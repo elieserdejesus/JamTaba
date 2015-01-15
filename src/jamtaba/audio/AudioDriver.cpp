@@ -4,7 +4,7 @@
 #include <QDebug>
 
 AbstractAudioDriver::AbstractAudioDriver(){
-    qDebug() << "AbstractAudioDriver constructor...";
+    //qDebug() << "AbstractAudioDriver constructor...";
     inputBuffers = 0;//non interleaved buffers
     outputBuffers = 0;
     inputChannels = 0;//total of selected input channels

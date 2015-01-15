@@ -25,6 +25,10 @@ private slots:
 
     //void on_okButton_released();
 
+    void on_comboAsioDriver_activated(const QString &arg1);
+
+    void on_comboAsioDriver_activated(int index);
+
 signals:
     void audioIOPropertiesChanged(int selectedDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
 

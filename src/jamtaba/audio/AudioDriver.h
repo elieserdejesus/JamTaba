@@ -55,10 +55,12 @@ public:
     virtual inline int getFirstInput(){return firstInputIndex;}
     virtual inline int getOutputs(){return outputChannels;}
     virtual inline int getFirstOutput(){return firstOutputIndex;}
+    virtual inline int getSampleRate(){return sampleRate;}
+    virtual inline int getBufferSize(){return bufferSize;}
     //virtual void initialize(){}
 
 protected:
-    static const int BUFFERS_LENGHT = 1024;
+    static const unsigned int BUFFERS_LENGHT = 2048;//size of internal audio buffers
 
     float** inputBuffers;//non interleaved buffers
     float** outputBuffers;

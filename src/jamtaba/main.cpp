@@ -1,7 +1,7 @@
 #include "gui/mainframe.h"
 #include <QtWidgets/QApplication>
 #include <QDebug>
-#include <exception>
+#include <stdexcept>
 
 int main(int argc, char *argv[])
 {
@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
         w.show();
         return a.exec();
     }
-    catch(const std::exception& ex){
+    catch(const std::runtime_error& ex){
         qDebug() << ex.what();
     }
 
