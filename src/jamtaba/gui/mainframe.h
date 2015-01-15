@@ -4,6 +4,7 @@
 #include "ui_mainframe.h"
 #include "../maincontroller.h"
 
+
 class MainFrame : public QMainWindow
 {
 	Q_OBJECT
@@ -16,6 +17,7 @@ public:
 
 private slots:
     void on_actionAudio_triggered();
+    void on_audioIOPropertiesChanged(int selectedDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
 
 private:
 	Ui::MainFrameClass ui;

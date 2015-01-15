@@ -1,24 +1,35 @@
 #include "PortAudioDriver.h"
 #include <QDebug>
+#include <stdexcept>
 #include "portaudio.h"
 #if _WIN32
     #include "pa_asio.h"
 #endif
 
-const int BUFFERS_LENGHT = 1024;
-
 PortAudioDriver::PortAudioDriver()
 {
 	qDebug() << "construtor PortAudioDriver";
-	PaError error = Pa_Initialize();
-	if (error != paNoError){
-		fireDriverException(Pa_GetErrorText(error));
-	}
+
+    qDebug() << "initializing portaudio...";
+    PaError error = Pa_Initialize();
+    if (error != paNoError){
+        qDebug() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
+        throw std::runtime_error(Pa_GetErrorText(error));
+    }
     paStream = inputBuffers = outputBuffers = NULL;
+    qDebug() << "portaudio initialized!";
+
     inputDeviceIndex = Pa_GetDefaultInputDevice();
     outputDeviceIndex = Pa_GetDefaultOutputDevice();
+    if(inputDeviceIndex != paNoDevice){
+        inputChannels = Pa_GetDeviceInfo(inputDeviceIndex)->maxInputChannels;
+        firstInputIndex = 0;
+    }
+    if(outputDeviceIndex != paNoDevice){
+        outputChannels = 2;
+        firstOutputIndex = 0;
+    }
 }
-
 
 PortAudioDriver::~PortAudioDriver()
 {
@@ -28,7 +39,7 @@ PortAudioDriver::~PortAudioDriver()
 //this method just convert portaudio void* inputBuffer to a float[][] buffer, and do the same for outputs
 void PortAudioDriver::translatePortAudioCallBack(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer){
 	if (framesPerBuffer > BUFFERS_LENGHT){
-		throw "framesPerBuffer > BUFFERS_LENGHT";
+        throw std::runtime_error( std::string("framesPerBuffer > BUFFERS_LENGHT"));
 		//TODO: fazer um loop consumindo framesPerBuffer, assim a aplica��o funciona mesmo que o usu�rio
 		//esteja usando um buffer maior que BUFFERS_LENGHT
 	}
@@ -70,13 +81,11 @@ int portaudioCallBack(const void *inputBuffer, void *outputBuffer,
 void PortAudioDriver::start(){
 	stop();
 
-	inputChannels = 1;
-	outputChannels = 2;
+    qDebug() << "recreating portaudio buffers...";
 	recreateInputBuffers(BUFFERS_LENGHT);
 	recreateOutputBuffers(BUFFERS_LENGHT);
 
-	double sampleRate = 44100;
-	unsigned long framesPerBuffer = paFramesPerBufferUnspecified;
+    unsigned long framesPerBuffer = bufferSize;// paFramesPerBufferUnspecified;
     PaSampleFormat sampleFormat = paFloat32;// | paNonInterleaved;
 
 	PaStreamParameters inputParams;
@@ -93,14 +102,27 @@ void PortAudioDriver::start(){
 	outputParams.suggestedLatency = Pa_GetDeviceInfo(outputParams.device)->defaultLowOutputLatency;
 	outputParams.hostApiSpecificStreamInfo = NULL;
 
-    PaError error = Pa_OpenStream(&paStream, &inputParams, &outputParams, sampleRate, framesPerBuffer, paNoFlag, portaudioCallBack, (void*)this);//I'm passing this to portaudio, so I can run methods inside the callback function
-	if (error != paNoError){
-		fireDriverException(Pa_GetErrorText(error));
+    PaError error =  Pa_IsFormatSupported(&inputParams, &outputParams, sampleRate);
+    if(error != paNoError){
+        qDebug() << "unsuported format: " << Pa_GetErrorText(error);
+    }
+    else{
+        qDebug() << "format supported!";
+    }
+
+    qDebug() << "initializing portaudio stream  inputs:" << inputParams.channelCount << " outputs:" << outputParams.channelCount << " sampleRate:" << sampleRate << " bufferSize:" << bufferSize << "inputDevice:" << inputDeviceIndex << "outputDevice:" << outputDeviceIndex;
+    paStream = NULL;
+    error = Pa_OpenStream(&paStream, &inputParams, &outputParams, sampleRate, framesPerBuffer, paNoFlag, portaudioCallBack, (void*)this);//I'm passing this to portaudio, so I can run methods inside the callback function
+    qDebug() << "after Pa_OpenStream error:" << error << Pa_GetErrorText(error);
+    if (error != paNoError){
+        throw std::runtime_error(std::string(Pa_GetErrorText(error)));
+        //fireDriverException(Pa_GetErrorText(error));
     }
     if(paStream != NULL){
         error = Pa_StartStream(paStream);
         if (error != paNoError){
-            fireDriverException(Pa_GetErrorText(error));
+            //fireDriverException(Pa_GetErrorText(error));
+            throw std::runtime_error(Pa_GetErrorText(error));
         }
     }
 	fireDriverStarted();
@@ -109,10 +131,14 @@ void PortAudioDriver::start(){
 
 void PortAudioDriver::stop(){
     if (paStream != NULL){
-		if (!Pa_IsStreamStopped(paStream)){
-			Pa_StopStream(paStream);
+        if (!Pa_IsStreamStopped(paStream)){
+            PaError error = Pa_CloseStream(paStream);
+            if(error != paNoError){
+                qDebug() << Pa_GetErrorText(error);
+                throw std::runtime_error(std::string(Pa_GetErrorText(error)));
+            }
 			fireDriverStopped();
-		}
+        }
 	}
 }
 
@@ -192,28 +218,4 @@ int PortAudioDriver::getDevicesCount() const
 }
 
 //++++++++++++=
-void PortAudioDriver::recreateInputBuffers(const int buffersLenght){
-	if (inputBuffers != NULL){
-		for (int i = 0; i < inputChannels; i++){
-			delete inputBuffers[i];
-		}
-		delete inputBuffers;
-	}
-	inputBuffers = new float*[inputChannels];
-	for (int i = 0; i < inputChannels; i++){
-		inputBuffers[i] = new float[buffersLenght];
-	}
-}
 
-void PortAudioDriver::recreateOutputBuffers(const int buffersLenght){
-	if (outputBuffers != NULL){
-		for (int i = 0; i < outputChannels; i++){
-			delete outputBuffers[i];
-		}
-		delete outputBuffers;
-	}
-	outputBuffers = new float*[outputChannels];
-	for (int i = 0; i < outputChannels; i++){
-		outputBuffers[i] = new float[buffersLenght];
-	}
-}

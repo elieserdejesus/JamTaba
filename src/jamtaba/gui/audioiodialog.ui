@@ -201,15 +201,15 @@
    <sender>okButton</sender>
    <signal>released()</signal>
    <receiver>AudioIODialog</receiver>
-   <slot>accept()</slot>
+   <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>285</x>
-     <y>357</y>
+     <x>299</x>
+     <y>358</y>
     </hint>
     <hint type="destinationlabel">
-     <x>207</x>
-     <y>350</y>
+     <x>179</x>
+     <y>356</y>
     </hint>
    </hints>
   </connection>

@@ -14,7 +14,6 @@ TEMPLATE = app
 MAIN = src/jamtaba/main.cpp #src/jamtaba/gui/testAudioIoDialog.cpp
 
 HEADERS += \
-    src/jamtaba/audio/AbstractAudioDriver.h \
     src/jamtaba/audio/AudioDriver.h \
     src/jamtaba/audio/AudioDriverListener.h \
     src/jamtaba/audio/PortAudioDriver.h \
@@ -26,11 +25,11 @@ win32:HEADERS += portaudio/include/pa_asio.h
 
 SOURCES += \
     $$MAIN \
-    src/jamtaba/audio/AbstractAudioDriver.cpp \
     src/jamtaba/audio/PortAudioDriver.cpp \
     src/jamtaba/gui/mainframe.cpp \
     src/jamtaba/maincontroller.cpp \
     src/jamtaba/gui/audioiodialog.cpp \
+    src/jamtaba/audio/AudioDriver.cpp
 
 
 FORMS += src/jamtaba/gui/mainframe.ui \

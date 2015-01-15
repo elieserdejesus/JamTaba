@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AbstractAudioDriver.h"
+#include "AudioDriver.h"
 #include "portaudio.h"
 
 
@@ -13,6 +13,7 @@ public:
 	virtual void start();
 	virtual void stop();
 	virtual void release();
+
     virtual int getMaxInputs() const;
     virtual int getMaxOutputs() const;
 
@@ -30,16 +31,11 @@ public:
     const char* getOutputDeviceName(PaDeviceIndex index) const;
     int getDevicesCount() const;
 
+
 private:
 
-    float** inputBuffers;//non interleaved buffers
-    float** outputBuffers;
-    int inputChannels;//total of selected input channels
-    int outputChannels;//total of selected output channels (2 channels by default)
-
 	PaStream* paStream;
-    PaDeviceIndex inputDeviceIndex;
-    PaDeviceIndex outputDeviceIndex;
+
 
 	void translatePortAudioCallBack(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer);
 
@@ -50,7 +46,6 @@ private:
 		PaStreamCallbackFlags statusFlags,
 		void *userData);
 
-	void recreateInputBuffers(const int buffersLenght);
-	void recreateOutputBuffers(const int buffersLenght);
+
 };
 

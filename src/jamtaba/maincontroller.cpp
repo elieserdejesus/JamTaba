@@ -6,8 +6,16 @@
 
 //++++++++++++++++++++++++++++++
 class Listener : public AudioDriverListenerAdapter{
+
+private:
+    MainController* mainController;
+public:
+    Listener(MainController* controller){
+        this->mainController = controller;
+    }
+
     virtual void driverStarted(){
-        qDebug() << "driver started";
+        qDebug() << "MainControllre::driver started";
     }
 
     virtual void driverStopped(){
@@ -15,10 +23,18 @@ class Listener : public AudioDriverListenerAdapter{
     }
 
     virtual void processCallBack(float** in, float**out, const int samplesToProcess){
-        //qDebug() << "procesCallBack << samples: " + samplesToProcess;
+        //qDebug() << "procesCallBack  samples:" << samplesToProcess;
+
+        AudioDriver* audioDriver = mainController->getAudioDriver();
         for(int i=0; i < samplesToProcess; i++){
-            out[0][i] = in[0][i];
-            out[1][i] = in[0][i];
+            if(audioDriver->getInputs() == 2){
+                out[0][i] = in[0][i];
+                out[1][i] = in[1][i];
+            }
+            else if(audioDriver->getInputs() == 1){
+                out[0][i] = in[0][i];
+                out[1][i] = in[0][i];
+            }
         }
     }
 
@@ -33,7 +49,7 @@ class Listener : public AudioDriverListenerAdapter{
 MainController::MainController()
 {
     this->audioDriver = new PortAudioDriver();
-    audioDriverListener = new Listener();
+    audioDriverListener = new Listener(this);
 }
 
 MainController::~MainController()
