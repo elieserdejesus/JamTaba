@@ -7,8 +7,10 @@ AbstractAudioDriver::AbstractAudioDriver(){
     //qDebug() << "AbstractAudioDriver constructor...";
     inputBuffers = 0;//non interleaved buffers
     outputBuffers = 0;
+    inputMasks = outputMasks = 0;
     inputChannels = 0;//total of selected input channels
     outputChannels = 0;//total of selected output channels (2 channels by default)
+    maxInputChannels = maxOutputChannels = 0;
     inputDeviceIndex = 0;//index of selected device index. In ASIO the inputDeviceIndex and outputDeviceIndex are equal.
     outputDeviceIndex = 0;
     firstInputIndex = 0;
@@ -34,29 +36,50 @@ void AbstractAudioDriver::removeListener(AudioDriverListener& l){
 }
 
 
-void AbstractAudioDriver::recreateInputBuffers(const int buffersLenght){
+void AbstractAudioDriver::recreateInputBuffers(const int buffersLenght, const int newMaxInputChannels){
     if (inputBuffers != NULL){
-        for (int i = 0; i < inputChannels; i++){
+        for (int i = 0; i < maxInputChannels; i++){
             delete inputBuffers[i];
         }
         delete inputBuffers;
     }
-    inputBuffers = new float*[inputChannels];
-    for (int i = 0; i < inputChannels; i++){
+    if(inputMasks != NULL){
+        delete inputMasks;
+    }
+
+    //recreate
+    maxInputChannels = newMaxInputChannels;
+    inputBuffers = new float*[newMaxInputChannels];
+    for (int i = 0; i < newMaxInputChannels; i++){
         inputBuffers[i] = new float[buffersLenght];
+    }
+
+    inputMasks = new float[newMaxInputChannels];
+    for (int i = 0; i < newMaxInputChannels; i++){
+        inputMasks[i] = (i >= firstInputIndex && i <= firstInputIndex + inputChannels -1) ? 1 : 0;
     }
 }
 
-void AbstractAudioDriver::recreateOutputBuffers(const int buffersLenght){
+void AbstractAudioDriver::recreateOutputBuffers(const int buffersLenght, const int newMaxOutputChannels){
     if (outputBuffers != NULL){
-        for (int i = 0; i < outputChannels; i++){
+        for (int i = 0; i < maxOutputChannels; i++){
             delete outputBuffers[i];
         }
         delete outputBuffers;
     }
-    outputBuffers = new float*[outputChannels];
-    for (int i = 0; i < outputChannels; i++){
+    if(outputMasks != NULL){
+        delete outputMasks;
+    }
+    maxOutputChannels = newMaxOutputChannels;
+    outputBuffers = new float*[newMaxOutputChannels];
+    for (int i = 0; i < newMaxOutputChannels; i++){
         outputBuffers[i] = new float[buffersLenght];
+    }
+
+    //recreate
+    outputMasks = new float[newMaxOutputChannels];
+    for (int i = 0; i < newMaxOutputChannels; i++){
+        outputMasks[i] = (i >= firstOutputIndex && i <= firstOutputIndex + outputChannels -1) ? 1 : 0;
     }
 }
 

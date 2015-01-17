@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include "portaudio.h"
+#include "../ConfigStore.h"
 #if _WIN32
     #include "pa_asio.h"
 #endif
@@ -17,22 +18,60 @@ PortAudioDriver::PortAudioDriver()
     }
     paStream = inputBuffers = outputBuffers = NULL;
 
-    inputDeviceIndex = Pa_GetDefaultInputDevice();
-    outputDeviceIndex = Pa_GetDefaultOutputDevice();
+    //set input device
+    inputDeviceIndex = ConfigStore::getLastInputDevice();
+    if(inputDeviceIndex < 0 || inputDeviceIndex >= Pa_GetDeviceCount()){
+        inputDeviceIndex = Pa_GetDefaultInputDevice();
+    }
+
+    //set output device
+    outputDeviceIndex = ConfigStore::getLastOutputDevice();
+    if(outputDeviceIndex < 0 || outputDeviceIndex >= Pa_GetDeviceCount()){
+        outputDeviceIndex = Pa_GetDefaultOutputDevice();
+    }
+
+    //set input channels
     if(inputDeviceIndex != paNoDevice){
-        inputChannels = Pa_GetDeviceInfo(inputDeviceIndex)->maxInputChannels;
-        firstInputIndex = 0;
+        firstInputIndex = ConfigStore::getFirstAudioInput();
+        int lastInputsCount = ConfigStore::getLastAudioInput() - firstInputIndex + 1;
+        int maxInputs = Pa_GetDeviceInfo(inputDeviceIndex)->maxInputChannels;
+        if(lastInputsCount > maxInputs || firstInputIndex >= maxInputs ){
+            firstInputIndex = Pa_GetDeviceInfo(inputDeviceIndex)->defaultLowInputLatency;
+            inputChannels = (firstInputIndex + lastInputsCount < maxInputs) ? lastInputsCount : 1 ;//force mono input
+        }
+        else{
+            inputChannels = lastInputsCount;
+        }
     }
+
+    //set output channels
     if(outputDeviceIndex != paNoDevice){
-        outputChannels = 2;
-        firstOutputIndex = 0;
+        firstOutputIndex = ConfigStore::getFirstAudioOutput();
+        int lastOutputsCount = ConfigStore::getLastAudioOutput() - firstOutputIndex + 1;
+        int maxOutputs = Pa_GetDeviceInfo(outputDeviceIndex)->maxOutputChannels;
+        if(lastOutputsCount > maxOutputs || firstOutputIndex >= maxOutputs ){
+            firstOutputIndex = Pa_GetDeviceInfo(outputDeviceIndex)->defaultLowInputLatency;
+            outputChannels = (firstOutputIndex + lastOutputsCount < maxOutputs) ? lastOutputsCount : 2 ;//force mono input
+        }
+        else{
+            outputChannels = lastOutputsCount;
+        }
     }
+
+    //set sample rate
+    int lastSampleRate = ConfigStore::getLastSampleRate();
+    sampleRate = lastSampleRate >= 44100 ? lastSampleRate : 44100;
+
+    int lastBufferSize = ConfigStore::getLastBufferSize();
+    bufferSize = lastBufferSize > 0 ? lastBufferSize : paFramesPerBufferUnspecified;
 }
 
 PortAudioDriver::~PortAudioDriver()
 {
 	qDebug() << "destrutor PortAudioDriver";
 }
+
+
 
 //this method just convert portaudio void* inputBuffer to a float[][] buffer, and do the same for outputs
 void PortAudioDriver::translatePortAudioCallBack(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer){
@@ -43,12 +82,12 @@ void PortAudioDriver::translatePortAudioCallBack(const void *inputBuffer, void *
     //prepare buffers and expose then do application process
     float* in = (float*)inputBuffer;
     for(unsigned int i=0; i < framesPerBuffer; i++){
-        for (int c = 0; c < inputChannels; c++){
-            inputBuffers[c][i] = *in++;
+        for (int c = 0; c < maxInputChannels; c++){
+            inputBuffers[c][i] = *in++ * inputMasks[c];
         }
     }
 
-    for (int c = 0; c < outputChannels; c++){//zero output buffers
+    for (int c = 0; c < maxOutputChannels; c++){//zero output buffers
         memset(outputBuffers[c], 0, framesPerBuffer * sizeof(float));
     }
 
@@ -58,8 +97,8 @@ void PortAudioDriver::translatePortAudioCallBack(const void *inputBuffer, void *
     //convert application output buffers to portaudio format
     float* out = (float*)outputBuffer;
     for(unsigned int i=0; i < framesPerBuffer; i++){
-        for (int c = 0; c < outputChannels; c++){
-            *out++ = outputBuffers[c][i];
+        for (int c = 0; c < maxOutputChannels; c++){
+            *out++ = outputBuffers[c][i] * outputMasks[c];
         }
     }
 }
@@ -79,21 +118,25 @@ void PortAudioDriver::start(){
 	stop();
 
     qDebug() << "recreating portaudio buffers...";
-	recreateInputBuffers(BUFFERS_LENGHT);
-	recreateOutputBuffers(BUFFERS_LENGHT);
+
+    int maxOutputs = Pa_GetDeviceInfo(outputDeviceIndex)->maxOutputChannels;
+    int maxInputs = Pa_GetDeviceInfo(inputDeviceIndex)->maxInputChannels;
+
+    recreateInputBuffers(BUFFERS_LENGHT, maxInputs);
+    recreateOutputBuffers(BUFFERS_LENGHT, maxOutputs);
 
     unsigned long framesPerBuffer = bufferSize;// paFramesPerBufferUnspecified;
     PaSampleFormat sampleFormat = paFloat32;// | paNonInterleaved;
 
 	PaStreamParameters inputParams;
-	inputParams.channelCount = inputChannels;
+    inputParams.channelCount = maxInputs;//*/ inputChannels;
     inputParams.device = inputDeviceIndex;
 	inputParams.sampleFormat = sampleFormat;
     inputParams.suggestedLatency = Pa_GetDeviceInfo(inputDeviceIndex)->defaultLowOutputLatency;
 	inputParams.hostApiSpecificStreamInfo = NULL;
 
 	PaStreamParameters outputParams;
-	outputParams.channelCount = outputChannels;
+    outputParams.channelCount = maxOutputs;// */outputChannels;
     outputParams.device = outputDeviceIndex;
 	outputParams.sampleFormat = sampleFormat;
     outputParams.suggestedLatency = Pa_GetDeviceInfo(outputDeviceIndex)->defaultLowOutputLatency;
@@ -102,6 +145,7 @@ void PortAudioDriver::start(){
     PaError error =  Pa_IsFormatSupported(&inputParams, &outputParams, sampleRate);
     if(error != paNoError){
         qDebug() << "unsuported format: " << Pa_GetErrorText(error);
+        throw std::runtime_error(std::string(Pa_GetErrorText(error) ));
     }
 
     if(inputDeviceIndex == outputDeviceIndex){

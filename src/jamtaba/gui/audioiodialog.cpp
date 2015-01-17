@@ -35,7 +35,7 @@ void AudioIODialog::populateAsioDriverCombo()
 void AudioIODialog::populateFirstInputCombo()
 {
     ui->comboFirstInput->clear();
-    int maxInputs = portAudioDriver->getMaxInputs();
+    int maxInputs = 2;//portAudioDriver->getMaxInputs();
     for(int i=0; i < maxInputs; i++){
         ui->comboFirstInput->addItem( portAudioDriver->getInputChannelName(i), i );
     }
@@ -50,9 +50,11 @@ void AudioIODialog::populateFirstInputCombo()
 void AudioIODialog::populateLastInputCombo()
 {
     ui->comboLastInput->clear();
-    int maxInputs = portAudioDriver->getMaxInputs();
+    int maxInputs = 2;//portAudioDriver->getMaxInputs();
     int currentFirstInput = ui->comboFirstInput->currentData().toInt();
-    for(int i=currentFirstInput; i < maxInputs; i++){
+    int items = 0;
+    const int MAX_ITEMS = maxInputs - currentFirstInput;
+    for(int i=currentFirstInput; items < MAX_ITEMS; i++, items++){
         ui->comboLastInput->addItem( portAudioDriver->getInputChannelName(i), i );
     }
     int lastInputIndex = portAudioDriver->getFirstInput() + portAudioDriver->getInputs() -1;
@@ -67,7 +69,7 @@ void AudioIODialog::populateLastInputCombo()
 void AudioIODialog::populateFirstOutputCombo()
 {
     ui->comboFirstOutput->clear();
-    int maxOuts = portAudioDriver->getMaxOutputs();
+    int maxOuts = 2;//portAudioDriver->getMaxOutputs();
     for(int i=0; i < maxOuts; i++){
         ui->comboFirstOutput->addItem( portAudioDriver->getOutputChannelName(i), i );
     }
@@ -77,24 +79,19 @@ void AudioIODialog::populateFirstOutputCombo()
 void AudioIODialog::populateLastOutputCombo()
 {
     ui->comboLastOutput->clear();
-    int maxOuts = portAudioDriver->getMaxOutputs();
+    int maxOuts = 2;//portAudioDriver->getMaxOutputs();
     int currentFirstOut = ui->comboFirstOutput->currentData().toInt();
     if(currentFirstOut + 1 < maxOuts){
         currentFirstOut++;//to avoid 1 channel output
     }
-    for(int i=currentFirstOut; i < maxOuts; i++){
+    int items = 0;
+    const int MAX_ITEMS = maxOuts - currentFirstOut;
+    for(int i=currentFirstOut; items < MAX_ITEMS; i++, items++){
         ui->comboLastOutput->addItem( portAudioDriver->getOutputChannelName(i), i);
     }
     int lastOutputIndex = portAudioDriver->getFirstOutput() + portAudioDriver->getOutputs() -1;
     int index = ui->comboLastOutput->findData(lastOutputIndex);
     ui->comboLastOutput->setCurrentIndex( index >=0 ? index : 0);
-
-//    if( lastOutputIndex < ui->comboLastOutput->count()){
-//        ui->comboLastOutput->setCurrentIndex(lastOutputIndex);
-//    }
-//    else{
-//        ui->comboLastOutput->setCurrentIndex(ui->comboLastOutput->count()-1);
-//    }
 }
 
 void AudioIODialog::populateSampleRateCombo()
@@ -132,7 +129,7 @@ void AudioIODialog::on_comboAsioDriver_activated(int index)
 #endif
     populateFirstInputCombo();
     populateFirstOutputCombo();
-    ui->groupBoxOutputs->setEnabled(portAudioDriver->getMaxOutputs() > 2);
+
 }
 
 void AudioIODialog::on_comboFirstInput_currentIndexChanged(int /*index*/)
@@ -143,9 +140,10 @@ void AudioIODialog::on_comboFirstInput_currentIndexChanged(int /*index*/)
 void AudioIODialog::on_comboFirstOutput_currentIndexChanged(int /*index*/)
 {
     populateLastOutputCombo();
+    ui->groupBoxOutputs->setEnabled(portAudioDriver->getMaxOutputs() > 2);
 }
 
-void AudioIODialog::closeEvent(QCloseEvent *)
+void AudioIODialog::on_okButton_released()
 {
     int selectedDevice = ui->comboAsioDriver->currentIndex();
     int firstIn = ui->comboFirstInput->currentData().toInt();
@@ -155,8 +153,4 @@ void AudioIODialog::closeEvent(QCloseEvent *)
     int sampleRate = ui->comboSampleRate->currentText().toInt();
     int bufferSize = ui->comboBufferSize->currentText().toInt();
     emit audioIOPropertiesChanged(selectedDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
-
 }
-
-
-

@@ -16,7 +16,7 @@ class AudioIODialog : public QDialog
 public:
     explicit AudioIODialog(PortAudioDriver &portAudioDriver, QWidget *parent = 0);
     ~AudioIODialog();
-    virtual void closeEvent(QCloseEvent *);
+   // virtual void closeEvent(QCloseEvent *);
 
 private slots:
     void on_comboAsioDriver_currentIndexChanged(int);
@@ -28,6 +28,8 @@ private slots:
     void on_comboAsioDriver_activated(const QString &arg1);
 
     void on_comboAsioDriver_activated(int index);
+
+    void on_okButton_released();
 
 signals:
     void audioIOPropertiesChanged(int selectedDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);

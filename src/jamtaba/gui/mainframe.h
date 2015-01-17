@@ -14,6 +14,7 @@ public:
 	~MainFrame();
     virtual void closeEvent(QCloseEvent *);
     virtual void showEvent(QShowEvent*);
+    virtual void changeEvent(QEvent *);
 
 private slots:
     void on_actionAudio_triggered();

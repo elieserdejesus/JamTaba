@@ -64,12 +64,21 @@ protected:
 
     float** inputBuffers;//non interleaved buffers
     float** outputBuffers;
+
+    float* inputMasks;
+    float* outputMasks;//estou abrindo todos os canais do device selecionado, os canais que não estão selecionados pelo usuário
+    //tem as amostras zeradas. Sempre pego cada amostra e multiplico pela máscara. Os canais selecionados são multiplicados por 1, e os
+    //não selecionados são multiplicados por ZERO.
+
+    int maxInputChannels;
+    int maxOutputChannels;
     int inputChannels;//total of selected input channels
     int outputChannels;//total of selected output channels (2 channels by default)
     int inputDeviceIndex;//index of selected device index. In ASIO the inputDeviceIndex and outputDeviceIndex are equal.
     int outputDeviceIndex;
     int firstInputIndex;
     int firstOutputIndex;
+
     int sampleRate;
     int bufferSize;
 
@@ -80,6 +89,6 @@ protected:
     void fireDriverStopped() const;
     void fireDriverException(const char* msg) const;
 
-    void recreateInputBuffers(const int buffersLenght);
-    void recreateOutputBuffers(const int buffersLenght);
+    void recreateInputBuffers(const int buffersLenght, const int maxInputs);
+    void recreateOutputBuffers(const int buffersLenght, const int maxOutputs);
 };
