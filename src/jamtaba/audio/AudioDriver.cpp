@@ -2,12 +2,107 @@
 #include "AudioDriverListener.h"
 #include <vector>
 #include <QDebug>
+#include <stdexcept>
 
+AudioSamplesBuffer::AudioSamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT){
+    if(channels == 0){
+        throw std::runtime_error(std::string("AudioSamplesBuffer::channels == 0"));
+    }
+    //this->sampleRate = sampleRate;
+    this->samples = new float*[channels];
+    for (unsigned int c = 0; c < channels; ++c) {
+        this->samples[c] = new float[MAX_BUFFERS_LENGHT];
+    }
+    this->channels = channels;
+    this->frameLenght = MAX_BUFFERS_LENGHT;
+}
+
+AudioSamplesBuffer::~AudioSamplesBuffer(){
+    if(samples != NULL){
+        for (unsigned int c = 0; c < channels; ++c) {
+            delete samples[c];
+            samples[c] = NULL;
+        }
+        delete samples;
+        samples = NULL;
+    }
+    qDebug() << "\tAudio samples destructor!";
+}
+
+void AudioSamplesBuffer::applyGain(float gainFactor)
+{
+    for (unsigned int c = 0; c < channels; ++c) {
+        for (unsigned int i = 0; i < frameLenght; ++i) {
+            samples[c][i] *= gainFactor;
+        }
+    }
+}
+
+void AudioSamplesBuffer::zero()
+{
+    for (unsigned int c = 0; c < channels; ++c) {
+       memset(samples[c], 0, frameLenght * sizeof(float));
+    }
+}
+
+void AudioSamplesBuffer::add(const AudioSamplesBuffer &buffer)
+{
+    unsigned int framesToProcess = frameLenght < buffer.frameLenght ? frameLenght : buffer.frameLenght;
+    if(channels == buffer.channels){
+        for (unsigned int c = 0; c < channels; ++c) {
+            for (unsigned int s = 0; s < framesToProcess; ++s) {
+                samples[c][s] += buffer.samples[c][s];
+            }
+        }
+    }
+    else{
+        if(!isMono()){//copy every &buffer samples to LR in this buffer
+            for (unsigned int s = 0; s < framesToProcess; ++s) {
+                samples[0][s] += buffer.samples[0][s];
+                samples[1][s] += buffer.samples[0][s];
+            }
+        }
+        else{//this buffer is mono, but the buffer in parameter is not! Mix down the stereo samples in one mono sample value.
+            for (unsigned int s = 0; s < framesToProcess; ++s) {
+                samples[0][s] += (buffer.samples[0][s] + buffer.samples[1][s]) / 2;
+            }
+        }
+    }
+}
+
+void AudioSamplesBuffer::set(const AudioSamplesBuffer &buffer)
+{
+    unsigned int framesToProcess = frameLenght < buffer.frameLenght ? frameLenght : buffer.frameLenght;
+    if(channels == buffer.channels){
+        for (unsigned int c = 0; c < channels; ++c) {
+            for (unsigned int s = 0; s < framesToProcess; ++s) {
+                samples[c][s] = buffer.samples[c][s];
+            }
+        }
+    }
+    else{
+        if(!isMono()){//copy every &buffer samples to LR in this buffer
+            for (unsigned int s = 0; s < framesToProcess; ++s) {
+                samples[0][s] = buffer.samples[0][s];
+                samples[1][s] = buffer.samples[0][s];
+            }
+        }
+        else{//this buffer is mono, but the buffer in parameter is not! Mix down the stereo samples in one mono sample value.
+            for (unsigned int s = 0; s < framesToProcess; ++s) {
+                samples[0][s] = (buffer.samples[0][s] + buffer.samples[1][s]) / 2;
+            }
+        }
+    }
+}
+
+
+
+
+//+++++++++++++++++++++++++++++++++++++++++++
 AbstractAudioDriver::AbstractAudioDriver(){
     //qDebug() << "AbstractAudioDriver constructor...";
-    inputBuffers = 0;//non interleaved buffers
-    outputBuffers = 0;
-    inputMasks = outputMasks = 0;
+    inputBuffer = 0;//non interleaved buffers
+    outputBuffer = 0;
     inputChannels = 0;//total of selected input channels
     outputChannels = 0;//total of selected output channels (2 channels by default)
     maxInputChannels = maxOutputChannels = 0;
@@ -36,51 +131,22 @@ void AbstractAudioDriver::removeListener(AudioDriverListener& l){
 }
 
 
-void AbstractAudioDriver::recreateInputBuffers(const int buffersLenght, const int newMaxInputChannels){
-    if (inputBuffers != NULL){
-        for (int i = 0; i < maxInputChannels; i++){
-            delete inputBuffers[i];
-        }
-        delete inputBuffers;
-    }
-    if(inputMasks != NULL){
-        delete inputMasks;
+void AbstractAudioDriver::recreateBuffers(const int buffersLenght, const int newMaxInputChannels, const int newMaxOutputChannels)
+{
+    if (inputBuffer != NULL){
+        delete inputBuffer;
     }
 
     //recreate
     maxInputChannels = newMaxInputChannels;
-    inputBuffers = new float*[newMaxInputChannels];
-    for (int i = 0; i < newMaxInputChannels; i++){
-        inputBuffers[i] = new float[buffersLenght];
+    inputBuffer = new AudioSamplesBuffer(newMaxInputChannels, buffersLenght);
+
+    if (outputBuffer != NULL){
+        delete outputBuffer;
     }
 
-    inputMasks = new float[newMaxInputChannels];
-    for (int i = 0; i < newMaxInputChannels; i++){
-        inputMasks[i] = (i >= firstInputIndex && i <= firstInputIndex + inputChannels -1) ? 1 : 0;
-    }
-}
-
-void AbstractAudioDriver::recreateOutputBuffers(const int buffersLenght, const int newMaxOutputChannels){
-    if (outputBuffers != NULL){
-        for (int i = 0; i < maxOutputChannels; i++){
-            delete outputBuffers[i];
-        }
-        delete outputBuffers;
-    }
-    if(outputMasks != NULL){
-        delete outputMasks;
-    }
     maxOutputChannels = newMaxOutputChannels;
-    outputBuffers = new float*[newMaxOutputChannels];
-    for (int i = 0; i < newMaxOutputChannels; i++){
-        outputBuffers[i] = new float[buffersLenght];
-    }
-
-    //recreate
-    outputMasks = new float[newMaxOutputChannels];
-    for (int i = 0; i < newMaxOutputChannels; i++){
-        outputMasks[i] = (i >= firstOutputIndex && i <= firstOutputIndex + outputChannels -1) ? 1 : 0;
-    }
+    outputBuffer = new AudioSamplesBuffer(newMaxOutputChannels, buffersLenght);
 }
 
 void AbstractAudioDriver::setProperties(int deviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)
@@ -131,10 +197,12 @@ void AbstractAudioDriver::fireDriverException(const char* msg) const{
     }
 }
 
-void AbstractAudioDriver::fireDriverCallback(float** in, float** out, const int samplesToProcess){
+
+
+void AbstractAudioDriver::fireDriverCallback(AudioSamplesBuffer& in, AudioSamplesBuffer& out){
     std::vector<AudioDriverListener*>::const_iterator it = listeners.begin();
     for (; it != listeners.end(); it++){
-        (*it)->processCallBack(in, out, samplesToProcess);
+        (*it)->processCallBack(in, out);
     }
 }
 

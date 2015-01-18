@@ -19,16 +19,11 @@ public:
    // virtual void closeEvent(QCloseEvent *);
 
 private slots:
-    void on_comboAsioDriver_currentIndexChanged(int);
+    //void on_comboAsioDriver_currentIndexChanged(int);
     void on_comboFirstInput_currentIndexChanged(int);
     void on_comboFirstOutput_currentIndexChanged(int);
-
-    //void on_okButton_released();
-
-    void on_comboAsioDriver_activated(const QString &arg1);
-
+    //void on_comboAsioDriver_activated(const QString &arg1);
     void on_comboAsioDriver_activated(int index);
-
     void on_okButton_released();
 
 signals:

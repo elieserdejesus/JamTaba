@@ -37,7 +37,7 @@ private:
 	PaStream* paStream;
 
 
-	void translatePortAudioCallBack(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer);
+    void translatePortAudioCallBack(const void *in, void *out, unsigned long framesPerBuffer);
 
 	//portaudio callback function
 	friend int portaudioCallBack(const void *inputBuffer, void *outputBuffer,

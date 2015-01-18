@@ -15,6 +15,6 @@ int main(int argc, char *argv[])
     catch(const std::runtime_error& ex){
         qDebug() << ex.what();
     }
-
+    return 0;
 
 }

@@ -3,9 +3,58 @@
 
 class AudioDriverListener;
 
+class AudioSamplesBuffer{
+private:
+    float** samples;
+    unsigned int channels;
+    unsigned int frameLenght;
+    //unsigned int sampleRate;
+
+    inline bool isMono(){return channels == 1;}
+
+    inline bool channelIsValid(unsigned int channel){return channel < channels;}
+    inline bool sampleIndexIsValid(unsigned int sampleIndex){return sampleIndex < frameLenght;}
+
+public:
+    AudioSamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT);
+    ~AudioSamplesBuffer();
+
+    void applyGain(float gainFactor);
+
+    void zero();
+
+    void add(const AudioSamplesBuffer& buffer);
+    inline void add(int channel, int sampleIndex, float sampleValue){
+        samples[channel][sampleIndex] += sampleValue;
+    }
+
+    void set(const AudioSamplesBuffer& buffer);
+    inline void set(int channel, int sampleIndex, float sampleValue)
+    {
+        samples[channel][sampleIndex] = sampleValue;
+    }
+
+    inline float get(int channel, int sampleIndex)
+    {
+        return samples[channel][sampleIndex];
+    }
+
+    //inline int getSampleRate(){ return sampleRate; }
+    inline int getFrameLenght(){ return frameLenght; }
+    inline void setFrameLenght(unsigned int newFrameLenght){this->frameLenght = newFrameLenght;}
+    inline int getChannels(){ return channels; }
+
+private:
+
+};
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class AudioDriver
 {
 public:
+
+    static const unsigned int MAX_BUFFERS_LENGHT = 2048;//size of internal audio buffers
+
 	//AudioDriver(){}
 	virtual ~AudioDriver(){}
 
@@ -42,7 +91,6 @@ public:
 class AbstractAudioDriver : public AudioDriver
 {
 
-
 public:
     AbstractAudioDriver();
     virtual ~AbstractAudioDriver(){}
@@ -60,13 +108,8 @@ public:
     //virtual void initialize(){}
 
 protected:
-    static const unsigned int BUFFERS_LENGHT = 2048;//size of internal audio buffers
-
-    float** inputBuffers;//non interleaved buffers
-    float** outputBuffers;
-
-    float* inputMasks;
-    float* outputMasks;//estou abrindo todos os canais do device selecionado, os canais que não estão selecionados pelo usuário
+    //float* inputMasks;
+    //float* outputMasks;//estou abrindo todos os canais do device selecionado, os canais que não estão selecionados pelo usuário
     //tem as amostras zeradas. Sempre pego cada amostra e multiplico pela máscara. Os canais selecionados são multiplicados por 1, e os
     //não selecionados são multiplicados por ZERO.
 
@@ -82,13 +125,15 @@ protected:
     int sampleRate;
     int bufferSize;
 
+    AudioSamplesBuffer* inputBuffer;
+    AudioSamplesBuffer* outputBuffer;
+
     std::vector<AudioDriverListener*> listeners;
 
-    void fireDriverCallback(float** in, float** out, const int samplesToProcess);
+    void fireDriverCallback(AudioSamplesBuffer& in, AudioSamplesBuffer& out);
     void fireDriverStarted() const;
     void fireDriverStopped() const;
     void fireDriverException(const char* msg) const;
 
-    void recreateInputBuffers(const int buffersLenght, const int maxInputs);
-    void recreateOutputBuffers(const int buffersLenght, const int maxOutputs);
+    void recreateBuffers(const int buffersLenght, const int maxInputs, const int maxOutputs);
 };

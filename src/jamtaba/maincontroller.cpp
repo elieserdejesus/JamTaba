@@ -1,6 +1,7 @@
 #include "maincontroller.h"
 #include "audio/AudioDriverListener.h"
 #include "audio/PortAudioDriver.h"
+#include "audio/AudioNode.h"
 #include <QDebug>
 
 
@@ -9,9 +10,36 @@ class Listener : public AudioDriverListenerAdapter{
 
 private:
     MainController* mainController;
+    AudioNode** oscillators;
+    AudioNode** oscillatorsGain;
+    AudioNode* output;
+    LocalInputAudioNode* localInputAudioNode;
+    static const int OSCS = 3;
 public:
     Listener(MainController* controller){
         this->mainController = controller;
+        this->output = new MainOutputAudioNode();
+        this->localInputAudioNode = new LocalInputAudioNode();
+        this->oscillators = new AudioNode*[OSCS];
+        this->oscillatorsGain = new AudioNode*[OSCS];
+        for (int i = 0; i < OSCS; ++i) {
+            oscillators[i] = new OscillatorAudioNode(i * 200, ((AbstractAudioDriver*)controller->getAudioDriver())->getSampleRate());
+            oscillatorsGain[i] = new GainNode(0.1);
+            oscillators[i]->connect(oscillatorsGain[i]);
+            oscillatorsGain[i]->connect(output);
+        }
+        localInputAudioNode->connect(output);
+    }
+
+    ~Listener(){
+        for (int i = 0; i < OSCS; ++i) {
+            delete oscillators[i];
+            delete oscillatorsGain[i];
+        }
+        delete oscillators;
+        delete oscillatorsGain;
+        delete output;
+        delete localInputAudioNode;
     }
 
     virtual void driverStarted(){
@@ -22,20 +50,11 @@ public:
         qDebug() << "audio driver stopped";
     }
 
-    virtual void processCallBack(float** in, float**out, const int samplesToProcess){
-        //qDebug() << "procesCallBack  samples:" << samplesToProcess;
+    virtual void processCallBack(AudioSamplesBuffer& in, AudioSamplesBuffer& out){
+        output->processReplacing(in, out);
 
-        AudioDriver* audioDriver = mainController->getAudioDriver();
-        for(int i=0; i < samplesToProcess; i++){
-            if(audioDriver->getInputs() == 2){
-                out[0][i] = in[0][i];
-                out[1][i] = in[1][i];
-            }
-            else if(audioDriver->getInputs() == 1){
-                out[0][i] = in[0][i];
-                out[1][i] = in[0][i];
-            }
-        }
+        //out.add(in);
+
     }
 
     virtual void driverException(const char* msg){

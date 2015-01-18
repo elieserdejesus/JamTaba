@@ -1,10 +1,13 @@
-#BUGS:
+# - mixer de streams de audio
+# - Abrir plugins VST
+
+#BUGS relacionados com o diálogo de audioIO:
 #1 - quando seleciono as entradas sPDIF da fast track a aplicação encerra
 #2 - quando seleciono saídas que não são 1 e 2 dá um crash também.
-#3 - quando seleciono as entradas e simplesmente volto para a tela de audio IO o valor do segundo combo está bugado.
+#3 - Com a fast track quando seleciono as entradas e simplesmente volto para a tela de audio IO o valor do segundo combo está bugado.
 #4 - preciso testar com a fonte da fast track para ver se os outros canais estão realmente funcionando
 
-# - Abrir plugins VST
+
 
 #-------------------------------------------------
 #
@@ -28,7 +31,8 @@ HEADERS += \
     src/jamtaba/gui/mainframe.h \
     src/jamtaba/maincontroller.h \
     src/jamtaba/gui/audioiodialog.h \
-    src/jamtaba/ConfigStore.h
+    src/jamtaba/ConfigStore.h \
+    src/jamtaba/audio/AudioNode.h
 
 
 win32:HEADERS += portaudio/include/pa_asio.h
@@ -40,7 +44,9 @@ SOURCES += \
     src/jamtaba/maincontroller.cpp \
     src/jamtaba/gui/audioiodialog.cpp \
     src/jamtaba/audio/AudioDriver.cpp \
-    src/jamtaba/ConfigStore.cpp
+    src/jamtaba/ConfigStore.cpp \
+    src/jamtaba/audio/AudioNode.cpp
+
 
 
 FORMS += src/jamtaba/gui/mainframe.ui \

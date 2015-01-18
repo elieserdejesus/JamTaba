@@ -16,7 +16,7 @@ PortAudioDriver::PortAudioDriver()
         qDebug() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
         throw std::runtime_error(Pa_GetErrorText(error));
     }
-    paStream = inputBuffers = outputBuffers = NULL;
+    paStream = inputBuffer = outputBuffer = NULL;
 
     //set input device
     inputDeviceIndex = ConfigStore::getLastInputDevice();
@@ -74,31 +74,32 @@ PortAudioDriver::~PortAudioDriver()
 
 
 //this method just convert portaudio void* inputBuffer to a float[][] buffer, and do the same for outputs
-void PortAudioDriver::translatePortAudioCallBack(const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer){
-    if(framesPerBuffer > BUFFERS_LENGHT){
-        throw std::runtime_error(std::string("AUDIO ERROR: framesPerBuffer > BUFFERS_LENGHT"));
-
+void PortAudioDriver::translatePortAudioCallBack(const void *in, void *out, unsigned long framesPerBuffer){
+    if(framesPerBuffer > MAX_BUFFERS_LENGHT){
+        qFatal("AUDIO ERROR: framesPerBuffer > BUFFERS_LENGHT");
     }
+    ;
     //prepare buffers and expose then do application process
-    float* in = (float*)inputBuffer;
+    inputBuffer->setFrameLenght(framesPerBuffer);
+    outputBuffer->setFrameLenght(framesPerBuffer);
+
+    float* inputs = (float*)in;
     for(unsigned int i=0; i < framesPerBuffer; i++){
         for (int c = 0; c < maxInputChannels; c++){
-            inputBuffers[c][i] = *in++ * inputMasks[c];
+            inputBuffer->set(c, i, *inputs++);
         }
     }
 
-    for (int c = 0; c < maxOutputChannels; c++){//zero output buffers
-        memset(outputBuffers[c], 0, framesPerBuffer * sizeof(float));
-    }
+    outputBuffer->zero();
 
     //all application audio processing is computed here
-    fireDriverCallback(inputBuffers, outputBuffers, framesPerBuffer);
+    fireDriverCallback(*inputBuffer, *outputBuffer);
 
     //convert application output buffers to portaudio format
-    float* out = (float*)outputBuffer;
+    float* outputs = (float*)out;
     for(unsigned int i=0; i < framesPerBuffer; i++){
         for (int c = 0; c < maxOutputChannels; c++){
-            *out++ = outputBuffers[c][i] * outputMasks[c];
+            *outputs++ = outputBuffer->get(c, i);
         }
     }
 }
@@ -122,8 +123,7 @@ void PortAudioDriver::start(){
     int maxOutputs = Pa_GetDeviceInfo(outputDeviceIndex)->maxOutputChannels;
     int maxInputs = Pa_GetDeviceInfo(inputDeviceIndex)->maxInputChannels;
 
-    recreateInputBuffers(BUFFERS_LENGHT, maxInputs);
-    recreateOutputBuffers(BUFFERS_LENGHT, maxOutputs);
+    recreateBuffers(MAX_BUFFERS_LENGHT, maxInputs, maxOutputs);
 
     unsigned long framesPerBuffer = bufferSize;// paFramesPerBufferUnspecified;
     PaSampleFormat sampleFormat = paFloat32;// | paNonInterleaved;
