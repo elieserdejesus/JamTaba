@@ -29,14 +29,14 @@ protected:
 
 private:
     QLinearGradient gradient;
-    QColor borderColor;
-    QColor bgColor;
+    //QColor borderColor;
+    //QColor bgColor;
     //QBrush brush;
 
     float peak;
 
-    static const QColor DEFAULT_BORDER_COLOR;
-    static const QColor DEFAULT_BG_COLOR;
+    //static const QColor DEFAULT_BORDER_COLOR;
+    //static const QColor DEFAULT_BG_COLOR;
 
     qint64 lastUpdate;// QDateTime::currentMSecsSinceEpoch()
     unsigned long decayTime;

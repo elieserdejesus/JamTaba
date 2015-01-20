@@ -4,5 +4,7 @@
     </qresource>
     <qresource prefix="/images">
         <file>gradient.bmp</file>
+        <file>fader.png</file>
+        <file>fader_shadow.png</file>
     </qresource>
 </RCC>

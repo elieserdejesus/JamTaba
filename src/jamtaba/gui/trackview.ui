@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="trackName">
      <property name="text">
       <string>TextLabel</string>
      </property>
@@ -25,7 +25,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="lineEdit">
+    <widget class="QLineEdit" name="channelName">
      <property name="text">
       <string>channel name</string>
      </property>
@@ -41,7 +41,7 @@
     </widget>
    </item>
    <item>
-    <widget class="Line" name="line">
+    <widget class="Line" name="topSeparator">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -130,7 +130,7 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QCheckBox" name="checkBox">
+          <widget class="QCheckBox" name="mute">
            <property name="layoutDirection">
             <enum>Qt::RightToLeft</enum>
            </property>
@@ -143,7 +143,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_2">
+          <widget class="QCheckBox" name="solo">
            <property name="layoutDirection">
             <enum>Qt::RightToLeft</enum>
            </property>
@@ -159,7 +159,7 @@
     </widget>
    </item>
    <item>
-    <widget class="Line" name="line_2">
+    <widget class="Line" name="panSectionSeparator">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -222,7 +222,7 @@
     </widget>
    </item>
    <item>
-    <widget class="Line" name="line_3">
+    <widget class="Line" name="bottomSectionSeparator">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
