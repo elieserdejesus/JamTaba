@@ -3,16 +3,60 @@
 #include <cmath>
 #include <QDebug>
 
+//+++++++++++++++
 void AudioNode::processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out)
 {
+    internalBuffer->setFrameLenght(out.getFrameLenght());
+
     foreach (AudioNode* node, connections) {
-        node->processReplacing(in, out);
+        node->processReplacing(in, *internalBuffer);
     }
+
+    //plugins
+    foreach (AudioNodeProcessor* processor, processors) {
+        processor->process(*internalBuffer);
+    }
+    internalBuffer->applyGain(gain, leftGain, rightGain);
+    out.add(*internalBuffer);
+}
+
+AudioNode::AudioNode()
+{
+    this->internalBuffer = new AudioSamplesBuffer(2, AudioDriver::MAX_BUFFERS_LENGHT);
+    this->gain = 1;
+    this->pan = 0;//center
+    this->leftGain = this->rightGain = 1;//pan gains
+}
+
+void AudioNode::setPan(float pan) {
+    if (pan < -1) {
+        pan = -1;
+    }
+    if (pan > 1) {
+        pan = 1;
+    }
+    this->pan = pan;
+    updateGains();
+}
+
+AudioNode::~AudioNode()
+{
+    foreach (AudioNodeProcessor* processor, processors) {
+        delete processor;
+    }
+    processors.clear();
+
+    delete internalBuffer;
 }
 
 bool AudioNode::connect(AudioNode* otherNode){
     otherNode->connections.insert(  this );
     return true;
+}
+
+void AudioNode::addProcessor(AudioNodeProcessor *newProcessor)
+{
+    processors.insert(newProcessor);
 }
 
 //+++++++++++++++++++++++++++++++++++++++
@@ -56,38 +100,12 @@ LocalInputAudioNode::LocalInputAudioNode(int firstInputIndex, bool isMono)
 
 void LocalInputAudioNode::processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out)
 {
-    out.add(in);//copy the input samples to output buffer. The output buffer values are erased
+    internalBuffer->setFrameLenght(out.getFrameLenght());
+    internalBuffer->set(in);//copy in to internal buffer
+    AudioNode::processReplacing(in, out);
+
 }
 
 //++++++++++++=
 
 
-GainNode::GainNode(float initialGain)
-{
-    this->gain = initialGain;
-    this->internalBuffer = new AudioSamplesBuffer(2, AudioDriver::MAX_BUFFERS_LENGHT);
-}
-
-GainNode::~GainNode()
-{
-    delete this->internalBuffer;
-}
-
-float GainNode::getGain(){
-    return gain;
-}
-
-void GainNode::setGain(float gain){
-    if(gain < 0){
-        gain = 0;
-    }
-    this->gain = gain;
-}
-
-void GainNode::processReplacing(AudioSamplesBuffer&in, AudioSamplesBuffer& out)
-{
-    internalBuffer->setFrameLenght(out.getFrameLenght());
-    AudioNode::processReplacing(in, *internalBuffer);//child nodes render to internalBuffer
-    internalBuffer->applyGain(gain);
-    out.add(*internalBuffer);//copy the changed samples to out buffer
-}

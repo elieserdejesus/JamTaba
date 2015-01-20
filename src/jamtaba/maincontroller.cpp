@@ -1,7 +1,7 @@
 #include "maincontroller.h"
 #include "audio/AudioDriverListener.h"
 #include "audio/PortAudioDriver.h"
-#include "audio/AudioNode.h"
+#include "audio/AudioMixer.h"
 #include <QDebug>
 
 
@@ -10,36 +10,39 @@ class Listener : public AudioDriverListenerAdapter{
 
 private:
     MainController* mainController;
-    AudioNode** oscillators;
-    AudioNode** oscillatorsGain;
-    AudioNode* output;
-    LocalInputAudioNode* localInputAudioNode;
-    static const int OSCS = 3;
+    AudioMixer* audioMixer;
+    //AudioNode** oscillators;
+    //AudioNode** oscillatorsGain;
+    //AudioNode* output;
+    //LocalInputAudioNode* localInputAudioNode;
+    //static const int OSCS = 3;
 public:
     Listener(MainController* controller){
         this->mainController = controller;
-        this->output = new MainOutputAudioNode();
-        this->localInputAudioNode = new LocalInputAudioNode();
-        this->oscillators = new AudioNode*[OSCS];
-        this->oscillatorsGain = new AudioNode*[OSCS];
-        for (int i = 0; i < OSCS; ++i) {
-            oscillators[i] = new OscillatorAudioNode(i * 200, ((AbstractAudioDriver*)controller->getAudioDriver())->getSampleRate());
-            oscillatorsGain[i] = new GainNode(0.1);
-            oscillators[i]->connect(oscillatorsGain[i]);
-            oscillatorsGain[i]->connect(output);
-        }
-        localInputAudioNode->connect(output);
+        this->audioMixer = new AudioMixer();
+//        this->output = new MainOutputAudioNode();
+//        this->localInputAudioNode = new LocalInputAudioNode();
+//        this->oscillators = new AudioNode*[OSCS];
+//        this->oscillatorsGain = new AudioNode*[OSCS];
+//        for (int i = 0; i < OSCS; ++i) {
+//            oscillators[i] = new OscillatorAudioNode(i * 200, ((AbstractAudioDriver*)controller->getAudioDriver())->getSampleRate());
+//            oscillatorsGain[i] = new GainNode(0.1);
+//            oscillators[i]->connect(oscillatorsGain[i]);
+//            oscillatorsGain[i]->connect(output);
+//        }
+//        localInputAudioNode->connect(output);
     }
 
     ~Listener(){
-        for (int i = 0; i < OSCS; ++i) {
-            delete oscillators[i];
-            delete oscillatorsGain[i];
-        }
-        delete oscillators;
-        delete oscillatorsGain;
-        delete output;
-        delete localInputAudioNode;
+        delete audioMixer;
+//        for (int i = 0; i < OSCS; ++i) {
+//            delete oscillators[i];
+//            delete oscillatorsGain[i];
+//        }
+//        delete oscillators;
+//        delete oscillatorsGain;
+//        delete output;
+//        delete localInputAudioNode;
     }
 
     virtual void driverStarted(){
@@ -51,7 +54,8 @@ public:
     }
 
     virtual void processCallBack(AudioSamplesBuffer& in, AudioSamplesBuffer& out){
-        output->processReplacing(in, out);
+        audioMixer->process(in, out);
+        //output->processReplacing(in, out);
 
         //out.add(in);
 

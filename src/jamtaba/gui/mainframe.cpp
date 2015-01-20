@@ -4,12 +4,14 @@
 #include "../ConfigStore.h"
 #include <QDebug>
 #include <QDesktopWidget>
+#include <QLayout>
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
 {
 	ui.setupUi(this);
     mainController = new MainController();
+
     if(ConfigStore::windowWasMaximized()){
         setWindowState(Qt::WindowMaximized);
     }
@@ -22,8 +24,20 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
         int y = desktopHeight * location.y();
         this->move(x, y);
     }
+    timerID = startTimer(50);
+
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void MainFrame::timerEvent(QTimerEvent *){
+    AbstractAudioDriver* audioDriver = (AbstractAudioDriver*)mainController->getAudioDriver();
+    const float* peaks = audioDriver->getOutputBuffer()->getPeaks();
+
+    //peakMeter->setPeak(peaks[0]);
+
+
+}
+
+//++++++++++++=
 void MainFrame::changeEvent(QEvent *ev){
     if(ev->type() == QEvent::WindowStateChange){
         ConfigStore::storeWindowState(isMaximized());
@@ -51,7 +65,9 @@ void MainFrame::showEvent(QShowEvent *)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainFrame::~MainFrame()
 {
+    killTimer(timerID);
     delete mainController;
+    //delete peakMeter;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //audio preferences

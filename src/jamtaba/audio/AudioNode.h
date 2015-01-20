@@ -1,7 +1,19 @@
 #pragma once
 #include <set>
+#include "AudioDriver.h"
+#include <cmath>
 
 class AudioSamplesBuffer;
+
+class AudioNodeProcessor{
+public:
+    virtual void process(AudioSamplesBuffer& buffer) = 0;
+    virtual ~AudioNodeProcessor(){}
+};
+
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 class AudioNode {
 
@@ -11,16 +23,48 @@ public:
     void inline setSoloStatus(bool soloed){ this->soloed = soloed; }
     inline bool isMuted(){return muted;}
     inline bool isSoloed(){return soloed;}
-    virtual ~AudioNode(){}
+    AudioNode();
+    virtual ~AudioNode();
     virtual bool connect(AudioNode *otherNode);
     //virtual bool disconnect(const AudioNode& otherNode);
 
+    void addProcessor(AudioNodeProcessor* newProcessor);
+
+    inline void setGain(float gainValue){
+        this->gain = gainValue;
+    }
+
+    inline float getGain() const{return gain;}
+
+    void setPan(float pan);
+    inline float getPan(){return pan;}
+
+
 protected:
     std::set<AudioNode*> connections;
+    std::set<AudioNodeProcessor*> processors;
+    AudioSamplesBuffer* internalBuffer;
 
 private:
     bool muted;
     bool soloed;
+    float gain;
+
+    //pan
+    float leftGain;
+    float rightGain;
+    float pan;
+
+
+    static const double root2Over2 = 1.414213562373095 * 0.5;
+    static const double piOver2 = 3.141592653589793238463 * 0.5;
+
+    inline void updateGains() {
+        double position = pan * piOver2;
+        double angle = position * 0.5;
+        leftGain = (float) (root2Over2 * (cos(angle) - sin(angle)));
+        rightGain = (float) (root2Over2 * (cos(angle) + sin(angle)));
+    }
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -56,14 +100,3 @@ public:
     virtual void processReplacing(AudioSamplesBuffer&in, AudioSamplesBuffer& out);
 };
 //++++++++++++++++++++++++
-class GainNode : public AudioNode{
-private:
-    float gain;
-    AudioSamplesBuffer* internalBuffer;
-public:
-    GainNode(float initialGain=1);
-    ~GainNode();
-    void setGain(float gain);
-    inline float getGain();
-    virtual void processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out);
-};

@@ -1,19 +1,28 @@
 #pragma once
 #include <vector>
 
+
 class AudioDriverListener;
+class AudioNodeProcessor;
+
 
 class AudioSamplesBuffer{
+
+    friend class AudioNodeProcessor;
+
 private:
     float** samples;
     unsigned int channels;
     unsigned int frameLenght;
-    //unsigned int sampleRate;
+
+    float peaks[2];
 
     inline bool isMono(){return channels == 1;}
 
     inline bool channelIsValid(unsigned int channel){return channel < channels;}
     inline bool sampleIndexIsValid(unsigned int sampleIndex){return sampleIndex < frameLenght;}
+
+    void computePeaks();
 
 public:
     AudioSamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT);
@@ -21,7 +30,11 @@ public:
 
     void applyGain(float gainFactor);
 
+    //overload applyGain used to compute main gain and pan gains in one pass
+    void applyGain(float gainFactor, float leftGain, float rightGain);//panValue between [-1, 0, 1] => LEFT, CENTER, RIGHT
     void zero();
+
+    const float *getPeaks();//{return peaks[channel];}
 
     void add(const AudioSamplesBuffer& buffer);
     inline void add(int channel, int sampleIndex, float sampleValue){
@@ -43,9 +56,6 @@ public:
     inline int getFrameLenght(){ return frameLenght; }
     inline void setFrameLenght(unsigned int newFrameLenght){this->frameLenght = newFrameLenght;}
     inline int getChannels(){ return channels; }
-
-private:
-
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -106,6 +116,8 @@ public:
     virtual inline int getSampleRate(){return sampleRate;}
     virtual inline int getBufferSize(){return bufferSize;}
     //virtual void initialize(){}
+
+    AudioSamplesBuffer* getOutputBuffer(){return outputBuffer;}
 
 protected:
     //float* inputMasks;

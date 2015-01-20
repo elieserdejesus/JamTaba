@@ -3,6 +3,7 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_mainframe.h"
 #include "../maincontroller.h"
+#include "widgets/PeakMeter.h"
 
 
 class MainFrame : public QMainWindow
@@ -15,6 +16,7 @@ public:
     virtual void closeEvent(QCloseEvent *);
     virtual void showEvent(QShowEvent*);
     virtual void changeEvent(QEvent *);
+    virtual void timerEvent(QTimerEvent *);
 
 private slots:
     void on_actionAudio_triggered();
@@ -23,4 +25,6 @@ private slots:
 private:
 	Ui::MainFrameClass ui;
     MainController* mainController;
+    int timerID;
+
 };

@@ -1,0 +1,63 @@
+*{
+    font-family: "Dialog";
+    font-size: 9pt;
+}
+
+QMainWindow{
+    background-color: rgb(60, 60, 60);
+}
+
+
+/* painéis principais */
+QWidget#leftPanel, QWidget#chatPanel, QWidget#onlineUsersPanel, QWidget#contentPanel{
+    background: url(:/images/gradient.bmp) repeat-x;
+    background-color: rgb(39, 39, 39);
+    border: 1px solid rgb(45, 45, 45);
+    border-radius: 5px;
+    margin-top: 1ex;
+}
+
+/* títulos dos painéis principais */
+QWidget#leftPanel .QLabel, QWidget#chatPanel .QLabel, QWidget#onlineUsersPanel .QLabel, QWidget#contentPanel .QLabel{
+    font-size: 10pt;
+    color: rgb(190, 190, 190);
+    qproperty-alignment: AlignCenter;
+}
+
+/* define os separadores horizontais abaixo dos títulos as seções principais   */
+QWidget#leftPanel .QFrame, QWidget#chatPanel .QFrame, QWidget#onlineUsersPanel .QFrame{
+    background-color: rgb(80,80,80);
+}
+
+QWidget#contentPanel .QFrame{
+    background-color: rgb(122, 122, 122);
+}
+/* ------------------------------ */
+
+QWidget#contentPanel{
+    background: rgb(128, 128, 128);
+}
+
+QMainWindow QGroupBox::title {
+     subcontrol-origin: margin;
+     subcontrol-position: top center; /* position at the top center */
+     padding: 10 3px;
+     color: rgb(190, 190, 190);
+     border-bottom-style: groove;
+     border-bottom-color: darkgray;
+         border-width: 3px;
+}
+
+/*  Track view */
+TrackView{
+    background-color: red;
+    border-radius: 5px;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), stop:1 rgb(100, 100, 100));
+    border: 1px solid rgb(61,61,61);
+
+/*
+ private Color borderLightColor = new Color(1, 1, 1, 0.1f);
+    private Color borderDarkColor = new Color(0, 0, 0, 0.2f);
+*/
+
+}

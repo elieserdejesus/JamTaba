@@ -32,7 +32,10 @@ HEADERS += \
     src/jamtaba/maincontroller.h \
     src/jamtaba/gui/audioiodialog.h \
     src/jamtaba/ConfigStore.h \
-    src/jamtaba/audio/AudioNode.h
+    src/jamtaba/audio/AudioNode.h \
+    src/jamtaba/audio/AudioMixer.h \
+    src/jamtaba/gui/widgets/PeakMeter.h \
+    src/jamtaba/gui/trackview.h
 
 
 win32:HEADERS += portaudio/include/pa_asio.h
@@ -45,12 +48,17 @@ SOURCES += \
     src/jamtaba/gui/audioiodialog.cpp \
     src/jamtaba/audio/AudioDriver.cpp \
     src/jamtaba/ConfigStore.cpp \
-    src/jamtaba/audio/AudioNode.cpp
+    src/jamtaba/audio/AudioNode.cpp \
+    src/jamtaba/audio/AudioMixer.cpp \
+    src/jamtaba/gui/widgets/PeakMeter.cpp \
+    src/jamtaba/gui/trackview.cpp
+
 
 
 
 FORMS += src/jamtaba/gui/mainframe.ui \
-    src/jamtaba/gui/audioiodialog.ui
+    src/jamtaba/gui/audioiodialog.ui \
+    src/jamtaba/gui/trackview.ui
 
 LIBPATH += C:/Qt/Qt5.4.0/Tools/mingw491_32/i686-w64-mingw32/lib/ \
            $$PWD/portaudio/lib/
@@ -63,8 +71,14 @@ LIBS += -lportaudio \
 
 PRE_TARGETDEPS += $$PWD/portaudio/lib/libportaudio.a
 
-INCLUDEPATH += $$PWD/portaudio/include
+INCLUDEPATH += $$PWD/portaudio/include \
+              src/jamtaba/gui \
+              src/jamtaba/gui/widgets
 
 DEPENDPATH += $$PWD/portaudio/include
+
+RESOURCES += \
+    src/jamtaba/resources/jamtaba.qrc
+
 
 

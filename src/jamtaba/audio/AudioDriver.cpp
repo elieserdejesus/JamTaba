@@ -3,6 +3,7 @@
 #include <vector>
 #include <QDebug>
 #include <stdexcept>
+#include <cmath>
 
 AudioSamplesBuffer::AudioSamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT){
     if(channels == 0){
@@ -15,6 +16,7 @@ AudioSamplesBuffer::AudioSamplesBuffer(unsigned int channels, const unsigned int
     }
     this->channels = channels;
     this->frameLenght = MAX_BUFFERS_LENGHT;
+    this->peaks[0] = this->peaks[1] = 0;
 }
 
 AudioSamplesBuffer::~AudioSamplesBuffer(){
@@ -38,11 +40,45 @@ void AudioSamplesBuffer::applyGain(float gainFactor)
     }
 }
 
+void AudioSamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain)
+{
+    if(!isMono()){
+        float finalLeftGain = gainFactor * leftGain;
+        float finalRightGain = gainFactor * rightGain;
+        for (unsigned int i = 0; i < frameLenght; ++i) {
+            samples[0][i] *= finalLeftGain;
+            samples[1][i] *= finalRightGain;
+        }
+    }
+    else{
+        applyGain(gainFactor);
+    }
+}
+
 void AudioSamplesBuffer::zero()
 {
     for (unsigned int c = 0; c < channels; ++c) {
        memset(samples[c], 0, frameLenght * sizeof(float));
     }
+}
+
+const float *AudioSamplesBuffer::getPeaks()
+{
+    float abs;
+    for (unsigned int c = 0; c < channels; ++c) {
+        float maxPeak = 0;
+        for (unsigned int i = 0; i < frameLenght; ++i) {
+            abs = fabs(samples[c][i]);
+            if( abs > maxPeak){
+                maxPeak = abs;
+            }
+            peaks[c] = maxPeak;
+        }
+    }
+    if(isMono()){
+        peaks[1] = peaks[0];
+    }
+    return peaks;
 }
 
 void AudioSamplesBuffer::add(const AudioSamplesBuffer &buffer)
