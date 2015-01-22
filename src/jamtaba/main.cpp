@@ -5,10 +5,15 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QResource>
+#include "network/loginserver/DefaultLoginService.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+    DefaultLoginService loginService;
+    NatMap natMap;
+    loginService.connect("elieser", 0,"nome do canal", natMap, 1, "windows", 44100);
 
     QFile styleFile( ":/style/jamtaba.css" );
     if(!styleFile.open( QFile::ReadOnly )){

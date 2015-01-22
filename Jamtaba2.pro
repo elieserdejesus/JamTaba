@@ -15,7 +15,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -35,8 +35,10 @@ HEADERS += \
     src/jamtaba/audio/AudioNode.h \
     src/jamtaba/audio/AudioMixer.h \
     src/jamtaba/gui/widgets/PeakMeter.h \
-    src/jamtaba/gui/trackview.h
-
+    src/jamtaba/gui/trackview.h \
+    src/jamtaba/network/loginserver/LoginService.h \
+    src/jamtaba/network/loginserver/DefaultLoginService.h \
+    src/jamtaba/JamtabaFactory.h
 
 win32:HEADERS += portaudio/include/pa_asio.h
 
@@ -51,9 +53,10 @@ SOURCES += \
     src/jamtaba/audio/AudioNode.cpp \
     src/jamtaba/audio/AudioMixer.cpp \
     src/jamtaba/gui/widgets/PeakMeter.cpp \
-    src/jamtaba/gui/trackview.cpp
-
-
+    src/jamtaba/gui/trackview.cpp \
+    src/jamtaba/network/loginserver/LoginService.cpp \
+    src/jamtaba/network/loginserver/DefaultLoginService.cpp \
+    src/jamtaba/JamtabaFactory.cpp
 
 
 FORMS += src/jamtaba/gui/mainframe.ui \

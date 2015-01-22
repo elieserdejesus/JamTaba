@@ -14,100 +14,81 @@
 }
 
 
-
-QCheckBox::indicator {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(179, 179, 179), stop:1 rgb(100, 100, 100));
-    border: 1px solid rgb(80, 80, 80); /*qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(120, 120, 120), stop:1 rgb(44,44,44));*/
-    border-radius: 2px;
+QCheckBox::indicator, QGroupBox::indicator  {
+    background: url(:/images/check.png);
+    width: 15px;
+    height: 16px;
 }
 
-QCheckBox::indicator:hover {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(100, 100, 100), stop:1 rgb(179, 179, 179));
+QCheckBox::indicator:hover, QGroupBox::indicator:hover {
+    background: url(:/images/check_hover.png);
 }
 
-QCheckBox::indicator:checked#mute {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
+QCheckBox::indicator:checked, QGroupBox::indicator:checked {
+    background: url(:/images/check_checked.png);
+}
+
+/*
+QCheckBox::indicator:hover, QGroupBox::indicator:hover  {
+    background-color: qlineargradient(x1:0, y1:0.3, x2:0, y2:0.8, stop:0 rgb(200, 200, 200), stop:1 rgb(130, 130, 130));
+}
+
+
+QGroupBox::indicator:checked {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
     border: 1px solid black;
 }
 
-QCheckBox::indicator:checked#solo {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
-    border: 1px solid gray;
+QGroupBox::indicator:hover:checked {
+    background-color: qlineargradient(x1:0, y1:0.3, x2:0, y2:0.7, stop:0 rgb(110, 255, 92), stop:1 rgb(30, 175, 40));
+    border-color: rgb(90, 90, 90);
 }
+*/
 
- QCheckBox::indicator:hover:checked#mute {
-     border: 1px solid red;
-}
-QCheckBox::indicator:hover:checked#solo{
-    border: 1px solid blue;
-}
-
-
+/*  SLIDER ++++++++++++++++++++++++++++++++ */
 QSlider::add-page:vertical, QSlider::groove:vertical {
-    border: 1px solid rgba(0, 0, 0, 30);
+    border: 1px solid rgba(0, 0, 0, 55);
     border-radius: 3px;
 }
 
 QSlider::groove:vertical {
-    background-color: rgba(0, 0, 0, 20);
+    background-color: rgba(0, 0, 0, 50);
     width: 8px;
 }
 
-QSlider::handle:vertical {
-    background: url(:/images/fader_shadow.png) no-repeat center center;
+QSlider::handle:vertical, QSlider::handle:horizontal {
+    background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgb(220, 220,220), stop:1 rgb(45, 45, 45));
+    border: 1px solid rgb(120, 120, 120);
+    height: 12px;
+    margin-left: -12px;
+    margin-right: -12px;
+    border-radius: 3px;
+}
 
-    height: 45px;
-    width: 22px;
-    margin-left: -10px;
-    margin-right: -10px;
-    margin-bottom: 0px;
+QSlider::handle:vertical:hover, QSlider::handle:horizontal:hover {
+    border: 1px solid rgb(70, 70, 70);
+    background-color: qlineargradient(x1:0, y1:0.5, x2:0, y2:1, stop:0 rgb(220, 220,220), stop:1 rgb(45, 45, 45));
 }
 
 QSlider::add-page:vertical {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 150), stop:1 rgba(255, 255, 255, 10));
+    background: rgb(255,255,255, 130);
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
     margin: 3px;
-
 }
 
+/* +++++++++++++++++++++++++++++++++++++++++++ */
 PeakMeter{
-    background-color: rgba(0, 0, 0, 50);
-    border-radius: 10px;
-    border: 0px solid;
+    background-color: rgba(0, 0, 0, 100);
+    border: 1px solid rgba(0, 0, 0, 30);
+    border-radius: 2px;
 }
 
-/*
-QSlider::groove:vertical {
-     background: yellow;
-     position: absolute;
-     left: 6px; right: 6px;
-     width: 17px;
-     border-radius: 3px;
-     border: 1px solid black;
-     padding: 3px;
- }
-
- QSlider::handle:vertical {
-     height: 10px;
-     background: green;
-     margin: 0 -4px;
- }
-*/
-
-
-/*
-QCheckBox::indicator:pressed {
-    background: url(...);
-}
-*/
+/* ++++++++++++++++++++++++++++++++++++++++ */
 
 QMainWindow{
     background-color: rgb(60, 60, 60);
 }
-
-
-
 
 /* painéis principais */
 .QWidget#leftPanel, .QWidget#chatPanel, .QWidget#onlineUsersPanel, .QWidget#contentPanel{
@@ -149,13 +130,68 @@ QMainWindow{
          border-width: 3px;
 }
 
-/*  Track view */
+/*  Track view +++++++++++++++++++++++++++++++++++++++++++++++ */
 TrackView{
     background-color: red;
     border-radius: 5px;
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), stop:1 rgb(100, 100, 100));
     border: 1px solid rgb(61,61,61);
 }
+
+TrackView > QGroupBox{
+    border: 1px solid rgba(0, 0, 0, 50);
+    border-radius: 3px;
+    margin-top: 5px;
+}
+
+
+TrackView > QGroupBox::title{
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 1 3px;
+    margin-left: 5px;
+    margin-right:5px;
+    left: 10px;
+
+}
+
+TrackView .QPushButton#solo, TrackView .QPushButton#mute {
+    border-radius: 3px;
+    border: 1px solid gray;
+    color: rgba(0, 0, 0, 80);
+    padding: 3px 6px 3px 6px;
+    font-size: 8pt;
+}
+
+TrackView .QLabel#labelPanR, TrackView .QLabel#labelPanL{
+    color: rgba(0, 0, 0, 80);
+}
+
+TrackView .QPushButton:hover#solo, TrackView .QPushButton:hover#mute{
+    background-color: rgba(255, 255, 255, 80);
+    color: rgba(0, 0, 0, 200);
+}
+
+TrackView .QPushButton:checked#solo{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
+    color: black;
+}
+
+TrackView .QPushButton:hover:checked#solo {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(110, 255, 82), stop:1 rgb(30, 195, 30));
+    color: gray;
+}
+
+TrackView .QPushButton:checked#mute {
+     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
+     color: lightgray;
+}
+
+TrackView .QPushButton:hover:checked#mute {
+     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 110, 122), stop:1 rgb(120, 0, 0));
+     color: white;
+}
+
 
 TrackView  > .QLabel#trackName {
     color: rgb(0, 0, 0);
@@ -176,7 +212,5 @@ TrackView > .QFrame#panSectionSeparator{
     background-color: rgb(180, 180, 180);
 }
 
-TrackView > .QFrame#bottomSectionSeparator{
-    background-color: rgb(120, 120, 120);
-}
+
 

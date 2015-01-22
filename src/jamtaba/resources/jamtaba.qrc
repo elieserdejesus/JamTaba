@@ -4,7 +4,9 @@
     </qresource>
     <qresource prefix="/images">
         <file>gradient.bmp</file>
-        <file>fader.png</file>
         <file>fader_shadow.png</file>
+        <file>check.png</file>
+        <file>check_hover.png</file>
+        <file>check_checked.png</file>
     </qresource>
 </RCC>
