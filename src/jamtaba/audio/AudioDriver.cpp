@@ -22,13 +22,13 @@ AudioSamplesBuffer::AudioSamplesBuffer(unsigned int channels, const unsigned int
 AudioSamplesBuffer::~AudioSamplesBuffer(){
     if(samples != NULL){
         for (unsigned int c = 0; c < channels; ++c) {
-            delete samples[c];
+            delete [] samples[c];
             samples[c] = NULL;
         }
-        delete samples;
+        delete [] samples;
         samples = NULL;
     }
-    qDebug() << "\tAudio samples destructor!";
+    //qDebug() << "\tAudio samples destructor!";
 }
 
 void AudioSamplesBuffer::applyGain(float gainFactor)
@@ -62,7 +62,7 @@ void AudioSamplesBuffer::zero()
     }
 }
 
-const float *AudioSamplesBuffer::getPeaks()
+const float *AudioSamplesBuffer::getPeaks() const
 {
     float abs;
     for (unsigned int c = 0; c < channels; ++c) {
@@ -235,7 +235,7 @@ void AbstractAudioDriver::fireDriverException(const char* msg) const{
 
 
 
-void AbstractAudioDriver::fireDriverCallback(AudioSamplesBuffer& in, AudioSamplesBuffer& out){
+void AbstractAudioDriver::fireDriverCallback(AudioSamplesBuffer& in, AudioSamplesBuffer& out) const{
     std::vector<AudioDriverListener*>::const_iterator it = listeners.begin();
     for (; it != listeners.end(); it++){
         (*it)->processCallBack(in, out);

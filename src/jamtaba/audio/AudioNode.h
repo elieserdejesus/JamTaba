@@ -1,6 +1,6 @@
 #pragma once
+
 #include <set>
-#include "AudioDriver.h"
 #include <cmath>
 
 class AudioSamplesBuffer;
@@ -11,8 +11,6 @@ public:
     virtual ~AudioNodeProcessor(){}
 };
 
-
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 class AudioNode {
@@ -21,14 +19,14 @@ public:
     virtual void processReplacing(AudioSamplesBuffer&in, AudioSamplesBuffer& out);
     virtual inline void setMuteStatus(bool muted){ this->muted = muted;}
     void inline setSoloStatus(bool soloed){ this->soloed = soloed; }
-    inline bool isMuted(){return muted;}
-    inline bool isSoloed(){return soloed;}
+    inline bool isMuted() const {return muted;}
+    inline bool isSoloed() const {return soloed;}
     AudioNode();
     virtual ~AudioNode();
-    virtual bool connect(AudioNode *otherNode);
+    virtual bool connect(AudioNode &otherNode) ;
     //virtual bool disconnect(const AudioNode& otherNode);
 
-    void addProcessor(AudioNodeProcessor* newProcessor);
+    void addProcessor(AudioNodeProcessor &newProcessor);
 
     inline void setGain(float gainValue){
         this->gain = gainValue;
@@ -37,7 +35,7 @@ public:
     inline float getGain() const{return gain;}
 
     void setPan(float pan);
-    inline float getPan(){return pan;}
+    inline float getPan() const {return pan;}
 
 
 protected:
@@ -56,12 +54,11 @@ private:
     float pan;
 
 
-    static const double root2Over2 = 1.414213562373095 * 0.5;
-    static const double piOver2 = 3.141592653589793238463 * 0.5;
+    static constexpr double root2Over2 = 1.414213562373095 * 0.5;
+    static constexpr double piOver2 = 3.141592653589793238463 * 0.5;
 
     inline void updateGains() {
-        double position = pan * piOver2;
-        double angle = position * 0.5;
+        double angle = pan * piOver2 * 0.5;
         leftGain = (float) (root2Over2 * (cos(angle) - sin(angle)));
         rightGain = (float) (root2Over2 * (cos(angle) + sin(angle)));
     }

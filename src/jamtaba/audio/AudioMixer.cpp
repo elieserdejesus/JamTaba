@@ -7,7 +7,7 @@ AudioMixer::AudioMixer()
     mainOutNode = new MainOutputAudioNode();
     inputNode = new LocalInputAudioNode();
 
-    inputNode->connect(mainOutNode);
+    inputNode->connect(*mainOutNode);
     inputNode->setGain(1);
     //inputNode->setPan(0);
 }

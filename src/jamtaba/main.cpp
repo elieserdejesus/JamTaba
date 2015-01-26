@@ -1,37 +1,41 @@
 #include "gui/mainframe.h"
-#include <QtWidgets/QApplication>
-#include <QDebug>
-#include <stdexcept>
-#include <QFile>
-#include <QFileInfo>
-#include <QResource>
+#include "MainController.h"
+#include "JamtabaFactory.h"
 #include "network/loginserver/DefaultLoginService.h"
 
-int main(int argc, char *argv[])
+void customLogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
+
+int main(int argc, char* args[])
 {
-    QApplication app(argc, argv);
+    qInstallMessageHandler(customLogHandler);
+    JamtabaFactory* factory = new ReleaseFactory();
+    MainController mainController(factory, argc, args);//MainController extends QApplication
 
-    DefaultLoginService loginService;
-    NatMap natMap;
-    loginService.connect("elieser", 0,"nome do canal", natMap, 1, "windows", 44100);
+    MainFrame w(&mainController);
+    w.show();
 
-    QFile styleFile( ":/style/jamtaba.css" );
-    if(!styleFile.open( QFile::ReadOnly )){
-        qFatal("não carregou estilo!");
+    delete factory;
+
+    return mainController.exec();
+}
+//++++++++++++++++++++++++++++++++++
+
+void customLogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QByteArray localMsg = msg.toLocal8Bit();
+    switch (type) {
+    case QtDebugMsg:
+        fprintf(stderr, "DEBUG: %s [%s: %u]\n", localMsg.constData(), context.file , context.line);
+        break;
+    case QtWarningMsg:
+        fprintf(stderr, "\n\nWARNING: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, context.file, context.line);
+        break;
+    case QtCriticalMsg:
+        fprintf(stderr, "\n\nCRITICAL: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, context.file, context.line);
+        break;
+    case QtFatalMsg:
+        fprintf(stderr, "\n\nFATAL: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, context.file, context.line);
+        abort();
     }
-
-    // Apply the loaded stylesheet
-    QString style( styleFile.readAll() );
-    app.setStyleSheet( style );
-
-     try{
-        MainFrame w;
-        w.show();
-        return app.exec();
-    }
-    catch(const std::runtime_error& ex){
-        qDebug() << ex.what();
-    }
-    return 0;
-
+    fflush(stderr);
 }

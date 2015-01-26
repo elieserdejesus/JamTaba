@@ -17,6 +17,8 @@
 
 QT       += core gui network
 
+QMAKE_CXXFLAGS += -std=c++11
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Jamtaba2
@@ -27,36 +29,46 @@ MAIN = src/jamtaba/main.cpp #src/jamtaba/gui/testAudioIoDialog.cpp
 HEADERS += \
     src/jamtaba/audio/AudioDriver.h \
     src/jamtaba/audio/AudioDriverListener.h \
-    src/jamtaba/audio/PortAudioDriver.h \
-    src/jamtaba/gui/mainframe.h \
-    src/jamtaba/maincontroller.h \
-    src/jamtaba/gui/audioiodialog.h \
-    src/jamtaba/ConfigStore.h \
     src/jamtaba/audio/AudioNode.h \
     src/jamtaba/audio/AudioMixer.h \
+    src/jamtaba/audio/PortAudioDriver.h \
+    src/jamtaba/gui/mainframe.h \
+    src/jamtaba/gui/audioiodialog.h \
     src/jamtaba/gui/widgets/PeakMeter.h \
     src/jamtaba/gui/trackview.h \
+    src/jamtaba/ConfigStore.h \
     src/jamtaba/network/loginserver/LoginService.h \
     src/jamtaba/network/loginserver/DefaultLoginService.h \
-    src/jamtaba/JamtabaFactory.h
+    src/jamtaba/JamtabaFactory.h \
+    src/jamtaba/network/loginserver/LoginServiceResponse.h \
+    src/jamtaba/model/JamRoomRepository.h \
+    src/jamtaba/model/Peer.h \
+    src/jamtaba/network/loginserver/JsonUtils.h \
+    src/jamtaba/MainController.h \
+    src/jamtaba/model/JamRoom.h
 
 win32:HEADERS += portaudio/include/pa_asio.h
 
 SOURCES += \
     $$MAIN \
-    src/jamtaba/audio/PortAudioDriver.cpp \
-    src/jamtaba/gui/mainframe.cpp \
-    src/jamtaba/maincontroller.cpp \
-    src/jamtaba/gui/audioiodialog.cpp \
-    src/jamtaba/audio/AudioDriver.cpp \
     src/jamtaba/ConfigStore.cpp \
+    src/jamtaba/audio/AudioDriver.cpp \
     src/jamtaba/audio/AudioNode.cpp \
     src/jamtaba/audio/AudioMixer.cpp \
+    src/jamtaba/audio/PortAudioDriver.cpp \
+    src/jamtaba/gui/mainframe.cpp \
+    src/jamtaba/gui/audioiodialog.cpp \
     src/jamtaba/gui/widgets/PeakMeter.cpp \
     src/jamtaba/gui/trackview.cpp \
     src/jamtaba/network/loginserver/LoginService.cpp \
     src/jamtaba/network/loginserver/DefaultLoginService.cpp \
-    src/jamtaba/JamtabaFactory.cpp
+    src/jamtaba/JamtabaFactory.cpp \
+    src/jamtaba/network/loginserver/LoginServiceResponse.cpp \
+    src/jamtaba/model/Peer.cpp \
+    src/jamtaba/model/JamRoomRepository.cpp \
+    src/jamtaba/network/loginserver/JsonUtils.cpp \
+    src/jamtaba/MainController.cpp \
+    src/jamtaba/model/JamRoom.cpp
 
 
 FORMS += src/jamtaba/gui/mainframe.ui \

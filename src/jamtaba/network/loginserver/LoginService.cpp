@@ -1,19 +1,9 @@
 #include "LoginService.h"
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <QJsonValue>
-#include <QJsonDocument>
-#include <QList>
-#include <QDebug>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QUrl>
-#include <QtNetwork/QNetworkReply>
-#include <QEventLoop>
 
-LoginService::LoginService()
+LoginService::LoginService(LoginServiceListener *listener)
 {
     this->connected = false;
+    this->listener = listener;
 }
 //+++++++++++++++++++++
 

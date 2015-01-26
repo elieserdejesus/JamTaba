@@ -49,14 +49,14 @@ AudioNode::~AudioNode()
     delete internalBuffer;
 }
 
-bool AudioNode::connect(AudioNode* otherNode){
-    otherNode->connections.insert(  this );
+bool AudioNode::connect(AudioNode& otherNode) {
+    otherNode.connections.insert(this );
     return true;
 }
 
-void AudioNode::addProcessor(AudioNodeProcessor *newProcessor)
+void AudioNode::addProcessor( AudioNodeProcessor& newProcessor)
 {
-    processors.insert(newProcessor);
+    processors.insert(&newProcessor);
 }
 
 //+++++++++++++++++++++++++++++++++++++++

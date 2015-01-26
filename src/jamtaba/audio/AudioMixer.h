@@ -1,7 +1,11 @@
 #pragma once
 
-#include "AudioNode.h"
 #include <set>
+
+class AudioNode;
+class AudioSamplesBuffer;
+class MainOutputAudioNode;
+class LocalInputAudioNode;
 
 class AudioMixer
 {

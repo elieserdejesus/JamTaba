@@ -5,12 +5,13 @@
 #include <QDebug>
 #include <QDesktopWidget>
 #include <QLayout>
+#include "../JamtabaFactory.h"
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
+MainFrame::MainFrame(MainController *mainController, QWidget *parent) : QMainWindow(parent)
 {
 	ui.setupUi(this);
-    mainController = new MainController();
+    this->mainController = mainController;
 
     if(ConfigStore::windowWasMaximized()){
         setWindowState(Qt::WindowMaximized);
@@ -25,16 +26,12 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
         this->move(x, y);
     }
     timerID = startTimer(50);
-
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::timerEvent(QTimerEvent *){
-    AbstractAudioDriver* audioDriver = (AbstractAudioDriver*)mainController->getAudioDriver();
-    const float* peaks = audioDriver->getOutputBuffer()->getPeaks();
-
+    //AbstractAudioDriver* audioDriver = (AbstractAudioDriver*)mainController->getAudioDriver();
+    //const float* peaks = audioDriver->getOutputBuffer()->getPeaks();
     //peakMeter->setPeak(peaks[0]);
-
-
 }
 
 //++++++++++++=
@@ -47,6 +44,7 @@ void MainFrame::changeEvent(QEvent *ev){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::closeEvent(QCloseEvent *)
  {
+    qDebug() << "MainFrame::closeEvent";
     if(mainController != NULL){
         mainController->stop();
     }
@@ -66,7 +64,7 @@ void MainFrame::showEvent(QShowEvent *)
 MainFrame::~MainFrame()
 {
     killTimer(timerID);
-    delete mainController;
+    //delete mainController;
     //delete peakMeter;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -94,3 +92,5 @@ void MainFrame::on_audioIOPropertiesChanged(int selectedDevice, int firstIn, int
 
     ConfigStore::storeAudioSettings(firstIn, lastIn, firstOut, lastOut, selectedDevice, selectedDevice, sampleRate, bufferSize);
 }
+
+

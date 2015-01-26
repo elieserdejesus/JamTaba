@@ -3,11 +3,13 @@
 #include <QObject>
 
 class LoginService;
+class LoginServiceListener;
 
 class JamtabaFactory
 {
-
-    virtual LoginService* createLoginService() = 0;
+public:
+    virtual LoginService* createLoginService(LoginServiceListener*) = 0;
+    virtual ~JamtabaFactory(){}
 };
 
 //++++++++++++++++++++
@@ -17,6 +19,6 @@ class ReleaseFactory : public JamtabaFactory{
 
     // JamtabaFactory interface
 private:
-    virtual LoginService *createLoginService(QObject* parent);
+    virtual LoginService *createLoginService(LoginServiceListener*);
 };
 

@@ -2,6 +2,7 @@
 #define TRACKVIEW_H
 
 #include <QWidget>
+class QWidget;
 
 namespace Ui {
 class TrackView;

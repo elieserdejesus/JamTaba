@@ -1,10 +1,10 @@
 #pragma once
-#include <vector>
 
+#include <vector>
+#include <memory>
 
 class AudioDriverListener;
 class AudioNodeProcessor;
-
 
 class AudioSamplesBuffer{
 
@@ -15,9 +15,9 @@ private:
     unsigned int channels;
     unsigned int frameLenght;
 
-    float peaks[2];
+    mutable float peaks[2];
 
-    inline bool isMono(){return channels == 1;}
+    inline bool isMono() const {return channels == 1;}
 
     inline bool channelIsValid(unsigned int channel){return channel < channels;}
     inline bool sampleIndexIsValid(unsigned int sampleIndex){return sampleIndex < frameLenght;}
@@ -34,7 +34,7 @@ public:
     void applyGain(float gainFactor, float leftGain, float rightGain);//panValue between [-1, 0, 1] => LEFT, CENTER, RIGHT
     void zero();
 
-    const float *getPeaks();//{return peaks[channel];}
+    const float *getPeaks() const;//{return peaks[channel];}
 
     void add(const AudioSamplesBuffer& buffer);
     inline void add(int channel, int sampleIndex, float sampleValue){
@@ -47,15 +47,15 @@ public:
         samples[channel][sampleIndex] = sampleValue;
     }
 
-    inline float get(int channel, int sampleIndex)
+    inline float get(int channel, int sampleIndex) const
     {
         return samples[channel][sampleIndex];
     }
 
     //inline int getSampleRate(){ return sampleRate; }
-    inline int getFrameLenght(){ return frameLenght; }
-    inline void setFrameLenght(unsigned int newFrameLenght){this->frameLenght = newFrameLenght;}
-    inline int getChannels(){ return channels; }
+    inline int getFrameLenght() const{ return frameLenght; }
+    inline void setFrameLenght(unsigned int newFrameLenght)  {this->frameLenght = newFrameLenght;}
+    inline int getChannels() const { return channels; }
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -87,10 +87,10 @@ public:
 
     virtual int getMaxOutputs() const = 0;
 
-    virtual int getInputs() = 0;
-    virtual int getFirstInput() = 0;
-    virtual int getOutputs() = 0;
-    virtual int getFirstOutput() = 0;
+    virtual int getInputs() const = 0;
+    virtual int getFirstInput() const = 0;
+    virtual int getOutputs() const = 0;
+    virtual int getFirstOutput() const = 0;
 
     virtual const char* getInputChannelName(unsigned const int channelIndex) const = 0;
 
@@ -109,15 +109,15 @@ public:
     virtual void setProperties(int deviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
     virtual void setProperties(int inputDeviceIndex, int outputDeviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
 
-    virtual inline int getInputs(){return inputChannels;}
-    virtual inline int getFirstInput(){return firstInputIndex;}
-    virtual inline int getOutputs(){return outputChannels;}
-    virtual inline int getFirstOutput(){return firstOutputIndex;}
-    virtual inline int getSampleRate(){return sampleRate;}
-    virtual inline int getBufferSize(){return bufferSize;}
+    virtual inline int getInputs() const {return inputChannels;}
+    virtual inline int getFirstInput() const {return firstInputIndex;}
+    virtual inline int getOutputs() const {return outputChannels;}
+    virtual inline int getFirstOutput() const {return firstOutputIndex;}
+    virtual inline int getSampleRate() const {return sampleRate;}
+    virtual inline int getBufferSize() const {return bufferSize;}
     //virtual void initialize(){}
 
-    AudioSamplesBuffer* getOutputBuffer(){return outputBuffer;}
+    const AudioSamplesBuffer& getOutputBuffer() const {return *outputBuffer;}
 
 protected:
     //float* inputMasks;
@@ -142,7 +142,7 @@ protected:
 
     std::vector<AudioDriverListener*> listeners;
 
-    void fireDriverCallback(AudioSamplesBuffer& in, AudioSamplesBuffer& out);
+    void fireDriverCallback(AudioSamplesBuffer& in, AudioSamplesBuffer& out) const;
     void fireDriverStarted() const;
     void fireDriverStopped() const;
     void fireDriverException(const char* msg) const;

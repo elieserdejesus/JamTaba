@@ -2,16 +2,16 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_mainframe.h"
-#include "../maincontroller.h"
+#include "../MainController.h"
 #include "widgets/PeakMeter.h"
-
+#include "../network/loginserver/LoginService.h"
 
 class MainFrame : public QMainWindow
 {
 	Q_OBJECT
 
 public:
-	MainFrame(QWidget *parent = 0);
+    MainFrame(MainController* mainController, QWidget *parent = 0);
 	~MainFrame();
     virtual void closeEvent(QCloseEvent *);
     virtual void showEvent(QShowEvent*);
@@ -26,5 +26,4 @@ private:
 	Ui::MainFrameClass ui;
     MainController* mainController;
     int timerID;
-
 };
