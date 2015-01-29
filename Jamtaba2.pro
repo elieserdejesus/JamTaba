@@ -1,4 +1,4 @@
-# - mixer de streams de audio
+# - mostrar salas ninjam
 # - Abrir plugins VST
 
 #BUGS relacionados com o diálogo de audioIO:
@@ -17,14 +17,14 @@
 
 QT       += core gui network
 
-QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++11 -Wno-unused-parameter -Wno-switch
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Jamtaba2
 TEMPLATE = app
 
-MAIN = src/jamtaba/main.cpp #src/jamtaba/gui/testAudioIoDialog.cpp
+MAIN = src/jamtaba/ninjam/main.cpp # src/jamtaba/main.cpp
 
 HEADERS += \
     src/jamtaba/audio/AudioDriver.h \
@@ -43,9 +43,16 @@ HEADERS += \
     src/jamtaba/network/loginserver/LoginServiceResponse.h \
     src/jamtaba/model/JamRoomRepository.h \
     src/jamtaba/model/Peer.h \
+    src/jamtaba/model/JamRoom.h \
     src/jamtaba/network/loginserver/JsonUtils.h \
     src/jamtaba/MainController.h \
-    src/jamtaba/model/JamRoom.h
+    src/jamtaba/ninjam/NinjamService.h \
+    src/jamtaba/ninjam/NinjamServer.h \
+    src/jamtaba/ninjam/NinjamUser.h \
+    src/jamtaba/ninjam/protocol/server/parsers/ServerMessageParser.h \
+    src/jamtaba/ninjam/protocol/NinjamPublicServersParser.h \
+    src/jamtaba/ninjam/protocol/ServerMessages.h \
+    src/jamtaba/ninjam/protocol/ClientMessages.h \
 
 win32:HEADERS += portaudio/include/pa_asio.h
 
@@ -68,7 +75,14 @@ SOURCES += \
     src/jamtaba/model/JamRoomRepository.cpp \
     src/jamtaba/network/loginserver/JsonUtils.cpp \
     src/jamtaba/MainController.cpp \
-    src/jamtaba/model/JamRoom.cpp
+    src/jamtaba/model/JamRoom.cpp \
+    src/jamtaba/ninjam/NinjamService.cpp \
+    src/jamtaba/ninjam/NinjamServer.cpp \
+    src/jamtaba/ninjam/NinjamUser.cpp \
+    src/jamtaba/ninjam/protocol/ServerMessages.cpp \
+    src/jamtaba/ninjam/protocol/server/parsers/ServerMessageParser.cpp \
+
+
 
 
 FORMS += src/jamtaba/gui/mainframe.ui \
