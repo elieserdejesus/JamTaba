@@ -12,6 +12,7 @@ class NinjamServer;
 class MixedPublicServersParser;
 class NinjamServiceListener;
 class ServerAuthChallengeMessage;
+class ServerAuthReplyMessage;
 class ServerMessage;
 class ClientMessage;
 class ServerMessageParser;
@@ -48,9 +49,9 @@ public:
     QString getConnectedUserName() ;
     float getIntervalPeriod() ;
 
-    void startServerConnection(QString serverIp, int serverPort);
-    void accomplishServerConnection(QString userName, QString channelName, ServerAuthChallengeMessage authChallengeMessage) ;
-    void accomplishServerConnection(QString userName, QString channelName, QString userPassword, ServerAuthChallengeMessage authChallengeMessage) ;
+    void startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password = "");
+    //void accomplishServerConnection(QString userName, QString channelName, ServerAuthChallengeMessage authChallengeMessage) ;
+    //void accomplishServerConnection(QString userName, QString channelName, QString userPassword, ServerAuthChallengeMessage authChallengeMessage) ;
     void disconnectFromServer(bool normalDisconnection=true);
 
     ~NinjamService();
@@ -75,6 +76,9 @@ private:
     NinjamServer* currentServer;
     bool running;// = false;
     bool initialized;// = false;
+    QString userName;
+    QString password;
+    QStringList channels;//channels names
 
     void buildNewSocket()  ;
 
@@ -82,8 +86,8 @@ private:
 
     //+++++= message handlers ++++
     void invokeMessageHandler(ServerMessage* message, QDataStream& stream) ;
-    void handle(ServerAuthChallengeMessage* msg, QString userName);
-
+    void handle(ServerAuthChallengeMessage* msg);
+    void handle(ServerAuthReplyMessage* msg);
 
 private slots:
     void socketReadSlot();

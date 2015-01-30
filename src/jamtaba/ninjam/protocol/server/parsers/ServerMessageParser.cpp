@@ -14,7 +14,7 @@ ServerMessageParser *ServerMessageParser::getParser(ServerMessageType::MessageTy
 ServerMessageParser* ServerMessageParser::createInstance(ServerMessageType::MessageType messageType){
     switch (messageType) {
     case ServerMessageType::AUTH_CHALLENGE: return new AuthChallengeParser();
-        //case AUTH_REPLY: return new AuthReplyParser();
+    case ServerMessageType::AUTH_REPLY: return new AuthReplyParser();
         //case USER_INFO_CHANGE_NOTIFY: return new UserInfoChangeNotifyParser();
         //case CONFIG_CHANGE_NOTIFY: return new ConfigChangeNotifyParser();
         //case CHAT_MESSAGE: return new ChatMessageParser();
@@ -44,15 +44,25 @@ ServerMessage* AuthChallengeParser::parse(QDataStream &stream, int /*payloadLeng
 
         quint32 protocolVersion;
         stream >> protocolVersion;
-        if (protocolVersion != 0x00020000) {
-            qCritical("wrong protocol");
-        }
+        Q_ASSERT(protocolVersion == 0x00020000);
+
         QString licenceAgreement = "";
         if (serverHasLicenceAgreement) {
-
             licenceAgreement = ServerMessageParser::extractString(stream);
         }
         return new ServerAuthChallengeMessage(serverKeepAlivePeriod, challenge, licenceAgreement, protocolVersion);
     }
 //++++++++++++++++++++++++++++++++++++++++++++++++++
 
+
+
+ServerMessage *AuthReplyParser::parse(QDataStream &stream, int payloadLenght)
+{
+    quint8 flag, maxChannels;
+    stream >> flag;
+
+    QString serverMessage = ServerMessageParser::extractString(stream);
+
+    stream >> maxChannels;
+    return new ServerAuthReplyMessage(flag, maxChannels, serverMessage);
+}

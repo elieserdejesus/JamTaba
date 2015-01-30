@@ -32,8 +32,6 @@ private:
 protected:
     static QString extractString(QDataStream& buffer) {
         return QString(buffer.device()->readLine());
-        qCritical("\\0 is not finded in QByteArray buffer!");
-        return "";
     }
 
 public:
@@ -50,4 +48,11 @@ public:
     virtual ServerMessage* parse(QDataStream& buffer, int payloadLenght) ;
 
 };
+//++++++++++++++++++++++++++++++++++++++++++++++++++
+class AuthReplyParser : public ServerMessageParser{
+
+public:
+    virtual ServerMessage *parse(QDataStream &stream, int payloadLenght);
+};
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++

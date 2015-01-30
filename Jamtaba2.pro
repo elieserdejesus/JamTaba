@@ -80,9 +80,8 @@ SOURCES += \
     src/jamtaba/ninjam/NinjamServer.cpp \
     src/jamtaba/ninjam/NinjamUser.cpp \
     src/jamtaba/ninjam/protocol/ServerMessages.cpp \
+    src/jamtaba/ninjam/protocol/ClientMessages.cpp \
     src/jamtaba/ninjam/protocol/server/parsers/ServerMessageParser.cpp \
-
-
 
 
 FORMS += src/jamtaba/gui/mainframe.ui \

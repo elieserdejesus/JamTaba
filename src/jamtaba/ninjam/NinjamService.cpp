@@ -47,22 +47,21 @@ void NinjamService::socketReadSlot(){
         stream >> payloadLenght;
         processed += 5;
         qDebug() << "Recebeu código"<< messageTypeCode << " payload:"<< payloadLenght << endl;
-        if (inputBuffer.size() - processed >= payloadLenght) {
+        if (inputBuffer.size() - processed >= (int)payloadLenght) {
             ServerMessageParser* parser = ServerMessageParser::getParser( static_cast<ServerMessageType::MessageType>(messageTypeCode));
             ServerMessage* message = parser->parse(stream, payloadLenght);
             invokeMessageHandler(message, stream);
-            delete message;
+            //delete message;
             processed += payloadLenght;
         } else {//bytesAvailable < payloadLenght, not enough bytes in socket
             qCritical("not enough bytes, wait to receive the other bytes");
             qDebug() << "bytes available:"<< inputBuffer.size() << endl;
             break;
         }
-        qDebug() << "processou MSG payload:"<<payloadLenght << "buffer.size" << inputBuffer.size() << endl;
     }
     //if (needSendKeepAliveToServer()) {
-//        sendMessageToServer(new ClientKeepAlive());
-//    }
+    //       sendMessageToServer(new ClientKeepAlive());
+    //    }
 
 }
 
@@ -93,124 +92,100 @@ void NinjamService::socketDisconnectSlot()
     }
 */
 
-    NinjamService* NinjamService::getInstance() {
-        if(serviceInstance.get() == nullptr){
-            serviceInstance = std::shared_ptr<NinjamService>(new NinjamService());
-        }
-        return serviceInstance.get();
+NinjamService* NinjamService::getInstance() {
+    if(serviceInstance.get() == nullptr){
+        serviceInstance = std::shared_ptr<NinjamService>(new NinjamService());
     }
+    return serviceInstance.get();
+}
 
-    bool NinjamService::isBotName(QString userName) {
-        userName = userName.trimmed().toLower();
-        return (userName == "jambot") ||
-                (userName == "ninbot") ||
-                (userName == "MUTANTLAB") ||
-                (userName == "LiveStream");
+bool NinjamService::isBotName(QString userName) {
+    userName = userName.trimmed().toLower();
+    return (userName == "jambot") ||
+            (userName == "ninbot") ||
+            (userName == "MUTANTLAB") ||
+            (userName == "LiveStream");
+}
+
+QString NinjamService::getConnectedUserName() {
+    if (initialized) {
+        return newUserName;
     }
+    qCritical() << "not initialized, newUserName is not available!";
+    return "";
+}
 
-    QString NinjamService::getConnectedUserName() {
-        if (initialized) {
-            return newUserName;
-        }
-        qCritical() << "not initialized, newUserName is not available!";
-        return "";
+float NinjamService::getIntervalPeriod() {
+    if (currentServer != nullptr) {
+        return (float)60000 / currentServer->getBpm() * currentServer->getBpi();
     }
+    return 0;
+}
 
-    float NinjamService::getIntervalPeriod() {
-        if (currentServer != nullptr) {
-            return (float)60000 / currentServer->getBpm() * currentServer->getBpi();
-        }
-        return 0;
-    }
-
-    void NinjamService::buildNewSocket()   {
-        if(socket != nullptr){
-            if(socket->isOpen()){
-                socket->close();
-            }
-            delete socket;
-        }
-        //if(inputBuffer != nullptr){delete inputBuffer;}
-
-        socket = new QTcpSocket(this);
-        connect(socket, SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
-        connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
-        connect(socket, SIGNAL(disconnected()), this, SLOT(socketDisconnectSlot()));
-        //inputBuffer = new QBuffer(socket);
-        //inputBuffer->open(QIODevice::ReadOnly);
-        //outputStream = QDataStream(socket);
-                //if(!socket->waitForConnected()){
-        //    qFatal("socket can't connect!");
-        // }
-    }
-
-    void NinjamService::sendMessageToServer(ClientMessage *message)
-    {
-        QByteArray outBuffer;
-        message->serializeTo(outBuffer);
-        socket->write(outBuffer);
-        lastSendTime = QDateTime::currentMSecsSinceEpoch();
-    }
-
-    void NinjamService::handle(ServerAuthChallengeMessage *msg, QString userName)
-    {
-        ClientAuthUser msgAuthUser(userName, msg->getChallenge(), msg->getProtocolVersion());
-        sendMessageToServer(&msgAuthUser);
-        //delete msgAuthUser;
-    }
-
-    void NinjamService::startServerConnection(QString serverIp, int serverPort){
-        initialized = running = false;
-        qDebug() << "Starting connection with "<< serverIp << ":"<< serverPort;
-        //+++++++++ SOCKET CHANNEL +++++++++
-        if (socket != nullptr && socket->isOpen()) {
+void NinjamService::buildNewSocket()   {
+    if(socket != nullptr){
+        if(socket->isOpen()){
             socket->close();
         }
-        buildNewSocket();
-        socket->connectToHost(serverIp, serverPort);
-
-        //++++++++++++++++++
+        delete socket;
     }
+    //if(inputBuffer != nullptr){delete inputBuffer;}
 
-    //++++++++++++++++++++++++++++++++++++++++++++++++++++
-    void NinjamService::accomplishServerConnection(QString userName, QString channelName, ServerAuthChallengeMessage authChallengeMessage) {
-        accomplishServerConnection(userName, channelName, "", authChallengeMessage);
+    socket = new QTcpSocket(this);
+    connect(socket, SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
+    connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
+    connect(socket, SIGNAL(disconnected()), this, SLOT(socketDisconnectSlot()));
+    //inputBuffer = new QBuffer(socket);
+    //inputBuffer->open(QIODevice::ReadOnly);
+    //outputStream = QDataStream(socket);
+    //if(!socket->waitForConnected()){
+    //    qFatal("socket can't connect!");
+    // }
+}
+
+void NinjamService::sendMessageToServer(ClientMessage *message)
+{
+    QByteArray outBuffer;
+    message->serializeTo(outBuffer);
+    int bytesWrited = socket->write(outBuffer);
+    if(bytesWrited <= 0){
+        qFatal("não escreveu os bytes");
     }
+    //qDebug() << "escreveu " << bytesWrited << " bytes no socket";
+    lastSendTime = QDateTime::currentMSecsSinceEpoch();
+    qDebug() << message;
+}
 
-    void NinjamService::accomplishServerConnection(QString userName, QString channelName, QString userPassword, ServerAuthChallengeMessage authChallengeMessage)  {
-/*
-            qDebug() << "accomplishing server connection...";
-            //Client send the received challenge to server
-            ClientAuthUser clientAuthUserMessage = new ClientAuthUser(userName, authChallengeMessage.getChallenge(), authChallengeMessage.getProtocolVersion(), userPassword);
-            sendMessageToServer(clientAuthUserMessage);
+void NinjamService::handle(ServerAuthChallengeMessage *msg)
+{
+    ClientAuthUserMessage msgAuthUser(this->userName, msg->getChallenge(), msg->getProtocolVersion());
+    sendMessageToServer(&msgAuthUser);
+}
 
-            //if connection is ok server returns an Auth Reply
-            ByteBuffer buffer = ByteBuffer.allocate(4096).order(ByteOrder.LITTLE_ENDIAN);
-            socketChannel.read(buffer);
-            buffer.flip();
-            byte messageType = buffer.get();
-            int payloadLenght = buffer.getInt();
-            ServerMessageParser parser = ServerMessageParserFactory.createParser(ServerMessageType.AUTH_REPLY);
-            ServerAuthReply serverAuthReply = (ServerAuthReply) parser.parse(buffer, payloadLenght);
+void NinjamService::handle(ServerAuthReplyMessage *msg)
+{
+    ClientSetChannel msgSetChannel(channels[0]);//just the first channel at moment
+    sendMessageToServer(&msgSetChannel);
+}
 
-            if (serverAuthReply.userIsAuthenticated()) {
-                LOGGER.log(Level.INFO, "Users authenticated in server: {0}", serverAuthReply);
-                newUserName = serverAuthReply.getNewUserName();
-                messageSendTask = serviceThread.submit(new SendMessageTask());
-                sendMessageToServer(new ClientSetChannel(channelName));
-                messageHandlerTask = serviceThread.submit(new MessageHandlerTask());
-                messageReceiveTask = serviceThread.submit(new MessageReceiveTask());//receive messages and forward then to MessageHandler
-            } else {
-                throw new NinjaMConnectionException(serverAuthReply.getErrorMessage());
-            }
-*/
+void NinjamService::startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password){
+    initialized = running = false;
+    this->userName = userName;
+    this->password = password;
+    this->channels = channels;
 
+    qDebug() << "Starting connection with "<< serverIp << ":"<< serverPort;
+    if (socket != nullptr && socket->isOpen()) {
+        socket->close();
     }
+    buildNewSocket();
+    socket->connectToHost(serverIp, serverPort);
+}
 
-    void NinjamService::disconnectFromServer(bool normalDisconnection)
-    {
+void NinjamService::disconnectFromServer(bool normalDisconnection)
+{
 
-    }
+}
 /*
     public static void getServerStats(String server, int port, String statsUser, String statsPassword) throws NinjaMConnectionException {
         NinjaMService statsService = new NinjaMService();
@@ -287,8 +262,8 @@ void NinjamService::socketDisconnectSlot()
     }
     */
 
-    //FileChannel channel = null;
-    //int intervalo = 0;
+//FileChannel channel = null;
+//int intervalo = 0;
 
 /*
 
@@ -346,9 +321,9 @@ void NinjamService::socketDisconnectSlot()
     }
     */
 
-    //+++++++++++++ SERVER MESSAGE HANDLERS +++++++++++++=
-    //int message = 0;
-    /*
+//+++++++++++++ SERVER MESSAGE HANDLERS +++++++++++++=
+//int message = 0;
+/*
     private: void handle(ServerKeepAlive msg) {
         //if (System.currentTimeMillis() - lastSendTime >= serverKeepAlivePeriod) {
         if (needSendKeepAliveToServer()) {
@@ -727,17 +702,16 @@ void NinjamService::socketDisconnectSlot()
 
     }
 */
-    void NinjamService::invokeMessageHandler(ServerMessage *message, QDataStream &stream){
-        qDebug() << message;
-        switch (message->getMessageType()) {
-            case ServerMessageType::AUTH_CHALLENGE:
-                //qDebug() << *(ServerAuthChallengeMessage*)(message);
-                handle((ServerAuthChallengeMessage*)message, "test");
-                break;
-        case ServerMessageType::AUTH_REPLY:
-            qWarning() << "RECEBEU AUTH REPLY";
-            break;
-            /*
+void NinjamService::invokeMessageHandler(ServerMessage *message, QDataStream &stream){
+    qDebug() << message;
+    switch (message->getMessageType()) {
+    case ServerMessageType::AUTH_CHALLENGE:
+        handle((ServerAuthChallengeMessage*)message);
+        break;
+    case ServerMessageType::AUTH_REPLY:
+        handle((ServerAuthReplyMessage*)message);
+        break;
+        /*
             case KEEP_ALIVE:
                 handle((ServerKeepAlive) message);
                 break;
@@ -758,11 +732,11 @@ void NinjamService::socketDisconnectSlot()
                 handle((DownloadIntervalWrite) message);
                 break;
                 */
-            default:
-                qCritical("not implement yet: " + message->getMessageType());
-        }
+    default:
+        qCritical("not implement yet: " + message->getMessageType());
     }
-    /*
+}
+/*
 //++++++
 
     public void close() {
@@ -802,137 +776,7 @@ void NinjamService::socketDisconnectSlot()
         }
     }
 
-    private static void testNinjamService() throws NinjaMConnectionException {
-        NinjaMService service = NinjaMService.getInstance();
-        service.addListener(new NinjaMServiceListener() {
 
-            @Override
-            public void userChannelCreated(NinjaMUser user, UserChannel channel) {
-                System.out.println("canal criado: " + user);
-            }
-
-            @Override
-            public void userChannelRemoved(NinjaMUser user, UserChannel channel) {
-                System.out.println("canal removido: " + user);
-            }
-
-            @Override
-            public void userChannelUpdated(NinjaMUser user, UserChannel channel) {
-                System.out.println("canal atualizado: " + user);
-            }
-
-            @Override
-            public void usercountMessageReceived(int users, int maxUsers) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void serverBpiChanged(short currentBpi, short lastBpi) {
-                System.out.println("bpi changed: " + currentBpi);
-            }
-
-            @Override
-            public void serverBpmChanged(short currentBpm) {
-                System.out.println("bpm changed: " + currentBpm);
-            }
-
-            @Override
-            public void audioIntervalPartAvailable(NinjaMUser user, byte channelIndex, ByteBuffer encodedAudioData, boolean lastPartOfInterval) {
-
-            }
-
-            @Override
-            public void disconnectedFromServer(boolean normalDisconnection) {
-                System.out.println("Disconnected listener");
-            }
-
-            @Override
-            public void connectedInServer(NinjaMServer server) {
-                System.out.println("conectado no servidor " + server);
-                for (NinjaMUser ninjaMUser : server.getUsers()) {
-                    System.out.println(ninjaMUser);
-                }
-            }
-
-            @Override
-            public void chatMessageReceived(NinjaMUser sender, String message) {
-                System.out.println("chat message: " + message);
-            }
-
-            @Override
-            public void privateMessageReceived(NinjaMUser sender, String message) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-//            @Override
-//            public void topicMessageReceived(NinjaMUser sender, String topicMessage) {
-//                System.out.println("topic received: " + sender + " - " + topicMessage);
-//            }
-            @Override
-            public void userEnterInTheJam(NinjaMUser newUser) {
-                System.out.println("user enter in jam: " + newUser);
-            }
-
-            @Override
-            public void userLeaveTheJam(NinjaMUser user) {
-                System.out.println("user leave the jam: " + user);
-            }
-        });
-
-        //List<NinjaMServer> servers = NinjaMService.getPublicServersInfos();
-        //for (NinjaMServer s : servers) {
-        //  if (s.isActive() && !s.containsBotOnly()) {
-        NinjaMServer s = NinjaMServer.getServer("localhost", 2049);
-        //NinjaMServer s = NinjaMServer.getServer("ninbot.com", 2049);
-        //System.out.println(s);
-        //NinjaMServer s = NinjaMServer.getServer("jammers.ddns.net", 2049);
-        ServerAuthChallenge challenge = service.startServerConnection(s.getHostName(), s.getPort());
-        service.accomplishServerConnection("test", "channel name", challenge);
-        //    break;
-        //}
-        //}
-    }
-
-    public static void main(String args[]) throws IOException, NinjaMConnectionException {
-        testNinjamService();
-//        testGetServerStats();
-    }
-
-    public static void testGetServerStats() throws NinjaMConnectionException {
-        //NinjaMService.getServerStats("ninjamers.servebeer.com", 2049, "bobs", "yauncle");
-        NinjaMService.getServerStats("localhost", 2049, "teste", "123123");
-    }
-
-    private static void testPublicServersParsing() throws IOException {
-        List<NinjaMServer> servers = NinjaMService.getPublicServersInfos();
-        for (NinjaMServer server : servers) {
-            System.out.println(server);
-        }
-    }
-
-    //+++++++++++++++++++++
-    private static class DirectByteBufferPool implements ReusableObjectPool<ByteBuffer> {
-
-        private final int maxBufersSize;
-        private Stack<ByteBuffer> pool = new Stack<ByteBuffer>();
-
-        public DirectByteBufferPool(int maxBytesInBuffers) {
-            this.maxBufersSize = maxBytesInBuffers;
-        }
-
-        @Override
-        public synchronized ByteBuffer pickFromPool() {
-            if (pool.isEmpty()) {
-                pool.push(ByteBuffer.allocateDirect(maxBufersSize));
-            }
-            return pool.pop();
-        }
-
-        @Override
-        public synchronized void backToPool(ByteBuffer buffer) {
-            pool.push(buffer);
-        }
-    }
 
     public static byte[] newGUID() {
 
