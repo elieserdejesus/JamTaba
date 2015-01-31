@@ -2,3 +2,6 @@
 # *~
 
 build/
+portaudio/
+*.pro.user
+release
