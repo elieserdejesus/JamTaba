@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QBuffer>
 
+
 //#include "nvwa/debug_new.h"
 
 class NinjamPublicServersParser;

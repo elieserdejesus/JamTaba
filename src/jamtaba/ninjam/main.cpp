@@ -7,7 +7,7 @@
 #include <QCryptographicHash>
 #include <QTimer>
 
-#include "nvwa/debug_new.h"
+//#include "nvwa/debug_new.h"
 
 //void customLogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
@@ -17,7 +17,7 @@ int main(int argc, char* args[])
 
     QTimer timer(&application);
          timer.connect(&timer, SIGNAL(timeout()), &application, SLOT(quit()));
-         timer.start(5000);
+         timer.start(10000);
 
     NinjamService* service = NinjamService::getInstance();
     QStringList channels("channel test");

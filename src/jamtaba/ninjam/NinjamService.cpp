@@ -22,7 +22,7 @@ NinjamService::NinjamService()
 }
 
 NinjamService::~NinjamService(){
-    qDebug() << "NinjamService destructor";
+//    qDebug() << "NinjamService destructor";
 }
 
 void NinjamService::socketReadSlot(){
