@@ -60,7 +60,7 @@ public:
 
     inline bool hasChannels() const{ return !channels.isEmpty(); }
 
-    inline QSet<NinjamUserChannel*> getChannels() const;
+    QSet<NinjamUserChannel*> getChannels() const;
 
     inline NinjamUserChannel* getChannel(int index) const{ return channels[index];}
 

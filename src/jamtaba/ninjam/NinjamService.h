@@ -11,12 +11,23 @@ class NinjamPublicServersParser;
 class NinjamServer;
 class MixedPublicServersParser;
 class NinjamServiceListener;
-class ServerAuthChallengeMessage;
-class ServerAuthReplyMessage;
-class ServerMessage;
-class ClientMessage;
+
 class ServerMessageParser;
 class ServerMessageParserFactory;
+
+class ServerMessage;
+class ServerKeepAliveMessage;
+class ServerAuthChallengeMessage;
+class ServerAuthReplyMessage;
+class ConfigChangeNotifyMessage;
+class UserInfoChangeNotifyMessage;
+class ServerKeepAliveMessage;
+class ServerChatMessage;
+class DownloadIntervalBegin;
+class DownloadIntervalWrite;
+
+class ClientMessage;
+
 class NinjamUser;
 class NinjamUserChannel;
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -25,11 +36,11 @@ class NinjamService : public QObject{
     Q_OBJECT
 
 signals:
-    void serverChallengeAvailable(QString challenge);
+    //void serverChallengeAvailable(QString challenge);
     void userChannelCreated(const NinjamUser& user, const NinjamUserChannel& channel);
     void userChannelRemoved(const NinjamUser& user, const NinjamUserChannel& channel);
     void userChannelUpdated(const NinjamUser& user, const NinjamUserChannel& channel);
-    void usercountMessageReceived(int users, int maxUsers);
+    void userCountMessageReceived(int users, int maxUsers);
     void serverBpiChanged(short currentBpi, short lastBpi);
     void serverBpmChanged(short currentBpm);
     void audioIntervalPartAvailable( const NinjamUser& user, int channelIndex, QByteArray encodedAudioData, bool lastPartOfInterval);
@@ -39,7 +50,7 @@ signals:
     void privateMessageReceived(const NinjamUser& sender, QString message);
     void userEnterInTheJam(const NinjamUser& newUser);
     void userLeaveTheJam(const NinjamUser& user);
-
+    void error(QString msg);
 public:
     static const bool USE_LOCAL_HOST = false;//debug
     static QList<NinjamServer> getPublicServersInfos();
@@ -50,8 +61,6 @@ public:
     float getIntervalPeriod() ;
 
     void startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password = "");
-    //void accomplishServerConnection(QString userName, QString channelName, ServerAuthChallengeMessage authChallengeMessage) ;
-    //void accomplishServerConnection(QString userName, QString channelName, QString userPassword, ServerAuthChallengeMessage authChallengeMessage) ;
     void disconnectFromServer(bool normalDisconnection=true);
 
     ~NinjamService();
@@ -62,8 +71,6 @@ private:
 
     QList<std::shared_ptr<NinjamServiceListener>> listeners;
     QTcpSocket* socket;
-    //QBuffer* inputBuffer;
-    //QDataStream outputStream;
 
     //GUID, AudioInterval
     long lastSendTime;//time stamp of last send
@@ -83,16 +90,28 @@ private:
     void buildNewSocket()  ;
 
     void sendMessageToServer(ClientMessage* message) ;
+    void handleUserChannels(NinjamUser* user, QList<NinjamUserChannel*> channelsInTheServer);
+    bool channelIsOutdate(const NinjamUser &user, const NinjamUserChannel &serverChannel);
+
+    void setBpm(quint16 newBpm);
+    void setBpi(quint16 newBpi);
 
     //+++++= message handlers ++++
     void invokeMessageHandler(ServerMessage* message, QDataStream& stream) ;
     void handle(ServerAuthChallengeMessage* msg);
     void handle(ServerAuthReplyMessage* msg);
+    void handle(ConfigChangeNotifyMessage* msg);
+    void handle(UserInfoChangeNotifyMessage* msg);
+    void handle(ServerChatMessage* msg);
+    void handle(ServerKeepAliveMessage *msg);
+    void handle(DownloadIntervalBegin *msg);
+    void handle(DownloadIntervalWrite *msg);
 
 private slots:
     void socketReadSlot();
     void socketErrorSlot(QAbstractSocket::SocketError error);
     void socketDisconnectSlot();
+    //void socketBytesWrittenSlot(qint64 bytes);
 public:
 
 /*

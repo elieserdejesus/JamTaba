@@ -1,9 +1,15 @@
 #include "ClientMessages.h"
-
+#include "../NinjamUser.h"
 #include <QCryptographicHash>
 #include <QIODevice>
 #include <QDebug>
 //++++++++++++++
+
+ClientMessage::ClientMessage(quint8 msgCode, quint32 payload)
+    :msgType(msgCode), payload(payload){
+
+}
+
 void ClientMessage::serializeString(const QString &str, QDataStream &stream){
     serializeByteArray(QByteArray(str.toStdString().c_str()), stream);
     stream << quint8('\0'); // NUL TERMINATED
@@ -34,10 +40,9 @@ void ClientMessage::serializeByteArray(const QByteArray &array, QDataStream &str
 */
 
 ClientAuthUserMessage::ClientAuthUserMessage(QString userName, QByteArray challenge, quint32 protocolVersion, QString password)
-    :
+    : ClientMessage(0x80, 0),
       userName(userName),
       clientCapabilites(1),
-      messageType(0x80),
       protocolVersion(protocolVersion),
       challenge(challenge)
 {
@@ -57,14 +62,13 @@ ClientAuthUserMessage::ClientAuthUserMessage(QString userName, QByteArray challe
     sha1.addData(passHash);
     sha1.addData(challenge.constData(), 8);
     this->passwordHash = sha1.result();
-    this->payloadLenght = 29 + this->userName.size();
+    this->payload = 29 + this->userName.size();
 }
 
 void ClientAuthUserMessage::serializeTo(QByteArray& buffer) {
     QDataStream stream(&buffer, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
-    stream << messageType;
-    stream << payloadLenght;
+    stream << msgType << payload;
     serializeByteArray(passwordHash, stream);
     serializeString(userName, stream);
     stream << clientCapabilites;
@@ -76,22 +80,21 @@ void ClientAuthUserMessage::printDebug(QDebug dbg) const
     dbg << "SEND ClientAuthUserMessage{  userName:" << userName << " challenge:" << challenge <<"}" << endl;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-ClientSetChannel::ClientSetChannel(QString channelName)
-    :volume(0), pan(0), flags(0), payloadLenght(0)
+ClientSetChannel::ClientSetChannel(QString channelName)//handling just one channel at moment
+    : ClientMessage(0x82, 0), volume(0), pan(0), flags(0)
 {
-    payloadLenght = 2;
+    payload = 2;
     channelNames.append(channelName);
-    for (int i = 0; i < channelNames.size(); i++) {//handling just one channel at moment
-        payloadLenght += (channelNames[i].size() + 1) + 2 + 1 + 1;//NUL + volume(short) + pan(byte) + flags(byte)
+    for (int i = 0; i < channelNames.size(); i++) {
+        payload += (channelNames[i].size() + 1) + 2 + 1 + 1;//NUL + volume(short) + pan(byte) + flags(byte)
     }
 }
 
 void ClientSetChannel::serializeTo(QByteArray &buffer){
     QDataStream stream(&buffer, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
-
-    stream << messageType;
-    stream << payloadLenght;
+    //payload = 0;
+    stream << msgType << payload;
     //++++++++
     stream << quint16(4); //byteBuffer.putShort((short) 4);//parameter size (4 bytes - volume (2 bytes) + pan (1 byte) + flags (1 byte))
     for (int i = 0; i < channelNames.size(); ++i) {
@@ -103,10 +106,56 @@ void ClientSetChannel::serializeTo(QByteArray &buffer){
 }
 
 void ClientSetChannel::printDebug(QDebug dbg) const{
-    dbg << "SEND ClientSetChannel{ payloadLenght=" << payloadLenght << " channelName=" << channelNames << '}' << endl;
+    dbg << "SEND ClientSetChannel{ payloadLenght=" << payload << " channelName=" << channelNames << '}' << endl;
 }
 
 //+++++++++++++++++++++
+ClientKeepAlive::ClientKeepAlive()
+    :ClientMessage(0xfd, 0)
+{
+
+}
+
+void ClientKeepAlive::serializeTo(QByteArray &buffer){
+    //just the header bytes, no payload
+    QDataStream stream(&buffer, QIODevice::WriteOnly);
+    stream.setByteOrder(QDataStream::LittleEndian);
+    stream << msgType << payload;
+}
+
+void ClientKeepAlive::printDebug(QDebug dbg) const{
+    dbg << "SEND {Client KeepAlive}" << endl;
+}
+//+++++++++++++++++
+ClientSetUserMask::ClientSetUserMask(QList<NinjamUser *> users)
+    :ClientMessage(0x81, 0)
+{
+    payload = 4 * users.size();//4 bytes (int) flag
+    foreach (NinjamUser* user , users) {
+        usersFullNames.append(user->getFullName());
+        payload += user->getFullName().size() + 1;
+    }
+}
+
+void ClientSetUserMask::serializeTo(QByteArray &buffer)
+{
+    QDataStream stream(&buffer, QIODevice::WriteOnly);
+    stream.setByteOrder(QDataStream::LittleEndian);
+    stream << msgType;
+    stream << payload;
+    //++++++++++++  END HEADER ++++++++++++
+    foreach (QString userName , usersFullNames) {
+        ClientMessage::serializeString(userName, stream);
+        stream << FLAG;
+    }
+}
+
+void ClientSetUserMask::printDebug(QDebug dbg) const
+{
+    dbg << "SEND ClientSetUserMask{ userNames=" << usersFullNames << " flag=" << FLAG << '}';
+}
+
+//+++++++++++++++
 QDebug operator<<(QDebug dbg, ClientMessage* message)
 {
     message->printDebug(dbg);

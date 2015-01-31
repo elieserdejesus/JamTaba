@@ -84,7 +84,7 @@ public:
 
     inline QString getTopic() const {return topic;}
 
-    inline void setTopic(QString topicText) ;
+    inline void setTopic(QString topicText) {this->topic = topicText;}
 };
 
 QDataStream &operator<<(QDataStream &out, const NinjamServer &server);
