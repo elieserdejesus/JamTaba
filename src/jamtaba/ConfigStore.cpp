@@ -45,7 +45,7 @@ const QString DEFAULT_RECORD_PATH = "./Recorded Jams";
 //++++++++++++++++++
 
 
-ConfigStore::getLastSampleRate(){
+int ConfigStore::getLastSampleRate(){
     bool ok;
     int result = readProperty(ConfigStore::KEY_LAST_SAMPLE_RATE).toInt(&ok);
     return ok ? result : -1;//use system sample rate

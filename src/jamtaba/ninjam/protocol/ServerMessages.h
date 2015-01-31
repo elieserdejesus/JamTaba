@@ -16,7 +16,7 @@ public:
 
 class ServerAuthChallengeMessage : public ServerMessage {
 
-    quint8 challenge[];// = new byte[8];
+    quint8 challenge[8];// = new byte[8];
     const QString licenceAgreement;
     const int serverKeepAlivePeriod;
     const int protocolVersion;//The Protocol Version field should contain 0x00020000.
@@ -83,11 +83,12 @@ private:
     QMap<NinjamUser*, QList<NinjamUserChannel*>> usersChannels;
 
 public:
+    //~UserInfoChangeNotifyMessage();
     UserInfoChangeNotifyMessage();
     UserInfoChangeNotifyMessage(QMap<NinjamUser *, QList<NinjamUserChannel *> > allUsersChannels) ;
 
     inline QList<NinjamUser*> getUsers() const{ return usersChannels.keys();}
-    inline QMap<NinjamUser*, QList<NinjamUserChannel*>> getUsersChannels() const{ return usersChannels;}
+    QList<NinjamUserChannel*> getUserChannels(NinjamUser *user) const {return usersChannels[user];}
     virtual void printDebug(QDebug dbg) const;
 };
 //++++++++++++=
@@ -152,7 +153,7 @@ class DownloadIntervalBegin : public ServerMessage {
 private:
     const QByteArray GUID;
     const quint32 estimatedSize;
-    quint8 fourCC[];// = new byte[4];
+    quint8 fourCC[4];// = new byte[4];
     const quint8 channelIndex;
     const QString userName;
     bool isValidOgg;

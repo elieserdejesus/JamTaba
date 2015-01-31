@@ -1,7 +1,18 @@
 #include "NinjamUser.h"
 #include "NinjamService.h"
+#include <QDebug>
+#include <memory>
 
-QMap<QString, NinjamUser*> NinjamUser::users;
+
+
+std::map<std::string, std::shared_ptr<NinjamUser>> NinjamUser::users;
+
+NinjamUserChannel::NinjamUserChannel(NinjamUser *user, QString name, bool active, int channelIndex, short volume, quint8 pan, quint8 flags)
+    : user(user), name(name), active(active), index(channelIndex), volume(volume), pan(pan), flags(flags)
+{
+    qDebug() << "NinjamUserChannel constructor";
+}
+
 
 NinjamUser::NinjamUser(QString fullName) {
     this->fullName = fullName;
@@ -12,20 +23,22 @@ NinjamUser::NinjamUser(QString fullName) {
     } else {
         this->ip = "";
     }
-    //System.out.println("criando user para fullname " + fullName);
-    //this->channels = new HashMap<Integer, UserChannel>();
+    qDebug() << "NinjamUser constructor " << fullName;
 }
 
+NinjamUser::~NinjamUser(){
+    qDebug() << "Destrutor NinjamUser";
+}
 
 NinjamUser* NinjamUser::getUser(QString userFullName) {
     if (userFullName.isNull() || userFullName.trimmed().isEmpty()) {
         return nullptr;
     }
-    if (!users.contains(userFullName)) {
-        NinjamUser* user = new NinjamUser(userFullName);
-        users.insert(userFullName, user);
+    std::string key = userFullName.toStdString();
+    if (users.count(key) == 0) {//not constains user
+        users[key] = std::shared_ptr<NinjamUser>(new NinjamUser(userFullName));
     }
-    return users[userFullName];
+    return &(*(users[key]));
 }
 
 bool NinjamUser::isBot() const {
@@ -34,13 +47,16 @@ bool NinjamUser::isBot() const {
 
 QSet<NinjamUserChannel *> NinjamUser::getChannels() const
 {
-    return QSet<NinjamUserChannel*>::fromList(channels.values());
+    QSet<NinjamUserChannel*> channels;
+    for (auto &l : this->channels.values()) {
+        channels.insert(&*l);
+    }
+
+    return channels;
 }
 
 void NinjamUser::addChannel(NinjamUserChannel* c) {
-    if (!channels.contains(c->getIndex())) {
-        this->channels.insert(c->getIndex(), c);
-    }
+    this->channels[c->getIndex()].reset(c);
 }
 
 void NinjamUser::removeChannel(NinjamUserChannel* userChannel) {

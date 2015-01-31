@@ -5,13 +5,19 @@
 #include "protocol/ServerMessages.h"
 #include <QTcpSocket>
 #include <QCryptographicHash>
+#include <QTimer>
 
-void customLogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
+#include "nvwa/debug_new.h"
 
+//void customLogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
 int main(int argc, char* args[])
 {
     QApplication application(argc, args);
+
+    QTimer timer(&application);
+         timer.connect(&timer, SIGNAL(timeout()), &application, SLOT(quit()));
+         timer.start(5000);
 
     NinjamService* service = NinjamService::getInstance();
     QStringList channels("channel test");
@@ -19,7 +25,7 @@ int main(int argc, char* args[])
 
     return application.exec();
 }
-
+/*
 void customLogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QByteArray localMsg = msg.toLocal8Bit();
@@ -39,4 +45,5 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
     }
     fflush(stderr);
 }
+*/
 

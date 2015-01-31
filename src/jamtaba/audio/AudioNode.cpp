@@ -3,6 +3,9 @@
 #include <cmath>
 #include <QDebug>
 
+const double AudioNode::root2Over2 = 1.414213562373095 *0.5;
+const double AudioNode::piOver2 = 3.141592653589793238463 * 0.5;
+
 //+++++++++++++++
 void AudioNode::processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out)
 {

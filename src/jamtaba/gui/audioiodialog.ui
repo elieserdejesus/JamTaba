@@ -142,7 +142,7 @@
    <property name="title">
     <string>Outpus</string>
    </property>
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QWidget" name="layoutWidget1">
     <property name="geometry">
      <rect>
       <x>11</x>

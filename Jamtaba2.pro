@@ -17,16 +17,18 @@
 
 QT       += core gui network
 
-QMAKE_CXXFLAGS += -std=c++11 -Wno-unused-parameter -Wno-switch
+QMAKE_CXXFLAGS += -std=c++11 # -Wno-unused-parameter -Wno-switch
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Jamtaba2
 TEMPLATE = app
 
-MAIN = src/jamtaba/ninjam/main.cpp # src/jamtaba/main.cpp
+MAIN = src/jamtaba/ninjam/main.cpp #src/jamtaba/main.cpp
+
 
 HEADERS += \
+    #nvwa/debug_new.h \
     src/jamtaba/audio/AudioDriver.h \
     src/jamtaba/audio/AudioDriverListener.h \
     src/jamtaba/audio/AudioNode.h \
@@ -58,6 +60,7 @@ win32:HEADERS += portaudio/include/pa_asio.h
 
 SOURCES += \
     $$MAIN \
+    nvwa/debug_new.cpp \
     src/jamtaba/ConfigStore.cpp \
     src/jamtaba/audio/AudioDriver.cpp \
     src/jamtaba/audio/AudioNode.cpp \

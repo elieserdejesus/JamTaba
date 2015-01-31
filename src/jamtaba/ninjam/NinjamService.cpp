@@ -8,12 +8,12 @@
 #include <QDateTime>
 
 
-std::shared_ptr<NinjamService> NinjamService::serviceInstance;
+std::unique_ptr<NinjamService> NinjamService::serviceInstance;
 
 
 NinjamService::NinjamService()
     : socket(nullptr),
-      currentServer(nullptr),
+      //currentServer(nullptr),
       //inputBuffer(nullptr),
       running(false),
       initialized(false)
@@ -26,33 +26,31 @@ NinjamService::~NinjamService(){
 }
 
 void NinjamService::socketReadSlot(){
-    QByteArray inputBuffer = socket->readAll();
-    if(inputBuffer.size() < 5){
+    if(socket->bytesAvailable() < 5){
         qDebug() << "not have enough bytes to read message header (5 bytes)";
         return;
     }
 
     quint8 messageTypeCode;
     quint32 payloadLenght;
-    QDataStream stream(inputBuffer);
-    stream.setByteOrder(QDataStream::LittleEndian);
 
-    int processed = 0;
-    while (inputBuffer.size() - processed >= 5){//consume all messages
-        stream >> messageTypeCode;
-        stream >> payloadLenght;
-        processed += 5;
-        if (inputBuffer.size() - processed >= (int)payloadLenght) {
+    QDataStream stream(socket.get());
+    stream.setByteOrder(QDataStream::LittleEndian);
+    bool handlingSplittedMessage = false;
+    while (socket->bytesAvailable() >= 5){//consume all messages
+        if(!handlingSplittedMessage){
+            stream >> messageTypeCode >> payloadLenght;
+        }
+        if (socket->bytesAvailable() >= (int)payloadLenght) {//message payload is available to read
+            handlingSplittedMessage = false;
             ServerMessageParser* parser = ServerMessageParser::getParser( static_cast<ServerMessageType::MessageType>(messageTypeCode));
             ServerMessage* message = parser->parse(stream, payloadLenght);
             qDebug() << message;
-            invokeMessageHandler(message, stream);
-            //delete message;
-            processed += payloadLenght;
+            invokeMessageHandler(message);
+            delete message;
         } else {//bytesAvailable < payloadLenght, not enough bytes in socket
-            qCritical("not enough bytes, wait to receive the other bytes");
-            qDebug() << "bytes available:"<< inputBuffer.size() << endl;
-            break;
+            handlingSplittedMessage = true;
+            socket->waitForReadyRead();
         }
     }
     //if (needSendKeepAliveToServer()) {
@@ -72,9 +70,9 @@ void NinjamService::socketDisconnectSlot()
 }
 
 
-NinjamService* NinjamService::getInstance() {
-    if(serviceInstance.get() == nullptr){
-        serviceInstance = std::shared_ptr<NinjamService>(new NinjamService());
+ NinjamService* NinjamService::getInstance() {
+    if(!serviceInstance){
+        serviceInstance = std::unique_ptr<NinjamService>(new NinjamService());
     }
     return serviceInstance.get();
 }
@@ -96,25 +94,23 @@ QString NinjamService::getConnectedUserName() {
 }
 
 float NinjamService::getIntervalPeriod() {
-    if (currentServer != nullptr) {
+    if (currentServer ) {
         return (float)60000 / currentServer->getBpm() * currentServer->getBpi();
     }
     return 0;
 }
 
 void NinjamService::buildNewSocket()   {
-    if(socket != nullptr){
+    if(socket){
         if(socket->isOpen()){
             socket->close();
         }
-        delete socket;
     }
-    //if(inputBuffer != nullptr){delete inputBuffer;}
 
-    socket = new QTcpSocket(this);
-    connect(socket, SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
-    connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
-    connect(socket, SIGNAL(disconnected()), this, SLOT(socketDisconnectSlot()));
+    socket.reset( new QTcpSocket(this));
+    connect(socket.get(), SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
+    connect(socket.get(), SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
+    connect(socket.get(), SIGNAL(disconnected()), this, SLOT(socketDisconnectSlot()));
 
 }
 
@@ -134,25 +130,27 @@ void NinjamService::sendMessageToServer(ClientMessage *message)
 }
 
 void NinjamService::handle(UserInfoChangeNotifyMessage* msg) {
-    QMap<NinjamUser*, QList<NinjamUserChannel*>> allUsersChannels = msg->getUsersChannels();
-    QSet<NinjamUser*> users = QSet<NinjamUser*>::fromList( allUsersChannels.keys());
+    //QMap<NinjamUser*, QList<NinjamUserChannel*>> allUsersChannels = msg->getUsersChannels();
+    QSet<NinjamUser*> users = QSet<NinjamUser*>::fromList( msg->getUsers());
     foreach (NinjamUser* user , users) {
         if (!currentServer->containsUser(*user)) {
             currentServer->addUser(user);
-            emit userEnterInTheJam(*user);
+            for (auto &l : listeners) {
+                l->userEnterInTheJam(*user);
+            }
         }
-        handleUserChannels(user, allUsersChannels.value(user));
+        handleUserChannels(user, msg->getUserChannels(user));
     }
 
     ClientSetUserMask setUserMask(msg->getUsers());
     sendMessageToServer( &setUserMask );//enable new users channels
 }
 
-void NinjamService::handle(DownloadIntervalBegin *msg){
+void NinjamService::handle(DownloadIntervalBegin */*msg*/){
     qDebug() << "DOWNLOAD INTERVAL BEGIN";
 }
 
-void NinjamService::handle(DownloadIntervalWrite *msg){
+void NinjamService::handle(DownloadIntervalWrite */*msg*/){
     qDebug() << "DOWNLOAD INTERVAL WRITE";
 }
 
@@ -174,7 +172,9 @@ void NinjamService::handle(ServerAuthReplyMessage *msg){
         sendMessageToServer(&setChannelMsg);
     }
     else{
-        emit error("Can't authenticate in server");
+        for (auto &l : listeners) {
+            l->error("Can't authenticate in server");
+        }
         disconnectFromServer(false);
     }
 }
@@ -192,14 +192,17 @@ void NinjamService::startServerConnection(QString serverIp, int serverPort, QStr
     buildNewSocket();
     socket->connectToHost(serverIp, serverPort);
     if(!socket->waitForConnected()){
-        emit error("can't connect in " + serverIp + ":" + serverPort);
+        for (auto &l : listeners) {
+            l->error("can't connect in " + serverIp + ":" + serverPort);
+        }
     }
 
-    currentServer = NinjamServer::getServer(serverIp, serverPort);
+    //the old current server is deleted by unique_ptr
+    currentServer.reset( NinjamServer::getServer(serverIp, serverPort));
 
 }
 
-void NinjamService::disconnectFromServer(bool normalDisconnection)
+void NinjamService::disconnectFromServer(bool /*normalDisconnection*/)
 {
 
 }
@@ -267,7 +270,9 @@ void NinjamService::setBpm(quint16 newBpm){
         throw ("currentServer == null");
     }
     if (currentServer->setBpm(newBpm) && initialized) {
-        emit serverBpmChanged(currentServer->getBpm());
+        for (auto &l : listeners) {
+            l->serverBpmChanged(currentServer->getBpm());
+        }
     }
 }
 
@@ -277,7 +282,9 @@ void NinjamService::setBpi(quint16 bpi) {
     }
     quint16 lastBpi = currentServer->getBpi();
     if (currentServer->setBpi(bpi) && initialized) {
-        emit serverBpiChanged(currentServer->getBpi(), lastBpi);
+        for (auto &l : listeners) {
+            l->serverBpiChanged(currentServer->getBpi(), lastBpi);
+        }
     }
 }
 /*
@@ -304,20 +311,26 @@ void NinjamService::handleUserChannels(NinjamUser* user, QList<NinjamUserChannel
         if (c->isActive()) {
             if (!userCurrentChannels.contains(c)) {
                 user->addChannel(c);
-                emit userChannelCreated(*user, *c);
+                for (auto &l : listeners) {
+                    l->userChannelCreated(*user, *c);
+                }
             } else {//check for channel updates
                 if (user->hasChannels()) {
                     NinjamUserChannel* userChannel = user->getChannel(c->getIndex());
                     if (channelIsOutdate(*user, *c)) {
                         userChannel->setName(c->getName());
                         userChannel->setFlags(c->getFlags());
-                        emit userChannelUpdated(*user, *userChannel);
+                        for(auto &l : listeners) {
+                            l->userChannelUpdated(*user, *userChannel);
+                        }
                     }
                 }
             }
         } else {
             user->removeChannel(c);
-            emit userChannelRemoved(*user, *c);
+            for(auto &l : listeners){
+                l->userChannelRemoved(*user, *c);
+            }
         }
     }
 }
@@ -416,22 +429,27 @@ void NinjamService::handle(ServerChatMessage* msg) {
     {
         QString messageSender = msg->getArguments().at(0);
         QString messageText = msg->getArguments().at(1);
-        emit chatMessageReceived(*(NinjamUser::getUser(messageSender)), messageText);
-
+        for(auto &l : listeners){
+            l->chatMessageReceived(*(NinjamUser::getUser(messageSender)), messageText);
+        }
         break;
 
     }
     case ServerChatCommand::PART:
     {
         QString userLeavingTheServer = msg->getArguments().at(0);
-        emit userLeaveTheJam(*NinjamUser::getUser(userLeavingTheServer));
+        for(auto &l : listeners){
+            l->userLeaveTheJam(*NinjamUser::getUser(userLeavingTheServer));
+        }
         break;
     }
     case ServerChatCommand::PRIVMSG:
     {
         QString messageSender = msg->getArguments().at(0);
         QString messageText = msg->getArguments().at(1);
-        emit privateMessageReceived(*NinjamUser::getUser(messageSender), messageText);
+        for(auto &l : listeners){
+            l->privateMessageReceived(*NinjamUser::getUser(messageSender), messageText);
+        }
 
         break;
     }
@@ -442,7 +460,9 @@ void NinjamService::handle(ServerChatMessage* msg) {
         if (!initialized) {
             initialized = true;
             currentServer->setTopic(topicText);
-            emit connectedInServer(*currentServer);
+            for(auto &l : listeners){
+                l->connectedInServer(*currentServer);
+            }
         }
         break;
     }
@@ -450,7 +470,9 @@ void NinjamService::handle(ServerChatMessage* msg) {
     {
         int users = msg->getArguments().at(0).toInt();
         int maxUsers = msg->getArguments().at(1).toInt();
-        emit userCountMessageReceived(users, maxUsers);
+        for(auto &l : listeners){
+            l->userCountMessageReceived(users, maxUsers);
+        }
         break;
     }
     default:
@@ -610,7 +632,7 @@ void NinjamService::handle(ConfigChangeNotifyMessage *msg)
     }
 }
 
-void NinjamService::invokeMessageHandler(ServerMessage *message, QDataStream &stream){
+void NinjamService::invokeMessageHandler(ServerMessage *message){
     switch (message->getMessageType()) {
     case ServerMessageType::AUTH_CHALLENGE:
         handle((ServerAuthChallengeMessage*)message);

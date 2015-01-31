@@ -1,5 +1,6 @@
 #include "ServerMessages.h"
 #include <QDebug>
+#include "../NinjamUser.h"
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 //+++++++++++++++++++++  SERVER MESSAGE (Base class) ++++++++
@@ -86,8 +87,16 @@ UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage()
 UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage(QMap<NinjamUser*, QList<NinjamUserChannel*>> allUsersChannels)
     :ServerMessage(ServerMessageType::USER_INFO_CHANGE_NOTIFY), usersChannels(allUsersChannels)
 {
-    //
+    //insere o NinjamUserChannel em um shared_ptr para que esses canais sejam automaticamente deletados
+//    foreach (NinjamUser* user, allUsersChannels.keys()) {
+//        std::vector< std::shared_ptr< NinjamUserChannel>> channels;//vai funcionar? channels não será deletado ao final do escopo?
+//        usersChannels.insert(user,  channels);
+//        foreach (NinjamUserChannel* channel, allUsersChannels[user]) {
+//            channels.push_back(std::shared_ptr<NinjamUserChannel>(channel));
+//        }
+//    }
 }
+
 
 void UserInfoChangeNotifyMessage::printDebug(QDebug dbg) const{
     dbg << "UserInfoChangeNotify{\n";

@@ -3,11 +3,11 @@
 #include "JamtabaFactory.h"
 #include "network/loginserver/DefaultLoginService.h"
 #include "ninjam/NinjamService.h"
-
-void customLogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
+#include "nvwa/debug_new.h"
 
 int main(int argc, char* args[])
 {
+
     qInstallMessageHandler(customLogHandler);
     JamtabaFactory* factory = new ReleaseFactory();
     MainController mainController(factory, argc, args);//MainController extends QApplication
@@ -17,8 +17,8 @@ int main(int argc, char* args[])
 
     delete factory;
 
-    NinjamService* ninjamService = NinjamService::getInstance();
-    ninjamService->startServerConnection("ninbot.com", 2049);
+    //NinjamService* ninjamService = NinjamService::getInstance();
+    //ninjamService->startServerConnection("ninbot.com", 2049);
 
     return mainController.exec();
     //return 0;

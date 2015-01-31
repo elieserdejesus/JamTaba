@@ -3,6 +3,8 @@
 #include <QMap>
 #include <QString>
 #include <QStringList>
+#include <QDebug>
+#include <memory>
 
 class NinjamUser;
 
@@ -17,15 +19,14 @@ private:
     quint8 flags;
 
 public:
-    NinjamUserChannel(NinjamUser* user, QString name, bool active, int channelIndex, short volume, quint8 pan, quint8 flags)
-        : user(user), name(name), active(active), index(channelIndex), volume(volume), pan(pan), flags(flags)
-    {
-
+    NinjamUserChannel(NinjamUser* user, QString name, bool active, int channelIndex, short volume, quint8 pan, quint8 flags);
+    ~NinjamUserChannel(){
+        qDebug() << "NinjamUserChannel destructor";
     }
 
-    inline bool isActive() const{
-        return active && flags == 0;
-    }
+   // ~NinjamUserChannel();
+
+    inline bool isActive() const{ return active && flags == 0; }
 
     inline int getIndex() const{ return index; }
 
@@ -44,16 +45,18 @@ public:
 class NinjamUser {
 
 private:
-    static QMap<QString, NinjamUser*> users;
+    static std::map<std::string, std::shared_ptr<NinjamUser>> users;
 
     QString name;
     QString ip;
-    QMap<int, NinjamUserChannel*> channels;
+    QMap<int, std::shared_ptr<NinjamUserChannel>> channels;
     QString fullName;
 
     NinjamUser(QString fullName);
 
+
 public:
+    ~NinjamUser();
     static NinjamUser* getUser(QString userFullName) ;
 
     bool isBot() const ;
@@ -62,7 +65,7 @@ public:
 
     QSet<NinjamUserChannel*> getChannels() const;
 
-    inline NinjamUserChannel* getChannel(int index) const{ return channels[index];}
+    inline NinjamUserChannel* getChannel(int index) const{ return &*(channels[index]);}
 
     inline QString getIp() const{ return ip;}
 

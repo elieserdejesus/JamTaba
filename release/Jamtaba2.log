@@ -1,0 +1,105 @@
+﻿Build started 31/01/2015 13:09:11.
+     1>Project "D:\Documents\Estudos\ComputacaoMusical\Jamtaba2\Jamtaba2\Jamtaba2.vcxproj" on node 2 (Build target(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_DefaultLoginService.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are debug\moc_DefaultLoginService.cpp, release\moc_DefaultLoginService.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_NinjamService.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are debug\moc_NinjamService.cpp, release\moc_NinjamService.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_PeakMeter.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are debug\moc_PeakMeter.cpp, release\moc_PeakMeter.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_audioiodialog.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are debug\moc_audioiodialog.cpp, release\moc_audioiodialog.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_mainframe.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are debug\moc_mainframe.cpp, release\moc_mainframe.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of moc_trackview.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are debug\moc_trackview.cpp, release\moc_trackview.cpp.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(935,5): warning MSB8027: Two or more files with the name of qrc_jamtaba.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are debug\qrc_jamtaba.cpp, release\qrc_jamtaba.cpp.
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Iportaudio\include /Isrc\jamtaba\gui /Isrc\jamtaba\gui\widgets /IC:\Qt\Qt5.4.0\5.4\mingw491_32\include /IC:\Qt\Qt5.4.0\5.4\mingw491_32\include\QtWidgets /IC:\Qt\Qt5.4.0\5.4\mingw491_32\include\QtGui /IC:\Qt\Qt5.4.0\5.4\mingw491_32\include\QtNetwork /IC:\Qt\Qt5.4.0\5.4\mingw491_32\include\QtCore /Irelease /I. /I"C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\win32-msvc2013" /nologo /W3 /WX- /O2 /Oy- /D _WINDOWS /D UNICODE /D WIN32 /D QT_NO_DEBUG /D QT_WIDGETS_LIB /D QT_GUI_LIB /D QT_NETWORK_LIB /D QT_CORE_LIB /D NDEBUG /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"release\\" /Gd /TP /analyze- /errorReport:prompt -Zm200 -std=c++11 -Zc:strictStrings -w34100 -w34189 src\jamtaba\audio\AudioDriver.cpp src\jamtaba\audio\AudioMixer.cpp src\jamtaba\audio\AudioNode.cpp src\jamtaba\ninjam\protocol\ClientMessages.cpp src\jamtaba\ConfigStore.cpp src\jamtaba\network\loginserver\DefaultLoginService.cpp src\jamtaba\model\JamRoom.cpp src\jamtaba\model\JamRoomRepository.cpp src\jamtaba\JamtabaFactory.cpp src\jamtaba\network\loginserver\JsonUtils.cpp src\jamtaba\network\loginserver\LoginService.cpp src\jamtaba\network\loginserver\LoginServiceResponse.cpp src\jamtaba\MainController.cpp src\jamtaba\ninjam\NinjamServer.cpp src\jamtaba\ninjam\NinjamService.cpp src\jamtaba\ninjam\NinjamUser.cpp src\jamtaba\gui\widgets\PeakMeter.cpp src\jamtaba\model\Peer.cpp src\jamtaba\audio\PortAudioDriver.cpp src\jamtaba\ninjam\protocol\ServerMessageParser.cpp src\jamtaba\ninjam\protocol\ServerMessages.cpp src\jamtaba\gui\audioiodialog.cpp src\jamtaba\ninjam\main.cpp src\jamtaba\gui\mainframe.cpp src\jamtaba\gui\trackview.cpp release\moc_DefaultLoginService.cpp release\moc_NinjamService.cpp release\moc_PeakMeter.cpp release\moc_audioiodialog.cpp release\moc_mainframe.cpp release\moc_trackview.cpp release\qrc_jamtaba.cpp
+     1>cl : Command line warning D9002: ignoring unknown option '-std=c++11'
+         AudioDriver.cpp
+         AudioMixer.cpp
+         AudioNode.cpp
+         ClientMessages.cpp
+         ConfigStore.cpp
+         DefaultLoginService.cpp
+         JamRoom.cpp
+         JamRoomRepository.cpp
+         JamtabaFactory.cpp
+         JsonUtils.cpp
+         LoginService.cpp
+         LoginServiceResponse.cpp
+         MainController.cpp
+         NinjamServer.cpp
+         NinjamService.cpp
+     1>src\jamtaba\ninjam\NinjamService.cpp(148): warning C4100: 'msg' : unreferenced formal parameter
+     1>src\jamtaba\ninjam\NinjamService.cpp(152): warning C4100: 'msg' : unreferenced formal parameter
+     1>src\jamtaba\ninjam\NinjamService.cpp(199): warning C4100: 'normalDisconnection' : unreferenced formal parameter
+     1>src\jamtaba\ninjam\NinjamService.cpp(610): warning C4100: 'stream' : unreferenced formal parameter
+         NinjamUser.cpp
+         PeakMeter.cpp
+     1>d:\documents\estudos\computacaomusical\jamtaba2\jamtaba2\src\jamtaba\gui\widgets\PeakMeter.h(27): warning C4138: '*/' found outside of comment
+         Peer.cpp
+         PortAudioDriver.cpp
+         ServerMessageParser.cpp
+     1>src\jamtaba\ninjam\protocol\ServerMessageParser.cpp(74): warning C4100: 'payloadLenght' : unreferenced formal parameter
+     1>src\jamtaba\ninjam\protocol\ServerMessageParser.cpp(165): warning C4100: 'payload' : unreferenced formal parameter
+         Generating Code...
+         Compiling...
+         ServerMessages.cpp
+         audioiodialog.cpp
+         main.cpp
+         mainframe.cpp
+     1>d:\documents\estudos\computacaomusical\jamtaba2\jamtaba2\src\jamtaba\gui\widgets/PeakMeter.h(27): warning C4138: '*/' found outside of comment
+         trackview.cpp
+     1>src\jamtaba\gui\widgets\PeakMeter.h(27): warning C4138: '*/' found outside of comment
+         moc_DefaultLoginService.cpp
+         moc_NinjamService.cpp
+         moc_PeakMeter.cpp
+     1>d:\documents\estudos\computacaomusical\jamtaba2\jamtaba2\release\../src/jamtaba/gui/widgets/PeakMeter.h(27): warning C4138: '*/' found outside of comment
+         moc_audioiodialog.cpp
+         moc_mainframe.cpp
+     1>d:\documents\estudos\computacaomusical\jamtaba2\jamtaba2\src\jamtaba\gui\widgets/PeakMeter.h(27): warning C4138: '*/' found outside of comment
+         moc_trackview.cpp
+         qrc_jamtaba.cpp
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"release\\Jamtaba2.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Qt\Qt5.4.0\5.4\mingw491_32\lib /LIBPATH:"C:\Qt\Qt5.4.0\Tools\mingw491_32\i686-w64-mingw32\lib\\" /LIBPATH:D:\Documents\Estudos\ComputacaoMusical\Jamtaba2\Jamtaba2\portaudio\lib\ glu32.lib opengl32.lib gdi32.lib user32.lib C:\Qt\Qt5.4.0\5.4\mingw491_32\lib\qtmain.lib "-LC:\mingw491\mingw32\lib" "-LC:\Utils\icu32_53_1_mingw482\lib" "-LC:\utils\postgresql\pgsql\lib" "-LC:\utils\mysql\mysql\lib" "-LC:\opensll\lib" "-lshell32" "-LC:\Qt\Qt5.4.0\5.4\mingw491_32/lib" "-lQt5Core" portaudio.lib winmm.lib ole32.lib C:\Qt\Qt5.4.0\5.4\mingw491_32\lib\Qt5Widgets.lib C:\Qt\Qt5.4.0\5.4\mingw491_32\lib\Qt5Gui.lib C:\Qt\Qt5.4.0\5.4\mingw491_32\lib\Qt5Network.lib C:\Qt\Qt5.4.0\5.4\mingw491_32\lib\Qt5Core.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"release\Jamtaba2.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /MACHINE:X86 /SAFESEH "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" release\AudioDriver.obj
+         release\AudioMixer.obj
+         release\AudioNode.obj
+         release\ClientMessages.obj
+         release\ConfigStore.obj
+         release\DefaultLoginService.obj
+         release\JamRoom.obj
+         release\JamRoomRepository.obj
+         release\JamtabaFactory.obj
+         release\JsonUtils.obj
+         release\LoginService.obj
+         release\LoginServiceResponse.obj
+         release\MainController.obj
+         release\NinjamServer.obj
+         release\NinjamService.obj
+         release\NinjamUser.obj
+         release\PeakMeter.obj
+         release\Peer.obj
+         release\PortAudioDriver.obj
+         release\ServerMessageParser.obj
+         release\ServerMessages.obj
+         release\audioiodialog.obj
+         release\main.obj
+         release\mainframe.obj
+         release\trackview.obj
+         release\moc_DefaultLoginService.obj
+         release\moc_NinjamService.obj
+         release\moc_PeakMeter.obj
+         release\moc_audioiodialog.obj
+         release\moc_mainframe.obj
+         release\moc_trackview.obj
+         release\qrc_jamtaba.obj
+     1>LINK : warning LNK4044: unrecognized option '/LC:\mingw491\mingw32\lib'; ignored
+     1>LINK : warning LNK4044: unrecognized option '/LC:\Utils\icu32_53_1_mingw482\lib'; ignored
+     1>LINK : warning LNK4044: unrecognized option '/LC:\utils\postgresql\pgsql\lib'; ignored
+     1>LINK : warning LNK4044: unrecognized option '/LC:\utils\mysql\mysql\lib'; ignored
+     1>LINK : warning LNK4044: unrecognized option '/LC:\opensll\lib'; ignored
+     1>LINK : warning LNK4044: unrecognized option '/lshell32'; ignored
+     1>LINK : warning LNK4044: unrecognized option '/LC:\Qt\Qt5.4.0\5.4\mingw491_32/lib'; ignored
+     1>LINK : warning LNK4044: unrecognized option '/lQt5Core'; ignored
+     1>LINK : fatal error LNK1181: cannot open input file 'C:\Qt\Qt5.4.0\5.4\mingw491_32\lib\qtmain.lib'
+     1>Done Building Project "D:\Documents\Estudos\ComputacaoMusical\Jamtaba2\Jamtaba2\Jamtaba2.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:23.12

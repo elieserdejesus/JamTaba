@@ -25,6 +25,7 @@ namespace ServerMessageType{
 class ServerMessageParser  {
 
 private:
+    //useri shared_pointer porque o unique_ptr estava dando muito problema com o map
     static QMap<ServerMessageType::MessageType, std::shared_ptr<ServerMessageParser>> parsers;
 
     static ServerMessageParser* createInstance(ServerMessageType::MessageType messageType);
@@ -35,7 +36,7 @@ protected:
 public:
     virtual ServerMessage* parse(QDataStream& stream, quint32 payloadLenght) = 0;
 
-    static ServerMessageParser* getParser(ServerMessageType::MessageType messageType) ;
+    static ServerMessageParser *getParser(ServerMessageType::MessageType messageType) ;
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++

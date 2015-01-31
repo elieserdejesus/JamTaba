@@ -4,10 +4,11 @@
 
 QMap<ServerMessageType::MessageType, std::shared_ptr<ServerMessageParser>> ServerMessageParser::parsers;
 
-ServerMessageParser *ServerMessageParser::getParser(ServerMessageType::MessageType type)
+ServerMessageParser* ServerMessageParser::getParser(ServerMessageType::MessageType type)
 {
     if(!parsers.contains(type)){
-        parsers.insert(type, std::shared_ptr<ServerMessageParser>(createInstance(type) ));
+        //parsers.emplace(std::make_pair(type,std::move(createInstance(type))));
+        parsers[type] = std::shared_ptr<ServerMessageParser>( createInstance(type));
     }
     return parsers[type].get();
 }
@@ -47,7 +48,7 @@ QString ServerMessageParser::extractString(QDataStream &stream)
 //+++++++++++++++++++++++++++++++++++++++++
 
 ServerMessage* AuthChallengeParser::parse(QDataStream &stream, quint32 /*payloadLenght*/){
-    quint8 challenge[8];// = new char[8];
+    quint8 challenge[8];
     for (int i = 0; i < 8; ++i) {
         stream >> challenge[i];
     }
@@ -71,7 +72,7 @@ ServerMessage* AuthChallengeParser::parse(QDataStream &stream, quint32 /*payload
     return new ServerAuthChallengeMessage(serverKeepAlivePeriod, challenge, licenceAgreement, protocolVersion);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++
-ServerMessage *AuthReplyParser::parse(QDataStream &stream, quint32 payloadLenght)
+ServerMessage *AuthReplyParser::parse(QDataStream &stream, quint32 /*payloadLenght*/)
 {
     quint8 flag;
     quint8 maxChannels;
@@ -162,7 +163,7 @@ ServerMessage *KeepAliveParser::parse(QDataStream &/*stream*/, quint32 /*payload
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-ServerMessage *DownloadIntervalBeginParser::parse(QDataStream &stream, quint32 payload)
+ServerMessage *DownloadIntervalBeginParser::parse(QDataStream &stream, quint32 /*payload*/)
 {
     QByteArray GUID;
     quint8 byte;

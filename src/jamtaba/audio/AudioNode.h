@@ -54,8 +54,8 @@ private:
     float pan;
 
 
-    static constexpr double root2Over2 = 1.414213562373095 * 0.5;
-    static constexpr double piOver2 = 3.141592653589793238463 * 0.5;
+	static const double root2Over2;// = 1.414213562373095;// *0.5;
+	static const double piOver2;// = 3.141592653589793238463 * 0.5;
 
     inline void updateGains() {
         double angle = pan * piOver2 * 0.5;
