@@ -1,6 +1,6 @@
 #pragma once
 #include <QString>
-#include "server/parsers/ServerMessageParser.h"
+#include "ServerMessageParser.h"
 #include <QDebug>
 
 class ServerMessage {

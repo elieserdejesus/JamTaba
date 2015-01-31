@@ -49,10 +49,10 @@ HEADERS += \
     src/jamtaba/ninjam/NinjamService.h \
     src/jamtaba/ninjam/NinjamServer.h \
     src/jamtaba/ninjam/NinjamUser.h \
-    src/jamtaba/ninjam/protocol/server/parsers/ServerMessageParser.h \
-    src/jamtaba/ninjam/protocol/NinjamPublicServersParser.h \
+    src/jamtaba/ninjam/protocol/ServerMessageParser.h \
     src/jamtaba/ninjam/protocol/ServerMessages.h \
     src/jamtaba/ninjam/protocol/ClientMessages.h \
+    src/jamtaba/ninjam/NinjamPublicServersParser.h \
 
 win32:HEADERS += portaudio/include/pa_asio.h
 
@@ -81,7 +81,7 @@ SOURCES += \
     src/jamtaba/ninjam/NinjamUser.cpp \
     src/jamtaba/ninjam/protocol/ServerMessages.cpp \
     src/jamtaba/ninjam/protocol/ClientMessages.cpp \
-    src/jamtaba/ninjam/protocol/server/parsers/ServerMessageParser.cpp \
+    src/jamtaba/ninjam/protocol/ServerMessageParser.cpp \
 
 
 FORMS += src/jamtaba/gui/mainframe.ui \

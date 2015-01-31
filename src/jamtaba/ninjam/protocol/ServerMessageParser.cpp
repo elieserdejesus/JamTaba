@@ -1,6 +1,6 @@
 #include "ServerMessageParser.h"
-#include "../../ServerMessages.h"
-#include "../ninjam/NinjamUser.h"
+#include "ServerMessages.h"
+#include "../NinjamUser.h"
 
 QMap<ServerMessageType::MessageType, std::shared_ptr<ServerMessageParser>> ServerMessageParser::parsers;
 

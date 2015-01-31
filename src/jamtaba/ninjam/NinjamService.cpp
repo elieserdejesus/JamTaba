@@ -1,7 +1,7 @@
 #include "NinjamService.h"
 #include "NinjamServer.h"
 #include "NinjamUser.h"
-#include "protocol/server/parsers/ServerMessageParser.h"
+#include "protocol/ServerMessageParser.h"
 #include "protocol/ServerMessages.h"
 #include "protocol/ClientMessages.h"
 #include <QHostAddress>
