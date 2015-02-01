@@ -10,7 +10,7 @@ std::map<std::string, std::shared_ptr<NinjamUser>> NinjamUser::users;
 NinjamUserChannel::NinjamUserChannel(NinjamUser *user, QString name, bool active, int channelIndex, short volume, quint8 pan, quint8 flags)
     : user(user), name(name), active(active), index(channelIndex), volume(volume), pan(pan), flags(flags)
 {
-    qDebug() << "NinjamUserChannel constructor";
+    //qDebug() << "NinjamUserChannel constructor";
 }
 
 
@@ -23,11 +23,11 @@ NinjamUser::NinjamUser(QString fullName) {
     } else {
         this->ip = "";
     }
-    qDebug() << "NinjamUser constructor " << fullName;
+   // qDebug() << "NinjamUser constructor " << fullName;
 }
 
 NinjamUser::~NinjamUser(){
-    qDebug() << "Destrutor NinjamUser";
+    //qDebug() << "Destrutor NinjamUser";
 }
 
 NinjamUser* NinjamUser::getUser(QString userFullName) {
@@ -64,7 +64,7 @@ void NinjamUser::removeChannel(NinjamUserChannel* userChannel) {
 }
 
 
-QDataStream &operator<<(QDataStream &out, const NinjamUser &user)
+QDebug &operator<<(QDebug &out, const NinjamUser &user)
 {
     out << "NinjamUser{" << "name=" << user.getName() << ", ip=" << user.getIp()
         << ", fullName=" << user.getFullName() << "}\n";
@@ -82,7 +82,7 @@ QDataStream &operator<<(QDataStream &out, const NinjamUser &user)
 }
 
 
-QDataStream &operator<<(QDataStream &out, const NinjamUserChannel &ch)
+QDebug &operator<<(QDebug &out, const NinjamUserChannel &ch)
 {
     out << "UserChannel{" << "name=" << ch.getName()<< ", active=" << ch.isActive()
         << ", index=" << ch.getIndex() << '}';

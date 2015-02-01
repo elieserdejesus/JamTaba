@@ -19,7 +19,8 @@ QT       += network
 
 QMAKE_MACOSX_DEPLOYMENT_TARGET=10.9
 
-QMAKE_CXXFLAGS += -std=c++11 -stdlib=libc++
+QMAKE_CXXFLAGS += -std=c++11 -Wno-unused-parameter
+macx:QMAKE_CXXFLAGS += -stdlib=libc++
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

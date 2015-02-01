@@ -78,6 +78,6 @@ public:
     void removeChannel(NinjamUserChannel* userChannel) ;
 };
 
-QDataStream &operator<<(QDataStream &out, const NinjamUser &user);
-QDataStream &operator<<(QDataStream &out, const NinjamUserChannel &user);
+QDebug &operator<<(QDebug &out, const NinjamUser &user);
+QDebug &operator<<(QDebug &out, const NinjamUserChannel &user);
 

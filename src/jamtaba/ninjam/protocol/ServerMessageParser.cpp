@@ -155,11 +155,13 @@ ServerMessage* ChatMessageParser::parse(QDataStream &stream, quint32 payloadLeng
 }
 
 //+++++++++++++++++++++++++++=
-ServerKeepAliveMessage* KeepAliveParser::keepAliveMessageInstance = new ServerKeepAliveMessage();
 
 ServerMessage *KeepAliveParser::parse(QDataStream &/*stream*/, quint32 /*payloadLenght*/)
 {
-    return keepAliveMessageInstance;
+    //tinha um bug aqui. Eu estava retornando uma instância estática da mensagem, só que o método
+    //que chama o parse deleta a mensagem depois de processá-la. Ou seja, a instância estática era
+    //destruída e dava um SIGSEV logo em seguida.
+    return new ServerKeepAliveMessage();
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

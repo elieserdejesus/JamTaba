@@ -4,8 +4,10 @@
 #include "protocol/ServerMessageParser.h"
 #include "protocol/ServerMessages.h"
 #include "protocol/ClientMessages.h"
+#include <algorithm>
 #include <QHostAddress>
 #include <QDateTime>
+#include <assert.h>
 
 
 std::unique_ptr<NinjamService> NinjamService::serviceInstance;
@@ -22,11 +24,29 @@ NinjamService::NinjamService()
 }
 
 NinjamService::~NinjamService(){
-//    qDebug() << "NinjamService destructor";
+    qDebug() << "NinjamService destructor";
+}
+
+void NinjamService::addListener(NinjamServiceListener *listener){
+
+    listeners.push_back(std::unique_ptr<NinjamServiceListener>(listener));
+}
+
+void NinjamService::removeListener(NinjamServiceListener *listener){
+    std::vector<std::unique_ptr<NinjamServiceListener>>::iterator it = listeners.begin();
+    while(it != listeners.end()){
+        if( &*(*it) == listener){
+            it->release();
+            listeners.erase(it);
+            break;
+        }
+        it++;
+    }
+
 }
 
 void NinjamService::socketReadSlot(){
-    if(socket->bytesAvailable() < 5){
+    if(socket.bytesAvailable() < 5){
         qDebug() << "not have enough bytes to read message header (5 bytes)";
         return;
     }
@@ -34,23 +54,24 @@ void NinjamService::socketReadSlot(){
     quint8 messageTypeCode;
     quint32 payloadLenght;
 
-    QDataStream stream(socket.get());
+    QDataStream stream(&socket);
     stream.setByteOrder(QDataStream::LittleEndian);
     bool handlingSplittedMessage = false;
-    while (socket->bytesAvailable() >= 5){//consume all messages
+    while (socket.bytesAvailable() >= 5){//consume all messages
         if(!handlingSplittedMessage){
             stream >> messageTypeCode >> payloadLenght;
         }
-        if (socket->bytesAvailable() >= (int)payloadLenght) {//message payload is available to read
+        if (socket.bytesAvailable() >= (int)payloadLenght) {//message payload is available to read
             handlingSplittedMessage = false;
             ServerMessageParser* parser = ServerMessageParser::getParser( static_cast<ServerMessageType::MessageType>(messageTypeCode));
             ServerMessage* message = parser->parse(stream, payloadLenght);
             qDebug() << message;
             invokeMessageHandler(message);
+
             delete message;
         } else {//bytesAvailable < payloadLenght, not enough bytes in socket
             handlingSplittedMessage = true;
-            socket->waitForReadyRead();
+            socket.waitForReadyRead();
         }
     }
     //if (needSendKeepAliveToServer()) {
@@ -101,16 +122,14 @@ float NinjamService::getIntervalPeriod() {
 }
 
 void NinjamService::buildNewSocket()   {
-    if(socket){
-        if(socket->isOpen()){
-            socket->close();
+        if(socket.isOpen()){
+            socket.close();
         }
-    }
 
-    socket.reset( new QTcpSocket(this));
-    connect(socket.get(), SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
-    connect(socket.get(), SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
-    connect(socket.get(), SIGNAL(disconnected()), this, SLOT(socketDisconnectSlot()));
+    //socket = QTcpSocket(this);
+    connect(&socket, SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
+    connect(&socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
+    connect(&socket, SIGNAL(disconnected()), this, SLOT(socketDisconnectSlot()));
 
 }
 
@@ -118,15 +137,14 @@ void NinjamService::sendMessageToServer(ClientMessage *message)
 {
     QByteArray outBuffer;
     message->serializeTo(outBuffer);
-    int bytesWrited = socket->write(outBuffer);
-    socket->flush();
+    int bytesWrited = socket.write(outBuffer);
+    socket.flush();
     if(bytesWrited <= 0){
         qFatal("não escreveu os bytes");
     }
-    //qDebug() << "escreveu " << bytesWrited << " bytes no socket";
     lastSendTime = QDateTime::currentMSecsSinceEpoch();
     qDebug() << message;
-    Q_ASSERT((int)message->getPayload() + 5 == outBuffer.size());
+    assert((int)message->getPayload() + 5 == outBuffer.size());
 }
 
 void NinjamService::handle(UserInfoChangeNotifyMessage* msg) {
@@ -146,12 +164,28 @@ void NinjamService::handle(UserInfoChangeNotifyMessage* msg) {
     sendMessageToServer( &setUserMask );//enable new users channels
 }
 
-void NinjamService::handle(DownloadIntervalBegin */*msg*/){
-    qDebug() << "DOWNLOAD INTERVAL BEGIN";
+void NinjamService::handle(DownloadIntervalBegin * msg){
+    if (!msg->downloadShouldBeStopped() && msg->isValidOggDownload()) {
+        quint8 channelIndex = msg->getChannelIndex();
+        QString userFullName = msg->getUserName();
+        QString GUID = msg->getGUID();
+        downloads.insert(GUID, std::shared_ptr<Download>( new Download(NinjamUser::getUser(userFullName), channelIndex, GUID)));
+    }
+
 }
 
-void NinjamService::handle(DownloadIntervalWrite */*msg*/){
-    qDebug() << "DOWNLOAD INTERVAL WRITE";
+void NinjamService::handle(DownloadIntervalWrite *msg){
+    if (downloads.contains(msg->getGUID())) {
+        Download* download = &*(downloads[msg->getGUID()]);
+        for (auto &l : listeners) {
+            l->audioIntervalPartAvailable(*download->user, download->channelIndex, msg->getEncodedAudioData(), msg->downloadIsComplete());
+        }
+        if (msg->downloadIsComplete()) {
+            downloads.remove(msg->getGUID());
+        }
+    } else {
+        qCritical("GUID is not in map!");
+    }
 }
 
 void NinjamService::handle(ServerKeepAliveMessage * /*msg*/)
@@ -185,13 +219,10 @@ void NinjamService::startServerConnection(QString serverIp, int serverPort, QStr
     this->password = password;
     this->channels = channels;
 
-    qDebug() << "Starting connection with "<< serverIp << ":"<< serverPort;
-    if (socket != nullptr && socket->isOpen()) {
-        socket->close();
-    }
+    //qDebug() << "Starting connection with "<< serverIp << ":"<< serverPort;
     buildNewSocket();
-    socket->connectToHost(serverIp, serverPort);
-    if(!socket->waitForConnected()){
+    socket.connectToHost(serverIp, serverPort);
+    if(!socket.waitForConnected()){
         for (auto &l : listeners) {
             l->error("can't connect in " + serverIp + ":" + serverPort);
         }
@@ -350,74 +381,6 @@ bool NinjamService::channelIsOutdate(const NinjamUser& user, const NinjamUserCha
     return false;
 }
 
-
-/*
-
-    private void fireUserChannelRemoved(NinjaMUser user, UserChannel userChannel) {
-        synchronized (listeners) {
-            for (NinjaMServiceListener l : listeners) {
-                l.userChannelRemoved(user, userChannel);
-            }
-        }
-    }
-
-    private void fireUserChannelUpdated(NinjaMUser user, UserChannel userChannel) {
-        synchronized (listeners) {
-            for (NinjaMServiceListener l : listeners) {
-                l.userChannelUpdated(user, userChannel);
-            }
-        }
-    }
-
-    private void fireUserChannelCreated(NinjaMUser user, UserChannel channel) {
-        synchronized (listeners) {
-            for (NinjaMServiceListener l : listeners) {
-                l.userChannelCreated(user, channel);
-            }
-        }
-    }
-
-    private class Download {
-
-        final byte channelIndex;
-        final NinjaMUser user;
-        final String GUID;
-
-        public Download(NinjaMUser user, byte channelIndex, String GUID) {
-            this.channelIndex = channelIndex;
-            this.user = user;
-            this.GUID = GUID;
-        }
-
-    }
-
-    private Map<String, Download> downloads = new HashMap<String, Download>();
-
-    private void handle(DownloadIntervalBegin msg) throws NinjaMSendException {
-
-        if (!msg.downloadShouldBeStopped() && msg.isValidOggDownload()) {
-            byte channelIndex = msg.getChannelIndex();
-            String userFullName = msg.getUserName();
-            String GUID = msg.getGUID();
-            downloads.put(GUID, new Download(NinjaMUser.getUser(userFullName), channelIndex, GUID));
-        }
-    }
-
-    private synchronized void handle(DownloadIntervalWrite msg) throws NinjaMSendException {
-        if (downloads.containsKey(msg.getGUID())) {
-            Download download = downloads.get(msg.getGUID());
-            //System.out.println("last part: " + msg.downloadIsComplete());
-            for (NinjaMServiceListener l : listeners) {
-                l.audioIntervalPartAvailable(download.user, download.channelIndex, msg.getEncodedAudioData(), msg.downloadIsComplete());
-            }
-            if (msg.downloadIsComplete()) {
-                downloads.remove(msg.getGUID());
-            }
-        } else {
-            LOGGER.severe("GUID is not in map!");
-        }
-    }
-*/
 //+++++++++++++ CHAT MESSAGES ++++++++++++++++++++++
 
 void NinjamService::handle(ServerChatMessage* msg) {
@@ -660,7 +623,7 @@ void NinjamService::invokeMessageHandler(ServerMessage *message){
                 break;
 
     default:
-        qCritical("not implement yet: " + message->getMessageType());
+        qCritical("receive a not implemented yet message!");
     }
 }
 

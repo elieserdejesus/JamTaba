@@ -57,8 +57,7 @@ public:
 //++++++++++++++++++++++++++++++++++++++++++++++++++
 class ServerKeepAliveMessage;
 class KeepAliveParser : public ServerMessageParser{
-private:
-    static ServerKeepAliveMessage* keepAliveMessageInstance;
+
 public:
     virtual ServerMessage* parse(QDataStream &stream, quint32 payloadLenght);
 };

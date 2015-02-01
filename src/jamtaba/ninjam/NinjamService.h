@@ -86,6 +86,9 @@ public:
     void startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password = "");
     void disconnectFromServer(bool normalDisconnection=true);
 
+    void addListener(NinjamServiceListener* listener);
+    void removeListener(NinjamServiceListener* listener);
+
     ~NinjamService();
 private:
     static const long DEFAULT_KEEP_ALIVE_PERIOD = 3000;
@@ -93,7 +96,7 @@ private:
     NinjamService();
 
     std::vector<std::unique_ptr<NinjamServiceListener>> listeners;
-    std::unique_ptr<QTcpSocket> socket;
+    QTcpSocket socket;
 
     //GUID, AudioInterval
     long lastSendTime;//time stamp of last send
@@ -129,6 +132,23 @@ private:
     void handle(ServerKeepAliveMessage *msg);
     void handle(DownloadIntervalBegin *msg);
     void handle(DownloadIntervalWrite *msg);
+    //++++++++++++=
+
+    class Download {
+    public:
+        const quint8 channelIndex;
+        const NinjamUser* user;
+        const QString GUID;
+
+        Download(NinjamUser* user, quint8 channelIndex, QString GUID)
+            :channelIndex(channelIndex), user(user), GUID(GUID){
+
+        }
+
+    };
+
+    //using GUID as key
+    QMap<QString, std::shared_ptr<Download>> downloads;
 
 private slots:
     void socketReadSlot();

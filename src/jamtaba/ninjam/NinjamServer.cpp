@@ -13,7 +13,7 @@ NinjamServer::NinjamServer(QString host, int port)
       containBot(false)
 {
 
-    qDebug() << "criou server " << host <<":" << port;
+    //qDebug() << "criou server " << host <<":" << port;
 }
 
 
