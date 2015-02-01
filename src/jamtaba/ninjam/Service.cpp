@@ -1,6 +1,6 @@
-#include "NinjamService.h"
-#include "NinjamServer.h"
-#include "NinjamUser.h"
+#include "Service.h"
+#include "Server.h"
+#include "User.h"
 #include "protocol/ServerMessageParser.h"
 #include "protocol/ServerMessages.h"
 #include "protocol/ClientMessages.h"
@@ -9,11 +9,12 @@
 #include <QDateTime>
 #include <assert.h>
 
+using namespace Ninjam;
 
-std::unique_ptr<NinjamService> NinjamService::serviceInstance;
+std::unique_ptr<Service> Service::serviceInstance;
 
 
-NinjamService::NinjamService()
+Service::Service()
     : socket(nullptr),
       //currentServer(nullptr),
       //inputBuffer(nullptr),
@@ -23,17 +24,17 @@ NinjamService::NinjamService()
 
 }
 
-NinjamService::~NinjamService(){
+Service::~Service(){
     qDebug() << "NinjamService destructor";
 }
 
-void NinjamService::addListener(NinjamServiceListener *listener){
+void Service::addListener(ServiceListener *listener){
 
-    listeners.push_back(std::unique_ptr<NinjamServiceListener>(listener));
+    listeners.push_back(std::unique_ptr<ServiceListener>(listener));
 }
 
-void NinjamService::removeListener(NinjamServiceListener *listener){
-    std::vector<std::unique_ptr<NinjamServiceListener>>::iterator it = listeners.begin();
+void Service::removeListener(ServiceListener *listener){
+    std::vector<std::unique_ptr<ServiceListener>>::iterator it = listeners.begin();
     while(it != listeners.end()){
         if( &*(*it) == listener){
             it->release();
@@ -45,7 +46,7 @@ void NinjamService::removeListener(NinjamServiceListener *listener){
 
 }
 
-void NinjamService::socketReadSlot(){
+void Service::socketReadSlot(){
     if(socket.bytesAvailable() < 5){
         qDebug() << "not have enough bytes to read message header (5 bytes)";
         return;
@@ -63,8 +64,8 @@ void NinjamService::socketReadSlot(){
         }
         if (socket.bytesAvailable() >= (int)payloadLenght) {//message payload is available to read
             handlingSplittedMessage = false;
-            ServerMessageParser* parser = ServerMessageParser::getParser( static_cast<ServerMessageType::MessageType>(messageTypeCode));
-            ServerMessage* message = parser->parse(stream, payloadLenght);
+            ServerMessageParser* parser = ServerMessageParser::getParser( static_cast<ServerMessageType>(messageTypeCode));
+            Ninjam::ServerMessage* message = parser->parse(stream, payloadLenght);
             qDebug() << message;
             invokeMessageHandler(message);
 
@@ -80,25 +81,25 @@ void NinjamService::socketReadSlot(){
 
 }
 
-void NinjamService::socketErrorSlot(QAbstractSocket::SocketError error)
+void Service::socketErrorSlot(QAbstractSocket::SocketError error)
 {
     qDebug() << "Socket error: " << error;
 }
 
-void NinjamService::socketDisconnectSlot()
+void Service::socketDisconnectSlot()
 {
     qFatal("Socket disconnected");
 }
 
 
- NinjamService* NinjamService::getInstance() {
+Service* Service::getInstance() {
     if(!serviceInstance){
-        serviceInstance = std::unique_ptr<NinjamService>(new NinjamService());
+        serviceInstance = std::unique_ptr<Service>(new Service());
     }
     return serviceInstance.get();
 }
 
-bool NinjamService::isBotName(QString userName) {
+bool Service::isBotName(QString userName) {
     userName = userName.trimmed().toLower();
     return (userName == "jambot") ||
             (userName == "ninbot") ||
@@ -106,7 +107,7 @@ bool NinjamService::isBotName(QString userName) {
             (userName == "LiveStream");
 }
 
-QString NinjamService::getConnectedUserName() {
+QString Service::getConnectedUserName() {
     if (initialized) {
         return newUserName;
     }
@@ -114,17 +115,17 @@ QString NinjamService::getConnectedUserName() {
     return "";
 }
 
-float NinjamService::getIntervalPeriod() {
+float Service::getIntervalPeriod() {
     if (currentServer ) {
         return (float)60000 / currentServer->getBpm() * currentServer->getBpi();
     }
     return 0;
 }
 
-void NinjamService::buildNewSocket()   {
-        if(socket.isOpen()){
-            socket.close();
-        }
+void Service::buildNewSocket()   {
+    if(socket.isOpen()){
+        socket.close();
+    }
 
     //socket = QTcpSocket(this);
     connect(&socket, SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
@@ -133,7 +134,7 @@ void NinjamService::buildNewSocket()   {
 
 }
 
-void NinjamService::sendMessageToServer(ClientMessage *message)
+void Service::sendMessageToServer(ClientMessage *message)
 {
     QByteArray outBuffer;
     message->serializeTo(outBuffer);
@@ -147,10 +148,10 @@ void NinjamService::sendMessageToServer(ClientMessage *message)
     assert((int)message->getPayload() + 5 == outBuffer.size());
 }
 
-void NinjamService::handle(UserInfoChangeNotifyMessage* msg) {
+void Service::handle(UserInfoChangeNotifyMessage* msg) {
     //QMap<NinjamUser*, QList<NinjamUserChannel*>> allUsersChannels = msg->getUsersChannels();
-    QSet<NinjamUser*> users = QSet<NinjamUser*>::fromList( msg->getUsers());
-    foreach (NinjamUser* user , users) {
+    QSet<User*> users = QSet<User*>::fromList( msg->getUsers());
+    foreach (User* user , users) {
         if (!currentServer->containsUser(*user)) {
             currentServer->addUser(user);
             for (auto &l : listeners) {
@@ -164,17 +165,17 @@ void NinjamService::handle(UserInfoChangeNotifyMessage* msg) {
     sendMessageToServer( &setUserMask );//enable new users channels
 }
 
-void NinjamService::handle(DownloadIntervalBegin * msg){
+void Service::handle(DownloadIntervalBegin * msg){
     if (!msg->downloadShouldBeStopped() && msg->isValidOggDownload()) {
         quint8 channelIndex = msg->getChannelIndex();
         QString userFullName = msg->getUserName();
         QString GUID = msg->getGUID();
-        downloads.insert(GUID, std::shared_ptr<Download>( new Download(NinjamUser::getUser(userFullName), channelIndex, GUID)));
+        downloads.insert(GUID, std::shared_ptr<Download>( new Download(User::getUser(userFullName), channelIndex, GUID)));
     }
 
 }
 
-void NinjamService::handle(DownloadIntervalWrite *msg){
+void Service::handle(DownloadIntervalWrite *msg){
     if (downloads.contains(msg->getGUID())) {
         Download* download = &*(downloads[msg->getGUID()]);
         for (auto &l : listeners) {
@@ -188,19 +189,19 @@ void NinjamService::handle(DownloadIntervalWrite *msg){
     }
 }
 
-void NinjamService::handle(ServerKeepAliveMessage * /*msg*/)
+void Service::handle(ServerKeepAliveMessage * /*msg*/)
 {
     ClientKeepAlive clientKeepAliveMessage;
     sendMessageToServer((ClientMessage*)&clientKeepAliveMessage);
 }
 
-void NinjamService::handle(ServerAuthChallengeMessage *msg)
+void Service::handle(ServerAuthChallengeMessage *msg)
 {
     ClientAuthUserMessage msgAuthUser(this->userName, msg->getChallenge(), msg->getProtocolVersion());
     sendMessageToServer(&msgAuthUser);
 }
 
-void NinjamService::handle(ServerAuthReplyMessage *msg){
+void Service::handle(ServerAuthReplyMessage *msg){
     if(msg->userIsAuthenticated()){
         ClientSetChannel setChannelMsg(this->channels[0]);
         sendMessageToServer(&setChannelMsg);
@@ -213,7 +214,7 @@ void NinjamService::handle(ServerAuthReplyMessage *msg){
     }
 }
 
-void NinjamService::startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password){
+void Service::startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password){
     initialized = running = false;
     this->userName = userName;
     this->password = password;
@@ -229,11 +230,11 @@ void NinjamService::startServerConnection(QString serverIp, int serverPort, QStr
     }
 
     //the old current server is deleted by unique_ptr
-    currentServer.reset( NinjamServer::getServer(serverIp, serverPort));
+    currentServer.reset( Server::getServer(serverIp, serverPort));
 
 }
 
-void NinjamService::disconnectFromServer(bool /*normalDisconnection*/)
+void Service::disconnectFromServer(bool /*normalDisconnection*/)
 {
 
 }
@@ -296,7 +297,7 @@ void NinjamService::disconnectFromServer(bool /*normalDisconnection*/)
         }
     }
 */
-void NinjamService::setBpm(quint16 newBpm){
+void Service::setBpm(quint16 newBpm){
     if (currentServer == nullptr) {
         throw ("currentServer == null");
     }
@@ -307,7 +308,7 @@ void NinjamService::setBpm(quint16 newBpm){
     }
 }
 
-void NinjamService::setBpi(quint16 bpi) {
+void Service::setBpi(quint16 bpi) {
     if (currentServer == nullptr) {
         throw ("currentServer == null");
     }
@@ -335,10 +336,10 @@ void NinjamService::setBpi(quint16 bpi) {
 
 */
 
-void NinjamService::handleUserChannels(NinjamUser* user, QList<NinjamUserChannel*> channelsInTheServer) {
-    QSet<NinjamUserChannel*> userCurrentChannels = user->getChannels();
+void Service::handleUserChannels(User* user, QList<UserChannel*> channelsInTheServer) {
+    QSet<UserChannel*> userCurrentChannels = user->getChannels();
     //check for new channels
-    foreach (NinjamUserChannel* c , channelsInTheServer) {
+    foreach (UserChannel* c , channelsInTheServer) {
         if (c->isActive()) {
             if (!userCurrentChannels.contains(c)) {
                 user->addChannel(c);
@@ -347,7 +348,7 @@ void NinjamService::handleUserChannels(NinjamUser* user, QList<NinjamUserChannel
                 }
             } else {//check for channel updates
                 if (user->hasChannels()) {
-                    NinjamUserChannel* userChannel = user->getChannel(c->getIndex());
+                    UserChannel* userChannel = user->getChannel(c->getIndex());
                     if (channelIsOutdate(*user, *c)) {
                         userChannel->setName(c->getName());
                         userChannel->setFlags(c->getFlags());
@@ -367,11 +368,11 @@ void NinjamService::handleUserChannels(NinjamUser* user, QList<NinjamUserChannel
 }
 
 //verifica se o canal do usuario esta diferente do canal que veio do servidor
-bool NinjamService::channelIsOutdate(const NinjamUser& user, const NinjamUserChannel& serverChannel) {
+bool Service::channelIsOutdate(const User& user, const UserChannel& serverChannel) {
     if (&user != serverChannel.getUser()) {
         throw ("The user in channel is illegal!");
     }
-    NinjamUserChannel* userChannel = user.getChannel(serverChannel.getIndex());
+    UserChannel* userChannel = user.getChannel(serverChannel.getIndex());
     if (userChannel->getName() != serverChannel.getName()) {
         return true;
     }
@@ -383,40 +384,40 @@ bool NinjamService::channelIsOutdate(const NinjamUser& user, const NinjamUserCha
 
 //+++++++++++++ CHAT MESSAGES ++++++++++++++++++++++
 
-void NinjamService::handle(ServerChatMessage* msg) {
+void Service::handle(ServerChatMessage* msg) {
     switch (msg->getCommand()) {
-    case ServerChatCommand::JOIN:
+    case ChatCommandType::JOIN:
         //
         break;
-    case ServerChatCommand::MSG:
+    case ChatCommandType::MSG:
     {
         QString messageSender = msg->getArguments().at(0);
         QString messageText = msg->getArguments().at(1);
         for(auto &l : listeners){
-            l->chatMessageReceived(*(NinjamUser::getUser(messageSender)), messageText);
+            l->chatMessageReceived(*(User::getUser(messageSender)), messageText);
         }
         break;
 
     }
-    case ServerChatCommand::PART:
+    case ChatCommandType::PART:
     {
         QString userLeavingTheServer = msg->getArguments().at(0);
         for(auto &l : listeners){
-            l->userLeaveTheJam(*NinjamUser::getUser(userLeavingTheServer));
+            l->userLeaveTheJam(*User::getUser(userLeavingTheServer));
         }
         break;
     }
-    case ServerChatCommand::PRIVMSG:
+    case ChatCommandType::PRIVMSG:
     {
         QString messageSender = msg->getArguments().at(0);
         QString messageText = msg->getArguments().at(1);
         for(auto &l : listeners){
-            l->privateMessageReceived(*NinjamUser::getUser(messageSender), messageText);
+            l->privateMessageReceived(*User::getUser(messageSender), messageText);
         }
 
         break;
     }
-    case ServerChatCommand::TOPIC:
+    case ChatCommandType::TOPIC:
     {
         //QString userName = msg->getArguments().at(0);
         QString topicText = msg->getArguments().at(1);
@@ -429,7 +430,7 @@ void NinjamService::handle(ServerChatMessage* msg) {
         }
         break;
     }
-    case ServerChatCommand::USERCOUNT:
+    case ChatCommandType::USERCOUNT:
     {
         int users = msg->getArguments().at(0).toInt();
         int maxUsers = msg->getArguments().at(1).toInt();
@@ -583,7 +584,7 @@ void NinjamService::handle(ServerChatMessage* msg) {
     }
 */
 
-void NinjamService::handle(ConfigChangeNotifyMessage *msg)
+void Service::handle(ConfigChangeNotifyMessage *msg)
 {
     quint16 bpi = msg->getBpi();
     quint16 bpm = msg->getBpm();
@@ -595,7 +596,7 @@ void NinjamService::handle(ConfigChangeNotifyMessage *msg)
     }
 }
 
-void NinjamService::invokeMessageHandler(ServerMessage *message){
+void Service::invokeMessageHandler(ServerMessage *message){
     switch (message->getMessageType()) {
     case ServerMessageType::AUTH_CHALLENGE:
         handle((ServerAuthChallengeMessage*)message);
@@ -615,12 +616,12 @@ void NinjamService::invokeMessageHandler(ServerMessage *message){
     case ServerMessageType::KEEP_ALIVE:
         handle((ServerKeepAliveMessage*) message);
         break;
-            case ServerMessageType::DOWNLOAD_INTERVAL_BEGIN:
-                handle((DownloadIntervalBegin*) message);
-                break;
-            case ServerMessageType::DOWNLOAD_INTERVAL_WRITE:
-                handle((DownloadIntervalWrite*) message);
-                break;
+    case ServerMessageType::DOWNLOAD_INTERVAL_BEGIN:
+        handle((DownloadIntervalBegin*) message);
+        break;
+    case ServerMessageType::DOWNLOAD_INTERVAL_WRITE:
+        handle((DownloadIntervalWrite*) message);
+        break;
 
     default:
         qCritical("receive a not implemented yet message!");

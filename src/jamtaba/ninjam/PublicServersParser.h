@@ -3,7 +3,10 @@
 #include <QList>
 #include <QMap>
 
-class NinjamServer;
+
+namespace Ninjam {
+
+class Server;
 
 class NinjamPublicServersParser {
 
@@ -21,8 +24,8 @@ public:
 class MixedPublicServersParser : public NinjamPublicServersParser {
 
 public:
-    virtual QList<NinjamServer*> getPublicServers(){
-        QList<NinjamServer*> servers;
+    virtual QList<Server*> getPublicServers(){
+        QList<Server*> servers;
         try {
             if (service != null && service.isShutdown() || service == null) {
                 service = Executors.newCachedThreadPool();
@@ -52,7 +55,7 @@ public:
         }
     }
 
-    QMap<String, NinjamServer> buildServersMap(QList<NinjamServer*> servers) {
+    QMap<String, Server> buildServersMap(QList<Server*> servers) {
         Map<String, NinjaMServer> map = new HashMap<String, NinjaMServer>();
         for (NinjaMServer s : servers) {
             map.put(s.getUniqueName(), s);
@@ -61,3 +64,5 @@ public:
     }
 
 };
+
+}

@@ -6,11 +6,13 @@
 #include <QDebug>
 #include <memory>
 
-class NinjamUser;
+namespace Ninjam {
 
-class NinjamUserChannel {
+class User;
+
+class UserChannel {
 private:
-    NinjamUser* user;
+    User* user;
     QString name;
     bool active;
     int index;
@@ -19,8 +21,8 @@ private:
     quint8 flags;
 
 public:
-    NinjamUserChannel(NinjamUser* user, QString name, bool active, int channelIndex, short volume, quint8 pan, quint8 flags);
-    ~NinjamUserChannel(){
+    UserChannel(User* user, QString name, bool active, int channelIndex, short volume, quint8 pan, quint8 flags);
+    ~UserChannel(){
         qDebug() << "NinjamUserChannel destructor";
     }
 
@@ -32,7 +34,7 @@ public:
 
     inline QString getName() const{ return name;}
 
-    inline NinjamUser* getUser() const{ return user;}
+    inline User* getUser() const{ return user;}
 
     inline void setName(QString name) {this->name = name;}
 
@@ -42,30 +44,30 @@ public:
 };
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class NinjamUser {
+class User {
 
 private:
-    static std::map<std::string, std::shared_ptr<NinjamUser>> users;
+    static std::map<std::string, std::shared_ptr<User>> users;
 
     QString name;
     QString ip;
-    QMap<int, std::shared_ptr<NinjamUserChannel>> channels;
+    QMap<int, std::shared_ptr<UserChannel>> channels;
     QString fullName;
 
-    NinjamUser(QString fullName);
+    User(QString fullName);
 
 
 public:
-    ~NinjamUser();
-    static NinjamUser* getUser(QString userFullName) ;
+    ~User();
+    static User* getUser(QString userFullName) ;
 
     bool isBot() const ;
 
     inline bool hasChannels() const{ return !channels.isEmpty(); }
 
-    QSet<NinjamUserChannel*> getChannels() const;
+    QSet<UserChannel*> getChannels() const;
 
-    inline NinjamUserChannel* getChannel(int index) const{ return &*(channels[index]);}
+    inline UserChannel* getChannel(int index) const{ return &*(channels[index]);}
 
     inline QString getIp() const{ return ip;}
 
@@ -73,11 +75,12 @@ public:
 
     inline QString getFullName() const{return fullName;}
 
-    void addChannel(NinjamUserChannel* c) ;
+    void addChannel(UserChannel* c) ;
 
-    void removeChannel(NinjamUserChannel* userChannel) ;
+    void removeChannel(UserChannel* userChannel) ;
 };
 
-QDebug &operator<<(QDebug &out, const NinjamUser &user);
-QDebug &operator<<(QDebug &out, const NinjamUserChannel &user);
+QDebug &operator<<(QDebug &out, const Ninjam::User &user);
+QDebug &operator<<(QDebug &out, const Ninjam::UserChannel &user);
 
+}

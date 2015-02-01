@@ -1,11 +1,13 @@
 #include "ServerMessages.h"
 #include <QDebug>
-#include "../NinjamUser.h"
+#include "../User.h"
+
+using namespace Ninjam;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 //+++++++++++++++++++++  SERVER MESSAGE (Base class) ++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-ServerMessage::ServerMessage(ServerMessageType::MessageType messageType)
+ServerMessage::ServerMessage(ServerMessageType messageType)
     :messageType(messageType){
     //
 }
@@ -84,7 +86,7 @@ UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage()
 
 }
 
-UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage(QMap<NinjamUser*, QList<NinjamUserChannel*>> allUsersChannels)
+UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage(QMap<User*, QList<UserChannel*>> allUsersChannels)
     :ServerMessage(ServerMessageType::USER_INFO_CHANGE_NOTIFY), usersChannels(allUsersChannels)
 {
     //insere o NinjamUserChannel em um shared_ptr para que esses canais sejam automaticamente deletados
@@ -100,7 +102,7 @@ UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage(QMap<NinjamUser*, QList
 
 void UserInfoChangeNotifyMessage::printDebug(QDebug dbg) const{
     dbg << "UserInfoChangeNotify{\n";
-    for (NinjamUser* user : usersChannels.keys()) {
+    for (User* user : usersChannels.keys()) {
         dbg << "\t" << user << "\n";
     }
     dbg << "}";
@@ -116,18 +118,18 @@ ServerChatMessage::ServerChatMessage(QString command, QStringList arguments)
     //
 }
 
-ServerChatCommand::CommandType ServerChatMessage::commandTypeFromString(QString string){
+ChatCommandType ServerChatMessage::commandTypeFromString(QString string){
     //"MSG", "PRIVMSG", "TOPIC", "JOIN", "PART", "USERCOUNT"
-    if(string == "MSG") return ServerChatCommand::MSG;
-    if(string == "PRIVMSG") return ServerChatCommand::PRIVMSG;
-    if(string == "TOPIC") return ServerChatCommand::TOPIC;
-    if(string == "JOIN") return ServerChatCommand::JOIN;
-    if(string == "PART") return ServerChatCommand::PART;
-    /*if(string == "USERCOUNT")*/ return ServerChatCommand::USERCOUNT;
+    if(string == "MSG") return ChatCommandType::MSG;
+    if(string == "PRIVMSG") return ChatCommandType::PRIVMSG;
+    if(string == "TOPIC") return ChatCommandType::TOPIC;
+    if(string == "JOIN") return ChatCommandType::JOIN;
+    if(string == "PART") return ChatCommandType::PART;
+    /*if(string == "USERCOUNT")*/ return ChatCommandType::USERCOUNT;
 }
 
 void ServerChatMessage::printDebug(QDebug dbg) const{
-    dbg << "RECEIVE ServerChatMessage{ command=" << commandType << " arguments=" << arguments << "}" << endl;
+    dbg << "RECEIVE ServerChatMessage{ command=" << (std::uint8_t)commandType << " arguments=" << arguments << "}" << endl;
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++
@@ -175,7 +177,7 @@ DownloadIntervalWrite::DownloadIntervalWrite(QByteArray GUID, quint8 flags, QByt
 
 //++++++++++++++++++
 
-QDebug operator<<(QDebug dbg, ServerMessage* message)
+QDebug Ninjam::operator<<(QDebug dbg, ServerMessage* message)
 {
     message->printDebug(dbg);
     return dbg;

@@ -1,9 +1,11 @@
 #include "ClientMessages.h"
-#include "../NinjamUser.h"
+#include "../User.h"
 #include <QCryptographicHash>
 #include <QIODevice>
 #include <QDebug>
 //++++++++++++++
+
+using namespace Ninjam;
 
 ClientMessage::ClientMessage(quint8 msgCode, quint32 payload)
     :msgType(msgCode), payload(payload){
@@ -127,11 +129,11 @@ void ClientKeepAlive::printDebug(QDebug dbg) const{
     dbg << "SEND {Client KeepAlive}" << endl;
 }
 //+++++++++++++++++
-ClientSetUserMask::ClientSetUserMask(QList<NinjamUser *> users)
+ClientSetUserMask::ClientSetUserMask(QList<User *> users)
     :ClientMessage(0x81, 0)
 {
     payload = 4 * users.size();//4 bytes (int) flag
-    foreach (NinjamUser* user , users) {
+    foreach (User* user , users) {
         usersFullNames.append(user->getFullName());
         payload += user->getFullName().size() + 1;
     }
@@ -156,7 +158,7 @@ void ClientSetUserMask::printDebug(QDebug dbg) const
 }
 
 //+++++++++++++++
-QDebug operator<<(QDebug dbg, ClientMessage* message)
+QDebug Ninjam::operator<<(QDebug dbg, ClientMessage* message)
 {
     message->printDebug(dbg);
     return dbg;

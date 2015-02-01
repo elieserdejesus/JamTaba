@@ -7,11 +7,15 @@
 #include <QObject>
 #include <QBuffer>
 
-
 //#include "nvwa/debug_new.h"
 
+
+namespace Ninjam {
+
+
+
 class NinjamPublicServersParser;
-class NinjamServer;
+class Server;
 class MixedPublicServersParser;
 
 class ServerMessageParser;
@@ -30,54 +34,54 @@ class DownloadIntervalWrite;
 
 class ClientMessage;
 
-class NinjamUser;
-class NinjamUserChannel;
+class User;
+class UserChannel;
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class NinjamServiceListener{
+class ServiceListener{
 public:
-    virtual void userChannelCreated(const NinjamUser& user, const NinjamUserChannel& channel) = 0;
-    virtual void userChannelRemoved(const NinjamUser& user, const NinjamUserChannel& channel) = 0;
-    virtual void userChannelUpdated(const NinjamUser& user, const NinjamUserChannel& channel) = 0;
+    virtual void userChannelCreated(const User& user, const UserChannel& channel) = 0;
+    virtual void userChannelRemoved(const User& user, const UserChannel& channel) = 0;
+    virtual void userChannelUpdated(const User& user, const UserChannel& channel) = 0;
     virtual void userCountMessageReceived(int users, int maxUsers) = 0;
     virtual void serverBpiChanged(short currentBpi, short lastBpi) = 0;
     virtual void serverBpmChanged(short currentBpm) = 0;
-    virtual void audioIntervalPartAvailable( const NinjamUser& user, int channelIndex, QByteArray encodedAudioData, bool lastPartOfInterval) = 0;
+    virtual void audioIntervalPartAvailable( const User& user, int channelIndex, QByteArray encodedAudioData, bool lastPartOfInterval) = 0;
     virtual void disconnectedFromServer(bool normalDisconnection) = 0;
-    virtual void connectedInServer(const NinjamServer& server) = 0;
-    virtual void chatMessageReceived(const NinjamUser& sender, QString message) = 0;
-    virtual void privateMessageReceived(const NinjamUser& sender, QString message) = 0;
-    virtual void userEnterInTheJam(const NinjamUser& newUser) = 0;
-    virtual void userLeaveTheJam(const NinjamUser& user) = 0;
+    virtual void connectedInServer(const Server& server) = 0;
+    virtual void chatMessageReceived(const User& sender, QString message) = 0;
+    virtual void privateMessageReceived(const User& sender, QString message) = 0;
+    virtual void userEnterInTheJam(const User& newUser) = 0;
+    virtual void userLeaveTheJam(const User& user) = 0;
     virtual void error(QString msg) = 0;
 };
 
-class NinjamServiceListenerAdapter : public NinjamServiceListener{
+class ServiceListenerAdapter : public ServiceListener{
 public:
-    virtual void userChannelCreated(const NinjamUser & , const NinjamUserChannel & ){}
-    virtual void userChannelRemoved(const NinjamUser & , const NinjamUserChannel & ){}
-    virtual void userChannelUpdated(const NinjamUser & , const NinjamUserChannel & ){}
+    virtual void userChannelCreated(const User & , const UserChannel & ){}
+    virtual void userChannelRemoved(const User & , const UserChannel & ){}
+    virtual void userChannelUpdated(const User & , const UserChannel & ){}
     virtual void userCountMessageReceived(int , int ){}
     virtual void serverBpiChanged(short , short ){}
     virtual void serverBpmChanged(short ){}
-    virtual void audioIntervalPartAvailable(const NinjamUser &, int , QByteArray , bool ){}
+    virtual void audioIntervalPartAvailable(const User &, int , QByteArray , bool ){}
     virtual void disconnectedFromServer(bool ){}
-    virtual void connectedInServer(const NinjamServer & ){}
-    virtual void chatMessageReceived(const NinjamUser & , QString ){}
-    virtual void privateMessageReceived(const NinjamUser & , QString ){}
-    virtual void userEnterInTheJam(const NinjamUser & ){}
-    virtual void userLeaveTheJam(const NinjamUser & ){}
+    virtual void connectedInServer(const Server & ){}
+    virtual void chatMessageReceived(const User & , QString ){}
+    virtual void privateMessageReceived(const User & , QString ){}
+    virtual void userEnterInTheJam(const User & ){}
+    virtual void userLeaveTheJam(const User & ){}
     virtual void error(QString ){}
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class NinjamService : public QObject{//mantive esta classe herdando de QObject para facilitar o uso de QTcpSocket
+class Service : public QObject{//mantive esta classe herdando de QObject para facilitar o uso de QTcpSocket
 
     Q_OBJECT
 
 public:
     static const bool USE_LOCAL_HOST = false;//debug
-    static QList<NinjamService> getPublicServersInfos();
-    static NinjamService* getInstance();
+    static QList<Service> getPublicServersInfos();
+    static Service* getInstance();
     static bool isBotName(QString userName) ;
 
     QString getConnectedUserName() ;
@@ -86,27 +90,27 @@ public:
     void startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password = "");
     void disconnectFromServer(bool normalDisconnection=true);
 
-    void addListener(NinjamServiceListener* listener);
-    void removeListener(NinjamServiceListener* listener);
+    void addListener(ServiceListener* listener);
+    void removeListener(ServiceListener* listener);
 
-    ~NinjamService();
+    ~Service();
 private:
     static const long DEFAULT_KEEP_ALIVE_PERIOD = 3000;
     static std::unique_ptr<NinjamPublicServersParser> publicServersParser;// = new MixedPublicServersParser();
-    NinjamService();
+    Service();
 
-    std::vector<std::unique_ptr<NinjamServiceListener>> listeners;
+    std::vector<std::unique_ptr<ServiceListener>> listeners;
     QTcpSocket socket;
 
     //GUID, AudioInterval
     long lastSendTime;//time stamp of last send
     long serverKeepAlivePeriod;
 
-    static std::unique_ptr<NinjamService> serviceInstance;// = new NinjaMService();// new TestService();
+    static std::unique_ptr<Service> serviceInstance;// = new NinjaMService();// new TestService();
 
     QString newUserName;//name received from server when connected
 
-    std::unique_ptr<NinjamServer> currentServer;
+    std::unique_ptr<Server> currentServer;
     bool running;// = false;
     bool initialized;// = false;
     QString userName;
@@ -116,8 +120,8 @@ private:
     void buildNewSocket()  ;
 
     void sendMessageToServer(ClientMessage* message) ;
-    void handleUserChannels(NinjamUser* user, QList<NinjamUserChannel*> channelsInTheServer);
-    bool channelIsOutdate(const NinjamUser &user, const NinjamUserChannel &serverChannel);
+    void handleUserChannels(User* user, QList<UserChannel*> channelsInTheServer);
+    bool channelIsOutdate(const User &user, const UserChannel &serverChannel);
 
     void setBpm(quint16 newBpm);
     void setBpi(quint16 newBpi);
@@ -137,10 +141,10 @@ private:
     class Download {
     public:
         const quint8 channelIndex;
-        const NinjamUser* user;
+        const User* user;
         const QString GUID;
 
-        Download(NinjamUser* user, quint8 channelIndex, QString GUID)
+        Download(User* user, quint8 channelIndex, QString GUID)
             :channelIndex(channelIndex), user(user), GUID(GUID){
 
         }
@@ -155,7 +159,7 @@ private slots:
     void socketErrorSlot(QAbstractSocket::SocketError error);
     void socketDisconnectSlot();
 public:
-/*
+    /*
 
 
     void sendNewUserInfos(QString newChannelName) {
@@ -355,3 +359,4 @@ public:
 
 */
 };
+}//namespace

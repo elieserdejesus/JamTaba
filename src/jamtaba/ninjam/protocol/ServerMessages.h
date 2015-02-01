@@ -3,14 +3,30 @@
 #include "ServerMessageParser.h"
 #include <QDebug>
 
+namespace Ninjam {
+
+enum class ServerMessageType : std::uint8_t{
+    AUTH_CHALLENGE = 0x00,
+    AUTH_REPLY = 0x01,
+    CONFIG_CHANGE_NOTIFY = 0x02,
+    USER_INFO_CHANGE_NOTIFY = 0x03,
+    DOWNLOAD_INTERVAL_BEGIN = 0x04,
+    DOWNLOAD_INTERVAL_WRITE = 0x05,
+    KEEP_ALIVE = 0xfd,//server requesting a keepalive
+    CHAT_MESSAGE= 0xc0
+};
+
 class ServerMessage {
 
-    const ServerMessageType::MessageType messageType;
 public:
-    ServerMessage(ServerMessageType::MessageType messageType);
+    ServerMessage(ServerMessageType messageType);
     virtual ~ServerMessage();
     virtual void printDebug(QDebug dbg) const = 0;
-    inline ServerMessageType::MessageType getMessageType() const { return messageType;}
+    inline ServerMessageType getMessageType() const { return messageType;}
+
+private:
+    const ServerMessageType messageType;
+
 };
 //++++++++++++++++++++++++++++++++++
 
@@ -75,20 +91,20 @@ public:
 
 };
 //++++++++++++++
-class NinjamUser;
-class NinjamUserChannel;
+class User;
+class UserChannel;
 
 class UserInfoChangeNotifyMessage : public ServerMessage{
 private:
-    QMap<NinjamUser*, QList<NinjamUserChannel*>> usersChannels;
+    QMap<User*, QList<UserChannel*>> usersChannels;
 
 public:
     //~UserInfoChangeNotifyMessage();
     UserInfoChangeNotifyMessage();
-    UserInfoChangeNotifyMessage(QMap<NinjamUser *, QList<NinjamUserChannel *> > allUsersChannels) ;
+    UserInfoChangeNotifyMessage(QMap<User *, QList<UserChannel *> > allUsersChannels) ;
 
-    inline QList<NinjamUser*> getUsers() const{ return usersChannels.keys();}
-    QList<NinjamUserChannel*> getUserChannels(NinjamUser *user) const {return usersChannels[user];}
+    inline QList<User*> getUsers() const{ return usersChannels.keys();}
+    QList<UserChannel*> getUserChannels(User *user) const {return usersChannels[user];}
     virtual void printDebug(QDebug dbg) const;
 };
 //++++++++++++=
@@ -111,25 +127,23 @@ public:
         USERCOUNT <users> <maxusers> -- server status
     */
 
-namespace ServerChatCommand {
-enum CommandType{ MSG=0, PRIVMSG, TOPIC, JOIN, PART, USERCOUNT};
-}
+enum class  ChatCommandType : std::uint8_t { MSG=0, PRIVMSG, TOPIC, JOIN, PART, USERCOUNT};
 
 class ServerChatMessage : public ServerMessage {
 
 private:
-    const ServerChatCommand::CommandType commandType;
+    const ChatCommandType commandType;
     QStringList arguments;
 
     virtual void printDebug(QDebug dbg) const;
-    ServerChatCommand::CommandType commandTypeFromString(QString string);
+    ChatCommandType commandTypeFromString(QString string);
 public:
 
     ServerChatMessage(QString command, QStringList arguments);
 
     inline QList<QString> getArguments() const { return arguments;}
 
-    inline ServerChatCommand::CommandType getCommand() const {return commandType;}
+    inline ChatCommandType getCommand() const {return commandType;}
 
 };
 //++++++++++++++++
@@ -198,6 +212,12 @@ public:
     inline bool downloadIsComplete() const { return flags == 1;}
 
 };
+
+
 //++++++++++++++++++++
-QDebug operator<<(QDebug dbg, ServerMessage* c);
+QDebug operator<<(QDebug dbg, Ninjam::ServerMessage* c);
 //QDataStream &operator<<(QDataStream &out, const ServerAuthChallengeMessage &message);
+
+}
+
+

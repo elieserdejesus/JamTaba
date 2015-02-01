@@ -1,10 +1,12 @@
 #include "ServerMessageParser.h"
 #include "ServerMessages.h"
-#include "../NinjamUser.h"
+#include "../User.h"
 
-QMap<ServerMessageType::MessageType, std::shared_ptr<ServerMessageParser>> ServerMessageParser::parsers;
+using namespace Ninjam;
 
-ServerMessageParser* ServerMessageParser::getParser(ServerMessageType::MessageType type)
+QMap<ServerMessageType, std::shared_ptr<ServerMessageParser>> ServerMessageParser::parsers;
+
+ServerMessageParser* ServerMessageParser::getParser(ServerMessageType type)
 {
     if(!parsers.contains(type)){
         //parsers.emplace(std::make_pair(type,std::move(createInstance(type))));
@@ -13,7 +15,7 @@ ServerMessageParser* ServerMessageParser::getParser(ServerMessageType::MessageTy
     return parsers[type].get();
 }
 
-ServerMessageParser* ServerMessageParser::createInstance(ServerMessageType::MessageType messageType){
+ServerMessageParser* ServerMessageParser::createInstance(ServerMessageType messageType){
     switch (messageType) {
     case ServerMessageType::AUTH_CHALLENGE: return new AuthChallengeParser();
     case ServerMessageType::AUTH_REPLY: return new AuthReplyParser();
@@ -24,7 +26,7 @@ ServerMessageParser* ServerMessageParser::createInstance(ServerMessageType::Mess
     case ServerMessageType::DOWNLOAD_INTERVAL_BEGIN: return new DownloadIntervalBeginParser();
     case ServerMessageType::DOWNLOAD_INTERVAL_WRITE: return new DownloadIntervalWriteParser();
     }
-    qFatal("Parser not implemented for " + messageType);
+    qFatal("Parser not implemented for " + (unsigned char)messageType);
     return nullptr;
 }
 
@@ -99,7 +101,7 @@ ServerMessage *UserInfoChangeNotifyParser::parse(QDataStream &stream, quint32 pa
     if (payloadLenght <= 0) {//no users
         return new UserInfoChangeNotifyMessage();
     }
-    QMap<NinjamUser*, QList<NinjamUserChannel*>> allUsersChannels;
+    QMap<User*, QList<UserChannel*>> allUsersChannels;
     unsigned int bytesConsumed = 0;
     while (bytesConsumed < payloadLenght) {
         quint8 active;
@@ -112,11 +114,11 @@ ServerMessage *UserInfoChangeNotifyParser::parse(QDataStream &stream, quint32 pa
         QString userFullName = ServerMessageParser::extractString(stream);
         bytesConsumed += userFullName.size() + 1;
         //QMap creates a empty object when the key is not found in map
-        NinjamUser* user = NinjamUser::getUser(userFullName);
-        QList<NinjamUserChannel*> userChannels = allUsersChannels[user];
+        User* user = User::getUser(userFullName);
+        QList<UserChannel*> userChannels = allUsersChannels[user];
         QString channelName = ServerMessageParser::extractString(stream);
         bytesConsumed += channelName.size() + 1;
-        userChannels.append( new NinjamUserChannel(user, channelName, (bool)active, channelIndex, volume, pan, flags));
+        userChannels.append( new UserChannel(user, channelName, (bool)active, channelIndex, volume, pan, flags));
     }
     return new UserInfoChangeNotifyMessage(allUsersChannels);
 }

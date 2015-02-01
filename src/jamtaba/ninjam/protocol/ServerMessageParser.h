@@ -6,29 +6,21 @@
 #include <QMap>
 #include <memory>
 
+namespace Ninjam {
+
+
 
 class ServerMessage;
-
-namespace ServerMessageType{
-    enum MessageType {
-        AUTH_CHALLENGE = 0x00,
-        AUTH_REPLY = 0x01,
-        CONFIG_CHANGE_NOTIFY = 0x02,
-        USER_INFO_CHANGE_NOTIFY = 0x03,
-        DOWNLOAD_INTERVAL_BEGIN = 0x04,
-        DOWNLOAD_INTERVAL_WRITE = 0x05,
-        KEEP_ALIVE = 0xfd,//server requesting a keepalive
-        CHAT_MESSAGE= 0xc0
-    };
-}
+enum class ServerMessageType : std::uint8_t;
 
 class ServerMessageParser  {
 
+
 private:
     //useri shared_pointer porque o unique_ptr estava dando muito problema com o map
-    static QMap<ServerMessageType::MessageType, std::shared_ptr<ServerMessageParser>> parsers;
+    static QMap<ServerMessageType, std::shared_ptr<ServerMessageParser>> parsers;
 
-    static ServerMessageParser* createInstance(ServerMessageType::MessageType messageType);
+    static ServerMessageParser* createInstance(ServerMessageType messageType);
 
 protected:
     static QString extractString(QDataStream& stream) ;
@@ -36,7 +28,9 @@ protected:
 public:
     virtual ServerMessage* parse(QDataStream& stream, quint32 payloadLenght) = 0;
 
-    static ServerMessageParser *getParser(ServerMessageType::MessageType messageType) ;
+    static ServerMessageParser *getParser(ServerMessageType messageType) ;
+
+
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -112,3 +106,5 @@ public:
     virtual ServerMessage* parse(QDataStream& stream, quint32 payloadLenght);
 
 };
+
+}

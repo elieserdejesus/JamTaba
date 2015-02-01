@@ -5,9 +5,11 @@
 #include <memory>
 #include <QSet>
 
-class NinjamUser;
+namespace Ninjam {
 
-class NinjamServer {
+class User;
+
+class Server {
 
 public:
     static const int MIN_BPM = 40;
@@ -17,7 +19,7 @@ public:
 
 private:
 
-    NinjamServer(QString host, int port);
+    Server(QString host, int port);
 
     int port;
     QString host;
@@ -28,16 +30,16 @@ private:
     QString streamUrl;
     QString topic;
 
-    QMap<QString, NinjamUser*> users;
+    QMap<QString, User*> users;
 
     bool containBot;// = false;
 
-    static QMap<QString, std::shared_ptr<NinjamServer>> servers;
+    static QMap<QString, std::shared_ptr<Server>> servers;
 
     static QString getUniqueName(QString host, int port) ;
 
 public:
-    static NinjamServer* getServer(QString host, int port) ;
+    static Server* getServer(QString host, int port) ;
 
     inline void setStreamUrl(QString streamUrl) { this->streamUrl = streamUrl; }
 
@@ -54,9 +56,9 @@ public:
 
     inline bool containsBot() const{ return containBot; }
 
-    bool containsUser(const NinjamUser& user) const;
+    bool containsUser(const User& user) const;
 
-    void addUser(NinjamUser* user) ;
+    void addUser(User* user) ;
 
     inline short getBpi() const{ return bpi; }
 
@@ -64,7 +66,7 @@ public:
 
     inline int getMaxUsers() const{ return maxUsers; }
 
-    QList<NinjamUser*> getUsers() const;
+    QList<User*> getUsers() const;
 
     inline bool isActive() const{ return activeServer;}
 
@@ -80,11 +82,17 @@ public:
 
     bool setBpi(short bpi) ;
 
-    void refreshUserList(QSet<NinjamUser*> onlineUsers) ;
+    void refreshUserList(QSet<User*> onlineUsers) ;
 
     inline QString getTopic() const {return topic;}
 
     inline void setTopic(QString topicText) {this->topic = topicText;}
 };
 
-QDataStream &operator<<(QDataStream &out, const NinjamServer &server);
+QDataStream &operator<<(QDataStream &out, const Ninjam::Server &server);
+
+}
+
+
+
+

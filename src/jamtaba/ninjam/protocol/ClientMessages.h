@@ -4,6 +4,13 @@
 #include <QString>
 #include <QDebug>
 
+
+
+namespace Ninjam {
+
+class User;
+
+
 //+++++++++++++++++++++++++++
 class ClientMessage {
 
@@ -22,7 +29,6 @@ protected:
     quint32 payload;
 };
 
-QDebug operator<<(QDebug dbg, ClientMessage* message);
 
 //++++++++++++++++++++++++++++++++++++++=
 //++++++++++++++++++++++++++++++++++++++=
@@ -64,16 +70,21 @@ public:
 
 };
 //++++++++++++++++++++++++++++++
-class NinjamUser;
+
 class ClientSetUserMask : public ClientMessage {
 
 private:
     QStringList usersFullNames;
     static const quint32 FLAG = 0xFFFFFFFF;
 public:
-    ClientSetUserMask(QList<NinjamUser*> users) ;
+    ClientSetUserMask(QList<User*> users) ;
     virtual void serializeTo(QByteArray &stream);
     virtual void printDebug(QDebug dbg) const;
 
 };
+
+QDebug operator<<(QDebug dbg, Ninjam::ClientMessage* message);
+
+}
+
 

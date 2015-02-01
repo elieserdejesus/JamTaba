@@ -51,13 +51,13 @@ HEADERS += \
 #    src/jamtaba/model/JamRoom.h \
 #    src/jamtaba/network/loginserver/JsonUtils.h \
 #    src/jamtaba/MainController.h \
-    src/jamtaba/ninjam/NinjamService.h \
-    src/jamtaba/ninjam/NinjamServer.h \
-    src/jamtaba/ninjam/NinjamUser.h \
     src/jamtaba/ninjam/protocol/ServerMessageParser.h \
     src/jamtaba/ninjam/protocol/ServerMessages.h \
     src/jamtaba/ninjam/protocol/ClientMessages.h \
-    src/jamtaba/ninjam/NinjamPublicServersParser.h \
+    src/jamtaba/ninjam/User.h \
+    src/jamtaba/ninjam/Service.h \
+    src/jamtaba/ninjam/Server.h \
+    src/jamtaba/ninjam/PublicServersParser.h
 
 #win32:HEADERS += portaudio/include/pa_asio.h
 
@@ -82,12 +82,12 @@ SOURCES += \
 #    src/jamtaba/network/loginserver/JsonUtils.cpp \
 #    src/jamtaba/MainController.cpp \
 #    src/jamtaba/model/JamRoom.cpp \
-    src/jamtaba/ninjam/NinjamService.cpp \
-    src/jamtaba/ninjam/NinjamServer.cpp \
-    src/jamtaba/ninjam/NinjamUser.cpp \
     src/jamtaba/ninjam/protocol/ServerMessages.cpp \
     src/jamtaba/ninjam/protocol/ClientMessages.cpp \
     src/jamtaba/ninjam/protocol/ServerMessageParser.cpp \
+    src/jamtaba/ninjam/Server.cpp \
+    src/jamtaba/ninjam/Service.cpp \
+    src/jamtaba/ninjam/User.cpp
 
 
 #FORMS += src/jamtaba/gui/mainframe.ui \
