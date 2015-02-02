@@ -1,11 +1,11 @@
 *.[oa]
 # *~
 
-build/
-portaudio/
-*.pro.user
-release
+Client/build/
+Client/portaudio/
+Client/*.pro.user
+Client/release
 
-Server/build/
-dist/
+Server/build
+Server/dist
 nbproject/private
