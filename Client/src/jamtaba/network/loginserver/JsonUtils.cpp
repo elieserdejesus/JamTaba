@@ -2,12 +2,51 @@
 #include "../model/JamRoom.h"
 #include "../model/JamRoomRepository.h"
 #include "../model/Peer.h"
+#include "../ninjam/Server.h"
 #include <QJsonArray>
 #include <QDebug>
 
 using namespace Model;
+using Ninjam::Server;
 
- AbstractJamRoom *JsonUtils::jamRoomFromJson(QJsonObject json)
+NinjamRoom *JsonUtils::ninjamServerFromJson(QJsonObject json)
+{
+    long long id = json.value("id").toVariant().toLongLong();
+
+    //vou usar essa mesma estratégia de atualizar as salas?
+
+    //obtenho sempre a mesma instância de JamRoom e seto os valores que chegaram do server. A classe
+    //JamRoom verifica se os valores que chegaram do server são diferentes dos valores antigos.
+    //Caso os valores sejam diferentes os JamRoomListeners são avisados das mudanças.
+    QString serverHost = json["name"].toString();
+    int serverPort = json["port"].toInt();
+    NinjamRoom* server = JamRoomRepository::getNinjamRoom(id, Ninjam::Server::getServer(serverHost, serverPort));
+    //updateJamRoom(json, jamRoom);
+    return server;
+
+    /*
+JSONObject serverObject = new JSONObject();
+        serverObject.put("id", server.getUniqueName().hashCode());
+        serverObject.put("name", server.getHostName());
+        serverObject.put("port", server.getPort());
+        serverObject.put("maxUsers", server.getMaxUsers());
+        serverObject.put("bpm", server.getBpm());
+        serverObject.put("bpi", server.getBpi());
+        serverObject.put("streamUrl", server.getStreamUrl());
+        //users
+        JSONArray usersArray = new JSONArray();
+        for (NinjaMUser user : server.getUsers()) {
+            JSONObject userObject = new JSONObject();
+            userObject.put("name", user.getName());
+            userObject.put("ip", user.getIp());
+            usersArray.put(userObject);
+        }
+        serverObject.put("users", usersArray);
+     */
+}
+
+
+RealTimeRoom *JsonUtils::realTimeRoomFromJson(QJsonObject json)
 {
      long long id = json.value("id").toVariant().toLongLong();
      //obtenho sempre a mesma instância de JamRoom e seto os valores que chegaram do server. A classe
@@ -15,7 +54,7 @@ using namespace Model;
      //Caso os valores sejam diferentes os JamRoomListeners são avisados das mudanças.
      RealTimeRoom* jamRoom = JamRoomRepository::getRealTimeJamRoom(id);
      updateJamRoom(json, jamRoom);
-     return (AbstractJamRoom*)jamRoom;
+     return jamRoom;
 }
 
  void JsonUtils::updateJamRoom(QJsonObject jamRoomObject, RealTimeRoom* jamRoom) {

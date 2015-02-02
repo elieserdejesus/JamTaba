@@ -3,8 +3,10 @@
 #include <QMap>
 #include <QDebug>
 #include "Peer.h"
+#include "../ninjam/Server.h"
 
 using namespace Model;
+using Ninjam::Server;
 
 AbstractJamRoom::AbstractJamRoom(long long roomID)
     : id(roomID),
@@ -180,4 +182,80 @@ RealTimeRoom::RealTimeRoom(long long id)
 RealTimeRoom::~RealTimeRoom()
 {
    // qDebug() << "RealTimeRoom destructor!";
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++             NINJAM  ROOM         ++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+NinjamRoom::NinjamRoom(long long ID, Ninjam::Server* ninjamServer)
+    :AbstractJamRoom(ID), ninjamServer(ninjamServer)
+{
+    //ninjaMService.addListener(new NinjamServiceListenerImpl(ninjaMService));
+}
+
+bool NinjamRoom::containBot() const{
+    return ninjamServer->containsBot();
+}
+
+
+int NinjamRoom::getPeersCount() const{
+    int peers = ninjamServer->getUsers().size();
+    if(containBot()){
+        return peers-1;
+    }
+    return peers;
+}
+
+
+bool NinjamRoom::isFull() const{
+    if(containBot()){
+        return getPeersCount()+1 == ninjamServer->getMaxUsers();
+    }
+    return ninjamServer->getUsers().size() == ninjamServer->getMaxUsers();
+}
+
+QString NinjamRoom::getTopic() const{
+    return ninjamServer->getTopic();
+}
+
+bool NinjamRoom::hasStreamLink() const{
+    return ninjamServer->hasStream();
+}
+
+QString NinjamRoom::getStreamLink() const{
+    if(!hasStreamLink()){
+        return "";
+    }
+    return ninjamServer->getStreamUrl();
+}
+
+QString NinjamRoom::getHostName() const{
+    return ninjamServer->getHostName();
+}
+
+int NinjamRoom::getHostPort() const{
+    return ninjamServer->getPort();
+}
+
+
+bool NinjamRoom::isEmpty() const{
+    return ninjamServer->getUsers().isEmpty() || ninjamServer->containsBotOnly();
+}
+
+
+QString NinjamRoom::getName() const{
+    return ninjamServer->getUniqueName();
+}
+
+int NinjamRoom::getMaxUsers() const {
+    return ninjamServer->getMaxUsers();
+}
+
+int NinjamRoom::getBpm() const{
+          return ninjamServer->getBpm();
+}
+
+int NinjamRoom::getBpi() const{
+    return ninjamServer->getBpi();
 }

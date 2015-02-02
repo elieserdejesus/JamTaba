@@ -19,7 +19,7 @@ public class Peer {
 
     //@Parent
     @Load
-    private Ref<Room> roomRef;
+    private Ref<RealtimeRoom> roomRef;
 
     private String publicIp;
 
@@ -81,14 +81,14 @@ public class Peer {
         return instrumentID;
     }
 
-    public Room getRoom() {
+    public RealtimeRoom getRoom() {
         if (roomRef == null) {
             return null;
         }
         return roomRef.get();
     }
 
-    public void setJamRoom(Room room) {
+    public void setJamRoom(RealtimeRoom room) {
         if (room != null) {
             this.roomRef = Ref.create(room);
         } else {
@@ -195,7 +195,7 @@ public class Peer {
 
     @Override
     public String toString() {
-        Room jamRoom = (roomRef != null) ? (roomRef.get()) : null;
+        RealtimeRoom jamRoom = (roomRef != null) ? (roomRef.get()) : null;
         return "Peer{" + "id=" + id + ", userName=" + userName + ", jamRoom=" + jamRoom + ", region=" + region + ", country=" + country + '}';
     }
 

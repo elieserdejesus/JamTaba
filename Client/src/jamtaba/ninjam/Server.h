@@ -76,7 +76,7 @@ public:
 
     bool containsBotOnly() const;
 
-    inline QString getUniqueName() const;
+    QString getUniqueName() const;
 
     bool setBpm(short bpm) ;
 

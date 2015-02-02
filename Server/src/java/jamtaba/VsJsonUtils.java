@@ -3,6 +3,8 @@ package jamtaba;
 import com.google.appengine.labs.repackaged.org.json.JSONArray;
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
+import jamtaba.ninjam.NinjaMServer;
+import jamtaba.ninjam.NinjaMUser;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
@@ -11,7 +13,7 @@ public class VsJsonUtils {
 
     private static final Logger LOGGER = Logger.getLogger(VsJsonUtils.class.getName());
 
-    public static String getJsonToConnectionInRoom(Room connectedRoom) throws JSONException {
+    public static String getJsonToConnectionInRoom(RealtimeRoom connectedRoom) throws JSONException {
         JSONObject json = new JSONObject();
         //json.put("peer", peerAsJSONObject(connectedPeer));
         //json.put("room", jamRoomToJSONObject(connectedRoom));
@@ -19,23 +21,32 @@ public class VsJsonUtils {
     }
 
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-    public static String getJsonToResponse(Collection<Room> jamRooms, Peer connectedPeer) throws JSONException {
+    public static String getJsonToResponse(Collection<RealtimeRoom> realtimeRooms, Collection<NinjaMServer> ninjamServers, Peer connectedPeer) throws JSONException {
         JSONObject json = new JSONObject();
-        json.put("rooms", jamRoomListToJsonArray(jamRooms));
+        json.put("realtimeRooms", realTimeRoomsToJsonArray(realtimeRooms));
+        json.put("ninjamServers", ninjamServersToJsonArray(ninjamServers));
         if (connectedPeer != null) {
             json.put("peer", peerAsJSONObject(connectedPeer));
         }
         return json.toString();
     }
 
-    public static String getJsonToResponse(List<Room> jamRooms) throws JSONException {
-        return getJsonToResponse(jamRooms, null);
+    public static String getJsonToResponse(List<RealtimeRoom> jamRooms, Collection<NinjaMServer> ninjamServers) throws JSONException {
+        return getJsonToResponse(jamRooms, ninjamServers, null);
     }
 
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-    private static JSONArray jamRoomListToJsonArray(Collection<Room> rooms) throws JSONException {
+    private static JSONArray ninjamServersToJsonArray(Collection<NinjaMServer> ninjamServers) throws JSONException {
+        JSONArray array = new JSONArray();
+        for (NinjaMServer server : ninjamServers) {
+            array.put(ninjamServerToJSONObject(server));
+        }
+        return array;
+    }
+    
+    private static JSONArray realTimeRoomsToJsonArray(Collection<RealtimeRoom> rooms) throws JSONException {
         JSONArray jamRoomsArray = new JSONArray();
-        for (Room jamRoom : rooms) {
+        for (RealtimeRoom jamRoom : rooms) {
             jamRoomsArray.put(jamRoomToJSONObject(jamRoom));
         }
         return jamRoomsArray;
@@ -51,13 +62,13 @@ public class VsJsonUtils {
         return array;
     }
 
-    public static String getJsonToJamRoomsList(List<Room> jamRooms) throws JSONException {
+    public static String getJsonToJamRoomsList(List<RealtimeRoom> jamRooms) throws JSONException {
         JSONObject json = new JSONObject();
-        json.put("rooms", jamRoomListToJsonArray(jamRooms));
+        json.put("rooms", realTimeRoomsToJsonArray(jamRooms));
         return json.toString();
     }
 
-    public static String getJsonToJamRoom(Room jamRoom) throws JSONException {
+    public static String getJsonToJamRoom(RealtimeRoom jamRoom) throws JSONException {
         JSONObject room = new JSONObject();
         room.put("room", jamRoomToJSONObject(jamRoom));
         return room.toString();
@@ -79,18 +90,39 @@ public class VsJsonUtils {
         peerMap.put("bufferSize", 0);//peer.getAudioBufferSize());
         peerMap.put("sampleRate", peer.getSampleRate());
 
-        Room peerRoom = peer.getRoom();
+        RealtimeRoom peerRoom = peer.getRoom();
         if (peerRoom != null) {
             peerMap.put("room", jamRoomToJSONObject(peerRoom, false));
         }
         return peerMap;
     }
 
-    private static JSONObject jamRoomToJSONObject(Room jamRoom) throws JSONException {
+    private static JSONObject ninjamServerToJSONObject(NinjaMServer server) throws JSONException {
+        JSONObject serverObject = new JSONObject();
+        serverObject.put("id", server.getUniqueName().hashCode());
+        serverObject.put("name", server.getHostName());
+        serverObject.put("port", server.getPort());
+        serverObject.put("maxUsers", server.getMaxUsers());
+        serverObject.put("bpm", server.getBpm());
+        serverObject.put("bpi", server.getBpi());
+        serverObject.put("streamUrl", server.getStreamUrl());
+        //users
+        JSONArray usersArray = new JSONArray();
+        for (NinjaMUser user : server.getUsers()) {
+            JSONObject userObject = new JSONObject();
+            userObject.put("name", user.getName());
+            userObject.put("ip", user.getIp());
+            usersArray.put(userObject);
+        }
+        serverObject.put("users", usersArray);
+        return serverObject;
+    }
+    
+    private static JSONObject jamRoomToJSONObject(RealtimeRoom jamRoom) throws JSONException {
         return jamRoomToJSONObject(jamRoom, true);
     }
 
-    private static JSONObject jamRoomToJSONObject(Room jamRoom, boolean includePeersList) throws JSONException {
+    private static JSONObject jamRoomToJSONObject(RealtimeRoom jamRoom, boolean includePeersList) throws JSONException {
         JSONObject jamRoomObject = new JSONObject();
 
         jamRoomObject.put("id", jamRoom.getId());
@@ -104,7 +136,7 @@ public class VsJsonUtils {
         return jamRoomObject;
     }
 
-    public static String getJsonToListPeersInJamRoom(Room jamRoom, List<Peer> activePeers) throws JSONException {
+    public static String getJsonToListPeersInJamRoom(RealtimeRoom jamRoom, List<Peer> activePeers) throws JSONException {
         JSONObject json = new JSONObject();
         json.put("peersOnline", peerListToJsonArray(activePeers));
         json.put("room", jamRoomToJSONObject(jamRoom));

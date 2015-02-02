@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import jamtaba.DbUtils;
-import jamtaba.Room;
+import jamtaba.RealtimeRoom;
 import jamtaba.Peer;
 import jamtaba.RequestUtils;
 
@@ -32,7 +32,7 @@ public class ConnectInJamRoom extends AbstractCommand {
             removeConnectedPeerFromCurrentRoom(connectedPeer);
 
             //connect in new room
-            Room jamRoomToConnect = DbUtils.getRoomByID(roomID);
+            RealtimeRoom jamRoomToConnect = DbUtils.getRoomByID(roomID);
             if (jamRoomToConnect != null && !jamRoomToConnect.isFull()) {
                 boolean connectedInRoom = connectedPeer.getRoom() != null;
                 if(connectedInRoom && connectedPeer.getRoom().getId().equals(roomID)){

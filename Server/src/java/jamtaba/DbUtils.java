@@ -16,8 +16,8 @@ public class DbUtils {
 
     private static final Logger LOGGER = Logger.getLogger(DbUtils.class.getName());
 
-    public static Collection<Room> loadRooms() {
-        return ofy().load().type(Room.class).list();
+    public static Collection<RealtimeRoom> loadRooms() {
+        return ofy().load().type(RealtimeRoom.class).list();
     }
 
     public static void save(Object p) {
@@ -30,10 +30,10 @@ public class DbUtils {
 
     public static void deleteInactivePeers(int MAX_TIME_WITHOUT_UPDATES) {
         List toDelete = new ArrayList<Peer>();
-        List<Room> roomsToSave = new ArrayList<Room>();
+        List<RealtimeRoom> roomsToSave = new ArrayList<RealtimeRoom>();
         //++++++++= CLEAN ROOMs ++++++++++++++++++=
-        Collection<Room> rooms = DbUtils.loadRooms();
-        for (Room room : rooms) {
+        Collection<RealtimeRoom> rooms = DbUtils.loadRooms();
+        for (RealtimeRoom room : rooms) {
             List<Peer> roomPeers = room.getPeers();
             if (!roomPeers.isEmpty()) {
                 for (Peer peer : roomPeers) {
@@ -54,17 +54,17 @@ public class DbUtils {
         //LOGGER.info(inactivePeers.size() + " peers inativos deletados!");
     }
 
-    public static Room getWaitingRoom() {
-        Key<Room> key = Key.create(Room.class, Room.WAITING_ROOM_ID);
+    public static RealtimeRoom getWaitingRoom() {
+        Key<RealtimeRoom> key = Key.create(RealtimeRoom.class, RealtimeRoom.WAITING_ROOM_ID);
         return ofy().load().key(key).now();
     }
 
-    static void createWaitingRoom(Room waitintRoom) {
+    static void createWaitingRoom(RealtimeRoom waitintRoom) {
         ofy().save().entity(waitintRoom).now();
     }
 
-    public static Room getRoomByID(Long jamRoomID) {
-        Key<Room> key = Key.create(Room.class, jamRoomID);
+    public static RealtimeRoom getRoomByID(Long jamRoomID) {
+        Key<RealtimeRoom> key = Key.create(RealtimeRoom.class, jamRoomID);
         return ofy().load().key(key).now();
     }
 

@@ -31,19 +31,25 @@ public:
     }
 
     ~LoginServiceListenerImpl(){qDebug() << "LoginServiceListenerImpl::destructor";}
+
     virtual void connected(Login::LoginServiceResponse response){
         qDebug() << "CONNECTED +++++++++++++++++++++++++++++++++\n";
         qDebug() << "\t total users online: " << response.getTotalOnlineUsers();
-        QList<Model::AbstractJamRoom*> rooms = response.getRooms();
-        foreach (Model::AbstractJamRoom* room, rooms) {
+
+        QList<Model::RealTimeRoom*> rooms = response.getRealtimeRooms();
+        foreach (Model::RealTimeRoom* room, rooms) {
             qDebug() << room->getName();
             QList<Model::Peer*> peers = room->getPeers();
             foreach (Model::Peer* peer, peers) {
                 qDebug() << "\t" << peer->getUserName();
             }
         }
-
         qDebug() << "+++++++++++++++++++++++++++++++++\n";
+        QList<Model::NinjamRoom*> ninjamRooms = response.getNinjamRooms();
+        foreach (Model::NinjamRoom* room, ninjamRooms) {
+            qDebug() << room->getName();
+
+        }
     }
     virtual void disconnected(){
         mainController->quit();

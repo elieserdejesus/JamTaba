@@ -2,7 +2,7 @@ package jamtaba.command;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import jamtaba.Room;
+import jamtaba.RealtimeRoom;
 import jamtaba.Peer;
 import jamtaba.RequestUtils;
 
@@ -11,7 +11,7 @@ public class ConnectInServer extends AbstractCommand {
     @Override
     protected void doCommandAction(HttpServletRequest req, Peer connectedPeer) throws ServletException {
         RequestUtils.putConnectedPeerIDInSession(req, connectedPeer);
-        ConnectInJamRoom connectInWaitingRoomCommand = new ConnectInJamRoom(Room.WAITING_ROOM_ID);
+        ConnectInJamRoom connectInWaitingRoomCommand = new ConnectInJamRoom(RealtimeRoom.WAITING_ROOM_ID);
         connectInWaitingRoomCommand.doCommandAction(req, connectedPeer);
         addToSave(connectInWaitingRoomCommand.getEntitiesToSave());
     }

@@ -22,18 +22,18 @@ public class ServletPrincipal extends HttpServlet {
         super.init();
 
         ObjectifyService.register(Peer.class);
-        ObjectifyService.register(Room.class);
+        ObjectifyService.register(RealtimeRoom.class);
 
         //+++++++++ CREATE THE STATIC ROOMS, ONE FOR EACH LOADED STYLE ++++
         //++++++++++++
-        Collection<Room> rooms = DbUtils.loadRooms();
+        Collection<RealtimeRoom> rooms = DbUtils.loadRooms();
         if (rooms.isEmpty()) {
-            List<Room> jamRooms = new ArrayList<Room>(STATIC_REAL_TIME_ROOMS);
+            List<RealtimeRoom> jamRooms = new ArrayList<RealtimeRoom>(STATIC_REAL_TIME_ROOMS);
             for (int i = 0; i < STATIC_REAL_TIME_ROOMS; i++) {
-                jamRooms.add( new Room("Room " + (i + 1), true));//a sala é estática
+                jamRooms.add( new RealtimeRoom("Room " + (i + 1), true));//a sala é estática
             }
             //cria a sala de espera e a sala onde os peers que entram em salas do ninjam ficam
-            Room waitintRoom = new Room("Waiting Room", Room.WAITING_ROOM_ID);
+            RealtimeRoom waitintRoom = new RealtimeRoom("Waiting Room", RealtimeRoom.WAITING_ROOM_ID);
             
             DbUtils.createWaitingRoom(waitintRoom);
             DbUtils.save(jamRooms);
@@ -151,7 +151,7 @@ public class ServletPrincipal extends HttpServlet {
     }
 
     private void showJamRooms(PrintWriter out) {
-        Collection<Room> rooms = DbUtils.loadRooms();
+        Collection<RealtimeRoom> rooms = DbUtils.loadRooms();
         out.print("<html>");
         out.print("<head>");
         out.print("<style>"
@@ -173,7 +173,7 @@ public class ServletPrincipal extends HttpServlet {
         out.print("<th> full");
         out.print("<th> static");
         out.print("</tr>");
-        for (Room jamRoom : rooms) {
+        for (RealtimeRoom jamRoom : rooms) {
             out.print("<tr>");
             out.print("<td>" + jamRoom.getId() + "</td>");
             out.print("<td>" + jamRoom.getName() + "</td>");

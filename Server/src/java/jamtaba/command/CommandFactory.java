@@ -4,7 +4,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import jamtaba.RequestUtils;
-import jamtaba.Room;
+import jamtaba.RealtimeRoom;
 
 /**
  *
@@ -26,7 +26,7 @@ public class CommandFactory {
         }
         if ("DISCONNECT".equals(cmd)) {
             if (isJamRoomCommand) {
-                return new ConnectInJamRoom(Room.WAITING_ROOM_ID);//back to waiting room
+                return new ConnectInJamRoom(RealtimeRoom.WAITING_ROOM_ID);//back to waiting room
             }
             return new DisconnectFromServer();
         }

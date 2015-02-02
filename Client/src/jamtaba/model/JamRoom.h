@@ -5,9 +5,13 @@
 #include <QString>
 #include <QSet>
 
+
+namespace Ninjam {
+    class Server;
+}
+
+
 namespace Model {
-
-
 
 class Peer;
 
@@ -67,7 +71,7 @@ public:
     
     QList<Peer *> getReachablePeers() const;
 
-    int getPeersCount() const;
+    virtual int getPeersCount() const;
 
     bool hasPeers() const;
 
@@ -82,11 +86,37 @@ public:
     bool isEmpty() const;
 };
 
+//++++++++++++++++++++++++++++++++=
 
 class RealTimeRoom : public AbstractJamRoom{
 public:
     RealTimeRoom(long long id);
     ~RealTimeRoom();
+};
+
+//++++++++++++++++++++++++++++++++=
+
+class NinjamRoom : public AbstractJamRoom {
+
+private:
+    const Ninjam::Server* ninjamServer;
+
+public:
+    NinjamRoom(long long ID, Ninjam::Server* ninjamServer);
+    bool containBot() const;
+    bool isFull() const;
+    QString getTopic() const;
+    bool hasStreamLink() const;
+    QString getStreamLink() const;
+    QString getHostName() const;
+    int getHostPort() const;
+    bool isEmpty() const;
+    QString getName() const;
+    int getMaxUsers() const ;
+    int getBpm() const;
+    int getBpi() const;
+
+    virtual int getPeersCount() const;
 };
 
 }

@@ -10,11 +10,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import jamtaba.DbUtils;
-import jamtaba.Room;
+import jamtaba.NinjamServers;
+import jamtaba.RealtimeRoom;
 import jamtaba.Peer;
 import jamtaba.PeerCleaner;
 import jamtaba.RequestUtils;
 import jamtaba.VsJsonUtils;
+import jamtaba.ninjam.NinjaMServer;
 
 public abstract class AbstractCommand implements Command {
 
@@ -37,9 +39,10 @@ public abstract class AbstractCommand implements Command {
             doCommandAction(req, peer);
             //+++++++++++++++
             DbUtils.save(entitiesToSave);
-            Collection<Room> jamRooms = DbUtils.loadRooms();
+            Collection<RealtimeRoom> jamRooms = DbUtils.loadRooms();
+            Collection<NinjaMServer> ninjamServers = NinjamServers.getServers();
             //++++++++++++++++++
-            resp.getWriter().print(VsJsonUtils.getJsonToResponse(jamRooms, peer));
+            resp.getWriter().print(VsJsonUtils.getJsonToResponse(jamRooms, ninjamServers, peer));
 
         } catch (Exception e) {
             throw new ServletException(e);
@@ -58,7 +61,7 @@ public abstract class AbstractCommand implements Command {
 
     protected void removeConnectedPeerFromCurrentRoom(Peer connectedPeer) {
         if (connectedPeer != null) {
-            Room currentRoom = connectedPeer.getRoom();
+            RealtimeRoom currentRoom = connectedPeer.getRoom();
             if (currentRoom != null) {
                 currentRoom.removePeer(connectedPeer.getId());
                 connectedPeer.setJamRoom(null);
