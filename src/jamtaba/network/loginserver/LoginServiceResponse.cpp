@@ -10,22 +10,29 @@
 using namespace Login;
 using namespace Model;
 
+
 Login::LoginServiceResponse::LoginServiceResponse(QString json)
     :totalOnlineUsers(0)
-    {
+{
     QJsonDocument document = QJsonDocument::fromJson(QByteArray(json.toStdString().c_str()));
     QJsonObject rootObject = document.object();
-    QList<Model::AbstractJamRoom*> jamRooms = buildJamRoomList(rootObject);
+    QList<Model::RealTimeRoom*> realTimeRooms = buildRealTimeJamRoomList(rootObject);
     this->totalOnlineUsers = 0;
-    foreach(Model::AbstractJamRoom* room, jamRooms){
-        roomsMap.insert(room->getId(), room);
+    foreach(Model::RealTimeRoom* room, realTimeRooms){
+        realTimeRoomsMap.insert(room->getId(), room);
+        this->totalOnlineUsers += room->getPeersCount();
+    }
+
+    QList<Model::NinjamRoom*> ninjamRooms = buildNinjamJamRoomList(rootObject);
+    foreach(Model::NinjamRoom* room, ninjamRooms ){
+        ninjamServersMap.insert(room->getId(), room);
         this->totalOnlineUsers += room->getPeersCount();
     }
 
     if(rootObject["peer"] != QJsonValue::Undefined){//not connected?
         QJsonObject jsonPeer = rootObject["peer"].toObject();
         QJsonObject jsonCurrentRoom = jsonPeer["room"].toObject();
-        this->currentRoom = JsonUtils::jamRoomFromJson(jsonCurrentRoom);
+        this->currentRoom = JsonUtils::realTimeRoomFromJson(jsonCurrentRoom);
         this->connectedPeer = JsonUtils::peerFromJson(jsonPeer);
     }
     else{
@@ -53,20 +60,23 @@ LoginServiceResponse LoginServiceResponse::fromJson(QString jsonString){
     return LoginServiceResponse(jamRooms, connectedPeer, currentRoom);
 }
 */
-QList<Model::AbstractJamRoom*> LoginServiceResponse::buildJamRoomList(QJsonObject rootJsonObject){
-    QJsonArray jamRoomsArray = rootJsonObject["rooms"].toArray();
-    QList<AbstractJamRoom*> realTimeRooms;
-    foreach (QJsonValue value, jamRoomsArray) {
-        AbstractJamRoom* jamRoom = JsonUtils::jamRoomFromJson(value.toObject());
-        realTimeRooms.append(jamRoom);
+QList<RealTimeRoom *> LoginServiceResponse::buildRealTimeJamRoomList(QJsonObject rootJsonObject){
+    QJsonArray realtimeRomsArray = rootJsonObject["realtimeRooms"].toArray();
+    QList<RealTimeRoom*> allRooms;
+    foreach (QJsonValue value, realtimeRomsArray) {
+        allRooms.append(JsonUtils::realTimeRoomFromJson(value.toObject()));
     }
 
-    QList<AbstractJamRoom*> ninjaRooms;
-    QList<AbstractJamRoom*> allRooms;
-    allRooms.append( ninjaRooms);
-    allRooms.append(realTimeRooms);
+    return allRooms;
+}
 
-    //Collections.sort(allRooms);
+QList<Model::NinjamRoom*> LoginServiceResponse::buildNinjamJamRoomList(QJsonObject rootJsonObject)
+{
+    QList<NinjamRoom*> allRooms;
+    QJsonArray ninjamServersArray = rootJsonObject["ninjamServers"].toArray();
+    foreach (QJsonValue value, ninjamServersArray) {
+        allRooms.append(JsonUtils::ninjamServerFromJson(value.toObject()));
+    }
     return allRooms;
 }
 
@@ -87,15 +97,13 @@ void LoginServiceResponse::addRoom(AbstractJamRoom room) {
 }
 */
 
-const AbstractJamRoom* LoginServiceResponse::getRoom(long id) const {
-    return roomsMap[id];
+
+QList<RealTimeRoom*> LoginServiceResponse::getRealtimeRooms() const{
+    return realTimeRoomsMap.values();
 }
 
-QList<AbstractJamRoom *> LoginServiceResponse::getRooms() const{
-    //qDebug() << "roomsMap.values().size:" << roomsMap.values().size();
-    QList<AbstractJamRoom*> sortedRooms(roomsMap.values());// = new ArrayList<AbstractJamRoom>(roomsMap.values());
-    //Collections.sort(sortedRooms);
-    return sortedRooms;
+QList<NinjamRoom*> LoginServiceResponse::getNinjamRooms() const{
+    return ninjamServersMap.values();
 }
 
 const Peer *LoginServiceResponse::getConnectedPeer() const{

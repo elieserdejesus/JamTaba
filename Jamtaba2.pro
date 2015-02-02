@@ -28,7 +28,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Jamtaba2
 TEMPLATE = app
 
-MAIN = src/jamtaba/ninjam/main.cpp #src/jamtaba/main.cpp
+MAIN = src/jamtaba/main.cpp
+#MAIN = src/jamtaba/ninjam/main.cpp
 
 
 HEADERS += \
@@ -56,8 +57,7 @@ HEADERS += \
     src/jamtaba/ninjam/protocol/ClientMessages.h \
     src/jamtaba/ninjam/User.h \
     src/jamtaba/ninjam/Service.h \
-    src/jamtaba/ninjam/Server.h \
-    src/jamtaba/ninjam/PublicServersParser.h
+    src/jamtaba/ninjam/Server.h
 
 win32:HEADERS += portaudio/include/pa_asio.h
 
@@ -88,7 +88,6 @@ SOURCES += \
     src/jamtaba/ninjam/Server.cpp \
     src/jamtaba/ninjam/Service.cpp \
     src/jamtaba/ninjam/User.cpp \
-    src/jamtaba/ninjam/PublicServersParser.cpp \
 
 
 FORMS += src/jamtaba/gui/mainframe.ui \

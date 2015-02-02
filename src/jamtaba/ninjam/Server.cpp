@@ -57,6 +57,11 @@ bool Server::containsBotOnly() const{
     return false;
 }
 
+QString Server::getUniqueName() const
+{
+     return host + ":" + port;
+}
+
 bool Server::setBpm(short bpm) {
     if (bpm == this->bpm) {
         return false;

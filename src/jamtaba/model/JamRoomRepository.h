@@ -4,36 +4,27 @@
 #include <QMap>
 #include <memory>
 
+namespace Ninjam {
+    class Server;
+}
+
 namespace Model {
 
-
-
 class RealTimeRoom;
+class NinjamRoom;
 
 class JamRoomRepository  {
 
 private:
 
     static QMap<long long, std::shared_ptr<RealTimeRoom>> realTimeRooms;
+    static QMap<long long, std::shared_ptr<NinjamRoom>> ninjamRooms;
 
 public:
     static RealTimeRoom *getRealTimeJamRoom(long long id);
-
-    //protected static ConcurrentMap<NinjaMServer, NinjaMRoom> ninjaMRooms = new ConcurrentHashMap<NinjaMServer, NinjaMRoom>();
-    //protected static final ConcurrentMap<Long, JamRoom> allRooms = new ConcurrentHashMap<Long, JamRoom>();
-
+    static NinjamRoom* getNinjamRoom(long long id, Ninjam::Server* server);
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 /*
-    public static synchronized RealtimeRoom getVSJamRoom(Long id) {
-        RealtimeRoom jamRoom = vsRooms.get(id);
-        if (jamRoom == null) {
-            jamRoom = new RealtimeRoom(id);
-            LOGGER.log(Level.FINE, "Jam instanciada: {0}", id);
-            //@todo deletar instancias que não serão mais utilizadas?
-            vsRooms.put(id, jamRoom);
-        }
-        return jamRoom;
-    }
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
     public static synchronized NinjaMRoom getNinjamMRoom(NinjaMServer ninjaMServer){
         NinjaMRoom room = ninjaMRooms.get(ninjaMServer);

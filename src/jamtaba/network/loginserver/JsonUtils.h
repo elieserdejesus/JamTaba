@@ -7,6 +7,7 @@ namespace Model {
 
 class RealTimeRoom;
 class AbstractJamRoom;
+class NinjamRoom;
 class Peer;
 
 class JsonUtils
@@ -15,7 +16,8 @@ class JsonUtils
     static QString getIpFromPeer(bool isPrivateIP, QJsonObject peerJson);
     static int getPortFromPeer(bool isPrivatePort, QJsonObject peerJson);
 public:
-    static AbstractJamRoom *jamRoomFromJson(QJsonObject json);
+    static RealTimeRoom *realTimeRoomFromJson(QJsonObject json);
+    static NinjamRoom* ninjamServerFromJson(QJsonObject json);
     static Peer* peerFromJson(QJsonObject peerObject);
 };
 
