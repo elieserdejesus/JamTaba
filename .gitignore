@@ -2,7 +2,7 @@
 # *~
 
 Client/build/
-build
+build/
 Client/portaudio/
 Client/*.pro.user
 Client/release
