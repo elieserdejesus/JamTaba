@@ -7,6 +7,6 @@ Client/portaudio/
 Client/*.pro.user
 Client/release
 
-Server/build
+Server/build/
 Server/dist
 Server/nbproject/private
