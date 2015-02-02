@@ -5,3 +5,7 @@ build/
 portaudio/
 *.pro.user
 release
+
+Server/build/
+dist/
+nbproject/private

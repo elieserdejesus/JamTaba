@@ -1,0 +1,74 @@
+package jamtaba;
+
+import com.googlecode.objectify.Key;
+import static com.googlecode.objectify.ObjectifyService.ofy;
+import com.googlecode.objectify.Ref;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.logging.Logger;
+import jamtaba.command.RefreshCommand;
+
+/**
+ * @author zeh
+ */
+public class DbUtils {
+
+    private static final Logger LOGGER = Logger.getLogger(DbUtils.class.getName());
+
+    public static Collection<Room> loadRooms() {
+        return ofy().load().type(Room.class).list();
+    }
+
+    public static void save(Object p) {
+        ofy().save().entity(p).now();
+    }
+
+    public static void save(Iterable entities) {
+        ofy().save().entities(entities).now();
+    }
+
+    public static void deleteInactivePeers(int MAX_TIME_WITHOUT_UPDATES) {
+        List toDelete = new ArrayList<Peer>();
+        List<Room> roomsToSave = new ArrayList<Room>();
+        //++++++++= CLEAN ROOMs ++++++++++++++++++=
+        Collection<Room> rooms = DbUtils.loadRooms();
+        for (Room room : rooms) {
+            List<Peer> roomPeers = room.getPeers();
+            if (!roomPeers.isEmpty()) {
+                for (Peer peer : roomPeers) {
+                    if (peer.getTimeSinceLastUpdate() >= RefreshCommand.MAX_TIME_WITHOUT_UPDATES) {
+                        toDelete.add(peer);
+                        roomsToSave.add(room);
+                        room.removePeer(peer.getId());
+                    }
+                }
+            } else {
+                if (!room.isStatic() && !room.isWaitingRoom()) {//deletable room without peers
+                    toDelete.add(room);
+                }
+            }
+        }
+        ofy().delete().entities(toDelete);
+        ofy().save().entities(roomsToSave);
+        //LOGGER.info(inactivePeers.size() + " peers inativos deletados!");
+    }
+
+    public static Room getWaitingRoom() {
+        Key<Room> key = Key.create(Room.class, Room.WAITING_ROOM_ID);
+        return ofy().load().key(key).now();
+    }
+
+    static void createWaitingRoom(Room waitintRoom) {
+        ofy().save().entity(waitintRoom).now();
+    }
+
+    public static Room getRoomByID(Long jamRoomID) {
+        Key<Room> key = Key.create(Room.class, jamRoomID);
+        return ofy().load().key(key).now();
+    }
+
+    public static void delete(Object o) {
+        ofy().delete().entity(o);
+    }
+}

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="-deploy-ant" basedir=".">
+
+    <!-- Google App Engine Properties -->
+    <property name="appengine.location" value="C:\appengine-java-sdk-1.9.13"/>
+    <property name="appengine.http.port" value="8080"/>
+    <property name="appengine.debug.port" value="8765"/>
+    <property name="appengine.manager.uri" value="deployer:appengine:localhost:8080/-1198750328"/>
+    
+    <property name="deploy.ant.enabled" value="false"/>
+    <property name="jvmargs" value=""/>
+    
+    <property name="appengine.jpa2" value="true"/>
+    
+
+    <!-- Import Google App Engine Macros -->
+    <import file="${appengine.location}/config/user/ant-macros.xml" />
+
+    <!-- Copy Google App Engine Runtime JARs -->
+    <target unless="${appengine.jpa2}" name="copyjars" description="Copies the App Engine JARs to the WAR." depends="init, dist">
+        <copy todir="${build.web.dir}/WEB-INF/lib" flatten="true">
+            <fileset dir="${appengine.location}/lib/user">
+                <include name="**/*.jar" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target if="${appengine.jpa2}" name="copyjars-v2" description="Copies the App Engine JARs to the WAR." depends="init, dist">
+        <copy todir="${build.web.dir}/WEB-INF/lib" flatten="true">
+            <fileset dir="${appengine.location}/lib/user">
+                <include name="**/appengine-api-1.0-sdk*.jar" />
+            </fileset>
+            <fileset dir="${appengine.location}/lib/opt/user">
+                <include name="appengine-api-labs/v1/*.jar" />
+                <include name="jsr107/v1/*.jar" />
+                <include name="datanucleus/v2/*.jar" />
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- Data Nucleus JPA Enhancer -->
+    <target unless="${appengine.jpa2}" name="datanucleusenhance" description="Performs JDO enhancement on compiled data classes." depends="copyjars">
+        <enhance_war war="${build.web.dir}" />
+    </target>
+    
+    <target if="${appengine.jpa2}" name="datanucleusenhance-v2" depends="copyjars-v2"
+            description="Performs enhancement on compiled data classes.">
+        <enhance_war war="${build.web.dir}">
+            <args>
+                <arg value="-enhancerVersion"/>
+                <arg value="v2"/>
+            </args>
+        </enhance_war>
+    </target>
+
+    <!-- Start Google App Engine Development Server -->
+    <target name="runserver" depends="datanucleusenhance,datanucleusenhance-v2"
+            description="Starts the development server.">
+        <dev_appserver war="${build.web.dir}" port="${appengine.http.port}" >
+            <options>
+                <arg line="${jvmargs}"/>
+            </options>
+        </dev_appserver>
+    </target>
+
+    <!-- Start Google App Engine Development Server In Debug Mode -->
+    <target name="runserver-debug" depends="datanucleusenhance,datanucleusenhance-v2"
+            description="Starts the development server.">
+        <dev_appserver war="${build.web.dir}" port="${appengine.http.port}" >
+            <options>
+                <arg value="--jvm_flag=-Xdebug"/>
+                <arg value="--jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=${appengine.debug.port}"/>
+                <arg line="${jvmargs}"/>
+            </options>
+        </dev_appserver>
+    </target>
+
+    <!-- Start Google App Engine Development Server In Profile Mode -->
+    <target name="runserver-profile" depends="datanucleusenhance,datanucleusenhance-v2"
+            description="Starts the development server.">
+        <dev_appserver war="${build.web.dir}" port="${appengine.http.port}" >            
+            <options>
+                <arg line="${jvmargs}"/>
+            </options>
+        </dev_appserver>
+    </target>
+
+    <target name="-deploy-ant" if="${deploy.ant.enabled}">
+        <fail message="Undeploy is not supported for the current target server"/>
+    </target>
+
+    <target name="-undeploy-ant" if="${deploy.ant.enabled}">
+        <fail message="Undeploy is not supported for the current target server"/>
+    </target>
+</project>
