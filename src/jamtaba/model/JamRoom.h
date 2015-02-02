@@ -5,6 +5,10 @@
 #include <QString>
 #include <QSet>
 
+namespace Model {
+
+
+
 class Peer;
 
 class JamRoomListener{
@@ -84,3 +88,5 @@ public:
     RealTimeRoom(long long id);
     ~RealTimeRoom();
 };
+
+}

@@ -4,6 +4,10 @@
 #include <QMap>
 #include <memory>
 
+namespace Model {
+
+
+
 class RealTimeRoom;
 
 class JamRoomRepository  {
@@ -52,4 +56,5 @@ public:
     */
 };
 
+}
 #endif // JAMROOMREPOSITORY_H

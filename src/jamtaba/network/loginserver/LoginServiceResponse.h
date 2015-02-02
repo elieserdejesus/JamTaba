@@ -1,45 +1,49 @@
-#ifndef LOGINSERVICERESPONSE_H
-#define LOGINSERVICERESPONSE_H
+#pragma once
 
 #include <QMap>
 #include <QJsonObject>
 
-class Peer;
-class AbstractJamRoom;
+
+namespace Model {
+    class Peer;
+    class AbstractJamRoom;
+}
+
+namespace Login {
 
 class LoginServiceResponse {
 
 private:
-    QMap<long long, AbstractJamRoom*> roomsMap;
-    Peer* connectedPeer;
-    AbstractJamRoom* currentRoom;
+    QMap<long long, Model::AbstractJamRoom*> roomsMap;
+    Model::Peer* connectedPeer;
+    Model::AbstractJamRoom* currentRoom;
     int totalOnlineUsers;// = 0;
-    AbstractJamRoom* waitingRoom;
+    Model::AbstractJamRoom* waitingRoom;
 
     //LoginServiceResponse(QList<AbstractJamRoom*> rooms, const Peer& connectedPeer, const AbstractJamRoom& currentRoom) ;
 
-    static QList<AbstractJamRoom*> buildJamRoomList(QJsonObject rootJsonObject);
+    static QList<Model::AbstractJamRoom*> buildJamRoomList(QJsonObject rootJsonObject);
 
 public:
 
     LoginServiceResponse(QString json) ;
 
-    const AbstractJamRoom* getWaitingRoom() const ;
+    const Model::AbstractJamRoom* getWaitingRoom() const ;
 
     //void addRoom(AbstractJamRoom room) ;
 
-    const AbstractJamRoom* getRoom(long id) const;
+    const Model::AbstractJamRoom* getRoom(long id) const;
 
-    QList<AbstractJamRoom*> getRooms() const;
+    QList<Model::AbstractJamRoom*> getRooms() const;
 
-    const Peer* getConnectedPeer() const;
+    const Model::Peer* getConnectedPeer() const;
 
     //void setCurrentRoom(NinjaMRoom room);
 
-    const AbstractJamRoom* getCurrentRoom() const;
+    const Model::AbstractJamRoom* getCurrentRoom() const;
 
     int getTotalOnlineUsers() const;
 
 };
 
-#endif // LOGINSERVICERESPONSE_H
+}

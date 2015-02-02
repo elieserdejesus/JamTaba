@@ -6,6 +6,13 @@
 #include <QDesktopWidget>
 #include <QLayout>
 #include "../JamtabaFactory.h"
+#include "../audio/PortAudioDriver.h"
+#include "../MainController.h"
+
+using namespace Audio;
+using namespace Persistence;
+using namespace Gui;
+using namespace Controller;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainFrame::MainFrame(MainController *mainController, QWidget *parent) : QMainWindow(parent)
@@ -73,7 +80,7 @@ void MainFrame::on_actionAudio_triggered()
 {
     PortAudioDriver* driver = (PortAudioDriver*)mainController->getAudioDriver();
     driver->stop();
-    AudioIODialog dialog(*driver, this);
+    AudioIODialog dialog(driver, this);
     connect(&dialog, SIGNAL(audioIOPropertiesChanged(int,int,int,int,int,int,int)), this, SLOT(on_audioIOPropertiesChanged(int,int,int,int,int,int,int)));
     dialog.exec();
     driver->start();
@@ -82,7 +89,7 @@ void MainFrame::on_actionAudio_triggered()
 
 void MainFrame::on_audioIOPropertiesChanged(int selectedDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)
 {
-    AudioDriver* audioDriver = mainController->getAudioDriver();
+    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
 #ifdef _WIN32
     audioDriver->setProperties(selectedDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
 #else

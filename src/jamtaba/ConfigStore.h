@@ -4,6 +4,8 @@
 #include <QString>
 #include <QSettings>
 
+namespace Persistence{
+
 class ConfigStore {
 
     ~ConfigStore();
@@ -181,7 +183,6 @@ public:
 //        }
 //        return Integer.parseInt(sessionsCountQString);
 //    }
-
-
-
 };
+
+}

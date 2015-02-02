@@ -5,6 +5,8 @@
 #include <QJsonArray>
 #include <QDebug>
 
+using namespace Model;
+
  AbstractJamRoom *JsonUtils::jamRoomFromJson(QJsonObject json)
 {
      long long id = json.value("id").toVariant().toLongLong();

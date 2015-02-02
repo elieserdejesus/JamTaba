@@ -1,9 +1,10 @@
 #include "AudioDriver.h"
-#include "AudioDriverListener.h"
 #include <vector>
 #include <QDebug>
 #include <stdexcept>
 #include <cmath>
+
+using namespace Audio;
 
 AudioSamplesBuffer::AudioSamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT){
     if(channels == 0){

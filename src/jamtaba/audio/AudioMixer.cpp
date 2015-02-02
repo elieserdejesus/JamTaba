@@ -2,6 +2,8 @@
 #include "AudioNode.h"
 #include <QDebug>
 
+using namespace Audio;
+
 AudioMixer::AudioMixer()
 {
     mainOutNode = new MainOutputAudioNode();

@@ -1,6 +1,8 @@
 #include "JamRoomRepository.h"
 #include "JamRoom.h"
 
+using namespace Model;
+
 QMap<long long, std::shared_ptr<RealTimeRoom>> JamRoomRepository::realTimeRooms;
 
 RealTimeRoom *JamRoomRepository::getRealTimeJamRoom(long long id)

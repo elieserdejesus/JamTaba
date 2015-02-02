@@ -2,6 +2,8 @@
 
 #include <set>
 
+namespace Audio{
+
 class AudioNode;
 class AudioSamplesBuffer;
 class MainOutputAudioNode;
@@ -28,3 +30,5 @@ public:
     virtual ~AudioMixerTrack();
 
 };
+
+}

@@ -1,12 +1,11 @@
 #pragma once
-
 #include <QDialog>
-#include "../audio/PortAudioDriver.h"
 #include <QCloseEvent>
 
-namespace Ui {
-class AudioIODialog;
-}
+namespace Audio{ class AudioDriver;}
+namespace Ui{ class AudioIODialog; }
+
+namespace Gui   {
 
 //++++++++++++++++++++++++++++++++++
 class AudioIODialog : public QDialog
@@ -14,7 +13,7 @@ class AudioIODialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AudioIODialog(PortAudioDriver &portAudioDriver, QWidget *parent = 0);
+    AudioIODialog(Audio::AudioDriver* audioDriver, QWidget *parent = 0);
     ~AudioIODialog();
    // virtual void closeEvent(QCloseEvent *);
 
@@ -31,7 +30,7 @@ signals:
 
 private:
     Ui::AudioIODialog *ui;
-    PortAudioDriver* portAudioDriver;
+    Audio::AudioDriver* audioDriver;
 
     void populateAsioDriverCombo();
     void populateFirstInputCombo();
@@ -42,3 +41,4 @@ private:
     void populateBufferSizeCombo();
 };
 
+}

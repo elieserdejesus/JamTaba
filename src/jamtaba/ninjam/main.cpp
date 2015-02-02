@@ -27,7 +27,7 @@ public:
     virtual void userChannelUpdated(const Ninjam::User &user, const Ninjam::UserChannel &channel){
         qDebug() << "canal modificado " << channel.getName() << endl << user << endl;
     }
-    virtual void userCountMessageReceived(int users, int maxUsers){}
+    virtual void userCountMessageReceived(int /*users*/, int /*maxUsers*/){}
     virtual void serverBpiChanged(short currentBpi, short lastBpi){
         qDebug() << "BPI CHANGED current:" << currentBpi << " old:" << lastBpi << endl;
     }
@@ -37,7 +37,7 @@ public:
     virtual void audioIntervalPartAvailable(const Ninjam::User &user, int channelIndex, QByteArray encodedAudioData, bool lastPartOfInterval){
         qDebug() << "AUDIO AVAILABLE for " << user.getName() << " channel:"<< channelIndex << "lastPart: " << lastPartOfInterval << " bytes:" << encodedAudioData.size();
     }
-    virtual void disconnectedFromServer(bool normalDisconnection){
+    virtual void disconnectedFromServer(bool /*normalDisconnection*/){
         qDebug() << "DISCONNECTED FROM SERVER!";
     }
     virtual void chatMessageReceived(const Ninjam::User &sender, QString message){
@@ -68,7 +68,7 @@ int main(int argc, char* args[])
     Ninjam::Service* service = Ninjam::Service::getInstance();
     //service->addListener(new Listener());
     QStringList channels("channel test");
-    service->startServerConnection("ninbot.com", 2049, "test", channels);
+    service->startServerConnection("localhost", 2049, "test", channels);
 
     return application.exec();
 }

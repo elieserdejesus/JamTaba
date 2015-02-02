@@ -1,5 +1,7 @@
 #include "LoginService.h"
 
+using namespace Login;
+
 LoginService::LoginService(LoginServiceListener *listener)
 {
     this->connected = false;

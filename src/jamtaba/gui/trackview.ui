@@ -75,6 +75,9 @@
          </item>
          <item alignment="Qt::AlignRight">
           <widget class="QPushButton" name="mute">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
              <horstretch>0</horstretch>
@@ -190,7 +193,7 @@
        </widget>
       </item>
       <item>
-       <widget class="PeakMeter" name="widget" native="true">
+       <widget class="Gui::PeakMeter" name="widget" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -246,7 +249,7 @@
        </widget>
       </item>
       <item row="0" column="2" rowspan="2" alignment="Qt::AlignRight">
-       <widget class="PeakMeter" name="widget_3" native="true">
+       <widget class="Gui::PeakMeter" name="widget_3" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -332,7 +335,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PeakMeter</class>
+   <class>Gui::PeakMeter</class>
    <extends>QWidget</extends>
    <header>PeakMeter.h</header>
    <container>1</container>

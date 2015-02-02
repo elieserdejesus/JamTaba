@@ -8,6 +8,11 @@
 #include <QDebug>
 #include <QDateTime>
 
+namespace Gui {
+
+
+
+
 class PeakMeter : public QWidget
 {
     Q_OBJECT
@@ -41,3 +46,6 @@ private:
     qint64 lastUpdate;// QDateTime::currentMSecsSinceEpoch()
     unsigned long decayTime;
 };
+
+}
+

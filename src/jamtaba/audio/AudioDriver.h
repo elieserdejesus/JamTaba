@@ -3,6 +3,8 @@
 #include <vector>
 #include <memory>
 
+namespace Audio{
+
 class AudioDriverListener;
 class AudioNodeProcessor;
 
@@ -92,10 +94,21 @@ public:
     virtual int getOutputs() const = 0;
     virtual int getFirstOutput() const = 0;
 
-    virtual const char* getInputChannelName(unsigned const int channelIndex) const = 0;
+    virtual int getInputDeviceIndex() const = 0;
+    virtual void setInputDeviceIndex(int index) = 0;
 
-    virtual const char* getOutputChannelName(unsigned const int channelIndex) const = 0;
+    virtual int getOutputDeviceIndex() const = 0;
+    virtual void setOutputDeviceIndex(int index) = 0;
 
+    virtual const char* getInputDeviceName(int index) const = 0;
+    virtual const char* getOutputDeviceName(int index) const = 0;
+    virtual int getDevicesCount() const = 0;
+
+    virtual const char* getInputChannelName(unsigned const int index) const = 0;
+    virtual const char* getOutputChannelName(unsigned const int index) const = 0;
+
+    virtual int getSampleRate() const = 0;
+    virtual int getBufferSize() const = 0;
 };
 //++++++++++++++++++++++++++++++
 class AbstractAudioDriver : public AudioDriver
@@ -115,7 +128,7 @@ public:
     virtual inline int getFirstOutput() const {return firstOutputIndex;}
     virtual inline int getSampleRate() const {return sampleRate;}
     virtual inline int getBufferSize() const {return bufferSize;}
-    //virtual void initialize(){}
+
 
     const AudioSamplesBuffer& getOutputBuffer() const {return *outputBuffer;}
 
@@ -149,3 +162,35 @@ protected:
 
     void recreateBuffers(const int buffersLenght, const int maxInputs, const int maxOutputs);
 };
+
+class AudioDriverListener
+{
+public:
+    virtual void processCallBack(AudioSamplesBuffer& in, AudioSamplesBuffer& out) = 0;
+    virtual void driverParametersChanged() = 0;//invocado quando acontece alguma mudança na configuração de buffer size, por exemplo
+    virtual void driverInitialized() = 0;
+    virtual void driverStopped() = 0;
+    virtual void driverStarted() = 0;
+    virtual void driverException(const char* msg) = 0;
+
+    virtual ~AudioDriverListener(){}
+    AudioDriverListener(){}
+};
+
+class AudioDriverListenerAdapter : public AudioDriverListener
+{
+public:
+    virtual void processCallBack(AudioSamplesBuffer&, AudioSamplesBuffer& ){
+//
+    };
+    virtual void driverParametersChanged(){}//invocado quando acontece alguma mudança na configuração de buffer size, por exemplo
+    virtual void driverInitialized(){}
+    virtual void driverStopped(){}
+    virtual void driverStarted(){}
+    virtual void driverException(const char*){}
+
+    virtual ~AudioDriverListenerAdapter(){}
+    AudioDriverListenerAdapter() { }
+};
+
+}

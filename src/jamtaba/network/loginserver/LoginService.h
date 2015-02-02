@@ -1,7 +1,9 @@
 #pragma once
 
-
 #include <QObject>
+
+namespace Login {
+
 class NatMap;
 class LoginServiceResponse;
 
@@ -29,5 +31,7 @@ public:
     inline bool isConnected(){return this->connected;}
 
 };
+
+}
 
 //++++++++++

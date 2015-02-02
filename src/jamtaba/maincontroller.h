@@ -1,27 +1,25 @@
 #pragma once
 
 #include <QApplication>
-#include "network/loginserver/LoginService.h"
 #include <QDebug>
+#include <memory>
 
-class AudioDriver;
-class AudioDriverListener;
-class LoginService;
-class MainController;
+namespace Audio {
+    class AudioDriver;
+    class AudioDriverListener;
+}
+
+namespace Login {
+    class LoginService;
+    class LoginServiceResponse;
+    class LoginServiceListener;
+}
+
 class JamtabaFactory;
-class LoginServiceResponse;
 
 //+++++++++++++
-class LoginServiceListenerImpl : public LoginServiceListener{
-public:
-    LoginServiceListenerImpl(MainController* app);
-    ~LoginServiceListenerImpl(){qDebug() << "LoginServiceListenerImpl::destructor";}
-    virtual void connected(LoginServiceResponse response);
-    virtual void disconnected();
-private:
-    MainController* application;
-};
 
+namespace Controller {
 
 //++++++++++++++++++++++++++++
 class MainController : public QApplication
@@ -32,15 +30,18 @@ public:
 
     void start();
     void stop();
-    AudioDriver* getAudioDriver() const;
+    Audio::AudioDriver* getAudioDriver() const;
 
 
 private:
-    AudioDriver* audioDriver;
-    AudioDriverListener* audioDriverListener;
-    LoginService* loginService;
-    LoginServiceListener* loginServiceListener;
+    std::unique_ptr< Audio::AudioDriver> audioDriver;
+    std::unique_ptr<Audio::AudioDriverListener> audioDriverListener;
+    std::unique_ptr<Login::LoginService> loginService;
+    std::unique_ptr<Login::LoginServiceListener> loginServiceListener;
     //+++++++++++++++++++++++++
     void configureStyleSheet();
+
+
 };
 
+}

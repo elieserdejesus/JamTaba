@@ -10,6 +10,8 @@
 #include "../model/JamRoom.h"
 #include "LoginServiceResponse.h"
 
+using namespace Login;
+
 const QString DefaultLoginService::SERVER = "https://jamtaba-music.appspot.com/vs";
 
 //+++++++++++++++++++++++++++++++++++++

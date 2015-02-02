@@ -3,6 +3,8 @@
 #include <set>
 #include <cmath>
 
+namespace Audio{
+
 class AudioSamplesBuffer;
 
 class AudioNodeProcessor{
@@ -97,3 +99,4 @@ public:
     virtual void processReplacing(AudioSamplesBuffer&in, AudioSamplesBuffer& out);
 };
 //++++++++++++++++++++++++
+}

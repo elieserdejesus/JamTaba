@@ -57,7 +57,7 @@
         </widget>
        </item>
        <item>
-        <widget class="TrackView" name="widget_2" native="true">
+        <widget class="Gui::TrackView" name="widget_2" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -235,9 +235,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>TrackView</class>
+   <class>Gui::TrackView</class>
    <extends>QWidget</extends>
-   <header>trackview.h</header>
+   <header>TrackView.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

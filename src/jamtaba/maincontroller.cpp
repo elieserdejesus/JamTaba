@@ -1,9 +1,9 @@
 #include "MainController.h"
-#include "audio/AudioDriverListener.h"
 #include "audio/PortAudioDriver.h"
 #include "audio/AudioMixer.h"
 #include "network/loginserver/DefaultLoginService.h"
 #include "JamtabaFactory.h"
+#include "ConfigStore.h"
 #include <QFile>
 #include <QDebug>
 #include <QApplication>
@@ -11,28 +11,50 @@
 #include "../model/JamRoom.h"
 #include "../model/Peer.h"
 
-LoginServiceListenerImpl::LoginServiceListenerImpl(MainController *app){
-    this->application = app;
-}
+using namespace Login;
+using namespace Model;
+using namespace Audio;
+using namespace Persistence;
+using namespace Controller;
 
-void LoginServiceListenerImpl::connected(LoginServiceResponse response){
-    qDebug() << "CONNECTED +++++++++++++++++++++++++++++++++\n";
-    qDebug() << "\t total users online: " << response.getTotalOnlineUsers();
-    QList<AbstractJamRoom*> rooms = response.getRooms();
-    foreach (AbstractJamRoom* room, rooms) {
-        qDebug() << room->getName();
-        QList<Peer*> peers = room->getPeers();
-        foreach (Peer* peer, peers) {
-            qDebug() << "\t" << peer->getUserName();
-        }
+namespace Controller {
+
+//declarei esta classe aqui no cpp porque não foi possível usar ela como uma classe interna de MainController.
+//Para usar como classe interna seria necessário incluir o header onde esta o LoginServiceListener no MainController.h,
+//o que não seria legal. Não é possível herdar usando forwarding declaration. Acabei adotando essa solução para evitar
+//a inclusão do header.
+class LoginServiceListenerImpl : public Login::LoginServiceListener{
+public:
+    LoginServiceListenerImpl(MainController* controller):
+        mainController(controller){
+
     }
 
-    qDebug() << "+++++++++++++++++++++++++++++++++\n";
+    ~LoginServiceListenerImpl(){qDebug() << "LoginServiceListenerImpl::destructor";}
+    virtual void connected(Login::LoginServiceResponse response){
+        qDebug() << "CONNECTED +++++++++++++++++++++++++++++++++\n";
+        qDebug() << "\t total users online: " << response.getTotalOnlineUsers();
+        QList<Model::AbstractJamRoom*> rooms = response.getRooms();
+        foreach (Model::AbstractJamRoom* room, rooms) {
+            qDebug() << room->getName();
+            QList<Model::Peer*> peers = room->getPeers();
+            foreach (Model::Peer* peer, peers) {
+                qDebug() << "\t" << peer->getUserName();
+            }
+        }
+
+        qDebug() << "+++++++++++++++++++++++++++++++++\n";
+    }
+    virtual void disconnected(){
+        mainController->quit();
+    }
+
+private:
+    MainController* mainController;
+};
+
 }
 
-void LoginServiceListenerImpl::disconnected(){
-    application->quit();
-}
 //++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++
@@ -81,56 +103,42 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     setQuitOnLastWindowClosed(false);
     configureStyleSheet();
 
-    this->loginServiceListener = new LoginServiceListenerImpl(this);
-    this->loginService = factory->createLoginService(loginServiceListener);
-    this->audioDriver = new PortAudioDriver();
-    audioDriverListener = new Listener(this);
+    LoginServiceListener* listener = new LoginServiceListenerImpl(this);
+    this->loginServiceListener = std::unique_ptr<LoginServiceListener>( listener );
+    this->loginService = std::unique_ptr<LoginService>( factory->createLoginService(listener));
+    this->audioDriver = std::unique_ptr<AudioDriver>( new PortAudioDriver(
+                ConfigStore::getLastInputDevice(), ConfigStore::getLastOutputDevice(),
+                ConfigStore::getFirstAudioInput(), ConfigStore::getLastAudioInput(),
+                ConfigStore::getFirstAudioOutput(), ConfigStore::getLastAudioOutput(),
+                ConfigStore::getLastSampleRate(), ConfigStore::getLastBufferSize()
+                ));
+    audioDriverListener = std::unique_ptr<AudioDriverListener>( new Listener(this));
 }
 
 MainController::~MainController()
 {
-    if(this->audioDriver != NULL){
-        this->audioDriver->stop();
-        delete this->audioDriver;
-        this->audioDriver = NULL;
-    }
-    if(this->audioDriverListener != NULL){
-        delete this->audioDriverListener;
-        this->audioDriverListener = NULL;
-    }
-
-    if(loginServiceListener != NULL){
-        delete loginServiceListener;
-    }
-    if(loginService != NULL){
-        delete loginService;
-    }
+    this->audioDriver->stop();
 }
 
 void MainController::start()
 {
-    if(this->audioDriver != NULL){
-        audioDriver->addListener(*audioDriverListener);
-        audioDriver->start();
-    }
+    audioDriver->addListener(*audioDriverListener);
+    audioDriver->start();
+
     NatMap map;
     loginService->connectInServer("elieser teste", 0, "channel", map, 0, "teste env", 44100);
 }
 
 void MainController::stop()
 {
-    if(this->audioDriver != NULL){
-        this->audioDriver->release();
-    }
-    if(loginService != NULL){
-        qDebug() << "disconnecting...";
-        loginService->disconnect();
-    }
+    this->audioDriver->release();
+    qDebug() << "disconnecting...";
+    loginService->disconnect();
 }
 
-AudioDriver *MainController::getAudioDriver() const
+Audio::AudioDriver *MainController::getAudioDriver() const
 {
-    return audioDriver;
+    return audioDriver.get();
 }
 
 void MainController::configureStyleSheet(){

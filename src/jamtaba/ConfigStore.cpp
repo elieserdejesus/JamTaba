@@ -2,6 +2,8 @@
 #include <QDebug>
 #include <QApplication>
 
+using namespace Persistence;
+
 const ConfigStore* ConfigStore::instance = new ConfigStore();
 
 //++++++++++++++++++

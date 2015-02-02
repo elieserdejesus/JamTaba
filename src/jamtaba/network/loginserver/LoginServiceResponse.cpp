@@ -7,14 +7,17 @@
 #include "JsonUtils.h"
 #include <QDebug>
 
-LoginServiceResponse::LoginServiceResponse(QString json)
+using namespace Login;
+using namespace Model;
+
+Login::LoginServiceResponse::LoginServiceResponse(QString json)
     :totalOnlineUsers(0)
     {
     QJsonDocument document = QJsonDocument::fromJson(QByteArray(json.toStdString().c_str()));
     QJsonObject rootObject = document.object();
-    QList<AbstractJamRoom*> jamRooms = buildJamRoomList(rootObject);
+    QList<Model::AbstractJamRoom*> jamRooms = buildJamRoomList(rootObject);
     this->totalOnlineUsers = 0;
-    foreach(AbstractJamRoom* room, jamRooms){
+    foreach(Model::AbstractJamRoom* room, jamRooms){
         roomsMap.insert(room->getId(), room);
         this->totalOnlineUsers += room->getPeersCount();
     }
@@ -50,7 +53,7 @@ LoginServiceResponse LoginServiceResponse::fromJson(QString jsonString){
     return LoginServiceResponse(jamRooms, connectedPeer, currentRoom);
 }
 */
-QList<AbstractJamRoom*> LoginServiceResponse::buildJamRoomList(QJsonObject rootJsonObject){
+QList<Model::AbstractJamRoom*> LoginServiceResponse::buildJamRoomList(QJsonObject rootJsonObject){
     QJsonArray jamRoomsArray = rootJsonObject["rooms"].toArray();
     QList<AbstractJamRoom*> realTimeRooms;
     foreach (QJsonValue value, jamRoomsArray) {

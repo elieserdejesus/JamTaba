@@ -4,6 +4,7 @@
 #include <QDebug>
 #include "Peer.h"
 
+using namespace Model;
 
 AbstractJamRoom::AbstractJamRoom(long long roomID)
     : id(roomID),

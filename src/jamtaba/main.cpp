@@ -2,17 +2,19 @@
 #include "MainController.h"
 #include "JamtabaFactory.h"
 #include "network/loginserver/DefaultLoginService.h"
-#include "ninjam/NinjamService.h"
-#include "nvwa/debug_new.h"
+#include "ninjam/Service.h"
+//#include "nvwa/debug_new.h"
+
+void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
 int main(int argc, char* args[])
 {
 
     qInstallMessageHandler(customLogHandler);
     JamtabaFactory* factory = new ReleaseFactory();
-    MainController mainController(factory, argc, args);//MainController extends QApplication
+    Controller::MainController mainController(factory, argc, args);//MainController extends QApplication
 
-    MainFrame w(&mainController);
+    Gui::MainFrame w(&mainController);
     w.show();
 
     delete factory;

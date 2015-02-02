@@ -2,16 +2,21 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_mainframe.h"
-#include "../MainController.h"
-#include "widgets/PeakMeter.h"
-#include "../network/loginserver/LoginService.h"
+
+namespace Controller {
+    class MainController;
+}
+
+namespace Gui{
+    class MainFrame;
+
 
 class MainFrame : public QMainWindow
 {
 	Q_OBJECT
 
 public:
-    MainFrame(MainController* mainController, QWidget *parent = 0);
+    MainFrame(Controller::MainController* mainController, QWidget *parent = 0);
 	~MainFrame();
     virtual void closeEvent(QCloseEvent *);
     virtual void showEvent(QShowEvent*);
@@ -24,6 +29,10 @@ private slots:
 
 private:
 	Ui::MainFrameClass ui;
-    MainController* mainController;
+    Controller::MainController* mainController;
     int timerID;
 };
+}
+
+
+

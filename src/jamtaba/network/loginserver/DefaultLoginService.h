@@ -11,6 +11,10 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 
+namespace Login {
+
+
+
 class AbstractJamRoom;
 class Peer;
 class LoginServiceResponse;
@@ -57,7 +61,7 @@ namespace LoginServiceCommands{
     };
 }
 
-class DefaultLoginService : public QObject, public LoginService
+class DefaultLoginService : public QObject, public Login::LoginService
 {
 
 Q_OBJECT
@@ -84,4 +88,5 @@ private:
     QNetworkReply* sendCommandToServer(const QUrlQuery&);
 };
 
+}
 #endif // DEFAULTLOGINSERVER_H

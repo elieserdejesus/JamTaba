@@ -4,6 +4,10 @@
 #include <QMap>
 #include <memory>
 
+namespace Model {
+
+
+
 class Peer
 {
 public:
@@ -36,4 +40,6 @@ private:
     //all created instances
     static QMap<long long, std::shared_ptr<Peer>> peers;
 };
+
+}
 

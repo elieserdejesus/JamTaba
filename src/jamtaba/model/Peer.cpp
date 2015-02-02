@@ -2,6 +2,8 @@
 #include <QMap>
 #include <QDebug>
 
+using namespace Model;
+
 QMap<long long, std::shared_ptr<Peer>> Peer::peers;
 
 

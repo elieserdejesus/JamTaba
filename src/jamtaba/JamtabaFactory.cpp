@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-LoginService *ReleaseFactory::createLoginService(LoginServiceListener* listener)
+Login::LoginService *ReleaseFactory::createLoginService(Login::LoginServiceListener* listener)
 {
-    return new DefaultLoginService(listener);
+    return new Login::DefaultLoginService(listener);
 }

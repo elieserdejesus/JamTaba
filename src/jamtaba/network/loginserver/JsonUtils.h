@@ -3,8 +3,10 @@
 
 #include <QJsonObject>
 
-class AbstractJamRoom;
+namespace Model {
+
 class RealTimeRoom;
+class AbstractJamRoom;
 class Peer;
 
 class JsonUtils
@@ -16,5 +18,7 @@ public:
     static AbstractJamRoom *jamRoomFromJson(QJsonObject json);
     static Peer* peerFromJson(QJsonObject peerObject);
 };
+
+}
 
 #endif // JSONUTILS_H

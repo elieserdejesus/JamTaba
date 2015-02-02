@@ -2,11 +2,12 @@
 #define TRACKVIEW_H
 
 #include <QWidget>
-class QWidget;
 
 namespace Ui {
-class TrackView;
+    class TrackView;
 }
+
+namespace Gui{
 
 class TrackView : public QWidget
 {
@@ -22,5 +23,7 @@ private:
 protected:
     void paintEvent(QPaintEvent *);
 };
+
+}
 
 #endif // TRACKVIEW_H
