@@ -20,7 +20,7 @@ Server::Server(QString host, int port)
 
 
 QString Server::getUniqueName(QString host, int port) {
-    return host + ":" + port;
+    return host + ":" + QString::number(port);
 }
 
 bool Server::containsUser(const User &user) const
@@ -59,7 +59,7 @@ bool Server::containsBotOnly() const{
 
 QString Server::getUniqueName() const
 {
-     return host + ":" + port;
+     return host + ":" + QString::number(port);
 }
 
 bool Server::setBpm(short bpm) {

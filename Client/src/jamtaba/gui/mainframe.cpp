@@ -1,18 +1,22 @@
 #include "mainframe.h"
 #include <QCloseEvent>
 #include "audioiodialog.h"
-#include "../ConfigStore.h"
 #include <QDebug>
 #include <QDesktopWidget>
 #include <QLayout>
+#include <QList>
+#include "jamroomviewpanel.h"
+#include "../persistence/ConfigStore.h"
 #include "../JamtabaFactory.h"
 #include "../audio/PortAudioDriver.h"
 #include "../MainController.h"
+#include "../loginserver/LoginService.h"
+#include "../loginserver/JamRoom.h"
 
 using namespace Audio;
 using namespace Persistence;
-using namespace Gui;
 using namespace Controller;
+
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainFrame::MainFrame(MainController *mainController, QWidget *parent) : QMainWindow(parent)
@@ -33,7 +37,20 @@ MainFrame::MainFrame(MainController *mainController, QWidget *parent) : QMainWin
         this->move(x, y);
     }
     timerID = startTimer(50);
+
+
+    Login::LoginService* loginService = this->mainController->getLoginService();
+    connect(loginService, SIGNAL(connectedInServer(QList<Login::AbstractJamRoom*>)),
+                                 this, SLOT(on_connectedInServer(QList<Login::AbstractJamRoom*>)));
 }
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void MainFrame::on_connectedInServer(QList<Login::AbstractJamRoom*> rooms){
+    ui.allRoomsContent->setLayout(new QVBoxLayout(ui.allRoomsContent));
+    foreach(Login::AbstractJamRoom* room, rooms){
+        ui.allRoomsContent->layout()->addWidget(new JamRoomViewPanel(room, ui.allRoomsContent));
+    }
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::timerEvent(QTimerEvent *){
     //AbstractAudioDriver* audioDriver = (AbstractAudioDriver*)mainController->getAudioDriver();
@@ -75,6 +92,21 @@ MainFrame::~MainFrame()
     //delete peakMeter;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//void MainFrame::on_freshDataReceivedFromLoginServer(const Login::LoginServiceParser &response){
+//    if(ui.allRoomsContent->layout() == 0){
+//        QLayout* layout = new QVBoxLayout(ui.allRoomsContent);
+//        layout->setSpacing(20);
+//        ui.allRoomsContent->setLayout(layout);
+//    }
+//    foreach (Model::AbstractJamRoom* room, response.getRooms()) {
+//        QWidget* widget = new JamRoomViewPanel(room, this->ui.allRoomsContent);
+//        ui.allRoomsContent->layout()->addWidget(widget);
+
+//    }
+//}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 //audio preferences
 void MainFrame::on_actionAudio_triggered()
 {

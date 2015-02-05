@@ -193,7 +193,7 @@
        </widget>
       </item>
       <item>
-       <widget class="Gui::PeakMeter" name="widget" native="true">
+       <widget class="PeakMeter" name="widget" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -249,7 +249,7 @@
        </widget>
       </item>
       <item row="0" column="2" rowspan="2" alignment="Qt::AlignRight">
-       <widget class="Gui::PeakMeter" name="widget_3" native="true">
+       <widget class="PeakMeter" name="widget_3" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -335,9 +335,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Gui::PeakMeter</class>
+   <class>PeakMeter</class>
    <extends>QWidget</extends>
-   <header>PeakMeter.h</header>
+   <header>peakmeter.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -13,18 +13,26 @@ public class VsJsonUtils {
 
     private static final Logger LOGGER = Logger.getLogger(VsJsonUtils.class.getName());
 
-    public static String getJsonToConnectionInRoom(RealtimeRoom connectedRoom) throws JSONException {
-        JSONObject json = new JSONObject();
-        //json.put("peer", peerAsJSONObject(connectedPeer));
-        //json.put("room", jamRoomToJSONObject(connectedRoom));
-        return json.toString();// toJSONString();
-    }
+//    public static String getJsonToConnectionInRoom(RealtimeRoom connectedRoom) throws JSONException {
+//        JSONObject json = new JSONObject();
+//        //json.put("peer", peerAsJSONObject(connectedPeer));
+//        //json.put("room", jamRoomToJSONObject(connectedRoom));
+//        return json.toString();// toJSONString();
+//    }
 
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     public static String getJsonToResponse(Collection<RealtimeRoom> realtimeRooms, Collection<NinjaMServer> ninjamServers, Peer connectedPeer) throws JSONException {
         JSONObject json = new JSONObject();
-        json.put("realtimeRooms", realTimeRoomsToJsonArray(realtimeRooms));
-        json.put("ninjamServers", ninjamServersToJsonArray(ninjamServers));
+        
+        JSONArray jamRoomsArray = new JSONArray();
+        for (RealtimeRoom jamRoom : realtimeRooms) {
+            jamRoomsArray.put(jamRoomToJSONObject(jamRoom));
+        }
+        for (NinjaMServer ninjamServer : ninjamServers) {
+            jamRoomsArray.put(ninjamServerToJSONObject(ninjamServer));
+        }
+        json.put("rooms", jamRoomsArray);
+        
         if (connectedPeer != null) {
             json.put("peer", peerAsJSONObject(connectedPeer));
         }
@@ -36,22 +44,6 @@ public class VsJsonUtils {
     }
 
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-    private static JSONArray ninjamServersToJsonArray(Collection<NinjaMServer> ninjamServers) throws JSONException {
-        JSONArray array = new JSONArray();
-        for (NinjaMServer server : ninjamServers) {
-            array.put(ninjamServerToJSONObject(server));
-        }
-        return array;
-    }
-    
-    private static JSONArray realTimeRoomsToJsonArray(Collection<RealtimeRoom> rooms) throws JSONException {
-        JSONArray jamRoomsArray = new JSONArray();
-        for (RealtimeRoom jamRoom : rooms) {
-            jamRoomsArray.put(jamRoomToJSONObject(jamRoom));
-        }
-        return jamRoomsArray;
-    }
-
     private static JSONArray peerListToJsonArray(List<Peer> peers) throws JSONException {
         JSONArray array = new JSONArray();
         for (Peer peer : peers) {
@@ -62,11 +54,11 @@ public class VsJsonUtils {
         return array;
     }
 
-    public static String getJsonToJamRoomsList(List<RealtimeRoom> jamRooms) throws JSONException {
-        JSONObject json = new JSONObject();
-        json.put("rooms", realTimeRoomsToJsonArray(jamRooms));
-        return json.toString();
-    }
+//    public static String getJsonToJamRoomsList(List<RealtimeRoom> jamRooms) throws JSONException {
+//        JSONObject json = new JSONObject();
+//        json.put("rooms", realTimeRoomsToJsonArray(jamRooms));
+//        return json.toString();
+//    }
 
     public static String getJsonToJamRoom(RealtimeRoom jamRoom) throws JSONException {
         JSONObject room = new JSONObject();
@@ -100,6 +92,7 @@ public class VsJsonUtils {
     private static JSONObject ninjamServerToJSONObject(NinjaMServer server) throws JSONException {
         JSONObject serverObject = new JSONObject();
         serverObject.put("id", server.getUniqueName().hashCode());
+        serverObject.put("type", "ninjam");
         serverObject.put("name", server.getHostName());
         serverObject.put("port", server.getPort());
         serverObject.put("maxUsers", server.getMaxUsers());
@@ -110,8 +103,10 @@ public class VsJsonUtils {
         JSONArray usersArray = new JSONArray();
         for (NinjaMUser user : server.getUsers()) {
             JSONObject userObject = new JSONObject();
+            userObject.put("id", user.getFullName().hashCode());
             userObject.put("name", user.getName());
             userObject.put("ip", user.getIp());
+            userObject.put("countryCode", user.getCountryCode());
             usersArray.put(userObject);
         }
         serverObject.put("users", usersArray);
@@ -127,6 +122,7 @@ public class VsJsonUtils {
 
         jamRoomObject.put("id", jamRoom.getId());
         jamRoomObject.put("name", jamRoom.getName());
+        jamRoomObject.put("type", "realtime");
         //jamRoomObject.put("styleCode", jamRoom.getStyleCode());
         jamRoomObject.put("maxUsers", jamRoom.getMaxUsers());
         jamRoomObject.put("isStatic", jamRoom.isStatic());

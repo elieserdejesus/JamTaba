@@ -10,7 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import jamtaba.DbUtils;
-import jamtaba.NinjamServers;
+import jamtaba.ninjam.NinjamServers;
 import jamtaba.RealtimeRoom;
 import jamtaba.Peer;
 import jamtaba.PeerCleaner;
@@ -24,6 +24,8 @@ public abstract class AbstractCommand implements Command {
     
     private static final Logger LOGGEr = Logger.getLogger(AbstractCommand.class.getName());
 
+    
+   
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
         try {
             Peer peer = getConnectedPeer(req);
@@ -39,10 +41,6 @@ public abstract class AbstractCommand implements Command {
             doCommandAction(req, peer);
             //+++++++++++++++
             DbUtils.save(entitiesToSave);
-            Collection<RealtimeRoom> jamRooms = DbUtils.loadRooms();
-            Collection<NinjaMServer> ninjamServers = NinjamServers.getServers();
-            //++++++++++++++++++
-            resp.getWriter().print(VsJsonUtils.getJsonToResponse(jamRooms, ninjamServers, peer));
 
         } catch (Exception e) {
             throw new ServletException(e);
@@ -87,7 +85,7 @@ public abstract class AbstractCommand implements Command {
         return entitiesToSave;
     }
 
-    protected Peer getConnectedPeer(HttpServletRequest req) throws IOException {
+    public static Peer getConnectedPeer(HttpServletRequest req) throws IOException {
         Peer peer;
         if (!RequestUtils.peerIsConnected(req)) {
             peer = RequestUtils.buildPeerFromRequest(req);

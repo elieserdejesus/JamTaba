@@ -1,5 +1,6 @@
 package jamtaba.ninjam;
 
+import jamtaba.ip2c.IpToCountryResolver;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,11 +11,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONArray;
@@ -30,8 +29,9 @@ public class ServersParser {
     private static final Logger LOGGER = Logger.getLogger(ServersParser.class.getName());
     private static final String URL = "http://ninbot.com/app/servers.php";
     private static final JSONParser parser = new JSONParser();
-
-    public static Collection<NinjaMServer> getPublicServers() throws IOException {
+    
+  
+    public static Collection<NinjaMServer> getPublicServers(IpToCountryResolver ipToCountryResolver) throws IOException {
         try {
             Map<String, AutoSongServer> autoSongServers = AutoSongParser.getPublicServers();
             //+++++++++++++++
@@ -54,13 +54,10 @@ public class ServersParser {
                     //users
                     for (int j = 0; j < usersArray.size(); j++) {
                         JSONObject userObject = (JSONObject) usersArray.get(j);
-                        String userIp = (String) userObject.get("ip");
+                        String userIp = NinjaMUser.getSanitizedIp( (String) userObject.get("ip"));
                         String userName = (String) userObject.get("name");
-                        String fullName = userName;
-                        if (!userIp.isEmpty()) {
-                            fullName += "@" + userIp;
-                        }
-                        server.addUser(new NinjaMUser(fullName));
+                        String userCountryCode = ipToCountryResolver.getCountry(userIp);
+                        server.addUser(new NinjaMUser(userName, userIp, userCountryCode));
                     }
                     servers.add(server);
                 }
@@ -165,10 +162,10 @@ public class ServersParser {
     }
 
     public static void main(String args[]) throws IOException {
-        Collection<NinjaMServer> servers = ServersParser.getPublicServers();
-        for (NinjaMServer server : servers) {
-            System.out.println(server.getHostName() + ":" + server.getPort() + "  " + server.getUsers().size() + "/" + server.getMaxUsers() + " " + usersLine(server.getUsers()));
-        }
+//        Collection<NinjaMServer> servers = ServersParser.getPublicServers();
+//        for (NinjaMServer server : servers) {
+//            System.out.println(server.getHostName() + ":" + server.getPort() + "  " + server.getUsers().size() + "/" + server.getMaxUsers() + " " + usersLine(server.getUsers()));
+//        }
     }
     
     private static String usersLine(List<NinjaMUser> users){

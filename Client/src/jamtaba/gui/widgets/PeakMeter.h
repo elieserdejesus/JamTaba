@@ -8,10 +8,6 @@
 #include <QDebug>
 #include <QDateTime>
 
-namespace Gui {
-
-
-
 
 class PeakMeter : public QWidget
 {
@@ -47,5 +43,5 @@ private:
     unsigned long decayTime;
 };
 
-}
+
 

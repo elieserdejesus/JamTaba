@@ -1,27 +1,44 @@
 package jamtaba.ninjam;
 
-import java.util.HashMap;
-import java.util.Map;
-//import jninjam.protocol.server.messages.UserChannel;
+import java.util.Random;
 
 /**
  * @author elieser
  */
 public class NinjaMUser {
 
+    private final static Random random = new Random(System.currentTimeMillis());
+    
     private final String name;
     private final String ip;
     private final String fullName;
+    private final String countryCode;
 
-    public NinjaMUser(String fullName) {
-        this.fullName = fullName;
-        String fullNameParts[] = fullName.split("@");
-        this.name = fullNameParts[0];
-        if (fullNameParts.length > 1) {
-            this.ip = fullNameParts[1];
-        } else {
-            this.ip = "";
+    public NinjaMUser(String name, String ip, String coutryCode) {
+        this.fullName = !ip.isEmpty() ? (name + "@" + ip) : name;
+        this.name = name;
+        this.ip = getSanitizedIp(ip);
+        this.countryCode = coutryCode;
+    }
+    
+    public static String getSanitizedIp(String rawIp){
+        String cleanIp = rawIp;
+        if(cleanIp == null || cleanIp.endsWith(".com")){
+            return "";
         }
+        cleanIp = cleanIp.trim();
+        if(cleanIp == null || cleanIp.isEmpty()){
+            return "";
+        }
+        if(cleanIp.endsWith("x")){
+            int rndValue = random.nextInt(180) + 20;// [20-200]
+            cleanIp = cleanIp.replace("x", String.valueOf(rndValue));
+        }
+        return cleanIp;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
     }
 
     public String getIp() {
@@ -36,5 +53,4 @@ public class NinjaMUser {
         return fullName;
     }
 
-   
 }
