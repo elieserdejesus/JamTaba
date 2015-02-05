@@ -1,9 +1,9 @@
 #include "gui/mainframe.h"
 #include "MainController.h"
 #include "JamtabaFactory.h"
-#include "network/loginserver/DefaultLoginService.h"
+#include "loginserver/LoginService.h"
 #include "ninjam/Service.h"
-//#include "nvwa/debug_new.h"
+#include "jamroomviewpanel.h"
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
@@ -14,13 +14,11 @@ int main(int argc, char* args[])
     JamtabaFactory* factory = new ReleaseFactory();
     Controller::MainController mainController(factory, argc, args);//MainController extends QApplication
 
-    Gui::MainFrame w(&mainController);
+    MainFrame w(&mainController);
     w.show();
 
     delete factory;
 
-    //NinjamService* ninjamService = NinjamService::getInstance();
-    //ninjamService->startServerConnection("ninbot.com", 2049);
 
     return mainController.exec();
     //return 0;

@@ -91,7 +91,7 @@ QMainWindow{
 }
 
 /* painéis principais */
-.QWidget#leftPanel, .QWidget#chatPanel, .QWidget#onlineUsersPanel, .QWidget#contentPanel{
+.QWidget#leftPanel, .QWidget#chatPanel, .QWidget#contentPanel{
     background: url(:/images/gradient.bmp) repeat-x;
     background-color: rgb(39, 39, 39);
     border: 1px solid rgb(45, 45, 45);
@@ -100,25 +100,71 @@ QMainWindow{
 }
 
 /* títulos dos painéis principais */
-.QWidget#leftPanel > .QLabel, .QWidget#chatPanel  > .QLabel, .QWidget#onlineUsersPanel > .QLabel, .QWidget#contentPanel > .QLabel{
+.QWidget#leftPanel > .QLabel, .QWidget#chatPanel  > .QLabel, .QWidget#contentPanel > .QLabel{
     font-size: 10pt;
     color: rgb(190, 190, 190);
     qproperty-alignment: AlignCenter;
 }
 
 /* define os separadores horizontais abaixo dos títulos as seções principais   */
-.QWidget#leftPanel > .QFrame, .QWidget#chatPanel > .QFrame, .QWidget#onlineUsersPanel > .QFrame{
+.QWidget#leftPanel > .QFrame, .QWidget#chatPanel > .QFrame{
     background-color: rgb(80,80,80);
 }
 
 .QWidget#contentPanel > .QFrame{
-    background-color: rgb(122, 122, 122);
+    background-color: rgb(100, 100, 100);
 }
 /* ------------------------------ */
 
 .QWidget#contentPanel{
     background: rgb(128, 128, 128);
 }
+
+.QTabWidget::pane{
+    background-color: rgba(255, 255, 255, 80);
+    border: 1px solid rgba(0, 0, 0, 60);
+    border-radius: 5px;
+    padding: -4px;
+}
+
+ .QTabWidget::tab-bar {
+     left: 10px; /* move to the right by 5px */
+ }
+
+/* Style the tab using the tab sub-control. Note that
+     it reads QTabBar _not_ QTabWidget */
+ .QTabBar::tab {
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+     border: 1px solid #C4C4C3;
+     border-bottom-color: #C2C7CB; /* same as the pane color */
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+     min-width: 8ex;
+     padding: 2px;
+     padding-left: 10px;
+     padding-right: 10px;
+
+ }
+
+ .QTabBar::tab:selected, .QTabBar::tab:hover {
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #fafafa, stop: 0.4 #f4f4f4,
+                                 stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
+ }
+
+ .QTabBar::tab:selected {
+     border-color: #9B9B9B;
+     border-bottom-color: #C2C7CB; /* same as pane color */
+
+ }
+
+ .QTabBar::tab:!selected {
+     margin-top: 5px; /* make non-selected tabs look smaller */
+ }
+
+/*++++++++++++++++++++*/
 
 .QMainWindow .QGroupBox::title {
      subcontrol-origin: margin;
@@ -127,7 +173,30 @@ QMainWindow{
      color: rgb(190, 190, 190);
      border-bottom-style: groove;
      border-bottom-color: darkgray;
-         border-width: 3px;
+     border-width: 3px;
+}
+
+QScrollArea{
+    border: none;
+    background: transparent;
+}
+
+QScrollArea > QWidget > QWidget{/*the content panel - QSCroll contém um QWidget privado que já é uma view port,além disso eu usei o meu próprio widget*/
+    background: transparent;
+}
+
+
+JamRoomViewPanel{
+    background: rgba(255,255, 255, 180);
+    border: 1px solid rgba(0, 0, 0, 30);
+    border-radius: 5px;
+}
+
+JamRoomViewPanel > #plotPanel{
+    min-height: 50px;
+    background: red;
+    border: 1px solid black;
+    border-radius: 5px;
 }
 
 /*  Track view +++++++++++++++++++++++++++++++++++++++++++++++ */

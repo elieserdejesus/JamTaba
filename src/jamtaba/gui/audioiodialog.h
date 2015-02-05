@@ -5,7 +5,6 @@
 namespace Audio{ class AudioDriver;}
 namespace Ui{ class AudioIODialog; }
 
-namespace Gui   {
 
 //++++++++++++++++++++++++++++++++++
 class AudioIODialog : public QDialog
@@ -41,4 +40,4 @@ private:
     void populateBufferSizeCombo();
 };
 
-}
+

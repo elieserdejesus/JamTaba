@@ -7,8 +7,6 @@ namespace Ui {
     class TrackView;
 }
 
-namespace Gui{
-
 class TrackView : public QWidget
 {
     Q_OBJECT
@@ -24,6 +22,6 @@ protected:
     void paintEvent(QPaintEvent *);
 };
 
-}
+
 
 #endif // TRACKVIEW_H

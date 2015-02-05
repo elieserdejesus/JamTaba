@@ -3,7 +3,6 @@
 #include <QStyleOption>
 #include <QPainter>
 
-using namespace Gui;
 
 TrackView::TrackView(QWidget *parent) :
     QWidget(parent),

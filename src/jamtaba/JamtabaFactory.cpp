@@ -1,9 +1,9 @@
 #include "JamtabaFactory.h"
-#include "network/loginserver/DefaultLoginService.h"
+#include "loginserver/LoginService.h"
 
 #include <QObject>
 
-Login::LoginService *ReleaseFactory::createLoginService(Login::LoginServiceListener* listener)
+Login::LoginService *ReleaseFactory::createLoginService(QObject *parent)
 {
-    return new Login::DefaultLoginService(listener);
+    return new Login::LoginService(parent);
 }

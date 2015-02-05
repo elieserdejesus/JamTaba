@@ -34,54 +34,61 @@ MAIN = src/jamtaba/main.cpp
 
 HEADERS += \
     #nvwa/debug_new.h \
+    src/jamtaba/persistence/ConfigStore.h \
+    #--------------------------------
     src/jamtaba/audio/AudioDriver.h \
     src/jamtaba/audio/AudioNode.h \
     src/jamtaba/audio/AudioMixer.h \
     src/jamtaba/audio/PortAudioDriver.h \
+    #--------------------------------
     src/jamtaba/gui/mainframe.h \
     src/jamtaba/gui/audioiodialog.h \
     src/jamtaba/gui/widgets/PeakMeter.h \
     src/jamtaba/gui/trackview.h \
-    src/jamtaba/ConfigStore.h \
-    src/jamtaba/network/loginserver/LoginService.h \
-    src/jamtaba/network/loginserver/DefaultLoginService.h \
-    src/jamtaba/JamtabaFactory.h \
-    src/jamtaba/network/loginserver/LoginServiceResponse.h \
-    src/jamtaba/model/JamRoomRepository.h \
-    src/jamtaba/model/Peer.h \
-    src/jamtaba/model/JamRoom.h \
-    src/jamtaba/network/loginserver/JsonUtils.h \
+    src/jamtaba/gui/jamroomviewpanel.h \
+    #--------------------------------
+    src/jamtaba/loginserver/LoginService.h \
+    src/jamtaba/loginserver/JamRoom.h \
+    src/jamtaba/loginserver/JsonUtils.h \
+    #--------------------------------
     src/jamtaba/MainController.h \
+    src/jamtaba/JamtabaFactory.h \
+    #--------------------------------
     src/jamtaba/ninjam/protocol/ServerMessageParser.h \
     src/jamtaba/ninjam/protocol/ServerMessages.h \
     src/jamtaba/ninjam/protocol/ClientMessages.h \
     src/jamtaba/ninjam/User.h \
     src/jamtaba/ninjam/Service.h \
-    src/jamtaba/ninjam/Server.h
+    src/jamtaba/ninjam/Server.h \
+    #--------------------------------
+    src/jamtaba/loginserver/natmap.h
+
 
 win32:HEADERS += portaudio/include/pa_asio.h
 
 SOURCES += \
     $$MAIN \
 #    nvwa/debug_new.cpp \
-    src/jamtaba/ConfigStore.cpp \
+    src/jamtaba/persistence/ConfigStore.cpp \
+#------------------------------------------------
     src/jamtaba/audio/AudioDriver.cpp \
     src/jamtaba/audio/AudioNode.cpp \
     src/jamtaba/audio/AudioMixer.cpp \
     src/jamtaba/audio/PortAudioDriver.cpp \
+#------------------------------------------------
     src/jamtaba/gui/mainframe.cpp \
     src/jamtaba/gui/audioiodialog.cpp \
     src/jamtaba/gui/widgets/PeakMeter.cpp \
     src/jamtaba/gui/trackview.cpp \
-    src/jamtaba/network/loginserver/LoginService.cpp \
-    src/jamtaba/network/loginserver/DefaultLoginService.cpp \
+    src/jamtaba/gui/jamroomviewpanel.cpp \
+#------------------------------------------------
     src/jamtaba/JamtabaFactory.cpp \
-    src/jamtaba/network/loginserver/LoginServiceResponse.cpp \
-    src/jamtaba/model/Peer.cpp \
-    src/jamtaba/model/JamRoomRepository.cpp \
-    src/jamtaba/network/loginserver/JsonUtils.cpp \
     src/jamtaba/MainController.cpp \
-    src/jamtaba/model/JamRoom.cpp \
+#------------------------------------------------
+    src/jamtaba/loginserver/LoginService.cpp \
+    src/jamtaba/loginserver/JsonUtils.cpp \
+    src/jamtaba/loginserver/JamRoom.cpp \
+#------------------------------------------------
     src/jamtaba/ninjam/protocol/ServerMessages.cpp \
     src/jamtaba/ninjam/protocol/ClientMessages.cpp \
     src/jamtaba/ninjam/protocol/ServerMessageParser.cpp \
@@ -89,10 +96,10 @@ SOURCES += \
     src/jamtaba/ninjam/Service.cpp \
     src/jamtaba/ninjam/User.cpp \
 
-
 FORMS += src/jamtaba/gui/mainframe.ui \
     src/jamtaba/gui/audioiodialog.ui \
-    src/jamtaba/gui/trackview.ui
+    src/jamtaba/gui/trackview.ui \
+    src/jamtaba/gui/jamroomviewpanel.ui
 
 #macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \
 win32:LIBPATH += C:/Qt/Qt5.4.0/Tools/mingw491_32/i686-w64-mingw32/lib/ \

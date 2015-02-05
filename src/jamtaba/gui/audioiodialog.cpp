@@ -5,7 +5,6 @@
 #include "../audio/AudioDriver.h"
 
 using namespace Audio;
-using namespace Gui;
 
 AudioIODialog::AudioIODialog(AudioDriver* driver, QWidget *parent) :
     QDialog(parent),

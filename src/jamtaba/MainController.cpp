@@ -1,65 +1,24 @@
 #include "MainController.h"
-#include "audio/PortAudioDriver.h"
-#include "audio/AudioMixer.h"
-#include "network/loginserver/DefaultLoginService.h"
-#include "JamtabaFactory.h"
-#include "ConfigStore.h"
 #include <QFile>
 #include <QDebug>
 #include <QApplication>
-#include "network/loginserver/LoginServiceResponse.h"
-#include "../model/JamRoom.h"
-#include "../model/Peer.h"
+#include "audio/PortAudioDriver.h"
+#include "audio/AudioMixer.h"
+#include "../loginserver/LoginService.h"
+#include "../loginserver/JamRoom.h"
+#include "../loginserver/natmap.h"
+#include "JamtabaFactory.h"
+#include "persistence/ConfigStore.h"
+#include "mainframe.h"
+
 
 using namespace Login;
-using namespace Model;
 using namespace Audio;
 using namespace Persistence;
 using namespace Controller;
 
 namespace Controller {
 
-//declarei esta classe aqui no cpp porque não foi possível usar ela como uma classe interna de MainController.
-//Para usar como classe interna seria necessário incluir o header onde esta o LoginServiceListener no MainController.h,
-//o que não seria legal. Não é possível herdar usando forwarding declaration. Acabei adotando essa solução para evitar
-//a inclusão do header.
-class LoginServiceListenerImpl : public Login::LoginServiceListener{
-public:
-    LoginServiceListenerImpl(MainController* controller):
-        mainController(controller){
-
-    }
-
-    ~LoginServiceListenerImpl(){qDebug() << "LoginServiceListenerImpl::destructor";}
-
-    virtual void connected(Login::LoginServiceResponse response){
-        qDebug() << "CONNECTED +++++++++++++++++++++++++++++++++\n";
-        qDebug() << "\t total users online: " << response.getTotalOnlineUsers();
-
-        QList<Model::RealTimeRoom*> rooms = response.getRealtimeRooms();
-        foreach (Model::RealTimeRoom* room, rooms) {
-            qDebug() << room->getName();
-            QList<Model::Peer*> peers = room->getPeers();
-            foreach (Model::Peer* peer, peers) {
-                qDebug() << "\t" << peer->getUserName();
-            }
-        }
-        qDebug() << "+++++++++++++++++++++++++++++++++\n";
-        QList<Model::NinjamRoom*> ninjamRooms = response.getNinjamRooms();
-        foreach (Model::NinjamRoom* room, ninjamRooms) {
-            qDebug() << room->getName();
-
-        }
-    }
-    virtual void disconnected(){
-        mainController->quit();
-    }
-
-private:
-    MainController* mainController;
-};
-
-}
 
 //++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++
@@ -101,17 +60,18 @@ public:
 
 
 };
+
+}
 //++++++++++++++++++++++++++++++
 
 MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     :QApplication(argc, argv)
 {
-    setQuitOnLastWindowClosed(false);
+    setQuitOnLastWindowClosed(false);//wait disconnect from server to close
     configureStyleSheet();
 
-    LoginServiceListener* listener = new LoginServiceListenerImpl(this);
-    this->loginServiceListener = std::unique_ptr<LoginServiceListener>( listener );
-    this->loginService = std::unique_ptr<LoginService>( factory->createLoginService(listener));
+    Login::LoginService* service = factory->createLoginService();
+    this->loginService = std::unique_ptr<LoginService>( service );
     this->audioDriver = std::unique_ptr<AudioDriver>( new PortAudioDriver(
                 ConfigStore::getLastInputDevice(), ConfigStore::getLastOutputDevice(),
                 ConfigStore::getFirstAudioInput(), ConfigStore::getLastAudioInput(),
@@ -119,6 +79,11 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
                 ConfigStore::getLastSampleRate(), ConfigStore::getLastBufferSize()
                 ));
     audioDriverListener = std::unique_ptr<AudioListener>( new AudioListener(this));
+    QObject::connect(service, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromServer()));
+}
+
+void MainController::on_disconnectedFromServer(){
+    exit(0);
 }
 
 MainController::~MainController()
@@ -156,4 +121,8 @@ void MainController::configureStyleSheet(){
     // Apply the loaded stylesheet
     QString style( styleFile.readAll() );
     setStyleSheet( style );
+}
+
+Login::LoginService* MainController::getLoginService() const{
+    return &*loginService;
 }
