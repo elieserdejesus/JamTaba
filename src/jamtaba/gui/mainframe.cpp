@@ -8,7 +8,7 @@
 #include "jamroomviewpanel.h"
 #include "../persistence/ConfigStore.h"
 #include "../JamtabaFactory.h"
-#include "../audio/PortAudioDriver.h"
+#include "../audio/core/PortAudioDriver.h"
 #include "../MainController.h"
 #include "../loginserver/LoginService.h"
 #include "../loginserver/JamRoom.h"

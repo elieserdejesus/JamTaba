@@ -2,7 +2,7 @@
 #include "ui_audioiodialog.h"
 
 #include <QDebug>
-#include "../audio/AudioDriver.h"
+#include "../audio/core/AudioDriver.h"
 
 using namespace Audio;
 

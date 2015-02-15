@@ -7,6 +7,7 @@
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
+
 int main(int argc, char* args[])
 {
 
@@ -17,7 +18,7 @@ int main(int argc, char* args[])
     MainFrame w(&mainController);
     w.show();
 
-    delete factory;
+   delete factory;
 
 
     return mainController.exec();

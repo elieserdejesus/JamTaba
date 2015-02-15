@@ -185,7 +185,6 @@ void LoginService::connectedSlot(){
 void LoginService::updateFromJson(QString json){
     QJsonDocument document = QJsonDocument::fromJson(QByteArray(json.toStdString().c_str()));
     QJsonObject root = document.object();
-    qDebug() << "room no map antes de atualizar: " << rooms.size();
     QJsonArray allRooms = root["rooms"].toArray();
     for (int i = 0; i < allRooms.size(); ++i) {
         QJsonObject jsonObject = allRooms[i].toObject();
@@ -206,9 +205,6 @@ void LoginService::updateFromJson(QString json){
             emit roomChanged(*room);
         }
     }
-    qDebug() << "rooms recebidas: " << allRooms.size();
-    qDebug() << "room inseridas no map: " << rooms.size();
-
 }
 
 QList<AbstractJamRoom*> LoginService::buildTheRoomsList(){
