@@ -6,6 +6,9 @@
 
 using namespace Audio;
 
+const int Mp3DecoderMiniMp3::MINIMUM_SIZE_TO_DECODE = 1024 + 256;
+const int Mp3DecoderMiniMp3::AUDIO_SAMPLES_BUFFER_MAX_SIZE = 4096 * 2;
+
 Mp3DecoderMiniMp3::Mp3DecoderMiniMp3()
     :mp3Decoder(mp3_create()), buffer(nullptr)
 
@@ -29,8 +32,8 @@ const AudioSamplesBuffer* Mp3DecoderMiniMp3::decode(char *inputBuffer, int bytes
     signed short* out = internalShortBuffer;
     char* in = array.data();
     int totalSamplesDecoded = 0;
+    int bytesLeft = array.size() - totalBytesDecoded;
     do{
-        int bytesLeft = bytesToDecode - totalBytesDecoded;
         bytesDecoded = mp3_decode((void**)mp3Decoder, in, bytesLeft, out, &mp3Info );
         if(bytesDecoded > 0){
             //qDebug() << "decoding stream sampleRate:" << mp3Info.sample_rate << " channels:" << mp3Info.channels;
@@ -42,8 +45,9 @@ const AudioSamplesBuffer* Mp3DecoderMiniMp3::decode(char *inputBuffer, int bytes
             totalBytesDecoded += bytesDecoded;
         }
     }
-    while(bytesDecoded > 0 && totalBytesDecoded < bytesToDecode);
+    while(bytesDecoded > 0 && bytesLeft > 0);
     array = array.right(array.size() - totalBytesDecoded);//keep just the undecoded bytes to the next call for decode
+    //qDebug() << "esperando para decodificar: " << array.size();
     if(totalBytesDecoded <= 0){
         return NULL_BUFFER;
     }

@@ -21,12 +21,16 @@ public:
     explicit AbstractMp3Streamer(Audio::Mp3Decoder* decoder);
     ~AbstractMp3Streamer();
     virtual void processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out);
+
+private:
+    static const int MAX_BYTES_PER_DECODING = 2048;
+
 protected:
     QMutex mutex;
     Audio::Mp3Decoder* decoder;
     std::vector<std::deque<float>> samplesBuffer;
     QIODevice* device;
-    void readBytesFromDevice(QIODevice* device, const unsigned int bytesToRead);
+    void decodeBytesFromDevice(QIODevice* device, const unsigned int bytesToRead);
 
 };
 //+++++++++++++++++++++++++++++++++++++++++++++
