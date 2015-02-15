@@ -15,7 +15,7 @@
 #
 #-------------------------------------------------
 
-QT       += network
+QT       +=  gui  network multimedia
 
 QMAKE_CXXFLAGS += -std=c++11 #-Wno-unused-parameter
 
@@ -34,12 +34,15 @@ MAIN = src/jamtaba/main.cpp
 
 HEADERS += \
     #nvwa/debug_new.h \
+    #--------------------------------
+    minimp3/minimp3.h \
+    #--------------------------------
     src/jamtaba/persistence/ConfigStore.h \
     #--------------------------------
-    src/jamtaba/audio/AudioDriver.h \
-    src/jamtaba/audio/AudioNode.h \
-    src/jamtaba/audio/AudioMixer.h \
-    src/jamtaba/audio/PortAudioDriver.h \
+    src/jamtaba/audio/core/AudioDriver.h \
+    src/jamtaba/audio/core/AudioNode.h \
+    src/jamtaba/audio/core/AudioMixer.h \
+    src/jamtaba/audio/core/PortAudioDriver.h \
     #--------------------------------
     src/jamtaba/gui/mainframe.h \
     src/jamtaba/gui/audioiodialog.h \
@@ -61,7 +64,9 @@ HEADERS += \
     src/jamtaba/ninjam/Service.h \
     src/jamtaba/ninjam/Server.h \
     #--------------------------------
-    src/jamtaba/loginserver/natmap.h
+    src/jamtaba/loginserver/natmap.h \
+    src/jamtaba/audio/RoomStreamerNode.h \
+    src/jamtaba/audio/codec.h
 
 
 win32:HEADERS += portaudio/include/pa_asio.h
@@ -69,12 +74,15 @@ win32:HEADERS += portaudio/include/pa_asio.h
 SOURCES += \
     $$MAIN \
 #    nvwa/debug_new.cpp \
+#--------------------------------
+    minimp3/minimp3.c \
+#-----------------------------------------
     src/jamtaba/persistence/ConfigStore.cpp \
 #------------------------------------------------
-    src/jamtaba/audio/AudioDriver.cpp \
-    src/jamtaba/audio/AudioNode.cpp \
-    src/jamtaba/audio/AudioMixer.cpp \
-    src/jamtaba/audio/PortAudioDriver.cpp \
+    src/jamtaba/audio/core/AudioDriver.cpp \
+    src/jamtaba/audio/core/AudioNode.cpp \
+    src/jamtaba/audio/core/AudioMixer.cpp \
+    src/jamtaba/audio/core/PortAudioDriver.cpp \
 #------------------------------------------------
     src/jamtaba/gui/mainframe.cpp \
     src/jamtaba/gui/audioiodialog.cpp \
@@ -95,6 +103,9 @@ SOURCES += \
     src/jamtaba/ninjam/Server.cpp \
     src/jamtaba/ninjam/Service.cpp \
     src/jamtaba/ninjam/User.cpp \
+    src/jamtaba/audio/RoomStreamerNode.cpp \
+    src/jamtaba/audio/codec.cpp
+
 
 FORMS += src/jamtaba/gui/mainframe.ui \
     src/jamtaba/gui/audioiodialog.ui \
