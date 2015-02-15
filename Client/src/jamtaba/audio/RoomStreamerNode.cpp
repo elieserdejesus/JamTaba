@@ -9,8 +9,12 @@
 #include <QBuffer>
 #include <QObject>
 #include <QDateTime>
+#include <QWaitCondition>
+#include <cmath>
 
 using namespace Audio;
+
+const int AbstractMp3Streamer::MAX_BYTES_PER_DECODING;// = 2048;
 
 //+++++++++++++
 AbstractMp3Streamer::AbstractMp3Streamer(Audio::Mp3Decoder *decoder)
@@ -38,23 +42,31 @@ void AbstractMp3Streamer::processReplacing(AudioSamplesBuffer &in, AudioSamplesB
     out.add(buffer);
 }
 
-void AbstractMp3Streamer::readBytesFromDevice(QIODevice* device, const unsigned int bytesToRead){
+void AbstractMp3Streamer::decodeBytesFromDevice(QIODevice* device, const unsigned int bytesToRead){
     char inputBuffer[bytesToRead];
-    qint64 bytesReaded = device->read(inputBuffer, bytesToRead);
+    qint64 totalBytesToProcess = device->read(inputBuffer, bytesToRead);
 
-    if(bytesReaded > 0){
-        const Audio::AudioSamplesBuffer* decodedBuffer = decoder->decode(inputBuffer, bytesReaded);
-        QMutexLocker locker(&mutex);
-        //qDebug() << "decoded frameLenght:" << decodedBuffer->getFrameLenght();
-        if(samplesBuffer.empty() && decodedBuffer->getFrameLenght() > 0){
-            for (int channel = 0; channel < decodedBuffer->getChannels(); ++channel) {
-                samplesBuffer.push_back(std::deque<float>());
+    if(totalBytesToProcess > 0){
+        int bytesProcessed = 0;
+        char* in = inputBuffer;
+        while(bytesProcessed < totalBytesToProcess){//splite bytesReaded in chunks to avoid a very large decoded buffer
+            int bytesToProcess = std::min((int)(totalBytesToProcess - bytesProcessed), MAX_BYTES_PER_DECODING);//chunks maxsize is 2048 bytes
+            const Audio::AudioSamplesBuffer* decodedBuffer = decoder->decode(in, bytesToProcess);
+            //prepare in for the next decoding
+            in += bytesToProcess;
+            bytesProcessed += bytesToProcess;
+            //+++++++++++++++++  PROCESS DECODED SAMPLES ++++++++++++++++
+            QMutexLocker locker(&mutex);
+            if(samplesBuffer.empty() && decodedBuffer->getFrameLenght() > 0){
+                for (int channel = 0; channel < decodedBuffer->getChannels(); ++channel) {
+                    samplesBuffer.push_back(std::deque<float>());
+                }
             }
-        }
 
-        for(int channel=0; channel < samplesBuffer.size(); ++channel){
-            for (int sample = 0; sample < decodedBuffer->getFrameLenght(); ++sample) {
-                samplesBuffer[channel].push_back(decodedBuffer->get(channel, sample));
+            for(int channel=0; channel < samplesBuffer.size(); ++channel){
+                for (int sample = 0; sample < decodedBuffer->getFrameLenght(); ++sample) {
+                    samplesBuffer[channel].push_back(decodedBuffer->get(channel, sample));
+                }
             }
         }
     }
@@ -79,7 +91,7 @@ void RoomStreamerNode::reply_error(QNetworkReply::NetworkError error){
 
 void RoomStreamerNode::reply_read(){
     QMutexLocker(&this->mutex);
-    AbstractMp3Streamer::readBytesFromDevice(device, device->bytesAvailable());
+    AbstractMp3Streamer::decodeBytesFromDevice(device, device->bytesAvailable());
     if(buffering && !samplesBuffer.empty() && samplesBuffer[0].size() >= bufferSize){
         buffering = false;
     }
@@ -114,6 +126,6 @@ AudioFileStreamerNode::~AudioFileStreamerNode(){
 }
 
 void AudioFileStreamerNode::processReplacing(AudioSamplesBuffer & in, AudioSamplesBuffer &out){
-    readBytesFromDevice(this->device, 1024 + 256);
+    decodeBytesFromDevice(this->device, 1024 + 256);
     AbstractMp3Streamer::processReplacing(in, out);
 }

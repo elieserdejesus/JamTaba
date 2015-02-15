@@ -31,9 +31,9 @@ public:
     AudioListener(MainController* controller){
         this->mainController = controller;
         this->audioMixer = new AudioMixer();
-        this->streamer = new RoomStreamerNode(QUrl("http://vprjazz.streamguys.net/vprjazz64.mp3"));
+        //this->streamer = new RoomStreamerNode(QUrl("http://vprjazz.streamguys.net/vprjazz64.mp3"));
         //this->streamer = new RoomStreamerNode(QUrl("http://users.skynet.be/fa046054/home/P22/track56.mp3"));
-        //this->streamer = new RoomStreamerNode(QUrl("http://ninbot.com:8000/2051"));
+        this->streamer = new RoomStreamerNode(QUrl("http://ninbot.com:8000/2050"));
         //this->streamer = new AudioFileStreamerNode("D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/teste.mp3");
         this->audioMixer->addNode(*this->streamer);
     }
