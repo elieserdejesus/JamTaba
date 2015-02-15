@@ -8,17 +8,23 @@ using namespace Audio;
 
 const int Mp3DecoderMiniMp3::MINIMUM_SIZE_TO_DECODE = 1024 + 256;
 const int Mp3DecoderMiniMp3::AUDIO_SAMPLES_BUFFER_MAX_SIZE = 4096 * 2;
+const int Mp3DecoderMiniMp3::INTERNAL_SHORT_BUFFER_SIZE = MP3_MAX_SAMPLES_PER_FRAME *8 * 2;
 
 Mp3DecoderMiniMp3::Mp3DecoderMiniMp3()
     :mp3Decoder(mp3_create()), buffer(nullptr)
 
 {
-    int size = MP3_MAX_SAMPLES_PER_FRAME*8 * 2;
-    internalShortBuffer = new signed short[size];//recommend by the minimp3 author
-    for (int i = 0; i < size; ++i) {
+    internalShortBuffer = new signed short[INTERNAL_SHORT_BUFFER_SIZE];//recommend by the minimp3 author
+    reset();
+    NULL_BUFFER = new Audio::AudioSamplesBuffer(1, 0);
+}
+
+
+void Mp3DecoderMiniMp3::reset(){
+    array.clear();
+    for (int i = 0; i < INTERNAL_SHORT_BUFFER_SIZE; ++i) {
         internalShortBuffer[i] = 0;
     }
-    NULL_BUFFER = new Audio::AudioSamplesBuffer(1, 0);
 }
 
 const AudioSamplesBuffer* Mp3DecoderMiniMp3::decode(char *inputBuffer, int bytesToDecode){

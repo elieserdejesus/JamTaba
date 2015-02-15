@@ -47,8 +47,19 @@ MainFrame::MainFrame(MainController *mainController, QWidget *parent) : QMainWin
 void MainFrame::on_connectedInServer(QList<Login::AbstractJamRoom*> rooms){
     ui.allRoomsContent->setLayout(new QVBoxLayout(ui.allRoomsContent));
     foreach(Login::AbstractJamRoom* room, rooms){
-        ui.allRoomsContent->layout()->addWidget(new JamRoomViewPanel(room, ui.allRoomsContent));
+        JamRoomViewPanel* roomViewPanel = new JamRoomViewPanel(room, ui.allRoomsContent);
+        ui.allRoomsContent->layout()->addWidget(roomViewPanel);
+        connect( roomViewPanel, SIGNAL(startingListeningTheRoom(QString)), this, SLOT(on_startingRoomStream(QString)));
+        connect( roomViewPanel, SIGNAL(finishingListeningTheRoom(QString)), this, SLOT(on_stoppingRoomStream(QString)));
     }
+}
+
+void MainFrame::on_startingRoomStream(QString roomStreamUrl){
+    mainController->playRoomStream(roomStreamUrl);
+}
+
+void MainFrame::on_stoppingRoomStream(QString /*roomStreamUrl*/){
+    mainController->stopRoomStream();
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

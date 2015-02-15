@@ -21,7 +21,8 @@ public:
     explicit AbstractMp3Streamer(Audio::Mp3Decoder* decoder);
     ~AbstractMp3Streamer();
     virtual void processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out);
-
+    virtual void stopCurrentStream();
+    void setStreamPath(QString streamPath);
 private:
     static const int MAX_BYTES_PER_DECODING = 2048;
 
@@ -31,7 +32,7 @@ protected:
     std::vector<std::deque<float>> samplesBuffer;
     QIODevice* device;
     void decodeBytesFromDevice(QIODevice* device, const unsigned int bytesToRead);
-
+    virtual void initialize(QString streamPath) = 0;
 };
 //+++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++
@@ -42,13 +43,19 @@ class RoomStreamerNode : public AbstractMp3Streamer
 Q_OBJECT//allow signal/slots
 
 public:
-    RoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds=10);
+    RoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds=3);
+    RoomStreamerNode(int bufferTimeInSeconds=3);
     ~RoomStreamerNode();
+
     virtual void processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out);
+    virtual void stopCurrentStream();
+protected:
+    void initialize(QString streamPath);
 private:
     QNetworkAccessManager httpClient;
     bool buffering;
     int bufferSize;
+
 
     //QByteArray byteArray;
 private slots:
@@ -61,6 +68,9 @@ class AudioFileStreamerNode : public AbstractMp3Streamer
 {
 Q_OBJECT//allow signal/slots
     //Q_OBJECT//allow signal/slots
+
+protected:
+    void initialize(QString streamPath);
 
 public:
     AudioFileStreamerNode(QString file);

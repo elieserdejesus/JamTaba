@@ -188,7 +188,7 @@ static QMap<QString, QString> countriesMap = {
     {"QA",	"Qatar"},
     {"RE",	"Réunion"},
     {"RO",	"Romania"},
-    {"RU",	"Russian Federation"},
+    {"RU",	"Russian"},
     {"RW",	"Rwanda"},
     {"SH",	"Saint Helena"},
     {"KN",	"Saint Kitts and Nevis"},
@@ -302,9 +302,28 @@ void JamRoomViewPanel::initialize(){
             ui->usersPanel->layout()->addWidget(label);
         }
     }
+
+    ui->buttonListen->setEnabled(currentRoom->hasStreamLink());
 }
 
 JamRoomViewPanel::~JamRoomViewPanel()
 {
     delete ui;
+}
+
+void JamRoomViewPanel::on_buttonListen_clicked()
+{
+    if(currentRoom->hasStreamLink()){
+        if(ui->buttonListen->isChecked()){
+            emit startingListeningTheRoom(currentRoom->getStreamLink());
+        }
+        else{
+            emit finishingListeningTheRoom(currentRoom->getStreamLink());
+        }
+    }
+}
+
+void JamRoomViewPanel::on_buttonEnter_clicked()
+{
+
 }

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <map>
 #include <string>
+#include <QPushButton>
 
 //static std::map<std::string, std::string> countriesMap;
 
@@ -20,6 +21,12 @@ public:
     JamRoomViewPanel(Login::AbstractJamRoom *jamRoom, QWidget *parent = 0);
     ~JamRoomViewPanel();
     void paintEvent( QPaintEvent */*e*/ );
+signals:
+    void startingListeningTheRoom(QString streamUrl);
+    void finishingListeningTheRoom(QString streamUrl);
+private slots:
+    void on_buttonListen_clicked();
+    void on_buttonEnter_clicked();
 
 private:
     Ui::RoomViewPanel *ui;
