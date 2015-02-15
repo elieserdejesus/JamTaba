@@ -47,6 +47,7 @@ HEADERS += \
     src/jamtaba/gui/mainframe.h \
     src/jamtaba/gui/audioiodialog.h \
     src/jamtaba/gui/widgets/PeakMeter.h \
+    src/jamtaba/gui/widgets/WavePeakPanel.h \
     src/jamtaba/gui/trackview.h \
     src/jamtaba/gui/jamroomviewpanel.h \
     #--------------------------------
@@ -87,6 +88,7 @@ SOURCES += \
     src/jamtaba/gui/mainframe.cpp \
     src/jamtaba/gui/audioiodialog.cpp \
     src/jamtaba/gui/widgets/PeakMeter.cpp \
+    src/jamtaba/gui/widgets/WavePeakPanel.cpp \
     src/jamtaba/gui/trackview.cpp \
     src/jamtaba/gui/jamroomviewpanel.cpp \
 #------------------------------------------------

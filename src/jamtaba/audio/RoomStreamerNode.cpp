@@ -18,13 +18,21 @@ const int AbstractMp3Streamer::MAX_BYTES_PER_DECODING;// = 2048;
 
 //+++++++++++++
 AbstractMp3Streamer::AbstractMp3Streamer(Audio::Mp3Decoder *decoder)
-    :decoder(decoder)
+    :decoder(decoder),
+      device(nullptr)
 {
 
 }
 
 AbstractMp3Streamer::~AbstractMp3Streamer(){
 
+}
+
+void AbstractMp3Streamer::stopCurrentStream(){
+    if(device){
+        device->close();
+    }
+    decoder->reset();//discard unprocessed bytes
 }
 
 void AbstractMp3Streamer::processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out){
@@ -72,17 +80,42 @@ void AbstractMp3Streamer::decodeBytesFromDevice(QIODevice* device, const unsigne
     }
 }
 
-//+++++++++++++++++++++++++++++++++++++++
+void AbstractMp3Streamer::setStreamPath(QString streamPath){
+    stopCurrentStream();
+    initialize(streamPath);
+}
 
+//+++++++++++++++++++++++++++++++++++++++
 RoomStreamerNode::RoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds)
     : AbstractMp3Streamer(new Mp3DecoderMiniMp3()),
-      buffering(true),
       bufferSize(bufferTimeInSeconds * 44100)//TODO melhorar isso
 {
-    QNetworkReply* reply = httpClient.get(QNetworkRequest(streamPath));
-    QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(reply_read()));
-    QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(reply_error(QNetworkReply::NetworkError)));
-    this->device = reply;
+    setStreamPath(streamPath.toString());
+}
+
+RoomStreamerNode::RoomStreamerNode(int bufferTimeInSeconds)
+    :AbstractMp3Streamer(new Mp3DecoderMiniMp3()),
+      bufferSize(bufferTimeInSeconds * 44100)//TODO melhorar isso
+{
+    setStreamPath("");
+}
+
+
+void RoomStreamerNode::initialize(QString streamPath){
+    buffering = true;
+    if(!streamPath.isEmpty()){
+        QNetworkReply* reply = httpClient.get(QNetworkRequest(QUrl(streamPath)));
+        QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(reply_read()));
+        QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(reply_error(QNetworkReply::NetworkError)));
+        this->device = reply;
+    }
+}
+
+void RoomStreamerNode::stopCurrentStream(){
+    if(device){
+        ((QNetworkReply*)device)->abort();//stop download
+        AbstractMp3Streamer::stopCurrentStream();
+    }
 }
 
 void RoomStreamerNode::reply_error(QNetworkReply::NetworkError error){
@@ -114,9 +147,13 @@ void RoomStreamerNode::processReplacing(AudioSamplesBuffer & in, AudioSamplesBuf
 AudioFileStreamerNode::AudioFileStreamerNode(QString file)
     :   AbstractMp3Streamer(new Mp3DecoderMiniMp3())
 {
-    QFile* f = new QFile(file);
+    setStreamPath(file);
+}
+
+void AudioFileStreamerNode::initialize(QString streamPath){
+    QFile* f = new QFile(streamPath);
     if(!f->open(QIODevice::ReadOnly)){
-        qDebug() << "não foi possivel abrir o arquivo " << file;
+        qDebug() << "não foi possivel abrir o arquivo " << streamPath;
     }
     this->device = f;
 }

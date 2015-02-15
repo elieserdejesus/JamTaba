@@ -34,6 +34,9 @@ private slots:
     void on_audioIOPropertiesChanged(int selectedDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
     void on_connectedInServer(QList<Login::AbstractJamRoom*>);
 
+    //+++++  ROOM STREAMS ++++++++
+    void on_startingRoomStream(QString roomStreamUrl);
+    void on_stoppingRoomStream(QString roomStreamUrl);
 private:
     Ui::MainFrameClass ui;
     Controller::MainController* mainController;

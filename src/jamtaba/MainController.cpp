@@ -26,21 +26,23 @@ class AudioListener : public AudioDriverListenerAdapter{
 private:
     MainController* mainController;
     AudioMixer* audioMixer;
-    AbstractMp3Streamer* streamer;
+    //AbstractMp3Streamer* streamer;
 public:
     AudioListener(MainController* controller){
         this->mainController = controller;
         this->audioMixer = new AudioMixer();
+
         //this->streamer = new RoomStreamerNode(QUrl("http://vprjazz.streamguys.net/vprjazz64.mp3"));
         //this->streamer = new RoomStreamerNode(QUrl("http://users.skynet.be/fa046054/home/P22/track56.mp3"));
-        this->streamer = new RoomStreamerNode(QUrl("http://ninbot.com:8000/2050"));
+        //this->streamer = new RoomStreamerNode(QUrl("http://ninbot.com:8000/2050"));
         //this->streamer = new AudioFileStreamerNode("D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/teste.mp3");
-        this->audioMixer->addNode(*this->streamer);
+        this->audioMixer->addNode( *mainController->roomStreamer);
+
     }
 
     ~AudioListener(){
         delete audioMixer;
-        delete streamer;
+        //delete streamer;
     }
 
     virtual void driverStarted(){
@@ -66,7 +68,8 @@ public:
 //++++++++++++++++++++++++++++++
 
 MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
-    :QApplication(argc, argv)
+    :QApplication(argc, argv),
+      roomStreamer(std::unique_ptr<Audio::AbstractMp3Streamer>(new RoomStreamerNode()))
 {
 
     setQuitOnLastWindowClosed(false);//wait disconnect from server to close
@@ -91,6 +94,14 @@ void MainController::on_disconnectedFromServer(){
 MainController::~MainController()
 {
     this->audioDriver->stop();
+}
+
+void MainController::playRoomStream(QString roomStreamURL){
+    roomStreamer->setStreamPath(roomStreamURL);
+}
+
+void MainController::stopRoomStream(){
+    roomStreamer->stopCurrentStream();
 }
 
 void MainController::start()

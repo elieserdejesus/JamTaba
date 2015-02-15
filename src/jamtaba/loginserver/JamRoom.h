@@ -75,6 +75,11 @@ public:
     virtual ~AbstractJamRoom();
     enum class Type{NINJAM, REALTIME};
 
+
+    virtual bool hasStreamLink() const = 0;
+
+    virtual QString getStreamLink() const= 0;
+
     virtual Type getRoomType() const = 0;
 
     inline bool isTheWaitingRoom() const {return id == WAITING_ROOM_ID; }
@@ -113,6 +118,8 @@ public:
     explicit RealTimeRoom(long long id);
     ~RealTimeRoom();
     virtual bool updateFromJson(QJsonObject json);
+    inline bool hasStreamLink() const{return false;}
+    inline QString getStreamLink() const{ return "";}
     inline AbstractJamRoom::Type getRoomType() const {return AbstractJamRoom::Type::REALTIME;}
     /***
      * @param localPeer - Skip local peer
