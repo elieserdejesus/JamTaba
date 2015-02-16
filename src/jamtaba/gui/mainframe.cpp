@@ -44,29 +44,38 @@ MainFrame::MainFrame(MainController *mainController, QWidget *parent) : QMainWin
                                  this, SLOT(on_connectedInServer(QList<Login::AbstractJamRoom*>)));
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//esses eventos deveriam ser tratados no controller
 void MainFrame::on_connectedInServer(QList<Login::AbstractJamRoom*> rooms){
     ui.allRoomsContent->setLayout(new QVBoxLayout(ui.allRoomsContent));
     foreach(Login::AbstractJamRoom* room, rooms){
         JamRoomViewPanel* roomViewPanel = new JamRoomViewPanel(room, ui.allRoomsContent);
+        roomViewPanels.insert(room, roomViewPanel);
         ui.allRoomsContent->layout()->addWidget(roomViewPanel);
-        connect( roomViewPanel, SIGNAL(startingListeningTheRoom(QString)), this, SLOT(on_startingRoomStream(QString)));
-        connect( roomViewPanel, SIGNAL(finishingListeningTheRoom(QString)), this, SLOT(on_stoppingRoomStream(QString)));
+        connect( roomViewPanel, SIGNAL(startingListeningTheRoom(Login::AbstractJamRoom*)), this, SLOT(on_startingRoomStream(Login::AbstractJamRoom*)));
+        connect( roomViewPanel, SIGNAL(finishingListeningTheRoom(Login::AbstractJamRoom*)), this, SLOT(on_stoppingRoomStream(Login::AbstractJamRoom*)));
     }
 }
 
-void MainFrame::on_startingRoomStream(QString roomStreamUrl){
-    mainController->playRoomStream(roomStreamUrl);
+void MainFrame::on_startingRoomStream(Login::AbstractJamRoom* room){
+    if(room->hasStreamLink()){
+        mainController->playRoomStream(room);
+    }
 }
 
-void MainFrame::on_stoppingRoomStream(QString /*roomStreamUrl*/){
+void MainFrame::on_stoppingRoomStream(Login::AbstractJamRoom * room){
     mainController->stopRoomStream();
+    roomViewPanels[room]->clearPeaks();
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::timerEvent(QTimerEvent *){
-    //AbstractAudioDriver* audioDriver = (AbstractAudioDriver*)mainController->getAudioDriver();
-    //const float* peaks = audioDriver->getOutputBuffer()->getPeaks();
-    //peakMeter->setPeak(peaks[0]);
+
+    if(mainController->isPlayingRoomStream()){
+          Login::AbstractJamRoom* room = mainController->getCurrentStreamingRoom();
+          JamRoomViewPanel* roomView =  roomViewPanels[room];
+          MainController::Peaks peaks = mainController->getPeaks();
+          roomView->addPeak(peaks.lastStreamRoomPeak);
+    }
 }
 
 //++++++++++++=

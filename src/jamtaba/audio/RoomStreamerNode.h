@@ -22,7 +22,7 @@ public:
     ~AbstractMp3Streamer();
     virtual void processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out);
     virtual void stopCurrentStream();
-    void setStreamPath(QString streamPath);
+    virtual void setStreamPath(QString streamPath);
 private:
     static const int MAX_BYTES_PER_DECODING = 2048;
 
@@ -48,7 +48,7 @@ public:
     ~RoomStreamerNode();
 
     virtual void processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out);
-    virtual void stopCurrentStream();
+    //virtual void stopCurrentStream();
 protected:
     void initialize(QString streamPath);
 private:
@@ -79,4 +79,19 @@ public:
 
 };
 
-}
+//++++++++++++++++++++++
+class TestStreamerNode : public AbstractMp3Streamer{
+private:
+    OscillatorAudioNode* oscilator;
+    bool playing;
+protected:
+    void initialize(QString streamPath);
+public:
+    TestStreamerNode();
+    ~TestStreamerNode();
+    void stopCurrentStream();
+    void setStreamPath(QString streamPath);
+    virtual void processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out);
+};
+
+}//namespace end

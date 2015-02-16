@@ -31,8 +31,10 @@ AbstractMp3Streamer::~AbstractMp3Streamer(){
 void AbstractMp3Streamer::stopCurrentStream(){
     if(device){
         device->close();
+        decoder->reset();//discard unprocessed bytes
+        device = nullptr;
+        samplesBuffer.clear();//discard samples
     }
-    decoder->reset();//discard unprocessed bytes
 }
 
 void AbstractMp3Streamer::processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out){
@@ -47,10 +49,16 @@ void AbstractMp3Streamer::processReplacing(AudioSamplesBuffer &in, AudioSamplesB
             samplesBuffer[c].pop_front();
         }
     }
+    const float* peaks = buffer.getPeaks();
+    this->lastPeaks[0] = peaks[0]; this->lastPeaks[1] = peaks[1];
+
     out.add(buffer);
 }
 
 void AbstractMp3Streamer::decodeBytesFromDevice(QIODevice* device, const unsigned int bytesToRead){
+    if(!device){
+        return;
+    }
     char inputBuffer[bytesToRead];
     qint64 totalBytesToProcess = device->read(inputBuffer, bytesToRead);
 
@@ -111,18 +119,15 @@ void RoomStreamerNode::initialize(QString streamPath){
     }
 }
 
-void RoomStreamerNode::stopCurrentStream(){
-    if(device){
-        ((QNetworkReply*)device)->abort();//stop download
-        AbstractMp3Streamer::stopCurrentStream();
-    }
-}
 
 void RoomStreamerNode::reply_error(QNetworkReply::NetworkError error){
     qDebug() << "ERROR" ;
 }
 
 void RoomStreamerNode::reply_read(){
+    if(!device){
+        return;
+    }
     QMutexLocker(&this->mutex);
     AbstractMp3Streamer::decodeBytesFromDevice(device, device->bytesAvailable());
     if(buffering && !samplesBuffer.empty() && samplesBuffer[0].size() >= bufferSize){
@@ -165,4 +170,39 @@ AudioFileStreamerNode::~AudioFileStreamerNode(){
 void AudioFileStreamerNode::processReplacing(AudioSamplesBuffer & in, AudioSamplesBuffer &out){
     decodeBytesFromDevice(this->device, 1024 + 256);
     AbstractMp3Streamer::processReplacing(in, out);
+}
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++/*
+
+TestStreamerNode::TestStreamerNode()
+    :AbstractMp3Streamer(new Mp3DecoderMiniMp3())
+{
+    oscilator = new OscillatorAudioNode(2, 44100);
+    playing = false;
+}
+
+TestStreamerNode::~TestStreamerNode(){
+    delete oscilator;
+}
+
+void TestStreamerNode::initialize(QString /*streamPath*/){
+    //
+}
+
+void TestStreamerNode::processReplacing(AudioSamplesBuffer & in, AudioSamplesBuffer &out){
+    if(playing){
+        oscilator->processReplacing(in, out);
+    }
+    const float* peaks = out.getPeaks();
+    lastPeaks[0] = peaks[0];
+    lastPeaks[1] = peaks[1];
+}
+
+
+void TestStreamerNode::setStreamPath(QString /*streamPath*/){
+    //
+    playing = true;
+}
+
+void TestStreamerNode::stopCurrentStream(){
+    playing = false;
 }
