@@ -84,6 +84,8 @@ SOURCES += \
     src/jamtaba/audio/core/AudioNode.cpp \
     src/jamtaba/audio/core/AudioMixer.cpp \
     src/jamtaba/audio/core/PortAudioDriver.cpp \
+    src/jamtaba/audio/RoomStreamerNode.cpp \
+    src/jamtaba/audio/codec.cpp \
 #------------------------------------------------
     src/jamtaba/gui/mainframe.cpp \
     src/jamtaba/gui/audioiodialog.cpp \
@@ -105,9 +107,6 @@ SOURCES += \
     src/jamtaba/ninjam/Server.cpp \
     src/jamtaba/ninjam/Service.cpp \
     src/jamtaba/ninjam/User.cpp \
-    src/jamtaba/audio/RoomStreamerNode.cpp \
-    src/jamtaba/audio/codec.cpp
-
 
 FORMS += src/jamtaba/gui/mainframe.ui \
     src/jamtaba/gui/audioiodialog.ui \

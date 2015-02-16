@@ -16,11 +16,9 @@ namespace Login {
     class LoginService;
     class LoginServiceParser;
     class LoginServiceListener;
-}
-
-namespace Model {
     class AbstractJamRoom;
 }
+
 
 class JamtabaFactory;
 
@@ -29,6 +27,7 @@ class JamtabaFactory;
 namespace Controller {
 
 class AudioListener;
+}
 
 //++++++++++++++++++++++++++++
 class MainController : public QApplication
@@ -43,31 +42,36 @@ public:
 
     void start();
     void stop();
-    void playRoomStream(QString roomStreamURL);
+    void playRoomStream(Login::AbstractJamRoom *room);
+    bool isPlayingRoomStream();
+    Login::AbstractJamRoom* getCurrentStreamingRoom();
     void stopRoomStream();//stop currentRoom stream
 
     Audio::AudioDriver* getAudioDriver() const;
     Login::LoginService* getLoginService() const;
 
+    struct Peaks{
+        float lastStreamRoomPeak;
+    };
 
-signals:
-    //void on_freshDataAvailableFromServer(const Login::LoginServiceParser& response);
-
+    Peaks getPeaks() const{return peaks;}
 
 private:
-    std::unique_ptr< Audio::AudioDriver> audioDriver;
+    std::unique_ptr<Audio::AudioDriver> audioDriver;
     std::unique_ptr<Audio::AudioDriverListener> audioDriverListener;
     std::unique_ptr<Login::LoginService> loginService;
 
-    std::unique_ptr<Audio::AbstractMp3Streamer> roomStreamer;
 
+    std::unique_ptr<Audio::AbstractMp3Streamer> roomStreamer;
+    Login::AbstractJamRoom* currentStreamRoom;
+    //+++++++++++++++++++
+    Peaks peaks;
     //+++++++++++++++++++++++++
     void configureStyleSheet();
-
 
 private slots:
     void on_disconnectedFromServer();
 
 };
 
-}
+//}

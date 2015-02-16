@@ -18,6 +18,12 @@ WavePeakPanel::WavePeakPanel(QWidget* parent)
 }
 
 
+void WavePeakPanel::clearPeaks(){
+    peaksArray.clear();
+    startIndex = totalPeaks = addIndex = 0;
+    update();
+}
+
 void WavePeakPanel::resizeEvent( QResizeEvent * /*event*/ ){
     recreatePeaksArray();
 }

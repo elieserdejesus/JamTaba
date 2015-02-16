@@ -39,11 +39,14 @@ public:
     void setPan(float pan);
     inline float getPan() const {return pan;}
 
-
+    inline float getLastPeakLeft() const{return lastPeaks[0];}
+    inline float getLastPeakRight() const{return lastPeaks[1];}
+    inline float getLastPeak() const {return std::max(lastPeaks[0], lastPeaks[1]);}
 protected:
     std::set<AudioNode*> connections;
     std::set<AudioNodeProcessor*> processors;
     AudioSamplesBuffer* internalBuffer;
+    float lastPeaks[2];
 
 private:
     bool muted;

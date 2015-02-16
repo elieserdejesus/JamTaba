@@ -1,6 +1,9 @@
 #ifndef NATMAP
 #define NATMAP
 
+//namespace Login {
+
+
 class NatMap{
 public:
     QString getPublicIp(){
@@ -11,6 +14,8 @@ public:
         return 30000;
     }
 };
+
+//}
 
 #endif // NATMAP
 

@@ -38,7 +38,7 @@ public:
     WavePeakPanel(QWidget *parent=0);
 
     void addPeak(float peak) ;
-
+    void clearPeaks();
     void setPeaksColor(QColor peaksColor) ;
 
     inline QColor getPeaksColor() const{

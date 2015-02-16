@@ -271,6 +271,10 @@ JamRoomViewPanel::JamRoomViewPanel(Login::AbstractJamRoom* jamRoom, QWidget* par
     initialize();
 }
 
+void JamRoomViewPanel::addPeak(float peak){
+    ui->wavePeakPanel->addPeak(peak);
+}
+
 void JamRoomViewPanel::paintEvent( QPaintEvent */*e*/ ){
     QStyleOption opt;
     opt.init(this);
@@ -297,7 +301,7 @@ void JamRoomViewPanel::initialize(){
             label->setTextFormat(Qt::RichText);
             QString countryCode = user->getCountryCode().toLower();
             QString countryName = countriesMap[user->getCountryCode()];
-            QString userString = user->getName() + " (" + countryName + ")";
+            QString userString = user->getName() + " <i>(" + countryName + ")</i>";
             label->setText("<img src=:/flags/flags/" + countryCode +".png> " + userString);
             ui->usersPanel->layout()->addWidget(label);
         }
@@ -311,14 +315,18 @@ JamRoomViewPanel::~JamRoomViewPanel()
     delete ui;
 }
 
+void JamRoomViewPanel::clearPeaks(){
+    ui->wavePeakPanel->clearPeaks();
+}
+
 void JamRoomViewPanel::on_buttonListen_clicked()
 {
     if(currentRoom->hasStreamLink()){
         if(ui->buttonListen->isChecked()){
-            emit startingListeningTheRoom(currentRoom->getStreamLink());
+            emit startingListeningTheRoom(currentRoom);
         }
         else{
-            emit finishingListeningTheRoom(currentRoom->getStreamLink());
+            emit finishingListeningTheRoom(currentRoom);
         }
     }
 }

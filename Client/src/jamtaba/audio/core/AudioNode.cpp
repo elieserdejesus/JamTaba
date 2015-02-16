@@ -22,6 +22,10 @@ void AudioNode::processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out
         processor->process(*internalBuffer);
     }
     internalBuffer->applyGain(gain, leftGain, rightGain);
+
+    const float* peaks = internalBuffer->getPeaks();
+    lastPeaks[0] = peaks[0]; lastPeaks[1] = peaks[1];
+
     out.add(*internalBuffer);
 }
 

@@ -3,10 +3,11 @@
 #include <QList>
 #include <QtWidgets/QMainWindow>
 #include "ui_mainframe.h"
+#include <QMap>
 
-namespace Controller{
+//namespace Controller{
     class MainController;
-}
+//}
 namespace Ui{
     class MainFrameClass;
     class MainFrame;
@@ -17,12 +18,14 @@ namespace Login {
     class AbstractJamRoom;
 }
 
+class JamRoomViewPanel;
+
 class MainFrame : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainFrame(Controller::MainController* mainController, QWidget *parent = 0);
+    MainFrame(MainController* mainController, QWidget *parent = 0);
     ~MainFrame();
     virtual void closeEvent(QCloseEvent *);
     virtual void showEvent(QShowEvent*);
@@ -35,12 +38,15 @@ private slots:
     void on_connectedInServer(QList<Login::AbstractJamRoom*>);
 
     //+++++  ROOM STREAMS ++++++++
-    void on_startingRoomStream(QString roomStreamUrl);
-    void on_stoppingRoomStream(QString roomStreamUrl);
+    void on_startingRoomStream(Login::AbstractJamRoom* room);
+    void on_stoppingRoomStream(Login::AbstractJamRoom* room);
 private:
     Ui::MainFrameClass ui;
-    Controller::MainController* mainController;
+    MainController* mainController;
     int timerID;
+
+    QMap<Login::AbstractJamRoom*, JamRoomViewPanel*> roomViewPanels;
+
 };
 
 

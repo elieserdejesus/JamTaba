@@ -21,9 +21,11 @@ public:
     JamRoomViewPanel(Login::AbstractJamRoom *jamRoom, QWidget *parent = 0);
     ~JamRoomViewPanel();
     void paintEvent( QPaintEvent */*e*/ );
+    void addPeak(float peak);
+    void clearPeaks();
 signals:
-    void startingListeningTheRoom(QString streamUrl);
-    void finishingListeningTheRoom(QString streamUrl);
+    void startingListeningTheRoom(Login::AbstractJamRoom* room);
+    void finishingListeningTheRoom(Login::AbstractJamRoom* room);
 private slots:
     void on_buttonListen_clicked();
     void on_buttonEnter_clicked();

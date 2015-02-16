@@ -158,4 +158,4 @@ public:
     //virtual int getPeersCount() const;
 };
 
-}
+}//end of namespace
