@@ -11,6 +11,7 @@
 #include <QDateTime>
 #include <QWaitCondition>
 #include <cmath>
+#include <QMutexLocker>
 
 using namespace Audio;
 
@@ -19,9 +20,10 @@ const int AbstractMp3Streamer::MAX_BYTES_PER_DECODING;// = 2048;
 //+++++++++++++
 AbstractMp3Streamer::AbstractMp3Streamer(Audio::Mp3Decoder *decoder)
     :decoder(decoder),
-      device(nullptr)
+      device(nullptr),
+      faderProcessor(FaderProcessor(0, 1, 44100*5))
 {
-
+    //addProcessor(faderProcessor);
 }
 
 AbstractMp3Streamer::~AbstractMp3Streamer(){
@@ -29,6 +31,8 @@ AbstractMp3Streamer::~AbstractMp3Streamer(){
 }
 
 void AbstractMp3Streamer::stopCurrentStream(){
+    QMutexLocker locker(&mutex);
+    faderProcessor.reset();//aply fadein in next stream
     if(device){
         device->close();
         decoder->reset();//discard unprocessed bytes
@@ -38,6 +42,7 @@ void AbstractMp3Streamer::stopCurrentStream(){
 }
 
 void AbstractMp3Streamer::processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out){
+    QMutexLocker locker(&mutex);
     if(samplesBuffer.empty()){
         return;
     }
@@ -52,10 +57,13 @@ void AbstractMp3Streamer::processReplacing(AudioSamplesBuffer &in, AudioSamplesB
     const float* peaks = buffer.getPeaks();
     this->lastPeaks[0] = peaks[0]; this->lastPeaks[1] = peaks[1];
 
+    faderProcessor.process(buffer);//aply fade in in stream
+
     out.add(buffer);
 }
 
 void AbstractMp3Streamer::decodeBytesFromDevice(QIODevice* device, const unsigned int bytesToRead){
+    QMutexLocker locker(&mutex);
     if(!device){
         return;
     }
@@ -72,8 +80,8 @@ void AbstractMp3Streamer::decodeBytesFromDevice(QIODevice* device, const unsigne
             in += bytesToProcess;
             bytesProcessed += bytesToProcess;
             //+++++++++++++++++  PROCESS DECODED SAMPLES ++++++++++++++++
-            QMutexLocker locker(&mutex);
             if(samplesBuffer.empty() && decodedBuffer->getFrameLenght() > 0){
+                qDebug() << "canais:"<<decodedBuffer->getChannels();
                 for (int channel = 0; channel < decodedBuffer->getChannels(); ++channel) {
                     samplesBuffer.push_back(std::deque<float>());
                 }
@@ -142,6 +150,7 @@ RoomStreamerNode::~RoomStreamerNode(){
 
 void RoomStreamerNode::processReplacing(AudioSamplesBuffer & in, AudioSamplesBuffer &out){
     if(buffering){
+        lastPeaks[0] = lastPeaks[1] = 0;
         return;
     }
     AbstractMp3Streamer::processReplacing(in, out);
@@ -185,21 +194,24 @@ TestStreamerNode::~TestStreamerNode(){
 }
 
 void TestStreamerNode::initialize(QString /*streamPath*/){
-    //
+
 }
 
 void TestStreamerNode::processReplacing(AudioSamplesBuffer & in, AudioSamplesBuffer &out){
     if(playing){
         oscilator->processReplacing(in, out);
+        faderProcessor.process(out);
     }
     const float* peaks = out.getPeaks();
     lastPeaks[0] = peaks[0];
     lastPeaks[1] = peaks[1];
+
+
 }
 
 
 void TestStreamerNode::setStreamPath(QString /*streamPath*/){
-    //
+    faderProcessor.reset();
     playing = true;
 }
 

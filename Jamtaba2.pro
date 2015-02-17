@@ -1,4 +1,5 @@
-# - mostrar salas ninjam
+# - O stream do ninjamer.com não é mono como achei que era, mas está dando problema
+# - Tenho que fazer resample do stream
 # - Abrir plugins VST
 
 #BUGS relacionados com o diálogo de audioIO:
@@ -15,7 +16,7 @@
 #
 #-------------------------------------------------
 
-QT       +=  gui  network multimedia
+QT       +=  gui  network
 
 QMAKE_CXXFLAGS += -std=c++11 #-Wno-unused-parameter
 
@@ -35,7 +36,7 @@ MAIN = src/jamtaba/main.cpp
 HEADERS += \
     #nvwa/debug_new.h \
     #--------------------------------
-    minimp3/minimp3.h \
+    #minimp3/minimp3.h \
     #--------------------------------
     src/jamtaba/persistence/ConfigStore.h \
     #--------------------------------
@@ -76,7 +77,7 @@ SOURCES += \
     $$MAIN \
 #    nvwa/debug_new.cpp \
 #--------------------------------
-    minimp3/minimp3.c \
+    #minimp3/minimp3.c \
 #-----------------------------------------
     src/jamtaba/persistence/ConfigStore.cpp \
 #------------------------------------------------
@@ -115,20 +116,23 @@ FORMS += src/jamtaba/gui/mainframe.ui \
 
 #macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \
 win32:LIBPATH += C:/Qt/Qt5.4.0/Tools/mingw491_32/i686-w64-mingw32/lib/ \
-win32:LIBPATH += $$PWD/portaudio/lib/
 
 
-win32:LIBS += -lportaudio \
-              -lwinmm \
+LIBS += -L$$PWD/minimp3/lib/ -lminimp3 \
+        -L$$PWD/portaudio/lib/ -lportaudio \
+
+win32:LIBS += -lwinmm \
               -lole32 \
 
 
 win32:PRE_TARGETDEPS += $$PWD/portaudio/lib/libportaudio.a
 
 INCLUDEPATH += $$PWD/portaudio/include \
+               $$PWD/minimp3/include \
                src/jamtaba/gui \
                src/jamtaba/gui/widgets
 
-DEPENDPATH += $$PWD/portaudio/include
+DEPENDPATH += $$PWD/portaudio/include \
+              $$PWD/minimp3/include
 
 RESOURCES += src/jamtaba/resources/jamtaba.qrc

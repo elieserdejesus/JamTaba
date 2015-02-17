@@ -9,6 +9,38 @@ const double AudioNode::root2Over2 = 1.414213562373095 *0.5;
 const double AudioNode::piOver2 = 3.141592653589793238463 * 0.5;
 
 //+++++++++++++++
+
+FaderProcessor::FaderProcessor(float startGain, float endGain, int samplesToFade)
+    : currentGain(startGain),
+      startGain(startGain),
+      gainStep((endGain-startGain)/samplesToFade),
+      totalSamplesToProcess(samplesToFade),
+      processedSamples(0)
+{
+
+}
+
+void FaderProcessor::reset(){
+    processedSamples = 0;
+    currentGain = startGain;
+}
+
+void FaderProcessor::process(AudioSamplesBuffer &buffer){
+    if(finished()){
+        return;
+    }
+    float finalGain = currentGain + (gainStep * buffer.getFrameLenght());
+    buffer.fade(currentGain, finalGain);
+    currentGain = finalGain + gainStep;
+    processedSamples += buffer.getFrameLenght();
+}
+
+bool FaderProcessor::finished(){
+    return processedSamples >= totalSamplesToProcess;
+}
+
+//+++++++++++++++
+
 void AudioNode::processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out)
 {
     internalBuffer->setFrameLenght(out.getFrameLenght());

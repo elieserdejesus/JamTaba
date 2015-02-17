@@ -13,6 +13,20 @@ public:
     virtual ~AudioNodeProcessor(){}
 };
 
+class FaderProcessor : public AudioNodeProcessor{
+private:
+    float currentGain;
+    float startGain;
+    float gainStep;
+    int totalSamplesToProcess;
+    int processedSamples;
+public:
+    FaderProcessor(float startGain, float endGain, int samplesToFade);
+    virtual void process(AudioSamplesBuffer &buffer);
+    bool finished();
+    void reset();
+};
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 class AudioNode {

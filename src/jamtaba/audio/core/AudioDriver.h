@@ -34,6 +34,9 @@ public:
     //inline int getID() const{return ID;}
     void applyGain(float gainFactor);
 
+    void fade(float beginGain=0, float endGain=1);
+
+
     //overload applyGain used to compute main gain and pan gains in one pass
     void applyGain(float gainFactor, float leftGain, float rightGain);//panValue between [-1, 0, 1] => LEFT, CENTER, RIGHT
     void zero();
@@ -62,6 +65,7 @@ public:
     inline void setFrameLenght(unsigned int newFrameLenght)  {this->frameLenght = newFrameLenght;}
     inline int getChannels() const { return channels; }
 };
+//++++++++++++++++++++++++++++++
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class AudioDriver
@@ -113,6 +117,10 @@ public:
     virtual int getSampleRate() const = 0;
     virtual int getBufferSize() const = 0;
 };
+
+
+
+
 //++++++++++++++++++++++++++++++
 class AbstractAudioDriver : public AudioDriver
 {
