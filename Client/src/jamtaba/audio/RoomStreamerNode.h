@@ -27,6 +27,7 @@ private:
     static const int MAX_BYTES_PER_DECODING = 2048;
 
 protected:
+    Audio::FaderProcessor faderProcessor;//used to apply fade in in stream
     QMutex mutex;
     Audio::Mp3Decoder* decoder;
     std::vector<std::deque<float>> samplesBuffer;

@@ -48,6 +48,17 @@ void AudioSamplesBuffer::applyGain(float gainFactor)
     }
 }
 
+void AudioSamplesBuffer::fade(float beginGain, float endGain){
+    float gainStep = (endGain - beginGain)/frameLenght;
+    for (int c = 0; c < channels; ++c) {
+        float gain = beginGain;
+        for (int s = 0; s < frameLenght; ++s) {
+            samples[c][s] *= gain;
+            gain += gainStep;
+        }
+    }
+}
+
 void AudioSamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain)
 {
     if(!isMono()){
