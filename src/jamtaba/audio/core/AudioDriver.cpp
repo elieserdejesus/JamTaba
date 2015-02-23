@@ -8,7 +8,7 @@ using namespace Audio;
 
 //int AudioSamplesBuffer:: lastID = 0;
 
-AudioSamplesBuffer::AudioSamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT)
+SamplesBuffer::SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT)
     : channels(channels), frameLenght(MAX_BUFFERS_LENGHT)
 {
     if(channels == 0){
@@ -18,7 +18,7 @@ AudioSamplesBuffer::AudioSamplesBuffer(unsigned int channels, const unsigned int
     this->samples = new float*[channels];
     for (unsigned int c = 0; c < channels; ++c) {
         this->samples[c] = new float[MAX_BUFFERS_LENGHT];
-        for (int s = 0; s < MAX_BUFFERS_LENGHT; ++s) {
+        for (unsigned int s = 0; s < MAX_BUFFERS_LENGHT; ++s) {
             this->samples[c][s] = 0;
         }
     }
@@ -27,7 +27,7 @@ AudioSamplesBuffer::AudioSamplesBuffer(unsigned int channels, const unsigned int
     //this->ID = lastID++;
 }
 
-AudioSamplesBuffer::~AudioSamplesBuffer(){
+SamplesBuffer::~SamplesBuffer(){
     if(samples != nullptr){
         for (unsigned int c = 0; c < channels; ++c) {
             delete [] samples[c];
@@ -39,7 +39,7 @@ AudioSamplesBuffer::~AudioSamplesBuffer(){
     //qDebug() << "\tAudio samples destructor ID:" << ID;
 }
 
-void AudioSamplesBuffer::applyGain(float gainFactor)
+void SamplesBuffer::applyGain(float gainFactor)
 {
     for (unsigned int c = 0; c < channels; ++c) {
         for (unsigned int i = 0; i < frameLenght; ++i) {
@@ -48,18 +48,18 @@ void AudioSamplesBuffer::applyGain(float gainFactor)
     }
 }
 
-void AudioSamplesBuffer::fade(float beginGain, float endGain){
+void SamplesBuffer::fade(float beginGain, float endGain){
     float gainStep = (endGain - beginGain)/frameLenght;
-    for (int c = 0; c < channels; ++c) {
+    for (unsigned int c = 0; c < channels; ++c) {
         float gain = beginGain;
-        for (int s = 0; s < frameLenght; ++s) {
+        for (unsigned int s = 0; s < frameLenght; ++s) {
             samples[c][s] *= gain;
             gain += gainStep;
         }
     }
 }
 
-void AudioSamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain)
+void SamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain)
 {
     if(!isMono()){
         float finalLeftGain = gainFactor * leftGain;
@@ -74,14 +74,14 @@ void AudioSamplesBuffer::applyGain(float gainFactor, float leftGain, float right
     }
 }
 
-void AudioSamplesBuffer::zero()
+void SamplesBuffer::zero()
 {
     for (unsigned int c = 0; c < channels; ++c) {
        memset(samples[c], 0, frameLenght * sizeof(float));
     }
 }
 
-const float *AudioSamplesBuffer::getPeaks() const
+const float *SamplesBuffer::getPeaks() const
 {
     float abs;
     for (unsigned int c = 0; c < channels; ++c) {
@@ -100,7 +100,7 @@ const float *AudioSamplesBuffer::getPeaks() const
     return peaks;
 }
 
-void AudioSamplesBuffer::add(const AudioSamplesBuffer &buffer)
+void SamplesBuffer::add(const SamplesBuffer &buffer)
 {
     unsigned int framesToProcess = frameLenght < buffer.frameLenght ? frameLenght : buffer.frameLenght;
     if(channels == buffer.channels){
@@ -125,39 +125,46 @@ void AudioSamplesBuffer::add(const AudioSamplesBuffer &buffer)
     }
 }
 
-void AudioSamplesBuffer::set(int channel, int sampleIndex, float sampleValue){
-    Q_ASSERT(channel < channels);
-    Q_ASSERT(sampleIndex < frameLenght);
+void SamplesBuffer::set(int channel, int sampleIndex, float sampleValue){
+    Q_ASSERT(channel < (int)channels);
+    Q_ASSERT(sampleIndex < (int)frameLenght);
     samples[channel][sampleIndex] = sampleValue;
 }
 
-void AudioSamplesBuffer::set(const AudioSamplesBuffer &buffer)
-{
-    unsigned int framesToProcess = frameLenght < buffer.frameLenght ? frameLenght : buffer.frameLenght;
-    if(channels == buffer.channels){
+void SamplesBuffer::set(const SamplesBuffer &buffer){
+    set(buffer, 0, buffer.getFrameLenght(), 0);
+}
+
+void SamplesBuffer::set(const SamplesBuffer& buffer, unsigned int bufferOffset, unsigned int samplesToCopy, unsigned int internalOffset){
+    unsigned int framesToProcess = samplesToCopy - bufferOffset;
+    if(framesToProcess > buffer.frameLenght){//não processa mais samples do que a quantidade existente em buffer
+        framesToProcess = buffer.frameLenght;
+    }
+    if(internalOffset + framesToProcess  > this->getFrameLenght()){
+        framesToProcess = (internalOffset + framesToProcess) - this->getFrameLenght();
+    }
+
+    if(channels == buffer.channels){//channels number are equal
         for (unsigned int c = 0; c < channels; ++c) {
-            for (unsigned int s = 0; s < framesToProcess; ++s) {
-                samples[c][s] = buffer.samples[c][s];
+            for (unsigned int s = bufferOffset; s < framesToProcess; ++s) {
+                samples[c][s + internalOffset] = buffer.samples[c][s];
             }
         }
     }
-    else{
+    else{//different number of channels
         if(!isMono()){//copy every &buffer samples to LR in this buffer
-            for (unsigned int s = 0; s < framesToProcess; ++s) {
-                samples[0][s] = buffer.samples[0][s];
-                samples[1][s] = buffer.samples[0][s];
+            for (unsigned int s = bufferOffset; s < framesToProcess; ++s) {
+                samples[0][s + internalOffset] = buffer.samples[0][s];
+                samples[1][s + internalOffset] = buffer.samples[0][s];
             }
         }
         else{//this buffer is mono, but the buffer in parameter is not! Mix down the stereo samples in one mono sample value.
-            for (unsigned int s = 0; s < framesToProcess; ++s) {
-                samples[0][s] = (buffer.samples[0][s] + buffer.samples[1][s]) / 2;
+            for (unsigned int s = bufferOffset; s < framesToProcess; ++s) {
+                samples[0][s + internalOffset] = (buffer.samples[0][s] + buffer.samples[1][s]) / 2;
             }
         }
     }
 }
-
-
-
 
 //+++++++++++++++++++++++++++++++++++++++++++
 AbstractAudioDriver::AbstractAudioDriver(){
@@ -200,14 +207,14 @@ void AbstractAudioDriver::recreateBuffers(const int buffersLenght, const int new
 
     //recreate
     maxInputChannels = newMaxInputChannels;
-    inputBuffer = new AudioSamplesBuffer(newMaxInputChannels, buffersLenght);
+    inputBuffer = new SamplesBuffer(newMaxInputChannels, buffersLenght);
 
     if (outputBuffer != NULL){
         delete outputBuffer;
     }
 
     maxOutputChannels = newMaxOutputChannels;
-    outputBuffer = new AudioSamplesBuffer(newMaxOutputChannels, buffersLenght);
+    outputBuffer = new SamplesBuffer(newMaxOutputChannels, buffersLenght);
 }
 
 void AbstractAudioDriver::setProperties(int deviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)
@@ -260,7 +267,7 @@ void AbstractAudioDriver::fireDriverException(const char* msg) const{
 
 
 
-void AbstractAudioDriver::fireDriverCallback(AudioSamplesBuffer& in, AudioSamplesBuffer& out) const{
+void AbstractAudioDriver::fireDriverCallback(SamplesBuffer& in, SamplesBuffer& out) const{
     std::vector<AudioDriverListener*>::const_iterator it = listeners.begin();
     for (; it != listeners.end(); it++){
         (*it)->processCallBack(in, out);

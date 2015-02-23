@@ -15,7 +15,7 @@ public:
     explicit TrackView(QWidget *parent = 0);
     ~TrackView();
 
-private:
+protected:
     Ui::TrackView *ui;
 
 protected:

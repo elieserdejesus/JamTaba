@@ -1,8 +1,10 @@
 #include "AudioMixer.h"
 #include "AudioNode.h"
 #include <QDebug>
+#include "plugins.h"
 
 using namespace Audio;
+using namespace Plugin;
 
 AudioMixer::AudioMixer()
 {
@@ -12,7 +14,6 @@ AudioMixer::AudioMixer()
     //disconnect to test
     //inputNode->connect(*mainOutNode);
     inputNode->setGain(1);
-    //inputNode->setPan(0);
 }
 
 void AudioMixer::addNode(AudioNode &node){
@@ -25,7 +26,7 @@ AudioMixer::~AudioMixer()
     delete inputNode;
 }
 
-void AudioMixer::process(AudioSamplesBuffer &in, AudioSamplesBuffer &out){
+void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out){
     mainOutNode->processReplacing(in, out);//mainOutNode ask all connected nodes to process
     //qDebug() << out.getPeaks()[0] << ", " << out.getPeaks()[1];
 }

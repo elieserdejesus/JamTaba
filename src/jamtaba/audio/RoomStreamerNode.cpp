@@ -19,9 +19,10 @@ const int AbstractMp3Streamer::MAX_BYTES_PER_DECODING;// = 2048;
 
 //+++++++++++++
 AbstractMp3Streamer::AbstractMp3Streamer(Audio::Mp3Decoder *decoder)
-    :decoder(decoder),
-      device(nullptr),
-      faderProcessor(FaderProcessor(0, 1, 44100*5))
+    :
+      faderProcessor(FaderProcessor(0, 1, 44100*3)),//3 seconds fade in
+      decoder(decoder),
+      device(nullptr)
 {
     //addProcessor(faderProcessor);
 }
@@ -41,13 +42,13 @@ void AbstractMp3Streamer::stopCurrentStream(){
     }
 }
 
-void AbstractMp3Streamer::processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out){
+void AbstractMp3Streamer::processReplacing(SamplesBuffer &/*in*/, SamplesBuffer &out){
     QMutexLocker locker(&mutex);
     if(samplesBuffer.empty()){
         return;
     }
     int samplesToRender = std::min(out.getFrameLenght(), (int)samplesBuffer[0].size());
-    AudioSamplesBuffer buffer(samplesBuffer.size(), samplesToRender);
+    SamplesBuffer buffer(samplesBuffer.size(), samplesToRender);
     for (int c = 0; c < buffer.getChannels(); ++c) {
         for (int s = 0; s < buffer.getFrameLenght(); ++s) {
             buffer.set(c, s, samplesBuffer[c].front());
@@ -75,7 +76,7 @@ void AbstractMp3Streamer::decodeBytesFromDevice(QIODevice* device, const unsigne
         char* in = inputBuffer;
         while(bytesProcessed < totalBytesToProcess){//splite bytesReaded in chunks to avoid a very large decoded buffer
             int bytesToProcess = std::min((int)(totalBytesToProcess - bytesProcessed), MAX_BYTES_PER_DECODING);//chunks maxsize is 2048 bytes
-            const Audio::AudioSamplesBuffer* decodedBuffer = decoder->decode(in, bytesToProcess);
+            const Audio::SamplesBuffer* decodedBuffer = decoder->decode(in, bytesToProcess);
             //prepare in for the next decoding
             in += bytesToProcess;
             bytesProcessed += bytesToProcess;
@@ -87,7 +88,7 @@ void AbstractMp3Streamer::decodeBytesFromDevice(QIODevice* device, const unsigne
                 }
             }
 
-            for(int channel=0; channel < samplesBuffer.size(); ++channel){
+            for(unsigned int channel=0; channel < samplesBuffer.size(); ++channel){
                 for (int sample = 0; sample < decodedBuffer->getFrameLenght(); ++sample) {
                     samplesBuffer[channel].push_back(decodedBuffer->get(channel, sample));
                 }
@@ -128,7 +129,7 @@ void RoomStreamerNode::initialize(QString streamPath){
 }
 
 
-void RoomStreamerNode::reply_error(QNetworkReply::NetworkError error){
+void RoomStreamerNode::reply_error(QNetworkReply::NetworkError /*error*/){
     qDebug() << "ERROR" ;
 }
 
@@ -138,7 +139,7 @@ void RoomStreamerNode::reply_read(){
     }
     QMutexLocker(&this->mutex);
     AbstractMp3Streamer::decodeBytesFromDevice(device, device->bytesAvailable());
-    if(buffering && !samplesBuffer.empty() && samplesBuffer[0].size() >= bufferSize){
+    if(buffering && !samplesBuffer.empty() && (int)samplesBuffer[0].size() >= bufferSize){
         buffering = false;
     }
 
@@ -148,7 +149,7 @@ RoomStreamerNode::~RoomStreamerNode(){
     qDebug() << "RoomStreamerNode destructor!";
 }
 
-void RoomStreamerNode::processReplacing(AudioSamplesBuffer & in, AudioSamplesBuffer &out){
+void RoomStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out){
     if(buffering){
         lastPeaks[0] = lastPeaks[1] = 0;
         return;
@@ -176,7 +177,7 @@ AudioFileStreamerNode::~AudioFileStreamerNode(){
     //device->deleteLater();
 }
 
-void AudioFileStreamerNode::processReplacing(AudioSamplesBuffer & in, AudioSamplesBuffer &out){
+void AudioFileStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out){
     decodeBytesFromDevice(this->device, 1024 + 256);
     AbstractMp3Streamer::processReplacing(in, out);
 }
@@ -197,7 +198,7 @@ void TestStreamerNode::initialize(QString /*streamPath*/){
 
 }
 
-void TestStreamerNode::processReplacing(AudioSamplesBuffer & in, AudioSamplesBuffer &out){
+void TestStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out){
     if(playing){
         oscilator->processReplacing(in, out);
         faderProcessor.process(out);

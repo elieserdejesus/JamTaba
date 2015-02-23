@@ -1,6 +1,12 @@
+#buga tudo se não tem conexão com a internet
+
+# - Coisas legais para implementar: fazer um plugin de delay para iniciar a saga dos plugins nativos do Jamtaba
 # - O stream do ninjamer.com não é mono como achei que era, mas está dando problema
 # - Tenho que fazer resample do stream
-# - Abrir plugins VST
+# - Abrir plugins VST - fazer um host. MrWatson: http://teragonaudio.com/article/How-to-make-your-own-VST-host.html
+# - O DAW LMMS usa PortAudio, pode ser interessante roubar o código deles.
+
+
 
 #BUGS relacionados com o diálogo de audioIO:
 #1 - quando seleciono as entradas sPDIF da fast track a aplicação encerra
@@ -45,12 +51,8 @@ HEADERS += \
     src/jamtaba/audio/core/AudioMixer.h \
     src/jamtaba/audio/core/PortAudioDriver.h \
     #--------------------------------
-    src/jamtaba/gui/mainframe.h \
-    src/jamtaba/gui/audioiodialog.h \
     src/jamtaba/gui/widgets/PeakMeter.h \
     src/jamtaba/gui/widgets/WavePeakPanel.h \
-    src/jamtaba/gui/trackview.h \
-    src/jamtaba/gui/jamroomviewpanel.h \
     #--------------------------------
     src/jamtaba/loginserver/LoginService.h \
     src/jamtaba/loginserver/JamRoom.h \
@@ -68,7 +70,17 @@ HEADERS += \
     #--------------------------------
     src/jamtaba/loginserver/natmap.h \
     src/jamtaba/audio/RoomStreamerNode.h \
-    src/jamtaba/audio/codec.h
+    src/jamtaba/audio/codec.h \
+    src/jamtaba/gui/LocalTrackView.h \
+    src/jamtaba/gui/AudioDialog.h \
+    src/jamtaba/gui/JamRoomViewPanel.h \
+    src/jamtaba/gui/MainFrame.h \
+    src/jamtaba/gui/TrackView.h \
+    src/jamtaba/gui/FxPanel.h \
+    src/jamtaba/gui/FxPanelItem.h \
+    src/jamtaba/audio/core/plugins.h \
+    src/jamtaba/gui/plugins/pluginwindow.h \
+    src/jamtaba/gui/plugins/guis.h
 
 
 win32:HEADERS += portaudio/include/pa_asio.h
@@ -86,7 +98,6 @@ SOURCES += \
     src/jamtaba/audio/core/AudioMixer.cpp \
     src/jamtaba/audio/core/PortAudioDriver.cpp \
     src/jamtaba/audio/RoomStreamerNode.cpp \
-    src/jamtaba/audio/codec.cpp \
 #------------------------------------------------
     src/jamtaba/gui/mainframe.cpp \
     src/jamtaba/gui/audioiodialog.cpp \
@@ -108,11 +119,19 @@ SOURCES += \
     src/jamtaba/ninjam/Server.cpp \
     src/jamtaba/ninjam/Service.cpp \
     src/jamtaba/ninjam/User.cpp \
+    src/jamtaba/gui/LocalTrackView.cpp \
+    src/jamtaba/gui/FxPanel.cpp \
+    src/jamtaba/gui/FxPanelItem.cpp \
+    src/jamtaba/gui/plugins/PluginWindow.cpp \
+    src/jamtaba/audio/core/plugins.cpp \
+    src/jamtaba/audio/codec.cpp \
+    src/jamtaba/gui/plugins/guis.cpp
 
 FORMS += src/jamtaba/gui/mainframe.ui \
     src/jamtaba/gui/audioiodialog.ui \
     src/jamtaba/gui/trackview.ui \
-    src/jamtaba/gui/jamroomviewpanel.ui
+    src/jamtaba/gui/jamroomviewpanel.ui \
+
 
 #macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \
 win32:LIBPATH += C:/Qt/Qt5.4.0/Tools/mingw491_32/i686-w64-mingw32/lib/ \

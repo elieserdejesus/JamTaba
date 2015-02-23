@@ -1,4 +1,4 @@
-#include "trackview.h"
+#include "TrackView.h"
 #include "ui_trackview.h"
 #include <QStyleOption>
 #include <QPainter>
@@ -9,6 +9,7 @@ TrackView::TrackView(QWidget *parent) :
     ui(new Ui::TrackView)
 {
     ui->setupUi(this);
+    //ui->gridLayout->addWidget();
 }
 
 TrackView::~TrackView()

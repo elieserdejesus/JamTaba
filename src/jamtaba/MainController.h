@@ -3,6 +3,8 @@
 #include <QApplication>
 #include <QDebug>
 #include <memory>
+#include <QList>
+#include "audio/core/plugins.h"
 
 class MainFrame;
 
@@ -10,6 +12,7 @@ namespace Audio {
     class AudioDriver;
     class AudioDriverListener;
     class AbstractMp3Streamer;
+    class Plugin;
 }
 
 namespace Login {
@@ -56,7 +59,13 @@ public:
 
     Peaks getPeaks() const{return peaks;}
 
+    std::vector<Plugin::PluginDescriptor*> getPluginsDescriptors();
+
+    Audio::Plugin* addPlugin(Plugin::PluginDescriptor* descriptor);
+
 private:
+    Audio::Plugin* createPluginInstance(Plugin::PluginDescriptor* descriptor);
+
     std::unique_ptr<Audio::AudioDriver> audioDriver;
     std::unique_ptr<Audio::AudioDriverListener> audioDriverListener;
     std::unique_ptr<Login::LoginService> loginService;

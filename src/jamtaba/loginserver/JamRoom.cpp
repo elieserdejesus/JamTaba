@@ -48,7 +48,7 @@ RealTimePeer::RealTimePeer(long long ID)
 
 }
 
-void RealTimePeer::updateFromJson(QJsonObject json){
+void RealTimePeer::updateFromJson(QJsonObject /*json*/){
 
 }
 

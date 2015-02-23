@@ -5,7 +5,7 @@
 namespace Audio{
 
 class AudioNode;
-class AudioSamplesBuffer;
+class SamplesBuffer;
 class MainOutputAudioNode;
 class LocalInputAudioNode;
 
@@ -14,7 +14,7 @@ class AudioMixer
 public:
     AudioMixer();
     ~AudioMixer();
-    void process(AudioSamplesBuffer& in, AudioSamplesBuffer& out);
+    void process(SamplesBuffer& in, SamplesBuffer& out);
     void addNode(AudioNode &node);
 
 private:

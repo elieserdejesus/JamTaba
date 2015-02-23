@@ -9,6 +9,11 @@ const double AudioNode::root2Over2 = 1.414213562373095 *0.5;
 const double AudioNode::piOver2 = 3.141592653589793238463 * 0.5;
 
 //+++++++++++++++
+Plugin::~Plugin(){
+    qDebug() << "Plugin destructor";
+}
+
+//+++++++++++++++
 
 FaderProcessor::FaderProcessor(float startGain, float endGain, int samplesToFade)
     : currentGain(startGain),
@@ -25,7 +30,7 @@ void FaderProcessor::reset(){
     currentGain = startGain;
 }
 
-void FaderProcessor::process(AudioSamplesBuffer &buffer){
+void FaderProcessor::process(SamplesBuffer &buffer){
     if(finished()){
         return;
     }
@@ -38,10 +43,16 @@ void FaderProcessor::process(AudioSamplesBuffer &buffer){
 bool FaderProcessor::finished(){
     return processedSamples >= totalSamplesToProcess;
 }
+//++++++++++++++++++++++++
+Plugin::Plugin(QString name, QString file)
+    :name(name), file(file)
+{
+
+}
 
 //+++++++++++++++
 
-void AudioNode::processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out)
+void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
 {
     internalBuffer->setFrameLenght(out.getFrameLenght());
 
@@ -63,7 +74,7 @@ void AudioNode::processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out
 
 AudioNode::AudioNode()
 {
-    this->internalBuffer = new AudioSamplesBuffer(2, AudioDriver::MAX_BUFFERS_LENGHT);
+    this->internalBuffer = new SamplesBuffer(2, AudioDriver::MAX_BUFFERS_LENGHT);
     this->gain = 1;
     this->pan = 0;//center
     this->leftGain = this->rightGain = 1;//pan gains
@@ -106,7 +117,7 @@ OscillatorAudioNode::OscillatorAudioNode(float frequency, int sampleRate)
     this->phase = 0;
 }
 
-void OscillatorAudioNode::processReplacing(AudioSamplesBuffer & /*in*/, AudioSamplesBuffer &out){
+void OscillatorAudioNode::processReplacing(SamplesBuffer & /*in*/, SamplesBuffer &out){
     int frames = out.getFrameLenght();
     int outChannels = out.getChannels();
     for (int i = 0; i < frames; ++i) {
@@ -119,7 +130,7 @@ void OscillatorAudioNode::processReplacing(AudioSamplesBuffer & /*in*/, AudioSam
 }
 //+++++++++++++++++++++++++++++++++++++++
 
-void MainOutputAudioNode::processReplacing(AudioSamplesBuffer&in, AudioSamplesBuffer& out)
+void MainOutputAudioNode::processReplacing(SamplesBuffer&in, SamplesBuffer& out)
 {
     for (const auto &node : connections) {
         node->processReplacing(in, out);
@@ -139,7 +150,7 @@ LocalInputAudioNode::LocalInputAudioNode(int firstInputIndex, bool isMono)
     this->mono = isMono;
 }
 
-void LocalInputAudioNode::processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out)
+void LocalInputAudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
 {
     internalBuffer->setFrameLenght(out.getFrameLenght());
     internalBuffer->set(in);//copy in to internal buffer

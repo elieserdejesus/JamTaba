@@ -44,7 +44,7 @@ void WavePeakPanel::addPeak(float peak) {
     if (peaksArray.size() > 0) {
         peaksArray[addIndex] = peak;
         addIndex = (addIndex + 1) % peaksArray.size();
-        if (totalPeaks < peaksArray.size()) {
+        if (totalPeaks < (int)peaksArray.size()) {
             totalPeaks++;
             startIndex = 0;
         } else {

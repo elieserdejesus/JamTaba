@@ -8,7 +8,7 @@ namespace Audio{
 class AudioDriverListener;
 class AudioNodeProcessor;
 
-class AudioSamplesBuffer{
+class SamplesBuffer{
 
     friend class AudioNodeProcessor;
 
@@ -29,8 +29,8 @@ private:
     void computePeaks();
 
 public:
-    AudioSamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT);
-    ~AudioSamplesBuffer();
+    SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT);
+    ~SamplesBuffer();
     //inline int getID() const{return ID;}
     void applyGain(float gainFactor);
 
@@ -43,12 +43,16 @@ public:
 
     const float *getPeaks() const;//{return peaks[channel];}
 
-    void add(const AudioSamplesBuffer& buffer);
+    void add(const SamplesBuffer& buffer);
     inline void add(int channel, int sampleIndex, float sampleValue){
         samples[channel][sampleIndex] += sampleValue;
     }
 
-    void set(const AudioSamplesBuffer& buffer);
+    /***
+     * copy samplesToCopy' samples starting from bufferOffset to internal buffer starting in 'internalOffset'
+     */
+    void set(const SamplesBuffer& buffer, unsigned int bufferOffset, unsigned int samplesToCopy, unsigned int internalOffset);
+    void set(const SamplesBuffer& buffer);
     void set(int channel, int sampleIndex, float sampleValue);
 //    inline void set(int channel, int sampleIndex, float sampleValue)
 //    {
@@ -141,7 +145,7 @@ public:
     virtual inline int getBufferSize() const {return bufferSize;}
 
 
-    const AudioSamplesBuffer& getOutputBuffer() const {return *outputBuffer;}
+    const SamplesBuffer& getOutputBuffer() const {return *outputBuffer;}
 
 protected:
     //float* inputMasks;
@@ -161,12 +165,12 @@ protected:
     int sampleRate;
     int bufferSize;
 
-    AudioSamplesBuffer* inputBuffer;
-    AudioSamplesBuffer* outputBuffer;
+    SamplesBuffer* inputBuffer;
+    SamplesBuffer* outputBuffer;
 
     std::vector<AudioDriverListener*> listeners;
 
-    void fireDriverCallback(AudioSamplesBuffer& in, AudioSamplesBuffer& out) const;
+    void fireDriverCallback(SamplesBuffer& in, SamplesBuffer& out) const;
     void fireDriverStarted() const;
     void fireDriverStopped() const;
     void fireDriverException(const char* msg) const;
@@ -177,7 +181,7 @@ protected:
 class AudioDriverListener
 {
 public:
-    virtual void processCallBack(AudioSamplesBuffer& in, AudioSamplesBuffer& out) = 0;
+    virtual void processCallBack(SamplesBuffer& in, SamplesBuffer& out) = 0;
     virtual void driverParametersChanged() = 0;//invocado quando acontece alguma mudança na configuração de buffer size, por exemplo
     virtual void driverInitialized() = 0;
     virtual void driverStopped() = 0;
@@ -191,7 +195,7 @@ public:
 class AudioDriverListenerAdapter : public AudioDriverListener
 {
 public:
-    virtual void processCallBack(AudioSamplesBuffer&, AudioSamplesBuffer& ){
+    virtual void processCallBack(SamplesBuffer&, SamplesBuffer& ){
 //
     };
     virtual void driverParametersChanged(){}//invocado quando acontece alguma mudança na configuração de buffer size, por exemplo
