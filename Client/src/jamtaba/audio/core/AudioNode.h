@@ -2,17 +2,21 @@
 
 #include <set>
 #include <cmath>
+#include <QString>
+#include <QWidget>
 
 namespace Audio{
 
-class AudioSamplesBuffer;
+class SamplesBuffer;
 
 class AudioNodeProcessor{
 public:
-    virtual void process(AudioSamplesBuffer& buffer) = 0;
+    virtual void process(SamplesBuffer& buffer) = 0;
     virtual ~AudioNodeProcessor(){}
 };
 
+//++++++++++++++++++++++++++++++++++++++++++++
+//# this class is used to apply fade in and fade outs
 class FaderProcessor : public AudioNodeProcessor{
 private:
     float currentGain;
@@ -22,9 +26,21 @@ private:
     int processedSamples;
 public:
     FaderProcessor(float startGain, float endGain, int samplesToFade);
-    virtual void process(AudioSamplesBuffer &buffer);
+    virtual void process(SamplesBuffer &buffer);
     bool finished();
     void reset();
+};
+//++++++++++++++++++++++++++++++++++++++++++++
+class Plugin : public AudioNodeProcessor{
+
+public:
+    Plugin(QString name, QString file);
+    virtual inline QString getName() const {return name;}
+    virtual inline QString getFile() const {return file;}
+    virtual ~Plugin();
+private:
+    QString name;
+    QString file;
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -32,7 +48,7 @@ public:
 class AudioNode {
 
 public:
-    virtual void processReplacing(AudioSamplesBuffer&in, AudioSamplesBuffer& out);
+    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
     virtual inline void setMuteStatus(bool muted){ this->muted = muted;}
     void inline setSoloStatus(bool soloed){ this->soloed = soloed; }
     inline bool isMuted() const {return muted;}
@@ -59,7 +75,7 @@ public:
 protected:
     std::set<AudioNode*> connections;
     std::set<AudioNodeProcessor*> processors;
-    AudioSamplesBuffer* internalBuffer;
+    SamplesBuffer* internalBuffer;
     float lastPeaks[2];
 
 private:
@@ -88,7 +104,7 @@ class OscillatorAudioNode : public AudioNode{
 
 public:
     OscillatorAudioNode(float frequency, int sampleRate);
-    virtual void processReplacing(AudioSamplesBuffer&in, AudioSamplesBuffer& out);
+    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
 
 private:
     float phase;
@@ -103,7 +119,7 @@ public:
 
     // AudioNode interface
 public:
-    void processReplacing(AudioSamplesBuffer &in, AudioSamplesBuffer &out);
+    void processReplacing(SamplesBuffer &in, SamplesBuffer &out);
 };
 //++++++++++++++++++
 class LocalInputAudioNode : public AudioNode{
@@ -113,7 +129,7 @@ private:
     //int firstOutputIndex;
 public:
     LocalInputAudioNode(int firstInputIndex=0, bool isMono=true);
-    virtual void processReplacing(AudioSamplesBuffer&in, AudioSamplesBuffer& out);
+    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
 };
 //++++++++++++++++++++++++
 }

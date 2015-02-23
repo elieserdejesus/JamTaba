@@ -9,13 +9,13 @@ extern "C"{
 
 namespace Audio{
 
-class AudioSamplesBuffer;
+class SamplesBuffer;
 
 
 class Mp3Decoder
 {
 public:
-    virtual const Audio::AudioSamplesBuffer* decode(char* inputBuffer, int bytesToDecode) = 0;
+    virtual const Audio::SamplesBuffer* decode(char* inputBuffer, int bytesToDecode) = 0;
     virtual void reset() = 0;
     virtual ~Mp3Decoder(){}
 };
@@ -27,7 +27,7 @@ class Mp3DecoderMiniMp3 : public Mp3Decoder{
 public:
     Mp3DecoderMiniMp3();
     ~Mp3DecoderMiniMp3();
-    virtual const Audio::AudioSamplesBuffer* decode(char *inputBuffer, int bytesToDecode);
+    virtual const Audio::SamplesBuffer* decode(char *inputBuffer, int bytesToDecode);
     virtual void reset();
 private:
     static const int MINIMUM_SIZE_TO_DECODE;// = 1024 + 256;
@@ -36,8 +36,8 @@ private:
     mp3_decoder_t mp3Decoder;
     mp3_info_t mp3Info;
     signed short* internalShortBuffer;
-    Audio::AudioSamplesBuffer* buffer;
-    Audio::AudioSamplesBuffer* NULL_BUFFER;
+    Audio::SamplesBuffer* buffer;
+    Audio::SamplesBuffer* NULL_BUFFER;
     QByteArray array;
 };
 

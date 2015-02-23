@@ -18,6 +18,14 @@ namespace Login {
     class AbstractJamRoom;
 }
 
+namespace Audio {
+class Plugin;
+}
+
+namespace Plugin {
+class PluginDescriptor;
+}
+
 class JamRoomViewPanel;
 
 class MainFrame : public QMainWindow
@@ -40,6 +48,10 @@ private slots:
     //+++++  ROOM STREAMS ++++++++
     void on_startingRoomStream(Login::AbstractJamRoom* room);
     void on_stoppingRoomStream(Login::AbstractJamRoom* room);
+
+    //fx MENU
+    void on_fxMenuActionTriggered(QAction*);
+    void on_editingPlugin(PluginGui* pluginGui);//emited by LocalTrackView
 private:
     Ui::MainFrameClass ui;
     MainController* mainController;
@@ -47,6 +59,13 @@ private:
 
     QMap<Login::AbstractJamRoom*, JamRoomViewPanel*> roomViewPanels;
 
+    QMenu* createFxMenu();
+
+    QMenu* fxMenu;
+
+    PluginGui* createPluginView(Plugin::PluginDescriptor *, Audio::Plugin *plugin) ;
+
+    void showPluginGui(PluginGui* pluginGui);
 };
 
 

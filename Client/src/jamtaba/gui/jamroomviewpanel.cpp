@@ -1,4 +1,4 @@
-#include "jamroomviewpanel.h"
+#include "JamRoomViewPanel.h"
 #include "ui_jamroomviewpanel.h"
 #include "../loginserver/JamRoom.h"
 

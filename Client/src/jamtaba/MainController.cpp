@@ -7,6 +7,7 @@
 #include "../loginserver/JamRoom.h"
 #include "../loginserver/natmap.h"
 #include "JamtabaFactory.h"
+#include "audio/core/plugins.h"
 #include "persistence/ConfigStore.h"
 //#include "mainframe.h"
 
@@ -49,7 +50,7 @@ public:
         qDebug() << "audio driver stopped";
     }
 
-    virtual void processCallBack(Audio::AudioSamplesBuffer& in, Audio::AudioSamplesBuffer& out){
+    virtual void processCallBack(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out){
         audioMixer->process(in, out);
         //output->processReplacing(in, out);
         //out.add(in);
@@ -85,6 +86,27 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
                 ));
     audioDriverListener = std::unique_ptr<Controller::AudioListener>( new Controller::AudioListener(this));
     QObject::connect(service, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromServer()));
+}
+
+std::vector<Plugin::PluginDescriptor*> MainController::getPluginsDescriptors(){
+    return Plugin::getDescriptors();
+}
+
+Audio::Plugin* MainController::addPlugin(Plugin::PluginDescriptor *descriptor){
+    Audio::Plugin* plugin = createPluginInstance(descriptor);
+    //preciso acessar o mixer para conectar o plugin na input track,
+    //sendo assim o mixer precisa ser um atributo do mainController
+    return plugin;
+}
+
+Audio::Plugin *MainController::createPluginInstance(Plugin::PluginDescriptor *descriptor)
+{
+    if(descriptor->getGroup() == "Jamtaba"){
+        if(descriptor->getName() == "Delay"){
+            return new Plugin::JamtabaDelay();
+        }
+    }
+    return nullptr;
 }
 
 bool MainController::isPlayingRoomStream(){

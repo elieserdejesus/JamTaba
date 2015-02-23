@@ -1,4 +1,4 @@
-#include "audioiodialog.h"
+#include "AudioDialog.h"
 #include "ui_audioiodialog.h"
 
 #include <QDebug>

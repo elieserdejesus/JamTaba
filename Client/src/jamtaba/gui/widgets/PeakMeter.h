@@ -29,7 +29,9 @@ protected:
     void resizeEvent (QResizeEvent *);
 
 private:
+    static const int LINES_MARGIN;
     QLinearGradient gradient;
+    QColor horizontalLinesColor;
     //QColor borderColor;
     //QColor bgColor;
     //QBrush brush;

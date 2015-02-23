@@ -1,284 +1,343 @@
 *{
-    font-family: "Dialog";
-    font-size: 9pt;
+font-family: "Dialog";
+font-size: 9pt;
 }
+
+FxPanel{
+    /*border: 1px solid gray;*/
+    background-color: rgba(0, 0, 0, 20);
+    max-height: 80px;
+}
+
+FxPanelItem{
+    background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 30), stop:1 rgba(0, 0, 0, 50));
+    max-height: 14px;
+    width: 100%;
+    qproperty-alignment: AlignCenter;
+    font-size: 8pt;
+    color: rgba(0, 0, 0);
+}
+
+
+FxPanelItem:hover{
+    background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgba(0, 0, 0, 50), stop:1 rgba(0, 0, 0, 70));
+    width: 100%;
+}
+
+QScrollBar:vertical {
+    border: 1px solid rgba(0, 0, 0, 45);
+    background-color: rgba(0, 0, 0, 40);
+    width: 15px;
+    margin: 0px;/* 22px 0 22px 0;*/
+    border-radius: 4px;
+}
+
+QScrollBar::handle:vertical {
+  background: rgba(0, 0, 0, 80);
+  border: 1px solid rgba(0, 0, 0, 85);
+  border-radius:4px;
+  margin: 2px;
+  max-height: 20px;
+  height: 20px;
+}
+
+QScrollBar::add-line:vertical {
+  border: none;/*2px solid red;*/
+  height: 0px;
+  subcontrol-position: bottom;
+  subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:vertical {
+  border: none;
+  height: 0px;
+  subcontrol-position: top;
+  subcontrol-origin: margin;
+}
+
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+  background: none;
+}
+
 
 /* common widgets */
 
 .QLineEdit{
-    border-radius: 10px;
-    padding: 2px;
-    background: rgb(100, 100, 100);
-    color: white;
-    border: 1px solid rgb(51, 51, 51);
+border-radius: 10px;
+padding: 2px;
+background: rgb(100, 100, 100);
+color: white;
+border: 1px solid rgb(51, 51, 51);
 }
 
 
 QCheckBox::indicator, QGroupBox::indicator  {
-    background: url(:/images/check.png);
-    width: 15px;
-    height: 16px;
+background: url(:/images/check.png);
+width: 15px;
+height: 16px;
 }
 
 QCheckBox::indicator:hover, QGroupBox::indicator:hover {
-    background: url(:/images/check_hover.png);
+background: url(:/images/check_hover.png);
 }
 
 QCheckBox::indicator:checked, QGroupBox::indicator:checked {
-    background: url(:/images/check_checked.png);
+background: url(:/images/check_checked.png);
 }
 
 /*
 QCheckBox::indicator:hover, QGroupBox::indicator:hover  {
-    background-color: qlineargradient(x1:0, y1:0.3, x2:0, y2:0.8, stop:0 rgb(200, 200, 200), stop:1 rgb(130, 130, 130));
+background-color: qlineargradient(x1:0, y1:0.3, x2:0, y2:0.8, stop:0 rgb(200, 200, 200), stop:1 rgb(130, 130, 130));
 }
 
 
 QGroupBox::indicator:checked {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
-    border: 1px solid black;
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
+border: 1px solid black;
 }
 
 QGroupBox::indicator:hover:checked {
-    background-color: qlineargradient(x1:0, y1:0.3, x2:0, y2:0.7, stop:0 rgb(110, 255, 92), stop:1 rgb(30, 175, 40));
-    border-color: rgb(90, 90, 90);
+background-color: qlineargradient(x1:0, y1:0.3, x2:0, y2:0.7, stop:0 rgb(110, 255, 92), stop:1 rgb(30, 175, 40));
+border-color: rgb(90, 90, 90);
 }
 */
 
 /*  SLIDER ++++++++++++++++++++++++++++++++ */
 QSlider::add-page:vertical, QSlider::groove:vertical {
-    border: 1px solid rgba(0, 0, 0, 55);
-    border-radius: 3px;
+border: 1px solid rgba(0, 0, 0, 55);
+border-radius: 3px;
 }
 
 QSlider::groove:vertical {
-    background-color: rgba(0, 0, 0, 50);
-    width: 8px;
+background-color: rgba(0, 0, 0, 50);
+width: 8px;
 }
 
 QSlider::handle:vertical, QSlider::handle:horizontal {
-    background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgb(220, 220,220), stop:1 rgb(45, 45, 45));
-    border: 1px solid rgb(120, 120, 120);
-    height: 12px;
-    margin-left: -12px;
-    margin-right: -12px;
-    border-radius: 3px;
+background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgb(220, 220,220), stop:1 rgb(45, 45, 45));
+border: 1px solid rgb(120, 120, 120);
+height: 12px;
+margin-left: -12px;
+margin-right: -12px;
+border-radius: 3px;
 }
 
 QSlider::handle:vertical:hover, QSlider::handle:horizontal:hover {
-    border: 1px solid rgb(70, 70, 70);
-    background-color: qlineargradient(x1:0, y1:0.5, x2:0, y2:1, stop:0 rgb(220, 220,220), stop:1 rgb(45, 45, 45));
+border: 1px solid rgb(70, 70, 70);
+background-color: qlineargradient(x1:0, y1:0.5, x2:0, y2:1, stop:0 rgb(220, 220,220), stop:1 rgb(45, 45, 45));
 }
 
 QSlider::add-page:vertical {
-    background: rgb(255,255,255, 130);
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-    margin: 3px;
+background: rgb(255,255,255, 130);
+border-top-left-radius: 0px;
+border-top-right-radius: 0px;
+margin: 3px;
 }
 
 /* +++++++++++++++++++++++++++++++++++++++++++ */
-Gui--PeakMeter{
+PeakMeter{
     background-color: rgba(0, 0, 0, 100);
-    border: 1px solid rgba(0, 0, 0, 30);
-    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 25);
+    max-width: 4px;
+    min-width: 4px;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++ */
 
 QMainWindow{
-    background-color: rgb(60, 60, 60);
+background-color: rgb(60, 60, 60);
 }
 
 /* painéis principais */
 .QWidget#leftPanel, .QWidget#chatPanel, .QWidget#contentPanel{
-    background: url(:/images/gradient.bmp) repeat-x;
-    background-color: rgb(39, 39, 39);
-    border: 1px solid rgb(45, 45, 45);
-    border-radius: 5px;
-    margin-top: 1ex;
+background: url(:/images/gradient.bmp) repeat-x;
+background-color: rgb(39, 39, 39);
+border: 1px solid rgb(45, 45, 45);
+border-radius: 5px;
+margin-top: 1ex;
 }
 
 /* títulos dos painéis principais */
 .QWidget#leftPanel > .QLabel, .QWidget#chatPanel  > .QLabel, .QWidget#contentPanel > .QLabel{
-    font-size: 10pt;
-    color: rgb(190, 190, 190);
-    qproperty-alignment: AlignCenter;
+font-size: 10pt;
+color: rgb(190, 190, 190);
+qproperty-alignment: AlignCenter;
 }
 
 /* define os separadores horizontais abaixo dos títulos as seções principais   */
 .QWidget#leftPanel > .QFrame, .QWidget#chatPanel > .QFrame{
-    background-color: rgb(80,80,80);
+background-color: rgb(80,80,80);
 }
 
 .QWidget#contentPanel > .QFrame{
-    background-color: rgb(100, 100, 100);
+background-color: rgb(100, 100, 100);
 }
 /* ------------------------------ */
 
 .QWidget#contentPanel{
-    background: rgb(128, 128, 128);
+background: rgb(128, 128, 128);
 }
 
 .QTabWidget::pane{
-    background-color: rgba(255, 255, 255, 80);
-    border: 1px solid rgba(0, 0, 0, 60);
-    border-radius: 5px;
-    padding: -4px;
+background-color: rgba(255, 255, 255, 80);
+border: 1px solid rgba(0, 0, 0, 60);
+border-radius: 5px;
+padding: -4px;
 }
 
  .QTabWidget::tab-bar {
-     left: 10px; /* move to the right by 5px */
+ left: 10px; /* move to the right by 5px */
  }
 
 /* Style the tab using the tab sub-control. Note that
-     it reads QTabBar _not_ QTabWidget */
- .QTabBar::tab {
-     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
-                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
-     border: 1px solid #C4C4C3;
-     border-bottom-color: #C2C7CB; /* same as the pane color */
-     border-top-left-radius: 5px;
-     border-top-right-radius: 5px;
-     min-width: 8ex;
-     padding: 2px;
-     padding-left: 10px;
-     padding-right: 10px;
+it reads QTabBar _not_ QTabWidget */
+.QTabBar::tab {
+background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+border: 1px solid #C4C4C3;
+border-bottom-color: #C2C7CB; /* same as the pane color */
+border-top-left-radius: 5px;
+border-top-right-radius: 5px;
+min-width: 8ex;
+padding: 2px;
+padding-left: 10px;
+padding-right: 10px;
 
  }
 
  .QTabBar::tab:selected, .QTabBar::tab:hover {
-     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                 stop: 0 #fafafa, stop: 0.4 #f4f4f4,
-                                 stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
+ background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+ stop: 0 #fafafa, stop: 0.4 #f4f4f4,
+ stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
  }
 
  .QTabBar::tab:selected {
-     border-color: #9B9B9B;
-     border-bottom-color: #C2C7CB; /* same as pane color */
+ border-color: #9B9B9B;
+ border-bottom-color: #C2C7CB; /* same as pane color */
 
  }
 
  .QTabBar::tab:!selected {
-     margin-top: 5px; /* make non-selected tabs look smaller */
+ margin-top: 5px; /* make non-selected tabs look smaller */
  }
 
 /*++++++++++++++++++++*/
 
 .QMainWindow .QGroupBox::title {
-     subcontrol-origin: margin;
-     subcontrol-position: top center; /* position at the top center */
-     padding: 10 3px;
-     color: rgb(190, 190, 190);
-     border-bottom-style: groove;
-     border-bottom-color: darkgray;
-     border-width: 3px;
+subcontrol-origin: margin;
+subcontrol-position: top center; /* position at the top center */
+padding: 10 3px;
+color: rgb(190, 190, 190);
+border-bottom-style: groove;
+border-bottom-color: darkgray;
+border-width: 3px;
 }
 
 QScrollArea{
-    border: none;
-    background: transparent;
+border: none;
+background: transparent;
 }
 
 QScrollArea > QWidget > QWidget{/*the content panel - QSCroll contém um QWidget privado que já é uma view port,além disso eu usei o meu próprio widget*/
-    background: transparent;
+background: transparent;
 }
 
 
 JamRoomViewPanel{
-    background: rgba(255,255, 255, 180);
-    border: 1px solid rgba(0, 0, 0, 30);
-    border-radius: 5px;
+background: rgba(255,255, 255, 180);
+border: 1px solid rgba(0, 0, 0, 30);
+border-radius: 5px;
 }
 
 JamRoomViewPanel > #plotPanel{
-    min-height: 50px;
-    background: red;
-    border: 1px solid black;
-    border-radius: 5px;
+min-height: 50px;
+background: red;
+border: 1px solid black;
+border-radius: 5px;
 }
 
 /*  Track view +++++++++++++++++++++++++++++++++++++++++++++++ */
-Gui--TrackView{
-    background-color: red;
-    border-radius: 5px;
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), stop:1 rgb(100, 100, 100));
-    border: 1px solid rgb(61,61,61);
+TrackView{
+background-color: red;
+border-radius: 5px;
+background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), stop:1 rgb(100, 100, 100));
+border: 1px solid rgb(61,61,61);
 }
 
-Gui--TrackView > QGroupBox{
-    border: 1px solid rgba(0, 0, 0, 50);
-    border-radius: 3px;
-    margin-top: 5px;
-}
-
-
-Gui--TrackView > QGroupBox::title{
-    subcontrol-origin: margin;
-    subcontrol-position: top left;
-    padding: 1 3px;
-    margin-left: 5px;
-    margin-right:5px;
-    left: 10px;
-
-}
-
-Gui--TrackView .QPushButton#solo, Gui--TrackView .QPushButton#mute {
-    border-radius: 3px;
-    border: 1px solid gray;
-    color: rgba(0, 0, 0, 80);
-    padding: 3px 6px 3px 6px;
-    font-size: 8pt;
-}
-
-Gui--TrackView .QLabel#labelPanR, Gui--TrackView .QLabel#labelPanL{
-    color: rgba(0, 0, 0, 80);
-}
-
-Gui--TrackView .QPushButton:hover#solo, Gui--TrackView .QPushButton:hover#mute{
-    background-color: rgba(255, 255, 255, 80);
-    color: rgba(0, 0, 0, 200);
-}
-
-Gui--TrackView .QPushButton:checked#solo{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
-    color: black;
-}
-
-Gui--TrackView .QPushButton:hover:checked#solo {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(110, 255, 82), stop:1 rgb(30, 195, 30));
-    color: gray;
-}
-
-Gui--TrackView .QPushButton:checked#mute {
-     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
-     color: lightgray;
-}
-
-Gui--TrackView .QPushButton:hover:checked#mute {
-     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 110, 122), stop:1 rgb(120, 0, 0));
-     color: white;
+TrackView  QGroupBox{
+border: 1px solid rgba(0, 0, 0, 50);
+border-radius: 3px;
+margin-top: 5px;
 }
 
 
-Gui--TrackView  > .QLabel#trackName {
-    color: rgb(0, 0, 0);
-    font-weight: bold;
-    margin-top:5px;
+TrackView  QGroupBox::title{
+subcontrol-origin: margin;
+subcontrol-position: top left;
+padding: 1 3px;
+margin-left: 5px;
+margin-right:5px;
+left: 10px;
+
 }
 
-Gui--TrackView  > .QLineEdit#channelName {
-    margin-bottom: 10px;
+TrackView .QPushButton#solo, TrackView .QPushButton#mute {
+border-radius: 3px;
+border: 1px solid gray;
+color: rgba(0, 0, 0, 80);
+padding: 3px 6px 3px 6px;
+font-size: 8pt;
+}
+
+TrackView .QLabel#labelPanR, TrackView .QLabel#labelPanL{
+color: rgba(0, 0, 0, 80);
+}
+
+TrackView .QPushButton:hover#solo, TrackView .QPushButton:hover#mute{
+background-color: rgba(255, 255, 255, 80);
+color: rgba(0, 0, 0, 200);
+}
+
+TrackView .QPushButton:checked#solo{
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
+color: black;
+}
+
+TrackView .QPushButton:hover:checked#solo {
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(110, 255, 82), stop:1 rgb(30, 195, 30));
+color: gray;
+}
+
+TrackView .QPushButton:checked#mute {
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
+color: lightgray;
+}
+
+TrackView .QPushButton:hover:checked#mute {
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 110, 122), stop:1 rgb(120, 0, 0));
+color: white;
 }
 
 
-Gui--TrackView > .QFrame#topSeparator{
-    background-color: rgb(210, 210, 210);
+TrackView  > .QLabel#trackName {
+color: rgb(0, 0, 0);
+font-weight: bold;
+margin-top:5px;
 }
 
-Gui--TrackView > .QFrame#panSectionSeparator{
-    background-color: rgb(180, 180, 180);
+TrackView  > .QLineEdit#channelName {
+margin-bottom: 10px;
+}
+
+
+TrackView > .QFrame#topSeparator{
+background-color: rgb(210, 210, 210);
+}
+
+TrackView > .QFrame#panSectionSeparator{
+background-color: rgb(180, 180, 180);
 }
 
 

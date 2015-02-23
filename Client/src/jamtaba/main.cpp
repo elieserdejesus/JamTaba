@@ -1,9 +1,9 @@
-#include "gui/mainframe.h"
+#include "gui/MainFrame.h"
 #include "MainController.h"
 #include "JamtabaFactory.h"
 #include "loginserver/LoginService.h"
 #include "ninjam/Service.h"
-#include "jamroomviewpanel.h"
+#include "JamRoomViewPanel.h"
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 

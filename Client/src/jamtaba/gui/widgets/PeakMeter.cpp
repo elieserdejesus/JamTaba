@@ -4,6 +4,7 @@
 #include <QResizeEvent>
 #include <QStyleOption>
 
+const int PeakMeter::LINES_MARGIN = 4;
 //const QColor PeakMeter::DEFAULT_BORDER_COLOR = QColor(0, 0, 0);
 //const QColor PeakMeter::DEFAULT_BG_COLOR = Qt::gray;
 
@@ -12,6 +13,7 @@ PeakMeter::PeakMeter(QWidget *){
     gradient.setColorAt(0, Qt::red);
     gradient.setColorAt(0.4, QColor(0, 200, 0));
     gradient.setColorAt(0.8, Qt::darkGreen);
+    horizontalLinesColor = QColor(0, 0, 0, 90);
     //gradient.setSpread(QGradient::ReflectSpread);
 
     //borderColor = DEFAULT_BORDER_COLOR;
@@ -43,7 +45,17 @@ void PeakMeter::paintEvent(QPaintEvent *){
         float top = (1 - peak) * height();
         int h = height() - top - 1;
         painter.fillRect(1, top , width()-2, h-1, gradient);
+
+        //draw horizontal lines
+        int lines = height()/LINES_MARGIN;
+        int y = 0;
+        painter.setPen(horizontalLinesColor);
+        for(int line=0; line < lines; line++){
+            painter.drawLine(1, y, width()-2, y);
+            y += LINES_MARGIN;
+        }
     }
+
 
     //border
     //painter.setPen(borderColor);

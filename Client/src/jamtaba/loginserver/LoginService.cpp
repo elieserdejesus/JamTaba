@@ -160,7 +160,8 @@ void LoginService::sslErrorsSlot(QList<QSslError> errorList){
 
 void LoginService::errorSlot(QNetworkReply::NetworkError /*error*/){
     if(pendingReply != NULL){
-        qFatal(pendingReply->errorString().toStdString().c_str());
+        qCritical() << pendingReply->errorString();
+        //qFatal(pendingReply->errorString().toStdString().c_str());
     }
 }
 

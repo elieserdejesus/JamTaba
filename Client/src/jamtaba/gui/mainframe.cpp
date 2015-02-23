@@ -1,17 +1,22 @@
-#include "mainframe.h"
+#include "MainFrame.h"
 #include <QCloseEvent>
-#include "audioiodialog.h"
+#include "AudioDialog.h"
 #include <QDebug>
 #include <QDesktopWidget>
 #include <QLayout>
 #include <QList>
-#include "jamroomviewpanel.h"
+#include <QAction>
+#include "JamRoomViewPanel.h"
 #include "../persistence/ConfigStore.h"
 #include "../JamtabaFactory.h"
 #include "../audio/core/PortAudioDriver.h"
 #include "../MainController.h"
 #include "../loginserver/LoginService.h"
 #include "../loginserver/JamRoom.h"
+#include "../audio/core/plugins.h"
+#include "plugins/guis.h"
+#include "FxPanel.h"
+#include "plugins/pluginwindow.h"
 
 using namespace Audio;
 using namespace Persistence;
@@ -19,7 +24,9 @@ using namespace Controller;
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-MainFrame::MainFrame(MainController *mainController, QWidget *parent) : QMainWindow(parent)
+MainFrame::MainFrame(MainController *mainController, QWidget *parent)
+    : QMainWindow(parent),
+    fxMenu(nullptr)
 {
 	ui.setupUi(this);
     this->mainController = mainController;
@@ -42,7 +49,65 @@ MainFrame::MainFrame(MainController *mainController, QWidget *parent) : QMainWin
     Login::LoginService* loginService = this->mainController->getLoginService();
     connect(loginService, SIGNAL(connectedInServer(QList<Login::AbstractJamRoom*>)),
                                  this, SLOT(on_connectedInServer(QList<Login::AbstractJamRoom*>)));
+
+    fxMenu = createFxMenu();
+    ui.localTrack->initializeFxPanel(fxMenu);
+
+    QObject::connect(ui.localTrack, SIGNAL(editingPlugin(PluginGui*)), this, SLOT(on_editingPlugin(PluginGui*)));
 }
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void MainFrame::on_editingPlugin(PluginGui *pluginGui){
+    showPluginGui(pluginGui);
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void MainFrame::on_fxMenuActionTriggered(QAction* action){
+    //add a new plugin
+    Plugin::PluginDescriptor* pluginDescriptor = action->data().value<Plugin::PluginDescriptor*>();
+    Audio::Plugin* plugin = mainController->addPlugin(pluginDescriptor);
+    PluginGui* pluginGui = createPluginView(pluginDescriptor, plugin);
+    ui.localTrack->addPlugin(pluginGui);
+    showPluginGui(pluginGui);
+}
+//++++++++++++++++++++++++++++++++++++
+void MainFrame::showPluginGui(PluginGui *pluginGui){
+    if(!pluginGui->isVisible()){
+        PluginWindow* pluginWindow = new PluginWindow(pluginGui, this);
+        pluginWindow->show();
+    }
+    else{
+        ((QDialog*)pluginGui->parentWidget())->activateWindow();
+    }
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+PluginGui* MainFrame::createPluginView(Plugin::PluginDescriptor* d, Audio::Plugin* plugin){
+    if(d->getGroup() == "Jamtaba"){
+        if(d->getName() == "Delay"){
+            return new DelayGui((Plugin::JamtabaDelay*)plugin);
+        }
+    }
+    return nullptr;
+}
+
+//++++++++++++++++++++
+QMenu* MainFrame::createFxMenu(){
+    if(fxMenu ){
+        fxMenu->close();
+        fxMenu->deleteLater();
+    }
+    QMenu* menu = new QMenu(this);
+
+    std::vector<Plugin::PluginDescriptor*> plugins = mainController->getPluginsDescriptors();
+    for(Plugin::PluginDescriptor* pluginDescriptor  : plugins){
+        QAction* action = menu->addAction(QString(pluginDescriptor->getName()));
+        action->setData(QVariant::fromValue(pluginDescriptor));
+    }
+
+    menu->connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(on_fxMenuActionTriggered(QAction*)));
+    return menu;
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //esses eventos deveriam ser tratados no controller
 void MainFrame::on_connectedInServer(QList<Login::AbstractJamRoom*> rooms){
