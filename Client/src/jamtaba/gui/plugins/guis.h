@@ -2,15 +2,17 @@
 #define DELAY_H
 
 #include <QWidget>
+#include <QSlider>
+#include <QLineEdit>
 
 namespace Plugin {
     class JamtabaDelay;
 }
 
 namespace Audio {
-class Plugin;
+    class Plugin;
 }
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class PluginGui : public QWidget{
     Q_OBJECT
 public:
@@ -20,7 +22,7 @@ public:
 protected:
     Audio::Plugin* plugin;
 };
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class DelayGui : public PluginGui
 {
     Q_OBJECT
@@ -28,7 +30,20 @@ class DelayGui : public PluginGui
 public:
     DelayGui( Plugin::JamtabaDelay* delayPlugin);
     ~DelayGui();
+private slots:
+    void on_sliderDelayReleased();
+    void on_sliderFeedbackReleased();
+    void on_sliderLevelReleased();
 
+private:
+    QSlider* sliderDelayTime;
+    QLineEdit* lineEditDelayTime;
+
+    QSlider* sliderFeedback;
+    QLineEdit* lineEditFeedback;
+
+    QSlider* sliderLevel;
+    QLineEdit* lineEditLevel;
 };
 
 #endif // DELAY_H

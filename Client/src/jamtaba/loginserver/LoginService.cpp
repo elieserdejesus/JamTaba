@@ -195,7 +195,7 @@ void LoginService::updateFromJson(QString json){
         QJsonObject jsonObject = allRooms[i].toObject();
         long long id = jsonObject.value("id").toVariant().toLongLong();
         QString roomType = jsonObject["type"].toString();//NINJAM OR REALTIME
-        AbstractJamRoom* room;
+        AbstractJamRoom* room = nullptr;
         if(!rooms.contains(id)){
             if(roomType == "ninjam"){
                 room = dynamic_cast<AbstractJamRoom*>(new NinjamRoom(id));
@@ -205,9 +205,11 @@ void LoginService::updateFromJson(QString json){
             }
             rooms.insert(id,  std::shared_ptr<AbstractJamRoom>(room));
         }
-        bool changed = room->updateFromJson(jsonObject);
-        if(changed){
-            emit roomChanged(*room);
+        if(room){//to avoid a strange bug in null room
+            bool changed = room->updateFromJson(jsonObject);
+            if(changed){
+                emit roomChanged(*room);
+            }
         }
     }
 }

@@ -17,6 +17,8 @@ public:
     void process(SamplesBuffer& in, SamplesBuffer& out);
     void addNode(AudioNode &node);
 
+    LocalInputAudioNode* getLocalInput() const{return inputNode;}
+
 private:
     MainOutputAudioNode* mainOutNode;
     LocalInputAudioNode* inputNode;
