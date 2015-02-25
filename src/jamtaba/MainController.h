@@ -13,6 +13,7 @@ namespace Audio {
     class AudioDriverListener;
     class AbstractMp3Streamer;
     class Plugin;
+    class AudioMixer;
 }
 
 namespace Login {
@@ -70,6 +71,7 @@ private:
     std::unique_ptr<Audio::AudioDriverListener> audioDriverListener;
     std::unique_ptr<Login::LoginService> loginService;
 
+    std::unique_ptr<Audio::AudioMixer> audioMixer;
 
     std::unique_ptr<Audio::AbstractMp3Streamer> roomStreamer;
     Login::AbstractJamRoom* currentStreamRoom;

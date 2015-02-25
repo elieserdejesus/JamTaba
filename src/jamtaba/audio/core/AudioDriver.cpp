@@ -3,13 +3,17 @@
 #include <QDebug>
 #include <stdexcept>
 #include <cmath>
+#include <QMutexLocker>
 
 using namespace Audio;
 
 //int AudioSamplesBuffer:: lastID = 0;
 
 SamplesBuffer::SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT)
-    : channels(channels), frameLenght(MAX_BUFFERS_LENGHT)
+    : channels(channels),
+      frameLenght(MAX_BUFFERS_LENGHT),
+      maxFrameLenght(MAX_BUFFERS_LENGHT)
+      //mutex()
 {
     if(channels == 0){
         throw std::runtime_error(std::string("AudioSamplesBuffer::channels == 0"));
@@ -41,6 +45,7 @@ SamplesBuffer::~SamplesBuffer(){
 
 void SamplesBuffer::applyGain(float gainFactor)
 {
+    //QMutexLocker locker(&mutex);
     for (unsigned int c = 0; c < channels; ++c) {
         for (unsigned int i = 0; i < frameLenght; ++i) {
             samples[c][i] *= gainFactor;
@@ -49,6 +54,7 @@ void SamplesBuffer::applyGain(float gainFactor)
 }
 
 void SamplesBuffer::fade(float beginGain, float endGain){
+    //QMutexLocker locker(&mutex);
     float gainStep = (endGain - beginGain)/frameLenght;
     for (unsigned int c = 0; c < channels; ++c) {
         float gain = beginGain;
@@ -61,6 +67,7 @@ void SamplesBuffer::fade(float beginGain, float endGain){
 
 void SamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain)
 {
+    //QMutexLocker locker(&mutex);
     if(!isMono()){
         float finalLeftGain = gainFactor * leftGain;
         float finalRightGain = gainFactor * rightGain;
@@ -76,6 +83,7 @@ void SamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain)
 
 void SamplesBuffer::zero()
 {
+    //QMutexLocker locker(&mutex);
     for (unsigned int c = 0; c < channels; ++c) {
        memset(samples[c], 0, frameLenght * sizeof(float));
     }
@@ -83,6 +91,7 @@ void SamplesBuffer::zero()
 
 const float *SamplesBuffer::getPeaks() const
 {
+    //QMutexLocker locker(&mutex);
     float abs;
     for (unsigned int c = 0; c < channels; ++c) {
         float maxPeak = 0;
@@ -102,6 +111,7 @@ const float *SamplesBuffer::getPeaks() const
 
 void SamplesBuffer::add(const SamplesBuffer &buffer)
 {
+    //QMutexLocker locker(&mutex);
     unsigned int framesToProcess = frameLenght < buffer.frameLenght ? frameLenght : buffer.frameLenght;
     if(channels == buffer.channels){
         for (unsigned int c = 0; c < channels; ++c) {
@@ -125,22 +135,68 @@ void SamplesBuffer::add(const SamplesBuffer &buffer)
     }
 }
 
+void SamplesBuffer::add( int channel,  int sampleIndex, float sampleValue){
+    //QMutexLocker locker(&mutex);
+    if(channelIsValid(channel) && sampleIndexIsValid(sampleIndex)){
+
+        samples[channel][sampleIndex] += sampleValue;
+    }
+//    else{
+//        qWarning() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
+//    }
+}
+
 void SamplesBuffer::set(int channel, int sampleIndex, float sampleValue){
-    Q_ASSERT(channel < (int)channels);
-    Q_ASSERT(sampleIndex < (int)frameLenght);
-    samples[channel][sampleIndex] = sampleValue;
+    //QMutexLocker locker(&mutex);
+    if(channelIsValid(channel) && sampleIndexIsValid(sampleIndex)){
+
+        samples[channel][sampleIndex] = sampleValue;
+    }
+//    else{
+//        qWarning() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
+//    }
+}
+
+int SamplesBuffer::getFrameLenght() const{
+    //QMutexLocker locker(&mutex);
+    return this->frameLenght;
 }
 
 void SamplesBuffer::set(const SamplesBuffer &buffer){
     set(buffer, 0, buffer.getFrameLenght(), 0);
 }
 
+float SamplesBuffer::get(int channel, int sampleIndex) const{
+    //QMutexLocker locker(&mutex);
+    if(!channelIsValid(channel) || !sampleIndexIsValid(sampleIndex)){
+        return 0;
+    }
+    return samples[channel][sampleIndex];
+
+}
+
+void SamplesBuffer::setFrameLenght(unsigned int newFrameLenght){
+    //QMutexLocker locker(&mutex);
+    if(newFrameLenght == frameLenght){
+        return;
+    }
+    if(newFrameLenght > maxFrameLenght){
+        qCritical("newFrameLenght > maxFrameLenght");
+        newFrameLenght = maxFrameLenght;
+    }
+
+    this->frameLenght = newFrameLenght;
+}
+
 void SamplesBuffer::set(const SamplesBuffer& buffer, unsigned int bufferOffset, unsigned int samplesToCopy, unsigned int internalOffset){
+
+    //QMutexLocker locker(&mutex);
+    //qDebug() << "set";
     unsigned int framesToProcess = samplesToCopy - bufferOffset;
     if(framesToProcess > buffer.frameLenght){//não processa mais samples do que a quantidade existente em buffer
         framesToProcess = buffer.frameLenght;
     }
-    if(internalOffset + framesToProcess  > this->getFrameLenght()){
+    if((int)(internalOffset + framesToProcess)  > this->getFrameLenght()){
         framesToProcess = (internalOffset + framesToProcess) - this->getFrameLenght();
     }
 
@@ -164,6 +220,7 @@ void SamplesBuffer::set(const SamplesBuffer& buffer, unsigned int bufferOffset, 
             }
         }
     }
+
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++

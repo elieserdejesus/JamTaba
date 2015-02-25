@@ -23,23 +23,20 @@ class AudioListener : public Audio::AudioDriverListenerAdapter{
 
 private:
     MainController* mainController;
-    Audio::AudioMixer* audioMixer;
+
     Audio::AbstractMp3Streamer* streamer;
 public:
     AudioListener(MainController* controller){
         this->mainController = controller;
-        this->audioMixer = new Audio::AudioMixer();
-
         //this->streamer = new RoomStreamerNode(QUrl("http://vprjazz.streamguys.net/vprjazz64.mp3"));
         //this->streamer = new RoomStreamerNode(QUrl("http://users.skynet.be/fa046054/home/P22/track56.mp3"));
         //this->streamer = new RoomStreamerNode(QUrl("http://ninbot.com:8000/2050"));
         //this->streamer = new Audio::AudioFileStreamerNode("D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/teste.mp3");
         this->streamer = &*mainController->roomStreamer;
-        this->audioMixer->addNode( *this->streamer);
     }
 
     ~AudioListener(){
-        delete audioMixer;
+        //delete audioMixer;
     }
 
     virtual void driverStarted(){
@@ -51,7 +48,7 @@ public:
     }
 
     virtual void processCallBack(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out){
-        audioMixer->process(in, out);
+        mainController->audioMixer->process(in, out);
         //output->processReplacing(in, out);
         //out.add(in);
 
@@ -69,8 +66,11 @@ public:
 
 MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     :QApplication(argc, argv),
+
+      audioMixer(new Audio::AudioMixer()),
       roomStreamer(new Audio::RoomStreamerNode()),
       currentStreamRoom(nullptr)
+
 {
 
     setQuitOnLastWindowClosed(false);//wait disconnect from server to close
@@ -86,6 +86,9 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
                 ));
     audioDriverListener = std::unique_ptr<Controller::AudioListener>( new Controller::AudioListener(this));
     QObject::connect(service, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromServer()));
+
+    this->audioMixer->addNode( *this->roomStreamer);
+
 }
 
 std::vector<Plugin::PluginDescriptor*> MainController::getPluginsDescriptors(){
@@ -94,8 +97,7 @@ std::vector<Plugin::PluginDescriptor*> MainController::getPluginsDescriptors(){
 
 Audio::Plugin* MainController::addPlugin(Plugin::PluginDescriptor *descriptor){
     Audio::Plugin* plugin = createPluginInstance(descriptor);
-    //preciso acessar o mixer para conectar o plugin na input track,
-    //sendo assim o mixer precisa ser um atributo do mainController
+    this->audioMixer->getLocalInput()->addProcessor(*plugin);
     return plugin;
 }
 
@@ -103,7 +105,7 @@ Audio::Plugin *MainController::createPluginInstance(Plugin::PluginDescriptor *de
 {
     if(descriptor->getGroup() == "Jamtaba"){
         if(descriptor->getName() == "Delay"){
-            return new Plugin::JamtabaDelay();
+            return new Plugin::JamtabaDelay(audioDriver->getSampleRate());
         }
     }
     return nullptr;

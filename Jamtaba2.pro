@@ -1,3 +1,5 @@
+#Delay: bugando quando altero o delay time
+
 #buga tudo se não tem conexão com a internet
 
 # - Coisas legais para implementar: fazer um plugin de delay para iniciar a saga dos plugins nativos do Jamtaba

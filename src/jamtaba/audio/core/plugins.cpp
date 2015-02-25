@@ -1,6 +1,7 @@
 #include "plugins.h"
 #include "AudioDriver.h"
 #include <QDebug>
+#include <QMutexLocker>
 
 using namespace Plugin;
 
@@ -20,18 +21,26 @@ std::vector<PluginDescriptor *> Plugin::getDescriptors(){
     return descriptors;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-JamtabaDelay::JamtabaDelay()
+const int JamtabaDelay::MAX_DELAY_IN_SECONDS = 3;
+
+JamtabaDelay::JamtabaDelay(int sampleRate)
     : Plugin("Delay", ""),
-      internalBuffer(new Audio::SamplesBuffer(2, 44100 * 3))//2 channels, 3 seconds delay
+
+      internalBuffer(new Audio::SamplesBuffer(2, sampleRate  * MAX_DELAY_IN_SECONDS))//2 channels, 3 seconds delay
+
 {
-    delayTimeInSamples = 44100/2;//half second
+    delayTimeInSamples = sampleRate/2;//half second
     internalIndex = 0;
     feedbackGain = 0.3;//feedback start in this gain
+    level = 1;
     internalBuffer->setFrameLenght(delayTimeInSamples);
+    this->sampleRate = sampleRate;
+
 }
 
 JamtabaDelay::~JamtabaDelay(){
     delete internalBuffer;
+    //delete mutex;
 }
 
 void JamtabaDelay::process(Audio::SamplesBuffer &buffer){
@@ -40,53 +49,31 @@ void JamtabaDelay::process(Audio::SamplesBuffer &buffer){
         for (int c = 0; c < buffer.getChannels(); ++c) {
             bufferValue = buffer.get(c, s);
             internalValue = internalBuffer->get(c, internalIndex);
-            buffer.add(c, s, internalValue);//copy the internal sample to out buffer
+            buffer.add(c, s, internalValue * level);//copy the internal sample to out buffer
             internalBuffer->set(c, internalIndex, bufferValue + internalValue * feedbackGain  ); //acumulate the sample in internal buffer
         }
         internalIndex = (internalIndex + 1) % internalBuffer->getFrameLenght();
     }
 }
 
-/*
-void JamtabaDelay::process(Audio::SamplesBuffer &outputBuffer){
-    //acumulate
-    int totalSamplesWrited = 0, samplesToWrite = 0;
-    int bufferOffset = 0;
-    int feedbackStartIndex = writePosition;
-    do{
-        samplesToWrite = std::min(internalBuffer->getFrameLenght() - writePosition, outputBuffer.getFrameLenght());
-        internalBuffer->set(outputBuffer, bufferOffset, samplesToWrite, writePosition);
-        bufferOffset += samplesToWrite;
-        totalSamplesWrited += samplesToWrite;
-        writePosition = (writePosition + samplesToWrite) % internalBuffer->getFrameLenght();
-    }
-    while(totalSamplesWrited < samplesToWrite);
+void JamtabaDelay::setDelayTime(int delayTimeInMs){
 
-    //copy delayed samples to outputBuffer
-    float sampleValue=0;
-    Audio::SamplesBuffer delayedBuffer(outputBuffer.getChannels(), outputBuffer.getFrameLenght());
-    float feedback = 1;
-    int repetitions = 0;
-    int internalIndex = feedbackStartIndex;
-    while(feedback > 0 && repetitions < 20){//using repetitions counter to avoid infinity loop
-        for(int s=0; s < delayedBuffer.getFrameLenght(); ++s){
-            for(int c=0; c < delayedBuffer.getChannels(); ++c){
-                sampleValue = internalBuffer->get(c, internalIndex) * feedback;
-                delayedBuffer.set(c, s, sampleValue);
-            }
-            internalIndex = (internalIndex + 1) % internalBuffer->getFrameLenght();
+    if(delayTimeInMs > 0 ){
+        if(delayTimeInMs > MAX_DELAY_IN_SECONDS * sampleRate){
+            delayTimeInMs = MAX_DELAY_IN_SECONDS * sampleRate;
         }
-        outputBuffer.add(delayedBuffer);
-        float db = 20 * std::log10(feedback);
-        feedback -= dbToLinear(-3);// (1 - feedbackGain);//TODO o mais fácil seria ter o feedback em db, e em cada repetição diminuir os dbs convertidos para linear
-        repetitions++;
-        internalIndex -= delayTimeInSamples;
-        if(internalIndex < 0){
-            internalIndex = internalBuffer->getFrameLenght() + internalIndex;
-        }
-        qDebug() << "feedback:" << feedback;
+        this->delayTimeInMs = delayTimeInMs;
+        this->delayTimeInSamples = delayTimeInMs/1000.0 * sampleRate;
+        this->internalBuffer->setFrameLenght(delayTimeInSamples);
     }
-    qDebug() << "Repetitions:" << repetitions << endl;
-
 }
-*/
+
+void JamtabaDelay::setFeedback(float feedback){
+    this->feedbackGain = feedback;
+}
+
+void JamtabaDelay::setLevel(float level){
+    if(level >= 0){
+        this->level = level;
+    }
+}

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <QMutex>
 
 namespace Audio{
 
@@ -18,15 +19,18 @@ private:
     float** samples;
     unsigned int channels;
     unsigned int frameLenght;
+    unsigned const int maxFrameLenght;
 
     mutable float peaks[2];
 
     inline bool isMono() const {return channels == 1;}
 
-    inline bool channelIsValid(unsigned int channel){return channel < channels;}
-    inline bool sampleIndexIsValid(unsigned int sampleIndex){return sampleIndex < frameLenght;}
+    inline bool channelIsValid(unsigned int channel) const{return channel < channels;}
+    inline bool sampleIndexIsValid(unsigned int sampleIndex) const{return sampleIndex < frameLenght;}
 
     void computePeaks();
+
+    //mutable QMutex mutex;
 
 public:
     SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT);
@@ -44,9 +48,7 @@ public:
     const float *getPeaks() const;//{return peaks[channel];}
 
     void add(const SamplesBuffer& buffer);
-    inline void add(int channel, int sampleIndex, float sampleValue){
-        samples[channel][sampleIndex] += sampleValue;
-    }
+    void add(int channel, int sampleIndex, float sampleValue);
 
     /***
      * copy samplesToCopy' samples starting from bufferOffset to internal buffer starting in 'internalOffset'
@@ -54,19 +56,13 @@ public:
     void set(const SamplesBuffer& buffer, unsigned int bufferOffset, unsigned int samplesToCopy, unsigned int internalOffset);
     void set(const SamplesBuffer& buffer);
     void set(int channel, int sampleIndex, float sampleValue);
-//    inline void set(int channel, int sampleIndex, float sampleValue)
-//    {
-//        samples[channel][sampleIndex] = sampleValue;
-//    }
 
-    inline float get(int channel, int sampleIndex) const
-    {
-        return samples[channel][sampleIndex];
-    }
+    float get( int channel,  int sampleIndex) const;
+
 
     //inline int getSampleRate(){ return sampleRate; }
-    inline int getFrameLenght() const{ return frameLenght; }
-    inline void setFrameLenght(unsigned int newFrameLenght)  {this->frameLenght = newFrameLenght;}
+    inline int getFrameLenght() const;//{ return frameLenght; }
+    void setFrameLenght(unsigned int newFrameLenght);
     inline int getChannels() const { return channels; }
 };
 //++++++++++++++++++++++++++++++
