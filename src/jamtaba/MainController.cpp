@@ -101,6 +101,10 @@ Audio::Plugin* MainController::addPlugin(Plugin::PluginDescriptor *descriptor){
     return plugin;
 }
 
+void MainController::removePlugin(Audio::Plugin *plugin){
+    this->audioMixer->getLocalInput()->removeProcessor(*plugin);
+}
+
 Audio::Plugin *MainController::createPluginInstance(Plugin::PluginDescriptor *descriptor)
 {
     if(descriptor->getGroup() == "Jamtaba"){

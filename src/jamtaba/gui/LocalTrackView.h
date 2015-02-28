@@ -17,6 +17,7 @@ public:
     void addPlugin(PluginGui* pluginGui);
 signals:
     void editingPlugin(PluginGui* pluginGui);
+    void removingPlugin(PluginGui* pluginGui);
 private:
     FxPanel* fxPanel;
 };

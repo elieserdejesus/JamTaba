@@ -16,6 +16,10 @@ QString PluginGui::getPluginName() const{
     return plugin->getName();
 }
 
+Audio::Plugin* PluginGui::getPlugin() const{
+    return plugin;
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++
 DelayGui::DelayGui(Plugin::JamtabaDelay* delayPlugin)
     :PluginGui(delayPlugin)

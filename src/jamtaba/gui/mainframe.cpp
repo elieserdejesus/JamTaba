@@ -54,8 +54,17 @@ MainFrame::MainFrame(MainController *mainController, QWidget *parent)
     ui.localTrack->initializeFxPanel(fxMenu);
 
     QObject::connect(ui.localTrack, SIGNAL(editingPlugin(PluginGui*)), this, SLOT(on_editingPlugin(PluginGui*)));
+    QObject::connect(ui.localTrack, SIGNAL(removingPlugin(PluginGui*)), this, SLOT(on_removingPlugin(PluginGui*)));
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void MainFrame::on_removingPlugin(PluginGui *pluginGui){
+    if(pluginGui->isVisible()){
+         ((QDialog*)pluginGui->parentWidget())->close();
+    }
+    mainController->removePlugin(pluginGui->getPlugin());
+    pluginGui->deleteLater();
+}
+
 void MainFrame::on_editingPlugin(PluginGui *pluginGui){
     showPluginGui(pluginGui);
 }

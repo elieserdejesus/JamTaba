@@ -38,9 +38,12 @@ public:
     virtual inline QString getName() const {return name;}
     virtual inline QString getFile() const {return file;}
     virtual ~Plugin();
+    virtual void setBypass(bool state);
+    inline bool isBypassed() const{return bypassed;}
 private:
     QString name;
     QString file;
+    bool bypassed;
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -59,6 +62,7 @@ public:
     //virtual bool disconnect(const AudioNode& otherNode);
 
     void addProcessor(AudioNodeProcessor &newProcessor);
+    void removeProcessor(AudioNodeProcessor &processor);
 
     inline void setGain(float gainValue){
         this->gain = gainValue;

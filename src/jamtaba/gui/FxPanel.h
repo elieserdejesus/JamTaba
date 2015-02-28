@@ -15,10 +15,10 @@ public:
     explicit FxPanel( QWidget *parent, QMenu* fxMenu);
     ~FxPanel();
     void addPlugin(PluginGui* pluginGui);
-
+    void removePlugin(PluginGui* pluginGui);
 signals:
     void editingPlugin(PluginGui* pluginGui);
-
+    void pluginRemoved(PluginGui* pluginGui);
 protected:
     void paintEvent(QPaintEvent* );
 

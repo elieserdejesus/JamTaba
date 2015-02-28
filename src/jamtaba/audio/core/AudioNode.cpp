@@ -9,11 +9,6 @@ const double AudioNode::root2Over2 = 1.414213562373095 *0.5;
 const double AudioNode::piOver2 = 3.141592653589793238463 * 0.5;
 
 //+++++++++++++++
-Plugin::~Plugin(){
-    qDebug() << "Plugin destructor";
-}
-
-//+++++++++++++++
 
 FaderProcessor::FaderProcessor(float startGain, float endGain, int samplesToFade)
     : currentGain(startGain),
@@ -45,9 +40,19 @@ bool FaderProcessor::finished(){
 }
 //++++++++++++++++++++++++
 Plugin::Plugin(QString name, QString file)
-    :name(name), file(file)
+    :name(name), file(file), bypassed(false)
 {
 
+}
+
+Plugin::~Plugin(){
+    qDebug() << "Plugin destructor";
+}
+
+void Plugin::setBypass(bool state){
+    if(state != bypassed){
+        bypassed = state;
+    }
 }
 
 //+++++++++++++++
@@ -109,6 +114,10 @@ bool AudioNode::connect(AudioNode& otherNode) {
 void AudioNode::addProcessor( AudioNodeProcessor& newProcessor)
 {
     processors.insert(&newProcessor);
+}
+
+void AudioNode::removeProcessor(AudioNodeProcessor &processor){
+    processors.erase(processors.find(&processor));
 }
 
 //+++++++++++++++++++++++++++++++++++++++
