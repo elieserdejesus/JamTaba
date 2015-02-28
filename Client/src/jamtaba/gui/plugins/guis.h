@@ -19,6 +19,7 @@ public:
     PluginGui(Audio::Plugin* plugin);
 
     QString getPluginName() const;//{return plugin->getName();}
+    Audio::Plugin* getPlugin() const;
 protected:
     Audio::Plugin* plugin;
 };

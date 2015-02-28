@@ -44,6 +44,9 @@ JamtabaDelay::~JamtabaDelay(){
 }
 
 void JamtabaDelay::process(Audio::SamplesBuffer &buffer){
+    if(isBypassed()){
+        return;
+    }
     float bufferValue = 0, internalValue = 0;
     for (int s = 0; s < buffer.getFrameLenght(); ++s) {
         for (int c = 0; c < buffer.getChannels(); ++c) {

@@ -63,6 +63,7 @@ public:
     std::vector<Plugin::PluginDescriptor*> getPluginsDescriptors();
 
     Audio::Plugin* addPlugin(Plugin::PluginDescriptor* descriptor);
+    void removePlugin(Audio::Plugin* plugin);
 
 private:
     Audio::Plugin* createPluginInstance(Plugin::PluginDescriptor* descriptor);

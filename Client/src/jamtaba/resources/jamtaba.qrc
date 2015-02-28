@@ -8,6 +8,8 @@
         <file>check.png</file>
         <file>check_hover.png</file>
         <file>check_checked.png</file>
+        <file>on.png</file>
+        <file>off.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

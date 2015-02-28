@@ -13,7 +13,7 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFE
     : channels(channels),
       frameLenght(MAX_BUFFERS_LENGHT),
       maxFrameLenght(MAX_BUFFERS_LENGHT)
-      //mutex()
+      //mutex(QMutex::Recursive)
 {
     if(channels == 0){
         throw std::runtime_error(std::string("AudioSamplesBuffer::channels == 0"));
@@ -141,9 +141,9 @@ void SamplesBuffer::add( int channel,  int sampleIndex, float sampleValue){
 
         samples[channel][sampleIndex] += sampleValue;
     }
-//    else{
-//        qWarning() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
-//    }
+    else{
+        qWarning() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
+    }
 }
 
 void SamplesBuffer::set(int channel, int sampleIndex, float sampleValue){

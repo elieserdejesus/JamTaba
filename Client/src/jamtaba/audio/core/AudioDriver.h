@@ -61,7 +61,7 @@ public:
 
 
     //inline int getSampleRate(){ return sampleRate; }
-    inline int getFrameLenght() const;//{ return frameLenght; }
+    int getFrameLenght() const;//{ return frameLenght; }
     void setFrameLenght(unsigned int newFrameLenght);
     inline int getChannels() const { return channels; }
 };

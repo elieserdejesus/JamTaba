@@ -1,4 +1,7 @@
-#Delay: bugando quando altero o delay time
+# implementar controles locais, não tem nada funcionando
+# Implementar plugins VST
+# Melhorar o visual do Delay, os LineEdit estão grandes demais
+# Seria interessante possibilitar que os parâmetros do delay sejam alterados através dos lineEdit
 
 #buga tudo se não tem conexão com a internet
 

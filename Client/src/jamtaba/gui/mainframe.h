@@ -52,6 +52,7 @@ private slots:
     //fx MENU
     void on_fxMenuActionTriggered(QAction*);
     void on_editingPlugin(PluginGui* pluginGui);//emited by LocalTrackView
+    void on_removingPlugin(PluginGui* pluginGui);//emit by LocalTrackView
 private:
     Ui::MainFrameClass ui;
     MainController* mainController;

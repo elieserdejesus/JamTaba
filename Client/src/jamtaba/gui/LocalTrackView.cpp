@@ -20,6 +20,8 @@ void LocalTrackView::addPlugin(PluginGui *pluginGui){
 void LocalTrackView::initializeFxPanel(QMenu *fxMenu){
     fxPanel = new FxPanel(this, fxMenu);
     fxPanel->connect(fxPanel, SIGNAL(editingPlugin(PluginGui*)), this, SIGNAL(editingPlugin(PluginGui*)));
+    fxPanel->connect(fxPanel, SIGNAL(pluginRemoved(PluginGui*)), this, SIGNAL(removingPlugin(PluginGui*)));
+
     int index = ui->mainLayout->indexOf(ui->panSectionSeparator);
 
     ui->mainLayout->insertWidget( index+1, fxPanel);

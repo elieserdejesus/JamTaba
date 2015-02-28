@@ -5,7 +5,7 @@
 #include <QPainter>
 #include <QScrollArea>
 #include <QVBoxLayout>
-
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FxPanel::FxPanel(QWidget *parent, QMenu *fxMenu) :
     QWidget(parent),
     fxMenu(fxMenu)
@@ -29,9 +29,10 @@ FxPanel::FxPanel(QWidget *parent, QMenu *fxMenu) :
         FxPanelItem* item = new FxPanelItem(this, fxMenu);
         contentLayout->addWidget(item);
         QObject::connect(item, SIGNAL(editingPlugin(PluginGui*)), this, SIGNAL(editingPlugin(PluginGui*)));
+        QObject::connect(item, SIGNAL(pluginRemoved(PluginGui*)), this, SIGNAL(pluginRemoved(PluginGui*)));
     }
 }
-
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void FxPanel::addPlugin(PluginGui *pluginGui){
     QList<FxPanelItem*> items = findChildren<FxPanelItem*>();
     for(FxPanelItem* item : items){//find the first free slot to put the new plugin
@@ -41,16 +42,16 @@ void FxPanel::addPlugin(PluginGui *pluginGui){
         }
     }
 }
-
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FxPanel::~FxPanel()
 {
     //delete ui;
 }
-
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void FxPanel::paintEvent(QPaintEvent* ){
     QStyleOption opt;
     opt.init(this);
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
-
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
