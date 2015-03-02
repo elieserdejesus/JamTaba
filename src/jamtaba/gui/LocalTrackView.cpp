@@ -5,22 +5,22 @@
 #include "ui_fxpanel.h"
 #include "plugins/guis.h"
 
-LocalTrackView::LocalTrackView(QWidget* parent)
-    :TrackView(parent), fxPanel(nullptr)
+LocalTrackView::LocalTrackView(QWidget* parent, Controller::MainController *mainController)
+    :TrackView(parent, mainController, 1), fxPanel(nullptr)
 {
 
 }
 
-void LocalTrackView::addPlugin(PluginGui *pluginGui){
+void LocalTrackView::addPlugin(Audio::Plugin* plugin){
     if(fxPanel){
-        this->fxPanel->addPlugin(pluginGui);
+        this->fxPanel->addPlugin(plugin);
     }
 }
 
 void LocalTrackView::initializeFxPanel(QMenu *fxMenu){
     fxPanel = new FxPanel(this, fxMenu);
-    fxPanel->connect(fxPanel, SIGNAL(editingPlugin(PluginGui*)), this, SIGNAL(editingPlugin(PluginGui*)));
-    fxPanel->connect(fxPanel, SIGNAL(pluginRemoved(PluginGui*)), this, SIGNAL(removingPlugin(PluginGui*)));
+    fxPanel->connect(fxPanel, SIGNAL(editingPlugin(Audio::Plugin*)), this, SIGNAL(editingPlugin(Audio::Plugin*)));
+    fxPanel->connect(fxPanel, SIGNAL(pluginRemoved(Audio::Plugin*)), this, SIGNAL(removingPlugin(Audio::Plugin*)));
 
     int index = ui->mainLayout->indexOf(ui->panSectionSeparator);
 

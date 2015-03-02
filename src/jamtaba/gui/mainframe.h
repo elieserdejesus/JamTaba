@@ -5,9 +5,9 @@
 #include "ui_mainframe.h"
 #include <QMap>
 
-//namespace Controller{
+namespace Controller{
     class MainController;
-//}
+}
 namespace Ui{
     class MainFrameClass;
     class MainFrame;
@@ -27,13 +27,15 @@ class PluginDescriptor;
 }
 
 class JamRoomViewPanel;
+class PluginGui;
+class LocalTrackView;
 
 class MainFrame : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainFrame(MainController* mainController, QWidget *parent = 0);
+    MainFrame(Controller::MainController* mainController, QWidget *parent=0);
     ~MainFrame();
     virtual void closeEvent(QCloseEvent *);
     virtual void showEvent(QShowEvent*);
@@ -51,22 +53,25 @@ private slots:
 
     //fx MENU
     void on_fxMenuActionTriggered(QAction*);
-    void on_editingPlugin(PluginGui* pluginGui);//emited by LocalTrackView
-    void on_removingPlugin(PluginGui* pluginGui);//emit by LocalTrackView
+    void on_editingPlugin(Audio::Plugin* plugin);//emited by LocalTrackView
+    void on_removingPlugin(Audio::Plugin* plugin);//emit by LocalTrackView
 private:
     Ui::MainFrameClass ui;
-    MainController* mainController;
+
     int timerID;
 
     QMap<Login::AbstractJamRoom*, JamRoomViewPanel*> roomViewPanels;
 
     QMenu* createFxMenu();
 
+    LocalTrackView* localTrackView;
+
     QMenu* fxMenu;
+    Controller::MainController* mainController;
 
-    PluginGui* createPluginView(Plugin::PluginDescriptor *, Audio::Plugin *plugin) ;
+    //PluginGui* createPluginView(Plugin::PluginDescriptor *, Audio::Plugin *plugin) ;
 
-    void showPluginGui(PluginGui* pluginGui);
+    //void showPluginGui(PluginGui* pluginGui);
 };
 
 

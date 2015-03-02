@@ -56,16 +56,6 @@
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="LocalTrackView" name="localTrack" native="true">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>1</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
     </item>
@@ -226,14 +216,6 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>LocalTrackView</class>
-   <extends>QWidget</extends>
-   <header>LocalTrackView.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

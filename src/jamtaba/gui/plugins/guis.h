@@ -5,13 +5,11 @@
 #include <QSlider>
 #include <QLineEdit>
 
-namespace Plugin {
+namespace Audio{
     class JamtabaDelay;
-}
-
-namespace Audio {
     class Plugin;
 }
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class PluginGui : public QWidget{
     Q_OBJECT
@@ -23,13 +21,14 @@ public:
 protected:
     Audio::Plugin* plugin;
 };
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class DelayGui : public PluginGui
 {
     Q_OBJECT
 
 public:
-    DelayGui( Plugin::JamtabaDelay* delayPlugin);
+    DelayGui( Audio::JamtabaDelay* delayPlugin);
     ~DelayGui();
 private slots:
     void on_sliderDelayReleased();

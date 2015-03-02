@@ -39,22 +39,6 @@ bool FaderProcessor::finished(){
     return processedSamples >= totalSamplesToProcess;
 }
 //++++++++++++++++++++++++
-Plugin::Plugin(QString name, QString file)
-    :name(name), file(file), bypassed(false)
-{
-
-}
-
-Plugin::~Plugin(){
-    qDebug() << "Plugin destructor";
-}
-
-void Plugin::setBypass(bool state){
-    if(state != bypassed){
-        bypassed = state;
-    }
-}
-
 //+++++++++++++++
 
 void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
@@ -78,11 +62,15 @@ void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
 }
 
 AudioNode::AudioNode()
+    :muted(false),
+      soloed(false),
+      gain(1),
+      pan(0)/*center*/,
+      leftGain(1),
+      rightGain(1)
+
 {
     this->internalBuffer = new SamplesBuffer(2, AudioDriver::MAX_BUFFERS_LENGHT);
-    this->gain = 1;
-    this->pan = 0;//center
-    this->leftGain = this->rightGain = 1;//pan gains
 }
 
 void AudioNode::setPan(float pan) {
@@ -141,8 +129,22 @@ void OscillatorAudioNode::processReplacing(SamplesBuffer & /*in*/, SamplesBuffer
 
 void MainOutputAudioNode::processReplacing(SamplesBuffer&in, SamplesBuffer& out)
 {
+    static int soloedBuffersInLastProcess = 0;
+    //--------------------------------------
+    bool hasSoloedBuffers = soloedBuffersInLastProcess > 0;
+    soloedBuffersInLastProcess = 0;
     for (const auto &node : connections) {
-        node->processReplacing(in, out);
+        bool canProcess = (!hasSoloedBuffers && !node->isMuted()) || (hasSoloedBuffers && node->isSoloed());
+        if(canProcess){
+            node->processReplacing(in, out);
+        }
+        else{
+            internalBuffer->setFrameLenght(out.getFrameLenght());
+            node->processReplacing(in, *internalBuffer);//discard the samples if node is muted, the internalBuffer is not copyed to out buffer
+        }
+        if(node->isSoloed()){
+            soloedBuffersInLastProcess++;
+        }
     }
 
     int nodesConnected = connections.size();

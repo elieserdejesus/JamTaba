@@ -14,22 +14,20 @@
 #include "../loginserver/LoginService.h"
 #include "../loginserver/JamRoom.h"
 #include "../audio/core/plugins.h"
+#include "LocalTrackView.h"
 #include "plugins/guis.h"
 #include "FxPanel.h"
-#include "plugins/pluginwindow.h"
 
 using namespace Audio;
 using namespace Persistence;
 using namespace Controller;
 
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-MainFrame::MainFrame(MainController *mainController, QWidget *parent)
+MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent)
     : QMainWindow(parent),
-    fxMenu(nullptr)
+    fxMenu(nullptr), mainController(mainController)
 {
 	ui.setupUi(this);
-    this->mainController = mainController;
 
     if(ConfigStore::windowWasMaximized()){
         setWindowState(Qt::WindowMaximized);
@@ -51,53 +49,58 @@ MainFrame::MainFrame(MainController *mainController, QWidget *parent)
                                  this, SLOT(on_connectedInServer(QList<Login::AbstractJamRoom*>)));
 
     fxMenu = createFxMenu();
-    ui.localTrack->initializeFxPanel(fxMenu);
 
-    QObject::connect(ui.localTrack, SIGNAL(editingPlugin(PluginGui*)), this, SLOT(on_editingPlugin(PluginGui*)));
-    QObject::connect(ui.localTrack, SIGNAL(removingPlugin(PluginGui*)), this, SLOT(on_removingPlugin(PluginGui*)));
+    localTrackView = new LocalTrackView(this, this->mainController);
+    ui.verticalLayoutLeft->addWidget(localTrackView);
+    localTrackView->initializeFxPanel(fxMenu);
+
+    QObject::connect(localTrackView, SIGNAL(editingPlugin(PluginGui*)), this, SLOT(on_editingPlugin(PluginGui*)));
+    QObject::connect(localTrackView, SIGNAL(removingPlugin(PluginGui*)), this, SLOT(on_removingPlugin(PluginGui*)));
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainFrame::on_removingPlugin(PluginGui *pluginGui){
-    if(pluginGui->isVisible()){
-         ((QDialog*)pluginGui->parentWidget())->close();
-    }
-    mainController->removePlugin(pluginGui->getPlugin());
-    pluginGui->deleteLater();
+void MainFrame::on_removingPlugin(Audio::Plugin *plugin){
+//    if(pluginGui->isVisible()){
+//         ((QDialog*)pluginGui->parentWidget())->close();
+//    }
+//    mainController->removePlugin(pluginGui->getPlugin());
+//    pluginGui->deleteLater();
 }
 
-void MainFrame::on_editingPlugin(PluginGui *pluginGui){
-    showPluginGui(pluginGui);
+void MainFrame::on_editingPlugin(Audio::Plugin *pluginGui){
+    //showPluginGui(pluginGui);
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::on_fxMenuActionTriggered(QAction* action){
     //add a new plugin
-    Plugin::PluginDescriptor* pluginDescriptor = action->data().value<Plugin::PluginDescriptor*>();
+    Audio::PluginDescriptor* pluginDescriptor = action->data().value<Audio::PluginDescriptor*>();
     Audio::Plugin* plugin = mainController->addPlugin(pluginDescriptor);
-    PluginGui* pluginGui = createPluginView(pluginDescriptor, plugin);
-    ui.localTrack->addPlugin(pluginGui);
-    showPluginGui(pluginGui);
+    localTrackView->addPlugin(plugin);
+    PluginWindow* window = new PluginWindow(this);
+    window->show();
+    QPoint p(localTrackView->x() + localTrackView->width(), height()/4);
+    plugin->openEditor(window, mapToGlobal(p));
 }
 //++++++++++++++++++++++++++++++++++++
-void MainFrame::showPluginGui(PluginGui *pluginGui){
-    if(!pluginGui->isVisible()){
-        PluginWindow* pluginWindow = new PluginWindow(pluginGui, this);
-        pluginWindow->show();
-    }
-    else{
-        ((QDialog*)pluginGui->parentWidget())->activateWindow();
-    }
-}
+//void MainFrame::showPluginGui(PluginGui *pluginGui){
+//    if(!pluginGui->isVisible()){
+//        PluginWindow* pluginWindow = new PluginWindow(pluginGui, this);
+//        pluginWindow->show();
+//    }
+//    else{
+//        ((QDialog*)pluginGui->parentWidget())->activateWindow();
+//    }
+//}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-PluginGui* MainFrame::createPluginView(Plugin::PluginDescriptor* d, Audio::Plugin* plugin){
-    if(d->getGroup() == "Jamtaba"){
-        if(d->getName() == "Delay"){
-            return new DelayGui((Plugin::JamtabaDelay*)plugin);
-        }
-    }
-    return nullptr;
-}
+//PluginGui* MainFrame::createPluginView(Plugin::PluginDescriptor* d, Audio::Plugin* plugin){
+//    if(d->getGroup() == "Jamtaba"){
+//        if(d->getName() == "Delay"){
+//            return new DelayGui((Plugin::JamtabaDelay*)plugin);
+//        }
+//    }
+//    return nullptr;
+//}
 
 //++++++++++++++++++++
 QMenu* MainFrame::createFxMenu(){
@@ -107,8 +110,8 @@ QMenu* MainFrame::createFxMenu(){
     }
     QMenu* menu = new QMenu(this);
 
-    std::vector<Plugin::PluginDescriptor*> plugins = mainController->getPluginsDescriptors();
-    for(Plugin::PluginDescriptor* pluginDescriptor  : plugins){
+    std::vector<Audio::PluginDescriptor*> plugins = mainController->getPluginsDescriptors();
+    for(Audio::PluginDescriptor* pluginDescriptor  : plugins){
         QAction* action = menu->addAction(QString(pluginDescriptor->getName()));
         action->setData(QVariant::fromValue(pluginDescriptor));
     }
@@ -144,11 +147,16 @@ void MainFrame::on_stoppingRoomStream(Login::AbstractJamRoom * room){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::timerEvent(QTimerEvent *){
 
+    //update local input track peaks
+    Peaks inputPeaks = mainController->getInputPeaks();
+    localTrackView->setPeaks(inputPeaks.left, inputPeaks.right);
+
+    //update room stream plot
     if(mainController->isPlayingRoomStream()){
           Login::AbstractJamRoom* room = mainController->getCurrentStreamingRoom();
           JamRoomViewPanel* roomView =  roomViewPanels[room];
-          MainController::Peaks peaks = mainController->getPeaks();
-          roomView->addPeak(peaks.lastStreamRoomPeak);
+          Controller::Peaks peaks = mainController->getRoomStreamPeaks();
+          roomView->addPeak(peaks.max());
     }
 }
 

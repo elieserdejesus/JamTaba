@@ -14,7 +14,7 @@ const QString FxPanelItem::NEW_EFFECT_STRING = "new effect...";
 FxPanelItem::FxPanelItem(QWidget *parent, QMenu *fxMenu)
     :QLabel(parent),
       fxMenu(fxMenu),
-      pluginGui(nullptr)
+      plugin(nullptr)
 {
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(on_contextMenu(QPoint)));
@@ -35,12 +35,12 @@ FxPanelItem::FxPanelItem(QWidget *parent, QMenu *fxMenu)
 }
 
 bool FxPanelItem::pluginIsBypassed(){
-    return containPlugin() && pluginGui->getPlugin()->isBypassed();
+    return containPlugin() && plugin->isBypassed();
 }
 
 void FxPanelItem::on_buttonClicked() {
-    if(pluginGui){
-        this->pluginGui->getPlugin()->setBypass(!this->button->isChecked());
+    if(plugin){
+        this->plugin->setBypass(!this->button->isChecked());
 
         //update style sheet
         style()->unpolish(this);
@@ -54,15 +54,15 @@ FxPanelItem::~FxPanelItem()
 
 }
 
-void FxPanelItem::setPlugin(PluginGui *pluginGui){
-    this->pluginGui = pluginGui;
-    this->setText( pluginGui->getPluginName());
+void FxPanelItem::setPlugin(Audio::Plugin* plugin){
+    this->plugin = plugin;
+    this->setText( plugin->getName());
     this->button->setVisible(true);
     this->button->setChecked(true);
 }
 
 void FxPanelItem::unsetPlugin(){
-    this->pluginGui = nullptr;
+    this->plugin = nullptr;
     this->setText("");
     this->button->setVisible(false);
 
@@ -86,8 +86,8 @@ void FxPanelItem::mousePressEvent(QMouseEvent *event){
             on_contextMenu(event->pos());
         }
         else{
-            if(pluginGui){
-                emit editingPlugin(pluginGui);
+            if(plugin){
+                emit editingPlugin(plugin);
             }
         }
     }
@@ -124,9 +124,9 @@ void FxPanelItem::on_actionMenuTriggered(QAction* a){
             button->click();//simulate a click in the bypass button
         }
         else if(a->text() == "remove"){
-            PluginGui* pluginGui = this->pluginGui;
-            unsetPlugin();//set this->pluginGui to nullptr
-            emit pluginRemoved(pluginGui);
+            Audio::Plugin* plugin = this->plugin;
+            unsetPlugin();//set this->plugin to nullptr
+            emit pluginRemoved(plugin);
         }
     }
 }

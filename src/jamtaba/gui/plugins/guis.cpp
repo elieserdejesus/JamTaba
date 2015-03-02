@@ -5,6 +5,7 @@
 #include <QLineEdit>
 #include <cmath>
 #include <QDebug>
+#include <QObject>
 #include "../audio/core/plugins.h"
 
 PluginGui::PluginGui(Audio::Plugin *plugin)
@@ -19,9 +20,10 @@ QString PluginGui::getPluginName() const{
 Audio::Plugin* PluginGui::getPlugin() const{
     return plugin;
 }
+//++++++++++++++
 
 //++++++++++++++++++++++++++++++++++++++++++++++
-DelayGui::DelayGui(Plugin::JamtabaDelay* delayPlugin)
+DelayGui::DelayGui(Audio::JamtabaDelay* delayPlugin)
     :PluginGui(delayPlugin)
 {
     QGridLayout* mainLayout = new QGridLayout(this);
@@ -61,20 +63,20 @@ DelayGui::DelayGui(Plugin::JamtabaDelay* delayPlugin)
 
 //++++++++++++++
 void DelayGui::on_sliderDelayReleased(){
-    ((Plugin::JamtabaDelay*)plugin)->setDelayTime(sliderDelayTime->value());
+    ((Audio::JamtabaDelay*)plugin)->setDelayTime(sliderDelayTime->value());
     lineEditDelayTime->setText(QString::number(sliderDelayTime->value()));
 }
 
 void DelayGui::on_sliderFeedbackReleased(){
     int value = sliderFeedback->value();
-    ((Plugin::JamtabaDelay*)plugin)->setFeedback(value/100.0);
+    ((Audio::JamtabaDelay*)plugin)->setFeedback(value/100.0);
     float db = 20 * std::log10(value/100.0);
     lineEditFeedback->setText(QString::number(db, 'f', 1));
 }
 
 void DelayGui::on_sliderLevelReleased(){
     int value = sliderLevel->value();
-    ((Plugin::JamtabaDelay*)plugin)->setLevel(value/100.0);
+    ((Audio::JamtabaDelay*)plugin)->setLevel(value/100.0);
     lineEditLevel->setText(QString::number(value/100.0, 'f', 1));
 }
 //++++++++++++++

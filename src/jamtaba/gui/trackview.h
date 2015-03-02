@@ -7,19 +7,30 @@ namespace Ui {
     class TrackView;
 }
 
+namespace Controller {
+    class MainController;
+}
+
 class TrackView : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit TrackView(QWidget *parent = 0);
+    TrackView(QWidget *parent, Controller::MainController* mainController, int trackID);
     ~TrackView();
-
+    void setPeaks(float left, float right);
 protected:
     Ui::TrackView *ui;
-
-protected:
+    Controller::MainController* mainController;
     void paintEvent(QPaintEvent *);
+    bool eventFilter(QObject *source, QEvent *ev);
+    int trackID;
+
+private slots:
+    void onMuteClicked();
+    void onSoloClicked();
+    void onFaderMoved(int value);
+    void onPanSliderMoved(int value);
 };
 
 
