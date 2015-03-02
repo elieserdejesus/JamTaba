@@ -1,5 +1,6 @@
-# implementar controles locais, não tem nada funcionando
-# Implementar plugins VST
+# Abrir plugins VST - fazer um host. MrWatson: http://teragonaudio.com/article/How-to-make-your-own-VST-host.html
+# duplo clique no controle de pan não reseta adequadamente
+# quando clico para ouvir uma outra sala não está resetando o plot da sala que eu estava ouvindo
 # Melhorar o visual do Delay, os LineEdit estão grandes demais
 # Seria interessante possibilitar que os parâmetros do delay sejam alterados através dos lineEdit
 
@@ -8,7 +9,7 @@
 # - Coisas legais para implementar: fazer um plugin de delay para iniciar a saga dos plugins nativos do Jamtaba
 # - O stream do ninjamer.com não é mono como achei que era, mas está dando problema
 # - Tenho que fazer resample do stream
-# - Abrir plugins VST - fazer um host. MrWatson: http://teragonaudio.com/article/How-to-make-your-own-VST-host.html
+# -
 # - O DAW LMMS usa PortAudio, pode ser interessante roubar o código deles.
 
 
@@ -84,8 +85,8 @@ HEADERS += \
     src/jamtaba/gui/FxPanel.h \
     src/jamtaba/gui/FxPanelItem.h \
     src/jamtaba/audio/core/plugins.h \
-    src/jamtaba/gui/plugins/pluginwindow.h \
-    src/jamtaba/gui/plugins/guis.h
+    src/jamtaba/gui/plugins/guis.h \
+    src/jamtaba/audio/vst/vstplugin.h
 
 
 win32:HEADERS += portaudio/include/pa_asio.h
@@ -104,12 +105,8 @@ SOURCES += \
     src/jamtaba/audio/core/PortAudioDriver.cpp \
     src/jamtaba/audio/RoomStreamerNode.cpp \
 #------------------------------------------------
-    src/jamtaba/gui/mainframe.cpp \
-    src/jamtaba/gui/audioiodialog.cpp \
     src/jamtaba/gui/widgets/PeakMeter.cpp \
     src/jamtaba/gui/widgets/WavePeakPanel.cpp \
-    src/jamtaba/gui/trackview.cpp \
-    src/jamtaba/gui/jamroomviewpanel.cpp \
 #------------------------------------------------
     src/jamtaba/JamtabaFactory.cpp \
     src/jamtaba/MainController.cpp \
@@ -127,10 +124,14 @@ SOURCES += \
     src/jamtaba/gui/LocalTrackView.cpp \
     src/jamtaba/gui/FxPanel.cpp \
     src/jamtaba/gui/FxPanelItem.cpp \
-    src/jamtaba/gui/plugins/PluginWindow.cpp \
     src/jamtaba/audio/core/plugins.cpp \
     src/jamtaba/audio/codec.cpp \
-    src/jamtaba/gui/plugins/guis.cpp
+    src/jamtaba/gui/plugins/guis.cpp \
+    src/jamtaba/gui/JamRoomViewPanel.cpp \
+    src/jamtaba/gui/AudioIODialog.cpp \
+    src/jamtaba/gui/MainFrame.cpp \
+    src/jamtaba/gui/TrackView.cpp \
+    src/jamtaba/audio/vst/vstplugin.cpp
 
 FORMS += src/jamtaba/gui/mainframe.ui \
     src/jamtaba/gui/audioiodialog.ui \
@@ -151,10 +152,13 @@ win32:LIBS += -lwinmm \
 
 win32:PRE_TARGETDEPS += $$PWD/portaudio/lib/libportaudio.a
 
+VST_SDK_PATH = "D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x/"
+
 INCLUDEPATH += $$PWD/portaudio/include \
                $$PWD/minimp3/include \
                src/jamtaba/gui \
-               src/jamtaba/gui/widgets
+               src/jamtaba/gui/widgets \
+               $$VST_SDK_PATH
 
 DEPENDPATH += $$PWD/portaudio/include \
               $$PWD/minimp3/include

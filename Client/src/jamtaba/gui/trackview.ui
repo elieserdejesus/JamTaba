@@ -96,7 +96,7 @@
           <number>0</number>
          </property>
          <item alignment="Qt::AlignLeft">
-          <widget class="QPushButton" name="solo">
+          <widget class="QPushButton" name="soloButton">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
              <horstretch>0</horstretch>
@@ -115,7 +115,7 @@
           </widget>
          </item>
          <item alignment="Qt::AlignRight">
-          <widget class="QPushButton" name="mute">
+          <widget class="QPushButton" name="muteButton">
            <property name="enabled">
             <bool>true</bool>
            </property>
@@ -179,17 +179,35 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="minimum">
+         <number>-4</number>
+        </property>
+        <property name="maximum">
+         <number>4</number>
+        </property>
         <property name="singleStep">
-         <number>10</number>
+         <number>1</number>
+        </property>
+        <property name="pageStep">
+         <number>1</number>
         </property>
         <property name="value">
-         <number>50</number>
+         <number>0</number>
+        </property>
+        <property name="sliderPosition">
+         <number>0</number>
+        </property>
+        <property name="tracking">
+         <bool>true</bool>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
         <property name="invertedAppearance">
          <bool>false</bool>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksBelow</enum>
         </property>
        </widget>
       </item>
@@ -222,21 +240,27 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QSlider" name="verticalSlider">
+       <widget class="QSlider" name="levelSlider">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>3</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="maximum">
+         <number>120</number>
+        </property>
         <property name="value">
-         <number>90</number>
+         <number>100</number>
         </property>
         <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
         <property name="tickPosition">
-         <enum>QSlider::TicksBothSides</enum>
+         <enum>QSlider::TicksBelow</enum>
+        </property>
+        <property name="tickInterval">
+         <number>0</number>
         </property>
        </widget>
       </item>
@@ -331,7 +355,13 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QSlider" name="horizontalSlider">
+       <widget class="QSlider" name="transmitGainSlider">
+        <property name="maximum">
+         <number>120</number>
+        </property>
+        <property name="value">
+         <number>100</number>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>

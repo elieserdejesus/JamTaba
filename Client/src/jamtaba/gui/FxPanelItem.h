@@ -7,7 +7,9 @@
 #include <QWidget>
 #include <QPushButton>
 
-class PluginGui;
+namespace Audio {
+    class Plugin;
+}
 
 class FxPanelItem : public QLabel
 {
@@ -17,15 +19,15 @@ class FxPanelItem : public QLabel
 public:
     FxPanelItem(QWidget* parent, QMenu* fxMenu);
     ~FxPanelItem();
-    void setPlugin(PluginGui* pluginGui);
+    void setPlugin(Audio::Plugin* plugin);
     void unsetPlugin();
-    inline bool containPlugin() const{ return pluginGui; }
+    inline bool containPlugin() const{ return plugin; }
     bool pluginIsBypassed();
     //void setText(QString str){}
     Q_PROPERTY(bool pluginBypassed READ pluginIsBypassed())
 signals:
-    void editingPlugin(PluginGui*pluginGui);
-    void pluginRemoved(PluginGui* pluginGui);
+    void editingPlugin(Audio::Plugin* plugin);
+    void pluginRemoved(Audio::Plugin* plugin);
 protected:
     void mousePressEvent ( QMouseEvent * event ) ;
     void paintEvent(QPaintEvent* );
@@ -38,7 +40,7 @@ private slots:
 private:
     QMenu* fxMenu;//used to list plugins
     QMenu* actionsMenu;//used to list actions(bypass, remove)
-    PluginGui* pluginGui;
+    Audio::Plugin* plugin;
     QPushButton* button;
 
     QMenu* createActionsMenu();

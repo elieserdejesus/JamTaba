@@ -33,11 +33,11 @@ FxPanel::FxPanel(QWidget *parent, QMenu *fxMenu) :
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void FxPanel::addPlugin(PluginGui *pluginGui){
+void FxPanel::addPlugin(Audio::Plugin * plugin){
     QList<FxPanelItem*> items = findChildren<FxPanelItem*>();
     for(FxPanelItem* item : items){//find the first free slot to put the new plugin
         if(!item->containPlugin()){
-            item->setPlugin(pluginGui);
+            item->setPlugin(plugin);
             return;
         }
     }

@@ -307,7 +307,7 @@ left: 10px;
 
 }
 
-TrackView .QPushButton#solo, TrackView .QPushButton#mute {
+TrackView .QPushButton#soloButton, TrackView .QPushButton#muteButton {
 border-radius: 3px;
 border: 1px solid gray;
 color: rgba(0, 0, 0, 80);
@@ -319,27 +319,27 @@ TrackView .QLabel#labelPanR, TrackView .QLabel#labelPanL{
 color: rgba(0, 0, 0, 80);
 }
 
-TrackView .QPushButton:hover#solo, TrackView .QPushButton:hover#mute{
+TrackView .QPushButton:hover#soloButton, TrackView .QPushButton:hover#muteButton{
 background-color: rgba(255, 255, 255, 80);
 color: rgba(0, 0, 0, 200);
 }
 
-TrackView .QPushButton:checked#solo{
+TrackView .QPushButton:checked#soloButton{
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
 color: black;
 }
 
-TrackView .QPushButton:hover:checked#solo {
+TrackView .QPushButton:hover:checked#soloButton {
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(110, 255, 82), stop:1 rgb(30, 195, 30));
 color: gray;
 }
 
-TrackView .QPushButton:checked#mute {
+TrackView .QPushButton:checked#muteButton {
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
 color: lightgray;
 }
 
-TrackView .QPushButton:hover:checked#mute {
+TrackView .QPushButton:hover:checked#muteButton {
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 110, 122), stop:1 rgb(120, 0, 0));
 color: white;
 }

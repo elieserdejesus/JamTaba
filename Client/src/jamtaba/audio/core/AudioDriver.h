@@ -35,6 +35,9 @@ private:
 public:
     SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT);
     ~SamplesBuffer();
+
+    inline float** getSamplesArray() const{return samples;}
+
     //inline int getID() const{return ID;}
     void applyGain(float gainFactor);
 

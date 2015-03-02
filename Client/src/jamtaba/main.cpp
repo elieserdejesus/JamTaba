@@ -13,7 +13,7 @@ int main(int argc, char* args[])
 
     qInstallMessageHandler(customLogHandler);
     JamtabaFactory* factory = new ReleaseFactory();
-    MainController mainController(factory, argc, args);//MainController extends QApplication
+    Controller::MainController mainController(factory, argc, args);//MainController extends QApplication
 
     MainFrame w(&mainController);
     w.show();

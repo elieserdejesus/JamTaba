@@ -31,7 +31,20 @@ class JamtabaFactory;
 namespace Controller {
 
 class AudioListener;
-}
+
+struct Peaks{
+    float left;
+    float right;
+
+    Peaks(float l, float r){
+        left    = l;
+        right   = r;
+    }
+
+    float max(){
+        return std::max(std::abs(left), std::abs(right));
+    }
+};
 
 //++++++++++++++++++++++++++++
 class MainController : public QApplication
@@ -46,6 +59,9 @@ public:
 
     void start();
     void stop();
+
+    void process(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
+
     void playRoomStream(Login::AbstractJamRoom *room);
     bool isPlayingRoomStream();
     Login::AbstractJamRoom* getCurrentStreamingRoom();
@@ -54,19 +70,24 @@ public:
     Audio::AudioDriver* getAudioDriver() const;
     Login::LoginService* getLoginService() const;
 
-    struct Peaks{
-        float lastStreamRoomPeak;
-    };
 
-    Peaks getPeaks() const{return peaks;}
 
-    std::vector<Plugin::PluginDescriptor*> getPluginsDescriptors();
+    Peaks getInputPeaks();
+    Peaks getRoomStreamPeaks();
 
-    Audio::Plugin* addPlugin(Plugin::PluginDescriptor* descriptor);
+    std::vector<Audio::PluginDescriptor*> getPluginsDescriptors();
+
+    Audio::Plugin* addPlugin(Audio::PluginDescriptor* descriptor);
     void removePlugin(Audio::Plugin* plugin);
 
+    //tracks
+    void setTrackMute(int trackID, bool muteStatus);
+    bool trackIsMuted(int trackID) const;
+    void setTrackSolo(int trackID, bool soloStatus);
+    void setTrackLevel(int trackID, float level);
+    void setTrackPan(int trackID, float pan);
 private:
-    Audio::Plugin* createPluginInstance(Plugin::PluginDescriptor* descriptor);
+    Audio::Plugin* createPluginInstance(Audio::PluginDescriptor* descriptor);
 
     std::unique_ptr<Audio::AudioDriver> audioDriver;
     std::unique_ptr<Audio::AudioDriverListener> audioDriverListener;
@@ -76,8 +97,12 @@ private:
 
     std::unique_ptr<Audio::AbstractMp3Streamer> roomStreamer;
     Login::AbstractJamRoom* currentStreamRoom;
+
+    std::map<int, Audio::AudioNode*> tracksNodes;
+
+    Peaks inputPeaks;
+    Peaks roomStreamerPeaks;
     //+++++++++++++++++++
-    Peaks peaks;
     //+++++++++++++++++++++++++
     void configureStyleSheet();
 
@@ -86,4 +111,4 @@ private slots:
 
 };
 
-//}
+}

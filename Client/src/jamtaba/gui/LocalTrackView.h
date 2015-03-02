@@ -5,19 +5,26 @@
 #include <QMenu>
 
 class FxPanel;
-class PluginGui;
+
+namespace Audio {
+class Plugin;
+}
+
+namespace Controller {
+    class MainController;
+}
 
 class LocalTrackView : public TrackView
 {
     Q_OBJECT
 public:
-    LocalTrackView(QWidget *parent = 0);
+    LocalTrackView(QWidget *parent, Controller::MainController* mainController);
     ~LocalTrackView();
     void initializeFxPanel(QMenu* fxMenu);
-    void addPlugin(PluginGui* pluginGui);
+    void addPlugin(Audio::Plugin* plugin);
 signals:
-    void editingPlugin(PluginGui* pluginGui);
-    void removingPlugin(PluginGui* pluginGui);
+    void editingPlugin(Audio::Plugin* plugi);
+    void removingPlugin(Audio::Plugin* plugin);
 private:
     FxPanel* fxPanel;
 };

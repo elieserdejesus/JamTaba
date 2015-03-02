@@ -3,24 +3,65 @@
 #include <QDebug>
 #include <QMutexLocker>
 
-using namespace Plugin;
+using namespace Audio;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 PluginDescriptor::PluginDescriptor(QString name, QString group)
-    :name(name), group(group)
+    :name(name), group(group), path("")
 {
 
 }
+
+PluginDescriptor::PluginDescriptor(QString name, QString group, QString path)
+    :name(name), group(group), path(path)
+{
+
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //a function in namespace Plugin to return all descriptors
-std::vector<PluginDescriptor *> Plugin::getDescriptors(){
-    static std::vector<Plugin::PluginDescriptor*> descriptors;
+std::vector<Audio::PluginDescriptor *> Audio::getPluginsDescriptors(){
+    static std::vector<Audio::PluginDescriptor*> descriptors;
     descriptors.clear();
     //+++++++++++++++++
-    descriptors.push_back(new Plugin::PluginDescriptor("Delay", "Jamtaba"));
+    descriptors.push_back(new Audio::PluginDescriptor("Delay", "Jamtaba"));
+
+    descriptors.push_back(new Audio::PluginDescriptor("OldSkool test", "VST", "C:/Program Files (x86)/VSTPlugins/OldSkoolVerb.dll"));
+
     return descriptors;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Plugin::Plugin(QString name, QString file)
+    :name(name), file(file), bypassed(false)
+{
+
+}
+
+Plugin::~Plugin(){
+    qDebug() << "Plugin destructor";
+}
+
+void Plugin::setBypass(bool state){
+    if(state != bypassed){
+        bypassed = state;
+    }
+}
+//++++++++++++++++++++++++++++
+PluginWindow::PluginWindow(QWidget *parent)
+    :QDialog(parent, Qt::WindowTitleHint | Qt::WindowCloseButtonHint)
+{
+    setAttribute( Qt::WA_DeleteOnClose, true );
+    //resize ;
+    //setWindowTitle(pluginGui->getPluginName());
+}
+
+PluginWindow::~PluginWindow()
+{
+    //pluginGui->setParent(nullptr);//avoid delete pluginGui instance
+}
+
+
+//+++++++++++++++++++++++++++++++++++++++++
 const int JamtabaDelay::MAX_DELAY_IN_SECONDS = 3;
 
 JamtabaDelay::JamtabaDelay(int sampleRate)
@@ -79,4 +120,8 @@ void JamtabaDelay::setLevel(float level){
     if(level >= 0){
         this->level = level;
     }
+}
+
+void JamtabaDelay::openEditor(PluginWindow *w, QPoint p){
+
 }

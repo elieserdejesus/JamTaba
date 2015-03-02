@@ -31,33 +31,19 @@ public:
     void reset();
 };
 //++++++++++++++++++++++++++++++++++++++++++++
-class Plugin : public AudioNodeProcessor{
-
-public:
-    Plugin(QString name, QString file);
-    virtual inline QString getName() const {return name;}
-    virtual inline QString getFile() const {return file;}
-    virtual ~Plugin();
-    virtual void setBypass(bool state);
-    inline bool isBypassed() const{return bypassed;}
-private:
-    QString name;
-    QString file;
-    bool bypassed;
-};
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 class AudioNode {
 
 public:
+    AudioNode();
+    virtual ~AudioNode();
+
     virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
     virtual inline void setMuteStatus(bool muted){ this->muted = muted;}
     void inline setSoloStatus(bool soloed){ this->soloed = soloed; }
     inline bool isMuted() const {return muted;}
     inline bool isSoloed() const {return soloed;}
-    AudioNode();
-    virtual ~AudioNode();
+
     virtual bool connect(AudioNode &otherNode) ;
     //virtual bool disconnect(const AudioNode& otherNode);
 

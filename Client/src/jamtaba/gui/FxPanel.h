@@ -5,7 +5,10 @@
 #include <QMenu>
 
 class FxPanelItem;
-class PluginGui;
+
+namespace Audio {
+    class Plugin;
+}
 
 class FxPanel : public QWidget
 {
@@ -14,11 +17,11 @@ class FxPanel : public QWidget
 public:
     explicit FxPanel( QWidget *parent, QMenu* fxMenu);
     ~FxPanel();
-    void addPlugin(PluginGui* pluginGui);
-    void removePlugin(PluginGui* pluginGui);
+    void addPlugin(Audio::Plugin* plugin);
+    void removePlugin(Audio::Plugin* plugin);
 signals:
-    void editingPlugin(PluginGui* pluginGui);
-    void pluginRemoved(PluginGui* pluginGui);
+    void editingPlugin(Audio::Plugin* plugin);
+    void pluginRemoved(Audio::Plugin* plugin);
 protected:
     void paintEvent(QPaintEvent* );
 

@@ -8,7 +8,9 @@ const int PeakMeter::LINES_MARGIN = 4;
 //const QColor PeakMeter::DEFAULT_BORDER_COLOR = QColor(0, 0, 0);
 //const QColor PeakMeter::DEFAULT_BG_COLOR = Qt::gray;
 
-PeakMeter::PeakMeter(QWidget *){
+PeakMeter::PeakMeter(QWidget *)
+    :peak(0), lastUpdate(QDateTime::currentMSecsSinceEpoch())
+{
     gradient = QLinearGradient(0, 0, 0, height()-1);
     gradient.setColorAt(0, Qt::red);
     gradient.setColorAt(0.4, QColor(0, 200, 0));

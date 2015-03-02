@@ -2,9 +2,9 @@
 #include "AudioNode.h"
 #include <QDebug>
 #include "plugins.h"
+#include "../vst/vstplugin.h"
 
 using namespace Audio;
-using namespace Plugin;
 
 AudioMixer::AudioMixer()
 {
@@ -14,6 +14,7 @@ AudioMixer::AudioMixer()
     //disconnect to test
     inputNode->connect(*mainOutNode);
     inputNode->setGain(1);
+
 }
 
 void AudioMixer::addNode(AudioNode &node){
