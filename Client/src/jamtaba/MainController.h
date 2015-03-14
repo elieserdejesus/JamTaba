@@ -23,6 +23,9 @@ namespace Login {
     class AbstractJamRoom;
 }
 
+namespace Vst {
+    class VstHost;
+}
 
 class JamtabaFactory;
 
@@ -103,6 +106,7 @@ private:
     Peaks inputPeaks;
     Peaks roomStreamerPeaks;
     //+++++++++++++++++++
+    Vst::VstHost* vstHost;
     //+++++++++++++++++++++++++
     void configureStyleSheet();
 

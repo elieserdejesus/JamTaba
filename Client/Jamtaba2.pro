@@ -1,4 +1,9 @@
-# Abrir plugins VST - fazer um host. MrWatson: http://teragonaudio.com/article/How-to-make-your-own-VST-host.html
+#Magnus e Doublebass agradeceram pelo esforço e disseram que ter um canal de backing track é muito importante.
+
+# implementar MIDI
+# listagem de VST está lenta no início, algum tipo de cache persistente
+# mostrar plugins nativos
+# trabalhar com VSTi - POrt midi
 # duplo clique no controle de pan não reseta adequadamente
 # quando clico para ouvir uma outra sala não está resetando o plot da sala que eu estava ouvindo
 # Melhorar o visual do Delay, os LineEdit estão grandes demais
@@ -86,7 +91,9 @@ HEADERS += \
     src/jamtaba/gui/FxPanelItem.h \
     src/jamtaba/audio/core/plugins.h \
     src/jamtaba/gui/plugins/guis.h \
-    src/jamtaba/audio/vst/vstplugin.h
+    src/jamtaba/audio/vst/PluginFinder.h \
+    src/jamtaba/audio/vst/VstPlugin.h \
+    src/jamtaba/audio/vst/vsthost.h
 
 
 win32:HEADERS += portaudio/include/pa_asio.h
@@ -131,7 +138,9 @@ SOURCES += \
     src/jamtaba/gui/AudioIODialog.cpp \
     src/jamtaba/gui/MainFrame.cpp \
     src/jamtaba/gui/TrackView.cpp \
-    src/jamtaba/audio/vst/vstplugin.cpp
+    src/jamtaba/audio/vst/PluginFinder.cpp \
+    src/jamtaba/audio/vst/VstPlugin.cpp \
+    src/jamtaba/audio/vst/vsthost.cpp
 
 FORMS += src/jamtaba/gui/mainframe.ui \
     src/jamtaba/gui/audioiodialog.ui \

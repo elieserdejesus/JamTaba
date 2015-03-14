@@ -10,7 +10,8 @@
 
 #include "JamtabaFactory.h"
 #include "audio/core/plugins.h"
-#include "audio/vst/vstplugin.h"
+#include "audio/vst/VstPlugin.h"
+#include "audio/vst/vsthost.h"
 #include "persistence/ConfigStore.h"
 //#include "mainframe.h"
 
@@ -68,7 +69,8 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
       roomStreamer(new Audio::RoomStreamerNode()),
       currentStreamRoom(nullptr),
       inputPeaks(0,0),
-      roomStreamerPeaks(0,0)
+      roomStreamerPeaks(0,0),
+      vstHost(Vst::VstHost::getInstance())
 
 {
 
@@ -89,6 +91,9 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     this->audioMixer->addNode( *this->roomStreamer);
 
     tracksNodes.insert(std::pair<int, Audio::AudioNode*>(1, audioMixer->getLocalInput()));
+
+    vstHost->setSampleRate(audioDriver->getSampleRate());
+    vstHost->setBlockSize(audioDriver->getBufferSize());
 
     //this->addPlugin()
 }
@@ -146,12 +151,14 @@ bool MainController::trackIsMuted(int trackID) const{
 //+++++++++++++++++++++++++++++++++
 
 std::vector<Audio::PluginDescriptor*> MainController::getPluginsDescriptors(){
-    return Audio::getPluginsDescriptors();
+    return Audio::getPluginsDescriptors(this->vstHost);
 }
 
 Audio::Plugin* MainController::addPlugin(Audio::PluginDescriptor *descriptor){
     Audio::Plugin* plugin = createPluginInstance(descriptor);
+    plugin->start(audioDriver->getSampleRate(), audioDriver->getBufferSize());
     this->audioMixer->getLocalInput()->addProcessor(*plugin);
+
     return plugin;
 }
 
@@ -167,7 +174,11 @@ Audio::Plugin *MainController::createPluginInstance(Audio::PluginDescriptor *des
         }
     }
     else if(descriptor->getGroup() == "VST"){
-        return Vst::load(descriptor->getPath());
+        Vst::VstPlugin* vst = new Vst::VstPlugin(this->vstHost);
+        if(vst->load(this->vstHost, descriptor->getPath())){
+            return vst;
+        }
+        return nullptr;
     }
     return nullptr;
 }

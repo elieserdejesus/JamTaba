@@ -54,20 +54,21 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     ui.verticalLayoutLeft->addWidget(localTrackView);
     localTrackView->initializeFxPanel(fxMenu);
 
-    QObject::connect(localTrackView, SIGNAL(editingPlugin(PluginGui*)), this, SLOT(on_editingPlugin(PluginGui*)));
-    QObject::connect(localTrackView, SIGNAL(removingPlugin(PluginGui*)), this, SLOT(on_removingPlugin(PluginGui*)));
+    QObject::connect(localTrackView, SIGNAL(editingPlugin(Audio::Plugin*)), this, SLOT(on_editingPlugin(Audio::Plugin*)));
+    QObject::connect(localTrackView, SIGNAL(removingPlugin(Audio::Plugin*)), this, SLOT(on_removingPlugin(Audio::Plugin*)));
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::on_removingPlugin(Audio::Plugin *plugin){
-//    if(pluginGui->isVisible()){
-//         ((QDialog*)pluginGui->parentWidget())->close();
-//    }
-//    mainController->removePlugin(pluginGui->getPlugin());
-//    pluginGui->deleteLater();
+    PluginWindow* window = PluginWindow::getWindow(this, plugin);
+    if(window){
+        window->close();
+    }
+    mainController->removePlugin(plugin);
+
 }
 
-void MainFrame::on_editingPlugin(Audio::Plugin *pluginGui){
-    //showPluginGui(pluginGui);
+void MainFrame::on_editingPlugin(Audio::Plugin *plugin){
+    showPluginGui(plugin);
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -76,21 +77,22 @@ void MainFrame::on_fxMenuActionTriggered(QAction* action){
     Audio::PluginDescriptor* pluginDescriptor = action->data().value<Audio::PluginDescriptor*>();
     Audio::Plugin* plugin = mainController->addPlugin(pluginDescriptor);
     localTrackView->addPlugin(plugin);
-    PluginWindow* window = new PluginWindow(this);
-    window->show();
-    QPoint p(localTrackView->x() + localTrackView->width(), height()/4);
-    plugin->openEditor(window, mapToGlobal(p));
+    showPluginGui(plugin);
 }
 //++++++++++++++++++++++++++++++++++++
-//void MainFrame::showPluginGui(PluginGui *pluginGui){
-//    if(!pluginGui->isVisible()){
-//        PluginWindow* pluginWindow = new PluginWindow(pluginGui, this);
-//        pluginWindow->show();
-//    }
-//    else{
-//        ((QDialog*)pluginGui->parentWidget())->activateWindow();
-//    }
-//}
+void MainFrame::showPluginGui(Audio::Plugin *plugin){
+    PluginWindow* window = PluginWindow::getWindow(this, plugin);
+
+    if(!window->isVisible()){
+        window->show();//show to generate a window handle, VST plugins use this handle to draw plugin GUI
+        int editorLeft = localTrackView->x() + localTrackView->width();
+        int editorTop = height()/4;
+        plugin->openEditor(window, mapToGlobal(QPoint(editorLeft, editorTop)));
+    }
+    else{
+      window->activateWindow();
+    }
+}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //PluginGui* MainFrame::createPluginView(Plugin::PluginDescriptor* d, Audio::Plugin* plugin){
@@ -112,7 +114,8 @@ QMenu* MainFrame::createFxMenu(){
 
     std::vector<Audio::PluginDescriptor*> plugins = mainController->getPluginsDescriptors();
     for(Audio::PluginDescriptor* pluginDescriptor  : plugins){
-        QAction* action = menu->addAction(QString(pluginDescriptor->getName()));
+        QAction* action = menu->addAction(pluginDescriptor->getName());
+        qDebug() << action->text();
         action->setData(QVariant::fromValue(pluginDescriptor));
     }
 
