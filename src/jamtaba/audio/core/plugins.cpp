@@ -2,6 +2,7 @@
 #include "AudioDriver.h"
 #include <QDebug>
 #include <QMutexLocker>
+#include "../../audio/vst/PluginFinder.h"
 
 using namespace Audio;
 
@@ -20,19 +21,28 @@ PluginDescriptor::PluginDescriptor(QString name, QString group, QString path)
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //a function in namespace Plugin to return all descriptors
-std::vector<Audio::PluginDescriptor *> Audio::getPluginsDescriptors(){
+std::vector<Audio::PluginDescriptor *> Audio::getPluginsDescriptors(Vst::VstHost* host){
     static std::vector<Audio::PluginDescriptor*> descriptors;
     descriptors.clear();
     //+++++++++++++++++
     descriptors.push_back(new Audio::PluginDescriptor("Delay", "Jamtaba"));
 
-    descriptors.push_back(new Audio::PluginDescriptor("OldSkool test", "VST", "C:/Program Files (x86)/VSTPlugins/OldSkoolVerb.dll"));
+    Vst::PluginFinder finder;
+
+    //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
+    QString vstDir = "C:/Program Files (x86)/VSTPlugins/";
+    finder.addPathToScan(vstDir.toStdString());
+    std::vector<Audio::PluginDescriptor*> vstDescriptors = finder.scan(host);
+    //add all vstDescriptors
+    descriptors.insert(descriptors.end(), vstDescriptors.begin(), vstDescriptors.end());
+
+    //descriptors.push_back(new Audio::PluginDescriptor("OldSkool test", "VST", "C:/Program Files (x86)/VSTPlugins/OldSkoolVerb.dll"));
 
     return descriptors;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Plugin::Plugin(QString name, QString file)
-    :name(name), file(file), bypassed(false)
+Plugin::Plugin(QString name)
+    :name(name), bypassed(false)
 {
 
 }
@@ -47,41 +57,71 @@ void Plugin::setBypass(bool state){
     }
 }
 //++++++++++++++++++++++++++++
-PluginWindow::PluginWindow(QWidget *parent)
-    :QDialog(parent, Qt::WindowTitleHint | Qt::WindowCloseButtonHint)
+QMap<Audio::Plugin*, PluginWindow*> PluginWindow::windows;
+
+PluginWindow* PluginWindow::getWindow(QWidget *parent, Audio::Plugin *plugin){
+    PluginWindow* window = nullptr;
+    if(!windows.contains(plugin)){
+        window = new PluginWindow(parent, plugin);
+        windows.insert(plugin, window);
+    }
+    else{
+        window = windows[plugin];
+    }
+    return window;
+}
+
+PluginWindow::PluginWindow(QWidget *parent, Plugin *plugin)
+    :QDialog(parent, Qt::WindowTitleHint | Qt::WindowCloseButtonHint),
+      plugin(plugin)
 {
     setAttribute( Qt::WA_DeleteOnClose, true );
-    //resize ;
-    //setWindowTitle(pluginGui->getPluginName());
+    setWindowTitle(plugin->getName());
 }
 
 PluginWindow::~PluginWindow()
 {
     //pluginGui->setParent(nullptr);//avoid delete pluginGui instance
+    windows.remove(plugin);
 }
 
+//void PluginWindow::setPlugin(Audio::Plugin *plugin){
+//    if(plugin != this->plugin){
+//        this->plugin = plugin;
+//        setWindowTitle(plugin->getName());
+//    }
+//}
 
 //+++++++++++++++++++++++++++++++++++++++++
 const int JamtabaDelay::MAX_DELAY_IN_SECONDS = 3;
 
 JamtabaDelay::JamtabaDelay(int sampleRate)
-    : Plugin("Delay", ""),
+    : Plugin("Delay"),
 
       internalBuffer(new Audio::SamplesBuffer(2, sampleRate  * MAX_DELAY_IN_SECONDS))//2 channels, 3 seconds delay
 
 {
-    delayTimeInSamples = sampleRate/2;//half second
     internalIndex = 0;
     feedbackGain = 0.3;//feedback start in this gain
     level = 1;
-    internalBuffer->setFrameLenght(delayTimeInSamples);
-    this->sampleRate = sampleRate;
+    setSampleRate(sampleRate);
+}
 
+void JamtabaDelay::setSampleRate(int newSampleRate){
+    this->sampleRate = newSampleRate;
+    delayTimeInSamples = this->sampleRate/2;//half second
+    internalBuffer->setFrameLenght(delayTimeInSamples);
 }
 
 JamtabaDelay::~JamtabaDelay(){
     delete internalBuffer;
     //delete mutex;
+}
+
+void JamtabaDelay::start(int sampleRate, int /*bufferSize*/){
+    if(sampleRate != this->sampleRate){
+        setSampleRate(sampleRate);
+    }
 }
 
 void JamtabaDelay::process(Audio::SamplesBuffer &buffer){
@@ -123,5 +163,6 @@ void JamtabaDelay::setLevel(float level){
 }
 
 void JamtabaDelay::openEditor(PluginWindow *w, QPoint p){
-
+    Q_UNUSED(w);
+    Q_UNUSED(p);
 }

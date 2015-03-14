@@ -71,7 +71,7 @@ private:
 
     //PluginGui* createPluginView(Plugin::PluginDescriptor *, Audio::Plugin *plugin) ;
 
-    //void showPluginGui(PluginGui* pluginGui);
+    void showPluginGui(Audio::Plugin* plugin);
 };
 
 

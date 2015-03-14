@@ -18,6 +18,7 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFE
     if(channels == 0){
         throw std::runtime_error(std::string("AudioSamplesBuffer::channels == 0"));
     }
+    qDebug() << "MAX FRAME LENGHT: " << maxFrameLenght;
     //this->sampleRate = sampleRate;
     this->samples = new float*[channels];
     for (unsigned int c = 0; c < channels; ++c) {
@@ -113,24 +114,17 @@ void SamplesBuffer::add(const SamplesBuffer &buffer)
 {
     //QMutexLocker locker(&mutex);
     unsigned int framesToProcess = frameLenght < buffer.frameLenght ? frameLenght : buffer.frameLenght;
-    if(channels == buffer.channels){
+    if( buffer.channels >= channels){
         for (unsigned int c = 0; c < channels; ++c) {
             for (unsigned int s = 0; s < framesToProcess; ++s) {
                 samples[c][s] += buffer.samples[c][s];
             }
         }
     }
-    else{
-        if(!isMono()){//copy every &buffer samples to LR in this buffer
-            for (unsigned int s = 0; s < framesToProcess; ++s) {
-                samples[0][s] += buffer.samples[0][s];
-                samples[1][s] += buffer.samples[0][s];
-            }
-        }
-        else{//this buffer is mono, but the buffer in parameter is not! Mix down the stereo samples in one mono sample value.
-            for (unsigned int s = 0; s < framesToProcess; ++s) {
-                samples[0][s] += (buffer.samples[0][s] + buffer.samples[1][s]) / 2;
-            }
+    else{//samples is stereo and butter is mono
+        for (unsigned int s = 0; s < framesToProcess; ++s) {
+            samples[0][s] += buffer.samples[0][s];
+            samples[1][s] += buffer.samples[0][s];
         }
     }
 }
@@ -181,7 +175,7 @@ void SamplesBuffer::setFrameLenght(unsigned int newFrameLenght){
         return;
     }
     if(newFrameLenght > maxFrameLenght){
-        qCritical("newFrameLenght > maxFrameLenght");
+        qCritical() << "newFrameLenght > maxFrameLenght (" << newFrameLenght << " > " << maxFrameLenght << ")  frameLenght:" << frameLenght;
         newFrameLenght = maxFrameLenght;
     }
 

@@ -28,8 +28,8 @@ FxPanel::FxPanel(QWidget *parent, QMenu *fxMenu) :
     for(int i=0; i < 4; i++){
         FxPanelItem* item = new FxPanelItem(this, fxMenu);
         contentLayout->addWidget(item);
-        QObject::connect(item, SIGNAL(editingPlugin(PluginGui*)), this, SIGNAL(editingPlugin(PluginGui*)));
-        QObject::connect(item, SIGNAL(pluginRemoved(PluginGui*)), this, SIGNAL(pluginRemoved(PluginGui*)));
+        QObject::connect(item, SIGNAL(editingPlugin(Audio::Plugin*)), this, SIGNAL(editingPlugin(Audio::Plugin*)));
+        QObject::connect(item, SIGNAL(pluginRemoved(Audio::Plugin*)), this, SIGNAL(pluginRemoved(Audio::Plugin*)));
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

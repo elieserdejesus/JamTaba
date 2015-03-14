@@ -2,7 +2,7 @@
 #include "AudioNode.h"
 #include <QDebug>
 #include "plugins.h"
-#include "../vst/vstplugin.h"
+#include "../vst/VstPlugin.h"
 
 using namespace Audio;
 
