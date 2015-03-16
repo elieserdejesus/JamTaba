@@ -20,7 +20,7 @@ class AbstractMp3Streamer : public QObject, public AudioNode{
 public:
     explicit AbstractMp3Streamer(Audio::Mp3Decoder* decoder);
     ~AbstractMp3Streamer();
-    virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out);
+    virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out, Midi::MidiBuffer &midiIn);
     virtual void stopCurrentStream();
     virtual void setStreamPath(QString streamPath);
 private:
@@ -48,7 +48,7 @@ public:
     RoomStreamerNode(int bufferTimeInSeconds=3);
     ~RoomStreamerNode();
 
-    virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out);
+    virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out, Midi::MidiBuffer &midiIn);
     //virtual void stopCurrentStream();
 protected:
     void initialize(QString streamPath);
@@ -76,7 +76,7 @@ protected:
 public:
     AudioFileStreamerNode(QString file);
     ~AudioFileStreamerNode();
-    virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out);
+    virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out, Midi::MidiBuffer &midiIn);
 
 };
 
@@ -92,7 +92,7 @@ public:
     ~TestStreamerNode();
     void stopCurrentStream();
     void setStreamPath(QString streamPath);
-    virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out);
+    virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out, Midi::MidiBuffer &midiIn);
 };
 
 }//namespace end

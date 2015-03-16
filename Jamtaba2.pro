@@ -1,6 +1,6 @@
 #Magnus e Doublebass agradeceram pelo esforço e disseram que ter um canal de backing track é muito importante.
 
-# implementar MIDI
+# implementar MIDI - port midi linkada, mas dialogo de IO não está funcionando
 # listagem de VST está lenta no início, algum tipo de cache persistente
 # mostrar plugins nativos
 # trabalhar com VSTi - POrt midi
@@ -93,10 +93,13 @@ HEADERS += \
     src/jamtaba/gui/plugins/guis.h \
     src/jamtaba/audio/vst/PluginFinder.h \
     src/jamtaba/audio/vst/VstPlugin.h \
-    src/jamtaba/audio/vst/vsthost.h
+    src/jamtaba/audio/vst/vsthost.h \
+    src/jamtaba/midi/MidiDriver.h \
+    src/jamtaba/midi/portmididriver.h
 
 
-win32:HEADERS += portaudio/include/pa_asio.h
+win32:HEADERS += portaudio/include/pa_asio.h \
+
 
 SOURCES += \
     $$MAIN \
@@ -140,12 +143,14 @@ SOURCES += \
     src/jamtaba/gui/TrackView.cpp \
     src/jamtaba/audio/vst/PluginFinder.cpp \
     src/jamtaba/audio/vst/VstPlugin.cpp \
-    src/jamtaba/audio/vst/vsthost.cpp
+    src/jamtaba/audio/vst/vsthost.cpp \
+    src/jamtaba/midi/MidiDriver.cpp \
+    src/jamtaba/midi/portmididriver.cpp
 
 FORMS += src/jamtaba/gui/mainframe.ui \
-    src/jamtaba/gui/audioiodialog.ui \
     src/jamtaba/gui/trackview.ui \
     src/jamtaba/gui/jamroomviewpanel.ui \
+    src/jamtaba/gui/IODialog.ui
 
 
 #macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \
@@ -154,12 +159,14 @@ win32:LIBPATH += C:/Qt/Qt5.4.0/Tools/mingw491_32/i686-w64-mingw32/lib/ \
 
 LIBS += -L$$PWD/minimp3/lib/ -lminimp3 \
         -L$$PWD/portaudio/lib/ -lportaudio \
+        -L$$PWD/portmidi/win/ -lportmidi
 
 win32:LIBS += -lwinmm \
               -lole32 \
+              #-L$$PWD/portmidi/win/ -lportmidi
 
 
-win32:PRE_TARGETDEPS += $$PWD/portaudio/lib/libportaudio.a
+win32:PRE_TARGETDEPS += $$PWD/portaudio/lib/libportaudio.a $$PWD/portmidi/win/libportmidi.a
 
 VST_SDK_PATH = "D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x/"
 
@@ -167,9 +174,11 @@ INCLUDEPATH += $$PWD/portaudio/include \
                $$PWD/minimp3/include \
                src/jamtaba/gui \
                src/jamtaba/gui/widgets \
-               $$VST_SDK_PATH
+               $$VST_SDK_PATH \
+               $$PWD/portmidi
 
 DEPENDPATH += $$PWD/portaudio/include \
-              $$PWD/minimp3/include
+              $$PWD/minimp3/include \
+              $$PWD/portmidi
 
 RESOURCES += src/jamtaba/resources/jamtaba.qrc

@@ -1,0 +1,36 @@
+#ifndef PORTMIDIDRIVER_H
+#define PORTMIDIDRIVER_H
+
+#include "MidiDriver.h"
+#include "portmidi.h"
+#include <QList>
+
+namespace Midi {
+
+class PortMidiDriver : public MidiDriver
+{
+public:
+    PortMidiDriver();
+    ~PortMidiDriver();
+
+    // MidiDriver interface
+public:
+    virtual void start();
+    virtual void stop();
+    virtual void release();
+    //virtual void initialize();
+    virtual int getMaxInputDevices() const;
+    virtual const char *getInputDeviceName(int index) const;
+    virtual MidiBuffer getBuffer();
+    //virtual bool hasMessageToRead();
+    //virtual int readMessage();
+
+private:
+    PmDeviceID deviceId;
+    PmStream* stream;
+    //QList<PmEvent> eventQueue;
+};
+
+}
+
+#endif // PORTMIDIDRIVER_H

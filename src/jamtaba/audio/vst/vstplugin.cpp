@@ -4,6 +4,8 @@
 #include <windows.h>
 #include <QDebug>
 #include "../audio/core/AudioDriver.h"
+#include "../midi/MidiDriver.h"
+#include "portmidi.h"
 #include <QDialog>
 #include <QVBoxLayout>
 #include <QDesktopWidget>
@@ -112,56 +114,9 @@ void VstPlugin::start(int sampleRate, int bufferSize){
     effect->dispatcher(effect, effSetSampleRate, 0, 0, NULL, sampleRate);
     effect->dispatcher(effect, effSetBlockSize, 0, bufferSize, NULL, 0.0f);
 
-    bool wantMidi = (effect->dispatcher(effect, effCanDo, 0, 0, (void*)"receiveVstMidiEvent", 0) == 1);
-    //bool wantMidi = (EffCanDo("receiveVstMidiEvent") == 1);
-
-    //VstPinProperties pinProp;
-    //EffGetInputProperties(0,&pinProp);
-
-    //stereo input
-    //bool stereoIn = false;
-    //if(pinProp.flags & kVstPinIsStereo)
-//            stereoIn = true;
-
-    //EffGetOutputProperties(0,&pinProp);
-    //stereo output
-    //bool stereoOut = false;
-    //if(pinProp.flags & kVstPinIsStereo)
-//            stereoOut = true;
+    wantMidi = (effect->dispatcher(effect, effCanDo, 0, 0, (void*)"receiveVstMidiEvent", 0) == 1);
 
     resume();
-    //suspend();
-
-//    if(stereoIn)
-//    {
-//            EffGetInputProperties(0,&pinProp);
-//            EffGetInputProperties(1,&pinProp);
-//    }
-//    if(stereoOut)
-//    {
-//            EffGetOutputProperties(0,&pinProp);
-//            EffGetOutputProperties(1,&pinProp);
-//    }
-
-//    if(bWantMidi)
-//    {
-//            EffGetNumMidiInputChannels();
-//            EffGetNumMidiOutputChannels();
-//    }
-
-//    if(ver>=2000 && ver<2400)
-//    {
-//            EffConnectInput(0,1);
-//            if(stereoIn)
-//                    EffConnectInput(1,1);
-
-//            EffConnectOutput(0,1);
-//            if(stereoOut)
-//                    EffConnectOutput(1,1);
-//    }
-
-//    EffSetProgram(0);
-
 
 }
 
@@ -185,10 +140,41 @@ void VstPlugin::unload(){
     }
 }
 
-void VstPlugin::process(Audio::SamplesBuffer &buffer){
+void VstPlugin::processMidiEvents(Midi::MidiBuffer &midiIn){
+    static int count = 0;
+    if((count++) % 1000 == 0){
+        int channel = 1;
+        int note = qrand() % 48  + 32;
+        int velocity = 127;
+        qint32 data = Pm_Message(0x90+channel, note, velocity);
+        Midi::MidiMessage msg(data, 0);
+        midiIn.addMessage(msg);
+    }
+    int midiMessages = midiIn.getMessagesCount();
+    for (int m = 0; m < midiMessages; ++m) {
+        Midi::MidiMessage message = midiIn.consumeMessage();
+        VstMidiEvent vstEvent;
+        VstEvents events;
+        events.numEvents = 1;
+        vstEvent.type = kVstMidiType;
+        vstEvent.byteSize = sizeof(vstEvent);
+        vstEvent.midiData[0] = Pm_MessageStatus(message.data);
+        vstEvent.midiData[1] = Pm_MessageData1(message.data);
+        vstEvent.midiData[2] = Pm_MessageData2(message.data);
+        events.events[0] = (VstEvent*)&vstEvent;
+        effect->dispatcher(effect, effProcessEvents, 0, 0, (void*)&events, 0);
+    }
+}
+
+void VstPlugin::process(Audio::SamplesBuffer &buffer, Midi::MidiBuffer &midiIn){
     if(isBypassed() || !effect || !internalBuffer){
         return;
     }
+
+    if(wantMidi){
+        processMidiEvents(midiIn);
+    }
+
     internalBuffer->setFrameLenght(buffer.getFrameLenght());
     float** in = buffer.getSamplesArray();
     float** out = internalBuffer->getSamplesArray();
