@@ -5,13 +5,17 @@
 #include <QString>
 #include <QWidget>
 
+namespace Midi   {
+    class MidiBuffer;
+}
+
 namespace Audio{
 
 class SamplesBuffer;
 
 class AudioNodeProcessor{
 public:
-    virtual void process(SamplesBuffer& buffer) = 0;
+    virtual void process(SamplesBuffer& buffer, Midi::MidiBuffer& midiIn) = 0;
     virtual ~AudioNodeProcessor(){}
 };
 
@@ -26,11 +30,13 @@ private:
     int processedSamples;
 public:
     FaderProcessor(float startGain, float endGain, int samplesToFade);
-    virtual void process(SamplesBuffer &buffer);
+    virtual void process(SamplesBuffer &buffer, Midi::MidiBuffer& midiIn);
     bool finished();
     void reset();
 };
 //++++++++++++++++++++++++++++++++++++++++++++
+
+
 
 class AudioNode {
 
@@ -38,7 +44,7 @@ public:
     AudioNode();
     virtual ~AudioNode();
 
-    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
+    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out, Midi::MidiBuffer& midiIn);
     virtual inline void setMuteStatus(bool muted){ this->muted = muted;}
     void inline setSoloStatus(bool soloed){ this->soloed = soloed; }
     inline bool isMuted() const {return muted;}
@@ -109,7 +115,7 @@ public:
 
     // AudioNode interface
 public:
-    void processReplacing(SamplesBuffer &in, SamplesBuffer &out);
+    void processReplacing(SamplesBuffer &in, SamplesBuffer &out, Midi::MidiBuffer& midiIn);
 };
 //++++++++++++++++++
 class LocalInputAudioNode : public AudioNode{
@@ -119,7 +125,7 @@ private:
     //int firstOutputIndex;
 public:
     LocalInputAudioNode(int firstInputIndex=0, bool isMono=true);
-    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
+    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out, Midi::MidiBuffer& midiIn);
 };
 //++++++++++++++++++++++++
 }

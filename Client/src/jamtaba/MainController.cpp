@@ -1,5 +1,6 @@
 #include "MainController.h"
 #include "audio/core/AudioDriver.h"
+#include "midi/portmididriver.h"
 #include "audio/core/PortAudioDriver.h"
 #include "audio/core/AudioMixer.h"
 #include "audio/core/AudioNode.h"
@@ -20,6 +21,7 @@
 #include <QApplication>
 
 using namespace Persistence;
+using namespace Midi;
 
 namespace Controller {
 
@@ -86,6 +88,9 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
                 ConfigStore::getLastSampleRate(), ConfigStore::getLastBufferSize()
                 ));
     audioDriverListener = std::unique_ptr<Controller::AudioListener>( new Controller::AudioListener(this));
+
+    midiDriver = new PortMidiDriver();
+
     QObject::connect(service, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromServer()));
 
     this->audioMixer->addNode( *this->roomStreamer);
@@ -99,7 +104,9 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
 }
 
 void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
-    audioMixer->process(in, out);
+    MidiBuffer midiBuffer = midiDriver->getBuffer();
+    audioMixer->process(in, out, midiBuffer);
+
     //output->processReplacing(in, out);
     //out.add(in);
 
@@ -198,6 +205,7 @@ void MainController::on_disconnectedFromServer(){
 MainController::~MainController()
 {
     this->audioDriver->stop();
+    this->midiDriver->stop();
 }
 
 void MainController::playRoomStream(Login::AbstractJamRoom* room){
@@ -216,6 +224,7 @@ void MainController::start()
 {
     audioDriver->addListener(*audioDriverListener);
     audioDriver->start();
+    midiDriver->start();
 
     NatMap map;
     loginService->connectInServer("elieser teste", 0, "channel", map, 0, "teste env", 44100);
@@ -224,6 +233,7 @@ void MainController::start()
 void MainController::stop()
 {
     this->audioDriver->release();
+    this->midiDriver->release();
     qDebug() << "disconnecting...";
     loginService->disconnect();
 }

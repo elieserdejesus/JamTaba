@@ -4,6 +4,10 @@
 #include <memory>
 #include <QMutex>
 
+namespace Midi {
+class MidiBuffer;
+}
+
 namespace Audio{
 
 class AudioDriverListener;
@@ -196,7 +200,7 @@ class AudioDriverListenerAdapter : public AudioDriverListener
 public:
     virtual void processCallBack(SamplesBuffer&, SamplesBuffer& ){
 //
-    };
+    }
     virtual void driverParametersChanged(){}//invocado quando acontece alguma mudança na configuração de buffer size, por exemplo
     virtual void driverInitialized(){}
     virtual void driverStopped(){}

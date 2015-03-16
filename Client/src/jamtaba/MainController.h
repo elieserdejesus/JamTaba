@@ -16,6 +16,11 @@ namespace Audio {
     class AudioMixer;
 }
 
+namespace Midi{
+    class MidiDriver;
+    class MidiBuffer;
+}
+
 namespace Login {
     class LoginService;
     class LoginServiceParser;
@@ -93,6 +98,8 @@ private:
     Audio::Plugin* createPluginInstance(Audio::PluginDescriptor* descriptor);
 
     std::unique_ptr<Audio::AudioDriver> audioDriver;
+    Midi::MidiDriver* midiDriver;
+
     std::unique_ptr<Audio::AudioDriverListener> audioDriverListener;
     std::unique_ptr<Login::LoginService> loginService;
 

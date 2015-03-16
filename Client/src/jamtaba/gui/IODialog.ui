@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>IODialog</class>
+ <widget class="QDialog" name="IODialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>463</width>
+    <height>466</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Audio I/O</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tabAudio">
+      <attribute name="title">
+       <string>Audio</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QWidget" name="widget" native="true">
+         <widget class="QComboBox" name="comboBufferSize">
+          <property name="geometry">
+           <rect>
+            <x>63</x>
+            <y>279</y>
+            <width>231</width>
+            <height>20</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QLabel" name="sampleRateLabel">
+          <property name="geometry">
+           <rect>
+            <x>1</x>
+            <y>240</y>
+            <width>57</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Sample rate</string>
+          </property>
+         </widget>
+         <widget class="QComboBox" name="comboSampleRate">
+          <property name="geometry">
+           <rect>
+            <x>64</x>
+            <y>240</y>
+            <width>231</width>
+            <height>20</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QComboBox" name="comboAsioDriver">
+          <property name="geometry">
+           <rect>
+            <x>65</x>
+            <y>10</y>
+            <width>231</width>
+            <height>20</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QGroupBox" name="groupBoxOutputs">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>139</y>
+            <width>301</width>
+            <height>81</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Outpus</string>
+          </property>
+          <widget class="QWidget" name="layoutWidget1_2">
+           <property name="geometry">
+            <rect>
+             <x>11</x>
+             <y>21</y>
+             <width>281</width>
+             <height>48</height>
+            </rect>
+           </property>
+           <layout class="QFormLayout" name="formLayout_3">
+            <item row="0" column="0">
+             <widget class="QLabel" name="firstOutputLabel_2">
+              <property name="text">
+               <string>First</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="comboFirstOutput_2"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="lastOutputLabel_2">
+              <property name="text">
+               <string>Last</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="comboLastOutput_2"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+         <widget class="QPushButton" name="okButton">
+          <property name="geometry">
+           <rect>
+            <x>220</x>
+            <y>329</y>
+            <width>75</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>ok</string>
+          </property>
+          <property name="default">
+           <bool>false</bool>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+         <widget class="QLabel" name="asioDriverLabel">
+          <property name="geometry">
+           <rect>
+            <x>4</x>
+            <y>10</y>
+            <width>56</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>ASIO driver</string>
+          </property>
+         </widget>
+         <widget class="QGroupBox" name="groupBoxInputs">
+          <property name="geometry">
+           <rect>
+            <x>1</x>
+            <y>46</y>
+            <width>301</width>
+            <height>81</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Inputs</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+          <widget class="QWidget" name="layoutWidget_2">
+           <property name="geometry">
+            <rect>
+             <x>11</x>
+             <y>21</y>
+             <width>281</width>
+             <height>48</height>
+            </rect>
+           </property>
+           <layout class="QFormLayout" name="formLayout_4">
+            <item row="0" column="0">
+             <widget class="QLabel" name="firstInputLabel_2">
+              <property name="text">
+               <string>First</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="comboFirstInput_2"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="lastInputLabel_2">
+              <property name="text">
+               <string>Last</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="comboLastInput_2"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+         <widget class="QLabel" name="bufferSizeLabel">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>279</y>
+            <width>51</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Buffer size</string>
+          </property>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabMidi">
+      <attribute name="title">
+       <string>MIDI</string>
+      </attribute>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
