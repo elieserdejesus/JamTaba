@@ -15,7 +15,7 @@ class SamplesBuffer;
 
 class AudioNodeProcessor{
 public:
-    virtual void process(SamplesBuffer& buffer, Midi::MidiBuffer& midiIn) = 0;
+    virtual void process(SamplesBuffer& buffer) = 0;
     virtual ~AudioNodeProcessor(){}
 };
 
@@ -30,7 +30,7 @@ private:
     int processedSamples;
 public:
     FaderProcessor(float startGain, float endGain, int samplesToFade);
-    virtual void process(SamplesBuffer &buffer, Midi::MidiBuffer& midiIn);
+    virtual void process(SamplesBuffer &buffer);
     bool finished();
     void reset();
 };
@@ -44,7 +44,7 @@ public:
     AudioNode();
     virtual ~AudioNode();
 
-    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out, Midi::MidiBuffer& midiIn);
+    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
     virtual inline void setMuteStatus(bool muted){ this->muted = muted;}
     void inline setSoloStatus(bool soloed){ this->soloed = soloed; }
     inline bool isMuted() const {return muted;}
@@ -115,7 +115,7 @@ public:
 
     // AudioNode interface
 public:
-    void processReplacing(SamplesBuffer &in, SamplesBuffer &out, Midi::MidiBuffer& midiIn);
+    void processReplacing(SamplesBuffer &in, SamplesBuffer &out);
 };
 //++++++++++++++++++
 class LocalInputAudioNode : public AudioNode{
@@ -125,7 +125,7 @@ private:
     //int firstOutputIndex;
 public:
     LocalInputAudioNode(int firstInputIndex=0, bool isMono=true);
-    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out, Midi::MidiBuffer& midiIn);
+    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
 };
 //++++++++++++++++++++++++
 }

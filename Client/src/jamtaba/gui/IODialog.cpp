@@ -1,5 +1,5 @@
-#include "AudioDialog.h"
-#include "ui_audioiodialog.h"
+#include "IODialog.h"
+#include "ui_IODialog.h"
 
 #include <QDebug>
 #include "../audio/core/AudioDriver.h"
@@ -8,7 +8,7 @@ using namespace Audio;
 
 AudioIODialog::AudioIODialog(AudioDriver* driver, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::AudioIODialog), audioDriver(driver)
+    ui(new Ui::IODialog), audioDriver(driver)
 {
     ui->setupUi(this);
     setModal(true);

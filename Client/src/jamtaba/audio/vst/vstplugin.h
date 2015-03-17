@@ -18,12 +18,12 @@ public:
     void start(int sampleRate, int bufferSize);
     void resume();
     void suspend();
-    virtual void process(Audio::SamplesBuffer &buffer, Midi::MidiBuffer& midiIn);
+    virtual void process(Audio::SamplesBuffer &buffer);
     virtual void openEditor(Audio::PluginWindow *, QPoint p);
     bool load(Vst::VstHost* host, QString path);
 protected:
     void unload();
-    void processMidiEvents(Midi::MidiBuffer& midiIn);
+    //void processMidiEvents(Midi::MidiBuffer& midiIn);
 private:
     bool initPlugin();
     AEffect* effect;

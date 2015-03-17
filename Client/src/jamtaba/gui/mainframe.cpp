@@ -1,6 +1,6 @@
 #include "MainFrame.h"
 #include <QCloseEvent>
-#include "AudioDialog.h"
+#include "IODialog.h"
 #include <QDebug>
 #include <QDesktopWidget>
 #include <QLayout>

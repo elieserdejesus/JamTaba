@@ -1,10 +1,11 @@
 #include "FxPanel.h"
-#include "ui_fxpanel.h"
+//#include "ui_fxpanel.h"
 #include "FxPanelItem.h"
 #include "plugins/guis.h"
 #include <QPainter>
 #include <QScrollArea>
 #include <QVBoxLayout>
+#include <QStyleOption>
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FxPanel::FxPanel(QWidget *parent, QMenu *fxMenu) :
     QWidget(parent),

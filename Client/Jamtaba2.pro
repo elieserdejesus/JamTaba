@@ -1,9 +1,13 @@
 #Magnus e Doublebass agradeceram pelo esforço e disseram que ter um canal de backing track é muito importante.
 
-# implementar MIDI - port midi linkada, mas dialogo de IO não está funcionando
-# listagem de VST está lenta no início, algum tipo de cache persistente
+# Quando botei o reverb depois do B4 ouvi o reverb na entrada do mic mas não no B4, o encadeamento tem problema
+# dialogo de IO do midi
+
+# drummix multi deu problema na mixagem dos canais, acho que só consegui ouvir o bumbo e o vazamendo das outras peças
+# programa fechando com erro, basta abrir e fechar para ver o erro na finalização
+
+#listagem de VST está lenta no início, algum tipo de cache persistente
 # mostrar plugins nativos
-# trabalhar com VSTi - POrt midi
 # duplo clique no controle de pan não reseta adequadamente
 # quando clico para ouvir uma outra sala não está resetando o plot da sala que eu estava ouvindo
 # Melhorar o visual do Delay, os LineEdit estão grandes demais
@@ -83,7 +87,6 @@ HEADERS += \
     src/jamtaba/audio/RoomStreamerNode.h \
     src/jamtaba/audio/codec.h \
     src/jamtaba/gui/LocalTrackView.h \
-    src/jamtaba/gui/AudioDialog.h \
     src/jamtaba/gui/JamRoomViewPanel.h \
     src/jamtaba/gui/MainFrame.h \
     src/jamtaba/gui/TrackView.h \
@@ -95,7 +98,8 @@ HEADERS += \
     src/jamtaba/audio/vst/VstPlugin.h \
     src/jamtaba/audio/vst/vsthost.h \
     src/jamtaba/midi/MidiDriver.h \
-    src/jamtaba/midi/portmididriver.h
+    src/jamtaba/midi/portmididriver.h \
+    src/jamtaba/gui/IODialog.h
 
 
 win32:HEADERS += portaudio/include/pa_asio.h \
@@ -138,14 +142,14 @@ SOURCES += \
     src/jamtaba/audio/codec.cpp \
     src/jamtaba/gui/plugins/guis.cpp \
     src/jamtaba/gui/JamRoomViewPanel.cpp \
-    src/jamtaba/gui/AudioIODialog.cpp \
     src/jamtaba/gui/MainFrame.cpp \
     src/jamtaba/gui/TrackView.cpp \
     src/jamtaba/audio/vst/PluginFinder.cpp \
     src/jamtaba/audio/vst/VstPlugin.cpp \
     src/jamtaba/audio/vst/vsthost.cpp \
     src/jamtaba/midi/MidiDriver.cpp \
-    src/jamtaba/midi/portmididriver.cpp
+    src/jamtaba/midi/portmididriver.cpp \
+    src/jamtaba/gui/IODialog.cpp
 
 FORMS += src/jamtaba/gui/mainframe.ui \
     src/jamtaba/gui/trackview.ui \
