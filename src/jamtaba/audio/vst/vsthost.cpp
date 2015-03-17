@@ -1,9 +1,12 @@
 #include "vsthost.h"
 #include "aeffectx.h"
+#include "../midi/MidiDriver.h"
+#include "portmidi.h"
 
 using namespace Vst;
 
 VstHost* VstHost::hostInstance = nullptr;
+
 
 VstHost* VstHost::getInstance(){
     if(!hostInstance){
@@ -16,12 +19,43 @@ VstHost::VstHost()
     :vstTimeInfo(new VstTimeInfo()),
       sampleRate(0), blockSize(0)
 {
+    this->vstMidiEvents.reserved = 0;
+    this->vstMidiEvents.numEvents = 0;
+    //this->vstMidiEvents.events = new VstEvent*[MAX_EVENTS];
+    for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
+        this->vstMidiEvents.events[i] = (VstEvent*)(new VstMidiEvent);
+    }
+}
 
+const VstEvents* VstHost::getVstMidiEvents() const{
+    return (VstEvents*)&vstMidiEvents;
+}
+
+void VstHost::fillMidiEvents(Midi::MidiBuffer &midiIn){
+    int midiMessages = std::min( midiIn.getMessagesCount(), MAX_MIDI_EVENTS);
+    this->vstMidiEvents.numEvents = midiMessages;
+    for (int m = 0; m < midiMessages; ++m) {
+        Midi::MidiMessage message = midiIn.consumeMessage();
+        VstMidiEvent* vstEvent = (VstMidiEvent*)vstMidiEvents.events[m];
+        vstEvent->type = kVstMidiType;
+        vstEvent->byteSize = sizeof(vstEvent);
+        vstEvent->deltaFrames = 0;
+        vstEvent->midiData[0] = Pm_MessageStatus(message.data);
+        vstEvent->midiData[1] = Pm_MessageData1(message.data);
+        vstEvent->midiData[2] = Pm_MessageData2(message.data);
+        vstEvent->midiData[3] = 0;
+        vstEvent->reserved1 = vstEvent->reserved2 = 0;
+        vstEvent->flags = kVstMidiEventIsRealtime;
+    }
 }
 
 VstHost::~VstHost()
 {
     delete this->vstTimeInfo;
+    for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
+        delete this->vstMidiEvents.events[i];
+    }
+//    delete [] this->vstMidiEvents.events;
 }
 
 void VstHost::setBlockSize(int blockSize){

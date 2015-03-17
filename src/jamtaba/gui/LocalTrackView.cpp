@@ -2,7 +2,7 @@
 #include "ui_trackview.h"
 #include "FxPanel.h"
 #include "FxPanelItem.h"
-#include "ui_fxpanel.h"
+//#include "ui_fxpanel.h"
 #include "plugins/guis.h"
 
 LocalTrackView::LocalTrackView(QWidget* parent, Controller::MainController *mainController)

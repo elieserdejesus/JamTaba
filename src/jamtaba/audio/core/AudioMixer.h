@@ -18,7 +18,7 @@ class AudioMixer
 public:
     AudioMixer();
     ~AudioMixer();
-    void process(SamplesBuffer& in, SamplesBuffer& out, Midi::MidiBuffer& midiIn);
+    void process(SamplesBuffer& in, SamplesBuffer& out);
     void addNode(AudioNode &node);
 
     LocalInputAudioNode* getLocalInput() const{return inputNode;}

@@ -105,7 +105,8 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
 
 void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
     MidiBuffer midiBuffer = midiDriver->getBuffer();
-    audioMixer->process(in, out, midiBuffer);
+    vstHost->fillMidiEvents(midiBuffer);//pass midi events to vst host
+    audioMixer->process(in, out);
 
     //output->processReplacing(in, out);
     //out.add(in);

@@ -29,8 +29,8 @@ std::vector<Audio::PluginDescriptor *> Audio::getPluginsDescriptors(Vst::VstHost
 
     Vst::PluginFinder finder;
 
-    QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
-    //QString vstDir = "C:/Program Files (x86)/VSTPlugins/";
+    //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
+    QString vstDir = "C:/Program Files (x86)/VSTPlugins/";
     finder.addPathToScan(vstDir.toStdString());
     std::vector<Audio::PluginDescriptor*> vstDescriptors = finder.scan(host);
     //add all vstDescriptors
@@ -124,7 +124,7 @@ void JamtabaDelay::start(int sampleRate, int /*bufferSize*/){
     }
 }
 
-void JamtabaDelay::process(Audio::SamplesBuffer &buffer, Midi::MidiBuffer &/*midiIn*/){
+void JamtabaDelay::process(Audio::SamplesBuffer &buffer){
     if(isBypassed()){
         return;
     }

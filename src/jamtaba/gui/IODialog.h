@@ -3,7 +3,7 @@
 #include <QCloseEvent>
 
 namespace Audio{ class AudioDriver;}
-namespace Ui{ class AudioIODialog; }
+namespace Ui{ class IODialog; }
 
 
 //++++++++++++++++++++++++++++++++++
@@ -28,7 +28,7 @@ signals:
     void audioIOPropertiesChanged(int selectedDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
 
 private:
-    Ui::AudioIODialog *ui;
+    Ui::IODialog *ui;
     Audio::AudioDriver* audioDriver;
 
     void populateAsioDriverCombo();

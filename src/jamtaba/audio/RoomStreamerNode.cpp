@@ -42,7 +42,7 @@ void AbstractMp3Streamer::stopCurrentStream(){
     }
 }
 
-void AbstractMp3Streamer::processReplacing(SamplesBuffer &/*in*/, SamplesBuffer &out, Midi::MidiBuffer& midiIn){
+void AbstractMp3Streamer::processReplacing(SamplesBuffer &/*in*/, SamplesBuffer &out){
     QMutexLocker locker(&mutex);
     if(samplesBuffer.empty()){
         return;
@@ -58,7 +58,7 @@ void AbstractMp3Streamer::processReplacing(SamplesBuffer &/*in*/, SamplesBuffer 
     const float* peaks = buffer.getPeaks();
     this->lastPeaks[0] = peaks[0]; this->lastPeaks[1] = peaks[1];
 
-    faderProcessor.process(buffer, midiIn);//aply fade in in stream
+    faderProcessor.process(buffer);//aply fade in in stream
 
     out.add(buffer);
 }
@@ -149,12 +149,12 @@ RoomStreamerNode::~RoomStreamerNode(){
     qDebug() << "RoomStreamerNode destructor!";
 }
 
-void RoomStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out, Midi::MidiBuffer& midiIn){
+void RoomStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out){
     if(buffering){
         lastPeaks[0] = lastPeaks[1] = 0;
         return;
     }
-    AbstractMp3Streamer::processReplacing(in, out, midiIn);
+    AbstractMp3Streamer::processReplacing(in, out);
 }
 
 //++++++++++++++++++
@@ -177,9 +177,9 @@ AudioFileStreamerNode::~AudioFileStreamerNode(){
     //device->deleteLater();
 }
 
-void AudioFileStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out, Midi::MidiBuffer& midiIn){
+void AudioFileStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out){
     decodeBytesFromDevice(this->device, 1024 + 256);
-    AbstractMp3Streamer::processReplacing(in, out, midiIn);
+    AbstractMp3Streamer::processReplacing(in, out);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++/*
 
@@ -198,10 +198,10 @@ void TestStreamerNode::initialize(QString /*streamPath*/){
 
 }
 
-void TestStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out, Midi::MidiBuffer& midiIn){
+void TestStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out){
     if(playing){
         oscilator->processReplacing(in, out);
-        faderProcessor.process(out, midiIn);
+        faderProcessor.process(out);
     }
     const float* peaks = out.getPeaks();
     lastPeaks[0] = peaks[0];

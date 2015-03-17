@@ -26,7 +26,7 @@ void FaderProcessor::reset(){
     currentGain = startGain;
 }
 
-void FaderProcessor::process(SamplesBuffer &buffer, Midi::MidiBuffer &midiIn){
+void FaderProcessor::process(SamplesBuffer &buffer){
     if(finished()){
         return;
     }
@@ -42,17 +42,17 @@ bool FaderProcessor::finished(){
 //++++++++++++++++++++++++
 //+++++++++++++++
 
-void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out, Midi::MidiBuffer& midiIn)
+void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
 {
     internalBuffer->setFrameLenght(out.getFrameLenght());
 
     foreach (AudioNode* node, connections) {
-        node->processReplacing(in, *internalBuffer, midiIn);
+        node->processReplacing(in, *internalBuffer);
     }
 
     //plugins
     foreach (AudioNodeProcessor* processor, processors) {
-        processor->process(*internalBuffer, midiIn);
+        processor->process(*internalBuffer);
     }
     internalBuffer->applyGain(gain, leftGain, rightGain);
 
@@ -128,7 +128,7 @@ void OscillatorAudioNode::processReplacing(SamplesBuffer & /*in*/, SamplesBuffer
 }
 //+++++++++++++++++++++++++++++++++++++++
 
-void MainOutputAudioNode::processReplacing(SamplesBuffer&in, SamplesBuffer& out, Midi::MidiBuffer& midiIn)
+void MainOutputAudioNode::processReplacing(SamplesBuffer&in, SamplesBuffer& out)
 {
     static int soloedBuffersInLastProcess = 0;
     //--------------------------------------
@@ -137,11 +137,11 @@ void MainOutputAudioNode::processReplacing(SamplesBuffer&in, SamplesBuffer& out,
     for (const auto &node : connections) {
         bool canProcess = (!hasSoloedBuffers && !node->isMuted()) || (hasSoloedBuffers && node->isSoloed());
         if(canProcess){
-            node->processReplacing(in, out, midiIn);
+            node->processReplacing(in, out);
         }
         else{
             internalBuffer->setFrameLenght(out.getFrameLenght());
-            node->processReplacing(in, *internalBuffer, midiIn);//discard the samples if node is muted, the internalBuffer is not copyed to out buffer
+            node->processReplacing(in, *internalBuffer);//discard the samples if node is muted, the internalBuffer is not copyed to out buffer
         }
         if(node->isSoloed()){
             soloedBuffersInLastProcess++;
@@ -162,11 +162,11 @@ LocalInputAudioNode::LocalInputAudioNode(int firstInputIndex, bool isMono)
     this->mono = isMono;
 }
 
-void LocalInputAudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out, Midi::MidiBuffer& midiIn)
+void LocalInputAudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
 {
     internalBuffer->setFrameLenght(out.getFrameLenght());
     internalBuffer->set(in);//copy in to internal buffer
-    AudioNode::processReplacing(in, out, midiIn);
+    AudioNode::processReplacing(in, out);
 
 }
 

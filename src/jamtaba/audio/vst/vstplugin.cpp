@@ -140,39 +140,14 @@ void VstPlugin::unload(){
     }
 }
 
-void VstPlugin::processMidiEvents(Midi::MidiBuffer &midiIn){
-    static int count = 0;
-    if((count++) % 1000 == 0){
-        int channel = 1;
-        int note = qrand() % 48  + 32;
-        int velocity = 127;
-        qint32 data = Pm_Message(0x90+channel, note, velocity);
-        Midi::MidiMessage msg(data, 0);
-        midiIn.addMessage(msg);
-    }
-    int midiMessages = midiIn.getMessagesCount();
-    for (int m = 0; m < midiMessages; ++m) {
-        Midi::MidiMessage message = midiIn.consumeMessage();
-        VstMidiEvent vstEvent;
-        VstEvents events;
-        events.numEvents = 1;
-        vstEvent.type = kVstMidiType;
-        vstEvent.byteSize = sizeof(vstEvent);
-        vstEvent.midiData[0] = Pm_MessageStatus(message.data);
-        vstEvent.midiData[1] = Pm_MessageData1(message.data);
-        vstEvent.midiData[2] = Pm_MessageData2(message.data);
-        events.events[0] = (VstEvent*)&vstEvent;
-        effect->dispatcher(effect, effProcessEvents, 0, 0, (void*)&events, 0);
-    }
-}
-
-void VstPlugin::process(Audio::SamplesBuffer &buffer, Midi::MidiBuffer &midiIn){
+void VstPlugin::process(Audio::SamplesBuffer &buffer){
     if(isBypassed() || !effect || !internalBuffer){
         return;
     }
 
     if(wantMidi){
-        processMidiEvents(midiIn);
+        const VstEvents* events = host->getVstMidiEvents();
+        effect->dispatcher(effect, effProcessEvents, 0, 0, (void*)events, 0);
     }
 
     internalBuffer->setFrameLenght(buffer.getFrameLenght());
