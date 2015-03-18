@@ -44,6 +44,39 @@ const QString ConfigStore::KEY_RECORD_PATH = "RECORD/path";
 const QString ConfigStore::KEY_RECORD_STATUS = "RECORD/status";
 
 const QString DEFAULT_RECORD_PATH = "./Recorded Jams";
+
+QString ConfigStore::getSettingsFilePath(){
+    return instance->settings->fileName();
+}
+
+//++++++++++++++++++
+
+void ConfigStore::addVstPlugin(QString pluginPath){
+    static int addedVSTs = 0;
+    instance->settings->beginWriteArray("VSTs");
+    instance->settings->setArrayIndex(addedVSTs++);
+    instance->settings->setValue("path", pluginPath);
+    instance->settings->endArray();
+}
+
+QStringList ConfigStore::getVstPluginsPaths(){
+    int lenght = instance->settings->beginReadArray("VSTs");
+    QStringList list;
+    for (int i = 0; i < lenght; ++i) {
+        instance->settings->setArrayIndex(i);
+        QString path = instance->settings->value("path").toString();
+        list.append(path);
+    }
+    instance->settings->endArray();
+    return list;
+}
+
+
+void ConfigStore::clearVstPaths(){
+    instance->settings->remove("VSTs");
+    instance->settings->sync();
+}
+
 //++++++++++++++++++
 
 
@@ -252,11 +285,11 @@ int ConfigStore::getLastAudioOutput(){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ConfigStore::ConfigStore(){
     //QString propertiesFile = QApplication::applicationDirPath().left(1) + ":/jamtaba.ini";
-    props = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Jamtaba 2", "jamtaba");
+    settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Jamtaba 2", "jamtaba");
 }
 
 ConfigStore::~ConfigStore(){
-    delete props;
+    delete settings;
 }
 
 void ConfigStore::storeSendGain(float preGain) {
@@ -306,10 +339,10 @@ void ConfigStore::storeLastChannelName(QString channelName) {
 
 void ConfigStore::saveProperty(QString key, QVariant value) {
     //qDebug() << "saving property"<< key << "=>" << value;
-    instance->props->setValue(key, value);
+    instance->settings->setValue(key, value);
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QVariant ConfigStore::readProperty(QString key) {
-    return instance->props->value(key);
+    return instance->settings->value(key);
 }

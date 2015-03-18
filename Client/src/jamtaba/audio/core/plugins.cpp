@@ -19,27 +19,22 @@ PluginDescriptor::PluginDescriptor(QString name, QString group, QString path)
 
 }
 
+QString PluginDescriptor::getPluginNameFromPath(QString path){
+    QString name = QFile(path).fileName();
+    int indexOfDirSeparator = name.lastIndexOf("/");
+    if(indexOfDirSeparator >= 0){
+        name = name.right(name.length() - indexOfDirSeparator - 1);
+    }
+    int indexOfPoint = name.lastIndexOf(".");
+    if(indexOfPoint > 0){
+        name = name.left(indexOfPoint);
+    }
+    return name;
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //a function in namespace Plugin to return all descriptors
-std::vector<Audio::PluginDescriptor *> Audio::getPluginsDescriptors(Vst::VstHost* host){
-    static std::vector<Audio::PluginDescriptor*> descriptors;
-    descriptors.clear();
-    //+++++++++++++++++
-    descriptors.push_back(new Audio::PluginDescriptor("Delay", "Jamtaba"));
 
-    Vst::PluginFinder finder;
-
-    //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
-    QString vstDir = "C:/Program Files (x86)/VSTPlugins/";
-    finder.addPathToScan(vstDir.toStdString());
-    std::vector<Audio::PluginDescriptor*> vstDescriptors = finder.scan(host);
-    //add all vstDescriptors
-    descriptors.insert(descriptors.end(), vstDescriptors.begin(), vstDescriptors.end());
-
-    //descriptors.push_back(new Audio::PluginDescriptor("OldSkool test", "VST", "C:/Program Files (x86)/VSTPlugins/OldSkoolVerb.dll"));
-
-    return descriptors;
-}
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Plugin::Plugin(QString name)
     :name(name), bypassed(false)

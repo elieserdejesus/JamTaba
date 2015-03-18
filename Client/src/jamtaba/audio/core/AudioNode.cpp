@@ -139,9 +139,9 @@ void MainOutputAudioNode::processReplacing(SamplesBuffer&in, SamplesBuffer& out)
         if(canProcess){
             node->processReplacing(in, out);
         }
-        else{
+        else{//just discard the samples if node is muted, the internalBuffer is not copyed to out buffer
             internalBuffer->setFrameLenght(out.getFrameLenght());
-            node->processReplacing(in, *internalBuffer);//discard the samples if node is muted, the internalBuffer is not copyed to out buffer
+            node->processReplacing(in, *internalBuffer);
         }
         if(node->isSoloed()){
             soloedBuffersInLastProcess++;
@@ -165,7 +165,7 @@ LocalInputAudioNode::LocalInputAudioNode(int firstInputIndex, bool isMono)
 void LocalInputAudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
 {
     internalBuffer->setFrameLenght(out.getFrameLenght());
-    internalBuffer->set(in);//copy in to internal buffer
+    internalBuffer->set(in);//copy into internal buffer
     AudioNode::processReplacing(in, out);
 
 }

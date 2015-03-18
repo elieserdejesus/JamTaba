@@ -11,9 +11,9 @@
 
 const QString FxPanelItem::NEW_EFFECT_STRING = "new effect...";
 
-FxPanelItem::FxPanelItem(QWidget *parent, QMenu *fxMenu)
+FxPanelItem::FxPanelItem(QWidget *parent)
     :QLabel(parent),
-      fxMenu(fxMenu),
+      fxMenu(nullptr),
       plugin(nullptr)
 {
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -32,6 +32,10 @@ FxPanelItem::FxPanelItem(QWidget *parent, QMenu *fxMenu)
     QObject::connect( this->button, SIGNAL(clicked()), this, SLOT(on_buttonClicked()) );
 
     this->actionsMenu = createActionsMenu();
+}
+
+void FxPanelItem::setFxMenu(QMenu* fxMenu){
+    this->fxMenu = fxMenu;
 }
 
 bool FxPanelItem::pluginIsBypassed(){

@@ -17,6 +17,8 @@
 #include "LocalTrackView.h"
 #include "plugins/guis.h"
 #include "FxPanel.h"
+#include "../audio/vst/PluginFinder.h"
+#include "pluginscandialog.h"
 
 using namespace Audio;
 using namespace Persistence;
@@ -25,7 +27,7 @@ using namespace Controller;
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent)
     : QMainWindow(parent),
-    fxMenu(nullptr), mainController(mainController)
+    fxMenu(nullptr), mainController(mainController), pluginScanDialog(nullptr)
 {
 	ui.setupUi(this);
 
@@ -56,7 +58,26 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 
     QObject::connect(localTrackView, SIGNAL(editingPlugin(Audio::Plugin*)), this, SLOT(on_editingPlugin(Audio::Plugin*)));
     QObject::connect(localTrackView, SIGNAL(removingPlugin(Audio::Plugin*)), this, SLOT(on_removingPlugin(Audio::Plugin*)));
+
+    const Vst::PluginFinder* pluginFinder = mainController->getPluginFinder();
+    QObject::connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(onPluginScanStarted()));
+    QObject::connect(pluginFinder, SIGNAL(scanFinished()), this, SLOT(onPluginScanFinished()));
+    QObject::connect(pluginFinder, SIGNAL(vstPluginFounded(Audio::PluginDescriptor*)), this, SLOT(onPluginFounded(Audio::PluginDescriptor*)));
+
+    //QObject::connect( ui.menuTest, SIGNAL(triggered(QAction*)), this, SLOT(scanTest(QAction*)));
+
+    QStringList vstPaths = ConfigStore::getVstPluginsPaths();
+    if(vstPaths.empty()){//no vsts in database cache, try scan
+        mainController->scanPlugins();
+    }
+    else{//use vsts stored in settings file
+        mainController->initializePluginsList(vstPaths);
+        onPluginScanFinished();
+    }
 }
+
+
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::on_removingPlugin(Audio::Plugin *plugin){
     PluginWindow* window = PluginWindow::getWindow(this, plugin);
@@ -115,7 +136,6 @@ QMenu* MainFrame::createFxMenu(){
     std::vector<Audio::PluginDescriptor*> plugins = mainController->getPluginsDescriptors();
     for(Audio::PluginDescriptor* pluginDescriptor  : plugins){
         QAction* action = menu->addAction(pluginDescriptor->getName());
-        qDebug() << action->text();
         action->setData(QVariant::fromValue(pluginDescriptor));
     }
 
@@ -237,4 +257,35 @@ void MainFrame::on_audioIOPropertiesChanged(int selectedDevice, int firstIn, int
     ConfigStore::storeAudioSettings(firstIn, lastIn, firstOut, lastOut, selectedDevice, selectedDevice, sampleRate, bufferSize);
 }
 
+//plugin finder events
+void MainFrame::onPluginScanStarted(){
+    if(!pluginScanDialog){
+        pluginScanDialog = new PluginScanDialog(this);
+    }
+    pluginScanDialog->show();
+}
 
+void MainFrame::onPluginScanFinished(){
+    if(pluginScanDialog){
+        pluginScanDialog->close();
+    }
+    delete pluginScanDialog;
+    pluginScanDialog = nullptr;
+
+
+    fxMenu = createFxMenu();
+    localTrackView->initializeFxPanel(fxMenu);
+}
+
+void MainFrame::onPluginFounded(Audio::PluginDescriptor* descriptor){
+    if(pluginScanDialog){
+        pluginScanDialog->setText(descriptor->getPath());
+    }
+}
+
+
+
+void MainFrame::on_pushButton_clicked()
+{
+    mainController->scanPlugins();
+}

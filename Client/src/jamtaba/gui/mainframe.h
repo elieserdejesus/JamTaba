@@ -4,6 +4,7 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_mainframe.h"
 #include <QMap>
+#include "pluginscandialog.h"
 
 namespace Controller{
     class MainController;
@@ -20,6 +21,7 @@ namespace Login {
 
 namespace Audio {
 class Plugin;
+class PluginDescriptor;
 }
 
 namespace Plugin {
@@ -43,6 +45,7 @@ public:
     virtual void timerEvent(QTimerEvent *);
 
 private slots:
+
     void on_actionAudio_triggered();
     void on_audioIOPropertiesChanged(int selectedDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
     void on_connectedInServer(QList<Login::AbstractJamRoom*>);
@@ -55,6 +58,13 @@ private slots:
     void on_fxMenuActionTriggered(QAction*);
     void on_editingPlugin(Audio::Plugin* plugin);//emited by LocalTrackView
     void on_removingPlugin(Audio::Plugin* plugin);//emit by LocalTrackView
+
+    //plugin finder
+    void onPluginScanStarted();
+    void onPluginScanFinished();
+    void onPluginFounded(Audio::PluginDescriptor* descriptor);
+    void on_pushButton_clicked();
+
 private:
     Ui::MainFrameClass ui;
 
@@ -63,6 +73,8 @@ private:
     QMap<Login::AbstractJamRoom*, JamRoomViewPanel*> roomViewPanels;
 
     QMenu* createFxMenu();
+
+    PluginScanDialog* pluginScanDialog;
 
     LocalTrackView* localTrackView;
 

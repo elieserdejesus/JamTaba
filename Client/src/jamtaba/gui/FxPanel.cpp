@@ -7,9 +7,9 @@
 #include <QVBoxLayout>
 #include <QStyleOption>
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-FxPanel::FxPanel(QWidget *parent, QMenu *fxMenu) :
+FxPanel::FxPanel(QWidget *parent) :
     QWidget(parent),
-    fxMenu(fxMenu)
+    fxMenu(nullptr)
 {
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(QMargins(2, 2, 2, 2));
@@ -27,12 +27,21 @@ FxPanel::FxPanel(QWidget *parent, QMenu *fxMenu) :
     mainLayout->addWidget(scrollArea);
 
     for(int i=0; i < 4; i++){
-        FxPanelItem* item = new FxPanelItem(this, fxMenu);
+        FxPanelItem* item = new FxPanelItem(this);
+        items.append(item);
         contentLayout->addWidget(item);
         QObject::connect(item, SIGNAL(editingPlugin(Audio::Plugin*)), this, SIGNAL(editingPlugin(Audio::Plugin*)));
         QObject::connect(item, SIGNAL(pluginRemoved(Audio::Plugin*)), this, SIGNAL(pluginRemoved(Audio::Plugin*)));
     }
 }
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void FxPanel::setFxMenu(QMenu *fxMenu){
+    this->fxMenu = fxMenu;
+    foreach (FxPanelItem* item, items) {
+        item->setFxMenu(fxMenu);
+    }
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void FxPanel::addPlugin(Audio::Plugin * plugin){
     QList<FxPanelItem*> items = findChildren<FxPanelItem*>();

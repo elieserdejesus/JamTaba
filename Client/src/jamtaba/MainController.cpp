@@ -14,6 +14,7 @@
 #include "audio/vst/VstPlugin.h"
 #include "audio/vst/vsthost.h"
 #include "persistence/ConfigStore.h"
+#include "../audio/vst/PluginFinder.h"
 //#include "mainframe.h"
 
 #include <QFile>
@@ -72,7 +73,8 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
       currentStreamRoom(nullptr),
       inputPeaks(0,0),
       roomStreamerPeaks(0,0),
-      vstHost(Vst::VstHost::getInstance())
+      vstHost(Vst::VstHost::getInstance()),
+      pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder()))
 
 {
 
@@ -100,7 +102,41 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     vstHost->setSampleRate(audioDriver->getSampleRate());
     vstHost->setBlockSize(audioDriver->getBufferSize());
 
-    //this->addPlugin()
+    //QObject::connect(&*pluginFinder, SIGNAL(scanStarted()), this, SLOT(onPluginScanStarted()));
+    //QObject::connect(&*pluginFinder, SIGNAL(scanFinished()), this, SLOT(onPluginScanFinished()));
+    QObject::connect(&*pluginFinder, SIGNAL(vstPluginFounded(Audio::PluginDescriptor*)), this, SLOT(onPluginFounded(Audio::PluginDescriptor*)));
+
+    //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
+    QString vstDir = "C:/Program Files (x86)/VSTPlugins/";
+    pluginFinder->addPathToScan(vstDir.toStdString());
+    //scanPlugins();
+
+    qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
+}
+
+void MainController::initializePluginsList(QStringList paths){
+    pluginsDescriptors.clear();
+    foreach (QString path, paths) {
+        QFile file(path);
+        if(file.exists()){
+            QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(path);
+            pluginsDescriptors.push_back(new Audio::PluginDescriptor(pluginName, "VST", path));
+        }
+    }
+}
+
+void MainController::scanPlugins(){
+    foreach (Audio::PluginDescriptor* descriptor, pluginsDescriptors) {
+        delete descriptor;
+    }
+    pluginsDescriptors.clear();
+    ConfigStore::clearVstPaths();
+    pluginFinder->scan(vstHost);
+}
+
+void MainController::onPluginFounded(Audio::PluginDescriptor* descriptor){
+    pluginsDescriptors.push_back(descriptor);
+    ConfigStore::addVstPlugin(descriptor->getPath());
 }
 
 void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
@@ -159,7 +195,28 @@ bool MainController::trackIsMuted(int trackID) const{
 //+++++++++++++++++++++++++++++++++
 
 std::vector<Audio::PluginDescriptor*> MainController::getPluginsDescriptors(){
-    return Audio::getPluginsDescriptors(this->vstHost);
+    return pluginsDescriptors;
+    //Audio::getPluginsDescriptors(this->vstHost);
+
+//        static std::vector<Audio::PluginDescriptor*> descriptors;
+//        descriptors.clear();
+//        //+++++++++++++++++
+//        descriptors.push_back(new Audio::PluginDescriptor("Delay", "Jamtaba"));
+
+//        Vst::PluginFinder finder;
+
+//        //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
+//        QString vstDir = "C:/Program Files (x86)/VSTPlugins/";
+//        finder.addPathToScan(vstDir.toStdString());
+//        std::vector<Audio::PluginDescriptor*> vstDescriptors = finder.scan(host);
+//        //add all vstDescriptors
+//        descriptors.insert(descriptors.end(), vstDescriptors.begin(), vstDescriptors.end());
+
+//        //descriptors.push_back(new Audio::PluginDescriptor("OldSkool test", "VST", "C:/Program Files (x86)/VSTPlugins/OldSkoolVerb.dll"));
+
+//        return descriptors;
+
+
 }
 
 Audio::Plugin* MainController::addPlugin(Audio::PluginDescriptor *descriptor){
@@ -207,6 +264,11 @@ MainController::~MainController()
 {
     this->audioDriver->stop();
     this->midiDriver->stop();
+
+    foreach (Audio::PluginDescriptor* descriptor, pluginsDescriptors) {
+        delete descriptor;
+    }
+    pluginsDescriptors.clear();
 }
 
 void MainController::playRoomStream(Login::AbstractJamRoom* room){
