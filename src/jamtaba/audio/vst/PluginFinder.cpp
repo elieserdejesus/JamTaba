@@ -20,24 +20,32 @@ PluginFinder::~PluginFinder()
 
 }
 
-std::vector<Audio::PluginDescriptor*> PluginFinder::scan(Vst::VstHost* host){
-    if(descriptorsCache.empty()){//scan
-        for(std::string scanPath : scanPaths){
-            QDirIterator dirIt(QString(scanPath.c_str()), QDirIterator::Subdirectories);
-            while (dirIt.hasNext()) {
-                dirIt.next();
-                QFileInfo fileInfo (dirIt.filePath());
-                Audio::PluginDescriptor* descriptor = getPluginDescriptor(fileInfo, host);
-                if(descriptor){
-                    descriptorsCache.push_back(descriptor);
-                }
-                //QApplication::processEvents();
+
+void PluginFinder::run(){
+    //parece que está escaneando em outra thread, mas nao abre o diálogo como eu esperava
+    qDebug() << "iniciando scan";
+    emit scanStarted();
+    for(std::string scanPath : scanPaths){
+        QDirIterator dirIt(QString(scanPath.c_str()), QDirIterator::Subdirectories);
+        while (dirIt.hasNext()) {
+            dirIt.next();
+            QFileInfo fileInfo (dirIt.filePath());
+            Audio::PluginDescriptor* descriptor = getPluginDescriptor(fileInfo, host);
+            if(descriptor){
+                emit vstPluginFounded(descriptor);
             }
+            QApplication::processEvents();
         }
     }
+    emit scanFinished();
+}
 
-    //build the result list
-    return descriptorsCache;
+void PluginFinder::scan(Vst::VstHost* host){
+    this->host = host;
+    if(!isRunning()){
+        start();
+        //run();
+    }
 }
 
 //typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
@@ -58,11 +66,7 @@ Audio::PluginDescriptor* PluginFinder::getPluginDescriptor(QFileInfo f, Vst::Vst
     try{
         Vst::VstPlugin plugin(host);
         if(plugin.load(host, f.absoluteFilePath())){
-            QString name = f.fileName();
-            int indexOfPoint = name.lastIndexOf(".");
-            if(indexOfPoint > 0){
-                name = name.left(indexOfPoint);
-            }
+            QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
             return new Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
         }
         return nullptr;

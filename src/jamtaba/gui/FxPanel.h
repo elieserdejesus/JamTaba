@@ -15,10 +15,11 @@ class FxPanel : public QWidget
     Q_OBJECT
 
 public:
-    explicit FxPanel( QWidget *parent, QMenu* fxMenu);
+    explicit FxPanel( QWidget *parent);
     ~FxPanel();
     void addPlugin(Audio::Plugin* plugin);
     void removePlugin(Audio::Plugin* plugin);
+    void setFxMenu(QMenu* fxMenu);
 signals:
     void editingPlugin(Audio::Plugin* plugin);
     void pluginRemoved(Audio::Plugin* plugin);
@@ -27,6 +28,7 @@ protected:
 
 private:
     QMenu* fxMenu;
+    QList<FxPanelItem*> items;
 };
 
 #endif // FXPANEL_H

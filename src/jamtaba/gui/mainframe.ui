@@ -44,6 +44,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>PushButton</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="Line" name="line">
          <property name="autoFillBackground">
           <bool>false</bool>
@@ -212,6 +219,11 @@
   <action name="actionAudio">
    <property name="text">
     <string>Audio</string>
+   </property>
+  </action>
+  <action name="actionTest">
+   <property name="text">
+    <string>test</string>
    </property>
   </action>
  </widget>

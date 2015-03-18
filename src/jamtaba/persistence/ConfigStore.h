@@ -4,6 +4,7 @@
 #include <QString>
 #include <QSettings>
 
+
 namespace Persistence{
 
 class ConfigStore {
@@ -13,7 +14,7 @@ class ConfigStore {
 private:
     ConfigStore();//private construtor
 
-    QSettings* props;
+    QSettings* settings;
 
     static const ConfigStore* instance;// = new ConfigStore();
 
@@ -57,9 +58,16 @@ private:
      static QVariant readProperty(QString key);
 
 public:
+
+     static QString getSettingsFilePath();
+
     static int getLastSampleRate() ;
     static int getLastBufferSize() ;
 
+    //VST
+    static void addVstPlugin(QString pluginPath);
+    static QStringList getVstPluginsPaths();
+    static void clearVstPaths();
 
     //+++++++++++++++++++++++++++++
     static void storeMetronomeSettings(float gain, float pan);

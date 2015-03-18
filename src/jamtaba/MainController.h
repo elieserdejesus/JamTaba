@@ -30,6 +30,7 @@ namespace Login {
 
 namespace Vst {
     class VstHost;
+    class PluginFinder;
 }
 
 class JamtabaFactory;
@@ -94,7 +95,12 @@ public:
     void setTrackSolo(int trackID, bool soloStatus);
     void setTrackLevel(int trackID, float level);
     void setTrackPan(int trackID, float pan);
+
+    const Vst::PluginFinder* getPluginFinder() const{return &*pluginFinder;}
+    void scanPlugins();
+    void initializePluginsList(QStringList paths);
 private:
+
     Audio::Plugin* createPluginInstance(Audio::PluginDescriptor* descriptor);
 
     std::unique_ptr<Audio::AudioDriver> audioDriver;
@@ -114,12 +120,16 @@ private:
     Peaks roomStreamerPeaks;
     //+++++++++++++++++++
     Vst::VstHost* vstHost;
+    std::vector<Audio::PluginDescriptor*> pluginsDescriptors;
+    std::unique_ptr<Vst::PluginFinder> pluginFinder;
     //+++++++++++++++++++++++++
     void configureStyleSheet();
 
 private slots:
     void on_disconnectedFromServer();
-
+    void onPluginScanStarted();
+    void onPluginScanFinished();
+    void onPluginFounded(Audio::PluginDescriptor* descriptor);
 };
 
 }

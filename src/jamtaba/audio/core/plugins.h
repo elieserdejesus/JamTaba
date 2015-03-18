@@ -31,9 +31,10 @@ public:
     inline QString getName() const{return name;}
     inline QString getGroup() const{return group;}
     inline QString getPath() const{return path;}
+
+    static QString getPluginNameFromPath(QString path);
 };
 
-std::vector<PluginDescriptor*> getPluginsDescriptors(Vst::VstHost *host);
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++
 class PluginWindow : public QDialog

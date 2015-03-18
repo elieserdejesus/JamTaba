@@ -29,13 +29,6 @@ VstPlugin::VstPlugin(VstHost* host)
     host(host)
 {
 
-//    this->effect = load(host, lib);
-//    if(effect){
-//        char name[kVstMaxEffectNameLen];
-//        effect->dispatcher(effect, effGetEffectName, 0, 0, name, 0);
-//        this->name = QString(name);
-//        start(44100, 2048);
-//    }
 }
 
 bool VstPlugin::load(VstHost *host, QString path){
@@ -44,7 +37,7 @@ bool VstPlugin::load(VstHost *host, QString path){
 
     if(!pluginLib.load()){
         qCritical() << "não foi possível carregar " << path;
-        return nullptr;
+        return false;
     }
 
     vstPluginFuncPtr entryPoint=0;
@@ -60,6 +53,7 @@ bool VstPlugin::load(VstHost *host, QString path){
     }
     if(!entryPoint) {
         unload();
+        return false;
     }
 
     try
@@ -73,10 +67,12 @@ bool VstPlugin::load(VstHost *host, QString path){
 
     if(!effect) {
         unload();
+        return false;
     }
 
     if (effect->magic != kEffectMagic) {
         unload();
+        return false;
     }
     char name[kVstMaxEffectNameLen];
     effect->dispatcher(effect, effGetEffectName, 0, 0, name, 0);
@@ -101,14 +97,8 @@ void VstPlugin::start(int sampleRate, int bufferSize){
     }
 
     long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
-
+    qDebug() << "Starting " << getName() << " version " << ver;
     internalBuffer = new Audio::SamplesBuffer(effect->numOutputs, host->getBufferSize());
-
-    //bufferSize = host->getBufferSize();
-    //sampleRate = host->getSampleRate();
-
-    //if(!(effect->flags & effFlagsCanDoubleReplacing))
-    //    doublePrecision=false;
 
     effect->dispatcher(effect, effOpen, 0, 0, NULL, 0.0f);
     effect->dispatcher(effect, effSetSampleRate, 0, 0, NULL, sampleRate);
@@ -117,7 +107,6 @@ void VstPlugin::start(int sampleRate, int bufferSize){
     wantMidi = (effect->dispatcher(effect, effCanDo, 0, 0, (void*)"receiveVstMidiEvent", 0) == 1);
 
     resume();
-
 }
 
 VstPlugin::~VstPlugin()
