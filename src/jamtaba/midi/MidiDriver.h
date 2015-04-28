@@ -49,6 +49,8 @@ public:
     virtual int getMaxInputDevices() const = 0;
     virtual const char* getInputDeviceName(int index) const = 0;
     virtual MidiBuffer getBuffer() = 0;
+    virtual int getInputDeviceIndex() const = 0;
+    virtual void setInputDeviceIndex(int index) = 0;
 
     /*
 
@@ -61,8 +63,7 @@ public:
     //virtual int getOutputs() const = 0;
     //virtual int getFirstOutput() const = 0;
 
-    //virtual int getInputDeviceIndex() const = 0;
-    //virtual void setInputDeviceIndex(int index) = 0;
+
 
     //virtual int getOutputDeviceIndex() const = 0;
     //virtual void setOutputDeviceIndex(int index) = 0;

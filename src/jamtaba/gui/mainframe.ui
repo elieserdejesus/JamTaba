@@ -208,22 +208,22 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuAudio">
+   <widget class="QMenu" name="menuPreferences">
     <property name="title">
      <string>Preferences</string>
     </property>
-    <addaction name="actionAudio"/>
+    <addaction name="menuAudioPreferences"/>
    </widget>
-   <addaction name="menuAudio"/>
+   <addaction name="menuPreferences"/>
   </widget>
-  <action name="actionAudio">
-   <property name="text">
-    <string>Audio</string>
-   </property>
-  </action>
   <action name="actionTest">
    <property name="text">
     <string>test</string>
+   </property>
+  </action>
+  <action name="menuAudioPreferences">
+   <property name="text">
+    <string>Audio...</string>
    </property>
   </action>
  </widget>

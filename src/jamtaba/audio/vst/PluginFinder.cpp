@@ -25,8 +25,8 @@ void PluginFinder::run(){
     //parece que está escaneando em outra thread, mas nao abre o diálogo como eu esperava
     qDebug() << "iniciando scan";
     emit scanStarted();
-    for(std::string scanPath : scanPaths){
-        QDirIterator dirIt(QString(scanPath.c_str()), QDirIterator::Subdirectories);
+    for(QString scanPath : scanPaths){
+        QDirIterator dirIt(scanPath, QDirIterator::Subdirectories);
         while (dirIt.hasNext()) {
             dirIt.next();
             QFileInfo fileInfo (dirIt.filePath());
@@ -46,6 +46,10 @@ void PluginFinder::scan(Vst::VstHost* host){
         start();
         //run();
     }
+}
+
+void PluginFinder::clearScanPaths(){
+    scanPaths.clear();
 }
 
 //typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
@@ -77,6 +81,6 @@ Audio::PluginDescriptor* PluginFinder::getPluginDescriptor(QFileInfo f, Vst::Vst
     return nullptr;
 }
 
-void PluginFinder::addPathToScan(std::string path){
+void PluginFinder::addPathToScan(QString path){
     scanPaths.push_back(path);
 }

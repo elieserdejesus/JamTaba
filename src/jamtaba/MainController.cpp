@@ -107,8 +107,8 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     QObject::connect(&*pluginFinder, SIGNAL(vstPluginFounded(Audio::PluginDescriptor*)), this, SLOT(onPluginFounded(Audio::PluginDescriptor*)));
 
     //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
-    QString vstDir = "C:/Program Files (x86)/VSTPlugins/";
-    pluginFinder->addPathToScan(vstDir.toStdString());
+    //QString vstDir = "C:/Program Files (x86)/VSTPlugins/";
+    //pluginFinder->addPathToScan(vstDir.toStdString());
     //scanPlugins();
 
     qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
@@ -130,7 +130,12 @@ void MainController::scanPlugins(){
         delete descriptor;
     }
     pluginsDescriptors.clear();
-    ConfigStore::clearVstPaths();
+    //ConfigStore::clearVstCache();
+    pluginFinder->clearScanPaths();
+    QStringList scanPaths = Persistence::ConfigStore::getVstScanPaths();
+    foreach (QString path, scanPaths) {
+        pluginFinder->addPathToScan(path);
+    }
     pluginFinder->scan(vstHost);
 }
 
@@ -304,6 +309,10 @@ void MainController::stop()
 Audio::AudioDriver *MainController::getAudioDriver() const
 {
     return audioDriver.get();
+}
+
+Midi::MidiDriver* MainController::getMidiDriver() const{
+    return midiDriver;
 }
 
 void MainController::configureStyleSheet(){

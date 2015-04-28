@@ -19,9 +19,37 @@ PortMidiDriver::~PortMidiDriver()
 }
 
 
+int PortMidiDriver::getInputDeviceIndex() const{
+    return deviceId;
+}
+
+void PortMidiDriver::setInputDeviceIndex(int index){
+    int totalDevices = Pm_CountDevices();
+    if(index >= 0 && index < totalDevices){
+        stop();
+        deviceId = pmInvalidDeviceId;
+        int inputIndex = 0;
+        for (int i = 0; i < totalDevices; ++i) {
+            if(Pm_GetDeviceInfo(index)->input > 0 && inputIndex == index){//index is a input device?
+                deviceId = index;
+                break;
+            }
+            inputIndex++;
+        }
+        if(deviceId != pmInvalidDeviceId){
+            start();
+        }
+        else{
+            qCritical() << "não foi possível reinicializar o device MIDI, indice errado";
+        }
+    }
+}
+
 void PortMidiDriver::start(){
     stop();
-    deviceId = Pm_GetDefaultInputDeviceID();
+    if(deviceId == pmInvalidDeviceId){
+        deviceId = Pm_GetDefaultInputDeviceID();
+    }
     if(deviceId != pmInvalidDeviceId){
         const PmDeviceInfo* deviceInfo = Pm_GetDeviceInfo(deviceId);
         if(deviceInfo != NULL){
@@ -65,13 +93,26 @@ void PortMidiDriver::release(){
 }
 
 int PortMidiDriver::getMaxInputDevices() const{
-    return Pm_CountDevices();
+    int totalDevices = Pm_CountDevices();
+    int inputDevices = 0;
+    for (int i = 0; i < totalDevices; ++i) {
+        const PmDeviceInfo* info = Pm_GetDeviceInfo(i);
+        if(info->input > 0){
+            inputDevices++;
+        }
+    }
+    return inputDevices;
 }
 
 const char* PortMidiDriver::getInputDeviceName(int index) const{
-    if(index >= 0 && index < Pm_CountDevices()){
-        const PmDeviceInfo* info = Pm_GetDeviceInfo(index);
-        return info->name;
+    int totalDevices = Pm_CountDevices();
+    int inputIndex = -1;
+    for (int i = 0; i < totalDevices; ++i) {
+        const PmDeviceInfo* info = Pm_GetDeviceInfo(i);
+        if(info->input > 0 && inputIndex == index){
+            return info->name;
+        }
+        inputIndex++;
     }
     return "wrong index";
 }

@@ -22,8 +22,8 @@ public:
     virtual int getMaxInputDevices() const;
     virtual const char *getInputDeviceName(int index) const;
     virtual MidiBuffer getBuffer();
-    //virtual bool hasMessageToRead();
-    //virtual int readMessage();
+    virtual int getInputDeviceIndex() const;
+    virtual void setInputDeviceIndex(int index);
 
 private:
     PmDeviceID deviceId;

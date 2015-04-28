@@ -67,8 +67,12 @@ public:
     //VST
     static void addVstPlugin(QString pluginPath);
     static QStringList getVstPluginsPaths();
-    static void clearVstPaths();
+    static void clearVstCache();
 
+    //VST paths
+    static void addVstScanPath(QString path);
+    static void removeVstScanPath(int index);
+    static QStringList getVstScanPaths();
     //+++++++++++++++++++++++++++++
     static void storeMetronomeSettings(float gain, float pan);
     
