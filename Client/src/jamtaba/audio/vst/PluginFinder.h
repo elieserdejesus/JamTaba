@@ -23,8 +23,9 @@ class PluginFinder : public QThread
 public:
     PluginFinder();
     ~PluginFinder();
-    void addPathToScan(std::string path);
+    void addPathToScan(QString path);
     void scan(Vst::VstHost *host);
+    void clearScanPaths();
 private:
     void run();
 signals:
@@ -32,7 +33,7 @@ signals:
     void scanFinished();
     void vstPluginFounded(Audio::PluginDescriptor* pluginDescriptor);
 private:
-    std::vector<std::string> scanPaths;
+    QList<QString> scanPaths;
     Audio::PluginDescriptor* getPluginDescriptor(QFileInfo f, Vst::VstHost* host);
     Vst::VstHost* host;
 };

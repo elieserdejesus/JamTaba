@@ -1,6 +1,6 @@
 #include "MainFrame.h"
 #include <QCloseEvent>
-#include "IODialog.h"
+#include "PreferencesDialog.h"
 #include <QDebug>
 #include <QDesktopWidget>
 #include <QLayout>
@@ -9,7 +9,8 @@
 #include "JamRoomViewPanel.h"
 #include "../persistence/ConfigStore.h"
 #include "../JamtabaFactory.h"
-#include "../audio/core/PortAudioDriver.h"
+#include "../audio/core/AudioDriver.h"
+#include "../midi/MidiDriver.h"
 #include "../MainController.h"
 #include "../loginserver/LoginService.h"
 #include "../loginserver/JamRoom.h"
@@ -74,6 +75,8 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
         mainController->initializePluginsList(vstPaths);
         onPluginScanFinished();
     }
+
+    QObject::connect(ui.menuAudioPreferences, SIGNAL(triggered()), this, SLOT(on_preferences_triggered()));
 }
 
 
@@ -232,29 +235,32 @@ MainFrame::~MainFrame()
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-//audio preferences
-void MainFrame::on_actionAudio_triggered()
+// preferences menu
+void MainFrame::on_preferences_triggered()
 {
-    PortAudioDriver* driver = (PortAudioDriver*)mainController->getAudioDriver();
+    qDebug() << "disparou acao";;
+    AudioDriver* driver = mainController->getAudioDriver();
     driver->stop();
-    AudioIODialog dialog(driver, this);
-    connect(&dialog, SIGNAL(audioIOPropertiesChanged(int,int,int,int,int,int,int)), this, SLOT(on_audioIOPropertiesChanged(int,int,int,int,int,int,int)));
+    PreferencesDialog dialog(driver, mainController->getMidiDriver(), this);
+    connect(&dialog, SIGNAL(audioIOPropertiesChanged(int, int,int,int,int,int,int,int)), this, SLOT(on_IOPropertiesChanged(int, int,int,int,int,int,int,int)));
     dialog.exec();
     driver->start();
     //audio driver is restarted in on_audioIOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.
 }
 
-void MainFrame::on_audioIOPropertiesChanged(int selectedDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)
+void MainFrame::on_IOPropertiesChanged(int midiDevice, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)
 {
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
 #ifdef _WIN32
-    audioDriver->setProperties(selectedDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
+    audioDriver->setProperties(audioDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
+
 #else
     //preciso de um outro on_audioIoPropertiesChanged que me dê o input e o output device
     //audioDriver->setProperties(selectedDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
 #endif
-
-    ConfigStore::storeAudioSettings(firstIn, lastIn, firstOut, lastOut, selectedDevice, selectedDevice, sampleRate, bufferSize);
+    //TODO setar o midi device selecionado
+    //mainController->getMidiDriver()->
+    ConfigStore::storeAudioSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, audioDevice, sampleRate, bufferSize);
 }
 
 //plugin finder events

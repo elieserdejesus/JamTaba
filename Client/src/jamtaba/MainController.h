@@ -77,6 +77,7 @@ public:
     void stopRoomStream();//stop currentRoom stream
 
     Audio::AudioDriver* getAudioDriver() const;
+    Midi::MidiDriver* getMidiDriver() const;
     Login::LoginService* getLoginService() const;
 
 
@@ -104,7 +105,7 @@ private:
     Audio::Plugin* createPluginInstance(Audio::PluginDescriptor* descriptor);
 
     std::unique_ptr<Audio::AudioDriver> audioDriver;
-    Midi::MidiDriver* midiDriver;
+    Midi::MidiDriver* midiDriver;//TODO use unique_ptr
 
     std::unique_ptr<Audio::AudioDriverListener> audioDriverListener;
     std::unique_ptr<Login::LoginService> loginService;
@@ -127,8 +128,8 @@ private:
 
 private slots:
     void on_disconnectedFromServer();
-    void onPluginScanStarted();
-    void onPluginScanFinished();
+    //void onPluginScanStarted();
+    //void onPluginScanFinished();
     void onPluginFounded(Audio::PluginDescriptor* descriptor);
 };
 

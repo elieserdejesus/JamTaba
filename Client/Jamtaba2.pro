@@ -1,4 +1,9 @@
+
+
 #Magnus e Doublebass agradeceram pelo esforço e disseram que ter um canal de backing track é muito importante.
+
+
+#tela de configuração dos VSTs - listar e salvar a lista de paths nas configurações da aplicação
 
 # Quando botei o reverb depois do B4 ouvi o reverb na entrada do mic mas não no B4, o encadeamento tem problema
 # não estou chamando o startProcess nos Vst
@@ -12,7 +17,7 @@
 #vi que o sampletank 2 retorna 2300 como versão do VST, todos os outros retornam 2400. Talvez tenha algum
     #detalhe diferente na implementação do 2300 para retornar o nome do VST.
 
-#tela para configurar caminhos dos VSTs e escanear
+
 # mostrar plugins nativos
 # duplo clique no controle de pan não reseta adequadamente
 # quando clico para ouvir uma outra sala não está resetando o plot da sala que eu estava ouvindo
@@ -105,9 +110,8 @@ HEADERS += \
     src/jamtaba/audio/vst/vsthost.h \
     src/jamtaba/midi/MidiDriver.h \
     src/jamtaba/midi/portmididriver.h \
-    src/jamtaba/gui/IODialog.h \
-    src/jamtaba/gui/vstpathsdialog.h \
-    src/jamtaba/gui/pluginscandialog.h
+    src/jamtaba/gui/pluginscandialog.h \
+    src/jamtaba/gui/PreferencesDialog.h
 
 
 win32:HEADERS += portaudio/include/pa_asio.h \
@@ -157,16 +161,14 @@ SOURCES += \
     src/jamtaba/audio/vst/vsthost.cpp \
     src/jamtaba/midi/MidiDriver.cpp \
     src/jamtaba/midi/portmididriver.cpp \
-    src/jamtaba/gui/IODialog.cpp \
-    src/jamtaba/gui/vstpathsdialog.cpp \
-    src/jamtaba/gui/pluginscandialog.cpp
+    src/jamtaba/gui/PreferencesDialog.cpp \
+    src/jamtaba/gui/PluginScanDialog.cpp
 
 FORMS += src/jamtaba/gui/mainframe.ui \
     src/jamtaba/gui/trackview.ui \
     src/jamtaba/gui/jamroomviewpanel.ui \
-    src/jamtaba/gui/IODialog.ui \
-    src/jamtaba/gui/vstpathsdialog.ui \
-    src/jamtaba/gui/pluginscandialog.ui
+    src/jamtaba/gui/pluginscandialog.ui \
+    src/jamtaba/gui/PreferencesDialog.ui
 
 
 #macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \
