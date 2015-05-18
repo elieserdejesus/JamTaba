@@ -33,6 +33,8 @@ private slots:
 
     void on_buttonScanVSTs_clicked();
 
+    //void on_okButton_clicked();
+
 signals:
     void ioChanged(int selectedMidiDevice, int selectedAudioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
 private:

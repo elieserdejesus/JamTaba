@@ -1,10 +1,11 @@
 #Magnus e Doublebass agradeceram pelo esforço e disseram que ter um canal de backing track é muito importante.
 
+
+#dialogo de IO do midi - testar novamente, ver se a seleção do midi device está funcionando
+
 # Quando botei o reverb depois do B4 ouvi o reverb na entrada do mic mas não no B4, o encadeamento tem problema
 # não estou chamando o startProcess nos Vst
 
-
-#dialogo de IO do midi - testar novamente, talvez mostrar uma mensagem quando não tiver devices
 
 
 # drummix multi deu problema na mixagem dos canais, acho que só consegui ouvir o bumbo e o vazamendo das outras peças
@@ -161,11 +162,12 @@ SOURCES += \
     src/jamtaba/gui/PreferencesDialog.cpp \
     src/jamtaba/gui/PluginScanDialog.cpp
 
-FORMS += src/jamtaba/gui/mainframe.ui \
-    src/jamtaba/gui/trackview.ui \
-    src/jamtaba/gui/jamroomviewpanel.ui \
-    src/jamtaba/gui/pluginscandialog.ui \
-    src/jamtaba/gui/PreferencesDialog.ui
+FORMS += \
+    src/jamtaba/gui/PreferencesDialog.ui \
+    src/jamtaba/gui/TrackView.ui \
+    src/jamtaba/gui/PluginScanDialog.ui \
+    src/jamtaba/gui/MainFrame.ui \
+    src/jamtaba/gui/JamRoomViewPanel.ui
 
 
 #macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \
