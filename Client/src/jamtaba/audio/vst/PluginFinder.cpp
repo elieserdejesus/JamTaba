@@ -22,8 +22,6 @@ PluginFinder::~PluginFinder()
 
 
 void PluginFinder::run(){
-    //parece que está escaneando em outra thread, mas nao abre o diálogo como eu esperava
-    qDebug() << "iniciando scan";
     emit scanStarted();
     for(QString scanPath : scanPaths){
         QDirIterator dirIt(scanPath, QDirIterator::Subdirectories);

@@ -66,7 +66,6 @@ private slots:
     void on_pushButton_clicked();
 
 private:
-    Ui::MainFrameClass ui;
 
     int timerID;
 
@@ -80,6 +79,8 @@ private:
 
     QMenu* fxMenu;
     Controller::MainController* mainController;
+
+    Ui::MainFrameClass ui;
 
     //PluginGui* createPluginView(Plugin::PluginDescriptor *, Audio::Plugin *plugin) ;
 

@@ -241,7 +241,7 @@ void MainFrame::on_preferences_triggered()
     qDebug() << "disparou acao";;
     AudioDriver* driver = mainController->getAudioDriver();
     driver->stop();
-    PreferencesDialog dialog(driver, mainController->getMidiDriver(), this);
+    PreferencesDialog dialog(mainController, this);
     connect(&dialog, SIGNAL(audioIOPropertiesChanged(int, int,int,int,int,int,int,int)), this, SLOT(on_IOPropertiesChanged(int, int,int,int,int,int,int,int)));
     dialog.exec();
     driver->start();
