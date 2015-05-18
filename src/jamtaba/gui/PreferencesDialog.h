@@ -3,8 +3,9 @@
 #include <QCloseEvent>
 
 namespace Audio {    class AudioDriver; }
-namespace Ui    {       class IODialog; }
+namespace Ui    {    class IODialog; }
 namespace Midi  {    class MidiDriver;  }
+namespace Controller{class MainController; }
 
 //++++++++++++++++++++++++++++++++++
 class PreferencesDialog : public QDialog
@@ -12,7 +13,7 @@ class PreferencesDialog : public QDialog
     Q_OBJECT
 
 public:
-    PreferencesDialog(Audio::AudioDriver* audioDriver, Midi::MidiDriver* midiDriver, QWidget *parent = 0);
+    PreferencesDialog(Controller::MainController* mainController, QWidget *parent = 0);
     ~PreferencesDialog();
    // virtual void closeEvent(QCloseEvent *);
 
@@ -28,12 +29,15 @@ private slots:
     void on_buttonAddVstPath_clicked();
     void on_buttonRemoveVstPathClicked();
 
+    void on_buttonClearVstCache_clicked();
+
+    void on_buttonScanVSTs_clicked();
+
 signals:
     void ioChanged(int selectedMidiDevice, int selectedAudioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
 private:
     Ui::IODialog *ui;
-    Audio::AudioDriver* audioDriver;
-    Midi::MidiDriver* midiDriver;
+    Controller::MainController* mainController;
 
     //AUDIO
     void populateAsioDriverCombo();

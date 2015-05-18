@@ -1,8 +1,6 @@
 #Magnus e Doublebass agradeceram pelo esforço e disseram que ter um canal de backing track é muito importante.
 
-# escanear VSts usando a lista de paths
-
-# limpar cache de VSTs
+#adicionar o diretório dos VSTs na lista de paths se a lista estiver vazia
 
 #limpar os erros de execução, acho que tem problemas com os slots
 

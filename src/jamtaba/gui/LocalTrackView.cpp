@@ -18,23 +18,27 @@ void LocalTrackView::addPlugin(Audio::Plugin* plugin){
 }
 
 void LocalTrackView::initializeFxPanel(QMenu *fxMenu){
-    if(!fxPanel){
-        fxPanel = new FxPanel(this);
-        fxPanel->connect(fxPanel, SIGNAL(editingPlugin(Audio::Plugin*)), this, SIGNAL(editingPlugin(Audio::Plugin*)));
-        fxPanel->connect(fxPanel, SIGNAL(pluginRemoved(Audio::Plugin*)), this, SIGNAL(removingPlugin(Audio::Plugin*)));
+    if(fxMenu && !fxMenu->isEmpty()){
+        if(!fxPanel){
+            fxPanel = new FxPanel(this);
+            fxPanel->connect(fxPanel, SIGNAL(editingPlugin(Audio::Plugin*)), this, SIGNAL(editingPlugin(Audio::Plugin*)));
+            fxPanel->connect(fxPanel, SIGNAL(pluginRemoved(Audio::Plugin*)), this, SIGNAL(removingPlugin(Audio::Plugin*)));
 
-        int index = ui->mainLayout->indexOf(ui->panSectionSeparator);
+            int index = ui->mainLayout->indexOf(ui->panSectionSeparator);
 
-        ui->mainLayout->insertWidget( index+1, fxPanel);
+            ui->mainLayout->insertWidget( index+1, fxPanel);
 
-        //add separator after effects panel
-        QFrame* separator = new QFrame(this);
-        separator->setObjectName(QStringLiteral("FX separator"));
-        separator->setFrameShape(QFrame::HLine);
-        separator->setFrameShadow(QFrame::Sunken);
-        ui->mainLayout->insertWidget(index + 2, separator);
+            //add separator after effects panel
+            QFrame* separator = new QFrame(this);
+            separator->setObjectName(QStringLiteral("FX separator"));
+            separator->setFrameShape(QFrame::HLine);
+            separator->setFrameShadow(QFrame::Sunken);
+            ui->mainLayout->insertWidget(index + 2, separator);
+
+
+        }
+        fxPanel->setFxMenu(fxMenu);
     }
-    fxPanel->setFxMenu(fxMenu);
 }
 
 LocalTrackView::~LocalTrackView()

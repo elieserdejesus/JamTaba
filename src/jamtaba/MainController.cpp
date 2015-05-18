@@ -111,7 +111,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     //pluginFinder->addPathToScan(vstDir.toStdString());
     //scanPlugins();
 
-    qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
+    //qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
 }
 
 void MainController::initializePluginsList(QStringList paths){

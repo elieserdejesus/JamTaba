@@ -6,26 +6,28 @@
 #include "../audio/core/AudioDriver.h"
 #include "../midi/MidiDriver.h"
 #include "../persistence/ConfigStore.h"
+#include "../MainController.h"
 
 using namespace Audio;
+using namespace Controller;
 
-PreferencesDialog::PreferencesDialog(AudioDriver* driver, Midi::MidiDriver *midiDriver, QWidget *parent) :
+PreferencesDialog::PreferencesDialog(Controller::MainController* mainController, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::IODialog), audioDriver(driver), midiDriver(midiDriver)
+    ui(new Ui::IODialog), mainController(mainController)
 {
     ui->setupUi(this);
     setModal(true);
 
-    //audio
     //populateAudioTab();
 
-    //midi
     //populateMidiInputCombo();
+
     ui->prefsTab->setCurrentIndex(0);
     populateAudioTab();
 }
 
 void PreferencesDialog::populateMidiInputCombo(){
+    Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
     int maxDevices = midiDriver->getMaxInputDevices();
     for (int i = 0; i < maxDevices; ++i) {
         ui->comboMidiInput->addItem( QString( midiDriver->getInputDeviceName(i)));
@@ -64,7 +66,8 @@ PreferencesDialog::~PreferencesDialog()
 
 void PreferencesDialog::populateAsioDriverCombo()
 {
-    int devices = this->audioDriver->getDevicesCount();
+    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
+    int devices = audioDriver->getDevicesCount();
     ui->comboAsioDriver->clear();
     for(int d=0; d < devices; d++){
         ui->comboAsioDriver->addItem(audioDriver->getInputDeviceName(d), d);//using device index as userData in comboBox
@@ -77,6 +80,7 @@ void PreferencesDialog::populateAsioDriverCombo()
 void PreferencesDialog::populateFirstInputCombo()
 {
     ui->comboFirstInput->clear();
+    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     int maxInputs = 2;//portAudioDriver->getMaxInputs();
     for(int i=0; i < maxInputs; i++){
         ui->comboFirstInput->addItem( audioDriver->getInputChannelName(i), i );
@@ -92,6 +96,7 @@ void PreferencesDialog::populateFirstInputCombo()
 void PreferencesDialog::populateLastInputCombo()
 {
     ui->comboLastInput->clear();
+    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     int maxInputs = 2;//portAudioDriver->getMaxInputs();
     int currentFirstInput = ui->comboFirstInput->currentData().toInt();
     int items = 0;
@@ -111,6 +116,7 @@ void PreferencesDialog::populateLastInputCombo()
 void PreferencesDialog::populateFirstOutputCombo()
 {
     ui->comboFirstOutput->clear();
+    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     int maxOuts = 2;//portAudioDriver->getMaxOutputs();
     for(int i=0; i < maxOuts; i++){
         ui->comboFirstOutput->addItem( audioDriver->getOutputChannelName(i), i );
@@ -128,6 +134,7 @@ void PreferencesDialog::populateLastOutputCombo()
     }
     int items = 0;
     const int MAX_ITEMS = maxOuts - currentFirstOut;
+    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     for(int i=currentFirstOut; items < MAX_ITEMS; i++, items++){
         ui->comboLastOutput->addItem( audioDriver->getOutputChannelName(i), i);
     }
@@ -144,6 +151,7 @@ void PreferencesDialog::populateSampleRateCombo()
     ui->comboSampleRate->addItem("96000", 96000);
     ui->comboSampleRate->addItem("192000", 192000);
 
+    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     ui->comboSampleRate->setCurrentText(QString::number( audioDriver->getSampleRate()));
 }
 
@@ -156,6 +164,7 @@ void PreferencesDialog::populateBufferSizeCombo()
     ui->comboBufferSize->addItem("512", 512);
     ui->comboBufferSize->addItem("1024", 1024);
     ui->comboBufferSize->addItem("2048", 2048);
+    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     ui->comboBufferSize->setCurrentText(QString::number(audioDriver->getBufferSize()));
     //ui->comboBufferSize->addItem("4096", 4096);
 }
@@ -165,6 +174,7 @@ void PreferencesDialog::populateBufferSizeCombo()
 void PreferencesDialog::on_comboAsioDriver_activated(int index)
 {
     int deviceIndex = ui->comboAsioDriver->itemData(index).toInt();
+    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     audioDriver->setInputDeviceIndex(deviceIndex);
 #ifdef _WIN32
     audioDriver->setOutputDeviceIndex(deviceIndex);
@@ -182,6 +192,7 @@ void PreferencesDialog::on_comboFirstInput_currentIndexChanged(int /*index*/)
 void PreferencesDialog::on_comboFirstOutput_currentIndexChanged(int /*index*/)
 {
     populateLastOutputCombo();
+    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     ui->groupBoxOutputs->setEnabled(audioDriver->getMaxOutputs() > 2);
 }
 
@@ -274,3 +285,15 @@ void PreferencesDialog::addVstScanPath(QString path){
 //}
 
 
+
+void PreferencesDialog::on_buttonClearVstCache_clicked()
+{
+    Persistence::ConfigStore::clearVstCache();
+}
+
+void PreferencesDialog::on_buttonScanVSTs_clicked()
+{
+    if(mainController){
+        mainController->scanPlugins();
+    }
+}
