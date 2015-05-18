@@ -30,6 +30,7 @@ void TrackView::setPeaks(float left, float right){
 bool TrackView::eventFilter(QObject *source, QEvent *ev){
     if(ev->type() == QEvent::MouseButtonDblClick){
         if(source == ui->panSlider){
+
             ui->panSlider->setValue(0);//center
         }
         if(source == ui->levelSlider){
@@ -39,7 +40,9 @@ bool TrackView::eventFilter(QObject *source, QEvent *ev){
             ui->transmitGainSlider->setValue(100);
         }
     }
-    return QWidget::eventFilter(source, ev);
+    else{
+        return QWidget::eventFilter(source, ev);
+    }
 }
 
 TrackView::~TrackView()
