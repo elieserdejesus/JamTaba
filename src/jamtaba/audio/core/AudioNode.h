@@ -80,9 +80,10 @@ private:
     float gain;
 
     //pan
+    float pan;
     float leftGain;
     float rightGain;
-    float pan;
+
 
 
 	static const double root2Over2;// = 1.414213562373095;// *0.5;

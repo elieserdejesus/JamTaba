@@ -76,7 +76,7 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
         onPluginScanFinished();
     }
 
-    QObject::connect(ui.menuAudioPreferences, SIGNAL(triggered()), this, SLOT(on_preferences_triggered()));
+    QObject::connect(ui.menuAudioPreferences, SIGNAL(triggered()), this, SLOT(on_preferencesClicked()));
 }
 
 
@@ -196,7 +196,7 @@ void MainFrame::changeEvent(QEvent *ev){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::closeEvent(QCloseEvent *)
  {
-    qDebug() << "MainFrame::closeEvent";
+    //qDebug() << "MainFrame::closeEvent";
     if(mainController != NULL){
         mainController->stop();
     }
@@ -236,7 +236,7 @@ MainFrame::~MainFrame()
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 // preferences menu
-void MainFrame::on_preferences_triggered()
+void MainFrame::on_preferencesClicked()
 {
     qDebug() << "disparou acao";;
     AudioDriver* driver = mainController->getAudioDriver();
@@ -248,7 +248,7 @@ void MainFrame::on_preferences_triggered()
     //audio driver is restarted in on_audioIOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.
 }
 
-void MainFrame::on_IOPropertiesChanged(int midiDevice, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)
+void MainFrame::on_IOPropertiesChanged(int /*midiDevice*/, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)
 {
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
 #ifdef _WIN32
@@ -291,7 +291,4 @@ void MainFrame::onPluginFounded(Audio::PluginDescriptor* descriptor){
 
 
 
-void MainFrame::on_pushButton_clicked()
-{
-    mainController->scanPlugins();
-}
+

@@ -46,7 +46,7 @@ public:
 
 private slots:
 
-    void on_preferences_triggered();
+    void on_preferencesClicked();
     void on_IOPropertiesChanged(int midiDevice, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
     void on_connectedInServer(QList<Login::AbstractJamRoom*>);
 
@@ -63,7 +63,7 @@ private slots:
     void onPluginScanStarted();
     void onPluginScanFinished();
     void onPluginFounded(Audio::PluginDescriptor* descriptor);
-    void on_pushButton_clicked();
+
 
 private:
 
@@ -72,15 +72,11 @@ private:
     QMap<Login::AbstractJamRoom*, JamRoomViewPanel*> roomViewPanels;
 
     QMenu* createFxMenu();
-
-    PluginScanDialog* pluginScanDialog;
-
-    LocalTrackView* localTrackView;
-
     QMenu* fxMenu;
     Controller::MainController* mainController;
-
+    PluginScanDialog* pluginScanDialog;
     Ui::MainFrameClass ui;
+    LocalTrackView* localTrackView;
 
     //PluginGui* createPluginView(Plugin::PluginDescriptor *, Audio::Plugin *plugin) ;
 

@@ -7,6 +7,7 @@
 #include "VstPlugin.h"
 #include "vsthost.h"
 #include <QApplication>
+#include <QSettings>
 
 using namespace Vst;
 
@@ -49,6 +50,7 @@ void PluginFinder::scan(Vst::VstHost* host){
 void PluginFinder::clearScanPaths(){
     scanPaths.clear();
 }
+
 
 //typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
 

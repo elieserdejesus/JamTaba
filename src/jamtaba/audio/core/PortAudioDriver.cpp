@@ -29,7 +29,7 @@ PortAudioDriver::PortAudioDriver(int inputDeviceIndex, int outputDeviceIndex, in
 
 void PortAudioDriver::initPortAudio(int inputDeviceIndex, int outputDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize)
 {
-    qDebug() << "initializing portaudio...";
+    //qDebug() << "initializing portaudio...";
     PaError error = Pa_Initialize();
     if (error != paNoError){
         qDebug() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
@@ -82,7 +82,7 @@ void PortAudioDriver::initPortAudio(int inputDeviceIndex, int outputDeviceIndex,
 
 PortAudioDriver::~PortAudioDriver()
 {
-    qDebug() << "destrutor PortAudioDriver";
+    //qDebug() << "destrutor PortAudioDriver";
 }
 
 
@@ -132,7 +132,7 @@ int portaudioCallBack(const void *inputBuffer, void *outputBuffer,
 void PortAudioDriver::start(){
     stop();
 
-    qDebug() << "recreating portaudio buffers...";
+    //qDebug() << "recreating portaudio buffers...";
 
     int maxOutputs = Pa_GetDeviceInfo(outputDeviceIndex)->maxOutputChannels;
     int maxInputs = Pa_GetDeviceInfo(inputDeviceIndex)->maxInputChannels;

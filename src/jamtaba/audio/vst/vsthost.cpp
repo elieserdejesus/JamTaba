@@ -66,8 +66,8 @@ void VstHost::setSampleRate(int sampleRate){
     this->sampleRate = sampleRate;
 }
 
-VstIntPtr VSTCALLBACK VstHost::hostCallback(AEffect *effect, VstInt32 opcode,
-  VstInt32 index, VstInt32 value, void *ptr, float opt)
+VstIntPtr VSTCALLBACK VstHost::hostCallback(AEffect */*effect*/, VstInt32 opcode,
+  VstInt32 /*index*/, VstInt32 /*value*/, void *ptr, float /*opt*/)
 {
     //long retValue = 0L;
     const char* str;
@@ -124,7 +124,7 @@ VstIntPtr VSTCALLBACK VstHost::hostCallback(AEffect *effect, VstInt32 opcode,
 
             //ignore the rest
             qDebug() << "host can't do"<<str;
-            return 0L;
-    }
 
+    }
+    return 0L;
 }

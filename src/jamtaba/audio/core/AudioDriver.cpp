@@ -18,7 +18,7 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFE
     if(channels == 0){
         throw std::runtime_error(std::string("AudioSamplesBuffer::channels == 0"));
     }
-    qDebug() << "MAX FRAME LENGHT: " << maxFrameLenght;
+
     //this->sampleRate = sampleRate;
     this->samples = new float*[channels];
     for (unsigned int c = 0; c < channels; ++c) {

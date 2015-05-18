@@ -170,7 +170,7 @@ extern "C" {
     }
 }
 */
-void VstPlugin::openEditor(Audio::PluginWindow *w, QPoint p){
+void VstPlugin::openEditor(Audio::PluginWindow *w, QPoint /*p*/){
 
 
     if(!effect ){
