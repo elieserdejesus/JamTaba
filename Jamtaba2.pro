@@ -1,28 +1,25 @@
-#Magnus e Doublebass agradeceram pelo esforço e disseram que ter um canal de backing track é muito importante.
-
 
 #dialogo de IO do midi - testar novamente, ver se a seleção do midi device está funcionando
 
+# programa fechando com erro, basta abrir e fechar para ver o erro na finalização. Quando testei sem nenhum device midi conectado não de problema. Então parece ser a portmidi.
+
 # Quando botei o reverb depois do B4 ouvi o reverb na entrada do mic mas não no B4, o encadeamento tem problema
-# não estou chamando o startProcess nos Vst
 
-
+# não estou chamando o startProcess nos VSTs
 
 # drummix multi deu problema na mixagem dos canais, acho que só consegui ouvir o bumbo e o vazamendo das outras peças
 
-# programa fechando com erro, basta abrir e fechar para ver o erro na finalização. Quando testei sem nenhum device midi conectado não de problema. Então parece ser a portmidi.
-
-#vi que o sampletank 2 retorna 2300 como versão do VST, todos os outros retornam 2400. Talvez tenha algum
-    #detalhe diferente na implementação do 2300 para retornar o nome do VST.
-
-
-# mostrar plugins nativos
-# duplo clique no controle de pan não reseta adequadamente
 # quando clico para ouvir uma outra sala não está resetando o plot da sala que eu estava ouvindo
-# Melhorar o visual do Delay, os LineEdit estão grandes demais
-# Seria interessante possibilitar que os parâmetros do delay sejam alterados através dos lineEdit
 
 #buga tudo se não tem conexão com a internet
+
+
+#PLUGINS NATIVOS
+    # mostrar plugins nativos
+    # Melhorar o visual do Delay, os LineEdit estão grandes demais
+    # Seria interessante possibilitar que os parâmetros do delay sejam alterados através dos lineEdit
+
+#Magnus e Doublebass agradeceram pelo esforço e disseram que ter um canal de backing track é muito importante.
 
 # - Coisas legais para implementar: fazer um plugin de delay para iniciar a saga dos plugins nativos do Jamtaba
 # - O stream do ninjamer.com não é mono como achei que era, mas está dando problema
