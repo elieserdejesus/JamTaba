@@ -238,11 +238,10 @@ MainFrame::~MainFrame()
 // preferences menu
 void MainFrame::on_preferencesClicked()
 {
-    qDebug() << "disparou acao";;
     AudioDriver* driver = mainController->getAudioDriver();
     driver->stop();
     PreferencesDialog dialog(mainController, this);
-    connect(&dialog, SIGNAL(audioIOPropertiesChanged(int, int,int,int,int,int,int,int)), this, SLOT(on_IOPropertiesChanged(int, int,int,int,int,int,int,int)));
+    connect(&dialog, SIGNAL(ioChanged(int,int,int,int,int,int,int,int)), this, SLOT(on_IOPropertiesChanged(int, int,int,int,int,int,int,int)));
     dialog.exec();
     driver->start();
     //audio driver is restarted in on_audioIOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.

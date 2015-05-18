@@ -58,7 +58,6 @@ void PreferencesDialog::clearScanPathWidgets(){
 }
 
 void PreferencesDialog::populateVstTab(){
-    qDebug() << "Settings: " << Persistence::ConfigStore::getSettingsFilePath();
     clearScanPathWidgets();//remove all widgets before add the paths
     QStringList paths = Persistence::ConfigStore::getVstScanPaths();
     foreach (QString path, paths) {
@@ -79,7 +78,7 @@ void PreferencesDialog::populateAsioDriverCombo()
     for(int d=0; d < devices; d++){
         ui->comboAsioDriver->addItem(audioDriver->getInputDeviceName(d), d);//using device index as userData in comboBox
     }
-    qDebug() << "setando combo para inputDeviceIndex: " << audioDriver->getInputDeviceIndex() << " outputDeviceIndex: " << audioDriver->getOutputDeviceIndex();
+    //qDebug() << "setando combo para inputDeviceIndex: " << audioDriver->getInputDeviceIndex() << " outputDeviceIndex: " << audioDriver->getOutputDeviceIndex();
     ui->comboAsioDriver->setCurrentIndex(audioDriver->getInputDeviceIndex());
 
 }
@@ -213,6 +212,7 @@ void PreferencesDialog::on_okButton_released()
     int sampleRate = ui->comboSampleRate->currentText().toInt();
     int bufferSize = ui->comboBufferSize->currentText().toInt();
     int selectedMidiDevice = (ui->comboMidiInput->count() > 0) ? ui->comboMidiInput->currentIndex() : -1;
+    this->close();
     emit ioChanged(selectedMidiDevice, selectedAudioDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
 }
 
@@ -304,3 +304,5 @@ void PreferencesDialog::on_buttonScanVSTs_clicked()
         mainController->scanPlugins();
     }
 }
+
+
