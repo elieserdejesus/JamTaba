@@ -29,8 +29,15 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
 void PreferencesDialog::populateMidiInputCombo(){
     Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
     int maxDevices = midiDriver->getMaxInputDevices();
-    for (int i = 0; i < maxDevices; ++i) {
-        ui->comboMidiInput->addItem( QString( midiDriver->getInputDeviceName(i)));
+    ui->comboMidiInput->clear();
+    if(maxDevices > 0){
+        for (int i = 0; i < maxDevices; ++i) {
+            ui->comboMidiInput->addItem( QString( midiDriver->getInputDeviceName(i)));
+        }
+    }
+    else{//no devices detected
+        ui->comboMidiInput->addItem( "No Midi Device Detected!" );
+        ui->comboMidiInput->setEnabled(false);
     }
 }
 
