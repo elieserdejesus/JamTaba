@@ -49,6 +49,7 @@ void PreferencesDialog::clearScanPathWidgets(){
 }
 
 void PreferencesDialog::populateVstTab(){
+    qDebug() << "Settings: " << Persistence::ConfigStore::getSettingsFilePath();
     clearScanPathWidgets();//remove all widgets before add the paths
     QStringList paths = Persistence::ConfigStore::getVstScanPaths();
     foreach (QString path, paths) {
@@ -244,7 +245,10 @@ void PreferencesDialog::createWidgetsToNewScanPath(QString path){
     QObject::connect( removeButton, SIGNAL(clicked()), this, SLOT(on_buttonRemoveVstPathClicked()));
     lineLayout->addWidget(removeButton);
     lineLayout->addWidget( new QLabel(path, this), 1.0);
-    panelLayout->insertWidget(0, parent);
+    panelLayout->removeItem(ui->verticalSpacer_2);
+    int index = panelLayout->count();//the last widget is a spacer, add before spacer
+    panelLayout->insertWidget(index, parent);
+    panelLayout->addSpacerItem(ui->verticalSpacer_2);
 
     scanPathButtons.push_back(removeButton);//save the widget to easy remove all widgets when the VSt Scan path tab is populated
 }

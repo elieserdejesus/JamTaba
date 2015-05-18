@@ -79,9 +79,11 @@ void ConfigStore::clearVstCache(){
 
 //VST paths to scan
 void ConfigStore::addVstScanPath(QString path){
-    static int addedPaths = 0;
-    instance->settings->beginWriteArray("VST Paths to Scan");
-    instance->settings->setArrayIndex(addedPaths++);
+    int newPathIndex = instance->settings->beginReadArray("VST_Paths_to_Scan");
+    instance->settings->endArray();
+
+    instance->settings->beginWriteArray("VST_Paths_to_Scan");
+    instance->settings->setArrayIndex(newPathIndex);
     instance->settings->setValue("pathToScan", path);
     instance->settings->endArray();
 }
@@ -92,7 +94,7 @@ void ConfigStore::removeVstScanPath(int index){
         allPathsToScan.removeAt(index);
 
         //write all list entries
-        instance->settings->beginWriteArray("VST Paths to Scan");
+        instance->settings->beginWriteArray("VST_Paths_to_Scan", allPathsToScan.count());
         for (int i = 0; i < allPathsToScan.size(); ++i) {
             instance->settings->setArrayIndex(i);
             instance->settings->setValue("pathToScan", allPathsToScan.at(i));
@@ -102,9 +104,9 @@ void ConfigStore::removeVstScanPath(int index){
 }
 
 QStringList ConfigStore::getVstScanPaths(){
-    int lenght = instance->settings->beginReadArray("VST Paths to Scan");
+    int size = instance->settings->beginReadArray("VST_Paths_to_Scan");
     QStringList list;
-    for (int i = 0; i < lenght; ++i) {
+    for (int i = 0; i < size; ++i) {
         instance->settings->setArrayIndex(i);
         QString path = instance->settings->value("pathToScan").toString();
         list.append(path);

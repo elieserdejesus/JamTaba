@@ -1,9 +1,10 @@
-
-
 #Magnus e Doublebass agradeceram pelo esforço e disseram que ter um canal de backing track é muito importante.
 
+# escanear VSts usando a lista de paths
 
-#tela de configuração dos VSTs - listar e salvar a lista de paths nas configurações da aplicação
+# limpar cache de VSTs
+
+#limpar os erros de execução, acho que tem problemas com os slots
 
 # Quando botei o reverb depois do B4 ouvi o reverb na entrada do mic mas não no B4, o encadeamento tem problema
 # não estou chamando o startProcess nos Vst
