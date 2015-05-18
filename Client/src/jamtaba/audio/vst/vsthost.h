@@ -47,9 +47,10 @@ protected:
     const VstEvents* getVstMidiEvents() const;
 
 private:
+    VstTimeInfo* vstTimeInfo;
     int sampleRate;
     int blockSize;
-    VstTimeInfo* vstTimeInfo;
+
     VSTEventBlock<MAX_MIDI_EVENTS> vstMidiEvents;
 
     static VstHost* hostInstance;

@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QObject>
 #include <QThread>
+#include <QStringList>
 
 namespace Audio {
     class PluginDescriptor;
@@ -26,6 +27,8 @@ public:
     void addPathToScan(QString path);
     void scan(Vst::VstHost *host);
     void clearScanPaths();
+
+
 private:
     void run();
 signals:

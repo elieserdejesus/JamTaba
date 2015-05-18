@@ -44,7 +44,7 @@ public:
     }
 
     virtual void driverStarted(){
-        qDebug() << "audio driver started";
+        //qDebug() << "audio driver started";
     }
 
     virtual void driverStopped(){
@@ -302,7 +302,7 @@ void MainController::stop()
 {
     this->audioDriver->release();
     this->midiDriver->release();
-    qDebug() << "disconnecting...";
+    //qDebug() << "disconnecting...";
     loginService->disconnect();
 }
 

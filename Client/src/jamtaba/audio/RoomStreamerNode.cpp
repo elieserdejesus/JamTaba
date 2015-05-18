@@ -146,7 +146,7 @@ void RoomStreamerNode::reply_read(){
 }
 
 RoomStreamerNode::~RoomStreamerNode(){
-    qDebug() << "RoomStreamerNode destructor!";
+    //qDebug() << "RoomStreamerNode destructor!";
 }
 
 void RoomStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out){

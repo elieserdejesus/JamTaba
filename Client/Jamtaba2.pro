@@ -1,7 +1,5 @@
 #Magnus e Doublebass agradeceram pelo esforço e disseram que ter um canal de backing track é muito importante.
 
-#adicionar o diretório dos VSTs na lista de paths se a lista estiver vazia
-
 #limpar os erros de execução, acho que tem problemas com os slots
 
 # Quando botei o reverb depois do B4 ouvi o reverb na entrada do mic mas não no B4, o encadeamento tem problema

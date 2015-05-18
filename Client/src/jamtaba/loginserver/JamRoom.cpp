@@ -15,7 +15,7 @@ AbstractPeer::AbstractPeer(long long ID)
 }
 
 AbstractPeer::~AbstractPeer(){
-    qDebug() << "AbstractPeer destructor " << getName();
+    //qDebug() << "AbstractPeer destructor " << getName();
 }
 //+++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++
@@ -65,7 +65,7 @@ AbstractJamRoom::AbstractJamRoom(long long roomID)
 
 
 AbstractJamRoom::~AbstractJamRoom(){
-    qDebug() << "AbstractJamRoom destructor!";
+    //qDebug() << "AbstractJamRoom destructor!";
 }
 
 bool AbstractJamRoom::containsPeer(long long peerId) const{
