@@ -21,6 +21,9 @@ const QString ConfigStore::KEY_FIRST_AUDIO_OUTPUT = "AUDIO/firstOut";
 const QString ConfigStore::KEY_LAST_AUDIO_INPUT = "AUDIO/lastIn";
 const QString ConfigStore::KEY_LAST_AUDIO_OUTPUT = "AUDIO/lastOut";
 
+//MIDI
+const QString ConfigStore::KEY_MIDI_INPUT = "MIDI/inputDevice";
+
 
 const QString ConfigStore::KEY_LAST_SEND_GAIN = "LOCAL INPUT/sendGain";
 const QString ConfigStore::KEY_LAST_BOOST_VALUE = "LOCAL INPUT/inputBoost";
@@ -210,7 +213,7 @@ void ConfigStore::storeRecordPath(QString absoluteRecordPath) {
 //    }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void ConfigStore::storeAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize){
+void ConfigStore::storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize, int midiDevice){
     saveProperty(KEY_FIRST_AUDIO_INPUT,  firstIn);
     saveProperty(KEY_LAST_AUDIO_INPUT ,  lastIn);
     saveProperty(KEY_FIRST_AUDIO_OUTPUT, firstOut);
@@ -219,7 +222,15 @@ void ConfigStore::storeAudioSettings(int firstIn, int lastIn, int firstOut, int 
     saveProperty(KEY_LAST_OUTPUT_DEVICE, outputDevice);
     saveProperty(KEY_LAST_SAMPLE_RATE, sampleRate);
     saveProperty(KEY_LAST_BUFFER_SIZE, bufferSize);
+    saveProperty(KEY_MIDI_INPUT, midiDevice);
 }
+
+
+int ConfigStore::getLastMidiDeviceIndex(){
+    return readProperty(KEY_MIDI_INPUT).toInt();
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //+++++++++   Window Location  +++++++++++++++++++++++
 void ConfigStore::storeWindowLocation(QPointF location) {

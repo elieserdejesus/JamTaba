@@ -1,4 +1,6 @@
 
+# MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais.
+
 #dialogo de IO do midi - testar novamente, ver se a seleção do midi device está funcionando
 
 # programa fechando com erro, basta abrir e fechar para ver o erro na finalização. Quando testei sem nenhum device midi conectado não de problema. Então parece ser a portmidi.
@@ -13,6 +15,7 @@
 
 #buga tudo se não tem conexão com a internet
 
+#implementar a view da sala ninjam
 
 #PLUGINS NATIVOS
     # mostrar plugins nativos
@@ -34,7 +37,6 @@
 #2 - quando seleciono saídas que não são 1 e 2 dá um crash também.
 #3 - Com a fast track quando seleciono as entradas e simplesmente volto para a tela de audio IO o valor do segundo combo está bugado.
 #4 - preciso testar com a fonte da fast track para ver se os outros canais estão realmente funcionando
-
 
 
 #-------------------------------------------------
@@ -155,9 +157,9 @@ SOURCES += \
     src/jamtaba/audio/vst/VstPlugin.cpp \
     src/jamtaba/audio/vst/vsthost.cpp \
     src/jamtaba/midi/MidiDriver.cpp \
-    src/jamtaba/midi/portmididriver.cpp \
     src/jamtaba/gui/PreferencesDialog.cpp \
-    src/jamtaba/gui/PluginScanDialog.cpp
+    src/jamtaba/gui/PluginScanDialog.cpp \
+    src/jamtaba/midi/PortMidiDriver.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
