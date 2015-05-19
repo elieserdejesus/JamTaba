@@ -238,18 +238,25 @@ MainFrame::~MainFrame()
 // preferences menu
 void MainFrame::on_preferencesClicked()
 {
-    AudioDriver* driver = mainController->getAudioDriver();
-    driver->stop();
+    Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
+    AudioDriver* audioDriver= mainController->getAudioDriver();
+    audioDriver->stop();
+    midiDriver->stop();
     PreferencesDialog dialog(mainController, this);
     connect(&dialog, SIGNAL(ioChanged(int,int,int,int,int,int,int,int)), this, SLOT(on_IOPropertiesChanged(int, int,int,int,int,int,int,int)));
     dialog.exec();
-    driver->start();
-    //audio driver is restarted in on_audioIOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.
+    midiDriver->start();
+    audioDriver->start();
+
+    //audio driver parameters are changed in on_audioIOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.
 }
 
-void MainFrame::on_IOPropertiesChanged(int /*midiDevice*/, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)
+void MainFrame::on_IOPropertiesChanged(int midiDeviceIndex, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)
 {
+    qDebug() << "midi device: " << midiDeviceIndex << endl;
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
+    Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
+    midiDriver->setInputDeviceIndex(midiDeviceIndex);
 #ifdef _WIN32
     audioDriver->setProperties(audioDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
 
@@ -257,9 +264,8 @@ void MainFrame::on_IOPropertiesChanged(int /*midiDevice*/, int audioDevice, int 
     //preciso de um outro on_audioIoPropertiesChanged que me dê o input e o output device
     //audioDriver->setProperties(selectedDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
 #endif
-    //TODO setar o midi device selecionado
-    //mainController->getMidiDriver()->
-    ConfigStore::storeAudioSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, audioDevice, sampleRate, bufferSize);
+
+    ConfigStore::storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, audioDevice, sampleRate, bufferSize, midiDeviceIndex);
 }
 
 //plugin finder events

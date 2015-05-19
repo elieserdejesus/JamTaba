@@ -32,6 +32,9 @@ private:
      static const QString KEY_LAST_AUDIO_INPUT;
      static const QString KEY_LAST_AUDIO_OUTPUT;
 
+     //midi
+     static const QString KEY_MIDI_INPUT;
+
      static const QString KEY_LAST_SEND_GAIN;
      static const QString KEY_LAST_BOOST_VALUE;
      static const QString KEY_LANGUAGE;
@@ -151,12 +154,16 @@ public:
 //    }
 
     //++++++++++++++++++++++++++++++++++++++++
-    static void storeAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize) ;
+    static void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize, int midiDevice) ;
 
     static int getFirstAudioInput() ;
     static int getLastAudioInput() ;
     static int getFirstAudioOutput();
     static int getLastAudioOutput();
+    static int getLastInputDevice();
+    static int getLastOutputDevice();
+
+    static int getLastMidiDeviceIndex() ;
 
     static void storeSendGain(float preGain) ;
     static float getLastSendGain() ;
@@ -165,14 +172,7 @@ public:
     static QString getLastUserName();
     static QString getLastChannelName();
 
-    static int getLastInputDevice();
-    
-    static int getLastOutputDevice();
-
-
-
     static void storeLasUserName(QString userName);
-
     static void storeLastChannelName(QString channelName) ;
 
 //    /**

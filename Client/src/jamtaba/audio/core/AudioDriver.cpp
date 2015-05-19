@@ -284,15 +284,15 @@ void AbstractAudioDriver::setProperties(int inputDeviceIndex, int outputDeviceIn
     this->outputChannels = (lastOut - firstOut) + 1;
     this->sampleRate = sampleRate;
     this->bufferSize = bufferSize;
-    qDebug() << "[portaudio driver properties changed] " <<
-                "\n\tthis->inputDeviceIndex: " << this->inputDeviceIndex <<
-                "\n\tthis->outputDeviceIndex: " << this->outputDeviceIndex <<
-                "\n\tthis->firstInputIndex: " << this->firstInputIndex <<
-                "\n\tthis->inputChannels: " << this->inputChannels <<
-                "\n\tthis->firstOutputIndex: " << this->firstOutputIndex <<
-                "\n\tthis->outputChannels: " << this->outputChannels <<
-                "\n\tthis->sampleRate: " << this->sampleRate <<
-                "\n\tthis->bufferSize: " << this->bufferSize;
+//    qDebug() << "[portaudio driver properties changed] " <<
+//                "\n\tthis->inputDeviceIndex: " << this->inputDeviceIndex <<
+//                "\n\tthis->outputDeviceIndex: " << this->outputDeviceIndex <<
+//                "\n\tthis->firstInputIndex: " << this->firstInputIndex <<
+//                "\n\tthis->inputChannels: " << this->inputChannels <<
+//                "\n\tthis->firstOutputIndex: " << this->firstOutputIndex <<
+//                "\n\tthis->outputChannels: " << this->outputChannels <<
+//                "\n\tthis->sampleRate: " << this->sampleRate <<
+//                "\n\tthis->bufferSize: " << this->bufferSize;
 }
 
 void AbstractAudioDriver::fireDriverStarted() const{

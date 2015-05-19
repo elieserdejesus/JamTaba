@@ -34,6 +34,10 @@ void PreferencesDialog::populateMidiInputCombo(){
         for (int i = 0; i < maxDevices; ++i) {
             ui->comboMidiInput->addItem( QString( midiDriver->getInputDeviceName(i)));
         }
+        int selectedDeviceIndex = Persistence::ConfigStore::getLastMidiDeviceIndex();
+        if(selectedDeviceIndex >= 0 && selectedDeviceIndex < maxDevices){
+            ui->comboMidiInput->setCurrentIndex(selectedDeviceIndex);
+        }
     }
     else{//no devices detected
         ui->comboMidiInput->addItem( "No Midi Device Detected!" );

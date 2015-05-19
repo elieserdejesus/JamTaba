@@ -92,6 +92,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     audioDriverListener = std::unique_ptr<Controller::AudioListener>( new Controller::AudioListener(this));
 
     midiDriver = new PortMidiDriver();
+    midiDriver->setInputDeviceIndex(Persistence::ConfigStore::getLastMidiDeviceIndex());
 
     QObject::connect(service, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromServer()));
 
