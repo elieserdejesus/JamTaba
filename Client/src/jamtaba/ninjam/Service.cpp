@@ -28,24 +28,6 @@ Service::~Service(){
     qDebug() << "NinjamService destructor";
 }
 
-void Service::addListener(ServiceListener *listener){
-
-    listeners.push_back(std::unique_ptr<ServiceListener>(listener));
-}
-
-void Service::removeListener(ServiceListener *listener){
-    std::vector<std::unique_ptr<ServiceListener>>::iterator it = listeners.begin();
-    while(it != listeners.end()){
-        if( &*(*it) == listener){
-            it->release();
-            listeners.erase(it);
-            break;
-        }
-        it++;
-    }
-
-}
-
 void Service::socketReadSlot(){
     if(socket.bytesAvailable() < 5){
         qDebug() << "not have enough bytes to read message header (5 bytes)";
@@ -154,9 +136,7 @@ void Service::handle(UserInfoChangeNotifyMessage* msg) {
     foreach (User* user , users) {
         if (!currentServer->containsUser(*user)) {
             currentServer->addUser(user);
-            for (auto &l : listeners) {
-                l->userEnterInTheJam(*user);
-            }
+            emit userEnterInTheJam(*user);
         }
         handleUserChannels(user, msg->getUserChannels(user));
     }
@@ -178,9 +158,9 @@ void Service::handle(DownloadIntervalBegin * msg){
 void Service::handle(DownloadIntervalWrite *msg){
     if (downloads.contains(msg->getGUID())) {
         Download* download = &*(downloads[msg->getGUID()]);
-        for (auto &l : listeners) {
-            l->audioIntervalPartAvailable(*download->user, download->channelIndex, msg->getEncodedAudioData(), msg->downloadIsComplete());
-        }
+
+        emit audioIntervalPartAvailable(*download->user, download->channelIndex, msg->getEncodedAudioData(), msg->downloadIsComplete());
+
         if (msg->downloadIsComplete()) {
             downloads.remove(msg->getGUID());
         }
@@ -207,9 +187,9 @@ void Service::handle(ServerAuthReplyMessage *msg){
         sendMessageToServer(&setChannelMsg);
     }
     else{
-        for (auto &l : listeners) {
-            l->error("Can't authenticate in server");
-        }
+
+        emit error("Can't authenticate in server");
+
         disconnectFromServer(false);
     }
 }
@@ -224,9 +204,7 @@ void Service::startServerConnection(QString serverIp, int serverPort, QString us
     buildNewSocket();
     socket.connectToHost(serverIp, serverPort);
     if(!socket.waitForConnected()){
-        for (auto &l : listeners) {
-            l->error("can't connect in " + serverIp + ":" + serverPort);
-        }
+        emit error("can't connect in " + serverIp + ":" + serverPort);
     }
 
     //the old current server is deleted by unique_ptr
@@ -302,9 +280,9 @@ void Service::setBpm(quint16 newBpm){
         throw ("currentServer == null");
     }
     if (currentServer->setBpm(newBpm) && initialized) {
-        for (auto &l : listeners) {
-            l->serverBpmChanged(currentServer->getBpm());
-        }
+
+        emit serverBpmChanged(currentServer->getBpm());
+
     }
 }
 
@@ -314,9 +292,9 @@ void Service::setBpi(quint16 bpi) {
     }
     quint16 lastBpi = currentServer->getBpi();
     if (currentServer->setBpi(bpi) && initialized) {
-        for (auto &l : listeners) {
-            l->serverBpiChanged(currentServer->getBpi(), lastBpi);
-        }
+
+        emit serverBpiChanged(currentServer->getBpi(), lastBpi);
+
     }
 }
 /*
@@ -343,26 +321,26 @@ void Service::handleUserChannels(User* user, QList<UserChannel*> channelsInTheSe
         if (c->isActive()) {
             if (!userCurrentChannels.contains(c)) {
                 user->addChannel(c);
-                for (auto &l : listeners) {
-                    l->userChannelCreated(*user, *c);
-                }
+
+                emit userChannelCreated(*user, *c);
+
             } else {//check for channel updates
                 if (user->hasChannels()) {
                     UserChannel* userChannel = user->getChannel(c->getIndex());
                     if (channelIsOutdate(*user, *c)) {
                         userChannel->setName(c->getName());
                         userChannel->setFlags(c->getFlags());
-                        for(auto &l : listeners) {
-                            l->userChannelUpdated(*user, *userChannel);
-                        }
+
+                        emit userChannelUpdated(*user, *userChannel);
+
                     }
                 }
             }
         } else {
             user->removeChannel(c);
-            for(auto &l : listeners){
-                l->userChannelRemoved(*user, *c);
-            }
+
+            emit userChannelRemoved(*user, *c);
+
         }
     }
 }
@@ -393,27 +371,27 @@ void Service::handle(ServerChatMessage* msg) {
     {
         QString messageSender = msg->getArguments().at(0);
         QString messageText = msg->getArguments().at(1);
-        for(auto &l : listeners){
-            l->chatMessageReceived(*(User::getUser(messageSender)), messageText);
-        }
+
+        emit chatMessageReceived(*(User::getUser(messageSender)), messageText);
+
         break;
 
     }
     case ChatCommandType::PART:
     {
         QString userLeavingTheServer = msg->getArguments().at(0);
-        for(auto &l : listeners){
-            l->userLeaveTheJam(*User::getUser(userLeavingTheServer));
-        }
+
+        emit userLeaveTheJam(*User::getUser(userLeavingTheServer));
+
         break;
     }
     case ChatCommandType::PRIVMSG:
     {
         QString messageSender = msg->getArguments().at(0);
         QString messageText = msg->getArguments().at(1);
-        for(auto &l : listeners){
-            l->privateMessageReceived(*User::getUser(messageSender), messageText);
-        }
+
+        emit privateMessageReceived(*User::getUser(messageSender), messageText);
+
 
         break;
     }
@@ -424,9 +402,9 @@ void Service::handle(ServerChatMessage* msg) {
         if (!initialized) {
             initialized = true;
             currentServer->setTopic(topicText);
-            for(auto &l : listeners){
-                l->connectedInServer(*currentServer);
-            }
+
+            emit connectedInServer(*currentServer);
+
         }
         break;
     }
@@ -434,9 +412,9 @@ void Service::handle(ServerChatMessage* msg) {
     {
         int users = msg->getArguments().at(0).toInt();
         int maxUsers = msg->getArguments().at(1).toInt();
-        for(auto &l : listeners){
-            l->userCountMessageReceived(users, maxUsers);
-        }
+
+        emit userCountMessageReceived(users, maxUsers);
+
         break;
     }
     default:

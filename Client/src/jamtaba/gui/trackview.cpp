@@ -39,10 +39,9 @@ bool TrackView::eventFilter(QObject *source, QEvent *ev){
         if(source == ui->transmitGainSlider){
             ui->transmitGainSlider->setValue(100);
         }
+        return true;
     }
-    else{
-        return QWidget::eventFilter(source, ev);
-    }
+    return QWidget::eventFilter(source, ev);
 }
 
 TrackView::~TrackView()

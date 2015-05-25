@@ -15,6 +15,9 @@
 #include "audio/vst/vsthost.h"
 #include "persistence/ConfigStore.h"
 #include "../audio/vst/PluginFinder.h"
+
+#include "../ninjam/Service.h"
+#include "../ninjam/Server.h"
 //#include "mainframe.h"
 
 #include <QFile>
@@ -23,6 +26,7 @@
 
 using namespace Persistence;
 using namespace Midi;
+using namespace Ninjam;
 
 namespace Controller {
 
@@ -75,7 +79,6 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
       roomStreamerPeaks(0,0),
       vstHost(Vst::VstHost::getInstance()),
       pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder()))
-
 {
 
     setQuitOnLastWindowClosed(false);//wait disconnect from server to close
@@ -106,6 +109,11 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     //QObject::connect(&*pluginFinder, SIGNAL(scanStarted()), this, SLOT(onPluginScanStarted()));
     //QObject::connect(&*pluginFinder, SIGNAL(scanFinished()), this, SLOT(onPluginScanFinished()));
     QObject::connect(&*pluginFinder, SIGNAL(vstPluginFounded(Audio::PluginDescriptor*)), this, SLOT(onPluginFounded(Audio::PluginDescriptor*)));
+
+
+    //ninjam service
+    this->ninjamService = Ninjam::Service::getInstance();
+    QObject::connect( this->ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), SLOT(connectedInNinjamServer(Ninjam::Server)) );
 
     //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
     //QString vstDir = "C:/Program Files (x86)/VSTPlugins/";
@@ -275,6 +283,11 @@ MainController::~MainController()
         delete descriptor;
     }
     pluginsDescriptors.clear();
+
+//    if(this->ninjamService){
+//        delete this->ninjamService;
+//        this->ninjamService = nullptr;
+//    }
 }
 
 void MainController::playRoomStream(Login::AbstractJamRoom* room){
@@ -287,6 +300,31 @@ void MainController::playRoomStream(Login::AbstractJamRoom* room){
 void MainController::stopRoomStream(){
     roomStreamer->stopCurrentStream();
     currentStreamRoom = nullptr;
+}
+
+void MainController::enterInRoom(Login::AbstractJamRoom *room)
+{
+    if(isPlayingRoomStream()){
+        stopRoomStream();
+    }
+
+    if(room->getRoomType() == Login::AbstractJamRoom::Type::NINJAM){
+        tryConnectInNinjamServer((Login::NinjamRoom*)room);
+    }
+
+    emit enteredInRoom(room);
+}
+
+void MainController::tryConnectInNinjamServer(Login::AbstractJamRoom *ninjamServer){
+
+    QString serverIp = "";
+    int serverPort = 0;
+    QString userName = "";
+    QStringList channelsNames("nome do canal");
+    QString password = "";
+
+    this->ninjamService->startServerConnection(serverIp, serverPort, userName, channelsNames, password);
+
 }
 
 void MainController::start()
@@ -329,4 +367,10 @@ void MainController::configureStyleSheet(){
 
 Login::LoginService* MainController::getLoginService() const{
     return &*loginService;
+}
+
+
+//++++++++++++= NINJAM ++++++++++++++++
+void MainController::connectedInNinjamServer(const Ninjam::Server &server){
+    qDebug() << "conectado no server " << server.getHostName() << endl;
 }

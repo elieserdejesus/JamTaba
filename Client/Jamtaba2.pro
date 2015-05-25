@@ -1,5 +1,6 @@
+#tendo problemas para conectar o signal do ninjam service para conectar na sala. Acho que preciso usar o namespace no código do server
 
-# MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais.
+# MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais. Testar com o controlador AKAI também para ver
 
 #dialogo de IO do midi - testar novamente, ver se a seleção do midi device está funcionando
 
@@ -16,6 +17,10 @@
 #buga tudo se não tem conexão com a internet
 
 #implementar a view da sala ninjam
+
+#audo update: https://wiki.qt.io/Qt-Installer-Framework
+
+
 
 #PLUGINS NATIVOS
     # mostrar plugins nativos
