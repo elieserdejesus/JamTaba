@@ -8,6 +8,11 @@
 
 class MainFrame;
 
+namespace Ninjam{
+    class Service;
+    class Server;
+}
+
 namespace Audio {
     class AudioDriver;
     class AudioDriverListener;
@@ -76,6 +81,8 @@ public:
     Login::AbstractJamRoom* getCurrentStreamingRoom();
     void stopRoomStream();//stop currentRoom stream
 
+    void enterInRoom(Login::AbstractJamRoom* room);
+
     Audio::AudioDriver* getAudioDriver() const;
     Midi::MidiDriver* getMidiDriver() const;
     Login::LoginService* getLoginService() const;
@@ -100,6 +107,9 @@ public:
     const Vst::PluginFinder* getPluginFinder() const{return &*pluginFinder;}
     void scanPlugins();
     void initializePluginsList(QStringList paths);
+
+signals:
+    void enteredInRoom(Login::AbstractJamRoom* room);
 private:
 
     Audio::Plugin* createPluginInstance(Audio::PluginDescriptor* descriptor);
@@ -115,6 +125,9 @@ private:
     std::unique_ptr<Audio::AbstractMp3Streamer> roomStreamer;
     Login::AbstractJamRoom* currentStreamRoom;
 
+    //ninjam
+    Ninjam::Service* ninjamService;
+
     std::map<int, Audio::AudioNode*> tracksNodes;
 
     Peaks inputPeaks;
@@ -126,11 +139,16 @@ private:
     //+++++++++++++++++++++++++
     void configureStyleSheet();
 
+    void tryConnectInNinjamServer(Login::AbstractJamRoom *ninjamServer);
+
 private slots:
     void on_disconnectedFromServer();
     //void onPluginScanStarted();
     //void onPluginScanFinished();
     void onPluginFounded(Audio::PluginDescriptor* descriptor);
+
+    //ninjam
+    void connectedInNinjamServer(const Ninjam::Server& server);
 };
 
 }

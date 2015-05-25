@@ -50,9 +50,10 @@ private slots:
     void on_IOPropertiesChanged(int midiDevice, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
     void on_connectedInServer(QList<Login::AbstractJamRoom*>);
 
-    //+++++  ROOM STREAMS ++++++++
+    //+++++  ROOM FEATURES ++++++++
     void on_startingRoomStream(Login::AbstractJamRoom* room);
     void on_stoppingRoomStream(Login::AbstractJamRoom* room);
+    void on_enteringInRoom(Login::AbstractJamRoom* room);
 
     //fx MENU
     void on_fxMenuActionTriggered(QAction*);

@@ -26,6 +26,7 @@ public:
 signals:
     void startingListeningTheRoom(Login::AbstractJamRoom* room);
     void finishingListeningTheRoom(Login::AbstractJamRoom* room);
+    void enteringInTheRoom(Login::AbstractJamRoom* room);
 private slots:
     void on_buttonListen_clicked();
     void on_buttonEnter_clicked();

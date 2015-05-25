@@ -37,43 +37,6 @@ class ClientMessage;
 class User;
 class UserChannel;
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class ServiceListener{
-public:
-    virtual void userChannelCreated(const User& user, const UserChannel& channel) = 0;
-    virtual void userChannelRemoved(const User& user, const UserChannel& channel) = 0;
-    virtual void userChannelUpdated(const User& user, const UserChannel& channel) = 0;
-    virtual void userCountMessageReceived(int users, int maxUsers) = 0;
-    virtual void serverBpiChanged(short currentBpi, short lastBpi) = 0;
-    virtual void serverBpmChanged(short currentBpm) = 0;
-    virtual void audioIntervalPartAvailable( const User& user, int channelIndex, QByteArray encodedAudioData, bool lastPartOfInterval) = 0;
-    virtual void disconnectedFromServer(bool normalDisconnection) = 0;
-    virtual void connectedInServer(const Server& server) = 0;
-    virtual void chatMessageReceived(const User& sender, QString message) = 0;
-    virtual void privateMessageReceived(const User& sender, QString message) = 0;
-    virtual void userEnterInTheJam(const User& newUser) = 0;
-    virtual void userLeaveTheJam(const User& user) = 0;
-    virtual void error(QString msg) = 0;
-};
-
-class ServiceListenerAdapter : public ServiceListener{
-public:
-    virtual void userChannelCreated(const User & , const UserChannel & ){}
-    virtual void userChannelRemoved(const User & , const UserChannel & ){}
-    virtual void userChannelUpdated(const User & , const UserChannel & ){}
-    virtual void userCountMessageReceived(int , int ){}
-    virtual void serverBpiChanged(short , short ){}
-    virtual void serverBpmChanged(short ){}
-    virtual void audioIntervalPartAvailable(const User &, int , QByteArray , bool ){}
-    virtual void disconnectedFromServer(bool ){}
-    virtual void connectedInServer(const Server & ){}
-    virtual void chatMessageReceived(const User & , QString ){}
-    virtual void privateMessageReceived(const User & , QString ){}
-    virtual void userEnterInTheJam(const User & ){}
-    virtual void userLeaveTheJam(const User & ){}
-    virtual void error(QString ){}
-};
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Service : public QObject{//mantive esta classe herdando de QObject para facilitar o uso de QTcpSocket
 
     Q_OBJECT
@@ -90,16 +53,29 @@ public:
     void startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password = "");
     void disconnectFromServer(bool normalDisconnection=true);
 
-    void addListener(ServiceListener* listener);
-    void removeListener(ServiceListener* listener);
-
     ~Service();
+
+signals:
+    void userChannelCreated(const Ninjam::User& user, const Ninjam::UserChannel& channel);
+    void userChannelRemoved(const Ninjam::User& user, const Ninjam::UserChannel& channel);
+    void userChannelUpdated(const Ninjam::User& user, const Ninjam::UserChannel& channel);
+    void userCountMessageReceived(int users, int maxUsers);
+    void serverBpiChanged(short currentBpi, short lastBpi);
+    void serverBpmChanged(short currentBpm);
+    void audioIntervalPartAvailable( const Ninjam::User& user, int channelIndex, QByteArray encodedAudioData, bool lastPartOfInterval);
+    void disconnectedFromServer(bool normalDisconnection);
+    void connectedInServer(const Ninjam::Server& server);
+    void chatMessageReceived(const Ninjam::User& sender, QString message);
+    void privateMessageReceived(const Ninjam::User& sender, QString message);
+    void userEnterInTheJam(const Ninjam::User& newUser);
+    void userLeaveTheJam(const Ninjam::User& user);
+    void error(QString msg);
+
 private:
     static const long DEFAULT_KEEP_ALIVE_PERIOD = 3000;
     static std::unique_ptr<PublicServersParser> publicServersParser;// = new MixedPublicServersParser();
     Service();
 
-    std::vector<std::unique_ptr<ServiceListener>> listeners;
     QTcpSocket socket;
 
     //GUID, AudioInterval

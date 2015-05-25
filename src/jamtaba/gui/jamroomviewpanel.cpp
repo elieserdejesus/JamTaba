@@ -333,5 +333,7 @@ void JamRoomViewPanel::on_buttonListen_clicked()
 
 void JamRoomViewPanel::on_buttonEnter_clicked()
 {
-
+    if(currentRoom){
+        emit enteringInTheRoom(currentRoom);
+    }
 }

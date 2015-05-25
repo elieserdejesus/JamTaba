@@ -159,6 +159,7 @@ void MainFrame::on_connectedInServer(QList<Login::AbstractJamRoom*> rooms){
     }
 }
 
+//+++++++++++++++++++++++++++++++++++++
 void MainFrame::on_startingRoomStream(Login::AbstractJamRoom* room){
     if(room->hasStreamLink()){
         mainController->playRoomStream(room);
@@ -168,6 +169,10 @@ void MainFrame::on_startingRoomStream(Login::AbstractJamRoom* room){
 void MainFrame::on_stoppingRoomStream(Login::AbstractJamRoom * room){
     mainController->stopRoomStream();
     roomViewPanels[room]->clearPeaks();
+}
+
+void MainFrame::on_enteringInRoom(Login::AbstractJamRoom *room){
+    mainController->enterInRoom(room);
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
