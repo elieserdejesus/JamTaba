@@ -54,6 +54,8 @@ private slots:
     void on_startingRoomStream(Login::AbstractJamRoom* room);
     void on_stoppingRoomStream(Login::AbstractJamRoom* room);
     void on_enteringInRoom(Login::AbstractJamRoom* room);
+    void on_enteredInRoom(Login::AbstractJamRoom* room);
+    //
 
     //fx MENU
     void on_fxMenuActionTriggered(QAction*);

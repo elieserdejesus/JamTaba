@@ -1,10 +1,10 @@
-#include "TrackView.h"
-#include "ui_trackview.h"
+#include "BaseTrackView.h"
+#include "ui_BaseTrackView.h"
 #include "../MainController.h"
 #include <QStyleOption>
 #include <QPainter>
 
-TrackView::TrackView(QWidget *parent, Controller::MainController *mainController, int trackID) :
+BaseTrackView::BaseTrackView(QWidget *parent, Controller::MainController *mainController, int trackID) :
     QWidget(parent),
     ui(new Ui::TrackView),
     mainController(mainController),
@@ -18,16 +18,15 @@ TrackView::TrackView(QWidget *parent, Controller::MainController *mainController
 
     ui->panSlider->installEventFilter(this);
     ui->levelSlider->installEventFilter(this);
-    ui->transmitGainSlider->installEventFilter(this);
 }
 
-void TrackView::setPeaks(float left, float right){
+void BaseTrackView::setPeaks(float left, float right){
     ui->peakMeterLeft->setPeak(left);
     ui->peakMeterRight->setPeak(right);
 }
 
 //event filter used to handle double clicks
-bool TrackView::eventFilter(QObject *source, QEvent *ev){
+bool BaseTrackView::eventFilter(QObject *source, QEvent *ev){
     if(ev->type() == QEvent::MouseButtonDblClick){
         if(source == ui->panSlider){
 
@@ -36,38 +35,36 @@ bool TrackView::eventFilter(QObject *source, QEvent *ev){
         if(source == ui->levelSlider){
             ui->levelSlider->setValue(100);
         }
-        if(source == ui->transmitGainSlider){
-            ui->transmitGainSlider->setValue(100);
-        }
+
         return true;
     }
     return QWidget::eventFilter(source, ev);
 }
 
-TrackView::~TrackView()
+BaseTrackView::~BaseTrackView()
 {
     delete ui;
 }
 
-void TrackView::onPanSliderMoved(int value){
+void BaseTrackView::onPanSliderMoved(int value){
     float sliderValue = value/(float)ui->panSlider->maximum();
     mainController->setTrackPan(this->trackID, sliderValue);
 }
 
-void TrackView::onFaderMoved(int value){
+void BaseTrackView::onFaderMoved(int value){
     mainController->setTrackLevel(this->trackID, value/100.0);
 }
 
-void TrackView::onMuteClicked(){
+void BaseTrackView::onMuteClicked(){
     mainController->setTrackMute(this->trackID, !mainController->trackIsMuted(trackID));
 }
 
-void TrackView::onSoloClicked(){
+void BaseTrackView::onSoloClicked(){
 
 }
 
 //little to allow stylesheet in custom widget
-void TrackView::paintEvent(QPaintEvent* ){
+void BaseTrackView::paintEvent(QPaintEvent* ){
     QStyleOption opt;
     opt.init(this);
     QPainter p(this);

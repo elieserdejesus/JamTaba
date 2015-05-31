@@ -18,6 +18,9 @@
 
 #include "../ninjam/Service.h"
 #include "../ninjam/Server.h"
+#include "../loginserver/JamRoom.h"
+#include "../audio/NinjamTrackNode.h"
+
 //#include "mainframe.h"
 
 #include <QFile>
@@ -101,7 +104,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
 
     this->audioMixer->addNode( *this->roomStreamer);
 
-    tracksNodes.insert(std::pair<int, Audio::AudioNode*>(1, audioMixer->getLocalInput()));
+    tracksNodes.insert(1, audioMixer->getLocalInput());
 
     vstHost->setSampleRate(audioDriver->getSampleRate());
     vstHost->setBlockSize(audioDriver->getBufferSize());
@@ -121,6 +124,20 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     //scanPlugins();
 
     //qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
+}
+
+int MainController::addTrack(const Login::AbstractPeer &peer){
+    int ID = peer.getId();
+    tracksNodes.insert( ID, new NinjamTrackNode() );
+    return ID;
+}
+
+void MainController::removeTrack(long trackID){
+    Audio::AudioNode* trackNode = tracksNodes[trackID];
+    if(trackNode){
+        tracksNodes.remove(trackID);
+        delete trackNode;
+    }
 }
 
 void MainController::initializePluginsList(QStringList paths){
@@ -178,30 +195,30 @@ Peaks MainController::getRoomStreamPeaks(){
 
 //++++++++++ TRACKS ++++++++++++
 void MainController::setTrackPan(int trackID, float pan){
-    auto it = tracksNodes.find(trackID);
-    if(it != tracksNodes.end()){
-        (*it).second->setPan(pan);
+    Audio::AudioNode* node = tracksNodes[trackID];
+    if(node){
+        node->setPan(pan);
     }
 }
 
 void MainController::setTrackLevel(int trackID, float level){
-    auto it = tracksNodes.find(trackID);
-    if(it != tracksNodes.end()){
-        (*it).second->setGain( std::pow( level, 4));
+    Audio::AudioNode* node = tracksNodes[trackID];
+    if(node){
+        node->setGain( std::pow( level, 4));
     }
 }
 
 void MainController::setTrackMute(int trackID, bool muteStatus){
-    auto it = tracksNodes.find(trackID);
-    if(it != tracksNodes.end()){
-        (*it).second->setMuteStatus(muteStatus);
+    Audio::AudioNode* node = tracksNodes[trackID];
+    if(node){
+        node->setMuteStatus(muteStatus);
     }
 }
 
 bool MainController::trackIsMuted(int trackID) const{
-    auto it = tracksNodes.find(trackID);
-    if(it != tracksNodes.end()){
-        return (*it).second->isMuted();
+    Audio::AudioNode* node = tracksNodes[trackID];
+    if(node){
+        return node->isMuted();
     }
     return false;
 }
@@ -309,18 +326,18 @@ void MainController::enterInRoom(Login::AbstractJamRoom *room)
     }
 
     if(room->getRoomType() == Login::AbstractJamRoom::Type::NINJAM){
-        tryConnectInNinjamServer((Login::NinjamRoom*)room);
+        tryConnectInNinjamServer(*((Login::NinjamRoom*)room));
     }
 
-    emit enteredInRoom(room);
+
 }
 
-void MainController::tryConnectInNinjamServer(Login::AbstractJamRoom *ninjamServer){
+void MainController::tryConnectInNinjamServer(const Login::NinjamRoom& ninjamRoom){
 
-    QString serverIp = "";
-    int serverPort = 0;
-    QString userName = "";
-    QStringList channelsNames("nome do canal");
+    QString serverIp = ninjamRoom.getHostName();
+    int serverPort = ninjamRoom.getHostPort();
+    QString userName = "Test user name";
+    QStringList channelsNames("channel name");
     QString password = "";
 
     this->ninjamService->startServerConnection(serverIp, serverPort, userName, channelsNames, password);
@@ -373,4 +390,8 @@ Login::LoginService* MainController::getLoginService() const{
 //++++++++++++= NINJAM ++++++++++++++++
 void MainController::connectedInNinjamServer(const Ninjam::Server &server){
     qDebug() << "conectado no server " << server.getHostName() << endl;
+    Login::NinjamRoom* ninjamRoom = Login::NinjamRoom::getNinjamRoom(server);
+    if(ninjamRoom){
+        emit enteredInRoom(ninjamRoom);
+    }
 }

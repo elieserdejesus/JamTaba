@@ -31,6 +31,8 @@ namespace Login {
     class LoginServiceParser;
     class LoginServiceListener;
     class AbstractJamRoom;
+    class NinjamRoom;
+    class AbstractPeer;
 }
 
 namespace Vst {
@@ -75,6 +77,9 @@ public:
     void stop();
 
     void process(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
+
+    int addTrack(const Login::AbstractPeer& peer);
+    void removeTrack(long trackID);
 
     void playRoomStream(Login::AbstractJamRoom *room);
     bool isPlayingRoomStream();
@@ -128,7 +133,7 @@ private:
     //ninjam
     Ninjam::Service* ninjamService;
 
-    std::map<int, Audio::AudioNode*> tracksNodes;
+    QMap<long, Audio::AudioNode*> tracksNodes;
 
     Peaks inputPeaks;
     Peaks roomStreamerPeaks;
@@ -139,7 +144,7 @@ private:
     //+++++++++++++++++++++++++
     void configureStyleSheet();
 
-    void tryConnectInNinjamServer(Login::AbstractJamRoom *ninjamServer);
+    void tryConnectInNinjamServer(const Login::NinjamRoom & ninjamRoom);
 
 private slots:
     void on_disconnectedFromServer();

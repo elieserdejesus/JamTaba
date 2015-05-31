@@ -11,13 +11,13 @@ namespace Controller {
     class MainController;
 }
 
-class TrackView : public QWidget
+class BaseTrackView : public QWidget
 {
     Q_OBJECT
 
 public:
-    TrackView(QWidget *parent, Controller::MainController* mainController, int trackID);
-    ~TrackView();
+    BaseTrackView(QWidget *parent, Controller::MainController* mainController, int trackID);
+    ~BaseTrackView();
     void setPeaks(float left, float right);
 protected:
     Ui::TrackView *ui;

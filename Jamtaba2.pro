@@ -1,4 +1,4 @@
-#tendo problemas para conectar o signal do ninjam service para conectar na sala. Acho que preciso usar o namespace no código do server
+# continuar implementando view da sala ninjam
 
 # MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais. Testar com o controlador AKAI também para ver
 
@@ -102,7 +102,6 @@ HEADERS += \
     src/jamtaba/gui/LocalTrackView.h \
     src/jamtaba/gui/JamRoomViewPanel.h \
     src/jamtaba/gui/MainFrame.h \
-    src/jamtaba/gui/TrackView.h \
     src/jamtaba/gui/FxPanel.h \
     src/jamtaba/gui/FxPanelItem.h \
     src/jamtaba/audio/core/plugins.h \
@@ -113,7 +112,11 @@ HEADERS += \
     src/jamtaba/midi/MidiDriver.h \
     src/jamtaba/midi/portmididriver.h \
     src/jamtaba/gui/pluginscandialog.h \
-    src/jamtaba/gui/PreferencesDialog.h
+    src/jamtaba/gui/PreferencesDialog.h \
+    src/jamtaba/gui/NinjamRoomWindow.h \
+    src/jamtaba/gui/BaseTrackView.h \
+    src/jamtaba/audio/NinjamTrackNode.h \
+    src/jamtaba/gui/NinjamTrackView.h
 
 
 win32:HEADERS += portaudio/include/pa_asio.h \
@@ -157,21 +160,25 @@ SOURCES += \
     src/jamtaba/gui/plugins/guis.cpp \
     src/jamtaba/gui/JamRoomViewPanel.cpp \
     src/jamtaba/gui/MainFrame.cpp \
-    src/jamtaba/gui/TrackView.cpp \
     src/jamtaba/audio/vst/PluginFinder.cpp \
     src/jamtaba/audio/vst/VstPlugin.cpp \
     src/jamtaba/audio/vst/vsthost.cpp \
     src/jamtaba/midi/MidiDriver.cpp \
     src/jamtaba/gui/PreferencesDialog.cpp \
     src/jamtaba/gui/PluginScanDialog.cpp \
-    src/jamtaba/midi/PortMidiDriver.cpp
+    src/jamtaba/midi/PortMidiDriver.cpp \
+    src/jamtaba/gui/NinjamRoomWindow.cpp \
+    src/jamtaba/gui/BaseTrackView.cpp \
+    src/jamtaba/audio/NinjamTrackNode.cpp \
+    src/jamtaba/gui/NinjamTrackView.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
-    src/jamtaba/gui/TrackView.ui \
     src/jamtaba/gui/PluginScanDialog.ui \
     src/jamtaba/gui/MainFrame.ui \
-    src/jamtaba/gui/JamRoomViewPanel.ui
+    src/jamtaba/gui/JamRoomViewPanel.ui \
+    src/jamtaba/gui/NinjamRoomWindow.ui \
+    src/jamtaba/gui/BaseTrackView.ui
 
 
 #macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \

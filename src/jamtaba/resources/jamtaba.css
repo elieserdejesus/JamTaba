@@ -283,21 +283,21 @@ border-radius: 5px;
 }
 
 /*  Track view +++++++++++++++++++++++++++++++++++++++++++++++ */
-TrackView{
+BaseTrackView{
 background-color: red;
 border-radius: 5px;
 background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), stop:1 rgb(100, 100, 100));
 border: 1px solid rgb(61,61,61);
 }
 
-TrackView  QGroupBox{
+BaseTrackView  QGroupBox{
 border: 1px solid rgba(0, 0, 0, 50);
 border-radius: 3px;
 margin-top: 5px;
 }
 
 
-TrackView  QGroupBox::title{
+BaseTrackView  QGroupBox::title{
 subcontrol-origin: margin;
 subcontrol-position: top left;
 padding: 1 3px;
@@ -307,7 +307,7 @@ left: 10px;
 
 }
 
-TrackView .QPushButton#soloButton, TrackView .QPushButton#muteButton {
+BaseTrackView .QPushButton#soloButton, BaseTrackView .QPushButton#muteButton {
 border-radius: 3px;
 border: 1px solid gray;
 color: rgba(0, 0, 0, 80);
@@ -315,21 +315,21 @@ padding: 3px 6px 3px 6px;
 font-size: 8pt;
 }
 
-TrackView .QLabel#labelPanR, TrackView .QLabel#labelPanL{
+BaseTrackView .QLabel#labelPanR, BaseTrackView .QLabel#labelPanL{
 color: rgba(0, 0, 0, 80);
 }
 
-TrackView .QPushButton:hover#soloButton, TrackView .QPushButton:hover#muteButton{
+BaseTrackView .QPushButton:hover#soloButton, BaseTrackView .QPushButton:hover#muteButton{
 background-color: rgba(255, 255, 255, 80);
 color: rgba(0, 0, 0, 200);
 }
 
-TrackView .QPushButton:checked#soloButton{
+BaseTrackView .QPushButton:checked#soloButton{
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
 color: black;
 }
 
-TrackView .QPushButton:hover:checked#soloButton {
+BaseTrackView .QPushButton:hover:checked#soloButton {
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(110, 255, 82), stop:1 rgb(30, 195, 30));
 color: gray;
 }
@@ -339,28 +339,28 @@ background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 
 color: lightgray;
 }
 
-TrackView .QPushButton:hover:checked#muteButton {
+BaseTrackView .QPushButton:hover:checked#muteButton {
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 110, 122), stop:1 rgb(120, 0, 0));
 color: white;
 }
 
 
-TrackView  > .QLabel#trackName {
+BaseTrackView  > .QLabel#trackName {
 color: rgb(0, 0, 0);
 font-weight: bold;
 margin-top:5px;
 }
 
-TrackView  > .QLineEdit#channelName {
+BaseTrackView  > .QLineEdit#channelName {
 margin-bottom: 10px;
 }
 
 
-TrackView > .QFrame#topSeparator{
+BaseTrackView > .QFrame#topSeparator{
 background-color: rgb(210, 210, 210);
 }
 
-TrackView > .QFrame#panSectionSeparator{
+BaseTrackView > .QFrame#panSectionSeparator{
 background-color: rgb(180, 180, 180);
 }
 

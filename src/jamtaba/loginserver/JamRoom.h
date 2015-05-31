@@ -7,6 +7,9 @@
 #include <memory>
 #include <QJsonObject>
 
+namespace Ninjam {
+    class Server;
+}
 
 namespace Login {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -140,7 +143,9 @@ private:
     QString hostName;
     int hostPort;
     int maxUsers;
-
+    static QMap<QString, NinjamRoom*> ninjamRooms;
+    QString getMapKey() const;
+    static QString buildMapKey(QString hostName, int hostPort);
 public:
     explicit NinjamRoom(long long ID);
     ~NinjamRoom();
@@ -156,6 +161,8 @@ public:
     virtual QString getName() const;//hostName:port = ninbot.com:2049
     inline int getMaxUsers() const {return maxUsers;}
     //virtual int getPeersCount() const;
+
+    static NinjamRoom* getNinjamRoom(const Ninjam::Server& server );
 };
 
 }//end of namespace

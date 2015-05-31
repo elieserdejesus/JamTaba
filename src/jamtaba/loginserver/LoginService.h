@@ -62,6 +62,7 @@ public:
     inline bool isConnected() const {return connected;}
 
 
+
 private:
     QNetworkAccessManager httpClient;
     QNetworkReply* pendingReply;
