@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TrackView.h"
+#include "BaseTrackView.h"
 #include <QWidget>
 #include <QMenu>
 
@@ -14,7 +14,7 @@ namespace Controller {
     class MainController;
 }
 
-class LocalTrackView : public TrackView
+class LocalTrackView : public BaseTrackView
 {
     Q_OBJECT
 public:

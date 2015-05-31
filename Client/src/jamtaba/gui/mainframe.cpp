@@ -20,6 +20,7 @@
 #include "FxPanel.h"
 #include "../audio/vst/PluginFinder.h"
 #include "pluginscandialog.h"
+#include "NinjamRoomWindow.h"
 
 using namespace Audio;
 using namespace Persistence;
@@ -77,6 +78,10 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     }
 
     QObject::connect(ui.menuAudioPreferences, SIGNAL(triggered()), this, SLOT(on_preferencesClicked()));
+
+    QObject::connect(mainController, SIGNAL(enteredInRoom(Login::AbstractJamRoom*)), this, SLOT(on_enteredInRoom(Login::AbstractJamRoom*)));
+
+
 }
 
 
@@ -156,6 +161,7 @@ void MainFrame::on_connectedInServer(QList<Login::AbstractJamRoom*> rooms){
         ui.allRoomsContent->layout()->addWidget(roomViewPanel);
         connect( roomViewPanel, SIGNAL(startingListeningTheRoom(Login::AbstractJamRoom*)), this, SLOT(on_startingRoomStream(Login::AbstractJamRoom*)));
         connect( roomViewPanel, SIGNAL(finishingListeningTheRoom(Login::AbstractJamRoom*)), this, SLOT(on_stoppingRoomStream(Login::AbstractJamRoom*)));
+        connect( roomViewPanel, SIGNAL(enteringInTheRoom(Login::AbstractJamRoom*)), this, SLOT(on_enteringInRoom(Login::AbstractJamRoom*)));
     }
 }
 
@@ -173,6 +179,15 @@ void MainFrame::on_stoppingRoomStream(Login::AbstractJamRoom * room){
 
 void MainFrame::on_enteringInRoom(Login::AbstractJamRoom *room){
     mainController->enterInRoom(room);
+}
+
+//este evento é disparado pelo controlador depois que já aconteceu a conexão com uma das salas
+void MainFrame::on_enteredInRoom(Login::AbstractJamRoom *room)
+{
+
+    NinjamRoomWindow* roomWindow = new NinjamRoomWindow(ui.tabWidget, dynamic_cast<Login::NinjamRoom*>(room), mainController);
+    int index = ui.tabWidget->addTab(roomWindow, room->getName());
+    ui.tabWidget->setCurrentIndex(index);
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

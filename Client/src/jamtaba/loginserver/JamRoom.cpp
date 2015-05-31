@@ -5,6 +5,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include "../ninjam/Service.h"
+#include "../ninjam/Server.h"
 
 using namespace Login;
 
@@ -208,6 +209,8 @@ QList<RealTimePeer *> RealTimeRoom::getReachablePeers() const{
 //+++++++++++++             NINJAM  ROOM         ++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+QMap<QString, NinjamRoom*> NinjamRoom::ninjamRooms;
+
 NinjamRoom::NinjamRoom(long long ID)
     :AbstractJamRoom(ID), containBotPeer(false)
 {
@@ -215,7 +218,11 @@ NinjamRoom::NinjamRoom(long long ID)
 }
 
 NinjamRoom::~NinjamRoom(){
+    ninjamRooms.remove(getMapKey());
+}
 
+QString NinjamRoom::getMapKey() const{
+    return buildMapKey(hostName, hostPort);
 }
 
 bool NinjamRoom::updateFromJson(QJsonObject json){
@@ -224,6 +231,8 @@ bool NinjamRoom::updateFromJson(QJsonObject json){
         this->hostPort = json["port"].toInt();
         this->maxUsers = json["maxUsers"].toInt();
         this->streamLink = json["streamUrl"].toString();
+
+        ninjamRooms.insert(getMapKey(), this);
     }
 
     //insert new users and removed the olds
@@ -279,6 +288,19 @@ bool NinjamRoom::isEmpty() const{
 
 QString NinjamRoom::getName() const{
     return hostName + ":" + QString::number(hostPort);
+}
+
+QString NinjamRoom::buildMapKey(QString hostName, int hostPort){
+    return hostName + ":" + QString::number(hostPort);
+}
+
+NinjamRoom* NinjamRoom::getNinjamRoom(const Ninjam::Server &server)
+{
+    QString key = buildMapKey(server.getHostName(), server.getPort());
+    if(ninjamRooms.contains(key)){
+        return ninjamRooms[key];
+    }
+    return nullptr;
 }
 
 //int NinjamRoom::getPeersCount() const{
