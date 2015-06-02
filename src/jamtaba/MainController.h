@@ -78,7 +78,7 @@ public:
 
     void process(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
 
-    int addTrack(const Login::AbstractPeer& peer);
+    void addTrack(long trackID);
     void removeTrack(long trackID);
 
     void playRoomStream(Login::AbstractJamRoom *room);

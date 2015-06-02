@@ -1,3 +1,5 @@
+#implementar metronomo local
+
 # continuar implementando view da sala ninjam
 
 # MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais. Testar com o controlador AKAI também para ver

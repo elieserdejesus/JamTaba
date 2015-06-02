@@ -63,14 +63,16 @@ void Service::socketReadSlot(){
 
 }
 
-void Service::socketErrorSlot(QAbstractSocket::SocketError error)
+void Service::socketErrorSlot(QAbstractSocket::SocketError e)
 {
-    qDebug() << "Socket error: " << error;
+    //qDebug() << "Socket error: " << error;
+    emit error("Socket error");
 }
 
 void Service::socketDisconnectSlot()
 {
-    qFatal("Socket disconnected");
+    //qFatal("Socket disconnected");
+    emit disconnectedFromServer(false);
 }
 
 
