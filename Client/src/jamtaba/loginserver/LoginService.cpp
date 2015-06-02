@@ -183,6 +183,11 @@ void LoginService::connectedSlot(){
     QString json = QString( pendingReply->readAll());
     updateFromJson(json);
     QList<AbstractJamRoom*> rooms = buildTheRoomsList();
+    if(LOCAL_HOST_MODE){
+        rooms.clear();
+        Login::NinjamRoom* ninjamLocalServer = new Login::NinjamRoom("localhost", 2049, 16);
+        rooms.append(ninjamLocalServer);
+     }
 
     emit connectedInServer(rooms);
 }

@@ -126,10 +126,8 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     //qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
 }
 
-int MainController::addTrack(const Login::AbstractPeer &peer){
-    int ID = peer.getId();
-    tracksNodes.insert( ID, new NinjamTrackNode() );
-    return ID;
+void MainController::addTrack(long trackID){
+    tracksNodes.insert( trackID, new NinjamTrackNode() );
 }
 
 void MainController::removeTrack(long trackID){

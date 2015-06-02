@@ -42,8 +42,8 @@ class Service : public QObject{//mantive esta classe herdando de QObject para fa
     Q_OBJECT
 
 public:
-    static const bool USE_LOCAL_HOST = false;//debug
-    static QList<Service> getPublicServersInfos();
+    //static const bool USE_LOCAL_HOST = false;//debug
+    //static QList<Service> getPublicServersInfos();
     static Service* getInstance();
     static bool isBotName(QString userName) ;
 

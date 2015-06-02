@@ -12,6 +12,8 @@ namespace Ninjam {
 }
 
 namespace Login {
+
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class AbstractPeer{
 public:
@@ -25,13 +27,18 @@ public:
     inline QString getIP() const {return ip;}
     virtual bool isBot() const = 0;
     virtual QString getCountryCode() const {return countryCode;}
+    virtual QString getCountryName() const {return countriesMap[getCountryCode().toUpper()];}
+
+    static AbstractPeer* getByIP(QString ip);
 protected:
     //all created instances
     static QMap<long long, std::shared_ptr<AbstractPeer>> peers;
+    static QMap<QString, QString> countriesMap;
     long long id;
     QString ip;
     QString name;
     QString countryCode;
+
 };
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class RealTimePeer : public AbstractPeer
@@ -58,6 +65,7 @@ public:
     ~NinjamPeer(){}
     virtual void updateFromJson(QJsonObject json);
     virtual bool isBot() const;
+
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -148,6 +156,7 @@ private:
     static QString buildMapKey(QString hostName, int hostPort);
 public:
     explicit NinjamRoom(long long ID);
+    NinjamRoom(QString host, int port, int maxUsers);
     ~NinjamRoom();
     virtual bool updateFromJson(QJsonObject json) ;
     inline AbstractJamRoom::Type getRoomType() const {return AbstractJamRoom::Type::NINJAM; }

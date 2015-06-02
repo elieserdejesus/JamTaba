@@ -2,7 +2,8 @@
 #define NINJAMROOMWINDOW_H
 
 #include <QWidget>
-#include "../loginserver/JamRoom.h"
+//#include "../loginserver/JamRoom.h"
+#include "../ninjam/Server.h"
 #include "../MainController.h"
 
 #include <QSpacerItem>
@@ -18,7 +19,7 @@ class NinjamRoomWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit NinjamRoomWindow(QWidget *parent, Login::NinjamRoom* room, Controller::MainController *mainController);
+    explicit NinjamRoomWindow(QWidget *parent, Ninjam::Server* server, Controller::MainController *mainController);
     ~NinjamRoomWindow();
 
 private:
