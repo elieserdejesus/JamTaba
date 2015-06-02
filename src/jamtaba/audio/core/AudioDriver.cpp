@@ -186,7 +186,7 @@ void SamplesBuffer::set(const SamplesBuffer& buffer, unsigned int bufferOffset, 
 
     //QMutexLocker locker(&mutex);
     //qDebug() << "set";
-    unsigned int framesToProcess = samplesToCopy - bufferOffset;
+    unsigned int framesToProcess = std::min(samplesToCopy, buffer.getFrameLenght() - bufferOffset);
     if(framesToProcess > buffer.frameLenght){//não processa mais samples do que a quantidade existente em buffer
         framesToProcess = buffer.frameLenght;
     }
@@ -196,21 +196,21 @@ void SamplesBuffer::set(const SamplesBuffer& buffer, unsigned int bufferOffset, 
 
     if(channels == buffer.channels){//channels number are equal
         for (unsigned int c = 0; c < channels; ++c) {
-            for (unsigned int s = bufferOffset; s < framesToProcess; ++s) {
-                samples[c][s + internalOffset] = buffer.samples[c][s];
+            for (unsigned int s = 0; s < framesToProcess; ++s) {
+                samples[c][s + internalOffset] = buffer.samples[c][s + bufferOffset];
             }
         }
     }
     else{//different number of channels
         if(!isMono()){//copy every &buffer samples to LR in this buffer
-            for (unsigned int s = bufferOffset; s < framesToProcess; ++s) {
-                samples[0][s + internalOffset] = buffer.samples[0][s];
-                samples[1][s + internalOffset] = buffer.samples[0][s];
+            for (unsigned int s = 0; s < framesToProcess; ++s) {
+                samples[0][s + internalOffset] = buffer.samples[0][s + bufferOffset];
+                samples[1][s + internalOffset] = buffer.samples[0][s + bufferOffset];
             }
         }
         else{//this buffer is mono, but the buffer in parameter is not! Mix down the stereo samples in one mono sample value.
-            for (unsigned int s = bufferOffset; s < framesToProcess; ++s) {
-                samples[0][s + internalOffset] = (buffer.samples[0][s] + buffer.samples[1][s]) / 2;
+            for (unsigned int s = 0; s < framesToProcess; ++s) {
+                samples[0][s + internalOffset] = (buffer.samples[0][s + bufferOffset] + buffer.samples[1][s + bufferOffset]) / 2;
             }
         }
     }

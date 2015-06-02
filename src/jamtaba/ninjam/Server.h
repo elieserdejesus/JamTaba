@@ -45,6 +45,8 @@ public:
 
     inline QString getStreamUrl() const { return streamUrl; }
 
+    inline bool isLocalHostServer() const{return host == "localhost"; }
+
     inline bool hasStream() const{
         //tirei o stream do server do mutant porque ele usa nsv, e não encontrei lib para esse formato
         return !streamUrl.isNull() && !host.toLower().contains("mutant");

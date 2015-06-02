@@ -19,7 +19,6 @@
 #include "../ninjam/Service.h"
 #include "../ninjam/Server.h"
 #include "../loginserver/JamRoom.h"
-#include "../audio/NinjamTrackNode.h"
 
 //#include "mainframe.h"
 
@@ -126,8 +125,9 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     //qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
 }
 
-void MainController::addTrack(long trackID){
-    tracksNodes.insert( trackID, new NinjamTrackNode() );
+void MainController::addTrack(long trackID, Audio::AudioNode* trackNode){
+    tracksNodes.insert( trackID, trackNode );
+    audioMixer->addNode(*trackNode) ;
 }
 
 void MainController::removeTrack(long trackID){
@@ -388,7 +388,13 @@ Login::LoginService* MainController::getLoginService() const{
 //++++++++++++= NINJAM ++++++++++++++++
 void MainController::connectedInNinjamServer(const Ninjam::Server &server){
     qDebug() << "conectado no server " << server.getHostName() << endl;
-    Login::NinjamRoom* ninjamRoom = Login::NinjamRoom::getNinjamRoom(server);
+    Login::NinjamRoom* ninjamRoom = nullptr;
+    if(!server.isLocalHostServer() ){
+        ninjamRoom = Login::NinjamRoom::getNinjamRoom(server);
+    }
+    else{
+        ninjamRoom = new Login::NinjamRoom(server.getHostName(), server.getPort(), server.getMaxUsers());
+    }
     if(ninjamRoom){
         emit enteredInRoom(ninjamRoom);
     }

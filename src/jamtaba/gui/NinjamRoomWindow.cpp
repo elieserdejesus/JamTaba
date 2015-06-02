@@ -4,7 +4,8 @@
 #include "../MainController.h"
 #include "../ninjam/User.h"
 #include "../loginserver/JamRoom.h"
-
+#include "../audio/NinjamTrackNode.h"
+#include "../audio/MetronomeTrackNode.h"
 
 class NinjamTrackInfos{
 
@@ -39,9 +40,6 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Ninjam::Server *server, Cont
 
     ui->labelRoomName->setText(server->getHostName() + ":" + QString::number(server->getPort()));
 
-    //Preciso da instância de ninjamUser para saber quantos canais esse user possui, isso eu não consigo com o NinjamPeer.
-    //Ou seja, as tracks estão ligadas a canais, não a usuários. Preciso de um ChannelPeer?
-
     QList<Ninjam::User*> users = server->getUsers();
     ui->tracksPanel->layout()->setAlignment(Qt::AlignLeft);
     foreach (Ninjam::User* user, users) {
@@ -51,7 +49,7 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Ninjam::Server *server, Cont
                 QSet<Ninjam::UserChannel*> channels = user->getChannels();
                 foreach (Ninjam::UserChannel* channel, channels) {
                     NinjamTrackInfos trackInfos(user, channel);
-                    mainController->addTrack( trackInfos.getID() );
+                    mainController->addTrack( trackInfos.getID(), new NinjamTrackNode() );
                     BaseTrackView* trackView = new NinjamTrackView(ui->tracksPanel, mainController, trackInfos.getID(), channel->getName(), ninjamPeer);
                     ui->tracksPanel->layout()->addWidget(trackView);
                 }
@@ -61,6 +59,9 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Ninjam::Server *server, Cont
             }
         }
     }
+
+    //metronome
+    mainController->addTrack(-1, new Audio::MetronomeTrackNode(":/click.wav"));
 
 }
 
