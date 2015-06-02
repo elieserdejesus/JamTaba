@@ -262,4 +262,7 @@
         <file>flags/zm.png</file>
         <file>flags/zw.png</file>
     </qresource>
+    <qresource prefix="/">
+        <file>click.wav</file>
+    </qresource>
 </RCC>

@@ -63,7 +63,7 @@ void Service::socketReadSlot(){
 
 }
 
-void Service::socketErrorSlot(QAbstractSocket::SocketError e)
+void Service::socketErrorSlot(QAbstractSocket::SocketError /*e*/)
 {
     //qDebug() << "Socket error: " << error;
     emit error("Socket error");

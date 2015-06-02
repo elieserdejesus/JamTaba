@@ -494,6 +494,7 @@ NinjamRoom::NinjamRoom(QString host, int port, int maxUsers)
     this->hostPort = port;
     this->maxUsers = maxUsers;
     this->streamLink = "";
+
 }
 
 NinjamRoom::~NinjamRoom(){

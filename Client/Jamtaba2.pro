@@ -1,5 +1,9 @@
 #implementar metronomo local
 
+#parece que quando conecta no server local ninjam não ocorre o evento avisando que foi conectado
+
+#botão de mute da pista local está bugado
+
 # continuar implementando view da sala ninjam
 
 # MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais. Testar com o controlador AKAI também para ver
@@ -118,7 +122,8 @@ HEADERS += \
     src/jamtaba/gui/NinjamRoomWindow.h \
     src/jamtaba/gui/BaseTrackView.h \
     src/jamtaba/audio/NinjamTrackNode.h \
-    src/jamtaba/gui/NinjamTrackView.h
+    src/jamtaba/gui/NinjamTrackView.h \
+    src/jamtaba/audio/MetronomeTrackNode.h
 
 
 win32:HEADERS += portaudio/include/pa_asio.h \
@@ -172,7 +177,8 @@ SOURCES += \
     src/jamtaba/gui/NinjamRoomWindow.cpp \
     src/jamtaba/gui/BaseTrackView.cpp \
     src/jamtaba/audio/NinjamTrackNode.cpp \
-    src/jamtaba/gui/NinjamTrackView.cpp
+    src/jamtaba/gui/NinjamTrackView.cpp \
+    src/jamtaba/audio/MetronomeTrackNode.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
