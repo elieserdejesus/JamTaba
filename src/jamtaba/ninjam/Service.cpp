@@ -118,6 +118,18 @@ void Service::buildNewSocket()   {
 
 }
 
+void Service::voteToChangeBPI(int newBPI){
+    QString text = "!vote BPI " + QString::number(newBPI);
+    ChatMessage message(text);
+    sendMessageToServer(&message);
+}
+
+void Service::voteToChangeBPM(int newBPM){
+    QString text = "!vote BPM " + QString::number(newBPM);
+    ChatMessage message(text);
+    sendMessageToServer(&message);
+}
+
 void Service::sendMessageToServer(ClientMessage *message)
 {
     QByteArray outBuffer;

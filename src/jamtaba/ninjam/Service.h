@@ -135,6 +135,10 @@ private slots:
     void socketErrorSlot(QAbstractSocket::SocketError error);
     void socketDisconnectSlot();
 public:
+    void voteToChangeBPM(int newBPM) ;
+
+    void voteToChangeBPI(int newBPI) ;
+
     /*
 
 
@@ -150,13 +154,6 @@ public:
         enqueueMessageToSend(new PrivateChatMessage(message, user));
     }
 
-    public void voteToChangeBPM(int newBPM) {
-        throw new RuntimeException("not implemented");
-    }
-
-    public void voteToChangeBPI(int newBPI) {
-        throw new RuntimeException("not implemented");
-    }
 
     public void changeTopic(String newTopic) {
         throw new RuntimeException("not implemented");

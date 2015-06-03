@@ -10,6 +10,8 @@
         <file>check_checked.png</file>
         <file>on.png</file>
         <file>off.png</file>
+        <file>metronome.png</file>
+        <file>ninja.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

@@ -157,7 +157,28 @@ void ClientSetUserMask::printDebug(QDebug dbg) const
     dbg << "SEND ClientSetUserMask{ userNames=" << usersFullNames << " flag=" << FLAG << '}';
 }
 
-//+++++++++++++++
+//+++++++++++++++++++++++++++++
+
+ChatMessage::ChatMessage(QString text)
+    : ClientMessage(0xc0, 0), text(text), command("MSG")
+{
+    payload = text.length() + 1 + command.length() + 1;
+}
+
+void ChatMessage::serializeTo(QByteArray &buffer){
+    QDataStream stream(&buffer, QIODevice::WriteOnly);
+    stream.setByteOrder(QDataStream::LittleEndian);
+    stream << msgType;
+    stream << payload;
+    ClientMessage::serializeString(command, stream);
+    ClientMessage::serializeString(text, stream);
+}
+
+void ChatMessage::printDebug(QDebug dbg) const{
+    dbg << "SEND ChatMessage{ command=" << command << " text=" << text << '}';
+}
+
+//+++++++++++++++++++++++++
 QDebug Ninjam::operator<<(QDebug dbg, ClientMessage* message)
 {
     message->printDebug(dbg);

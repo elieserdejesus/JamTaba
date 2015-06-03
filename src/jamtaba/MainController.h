@@ -115,6 +115,7 @@ public:
 
 signals:
     void enteredInRoom(Login::AbstractJamRoom* room);
+    void audioSamplesProcessed(int samplesProcessed);
 private:
 
     Audio::Plugin* createPluginInstance(Audio::PluginDescriptor* descriptor);

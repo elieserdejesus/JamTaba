@@ -184,12 +184,17 @@ void MainFrame::on_enteringInRoom(Login::AbstractJamRoom *room){
 //este evento é disparado pelo controlador depois que já aconteceu a conexão com uma das salas
 void MainFrame::on_enteredInRoom(Login::AbstractJamRoom *room)
 {
-    Login::NinjamRoom* ninjamRoom = dynamic_cast<Login::NinjamRoom*>(room);
-    Ninjam::Server* server = Ninjam::Server::getServer(ninjamRoom->getHostName(), ninjamRoom->getHostPort());
-    if(server){
-        NinjamRoomWindow* roomWindow = new NinjamRoomWindow(ui.tabWidget, server, mainController);
-        int index = ui.tabWidget->addTab(roomWindow, room->getName());
-        ui.tabWidget->setCurrentIndex(index);
+    if(room->getRoomType() == AbstractJamRoom::Type::NINJAM){
+        Login::NinjamRoom* ninjamRoom = dynamic_cast<Login::NinjamRoom*>(room);
+        Ninjam::Server* server = Ninjam::Server::getServer(ninjamRoom->getHostName(), ninjamRoom->getHostPort());
+        if(!server){
+            server = ninjamRoom->getNinjamServer();
+        }
+        if(server){
+            NinjamRoomWindow* roomWindow = new NinjamRoomWindow(ui.tabWidget, server, mainController);
+            int index = ui.tabWidget->addTab(roomWindow, room->getName());
+            ui.tabWidget->setCurrentIndex(index);
+        }
     }
 }
 

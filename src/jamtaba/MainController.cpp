@@ -181,6 +181,8 @@ void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out
 
     roomStreamerPeaks.left = roomStreamer->getLastPeak();
     roomStreamerPeaks.right = roomStreamer->getLastPeak();
+
+   emit audioSamplesProcessed(out.getFrameLenght());
 }
 
 Controller::Peaks MainController::getInputPeaks(){

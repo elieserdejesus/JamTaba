@@ -13,8 +13,8 @@ AudioMixer::AudioMixer()
     inputNode = new LocalInputAudioNode();
 
     //disconnect to test
-    inputNode->connect(*mainOutNode);
-    inputNode->setGain(1);
+    //inputNode->connect(*mainOutNode);
+    //inputNode->setGain(1);
 
 }
 
