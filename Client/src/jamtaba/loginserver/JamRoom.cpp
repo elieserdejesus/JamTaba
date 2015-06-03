@@ -481,14 +481,14 @@ QList<RealTimePeer *> RealTimeRoom::getReachablePeers() const{
 QMap<QString, NinjamRoom*> NinjamRoom::ninjamRooms;
 
 NinjamRoom::NinjamRoom(long long ID)
-    :AbstractJamRoom(ID), containBotPeer(false)
+    :AbstractJamRoom(ID), containBotPeer(false), ninjamServer(nullptr)
 {
 
 }
 
 //this constructor is used just to test the localhost ninjam server
 NinjamRoom::NinjamRoom(QString host, int port, int maxUsers)
-    :AbstractJamRoom(1)
+    :AbstractJamRoom(1), ninjamServer(nullptr)
 {
     this->hostName = host;
     this->hostPort = port;
@@ -578,7 +578,9 @@ NinjamRoom* NinjamRoom::getNinjamRoom(const Ninjam::Server &server)
 {
     QString key = buildMapKey(server.getHostName(), server.getPort());
     if(ninjamRooms.contains(key)){
-        return ninjamRooms[key];
+        NinjamRoom* room = ninjamRooms[key];
+        room->setNinjamServer((Ninjam::Server*)&server);
+        return room;
     }
     return nullptr;
 }

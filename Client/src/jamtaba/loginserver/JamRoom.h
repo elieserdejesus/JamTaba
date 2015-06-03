@@ -154,6 +154,7 @@ private:
     static QMap<QString, NinjamRoom*> ninjamRooms;
     QString getMapKey() const;
     static QString buildMapKey(QString hostName, int hostPort);
+    Ninjam::Server* ninjamServer;
 public:
     explicit NinjamRoom(long long ID);
     NinjamRoom(QString host, int port, int maxUsers);
@@ -169,6 +170,8 @@ public:
     bool isEmpty() const;
     virtual QString getName() const;//hostName:port = ninbot.com:2049
     inline int getMaxUsers() const {return maxUsers;}
+    inline void setNinjamServer(Ninjam::Server* server){this->ninjamServer = server;}
+    inline Ninjam::Server* getNinjamServer() const{return this->ninjamServer;}
     //virtual int getPeersCount() const;
 
     static NinjamRoom* getNinjamRoom(const Ninjam::Server& server );

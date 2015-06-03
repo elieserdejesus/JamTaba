@@ -343,7 +343,7 @@ background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(110, 255, 8
 color: gray;
 }
 
-TrackView .QPushButton:checked#muteButton {
+BaseTrackView .QPushButton:checked#muteButton {
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
 color: lightgray;
 }
@@ -371,6 +371,11 @@ background-color: rgb(210, 210, 210);
 
 BaseTrackView > .QFrame#panSectionSeparator{
 background-color: rgb(180, 180, 180);
+}
+
+/* NINJAM */
+NinjamPanel{
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
 }
 
 

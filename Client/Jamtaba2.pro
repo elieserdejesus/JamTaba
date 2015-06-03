@@ -1,6 +1,6 @@
-#implementar metronomo local
+#mensagem de mudança de bpm está com algum problema, server está retornando uma mensagem de erro
 
-#parece que quando conecta no server local ninjam não ocorre o evento avisando que foi conectado
+#implementar metronomo local
 
 #botão de mute da pista local está bugado
 
@@ -123,7 +123,8 @@ HEADERS += \
     src/jamtaba/gui/BaseTrackView.h \
     src/jamtaba/audio/NinjamTrackNode.h \
     src/jamtaba/gui/NinjamTrackView.h \
-    src/jamtaba/audio/MetronomeTrackNode.h
+    src/jamtaba/audio/MetronomeTrackNode.h \
+    src/jamtaba/gui/NinjamPanel.h
 
 
 win32:HEADERS += portaudio/include/pa_asio.h \
@@ -178,7 +179,8 @@ SOURCES += \
     src/jamtaba/gui/BaseTrackView.cpp \
     src/jamtaba/audio/NinjamTrackNode.cpp \
     src/jamtaba/gui/NinjamTrackView.cpp \
-    src/jamtaba/audio/MetronomeTrackNode.cpp
+    src/jamtaba/audio/MetronomeTrackNode.cpp \
+    src/jamtaba/gui/NinjamPanel.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
@@ -186,7 +188,8 @@ FORMS += \
     src/jamtaba/gui/MainFrame.ui \
     src/jamtaba/gui/JamRoomViewPanel.ui \
     src/jamtaba/gui/NinjamRoomWindow.ui \
-    src/jamtaba/gui/BaseTrackView.ui
+    src/jamtaba/gui/BaseTrackView.ui \
+    src/jamtaba/gui/NinjamPanel.ui
 
 
 #macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \

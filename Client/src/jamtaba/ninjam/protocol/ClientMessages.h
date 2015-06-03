@@ -83,6 +83,17 @@ public:
 
 };
 
+//+++++++++++++++++++++++++++
+class ChatMessage : public ClientMessage{
+public:
+    ChatMessage(QString text);
+    virtual void serializeTo(QByteArray &stream);
+    virtual void printDebug(QDebug dbg) const;
+private:
+    QString text;
+    QString command;
+};
+
 QDebug operator<<(QDebug dbg, Ninjam::ClientMessage* message);
 
 }
