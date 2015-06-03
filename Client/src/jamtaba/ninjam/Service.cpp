@@ -119,13 +119,13 @@ void Service::buildNewSocket()   {
 }
 
 void Service::voteToChangeBPI(int newBPI){
-    QString text = "!vote BPI " + QString::number(newBPI);
+    QString text = "!vote bpi " + QString::number(newBPI);
     ChatMessage message(text);
     sendMessageToServer(&message);
 }
 
 void Service::voteToChangeBPM(int newBPM){
-    QString text = "!vote BPM " + QString::number(newBPM);
+    QString text = "!vote bpm " + QString::number(newBPM);
     ChatMessage message(text);
     sendMessageToServer(&message);
 }

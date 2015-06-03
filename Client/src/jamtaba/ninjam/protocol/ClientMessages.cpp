@@ -18,6 +18,7 @@ void ClientMessage::serializeString(const QString &str, QDataStream &stream){
 }
 
 void ClientMessage::serializeByteArray(const QByteArray &array, QDataStream &stream){
+    qDebug() << "serializando " << array.size() << " bytes para " << array <<endl;
     for (int i = 0; i < array.size(); ++i) {
         stream << quint8(array[i]);
     }
@@ -175,7 +176,7 @@ void ChatMessage::serializeTo(QByteArray &buffer){
 }
 
 void ChatMessage::printDebug(QDebug dbg) const{
-    dbg << "SEND ChatMessage{ command=" << command << " text=" << text << '}';
+    dbg << "SEND ChatMessage{ payload: " << payload << " " << "command=" << command << " text=" << text << '}';
 }
 
 //+++++++++++++++++++++++++
