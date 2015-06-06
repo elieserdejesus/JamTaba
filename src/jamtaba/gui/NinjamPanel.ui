@@ -119,7 +119,7 @@
     </widget>
    </item>
    <item row="1" column="0" colspan="2">
-    <widget class="QWidget" name="ninjamPanel" native="true">
+    <widget class="FancyProgressDisplay" name="intervalPanel" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -130,6 +130,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>FancyProgressDisplay</class>
+   <extends>QWidget</extends>
+   <header>FancyProgressDisplay.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

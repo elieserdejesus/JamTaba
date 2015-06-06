@@ -19,6 +19,7 @@
 #include "../ninjam/Service.h"
 #include "../ninjam/Server.h"
 #include "../loginserver/JamRoom.h"
+#include "NinjamJamRoomController.h"
 
 //#include "mainframe.h"
 
@@ -117,6 +118,9 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     this->ninjamService = Ninjam::Service::getInstance();
     QObject::connect( this->ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), SLOT(connectedInNinjamServer(Ninjam::Server)) );
 
+
+    this->ninjamController = new Controller::NinjamJamRoomController(this);
+
     //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
     //QString vstDir = "C:/Program Files (x86)/VSTPlugins/";
     //pluginFinder->addPathToScan(vstDir.toStdString());
@@ -168,21 +172,28 @@ void MainController::onPluginFounded(Audio::PluginDescriptor* descriptor){
     ConfigStore::addVstPlugin(descriptor->getPath());
 }
 
-void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
+void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
     MidiBuffer midiBuffer = midiDriver->getBuffer();
     vstHost->fillMidiEvents(midiBuffer);//pass midi events to vst host
-    audioMixer->process(in, out);
 
-    //output->processReplacing(in, out);
-    //out.add(in);
+    audioMixer->process(in, out);
 
     inputPeaks.left = audioMixer->getLocalInput()->getLastPeakLeft();
     inputPeaks.right = audioMixer->getLocalInput()->getLastPeakRight();
 
     roomStreamerPeaks.left = roomStreamer->getLastPeak();
     roomStreamerPeaks.right = roomStreamer->getLastPeak();
+}
 
-   emit audioSamplesProcessed(out.getFrameLenght());
+
+void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
+    //static Samples
+    if(!ninjamController->isRunning()){
+        doAudioProcess(in, out);
+    }
+    else{
+        ninjamController->process(in, out);
+    }
 }
 
 Controller::Peaks MainController::getInputPeaks(){
@@ -301,6 +312,11 @@ MainController::~MainController()
     }
     pluginsDescriptors.clear();
 
+    if(this->ninjamController){
+        delete ninjamController;
+        ninjamController = nullptr;
+    }
+
 //    if(this->ninjamService){
 //        delete this->ninjamService;
 //        this->ninjamService = nullptr;
@@ -389,7 +405,7 @@ Login::LoginService* MainController::getLoginService() const{
 
 //++++++++++++= NINJAM ++++++++++++++++
 void MainController::connectedInNinjamServer(const Ninjam::Server &server){
-    qDebug() << "conectado no server " << server.getHostName() << endl;
+    //qDebug() << "conectado no server " << server.getHostName() << endl;
     Login::NinjamRoom* ninjamRoom = nullptr;
     if(!server.isLocalHostServer() ){
         ninjamRoom = Login::NinjamRoom::getNinjamRoom(server);
@@ -400,4 +416,5 @@ void MainController::connectedInNinjamServer(const Ninjam::Server &server){
     if(ninjamRoom){
         emit enteredInRoom(ninjamRoom);
     }
+    ninjamController->start(server.getBpm(), server.getBpi());
 }

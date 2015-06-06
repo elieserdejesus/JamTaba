@@ -8,8 +8,9 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
 {
     ui->setupUi(this);
 
+
     //initialize combos
-    for (int bpm = 80; bpm < 200; bpm += 10) {
+    for (int bpm = 60; bpm < 200; bpm += 10) {
         ui->comboBpm->addItem(QString::number(bpm), bpm);
     }
     int bpis[] = {16, 32, 48, 64};
@@ -19,6 +20,19 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
 
     ui->comboBpm->setValidator(new QIntValidator(60, 240, ui->comboBpm));
     ui->comboBpi->setValidator(new QIntValidator(4, 64, ui->comboBpi));
+}
+
+void NinjamPanel::setCurrentBeat(int currentBeat){
+    ui->intervalPanel->setCurrentBeat(currentBeat);
+}
+
+void NinjamPanel::setBpi(int bpi){
+    ui->comboBpi->setCurrentText(QString::number(bpi));
+    ui->intervalPanel->setBeatsPerInterval(bpi);
+}
+
+void NinjamPanel::setBpm(int bpm){
+    ui->comboBpm->setCurrentText(QString::number(bpm));
 }
 
 QComboBox* NinjamPanel::getBpiCombo() const{

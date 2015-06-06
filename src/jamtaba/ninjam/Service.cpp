@@ -48,7 +48,7 @@ void Service::socketReadSlot(){
             handlingSplittedMessage = false;
             ServerMessageParser* parser = ServerMessageParser::getParser( static_cast<ServerMessageType>(messageTypeCode));
             Ninjam::ServerMessage* message = parser->parse(stream, payloadLenght);
-            qDebug() << message;
+            //qDebug() << message;
             invokeMessageHandler(message);
 
             delete message;
@@ -140,7 +140,7 @@ void Service::sendMessageToServer(ClientMessage *message)
         qFatal("não escreveu os bytes");
     }
     lastSendTime = QDateTime::currentMSecsSinceEpoch();
-    qDebug() << message;
+    //qDebug() << message;
     assert((int)message->getPayload() + 5 == outBuffer.size());
 }
 

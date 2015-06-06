@@ -5,12 +5,14 @@
 #include "ninjam/Service.h"
 #include "JamRoomViewPanel.h"
 
-void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
+#include "audio/core/AudioDriver.h"
 
+
+
+void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
 int main(int argc, char* args[])
 {
-
     qInstallMessageHandler(customLogHandler);
     JamtabaFactory* factory = new ReleaseFactory();
     Controller::MainController mainController(factory, argc, args);//MainController extends QApplication
@@ -18,12 +20,9 @@ int main(int argc, char* args[])
     MainFrame w(&mainController);
     w.show();
 
-   delete factory;
-
-
+    delete factory;
     return mainController.exec();
-    //return 0;
-}
+ }
 //++++++++++++++++++++++++++++++++++
 
 void customLogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
