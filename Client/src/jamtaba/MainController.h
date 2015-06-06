@@ -47,6 +47,7 @@ class JamtabaFactory;
 namespace Controller {
 
 class AudioListener;
+class NinjamJamRoomController;
 
 struct Peaks{
     float left;
@@ -68,6 +69,7 @@ class MainController : public QApplication
     Q_OBJECT
 
     friend class Controller::AudioListener;
+    friend class Controller::NinjamJamRoomController;
 
 public:
     MainController(JamtabaFactory *factory, int& argc, char** argv);
@@ -93,6 +95,7 @@ public:
     Login::LoginService* getLoginService() const;
 
 
+    inline Controller::NinjamJamRoomController* getNinjamController() const{return ninjamController;}
 
     Peaks getInputPeaks();
     Peaks getRoomStreamPeaks();
@@ -115,8 +118,10 @@ public:
 
 signals:
     void enteredInRoom(Login::AbstractJamRoom* room);
-    void audioSamplesProcessed(int samplesProcessed);
+    //void startingAudioCallBack(int bufferSize);
 private:
+
+    void doAudioProcess(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
 
     Audio::Plugin* createPluginInstance(Audio::PluginDescriptor* descriptor);
 
@@ -133,6 +138,8 @@ private:
 
     //ninjam
     Ninjam::Service* ninjamService;
+    Controller::NinjamJamRoomController* ninjamController;
+
 
     QMap<long, Audio::AudioNode*> tracksNodes;
 

@@ -24,6 +24,7 @@ private:
     unsigned int channels;
     unsigned int frameLenght;
     unsigned const int maxFrameLenght;
+    //int offset;
 
     mutable float peaks[2];
 
@@ -36,9 +37,16 @@ private:
 
     //mutable QMutex mutex;
 
+    //bool isClone;
+    int offset;
+
 public:
     SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT);
     ~SamplesBuffer();
+
+
+    void setOffset(int offset);
+    void resetOffset();
 
     inline float** getSamplesArray() const{return samples;}
 
@@ -50,7 +58,9 @@ public:
 
     //overload applyGain used to compute main gain and pan gains in one pass
     void applyGain(float gainFactor, float leftGain, float rightGain);//panValue between [-1, 0, 1] => LEFT, CENTER, RIGHT
+
     void zero();
+
 
     const float *getPeaks() const;//{return peaks[channel];}
 

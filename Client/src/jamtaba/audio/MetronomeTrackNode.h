@@ -10,18 +10,24 @@ class SamplesBuffer;
 class MetronomeTrackNode : public Audio::AudioNode
 {
 public:
-    MetronomeTrackNode(QString metronomeWaveFile);
+    MetronomeTrackNode(QString metronomeWaveFile, int localSampleRate);
     ~MetronomeTrackNode();
     virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
     void setSamplesPerBeat(long samplesPerBeat);
+    void setIntervalPosition(long intervalPosition);
+    void reset();
 private:
     SamplesBuffer* clickSoundBuffer;
-    unsigned int clickBufferOffset;
+    SamplesBuffer* firstIntervalBeatBuffer;
+    SamplesBuffer* firstMeasureBeatBuffer;
+
+    //unsigned int clickBufferOffset;
 
     long samplesPerBeat;
-    long beatSample;//controla a amostra atual, vai incrementando conforme as amostras são tocadas
+    long intervalPosition;
+    long beatPosition;//controla a amostra atual, vai incrementando conforme as amostras são tocadas
 
-    SamplesBuffer* readWavFile(QString fileName);
+    SamplesBuffer* readWavFile(QString fileName, quint32 &sampleRate);//the second parameter is a output parameter
 };
 
 }

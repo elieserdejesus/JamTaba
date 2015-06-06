@@ -18,7 +18,7 @@ void ClientMessage::serializeString(const QString &str, QDataStream &stream){
 }
 
 void ClientMessage::serializeByteArray(const QByteArray &array, QDataStream &stream){
-    qDebug() << "serializando " << array.size() << " bytes para " << array <<endl;
+    //qDebug() << "serializando " << array.size() << " bytes para " << array <<endl;
     for (int i = 0; i < array.size(); ++i) {
         stream << quint8(array[i]);
     }

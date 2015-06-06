@@ -6,6 +6,7 @@
 #include "../loginserver/JamRoom.h"
 #include "../audio/NinjamTrackNode.h"
 #include "../audio/MetronomeTrackNode.h"
+#include "../NinjamJamRoomController.h"
 #include "../audio/core/AudioDriver.h"
 #include "../ninjam/Service.h"
 #include "NinjamPanel.h"
@@ -36,21 +37,22 @@ long NinjamTrackInfos::ID_GENERATOR = 0;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Ninjam::Server *server, Controller::MainController* mainController) :
+NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Ninjam::Server *server, Controller::MainController *mainController) :
     QWidget(parent),
     ui(new Ui::NinjamRoomWindow),
-    server(server),
-    mainController(mainController),
-    metronomeTrackNode(new Audio::MetronomeTrackNode(":/click.wav")),
-    newBpi(-1), newBpm(-1)
-
+    ninjamController(mainController->getNinjamController())
 {
     ui->setupUi(this);
 
     QString roomName = server->getHostName() + ":" + QString::number(server->getPort());
     ui->labelRoomName->setText(roomName);
+
+    ui->topPanel->setBpi(server->getBpi());
+    ui->topPanel->setBpm(server->getBpm());
+
+    QObject::connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(bpiChanged(int)));
+    QObject::connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(bpmChanged(int)));
+    QObject::connect(ninjamController, SIGNAL(intervalBeatChanged(int)), this, SLOT(intervalBeatChanged(int)));
 
     QList<Ninjam::User*> users = server->getUsers();
     ui->tracksPanel->layout()->setAlignment(Qt::AlignLeft);
@@ -72,23 +74,10 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Ninjam::Server *server, Cont
         }
     }
 
-    this->samplesInInterval = computeTotalSamplesInInterval();
-
-    //metronome
-    this->metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
-    mainController->addTrack(-1, this->metronomeTrackNode);
-
-
-    Ninjam::Service* ninjamService = Ninjam::Service::getInstance();
-    QObject::connect(ninjamService, SIGNAL(serverBpmChanged(short)), this, SLOT(ninjamServerBpmChanged(short)));
-    QObject::connect(ninjamService, SIGNAL(serverBpiChanged(short,short)), this, SLOT(ninjamServerBpiChanged(short,short)));
-
-    QObject::connect(mainController, SIGNAL(audioSamplesProcessed(int)), this, SLOT(audioSamplesProcessed(int)));
-
     QObject::connect(ui->topPanel->getBpiCombo(), SIGNAL(currentIndexChanged(int)), this, SLOT(ninjamBpiComboChanged(int)));
     QObject::connect(ui->topPanel->getBpmCombo(), SIGNAL(currentIndexChanged(int)), this, SLOT(ninjamBpmComboChanged(int)));
 }
-
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::ninjamBpiComboChanged(int /*index*/){
     int newBpi = ui->topPanel->getBpiCombo()->currentData().toInt();
     QMessageBox::StandardButton reply;
@@ -99,7 +88,7 @@ void NinjamRoomWindow::ninjamBpiComboChanged(int /*index*/){
         Ninjam::Service::getInstance()->voteToChangeBPI(newBpi);
     }
 }
-
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::ninjamBpmComboChanged(int /*index*/){
     int newBpm = ui->topPanel->getBpmCombo()->currentData().toInt();
     QMessageBox::StandardButton reply;
@@ -109,51 +98,22 @@ void NinjamRoomWindow::ninjamBpmComboChanged(int /*index*/){
         Ninjam::Service::getInstance()->voteToChangeBPM(newBpm);
     }
 }
-
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NinjamRoomWindow::~NinjamRoomWindow()
 {
     delete ui;
-    delete metronomeTrackNode;
+}
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+//ninjam controller events
+void NinjamRoomWindow::bpiChanged(int bpi){
+    ui->topPanel->setBpi(bpi);
 }
 
-void NinjamRoomWindow::audioSamplesProcessed(int samplesProcessed){
-    bool startingNewInterval = this->intervalPosition + samplesProcessed > samplesInInterval;
-    if(startingNewInterval){
-        processScheduledChanges();
-    }
-    this->intervalPosition = (this->intervalPosition + samplesProcessed) % samplesInInterval;
+void NinjamRoomWindow::bpmChanged(int bpm){
+    ui->topPanel->setBpm(bpm);
 }
 
-void NinjamRoomWindow::processScheduledChanges(){
-    if(newBpi > 0){
-        this->samplesInInterval = computeTotalSamplesInInterval();
-        newBpi = -1;
-    }
-    if(newBpm > 0){
-        this->metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
-        newBpm = -1;
-    }
-}
-
-long NinjamRoomWindow::getSamplesPerBeat(){
-    return computeTotalSamplesInInterval()/server->getBpi();
-}
-
-long NinjamRoomWindow::computeTotalSamplesInInterval(){
-    double intervalPeriod =  60000.0 / server->getBpm() * server->getBpi();
-    int sampleRate = mainController->getAudioDriver()->getSampleRate();
-    return (long)(sampleRate * intervalPeriod / 1000.0);
-}
-
-
-//ninjam events
-
-void NinjamRoomWindow::ninjamServerBpiChanged(short /*oldBpi*/, short newBpi){
-    //this->samplesInInterval = computeTotalSamplesInInterval();
-    this->newBpi = newBpi;
-}
-
-void NinjamRoomWindow::ninjamServerBpmChanged(short newBpm){
-    //this->metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
-    this->newBpm = newBpm;
+void NinjamRoomWindow::intervalBeatChanged(int beat){
+    ui->topPanel->setCurrentBeat(beat);
 }

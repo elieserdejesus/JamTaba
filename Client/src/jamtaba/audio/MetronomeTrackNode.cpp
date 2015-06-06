@@ -4,16 +4,43 @@
 #include <QFile>
 #include <cmath>
 #include <QtEndian>
+#include "Resampler.h"
 
 using namespace Audio;
 
-MetronomeTrackNode::MetronomeTrackNode(QString metronomeWaveFile){
-    clickSoundBuffer = readWavFile(metronomeWaveFile);
-    clickBufferOffset = beatSample = 0;
+SamplesBuffer* createResampledBuffer(const SamplesBuffer& buffer, int originalSampleRate, int finalSampleRate){
+    int finalSize = (double)finalSampleRate/originalSampleRate * buffer.getFrameLenght();
+    int channels = buffer.getChannels();
+    SamplesBuffer* newBuffer = new SamplesBuffer(channels, finalSize);
+    float** in = buffer.getSamplesArray();
+    float** out = newBuffer->getSamplesArray();
+    for (int c = 0; c < channels; ++c) {
+        Resampler resampler(originalSampleRate, finalSampleRate);
+        resampler.process(in[c], buffer.getFrameLenght(), out[c], finalSize);
+    }
+    //qDebug() << "Criou buffer com resampling: bufferAntigo: " <<buffer.getFrameLenght() << " novo:" << newBuffer->getFrameLenght() << endl;
+    return newBuffer;
+}
+
+MetronomeTrackNode::MetronomeTrackNode(QString metronomeWaveFile, int localSampleRate)
+    : samplesPerBeat(0){
+    quint32 waveFileSampleRate;
+    clickSoundBuffer = readWavFile(metronomeWaveFile, waveFileSampleRate);
+    if(waveFileSampleRate != (uint)localSampleRate){
+        SamplesBuffer* temp = clickSoundBuffer;
+        clickSoundBuffer = createResampledBuffer(*clickSoundBuffer, waveFileSampleRate, localSampleRate);
+        delete temp;
+    }
+
+    firstIntervalBeatBuffer = new SamplesBuffer(1, 0);
+    firstMeasureBeatBuffer = new SamplesBuffer(1, 0);
+    reset();
 }
 
 MetronomeTrackNode::~MetronomeTrackNode(){
     delete clickSoundBuffer;
+    delete firstIntervalBeatBuffer;
+    delete firstMeasureBeatBuffer;
 }
 
 void MetronomeTrackNode::setSamplesPerBeat(long samplesPerBeat){
@@ -21,8 +48,21 @@ void MetronomeTrackNode::setSamplesPerBeat(long samplesPerBeat){
         qCritical() << "samples per beat <= 0";
     }
     this->samplesPerBeat = samplesPerBeat;
-    clickBufferOffset = beatSample = 0;
+    //clickSoundBuffer->setFrameLenght(samplesPerBeat);
+    reset();
     qDebug() << "samples per beat: " << this->samplesPerBeat << endl;
+}
+
+void MetronomeTrackNode::reset(){
+    beatPosition = intervalPosition = 0;
+}
+
+void MetronomeTrackNode::setIntervalPosition(long intervalPosition){
+    if(samplesPerBeat <= 0){
+        return;
+    }
+    this->intervalPosition = intervalPosition;
+    this->beatPosition = intervalPosition % samplesPerBeat;
 }
 
 void MetronomeTrackNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out){
@@ -32,30 +72,25 @@ void MetronomeTrackNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
     internalBuffer->setFrameLenght(out.getFrameLenght());
     internalBuffer->zero();
 
-    int samplesToCopy = std::min( (int)(clickSoundBuffer->getFrameLenght() - clickBufferOffset), out.getFrameLenght());
-    int nextBeatSample = beatSample + out.getFrameLenght();
+    int samplesToCopy = std::min( (int)(clickSoundBuffer->getFrameLenght() - beatPosition), out.getFrameLenght());
+    int nextBeatSample = beatPosition + out.getFrameLenght();
     int outOffset = 0;
+    int clickSoundBufferOffset = beatPosition;
     if(nextBeatSample > samplesPerBeat){
-        outOffset = samplesPerBeat - beatSample;
-        clickBufferOffset = 0;
+        outOffset = samplesPerBeat - beatPosition;
         samplesToCopy = nextBeatSample - samplesPerBeat;
+        clickSoundBufferOffset = 0;
     }
     if(samplesToCopy > 0){
-        internalBuffer->set(*clickSoundBuffer, clickBufferOffset, samplesToCopy, outOffset);
-        clickBufferOffset += samplesToCopy;
-        //qDebug() << "offset: " << clickBufferOffset << endl;
+        internalBuffer->set(*clickSoundBuffer, clickSoundBufferOffset, samplesToCopy, outOffset);
         AudioNode::processReplacing(in, out);
     }
-    //qDebug() << " beatSample: " << beatSample << "  clickBufferOffset: " << clickBufferOffset << " samplesToCopy: " << samplesToCopy << endl;
-    beatSample = (beatSample + out.getFrameLenght()) % samplesPerBeat;
-
-
-
+    //qDebug() << "samplesToCopy:" <<samplesToCopy << " beatPosition: " <<beatPosition << " intervalPOsition:" <<intervalPosition<< endl;
 }
 
-SamplesBuffer *MetronomeTrackNode::readWavFile(QString fileName){
+SamplesBuffer *MetronomeTrackNode::readWavFile(QString fileName, quint32 & sampleRate){
     // Open wave file
-    qDebug() << "Opening WAV file at: " << fileName;
+    //qDebug() << "Opening WAV file at: " << fileName;
     QFile wavFile(fileName);
     if (!wavFile.open(QFile::ReadOnly))
     {
@@ -65,7 +100,7 @@ SamplesBuffer *MetronomeTrackNode::readWavFile(QString fileName){
 
     // Read in the whole thing
     QByteArray wavFileContent = wavFile.readAll();
-    qDebug() << "The size of the WAV file is: " << wavFileContent.size();
+    //qDebug() << "The size of the WAV file is: " << wavFileContent.size();
 
     // Define the header components
     quint8 fileType[4];
@@ -75,7 +110,7 @@ SamplesBuffer *MetronomeTrackNode::readWavFile(QString fileName){
     quint32 fmtLength;
     quint16 fmtType;
     quint16 numberOfChannels;
-    quint32 sampleRate;
+    //quint32 sampleRate;
     quint32 sampleRateXBitsPerSampleXChanngelsDivEight;
     quint16 bitsPerSampleXChannelsDivEightPointOne;
     quint16 bitsPerSample;

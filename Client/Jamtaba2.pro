@@ -1,6 +1,8 @@
-#mensagem de mudança de bpm está com algum problema, server está retornando uma mensagem de erro
+#implementar acentos do metronomo
 
-#implementar metronomo local
+#combos do painel ninjam estão disparando aleatoriamente
+
+#implementar controles do metronomo local
 
 #botão de mute da pista local está bugado
 
@@ -124,7 +126,14 @@ HEADERS += \
     src/jamtaba/audio/NinjamTrackNode.h \
     src/jamtaba/gui/NinjamTrackView.h \
     src/jamtaba/audio/MetronomeTrackNode.h \
-    src/jamtaba/gui/NinjamPanel.h
+    src/jamtaba/gui/NinjamPanel.h \
+    src/jamtaba/gui/FancyProgressDisplay.h \
+    src/jamtaba/audio/libresample/include/libresample.h \
+    src/jamtaba/audio/libresample/src/configtemplate.h \
+    src/jamtaba/audio/libresample/src/filterkit.h \
+    src/jamtaba/audio/libresample/src/resample_defs.h \
+    src/jamtaba/audio/Resampler.h \
+    src/jamtaba/NinjamJamRoomController.h
 
 
 win32:HEADERS += portaudio/include/pa_asio.h \
@@ -180,7 +189,13 @@ SOURCES += \
     src/jamtaba/audio/NinjamTrackNode.cpp \
     src/jamtaba/gui/NinjamTrackView.cpp \
     src/jamtaba/audio/MetronomeTrackNode.cpp \
-    src/jamtaba/gui/NinjamPanel.cpp
+    src/jamtaba/gui/NinjamPanel.cpp \
+    src/jamtaba/gui/FancyProgressDisplay.cpp \
+    src/jamtaba/audio/libresample/src/filterkit.c \
+    src/jamtaba/audio/libresample/src/resample.c \
+    src/jamtaba/audio/libresample/src/resamplesubs.c \
+    src/jamtaba/audio/Resampler.cpp \
+    src/jamtaba/NinjamJamRoomController.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \

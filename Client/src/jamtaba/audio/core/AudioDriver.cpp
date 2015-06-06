@@ -12,8 +12,9 @@ using namespace Audio;
 SamplesBuffer::SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT)
     : channels(channels),
       frameLenght(MAX_BUFFERS_LENGHT),
-      maxFrameLenght(MAX_BUFFERS_LENGHT)
-      //mutex(QMutex::Recursive)
+      maxFrameLenght(MAX_BUFFERS_LENGHT),
+      offset(0)
+
 {
     if(channels == 0){
         throw std::runtime_error(std::string("AudioSamplesBuffer::channels == 0"));
@@ -30,6 +31,7 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFE
 
     this->peaks[0] = this->peaks[1] = 0;
     //this->ID = lastID++;
+    //this->isClone = false;
 }
 
 SamplesBuffer::~SamplesBuffer(){
@@ -42,6 +44,28 @@ SamplesBuffer::~SamplesBuffer(){
         samples = nullptr;
     }
     //qDebug() << "\tAudio samples destructor ID:" << ID;
+}
+
+
+void SamplesBuffer::setOffset(int offset){
+    if(offset > 0){
+        for (unsigned int c = 0; c < channels; ++c) {
+            samples[c] += offset;
+        }
+        this->offset = offset;
+        this->frameLenght -= offset;
+    }
+    else{
+        resetOffset();
+    }
+
+}
+
+void SamplesBuffer::resetOffset(){
+    for (unsigned int c = 0; c < channels; ++c) {
+        samples[c] -= offset;
+    }
+    this->offset = 0;
 }
 
 void SamplesBuffer::applyGain(float gainFactor)
@@ -86,7 +110,8 @@ void SamplesBuffer::zero()
 {
     //QMutexLocker locker(&mutex);
     for (unsigned int c = 0; c < channels; ++c) {
-       memset(samples[c], 0, frameLenght * sizeof(float));
+        void* dest = samples[c];
+        memset(dest, 0, maxFrameLenght * sizeof(float));
     }
 }
 
@@ -121,9 +146,9 @@ void SamplesBuffer::add(const SamplesBuffer &buffer)
             }
         }
     }
-    else{//samples is stereo and butter is mono
+    else{//samples is stereo and buffer is mono
         for (unsigned int s = 0; s < framesToProcess; ++s) {
-            samples[0][s] += buffer.samples[0][s];
+            samples[0][s ] += buffer.samples[0][s];
             samples[1][s] += buffer.samples[0][s];
         }
     }
@@ -165,7 +190,7 @@ float SamplesBuffer::get(int channel, int sampleIndex) const{
     if(!channelIsValid(channel) || !sampleIndexIsValid(sampleIndex)){
         return 0;
     }
-    return samples[channel][sampleIndex];
+    return samples[channel][sampleIndex ];
 
 }
 
@@ -175,10 +200,13 @@ void SamplesBuffer::setFrameLenght(unsigned int newFrameLenght){
         return;
     }
     if(newFrameLenght > maxFrameLenght){
-        qCritical() << "newFrameLenght > maxFrameLenght (" << newFrameLenght << " > " << maxFrameLenght << ")  frameLenght:" << frameLenght;
+        qWarning() << "newFrameLenght > maxFrameLenght (" << newFrameLenght << " > " << maxFrameLenght << ")  frameLenght:" << frameLenght;
         newFrameLenght = maxFrameLenght;
     }
-
+    //if(newFrameLenght > this->frameLenght){
+        //zero extra samples
+        //zero(frameLenght, maxFrameLenght-1);
+    //}
     this->frameLenght = newFrameLenght;
 }
 

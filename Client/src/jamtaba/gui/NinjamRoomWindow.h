@@ -25,32 +25,17 @@ public:
 
 private:
     Ui::NinjamRoomWindow *ui;
-    Ninjam::Server* server;
-    Controller::MainController* mainController;
-    Audio::MetronomeTrackNode* metronomeTrackNode;
-
-    long intervalPosition;
-    long samplesInInterval;
-
-    int newBpi;
-    int newBpm;
-
-    long computeTotalSamplesInInterval();
-    long getSamplesPerBeat();
-
-    void processScheduledChanges();
+    Controller::NinjamJamRoomController* ninjamController;
 
 private slots:
-    //ninjam events
-    void ninjamServerBpmChanged(short newBpm);
-    void ninjamServerBpiChanged(short oldBpi, short newBpi);
-
-    //main controller
-    void audioSamplesProcessed(int samplesProcessed);
-
     //ninja interval controls
     void ninjamBpiComboChanged(int);
     void ninjamBpmComboChanged(int);
+
+    //ninjam controller events
+    void bpiChanged(int bpi);
+    void bpmChanged(int bpm);
+    void intervalBeatChanged(int beat);
 };
 
 #endif // NINJAMROOMWINDOW_H

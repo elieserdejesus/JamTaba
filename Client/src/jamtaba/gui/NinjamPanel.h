@@ -18,11 +18,15 @@ public:
     ~NinjamPanel();
     QComboBox* getBpiCombo() const;
     QComboBox* getBpmCombo() const;
+    void setBpi(int bpi);
+    void setBpm(int bpm);
+    void setCurrentBeat(int currentBeat);
 protected:
     void paintEvent(QPaintEvent *);
 
 private:
     Ui::NinjamPanel *ui;
+
 };
 
 #endif // NINJAMPANEL_H
