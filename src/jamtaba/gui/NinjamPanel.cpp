@@ -69,19 +69,20 @@ void NinjamPanel::setCurrentBeat(int currentBeat){
 }
 
 void NinjamPanel::setBpi(int bpi){
+    ui->comboBpi->blockSignals(true);
     ui->comboBpi->setCurrentText(QString::number(bpi));
+    ui->comboBpi->blockSignals(false);
     ui->intervalPanel->setBeatsPerInterval(bpi);
     buildAccentsdModel(bpi);
+    ui->comboBeatsPerAccent->setCurrentIndex(0);//off
+    ui->intervalPanel->setShowAccents(false);
 
-    if(ui->intervalPanel->isShowingAccents()){
-        if(ui->comboBeatsPerAccent->count() > 1){
-            ui->comboBeatsPerAccent->setCurrentIndex(1);//auto choose the first available beats per accent value
-        }
-    }
 }
 
 void NinjamPanel::setBpm(int bpm){
+    ui->comboBpm->blockSignals(true);
     ui->comboBpm->setCurrentText(QString::number(bpm));
+    ui->comboBpm->blockSignals(false);
 }
 
 QComboBox* NinjamPanel::getBpiCombo() const{

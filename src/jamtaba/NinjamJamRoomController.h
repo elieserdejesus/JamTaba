@@ -21,6 +21,8 @@ public:
     void stop();
     bool inline isRunning() const{return running;}
     void setMetronomeBeatsPerAccent(int beatsPerAccent);
+    inline int getCurrentBpi() const{return currentBpi;}
+    inline int getCurrentBpm() const{return currentBpm;}
 signals:
     void currentBpiChanged(int newBpi);
     void currentBpmChanged(int newBpm);

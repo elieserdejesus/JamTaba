@@ -74,20 +74,24 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Ninjam::Server *server, Cont
         }
     }
 
-    QObject::connect(ui->topPanel->getBpiCombo(), SIGNAL(currentIndexChanged(int)), this, SLOT(ninjamBpiComboChanged(int)));
-    QObject::connect(ui->topPanel->getBpmCombo(), SIGNAL(currentIndexChanged(int)), this, SLOT(ninjamBpmComboChanged(int)));
+    QObject::connect(ui->topPanel->getBpiCombo(), SIGNAL(activated(QString)), this, SLOT(ninjamBpiComboChanged(QString)));
+    QObject::connect(ui->topPanel->getBpmCombo(), SIGNAL(activated(QString)), this, SLOT(ninjamBpmComboChanged(QString)));
     QObject::connect(ui->topPanel->getAccentsCombo(), SIGNAL(currentIndexChanged(int)), this, SLOT(ninjamAccentsComboChanged(int)));
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamRoomWindow::ninjamAccentsComboChanged(int index){
-    qDebug() << ui->topPanel->getAccentsCombo()->currentData();
+void NinjamRoomWindow::ninjamAccentsComboChanged(int /*index*/){
+    //qDebug() << ui->topPanel->getAccentsCombo()->currentData();
     int beatsPerAccent = ui->topPanel->getAccentsCombo()->currentData().toInt();
     ninjamController->setMetronomeBeatsPerAccent(beatsPerAccent);
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamRoomWindow::ninjamBpiComboChanged(int /*index*/){
-    int newBpi = ui->topPanel->getBpiCombo()->currentData().toInt();
+void NinjamRoomWindow::ninjamBpiComboChanged(QString newText){
+    int currentBpi = ninjamController->getCurrentBpi();
+    int newBpi = newText.toInt();
+    if(newBpi == currentBpi){
+        return;
+    }
     QMessageBox::StandardButton reply;
     QString message = "Vote to change the BPI to " + QString::number(newBpi) + "?";
     reply = QMessageBox::question(this, "Changing BPI ...", message,
@@ -95,15 +99,29 @@ void NinjamRoomWindow::ninjamBpiComboChanged(int /*index*/){
     if (reply == QMessageBox::Yes) {
         Ninjam::Service::getInstance()->voteToChangeBPI(newBpi);
     }
+    else{
+        ui->topPanel->getBpiCombo()->blockSignals(true);
+        ui->topPanel->getBpiCombo()->setCurrentText(QString::number(currentBpi));
+        ui->topPanel->getBpiCombo()->blockSignals(false);
+    }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamRoomWindow::ninjamBpmComboChanged(int /*index*/){
-    int newBpm = ui->topPanel->getBpmCombo()->currentData().toInt();
+void NinjamRoomWindow::ninjamBpmComboChanged(QString newText){
+    int currentBpm = ninjamController->getCurrentBpm();
+    int newBpm = newText.toInt();
+    if(newBpm == currentBpm){
+        return;
+    }
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Changing BPM ...", "Vote to change the BPM to " + QString::number(newBpm) + "?",
                                   QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::Yes) {
         Ninjam::Service::getInstance()->voteToChangeBPM(newBpm);
+    }
+    else{
+        ui->topPanel->getBpmCombo()->blockSignals(true);
+        ui->topPanel->getBpmCombo()->setCurrentText(QString::number(currentBpm));
+        ui->topPanel->getBpmCombo()->blockSignals(false);
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
