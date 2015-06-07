@@ -24,7 +24,7 @@ SamplesBuffer* createResampledBuffer(const SamplesBuffer& buffer, int originalSa
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MetronomeTrackNode::MetronomeTrackNode(QString metronomeWaveFile, int localSampleRate)
-    : samplesPerBeat(0), intervalPosition(0), beatPosition(0), currentBeat(0), beatsPerAccent(4){
+    : samplesPerBeat(0), intervalPosition(0), beatPosition(0), currentBeat(0), beatsPerAccent(0){
     quint32 waveFileSampleRate;//this value will be changed by readWavFile method
     clickSoundBuffer = readWavFile(metronomeWaveFile, waveFileSampleRate);
     if(waveFileSampleRate != (uint)localSampleRate){

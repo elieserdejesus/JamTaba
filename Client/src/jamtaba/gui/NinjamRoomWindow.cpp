@@ -76,7 +76,15 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Ninjam::Server *server, Cont
 
     QObject::connect(ui->topPanel->getBpiCombo(), SIGNAL(currentIndexChanged(int)), this, SLOT(ninjamBpiComboChanged(int)));
     QObject::connect(ui->topPanel->getBpmCombo(), SIGNAL(currentIndexChanged(int)), this, SLOT(ninjamBpmComboChanged(int)));
+    QObject::connect(ui->topPanel->getAccentsCombo(), SIGNAL(currentIndexChanged(int)), this, SLOT(ninjamAccentsComboChanged(int)));
 }
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamRoomWindow::ninjamAccentsComboChanged(int index){
+    qDebug() << ui->topPanel->getAccentsCombo()->currentData();
+    int beatsPerAccent = ui->topPanel->getAccentsCombo()->currentData().toInt();
+    ninjamController->setMetronomeBeatsPerAccent(beatsPerAccent);
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::ninjamBpiComboChanged(int /*index*/){
     int newBpi = ui->topPanel->getBpiCombo()->currentData().toInt();

@@ -20,6 +20,7 @@ public:
     void start(int initialBpm, int initialBpi);
     void stop();
     bool inline isRunning() const{return running;}
+    void setMetronomeBeatsPerAccent(int beatsPerAccent);
 signals:
     void currentBpiChanged(int newBpi);
     void currentBpmChanged(int newBpm);
