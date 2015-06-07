@@ -1,7 +1,3 @@
-#quando troca de bpi não mantém o acento ligado no metronomo
-
-#combos do painel ninjam estão disparando aleatoriamente
-
 #implementar controles do metronomo local
 
 #botão de mute da pista local está bugado

@@ -29,8 +29,8 @@ private:
 
 private slots:
     //ninja interval controls
-    void ninjamBpiComboChanged(int);
-    void ninjamBpmComboChanged(int);
+    void ninjamBpiComboChanged(QString);
+    void ninjamBpmComboChanged(QString);
     void ninjamAccentsComboChanged(int );
 
     //ninjam controller events
