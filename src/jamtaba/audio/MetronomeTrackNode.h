@@ -3,6 +3,8 @@
 
 #include "core/AudioNode.h"
 
+#include <QMutex>
+
 namespace Audio {
 class SamplesBuffer;
 
@@ -16,18 +18,30 @@ public:
     void setSamplesPerBeat(long samplesPerBeat);
     void setIntervalPosition(long intervalPosition);
     void reset();
+
+    void setBeatsPerAccent(int beatsPerAccent) ;//pass zero to turn off accents
+
+    inline bool isPlayingAccents() const{ return beatsPerAccent > 0; }
+
+
 private:
     SamplesBuffer* clickSoundBuffer;
     SamplesBuffer* firstIntervalBeatBuffer;
     SamplesBuffer* firstMeasureBeatBuffer;
+
+    QMutex mutex;
 
     //unsigned int clickBufferOffset;
 
     long samplesPerBeat;
     long intervalPosition;
     long beatPosition;//controla a amostra atual, vai incrementando conforme as amostras são tocadas
+    int currentBeat;
+    int beatsPerAccent;
 
     SamplesBuffer* readWavFile(QString fileName, quint32 &sampleRate);//the second parameter is a output parameter
+
+    SamplesBuffer* getBuffer(int beat);//return the correct buffer to play in each beat
 };
 
 }
