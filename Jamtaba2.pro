@@ -1,4 +1,4 @@
-#implementar acentos do metronomo
+#quando troca de bpi não mantém o acento ligado no metronomo
 
 #combos do painel ninjam estão disparando aleatoriamente
 

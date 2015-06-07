@@ -37,6 +37,10 @@ void NinjamJamRoomController::start(int initialBpm, int initialBpi){
     }
 }
 
+void NinjamJamRoomController::setMetronomeBeatsPerAccent(int beatsPerAccent){
+    metronomeTrackNode->setBeatsPerAccent(beatsPerAccent);
+}
+
 void NinjamJamRoomController::stop(){
     if(running){
         this->running = false;
