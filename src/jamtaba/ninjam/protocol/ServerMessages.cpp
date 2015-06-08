@@ -89,6 +89,7 @@ UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage()
 UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage(QMap<User*, QList<UserChannel*>> allUsersChannels)
     :ServerMessage(ServerMessageType::USER_INFO_CHANGE_NOTIFY), usersChannels(allUsersChannels)
 {
+
     //insere o NinjamUserChannel em um shared_ptr para que esses canais sejam automaticamente deletados
 //    foreach (NinjamUser* user, allUsersChannels.keys()) {
 //        std::vector< std::shared_ptr< NinjamUserChannel>> channels;//vai funcionar? channels não será deletado ao final do escopo?
