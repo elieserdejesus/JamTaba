@@ -97,9 +97,6 @@ public:
 
     inline Controller::NinjamJamRoomController* getNinjamController() const{return ninjamController;}
 
-    Peaks getInputPeaks();
-    Peaks getRoomStreamPeaks();
-
     std::vector<Audio::PluginDescriptor*> getPluginsDescriptors();
 
     Audio::Plugin* addPlugin(Audio::PluginDescriptor* descriptor);
@@ -111,6 +108,9 @@ public:
     void setTrackSolo(int trackID, bool soloStatus);
     void setTrackLevel(int trackID, float level);
     void setTrackPan(int trackID, float pan);
+    Peaks getInputPeaks();
+    Peaks getRoomStreamPeaks();
+    Peaks getTrackPeaks(int trackID);
 
     const Vst::PluginFinder* getPluginFinder() const{return &*pluginFinder;}
     void scanPlugins();

@@ -1,4 +1,7 @@
-#implementar controles do metronomo local
+#quando trocar de bpi ver se ainda é possível usar a mesma acentuação procurando pelo valor
+#antigo na nova lista
+
+#meters estão com problema, fica bem claro no meter do metronomo
 
 #botão de mute da pista local está bugado
 
@@ -129,7 +132,8 @@ HEADERS += \
     src/jamtaba/audio/libresample/src/filterkit.h \
     src/jamtaba/audio/libresample/src/resample_defs.h \
     src/jamtaba/audio/Resampler.h \
-    src/jamtaba/NinjamJamRoomController.h
+    src/jamtaba/NinjamJamRoomController.h \
+    src/jamtaba/gui/MetronomeTrackView.h
 
 
 win32:HEADERS += portaudio/include/pa_asio.h \
@@ -191,7 +195,8 @@ SOURCES += \
     src/jamtaba/audio/libresample/src/resample.c \
     src/jamtaba/audio/libresample/src/resamplesubs.c \
     src/jamtaba/audio/Resampler.cpp \
-    src/jamtaba/NinjamJamRoomController.cpp
+    src/jamtaba/NinjamJamRoomController.cpp \
+    src/jamtaba/gui/MetronomeTrackView.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \

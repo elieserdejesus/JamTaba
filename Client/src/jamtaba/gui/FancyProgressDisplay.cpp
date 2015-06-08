@@ -52,6 +52,8 @@ void FancyProgressDisplay::setBeatsPerInterval(int beats) {
 void FancyProgressDisplay::paintEvent(QPaintEvent * /*e*/){
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
+    //painter.setBrush(QBrush(Qt::black));
+    //painter.drawRect(QRect(0, 0, width(), height() ));
     drawPoints(&painter, height() / 2, 0, this->beatsPerInterval);
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

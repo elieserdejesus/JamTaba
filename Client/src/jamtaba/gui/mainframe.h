@@ -31,6 +31,7 @@ class PluginDescriptor;
 class JamRoomViewPanel;
 class PluginGui;
 class LocalTrackView;
+class MetronomeTrackView;
 
 class MainFrame : public QMainWindow
 {
@@ -80,6 +81,7 @@ private:
     PluginScanDialog* pluginScanDialog;
     Ui::MainFrameClass ui;
     LocalTrackView* localTrackView;
+    MetronomeTrackView* metronomeTrackView;
 
     //PluginGui* createPluginView(Plugin::PluginDescriptor *, Audio::Plugin *plugin) ;
 
