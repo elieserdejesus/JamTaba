@@ -196,6 +196,14 @@ void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out
     }
 }
 
+Peaks MainController::getTrackPeaks(int trackID){
+    Audio::AudioNode* trackNode = tracksNodes[trackID];
+    if(trackNode){
+        return Peaks(trackNode->getLastPeakLeft(), trackNode->getLastPeakRight());
+    }
+    return Peaks(0, 0);
+}
+
 Controller::Peaks MainController::getInputPeaks(){
     return inputPeaks;
 }

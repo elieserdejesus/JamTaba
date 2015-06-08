@@ -21,6 +21,7 @@
 #include "../audio/vst/PluginFinder.h"
 #include "pluginscandialog.h"
 #include "NinjamRoomWindow.h"
+#include "MetronomeTrackView.h"
 
 using namespace Audio;
 using namespace Persistence;
@@ -29,7 +30,7 @@ using namespace Controller;
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent)
     : QMainWindow(parent),
-    fxMenu(nullptr), mainController(mainController), pluginScanDialog(nullptr)
+    fxMenu(nullptr), mainController(mainController), pluginScanDialog(nullptr), metronomeTrackView(nullptr)
 {
 	ui.setupUi(this);
 
@@ -55,7 +56,7 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     fxMenu = createFxMenu();
 
     localTrackView = new LocalTrackView(this, this->mainController);
-    ui.verticalLayoutLeft->addWidget(localTrackView);
+    ui.localTracksLayout->addWidget(localTrackView);
     localTrackView->initializeFxPanel(fxMenu);
 
     QObject::connect(localTrackView, SIGNAL(editingPlugin(Audio::Plugin*)), this, SLOT(on_editingPlugin(Audio::Plugin*)));
@@ -78,13 +79,8 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     }
 
     QObject::connect(ui.menuAudioPreferences, SIGNAL(triggered()), this, SLOT(on_preferencesClicked()));
-
     QObject::connect(mainController, SIGNAL(enteredInRoom(Login::AbstractJamRoom*)), this, SLOT(on_enteredInRoom(Login::AbstractJamRoom*)));
-
-
 }
-
-
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::on_removingPlugin(Audio::Plugin *plugin){
@@ -194,6 +190,9 @@ void MainFrame::on_enteredInRoom(Login::AbstractJamRoom *room)
             NinjamRoomWindow* roomWindow = new NinjamRoomWindow(ui.tabWidget, server, mainController);
             int index = ui.tabWidget->addTab(roomWindow, room->getName());
             ui.tabWidget->setCurrentIndex(index);
+            //adicionar track para o metronomo
+            metronomeTrackView = new MetronomeTrackView(this, mainController);
+            ui.localTracksLayout->addWidget(metronomeTrackView);
         }
     }
 }
@@ -204,6 +203,12 @@ void MainFrame::timerEvent(QTimerEvent *){
     //update local input track peaks
     Peaks inputPeaks = mainController->getInputPeaks();
     localTrackView->setPeaks(inputPeaks.left, inputPeaks.right);
+
+    //update metronome peaks
+    if(metronomeTrackView){
+        Peaks peaks = mainController->getTrackPeaks(metronomeTrackView->getTrackID());
+        metronomeTrackView->setPeaks(peaks.left, peaks.right);
+    }
 
     //update room stream plot
     if(mainController->isPlayingRoomStream()){

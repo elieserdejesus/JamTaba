@@ -19,6 +19,7 @@ public:
     BaseTrackView(QWidget *parent, Controller::MainController* mainController, int trackID);
     ~BaseTrackView();
     void setPeaks(float left, float right);
+    inline int getTrackID() const{return trackID;}
 protected:
     Ui::TrackView *ui;
     Controller::MainController* mainController;
