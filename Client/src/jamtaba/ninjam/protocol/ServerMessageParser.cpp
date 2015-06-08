@@ -115,7 +115,8 @@ ServerMessage *UserInfoChangeNotifyParser::parse(QDataStream &stream, quint32 pa
         bytesConsumed += userFullName.size() + 1;
         //QMap creates a empty object when the key is not found in map
         User* user = User::getUser(userFullName);
-        QList<UserChannel*> userChannels = allUsersChannels[user];
+        QList<UserChannel*> & userChannels = allUsersChannels[user];//use the reference to change the same instance inside of QMap
+        //allUsersChannels.insert(user, userChannels);
         QString channelName = ServerMessageParser::extractString(stream);
         bytesConsumed += channelName.size() + 1;
         userChannels.append( new UserChannel(user, channelName, (bool)active, channelIndex, volume, pan, flags));

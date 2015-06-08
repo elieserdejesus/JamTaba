@@ -59,7 +59,7 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Ninjam::Server *server, Cont
     foreach (Ninjam::User* user, users) {
         if(!user->isBot()){
             Login::NinjamPeer* ninjamPeer = (NinjamPeer*)AbstractPeer::getByIP(user->getIp());
-            if(ninjamPeer){
+            //if(ninjamPeer){
                 QSet<Ninjam::UserChannel*> channels = user->getChannels();
                 foreach (Ninjam::UserChannel* channel, channels) {
                     NinjamTrackInfos trackInfos(user, channel);
@@ -67,10 +67,10 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Ninjam::Server *server, Cont
                     BaseTrackView* trackView = new NinjamTrackView(ui->tracksPanel, mainController, trackInfos.getID(), channel->getName(), ninjamPeer);
                     ui->tracksPanel->layout()->addWidget(trackView);
                 }
-            }
-            else{
-                qWarning() << "Não encontrou o ninjamPeer para " << user->getFullName();
-            }
+            //}
+            //else{
+//                qWarning() << "Não encontrou o ninjamPeer para " << user->getFullName();
+//            }
         }
     }
 

@@ -3,6 +3,8 @@
 
 #meters estão com problema, fica bem claro no meter do metronomo
 
+#onde vou mostrar a licença do server?
+
 #botão de mute da pista local está bugado
 
 # continuar implementando view da sala ninjam
