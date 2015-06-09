@@ -22,11 +22,8 @@ public:
 private:
     QByteArray encodedBytes;
     VorbisDecoder decoder;
-    Audio::StreamBuffer* streamBuffer;
-    char outBuffer[1024 * 10];
-
-    void copyStereoDecodedBytesToStream(int decodedBytes);
-    void copyMonoDecodedBytesToStream(int decodedBytes);
+    //Audio::StreamBuffer* streamBuffer;
+    float** decoderOutBuffer;
 };
 
 #endif // NINJAMTRACKNODE_H

@@ -122,14 +122,14 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
 
     this->ninjamController = new Controller::NinjamJamRoomController(this);
 
-    NinjamTrackNode* ninjamTrackNode = new NinjamTrackNode();
-    addTrack(2, ninjamTrackNode);
-    QFile file(":/Van halen.ogg");
-    if(!file.exists()){
-        qCritical() << "File not exists! " << file.errorString();
-    }
-    file.open(QIODevice::ReadOnly);
-    ninjamTrackNode->addEncodedBytes(file.readAll());
+//    NinjamTrackNode* ninjamTrackNode = new NinjamTrackNode();
+//    addTrack(2, ninjamTrackNode);
+//    QFile file(":/Van halen.ogg");
+//    if(!file.exists()){
+//        qCritical() << "File not exists! " << file.errorString();
+//    }
+//    file.open(QIODevice::ReadOnly);
+//    ninjamTrackNode->addEncodedBytes(file.readAll());
 
     //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
     //QString vstDir = "C:/Program Files (x86)/VSTPlugins/";

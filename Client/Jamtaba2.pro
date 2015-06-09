@@ -224,7 +224,8 @@ LIBS += -L$$PWD/minimp3/lib/ -lminimp3 \
         -L$$PWD/portaudio/lib/ -lportaudio \
         -L$$PWD/portmidi/win/ -lportmidi \
         -L$$PWD/libogg/lib/ -logg \
-        -L$$PWD/libvorbis/lib/ -lvorbis
+        -L$$PWD/libogg/lib/ -lvorbis \
+        -L$$PWD/libvorbis/lib/ -lvorbisfile
 
 win32:LIBS += -lwinmm \
               -lole32 \
@@ -234,7 +235,8 @@ win32:LIBS += -lwinmm \
 win32:PRE_TARGETDEPS += $$PWD/portaudio/lib/libportaudio.a \
                         $$PWD/portmidi/win/libportmidi.a \
                         $$PWD/libogg/lib/libogg.a \
-                        $$PWD/libvorbis/lib/libvorbis.a
+                        $$PWD/libvorbis/lib/libvorbis.a \
+                        $$PWD/libvorbis/lib/libvorbisfile.a
 
 VST_SDK_PATH = "D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x/"
 
