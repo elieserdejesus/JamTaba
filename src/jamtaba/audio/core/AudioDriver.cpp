@@ -9,6 +9,16 @@ using namespace Audio;
 
 //int AudioSamplesBuffer:: lastID = 0;
 
+//SamplesBuffer::SamplesBuffer(float **samples, unsigned int channels, unsigned int samplesCount)
+//    :   channels(channels),
+//        frameLenght(samplesCount),
+//        maxFrameLenght(samplesCount),
+//        offset(0)
+//{
+//    this->samples = samples;
+//    this->peaks[0] = this->peaks[1] = 0;
+//}
+
 SamplesBuffer::SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT)
     : channels(channels),
       frameLenght(MAX_BUFFERS_LENGHT),

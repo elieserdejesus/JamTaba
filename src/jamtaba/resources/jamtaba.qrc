@@ -266,5 +266,6 @@
     </qresource>
     <qresource prefix="/">
         <file>click.wav</file>
+        <file>../../../Van halen.ogg</file>
     </qresource>
 </RCC>

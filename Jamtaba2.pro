@@ -1,3 +1,5 @@
+#compilei a libogg e a libvorbis, agora tenho que usar
+
 #quando trocar de bpi ver se ainda é possível usar a mesma acentuação procurando pelo valor
 #antigo na nova lista
 
@@ -135,7 +137,9 @@ HEADERS += \
     src/jamtaba/audio/libresample/src/resample_defs.h \
     src/jamtaba/audio/Resampler.h \
     src/jamtaba/NinjamJamRoomController.h \
-    src/jamtaba/gui/MetronomeTrackView.h
+    src/jamtaba/gui/MetronomeTrackView.h \
+    src/jamtaba/audio/vorbis/VorbisDecoder.h \
+    src/jamtaba/audio/streambuffer.h
 
 
 win32:HEADERS += portaudio/include/pa_asio.h \
@@ -198,7 +202,9 @@ SOURCES += \
     src/jamtaba/audio/libresample/src/resamplesubs.c \
     src/jamtaba/audio/Resampler.cpp \
     src/jamtaba/NinjamJamRoomController.cpp \
-    src/jamtaba/gui/MetronomeTrackView.cpp
+    src/jamtaba/gui/MetronomeTrackView.cpp \
+    src/jamtaba/audio/vorbis/VorbisDecoder.cpp \
+    src/jamtaba/audio/streambuffer.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
@@ -216,14 +222,19 @@ win32:LIBPATH += C:/Qt/Qt5.4.0/Tools/mingw491_32/i686-w64-mingw32/lib/ \
 
 LIBS += -L$$PWD/minimp3/lib/ -lminimp3 \
         -L$$PWD/portaudio/lib/ -lportaudio \
-        -L$$PWD/portmidi/win/ -lportmidi
+        -L$$PWD/portmidi/win/ -lportmidi \
+        -L$$PWD/libogg/lib/ -logg \
+        -L$$PWD/libvorbis/lib/ -lvorbis
 
 win32:LIBS += -lwinmm \
               -lole32 \
               #-L$$PWD/portmidi/win/ -lportmidi
 
 
-win32:PRE_TARGETDEPS += $$PWD/portaudio/lib/libportaudio.a $$PWD/portmidi/win/libportmidi.a
+win32:PRE_TARGETDEPS += $$PWD/portaudio/lib/libportaudio.a \
+                        $$PWD/portmidi/win/libportmidi.a \
+                        $$PWD/libogg/lib/libogg.a \
+                        $$PWD/libvorbis/lib/libvorbis.a
 
 VST_SDK_PATH = "D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x/"
 
@@ -232,10 +243,14 @@ INCLUDEPATH += $$PWD/portaudio/include \
                src/jamtaba/gui \
                src/jamtaba/gui/widgets \
                $$VST_SDK_PATH \
-               $$PWD/portmidi
+               $$PWD/portmidi \
+               $$PWD/libogg/include \
+               $$PWD/libvorbis/include \
 
 DEPENDPATH += $$PWD/portaudio/include \
               $$PWD/minimp3/include \
-              $$PWD/portmidi
+              $$PWD/portmidi \
+              $$PWD/libogg/include \
+              $$PWD/libvorbis/include \
 
 RESOURCES += src/jamtaba/resources/jamtaba.qrc

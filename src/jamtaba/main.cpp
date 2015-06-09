@@ -4,10 +4,7 @@
 #include "loginserver/LoginService.h"
 #include "ninjam/Service.h"
 #include "JamRoomViewPanel.h"
-
 #include "audio/core/AudioDriver.h"
-
-
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
