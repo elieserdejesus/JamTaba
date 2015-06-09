@@ -41,3 +41,4 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
     }
     fflush(stderr);
 }
+
