@@ -190,8 +190,6 @@ SamplesBuffer *MetronomeTrackNode::readWavFile(QString fileName, quint32 & sampl
             buffer->set(c, s, sample / 32767.0f);
         }
     }
-    qDebug() << endl;
-
     return buffer;
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

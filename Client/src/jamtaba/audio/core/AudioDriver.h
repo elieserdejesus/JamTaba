@@ -42,6 +42,7 @@ private:
 
 public:
     SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT);
+    //SamplesBuffer(float** samples, unsigned int channels, unsigned int samplesCount);
     ~SamplesBuffer();
 
 
