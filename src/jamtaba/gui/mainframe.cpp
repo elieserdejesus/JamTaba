@@ -22,10 +22,12 @@
 #include "pluginscandialog.h"
 #include "NinjamRoomWindow.h"
 #include "MetronomeTrackView.h"
+#include "../ninjam/Server.h"
 
 using namespace Audio;
 using namespace Persistence;
 using namespace Controller;
+using namespace Ninjam;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent)
@@ -180,7 +182,8 @@ void MainFrame::on_enteringInRoom(Login::AbstractJamRoom *room){
 //este evento é disparado pelo controlador depois que já aconteceu a conexão com uma das salas
 void MainFrame::on_enteredInRoom(Login::AbstractJamRoom *room)
 {
-    if(room->getRoomType() == AbstractJamRoom::Type::NINJAM){
+
+    if(room->getRoomType() == Login::AbstractJamRoom::Type::NINJAM){
         Login::NinjamRoom* ninjamRoom = dynamic_cast<Login::NinjamRoom*>(room);
         Ninjam::Server* server = Ninjam::Server::getServer(ninjamRoom->getHostName(), ninjamRoom->getHostPort());
         if(!server){

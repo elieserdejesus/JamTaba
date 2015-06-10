@@ -164,7 +164,7 @@ void DownloadIntervalBegin::printDebug(QDebug dbg) const
 
 void DownloadIntervalWrite::printDebug(QDebug dbg) const
 {
-    dbg << "RECEIVE DownloadIntervalWrite{ flags=" << flags << " GUID={" << GUID << "} downloadIsComplete=" << downloadIsComplete() << ", audioData=" << encodedAudioData.size() << " bytes }";
+    dbg << "RECEIVE DownloadIntervalWrite{ flags='" << flags << "' GUID={" << GUID << "} downloadIsComplete=" << downloadIsComplete() << ", audioData=" << encodedAudioData.size() << " bytes }";
 }
 
 DownloadIntervalWrite::DownloadIntervalWrite(QByteArray GUID, quint8 flags, QByteArray encodedAudioData)

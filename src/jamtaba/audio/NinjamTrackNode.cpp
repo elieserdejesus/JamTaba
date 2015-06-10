@@ -5,56 +5,55 @@
 #include <QDebug>
 
 NinjamTrackNode::NinjamTrackNode()
-    :decoder(VorbisDecoder(encodedBytes))//, streamBuffer(nullptr)
+    : readIndex(0), writeIndex(0), playing(false)
 {
 
 }
 
 NinjamTrackNode::~NinjamTrackNode()
 {
-//    if(streamBuffer){
-//        delete streamBuffer;
-//    }
 }
 
-void NinjamTrackNode::addEncodedBytes(QByteArray bytes){
-    encodedBytes.append(bytes);
-    if(!decoder.isInitialized()){
-        decoder.initialize();//parse ogg header to get channels and sample rate
-        decoderOutBuffer = new float*[decoder.getChannels()];
-        for (int c = 0; c < decoder.getChannels(); ++c) {
-            decoderOutBuffer[c] = new float[4096];
-        }
+void NinjamTrackNode::startNewInterval(){
+    playing = decoders[readIndex].canDecode();
+}
+
+void NinjamTrackNode::addEncodedBytes(QByteArray vorbisData, bool lastPartOfInterval){
+    decoders[writeIndex].addVorbisData(vorbisData, lastPartOfInterval);
+    if(!decoders[writeIndex].isInitialized()){
+        decoders[writeIndex].initialize();//parse ogg header to get channels and sample rate
+    }
+    if(lastPartOfInterval){
+        writeIndex = (writeIndex + 1) % 2;//use the next
+        //decoders[writeIndex].reset();
     }
 }
 //++++++++++++++++++++++++++++++++++++++
 
 void NinjamTrackNode::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
+    if(!playing){
+        return;
+    }
     int totalDecoded = 0;
-    int internalOffset = 0;
     internalBuffer->setFrameLenght(out.getFrameLenght());
     internalBuffer->zero();
-    while(totalDecoded < out.getFrameLenght() && decoder.hasMoreSamplesToDecode()){
-        int decoded = decoder.decode(&decoderOutBuffer, out.getFrameLenght() - totalDecoded);
-        if(decoded > 0){
-            if(decoder.isStereo()){
-                for (int s = 0; s < decoded; ++s) {
-                    internalBuffer->set(0, internalOffset, decoderOutBuffer[0][s]);//left sample
-                    internalBuffer->set(1, internalOffset, decoderOutBuffer[1][s]);//right sample
-                    internalOffset++;
-                }
+    if(decoders[readIndex].canDecode()){
+        while(totalDecoded < out.getFrameLenght() && decoders[readIndex].hasMoreSamplesToDecode()){
+            const Audio::SamplesBuffer* decodedBuffer = decoders[readIndex].decode(out.getFrameLenght() - totalDecoded);
+            if(decodedBuffer->getFrameLenght() > 0){
+                out.add(*decodedBuffer, totalDecoded);//total decoded is the offset
             }
-            else{
-                for (int s = 0; s < decoded; ++s) {
-                    internalBuffer->set(0, internalOffset, decoderOutBuffer[0][s]);//mono sample
-                    internalOffset++;
-                }
+            totalDecoded += decodedBuffer->getFrameLenght();
+            if(decodedBuffer->getFrameLenght() == 0){
+                break;
             }
         }
-        totalDecoded += decoded;
     }
     if(totalDecoded > 0){
         Audio::AudioNode::processReplacing(in, out);
     }
-
+    if(decoders[readIndex].isInitialized() && !decoders[readIndex].hasMoreSamplesToDecode()){//all samples consumed
+        decoders[readIndex].reset();
+        readIndex = (readIndex + 1) % 2;
+    }
 }

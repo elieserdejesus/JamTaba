@@ -3,6 +3,16 @@
 
 #include <QObject>
 #include "audio/MetronomeTrackNode.h"
+#include <QMap>
+//#include "../audio/NinjamTrackNode.h"
+
+namespace Ninjam {
+class User;
+class UserChannel;
+class Server;
+}
+
+class NinjamTrackNode;
 
 namespace Controller {
 
@@ -17,7 +27,7 @@ public:
     NinjamJamRoomController(Controller::MainController* mainController);
     ~NinjamJamRoomController();
     void process(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
-    void start(int initialBpm, int initialBpi);
+    void start(const Ninjam::Server& server);
     void stop();
     bool inline isRunning() const{return running;}
     void setMetronomeBeatsPerAccent(int beatsPerAccent);
@@ -27,10 +37,16 @@ signals:
     void currentBpiChanged(int newBpi);
     void currentBpmChanged(int newBpm);
     void intervalBeatChanged(int intervalBeat);
+    void channelAdded(const Ninjam::UserChannel& channel, long channelID);
+    void channelRemoved(const Ninjam::UserChannel& channel, long channelID);
 
 private:
     Controller::MainController* mainController;
     Audio::MetronomeTrackNode* metronomeTrackNode;
+    QMap<Ninjam::UserChannel*, NinjamTrackNode*> trackNodes;
+
+
+    void addNewTrack(Ninjam::UserChannel *channel);
 
     bool running;
 
@@ -52,7 +68,7 @@ private slots:
     //ninjam events
     void ninjamServerBpmChanged(short newBpm);
     void ninjamServerBpiChanged(short oldBpi, short newBpi);
-
+    void ninjamAudioAvailable(const Ninjam::User& user, int channelIndex, QByteArray encodedAudioData, bool lastPartOfInterval);
 };
 
 }

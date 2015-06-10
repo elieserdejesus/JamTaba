@@ -1,46 +1,29 @@
 #include "NinjamRoomWindow.h"
 #include "ui_NinjamRoomWindow.h"
 #include "NinjamTrackView.h"
-#include "../MainController.h"
+
 #include "../ninjam/User.h"
+#include "../ninjam/Service.h"
+#include "../ninjam/Server.h"
+
 #include "../loginserver/JamRoom.h"
+
 #include "../audio/NinjamTrackNode.h"
 #include "../audio/MetronomeTrackNode.h"
-#include "../NinjamJamRoomController.h"
 #include "../audio/core/AudioDriver.h"
-#include "../ninjam/Service.h"
+
+#include "../NinjamJamRoomController.h"
+#include "../MainController.h"
+
 #include "NinjamPanel.h"
 #include <QMessageBox>
-
-class NinjamTrackInfos{
-
-public:
-    NinjamTrackInfos(Ninjam::User* user, Ninjam::UserChannel* channel)
-        :user(user), channel(channel), id(ID_GENERATOR++)
-    {
-
-    }
-
-    long getID() const{return id;}
-    Ninjam::User* getUser() const{return user;}
-    Ninjam::UserChannel* getChannel() const{return channel;}
-
-private:
-    Ninjam::User* user;
-    Ninjam::UserChannel* channel;
-
-    long id;
-    static long ID_GENERATOR;// = 0;
-};
-
-long NinjamTrackInfos::ID_GENERATOR = 0;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Ninjam::Server *server, Controller::MainController *mainController) :
     QWidget(parent),
     ui(new Ui::NinjamRoomWindow),
-    ninjamController(mainController->getNinjamController())
+    mainController(mainController)
 {
     ui->setupUi(this);
 
@@ -50,44 +33,38 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Ninjam::Server *server, Cont
     ui->topPanel->setBpi(server->getBpi());
     ui->topPanel->setBpm(server->getBpm());
 
+    ui->tracksPanel->layout()->setAlignment(Qt::AlignLeft);//tracks are left aligned
+
+    Controller::NinjamJamRoomController* ninjamController = mainController->getNinjamController();
     QObject::connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(bpiChanged(int)));
     QObject::connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(bpmChanged(int)));
     QObject::connect(ninjamController, SIGNAL(intervalBeatChanged(int)), this, SLOT(intervalBeatChanged(int)));
-
-    QList<Ninjam::User*> users = server->getUsers();
-    ui->tracksPanel->layout()->setAlignment(Qt::AlignLeft);
-    foreach (Ninjam::User* user, users) {
-        if(!user->isBot()){
-            Login::NinjamPeer* ninjamPeer = (NinjamPeer*)AbstractPeer::getByIP(user->getIp());
-            //if(ninjamPeer){
-                QSet<Ninjam::UserChannel*> channels = user->getChannels();
-                foreach (Ninjam::UserChannel* channel, channels) {
-                    NinjamTrackInfos trackInfos(user, channel);
-                    mainController->addTrack( trackInfos.getID(), new NinjamTrackNode() );
-                    BaseTrackView* trackView = new NinjamTrackView(ui->tracksPanel, mainController, trackInfos.getID(), channel->getName(), ninjamPeer);
-                    ui->tracksPanel->layout()->addWidget(trackView);
-                }
-            //}
-            //else{
-//                qWarning() << "Não encontrou o ninjamPeer para " << user->getFullName();
-//            }
-        }
-    }
+    QObject::connect(ninjamController, SIGNAL(channelAdded(Ninjam::UserChannel,long)), this, SLOT(channelAdded(Ninjam::UserChannel,long)));
 
     QObject::connect(ui->topPanel->getBpiCombo(), SIGNAL(activated(QString)), this, SLOT(ninjamBpiComboChanged(QString)));
     QObject::connect(ui->topPanel->getBpmCombo(), SIGNAL(activated(QString)), this, SLOT(ninjamBpmComboChanged(QString)));
     QObject::connect(ui->topPanel->getAccentsCombo(), SIGNAL(currentIndexChanged(int)), this, SLOT(ninjamAccentsComboChanged(int)));
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamRoomWindow::channelAdded(const Ninjam::UserChannel &channel, long channelID){
+    QString userName = channel.getUser()->getName();
+    QString channelName = channel.getName();
+    QString countryName = "Country name";//tenho que pegar de uma base local, não dá pra tentar pegar essa informação do server, talvez o server ainda não esteja atualizado com a informação do usuário que acabou de se conectar
+    QString countryCode = "UNKNOWN";
+    BaseTrackView* trackView = new NinjamTrackView(ui->tracksPanel, this->mainController, channelID, userName, channelName, countryName, countryCode );
+    ui->tracksPanel->layout()->addWidget(trackView);
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::ninjamAccentsComboChanged(int /*index*/){
     //qDebug() << ui->topPanel->getAccentsCombo()->currentData();
     int beatsPerAccent = ui->topPanel->getAccentsCombo()->currentData().toInt();
-    ninjamController->setMetronomeBeatsPerAccent(beatsPerAccent);
+    mainController->getNinjamController()->setMetronomeBeatsPerAccent(beatsPerAccent);
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::ninjamBpiComboChanged(QString newText){
-    int currentBpi = ninjamController->getCurrentBpi();
+    int currentBpi = mainController->getNinjamController()->getCurrentBpi();
     int newBpi = newText.toInt();
     if(newBpi == currentBpi){
         return;
@@ -107,7 +84,7 @@ void NinjamRoomWindow::ninjamBpiComboChanged(QString newText){
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::ninjamBpmComboChanged(QString newText){
-    int currentBpm = ninjamController->getCurrentBpm();
+    int currentBpm = mainController->getNinjamController()->getCurrentBpm();
     int newBpm = newText.toInt();
     if(newBpm == currentBpm){
         return;

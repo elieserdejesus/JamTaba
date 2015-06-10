@@ -5,27 +5,40 @@
 #ifndef VORBIS_DECODER_H
 #define VORBIS_DECODER_H
 
+namespace Audio {
+    class SamplesBuffer;
+}
+
 class VorbisDecoder{
 public:
-    VorbisDecoder(QByteArray &input);
-	~VorbisDecoder();
-    int decode(float ***outBuffer, int maxSamplesToDecode);
-	bool hasMoreSamplesToDecode();
-	void reset();
+    VorbisDecoder();
+    ~VorbisDecoder();
+    const Audio::SamplesBuffer* decode(int maxSamplesToDecode);
+
+    bool hasMoreSamplesToDecode();
+
     inline bool isStereo() const{return getChannels() == 2;}
-    inline bool isMono() const{return info->channels == 1;}
-    inline int getChannels() const{return info->channels;}
-    inline int getSampleRate() const{return info->rate;}
-    void initialize();
+    inline bool isMono() const{return vorbisFile.vi->channels == 1;}
+    inline int getChannels() const{return vorbisFile.vi->channels;}
+    inline int getSampleRate() const{return vorbisFile.vi->rate;}
 
-    inline bool isInitialized() const{return info;}
+    bool initialize();
+    inline bool isInitialized() const{return initialized;}
+
+    void reset();
+
+    void addVorbisData(QByteArray vorbisData, bool isLastPart);
+
+    inline bool canDecode() const{return lastPartAdded;}
+
 private:
+    Audio::SamplesBuffer* internalBuffer;
     OggVorbis_File vorbisFile;
-    vorbis_info* info;// struct that stores all the static vorbis bitstream settings
-
+    bool initialized;
 	bool finished;// = false;
+    bool lastPartAdded;
 
-    QByteArray& input;
+    QByteArray vorbisInput;
 
     static size_t readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *datasource);
 

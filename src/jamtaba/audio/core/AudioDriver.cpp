@@ -7,17 +7,8 @@
 
 using namespace Audio;
 
-//int AudioSamplesBuffer:: lastID = 0;
 
-//SamplesBuffer::SamplesBuffer(float **samples, unsigned int channels, unsigned int samplesCount)
-//    :   channels(channels),
-//        frameLenght(samplesCount),
-//        maxFrameLenght(samplesCount),
-//        offset(0)
-//{
-//    this->samples = samples;
-//    this->peaks[0] = this->peaks[1] = 0;
-//}
+const SamplesBuffer SamplesBuffer::ZERO_BUFFER(1, 0);
 
 SamplesBuffer::SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT)
     : channels(channels),
@@ -55,6 +46,8 @@ SamplesBuffer::~SamplesBuffer(){
     }
     //qDebug() << "\tAudio samples destructor ID:" << ID;
 }
+
+
 
 
 void SamplesBuffer::setOffset(int offset){
@@ -145,21 +138,19 @@ const float *SamplesBuffer::getPeaks() const
     return peaks;
 }
 
-void SamplesBuffer::add(const SamplesBuffer &buffer)
-{
-    //QMutexLocker locker(&mutex);
+void SamplesBuffer::add(const SamplesBuffer &buffer, int offset){
     unsigned int framesToProcess = frameLenght < buffer.frameLenght ? frameLenght : buffer.frameLenght;
     if( buffer.channels >= channels){
         for (unsigned int c = 0; c < channels; ++c) {
             for (unsigned int s = 0; s < framesToProcess; ++s) {
-                samples[c][s] += buffer.samples[c][s];
+                samples[c][s + offset] += buffer.samples[c][s];
             }
         }
     }
     else{//samples is stereo and buffer is mono
         for (unsigned int s = 0; s < framesToProcess; ++s) {
-            samples[0][s ] += buffer.samples[0][s];
-            samples[1][s] += buffer.samples[0][s];
+            samples[0][s + offset] += buffer.samples[0][s];
+            samples[1][s + offset] += buffer.samples[0][s];
         }
     }
 }

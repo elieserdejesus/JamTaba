@@ -202,8 +202,11 @@ ServerMessage *DownloadIntervalWriteParser::parse(QDataStream &stream, quint32 p
 
     quint32 lenght = payloadLenght - 17;
     QByteArray encodedData;
-    encodedData.reserve(lenght);
-    stream.readRawData(encodedData.data(), lenght);
+    encodedData.resize(lenght);
+    int bytesReaded = stream.readRawData(encodedData.data(), lenght);
+    if(bytesReaded <= 0){
+        qWarning() << "ERRO na leitura do audio codificado! "  << bytesReaded;
+    }
     return new DownloadIntervalWrite(GUID, flags, encodedData);
 }
 //++++++++++++++++++++++++++++++++++++++

@@ -130,6 +130,8 @@ private:
     //using GUID as key
     QMap<QString, std::shared_ptr<Download>> downloads;
 
+    bool needSendKeepAlive() const;
+
 private slots:
     void socketReadSlot();
     void socketErrorSlot(QAbstractSocket::SocketError error);
