@@ -83,10 +83,12 @@ void VorbisDecoder::addVorbisData(QByteArray vorbisData, bool isLastPart){
     if(!finished){
         vorbisInput.append(vorbisData);
     }
-    if(isLastPart && !lastPartAdded){
+    if(isLastPart ){
         lastPartAdded = true;
+        //qDebug() << "adicionou a última parte!";
+        initialize();
     }
-    //qDebug() << "já baixou " << vorbisInput.size() << " bytes  lastPart: " << isLastPart << " vorbisData: " << vorbisData.size();
+    //qDebug() << "já baixou " << vorbisInput.size() << " bytes";
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++
@@ -101,7 +103,7 @@ bool VorbisDecoder::initialize(){
         if(result == 0){
             initialized = true;
             finished = false;
-            lastPartAdded = false;
+            //lastPartAdded = false;
             if(internalBuffer){
                 if(internalBuffer->getChannels() != vorbisFile.vi->channels){
                     delete internalBuffer;

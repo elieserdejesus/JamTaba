@@ -16,14 +16,13 @@ NinjamTrackNode::~NinjamTrackNode()
 
 void NinjamTrackNode::startNewInterval(){
     playing = decoders[readIndex].canDecode();
+    qDebug() << "playing: " << playing << " readIndex: " << readIndex;
 }
 
 void NinjamTrackNode::addEncodedBytes(QByteArray vorbisData, bool lastPartOfInterval){
     decoders[writeIndex].addVorbisData(vorbisData, lastPartOfInterval);
-    if(!decoders[writeIndex].isInitialized()){
-        decoders[writeIndex].initialize();//parse ogg header to get channels and sample rate
-    }
     if(lastPartOfInterval){
+        //decoders[writeIndex].initialize();
         writeIndex = (writeIndex + 1) % 2;//use the next
         //decoders[writeIndex].reset();
     }
