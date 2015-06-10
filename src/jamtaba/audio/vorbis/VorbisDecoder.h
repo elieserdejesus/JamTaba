@@ -22,7 +22,7 @@ public:
     inline int getChannels() const{return vorbisFile.vi->channels;}
     inline int getSampleRate() const{return vorbisFile.vi->rate;}
 
-    bool initialize();
+
     inline bool isInitialized() const{return initialized;}
 
     void reset();
@@ -32,6 +32,7 @@ public:
     inline bool canDecode() const{return lastPartAdded;}
 
 private:
+    bool initialize();
     Audio::SamplesBuffer* internalBuffer;
     OggVorbis_File vorbisFile;
     bool initialized;
