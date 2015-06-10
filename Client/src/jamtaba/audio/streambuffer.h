@@ -5,6 +5,8 @@ namespace Audio {
 
 class SamplesBuffer;
 
+//Esta classe acabou não sendo usada
+
 class StreamBuffer{
 public:
     StreamBuffer(int channels, int capacity);

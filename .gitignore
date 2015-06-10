@@ -1,6 +1,7 @@
 *.[o]
 # *~
 
+*.ogg
 Client/build/
 build/
 Client/portaudio/

@@ -1,4 +1,7 @@
-#compilei a libogg e a libvorbis, agora tenho que usar
+#o que acontece se eu mudo de stereo para mono? Testar isso com 2 arquivos, um mono e outro estereo.
+
+#o audio está realmente em outra thread? Pelo comportamento do áudio quando executo no debug acho que não. Além
+#disso quando o decoder ficou em um loop infinito a gui travou, então estou suspeitando que o áudio está rodando na thread da GUI
 
 #quando trocar de bpi ver se ainda é possível usar a mesma acentuação procurando pelo valor
 #antigo na nova lista

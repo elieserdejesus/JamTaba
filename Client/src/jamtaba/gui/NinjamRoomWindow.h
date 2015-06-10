@@ -3,16 +3,24 @@
 
 #include <QWidget>
 //#include "../loginserver/JamRoom.h"
-#include "../ninjam/Server.h"
-#include "../MainController.h"
-#include "../audio/MetronomeTrackNode.h"
+//#include "../ninjam/Server.h"
+//#include "../MainController.h"
+//#include "../audio/MetronomeTrackNode.h"
 
 #include <QSpacerItem>
 
-using namespace Login;
-
 namespace Ui {
 class NinjamRoomWindow;
+}
+
+namespace Controller {
+    class NinjamJamRoomController;
+    class MainController;
+}
+
+namespace Ninjam {
+    class Server;
+    class UserChannel;
 }
 
 class NinjamRoomWindow : public QWidget
@@ -25,7 +33,7 @@ public:
 
 private:
     Ui::NinjamRoomWindow *ui;
-    Controller::NinjamJamRoomController* ninjamController;
+    Controller::MainController* mainController;
 
 private slots:
     //ninja interval controls
@@ -37,6 +45,7 @@ private slots:
     void bpiChanged(int bpi);
     void bpmChanged(int bpm);
     void intervalBeatChanged(int beat);
+    void channelAdded(const Ninjam::UserChannel& channel, long channelID );
 };
 
 #endif // NINJAMROOMWINDOW_H

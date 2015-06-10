@@ -17,10 +17,13 @@ class SamplesBuffer{
 
     friend class AudioNodeProcessor;
 
+public:
+    float** samples;//unfornally I have to change the visibility to public to deal with a problem in vorbis decoder. Decoder not work if I return the samples member and use as output buffer to vorbis decoder.
+
 private:
     //static int lastID;
     //int ID;
-    float** samples;
+
     unsigned int channels;
     unsigned int frameLenght;
     unsigned const int maxFrameLenght;
@@ -45,6 +48,8 @@ public:
     //SamplesBuffer(float** samples, unsigned int channels, unsigned int samplesCount);
     ~SamplesBuffer();
 
+    static const SamplesBuffer ZERO_BUFFER;//a static buffer with zero samples
+
 
     void setOffset(int offset);
     void resetOffset();
@@ -65,8 +70,9 @@ public:
 
     const float *getPeaks() const;//{return peaks[channel];}
 
-    void add(const SamplesBuffer& buffer);
+    inline void add(const SamplesBuffer& buffer){add(buffer, 0);}
     void add(int channel, int sampleIndex, float sampleValue);
+    void add(const SamplesBuffer& buffer, int offset);//the offset is used in internal buffer, not in parameter buffer
 
     /***
      * copy samplesToCopy' samples starting from bufferOffset to internal buffer starting in 'internalOffset'

@@ -119,17 +119,23 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     this->ninjamService = Ninjam::Service::getInstance();
     QObject::connect( this->ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), SLOT(connectedInNinjamServer(Ninjam::Server)) );
 
-
     this->ninjamController = new Controller::NinjamJamRoomController(this);
 
-//    NinjamTrackNode* ninjamTrackNode = new NinjamTrackNode();
-//    addTrack(2, ninjamTrackNode);
-//    QFile file(":/Van halen.ogg");
-//    if(!file.exists()){
-//        qCritical() << "File not exists! " << file.errorString();
+
+//    NinjamTrackNode* trackTest = new NinjamTrackNode();
+//    QStringList testFiles({":/sine.ogg", ":/bateria mono.ogg"});
+//    addTrack(2, trackTest);
+
+//    //test ninjam stream
+//    for (int i = 0; i < testFiles.size(); ++i) {
+//        QFile file(testFiles.at(i));
+//        if(!file.exists()){
+//            qCritical() << "File not exists! " << file.errorString();
+//        }
+//        file.open(QIODevice::ReadOnly);
+//        trackTest->addEncodedBytes(file.readAll(), true);
 //    }
-//    file.open(QIODevice::ReadOnly);
-//    ninjamTrackNode->addEncodedBytes(file.readAll());
+
 
     //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
     //QString vstDir = "C:/Program Files (x86)/VSTPlugins/";
@@ -183,6 +189,9 @@ void MainController::onPluginFounded(Audio::PluginDescriptor* descriptor){
 }
 
 void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
+
+
+
     MidiBuffer midiBuffer = midiDriver->getBuffer();
     vstHost->fillMidiEvents(midiBuffer);//pass midi events to vst host
 
@@ -434,5 +443,5 @@ void MainController::connectedInNinjamServer(const Ninjam::Server &server){
     if(ninjamRoom){
         emit enteredInRoom(ninjamRoom);
     }
-    ninjamController->start(server.getBpm(), server.getBpi());
+    ninjamController->start(server);
 }

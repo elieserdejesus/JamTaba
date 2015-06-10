@@ -7,7 +7,7 @@
 class NinjamTrackView : public BaseTrackView
 {
 public:
-    NinjamTrackView(QWidget *parent, Controller::MainController* mainController, int trackID, QString channelName, Login::NinjamPeer* ninjamPeer);
+    NinjamTrackView(QWidget *parent, Controller::MainController *mainController, int trackID, QString userName, QString channelName, QString countryName, QString countyCode);
     ~NinjamTrackView();
 
 private:

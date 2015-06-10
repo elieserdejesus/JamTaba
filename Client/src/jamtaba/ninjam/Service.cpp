@@ -50,8 +50,11 @@ void Service::socketReadSlot(){
             Ninjam::ServerMessage* message = parser->parse(stream, payloadLenght);
             //qDebug() << message;
             invokeMessageHandler(message);
-
             delete message;
+            if(needSendKeepAlive()){
+                ClientKeepAlive clientKeepAliveMessage;
+                sendMessageToServer((ClientMessage*)&clientKeepAliveMessage);
+            }
         } else {//bytesAvailable < payloadLenght, not enough bytes in socket
             handlingSplittedMessage = true;
             socket.waitForReadyRead();
@@ -144,6 +147,11 @@ void Service::sendMessageToServer(ClientMessage *message)
     assert((int)message->getPayload() + 5 == outBuffer.size());
 }
 
+bool Service::needSendKeepAlive() const{
+    long ellapsedSeconds = (QDateTime::currentMSecsSinceEpoch() - lastSendTime)/1000;
+    return ellapsedSeconds >= serverKeepAlivePeriod;
+}
+
 void Service::handle(UserInfoChangeNotifyMessage* msg) {
     //QMap<NinjamUser*, QList<NinjamUserChannel*>> allUsersChannels = msg->getUsersChannels();
     QSet<User*> users = QSet<User*>::fromList( msg->getUsers());
@@ -172,7 +180,7 @@ void Service::handle(DownloadIntervalBegin * msg){
 void Service::handle(DownloadIntervalWrite *msg){
     if (downloads.contains(msg->getGUID())) {
         Download* download = &*(downloads[msg->getGUID()]);
-
+ //       qDebug() << msg;
         emit audioIntervalPartAvailable(*download->user, download->channelIndex, msg->getEncodedAudioData(), msg->downloadIsComplete());
 
         if (msg->downloadIsComplete()) {
