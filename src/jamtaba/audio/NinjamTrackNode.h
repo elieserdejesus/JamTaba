@@ -4,12 +4,15 @@
 #include "core/AudioNode.h"
 #include <QByteArray>
 #include "vorbis/VorbisDecoder.h"
-
+#include <QList>
+#include <QMutex>
 
 namespace Audio{
     class SamplesBuffer;
     class StreamBuffer;
 }
+
+class NinjamInterval;
 
 class NinjamTrackNode : public Audio::AudioNode
 {
@@ -21,10 +24,9 @@ public:
     void startNewInterval();
 private:
     bool playing;//playing one interval or waiting for more vorbis data to decode
-    int readIndex;//used to point to decoder to read
-    int writeIndex;//used to point to decoder to write new vorbis data
-    VorbisDecoder decoders[2];//use two decoders, one to decode the current interval and other to decode the next interval
-    //float** decoderOutBuffer;
+    VorbisDecoder decoder;
+    QList<NinjamInterval> intervals;
+    QMutex mutex;
 };
 
 #endif // NINJAMTRACKNODE_H

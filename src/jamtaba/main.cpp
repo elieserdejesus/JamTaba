@@ -6,24 +6,10 @@
 #include "JamRoomViewPanel.h"
 #include "audio/core/AudioDriver.h"
 
-//#include "audio/vorbis/VorbisDecoder.h"
-//#include <QFile>
-//#include <QByteArray>
-
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
 int main(int argc, char* args[])
 {
-//    QFile file(":/bateria mono.ogg");
-//    file.open(QIODevice::ReadOnly);
-//    VorbisDecoder decoder;
-//    decoder.addVorbisData(file.readAll());
-//    while(decoder.hasMoreSamplesToDecode()){
-//        const Audio::SamplesBuffer* decodedBuffer = decoder.decode(2048);
-//        qDebug() << decodedBuffer->getFrameLenght();
-//    }
-//    return 0;
-
     qInstallMessageHandler(customLogHandler);
     JamtabaFactory* factory = new ReleaseFactory();
     Controller::MainController mainController(factory, argc, args);//MainController extends QApplication
