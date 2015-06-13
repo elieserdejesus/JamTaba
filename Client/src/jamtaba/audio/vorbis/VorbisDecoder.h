@@ -15,33 +15,28 @@ public:
     ~VorbisDecoder();
     const Audio::SamplesBuffer* decode(int maxSamplesToDecode);
 
-    bool hasMoreSamplesToDecode();
-
     inline bool isStereo() const{return getChannels() == 2;}
     inline bool isMono() const{return vorbisFile.vi->channels == 1;}
     inline int getChannels() const{return vorbisFile.vi->channels;}
     inline int getSampleRate() const{return vorbisFile.vi->rate;}
 
-
-    inline bool isInitialized() const{return initialized;}
-
+    void setInput(QByteArray vorbisData);
+    //bool canDecode() const;
     void reset();
-
-    void addVorbisData(QByteArray vorbisData, bool isLastPart);
-
-    inline bool canDecode() const{return lastPartAdded;}
-
+    //inline bool isFinished() const{return finished;}
+    //inline bool isInitialized() const{return initialized;}
 private:
+
     bool initialize();
     Audio::SamplesBuffer* internalBuffer;
     OggVorbis_File vorbisFile;
     bool initialized;
-	bool finished;// = false;
-    bool lastPartAdded;
-
+    //bool finished;
     QByteArray vorbisInput;
 
-    static size_t readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *datasource);
+    static size_t readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *decoderInstance);
+
+    int consumeTo(void* oggOutBuffer, int bytesToConsume);
 
 };
 

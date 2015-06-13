@@ -122,11 +122,10 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     this->ninjamController = new Controller::NinjamJamRoomController(this);
 
 
+    //test ninjam stream
 //    NinjamTrackNode* trackTest = new NinjamTrackNode();
-//    QStringList testFiles({":/sine.ogg", ":/bateria mono.ogg"});
+//    QStringList testFiles({":/bateria mono.ogg"});
 //    addTrack(2, trackTest);
-
-//    //test ninjam stream
 //    for (int i = 0; i < testFiles.size(); ++i) {
 //        QFile file(testFiles.at(i));
 //        if(!file.exists()){
@@ -135,6 +134,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
 //        file.open(QIODevice::ReadOnly);
 //        trackTest->addEncodedBytes(file.readAll(), true);
 //    }
+//    trackTest->startNewInterval();
 
 
     //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";

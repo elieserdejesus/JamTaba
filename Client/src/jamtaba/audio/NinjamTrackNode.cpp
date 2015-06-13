@@ -3,9 +3,37 @@
 #include "streambuffer.h"
 #include <QDataStream>
 #include <QDebug>
+#include <QList>
+#include <QByteArray>
+#include <QMutexLocker>
+
+class NinjamInterval{
+public:
+    NinjamInterval()
+        :downloaded(false){
+    }
+
+    void addBytes(QByteArray vorbisData){
+        bytes.append(vorbisData);
+    }
+
+    QByteArray getBytes() const{
+        return bytes;
+    }
+
+    void markAsCompleted(){
+        this->downloaded = true;
+    }
+
+    inline bool isDownloaded() const{return downloaded;}
+
+private:
+    bool downloaded;
+    QByteArray bytes;
+};
 
 NinjamTrackNode::NinjamTrackNode()
-    : readIndex(0), writeIndex(0), playing(false)
+    :playing(false), mutex()
 {
 
 }
@@ -15,17 +43,32 @@ NinjamTrackNode::~NinjamTrackNode()
 }
 
 void NinjamTrackNode::startNewInterval(){
-    playing = decoders[readIndex].canDecode();
-    qDebug() << "playing: " << playing << " readIndex: " << readIndex;
+    QMutexLocker locker(&mutex);
+    if(!intervals.isEmpty() && intervals.front().isDownloaded() ){
+        decoder.setInput(intervals.front().getBytes());
+        intervals.removeFirst();
+        decoder.reset();//head the headers
+        playing = true;
+    }
+    else{
+        playing = false;
+    }
 }
 
 void NinjamTrackNode::addEncodedBytes(QByteArray vorbisData, bool lastPartOfInterval){
-    decoders[writeIndex].addVorbisData(vorbisData, lastPartOfInterval);
+    QMutexLocker locker(&mutex);
     if(lastPartOfInterval){
-        //decoders[writeIndex].initialize();
-        writeIndex = (writeIndex + 1) % 2;//use the next
-        //decoders[writeIndex].reset();
+        qDebug() << "add encoded bytes " << lastPartOfInterval;
     }
+    if(intervals.isEmpty()){
+        intervals.append(NinjamInterval());
+    }
+    intervals.back().addBytes(vorbisData);
+    if(lastPartOfInterval){
+        intervals.back().markAsCompleted();//mark interval as completed
+        intervals.append(NinjamInterval());//create a new interval to the next interval stream
+    }
+
 }
 //++++++++++++++++++++++++++++++++++++++
 
@@ -36,23 +79,19 @@ void NinjamTrackNode::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesB
     int totalDecoded = 0;
     internalBuffer->setFrameLenght(out.getFrameLenght());
     internalBuffer->zero();
-    if(decoders[readIndex].canDecode()){
-        while(totalDecoded < out.getFrameLenght() && decoders[readIndex].hasMoreSamplesToDecode()){
-            const Audio::SamplesBuffer* decodedBuffer = decoders[readIndex].decode(out.getFrameLenght() - totalDecoded);
-            if(decodedBuffer->getFrameLenght() > 0){
-                out.add(*decodedBuffer, totalDecoded);//total decoded is the offset
-            }
-            totalDecoded += decodedBuffer->getFrameLenght();
-            if(decodedBuffer->getFrameLenght() == 0){
-                break;
-            }
+    while(totalDecoded < out.getFrameLenght() ){
+        const Audio::SamplesBuffer* decodedBuffer = decoder.decode(out.getFrameLenght() - totalDecoded);
+        if(decodedBuffer->getFrameLenght() > 0){
+            out.add(*decodedBuffer, totalDecoded);//total decoded is the offset
+        }
+        totalDecoded += decodedBuffer->getFrameLenght();
+        if(decodedBuffer->getFrameLenght() == 0){
+            break;
         }
     }
+
     if(totalDecoded > 0){
         Audio::AudioNode::processReplacing(in, out);
     }
-    if(decoders[readIndex].isInitialized() && !decoders[readIndex].hasMoreSamplesToDecode()){//all samples consumed
-        decoders[readIndex].reset();
-        readIndex = (readIndex + 1) % 2;
-    }
+
 }

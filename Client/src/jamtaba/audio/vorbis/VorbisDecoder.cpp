@@ -9,47 +9,45 @@
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::VorbisDecoder()
     : internalBuffer(nullptr),
-      initialized(false),
-      finished(false),
-      vorbisInput(QByteArray()),
-      lastPartAdded(false)
+      vorbisInput(),
+      initialized(false)
 {
 
 }
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::~VorbisDecoder(){
-    if(isInitialized()){
-        ov_clear(&vorbisFile);
-        if(internalBuffer){
-            delete internalBuffer;
-        }
+    ov_clear(&vorbisFile);
+    if(internalBuffer){
+        delete internalBuffer;
     }
 }
 //+++++++++++++++++++++++++++++++++++++++++++
-//vorbisfile read callback
-size_t VorbisDecoder::readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *datasource){
-    QByteArray* byteArray = reinterpret_cast<QByteArray*>(datasource);
-    if(byteArray->isEmpty()){
-        return 0;//end of stream
+int VorbisDecoder::consumeTo(void *oggOutBuffer, int bytesToConsume){
+    int len = std::min( bytesToConsume, vorbisInput.size());
+    if(len > 0){
+        memcpy(oggOutBuffer, vorbisInput.data(), len);
+        vorbisInput.remove(0, len);
     }
-    size_t len = std::min( (int)(size * nmemb), byteArray->size());
-    memcpy(oggOutBuffer, byteArray->data(), len);
-    byteArray->remove(0, len);
+//    else{
+//        finished = true;
+//    }
     return len;
 }
+
+//vorbisfile read callback
+size_t VorbisDecoder::readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *decoder){
+    VorbisDecoder* decoderInstance = reinterpret_cast<VorbisDecoder*>(decoder);
+    return decoderInstance->consumeTo(oggOutBuffer, size * nmemb);
+}
 //+++++++++++++++++++++++++++++++++++++++++++
-//return decoded samples
 const Audio::SamplesBuffer* VorbisDecoder::decode(int maxSamplesToDecode){
-    if(!lastPartAdded){//waiti to complete the download of encoded interval
-        return &(Audio::SamplesBuffer::ZERO_BUFFER);
+//    if(!canDecode()){//wait to complete the download of encoded interval
+//        return &(Audio::SamplesBuffer::ZERO_BUFFER);
+//    }
+    if(!initialized){
+        initialize();
     }
-    if (!isInitialized()){
-        if(!initialize()){
-            return &(Audio::SamplesBuffer::ZERO_BUFFER);
-        }
-    }
-    static int currentSection;
-    long samplesDecoded = ov_read_float(&vorbisFile, &internalBuffer->samples, maxSamplesToDecode, &currentSection);//currentSection is not used
+    long samplesDecoded = ov_read_float(&vorbisFile, &internalBuffer->samples, maxSamplesToDecode, NULL);//currentSection is not used
     if(samplesDecoded < 0){//error
         QString message;
         switch (samplesDecoded) {
@@ -63,80 +61,71 @@ const Audio::SamplesBuffer* VorbisDecoder::decode(int maxSamplesToDecode){
         return &Audio::SamplesBuffer::ZERO_BUFFER;
     }
     internalBuffer->setFrameLenght(samplesDecoded);
-    if(samplesDecoded == 0){//sometimes decoder can't decode samples because don't have enough bytes to decode
-        finished = true;
-        qDebug() << "Decoder finalizado!";
-    }
+    //if(samplesDecoded == 0){//sometimes decoder can't decode samples because don't have enough bytes to decode
+        //qWarning() << "samples decoded == zero!";
+    //}
 
+//    if(totalBytesInLastInterval > 0 && bytesConsumed >= totalBytesInLastInterval){
+//        reset();//prepare to decode a new interval
+//    }
     return internalBuffer;
 }
 //+++++++++++++++++++++++++++++++++++++++++++
 void VorbisDecoder::reset(){
-    if(isInitialized()){
-        finished = initialized = lastPartAdded = false;
+    if(initialized){
         ov_clear(&vorbisFile);
-        qDebug() << "resetou decoder" ;
     }
+    initialize();
 }
-
-void VorbisDecoder::addVorbisData(QByteArray vorbisData, bool isLastPart){
-    if(!finished){
-        vorbisInput.append(vorbisData);
-    }
-    if(isLastPart ){
-        lastPartAdded = true;
-        //qDebug() << "adicionou a última parte!";
-        initialize();
-    }
-    //qDebug() << "já baixou " << vorbisInput.size() << " bytes";
+//++++++++++++++++++++++++++++++++++++++++++++++
+void VorbisDecoder::setInput(QByteArray vorbisData){
+    vorbisInput.clear();
+    vorbisInput.append(vorbisData);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++
 bool VorbisDecoder::initialize(){
-    if (!isInitialized()){
-        ov_callbacks callbacks;
-        callbacks.read_func = readOgg;
-        callbacks.seek_func = NULL;
-        callbacks.close_func = NULL;
-        callbacks.tell_func = NULL;
-        int result = ov_open_callbacks((void*)&vorbisInput, &vorbisFile, NULL, 0, callbacks );
-        if(result == 0){
-            initialized = true;
-            finished = false;
-            //lastPartAdded = false;
-            if(internalBuffer){
-                if(internalBuffer->getChannels() != vorbisFile.vi->channels){
-                    delete internalBuffer;
-                    internalBuffer = new Audio::SamplesBuffer(vorbisFile.vi->channels, 4096);
-                }
-            }
-            else{
+    ov_callbacks callbacks;
+    callbacks.read_func = readOgg;
+    callbacks.seek_func = NULL;
+    callbacks.close_func = NULL;
+    callbacks.tell_func = NULL;
+    int result = ov_open_callbacks((void*)this, &vorbisFile, NULL, 0, callbacks );
+    if(result == 0){
+        if(internalBuffer){
+            if(internalBuffer->getChannels() != vorbisFile.vi->channels){
+                delete internalBuffer;
                 internalBuffer = new Audio::SamplesBuffer(vorbisFile.vi->channels, 4096);
             }
-            qDebug() << "inicializou decoder";
         }
         else{
-            initialized = false;
-            finished = true;
-
-            QString message;
-            switch (result) {
-            case OV_EREAD: message = "VORBIS DECODER INIT ERROR:  A read from media returned an error.";
-                break;
-            case OV_ENOTVORBIS: message = "VORBIS DECODER INIT ERROR:  Bitstream does not contain any Vorbis data.";
-                break;
-            case OV_EVERSION: message = "VORBIS DECODER INIT ERROR: Vorbis version mismatch";
-                break;
-            case OV_EBADHEADER: message = "VORBIS DECODER INIT ERROR: Invalid Vorbis bitstream header.";
-                break;
-            case OV_EFAULT: message = "VORBIS DECODER INIT ERROR: Internal logic fault; indicates a bug or heap/stack corruption.";
-            }
-            qWarning() << message;
+            internalBuffer = new Audio::SamplesBuffer(vorbisFile.vi->channels, 4096);
         }
-	}
+        initialized = true;
+    }
+    else{
+        initialized = false;
+        QString message;
+        switch (result) {
+        case OV_EREAD: message = "VORBIS DECODER INIT ERROR:  A read from media returned an error.";
+            break;
+        case OV_ENOTVORBIS: message = "VORBIS DECODER INIT ERROR:  Bitstream does not contain any Vorbis data.";
+            break;
+        case OV_EVERSION: message = "VORBIS DECODER INIT ERROR: Vorbis version mismatch";
+            break;
+        case OV_EBADHEADER: message = "VORBIS DECODER INIT ERROR: Invalid Vorbis bitstream header.";
+            break;
+        case OV_EFAULT: message = "VORBIS DECODER INIT ERROR: Internal logic fault; indicates a bug or heap/stack corruption.";
+        }
+        qWarning() << message;
+        return false;
+    }
+
     return initialized;
 }
 
-bool VorbisDecoder::hasMoreSamplesToDecode(){
-    return isInitialized() && !finished;
-}
+//bool VorbisDecoder::canDecode() const{
+//    return vorbisInput.size() >= 4096 * 2;
+//}
+
+
