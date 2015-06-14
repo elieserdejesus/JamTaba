@@ -4,7 +4,9 @@
 #include <QStyleOption>
 #include <QPainter>
 
-BaseTrackView::BaseTrackView(QWidget *parent, Controller::MainController *mainController, int trackID) :
+QMap<long, BaseTrackView*> BaseTrackView::trackViews;//static map
+
+BaseTrackView::BaseTrackView(QWidget *parent, Controller::MainController *mainController, long trackID) :
     QWidget(parent),
     ui(new Ui::TrackView),
     mainController(mainController),
@@ -18,6 +20,16 @@ BaseTrackView::BaseTrackView(QWidget *parent, Controller::MainController *mainCo
 
     ui->panSlider->installEventFilter(this);
     ui->levelSlider->installEventFilter(this);
+
+    //add in static map
+    trackViews.insert(trackID, this);
+}
+
+BaseTrackView* BaseTrackView::getTrackViewByID(long trackID){
+    if(trackViews.contains(trackID)){
+        return trackViews[trackID];
+    }
+    return nullptr;
 }
 
 void BaseTrackView::setPeaks(float left, float right){
@@ -44,6 +56,7 @@ bool BaseTrackView::eventFilter(QObject *source, QEvent *ev){
 BaseTrackView::~BaseTrackView()
 {
     delete ui;
+    trackViews.remove(this->getTrackID());//remove from static map
 }
 
 void BaseTrackView::onPanSliderMoved(int value){

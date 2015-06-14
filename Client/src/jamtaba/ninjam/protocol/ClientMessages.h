@@ -77,7 +77,7 @@ private:
     QStringList usersFullNames;
     static const quint32 FLAG = 0xFFFFFFFF;
 public:
-    ClientSetUserMask(QList<User*> users) ;
+    ClientSetUserMask(QList<QString> users) ;
     virtual void serializeTo(QByteArray &stream);
     virtual void printDebug(QDebug dbg) const;
 

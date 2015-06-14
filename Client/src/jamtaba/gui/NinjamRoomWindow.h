@@ -8,6 +8,8 @@
 //#include "../audio/MetronomeTrackNode.h"
 
 #include <QSpacerItem>
+#include "../ninjam/User.h"
+#include "../ninjam/UserChannel.h"
 
 namespace Ui {
 class NinjamRoomWindow;
@@ -21,6 +23,7 @@ namespace Controller {
 namespace Ninjam {
     class Server;
     class UserChannel;
+    class User;
 }
 
 class NinjamRoomWindow : public QWidget
@@ -45,7 +48,9 @@ private slots:
     void bpiChanged(int bpi);
     void bpmChanged(int bpm);
     void intervalBeatChanged(int beat);
-    void channelAdded(const Ninjam::UserChannel& channel, long channelID );
+    void channelAdded(  Ninjam::User user, Ninjam::UserChannel channel, long channelID );
+    void channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
+    void channelChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
 };
 
 #endif // NINJAMROOMWINDOW_H

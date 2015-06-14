@@ -3,7 +3,7 @@
 #include "NinjamTrackView.h"
 
 #include "../ninjam/User.h"
-#include "../ninjam/Service.h"
+//#include "../ninjam/Service.h"
 #include "../ninjam/Server.h"
 
 #include "../loginserver/JamRoom.h"
@@ -39,15 +39,32 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Ninjam::Server *server, Cont
     QObject::connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(bpiChanged(int)));
     QObject::connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(bpmChanged(int)));
     QObject::connect(ninjamController, SIGNAL(intervalBeatChanged(int)), this, SLOT(intervalBeatChanged(int)));
-    QObject::connect(ninjamController, SIGNAL(channelAdded(Ninjam::UserChannel,long)), this, SLOT(channelAdded(Ninjam::UserChannel,long)));
+    QObject::connect(ninjamController, SIGNAL(channelAdded(Ninjam::User,   Ninjam::UserChannel, long)), this, SLOT(channelAdded(  Ninjam::User, Ninjam::UserChannel, long)));
+    QObject::connect(ninjamController, SIGNAL(channelRemoved(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(channelRemoved(Ninjam::User, Ninjam::UserChannel, long)));
+    QObject::connect(ninjamController, SIGNAL(channelChanged(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(channelChanged(Ninjam::User, Ninjam::UserChannel, long)));
 
     QObject::connect(ui->topPanel->getBpiCombo(), SIGNAL(activated(QString)), this, SLOT(ninjamBpiComboChanged(QString)));
     QObject::connect(ui->topPanel->getBpmCombo(), SIGNAL(activated(QString)), this, SLOT(ninjamBpmComboChanged(QString)));
     QObject::connect(ui->topPanel->getAccentsCombo(), SIGNAL(currentIndexChanged(int)), this, SLOT(ninjamAccentsComboChanged(int)));
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamRoomWindow::channelAdded(const Ninjam::UserChannel &channel, long channelID){
-    QString userName = channel.getUser()->getName();
+void NinjamRoomWindow::channelRemoved(Ninjam::User, Ninjam::UserChannel /*channel*/, long channelID){
+    BaseTrackView* trackView = NinjamTrackView::getTrackViewByID(channelID);
+    if(trackView){
+        ui->tracksPanel->layout()->removeWidget(trackView);
+    }
+}
+
+void NinjamRoomWindow::channelChanged(Ninjam::User, Ninjam::UserChannel channel, long channelID){
+    NinjamTrackView* trackView = (NinjamTrackView*)NinjamTrackView::getTrackViewByID(channelID);
+    if(trackView){
+        trackView->setChannelName(channel.getName());
+        //trackView->setUserName(channel->getUser()->getName());
+    }
+}
+
+void NinjamRoomWindow::channelAdded(Ninjam::User user, Ninjam::UserChannel channel, long channelID){
+    QString userName = user.getName();
     QString channelName = channel.getName();
     QString countryName = "Country name";//tenho que pegar de uma base local, não dá pra tentar pegar essa informação do server, talvez o server ainda não esteja atualizado com a informação do usuário que acabou de se conectar
     QString countryCode = "UNKNOWN";
@@ -74,7 +91,7 @@ void NinjamRoomWindow::ninjamBpiComboChanged(QString newText){
     reply = QMessageBox::question(this, "Changing BPI ...", message,
                                   QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::Yes) {
-        Ninjam::Service::getInstance()->voteToChangeBPI(newBpi);
+        mainController->getNinjamController()->voteBpi(newBpi);
     }
     else{
         ui->topPanel->getBpiCombo()->blockSignals(true);
@@ -93,7 +110,7 @@ void NinjamRoomWindow::ninjamBpmComboChanged(QString newText){
     reply = QMessageBox::question(this, "Changing BPM ...", "Vote to change the BPM to " + QString::number(newBpm) + "?",
                                   QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::Yes) {
-        Ninjam::Service::getInstance()->voteToChangeBPM(newBpm);
+        mainController->getNinjamController()->voteBpm(newBpm);
     }
     else{
         ui->topPanel->getBpmCombo()->blockSignals(true);

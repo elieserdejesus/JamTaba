@@ -32,8 +32,8 @@ private:
     QByteArray bytes;
 };
 
-NinjamTrackNode::NinjamTrackNode()
-    :playing(false), mutex()
+NinjamTrackNode::NinjamTrackNode(int ID)
+    :playing(false), ID(ID)
 {
 
 }
@@ -57,9 +57,9 @@ void NinjamTrackNode::startNewInterval(){
 
 void NinjamTrackNode::addEncodedBytes(QByteArray vorbisData, bool lastPartOfInterval){
     QMutexLocker locker(&mutex);
-    if(lastPartOfInterval){
-        qDebug() << "add encoded bytes " << lastPartOfInterval;
-    }
+//    if(lastPartOfInterval){
+//        qDebug() << "add encoded bytes " << lastPartOfInterval;
+//    }
     if(intervals.isEmpty()){
         intervals.append(NinjamInterval());
     }

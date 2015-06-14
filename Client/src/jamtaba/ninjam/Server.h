@@ -30,7 +30,7 @@ private:
     QString streamUrl;
     QString topic;
 
-    QMap<QString, User*> users;
+    QMap<QString, User> users;
 
     bool containBot;// = false;
 
@@ -59,8 +59,9 @@ public:
     inline bool containsBot() const{ return containBot; }
 
     bool containsUser(const User& user) const;
+    bool containsUser(QString userFullName) const;
 
-    void addUser(User* user) ;
+    void addUser(User user) ;
 
     inline short getBpi() const{ return bpi; }
 
@@ -68,7 +69,7 @@ public:
 
     inline int getMaxUsers() const{ return maxUsers; }
 
-    QList<User*> getUsers() const;
+    QList<User> getUsers() const;
 
     inline bool isActive() const{ return activeServer;}
 
@@ -84,7 +85,7 @@ public:
 
     bool setBpi(short bpi) ;
 
-    void refreshUserList(QSet<User*> onlineUsers) ;
+    void refreshUserList(QSet<QString> onlineUsers) ;
 
     inline QString getTopic() const {return topic;}
 

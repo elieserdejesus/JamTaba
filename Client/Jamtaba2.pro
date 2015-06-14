@@ -1,4 +1,14 @@
-#o que acontece se eu mudo de stereo para mono? Testar isso com o ReaNinjam
+#tratar adição  e remoção de canais
+
+#removeu canal do controller mas não removeu da view
+
+#quando mudei o nome do canal um canal novo foi criado na view, talve o problema seja no service
+
+#não consigo testar a mudança de nome no canal por causa da exibição que não mostra o texto
+
+#controles do canal ninjam não atuaram
+
+
 
 #o audio está realmente em outra thread? Pelo comportamento do áudio quando executo no debug acho que não. Além
 #disso quando o decoder ficou em um loop infinito a gui travou, então estou suspeitando que o áudio está rodando na thread da GUI
@@ -142,7 +152,8 @@ HEADERS += \
     src/jamtaba/NinjamJamRoomController.h \
     src/jamtaba/gui/MetronomeTrackView.h \
     src/jamtaba/audio/vorbis/VorbisDecoder.h \
-    src/jamtaba/audio/streambuffer.h
+    src/jamtaba/audio/streambuffer.h \
+    src/jamtaba/ninjam/UserChannel.h
 
 
 win32:HEADERS += portaudio/include/pa_asio.h \
@@ -207,7 +218,8 @@ SOURCES += \
     src/jamtaba/NinjamJamRoomController.cpp \
     src/jamtaba/gui/MetronomeTrackView.cpp \
     src/jamtaba/audio/vorbis/VorbisDecoder.cpp \
-    src/jamtaba/audio/streambuffer.cpp
+    src/jamtaba/audio/streambuffer.cpp \
+    src/jamtaba/ninjam/UserChannel.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
