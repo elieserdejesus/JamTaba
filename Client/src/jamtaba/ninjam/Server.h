@@ -30,7 +30,7 @@ private:
     QString streamUrl;
     QString topic;
 
-    QMap<QString, User> users;
+    QMap<QString, User*> users;
 
     bool containBot;// = false;
 
@@ -40,6 +40,8 @@ private:
 
 public:
     static Server* getServer(QString host, int port) ;
+
+    User* getUser(QString userFullName) const;//{ return &(users[userFullName]);}
 
     inline void setStreamUrl(QString streamUrl) { this->streamUrl = streamUrl; }
 
@@ -69,7 +71,7 @@ public:
 
     inline int getMaxUsers() const{ return maxUsers; }
 
-    QList<User> getUsers() const;
+    QList<User *> getUsers() const;
 
     inline bool isActive() const{ return activeServer;}
 

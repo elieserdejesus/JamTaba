@@ -40,7 +40,7 @@ void NinjamJamRoomController::start(const Ninjam::Server& server){
         Ninjam::Service* ninjamService = Ninjam::Service::getInstance();
         QObject::connect(ninjamService, SIGNAL(serverBpmChanged(short)), this, SLOT(ninjamServerBpmChanged(short)));
         QObject::connect(ninjamService, SIGNAL(serverBpiChanged(short,short)), this, SLOT(ninjamServerBpiChanged(short,short)));
-        QObject::connect(ninjamService, SIGNAL(audioIntervalPartAvailable(Ninjam::User*,int,QByteArray,bool)), this, SLOT(ninjamAudioAvailable(Ninjam::User*,int,QByteArray,bool)) );
+        QObject::connect(ninjamService, SIGNAL(audioIntervalPartAvailable(Ninjam::User,int,QByteArray,bool)), this, SLOT(ninjamAudioAvailable(Ninjam::User,int,QByteArray,bool)));
 
         //desconectar esses no destrutor
         QObject::connect(ninjamService, SIGNAL(userChannelCreated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelCreated(Ninjam::User, Ninjam::UserChannel)));
@@ -48,10 +48,10 @@ void NinjamJamRoomController::start(const Ninjam::Server& server){
         QObject::connect(ninjamService, SIGNAL(userChannelUpdated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelUpdated(Ninjam::User, Ninjam::UserChannel)));
 
         //add server users
-        QList<Ninjam::User> users = server.getUsers();
-        foreach (Ninjam::User user, users) {
-            foreach (Ninjam::UserChannel channel, user.getChannels()) {
-                addTrack(user, channel);
+        QList<Ninjam::User*> users = server.getUsers();
+        foreach (Ninjam::User* user, users) {
+            foreach (Ninjam::UserChannel* channel, user->getChannels()) {
+                addTrack(*user, *channel);
             }
         }
 

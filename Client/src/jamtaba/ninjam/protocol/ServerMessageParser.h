@@ -13,39 +13,28 @@ namespace Ninjam {
 class ServerMessage;
 enum class ServerMessageType : std::uint8_t;
 
+template<type T>
 class ServerMessageParser  {
-
-
-private:
-    //useri shared_pointer porque o unique_ptr estava dando muito problema com o map
-    static QMap<ServerMessageType, std::shared_ptr<ServerMessageParser>> parsers;
-
-    static ServerMessageParser* createInstance(ServerMessageType messageType);
 
 protected:
     static QString extractString(QDataStream& stream) ;
 
 public:
-    virtual ServerMessage* parse(QDataStream& stream, quint32 payloadLenght) = 0;
-
-    static ServerMessageParser *getParser(ServerMessageType messageType) ;
-
-
+    virtual const ServerMessage& parse(QDataStream& stream, quint32 payloadLenght) = 0;
+    static const ServerMessageParser& getParser(ServerMessageType messageType) ;
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
-class AuthChallengeParser : public ServerMessageParser{
-
-
+class AuthChallengeParser : public ServerMessageParser<AuthChallengeParser>{
 public:
-    virtual ServerMessage* parse(QDataStream& stream, quint32 payloadLenght) ;
+    virtual const AuthChallengeParser parse(QDataStream& stream, quint32 payloadLenght) ;
 
 };
 //++++++++++++++++++++++++++++++++++++++++++++++++++
-class AuthReplyParser : public ServerMessageParser{
+class AuthReplyParser : public ServerMessageParser<>{
 
 public:
-    virtual ServerMessage *parse(QDataStream &stream, quint32 payloadLenght);
+    virtual const ServerMessage& parse(QDataStream &stream, quint32 payloadLenght);
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -53,26 +42,26 @@ class ServerKeepAliveMessage;
 class KeepAliveParser : public ServerMessageParser{
 
 public:
-    virtual ServerMessage* parse(QDataStream &stream, quint32 payloadLenght);
+    virtual const ServerMessage& parse(QDataStream &stream, quint32 payloadLenght);
 };
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++
 class ConfigChangeNotifyParser : public ServerMessageParser{
 
 public:
-    virtual ServerMessage* parse(QDataStream &stream, quint32 payloadLenght);
+    virtual const ServerMessage& parse(QDataStream &stream, quint32 payloadLenght);
 };
 //++++++++++++++++++++++
 class UserInfoChangeNotifyParser : public ServerMessageParser {
 
 public:
-    virtual ServerMessage *parse(QDataStream &stream, quint32 payloadLenght);
+    virtual const ServerMessage& parse(QDataStream &stream, quint32 payloadLenght);
 
 };
 //+++++++++++++++++++=
 
 class ChatMessageParser : public ServerMessageParser {
 
-    virtual ServerMessage *parse(QDataStream &stream, quint32 payloadLenght);
+    virtual const ServerMessage& parse(QDataStream &stream, quint32 payloadLenght);
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 };
@@ -87,7 +76,7 @@ class ChatMessageParser : public ServerMessageParser {
  */
 class DownloadIntervalBeginParser : public ServerMessageParser {
 
-    virtual ServerMessage* parse(QDataStream& stream, quint32 payload);
+    virtual const ServerMessage& parse(QDataStream& stream, quint32 payload);
 
 };
 
@@ -103,7 +92,7 @@ class DownloadIntervalWriteParser : public ServerMessageParser {
     //max payload recebido do reaper foi 2076
 
 public:
-    virtual ServerMessage* parse(QDataStream& stream, quint32 payloadLenght);
+    virtual const ServerMessage& parse(QDataStream& stream, quint32 payloadLenght);
 
 };
 

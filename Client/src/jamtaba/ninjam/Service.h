@@ -65,7 +65,7 @@ signals:
     void userCountMessageReceived(int users, int maxUsers);
     void serverBpiChanged(short currentBpi, short lastBpi);
     void serverBpmChanged(short currentBpm);
-    void audioIntervalPartAvailable(QString userFullName, int channelIndex, QByteArray encodedAudioData, bool lastPartOfInterval);
+    void audioIntervalPartAvailable(Ninjam::User user, int channelIndex, QByteArray encodedAudioData, bool lastPartOfInterval);
     void disconnectedFromServer(bool normalDisconnection);
     void connectedInServer(const Ninjam::Server& server);
     void chatMessageReceived(Ninjam::User sender, QString message);
@@ -99,39 +99,48 @@ private:
     void buildNewSocket()  ;
 
     void sendMessageToServer(ClientMessage* message) ;
-    void handleUserChannels(User user, QList<UserChannel> channelsInTheServer);
+    void handleUserChannels(QString userFullName, QList<UserChannel> channelsInTheServer);
     bool channelIsOutdate(const User &user, const UserChannel &serverChannel);
 
     void setBpm(quint16 newBpm);
     void setBpi(quint16 newBpi);
 
     //+++++= message handlers ++++
-    void invokeMessageHandler(ServerMessage* message) ;
-    void handle(ServerAuthChallengeMessage* msg);
-    void handle(ServerAuthReplyMessage* msg);
-    void handle(ConfigChangeNotifyMessage* msg);
-    void handle(UserInfoChangeNotifyMessage* msg);
-    void handle(ServerChatMessage* msg);
-    void handle(ServerKeepAliveMessage *msg);
-    void handle(DownloadIntervalBegin *msg);
-    void handle(DownloadIntervalWrite *msg);
+    void invokeMessageHandler(const ServerMessage& message) ;
+    void handle(const ServerAuthChallengeMessage& msg);
+    void handle(const ServerAuthReplyMessage& msg);
+    void handle(const ConfigChangeNotifyMessage& msg);
+    void handle(const UserInfoChangeNotifyMessage& msg);
+    void handle(const ServerChatMessage& msg);
+    void handle(const ServerKeepAliveMessage& msg);
+    void handle(const DownloadIntervalBegin& msg);
+    void handle(const DownloadIntervalWrite& msg);
     //++++++++++++=
 
     class Download {
+    private:
+        quint8 channelIndex;
+        QString userFullName;
+        QString GUID;
     public:
-        const quint8 channelIndex;
-        const User* user;
-        const QString GUID;
+        Download(QString userFullName, quint8 channelIndex, QString GUID)
+            :channelIndex(channelIndex), userFullName(userFullName), GUID(GUID){
+        }
+        Download(){
+            qWarning() << "using the default constructor!";
+        }
 
-        Download(const User& user, quint8 channelIndex, QString GUID)
-            :channelIndex(channelIndex), user(&user), GUID(GUID){
+        ~Download(){
 
         }
 
+        inline quint8 getChannelIndex() const{return channelIndex;}
+        inline QString getUserFullName() const{return userFullName;}
+        inline QString getGUI() const{return GUID;}
     };
 
     //using GUID as key
-    QMap<QString, std::shared_ptr<Download>> downloads;
+    QMap<QString, Download> downloads;
 
     bool needSendKeepAlive() const;
 
