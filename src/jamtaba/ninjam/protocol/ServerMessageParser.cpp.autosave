@@ -41,7 +41,7 @@ QString ServerMessageParser::extractString(QDataStream &stream)
 
 //+++++++++++++++++++++++++++++++++++++++++
 
-const ServerMessage& AuthChallengeParser::parse(QDataStream &stream, quint32 /*payloadLenght*/){
+const AuthChallengeParser AuthChallengeParser::parse(QDataStream &stream, quint32 /*payloadLenght*/){
     quint8 challenge[8];
     for (int i = 0; i < 8; ++i) {
         stream >> challenge[i];

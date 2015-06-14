@@ -22,15 +22,15 @@ User::User(QString fullName)
    // qDebug() << "NinjamUser constructor " << fullName;
 }
 
-User::User(const User &u)
-    :
-      fullName(u.fullName),
-      name(u.name),
-      ip(u.ip)
+//User::User(const User &u)
+//    :
+//      fullName(u.fullName),
+//      name(u.name),
+//      ip(u.ip)
 
-{
+//{
 
-}
+//}
 
 User::~User(){
     //qDebug() << "Destrutor NinjamUser";
@@ -61,11 +61,23 @@ bool User::isBot() const {
 
 void User::addChannel(UserChannel c){
     //addChannel(c.getName(), c.isActive(), c.getIndex(), c.volume, c.pan, c.getFlags());
-    channels.insert(c.getIndex(), c);
+    channels.insert(c.getIndex(), new UserChannel(c));
 }
 
 void User::removeChannel(int channelIndex) {
     this->channels.remove(channelIndex);
+}
+
+void User::setChannelName(int channelIndex, QString name){
+    if(channels.contains(channelIndex)){
+        channels[channelIndex]->setName(name);
+    }
+}
+
+void User::setChannelFlags(int channelIndex, int flags){
+    if(channels.contains(channelIndex)){
+        channels[channelIndex]->setFlags(flags);
+    }
 }
 
 QDebug& Ninjam::operator<<(QDebug &out, const User &user)

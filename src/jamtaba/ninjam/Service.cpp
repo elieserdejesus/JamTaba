@@ -48,8 +48,8 @@ void Service::socketReadSlot(){
             handlingSplittedMessage = false;
             ServerMessageParser* parser = ServerMessageParser::getParser( static_cast<ServerMessageType>(messageTypeCode));
             Ninjam::ServerMessage* message = parser->parse(stream, payloadLenght);
-            //qDebug() << message;
-            invokeMessageHandler(message);
+            qDebug() << message;
+            invokeMessageHandler(*message);
             delete message;
             if(needSendKeepAlive()){
                 ClientKeepAlive clientKeepAliveMessage;
@@ -152,60 +152,60 @@ bool Service::needSendKeepAlive() const{
     return ellapsedSeconds >= serverKeepAlivePeriod;
 }
 
-void Service::handle(UserInfoChangeNotifyMessage* msg) {
-    //QMap<NinjamUser*, QList<NinjamUserChannel*>> allUsersChannels = msg->getUsersChannels();
-    QSet<QString> users = QSet<QString>::fromList( msg->getUsersNames());
+void Service::handle(const UserInfoChangeNotifyMessage& msg) {
+    //QMap<NinjamUser*, QList<NinjamUserChannel*>> allUsersChannels = msg.getUsersChannels();
+    QSet<QString> users = QSet<QString>::fromList( msg.getUsersNames());
     foreach (QString userFullName , users) {
         if (!currentServer->containsUser(userFullName)) {
             User newUser(userFullName);
             currentServer->addUser( newUser );
             emit userEnterInTheJam(newUser);
         }
-        handleUserChannels(userFullName, msg->getUserChannels(userFullName));
+        handleUserChannels(userFullName, msg.getUserChannels(userFullName));
     }
 
-    ClientSetUserMask setUserMask(msg->getUsersNames());
+    ClientSetUserMask setUserMask(msg.getUsersNames());
     sendMessageToServer( &setUserMask );//enable new users channels
 }
 
-void Service::handle(DownloadIntervalBegin * msg){
-    if (!msg->downloadShouldBeStopped() && msg->isValidOggDownload()) {
-        quint8 channelIndex = msg->getChannelIndex();
-        QString userFullName = msg->getUserName();
-        QString GUID = msg->getGUID();
-        downloads.insert(GUID, std::shared_ptr<Download>( new Download(User(userFullName), channelIndex, GUID)));
+void Service::handle(const DownloadIntervalBegin& msg){
+    if (!msg.downloadShouldBeStopped() && msg.isValidOggDownload()) {
+        quint8 channelIndex = msg.getChannelIndex();
+        QString userFullName = msg.getUserName();
+        QString GUID = msg.getGUID();
+        downloads.insert(GUID, Download(userFullName, channelIndex, GUID));
     }
 
 }
 
-void Service::handle(DownloadIntervalWrite *msg){
-    if (downloads.contains(msg->getGUID())) {
-        Download* download = &*(downloads[msg->getGUID()]);
+void Service::handle(const DownloadIntervalWrite& msg){
+    if (downloads.contains(msg.getGUID())) {
+        Download download = downloads[msg.getGUID()];
  //       qDebug() << msg;
-        emit audioIntervalPartAvailable(download->user->getFullName(), download->channelIndex, msg->getEncodedAudioData(), msg->downloadIsComplete());
+        emit audioIntervalPartAvailable(download.getUserFullName(), download.getChannelIndex(), msg.getEncodedAudioData(), msg.downloadIsComplete());
 
-        if (msg->downloadIsComplete()) {
-            downloads.remove(msg->getGUID());
+        if (msg.downloadIsComplete()) {
+            downloads.remove(msg.getGUID());
         }
     } else {
         qCritical("GUID is not in map!");
     }
 }
 
-void Service::handle(ServerKeepAliveMessage * /*msg*/)
+void Service::handle(const ServerKeepAliveMessage& /*msg*/)
 {
     ClientKeepAlive clientKeepAliveMessage;
     sendMessageToServer((ClientMessage*)&clientKeepAliveMessage);
 }
 
-void Service::handle(ServerAuthChallengeMessage *msg)
+void Service::handle(const ServerAuthChallengeMessage& msg)
 {
-    ClientAuthUserMessage msgAuthUser(this->userName, msg->getChallenge(), msg->getProtocolVersion());
+    ClientAuthUserMessage msgAuthUser(this->userName, msg.getChallenge(), msg.getProtocolVersion());
     sendMessageToServer(&msgAuthUser);
 }
 
-void Service::handle(ServerAuthReplyMessage *msg){
-    if(msg->userIsAuthenticated()){
+void Service::handle(const ServerAuthReplyMessage& msg){
+    if(msg.userIsAuthenticated()){
         ClientSetChannel setChannelMsg(this->channels[0]);
         sendMessageToServer(&setChannelMsg);
     }
@@ -337,32 +337,28 @@ void Service::setBpi(quint16 bpi) {
 
 */
 
-void Service::handleUserChannels(User user, QList<UserChannel> channelsInTheServer) {
-    //QSet<UserChannel> userCurrentChannels = user.getChannels();
+void Service::handleUserChannels(QString userFullName, QList<UserChannel> channelsInTheServer) {
     //check for new channels
+    User* user = this->currentServer->getUser(userFullName);
     foreach (UserChannel c , channelsInTheServer) {
         if (c.isActive()) {
-            if (!user.hasChannel(c.getIndex())) {
-                user.addChannel(c);
-
-                emit userChannelCreated(user, c);
+            if (!user->hasChannel(c.getIndex())) {
+                user->addChannel(c);
+                emit userChannelCreated(*user, c);
 
             } else {//check for channel updates
-                if (user.hasChannels()) {
-                    UserChannel userChannel = user.getChannel(c.getIndex());
-                    if (channelIsOutdate(user, c)) {
-                        userChannel.setName(c.getName());
-                        userChannel.setFlags(c.getFlags());
-
-                        emit userChannelUpdated(user, userChannel);
-
+                if (user->hasChannels()) {
+                    //UserChannel userChannel = user->getChannel(c.getIndex());
+                    if (channelIsOutdate(*user, c)) {
+                        user->setChannelName(c.getIndex(), c.getName());
+                        user->setChannelFlags(c.getIndex(), c.getFlags());
+                        emit userChannelUpdated(*user, user->getChannel(c.getIndex()));
                     }
                 }
             }
         } else {
-            user.removeChannel(c.getIndex());
-
-            emit userChannelRemoved(user, c);
+            user->removeChannel(c.getIndex());
+            emit userChannelRemoved(*user, c);
 
         }
     }
@@ -385,15 +381,15 @@ bool Service::channelIsOutdate(const User& user, const UserChannel& serverChanne
 
 //+++++++++++++ CHAT MESSAGES ++++++++++++++++++++++
 
-void Service::handle(ServerChatMessage* msg) {
-    switch (msg->getCommand()) {
+void Service::handle(const ServerChatMessage& msg) {
+    switch (msg.getCommand()) {
     case ChatCommandType::JOIN:
         //
         break;
     case ChatCommandType::MSG:
     {
-        QString messageSender = msg->getArguments().at(0);
-        QString messageText = msg->getArguments().at(1);
+        QString messageSender = msg.getArguments().at(0);
+        QString messageText = msg.getArguments().at(1);
 
         emit chatMessageReceived(User(messageSender), messageText);
 
@@ -402,7 +398,7 @@ void Service::handle(ServerChatMessage* msg) {
     }
     case ChatCommandType::PART:
     {
-        QString userLeavingTheServer = msg->getArguments().at(0);
+        QString userLeavingTheServer = msg.getArguments().at(0);
 
         emit userLeaveTheJam(User(userLeavingTheServer));
 
@@ -410,8 +406,8 @@ void Service::handle(ServerChatMessage* msg) {
     }
     case ChatCommandType::PRIVMSG:
     {
-        QString messageSender = msg->getArguments().at(0);
-        QString messageText = msg->getArguments().at(1);
+        QString messageSender = msg.getArguments().at(0);
+        QString messageText = msg.getArguments().at(1);
 
         emit privateMessageReceived(User(messageSender), messageText);
 
@@ -420,8 +416,8 @@ void Service::handle(ServerChatMessage* msg) {
     }
     case ChatCommandType::TOPIC:
     {
-        //QString userName = msg->getArguments().at(0);
-        QString topicText = msg->getArguments().at(1);
+        //QString userName = msg.getArguments().at(0);
+        QString topicText = msg.getArguments().at(1);
         if (!initialized) {
             initialized = true;
             currentServer->setTopic(topicText);
@@ -433,8 +429,8 @@ void Service::handle(ServerChatMessage* msg) {
     }
     case ChatCommandType::USERCOUNT:
     {
-        int users = msg->getArguments().at(0).toInt();
-        int maxUsers = msg->getArguments().at(1).toInt();
+        int users = msg.getArguments().at(0).toInt();
+        int maxUsers = msg.getArguments().at(1).toInt();
 
         emit userCountMessageReceived(users, maxUsers);
 
@@ -585,10 +581,10 @@ void Service::handle(ServerChatMessage* msg) {
     }
 */
 
-void Service::handle(ConfigChangeNotifyMessage *msg)
+void Service::handle(const ConfigChangeNotifyMessage& msg)
 {
-    quint16 bpi = msg->getBpi();
-    quint16 bpm = msg->getBpm();
+    quint16 bpi = msg.getBpi();
+    quint16 bpm = msg.getBpm();
     if (bpi != currentServer->getBpi()) {
         setBpi(bpi);
     }
@@ -597,31 +593,31 @@ void Service::handle(ConfigChangeNotifyMessage *msg)
     }
 }
 
-void Service::invokeMessageHandler(ServerMessage *message){
-    switch (message->getMessageType()) {
+void Service::invokeMessageHandler(const ServerMessage& message){
+    switch (message.getMessageType()) {
     case ServerMessageType::AUTH_CHALLENGE:
-        handle((ServerAuthChallengeMessage*)message);
+        handle((ServerAuthChallengeMessage&)message);
         break;
     case ServerMessageType::AUTH_REPLY:
-        handle((ServerAuthReplyMessage*)message);
+        handle((ServerAuthReplyMessage&)message);
         break;
     case ServerMessageType::CONFIG_CHANGE_NOTIFY:
-        handle((ConfigChangeNotifyMessage*) message);
+        handle((ConfigChangeNotifyMessage&) message);
         break;
     case ServerMessageType::USER_INFO_CHANGE_NOTIFY:
-        handle((UserInfoChangeNotifyMessage*) message);
+        handle((UserInfoChangeNotifyMessage&) message);
         break;
     case ServerMessageType::CHAT_MESSAGE:
-        handle((ServerChatMessage*) message);
+        handle((ServerChatMessage&) message);
         break;
     case ServerMessageType::KEEP_ALIVE:
-        handle((ServerKeepAliveMessage*) message);
+        handle((ServerKeepAliveMessage&) message);
         break;
     case ServerMessageType::DOWNLOAD_INTERVAL_BEGIN:
-        handle((DownloadIntervalBegin*) message);
+        handle((DownloadIntervalBegin&) message);
         break;
     case ServerMessageType::DOWNLOAD_INTERVAL_WRITE:
-        handle((DownloadIntervalWrite*) message);
+        handle((DownloadIntervalWrite&) message);
         break;
 
     default:
