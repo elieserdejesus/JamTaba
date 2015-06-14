@@ -1,3 +1,5 @@
+#quando adicionei canais deu pau depois que mexi na estrutura de alocação de memória
+
 #tratar adição  e remoção de canais
 
 #removeu canal do controller mas não removeu da view
