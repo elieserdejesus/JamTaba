@@ -1,7 +1,7 @@
 #include "NinjamTrackView.h"
 #include "ui_BaseTrackView.h"
 
-NinjamTrackView::NinjamTrackView(QWidget *parent, Controller::MainController *mainController, int trackID, QString userName, QString channelName, QString countryName, QString countryCode)
+NinjamTrackView::NinjamTrackView(QWidget *parent, Controller::MainController *mainController, long trackID, QString userName, QString channelName, QString countryName, QString countryCode)
     :BaseTrackView(parent, mainController, trackID)
 {
     this->setMaximumWidth(100);
@@ -16,7 +16,15 @@ NinjamTrackView::NinjamTrackView(QWidget *parent, Controller::MainController *ma
     ui->namesPanel->layout()->addWidget(countryLabel);
 
     //disable channel name
-    ui->channelName->setEnabled(false);
+    ui->channelName->setEnabled(true);
+}
+
+void NinjamTrackView::setUserName(QString newName){
+    ui->trackName->setText(newName);
+}
+
+void NinjamTrackView::setChannelName(QString newChannelName){
+    ui->channelName->setText(newChannelName);
 }
 
 NinjamTrackView::~NinjamTrackView()

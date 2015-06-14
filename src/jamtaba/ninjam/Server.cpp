@@ -23,9 +23,13 @@ QString Server::getUniqueName(QString host, int port) {
     return host + ":" + QString::number(port);
 }
 
-bool Server::containsUser(const User &user) const
-{
-    return users.contains(user.getFullName());
+bool Server::containsUser(QString userFullName) const{
+    return users.contains(userFullName);
+}
+
+
+bool Server::containsUser(const User &user) const{
+    return containsUser(user.getFullName());
 }
 
 
@@ -37,16 +41,16 @@ Server* Server::getServer(QString host, int port) {
     return servers[key].get();
 }
 
-void Server::addUser(User* user) {
-    if (!users.contains(user->getFullName())) {
-        users.insert(user->getFullName(), user);
-        if (user->isBot()) {
+void Server::addUser(User user) {
+    if (!users.contains(user.getFullName())) {
+        users.insert(user.getFullName(), user);
+        if (user.isBot()) {
             containBot = true;
         }
     }
 }
 
-QList<User*> Server::getUsers() const{
+QList<User> Server::getUsers() const{
     return users.values();
 }
 
@@ -86,22 +90,22 @@ bool Server::setBpi(short bpi) {
     return false;
 }
 
-void Server::refreshUserList(QSet<User*> onlineUsers) {
-    QList<User*> toRemove;
+void Server::refreshUserList(QSet<QString> onlineUsers) {
+    QList<QString> toRemove;
 
-    foreach (User* onlineUser , onlineUsers) {
-        addUser(onlineUser);
+    foreach (QString onlineUserName , onlineUsers) {
+        addUser(User(onlineUserName));
     }
 
-    QList<User*> currentUsers= users.values();
-    foreach (User* user , currentUsers) {
-        if (!onlineUsers.contains(user)) {
-            toRemove.append(user);
+    QList<User> currentUsers= users.values();
+    foreach (User user , currentUsers) {
+        if (!onlineUsers.contains(user.getFullName())) {
+            toRemove.append(user.getFullName());
         }
     }
 
-    foreach (User* ninjaMUser , toRemove) {
-        users.remove(ninjaMUser->getFullName());
+    foreach (User ninjaMUser , toRemove) {
+        users.remove(ninjaMUser.getFullName());
     }
 
 }
@@ -112,8 +116,8 @@ QDataStream & Ninjam::operator<<(QDataStream &out, const Server &server){
         <<" maxUsers="  <<  server.getMaxUsers() <<  ", bpm="
         <<  server.getBpm()  <<  ", bpi="  <<  server.getBpi()
         <<  ", isActive="  <<  server.isActive() <<  "}\n";
-    for (User* user : server.getUsers()) {
-        out << "\t" << user->getName()  << "\n";
+    for (User user : server.getUsers()) {
+        out << "\t" << user.getName()  << "\n";
     }
     return out;
 }

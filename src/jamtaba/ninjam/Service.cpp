@@ -154,16 +154,17 @@ bool Service::needSendKeepAlive() const{
 
 void Service::handle(UserInfoChangeNotifyMessage* msg) {
     //QMap<NinjamUser*, QList<NinjamUserChannel*>> allUsersChannels = msg->getUsersChannels();
-    QSet<User*> users = QSet<User*>::fromList( msg->getUsers());
-    foreach (User* user , users) {
-        if (!currentServer->containsUser(*user)) {
-            currentServer->addUser(user);
-            emit userEnterInTheJam(*user);
+    QSet<QString> users = QSet<QString>::fromList( msg->getUsersNames());
+    foreach (QString userFullName , users) {
+        if (!currentServer->containsUser(userFullName)) {
+            User newUser(userFullName);
+            currentServer->addUser( newUser );
+            emit userEnterInTheJam(newUser);
         }
-        handleUserChannels(user, msg->getUserChannels(user));
+        handleUserChannels(userFullName, msg->getUserChannels(userFullName));
     }
 
-    ClientSetUserMask setUserMask(msg->getUsers());
+    ClientSetUserMask setUserMask(msg->getUsersNames());
     sendMessageToServer( &setUserMask );//enable new users channels
 }
 
@@ -172,7 +173,7 @@ void Service::handle(DownloadIntervalBegin * msg){
         quint8 channelIndex = msg->getChannelIndex();
         QString userFullName = msg->getUserName();
         QString GUID = msg->getGUID();
-        downloads.insert(GUID, std::shared_ptr<Download>( new Download(User::getUser(userFullName), channelIndex, GUID)));
+        downloads.insert(GUID, std::shared_ptr<Download>( new Download(User(userFullName), channelIndex, GUID)));
     }
 
 }
@@ -181,7 +182,7 @@ void Service::handle(DownloadIntervalWrite *msg){
     if (downloads.contains(msg->getGUID())) {
         Download* download = &*(downloads[msg->getGUID()]);
  //       qDebug() << msg;
-        emit audioIntervalPartAvailable(*download->user, download->channelIndex, msg->getEncodedAudioData(), msg->downloadIsComplete());
+        emit audioIntervalPartAvailable(download->user->getFullName(), download->channelIndex, msg->getEncodedAudioData(), msg->downloadIsComplete());
 
         if (msg->downloadIsComplete()) {
             downloads.remove(msg->getGUID());
@@ -336,32 +337,32 @@ void Service::setBpi(quint16 bpi) {
 
 */
 
-void Service::handleUserChannels(User* user, QList<UserChannel*> channelsInTheServer) {
-    QSet<UserChannel*> userCurrentChannels = user->getChannels();
+void Service::handleUserChannels(User user, QList<UserChannel> channelsInTheServer) {
+    //QSet<UserChannel> userCurrentChannels = user.getChannels();
     //check for new channels
-    foreach (UserChannel* c , channelsInTheServer) {
-        if (c->isActive()) {
-            if (!userCurrentChannels.contains(c)) {
-                user->addChannel(c);
+    foreach (UserChannel c , channelsInTheServer) {
+        if (c.isActive()) {
+            if (!user.hasChannel(c.getIndex())) {
+                user.addChannel(c);
 
-                emit userChannelCreated(*user, *c);
+                emit userChannelCreated(user, c);
 
             } else {//check for channel updates
-                if (user->hasChannels()) {
-                    UserChannel* userChannel = user->getChannel(c->getIndex());
-                    if (channelIsOutdate(*user, *c)) {
-                        userChannel->setName(c->getName());
-                        userChannel->setFlags(c->getFlags());
+                if (user.hasChannels()) {
+                    UserChannel userChannel = user.getChannel(c.getIndex());
+                    if (channelIsOutdate(user, c)) {
+                        userChannel.setName(c.getName());
+                        userChannel.setFlags(c.getFlags());
 
-                        emit userChannelUpdated(*user, *userChannel);
+                        emit userChannelUpdated(user, userChannel);
 
                     }
                 }
             }
         } else {
-            user->removeChannel(c);
+            user.removeChannel(c.getIndex());
 
-            emit userChannelRemoved(*user, *c);
+            emit userChannelRemoved(user, c);
 
         }
     }
@@ -369,14 +370,14 @@ void Service::handleUserChannels(User* user, QList<UserChannel*> channelsInTheSe
 
 //verifica se o canal do usuario esta diferente do canal que veio do servidor
 bool Service::channelIsOutdate(const User& user, const UserChannel& serverChannel) {
-    if (&user != serverChannel.getUser()) {
+    if (user.getFullName() != serverChannel.getUserFullName()) {
         throw ("The user in channel is illegal!");
     }
-    UserChannel* userChannel = user.getChannel(serverChannel.getIndex());
-    if (userChannel->getName() != serverChannel.getName()) {
+    UserChannel userChannel = user.getChannel(serverChannel.getIndex());
+    if (userChannel.getName() != serverChannel.getName()) {
         return true;
     }
-    if (userChannel->getFlags() != serverChannel.getFlags()) {
+    if (userChannel.getFlags() != serverChannel.getFlags()) {
         return true;
     }
     return false;
@@ -394,7 +395,7 @@ void Service::handle(ServerChatMessage* msg) {
         QString messageSender = msg->getArguments().at(0);
         QString messageText = msg->getArguments().at(1);
 
-        emit chatMessageReceived(*(User::getUser(messageSender)), messageText);
+        emit chatMessageReceived(User(messageSender), messageText);
 
         break;
 
@@ -403,7 +404,7 @@ void Service::handle(ServerChatMessage* msg) {
     {
         QString userLeavingTheServer = msg->getArguments().at(0);
 
-        emit userLeaveTheJam(*User::getUser(userLeavingTheServer));
+        emit userLeaveTheJam(User(userLeavingTheServer));
 
         break;
     }
@@ -412,7 +413,7 @@ void Service::handle(ServerChatMessage* msg) {
         QString messageSender = msg->getArguments().at(0);
         QString messageText = msg->getArguments().at(1);
 
-        emit privateMessageReceived(*User::getUser(messageSender), messageText);
+        emit privateMessageReceived(User(messageSender), messageText);
 
 
         break;

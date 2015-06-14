@@ -5,17 +5,13 @@
 
 using namespace Ninjam;
 
-std::map<std::string, std::shared_ptr<User>> User::users;
+//QMap<QString, User> User::users;
 
-UserChannel::UserChannel(User *user, QString name, bool active, int channelIndex, short volume, quint8 pan, quint8 flags)
-    : user(user), name(name), active(active), index(channelIndex), volume(volume), pan(pan), flags(flags)
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+User::User(QString fullName)
+    :  fullName(fullName)
 {
-    //qDebug() << "NinjamUserChannel constructor";
-}
-
-
-User::User(QString fullName) {
-    this->fullName = fullName;
     QStringList fullNameParts = fullName.split("@");
     this->name = fullNameParts.at(0);
     if (fullNameParts.size() > 1) {
@@ -26,43 +22,51 @@ User::User(QString fullName) {
    // qDebug() << "NinjamUser constructor " << fullName;
 }
 
+User::User(const User &u)
+    :
+      fullName(u.fullName),
+      name(u.name),
+      ip(u.ip)
+
+{
+
+}
+
 User::~User(){
     //qDebug() << "Destrutor NinjamUser";
 }
 
-User* User::getUser(QString userFullName) {
-    if (userFullName.isNull() || userFullName.trimmed().isEmpty()) {
-        return nullptr;
-    }
-    std::string key = userFullName.toStdString();
-    if (users.count(key) == 0) {//not constains user
-        users[key] = std::shared_ptr<User>(new User(userFullName));
-    }
-    return &(*(users[key]));
-}
+//User User::getUser(QString userFullName) {
+//    if (userFullName.isNull() || userFullName.trimmed().isEmpty()) {
+//        return nullptr;
+//    }
+//    if (users.contains(userFullName)) {//not constains user
+//        users.insert(userFullName, User(userFullName));
+//    }
+//    return users[userFullName];
+//}
 
 bool User::isBot() const {
     return Service::isBotName(getName());
 }
 
-QSet<UserChannel *> User::getChannels() const
-{
-    QSet<UserChannel*> channels;
-    for (auto &l : this->channels.values()) {
-        channels.insert(&*l);
-    }
+//QSet<UserChannel> User::getChannels() const
+//{
+//    return QSet<UserChannel>::fromList( channels.values());
+//}
 
-    return channels;
+//void User::addChannel(QString channelName, bool active, int channelIndex, short volume, quint8 pan, quint8 flags) {
+//    this->channels.insert(channelIndex, UserChannel(this->getFullName(), channelName, active, channelIndex, volume, pan, flags));
+//}
+
+void User::addChannel(UserChannel c){
+    //addChannel(c.getName(), c.isActive(), c.getIndex(), c.volume, c.pan, c.getFlags());
+    channels.insert(c.getIndex(), c);
 }
 
-void User::addChannel(UserChannel* c) {
-    this->channels[c->getIndex()].reset(c);
+void User::removeChannel(int channelIndex) {
+    this->channels.remove(channelIndex);
 }
-
-void User::removeChannel(UserChannel* userChannel) {
-    this->channels.remove(userChannel->getIndex());
-}
-
 
 QDebug& Ninjam::operator<<(QDebug &out, const User &user)
 {
@@ -72,10 +76,10 @@ QDebug& Ninjam::operator<<(QDebug &out, const User &user)
         out << "\tNenhum canal!\n";
     }
     else{
-        QSet<UserChannel*> chs = user.getChannels();
-        foreach (UserChannel* userChannel , chs) {
-            out << "\t" << userChannel << "\n";
-        }
+//        QSet<UserChannel> chs = user.getChannels();
+//        foreach (UserChannel userChannel , chs) {
+//            out << "\t" << userChannel << "\n";
+//        }
     }
     out << "--------------\n";
     return out;

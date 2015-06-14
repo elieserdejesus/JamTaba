@@ -2,6 +2,7 @@
 #include <QString>
 #include "ServerMessageParser.h"
 #include <QDebug>
+#include "../User.h"
 
 namespace Ninjam {
 
@@ -96,15 +97,15 @@ class UserChannel;
 
 class UserInfoChangeNotifyMessage : public ServerMessage{
 private:
-    QMap<User*, QList<UserChannel*>> usersChannels;
+    QMap<QString, QList<UserChannel>> usersChannels;
 
 public:
     //~UserInfoChangeNotifyMessage();
     UserInfoChangeNotifyMessage();
-    UserInfoChangeNotifyMessage(QMap<User *, QList<UserChannel *> > allUsersChannels) ;
+    UserInfoChangeNotifyMessage(QMap<QString, QList<UserChannel> > allUsersChannels) ;
 
-    inline QList<User*> getUsers() const{ return usersChannels.keys();}
-    QList<UserChannel*> getUserChannels(User *user) const {return usersChannels[user];}
+    inline QList<QString> getUsersNames() const{ return usersChannels.keys();}
+    QList<UserChannel> getUserChannels(QString userFullName) const {return usersChannels[userFullName];}
     virtual void printDebug(QDebug dbg) const;
 };
 //++++++++++++=

@@ -130,13 +130,13 @@ void ClientKeepAlive::printDebug(QDebug dbg) const{
     dbg << "SEND {Client KeepAlive}" << endl;
 }
 //+++++++++++++++++
-ClientSetUserMask::ClientSetUserMask(QList<User *> users)
+ClientSetUserMask::ClientSetUserMask(QList<QString> users)
     :ClientMessage(0x81, 0)
 {
     payload = 4 * users.size();//4 bytes (int) flag
-    foreach (User* user , users) {
-        usersFullNames.append(user->getFullName());
-        payload += user->getFullName().size() + 1;
+    foreach (QString userFullName , users) {
+        usersFullNames.append(userFullName);
+        payload += userFullName.size() + 1;
     }
 }
 

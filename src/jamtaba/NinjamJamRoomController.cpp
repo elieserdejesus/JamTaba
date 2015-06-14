@@ -40,29 +40,67 @@ void NinjamJamRoomController::start(const Ninjam::Server& server){
         Ninjam::Service* ninjamService = Ninjam::Service::getInstance();
         QObject::connect(ninjamService, SIGNAL(serverBpmChanged(short)), this, SLOT(ninjamServerBpmChanged(short)));
         QObject::connect(ninjamService, SIGNAL(serverBpiChanged(short,short)), this, SLOT(ninjamServerBpiChanged(short,short)));
-        QObject::connect(ninjamService, SIGNAL(audioIntervalPartAvailable(Ninjam::User,int,QByteArray,bool)), this, SLOT(ninjamAudioAvailable(Ninjam::User,int,QByteArray,bool)) );
+        QObject::connect(ninjamService, SIGNAL(audioIntervalPartAvailable(Ninjam::User*,int,QByteArray,bool)), this, SLOT(ninjamAudioAvailable(Ninjam::User*,int,QByteArray,bool)) );
+
+        //desconectar esses no destrutor
+        QObject::connect(ninjamService, SIGNAL(userChannelCreated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelCreated(Ninjam::User, Ninjam::UserChannel)));
+        QObject::connect(ninjamService, SIGNAL(userChannelRemoved(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelRemoved(Ninjam::User, Ninjam::UserChannel)));
+        QObject::connect(ninjamService, SIGNAL(userChannelUpdated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelUpdated(Ninjam::User, Ninjam::UserChannel)));
 
         //add server users
-        QList<Ninjam::User*> users = server.getUsers();
-        foreach (Ninjam::User* user, users) {
-            foreach (Ninjam::UserChannel* channel, user->getChannels()) {
-                addNewTrack(channel);
+        QList<Ninjam::User> users = server.getUsers();
+        foreach (Ninjam::User user, users) {
+            foreach (Ninjam::UserChannel channel, user.getChannels()) {
+                addTrack(user, channel);
             }
         }
 
     }
 }
 
-void NinjamJamRoomController::addNewTrack(Ninjam::UserChannel* channel){
-    NinjamTrackNode* trackNode = new NinjamTrackNode();
-    trackNodes.insert(channel, trackNode);
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+long NinjamJamRoomController::generateNewTrackID(){
     static long TRACK_IDS = 0;
     long newID = TRACK_IDS;
     TRACK_IDS++;
-    mainController->addTrack(newID, trackNode);
-    emit channelAdded(*channel, newID);
+    return newID;
 }
 
+QString NinjamJamRoomController::getUniqueKey(Ninjam::UserChannel channel){
+    return channel.getUserFullName() + QString::number(channel.getIndex());
+}
+
+void NinjamJamRoomController::addTrack(Ninjam::User user, Ninjam::UserChannel channel){
+    NinjamTrackNode* trackNode = new NinjamTrackNode(generateNewTrackID());
+    trackNodes.insert(getUniqueKey(channel), trackNode);
+    mainController->addTrack(trackNode->getID(), trackNode);
+    emit channelAdded(user,  channel, trackNode->getID());
+}
+
+void NinjamJamRoomController::removeTrack(Ninjam::User user, Ninjam::UserChannel channel){
+    QString uniqueKey = getUniqueKey(channel);
+    if(trackNodes.contains(uniqueKey)){
+        NinjamTrackNode* trackNode = trackNodes[uniqueKey];
+        mainController->removeTrack(trackNode->getID());
+        trackNodes.remove(uniqueKey);
+        emit channelRemoved(user, channel, trackNode->getID());
+    }
+    else{
+        qDebug() << " não encontrou o channel em tracNodes";
+
+    }
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamJamRoomController::voteBpi(int bpi){
+    Ninjam::Service::getInstance()->voteToChangeBPI(bpi);
+}
+
+void NinjamJamRoomController::voteBpm(int bpm){
+    Ninjam::Service::getInstance()->voteToChangeBPM(bpm);
+}
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamJamRoomController::setMetronomeBeatsPerAccent(int beatsPerAccent){
     metronomeTrackNode->setBeatsPerAccent(beatsPerAccent);
 }
@@ -147,6 +185,23 @@ long NinjamJamRoomController::computeTotalSamplesInInterval(){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //ninjam events
 
+void NinjamJamRoomController::ninjamUserChannelCreated(Ninjam::User user, Ninjam::UserChannel channel){
+    addTrack(user, channel);
+}
+
+void NinjamJamRoomController::ninjamUserChannelRemoved(Ninjam::User user, Ninjam::UserChannel channel){
+    removeTrack(user, channel);
+}
+
+void NinjamJamRoomController::ninjamUserChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel){
+    QString uniqueKey = getUniqueKey(channel);
+    if(trackNodes.contains(uniqueKey)){
+        NinjamTrackNode* trackNode = trackNodes[uniqueKey];
+        emit channelChanged(user, channel, trackNode->getID());
+    }
+
+}
+
 void NinjamJamRoomController::ninjamServerBpiChanged(short newBpi, short /*oldBpi*/){
     //this->samplesInInterval = computeTotalSamplesInInterval();
     this->newBpi = newBpi;
@@ -157,12 +212,12 @@ void NinjamJamRoomController::ninjamServerBpmChanged(short newBpm){
     this->newBpm = newBpm;
 }
 
-void NinjamJamRoomController::ninjamAudioAvailable(const Ninjam::User &user,
-            int channelIndex, QByteArray encodedAudioData, bool lastPartOfInterval){
+void NinjamJamRoomController::ninjamAudioAvailable(Ninjam::User user, int channelIndex, QByteArray encodedAudioData, bool lastPartOfInterval){
 
-    Ninjam::UserChannel* channel = user.getChannel(channelIndex);
-    if(trackNodes.contains(channel)){
-        NinjamTrackNode* trackNode = trackNodes[channel];
+    Ninjam::UserChannel channel = user.getChannel(channelIndex);
+    QString channelKey = getUniqueKey(channel);
+    if(trackNodes.contains(channelKey)){
+        NinjamTrackNode* trackNode = trackNodes[channelKey];
         trackNode->addEncodedBytes(encodedAudioData, lastPartOfInterval);
     }
     else{

@@ -86,7 +86,7 @@ UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage()
 
 }
 
-UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage(QMap<User*, QList<UserChannel*>> allUsersChannels)
+UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage(QMap<QString, QList<UserChannel> > allUsersChannels)
     :ServerMessage(ServerMessageType::USER_INFO_CHANGE_NOTIFY), usersChannels(allUsersChannels)
 {
 
@@ -103,8 +103,8 @@ UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage(QMap<User*, QList<UserC
 
 void UserInfoChangeNotifyMessage::printDebug(QDebug dbg) const{
     dbg << "UserInfoChangeNotify{\n";
-    for (User* user : usersChannels.keys()) {
-        dbg << "\t" << user << "\n";
+    for (QString userFullName : usersChannels.keys()) {
+        dbg << "\t" << userFullName << "\n";
     }
     dbg << "}";
 }

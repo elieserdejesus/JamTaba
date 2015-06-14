@@ -101,7 +101,7 @@ ServerMessage *UserInfoChangeNotifyParser::parse(QDataStream &stream, quint32 pa
     if (payloadLenght <= 0) {//no users
         return new UserInfoChangeNotifyMessage();
     }
-    QMap<User*, QList<UserChannel*>> allUsersChannels;
+    QMap<QString, QList<UserChannel>> allUsersChannels;
     unsigned int bytesConsumed = 0;
     while (bytesConsumed < payloadLenght) {
         quint8 active;
@@ -114,12 +114,11 @@ ServerMessage *UserInfoChangeNotifyParser::parse(QDataStream &stream, quint32 pa
         QString userFullName = ServerMessageParser::extractString(stream);
         bytesConsumed += userFullName.size() + 1;
         //QMap creates a empty object when the key is not found in map
-        User* user = User::getUser(userFullName);
-        QList<UserChannel*> & userChannels = allUsersChannels[user];//use the reference to change the same instance inside of QMap
-        //allUsersChannels.insert(user, userChannels);
+        //User user = User::getUser(userFullName);
+        QList<UserChannel> & userChannels = allUsersChannels[userFullName];//use the reference to change the same instance inside of QMap
         QString channelName = ServerMessageParser::extractString(stream);
         bytesConsumed += channelName.size() + 1;
-        userChannels.append( new UserChannel(user, channelName, (bool)active, channelIndex, volume, pan, flags));
+        userChannels.append(UserChannel(userFullName, channelName, (bool)active, channelIndex, volume, pan, flags));
     }
     return new UserInfoChangeNotifyMessage(allUsersChannels);
 }

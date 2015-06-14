@@ -9,6 +9,9 @@
 
 //#include "nvwa/debug_new.h"
 
+#include "../ninjam/User.h"
+#include "../ninjam/UserChannel.h"
+
 
 namespace Ninjam {
 
@@ -56,19 +59,19 @@ public:
     ~Service();
 
 signals:
-    void userChannelCreated(const Ninjam::User& user, const Ninjam::UserChannel& channel);
-    void userChannelRemoved(const Ninjam::User& user, const Ninjam::UserChannel& channel);
-    void userChannelUpdated(const Ninjam::User& user, const Ninjam::UserChannel& channel);
+    void userChannelCreated(Ninjam::User user, Ninjam::UserChannel channel);
+    void userChannelRemoved(Ninjam::User user, Ninjam::UserChannel channel);
+    void userChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel);
     void userCountMessageReceived(int users, int maxUsers);
     void serverBpiChanged(short currentBpi, short lastBpi);
     void serverBpmChanged(short currentBpm);
-    void audioIntervalPartAvailable( const Ninjam::User& user, int channelIndex, QByteArray encodedAudioData, bool lastPartOfInterval);
+    void audioIntervalPartAvailable(QString userFullName, int channelIndex, QByteArray encodedAudioData, bool lastPartOfInterval);
     void disconnectedFromServer(bool normalDisconnection);
     void connectedInServer(const Ninjam::Server& server);
-    void chatMessageReceived(const Ninjam::User& sender, QString message);
-    void privateMessageReceived(const Ninjam::User& sender, QString message);
-    void userEnterInTheJam(const Ninjam::User& newUser);
-    void userLeaveTheJam(const Ninjam::User& user);
+    void chatMessageReceived(Ninjam::User sender, QString message);
+    void privateMessageReceived(Ninjam::User sender, QString message);
+    void userEnterInTheJam(Ninjam::User newUser);
+    void userLeaveTheJam(Ninjam::User user);
     void error(QString msg);
 
 private:
@@ -96,7 +99,7 @@ private:
     void buildNewSocket()  ;
 
     void sendMessageToServer(ClientMessage* message) ;
-    void handleUserChannels(User* user, QList<UserChannel*> channelsInTheServer);
+    void handleUserChannels(User user, QList<UserChannel> channelsInTheServer);
     bool channelIsOutdate(const User &user, const UserChannel &serverChannel);
 
     void setBpm(quint16 newBpm);
@@ -120,8 +123,8 @@ private:
         const User* user;
         const QString GUID;
 
-        Download(User* user, quint8 channelIndex, QString GUID)
-            :channelIndex(channelIndex), user(user), GUID(GUID){
+        Download(const User& user, quint8 channelIndex, QString GUID)
+            :channelIndex(channelIndex), user(&user), GUID(GUID){
 
         }
 
