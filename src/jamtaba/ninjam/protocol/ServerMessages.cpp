@@ -17,17 +17,19 @@ ServerMessage::~ServerMessage(){ }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 //+++++++++++++++++++++  SERVER AUTH CHALLENGE+++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-ServerAuthChallengeMessage::ServerAuthChallengeMessage(int serverKeepAlivePeriod, quint8 challenge[], QString licenceAgreement, int protocolVersion )
-    :ServerMessage(ServerMessageType::AUTH_CHALLENGE),
-      //challenge(QString((const char*)challenge)),
-      licenceAgreement(licenceAgreement),
-      serverKeepAlivePeriod(serverKeepAlivePeriod),
-      protocolVersion(protocolVersion)
-{
+void ServerAuthChallengeMessage::set( int serverKeepAlivePeriod, quint8 challenge[], QString licenceAgreement, int protocolVersion ){
+    this->serverKeepAlivePeriod = serverKeepAlivePeriod;
     for (int i = 0; i < 8; ++i) {
         this->challenge[i] = challenge[i];
     }
-    //System.arraycopy(challenge, 0, this.challenge, 0, challenge.length);
+    this->licenceAgreement = licenceAgreement;
+    this->protocolVersion = protocolVersion;
+}
+
+ServerAuthChallengeMessage::ServerAuthChallengeMessage( )
+    :ServerMessage(ServerMessageType::AUTH_CHALLENGE)
+{
+
 }
 
 void ServerAuthChallengeMessage::printDebug(QDebug dbg) const
@@ -41,11 +43,15 @@ void ServerAuthChallengeMessage::printDebug(QDebug dbg) const
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 //+++++++++++++++++++++  SERVER AUTH REPLY ++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-ServerAuthReplyMessage::ServerAuthReplyMessage(quint8 flag, quint8 maxChannels, QString responseMessage)
-    :ServerMessage(ServerMessageType::AUTH_REPLY),
-      flag(flag), message(responseMessage), maxChannels(maxChannels)
-{
-    //
+ServerAuthReplyMessage::ServerAuthReplyMessage()
+    :ServerMessage(ServerMessageType::AUTH_REPLY){
+
+}
+
+void ServerAuthReplyMessage::set(quint8 flag, quint8 maxChannels, QString responseMessage){
+    this->flag = flag;
+    this->message = responseMessage;
+    this-> maxChannels = maxChannels;
 }
 
 void ServerAuthReplyMessage::printDebug(QDebug debug) const{
@@ -68,10 +74,14 @@ void ServerKeepAliveMessage::printDebug(QDebug dbg) const{
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 //+++++++++++++++++++++  SERVER CONFIG CHANGE NOTIFY ++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-ConfigChangeNotifyMessage::ConfigChangeNotifyMessage(quint16 bpm, quint16 bpi)
-    :ServerMessage(ServerMessageType::CONFIG_CHANGE_NOTIFY), bpm(bpm), bpi(bpi)
-{
-    //
+ConfigChangeNotifyMessage::ConfigChangeNotifyMessage()
+    :ServerMessage(ServerMessageType::CONFIG_CHANGE_NOTIFY){
+
+}
+
+void ConfigChangeNotifyMessage::set(quint16 bpm, quint16 bpi){
+    this->bpm = bpm;
+    this->bpi = bpi;
 }
 
 void ConfigChangeNotifyMessage::printDebug(QDebug dbg) const{
@@ -86,20 +96,9 @@ UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage()
 
 }
 
-UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage(QMap<QString, QList<UserChannel> > allUsersChannels)
-    :ServerMessage(ServerMessageType::USER_INFO_CHANGE_NOTIFY), usersChannels(allUsersChannels)
-{
-
-    //insere o NinjamUserChannel em um shared_ptr para que esses canais sejam automaticamente deletados
-//    foreach (NinjamUser* user, allUsersChannels.keys()) {
-//        std::vector< std::shared_ptr< NinjamUserChannel>> channels;//vai funcionar? channels não será deletado ao final do escopo?
-//        usersChannels.insert(user,  channels);
-//        foreach (NinjamUserChannel* channel, allUsersChannels[user]) {
-//            channels.push_back(std::shared_ptr<NinjamUserChannel>(channel));
-//        }
-//    }
+void UserInfoChangeNotifyMessage::set(QMap<QString, QList<UserChannel> > allUsersChannels){
+   this->usersChannels = allUsersChannels;
 }
-
 
 void UserInfoChangeNotifyMessage::printDebug(QDebug dbg) const{
     dbg << "UserInfoChangeNotify{\n";
@@ -111,12 +110,15 @@ void UserInfoChangeNotifyMessage::printDebug(QDebug dbg) const{
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++ SERVER CHAT MESSAGE +++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-ServerChatMessage::ServerChatMessage(QString command, QStringList arguments)
-    :ServerMessage(ServerMessageType::CHAT_MESSAGE),
-      commandType(commandTypeFromString(command)),
-      arguments(arguments)
+ServerChatMessage::ServerChatMessage()
+    :ServerMessage(ServerMessageType::CHAT_MESSAGE)
 {
-    //
+
+}
+
+void ServerChatMessage::set(QString command, QStringList arguments){
+    this->commandType = commandTypeFromString(command);
+    this->arguments = arguments;
 }
 
 ChatCommandType ServerChatMessage::commandTypeFromString(QString string){
@@ -134,14 +136,16 @@ void ServerChatMessage::printDebug(QDebug dbg) const{
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++
+DownloadIntervalBegin::DownloadIntervalBegin()
+    :ServerMessage(ServerMessageType::DOWNLOAD_INTERVAL_BEGIN){
 
-DownloadIntervalBegin::DownloadIntervalBegin(quint32 estimatedSize, quint8 channelIndex, QString userName, quint8 fourCC[], QByteArray GUID)
-    :ServerMessage(ServerMessageType::DOWNLOAD_INTERVAL_BEGIN),
-      GUID(GUID),
-      estimatedSize(estimatedSize),
-      channelIndex(channelIndex),
-      userName(userName)
-{
+}
+
+void DownloadIntervalBegin::set(quint32 estimatedSize, quint8 channelIndex, QString userName, quint8 fourCC[], QByteArray GUID){
+    this->GUID = GUID;
+    this->estimatedSize = estimatedSize;
+    this->channelIndex = channelIndex;
+    this->userName = userName;
     for (int i = 0; i < 4; ++i) {
         this->fourCC[i] = fourCC[i];
     }
@@ -167,19 +171,21 @@ void DownloadIntervalWrite::printDebug(QDebug dbg) const
     dbg << "RECEIVE DownloadIntervalWrite{ flags='" << flags << "' GUID={" << GUID << "} downloadIsComplete=" << downloadIsComplete() << ", audioData=" << encodedAudioData.size() << " bytes }";
 }
 
-DownloadIntervalWrite::DownloadIntervalWrite(QByteArray GUID, quint8 flags, QByteArray encodedAudioData)
-    :ServerMessage(ServerMessageType::DOWNLOAD_INTERVAL_WRITE),
-      GUID(GUID),
-      flags(flags),
-      encodedAudioData(encodedAudioData)
-{
-    //
+DownloadIntervalWrite::DownloadIntervalWrite()
+    :ServerMessage(ServerMessageType::DOWNLOAD_INTERVAL_WRITE){
+
+}
+
+void DownloadIntervalWrite::set(QByteArray GUID, quint8 flags, QByteArray encodedAudioData){
+    this->GUID = GUID;
+    this->flags = flags;
+    this->encodedAudioData = encodedAudioData;
 }
 
 //++++++++++++++++++
 
-QDebug Ninjam::operator<<(QDebug dbg, ServerMessage* message)
+QDebug Ninjam::operator<<(QDebug dbg, const ServerMessage& message)
 {
-    message->printDebug(dbg);
+    message.printDebug(dbg);
     return dbg;
 }

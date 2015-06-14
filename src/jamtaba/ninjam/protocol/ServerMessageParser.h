@@ -4,26 +4,36 @@
 #include <QByteArray>
 #include <QDataStream>
 #include <QMap>
-#include <memory>
+//#include <memory>
+#include "ServerMessages.h"
 
 namespace Ninjam {
-
 
 
 class ServerMessage;
 enum class ServerMessageType : std::uint8_t;
 
-template<type T>
 class ServerMessageParser  {
 
 protected:
     static QString extractString(QDataStream& stream) ;
 
 public:
-    virtual const ServerMessage& parse(QDataStream& stream, quint32 payloadLenght) = 0;
-    static const ServerMessageParser& getParser(ServerMessageType messageType) ;
-};
+    static const ServerMessage& parse(ServerMessageType msgType, QDataStream& stream, quint32 payloadLenght);
 
+private:
+
+    static const ServerMessage& parseAuthChallenge(QDataStream &stream, quint32 /*payloadLenght*/);
+    static const ServerMessage& parseAuthReply(QDataStream &stream, quint32 /*payloadLenght*/);
+    static const ServerMessage& parseConfigChangeNotify(QDataStream &stream, quint32 /*payloadLenght*/);
+    static const ServerMessage& parseUserInfoChangeNotify(QDataStream &stream, quint32 payloadLenght);
+    static const ServerMessage& parseChatMessage(QDataStream &stream, quint32 payloadLenght);
+    static const ServerMessage& parseKeepAlive(QDataStream &/*stream*/, quint32 /*payloadLenght*/);
+    static const ServerMessage& parseDownloadIntervalBegin(QDataStream &stream, quint32 /*payload*/);
+    static const ServerMessage& parseDownloadIntervalWrite(QDataStream &stream, quint32 payloadLenght);
+
+};
+/*
 //+++++++++++++++++++++++++++++++++++++++++++++++
 class AuthChallengeParser : public ServerMessageParser<AuthChallengeParser>{
 public:
@@ -65,6 +75,7 @@ class ChatMessageParser : public ServerMessageParser {
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 };
+*/
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 /*
  Offset Type        Field
@@ -74,12 +85,13 @@ class ChatMessageParser : public ServerMessageParser {
  0x18   uint8_t     Channel Index
  0x19   ...         Username (NUL-terminated)
  */
+/*
 class DownloadIntervalBeginParser : public ServerMessageParser {
 
     virtual const ServerMessage& parse(QDataStream& stream, quint32 payload);
 
 };
-
+*/
 //++++++++++++++++++++
 /*
  Offset Type        Field
@@ -87,6 +99,7 @@ class DownloadIntervalBeginParser : public ServerMessageParser {
  0x10   uint8_t     Flags
  0x11   ...         Audio Data
  */
+/*
 class DownloadIntervalWriteParser : public ServerMessageParser {
 
     //max payload recebido do reaper foi 2076
@@ -95,5 +108,6 @@ public:
     virtual const ServerMessage& parse(QDataStream& stream, quint32 payloadLenght);
 
 };
+*/
 
 }

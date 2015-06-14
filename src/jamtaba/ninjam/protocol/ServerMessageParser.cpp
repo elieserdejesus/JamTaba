@@ -2,25 +2,9 @@
 #include "ServerMessages.h"
 #include "../User.h"
 
+#include <QSharedPointer>
+
 using namespace Ninjam;
-
-//QMap<ServerMessageType, std::shared_ptr<ServerMessageParser>> ServerMessageParser::parsers;
-
-const ServerMessageParser & ServerMessageParser::getParser(ServerMessageType messageType)
-{
-    switch (messageType) {
-        case ServerMessageType::AUTH_CHALLENGE: return AuthChallengeParser();
-        case ServerMessageType::AUTH_REPLY: return  AuthReplyParser();
-        case ServerMessageType::USER_INFO_CHANGE_NOTIFY: return  UserInfoChangeNotifyParser();
-        case ServerMessageType::CONFIG_CHANGE_NOTIFY: return  ConfigChangeNotifyParser();
-        case ServerMessageType::CHAT_MESSAGE: return  ChatMessageParser();
-        case ServerMessageType::KEEP_ALIVE: return  KeepAliveParser();
-        case ServerMessageType::DOWNLOAD_INTERVAL_BEGIN: return  DownloadIntervalBeginParser();
-        case ServerMessageType::DOWNLOAD_INTERVAL_WRITE: return  DownloadIntervalWriteParser();
-    }
-    qFatal("Parser not implemented for " + (unsigned char)messageType);
-    //return nullptr;
-}
 
 QString ServerMessageParser::extractString(QDataStream &stream)
 {
@@ -35,13 +19,24 @@ QString ServerMessageParser::extractString(QDataStream &stream)
             break;
         }
     }
-    //qDebug() << "extraiu " << str;
     return str;
 }
-
 //+++++++++++++++++++++++++++++++++++++++++
+const ServerMessage& ServerMessageParser::parse(ServerMessageType msgType, QDataStream &stream, quint32 payloadLenght){
+    //const ServerMessage* message = nullptr;
+    switch (msgType) {
+    case ServerMessageType::AUTH_CHALLENGE: return parseAuthChallenge(stream, payloadLenght);
+    case ServerMessageType::AUTH_REPLY: return parseAuthReply(stream, payloadLenght);
+    case ServerMessageType::USER_INFO_CHANGE_NOTIFY: return parseUserInfoChangeNotify(stream, payloadLenght);
+    case ServerMessageType::CONFIG_CHANGE_NOTIFY: return parseConfigChangeNotify(stream, payloadLenght);
+    case ServerMessageType::CHAT_MESSAGE: return parseChatMessage(stream, payloadLenght);
+    case ServerMessageType::KEEP_ALIVE: return parseKeepAlive(stream, payloadLenght);
+    case ServerMessageType::DOWNLOAD_INTERVAL_BEGIN: return parseDownloadIntervalBegin(stream, payloadLenght);
+    case ServerMessageType::DOWNLOAD_INTERVAL_WRITE: return parseDownloadIntervalWrite(stream, payloadLenght);
+    }
+}
 
-const ServerMessage& AuthChallengeParser::parse(QDataStream &stream, quint32 /*payloadLenght*/){
+const ServerMessage& ServerMessageParser::parseAuthChallenge(QDataStream &stream, quint32 /*payloadLenght*/){
     quint8 challenge[8];
     for (int i = 0; i < 8; ++i) {
         stream >> challenge[i];
@@ -63,10 +58,12 @@ const ServerMessage& AuthChallengeParser::parse(QDataStream &stream, quint32 /*p
     if (serverHasLicenceAgreement) {
         licenceAgreement = ServerMessageParser::extractString(stream);
     }
-    return new ServerAuthChallengeMessage(serverKeepAlivePeriod, challenge, licenceAgreement, protocolVersion);
+    static ServerAuthChallengeMessage msg;
+    msg.set(serverKeepAlivePeriod, challenge, licenceAgreement, protocolVersion);
+    return msg;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++
-const ServerMessage& AuthReplyParser::parse(QDataStream &stream, quint32 /*payloadLenght*/)
+const ServerMessage& ServerMessageParser::parseAuthReply(QDataStream &stream, quint32 /*payloadLenght*/)
 {
     quint8 flag;
     quint8 maxChannels;
@@ -75,23 +72,28 @@ const ServerMessage& AuthReplyParser::parse(QDataStream &stream, quint32 /*paylo
     QString serverMessage = ServerMessageParser::extractString(stream);
     //acho que o extractString não movimenta o cursos interno do stream, por isso não está lendo o maxChannels corretamente
     stream >> maxChannels;
-    return new ServerAuthReplyMessage(flag, maxChannels, serverMessage);
+    static ServerAuthReplyMessage msg;
+    msg.set(flag, maxChannels, serverMessage);
+    return msg;
 }
 //++++++++++++++++++++++++++++++++++++++=
-const ServerMessage& ConfigChangeNotifyParser::parse(QDataStream &stream, quint32 /*payloadLenght*/){
+const ServerMessage& ServerMessageParser::parseConfigChangeNotify(QDataStream &stream, quint32 /*payloadLenght*/){
     quint16 bpm;
     quint16 bpi;
     stream >> bpm;
     stream >> bpi;
-    return new ConfigChangeNotifyMessage(bpm, bpi);
-
+    static ConfigChangeNotifyMessage msg;
+    msg.set(bpm, bpi);
+    return msg;
 }
 
 
-const ServerMessage& UserInfoChangeNotifyParser::parse(QDataStream &stream, quint32 payloadLenght)
+const ServerMessage& ServerMessageParser::parseUserInfoChangeNotify(QDataStream &stream, quint32 payloadLenght)
 {
+    static UserInfoChangeNotifyMessage msg;
     if (payloadLenght <= 0) {//no users
-        return new UserInfoChangeNotifyMessage();
+        msg.set(QMap<QString, QList<UserChannel>>());
+        return  msg;
     }
     QMap<QString, QList<UserChannel>> allUsersChannels;
     unsigned int bytesConsumed = 0;
@@ -112,7 +114,9 @@ const ServerMessage& UserInfoChangeNotifyParser::parse(QDataStream &stream, quin
         bytesConsumed += channelName.size() + 1;
         userChannels.append(UserChannel(userFullName, channelName, (bool)active, channelIndex, volume, pan, flags));
     }
-    return new UserInfoChangeNotifyMessage(allUsersChannels);
+
+    msg.set(allUsersChannels);
+    return msg;
 }
 
 //+++++++++++++++++++
@@ -132,7 +136,7 @@ const ServerMessage& UserInfoChangeNotifyParser::parse(QDataStream &stream, quin
  PART <username> -- user leaves server
  USERCOUNT <users> <maxusers> -- server status
  */
-const ServerMessage & ChatMessageParser::parse(QDataStream &stream, quint32 payloadLenght){
+const ServerMessage& ServerMessageParser::parseChatMessage(QDataStream &stream, quint32 payloadLenght){
     quint32 consumedBytes = 0;
     QString command = ServerMessageParser::extractString(stream);
     consumedBytes += command.size() + 1;
@@ -145,21 +149,25 @@ const ServerMessage & ChatMessageParser::parse(QDataStream &stream, quint32 payl
         consumedBytes += arg.size() + 1;
     }
     Q_ASSERT(consumedBytes == payloadLenght);
-    return new ServerChatMessage(command, arguments);
+    static ServerChatMessage msg;
+    msg.set(command, arguments);
+    return msg;
 }
 
 //+++++++++++++++++++++++++++=
 
-const ServerMessage& KeepAliveParser::parse(QDataStream &/*stream*/, quint32 /*payloadLenght*/)
+const ServerMessage& ServerMessageParser::parseKeepAlive(QDataStream &/*stream*/, quint32 /*payloadLenght*/)
 {
     //tinha um bug aqui. Eu estava retornando uma instância estática da mensagem, só que o método
     //que chama o parse deleta a mensagem depois de processá-la. Ou seja, a instância estática era
     //destruída e dava um SIGSEV logo em seguida.
-    return new ServerKeepAliveMessage();
+
+    static  ServerKeepAliveMessage msg;
+    return msg;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-const ServerMessage& DownloadIntervalBeginParser::parse(QDataStream &stream, quint32 /*payload*/)
+const ServerMessage& ServerMessageParser::parseDownloadIntervalBegin(QDataStream &stream, quint32 /*payload*/)
 {
     QByteArray GUID;
     quint8 byte;
@@ -176,11 +184,14 @@ const ServerMessage& DownloadIntervalBeginParser::parse(QDataStream &stream, qui
     quint8 channelIndex;
     stream >> channelIndex;
     QString userName = ServerMessageParser::extractString(stream);
-    return new DownloadIntervalBegin(estimatedSize, channelIndex, userName, fourCC, GUID);
+
+    static DownloadIntervalBegin msg;
+    msg.set(estimatedSize, channelIndex, userName, fourCC, GUID);
+    return msg;
 }
 
 
-const ServerMessage& DownloadIntervalWriteParser::parse(QDataStream &stream, quint32 payloadLenght)
+const ServerMessage &ServerMessageParser::parseDownloadIntervalWrite(QDataStream &stream, quint32 payloadLenght)
 {
     QByteArray GUID;
     quint8 byte;
@@ -198,6 +209,8 @@ const ServerMessage& DownloadIntervalWriteParser::parse(QDataStream &stream, qui
     if(bytesReaded <= 0){
         qWarning() << "ERRO na leitura do audio codificado! "  << bytesReaded;
     }
-    return new DownloadIntervalWrite(GUID, flags, encodedData);
+    static DownloadIntervalWrite msg;
+    msg.set(GUID, flags, encodedData);
+    return msg;
 }
 //++++++++++++++++++++++++++++++++++++++

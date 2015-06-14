@@ -46,11 +46,9 @@ void Service::socketReadSlot(){
         }
         if (socket.bytesAvailable() >= (int)payloadLenght) {//message payload is available to read
             handlingSplittedMessage = false;
-            ServerMessageParser* parser = ServerMessageParser::getParser( static_cast<ServerMessageType>(messageTypeCode));
-            Ninjam::ServerMessage* message = parser->parse(stream, payloadLenght);
+            const Ninjam::ServerMessage& message = ServerMessageParser::parse(static_cast<ServerMessageType>(messageTypeCode), stream, payloadLenght) ;
             qDebug() << message;
-            invokeMessageHandler(*message);
-            delete message;
+            invokeMessageHandler(message);
             if(needSendKeepAlive()){
                 ClientKeepAlive clientKeepAliveMessage;
                 sendMessageToServer((ClientMessage*)&clientKeepAliveMessage);
@@ -182,7 +180,8 @@ void Service::handle(const DownloadIntervalWrite& msg){
     if (downloads.contains(msg.getGUID())) {
         Download download = downloads[msg.getGUID()];
  //       qDebug() << msg;
-        emit audioIntervalPartAvailable(download.getUserFullName(), download.getChannelIndex(), msg.getEncodedAudioData(), msg.downloadIsComplete());
+        User* user = currentServer->getUser(download.getUserFullName());
+        emit audioIntervalPartAvailable(*user, download.getChannelIndex(), msg.getEncodedAudioData(), msg.downloadIsComplete());
 
         if (msg.downloadIsComplete()) {
             downloads.remove(msg.getGUID());
