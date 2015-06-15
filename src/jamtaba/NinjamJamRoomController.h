@@ -2,10 +2,9 @@
 #define NINJAMJAMROOMCONTROLLER_H
 
 #include <QObject>
-#include "audio/MetronomeTrackNode.h"
 #include <QMap>
-//#include "../audio/NinjamTrackNode.h"
-
+#include <QMutex>
+#include "audio/MetronomeTrackNode.h"
 #include "../ninjam/User.h"
 #include "../ninjam/UserChannel.h"
 
@@ -74,6 +73,8 @@ private:
     inline bool hasScheduledChanges() const{return newBpi > 0 || newBpm > 0;}
 
     static long generateNewTrackID();
+
+    QMutex mutex;
 
 private slots:
     //ninjam events

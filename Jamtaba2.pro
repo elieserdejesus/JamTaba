@@ -1,3 +1,9 @@
+#se deleto o único canal do reaninjam quando está tocando dá pau, deu pau em outros
+#momentos quando deletei também, parece ser alguma coisa com a mensagem UserChangeNotify que é retornada
+#acgq
+
+#se conecto e não tem canal no reaninjam aparece uma pista sem nome do Jamtaba
+
 #quando adicionei canais deu pau depois que mexi na estrutura de alocação de memória
 
 #tratar adição  e remoção de canais

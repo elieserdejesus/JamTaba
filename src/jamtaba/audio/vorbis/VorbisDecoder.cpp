@@ -16,7 +16,9 @@ VorbisDecoder::VorbisDecoder()
 }
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::~VorbisDecoder(){
-    ov_clear(&vorbisFile);
+    if(initialized){
+        ov_clear(&vorbisFile);
+    }
     if(internalBuffer){
         delete internalBuffer;
     }

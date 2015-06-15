@@ -17,7 +17,7 @@ class BaseTrackView : public QWidget
 
 public:
     BaseTrackView(QWidget *parent, Controller::MainController* mainController, long trackID);
-    ~BaseTrackView();
+    virtual ~BaseTrackView();
     void setPeaks(float left, float right);
     inline long getTrackID() const{return trackID;}
     static BaseTrackView* getTrackViewByID(long trackID);

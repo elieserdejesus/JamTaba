@@ -105,7 +105,11 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
 
     this->audioMixer->addNode( *this->roomStreamer);
 
-    tracksNodes.insert(1, audioMixer->getLocalInput());
+    {
+        QMutexLocker locker(&tracksMutex);
+        tracksNodes.insert(1, audioMixer->getLocalInput());
+    }
+
 
     vstHost->setSampleRate(audioDriver->getSampleRate());
     vstHost->setBlockSize(audioDriver->getBufferSize());
@@ -146,14 +150,17 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
 }
 
 void MainController::addTrack(long trackID, Audio::AudioNode* trackNode){
+    QMutexLocker locker(&tracksMutex);
     tracksNodes.insert( trackID, trackNode );
     audioMixer->addNode(*trackNode) ;
 }
 
 void MainController::removeTrack(long trackID){
+    QMutexLocker locker(&tracksMutex); //remove Track is called from ninjam service thread, and cause a crash if the process callback (audio Thread) is iterating over tracksNodes to render audio
     Audio::AudioNode* trackNode = tracksNodes[trackID];
     if(trackNode){
         tracksNodes.remove(trackID);
+        audioMixer->removeNode(*trackNode);
         delete trackNode;
     }
 }
@@ -216,6 +223,7 @@ void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out
 }
 
 Peaks MainController::getTrackPeaks(int trackID){
+    QMutexLocker locker(&tracksMutex);
     Audio::AudioNode* trackNode = tracksNodes[trackID];
     if(trackNode){
         return Peaks(trackNode->getLastPeakLeft(), trackNode->getLastPeakRight());
@@ -233,6 +241,7 @@ Peaks MainController::getRoomStreamPeaks(){
 
 //++++++++++ TRACKS ++++++++++++
 void MainController::setTrackPan(int trackID, float pan){
+    QMutexLocker locker(&tracksMutex);
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->setPan(pan);
@@ -240,6 +249,7 @@ void MainController::setTrackPan(int trackID, float pan){
 }
 
 void MainController::setTrackLevel(int trackID, float level){
+    QMutexLocker locker(&tracksMutex);
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->setGain( std::pow( level, 4));
@@ -247,6 +257,7 @@ void MainController::setTrackLevel(int trackID, float level){
 }
 
 void MainController::setTrackMute(int trackID, bool muteStatus){
+    QMutexLocker locker(&tracksMutex);
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->setMuteStatus(muteStatus);
@@ -254,6 +265,7 @@ void MainController::setTrackMute(int trackID, bool muteStatus){
 }
 
 bool MainController::trackIsMuted(int trackID) const{
+    QMutexLocker locker(&tracksMutex);
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         return node->isMuted();

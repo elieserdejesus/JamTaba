@@ -100,6 +100,12 @@ bool AudioNode::connect(AudioNode& otherNode) {
     return true;
 }
 
+bool AudioNode::disconnect(AudioNode &otherNode){
+
+    otherNode.connections. remove(this );
+    return true;
+}
+
 void AudioNode::addProcessor( AudioNodeProcessor& newProcessor)
 {
     processors.insert(&newProcessor);

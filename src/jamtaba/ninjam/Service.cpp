@@ -47,7 +47,7 @@ void Service::socketReadSlot(){
         if (socket.bytesAvailable() >= (int)payloadLenght) {//message payload is available to read
             handlingSplittedMessage = false;
             const Ninjam::ServerMessage& message = ServerMessageParser::parse(static_cast<ServerMessageType>(messageTypeCode), stream, payloadLenght) ;
-            qDebug() << message;
+            //qDebug() << message;
             invokeMessageHandler(message);
             if(needSendKeepAlive()){
                 ClientKeepAlive clientKeepAliveMessage;
@@ -580,7 +580,7 @@ void Service::handle(const ServerChatMessage& msg) {
     }
 */
 
-void Service::handle(const ConfigChangeNotifyMessage& msg)
+void Service::handle(const ServerConfigChangeNotifyMessage& msg)
 {
     quint16 bpi = msg.getBpi();
     quint16 bpm = msg.getBpm();
@@ -600,8 +600,8 @@ void Service::invokeMessageHandler(const ServerMessage& message){
     case ServerMessageType::AUTH_REPLY:
         handle((ServerAuthReplyMessage&)message);
         break;
-    case ServerMessageType::CONFIG_CHANGE_NOTIFY:
-        handle((ConfigChangeNotifyMessage&) message);
+    case ServerMessageType::SERVER_CONFIG_CHANGE_NOTIFY:
+        handle((ServerConfigChangeNotifyMessage&) message);
         break;
     case ServerMessageType::USER_INFO_CHANGE_NOTIFY:
         handle((UserInfoChangeNotifyMessage&) message);

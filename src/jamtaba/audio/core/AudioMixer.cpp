@@ -4,6 +4,7 @@
 #include "plugins.h"
 #include "../vst/VstPlugin.h"
 #include "../midi/MidiDriver.h"
+#include <QMutexLocker>
 
 using namespace Audio;
 
@@ -19,18 +20,30 @@ AudioMixer::AudioMixer()
 }
 
 void AudioMixer::addNode(AudioNode &node){
+    QMutexLocker locker(&mutex);
     node.connect(*mainOutNode);
+}
+
+void AudioMixer::removeNode(AudioNode &node){
+    QMutexLocker locker(&mutex);
+    node.disconnect(*mainOutNode);
 }
 
 AudioMixer::~AudioMixer()
 {
+    QMutexLocker locker(&mutex);
     delete mainOutNode;
+    mainOutNode = nullptr;
     delete inputNode;
+    inputNode = nullptr;
 }
 
 void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out){
-    mainOutNode->processReplacing(in, out);//mainOutNode ask all connected nodes to process
-    //qDebug() << out.getPeaks()[0] << ", " << out.getPeaks()[1];
+    QMutexLocker locker(&mutex);
+    if(mainOutNode){
+        mainOutNode->processReplacing(in, out);//mainOutNode ask all connected nodes to process
+    }
+
 }
 
 //++++++++++++++++++++++

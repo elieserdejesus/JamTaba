@@ -9,7 +9,7 @@ namespace Ninjam {
 enum class ServerMessageType : std::uint8_t{
     AUTH_CHALLENGE = 0x00,
     AUTH_REPLY = 0x01,
-    CONFIG_CHANGE_NOTIFY = 0x02,
+    SERVER_CONFIG_CHANGE_NOTIFY = 0x02,
     USER_INFO_CHANGE_NOTIFY = 0x03,
     DOWNLOAD_INTERVAL_BEGIN = 0x04,
     DOWNLOAD_INTERVAL_WRITE = 0x05,
@@ -79,14 +79,14 @@ public:
     virtual void printDebug(QDebug dbg) const;
 };
 //++++++++++++++++++++++++=
-class ConfigChangeNotifyMessage : public ServerMessage{
+class ServerConfigChangeNotifyMessage : public ServerMessage{
 
 private:
     quint16 bpm;
     quint16 bpi;
 
 public:
-    ConfigChangeNotifyMessage();
+    ServerConfigChangeNotifyMessage();
     void set(quint16 bpm, quint16 bpi) ;
     inline quint16 getBpi() const { return bpi; }
     virtual void printDebug(QDebug dbg) const;
@@ -102,7 +102,7 @@ private:
     QMap<QString, QList<UserChannel>> usersChannels;
 
 public:
-    //~UserInfoChangeNotifyMessage();
+    ~UserInfoChangeNotifyMessage();
     UserInfoChangeNotifyMessage();
     void set(QMap<QString, QList<UserChannel> > allUsersChannels) ;
 

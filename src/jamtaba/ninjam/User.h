@@ -24,7 +24,7 @@ private:
 public:
     User(QString fullName);
     //User(const User& u);
-    ~User();
+    virtual ~User();
     //static User getUser(QString userFullName) ;
 
     bool isBot() const ;

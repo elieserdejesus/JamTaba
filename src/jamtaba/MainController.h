@@ -142,6 +142,7 @@ private:
 
 
     QMap<long, Audio::AudioNode*> tracksNodes;
+    mutable QMutex tracksMutex;
 
     Peaks inputPeaks;
     Peaks roomStreamerPeaks;
