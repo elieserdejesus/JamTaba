@@ -28,7 +28,7 @@ class ServerMessage;
 class ServerKeepAliveMessage;
 class ServerAuthChallengeMessage;
 class ServerAuthReplyMessage;
-class ConfigChangeNotifyMessage;
+class ServerConfigChangeNotifyMessage;
 class UserInfoChangeNotifyMessage;
 class ServerKeepAliveMessage;
 class ServerChatMessage;
@@ -109,7 +109,7 @@ private:
     void invokeMessageHandler(const ServerMessage& message) ;
     void handle(const ServerAuthChallengeMessage& msg);
     void handle(const ServerAuthReplyMessage& msg);
-    void handle(const ConfigChangeNotifyMessage& msg);
+    void handle(const ServerConfigChangeNotifyMessage& msg);
     void handle(const UserInfoChangeNotifyMessage& msg);
     void handle(const ServerChatMessage& msg);
     void handle(const ServerKeepAliveMessage& msg);

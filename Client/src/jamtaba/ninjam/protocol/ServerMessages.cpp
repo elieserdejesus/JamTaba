@@ -74,17 +74,17 @@ void ServerKeepAliveMessage::printDebug(QDebug dbg) const{
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 //+++++++++++++++++++++  SERVER CONFIG CHANGE NOTIFY ++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-ConfigChangeNotifyMessage::ConfigChangeNotifyMessage()
-    :ServerMessage(ServerMessageType::CONFIG_CHANGE_NOTIFY){
+ServerConfigChangeNotifyMessage::ServerConfigChangeNotifyMessage()
+    :ServerMessage(ServerMessageType::SERVER_CONFIG_CHANGE_NOTIFY){
 
 }
 
-void ConfigChangeNotifyMessage::set(quint16 bpm, quint16 bpi){
+void ServerConfigChangeNotifyMessage::set(quint16 bpm, quint16 bpi){
     this->bpm = bpm;
     this->bpi = bpi;
 }
 
-void ConfigChangeNotifyMessage::printDebug(QDebug dbg) const{
+void ServerConfigChangeNotifyMessage::printDebug(QDebug dbg) const{
     dbg << "RECEIVE ConfigChangeNotify{ bpm=" << bpm << ", bpi=" << bpi << "}" << endl;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
@@ -96,8 +96,13 @@ UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage()
 
 }
 
+UserInfoChangeNotifyMessage::~UserInfoChangeNotifyMessage(){
+    qWarning() << "destrutor UserInfoChangeNotifyMessage";
+}
+
 void UserInfoChangeNotifyMessage::set(QMap<QString, QList<UserChannel> > allUsersChannels){
-   this->usersChannels = allUsersChannels;
+   //this->usersChannels.clear();
+    this->usersChannels = allUsersChannels;
 }
 
 void UserInfoChangeNotifyMessage::printDebug(QDebug dbg) const{

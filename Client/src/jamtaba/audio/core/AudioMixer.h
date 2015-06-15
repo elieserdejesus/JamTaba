@@ -1,6 +1,7 @@
 #pragma once
 
-#include <set>
+//#include <set>
+#include <QMutex>
 
 namespace Midi {
     class MidiBuffer;
@@ -20,12 +21,14 @@ public:
     ~AudioMixer();
     void process(SamplesBuffer& in, SamplesBuffer& out);
     void addNode(AudioNode &node);
+    void removeNode(AudioNode &node);
 
     LocalInputAudioNode* getLocalInput() const{return inputNode;}
 
 private:
     MainOutputAudioNode* mainOutNode;
     LocalInputAudioNode* inputNode;
+    QMutex mutex;
 };
 //+++++++++++++++++++++++
 

@@ -25,7 +25,7 @@ private:
 
     static const ServerMessage& parseAuthChallenge(QDataStream &stream, quint32 /*payloadLenght*/);
     static const ServerMessage& parseAuthReply(QDataStream &stream, quint32 /*payloadLenght*/);
-    static const ServerMessage& parseConfigChangeNotify(QDataStream &stream, quint32 /*payloadLenght*/);
+    static const ServerMessage& parseServerConfigChangeNotify(QDataStream &stream, quint32 /*payloadLenght*/);
     static const ServerMessage& parseUserInfoChangeNotify(QDataStream &stream, quint32 payloadLenght);
     static const ServerMessage& parseChatMessage(QDataStream &stream, quint32 payloadLenght);
     static const ServerMessage& parseKeepAlive(QDataStream &/*stream*/, quint32 /*payloadLenght*/);

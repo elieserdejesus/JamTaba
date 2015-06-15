@@ -1,9 +1,8 @@
 #pragma once
 
-#include <set>
+#include <QSet>
 #include <cmath>
-#include <QString>
-#include <QWidget>
+#include <QMutex>
 
 namespace Midi   {
     class MidiBuffer;
@@ -51,7 +50,7 @@ public:
     inline bool isSoloed() const {return soloed;}
 
     virtual bool connect(AudioNode &otherNode) ;
-    //virtual bool disconnect(const AudioNode& otherNode);
+    virtual bool disconnect(AudioNode &otherNode);
 
     void addProcessor(AudioNodeProcessor &newProcessor);
     void removeProcessor(AudioNodeProcessor &processor);
@@ -69,11 +68,11 @@ public:
     inline float getLastPeakRight() const{return lastPeaks[1];}
     inline float getLastPeak() const {return std::max(lastPeaks[0], lastPeaks[1]);}
 protected:
-    std::set<AudioNode*> connections;
-    std::set<AudioNodeProcessor*> processors;
+    QSet<AudioNode*> connections;
+    QSet<AudioNodeProcessor*> processors;
     SamplesBuffer* internalBuffer;
     float lastPeaks[2];
-
+    //QMutex mutex; //used to protected connections manipulation because nodes can be added or removed by different threads
 private:
     bool muted;
     bool soloed;
@@ -83,6 +82,7 @@ private:
     float pan;
     float leftGain;
     float rightGain;
+
 
 
 

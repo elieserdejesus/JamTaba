@@ -52,6 +52,7 @@ void NinjamRoomWindow::channelRemoved(Ninjam::User, Ninjam::UserChannel /*channe
     BaseTrackView* trackView = NinjamTrackView::getTrackViewByID(channelID);
     if(trackView){
         ui->tracksPanel->layout()->removeWidget(trackView);
+        trackView->deleteLater();
     }
 }
 

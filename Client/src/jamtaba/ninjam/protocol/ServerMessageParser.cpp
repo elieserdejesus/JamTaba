@@ -28,12 +28,13 @@ const ServerMessage& ServerMessageParser::parse(ServerMessageType msgType, QData
     case ServerMessageType::AUTH_CHALLENGE: return parseAuthChallenge(stream, payloadLenght);
     case ServerMessageType::AUTH_REPLY: return parseAuthReply(stream, payloadLenght);
     case ServerMessageType::USER_INFO_CHANGE_NOTIFY: return parseUserInfoChangeNotify(stream, payloadLenght);
-    case ServerMessageType::CONFIG_CHANGE_NOTIFY: return parseConfigChangeNotify(stream, payloadLenght);
+    case ServerMessageType::SERVER_CONFIG_CHANGE_NOTIFY: return parseServerConfigChangeNotify(stream, payloadLenght);
     case ServerMessageType::CHAT_MESSAGE: return parseChatMessage(stream, payloadLenght);
     case ServerMessageType::KEEP_ALIVE: return parseKeepAlive(stream, payloadLenght);
     case ServerMessageType::DOWNLOAD_INTERVAL_BEGIN: return parseDownloadIntervalBegin(stream, payloadLenght);
     case ServerMessageType::DOWNLOAD_INTERVAL_WRITE: return parseDownloadIntervalWrite(stream, payloadLenght);
     }
+    throw std::runtime_error("invalid message type!");
 }
 
 const ServerMessage& ServerMessageParser::parseAuthChallenge(QDataStream &stream, quint32 /*payloadLenght*/){
@@ -77,12 +78,12 @@ const ServerMessage& ServerMessageParser::parseAuthReply(QDataStream &stream, qu
     return msg;
 }
 //++++++++++++++++++++++++++++++++++++++=
-const ServerMessage& ServerMessageParser::parseConfigChangeNotify(QDataStream &stream, quint32 /*payloadLenght*/){
+const ServerMessage& ServerMessageParser::parseServerConfigChangeNotify(QDataStream &stream, quint32 /*payloadLenght*/){
     quint16 bpm;
     quint16 bpi;
     stream >> bpm;
     stream >> bpi;
-    static ConfigChangeNotifyMessage msg;
+    static ServerConfigChangeNotifyMessage msg;
     msg.set(bpm, bpi);
     return msg;
 }
@@ -92,7 +93,7 @@ const ServerMessage& ServerMessageParser::parseUserInfoChangeNotify(QDataStream 
 {
     static UserInfoChangeNotifyMessage msg;
     if (payloadLenght <= 0) {//no users
-        msg.set(QMap<QString, QList<UserChannel>>());
+        msg.set(QMap<QString, QList<UserChannel>>());//empy user list
         return  msg;
     }
     QMap<QString, QList<UserChannel>> allUsersChannels;
