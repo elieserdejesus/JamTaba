@@ -3,6 +3,7 @@
 #include <cmath>
 #include <QDebug>
 #include "../midi/MidiDriver.h"
+#include <QMutexLocker>
 
 using namespace Audio;
 
@@ -40,14 +41,24 @@ bool FaderProcessor::finished(){
     return processedSamples >= totalSamplesToProcess;
 }
 //++++++++++++++++++++++++
+void AudioNode::deactivate(){
+    QMutexLocker locker(&mutex);
+    this->activated = false;
+}
+
 //+++++++++++++++
 
 void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
 {
+    if(!activated){
+        return;
+    }
     internalBuffer->setFrameLenght(out.getFrameLenght());
-
-    foreach (AudioNode* node, connections) {
-        node->processReplacing(in, *internalBuffer);
+    {
+        QMutexLocker locker(&mutex);
+        foreach (AudioNode* node, connections) {
+            node->processReplacing(in, *internalBuffer);
+        }
     }
 
     //plugins
@@ -63,7 +74,8 @@ void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
 }
 
 AudioNode::AudioNode()
-    :muted(false),
+     : activated(true),
+       muted(false),
       soloed(false),
       gain(1),
       pan(0)/*center*/,
@@ -95,14 +107,15 @@ AudioNode::~AudioNode()
     delete internalBuffer;
 }
 
-bool AudioNode::connect(AudioNode& otherNode) {
-    otherNode.connections.insert(this );
+bool AudioNode::connect(AudioNode& other) {
+    QMutexLocker(&(other.mutex));
+    other.connections.insert(this);
     return true;
 }
 
 bool AudioNode::disconnect(AudioNode &otherNode){
-
-    otherNode.connections. remove(this );
+    QMutexLocker(&(otherNode.mutex));
+    otherNode.connections.remove(this );
     return true;
 }
 
@@ -140,6 +153,7 @@ void MainOutputAudioNode::processReplacing(SamplesBuffer&in, SamplesBuffer& out)
     //--------------------------------------
     bool hasSoloedBuffers = soloedBuffersInLastProcess > 0;
     soloedBuffersInLastProcess = 0;
+    QMutexLocker locker(&mutex);
     for (const auto &node : connections) {
         bool canProcess = (!hasSoloedBuffers && !node->isMuted()) || (hasSoloedBuffers && node->isSoloed());
         if(canProcess){

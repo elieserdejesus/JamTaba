@@ -26,6 +26,7 @@ Service::Service()
 
 Service::~Service(){
     qDebug() << "NinjamService destructor";
+    socket.disconnectFromHost();
 }
 
 void Service::socketReadSlot(){
@@ -191,14 +192,12 @@ void Service::handle(const DownloadIntervalWrite& msg){
     }
 }
 
-void Service::handle(const ServerKeepAliveMessage& /*msg*/)
-{
+void Service::handle(const ServerKeepAliveMessage& /*msg*/){
     ClientKeepAlive clientKeepAliveMessage;
     sendMessageToServer((ClientMessage*)&clientKeepAliveMessage);
 }
 
-void Service::handle(const ServerAuthChallengeMessage& msg)
-{
+void Service::handle(const ServerAuthChallengeMessage& msg){
     ClientAuthUserMessage msgAuthUser(this->userName, msg.getChallenge(), msg.getProtocolVersion());
     sendMessageToServer(&msgAuthUser);
 }
@@ -209,9 +208,7 @@ void Service::handle(const ServerAuthReplyMessage& msg){
         sendMessageToServer(&setChannelMsg);
     }
     else{
-
         emit error("Can't authenticate in server");
-
         disconnectFromServer(false);
     }
 }
@@ -319,23 +316,8 @@ void Service::setBpi(quint16 bpi) {
 
     }
 }
-/*
 
 //+++++++++++++ SERVER MESSAGE HANDLERS +++++++++++++=
-//int message = 0;
-
-    private: void handle(ServerKeepAlive msg) {
-        //if (System.currentTimeMillis() - lastSendTime >= serverKeepAlivePeriod) {
-        if (needSendKeepAliveToServer()) {
-            sendMessageToServer(new ClientKeepAlive());
-        }
-        //sendChatMessage("keep alive sended");
-        //}
-    }
-
-
-*/
-
 void Service::handleUserChannels(QString userFullName, QList<UserChannel> channelsInTheServer) {
     //check for new channels
     User* user = this->currentServer->getUser(userFullName);

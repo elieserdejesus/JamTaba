@@ -40,6 +40,7 @@ NinjamTrackNode::NinjamTrackNode(int ID)
 
 NinjamTrackNode::~NinjamTrackNode()
 {
+    qDebug() << "Destruindo ninjamTrack Node " << this->getID();
 }
 
 void NinjamTrackNode::startNewInterval(){

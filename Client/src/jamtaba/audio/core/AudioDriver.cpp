@@ -14,35 +14,34 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFE
     : channels(channels),
       frameLenght(MAX_BUFFERS_LENGHT),
       maxFrameLenght(MAX_BUFFERS_LENGHT),
-      offset(0)
+      offset(0),
+      deletado(false)
 
 {
     if(channels == 0){
         throw std::runtime_error(std::string("AudioSamplesBuffer::channels == 0"));
     }
-
-    //this->sampleRate = sampleRate;
-    this->samples = new float*[channels];
-    for (unsigned int c = 0; c < channels; ++c) {
-        this->samples[c] = new float[MAX_BUFFERS_LENGHT];
-        for (unsigned int s = 0; s < MAX_BUFFERS_LENGHT; ++s) {
-            this->samples[c][s] = 0;
-        }
-    }
-
     this->peaks[0] = this->peaks[1] = 0;
-    //this->ID = lastID++;
-    //this->isClone = false;
+    samples = new float*[channels];
+    for (unsigned int c = 0; c < channels; ++c) {
+        samples[c] = new float[MAX_BUFFERS_LENGHT];
+    }
 }
 
 SamplesBuffer::~SamplesBuffer(){
-    if(samples != nullptr){
+    //QMutexLocker locker(&mutex);
+    if(deletado){
+        throw new std::runtime_error("deletando duas vezes!");
+    }
+    if(samples){
+        resetOffset();
         for (unsigned int c = 0; c < channels; ++c) {
             delete [] samples[c];
-            samples[c] = nullptr;
+            //samples[c] = nullptr;
         }
         delete [] samples;
         samples = nullptr;
+        deletado = true;
     }
     //qDebug() << "\tAudio samples destructor ID:" << ID;
 }
@@ -51,6 +50,7 @@ SamplesBuffer::~SamplesBuffer(){
 
 
 void SamplesBuffer::setOffset(int offset){
+    //QMutexLocker locker(&mutex);
     if(offset > 0){
         for (unsigned int c = 0; c < channels; ++c) {
             samples[c] += offset;
@@ -65,6 +65,7 @@ void SamplesBuffer::setOffset(int offset){
 }
 
 void SamplesBuffer::resetOffset(){
+    //QMutexLocker locker(&mutex);
     for (unsigned int c = 0; c < channels; ++c) {
         samples[c] -= offset;
     }
@@ -109,6 +110,7 @@ void SamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain)
     }
 }
 
+
 void SamplesBuffer::zero()
 {
     //QMutexLocker locker(&mutex);
@@ -139,6 +141,7 @@ const float *SamplesBuffer::getPeaks() const
 }
 
 void SamplesBuffer::add(const SamplesBuffer &buffer, int offset){
+    //QMutexLocker locker(&mutex);
     unsigned int framesToProcess = frameLenght < buffer.frameLenght ? frameLenght : buffer.frameLenght;
     if( buffer.channels >= channels){
         for (unsigned int c = 0; c < channels; ++c) {

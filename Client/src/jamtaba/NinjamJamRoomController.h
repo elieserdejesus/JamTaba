@@ -56,6 +56,8 @@ private:
     void addTrack(Ninjam::User user, Ninjam::UserChannel channel);
     void removeTrack(Ninjam::User, Ninjam::UserChannel channel);
 
+    void deleteDeactivatedTracks();
+
     bool running;
 
     long intervalPosition;
@@ -74,7 +76,7 @@ private:
 
     static long generateNewTrackID();
 
-    QMutex mutex;
+    //QMutex mutex;
 
 private slots:
     //ninjam events

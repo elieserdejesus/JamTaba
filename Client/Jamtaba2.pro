@@ -1,22 +1,12 @@
-#se deleto o único canal do reaninjam quando está tocando dá pau, deu pau em outros
-#momentos quando deletei também, parece ser alguma coisa com a mensagem UserChangeNotify que é retornada
-#acgq
+#problema quando deleto track
 
-#se conecto e não tem canal no reaninjam aparece uma pista sem nome do Jamtaba
+#tratar a entrada de novos usuários no server
 
-#quando adicionei canais deu pau depois que mexi na estrutura de alocação de memória
+#tratar a saída de usuários do server
 
-#tratar adição  e remoção de canais
-
-#removeu canal do controller mas não removeu da view
-
-#quando mudei o nome do canal um canal novo foi criado na view, talve o problema seja no service
-
-#não consigo testar a mudança de nome no canal por causa da exibição que não mostra o texto
+#tratar desconexão no server, acho que não estou emitindo o sinal quando desconecta
 
 #controles do canal ninjam não atuaram
-
-
 
 #o audio está realmente em outra thread? Pelo comportamento do áudio quando executo no debug acho que não. Além
 #disso quando o decoder ficou em um loop infinito a gui travou, então estou suspeitando que o áudio está rodando na thread da GUI

@@ -49,7 +49,7 @@ public:
     inline bool isMuted() const {return muted;}
     inline bool isSoloed() const {return soloed;}
 
-    virtual bool connect(AudioNode &otherNode) ;
+    virtual bool connect(AudioNode &other) ;
     virtual bool disconnect(AudioNode &otherNode);
 
     void addProcessor(AudioNodeProcessor &newProcessor);
@@ -67,12 +67,16 @@ public:
     inline float getLastPeakLeft() const{return lastPeaks[0];}
     inline float getLastPeakRight() const{return lastPeaks[1];}
     inline float getLastPeak() const {return std::max(lastPeaks[0], lastPeaks[1]);}
+
+    void deactivate();
+    inline bool isActivated() const{return activated;}
 protected:
     QSet<AudioNode*> connections;
     QSet<AudioNodeProcessor*> processors;
     SamplesBuffer* internalBuffer;
     float lastPeaks[2];
-    //QMutex mutex; //used to protected connections manipulation because nodes can be added or removed by different threads
+    QMutex mutex; //used to protected connections manipulation because nodes can be added or removed by different threads
+    bool activated; //used to safely remove non activated nodes
 private:
     bool muted;
     bool soloed;
