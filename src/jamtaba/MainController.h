@@ -75,6 +75,8 @@ public:
     MainController(JamtabaFactory *factory, int& argc, char** argv);
     ~MainController();
 
+    //virtual void timerEvent(QTimerEvent *);
+
     void start();
     void stop();
 
@@ -116,13 +118,13 @@ public:
     void scanPlugins();
     void initializePluginsList(QStringList paths);
 
+    Audio::AudioNode* getTrackNode(long ID);
+
 signals:
     void enteredInRoom(Login::AbstractJamRoom* room);
     //void startingAudioCallBack(int bufferSize);
 private:
-
     void doAudioProcess(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
-
     Audio::Plugin* createPluginInstance(Audio::PluginDescriptor* descriptor);
 
     std::unique_ptr<Audio::AudioDriver> audioDriver;
@@ -142,7 +144,7 @@ private:
 
 
     QMap<long, Audio::AudioNode*> tracksNodes;
-    mutable QMutex tracksMutex;
+    //mutable QMutex tracksMutex;
 
     Peaks inputPeaks;
     Peaks roomStreamerPeaks;

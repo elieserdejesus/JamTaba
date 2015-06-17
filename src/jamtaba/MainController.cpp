@@ -20,6 +20,7 @@
 #include "../ninjam/Server.h"
 #include "../loginserver/JamRoom.h"
 #include "NinjamJamRoomController.h"
+#include <QTimer>
 
 //#include "mainframe.h"
 
@@ -106,7 +107,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     this->audioMixer->addNode( *this->roomStreamer);
 
     {
-        QMutexLocker locker(&tracksMutex);
+        //QMutexLocker locker(&tracksMutex);
         tracksNodes.insert(1, audioMixer->getLocalInput());
     }
 
@@ -149,19 +150,27 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     //qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
 }
 
+Audio::AudioNode *MainController::getTrackNode(long ID){
+    //QMutexLocker locker(&tracksMutex);
+    if(tracksNodes.contains(ID)){
+        return tracksNodes[ID];
+    }
+    return nullptr;
+}
+
 void MainController::addTrack(long trackID, Audio::AudioNode* trackNode){
-    QMutexLocker locker(&tracksMutex);
+    //QMutexLocker locker(&tracksMutex);
     tracksNodes.insert( trackID, trackNode );
     audioMixer->addNode(*trackNode) ;
 }
 
 void MainController::removeTrack(long trackID){
-    QMutexLocker locker(&tracksMutex); //remove Track is called from ninjam service thread, and cause a crash if the process callback (audio Thread) is iterating over tracksNodes to render audio
+    //QMutexLocker locker(&tracksMutex); //remove Track is called from ninjam service thread, and cause a crash if the process callback (audio Thread) is iterating over tracksNodes to render audio
     Audio::AudioNode* trackNode = tracksNodes[trackID];
     if(trackNode){
-        tracksNodes.remove(trackID);
         audioMixer->removeNode(*trackNode);
-        delete trackNode;
+        tracksNodes.remove(trackID);
+        //delete trackNode;
     }
 }
 
@@ -197,8 +206,6 @@ void MainController::onPluginFounded(Audio::PluginDescriptor* descriptor){
 
 void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
 
-
-
     MidiBuffer midiBuffer = midiDriver->getBuffer();
     vstHost->fillMidiEvents(midiBuffer);//pass midi events to vst host
 
@@ -223,7 +230,7 @@ void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out
 }
 
 Peaks MainController::getTrackPeaks(int trackID){
-    QMutexLocker locker(&tracksMutex);
+    //QMutexLocker locker(&tracksMutex);
     Audio::AudioNode* trackNode = tracksNodes[trackID];
     if(trackNode){
         return Peaks(trackNode->getLastPeakLeft(), trackNode->getLastPeakRight());
@@ -241,7 +248,7 @@ Peaks MainController::getRoomStreamPeaks(){
 
 //++++++++++ TRACKS ++++++++++++
 void MainController::setTrackPan(int trackID, float pan){
-    QMutexLocker locker(&tracksMutex);
+    //QMutexLocker locker(&tracksMutex);
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->setPan(pan);
@@ -249,7 +256,7 @@ void MainController::setTrackPan(int trackID, float pan){
 }
 
 void MainController::setTrackLevel(int trackID, float level){
-    QMutexLocker locker(&tracksMutex);
+    //QMutexLocker locker(&tracksMutex);
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->setGain( std::pow( level, 4));
@@ -257,7 +264,7 @@ void MainController::setTrackLevel(int trackID, float level){
 }
 
 void MainController::setTrackMute(int trackID, bool muteStatus){
-    QMutexLocker locker(&tracksMutex);
+    //QMutexLocker locker(&tracksMutex);
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->setMuteStatus(muteStatus);
@@ -265,7 +272,7 @@ void MainController::setTrackMute(int trackID, bool muteStatus){
 }
 
 bool MainController::trackIsMuted(int trackID) const{
-    QMutexLocker locker(&tracksMutex);
+    //QMutexLocker locker(&tracksMutex);
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         return node->isMuted();

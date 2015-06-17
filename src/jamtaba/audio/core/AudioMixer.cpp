@@ -20,18 +20,18 @@ AudioMixer::AudioMixer()
 }
 
 void AudioMixer::addNode(AudioNode &node){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
     node.connect(*mainOutNode);
 }
 
 void AudioMixer::removeNode(AudioNode &node){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
     node.disconnect(*mainOutNode);
 }
 
 AudioMixer::~AudioMixer()
 {
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
     delete mainOutNode;
     mainOutNode = nullptr;
     delete inputNode;
@@ -39,7 +39,7 @@ AudioMixer::~AudioMixer()
 }
 
 void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
     if(mainOutNode){
         mainOutNode->processReplacing(in, out);//mainOutNode ask all connected nodes to process
     }

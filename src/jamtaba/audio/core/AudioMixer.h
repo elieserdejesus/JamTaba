@@ -28,7 +28,7 @@ public:
 private:
     MainOutputAudioNode* mainOutNode;
     LocalInputAudioNode* inputNode;
-    QMutex mutex;
+    //QMutex mutex;
 };
 //+++++++++++++++++++++++
 

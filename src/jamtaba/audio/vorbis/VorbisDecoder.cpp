@@ -9,18 +9,20 @@
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::VorbisDecoder()
     : internalBuffer(nullptr),
-      vorbisInput(),
-      initialized(false)
+      initialized(false),
+      vorbisInput()
 {
 
 }
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::~VorbisDecoder(){
+    qDebug() << "Vorbis decoder destructor!";
     if(initialized){
-        ov_clear(&vorbisFile);
+        //ov_clear(&vorbisFile);
     }
     if(internalBuffer){
         delete internalBuffer;
+        internalBuffer = nullptr;
     }
 }
 //+++++++++++++++++++++++++++++++++++++++++++
@@ -49,6 +51,7 @@ const Audio::SamplesBuffer* VorbisDecoder::decode(int maxSamplesToDecode){
     if(!initialized){
         initialize();
     }
+    //float ** internalBuffer->getSamplesArray()
     long samplesDecoded = ov_read_float(&vorbisFile, &internalBuffer->samples, maxSamplesToDecode, NULL);//currentSection is not used
     if(samplesDecoded < 0){//error
         QString message;
@@ -74,9 +77,6 @@ const Audio::SamplesBuffer* VorbisDecoder::decode(int maxSamplesToDecode){
 }
 //+++++++++++++++++++++++++++++++++++++++++++
 void VorbisDecoder::reset(){
-    if(initialized){
-        ov_clear(&vorbisFile);
-    }
     initialize();
 }
 //++++++++++++++++++++++++++++++++++++++++++++++

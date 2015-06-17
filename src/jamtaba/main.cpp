@@ -9,17 +9,8 @@
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
-int main(int argc, char* args[])
+int main(int argc, char* args[] )
 {
-//    Ninjam::Service* service = Ninjam::Service::getInstance();
-//    service->startServerConnection("localhost", 2049, "test", QStringList(""), "");
-
-//    QThread::msleep(10000);
-
-//    return 0;
-
-
-
     qInstallMessageHandler(customLogHandler);
     JamtabaFactory* factory = new ReleaseFactory();
     Controller::MainController mainController(factory, argc, args);//MainController extends QApplication
@@ -29,7 +20,6 @@ int main(int argc, char* args[])
 
     delete factory;
     return mainController.exec();
-
  }
 //++++++++++++++++++++++++++++++++++
 

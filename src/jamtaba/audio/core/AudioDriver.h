@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include <QMutex>
+#include <vector>
 
 namespace Midi {
 class MidiBuffer;
@@ -18,16 +19,14 @@ class SamplesBuffer{
     friend class AudioNodeProcessor;
 
 public:
-    float** samples;//unfornally I have to change the visibility to public to deal with a problem in vorbis decoder. Decoder not work if I return the samples member and use as output buffer to vorbis decoder.
-
+    float** samples;//deixei public porque o ogg decoder não funcionou de outra maneira, tive que acessar diretamente o endereço desse array
 private:
-    //static int lastID;
-    //int ID;
+
 
     unsigned int channels;
     unsigned int frameLenght;
     unsigned const int maxFrameLenght;
-    //int offset;
+    int offset;
 
     mutable float peaks[2];
 
@@ -38,11 +37,11 @@ private:
 
     void computePeaks();
 
-    //mutable QMutex mutex;
+    //QMutex mutex;
 
     //bool isClone;
-    int offset;
-
+    //int offset;
+    bool deletado;
 public:
     SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT);
     //SamplesBuffer(float** samples, unsigned int channels, unsigned int samplesCount);
