@@ -14,8 +14,8 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFE
     : channels(channels),
       frameLenght(MAX_BUFFERS_LENGHT),
       maxFrameLenght(MAX_BUFFERS_LENGHT),
-      offset(0),
-      deletado(false)
+      offset(0)
+      //deletado(false)
 
 {
     if(channels == 0){
@@ -28,11 +28,23 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFE
     }
 }
 
+SamplesBuffer::SamplesBuffer(const SamplesBuffer& other)
+    : channels(other.channels),
+      frameLenght(other.frameLenght),
+      maxFrameLenght(other.maxFrameLenght),
+      offset(other.offset)
+{
+    qCritical() << "copy constructor!";
+}
+
+SamplesBuffer& SamplesBuffer::operator=(const SamplesBuffer& /*other*/){
+    qCritical() << "assignment operator";
+    return *this;
+}
+
 SamplesBuffer::~SamplesBuffer(){
     //QMutexLocker locker(&mutex);
-    if(deletado){
-        throw new std::runtime_error("deletando duas vezes!");
-    }
+
     if(samples){
         resetOffset();
         for (unsigned int c = 0; c < channels; ++c) {
@@ -41,7 +53,6 @@ SamplesBuffer::~SamplesBuffer(){
         }
         delete [] samples;
         samples = nullptr;
-        deletado = true;
     }
     //qDebug() << "\tAudio samples destructor ID:" << ID;
 }
@@ -273,10 +284,10 @@ void AbstractAudioDriver::removeListener(AudioDriverListener& l){
     std::vector< AudioDriverListener*>::iterator it = this->listeners.begin();
     while (it != this->listeners.end()){
         if ((*it) == &l){
-            this->listeners.erase(it);
+            it = this->listeners.erase(it);
         }
         else{
-            it++;
+            ++it;
         }
     }
 }
@@ -329,21 +340,21 @@ void AbstractAudioDriver::setProperties(int inputDeviceIndex, int outputDeviceIn
 
 void AbstractAudioDriver::fireDriverStarted() const{
     std::vector< AudioDriverListener*>::const_iterator it = listeners.begin();
-    for (; it != listeners.end(); it++){
+    for (; it != listeners.end(); ++it){
         (*it)->driverStarted();
     }
 }
 
 void AbstractAudioDriver::fireDriverStopped() const{
     std::vector<AudioDriverListener*>::const_iterator it = listeners.begin();
-    for (; it != listeners.end(); it++){
+    for (; it != listeners.end(); ++it){
         (*it)->driverStopped();
     }
 }
 
 void AbstractAudioDriver::fireDriverException(const char* msg) const{
     std::vector<AudioDriverListener*>::const_iterator it = listeners.begin();
-    for (; it != listeners.end(); it++){
+    for (; it != listeners.end(); ++it){
         (*it)->driverException(msg);
     }
 }
@@ -352,7 +363,7 @@ void AbstractAudioDriver::fireDriverException(const char* msg) const{
 
 void AbstractAudioDriver::fireDriverCallback(SamplesBuffer& in, SamplesBuffer& out) const{
     std::vector<AudioDriverListener*>::const_iterator it = listeners.begin();
-    for (; it != listeners.end(); it++){
+    for (; it != listeners.end(); ++it){
         (*it)->processCallBack(in, out);
     }
 }

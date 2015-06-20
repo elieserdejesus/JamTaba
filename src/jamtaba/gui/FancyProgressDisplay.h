@@ -24,7 +24,7 @@ private:
     QFontMetrics fontMetrics;
 
 public:
-    FancyProgressDisplay(QWidget* parent);
+    explicit FancyProgressDisplay(QWidget* parent);
     inline bool isShowingAccents() const{ return this->showAccents && beatsPerAccent > 0; }
     void setShowAccents(bool showAccents) ;
     void setCurrentBeat(int beat) ;

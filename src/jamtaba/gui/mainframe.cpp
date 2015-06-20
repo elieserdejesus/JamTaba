@@ -185,18 +185,13 @@ void MainFrame::on_enteredInRoom(Login::AbstractJamRoom *room)
 
     if(room->getRoomType() == Login::AbstractJamRoom::Type::NINJAM){
         Login::NinjamRoom* ninjamRoom = dynamic_cast<Login::NinjamRoom*>(room);
-        Ninjam::Server* server = Ninjam::Server::getServer(ninjamRoom->getHostName(), ninjamRoom->getHostPort());
-        if(!server){
-            server = ninjamRoom->getNinjamServer();
-        }
-        if(server){
-            NinjamRoomWindow* roomWindow = new NinjamRoomWindow(ui.tabWidget, server, mainController);
-            int index = ui.tabWidget->addTab(roomWindow, room->getName());
-            ui.tabWidget->setCurrentIndex(index);
-            //adicionar track para o metronomo
-            metronomeTrackView = new MetronomeTrackView(this, mainController);
-            ui.localTracksLayout->addWidget(metronomeTrackView);
-        }
+        NinjamRoomWindow* roomWindow = new NinjamRoomWindow(ui.tabWidget, *ninjamRoom, mainController);
+        int index = ui.tabWidget->addTab(roomWindow, room->getName());
+        ui.tabWidget->setCurrentIndex(index);
+        //adicionar track para o metronomo
+        metronomeTrackView = new MetronomeTrackView(this, mainController);
+        ui.localTracksLayout->addWidget(metronomeTrackView);
+
     }
 }
 
@@ -290,10 +285,10 @@ void MainFrame::on_preferencesClicked()
 void MainFrame::on_IOPropertiesChanged(int midiDeviceIndex, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)
 {
     qDebug() << "midi device: " << midiDeviceIndex << endl;
-    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
     midiDriver->setInputDeviceIndex(midiDeviceIndex);
 #ifdef _WIN32
+    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     audioDriver->setProperties(audioDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
 
 #else

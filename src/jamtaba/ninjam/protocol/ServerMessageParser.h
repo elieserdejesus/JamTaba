@@ -6,6 +6,7 @@
 #include <QMap>
 //#include <memory>
 #include "ServerMessages.h"
+#include <cstdint>
 
 namespace Ninjam {
 

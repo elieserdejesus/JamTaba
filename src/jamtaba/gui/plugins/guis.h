@@ -14,7 +14,7 @@ namespace Audio{
 class PluginGui : public QWidget{
     Q_OBJECT
 public:
-    PluginGui(Audio::Plugin* plugin);
+    explicit PluginGui(Audio::Plugin* plugin);
 
     QString getPluginName() const;//{return plugin->getName();}
     Audio::Plugin* getPlugin() const;
@@ -28,7 +28,7 @@ class DelayGui : public PluginGui
     Q_OBJECT
 
 public:
-    DelayGui( Audio::JamtabaDelay* delayPlugin);
+    explicit DelayGui( Audio::JamtabaDelay* delayPlugin);
     ~DelayGui();
 private slots:
     void on_sliderDelayReleased();

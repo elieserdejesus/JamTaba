@@ -2,11 +2,6 @@
 #define NINJAMROOMWINDOW_H
 
 #include <QWidget>
-//#include "../loginserver/JamRoom.h"
-//#include "../ninjam/Server.h"
-//#include "../MainController.h"
-//#include "../audio/MetronomeTrackNode.h"
-
 #include <QSpacerItem>
 #include "../ninjam/User.h"
 #include "../ninjam/UserChannel.h"
@@ -15,13 +10,17 @@ namespace Ui {
 class NinjamRoomWindow;
 }
 
+namespace Login {
+class NinjamRoom;
+}
+
 namespace Controller {
     class NinjamJamRoomController;
     class MainController;
 }
 
 namespace Ninjam {
-    class Server;
+    //class Server;
     class UserChannel;
     class User;
 }
@@ -31,7 +30,7 @@ class NinjamRoomWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit NinjamRoomWindow(QWidget *parent, Ninjam::Server* server, Controller::MainController *mainController);
+    explicit NinjamRoomWindow(QWidget *parent, const Login::NinjamRoom& room, Controller::MainController *mainController);
     ~NinjamRoomWindow();
 
 private:

@@ -22,11 +22,12 @@ struct MidiMessage{
 
 class MidiBuffer{
 public:
-    MidiBuffer(int maxMessages);
+    explicit MidiBuffer(int maxMessages);
     ~MidiBuffer();
     void addMessage(const MidiMessage& m);
     MidiMessage consumeMessage();
     int getMessagesCount() const {return messagesCount;}
+    MidiBuffer(const MidiBuffer& other);
 private:
     int maxMessages;
     MidiMessage* messages;

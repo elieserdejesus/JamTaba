@@ -12,6 +12,7 @@
 using namespace Vst;
 
 PluginFinder::PluginFinder()
+    :host(nullptr)
 {
 
 }

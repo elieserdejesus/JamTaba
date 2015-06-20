@@ -3,6 +3,7 @@
 #include "ServerMessageParser.h"
 #include <QDebug>
 #include "../User.h"
+#include <cstdint>
 
 namespace Ninjam {
 
@@ -20,7 +21,7 @@ enum class ServerMessageType : std::uint8_t{
 class ServerMessage {
 
 public:
-    ServerMessage(ServerMessageType messageType);
+    explicit ServerMessage(ServerMessageType messageType);
     virtual ~ServerMessage();
     virtual void printDebug(QDebug dbg) const = 0;
     inline ServerMessageType getMessageType() const { return messageType;}

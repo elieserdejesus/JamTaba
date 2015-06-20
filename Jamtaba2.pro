@@ -1,4 +1,8 @@
-#problema quando deleto track
+#decidi compilar todas as libs estaticamente por enquanto
+
+# acho que solucionei o problema que dava na desconexão, mas agora o problema quando deleto track ainda continua, pode ter relação com as  mudanças que fiz
+
+#não estou removendo as tracks do controller quando saio de um servidor
 
 #tratar a entrada de novos usuários no server
 
@@ -74,7 +78,9 @@
 
 QT       +=  gui  network
 
-QMAKE_CXXFLAGS += -std=c++11 #-Wno-unused-parameter
+#QMAKE_CXXFLAGS += -std=c++11 #-Wno-unused-parameter
+
+CONFIG += c++11
 
 #MAC
 macx:QMAKE_CXXFLAGS += -stdlib=libc++
@@ -91,8 +97,6 @@ MAIN = src/jamtaba/main.cpp
 
 HEADERS += \
     #nvwa/debug_new.h \
-    #--------------------------------
-    #minimp3/minimp3.h \
     #--------------------------------
     src/jamtaba/persistence/ConfigStore.h \
     #--------------------------------
@@ -142,26 +146,19 @@ HEADERS += \
     src/jamtaba/audio/MetronomeTrackNode.h \
     src/jamtaba/gui/NinjamPanel.h \
     src/jamtaba/gui/FancyProgressDisplay.h \
-    src/jamtaba/audio/libresample/include/libresample.h \
-    src/jamtaba/audio/libresample/src/configtemplate.h \
-    src/jamtaba/audio/libresample/src/filterkit.h \
-    src/jamtaba/audio/libresample/src/resample_defs.h \
     src/jamtaba/audio/Resampler.h \
     src/jamtaba/NinjamJamRoomController.h \
     src/jamtaba/gui/MetronomeTrackView.h \
     src/jamtaba/audio/vorbis/VorbisDecoder.h \
-    src/jamtaba/audio/streambuffer.h \
     src/jamtaba/ninjam/UserChannel.h
 
 
-win32:HEADERS += portaudio/include/pa_asio.h \
+#win32:HEADERS += portaudio/include/pa_asio.h \
 
 
 SOURCES += \
     $$MAIN \
 #    nvwa/debug_new.cpp \
-#--------------------------------
-    #minimp3/minimp3.c \
 #-----------------------------------------
     src/jamtaba/persistence/ConfigStore.cpp \
 #------------------------------------------------
@@ -209,14 +206,13 @@ SOURCES += \
     src/jamtaba/audio/MetronomeTrackNode.cpp \
     src/jamtaba/gui/NinjamPanel.cpp \
     src/jamtaba/gui/FancyProgressDisplay.cpp \
-    src/jamtaba/audio/libresample/src/filterkit.c \
-    src/jamtaba/audio/libresample/src/resample.c \
-    src/jamtaba/audio/libresample/src/resamplesubs.c \
+    #src/jamtaba/audio/libresample/src/filterkit.c \
+    #src/jamtaba/audio/libresample/src/resample.c \
+    #src/jamtaba/audio/libresample/src/resamplesubs.c \
     src/jamtaba/audio/Resampler.cpp \
     src/jamtaba/NinjamJamRoomController.cpp \
     src/jamtaba/gui/MetronomeTrackView.cpp \
     src/jamtaba/audio/vorbis/VorbisDecoder.cpp \
-    src/jamtaba/audio/streambuffer.cpp \
     src/jamtaba/ninjam/UserChannel.cpp
 
 FORMS += \
@@ -230,42 +226,35 @@ FORMS += \
 
 
 #macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \
-win32:LIBPATH += C:/Qt/Qt5.4.0/Tools/mingw491_32/i686-w64-mingw32/lib/ \
-
-
-LIBS += -L$$PWD/minimp3/lib/ -lminimp3 \
-        -L$$PWD/portaudio/lib/ -lportaudio \
-        -L$$PWD/portmidi/win/ -lportmidi \
-        -L$$PWD/libogg/lib/ -logg \
-        -L$$PWD/libogg/lib/ -lvorbis \
-        -L$$PWD/libvorbis/lib/ -lvorbisfile
-
-win32:LIBS += -lwinmm \
-              -lole32 \
-              #-L$$PWD/portmidi/win/ -lportmidi
-
-
-win32:PRE_TARGETDEPS += $$PWD/portaudio/lib/libportaudio.a \
-                        $$PWD/portmidi/win/libportmidi.a \
-                        $$PWD/libogg/lib/libogg.a \
-                        $$PWD/libvorbis/lib/libvorbis.a \
-                        $$PWD/libvorbis/lib/libvorbisfile.a
+#win32:LIBPATH += C:/Qt/Qt5.4.0/Tools/mingw491_32/i686-w64-mingw32/lib/ \
 
 VST_SDK_PATH = "D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x/"
 
-INCLUDEPATH += $$PWD/portaudio/include \
-               $$PWD/minimp3/include \
-               src/jamtaba/gui \
+
+INCLUDEPATH += src/jamtaba/gui \
                src/jamtaba/gui/widgets \
                $$VST_SDK_PATH \
-               $$PWD/portmidi \
-               $$PWD/libogg/include \
-               $$PWD/libvorbis/include \
+               $$PWD/portaudio/include \
+               $$PWD/portmidi/include \
+               $$PWD/vorbis/include \
+               $$PWD/minimp3/include \
+               $$PWD/libresample/include \
 
-DEPENDPATH += $$PWD/portaudio/include \
-              $$PWD/minimp3/include \
-              $$PWD/portmidi \
-              $$PWD/libogg/include \
-              $$PWD/libvorbis/include \
+#DEPENDPATH +=   $$PWD/vorbis/x86 \
+#                $$PWD/ogg/x86 \
+#                $$PWD/portaudio/x86 \
+#                $$PWD/portmidi/x86 \
+#                $$PWD/libresample/x86 \
 
 RESOURCES += src/jamtaba/resources/jamtaba.qrc
+
+win32: LIBS +=  -L$$PWD/portaudio/x86/      -lportaudio     \
+                -L$$PWD/portmidi/x86/       -lportmidi      \
+                -L$$PWD/vorbis/x86/         -lvorbisfile    \
+                -L$$PWD/vorbis/x86/         -lvorbis        \
+                -L$$PWD/ogg/x86/            -logg           \
+                -L$$PWD/minimp3/x86/        -lminimp3       \
+                -L$$PWD/libresample/x86/    -lresample      \
+
+win32: LIBS +=  -lwinmm  \
+                -lole32  \

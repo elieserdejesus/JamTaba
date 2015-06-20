@@ -40,7 +40,7 @@ signals:
     void roomChanged(const AbstractJamRoom& room);
 
 private:
-    static const bool LOCAL_HOST_MODE = true;
+    static const bool LOCAL_HOST_MODE = false;
     static const QString SERVER;
     static QMap<long long, std::shared_ptr<AbstractJamRoom>> rooms;
     bool connected;
@@ -55,7 +55,7 @@ private slots:
     void connectNetworkReplySlots(QNetworkReply *reply, Command command);
 
 public:
-    LoginService(QObject *parent=0);
+    explicit LoginService(QObject *parent=0);
     ~LoginService();
     virtual void connectInServer(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
     virtual void disconnect();

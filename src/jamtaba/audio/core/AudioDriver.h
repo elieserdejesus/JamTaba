@@ -37,14 +37,15 @@ private:
 
     void computePeaks();
 
-    //QMutex mutex;
+    //achei que isso iria gerar error nos lugares onde acontecem copias, mas não rolou
+    //tentar implementar esses métodos e disparar warnings para ver
 
-    //bool isClone;
-    //int offset;
-    bool deletado;
+
 public:
     SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT);
-    //SamplesBuffer(float** samples, unsigned int channels, unsigned int samplesCount);
+    SamplesBuffer(const SamplesBuffer& other);
+    SamplesBuffer& operator=(const SamplesBuffer& other);
+
     ~SamplesBuffer();
 
     static const SamplesBuffer ZERO_BUFFER;//a static buffer with zero samples

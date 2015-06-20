@@ -17,7 +17,7 @@ class NinjamInterval;
 class NinjamTrackNode : public Audio::AudioNode
 {
 public:
-    NinjamTrackNode(int ID);
+    explicit NinjamTrackNode(int ID);
     ~NinjamTrackNode();
     void addEncodedBytes(QByteArray encodedBytes, bool lastPartOfInterval);
     void processReplacing(Audio::SamplesBuffer&in, Audio::SamplesBuffer& out);
@@ -27,7 +27,7 @@ private:
     bool playing;//playing one interval or waiting for more vorbis data to decode
     VorbisDecoder decoder;
     QList<NinjamInterval> intervals;
-    QMutex mutex;
+    //QMutex mutex;
     int ID;
 };
 

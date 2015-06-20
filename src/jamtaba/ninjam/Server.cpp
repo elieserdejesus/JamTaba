@@ -4,7 +4,7 @@
 
 using namespace Ninjam;
 
-QMap<QString, std::shared_ptr<Server>> Server::servers;
+//QMap<QString, std::shared_ptr<Server>> Server::servers;
 
 Server::Server(QString host, int port)
     :port(port), host(host),
@@ -18,10 +18,13 @@ Server::Server(QString host, int port)
     //qDebug() << "criou server " << host <<":" << port;
 }
 
-
-QString Server::getUniqueName(QString host, int port) {
-    return host + ":" + QString::number(port);
+Server::~Server(){
+    //qDeleteAll(users);
 }
+
+//QString Server::getUniqueName(QString host, int port) {
+//    return host + ":" + QString::number(port);
+//}
 
 bool Server::containsUser(QString userFullName) const{
     return users.contains(userFullName);
@@ -33,13 +36,13 @@ bool Server::containsUser(const User &user) const{
 }
 
 
-Server* Server::getServer(QString host, int port) {
-    QString key = getUniqueName(host, port);
-    if (!servers.contains(key)) {
-        servers.insert(key, std::shared_ptr<Server>(new Server(host, port)));
-    }
-    return servers[key].get();
-}
+//Server* Server::getServer(QString host, int port) {
+//    QString key = getUniqueName(host, port);
+//    if (!servers.contains(key)) {
+//        servers.insert(key, std::shared_ptr<Server>(new Server(host, port)));
+//    }
+//    return servers[key].get();
+//}
 
 void Server::addUser(User user) {
     if (!users.contains(user.getFullName())) {
@@ -111,8 +114,8 @@ void Server::refreshUserList(QSet<QString> onlineUsers) {
         }
     }
 
-    foreach (User ninjaMUser , toRemove) {
-        users.remove(ninjaMUser.getFullName());
+    foreach (QString fullName , toRemove) {
+        users.remove(fullName);
     }
 
 }

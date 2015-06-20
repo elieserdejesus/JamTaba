@@ -227,13 +227,13 @@ void Service::startServerConnection(QString serverIp, int serverPort, QString us
     }
 
     //the old current server is deleted by unique_ptr
-    currentServer.reset( Server::getServer(serverIp, serverPort));
+    currentServer.reset( new Server(serverIp, serverPort));
 
 }
 
 void Service::disconnectFromServer(bool /*normalDisconnection*/)
 {
-
+    qWarning() << "disconnected from server";
 }
 /*
 

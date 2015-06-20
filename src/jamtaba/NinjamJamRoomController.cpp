@@ -14,7 +14,12 @@ using namespace Controller;
 
 NinjamJamRoomController::NinjamJamRoomController(Controller::MainController* mainController)
     :mainController(mainController),
-    metronomeTrackNode(new Audio::MetronomeTrackNode(":/click.wav", mainController->getAudioDriver()->getSampleRate()))
+    metronomeTrackNode(new Audio::MetronomeTrackNode(":/click.wav", mainController->getAudioDriver()->getSampleRate())),
+    intervalPosition(0),
+    samplesInInterval(0),
+    newBpi(-1), newBpm(-1),
+    currentBpi(0),
+    currentBpm(0)
 {
     running = false;
 
@@ -74,7 +79,7 @@ QString NinjamJamRoomController::getUniqueKey(Ninjam::UserChannel channel){
 void NinjamJamRoomController::addTrack(Ninjam::User user, Ninjam::UserChannel channel){
     NinjamTrackNode* trackNode = new NinjamTrackNode(generateNewTrackID());
     {
-        //QMutexLocker locker(&mutex);
+        QMutexLocker locker(&mutex);
         trackNodes.insert(getUniqueKey(channel), trackNode);
         mainController->addTrack(trackNode->getID(), trackNode);
     }
@@ -83,17 +88,17 @@ void NinjamJamRoomController::addTrack(Ninjam::User user, Ninjam::UserChannel ch
 
 
 void NinjamJamRoomController::removeTrack(Ninjam::User user, Ninjam::UserChannel channel){
-    //QMutexLocker locker(&mutex);
+    QMutexLocker locker(&mutex);
     QString uniqueKey = getUniqueKey(channel);
     if(trackNodes.contains(uniqueKey)){
         NinjamTrackNode* trackNode = trackNodes[uniqueKey];
         long ID = trackNode->getID();
         trackNode->deactivate();//tracks are deactivated and deleted in next step
-        mainController->removeTrack(ID);
+        //mainController->removeTrack(ID);
         emit channelRemoved(user, channel, ID);
     }
     else{
-        qDebug() << " não encontrou o channel em tracNodes";
+        qDebug() << " não encontrou o channel em trackNodes";
 
     }
 }
@@ -123,18 +128,21 @@ void NinjamJamRoomController::stop(){
         QObject::disconnect(ninjamService, SIGNAL(userChannelCreated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelCreated(Ninjam::User, Ninjam::UserChannel)));
         QObject::disconnect(ninjamService, SIGNAL(userChannelRemoved(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelRemoved(Ninjam::User, Ninjam::UserChannel)));
         QObject::disconnect(ninjamService, SIGNAL(userChannelUpdated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelUpdated(Ninjam::User, Ninjam::UserChannel)));
+
+        ninjamService->disconnectFromServer();
     }
 }
 
 void NinjamJamRoomController::deleteDeactivatedTracks(){
-    //QMutexLocker locker(&mutex);
-    QMap<QString, NinjamTrackNode*>::iterator it = trackNodes.begin();
-    while(it != trackNodes.end() ){
-        if(!(it.value()->isActivated())){
-            delete it.value();
-            trackNodes.erase(it);
+    QMutexLocker locker(&mutex);
+    QList<QString> keys = trackNodes.keys();
+    foreach (QString key, keys) {
+        NinjamTrackNode* trackNode = trackNodes[key];
+        if(!(trackNode->isActivated())){
+            trackNodes.remove(key);
+            mainController->removeTrack(trackNode->getID());
+            delete trackNode;
         }
-        it++;
     }
 }
 
@@ -158,7 +166,7 @@ void NinjamJamRoomController::process(Audio::SamplesBuffer &in, Audio::SamplesBu
                 processScheduledChanges();
             }
             {
-                //QMutexLocker locker(&mutex);
+                QMutexLocker locker(&mutex);
                 foreach (NinjamTrackNode* track, trackNodes.values()) {
                     track->startNewInterval();
                 }
@@ -223,7 +231,7 @@ void NinjamJamRoomController::ninjamUserChannelRemoved(Ninjam::User user, Ninjam
 
 void NinjamJamRoomController::ninjamUserChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel){
     QString uniqueKey = getUniqueKey(channel);
-    //QMutexLocker locker(&mutex);
+    QMutexLocker locker(&mutex);
     if(trackNodes.contains(uniqueKey)){
         NinjamTrackNode* trackNode = trackNodes[uniqueKey];
         emit channelChanged(user, channel, trackNode->getID());
@@ -245,7 +253,7 @@ void NinjamJamRoomController::ninjamAudioAvailable(Ninjam::User user, int channe
 
     Ninjam::UserChannel channel = user.getChannel(channelIndex);
     QString channelKey = getUniqueKey(channel);
-    //QMutexLocker locker(&mutex);
+    QMutexLocker locker(&mutex);
     if(trackNodes.contains(channelKey)){
         NinjamTrackNode* trackNode = trackNodes[channelKey];
         trackNode->addEncodedBytes(encodedAudioData, lastPartOfInterval);

@@ -62,7 +62,7 @@ void PortAudioDriver::initPortAudio(int inputDeviceIndex, int outputDeviceIndex,
 
     //set output channels
     if(outputDeviceIndex != paNoDevice){
-        firstOutputIndex = firstOutputIndex;
+        this->firstOutputIndex = firstOutputIndex;
         int lastOutputsCount = lastOutputIndex - firstOutputIndex + 1;
         int maxOutputs = Pa_GetDeviceInfo(outputDeviceIndex)->maxOutputChannels;
         if(lastOutputsCount > maxOutputs || firstOutputIndex >= maxOutputs ){
@@ -124,7 +124,7 @@ int portaudioCallBack(const void *inputBuffer, void *outputBuffer,
                       PaStreamCallbackFlags /*statusFlags*/, void *userData)
 {
     //qDebug() << "portAudioCallBack framesPerBuffer: " << framesPerBuffer;
-    PortAudioDriver* instance = (PortAudioDriver*)userData;
+    PortAudioDriver* instance = static_cast<PortAudioDriver*>(userData);
     instance->translatePortAudioCallBack(inputBuffer, outputBuffer, framesPerBuffer);
     return paContinue;
 }

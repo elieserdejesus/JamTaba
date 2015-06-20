@@ -49,46 +49,46 @@ const QString ConfigStore::KEY_RECORD_STATUS = "RECORD/status";
 const QString DEFAULT_RECORD_PATH = "./Recorded Jams";
 
 QString ConfigStore::getSettingsFilePath(){
-    return instance->settings->fileName();
+    return instance->settings.fileName();
 }
 
 //++++++++++++++++++
 
 void ConfigStore::addVstPlugin(QString pluginPath){
     static int addedVSTs = 0;
-    instance->settings->beginWriteArray("VSTs");
-    instance->settings->setArrayIndex(addedVSTs++);
-    instance->settings->setValue("path", pluginPath);
-    instance->settings->endArray();
+    instance->settings.beginWriteArray("VSTs");
+    instance->settings.setArrayIndex(addedVSTs++);
+    instance->settings.setValue("path", pluginPath);
+    instance->settings.endArray();
 }
 
 QStringList ConfigStore::getVstPluginsPaths(){
-    int lenght = instance->settings->beginReadArray("VSTs");
+    int lenght = instance->settings.beginReadArray("VSTs");
     QStringList list;
     for (int i = 0; i < lenght; ++i) {
-        instance->settings->setArrayIndex(i);
-        QString path = instance->settings->value("path").toString();
+        instance->settings.setArrayIndex(i);
+        QString path = instance->settings.value("path").toString();
         list.append(path);
     }
-    instance->settings->endArray();
+    instance->settings.endArray();
     return list;
 }
 
 
 void ConfigStore::clearVstCache(){
-    instance->settings->remove("VSTs");
-    instance->settings->sync();
+    instance->settings.remove("VSTs");
+    instance->settings.sync();
 }
 
 //VST paths to scan
 void ConfigStore::addVstScanPath(QString path){
-    int newPathIndex = instance->settings->beginReadArray("VST_Paths_to_Scan");
-    instance->settings->endArray();
+    int newPathIndex = instance->settings.beginReadArray("VST_Paths_to_Scan");
+    instance->settings.endArray();
 
-    instance->settings->beginWriteArray("VST_Paths_to_Scan");
-    instance->settings->setArrayIndex(newPathIndex);
-    instance->settings->setValue("pathToScan", path);
-    instance->settings->endArray();
+    instance->settings.beginWriteArray("VST_Paths_to_Scan");
+    instance->settings.setArrayIndex(newPathIndex);
+    instance->settings.setValue("pathToScan", path);
+    instance->settings.endArray();
 }
 
 void ConfigStore::removeVstScanPath(int index){
@@ -97,24 +97,24 @@ void ConfigStore::removeVstScanPath(int index){
         allPathsToScan.removeAt(index);
 
         //write all list entries
-        instance->settings->beginWriteArray("VST_Paths_to_Scan", allPathsToScan.count());
+        instance->settings.beginWriteArray("VST_Paths_to_Scan", allPathsToScan.count());
         for (int i = 0; i < allPathsToScan.size(); ++i) {
-            instance->settings->setArrayIndex(i);
-            instance->settings->setValue("pathToScan", allPathsToScan.at(i));
+            instance->settings.setArrayIndex(i);
+            instance->settings.setValue("pathToScan", allPathsToScan.at(i));
         }
-        instance->settings->endArray();
+        instance->settings.endArray();
     }
 }
 
 QStringList ConfigStore::getVstScanPaths(){
-    int size = instance->settings->beginReadArray("VST_Paths_to_Scan");
+    int size = instance->settings.beginReadArray("VST_Paths_to_Scan");
     QStringList list;
     for (int i = 0; i < size; ++i) {
-        instance->settings->setArrayIndex(i);
-        QString path = instance->settings->value("pathToScan").toString();
+        instance->settings.setArrayIndex(i);
+        QString path = instance->settings.value("pathToScan").toString();
         list.append(path);
     }
-    instance->settings->endArray();
+    instance->settings.endArray();
     return list;
 }
 
@@ -332,13 +332,15 @@ int ConfigStore::getLastAudioOutput(){
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-ConfigStore::ConfigStore(){
-    //QString propertiesFile = QApplication::applicationDirPath().left(1) + ":/jamtaba.ini";
-    settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Jamtaba 2", "jamtaba");
+ConfigStore::ConfigStore()
+    :
+      settings(QSettings::IniFormat, QSettings::UserScope, "Jamtaba 2", "jamtaba")
+{
+
 }
 
 ConfigStore::~ConfigStore(){
-    delete settings;
+    //delete settings;
 }
 
 void ConfigStore::storeSendGain(float preGain) {
@@ -388,10 +390,10 @@ void ConfigStore::storeLastChannelName(QString channelName) {
 
 void ConfigStore::saveProperty(QString key, QVariant value) {
     //qDebug() << "saving property"<< key << "=>" << value;
-    instance->settings->setValue(key, value);
+    instance->settings.setValue(key, value);
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QVariant ConfigStore::readProperty(QString key) {
-    return instance->settings->value(key);
+    return instance->settings.value(key);
 }

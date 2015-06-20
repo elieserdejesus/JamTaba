@@ -13,7 +13,7 @@ class VstHost;
 class VstPlugin : public Audio::Plugin
 {
 public:
-    VstPlugin(Vst::VstHost* host);
+    explicit VstPlugin(Vst::VstHost* host);
     ~VstPlugin();
     void start(int sampleRate, int bufferSize);
     void resume();

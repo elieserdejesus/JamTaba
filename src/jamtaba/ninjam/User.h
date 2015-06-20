@@ -22,7 +22,7 @@ private:
     QMap<int, UserChannel*> channels;
 
 public:
-    User(QString fullName);
+    explicit User(QString fullName);
     //User(const User& u);
     virtual ~User();
     //static User getUser(QString userFullName) ;

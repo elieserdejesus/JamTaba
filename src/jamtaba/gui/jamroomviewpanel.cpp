@@ -8,7 +8,7 @@
 
 
 JamRoomViewPanel::JamRoomViewPanel(QWidget *parent)
-    :QWidget(parent)
+    :QWidget(parent), ui(new Ui::RoomViewPanel), currentRoom(nullptr)
 {
     ui->labelRoomStatus->setText("");
 }

@@ -1,6 +1,6 @@
 #include "NinjamTrackNode.h"
 #include "../audio/core/AudioDriver.h"
-#include "streambuffer.h"
+//#include "streambuffer.h"
 #include <QDataStream>
 #include <QDebug>
 #include <QList>
@@ -45,6 +45,9 @@ NinjamTrackNode::~NinjamTrackNode()
 
 void NinjamTrackNode::startNewInterval(){
     QMutexLocker locker(&mutex);
+    if(!isActivated()){
+        return;
+    }
     if(!intervals.isEmpty() && intervals.front().isDownloaded() ){
         decoder.setInput(intervals.front().getBytes());
         intervals.removeFirst();
@@ -58,9 +61,10 @@ void NinjamTrackNode::startNewInterval(){
 
 void NinjamTrackNode::addEncodedBytes(QByteArray vorbisData, bool lastPartOfInterval){
     QMutexLocker locker(&mutex);
-//    if(lastPartOfInterval){
-//        qDebug() << "add encoded bytes " << lastPartOfInterval;
-//    }
+    if(!isActivated()){
+        return;
+    }
+
     if(intervals.isEmpty()){
         intervals.append(NinjamInterval());
     }
@@ -74,6 +78,12 @@ void NinjamTrackNode::addEncodedBytes(QByteArray vorbisData, bool lastPartOfInte
 //++++++++++++++++++++++++++++++++++++++
 
 void NinjamTrackNode::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
+    {
+        QMutexLocker locker(&mutex);
+        if(!isActivated()){
+            return;
+        }
+    }
     if(!playing){
         return;
     }

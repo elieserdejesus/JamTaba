@@ -14,7 +14,7 @@ class ConfigStore {
 private:
     ConfigStore();//private construtor
 
-    QSettings* settings;
+    mutable QSettings settings;
 
     static const ConfigStore* instance;// = new ConfigStore();
 

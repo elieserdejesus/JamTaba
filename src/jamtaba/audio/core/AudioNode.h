@@ -78,6 +78,8 @@ protected:
     QMutex mutex; //used to protected connections manipulation because nodes can be added or removed by different threads
     bool activated; //used to safely remove non activated nodes
 private:
+    AudioNode(const AudioNode& other);
+    AudioNode& operator=(const AudioNode& other);
     bool muted;
     bool soloed;
     float gain;
@@ -86,9 +88,6 @@ private:
     float pan;
     float leftGain;
     float rightGain;
-
-
-
 
 	static const double root2Over2;// = 1.414213562373095;// *0.5;
 	static const double piOver2;// = 3.141592653589793238463 * 0.5;

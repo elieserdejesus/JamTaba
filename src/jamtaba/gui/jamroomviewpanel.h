@@ -17,7 +17,7 @@ class JamRoomViewPanel : public QWidget
     Q_OBJECT
 
 public:
-    JamRoomViewPanel(QWidget *parent = 0);
+    explicit JamRoomViewPanel(QWidget *parent = 0);
     JamRoomViewPanel(Login::AbstractJamRoom *jamRoom, QWidget *parent = 0);
     ~JamRoomViewPanel();
     void paintEvent( QPaintEvent */*e*/ );
