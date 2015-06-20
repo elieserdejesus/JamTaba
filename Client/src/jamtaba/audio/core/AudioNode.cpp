@@ -74,13 +74,15 @@ void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
 }
 
 AudioNode::AudioNode()
-     : activated(true),
+     : //lastPeaks{0,0},
+       activated(true),
        muted(false),
       soloed(false),
       gain(1),
       pan(0)/*center*/,
-      leftGain(1),
-      rightGain(1)
+      leftGain(1.0),
+      rightGain(1.0)
+
 
 {
     this->internalBuffer = new SamplesBuffer(2, AudioDriver::MAX_BUFFERS_LENGHT);

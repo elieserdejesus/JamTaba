@@ -17,7 +17,7 @@ namespace Login {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class AbstractPeer{
 public:
-    AbstractPeer(long long ID);
+    explicit AbstractPeer(long long ID);
     virtual ~AbstractPeer();
 
     virtual void updateFromJson(QJsonObject json) = 0;
@@ -33,7 +33,9 @@ public:
 protected:
     //all created instances
     static QMap<long long, std::shared_ptr<AbstractPeer>> peers;
-    static QMap<QString, QString> countriesMap;
+    //static QMap<QString, QString> countriesMap;
+    //static const std::pair<std::string, std::string> countriesMap[];
+    static const QMap<QString, QString> countriesMap;
     long long id;
     QString ip;
     QString name;
@@ -49,7 +51,7 @@ public:
     virtual void updateFromJson(QJsonObject json);
     virtual bool isBot() const { return false; }
 protected:
-    RealTimePeer(long long ID);
+    explicit RealTimePeer(long long ID);
 
 private:
     int port;
@@ -61,7 +63,7 @@ private:
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class NinjamPeer : public AbstractPeer{
 public:
-    NinjamPeer(long long ID);
+    explicit NinjamPeer(long long ID);
     ~NinjamPeer(){}
     virtual void updateFromJson(QJsonObject json);
     virtual bool isBot() const;
@@ -95,7 +97,7 @@ public:
 
     inline bool isTheWaitingRoom() const {return id == WAITING_ROOM_ID; }
     virtual bool containsPeer(long long peerId) const;
-    virtual void addPeer(AbstractPeer *peer) ;
+    //virtual void addPeer(AbstractPeer *peer) ;
     virtual void removePeer(AbstractPeer* peer) ;
     inline int getMaxUsers() const { return maxUsers; }
 
@@ -150,15 +152,18 @@ private:
     QString streamLink;
     QString hostName;
     int hostPort;
-    int maxUsers;
     static QMap<QString, NinjamRoom*> ninjamRooms;
     QString getMapKey() const;
     static QString buildMapKey(QString hostName, int hostPort);
-    Ninjam::Server* ninjamServer;
+    int currentBpi;
+    int currentBpm;
 public:
     explicit NinjamRoom(long long ID);
     NinjamRoom(QString host, int port, int maxUsers);
+    NinjamRoom(QString host, int port, int maxUsers, int initialBpi, int intialBpm);
     ~NinjamRoom();
+    inline int getCurrentBpi() const{return currentBpi;}
+    inline int getCurrentBpm() const{return currentBpm;}
     virtual bool updateFromJson(QJsonObject json) ;
     inline AbstractJamRoom::Type getRoomType() const {return AbstractJamRoom::Type::NINJAM; }
     inline bool containBot() const{return containBotPeer;}
@@ -170,8 +175,8 @@ public:
     bool isEmpty() const;
     virtual QString getName() const;//hostName:port = ninbot.com:2049
     inline int getMaxUsers() const {return maxUsers;}
-    inline void setNinjamServer(Ninjam::Server* server){this->ninjamServer = server;}
-    inline Ninjam::Server* getNinjamServer() const{return this->ninjamServer;}
+    //inline void setNinjamServer(Ninjam::Server* server){this->ninjamServer = server;}
+    //inline Ninjam::Server* getNinjamServer() const{return this->ninjamServer;}
     //virtual int getPeersCount() const;
 
     static NinjamRoom* getNinjamRoom(const Ninjam::Server& server );

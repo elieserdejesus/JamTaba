@@ -35,7 +35,7 @@ private:
     void drawPeak(QPainter* g, int x, float peak) ;
 
 public:
-    WavePeakPanel(QWidget *parent=0);
+    explicit WavePeakPanel(QWidget *parent=0);
 
     void addPeak(float peak) ;
     void clearPeaks();
@@ -53,9 +53,9 @@ public:
 
     void setBorderColor(QColor borderColor) ;
 
-    inline QColor getBorderColor() const{
-        return borderColor;
-    }
+//    inline QColor getBorderColor() const{
+//        return borderColor;
+//    }
 
     void setDrawBorder(bool drawBorder) ;
 

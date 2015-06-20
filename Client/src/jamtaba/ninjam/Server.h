@@ -18,9 +18,6 @@ public:
     static const int MIN_BPI = 4;
 
 private:
-
-    Server(QString host, int port);
-
     int port;
     QString host;
     int maxUsers;
@@ -34,12 +31,14 @@ private:
 
     bool containBot;// = false;
 
-    static QMap<QString, std::shared_ptr<Server>> servers;
+    //static QMap<QString, std::shared_ptr<Server>> servers;
 
-    static QString getUniqueName(QString host, int port) ;
+    //static QString getUniqueName(QString host, int port) ;
 
 public:
-    static Server* getServer(QString host, int port) ;
+    Server(QString host, int port);
+    //static Server* getServer(QString host, int port) ;
+    ~Server();
 
     User* getUser(QString userFullName) const;//{ return &(users[userFullName]);}
 

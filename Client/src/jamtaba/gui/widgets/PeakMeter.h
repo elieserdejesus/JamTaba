@@ -14,10 +14,7 @@ class PeakMeter : public QWidget
     Q_OBJECT
 
 public:
-   PeakMeter(QWidget *parent = 0);
-
-
-
+   explicit PeakMeter(QWidget *parent = 0);
    virtual ~PeakMeter(){
 
    }

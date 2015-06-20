@@ -13,13 +13,11 @@ Resampler::~Resampler(){
 
 int Resampler::process(float* in, int inLength, float* out, int outLength){
     int lastSize = 0;
-    int lastInOffset = 0;
     int inOffset = 0;
     bool finished = false;
     do{
-
         int size = resample_process(libresampleHandle, factor, in, inLength, 1, &inOffset, out, outLength);
-        lastInOffset = inOffset;
+        int lastInOffset = inOffset;
         lastSize = size;
         finished = size == lastSize && inOffset == lastInOffset;//no input consumed and no output generated
     }

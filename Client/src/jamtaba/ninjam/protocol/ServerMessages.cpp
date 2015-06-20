@@ -27,7 +27,9 @@ void ServerAuthChallengeMessage::set( int serverKeepAlivePeriod, quint8 challeng
 }
 
 ServerAuthChallengeMessage::ServerAuthChallengeMessage( )
-    :ServerMessage(ServerMessageType::AUTH_CHALLENGE)
+    :ServerMessage(ServerMessageType::AUTH_CHALLENGE),
+      serverKeepAlivePeriod(0),
+      protocolVersion(0)
 {
 
 }
@@ -142,7 +144,9 @@ void ServerChatMessage::printDebug(QDebug dbg) const{
 
 //++++++++++++++++++++++++++++++++++++++++++++++
 DownloadIntervalBegin::DownloadIntervalBegin()
-    :ServerMessage(ServerMessageType::DOWNLOAD_INTERVAL_BEGIN){
+    :ServerMessage(ServerMessageType::DOWNLOAD_INTERVAL_BEGIN),
+    isValidOgg(false)
+{
 
 }
 

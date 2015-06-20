@@ -1,5 +1,4 @@
 #pragma once
-
 #include <QList>
 #include <QtWidgets/QMainWindow>
 #include "ui_mainframe.h"

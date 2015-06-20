@@ -56,7 +56,7 @@ private:
 class Plugin : public Audio::AudioNodeProcessor{
 
 public:
-    Plugin(QString name);
+    explicit Plugin(QString name);
     virtual inline QString getName() const {return name;}
     virtual ~Plugin();
     virtual void setBypass(bool state);
@@ -74,7 +74,7 @@ protected:
 class JamtabaDelay  : public Plugin{
 
 public:
-    JamtabaDelay(int sampleRate);
+    explicit JamtabaDelay(int sampleRate);
     ~JamtabaDelay();
     virtual void process(Audio::SamplesBuffer &buffer);
     void setDelayTime(int delayTimeInMs);

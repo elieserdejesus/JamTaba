@@ -17,7 +17,7 @@ class FxPanelItem : public QLabel
     Q_OBJECT
 
 public:
-    FxPanelItem(QWidget* parent);
+    explicit FxPanelItem(QWidget* parent);
     ~FxPanelItem();
     void setFxMenu(QMenu* fxMenu);
     void setPlugin(Audio::Plugin* plugin);

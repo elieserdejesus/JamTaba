@@ -16,6 +16,8 @@ class LocalInputAudioNode;
 
 class AudioMixer
 {
+private:
+    AudioMixer(const AudioMixer& other);
 public:
     AudioMixer();
     ~AudioMixer();

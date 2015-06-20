@@ -20,18 +20,18 @@
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Ninjam::Server *server, Controller::MainController *mainController) :
+NinjamRoomWindow::NinjamRoomWindow(QWidget *parent,const Login::NinjamRoom& room, Controller::MainController *mainController) :
     QWidget(parent),
     ui(new Ui::NinjamRoomWindow),
     mainController(mainController)
 {
     ui->setupUi(this);
 
-    QString roomName = server->getHostName() + ":" + QString::number(server->getPort());
-    ui->labelRoomName->setText(roomName);
+    //QString roomName = room.getHostName() + ":" + QString::number(room.getHostPort());
+    ui->labelRoomName->setText(room.getName());
 
-    ui->topPanel->setBpi(server->getBpi());
-    ui->topPanel->setBpm(server->getBpm());
+    ui->topPanel->setBpi(room.getCurrentBpi());
+    ui->topPanel->setBpm(room.getCurrentBpm());
 
     ui->tracksPanel->layout()->setAlignment(Qt::AlignLeft);//tracks are left aligned
 
@@ -57,7 +57,7 @@ void NinjamRoomWindow::channelRemoved(Ninjam::User, Ninjam::UserChannel /*channe
 }
 
 void NinjamRoomWindow::channelChanged(Ninjam::User, Ninjam::UserChannel channel, long channelID){
-    NinjamTrackView* trackView = (NinjamTrackView*)NinjamTrackView::getTrackViewByID(channelID);
+    NinjamTrackView* trackView = static_cast<NinjamTrackView*>(NinjamTrackView::getTrackViewByID(channelID));
     if(trackView){
         trackView->setChannelName(channel.getName());
         //trackView->setUserName(channel->getUser()->getName());

@@ -15,7 +15,7 @@
 
 using namespace Audio;
 
-const int AbstractMp3Streamer::MAX_BYTES_PER_DECODING;// = 2048;
+const int AbstractMp3Streamer::MAX_BYTES_PER_DECODING = 2048;
 
 //+++++++++++++
 AbstractMp3Streamer::AbstractMp3Streamer(Audio::Mp3Decoder *decoder)
@@ -68,7 +68,7 @@ void AbstractMp3Streamer::decodeBytesFromDevice(QIODevice* device, const unsigne
     if(!device){
         return;
     }
-    char inputBuffer[bytesToRead];
+    char* inputBuffer = new char[bytesToRead];
     qint64 totalBytesToProcess = device->read(inputBuffer, bytesToRead);
 
     if(totalBytesToProcess > 0){
@@ -95,6 +95,7 @@ void AbstractMp3Streamer::decodeBytesFromDevice(QIODevice* device, const unsigne
             }
         }
     }
+    delete inputBuffer;
 }
 
 void AbstractMp3Streamer::setStreamPath(QString streamPath){

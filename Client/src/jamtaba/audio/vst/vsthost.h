@@ -55,6 +55,7 @@ private:
 
     static VstHost* hostInstance;
     VstHost();
+    VstHost(const VstHost&);//copy constructor
     ~VstHost();
 };
 

@@ -26,7 +26,7 @@ class NinjamJamRoomController : public QObject
     Q_OBJECT
 
 public:
-    NinjamJamRoomController(Controller::MainController* mainController);
+    explicit NinjamJamRoomController(Controller::MainController* mainController);
     ~NinjamJamRoomController();
     void process(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
     void start(const Ninjam::Server& server);
@@ -76,7 +76,7 @@ private:
 
     static long generateNewTrackID();
 
-    //QMutex mutex;
+    QMutex mutex;
 
 private slots:
     //ninjam events

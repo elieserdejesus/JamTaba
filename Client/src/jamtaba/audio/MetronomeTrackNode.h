@@ -29,7 +29,7 @@ private:
     SamplesBuffer* firstIntervalBeatBuffer;
     SamplesBuffer* firstMeasureBeatBuffer;
 
-    QMutex mutex;
+    //QMutex mutex;
 
     //unsigned int clickBufferOffset;
 

@@ -9,9 +9,22 @@
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
+//extern "C"{
+//    #include "minimp3.h"
+//}
+
 int main(int argc, char* args[] )
 {
+
+//    mp3_decoder_t decoder = mp3_create();
+
+//    mp3_info_t info;
+//    int bytesDecoded = mp3_decode(&decoder, 0, 0, 0, &info);
+//    mp3_done(&decoder);
+//    qDebug() << "bytes decoded: " << bytesDecoded;
+
     qInstallMessageHandler(customLogHandler);
+
     JamtabaFactory* factory = new ReleaseFactory();
     Controller::MainController mainController(factory, argc, args);//MainController extends QApplication
 

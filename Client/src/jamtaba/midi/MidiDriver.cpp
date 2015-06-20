@@ -3,10 +3,24 @@
 using namespace Midi;
 
 MidiBuffer::MidiBuffer(int maxMessages)
-    :maxMessages(maxMessages){
-    messages = new MidiMessage[maxMessages];
-    writeIndex = readIndex = 0;
-    messagesCount = 0;
+    : maxMessages(maxMessages),
+      messages(new MidiMessage[maxMessages]),
+      writeIndex(0), readIndex(0),
+      messagesCount(0)
+{
+
+}
+
+MidiBuffer::MidiBuffer(const MidiBuffer &other)
+    : maxMessages(other.maxMessages),
+      messages(new MidiMessage[other.maxMessages]),
+      writeIndex(other.writeIndex), readIndex(other.readIndex),
+      messagesCount(other.messagesCount)
+{
+    for (int m = 0; m < other.messagesCount; ++m) {
+        this->messages[m].data = other.messages[m].data;
+        this->messages[m].timestamp = other.messages[m].timestamp;
+    }
 }
 
 MidiBuffer::~MidiBuffer(){

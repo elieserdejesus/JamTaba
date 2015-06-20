@@ -24,11 +24,11 @@ public:
     virtual void stopCurrentStream();
     virtual void setStreamPath(QString streamPath);
 private:
-    static const int MAX_BYTES_PER_DECODING = 2048;
+    static const int MAX_BYTES_PER_DECODING;
 
 protected:
     Audio::FaderProcessor faderProcessor;//used to apply fade in in stream
-    QMutex mutex;
+    //QMutex mutex;
     Audio::Mp3Decoder* decoder;
     std::vector<std::deque<float>> samplesBuffer;
     QIODevice* device;
@@ -45,7 +45,7 @@ Q_OBJECT//allow signal/slots
 
 public:
     RoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds=3);
-    RoomStreamerNode(int bufferTimeInSeconds=3);
+    explicit RoomStreamerNode(int bufferTimeInSeconds=3);
     ~RoomStreamerNode();
 
     virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out);
@@ -74,7 +74,7 @@ protected:
     void initialize(QString streamPath);
 
 public:
-    AudioFileStreamerNode(QString file);
+    explicit AudioFileStreamerNode(QString file);
     ~AudioFileStreamerNode();
     virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out);
 

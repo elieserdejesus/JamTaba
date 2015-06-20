@@ -58,7 +58,7 @@ private:
 public:
     virtual void serializeTo(QByteArray &stream);
     virtual void printDebug(QDebug dbg) const;
-    ClientSetChannel(QString channelName);
+    explicit ClientSetChannel(QString channelName);
 };
 //++++++++++++++++++++++++++
 class ClientKeepAlive : public ClientMessage{
@@ -77,7 +77,7 @@ private:
     QStringList usersFullNames;
     static const quint32 FLAG = 0xFFFFFFFF;
 public:
-    ClientSetUserMask(QList<QString> users) ;
+    explicit ClientSetUserMask(QList<QString> users) ;
     virtual void serializeTo(QByteArray &stream);
     virtual void printDebug(QDebug dbg) const;
 
@@ -86,7 +86,7 @@ public:
 //+++++++++++++++++++++++++++
 class ChatMessage : public ClientMessage{
 public:
-    ChatMessage(QString text);
+    explicit ChatMessage(QString text);
     virtual void serializeTo(QByteArray &stream);
     virtual void printDebug(QDebug dbg) const;
 private:
