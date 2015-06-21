@@ -78,13 +78,9 @@
 
 QT       +=  gui  network
 
-#QMAKE_CXXFLAGS += -std=c++11 #-Wno-unused-parameter
+QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS #-Wno-unused-parameter
 
 CONFIG += c++11
-
-#MAC
-macx:QMAKE_CXXFLAGS += -stdlib=libc++
-QMAKE_MACOSX_DEPLOYMENT_TARGET=10.6
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -99,29 +95,29 @@ HEADERS += \
     #nvwa/debug_new.h \
     #--------------------------------
     src/jamtaba/persistence/ConfigStore.h \
-    #--------------------------------
+#    #--------------------------------
     src/jamtaba/audio/core/AudioDriver.h \
     src/jamtaba/audio/core/AudioNode.h \
     src/jamtaba/audio/core/AudioMixer.h \
     src/jamtaba/audio/core/PortAudioDriver.h \
-    #--------------------------------
+#    #--------------------------------
     src/jamtaba/gui/widgets/PeakMeter.h \
     src/jamtaba/gui/widgets/WavePeakPanel.h \
-    #--------------------------------
+#    #--------------------------------
     src/jamtaba/loginserver/LoginService.h \
     src/jamtaba/loginserver/JamRoom.h \
     src/jamtaba/loginserver/JsonUtils.h \
-    #--------------------------------
+#    #--------------------------------
     src/jamtaba/MainController.h \
     src/jamtaba/JamtabaFactory.h \
-    #--------------------------------
+#    #--------------------------------
     src/jamtaba/ninjam/protocol/ServerMessageParser.h \
     src/jamtaba/ninjam/protocol/ServerMessages.h \
     src/jamtaba/ninjam/protocol/ClientMessages.h \
     src/jamtaba/ninjam/User.h \
     src/jamtaba/ninjam/Service.h \
     src/jamtaba/ninjam/Server.h \
-    #--------------------------------
+#    #--------------------------------
     src/jamtaba/loginserver/natmap.h \
     src/jamtaba/audio/RoomStreamerNode.h \
     src/jamtaba/audio/codec.h \
@@ -153,31 +149,28 @@ HEADERS += \
     src/jamtaba/ninjam/UserChannel.h
 
 
-#win32:HEADERS += portaudio/include/pa_asio.h \
-
-
 SOURCES += \
     $$MAIN \
 #    nvwa/debug_new.cpp \
 #-----------------------------------------
     src/jamtaba/persistence/ConfigStore.cpp \
-#------------------------------------------------
+##------------------------------------------------
     src/jamtaba/audio/core/AudioDriver.cpp \
     src/jamtaba/audio/core/AudioNode.cpp \
     src/jamtaba/audio/core/AudioMixer.cpp \
     src/jamtaba/audio/core/PortAudioDriver.cpp \
     src/jamtaba/audio/RoomStreamerNode.cpp \
-#------------------------------------------------
+##------------------------------------------------
     src/jamtaba/gui/widgets/PeakMeter.cpp \
     src/jamtaba/gui/widgets/WavePeakPanel.cpp \
-#------------------------------------------------
+##------------------------------------------------
     src/jamtaba/JamtabaFactory.cpp \
     src/jamtaba/MainController.cpp \
-#------------------------------------------------
+##------------------------------------------------
     src/jamtaba/loginserver/LoginService.cpp \
     src/jamtaba/loginserver/JsonUtils.cpp \
     src/jamtaba/loginserver/JamRoom.cpp \
-#------------------------------------------------
+##------------------------------------------------
     src/jamtaba/ninjam/protocol/ServerMessages.cpp \
     src/jamtaba/ninjam/protocol/ClientMessages.cpp \
     src/jamtaba/ninjam/protocol/ServerMessageParser.cpp \
@@ -206,9 +199,6 @@ SOURCES += \
     src/jamtaba/audio/MetronomeTrackNode.cpp \
     src/jamtaba/gui/NinjamPanel.cpp \
     src/jamtaba/gui/FancyProgressDisplay.cpp \
-    #src/jamtaba/audio/libresample/src/filterkit.c \
-    #src/jamtaba/audio/libresample/src/resample.c \
-    #src/jamtaba/audio/libresample/src/resamplesubs.c \
     src/jamtaba/audio/Resampler.cpp \
     src/jamtaba/NinjamJamRoomController.cpp \
     src/jamtaba/gui/MetronomeTrackView.cpp \
@@ -227,34 +217,28 @@ FORMS += \
 
 #macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \
 #win32:LIBPATH += C:/Qt/Qt5.4.0/Tools/mingw491_32/i686-w64-mingw32/lib/ \
+#win32:LIBPATH += C:\Qt\Qt5.4.2\5.4\msvc2013\lib
 
 VST_SDK_PATH = "D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x/"
 
 
-INCLUDEPATH += src/jamtaba/gui \
-               src/jamtaba/gui/widgets \
-               $$VST_SDK_PATH \
-               $$PWD/portaudio/include \
-               $$PWD/portmidi/include \
-               $$PWD/vorbis/include \
-               $$PWD/minimp3/include \
-               $$PWD/libresample/include \
+INCLUDEPATH += src/jamtaba/gui                  \
+               src/jamtaba/gui/widgets          \
+               $$VST_SDK_PATH                   \
+               $$PWD/libs/includes/portaudio    \
+               $$PWD/libs/includes/portmidi     \
+               $$PWD/libs/includes/ogg          \
+               $$PWD/libs/includes/vorbis       \
+               $$PWD/libs/includes/libresample  \
+               $$PWD/libs/includes/minimp3  \
 
-#DEPENDPATH +=   $$PWD/vorbis/x86 \
-#                $$PWD/ogg/x86 \
-#                $$PWD/portaudio/x86 \
-#                $$PWD/portmidi/x86 \
-#                $$PWD/libresample/x86 \
 
-RESOURCES += src/jamtaba/resources/jamtaba.qrc
-
-win32: LIBS +=  -L$$PWD/portaudio/x86/      -lportaudio     \
-                -L$$PWD/portmidi/x86/       -lportmidi      \
-                -L$$PWD/vorbis/x86/         -lvorbisfile    \
-                -L$$PWD/vorbis/x86/         -lvorbis        \
-                -L$$PWD/ogg/x86/            -logg           \
-                -L$$PWD/minimp3/x86/        -lminimp3       \
-                -L$$PWD/libresample/x86/    -lresample      \
+win32: LIBS +=  -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi   -lvorbisfile -lvorbis -logg -lresample -lminimp3 \
 
 win32: LIBS +=  -lwinmm  \
                 -lole32  \
+
+RESOURCES += src/jamtaba/resources/jamtaba.qrc
+
+#INCLUDEPATH += $$PWD/libs/includes/portaudio
+#DEPENDPATH += $$PWD/libs/includes/portaudio
