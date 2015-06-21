@@ -4,7 +4,7 @@
 #include <QByteArray>
 
 extern "C"{
-    #include "minimp3/include/minimp3.h"
+    #include "minimp3.h"
 }
 
 namespace Audio{
