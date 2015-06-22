@@ -12,21 +12,19 @@ namespace Audio{
     class StreamBuffer;
 }
 
-class NinjamInterval;
-
 class NinjamTrackNode : public Audio::AudioNode
 {
 public:
     explicit NinjamTrackNode(int ID);
     ~NinjamTrackNode();
-    void addEncodedBytes(QByteArray encodedBytes, bool lastPartOfInterval);
+    void addVorbisEncodedInterval(QByteArray encodedBytes);
     void processReplacing(Audio::SamplesBuffer&in, Audio::SamplesBuffer& out);
     void startNewInterval();
     inline int getID() const{return ID;}
 private:
     bool playing;//playing one interval or waiting for more vorbis data to decode
     VorbisDecoder decoder;
-    QList<NinjamInterval> intervals;
+    QList<QByteArray> intervals;
     //QMutex mutex;
     int ID;
 };

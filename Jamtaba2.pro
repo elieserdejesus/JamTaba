@@ -1,5 +1,3 @@
-#decidi compilar todas as libs estaticamente por enquanto
-
 # acho que solucionei o problema que dava na desconexão, mas agora o problema quando deleto track ainda continua, pode ter relação com as  mudanças que fiz
 
 #não estou removendo as tracks do controller quando saio de um servidor
