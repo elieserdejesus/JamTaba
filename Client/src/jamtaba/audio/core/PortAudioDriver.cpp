@@ -4,8 +4,11 @@
 #include <algorithm>
 #include "portaudio.h"
 #include "../persistence/ConfigStore.h"
+
+#include <QThread>
+
 #if _WIN32
-#include "pa_asio.h"
+    #include "pa_asio.h"
 #endif
 
 namespace Audio{
@@ -123,7 +126,7 @@ int portaudioCallBack(const void *inputBuffer, void *outputBuffer,
                       unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* /*timeInfo*/,
                       PaStreamCallbackFlags /*statusFlags*/, void *userData)
 {
-    //qDebug() << "portAudioCallBack framesPerBuffer: " << framesPerBuffer;
+    //qDebug() << "portAudioCallBack  Thread ID: " << QThread::currentThreadId();
     PortAudioDriver* instance = static_cast<PortAudioDriver*>(userData);
     instance->translatePortAudioCallBack(inputBuffer, outputBuffer, framesPerBuffer);
     return paContinue;

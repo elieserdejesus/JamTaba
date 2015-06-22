@@ -7,30 +7,6 @@
 #include <QByteArray>
 #include <QMutexLocker>
 
-class NinjamInterval{
-public:
-    NinjamInterval()
-        :downloaded(false){
-    }
-
-    void addBytes(QByteArray vorbisData){
-        bytes.append(vorbisData);
-    }
-
-    QByteArray getBytes() const{
-        return bytes;
-    }
-
-    void markAsCompleted(){
-        this->downloaded = true;
-    }
-
-    inline bool isDownloaded() const{return downloaded;}
-
-private:
-    bool downloaded;
-    QByteArray bytes;
-};
 
 NinjamTrackNode::NinjamTrackNode(int ID)
     :playing(false), ID(ID)
@@ -48,8 +24,8 @@ void NinjamTrackNode::startNewInterval(){
     if(!isActivated()){
         return;
     }
-    if(!intervals.isEmpty() && intervals.front().isDownloaded() ){
-        decoder.setInput(intervals.front().getBytes());
+    if(!intervals.isEmpty()){
+        decoder.setInput(intervals.front());
         intervals.removeFirst();
         decoder.reset();//head the headers
         playing = true;
@@ -59,21 +35,12 @@ void NinjamTrackNode::startNewInterval(){
     }
 }
 
-void NinjamTrackNode::addEncodedBytes(QByteArray vorbisData, bool lastPartOfInterval){
+void NinjamTrackNode::addVorbisEncodedInterval(QByteArray vorbisData){
     QMutexLocker locker(&mutex);
     if(!isActivated()){
         return;
     }
-
-    if(intervals.isEmpty()){
-        intervals.append(NinjamInterval());
-    }
-    intervals.back().addBytes(vorbisData);
-    if(lastPartOfInterval){
-        intervals.back().markAsCompleted();//mark interval as completed
-        intervals.append(NinjamInterval());//create a new interval to the next interval stream
-    }
-
+    intervals.append(vorbisData);//enqueue a new interval
 }
 //++++++++++++++++++++++++++++++++++++++
 

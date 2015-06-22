@@ -65,7 +65,7 @@ signals:
     void userCountMessageReceived(int users, int maxUsers);
     void serverBpiChanged(short currentBpi, short lastBpi);
     void serverBpmChanged(short currentBpm);
-    void audioIntervalPartAvailable(Ninjam::User user, int channelIndex, QByteArray encodedAudioData, bool lastPartOfInterval);
+    void audioIntervalAvailable(Ninjam::User user, int channelIndex, QByteArray encodedAudioData);
     void disconnectedFromServer(bool normalDisconnection);
     void connectedInServer(const Ninjam::Server& server);
     void chatMessageReceived(Ninjam::User sender, QString message);
@@ -78,8 +78,8 @@ private:
     static const long DEFAULT_KEEP_ALIVE_PERIOD = 3000;
     static std::unique_ptr<PublicServersParser> publicServersParser;// = new MixedPublicServersParser();
     Service();
-
     QTcpSocket socket;
+    QByteArray byteArray;
 
     //GUID, AudioInterval
     long lastSendTime;//time stamp of last send
@@ -122,6 +122,7 @@ private:
         quint8 channelIndex;
         QString userFullName;
         QString GUID;
+        QByteArray vorbisData;
     public:
         Download(QString userFullName, quint8 channelIndex, QString GUID)
             :channelIndex(channelIndex), userFullName(userFullName), GUID(GUID){
@@ -134,13 +135,17 @@ private:
 
         }
 
+        inline void appendVorbisData(QByteArray data){ this->vorbisData.append(data); }
+
         inline quint8 getChannelIndex() const{return channelIndex;}
         inline QString getUserFullName() const{return userFullName;}
         inline QString getGUI() const{return GUID;}
+        inline QByteArray getVorbisData() const{return vorbisData;}
+
     };
 
     //using GUID as key
-    QMap<QString, Download> downloads;
+    QMap<QString, Download*> downloads;
 
     bool needSendKeepAlive() const;
 

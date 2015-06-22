@@ -198,6 +198,8 @@ void MainFrame::on_enteredInRoom(Login::AbstractJamRoom *room)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::timerEvent(QTimerEvent *){
 
+    //qDebug() << "timerEvent  Thread ID: " << QThread::currentThreadId();
+
     //update local input track peaks
     Peaks inputPeaks = mainController->getInputPeaks();
     localTrackView->setPeaks(inputPeaks.left, inputPeaks.right);

@@ -15,9 +15,7 @@ std::unique_ptr<Service> Service::serviceInstance;
 
 
 Service::Service()
-    : socket(nullptr),
-      //currentServer(nullptr),
-      //inputBuffer(nullptr),
+    :
       running(false),
       initialized(false)
 {
@@ -35,18 +33,18 @@ void Service::socketReadSlot(){
         return;
     }
 
-    quint8 messageTypeCode;
-    quint32 payloadLenght;
-
     QDataStream stream(&socket);
     stream.setByteOrder(QDataStream::LittleEndian);
-    bool handlingSplittedMessage = false;
+
+    static quint8 messageTypeCode;
+    static quint32 payloadLenght;
+    static bool lastMessageWasIncomplete = false;
     while (socket.bytesAvailable() >= 5){//consume all messages
-        if(!handlingSplittedMessage){
+        if(!lastMessageWasIncomplete){
             stream >> messageTypeCode >> payloadLenght;
         }
         if (socket.bytesAvailable() >= (int)payloadLenght) {//message payload is available to read
-            handlingSplittedMessage = false;
+            lastMessageWasIncomplete = false;
             const Ninjam::ServerMessage& message = ServerMessageParser::parse(static_cast<ServerMessageType>(messageTypeCode), stream, payloadLenght) ;
             //qDebug() << message;
             invokeMessageHandler(message);
@@ -54,15 +52,13 @@ void Service::socketReadSlot(){
                 ClientKeepAlive clientKeepAliveMessage;
                 sendMessageToServer((ClientMessage*)&clientKeepAliveMessage);
             }
-        } else {//bytesAvailable < payloadLenght, not enough bytes in socket
-            handlingSplittedMessage = true;
-            socket.waitForReadyRead();
+        }
+        else{
+            //qWarning() << "incomplete message!";
+            lastMessageWasIncomplete = true;
+            break;
         }
     }
-    //if (needSendKeepAliveToServer()) {
-    //       sendMessageToServer(new ClientKeepAlive());
-    //    }
-
 }
 
 void Service::socketErrorSlot(QAbstractSocket::SocketError /*e*/)
@@ -172,19 +168,19 @@ void Service::handle(const DownloadIntervalBegin& msg){
         quint8 channelIndex = msg.getChannelIndex();
         QString userFullName = msg.getUserName();
         QString GUID = msg.getGUID();
-        downloads.insert(GUID, Download(userFullName, channelIndex, GUID));
+        downloads.insert(GUID, new Download(userFullName, channelIndex, GUID));
     }
 
 }
 
 void Service::handle(const DownloadIntervalWrite& msg){
     if (downloads.contains(msg.getGUID())) {
-        Download download = downloads[msg.getGUID()];
- //       qDebug() << msg;
-        User* user = currentServer->getUser(download.getUserFullName());
-        emit audioIntervalPartAvailable(*user, download.getChannelIndex(), msg.getEncodedAudioData(), msg.downloadIsComplete());
-
+        Download* download = downloads[msg.getGUID()];
+        download->appendVorbisData(msg.getEncodedAudioData());
         if (msg.downloadIsComplete()) {
+            User* user = currentServer->getUser(download->getUserFullName());
+            emit audioIntervalAvailable(*user, download->getChannelIndex(), download->getVorbisData());
+            delete download;
             downloads.remove(msg.getGUID());
         }
     } else {

@@ -6,6 +6,7 @@
 #include <QDebug>
 #include "../audio/core/AudioDriver.h"
 #include <vorbis/vorbisfile.h>
+#include <QThread>
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::VorbisDecoder()
     : internalBuffer(nullptr),
@@ -48,6 +49,7 @@ const Audio::SamplesBuffer* VorbisDecoder::decode(int maxSamplesToDecode){
 //    if(!canDecode()){//wait to complete the download of encoded interval
 //        return &(Audio::SamplesBuffer::ZERO_BUFFER);
 //    }
+    //qDebug() << "decode Thread ID: " << QThread::currentThreadId();
     if(!initialized){
         initialize();
     }
