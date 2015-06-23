@@ -1,5 +1,6 @@
 #include "AudioNode.h"
 #include "AudioDriver.h"
+#include "SamplesBuffer.h"
 #include <cmath>
 #include <QDebug>
 #include "../midi/MidiDriver.h"

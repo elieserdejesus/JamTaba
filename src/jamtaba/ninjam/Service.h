@@ -66,13 +66,13 @@ signals:
     void serverBpiChanged(short currentBpi, short lastBpi);
     void serverBpmChanged(short currentBpm);
     void audioIntervalAvailable(Ninjam::User user, int channelIndex, QByteArray encodedAudioData);
-    void disconnectedFromServer(bool normalDisconnection);
+    void disconnectedFromServer(const Ninjam::Server& server, bool normalDisconnection);
     void connectedInServer(const Ninjam::Server& server);
     void chatMessageReceived(Ninjam::User sender, QString message);
     void privateMessageReceived(Ninjam::User sender, QString message);
     void userEnterInTheJam(Ninjam::User newUser);
     void userLeaveTheJam(Ninjam::User user);
-    void error(QString msg);
+    //void error(QString msg);
 
 private:
     static const long DEFAULT_KEEP_ALIVE_PERIOD = 3000;
@@ -95,8 +95,6 @@ private:
     QString userName;
     QString password;
     QStringList channels;//channels names
-
-    void buildNewSocket()  ;
 
     void sendMessageToServer(ClientMessage* message) ;
     void handleUserChannels(QString userFullName, QList<UserChannel> channelsInTheServer);
@@ -153,6 +151,7 @@ private slots:
     void socketReadSlot();
     void socketErrorSlot(QAbstractSocket::SocketError error);
     void socketDisconnectSlot();
+    void socketConnectedSlot();
 public:
     void voteToChangeBPM(int newBPM) ;
 

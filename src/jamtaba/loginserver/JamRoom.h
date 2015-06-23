@@ -179,7 +179,7 @@ public:
     //inline Ninjam::Server* getNinjamServer() const{return this->ninjamServer;}
     //virtual int getPeersCount() const;
 
-    static NinjamRoom* getNinjamRoom(const Ninjam::Server& server );
+    static NinjamRoom* getNinjamRoom(const Ninjam::Server *server );
 };
 
 }//end of namespace

@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include "portaudio.h"
+#include "SamplesBuffer.h"
 #include "../persistence/ConfigStore.h"
 
 #include <QThread>

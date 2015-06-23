@@ -266,8 +266,6 @@
     </qresource>
     <qresource prefix="/">
         <file>click.wav</file>
-        <file>../../../../bumbo.ogg</file>
-        <file>../../../../sine.ogg</file>
-        <file>../../../../bateria mono.ogg</file>
+        <file>loading.gif</file>
     </qresource>
 </RCC>

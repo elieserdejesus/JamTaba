@@ -16,6 +16,7 @@ NinjamTrackNode::NinjamTrackNode(int ID)
 
 NinjamTrackNode::~NinjamTrackNode()
 {
+    //QMutexLocker locker(&mutex);
     qDebug() << "Destruindo ninjamTrack Node " << this->getID();
 }
 
@@ -58,12 +59,12 @@ void NinjamTrackNode::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesB
     internalBuffer->setFrameLenght(out.getFrameLenght());
     internalBuffer->zero();
     while(totalDecoded < out.getFrameLenght() ){
-        const Audio::SamplesBuffer* decodedBuffer = decoder.decode(out.getFrameLenght() - totalDecoded);
-        if(decodedBuffer->getFrameLenght() > 0){
-            out.add(*decodedBuffer, totalDecoded);//total decoded is the offset
+        const Audio::SamplesBuffer& decodedBuffer = decoder.decode(out.getFrameLenght() - totalDecoded);
+        if(decodedBuffer.getFrameLenght() > 0){
+            out.add(decodedBuffer, totalDecoded);//total decoded is the offset
         }
-        totalDecoded += decodedBuffer->getFrameLenght();
-        if(decodedBuffer->getFrameLenght() == 0){
+        totalDecoded += decodedBuffer.getFrameLenght();
+        if(decodedBuffer.getFrameLenght() == 0){
             break;
         }
     }

@@ -602,12 +602,14 @@ QString NinjamRoom::buildMapKey(QString hostName, int hostPort){
     return hostName + ":" + QString::number(hostPort);
 }
 
-NinjamRoom* NinjamRoom::getNinjamRoom(const Ninjam::Server &server)
+NinjamRoom* NinjamRoom::getNinjamRoom(const Ninjam::Server* server)
 {
-    QString key = buildMapKey(server.getHostName(), server.getPort());
-    if(ninjamRooms.contains(key)){
-        NinjamRoom* room = ninjamRooms[key];
-        return room;
+    if(server){
+        QString key = buildMapKey(server->getHostName(), server->getPort());
+        if(ninjamRooms.contains(key)){
+            NinjamRoom* room = ninjamRooms[key];
+            return room;
+        }
     }
     return nullptr;
 }

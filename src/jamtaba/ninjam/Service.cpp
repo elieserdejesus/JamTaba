@@ -19,11 +19,19 @@ Service::Service()
       running(false),
       initialized(false)
 {
-
+    connect(&socket, SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
+    connect(&socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
+    connect(&socket, SIGNAL(disconnected()), this, SLOT(socketDisconnectSlot()));
+    connect(&socket, SIGNAL(connected()), this, SLOT(socketConnectedSlot()));
 }
 
 Service::~Service(){
     qDebug() << "NinjamService destructor";
+    disconnect(&socket, SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
+    disconnect(&socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
+    disconnect(&socket, SIGNAL(disconnected()), this, SLOT(socketDisconnectSlot()));
+    disconnect(&socket, SIGNAL(connected()), this, SLOT(socketConnectedSlot()));
+
     socket.disconnectFromHost();
 }
 
@@ -61,16 +69,25 @@ void Service::socketReadSlot(){
     }
 }
 
-void Service::socketErrorSlot(QAbstractSocket::SocketError /*e*/)
+void Service::socketErrorSlot(QAbstractSocket::SocketError error)
 {
-    //qDebug() << "Socket error: " << error;
-    emit error("Socket error");
+    //emit disconnectedFromServer(*currentServer, false);
+    qWarning() << error;
+    //socket.close();
+    emit disconnectedFromServer(*currentServer, false);
+    currentServer.reset(nullptr);
+}
+
+void Service::socketConnectedSlot(){
+    //the old current server is deleted by unique_ptr
+    QString serverIp = socket.peerName();
+    quint16 serverPort = socket.peerPort();
+    currentServer.reset( new Server(serverIp, serverPort));
 }
 
 void Service::socketDisconnectSlot()
 {
-    //qFatal("Socket disconnected");
-    emit disconnectedFromServer(false);
+    emit disconnectedFromServer(*currentServer, true);
 }
 
 
@@ -104,17 +121,6 @@ float Service::getIntervalPeriod() {
     return 0;
 }
 
-void Service::buildNewSocket()   {
-    if(socket.isOpen()){
-        socket.close();
-    }
-
-    //socket = QTcpSocket(this);
-    connect(&socket, SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
-    connect(&socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
-    connect(&socket, SIGNAL(disconnected()), this, SLOT(socketDisconnectSlot()));
-
-}
 
 void Service::voteToChangeBPI(int newBPI){
     QString text = "!vote bpi " + QString::number(newBPI);
@@ -204,7 +210,7 @@ void Service::handle(const ServerAuthReplyMessage& msg){
         sendMessageToServer(&setChannelMsg);
     }
     else{
-        emit error("Can't authenticate in server");
+        //emit error("Can't authenticate in server");
         disconnectFromServer(false);
     }
 }
@@ -215,21 +221,15 @@ void Service::startServerConnection(QString serverIp, int serverPort, QString us
     this->password = password;
     this->channels = channels;
 
-    //qDebug() << "Starting connection with "<< serverIp << ":"<< serverPort;
-    buildNewSocket();
     socket.connectToHost(serverIp, serverPort);
-    if(!socket.waitForConnected()){
-        emit error("can't connect in " + serverIp + ":" + serverPort);
-    }
-
-    //the old current server is deleted by unique_ptr
-    currentServer.reset( new Server(serverIp, serverPort));
-
 }
 
-void Service::disconnectFromServer(bool /*normalDisconnection*/)
+void Service::disconnectFromServer(bool normalDisconnection)
 {
-    qWarning() << "disconnected from server";
+    Q_UNUSED(normalDisconnection);
+
+    socket.disconnectFromHost();
+    //emit disconnectedFromServer(*currentServer, normalDisconnection);
 }
 /*
 

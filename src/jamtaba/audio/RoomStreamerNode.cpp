@@ -1,6 +1,7 @@
 #include "RoomStreamerNode.h"
 #include "codec.h"
 #include "core/AudioDriver.h"
+#include "core/SamplesBuffer.h"
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QUrl>

@@ -1,5 +1,6 @@
 #include "plugins.h"
 #include "AudioDriver.h"
+#include "SamplesBuffer.h"
 #include <QDebug>
 #include <QMutexLocker>
 #include "../../audio/vst/PluginFinder.h"
