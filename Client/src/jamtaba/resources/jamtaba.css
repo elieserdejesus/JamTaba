@@ -277,6 +277,16 @@ QScrollArea > QWidget > QWidget{/*the content panel - QSCroll contém um QWidget
 background: transparent;
 }
 
+BusyDialog{
+    background: qradialgradient(cx:0.5, cy:0.5, radius: 0.6, fx:0.5, fy:0.5, stop:0 rgba(45, 45, 45, 200), stop:1 rgba(220, 220, 220, 200));
+    border: 1px solid rgb(180, 180, 180);
+    border-radius: 8px;
+}
+
+BusyDialog > QLabel{
+    font-weight: bold;
+}
+
 
 JamRoomViewPanel{
 background: rgba(255,255, 255, 180);

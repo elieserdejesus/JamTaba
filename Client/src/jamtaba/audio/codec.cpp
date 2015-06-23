@@ -1,6 +1,7 @@
 #include "codec.h"
 #include <climits>
 #include "core/AudioDriver.h"
+#include "core/SamplesBuffer.h"
 #include <QDebug>
 #include <cmath>
 

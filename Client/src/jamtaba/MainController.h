@@ -122,7 +122,8 @@ public:
 
 signals:
     void enteredInRoom(Login::AbstractJamRoom* room);
-    //void startingAudioCallBack(int bufferSize);
+    void exitedFromRoom(bool normalDisconnection);
+
 private:
     void doAudioProcess(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
     Audio::Plugin* createPluginInstance(Audio::PluginDescriptor* descriptor);
@@ -159,13 +160,13 @@ private:
     void tryConnectInNinjamServer(const Login::NinjamRoom & ninjamRoom);
 
 private slots:
-    void on_disconnectedFromServer();
-    //void onPluginScanStarted();
-    //void onPluginScanFinished();
+    void on_disconnectedFromLoginServer();
+
     void onPluginFounded(Audio::PluginDescriptor* descriptor);
 
     //ninjam
     void connectedInNinjamServer(const Ninjam::Server& server);
+    void disconnectedFromNinjamServer(const Ninjam::Server& server, bool normalDisconnection);
 };
 
 }

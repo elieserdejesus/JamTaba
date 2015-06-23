@@ -5,11 +5,12 @@
 #include <cmath>
 #include <QDebug>
 #include "../audio/core/AudioDriver.h"
+#include "../audio/core/SamplesBuffer.h"
 #include <vorbis/vorbisfile.h>
 #include <QThread>
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::VorbisDecoder()
-    : internalBuffer(nullptr),
+    : internalBuffer(2, 4096),
       initialized(false),
       vorbisInput()
 {
@@ -17,14 +18,8 @@ VorbisDecoder::VorbisDecoder()
 }
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::~VorbisDecoder(){
-    qDebug() << "Vorbis decoder destructor!";
-    if(initialized){
-        //ov_clear(&vorbisFile);
-    }
-    if(internalBuffer){
-        delete internalBuffer;
-        internalBuffer = nullptr;
-    }
+    qDebug() << "Destrutor Vorbis Decoder";
+    ov_clear(&vorbisFile);
 }
 //+++++++++++++++++++++++++++++++++++++++++++
 int VorbisDecoder::consumeTo(void *oggOutBuffer, int bytesToConsume){
@@ -33,9 +28,6 @@ int VorbisDecoder::consumeTo(void *oggOutBuffer, int bytesToConsume){
         memcpy(oggOutBuffer, vorbisInput.data(), len);
         vorbisInput.remove(0, len);
     }
-//    else{
-//        finished = true;
-//    }
     return len;
 }
 
@@ -45,16 +37,11 @@ size_t VorbisDecoder::readOgg(void *oggOutBuffer, size_t size, size_t nmemb, voi
     return decoderInstance->consumeTo(oggOutBuffer, size * nmemb);
 }
 //+++++++++++++++++++++++++++++++++++++++++++
-const Audio::SamplesBuffer* VorbisDecoder::decode(int maxSamplesToDecode){
-//    if(!canDecode()){//wait to complete the download of encoded interval
-//        return &(Audio::SamplesBuffer::ZERO_BUFFER);
-//    }
-    //qDebug() << "decode Thread ID: " << QThread::currentThreadId();
+const Audio::SamplesBuffer &VorbisDecoder::decode(int maxSamplesToDecode){
     if(!initialized){
         initialize();
     }
-    //float ** internalBuffer->getSamplesArray()
-    long samplesDecoded = ov_read_float(&vorbisFile, &internalBuffer->samples, maxSamplesToDecode, NULL);//currentSection is not used
+    long samplesDecoded = ov_read_float(&vorbisFile, &internalBuffer.samples, maxSamplesToDecode, NULL);//currentSection is not used
     if(samplesDecoded < 0){//error
         QString message;
         switch (samplesDecoded) {
@@ -65,16 +52,9 @@ const Audio::SamplesBuffer* VorbisDecoder::decode(int maxSamplesToDecode){
             case OV_EINVAL: message = "VORBIS ERROR: the initial file headers couldn't be read or are corrupt, or that the initial open call for vf failed.";
         }
         qWarning() << message;
-        return &Audio::SamplesBuffer::ZERO_BUFFER;
+        return Audio::SamplesBuffer::ZERO_BUFFER;
     }
-    internalBuffer->setFrameLenght(samplesDecoded);
-    //if(samplesDecoded == 0){//sometimes decoder can't decode samples because don't have enough bytes to decode
-        //qWarning() << "samples decoded == zero!";
-    //}
-
-//    if(totalBytesInLastInterval > 0 && bytesConsumed >= totalBytesInLastInterval){
-//        reset();//prepare to decode a new interval
-//    }
+    internalBuffer.setFrameLenght(samplesDecoded);
     return internalBuffer;
 }
 //+++++++++++++++++++++++++++++++++++++++++++
@@ -95,20 +75,8 @@ bool VorbisDecoder::initialize(){
     callbacks.close_func = NULL;
     callbacks.tell_func = NULL;
     int result = ov_open_callbacks((void*)this, &vorbisFile, NULL, 0, callbacks );
-    if(result == 0){
-        if(internalBuffer){
-            if(internalBuffer->getChannels() != vorbisFile.vi->channels){
-                delete internalBuffer;
-                internalBuffer = new Audio::SamplesBuffer(vorbisFile.vi->channels, 4096);
-            }
-        }
-        else{
-            internalBuffer = new Audio::SamplesBuffer(vorbisFile.vi->channels, 4096);
-        }
-        initialized = true;
-    }
-    else{
-        initialized = false;
+    initialized = result == 0;
+    if(!initialized){
         QString message;
         switch (result) {
         case OV_EREAD: message = "VORBIS DECODER INIT ERROR:  A read from media returned an error.";
@@ -122,14 +90,6 @@ bool VorbisDecoder::initialize(){
         case OV_EFAULT: message = "VORBIS DECODER INIT ERROR: Internal logic fault; indicates a bug or heap/stack corruption.";
         }
         qWarning() << message;
-        return false;
     }
-
     return initialized;
 }
-
-//bool VorbisDecoder::canDecode() const{
-//    return vorbisInput.size() >= 4096 * 2;
-//}
-
-

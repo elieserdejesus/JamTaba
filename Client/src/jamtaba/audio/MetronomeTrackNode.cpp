@@ -1,6 +1,7 @@
 #include "MetronomeTrackNode.h"
 #include <QDebug>
 #include "../audio/core/AudioDriver.h"
+#include "../audio/core/SamplesBuffer.h"
 #include <QFile>
 #include <cmath>
 #include <QtEndian>

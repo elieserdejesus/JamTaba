@@ -1,17 +1,22 @@
-# acho que solucionei o problema que dava na desconexão, mas agora o problema quando deleto track ainda continua, pode ter relação com as  mudanças que fiz
+#se conecto no server com o servidor parado buga tudo
 
-#não estou removendo as tracks do controller quando saio de um servidor
-
-#tratar a entrada de novos usuários no server
-
-#tratar a saída de usuários do server
-
-#tratar desconexão no server, acho que não estou emitindo o sinal quando desconecta
+#quando desconectei do server e conectei novamente deu pau no socket, não tem bytes suficientes para ler a mensagem. Talvez eu não tenha desconectado os slots quando sai do server
 
 #controles do canal ninjam não atuaram
 
-#o audio está realmente em outra thread? Pelo comportamento do áudio quando executo no debug acho que não. Além
-#disso quando o decoder ficou em um loop infinito a gui travou, então estou suspeitando que o áudio está rodando na thread da GUI
+
+
+#quando adiciono muitas pistas o layout fica bagunçado
+
+#não criar pistas para os canais dos bots
+
+#não está aparecendo scroll na área das pistas
+
+#se clico no ícone da barra de tarefas a aplicação minimiza. Quando clico novamente bug tudo, o áudio fica acelerado.
+
+#não consegui resolver o bug que acontece quando as pistas são removidas, por hora apenas comentei a linha que delete as pistas no NinjamJamRoomController. Ou seja, a memoria não está sendo liberada
+
+#Estou usando um SamplesBuffer estereo dentro da classe do VorbisDecoder. Tenho que ver o que acontece se o stream é mono.
 
 #quando trocar de bpi ver se ainda é possível usar a mesma acentuação procurando pelo valor
 #antigo na nova lista
@@ -144,7 +149,9 @@ HEADERS += \
     src/jamtaba/NinjamJamRoomController.h \
     src/jamtaba/gui/MetronomeTrackView.h \
     src/jamtaba/audio/vorbis/VorbisDecoder.h \
-    src/jamtaba/ninjam/UserChannel.h
+    src/jamtaba/ninjam/UserChannel.h \
+    src/jamtaba/audio/core/SamplesBuffer.h \
+    src/jamtaba/gui/BusyDialog.h
 
 
 SOURCES += \
@@ -201,7 +208,9 @@ SOURCES += \
     src/jamtaba/NinjamJamRoomController.cpp \
     src/jamtaba/gui/MetronomeTrackView.cpp \
     src/jamtaba/audio/vorbis/VorbisDecoder.cpp \
-    src/jamtaba/ninjam/UserChannel.cpp
+    src/jamtaba/ninjam/UserChannel.cpp \
+    src/jamtaba/audio/core/SamplesBuffer.cpp \
+    src/jamtaba/gui/BusyDialog.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
@@ -210,7 +219,8 @@ FORMS += \
     src/jamtaba/gui/JamRoomViewPanel.ui \
     src/jamtaba/gui/NinjamRoomWindow.ui \
     src/jamtaba/gui/BaseTrackView.ui \
-    src/jamtaba/gui/NinjamPanel.ui
+    src/jamtaba/gui/NinjamPanel.ui \
+    src/jamtaba/gui/BusyDialog.ui
 
 
 #macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \

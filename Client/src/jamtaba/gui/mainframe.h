@@ -4,6 +4,7 @@
 #include "ui_mainframe.h"
 #include <QMap>
 #include "pluginscandialog.h"
+#include "BusyDialog.h"
 
 namespace Controller{
     class MainController;
@@ -43,6 +44,7 @@ public:
     virtual void showEvent(QShowEvent*);
     virtual void changeEvent(QEvent *);
     virtual void timerEvent(QTimerEvent *);
+    virtual void resizeEvent(QResizeEvent*);
 
 private slots:
 
@@ -55,6 +57,7 @@ private slots:
     void on_stoppingRoomStream(Login::AbstractJamRoom* room);
     void on_enteringInRoom(Login::AbstractJamRoom* room);
     void on_enteredInRoom(Login::AbstractJamRoom* room);
+    void on_exitedFromRoom(bool normalDisconnection);
     //
 
     //fx MENU
@@ -69,6 +72,13 @@ private slots:
 
 
 private:
+
+    BusyDialog busyDialog;
+
+    void showBusyDialog(QString message);
+    void showBusyDialog();
+    void hideBusyDialog();
+    void centerBusyDialog();
 
     int timerID;
 

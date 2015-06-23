@@ -7,12 +7,8 @@
 #include "audio/MetronomeTrackNode.h"
 #include "../ninjam/User.h"
 #include "../ninjam/UserChannel.h"
+#include "../ninjam/Server.h"
 
-namespace Ninjam {
-//class User;
-//class UserChannel;
-class Server;
-}
 
 class NinjamTrackNode;
 
@@ -44,6 +40,7 @@ signals:
     void channelAdded(Ninjam::User user,   Ninjam::UserChannel channel, long channelID);
     void channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
     void channelChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
+    //void disconnected(bool normalDisconnection);
 
 private:
     Controller::MainController* mainController;
@@ -86,6 +83,8 @@ private slots:
     void ninjamUserChannelCreated(Ninjam::User user, Ninjam::UserChannel channel);
     void ninjamUserChannelRemoved(Ninjam::User user, Ninjam::UserChannel channel);
     void ninjamUserChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel);
+    void ninjamUserLeave(Ninjam::User user);
+    void ninjamDisconnectedFromServer(Ninjam::Server server, bool normalDisconnection);
 };
 
 }

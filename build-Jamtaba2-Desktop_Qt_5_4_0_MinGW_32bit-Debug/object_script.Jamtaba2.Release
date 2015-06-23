@@ -46,6 +46,8 @@ INPUT(
 ./release\MetronomeTrackView.o
 ./release\VorbisDecoder.o
 ./release\UserChannel.o
+./release\SamplesBuffer.o
+./release\BusyDialog.o
 ./release\qrc_jamtaba.o
 ./release\moc_PeakMeter.o
 ./release\moc_LoginService.o
@@ -66,4 +68,5 @@ INPUT(
 ./release\moc_BaseTrackView.o
 ./release\moc_NinjamPanel.o
 ./release\moc_NinjamJamRoomController.o
+./release\moc_BusyDialog.o
 );

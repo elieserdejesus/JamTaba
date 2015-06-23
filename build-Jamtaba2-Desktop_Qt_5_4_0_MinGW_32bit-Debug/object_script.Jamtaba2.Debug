@@ -46,6 +46,8 @@ INPUT(
 ./debug\MetronomeTrackView.o
 ./debug\VorbisDecoder.o
 ./debug\UserChannel.o
+./debug\SamplesBuffer.o
+./debug\BusyDialog.o
 ./debug\qrc_jamtaba.o
 ./debug\moc_PeakMeter.o
 ./debug\moc_LoginService.o
@@ -66,4 +68,5 @@ INPUT(
 ./debug\moc_BaseTrackView.o
 ./debug\moc_NinjamPanel.o
 ./debug\moc_NinjamJamRoomController.o
+./debug\moc_BusyDialog.o
 );

@@ -91,8 +91,8 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     setQuitOnLastWindowClosed(false);//wait disconnect from server to close
     configureStyleSheet();
 
-    Login::LoginService* service = factory->createLoginService();
-    this->loginService = std::unique_ptr<Login::LoginService>( service );
+    Login::LoginService* loginService = factory->createLoginService();
+    this->loginService = std::unique_ptr<Login::LoginService>( loginService );
     this->audioDriver = std::unique_ptr<Audio::AudioDriver>( new Audio::PortAudioDriver(
                 ConfigStore::getLastInputDevice(), ConfigStore::getLastOutputDevice(),
                 ConfigStore::getFirstAudioInput(), ConfigStore::getLastAudioInput(),
@@ -104,7 +104,8 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     midiDriver = new PortMidiDriver();
     midiDriver->setInputDeviceIndex(Persistence::ConfigStore::getLastMidiDeviceIndex());
 
-    QObject::connect(service, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromServer()));
+    QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromLoginServer()));
+
 
     this->audioMixer->addNode( *this->roomStreamer);
 
@@ -125,6 +126,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     //ninjam service
     this->ninjamService = Ninjam::Service::getInstance();
     QObject::connect( this->ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), SLOT(connectedInNinjamServer(Ninjam::Server)) );
+    QObject::connect(this->ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server,bool)), this, SLOT(disconnectedFromNinjamServer(Ninjam::Server, bool)));
 
     this->ninjamController = new Controller::NinjamJamRoomController(this);
 
@@ -346,7 +348,7 @@ Login::AbstractJamRoom* MainController::getCurrentStreamingRoom(){
     return currentStreamRoom;
 }
 
-void MainController::on_disconnectedFromServer(){
+void MainController::on_disconnectedFromLoginServer(){
     exit(0);
 }
 
@@ -450,11 +452,18 @@ Login::LoginService* MainController::getLoginService() const{
 
 
 //++++++++++++= NINJAM ++++++++++++++++
+void MainController::disconnectedFromNinjamServer(const Server &server, bool normalDisconnection){
+    //Q_USUSED(normalDisconnection);
+    ninjamController->stop();
+    //Login::NinjamRoom::getNinjamRoom(server)
+    emit exitedFromRoom(normalDisconnection);
+}
+
 void MainController::connectedInNinjamServer(const Ninjam::Server &server){
     //qDebug() << "conectado no server " << server.getHostName() << endl;
     Login::NinjamRoom* ninjamRoom = nullptr;
     if(!server.isLocalHostServer() ){
-        ninjamRoom = Login::NinjamRoom::getNinjamRoom(server);
+        ninjamRoom = Login::NinjamRoom::getNinjamRoom(&server);
     }
     else{
         ninjamRoom = new Login::NinjamRoom(server.getHostName(), server.getPort(), server.getMaxUsers(), server.getBpi(), server.getBpm());

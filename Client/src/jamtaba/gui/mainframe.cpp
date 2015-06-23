@@ -23,6 +23,8 @@
 #include "NinjamRoomWindow.h"
 #include "MetronomeTrackView.h"
 #include "../ninjam/Server.h"
+#include <QMessageBox>
+#include "BusyDialog.h"
 
 using namespace Audio;
 using namespace Persistence;
@@ -31,10 +33,16 @@ using namespace Ninjam;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent)
-    : QMainWindow(parent),
-    fxMenu(nullptr), mainController(mainController), pluginScanDialog(nullptr), metronomeTrackView(nullptr)
+    :
+      QMainWindow(parent),
+    busyDialog(0),
+    fxMenu(nullptr),
+    mainController(mainController),
+    pluginScanDialog(nullptr),
+    metronomeTrackView(nullptr)
 {
 	ui.setupUi(this);
+
 
     if(ConfigStore::windowWasMaximized()){
         setWindowState(Qt::WindowMaximized);
@@ -82,8 +90,33 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 
     QObject::connect(ui.menuAudioPreferences, SIGNAL(triggered()), this, SLOT(on_preferencesClicked()));
     QObject::connect(mainController, SIGNAL(enteredInRoom(Login::AbstractJamRoom*)), this, SLOT(on_enteredInRoom(Login::AbstractJamRoom*)));
+    QObject::connect(mainController, SIGNAL(exitedFromRoom(bool)), this, SLOT(on_exitedFromRoom(bool)));
+
+    //BusyDialog busyDialog(this);
+    //busyDialog.exec();
 }
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void MainFrame::showBusyDialog(){
+    showBusyDialog("");
+}
+
+void MainFrame::showBusyDialog(QString message){
+    busyDialog.setParent(this);
+    centerBusyDialog();
+    busyDialog.show(message);
+}
+
+void MainFrame::hideBusyDialog(){
+    busyDialog.hide();
+}
+
+
+void MainFrame::centerBusyDialog(){
+    int newX = ui.contentPanel->width()/2 - busyDialog.width()/2;
+    int newY = ui.contentPanel->height()/2 - busyDialog.height()/2;
+    busyDialog.move(newX + ui.contentPanel->x(), newY + ui.contentPanel->y());
+}
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::on_removingPlugin(Audio::Plugin *plugin){
     PluginWindow* window = PluginWindow::getWindow(this, plugin);
@@ -152,6 +185,7 @@ QMenu* MainFrame::createFxMenu(){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //esses eventos deveriam ser tratados no controller
 void MainFrame::on_connectedInServer(QList<Login::AbstractJamRoom*> rooms){
+    hideBusyDialog();
     ui.allRoomsContent->setLayout(new QVBoxLayout(ui.allRoomsContent));
     foreach(Login::AbstractJamRoom* room, rooms){
         JamRoomViewPanel* roomViewPanel = new JamRoomViewPanel(room, ui.allRoomsContent);
@@ -161,6 +195,7 @@ void MainFrame::on_connectedInServer(QList<Login::AbstractJamRoom*> rooms){
         connect( roomViewPanel, SIGNAL(finishingListeningTheRoom(Login::AbstractJamRoom*)), this, SLOT(on_stoppingRoomStream(Login::AbstractJamRoom*)));
         connect( roomViewPanel, SIGNAL(enteringInTheRoom(Login::AbstractJamRoom*)), this, SLOT(on_enteringInRoom(Login::AbstractJamRoom*)));
     }
+
 }
 
 //+++++++++++++++++++++++++++++++++++++
@@ -176,13 +211,16 @@ void MainFrame::on_stoppingRoomStream(Login::AbstractJamRoom * room){
 }
 
 void MainFrame::on_enteringInRoom(Login::AbstractJamRoom *room){
+    showBusyDialog("Connecting in " + room->getName() + " ...");
     mainController->enterInRoom(room);
+
 }
 
-//este evento é disparado pelo controlador depois que já aconteceu a conexão com uma das salas
-void MainFrame::on_enteredInRoom(Login::AbstractJamRoom *room)
-{
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//estes eventos são disparados pelo controlador depois que já aconteceu a conexão com uma das salas
 
+void MainFrame::on_enteredInRoom(Login::AbstractJamRoom *room){
+    hideBusyDialog();
     if(room->getRoomType() == Login::AbstractJamRoom::Type::NINJAM){
         Login::NinjamRoom* ninjamRoom = dynamic_cast<Login::NinjamRoom*>(room);
         NinjamRoomWindow* roomWindow = new NinjamRoomWindow(ui.tabWidget, *ninjamRoom, mainController);
@@ -195,6 +233,20 @@ void MainFrame::on_enteredInRoom(Login::AbstractJamRoom *room)
     }
 }
 
+void MainFrame::on_exitedFromRoom(bool normalDisconnection){
+    hideBusyDialog();
+    if(metronomeTrackView){
+        ui.localTracksLayout->removeWidget(metronomeTrackView);
+    }
+    if(ui.tabWidget->count() > 1){
+        ui.tabWidget->removeTab(1);//remove the last tab
+    }
+    if(!normalDisconnection){
+        QMessageBox::warning(this, "Warning", "Disconnected from server!", QMessageBox::NoButton, QMessageBox::NoButton);
+    }
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::timerEvent(QTimerEvent *){
 
@@ -220,6 +272,13 @@ void MainFrame::timerEvent(QTimerEvent *){
 }
 
 //++++++++++++=
+
+void MainFrame::resizeEvent(QResizeEvent *){
+    if(busyDialog.isVisible()){
+        centerBusyDialog();
+    }
+}
+
 void MainFrame::changeEvent(QEvent *ev){
     if(ev->type() == QEvent::WindowStateChange){
         ConfigStore::storeWindowState(isMaximized());
@@ -243,6 +302,7 @@ void MainFrame::closeEvent(QCloseEvent *)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::showEvent(QShowEvent *)
 {
+    showBusyDialog("Loading rooms list ...");
     mainController->start();
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

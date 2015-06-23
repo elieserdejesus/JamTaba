@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_Ninjam__Service_t {
     QByteArrayData data[38];
-    char stringdata[551];
+    char stringdata[567];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -50,10 +50,10 @@ QT_MOC_LITERAL(17, 224, 22), // "audioIntervalAvailable"
 QT_MOC_LITERAL(18, 247, 12), // "channelIndex"
 QT_MOC_LITERAL(19, 260, 16), // "encodedAudioData"
 QT_MOC_LITERAL(20, 277, 22), // "disconnectedFromServer"
-QT_MOC_LITERAL(21, 300, 19), // "normalDisconnection"
-QT_MOC_LITERAL(22, 320, 17), // "connectedInServer"
-QT_MOC_LITERAL(23, 338, 14), // "Ninjam::Server"
-QT_MOC_LITERAL(24, 353, 6), // "server"
+QT_MOC_LITERAL(21, 300, 14), // "Ninjam::Server"
+QT_MOC_LITERAL(22, 315, 6), // "server"
+QT_MOC_LITERAL(23, 322, 19), // "normalDisconnection"
+QT_MOC_LITERAL(24, 342, 17), // "connectedInServer"
 QT_MOC_LITERAL(25, 360, 19), // "chatMessageReceived"
 QT_MOC_LITERAL(26, 380, 6), // "sender"
 QT_MOC_LITERAL(27, 387, 7), // "message"
@@ -61,12 +61,12 @@ QT_MOC_LITERAL(28, 395, 22), // "privateMessageReceived"
 QT_MOC_LITERAL(29, 418, 17), // "userEnterInTheJam"
 QT_MOC_LITERAL(30, 436, 7), // "newUser"
 QT_MOC_LITERAL(31, 444, 15), // "userLeaveTheJam"
-QT_MOC_LITERAL(32, 460, 5), // "error"
-QT_MOC_LITERAL(33, 466, 3), // "msg"
-QT_MOC_LITERAL(34, 470, 14), // "socketReadSlot"
-QT_MOC_LITERAL(35, 485, 15), // "socketErrorSlot"
-QT_MOC_LITERAL(36, 501, 28), // "QAbstractSocket::SocketError"
-QT_MOC_LITERAL(37, 530, 20) // "socketDisconnectSlot"
+QT_MOC_LITERAL(32, 460, 14), // "socketReadSlot"
+QT_MOC_LITERAL(33, 475, 15), // "socketErrorSlot"
+QT_MOC_LITERAL(34, 491, 28), // "QAbstractSocket::SocketError"
+QT_MOC_LITERAL(35, 520, 5), // "error"
+QT_MOC_LITERAL(36, 526, 20), // "socketDisconnectSlot"
+QT_MOC_LITERAL(37, 547, 19) // "socketConnectedSlot"
 
     },
     "Ninjam::Service\0userChannelCreated\0\0"
@@ -77,14 +77,14 @@ QT_MOC_LITERAL(37, 530, 20) // "socketDisconnectSlot"
     "currentBpi\0lastBpi\0serverBpmChanged\0"
     "currentBpm\0audioIntervalAvailable\0"
     "channelIndex\0encodedAudioData\0"
-    "disconnectedFromServer\0normalDisconnection\0"
-    "connectedInServer\0Ninjam::Server\0"
-    "server\0chatMessageReceived\0sender\0"
-    "message\0privateMessageReceived\0"
-    "userEnterInTheJam\0newUser\0userLeaveTheJam\0"
-    "error\0msg\0socketReadSlot\0socketErrorSlot\0"
-    "QAbstractSocket::SocketError\0"
-    "socketDisconnectSlot"
+    "disconnectedFromServer\0Ninjam::Server\0"
+    "server\0normalDisconnection\0connectedInServer\0"
+    "chatMessageReceived\0sender\0message\0"
+    "privateMessageReceived\0userEnterInTheJam\0"
+    "newUser\0userLeaveTheJam\0socketReadSlot\0"
+    "socketErrorSlot\0QAbstractSocket::SocketError\0"
+    "error\0socketDisconnectSlot\0"
+    "socketConnectedSlot"
 };
 #undef QT_MOC_LITERAL
 
@@ -99,7 +99,7 @@ static const uint qt_meta_data_Ninjam__Service[] = {
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-      14,       // signalCount
+      13,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
        1,    2,   99,    2, 0x06 /* Public */,
@@ -109,17 +109,17 @@ static const uint qt_meta_data_Ninjam__Service[] = {
       12,    2,  119,    2, 0x06 /* Public */,
       15,    1,  124,    2, 0x06 /* Public */,
       17,    3,  127,    2, 0x06 /* Public */,
-      20,    1,  134,    2, 0x06 /* Public */,
-      22,    1,  137,    2, 0x06 /* Public */,
-      25,    2,  140,    2, 0x06 /* Public */,
-      28,    2,  145,    2, 0x06 /* Public */,
-      29,    1,  150,    2, 0x06 /* Public */,
-      31,    1,  153,    2, 0x06 /* Public */,
-      32,    1,  156,    2, 0x06 /* Public */,
+      20,    2,  134,    2, 0x06 /* Public */,
+      24,    1,  139,    2, 0x06 /* Public */,
+      25,    2,  142,    2, 0x06 /* Public */,
+      28,    2,  147,    2, 0x06 /* Public */,
+      29,    1,  152,    2, 0x06 /* Public */,
+      31,    1,  155,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      34,    0,  159,    2, 0x08 /* Private */,
-      35,    1,  160,    2, 0x08 /* Private */,
+      32,    0,  158,    2, 0x08 /* Private */,
+      33,    1,  159,    2, 0x08 /* Private */,
+      36,    0,  162,    2, 0x08 /* Private */,
       37,    0,  163,    2, 0x08 /* Private */,
 
  // signals: parameters
@@ -130,17 +130,17 @@ static const uint qt_meta_data_Ninjam__Service[] = {
     QMetaType::Void, QMetaType::Short, QMetaType::Short,   13,   14,
     QMetaType::Void, QMetaType::Short,   16,
     QMetaType::Void, 0x80000000 | 3, QMetaType::Int, QMetaType::QByteArray,    4,   18,   19,
-    QMetaType::Void, QMetaType::Bool,   21,
-    QMetaType::Void, 0x80000000 | 23,   24,
+    QMetaType::Void, 0x80000000 | 21, QMetaType::Bool,   22,   23,
+    QMetaType::Void, 0x80000000 | 21,   22,
     QMetaType::Void, 0x80000000 | 3, QMetaType::QString,   26,   27,
     QMetaType::Void, 0x80000000 | 3, QMetaType::QString,   26,   27,
     QMetaType::Void, 0x80000000 | 3,   30,
     QMetaType::Void, 0x80000000 | 3,    4,
-    QMetaType::Void, QMetaType::QString,   33,
 
  // slots: parameters
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 36,   32,
+    QMetaType::Void, 0x80000000 | 34,   35,
+    QMetaType::Void,
     QMetaType::Void,
 
        0        // eod
@@ -158,22 +158,22 @@ void Ninjam::Service::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
         case 4: _t->serverBpiChanged((*reinterpret_cast< short(*)>(_a[1])),(*reinterpret_cast< short(*)>(_a[2]))); break;
         case 5: _t->serverBpmChanged((*reinterpret_cast< short(*)>(_a[1]))); break;
         case 6: _t->audioIntervalAvailable((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< QByteArray(*)>(_a[3]))); break;
-        case 7: _t->disconnectedFromServer((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 7: _t->disconnectedFromServer((*reinterpret_cast< const Ninjam::Server(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
         case 8: _t->connectedInServer((*reinterpret_cast< const Ninjam::Server(*)>(_a[1]))); break;
         case 9: _t->chatMessageReceived((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
         case 10: _t->privateMessageReceived((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
         case 11: _t->userEnterInTheJam((*reinterpret_cast< Ninjam::User(*)>(_a[1]))); break;
         case 12: _t->userLeaveTheJam((*reinterpret_cast< Ninjam::User(*)>(_a[1]))); break;
-        case 13: _t->error((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 14: _t->socketReadSlot(); break;
-        case 15: _t->socketErrorSlot((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
-        case 16: _t->socketDisconnectSlot(); break;
+        case 13: _t->socketReadSlot(); break;
+        case 14: _t->socketErrorSlot((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
+        case 15: _t->socketDisconnectSlot(); break;
+        case 16: _t->socketConnectedSlot(); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         switch (_id) {
         default: *reinterpret_cast<int*>(_a[0]) = -1; break;
-        case 15:
+        case 14:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<int*>(_a[0]) = -1; break;
             case 0:
@@ -227,7 +227,7 @@ void Ninjam::Service::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
             }
         }
         {
-            typedef void (Service::*_t)(bool );
+            typedef void (Service::*_t)(const Ninjam::Server & , bool );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&Service::disconnectedFromServer)) {
                 *result = 7;
             }
@@ -260,12 +260,6 @@ void Ninjam::Service::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
             typedef void (Service::*_t)(Ninjam::User );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&Service::userLeaveTheJam)) {
                 *result = 12;
-            }
-        }
-        {
-            typedef void (Service::*_t)(QString );
-            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&Service::error)) {
-                *result = 13;
             }
         }
     }
@@ -357,9 +351,9 @@ void Ninjam::Service::audioIntervalAvailable(Ninjam::User _t1, int _t2, QByteArr
 }
 
 // SIGNAL 7
-void Ninjam::Service::disconnectedFromServer(bool _t1)
+void Ninjam::Service::disconnectedFromServer(const Ninjam::Server & _t1, bool _t2)
 {
-    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 7, _a);
 }
 
@@ -396,12 +390,5 @@ void Ninjam::Service::userLeaveTheJam(Ninjam::User _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 12, _a);
-}
-
-// SIGNAL 13
-void Ninjam::Service::error(QString _t1)
-{
-    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
-    QMetaObject::activate(this, &staticMetaObject, 13, _a);
 }
 QT_END_MOC_NAMESPACE

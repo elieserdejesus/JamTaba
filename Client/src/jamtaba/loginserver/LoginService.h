@@ -40,7 +40,7 @@ signals:
     void roomChanged(const AbstractJamRoom& room);
 
 private:
-    static const bool LOCAL_HOST_MODE = false;
+    static const bool LOCAL_HOST_MODE = true;
     static const QString SERVER;
     static QMap<long long, std::shared_ptr<AbstractJamRoom>> rooms;
     bool connected;

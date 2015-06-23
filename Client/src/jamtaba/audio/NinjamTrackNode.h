@@ -16,7 +16,7 @@ class NinjamTrackNode : public Audio::AudioNode
 {
 public:
     explicit NinjamTrackNode(int ID);
-    ~NinjamTrackNode();
+    virtual ~NinjamTrackNode();
     void addVorbisEncodedInterval(QByteArray encodedBytes);
     void processReplacing(Audio::SamplesBuffer&in, Audio::SamplesBuffer& out);
     void startNewInterval();
