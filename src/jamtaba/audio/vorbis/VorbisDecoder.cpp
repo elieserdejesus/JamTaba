@@ -14,11 +14,16 @@ VorbisDecoder::VorbisDecoder()
       initialized(false),
       vorbisInput()
 {
-
+    outBuffer = new float*[2];
+    outBuffer[0] = new float[2048];
+    outBuffer[1] = new float[2048];
 }
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::~VorbisDecoder(){
     qDebug() << "Destrutor Vorbis Decoder";
+    delete [] outBuffer[0];
+    delete [] outBuffer[1];
+    delete [] outBuffer;
     ov_clear(&vorbisFile);
 }
 //+++++++++++++++++++++++++++++++++++++++++++
@@ -41,7 +46,8 @@ const Audio::SamplesBuffer &VorbisDecoder::decode(int maxSamplesToDecode){
     if(!initialized){
         initialize();
     }
-    long samplesDecoded = ov_read_float(&vorbisFile, &internalBuffer.samples, maxSamplesToDecode, NULL);//currentSection is not used
+    //static float decoderOutBuffer[vorbisFile.vi->channels]
+    long samplesDecoded = ov_read_float(&vorbisFile, &outBuffer, maxSamplesToDecode, NULL);//currentSection is not used
     if(samplesDecoded < 0){//error
         QString message;
         switch (samplesDecoded) {
@@ -55,6 +61,9 @@ const Audio::SamplesBuffer &VorbisDecoder::decode(int maxSamplesToDecode){
         return Audio::SamplesBuffer::ZERO_BUFFER;
     }
     internalBuffer.setFrameLenght(samplesDecoded);
+    //internal buffer is always stereo
+    internalBuffer.add(0, outBuffer[0], samplesDecoded);//the left channel is always copyed
+    internalBuffer.add(1, outBuffer[ (vorbisFile.vi->channels >= 2) ? 1 : 0 ], samplesDecoded);
     return internalBuffer;
 }
 //+++++++++++++++++++++++++++++++++++++++++++
@@ -74,8 +83,10 @@ bool VorbisDecoder::initialize(){
     callbacks.seek_func = NULL;
     callbacks.close_func = NULL;
     callbacks.tell_func = NULL;
+    //int lastChannels = (initialized) ? (vorbisFile.vi->channels) : 0;
     int result = ov_open_callbacks((void*)this, &vorbisFile, NULL, 0, callbacks );
     initialized = result == 0;
+
     if(!initialized){
         QString message;
         switch (result) {

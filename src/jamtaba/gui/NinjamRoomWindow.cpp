@@ -63,7 +63,6 @@ void NinjamRoomWindow::updatePeaks(){
         if(view){
             Controller::Peaks peaks = mainController->getTrackPeaks(view->getTrackID());
             view->setPeaks(peaks.left, peaks.right);
-            qDebug() << peaks.left;
         }
     }
 }
