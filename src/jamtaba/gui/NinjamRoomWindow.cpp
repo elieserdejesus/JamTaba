@@ -16,18 +16,21 @@
 
 #include "../NinjamJamRoomController.h"
 #include "../MainController.h"
+#include "../ninjam/Service.h"
 
 #include "NinjamPanel.h"
 #include <QMessageBox>
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-NinjamRoomWindow::NinjamRoomWindow(QWidget *parent,const Login::NinjamRoom& room, Controller::MainController *mainController) :
+NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, const Login::NinjamRoom& room, Controller::MainController *mainController) :
     QWidget(parent),
     ui(new Ui::NinjamRoomWindow),
     mainController(mainController)
 {
     ui->setupUi(this);
+
+    ui->licenceButton->setIcon(QIcon(QPixmap(":/images/licence.png")));
 
     //QString roomName = room.getHostName() + ":" + QString::number(room.getHostPort());
     ui->labelRoomName->setText(room.getName());
@@ -48,6 +51,9 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent,const Login::NinjamRoom& room
     QObject::connect(ui->topPanel->getBpiCombo(), SIGNAL(activated(QString)), this, SLOT(ninjamBpiComboChanged(QString)));
     QObject::connect(ui->topPanel->getBpmCombo(), SIGNAL(activated(QString)), this, SLOT(ninjamBpmComboChanged(QString)));
     QObject::connect(ui->topPanel->getAccentsCombo(), SIGNAL(currentIndexChanged(int)), this, SLOT(ninjamAccentsComboChanged(int)));
+
+    QString serverLicence = Ninjam::Service::getInstance()->getCurrentServerLicence();
+    ui->licenceButton->setVisible(!serverLicence.isEmpty());
 
     //testing many tracks
 //    for (int t = 0; t < 16; ++t) {
@@ -159,4 +165,10 @@ void NinjamRoomWindow::bpmChanged(int bpm){
 
 void NinjamRoomWindow::intervalBeatChanged(int beat){
     ui->topPanel->setCurrentBeat(beat);
+}
+
+void NinjamRoomWindow::on_licenceButton_clicked()
+{
+    QString licence = Ninjam::Service::getInstance()->getCurrentServerLicence();
+    QMessageBox::information(this, ui->labelRoomName->text(), licence, QMessageBox::NoButton, QMessageBox::NoButton);
 }

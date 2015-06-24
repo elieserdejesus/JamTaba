@@ -200,12 +200,14 @@ void Service::handle(const ServerKeepAliveMessage& /*msg*/){
 void Service::handle(const ServerAuthChallengeMessage& msg){
     ClientAuthUserMessage msgAuthUser(this->userName, msg.getChallenge(), msg.getProtocolVersion());
     sendMessageToServer(&msgAuthUser);
+    this->serverLicence = msg.getLicenceAgreement();
 }
 
 void Service::handle(const ServerAuthReplyMessage& msg){
     if(msg.userIsAuthenticated()){
         ClientSetChannel setChannelMsg(this->channels[0]);
         sendMessageToServer(&setChannelMsg);
+
     }
     //when user is not authenticated the socketErrorSlot is called and dispatch an error signal
 //    else{
@@ -396,9 +398,9 @@ void Service::handle(const ServerChatMessage& msg) {
         if (!initialized) {
             initialized = true;
             currentServer->setTopic(topicText);
-
+            currentServer->setLicence(serverLicence);//server licence is received when the hand shake with server is started
+            //serverLicence.clear();
             emit connectedInServer(*currentServer);
-
         }
         break;
     }
@@ -600,6 +602,9 @@ void Service::invokeMessageHandler(const ServerMessage& message){
     }
 }
 
+QString Service::getCurrentServerLicence() const{
+    return serverLicence;
+}
 
 
 

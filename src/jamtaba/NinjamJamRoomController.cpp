@@ -109,6 +109,7 @@ void NinjamJamRoomController::removeTrack(Ninjam::User user, Ninjam::UserChannel
 
     }
 }
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamJamRoomController::voteBpi(int bpi){

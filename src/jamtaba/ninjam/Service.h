@@ -48,6 +48,7 @@ public:
     static bool isBotName(QString userName) ;
 
     QString getConnectedUserName() ;
+    QString getCurrentServerLicence() const;
     float getIntervalPeriod() ;
 
     void startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password = "");
@@ -81,6 +82,7 @@ private:
     //GUID, AudioInterval
     long lastSendTime;//time stamp of last send
     long serverKeepAlivePeriod;
+    QString serverLicence;
 
     static std::unique_ptr<Service> serviceInstance;// = new NinjaMService();// new TestService();
 

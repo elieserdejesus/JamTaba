@@ -1,17 +1,8 @@
 #de vez em quando buga quando chega o primeiro intervalo e ainda não sei porque
 
-#se clico no ícone da barra de tarefas a aplicação minimiza. Quando clico novamente bug tudo, o áudio fica acelerado.
-
-#quando trocar de bpi ver se ainda é possível usar a mesma acentuação procurando pelo valor
-#antigo na nova lista
+#acho que o solo das pistas ninjam não está funcionando
 
 #meters estão com problema, fica bem claro no meter do metronomo
-
-#onde vou mostrar a licença do server?
-
-#botão de mute da pista local está bugado
-
-#acho que o solo das pistas ninjam não está funcionando
 
 # continuar implementando view da sala ninjam
 
@@ -19,6 +10,9 @@
 #não posso editar o nome das pistas
 #bandeira do pais
 #mapa com os jogadores? É possível?
+
+#quando trocar de bpi ver se ainda é possível usar a mesma acentuação procurando pelo valor
+#antigo na nova lista
 
 #não consegui resolver o bug que acontece quando as pistas são removidas, por hora apenas comentei a linha que delete as pistas no NinjamJamRoomController. Ou seja, a memoria não está sendo liberada
 

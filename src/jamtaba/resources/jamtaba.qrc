@@ -12,6 +12,7 @@
         <file>off.png</file>
         <file>metronome.png</file>
         <file>ninja.png</file>
+        <file>licence.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

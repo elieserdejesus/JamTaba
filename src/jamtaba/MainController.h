@@ -109,6 +109,7 @@ public:
     void setTrackMute(int trackID, bool muteStatus);
     bool trackIsMuted(int trackID) const;
     void setTrackSolo(int trackID, bool soloStatus);
+    bool trackIsSoloed(int trackID) const;
     void setTrackLevel(int trackID, float level);
     void setTrackPan(int trackID, float pan);
     Peaks getInputPeaks();
@@ -121,6 +122,7 @@ public:
 
     Audio::AudioNode* getTrackNode(long ID);
 
+    inline bool isStarted() const{return started;}
 signals:
     void enteredInRoom(Login::AbstractJamRoom* room);
     void exitedFromRoom(bool error);
@@ -149,6 +151,8 @@ private:
     QMap<long, Audio::AudioNode*> tracksNodes;
 
     mutable QMutex mutex;
+
+    bool started;
 
     Peaks inputPeaks;
     Peaks roomStreamerPeaks;

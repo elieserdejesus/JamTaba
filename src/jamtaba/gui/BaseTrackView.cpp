@@ -73,7 +73,7 @@ void BaseTrackView::onMuteClicked(){
 }
 
 void BaseTrackView::onSoloClicked(){
-
+    mainController->setTrackSolo(this->trackID, !mainController->trackIsSoloed(this->trackID));
 }
 
 //little to allow stylesheet in custom widget

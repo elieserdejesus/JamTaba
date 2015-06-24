@@ -24,6 +24,7 @@ private:
     bool activeServer;// = true;
     QString streamUrl;
     QString topic;
+    QString licence;
 
     QMap<QString, User*> users;
 
@@ -50,6 +51,10 @@ public:
         //tirei o stream do server do mutant porque ele usa nsv, e não encontrei lib para esse formato
         return !streamUrl.isNull() && !host.toLower().contains("mutant");
     }
+
+    inline void setLicence(QString licenceText){this->licence = licenceText;}
+
+    inline QString getLicence() const{return licence;}
 
     inline void setMaxUsers(unsigned int maxUsers) {  this->maxUsers = maxUsers; }
 
