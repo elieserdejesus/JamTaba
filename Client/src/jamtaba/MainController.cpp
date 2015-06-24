@@ -133,7 +133,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
 
 
     //test ninjam stream
-//    NinjamTrackNode* trackTest = new NinjamTrackNode();
+//    NinjamTrackNode* trackTest = new NinjamTrackNode(2);
 //    QStringList testFiles({":/bateria mono.ogg"});
 //    addTrack(2, trackTest);
 //    for (int i = 0; i < testFiles.size(); ++i) {
@@ -142,7 +142,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
 //            qCritical() << "File not exists! " << file.errorString();
 //        }
 //        file.open(QIODevice::ReadOnly);
-//        trackTest->addEncodedBytes(file.readAll(), true);
+//        trackTest->addVorbisEncodedInterval(file.readAll());
 //    }
 //    trackTest->startNewInterval();
 

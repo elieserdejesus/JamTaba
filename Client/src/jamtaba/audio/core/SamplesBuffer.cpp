@@ -40,7 +40,7 @@ SamplesBuffer& SamplesBuffer::operator=(const SamplesBuffer& /*other*/){
 
 SamplesBuffer::~SamplesBuffer(){
     //QMutexLocker locker(&mutex);
-    qDebug() << "desctrutor SamplesBuffer";
+    //qDebug() << "desctrutor SamplesBuffer";
     if(samples){
         resetOffset();
         for (unsigned int c = 0; c < channels; ++c) {
@@ -147,6 +147,12 @@ const float *SamplesBuffer::getPeaks() const
     return peaks;
 }
 
+void SamplesBuffer::copyLeftChannelToRight(){
+    if(channels > 1){
+        memcpy(samples[1], samples[0], frameLenght * sizeof(float));
+    }
+}
+
 void SamplesBuffer::add(const SamplesBuffer &buffer, int offset){
     //QMutexLocker locker(&mutex);
     unsigned int framesToProcess = frameLenght < buffer.frameLenght ? frameLenght : buffer.frameLenght;
@@ -162,6 +168,15 @@ void SamplesBuffer::add(const SamplesBuffer &buffer, int offset){
             samples[0][s + offset] += buffer.samples[0][s];
             samples[1][s + offset] += buffer.samples[0][s];
         }
+    }
+}
+
+void SamplesBuffer::add(int channel, float *samples, int samplesToAdd){
+    if(channel >= 0 && channel < channels){
+        memcpy( this->samples[channel], samples, std::min((int)frameLenght, samplesToAdd) * sizeof(float));
+    }
+    else{
+        qWarning() << "wrong channel " << channel;
     }
 }
 

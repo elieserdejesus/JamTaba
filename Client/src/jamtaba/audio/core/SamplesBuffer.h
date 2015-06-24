@@ -7,13 +7,15 @@ class SamplesBuffer{
 
     friend class AudioNodeProcessor;
 
-public:
-    float** samples;//deixei public porque o ogg decoder não funcionou de outra maneira, tive que acessar diretamente o endereço desse array
+//public:
+    //deixei public porque o ogg decoder não funcionou de outra maneira, tive que acessar diretamente o endereço desse array
 private:
     unsigned int channels;
     unsigned int frameLenght;
     unsigned const int maxFrameLenght;
     int offset;
+
+    float** samples;//poderia deixar fixo com 2 canais e 4096 samples
 
     mutable float peaks[2];
 
@@ -36,6 +38,8 @@ public:
     ~SamplesBuffer();
 
     static const SamplesBuffer ZERO_BUFFER;//a static buffer with zero samples
+
+    void copyLeftChannelToRight();//usefull to transform a mono input in a pseudo-stereo (both channels are the same)
 
 
     void setOffset(int offset);
@@ -60,6 +64,7 @@ public:
     inline void add(const SamplesBuffer& buffer){add(buffer, 0);}
     void add(int channel, int sampleIndex, float sampleValue);
     void add(const SamplesBuffer& buffer, int offset);//the offset is used in internal buffer, not in parameter buffer
+    void add(int channel, float* samples, int samplesToAdd);
 
     /***
      * copy samplesToCopy' samples starting from bufferOffset to internal buffer starting in 'internalOffset'

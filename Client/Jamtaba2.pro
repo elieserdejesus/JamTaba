@@ -1,17 +1,6 @@
-#quando adiciono muitas pistas o layout fica bagunçado - resolvido, mas preciso testar criando várias pistas no Reaninjam
-#não está aparecendo scroll na área das pistas
-
-#mudei o internalBuffer de audio node de ponteiro para uma instancia comum, tenho que testar se ainda funciona.
-#ontem a noite entrei em um server e quando chegou o primeiro intervalo deu pau.
-
-#controles do canal ninjam não atuaram - Eu estava adiciona as amostras decodificadas diretamente no out buffer, agora mudei para adicionar no internal buffer que depois é processado pela classe base. Tenho que testar isso, não consegui testar na univali
-
+#de vez em quando buga quando chega o primeiro intervalo e ainda não sei porque
 
 #se clico no ícone da barra de tarefas a aplicação minimiza. Quando clico novamente bug tudo, o áudio fica acelerado.
-
-#não consegui resolver o bug que acontece quando as pistas são removidas, por hora apenas comentei a linha que delete as pistas no NinjamJamRoomController. Ou seja, a memoria não está sendo liberada
-
-#Estou usando um SamplesBuffer estereo dentro da classe do VorbisDecoder. Tenho que ver o que acontece se o stream é mono.
 
 #quando trocar de bpi ver se ainda é possível usar a mesma acentuação procurando pelo valor
 #antigo na nova lista
@@ -25,6 +14,13 @@
 #acho que o solo das pistas ninjam não está funcionando
 
 # continuar implementando view da sala ninjam
+
+#sair da sala
+#não posso editar o nome das pistas
+#bandeira do pais
+#mapa com os jogadores? É possível?
+
+#não consegui resolver o bug que acontece quando as pistas são removidas, por hora apenas comentei a linha que delete as pistas no NinjamJamRoomController. Ou seja, a memoria não está sendo liberada
 
 # MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais. Testar com o controlador AKAI também para ver
 
