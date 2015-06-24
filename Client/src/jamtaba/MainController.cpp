@@ -126,7 +126,8 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     //ninjam service
     this->ninjamService = Ninjam::Service::getInstance();
     QObject::connect( this->ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), SLOT(connectedInNinjamServer(Ninjam::Server)) );
-    QObject::connect(this->ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server,bool)), this, SLOT(disconnectedFromNinjamServer(Ninjam::Server, bool)));
+    QObject::connect(this->ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(disconnectedFromNinjamServer(Ninjam::Server)));
+    QObject::connect(this->ninjamService, SIGNAL(error(QString)), this, SLOT(errorInNinjamServer(QString)));
 
     this->ninjamController = new Controller::NinjamJamRoomController(this);
 
@@ -452,11 +453,16 @@ Login::LoginService* MainController::getLoginService() const{
 
 
 //++++++++++++= NINJAM ++++++++++++++++
-void MainController::disconnectedFromNinjamServer(const Server &server, bool normalDisconnection){
-    //Q_USUSED(normalDisconnection);
+void MainController::errorInNinjamServer(QString error){
+    qWarning() << error;
     ninjamController->stop();
-    //Login::NinjamRoom::getNinjamRoom(server)
-    emit exitedFromRoom(normalDisconnection);
+    emit exitedFromRoom(true);
+}
+
+void MainController::disconnectedFromNinjamServer(const Server &server){
+    Q_UNUSED(server);
+    ninjamController->stop();
+    emit exitedFromRoom(false);
 }
 
 void MainController::connectedInNinjamServer(const Ninjam::Server &server){

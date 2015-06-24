@@ -54,39 +54,38 @@ void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
     if(!activated){
         return;
     }
-    internalBuffer->setFrameLenght(out.getFrameLenght());
+    internalBuffer.setFrameLenght(out.getFrameLenght());
     {
         QMutexLocker locker(&mutex);
         foreach (AudioNode* node, connections) {
-            node->processReplacing(in, *internalBuffer);
+            node->processReplacing(in, internalBuffer);
         }
     }
 
     //plugins
     foreach (AudioNodeProcessor* processor, processors) {
-        processor->process(*internalBuffer);
+        processor->process(internalBuffer);
     }
-    internalBuffer->applyGain(gain, leftGain, rightGain);
+    internalBuffer.applyGain(gain, leftGain, rightGain);
 
-    const float* peaks = internalBuffer->getPeaks();
+    const float* peaks = internalBuffer.getPeaks();
     lastPeaks[0] = peaks[0]; lastPeaks[1] = peaks[1];
 
-    out.add(*internalBuffer);
+    out.add(internalBuffer);
 }
 
 AudioNode::AudioNode()
      : //lastPeaks{0,0},
-       activated(true),
-       muted(false),
+      activated(true),
+      muted(false),
       soloed(false),
       gain(1),
       pan(0)/*center*/,
       leftGain(1.0),
-      rightGain(1.0)
-
-
+      rightGain(1.0),
+      internalBuffer(2, AudioDriver::MAX_BUFFERS_LENGHT)
 {
-    this->internalBuffer = new SamplesBuffer(2, AudioDriver::MAX_BUFFERS_LENGHT);
+
 }
 
 void AudioNode::setPan(float pan) {
@@ -107,7 +106,7 @@ AudioNode::~AudioNode()
     }
     processors.clear();
 
-    delete internalBuffer;
+    //sdelete internalBuffer;
 }
 
 bool AudioNode::connect(AudioNode& other) {
@@ -163,8 +162,8 @@ void MainOutputAudioNode::processReplacing(SamplesBuffer&in, SamplesBuffer& out)
             node->processReplacing(in, out);
         }
         else{//just discard the samples if node is muted, the internalBuffer is not copyed to out buffer
-            internalBuffer->setFrameLenght(out.getFrameLenght());
-            node->processReplacing(in, *internalBuffer);
+            internalBuffer.setFrameLenght(out.getFrameLenght());
+            node->processReplacing(in, internalBuffer);
         }
         if(node->isSoloed()){
             soloedBuffersInLastProcess++;
@@ -187,8 +186,8 @@ LocalInputAudioNode::LocalInputAudioNode(int firstInputIndex, bool isMono)
 
 void LocalInputAudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
 {
-    internalBuffer->setFrameLenght(out.getFrameLenght());
-    internalBuffer->set(in);//copy into internal buffer
+    internalBuffer.setFrameLenght(out.getFrameLenght());
+    internalBuffer.set(in);//copy into internal buffer
     AudioNode::processReplacing(in, out);
 
 }

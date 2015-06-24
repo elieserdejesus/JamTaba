@@ -122,7 +122,8 @@ public:
 
 signals:
     void enteredInRoom(Login::AbstractJamRoom* room);
-    void exitedFromRoom(bool normalDisconnection);
+    void exitedFromRoom(bool error);
+    //void
 
 private:
     void doAudioProcess(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
@@ -166,7 +167,8 @@ private slots:
 
     //ninjam
     void connectedInNinjamServer(const Ninjam::Server& server);
-    void disconnectedFromNinjamServer(const Ninjam::Server& server, bool normalDisconnection);
+    void disconnectedFromNinjamServer(const Ninjam::Server& server);
+    void errorInNinjamServer(QString error);
 };
 
 }

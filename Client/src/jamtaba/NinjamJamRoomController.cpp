@@ -79,6 +79,9 @@ QString NinjamJamRoomController::getUniqueKey(Ninjam::UserChannel channel){
 }
 
 void NinjamJamRoomController::addTrack(Ninjam::User user, Ninjam::UserChannel channel){
+    if(user.isBot()){
+        return;
+    }
     NinjamTrackNode* trackNode = new NinjamTrackNode(generateNewTrackID());
     {
         QMutexLocker locker(&mutex);

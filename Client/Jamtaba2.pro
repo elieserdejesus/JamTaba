@@ -1,16 +1,11 @@
-#se conecto no server com o servidor parado buga tudo
 
-#quando desconectei do server e conectei novamente deu pau no socket, não tem bytes suficientes para ler a mensagem. Talvez eu não tenha desconectado os slots quando sai do server
-
-#controles do canal ninjam não atuaram
-
-
-
-#quando adiciono muitas pistas o layout fica bagunçado
-
-#não criar pistas para os canais dos bots
-
+#quando adiciono muitas pistas o layout fica bagunçado - resolvido, mas preciso testar criando várias pistas no Reaninjam
 #não está aparecendo scroll na área das pistas
+
+
+#controles do canal ninjam não atuaram - Eu estava adiciona as amostras decodificadas diretamente no out buffer, agora mudei para adicionar no internal buffer que depois é processado pela classe base. Tenho que testar isso, não consegui testar na univali
+
+#quando fecho recebo a mensagem de desconexão
 
 #se clico no ícone da barra de tarefas a aplicação minimiza. Quando clico novamente bug tudo, o áudio fica acelerado.
 

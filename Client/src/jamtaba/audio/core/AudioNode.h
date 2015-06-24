@@ -3,6 +3,7 @@
 #include <QSet>
 #include <cmath>
 #include <QMutex>
+#include "SamplesBuffer.h"
 
 namespace Midi   {
     class MidiBuffer;
@@ -73,7 +74,7 @@ public:
 protected:
     QSet<AudioNode*> connections;
     QSet<AudioNodeProcessor*> processors;
-    SamplesBuffer* internalBuffer;
+    SamplesBuffer internalBuffer;
     float lastPeaks[2];
     QMutex mutex; //used to protected connections manipulation because nodes can be added or removed by different threads
     bool activated; //used to safely remove non activated nodes

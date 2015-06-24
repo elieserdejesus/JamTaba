@@ -69,13 +69,11 @@ void Service::socketReadSlot(){
     }
 }
 
-void Service::socketErrorSlot(QAbstractSocket::SocketError error)
+void Service::socketErrorSlot(QAbstractSocket::SocketError e)
 {
-    //emit disconnectedFromServer(*currentServer, false);
-    qWarning() << error;
-    //socket.close();
-    emit disconnectedFromServer(*currentServer, false);
+    Q_UNUSED(e);
     currentServer.reset(nullptr);
+    emit error(socket.errorString());
 }
 
 void Service::socketConnectedSlot(){
@@ -87,7 +85,7 @@ void Service::socketConnectedSlot(){
 
 void Service::socketDisconnectSlot()
 {
-    emit disconnectedFromServer(*currentServer, true);
+    emit disconnectedFromServer(*currentServer);
 }
 
 
@@ -210,8 +208,7 @@ void Service::handle(const ServerAuthReplyMessage& msg){
         sendMessageToServer(&setChannelMsg);
     }
     else{
-        //emit error("Can't authenticate in server");
-        disconnectFromServer(false);
+        emit error(msg.getErrorMessage());
     }
 }
 
@@ -224,9 +221,9 @@ void Service::startServerConnection(QString serverIp, int serverPort, QString us
     socket.connectToHost(serverIp, serverPort);
 }
 
-void Service::disconnectFromServer(bool normalDisconnection)
+void Service::disconnectFromServer()
 {
-    Q_UNUSED(normalDisconnection);
+    //Q_UNUSED(normalDisconnection);
 
     socket.disconnectFromHost();
     //emit disconnectedFromServer(*currentServer, normalDisconnection);
