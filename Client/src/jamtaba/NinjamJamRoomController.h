@@ -84,7 +84,7 @@ private slots:
     void ninjamUserChannelRemoved(Ninjam::User user, Ninjam::UserChannel channel);
     void ninjamUserChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel);
     void ninjamUserLeave(Ninjam::User user);
-    void ninjamDisconnectedFromServer(Ninjam::Server server, bool normalDisconnection);
+    void ninjamDisconnectedFromServer(Ninjam::Server server);
 };
 
 }

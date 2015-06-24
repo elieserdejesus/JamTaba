@@ -48,7 +48,7 @@ void NinjamJamRoomController::start(const Ninjam::Server& server){
         QObject::connect(ninjamService, SIGNAL(serverBpmChanged(short)), this, SLOT(ninjamServerBpmChanged(short)));
         QObject::connect(ninjamService, SIGNAL(serverBpiChanged(short,short)), this, SLOT(ninjamServerBpiChanged(short,short)));
         QObject::connect(ninjamService, SIGNAL(audioIntervalAvailable(Ninjam::User,int,QByteArray)), this, SLOT(ninjamAudioAvailable(Ninjam::User,int,QByteArray)));
-        QObject::connect(ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server,bool)), this, SLOT(ninjamDisconnectedFromServer(Ninjam::Server,bool)));
+        QObject::connect(ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(ninjamDisconnectedFromServer(Ninjam::Server)));
 
         QObject::connect(ninjamService, SIGNAL(userChannelCreated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelCreated(Ninjam::User, Ninjam::UserChannel)));
         QObject::connect(ninjamService, SIGNAL(userChannelRemoved(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelRemoved(Ninjam::User, Ninjam::UserChannel)));
@@ -135,7 +135,7 @@ void NinjamJamRoomController::stop(){
         QObject::disconnect(ninjamService, SIGNAL(userChannelCreated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelCreated(Ninjam::User, Ninjam::UserChannel)));
         QObject::disconnect(ninjamService, SIGNAL(userChannelRemoved(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelRemoved(Ninjam::User, Ninjam::UserChannel)));
         QObject::disconnect(ninjamService, SIGNAL(userChannelUpdated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelUpdated(Ninjam::User, Ninjam::UserChannel)));
-        QObject::disconnect(ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server,bool)), this, SLOT(ninjamDisconnectedFromServer(Ninjam::Server, bool)));
+        QObject::disconnect(ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(ninjamDisconnectedFromServer(Ninjam::Server)));
 
         ninjamService->disconnectFromServer();
     }
@@ -229,8 +229,8 @@ long NinjamJamRoomController::computeTotalSamplesInInterval(){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //ninjam events
 
-void NinjamJamRoomController::ninjamDisconnectedFromServer(Ninjam::Server server, bool normalDisconnection){
-
+void NinjamJamRoomController::ninjamDisconnectedFromServer(Ninjam::Server server){
+    Q_UNUSED(server);
     QMutexLocker locker(&mutex);
     mainController->removeTrack(-1);//remove metronome
     foreach(NinjamTrackNode* trackNode, trackNodes.values()){

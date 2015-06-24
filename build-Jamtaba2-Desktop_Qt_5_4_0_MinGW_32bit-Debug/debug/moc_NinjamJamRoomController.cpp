@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_Controller__NinjamJamRoomController_t {
-    QByteArrayData data[30];
-    char stringdata[485];
+    QByteArrayData data[29];
+    char stringdata[465];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -57,8 +57,7 @@ QT_MOC_LITERAL(24, 373, 24), // "ninjamUserChannelUpdated"
 QT_MOC_LITERAL(25, 398, 15), // "ninjamUserLeave"
 QT_MOC_LITERAL(26, 414, 28), // "ninjamDisconnectedFromServer"
 QT_MOC_LITERAL(27, 443, 14), // "Ninjam::Server"
-QT_MOC_LITERAL(28, 458, 6), // "server"
-QT_MOC_LITERAL(29, 465, 19) // "normalDisconnection"
+QT_MOC_LITERAL(28, 458, 6) // "server"
 
     },
     "Controller::NinjamJamRoomController\0"
@@ -73,7 +72,7 @@ QT_MOC_LITERAL(29, 465, 19) // "normalDisconnection"
     "ninjamUserChannelRemoved\0"
     "ninjamUserChannelUpdated\0ninjamUserLeave\0"
     "ninjamDisconnectedFromServer\0"
-    "Ninjam::Server\0server\0normalDisconnection"
+    "Ninjam::Server\0server"
 };
 #undef QT_MOC_LITERAL
 
@@ -106,7 +105,7 @@ static const uint qt_meta_data_Controller__NinjamJamRoomController[] = {
       23,    2,  134,    2, 0x08 /* Private */,
       24,    2,  139,    2, 0x08 /* Private */,
       25,    1,  144,    2, 0x08 /* Private */,
-      26,    2,  147,    2, 0x08 /* Private */,
+      26,    1,  147,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::Int,    3,
@@ -124,7 +123,7 @@ static const uint qt_meta_data_Controller__NinjamJamRoomController[] = {
     QMetaType::Void, 0x80000000 | 9, 0x80000000 | 11,   10,   12,
     QMetaType::Void, 0x80000000 | 9, 0x80000000 | 11,   10,   12,
     QMetaType::Void, 0x80000000 | 9,   10,
-    QMetaType::Void, 0x80000000 | 27, QMetaType::Bool,   28,   29,
+    QMetaType::Void, 0x80000000 | 27,   28,
 
        0        // eod
 };
@@ -147,7 +146,7 @@ void Controller::NinjamJamRoomController::qt_static_metacall(QObject *_o, QMetaO
         case 10: _t->ninjamUserChannelRemoved((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< Ninjam::UserChannel(*)>(_a[2]))); break;
         case 11: _t->ninjamUserChannelUpdated((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< Ninjam::UserChannel(*)>(_a[2]))); break;
         case 12: _t->ninjamUserLeave((*reinterpret_cast< Ninjam::User(*)>(_a[1]))); break;
-        case 13: _t->ninjamDisconnectedFromServer((*reinterpret_cast< Ninjam::Server(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
+        case 13: _t->ninjamDisconnectedFromServer((*reinterpret_cast< Ninjam::Server(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
