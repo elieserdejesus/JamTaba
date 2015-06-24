@@ -344,6 +344,7 @@ debug/qrc_jamtaba.cpp: ../Client/src/jamtaba/resources/jamtaba.qrc \
 		../Client/src/jamtaba/resources/metronome.png \
 		../Client/src/jamtaba/resources/check_hover.png \
 		../Client/src/jamtaba/resources/off.png \
+		../Client/src/jamtaba/resources/licence.png \
 		../Client/src/jamtaba/resources/check.png \
 		../Client/src/jamtaba/resources/ninja.png \
 		../Client/src/jamtaba/resources/check_checked.png \
@@ -7155,6 +7156,9 @@ debug/NinjamRoomWindow.o: ../Client/src/jamtaba/gui/NinjamRoomWindow.cpp ../Clie
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QPushButton \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qpushbutton.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QScrollArea \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qscrollarea.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QVBoxLayout \
@@ -7187,6 +7191,10 @@ debug/NinjamRoomWindow.o: ../Client/src/jamtaba/gui/NinjamRoomWindow.cpp ../Clie
 		../Client/src/jamtaba/NinjamJamRoomController.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		../Client/src/jamtaba/MainController.h \
+		../Client/src/jamtaba/ninjam/Service.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QTcpSocket \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMessageBox \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmessagebox.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h

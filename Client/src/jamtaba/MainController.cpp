@@ -81,6 +81,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
       roomStreamer(new Audio::RoomStreamerNode()),
       currentStreamRoom(nullptr),
       mutex(QMutex::Recursive),
+      started(false),
       inputPeaks(0,0),
       roomStreamerPeaks(0,0),
       vstHost(Vst::VstHost::getInstance()),
@@ -276,11 +277,28 @@ void MainController::setTrackMute(int trackID, bool muteStatus){
     }
 }
 
+void MainController::setTrackSolo(int trackID, bool soloStatus){
+    QMutexLocker locker(&mutex);
+    Audio::AudioNode* node = tracksNodes[trackID];
+    if(node){
+        node->setSoloStatus(soloStatus);
+    }
+}
+
 bool MainController::trackIsMuted(int trackID) const{
     QMutexLocker locker(&mutex);
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         return node->isMuted();
+    }
+    return false;
+}
+
+bool MainController::trackIsSoloed(int trackID) const{
+    QMutexLocker locker(&mutex);
+    Audio::AudioNode* node = tracksNodes[trackID];
+    if(node){
+        return node->isSoloed();
     }
     return false;
 }
@@ -407,23 +425,29 @@ void MainController::tryConnectInNinjamServer(const Login::NinjamRoom& ninjamRoo
 
 void MainController::start()
 {
-    audioDriver->addListener(*audioDriverListener);
-    audioDriver->start();
-    midiDriver->start();
+    if(!started){
+        started = true;
+        audioDriver->addListener(*audioDriverListener);
+        audioDriver->start();
+        midiDriver->start();
 
-    NatMap map;
-    loginService->connectInServer("elieser teste", 0, "channel", map, 0, "teste env", 44100);
+        NatMap map;
+        loginService->connectInServer("elieser teste", 0, "channel", map, 0, "teste env", 44100);
+    }
 }
 
 void MainController::stop()
 {
-    QMutexLocker locker(&mutex);
-    this->audioDriver->release();
-    this->midiDriver->release();
-    //qDebug() << "disconnecting...";
-    loginService->disconnect();
-    if(ninjamController){
-        ninjamController->stop();
+    if(started){
+        QMutexLocker locker(&mutex);
+        this->audioDriver->release();
+        this->midiDriver->release();
+        //qDebug() << "disconnecting...";
+        loginService->disconnect();
+        if(ninjamController){
+            ninjamController->stop();
+        }
+        started = false;
     }
 }
 

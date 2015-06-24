@@ -17,6 +17,7 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -28,7 +29,10 @@ class Ui_NinjamRoomWindow
 {
 public:
     QVBoxLayout *verticalLayout;
+    QWidget *widget;
+    QHBoxLayout *horizontalLayout_2;
     QLabel *labelRoomName;
+    QPushButton *licenceButton;
     QFrame *line;
     QWidget *content;
     QVBoxLayout *verticalLayout_2;
@@ -49,12 +53,32 @@ public:
         NinjamRoomWindow->setSizePolicy(sizePolicy);
         verticalLayout = new QVBoxLayout(NinjamRoomWindow);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        labelRoomName = new QLabel(NinjamRoomWindow);
+        widget = new QWidget(NinjamRoomWindow);
+        widget->setObjectName(QStringLiteral("widget"));
+        horizontalLayout_2 = new QHBoxLayout(widget);
+        horizontalLayout_2->setSpacing(0);
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
+        labelRoomName = new QLabel(widget);
         labelRoomName->setObjectName(QStringLiteral("labelRoomName"));
+        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy1.setHorizontalStretch(1);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(labelRoomName->sizePolicy().hasHeightForWidth());
+        labelRoomName->setSizePolicy(sizePolicy1);
         labelRoomName->setText(QStringLiteral("TextLabel"));
         labelRoomName->setAlignment(Qt::AlignCenter);
 
-        verticalLayout->addWidget(labelRoomName);
+        horizontalLayout_2->addWidget(labelRoomName);
+
+        licenceButton = new QPushButton(widget);
+        licenceButton->setObjectName(QStringLiteral("licenceButton"));
+        licenceButton->setFlat(true);
+
+        horizontalLayout_2->addWidget(licenceButton);
+
+
+        verticalLayout->addWidget(widget);
 
         line = new QFrame(NinjamRoomWindow);
         line->setObjectName(QStringLiteral("line"));
@@ -65,11 +89,11 @@ public:
 
         content = new QWidget(NinjamRoomWindow);
         content->setObjectName(QStringLiteral("content"));
-        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(1);
-        sizePolicy1.setHeightForWidth(content->sizePolicy().hasHeightForWidth());
-        content->setSizePolicy(sizePolicy1);
+        QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(1);
+        sizePolicy2.setHeightForWidth(content->sizePolicy().hasHeightForWidth());
+        content->setSizePolicy(sizePolicy2);
         verticalLayout_2 = new QVBoxLayout(content);
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         topPanel = new NinjamPanel(content);
@@ -84,7 +108,7 @@ public:
         scrollArea->setWidgetResizable(true);
         tracksPanel = new QWidget();
         tracksPanel->setObjectName(QStringLiteral("tracksPanel"));
-        tracksPanel->setGeometry(QRect(0, 0, 709, 392));
+        tracksPanel->setGeometry(QRect(0, 0, 709, 382));
         horizontalLayout = new QHBoxLayout(tracksPanel);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         horizontalLayout->setContentsMargins(0, 6, 0, 6);
@@ -104,6 +128,10 @@ public:
     void retranslateUi(QWidget *NinjamRoomWindow)
     {
         NinjamRoomWindow->setWindowTitle(QApplication::translate("NinjamRoomWindow", "Form", 0));
+#ifndef QT_NO_TOOLTIP
+        licenceButton->setToolTip(QApplication::translate("NinjamRoomWindow", "read the server licence ...", 0));
+#endif // QT_NO_TOOLTIP
+        licenceButton->setText(QString());
     } // retranslateUi
 
 };

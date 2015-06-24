@@ -312,8 +312,10 @@ void MainFrame::closeEvent(QCloseEvent *)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::showEvent(QShowEvent *)
 {
-    showBusyDialog("Loading rooms list ...");
-    mainController->start();
+    if(!mainController->isStarted()){
+        showBusyDialog("Loading rooms list ...");
+        mainController->start();
+    }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainFrame::~MainFrame()

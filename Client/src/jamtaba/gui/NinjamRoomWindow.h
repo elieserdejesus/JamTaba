@@ -41,6 +41,7 @@ private:
     Ui::NinjamRoomWindow *ui;
     Controller::MainController* mainController;
     QList<NinjamTrackView*> tracks;
+    //QString serverLicence;
 
 private slots:
     //ninja interval controls
@@ -55,6 +56,7 @@ private slots:
     void channelAdded(  Ninjam::User user, Ninjam::UserChannel channel, long channelID );
     void channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
     void channelChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
+    void on_licenceButton_clicked();
 };
 
 #endif // NINJAMROOMWINDOW_H
