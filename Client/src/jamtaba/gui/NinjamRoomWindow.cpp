@@ -2,8 +2,10 @@
 #include "ui_NinjamRoomWindow.h"
 #include "NinjamTrackView.h"
 
+#include <QComboBox>
+#include <QDebug>
+
 #include "../ninjam/User.h"
-//#include "../ninjam/Service.h"
 #include "../ninjam/Server.h"
 
 #include "../loginserver/JamRoom.h"
@@ -56,10 +58,22 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent,const Login::NinjamRoom& room
 
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamRoomWindow::updatePeaks(){
+    foreach (NinjamTrackView* view, tracks) {
+        if(view){
+            Controller::Peaks peaks = mainController->getTrackPeaks(view->getTrackID());
+            view->setPeaks(peaks.left, peaks.right);
+            qDebug() << peaks.left;
+        }
+    }
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::channelRemoved(Ninjam::User, Ninjam::UserChannel /*channel*/, long channelID){
     BaseTrackView* trackView = NinjamTrackView::getTrackViewByID(channelID);
     if(trackView){
         ui->tracksPanel->layout()->removeWidget(trackView);
+        tracks.removeOne(dynamic_cast<NinjamTrackView*>(trackView));
         trackView->deleteLater();
     }
 }
@@ -77,8 +91,9 @@ void NinjamRoomWindow::channelAdded(Ninjam::User user, Ninjam::UserChannel chann
     QString channelName = channel.getName();
     QString countryName = "Country name";//tenho que pegar de uma base local, não dá pra tentar pegar essa informação do server, talvez o server ainda não esteja atualizado com a informação do usuário que acabou de se conectar
     QString countryCode = "UNKNOWN";
-    BaseTrackView* trackView = new NinjamTrackView(ui->tracksPanel, this->mainController, channelID, userName, channelName, countryName, countryCode );
+    NinjamTrackView* trackView = new NinjamTrackView(ui->tracksPanel, this->mainController, channelID, userName, channelName, countryName, countryCode );
     ui->tracksPanel->layout()->addWidget(trackView);
+    tracks.append(trackView);
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

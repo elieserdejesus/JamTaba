@@ -1,11 +1,6 @@
 #pragma once
 
 #include <QWidget>
-#include <QColor>
-#include <QObject>
-#include <vector>
-#include <QResizeEvent>
-#include <QPainter>
 
 /**
  * @author zeh

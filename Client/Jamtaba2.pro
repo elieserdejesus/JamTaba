@@ -1,12 +1,10 @@
-
-
 #quando adiciono muitas pistas o layout fica bagunçado - resolvido, mas preciso testar criando várias pistas no Reaninjam
 #não está aparecendo scroll na área das pistas
 
 #mudei o internalBuffer de audio node de ponteiro para uma instancia comum, tenho que testar se ainda funciona.
+#ontem a noite entrei em um server e quando chegou o primeiro intervalo deu pau.
 
 #controles do canal ninjam não atuaram - Eu estava adiciona as amostras decodificadas diretamente no out buffer, agora mudei para adicionar no internal buffer que depois é processado pela classe base. Tenho que testar isso, não consegui testar na univali
-
 
 
 #se clico no ícone da barra de tarefas a aplicação minimiza. Quando clico novamente bug tudo, o áudio fica acelerado.
@@ -23,6 +21,8 @@
 #onde vou mostrar a licença do server?
 
 #botão de mute da pista local está bugado
+
+#acho que o solo das pistas ninjam não está funcionando
 
 # continuar implementando view da sala ninjam
 

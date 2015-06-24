@@ -2,7 +2,7 @@
 #define NINJAMTRACKVIEW_H
 
 #include "BaseTrackView.h"
-#include "../loginserver/JamRoom.h"
+//#include "../loginserver/JamRoom.h"
 
 class NinjamTrackView : public BaseTrackView
 {

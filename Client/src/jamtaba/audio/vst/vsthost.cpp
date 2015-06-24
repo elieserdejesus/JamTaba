@@ -2,6 +2,7 @@
 #include "aeffectx.h"
 #include "../midi/MidiDriver.h"
 #include "portmidi.h"
+#include <QDebug>
 
 using namespace Vst;
 

@@ -8,6 +8,8 @@
 #include <QHBoxLayout>
 #include <QSpacerItem>
 #include <QAction>
+#include <QMouseEvent>
+#include <QMenu>
 
 const QString FxPanelItem::NEW_EFFECT_STRING = "new effect...";
 

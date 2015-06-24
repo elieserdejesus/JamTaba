@@ -1,12 +1,6 @@
 #pragma once
 
 #include <QWidget>
-#include <QDateTime>
-#include <QPainter>
-#include <cmath>
-#include <climits>
-#include <QDebug>
-#include <QDateTime>
 
 
 class PeakMeter : public QWidget
@@ -29,14 +23,8 @@ private:
     static const int LINES_MARGIN;
     QLinearGradient gradient;
     QColor horizontalLinesColor;
-    //QColor borderColor;
-    //QColor bgColor;
-    //QBrush brush;
 
     float peak;
-
-    //static const QColor DEFAULT_BORDER_COLOR;
-    //static const QColor DEFAULT_BG_COLOR;
 
     qint64 lastUpdate;// QDateTime::currentMSecsSinceEpoch()
     unsigned long decayTime;

@@ -2,8 +2,9 @@
 #define DELAY_H
 
 #include <QWidget>
-#include <QSlider>
-#include <QLineEdit>
+
+class QSlider;
+class QLineEdit;
 
 namespace Audio{
     class JamtabaDelay;

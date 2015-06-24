@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QResizeEvent>
 #include <QStyleOption>
+#include <QDateTime>
+#include <QPainter>
 
 const int PeakMeter::LINES_MARGIN = 4;
 //const QColor PeakMeter::DEFAULT_BORDER_COLOR = QColor(0, 0, 0);

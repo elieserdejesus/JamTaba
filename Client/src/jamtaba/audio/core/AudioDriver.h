@@ -1,8 +1,7 @@
 #pragma once
 
-#include <vector>
-#include <memory>
-#include <QMutex>
+//#include <memory>
+//#include <QMutex>
 #include <vector>
 
 namespace Midi {

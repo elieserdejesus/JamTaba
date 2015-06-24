@@ -4,8 +4,6 @@
 #include "core/AudioNode.h"
 #include <QByteArray>
 #include "vorbis/VorbisDecoder.h"
-#include <QList>
-#include <QMutex>
 
 namespace Audio{
     class SamplesBuffer;

@@ -2,8 +2,6 @@
 
 #include <QString>
 #include <QMap>
-#include <memory>
-#include <QSet>
 
 namespace Ninjam {
 

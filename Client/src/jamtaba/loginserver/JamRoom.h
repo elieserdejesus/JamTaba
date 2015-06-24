@@ -1,9 +1,7 @@
 #pragma once
 
 #include <QMap>
-#include <QList>
 #include <QString>
-#include <QSet>
 #include <memory>
 #include <QJsonObject>
 

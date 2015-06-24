@@ -1,11 +1,6 @@
 #pragma once
-#include <memory>
-#include <vector>
-#include <string>
 #include <QFileInfo>
-#include <QObject>
 #include <QThread>
-#include <QStringList>
 
 namespace Audio {
     class PluginDescriptor;

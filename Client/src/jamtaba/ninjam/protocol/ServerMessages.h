@@ -1,8 +1,7 @@
 #pragma once
 #include <QString>
-#include "ServerMessageParser.h"
-#include <QDebug>
-#include "../User.h"
+#include <QMap>
+#include <QStringList>
 #include <cstdint>
 
 namespace Ninjam {

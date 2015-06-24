@@ -2,8 +2,11 @@
 #define NINJAMPANEL_H
 
 #include <QWidget>
-#include <QComboBox>
-#include <QStringListModel>
+#include <QStringList>
+class QComboBox;
+
+//#include <QComboBox>
+//#include <QStringListModel>
 
 namespace Ui {
 class NinjamPanel;

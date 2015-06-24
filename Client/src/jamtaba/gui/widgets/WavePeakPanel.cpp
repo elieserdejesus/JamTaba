@@ -1,5 +1,7 @@
 #include "WavePeakPanel.h"
 
+#include <QPainter>
+
 const int WavePeakPanel::peaksRectWidth = 3;
 const int WavePeakPanel::peaksPad = 2;
 const int WavePeakPanel::roundBorderSize = 10;

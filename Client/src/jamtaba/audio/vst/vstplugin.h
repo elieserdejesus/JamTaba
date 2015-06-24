@@ -1,9 +1,7 @@
 #pragma once
 
-#include <QDialog>
 #include "../core/plugins.h"
 #include "aeffect.h"
-#include "../../audio/core/AudioDriver.h"
 #include <QLibrary>
 
 namespace Vst {

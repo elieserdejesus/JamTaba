@@ -1,15 +1,11 @@
 #pragma once
 
-#include <QMap>
-#include <QString>
-#include <QStringList>
-#include <QDebug>
-#include <memory>
 #include "UserChannel.h"
+#include <QMap>
 
 namespace Ninjam {
 
-class UserChannel;
+//class UserChannel;
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

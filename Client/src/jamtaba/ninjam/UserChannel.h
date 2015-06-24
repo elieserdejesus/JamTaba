@@ -2,7 +2,7 @@
 #define USERCHANNEL_H
 
 #include <QString>
-#include <QDebug>
+//#include <QDebug>
 
 namespace Ninjam {
 

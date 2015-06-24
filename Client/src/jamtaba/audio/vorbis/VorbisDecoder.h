@@ -1,4 +1,4 @@
-#include <ogg/ogg.h>
+//#include <ogg/ogg.h>
 #include <vorbis/vorbisfile.h>
 #include "../audio/core/SamplesBuffer.h"
 #include <QByteArray>
@@ -19,17 +19,12 @@ public:
     inline int getSampleRate() const{return vorbisFile.vi->rate;}
 
     void setInput(QByteArray vorbisData);
-    //bool canDecode() const;
     void reset();
-    //inline bool isFinished() const{return finished;}
-    //inline bool isInitialized() const{return initialized;}
 private:
-
     bool initialize();
     Audio::SamplesBuffer internalBuffer;
     OggVorbis_File vorbisFile;
     bool initialized;
-    //bool finished;
     QByteArray vorbisInput;
 
     static size_t readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *decoderInstance);

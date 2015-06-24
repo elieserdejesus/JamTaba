@@ -2,7 +2,10 @@
 #define FXPANEL_H
 
 #include <QWidget>
-#include <QMenu>
+
+class QMenu;
+
+//#include <QMenu>
 
 class FxPanelItem;
 

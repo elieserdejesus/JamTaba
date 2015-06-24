@@ -1,6 +1,6 @@
 #pragma once
 #include <QDialog>
-#include <QCloseEvent>
+//#include <QCloseEvent>
 
 namespace Audio {    class AudioDriver; }
 namespace Ui    {    class IODialog; }

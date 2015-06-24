@@ -2,11 +2,6 @@
 #define BUSYDIALOG_H
 
 #include <QDialog>
-#include <QPaintEvent>
-#include <QRegion>
-#include <QRect>
-#include <QShowEvent>
-#include <QHideEvent>
 
 namespace Ui {
 class BusyDialog;

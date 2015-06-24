@@ -1,9 +1,8 @@
 #ifndef VSTHOST_H
 #define VSTHOST_H
 
-//#include "aeffect.h"
 #include "aeffectx.h"
-#include <QDebug>
+//#include <QDebug>
 
 #define MAX_MIDI_EVENTS 20 //in my tests playing piano I can genenerate just 3 messages per block (256 samples) at maximum
 

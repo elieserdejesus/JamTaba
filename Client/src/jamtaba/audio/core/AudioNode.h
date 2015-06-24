@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QSet>
-#include <cmath>
+//#include <cmath>
 #include <QMutex>
 #include "SamplesBuffer.h"
 
@@ -11,7 +11,7 @@ namespace Midi   {
 
 namespace Audio{
 
-class SamplesBuffer;
+//class SamplesBuffer;
 
 class AudioNodeProcessor{
 public:

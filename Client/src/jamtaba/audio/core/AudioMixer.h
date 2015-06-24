@@ -1,8 +1,5 @@
 #pragma once
 
-//#include <set>
-#include <QMutex>
-
 namespace Midi {
     class MidiBuffer;
 }

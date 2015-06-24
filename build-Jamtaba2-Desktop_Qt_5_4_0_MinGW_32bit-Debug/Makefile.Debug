@@ -704,13 +704,6 @@ debug/moc_PeakMeter.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidget
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDateTime \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		../Client/src/jamtaba/gui/widgets/PeakMeter.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\gui\widgets\PeakMeter.h -o debug\moc_PeakMeter.cpp
 
@@ -918,16 +911,7 @@ debug/moc_MainController.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QA
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		../Client/src/jamtaba/audio/core/plugins.h \
-		../Client/src/jamtaba/audio/core/AudioNode.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
-		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
 		../Client/src/jamtaba/MainController.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\MainController.h -o debug\moc_MainController.cpp
 
@@ -1000,15 +984,10 @@ debug/moc_Service.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QTcpSocke
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpoint.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QBuffer \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbuffer.h \
 		../Client/src/jamtaba/ninjam/User.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
 		../Client/src/jamtaba/ninjam/UserChannel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
 		../Client/src/jamtaba/ninjam/Service.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\ninjam\Service.h -o debug\moc_Service.cpp
 
@@ -1109,11 +1088,6 @@ debug/moc_RoomStreamerNode.cpp: ../Client/src/jamtaba/audio/core/AudioNode.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsharedpointer_impl.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFile \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfile.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutexLocker \
 		../Client/src/jamtaba/audio/RoomStreamerNode.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\audio\RoomStreamerNode.h -o debug\moc_RoomStreamerNode.cpp
 
@@ -1220,11 +1194,6 @@ debug/moc_LocalTrackView.cpp: ../Client/src/jamtaba/gui/BaseTrackView.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMenu \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmenu.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
 		../Client/src/jamtaba/gui/LocalTrackView.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\gui\LocalTrackView.h -o debug\moc_LocalTrackView.cpp
 
@@ -1330,16 +1299,13 @@ debug/moc_JamRoomViewPanel.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QPushButton \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qpushbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
 		../Client/src/jamtaba/gui/JamRoomViewPanel.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\gui\JamRoomViewPanel.h -o debug\moc_JamRoomViewPanel.cpp
 
-debug/moc_MainFrame.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
+debug/moc_MainFrame.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMainWindow \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmainwindow.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qwidget.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobal.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qconfig.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfeatures.h \
@@ -1368,23 +1334,21 @@ debug/moc_MainFrame.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobalstatic.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnumeric.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnamespace.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMainWindow \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmainwindow.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnamespace.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs_impl.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs_win.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreevent.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qscopedpointer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmetatype.h \
@@ -1443,64 +1407,9 @@ debug/moc_MainFrame.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		ui_mainframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qeventloop.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdesktopwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QButtonGroup \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qbuttongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QFrame \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHeaderView \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qheaderview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qitemselectionmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMenu \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmenu.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMenuBar \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmenubar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QScrollArea \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QTabWidget \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QVBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidget \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		../Client/src/jamtaba/gui/pluginscandialog.h \
+		../Client/src/jamtaba/gui/BusyDialog.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
-		../Client/src/jamtaba/gui/BusyDialog.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPaintEvent \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QRegion \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QRect \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QShowEvent \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QHideEvent \
 		../Client/src/jamtaba/gui/MainFrame.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\gui\MainFrame.h -o debug\moc_MainFrame.cpp
 
@@ -1606,11 +1515,6 @@ debug/moc_FxPanel.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidget \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMenu \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmenu.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
 		../Client/src/jamtaba/gui/FxPanel.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\gui\FxPanel.h -o debug\moc_FxPanel.cpp
 
@@ -1718,16 +1622,6 @@ debug/moc_FxPanelItem.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabe
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMenu \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmenu.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QMouseEvent \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidget \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QPushButton \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qpushbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
 		../Client/src/jamtaba/gui/FxPanelItem.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\gui\FxPanelItem.h -o debug\moc_FxPanelItem.cpp
 
@@ -1777,10 +1671,14 @@ debug/moc_plugins.cpp: ../Client/src/jamtaba/audio/core/AudioNode.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
 		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qwidget.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs_impl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs_win.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreevent.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qscopedpointer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmetatype.h \
@@ -1788,11 +1686,6 @@ debug/moc_plugins.cpp: ../Client/src/jamtaba/audio/core/AudioNode.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontainerfwd.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qisenum.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject_impl.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs_win.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmargins.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpaintdevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrect.h \
@@ -1944,16 +1837,6 @@ debug/moc_guis.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidget \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSlider \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLineEdit \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlineedit.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextcursor.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextformat.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
 		../Client/src/jamtaba/gui/plugins/guis.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\gui\plugins\guis.h -o debug\moc_guis.cpp
 
@@ -2014,14 +1897,8 @@ debug/moc_PluginFinder.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFileIn
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qshareddata.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QThread \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qthread.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringlist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatastream.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregexp.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringmatcher.h \
 		../Client/src/jamtaba/audio/vst/PluginFinder.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\audio\vst\PluginFinder.h -o debug\moc_PluginFinder.cpp
 
@@ -2234,7 +2111,6 @@ debug/moc_PreferencesDialog.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QCloseEvent \
 		../Client/src/jamtaba/gui/PreferencesDialog.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\gui\PreferencesDialog.h -o debug\moc_PreferencesDialog.cpp
 
@@ -2340,14 +2216,10 @@ debug/moc_NinjamRoomWindow.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSpacerItem \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
 		../Client/src/jamtaba/ninjam/User.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		../Client/src/jamtaba/ninjam/UserChannel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
 		../Client/src/jamtaba/gui/NinjamRoomWindow.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\gui\NinjamRoomWindow.h -o debug\moc_NinjamRoomWindow.cpp
 
@@ -2558,24 +2430,7 @@ debug/moc_NinjamPanel.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidg
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QComboBox \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qcombobox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringListModel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringlistmodel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
 		../Client/src/jamtaba/gui/NinjamPanel.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\gui\NinjamPanel.h -o debug\moc_NinjamPanel.cpp
 
@@ -2629,6 +2484,10 @@ debug/moc_NinjamJamRoomController.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtC
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontainerfwd.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qisenum.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject_impl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
+		../Client/src/jamtaba/ninjam/User.h \
+		../Client/src/jamtaba/ninjam/UserChannel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmap.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
@@ -2647,16 +2506,6 @@ debug/moc_NinjamJamRoomController.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtC
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpoint.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
-		../Client/src/jamtaba/audio/MetronomeTrackNode.h \
-		../Client/src/jamtaba/audio/core/AudioNode.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
-		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
-		../Client/src/jamtaba/ninjam/User.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		../Client/src/jamtaba/ninjam/UserChannel.h \
 		../Client/src/jamtaba/ninjam/Server.h \
 		../Client/src/jamtaba/NinjamJamRoomController.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\NinjamJamRoomController.h -o debug\moc_NinjamJamRoomController.cpp
@@ -2764,11 +2613,6 @@ debug/moc_BusyDialog.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialo
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPaintEvent \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QRegion \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QRect \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QShowEvent \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QHideEvent \
 		../Client/src/jamtaba/gui/BusyDialog.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -I"D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x" -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\gui\BusyDialog.h -o debug\moc_BusyDialog.cpp
 
@@ -2889,14 +2733,7 @@ ui_JamRoomViewPanel.h: ../Client/src/jamtaba/gui/JamRoomViewPanel.ui \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfile.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QColor \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QResizeEvent \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\uic.exe ..\Client\src\jamtaba\gui\JamRoomViewPanel.ui -o ui_JamRoomViewPanel.h
 
 ui_NinjamRoomWindow.h: ../Client/src/jamtaba/gui/NinjamRoomWindow.ui \
@@ -3003,24 +2840,7 @@ ui_NinjamRoomWindow.h: ../Client/src/jamtaba/gui/NinjamRoomWindow.ui \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QComboBox \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qcombobox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringListModel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringlistmodel.h
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\uic.exe ..\Client\src\jamtaba\gui\NinjamRoomWindow.ui -o ui_NinjamRoomWindow.h
 
 ui_BaseTrackView.h: ../Client/src/jamtaba/gui/BaseTrackView.ui \
@@ -3126,14 +2946,7 @@ ui_BaseTrackView.h: ../Client/src/jamtaba/gui/BaseTrackView.ui \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfile.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDateTime \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\uic.exe ..\Client\src\jamtaba\gui\BaseTrackView.ui -o ui_BaseTrackView.h
 
 ui_NinjamPanel.h: ../Client/src/jamtaba/gui/NinjamPanel.ui \
@@ -3239,9 +3052,7 @@ ui_NinjamPanel.h: ../Client/src/jamtaba/gui/NinjamPanel.ui \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfile.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QColor \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QFontMetrics
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\uic.exe ..\Client\src\jamtaba\gui\NinjamPanel.ui -o ui_NinjamPanel.h
 
 ui_BusyDialog.h: ../Client/src/jamtaba/gui/BusyDialog.ui
@@ -3260,9 +3071,10 @@ compiler_clean: compiler_rcc_clean compiler_moc_header_clean compiler_uic_clean
 ####### Compile
 
 debug/main.o: ../Client/src/jamtaba/main.cpp ../Client/src/jamtaba/gui/MainFrame.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMainWindow \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmainwindow.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qwidget.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobal.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qconfig.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfeatures.h \
@@ -3291,23 +3103,21 @@ debug/main.o: ../Client/src/jamtaba/main.cpp ../Client/src/jamtaba/gui/MainFrame
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobalstatic.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnumeric.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnamespace.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMainWindow \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmainwindow.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnamespace.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs_impl.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs_win.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreevent.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qscopedpointer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmetatype.h \
@@ -3366,11 +3176,10 @@ debug/main.o: ../Client/src/jamtaba/main.cpp ../Client/src/jamtaba/gui/MainFrame
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		ui_mainframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
+		../Client/src/jamtaba/gui/BusyDialog.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
+		../Client/src/jamtaba/MainController.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
@@ -3378,61 +3187,9 @@ debug/main.o: ../Client/src/jamtaba/main.cpp ../Client/src/jamtaba/gui/MainFrame
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdesktopwidget.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QButtonGroup \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qbuttongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QFrame \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHeaderView \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qheaderview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qitemselectionmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMenu \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmenu.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMenuBar \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmenubar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QScrollArea \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QTabWidget \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QVBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidget \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		../Client/src/jamtaba/gui/pluginscandialog.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
-		../Client/src/jamtaba/gui/BusyDialog.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPaintEvent \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QRegion \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QRect \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QShowEvent \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QHideEvent \
-		../Client/src/jamtaba/MainController.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		../Client/src/jamtaba/audio/core/plugins.h \
-		../Client/src/jamtaba/audio/core/AudioNode.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
-		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		../Client/src/jamtaba/JamtabaFactory.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		../Client/src/jamtaba/loginserver/LoginService.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
@@ -3451,30 +3208,27 @@ debug/main.o: ../Client/src/jamtaba/main.cpp ../Client/src/jamtaba/gui/MainFrame
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
 		../Client/src/jamtaba/ninjam/Service.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QTcpSocket \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QBuffer \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbuffer.h \
 		../Client/src/jamtaba/ninjam/User.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
 		../Client/src/jamtaba/ninjam/UserChannel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
 		../Client/src/jamtaba/gui/JamRoomViewPanel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QPushButton \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qpushbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidget \
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QThread \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qthread.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\main.o ..\Client\src\jamtaba\main.cpp
 
 debug/ConfigStore.o: ../Client/src/jamtaba/persistence/ConfigStore.cpp ../Client/src/jamtaba/persistence/ConfigStore.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobal.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qconfig.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfeatures.h \
@@ -3503,24 +3257,20 @@ debug/ConfigStore.o: ../Client/src/jamtaba/persistence/ConfigStore.cpp ../Client
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobalstatic.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnumeric.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnamespace.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmap.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtextstream.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiodevice.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSettings \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsettings.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs_impl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreevent.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qscopedpointer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmetatype.h \
@@ -3528,20 +3278,24 @@ debug/ConfigStore.o: ../Client/src/jamtaba/persistence/ConfigStore.cpp ../Client
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontainerfwd.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qisenum.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject_impl.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlocale.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qvariant.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringlist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatastream.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregexp.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringmatcher.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmap.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtextstream.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiodevice.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlocale.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qshareddata.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qvector.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpoint.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSettings \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsettings.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringlist.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatastream.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregexp.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringmatcher.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
@@ -3587,8 +3341,10 @@ debug/ConfigStore.o: ../Client/src/jamtaba/persistence/ConfigStore.cpp ../Client
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\ConfigStore.o ..\Client\src\jamtaba\persistence\ConfigStore.cpp
 
 debug/AudioDriver.o: ../Client/src/jamtaba/audio/core/AudioDriver.cpp ../Client/src/jamtaba/audio/core/AudioDriver.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
+		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobal.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qconfig.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfeatures.h \
@@ -3615,11 +3371,8 @@ debug/AudioDriver.o: ../Client/src/jamtaba/audio/core/AudioDriver.cpp ../Client/
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_gcc.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_unix.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobalstatic.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnumeric.h \
-		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
@@ -3737,8 +3490,11 @@ debug/AudioNode.o: ../Client/src/jamtaba/audio/core/AudioNode.cpp ../Client/src/
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\AudioNode.o ..\Client\src\jamtaba\audio\core\AudioNode.cpp
 
 debug/AudioMixer.o: ../Client/src/jamtaba/audio/core/AudioMixer.cpp ../Client/src/jamtaba/audio/core/AudioMixer.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
+		../Client/src/jamtaba/audio/core/AudioNode.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobal.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qconfig.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfeatures.h \
@@ -3765,12 +3521,8 @@ debug/AudioMixer.o: ../Client/src/jamtaba/audio/core/AudioMixer.cpp ../Client/sr
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_gcc.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_unix.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobalstatic.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnumeric.h \
-		../Client/src/jamtaba/audio/core/AudioNode.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
@@ -3782,6 +3534,7 @@ debug/AudioMixer.o: ../Client/src/jamtaba/audio/core/AudioMixer.cpp ../Client/sr
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
 		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
@@ -3809,7 +3562,6 @@ debug/AudioMixer.o: ../Client/src/jamtaba/audio/core/AudioMixer.cpp ../Client/sr
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpoint.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
 		../Client/src/jamtaba/audio/core/plugins.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qwidget.h \
@@ -3849,7 +3601,6 @@ debug/AudioMixer.o: ../Client/src/jamtaba/audio/core/AudioMixer.cpp ../Client/sr
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
 		../Client/src/jamtaba/audio/vst/VstPlugin.h \
 		../../VST3\ SDK/pluginterfaces/vst2.x/aeffect.h \
-		../Client/src/jamtaba/audio/core/AudioDriver.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QLibrary \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlibrary.h \
 		../Client/src/jamtaba/midi/MidiDriver.h \
@@ -3859,8 +3610,10 @@ debug/AudioMixer.o: ../Client/src/jamtaba/audio/core/AudioMixer.cpp ../Client/sr
 
 debug/PortAudioDriver.o: ../Client/src/jamtaba/audio/core/PortAudioDriver.cpp ../Client/src/jamtaba/audio/core/PortAudioDriver.h \
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
+		../Client/libs/includes/portaudio/portaudio.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobal.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qconfig.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfeatures.h \
@@ -3887,11 +3640,8 @@ debug/PortAudioDriver.o: ../Client/src/jamtaba/audio/core/PortAudioDriver.cpp ..
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_gcc.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_unix.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobalstatic.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnumeric.h \
-		../Client/libs/includes/portaudio/portaudio.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
@@ -4036,13 +3786,7 @@ debug/RoomStreamerNode.o: ../Client/src/jamtaba/audio/RoomStreamerNode.cpp ../Cl
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsharedpointer_impl.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFile \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfile.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutexLocker \
 		../Client/src/jamtaba/audio/codec.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QByteArray \
 		../Client/libs/includes/minimp3/minimp3.h \
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
@@ -4050,7 +3794,11 @@ debug/RoomStreamerNode.o: ../Client/src/jamtaba/audio/RoomStreamerNode.cpp ../Cl
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbuffer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDateTime \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QWaitCondition \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qwaitcondition.h
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qwaitcondition.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutexLocker \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFile \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfile.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\RoomStreamerNode.o ..\Client\src\jamtaba\audio\RoomStreamerNode.cpp
 
 debug/PeakMeter.o: ../Client/src/jamtaba/gui/widgets/PeakMeter.cpp ../Client/src/jamtaba/gui/widgets/PeakMeter.h \
@@ -4156,12 +3904,6 @@ debug/PeakMeter.o: ../Client/src/jamtaba/gui/widgets/PeakMeter.cpp ../Client/src
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDateTime \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QResizeEvent \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QStyleOption \
@@ -4177,7 +3919,13 @@ debug/PeakMeter.o: ../Client/src/jamtaba/gui/widgets/PeakMeter.cpp ../Client/src
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDateTime \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\PeakMeter.o ..\Client\src\jamtaba\gui\widgets\PeakMeter.cpp
 
 debug/WavePeakPanel.o: ../Client/src/jamtaba/gui/widgets/WavePeakPanel.cpp ../Client/src/jamtaba/gui/widgets/WavePeakPanel.h \
@@ -4283,9 +4031,6 @@ debug/WavePeakPanel.o: ../Client/src/jamtaba/gui/widgets/WavePeakPanel.cpp ../Cl
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QColor \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QResizeEvent \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
@@ -4498,16 +4243,7 @@ debug/MainController.o: ../Client/src/jamtaba/MainController.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		../Client/src/jamtaba/audio/core/plugins.h \
-		../Client/src/jamtaba/audio/core/AudioNode.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
-		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
 		../Client/src/jamtaba/midi/portmididriver.h \
 		../Client/src/jamtaba/midi/MidiDriver.h \
@@ -4516,6 +4252,9 @@ debug/MainController.o: ../Client/src/jamtaba/MainController.cpp ../Client/src/j
 		../Client/src/jamtaba/audio/core/PortAudioDriver.h \
 		../Client/libs/includes/portaudio/portaudio.h \
 		../Client/src/jamtaba/audio/core/AudioMixer.h \
+		../Client/src/jamtaba/audio/core/AudioNode.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
+		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
 		../Client/src/jamtaba/audio/RoomStreamerNode.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
@@ -4528,6 +4267,7 @@ debug/MainController.o: ../Client/src/jamtaba/MainController.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QSslConfiguration \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslconfiguration.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslsocket.h \
@@ -4539,8 +4279,6 @@ debug/MainController.o: ../Client/src/jamtaba/MainController.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFile \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutexLocker \
 		../Client/src/jamtaba/loginserver/LoginService.h \
 		../Client/src/jamtaba/loginserver/JamRoom.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
@@ -4549,6 +4287,9 @@ debug/MainController.o: ../Client/src/jamtaba/MainController.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
 		../Client/src/jamtaba/loginserver/natmap.h \
 		../Client/src/jamtaba/JamtabaFactory.h \
+		../Client/src/jamtaba/audio/core/plugins.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
 		../Client/src/jamtaba/audio/vst/VstPlugin.h \
 		../../VST3\ SDK/pluginterfaces/vst2.x/aeffect.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QLibrary \
@@ -4563,27 +4304,25 @@ debug/MainController.o: ../Client/src/jamtaba/MainController.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfileinfo.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QThread \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qthread.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
 		../Client/src/jamtaba/ninjam/Service.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QTcpSocket \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QBuffer \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbuffer.h \
 		../Client/src/jamtaba/ninjam/User.h \
 		../Client/src/jamtaba/ninjam/UserChannel.h \
 		../Client/src/jamtaba/ninjam/Server.h \
 		../Client/src/jamtaba/NinjamJamRoomController.h \
-		../Client/src/jamtaba/audio/MetronomeTrackNode.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QTimer \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtimer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbasictimer.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFile \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		../Client/src/jamtaba/audio/NinjamTrackNode.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QByteArray \
 		../Client/src/jamtaba/audio/vorbis/VorbisDecoder.h \
+		../Client/libs/includes/vorbis/vorbis/vorbisfile.h \
+		../Client/libs/includes/vorbis/vorbis/codec.h \
 		../Client/libs/includes/ogg/ogg/ogg.h \
 		../Client/libs/includes/ogg/ogg/os_types.h \
-		../Client/libs/includes/ogg/ogg/config_types.h \
-		../Client/libs/includes/vorbis/vorbis/vorbisfile.h \
-		../Client/libs/includes/vorbis/vorbis/codec.h
+		../Client/libs/includes/ogg/ogg/config_types.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\MainController.o ..\Client\src\jamtaba\MainController.cpp
 
 debug/LoginService.o: ../Client/src/jamtaba/loginserver/LoginService.cpp ../Client/src/jamtaba/loginserver/LoginService.h \
@@ -4682,8 +4421,6 @@ debug/LoginService.o: ../Client/src/jamtaba/loginserver/LoginService.cpp ../Clie
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qurlquery.h \
 		../Client/src/jamtaba/loginserver/JamRoom.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonObject \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonobject.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
@@ -4767,12 +4504,11 @@ debug/JamRoom.o: ../Client/src/jamtaba/loginserver/JamRoom.cpp ../Client/src/jam
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpoint.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonObject \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonobject.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonArray \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonarray.h \
@@ -4780,11 +4516,7 @@ debug/JamRoom.o: ../Client/src/jamtaba/loginserver/JamRoom.cpp ../Client/src/jam
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QTcpSocket \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QBuffer \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbuffer.h \
 		../Client/src/jamtaba/ninjam/User.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
 		../Client/src/jamtaba/ninjam/UserChannel.h \
 		../Client/src/jamtaba/ninjam/Server.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\JamRoom.o ..\Client\src\jamtaba\loginserver\JamRoom.cpp
@@ -4826,34 +4558,31 @@ debug/ServerMessages.o: ../Client/src/jamtaba/ninjam/protocol/ServerMessages.cpp
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnamespace.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
-		../Client/src/jamtaba/ninjam/protocol/ServerMessageParser.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDataStream \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatastream.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qscopedpointer.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmap.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtextstream.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiodevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs_impl.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreevent.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qscopedpointer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmetatype.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qvarlengtharray.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontainerfwd.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qisenum.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject_impl.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QByteArray \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmap.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtextstream.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlocale.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qvariant.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringlist.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatastream.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregexp.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringmatcher.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qshareddata.h \
@@ -4861,9 +4590,9 @@ debug/ServerMessages.o: ../Client/src/jamtaba/ninjam/protocol/ServerMessages.cpp
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpoint.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		../Client/src/jamtaba/ninjam/User.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
 		../Client/src/jamtaba/ninjam/UserChannel.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\ServerMessages.o ..\Client\src\jamtaba\ninjam\protocol\ServerMessages.cpp
 
@@ -4905,51 +4634,52 @@ debug/ClientMessages.o: ../Client/src/jamtaba/ninjam/protocol/ClientMessages.cpp
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringlist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmap.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtextstream.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatastream.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qscopedpointer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiodevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs_impl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreevent.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qscopedpointer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmetatype.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qvarlengtharray.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontainerfwd.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qisenum.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject_impl.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlocale.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qvariant.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringlist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatastream.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregexp.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringmatcher.h \
+		../Client/src/jamtaba/ninjam/User.h \
+		../Client/src/jamtaba/ninjam/UserChannel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmap.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtextstream.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlocale.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qvariant.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qshareddata.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qvector.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpoint.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
-		../Client/src/jamtaba/ninjam/User.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
-		../Client/src/jamtaba/ninjam/UserChannel.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QCryptographicHash \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcryptographichash.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\ClientMessages.o ..\Client\src\jamtaba\ninjam\protocol\ClientMessages.cpp
 
 debug/ServerMessageParser.o: ../Client/src/jamtaba/ninjam/protocol/ServerMessageParser.cpp ../Client/src/jamtaba/ninjam/protocol/ServerMessageParser.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDataStream \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatastream.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qscopedpointer.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QByteArray \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobal.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qconfig.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfeatures.h \
@@ -4961,7 +4691,9 @@ debug/ServerMessageParser.o: ../Client/src/jamtaba/ninjam/protocol/ServerMessage
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsysinfo.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlogging.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qflags.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobalstatic.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnumeric.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbasicatomic.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_bootstrap.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qgenericatomic.h \
@@ -4975,40 +4707,38 @@ debug/ServerMessageParser.o: ../Client/src/jamtaba/ninjam/protocol/ServerMessage
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_cxx11.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_gcc.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_unix.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobalstatic.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnumeric.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnamespace.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
+		../Client/src/jamtaba/ninjam/protocol/ServerMessages.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmap.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtextstream.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiodevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnamespace.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs_impl.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreevent.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qscopedpointer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmetatype.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qvarlengtharray.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontainerfwd.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qisenum.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject_impl.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QByteArray \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmap.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtextstream.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlocale.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qvariant.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringlist.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatastream.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregexp.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringmatcher.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qshareddata.h \
@@ -5016,15 +4746,13 @@ debug/ServerMessageParser.o: ../Client/src/jamtaba/ninjam/protocol/ServerMessage
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpoint.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
-		../Client/src/jamtaba/ninjam/protocol/ServerMessages.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		../Client/src/jamtaba/ninjam/User.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
+		../Client/src/jamtaba/ninjam/User.h \
 		../Client/src/jamtaba/ninjam/UserChannel.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedPointer \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsharedpointer.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsharedpointer_impl.h
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsharedpointer_impl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\ServerMessageParser.o ..\Client\src\jamtaba\ninjam\protocol\ServerMessageParser.cpp
 
 debug/Server.o: ../Client/src/jamtaba/ninjam/Server.cpp ../Client/src/jamtaba/ninjam/Server.h \
@@ -5096,11 +4824,9 @@ debug/Server.o: ../Client/src/jamtaba/ninjam/Server.cpp ../Client/src/jamtaba/ni
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpoint.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
 		../Client/src/jamtaba/ninjam/User.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		../Client/src/jamtaba/ninjam/UserChannel.h
+		../Client/src/jamtaba/ninjam/UserChannel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Server.o ..\Client\src\jamtaba\ninjam\Server.cpp
 
 debug/Service.o: ../Client/src/jamtaba/ninjam/Service.cpp ../Client/src/jamtaba/ninjam/Service.h \
@@ -5173,21 +4899,15 @@ debug/Service.o: ../Client/src/jamtaba/ninjam/Service.cpp ../Client/src/jamtaba/
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpoint.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QBuffer \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbuffer.h \
 		../Client/src/jamtaba/ninjam/User.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
 		../Client/src/jamtaba/ninjam/UserChannel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
 		../Client/src/jamtaba/ninjam/Server.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
 		../Client/src/jamtaba/ninjam/protocol/ServerMessageParser.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDataStream \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QByteArray \
 		../Client/src/jamtaba/ninjam/protocol/ServerMessages.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
 		../Client/src/jamtaba/ninjam/protocol/ClientMessages.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QHostAddress \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qhostaddress.h \
@@ -5196,9 +4916,10 @@ debug/Service.o: ../Client/src/jamtaba/ninjam/Service.cpp ../Client/src/jamtaba/
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Service.o ..\Client\src\jamtaba\ninjam\Service.cpp
 
 debug/User.o: ../Client/src/jamtaba/ninjam/User.cpp ../Client/src/jamtaba/ninjam/User.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmap.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
+		../Client/src/jamtaba/ninjam/UserChannel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobal.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qconfig.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfeatures.h \
@@ -5227,16 +4948,17 @@ debug/User.o: ../Client/src/jamtaba/ninjam/User.cpp ../Client/src/jamtaba/ninjam
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobalstatic.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnumeric.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnamespace.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmap.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnamespace.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
@@ -5263,17 +4985,11 @@ debug/User.o: ../Client/src/jamtaba/ninjam/User.cpp ../Client/src/jamtaba/ninjam
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpoint.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		../Client/src/jamtaba/ninjam/UserChannel.h \
 		../Client/src/jamtaba/ninjam/Service.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QTcpSocket \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QBuffer \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbuffer.h
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\User.o ..\Client\src\jamtaba\ninjam\User.cpp
 
 debug/LocalTrackView.o: ../Client/src/jamtaba/gui/LocalTrackView.cpp ../Client/src/jamtaba/gui/LocalTrackView.h \
@@ -5380,71 +5096,18 @@ debug/LocalTrackView.o: ../Client/src/jamtaba/gui/LocalTrackView.cpp ../Client/s
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
+		ui_BaseTrackView.h \
+		../Client/src/jamtaba/gui/FxPanel.h \
+		../Client/src/jamtaba/gui/FxPanelItem.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
+		../Client/src/jamtaba/gui/plugins/guis.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMenu \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmenu.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
-		ui_BaseTrackView.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qeventloop.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdesktopwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QButtonGroup \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qbuttongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QFrame \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QGridLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHeaderView \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qheaderview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qitemselectionmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLineEdit \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlineedit.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextcursor.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextformat.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QPushButton \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qpushbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSlider \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QVBoxLayout \
-		../Client/src/jamtaba/gui/widgets/peakmeter.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDateTime \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		../Client/src/jamtaba/gui/FxPanel.h \
-		../Client/src/jamtaba/gui/FxPanelItem.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QMouseEvent \
-		../Client/src/jamtaba/gui/plugins/guis.h
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\LocalTrackView.o ..\Client\src\jamtaba\gui\LocalTrackView.cpp
 
 debug/FxPanel.o: ../Client/src/jamtaba/gui/FxPanel.cpp ../Client/src/jamtaba/gui/FxPanel.h \
@@ -5550,31 +5213,15 @@ debug/FxPanel.o: ../Client/src/jamtaba/gui/FxPanel.cpp ../Client/src/jamtaba/gui
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMenu \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmenu.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
 		../Client/src/jamtaba/gui/FxPanelItem.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QMouseEvent \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QPushButton \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qpushbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
 		../Client/src/jamtaba/gui/plugins/guis.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSlider \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLineEdit \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlineedit.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextcursor.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextformat.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QScrollArea \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qscrollarea.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractscrollarea.h \
@@ -5588,6 +5235,9 @@ debug/FxPanel.o: ../Client/src/jamtaba/gui/FxPanel.cpp ../Client/src/jamtaba/gui
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
@@ -5700,54 +5350,48 @@ debug/FxPanelItem.o: ../Client/src/jamtaba/gui/FxPanelItem.cpp ../Client/src/jam
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMenu \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmenu.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QMouseEvent \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidget \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QPushButton \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qpushbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
 		../Client/src/jamtaba/gui/plugins/guis.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSlider \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLineEdit \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlineedit.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextcursor.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextformat.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidget \
 		../Client/src/jamtaba/audio/core/plugins.h \
 		../Client/src/jamtaba/audio/core/AudioNode.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
 		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QStyleOption \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QPushButton \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qpushbutton.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHBoxLayout \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSpacerItem \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QMouseEvent \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMenu \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmenu.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\FxPanelItem.o ..\Client\src\jamtaba\gui\FxPanelItem.cpp
 
 debug/plugins.o: ../Client/src/jamtaba/audio/core/plugins.cpp ../Client/src/jamtaba/audio/core/plugins.h \
@@ -5797,10 +5441,14 @@ debug/plugins.o: ../Client/src/jamtaba/audio/core/plugins.cpp ../Client/src/jamt
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
 		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qwidget.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs_impl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs_win.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreevent.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qscopedpointer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmetatype.h \
@@ -5808,11 +5456,6 @@ debug/plugins.o: ../Client/src/jamtaba/audio/core/plugins.cpp ../Client/src/jamt
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontainerfwd.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qisenum.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject_impl.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs_win.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmargins.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpaintdevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrect.h \
@@ -5866,8 +5509,7 @@ debug/plugins.o: ../Client/src/jamtaba/audio/core/plugins.cpp ../Client/src/jamt
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFileInfo \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfileinfo.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QThread \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qthread.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qthread.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\plugins.o ..\Client\src\jamtaba\audio\core\plugins.cpp
 
 debug/codec.o: ../Client/src/jamtaba/audio/codec.cpp ../Client/libs/includes/vorbis/vorbis/codec.h \
@@ -5875,8 +5517,10 @@ debug/codec.o: ../Client/src/jamtaba/audio/codec.cpp ../Client/libs/includes/vor
 		../Client/libs/includes/ogg/ogg/os_types.h \
 		../Client/libs/includes/ogg/ogg/config_types.h \
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
+		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobal.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qconfig.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfeatures.h \
@@ -5903,11 +5547,8 @@ debug/codec.o: ../Client/src/jamtaba/audio/codec.cpp ../Client/libs/includes/vor
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_gcc.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_unix.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobalstatic.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnumeric.h \
-		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
@@ -6049,23 +5690,23 @@ debug/guis.o: ../Client/src/jamtaba/gui/plugins/guis.cpp ../Client/src/jamtaba/g
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSlider \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLineEdit \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlineedit.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextcursor.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextformat.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QGridLayout \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSlider \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLineEdit \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlineedit.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextcursor.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextformat.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		../Client/src/jamtaba/audio/core/plugins.h \
@@ -6180,76 +5821,25 @@ debug/JamRoomViewPanel.o: ../Client/src/jamtaba/gui/JamRoomViewPanel.cpp ../Clie
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QPushButton \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qpushbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		ui_jamroomviewpanel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qeventloop.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdesktopwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QButtonGroup \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qbuttongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QFrame \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QGridLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHeaderView \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qheaderview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qitemselectionmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QVBoxLayout \
-		../Client/src/jamtaba/gui/widgets/WavePeakPanel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QColor \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QResizeEvent \
+		../Client/src/jamtaba/loginserver/JamRoom.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonObject \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonobject.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
-		../Client/src/jamtaba/loginserver/JamRoom.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonobject.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QLocale
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\JamRoomViewPanel.o ..\Client\src\jamtaba\gui\JamRoomViewPanel.cpp
 
 debug/MainFrame.o: ../Client/src/jamtaba/gui/MainFrame.cpp ../Client/src/jamtaba/gui/MainFrame.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMainWindow \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmainwindow.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qwidget.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobal.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qconfig.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfeatures.h \
@@ -6278,23 +5868,21 @@ debug/MainFrame.o: ../Client/src/jamtaba/gui/MainFrame.cpp ../Client/src/jamtaba
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobalstatic.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnumeric.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnamespace.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMainWindow \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmainwindow.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnamespace.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs_impl.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs_win.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreevent.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qscopedpointer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmetatype.h \
@@ -6353,73 +5941,25 @@ debug/MainFrame.o: ../Client/src/jamtaba/gui/MainFrame.cpp ../Client/src/jamtaba
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		ui_mainframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qeventloop.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdesktopwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QButtonGroup \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qbuttongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QFrame \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHeaderView \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qheaderview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qitemselectionmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMenu \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmenu.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMenuBar \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmenubar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QScrollArea \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QTabWidget \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QVBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidget \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		../Client/src/jamtaba/gui/pluginscandialog.h \
+		../Client/src/jamtaba/gui/BusyDialog.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
-		../Client/src/jamtaba/gui/BusyDialog.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPaintEvent \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QRegion \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QRect \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QShowEvent \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QHideEvent \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QCloseEvent \
 		../Client/src/jamtaba/gui/PreferencesDialog.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDesktopWidget \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdesktopwidget.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLayout \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
 		../Client/src/jamtaba/gui/JamRoomViewPanel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QPushButton \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qpushbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidget \
 		../Client/src/jamtaba/persistence/ConfigStore.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSettings \
@@ -6427,14 +5967,16 @@ debug/MainFrame.o: ../Client/src/jamtaba/gui/MainFrame.cpp ../Client/src/jamtaba
 		../Client/src/jamtaba/JamtabaFactory.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
 		../Client/src/jamtaba/midi/MidiDriver.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QtGlobal \
 		../Client/src/jamtaba/MainController.h \
-		../Client/src/jamtaba/audio/core/plugins.h \
-		../Client/src/jamtaba/audio/core/AudioNode.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
-		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qeventloop.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
 		../Client/src/jamtaba/loginserver/LoginService.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
@@ -6452,37 +5994,36 @@ debug/MainFrame.o: ../Client/src/jamtaba/gui/MainFrame.cpp ../Client/src/jamtaba
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
 		../Client/src/jamtaba/loginserver/JamRoom.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonObject \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonobject.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
+		../Client/src/jamtaba/audio/core/plugins.h \
+		../Client/src/jamtaba/audio/core/AudioNode.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
+		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
 		../Client/src/jamtaba/gui/LocalTrackView.h \
 		../Client/src/jamtaba/gui/BaseTrackView.h \
 		../Client/src/jamtaba/gui/plugins/guis.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSlider \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLineEdit \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlineedit.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextcursor.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextformat.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
 		../Client/src/jamtaba/gui/FxPanel.h \
 		../Client/src/jamtaba/audio/vst/PluginFinder.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFileInfo \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfileinfo.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QThread \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qthread.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
+		../Client/src/jamtaba/gui/pluginscandialog.h \
 		../Client/src/jamtaba/gui/NinjamRoomWindow.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSpacerItem \
 		../Client/src/jamtaba/ninjam/User.h \
 		../Client/src/jamtaba/ninjam/UserChannel.h \
-		../Client/src/jamtaba/gui/MetronomeTrackView.h \
+		../Client/src/jamtaba/NinjamJamRoomController.h \
 		../Client/src/jamtaba/ninjam/Server.h \
+		../Client/src/jamtaba/gui/MetronomeTrackView.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMessageBox \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmessagebox.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\MainFrame.o ..\Client\src\jamtaba\gui\MainFrame.cpp
@@ -6545,17 +6086,15 @@ debug/PluginFinder.o: ../Client/src/jamtaba/audio/vst/PluginFinder.cpp ../Client
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qshareddata.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QThread \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qthread.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDirIterator \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdiriterator.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdir.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringlist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatastream.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregexp.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringmatcher.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDirIterator \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdiriterator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdir.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmap.h \
@@ -6608,7 +6147,6 @@ debug/PluginFinder.o: ../Client/src/jamtaba/audio/vst/PluginFinder.cpp ../Client
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
 		../Client/src/jamtaba/audio/vst/VstPlugin.h \
 		../../VST3\ SDK/pluginterfaces/vst2.x/aeffect.h \
-		../Client/src/jamtaba/audio/core/AudioDriver.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QLibrary \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlibrary.h \
 		../Client/src/jamtaba/audio/vst/vsthost.h \
@@ -6625,10 +6163,12 @@ debug/PluginFinder.o: ../Client/src/jamtaba/audio/vst/PluginFinder.cpp ../Client
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\PluginFinder.o ..\Client\src\jamtaba\audio\vst\PluginFinder.cpp
 
 debug/VstPlugin.o: ../Client/src/jamtaba/audio/vst/VstPlugin.cpp ../Client/src/jamtaba/audio/vst/VstPlugin.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs.h \
+		../Client/src/jamtaba/audio/core/plugins.h \
+		../Client/src/jamtaba/audio/core/AudioNode.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobal.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qconfig.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfeatures.h \
@@ -6657,21 +6197,27 @@ debug/VstPlugin.o: ../Client/src/jamtaba/audio/vst/VstPlugin.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobalstatic.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnumeric.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnamespace.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
+		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qwidget.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs_impl.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qwindowdefs_win.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreevent.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qscopedpointer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmetatype.h \
@@ -6690,7 +6236,6 @@ debug/VstPlugin.o: ../Client/src/jamtaba/audio/vst/VstPlugin.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringlist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatastream.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiodevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregexp.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringmatcher.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qbrush.h \
@@ -6706,7 +6251,6 @@ debug/VstPlugin.o: ../Client/src/jamtaba/audio/vst/VstPlugin.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpixmap.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsharedpointer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qshareddata.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsharedpointer_impl.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qfont.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qfontmetrics.h \
@@ -6720,7 +6264,6 @@ debug/VstPlugin.o: ../Client/src/jamtaba/audio/vst/VstPlugin.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtextstream.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlocale.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qurl.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qurlquery.h \
@@ -6728,19 +6271,13 @@ debug/VstPlugin.o: ../Client/src/jamtaba/audio/vst/VstPlugin.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		../Client/src/jamtaba/audio/core/plugins.h \
-		../Client/src/jamtaba/audio/core/AudioNode.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
-		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		../../VST3\ SDK/pluginterfaces/vst2.x/aeffect.h \
-		../Client/src/jamtaba/audio/core/AudioDriver.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QLibrary \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlibrary.h \
 		../../VST3\ SDK/pluginterfaces/vst2.x/aeffectx.h \
 		../Client/src/jamtaba/audio/vst/vsthost.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
+		../Client/src/jamtaba/audio/core/AudioDriver.h \
 		../Client/src/jamtaba/midi/MidiDriver.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QtGlobal \
 		../Client/libs/includes/portmidi/portmidi.h \
@@ -6756,9 +6293,8 @@ debug/VstPlugin.o: ../Client/src/jamtaba/audio/vst/VstPlugin.cpp ../Client/src/j
 debug/vsthost.o: ../Client/src/jamtaba/audio/vst/vsthost.cpp ../Client/src/jamtaba/audio/vst/vsthost.h \
 		../../VST3\ SDK/pluginterfaces/vst2.x/aeffectx.h \
 		../../VST3\ SDK/pluginterfaces/vst2.x/aeffect.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
+		../Client/src/jamtaba/midi/MidiDriver.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QtGlobal \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobal.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qconfig.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfeatures.h \
@@ -6787,6 +6323,10 @@ debug/vsthost.o: ../Client/src/jamtaba/audio/vst/vsthost.cpp ../Client/src/jamta
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobalstatic.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnumeric.h \
+		../Client/libs/includes/portmidi/portmidi.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
@@ -6822,10 +6362,7 @@ debug/vsthost.o: ../Client/src/jamtaba/audio/vst/vsthost.cpp ../Client/src/jamta
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qvector.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpoint.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
-		../Client/src/jamtaba/midi/MidiDriver.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QtGlobal \
-		../Client/libs/includes/portmidi/portmidi.h
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\vsthost.o ..\Client\src\jamtaba\audio\vst\vsthost.cpp
 
 debug/MidiDriver.o: ../Client/src/jamtaba/midi/MidiDriver.cpp ../Client/src/jamtaba/midi/MidiDriver.h \
@@ -6964,71 +6501,13 @@ debug/PreferencesDialog.o: ../Client/src/jamtaba/gui/PreferencesDialog.cpp ../Cl
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QCloseEvent \
 		ui_PreferencesDialog.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qeventloop.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdesktopwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QButtonGroup \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qbuttongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QComboBox \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qcombobox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QFormLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qformlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QFrame \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QGroupBox \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgroupbox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHeaderView \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qheaderview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qitemselectionmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QPushButton \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qpushbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QScrollArea \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSpacerItem \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QTabWidget \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QVBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidget \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QFileDialog \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qfiledialog.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdir.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfileinfo.h \
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
 		../Client/src/jamtaba/midi/MidiDriver.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QtGlobal \
 		../Client/src/jamtaba/persistence/ConfigStore.h \
@@ -7036,12 +6515,14 @@ debug/PreferencesDialog.o: ../Client/src/jamtaba/gui/PreferencesDialog.cpp ../Cl
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSettings \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsettings.h \
 		../Client/src/jamtaba/MainController.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		../Client/src/jamtaba/audio/core/plugins.h \
-		../Client/src/jamtaba/audio/core/AudioNode.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
-		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qeventloop.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdesktopwidget.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\PreferencesDialog.o ..\Client\src\jamtaba\gui\PreferencesDialog.cpp
 
 debug/PluginScanDialog.o: ../Client/src/jamtaba/gui/PluginScanDialog.cpp ../Client/src/jamtaba/gui/pluginscandialog.h \
@@ -7147,47 +6628,7 @@ debug/PluginScanDialog.o: ../Client/src/jamtaba/gui/PluginScanDialog.cpp ../Clie
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfile.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		ui_pluginscandialog.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qeventloop.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdesktopwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QButtonGroup \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qbuttongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHeaderView \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qheaderview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qitemselectionmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\PluginScanDialog.o ..\Client\src\jamtaba\gui\PluginScanDialog.cpp
 
 debug/PortMidiDriver.o: ../Client/src/jamtaba/midi/PortMidiDriver.cpp ../Client/src/jamtaba/midi/portmididriver.h \
@@ -7222,21 +6663,20 @@ debug/PortMidiDriver.o: ../Client/src/jamtaba/midi/PortMidiDriver.cpp ../Client/
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnumeric.h \
 		../Client/libs/includes/portmidi/portmidi.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnamespace.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmap.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtextstream.h \
@@ -7367,20 +6807,52 @@ debug/NinjamRoomWindow.o: ../Client/src/jamtaba/gui/NinjamRoomWindow.cpp ../Clie
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSpacerItem \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
 		../Client/src/jamtaba/ninjam/User.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		../Client/src/jamtaba/ninjam/UserChannel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
 		ui_NinjamRoomWindow.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
+		../Client/src/jamtaba/gui/NinjamTrackView.h \
+		../Client/src/jamtaba/gui/BaseTrackView.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QComboBox \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qcombobox.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
+		../Client/src/jamtaba/ninjam/Server.h \
+		../Client/src/jamtaba/loginserver/JamRoom.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonObject \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonobject.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
+		../Client/src/jamtaba/audio/NinjamTrackNode.h \
+		../Client/src/jamtaba/audio/core/AudioNode.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
+		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QByteArray \
+		../Client/src/jamtaba/audio/vorbis/VorbisDecoder.h \
+		../Client/libs/includes/vorbis/vorbis/vorbisfile.h \
+		../Client/libs/includes/vorbis/vorbis/codec.h \
+		../Client/libs/includes/ogg/ogg/ogg.h \
+		../Client/libs/includes/ogg/ogg/os_types.h \
+		../Client/libs/includes/ogg/ogg/config_types.h \
+		../Client/src/jamtaba/audio/MetronomeTrackNode.h \
+		../Client/src/jamtaba/audio/core/AudioDriver.h \
+		../Client/src/jamtaba/NinjamJamRoomController.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
+		../Client/src/jamtaba/MainController.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
@@ -7388,71 +6860,11 @@ debug/NinjamRoomWindow.o: ../Client/src/jamtaba/gui/NinjamRoomWindow.cpp ../Clie
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdesktopwidget.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QButtonGroup \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qbuttongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QFrame \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHeaderView \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qheaderview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qitemselectionmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QScrollArea \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QVBoxLayout \
 		../Client/src/jamtaba/gui/NinjamPanel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QComboBox \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qcombobox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringListModel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringlistmodel.h \
-		../Client/src/jamtaba/gui/NinjamTrackView.h \
-		../Client/src/jamtaba/gui/BaseTrackView.h \
-		../Client/src/jamtaba/loginserver/JamRoom.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonobject.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
-		../Client/src/jamtaba/ninjam/Server.h \
-		../Client/src/jamtaba/audio/NinjamTrackNode.h \
-		../Client/src/jamtaba/audio/core/AudioNode.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
-		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QByteArray \
-		../Client/src/jamtaba/audio/vorbis/VorbisDecoder.h \
-		../Client/libs/includes/ogg/ogg/ogg.h \
-		../Client/libs/includes/ogg/ogg/os_types.h \
-		../Client/libs/includes/ogg/ogg/config_types.h \
-		../Client/libs/includes/vorbis/vorbis/vorbisfile.h \
-		../Client/libs/includes/vorbis/vorbis/codec.h \
-		../Client/src/jamtaba/audio/MetronomeTrackNode.h \
-		../Client/src/jamtaba/audio/core/AudioDriver.h \
-		../Client/src/jamtaba/NinjamJamRoomController.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		../Client/src/jamtaba/MainController.h \
-		../Client/src/jamtaba/audio/core/plugins.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMessageBox \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmessagebox.h
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmessagebox.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\NinjamRoomWindow.o ..\Client\src\jamtaba\gui\NinjamRoomWindow.cpp
 
 debug/BaseTrackView.o: ../Client/src/jamtaba/gui/BaseTrackView.cpp ../Client/src/jamtaba/gui/BaseTrackView.h \
@@ -7559,11 +6971,7 @@ debug/BaseTrackView.o: ../Client/src/jamtaba/gui/BaseTrackView.cpp ../Client/src
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
 		ui_BaseTrackView.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
+		../Client/src/jamtaba/MainController.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
@@ -7571,63 +6979,25 @@ debug/BaseTrackView.o: ../Client/src/jamtaba/gui/BaseTrackView.cpp ../Client/src
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdesktopwidget.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QButtonGroup \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qbuttongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QFrame \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QGridLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHeaderView \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qheaderview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qitemselectionmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QStyleOption \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLineEdit \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlineedit.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextcursor.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextformat.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QPushButton \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qpushbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSlider \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QVBoxLayout \
-		../Client/src/jamtaba/gui/widgets/peakmeter.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDateTime \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		../Client/src/jamtaba/MainController.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		../Client/src/jamtaba/audio/core/plugins.h \
-		../Client/src/jamtaba/audio/core/AudioNode.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
-		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QStyleOption
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\BaseTrackView.o ..\Client\src\jamtaba\gui\BaseTrackView.cpp
 
 debug/NinjamTrackNode.o: ../Client/src/jamtaba/audio/NinjamTrackNode.cpp ../Client/src/jamtaba/audio/NinjamTrackNode.h \
@@ -7679,12 +7049,11 @@ debug/NinjamTrackNode.o: ../Client/src/jamtaba/audio/NinjamTrackNode.cpp ../Clie
 		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QByteArray \
 		../Client/src/jamtaba/audio/vorbis/VorbisDecoder.h \
+		../Client/libs/includes/vorbis/vorbis/vorbisfile.h \
+		../Client/libs/includes/vorbis/vorbis/codec.h \
 		../Client/libs/includes/ogg/ogg/ogg.h \
 		../Client/libs/includes/ogg/ogg/os_types.h \
 		../Client/libs/includes/ogg/ogg/config_types.h \
-		../Client/libs/includes/vorbis/vorbis/vorbisfile.h \
-		../Client/libs/includes/vorbis/vorbis/codec.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDataStream \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatastream.h \
@@ -7712,6 +7081,7 @@ debug/NinjamTrackNode.o: ../Client/src/jamtaba/audio/NinjamTrackNode.cpp ../Clie
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qvector.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpoint.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutexLocker
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\NinjamTrackNode.o ..\Client\src\jamtaba\audio\NinjamTrackNode.cpp
 
@@ -7819,73 +7189,7 @@ debug/NinjamTrackView.o: ../Client/src/jamtaba/gui/NinjamTrackView.cpp ../Client
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		../Client/src/jamtaba/loginserver/JamRoom.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonobject.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
-		ui_BaseTrackView.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qeventloop.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdesktopwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QButtonGroup \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qbuttongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QFrame \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QGridLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHeaderView \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qheaderview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qitemselectionmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLineEdit \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlineedit.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextcursor.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextformat.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QPushButton \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qpushbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSlider \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QVBoxLayout \
-		../Client/src/jamtaba/gui/widgets/peakmeter.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDateTime \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug
+		ui_BaseTrackView.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\NinjamTrackView.o ..\Client\src\jamtaba\gui\NinjamTrackView.cpp
 
 debug/MetronomeTrackNode.o: ../Client/src/jamtaba/audio/MetronomeTrackNode.cpp ../Client/src/jamtaba/audio/MetronomeTrackNode.h \
@@ -8073,55 +7377,7 @@ debug/NinjamPanel.o: ../Client/src/jamtaba/gui/NinjamPanel.cpp ../Client/src/jam
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QComboBox \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qcombobox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringListModel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringlistmodel.h \
-		ui_ninjampanel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qeventloop.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdesktopwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QButtonGroup \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qbuttongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QGridLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHeaderView \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qheaderview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qitemselectionmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSpacerItem \
-		../Client/src/jamtaba/gui/FancyProgressDisplay.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QColor \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QFontMetrics \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
@@ -8232,8 +7488,6 @@ debug/FancyProgressDisplay.o: ../Client/src/jamtaba/gui/FancyProgressDisplay.cpp
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QColor \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QFontMetrics \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
@@ -8297,6 +7551,10 @@ debug/NinjamJamRoomController.o: ../Client/src/jamtaba/NinjamJamRoomController.c
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontainerfwd.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qisenum.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject_impl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
+		../Client/src/jamtaba/ninjam/User.h \
+		../Client/src/jamtaba/ninjam/UserChannel.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmap.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
@@ -8315,16 +7573,6 @@ debug/NinjamJamRoomController.o: ../Client/src/jamtaba/NinjamJamRoomController.c
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpoint.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
-		../Client/src/jamtaba/audio/MetronomeTrackNode.h \
-		../Client/src/jamtaba/audio/core/AudioNode.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
-		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
-		../Client/src/jamtaba/ninjam/User.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QStringList \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		../Client/src/jamtaba/ninjam/UserChannel.h \
 		../Client/src/jamtaba/ninjam/Server.h \
 		../Client/src/jamtaba/MainController.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
@@ -8369,30 +7617,27 @@ debug/NinjamJamRoomController.o: ../Client/src/jamtaba/NinjamJamRoomController.c
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		../Client/src/jamtaba/audio/core/plugins.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
 		../Client/src/jamtaba/ninjam/Service.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QTcpSocket \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QBuffer \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbuffer.h \
 		../Client/src/jamtaba/gui/NinjamRoomWindow.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidget \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSpacerItem \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
 		../Client/src/jamtaba/audio/NinjamTrackNode.h \
+		../Client/src/jamtaba/audio/core/AudioNode.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
+		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QByteArray \
 		../Client/src/jamtaba/audio/vorbis/VorbisDecoder.h \
+		../Client/libs/includes/vorbis/vorbis/vorbisfile.h \
+		../Client/libs/includes/vorbis/vorbis/codec.h \
 		../Client/libs/includes/ogg/ogg/ogg.h \
 		../Client/libs/includes/ogg/ogg/os_types.h \
 		../Client/libs/includes/ogg/ogg/config_types.h \
-		../Client/libs/includes/vorbis/vorbis/vorbisfile.h \
-		../Client/libs/includes/vorbis/vorbis/codec.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutexLocker \
+		../Client/src/jamtaba/audio/MetronomeTrackNode.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QThread \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qthread.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\NinjamJamRoomController.o ..\Client\src\jamtaba\NinjamJamRoomController.cpp
@@ -8501,73 +7746,15 @@ debug/MetronomeTrackView.o: ../Client/src/jamtaba/gui/MetronomeTrackView.cpp ../
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		ui_BaseTrackView.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qeventloop.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdesktopwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QButtonGroup \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qbuttongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QFrame \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QGridLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHeaderView \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qheaderview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qitemselectionmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLineEdit \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlineedit.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextcursor.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextformat.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QPushButton \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qpushbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSlider \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QVBoxLayout \
-		../Client/src/jamtaba/gui/widgets/peakmeter.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDateTime \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug
+		ui_BaseTrackView.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\MetronomeTrackView.o ..\Client\src\jamtaba\gui\MetronomeTrackView.cpp
 
 debug/VorbisDecoder.o: ../Client/src/jamtaba/audio/vorbis/VorbisDecoder.cpp ../Client/src/jamtaba/audio/vorbis/VorbisDecoder.h \
+		../Client/libs/includes/vorbis/vorbis/vorbisfile.h \
+		../Client/libs/includes/vorbis/vorbis/codec.h \
 		../Client/libs/includes/ogg/ogg/ogg.h \
 		../Client/libs/includes/ogg/ogg/os_types.h \
 		../Client/libs/includes/ogg/ogg/config_types.h \
-		../Client/libs/includes/vorbis/vorbis/vorbisfile.h \
-		../Client/libs/includes/vorbis/vorbis/codec.h \
 		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QByteArray \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
@@ -8638,7 +7825,6 @@ debug/VorbisDecoder.o: ../Client/src/jamtaba/audio/vorbis/VorbisDecoder.cpp ../C
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QThread \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qthread.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\VorbisDecoder.o ..\Client\src\jamtaba\audio\vorbis\VorbisDecoder.cpp
@@ -8888,51 +8074,7 @@ debug/BusyDialog.o: ../Client/src/jamtaba/gui/BusyDialog.cpp ../Client/src/jamta
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPaintEvent \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QRegion \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QRect \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QShowEvent \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QHideEvent \
 		ui_BusyDialog.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qeventloop.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdesktopwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QButtonGroup \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qbuttongroup.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QHeaderView \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qheaderview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractscrollarea.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qframe.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qabstractitemmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qitemselectionmodel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractitemdelegate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyleoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractspinbox.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvalidator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractslider.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qstyle.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabbar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qtabwidget.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qrubberband.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLabel \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlabel.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QVBoxLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qboxlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayout.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qlayoutitem.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qgridlayout.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
@@ -8940,6 +8082,8 @@ debug/BusyDialog.o: ../Client/src/jamtaba/gui/BusyDialog.cpp ../Client/src/jamta
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QMovie \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qmovie.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qimagereader.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreapplication.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qeventloop.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qimageiohandler.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qplugin.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpointer.h \
