@@ -2,9 +2,12 @@
 #define NINJAMROOMWINDOW_H
 
 #include <QWidget>
-#include <QSpacerItem>
+//#include <QSpacerItem>
 #include "../ninjam/User.h"
-#include "../ninjam/UserChannel.h"
+//#include "../ninjam/UserChannel.h"
+
+
+class NinjamTrackView;
 
 namespace Ui {
 class NinjamRoomWindow;
@@ -21,8 +24,8 @@ namespace Controller {
 
 namespace Ninjam {
     //class Server;
-    class UserChannel;
-    class User;
+    //class UserChannel;
+    //class User;
 }
 
 class NinjamRoomWindow : public QWidget
@@ -32,10 +35,12 @@ class NinjamRoomWindow : public QWidget
 public:
     explicit NinjamRoomWindow(QWidget *parent, const Login::NinjamRoom& room, Controller::MainController *mainController);
     ~NinjamRoomWindow();
+    void updatePeaks();
 
 private:
     Ui::NinjamRoomWindow *ui;
     Controller::MainController* mainController;
+    QList<NinjamTrackView*> tracks;
 
 private slots:
     //ninja interval controls

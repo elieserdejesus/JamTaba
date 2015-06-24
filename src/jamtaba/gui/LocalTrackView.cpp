@@ -4,6 +4,7 @@
 #include "FxPanelItem.h"
 //#include "ui_fxpanel.h"
 #include "plugins/guis.h"
+#include <QMenu>
 
 LocalTrackView::LocalTrackView(QWidget* parent, Controller::MainController *mainController)
     :BaseTrackView(parent, mainController, 1), fxPanel(nullptr)

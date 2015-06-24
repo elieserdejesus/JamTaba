@@ -2,8 +2,7 @@
 #define FANCY_PROGRESS_DISPLAY_H
 
 #include <QWidget>
-#include <QColor>
-#include <QFontMetrics>
+
 
 class FancyProgressDisplay : public QWidget{
 private:

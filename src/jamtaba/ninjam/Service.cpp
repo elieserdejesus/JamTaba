@@ -207,9 +207,10 @@ void Service::handle(const ServerAuthReplyMessage& msg){
         ClientSetChannel setChannelMsg(this->channels[0]);
         sendMessageToServer(&setChannelMsg);
     }
-    else{
-        emit error(msg.getErrorMessage());
-    }
+    //when user is not authenticated the socketErrorSlot is called and dispatch an error signal
+//    else{
+//        emit error(msg.getErrorMessage());
+//    }
 }
 
 void Service::startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password){

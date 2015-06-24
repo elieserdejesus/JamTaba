@@ -3,8 +3,6 @@
 
 #include "core/AudioNode.h"
 
-#include <QMutex>
-
 namespace Audio {
 class SamplesBuffer;
 

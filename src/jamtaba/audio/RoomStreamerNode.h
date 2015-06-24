@@ -1,15 +1,18 @@
 #pragma once
 
 #include "core/AudioNode.h"
-#include <memory>
+//#include <memory>
 #include <QNetworkReply>
+#include <QNetworkAccessManager>
 #include <QObject>
-#include <QList>
-#include <QFile>
+//#include <QList>
+//#include <QFile>
 #include <deque>
-#include <vector>
-#include <QMutex>
-#include <QMutexLocker>
+//#include <vector>
+//#include <QMutex>
+//#include <QMutexLocker>
+
+class QIODevice;
 
 namespace Audio {
 

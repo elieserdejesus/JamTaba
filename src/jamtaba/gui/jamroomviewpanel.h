@@ -2,11 +2,6 @@
 #define JAMROOMVIEWPANEL_H
 
 #include <QWidget>
-#include <map>
-#include <string>
-#include <QPushButton>
-
-//static std::map<std::string, std::string> countriesMap;
 
 namespace Ui { class RoomViewPanel; }
 

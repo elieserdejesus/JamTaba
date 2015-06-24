@@ -3,7 +3,6 @@
 
 #include "MidiDriver.h"
 #include "portmidi.h"
-#include <QList>
 
 namespace Midi {
 

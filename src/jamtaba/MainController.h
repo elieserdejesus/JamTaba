@@ -1,10 +1,8 @@
 #pragma once
 
 #include <QApplication>
-#include <QDebug>
 #include <memory>
-#include <QList>
-#include "audio/core/plugins.h"
+#include <QMutex>
 
 class MainFrame;
 
@@ -19,6 +17,9 @@ namespace Audio {
     class AbstractMp3Streamer;
     class Plugin;
     class AudioMixer;
+    class SamplesBuffer;
+    class AudioNode;
+    class PluginDescriptor;
 }
 
 namespace Midi{

@@ -21,6 +21,7 @@
 #include "../audio/vst/PluginFinder.h"
 #include "pluginscandialog.h"
 #include "NinjamRoomWindow.h"
+#include "../NinjamJamRoomController.h"
 #include "MetronomeTrackView.h"
 #include "../ninjam/Server.h"
 #include <QMessageBox>
@@ -31,6 +32,7 @@ using namespace Persistence;
 using namespace Controller;
 using namespace Ninjam;
 
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent)
     :
@@ -39,7 +41,8 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     fxMenu(nullptr),
     mainController(mainController),
     pluginScanDialog(nullptr),
-    metronomeTrackView(nullptr)
+    metronomeTrackView(nullptr),
+    ninjamWindow(nullptr)
 {
 	ui.setupUi(this);
 
@@ -223,8 +226,11 @@ void MainFrame::on_enteredInRoom(Login::AbstractJamRoom *room){
     hideBusyDialog();
     if(room->getRoomType() == Login::AbstractJamRoom::Type::NINJAM){
         Login::NinjamRoom* ninjamRoom = dynamic_cast<Login::NinjamRoom*>(room);
-        NinjamRoomWindow* roomWindow = new NinjamRoomWindow(ui.tabWidget, *ninjamRoom, mainController);
-        int index = ui.tabWidget->addTab(roomWindow, room->getName());
+        if(ninjamWindow){
+            ninjamWindow->deleteLater();
+        }
+        ninjamWindow = new NinjamRoomWindow(ui.tabWidget, *ninjamRoom, mainController);
+        int index = ui.tabWidget->addTab(ninjamWindow, room->getName());
         ui.tabWidget->setCurrentIndex(index);
 
         //add metronome track
@@ -249,17 +255,21 @@ void MainFrame::on_exitedFromRoom(bool normalDisconnection){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::timerEvent(QTimerEvent *){
-
-    //qDebug() << "timerEvent  Thread ID: " << QThread::currentThreadId();
-
     //update local input track peaks
     Peaks inputPeaks = mainController->getInputPeaks();
     localTrackView->setPeaks(inputPeaks.left, inputPeaks.right);
 
     //update metronome peaks
-    if(metronomeTrackView){
-        Peaks peaks = mainController->getTrackPeaks(metronomeTrackView->getTrackID());
-        metronomeTrackView->setPeaks(peaks.left, peaks.right);
+    if(mainController->getNinjamController()->isRunning()){
+        if(metronomeTrackView){
+            Peaks peaks = mainController->getTrackPeaks(metronomeTrackView->getTrackID());
+            metronomeTrackView->setPeaks(peaks.left, peaks.right);
+        }
+
+        //update tracks peaks
+        if(ninjamWindow){
+            ninjamWindow->updatePeaks();
+        }
     }
 
     //update room stream plot

@@ -1,5 +1,7 @@
 #include "UserChannel.h"
 
+#include <QDebug>
+
 using namespace Ninjam;
 
 UserChannel::UserChannel(QString userFullName, QString channelName, bool active, int channelIndex, short volume, quint8 pan, quint8 flags)

@@ -2,10 +2,9 @@
 #define FXPANELITEM_H
 
 #include <QLabel>
-#include <QMenu>
-#include <QMouseEvent>
-#include <QWidget>
-#include <QPushButton>
+
+class QMenu;
+class QPushButton;
 
 namespace Audio {
     class Plugin;

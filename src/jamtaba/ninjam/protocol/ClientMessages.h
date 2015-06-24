@@ -2,9 +2,7 @@
 
 #include <QByteArray>
 #include <QString>
-#include <QDebug>
-
-
+#include <QStringList>
 
 namespace Ninjam {
 

@@ -1,11 +1,10 @@
 #pragma once
 
-//#include <QList>
 #include <QTcpSocket>
 #include <memory>
-#include <QDebug>
-#include <QObject>
-#include <QBuffer>
+//#include <QDebug>
+//#include <QObject>
+//#include <QBuffer>
 
 //#include "nvwa/debug_new.h"
 
@@ -14,8 +13,6 @@
 
 
 namespace Ninjam {
-
-
 
 class PublicServersParser;
 class Server;

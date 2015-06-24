@@ -1,12 +1,11 @@
 #pragma once
 
-#include <QDataStream>
 #include <QByteArray>
-#include <QDataStream>
-#include <QMap>
-//#include <memory>
+//#include <QMap>
 #include "ServerMessages.h"
 #include <cstdint>
+
+class QDataStream;
 
 namespace Ninjam {
 

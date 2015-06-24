@@ -13,6 +13,7 @@
 #include <QWaitCondition>
 #include <cmath>
 #include <QMutexLocker>
+#include <QFile>
 
 using namespace Audio;
 

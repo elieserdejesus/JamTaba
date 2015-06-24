@@ -3,8 +3,6 @@
 
 namespace Audio {
 
-
-
 class SamplesBuffer{
 
     friend class AudioNodeProcessor;
@@ -12,8 +10,6 @@ class SamplesBuffer{
 public:
     float** samples;//deixei public porque o ogg decoder não funcionou de outra maneira, tive que acessar diretamente o endereço desse array
 private:
-
-
     unsigned int channels;
     unsigned int frameLenght;
     unsigned const int maxFrameLenght;

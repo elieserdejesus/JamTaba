@@ -1,10 +1,15 @@
 #pragma once
-#include <QList>
+
 #include <QtWidgets/QMainWindow>
 #include "ui_mainframe.h"
-#include <QMap>
-#include "pluginscandialog.h"
+//#include <QList>
+//#include <QMap>
+//#include "pluginscandialog.h"
 #include "BusyDialog.h"
+//#include "NinjamRoomWindow.h"
+
+class PluginScanDialog;
+class NinjamRoomWindow;
 
 namespace Controller{
     class MainController;
@@ -12,6 +17,7 @@ namespace Controller{
 namespace Ui{
     class MainFrameClass;
     class MainFrame;
+    //class NinjamRoomWindow;
 }
 
 namespace Login {
@@ -91,7 +97,7 @@ private:
     Ui::MainFrameClass ui;
     LocalTrackView* localTrackView;
     MetronomeTrackView* metronomeTrackView;
-
+    NinjamRoomWindow* ninjamWindow;
     //PluginGui* createPluginView(Plugin::PluginDescriptor *, Audio::Plugin *plugin) ;
 
     void showPluginGui(Audio::Plugin* plugin);

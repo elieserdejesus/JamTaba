@@ -7,6 +7,7 @@
 #include "../NinjamRoomWindow.h"
 #include "../audio/NinjamTrackNode.h"
 #include <QMutexLocker>
+#include "../audio/MetronomeTrackNode.h"
 
 #include <QDebug>
 #include <QThread>

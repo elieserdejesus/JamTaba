@@ -1,11 +1,5 @@
 #pragma once
 #include "AudioNode.h"
-#include <memory>
-#include <vector>
-#include <string>
-#include <map>
-#include <QObject>
-#include <QMutex>
 #include <QDialog>
 
 namespace Audio {

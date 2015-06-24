@@ -2,15 +2,18 @@
 #define NINJAMJAMROOMCONTROLLER_H
 
 #include <QObject>
-#include <QMap>
 #include <QMutex>
-#include "audio/MetronomeTrackNode.h"
 #include "../ninjam/User.h"
-#include "../ninjam/UserChannel.h"
 #include "../ninjam/Server.h"
 
 
 class NinjamTrackNode;
+
+namespace Audio {
+    class MetronomeTrackNode;
+    class SamplesBuffer;
+}
+
 
 namespace Controller {
 

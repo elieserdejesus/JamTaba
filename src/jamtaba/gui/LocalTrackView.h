@@ -2,7 +2,8 @@
 
 #include "BaseTrackView.h"
 #include <QWidget>
-#include <QMenu>
+class QMenu;
+//#include <QMenu>
 
 class FxPanel;
 

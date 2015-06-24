@@ -3,6 +3,7 @@
 #include "../User.h"
 
 #include <QSharedPointer>
+#include <QDebug>
 
 using namespace Ninjam;
 
