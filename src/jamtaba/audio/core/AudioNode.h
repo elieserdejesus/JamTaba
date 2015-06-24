@@ -65,9 +65,7 @@ public:
     void setPan(float pan);
     inline float getPan() const {return pan;}
 
-    inline float getLastPeakLeft() const{return lastPeaks[0];}
-    inline float getLastPeakRight() const{return lastPeaks[1];}
-    inline float getLastPeak() const {return std::max(lastPeaks[0], lastPeaks[1]);}
+    AudioPeak getLastPeak(bool resetPeak=false) const;
 
     void deactivate();
     inline bool isActivated() const{return activated;}
@@ -75,7 +73,7 @@ protected:
     QSet<AudioNode*> connections;
     QSet<AudioNodeProcessor*> processors;
     SamplesBuffer internalBuffer;
-    float lastPeaks[2];
+    mutable Audio::AudioPeak lastPeak;
     QMutex mutex; //used to protected connections manipulation because nodes can be added or removed by different threads
     bool activated; //used to safely remove non activated nodes
 private:
@@ -131,6 +129,7 @@ private:
 public:
     LocalInputAudioNode(int firstInputIndex=0, bool isMono=true);
     virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
+
 };
 //++++++++++++++++++++++++
 }

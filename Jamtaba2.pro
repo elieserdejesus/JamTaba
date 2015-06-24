@@ -1,15 +1,8 @@
 #de vez em quando buga quando chega o primeiro intervalo e ainda não sei porque
 
-#acho que o solo das pistas ninjam não está funcionando
-
-#meters estão com problema, fica bem claro no meter do metronomo
-
-# continuar implementando view da sala ninjam
-
 #sair da sala
 #não posso editar o nome das pistas
 #bandeira do pais
-#mapa com os jogadores? É possível?
 
 #quando trocar de bpi ver se ainda é possível usar a mesma acentuação procurando pelo valor
 #antigo na nova lista
@@ -23,8 +16,9 @@
 # programa fechando com erro, basta abrir e fechar para ver o erro na finalização. Quando testei sem nenhum device midi conectado não de problema. Então parece ser a portmidi.
 
 # Quando botei o reverb depois do B4 ouvi o reverb na entrada do mic mas não no B4, o encadeamento tem problema
+#Na verdade preciso repensar isso, não faz sentido ter midi e áudio ao mesmo tempo em uma pista
 
-# não estou chamando o startProcess nos VSTs
+# não estou chamando o startProcess nos VSTs, isso pode bugar VSTs que utilizam
 
 # drummix multi deu problema na mixagem dos canais, acho que só consegui ouvir o bumbo e o vazamendo das outras peças
 
@@ -36,7 +30,7 @@
 
 #audo update: https://wiki.qt.io/Qt-Installer-Framework
 
-
+#mapa com os jogadores? É possível?
 
 #PLUGINS NATIVOS
     # mostrar plugins nativos
@@ -138,7 +132,8 @@ HEADERS += \
     src/jamtaba/audio/vorbis/VorbisDecoder.h \
     src/jamtaba/ninjam/UserChannel.h \
     src/jamtaba/audio/core/SamplesBuffer.h \
-    src/jamtaba/gui/BusyDialog.h
+    src/jamtaba/gui/BusyDialog.h \
+    src/jamtaba/audio/core/AudioPeak.h
 
 
 SOURCES += \
@@ -197,7 +192,8 @@ SOURCES += \
     src/jamtaba/audio/vorbis/VorbisDecoder.cpp \
     src/jamtaba/ninjam/UserChannel.cpp \
     src/jamtaba/audio/core/SamplesBuffer.cpp \
-    src/jamtaba/gui/BusyDialog.cpp
+    src/jamtaba/gui/BusyDialog.cpp \
+    src/jamtaba/audio/core/AudioPeak.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
@@ -214,7 +210,7 @@ FORMS += \
 #win32:LIBPATH += C:/Qt/Qt5.4.0/Tools/mingw491_32/i686-w64-mingw32/lib/ \
 #win32:LIBPATH += C:\Qt\Qt5.4.2\5.4\msvc2013\lib
 
-VST_SDK_PATH = "D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x/"
+VST_SDK_PATH = "D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3_SDK/pluginterfaces/vst2.x/"
 
 
 INCLUDEPATH += src/jamtaba/gui                  \

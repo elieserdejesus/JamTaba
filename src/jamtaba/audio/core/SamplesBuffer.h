@@ -1,7 +1,11 @@
 #ifndef SAMPLESBUFFER_H
 #define SAMPLESBUFFER_H
 
+#include "AudioPeak.h"
+
 namespace Audio {
+
+
 
 class SamplesBuffer{
 
@@ -17,30 +21,23 @@ private:
 
     float** samples;//poderia deixar fixo com 2 canais e 4096 samples
 
-    mutable float peaks[2];
-
     inline bool isMono() const {return channels == 1;}
 
     inline bool channelIsValid(unsigned int channel) const{return channel < channels;}
     inline bool sampleIndexIsValid(unsigned int sampleIndex) const{return sampleIndex < frameLenght;}
 
-    void computePeaks();
+    //void computePeaks();
 
-    //achei que isso iria gerar error nos lugares onde acontecem copias, mas não rolou
-    //tentar implementar esses métodos e disparar warnings para ver
-
-
-public:
-    SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT);
     SamplesBuffer(const SamplesBuffer& other);
     SamplesBuffer& operator=(const SamplesBuffer& other);
 
+public:
+    SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT);
     ~SamplesBuffer();
 
     static const SamplesBuffer ZERO_BUFFER;//a static buffer with zero samples
 
-    void copyLeftChannelToRight();//usefull to transform a mono input in a pseudo-stereo (both channels are the same)
-
+    //void copyLeftChannelToRight();//usefull to transform a mono input in a pseudo-stereo (both channels are the same)
 
     void setOffset(int offset);
     void resetOffset();
@@ -59,7 +56,7 @@ public:
     void zero();
 
 
-    const float *getPeaks() const;//{return peaks[channel];}
+    Audio::AudioPeak computePeak() const;//{return peaks[channel];}
 
     inline void add(const SamplesBuffer& buffer){add(buffer, 0);}
     void add(int channel, int sampleIndex, float sampleValue);

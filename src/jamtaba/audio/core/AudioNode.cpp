@@ -1,6 +1,7 @@
 #include "AudioNode.h"
 #include "AudioDriver.h"
 #include "SamplesBuffer.h"
+#include "AudioPeak.h"
 #include <cmath>
 #include <QDebug>
 #include "../midi/MidiDriver.h"
@@ -68,11 +69,11 @@ void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
     }
     internalBuffer.applyGain(gain, leftGain, rightGain);
 
-    const float* peaks = internalBuffer.getPeaks();
-    lastPeaks[0] = peaks[0]; lastPeaks[1] = peaks[1];
+    lastPeak.update(internalBuffer.computePeak());
 
     out.add(internalBuffer);
 }
+
 
 AudioNode::AudioNode()
      : //lastPeaks{0,0},
@@ -83,9 +84,19 @@ AudioNode::AudioNode()
       pan(0)/*center*/,
       leftGain(1.0),
       rightGain(1.0),
-      internalBuffer(2, AudioDriver::MAX_BUFFERS_LENGHT)
+      internalBuffer(2, AudioDriver::MAX_BUFFERS_LENGHT),
+      lastPeak(0, 0)
 {
 
+}
+
+Audio::AudioPeak AudioNode::getLastPeak(bool resetPeak) const{
+    AudioPeak peak = this->lastPeak;
+    if(resetPeak){
+        this->lastPeak.zero();
+    }
+
+    return peak;
 }
 
 void AudioNode::setPan(float pan) {

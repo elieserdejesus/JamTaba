@@ -67,8 +67,8 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, const Login::NinjamRoom& roo
 void NinjamRoomWindow::updatePeaks(){
     foreach (NinjamTrackView* view, tracks) {
         if(view){
-            Controller::Peaks peaks = mainController->getTrackPeaks(view->getTrackID());
-            view->setPeaks(peaks.left, peaks.right);
+            Audio::AudioPeak peak = mainController->getTrackPeak(view->getTrackID());
+            view->setPeaks(peak.getLeft(), peak.getRight());
         }
     }
 }
