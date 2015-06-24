@@ -3,6 +3,7 @@
 #include "../MainController.h"
 #include <QStyleOption>
 #include <QPainter>
+#include <QDebug>
 
 QMap<long, BaseTrackView*> BaseTrackView::trackViews;//static map
 
@@ -33,6 +34,9 @@ BaseTrackView* BaseTrackView::getTrackViewByID(long trackID){
 }
 
 void BaseTrackView::setPeaks(float left, float right){
+    if(left < 0 || right < 0){
+        qWarning() << "picos menores que zero left:" << left << " right:" << right;
+    }
     ui->peakMeterLeft->setPeak(left);
     ui->peakMeterRight->setPeak(right);
 }

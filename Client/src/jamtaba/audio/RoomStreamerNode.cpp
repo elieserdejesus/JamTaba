@@ -57,8 +57,7 @@ void AbstractMp3Streamer::processReplacing(SamplesBuffer &/*in*/, SamplesBuffer 
             samplesBuffer[c].pop_front();
         }
     }
-    const float* peaks = buffer.getPeaks();
-    this->lastPeaks[0] = peaks[0]; this->lastPeaks[1] = peaks[1];
+    this->lastPeak.update(buffer.computePeak());
 
     faderProcessor.process(buffer);//aply fade in in stream
 
@@ -154,7 +153,7 @@ RoomStreamerNode::~RoomStreamerNode(){
 
 void RoomStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out){
     if(buffering){
-        lastPeaks[0] = lastPeaks[1] = 0;
+        lastPeak.zero();
         return;
     }
     AbstractMp3Streamer::processReplacing(in, out);
@@ -206,11 +205,7 @@ void TestStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out){
         oscilator->processReplacing(in, out);
         faderProcessor.process(out);
     }
-    const float* peaks = out.getPeaks();
-    lastPeaks[0] = peaks[0];
-    lastPeaks[1] = peaks[1];
-
-
+    lastPeak.update( out.computePeak());
 }
 
 

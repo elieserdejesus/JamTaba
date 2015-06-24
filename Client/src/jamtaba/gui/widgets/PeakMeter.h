@@ -22,12 +22,16 @@ protected:
 private:
     static const int LINES_MARGIN;
     QLinearGradient gradient;
-    QColor horizontalLinesColor;
+    static const QColor HORIZONTAL_LINES_COLOR;
+    static const QColor MAX_PEAK_COLOR;
 
-    float peak;
+    float currentPeak;
+    float maxPeak;
+    qint64 lastMaxPeakTime;
 
     qint64 lastUpdate;// QDateTime::currentMSecsSinceEpoch()
-    unsigned long decayTime;
+    static const int DECAY_TIME = 1500;
+    static const int MAX_PEAK_SHOW_TIME = 1500;
 };
 
 

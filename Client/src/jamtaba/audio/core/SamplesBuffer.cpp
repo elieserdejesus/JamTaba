@@ -1,8 +1,12 @@
 #include "SamplesBuffer.h"
 #include <stdexcept>
 #include <QDebug>
+#include <cmath>
 
 using namespace Audio;
+//+++++++++++++++++=
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 const SamplesBuffer SamplesBuffer::ZERO_BUFFER(1, 0);
 
@@ -17,7 +21,7 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFE
     if(channels == 0){
         throw std::runtime_error(std::string("AudioSamplesBuffer::channels == 0"));
     }
-    this->peaks[0] = this->peaks[1] = 0;
+
     samples = new float*[channels];
     for (unsigned int c = 0; c < channels; ++c) {
         samples[c] = new float[MAX_BUFFERS_LENGHT];
@@ -127,10 +131,11 @@ void SamplesBuffer::zero()
     }
 }
 
-const float *SamplesBuffer::getPeaks() const
+AudioPeak SamplesBuffer::computePeak() const
 {
     //QMutexLocker locker(&mutex);
     float abs;
+    float peaks[2];//left and right peaks
     for (unsigned int c = 0; c < channels; ++c) {
         float maxPeak = 0;
         for (unsigned int i = 0; i < frameLenght; ++i) {
@@ -144,14 +149,14 @@ const float *SamplesBuffer::getPeaks() const
     if(isMono()){
         peaks[1] = peaks[0];
     }
-    return peaks;
+    return AudioPeak(peaks[0], peaks[1]);
 }
 
-void SamplesBuffer::copyLeftChannelToRight(){
-    if(channels > 1){
-        memcpy(samples[1], samples[0], frameLenght * sizeof(float));
-    }
-}
+//void SamplesBuffer::copyLeftChannelToRight(){
+//    if(channels > 1){
+//        memcpy(samples[1], samples[0], frameLenght * sizeof(float));
+//    }
+//}
 
 void SamplesBuffer::add(const SamplesBuffer &buffer, int offset){
     //QMutexLocker locker(&mutex);

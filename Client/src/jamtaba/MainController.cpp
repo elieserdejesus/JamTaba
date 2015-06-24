@@ -110,11 +110,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
 
     this->audioMixer->addNode( *this->roomStreamer);
 
-    {
-        //QMutexLocker locker(&tracksMutex);
-        tracksNodes.insert(1, audioMixer->getLocalInput());
-    }
-
+    tracksNodes.insert(INPUT_TRACK_ID, audioMixer->getLocalInput());
 
     vstHost->setSampleRate(audioDriver->getSampleRate());
     vstHost->setBlockSize(audioDriver->getBufferSize());
@@ -217,11 +213,10 @@ void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuff
 
     audioMixer->process(in, out);
 
-    inputPeaks.left = audioMixer->getLocalInput()->getLastPeakLeft();
-    inputPeaks.right = audioMixer->getLocalInput()->getLastPeakRight();
 
-    roomStreamerPeaks.left = roomStreamer->getLastPeak();
-    roomStreamerPeaks.right = roomStreamer->getLastPeak();
+    inputPeaks.update( audioMixer->getLocalInput()->getLastPeak());
+    roomStreamerPeaks.update( roomStreamer->getLastPeak());
+
 }
 
 
@@ -235,21 +230,23 @@ void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out
     }
 }
 
-Peaks MainController::getTrackPeaks(int trackID){
+Audio::AudioPeak MainController::getTrackPeak(int trackID){
     QMutexLocker locker(&mutex);
     Audio::AudioNode* trackNode = tracksNodes[trackID];
-    if(trackNode){
-        return Peaks(trackNode->getLastPeakLeft(), trackNode->getLastPeakRight());
+    if(trackNode && !trackNode->isMuted()){
+        return trackNode->getLastPeak(true);//get last peak and reset
     }
-    return Peaks(0, 0);
+    return Audio::AudioPeak();
 }
 
-Controller::Peaks MainController::getInputPeaks(){
-    return inputPeaks;
+Audio::AudioPeak MainController::getInputPeaks(){
+    return getTrackPeak(INPUT_TRACK_ID);
 }
 
-Peaks MainController::getRoomStreamPeaks(){
-    return roomStreamerPeaks;
+Audio::AudioPeak MainController::getRoomStreamPeak(){
+    Audio::AudioPeak peak = roomStreamerPeaks;
+    roomStreamerPeaks.zero();
+    return peak;
 }
 
 //++++++++++ TRACKS ++++++++++++

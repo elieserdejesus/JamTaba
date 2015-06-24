@@ -59,7 +59,7 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
         int y = desktopHeight * location.y();
         this->move(x, y);
     }
-    timerID = startTimer(50);
+    timerID = startTimer(1000/70);
 
 
     Login::LoginService* loginService = this->mainController->getLoginService();
@@ -256,14 +256,16 @@ void MainFrame::on_exitedFromRoom(bool normalDisconnection){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::timerEvent(QTimerEvent *){
     //update local input track peaks
-    Peaks inputPeaks = mainController->getInputPeaks();
-    localTrackView->setPeaks(inputPeaks.left, inputPeaks.right);
+
+    AudioPeak inputPeaks = mainController->getInputPeaks();
+    localTrackView->setPeaks(inputPeaks.getLeft(), inputPeaks.getRight());
 
     //update metronome peaks
     if(mainController->getNinjamController()->isRunning()){
         if(metronomeTrackView){
-            Peaks peaks = mainController->getTrackPeaks(metronomeTrackView->getTrackID());
-            metronomeTrackView->setPeaks(peaks.left, peaks.right);
+            AudioPeak peaks = mainController->getTrackPeak(metronomeTrackView->getTrackID());
+            metronomeTrackView->setPeaks(peaks.getLeft(), peaks.getRight());
+            //qDebug() << peaks.left << ", " << peaks.right;
         }
 
         //update tracks peaks
@@ -275,9 +277,12 @@ void MainFrame::timerEvent(QTimerEvent *){
     //update room stream plot
     if(mainController->isPlayingRoomStream()){
           Login::AbstractJamRoom* room = mainController->getCurrentStreamingRoom();
-          JamRoomViewPanel* roomView =  roomViewPanels[room];
-          Controller::Peaks peaks = mainController->getRoomStreamPeaks();
-          roomView->addPeak(peaks.max());
+          if(room){
+            JamRoomViewPanel* roomView =  roomViewPanels[room];
+            if(roomView){
+                roomView->addPeak(mainController->getRoomStreamPeak().max());
+              }
+          }
     }
 }
 

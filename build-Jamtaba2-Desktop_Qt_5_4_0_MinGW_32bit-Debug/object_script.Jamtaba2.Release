@@ -48,6 +48,7 @@ INPUT(
 ./release\UserChannel.o
 ./release\SamplesBuffer.o
 ./release\BusyDialog.o
+./release\AudioPeak.o
 ./release\qrc_jamtaba.o
 ./release\moc_PeakMeter.o
 ./release\moc_LoginService.o

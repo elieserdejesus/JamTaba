@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <memory>
 #include <QMutex>
+#include "audio/core/AudioPeak.h"
 
 class MainFrame;
 
@@ -50,19 +51,7 @@ namespace Controller {
 class AudioListener;
 class NinjamJamRoomController;
 
-struct Peaks{
-    float left;
-    float right;
 
-    Peaks(float l, float r){
-        left    = l;
-        right   = r;
-    }
-
-    float max(){
-        return std::max(std::abs(left), std::abs(right));
-    }
-};
 
 //++++++++++++++++++++++++++++
 class MainController : public QApplication
@@ -112,9 +101,9 @@ public:
     bool trackIsSoloed(int trackID) const;
     void setTrackLevel(int trackID, float level);
     void setTrackPan(int trackID, float pan);
-    Peaks getInputPeaks();
-    Peaks getRoomStreamPeaks();
-    Peaks getTrackPeaks(int trackID);
+    Audio::AudioPeak getInputPeaks();
+    Audio::AudioPeak getRoomStreamPeak();
+    Audio::AudioPeak getTrackPeak(int trackID);
 
     const Vst::PluginFinder* getPluginFinder() const{return &*pluginFinder;}
     void scanPlugins();
@@ -129,6 +118,7 @@ signals:
     //void
 
 private:
+    static const int INPUT_TRACK_ID = 1;
     void doAudioProcess(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
     Audio::Plugin* createPluginInstance(Audio::PluginDescriptor* descriptor);
 
@@ -154,8 +144,8 @@ private:
 
     bool started;
 
-    Peaks inputPeaks;
-    Peaks roomStreamerPeaks;
+    Audio::AudioPeak inputPeaks;
+    Audio::AudioPeak roomStreamerPeaks;
     //+++++++++++++++++++
     Vst::VstHost* vstHost;
     std::vector<Audio::PluginDescriptor*> pluginsDescriptors;
