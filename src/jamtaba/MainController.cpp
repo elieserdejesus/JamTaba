@@ -456,13 +456,13 @@ Login::LoginService* MainController::getLoginService() const{
 void MainController::errorInNinjamServer(QString error){
     qWarning() << error;
     ninjamController->stop();
-    emit exitedFromRoom(true);
+    emit exitedFromRoom(false);//not a normal disconnection
 }
 
 void MainController::disconnectedFromNinjamServer(const Server &server){
     Q_UNUSED(server);
     ninjamController->stop();
-    emit exitedFromRoom(false);
+    emit exitedFromRoom(true);//normal disconnection
 }
 
 void MainController::connectedInNinjamServer(const Ninjam::Server &server){
