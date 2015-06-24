@@ -226,10 +226,10 @@ void MainFrame::on_enteredInRoom(Login::AbstractJamRoom *room){
         NinjamRoomWindow* roomWindow = new NinjamRoomWindow(ui.tabWidget, *ninjamRoom, mainController);
         int index = ui.tabWidget->addTab(roomWindow, room->getName());
         ui.tabWidget->setCurrentIndex(index);
-        //adicionar track para o metronomo
+
+        //add metronome track
         metronomeTrackView = new MetronomeTrackView(this, mainController);
         ui.localTracksLayout->addWidget(metronomeTrackView);
-
     }
 }
 

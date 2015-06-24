@@ -113,8 +113,14 @@
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
             <widget class="QScrollArea" name="allRoomsScroll">
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
              <property name="verticalScrollBarPolicy">
               <enum>Qt::ScrollBarAlwaysOn</enum>
+             </property>
+             <property name="horizontalScrollBarPolicy">
+              <enum>Qt::ScrollBarAsNeeded</enum>
              </property>
              <property name="widgetResizable">
               <bool>true</bool>
@@ -130,7 +136,14 @@
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
                <item>
-                <widget class="QWidget" name="allRoomsContent" native="true"/>
+                <widget class="QWidget" name="allRoomsContent" native="true">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>

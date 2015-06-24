@@ -5,6 +5,8 @@ NinjamTrackView::NinjamTrackView(QWidget *parent, Controller::MainController *ma
     :BaseTrackView(parent, mainController, trackID)
 {
     this->setMaximumWidth(100);
+    this->setMinimumWidth(100);
+
     ui->trackName->setText( userName );
     ui->channelName->setText(channelName);
 

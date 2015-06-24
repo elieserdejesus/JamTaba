@@ -56,12 +56,12 @@ void NinjamTrackNode::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesB
         return;
     }
     int totalDecoded = 0;
-    internalBuffer->setFrameLenght(out.getFrameLenght());
-    internalBuffer->zero();
+    internalBuffer.setFrameLenght(out.getFrameLenght());
+    internalBuffer.zero();
     while(totalDecoded < out.getFrameLenght() ){
         const Audio::SamplesBuffer& decodedBuffer = decoder.decode(out.getFrameLenght() - totalDecoded);
         if(decodedBuffer.getFrameLenght() > 0){
-            out.add(decodedBuffer, totalDecoded);//total decoded is the offset
+            internalBuffer.add(decodedBuffer, totalDecoded);//total decoded is the offset
         }
         totalDecoded += decodedBuffer.getFrameLenght();
         if(decodedBuffer.getFrameLenght() == 0){
@@ -70,7 +70,7 @@ void NinjamTrackNode::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesB
     }
 
     if(totalDecoded > 0){
-        Audio::AudioNode::processReplacing(in, out);
+        Audio::AudioNode::processReplacing(in, out);//process internal buffer pan, gain, etc
     }
 
 }

@@ -54,7 +54,7 @@ public:
     float getIntervalPeriod() ;
 
     void startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password = "");
-    void disconnectFromServer(bool normalDisconnection=true);
+    void disconnectFromServer();
 
     ~Service();
 
@@ -66,13 +66,13 @@ signals:
     void serverBpiChanged(short currentBpi, short lastBpi);
     void serverBpmChanged(short currentBpm);
     void audioIntervalAvailable(Ninjam::User user, int channelIndex, QByteArray encodedAudioData);
-    void disconnectedFromServer(const Ninjam::Server& server, bool normalDisconnection);
+    void disconnectedFromServer(const Ninjam::Server& server);
     void connectedInServer(const Ninjam::Server& server);
     void chatMessageReceived(Ninjam::User sender, QString message);
     void privateMessageReceived(Ninjam::User sender, QString message);
     void userEnterInTheJam(Ninjam::User newUser);
     void userLeaveTheJam(Ninjam::User user);
-    //void error(QString msg);
+    void error(QString msg);
 
 private:
     static const long DEFAULT_KEEP_ALIVE_PERIOD = 3000;
