@@ -16,6 +16,9 @@ User::User(QString fullName)
     this->name = fullNameParts.at(0);
     if (fullNameParts.size() > 1) {
         this->ip = fullNameParts.at(1);
+        if(this->ip.contains("x", Qt::CaseInsensitive)){
+            this->ip = this->ip.replace("[xX]", "128");//just use 128 as a default ip segment
+        }
     } else {
         this->ip = "";
     }

@@ -24,20 +24,22 @@ public:
     inline QString getName() const {return name;}
     inline QString getIP() const {return ip;}
     virtual bool isBot() const = 0;
-    virtual QString getCountryCode() const {return countryCode;}
-    virtual QString getCountryName() const {return countriesMap[getCountryCode().toUpper()];}
+    //virtual QString getCountryCode() const {return countryCode; }
+    //virtual QString getCountryName() const {return  countryName;}
 
     static AbstractPeer* getByIP(QString ip);
 protected:
     //all created instances
     static QMap<long long, std::shared_ptr<AbstractPeer>> peers;
-    //static QMap<QString, QString> countriesMap;
-    //static const std::pair<std::string, std::string> countriesMap[];
-    static const QMap<QString, QString> countriesMap;
+
+    //static const QMap<QString, QString> countriesMap;
     long long id;
     QString ip;
     QString name;
-    QString countryCode;
+    //QString countryCode;
+    //QString countryName;
+    //double latitude;
+    //double longitude;
 
 };
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++

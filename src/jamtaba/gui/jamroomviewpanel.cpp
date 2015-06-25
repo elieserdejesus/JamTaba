@@ -1,21 +1,26 @@
 #include "JamRoomViewPanel.h"
 #include "ui_jamroomviewpanel.h"
 #include "../loginserver/JamRoom.h"
+#include "../MainController.h"
 
 #include <QPainter>
 #include <QDebug>
 #include <QLocale>
 
 
-JamRoomViewPanel::JamRoomViewPanel(QWidget *parent)
-    :QWidget(parent), ui(new Ui::RoomViewPanel), currentRoom(nullptr)
+JamRoomViewPanel::JamRoomViewPanel(QWidget *parent, Controller::MainController* mainController)
+    :QWidget(parent),
+      ui(new Ui::RoomViewPanel),
+      mainController(mainController),
+      currentRoom(nullptr)
 {
     ui->labelRoomStatus->setText("");
 }
 
-JamRoomViewPanel::JamRoomViewPanel(Login::AbstractJamRoom* jamRoom, QWidget* parent)
+JamRoomViewPanel::JamRoomViewPanel(Login::AbstractJamRoom* jamRoom, QWidget* parent, Controller::MainController* mainController)
     :QWidget(parent),
       ui(new Ui::RoomViewPanel),
+      mainController(mainController),
       currentRoom(jamRoom)
 {
     ui->setupUi(this);
@@ -50,13 +55,18 @@ void JamRoomViewPanel::initialize(){
         if(!user->isBot()){
             QLabel* label = new QLabel(ui->usersPanel);
             label->setTextFormat(Qt::RichText);
-            QString countryCode = user->getCountryCode().toLower();
-            QString countryName = user->getCountryName();
+            Geo::Location userLocation = mainController->getLocation(user->getIP());
+            QString countryCode = userLocation.getCountryCode().toLower();
+            QString countryName = userLocation.getCountryName();
             QString userString = user->getName() + " <i>(" + countryName + ")</i>";
             label->setText("<img src=:/flags/flags/" + countryCode +".png> " + userString);
             ui->usersPanel->layout()->addWidget(label);
         }
     }
+
+    QString gMapURL = "England"; // this is where you want to point
+    gMapURL = "http://maps.google.com.sg/maps?q="+gMapURL+"&oe=utf-8&rls=org.mozilla:en-US:official&client=firefox-a&um=1&ie=UTF-8&hl=en&sa=N&tab=wl";
+    //ui->webView->setUrl(gMapURL);
 
     ui->buttonListen->setEnabled(currentRoom->hasStreamLink());
 }

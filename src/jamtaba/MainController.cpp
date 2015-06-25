@@ -85,7 +85,8 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
       inputPeaks(0,0),
       roomStreamerPeaks(0,0),
       vstHost(Vst::VstHost::getInstance()),
-      pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder()))
+      pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
+      ipToLocationResolver("../GeoLite2-Country.mmdb")
 
 {
 
@@ -150,6 +151,10 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     //scanPlugins();
 
     //qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
+}
+
+Geo::Location MainController::getLocation(QString ip) {
+    return ipToLocationResolver.resolve(ip);
 }
 
 Audio::AudioNode *MainController::getTrackNode(long ID){

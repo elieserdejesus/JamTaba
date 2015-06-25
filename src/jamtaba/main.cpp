@@ -7,9 +7,24 @@
 #include "audio/core/AudioDriver.h"
 #include <QThread>
 
+#include "geo/IpToLocationResolver.h"
+
+#include <QFile>
+#include <QFileInfo>
+
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
 int main(int argc, char* args[] ){
+
+//    QFile file("../GeoLite2-Country.mmdb");
+//    Geo::IpToLocationResolver resolver(QFileInfo(file).absoluteFilePath());
+//    Geo::Location location = resolver.resolve("200.169.62.4");
+//    qDebug() << location.getCountryName();
+//    qDebug() << location.getCountryCode();
+//    qDebug() << location.getCity();
+//    qDebug() << location.getLatitude();
+//    qDebug() << location.getLongitude();
+
     qInstallMessageHandler(customLogHandler);
 
     JamtabaFactory* factory = new ReleaseFactory();

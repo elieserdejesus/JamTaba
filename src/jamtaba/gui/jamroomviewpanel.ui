@@ -7,8 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>634</width>
-    <height>132</height>
+    <height>673</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -121,15 +127,15 @@
       <item>
        <widget class="QWidget" name="usersPanel" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>1</horstretch>
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="maximumSize">
+        <property name="minimumSize">
          <size>
-          <width>250</width>
-          <height>16777215</height>
+          <width>150</width>
+          <height>0</height>
          </size>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2"/>
@@ -139,15 +145,9 @@
        <widget class="WavePeakPanel" name="wavePeakPanel" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>2</horstretch>
+          <horstretch>1</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>50</height>
-         </size>
         </property>
        </widget>
       </item>
