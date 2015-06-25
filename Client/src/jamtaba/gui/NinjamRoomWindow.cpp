@@ -94,8 +94,9 @@ void NinjamRoomWindow::channelChanged(Ninjam::User, Ninjam::UserChannel channel,
 void NinjamRoomWindow::channelAdded(Ninjam::User user, Ninjam::UserChannel channel, long channelID){
     QString userName = user.getName();
     QString channelName = channel.getName();
-    QString countryName = "Country name";//tenho que pegar de uma base local, não dá pra tentar pegar essa informação do server, talvez o server ainda não esteja atualizado com a informação do usuário que acabou de se conectar
-    QString countryCode = "UNKNOWN";
+    Geo::Location userLocation = mainController->getLocation(user.getIp());
+    QString countryName = userLocation.getCountryName();
+    QString countryCode = userLocation.getCountryCode();
     NinjamTrackView* trackView = new NinjamTrackView(ui->tracksPanel, this->mainController, channelID, userName, channelName, countryName, countryCode );
     ui->tracksPanel->layout()->addWidget(trackView);
     tracks.append(trackView);

@@ -47,16 +47,21 @@ public:
     {
         if (RoomViewPanel->objectName().isEmpty())
             RoomViewPanel->setObjectName(QStringLiteral("RoomViewPanel"));
-        RoomViewPanel->resize(634, 132);
+        RoomViewPanel->resize(634, 673);
+        QSizePolicy sizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(RoomViewPanel->sizePolicy().hasHeightForWidth());
+        RoomViewPanel->setSizePolicy(sizePolicy);
         verticalLayout = new QVBoxLayout(RoomViewPanel);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         panelTop = new QWidget(RoomViewPanel);
         panelTop->setObjectName(QStringLiteral("panelTop"));
-        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(panelTop->sizePolicy().hasHeightForWidth());
-        panelTop->setSizePolicy(sizePolicy);
+        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(panelTop->sizePolicy().hasHeightForWidth());
+        panelTop->setSizePolicy(sizePolicy1);
         panelTop->setMinimumSize(QSize(0, 40));
         gridLayout = new QGridLayout(panelTop);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
@@ -104,12 +109,12 @@ public:
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
         usersPanel = new QWidget(widget_2);
         usersPanel->setObjectName(QStringLiteral("usersPanel"));
-        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        sizePolicy1.setHorizontalStretch(1);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(usersPanel->sizePolicy().hasHeightForWidth());
-        usersPanel->setSizePolicy(sizePolicy1);
-        usersPanel->setMaximumSize(QSize(250, 16777215));
+        QSizePolicy sizePolicy2(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(usersPanel->sizePolicy().hasHeightForWidth());
+        usersPanel->setSizePolicy(sizePolicy2);
+        usersPanel->setMinimumSize(QSize(150, 0));
         verticalLayout_2 = new QVBoxLayout(usersPanel);
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
 
@@ -117,22 +122,21 @@ public:
 
         wavePeakPanel = new WavePeakPanel(widget_2);
         wavePeakPanel->setObjectName(QStringLiteral("wavePeakPanel"));
-        QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        sizePolicy2.setHorizontalStretch(2);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(wavePeakPanel->sizePolicy().hasHeightForWidth());
-        wavePeakPanel->setSizePolicy(sizePolicy2);
-        wavePeakPanel->setMinimumSize(QSize(0, 50));
+        QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy3.setHorizontalStretch(1);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(wavePeakPanel->sizePolicy().hasHeightForWidth());
+        wavePeakPanel->setSizePolicy(sizePolicy3);
 
         horizontalLayout->addWidget(wavePeakPanel);
 
         labelRoomType = new QLabel(widget_2);
         labelRoomType->setObjectName(QStringLiteral("labelRoomType"));
-        QSizePolicy sizePolicy3(QSizePolicy::Fixed, QSizePolicy::Preferred);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(labelRoomType->sizePolicy().hasHeightForWidth());
-        labelRoomType->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy4(QSizePolicy::Fixed, QSizePolicy::Preferred);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(labelRoomType->sizePolicy().hasHeightForWidth());
+        labelRoomType->setSizePolicy(sizePolicy4);
         labelRoomType->setAlignment(Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing);
 
         horizontalLayout->addWidget(labelRoomType);

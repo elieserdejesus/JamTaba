@@ -5,6 +5,8 @@
 #include <QMutex>
 #include "audio/core/AudioPeak.h"
 
+#include "geo/IpToLocationResolver.h"
+
 class MainFrame;
 
 namespace Ninjam{
@@ -112,6 +114,8 @@ public:
     Audio::AudioNode* getTrackNode(long ID);
 
     inline bool isStarted() const{return started;}
+
+    Geo::Location getLocation(QString ip) ;
 signals:
     void enteredInRoom(Login::AbstractJamRoom* room);
     void exitedFromRoom(bool error);
@@ -154,6 +158,8 @@ private:
     void configureStyleSheet();
 
     void tryConnectInNinjamServer(const Login::NinjamRoom & ninjamRoom);
+
+    Geo::IpToLocationResolver ipToLocationResolver;
 
 private slots:
     void on_disconnectedFromLoginServer();

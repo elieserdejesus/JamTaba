@@ -18,7 +18,7 @@ NinjamTrackView::NinjamTrackView(QWidget *parent, Controller::MainController *ma
     ui->namesPanel->layout()->addWidget(countryLabel);
 
     //disable channel name
-    ui->channelName->setEnabled(true);
+    ui->channelName->setEnabled(false);
 }
 
 void NinjamTrackView::setUserName(QString newName){

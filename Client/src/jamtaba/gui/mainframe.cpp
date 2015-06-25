@@ -95,8 +95,21 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     QObject::connect(mainController, SIGNAL(enteredInRoom(Login::AbstractJamRoom*)), this, SLOT(on_enteredInRoom(Login::AbstractJamRoom*)));
     QObject::connect(mainController, SIGNAL(exitedFromRoom(bool)), this, SLOT(on_exitedFromRoom(bool)));
 
-    //BusyDialog busyDialog(this);
-    //busyDialog.exec();
+    //the rooms list tab bar is not closable
+    ui.tabWidget->tabBar()->tabButton(0, QTabBar::RightSide)->resize(0, 0);
+    ui.tabWidget->tabBar()->tabButton(0, QTabBar::RightSide)->hide();
+
+    connect( ui.tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(on_tabCloseRequest(int)));
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void MainFrame::on_tabCloseRequest(int index){
+    if(index > 0){//the first tab is not closable
+        showBusyDialog("disconnecting ...");
+        if(mainController->getNinjamController()->isRunning()){
+            mainController->getNinjamController()->stop();
+        }
+    }
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -191,7 +204,7 @@ void MainFrame::on_connectedInServer(QList<Login::AbstractJamRoom*> rooms){
     hideBusyDialog();
     ui.allRoomsContent->setLayout(new QVBoxLayout(ui.allRoomsContent));
     foreach(Login::AbstractJamRoom* room, rooms){
-        JamRoomViewPanel* roomViewPanel = new JamRoomViewPanel(room, ui.allRoomsContent);
+        JamRoomViewPanel* roomViewPanel = new JamRoomViewPanel(room, ui.allRoomsContent, mainController);
         roomViewPanels.insert(room, roomViewPanel);
         ui.allRoomsContent->layout()->addWidget(roomViewPanel);
         connect( roomViewPanel, SIGNAL(startingListeningTheRoom(Login::AbstractJamRoom*)), this, SLOT(on_startingRoomStream(Login::AbstractJamRoom*)));

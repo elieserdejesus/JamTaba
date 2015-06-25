@@ -61,6 +61,7 @@ public:
         TrackView->resize(174, 574);
         mainLayout = new QVBoxLayout(TrackView);
         mainLayout->setObjectName(QStringLiteral("mainLayout"));
+        mainLayout->setContentsMargins(6, 6, 6, 6);
         namesPanel = new QWidget(TrackView);
         namesPanel->setObjectName(QStringLiteral("namesPanel"));
         topLayout = new QVBoxLayout(namesPanel);
@@ -94,6 +95,7 @@ public:
         topPanel->setObjectName(QStringLiteral("topPanel"));
         topPanelLayout = new QGridLayout(topPanel);
         topPanelLayout->setObjectName(QStringLiteral("topPanelLayout"));
+        topPanelLayout->setHorizontalSpacing(6);
         topPanelLayout->setVerticalSpacing(12);
         topPanelLayout->setContentsMargins(0, -1, 0, -1);
         soloMutePane = new QWidget(topPanel);

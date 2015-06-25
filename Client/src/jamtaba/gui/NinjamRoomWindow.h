@@ -2,12 +2,11 @@
 #define NINJAMROOMWINDOW_H
 
 #include <QWidget>
-//#include <QSpacerItem>
 #include "../ninjam/User.h"
-//#include "../ninjam/UserChannel.h"
-
+//#include "../geo/IpToLocationResolver.h"
 
 class NinjamTrackView;
+
 
 namespace Ui {
 class NinjamRoomWindow;
@@ -41,7 +40,7 @@ private:
     Ui::NinjamRoomWindow *ui;
     Controller::MainController* mainController;
     QList<NinjamTrackView*> tracks;
-    //QString serverLicence;
+    //Geo::IpToLocationResolver ipToLocationResolver;
 
 private slots:
     //ninja interval controls

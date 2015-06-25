@@ -1,9 +1,5 @@
 #de vez em quando buga quando chega o primeiro intervalo e ainda não sei porque
 
-#sair da sala
-#não posso editar o nome das pistas
-#bandeira do pais
-
 #quando trocar de bpi ver se ainda é possível usar a mesma acentuação procurando pelo valor
 #antigo na nova lista
 
@@ -60,7 +56,7 @@
 #
 #-------------------------------------------------
 
-QT       +=  gui  network
+QT       +=  gui  network webkitwidgets
 
 QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS #-Wno-unused-parameter
 
@@ -133,7 +129,8 @@ HEADERS += \
     src/jamtaba/ninjam/UserChannel.h \
     src/jamtaba/audio/core/SamplesBuffer.h \
     src/jamtaba/gui/BusyDialog.h \
-    src/jamtaba/audio/core/AudioPeak.h
+    src/jamtaba/audio/core/AudioPeak.h \
+    src/jamtaba/geo/IpToLocationResolver.h
 
 
 SOURCES += \
@@ -193,7 +190,8 @@ SOURCES += \
     src/jamtaba/ninjam/UserChannel.cpp \
     src/jamtaba/audio/core/SamplesBuffer.cpp \
     src/jamtaba/gui/BusyDialog.cpp \
-    src/jamtaba/audio/core/AudioPeak.cpp
+    src/jamtaba/audio/core/AudioPeak.cpp \
+    src/jamtaba/geo/IpToLocationResolver.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
@@ -221,13 +219,15 @@ INCLUDEPATH += src/jamtaba/gui                  \
                $$PWD/libs/includes/ogg          \
                $$PWD/libs/includes/vorbis       \
                $$PWD/libs/includes/libresample  \
-               $$PWD/libs/includes/minimp3  \
+               $$PWD/libs/includes/minimp3      \
+               $$PWD/libs/includes/libmaxmind   \
 
 
-win32: LIBS +=  -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi   -lvorbisfile -lvorbis -logg -lresample -lminimp3 \
+win32: LIBS +=  -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi   -lvorbisfile -lvorbis -logg -lresample -lminimp3 -lmaxminddb \
 
-win32: LIBS +=  -lwinmm  \
-                -lole32  \
+win32: LIBS +=  -lwinmm     \
+                -lole32     \
+                -lws2_32    \
 
 RESOURCES += src/jamtaba/resources/jamtaba.qrc
 

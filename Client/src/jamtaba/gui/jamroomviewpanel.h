@@ -7,13 +7,17 @@ namespace Ui { class RoomViewPanel; }
 
 namespace Login{ class AbstractJamRoom; }
 
+namespace Controller {
+class MainController;
+}
+
 class JamRoomViewPanel : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit JamRoomViewPanel(QWidget *parent = 0);
-    JamRoomViewPanel(Login::AbstractJamRoom *jamRoom, QWidget *parent = 0);
+    JamRoomViewPanel(QWidget *parent, Controller::MainController* mainController);
+    JamRoomViewPanel(Login::AbstractJamRoom *jamRoom, QWidget *parent, Controller::MainController* mainController);
     ~JamRoomViewPanel();
     void paintEvent( QPaintEvent */*e*/ );
     void addPeak(float peak);
@@ -28,6 +32,7 @@ private slots:
 
 private:
     Ui::RoomViewPanel *ui;
+    Controller::MainController* mainController;
     Login::AbstractJamRoom* currentRoom;
     void initialize();
 };

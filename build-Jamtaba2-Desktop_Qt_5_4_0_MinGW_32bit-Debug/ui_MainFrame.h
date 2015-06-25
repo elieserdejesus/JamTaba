@@ -131,7 +131,7 @@ public:
         tabWidget->setTabShape(QTabWidget::Rounded);
         tabWidget->setElideMode(Qt::ElideLeft);
         tabWidget->setDocumentMode(false);
-        tabWidget->setTabsClosable(false);
+        tabWidget->setTabsClosable(true);
         tab = new QWidget();
         tab->setObjectName(QStringLiteral("tab"));
         verticalLayout_5 = new QVBoxLayout(tab);
@@ -146,7 +146,7 @@ public:
         allRoomsScroll->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 689, 647));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 689, 644));
         verticalLayout_6 = new QVBoxLayout(scrollAreaWidgetContents);
         verticalLayout_6->setSpacing(6);
         verticalLayout_6->setContentsMargins(11, 11, 11, 11);

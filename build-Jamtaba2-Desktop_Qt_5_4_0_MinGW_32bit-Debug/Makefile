@@ -179,7 +179,9 @@ Makefile: ../Client/Jamtaba2.pro C:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++
 		../Client/Jamtaba2.pro \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/qtmaind.prl \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5Cored.prl \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5WebKitWidgets.prl \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5Widgets.prl \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5WebKit.prl \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5Gui.prl \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5Network.prl \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5Core.prl
@@ -304,7 +306,9 @@ C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\lex.prf:
 ..\Client\Jamtaba2.pro:
 C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/qtmaind.prl:
 C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5Cored.prl:
+C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5WebKitWidgets.prl:
 C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5Widgets.prl:
+C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5WebKit.prl:
 C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5Gui.prl:
 C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5Network.prl:
 C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5Core.prl:
