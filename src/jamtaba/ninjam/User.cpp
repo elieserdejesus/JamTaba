@@ -2,6 +2,7 @@
 #include "Service.h"
 #include <QDebug>
 #include <memory>
+#include <QRegularExpression>
 
 using namespace Ninjam;
 
@@ -17,7 +18,7 @@ User::User(QString fullName)
     if (fullNameParts.size() > 1) {
         this->ip = fullNameParts.at(1);
         if(this->ip.contains("x", Qt::CaseInsensitive)){
-            this->ip = this->ip.replace("[xX]", "128");//just use 128 as a default ip segment
+            this->ip = this->ip.replace(QRegularExpression("[xX]+"), "128");//just use 128 as a default ip segment
         }
     } else {
         this->ip = "";
