@@ -1,7 +1,15 @@
-#de vez em quando buga quando chega o primeiro intervalo e ainda não sei porque
+#nomes dos canais ficam ruims quando são grandes - pensar em algo
+#nome dos países também está ficando grande na pista ninjam, diminuir a fonte já soluciona
 
-#quando trocar de bpi ver se ainda é possível usar a mesma acentuação procurando pelo valor
-#antigo na nova lista
+#chat ninjam
+
+#como serão as entradas? Como será a criação do canal de backtracking?
+#acho que faz sentido selecionar uma entrada como sendo audio ou midi, stereo ou mono
+
+
+# quando clico para ouvir uma outra sala não está resetando o plot da sala que eu estava ouvindo
+
+#de vez em quando buga quando chega o primeiro intervalo e ainda não sei porque
 
 #não consegui resolver o bug que acontece quando as pistas são removidas, por hora apenas comentei a linha que delete as pistas no NinjamJamRoomController. Ou seja, a memoria não está sendo liberada
 
@@ -17,8 +25,6 @@
 # não estou chamando o startProcess nos VSTs, isso pode bugar VSTs que utilizam
 
 # drummix multi deu problema na mixagem dos canais, acho que só consegui ouvir o bumbo e o vazamendo das outras peças
-
-# quando clico para ouvir uma outra sala não está resetando o plot da sala que eu estava ouvindo
 
 #buga tudo se não tem conexão com a internet
 
@@ -42,6 +48,8 @@
 # - O DAW LMMS usa PortAudio, pode ser interessante roubar o código deles.
 
 
+#quando trocar de bpi ver se ainda é possível usar a mesma acentuação procurando pelo valor
+#antigo na nova lista
 
 #BUGS relacionados com o diálogo de audioIO:
 #1 - quando seleciono as entradas sPDIF da fast track a aplicação encerra

@@ -96,7 +96,7 @@ void NinjamRoomWindow::channelAdded(Ninjam::User user, Ninjam::UserChannel chann
     QString channelName = channel.getName();
     Geo::Location userLocation = mainController->getLocation(user.getIp());
     QString countryName = userLocation.getCountryName();
-    QString countryCode = userLocation.getCountryCode();
+    QString countryCode = userLocation.getCountryCode().toLower();
     NinjamTrackView* trackView = new NinjamTrackView(ui->tracksPanel, this->mainController, channelID, userName, channelName, countryName, countryCode );
     ui->tracksPanel->layout()->addWidget(trackView);
     tracks.append(trackView);

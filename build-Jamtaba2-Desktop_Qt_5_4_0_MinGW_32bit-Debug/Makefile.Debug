@@ -922,6 +922,10 @@ debug/moc_MainController.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QA
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
 		../Client/src/jamtaba/audio/core/AudioPeak.h \
+		../Client/src/jamtaba/geo/IpToLocationResolver.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		../Client/libs/includes/libmaxmind/maxminddb.h \
+		../Client/libs/includes/libmaxmind/maxminddb_config.h \
 		../Client/src/jamtaba/MainController.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3_SDK/pluginterfaces/vst2.x -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libmaxmind -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKitWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKit -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\MainController.h -o debug\moc_MainController.cpp
 
@@ -2691,7 +2695,6 @@ ui_MainFrame.h: ../Client/src/jamtaba/gui/MainFrame.ui
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\uic.exe ..\Client\src\jamtaba\gui\MainFrame.ui -o ui_MainFrame.h
 
 ui_JamRoomViewPanel.h: ../Client/src/jamtaba/gui/JamRoomViewPanel.ui \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKitWidgets/QWebView \
 		../Client/src/jamtaba/gui/widgets/WavePeakPanel.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidget \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qwidget.h \
@@ -3291,6 +3294,10 @@ debug/main.o: ../Client/src/jamtaba/main.cpp ../Client/src/jamtaba/gui/MainFrame
 		../Client/src/jamtaba/MainController.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
 		../Client/src/jamtaba/audio/core/AudioPeak.h \
+		../Client/src/jamtaba/geo/IpToLocationResolver.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		../Client/libs/includes/libmaxmind/maxminddb.h \
+		../Client/libs/includes/libmaxmind/maxminddb_config.h \
 		../Client/src/jamtaba/JamtabaFactory.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		../Client/src/jamtaba/loginserver/LoginService.h \
@@ -3310,7 +3317,6 @@ debug/main.o: ../Client/src/jamtaba/main.cpp ../Client/src/jamtaba/gui/MainFrame
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
@@ -3324,9 +3330,9 @@ debug/main.o: ../Client/src/jamtaba/main.cpp ../Client/src/jamtaba/gui/MainFrame
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QThread \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qthread.h \
-		../Client/src/jamtaba/geo/IpToLocationResolver.h \
-		../Client/libs/includes/libmaxmind/maxminddb.h \
-		../Client/libs/includes/libmaxmind/maxminddb_config.h
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFile \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFileInfo \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfileinfo.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\main.o ..\Client\src\jamtaba\main.cpp
 
 debug/ConfigStore.o: ../Client/src/jamtaba/persistence/ConfigStore.cpp ../Client/src/jamtaba/persistence/ConfigStore.h \
@@ -4355,6 +4361,10 @@ debug/MainController.o: ../Client/src/jamtaba/MainController.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
 		../Client/src/jamtaba/audio/core/AudioPeak.h \
+		../Client/src/jamtaba/geo/IpToLocationResolver.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		../Client/libs/includes/libmaxmind/maxminddb.h \
+		../Client/libs/includes/libmaxmind/maxminddb_config.h \
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
 		../Client/src/jamtaba/midi/portmididriver.h \
 		../Client/src/jamtaba/midi/MidiDriver.h \
@@ -4370,7 +4380,6 @@ debug/MainController.o: ../Client/src/jamtaba/MainController.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
@@ -5100,7 +5109,9 @@ debug/User.o: ../Client/src/jamtaba/ninjam/User.cpp ../Client/src/jamtaba/ninjam
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QTcpSocket \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QRegularExpression \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregularexpression.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\User.o ..\Client\src\jamtaba\ninjam\User.cpp
 
 debug/LocalTrackView.o: ../Client/src/jamtaba/gui/LocalTrackView.cpp ../Client/src/jamtaba/gui/LocalTrackView.h \
@@ -5985,30 +5996,9 @@ debug/JamRoomViewPanel.o: ../Client/src/jamtaba/gui/JamRoomViewPanel.cpp ../Clie
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
 		ui_jamroomviewpanel.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKitWidgets/QWebView \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKitWidgets/qwebview.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKit/qwebkitglobal.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKitWidgets/qwebpage.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKit/qwebsettings.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QSslConfiguration \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslconfiguration.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslsocket.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslerror.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslcertificate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcryptographichash.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qactiongroup.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QApplication \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qapplication.h \
@@ -6057,7 +6047,16 @@ debug/JamRoomViewPanel.o: ../Client/src/jamtaba/gui/JamRoomViewPanel.cpp ../Clie
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonObject \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonobject.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
+		../Client/src/jamtaba/MainController.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
+		../Client/src/jamtaba/audio/core/AudioPeak.h \
+		../Client/src/jamtaba/geo/IpToLocationResolver.h \
+		../Client/libs/includes/libmaxmind/maxminddb.h \
+		../Client/libs/includes/libmaxmind/maxminddb_config.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QLocale
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\JamRoomViewPanel.o ..\Client\src\jamtaba\gui\JamRoomViewPanel.cpp
@@ -6238,6 +6237,9 @@ debug/MainFrame.o: ../Client/src/jamtaba/gui/MainFrame.cpp ../Client/src/jamtaba
 		../Client/src/jamtaba/MainController.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
 		../Client/src/jamtaba/audio/core/AudioPeak.h \
+		../Client/src/jamtaba/geo/IpToLocationResolver.h \
+		../Client/libs/includes/libmaxmind/maxminddb.h \
+		../Client/libs/includes/libmaxmind/maxminddb_config.h \
 		../Client/src/jamtaba/loginserver/LoginService.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
@@ -6834,7 +6836,10 @@ debug/PreferencesDialog.o: ../Client/src/jamtaba/gui/PreferencesDialog.cpp ../Cl
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsettings.h \
 		../Client/src/jamtaba/MainController.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
-		../Client/src/jamtaba/audio/core/AudioPeak.h
+		../Client/src/jamtaba/audio/core/AudioPeak.h \
+		../Client/src/jamtaba/geo/IpToLocationResolver.h \
+		../Client/libs/includes/libmaxmind/maxminddb.h \
+		../Client/libs/includes/libmaxmind/maxminddb_config.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\PreferencesDialog.o ..\Client\src\jamtaba\gui\PreferencesDialog.cpp
 
 debug/PluginScanDialog.o: ../Client/src/jamtaba/gui/PluginScanDialog.cpp ../Client/src/jamtaba/gui/pluginscandialog.h \
@@ -7240,6 +7245,9 @@ debug/NinjamRoomWindow.o: ../Client/src/jamtaba/gui/NinjamRoomWindow.cpp ../Clie
 		../Client/src/jamtaba/NinjamJamRoomController.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		../Client/src/jamtaba/MainController.h \
+		../Client/src/jamtaba/geo/IpToLocationResolver.h \
+		../Client/libs/includes/libmaxmind/maxminddb.h \
+		../Client/libs/includes/libmaxmind/maxminddb_config.h \
 		../Client/src/jamtaba/ninjam/Service.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QTcpSocket \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
@@ -7409,6 +7417,10 @@ debug/BaseTrackView.o: ../Client/src/jamtaba/gui/BaseTrackView.cpp ../Client/src
 		../Client/src/jamtaba/MainController.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
 		../Client/src/jamtaba/audio/core/AudioPeak.h \
+		../Client/src/jamtaba/geo/IpToLocationResolver.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		../Client/libs/includes/libmaxmind/maxminddb.h \
+		../Client/libs/includes/libmaxmind/maxminddb_config.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QStyleOption \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
@@ -8133,6 +8145,9 @@ debug/NinjamJamRoomController.o: ../Client/src/jamtaba/NinjamJamRoomController.c
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qguiapplication.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qinputmethod.h \
 		../Client/src/jamtaba/audio/core/AudioPeak.h \
+		../Client/src/jamtaba/geo/IpToLocationResolver.h \
+		../Client/libs/includes/libmaxmind/maxminddb.h \
+		../Client/libs/includes/libmaxmind/maxminddb_config.h \
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
 		../Client/src/jamtaba/ninjam/Service.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QTcpSocket \

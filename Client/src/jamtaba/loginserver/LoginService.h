@@ -37,6 +37,8 @@ public:
 signals:
     void connectedInServer(QList<Login::AbstractJamRoom*> rooms);
     void disconnectedFromServer();
+
+    //talvez seja melhor esquecer esse evento, simplesmente entrega uma nova lista de salas
     void roomChanged(const AbstractJamRoom& room);
 
 private:
