@@ -2,7 +2,9 @@
 #define NINJAMTRACKVIEW_H
 
 #include "BaseTrackView.h"
-//#include "../loginserver/JamRoom.h"
+
+class QLabel;
+class QLineEdit;
 
 class NinjamTrackView : public BaseTrackView
 {
@@ -12,8 +14,7 @@ public:
     void setUserName(QString newName);
     void setChannelName(QString newChannelName);
 
-private:
-    //Login::NinjamPeer* peer;
+
 };
 
 #endif // NINJAMTRACKVIEW_H

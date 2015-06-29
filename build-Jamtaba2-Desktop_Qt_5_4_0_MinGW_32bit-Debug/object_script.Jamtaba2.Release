@@ -52,7 +52,6 @@ INPUT(
 ./release\IpToLocationResolver.o
 ./release\ChatPanel.o
 ./release\ChatMessagePanel.o
-./release\ChatMessageTextBrowser.o
 ./release\qrc_jamtaba.o
 ./release\moc_PeakMeter.o
 ./release\moc_LoginService.o
@@ -76,5 +75,4 @@ INPUT(
 ./release\moc_BusyDialog.o
 ./release\moc_ChatPanel.o
 ./release\moc_ChatMessagePanel.o
-./release\moc_ChatMessageTextBrowser.o
 );

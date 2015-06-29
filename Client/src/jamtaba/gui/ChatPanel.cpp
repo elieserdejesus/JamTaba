@@ -36,6 +36,9 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
         }
     }
     */
+
+    //QString teste("Ã©");
+    //addMessage("elieser", QString::fromUtf8(teste.toStdString().c_str()));
 }
 
 void ChatPanel::verticalScrollBarRangeChanged(int min, int max){

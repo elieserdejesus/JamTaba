@@ -7,6 +7,7 @@
 
 using namespace Ninjam;
 
+
 QString ServerMessageParser::extractString(QDataStream &stream)
 {
     QString str;
@@ -20,7 +21,9 @@ QString ServerMessageParser::extractString(QDataStream &stream)
             break;
         }
     }
-    return str;
+
+    QByteArray bArray(str.toStdString().c_str());
+    return QString::fromUtf8(bArray.data(), bArray.size());
 }
 //+++++++++++++++++++++++++++++++++++++++++
 const ServerMessage& ServerMessageParser::parse(ServerMessageType msgType, QDataStream &stream, quint32 payloadLenght){
