@@ -26,6 +26,7 @@
 #include "../ninjam/Server.h"
 #include <QMessageBox>
 #include "BusyDialog.h"
+#include "ChatPanel.h"
 
 using namespace Audio;
 using namespace Persistence;
@@ -249,6 +250,10 @@ void MainFrame::on_enteredInRoom(Login::AbstractJamRoom *room){
         //add metronome track
         metronomeTrackView = new MetronomeTrackView(this, mainController);
         ui.localTracksLayout->addWidget(metronomeTrackView);
+
+        //add the chat panel in main window
+        ChatPanel* chatPanel = ninjamWindow->getChatPanel();
+        ui.chatTabWidget->addTab(chatPanel, QIcon(":/images/ninja.png"), ninjamRoom->getName());
     }
 }
 

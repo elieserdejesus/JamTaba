@@ -50,6 +50,9 @@ INPUT(
 ./debug\BusyDialog.o
 ./debug\AudioPeak.o
 ./debug\IpToLocationResolver.o
+./debug\ChatPanel.o
+./debug\ChatMessagePanel.o
+./debug\ChatMessageTextBrowser.o
 ./debug\qrc_jamtaba.o
 ./debug\moc_PeakMeter.o
 ./debug\moc_LoginService.o
@@ -71,4 +74,7 @@ INPUT(
 ./debug\moc_NinjamPanel.o
 ./debug\moc_NinjamJamRoomController.o
 ./debug\moc_BusyDialog.o
+./debug\moc_ChatPanel.o
+./debug\moc_ChatMessagePanel.o
+./debug\moc_ChatMessageTextBrowser.o
 );

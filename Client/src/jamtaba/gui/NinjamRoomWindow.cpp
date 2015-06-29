@@ -19,6 +19,8 @@
 #include "../ninjam/Service.h"
 
 #include "NinjamPanel.h"
+#include "ChatPanel.h"
+
 #include <QMessageBox>
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -26,7 +28,8 @@
 NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, const Login::NinjamRoom& room, Controller::MainController *mainController) :
     QWidget(parent),
     ui(new Ui::NinjamRoomWindow),
-    mainController(mainController)
+    mainController(mainController),
+    chatPanel(new ChatPanel(this, mainController->getBotNames() ))
 {
     ui->setupUi(this);
 
@@ -47,6 +50,7 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, const Login::NinjamRoom& roo
     QObject::connect(ninjamController, SIGNAL(channelAdded(Ninjam::User,   Ninjam::UserChannel, long)), this, SLOT(channelAdded(  Ninjam::User, Ninjam::UserChannel, long)));
     QObject::connect(ninjamController, SIGNAL(channelRemoved(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(channelRemoved(Ninjam::User, Ninjam::UserChannel, long)));
     QObject::connect(ninjamController, SIGNAL(channelChanged(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(channelChanged(Ninjam::User, Ninjam::UserChannel, long)));
+    QObject::connect(ninjamController, SIGNAL(chatMsgReceived(Ninjam::User,QString)), this, SLOT(chatMessageReceived(Ninjam::User,QString)));
 
     QObject::connect(ui->topPanel->getBpiCombo(), SIGNAL(activated(QString)), this, SLOT(ninjamBpiComboChanged(QString)));
     QObject::connect(ui->topPanel->getBpmCombo(), SIGNAL(activated(QString)), this, SLOT(ninjamBpmComboChanged(QString)));
@@ -54,6 +58,8 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, const Login::NinjamRoom& roo
 
     QString serverLicence = Ninjam::Service::getInstance()->getCurrentServerLicence();
     ui->licenceButton->setVisible(!serverLicence.isEmpty());
+
+    QObject::connect(chatPanel, SIGNAL(userSendingNewMessage(QString)), this, SLOT(userSendingNewChatMessage(QString)));
 
     //testing many tracks
 //    for (int t = 0; t < 16; ++t) {
@@ -63,6 +69,16 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, const Login::NinjamRoom& roo
 
 
 }
+
+void NinjamRoomWindow::userSendingNewChatMessage(QString msg){
+    mainController->getNinjamController()->sendChatMessage(msg);
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamRoomWindow::chatMessageReceived(Ninjam::User user, QString message){
+    chatPanel->addMessage(user.getName(), message);
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::updatePeaks(){
     foreach (NinjamTrackView* view, tracks) {

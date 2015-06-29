@@ -13,6 +13,7 @@ using namespace Ninjam;
 
 std::unique_ptr<Service> Service::serviceInstance;
 
+const QStringList Service::botNames = buildBotNamesList();
 
 Service::Service()
     :
@@ -97,11 +98,17 @@ Service* Service::getInstance() {
 }
 
 bool Service::isBotName(QString userName) {
-    userName = userName.trimmed().toLower();
-    return (userName == "jambot") ||
-            (userName == "ninbot") ||
-            (userName == "MUTANTLAB") ||
-            (userName == "LiveStream");
+    userName = userName.trimmed();
+    return botNames.contains(userName);
+}
+
+QStringList Service::buildBotNamesList(){
+    QStringList names;
+    names.append("jambot");
+    names.append("ninbot");
+    names.append("MUTANTLAB");
+    names.append("LiveStream");
+    return names;
 }
 
 QString Service::getConnectedUserName() {
@@ -130,6 +137,11 @@ void Service::voteToChangeBPM(int newBPM){
     QString text = "!vote bpm " + QString::number(newBPM);
     ChatMessage message(text);
     sendMessageToServer(&message);
+}
+
+void Service::sendChatMessageToServer(QString message){
+    ChatMessage msg(message);
+    sendMessageToServer(&msg);
 }
 
 void Service::sendMessageToServer(ClientMessage *message)
@@ -401,6 +413,7 @@ void Service::handle(const ServerChatMessage& msg) {
             currentServer->setLicence(serverLicence);//server licence is received when the hand shake with server is started
             //serverLicence.clear();
             emit connectedInServer(*currentServer);
+            emit chatMessageReceived(Ninjam::User(currentServer->getHostName()), topicText);
         }
         break;
     }

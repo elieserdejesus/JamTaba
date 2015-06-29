@@ -73,7 +73,7 @@ public:
 
         licenceButton = new QPushButton(widget);
         licenceButton->setObjectName(QStringLiteral("licenceButton"));
-        licenceButton->setFlat(true);
+        licenceButton->setFlat(false);
 
         horizontalLayout_2->addWidget(licenceButton);
 

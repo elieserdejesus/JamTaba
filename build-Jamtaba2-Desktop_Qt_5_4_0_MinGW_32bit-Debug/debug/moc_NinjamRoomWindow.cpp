@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_NinjamRoomWindow_t {
-    QByteArrayData data[20];
-    char stringdata[267];
+    QByteArrayData data[24];
+    char stringdata[325];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -48,7 +48,11 @@ QT_MOC_LITERAL(15, 194, 7), // "channel"
 QT_MOC_LITERAL(16, 202, 9), // "channelID"
 QT_MOC_LITERAL(17, 212, 14), // "channelRemoved"
 QT_MOC_LITERAL(18, 227, 14), // "channelChanged"
-QT_MOC_LITERAL(19, 242, 24) // "on_licenceButton_clicked"
+QT_MOC_LITERAL(19, 242, 19), // "chatMessageReceived"
+QT_MOC_LITERAL(20, 262, 7), // "message"
+QT_MOC_LITERAL(21, 270, 25), // "userSendingNewChatMessage"
+QT_MOC_LITERAL(22, 296, 3), // "msg"
+QT_MOC_LITERAL(23, 300, 24) // "on_licenceButton_clicked"
 
     },
     "NinjamRoomWindow\0ninjamBpiComboChanged\0"
@@ -57,7 +61,9 @@ QT_MOC_LITERAL(19, 242, 24) // "on_licenceButton_clicked"
     "intervalBeatChanged\0beat\0channelAdded\0"
     "Ninjam::User\0user\0Ninjam::UserChannel\0"
     "channel\0channelID\0channelRemoved\0"
-    "channelChanged\0on_licenceButton_clicked"
+    "channelChanged\0chatMessageReceived\0"
+    "message\0userSendingNewChatMessage\0msg\0"
+    "on_licenceButton_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -67,7 +73,7 @@ static const uint qt_meta_data_NinjamRoomWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      10,   14, // methods
+      12,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -75,16 +81,18 @@ static const uint qt_meta_data_NinjamRoomWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,   64,    2, 0x08 /* Private */,
-       3,    1,   67,    2, 0x08 /* Private */,
-       4,    1,   70,    2, 0x08 /* Private */,
-       5,    1,   73,    2, 0x08 /* Private */,
-       7,    1,   76,    2, 0x08 /* Private */,
-       9,    1,   79,    2, 0x08 /* Private */,
-      11,    3,   82,    2, 0x08 /* Private */,
-      17,    3,   89,    2, 0x08 /* Private */,
-      18,    3,   96,    2, 0x08 /* Private */,
-      19,    0,  103,    2, 0x08 /* Private */,
+       1,    1,   74,    2, 0x08 /* Private */,
+       3,    1,   77,    2, 0x08 /* Private */,
+       4,    1,   80,    2, 0x08 /* Private */,
+       5,    1,   83,    2, 0x08 /* Private */,
+       7,    1,   86,    2, 0x08 /* Private */,
+       9,    1,   89,    2, 0x08 /* Private */,
+      11,    3,   92,    2, 0x08 /* Private */,
+      17,    3,   99,    2, 0x08 /* Private */,
+      18,    3,  106,    2, 0x08 /* Private */,
+      19,    2,  113,    2, 0x08 /* Private */,
+      21,    1,  118,    2, 0x08 /* Private */,
+      23,    0,  121,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::QString,    2,
@@ -96,6 +104,8 @@ static const uint qt_meta_data_NinjamRoomWindow[] = {
     QMetaType::Void, 0x80000000 | 12, 0x80000000 | 14, QMetaType::Long,   13,   15,   16,
     QMetaType::Void, 0x80000000 | 12, 0x80000000 | 14, QMetaType::Long,   13,   15,   16,
     QMetaType::Void, 0x80000000 | 12, 0x80000000 | 14, QMetaType::Long,   13,   15,   16,
+    QMetaType::Void, 0x80000000 | 12, QMetaType::QString,    2,   20,
+    QMetaType::Void, QMetaType::QString,   22,
     QMetaType::Void,
 
        0        // eod
@@ -115,7 +125,9 @@ void NinjamRoomWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int
         case 6: _t->channelAdded((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< Ninjam::UserChannel(*)>(_a[2])),(*reinterpret_cast< long(*)>(_a[3]))); break;
         case 7: _t->channelRemoved((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< Ninjam::UserChannel(*)>(_a[2])),(*reinterpret_cast< long(*)>(_a[3]))); break;
         case 8: _t->channelChanged((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< Ninjam::UserChannel(*)>(_a[2])),(*reinterpret_cast< long(*)>(_a[3]))); break;
-        case 9: _t->on_licenceButton_clicked(); break;
+        case 9: _t->chatMessageReceived((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 10: _t->userSendingNewChatMessage((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 11: _t->on_licenceButton_clicked(); break;
         default: ;
         }
     }
@@ -146,13 +158,13 @@ int NinjamRoomWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 12;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 12)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 10;
+        _id -= 12;
     }
     return _id;
 }

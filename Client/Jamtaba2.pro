@@ -2,6 +2,8 @@
 #nome dos países também está ficando grande na pista ninjam, diminuir a fonte já soluciona
 
 #chat ninjam
+    #testar acentos
+    #botão para limpar as mensagens?
 
 #como serão as entradas? Como será a criação do canal de backtracking?
 #acho que faz sentido selecionar uma entrada como sendo audio ou midi, stereo ou mono
@@ -138,7 +140,10 @@ HEADERS += \
     src/jamtaba/audio/core/SamplesBuffer.h \
     src/jamtaba/gui/BusyDialog.h \
     src/jamtaba/audio/core/AudioPeak.h \
-    src/jamtaba/geo/IpToLocationResolver.h
+    src/jamtaba/geo/IpToLocationResolver.h \
+    src/jamtaba/gui/ChatPanel.h \
+    src/jamtaba/gui/ChatMessagePanel.h \
+    src/jamtaba/gui/ChatMessageTextBrowser.h
 
 
 SOURCES += \
@@ -199,7 +204,10 @@ SOURCES += \
     src/jamtaba/audio/core/SamplesBuffer.cpp \
     src/jamtaba/gui/BusyDialog.cpp \
     src/jamtaba/audio/core/AudioPeak.cpp \
-    src/jamtaba/geo/IpToLocationResolver.cpp
+    src/jamtaba/geo/IpToLocationResolver.cpp \
+    src/jamtaba/gui/ChatPanel.cpp \
+    src/jamtaba/gui/ChatMessagePanel.cpp \
+    src/jamtaba/gui/ChatMessageTextBrowser.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
@@ -209,7 +217,9 @@ FORMS += \
     src/jamtaba/gui/NinjamRoomWindow.ui \
     src/jamtaba/gui/BaseTrackView.ui \
     src/jamtaba/gui/NinjamPanel.ui \
-    src/jamtaba/gui/BusyDialog.ui
+    src/jamtaba/gui/BusyDialog.ui \
+    src/jamtaba/gui/ChatPanel.ui \
+    src/jamtaba/gui/ChatMessagePanel.ui
 
 
 #macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \

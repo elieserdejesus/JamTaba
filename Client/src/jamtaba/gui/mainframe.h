@@ -2,11 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_mainframe.h"
-//#include <QList>
-//#include <QMap>
-//#include "pluginscandialog.h"
 #include "BusyDialog.h"
-//#include "NinjamRoomWindow.h"
 
 class PluginScanDialog;
 class NinjamRoomWindow;
@@ -17,7 +13,6 @@ namespace Controller{
 namespace Ui{
     class MainFrameClass;
     class MainFrame;
-    //class NinjamRoomWindow;
 }
 
 namespace Login {

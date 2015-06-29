@@ -49,13 +49,11 @@ public:
     QWidget *scrollAreaWidgetContents;
     QVBoxLayout *verticalLayout_6;
     QWidget *allRoomsContent;
-    QWidget *chatPanel_2;
+    QWidget *chatArea;
     QVBoxLayout *verticalLayout;
-    QWidget *chatPanel;
-    QVBoxLayout *verticalLayout_4;
-    QLabel *label_3;
-    QFrame *line_3;
-    QWidget *widget_4;
+    QLabel *chatLabel;
+    QFrame *chatDivider;
+    QTabWidget *chatTabWidget;
     QMenuBar *menuBar;
     QMenu *menuPreferences;
 
@@ -172,51 +170,35 @@ public:
 
         horizontalLayout->addWidget(contentPanel);
 
-        chatPanel_2 = new QWidget(centralWidget);
-        chatPanel_2->setObjectName(QStringLiteral("chatPanel_2"));
-        sizePolicy.setHeightForWidth(chatPanel_2->sizePolicy().hasHeightForWidth());
-        chatPanel_2->setSizePolicy(sizePolicy);
-        chatPanel_2->setMinimumSize(QSize(280, 0));
-        verticalLayout = new QVBoxLayout(chatPanel_2);
+        chatArea = new QWidget(centralWidget);
+        chatArea->setObjectName(QStringLiteral("chatArea"));
+        sizePolicy.setHeightForWidth(chatArea->sizePolicy().hasHeightForWidth());
+        chatArea->setSizePolicy(sizePolicy);
+        chatArea->setMinimumSize(QSize(280, 0));
+        verticalLayout = new QVBoxLayout(chatArea);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        verticalLayout->setContentsMargins(0, 0, 0, 0);
-        chatPanel = new QWidget(chatPanel_2);
-        chatPanel->setObjectName(QStringLiteral("chatPanel"));
-        QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        sizePolicy3.setHorizontalStretch(1);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(chatPanel->sizePolicy().hasHeightForWidth());
-        chatPanel->setSizePolicy(sizePolicy3);
-        verticalLayout_4 = new QVBoxLayout(chatPanel);
-        verticalLayout_4->setSpacing(6);
-        verticalLayout_4->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
-        label_3 = new QLabel(chatPanel);
-        label_3->setObjectName(QStringLiteral("label_3"));
+        verticalLayout->setContentsMargins(6, 6, 6, 6);
+        chatLabel = new QLabel(chatArea);
+        chatLabel->setObjectName(QStringLiteral("chatLabel"));
 
-        verticalLayout_4->addWidget(label_3);
+        verticalLayout->addWidget(chatLabel);
 
-        line_3 = new QFrame(chatPanel);
-        line_3->setObjectName(QStringLiteral("line_3"));
-        line_3->setFrameShape(QFrame::HLine);
-        line_3->setFrameShadow(QFrame::Sunken);
+        chatDivider = new QFrame(chatArea);
+        chatDivider->setObjectName(QStringLiteral("chatDivider"));
+        chatDivider->setFrameShape(QFrame::HLine);
+        chatDivider->setFrameShadow(QFrame::Sunken);
 
-        verticalLayout_4->addWidget(line_3);
+        verticalLayout->addWidget(chatDivider);
 
-        widget_4 = new QWidget(chatPanel);
-        widget_4->setObjectName(QStringLiteral("widget_4"));
-        sizePolicy1.setHeightForWidth(widget_4->sizePolicy().hasHeightForWidth());
-        widget_4->setSizePolicy(sizePolicy1);
+        chatTabWidget = new QTabWidget(chatArea);
+        chatTabWidget->setObjectName(QStringLiteral("chatTabWidget"));
 
-        verticalLayout_4->addWidget(widget_4);
+        verticalLayout->addWidget(chatTabWidget);
 
 
-        verticalLayout->addWidget(chatPanel);
-
-
-        horizontalLayout->addWidget(chatPanel_2);
+        horizontalLayout->addWidget(chatArea);
 
         MainFrameClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainFrameClass);
@@ -232,6 +214,7 @@ public:
         retranslateUi(MainFrameClass);
 
         tabWidget->setCurrentIndex(0);
+        chatTabWidget->setCurrentIndex(-1);
 
 
         QMetaObject::connectSlotsByName(MainFrameClass);
@@ -243,7 +226,7 @@ public:
         menuAudioPreferences->setText(QApplication::translate("MainFrameClass", "Audio...", 0));
         label->setText(QApplication::translate("MainFrameClass", "Your Controls", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainFrameClass", "Rooms to play", 0));
-        label_3->setText(QApplication::translate("MainFrameClass", "Chat", 0));
+        chatLabel->setText(QApplication::translate("MainFrameClass", "Chat", 0));
         menuPreferences->setTitle(QApplication::translate("MainFrameClass", "Preferences", 0));
         Q_UNUSED(MainFrameClass);
     } // retranslateUi

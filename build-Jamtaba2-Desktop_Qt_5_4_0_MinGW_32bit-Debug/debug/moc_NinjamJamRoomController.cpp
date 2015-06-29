@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_Controller__NinjamJamRoomController_t {
-    QByteArrayData data[29];
-    char stringdata[465];
+    QByteArrayData data[31];
+    char stringdata[489];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -45,19 +45,21 @@ QT_MOC_LITERAL(12, 171, 7), // "channel"
 QT_MOC_LITERAL(13, 179, 9), // "channelID"
 QT_MOC_LITERAL(14, 189, 14), // "channelRemoved"
 QT_MOC_LITERAL(15, 204, 14), // "channelChanged"
-QT_MOC_LITERAL(16, 219, 22), // "ninjamServerBpmChanged"
-QT_MOC_LITERAL(17, 242, 22), // "ninjamServerBpiChanged"
-QT_MOC_LITERAL(18, 265, 6), // "oldBpi"
-QT_MOC_LITERAL(19, 272, 20), // "ninjamAudioAvailable"
-QT_MOC_LITERAL(20, 293, 12), // "channelIndex"
-QT_MOC_LITERAL(21, 306, 16), // "encodedAudioData"
-QT_MOC_LITERAL(22, 323, 24), // "ninjamUserChannelCreated"
-QT_MOC_LITERAL(23, 348, 24), // "ninjamUserChannelRemoved"
-QT_MOC_LITERAL(24, 373, 24), // "ninjamUserChannelUpdated"
-QT_MOC_LITERAL(25, 398, 15), // "ninjamUserLeave"
-QT_MOC_LITERAL(26, 414, 28), // "ninjamDisconnectedFromServer"
-QT_MOC_LITERAL(27, 443, 14), // "Ninjam::Server"
-QT_MOC_LITERAL(28, 458, 6) // "server"
+QT_MOC_LITERAL(16, 219, 15), // "chatMsgReceived"
+QT_MOC_LITERAL(17, 235, 7), // "message"
+QT_MOC_LITERAL(18, 243, 22), // "ninjamServerBpmChanged"
+QT_MOC_LITERAL(19, 266, 22), // "ninjamServerBpiChanged"
+QT_MOC_LITERAL(20, 289, 6), // "oldBpi"
+QT_MOC_LITERAL(21, 296, 20), // "ninjamAudioAvailable"
+QT_MOC_LITERAL(22, 317, 12), // "channelIndex"
+QT_MOC_LITERAL(23, 330, 16), // "encodedAudioData"
+QT_MOC_LITERAL(24, 347, 24), // "ninjamUserChannelCreated"
+QT_MOC_LITERAL(25, 372, 24), // "ninjamUserChannelRemoved"
+QT_MOC_LITERAL(26, 397, 24), // "ninjamUserChannelUpdated"
+QT_MOC_LITERAL(27, 422, 15), // "ninjamUserLeave"
+QT_MOC_LITERAL(28, 438, 28), // "ninjamDisconnectedFromServer"
+QT_MOC_LITERAL(29, 467, 14), // "Ninjam::Server"
+QT_MOC_LITERAL(30, 482, 6) // "server"
 
     },
     "Controller::NinjamJamRoomController\0"
@@ -66,8 +68,9 @@ QT_MOC_LITERAL(28, 458, 6) // "server"
     "channelAdded\0Ninjam::User\0user\0"
     "Ninjam::UserChannel\0channel\0channelID\0"
     "channelRemoved\0channelChanged\0"
-    "ninjamServerBpmChanged\0ninjamServerBpiChanged\0"
-    "oldBpi\0ninjamAudioAvailable\0channelIndex\0"
+    "chatMsgReceived\0message\0ninjamServerBpmChanged\0"
+    "ninjamServerBpiChanged\0oldBpi\0"
+    "ninjamAudioAvailable\0channelIndex\0"
     "encodedAudioData\0ninjamUserChannelCreated\0"
     "ninjamUserChannelRemoved\0"
     "ninjamUserChannelUpdated\0ninjamUserLeave\0"
@@ -82,30 +85,31 @@ static const uint qt_meta_data_Controller__NinjamJamRoomController[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      14,   14, // methods
+      15,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       6,       // signalCount
+       7,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   84,    2, 0x06 /* Public */,
-       4,    1,   87,    2, 0x06 /* Public */,
-       6,    1,   90,    2, 0x06 /* Public */,
-       8,    3,   93,    2, 0x06 /* Public */,
-      14,    3,  100,    2, 0x06 /* Public */,
-      15,    3,  107,    2, 0x06 /* Public */,
+       1,    1,   89,    2, 0x06 /* Public */,
+       4,    1,   92,    2, 0x06 /* Public */,
+       6,    1,   95,    2, 0x06 /* Public */,
+       8,    3,   98,    2, 0x06 /* Public */,
+      14,    3,  105,    2, 0x06 /* Public */,
+      15,    3,  112,    2, 0x06 /* Public */,
+      16,    2,  119,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      16,    1,  114,    2, 0x08 /* Private */,
-      17,    2,  117,    2, 0x08 /* Private */,
-      19,    3,  122,    2, 0x08 /* Private */,
-      22,    2,  129,    2, 0x08 /* Private */,
-      23,    2,  134,    2, 0x08 /* Private */,
+      18,    1,  124,    2, 0x08 /* Private */,
+      19,    2,  127,    2, 0x08 /* Private */,
+      21,    3,  132,    2, 0x08 /* Private */,
       24,    2,  139,    2, 0x08 /* Private */,
-      25,    1,  144,    2, 0x08 /* Private */,
-      26,    1,  147,    2, 0x08 /* Private */,
+      25,    2,  144,    2, 0x08 /* Private */,
+      26,    2,  149,    2, 0x08 /* Private */,
+      27,    1,  154,    2, 0x08 /* Private */,
+      28,    1,  157,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::Int,    3,
@@ -114,16 +118,17 @@ static const uint qt_meta_data_Controller__NinjamJamRoomController[] = {
     QMetaType::Void, 0x80000000 | 9, 0x80000000 | 11, QMetaType::Long,   10,   12,   13,
     QMetaType::Void, 0x80000000 | 9, 0x80000000 | 11, QMetaType::Long,   10,   12,   13,
     QMetaType::Void, 0x80000000 | 9, 0x80000000 | 11, QMetaType::Long,   10,   12,   13,
+    QMetaType::Void, 0x80000000 | 9, QMetaType::QString,   10,   17,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Short,    5,
-    QMetaType::Void, QMetaType::Short, QMetaType::Short,   18,    3,
-    QMetaType::Void, 0x80000000 | 9, QMetaType::Int, QMetaType::QByteArray,   10,   20,   21,
+    QMetaType::Void, QMetaType::Short, QMetaType::Short,   20,    3,
+    QMetaType::Void, 0x80000000 | 9, QMetaType::Int, QMetaType::QByteArray,   10,   22,   23,
     QMetaType::Void, 0x80000000 | 9, 0x80000000 | 11,   10,   12,
     QMetaType::Void, 0x80000000 | 9, 0x80000000 | 11,   10,   12,
     QMetaType::Void, 0x80000000 | 9, 0x80000000 | 11,   10,   12,
     QMetaType::Void, 0x80000000 | 9,   10,
-    QMetaType::Void, 0x80000000 | 27,   28,
+    QMetaType::Void, 0x80000000 | 29,   30,
 
        0        // eod
 };
@@ -139,14 +144,15 @@ void Controller::NinjamJamRoomController::qt_static_metacall(QObject *_o, QMetaO
         case 3: _t->channelAdded((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< Ninjam::UserChannel(*)>(_a[2])),(*reinterpret_cast< long(*)>(_a[3]))); break;
         case 4: _t->channelRemoved((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< Ninjam::UserChannel(*)>(_a[2])),(*reinterpret_cast< long(*)>(_a[3]))); break;
         case 5: _t->channelChanged((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< Ninjam::UserChannel(*)>(_a[2])),(*reinterpret_cast< long(*)>(_a[3]))); break;
-        case 6: _t->ninjamServerBpmChanged((*reinterpret_cast< short(*)>(_a[1]))); break;
-        case 7: _t->ninjamServerBpiChanged((*reinterpret_cast< short(*)>(_a[1])),(*reinterpret_cast< short(*)>(_a[2]))); break;
-        case 8: _t->ninjamAudioAvailable((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< QByteArray(*)>(_a[3]))); break;
-        case 9: _t->ninjamUserChannelCreated((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< Ninjam::UserChannel(*)>(_a[2]))); break;
-        case 10: _t->ninjamUserChannelRemoved((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< Ninjam::UserChannel(*)>(_a[2]))); break;
-        case 11: _t->ninjamUserChannelUpdated((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< Ninjam::UserChannel(*)>(_a[2]))); break;
-        case 12: _t->ninjamUserLeave((*reinterpret_cast< Ninjam::User(*)>(_a[1]))); break;
-        case 13: _t->ninjamDisconnectedFromServer((*reinterpret_cast< Ninjam::Server(*)>(_a[1]))); break;
+        case 6: _t->chatMsgReceived((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
+        case 7: _t->ninjamServerBpmChanged((*reinterpret_cast< short(*)>(_a[1]))); break;
+        case 8: _t->ninjamServerBpiChanged((*reinterpret_cast< short(*)>(_a[1])),(*reinterpret_cast< short(*)>(_a[2]))); break;
+        case 9: _t->ninjamAudioAvailable((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< QByteArray(*)>(_a[3]))); break;
+        case 10: _t->ninjamUserChannelCreated((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< Ninjam::UserChannel(*)>(_a[2]))); break;
+        case 11: _t->ninjamUserChannelRemoved((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< Ninjam::UserChannel(*)>(_a[2]))); break;
+        case 12: _t->ninjamUserChannelUpdated((*reinterpret_cast< Ninjam::User(*)>(_a[1])),(*reinterpret_cast< Ninjam::UserChannel(*)>(_a[2]))); break;
+        case 13: _t->ninjamUserLeave((*reinterpret_cast< Ninjam::User(*)>(_a[1]))); break;
+        case 14: _t->ninjamDisconnectedFromServer((*reinterpret_cast< Ninjam::Server(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -188,6 +194,12 @@ void Controller::NinjamJamRoomController::qt_static_metacall(QObject *_o, QMetaO
                 *result = 5;
             }
         }
+        {
+            typedef void (NinjamJamRoomController::*_t)(Ninjam::User , QString );
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&NinjamJamRoomController::chatMsgReceived)) {
+                *result = 6;
+            }
+        }
     }
 }
 
@@ -216,13 +228,13 @@ int Controller::NinjamJamRoomController::qt_metacall(QMetaObject::Call _c, int _
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 14)
+        if (_id < 15)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 14;
+        _id -= 15;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 14)
+        if (_id < 15)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 14;
+        _id -= 15;
     }
     return _id;
 }
@@ -267,5 +279,12 @@ void Controller::NinjamJamRoomController::channelChanged(Ninjam::User _t1, Ninja
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)), const_cast<void*>(reinterpret_cast<const void*>(&_t3)) };
     QMetaObject::activate(this, &staticMetaObject, 5, _a);
+}
+
+// SIGNAL 6
+void Controller::NinjamJamRoomController::chatMsgReceived(Ninjam::User _t1, QString _t2)
+{
+    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    QMetaObject::activate(this, &staticMetaObject, 6, _a);
 }
 QT_END_MOC_NAMESPACE

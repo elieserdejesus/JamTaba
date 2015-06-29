@@ -24,8 +24,6 @@ NinjamJamRoomController::NinjamJamRoomController(Controller::MainController* mai
     currentBpm(0)
 {
     running = false;
-
-
 }
 
 NinjamJamRoomController::~NinjamJamRoomController()
@@ -55,6 +53,8 @@ void NinjamJamRoomController::start(const Ninjam::Server& server){
         QObject::connect(ninjamService, SIGNAL(userChannelRemoved(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelRemoved(Ninjam::User, Ninjam::UserChannel)));
         QObject::connect(ninjamService, SIGNAL(userChannelUpdated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelUpdated(Ninjam::User, Ninjam::UserChannel)));
 
+        QObject::connect(ninjamService, SIGNAL(chatMessageReceived(Ninjam::User,QString)), this, SIGNAL(chatMsgReceived(Ninjam::User,QString)));
+
         //add server users
         QList<Ninjam::User*> users = server.getUsers();
         foreach (Ninjam::User* user, users) {
@@ -66,6 +66,9 @@ void NinjamJamRoomController::start(const Ninjam::Server& server){
     }
 }
 
+void NinjamJamRoomController::sendChatMessage(QString msg){
+    Ninjam::Service::getInstance()->sendChatMessageToServer(msg);
+}
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 long NinjamJamRoomController::generateNewTrackID(){
