@@ -155,7 +155,10 @@ void Service::sendMessageToServer(ClientMessage *message)
     }
     lastSendTime = QDateTime::currentMSecsSinceEpoch();
     //qDebug() << message;
-    assert((int)message->getPayload() + 5 == outBuffer.size());
+    //assert((int)message->getPayload() + 5 == outBuffer.size());
+    if((int)message->getPayload() + 5 != outBuffer.size()){
+        qWarning() << "(int)message->getPayload() + 5: " << ((int)message->getPayload() + 5) << "outbuffer.size():" << outBuffer.size();
+    }
 }
 
 bool Service::needSendKeepAlive() const{

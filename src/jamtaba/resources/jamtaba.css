@@ -411,6 +411,7 @@ BaseTrackView > .QFrame#panSectionSeparator{
 background-color: rgb(180, 180, 180);
 }
 
+
 /* NINJAM */
 NinjamPanel{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(253, 253, 253), stop:1 rgb(193, 193, 193));
@@ -422,8 +423,6 @@ NinjamPanel{
 
 
 /*Chat */
-
-
 ChatMessagePanel > QLabel#labelUserName{
     padding: 0px;
     padding-right: 3px;

@@ -1,20 +1,14 @@
 #include "gui/MainFrame.h"
 #include "MainController.h"
 #include "JamtabaFactory.h"
-#include "loginserver/LoginService.h"
-#include "ninjam/Service.h"
-#include "JamRoomViewPanel.h"
-#include "audio/core/AudioDriver.h"
-#include <QThread>
-
-#include "geo/IpToLocationResolver.h"
-
-#include <QFile>
-#include <QFileInfo>
+#include <QTextCodec>
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
 int main(int argc, char* args[] ){
+
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+
     qInstallMessageHandler(customLogHandler);
 
     JamtabaFactory* factory = new ReleaseFactory();

@@ -1,23 +1,23 @@
-#nomes dos canais ficam ruims quando são grandes - pensar em algo
-#nome dos países também está ficando grande na pista ninjam, diminuir a fonte já soluciona
+# o botão de entrar na sala fica habilitado mesmo quando está cheia
 
-#chat ninjam
-    #testar acentos
-    #botão para limpar as mensagens?
+# a mensagem de crowded está errada
 
-#como serão as entradas? Como será a criação do canal de backtracking?
-#acho que faz sentido selecionar uma entrada como sendo audio ou midi, stereo ou mono
-
+#resampling
 
 # quando clico para ouvir uma outra sala não está resetando o plot da sala que eu estava ouvindo
 
 #de vez em quando buga quando chega o primeiro intervalo e ainda não sei porque
 
-#não consegui resolver o bug que acontece quando as pistas são removidas, por hora apenas comentei a linha que delete as pistas no NinjamJamRoomController. Ou seja, a memoria não está sendo liberada
+#como serão as entradas? Como será a criação do canal de backtracking?
+#acho que faz sentido selecionar uma entrada como sendo audio ou midi, stereo ou mono
+
+#transmissão do áudio
 
 # MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais. Testar com o controlador AKAI também para ver
 
 #dialogo de IO do midi - testar novamente, ver se a seleção do midi device está funcionando
+
+#não consegui resolver o bug que acontece quando as pistas são removidas, por hora apenas comentei a linha que delete as pistas no NinjamJamRoomController. Ou seja, a memoria não está sendo liberada
 
 # programa fechando com erro, basta abrir e fechar para ver o erro na finalização. Quando testei sem nenhum device midi conectado não de problema. Então parece ser a portmidi.
 
@@ -30,7 +30,11 @@
 
 #buga tudo se não tem conexão com a internet
 
-#implementar a view da sala ninjam
+
+#chat ninjam
+    #problema nos caracteres especiais - tenho que testar se o envio está correto e depois testar a recepção
+    #botão para limpar as mensagens?
+
 
 #audo update: https://wiki.qt.io/Qt-Installer-Framework
 
@@ -67,6 +71,9 @@
 #-------------------------------------------------
 
 QT       +=  gui  network webkitwidgets
+
+#DEFINES += QT_NO_CAST_FROM_ASCII
+#DEFINES += QT_NO_CAST_TO_ASCII
 
 QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS #-Wno-unused-parameter
 
@@ -143,7 +150,6 @@ HEADERS += \
     src/jamtaba/geo/IpToLocationResolver.h \
     src/jamtaba/gui/ChatPanel.h \
     src/jamtaba/gui/ChatMessagePanel.h \
-    src/jamtaba/gui/ChatMessageTextBrowser.h
 
 
 SOURCES += \
@@ -207,7 +213,6 @@ SOURCES += \
     src/jamtaba/geo/IpToLocationResolver.cpp \
     src/jamtaba/gui/ChatPanel.cpp \
     src/jamtaba/gui/ChatMessagePanel.cpp \
-    src/jamtaba/gui/ChatMessageTextBrowser.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
