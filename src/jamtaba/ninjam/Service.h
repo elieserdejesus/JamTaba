@@ -47,6 +47,8 @@ public:
     static Service* getInstance();
     static bool isBotName(QString userName) ;
 
+    void sendChatMessageToServer(QString message);
+
     QString getConnectedUserName() ;
     QString getCurrentServerLicence() const;
     float getIntervalPeriod() ;
@@ -55,6 +57,10 @@ public:
     void disconnectFromServer();
 
     ~Service();
+
+    static inline QStringList getBotNamesList(){
+        return botNames;
+    }
 
 signals:
     void userChannelCreated(Ninjam::User user, Ninjam::UserChannel channel);
@@ -78,6 +84,9 @@ private:
     Service();
     QTcpSocket socket;
     QByteArray byteArray;
+
+    static const QStringList botNames;
+    static QStringList buildBotNamesList();
 
     //GUID, AudioInterval
     long lastSendTime;//time stamp of last send

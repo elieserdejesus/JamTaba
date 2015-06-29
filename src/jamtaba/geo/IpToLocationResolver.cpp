@@ -40,6 +40,9 @@ IpToLocationResolver::~IpToLocationResolver(){
 }
 
 Location IpToLocationResolver::resolve(QString ip) {
+    if(ip.isEmpty()){
+        return Location();//empty location
+    }
     int gai_error, mmdb_error;
     MMDB_lookup_result_s result = MMDB_lookup_string(&mmdb_s, ip.toStdString().c_str(), &gai_error, &mmdb_error);
     if (0 != gai_error) {

@@ -206,7 +206,7 @@ background-color: rgb(60, 60, 60);
 }
 
 /* painéis principais */
-.QWidget#leftPanel, .QWidget#chatPanel, .QWidget#contentPanel{
+.QWidget#leftPanel, .QWidget#chatArea, .QWidget#contentPanel{
 background: url(:/images/gradient.bmp) repeat-x;
 background-color: rgb(39, 39, 39);
 border: 1px solid rgb(45, 45, 45);
@@ -215,14 +215,14 @@ margin-top: 1ex;
 }
 
 /* títulos dos painéis principais */
-.QWidget#leftPanel > .QLabel, .QWidget#chatPanel  > .QLabel, .QWidget#contentPanel > .QLabel{
+.QWidget#leftPanel > .QLabel, .QWidget#chatArea  > .QLabel, .QWidget#contentPanel > .QLabel{
 font-size: 10pt;
 color: rgb(190, 190, 190);
 qproperty-alignment: AlignCenter;
 }
 
 /* define os separadores horizontais abaixo dos títulos as seções principais   */
-.QWidget#leftPanel > .QFrame, .QWidget#chatPanel > .QFrame{
+.QWidget#leftPanel > .QFrame, .QWidget#chatArea > .QFrame{
 background-color: rgb(80,80,80);
 }
 
@@ -421,4 +421,26 @@ NinjamPanel{
 }
 
 
+/*Chat */
+
+
+ChatMessagePanel > QLabel#labelUserName{
+    padding: 0px;
+    padding-right: 3px;
+    border: 1px solid rgb(0, 0, 0, 70);
+    border-right: none;
+    border-radius: 3px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    font-size: 8pt;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-right: -1px;
+}
+
+ChatMessagePanel > QLabel#labelMessage{
+    padding: 2px;
+    border: 1px solid rgb(0, 0, 0, 80);
+    border-radius: 3px;
+}
 

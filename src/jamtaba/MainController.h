@@ -96,6 +96,8 @@ public:
     Audio::Plugin* addPlugin(Audio::PluginDescriptor* descriptor);
     void removePlugin(Audio::Plugin* plugin);
 
+    QStringList getBotNames() const;
+
     //tracks
     void setTrackMute(int trackID, bool muteStatus);
     bool trackIsMuted(int trackID) const;

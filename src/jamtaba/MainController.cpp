@@ -153,6 +153,10 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     //qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
 }
 
+QStringList MainController::getBotNames() const{
+    return Ninjam::Service::getBotNamesList();
+}
+
 Geo::Location MainController::getLocation(QString ip) {
     return ipToLocationResolver.resolve(ip);
 }

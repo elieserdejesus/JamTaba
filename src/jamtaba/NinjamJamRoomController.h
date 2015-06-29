@@ -36,6 +36,9 @@ public:
     inline int getCurrentBpm() const{return currentBpm;}
     void voteBpi(int newBpi);
     void voteBpm(int newBpm);
+
+    void sendChatMessage(QString msg);
+
 signals:
     void currentBpiChanged(int newBpi);
     void currentBpmChanged(int newBpm);
@@ -43,7 +46,7 @@ signals:
     void channelAdded(Ninjam::User user,   Ninjam::UserChannel channel, long channelID);
     void channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
     void channelChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
-    //void disconnected(bool normalDisconnection);
+    void chatMsgReceived(Ninjam::User user, QString message);
 
 private:
     Controller::MainController* mainController;
