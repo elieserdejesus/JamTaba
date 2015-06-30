@@ -24,7 +24,8 @@ AbstractMp3Streamer::AbstractMp3Streamer(Audio::Mp3Decoder *decoder)
     :
       faderProcessor(FaderProcessor(0, 1, 44100*3)),//3 seconds fade in
       decoder(decoder),
-      device(nullptr)
+      device(nullptr),
+      streaming(false)
 {
     //addProcessor(faderProcessor);
 }
@@ -41,6 +42,7 @@ void AbstractMp3Streamer::stopCurrentStream(){
         decoder->reset();//discard unprocessed bytes
         device = nullptr;
         samplesBuffer.clear();//discard samples
+        streaming = false;
     }
 }
 
@@ -62,6 +64,11 @@ void AbstractMp3Streamer::processReplacing(SamplesBuffer &/*in*/, SamplesBuffer 
     faderProcessor.process(buffer);//aply fade in in stream
 
     out.add(buffer);
+}
+
+void AbstractMp3Streamer::initialize(QString streamPath){
+    Q_UNUSED(streamPath);
+    streaming = true;
 }
 
 void AbstractMp3Streamer::decodeBytesFromDevice(QIODevice* device, const unsigned int bytesToRead){
@@ -121,6 +128,7 @@ RoomStreamerNode::RoomStreamerNode(int bufferTimeInSeconds)
 
 
 void RoomStreamerNode::initialize(QString streamPath){
+    AbstractMp3Streamer::initialize(streamPath);
     buffering = true;
     if(!streamPath.isEmpty()){
         QNetworkReply* reply = httpClient.get(QNetworkRequest(QUrl(streamPath)));
@@ -168,6 +176,7 @@ AudioFileStreamerNode::AudioFileStreamerNode(QString file)
 }
 
 void AudioFileStreamerNode::initialize(QString streamPath){
+    AbstractMp3Streamer::initialize(streamPath);
     QFile* f = new QFile(streamPath);
     if(!f->open(QIODevice::ReadOnly)){
         qDebug() << "não foi possivel abrir o arquivo " << streamPath;
@@ -196,11 +205,12 @@ TestStreamerNode::~TestStreamerNode(){
     delete oscilator;
 }
 
-void TestStreamerNode::initialize(QString /*streamPath*/){
-
+void TestStreamerNode::initialize(QString streamPath){
+    AbstractMp3Streamer::initialize(streamPath);
 }
 
 void TestStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out){
+
     if(playing){
         oscilator->processReplacing(in, out);
         faderProcessor.process(out);

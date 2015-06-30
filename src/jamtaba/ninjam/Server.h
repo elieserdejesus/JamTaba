@@ -25,17 +25,12 @@ private:
     QString streamUrl;
     QString topic;
     QString licence;
-
     QMap<QString, User*> users;
-
     bool containBot;// = false;
-
-    //static QMap<QString, std::shared_ptr<Server>> servers;
-
-    //static QString getUniqueName(QString host, int port) ;
-
 public:
     Server(QString host, int port);
+    Server(QString host, int port, int maxUsers);
+
     //static Server* getServer(QString host, int port) ;
     ~Server();
 
@@ -51,6 +46,8 @@ public:
         //tirei o stream do server do mutant porque ele usa nsv, e não encontrei lib para esse formato
         return !streamUrl.isNull() && !host.toLower().contains("mutant");
     }
+
+    inline bool isFull() const{ return users.size() == maxUsers; }
 
     inline void setLicence(QString licenceText){this->licence = licenceText;}
 

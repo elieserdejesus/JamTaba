@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include "../ninjam/User.h"
+#include "../ninjam/Server.h"
+#include "../loginserver/LoginService.h"
 #include "ChatPanel.h"
 
 
@@ -12,10 +14,6 @@ class NinjamTrackView;
 namespace Ui {
     class NinjamRoomWindow;
     //class ChatPanel;
-}
-
-namespace Login {
-class NinjamRoom;
 }
 
 namespace Controller {
@@ -28,7 +26,7 @@ class NinjamRoomWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit NinjamRoomWindow(QWidget *parent, const Login::NinjamRoom& room, Controller::MainController *mainController);
+    explicit NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Controller::MainController *mainController);
     ~NinjamRoomWindow();
     void updatePeaks();
 

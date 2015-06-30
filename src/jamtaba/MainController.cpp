@@ -6,7 +6,6 @@
 #include "audio/core/AudioNode.h"
 #include "audio/RoomStreamerNode.h"
 #include "../loginserver/LoginService.h"
-#include "../loginserver/JamRoom.h"
 #include "../loginserver/natmap.h"
 
 #include "JamtabaFactory.h"
@@ -18,7 +17,6 @@
 
 #include "../ninjam/Service.h"
 #include "../ninjam/Server.h"
-#include "../loginserver/JamRoom.h"
 #include "NinjamJamRoomController.h"
 #include <QTimer>
 
@@ -79,7 +77,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
 
       audioMixer(new Audio::AudioMixer()),
       roomStreamer(new Audio::RoomStreamerNode()),
-      currentStreamRoom(nullptr),
+      currentStreamingRoomID(-1000),
       mutex(QMutex::Recursive),
       started(false),
       inputPeaks(0,0),
@@ -365,13 +363,6 @@ Audio::Plugin *MainController::createPluginInstance(Audio::PluginDescriptor *des
     return nullptr;
 }
 
-bool MainController::isPlayingRoomStream(){
-    return currentStreamRoom != nullptr;
-}
-
-Login::AbstractJamRoom* MainController::getCurrentStreamingRoom(){
-    return currentStreamRoom;
-}
 
 void MainController::on_disconnectedFromLoginServer(){
     exit(0);
@@ -380,7 +371,7 @@ void MainController::on_disconnectedFromLoginServer(){
 MainController::~MainController()
 {
     stop();
-
+    delete roomStreamer;
     foreach (Audio::PluginDescriptor* descriptor, pluginsDescriptors) {
         delete descriptor;
     }
@@ -392,35 +383,36 @@ MainController::~MainController()
     }
 }
 
-void MainController::playRoomStream(Login::AbstractJamRoom* room){
-    if(room->hasStreamLink()){
-        roomStreamer->setStreamPath(room->getStreamLink());
-        currentStreamRoom = room;
+void MainController::playRoomStream(Login::RoomInfo roomInfo){
+    if(roomInfo.hasStream()){
+        roomStreamer->setStreamPath(roomInfo.getStreamUrl());
+        currentStreamingRoomID = roomInfo.getID();
     }
 }
 
 void MainController::stopRoomStream(){
     roomStreamer->stopCurrentStream();
-    currentStreamRoom = nullptr;
+    currentStreamingRoomID = -1000;
 }
 
-void MainController::enterInRoom(Login::AbstractJamRoom *room)
-{
+bool MainController::isPlayingRoomStream() const{
+    return roomStreamer->isStreaming();
+}
+
+void MainController::enterInRoom(Login::RoomInfo room){
     if(isPlayingRoomStream()){
         stopRoomStream();
     }
 
-    if(room->getRoomType() == Login::AbstractJamRoom::Type::NINJAM){
-        tryConnectInNinjamServer(*((Login::NinjamRoom*)room));
+    if(room.getType() == Login::RoomTYPE::NINJAM){
+        tryConnectInNinjamServer(room);
     }
-
-
 }
 
-void MainController::tryConnectInNinjamServer(const Login::NinjamRoom& ninjamRoom){
+void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom){
 
-    QString serverIp = ninjamRoom.getHostName();
-    int serverPort = ninjamRoom.getHostPort();
+    QString serverIp = ninjamRoom.getName();
+    int serverPort = ninjamRoom.getPort();
     QString userName = "Test user name";
     QStringList channelsNames("channel name");
     QString password = "";
@@ -495,17 +487,9 @@ void MainController::disconnectedFromNinjamServer(const Server &server){
     emit exitedFromRoom(true);//normal disconnection
 }
 
-void MainController::connectedInNinjamServer(const Ninjam::Server &server){
-    //qDebug() << "conectado no server " << server.getHostName() << endl;
-    Login::NinjamRoom* ninjamRoom = nullptr;
-    if(!server.isLocalHostServer() ){
-        ninjamRoom = Login::NinjamRoom::getNinjamRoom(&server);
-    }
-    else{
-        ninjamRoom = new Login::NinjamRoom(server.getHostName(), server.getPort(), server.getMaxUsers(), server.getBpi(), server.getBpm());
-    }
-    if(ninjamRoom){
-        emit enteredInRoom(ninjamRoom);
-    }
+void MainController::connectedInNinjamServer(Ninjam::Server server){
+
+    emit enteredInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers()));
     ninjamController->start(server);
+
 }

@@ -102,7 +102,6 @@ HEADERS += \
     src/jamtaba/gui/widgets/WavePeakPanel.h \
 #    #--------------------------------
     src/jamtaba/loginserver/LoginService.h \
-    src/jamtaba/loginserver/JamRoom.h \
     src/jamtaba/loginserver/JsonUtils.h \
 #    #--------------------------------
     src/jamtaba/MainController.h \
@@ -172,7 +171,6 @@ SOURCES += \
 ##------------------------------------------------
     src/jamtaba/loginserver/LoginService.cpp \
     src/jamtaba/loginserver/JsonUtils.cpp \
-    src/jamtaba/loginserver/JamRoom.cpp \
 ##------------------------------------------------
     src/jamtaba/ninjam/protocol/ServerMessages.cpp \
     src/jamtaba/ninjam/protocol/ClientMessages.cpp \

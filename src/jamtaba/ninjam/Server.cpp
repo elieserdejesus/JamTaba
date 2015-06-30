@@ -18,6 +18,18 @@ Server::Server(QString host, int port)
     //qDebug() << "criou server " << host <<":" << port;
 }
 
+Server::Server(QString host, int port, int maxUsers)
+    :port(port), host(host),
+      maxUsers(maxUsers), bpm(120), bpi(16),
+      activeServer(true),
+      streamUrl(""),
+      topic(""),
+      containBot(false)
+{
+
+    //qDebug() << "criou server " << host <<":" << port;
+}
+
 Server::~Server(){
     //qDeleteAll(users);
 }

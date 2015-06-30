@@ -6,12 +6,14 @@
 #include "audio/core/AudioPeak.h"
 
 #include "geo/IpToLocationResolver.h"
+#include "../ninjam/Server.h"
+#include "../loginserver/LoginService.h"
 
 class MainFrame;
 
 namespace Ninjam{
     class Service;
-    class Server;
+    //class Server;
 }
 
 namespace Audio {
@@ -34,9 +36,9 @@ namespace Login {
     class LoginService;
     class LoginServiceParser;
     class LoginServiceListener;
-    class AbstractJamRoom;
-    class NinjamRoom;
-    class AbstractPeer;
+    //class AbstractJamRoom;
+    //class NinjamRoom;
+    //class AbstractPeer;
 }
 
 namespace Vst {
@@ -77,12 +79,13 @@ public:
     void addTrack(long trackID, Audio::AudioNode* trackNode);
     void removeTrack(long trackID);
 
-    void playRoomStream(Login::AbstractJamRoom *room);
-    bool isPlayingRoomStream();
-    Login::AbstractJamRoom* getCurrentStreamingRoom();
-    void stopRoomStream();//stop currentRoom stream
+    void playRoomStream(Login::RoomInfo roomInfo);
+    bool isPlayingRoomStream() const;
 
-    void enterInRoom(Login::AbstractJamRoom* room);
+    void stopRoomStream();//stop currentRoom stream
+    inline long long getCurrentStreamingRoomID() const{return currentStreamingRoomID;}
+
+    void enterInRoom(Login::RoomInfo room);
 
     Audio::AudioDriver* getAudioDriver() const;
     Midi::MidiDriver* getMidiDriver() const;
@@ -119,7 +122,7 @@ public:
 
     Geo::Location getLocation(QString ip) ;
 signals:
-    void enteredInRoom(Login::AbstractJamRoom* room);
+    void enteredInRoom(Login::RoomInfo room);
     void exitedFromRoom(bool error);
     //void
 
@@ -136,8 +139,8 @@ private:
 
     std::unique_ptr<Audio::AudioMixer> audioMixer;
 
-    std::unique_ptr<Audio::AbstractMp3Streamer> roomStreamer;
-    Login::AbstractJamRoom* currentStreamRoom;
+    Audio::AbstractMp3Streamer* roomStreamer;
+    long long currentStreamingRoomID;
 
     //ninjam
     Ninjam::Service* ninjamService;
@@ -159,7 +162,7 @@ private:
     //+++++++++++++++++++++++++
     void configureStyleSheet();
 
-    void tryConnectInNinjamServer(const Login::NinjamRoom & ninjamRoom);
+    void tryConnectInNinjamServer(Login::RoomInfo ninjamRoom);
 
     Geo::IpToLocationResolver ipToLocationResolver;
 
@@ -169,7 +172,7 @@ private slots:
     void onPluginFounded(Audio::PluginDescriptor* descriptor);
 
     //ninjam
-    void connectedInNinjamServer(const Ninjam::Server& server);
+    void connectedInNinjamServer(Ninjam::Server server);
     void disconnectedFromNinjamServer(const Ninjam::Server& server);
     void errorInNinjamServer(QString error);
 };
