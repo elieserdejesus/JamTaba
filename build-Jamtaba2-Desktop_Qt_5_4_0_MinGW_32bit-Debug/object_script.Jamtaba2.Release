@@ -12,7 +12,6 @@ INPUT(
 ./release\MainController.o
 ./release\LoginService.o
 ./release\JsonUtils.o
-./release\JamRoom.o
 ./release\ServerMessages.o
 ./release\ClientMessages.o
 ./release\ServerMessageParser.o

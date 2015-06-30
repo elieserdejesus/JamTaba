@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_JamRoomViewPanel_t {
     QByteArrayData data[9];
-    char stringdata[163];
+    char stringdata[159];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -32,16 +32,16 @@ static const qt_meta_stringdata_JamRoomViewPanel_t qt_meta_stringdata_JamRoomVie
 QT_MOC_LITERAL(0, 0, 16), // "JamRoomViewPanel"
 QT_MOC_LITERAL(1, 17, 24), // "startingListeningTheRoom"
 QT_MOC_LITERAL(2, 42, 0), // ""
-QT_MOC_LITERAL(3, 43, 23), // "Login::AbstractJamRoom*"
-QT_MOC_LITERAL(4, 67, 4), // "room"
-QT_MOC_LITERAL(5, 72, 25), // "finishingListeningTheRoom"
-QT_MOC_LITERAL(6, 98, 17), // "enteringInTheRoom"
-QT_MOC_LITERAL(7, 116, 23), // "on_buttonListen_clicked"
-QT_MOC_LITERAL(8, 140, 22) // "on_buttonEnter_clicked"
+QT_MOC_LITERAL(3, 43, 15), // "Login::RoomInfo"
+QT_MOC_LITERAL(4, 59, 8), // "roomInfo"
+QT_MOC_LITERAL(5, 68, 25), // "finishingListeningTheRoom"
+QT_MOC_LITERAL(6, 94, 17), // "enteringInTheRoom"
+QT_MOC_LITERAL(7, 112, 23), // "on_buttonListen_clicked"
+QT_MOC_LITERAL(8, 136, 22) // "on_buttonEnter_clicked"
 
     },
     "JamRoomViewPanel\0startingListeningTheRoom\0"
-    "\0Login::AbstractJamRoom*\0room\0"
+    "\0Login::RoomInfo\0roomInfo\0"
     "finishingListeningTheRoom\0enteringInTheRoom\0"
     "on_buttonListen_clicked\0on_buttonEnter_clicked"
 };
@@ -86,9 +86,9 @@ void JamRoomViewPanel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int
     if (_c == QMetaObject::InvokeMetaMethod) {
         JamRoomViewPanel *_t = static_cast<JamRoomViewPanel *>(_o);
         switch (_id) {
-        case 0: _t->startingListeningTheRoom((*reinterpret_cast< Login::AbstractJamRoom*(*)>(_a[1]))); break;
-        case 1: _t->finishingListeningTheRoom((*reinterpret_cast< Login::AbstractJamRoom*(*)>(_a[1]))); break;
-        case 2: _t->enteringInTheRoom((*reinterpret_cast< Login::AbstractJamRoom*(*)>(_a[1]))); break;
+        case 0: _t->startingListeningTheRoom((*reinterpret_cast< Login::RoomInfo(*)>(_a[1]))); break;
+        case 1: _t->finishingListeningTheRoom((*reinterpret_cast< Login::RoomInfo(*)>(_a[1]))); break;
+        case 2: _t->enteringInTheRoom((*reinterpret_cast< Login::RoomInfo(*)>(_a[1]))); break;
         case 3: _t->on_buttonListen_clicked(); break;
         case 4: _t->on_buttonEnter_clicked(); break;
         default: ;
@@ -97,19 +97,19 @@ void JamRoomViewPanel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int
         int *result = reinterpret_cast<int *>(_a[0]);
         void **func = reinterpret_cast<void **>(_a[1]);
         {
-            typedef void (JamRoomViewPanel::*_t)(Login::AbstractJamRoom * );
+            typedef void (JamRoomViewPanel::*_t)(Login::RoomInfo );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&JamRoomViewPanel::startingListeningTheRoom)) {
                 *result = 0;
             }
         }
         {
-            typedef void (JamRoomViewPanel::*_t)(Login::AbstractJamRoom * );
+            typedef void (JamRoomViewPanel::*_t)(Login::RoomInfo );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&JamRoomViewPanel::finishingListeningTheRoom)) {
                 *result = 1;
             }
         }
         {
-            typedef void (JamRoomViewPanel::*_t)(Login::AbstractJamRoom * );
+            typedef void (JamRoomViewPanel::*_t)(Login::RoomInfo );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&JamRoomViewPanel::enteringInTheRoom)) {
                 *result = 2;
             }
@@ -154,21 +154,21 @@ int JamRoomViewPanel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void JamRoomViewPanel::startingListeningTheRoom(Login::AbstractJamRoom * _t1)
+void JamRoomViewPanel::startingListeningTheRoom(Login::RoomInfo _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 
 // SIGNAL 1
-void JamRoomViewPanel::finishingListeningTheRoom(Login::AbstractJamRoom * _t1)
+void JamRoomViewPanel::finishingListeningTheRoom(Login::RoomInfo _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 
 // SIGNAL 2
-void JamRoomViewPanel::enteringInTheRoom(Login::AbstractJamRoom * _t1)
+void JamRoomViewPanel::enteringInTheRoom(Login::RoomInfo _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 2, _a);

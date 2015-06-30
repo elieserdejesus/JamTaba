@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_Controller__MainController_t {
     QByteArrayData data[16];
-    char stringdata[270];
+    char stringdata[262];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -32,25 +32,24 @@ static const qt_meta_stringdata_Controller__MainController_t qt_meta_stringdata_
 QT_MOC_LITERAL(0, 0, 26), // "Controller::MainController"
 QT_MOC_LITERAL(1, 27, 13), // "enteredInRoom"
 QT_MOC_LITERAL(2, 41, 0), // ""
-QT_MOC_LITERAL(3, 42, 23), // "Login::AbstractJamRoom*"
-QT_MOC_LITERAL(4, 66, 4), // "room"
-QT_MOC_LITERAL(5, 71, 14), // "exitedFromRoom"
-QT_MOC_LITERAL(6, 86, 5), // "error"
-QT_MOC_LITERAL(7, 92, 30), // "on_disconnectedFromLoginServer"
-QT_MOC_LITERAL(8, 123, 15), // "onPluginFounded"
-QT_MOC_LITERAL(9, 139, 24), // "Audio::PluginDescriptor*"
-QT_MOC_LITERAL(10, 164, 10), // "descriptor"
-QT_MOC_LITERAL(11, 175, 23), // "connectedInNinjamServer"
-QT_MOC_LITERAL(12, 199, 14), // "Ninjam::Server"
-QT_MOC_LITERAL(13, 214, 6), // "server"
-QT_MOC_LITERAL(14, 221, 28), // "disconnectedFromNinjamServer"
-QT_MOC_LITERAL(15, 250, 19) // "errorInNinjamServer"
+QT_MOC_LITERAL(3, 42, 15), // "Login::RoomInfo"
+QT_MOC_LITERAL(4, 58, 4), // "room"
+QT_MOC_LITERAL(5, 63, 14), // "exitedFromRoom"
+QT_MOC_LITERAL(6, 78, 5), // "error"
+QT_MOC_LITERAL(7, 84, 30), // "on_disconnectedFromLoginServer"
+QT_MOC_LITERAL(8, 115, 15), // "onPluginFounded"
+QT_MOC_LITERAL(9, 131, 24), // "Audio::PluginDescriptor*"
+QT_MOC_LITERAL(10, 156, 10), // "descriptor"
+QT_MOC_LITERAL(11, 167, 23), // "connectedInNinjamServer"
+QT_MOC_LITERAL(12, 191, 14), // "Ninjam::Server"
+QT_MOC_LITERAL(13, 206, 6), // "server"
+QT_MOC_LITERAL(14, 213, 28), // "disconnectedFromNinjamServer"
+QT_MOC_LITERAL(15, 242, 19) // "errorInNinjamServer"
 
     },
     "Controller::MainController\0enteredInRoom\0"
-    "\0Login::AbstractJamRoom*\0room\0"
-    "exitedFromRoom\0error\0"
-    "on_disconnectedFromLoginServer\0"
+    "\0Login::RoomInfo\0room\0exitedFromRoom\0"
+    "error\0on_disconnectedFromLoginServer\0"
     "onPluginFounded\0Audio::PluginDescriptor*\0"
     "descriptor\0connectedInNinjamServer\0"
     "Ninjam::Server\0server\0"
@@ -102,11 +101,11 @@ void Controller::MainController::qt_static_metacall(QObject *_o, QMetaObject::Ca
     if (_c == QMetaObject::InvokeMetaMethod) {
         MainController *_t = static_cast<MainController *>(_o);
         switch (_id) {
-        case 0: _t->enteredInRoom((*reinterpret_cast< Login::AbstractJamRoom*(*)>(_a[1]))); break;
+        case 0: _t->enteredInRoom((*reinterpret_cast< Login::RoomInfo(*)>(_a[1]))); break;
         case 1: _t->exitedFromRoom((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 2: _t->on_disconnectedFromLoginServer(); break;
         case 3: _t->onPluginFounded((*reinterpret_cast< Audio::PluginDescriptor*(*)>(_a[1]))); break;
-        case 4: _t->connectedInNinjamServer((*reinterpret_cast< const Ninjam::Server(*)>(_a[1]))); break;
+        case 4: _t->connectedInNinjamServer((*reinterpret_cast< Ninjam::Server(*)>(_a[1]))); break;
         case 5: _t->disconnectedFromNinjamServer((*reinterpret_cast< const Ninjam::Server(*)>(_a[1]))); break;
         case 6: _t->errorInNinjamServer((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
@@ -115,7 +114,7 @@ void Controller::MainController::qt_static_metacall(QObject *_o, QMetaObject::Ca
         int *result = reinterpret_cast<int *>(_a[0]);
         void **func = reinterpret_cast<void **>(_a[1]);
         {
-            typedef void (MainController::*_t)(Login::AbstractJamRoom * );
+            typedef void (MainController::*_t)(Login::RoomInfo );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&MainController::enteredInRoom)) {
                 *result = 0;
             }
@@ -166,7 +165,7 @@ int Controller::MainController::qt_metacall(QMetaObject::Call _c, int _id, void 
 }
 
 // SIGNAL 0
-void Controller::MainController::enteredInRoom(Login::AbstractJamRoom * _t1)
+void Controller::MainController::enteredInRoom(Login::RoomInfo _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);

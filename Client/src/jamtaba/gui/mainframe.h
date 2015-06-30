@@ -3,6 +3,8 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_mainframe.h"
 #include "BusyDialog.h"
+#include "../ninjam/Server.h"
+#include "../loginserver/LoginService.h"
 
 class PluginScanDialog;
 class NinjamRoomWindow;
@@ -17,7 +19,7 @@ namespace Ui{
 
 namespace Login {
     class LoginServiceParser;
-    class AbstractJamRoom;
+    //class AbstractJamRoom;
 }
 
 namespace Audio {
@@ -51,13 +53,14 @@ private slots:
     void on_tabCloseRequest(int index);
     void on_preferencesClicked();
     void on_IOPropertiesChanged(int midiDevice, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
-    void on_connectedInServer(QList<Login::AbstractJamRoom*>);
+    //void on_connectedInServer(QList<Login::AbstractJamRoom*>);
+    void on_roomsListAvailable(QList<Login::RoomInfo> publicRooms);
 
     //+++++  ROOM FEATURES ++++++++
-    void on_startingRoomStream(Login::AbstractJamRoom* room);
-    void on_stoppingRoomStream(Login::AbstractJamRoom* room);
-    void on_enteringInRoom(Login::AbstractJamRoom* room);
-    void on_enteredInRoom(Login::AbstractJamRoom* room);
+    void on_startingRoomStream(Login::RoomInfo roomInfo);
+    void on_stoppingRoomStream(Login::RoomInfo roomInfo);
+    void on_enteringInRoom(Login::RoomInfo roomInfo);
+    void on_enteredInRoom(Login::RoomInfo roomInfo);
     void on_exitedFromRoom(bool normalDisconnection);
     //
 
@@ -83,7 +86,7 @@ private:
 
     int timerID;
 
-    QMap<Login::AbstractJamRoom*, JamRoomViewPanel*> roomViewPanels;
+    QMap<long long, JamRoomViewPanel*> roomViewPanels;
 
     QMenu* createFxMenu();
     QMenu* fxMenu;
@@ -96,6 +99,8 @@ private:
     //PluginGui* createPluginView(Plugin::PluginDescriptor *, Audio::Plugin *plugin) ;
 
     void showPluginGui(Audio::Plugin* plugin);
+
+    static bool jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2);
 };
 
 

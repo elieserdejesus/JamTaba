@@ -8,8 +8,6 @@
 #include "../ninjam/User.h"
 #include "../ninjam/Server.h"
 
-#include "../loginserver/JamRoom.h"
-
 #include "../audio/NinjamTrackNode.h"
 #include "../audio/MetronomeTrackNode.h"
 #include "../audio/core/AudioDriver.h"
@@ -25,7 +23,7 @@
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, const Login::NinjamRoom& room, Controller::MainController *mainController) :
+NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Controller::MainController *mainController) :
     QWidget(parent),
     ui(new Ui::NinjamRoomWindow),
     mainController(mainController),
@@ -36,10 +34,10 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, const Login::NinjamRoom& roo
     ui->licenceButton->setIcon(QIcon(QPixmap(":/images/licence.png")));
 
     //QString roomName = room.getHostName() + ":" + QString::number(room.getHostPort());
-    ui->labelRoomName->setText(room.getName());
+    ui->labelRoomName->setText(roomInfo.getName());
 
-    ui->topPanel->setBpi(room.getCurrentBpi());
-    ui->topPanel->setBpm(room.getCurrentBpm());
+    //ui->topPanel->setBpi(server.getBpi());
+    //ui->topPanel->setBpm(server.getBpm());
 
     ui->tracksPanel->layout()->setAlignment(Qt::AlignLeft);//tracks are left aligned
 

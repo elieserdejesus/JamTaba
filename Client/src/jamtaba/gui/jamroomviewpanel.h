@@ -2,6 +2,8 @@
 #define JAMROOMVIEWPANEL_H
 
 #include <QWidget>
+#include "../ninjam/Server.h"
+#include "../loginserver/LoginService.h"
 
 namespace Ui { class RoomViewPanel; }
 
@@ -16,16 +18,16 @@ class JamRoomViewPanel : public QWidget
     Q_OBJECT
 
 public:
-    JamRoomViewPanel(QWidget *parent, Controller::MainController* mainController);
-    JamRoomViewPanel(Login::AbstractJamRoom *jamRoom, QWidget *parent, Controller::MainController* mainController);
+    //JamRoomViewPanel(QWidget *parent, Controller::MainController* mainController);
+    JamRoomViewPanel(Login::RoomInfo roomInfo, QWidget *parent, Controller::MainController* mainController);
     ~JamRoomViewPanel();
     void paintEvent( QPaintEvent */*e*/ );
     void addPeak(float peak);
     void clearPeaks();
 signals:
-    void startingListeningTheRoom(Login::AbstractJamRoom* room);
-    void finishingListeningTheRoom(Login::AbstractJamRoom* room);
-    void enteringInTheRoom(Login::AbstractJamRoom* room);
+    void startingListeningTheRoom(Login::RoomInfo roomInfo);
+    void finishingListeningTheRoom(Login::RoomInfo roomInfo);
+    void enteringInTheRoom(Login::RoomInfo roomInfo);
 private slots:
     void on_buttonListen_clicked();
     void on_buttonEnter_clicked();
@@ -33,8 +35,11 @@ private slots:
 private:
     Ui::RoomViewPanel *ui;
     Controller::MainController* mainController;
-    Login::AbstractJamRoom* currentRoom;
+    Login::RoomInfo roomInfo;
     void initialize();
+    bool roomContainsBotsOnly(Login::RoomInfo roomInfo);
+    bool userIsBot(Login::UserInfo userInfo);
+
 };
 
 #endif // JAMROOMVIEWPANEL_H

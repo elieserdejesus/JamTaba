@@ -12,7 +12,6 @@ INPUT(
 ./debug\MainController.o
 ./debug\LoginService.o
 ./debug\JsonUtils.o
-./debug\JamRoom.o
 ./debug\ServerMessages.o
 ./debug\ClientMessages.o
 ./debug\ServerMessageParser.o

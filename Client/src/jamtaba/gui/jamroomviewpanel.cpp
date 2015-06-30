@@ -1,27 +1,16 @@
 #include "JamRoomViewPanel.h"
 #include "ui_jamroomviewpanel.h"
-#include "../loginserver/JamRoom.h"
 #include "../MainController.h"
-
+#include "../ninjam/User.h"
 #include <QPainter>
 #include <QDebug>
-#include <QLocale>
 
 
-JamRoomViewPanel::JamRoomViewPanel(QWidget *parent, Controller::MainController* mainController)
+JamRoomViewPanel::JamRoomViewPanel(Login::RoomInfo roomInfo, QWidget* parent, Controller::MainController* mainController)
     :QWidget(parent),
       ui(new Ui::RoomViewPanel),
       mainController(mainController),
-      currentRoom(nullptr)
-{
-    ui->labelRoomStatus->setText("");
-}
-
-JamRoomViewPanel::JamRoomViewPanel(Login::AbstractJamRoom* jamRoom, QWidget* parent, Controller::MainController* mainController)
-    :QWidget(parent),
-      ui(new Ui::RoomViewPanel),
-      mainController(mainController),
-      currentRoom(jamRoom)
+      roomInfo(roomInfo)
 {
     ui->setupUi(this);
     initialize();
@@ -38,37 +27,55 @@ void JamRoomViewPanel::paintEvent( QPaintEvent */*e*/ ){
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
+bool JamRoomViewPanel::userIsBot(Login::UserInfo userInfo){
+    return mainController->getBotNames().contains(userInfo.getName());
+}
+
+bool JamRoomViewPanel::roomContainsBotsOnly(Login::RoomInfo roomInfo){
+    QStringList botsNames = mainController->getBotNames();
+    foreach (Login::UserInfo user, roomInfo.getUsers()) {
+        if(!botsNames.contains(user.getName())){
+            return false;
+        }
+    }
+    return true;
+}
+
 void JamRoomViewPanel::initialize(){
-    ui->labelName->setText(currentRoom->getName());
-    ui->labelRoomType->setText( currentRoom->getRoomType() == Login::AbstractJamRoom::Type::NINJAM ? "Ninjam" : "Realtime" );
-    if(currentRoom->isEmpty()){
+    QString roomName = roomInfo.getName();
+    if(roomInfo.getType() == Login::RoomTYPE::NINJAM){
+        roomName += " (" + QString::number(roomInfo.getPort()) + ")";
+    }
+    ui->labelName->setText( roomName );
+    ui->labelRoomType->setText( (roomInfo.getType() == Login::RoomTYPE::NINJAM) ? "Ninjam" : "RealTime");
+    if(roomInfo.isEmpty() || roomContainsBotsOnly(roomInfo)){
         ui->labelRoomStatus->setText( "Empty room!"  );
     }
-    else if(currentRoom->isFull()){
+    else if(roomInfo.isFull() ){
         ui->labelRoomStatus->setText( "Crowded room!");
     }
     else{
         ui->labelRoomStatus->setText("");
     }
 
-    foreach (Login::AbstractPeer* user, currentRoom->getPeers()) {
-        if(!user->isBot()){
+    foreach (Login::UserInfo user, roomInfo.getUsers()) {
+        if(!userIsBot(user)){
             QLabel* label = new QLabel(ui->usersPanel);
             label->setTextFormat(Qt::RichText);
-            Geo::Location userLocation = mainController->getLocation(user->getIP());
+            Geo::Location userLocation = mainController->getLocation(user.getIp());
             QString countryCode = userLocation.getCountryCode().toLower();
             QString countryName = userLocation.getCountryName();
-            QString userString = user->getName() + " <i>(" + countryName + ")</i>";
+            QString userString = user.getName() + " <i>(" + countryName + ")</i>";
             label->setText("<img src=:/flags/flags/" + countryCode +".png> " + userString);
             ui->usersPanel->layout()->addWidget(label);
         }
     }
 
-    QString gMapURL = "England"; // this is where you want to point
-    gMapURL = "http://maps.google.com.sg/maps?q="+gMapURL+"&oe=utf-8&rls=org.mozilla:en-US:official&client=firefox-a&um=1&ie=UTF-8&hl=en&sa=N&tab=wl";
-    //ui->webView->setUrl(gMapURL);
+//    QString gMapURL = "England"; // this is where you want to point
+//    gMapURL = "http://maps.google.com.sg/maps?q="+gMapURL+"&oe=utf-8&rls=org.mozilla:en-US:official&client=firefox-a&um=1&ie=UTF-8&hl=en&sa=N&tab=wl";
+//    //ui->webView->setUrl(gMapURL);
 
-    ui->buttonListen->setEnabled(currentRoom->hasStreamLink());
+    ui->buttonListen->setEnabled(roomInfo.hasStream());
 }
 
 JamRoomViewPanel::~JamRoomViewPanel()
@@ -80,21 +87,15 @@ void JamRoomViewPanel::clearPeaks(){
     ui->wavePeakPanel->clearPeaks();
 }
 
-void JamRoomViewPanel::on_buttonListen_clicked()
-{
-    if(currentRoom->hasStreamLink()){
-        if(ui->buttonListen->isChecked()){
-            emit startingListeningTheRoom(currentRoom);
-        }
-        else{
-            emit finishingListeningTheRoom(currentRoom);
-        }
+void JamRoomViewPanel::on_buttonListen_clicked(){
+    if(ui->buttonListen->isChecked()){
+        emit startingListeningTheRoom(roomInfo);
+    }
+    else{
+        emit finishingListeningTheRoom(roomInfo);
     }
 }
 
-void JamRoomViewPanel::on_buttonEnter_clicked()
-{
-    if(currentRoom){
-        emit enteringInTheRoom(currentRoom);
-    }
+void JamRoomViewPanel::on_buttonEnter_clicked(){
+    emit enteringInTheRoom(roomInfo);
 }

@@ -1,81 +1,43 @@
 #include "LoginService.h"
-#include "JamRoom.h"
 #include "natmap.h"
 #include "JsonUtils.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QUrlQuery>
+#include "../ninjam/Server.h"
 
 using namespace Login;
 
 const QString LoginService::SERVER = "https://jamtaba2.appspot.com/vs";
 //const QString LoginService::SERVER = "http://localhost:8080/vs";
-QMap<long long, std::shared_ptr<AbstractJamRoom>> LoginService::rooms;
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//class LoginServiceParser {//this class handle json data
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+UserInfo::UserInfo(long long id, QString name, QString ip)
+    :id(id), name(name), ip(ip){
 
-//private:
+}
 
-//    static QList<RealTimeRoom *> buildRealTimeJamRoomList(QJsonObject rootJsonObject){
-//        QJsonArray realtimeRomsArray = rootJsonObject["realtimeRooms"].toArray();
-//        QList<RealTimeRoom*> allRooms;
-//        foreach (QJsonValue value, realtimeRomsArray) {
-//            allRooms.append(JsonUtils::realTimeRoomFromJson(value.toObject()));
-//        }
+RoomInfo::RoomInfo(long long id, QString roomName, int roomPort, RoomTYPE roomType, int maxUsers, QList<UserInfo> users, QString streamUrl)
+    :id(id), name(roomName), port(roomPort), type(roomType) , maxUsers(maxUsers),
+      users(users), streamUrl(streamUrl)
+{
 
-//        return allRooms;
-//    }
+}
 
-//    static QList<NinjamRoom*> buildNinjamJamRoomList(QJsonObject rootJsonObject)
-//    {
-//        QList<NinjamRoom*> allRooms;
-//        QJsonArray ninjamServersArray = rootJsonObject["ninjamServers"].toArray();
-//        foreach (QJsonValue value, ninjamServersArray) {
-//            allRooms.append(JsonUtils::ninjamServerFromJson(value.toObject()));
-//        }
-//        return allRooms;
-//    }
+RoomInfo::RoomInfo(QString roomName, int roomPort, RoomTYPE roomType, int maxUsers)
+    :id(-1000), name(roomName), port(roomPort), type(roomType) , maxUsers(maxUsers),
+      users(QList<Login::UserInfo>()), streamUrl("")
+{
 
-//public:
-
-//    static QList<AbstractJamRoom*> getRooms(QString json) {
-//        QJsonDocument document = QJsonDocument::fromJson(QByteArray(json.toStdString().c_str()));
-//        QJsonObject rootObject = document.object();
-
-//        QList<AbstractJamRoom*> rooms;
-
-//        QList<NinjamRoom*> ninjamRooms = buildNinjamJamRoomList(rootObject);
-//        foreach(NinjamRoom* room, ninjamRooms ){
-//            rooms.append(room);
-//        }
-
-//        QList<RealTimeRoom*> realTimeRooms = buildRealTimeJamRoomList(rootObject);
-//        foreach(RealTimeRoom* room, realTimeRooms){
-//            rooms.append(room);
-//        }
-
-////        if(rootObject["peer"] != QJsonValue::Undefined){//not connected?
-////            QJsonObject jsonPeer = rootObject["peer"].toObject();
-////            QJsonObject jsonCurrentRoom = jsonPeer["room"].toObject();
-////            this->currentRoom = JsonUtils::realTimeRoomFromJson(jsonCurrentRoom);
-////            this->connectedPeer = JsonUtils::peerFromJson(jsonPeer);
-////        }
-////        else{
-////            this->currentRoom = nullptr;
-////            this->connectedPeer = nullptr;
-////        }
-//        return rooms;
-//    }
-//};
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-namespace Login {
+}
 
 
+bool RoomInfo::isEmpty() const{
+    return users.isEmpty();
+}
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class HttpParamsFactory{
 public:
     static QUrlQuery parametersToConnect(QString userName, int instrumentID, QString channelName, NatMap localPeerMap, int version, QString environment, int sampleRate) {
@@ -99,9 +61,6 @@ public:
     }
 };
 
-}//namespace Login::
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 LoginService::LoginService(QObject* parent)
@@ -178,57 +137,51 @@ void LoginService::connectNetworkReplySlots(QNetworkReply* reply, Command comman
 }
 
 void LoginService::connectedSlot(){
-    //qDebug() << "connected slot!" << pendingReply->readAll();
     connected = true;
-    QString json = QString( pendingReply->readAll());
-    updateFromJson(json);
-    QList<AbstractJamRoom*> rooms = buildTheRoomsList();
-    if(LOCAL_HOST_MODE){
-        rooms.clear();
-        Login::NinjamRoom* ninjamLocalServer = new Login::NinjamRoom("localhost", 2049, 16);
-        rooms.append(ninjamLocalServer);
-     }
-
-    emit connectedInServer(rooms);
+    if(!LOCAL_HOST_MODE){
+        QString json = QString( pendingReply->readAll());
+        handleJson(json);
+    }
+    else{//local host - test mode
+        QList<Login::RoomInfo> publicRooms;
+        publicRooms.append(RoomInfo(1, "localhost", 2049, Login::RoomTYPE::NINJAM, 16, QList<UserInfo>()));
+        emit roomsListAvailable(publicRooms);
+    }
 }
 
-void LoginService::updateFromJson(QString json){
+void LoginService::handleJson(QString json){
     QJsonDocument document = QJsonDocument::fromJson(QByteArray(json.toStdString().c_str()));
     QJsonObject root = document.object();
     QJsonArray allRooms = root["rooms"].toArray();
+    QList<RoomInfo> publicRooms;
     for (int i = 0; i < allRooms.size(); ++i) {
         QJsonObject jsonObject = allRooms[i].toObject();
-        long long id = jsonObject.value("id").toVariant().toLongLong();
-        QString roomType = jsonObject["type"].toString();//NINJAM OR REALTIME
-        AbstractJamRoom* room = nullptr;
-        if(!rooms.contains(id)){
-            if(roomType == "ninjam"){
-                room = dynamic_cast<AbstractJamRoom*>(new NinjamRoom(id));
-            }
-            else{
-                room = dynamic_cast<AbstractJamRoom*>(new RealTimeRoom(id));
-            }
-            rooms.insert(id,  std::shared_ptr<AbstractJamRoom>(room));
-        }
-        if(room){//to avoid a strange bug in null room
-            bool changed = room->updateFromJson(jsonObject);
-            if(changed){
-                emit roomChanged(*room);
-            }
-        }
+        publicRooms.append(buildRoomInfoFromJson(jsonObject));
     }
+    emit roomsListAvailable(publicRooms);
 }
 
-QList<AbstractJamRoom*> LoginService::buildTheRoomsList(){
-    QList<AbstractJamRoom*> list;
-    for(std::shared_ptr<AbstractJamRoom> &l : rooms.values()){
-        AbstractJamRoom* room = l.get();
-        list.append(room);
-    }
-    qSort(list.begin(), list.end(), Login::jamRoomLessThan);
-    return list;
-}
+RoomInfo LoginService::buildRoomInfoFromJson(QJsonObject jsonObject){
+    long long id = jsonObject.value("id").toVariant().toLongLong();
+    QString typeString = jsonObject["type"].toString();//ninjam OR realtime
 
+    Login::RoomTYPE type = (typeString == "ninjam") ? Login::RoomTYPE::NINJAM : Login::RoomTYPE::REALTIME;
+    QString name = jsonObject["name"].toString();
+    int port = jsonObject["port"].toInt();
+    int maxUsers = jsonObject["maxUsers"].toInt();
+    QString streamLink = jsonObject["streamUrl"].toString();
+
+    QJsonArray usersArray = jsonObject["users"].toArray();
+    QList<UserInfo> users;
+    for (int i = 0; i < usersArray.size(); ++i) {
+        QJsonObject userObject = usersArray[i].toObject();
+        long long userID = userObject.value("id").toVariant().toLongLong();
+        QString userName = userObject.value("name").toString();
+        QString userIp =  userObject.value("ip").toString();
+        users.append(Login::UserInfo(userID, userName, userIp));
+    }
+    return Login::RoomInfo(id, name, port, type, maxUsers, users, streamLink);
+}
 
 
 

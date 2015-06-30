@@ -104,7 +104,7 @@ bool Service::isBotName(QString userName) {
 
 QStringList Service::buildBotNamesList(){
     QStringList names;
-    names.append("jambot");
+    names.append("Jambot");
     names.append("ninbot");
     names.append("MUTANTLAB");
     names.append("LiveStream");

@@ -56,7 +56,6 @@ SOURCES       = ..\Client\src\jamtaba\main.cpp \
 		..\Client\src\jamtaba\MainController.cpp \
 		..\Client\src\jamtaba\loginserver\LoginService.cpp \
 		..\Client\src\jamtaba\loginserver\JsonUtils.cpp \
-		..\Client\src\jamtaba\loginserver\JamRoom.cpp \
 		..\Client\src\jamtaba\ninjam\protocol\ServerMessages.cpp \
 		..\Client\src\jamtaba\ninjam\protocol\ClientMessages.cpp \
 		..\Client\src\jamtaba\ninjam\protocol\ServerMessageParser.cpp \
@@ -131,7 +130,6 @@ OBJECTS       = debug/main.o \
 		debug/MainController.o \
 		debug/LoginService.o \
 		debug/JsonUtils.o \
-		debug/JamRoom.o \
 		debug/ServerMessages.o \
 		debug/ClientMessages.o \
 		debug/ServerMessageParser.o \
@@ -203,7 +201,6 @@ DIST          =  ..\Client\src\jamtaba\persistence\ConfigStore.h \
 		..\Client\src\jamtaba\gui\widgets\PeakMeter.h \
 		..\Client\src\jamtaba\gui\widgets\WavePeakPanel.h \
 		..\Client\src\jamtaba\loginserver\LoginService.h \
-		..\Client\src\jamtaba\loginserver\JamRoom.h \
 		..\Client\src\jamtaba\loginserver\JsonUtils.h \
 		..\Client\src\jamtaba\MainController.h \
 		..\Client\src\jamtaba\JamtabaFactory.h \
@@ -260,7 +257,6 @@ DIST          =  ..\Client\src\jamtaba\persistence\ConfigStore.h \
 		..\Client\src\jamtaba\MainController.cpp \
 		..\Client\src\jamtaba\loginserver\LoginService.cpp \
 		..\Client\src\jamtaba\loginserver\JsonUtils.cpp \
-		..\Client\src\jamtaba\loginserver\JamRoom.cpp \
 		..\Client\src\jamtaba\ninjam\protocol\ServerMessages.cpp \
 		..\Client\src\jamtaba\ninjam\protocol\ClientMessages.cpp \
 		..\Client\src\jamtaba\ninjam\protocol\ServerMessageParser.cpp \
@@ -338,7 +334,7 @@ dist:
 	$(ZIP) Jamtaba2.zip $(SOURCES) $(DIST) ..\Client\Jamtaba2.pro C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\spec_pre.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\qdevice.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\device_config.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\common\shell-win32.conf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\qconfig.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_axbase.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_axbase_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_axcontainer.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_axcontainer_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_axserver.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_axserver_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_bluetooth.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_bluetooth_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_bootstrap_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_clucene_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_concurrent.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_concurrent_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_core.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_core_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_declarative.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_declarative_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_designer.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_designer_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_designercomponents_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_enginio.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_enginio_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_gui.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_gui_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_help.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_help_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_location.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_location_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_multimedia.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_multimedia_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_multimediawidgets.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_multimediawidgets_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_network.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_network_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_nfc.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_nfc_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_opengl.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_opengl_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_openglextensions.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_openglextensions_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_platformsupport_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_positioning.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_positioning_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_printsupport.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_printsupport_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_qml.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_qml_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_qmldevtools_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_qmltest.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_qmltest_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_quick.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_quick_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_quickparticles_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_quickwidgets.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_quickwidgets_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_script.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_script_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_scripttools.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_scripttools_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_sensors.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_sensors_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_serialport.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_serialport_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_sql.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_sql_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_svg.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_svg_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_testlib.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_testlib_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_uitools.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_uitools_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_webchannel.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_webchannel_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_webkit.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_webkit_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_webkitwidgets.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_webkitwidgets_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_websockets.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_websockets_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_widgets.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_widgets_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_winextras.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_winextras_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_xml.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_xml_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_xmlpatterns.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\modules\qt_lib_xmlpatterns_private.pri C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\qt_functions.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\qt_config.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\win32\qt_config.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\win32-g++\qmake.conf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\spec_post.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\exclusive_builds.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\default_pre.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\win32\default_pre.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\resolve_config.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\exclusive_builds_post.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\default_post.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\build_pass.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\c++11.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\win32\rtti.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\precompile_header.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\warn_on.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\qt.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\resources.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\moc.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\win32\opengl.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\uic.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\win32\windows.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\testcase_targets.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\exceptions.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\yacc.prf C:\Qt\Qt5.4.0\5.4\mingw491_32\mkspecs\features\lex.prf ..\Client\Jamtaba2.pro ..\Client\src\jamtaba\resources\jamtaba.qrc C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/qtmaind.prl C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5Cored.prl C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5WebKitWidgetsd.prl C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5Widgetsd.prl C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5WebKitd.prl C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5Guid.prl C:/Qt/Qt5.4.0/5.4/mingw491_32/lib/Qt5Networkd.prl  NO_PCH_SOURCES RESOURCES HEADERS SOURCES OBJECTIVE_SOURCES FORMS YACCSOURCES YACCSOURCES LEXSOURCES 
 
 clean: compiler_clean 
-	-$(DEL_FILE) debug\main.o debug\ConfigStore.o debug\AudioDriver.o debug\AudioNode.o debug\AudioMixer.o debug\PortAudioDriver.o debug\RoomStreamerNode.o debug\PeakMeter.o debug\WavePeakPanel.o debug\JamtabaFactory.o debug\MainController.o debug\LoginService.o debug\JsonUtils.o debug\JamRoom.o debug\ServerMessages.o debug\ClientMessages.o debug\ServerMessageParser.o debug\Server.o debug\Service.o debug\User.o debug\LocalTrackView.o debug\FxPanel.o debug\FxPanelItem.o debug\plugins.o debug\codec.o debug\guis.o debug\JamRoomViewPanel.o debug\MainFrame.o debug\PluginFinder.o debug\VstPlugin.o debug\vsthost.o debug\MidiDriver.o debug\PreferencesDialog.o debug\PluginScanDialog.o debug\PortMidiDriver.o debug\NinjamRoomWindow.o debug\BaseTrackView.o debug\NinjamTrackNode.o debug\NinjamTrackView.o debug\MetronomeTrackNode.o debug\NinjamPanel.o debug\FancyProgressDisplay.o debug\Resampler.o debug\NinjamJamRoomController.o debug\MetronomeTrackView.o debug\VorbisDecoder.o debug\UserChannel.o debug\SamplesBuffer.o debug\BusyDialog.o debug\AudioPeak.o debug\IpToLocationResolver.o debug\ChatPanel.o debug\ChatMessagePanel.o debug\qrc_jamtaba.o debug\moc_PeakMeter.o debug\moc_LoginService.o debug\moc_MainController.o debug\moc_Service.o debug\moc_RoomStreamerNode.o debug\moc_LocalTrackView.o debug\moc_JamRoomViewPanel.o debug\moc_MainFrame.o debug\moc_FxPanel.o debug\moc_FxPanelItem.o debug\moc_plugins.o debug\moc_guis.o debug\moc_PluginFinder.o debug\moc_pluginscandialog.o debug\moc_PreferencesDialog.o debug\moc_NinjamRoomWindow.o debug\moc_BaseTrackView.o debug\moc_NinjamPanel.o debug\moc_NinjamJamRoomController.o debug\moc_BusyDialog.o debug\moc_ChatPanel.o debug\moc_ChatMessagePanel.o
+	-$(DEL_FILE) debug\main.o debug\ConfigStore.o debug\AudioDriver.o debug\AudioNode.o debug\AudioMixer.o debug\PortAudioDriver.o debug\RoomStreamerNode.o debug\PeakMeter.o debug\WavePeakPanel.o debug\JamtabaFactory.o debug\MainController.o debug\LoginService.o debug\JsonUtils.o debug\ServerMessages.o debug\ClientMessages.o debug\ServerMessageParser.o debug\Server.o debug\Service.o debug\User.o debug\LocalTrackView.o debug\FxPanel.o debug\FxPanelItem.o debug\plugins.o debug\codec.o debug\guis.o debug\JamRoomViewPanel.o debug\MainFrame.o debug\PluginFinder.o debug\VstPlugin.o debug\vsthost.o debug\MidiDriver.o debug\PreferencesDialog.o debug\PluginScanDialog.o debug\PortMidiDriver.o debug\NinjamRoomWindow.o debug\BaseTrackView.o debug\NinjamTrackNode.o debug\NinjamTrackView.o debug\MetronomeTrackNode.o debug\NinjamPanel.o debug\FancyProgressDisplay.o debug\Resampler.o debug\NinjamJamRoomController.o debug\MetronomeTrackView.o debug\VorbisDecoder.o debug\UserChannel.o debug\SamplesBuffer.o debug\BusyDialog.o debug\AudioPeak.o debug\IpToLocationResolver.o debug\ChatPanel.o debug\ChatMessagePanel.o debug\qrc_jamtaba.o debug\moc_PeakMeter.o debug\moc_LoginService.o debug\moc_MainController.o debug\moc_Service.o debug\moc_RoomStreamerNode.o debug\moc_LocalTrackView.o debug\moc_JamRoomViewPanel.o debug\moc_MainFrame.o debug\moc_FxPanel.o debug\moc_FxPanelItem.o debug\moc_plugins.o debug\moc_guis.o debug\moc_PluginFinder.o debug\moc_pluginscandialog.o debug\moc_PreferencesDialog.o debug\moc_NinjamRoomWindow.o debug\moc_BaseTrackView.o debug\moc_NinjamPanel.o debug\moc_NinjamJamRoomController.o debug\moc_BusyDialog.o debug\moc_ChatPanel.o debug\moc_ChatMessagePanel.o
 
 distclean: clean 
 	-$(DEL_FILE) $(DESTDIR_TARGET)
@@ -822,6 +818,8 @@ debug/moc_LoginService.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qurl.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qurlquery.h \
+		../Client/src/jamtaba/ninjam/Server.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
 		../Client/src/jamtaba/loginserver/LoginService.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3_SDK/pluginterfaces/vst2.x -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libmaxmind -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKitWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKit -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\loginserver\LoginService.h -o debug\moc_LoginService.cpp
 
@@ -939,6 +937,31 @@ debug/moc_MainController.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QA
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
 		../Client/libs/includes/libmaxmind/maxminddb.h \
 		../Client/libs/includes/libmaxmind/maxminddb_config.h \
+		../Client/src/jamtaba/ninjam/Server.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		../Client/src/jamtaba/loginserver/LoginService.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QSslConfiguration \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslconfiguration.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslerror.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslcertificate.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcryptographichash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
 		../Client/src/jamtaba/MainController.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3_SDK/pluginterfaces/vst2.x -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libmaxmind -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKitWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKit -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\MainController.h -o debug\moc_MainController.cpp
 
@@ -1327,6 +1350,32 @@ debug/moc_JamRoomViewPanel.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
+		../Client/src/jamtaba/ninjam/Server.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		../Client/src/jamtaba/loginserver/LoginService.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QSslConfiguration \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslconfiguration.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslerror.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslcertificate.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcryptographichash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
 		../Client/src/jamtaba/gui/JamRoomViewPanel.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3_SDK/pluginterfaces/vst2.x -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libmaxmind -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKitWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKit -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\gui\JamRoomViewPanel.h -o debug\moc_JamRoomViewPanel.cpp
 
@@ -1486,6 +1535,31 @@ debug/moc_MainFrame.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMainWi
 		../Client/src/jamtaba/gui/BusyDialog.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
+		../Client/src/jamtaba/ninjam/Server.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		../Client/src/jamtaba/loginserver/LoginService.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QSslConfiguration \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslconfiguration.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslerror.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslcertificate.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcryptographichash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
 		../Client/src/jamtaba/gui/MainFrame.h
 	C:\Qt\Qt5.4.0\5.4\mingw491_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.4.0/5.4/mingw491_32/mkspecs/win32-g++ -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/src/jamtaba/gui/widgets -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3_SDK/pluginterfaces/vst2.x -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portaudio -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/portmidi -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/ogg -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/vorbis -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libresample -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/minimp3 -ID:/Documents/Estudos/ComputacaoMusical/Jamtaba2/Jamtaba2/Client/libs/includes/libmaxmind -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKitWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWebKit -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork -IC:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore -I. ..\Client\src\jamtaba\gui\MainFrame.h -o debug\moc_MainFrame.cpp
 
@@ -2297,6 +2371,30 @@ debug/moc_NinjamRoomWindow.cpp: C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/
 		../Client/src/jamtaba/ninjam/UserChannel.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		../Client/src/jamtaba/ninjam/Server.h \
+		../Client/src/jamtaba/loginserver/LoginService.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QSslConfiguration \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslconfiguration.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslerror.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslcertificate.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcryptographichash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
 		../Client/src/jamtaba/gui/ChatPanel.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
 		../Client/src/jamtaba/gui/NinjamRoomWindow.h
@@ -3524,15 +3622,38 @@ debug/main.o: ../Client/src/jamtaba/main.cpp ../Client/src/jamtaba/gui/MainFrame
 		../Client/src/jamtaba/gui/BusyDialog.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
+		../Client/src/jamtaba/ninjam/Server.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		../Client/src/jamtaba/loginserver/LoginService.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QSslConfiguration \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslconfiguration.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslerror.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslcertificate.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcryptographichash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
 		../Client/src/jamtaba/MainController.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
 		../Client/src/jamtaba/audio/core/AudioPeak.h \
 		../Client/src/jamtaba/geo/IpToLocationResolver.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
 		../Client/libs/includes/libmaxmind/maxminddb.h \
 		../Client/libs/includes/libmaxmind/maxminddb_config.h \
 		../Client/src/jamtaba/JamtabaFactory.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QTextCodec \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtextcodec.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\main.o ..\Client\src\jamtaba\main.cpp
@@ -4449,7 +4570,9 @@ debug/JamtabaFactory.o: ../Client/src/jamtaba/JamtabaFactory.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qurl.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qurlquery.h
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qurlquery.h \
+		../Client/src/jamtaba/ninjam/Server.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\JamtabaFactory.o ..\Client\src\jamtaba\JamtabaFactory.cpp
 
 debug/MainController.o: ../Client/src/jamtaba/MainController.cpp ../Client/src/jamtaba/MainController.h \
@@ -4567,6 +4690,31 @@ debug/MainController.o: ../Client/src/jamtaba/MainController.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
 		../Client/libs/includes/libmaxmind/maxminddb.h \
 		../Client/libs/includes/libmaxmind/maxminddb_config.h \
+		../Client/src/jamtaba/ninjam/Server.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		../Client/src/jamtaba/loginserver/LoginService.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QSslConfiguration \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslconfiguration.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslerror.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslcertificate.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcryptographichash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
 		../Client/src/jamtaba/midi/portmididriver.h \
 		../Client/src/jamtaba/midi/MidiDriver.h \
@@ -4579,34 +4727,6 @@ debug/MainController.o: ../Client/src/jamtaba/MainController.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
 		../Client/src/jamtaba/audio/core/SamplesBuffer.h \
 		../Client/src/jamtaba/audio/RoomStreamerNode.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QSslConfiguration \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslconfiguration.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslsocket.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslerror.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslcertificate.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcryptographichash.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
-		../Client/src/jamtaba/loginserver/LoginService.h \
-		../Client/src/jamtaba/loginserver/JamRoom.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonobject.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
 		../Client/src/jamtaba/loginserver/natmap.h \
 		../Client/src/jamtaba/JamtabaFactory.h \
 		../Client/src/jamtaba/audio/core/plugins.h \
@@ -4630,7 +4750,6 @@ debug/MainController.o: ../Client/src/jamtaba/MainController.cpp ../Client/src/j
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QTcpSocket \
 		../Client/src/jamtaba/ninjam/User.h \
 		../Client/src/jamtaba/ninjam/UserChannel.h \
-		../Client/src/jamtaba/ninjam/Server.h \
 		../Client/src/jamtaba/NinjamJamRoomController.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QTimer \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtimer.h \
@@ -4741,13 +4860,13 @@ debug/LoginService.o: ../Client/src/jamtaba/loginserver/LoginService.cpp ../Clie
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qurl.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qurlquery.h \
-		../Client/src/jamtaba/loginserver/JamRoom.h \
+		../Client/src/jamtaba/ninjam/Server.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		../Client/src/jamtaba/loginserver/natmap.h \
+		../Client/src/jamtaba/loginserver/JsonUtils.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonObject \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonobject.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
-		../Client/src/jamtaba/loginserver/natmap.h \
-		../Client/src/jamtaba/loginserver/JsonUtils.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonDocument \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsondocument.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonArray \
@@ -4757,91 +4876,6 @@ debug/LoginService.o: ../Client/src/jamtaba/loginserver/LoginService.cpp ../Clie
 
 debug/JsonUtils.o: ../Client/src/jamtaba/loginserver/JsonUtils.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\JsonUtils.o ..\Client\src\jamtaba\loginserver\JsonUtils.cpp
-
-debug/JamRoom.o: ../Client/src/jamtaba/loginserver/JamRoom.cpp ../Client/src/jamtaba/loginserver/JamRoom.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmap.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiterator.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobal.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qconfig.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfeatures.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsystemdetection.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qprocessordetection.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcompilerdetection.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtypeinfo.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtypetraits.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsysinfo.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlogging.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qflags.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbasicatomic.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_bootstrap.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qgenericatomic.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_msvc.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_armv7.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_armv6.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_armv5.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_ia64.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_mips.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_x86.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_cxx11.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_gcc.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qatomic_unix.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qglobalstatic.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmutex.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnumeric.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qalgorithms.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qrefcount.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qarraydata.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearraylist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qbytearray.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qnamespace.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstring.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qchar.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringbuilder.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpair.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdebug.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qhash.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qtextstream.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qiodevice.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobjectdefs_impl.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcoreevent.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qscopedpointer.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qmetatype.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qvarlengtharray.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontainerfwd.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qisenum.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qobject_impl.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qlocale.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qvariant.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringlist.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatastream.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qregexp.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qstringmatcher.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qshareddata.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qvector.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qpoint.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qset.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcontiguouscache.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonobject.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonArray \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonarray.h \
-		../Client/src/jamtaba/ninjam/Service.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QTcpSocket \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
-		../Client/src/jamtaba/ninjam/User.h \
-		../Client/src/jamtaba/ninjam/UserChannel.h \
-		../Client/src/jamtaba/ninjam/Server.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\JamRoom.o ..\Client\src\jamtaba\loginserver\JamRoom.cpp
 
 debug/ServerMessages.o: ../Client/src/jamtaba/ninjam/protocol/ServerMessages.cpp ../Client/src/jamtaba/ninjam/protocol/ServerMessages.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
@@ -6196,8 +6230,33 @@ debug/JamRoomViewPanel.o: ../Client/src/jamtaba/gui/JamRoomViewPanel.cpp ../Clie
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qfiledevice.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qvector2d.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtouchdevice.h \
-		ui_jamroomviewpanel.h \
+		../Client/src/jamtaba/ninjam/Server.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		../Client/src/jamtaba/loginserver/LoginService.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QSslConfiguration \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslconfiguration.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslerror.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslcertificate.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcryptographichash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
+		ui_jamroomviewpanel.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
@@ -6243,24 +6302,19 @@ debug/JamRoomViewPanel.o: ../Client/src/jamtaba/gui/JamRoomViewPanel.cpp ../Clie
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QVBoxLayout \
 		../Client/src/jamtaba/gui/widgets/WavePeakPanel.h \
-		../Client/src/jamtaba/loginserver/JamRoom.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonobject.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
 		../Client/src/jamtaba/MainController.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
 		../Client/src/jamtaba/audio/core/AudioPeak.h \
 		../Client/src/jamtaba/geo/IpToLocationResolver.h \
 		../Client/libs/includes/libmaxmind/maxminddb.h \
 		../Client/libs/includes/libmaxmind/maxminddb_config.h \
+		../Client/src/jamtaba/ninjam/User.h \
+		../Client/src/jamtaba/ninjam/UserChannel.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qtextoption.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpen.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QLocale
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\JamRoomViewPanel.o ..\Client\src\jamtaba\gui\JamRoomViewPanel.cpp
 
 debug/MainFrame.o: ../Client/src/jamtaba/gui/MainFrame.cpp ../Client/src/jamtaba/gui/MainFrame.h \
@@ -6420,29 +6474,11 @@ debug/MainFrame.o: ../Client/src/jamtaba/gui/MainFrame.cpp ../Client/src/jamtaba
 		../Client/src/jamtaba/gui/BusyDialog.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDialog \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QCloseEvent \
-		../Client/src/jamtaba/gui/PreferencesDialog.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDesktopWidget \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLayout \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
-		../Client/src/jamtaba/gui/JamRoomViewPanel.h \
-		../Client/src/jamtaba/persistence/ConfigStore.h \
+		../Client/src/jamtaba/ninjam/Server.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSettings \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsettings.h \
-		../Client/src/jamtaba/JamtabaFactory.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
-		../Client/src/jamtaba/audio/core/AudioDriver.h \
-		../Client/src/jamtaba/midi/MidiDriver.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QtGlobal \
-		../Client/src/jamtaba/MainController.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
-		../Client/src/jamtaba/audio/core/AudioPeak.h \
-		../Client/src/jamtaba/geo/IpToLocationResolver.h \
-		../Client/libs/includes/libmaxmind/maxminddb.h \
-		../Client/libs/includes/libmaxmind/maxminddb_config.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
 		../Client/src/jamtaba/loginserver/LoginService.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QSslConfiguration \
@@ -6463,11 +6499,26 @@ debug/MainFrame.o: ../Client/src/jamtaba/gui/MainFrame.cpp ../Client/src/jamtaba
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
-		../Client/src/jamtaba/loginserver/JamRoom.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonobject.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QCloseEvent \
+		../Client/src/jamtaba/gui/PreferencesDialog.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QDesktopWidget \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QLayout \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
+		../Client/src/jamtaba/gui/JamRoomViewPanel.h \
+		../Client/src/jamtaba/persistence/ConfigStore.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSettings \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qsettings.h \
+		../Client/src/jamtaba/JamtabaFactory.h \
+		../Client/src/jamtaba/audio/core/AudioDriver.h \
+		../Client/src/jamtaba/midi/MidiDriver.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QtGlobal \
+		../Client/src/jamtaba/MainController.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMutex \
+		../Client/src/jamtaba/audio/core/AudioPeak.h \
+		../Client/src/jamtaba/geo/IpToLocationResolver.h \
+		../Client/libs/includes/libmaxmind/maxminddb.h \
+		../Client/libs/includes/libmaxmind/maxminddb_config.h \
 		../Client/src/jamtaba/audio/core/plugins.h \
 		../Client/src/jamtaba/audio/core/AudioNode.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
@@ -6487,7 +6538,6 @@ debug/MainFrame.o: ../Client/src/jamtaba/gui/MainFrame.cpp ../Client/src/jamtaba
 		../Client/src/jamtaba/ninjam/UserChannel.h \
 		../Client/src/jamtaba/gui/ChatPanel.h \
 		../Client/src/jamtaba/NinjamJamRoomController.h \
-		../Client/src/jamtaba/ninjam/Server.h \
 		../Client/src/jamtaba/gui/MetronomeTrackView.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMessageBox \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmessagebox.h
@@ -7042,7 +7092,31 @@ debug/PreferencesDialog.o: ../Client/src/jamtaba/gui/PreferencesDialog.cpp ../Cl
 		../Client/src/jamtaba/audio/core/AudioPeak.h \
 		../Client/src/jamtaba/geo/IpToLocationResolver.h \
 		../Client/libs/includes/libmaxmind/maxminddb.h \
-		../Client/libs/includes/libmaxmind/maxminddb_config.h
+		../Client/libs/includes/libmaxmind/maxminddb_config.h \
+		../Client/src/jamtaba/ninjam/Server.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		../Client/src/jamtaba/loginserver/LoginService.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QSslConfiguration \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslconfiguration.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslerror.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslcertificate.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcryptographichash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\PreferencesDialog.o ..\Client\src\jamtaba\gui\PreferencesDialog.cpp
 
 debug/PluginScanDialog.o: ../Client/src/jamtaba/gui/PluginScanDialog.cpp ../Client/src/jamtaba/gui/pluginscandialog.h \
@@ -7371,10 +7445,33 @@ debug/NinjamRoomWindow.o: ../Client/src/jamtaba/gui/NinjamRoomWindow.cpp ../Clie
 		../Client/src/jamtaba/ninjam/UserChannel.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		../Client/src/jamtaba/ninjam/Server.h \
+		../Client/src/jamtaba/loginserver/LoginService.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QSslConfiguration \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslconfiguration.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslerror.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslcertificate.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcryptographichash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
 		../Client/src/jamtaba/gui/ChatPanel.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QList \
 		ui_NinjamRoomWindow.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QAction \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qaction.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qicon.h \
@@ -7427,11 +7524,6 @@ debug/NinjamRoomWindow.o: ../Client/src/jamtaba/gui/NinjamRoomWindow.cpp ../Clie
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QComboBox \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qcombobox.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug \
-		../Client/src/jamtaba/ninjam/Server.h \
-		../Client/src/jamtaba/loginserver/JamRoom.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QJsonObject \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonobject.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qjsonvalue.h \
 		../Client/src/jamtaba/audio/NinjamTrackNode.h \
 		../Client/src/jamtaba/audio/core/AudioNode.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSet \
@@ -7448,15 +7540,12 @@ debug/NinjamRoomWindow.o: ../Client/src/jamtaba/gui/NinjamRoomWindow.cpp ../Clie
 		../Client/src/jamtaba/audio/MetronomeTrackNode.h \
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
 		../Client/src/jamtaba/NinjamJamRoomController.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
 		../Client/src/jamtaba/MainController.h \
 		../Client/src/jamtaba/geo/IpToLocationResolver.h \
 		../Client/libs/includes/libmaxmind/maxminddb.h \
 		../Client/libs/includes/libmaxmind/maxminddb_config.h \
 		../Client/src/jamtaba/ninjam/Service.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QTcpSocket \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QMessageBox \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qmessagebox.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qdialog.h
@@ -7626,6 +7715,30 @@ debug/BaseTrackView.o: ../Client/src/jamtaba/gui/BaseTrackView.cpp ../Client/src
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QString \
 		../Client/libs/includes/libmaxmind/maxminddb.h \
 		../Client/libs/includes/libmaxmind/maxminddb_config.h \
+		../Client/src/jamtaba/ninjam/Server.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QMap \
+		../Client/src/jamtaba/loginserver/LoginService.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QObject \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QSslConfiguration \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslconfiguration.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslerror.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslcertificate.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcryptographichash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QStyleOption \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/QPainter \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtGui/qpainter.h \
@@ -7875,7 +7988,8 @@ debug/NinjamTrackView.o: ../Client/src/jamtaba/gui/NinjamTrackView.cpp ../Client
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/qabstractbutton.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QSlider \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QVBoxLayout \
-		../Client/src/jamtaba/gui/widgets/peakmeter.h
+		../Client/src/jamtaba/gui/widgets/peakmeter.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\NinjamTrackView.o ..\Client\src\jamtaba\gui\NinjamTrackView.cpp
 
 debug/MetronomeTrackNode.o: ../Client/src/jamtaba/audio/MetronomeTrackNode.cpp ../Client/src/jamtaba/audio/MetronomeTrackNode.h \
@@ -8353,11 +8467,31 @@ debug/NinjamJamRoomController.o: ../Client/src/jamtaba/NinjamJamRoomController.c
 		../Client/src/jamtaba/geo/IpToLocationResolver.h \
 		../Client/libs/includes/libmaxmind/maxminddb.h \
 		../Client/libs/includes/libmaxmind/maxminddb_config.h \
+		../Client/src/jamtaba/loginserver/LoginService.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkAccessManager \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkaccessmanager.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QSslConfiguration \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslconfiguration.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslerror.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qsslcertificate.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qcryptographichash.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/qdatetime.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qssl.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QFlags \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkReply \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkreply.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QIODevice \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QVariant \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QNetworkRequest \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qnetworkrequest.h \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QSharedDataPointer \
+		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtCore/QUrl \
 		../Client/src/jamtaba/audio/core/AudioDriver.h \
 		../Client/src/jamtaba/ninjam/Service.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/QTcpSocket \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qtcpsocket.h \
-		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtNetwork/qabstractsocket.h \
 		../Client/src/jamtaba/gui/NinjamRoomWindow.h \
 		C:/Qt/Qt5.4.0/5.4/mingw491_32/include/QtWidgets/QWidget \
 		../Client/src/jamtaba/gui/ChatPanel.h \

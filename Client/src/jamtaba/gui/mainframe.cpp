@@ -13,7 +13,6 @@
 #include "../midi/MidiDriver.h"
 #include "../MainController.h"
 #include "../loginserver/LoginService.h"
-#include "../loginserver/JamRoom.h"
 #include "../audio/core/plugins.h"
 #include "LocalTrackView.h"
 #include "plugins/guis.h"
@@ -64,8 +63,8 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 
 
     Login::LoginService* loginService = this->mainController->getLoginService();
-    connect(loginService, SIGNAL(connectedInServer(QList<Login::AbstractJamRoom*>)),
-                                 this, SLOT(on_connectedInServer(QList<Login::AbstractJamRoom*>)));
+    connect(loginService, SIGNAL(roomsListAvailable(QList<Login::RoomInfo>)),
+                                 this, SLOT(on_roomsListAvailable(QList<Login::RoomInfo>)));
 
     fxMenu = createFxMenu();
 
@@ -93,7 +92,8 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     }
 
     QObject::connect(ui.menuAudioPreferences, SIGNAL(triggered()), this, SLOT(on_preferencesClicked()));
-    QObject::connect(mainController, SIGNAL(enteredInRoom(Login::AbstractJamRoom*)), this, SLOT(on_enteredInRoom(Login::AbstractJamRoom*)));
+    QObject::connect(mainController, SIGNAL(enteredInRoom(Login::RoomInfo)),
+                     this, SLOT(on_enteredInRoom(Login::RoomInfo)));
     QObject::connect(mainController, SIGNAL(exitedFromRoom(bool)), this, SLOT(on_exitedFromRoom(bool)));
 
     //the rooms list tab bar is not closable
@@ -201,60 +201,67 @@ QMenu* MainFrame::createFxMenu(){
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //esses eventos deveriam ser tratados no controller
-void MainFrame::on_connectedInServer(QList<Login::AbstractJamRoom*> rooms){
+
+bool MainFrame::jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2){
+     return r1.getUsers().size() > r2.getUsers().size();
+}
+
+void MainFrame::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
     hideBusyDialog();
     ui.allRoomsContent->setLayout(new QVBoxLayout(ui.allRoomsContent));
-    foreach(Login::AbstractJamRoom* room, rooms){
-        JamRoomViewPanel* roomViewPanel = new JamRoomViewPanel(room, ui.allRoomsContent, mainController);
-        roomViewPanels.insert(room, roomViewPanel);
+    qSort(publicRooms.begin(), publicRooms.end(), jamRoomLessThan);
+    foreach(Login::RoomInfo server, publicRooms ){
+        JamRoomViewPanel* roomViewPanel = new JamRoomViewPanel(server, ui.allRoomsContent, mainController);
+        roomViewPanels.insert(server.getID(), roomViewPanel);
         ui.allRoomsContent->layout()->addWidget(roomViewPanel);
-        connect( roomViewPanel, SIGNAL(startingListeningTheRoom(Login::AbstractJamRoom*)), this, SLOT(on_startingRoomStream(Login::AbstractJamRoom*)));
-        connect( roomViewPanel, SIGNAL(finishingListeningTheRoom(Login::AbstractJamRoom*)), this, SLOT(on_stoppingRoomStream(Login::AbstractJamRoom*)));
-        connect( roomViewPanel, SIGNAL(enteringInTheRoom(Login::AbstractJamRoom*)), this, SLOT(on_enteringInRoom(Login::AbstractJamRoom*)));
+        connect( roomViewPanel, SIGNAL(startingListeningTheRoom(Login::RoomInfo)),
+                 this, SLOT(on_startingRoomStream(Login::RoomInfo)));
+        connect( roomViewPanel, SIGNAL(finishingListeningTheRoom(Login::RoomInfo)),
+                 this, SLOT(on_stoppingRoomStream(Login::RoomInfo)));
+        connect( roomViewPanel, SIGNAL(enteringInTheRoom(Login::RoomInfo)),
+                 this, SLOT(on_enteringInRoom(Login::RoomInfo)));
     }
 
 }
 
 //+++++++++++++++++++++++++++++++++++++
-void MainFrame::on_startingRoomStream(Login::AbstractJamRoom* room){
-    if(room->hasStreamLink()){
-        mainController->playRoomStream(room);
+void MainFrame::on_startingRoomStream(Login::RoomInfo roomInfo){
+    if(roomInfo.hasStream()){//just in case...
+        mainController->playRoomStream(roomInfo);
     }
 }
 
-void MainFrame::on_stoppingRoomStream(Login::AbstractJamRoom * room){
+void MainFrame::on_stoppingRoomStream(Login::RoomInfo roomInfo){
     mainController->stopRoomStream();
-    roomViewPanels[room]->clearPeaks();
+    roomViewPanels[roomInfo.getID()]->clearPeaks();
 }
 
-void MainFrame::on_enteringInRoom(Login::AbstractJamRoom *room){
-    showBusyDialog("Connecting in " + room->getName() + " ...");
-    mainController->enterInRoom(room);
+void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo){
+    showBusyDialog("Connecting in " + roomInfo.getName() + " ...");
+    mainController->enterInRoom(roomInfo);
 
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //estes eventos são disparados pelo controlador depois que já aconteceu a conexão com uma das salas
 
-void MainFrame::on_enteredInRoom(Login::AbstractJamRoom *room){
+void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
     hideBusyDialog();
-    if(room->getRoomType() == Login::AbstractJamRoom::Type::NINJAM){
-        Login::NinjamRoom* ninjamRoom = dynamic_cast<Login::NinjamRoom*>(room);
-        if(ninjamWindow){
-            ninjamWindow->deleteLater();
-        }
-        ninjamWindow = new NinjamRoomWindow(ui.tabWidget, *ninjamRoom, mainController);
-        int index = ui.tabWidget->addTab(ninjamWindow, room->getName());
-        ui.tabWidget->setCurrentIndex(index);
 
-        //add metronome track
-        metronomeTrackView = new MetronomeTrackView(this, mainController);
-        ui.localTracksLayout->addWidget(metronomeTrackView);
-
-        //add the chat panel in main window
-        ChatPanel* chatPanel = ninjamWindow->getChatPanel();
-        ui.chatTabWidget->addTab(chatPanel, QIcon(":/images/ninja.png"), ninjamRoom->getName());
+    if(ninjamWindow){
+        ninjamWindow->deleteLater();
     }
+    ninjamWindow = new NinjamRoomWindow(ui.tabWidget, roomInfo, mainController);
+    int index = ui.tabWidget->addTab(ninjamWindow, roomInfo.getName());
+    ui.tabWidget->setCurrentIndex(index);
+
+    //add metronome track
+    metronomeTrackView = new MetronomeTrackView(this, mainController);
+    ui.localTracksLayout->addWidget(metronomeTrackView);
+
+    //add the chat panel in main window
+    ChatPanel* chatPanel = ninjamWindow->getChatPanel();
+    ui.chatTabWidget->addTab(chatPanel, QIcon(":/images/ninja.png"), roomInfo.getName());
 }
 
 void MainFrame::on_exitedFromRoom(bool normalDisconnection){
@@ -294,12 +301,10 @@ void MainFrame::timerEvent(QTimerEvent *){
 
     //update room stream plot
     if(mainController->isPlayingRoomStream()){
-          Login::AbstractJamRoom* room = mainController->getCurrentStreamingRoom();
-          if(room){
-            JamRoomViewPanel* roomView =  roomViewPanels[room];
-            if(roomView){
-                roomView->addPeak(mainController->getRoomStreamPeak().max());
-              }
+          long long roomID = mainController->getCurrentStreamingRoomID();
+          JamRoomViewPanel* roomView = roomViewPanels[roomID];
+          if(roomView){
+              roomView->addPeak(mainController->getRoomStreamPeak().max());
           }
     }
 }

@@ -26,6 +26,7 @@ public:
     virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out);
     virtual void stopCurrentStream();
     virtual void setStreamPath(QString streamPath);
+    inline bool isStreaming() const{return streaming;}
 private:
     static const int MAX_BYTES_PER_DECODING;
 
@@ -36,7 +37,8 @@ protected:
     std::vector<std::deque<float>> samplesBuffer;
     QIODevice* device;
     void decodeBytesFromDevice(QIODevice* device, const unsigned int bytesToRead);
-    virtual void initialize(QString streamPath) = 0;
+    virtual void initialize(QString streamPath);
+    bool streaming;
 };
 //+++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++

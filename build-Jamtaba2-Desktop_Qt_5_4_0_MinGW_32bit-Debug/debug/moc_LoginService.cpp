@@ -20,8 +20,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_Login__LoginService_t {
-    QByteArrayData data[20];
-    char stringdata[294];
+    QByteArrayData data[17];
+    char stringdata[260];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -31,31 +31,27 @@ struct qt_meta_stringdata_Login__LoginService_t {
 static const qt_meta_stringdata_Login__LoginService_t qt_meta_stringdata_Login__LoginService = {
     {
 QT_MOC_LITERAL(0, 0, 19), // "Login::LoginService"
-QT_MOC_LITERAL(1, 20, 17), // "connectedInServer"
-QT_MOC_LITERAL(2, 38, 0), // ""
-QT_MOC_LITERAL(3, 39, 30), // "QList<Login::AbstractJamRoom*>"
-QT_MOC_LITERAL(4, 70, 5), // "rooms"
-QT_MOC_LITERAL(5, 76, 22), // "disconnectedFromServer"
-QT_MOC_LITERAL(6, 99, 11), // "roomChanged"
-QT_MOC_LITERAL(7, 111, 15), // "AbstractJamRoom"
-QT_MOC_LITERAL(8, 127, 4), // "room"
-QT_MOC_LITERAL(9, 132, 13), // "connectedSlot"
-QT_MOC_LITERAL(10, 146, 16), // "disconnectedSlot"
-QT_MOC_LITERAL(11, 163, 9), // "errorSlot"
-QT_MOC_LITERAL(12, 173, 27), // "QNetworkReply::NetworkError"
-QT_MOC_LITERAL(13, 201, 13), // "sslErrorsSlot"
-QT_MOC_LITERAL(14, 215, 16), // "QList<QSslError>"
-QT_MOC_LITERAL(15, 232, 24), // "connectNetworkReplySlots"
-QT_MOC_LITERAL(16, 257, 14), // "QNetworkReply*"
-QT_MOC_LITERAL(17, 272, 5), // "reply"
-QT_MOC_LITERAL(18, 278, 7), // "Command"
-QT_MOC_LITERAL(19, 286, 7) // "command"
+QT_MOC_LITERAL(1, 20, 18), // "roomsListAvailable"
+QT_MOC_LITERAL(2, 39, 0), // ""
+QT_MOC_LITERAL(3, 40, 22), // "QList<Login::RoomInfo>"
+QT_MOC_LITERAL(4, 63, 11), // "publicRooms"
+QT_MOC_LITERAL(5, 75, 22), // "disconnectedFromServer"
+QT_MOC_LITERAL(6, 98, 13), // "connectedSlot"
+QT_MOC_LITERAL(7, 112, 16), // "disconnectedSlot"
+QT_MOC_LITERAL(8, 129, 9), // "errorSlot"
+QT_MOC_LITERAL(9, 139, 27), // "QNetworkReply::NetworkError"
+QT_MOC_LITERAL(10, 167, 13), // "sslErrorsSlot"
+QT_MOC_LITERAL(11, 181, 16), // "QList<QSslError>"
+QT_MOC_LITERAL(12, 198, 24), // "connectNetworkReplySlots"
+QT_MOC_LITERAL(13, 223, 14), // "QNetworkReply*"
+QT_MOC_LITERAL(14, 238, 5), // "reply"
+QT_MOC_LITERAL(15, 244, 7), // "Command"
+QT_MOC_LITERAL(16, 252, 7) // "command"
 
     },
-    "Login::LoginService\0connectedInServer\0"
-    "\0QList<Login::AbstractJamRoom*>\0rooms\0"
-    "disconnectedFromServer\0roomChanged\0"
-    "AbstractJamRoom\0room\0connectedSlot\0"
+    "Login::LoginService\0roomsListAvailable\0"
+    "\0QList<Login::RoomInfo>\0publicRooms\0"
+    "disconnectedFromServer\0connectedSlot\0"
     "disconnectedSlot\0errorSlot\0"
     "QNetworkReply::NetworkError\0sslErrorsSlot\0"
     "QList<QSslError>\0connectNetworkReplySlots\0"
@@ -69,36 +65,34 @@ static const uint qt_meta_data_Login__LoginService[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       3,       // signalCount
+       2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   54,    2, 0x06 /* Public */,
-       5,    0,   57,    2, 0x06 /* Public */,
-       6,    1,   58,    2, 0x06 /* Public */,
+       1,    1,   49,    2, 0x06 /* Public */,
+       5,    0,   52,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       9,    0,   61,    2, 0x08 /* Private */,
-      10,    0,   62,    2, 0x08 /* Private */,
-      11,    1,   63,    2, 0x08 /* Private */,
-      13,    1,   66,    2, 0x08 /* Private */,
-      15,    2,   69,    2, 0x08 /* Private */,
+       6,    0,   53,    2, 0x08 /* Private */,
+       7,    0,   54,    2, 0x08 /* Private */,
+       8,    1,   55,    2, 0x08 /* Private */,
+      10,    1,   58,    2, 0x08 /* Private */,
+      12,    2,   61,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 7,    8,
 
  // slots: parameters
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 12,    2,
-    QMetaType::Void, 0x80000000 | 14,    2,
-    QMetaType::Void, 0x80000000 | 16, 0x80000000 | 18,   17,   19,
+    QMetaType::Void, 0x80000000 | 9,    2,
+    QMetaType::Void, 0x80000000 | 11,    2,
+    QMetaType::Void, 0x80000000 | 13, 0x80000000 | 15,   14,   16,
 
        0        // eod
 };
@@ -108,34 +102,33 @@ void Login::LoginService::qt_static_metacall(QObject *_o, QMetaObject::Call _c, 
     if (_c == QMetaObject::InvokeMetaMethod) {
         LoginService *_t = static_cast<LoginService *>(_o);
         switch (_id) {
-        case 0: _t->connectedInServer((*reinterpret_cast< QList<Login::AbstractJamRoom*>(*)>(_a[1]))); break;
+        case 0: _t->roomsListAvailable((*reinterpret_cast< QList<Login::RoomInfo>(*)>(_a[1]))); break;
         case 1: _t->disconnectedFromServer(); break;
-        case 2: _t->roomChanged((*reinterpret_cast< const AbstractJamRoom(*)>(_a[1]))); break;
-        case 3: _t->connectedSlot(); break;
-        case 4: _t->disconnectedSlot(); break;
-        case 5: _t->errorSlot((*reinterpret_cast< QNetworkReply::NetworkError(*)>(_a[1]))); break;
-        case 6: _t->sslErrorsSlot((*reinterpret_cast< QList<QSslError>(*)>(_a[1]))); break;
-        case 7: _t->connectNetworkReplySlots((*reinterpret_cast< QNetworkReply*(*)>(_a[1])),(*reinterpret_cast< Command(*)>(_a[2]))); break;
+        case 2: _t->connectedSlot(); break;
+        case 3: _t->disconnectedSlot(); break;
+        case 4: _t->errorSlot((*reinterpret_cast< QNetworkReply::NetworkError(*)>(_a[1]))); break;
+        case 5: _t->sslErrorsSlot((*reinterpret_cast< QList<QSslError>(*)>(_a[1]))); break;
+        case 6: _t->connectNetworkReplySlots((*reinterpret_cast< QNetworkReply*(*)>(_a[1])),(*reinterpret_cast< Command(*)>(_a[2]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         switch (_id) {
         default: *reinterpret_cast<int*>(_a[0]) = -1; break;
-        case 5:
+        case 4:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<int*>(_a[0]) = -1; break;
             case 0:
                 *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< QNetworkReply::NetworkError >(); break;
             }
             break;
-        case 6:
+        case 5:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<int*>(_a[0]) = -1; break;
             case 0:
                 *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< QList<QSslError> >(); break;
             }
             break;
-        case 7:
+        case 6:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<int*>(_a[0]) = -1; break;
             case 0:
@@ -147,8 +140,8 @@ void Login::LoginService::qt_static_metacall(QObject *_o, QMetaObject::Call _c, 
         int *result = reinterpret_cast<int *>(_a[0]);
         void **func = reinterpret_cast<void **>(_a[1]);
         {
-            typedef void (LoginService::*_t)(QList<Login::AbstractJamRoom*> );
-            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&LoginService::connectedInServer)) {
+            typedef void (LoginService::*_t)(QList<Login::RoomInfo> );
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&LoginService::roomsListAvailable)) {
                 *result = 0;
             }
         }
@@ -156,12 +149,6 @@ void Login::LoginService::qt_static_metacall(QObject *_o, QMetaObject::Call _c, 
             typedef void (LoginService::*_t)();
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&LoginService::disconnectedFromServer)) {
                 *result = 1;
-            }
-        }
-        {
-            typedef void (LoginService::*_t)(const AbstractJamRoom & );
-            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&LoginService::roomChanged)) {
-                *result = 2;
             }
         }
     }
@@ -192,19 +179,19 @@ int Login::LoginService::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 8)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 7;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 8)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 7;
     }
     return _id;
 }
 
 // SIGNAL 0
-void Login::LoginService::connectedInServer(QList<Login::AbstractJamRoom*> _t1)
+void Login::LoginService::roomsListAvailable(QList<Login::RoomInfo> _t1)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
@@ -214,12 +201,5 @@ void Login::LoginService::connectedInServer(QList<Login::AbstractJamRoom*> _t1)
 void Login::LoginService::disconnectedFromServer()
 {
     QMetaObject::activate(this, &staticMetaObject, 1, Q_NULLPTR);
-}
-
-// SIGNAL 2
-void Login::LoginService::roomChanged(const AbstractJamRoom & _t1)
-{
-    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
-    QMetaObject::activate(this, &staticMetaObject, 2, _a);
 }
 QT_END_MOC_NAMESPACE
