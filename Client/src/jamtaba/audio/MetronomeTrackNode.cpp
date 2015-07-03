@@ -17,17 +17,18 @@ SamplesBuffer* createResampledBuffer(const SamplesBuffer& buffer, int originalSa
     float** in = buffer.getSamplesArray();
     float** out = newBuffer->getSamplesArray();
     for (int c = 0; c < channels; ++c) {
-        Resampler resampler(originalSampleRate, finalSampleRate);
-        resampler.process(in[c], buffer.getFrameLenght(), out[c], finalSize);
+        //Resampler resampler(originalSampleRate, finalSampleRate);
+        //resampler.process(in[c], buffer.getFrameLenght(), out[c], finalSize);
+        Resampler::process(in[c], buffer.getFrameLenght(), originalSampleRate, out[c], finalSize, finalSampleRate );
     }
     //qDebug() << "Criou buffer com resampling: bufferAntigo: " <<buffer.getFrameLenght() << " novo:" << newBuffer->getFrameLenght() << endl;
     return newBuffer;
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MetronomeTrackNode::MetronomeTrackNode(QString metronomeWaveFile, int localSampleRate)
-    : samplesPerBeat(0), intervalPosition(0), beatPosition(0), currentBeat(0), beatsPerAccent(0){
-    quint32 waveFileSampleRate;//this value will be changed by readWavFile method
-    clickSoundBuffer = readWavFile(metronomeWaveFile, waveFileSampleRate);
+    :  samplesPerBeat(0), intervalPosition(0), beatPosition(0), currentBeat(0), beatsPerAccent(0){
+
+    clickSoundBuffer = readWavFile(metronomeWaveFile, this->waveFileSampleRate);//the last param value will be changed by readWavFile method
     if(waveFileSampleRate != (uint)localSampleRate){
         SamplesBuffer* temp = clickSoundBuffer;
         clickSoundBuffer = createResampledBuffer(*clickSoundBuffer, waveFileSampleRate, localSampleRate);

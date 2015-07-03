@@ -21,7 +21,7 @@ class AudioDriver
 {
 public:
 
-    static const unsigned int MAX_BUFFERS_LENGHT = 2048;//size of internal audio buffers
+    static const unsigned int MAX_BUFFERS_LENGHT = 4096;//size of internal audio buffers
 
 	//AudioDriver(){}
 	virtual ~AudioDriver(){}

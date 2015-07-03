@@ -137,7 +137,7 @@ private:
     std::unique_ptr<Audio::AudioDriverListener> audioDriverListener;
     std::unique_ptr<Login::LoginService> loginService;
 
-    std::unique_ptr<Audio::AudioMixer> audioMixer;
+    Audio::AudioMixer* audioMixer;
 
     Audio::AbstractMp3Streamer* roomStreamer;
     long long currentStreamingRoomID;

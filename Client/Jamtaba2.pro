@@ -1,8 +1,13 @@
+# o resampling está quase 100%
+    #preciso testar abrir o arquivo em 192 KHz com o audio driver em 44.1 usando 4096 de buffer size
+
 # o botão de entrar na sala fica habilitado mesmo quando está cheia
 
 # a mensagem de crowded está errada
 
 #resampling
+
+#reaper tem uma cor mais clara quando coloca o mouse em cima
 
 # quando clico para ouvir uma outra sala não está resetando o plot da sala que eu estava ouvindo
 
@@ -149,6 +154,7 @@ HEADERS += \
     src/jamtaba/geo/IpToLocationResolver.h \
     src/jamtaba/gui/ChatPanel.h \
     src/jamtaba/gui/ChatMessagePanel.h \
+    src/jamtaba/audio/SamplesBufferResampler.h
 
 
 SOURCES += \
@@ -211,6 +217,7 @@ SOURCES += \
     src/jamtaba/geo/IpToLocationResolver.cpp \
     src/jamtaba/gui/ChatPanel.cpp \
     src/jamtaba/gui/ChatMessagePanel.cpp \
+    src/jamtaba/audio/SamplesBufferResampler.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
@@ -239,12 +246,12 @@ INCLUDEPATH += src/jamtaba/gui                  \
                $$PWD/libs/includes/portmidi     \
                $$PWD/libs/includes/ogg          \
                $$PWD/libs/includes/vorbis       \
-               $$PWD/libs/includes/libresample  \
+               #$$PWD/libs/includes/libresample  \
                $$PWD/libs/includes/minimp3      \
                $$PWD/libs/includes/libmaxmind   \
 
 
-win32: LIBS +=  -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi   -lvorbisfile -lvorbis -logg -lresample -lminimp3 -lmaxminddb \
+win32: LIBS +=  -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi   -lvorbisfile -lvorbis -logg -lminimp3 -lmaxminddb \
 
 win32: LIBS +=  -lwinmm     \
                 -lole32     \

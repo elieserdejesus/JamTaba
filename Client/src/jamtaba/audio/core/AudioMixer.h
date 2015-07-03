@@ -1,5 +1,10 @@
 #pragma once
 
+#include <QList>
+#include <QMutex>
+#include <QMap>
+#include "../SamplesBufferResampler.h"
+
 namespace Midi {
     class MidiBuffer;
 }
@@ -8,26 +13,33 @@ namespace Audio{
 
 class AudioNode;
 class SamplesBuffer;
-class MainOutputAudioNode;
+//class MainOutputAudioNode;
 class LocalInputAudioNode;
+
+
 
 class AudioMixer
 {
 private:
     AudioMixer(const AudioMixer& other);
 public:
-    AudioMixer();
+    AudioMixer(int sampleRate);
     ~AudioMixer();
     void process(SamplesBuffer& in, SamplesBuffer& out);
-    void addNode(AudioNode &node);
-    void removeNode(AudioNode &node);
+    void addNode(AudioNode* node);
+    void removeNode(AudioNode* node);
 
     LocalInputAudioNode* getLocalInput() const{return inputNode;}
 
+    inline void setSampleRate(int newSampleRate){this->sampleRate = newSampleRate;}
+
 private:
-    MainOutputAudioNode* mainOutNode;
     LocalInputAudioNode* inputNode;
-    //QMutex mutex;
+
+    QList<AudioNode*> nodes;
+    int sampleRate;
+    QMutex mutex;
+    QMap<AudioNode*, SamplesBufferResampler*> resamplers;
 };
 //+++++++++++++++++++++++
 

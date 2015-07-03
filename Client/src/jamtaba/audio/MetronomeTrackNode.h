@@ -21,6 +21,7 @@ public:
 
     inline bool isPlayingAccents() const{ return beatsPerAccent > 0; }
 
+    virtual int getSampleRate() const{return waveFileSampleRate;}
 
 private:
     SamplesBuffer* clickSoundBuffer;
@@ -36,6 +37,8 @@ private:
     long beatPosition;//controla a amostra atual, vai incrementando conforme as amostras são tocadas
     int currentBeat;
     int beatsPerAccent;
+
+    quint32 waveFileSampleRate;
 
     SamplesBuffer* readWavFile(QString fileName, quint32 &sampleRate);//the second parameter is a output parameter
 

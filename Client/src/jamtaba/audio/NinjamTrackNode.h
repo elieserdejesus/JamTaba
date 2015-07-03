@@ -4,6 +4,7 @@
 #include "core/AudioNode.h"
 #include <QByteArray>
 #include "vorbis/VorbisDecoder.h"
+#include "Resampler.h"
 
 namespace Audio{
     class SamplesBuffer;
@@ -19,12 +20,16 @@ public:
     void processReplacing(Audio::SamplesBuffer&in, Audio::SamplesBuffer& out);
     void startNewInterval();
     inline int getID() const{return ID;}
+    virtual bool needResamplingFor(int targetSampleRate) const;
+    virtual int getSampleRate() const;
 private:
     bool playing;//playing one interval or waiting for more vorbis data to decode
     VorbisDecoder decoder;
     QList<QByteArray> intervals;
     //QMutex mutex;
     int ID;
+    //Resampler resamplerLeft;
+    //Resampler resamplerRight;
 };
 
 #endif // NINJAMTRACKNODE_H
