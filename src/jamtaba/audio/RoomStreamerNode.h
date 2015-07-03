@@ -1,16 +1,10 @@
 #pragma once
 
 #include "core/AudioNode.h"
-//#include <memory>
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
 #include <QObject>
-//#include <QList>
-//#include <QFile>
 #include <deque>
-//#include <vector>
-//#include <QMutex>
-//#include <QMutexLocker>
 
 class QIODevice;
 
@@ -27,6 +21,8 @@ public:
     virtual void stopCurrentStream();
     virtual void setStreamPath(QString streamPath);
     inline bool isStreaming() const{return streaming;}
+    virtual int getSampleRate() const;
+    virtual bool needResamplingFor(int targetSampleRate) const;
 private:
     static const int MAX_BYTES_PER_DECODING;
 
@@ -79,7 +75,7 @@ protected:
     void initialize(QString streamPath);
 
 public:
-    explicit AudioFileStreamerNode(QString file);
+    explicit AudioFileStreamerNode(QString file, int sampleRate);
     ~AudioFileStreamerNode();
     virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out);
 
@@ -93,7 +89,7 @@ private:
 protected:
     void initialize(QString streamPath);
 public:
-    TestStreamerNode();
+    TestStreamerNode(int sampleRate);
     ~TestStreamerNode();
     void stopCurrentStream();
     void setStreamPath(QString streamPath);

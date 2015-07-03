@@ -269,5 +269,7 @@
     <qresource prefix="/">
         <file>click.wav</file>
         <file>loading.gif</file>
+        <file>../../../../bateria mono.ogg</file>
+        <file>../../../../loop 192KHz.wav.ogg</file>
     </qresource>
 </RCC>

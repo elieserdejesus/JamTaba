@@ -6,6 +6,7 @@
 #include <QDebug>
 #include "../midi/MidiDriver.h"
 #include <QMutexLocker>
+#include "../audio/Resampler.h"
 
 using namespace Audio;
 
@@ -50,6 +51,11 @@ void AudioNode::deactivate(){
 
 //+++++++++++++++
 
+bool AudioNode::needResamplingFor(int targetSampleRate) const{
+    Q_UNUSED(targetSampleRate);
+    return false;
+}
+
 void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
 {
     if(!activated){
@@ -76,7 +82,7 @@ void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
 
 
 AudioNode::AudioNode()
-     : //lastPeaks{0,0},
+     :
       activated(true),
       muted(false),
       soloed(false),
@@ -143,8 +149,11 @@ void AudioNode::removeProcessor(AudioNodeProcessor &processor){
 
 //+++++++++++++++++++++++++++++++++++++++
 OscillatorAudioNode::OscillatorAudioNode(float frequency, int sampleRate)
-    :phaseIncrement(2 * 3.1415 / sampleRate * frequency){
-    this->phase = 0;
+    :   phaseIncrement(2 * 3.1415 / sampleRate * frequency),
+        phase(0),
+        sampleRate(sampleRate)
+{
+
 }
 
 void OscillatorAudioNode::processReplacing(SamplesBuffer & /*in*/, SamplesBuffer &out){
@@ -160,36 +169,8 @@ void OscillatorAudioNode::processReplacing(SamplesBuffer & /*in*/, SamplesBuffer
 }
 //+++++++++++++++++++++++++++++++++++++++
 
-void MainOutputAudioNode::processReplacing(SamplesBuffer&in, SamplesBuffer& out)
-{
-    static int soloedBuffersInLastProcess = 0;
-    //--------------------------------------
-    bool hasSoloedBuffers = soloedBuffersInLastProcess > 0;
-    soloedBuffersInLastProcess = 0;
-    QMutexLocker locker(&mutex);
-    for (const auto &node : connections) {
-        bool canProcess = (!hasSoloedBuffers && !node->isMuted()) || (hasSoloedBuffers && node->isSoloed());
-        if(canProcess){
-            node->processReplacing(in, out);
-        }
-        else{//just discard the samples if node is muted, the internalBuffer is not copyed to out buffer
-            internalBuffer.setFrameLenght(out.getFrameLenght());
-            node->processReplacing(in, internalBuffer);
-        }
-        if(node->isSoloed()){
-            soloedBuffersInLastProcess++;
-        }
-    }
-
-    int nodesConnected = connections.size();
-    if(nodesConnected > 1){//attenuate
-        out.applyGain( 1.0/nodesConnected );
-    }
-
-}
-
 //++++++++++++++++++++++++++++++++++++++++++++++
-LocalInputAudioNode::LocalInputAudioNode(int firstInputIndex, bool isMono)
+LocalInputAudioNode::LocalInputAudioNode( int firstInputIndex, bool isMono)
 {
     this->firstInputIndex = firstInputIndex;
     this->mono = isMono;

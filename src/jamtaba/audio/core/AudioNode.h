@@ -60,6 +60,10 @@ public:
         this->gain = gainValue;
     }
 
+    //virtual inline void setSampleRate(int newSampleRate){this->sampleRate = newSampleRate;}
+
+    virtual int getSampleRate() const = 0;
+
     inline float getGain() const{return gain;}
 
     void setPan(float pan);
@@ -69,6 +73,9 @@ public:
 
     void deactivate();
     inline bool isActivated() const{return activated;}
+
+    virtual bool needResamplingFor(int targetSampleRate) const;
+
 protected:
     QSet<AudioNode*> connections;
     QSet<AudioNodeProcessor*> processors;
@@ -76,6 +83,7 @@ protected:
     mutable Audio::AudioPeak lastPeak;
     QMutex mutex; //used to protected connections manipulation because nodes can be added or removed by different threads
     bool activated; //used to safely remove non activated nodes
+    //int sampleRate;
 private:
     AudioNode(const AudioNode& other);
     AudioNode& operator=(const AudioNode& other);
@@ -104,22 +112,14 @@ class OscillatorAudioNode : public AudioNode{
 public:
     OscillatorAudioNode(float frequency, int sampleRate);
     virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
-
+    virtual int getSampleRate() const{return sampleRate;}
 private:
     float phase;
     const float phaseIncrement;
+    int sampleRate;
 };
 //+++++++++++++++++
 
-class MainOutputAudioNode : public AudioNode
-{
-public:
-    MainOutputAudioNode() {}
-
-    // AudioNode interface
-public:
-    void processReplacing(SamplesBuffer &in, SamplesBuffer &out);
-};
 //++++++++++++++++++
 class LocalInputAudioNode : public AudioNode{
 private:
@@ -129,7 +129,7 @@ private:
 public:
     LocalInputAudioNode(int firstInputIndex=0, bool isMono=true);
     virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
-
+    virtual int getSampleRate() const{return 0;}
 };
 //++++++++++++++++++++++++
 }

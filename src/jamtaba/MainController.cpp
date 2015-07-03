@@ -74,9 +74,8 @@ using namespace Controller;
 
 MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     :QApplication(argc, argv),
-
-      audioMixer(new Audio::AudioMixer()),
-      roomStreamer(new Audio::RoomStreamerNode()),
+      audioMixer(nullptr),
+      roomStreamer(nullptr),
       currentStreamingRoomID(-1000),
       mutex(QMutex::Recursive),
       started(false),
@@ -84,8 +83,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
       roomStreamerPeaks(0,0),
       vstHost(Vst::VstHost::getInstance()),
       pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
-      ipToLocationResolver("../GeoLite2-Country.mmdb")
-
+      ipToLocationResolver("../Jamtaba2/GeoLite2-Country.mmdb")
 {
 
     setQuitOnLastWindowClosed(false);//wait disconnect from server to close
@@ -101,13 +99,16 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
                 ));
     audioDriverListener = std::unique_ptr<Controller::AudioListener>( new Controller::AudioListener(this));
 
+    audioMixer = new Audio::AudioMixer(audioDriver->getSampleRate());
+    roomStreamer = new Audio::RoomStreamerNode();
+
     midiDriver = new PortMidiDriver();
     midiDriver->setInputDeviceIndex(Persistence::ConfigStore::getLastMidiDeviceIndex());
 
     QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromLoginServer()));
 
 
-    this->audioMixer->addNode( *this->roomStreamer);
+    this->audioMixer->addNode( this->roomStreamer);
 
     tracksNodes.insert(INPUT_TRACK_ID, audioMixer->getLocalInput());
 
@@ -129,18 +130,19 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
 
 
     //test ninjam stream
-//    NinjamTrackNode* trackTest = new NinjamTrackNode(2);
-//    QStringList testFiles({":/bateria mono.ogg"});
-//    addTrack(2, trackTest);
-//    for (int i = 0; i < testFiles.size(); ++i) {
-//        QFile file(testFiles.at(i));
-//        if(!file.exists()){
-//            qCritical() << "File not exists! " << file.errorString();
-//        }
-//        file.open(QIODevice::ReadOnly);
-//        trackTest->addVorbisEncodedInterval(file.readAll());
-//    }
-//    trackTest->startNewInterval();
+    NinjamTrackNode* trackTest = new NinjamTrackNode(2);
+    //QStringList testFiles({":/bateria mono.ogg"});
+    QStringList testFiles({":/loop 192KHz.wav.ogg"});
+    addTrack(2, trackTest);
+    for (int i = 0; i < testFiles.size(); ++i) {
+        QFile file(testFiles.at(i));
+        if(!file.exists()){
+            qCritical() << "File not exists! " << file.errorString();
+        }
+        file.open(QIODevice::ReadOnly);
+        trackTest->addVorbisEncodedInterval(file.readAll());
+    }
+    trackTest->startNewInterval();
 
 
     //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
@@ -170,14 +172,14 @@ Audio::AudioNode *MainController::getTrackNode(long ID){
 void MainController::addTrack(long trackID, Audio::AudioNode* trackNode){
     QMutexLocker locker(&mutex);
     tracksNodes.insert( trackID, trackNode );
-    audioMixer->addNode(*trackNode) ;
+    audioMixer->addNode(trackNode) ;
 }
 
 void MainController::removeTrack(long trackID){
     QMutexLocker locker(&mutex); //remove Track is called from ninjam service thread, and cause a crash if the process callback (audio Thread) is iterating over tracksNodes to render audio
     Audio::AudioNode* trackNode = tracksNodes[trackID];
     if(trackNode){
-        audioMixer->removeNode(*trackNode);
+        audioMixer->removeNode(trackNode);
         tracksNodes.remove(trackID);
         //delete trackNode;
     }
@@ -381,6 +383,7 @@ MainController::~MainController()
         delete ninjamController;
         ninjamController = nullptr;
     }
+    //Resampler::releaseSharedLibHandler();
 }
 
 void MainController::playRoomStream(Login::RoomInfo roomInfo){

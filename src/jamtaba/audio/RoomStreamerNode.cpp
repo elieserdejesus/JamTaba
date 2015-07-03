@@ -20,7 +20,7 @@ using namespace Audio;
 const int AbstractMp3Streamer::MAX_BYTES_PER_DECODING = 2048;
 
 //+++++++++++++
-AbstractMp3Streamer::AbstractMp3Streamer(Audio::Mp3Decoder *decoder)
+AbstractMp3Streamer::AbstractMp3Streamer( Audio::Mp3Decoder *decoder)
     :
       faderProcessor(FaderProcessor(0, 1, 44100*3)),//3 seconds fade in
       decoder(decoder),
@@ -67,8 +67,19 @@ void AbstractMp3Streamer::processReplacing(SamplesBuffer &/*in*/, SamplesBuffer 
 }
 
 void AbstractMp3Streamer::initialize(QString streamPath){
-    Q_UNUSED(streamPath);
-    streaming = true;
+    //Q_UNUSED(streamPath);
+    streaming = !streamPath.isNull() && !streamPath.isEmpty();
+}
+
+int AbstractMp3Streamer::getSampleRate() const{
+    return decoder->getSampleRate();
+}
+
+bool AbstractMp3Streamer::needResamplingFor(int targetSampleRate) const{
+    if(!streaming){
+        return false;
+    }
+    return targetSampleRate != getSampleRate();
 }
 
 void AbstractMp3Streamer::decodeBytesFromDevice(QIODevice* device, const unsigned int bytesToRead){
@@ -113,15 +124,15 @@ void AbstractMp3Streamer::setStreamPath(QString streamPath){
 
 //+++++++++++++++++++++++++++++++++++++++
 RoomStreamerNode::RoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds)
-    : AbstractMp3Streamer(new Mp3DecoderMiniMp3()),
-      bufferSize(bufferTimeInSeconds * 44100)//TODO melhorar isso
+    : AbstractMp3Streamer( new Mp3DecoderMiniMp3()),
+      bufferSize(bufferTimeInSeconds * 48000)
 {
     setStreamPath(streamPath.toString());
 }
 
 RoomStreamerNode::RoomStreamerNode(int bufferTimeInSeconds)
-    :AbstractMp3Streamer(new Mp3DecoderMiniMp3()),
-      bufferSize(bufferTimeInSeconds * 44100)//TODO melhorar isso
+    :AbstractMp3Streamer( new Mp3DecoderMiniMp3()),
+      bufferSize(bufferTimeInSeconds * 48000)//TODO melhorar isso
 {
     setStreamPath("");
 }
@@ -169,8 +180,8 @@ void RoomStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out){
 
 //++++++++++++++++++
 
-AudioFileStreamerNode::AudioFileStreamerNode(QString file)
-    :   AbstractMp3Streamer(new Mp3DecoderMiniMp3())
+AudioFileStreamerNode::AudioFileStreamerNode(QString file, int sampleRate)
+    :   AbstractMp3Streamer( new Mp3DecoderMiniMp3())
 {
     setStreamPath(file);
 }
@@ -194,10 +205,10 @@ void AudioFileStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++/*
 
-TestStreamerNode::TestStreamerNode()
+TestStreamerNode::TestStreamerNode(int sampleRate)
     :AbstractMp3Streamer(new Mp3DecoderMiniMp3())
 {
-    oscilator = new OscillatorAudioNode(2, 44100);
+    oscilator = new OscillatorAudioNode(2, sampleRate);
     playing = false;
 }
 

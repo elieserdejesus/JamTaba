@@ -9,9 +9,14 @@
 
 
 NinjamTrackNode::NinjamTrackNode(int ID)
-    :playing(false), ID(ID)
+    : playing(false), ID(ID)
+      //resamplerLeft(Resampler())
 {
 
+}
+
+int NinjamTrackNode::getSampleRate() const{
+    return decoder.getSampleRate();
 }
 
 NinjamTrackNode::~NinjamTrackNode()
@@ -72,5 +77,11 @@ void NinjamTrackNode::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesB
     if(totalDecoded > 0){
         Audio::AudioNode::processReplacing(in, out);//process internal buffer pan, gain, etc
     }
+}
 
+bool NinjamTrackNode::needResamplingFor(int targetSampleRate) const{
+    if(playing){
+        return decoder.getSampleRate() != targetSampleRate;
+    }
+    return false;
 }
