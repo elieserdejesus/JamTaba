@@ -215,12 +215,12 @@ void MainController::onPluginFounded(Audio::PluginDescriptor* descriptor){
     ConfigStore::addVstPlugin(descriptor->getPath());
 }
 
-void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
+void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int outOffset){
     QMutexLocker locker(&mutex);
     MidiBuffer midiBuffer = midiDriver->getBuffer();
     vstHost->fillMidiEvents(midiBuffer);//pass midi events to vst host
 
-    audioMixer->process(in, out);
+    audioMixer->process(in, out, outOffset);
 
 
     inputPeaks.update( audioMixer->getLocalInput()->getLastPeak());
@@ -232,7 +232,7 @@ void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuff
 void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
     QMutexLocker locker(&mutex);
     if(!ninjamController->isRunning()){
-        doAudioProcess(in, out);
+        doAudioProcess(in, out, 0);
     }
     else{
         ninjamController->process(in, out);

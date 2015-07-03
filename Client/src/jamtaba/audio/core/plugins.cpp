@@ -94,7 +94,7 @@ const int JamtabaDelay::MAX_DELAY_IN_SECONDS = 3;
 JamtabaDelay::JamtabaDelay(int sampleRate)
     : Plugin("Delay"), delayTimeInMs(0),
 
-      internalBuffer(new Audio::SamplesBuffer(2, sampleRate  * MAX_DELAY_IN_SECONDS))//2 channels, 3 seconds delay
+      internalBuffer(new Audio::SamplesBuffer(2))//2 channels, 3 seconds delay
 
 {
     internalIndex = 0;

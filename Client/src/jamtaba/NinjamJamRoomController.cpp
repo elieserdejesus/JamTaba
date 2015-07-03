@@ -171,7 +171,6 @@ void NinjamJamRoomController::process(Audio::SamplesBuffer &in, Audio::SamplesBu
     int outLenght = out.getFrameLenght();
     do{
         int samplesToProcessInThisStep = std::min((int)(samplesInInterval - intervalPosition), outLenght - offset);
-        out.setOffset(offset);
         out.setFrameLenght(samplesToProcessInThisStep);
 
         if(this->intervalPosition == 0){//starting new interval
@@ -192,14 +191,13 @@ void NinjamJamRoomController::process(Audio::SamplesBuffer &in, Audio::SamplesBu
             lastBeat = currentBeat;
             emit intervalBeatChanged(currentBeat);
         }
-        mainController->doAudioProcess(in, out);
+        mainController->doAudioProcess(in, out, offset);
         samplesProcessed += samplesToProcessInThisStep;
         offset += samplesToProcessInThisStep;
         out.setFrameLenght(outLenght);//restore
         this->intervalPosition = (this->intervalPosition + samplesToProcessInThisStep) % samplesInInterval;
     }
     while( samplesProcessed < totalSamplesToProcess);
-    out.resetOffset();
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

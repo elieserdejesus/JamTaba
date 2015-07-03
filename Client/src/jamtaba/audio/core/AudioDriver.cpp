@@ -51,14 +51,14 @@ void AbstractAudioDriver::recreateBuffers(const int buffersLenght, const int new
 
     //recreate
     maxInputChannels = newMaxInputChannels;
-    inputBuffer = new SamplesBuffer(newMaxInputChannels, buffersLenght);
+    inputBuffer = new SamplesBuffer(newMaxInputChannels);
 
     if (outputBuffer != NULL){
         delete outputBuffer;
     }
 
     maxOutputChannels = newMaxOutputChannels;
-    outputBuffer = new SamplesBuffer(newMaxOutputChannels, buffersLenght);
+    outputBuffer = new SamplesBuffer(newMaxOutputChannels);
 }
 
 void AbstractAudioDriver::setProperties(int deviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)

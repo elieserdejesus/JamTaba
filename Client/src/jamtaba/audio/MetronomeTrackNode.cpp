@@ -14,12 +14,12 @@ SamplesBuffer* createResampledBuffer(const SamplesBuffer& buffer, int originalSa
     int finalSize = (double)finalSampleRate/originalSampleRate * buffer.getFrameLenght();
     int channels = buffer.getChannels();
     SamplesBuffer* newBuffer = new SamplesBuffer(channels, finalSize);
-    float** in = buffer.getSamplesArray();
-    float** out = newBuffer->getSamplesArray();
+    //float** in = ;
+    //float** out = newBuffer->getSamplesArray();
     for (int c = 0; c < channels; ++c) {
         //Resampler resampler(originalSampleRate, finalSampleRate);
         //resampler.process(in[c], buffer.getFrameLenght(), out[c], finalSize);
-        Resampler::process(in[c], buffer.getFrameLenght(), originalSampleRate, out[c], finalSize, finalSampleRate );
+        Resampler::process(buffer.getSamplesArray(c), buffer.getFrameLenght(), originalSampleRate, newBuffer->getSamplesArray(c), finalSize, finalSampleRate );
     }
     //qDebug() << "Criou buffer com resampling: bufferAntigo: " <<buffer.getFrameLenght() << " novo:" << newBuffer->getFrameLenght() << endl;
     return newBuffer;

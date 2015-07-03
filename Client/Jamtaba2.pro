@@ -1,5 +1,4 @@
-# o resampling está quase 100%
-    #preciso testar abrir o arquivo em 192 KHz com o audio driver em 44.1 usando 4096 de buffer size
+# resampling do mp3 da sala funciona?
 
 # o botão de entrar na sala fica habilitado mesmo quando está cheia
 

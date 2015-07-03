@@ -142,8 +142,14 @@ void VstPlugin::process(Audio::SamplesBuffer &buffer){
 
     internalBuffer->setFrameLenght(buffer.getFrameLenght());
 
-    float** in = buffer.getSamplesArray();
-    float** out = internalBuffer->getSamplesArray();
+    float* in[2] = {
+        buffer.getSamplesArray(0),
+        buffer.getSamplesArray(1)
+    };
+     float* out[2] = {
+        internalBuffer->getSamplesArray(0),
+        internalBuffer->getSamplesArray(1)
+    };
     VstInt32 sampleFrames = buffer.getFrameLenght();
     effect->processReplacing(effect, in, out, sampleFrames);
     buffer.add(*internalBuffer);

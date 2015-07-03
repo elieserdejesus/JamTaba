@@ -14,8 +14,7 @@ AudioMixer::AudioMixer(int sampleRate)
 {
 
     //disconnect to test
-    //inputNode->connect(*mainOutNode);
-    //inputNode->setGain(1);
+    //nodes.append(inputNode);
 
 }
 
@@ -37,7 +36,7 @@ AudioMixer::~AudioMixer(){
     inputNode = nullptr;
 }
 
-void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out){
+void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out, int outOffset){
     static int soloedBuffersInLastProcess = 0;
     //--------------------------------------
     bool hasSoloedBuffers = soloedBuffersInLastProcess > 0;
@@ -48,7 +47,7 @@ void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out){
         if(canProcess){
             if(node->needResamplingFor(sampleRate)){
                 //read N samples from the node
-                static SamplesBuffer tempOutBuffer(2, 4096 * 2);
+                static SamplesBuffer tempOutBuffer(2);
                 tempOutBuffer.zero();
                 double resampleFactor = (double)node->getSampleRate()/(double)sampleRate;
                 int samplesToGrabFromNode = (int)(out.getFrameLenght() * resampleFactor);
@@ -60,7 +59,7 @@ void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out){
                 //assert(resamplers[node] != nullptr);
                 SamplesBufferResampler* resampler = resamplers[node];
                 const SamplesBuffer& resampledBuffer = resampler->resample(tempOutBuffer, out.getFrameLenght(), node->getSampleRate(), this->sampleRate);
-                out.add(resampledBuffer);
+                out.add(resampledBuffer, outOffset);
                 if(resampledBuffer.getFrameLenght() != out.getFrameLenght()){
                     qDebug() << resampledBuffer.getFrameLenght();
                 }
@@ -70,7 +69,7 @@ void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out){
             }
         }
         else{//just discard the samples if node is muted, the internalBuffer is not copyed to out buffer
-            static Audio::SamplesBuffer internalBuffer(2, 4096);
+            static Audio::SamplesBuffer internalBuffer(2);
             internalBuffer.setFrameLenght(out.getFrameLenght());
             node->processReplacing(in, internalBuffer);
         }

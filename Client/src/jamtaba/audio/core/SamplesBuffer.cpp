@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <QDebug>
 #include <cmath>
+#include <algorithm>
 
 using namespace Audio;
 //+++++++++++++++++=
@@ -10,29 +11,33 @@ using namespace Audio;
 
 const SamplesBuffer SamplesBuffer::ZERO_BUFFER(1, 0);
 
-SamplesBuffer::SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT)
+SamplesBuffer::SamplesBuffer(unsigned int channels)
     : channels(channels),
-      frameLenght(MAX_BUFFERS_LENGHT),
-      maxFrameLenght(MAX_BUFFERS_LENGHT),
-      offset(0)
-      //deletado(false)
-
+      frameLenght(0)
 {
     if(channels == 0){
         throw std::runtime_error(std::string("AudioSamplesBuffer::channels == 0"));
     }
-
-    samples = new float*[channels];
     for (unsigned int c = 0; c < channels; ++c) {
-        samples[c] = new float[MAX_BUFFERS_LENGHT];
+        samples.push_back(std::vector<float>());
+    }
+}
+
+SamplesBuffer::SamplesBuffer(unsigned int channels, unsigned int frameLenght)
+    : channels(channels),
+      frameLenght(frameLenght)
+{
+    if(channels == 0){
+        throw std::runtime_error(std::string("AudioSamplesBuffer::channels == 0"));
+    }
+    for (unsigned int c = 0; c < channels; ++c) {
+        samples.push_back(std::vector<float>(frameLenght));
     }
 }
 
 SamplesBuffer::SamplesBuffer(const SamplesBuffer& other)
     : channels(other.channels),
-      frameLenght(other.frameLenght),
-      maxFrameLenght(other.maxFrameLenght),
-      offset(other.offset)
+      frameLenght(other.frameLenght)
 {
     qCritical() << "copy constructor!";
 }
@@ -43,45 +48,40 @@ SamplesBuffer& SamplesBuffer::operator=(const SamplesBuffer& /*other*/){
 }
 
 SamplesBuffer::~SamplesBuffer(){
-    //QMutexLocker locker(&mutex);
-    //qDebug() << "desctrutor SamplesBuffer";
-    if(samples){
-        resetOffset();
-        for (unsigned int c = 0; c < channels; ++c) {
-            delete [] samples[c];
-            //samples[c] = nullptr;
-        }
-        delete [] samples;
-        samples = nullptr;
-    }
-    //qDebug() << "\tAudio samples destructor ID:" << ID;
-}
-
-
-
-
-void SamplesBuffer::setOffset(int offset){
-    //QMutexLocker locker(&mutex);
-    if(offset > 0){
-        for (unsigned int c = 0; c < channels; ++c) {
-            samples[c] += offset;
-        }
-        this->offset = offset;
-        this->frameLenght -= offset;
-    }
-    else{
-        resetOffset();
-    }
 
 }
 
-void SamplesBuffer::resetOffset(){
-    //QMutexLocker locker(&mutex);
-    for (unsigned int c = 0; c < channels; ++c) {
-        samples[c] -= offset;
+
+float* SamplesBuffer::getSamplesArray(unsigned int channel) const{
+    if( channel > samples.size()){
+        channel = 0;
     }
-    this->offset = 0;
+    return const_cast<float*>(&(samples[channel][0]));
 }
+
+
+//void SamplesBuffer::setOffset(int offset){
+//    //QMutexLocker locker(&mutex);
+//    if(offset > 0){
+//        for (unsigned int c = 0; c < channels; ++c) {
+//            samples[c] += offset;
+//        }
+//        this->offset = offset;
+//        this->frameLenght -= offset;
+//    }
+//    else{
+//        resetOffset();
+//    }
+
+//}
+
+//void SamplesBuffer::resetOffset(){
+//    //QMutexLocker locker(&mutex);
+//    for (unsigned int c = 0; c < channels; ++c) {
+//        samples[c] -= offset;
+//    }
+//    this->offset = 0;
+//}
 
 void SamplesBuffer::applyGain(float gainFactor)
 {
@@ -124,10 +124,8 @@ void SamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain)
 
 void SamplesBuffer::zero()
 {
-    //QMutexLocker locker(&mutex);
     for (unsigned int c = 0; c < channels; ++c) {
-        void* dest = samples[c];
-        memset(dest, 0, maxFrameLenght * sizeof(float));
+        std::fill(samples[c].begin(), samples[c].end(), 0);
     }
 }
 
@@ -176,9 +174,10 @@ void SamplesBuffer::add(const SamplesBuffer &buffer, int offset){
     }
 }
 
-void SamplesBuffer::add(int channel, float *samples, int samplesToAdd){
-    if(channel >= 0 && channel < channels){
-        memcpy( this->samples[channel], samples, std::min((int)frameLenght, samplesToAdd) * sizeof(float));
+void SamplesBuffer::add(unsigned int channel, float *samples, int samplesToAdd){
+    if( channel < channels){
+        void* dest = &(this->samples[channel][0]);
+        memcpy(dest, samples, std::min((int)frameLenght, samplesToAdd) * sizeof(float));
     }
     else{
         qWarning() << "wrong channel " << channel;
@@ -230,14 +229,10 @@ void SamplesBuffer::setFrameLenght(unsigned int newFrameLenght){
     if(newFrameLenght == frameLenght){
         return;
     }
-    if(newFrameLenght > maxFrameLenght){
-        qWarning() << "newFrameLenght > maxFrameLenght (" << newFrameLenght << " > " << maxFrameLenght << ")  frameLenght:" << frameLenght;
-        newFrameLenght = maxFrameLenght;
+
+    for (int c = 0; c < channels; ++c) {
+        samples[c].resize(newFrameLenght);
     }
-    //if(newFrameLenght > this->frameLenght){
-        //zero extra samples
-        //zero(frameLenght, maxFrameLenght-1);
-    //}
     this->frameLenght = newFrameLenght;
 }
 
