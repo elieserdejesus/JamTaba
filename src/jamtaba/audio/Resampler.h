@@ -8,7 +8,7 @@ public:
 //    Resampler();
 //    ~Resampler();
 //    int process(float* in, int inLength, float* out, int outLength);
-    static int process(float* in, int inLength, int inSampleRate, float* out, int outLength, int outSampleRate);
+    static int process(const float* in, int inLength, int inSampleRate, float *out, int outLength, int outSampleRate);
 
     //static void releaseSharedLibHandler();
 

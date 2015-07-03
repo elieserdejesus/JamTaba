@@ -90,7 +90,7 @@ AudioNode::AudioNode()
       pan(0)/*center*/,
       leftGain(1.0),
       rightGain(1.0),
-      internalBuffer(2, AudioDriver::MAX_BUFFERS_LENGHT),
+      internalBuffer(2),
       lastPeak(0, 0)
 {
 

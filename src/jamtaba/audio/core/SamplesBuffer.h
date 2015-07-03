@@ -2,6 +2,7 @@
 #define SAMPLESBUFFER_H
 
 #include "AudioPeak.h"
+#include <vector>
 
 namespace Audio {
 
@@ -16,10 +17,9 @@ class SamplesBuffer{
 private:
     unsigned int channels;
     unsigned int frameLenght;
-    unsigned const int maxFrameLenght;
-    int offset;
 
-    float** samples;//poderia deixar fixo com 2 canais e 4096 samples
+    //float** samples;//poderia deixar fixo com 2 canais e 4096 samples
+    std::vector< std::vector<float>> samples;
 
     inline bool isMono() const {return channels == 1;}
 
@@ -32,17 +32,13 @@ private:
     SamplesBuffer& operator=(const SamplesBuffer& other);
 
 public:
-    SamplesBuffer(unsigned int channels, const unsigned int MAX_BUFFERS_LENGHT);
+    SamplesBuffer(unsigned int channels);
+    SamplesBuffer(unsigned int channels, unsigned int frameLenght);
     ~SamplesBuffer();
 
     static const SamplesBuffer ZERO_BUFFER;//a static buffer with zero samples
 
-    //void copyLeftChannelToRight();//usefull to transform a mono input in a pseudo-stereo (both channels are the same)
-
-    void setOffset(int offset);
-    void resetOffset();
-
-    inline float** getSamplesArray() const{return samples;}
+    float* getSamplesArray(unsigned int channel) const;
 
     //inline int getID() const{return ID;}
     void applyGain(float gainFactor);
@@ -61,7 +57,7 @@ public:
     inline void add(const SamplesBuffer& buffer){add(buffer, 0);}
     void add(int channel, int sampleIndex, float sampleValue);
     void add(const SamplesBuffer& buffer, int offset);//the offset is used in internal buffer, not in parameter buffer
-    void add(int channel, float* samples, int samplesToAdd);
+    void add(unsigned int channel, float* samples, int samplesToAdd);
 
     /***
      * copy samplesToCopy' samples starting from bufferOffset to internal buffer starting in 'internalOffset'

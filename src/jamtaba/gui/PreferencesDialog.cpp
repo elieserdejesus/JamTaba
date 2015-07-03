@@ -174,6 +174,7 @@ void PreferencesDialog::populateBufferSizeCombo()
     ui->comboBufferSize->addItem("512", 512);
     ui->comboBufferSize->addItem("1024", 1024);
     ui->comboBufferSize->addItem("2048", 2048);
+    ui->comboBufferSize->addItem("4096", 4096);
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     ui->comboBufferSize->setCurrentText(QString::number(audioDriver->getBufferSize()));
     //ui->comboBufferSize->addItem("4096", 4096);

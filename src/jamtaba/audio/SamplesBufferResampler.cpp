@@ -15,9 +15,9 @@ const Audio::SamplesBuffer& SamplesBufferResampler::resample(
     int outLenght = 0;
     outBuffer.zero();
     for (int c = 0; c < 2; ++c) {
-        float* resamplerIn = in.getSamplesArray()[c];
-        float* resamplerOut = outBuffer.getSamplesArray()[c];
-        outLenght = Resampler::process(resamplerIn, in.getFrameLenght(), originalSampleRate, resamplerOut, maxOutLenght, finalSampleRate);
+        float* input = in.getSamplesArray(c);
+        float* output = outBuffer.getSamplesArray(c);
+        outLenght = Resampler::process(input, in.getFrameLenght(), originalSampleRate, output, maxOutLenght, finalSampleRate);
     }
     outBuffer.setFrameLenght(outLenght);
     return outBuffer;

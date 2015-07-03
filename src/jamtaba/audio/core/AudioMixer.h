@@ -25,7 +25,7 @@ private:
 public:
     AudioMixer(int sampleRate);
     ~AudioMixer();
-    void process(SamplesBuffer& in, SamplesBuffer& out);
+    void process(SamplesBuffer& in, SamplesBuffer& out, int outOffset);
     void addNode(AudioNode* node);
     void removeNode(AudioNode* node);
 

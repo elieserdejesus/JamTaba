@@ -17,7 +17,7 @@ Mp3DecoderMiniMp3::Mp3DecoderMiniMp3()
 {
     internalShortBuffer = new signed short[INTERNAL_SHORT_BUFFER_SIZE];//recommend by the minimp3 author
     reset();
-    NULL_BUFFER = new Audio::SamplesBuffer(1, 0);
+    NULL_BUFFER = new Audio::SamplesBuffer(1);
 }
 
 
@@ -62,7 +62,7 @@ const SamplesBuffer* Mp3DecoderMiniMp3::decode(char *inputBuffer, int bytesToDec
     int framesDecoded = totalSamplesDecoded/mp3Info.channels;
 
     if(!buffer){
-        buffer = new Audio::SamplesBuffer(mp3Info.channels, AUDIO_SAMPLES_BUFFER_MAX_SIZE);
+        buffer = new Audio::SamplesBuffer(mp3Info.channels);
     }
     //Q_ASSERT(framesDecoded <= AUDIO_SAMPLES_BUFFER_MAX_SIZE);
     if(framesDecoded > AUDIO_SAMPLES_BUFFER_MAX_SIZE){

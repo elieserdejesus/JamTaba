@@ -52,7 +52,9 @@ void AbstractMp3Streamer::processReplacing(SamplesBuffer &/*in*/, SamplesBuffer 
         return;
     }
     int samplesToRender = std::min(out.getFrameLenght(), (int)samplesBuffer[0].size());
-    SamplesBuffer buffer(samplesBuffer.size(), samplesToRender);
+
+    SamplesBuffer buffer(samplesBuffer.size());
+    buffer.setFrameLenght(samplesToRender);
     for (int c = 0; c < buffer.getChannels(); ++c) {
         for (int s = 0; s < buffer.getFrameLenght(); ++s) {
             buffer.set(c, s, samplesBuffer[c].front());

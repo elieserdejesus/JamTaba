@@ -34,7 +34,7 @@
 
 //}
 
-int Resampler::process(float *in, int inLength, int inSampleRate, float *out, int outLength, int outSampleRate){
+int Resampler::process(const float *in, int inLength, int inSampleRate, float *out, int outLength, int outSampleRate){
     if (inSampleRate == outSampleRate) {
         //copy in to out
         return inLength;
