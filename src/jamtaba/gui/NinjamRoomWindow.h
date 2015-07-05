@@ -50,7 +50,8 @@ private slots:
     void intervalBeatChanged(int beat);
     void channelAdded(  Ninjam::User user, Ninjam::UserChannel channel, long channelID );
     void channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
-    void channelChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
+    void channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
+    void channelXmitChanged(long channelID, bool transmiting);
     void chatMessageReceived(Ninjam::User, QString message);
 
     void userSendingNewChatMessage(QString msg);

@@ -25,10 +25,10 @@ NinjamTrackNode::~NinjamTrackNode()
     qDebug() << "Destruindo ninjamTrack Node " << this->getID();
 }
 
-void NinjamTrackNode::startNewInterval(){
+bool NinjamTrackNode::startNewInterval(){
     QMutexLocker locker(&mutex);
     if(!isActivated()){
-        return;
+        return false;
     }
     if(!intervals.isEmpty()){
         decoder.setInput(intervals.front());
@@ -39,6 +39,7 @@ void NinjamTrackNode::startNewInterval(){
     else{
         playing = false;
     }
+    return playing;
 }
 
 void NinjamTrackNode::addVorbisEncodedInterval(QByteArray vorbisData){

@@ -8,7 +8,7 @@
 #include "../ninjam/User.h"
 #include "../ninjam/Server.h"
 
-#include "../audio/NinjamTrackNode.h"
+//#include "../audio/NinjamTrackNode.h"
 #include "../audio/MetronomeTrackNode.h"
 #include "../audio/core/AudioDriver.h"
 
@@ -47,8 +47,9 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Co
     QObject::connect(ninjamController, SIGNAL(intervalBeatChanged(int)), this, SLOT(intervalBeatChanged(int)));
     QObject::connect(ninjamController, SIGNAL(channelAdded(Ninjam::User,   Ninjam::UserChannel, long)), this, SLOT(channelAdded(  Ninjam::User, Ninjam::UserChannel, long)));
     QObject::connect(ninjamController, SIGNAL(channelRemoved(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(channelRemoved(Ninjam::User, Ninjam::UserChannel, long)));
-    QObject::connect(ninjamController, SIGNAL(channelChanged(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(channelChanged(Ninjam::User, Ninjam::UserChannel, long)));
+    QObject::connect(ninjamController, SIGNAL(channelNameChanged(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(channelNameChanged(Ninjam::User, Ninjam::UserChannel, long)));
     QObject::connect(ninjamController, SIGNAL(chatMsgReceived(Ninjam::User,QString)), this, SLOT(chatMessageReceived(Ninjam::User,QString)));
+    QObject::connect(ninjamController, SIGNAL(channelXmitChanged(long,bool)), this, SLOT(channelXmitChanged(long,bool)));
 
     QObject::connect(ui->topPanel->getBpiCombo(), SIGNAL(activated(QString)), this, SLOT(ninjamBpiComboChanged(QString)));
     QObject::connect(ui->topPanel->getBpmCombo(), SIGNAL(activated(QString)), this, SLOT(ninjamBpmComboChanged(QString)));
@@ -88,6 +89,12 @@ void NinjamRoomWindow::updatePeaks(){
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamRoomWindow::channelXmitChanged(long channelID, bool transmiting){
+    NinjamTrackView* trackView = dynamic_cast<NinjamTrackView*>(NinjamTrackView::getTrackViewByID(channelID));
+    trackView->setEnabled(transmiting);
+    //qDebug() << "xmit changed " << transmiting;
+}
+
 void NinjamRoomWindow::channelRemoved(Ninjam::User, Ninjam::UserChannel /*channel*/, long channelID){
     BaseTrackView* trackView = NinjamTrackView::getTrackViewByID(channelID);
     if(trackView){
@@ -97,7 +104,7 @@ void NinjamRoomWindow::channelRemoved(Ninjam::User, Ninjam::UserChannel /*channe
     }
 }
 
-void NinjamRoomWindow::channelChanged(Ninjam::User, Ninjam::UserChannel channel, long channelID){
+void NinjamRoomWindow::channelNameChanged(Ninjam::User, Ninjam::UserChannel channel, long channelID){
     NinjamTrackView* trackView = static_cast<NinjamTrackView*>(NinjamTrackView::getTrackViewByID(channelID));
     if(trackView){
         trackView->setChannelName(channel.getName());

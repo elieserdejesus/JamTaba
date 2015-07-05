@@ -45,7 +45,10 @@ signals:
     void intervalBeatChanged(int intervalBeat);
     void channelAdded(Ninjam::User user,   Ninjam::UserChannel channel, long channelID);
     void channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
-    void channelChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
+    void channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
+    //void channelAudioReceived(Ninjam::User user, long channelID, int downloadedBytes);
+    void channelXmitChanged(long channelID, bool transmiting);
+
     void chatMsgReceived(Ninjam::User user, QString message);
 
 private:
@@ -85,7 +88,8 @@ private slots:
     //ninjam events
     void ninjamServerBpmChanged(short newBpm);
     void ninjamServerBpiChanged(short oldBpi, short newBpi);
-    void ninjamAudioAvailable(Ninjam::User user, int channelIndex, QByteArray encodedAudioData);
+    void ninjamAudiointervalCompleted(Ninjam::User user, int channelIndex, QByteArray encodedAudioData);
+    void ninjamAudiointervalDownloading(Ninjam::User user, int channelIndex, int downloadedBytes);
     void ninjamUserChannelCreated(Ninjam::User user, Ninjam::UserChannel channel);
     void ninjamUserChannelRemoved(Ninjam::User user, Ninjam::UserChannel channel);
     void ninjamUserChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel);

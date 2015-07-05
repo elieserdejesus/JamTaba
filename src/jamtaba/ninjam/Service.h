@@ -58,9 +58,7 @@ public:
 
     ~Service();
 
-    static inline QStringList getBotNamesList(){
-        return botNames;
-    }
+    static inline QStringList getBotNamesList(){ return botNames; }
 
 signals:
     void userChannelCreated(Ninjam::User user, Ninjam::UserChannel channel);
@@ -69,7 +67,8 @@ signals:
     void userCountMessageReceived(int users, int maxUsers);
     void serverBpiChanged(short currentBpi, short lastBpi);
     void serverBpmChanged(short currentBpm);
-    void audioIntervalAvailable(Ninjam::User user, int channelIndex, QByteArray encodedAudioData);
+    void audioIntervalCompleted(Ninjam::User user, int channelIndex, QByteArray encodedAudioData);
+    void audioIntervalDownloading(Ninjam::User, int channelIndex, int bytesDownloaded );
     void disconnectedFromServer(const Ninjam::Server& server);
     void connectedInServer(const Ninjam::Server& server);
     void chatMessageReceived(Ninjam::User sender, QString message);
