@@ -78,7 +78,7 @@ int AbstractMp3Streamer::getSampleRate() const{
 }
 
 bool AbstractMp3Streamer::needResamplingFor(int targetSampleRate) const{
-    if(!streaming){
+    if(!streaming ){
         return false;
     }
     return targetSampleRate != getSampleRate();
@@ -139,6 +139,13 @@ RoomStreamerNode::RoomStreamerNode(int bufferTimeInSeconds)
     setStreamPath("");
 }
 
+
+bool RoomStreamerNode::needResamplingFor(int targetSampleRate) const{
+    if(!streaming || buffering){
+        return false;
+    }
+    return AbstractMp3Streamer::needResamplingFor(targetSampleRate);
+}
 
 void RoomStreamerNode::initialize(QString streamPath){
     AbstractMp3Streamer::initialize(streamPath);

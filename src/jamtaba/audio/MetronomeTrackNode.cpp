@@ -19,7 +19,7 @@ SamplesBuffer* createResampledBuffer(const SamplesBuffer& buffer, int originalSa
     for (int c = 0; c < channels; ++c) {
         //Resampler resampler(originalSampleRate, finalSampleRate);
         //resampler.process(in[c], buffer.getFrameLenght(), out[c], finalSize);
-        Resampler::process(buffer.getSamplesArray(c), buffer.getFrameLenght(), originalSampleRate, newBuffer->getSamplesArray(c), finalSize, finalSampleRate );
+        Resampler::process(buffer.getSamplesArray(c), buffer.getFrameLenght(), newBuffer->getSamplesArray(c), finalSize);
     }
     //qDebug() << "Criou buffer com resampling: bufferAntigo: " <<buffer.getFrameLenght() << " novo:" << newBuffer->getFrameLenght() << endl;
     return newBuffer;

@@ -56,8 +56,7 @@ bool AudioNode::needResamplingFor(int targetSampleRate) const{
     return false;
 }
 
-void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
-{
+void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out){
     if(!activated){
         return;
     }
@@ -91,9 +90,18 @@ AudioNode::AudioNode()
       leftGain(1.0),
       rightGain(1.0),
       internalBuffer(2),
-      lastPeak(0, 0)
+      lastPeak(0, 0),
+      resamplingCorrection(0)
 {
 
+}
+
+int AudioNode::getInputResamplingLength(int targetSampleRate, int outFrameLenght) const{
+    double factor = (double)getSampleRate()/targetSampleRate;
+    double doubleLenght = outFrameLenght * factor + resamplingCorrection;
+    int intLenght = std::round(doubleLenght);
+    resamplingCorrection = intLenght - doubleLenght;
+    return intLenght;
 }
 
 Audio::AudioPeak AudioNode::getLastPeak(bool resetPeak) const{

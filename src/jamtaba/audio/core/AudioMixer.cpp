@@ -36,7 +36,7 @@ AudioMixer::~AudioMixer(){
     inputNode = nullptr;
 }
 
-void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out, int outOffset){
+void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out, int outOffset, bool attenuateAfterSumming){
     static int soloedBuffersInLastProcess = 0;
     //--------------------------------------
     bool hasSoloedBuffers = soloedBuffersInLastProcess > 0;
@@ -44,25 +44,17 @@ void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out, int outOffset){
     QMutexLocker locker(&mutex);
     foreach (AudioNode* node , nodes) {
         bool canProcess = (!hasSoloedBuffers && !node->isMuted()) || (hasSoloedBuffers && node->isSoloed());
-        if(canProcess){
+        if(canProcess ){
             if(node->needResamplingFor(sampleRate)){
                 //read N samples from the node
-                static SamplesBuffer tempOutBuffer(2);
-                tempOutBuffer.zero();
-                double resampleFactor = (double)node->getSampleRate()/(double)sampleRate;
-                int samplesToGrabFromNode = (int)(out.getFrameLenght() * resampleFactor);
-                //samplesToGrabFromNode++;
-                tempOutBuffer.setFrameLenght(samplesToGrabFromNode);
-                node->processReplacing(in, tempOutBuffer);
+                static SamplesBuffer tempBuffer(2);
+                tempBuffer.zero();
+                int samplesToGrabFromNode = node->getInputResamplingLength(sampleRate, out.getFrameLenght());
+                tempBuffer.setFrameLenght(samplesToGrabFromNode);
+                node->processReplacing(in, tempBuffer);
 
-                //resample the readed samples to match the current mixer sample rate
-                //assert(resamplers[node] != nullptr);
-                SamplesBufferResampler* resampler = resamplers[node];
-                const SamplesBuffer& resampledBuffer = resampler->resample(tempOutBuffer, out.getFrameLenght(), node->getSampleRate(), this->sampleRate);
+                const SamplesBuffer& resampledBuffer = resamplers[node]->resample(tempBuffer, out.getFrameLenght());
                 out.add(resampledBuffer, outOffset);
-                if(resampledBuffer.getFrameLenght() != out.getFrameLenght()){
-                    qDebug() << resampledBuffer.getFrameLenght();
-                }
             }
             else{
                 node->processReplacing(in, out);
@@ -78,9 +70,11 @@ void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out, int outOffset){
         }
     }
 
-    int nodesConnected = nodes.size();
-    if(nodesConnected > 1){//attenuate
-        out.applyGain( 1.0/nodesConnected );
+    if(attenuateAfterSumming){
+        int nodesConnected = nodes.size();
+        if(nodesConnected > 1){//attenuate
+            out.applyGain( 1.0/nodesConnected );
+        }
     }
 
 }

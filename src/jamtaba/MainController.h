@@ -153,8 +153,8 @@ private:
 
     bool started;
 
-    Audio::AudioPeak inputPeaks;
-    Audio::AudioPeak roomStreamerPeaks;
+    //Audio::AudioPeak inputPeaks;
+    //Audio::AudioPeak roomStreamerPeaks;
     //+++++++++++++++++++
     Vst::VstHost* vstHost;
     std::vector<Audio::PluginDescriptor*> pluginsDescriptors;

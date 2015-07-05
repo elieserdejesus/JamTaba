@@ -10,15 +10,15 @@ SamplesBufferResampler::~SamplesBufferResampler(){
 }
 
 const Audio::SamplesBuffer& SamplesBufferResampler::resample(
-        Audio::SamplesBuffer &in, int maxOutLenght, int originalSampleRate, int finalSampleRate)
+        Audio::SamplesBuffer &in, int desiredOutLenght)
 {
-    int outLenght = 0;
+    int lenght = 0;
     outBuffer.zero();
     for (int c = 0; c < 2; ++c) {
         float* input = in.getSamplesArray(c);
         float* output = outBuffer.getSamplesArray(c);
-        outLenght = Resampler::process(input, in.getFrameLenght(), originalSampleRate, output, maxOutLenght, finalSampleRate);
+        lenght = Resampler::process(input, in.getFrameLenght(), output, desiredOutLenght);
     }
-    outBuffer.setFrameLenght(outLenght);
+    outBuffer.setFrameLenght(lenght);
     return outBuffer;
 }
