@@ -79,8 +79,8 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
       currentStreamingRoomID(-1000),
       mutex(QMutex::Recursive),
       started(false),
-      inputPeaks(0,0),
-      roomStreamerPeaks(0,0),
+      //inputPeaks(0,0),
+      //roomStreamerPeaks(0,0),
       vstHost(Vst::VstHost::getInstance()),
       pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
       ipToLocationResolver("../Jamtaba2/GeoLite2-Country.mmdb")
@@ -130,19 +130,19 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
 
 
     //test ninjam stream
-    NinjamTrackNode* trackTest = new NinjamTrackNode(2);
-    //QStringList testFiles({":/bateria mono.ogg"});
-    QStringList testFiles({":/loop 192KHz.wav.ogg"});
-    addTrack(2, trackTest);
-    for (int i = 0; i < testFiles.size(); ++i) {
-        QFile file(testFiles.at(i));
-        if(!file.exists()){
-            qCritical() << "File not exists! " << file.errorString();
-        }
-        file.open(QIODevice::ReadOnly);
-        trackTest->addVorbisEncodedInterval(file.readAll());
-    }
-    trackTest->startNewInterval();
+//    NinjamTrackNode* trackTest = new NinjamTrackNode(2);
+//    QStringList testFiles({":/bateria mono.ogg"});
+//    //QStringList testFiles({":/loop 192KHz.wav.ogg"});
+//    addTrack(2, trackTest);
+//    for (int i = 0; i < testFiles.size(); ++i) {
+//        QFile file(testFiles.at(i));
+//        if(!file.exists()){
+//            qCritical() << "File not exists! " << file.errorString();
+//        }
+//        file.open(QIODevice::ReadOnly);
+//        trackTest->addVorbisEncodedInterval(file.readAll());
+//    }
+//    trackTest->startNewInterval();
 
 
     //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
@@ -223,8 +223,8 @@ void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuff
     audioMixer->process(in, out, outOffset);
 
 
-    inputPeaks.update( audioMixer->getLocalInput()->getLastPeak());
-    roomStreamerPeaks.update( roomStreamer->getLastPeak());
+    //inputPeaks.update( audioMixer->getLocalInput()->getLastPeak());
+    //roomStreamerPeaks.update( roomStreamer->getLastPeak());
 
 }
 
@@ -253,9 +253,7 @@ Audio::AudioPeak MainController::getInputPeaks(){
 }
 
 Audio::AudioPeak MainController::getRoomStreamPeak(){
-    Audio::AudioPeak peak = roomStreamerPeaks;
-    roomStreamerPeaks.zero();
-    return peak;
+    return roomStreamer->getLastPeak(true);
 }
 
 //++++++++++ TRACKS ++++++++++++

@@ -75,6 +75,7 @@ public:
     inline bool isActivated() const{return activated;}
 
     virtual bool needResamplingFor(int targetSampleRate) const;
+    int getInputResamplingLength(int targetSampleRate, int outFrameLenght) const;
 
 protected:
     QSet<AudioNode*> connections;
@@ -104,6 +105,8 @@ private:
         leftGain = (float) (root2Over2 * (cos(angle) - sin(angle)));
         rightGain = (float) (root2Over2 * (cos(angle) + sin(angle)));
     }
+
+    mutable double resamplingCorrection;
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++

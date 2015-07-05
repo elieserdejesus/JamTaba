@@ -26,6 +26,8 @@ NinjamTrackView::NinjamTrackView(QWidget *parent, Controller::MainController *ma
     countryLabel->setAlignment(Qt::AlignCenter);
     ui->namesPanel->layout()->addWidget(countryLabel);
 
+    ui->channelName->setStyleSheet("font-size: 7pt");
+
     //disable channel name, not editable
     ui->channelName->setEnabled(false);
 }

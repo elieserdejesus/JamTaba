@@ -51,6 +51,7 @@ public:
 
     virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out);
     //virtual void stopCurrentStream();
+    virtual bool needResamplingFor(int targetSampleRate) const;
 protected:
     void initialize(QString streamPath);
 private:

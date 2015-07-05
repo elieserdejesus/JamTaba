@@ -1,4 +1,9 @@
-# resampling do mp3 da sala funciona?
+#feedback do download dos intervalos seria muito legal
+
+# entrei em uma sala para testar o resampleing e a continuidade entre um intervalo e outro ficou estranha, tenho que ver isso
+#entrei em outra sala e pareceu ok, talvez um pequeno estalo no início do intervalo
+
+
 
 # o botão de entrar na sala fica habilitado mesmo quando está cheia
 
@@ -34,6 +39,8 @@
 
 #buga tudo se não tem conexão com a internet
 
+
+# feature - botão para ouvir o stream dos server e ver como está a mix geral
 
 #chat ninjam
     #problema nos caracteres especiais - tenho que testar se o envio está correto e depois testar a recepção
