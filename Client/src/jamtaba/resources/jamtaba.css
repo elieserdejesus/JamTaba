@@ -165,9 +165,23 @@ border: 1px solid rgba(0, 0, 0, 55);
 border-radius: 3px;
 }
 
+QSlider::add-page:vertical[enabled="false"]{
+    border: none;
+}
+
+QSlider::groove:horizontal[enabled="false"]{
+    background-color: rgba(0, 0, 0, 20);
+    height: 5px;
+}
+
 QSlider::groove:vertical {
 background-color: rgba(0, 0, 0, 50);
 width: 8px;
+}
+
+QSlider::groove:vertical[enabled="false"]{
+    background-color: rgba(0, 0, 0, 20);
+    border-color: rgba(0, 0, 0, 25);
 }
 
 QSlider::handle:vertical, QSlider::handle:horizontal {
@@ -179,12 +193,16 @@ margin-right: -12px;
 border-radius: 3px;
 }
 
+QSlider::handle:vertical[enabled="false"], QSlider::handle:horizontal[enabled="false"]{
+    background-color:rgb(120, 120, 120);
+}
+
 QSlider::handle:vertical:hover, QSlider::handle:horizontal:hover {
 border: 1px solid rgb(70, 70, 70);
 background-color: qlineargradient(x1:0, y1:0.5, x2:0, y2:1, stop:0 rgb(220, 220,220), stop:1 rgb(45, 45, 45));
 }
 
-QSlider::add-page:vertical {
+QSlider::add-page:vertical[enabled="true"] {
 background: rgb(255,255,255, 130);
 border-top-left-radius: 0px;
 border-top-right-radius: 0px;
@@ -197,6 +215,10 @@ PeakMeter{
     border: 1px solid rgba(0, 0, 0, 25);
     max-width: 4px;
     min-width: 4px;
+}
+PeakMeter[enabled="false"]{
+    background-color: rgba(0, 0, 0, 20);
+    border: none;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++ */
@@ -336,6 +358,16 @@ border-radius: 5px;
 background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), stop:1 rgb(100, 100, 100));
 border: 1px solid rgb(61,61,61);
 }
+
+BaseTrackView[enabled="false"] > QFrame#topSeparator, BaseTrackView[enabled="false"] > QFrame#panSectionSeparator{
+    background-color: rgba(0, 0, 0, 5);
+}
+
+BaseTrackView[enabled="false"]{
+    background: rgba(0, 0, 0, 30);
+    border: none;
+}
+
 
 BaseTrackView  QGroupBox{
 border: 1px solid rgba(0, 0, 0, 50);

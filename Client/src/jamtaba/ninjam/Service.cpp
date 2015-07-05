@@ -196,11 +196,14 @@ void Service::handle(const DownloadIntervalWrite& msg){
     if (downloads.contains(msg.getGUID())) {
         Download* download = downloads[msg.getGUID()];
         download->appendVorbisData(msg.getEncodedAudioData());
+        User* user = currentServer->getUser(download->getUserFullName());
         if (msg.downloadIsComplete()) {
-            User* user = currentServer->getUser(download->getUserFullName());
-            emit audioIntervalAvailable(*user, download->getChannelIndex(), download->getVorbisData());
+            emit audioIntervalCompleted(*user, download->getChannelIndex(), download->getVorbisData());
             delete download;
             downloads.remove(msg.getGUID());
+        }
+        else{
+            emit audioIntervalDownloading(*user, download->getChannelIndex(), msg.getEncodedAudioData().size());
         }
     } else {
         qCritical("GUID is not in map!");

@@ -1,9 +1,5 @@
-#feedback do download dos intervalos seria muito legal
-
 # entrei em uma sala para testar o resampleing e a continuidade entre um intervalo e outro ficou estranha, tenho que ver isso
 #entrei em outra sala e pareceu ok, talvez um pequeno estalo no início do intervalo
-
-
 
 # o botão de entrar na sala fica habilitado mesmo quando está cheia
 
@@ -11,7 +7,7 @@
 
 #resampling
 
-#reaper tem uma cor mais clara quando coloca o mouse em cima
+#reaper tem uma cor mais clara quando coloca o mouse em cima da barra de rolagem
 
 # quando clico para ouvir uma outra sala não está resetando o plot da sala que eu estava ouvindo
 

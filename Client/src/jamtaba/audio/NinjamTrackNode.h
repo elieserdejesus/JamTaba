@@ -18,10 +18,11 @@ public:
     virtual ~NinjamTrackNode();
     void addVorbisEncodedInterval(QByteArray encodedBytes);
     void processReplacing(Audio::SamplesBuffer&in, Audio::SamplesBuffer& out);
-    void startNewInterval();
+    bool startNewInterval();
     inline int getID() const{return ID;}
     virtual bool needResamplingFor(int targetSampleRate) const;
     virtual int getSampleRate() const;
+    inline bool isPlaying() const{return playing;}
 private:
     bool playing;//playing one interval or waiting for more vorbis data to decode
     VorbisDecoder decoder;

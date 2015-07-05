@@ -21,13 +21,15 @@ public:
     void setPeaks(float left, float right);
     inline long getTrackID() const{return trackID;}
     static BaseTrackView* getTrackViewByID(long trackID);
+    virtual void setEnabled(bool);
+
 protected:
     Ui::TrackView *ui;
     Controller::MainController* mainController;
     void paintEvent(QPaintEvent *);
     bool eventFilter(QObject *source, QEvent *ev);
     long trackID;
-
+    bool activated;
 private:
     static QMap<long, BaseTrackView*> trackViews;
 

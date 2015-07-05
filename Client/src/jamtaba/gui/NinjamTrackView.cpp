@@ -4,13 +4,13 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QDebug>
+#include <QStyle>
 
 NinjamTrackView::NinjamTrackView(QWidget *parent, Controller::MainController *mainController, long trackID, QString userName, QString channelName, QString countryName, QString countryCode)
     :BaseTrackView(parent, mainController, trackID)
 {
     this->setMaximumWidth(100);
     this->setMinimumWidth(100);
-
 
     setUserName(userName);
     setChannelName(channelName);
@@ -30,6 +30,9 @@ NinjamTrackView::NinjamTrackView(QWidget *parent, Controller::MainController *ma
 
     //disable channel name, not editable
     ui->channelName->setEnabled(false);
+
+    setEnabled(false);
+    //setActivated(false);
 }
 
 void NinjamTrackView::setUserName(QString newName){

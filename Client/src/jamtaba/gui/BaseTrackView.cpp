@@ -11,7 +11,8 @@ BaseTrackView::BaseTrackView(QWidget *parent, Controller::MainController *mainCo
     QWidget(parent),
     ui(new Ui::TrackView),
     mainController(mainController),
-    trackID(trackID)
+    trackID(trackID),
+    activated(true)
 {
     ui->setupUi(this);
     QObject::connect(ui->muteButton, SIGNAL(clicked()), this, SLOT(onMuteClicked()));
@@ -24,6 +25,26 @@ BaseTrackView::BaseTrackView(QWidget *parent, Controller::MainController *mainCo
 
     //add in static map
     trackViews.insert(trackID, this);
+}
+
+void BaseTrackView::setEnabled(bool enabled){
+    QWidget::setEnabled(enabled);
+    style()->unpolish(this);
+    style()->polish(this);
+
+    style()->unpolish(ui->levelSlider);
+    style()->polish(ui->levelSlider);
+
+    style()->unpolish(ui->panSlider);
+    style()->polish(ui->panSlider);
+
+    style()->unpolish(ui->peakMeterLeft);
+    style()->polish(ui->peakMeterLeft);
+
+    style()->unpolish(ui->peakMeterRight);
+    style()->polish(ui->peakMeterRight);
+
+
 }
 
 BaseTrackView* BaseTrackView::getTrackViewByID(long trackID){
