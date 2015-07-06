@@ -14,6 +14,7 @@
         <file>ninja.png</file>
         <file>licence.png</file>
         <file>chat.png</file>
+        <file>broom.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

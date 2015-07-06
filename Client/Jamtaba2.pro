@@ -1,17 +1,16 @@
-# entrei em uma sala para testar o resampleing e a continuidade entre um intervalo e outro ficou estranha, tenho que ver isso
+#chat ninjam
+    #problema nos caracteres especiais - tenho que testar se o envio está correto e depois testar a recepção
+    #mensagem de voto fica sem o nome do sender
+    #vi que as mensagens do ninbot chegam como ninbot.com, e não como ninbot, por isso não são reconhecidas como mensagens do bot
+
+# entrei em uma sala para testar o resampling e a continuidade entre um intervalo e outro ficou estranha, tenho que ver isso
 #entrei em outra sala e pareceu ok, talvez um pequeno estalo no início do intervalo
 
-# o botão de entrar na sala fica habilitado mesmo quando está cheia
-
-# a mensagem de crowded está errada
-
-#resampling
-
-#reaper tem uma cor mais clara quando coloca o mouse em cima da barra de rolagem
+# a mensagem de crowded está errada?
 
 # quando clico para ouvir uma outra sala não está resetando o plot da sala que eu estava ouvindo
 
-#de vez em quando buga quando chega o primeiro intervalo e ainda não sei porque
+#de vez em quando buga quando chega o primeiro intervalo e ainda não sei porque. Isso nos testes locais, não vi mais o problema com os servers públicos
 
 #como serão as entradas? Como será a criação do canal de backtracking?
 #acho que faz sentido selecionar uma entrada como sendo audio ou midi, stereo ou mono
@@ -22,9 +21,8 @@
 
 #dialogo de IO do midi - testar novamente, ver se a seleção do midi device está funcionando
 
-#não consegui resolver o bug que acontece quando as pistas são removidas, por hora apenas comentei a linha que delete as pistas no NinjamJamRoomController. Ou seja, a memoria não está sendo liberada
-
-# programa fechando com erro, basta abrir e fechar para ver o erro na finalização. Quando testei sem nenhum device midi conectado não de problema. Então parece ser a portmidi.
+#não consegui resolver o bug que acontece quando as pistas são removidas, por hora apenas comentei a linha que delete as pistas no NinjamJamRoomController. Ou seja, a memoria não está sendo liberada.
+#Agora estou usando vector<float> para guardar as amostras, ver o que acontece.
 
 # Quando botei o reverb depois do B4 ouvi o reverb na entrada do mic mas não no B4, o encadeamento tem problema
 #Na verdade preciso repensar isso, não faz sentido ter midi e áudio ao mesmo tempo em uma pista
@@ -37,11 +35,6 @@
 
 
 # feature - botão para ouvir o stream dos server e ver como está a mix geral
-
-#chat ninjam
-    #problema nos caracteres especiais - tenho que testar se o envio está correto e depois testar a recepção
-    #botão para limpar as mensagens?
-
 
 #audo update: https://wiki.qt.io/Qt-Installer-Framework
 
@@ -56,9 +49,6 @@
 
 # - Coisas legais para implementar: fazer um plugin de delay para iniciar a saga dos plugins nativos do Jamtaba
 # - O stream do ninjamer.com não é mono como achei que era, mas está dando problema
-# - Tenho que fazer resample do stream
-# -
-# - O DAW LMMS usa PortAudio, pode ser interessante roubar o código deles.
 
 
 #quando trocar de bpi ver se ainda é possível usar a mesma acentuação procurando pelo valor
@@ -77,7 +67,7 @@
 #
 #-------------------------------------------------
 
-QT       +=  gui  network webkitwidgets
+QT       +=  gui  network
 
 #DEFINES += QT_NO_CAST_FROM_ASCII
 #DEFINES += QT_NO_CAST_TO_ASCII

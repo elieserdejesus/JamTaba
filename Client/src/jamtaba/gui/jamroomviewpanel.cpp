@@ -76,6 +76,7 @@ void JamRoomViewPanel::initialize(){
 //    //ui->webView->setUrl(gMapURL);
 
     ui->buttonListen->setEnabled(roomInfo.hasStream());
+    ui->buttonEnter->setEnabled(!roomInfo.isFull());
 }
 
 JamRoomViewPanel::~JamRoomViewPanel()

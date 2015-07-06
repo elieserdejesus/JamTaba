@@ -24,6 +24,8 @@ signals:
 private slots:
     void chatTextEditionFinished();
     void verticalScrollBarRangeChanged(int min, int max);
+    void on_buttonClear_clicked();
+
 private:
     Ui::ChatPanel *ui;
     QColor getUserColor(QString userName);
