@@ -97,3 +97,13 @@ ChatPanel::~ChatPanel()
 {
     delete ui;
 }
+
+void ChatPanel::on_buttonClear_clicked()
+{
+    QList<ChatMessagePanel*> panels = ui->scrollContent->findChildren<ChatMessagePanel*>();
+    foreach (ChatMessagePanel* msgPanel, panels) {
+        ui->scrollContent->layout()->removeWidget(msgPanel);
+        delete msgPanel;
+    }
+
+}
