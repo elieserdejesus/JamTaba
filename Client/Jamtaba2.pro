@@ -1,10 +1,10 @@
+# entrei em uma sala para testar o resampling e a continuidade entre um intervalo e outro ficou estranha, tenho que ver isso
+#entrei em outra sala e pareceu ok, talvez um pequeno estalo no início do intervalo
+
 #chat ninjam
     #problema nos caracteres especiais - tenho que testar se o envio está correto e depois testar a recepção
     #mensagem de voto fica sem o nome do sender
     #vi que as mensagens do ninbot chegam como ninbot.com, e não como ninbot, por isso não são reconhecidas como mensagens do bot
-
-# entrei em uma sala para testar o resampling e a continuidade entre um intervalo e outro ficou estranha, tenho que ver isso
-#entrei em outra sala e pareceu ok, talvez um pequeno estalo no início do intervalo
 
 # a mensagem de crowded está errada?
 
