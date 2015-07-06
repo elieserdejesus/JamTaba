@@ -18,7 +18,8 @@ const QStringList Service::botNames = buildBotNamesList();
 Service::Service()
     :
       running(false),
-      initialized(false)
+      initialized(false),
+      lastSendTime(0)
 {
     connect(&socket, SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
     connect(&socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
@@ -154,15 +155,13 @@ void Service::sendMessageToServer(ClientMessage *message)
         qFatal("não escreveu os bytes");
     }
     lastSendTime = QDateTime::currentMSecsSinceEpoch();
-    //qDebug() << message;
-    //assert((int)message->getPayload() + 5 == outBuffer.size());
     if((int)message->getPayload() + 5 != outBuffer.size()){
         qWarning() << "(int)message->getPayload() + 5: " << ((int)message->getPayload() + 5) << "outbuffer.size():" << outBuffer.size();
     }
 }
 
 bool Service::needSendKeepAlive() const{
-    long ellapsedSeconds = (QDateTime::currentMSecsSinceEpoch() - lastSendTime)/1000;
+    long ellapsedSeconds = (int)(QDateTime::currentMSecsSinceEpoch() - lastSendTime)/1000;
     return ellapsedSeconds >= serverKeepAlivePeriod;
 }
 
@@ -219,6 +218,7 @@ void Service::handle(const ServerAuthChallengeMessage& msg){
     ClientAuthUserMessage msgAuthUser(this->userName, msg.getChallenge(), msg.getProtocolVersion());
     sendMessageToServer(&msgAuthUser);
     this->serverLicence = msg.getLicenceAgreement();
+    this->serverKeepAlivePeriod = msg.getServerKeepAlivePeriod();
 }
 
 void Service::handle(const ServerAuthReplyMessage& msg){
