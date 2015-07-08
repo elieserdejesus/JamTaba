@@ -44,7 +44,8 @@ public:
     void applyGain(float gainFactor);
 
     void fade(float beginGain=0, float endGain=1);
-
+    void fadeIn(int fadeFrameLenght,  float beginGain = 0);
+    void fadeOut(int fadeFrameLenght, float endGain = 0);
 
     //overload applyGain used to compute main gain and pan gains in one pass
     void applyGain(float gainFactor, float leftGain, float rightGain);//panValue between [-1, 0, 1] => LEFT, CENTER, RIGHT

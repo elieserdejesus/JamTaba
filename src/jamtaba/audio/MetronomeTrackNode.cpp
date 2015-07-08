@@ -14,14 +14,10 @@ SamplesBuffer* createResampledBuffer(const SamplesBuffer& buffer, int originalSa
     int finalSize = (double)finalSampleRate/originalSampleRate * buffer.getFrameLenght();
     int channels = buffer.getChannels();
     SamplesBuffer* newBuffer = new SamplesBuffer(channels, finalSize);
-    //float** in = ;
-    //float** out = newBuffer->getSamplesArray();
     for (int c = 0; c < channels; ++c) {
-        //Resampler resampler(originalSampleRate, finalSampleRate);
-        //resampler.process(in[c], buffer.getFrameLenght(), out[c], finalSize);
-        Resampler::process(buffer.getSamplesArray(c), buffer.getFrameLenght(), newBuffer->getSamplesArray(c), finalSize);
+        Resampler resampler;
+        resampler.process(buffer.getSamplesArray(c), buffer.getFrameLenght(), originalSampleRate, newBuffer->getSamplesArray(c), finalSize, finalSampleRate);
     }
-    //qDebug() << "Criou buffer com resampling: bufferAntigo: " <<buffer.getFrameLenght() << " novo:" << newBuffer->getFrameLenght() << endl;
     return newBuffer;
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -57,9 +53,7 @@ void MetronomeTrackNode::setSamplesPerBeat(long samplesPerBeat){
         qCritical() << "samples per beat <= 0";
     }
     this->samplesPerBeat = samplesPerBeat;
-    //clickSoundBuffer->setFrameLenght(samplesPerBeat);
     reset();
-    //qDebug() << "samples per beat: " << this->samplesPerBeat << endl;
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MetronomeTrackNode::reset(){
@@ -73,7 +67,6 @@ void MetronomeTrackNode::setIntervalPosition(long intervalPosition){
     this->intervalPosition = intervalPosition;
     this->beatPosition = intervalPosition % samplesPerBeat;
     this->currentBeat = (intervalPosition / samplesPerBeat);// + 1;
-    //qDebug() << "beat: " << currentBeat;
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SamplesBuffer* MetronomeTrackNode::getBuffer(int beat){
@@ -86,7 +79,7 @@ SamplesBuffer* MetronomeTrackNode::getBuffer(int beat){
     }
     return clickSoundBuffer;
 }
-
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MetronomeTrackNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out){
     if(samplesPerBeat <= 0){
         return;
@@ -97,17 +90,17 @@ void MetronomeTrackNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
     SamplesBuffer* samplesBuffer = getBuffer(currentBeat);
     int samplesToCopy = std::min( (int)(samplesBuffer->getFrameLenght() - beatPosition), out.getFrameLenght());
     int nextBeatSample = beatPosition + out.getFrameLenght();
-    int outOffset = 0;
+    int internalOffset = 0;
     int clickSoundBufferOffset = beatPosition;
     if(nextBeatSample > samplesPerBeat){
         samplesBuffer = getBuffer(currentBeat + 1);//iniciar o próximo beat nesse callback
-        outOffset = samplesPerBeat - beatPosition;
+        internalOffset = samplesPerBeat - beatPosition;
         samplesToCopy = std::min( nextBeatSample - samplesPerBeat, (long)samplesBuffer->getFrameLenght());
         clickSoundBufferOffset = 0;
 
     }
     if(samplesToCopy > 0){
-        internalBuffer.set(*samplesBuffer, clickSoundBufferOffset, samplesToCopy, outOffset);
+        internalBuffer.set(*samplesBuffer, clickSoundBufferOffset, samplesToCopy, internalOffset);
         AudioNode::processReplacing(in, out);
     }
 }

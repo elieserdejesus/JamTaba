@@ -3,10 +3,12 @@
 #include "JamtabaFactory.h"
 #include <QTextCodec>
 
+#include "../audio/core/SamplesBuffer.h"
+
+
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
 int main(int argc, char* args[] ){
-
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
     qInstallMessageHandler(customLogHandler);

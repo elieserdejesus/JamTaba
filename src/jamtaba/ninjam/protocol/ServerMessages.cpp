@@ -5,7 +5,7 @@
 using namespace Ninjam;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-//+++++++++++++++++++++  SERVER MESSAGE (Base class) ++++++++
+//+++++++++++++  SERVER MESSAGE (Base class) +++++++++++++++=
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 ServerMessage::ServerMessage(ServerMessageType messageType)
     :messageType(messageType){
@@ -99,7 +99,7 @@ UserInfoChangeNotifyMessage::UserInfoChangeNotifyMessage()
 }
 
 UserInfoChangeNotifyMessage::~UserInfoChangeNotifyMessage(){
-    qWarning() << "destrutor UserInfoChangeNotifyMessage";
+    //qWarning() << "destrutor UserInfoChangeNotifyMessage";
 }
 
 void UserInfoChangeNotifyMessage::set(QMap<QString, QList<UserChannel> > allUsersChannels){

@@ -97,10 +97,12 @@ AudioNode::AudioNode()
 }
 
 int AudioNode::getInputResamplingLength(int targetSampleRate, int outFrameLenght) const{
-    double factor = (double)getSampleRate()/targetSampleRate;
-    double doubleLenght = outFrameLenght * factor + resamplingCorrection;
-    int intLenght = std::round(doubleLenght);
+
+    double factor = (double)getSampleRate()/(double)targetSampleRate;
+    double doubleLenght = (double)outFrameLenght * factor;
+    int intLenght = (int)(doubleLenght + resamplingCorrection);
     resamplingCorrection = intLenght - doubleLenght;
+
     return intLenght;
 }
 
@@ -164,16 +166,32 @@ OscillatorAudioNode::OscillatorAudioNode(float frequency, int sampleRate)
 
 }
 
-void OscillatorAudioNode::processReplacing(SamplesBuffer & /*in*/, SamplesBuffer &out){
+void OscillatorAudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out){
+    Q_UNUSED(in);
     int frames = out.getFrameLenght();
     int outChannels = out.getChannels();
     for (int i = 0; i < frames; ++i) {
-        float sample = sin(this->phase);
+        float sample = sin(this->phase) * getGain();
         for (int c = 0; c < outChannels; ++c) {
-            out.add(c,i, sample);
+            out.set(c, i + 0, sample);//mesmo zerando o offset o audio ainda fica interrompido
         }
         this->phase += phaseIncrement;
     }
+
+    /*
+    int frames = out.getFrameLenght();
+    int outChannels = out.getChannels();
+    internalBuffer.setFrameLenght(frames);
+    internalBuffer.zero();
+    for (int i = 0; i < frames; ++i) {
+        float sample = sin(this->phase);
+        for (int c = 0; c < outChannels; ++c) {
+            internalBuffer.add(c, i, sample);
+        }
+        this->phase += phaseIncrement;
+    }
+    Audio::AudioNode::processReplacing(in, out, outOffset);
+    */
 }
 //+++++++++++++++++++++++++++++++++++++++
 

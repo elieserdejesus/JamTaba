@@ -93,6 +93,30 @@ void SamplesBuffer::applyGain(float gainFactor)
     }
 }
 
+void SamplesBuffer::fadeOut(int fadeFrameLenght, float endGain){
+    int lenght = std::min(fadeFrameLenght, (int)frameLenght);
+    float gainStep = (1 - endGain)/lenght;
+    for (unsigned int c = 0; c < channels; ++c) {
+        float gain = 1;
+        for (unsigned int s = 0; s < lenght; ++s) {
+            samples[c][s] *= gain;
+            gain -= gainStep;
+        }
+    }
+}
+
+void SamplesBuffer::fadeIn(int fadeFrameLenght, float beginGain){
+    int lenght = std::min(fadeFrameLenght, (int)frameLenght);
+    float gainStep = (1 - beginGain)/lenght;
+    for (unsigned int c = 0; c < channels; ++c) {
+        float gain = beginGain;
+        for (unsigned int s = 0; s < lenght; ++s) {
+            samples[c][s] *= gain;
+            gain += gainStep;
+        }
+    }
+}
+
 void SamplesBuffer::fade(float beginGain, float endGain){
     //QMutexLocker locker(&mutex);
     float gainStep = (endGain - beginGain)/frameLenght;
@@ -158,7 +182,10 @@ AudioPeak SamplesBuffer::computePeak() const
 
 void SamplesBuffer::add(const SamplesBuffer &buffer, int offset){
     //QMutexLocker locker(&mutex);
-    unsigned int framesToProcess = frameLenght < buffer.frameLenght ? frameLenght : buffer.frameLenght;
+    unsigned int framesToProcess = std::min( (int)frameLenght, buffer.getFrameLenght());
+//    if(framesToProcess < (unsigned int)buffer.getFrameLenght()){
+//        qWarning() << (buffer.getFrameLenght()-framesToProcess) << " samples discarded";
+//    }
     if( buffer.channels >= channels){
         for (unsigned int c = 0; c < channels; ++c) {
             for (unsigned int s = 0; s < framesToProcess; ++s) {
@@ -230,7 +257,7 @@ void SamplesBuffer::setFrameLenght(unsigned int newFrameLenght){
         return;
     }
 
-    for (int c = 0; c < channels; ++c) {
+    for (unsigned int c = 0; c < channels; ++c) {
         samples[c].resize(newFrameLenght);
     }
     this->frameLenght = newFrameLenght;
