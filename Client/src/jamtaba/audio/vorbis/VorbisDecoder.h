@@ -20,6 +20,7 @@ public:
 
     void setInput(QByteArray vorbisData);
     void reset();
+    inline int getTotalDecodedSamples() const{return decodedSamples;}
 private:
     bool initialize();
     Audio::SamplesBuffer internalBuffer;
@@ -31,6 +32,7 @@ private:
 
     int consumeTo(void* oggOutBuffer, int bytesToConsume);
 
+    int decodedSamples;
 };
 
 

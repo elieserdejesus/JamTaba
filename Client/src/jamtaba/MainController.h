@@ -128,7 +128,7 @@ signals:
 
 private:
     static const int INPUT_TRACK_ID = 1;
-    void doAudioProcess(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int outOffset);
+    void doAudioProcess(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
     Audio::Plugin* createPluginInstance(Audio::PluginDescriptor* descriptor);
 
     std::unique_ptr<Audio::AudioDriver> audioDriver;

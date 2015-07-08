@@ -19,13 +19,10 @@
 #include "../ninjam/Server.h"
 #include "NinjamJamRoomController.h"
 #include <QTimer>
-
-//#include "mainframe.h"
-
 #include <QFile>
 #include <QDebug>
 #include <QApplication>
-#include "audio/NinjamTrackNode.h"
+//#include "audio/NinjamTrackNode.h"
 
 using namespace Persistence;
 using namespace Midi;
@@ -79,8 +76,6 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
       currentStreamingRoomID(-1000),
       mutex(QMutex::Recursive),
       started(false),
-      //inputPeaks(0,0),
-      //roomStreamerPeaks(0,0),
       vstHost(Vst::VstHost::getInstance()),
       pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
       ipToLocationResolver("../Jamtaba2/GeoLite2-Country.mmdb")
@@ -108,17 +103,14 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromLoginServer()));
 
 
-    this->audioMixer->addNode( this->roomStreamer);
+    //this->audioMixer->addNode( this->roomStreamer);
 
     tracksNodes.insert(INPUT_TRACK_ID, audioMixer->getLocalInput());
 
     vstHost->setSampleRate(audioDriver->getSampleRate());
     vstHost->setBlockSize(audioDriver->getBufferSize());
 
-    //QObject::connect(&*pluginFinder, SIGNAL(scanStarted()), this, SLOT(onPluginScanStarted()));
-    //QObject::connect(&*pluginFinder, SIGNAL(scanFinished()), this, SLOT(onPluginScanFinished()));
     QObject::connect(&*pluginFinder, SIGNAL(vstPluginFounded(Audio::PluginDescriptor*)), this, SLOT(onPluginFounded(Audio::PluginDescriptor*)));
-
 
     //ninjam service
     this->ninjamService = Ninjam::Service::getInstance();
@@ -131,8 +123,8 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
 
     //test ninjam stream
 //    NinjamTrackNode* trackTest = new NinjamTrackNode(2);
-//    QStringList testFiles({":/bateria mono.ogg"});
-//    //QStringList testFiles({":/loop 192KHz.wav.ogg"});
+//    //QStringList testFiles({":/bateria mono.ogg"});
+//    QStringList testFiles({":/loop 192KHz.wav.ogg"});
 //    addTrack(2, trackTest);
 //    for (int i = 0; i < testFiles.size(); ++i) {
 //        QFile file(testFiles.at(i));
@@ -215,24 +207,19 @@ void MainController::onPluginFounded(Audio::PluginDescriptor* descriptor){
     ConfigStore::addVstPlugin(descriptor->getPath());
 }
 
-void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int outOffset){
+void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
     QMutexLocker locker(&mutex);
     MidiBuffer midiBuffer = midiDriver->getBuffer();
     vstHost->fillMidiEvents(midiBuffer);//pass midi events to vst host
 
-    audioMixer->process(in, out, outOffset);
-
-
-    //inputPeaks.update( audioMixer->getLocalInput()->getLastPeak());
-    //roomStreamerPeaks.update( roomStreamer->getLastPeak());
-
+    audioMixer->process(in, out);
 }
 
 
 void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
     QMutexLocker locker(&mutex);
     if(!ninjamController->isRunning()){
-        doAudioProcess(in, out, 0);
+        doAudioProcess(in, out);
     }
     else{
         ninjamController->process(in, out);
@@ -381,7 +368,7 @@ MainController::~MainController()
         delete ninjamController;
         ninjamController = nullptr;
     }
-    //Resampler::releaseSharedLibHandler();
+
 }
 
 void MainController::playRoomStream(Login::RoomInfo roomInfo){

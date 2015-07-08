@@ -6,6 +6,7 @@
 #include "../ninjam/User.h"
 #include "../ninjam/Server.h"
 
+#include "audio/samplesbufferrecorder.h"
 
 class NinjamTrackNode;
 
@@ -58,6 +59,8 @@ private:
 
     static QString getUniqueKey(Ninjam::UserChannel channel);
 
+
+    SamplesBufferRecorder recorder;
 
     void addTrack(Ninjam::User user, Ninjam::UserChannel channel);
     void removeTrack(Ninjam::User, Ninjam::UserChannel channel);

@@ -36,7 +36,7 @@ AudioMixer::~AudioMixer(){
     inputNode = nullptr;
 }
 
-void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out, int outOffset, bool attenuateAfterSumming){
+void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out, bool attenuateAfterSumming){
     static int soloedBuffersInLastProcess = 0;
     //--------------------------------------
     bool hasSoloedBuffers = soloedBuffersInLastProcess > 0;
@@ -53,8 +53,11 @@ void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out, int outOffset, b
                 tempBuffer.setFrameLenght(samplesToGrabFromNode);
                 node->processReplacing(in, tempBuffer);
 
-                const SamplesBuffer& resampledBuffer = resamplers[node]->resample(tempBuffer, out.getFrameLenght());
-                out.add(resampledBuffer, outOffset);
+                const SamplesBuffer& resampledBuffer = resamplers[node]->resample(tempBuffer, node->getSampleRate(), out.getFrameLenght(), this->sampleRate);
+                out.add(resampledBuffer);
+                if(resampledBuffer.getFrameLenght() != out.getFrameLenght()){
+                    qDebug() << "resampled buffer size problem: " << resampledBuffer.getFrameLenght() << " != " << out.getFrameLenght();
+                }
             }
             else{
                 node->processReplacing(in, out);

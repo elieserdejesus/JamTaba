@@ -1,5 +1,9 @@
-# entrei em uma sala para testar o resampling e a continuidade entre um intervalo e outro ficou estranha, tenho que ver isso
-#entrei em outra sala e pareceu ok, talvez um pequeno estalo no início do intervalo
+#Resampling
+#O wahjam também usar a ideia de calcular quantas amostras serão lidas com base na SR.
+#Mas tenho que ver o que eles fizeram, eles somam um double resample_state que eu não entendi totalmente.
+
+#quando troco a taxa de amostragem preciso mudar a quantidade de amostras por intervalo.
+#Eu estava testando com 4 BPI e vi que quando mudei a taxa o intervalo não chegava mais até o final, do tempo 2 pulou para o 1.
 
 #chat ninjam
     #problema nos caracteres especiais - tenho que testar se o envio está correto e depois testar a recepção
@@ -146,7 +150,8 @@ HEADERS += \
     src/jamtaba/geo/IpToLocationResolver.h \
     src/jamtaba/gui/ChatPanel.h \
     src/jamtaba/gui/ChatMessagePanel.h \
-    src/jamtaba/audio/SamplesBufferResampler.h
+    src/jamtaba/audio/SamplesBufferResampler.h \
+    src/jamtaba/audio/samplesbufferrecorder.h
 
 
 SOURCES += \
@@ -209,7 +214,8 @@ SOURCES += \
     src/jamtaba/geo/IpToLocationResolver.cpp \
     src/jamtaba/gui/ChatPanel.cpp \
     src/jamtaba/gui/ChatMessagePanel.cpp \
-    src/jamtaba/audio/SamplesBufferResampler.cpp
+    src/jamtaba/audio/SamplesBufferResampler.cpp \
+    src/jamtaba/audio/samplesbufferrecorder.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
@@ -238,12 +244,12 @@ INCLUDEPATH += src/jamtaba/gui                  \
                $$PWD/libs/includes/portmidi     \
                $$PWD/libs/includes/ogg          \
                $$PWD/libs/includes/vorbis       \
-               #$$PWD/libs/includes/libresample  \
+               $$PWD/libs/includes/libresample  \
                $$PWD/libs/includes/minimp3      \
                $$PWD/libs/includes/libmaxmind   \
 
 
-win32: LIBS +=  -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi   -lvorbisfile -lvorbis -logg -lminimp3 -lmaxminddb \
+win32: LIBS +=  -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi -lvorbisfile -lvorbis -logg -lminimp3 -lmaxminddb -lresample \
 
 win32: LIBS +=  -lwinmm     \
                 -lole32     \

@@ -33,7 +33,8 @@ bool NinjamTrackNode::startNewInterval(){
     if(!intervals.isEmpty()){
         decoder.setInput(intervals.front());
         intervals.removeFirst();
-        decoder.reset();//head the headers
+        //qDebug() << "total samples decoded: " << decoder.getTotalDecodedSamples();
+        decoder.reset();//head the headers from new interval
         playing = true;
     }
     else{
@@ -68,9 +69,9 @@ void NinjamTrackNode::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesB
         const Audio::SamplesBuffer& decodedBuffer = decoder.decode(out.getFrameLenght() - totalDecoded);
         if(decodedBuffer.getFrameLenght() > 0){
             internalBuffer.add(decodedBuffer, totalDecoded);//total decoded is the offset
+            totalDecoded += decodedBuffer.getFrameLenght();
         }
-        totalDecoded += decodedBuffer.getFrameLenght();
-        if(decodedBuffer.getFrameLenght() == 0){
+        else{//no more samples to decode
             break;
         }
     }

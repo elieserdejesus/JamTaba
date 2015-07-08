@@ -4,8 +4,12 @@
 class Resampler
 {
 public:
-    //static int process(const float* in, int inLength, int inSampleRate, float *out, int desiredOutLength, int outSampleRate);
-    static int process(const float *in, int inLength, float *out, int desiredOutLength);
+    int process(const float* in, int inLength, int inSampleRate, float *out, int outLenght, int outSampleRate);
+    Resampler();
+    ~Resampler();
+
+private:
+    void* libHandler;
 };
 
 #endif // RESAMPLER_H
