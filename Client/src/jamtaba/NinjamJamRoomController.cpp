@@ -55,6 +55,8 @@ void NinjamJamRoomController::start(const Ninjam::Server& server){
         //mainController->setTrackLevel(-5, 0.6);
 
         mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
+        metronomeTrackNode->setGain(1);//TODO - use the persisted values
+        metronomeTrackNode->setPan(0);
 
         this->intervalPosition  = 0;
         this->running = true;
@@ -88,10 +90,9 @@ void NinjamJamRoomController::sendChatMessage(QString msg){
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 long NinjamJamRoomController::generateNewTrackID(){
-    static long TRACK_IDS = 0;
-    long newID = TRACK_IDS;
-    TRACK_IDS++;
-    return newID;
+    //QMutexLocker locker(&mutex);
+    static long TRACK_IDS = 100;
+    return TRACK_IDS++;
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QString NinjamJamRoomController::getUniqueKey(Ninjam::UserChannel channel){
@@ -103,12 +104,20 @@ void NinjamJamRoomController::addTrack(Ninjam::User user, Ninjam::UserChannel ch
         return;
     }
     NinjamTrackNode* trackNode = new NinjamTrackNode(generateNewTrackID());
+
+    bool trackAdded = false;
     {
         QMutexLocker locker(&mutex);
         trackNodes.insert(getUniqueKey(channel), trackNode);
-        mainController->addTrack(trackNode->getID(), trackNode);
+        trackAdded = mainController->addTrack(trackNode->getID(), trackNode);
+    }//release the mutex before emit the signal
+    if(trackAdded){
+        emit channelAdded(user,  channel, trackNode->getID());
     }
-    emit channelAdded(user,  channel, trackNode->getID());
+    else{
+        trackNodes.remove(getUniqueKey(channel));
+        delete trackNode;
+    }
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamJamRoomController::removeTrack(Ninjam::User user, Ninjam::UserChannel channel){
@@ -148,13 +157,14 @@ void NinjamJamRoomController::stop(){
         QObject::disconnect(ninjamService, SIGNAL(serverBpmChanged(short)), this, SLOT(on_ninjamServerBpmChanged(short)));
         QObject::disconnect(ninjamService, SIGNAL(serverBpiChanged(short,short)), this, SLOT(on_ninjamServerBpiChanged(short,short)));
         QObject::disconnect(ninjamService, SIGNAL(audioIntervalCompleted(Ninjam::User,int,QByteArray)), this, SLOT(on_ninjamAudiointervalCompleted(Ninjam::User,int,QByteArray)));
-        QObject::disconnect(ninjamService, SIGNAL(audioIntervalDownloading(Ninjam::User,int,int)), this, SLOT(on_ninjamAudiointervalDownloading(Ninjam::User,int,int)));
-        QObject::disconnect(ninjamService, SIGNAL(userLeaveTheJam(Ninjam::User)), this, SLOT(on_ninjamUserLeave(Ninjam::User)));
+        QObject::disconnect(ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(on_ninjamDisconnectedFromServer(Ninjam::Server)));
 
         QObject::disconnect(ninjamService, SIGNAL(userChannelCreated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelCreated(Ninjam::User, Ninjam::UserChannel)));
         QObject::disconnect(ninjamService, SIGNAL(userChannelRemoved(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelRemoved(Ninjam::User, Ninjam::UserChannel)));
         QObject::disconnect(ninjamService, SIGNAL(userChannelUpdated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelUpdated(Ninjam::User, Ninjam::UserChannel)));
-        QObject::disconnect(ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(on_ninjamDisconnectedFromServer(Ninjam::Server)));
+        QObject::disconnect(ninjamService, SIGNAL(audioIntervalDownloading(Ninjam::User,int,int)), this, SLOT(on_ninjamAudiointervalDownloading(Ninjam::User,int,int)));
+
+        QObject::disconnect(ninjamService, SIGNAL(chatMessageReceived(Ninjam::User,QString)), this, SIGNAL(chatMsgReceived(Ninjam::User,QString)));
 
         ninjamService->disconnectFromServer();
 
@@ -253,7 +263,6 @@ void NinjamJamRoomController::processScheduledChanges(){
         this->metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
         emit currentBpmChanged((currentBpm)); //ui->topPanel->setBpm(currentBpm);
     }
-    qDebug() << "SAMPLES IN INTERVAL: " << this->samplesInInterval;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 long NinjamJamRoomController::getSamplesPerBeat(){

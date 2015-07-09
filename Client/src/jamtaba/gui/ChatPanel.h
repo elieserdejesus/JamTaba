@@ -22,8 +22,8 @@ public:
 signals:
     void userSendingNewMessage(QString msg);
 private slots:
-    void chatTextEditionFinished();
-    void verticalScrollBarRangeChanged(int min, int max);
+    void on_chatTextEditionFinished();
+    void on_verticalScrollBarRangeChanged(int min, int max);
     void on_buttonClear_clicked();
 
 private:

@@ -77,7 +77,7 @@ public:
 
     virtual void process(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
 
-    void addTrack(long trackID, Audio::AudioNode* trackNode);
+    bool addTrack(long trackID, Audio::AudioNode* trackNode);
     void removeTrack(long trackID);
 
     void playRoomStream(Login::RoomInfo roomInfo);

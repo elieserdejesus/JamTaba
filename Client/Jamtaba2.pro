@@ -1,29 +1,19 @@
-#será que o resampler não acumula as amostras? Eu estou achando que sim. Se
-#eu passar out.frameLenght para ele mas o buffer resampleado tiver out.lenght + 1 samples
-#eu acho que ele vai guardar essa última amostra no buffer interno, mas eu teria
-#que sair do loop do resampler exatamente em out.lenght
-
-
-#quando saio e volto para a sala o metronomo fica baixinho, quando mexo no fader volta ao normal
-#também aconteceu de voltar para a sala e a pista do reaninjam ficar sem os picos, talvez seja o mesmo problema que eu vi na sala pública
-
-#tentar não parar o driver de áudio quando saio da sala
-
-#chat ninjam
-    #problema nos caracteres especiais - tenho que testar se o envio está correto e depois testar a recepção
-    #mensagem de voto fica sem o nome do sender
-    #vi que as mensagens do ninbot chegam como ninbot.com, e não como ninbot, por isso não são reconhecidas como mensagens do bot
-
 # a mensagem de crowded está errada?
-
-# quando clico para ouvir uma outra sala não está resetando o plot da sala que eu estava ouvindo
-
-#de vez em quando buga quando chega o primeiro intervalo e ainda não sei porque. Isso nos testes locais, não vi mais o problema com os servers públicos
 
 #como serão as entradas? Como será a criação do canal de backtracking?
 #acho que faz sentido selecionar uma entrada como sendo audio ou midi, stereo ou mono
 
 #transmissão do áudio
+
+
+#será que o resampler não acumula as amostras? Eu estou achando que sim. Se
+#eu passar out.frameLenght para ele mas o buffer resampleado tiver out.lenght + 1 samples
+#eu acho que ele vai guardar essa última amostra no buffer interno, mas eu teria
+#que sair do loop do resampler exatamente em out.lenght
+
+#acho que quando fico alternando entre os streams das salas não está funcionando muito bem, parece que o botão ficou pressionado.
+
+#acho que o stream do ninjamer não está rolando
 
 # MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais. Testar com o controlador AKAI também para ver
 
@@ -49,6 +39,8 @@
 
 #tem um bug quando o bpi está em 4
 
+#chat ninjam
+    #problema nos caracteres especiais - tenho que testar se o envio está correto e depois testar a recepção
 
 # feature - botão para ouvir o stream dos server e ver como está a mix geral
 

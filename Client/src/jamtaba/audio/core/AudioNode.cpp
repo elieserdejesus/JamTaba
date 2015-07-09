@@ -63,7 +63,7 @@ void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out){
     internalBuffer.setFrameLenght(out.getFrameLenght());
     {
         QMutexLocker locker(&mutex);
-        foreach (AudioNode* node, connections) {
+        foreach (AudioNode* node, connections) {//ask connected nodes to generate audio
             node->processReplacing(in, internalBuffer);
         }
     }
@@ -83,8 +83,8 @@ void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out){
 AudioNode::AudioNode()
      :
       internalBuffer(2),
-       lastPeak(0, 0),
-       activated(true),
+      lastPeak(0, 0),
+      activated(true),
       muted(false),
       soloed(false),
       gain(1),

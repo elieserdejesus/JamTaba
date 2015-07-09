@@ -93,12 +93,11 @@ void MetronomeTrackNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
     int nextBeatSample = beatPosition + out.getFrameLenght();
     int internalOffset = 0;
     int clickSoundBufferOffset = beatPosition;
-    if(nextBeatSample > samplesPerBeat){
-        samplesBuffer = getBuffer(currentBeat + 1);//iniciar o próximo beat nesse callback
+    if(nextBeatSample > samplesPerBeat){//next beat starting in this audio buffer?
+        samplesBuffer = getBuffer(currentBeat + 1);
         internalOffset = samplesPerBeat - beatPosition;
         samplesToCopy = std::min( nextBeatSample - samplesPerBeat, (long)samplesBuffer->getFrameLenght());
         clickSoundBufferOffset = 0;
-
     }
     if(samplesToCopy > 0){
         internalBuffer.set(*samplesBuffer, clickSoundBufferOffset, samplesToCopy, internalOffset);

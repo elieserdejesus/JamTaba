@@ -108,9 +108,9 @@ void MainFrame::on_tabCloseRequest(int index){
     if(index > 0){//the first tab is not closable
         showBusyDialog("disconnecting ...");
         if(mainController->getNinjamController()->isRunning()){
-            mainController->getAudioDriver()->stop();
+            //mainController->getAudioDriver()->stop();
             mainController->getNinjamController()->stop();//disconnect from server
-            mainController->getAudioDriver()->start();
+            //mainController->getAudioDriver()->start();
         }
     }
 }
@@ -228,6 +228,11 @@ void MainFrame::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
 
 //+++++++++++++++++++++++++++++++++++++
 void MainFrame::on_startingRoomStream(Login::RoomInfo roomInfo){
+    //clear all plots
+    foreach (JamRoomViewPanel* viewPanel, this->roomViewPanels.values()) {
+        viewPanel->clearPeaks();
+    }
+
     if(roomInfo.hasStream()){//just in case...
         mainController->playRoomStream(roomInfo);
     }
