@@ -108,7 +108,9 @@ void MainFrame::on_tabCloseRequest(int index){
     if(index > 0){//the first tab is not closable
         showBusyDialog("disconnecting ...");
         if(mainController->getNinjamController()->isRunning()){
-            mainController->getNinjamController()->stop();
+            mainController->getAudioDriver()->stop();
+            mainController->getNinjamController()->stop();//disconnect from server
+            mainController->getAudioDriver()->start();
         }
     }
 }
@@ -248,15 +250,15 @@ void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo){
 void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
     hideBusyDialog();
 
-    if(ninjamWindow){
-        ninjamWindow->deleteLater();
-    }
+//    if(ninjamWindow){
+//        ninjamWindow->deleteLater();
+//    }
     ninjamWindow = new NinjamRoomWindow(ui.tabWidget, roomInfo, mainController);
     int index = ui.tabWidget->addTab(ninjamWindow, roomInfo.getName());
     ui.tabWidget->setCurrentIndex(index);
 
     //add metronome track
-    metronomeTrackView = new MetronomeTrackView(this, mainController);
+    metronomeTrackView = new MetronomeTrackView(this, mainController, NinjamJamRoomController::METRONOME_TRACK_ID);
     ui.localTracksLayout->addWidget(metronomeTrackView);
 
     //add the chat panel in main window
@@ -269,9 +271,18 @@ void MainFrame::on_exitedFromRoom(bool normalDisconnection){
     if(metronomeTrackView){
         ui.localTracksLayout->removeWidget(metronomeTrackView);
     }
+
+    //remove the jam room tab (the last tab)
     if(ui.tabWidget->count() > 1){
-        ui.tabWidget->removeTab(1);//remove the last tab
+        ui.tabWidget->widget(1)->deleteLater();//delete the room window
+        ui.tabWidget->removeTab(1);
     }
+
+    if(ui.chatTabWidget->count() > 0){
+        ui.chatTabWidget->widget(0)->deleteLater();
+        ui.chatTabWidget->removeTab(0);
+    }
+
     if(!normalDisconnection){
         QMessageBox::warning(this, "Warning", "Disconnected from server!", QMessageBox::NoButton, QMessageBox::NoButton);
     }
@@ -286,11 +297,10 @@ void MainFrame::timerEvent(QTimerEvent *){
     localTrackView->setPeaks(inputPeaks.getLeft(), inputPeaks.getRight());
 
     //update metronome peaks
-    if(mainController->getNinjamController()->isRunning()){
+    if(mainController->isPlayingInNinjamRoom()){
         if(metronomeTrackView){
             AudioPeak peaks = mainController->getTrackPeak(metronomeTrackView->getTrackID());
             metronomeTrackView->setPeaks(peaks.getLeft(), peaks.getRight());
-            //qDebug() << peaks.left << ", " << peaks.right;
         }
 
         //update tracks peaks
@@ -372,16 +382,17 @@ MainFrame::~MainFrame()
 void MainFrame::on_preferencesClicked()
 {
     Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
-    AudioDriver* audioDriver= mainController->getAudioDriver();
+    AudioDriver* audioDriver = mainController->getAudioDriver();
     audioDriver->stop();
     midiDriver->stop();
     PreferencesDialog dialog(mainController, this);
     connect(&dialog, SIGNAL(ioChanged(int,int,int,int,int,int,int,int)), this, SLOT(on_IOPropertiesChanged(int, int,int,int,int,int,int,int)));
     dialog.exec();
+
     midiDriver->start();
     audioDriver->start();
 
-    //audio driver parameters are changed in on_audioIOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.
+    //audio driver parameters are changed in on_IOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.
 }
 
 void MainFrame::on_IOPropertiesChanged(int midiDeviceIndex, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)

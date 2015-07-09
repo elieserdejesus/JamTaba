@@ -14,7 +14,9 @@
 
 namespace Audio{
 
-PortAudioDriver::PortAudioDriver(){
+PortAudioDriver::PortAudioDriver(AudioDriverListener *audioDriverListener)
+    :AudioDriver(audioDriverListener)
+{
     //initialize portaudio using default devices, mono input and try estereo output if possible
     PaError error = Pa_Initialize();
     if (error != paNoError){
@@ -25,7 +27,8 @@ PortAudioDriver::PortAudioDriver(){
     initPortAudio(Pa_GetDefaultInputDevice(), Pa_GetDefaultOutputDevice(), 0, 0, 0, outputs > 1 ? 1 : 0 , 44100, paFramesPerBufferUnspecified);
 }
 
-PortAudioDriver::PortAudioDriver(int inputDeviceIndex, int outputDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize )
+PortAudioDriver::PortAudioDriver(AudioDriverListener* audioDriverListener, int inputDeviceIndex, int outputDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize )
+    :AudioDriver(audioDriverListener)
 {
     //initialize port audio using custom devices and I/O
     initPortAudio(inputDeviceIndex, outputDeviceIndex, firstInputIndex, lastInputIndex, firstOutputIndex, lastOutputIndex, sampleRate, bufferSize);
@@ -39,7 +42,7 @@ void PortAudioDriver::initPortAudio(int inputDeviceIndex, int outputDeviceIndex,
         qDebug() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
         throw std::runtime_error(Pa_GetErrorText(error));
     }
-    paStream = inputBuffer = outputBuffer = NULL;
+    paStream = nullptr;// inputBuffer = outputBuffer = NULL;
 
     //set input device
     if(inputDeviceIndex < 0 || inputDeviceIndex >= Pa_GetDeviceCount()){
@@ -93,31 +96,33 @@ PortAudioDriver::~PortAudioDriver()
 
 //this method just convert portaudio void* inputBuffer to a float[][] buffer, and do the same for outputs
 void PortAudioDriver::translatePortAudioCallBack(const void *in, void *out, unsigned long framesPerBuffer){
-    if(framesPerBuffer > MAX_BUFFERS_LENGHT){
-        qFatal("AUDIO ERROR: framesPerBuffer > BUFFERS_LENGHT");
-    }
+//    if(framesPerBuffer > MAX_BUFFERS_LENGHT){
+//        qFatal("AUDIO ERROR: framesPerBuffer > BUFFERS_LENGHT");
+//    }
 
     //prepare buffers and expose then do application process
-    inputBuffer->setFrameLenght(framesPerBuffer);
-    outputBuffer->setFrameLenght(framesPerBuffer);
+    inputBuffer.setFrameLenght(framesPerBuffer);
+    outputBuffer.setFrameLenght(framesPerBuffer);
 
     float* inputs = (float*)in;
     for(unsigned int i=0; i < framesPerBuffer; i++){
         for (int c = 0; c < maxInputChannels; c++){
-            inputBuffer->set(c, i, *inputs++);
+            inputBuffer.set(c, i, *inputs++);
         }
     }
 
-    outputBuffer->zero();
+    outputBuffer.zero();
 
     //all application audio processing is computed here
-    fireDriverCallback(*inputBuffer, *outputBuffer);
+    if(audioDriverListener){
+        audioDriverListener->process(inputBuffer, outputBuffer);
+    }
 
     //convert application output buffers to portaudio format
     float* outputs = (float*)out;
     for(unsigned int i=0; i < framesPerBuffer; i++){
         for (int c = 0; c < maxOutputChannels; c++){
-            *outputs++ = outputBuffer->get(c, i);
+            *outputs++ = outputBuffer.get(c, i);
         }
     }
 }
@@ -141,7 +146,7 @@ void PortAudioDriver::start(){
     int maxOutputs = Pa_GetDeviceInfo(outputDeviceIndex)->maxOutputChannels;
     int maxInputs = Pa_GetDeviceInfo(inputDeviceIndex)->maxInputChannels;
 
-    recreateBuffers(MAX_BUFFERS_LENGHT, maxInputs, maxOutputs);
+    recreateBuffers( maxInputs, maxOutputs);
 
     unsigned long framesPerBuffer = bufferSize;// paFramesPerBufferUnspecified;
     PaSampleFormat sampleFormat = paFloat32;// | paNonInterleaved;
@@ -184,8 +189,7 @@ void PortAudioDriver::start(){
             throw std::runtime_error(Pa_GetErrorText(error));
         }
     }
-    fireDriverStarted();
-
+    emit started();
 }
 
 void PortAudioDriver::stop(){
@@ -196,7 +200,7 @@ void PortAudioDriver::stop(){
                 qDebug() << Pa_GetErrorText(error);
                 throw std::runtime_error(std::string(Pa_GetErrorText(error)));
             }
-            fireDriverStopped();
+            emit stopped(); //fireDriverStopped();
         }
     }
 }

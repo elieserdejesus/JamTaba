@@ -64,7 +64,7 @@ public:
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 LoginService::LoginService(QObject* parent)
-     : QObject(parent), connected(false), pendingReply(nullptr)
+     : QObject(parent), pendingReply(nullptr), connected(false)
 {
 
 }

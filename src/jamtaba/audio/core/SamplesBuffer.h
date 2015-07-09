@@ -9,16 +9,11 @@ namespace Audio {
 
 
 class SamplesBuffer{
-
     friend class AudioNodeProcessor;
-
-//public:
-    //deixei public porque o ogg decoder não funcionou de outra maneira, tive que acessar diretamente o endereço desse array
 private:
     unsigned int channels;
     unsigned int frameLenght;
 
-    //float** samples;//poderia deixar fixo com 2 canais e 4096 samples
     std::vector< std::vector<float>> samples;
 
     inline bool isMono() const {return channels == 1;}
@@ -26,14 +21,13 @@ private:
     inline bool channelIsValid(unsigned int channel) const{return channel < channels;}
     inline bool sampleIndexIsValid(unsigned int sampleIndex) const{return sampleIndex < frameLenght;}
 
-    //void computePeaks();
 
-    SamplesBuffer(const SamplesBuffer& other);
     SamplesBuffer& operator=(const SamplesBuffer& other);
 
 public:
     SamplesBuffer(unsigned int channels);
     SamplesBuffer(unsigned int channels, unsigned int frameLenght);
+    SamplesBuffer(const SamplesBuffer& other);
     ~SamplesBuffer();
 
     static const SamplesBuffer ZERO_BUFFER;//a static buffer with zero samples

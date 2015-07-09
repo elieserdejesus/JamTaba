@@ -6,7 +6,7 @@
 
 Resampler::Resampler(){
     libHandler = resample_open(0, 44100.0/192000.0, 192000.0/44100.0);
-    qWarning() << "criando resampler";
+    //qWarning() << "criando resampler";
 }
 
 Resampler::~Resampler(){
@@ -17,8 +17,21 @@ int Resampler::process(const float *in, int inLength, int inSampleRate, float *o
     double factor = (double)outSampleRate/(double)inSampleRate;
     int inOffset = 0;
     int totalResampled = 0;
-    while(inOffset < inLength){
-        totalResampled += resample_process(libHandler, factor, (float*)(in + inOffset), inLength, 0, &inOffset, out, outLenght);
+    int resampled = 0;
+    do{
+        int inBlock = inLength - inOffset;
+        resampled = resample_process(libHandler,
+                                           factor,
+                                           (float*)(in + inOffset), //input
+                                           inBlock,
+                                           0,//last flag
+                                            &inOffset, //inBufferUsed
+                                           out + totalResampled, //out buffer
+                                           outLenght - totalResampled );//outBufferLen
+        if(resampled >= 0){
+            totalResampled += resampled;
+        }
     }
+    while(resampled >= 0 && totalResampled < outLenght);
     return totalResampled;
 }

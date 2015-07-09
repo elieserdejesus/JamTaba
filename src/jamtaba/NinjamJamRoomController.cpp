@@ -15,26 +15,33 @@
 #include "audio/samplesbufferrecorder.h"
 
 using namespace Controller;
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NinjamJamRoomController::NinjamJamRoomController(Controller::MainController* mainController)
     :mainController(mainController),
-    metronomeTrackNode(new Audio::MetronomeTrackNode(":/click.wav", mainController->getAudioDriver()->getSampleRate())),
+    metronomeTrackNode(createMetronomeTrackNode( mainController->getAudioDriver()->getSampleRate())),
     intervalPosition(0),
     samplesInInterval(0),
     newBpi(-1), newBpm(-1),
     currentBpi(0),
-    currentBpm(0),
-    recorder("record.wav", mainController->getAudioDriver()->getSampleRate())
+    currentBpm(0)
+    //recorder("record.wav", mainController->getAudioDriver()->getSampleRate())
 {
     running = false;
+    QObject::connect( mainController->getAudioDriver(), SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
+    QObject::connect( mainController->getAudioDriver(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
+}
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Audio::MetronomeTrackNode* NinjamJamRoomController::createMetronomeTrackNode(int sampleRate){
+    return new Audio::MetronomeTrackNode(":/click.wav", sampleRate);
 }
 
-NinjamJamRoomController::~NinjamJamRoomController()
-{
+//+++++++++++++++
+NinjamJamRoomController::~NinjamJamRoomController(){
     delete metronomeTrackNode;
-
+    QObject::disconnect( mainController->getAudioDriver(), SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
+    QObject::disconnect( mainController->getAudioDriver(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
 }
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamJamRoomController::start(const Ninjam::Server& server){
     //schedule an update in internal attributes
     newBpi = server.getBpi();
@@ -47,21 +54,21 @@ void NinjamJamRoomController::start(const Ninjam::Server& server){
         //mainController->addTrack(-5, osc);
         //mainController->setTrackLevel(-5, 0.6);
 
-        mainController->addTrack(-1, this->metronomeTrackNode);
+        mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
 
         this->intervalPosition  = 0;
         this->running = true;
 
         Ninjam::Service* ninjamService = Ninjam::Service::getInstance();
-        QObject::connect(ninjamService, SIGNAL(serverBpmChanged(short)), this, SLOT(ninjamServerBpmChanged(short)));
-        QObject::connect(ninjamService, SIGNAL(serverBpiChanged(short,short)), this, SLOT(ninjamServerBpiChanged(short,short)));
-        QObject::connect(ninjamService, SIGNAL(audioIntervalCompleted(Ninjam::User,int,QByteArray)), this, SLOT(ninjamAudiointervalCompleted(Ninjam::User,int,QByteArray)));
-        QObject::connect(ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(ninjamDisconnectedFromServer(Ninjam::Server)));
+        QObject::connect(ninjamService, SIGNAL(serverBpmChanged(short)), this, SLOT(on_ninjamServerBpmChanged(short)));
+        QObject::connect(ninjamService, SIGNAL(serverBpiChanged(short,short)), this, SLOT(on_ninjamServerBpiChanged(short,short)));
+        QObject::connect(ninjamService, SIGNAL(audioIntervalCompleted(Ninjam::User,int,QByteArray)), this, SLOT(on_ninjamAudiointervalCompleted(Ninjam::User,int,QByteArray)));
+        QObject::connect(ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(on_ninjamDisconnectedFromServer(Ninjam::Server)));
 
-        QObject::connect(ninjamService, SIGNAL(userChannelCreated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelCreated(Ninjam::User, Ninjam::UserChannel)));
-        QObject::connect(ninjamService, SIGNAL(userChannelRemoved(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelRemoved(Ninjam::User, Ninjam::UserChannel)));
-        QObject::connect(ninjamService, SIGNAL(userChannelUpdated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelUpdated(Ninjam::User, Ninjam::UserChannel)));
-        QObject::connect(ninjamService, SIGNAL(audioIntervalDownloading(Ninjam::User,int,int)), this, SLOT(ninjamAudiointervalDownloading(Ninjam::User,int,int)));
+        QObject::connect(ninjamService, SIGNAL(userChannelCreated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelCreated(Ninjam::User, Ninjam::UserChannel)));
+        QObject::connect(ninjamService, SIGNAL(userChannelRemoved(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelRemoved(Ninjam::User, Ninjam::UserChannel)));
+        QObject::connect(ninjamService, SIGNAL(userChannelUpdated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelUpdated(Ninjam::User, Ninjam::UserChannel)));
+        QObject::connect(ninjamService, SIGNAL(audioIntervalDownloading(Ninjam::User,int,int)), this, SLOT(on_ninjamAudiointervalDownloading(Ninjam::User,int,int)));
 
         QObject::connect(ninjamService, SIGNAL(chatMessageReceived(Ninjam::User,QString)), this, SIGNAL(chatMsgReceived(Ninjam::User,QString)));
 
@@ -75,11 +82,10 @@ void NinjamJamRoomController::start(const Ninjam::Server& server){
 
     }
 }
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamJamRoomController::sendChatMessage(QString msg){
     Ninjam::Service::getInstance()->sendChatMessageToServer(msg);
 }
-
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 long NinjamJamRoomController::generateNewTrackID(){
     static long TRACK_IDS = 0;
@@ -87,11 +93,11 @@ long NinjamJamRoomController::generateNewTrackID(){
     TRACK_IDS++;
     return newID;
 }
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QString NinjamJamRoomController::getUniqueKey(Ninjam::UserChannel channel){
     return channel.getUserFullName() + QString::number(channel.getIndex());
 }
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamJamRoomController::addTrack(Ninjam::User user, Ninjam::UserChannel channel){
     if(user.isBot()){
         return;
@@ -104,8 +110,7 @@ void NinjamJamRoomController::addTrack(Ninjam::User user, Ninjam::UserChannel ch
     }
     emit channelAdded(user,  channel, trackNode->getID());
 }
-
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamJamRoomController::removeTrack(Ninjam::User user, Ninjam::UserChannel channel){
     //qDebug() << "Removendo track " << channel.getName() << " do user " << user.getName();
     QMutexLocker locker(&mutex);
@@ -140,18 +145,27 @@ void NinjamJamRoomController::stop(){
         this->running = false;
 
         Ninjam::Service* ninjamService = Ninjam::Service::getInstance();
-        QObject::disconnect(ninjamService, SIGNAL(serverBpmChanged(short)), this, SLOT(ninjamServerBpmChanged(short)));
-        QObject::disconnect(ninjamService, SIGNAL(serverBpiChanged(short,short)), this, SLOT(ninjamServerBpiChanged(short,short)));
-        QObject::disconnect(ninjamService, SIGNAL(audioIntervalCompleted(Ninjam::User,int,QByteArray)), this, SLOT(ninjamAudiointervalCompleted(Ninjam::User,int,QByteArray)));
-        QObject::disconnect(ninjamService, SIGNAL(audioIntervalDownloading(Ninjam::User,int,int)), this, SLOT(ninjamAudiointervalDownloading(Ninjam::User,int,int)));
-        QObject::disconnect(ninjamService, SIGNAL(userLeaveTheJam(Ninjam::User)), this, SLOT(ninjamUserLeave(Ninjam::User)));
+        QObject::disconnect(ninjamService, SIGNAL(serverBpmChanged(short)), this, SLOT(on_ninjamServerBpmChanged(short)));
+        QObject::disconnect(ninjamService, SIGNAL(serverBpiChanged(short,short)), this, SLOT(on_ninjamServerBpiChanged(short,short)));
+        QObject::disconnect(ninjamService, SIGNAL(audioIntervalCompleted(Ninjam::User,int,QByteArray)), this, SLOT(on_ninjamAudiointervalCompleted(Ninjam::User,int,QByteArray)));
+        QObject::disconnect(ninjamService, SIGNAL(audioIntervalDownloading(Ninjam::User,int,int)), this, SLOT(on_ninjamAudiointervalDownloading(Ninjam::User,int,int)));
+        QObject::disconnect(ninjamService, SIGNAL(userLeaveTheJam(Ninjam::User)), this, SLOT(on_ninjamUserLeave(Ninjam::User)));
 
-        QObject::disconnect(ninjamService, SIGNAL(userChannelCreated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelCreated(Ninjam::User, Ninjam::UserChannel)));
-        QObject::disconnect(ninjamService, SIGNAL(userChannelRemoved(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelRemoved(Ninjam::User, Ninjam::UserChannel)));
-        QObject::disconnect(ninjamService, SIGNAL(userChannelUpdated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(ninjamUserChannelUpdated(Ninjam::User, Ninjam::UserChannel)));
-        QObject::disconnect(ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(ninjamDisconnectedFromServer(Ninjam::Server)));
+        QObject::disconnect(ninjamService, SIGNAL(userChannelCreated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelCreated(Ninjam::User, Ninjam::UserChannel)));
+        QObject::disconnect(ninjamService, SIGNAL(userChannelRemoved(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelRemoved(Ninjam::User, Ninjam::UserChannel)));
+        QObject::disconnect(ninjamService, SIGNAL(userChannelUpdated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelUpdated(Ninjam::User, Ninjam::UserChannel)));
+        QObject::disconnect(ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(on_ninjamDisconnectedFromServer(Ninjam::Server)));
 
         ninjamService->disconnectFromServer();
+
+        QMutexLocker locker(&mutex);
+        mainController->removeTrack(METRONOME_TRACK_ID);//remove metronome
+        foreach(NinjamTrackNode* trackNode, trackNodes.values()){
+            mainController->removeTrack(trackNode->getID());
+            trackNode->deactivate();
+        }
+        trackNodes.clear();
+
     }
 }
 
@@ -252,38 +266,30 @@ long NinjamJamRoomController::computeTotalSamplesInInterval(){
     return (long)(sampleRate * intervalPeriod / 1000.0);
 }
 
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //ninjam events
 
-void NinjamJamRoomController::ninjamDisconnectedFromServer(Ninjam::Server server){
-    Q_UNUSED(server);
-    QMutexLocker locker(&mutex);
-    mainController->removeTrack(-1);//remove metronome
-    foreach(NinjamTrackNode* trackNode, trackNodes.values()){
-        mainController->removeTrack(trackNode->getID());
-        trackNode->deactivate();
-    }
-    trackNodes.clear();
+void NinjamJamRoomController::on_ninjamDisconnectedFromServer(Ninjam::Server server){
+
     //emit disconnected(normalDisconnection);
 
 }
 
-void NinjamJamRoomController::ninjamUserLeave(Ninjam::User user){
+void NinjamJamRoomController::on_ninjamUserLeave(Ninjam::User user){
      foreach (Ninjam::UserChannel* channel, user.getChannels()) {
         removeTrack(user, *channel);
      }
 }
 
-void NinjamJamRoomController::ninjamUserChannelCreated(Ninjam::User user, Ninjam::UserChannel channel){
+void NinjamJamRoomController::on_ninjamUserChannelCreated(Ninjam::User user, Ninjam::UserChannel channel){
     addTrack(user, channel);
 }
 
-void NinjamJamRoomController::ninjamUserChannelRemoved(Ninjam::User user, Ninjam::UserChannel channel){
+void NinjamJamRoomController::on_ninjamUserChannelRemoved(Ninjam::User user, Ninjam::UserChannel channel){
     removeTrack(user, channel);
 }
 
-void NinjamJamRoomController::ninjamUserChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel){
+void NinjamJamRoomController::on_ninjamUserChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel){
     QString uniqueKey = getUniqueKey(channel);
     QMutexLocker locker(&mutex);
     if(trackNodes.contains(uniqueKey)){
@@ -293,17 +299,17 @@ void NinjamJamRoomController::ninjamUserChannelUpdated(Ninjam::User user, Ninjam
 
 }
 
-void NinjamJamRoomController::ninjamServerBpiChanged(short newBpi, short /*oldBpi*/){
+void NinjamJamRoomController::on_ninjamServerBpiChanged(short newBpi, short /*oldBpi*/){
     //this->samplesInInterval = computeTotalSamplesInInterval();
     this->newBpi = newBpi;
 }
 
-void NinjamJamRoomController::ninjamServerBpmChanged(short newBpm){
+void NinjamJamRoomController::on_ninjamServerBpmChanged(short newBpm){
     //this->metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
     this->newBpm = newBpm;
 }
 
-void NinjamJamRoomController::ninjamAudiointervalCompleted(Ninjam::User user, int channelIndex, QByteArray encodedAudioData){
+void NinjamJamRoomController::on_ninjamAudiointervalCompleted(Ninjam::User user, int channelIndex, QByteArray encodedAudioData){
     //qDebug() << "audio available  Thread ID: " << QThread::currentThreadId();
     Ninjam::UserChannel channel = user.getChannel(channelIndex);
     QString channelKey = getUniqueKey(channel);
@@ -317,7 +323,34 @@ void NinjamJamRoomController::ninjamAudiointervalCompleted(Ninjam::User user, in
     }
 }
 
-void NinjamJamRoomController::ninjamAudiointervalDownloading(Ninjam::User user, int channelIndex, int downloadedBytes){
+void NinjamJamRoomController::on_audioDriverStopped(){
+    QMutexLocker locker(&mutex);
+    foreach (NinjamTrackNode* trackNode, this->trackNodes.values()) {
+        trackNode->discardIntervals();
+    }
+    intervalPosition = 0;
+}
+
+void NinjamJamRoomController::on_audioDriverSampleRateChanged(int newSampleRate){
+    Q_UNUSED(newSampleRate);
+    this->samplesInInterval = computeTotalSamplesInInterval();
+
+    //remove the old metronome
+    mainController->removeTrack(METRONOME_TRACK_ID);
+    Audio::MetronomeTrackNode* oldMetronomeTrack = this->metronomeTrackNode;
+
+    //recreate metronome using the new sample rate
+    this->metronomeTrackNode = createMetronomeTrackNode(newSampleRate);
+    this->metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
+    this->metronomeTrackNode->setGain(oldMetronomeTrack->getGain());
+    this->metronomeTrackNode->setPan(oldMetronomeTrack->getPan());
+    mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
+
+    delete oldMetronomeTrack;
+}
+
+void NinjamJamRoomController::on_ninjamAudiointervalDownloading(Ninjam::User user, int channelIndex, int downloadedBytes){
+    Q_UNUSED(downloadedBytes);
     Ninjam::UserChannel channel = user.getChannel(channelIndex);
     QString channelKey = getUniqueKey(channel);
     QMutexLocker locker(&mutex);

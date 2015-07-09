@@ -189,7 +189,7 @@ void RoomStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out){
 
 //++++++++++++++++++
 
-AudioFileStreamerNode::AudioFileStreamerNode(QString file, int sampleRate)
+AudioFileStreamerNode::AudioFileStreamerNode(QString file)
     :   AbstractMp3Streamer( new Mp3DecoderMiniMp3())
 {
     setStreamPath(file);

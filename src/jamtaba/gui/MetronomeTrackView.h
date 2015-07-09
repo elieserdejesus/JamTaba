@@ -6,7 +6,7 @@
 class MetronomeTrackView : public BaseTrackView
 {
 public:
-    MetronomeTrackView(QWidget *parent, Controller::MainController* mainController);
+    MetronomeTrackView(QWidget *parent, Controller::MainController* mainController, long metronomeID);
     ~MetronomeTrackView();
 };
 

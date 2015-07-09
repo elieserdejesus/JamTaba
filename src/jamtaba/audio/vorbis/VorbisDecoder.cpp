@@ -35,6 +35,9 @@ int VorbisDecoder::consumeTo(void *oggOutBuffer, int bytesToConsume){
         memcpy(oggOutBuffer, vorbisInput.data(), len);
         vorbisInput.remove(0, len);
     }
+//    else{
+//        qCritical() << "len " << len;
+//    }
     return len;
 }
 
@@ -73,6 +76,7 @@ const Audio::SamplesBuffer &VorbisDecoder::decode(int maxSamplesToDecode){
 void VorbisDecoder::reset(){
     initialize();
     decodedSamples = 0;
+    //qWarning() << "reset";
 }
 //++++++++++++++++++++++++++++++++++++++++++++++
 void VorbisDecoder::setInput(QByteArray vorbisData){

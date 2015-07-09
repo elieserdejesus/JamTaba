@@ -96,6 +96,7 @@ QColor ChatPanel::getUserColor(QString userName) {
 ChatPanel::~ChatPanel()
 {
     delete ui;
+    qWarning() << "Destrutor ChatPanel";
 }
 
 void ChatPanel::on_buttonClear_clicked()

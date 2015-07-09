@@ -11,6 +11,7 @@ class MetronomeTrackNode : public Audio::AudioNode
 {
 public:
     MetronomeTrackNode(QString metronomeWaveFile, int localSampleRate);
+
     ~MetronomeTrackNode();
     virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
     void setSamplesPerBeat(long samplesPerBeat);

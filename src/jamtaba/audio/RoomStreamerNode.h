@@ -76,7 +76,7 @@ protected:
     void initialize(QString streamPath);
 
 public:
-    explicit AudioFileStreamerNode(QString file, int sampleRate);
+    explicit AudioFileStreamerNode(QString file);
     ~AudioFileStreamerNode();
     virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out);
 

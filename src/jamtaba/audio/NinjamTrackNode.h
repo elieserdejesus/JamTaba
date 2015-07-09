@@ -23,6 +23,7 @@ public:
     virtual bool needResamplingFor(int targetSampleRate) const;
     virtual int getSampleRate() const;
     inline bool isPlaying() const{return playing;}
+    void discardIntervals();
 private:
     bool playing;//playing one interval or waiting for more vorbis data to decode
     VorbisDecoder decoder;

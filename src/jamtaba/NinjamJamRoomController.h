@@ -40,6 +40,8 @@ public:
 
     void sendChatMessage(QString msg);
 
+    static const long METRONOME_TRACK_ID = -123; //just a number :)
+
 signals:
     void currentBpiChanged(int newBpi);
     void currentBpmChanged(int newBpm);
@@ -55,12 +57,14 @@ signals:
 private:
     Controller::MainController* mainController;
     Audio::MetronomeTrackNode* metronomeTrackNode;
+
+
     QMap<QString, NinjamTrackNode*> trackNodes;
 
     static QString getUniqueKey(Ninjam::UserChannel channel);
 
 
-    SamplesBufferRecorder recorder;
+    //SamplesBufferRecorder recorder;
 
     void addTrack(Ninjam::User user, Ninjam::UserChannel channel);
     void removeTrack(Ninjam::User, Ninjam::UserChannel channel);
@@ -77,6 +81,8 @@ private:
     int currentBpi;
     int currentBpm;
 
+    QMutex mutex;
+
     long computeTotalSamplesInInterval();
     long getSamplesPerBeat();
 
@@ -85,19 +91,23 @@ private:
 
     static long generateNewTrackID();
 
-    QMutex mutex;
+    static Audio::MetronomeTrackNode* createMetronomeTrackNode(int sampleRate);
 
 private slots:
     //ninjam events
-    void ninjamServerBpmChanged(short newBpm);
-    void ninjamServerBpiChanged(short oldBpi, short newBpi);
-    void ninjamAudiointervalCompleted(Ninjam::User user, int channelIndex, QByteArray encodedAudioData);
-    void ninjamAudiointervalDownloading(Ninjam::User user, int channelIndex, int downloadedBytes);
-    void ninjamUserChannelCreated(Ninjam::User user, Ninjam::UserChannel channel);
-    void ninjamUserChannelRemoved(Ninjam::User user, Ninjam::UserChannel channel);
-    void ninjamUserChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel);
-    void ninjamUserLeave(Ninjam::User user);
-    void ninjamDisconnectedFromServer(Ninjam::Server server);
+    void on_ninjamServerBpmChanged(short newBpm);
+    void on_ninjamServerBpiChanged(short oldBpi, short newBpi);
+    void on_ninjamAudiointervalCompleted(Ninjam::User user, int channelIndex, QByteArray encodedAudioData);
+    void on_ninjamAudiointervalDownloading(Ninjam::User user, int channelIndex, int downloadedBytes);
+    void on_ninjamUserChannelCreated(Ninjam::User user, Ninjam::UserChannel channel);
+    void on_ninjamUserChannelRemoved(Ninjam::User user, Ninjam::UserChannel channel);
+    void on_ninjamUserChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel);
+    void on_ninjamUserLeave(Ninjam::User user);
+    void on_ninjamDisconnectedFromServer(Ninjam::Server server);
+
+    //audio driver events
+    void on_audioDriverSampleRateChanged(int newSampleRate);
+    void on_audioDriverStopped();
 };
 
 }

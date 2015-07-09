@@ -37,9 +37,10 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, unsigned int frameLenght)
 
 SamplesBuffer::SamplesBuffer(const SamplesBuffer& other)
     : channels(other.channels),
-      frameLenght(other.frameLenght)
+      frameLenght(other.frameLenght),
+      samples(other.samples)
 {
-    qCritical() << "copy constructor!";
+    qWarning() << "Samples Buffer copy constructor!";
 }
 
 SamplesBuffer& SamplesBuffer::operator=(const SamplesBuffer& /*other*/){
@@ -214,7 +215,6 @@ void SamplesBuffer::add(unsigned int channel, float *samples, int samplesToAdd){
 void SamplesBuffer::add( int channel,  int sampleIndex, float sampleValue){
     //QMutexLocker locker(&mutex);
     if(channelIsValid(channel) && sampleIndexIsValid(sampleIndex)){
-
         samples[channel][sampleIndex] += sampleValue;
     }
     else{
@@ -225,12 +225,11 @@ void SamplesBuffer::add( int channel,  int sampleIndex, float sampleValue){
 void SamplesBuffer::set(int channel, int sampleIndex, float sampleValue){
     //QMutexLocker locker(&mutex);
     if(channelIsValid(channel) && sampleIndexIsValid(sampleIndex)){
-
         samples[channel][sampleIndex] = sampleValue;
     }
-//    else{
-//        qWarning() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
-//    }
+    else{
+        qWarning() << "channel ("<<channel<<") or sampleIndex ("<<sampleIndex<<") invalid";
+    }
 }
 
 int SamplesBuffer::getFrameLenght() const{
