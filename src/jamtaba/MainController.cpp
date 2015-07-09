@@ -128,10 +128,17 @@ Audio::AudioNode *MainController::getTrackNode(long ID){
     return nullptr;
 }
 
-void MainController::addTrack(long trackID, Audio::AudioNode* trackNode){
+bool MainController::addTrack(long trackID, Audio::AudioNode* trackNode){
     QMutexLocker locker(&mutex);
-    tracksNodes.insert( trackID, trackNode );
-    audioMixer->addNode(trackNode) ;
+    if(!tracksNodes.contains(trackID)){
+        tracksNodes.insert( trackID, trackNode );
+        audioMixer->addNode(trackNode) ;
+        return true;
+    }
+    else{
+        qCritical() << "Duplicated track ID";
+    }
+    return false;
 }
 
 void MainController::removeTrack(long trackID){
@@ -202,7 +209,6 @@ Audio::AudioPeak MainController::getTrackPeak(int trackID){
     if(!trackNode){
         qWarning() << "trackNode not found! ID:" << trackID;
     }
-    qWarning() << "returning ZERO peaks ID " << trackID;
     return Audio::AudioPeak();
 }
 

@@ -17,10 +17,10 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
     ui->setupUi(this);
     ui->scrollContent->setLayout(new QVBoxLayout(ui->scrollContent));
 
-    QObject::connect(ui->chatText, SIGNAL(returnPressed()), this, SLOT(chatTextEditionFinished()));
+    QObject::connect(ui->chatText, SIGNAL(returnPressed()), this, SLOT(on_chatTextEditionFinished()));
 
     //this event is used to auto scroll down when new messages are added
-    QObject::connect(ui->chatScroll->verticalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(verticalScrollBarRangeChanged(int,int)));
+    QObject::connect(ui->chatScroll->verticalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(on_verticalScrollBarRangeChanged(int,int)));
 
     //create some messages to test
     /*
@@ -41,12 +41,12 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
     //addMessage("elieser", QString::fromUtf8(teste.toStdString().c_str()));
 }
 
-void ChatPanel::verticalScrollBarRangeChanged(int min, int max){
+void ChatPanel::on_verticalScrollBarRangeChanged(int min, int max){
     //used to auto scroll down to keep the last added message visible
     ui->chatScroll->verticalScrollBar()->setValue(max + 10);
 }
 
-void ChatPanel::chatTextEditionFinished(){
+void ChatPanel::on_chatTextEditionFinished(){
     if(!ui->chatText->text().isEmpty()){
         emit userSendingNewMessage(ui->chatText->text());
         ui->chatText->clear();
@@ -54,8 +54,17 @@ void ChatPanel::chatTextEditionFinished(){
 }
 
 void ChatPanel::addMessage(QString userName, QString userMessage){
-    QColor bgColor = getUserColor(userName);
-    ChatMessagePanel* msgPanel = new ChatMessagePanel(ui->scrollContent, userName, userMessage, bgColor);
+    QColor msgBackgroundColor = getUserColor(userName);
+    QColor textColor = msgBackgroundColor == BOT_COLOR ? QColor(50, 50, 50) : QColor(0, 0, 0);
+    QColor userNameBackgroundColor = msgBackgroundColor;
+    bool drawBorder = true;
+    if(msgBackgroundColor != BOT_COLOR){
+        userNameBackgroundColor.setHsvF(msgBackgroundColor.hueF(), msgBackgroundColor.saturationF(), msgBackgroundColor.valueF() - 0.2);
+    }
+    else{
+        drawBorder = false;
+    }
+    ChatMessagePanel* msgPanel = new ChatMessagePanel(ui->scrollContent, userName, userMessage, userNameBackgroundColor, msgBackgroundColor, textColor, drawBorder);
     ui->scrollContent->layout()->addWidget(msgPanel);
     if(ui->scrollContent->layout()->count() > MAX_MESSAGES){
         //remove the first widget
@@ -79,7 +88,7 @@ QList<QColor> ChatPanel::createColors(){
 }
 
 QColor ChatPanel::getUserColor(QString userName) {
-    if ( botNames.contains(userName) ) {
+    if ( botNames.contains(userName) || userName.isNull() || userName.isEmpty() ) {
         return BOT_COLOR;
     }
 
@@ -93,14 +102,11 @@ QColor ChatPanel::getUserColor(QString userName) {
     return usersColorMap[userName];
 }
 
-ChatPanel::~ChatPanel()
-{
+ChatPanel::~ChatPanel(){
     delete ui;
-    qWarning() << "Destrutor ChatPanel";
 }
 
-void ChatPanel::on_buttonClear_clicked()
-{
+void ChatPanel::on_buttonClear_clicked(){
     QList<ChatMessagePanel*> panels = ui->scrollContent->findChildren<ChatMessagePanel*>();
     foreach (ChatMessagePanel* msgPanel, panels) {
         ui->scrollContent->layout()->removeWidget(msgPanel);

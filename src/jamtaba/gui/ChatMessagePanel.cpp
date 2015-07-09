@@ -10,22 +10,37 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
 }
 
 
-ChatMessagePanel::ChatMessagePanel(QWidget *parent, QString userName, QString msg, QColor backgroundColor)
+ChatMessagePanel::ChatMessagePanel(QWidget *parent, QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool drawBorder)
     :QWidget(parent),
       ui(new Ui::ChatMessagePanel)
 {
     ui->setupUi(this);
-    ui->labelUserName->setText(userName);
+    initialize(userName, msg, userNameBackgroundColor, msgBackgroundColor, textColor, drawBorder);
+}
+
+void ChatMessagePanel::initialize(QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool drawBorder){
+    if(!userName.isEmpty() && !userName.isNull()){
+        ui->labelUserName->setText(userName);
+        ui->labelUserName->setStyleSheet(buildCssString(userNameBackgroundColor, textColor, drawBorder));
+    }
+    else{
+        ui->labelUserName->setVisible(false);
+    }
 
     msg = msg.replace(QRegExp("<.+?>"), "");//scape html tags
     msg = msg.replace("\n", "<br/>");
     msg = replaceLinksInString(msg);
     ui->labelMessage->setText(msg);
+    ui->labelMessage->setStyleSheet(buildCssString(msgBackgroundColor, textColor, drawBorder));
+}
 
-    QColor nameColor = backgroundColor;
-    nameColor.setHsvF(backgroundColor.hueF(), backgroundColor.saturationF(), backgroundColor.valueF() - 0.3);
-    ui->labelUserName->setStyleSheet("background-color: " + colorToCSS(nameColor));
-    ui->labelMessage->setStyleSheet("background-color: " + colorToCSS(backgroundColor));
+QString ChatMessagePanel::buildCssString(QColor bgColor, QColor textColor, bool drawBorder){
+    QString css =   "background-color: " + colorToCSS(bgColor) + ";";
+    css +=          "color: " + colorToCSS(textColor) + ";";
+    if(!drawBorder){
+        css +=          "border: none; ";
+    }
+    return css;
 }
 
 QString ChatMessagePanel::replaceLinksInString(QString str){

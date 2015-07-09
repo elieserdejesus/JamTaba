@@ -75,6 +75,7 @@ void NinjamRoomWindow::userSendingNewChatMessage(QString msg){
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::on_chatMessageReceived(Ninjam::User user, QString message){
+    //qDebug() << user.getFullName() << message;
     chatPanel->addMessage(user.getName(), message);
 }
 
