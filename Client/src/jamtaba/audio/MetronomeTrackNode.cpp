@@ -36,6 +36,7 @@ MetronomeTrackNode::MetronomeTrackNode(QString metronomeWaveFile, int localSampl
 
     reset();
 }
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MetronomeTrackNode::~MetronomeTrackNode(){
     delete clickSoundBuffer;

@@ -82,29 +82,43 @@ void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out){
 
 AudioNode::AudioNode()
      :
-      activated(true),
+      internalBuffer(2),
+       lastPeak(0, 0),
+       activated(true),
       muted(false),
       soloed(false),
       gain(1),
       pan(0)/*center*/,
       leftGain(1.0),
-      rightGain(1.0),
-      internalBuffer(2),
-      lastPeak(0, 0),
-      resamplingCorrection(0)
+      rightGain(1.0)
+
 {
 
 }
 
 int AudioNode::getInputResamplingLength(int targetSampleRate, int outFrameLenght) const{
-
     double factor = (double)getSampleRate()/(double)targetSampleRate;
-    double doubleLenght = (double)outFrameLenght * factor;
-    int intLenght = (int)(doubleLenght + resamplingCorrection);
-    resamplingCorrection = intLenght - doubleLenght;
+    double doubleLenght = (double)outFrameLenght * factor;// + resamplingCorrection;
+    int intLenght = std::ceil(doubleLenght);
+
+
+//    double reverseFactor = (double)targetSampleRate/(double)getSampleRate();
+//    int resampledLenght = intLenght * reverseFactor;
+//    resamplingCorrection += (double)(intLenght * reverseFactor) - resampledLenght;
+//    qDebug() << "correction:" << resamplingCorrection << "intLenght:" << intLenght << "doubleLenght: " << doubleLenght << "outFrameLenght" << outFrameLenght;
 
     return intLenght;
 }
+
+//void AudioNode::pushBackDiscardedSamples(const SamplesBuffer &buffer, unsigned int discardedSamples){
+//    if(discardedSamples < buffer.getFrameLenght()){
+//        discardedBuffer.setFrameLenght(discardedSamples);
+//        discardedBuffer.set(buffer, buffer.getFrameLenght() - discardedSamples, discardedSamples, 0);
+//    }
+//    else{
+//        qCritical() << "too many discarded samples?";
+//    }
+//}
 
 Audio::AudioPeak AudioNode::getLastPeak(bool resetPeak) const{
     AudioPeak peak = this->lastPeak;
@@ -159,8 +173,9 @@ void AudioNode::removeProcessor(AudioNodeProcessor &processor){
 
 //+++++++++++++++++++++++++++++++++++++++
 OscillatorAudioNode::OscillatorAudioNode(float frequency, int sampleRate)
-    :   phaseIncrement(2 * 3.1415 / sampleRate * frequency),
+    :
         phase(0),
+        phaseIncrement(2 * 3.1415 / sampleRate * frequency),
         sampleRate(sampleRate)
 {
 

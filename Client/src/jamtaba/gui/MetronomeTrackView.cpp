@@ -1,8 +1,8 @@
 #include "MetronomeTrackView.h"
 #include "ui_BaseTrackView.h"
 
-MetronomeTrackView::MetronomeTrackView(QWidget *parent, Controller::MainController *mainController)
-    :BaseTrackView(parent, mainController, -1)//-1 is the track ID for metronome
+MetronomeTrackView::MetronomeTrackView(QWidget *parent, Controller::MainController *mainController, long metronomeID)
+    :BaseTrackView(parent, mainController, metronomeID)
 {
     ui->channelName->setVisible(false);
     ui->trackName->setTextFormat(Qt::RichText);

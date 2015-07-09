@@ -22,49 +22,12 @@
 #include <QFile>
 #include <QDebug>
 #include <QApplication>
-//#include "audio/NinjamTrackNode.h"
+#include "audio/NinjamTrackNode.h"
 
 using namespace Persistence;
 using namespace Midi;
 using namespace Ninjam;
 
-namespace Controller {
-
-class AudioListener : public Audio::AudioDriverListenerAdapter{
-
-private:
-    MainController* mainController;
-public:
-    explicit AudioListener(MainController* controller){
-        this->mainController = controller;
-        //this->streamer = new RoomStreamerNode(QUrl("http://vprjazz.streamguys.net/vprjazz64.mp3"));
-        //this->streamer = new RoomStreamerNode(QUrl("http://users.skynet.be/fa046054/home/P22/track56.mp3"));
-        //this->streamer = new RoomStreamerNode(QUrl("http://ninbot.com:8000/2050"));
-        //this->streamer = new Audio::AudioFileStreamerNode("D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/teste.mp3");
-    }
-
-    ~AudioListener(){
-        //delete audioMixer;
-    }
-
-    virtual void driverStarted(){
-        //qDebug() << "audio driver started";
-    }
-
-    virtual void driverStopped(){
-        qDebug() << "audio driver stopped";
-    }
-
-    virtual void processCallBack(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out){
-        mainController->process(in, out);
-    }
-
-    virtual void driverException(const char* msg){
-        qDebug() << msg;
-    }
-};
-
-}//namespace Controller::
 //++++++++++++++++++++++++++++++
 
 using namespace Controller;
@@ -74,6 +37,8 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
       audioMixer(nullptr),
       roomStreamer(nullptr),
       currentStreamingRoomID(-1000),
+      ninjamService(nullptr),
+      ninjamController(nullptr),
       mutex(QMutex::Recursive),
       started(false),
       vstHost(Vst::VstHost::getInstance()),
@@ -86,13 +51,15 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
 
     Login::LoginService* loginService = factory->createLoginService();
     this->loginService = std::unique_ptr<Login::LoginService>( loginService );
-    this->audioDriver = std::unique_ptr<Audio::AudioDriver>( new Audio::PortAudioDriver(
+    this->audioDriver = new Audio::PortAudioDriver(
+                this, //the AudioDriverListener instance
                 ConfigStore::getLastInputDevice(), ConfigStore::getLastOutputDevice(),
                 ConfigStore::getFirstAudioInput(), ConfigStore::getLastAudioInput(),
                 ConfigStore::getFirstAudioOutput(), ConfigStore::getLastAudioOutput(),
                 ConfigStore::getLastSampleRate(), ConfigStore::getLastBufferSize()
-                ));
-    audioDriverListener = std::unique_ptr<Controller::AudioListener>( new Controller::AudioListener(this));
+                );
+
+    QObject::connect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
 
     audioMixer = new Audio::AudioMixer(audioDriver->getSampleRate());
     roomStreamer = new Audio::RoomStreamerNode();
@@ -110,13 +77,13 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     vstHost->setSampleRate(audioDriver->getSampleRate());
     vstHost->setBlockSize(audioDriver->getBufferSize());
 
-    QObject::connect(&*pluginFinder, SIGNAL(vstPluginFounded(Audio::PluginDescriptor*)), this, SLOT(onPluginFounded(Audio::PluginDescriptor*)));
+    QObject::connect(&*pluginFinder, SIGNAL(vstPluginFounded(Audio::PluginDescriptor*)), this, SLOT(on_VSTPluginFounded(Audio::PluginDescriptor*)));
 
     //ninjam service
     this->ninjamService = Ninjam::Service::getInstance();
-    QObject::connect( this->ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), SLOT(connectedInNinjamServer(Ninjam::Server)) );
-    QObject::connect(this->ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(disconnectedFromNinjamServer(Ninjam::Server)));
-    QObject::connect(this->ninjamService, SIGNAL(error(QString)), this, SLOT(errorInNinjamServer(QString)));
+    QObject::connect( this->ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), SLOT(on_connectedInNinjamServer(Ninjam::Server)) );
+    QObject::connect(this->ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(on_disconnectedFromNinjamServer(Ninjam::Server)));
+    QObject::connect(this->ninjamService, SIGNAL(error(QString)), this, SLOT(on_errorInNinjamServer(QString)));
 
     this->ninjamController = new Controller::NinjamJamRoomController(this);
 
@@ -202,7 +169,7 @@ void MainController::scanPlugins(){
     pluginFinder->scan(vstHost);
 }
 
-void MainController::onPluginFounded(Audio::PluginDescriptor* descriptor){
+void MainController::on_VSTPluginFounded(Audio::PluginDescriptor* descriptor){
     pluginsDescriptors.push_back(descriptor);
     ConfigStore::addVstPlugin(descriptor->getPath());
 }
@@ -218,7 +185,7 @@ void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuff
 
 void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
     QMutexLocker locker(&mutex);
-    if(!ninjamController->isRunning()){
+    if(!isPlayingInNinjamRoom()){
         doAudioProcess(in, out);
     }
     else{
@@ -232,6 +199,10 @@ Audio::AudioPeak MainController::getTrackPeak(int trackID){
     if(trackNode && !trackNode->isMuted()){
         return trackNode->getLastPeak(true);//get last peak and reset
     }
+    if(!trackNode){
+        qWarning() << "trackNode not found! ID:" << trackID;
+    }
+    qWarning() << "returning ZERO peaks ID " << trackID;
     return Audio::AudioPeak();
 }
 
@@ -355,8 +326,7 @@ void MainController::on_disconnectedFromLoginServer(){
     exit(0);
 }
 
-MainController::~MainController()
-{
+MainController::~MainController(){
     stop();
     delete roomStreamer;
     foreach (Audio::PluginDescriptor* descriptor, pluginsDescriptors) {
@@ -368,7 +338,7 @@ MainController::~MainController()
         delete ninjamController;
         ninjamController = nullptr;
     }
-
+    QObject::disconnect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
 }
 
 void MainController::playRoomStream(Login::RoomInfo roomInfo){
@@ -409,11 +379,15 @@ void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom){
 
 }
 
+void MainController::on_audioDriverSampleRateChanged(int newSampleRate){
+    Q_UNUSED(newSampleRate);
+    audioMixer->setSampleRate(newSampleRate);
+}
+
 void MainController::start()
 {
     if(!started){
         started = true;
-        audioDriver->addListener(*audioDriverListener);
         audioDriver->start();
         midiDriver->start();
 
@@ -439,7 +413,7 @@ void MainController::stop()
 
 Audio::AudioDriver *MainController::getAudioDriver() const
 {
-    return audioDriver.get();
+    return audioDriver;
 }
 
 Midi::MidiDriver* MainController::getMidiDriver() const{
@@ -461,23 +435,31 @@ Login::LoginService* MainController::getLoginService() const{
     return &*loginService;
 }
 
+bool MainController::isPlayingInNinjamRoom() const{
+    if(ninjamController){
+        return ninjamController->isRunning();
+    }
+    return false;
+}
 
 //++++++++++++= NINJAM ++++++++++++++++
-void MainController::errorInNinjamServer(QString error){
+void MainController::on_errorInNinjamServer(QString error){
     qWarning() << error;
-    ninjamController->stop();
+    if(ninjamController){
+        ninjamController->stop();
+    }
     emit exitedFromRoom(false);//not a normal disconnection
 }
 
-void MainController::disconnectedFromNinjamServer(const Server &server){
+void MainController::on_disconnectedFromNinjamServer(const Server &server){
     Q_UNUSED(server);
-    ninjamController->stop();
+    if(ninjamController){
+        ninjamController->stop();
+    }
     emit exitedFromRoom(true);//normal disconnection
 }
 
-void MainController::connectedInNinjamServer(Ninjam::Server server){
-
+void MainController::on_connectedInNinjamServer(Ninjam::Server server){
     emit enteredInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers()));
     ninjamController->start(server);
-
 }

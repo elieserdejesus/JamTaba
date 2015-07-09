@@ -56,6 +56,8 @@ public:
     void addProcessor(AudioNodeProcessor &newProcessor);
     void removeProcessor(AudioNodeProcessor &processor);
 
+    //void pushBackDiscardedSamples(const Audio::SamplesBuffer& buffer, unsigned int discardedSamples);
+
     inline void setGain(float gainValue){
         this->gain = gainValue;
     }
@@ -81,6 +83,7 @@ protected:
     QSet<AudioNode*> connections;
     QSet<AudioNodeProcessor*> processors;
     SamplesBuffer internalBuffer;
+    //SamplesBuffer discardedBuffer;//store samples discarded in AudioMixer to avoid loose samples in resampling process
     mutable Audio::AudioPeak lastPeak;
     QMutex mutex; //used to protected connections manipulation because nodes can be added or removed by different threads
     bool activated; //used to safely remove non activated nodes
@@ -106,7 +109,7 @@ private:
         rightGain = (float) (root2Over2 * (cos(angle) + sin(angle)));
     }
 
-    mutable double resamplingCorrection;
+    //mutable double resamplingCorrection;
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++

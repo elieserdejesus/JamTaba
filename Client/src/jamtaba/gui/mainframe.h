@@ -53,7 +53,6 @@ private slots:
     void on_tabCloseRequest(int index);
     void on_preferencesClicked();
     void on_IOPropertiesChanged(int midiDevice, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
-    //void on_connectedInServer(QList<Login::AbstractJamRoom*>);
     void on_roomsListAvailable(QList<Login::RoomInfo> publicRooms);
 
     //+++++  ROOM FEATURES ++++++++

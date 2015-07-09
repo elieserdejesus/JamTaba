@@ -1,9 +1,13 @@
-#Resampling
-#O wahjam também usar a ideia de calcular quantas amostras serão lidas com base na SR.
-#Mas tenho que ver o que eles fizeram, eles somam um double resample_state que eu não entendi totalmente.
+#será que o resampler não acumula as amostras? Eu estou achando que sim. Se
+#eu passar out.frameLenght para ele mas o buffer resampleado tiver out.lenght + 1 samples
+#eu acho que ele vai guardar essa última amostra no buffer interno, mas eu teria
+#que sair do loop do resampler exatamente em out.lenght
 
-#quando troco a taxa de amostragem preciso mudar a quantidade de amostras por intervalo.
-#Eu estava testando com 4 BPI e vi que quando mudei a taxa o intervalo não chegava mais até o final, do tempo 2 pulou para o 1.
+
+#quando saio e volto para a sala o metronomo fica baixinho, quando mexo no fader volta ao normal
+#também aconteceu de voltar para a sala e a pista do reaninjam ficar sem os picos, talvez seja o mesmo problema que eu vi na sala pública
+
+#tentar não parar o driver de áudio quando saio da sala
 
 #chat ninjam
     #problema nos caracteres especiais - tenho que testar se o envio está correto e depois testar a recepção
@@ -36,6 +40,14 @@
 # drummix multi deu problema na mixagem dos canais, acho que só consegui ouvir o bumbo e o vazamendo das outras peças
 
 #buga tudo se não tem conexão com a internet
+
+#Resampling
+    #Ainda tem um probleminha nos início de alguns intervalos, mas só acontece em
+    #algumas combinações de SR e como está já está bem aceitável. Eu não estou corrigindo
+    #a perda de amostras que vai acontecendo aos poucos, por isso chega no final do intervalo
+    #pode dar algumas amostras de diferença.
+
+#tem um bug quando o bpi está em 4
 
 
 # feature - botão para ouvir o stream dos server e ver como está a mix geral

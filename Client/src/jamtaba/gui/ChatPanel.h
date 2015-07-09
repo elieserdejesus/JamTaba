@@ -16,7 +16,7 @@ class ChatPanel : public QWidget
 
 public:
     ChatPanel(QWidget *parent, QStringList botNames);
-    ~ChatPanel();
+    virtual ~ChatPanel();
     void addMessage(QString userName, QString userMessage);
 
 signals:

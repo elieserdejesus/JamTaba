@@ -25,6 +25,12 @@ NinjamTrackNode::~NinjamTrackNode()
     qDebug() << "Destruindo ninjamTrack Node " << this->getID();
 }
 
+void NinjamTrackNode::discardIntervals(){
+    QMutexLocker locker(&mutex);
+    intervals.clear();
+    qDebug() << "intervals discarded";
+}
+
 bool NinjamTrackNode::startNewInterval(){
     QMutexLocker locker(&mutex);
     if(!isActivated()){
@@ -65,6 +71,13 @@ void NinjamTrackNode::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesB
     int totalDecoded = 0;
     internalBuffer.setFrameLenght(out.getFrameLenght());
     internalBuffer.zero();
+
+//    if(discardedBuffer.getFrameLenght() > 0){//use the discarded samples decoded in last audio callback (resampler generates a buffer with many samples)
+//        internalBuffer.add(discardedBuffer);
+//        totalDecoded += discardedBuffer.getFrameLenght();
+//        discardedBuffer.setFrameLenght(0);
+//    }
+
     while(totalDecoded < out.getFrameLenght() ){
         const Audio::SamplesBuffer& decodedBuffer = decoder.decode(out.getFrameLenght() - totalDecoded);
         if(decodedBuffer.getFrameLenght() > 0){

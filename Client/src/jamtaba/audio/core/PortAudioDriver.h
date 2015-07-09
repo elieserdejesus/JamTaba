@@ -5,11 +5,11 @@
 
 namespace Audio{
 
-class PortAudioDriver : public AbstractAudioDriver
+class PortAudioDriver : public AudioDriver
 {
 public:
-    PortAudioDriver(int inputDeviceIndex, int outputDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize);
-    PortAudioDriver();
+    PortAudioDriver(AudioDriverListener* audioDriverListener, int inputDeviceIndex, int outputDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize);
+    PortAudioDriver(AudioDriverListener* audioDriverListener);
     virtual ~PortAudioDriver();
 
 	virtual void start();
@@ -25,12 +25,12 @@ public:
     virtual const char* getInputDeviceName(int index) const;
     virtual const char* getOutputDeviceName(int index) const;
 
-    virtual inline int getInputs() const {return inputChannels;}
-    virtual inline int getFirstInput() const {return firstInputIndex;}
-    virtual inline int getOutputs() const {return outputChannels;}
-    virtual inline int getFirstOutput() const {return firstOutputIndex;}
-    virtual inline int getSampleRate() const {return sampleRate;}
-    virtual inline int getBufferSize() const {return bufferSize;}
+//    virtual inline int getInputs() const {return inputChannels;}
+//    virtual inline int getFirstInput() const {return firstInputIndex;}
+//    virtual inline int getOutputs() const {return outputChannels;}
+//    virtual inline int getFirstOutput() const {return firstOutputIndex;}
+//    virtual inline int getSampleRate() const {return sampleRate;}
+//    virtual inline int getBufferSize() const {return bufferSize;}
 
     virtual int getInputDeviceIndex() const;
     virtual void setInputDeviceIndex(int index);

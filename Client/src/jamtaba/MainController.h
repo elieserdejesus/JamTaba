@@ -8,6 +8,7 @@
 #include "geo/IpToLocationResolver.h"
 #include "../ninjam/Server.h"
 #include "../loginserver/LoginService.h"
+#include "../audio/core/AudioDriver.h"
 
 class MainFrame;
 
@@ -58,7 +59,7 @@ class NinjamJamRoomController;
 
 
 //++++++++++++++++++++++++++++
-class MainController : public QApplication
+class MainController : public QApplication, public Audio::AudioDriverListener
 {
     Q_OBJECT
 
@@ -74,13 +75,15 @@ public:
     void start();
     void stop();
 
-    void process(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
+    virtual void process(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
 
     void addTrack(long trackID, Audio::AudioNode* trackNode);
     void removeTrack(long trackID);
 
     void playRoomStream(Login::RoomInfo roomInfo);
     bool isPlayingRoomStream() const;
+
+    bool isPlayingInNinjamRoom() const;
 
     void stopRoomStream();//stop currentRoom stream
     inline long long getCurrentStreamingRoomID() const{return currentStreamingRoomID;}
@@ -121,6 +124,7 @@ public:
     inline bool isStarted() const{return started;}
 
     Geo::Location getLocation(QString ip) ;
+
 signals:
     void enteredInRoom(Login::RoomInfo room);
     void exitedFromRoom(bool error);
@@ -131,10 +135,9 @@ private:
     void doAudioProcess(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
     Audio::Plugin* createPluginInstance(Audio::PluginDescriptor* descriptor);
 
-    std::unique_ptr<Audio::AudioDriver> audioDriver;
+    Audio::AudioDriver* audioDriver;
     Midi::MidiDriver* midiDriver;//TODO use unique_ptr
 
-    std::unique_ptr<Audio::AudioDriverListener> audioDriverListener;
     std::unique_ptr<Login::LoginService> loginService;
 
     Audio::AudioMixer* audioMixer;
@@ -146,16 +149,12 @@ private:
     Ninjam::Service* ninjamService;
     Controller::NinjamJamRoomController* ninjamController;
 
-
     QMap<long, Audio::AudioNode*> tracksNodes;
-
     mutable QMutex mutex;
 
     bool started;
 
-    //Audio::AudioPeak inputPeaks;
-    //Audio::AudioPeak roomStreamerPeaks;
-    //+++++++++++++++++++
+    //VST
     Vst::VstHost* vstHost;
     std::vector<Audio::PluginDescriptor*> pluginsDescriptors;
     std::unique_ptr<Vst::PluginFinder> pluginFinder;
@@ -167,14 +166,19 @@ private:
     Geo::IpToLocationResolver ipToLocationResolver;
 
 private slots:
+    //Login server
     void on_disconnectedFromLoginServer();
 
-    void onPluginFounded(Audio::PluginDescriptor* descriptor);
+    //VST
+    void on_VSTPluginFounded(Audio::PluginDescriptor* descriptor);
 
     //ninjam
-    void connectedInNinjamServer(Ninjam::Server server);
-    void disconnectedFromNinjamServer(const Ninjam::Server& server);
-    void errorInNinjamServer(QString error);
+    void on_connectedInNinjamServer(Ninjam::Server server);
+    void on_disconnectedFromNinjamServer(const Ninjam::Server& server);
+    void on_errorInNinjamServer(QString error);
+
+    //audio driver
+    void on_audioDriverSampleRateChanged(int newSampleRate);
 };
 
 }

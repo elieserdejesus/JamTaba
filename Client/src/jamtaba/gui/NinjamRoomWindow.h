@@ -45,14 +45,14 @@ private slots:
     void ninjamAccentsComboChanged(int );
 
     //ninjam controller events
-    void bpiChanged(int bpi);
-    void bpmChanged(int bpm);
-    void intervalBeatChanged(int beat);
-    void channelAdded(  Ninjam::User user, Ninjam::UserChannel channel, long channelID );
-    void channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
-    void channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
-    void channelXmitChanged(long channelID, bool transmiting);
-    void chatMessageReceived(Ninjam::User, QString message);
+    void on_bpiChanged(int bpi);
+    void on_bpmChanged(int bpm);
+    void on_intervalBeatChanged(int beat);
+    void on_channelAdded(  Ninjam::User user, Ninjam::UserChannel channel, long channelID );
+    void on_channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
+    void on_channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
+    void on_channelXmitChanged(long channelID, bool transmiting);
+    void on_chatMessageReceived(Ninjam::User, QString message);
 
     void userSendingNewChatMessage(QString msg);
 
