@@ -96,6 +96,8 @@ void MainFrame::initializeLocalTrackView(){
 
     QObject::connect(localTrackView, SIGNAL(editingPlugin(Audio::Plugin*)), this, SLOT(on_editingPlugin(Audio::Plugin*)));
     QObject::connect(localTrackView, SIGNAL(removingPlugin(Audio::Plugin*)), this, SLOT(on_removingPlugin(Audio::Plugin*)));
+
+    localTrackView->refreshInputSelectionName();
 }
 
 void MainFrame::initializeLoginService(){

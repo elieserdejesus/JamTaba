@@ -1,4 +1,6 @@
 
+#transmissão do áudio
+
 #também preciso tratar a situação onde o usuário está usando midi como entrada e o driver midi é alterado nas preferencias
 
 
@@ -11,24 +13,13 @@
 #abri a aplicação com a fast track e deu pau porque 192 é uma SR inválida. Tenho que pedir as SR válidas para cada device.
 #já aproveitar para pedir os buffer sizes
 
-#quando abrir tenho que carregar o nome do canal de entrada selecionado no combo da pista local
 
-#quando seleciono a entrada como mono o meter fica com um lado só
 
-#parece que quando seleciono a entrada como mono o áudio da entrada fica só na esquerda
 
 #depois trabalhar na ideia do segundo canal. Deixar o backtracking sempre na tela pode ser
 #muito chato pra quem não usa. O BT channel poderia ser removido?
 
 #como serão as entradas? Como será a criação do canal de backtracking?
-#acho que faz sentido selecionar uma entrada como sendo audio ou midi, stereo ou mono
-
-#acho que a ideia do Reaper é boa:
-#usuário clica em um combo de input e aparece o menu:
-    # Mono - as entradas
-    # stereo - os pares
-    # MIDI - os devices e uma opção aLl devices seria legal
-    # no input - útil se for usar um looper VST
 
 
 #acho que poderia simplificar a criação do menu de plugins usando a mesma ideia
@@ -36,10 +27,6 @@
 #uma referência para o mainController eu posso pedir para ele os PluginDEscriptors
 
 # a mensagem de crowded está errada?
-
-
-
-#transmissão do áudio
 
 
 #será que o resampler não acumula as amostras? Eu estou achando que sim. Se
