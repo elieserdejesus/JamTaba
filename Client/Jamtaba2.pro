@@ -1,7 +1,52 @@
-# a mensagem de crowded está errada?
+#arrumei o bug na seleção do áudio, mas está resetando a configuração quando mudo
+#alguma coisa na configuração de áudio, tenho que deixar o algoritmo da mudança
+#mais inteligente
+
+#acho que se eu estiver usando as entradas 3 e 4 e mudar o buffer size as entradas vão voltar para 1 e 2
+    #mudei o código, mas crashou. Selecionei as entradas 3+4, abri as preferencias, mudei o buffer size, fechei e crashou
+
+
+
+#também preciso tratar a situação onde o usuário está usando midi como entrada e o driver midi é alterado nas preferencias
+
+#limitar a escolha das saídas para pares ao invés de permitir um range
+
+#como vou permitir vários devices midi? Pelo que vi no portaudio.h o único jeito seria abrir vários streams midi, um para cada device.
+#acho que é melhor deixar isso para mais adiante, por que também terei que mudar a forma como estou lendo as mensagens midi e passando
+#elas adiante. Como cada pista local vai poder ler de um midi device diferente eu acho que a solução seria criar um MidiBuffer e disponibilizá-lo
+#para o processReplacing como eu fiz com o SamplesBuffer. Esse MidiBuffer teria vários canais, cada canal contendo as mensagens midi de um device
+#diferente
+
+#abri a aplicação com a fast track e deu pau porque 192 é uma SR inválida. Tenho que pedir as SR válidas para cada device.
+#já aproveitar para pedir os buffer sizes
+
+#quando abrir tenho que carregar o nome do canal de entrada selecionado no combo da pista local
+
+#quando seleciono a entrada como mono o meter fica com um lado só
+
+#parece que quando seleciono a entrada como mono o áudio da entrada fica só na esquerda
+
+#depois trabalhar na ideia do segundo canal. Deixar o backtracking sempre na tela pode ser
+#muito chato pra quem não usa. O BT channel poderia ser removido?
 
 #como serão as entradas? Como será a criação do canal de backtracking?
 #acho que faz sentido selecionar uma entrada como sendo audio ou midi, stereo ou mono
+
+#acho que a ideia do Reaper é boa:
+#usuário clica em um combo de input e aparece o menu:
+    # Mono - as entradas
+    # stereo - os pares
+    # MIDI - os devices e uma opção aLl devices seria legal
+    # no input - útil se for usar um looper VST
+
+
+#acho que poderia simplificar a criação do menu de plugins usando a mesma ideia
+#que usei para gerar o menu das inputs da pista local. Como a pista local tem
+#uma referência para o mainController eu posso pedir para ele os PluginDEscriptors
+
+# a mensagem de crowded está errada?
+
+
 
 #transmissão do áudio
 
@@ -10,6 +55,12 @@
 #eu passar out.frameLenght para ele mas o buffer resampleado tiver out.lenght + 1 samples
 #eu acho que ele vai guardar essa última amostra no buffer interno, mas eu teria
 #que sair do loop do resampler exatamente em out.lenght
+
+#tirar spacers dos títulos das seções?
+
+#salvar as entradas selecionadas para a pista local
+
+#salvar o metronomo
 
 #acho que quando fico alternando entre os streams das salas não está funcionando muito bem, parece que o botão ficou pressionado.
 
@@ -155,7 +206,8 @@ HEADERS += \
     src/jamtaba/gui/ChatPanel.h \
     src/jamtaba/gui/ChatMessagePanel.h \
     src/jamtaba/audio/SamplesBufferResampler.h \
-    src/jamtaba/audio/samplesbufferrecorder.h
+    src/jamtaba/audio/samplesbufferrecorder.h \
+    src/jamtaba/gui/TrackIOPanel.h
 
 
 SOURCES += \
@@ -219,7 +271,8 @@ SOURCES += \
     src/jamtaba/gui/ChatPanel.cpp \
     src/jamtaba/gui/ChatMessagePanel.cpp \
     src/jamtaba/audio/SamplesBufferResampler.cpp \
-    src/jamtaba/audio/samplesbufferrecorder.cpp
+    src/jamtaba/audio/samplesbufferrecorder.cpp \
+    src/jamtaba/gui/TrackIoPanel.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
@@ -231,7 +284,8 @@ FORMS += \
     src/jamtaba/gui/NinjamPanel.ui \
     src/jamtaba/gui/BusyDialog.ui \
     src/jamtaba/gui/ChatPanel.ui \
-    src/jamtaba/gui/ChatMessagePanel.ui
+    src/jamtaba/gui/ChatMessagePanel.ui \
+    src/jamtaba/gui/TrackIOPanel.ui
 
 
 #macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \

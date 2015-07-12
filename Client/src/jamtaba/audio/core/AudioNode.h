@@ -4,6 +4,7 @@
 //#include <cmath>
 #include <QMutex>
 #include "SamplesBuffer.h"
+#include "AudioDriver.h"
 
 namespace Midi   {
     class MidiBuffer;
@@ -129,13 +130,27 @@ private:
 //++++++++++++++++++
 class LocalInputAudioNode : public AudioNode{
 private:
-    bool mono;
-    int firstInputIndex;
-    //int firstOutputIndex;
+    int globalFirstInputIndex; //store the first input index selected globally by users in preferences menu
+    ChannelRange audioInputRange;
+    //store user selected input range. For example, user can choose just the
+    //right input channel (index 1), or use stereo input (indexes 0 and 1), or
+    //use the channels 2 and 3 (the second input pair in a multichannel audio interface)
+
+    int midiDeviceIndex; //setted when user choose MIDI as input method
 public:
-    LocalInputAudioNode(int firstInputIndex=0, bool isMono=true);
+    LocalInputAudioNode(bool isMono=true);
     virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
     virtual int getSampleRate() const{return 0;}
+    inline bool isMono() const{return audioInputRange.isMono();}
+    inline bool isStereo() const{return audioInputRange.getChannels() == 2;}
+    inline bool isNoInput() const{return audioInputRange.isEmpty();}
+    inline bool isMidi() const{return midiDeviceIndex >= 0;}
+    void setAudioInputSelection(int firstChannelIndex, int channelCount);
+    void setMidiInputSelection(int midiDeviceIndex);
+    void setToNoInput();
+    inline int getMidiDeviceIndex() const{return midiDeviceIndex;}
+    inline ChannelRange getAudioInputRange() const{return audioInputRange;}
+    inline void setGlobalFirstInputIndex(int firstInputIndex){this->globalFirstInputIndex = firstInputIndex;}
 };
 //++++++++++++++++++++++++
 }

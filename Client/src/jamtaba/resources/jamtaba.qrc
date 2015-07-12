@@ -15,6 +15,12 @@
         <file>licence.png</file>
         <file>chat.png</file>
         <file>broom.png</file>
+        <file>arrow-down.png</file>
+        <file>input_midi.png</file>
+        <file>input_mono.png</file>
+        <file>input_no.png</file>
+        <file>input_stereo.png</file>
+        <file>arrow-down-lighter.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

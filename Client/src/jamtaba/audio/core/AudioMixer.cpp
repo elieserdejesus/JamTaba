@@ -14,7 +14,7 @@ AudioMixer::AudioMixer(int sampleRate)
 {
 
     //disconnect to test
-    //nodes.append(inputNode);
+    nodes.append(inputNode);
 
 }
 

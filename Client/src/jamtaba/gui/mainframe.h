@@ -49,6 +49,7 @@ public:
     virtual void timerEvent(QTimerEvent *);
     virtual void resizeEvent(QResizeEvent*);
 
+
 private slots:
     void on_tabCloseRequest(int index);
     void on_preferencesClicked();
@@ -73,6 +74,8 @@ private slots:
     void onPluginScanFinished();
     void onPluginFounded(Audio::PluginDescriptor* descriptor);
 
+    //input selection
+    void on_inputSelectionChanged();
 
 private:
 
@@ -100,6 +103,13 @@ private:
     void showPluginGui(Audio::Plugin* plugin);
 
     static bool jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2);
+
+    void initializeWindowState();
+    void initializeLoginService();
+    void initializeLocalTrackView();
+    void initializeVstFinderStuff();
+    void initializeMainControllerEvents();
+    void initializeMainTabWidget();
 };
 
 

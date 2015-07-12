@@ -18,6 +18,7 @@ private:
 
     inline bool isMono() const {return channels == 1;}
 
+
     inline bool channelIsValid(unsigned int channel) const{return channel < channels;}
     inline bool sampleIndexIsValid(unsigned int sampleIndex) const{return sampleIndex < frameLenght;}
 
@@ -46,6 +47,8 @@ public:
 
     void zero();
 
+    void setToMono();
+    void setToStereo();
 
     Audio::AudioPeak computePeak() const;//{return peaks[channel];}
 
@@ -59,6 +62,7 @@ public:
      */
     void set(const SamplesBuffer& buffer, unsigned int bufferOffset, unsigned int samplesToCopy, unsigned int internalOffset);
     void set(const SamplesBuffer& buffer);
+    void set(const SamplesBuffer& buffer, int bufferChannelOffset, int channelsToCopy);
     void set(int channel, int sampleIndex, float sampleValue);
 
     float get( int channel,  int sampleIndex) const;

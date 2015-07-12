@@ -5,6 +5,7 @@
 
 namespace Audio{
 
+
 class PortAudioDriver : public AudioDriver
 {
 public:
@@ -25,13 +26,6 @@ public:
     virtual const char* getInputDeviceName(int index) const;
     virtual const char* getOutputDeviceName(int index) const;
 
-//    virtual inline int getInputs() const {return inputChannels;}
-//    virtual inline int getFirstInput() const {return firstInputIndex;}
-//    virtual inline int getOutputs() const {return outputChannels;}
-//    virtual inline int getFirstOutput() const {return firstOutputIndex;}
-//    virtual inline int getSampleRate() const {return sampleRate;}
-//    virtual inline int getBufferSize() const {return bufferSize;}
-
     virtual int getInputDeviceIndex() const;
     virtual void setInputDeviceIndex(int index);
     virtual int getOutputDeviceIndex() const;
@@ -39,6 +33,9 @@ public:
 
     virtual int getDevicesCount() const;
 
+//    virtual void setInputToMono(int inputIndex);
+//    virtual void setInputToStereo(int firstInputIndex);
+//    virtual void setInputToNoInput();
 
     //portaudio callback function
     friend int portaudioCallBack(const void *inputBuffer, void *outputBuffer,
@@ -48,10 +45,11 @@ public:
         void *userData);
 
 private:
-    void initPortAudio(int inputDeviceIndex, int outputDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize);
+    void initPortAudio(int sampleRate, int bufferSize);
 	PaStream* paStream;
     void translatePortAudioCallBack(const void *in, void *out, unsigned long framesPerBuffer);
 
+    void changeInputSelection(int firstInputChannelIndex, int inputChannelCount);
 };
 
 

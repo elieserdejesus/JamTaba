@@ -208,23 +208,49 @@ void OscillatorAudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out
     Audio::AudioNode::processReplacing(in, out, outOffset);
     */
 }
-//+++++++++++++++++++++++++++++++++++++++
-
 //++++++++++++++++++++++++++++++++++++++++++++++
-LocalInputAudioNode::LocalInputAudioNode( int firstInputIndex, bool isMono)
+LocalInputAudioNode::LocalInputAudioNode(bool isMono)
+    :globalFirstInputIndex(0)
 {
-    this->firstInputIndex = firstInputIndex;
-    this->mono = isMono;
+    setAudioInputSelection(0, isMono ? 1 : 2);
 }
 
-void LocalInputAudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
-{
+void LocalInputAudioNode::setAudioInputSelection(int firstChannelIndex, int channelCount){
+    audioInputRange = ChannelRange(firstChannelIndex, channelCount);
+    if(audioInputRange.isMono())
+        internalBuffer.setToMono();
+    else
+        internalBuffer.setToStereo();
+
+    midiDeviceIndex = -1;//disable midi input
+}
+
+void LocalInputAudioNode::setToNoInput(){
+    audioInputRange = ChannelRange(-1, 0);//disable audio input
+    midiDeviceIndex = -1;//disable midi input
+}
+
+void LocalInputAudioNode::setMidiInputSelection(int midiDeviceIndex){
+    audioInputRange = ChannelRange(-1, 0);//disable audio input
+    this->midiDeviceIndex = midiDeviceIndex;
+}
+
+void LocalInputAudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out){
+    /* The input buffer (in) is a multichannel buffer. So, this buffer contains
+     * all channels grabbed from soundcard inputs. If the user select a range of 4
+     * input channels in audio preferences menu this buffer will contain 4 channels.
+     *
+     * A LocalInputAudioNode instance grab only your input range from this input buffer.
+     * Other LocalInputAudioNode instances will read other channels from in buffer.
+     */
+
+    if(audioInputRange.isEmpty()){
+        return;
+    }
     internalBuffer.setFrameLenght(out.getFrameLenght());
-    internalBuffer.set(in);//copy into internal buffer
+    int inChannelOffset = audioInputRange.getFirstChannel() - globalFirstInputIndex;
+    internalBuffer.set(in, inChannelOffset, audioInputRange.getChannels());
+
     AudioNode::processReplacing(in, out);
-
 }
-
 //++++++++++++=
-
-

@@ -37,9 +37,6 @@ namespace Login {
     class LoginService;
     class LoginServiceParser;
     class LoginServiceListener;
-    //class AbstractJamRoom;
-    //class NinjamRoom;
-    //class AbstractPeer;
 }
 
 namespace Vst {
@@ -69,8 +66,6 @@ class MainController : public QApplication, public Audio::AudioDriverListener
 public:
     MainController(JamtabaFactory *factory, int& argc, char** argv);
     ~MainController();
-
-    //virtual void timerEvent(QTimerEvent *);
 
     void start();
     void stop();
@@ -121,17 +116,27 @@ public:
 
     Audio::AudioNode* getTrackNode(long ID);
 
+    void updateInputTrackRange();//called when input range or method (audio or midi) are changed in preferences
+    void setInputTrackToMono(int inputIndex);
+    void setInputTrackToStereo(int firstInputIndex);
+    void setInputTrackToMIDI(int midiDevice);
+    void setInputTrackToNoInput();
+
     inline bool isStarted() const{return started;}
 
     Geo::Location getLocation(QString ip) ;
 
+    static const int INPUT_TRACK_ID = 1;
+
 signals:
     void enteredInRoom(Login::RoomInfo room);
     void exitedFromRoom(bool error);
-    //void
+
+    //input selection
+    void inputSelectionChanged();
 
 private:
-    static const int INPUT_TRACK_ID = 1;
+
     void doAudioProcess(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
     Audio::Plugin* createPluginInstance(Audio::PluginDescriptor* descriptor);
 

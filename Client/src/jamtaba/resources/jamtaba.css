@@ -12,6 +12,9 @@ FxPanel{
 
 FxPanelItem{
     background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 30), stop:1 rgba(0, 0, 0, 50));
+    background-image: url(':/images/arrow-down-lighter.png');
+    background-position: center right;
+    background-repeat: none;
     max-height: 14px;
     width: 100%;
     qproperty-alignment: AlignCenter;
@@ -454,6 +457,29 @@ BaseTrackView > .QFrame#panSectionSeparator{
 background-color: rgb(180, 180, 180);
 }
 
+/*+++++++++++++++++++++++++++++++++++++++++++++++*/
+LocalTrackView #inputPanel{
+    padding: 2px;
+    background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 60), stop:1 rgba(0, 0, 0, 140));
+    border: 1px solid rgba(0, 0, 0, 60);
+    border-radius: 3px;
+}
+
+LocalTrackView #inputPanel:hover{
+    background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgba(0, 0, 0, 20), stop:1 rgba(0, 0, 0, 40));
+}
+
+LocalTrackView #inputSelectionButton{
+    background-color: none;
+    background-image: url(':/images/arrow-down.png');
+    background-repeat: none;
+    background-position: center right;
+    border: none;
+    color: rgba(255,255, 255, 160);
+    font-size: 7pt;
+    text-align: left;
+}
+/*+++++++++++++++++++++++++++++++++++++++++++++++*/
 
 /* NINJAM */
 NinjamPanel{
