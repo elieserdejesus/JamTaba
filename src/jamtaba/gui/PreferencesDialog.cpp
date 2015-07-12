@@ -19,8 +19,9 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
     setModal(true);
 
     //populateAudioTab();
-
     //populateMidiInputCombo();
+
+    ui->comboLastOutput->setEnabled(false);
 
     ui->prefsTab->setCurrentIndex(0);
     populateAudioTab();
@@ -138,13 +139,13 @@ void PreferencesDialog::populateFirstOutputCombo(){
 void PreferencesDialog::populateLastOutputCombo()
 {
     ui->comboLastOutput->clear();
-    int maxOuts = 2;//portAudioDriver->getMaxOutputs();
+    int maxOuts = mainController->getAudioDriver()->getMaxOutputs();
     int currentFirstOut = ui->comboFirstOutput->currentData().toInt();
     if(currentFirstOut + 1 < maxOuts){
         currentFirstOut++;//to avoid 1 channel output
     }
     int items = 0;
-    const int MAX_ITEMS = maxOuts - currentFirstOut;
+    const int MAX_ITEMS = 1;//std::min( maxOuts - currentFirstOut, 2);
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     for(int i=currentFirstOut; items < MAX_ITEMS; i++, items++){
         ui->comboLastOutput->addItem( audioDriver->getOutputChannelName(i), i);
