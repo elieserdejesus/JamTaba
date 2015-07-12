@@ -1,4 +1,3 @@
-
 #transmissão do áudio
 
 #também preciso tratar a situação onde o usuário está usando midi como entrada e o driver midi é alterado nas preferencias
@@ -13,14 +12,13 @@
 #abri a aplicação com a fast track e deu pau porque 192 é uma SR inválida. Tenho que pedir as SR válidas para cada device.
 #já aproveitar para pedir os buffer sizes
 
-
-
-
 #depois trabalhar na ideia do segundo canal. Deixar o backtracking sempre na tela pode ser
 #muito chato pra quem não usa. O BT channel poderia ser removido?
 
 #como serão as entradas? Como será a criação do canal de backtracking?
 
+#salvar as entradas selecionadas para a pista local (salvar primeiro índice e quantidade de canais).
+#Deixar para pensar em como salvar quando  já tiver decidico como serão as múltiplas entradas
 
 #acho que poderia simplificar a criação do menu de plugins usando a mesma ideia
 #que usei para gerar o menu das inputs da pista local. Como a pista local tem
@@ -35,10 +33,6 @@
 #que sair do loop do resampler exatamente em out.lenght
 
 #tirar spacers dos títulos das seções?
-
-#salvar as entradas selecionadas para a pista local
-
-#salvar o metronomo
 
 #acho que quando fico alternando entre os streams das salas não está funcionando muito bem, parece que o botão ficou pressionado.
 

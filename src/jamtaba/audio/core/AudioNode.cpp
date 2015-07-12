@@ -140,6 +140,12 @@ void AudioNode::setPan(float pan) {
     updateGains();
 }
 
+void AudioNode::updateGains(){
+    double angle = pan * piOver2 * 0.5;
+    leftGain = (float) (root2Over2 * (cos(angle) - sin(angle)));
+    rightGain = (float) (root2Over2 * (cos(angle) + sin(angle)));
+}
+
 AudioNode::~AudioNode()
 {
     foreach (AudioNodeProcessor* processor, processors) {

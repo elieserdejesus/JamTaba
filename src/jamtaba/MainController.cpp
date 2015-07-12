@@ -54,8 +54,8 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     this->audioDriver = new Audio::PortAudioDriver(
                 this, //the AudioDriverListener instance
                 ConfigStore::getLastInputDevice(), ConfigStore::getLastOutputDevice(),
-                ConfigStore::getFirstAudioInput(), ConfigStore::getLastAudioInput(),
-                ConfigStore::getFirstAudioOutput(), ConfigStore::getLastAudioOutput(),
+                ConfigStore::getFirstGlobalAudioInput(), ConfigStore::getLastGlobalAudioInput(),
+                ConfigStore::getFirstGlobalAudioOutput(), ConfigStore::getLastGlobalAudioOutput(),
                 ConfigStore::getLastSampleRate(), ConfigStore::getLastBufferSize()
                 );
 
@@ -185,15 +185,19 @@ Audio::AudioNode *MainController::getTrackNode(long ID){
 
 bool MainController::addTrack(long trackID, Audio::AudioNode* trackNode){
     QMutexLocker locker(&mutex);
-    if(!tracksNodes.contains(trackID)){
+//    qDebug() << "adicionando track " << trackID;
+//    if(!tracksNodes.contains(trackID)){
         tracksNodes.insert( trackID, trackNode );
         audioMixer->addNode(trackNode) ;
         return true;
-    }
-    else{
-        qCritical() << "Duplicated track ID";
-    }
-    return false;
+//    }
+//    else{
+//        qCritical() << "Duplicated track ID";
+//        foreach (long key, tracksNodes.keys()) {
+//            qDebug() << "node:" << key;
+//        }
+//    }
+//    return false;
 }
 
 void MainController::removeTrack(long trackID){
@@ -281,6 +285,8 @@ void MainController::setTrackPan(int trackID, float pan){
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->setPan(pan);
+    }else{
+        qWarning() << "track not found! " << trackID;
     }
 }
 
@@ -289,6 +295,8 @@ void MainController::setTrackLevel(int trackID, float level){
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->setGain( std::pow( level, 4));
+    }else{
+        qWarning() << "track not found! " << trackID;
     }
 }
 
@@ -521,6 +529,7 @@ void MainController::on_disconnectedFromNinjamServer(const Server &server){
 }
 
 void MainController::on_connectedInNinjamServer(Ninjam::Server server){
+    //emit event after start controller to create view widgets before start
     emit enteredInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers()));
     ninjamController->start(server);
 }

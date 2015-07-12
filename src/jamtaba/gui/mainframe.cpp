@@ -280,8 +280,11 @@ void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
     int index = ui.tabWidget->addTab(ninjamWindow, roomInfo.getName());
     ui.tabWidget->setCurrentIndex(index);
 
-    //add metronome track
-    metronomeTrackView = new MetronomeTrackView(this, mainController, NinjamJamRoomController::METRONOME_TRACK_ID);
+    //add metronome track view
+    float metronomeInitialGain = ConfigStore::getMetronomeGain();
+    float metronomeInitialPan = ConfigStore::getMetronomePan();
+    metronomeTrackView = new MetronomeTrackView(this, mainController, NinjamJamRoomController::METRONOME_TRACK_ID, metronomeInitialGain, metronomeInitialPan );
+
     ui.localTracksLayout->addWidget(metronomeTrackView);
 
     //add the chat panel in main window

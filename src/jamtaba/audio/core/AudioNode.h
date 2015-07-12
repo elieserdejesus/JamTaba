@@ -104,11 +104,7 @@ private:
 	static const double root2Over2;// = 1.414213562373095;// *0.5;
 	static const double piOver2;// = 3.141592653589793238463 * 0.5;
 
-    inline void updateGains() {
-        double angle = pan * piOver2 * 0.5;
-        leftGain = (float) (root2Over2 * (cos(angle) - sin(angle)));
-        rightGain = (float) (root2Over2 * (cos(angle) + sin(angle)));
-    }
+    void updateGains();
 
     //mutable double resamplingCorrection;
 };
