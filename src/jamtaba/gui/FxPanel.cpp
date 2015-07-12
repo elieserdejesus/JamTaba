@@ -59,6 +59,7 @@ FxPanel::~FxPanel()
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void FxPanel::paintEvent(QPaintEvent* ){
+    //default code to use stylesheets
     QStyleOption opt;
     opt.init(this);
     QPainter p(this);

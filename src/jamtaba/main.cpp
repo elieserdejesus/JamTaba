@@ -3,8 +3,7 @@
 #include "JamtabaFactory.h"
 #include <QTextCodec>
 
-#include "../audio/core/SamplesBuffer.h"
-
+//#include "../audio/core/SamplesBuffer.h"
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 

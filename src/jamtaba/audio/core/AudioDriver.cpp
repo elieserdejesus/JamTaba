@@ -7,44 +7,54 @@
 
 using namespace Audio;
 
+ChannelRange::ChannelRange(int firstChannel, int channelsCount)
+    :firstChannel(firstChannel), channelsCount(channelsCount){
+}
 
-
-
-//+++++++++++++++++++++++++++++++++++++++++++
-AudioDriver::AudioDriver(AudioDriverListener *audioDriverListener)
-    :
-    maxInputChannels(0),
-    maxOutputChannels(0),
-    inputChannels(0),//total of selected input channels
-    outputChannels(0),//total of selected output channels (2 channels by default)
-    inputDeviceIndex(0),//index of selected device index. In ASIO the inputDeviceIndex and outputDeviceIndex are equal.
-    outputDeviceIndex(0),
-    firstInputIndex(0),
-    firstOutputIndex(0),
-    sampleRate(44100),
-    bufferSize(128),
-    inputBuffer(2),
-    outputBuffer(2),
-    audioDriverListener(audioDriverListener)
+ChannelRange::ChannelRange()
+    :firstChannel(-1), channelsCount(0)
 {
 
 }
 
-void AudioDriver::recreateBuffers(const int newMaxInputChannels, const int newMaxOutputChannels){
-//    if (inputBuffer != NULL){
-//        delete inputBuffer;
-//    }
+void ChannelRange::setToStereo(){
+    this->channelsCount = 2;
+}
 
-    //recreate
-    maxInputChannels = newMaxInputChannels;
-    //inputBuffer = new SamplesBuffer(newMaxInputChannels);
+void ChannelRange::setToMono(){
+    this->channelsCount = 1;
+}
 
-//    if (outputBuffer != NULL){
-//        delete outputBuffer;
-//    }
+//+++++++++++++++++++++++++++++++++++++++++++
+AudioDriver::AudioDriver(AudioDriverListener *audioDriverListener)
+    :
+    inputDeviceIndex(0),//index of selected device index. In ASIO the inputDeviceIndex and outputDeviceIndex are equal.
+    outputDeviceIndex(0),
+    sampleRate(44100),
+    bufferSize(128),
+    inputBuffer(nullptr),
+    outputBuffer(nullptr),
+    globalInputRange(0, 0),
+    globalOutputRange(0, 0),
+    //selectedInputs(0, 0),
+    //selectedOutpus(0, 0),
+    audioDriverListener(audioDriverListener)
 
-    maxOutputChannels = newMaxOutputChannels;
-    //outputBuffer = new SamplesBuffer(newMaxOutputChannels);
+{
+
+}
+
+void AudioDriver::recreateBuffers(){
+    if (inputBuffer){
+        delete inputBuffer;
+    }
+    inputBuffer = new SamplesBuffer(globalInputRange.getChannels());
+
+    if(outputBuffer)
+    if (outputBuffer != NULL){
+        delete outputBuffer;
+    }
+    outputBuffer = new SamplesBuffer(globalOutputRange.getChannels());
 }
 
 void AudioDriver::setProperties(int deviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)
@@ -57,11 +67,10 @@ void AudioDriver::setProperties(int inputDeviceIndex, int outputDeviceIndex, int
     stop();
     this->inputDeviceIndex = inputDeviceIndex;
     this->outputDeviceIndex = outputDeviceIndex;
-    this->firstInputIndex = firstIn;
-    this->inputChannels = (lastIn - firstIn) + 1;
-    this->firstOutputIndex = firstOut;
-    this->outputChannels = (lastOut - firstOut) + 1;
+    this->globalInputRange = ChannelRange(firstIn, (lastIn - firstIn) + 1);
+    this->globalOutputRange = ChannelRange(firstOut, (lastOut - firstOut) + 1);
     this->bufferSize = bufferSize;
+
     if(this->sampleRate != sampleRate){
         this->sampleRate = sampleRate;
         emit sampleRateChanged(this->sampleRate);

@@ -19,6 +19,11 @@ VorbisDecoder::VorbisDecoder()
     outBuffer[1] = new float[2048];
 
     decodedSamples = 0;
+
+    Q_UNUSED(OV_CALLBACKS_DEFAULT);
+    Q_UNUSED(OV_CALLBACKS_NOCLOSE);
+    Q_UNUSED(OV_CALLBACKS_STREAMONLY);
+    Q_UNUSED(OV_CALLBACKS_STREAMONLY_NOCLOSE);
 }
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::~VorbisDecoder(){

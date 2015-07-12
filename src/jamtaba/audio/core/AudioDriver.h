@@ -2,8 +2,26 @@
 
 #include "SamplesBuffer.h"
 #include <QObject>
+#include <QMutex>
 
 namespace Audio{
+
+class ChannelRange{
+
+private:
+    int firstChannel;
+    int channelsCount;
+public:
+    ChannelRange(int firstChannel, int channelsCount);
+    ChannelRange();
+    inline int getChannels() const{return channelsCount;}
+    inline bool isMono() const{return channelsCount == 1;}
+    void setToStereo();
+    void setToMono();
+    inline int getFirstChannel() const{return firstChannel;}
+    inline int getLastChannel() const{return firstChannel + channelsCount - 1;}
+    inline bool isEmpty() const{return getChannels() <= 0;}
+};
 
 class AudioDriverListener{
 public:
@@ -30,15 +48,14 @@ public:
     virtual void start() = 0;
     virtual void release() = 0;
 
-    virtual inline int getInputs() const {return inputChannels;}
-    virtual inline int getFirstInput() const {return firstInputIndex;}
-    virtual inline int getOutputs() const {return outputChannels;}
-    virtual inline int getFirstOutput() const {return firstOutputIndex;}
+    inline ChannelRange getSelectedInputs() const{return globalInputRange;}
+    inline ChannelRange getSelectedOutputs() const{return globalOutputRange;}
+
     virtual inline int getSampleRate() const {return sampleRate;}
     virtual inline int getBufferSize() const {return bufferSize;}
 
-    inline int getMaxInputs() const{return maxInputChannels;}
-    inline int getMaxOutputs() const{return maxOutputChannels;}
+    virtual int getMaxInputs() const = 0;//return max inputs for an audio device. My fast track ultra (8 channels) return 8, etc.
+    virtual int getMaxOutputs() const = 0;
 
     virtual const char* getInputChannelName(unsigned const int index) const = 0;
     virtual const char* getOutputChannelName(unsigned const int index) const = 0;
@@ -53,24 +70,21 @@ public:
 
     virtual int getDevicesCount() const = 0;
 
-    const SamplesBuffer& getOutputBuffer() const {return outputBuffer;}
+    const SamplesBuffer& getOutputBuffer() const {return *outputBuffer;}
 protected:
-    int maxInputChannels;
-    int maxOutputChannels;
-    int inputChannels;//total of selected input channels
-    int outputChannels;//total of selected output channels (2 channels by default)
+    ChannelRange globalInputRange;//the range of input channels selected in audio preferences menu
+    ChannelRange globalOutputRange;//the range of output channels selected in audio preferences menu
+
     int inputDeviceIndex;//index of selected device index. In ASIO the inputDeviceIndex and outputDeviceIndex are equal.
     int outputDeviceIndex;
-    int firstInputIndex;
-    int firstOutputIndex;
 
     int sampleRate;
     int bufferSize;
 
-    SamplesBuffer inputBuffer;
-    SamplesBuffer outputBuffer;
+    SamplesBuffer* inputBuffer;
+    SamplesBuffer* outputBuffer;
 
-    void recreateBuffers(const int maxInputs, const int maxOutputs);
+    void recreateBuffers();
 
     AudioDriverListener* audioDriverListener;
 };

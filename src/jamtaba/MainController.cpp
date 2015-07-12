@@ -119,7 +119,62 @@ QStringList MainController::getBotNames() const{
 Geo::Location MainController::getLocation(QString ip) {
     return ipToLocationResolver.resolve(ip);
 }
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void MainController::updateInputTrackRange(){
+    Audio::LocalInputAudioNode* inputTrack = dynamic_cast<Audio::LocalInputAudioNode*>(getTrackNode(INPUT_TRACK_ID));
+    Audio::ChannelRange globalInputRange = audioDriver->getSelectedInputs();
+    Audio::ChannelRange inputTrackRange = inputTrack->getAudioInputRange();
+    inputTrack->setGlobalFirstInputIndex(globalInputRange.getFirstChannel());
 
+//    //If global input range is reduced to 2 channels and user previous selected inputs 3+4 the input range need be corrected to avoid a beautiful crash :)
+    if(globalInputRange.getChannels() < inputTrackRange.getChannels()){
+        if(globalInputRange.isMono()){
+            setInputTrackToMono(globalInputRange.getFirstChannel());
+        }
+        else{
+            setInputTrackToNoInput();
+        }
+    }
+
+    if(inputTrack->isNoInput()){
+        return;
+    }
+
+    //check if localInputRange is valid after the change in globalInputRange
+    int firstChannel = inputTrackRange.getFirstChannel();
+    int globalFirstChannel = globalInputRange.getFirstChannel();
+    if( firstChannel < globalFirstChannel || inputTrackRange.getLastChannel() > globalInputRange.getLastChannel()){
+        if(globalInputRange.isMono()){
+            setInputTrackToMono(globalInputRange.getFirstChannel());
+        }else if(globalInputRange.getChannels() >= 2){
+            setInputTrackToStereo(globalInputRange.getFirstChannel());
+        }
+    }
+}
+
+void MainController::setInputTrackToMono(int inputIndex){
+    //audioDriver->setInputToMono(inputIndex);
+    Audio::LocalInputAudioNode* inputTrack = dynamic_cast<Audio::LocalInputAudioNode*>(getTrackNode(INPUT_TRACK_ID));
+    inputTrack->setAudioInputSelection(inputIndex, 1);//mono
+    emit inputSelectionChanged();
+}
+void MainController::setInputTrackToStereo(int firstInputIndex){
+    Audio::LocalInputAudioNode* inputTrack = dynamic_cast<Audio::LocalInputAudioNode*>(getTrackNode(INPUT_TRACK_ID));
+    inputTrack->setAudioInputSelection(firstInputIndex, 2);//stereo
+    emit inputSelectionChanged();
+}
+void MainController::setInputTrackToMIDI(int midiDevice){
+    Audio::LocalInputAudioNode* inputTrack = dynamic_cast<Audio::LocalInputAudioNode*>(getTrackNode(INPUT_TRACK_ID));
+    midiDriver->setInputDeviceIndex(midiDevice);
+    inputTrack->setMidiInputSelection(midiDevice);
+    emit inputSelectionChanged();
+}
+void MainController::setInputTrackToNoInput(){
+    Audio::LocalInputAudioNode* inputTrack = dynamic_cast<Audio::LocalInputAudioNode*>(getTrackNode(INPUT_TRACK_ID));
+    inputTrack->setToNoInput();
+    emit inputSelectionChanged();
+}
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Audio::AudioNode *MainController::getTrackNode(long ID){
     QMutexLocker locker(&mutex);
     if(tracksNodes.contains(ID)){

@@ -237,6 +237,25 @@ int SamplesBuffer::getFrameLenght() const{
     return this->frameLenght;
 }
 
+void SamplesBuffer::setToMono(){
+    if(this->channels != 1){
+        this->channels = 1;
+    }
+}
+
+void SamplesBuffer::setToStereo(){
+    if(this->samples.size() < 2){
+        int channelsToAdd = 2 - this->samples.size();
+        for (int c = 0; c < channelsToAdd; ++c) {
+            samples.push_back(std::vector<float>(frameLenght));
+        }
+    }
+    for (unsigned int c = 0; c < samples.size(); ++c) {
+        samples[c].resize(frameLenght);
+    }
+    this->channels = 2;
+}
+
 void SamplesBuffer::set(const SamplesBuffer &buffer){
     set(buffer, 0, buffer.getFrameLenght(), 0);
 }
@@ -247,7 +266,6 @@ float SamplesBuffer::get(int channel, int sampleIndex) const{
         return 0;
     }
     return samples[channel][sampleIndex ];
-
 }
 
 void SamplesBuffer::setFrameLenght(unsigned int newFrameLenght){
@@ -260,6 +278,20 @@ void SamplesBuffer::setFrameLenght(unsigned int newFrameLenght){
         samples[c].resize(newFrameLenght);
     }
     this->frameLenght = newFrameLenght;
+}
+
+void SamplesBuffer::set(const SamplesBuffer &buffer, int bufferChannelOffset, int channelsToCopy){
+    int framesToCopy = std::min(buffer.getFrameLenght(), (int)frameLenght);
+    int channelsToProcess = std::min(channelsToCopy, std::min(buffer.getChannels(), (int)channels));
+    if(channelsToProcess + bufferChannelOffset <= buffer.getChannels()){//avoid invalid channel index
+        int bytesToCopy = framesToCopy * sizeof(float);
+        for (int c = 0; c < channelsToProcess; ++c) {
+            memcpy( (void*)getSamplesArray(c), buffer.getSamplesArray(c + bufferChannelOffset), bytesToCopy);
+        }
+    }
+    else{
+        throw new std::runtime_error("wrong channel index ");
+    }
 }
 
 void SamplesBuffer::set(const SamplesBuffer& buffer, unsigned int bufferOffset, unsigned int samplesToCopy, unsigned int internalOffset){

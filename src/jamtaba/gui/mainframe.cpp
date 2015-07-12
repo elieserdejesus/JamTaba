@@ -45,8 +45,66 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     ninjamWindow(nullptr)
 {
 	ui.setupUi(this);
+    initializeWindowState();//window size, maximization ...
+    initializeLoginService();
+    initializeLocalTrackView();
+    initializeVstFinderStuff();//vst finder...
 
+    initializeMainControllerEvents();
+    initializeMainTabWidget();
+    timerID = startTimer(1000/50);
 
+    QObject::connect(ui.menuAudioPreferences, SIGNAL(triggered()), this, SLOT(on_preferencesClicked()));
+    QObject::connect(mainController, SIGNAL(inputSelectionChanged()), this, SLOT(on_inputSelectionChanged()));
+}
+//++++++++++++++++++++++++=
+void MainFrame::initializeMainTabWidget(){
+    //the rooms list tab bar is not closable
+    ui.tabWidget->tabBar()->tabButton(0, QTabBar::RightSide)->resize(0, 0);
+    ui.tabWidget->tabBar()->tabButton(0, QTabBar::RightSide)->hide();
+
+    connect( ui.tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(on_tabCloseRequest(int)));
+}
+
+void MainFrame::initializeMainControllerEvents(){
+    QObject::connect(mainController, SIGNAL(enteredInRoom(Login::RoomInfo)), this, SLOT(on_enteredInRoom(Login::RoomInfo)));
+    QObject::connect(mainController, SIGNAL(exitedFromRoom(bool)), this, SLOT(on_exitedFromRoom(bool)));
+}
+
+void MainFrame::initializeVstFinderStuff(){
+    const Vst::PluginFinder* pluginFinder = mainController->getPluginFinder();
+    QObject::connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(onPluginScanStarted()));
+    QObject::connect(pluginFinder, SIGNAL(scanFinished()), this, SLOT(onPluginScanFinished()));
+    QObject::connect(pluginFinder, SIGNAL(vstPluginFounded(Audio::PluginDescriptor*)), this, SLOT(onPluginFounded(Audio::PluginDescriptor*)));
+
+    QStringList vstPaths = ConfigStore::getVstPluginsPaths();
+    if(vstPaths.empty()){//no vsts in database cache, try scan
+        mainController->scanPlugins();
+    }
+    else{//use vsts stored in settings file
+        mainController->initializePluginsList(vstPaths);
+        onPluginScanFinished();
+    }
+}
+//++++++++++++++++++++++++++++++++++++++++++++++++
+void MainFrame::initializeLocalTrackView(){
+    fxMenu = createFxMenu();
+
+    localTrackView = new LocalTrackView(this, this->mainController);
+    ui.localTracksLayout->addWidget(localTrackView);
+    localTrackView->initializeFxPanel(fxMenu);
+
+    QObject::connect(localTrackView, SIGNAL(editingPlugin(Audio::Plugin*)), this, SLOT(on_editingPlugin(Audio::Plugin*)));
+    QObject::connect(localTrackView, SIGNAL(removingPlugin(Audio::Plugin*)), this, SLOT(on_removingPlugin(Audio::Plugin*)));
+}
+
+void MainFrame::initializeLoginService(){
+    Login::LoginService* loginService = this->mainController->getLoginService();
+    connect(loginService, SIGNAL(roomsListAvailable(QList<Login::RoomInfo>)),
+            this, SLOT(on_roomsListAvailable(QList<Login::RoomInfo>)));
+}
+
+void MainFrame::initializeWindowState(){
     if(ConfigStore::windowWasMaximized()){
         setWindowState(Qt::WindowMaximized);
     }
@@ -59,48 +117,6 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
         int y = desktopHeight * location.y();
         this->move(x, y);
     }
-    timerID = startTimer(1000/70);
-
-
-    Login::LoginService* loginService = this->mainController->getLoginService();
-    connect(loginService, SIGNAL(roomsListAvailable(QList<Login::RoomInfo>)),
-                                 this, SLOT(on_roomsListAvailable(QList<Login::RoomInfo>)));
-
-    fxMenu = createFxMenu();
-
-    localTrackView = new LocalTrackView(this, this->mainController);
-    ui.localTracksLayout->addWidget(localTrackView);
-    localTrackView->initializeFxPanel(fxMenu);
-
-    QObject::connect(localTrackView, SIGNAL(editingPlugin(Audio::Plugin*)), this, SLOT(on_editingPlugin(Audio::Plugin*)));
-    QObject::connect(localTrackView, SIGNAL(removingPlugin(Audio::Plugin*)), this, SLOT(on_removingPlugin(Audio::Plugin*)));
-
-    const Vst::PluginFinder* pluginFinder = mainController->getPluginFinder();
-    QObject::connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(onPluginScanStarted()));
-    QObject::connect(pluginFinder, SIGNAL(scanFinished()), this, SLOT(onPluginScanFinished()));
-    QObject::connect(pluginFinder, SIGNAL(vstPluginFounded(Audio::PluginDescriptor*)), this, SLOT(onPluginFounded(Audio::PluginDescriptor*)));
-
-    //QObject::connect( ui.menuTest, SIGNAL(triggered(QAction*)), this, SLOT(scanTest(QAction*)));
-
-    QStringList vstPaths = ConfigStore::getVstPluginsPaths();
-    if(vstPaths.empty()){//no vsts in database cache, try scan
-        mainController->scanPlugins();
-    }
-    else{//use vsts stored in settings file
-        mainController->initializePluginsList(vstPaths);
-        onPluginScanFinished();
-    }
-
-    QObject::connect(ui.menuAudioPreferences, SIGNAL(triggered()), this, SLOT(on_preferencesClicked()));
-    QObject::connect(mainController, SIGNAL(enteredInRoom(Login::RoomInfo)),
-                     this, SLOT(on_enteredInRoom(Login::RoomInfo)));
-    QObject::connect(mainController, SIGNAL(exitedFromRoom(bool)), this, SLOT(on_exitedFromRoom(bool)));
-
-    //the rooms list tab bar is not closable
-    ui.tabWidget->tabBar()->tabButton(0, QTabBar::RightSide)->resize(0, 0);
-    ui.tabWidget->tabBar()->tabButton(0, QTabBar::RightSide)->hide();
-
-    connect( ui.tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(on_tabCloseRequest(int)));
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -394,27 +410,37 @@ void MainFrame::on_preferencesClicked()
     connect(&dialog, SIGNAL(ioChanged(int,int,int,int,int,int,int,int)), this, SLOT(on_IOPropertiesChanged(int, int,int,int,int,int,int,int)));
     dialog.exec();
 
-    midiDriver->start();
-    audioDriver->start();
+    //midiDriver->start();
+    //audioDriver->start();
 
     //audio driver parameters are changed in on_IOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.
 }
 
 void MainFrame::on_IOPropertiesChanged(int midiDeviceIndex, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)
 {
-    qDebug() << "midi device: " << midiDeviceIndex << endl;
+    //qDebug() << "midi device: " << midiDeviceIndex << endl;
+    //bool midiDeviceChanged =  midiDeviceIndex
+
     Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
     midiDriver->setInputDeviceIndex(midiDeviceIndex);
+
 #ifdef _WIN32
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     audioDriver->setProperties(audioDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
-
 #else
     //preciso de um outro on_audioIoPropertiesChanged que me dê o input e o output device
     //audioDriver->setProperties(selectedDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
 #endif
-
+    mainController->updateInputTrackRange();
     ConfigStore::storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, audioDevice, sampleRate, bufferSize, midiDeviceIndex);
+
+    mainController->getMidiDriver()->start();
+    mainController->getAudioDriver()->start();
+}
+
+//input selection changed by user or by system
+void MainFrame::on_inputSelectionChanged(){
+    localTrackView->refreshInputSelectionName();
 }
 
 //plugin finder events

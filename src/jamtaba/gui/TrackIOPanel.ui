@@ -1,0 +1,22 @@
+<?xml version='1.0'?>
+<ui version="4.0">
+ <author/>
+ <comment/>
+ <exportmacro/>
+ <class>TrackIOPanel</class>
+ <widget class="QWidget" name="TrackIOPanel">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>320</width>
+    <height>240</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+ </widget>
+ <pixmapfunction/>
+ <connections/>
+</ui>
