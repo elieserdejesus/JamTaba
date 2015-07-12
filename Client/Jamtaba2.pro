@@ -1,15 +1,6 @@
-#arrumei o bug na seleção do áudio, mas está resetando a configuração quando mudo
-#alguma coisa na configuração de áudio, tenho que deixar o algoritmo da mudança
-#mais inteligente
-
-#acho que se eu estiver usando as entradas 3 e 4 e mudar o buffer size as entradas vão voltar para 1 e 2
-    #mudei o código, mas crashou. Selecionei as entradas 3+4, abri as preferencias, mudei o buffer size, fechei e crashou
-
-
 
 #também preciso tratar a situação onde o usuário está usando midi como entrada e o driver midi é alterado nas preferencias
 
-#limitar a escolha das saídas para pares ao invés de permitir um range
 
 #como vou permitir vários devices midi? Pelo que vi no portaudio.h o único jeito seria abrir vários streams midi, um para cada device.
 #acho que é melhor deixar isso para mais adiante, por que também terei que mudar a forma como estou lendo as mensagens midi e passando
