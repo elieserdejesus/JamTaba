@@ -106,6 +106,7 @@ public:
     bool trackIsSoloed(int trackID) const;
     void setTrackLevel(int trackID, float level);
     void setTrackPan(int trackID, float pan);
+
     Audio::AudioPeak getInputPeaks();
     Audio::AudioPeak getRoomStreamPeak();
     Audio::AudioPeak getTrackPeak(int trackID);

@@ -40,7 +40,7 @@ public:
 
     void sendChatMessage(QString msg);
 
-    static const long METRONOME_TRACK_ID = -123; //just a number :)
+    static const long METRONOME_TRACK_ID = 123456789; //just a number :)
 
 signals:
     void currentBpiChanged(int newBpi);

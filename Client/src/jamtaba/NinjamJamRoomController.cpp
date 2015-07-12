@@ -4,10 +4,13 @@
 #include "ninjam/Service.h"
 #include "ninjam/User.h"
 #include "ninjam/Server.h"
+#include "audio/core/AudioNode.h"
 #include "../NinjamRoomWindow.h"
 #include "../audio/NinjamTrackNode.h"
+#include "../persistence/ConfigStore.h"
 #include <QMutexLocker>
 #include "../audio/MetronomeTrackNode.h"
+#include <cmath>
 
 #include <QDebug>
 #include <QThread>
@@ -55,8 +58,10 @@ void NinjamJamRoomController::start(const Ninjam::Server& server){
         //mainController->setTrackLevel(-5, 0.6);
 
         mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
-        metronomeTrackNode->setGain(1);//TODO - use the persisted values
-        metronomeTrackNode->setPan(0);
+        float metronomeInitialGain = Persistence::ConfigStore::getMetronomeGain();
+        float metronomeInitialPan = Persistence::ConfigStore::getMetronomePan();
+        mainController->setTrackLevel(METRONOME_TRACK_ID, metronomeInitialGain);
+        mainController->setTrackPan(METRONOME_TRACK_ID, metronomeInitialPan);
 
         this->intervalPosition  = 0;
         this->running = true;
@@ -168,13 +173,23 @@ void NinjamJamRoomController::stop(){
 
         ninjamService->disconnectFromServer();
 
+
         QMutexLocker locker(&mutex);
-        mainController->removeTrack(METRONOME_TRACK_ID);//remove metronome
+
+        //store metronome settings
+        Audio::AudioNode* metronomeTrack = mainController->getTrackNode(METRONOME_TRACK_ID);
+        if(metronomeTrack){
+            float correctedGain = std::pow( metronomeTrack->getGain(), 1.0/4);//4th root - save the metronome gain in linear
+            Persistence::ConfigStore::storeMetronomeSettings(correctedGain, metronomeTrack->getPan());
+            mainController->removeTrack(METRONOME_TRACK_ID);//remove metronome
+        }
+        //clear all tracks
         foreach(NinjamTrackNode* trackNode, trackNodes.values()){
             mainController->removeTrack(trackNode->getID());
             trackNode->deactivate();
         }
         trackNodes.clear();
+
 
     }
 }
