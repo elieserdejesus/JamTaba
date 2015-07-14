@@ -27,6 +27,31 @@ BaseTrackView::BaseTrackView(QWidget *parent, Controller::MainController *mainCo
     trackViews.insert(trackID, this);
 }
 
+void BaseTrackView::setToNarrow(){
+    this->setMaximumWidth(NARROW_WIDTH);
+
+    ui->soloButton->setText("S");
+    ui->soloButton->setToolTip("Solo");
+
+    ui->muteButton->setText("M");
+    ui->muteButton->setToolTip("Mute");
+
+    ui->panSlider->setTickInterval(2);
+}
+
+void BaseTrackView::setToWide(){
+    if(this->maximumWidth() == NARROW_WIDTH){
+        setMaximumWidth(QWIDGETSIZE_MAX);
+        ui->soloButton->setText("SOLO");
+        ui->soloButton->setToolTip("Solo");
+
+        ui->muteButton->setText("MUTE");
+        ui->muteButton->setToolTip("Mute");
+
+        ui->panSlider->setTickInterval(0);
+    }
+}
+
 void BaseTrackView::setEnabled(bool enabled){
     QWidget::setEnabled(enabled);
     style()->unpolish(this);

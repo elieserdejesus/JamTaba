@@ -23,6 +23,9 @@ public:
     static BaseTrackView* getTrackViewByID(long trackID);
     virtual void setEnabled(bool);
 
+    virtual void setToNarrow();
+    virtual void setToWide();
+
 protected:
     Ui::TrackView *ui;
     Controller::MainController* mainController;
@@ -30,6 +33,8 @@ protected:
     bool eventFilter(QObject *source, QEvent *ev);
     long trackID;
     bool activated;
+
+    static const int NARROW_WIDTH = 80;
 private:
     static QMap<long, BaseTrackView*> trackViews;
 

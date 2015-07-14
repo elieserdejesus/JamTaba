@@ -243,8 +243,9 @@ background-color: rgb(60, 60, 60);
 
 /* painéis principais */
 .QWidget#leftPanel, .QWidget#chatArea, .QWidget#contentPanel{
-background: url(:/images/gradient.bmp) repeat-x;
-background-color: rgb(39, 39, 39);
+/*background: url(:/images/gradient.bmp) repeat-x;*/
+/*background-color: rgb(39, 39, 39);*/
+/*background-color: red;*/
 border: 1px solid rgb(45, 45, 45);
 border-radius: 5px;
 margin-top: 1ex;
@@ -368,7 +369,7 @@ border-radius: 5px;
 
 /*  Track view +++++++++++++++++++++++++++++++++++++++++++++++ */
 BaseTrackView{
-border-radius: 5px;
+border-radius: 3px;
 background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), stop:1 rgb(100, 100, 100));
 border: 1px solid rgb(61,61,61);
 }
@@ -436,18 +437,48 @@ BaseTrackView .QPushButton:hover:checked#muteButton {
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 110, 122), stop:1 rgb(120, 0, 0));
 color: white;
 }
+/* LOCAL TRACK GROUP */
 
+LocalTrackGroupView {
+    border: none;
+    background-color: none;
+}
 
-BaseTrackView  > .QLabel#trackName {
+LocalTrackGroupView[highlighted="true"] {
+    border: 2px solid white;
+    border-radius: 3px;
+}
+
+LocalTrackGroupView > #topPanel{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), stop:1 rgb(100, 100, 100));
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+MainFrame  #userNameLabel {
     color: rgb(0, 0, 0);
     font-weight: bold;
     margin-top:5px;
+    text-align: center;
 }
 
-BaseTrackView  > .QLineEdit#channelName {
+LocalTrackGroupView   #groupNameField {
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
+LocalTrackGroupView  #toolButton, #leftPanel > #toolButton {
+    background-color: none;
+    background-image: url(':/images/gear.png');
+    background-repeat: none;
+    background-position: center center;
+    border: none;
+}
+
+LocalTrackGroupView   #toolButton:hover, #leftPanel > #toolButton:hover {
+    background-image: url(':/images/gear-hover.png');
+}
+/* ++++++++++++++++++++++++++++++++++ */
 
 BaseTrackView > .QFrame#topSeparator{
 background-color: rgb(210, 210, 210);
@@ -458,6 +489,16 @@ background-color: rgb(180, 180, 180);
 }
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++*/
+LocalTrackView{
+    border: none;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+LocalTrackView[highlighted="true"]{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(230, 230, 230), stop:1 rgb(140, 140, 140));
+}
+
 LocalTrackView #inputPanel{
     padding: 2px;
     background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 60), stop:1 rgba(0, 0, 0, 140));

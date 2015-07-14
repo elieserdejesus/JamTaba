@@ -6,19 +6,11 @@
 MetronomeTrackView::MetronomeTrackView(QWidget *parent, Controller::MainController *mainController, long metronomeID, float initialGain, float initialPan)
     :BaseTrackView(parent, mainController, metronomeID)
 {
-    ui->channelName->setVisible(false);
-    ui->trackName->setTextFormat(Qt::RichText);
-    ui->trackName->setText("Metronome<br><img src=:/images/metronome.png>");
+    //ui->channelName->setVisible(false);
+    //ui->trackName->setTextFormat(Qt::RichText);
+    //ui->trackName->setText("Metronome<br><img src=:/images/metronome.png>");
 
-    this->setMaximumWidth(80);
-
-    ui->soloButton->setText("S");
-    ui->soloButton->setToolTip("Solo");
-
-    ui->muteButton->setText("M");
-    ui->muteButton->setToolTip("Mute");
-
-    ui->panSlider->setTickInterval(2);
+    setToNarrow();
 
     //set levelSlider position to initial gain
     ui->levelSlider->setValue((int)(100 * initialGain ));

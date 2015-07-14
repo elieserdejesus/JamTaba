@@ -220,10 +220,14 @@ ConfigStore::~ConfigStore(){
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QString ConfigStore::getLastUserName() {
-    return readProperty(ConfigStore::KEY_LAST_USER_NAME).toString();
+    QString userName = readProperty(ConfigStore::KEY_LAST_USER_NAME).toString();
+    if (userName.isNull() || userName.isEmpty()) {
+        return "not saved yet";
+    }
+    return userName;
 }
 
-QString ConfigStore::getLastChannelName() {
+QString ConfigStore::getLastChannelName(int channelIndex) {
     QString channelName = readProperty(ConfigStore::KEY_LAST_CHANNEL_NAME).toString();
     if (channelName.isNull() || channelName.isEmpty()) {
         return "channel name";

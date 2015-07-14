@@ -1,37 +1,41 @@
 #include "MainFrame.h"
+
 #include <QCloseEvent>
-#include "PreferencesDialog.h"
 #include <QDebug>
 #include <QDesktopWidget>
 #include <QLayout>
 #include <QList>
 #include <QAction>
+#include <QMessageBox>
+
+#include "PreferencesDialog.h"
 #include "JamRoomViewPanel.h"
+#include "LocalTrackView.h"
+#include "LocalTrackGroupView.h"
+#include "plugins/guis.h"
+#include "FxPanel.h"
+#include "pluginscandialog.h"
+#include "NinjamRoomWindow.h"
+#include "MetronomeTrackView.h"
+#include "Highligther.h"
+#include "ChatPanel.h"
+#include "BusyDialog.h"
+
+#include "../NinjamJamRoomController.h"
+#include "../ninjam/Server.h"
 #include "../persistence/ConfigStore.h"
 #include "../JamtabaFactory.h"
 #include "../audio/core/AudioDriver.h"
+#include "../audio/vst/PluginFinder.h"
+#include "../audio/core/plugins.h"
 #include "../midi/MidiDriver.h"
 #include "../MainController.h"
 #include "../loginserver/LoginService.h"
-#include "../audio/core/plugins.h"
-#include "LocalTrackView.h"
-#include "plugins/guis.h"
-#include "FxPanel.h"
-#include "../audio/vst/PluginFinder.h"
-#include "pluginscandialog.h"
-#include "NinjamRoomWindow.h"
-#include "../NinjamJamRoomController.h"
-#include "MetronomeTrackView.h"
-#include "../ninjam/Server.h"
-#include <QMessageBox>
-#include "BusyDialog.h"
-#include "ChatPanel.h"
 
 using namespace Audio;
 using namespace Persistence;
 using namespace Controller;
 using namespace Ninjam;
-
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent)
@@ -56,7 +60,55 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 
     QObject::connect(ui.menuAudioPreferences, SIGNAL(triggered()), this, SLOT(on_preferencesClicked()));
     QObject::connect(mainController, SIGNAL(inputSelectionChanged()), this, SLOT(on_inputSelectionChanged()));
+
+    QObject::connect( ui.toolButton, SIGNAL(clicked()), this, SLOT(on_toolButtonClicked()));
 }
+//++++++++++++++++++++++++=
+void MainFrame::on_toolButtonClicked(){
+    QMenu menu;
+    QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
+    QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(on_addChannelClicked()));
+    if(localChannels.size() > 1){
+        menu.addSeparator();
+        for (int i = 2; i <= localChannels.size(); ++i) {
+            QString channelName = localChannels.at(i-1)->getGroupName();
+            QAction* action = menu.addAction(QIcon(":/images/less.png"), "Remove channel \"" + channelName + "\"");
+            action->setData( i-1 );//use channel index as action data
+        }
+    }
+    QObject::connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(on_toolButtonMenuActionTriggered(QAction*)));
+    QObject::connect(&menu, SIGNAL(hovered(QAction*)), this, SLOT(on_toolButtonMenuActionHovered(QAction*)));
+    QPoint pos = ui.toolButton->parentWidget()->mapToGlobal(ui.toolButton->pos() + QPoint(ui.toolButton->width(), 0));
+
+    menu.move( pos );
+    menu.exec();
+}
+
+void MainFrame::on_toolButtonMenuActionTriggered(QAction *action){
+    if(action->data().isValid()){//only remove actions contains valid data (the channel index)
+        int channelIndex = action->data().toInt();
+        if(channelIndex >= 0 && channelIndex < localChannels.size()){
+            LocalTrackGroupView* channel = localChannels.at(channelIndex);
+            ui.localTracksLayout->removeWidget(channel);
+            localChannels.removeAt(channelIndex);
+            channel->deleteLater();
+            update();
+        }
+    }
+}
+void MainFrame::on_toolButtonMenuActionHovered(QAction *action){
+    if(action->data().isValid()){//only remove actions contains valid data (the channel index)
+        int channelIndex = action->data().toInt();
+        if(channelIndex >= 0 && channelIndex < localChannels.size()){
+            Highligther::getInstance()->highlight(localChannels.at(channelIndex));
+        }
+    }
+}
+
+void MainFrame::on_addChannelClicked(){
+    addLocalChannel();
+}
+
 //++++++++++++++++++++++++=
 void MainFrame::initializeMainTabWidget(){
     //the rooms list tab bar is not closable
@@ -87,17 +139,26 @@ void MainFrame::initializeVstFinderStuff(){
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++
-void MainFrame::initializeLocalTrackView(){
-    fxMenu = createFxMenu();
+void MainFrame::addLocalChannel(){
+    LocalTrackGroupView* localChannel = new LocalTrackGroupView(this);
+    localChannels.append( localChannel );
+    localChannel->setGroupName(Persistence::ConfigStore::getLastChannelName(0));
 
-    localTrackView = new LocalTrackView(this, this->mainController);
-    ui.localTracksLayout->addWidget(localTrackView);
+    //subchannels
+    LocalTrackView* localTrackView = new LocalTrackView(localChannel, this->mainController);
+    localChannel->addTrackView( localTrackView );
+    ui.localTracksLayout->addWidget(localChannel);
     localTrackView->initializeFxPanel(fxMenu);
 
     QObject::connect(localTrackView, SIGNAL(editingPlugin(Audio::Plugin*)), this, SLOT(on_editingPlugin(Audio::Plugin*)));
     QObject::connect(localTrackView, SIGNAL(removingPlugin(Audio::Plugin*)), this, SLOT(on_removingPlugin(Audio::Plugin*)));
 
     localTrackView->refreshInputSelectionName();
+}
+
+void MainFrame::initializeLocalTrackView(){
+    fxMenu = createFxMenu();
+    addLocalChannel();
 }
 
 void MainFrame::initializeLoginService(){
@@ -171,10 +232,11 @@ void MainFrame::on_editingPlugin(Audio::Plugin *plugin){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::on_fxMenuActionTriggered(QAction* action){
     //add a new plugin
-    Audio::PluginDescriptor* pluginDescriptor = action->data().value<Audio::PluginDescriptor*>();
-    Audio::Plugin* plugin = mainController->addPlugin(pluginDescriptor);
-    localTrackView->addPlugin(plugin);
-    showPluginGui(plugin);
+//    Audio::PluginDescriptor* pluginDescriptor = action->data().value<Audio::PluginDescriptor*>();
+//    Audio::Plugin* plugin = mainController->addPlugin(pluginDescriptor);
+//    localTrackGroupView->addPlugin(plugin);
+//    showPluginGui(plugin);
+    qCritical() << "PRECISO REVER O FUNCIONAMENTO DOS PLUGINS!";
 }
 //++++++++++++++++++++++++++++++++++++
 void MainFrame::showPluginGui(Audio::Plugin *plugin){
@@ -182,8 +244,8 @@ void MainFrame::showPluginGui(Audio::Plugin *plugin){
 
     if(!window->isVisible()){
         window->show();//show to generate a window handle, VST plugins use this handle to draw plugin GUI
-        int editorLeft = localTrackView->x() + localTrackView->width();
-        int editorTop = height()/4;
+        int editorLeft = width()/2 - window->width()/2;
+        int editorTop = height()/2 - window->height()/2;
         plugin->openEditor(window, mapToGlobal(QPoint(editorLeft, editorTop)));
     }
     else{
@@ -320,7 +382,9 @@ void MainFrame::timerEvent(QTimerEvent *){
     //update local input track peaks
 
     AudioPeak inputPeaks = mainController->getInputPeaks();
-    localTrackView->setPeaks(inputPeaks.getLeft(), inputPeaks.getRight());
+
+    //PRECISO REVER COMO VOU SETAR OS PICOS
+    //localTrackGroupView->setPeaks(inputPeaks.getLeft(), inputPeaks.getRight());
 
     //update metronome peaks
     if(mainController->isPlayingInNinjamRoom()){
@@ -445,7 +509,8 @@ void MainFrame::on_IOPropertiesChanged(int midiDeviceIndex, int audioDevice, int
 
 //input selection changed by user or by system
 void MainFrame::on_inputSelectionChanged(){
-    localTrackView->refreshInputSelectionName();
+    //PRECISO VER COMO VOU INDEXAR O SUBCANAL
+    //localTrackGroupView->refreshInputSelectionName();
 }
 
 //plugin finder events
@@ -465,7 +530,9 @@ void MainFrame::onPluginScanFinished(){
 
 
     fxMenu = createFxMenu();
-    localTrackView->initializeFxPanel(fxMenu);
+
+    //PRECISO VER ISSO
+    //localTrackGroupView->initializeFxPanel(fxMenu);
 }
 
 void MainFrame::onPluginFounded(Audio::PluginDescriptor* descriptor){

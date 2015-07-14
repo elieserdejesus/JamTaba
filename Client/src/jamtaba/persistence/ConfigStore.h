@@ -145,7 +145,7 @@ public:
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     static QString getLastUserName();
-    static QString getLastChannelName();
+    static QString getLastChannelName(int channelIndex);
 
     static void storeLasUserName(QString userName);
     static void storeLastChannelName(QString channelName) ;

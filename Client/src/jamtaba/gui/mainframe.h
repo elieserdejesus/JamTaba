@@ -33,7 +33,7 @@ class PluginDescriptor;
 
 class JamRoomViewPanel;
 class PluginGui;
-class LocalTrackView;
+class LocalTrackGroupView;
 class MetronomeTrackView;
 
 class MainFrame : public QMainWindow
@@ -77,6 +77,12 @@ private slots:
     //input selection
     void on_inputSelectionChanged();
 
+    //add/remove channels
+    void on_toolButtonClicked();
+    void on_addChannelClicked();
+    void on_toolButtonMenuActionTriggered(QAction*);
+    void on_toolButtonMenuActionHovered(QAction*);
+
 private:
 
     BusyDialog busyDialog;
@@ -95,7 +101,7 @@ private:
     Controller::MainController* mainController;
     PluginScanDialog* pluginScanDialog;
     Ui::MainFrameClass ui;
-    LocalTrackView* localTrackView;
+    QList<LocalTrackGroupView*> localChannels;
     MetronomeTrackView* metronomeTrackView;
     NinjamRoomWindow* ninjamWindow;
     //PluginGui* createPluginView(Plugin::PluginDescriptor *, Audio::Plugin *plugin) ;
@@ -110,6 +116,8 @@ private:
     void initializeVstFinderStuff();
     void initializeMainControllerEvents();
     void initializeMainTabWidget();
+
+    void addLocalChannel();
 };
 
 

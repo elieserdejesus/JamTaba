@@ -7,6 +7,7 @@
 #include "../midi/MidiDriver.h"
 #include "../audio/core/AudioDriver.h"
 #include "../audio/core/AudioNode.h"
+#include "Highligther.h"
 #include <QMenu>
 #include <QToolButton>
 
@@ -22,6 +23,8 @@ LocalTrackView::LocalTrackView(QWidget* parent, Controller::MainController *main
     ui->mainLayout->addSpacing(20);
     ui->mainLayout->addWidget(createInputPanel());
 }
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QWidget* LocalTrackView::createInputPanel(){
     QWidget* inputPanel = new QWidget(this);
@@ -214,12 +217,13 @@ void LocalTrackView::initializeFxPanel(QMenu *fxMenu){
             fxPanel->connect(fxPanel, SIGNAL(editingPlugin(Audio::Plugin*)), this, SIGNAL(editingPlugin(Audio::Plugin*)));
             fxPanel->connect(fxPanel, SIGNAL(pluginRemoved(Audio::Plugin*)), this, SIGNAL(removingPlugin(Audio::Plugin*)));
 
-            int index = ui->mainLayout->indexOf(ui->panSpacer->widget());
+            //int index = ui->mainLayout->indexOf(ui->panSpacer->widget());
 
-            ui->mainLayout->insertWidget( index+1, fxPanel);
+            //add separator before effects panel
+            ui->mainLayout->addSpacing(20);
+            ui->mainLayout->addWidget( fxPanel);
 
-            //add separator after effects panel
-            ui->mainLayout->insertSpacing( index + 2, 20);
+
         }
         fxPanel->setFxMenu(fxMenu);
     }
