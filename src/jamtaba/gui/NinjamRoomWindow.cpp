@@ -110,8 +110,7 @@ void NinjamRoomWindow::on_channelRemoved(Ninjam::User, Ninjam::UserChannel /*cha
 void NinjamRoomWindow::on_channelNameChanged(Ninjam::User, Ninjam::UserChannel channel, long channelID){
     NinjamTrackView* trackView = static_cast<NinjamTrackView*>(NinjamTrackView::getTrackViewByID(channelID));
     if(trackView){
-        trackView->setChannelName(channel.getName());
-        //trackView->setUserName(channel->getUser()->getName());
+        //trackView->setChannelName(channel.getName());
     }
 }
 

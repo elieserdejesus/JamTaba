@@ -11,8 +11,8 @@ class NinjamTrackView : public BaseTrackView
 public:
     NinjamTrackView(QWidget *parent, Controller::MainController *mainController, long trackID, QString userName, QString channelName, QString countryName, QString countyCode);
     ~NinjamTrackView();
-    void setUserName(QString newName);
-    void setChannelName(QString newChannelName);
+//    void setUserName(QString newName);
+//    void setChannelName(QString newChannelName);
 
 
 };

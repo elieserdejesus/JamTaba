@@ -2,6 +2,7 @@
 
 #include "BaseTrackView.h"
 #include <QWidget>
+#include <QTimer>
 
 class QMenu;
 class FxPanel;
@@ -26,11 +27,14 @@ public:
     void initializeFxPanel(QMenu* fxMenu);
     void addPlugin(Audio::Plugin* plugin);
     void refreshInputSelectionName();
+    inline Controller::MainController* getMainController() const{return mainController;}
+
 signals:
     //plugins
     void editingPlugin(Audio::Plugin* plugi);
     void removingPlugin(Audio::Plugin* plugin);
 private:
+
     FxPanel* fxPanel;
     QWidget* createInputPanel();
     QPushButton* createInputSelectionButton(QWidget* parent);
@@ -48,6 +52,8 @@ private:
     static const QString STEREO_ICON;
     static const QString NO_INPUT_ICON;
 
+    QString getInputChannelNameOnly(int inputIndex);//return the input channel name withou the number/index
+
 private slots:
     void on_inputSelectionButtonClicked();
 
@@ -55,6 +61,5 @@ private slots:
     void on_stereoInputMenuSelected(QAction*);
     void on_MidiInputMenuSelected(QAction*);
     void on_noInputMenuSelected();
-    QString getInputChannelNameOnly(int inputIndex);//return the input channel name withou the number/index
 };
 

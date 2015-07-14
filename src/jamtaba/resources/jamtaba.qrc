@@ -21,6 +21,10 @@
         <file>input_no.png</file>
         <file>input_stereo.png</file>
         <file>arrow-down-lighter.png</file>
+        <file>gear.png</file>
+        <file>gear-hover.png</file>
+        <file>less.png</file>
+        <file>more.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

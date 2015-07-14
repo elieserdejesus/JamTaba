@@ -1,25 +1,24 @@
-#transmissão do áudio
-    #dando estalo no início do intervalo transmitido, parece que não estou pegando os últimos bytes
+#melhorar posicionamento do menu de criação de canais
 
+#implementar os subchannels
 
-#implementar xmit
+#os canais estão muito largos, quando cria mais canais já tem que setar a largura dos subcanais deles para narrow
 
-#consegui entrar no jamtaba com a fast track desligada. O canal apareceu como "not connected"
+#setar subchannels para no input quando são criados
 
-#não consegui votar para trocar bpi
+#nem sempre os slots dos VSTs estão aparecendo quando crio as pistas, e as vezes os VSTs ficam embaixo do seletor de input.
+#preciso repensar essa inicializar do menu VST
 
-#preciso testar nome de usuário com caracter especial para ver se o utf está funcionando
-
-#não está lembrando das entradas estereo com a fast track
-
-#também preciso tratar a situação onde o usuário está usando midi como entrada e o driver midi é alterado nas preferencias
-
-
+#preciso mudar a persistência dos nomes dos channels para um array
 
 #permitir a criação de subcanais é importante. Eu posso estar em um server que permite apenas um canal mas estou usando vários
 #subcanais. O canal pai tem um nome, os sub são apenas locais, são mixados e enviados como o canal pai. Acho que essa é uma boa
 #arquitetura para as entradas mas preciso pensar bem sobre as características do canal pai, acho que os canais filhos são os que
 #eu já tenho
+
+#também preciso tratar a situação onde o usuário está usando midi como entrada e o driver midi é alterado nas preferencias
+
+
 
 
 #como vou permitir vários devices midi? Pelo que vi no portaudio.h o único jeito seria abrir vários streams midi, um para cada device.
@@ -37,11 +36,23 @@
 #como serão as entradas? Como será a criação do canal de backtracking?
 
 #salvar as entradas selecionadas para a pista local (salvar primeiro índice e quantidade de canais).
-#Deixar para pensar em como salvar quando  já tiver decidico como serão as múltiplas entradas
+#Deixar para pensar em como salvar quando  já tiver decidido como serão as múltiplas entradas
+
+#implementar xmit
+
+#consegui entrar no jamtaba com a fast track desligada. O canal apareceu como "not connected"
+
+#não consegui votar para trocar bpi
+
+#preciso testar nome de usuário com caracter especial para ver se o utf está funcionando
+
+#não está lembrando das entradas estereo com a fast track
 
 #acho que poderia simplificar a criação do menu de plugins usando a mesma ideia
 #que usei para gerar o menu das inputs da pista local. Como a pista local tem
 #uma referência para o mainController eu posso pedir para ele os PluginDEscriptors
+
+#no ninjamJamController estou recriando o tempInBuffer em cada callback. Otimizar isso.
 
 # a mensagem de crowded está errada?
 
@@ -205,7 +216,9 @@ HEADERS += \
     src/jamtaba/audio/SamplesBufferResampler.h \
     src/jamtaba/audio/samplesbufferrecorder.h \
     src/jamtaba/gui/TrackIOPanel.h \
-    src/jamtaba/audio/vorbis/VorbisEncoder.h
+    src/jamtaba/audio/vorbis/VorbisEncoder.h \
+    src/jamtaba/gui/LocalTrackGroupView.h \
+    src/jamtaba/gui/Highligther.h
 
 
 SOURCES += \
@@ -271,7 +284,9 @@ SOURCES += \
     src/jamtaba/audio/SamplesBufferResampler.cpp \
     src/jamtaba/audio/samplesbufferrecorder.cpp \
     src/jamtaba/gui/TrackIoPanel.cpp \
-    src/jamtaba/audio/vorbis/VorbisEncoder.cpp
+    src/jamtaba/audio/vorbis/VorbisEncoder.cpp \
+    src/jamtaba/gui/LocalTrackGroupView.cpp \
+    src/jamtaba/gui/Highligther.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
@@ -284,7 +299,8 @@ FORMS += \
     src/jamtaba/gui/BusyDialog.ui \
     src/jamtaba/gui/ChatPanel.ui \
     src/jamtaba/gui/ChatMessagePanel.ui \
-    src/jamtaba/gui/TrackIOPanel.ui
+    src/jamtaba/gui/TrackIOPanel.ui \
+    src/jamtaba/gui/LocalTrackGroupView.ui
 
 
 #macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \
