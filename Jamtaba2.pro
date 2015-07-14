@@ -10,7 +10,11 @@
 
 #preciso testar nome de usuário com caracter especial para ver se o utf está funcionando
 
+#não está lembrando das entradas estereo com a fast track
+
 #também preciso tratar a situação onde o usuário está usando midi como entrada e o driver midi é alterado nas preferencias
+
+
 
 #permitir a criação de subcanais é importante. Eu posso estar em um server que permite apenas um canal mas estou usando vários
 #subcanais. O canal pai tem um nome, os sub são apenas locais, são mixados e enviados como o canal pai. Acho que essa é uma boa
