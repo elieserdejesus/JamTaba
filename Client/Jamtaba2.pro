@@ -1,6 +1,21 @@
 #transmissão do áudio
+    #dando estalo no início do intervalo transmitido, parece que não estou pegando os últimos bytes
+
+
+#implementar xmit
+
+#consegui entrar no jamtaba com a fast track desligada. O canal apareceu como "not connected"
+
+#não consegui votar para trocar bpi
+
+#preciso testar nome de usuário com caracter especial para ver se o utf está funcionando
 
 #também preciso tratar a situação onde o usuário está usando midi como entrada e o driver midi é alterado nas preferencias
+
+#permitir a criação de subcanais é importante. Eu posso estar em um server que permite apenas um canal mas estou usando vários
+#subcanais. O canal pai tem um nome, os sub são apenas locais, são mixados e enviados como o canal pai. Acho que essa é uma boa
+#arquitetura para as entradas mas preciso pensar bem sobre as características do canal pai, acho que os canais filhos são os que
+#eu já tenho
 
 
 #como vou permitir vários devices midi? Pelo que vi no portaudio.h o único jeito seria abrir vários streams midi, um para cada device.
@@ -31,6 +46,12 @@
 #eu passar out.frameLenght para ele mas o buffer resampleado tiver out.lenght + 1 samples
 #eu acho que ele vai guardar essa última amostra no buffer interno, mas eu teria
 #que sair do loop do resampler exatamente em out.lenght
+
+#o metronome precisa ficar na tela o tempo todo, ele é muito importante. Se ele ficar junto com as pistas locais ele sumirá
+#quando a seção com as pistas locais for contraída
+
+#Preciso mudar a cor de fundo da pistas de acordo com o tipo. Pistas locais de uma cor, metronomo de outra, pistas ninjam de outra.
+#Talvez seja uma boa hora para usar HSV e ter variações
 
 #tirar spacers dos títulos das seções?
 
@@ -179,7 +200,8 @@ HEADERS += \
     src/jamtaba/gui/ChatMessagePanel.h \
     src/jamtaba/audio/SamplesBufferResampler.h \
     src/jamtaba/audio/samplesbufferrecorder.h \
-    src/jamtaba/gui/TrackIOPanel.h
+    src/jamtaba/gui/TrackIOPanel.h \
+    src/jamtaba/audio/vorbis/VorbisEncoder.h
 
 
 SOURCES += \
@@ -244,7 +266,8 @@ SOURCES += \
     src/jamtaba/gui/ChatMessagePanel.cpp \
     src/jamtaba/audio/SamplesBufferResampler.cpp \
     src/jamtaba/audio/samplesbufferrecorder.cpp \
-    src/jamtaba/gui/TrackIoPanel.cpp
+    src/jamtaba/gui/TrackIoPanel.cpp \
+    src/jamtaba/audio/vorbis/VorbisEncoder.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
@@ -279,7 +302,7 @@ INCLUDEPATH += src/jamtaba/gui                  \
                $$PWD/libs/includes/libmaxmind   \
 
 
-win32: LIBS +=  -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi -lvorbisfile -lvorbis -logg -lminimp3 -lmaxminddb -lresample \
+win32: LIBS +=  -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi -lvorbisfile -lvorbis -lvorbisenc -logg -lminimp3 -lmaxminddb -lresample \
 
 win32: LIBS +=  -lwinmm     \
                 -lole32     \

@@ -91,6 +91,53 @@ private:
     QString text;
     QString command;
 };
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+/**
+Offset Type        Field
+0x0    uint8_t[16] GUID (binary)
+0x10   uint32_t    Estimated Size
+0x14   uint8_t[4]  FourCC
+0x18   uint8_t     Channel Index
+0x19   ...         Username (NUL-terminated)
+*/
+class ClientUploadIntervalBegin : public ClientMessage {
+private:
+    QByteArray GUID;
+    quint32 estimatedSize;
+    char fourCC[4];
+    quint8 channelIndex;
+    QString userName;
+public:
+    ClientUploadIntervalBegin(QByteArray GUID, quint8 channelIndex, QString userName);
+
+//     this constructor is used only when is necessary abort interval upload. This occurs when user toggle transmit.
+//    public ClientUploadIntervalBegin(byte channelIndex, String userName) {
+//        this( new byte[16], channelIndex, userName, ""+ '\0'+'\0'+'\0'+'\0');//empty fourCC
+//    }
+
+    static QByteArray newGUID();
+
+    virtual void serializeTo(QByteArray &stream);
+    virtual void printDebug(QDebug dbg) const;
+
+    inline QByteArray getGUID() const{return GUID;}
+};
+
+//++++++++++++++++++++++++++++++++++++++++++++++++=
+class ClientIntervalUploadWrite : public ClientMessage {
+private:
+    QByteArray GUID;
+    QByteArray encodedAudioBuffer;
+    bool isLastPart;
+public:
+    ClientIntervalUploadWrite(QByteArray GUID, QByteArray encodedAudioBuffer, bool isLastPart);
+    virtual void serializeTo(QByteArray &buffer);
+    virtual void printDebug(QDebug dbg) const;
+};
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 QDebug operator<<(QDebug dbg, Ninjam::ClientMessage* message);
 

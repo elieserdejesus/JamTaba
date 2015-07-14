@@ -5,8 +5,11 @@
 #include <QMutex>
 #include "../ninjam/User.h"
 #include "../ninjam/Server.h"
+//#include "../audio/core/SamplesBuffer.h"
 
-#include "audio/samplesbufferrecorder.h"
+#include "../audio/vorbis/VorbisEncoder.h"
+
+//#include "audio/samplesbufferrecorder.h"
 
 class NinjamTrackNode;
 
@@ -42,6 +45,8 @@ public:
 
     static const long METRONOME_TRACK_ID = 123456789; //just a number :)
 
+    void recreateEncoders();
+
 signals:
     void currentBpiChanged(int newBpi);
     void currentBpmChanged(int newBpm);
@@ -49,11 +54,12 @@ signals:
     void channelAdded(Ninjam::User user,   Ninjam::UserChannel channel, long channelID);
     void channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
     void channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
-    //void channelAudioReceived(Ninjam::User user, long channelID, int downloadedBytes);
     void channelXmitChanged(long channelID, bool transmiting);
 
     void chatMsgReceived(Ninjam::User user, QString message);
 
+    void encodedAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart);
+    //void startingNewInterval();
 private:
     Controller::MainController* mainController;
     Audio::MetronomeTrackNode* metronomeTrackNode;
@@ -92,6 +98,10 @@ private:
     static long generateNewTrackID();
 
     static Audio::MetronomeTrackNode* createMetronomeTrackNode(int sampleRate);
+    VorbisEncoder* encoder;
+    VorbisEncoder* getEncoder(quint8 channelIndex);
+
+
 
 private slots:
     //ninjam events

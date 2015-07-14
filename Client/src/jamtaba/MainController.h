@@ -26,6 +26,7 @@ namespace Audio {
     class SamplesBuffer;
     class AudioNode;
     class PluginDescriptor;
+    class LocalInputAudioNode;
 }
 
 namespace Midi{
@@ -118,7 +119,7 @@ public:
     Audio::AudioNode* getTrackNode(long ID);
 
     void updateInputTrackRange();//called when input range or method (audio or midi) are changed in preferences
-    void setInputTrackToMono(int inputIndex);
+    void setInputTrackToMono(int inputIndexInAudioDevice);
     void setInputTrackToStereo(int firstInputIndex);
     void setInputTrackToMIDI(int midiDevice);
     void setInputTrackToNoInput();
@@ -128,6 +129,11 @@ public:
     Geo::Location getLocation(QString ip) ;
 
     static const int INPUT_TRACK_ID = 1;
+    Audio::LocalInputAudioNode* getInputTrack();
+
+    inline int getAudioDriverSampleRate() const{return audioDriver->getSampleRate();}
+
+    static QByteArray newGUID();
 
 signals:
     void enteredInRoom(Login::RoomInfo room);
@@ -171,6 +177,8 @@ private:
 
     Geo::IpToLocationResolver ipToLocationResolver;
 
+    QByteArray currentGUID;
+
 private slots:
     //Login server
     void on_disconnectedFromLoginServer();
@@ -182,9 +190,11 @@ private slots:
     void on_connectedInNinjamServer(Ninjam::Server server);
     void on_disconnectedFromNinjamServer(const Ninjam::Server& server);
     void on_errorInNinjamServer(QString error);
+    void on_ninjamAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart);
 
     //audio driver
     void on_audioDriverSampleRateChanged(int newSampleRate);
+    void on_audioDriverStopped();
 };
 
 }

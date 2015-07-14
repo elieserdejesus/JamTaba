@@ -49,6 +49,11 @@ public:
 
     void sendChatMessageToServer(QString message);
 
+    //audio interval upload
+    void sendAudioIntervalPart(QByteArray GUID, QByteArray encodedAudioBuffer, bool isLastPart);
+    void sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex);
+    //void stopTransmitting(char* GUID[], quint8 userChannel);
+
     QString getConnectedUserName() ;
     QString getCurrentServerLicence() const;
     float getIntervalPeriod() ;

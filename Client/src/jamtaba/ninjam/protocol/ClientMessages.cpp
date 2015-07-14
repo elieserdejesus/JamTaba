@@ -2,7 +2,9 @@
 #include "../User.h"
 #include <QCryptographicHash>
 #include <QIODevice>
+#include <cassert>
 #include <QDebug>
+//#include <QUuid>
 //++++++++++++++
 
 using namespace Ninjam;
@@ -182,6 +184,70 @@ void ChatMessage::printDebug(QDebug dbg) const{
 }
 
 //+++++++++++++++++++++++++
+
+ClientUploadIntervalBegin::ClientUploadIntervalBegin(QByteArray GUID, quint8 channelIndex, QString userName)
+    :ClientMessage( 0x83, 16 + 4 + 4 + 1 + userName.size()),
+      GUID(GUID),
+      estimatedSize(0),
+      fourCC{'O', 'G', 'G', 'v'},
+      channelIndex(channelIndex),
+      userName(userName)
+{
+
+}
+
+void ClientUploadIntervalBegin::serializeTo(QByteArray &buffer){
+    QDataStream stream(&buffer, QIODevice::WriteOnly);
+    stream.setByteOrder(QDataStream::LittleEndian);
+    //quint32 payload = 16 + 4 + 4 + 1 + userName.size();
+    stream << msgType;
+    stream << payload;
+    stream.writeRawData(GUID, 16);
+    stream << estimatedSize;
+    stream.writeRawData(fourCC, 4);
+    stream << channelIndex;
+    stream.writeRawData(userName.toStdString().c_str(), userName.size());
+
+    if((quint32)buffer.size() != payload + 5){
+        qCritical() << "wrong size!";
+    }
+}
+
+void ClientUploadIntervalBegin::printDebug(QDebug dbg) const{
+    dbg << "SEND ClientUploadIntervalBegin{ GUID "  << QString(GUID) << " fourCC" << QString(fourCC) << "channelIndex: " << channelIndex << "userName:" << userName << "}";
+}
+
+//+++++++++++++++++++++
+ClientIntervalUploadWrite::ClientIntervalUploadWrite(QByteArray GUID, QByteArray encodedAudioBuffer, bool isLastPart)
+    :ClientMessage(0x84, 16 + 1 + encodedAudioBuffer.size()),
+    GUID(GUID),
+      encodedAudioBuffer(encodedAudioBuffer),
+    isLastPart(isLastPart)
+{
+
+}
+
+void ClientIntervalUploadWrite::serializeTo(QByteArray &buffer){
+    QDataStream stream(&buffer, QIODevice::WriteOnly);
+    stream.setByteOrder(QDataStream::LittleEndian);
+    stream << msgType;
+    stream << payload;
+
+    stream.writeRawData(GUID.data(), 16);
+    quint8 intervalCompleted = isLastPart ? (quint8) 1 : (quint8) 0;//If the Flag field bit 0 is set then the upload is complete.
+    stream << intervalCompleted;
+    stream.writeRawData( encodedAudioBuffer.data(), encodedAudioBuffer.size() );
+
+    assert(buffer.size() == payload + 5);
+}
+
+
+ void ClientIntervalUploadWrite::printDebug(QDebug dbg) const{
+    dbg << "SEND ClientIntervalUploadWrite{" << "GUID=" << QString(GUID) << ", encodedAudioBuffer= " << payload << " bytes, isLastPart=" << isLastPart << '}';
+}
+
+
+//+++++++++++++++++++++++++++
 QDebug Ninjam::operator<<(QDebug dbg, ClientMessage* message)
 {
     message->printDebug(dbg);

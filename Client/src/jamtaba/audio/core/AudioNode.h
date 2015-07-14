@@ -137,6 +137,7 @@ public:
     LocalInputAudioNode(bool isMono=true);
     virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
     virtual int getSampleRate() const{return 0;}
+    inline int getChannels() const{return audioInputRange.getChannels();}
     inline bool isMono() const{return audioInputRange.isMono();}
     inline bool isStereo() const{return audioInputRange.getChannels() == 2;}
     inline bool isNoInput() const{return audioInputRange.isEmpty();}
@@ -147,6 +148,8 @@ public:
     inline int getMidiDeviceIndex() const{return midiDeviceIndex;}
     inline ChannelRange getAudioInputRange() const{return audioInputRange;}
     inline void setGlobalFirstInputIndex(int firstInputIndex){this->globalFirstInputIndex = firstInputIndex;}
+
+    const Audio::SamplesBuffer& getLastBuffer() const{return internalBuffer;}
 };
 //++++++++++++++++++++++++
 }
