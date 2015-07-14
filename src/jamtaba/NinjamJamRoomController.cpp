@@ -256,10 +256,7 @@ void NinjamJamRoomController::process(Audio::SamplesBuffer &in, Audio::SamplesBu
             quint8 channelIndex = (quint8)0;
             bool isLastPart = intervalPosition + samplesToProcessInThisStep >= samplesInInterval;
             bool isFirstPart = intervalPosition == 0;
-            //VorbisEncoder* encoder = getEncoder(channelIndex);
-            if(isFirstPart){
-                encoder = new VorbisEncoder(mainController->getInputTrack()->getChannels(), mainController->getAudioDriverSampleRate());
-            }
+            VorbisEncoder* encoder = getEncoder(channelIndex);
             assert(encoder);
             QByteArray encodedBytes = encoder->encode(mainController->getInputTrack()->getLastBuffer());
             if(isLastPart){//get the last encoded bytes
@@ -281,13 +278,13 @@ void NinjamJamRoomController::process(Audio::SamplesBuffer &in, Audio::SamplesBu
 
 }
 
-//VorbisEncoder* NinjamJamRoomController::getEncoder(quint8 channelIndex){
-//    Q_UNUSED(channelIndex);
-//    if(!encoder){
-//        encoder = new VorbisEncoder(mainController->getInputTrack()->getChannels(), mainController->getAudioDriverSampleRate());
-//    }
-//    return encoder;
-//}
+VorbisEncoder* NinjamJamRoomController::getEncoder(quint8 channelIndex){
+    Q_UNUSED(channelIndex);
+    if(!encoder){
+        encoder = new VorbisEncoder(mainController->getInputTrack()->getChannels(), mainController->getAudioDriverSampleRate());
+    }
+    return encoder;
+}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamJamRoomController::processScheduledChanges(){
