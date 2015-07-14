@@ -1,6 +1,7 @@
 #include "NinjamJamRoomController.h"
 #include "MainController.h"
 #include "audio/core/AudioDriver.h"
+#include "audio/core/SamplesBuffer.h"
 #include "ninjam/Service.h"
 #include "ninjam/User.h"
 #include "ninjam/Server.h"
@@ -11,6 +12,7 @@
 #include <QMutexLocker>
 #include "../audio/MetronomeTrackNode.h"
 #include <cmath>
+#include <cassert>
 
 #include <QDebug>
 #include <QThread>
@@ -21,12 +23,14 @@ using namespace Controller;
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NinjamJamRoomController::NinjamJamRoomController(Controller::MainController* mainController)
     :mainController(mainController),
-    metronomeTrackNode(createMetronomeTrackNode( mainController->getAudioDriver()->getSampleRate())),
+    metronomeTrackNode(createMetronomeTrackNode( mainController->getAudioDriverSampleRate())),
     intervalPosition(0),
     samplesInInterval(0),
     newBpi(-1), newBpm(-1),
     currentBpi(0),
-    currentBpm(0)
+    currentBpm(0),
+    encoder(nullptr)
+    //encoder(mainController->getInputTrack()->getChannels(), mainController->getAudioDriverSampleRate() )
     //recorder("record.wav", mainController->getAudioDriver()->getSampleRate())
 {
     running = false;
@@ -58,10 +62,8 @@ void NinjamJamRoomController::start(const Ninjam::Server& server){
         //mainController->setTrackLevel(-5, 0.6);
 
         mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
-        float metronomeInitialGain = Persistence::ConfigStore::getMetronomeGain();
-        float metronomeInitialPan = Persistence::ConfigStore::getMetronomePan();
-        mainController->setTrackLevel(METRONOME_TRACK_ID, metronomeInitialGain);
-        mainController->setTrackPan(METRONOME_TRACK_ID, metronomeInitialPan);
+        mainController->setTrackLevel(METRONOME_TRACK_ID, Persistence::ConfigStore::getMetronomeGain());
+        mainController->setTrackPan(METRONOME_TRACK_ID, Persistence::ConfigStore::getMetronomePan());
 
         this->intervalPosition  = 0;
         this->running = true;
@@ -153,7 +155,7 @@ void NinjamJamRoomController::voteBpm(int bpm){
 void NinjamJamRoomController::setMetronomeBeatsPerAccent(int beatsPerAccent){
     metronomeTrackNode->setBeatsPerAccent(beatsPerAccent);
 }
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamJamRoomController::stop(){
     if(running){
         this->running = false;
@@ -193,7 +195,7 @@ void NinjamJamRoomController::stop(){
 
     }
 }
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamJamRoomController::deleteDeactivatedTracks(){
     QMutexLocker locker(&mutex);
     QList<QString> keys = trackNodes.keys();
@@ -206,8 +208,7 @@ void NinjamJamRoomController::deleteDeactivatedTracks(){
         }
     }
 }
-
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamJamRoomController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
     deleteDeactivatedTracks();
 
@@ -217,11 +218,16 @@ void NinjamJamRoomController::process(Audio::SamplesBuffer &in, Audio::SamplesBu
     int offset = 0;
     do{
         int samplesToProcessInThisStep = std::min((int)(samplesInInterval - intervalPosition), totalSamplesToProcess - offset);
-        static Audio::SamplesBuffer tempBuffer(2, samplesToProcessInThisStep);
-        tempBuffer.setFrameLenght(samplesToProcessInThisStep);
-        tempBuffer.zero();
+        static Audio::SamplesBuffer tempOutBuffer(2, samplesToProcessInThisStep);
+        tempOutBuffer.setFrameLenght(samplesToProcessInThisStep);
+        tempOutBuffer.zero();
 
-        if(this->intervalPosition == 0){//starting new interval
+        Audio::SamplesBuffer tempInBuffer(in.getChannels(), samplesToProcessInThisStep);
+        tempInBuffer.set(in, offset, samplesToProcessInThisStep, 0);
+
+        bool newInterval = intervalPosition == 0;
+
+        if(newInterval){//starting new interval
             if(hasScheduledChanges()){
                 processScheduledChanges();
             }
@@ -233,6 +239,7 @@ void NinjamJamRoomController::process(Audio::SamplesBuffer &in, Audio::SamplesBu
                     emit channelXmitChanged(track->getID(), trackIsPlaying);
                 }
             }
+
         }
         metronomeTrackNode->setIntervalPosition(this->intervalPosition);
 
@@ -242,14 +249,26 @@ void NinjamJamRoomController::process(Audio::SamplesBuffer &in, Audio::SamplesBu
             emit intervalBeatChanged(currentBeat);
         }
         //+++++++++++ MAIN PROCESS +++++++++++++++
-        mainController->doAudioProcess(in, tempBuffer);
-//        if(intervalPosition == 0){
-//            tempBuffer.fadeIn(tempBuffer.getFrameLenght());
-//        }
-//        if(intervalPosition + samplesToProcessInThisStep >= samplesInInterval){//last interval buffer
-//            tempBuffer.fadeOut(tempBuffer.getFrameLenght());
-//        }
-        out.add(tempBuffer, offset);
+        mainController->doAudioProcess(tempInBuffer, tempOutBuffer);
+        out.add(tempOutBuffer, offset); //generate audio output
+
+        if(!mainController->getInputTrack()->isNoInput()){
+            quint8 channelIndex = (quint8)0;
+            bool isLastPart = intervalPosition + samplesToProcessInThisStep >= samplesInInterval;
+            bool isFirstPart = intervalPosition == 0;
+            //VorbisEncoder* encoder = getEncoder(channelIndex);
+            if(isFirstPart){
+                encoder = new VorbisEncoder(mainController->getInputTrack()->getChannels(), mainController->getAudioDriverSampleRate());
+            }
+            assert(encoder);
+            QByteArray encodedBytes = encoder->encode(mainController->getInputTrack()->getLastBuffer());
+            if(isLastPart){//get the last encoded bytes
+                encodedBytes.append( encoder->finishIntervalEncoding() );
+
+            }
+            emit encodedAudioAvailableToSend(encodedBytes, channelIndex, isFirstPart, isLastPart);
+        }
+
         //++++++++++++++++++++++++++++++++++++++++
 
         samplesProcessed += samplesToProcessInThisStep;
@@ -261,6 +280,14 @@ void NinjamJamRoomController::process(Audio::SamplesBuffer &in, Audio::SamplesBu
     while( samplesProcessed < totalSamplesToProcess);
 
 }
+
+//VorbisEncoder* NinjamJamRoomController::getEncoder(quint8 channelIndex){
+//    Q_UNUSED(channelIndex);
+//    if(!encoder){
+//        encoder = new VorbisEncoder(mainController->getInputTrack()->getChannels(), mainController->getAudioDriverSampleRate());
+//    }
+//    return encoder;
+//}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamJamRoomController::processScheduledChanges(){
@@ -294,7 +321,7 @@ long NinjamJamRoomController::computeTotalSamplesInInterval(){
 //ninjam events
 
 void NinjamJamRoomController::on_ninjamDisconnectedFromServer(Ninjam::Server server){
-
+    Q_UNUSED(server);
     //emit disconnected(normalDisconnection);
 
 }
@@ -355,6 +382,13 @@ void NinjamJamRoomController::on_audioDriverStopped(){
     intervalPosition = 0;
 }
 
+void NinjamJamRoomController::recreateEncoders(){
+    if(encoder){
+        delete encoder;
+    }
+    encoder = new VorbisEncoder(mainController->getInputTrack()->getChannels(), mainController->getAudioDriverSampleRate());
+}
+
 void NinjamJamRoomController::on_audioDriverSampleRateChanged(int newSampleRate){
     Q_UNUSED(newSampleRate);
     this->samplesInInterval = computeTotalSamplesInInterval();
@@ -371,6 +405,8 @@ void NinjamJamRoomController::on_audioDriverSampleRateChanged(int newSampleRate)
     mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
 
     delete oldMetronomeTrack;
+
+    recreateEncoders();
 }
 
 void NinjamJamRoomController::on_ninjamAudiointervalDownloading(Ninjam::User user, int channelIndex, int downloadedBytes){

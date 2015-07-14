@@ -276,6 +276,5 @@
     <qresource prefix="/">
         <file>click.wav</file>
         <file>loading.gif</file>
-        <file>../../../../loop 192KHz.wav.ogg</file>
     </qresource>
 </RCC>

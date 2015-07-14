@@ -3,11 +3,37 @@
 #include "JamtabaFactory.h"
 #include <QTextCodec>
 
-//#include "../audio/core/SamplesBuffer.h"
-
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
+#include "audio/core/SamplesBuffer.h"
+#include "audio/vorbis/VorbisEncoder.h"
+#include <QFile>
+#include "audio/core/AudioNode.h"
+
 int main(int argc, char* args[] ){
+
+//    int sampleRate = 44100;
+//    Audio::OscillatorAudioNode osc(400, sampleRate);
+//    Audio::SamplesBuffer oscSamples(2, sampleRate * 5);
+//    Audio::SamplesBuffer in(2, 0);
+//    osc.processReplacing(in, oscSamples);
+//    //int encoded = 0;
+
+//    for (int x = 0; x < 5; ++x) {
+//        VorbisEncoder encoder(2, sampleRate);
+//        Audio::SamplesBuffer temp(2, sampleRate);
+//        temp.set(oscSamples, x * sampleRate, sampleRate, 0);
+//        QByteArray encodedData = encoder.encode(temp);
+//        encodedData.append(encoder.finishIntervalEncoding());
+
+//        QString fileName = "test" + QString::number(x) + ".ogg";
+//        QFile file(fileName);
+//        file.open(QIODevice::WriteOnly);
+//        file.write(encodedData.data(), encodedData.size());
+//    }
+
+//    return 0;
+
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
     qInstallMessageHandler(customLogHandler);
@@ -20,6 +46,7 @@ int main(int argc, char* args[] ){
 
     delete factory;
     return mainController.exec();
+
  }
 //++++++++++++++++++++++++++++++++++
 

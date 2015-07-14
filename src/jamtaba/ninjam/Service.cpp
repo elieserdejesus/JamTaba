@@ -17,9 +17,10 @@ const QStringList Service::botNames = buildBotNamesList();
 
 Service::Service()
     :
+      lastSendTime(0),
       running(false),
-      initialized(false),
-      lastSendTime(0)
+      initialized(false)
+
 {
     connect(&socket, SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
     connect(&socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
@@ -37,6 +38,26 @@ Service::~Service(){
     socket.disconnectFromHost();
 }
 
+//void Service::sendAudioIntervalPart(char* currentGUID, QString userName, quint8 userChannelIndex){
+//    enqueueMessageToSend(new ClientIntervalUploadWrite(GUID, encodedAudioBuffer, isLastPart));
+//}
+
+void Service::sendAudioIntervalPart(QByteArray GUID, QByteArray encodedAudioBuffer, bool isLastPart){
+    ClientIntervalUploadWrite msg(GUID, encodedAudioBuffer, isLastPart);
+    sendMessageToServer(&msg);
+}
+
+void Service::sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex){
+    ClientUploadIntervalBegin msg(GUID, channelIndex, this->userName);
+    sendMessageToServer(&msg);
+}
+
+//void Service::stopTransmitting(char* GUID[], quint8 userChannel){
+//    enqueueMessageToSend(new ClientUploadIntervalBegin(userChannel, newUserName));
+//}
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Service::socketReadSlot(){
     if(socket.bytesAvailable() < 5){
         qDebug() << "not have enough bytes to read message header (5 bytes)";
@@ -148,8 +169,9 @@ void Service::sendChatMessageToServer(QString message){
     sendMessageToServer(&msg);
 }
 
-void Service::sendMessageToServer(ClientMessage *message)
-{
+void Service::sendMessageToServer(ClientMessage *message){
+
+    //qDebug() << message;
     QByteArray outBuffer;
     message->serializeTo(outBuffer);
     int bytesWrited = socket.write(outBuffer);
@@ -161,6 +183,7 @@ void Service::sendMessageToServer(ClientMessage *message)
     if((int)message->getPayload() + 5 != outBuffer.size()){
         qWarning() << "(int)message->getPayload() + 5: " << ((int)message->getPayload() + 5) << "outbuffer.size():" << outBuffer.size();
     }
+
 }
 
 bool Service::needSendKeepAlive() const{

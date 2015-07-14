@@ -22,6 +22,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QApplication>
+#include <QUuid>
 #include "audio/NinjamTrackNode.h"
 
 using namespace Persistence;
@@ -60,6 +61,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
                 );
 
     QObject::connect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
+    QObject::connect(this->audioDriver, SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
 
     audioMixer = new Audio::AudioMixer(audioDriver->getSampleRate());
     roomStreamer = new Audio::RoomStreamerNode();
@@ -85,8 +87,12 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     QObject::connect(this->ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(on_disconnectedFromNinjamServer(Ninjam::Server)));
     QObject::connect(this->ninjamService, SIGNAL(error(QString)), this, SLOT(on_errorInNinjamServer(QString)));
 
-    this->ninjamController = new Controller::NinjamJamRoomController(this);
 
+    this->ninjamController = new Controller::NinjamJamRoomController(this);
+    //QObject::connect(this->ninjamController, SIGNAL(startingNewInterval()), this, SLOT(on_ninjamStartingNewInterval()));
+    QObject::connect(this->ninjamController,
+                     SIGNAL(encodedAudioAvailableToSend(QByteArray,quint8, bool, bool)),
+                     this, SLOT(on_ninjamAudioAvailableToSend(QByteArray,quint8,bool,  bool)));
 
     //test ninjam stream
 //    NinjamTrackNode* trackTest = new NinjamTrackNode(2);
@@ -152,27 +158,47 @@ void MainController::updateInputTrackRange(){
     }
 }
 
-void MainController::setInputTrackToMono(int inputIndex){
-    //audioDriver->setInputToMono(inputIndex);
-    Audio::LocalInputAudioNode* inputTrack = dynamic_cast<Audio::LocalInputAudioNode*>(getTrackNode(INPUT_TRACK_ID));
-    inputTrack->setAudioInputSelection(inputIndex, 1);//mono
-    emit inputSelectionChanged();
+Audio::LocalInputAudioNode* MainController::getInputTrack(){
+    return dynamic_cast<Audio::LocalInputAudioNode*>(getTrackNode(INPUT_TRACK_ID));
+}
+
+void MainController::setInputTrackToMono(int inputIndexInAudioDevice){
+    Audio::LocalInputAudioNode* inputTrack = getInputTrack();
+    if(inputTrack){
+        inputTrack->setAudioInputSelection(inputIndexInAudioDevice, 1);//mono
+        emit inputSelectionChanged();
+    }
+    if(isPlayingInNinjamRoom()){
+        ninjamController->recreateEncoders();
+    }
 }
 void MainController::setInputTrackToStereo(int firstInputIndex){
-    Audio::LocalInputAudioNode* inputTrack = dynamic_cast<Audio::LocalInputAudioNode*>(getTrackNode(INPUT_TRACK_ID));
-    inputTrack->setAudioInputSelection(firstInputIndex, 2);//stereo
-    emit inputSelectionChanged();
+    Audio::LocalInputAudioNode* inputTrack = getInputTrack();
+    if(inputTrack){
+        inputTrack->setAudioInputSelection(firstInputIndex, 2);//stereo
+        emit inputSelectionChanged();
+    }
+    if(isPlayingInNinjamRoom()){
+        ninjamController->recreateEncoders();
+    }
 }
 void MainController::setInputTrackToMIDI(int midiDevice){
-    Audio::LocalInputAudioNode* inputTrack = dynamic_cast<Audio::LocalInputAudioNode*>(getTrackNode(INPUT_TRACK_ID));
-    midiDriver->setInputDeviceIndex(midiDevice);
-    inputTrack->setMidiInputSelection(midiDevice);
-    emit inputSelectionChanged();
+    Audio::LocalInputAudioNode* inputTrack = getInputTrack();
+    if(inputTrack){
+        midiDriver->setInputDeviceIndex(midiDevice);
+        inputTrack->setMidiInputSelection(midiDevice);
+        emit inputSelectionChanged();
+    }
 }
 void MainController::setInputTrackToNoInput(){
-    Audio::LocalInputAudioNode* inputTrack = dynamic_cast<Audio::LocalInputAudioNode*>(getTrackNode(INPUT_TRACK_ID));
-    inputTrack->setToNoInput();
-    emit inputSelectionChanged();
+    Audio::LocalInputAudioNode* inputTrack = getInputTrack();
+    if(inputTrack){
+        inputTrack->setToNoInput();
+        emit inputSelectionChanged();
+        if(isPlayingInNinjamRoom()){//send the finish interval message
+            ninjamService->sendAudioIntervalPart(currentGUID, QByteArray(), true);
+        }
+    }
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Audio::AudioNode *MainController::getTrackNode(long ID){
@@ -285,8 +311,6 @@ void MainController::setTrackPan(int trackID, float pan){
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->setPan(pan);
-    }else{
-        qWarning() << "track not found! " << trackID;
     }
 }
 
@@ -295,8 +319,6 @@ void MainController::setTrackLevel(int trackID, float level){
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->setGain( std::pow( level, 4));
-    }else{
-        qWarning() << "track not found! " << trackID;
     }
 }
 
@@ -453,6 +475,13 @@ void MainController::on_audioDriverSampleRateChanged(int newSampleRate){
     audioMixer->setSampleRate(newSampleRate);
 }
 
+void MainController::on_audioDriverStopped(){
+    if(isPlayingInNinjamRoom()){
+        //send the last interval part when audio driver is stopped
+        ninjamService->sendAudioIntervalPart(currentGUID, QByteArray(), true);
+    }
+}
+
 void MainController::start()
 {
     if(!started){
@@ -512,6 +541,29 @@ bool MainController::isPlayingInNinjamRoom() const{
 }
 
 //++++++++++++= NINJAM ++++++++++++++++
+QByteArray MainController::newGUID(){
+    QUuid uuid = QUuid::createUuid();
+    return uuid.toRfc4122();
+}
+
+
+void MainController::on_ninjamAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart){
+    //audio thread fire this event. This thread (main/gui thread)
+    //write the encoded bytes in socket. We can't write in socket from audio thread.
+    if(isFirstPart){
+        currentGUID = newGUID();
+        ninjamService->sendAudioIntervalBegin(currentGUID, (quint8)0);
+    }
+
+//    static QByteArray dataToSend;
+//    dataToSend.append(encodedAudio);
+//    if(dataToSend.size() >= 1024 * 4 || isLastPart ){
+//        ninjamService->sendAudioIntervalPart(currentGUID, dataToSend, channelIndex, isLastPart);
+//        dataToSend.clear();
+//    }
+    ninjamService->sendAudioIntervalPart(currentGUID, encodedAudio, isLastPart);
+}
+
 void MainController::on_errorInNinjamServer(QString error){
     qWarning() << error;
     if(ninjamController){

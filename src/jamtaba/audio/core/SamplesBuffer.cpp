@@ -40,7 +40,7 @@ SamplesBuffer::SamplesBuffer(const SamplesBuffer& other)
       frameLenght(other.frameLenght),
       samples(other.samples)
 {
-    qWarning() << "Samples Buffer copy constructor!";
+    //qWarning() << "Samples Buffer copy constructor!";
 }
 
 SamplesBuffer& SamplesBuffer::operator=(const SamplesBuffer& /*other*/){
