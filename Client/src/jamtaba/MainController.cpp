@@ -548,6 +548,7 @@ QByteArray MainController::newGUID(){
 
 
 void MainController::on_ninjamAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart){
+    Q_UNUSED(channelIndex);
     //audio thread fire this event. This thread (main/gui thread)
     //write the encoded bytes in socket. We can't write in socket from audio thread.
     if(isFirstPart){
@@ -555,13 +556,12 @@ void MainController::on_ninjamAudioAvailableToSend(QByteArray encodedAudio, quin
         ninjamService->sendAudioIntervalBegin(currentGUID, (quint8)0);
     }
 
-//    static QByteArray dataToSend;
-//    dataToSend.append(encodedAudio);
-//    if(dataToSend.size() >= 1024 * 4 || isLastPart ){
-//        ninjamService->sendAudioIntervalPart(currentGUID, dataToSend, channelIndex, isLastPart);
-//        dataToSend.clear();
-//    }
-    ninjamService->sendAudioIntervalPart(currentGUID, encodedAudio, isLastPart);
+    static QByteArray dataToSend;
+    dataToSend.append(encodedAudio);
+    if(dataToSend.size() >= 1024 * 4 || isLastPart ){
+        ninjamService->sendAudioIntervalPart(currentGUID, dataToSend, isLastPart);
+        dataToSend.clear();
+    }
 }
 
 void MainController::on_errorInNinjamServer(QString error){
