@@ -69,7 +69,7 @@ void Plugin::setEditor(PluginWindow *editorWindow){
 }
 
 Plugin::~Plugin(){
-    qDebug() << "Plugin destructor";
+    //qDebug() << "Plugin destructor";
     if(editorWindow){
        delete editorWindow;
     }
@@ -90,7 +90,7 @@ PluginWindow::PluginWindow( Plugin *plugin)
 }
 
 PluginWindow::~PluginWindow(){
-    qDebug() << "PLugin window destructor";
+    //qDebug() << "PLugin window destructor";
 }
 
 //+++++++++++++++++++++++++++++++++++++++++

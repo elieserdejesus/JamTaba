@@ -9,12 +9,12 @@
 using namespace Audio;
 
 AudioMixer::AudioMixer(int sampleRate)
-    : inputNode(new LocalInputAudioNode()),
+    : //inputNode(new LocalInputAudioNode()),
       sampleRate(sampleRate)
 {
 
     //disconnect to test
-    nodes.append(inputNode);
+    //nodes.append(inputNode);
 
 }
 
@@ -32,8 +32,10 @@ void AudioMixer::removeNode(AudioNode *node){
 }
 
 AudioMixer::~AudioMixer(){
-    delete inputNode;
-    inputNode = nullptr;
+    foreach (SamplesBufferResampler* resampler, resamplers.values()) {
+        delete resampler;
+    }
+    resamplers.clear();
 }
 
 void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out, bool attenuateAfterSumming){

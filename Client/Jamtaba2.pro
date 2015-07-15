@@ -1,11 +1,19 @@
-
-#deu pau quando tentei colocar o Addictive Drums
-
 #implementar os subchannels
+#por enquanto comentei o código do NinjamController que encodava, depois tenho que pensar em como vou encodar vários canais
+#no método que recria os encoders eu estou dando o migué e estou recriando apenas um
+
+#depois trabalhar na ideia do segundo canal. Deixar o backtracking sempre na tela pode ser
+#muito chato pra quem não usa. O BT channel poderia ser removido?
+
+#como serão as entradas? Como será a criação do canal de backtracking?
+
+#salvar as entradas selecionadas para a pista local (salvar primeiro índice e quantidade de canais).
+#Deixar para pensar em como salvar quando  já tiver decidido como serão as múltiplas entradas
+
+#implementar xmit
+
 
 #setar subchannels para no input quando são criados
-
-
 
 #preciso mudar a persistência dos nomes dos channels para um array
 
@@ -25,18 +33,13 @@
 #para o processReplacing como eu fiz com o SamplesBuffer. Esse MidiBuffer teria vários canais, cada canal contendo as mensagens midi de um device
 #diferente
 
+#deu pau com o kontakt também. Só está carregando plugins pequenos?
+
+#deu pau quando tentei colocar o Addictive Drums
+
 #abri a aplicação com a fast track e deu pau porque 192 é uma SR inválida. Tenho que pedir as SR válidas para cada device.
 #já aproveitar para pedir os buffer sizes
 
-#depois trabalhar na ideia do segundo canal. Deixar o backtracking sempre na tela pode ser
-#muito chato pra quem não usa. O BT channel poderia ser removido?
-
-#como serão as entradas? Como será a criação do canal de backtracking?
-
-#salvar as entradas selecionadas para a pista local (salvar primeiro índice e quantidade de canais).
-#Deixar para pensar em como salvar quando  já tiver decidido como serão as múltiplas entradas
-
-#implementar xmit
 
 #consegui entrar no jamtaba com a fast track desligada. O canal apareceu como "not connected"
 
@@ -72,8 +75,8 @@
 
 #tirar spacers dos títulos das seções?
 
+#ver o construtor do mainController, acho que comentei a inserção do roomStreamer na lista de nodes, por isso não está tocando os streams
 #acho que quando fico alternando entre os streams das salas não está funcionando muito bem, parece que o botão ficou pressionado.
-
 #acho que o stream do ninjamer não está rolando
 
 # MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais. Testar com o controlador AKAI também para ver

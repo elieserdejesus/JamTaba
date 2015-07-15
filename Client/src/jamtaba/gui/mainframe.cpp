@@ -345,10 +345,9 @@ void MainFrame::on_exitedFromRoom(bool normalDisconnection){
 void MainFrame::timerEvent(QTimerEvent *){
     //update local input track peaks
 
-    AudioPeak inputPeaks = mainController->getInputPeaks();
-
-    //PRECISO REVER COMO VOU SETAR OS PICOS
-    //localTrackGroupView->setPeaks(inputPeaks.getLeft(), inputPeaks.getRight());
+    foreach (LocalTrackGroupView* channel, localChannels) {
+        channel->updatePeaks();
+    }
 
     //update metronome peaks
     if(mainController->isPlayingInNinjamRoom()){
@@ -464,7 +463,7 @@ void MainFrame::on_IOPropertiesChanged(int midiDeviceIndex, int audioDevice, int
     //preciso de um outro on_audioIoPropertiesChanged que me dê o input e o output device
     //audioDriver->setProperties(selectedDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
 #endif
-    mainController->updateInputTrackRange();
+    mainController->updateInputTracksRange();
     ConfigStore::storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, audioDevice, sampleRate, bufferSize, midiDeviceIndex);
 
     mainController->getMidiDriver()->start();

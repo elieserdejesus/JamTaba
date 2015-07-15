@@ -28,12 +28,10 @@ public:
     void addPlugin(Audio::Plugin* plugin);
     void refreshInputSelectionName();
     inline Controller::MainController* getMainController() const{return mainController;}
-
-//signals:
-//    //plugins
-//    void editingPlugin(Audio::Plugin* plugi);
-//    void removingPlugin(Audio::Plugin* plugin);
+    inline int getInputIndex() const{return inputIndex;}
+    void updatePeaks();
 private:
+    int inputIndex;
     FxPanel* fxPanel;
     FxPanel* createFxPanel();
     QWidget* createInputPanel();

@@ -97,8 +97,8 @@ public:
 
     QList<Audio::PluginDescriptor> getPluginsDescriptors();
 
-    Audio::Plugin* addPlugin(const Audio::PluginDescriptor& descriptor);
-    void removePlugin(Audio::Plugin* plugin);
+    Audio::Plugin* addPlugin(int inputTrackIndex, const Audio::PluginDescriptor& descriptor);
+    void removePlugin(int inputTrackIndex, Audio::Plugin* plugin);
 
     QStringList getBotNames() const;
 
@@ -110,7 +110,6 @@ public:
     void setTrackLevel(int trackID, float level);
     void setTrackPan(int trackID, float pan);
 
-    Audio::AudioPeak getInputPeaks();
     Audio::AudioPeak getRoomStreamPeak();
     Audio::AudioPeak getTrackPeak(int trackID);
 
@@ -120,18 +119,20 @@ public:
 
     Audio::AudioNode* getTrackNode(long ID);
 
-    void updateInputTrackRange();//called when input range or method (audio or midi) are changed in preferences
-    void setInputTrackToMono(int inputIndexInAudioDevice);
-    void setInputTrackToStereo(int firstInputIndex);
-    void setInputTrackToMIDI(int midiDevice);
-    void setInputTrackToNoInput();
+    void updateInputTracksRange();//called when input range or method (audio or midi) are changed in preferences
+    void setInputTrackToMono(int localChannelIndex, int inputIndexInAudioDevice);
+    void setInputTrackToStereo(int localChannelIndex, int firstInputIndex);
+    void setInputTrackToMIDI(int localChannelIndex, int midiDevice);
+    void setInputTrackToNoInput(int localChannelIndex);
 
     inline bool isStarted() const{return started;}
 
     Geo::Location getLocation(QString ip) ;
 
-    static const int INPUT_TRACK_ID = 1;
-    Audio::LocalInputAudioNode* getInputTrack();
+    //static const int INPUT_TRACK_ID = 1;
+    Audio::LocalInputAudioNode* getInputTrack(int localInputIndex);
+    int addInputTrackNode(Audio::LocalInputAudioNode* inputTrackNode);
+    QList<Audio::LocalInputAudioNode*> inputTracks;
 
     inline int getAudioDriverSampleRate() const{return audioDriver->getSampleRate();}
 

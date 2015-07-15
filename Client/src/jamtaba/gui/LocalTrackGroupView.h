@@ -24,6 +24,8 @@ public:
 
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
+    void updatePeaks();
+    //inline QList<LocalTrackView*> getTracks() const{return trackViews;}
 
 protected:
     void paintEvent(QPaintEvent* );

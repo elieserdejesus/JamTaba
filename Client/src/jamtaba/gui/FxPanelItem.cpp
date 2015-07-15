@@ -142,7 +142,7 @@ void FxPanelItem::on_contextMenu(QPoint p){
 void FxPanelItem::on_fxMenuActionTriggered(QAction* action){
     //add a new plugin
     Audio::PluginDescriptor descriptor = Audio::PluginDescriptor::fromString( action->data().toString());
-    Audio::Plugin* plugin = mainController->addPlugin(descriptor);
+    Audio::Plugin* plugin = mainController->addPlugin(this->localTrackView->getInputIndex(), descriptor);
     this->localTrackView->addPlugin(plugin);
     showPluginGui(plugin);
 }
@@ -162,7 +162,7 @@ void FxPanelItem::on_actionMenuTriggered(QAction* a){
                     window->close();
                 }
             }
-            mainController->removePlugin(plugin);
+            mainController->removePlugin(this->localTrackView->getInputIndex(), plugin);
         }
     }
 }
