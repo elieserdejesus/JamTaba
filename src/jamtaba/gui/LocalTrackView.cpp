@@ -17,7 +17,7 @@ const QString LocalTrackView::STEREO_ICON = ":/images/input_stereo.png";
 const QString LocalTrackView::NO_INPUT_ICON= ":/images/input_no.png";
 
 LocalTrackView::LocalTrackView(QWidget* parent, Controller::MainController *mainController)
-    :BaseTrackView(parent, mainController, 1), fxPanel(nullptr)
+    :BaseTrackView(parent, mainController, 1), fxPanel(nullptr), inputNode(nullptr)
 {
     //add separator before effects panel
     ui->mainLayout->addSpacing(20);
@@ -29,8 +29,16 @@ LocalTrackView::LocalTrackView(QWidget* parent, Controller::MainController *main
     ui->mainLayout->addWidget(createInputPanel());
 
     //insert a input node in controller
-    this->inputIndex = mainController->addInputTrackNode(new Audio::LocalInputAudioNode());
-
+    this->inputNode = new Audio::LocalInputAudioNode();
+    this->inputIndex = mainController->addInputTrackNode(this->inputNode);
+}
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void LocalTrackView::setToNoInput(){
+    if(inputNode){
+        inputNode->setToNoInput();
+        refreshInputSelectionName();
+    }
+    setEnabled(false);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -77,13 +85,13 @@ QPushButton* LocalTrackView::createInputSelectionButton(QWidget* parent){
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void LocalTrackView::on_inputSelectionButtonClicked(){
     QMenu menu(this);
-    //menu.setParent(inputSelectionButton);
-    menu.move(mapToGlobal(inputSelectionButton->parentWidget()->pos()));
     menu.addMenu(createMonoInputsMenu(&menu));
     menu.addMenu(createStereoInputsMenu(&menu));
     menu.addMenu(createMidiInputsMenu(&menu));
     QAction* noInputAction = menu.addAction(QIcon(NO_INPUT_ICON), "no input");
     QObject::connect( noInputAction, SIGNAL(triggered()), this, SLOT(on_noInputMenuSelected()));
+
+    menu.move(mapToGlobal(inputSelectionButton->parentWidget()->pos()));
     menu.exec();
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -92,21 +100,32 @@ void LocalTrackView::on_noInputMenuSelected(){
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 QMenu* LocalTrackView::createMonoInputsMenu(QMenu* parent){
     QMenu* monoInputsMenu = new QMenu("Mono", parent);
     monoInputsMenu->setIcon(QIcon(MONO_ICON));
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
-    Audio::ChannelRange inputsRange = audioDriver->getSelectedInputs();
-    int inputs = inputsRange.getChannels();
-    int firstInputIndex = inputsRange.getFirstChannel();
+    Audio::ChannelRange globalInputsRange = audioDriver->getSelectedInputs();
+    int globalInputs = globalInputsRange.getChannels();
+    int firstGlobalInputIndex = globalInputsRange.getFirstChannel();
     QString deviceName(audioDriver->getInputDeviceName(audioDriver->getInputDeviceIndex()));
-    for (int i = 0; i < inputs; ++i) {
-        int index = firstInputIndex + i;
+    //Audio::ChannelRange thisTrackInputRange = inputNode->getAudioInputRange();
+    //bool canEnableMenu = false;
+    for (int i = 0; i < globalInputs; ++i) {
+        int index = firstGlobalInputIndex + i;
         QString inputName = QString(audioDriver->getInputChannelName(index)) + "  (" + deviceName + ")";
         QAction* action = monoInputsMenu->addAction(inputName);
         action->setData( index );//using the channel index as action data
         action->setIcon(monoInputsMenu->icon());
+//        action->setEnabled(mainController->audioMonoInputIsFreeToSelect(index) || index == thisTrackInputRange.getFirstChannel() || index == thisTrackInputRange.getLastChannel());
+//        if(action->isEnabled()){//at least one action is enabled
+//            canEnableMenu = true;
+//        }
     }
+//    monoInputsMenu->setEnabled(canEnableMenu);
+//    if(!canEnableMenu){
+//        monoInputsMenu->setTitle("Mono (all mono inputs are already in use)");
+//    }
     QObject::connect( monoInputsMenu, SIGNAL(triggered(QAction*)), this, SLOT(on_monoInputMenuSelected(QAction*)));
     return monoInputsMenu;
 }
@@ -114,6 +133,7 @@ QMenu* LocalTrackView::createMonoInputsMenu(QMenu* parent){
 void LocalTrackView::on_monoInputMenuSelected(QAction *action){
     int selectedInputIndexInAudioDevice = action->data().toInt();
     mainController->setInputTrackToMono(this->inputIndex, selectedInputIndexInAudioDevice);
+
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -121,31 +141,45 @@ QMenu* LocalTrackView::createStereoInputsMenu(QMenu* parent){
     QMenu* stereoInputsMenu = new QMenu("Stereo", parent);
     stereoInputsMenu->setIcon(QIcon(STEREO_ICON));
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
-    Audio::ChannelRange inputsRange = audioDriver->getSelectedInputs();
-    int inputs = inputsRange.getChannels();
+    Audio::ChannelRange globalInputRange = audioDriver->getSelectedInputs();
+    Audio::ChannelRange thisTrackInputRange = mainController->getInputTrack(this->inputIndex)->getAudioInputRange();
+    int globalInputs = globalInputRange.getChannels();
     QString deviceName(audioDriver->getInputDeviceName(audioDriver->getInputDeviceIndex()));
-    for (int i = 0; i < inputs; i += 2) {
-        if(i + 1 < inputs){//we can make a channel pair using (i) and (i+1)?
-            int index = inputsRange.getFirstChannel() + i;
+    //bool canEnableMenu = false;
+    for (int i = 0; i < globalInputs; i += 2) {
+        if(i + 1 < globalInputs){//we can make a channel pair using (i) and (i+1)?
+            int index = globalInputRange.getFirstChannel() + i;
             QString firstName = getInputChannelNameOnly(index);
             QString indexes = QString::number(index+1) + " + " + QString::number(index+2);
             QString inputName = firstName + " [" + indexes +  "]  (" + deviceName + ")";
             QAction* action = stereoInputsMenu->addAction(inputName);
             action->setData(index);//use the first input pair index as action data
             action->setIcon(stereoInputsMenu->icon());
+//            bool inputPairIsFree = mainController->audioStereoInputIsFreeToSelect(index);
+//            bool inputUsageIsOk = inputIsUsedByMe(index) || (inputIsUsedByMe(index+1) && thisTrackInputRange.isMono());
+//            action->setEnabled( inputPairIsFree || inputUsageIsOk );
+//            if(action->isEnabled()){
+//                canEnableMenu = true;
+//            }
         }
     }
-    stereoInputsMenu->setEnabled(inputs/2 >= 1);//at least one pair
+    stereoInputsMenu->setEnabled(globalInputs/2 >= 1);//at least one pair
     if(!stereoInputsMenu->isEnabled()){
-        stereoInputsMenu->setTitle( stereoInputsMenu->title() + "  (not enough inputs to make stereo)" );
+        stereoInputsMenu->setTitle( stereoInputsMenu->title() + "  (not enough available inputs to make stereo)" );
     }
     QObject::connect(stereoInputsMenu, SIGNAL(triggered(QAction*)), this, SLOT(on_stereoInputMenuSelected(QAction*)));
     return stereoInputsMenu;
 }
 
+//bool LocalTrackView::inputIsUsedByMe(int inputIndexInAudioDevice) const{
+//    Audio::ChannelRange range = inputNode->getAudioInputRange();
+//    return range.getFirstChannel() == inputIndexInAudioDevice || range.getLastChannel() == inputIndexInAudioDevice;
+//}
+
 void LocalTrackView::on_stereoInputMenuSelected(QAction *action){
     int firstInputIndexInAudioDevice = action->data().toInt();
     mainController->setInputTrackToStereo(this->inputIndex, firstInputIndexInAudioDevice);
+
 }
 
 QString LocalTrackView::getInputChannelNameOnly(int inputIndex){
@@ -206,7 +240,7 @@ QMenu* LocalTrackView::createMidiInputsMenu(QMenu* parent){
     }
     midiInputsMenu->setEnabled(midiDevices > 0);
     if(!midiInputsMenu->isEnabled()){
-        midiInputsMenu->setTitle( midiInputsMenu->title() + "  (no MIDI device detected)" );
+        midiInputsMenu->setTitle( midiInputsMenu->title() + "  (no MIDI devices detected)" );
     }
     QObject::connect(midiInputsMenu, SIGNAL(triggered(QAction*)), this, SLOT(on_MidiInputMenuSelected(QAction*)));
     return midiInputsMenu;
@@ -215,6 +249,7 @@ QMenu* LocalTrackView::createMidiInputsMenu(QMenu* parent){
 void LocalTrackView::on_MidiInputMenuSelected(QAction *action){
     int midiDeviceIndex = action->data().toInt();
     mainController->setInputTrackToMIDI(this->inputIndex, midiDeviceIndex);
+
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -234,6 +269,6 @@ FxPanel *LocalTrackView::createFxPanel(){
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 LocalTrackView::~LocalTrackView()
 {
-
+    mainController->removeInputTrackNode(this->inputIndex);
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

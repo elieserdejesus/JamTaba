@@ -12,6 +12,7 @@ class QLabel;
 
 namespace Audio {
 class Plugin;
+class LocalInputAudioNode;
 }
 
 namespace Controller {
@@ -30,6 +31,7 @@ public:
     inline Controller::MainController* getMainController() const{return mainController;}
     inline int getInputIndex() const{return inputIndex;}
     void updatePeaks();
+    void setToNoInput();
 private:
     int inputIndex;
     FxPanel* fxPanel;
@@ -51,6 +53,11 @@ private:
     static const QString NO_INPUT_ICON;
 
     QString getInputChannelNameOnly(int inputIndex);//return the input channel name withou the number/index
+
+    Audio::LocalInputAudioNode* inputNode;
+
+    bool inputIsUsedByMe(int inputIndexInAudioDevice) const;
+
 
 private slots:
     void on_inputSelectionButtonClicked();

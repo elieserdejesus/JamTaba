@@ -58,7 +58,7 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     timerID = startTimer(1000/50);
 
     QObject::connect(ui.menuAudioPreferences, SIGNAL(triggered()), this, SLOT(on_preferencesClicked()));
-    QObject::connect(mainController, SIGNAL(inputSelectionChanged()), this, SLOT(on_inputSelectionChanged()));
+    QObject::connect(mainController, SIGNAL(inputSelectionChanged(int)), this, SLOT(on_inputSelectionChanged(int)));
 
     QObject::connect( ui.toolButton, SIGNAL(clicked()), this, SLOT(on_toolButtonClicked()));
 }
@@ -106,6 +106,7 @@ void MainFrame::on_toolButtonMenuActionHovered(QAction *action){
 
 void MainFrame::on_addChannelClicked(){
     addLocalChannel();
+    mainController->updateInputTracksRange();
 }
 
 //++++++++++++++++++++++++=
@@ -152,7 +153,12 @@ void MainFrame::addLocalChannel(){
     //QObject::connect(localTrackView, SIGNAL(editingPlugin(Audio::Plugin*)), this, SLOT(on_editingPlugin(Audio::Plugin*)));
     //QObject::connect(localTrackView, SIGNAL(removingPlugin(Audio::Plugin*)), this, SLOT(on_removingPlugin(Audio::Plugin*)));
 
-    localTrackView->refreshInputSelectionName();
+    if(localChannels.size() > 1){
+        localTrackView->setToNoInput();
+    }
+    else{
+        localTrackView->refreshInputSelectionName();
+    }
 
 
 }
@@ -471,8 +477,10 @@ void MainFrame::on_IOPropertiesChanged(int midiDeviceIndex, int audioDevice, int
 }
 
 //input selection changed by user or by system
-void MainFrame::on_inputSelectionChanged(){
-    //PRECISO VER COMO VOU INDEXAR O SUBCANAL
+void MainFrame::on_inputSelectionChanged(int inputTrackIndex){
+    foreach (LocalTrackGroupView* channel, localChannels) {
+        channel->refreshInputSelectionName(inputTrackIndex);
+    }
     //localTrackGroupView->refreshInputSelectionName();
 }
 

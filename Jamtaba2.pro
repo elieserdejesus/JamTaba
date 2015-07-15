@@ -1,19 +1,31 @@
-#implementar os subchannels
-#por enquanto comentei o código do NinjamController que encodava, depois tenho que pensar em como vou encodar vários canais
-#no método que recria os encoders eu estou dando o migué e estou recriando apenas um
-
-#depois trabalhar na ideia do segundo canal. Deixar o backtracking sempre na tela pode ser
-#muito chato pra quem não usa. O BT channel poderia ser removido?
-
-#como serão as entradas? Como será a criação do canal de backtracking?
+#dar feedback quando o usuário escolher noInput. Deixar a pista esmaecida seria legal.
+#Usar setEnabled não funcionou porque desabilita inclusive o combo de selação, o que
+#impossibilita que o usuário volte a deixar a pista ativa.
 
 #salvar as entradas selecionadas para a pista local (salvar primeiro índice e quantidade de canais).
 #Deixar para pensar em como salvar quando  já tiver decidido como serão as múltiplas entradas
 
+#    Nome do canal
+#        range sub1
+#        range sub2
+#    Nome do canal 2
+#        ranges
+
+
+#implementar a conversão de vários canais para um só. Isso será necessário quando o
+#usuário entrar em um server que aceita menos canais do que ele tinha criado. Pegar
+#os subchannels dos canais adicionais e fazer um merge com o último canal válido. Por
+#exemplo, se o server aceita 2 canais e eu estou com 3 então ele vai fazer um merge 2+3
+
+
+#implementar os subchannels
+#por enquanto comentei o código do NinjamController que encodava, depois tenho que pensar em como vou encodar vários canais
+#no método que recria os encoders eu estou dando o migué e estou recriando apenas um
+
 #implementar xmit
 
 
-#setar subchannels para no input quando são criados
+
 
 #preciso mudar a persistência dos nomes dos channels para um array
 

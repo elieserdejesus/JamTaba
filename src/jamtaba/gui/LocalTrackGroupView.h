@@ -25,6 +25,7 @@ public:
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
     void updatePeaks();
+    void refreshInputSelectionName(int inputTrackIndex);
     //inline QList<LocalTrackView*> getTracks() const{return trackViews;}
 
 protected:
