@@ -13,7 +13,7 @@ LocalTrackGroupView::LocalTrackGroupView(QWidget *parent) :
 
     //ui->tracksPanel->setLayout(new QHBoxLayout(ui->tracksPanel));
     ui->tracksPanel->layout()->setContentsMargins(0, 0, 0, 0);
-    ui->tracksPanel->layout()->setSpacing(1);
+    ui->tracksPanel->layout()->setSpacing(2);
 }
 
 LocalTrackGroupView::~LocalTrackGroupView()
@@ -30,6 +30,9 @@ void LocalTrackGroupView::paintEvent(QPaintEvent* ){
 }
 
 void LocalTrackGroupView::addTrackView(LocalTrackView *trackView){
+    if(trackViews.size() >= MAX_SUB_CHANNELS){
+        return;
+    }
     if(ui->tracksPanel->layout()){
         ui->tracksPanel->layout()->addWidget(trackView);
         trackViews.append(trackView);
@@ -56,7 +59,8 @@ void LocalTrackGroupView::on_toolButton_clicked()
     QMenu menu;
     QAction* addSubchannelAction = menu.addAction(QIcon(":/images/more.png"), "Add subchannel");
     QObject::connect(addSubchannelAction, SIGNAL(triggered()), this, SLOT(onAddSubChannelClicked()));
-    if(trackViews.size() > 1){
+    addSubchannelAction->setEnabled(trackViews.size() < MAX_SUB_CHANNELS);
+    if(trackViews.size() > 1 ){
         menu.addSeparator();
         for (int i = 2; i <= trackViews.size(); ++i) {
             QAction* action = menu.addAction(QIcon(":/images/less.png"), "Remove subchannel " + QString::number(i));
@@ -101,9 +105,12 @@ void LocalTrackGroupView::on_toolButtonActionTriggered(QAction *action){
 }
 
 QSize LocalTrackGroupView::minimumSizeHint() const{
-    return QSize(trackViews.size() * BaseTrackView::NARROW_WIDTH, 10);
+    return sizeHint();
 }
 
 QSize LocalTrackGroupView::sizeHint() const{
-    return QSize(trackViews.size() * BaseTrackView::NARROW_WIDTH, 10);
+    if(trackViews.size() > 1){
+        return QSize(trackViews.size() * BaseTrackView::NARROW_WIDTH, 10);
+    }
+    return trackViews.at(0)->sizeHint();
 }

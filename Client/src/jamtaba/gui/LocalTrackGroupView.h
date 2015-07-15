@@ -38,7 +38,7 @@ private slots:
 private:
     Ui::LocalTrackGroupView *ui;
     QList<LocalTrackView*> trackViews;
-
+    static const int MAX_SUB_CHANNELS = 3;
 };
 
 #endif // LOCALTRACKGROUPVIEW_H

@@ -26,6 +26,8 @@ BaseTrackView::BaseTrackView(QWidget *parent, Controller::MainController *mainCo
 
     //add in static map
     trackViews.insert(trackID, this);
+
+
 }
 
 QSize BaseTrackView::sizeHint() const{
