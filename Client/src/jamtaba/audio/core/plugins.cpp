@@ -56,13 +56,23 @@ QString PluginDescriptor::getPluginNameFromPath(QString path){
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Plugin::Plugin(QString name)
-    :name(name), bypassed(false)
+    :name(name), bypassed(false), editorWindow(nullptr)
 {
 
 }
 
+void Plugin::setEditor(PluginWindow *editorWindow){
+    if(this->editorWindow){
+        editorWindow->deleteLater();
+    }
+    this->editorWindow = editorWindow;
+}
+
 Plugin::~Plugin(){
     qDebug() << "Plugin destructor";
+    if(editorWindow){
+       delete editorWindow;
+    }
 }
 
 void Plugin::setBypass(bool state){
@@ -71,40 +81,17 @@ void Plugin::setBypass(bool state){
     }
 }
 //++++++++++++++++++++++++++++
-QMap<Audio::Plugin*, PluginWindow*> PluginWindow::windows;
-
-PluginWindow* PluginWindow::getWindow(QWidget *parent, Audio::Plugin *plugin){
-    PluginWindow* window = nullptr;
-    if(!windows.contains(plugin)){
-        window = new PluginWindow(parent, plugin);
-        windows.insert(plugin, window);
-    }
-    else{
-        window = windows[plugin];
-    }
-    return window;
-}
-
-PluginWindow::PluginWindow(QWidget *parent, Plugin *plugin)
-    :QDialog(parent, Qt::WindowTitleHint | Qt::WindowCloseButtonHint),
+PluginWindow::PluginWindow( Plugin *plugin)
+    :QDialog(nullptr, Qt::WindowTitleHint | Qt::WindowCloseButtonHint),
       plugin(plugin)
 {
-    setAttribute( Qt::WA_DeleteOnClose, true );
+    //setAttribute( Qt::WA_DeleteOnClose, true );
     setWindowTitle(plugin->getName());
 }
 
-PluginWindow::~PluginWindow()
-{
-    //pluginGui->setParent(nullptr);//avoid delete pluginGui instance
-    windows.remove(plugin);
+PluginWindow::~PluginWindow(){
+    qDebug() << "PLugin window destructor";
 }
-
-//void PluginWindow::setPlugin(Audio::Plugin *plugin){
-//    if(plugin != this->plugin){
-//        this->plugin = plugin;
-//        setWindowTitle(plugin->getName());
-//    }
-//}
 
 //+++++++++++++++++++++++++++++++++++++++++
 const int JamtabaDelay::MAX_DELAY_IN_SECONDS = 3;
@@ -176,7 +163,7 @@ void JamtabaDelay::setLevel(float level){
     }
 }
 
-void JamtabaDelay::openEditor(PluginWindow *w, QPoint p){
-    Q_UNUSED(w);
+void JamtabaDelay::openEditor(QPoint p){
+    //Q_UNUSED(w);
     Q_UNUSED(p);
 }

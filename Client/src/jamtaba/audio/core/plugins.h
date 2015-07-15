@@ -46,14 +46,9 @@ class PluginWindow : public QDialog
     Q_OBJECT
 
 public:
-    static PluginWindow* getWindow(QWidget* parent, Audio::Plugin* plugin);
+    PluginWindow(Audio::Plugin* plugin);
     ~PluginWindow();
-    //void setPlugin(Audio::Plugin* plugin);
-    //Audio::Plugin* getPlugin() const{return plugin;}
-
 private:
-    static QMap<Audio::Plugin*, PluginWindow*> windows;
-    PluginWindow(QWidget* parent, Audio::Plugin* plugin);
     Audio::Plugin* plugin;
 };
 //+++++++++++++++++++++++
@@ -65,11 +60,15 @@ public:
     virtual ~Plugin();
     virtual void setBypass(bool state);
     inline bool isBypassed() const{return bypassed;}
-    virtual void openEditor(PluginWindow* w, QPoint p) = 0;
+    virtual void openEditor(QPoint centerOfScreen) = 0;
     virtual void start(int sampleRate, int bufferSize) = 0;
+    void setEditor(PluginWindow* editorWindow);
+    inline bool hasEditorWindow() const{return editorWindow;}
+    PluginWindow* getPluginEditor() const{return editorWindow;}
 protected:
     QString name;
     bool bypassed;
+    PluginWindow* editorWindow;
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -88,7 +87,7 @@ public:
     inline float getDelayTime() const{return delayTimeInMs;}
     inline float getFeedback() const{return feedbackGain;}
     inline float getLevel() const{return level;}
-    virtual void openEditor(PluginWindow *, QPoint p);
+    virtual void openEditor(QPoint centerOfScreen);
     virtual void start(int sampleRate, int bufferSize);
 private:
     void setSampleRate(int newSampleRate);

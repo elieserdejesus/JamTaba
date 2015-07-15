@@ -1,12 +1,5 @@
-#não setou desalocando REct usado na hora de abrir o editor do plugin
 
-#separar o carregamento do plugin VST da instância. No momento uma instância é criada e depois é que o plugin é carregado. Pra mim
-#isso é um bad design
-
-#botei dois plugins, b4 e oldschool. Quando cliquei no old school a tela não apareceu
-
-
-#não entendi o posicionamento da janela de plugin, deveria ficar em 0,0 mas está bem diferente disso
+#deu pau quando tentei colocar o Addictive Drums
 
 #implementar os subchannels
 
@@ -66,6 +59,10 @@
 #eu passar out.frameLenght para ele mas o buffer resampleado tiver out.lenght + 1 samples
 #eu acho que ele vai guardar essa última amostra no buffer interno, mas eu teria
 #que sair do loop do resampler exatamente em out.lenght
+
+#separar o carregamento do plugin VST da instância. No momento uma instância é criada e depois é que o plugin é carregado. Pra mim
+#isso é um bad design
+
 
 #o metronome precisa ficar na tela o tempo todo, ele é muito importante. Se ele ficar junto com as pistas locais ele sumirá
 #quando a seção com as pistas locais for contraída

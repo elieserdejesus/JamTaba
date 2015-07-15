@@ -79,6 +79,10 @@ bool VstPlugin::load(VstHost *host, QString path){
     effect->dispatcher(effect, effGetEffectName, 0, 0, name, 0);
     this->name = QString(name);
 
+    if(effect->flags & effFlagsHasEditor ){
+        setEditor(new Audio::PluginWindow(this));
+    }
+
     return true;
 }
 
@@ -178,11 +182,11 @@ extern "C" {
     }
 }
 */
-void VstPlugin::openEditor(Audio::PluginWindow* w, QPoint centerOfScreen){
+void VstPlugin::openEditor(QPoint centerOfScreen){
     if(!effect ){
         return;
     }
-    if(!(effect->flags & effFlagsHasEditor)){
+    if(!(effect->flags & effFlagsHasEditor || !hasEditorWindow())){
         return;
     }
     //suspend();
@@ -198,6 +202,7 @@ void VstPlugin::openEditor(Audio::PluginWindow* w, QPoint centerOfScreen){
     }
     int rectWidth = rect->right - rect->left;
     int rectHeight = rect->bottom - rect->top;
+    Audio::PluginWindow* w = getPluginEditor();
     w->setFixedSize(rectWidth, rectHeight);
     effect->dispatcher(effect, effEditOpen, 0, 0, (void*)(w->effectiveWinId()), 0);
 
