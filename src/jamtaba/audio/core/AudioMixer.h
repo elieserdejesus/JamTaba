@@ -29,12 +29,12 @@ public:
     void addNode(AudioNode* node);
     void removeNode(AudioNode* node);
 
-    LocalInputAudioNode* getLocalInput() const{return inputNode;}
+    //LocalInputAudioNode* getLocalInput() const{return inputNode;}
 
     inline void setSampleRate(int newSampleRate){this->sampleRate = newSampleRate;}
 
 private:
-    LocalInputAudioNode* inputNode;
+    //LocalInputAudioNode* inputNode;
 
     QList<AudioNode*> nodes;
     int sampleRate;

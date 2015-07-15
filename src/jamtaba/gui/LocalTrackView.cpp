@@ -27,9 +27,18 @@ LocalTrackView::LocalTrackView(QWidget* parent, Controller::MainController *main
     //create input panel in the bottom
     ui->mainLayout->addSpacing(20);
     ui->mainLayout->addWidget(createInputPanel());
+
+    //insert a input node in controller
+    this->inputIndex = mainController->addInputTrackNode(new Audio::LocalInputAudioNode());
+
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void LocalTrackView::updatePeaks(){
+    Audio::AudioPeak peak = mainController->getTrackPeak(this->inputIndex);
+    setPeaks(peak.getLeft(), peak.getRight());
+}
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QWidget* LocalTrackView::createInputPanel(){
     QWidget* inputPanel = new QWidget(this);
@@ -79,7 +88,7 @@ void LocalTrackView::on_inputSelectionButtonClicked(){
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void LocalTrackView::on_noInputMenuSelected(){
-    mainController->setInputTrackToNoInput();
+    mainController->setInputTrackToNoInput(this->inputIndex);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -103,8 +112,8 @@ QMenu* LocalTrackView::createMonoInputsMenu(QMenu* parent){
 }
 
 void LocalTrackView::on_monoInputMenuSelected(QAction *action){
-    int selectedInputIndex = action->data().toInt();
-    mainController->setInputTrackToMono(selectedInputIndex);
+    int selectedInputIndexInAudioDevice = action->data().toInt();
+    mainController->setInputTrackToMono(this->inputIndex, selectedInputIndexInAudioDevice);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -135,8 +144,8 @@ QMenu* LocalTrackView::createStereoInputsMenu(QMenu* parent){
 }
 
 void LocalTrackView::on_stereoInputMenuSelected(QAction *action){
-    int firstInputIndex = action->data().toInt();
-    mainController->setInputTrackToStereo(firstInputIndex);
+    int firstInputIndexInAudioDevice = action->data().toInt();
+    mainController->setInputTrackToStereo(this->inputIndex, firstInputIndexInAudioDevice);
 }
 
 QString LocalTrackView::getInputChannelNameOnly(int inputIndex){
@@ -149,7 +158,7 @@ QString LocalTrackView::getInputChannelNameOnly(int inputIndex){
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void LocalTrackView::refreshInputSelectionName(){
-    Audio::LocalInputAudioNode* inputTrack = dynamic_cast<Audio::LocalInputAudioNode*>( mainController->getTrackNode(Controller::MainController::INPUT_TRACK_ID));
+    Audio::LocalInputAudioNode* inputTrack = mainController->getInputTrack(this->inputIndex);
     QString channelName;
     QString iconFile;
     if(!inputTrack->isMidi()){//using audio as input method
@@ -205,7 +214,7 @@ QMenu* LocalTrackView::createMidiInputsMenu(QMenu* parent){
 
 void LocalTrackView::on_MidiInputMenuSelected(QAction *action){
     int midiDeviceIndex = action->data().toInt();
-    mainController->setInputTrackToMIDI(midiDeviceIndex);
+    mainController->setInputTrackToMIDI(this->inputIndex, midiDeviceIndex);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

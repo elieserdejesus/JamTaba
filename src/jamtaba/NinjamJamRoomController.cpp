@@ -252,19 +252,19 @@ void NinjamJamRoomController::process(Audio::SamplesBuffer &in, Audio::SamplesBu
         mainController->doAudioProcess(tempInBuffer, tempOutBuffer);
         out.add(tempOutBuffer, offset); //generate audio output
 
-        if(!mainController->getInputTrack()->isNoInput()){
-            quint8 channelIndex = (quint8)0;
-            bool isLastPart = intervalPosition + samplesToProcessInThisStep >= samplesInInterval;
-            bool isFirstPart = intervalPosition == 0;
-            VorbisEncoder* encoder = getEncoder(channelIndex);
-            assert(encoder);
-            QByteArray encodedBytes = encoder->encode(mainController->getInputTrack()->getLastBuffer());
-            if(isLastPart){//get the last encoded bytes
-                encodedBytes.append( encoder->finishIntervalEncoding() );
+//        if(!mainController->getInputTrack()->isNoInput()){
+//            quint8 channelIndex = (quint8)0;
+//            bool isLastPart = intervalPosition + samplesToProcessInThisStep >= samplesInInterval;
+//            bool isFirstPart = intervalPosition == 0;
+//            VorbisEncoder* encoder = getEncoder(channelIndex);
+//            assert(encoder);
+//            QByteArray encodedBytes = encoder->encode(mainController->getInputTrack()->getLastBuffer());
+//            if(isLastPart){//get the last encoded bytes
+//                encodedBytes.append( encoder->finishIntervalEncoding() );
 
-            }
-            emit encodedAudioAvailableToSend(encodedBytes, channelIndex, isFirstPart, isLastPart);
-        }
+//            }
+//            emit encodedAudioAvailableToSend(encodedBytes, channelIndex, isFirstPart, isLastPart);
+//        }
 
         //++++++++++++++++++++++++++++++++++++++++
 
@@ -279,9 +279,11 @@ void NinjamJamRoomController::process(Audio::SamplesBuffer &in, Audio::SamplesBu
 }
 
 VorbisEncoder* NinjamJamRoomController::getEncoder(quint8 channelIndex){
-    Q_UNUSED(channelIndex);
     if(!encoder){
-        encoder = new VorbisEncoder(mainController->getInputTrack()->getChannels(), mainController->getAudioDriverSampleRate());
+        Audio::LocalInputAudioNode* inputTrack = mainController->getInputTrack(channelIndex);
+        if(inputTrack){//TODO - retornando o mesmo encoder para todos os canais?
+            encoder = new VorbisEncoder(inputTrack->getChannels(), mainController->getAudioDriverSampleRate());
+        }
     }
     return encoder;
 }
@@ -383,7 +385,8 @@ void NinjamJamRoomController::recreateEncoders(){
     if(encoder){
         delete encoder;
     }
-    encoder = new VorbisEncoder(mainController->getInputTrack()->getChannels(), mainController->getAudioDriverSampleRate());
+    //TODO não estou recriando para todos os canais de entrada
+    encoder = new VorbisEncoder(mainController->getInputTrack(0)->getChannels(), mainController->getAudioDriverSampleRate());
 }
 
 void NinjamJamRoomController::on_audioDriverSampleRateChanged(int newSampleRate){

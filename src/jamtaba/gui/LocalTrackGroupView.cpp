@@ -16,6 +16,12 @@ LocalTrackGroupView::LocalTrackGroupView(QWidget *parent) :
     ui->tracksPanel->layout()->setSpacing(2);
 }
 
+void LocalTrackGroupView::updatePeaks(){
+    foreach (LocalTrackView* trackView, trackViews) {
+        trackView->updatePeaks();
+    }
+}
+
 LocalTrackGroupView::~LocalTrackGroupView()
 {
     delete ui;
