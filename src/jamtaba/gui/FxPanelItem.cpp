@@ -156,9 +156,11 @@ void FxPanelItem::on_actionMenuTriggered(QAction* a){
             Audio::Plugin* plugin = this->plugin;
             unsetPlugin();//set this->plugin to nullptr
 
-            Audio::PluginWindow* window = Audio::PluginWindow::getWindow(this, plugin);
-            if(window){
-                window->close();
+            if(plugin->hasEditorWindow()){
+                Audio::PluginWindow* window = plugin->getPluginEditor();
+                if(window){
+                    window->close();
+                }
             }
             mainController->removePlugin(plugin);
         }
@@ -167,17 +169,19 @@ void FxPanelItem::on_actionMenuTriggered(QAction* a){
 
 //++++++++++++++++++++++++++
 void FxPanelItem::showPluginGui(Audio::Plugin *plugin){
-    Audio::PluginWindow* window = Audio::PluginWindow::getWindow(this, plugin);
+    if(plugin && plugin->hasEditorWindow()){
+        Audio::PluginWindow* window = plugin->getPluginEditor();
 
-    if(!window->isVisible()){
-        window->show();//show to generate a window handle, VST plugins use this handle to draw plugin GUI
-        QDesktopWidget desktop;
+        if(!window->isVisible()){
+            window->show();//show to generate a window handle, VST plugins use this handle to draw plugin GUI
+            QDesktopWidget desktop;
 
-        int hCenter = desktop.geometry().width()/2;// - window->width();
-        int vCenter = desktop.geometry().height()/2;// - window->height();
-        plugin->openEditor(window, QPoint(hCenter, vCenter));
-    }
-    else{
-      window->activateWindow();
+            int hCenter = desktop.geometry().width()/2;// - window->width();
+            int vCenter = desktop.geometry().height()/2;// - window->height();
+            plugin->openEditor(QPoint(hCenter, vCenter));
+        }
+        else{
+            window->activateWindow();
+        }
     }
 }
