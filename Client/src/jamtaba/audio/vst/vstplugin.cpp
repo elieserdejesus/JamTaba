@@ -24,10 +24,10 @@ typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 VstPlugin::VstPlugin(VstHost* host)
-    :Audio::Plugin("name"),
-      effect(nullptr),
-    internalBuffer(nullptr),//create an empty iternal buffer for while
-    host(host)
+    :   Audio::Plugin("name"),
+        effect(nullptr),
+        internalBuffer(nullptr),
+        host(host)
 {
 
 }
@@ -37,7 +37,7 @@ bool VstPlugin::load(VstHost *host, QString path){
     effect = nullptr;
 
     if(!pluginLib.load()){
-        qCritical() << "não foi possível carregar " << path;
+        qCritical() << "error when loading VST plugin " << path;
         return false;
     }
 
@@ -98,7 +98,7 @@ void VstPlugin::start(int sampleRate, int bufferSize){
     }
 
     long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
-    qDebug() << "Starting " << getName() << " version " << ver;
+    //qDebug() << "Starting " << getName() << " version " << ver;
     internalBuffer = new Audio::SamplesBuffer(effect->numOutputs, host->getBufferSize());
 
     effect->dispatcher(effect, effOpen, 0, 0, NULL, 0.0f);
@@ -178,9 +178,7 @@ extern "C" {
     }
 }
 */
-void VstPlugin::openEditor(Audio::PluginWindow *w, QPoint /*p*/){
-
-
+void VstPlugin::openEditor(Audio::PluginWindow* w, QPoint p){
     if(!effect ){
         return;
     }
@@ -212,10 +210,11 @@ void VstPlugin::openEditor(Audio::PluginWindow *w, QPoint /*p*/){
     rectWidth = rect->right - rect->left;
     rectHeight = rect->bottom - rect->top;
 
-    QDesktopWidget widget;
-    QRect mainScreenSize = widget.availableGeometry(widget.primaryScreen());
+    //QDesktopWidget widget;
+    //QRect mainScreenSize = widget.availableGeometry(widget.primaryScreen());
 
-    w->move(mainScreenSize.width()/2 - rectWidth/2, mainScreenSize.height()/2 - rectHeight/2);
+    //w->move( mainScreenSize.width()/2 - rectWidth/2, mainScreenSize.height()/2 - rectHeight/2);
+    w->move(p.x(), p.y());
     //delete rect; //se deletar buga alguns plugins
 
     resume();

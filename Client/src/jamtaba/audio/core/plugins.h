@@ -13,20 +13,30 @@ namespace Vst {
 
 namespace Audio {
 
-class PluginDescriptor : public QObject{
-    Q_OBJECT
+class PluginDescriptor {
+
 private:
-    const QString name;
-    const QString group;
-    const QString path;
+    QString name;
+    QString group;
+    QString path;
 public:
     PluginDescriptor(QString name, QString group);
     PluginDescriptor(QString name, QString group, QString path);
+    PluginDescriptor();
+    //PluginDescriptor(const PluginDescriptor&);
+    //~PluginDescriptor();
     inline QString getName() const{return name;}
     inline QString getGroup() const{return group;}
     inline QString getPath() const{return path;}
+    inline bool isValid() const{ return !name.isEmpty() && !group.isEmpty();}
+
+    inline bool isVST() const{return group.toLower() == "vst";}
+    inline bool isNative() const{return group.toLower() == "jamtaba";}
 
     static QString getPluginNameFromPath(QString path);
+
+    QString toString() const;
+    static PluginDescriptor fromString(QString);
 };
 
 

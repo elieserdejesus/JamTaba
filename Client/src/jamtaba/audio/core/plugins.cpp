@@ -8,16 +8,34 @@
 using namespace Audio;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+PluginDescriptor::PluginDescriptor()
+    :name(""), group(""), path(""){
+}
+
 PluginDescriptor::PluginDescriptor(QString name, QString group)
     :name(name), group(group), path("")
 {
 
 }
 
+//PluginDescriptor::PluginDescriptor(const PluginDescriptor &other)
+//    :name(other.name), group(other.group), path(other.path){
+
+//}
+
 PluginDescriptor::PluginDescriptor(QString name, QString group, QString path)
     :name(name), group(group), path(path)
 {
 
+}
+
+QString PluginDescriptor::toString() const{
+    return name + ";" + group + ";" + path;
+}
+
+PluginDescriptor PluginDescriptor::fromString(QString str){
+    QStringList parts = str.split(";");
+    return PluginDescriptor(parts.at(0), parts.at(1), parts.at(2));
 }
 
 QString PluginDescriptor::getPluginNameFromPath(QString path){

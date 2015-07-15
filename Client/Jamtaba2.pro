@@ -1,9 +1,17 @@
-#os canais estão muito largos, quando cria mais canais já tem que setar a largura dos subcanais deles para narrow
+#não estou deletando o plugin quando removo ele da lista
 
-#se adicionar um subcanal em um canal narrow, vai funcionar?
+#não setou desalocando REct usado na hora de abrir o editor do plugin
 
-#nem sempre os slots dos VSTs estão aparecendo quando crio as pistas, e as vezes os VSTs ficam embaixo do seletor de input.
-#preciso repensar essa inicializar do menu VST
+#separar o carregamento do plugin VST da instância. No momento uma instância é criada e depois é que o plugin é carregado. Pra mim
+#isso é umbad design
+
+#internal buffer do plugin vst poderia ser estatico ao invpes de ponteiro
+
+#botei dois plugins, b4 e oldschool. Quando cliquei no old school a tela não apareceu
+
+
+
+#não entendi o posicionamento da janela de plugin, deveria ficar em 0,0 mas está bem diferente disso
 
 #implementar os subchannels
 

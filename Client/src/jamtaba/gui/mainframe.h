@@ -48,8 +48,6 @@ public:
     virtual void changeEvent(QEvent *);
     virtual void timerEvent(QTimerEvent *);
     virtual void resizeEvent(QResizeEvent*);
-
-
 private slots:
     void on_tabCloseRequest(int index);
     void on_preferencesClicked();
@@ -64,15 +62,10 @@ private slots:
     void on_exitedFromRoom(bool normalDisconnection);
     //
 
-    //fx MENU
-    void on_fxMenuActionTriggered(QAction*);
-    void on_editingPlugin(Audio::Plugin* plugin);//emited by LocalTrackView
-    void on_removingPlugin(Audio::Plugin* plugin);//emit by LocalTrackView
-
     //plugin finder
     void onPluginScanStarted();
     void onPluginScanFinished();
-    void onPluginFounded(Audio::PluginDescriptor* descriptor);
+    void onPluginFounded(QString name, QString group, QString path);
 
     //input selection
     void on_inputSelectionChanged();
@@ -96,8 +89,6 @@ private:
 
     QMap<long long, JamRoomViewPanel*> roomViewPanels;
 
-    QMenu* createFxMenu();
-    QMenu* fxMenu;
     Controller::MainController* mainController;
     PluginScanDialog* pluginScanDialog;
     Ui::MainFrameClass ui;

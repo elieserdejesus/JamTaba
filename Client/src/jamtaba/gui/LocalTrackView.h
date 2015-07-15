@@ -24,18 +24,18 @@ class LocalTrackView : public BaseTrackView
 public:
     LocalTrackView(QWidget *parent, Controller::MainController* mainController);
     ~LocalTrackView();
-    void initializeFxPanel(QMenu* fxMenu);
+
     void addPlugin(Audio::Plugin* plugin);
     void refreshInputSelectionName();
     inline Controller::MainController* getMainController() const{return mainController;}
 
-signals:
-    //plugins
-    void editingPlugin(Audio::Plugin* plugi);
-    void removingPlugin(Audio::Plugin* plugin);
+//signals:
+//    //plugins
+//    void editingPlugin(Audio::Plugin* plugi);
+//    void removingPlugin(Audio::Plugin* plugin);
 private:
-
     FxPanel* fxPanel;
+    FxPanel* createFxPanel();
     QWidget* createInputPanel();
     QPushButton* createInputSelectionButton(QWidget* parent);
     QLabel* createInputTypeIconLabel(QWidget *parent);

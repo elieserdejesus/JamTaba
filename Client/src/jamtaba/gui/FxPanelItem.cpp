@@ -1,6 +1,9 @@
 #include "fxpanelitem.h"
 #include "plugins/guis.h"
 #include "../audio/core/plugins.h"
+#include "../MainController.h"
+#include "../gui/LocalTrackView.h"
+#include "../audio/core/plugins.h"
 #include <QDebug>
 #include <QPainter>
 #include <QStyleOption>
@@ -11,17 +14,18 @@
 #include <QMouseEvent>
 #include <QMenu>
 
+
 const QString FxPanelItem::NEW_EFFECT_STRING = "new effect...";
 
-FxPanelItem::FxPanelItem(QWidget *parent)
+FxPanelItem::FxPanelItem(LocalTrackView *parent, Controller::MainController *mainController)
     :QLabel(parent),
-      fxMenu(nullptr),
-      plugin(nullptr)
+      plugin(nullptr),
+      button(new QPushButton(this)),
+      mainController(mainController),
+      localTrackView(parent)
 {
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(on_contextMenu(QPoint)));
-
-    this->button = new QPushButton(this);
 
     QHBoxLayout* layout = new QHBoxLayout(this);
     layout->addStretch();
@@ -33,12 +37,12 @@ FxPanelItem::FxPanelItem(QWidget *parent)
     this->button->setChecked(true);
     QObject::connect( this->button, SIGNAL(clicked()), this, SLOT(on_buttonClicked()) );
 
-    this->actionsMenu = createActionsMenu();
+    //this->actionsMenu = createActionsMenu();
 }
 
-void FxPanelItem::setFxMenu(QMenu* fxMenu){
-    this->fxMenu = fxMenu;
-}
+//void FxPanelItem::setFxMenu(QMenu* fxMenu){
+//    this->fxMenu = fxMenu;
+//}
 
 bool FxPanelItem::pluginIsBypassed(){
     return containPlugin() && plugin->isBypassed();
@@ -93,7 +97,7 @@ void FxPanelItem::mousePressEvent(QMouseEvent *event){
         }
         else{
             if(plugin){
-                emit editingPlugin(plugin);
+                showPluginGui(plugin);
             }
         }
     }
@@ -113,15 +117,33 @@ void FxPanelItem::leaveEvent(QEvent *){
 
 void FxPanelItem::on_contextMenu(QPoint p){
     if(!containPlugin()){//show plugins list
-        if(fxMenu){
-            fxMenu->popup(mapToGlobal(p));
+        QMenu menu;
+        QList<Audio::PluginDescriptor> plugins = mainController->getPluginsDescriptors();
+        for(const Audio::PluginDescriptor& pluginDescriptor  : plugins){
+            QAction* action = menu.addAction(pluginDescriptor.getName());
+            action->setData(pluginDescriptor.toString());
         }
+
+        QObject::connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(on_fxMenuActionTriggered(QAction*)));
+        menu.move(mapToGlobal(p));
+        menu.exec();
     }
-    else{//show actions list
-        if(actionsMenu){
-            actionsMenu->popup(mapToGlobal(p));
-        }
+    else{//show actions list if contain a plugin
+        QMenu menu(this);
+        menu.connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(on_actionMenuTriggered(QAction*)));
+        menu.addAction("bypass");
+        menu.addAction("remove");
+        menu.move(mapToGlobal(p));
+        menu.exec();
     }
+}
+
+void FxPanelItem::on_fxMenuActionTriggered(QAction* action){
+    //add a new plugin
+    Audio::PluginDescriptor descriptor = Audio::PluginDescriptor::fromString( action->data().toString());
+    Audio::Plugin* plugin = mainController->addPlugin(descriptor);
+    this->localTrackView->addPlugin(plugin);
+    showPluginGui(plugin);
 }
 
 void FxPanelItem::on_actionMenuTriggered(QAction* a){
@@ -132,16 +154,27 @@ void FxPanelItem::on_actionMenuTriggered(QAction* a){
         else if(a->text() == "remove"){
             Audio::Plugin* plugin = this->plugin;
             unsetPlugin();//set this->plugin to nullptr
-            emit pluginRemoved(plugin);
+
+            Audio::PluginWindow* window = Audio::PluginWindow::getWindow(this, plugin);
+            if(window){
+                window->close();
+            }
+            mainController->removePlugin(plugin);
         }
     }
 }
 
-QMenu* FxPanelItem::createActionsMenu(){
-    QMenu* menu = new QMenu(this);
-    menu->connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(on_actionMenuTriggered(QAction*)));
-    menu->addAction("bypass");
-    menu->addAction("remove");
-    return menu;
-}
+//++++++++++++++++++++++++++
+void FxPanelItem::showPluginGui(Audio::Plugin *plugin){
+    Audio::PluginWindow* window = Audio::PluginWindow::getWindow(this, plugin);
 
+    if(!window->isVisible()){
+        window->show();//show to generate a window handle, VST plugins use this handle to draw plugin GUI
+        int editorLeft = 0;//width()/2 - window->width()/2;
+        int editorTop = 0;//height()/2 - window->height()/2;
+        plugin->openEditor(window, mapToGlobal(QPoint(editorLeft, editorTop)));
+    }
+    else{
+      window->activateWindow();
+    }
+}
