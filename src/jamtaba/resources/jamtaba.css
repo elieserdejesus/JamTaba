@@ -442,10 +442,11 @@ color: white;
 LocalTrackGroupView {
     border: none;
     background-color: none;
+    min-width: 120px;
 }
 
 LocalTrackGroupView[highlighted="true"] {
-    border: 2px solid white;
+    border: 1px solid white;
     border-radius: 3px;
 }
 
@@ -454,6 +455,7 @@ LocalTrackGroupView > #topPanel{
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
 }
+
 
 MainFrame  #userNameLabel {
     color: rgb(0, 0, 0);

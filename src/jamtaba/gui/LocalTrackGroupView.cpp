@@ -38,7 +38,7 @@ void LocalTrackGroupView::addTrackView(LocalTrackView *trackView){
             foreach(LocalTrackView* trackView, trackViews){
                 trackView->setToNarrow();
             }
-            update();
+            updateGeometry();
         }
     }
 }
@@ -94,6 +94,16 @@ void LocalTrackGroupView::on_toolButtonActionTriggered(QAction *action){
             if(trackViews.size() == 1){
                 trackViews.at(0)->setToWide();
             }
+
+            updateGeometry();
         }
     }
+}
+
+QSize LocalTrackGroupView::minimumSizeHint() const{
+    return QSize(trackViews.size() * BaseTrackView::NARROW_WIDTH, 10);
+}
+
+QSize LocalTrackGroupView::sizeHint() const{
+    return QSize(trackViews.size() * BaseTrackView::NARROW_WIDTH, 10);
 }

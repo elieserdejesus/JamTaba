@@ -22,6 +22,9 @@ public:
 
     void addTrackView(LocalTrackView* trackView);
 
+    QSize minimumSizeHint() const;
+    QSize sizeHint() const;
+
 protected:
     void paintEvent(QPaintEvent* );
 

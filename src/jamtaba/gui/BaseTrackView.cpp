@@ -12,7 +12,8 @@ BaseTrackView::BaseTrackView(QWidget *parent, Controller::MainController *mainCo
     ui(new Ui::TrackView),
     mainController(mainController),
     trackID(trackID),
-    activated(true)
+    activated(true),
+    narrowed(false)
 {
     ui->setupUi(this);
     QObject::connect(ui->muteButton, SIGNAL(clicked()), this, SLOT(onMuteClicked()));
@@ -27,8 +28,23 @@ BaseTrackView::BaseTrackView(QWidget *parent, Controller::MainController *mainCo
     trackViews.insert(trackID, this);
 }
 
+QSize BaseTrackView::sizeHint() const{
+    if(narrowed){
+        return QSize(NARROW_WIDTH, height());
+    }
+    return QSize(120, height());
+}
+
+QSize BaseTrackView::minimumSizeHint() const{
+    if(narrowed){
+        return QSize(NARROW_WIDTH, height());
+    }
+    return QSize(120, height());
+}
+
 void BaseTrackView::setToNarrow(){
-    this->setMaximumWidth(NARROW_WIDTH);
+    //this->setMaximumWidth(NARROW_WIDTH);
+    this->narrowed = true;
 
     ui->soloButton->setText("S");
     ui->soloButton->setToolTip("Solo");
@@ -37,11 +53,13 @@ void BaseTrackView::setToNarrow(){
     ui->muteButton->setToolTip("Mute");
 
     ui->panSlider->setTickInterval(2);
+    updateGeometry();
 }
 
 void BaseTrackView::setToWide(){
-    if(this->maximumWidth() == NARROW_WIDTH){
-        setMaximumWidth(QWIDGETSIZE_MAX);
+    if(narrowed){
+        //setMaximumWidth(QWIDGETSIZE_MAX);
+        this->narrowed = false;
         ui->soloButton->setText("SOLO");
         ui->soloButton->setToolTip("Solo");
 
@@ -49,6 +67,7 @@ void BaseTrackView::setToWide(){
         ui->muteButton->setToolTip("Mute");
 
         ui->panSlider->setTickInterval(0);
+        updateGeometry();
     }
 }
 
