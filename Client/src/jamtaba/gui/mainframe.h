@@ -68,13 +68,13 @@ private slots:
     void onPluginFounded(QString name, QString group, QString path);
 
     //input selection
-    void on_inputSelectionChanged();
+    void on_inputSelectionChanged(int inputTrackIndex);
 
     //add/remove channels
-    void on_toolButtonClicked();
-    void on_addChannelClicked();
+    void on_toolButtonClicked();//show the channels menu
+    void on_addChannelClicked();//add a new channel (a group of subchannels)
     void on_toolButtonMenuActionTriggered(QAction*);
-    void on_toolButtonMenuActionHovered(QAction*);
+    void on_toolButtonMenuActionHovered(QAction*);//highlight the hovered channel
 
 private:
 

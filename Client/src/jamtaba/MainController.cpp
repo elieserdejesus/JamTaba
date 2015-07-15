@@ -159,11 +159,41 @@ void MainController::updateInputTracksRange(){
         }
     }
 }
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//bool MainController::audioMonoInputIsFreeToSelect(int inputIndexInAudioDevice) const{
+//    foreach (Audio::LocalInputAudioNode* inputTrack, inputTracks) {
+//        if(!inputTrack->isNoInput() && !inputTrack->isMidi()){
+//            Audio::ChannelRange trackRange = inputTrack->getAudioInputRange();
+//            if(trackRange.getFirstChannel() == inputIndexInAudioDevice || trackRange.getLastChannel() == inputIndexInAudioDevice){
+//                return false;
+//            }
+//        }
+//    }
+//    return true;
+//}
+
+//bool MainController::audioStereoInputIsFreeToSelect(int firstInputIndexInAudioDevice) const{
+//    bool firstChannelIsFree = audioMonoInputIsFreeToSelect(firstInputIndexInAudioDevice);
+//    bool secondChannelIsFree = audioMonoInputIsFreeToSelect(firstInputIndexInAudioDevice + 1);
+//    return firstChannelIsFree && secondChannelIsFree;
+//}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+
+void MainController::removeInputTrackNode(int inputTrackIndex){
+    if(inputTrackIndex >= 0 && inputTrackIndex < inputTracks.size()){
+        //Audio::LocalInputAudioNode* inputTrack = inputTracks.at(inputTrackIndex);
+        inputTracks.removeAt(inputTrackIndex);
+        removeTrack(inputTrackIndex);;
+    }
+}
 
 int MainController::addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode){
     inputTracks.append(inputTrackNode);
     int inputTrackID = inputTracks.size() -1;
     addTrack(inputTrackID, inputTrackNode);
+
+    //updateInputTracksRange();
     return inputTrackID;
 }
 
@@ -179,7 +209,7 @@ void MainController::setInputTrackToMono(int localChannelIndex, int inputIndexIn
     Audio::LocalInputAudioNode* inputTrack = getInputTrack(localChannelIndex);
     if(inputTrack){
         inputTrack->setAudioInputSelection(inputIndexInAudioDevice, 1);//mono
-        emit inputSelectionChanged();
+        emit inputSelectionChanged(localChannelIndex);
     }
     if(isPlayingInNinjamRoom()){
         ninjamController->recreateEncoders();
@@ -189,7 +219,7 @@ void MainController::setInputTrackToStereo(int localChannelIndex, int firstInput
     Audio::LocalInputAudioNode* inputTrack = getInputTrack(localChannelIndex);
     if(inputTrack){
         inputTrack->setAudioInputSelection(firstInputIndex, 2);//stereo
-        emit inputSelectionChanged();
+        emit inputSelectionChanged(localChannelIndex);
     }
     if(isPlayingInNinjamRoom()){
         ninjamController->recreateEncoders();
@@ -200,14 +230,14 @@ void MainController::setInputTrackToMIDI(int localChannelIndex, int midiDevice){
     if(inputTrack){
         midiDriver->setInputDeviceIndex(midiDevice);
         inputTrack->setMidiInputSelection(midiDevice);
-        emit inputSelectionChanged();
+        emit inputSelectionChanged(localChannelIndex);
     }
 }
 void MainController::setInputTrackToNoInput(int localChannelIndex){
     Audio::LocalInputAudioNode* inputTrack = getInputTrack(localChannelIndex);
     if(inputTrack){
         inputTrack->setToNoInput();
-        emit inputSelectionChanged();
+        emit inputSelectionChanged(localChannelIndex);
         if(isPlayingInNinjamRoom()){//send the finish interval message
             ninjamService->sendAudioIntervalPart(currentGUID, QByteArray(), true);
         }

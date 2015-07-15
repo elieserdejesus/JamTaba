@@ -132,18 +132,22 @@ public:
     //static const int INPUT_TRACK_ID = 1;
     Audio::LocalInputAudioNode* getInputTrack(int localInputIndex);
     int addInputTrackNode(Audio::LocalInputAudioNode* inputTrackNode);
+    void removeInputTrackNode(int inputTrackIndex);
     QList<Audio::LocalInputAudioNode*> inputTracks;
 
     inline int getAudioDriverSampleRate() const{return audioDriver->getSampleRate();}
 
     static QByteArray newGUID();
 
+    //bool audioMonoInputIsFreeToSelect(int inputIndexInAudioDevice) const;
+    //bool audioStereoInputIsFreeToSelect( int firstInputIndexInAudioDevice)const;
+
 signals:
     void enteredInRoom(Login::RoomInfo room);
     void exitedFromRoom(bool error);
 
     //input selection
-    void inputSelectionChanged();
+    void inputSelectionChanged(int inputTrackIndex);
 
 private:
 

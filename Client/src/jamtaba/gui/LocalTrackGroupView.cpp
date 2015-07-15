@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QMenu>
 #include "Highligther.h"
+#include "../MainController.h"
 
 LocalTrackGroupView::LocalTrackGroupView(QWidget *parent) :
     QWidget(parent),
@@ -19,6 +20,14 @@ LocalTrackGroupView::LocalTrackGroupView(QWidget *parent) :
 void LocalTrackGroupView::updatePeaks(){
     foreach (LocalTrackView* trackView, trackViews) {
         trackView->updatePeaks();
+    }
+}
+
+void LocalTrackGroupView::refreshInputSelectionName(int inputTrackIndex){
+    foreach (LocalTrackView* trackView, trackViews) {
+        if(trackView->getInputIndex() == inputTrackIndex){
+            trackView->refreshInputSelectionName();
+        }
     }
 }
 
@@ -80,7 +89,9 @@ void LocalTrackGroupView::on_toolButton_clicked()
 }
 
 void LocalTrackGroupView::onAddSubChannelClicked(){
-    addTrackView(new LocalTrackView(this, trackViews.at(0)->getMainController()));
+    LocalTrackView* trackView = new LocalTrackView(this, trackViews.at(0)->getMainController());
+    addTrackView(trackView);
+    trackView->getMainController()->setInputTrackToNoInput(trackView->getInputIndex());
 }
 
 void LocalTrackGroupView::on_toolButtonActionHovered(QAction *action){
