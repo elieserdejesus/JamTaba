@@ -26,6 +26,10 @@ public:
     virtual void setToNarrow();
     virtual void setToWide();
 
+    QSize sizeHint() const;
+    QSize minimumSizeHint() const;
+
+    static const int NARROW_WIDTH = 80;
 protected:
     Ui::TrackView *ui;
     Controller::MainController* mainController;
@@ -34,7 +38,7 @@ protected:
     long trackID;
     bool activated;
 
-    static const int NARROW_WIDTH = 80;
+    bool narrowed;
 private:
     static QMap<long, BaseTrackView*> trackViews;
 

@@ -1,13 +1,15 @@
-#melhorar posicionamento do menu de criação de canais
-
-#implementar os subchannels
-
 #os canais estão muito largos, quando cria mais canais já tem que setar a largura dos subcanais deles para narrow
 
-#setar subchannels para no input quando são criados
+#se adicionar um subcanal em um canal narrow, vai funcionar?
 
 #nem sempre os slots dos VSTs estão aparecendo quando crio as pistas, e as vezes os VSTs ficam embaixo do seletor de input.
 #preciso repensar essa inicializar do menu VST
+
+#implementar os subchannels
+
+#setar subchannels para no input quando são criados
+
+
 
 #preciso mudar a persistência dos nomes dos channels para um array
 

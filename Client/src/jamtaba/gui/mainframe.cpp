@@ -154,6 +154,8 @@ void MainFrame::addLocalChannel(){
     QObject::connect(localTrackView, SIGNAL(removingPlugin(Audio::Plugin*)), this, SLOT(on_removingPlugin(Audio::Plugin*)));
 
     localTrackView->refreshInputSelectionName();
+
+
 }
 
 void MainFrame::initializeLocalTrackView(){
