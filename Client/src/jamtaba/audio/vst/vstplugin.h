@@ -18,7 +18,7 @@ public:
     void resume();
     void suspend();
     virtual void process(Audio::SamplesBuffer &buffer);
-    virtual void openEditor(Audio::PluginWindow *, QPoint p);
+    virtual void openEditor(Audio::PluginWindow *, QPoint centerOfScreen);
     bool load(Vst::VstHost* host, QString path);
 protected:
     void unload();
