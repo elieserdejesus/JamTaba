@@ -1,6 +1,7 @@
 #pragma once
 #include <QFileInfo>
 #include <QThread>
+#include "../audio/core/plugins.h"
 
 namespace Audio {
     class PluginDescriptor;
@@ -23,16 +24,15 @@ public:
     void scan(Vst::VstHost *host);
     void clearScanPaths();
 
-
 private:
     void run();
 signals:
     void scanStarted();
     void scanFinished();
-    void vstPluginFounded(Audio::PluginDescriptor* pluginDescriptor);
+    void vstPluginFounded(QString name, QString group, QString path);
 private:
     QList<QString> scanPaths;
-    Audio::PluginDescriptor* getPluginDescriptor(QFileInfo f, Vst::VstHost* host);
+    Audio::PluginDescriptor getPluginDescriptor(QFileInfo f, Vst::VstHost* host);
     Vst::VstHost* host;
 };
 

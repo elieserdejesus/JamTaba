@@ -3,6 +3,7 @@
 #include "../core/plugins.h"
 #include "aeffect.h"
 #include <QLibrary>
+//#include "../audio/core/SamplesBuffer.h"
 
 namespace Vst {
 

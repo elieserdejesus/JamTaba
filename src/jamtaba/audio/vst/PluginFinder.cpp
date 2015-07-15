@@ -30,9 +30,9 @@ void PluginFinder::run(){
         while (dirIt.hasNext()) {
             dirIt.next();
             QFileInfo fileInfo (dirIt.filePath());
-            Audio::PluginDescriptor* descriptor = getPluginDescriptor(fileInfo, host);
-            if(descriptor){
-                emit vstPluginFounded(descriptor);
+            const Audio::PluginDescriptor& descriptor = getPluginDescriptor(fileInfo, host);
+            if(descriptor.isValid()){
+                emit vstPluginFounded(descriptor.getName(), descriptor.getGroup(), descriptor.getPath());
             }
             QApplication::processEvents();
         }
@@ -64,22 +64,21 @@ void PluginFinder::clearScanPaths(){
 //}
 
 //retorna nullptr se não for um plugin
-Audio::PluginDescriptor* PluginFinder::getPluginDescriptor(QFileInfo f, Vst::VstHost* host){
+Audio::PluginDescriptor PluginFinder::getPluginDescriptor(QFileInfo f, Vst::VstHost* host){
     if (!f.isFile() || f.suffix() != "dll")
-        return nullptr;
+        return Audio::PluginDescriptor();//invalid descriptor
 
     try{
         Vst::VstPlugin plugin(host);
         if(plugin.load(host, f.absoluteFilePath())){
             QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
-            return new Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
+            return Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
         }
-        return nullptr;
     }
     catch(...){
         qCritical() << "não carregou " << f.absoluteFilePath();
     }
-    return nullptr;
+    return Audio::PluginDescriptor();//invalid descriptor
 }
 
 void PluginFinder::addPathToScan(QString path){

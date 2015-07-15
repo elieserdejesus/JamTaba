@@ -2,6 +2,7 @@
 #define FXPANELITEM_H
 
 #include <QLabel>
+#include "LocalTrackView.h"
 
 class QMenu;
 class QPushButton;
@@ -10,24 +11,28 @@ namespace Audio {
     class Plugin;
 }
 
+namespace Controller {
+    class MainController;
+}
+
 class FxPanelItem : public QLabel
 {
 
     Q_OBJECT
 
 public:
-    explicit FxPanelItem(QWidget* parent);
+    FxPanelItem(LocalTrackView* parent, Controller::MainController* mainController);
     ~FxPanelItem();
-    void setFxMenu(QMenu* fxMenu);
+    //void setFxMenu(QMenu* fxMenu);
     void setPlugin(Audio::Plugin* plugin);
     void unsetPlugin();
     inline bool containPlugin() const{ return plugin; }
     bool pluginIsBypassed();
     //void setText(QString str){}
-    Q_PROPERTY(bool pluginBypassed READ pluginIsBypassed())
-signals:
-    void editingPlugin(Audio::Plugin* plugin);
-    void pluginRemoved(Audio::Plugin* plugin);
+    Q_PROPERTY(bool pluginBypassed READ pluginIsBypassed())//to use in stylesheet
+//signals:
+//    void editingPlugin(Audio::Plugin* plugin);
+//    void pluginRemoved(Audio::Plugin* plugin);
 protected:
     void mousePressEvent ( QMouseEvent * event ) ;
     void paintEvent(QPaintEvent* );
@@ -37,15 +42,17 @@ private slots:
     void on_contextMenu(QPoint p);
     void on_buttonClicked();
     void on_actionMenuTriggered(QAction* a);
+    void on_fxMenuActionTriggered(QAction* a);
 private:
-    QMenu* fxMenu;//used to list plugins
-    QMenu* actionsMenu;//used to list actions(bypass, remove)
     Audio::Plugin* plugin;
     QPushButton* button;
+    Controller::MainController* mainController;//used to ask about plugins
 
-    QMenu* createActionsMenu();
+    void showPluginGui(Audio::Plugin *plugin);
 
     static const QString NEW_EFFECT_STRING;
+
+    LocalTrackView* localTrackView;
 };
 
 #endif // FXPANELITEM_H

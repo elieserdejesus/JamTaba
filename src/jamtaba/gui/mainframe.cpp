@@ -42,7 +42,6 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     :
       QMainWindow(parent),
     busyDialog(0),
-    fxMenu(nullptr),
     mainController(mainController),
     pluginScanDialog(nullptr),
     metronomeTrackView(nullptr),
@@ -124,10 +123,10 @@ void MainFrame::initializeMainControllerEvents(){
 }
 
 void MainFrame::initializeVstFinderStuff(){
-    const Vst::PluginFinder* pluginFinder = mainController->getPluginFinder();
-    QObject::connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(onPluginScanStarted()));
-    QObject::connect(pluginFinder, SIGNAL(scanFinished()), this, SLOT(onPluginScanFinished()));
-    QObject::connect(pluginFinder, SIGNAL(vstPluginFounded(Audio::PluginDescriptor*)), this, SLOT(onPluginFounded(Audio::PluginDescriptor*)));
+    const Vst::PluginFinder& pluginFinder = mainController->getPluginFinder();
+    QObject::connect(&pluginFinder, SIGNAL(scanStarted()), this, SLOT(onPluginScanStarted()));
+    QObject::connect(&pluginFinder, SIGNAL(scanFinished()), this, SLOT(onPluginScanFinished()));
+    QObject::connect(&pluginFinder, SIGNAL(vstPluginFounded(QString,QString,QString)), this, SLOT(onPluginFounded(QString,QString,QString)));
 
     QStringList vstPaths = ConfigStore::getVstPluginsPaths();
     if(vstPaths.empty()){//no vsts in database cache, try scan
@@ -148,10 +147,10 @@ void MainFrame::addLocalChannel(){
     LocalTrackView* localTrackView = new LocalTrackView(localChannel, this->mainController);
     localChannel->addTrackView( localTrackView );
     ui.localTracksLayout->addWidget(localChannel);
-    localTrackView->initializeFxPanel(fxMenu);
+    //localTrackView->initializeFxPanel(fxMenu);
 
-    QObject::connect(localTrackView, SIGNAL(editingPlugin(Audio::Plugin*)), this, SLOT(on_editingPlugin(Audio::Plugin*)));
-    QObject::connect(localTrackView, SIGNAL(removingPlugin(Audio::Plugin*)), this, SLOT(on_removingPlugin(Audio::Plugin*)));
+    //QObject::connect(localTrackView, SIGNAL(editingPlugin(Audio::Plugin*)), this, SLOT(on_editingPlugin(Audio::Plugin*)));
+    //QObject::connect(localTrackView, SIGNAL(removingPlugin(Audio::Plugin*)), this, SLOT(on_removingPlugin(Audio::Plugin*)));
 
     localTrackView->refreshInputSelectionName();
 
@@ -159,7 +158,7 @@ void MainFrame::addLocalChannel(){
 }
 
 void MainFrame::initializeLocalTrackView(){
-    fxMenu = createFxMenu();
+    //fxMenu = createFxMenu();
     addLocalChannel();
 }
 
@@ -218,42 +217,21 @@ void MainFrame::centerBusyDialog(){
     busyDialog.move(newX + ui.contentPanel->x(), newY + ui.contentPanel->y());
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainFrame::on_removingPlugin(Audio::Plugin *plugin){
-    PluginWindow* window = PluginWindow::getWindow(this, plugin);
-    if(window){
-        window->close();
-    }
-    mainController->removePlugin(plugin);
+//void MainFrame::on_removingPlugin(Audio::Plugin *plugin){
+//    PluginWindow* window = PluginWindow::getWindow(this, plugin);
+//    if(window){
+//        window->close();
+//    }
+//    mainController->removePlugin(plugin);
 
-}
+//}
 
-void MainFrame::on_editingPlugin(Audio::Plugin *plugin){
-    showPluginGui(plugin);
-}
+//void MainFrame::on_editingPlugin(Audio::Plugin *plugin){
+//    showPluginGui(plugin);
+//}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainFrame::on_fxMenuActionTriggered(QAction* action){
-    //add a new plugin
-//    Audio::PluginDescriptor* pluginDescriptor = action->data().value<Audio::PluginDescriptor*>();
-//    Audio::Plugin* plugin = mainController->addPlugin(pluginDescriptor);
-//    localTrackGroupView->addPlugin(plugin);
-//    showPluginGui(plugin);
-    qCritical() << "PRECISO REVER O FUNCIONAMENTO DOS PLUGINS!";
-}
 //++++++++++++++++++++++++++++++++++++
-void MainFrame::showPluginGui(Audio::Plugin *plugin){
-    PluginWindow* window = PluginWindow::getWindow(this, plugin);
-
-    if(!window->isVisible()){
-        window->show();//show to generate a window handle, VST plugins use this handle to draw plugin GUI
-        int editorLeft = width()/2 - window->width()/2;
-        int editorTop = height()/2 - window->height()/2;
-        plugin->openEditor(window, mapToGlobal(QPoint(editorLeft, editorTop)));
-    }
-    else{
-      window->activateWindow();
-    }
-}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //PluginGui* MainFrame::createPluginView(Plugin::PluginDescriptor* d, Audio::Plugin* plugin){
@@ -266,22 +244,6 @@ void MainFrame::showPluginGui(Audio::Plugin *plugin){
 //}
 
 //++++++++++++++++++++
-QMenu* MainFrame::createFxMenu(){
-    if(fxMenu ){
-        fxMenu->close();
-        fxMenu->deleteLater();
-    }
-    QMenu* menu = new QMenu(this);
-
-    std::vector<Audio::PluginDescriptor*> plugins = mainController->getPluginsDescriptors();
-    for(Audio::PluginDescriptor* pluginDescriptor  : plugins){
-        QAction* action = menu->addAction(pluginDescriptor->getName());
-        action->setData(QVariant::fromValue(pluginDescriptor));
-    }
-
-    menu->connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(on_fxMenuActionTriggered(QAction*)));
-    return menu;
-}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //esses eventos deveriam ser tratados no controller
@@ -451,7 +413,7 @@ void MainFrame::showEvent(QShowEvent *)
 MainFrame::~MainFrame()
 {
     killTimer(timerID);
-    //delete mainController;
+
     //delete peakMeter;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -530,16 +492,13 @@ void MainFrame::onPluginScanFinished(){
     delete pluginScanDialog;
     pluginScanDialog = nullptr;
 
-
-    fxMenu = createFxMenu();
-
-    //PRECISO VER ISSO
-    //localTrackGroupView->initializeFxPanel(fxMenu);
 }
 
-void MainFrame::onPluginFounded(Audio::PluginDescriptor* descriptor){
+void MainFrame::onPluginFounded(QString name, QString group, QString path){
+    Q_UNUSED(name);
+    Q_UNUSED(group);
     if(pluginScanDialog){
-        pluginScanDialog->setText(descriptor->getPath());
+        pluginScanDialog->setText(path);
     }
 }
 

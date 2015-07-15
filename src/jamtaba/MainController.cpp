@@ -13,7 +13,6 @@
 #include "audio/vst/VstPlugin.h"
 #include "audio/vst/vsthost.h"
 #include "persistence/ConfigStore.h"
-#include "../audio/vst/PluginFinder.h"
 
 #include "../ninjam/Service.h"
 #include "../ninjam/Server.h"
@@ -43,7 +42,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
       mutex(QMutex::Recursive),
       started(false),
       vstHost(Vst::VstHost::getInstance()),
-      pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
+      //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
       ipToLocationResolver("../Jamtaba2/GeoLite2-Country.mmdb")
 {
 
@@ -79,7 +78,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     vstHost->setSampleRate(audioDriver->getSampleRate());
     vstHost->setBlockSize(audioDriver->getBufferSize());
 
-    QObject::connect(&*pluginFinder, SIGNAL(vstPluginFounded(Audio::PluginDescriptor*)), this, SLOT(on_VSTPluginFounded(Audio::PluginDescriptor*)));
+    QObject::connect(&pluginFinder, SIGNAL(vstPluginFounded(QString,QString,QString)), this, SLOT(on_VSTPluginFounded(QString,QString,QString)));
 
     //ninjam service
     this->ninjamService = Ninjam::Service::getInstance();
@@ -242,28 +241,25 @@ void MainController::initializePluginsList(QStringList paths){
         QFile file(path);
         if(file.exists()){
             QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(path);
-            pluginsDescriptors.push_back(new Audio::PluginDescriptor(pluginName, "VST", path));
+            pluginsDescriptors.append(Audio::PluginDescriptor(pluginName, "VST", path));
         }
     }
 }
 
 void MainController::scanPlugins(){
-    foreach (Audio::PluginDescriptor* descriptor, pluginsDescriptors) {
-        delete descriptor;
-    }
     pluginsDescriptors.clear();
     //ConfigStore::clearVstCache();
-    pluginFinder->clearScanPaths();
+    pluginFinder.clearScanPaths();
     QStringList scanPaths = Persistence::ConfigStore::getVstScanPaths();
     foreach (QString path, scanPaths) {
-        pluginFinder->addPathToScan(path);
+        pluginFinder.addPathToScan(path);
     }
-    pluginFinder->scan(vstHost);
+    pluginFinder.scan(vstHost);
 }
 
-void MainController::on_VSTPluginFounded(Audio::PluginDescriptor* descriptor){
-    pluginsDescriptors.push_back(descriptor);
-    ConfigStore::addVstPlugin(descriptor->getPath());
+void MainController::on_VSTPluginFounded(QString name, QString group, QString path){
+    pluginsDescriptors.append(Audio::PluginDescriptor(name, group, path));
+    ConfigStore::addVstPlugin(path);
 }
 
 void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
@@ -358,7 +354,7 @@ bool MainController::trackIsSoloed(int trackID) const{
 
 //+++++++++++++++++++++++++++++++++
 
-std::vector<Audio::PluginDescriptor*> MainController::getPluginsDescriptors(){
+QList<Audio::PluginDescriptor> MainController::getPluginsDescriptors(){
     return pluginsDescriptors;
     //Audio::getPluginsDescriptors(this->vstHost);
 
@@ -383,7 +379,7 @@ std::vector<Audio::PluginDescriptor*> MainController::getPluginsDescriptors(){
 
 }
 
-Audio::Plugin* MainController::addPlugin(Audio::PluginDescriptor *descriptor){
+Audio::Plugin* MainController::addPlugin(const Audio::PluginDescriptor& descriptor){
     Audio::Plugin* plugin = createPluginInstance(descriptor);
     plugin->start(audioDriver->getSampleRate(), audioDriver->getBufferSize());
     this->audioMixer->getLocalInput()->addProcessor(*plugin);
@@ -393,19 +389,20 @@ Audio::Plugin* MainController::addPlugin(Audio::PluginDescriptor *descriptor){
 
 void MainController::removePlugin(Audio::Plugin *plugin){
     this->audioMixer->getLocalInput()->removeProcessor(*plugin);
+    delete plugin;
 }
 
-Audio::Plugin *MainController::createPluginInstance(Audio::PluginDescriptor *descriptor)
+Audio::Plugin *MainController::createPluginInstance(const Audio::PluginDescriptor& descriptor)
 {
-    if(descriptor->getGroup() == "Jamtaba"){
-        if(descriptor->getName() == "Delay"){
+    if(descriptor.isNative()){
+        if(descriptor.getName() == "Delay"){
             return new Audio::JamtabaDelay(audioDriver->getSampleRate());
         }
     }
-    else if(descriptor->getGroup() == "VST"){
-        Vst::VstPlugin* vst = new Vst::VstPlugin(this->vstHost);
-        if(vst->load(this->vstHost, descriptor->getPath())){
-            return vst;
+    else if(descriptor.isVST()){
+        Vst::VstPlugin* vstPlugin = new Vst::VstPlugin(this->vstHost);
+        if(vstPlugin->load(this->vstHost, descriptor.getPath())){
+            return vstPlugin;
         }
         return nullptr;
     }
@@ -420,9 +417,12 @@ void MainController::on_disconnectedFromLoginServer(){
 MainController::~MainController(){
     stop();
     delete roomStreamer;
-    foreach (Audio::PluginDescriptor* descriptor, pluginsDescriptors) {
-        delete descriptor;
+
+    foreach (Audio::AudioNode* track, tracksNodes) {
+        delete track;
     }
+    tracksNodes.clear();
+
     pluginsDescriptors.clear();
 
     if(this->ninjamController){
@@ -497,9 +497,11 @@ void MainController::start()
 void MainController::stop()
 {
     if(started){
-        QMutexLocker locker(&mutex);
-        this->audioDriver->release();
-        this->midiDriver->release();
+        {
+            QMutexLocker locker(&mutex);
+            this->audioDriver->release();
+            this->midiDriver->release();
+        }
         //qDebug() << "disconnecting...";
         loginService->disconnect();
         if(ninjamController){

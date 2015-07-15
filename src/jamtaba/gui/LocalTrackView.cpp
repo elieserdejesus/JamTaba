@@ -19,6 +19,11 @@ const QString LocalTrackView::NO_INPUT_ICON= ":/images/input_no.png";
 LocalTrackView::LocalTrackView(QWidget* parent, Controller::MainController *mainController)
     :BaseTrackView(parent, mainController, 1), fxPanel(nullptr)
 {
+    //add separator before effects panel
+    ui->mainLayout->addSpacing(20);
+    fxPanel = createFxPanel();
+    ui->mainLayout->addWidget( fxPanel );
+
     //create input panel in the bottom
     ui->mainLayout->addSpacing(20);
     ui->mainLayout->addWidget(createInputPanel());
@@ -210,23 +215,12 @@ void LocalTrackView::addPlugin(Audio::Plugin* plugin){
     }
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void LocalTrackView::initializeFxPanel(QMenu *fxMenu){
-    if(fxMenu && !fxMenu->isEmpty()){
-        if(!fxPanel){
-            fxPanel = new FxPanel(this);
-            fxPanel->connect(fxPanel, SIGNAL(editingPlugin(Audio::Plugin*)), this, SIGNAL(editingPlugin(Audio::Plugin*)));
-            fxPanel->connect(fxPanel, SIGNAL(pluginRemoved(Audio::Plugin*)), this, SIGNAL(removingPlugin(Audio::Plugin*)));
+FxPanel *LocalTrackView::createFxPanel(){
+    FxPanel* panel = new FxPanel(this, mainController);
 
-            //int index = ui->mainLayout->indexOf(ui->panSpacer->widget());
-
-            //add separator before effects panel
-            ui->mainLayout->addSpacing(20);
-            ui->mainLayout->addWidget( fxPanel);
-
-
-        }
-        fxPanel->setFxMenu(fxMenu);
-    }
+    //panel->connect(panel, SIGNAL(editingPlugin(Audio::Plugin*)), this, SIGNAL(editingPlugin(Audio::Plugin*)));
+    //panel->connect(panel, SIGNAL(pluginRemoved(Audio::Plugin*)), this, SIGNAL(removingPlugin(Audio::Plugin*)));
+    return panel;
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 LocalTrackView::~LocalTrackView()

@@ -9,6 +9,8 @@
 #include "../ninjam/Server.h"
 #include "../loginserver/LoginService.h"
 #include "../audio/core/AudioDriver.h"
+#include "../audio/core/plugins.h"
+#include "../audio/vst/PluginFinder.h"
 
 class MainFrame;
 
@@ -93,9 +95,9 @@ public:
 
     inline Controller::NinjamJamRoomController* getNinjamController() const{return ninjamController;}
 
-    std::vector<Audio::PluginDescriptor*> getPluginsDescriptors();
+    QList<Audio::PluginDescriptor> getPluginsDescriptors();
 
-    Audio::Plugin* addPlugin(Audio::PluginDescriptor* descriptor);
+    Audio::Plugin* addPlugin(const Audio::PluginDescriptor& descriptor);
     void removePlugin(Audio::Plugin* plugin);
 
     QStringList getBotNames() const;
@@ -112,7 +114,7 @@ public:
     Audio::AudioPeak getRoomStreamPeak();
     Audio::AudioPeak getTrackPeak(int trackID);
 
-    const Vst::PluginFinder* getPluginFinder() const{return &*pluginFinder;}
+    const Vst::PluginFinder& getPluginFinder() const{return pluginFinder;}
     void scanPlugins();
     void initializePluginsList(QStringList paths);
 
@@ -145,7 +147,7 @@ signals:
 private:
 
     void doAudioProcess(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
-    Audio::Plugin* createPluginInstance(Audio::PluginDescriptor* descriptor);
+    Audio::Plugin* createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
     Audio::AudioDriver* audioDriver;
     Midi::MidiDriver* midiDriver;//TODO use unique_ptr
@@ -168,8 +170,8 @@ private:
 
     //VST
     Vst::VstHost* vstHost;
-    std::vector<Audio::PluginDescriptor*> pluginsDescriptors;
-    std::unique_ptr<Vst::PluginFinder> pluginFinder;
+    QList<Audio::PluginDescriptor> pluginsDescriptors;
+    Vst::PluginFinder pluginFinder;
     //+++++++++++++++++++++++++
     void configureStyleSheet();
 
@@ -184,7 +186,7 @@ private slots:
     void on_disconnectedFromLoginServer();
 
     //VST
-    void on_VSTPluginFounded(Audio::PluginDescriptor* descriptor);
+    void on_VSTPluginFounded(QString name, QString group, QString path);
 
     //ninjam
     void on_connectedInNinjamServer(Ninjam::Server server);
