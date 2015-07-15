@@ -1,14 +1,9 @@
-#não estou deletando o plugin quando removo ele da lista
-
 #não setou desalocando REct usado na hora de abrir o editor do plugin
 
 #separar o carregamento do plugin VST da instância. No momento uma instância é criada e depois é que o plugin é carregado. Pra mim
-#isso é umbad design
-
-#internal buffer do plugin vst poderia ser estatico ao invpes de ponteiro
+#isso é um bad design
 
 #botei dois plugins, b4 e oldschool. Quando cliquei no old school a tela não apareceu
-
 
 
 #não entendi o posicionamento da janela de plugin, deveria ficar em 0,0 mas está bem diferente disso

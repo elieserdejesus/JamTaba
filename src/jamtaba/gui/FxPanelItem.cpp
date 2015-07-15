@@ -13,6 +13,7 @@
 #include <QAction>
 #include <QMouseEvent>
 #include <QMenu>
+#include <QDesktopWidget>
 
 
 const QString FxPanelItem::NEW_EFFECT_STRING = "new effect...";
@@ -170,9 +171,11 @@ void FxPanelItem::showPluginGui(Audio::Plugin *plugin){
 
     if(!window->isVisible()){
         window->show();//show to generate a window handle, VST plugins use this handle to draw plugin GUI
-        int editorLeft = 0;//width()/2 - window->width()/2;
-        int editorTop = 0;//height()/2 - window->height()/2;
-        plugin->openEditor(window, mapToGlobal(QPoint(editorLeft, editorTop)));
+        QDesktopWidget desktop;
+
+        int hCenter = desktop.geometry().width()/2;// - window->width();
+        int vCenter = desktop.geometry().height()/2;// - window->height();
+        plugin->openEditor(window, QPoint(hCenter, vCenter));
     }
     else{
       window->activateWindow();

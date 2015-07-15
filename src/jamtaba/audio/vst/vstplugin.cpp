@@ -97,7 +97,7 @@ void VstPlugin::start(int sampleRate, int bufferSize){
         return;
     }
 
-    long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
+    //long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
     //qDebug() << "Starting " << getName() << " version " << ver;
     internalBuffer = new Audio::SamplesBuffer(effect->numOutputs, host->getBufferSize());
 
@@ -178,7 +178,7 @@ extern "C" {
     }
 }
 */
-void VstPlugin::openEditor(Audio::PluginWindow* w, QPoint p){
+void VstPlugin::openEditor(Audio::PluginWindow* w, QPoint centerOfScreen){
     if(!effect ){
         return;
     }
@@ -210,12 +210,7 @@ void VstPlugin::openEditor(Audio::PluginWindow* w, QPoint p){
     rectWidth = rect->right - rect->left;
     rectHeight = rect->bottom - rect->top;
 
-    //QDesktopWidget widget;
-    //QRect mainScreenSize = widget.availableGeometry(widget.primaryScreen());
-
-    //w->move( mainScreenSize.width()/2 - rectWidth/2, mainScreenSize.height()/2 - rectHeight/2);
-    w->move(p.x(), p.y());
-    //delete rect; //se deletar buga alguns plugins
+    w->move(centerOfScreen.x() - rectWidth/2, centerOfScreen.y() - rectHeight/2);
 
     resume();
 }
