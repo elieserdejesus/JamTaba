@@ -115,7 +115,7 @@ private:
     void initializeMainControllerEvents();
     void initializeMainTabWidget();
 
-    LocalTrackGroupView* addLocalChannel(QString channelName, bool createFirstSubchannel);
+    LocalTrackGroupView* addLocalChannel(int channelGroupIndex, QString channelName, bool createFirstSubchannel);
 };
 
 

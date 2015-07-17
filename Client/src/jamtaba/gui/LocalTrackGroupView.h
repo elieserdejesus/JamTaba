@@ -16,14 +16,16 @@ class LocalTrackGroupView : public TrackGroupView
 {
     Q_OBJECT
 public:
-    LocalTrackGroupView();
+    LocalTrackGroupView(int index);
     ~LocalTrackGroupView();
     void refreshInputSelectionName(int inputTrackIndex);
     QList<LocalTrackView*> getTracks() const;
     virtual void addTrackView(BaseTrackView *trackView);
+    inline int getIndex() const{return index;}
 private:
     QPushButton* toolButton;
     static const int MAX_SUB_CHANNELS = 3;
+    int index;
 private slots:
     void on_toolButtonClicked();
     void onAddSubChannelClicked();

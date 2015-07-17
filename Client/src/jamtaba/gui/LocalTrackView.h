@@ -23,8 +23,8 @@ class LocalTrackView : public BaseTrackView
 {
     Q_OBJECT
 public:
-    LocalTrackView(Controller::MainController* mainController, float initialGain, float initialPan);
-    LocalTrackView(Controller::MainController* mainController);
+    LocalTrackView(Controller::MainController* mainController, int channelIndex, float initialGain, float initialPan);
+    LocalTrackView(Controller::MainController* mainController, int channelIndex);
     ~LocalTrackView();
 
     void addPlugin(Audio::Plugin* plugin, bool bypassed=false);
@@ -61,7 +61,7 @@ private:
 
     bool inputIsUsedByMe(int inputIndexInAudioDevice) const;
 
-    void init(float initialGain, float initialPan);
+    void init(int channelIndex, float initialGain, float initialPan);
 private slots:
     void on_inputSelectionButtonClicked();
 

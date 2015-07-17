@@ -36,6 +36,7 @@ VorbisEncoder::~VorbisEncoder() {
     vorbis_dsp_clear(&dspState);
     vorbis_comment_clear(&comment);
     vorbis_info_clear(&info);
+    qDebug() << "ENCODER DESTRUCTOR!";
 }
 //++++++++++++++++++++++++++++++++++++++++++
 void VorbisEncoder::initializeVorbis() {

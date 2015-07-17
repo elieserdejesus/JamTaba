@@ -21,7 +21,7 @@
 #include "ChatPanel.h"
 #include "BusyDialog.h"
 
-#include "../NinjamJamRoomController.h"
+#include "../NinjamController.h"
 #include "../ninjam/Server.h"
 #include "../persistence/Settings.h"
 #include "../JamtabaFactory.h"
@@ -136,7 +136,8 @@ void MainFrame::on_toolButtonMenuActionHovered(QAction *action){
 }
 
 void MainFrame::on_addChannelClicked(){
-    addLocalChannel("", true);
+    int channelIndex = localChannels.size();
+    addLocalChannel( channelIndex, "new channel", true);
     mainController->updateInputTracksRange();
 }
 
@@ -170,14 +171,14 @@ void MainFrame::initializeVstFinderStuff(){
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++
-LocalTrackGroupView *MainFrame::addLocalChannel(QString channelName, bool createFirstSubchannel){
-    LocalTrackGroupView* localChannel = new LocalTrackGroupView();
+LocalTrackGroupView *MainFrame::addLocalChannel(int channelGroupIndex, QString channelName, bool createFirstSubchannel){
+    LocalTrackGroupView* localChannel = new LocalTrackGroupView(channelGroupIndex);
     localChannels.append( localChannel );
     localChannel->setGroupName(channelName);
     ui.localTracksLayout->addWidget(localChannel);
 
     if(createFirstSubchannel){
-        LocalTrackView* localTrackView = new LocalTrackView(this->mainController);
+        LocalTrackView* localTrackView = new LocalTrackView(this->mainController, channelGroupIndex);
         localChannel->addTrackView( localTrackView );
 
         if(localChannels.size() > 1){
@@ -192,10 +193,11 @@ LocalTrackGroupView *MainFrame::addLocalChannel(QString channelName, bool create
 
 void MainFrame::initializeLocalInputChannels(){
     Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
+    int channelIndex = 0;
     foreach (Persistence::Channel channel, inputsSettings.channels) {
-        LocalTrackGroupView* channelView = addLocalChannel(channel.name, channel.subChannels.isEmpty());
+        LocalTrackGroupView* channelView = addLocalChannel(channelIndex, channel.name, channel.subChannels.isEmpty());
         foreach (Persistence::Subchannel subChannel, channel.subChannels) {
-            LocalTrackView* subChannelView = new LocalTrackView( mainController, subChannel.gain, subChannel.pan);
+            LocalTrackView* subChannelView = new LocalTrackView( mainController, channelIndex, subChannel.gain, subChannel.pan);
             channelView->addTrackView(subChannelView);
             if(subChannel.usingMidi){
                 mainController->setInputTrackToMIDI( subChannelView->getInputIndex(), subChannel.midiDevice);
@@ -221,6 +223,7 @@ void MainFrame::initializeLocalInputChannels(){
             //mainController->setTrackLevel(subChannelView->getInputIndex(), subChannel.gain);
             //mainController->setTrackPan(subChannelView->getInputIndex(), subChannel.pan);
         }
+        channelIndex++;
     }
 }
 
@@ -371,7 +374,7 @@ void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
     //add metronome track view
     float metronomeInitialGain = mainController->getSettings().getMetronomeGain();
     float metronomeInitialPan = mainController->getSettings().getMetronomePan();
-    metronomeTrackView = new MetronomeTrackView(mainController, NinjamJamRoomController::METRONOME_TRACK_ID, metronomeInitialGain, metronomeInitialPan );
+    metronomeTrackView = new MetronomeTrackView(mainController, NinjamController::METRONOME_TRACK_ID, metronomeInitialGain, metronomeInitialPan );
 
     ui.localTracksLayout->addWidget(metronomeTrackView);
 

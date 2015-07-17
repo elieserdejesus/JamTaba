@@ -16,7 +16,7 @@
 
 #include "../ninjam/Service.h"
 #include "../ninjam/Server.h"
-#include "NinjamJamRoomController.h"
+#include "NinjamController.h"
 #include <QTimer>
 #include <QFile>
 #include <QDebug>
@@ -89,7 +89,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     QObject::connect(this->ninjamService, SIGNAL(error(QString)), this, SLOT(on_errorInNinjamServer(QString)));
 
 
-    this->ninjamController = new Controller::NinjamJamRoomController(this);
+    this->ninjamController = new Controller::NinjamController(this);
     //QObject::connect(this->ninjamController, SIGNAL(startingNewInterval()), this, SLOT(on_ninjamStartingNewInterval()));
     QObject::connect(this->ninjamController,
                      SIGNAL(encodedAudioAvailableToSend(QByteArray,quint8, bool, bool)),
@@ -212,9 +212,9 @@ void MainController::setInputTrackToMono(int localChannelIndex, int inputIndexIn
     if(inputTrack){
         inputTrack->setAudioInputSelection(inputIndexInAudioDevice, 1);//mono
         emit inputSelectionChanged(localChannelIndex);
-    }
-    if(isPlayingInNinjamRoom()){
-        ninjamController->recreateEncoders();
+        if(isPlayingInNinjamRoom()){
+            ninjamController->recreateEncoderForChannel(inputTrack->getGroupChannelIndex());
+        }
     }
 }
 void MainController::setInputTrackToStereo(int localChannelIndex, int firstInputIndex){
@@ -222,9 +222,9 @@ void MainController::setInputTrackToStereo(int localChannelIndex, int firstInput
     if(inputTrack){
         inputTrack->setAudioInputSelection(firstInputIndex, 2);//stereo
         emit inputSelectionChanged(localChannelIndex);
-    }
-    if(isPlayingInNinjamRoom()){
-        ninjamController->recreateEncoders();
+        if(isPlayingInNinjamRoom()){
+            ninjamController->recreateEncoderForChannel(inputTrack->getGroupChannelIndex());
+        }
     }
 }
 void MainController::setInputTrackToMIDI(int localChannelIndex, int midiDevice){
@@ -233,6 +233,9 @@ void MainController::setInputTrackToMIDI(int localChannelIndex, int midiDevice){
         midiDriver->setInputDeviceIndex(midiDevice);
         inputTrack->setMidiInputSelection(midiDevice);
         emit inputSelectionChanged(localChannelIndex);
+        if(isPlayingInNinjamRoom()){
+            ninjamController->recreateEncoderForChannel(inputTrack->getGroupChannelIndex());
+        }
     }
 }
 void MainController::setInputTrackToNoInput(int localChannelIndex){
@@ -242,6 +245,7 @@ void MainController::setInputTrackToNoInput(int localChannelIndex){
         emit inputSelectionChanged(localChannelIndex);
         if(isPlayingInNinjamRoom()){//send the finish interval message
             ninjamService->sendAudioIntervalPart(currentGUID, QByteArray(), true);
+            ninjamController->recreateEncoderForChannel(inputTrack->getGroupChannelIndex());
         }
     }
 }
