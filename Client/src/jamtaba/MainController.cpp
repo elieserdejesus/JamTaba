@@ -123,7 +123,7 @@ QStringList MainController::getBotNames() const{
     return Ninjam::Service::getBotNamesList();
 }
 
-Geo::Location MainController::getLocation(QString ip) {
+Geo::Location MainController::getGeoLocation(QString ip) {
     return ipToLocationResolver.resolve(ip);
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -16,9 +16,9 @@ class BaseTrackView : public QWidget
     Q_OBJECT
 
 public:
-    BaseTrackView(QWidget *parent, Controller::MainController* mainController, long trackID);
+    BaseTrackView(Controller::MainController* mainController, long trackID);
     virtual ~BaseTrackView();
-    void setPeaks(float left, float right);
+
     inline long getTrackID() const{return trackID;}
     static BaseTrackView* getTrackViewByID(long trackID);
     virtual void setEnabled(bool);
@@ -28,6 +28,10 @@ public:
 
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
+
+    void updatePeaks();
+
+    inline Controller::MainController* getMainController() const{return mainController;}
 
     static const int NARROW_WIDTH = 80;
 protected:
@@ -39,6 +43,8 @@ protected:
     bool activated;
 
     bool narrowed;
+
+    void setPeaks(float left, float right);
 private:
     static QMap<long, BaseTrackView*> trackViews;
 

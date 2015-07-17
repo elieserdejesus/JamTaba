@@ -16,14 +16,14 @@ const QString LocalTrackView::MONO_ICON = ":/images/input_mono.png";
 const QString LocalTrackView::STEREO_ICON = ":/images/input_stereo.png";
 const QString LocalTrackView::NO_INPUT_ICON= ":/images/input_no.png";
 
-LocalTrackView::LocalTrackView(QWidget* parent, Controller::MainController *mainController, float initialGain, float initialPan)
-    :BaseTrackView(parent, mainController, 1), fxPanel(nullptr), inputNode(nullptr)
+LocalTrackView::LocalTrackView(Controller::MainController *mainController, float initialGain, float initialPan)
+    :BaseTrackView( mainController, 1), fxPanel(nullptr), inputNode(nullptr)
 {
     init(initialGain, initialPan);
 }
 
-LocalTrackView::LocalTrackView(QWidget* parent, Controller::MainController *mainController)
-    :BaseTrackView(parent, mainController, 1), fxPanel(nullptr), inputNode(nullptr)
+LocalTrackView::LocalTrackView(Controller::MainController *mainController)
+    :BaseTrackView(mainController, 1), fxPanel(nullptr), inputNode(nullptr)
 {
     init(1, 0);//unit gain and pan in center
 }
@@ -60,10 +60,7 @@ void LocalTrackView::setToNoInput(){
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void LocalTrackView::updatePeaks(){
-    Audio::AudioPeak peak = mainController->getTrackPeak(getTrackID());
-    setPeaks(peak.getLeft(), peak.getRight());
-}
+
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QWidget* LocalTrackView::createInputPanel(){

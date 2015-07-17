@@ -6,6 +6,7 @@
 #include "../ninjam/Server.h"
 #include "../loginserver/LoginService.h"
 #include "../persistence/Settings.h"
+#include "../LocalTrackGroupView.h"
 
 class PluginScanDialog;
 class NinjamRoomWindow;

@@ -1,47 +1,35 @@
 #ifndef LOCALTRACKGROUPVIEW_H
 #define LOCALTRACKGROUPVIEW_H
 
-#include <QWidget>
-#include "LocalTrackView.h"
+#include "TrackGroupView.h"
+
+class LocalTrackView;
+
+class QPushButton;
 
 namespace Ui {
 class LocalTrackGroupView;
 }
 
-class QMenu;
 
-class LocalTrackGroupView : public QWidget
+class LocalTrackGroupView : public TrackGroupView
 {
     Q_OBJECT
-
 public:
-    explicit LocalTrackGroupView(QWidget *parent = 0);
+    LocalTrackGroupView();
     ~LocalTrackGroupView();
-    void setGroupName(QString groupName);
-    QString getGroupName() const;
-
-    void addTrackView(LocalTrackView* trackView);
-
-    QSize minimumSizeHint() const;
-    QSize sizeHint() const;
-    void updatePeaks();
     void refreshInputSelectionName(int inputTrackIndex);
-    inline QList<LocalTrackView*> getTracks() const{return trackViews;}
-
-protected:
-    void paintEvent(QPaintEvent* );
-
-private slots:
-    void on_toolButton_clicked();
-
-    void onAddSubChannelClicked();
-    void on_toolButtonActionTriggered(QAction*);
-    void on_toolButtonActionHovered(QAction*);
-
+    QList<LocalTrackView*> getTracks() const;
+    virtual void addTrackView(BaseTrackView *trackView);
 private:
-    Ui::LocalTrackGroupView *ui;
-    QList<LocalTrackView*> trackViews;
+    QPushButton* toolButton;
     static const int MAX_SUB_CHANNELS = 3;
+private slots:
+    void on_toolButtonClicked();
+    void onAddSubChannelClicked();
+    void on_toolButtonActionHovered(QAction *action);
+    void on_toolButtonActionTriggered(QAction *action);
 };
+
 
 #endif // LOCALTRACKGROUPVIEW_H

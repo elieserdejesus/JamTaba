@@ -62,7 +62,7 @@ void JamRoomViewPanel::initialize(){
         if(!userIsBot(user)){
             QLabel* label = new QLabel(ui->usersPanel);
             label->setTextFormat(Qt::RichText);
-            Geo::Location userLocation = mainController->getLocation(user.getIp());
+            Geo::Location userLocation = mainController->getGeoLocation(user.getIp());
             QString countryCode = userLocation.getCountryCode().toLower();
             QString countryName = userLocation.getCountryName();
             QString userString = user.getName() + " <i>(" + countryName + ")</i>";

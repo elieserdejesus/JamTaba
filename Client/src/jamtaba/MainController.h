@@ -130,7 +130,7 @@ public:
 
     inline bool isStarted() const{return started;}
 
-    Geo::Location getLocation(QString ip) ;
+    Geo::Location getGeoLocation(QString ip) ;
 
     //static const int INPUT_TRACK_ID = 1;
     Audio::LocalInputAudioNode* getInputTrack(int localInputIndex);

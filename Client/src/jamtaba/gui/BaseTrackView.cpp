@@ -7,8 +7,7 @@
 
 QMap<long, BaseTrackView*> BaseTrackView::trackViews;//static map
 
-BaseTrackView::BaseTrackView(QWidget *parent, Controller::MainController *mainController, long trackID) :
-    QWidget(parent),
+BaseTrackView::BaseTrackView(Controller::MainController *mainController, long trackID) :
     ui(new Ui::TrackView),
     mainController(mainController),
     trackID(trackID),
@@ -28,6 +27,11 @@ BaseTrackView::BaseTrackView(QWidget *parent, Controller::MainController *mainCo
     trackViews.insert(trackID, this);
 
 
+}
+
+void BaseTrackView::updatePeaks(){
+    Audio::AudioPeak peak = mainController->getTrackPeak(getTrackID());
+    setPeaks(peak.getLeft(), peak.getRight());
 }
 
 QSize BaseTrackView::sizeHint() const{
