@@ -11,6 +11,7 @@
 #include "../audio/core/AudioDriver.h"
 #include "../audio/core/plugins.h"
 #include "../audio/vst/PluginFinder.h"
+#include "../persistence/Settings.h"
 
 class MainFrame;
 
@@ -67,11 +68,13 @@ class MainController : public QApplication, public Audio::AudioDriverListener
     friend class Controller::NinjamJamRoomController;
 
 public:
-    MainController(JamtabaFactory *factory, int& argc, char** argv);
+    MainController(JamtabaFactory *factory, Persistence::Settings settings, int& argc, char** argv);
     ~MainController();
 
     void start();
     void stop();
+
+    void saveLastUserSettings(const Persistence::InputsSettings &inputsSettings);
 
     virtual void process(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
 
@@ -142,6 +145,16 @@ public:
     //bool audioMonoInputIsFreeToSelect(int inputIndexInAudioDevice) const;
     //bool audioStereoInputIsFreeToSelect( int firstInputIndexInAudioDevice)const;
 
+    inline const Persistence::Settings& getSettings() const{return settings;}
+
+    //store settings
+    void storeMetronomeSettings(float gain, float pan);
+    void addVstScanPath(QString path);
+    void removeVstScanPath(int index);
+    void clearVstCache();
+    void storeWindowSettings(bool maximized, QPointF location);
+    void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize, int midiDevice) ;
+    //void storeInputChannels()
 signals:
     void enteredInRoom(Login::RoomInfo room);
     void exitedFromRoom(bool error);
@@ -185,6 +198,8 @@ private:
     Geo::IpToLocationResolver ipToLocationResolver;
 
     QByteArray currentGUID;
+
+    Persistence::Settings settings;
 
 private slots:
     //Login server

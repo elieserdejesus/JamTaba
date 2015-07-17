@@ -9,6 +9,10 @@ using namespace Audio;
 
 ChannelRange::ChannelRange(int firstChannel, int channelsCount)
     :firstChannel(firstChannel), channelsCount(channelsCount){
+    if(firstChannel < 0 || channelsCount < 0){
+        this->firstChannel = -1;
+        this->channelsCount = 0;
+    }
 }
 
 ChannelRange::ChannelRange()

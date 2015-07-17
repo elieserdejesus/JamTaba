@@ -12,7 +12,7 @@
 #include "audio/core/plugins.h"
 #include "audio/vst/VstPlugin.h"
 #include "audio/vst/vsthost.h"
-#include "persistence/ConfigStore.h"
+#include "persistence/Settings.h"
 
 #include "../ninjam/Service.h"
 #include "../ninjam/Server.h"
@@ -23,6 +23,7 @@
 #include <QApplication>
 #include <QUuid>
 #include "audio/NinjamTrackNode.h"
+#include "Utils.h"
 
 using namespace Persistence;
 using namespace Midi;
@@ -32,7 +33,7 @@ using namespace Ninjam;
 
 using namespace Controller;
 
-MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
+MainController::MainController(JamtabaFactory* factory, Settings settings, int &argc, char **argv)
     :QApplication(argc, argv),
       audioMixer(nullptr),
       roomStreamer(nullptr),
@@ -43,7 +44,8 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
       started(false),
       vstHost(Vst::VstHost::getInstance()),
       //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
-      ipToLocationResolver("../Jamtaba2/GeoLite2-Country.mmdb")
+      ipToLocationResolver("../Jamtaba2/GeoLite2-Country.mmdb"),
+      settings(settings)
 {
 
     setQuitOnLastWindowClosed(false);//wait disconnect from server to close
@@ -53,10 +55,10 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     this->loginService = std::unique_ptr<Login::LoginService>( loginService );
     this->audioDriver = new Audio::PortAudioDriver(
                 this, //the AudioDriverListener instance
-                ConfigStore::getLastInputDevice(), ConfigStore::getLastOutputDevice(),
-                ConfigStore::getFirstGlobalAudioInput(), ConfigStore::getLastGlobalAudioInput(),
-                ConfigStore::getFirstGlobalAudioOutput(), ConfigStore::getLastGlobalAudioOutput(),
-                ConfigStore::getLastSampleRate(), ConfigStore::getLastBufferSize()
+                settings.getLastInputDevice(), settings.getLastOutputDevice(),
+                settings.getFirstGlobalAudioInput(), settings.getLastGlobalAudioInput(),
+                settings.getFirstGlobalAudioOutput(), settings.getLastGlobalAudioOutput(),
+                settings.getLastSampleRate(), settings.getLastBufferSize()
                 );
 
     QObject::connect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
@@ -66,7 +68,7 @@ MainController::MainController(JamtabaFactory* factory, int &argc, char **argv)
     roomStreamer = new Audio::RoomStreamerNode();
 
     midiDriver = new PortMidiDriver();
-    midiDriver->setInputDeviceIndex(Persistence::ConfigStore::getLastMidiDeviceIndex());
+    midiDriver->setInputDeviceIndex(settings.getLastMidiDeviceIndex());
 
     QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromLoginServer()));
 
@@ -269,6 +271,33 @@ bool MainController::addTrack(long trackID, Audio::AudioNode* trackNode){
 //    return false;
 }
 
+//+++++++++++++++  SETTINGS +++++++++++
+void MainController::storeMetronomeSettings(float gain, float pan){
+    settings.setMetronomeSettings(gain, pan);
+}
+
+void MainController::addVstScanPath(QString path){
+    settings.addVstScanPath(path);
+}
+
+void MainController::removeVstScanPath(int index){
+   settings.removeVstScanPath(index);
+}
+
+void MainController::clearVstCache(){
+    settings.clearVstCache();
+}
+
+void MainController::storeWindowSettings(bool maximized, QPointF location){
+    settings.setWindowSettings(maximized, location);
+}
+
+void MainController::storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize, int midiDevice){
+    settings.setAudioSettings(firstIn, lastIn, firstOut, lastOut, inputDevice, outputDevice, sampleRate, bufferSize, midiDevice);
+}
+
+//+++++++++++++++++
+
 void MainController::removeTrack(long trackID){
     QMutexLocker locker(&mutex); //remove Track is called from ninjam service thread, and cause a crash if the process callback (audio Thread) is iterating over tracksNodes to render audio
     Audio::AudioNode* trackNode = tracksNodes[trackID];
@@ -294,7 +323,7 @@ void MainController::scanPlugins(){
     pluginsDescriptors.clear();
     //ConfigStore::clearVstCache();
     pluginFinder.clearScanPaths();
-    QStringList scanPaths = Persistence::ConfigStore::getVstScanPaths();
+    QStringList scanPaths = settings.getVstScanPaths();
     foreach (QString path, scanPaths) {
         pluginFinder.addPathToScan(path);
     }
@@ -303,7 +332,7 @@ void MainController::scanPlugins(){
 
 void MainController::on_VSTPluginFounded(QString name, QString group, QString path){
     pluginsDescriptors.append(Audio::PluginDescriptor(name, group, path));
-    ConfigStore::addVstPlugin(path);
+    settings.addVstPlugin(path);
 }
 
 void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
@@ -354,7 +383,8 @@ void MainController::setTrackLevel(int trackID, float level){
     QMutexLocker locker(&mutex);
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
-        node->setGain( std::pow( level, 4));
+        //node->setGain( std::pow( level, 4));
+        node->setGain(Utils::linearGainToPower(level));
     }
 }
 
@@ -471,6 +501,10 @@ MainController::~MainController(){
     QObject::disconnect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
 }
 
+void MainController::saveLastUserSettings(const Persistence::InputsSettings& inputsSettings){
+    settings.save(inputsSettings);
+}
+
 void MainController::playRoomStream(Login::RoomInfo roomInfo){
     if(roomInfo.hasStream()){
         roomStreamer->setStreamPath(roomInfo.getStreamUrl());
@@ -525,6 +559,7 @@ void MainController::start()
 {
     if(!started){
         started = true;
+
         audioDriver->start();
         midiDriver->start();
 
@@ -537,7 +572,7 @@ void MainController::stop()
 {
     if(started){
         {
-            QMutexLocker locker(&mutex);
+            //QMutexLocker locker(&mutex);
             this->audioDriver->release();
             this->midiDriver->release();
         }

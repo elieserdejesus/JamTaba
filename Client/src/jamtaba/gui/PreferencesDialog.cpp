@@ -5,7 +5,7 @@
 #include <QFileDialog>
 #include "../audio/core/AudioDriver.h"
 #include "../midi/MidiDriver.h"
-#include "../persistence/ConfigStore.h"
+#include "../persistence/Settings.h"
 #include "../MainController.h"
 
 using namespace Audio;
@@ -35,7 +35,7 @@ void PreferencesDialog::populateMidiInputCombo(){
         for (int i = 0; i < maxDevices; ++i) {
             ui->comboMidiInput->addItem( QString( midiDriver->getInputDeviceName(i)));
         }
-        int selectedDeviceIndex = Persistence::ConfigStore::getLastMidiDeviceIndex();
+        int selectedDeviceIndex = mainController->getSettings().getLastMidiDeviceIndex();
         if(selectedDeviceIndex >= 0 && selectedDeviceIndex < maxDevices){
             ui->comboMidiInput->setCurrentIndex(selectedDeviceIndex);
         }
@@ -64,7 +64,7 @@ void PreferencesDialog::clearScanPathWidgets(){
 
 void PreferencesDialog::populateVstTab(){
     clearScanPathWidgets();//remove all widgets before add the paths
-    QStringList paths = Persistence::ConfigStore::getVstScanPaths();
+    QStringList paths = mainController->getSettings().getVstScanPaths();
     foreach (QString path, paths) {
         createWidgetsToNewScanPath(path);
     }
@@ -257,7 +257,7 @@ void PreferencesDialog::on_buttonRemoveVstPathClicked(){
         ui->panelPaths->layout()->removeWidget(buttonClicked->parentWidget());
         scanPathButtons.removeOne(buttonClicked);
         delete buttonClicked->parentWidget();
-        Persistence::ConfigStore::removeVstScanPath(buttonIndex);
+        mainController->removeVstScanPath(buttonIndex);
     }
 }
 
@@ -280,7 +280,7 @@ void PreferencesDialog::createWidgetsToNewScanPath(QString path){
 
 void PreferencesDialog::addVstScanPath(QString path){
     createWidgetsToNewScanPath( path );
-    Persistence::ConfigStore::addVstScanPath(path);
+    mainController->addVstScanPath(path);
 }
 
 //void PreferencesDialog::clearLayout(QLayout* layout, bool deleteWidgets)
@@ -302,7 +302,7 @@ void PreferencesDialog::addVstScanPath(QString path){
 
 void PreferencesDialog::on_buttonClearVstCache_clicked()
 {
-    Persistence::ConfigStore::clearVstCache();
+    mainController->clearVstCache();
 }
 
 void PreferencesDialog::on_buttonScanVSTs_clicked()

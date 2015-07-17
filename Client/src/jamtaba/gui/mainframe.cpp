@@ -23,7 +23,7 @@
 
 #include "../NinjamJamRoomController.h"
 #include "../ninjam/Server.h"
-#include "../persistence/ConfigStore.h"
+#include "../persistence/Settings.h"
 #include "../JamtabaFactory.h"
 #include "../audio/core/AudioDriver.h"
 #include "../audio/vst/PluginFinder.h"
@@ -31,6 +31,7 @@
 #include "../midi/MidiDriver.h"
 #include "../MainController.h"
 #include "../loginserver/LoginService.h"
+#include "../Utils.h"
 
 using namespace Audio;
 using namespace Persistence;
@@ -50,7 +51,7 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 	ui.setupUi(this);
     initializeWindowState();//window size, maximization ...
     initializeLoginService();
-    initializeLocalTrackView();
+
     initializeVstFinderStuff();//vst finder...
 
     initializeMainControllerEvents();
@@ -61,6 +62,35 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     QObject::connect(mainController, SIGNAL(inputSelectionChanged(int)), this, SLOT(on_inputSelectionChanged(int)));
 
     QObject::connect( ui.toolButton, SIGNAL(clicked()), this, SLOT(on_toolButtonClicked()));
+
+    initializeLocalInputChannels();
+}
+//++++++++++++++++++++++++=
+Persistence::InputsSettings MainFrame::getInputsSettings() const{
+    InputsSettings settings;
+    foreach (LocalTrackGroupView* trackGroupView, localChannels) {
+        Persistence::Channel channel(trackGroupView->getGroupName());
+        foreach (LocalTrackView* trackView, trackGroupView->getTracks()) {
+            Audio::LocalInputAudioNode* inputNode = trackView->getInputNode();
+            Audio::ChannelRange inputNodeRange = inputNode->getAudioInputRange();
+            int firstInput = inputNodeRange.getFirstChannel();
+            int channelsCount = inputNodeRange.getChannels();
+            bool isMidiTrack = inputNode->isMidi();
+            float gain = Utils::poweredGainToLinear( inputNode->getGain() );
+            float pan = inputNode->getPan();
+
+            QList<const Audio::Plugin*> insertedPlugins = trackView->getInsertedPlugins();
+            QList<Persistence::Plugin> plugins;
+            foreach (const Audio::Plugin* p, insertedPlugins) {
+                plugins.append(Persistence::Plugin(p->getPath(), p->isBypassed()));
+            }
+            Persistence::Subchannel sub(firstInput, channelsCount, isMidiTrack, gain, pan, plugins);
+
+            channel.subChannels.append(sub);
+        }
+        settings.channels.append(channel);
+    }
+    return settings;
 }
 //++++++++++++++++++++++++=
 void MainFrame::on_toolButtonClicked(){
@@ -105,7 +135,7 @@ void MainFrame::on_toolButtonMenuActionHovered(QAction *action){
 }
 
 void MainFrame::on_addChannelClicked(){
-    addLocalChannel();
+    addLocalChannel("", true);
     mainController->updateInputTracksRange();
 }
 
@@ -129,7 +159,7 @@ void MainFrame::initializeVstFinderStuff(){
     QObject::connect(&pluginFinder, SIGNAL(scanFinished()), this, SLOT(onPluginScanFinished()));
     QObject::connect(&pluginFinder, SIGNAL(vstPluginFounded(QString,QString,QString)), this, SLOT(onPluginFounded(QString,QString,QString)));
 
-    QStringList vstPaths = ConfigStore::getVstPluginsPaths();
+    QStringList vstPaths = mainController->getSettings().getVstPluginsPaths();
     if(vstPaths.empty()){//no vsts in database cache, try scan
         mainController->scanPlugins();
     }
@@ -139,33 +169,58 @@ void MainFrame::initializeVstFinderStuff(){
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++
-void MainFrame::addLocalChannel(){
-    LocalTrackGroupView* localChannel = new LocalTrackGroupView(this);
+LocalTrackGroupView *MainFrame::addLocalChannel(QString channelName, bool createFirstSubchannel){
+    LocalTrackGroupView* localChannel = new LocalTrackGroupView();
     localChannels.append( localChannel );
-    localChannel->setGroupName(Persistence::ConfigStore::getLastChannelName(0));
-
-    //subchannels
-    LocalTrackView* localTrackView = new LocalTrackView(localChannel, this->mainController);
-    localChannel->addTrackView( localTrackView );
+    localChannel->setGroupName(channelName);
     ui.localTracksLayout->addWidget(localChannel);
-    //localTrackView->initializeFxPanel(fxMenu);
 
-    //QObject::connect(localTrackView, SIGNAL(editingPlugin(Audio::Plugin*)), this, SLOT(on_editingPlugin(Audio::Plugin*)));
-    //QObject::connect(localTrackView, SIGNAL(removingPlugin(Audio::Plugin*)), this, SLOT(on_removingPlugin(Audio::Plugin*)));
+    if(createFirstSubchannel){
+        LocalTrackView* localTrackView = new LocalTrackView(localChannel, this->mainController);
+        localChannel->addTrackView( localTrackView );
 
-    if(localChannels.size() > 1){
-        localTrackView->setToNoInput();
+        if(localChannels.size() > 1){
+            localTrackView->setToNoInput();
+        }
+        else{
+            localTrackView->refreshInputSelectionName();
+        }
     }
-    else{
-        localTrackView->refreshInputSelectionName();
-    }
-
-
+    return localChannel;
 }
 
-void MainFrame::initializeLocalTrackView(){
-    //fxMenu = createFxMenu();
-    addLocalChannel();
+void MainFrame::initializeLocalInputChannels(){
+    Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
+    foreach (Persistence::Channel channel, inputsSettings.channels) {
+        LocalTrackGroupView* channelView = addLocalChannel(channel.name, channel.subChannels.isEmpty());
+        foreach (Persistence::Subchannel subChannel, channel.subChannels) {
+            LocalTrackView* subChannelView = new LocalTrackView(channelView, mainController, subChannel.gain, subChannel.pan);
+            channelView->addTrackView(subChannelView);
+            if(subChannel.usingMidi){
+                mainController->setInputTrackToMIDI( subChannelView->getInputIndex(), subChannel.midiDevice);
+            }
+            else if(subChannel.channelsCount <= 0){
+                mainController->setInputTrackToNoInput(subChannelView->getInputIndex());
+            }
+            else if(subChannel.channelsCount == 1){
+                mainController->setInputTrackToMono(subChannelView->getInputIndex(), subChannel.firstInput);
+            }
+            else{
+                mainController->setInputTrackToStereo(subChannelView->getInputIndex(), subChannel.firstInput);
+            }
+
+            //create the plugins list
+            foreach (Persistence::Plugin plugin, subChannel.plugins) {
+                QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
+                Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path );
+                Audio::Plugin* pluginInstance = mainController->addPlugin(subChannelView->getInputIndex(), descriptor);
+                subChannelView->addPlugin(pluginInstance, plugin.bypassed);
+            }
+
+            //mainController->setTrackLevel(subChannelView->getInputIndex(), subChannel.gain);
+            //mainController->setTrackPan(subChannelView->getInputIndex(), subChannel.pan);
+        }
+    }
 }
 
 void MainFrame::initializeLoginService(){
@@ -175,11 +230,11 @@ void MainFrame::initializeLoginService(){
 }
 
 void MainFrame::initializeWindowState(){
-    if(ConfigStore::windowWasMaximized()){
+    if(mainController->getSettings().windowWasMaximized()){
         setWindowState(Qt::WindowMaximized);
     }
     else{
-        QPointF location = ConfigStore::getLastWindowLocation();
+        QPointF location = mainController->getSettings().getLastWindowLocation();
         QDesktopWidget* desktop = QApplication::desktop();
         int desktopWidth = desktop->width();
         int desktopHeight = desktop->height();
@@ -313,8 +368,8 @@ void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
     ui.tabWidget->setCurrentIndex(index);
 
     //add metronome track view
-    float metronomeInitialGain = ConfigStore::getMetronomeGain();
-    float metronomeInitialPan = ConfigStore::getMetronomePan();
+    float metronomeInitialGain = mainController->getSettings().getMetronomeGain();
+    float metronomeInitialPan = mainController->getSettings().getMetronomePan();
     metronomeTrackView = new MetronomeTrackView(this, mainController, NinjamJamRoomController::METRONOME_TRACK_ID, metronomeInitialGain, metronomeInitialPan );
 
     ui.localTracksLayout->addWidget(metronomeTrackView);
@@ -388,23 +443,25 @@ void MainFrame::resizeEvent(QResizeEvent *){
 
 void MainFrame::changeEvent(QEvent *ev){
     if(ev->type() == QEvent::WindowStateChange){
-        ConfigStore::storeWindowState(isMaximized());
+        mainController->storeWindowSettings(isMaximized(), computeLocation() );
     }
     ev->accept();
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+QPointF MainFrame::computeLocation() const{
+    QRect screen = QApplication::desktop()->screenGeometry();
+    float x = (float)this->pos().x()/screen.width();
+    float y = (float)this->pos().y()/screen.height();
+    return QPointF(x, y);
+}
+
 void MainFrame::closeEvent(QCloseEvent *)
  {
     //qDebug() << "MainFrame::closeEvent";
     if(mainController != NULL){
         mainController->stop();
     }
-    //store window position
-    QRect screen = QApplication::desktop()->screenGeometry();
-    float x = (float)this->pos().x()/screen.width();
-    float y = (float)this->pos().y()/screen.height();
-    QPointF location(x, y) ;
-    ConfigStore::storeWindowLocation( location ) ;
+    mainController->storeWindowSettings(isMaximized(), computeLocation() );
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::showEvent(QShowEvent *)
@@ -470,7 +527,7 @@ void MainFrame::on_IOPropertiesChanged(int midiDeviceIndex, int audioDevice, int
     //audioDriver->setProperties(selectedDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
 #endif
     mainController->updateInputTracksRange();
-    ConfigStore::storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, audioDevice, sampleRate, bufferSize, midiDeviceIndex);
+    mainController->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, audioDevice, sampleRate, bufferSize, midiDeviceIndex);
 
     mainController->getMidiDriver()->start();
     mainController->getAudioDriver()->start();

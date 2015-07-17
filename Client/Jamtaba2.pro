@@ -1,16 +1,10 @@
-#dar feedback quando o usuário escolher noInput. Deixar a pista esmaecida seria legal.
-#Usar setEnabled não funcionou porque desabilita inclusive o combo de selação, o que
-#impossibilita que o usuário volte a deixar a pista ativa.
+#está bugando o FXPanelItem quando carrego um plugin bypassado
 
-#salvar as entradas selecionadas para a pista local (salvar primeiro índice e quantidade de canais).
-#Deixar para pensar em como salvar quando  já tiver decidido como serão as múltiplas entradas
+#ver canais ninjam, eu mudei um monte de coisas
 
-#    Nome do canal
-#        range sub1
-#        range sub2
-#    Nome do canal 2
-#        ranges
+#mudança de nome nos canais ninjam está comentada
 
+#drummix stereo abre, mas o drummix multi dá pau. Talvez a quantidade de canais esteja gerando problema.
 
 #implementar a conversão de vários canais para um só. Isso será necessário quando o
 #usuário entrar em um server que aceita menos canais do que ele tinha criado. Pegar
@@ -22,21 +16,28 @@
 #por enquanto comentei o código do NinjamController que encodava, depois tenho que pensar em como vou encodar vários canais
 #no método que recria os encoders eu estou dando o migué e estou recriando apenas um
 
+
+
 #implementar xmit
 
 
+#se adiciono um plugin e fecho dá pau
+
+#quando mando scanear arquivos de programa dá pau em algumas DLLs. ACho que um
+#try catch poderia melhorar isso
+
+#o botão clear cache não dá nenhum feedback. Seria legal mostrar a lista de plugins
+#que estão na cache e depois limpar essa lista
 
 
-#preciso mudar a persistência dos nomes dos channels para um array
+#Preciso persistir os plugins que foram insertados no canal, essa é a melhor feature do mundo
 
-#permitir a criação de subcanais é importante. Eu posso estar em um server que permite apenas um canal mas estou usando vários
-#subcanais. O canal pai tem um nome, os sub são apenas locais, são mixados e enviados como o canal pai. Acho que essa é uma boa
-#arquitetura para as entradas mas preciso pensar bem sobre as características do canal pai, acho que os canais filhos são os que
-#eu já tenho
+#dar feedback quando o usuário escolher noInput. Deixar a pista esmaecida seria legal.
+#Usar setEnabled não funcionou porque desabilita inclusive o combo de selação, o que
+#impossibilita que o usuário volte a deixar a pista ativa.
+
 
 #também preciso tratar a situação onde o usuário está usando midi como entrada e o driver midi é alterado nas preferencias
-
-
 
 
 #como vou permitir vários devices midi? Pelo que vi no portaudio.h o único jeito seria abrir vários streams midi, um para cada device.
@@ -172,7 +173,6 @@ MAIN = src/jamtaba/main.cpp
 HEADERS += \
     #nvwa/debug_new.h \
     #--------------------------------
-    src/jamtaba/persistence/ConfigStore.h \
 #    #--------------------------------
     src/jamtaba/audio/core/AudioDriver.h \
     src/jamtaba/audio/core/AudioNode.h \
@@ -235,14 +235,15 @@ HEADERS += \
     src/jamtaba/gui/TrackIOPanel.h \
     src/jamtaba/audio/vorbis/VorbisEncoder.h \
     src/jamtaba/gui/LocalTrackGroupView.h \
-    src/jamtaba/gui/Highligther.h
+    src/jamtaba/gui/Highligther.h \
+    src/jamtaba/persistence/Settings.h \
+    src/jamtaba/Utils.h
 
 
 SOURCES += \
     $$MAIN \
 #    nvwa/debug_new.cpp \
 #-----------------------------------------
-    src/jamtaba/persistence/ConfigStore.cpp \
 ##------------------------------------------------
     src/jamtaba/audio/core/AudioDriver.cpp \
     src/jamtaba/audio/core/AudioNode.cpp \
@@ -303,7 +304,8 @@ SOURCES += \
     src/jamtaba/gui/TrackIoPanel.cpp \
     src/jamtaba/audio/vorbis/VorbisEncoder.cpp \
     src/jamtaba/gui/LocalTrackGroupView.cpp \
-    src/jamtaba/gui/Highligther.cpp
+    src/jamtaba/gui/Highligther.cpp \
+    src/jamtaba/persistence/Settings.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \

@@ -17,6 +17,8 @@ public:
     virtual void start();
     virtual void stop();
     virtual void release();
+
+    virtual bool hasInputDevices() const;
     //virtual void initialize();
     virtual int getMaxInputDevices() const;
     virtual const char *getInputDeviceName(int index) const;

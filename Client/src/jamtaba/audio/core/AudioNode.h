@@ -5,6 +5,7 @@
 #include <QMutex>
 #include "SamplesBuffer.h"
 #include "AudioDriver.h"
+#include <QDebug>
 
 namespace Midi   {
     class MidiBuffer;
@@ -67,7 +68,9 @@ public:
 
     virtual int getSampleRate() const = 0;
 
-    inline float getGain() const{return gain;}
+    inline float getGain() const{
+        return gain;
+    }
 
     void setPan(float pan);
     inline float getPan() const {return pan;}

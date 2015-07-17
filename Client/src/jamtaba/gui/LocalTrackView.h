@@ -23,17 +23,20 @@ class LocalTrackView : public BaseTrackView
 {
     Q_OBJECT
 public:
+    LocalTrackView(QWidget *parent, Controller::MainController* mainController, float initialGain, float initialPan);
     LocalTrackView(QWidget *parent, Controller::MainController* mainController);
     ~LocalTrackView();
 
-    void addPlugin(Audio::Plugin* plugin);
+    void addPlugin(Audio::Plugin* plugin, bool bypassed=false);
     void refreshInputSelectionName();
     inline Controller::MainController* getMainController() const{return mainController;}
-    inline int getInputIndex() const{return inputIndex;}
+    inline int getInputIndex() const{return getTrackID();}
     void updatePeaks();
     void setToNoInput();
+    Audio::LocalInputAudioNode* getInputNode() const;
+    QList<const Audio::Plugin*> getInsertedPlugins() const;
 private:
-    int inputIndex;
+    //int inputIndex;
     FxPanel* fxPanel;
     FxPanel* createFxPanel();
     QWidget* createInputPanel();
@@ -58,7 +61,7 @@ private:
 
     bool inputIsUsedByMe(int inputIndexInAudioDevice) const;
 
-
+    void init(float initialGain, float initialPan);
 private slots:
     void on_inputSelectionButtonClicked();
 

@@ -5,10 +5,9 @@
 using namespace Midi;
 
 PortMidiDriver::PortMidiDriver()
-
+    : deviceId(pmInvalidDeviceId),
+     stream(nullptr)
 {
-    deviceId = pmInvalidDeviceId;
-    stream = nullptr;
     Pm_Initialize();
 
 //    int devices = Pm_CountDevices();
@@ -32,6 +31,9 @@ int PortMidiDriver::getInputDeviceIndex() const{
 }
 
 void PortMidiDriver::setInputDeviceIndex(int index){
+    if(!hasInputDevices()){
+        return;
+    }
     //A port Midi não diferencia entrada de saida, então os índices precisam ser convertidos. Por exemplo, usar a entrada
     //de índice 0 pode significar usar o device de índice 4, porque os devices anteriores são todos saída
     int totalDevices = Pm_CountDevices();
@@ -60,11 +62,15 @@ void PortMidiDriver::setInputDeviceIndex(int index){
             qCritical() << "não foi possível reinicializar o device MIDI, indice errado";
         }
     }
+
 }
 
 void PortMidiDriver::start(){
+    if(!hasInputDevices()){
+        return;
+    }
     stop();
-    if(deviceId == pmInvalidDeviceId){
+    if(deviceId < 0 || deviceId == pmInvalidDeviceId){
         deviceId = Pm_GetDefaultInputDeviceID();
     }
     if(deviceId != pmInvalidDeviceId){
@@ -79,6 +85,10 @@ void PortMidiDriver::start(){
     }
 
 
+}
+
+bool PortMidiDriver::hasInputDevices() const{
+    return getMaxInputDevices() > 0;
 }
 
 MidiBuffer PortMidiDriver::getBuffer(){

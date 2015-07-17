@@ -5,6 +5,7 @@
 #include "BusyDialog.h"
 #include "../ninjam/Server.h"
 #include "../loginserver/LoginService.h"
+#include "../persistence/Settings.h"
 
 class PluginScanDialog;
 class NinjamRoomWindow;
@@ -48,6 +49,8 @@ public:
     virtual void changeEvent(QEvent *);
     virtual void timerEvent(QTimerEvent *);
     virtual void resizeEvent(QResizeEvent*);
+
+    Persistence::InputsSettings getInputsSettings() const;
 private slots:
     void on_tabCloseRequest(int index);
     void on_preferencesClicked();
@@ -87,6 +90,8 @@ private:
 
     int timerID;
 
+    QPointF computeLocation() const;
+
     QMap<long long, JamRoomViewPanel*> roomViewPanels;
 
     Controller::MainController* mainController;
@@ -95,7 +100,8 @@ private:
     QList<LocalTrackGroupView*> localChannels;
     MetronomeTrackView* metronomeTrackView;
     NinjamRoomWindow* ninjamWindow;
-    //PluginGui* createPluginView(Plugin::PluginDescriptor *, Audio::Plugin *plugin) ;
+
+
 
     void showPluginGui(Audio::Plugin* plugin);
 
@@ -103,12 +109,12 @@ private:
 
     void initializeWindowState();
     void initializeLoginService();
-    void initializeLocalTrackView();
+    void initializeLocalInputChannels();
     void initializeVstFinderStuff();
     void initializeMainControllerEvents();
     void initializeMainTabWidget();
 
-    void addLocalChannel();
+    LocalTrackGroupView* addLocalChannel(QString channelName, bool createFirstSubchannel);
 };
 
 
