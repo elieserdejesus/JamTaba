@@ -20,6 +20,7 @@ public:
     virtual void process(Audio::SamplesBuffer &buffer);
     virtual void openEditor(QPoint centerOfScreen);
     bool load(Vst::VstHost* host, QString path);
+    inline QString getPath() const{return path;}
 protected:
     void unload();
     //void processMidiEvents(Midi::MidiBuffer& midiIn);
@@ -30,6 +31,7 @@ private:
     QLibrary pluginLib;
     Vst::VstHost* host;
     bool wantMidi;
+    QString path;
 };
 
 

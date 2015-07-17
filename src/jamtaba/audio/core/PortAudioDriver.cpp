@@ -4,7 +4,7 @@
 #include <algorithm>
 #include "portaudio.h"
 #include "SamplesBuffer.h"
-#include "../persistence/ConfigStore.h"
+#include "../persistence/Settings.h"
 
 #include <QThread>
 
@@ -37,10 +37,26 @@ PortAudioDriver::PortAudioDriver(AudioDriverListener *audioDriverListener)
 PortAudioDriver::PortAudioDriver(AudioDriverListener* audioDriverListener, int inputDeviceIndex, int outputDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize )
     :AudioDriver(audioDriverListener)
 {
+//    int maxInputs = getMaxInputs();
+//    if(firstInputIndex < 0 || firstInputIndex >= maxInputs){
+//        firstInputIndex = lastInputIndex = 0;
+//    }
+//    if(lastInputIndex < 0 || lastInputIndex >= maxInputs){
+//        lastInputIndex = 0;
+//    }
+
+//    int maxOutputs = getMaxOutputs();
+//    if(firstOutputIndex < 0 || firstOutputIndex >= maxOutputs){
+//        firstOutputIndex = lastOutputIndex = 0;
+//    }
+//    if(lastOutputIndex < 0 || lastOutputIndex >= maxOutputs){
+//        lastOutputIndex = 0;
+//    }
+
     this->globalInputRange = ChannelRange(firstInputIndex, (lastInputIndex - firstInputIndex) + 1);
     this->globalOutputRange = ChannelRange(firstOutputIndex, (lastOutputIndex - firstOutputIndex) + 1);
-    this->inputDeviceIndex = inputDeviceIndex;
-    this->outputDeviceIndex = outputDeviceIndex;
+    this->inputDeviceIndex = inputDeviceIndex;// (inputDeviceIndex >= 0 && inputDeviceIndex < getDevicesCount()) ? inputDeviceIndex : paNoDevice;
+    this->outputDeviceIndex = outputDeviceIndex;// (outputDeviceIndex >= 0 && outputDeviceIndex < getDevicesCount()) ? outputDeviceIndex : paNoDevice;
     initPortAudio(sampleRate, bufferSize);
 }
 
@@ -68,9 +84,9 @@ void PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
     if(inputDeviceIndex != paNoDevice){
         int inputsCount = globalInputRange.getChannels();
         int maxInputs = getMaxInputs();
-        if(inputsCount > maxInputs || globalInputRange.getFirstChannel() >= maxInputs ){
-            //force input to mono
-            globalInputRange = ChannelRange( Pa_GetDeviceInfo(inputDeviceIndex)->defaultLowInputLatency, 1);
+        if(inputsCount > maxInputs || globalInputRange.getFirstChannel() >= maxInputs || inputsCount <= 0 ){
+            const PaDeviceInfo* deviceInfo = Pa_GetDeviceInfo(inputDeviceIndex);
+            globalInputRange = ChannelRange( deviceInfo->defaultLowInputLatency, std::min(maxInputs, 1));
         }
     }
 
@@ -78,8 +94,9 @@ void PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
     if(outputDeviceIndex != paNoDevice){
         int outputsCount = globalOutputRange.getChannels();
         int maxOutputs = getMaxOutputs();
-        if(outputsCount > maxOutputs || globalOutputRange.getFirstChannel() >= maxOutputs ){
-            globalOutputRange = ChannelRange(Pa_GetDeviceInfo(outputDeviceIndex)->defaultLowOutputLatency, 1);
+        if(outputsCount > maxOutputs || globalOutputRange.getFirstChannel() >= maxOutputs || outputsCount <= 0){
+            const PaDeviceInfo* info = Pa_GetDeviceInfo(outputDeviceIndex);
+            globalOutputRange = ChannelRange(info->defaultLowOutputLatency, std::min(2, info->maxOutputChannels));
         }
     }
 

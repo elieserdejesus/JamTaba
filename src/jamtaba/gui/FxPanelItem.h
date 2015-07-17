@@ -28,7 +28,7 @@ public:
     void unsetPlugin();
     inline bool containPlugin() const{ return plugin; }
     bool pluginIsBypassed();
-    //void setText(QString str){}
+    const Audio::Plugin* getAudioPlugin() const{return plugin;}
     Q_PROPERTY(bool pluginBypassed READ pluginIsBypassed())//to use in stylesheet
 //signals:
 //    void editingPlugin(Audio::Plugin* plugin);

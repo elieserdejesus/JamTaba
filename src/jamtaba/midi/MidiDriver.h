@@ -45,6 +45,8 @@ public:
     virtual void start() = 0;
     virtual void stop() = 0;
     virtual void release() = 0;
+
+    virtual bool hasInputDevices() const = 0;
     //virtual void initialize() = 0;
 
     virtual int getMaxInputDevices() const = 0;

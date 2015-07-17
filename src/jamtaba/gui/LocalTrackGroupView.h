@@ -26,7 +26,7 @@ public:
     QSize sizeHint() const;
     void updatePeaks();
     void refreshInputSelectionName(int inputTrackIndex);
-    //inline QList<LocalTrackView*> getTracks() const{return trackViews;}
+    inline QList<LocalTrackView*> getTracks() const{return trackViews;}
 
 protected:
     void paintEvent(QPaintEvent* );

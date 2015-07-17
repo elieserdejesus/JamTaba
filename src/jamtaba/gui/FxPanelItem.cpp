@@ -69,7 +69,7 @@ void FxPanelItem::setPlugin(Audio::Plugin* plugin){
     this->plugin = plugin;
     this->setText( plugin->getName());
     this->button->setVisible(true);
-    this->button->setChecked(true);
+    this->button->setChecked(!plugin->isBypassed());
 }
 
 void FxPanelItem::unsetPlugin(){
@@ -143,6 +143,7 @@ void FxPanelItem::on_fxMenuActionTriggered(QAction* action){
     //add a new plugin
     Audio::PluginDescriptor descriptor = Audio::PluginDescriptor::fromString( action->data().toString());
     Audio::Plugin* plugin = mainController->addPlugin(this->localTrackView->getInputIndex(), descriptor);
+
     this->localTrackView->addPlugin(plugin);
     showPluginGui(plugin);
 }
@@ -157,7 +158,7 @@ void FxPanelItem::on_actionMenuTriggered(QAction* a){
             unsetPlugin();//set this->plugin to nullptr
 
             if(plugin->hasEditorWindow()){
-                Audio::PluginWindow* window = plugin->getPluginEditor();
+                Audio::PluginWindow* window = plugin->getEditor();
                 if(window){
                     window->close();
                 }
@@ -170,7 +171,7 @@ void FxPanelItem::on_actionMenuTriggered(QAction* a){
 //++++++++++++++++++++++++++
 void FxPanelItem::showPluginGui(Audio::Plugin *plugin){
     if(plugin && plugin->hasEditorWindow()){
-        Audio::PluginWindow* window = plugin->getPluginEditor();
+        Audio::PluginWindow* window = plugin->getEditor();
 
         if(!window->isVisible()){
             window->show();//show to generate a window handle, VST plugins use this handle to draw plugin GUI

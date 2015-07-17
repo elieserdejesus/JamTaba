@@ -63,8 +63,9 @@ public:
     virtual void openEditor(QPoint centerOfScreen) = 0;
     virtual void start(int sampleRate, int bufferSize) = 0;
     void setEditor(PluginWindow* editorWindow);
+    PluginWindow* getEditor() const{return editorWindow;}
     inline bool hasEditorWindow() const{return editorWindow;}
-    PluginWindow* getPluginEditor() const{return editorWindow;}
+    virtual QString getPath() const = 0;
 protected:
     QString name;
     bool bypassed;
@@ -89,6 +90,7 @@ public:
     inline float getLevel() const{return level;}
     virtual void openEditor(QPoint centerOfScreen);
     virtual void start(int sampleRate, int bufferSize);
+    inline QString getPath() const{return "";}
 private:
     void setSampleRate(int newSampleRate);
 

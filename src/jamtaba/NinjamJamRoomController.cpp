@@ -8,7 +8,7 @@
 #include "audio/core/AudioNode.h"
 #include "../NinjamRoomWindow.h"
 #include "../audio/NinjamTrackNode.h"
-#include "../persistence/ConfigStore.h"
+#include "../persistence/Settings.h"
 #include <QMutexLocker>
 #include "../audio/MetronomeTrackNode.h"
 #include <cmath>
@@ -18,6 +18,7 @@
 #include <QThread>
 
 #include "audio/samplesbufferrecorder.h"
+#include "Utils.h"
 
 using namespace Controller;
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -62,8 +63,8 @@ void NinjamJamRoomController::start(const Ninjam::Server& server){
         //mainController->setTrackLevel(-5, 0.6);
 
         mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
-        mainController->setTrackLevel(METRONOME_TRACK_ID, Persistence::ConfigStore::getMetronomeGain());
-        mainController->setTrackPan(METRONOME_TRACK_ID, Persistence::ConfigStore::getMetronomePan());
+        mainController->setTrackLevel(METRONOME_TRACK_ID, mainController->getSettings().getMetronomeGain());
+        mainController->setTrackPan(METRONOME_TRACK_ID, mainController->getSettings().getMetronomePan());
 
         this->intervalPosition  = 0;
         this->running = true;
@@ -181,8 +182,9 @@ void NinjamJamRoomController::stop(){
         //store metronome settings
         Audio::AudioNode* metronomeTrack = mainController->getTrackNode(METRONOME_TRACK_ID);
         if(metronomeTrack){
-            float correctedGain = std::pow( metronomeTrack->getGain(), 1.0/4);//4th root - save the metronome gain in linear
-            Persistence::ConfigStore::storeMetronomeSettings(correctedGain, metronomeTrack->getPan());
+                                //  std::pow( metronomeTrack->getGain(), 1.0/4);//4th root - save the metronome gain in linear
+            float correctedGain = Utils::poweredGainToLinear(metronomeTrack->getGain());
+            mainController->storeMetronomeSettings(correctedGain, metronomeTrack->getPan());
             mainController->removeTrack(METRONOME_TRACK_ID);//remove metronome
         }
         //clear all tracks
@@ -390,6 +392,9 @@ void NinjamJamRoomController::recreateEncoders(){
 }
 
 void NinjamJamRoomController::on_audioDriverSampleRateChanged(int newSampleRate){
+    if(!isRunning()){
+        return;
+    }
     Q_UNUSED(newSampleRate);
     this->samplesInInterval = computeTotalSamplesInInterval();
 

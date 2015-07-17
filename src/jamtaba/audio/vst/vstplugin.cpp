@@ -33,6 +33,7 @@ VstPlugin::VstPlugin(VstHost* host)
 }
 
 bool VstPlugin::load(VstHost *host, QString path){
+    //qDebug() << "loading " << path;
     pluginLib.setFileName(path);
     effect = nullptr;
 
@@ -79,9 +80,8 @@ bool VstPlugin::load(VstHost *host, QString path){
     effect->dispatcher(effect, effGetEffectName, 0, 0, name, 0);
     this->name = QString(name);
 
-    if(effect->flags & effFlagsHasEditor ){
-        setEditor(new Audio::PluginWindow(this));
-    }
+
+    this->path = path;
 
     return true;
 }
@@ -202,7 +202,7 @@ void VstPlugin::openEditor(QPoint centerOfScreen){
     }
     int rectWidth = rect->right - rect->left;
     int rectHeight = rect->bottom - rect->top;
-    Audio::PluginWindow* w = getPluginEditor();
+    Audio::PluginWindow* w = getEditor();
     w->setFixedSize(rectWidth, rectHeight);
     effect->dispatcher(effect, effEditOpen, 0, 0, (void*)(w->effectiveWinId()), 0);
 

@@ -24,6 +24,7 @@ public:
     void addPlugin(Audio::Plugin* plugin);
     void removePlugin(Audio::Plugin* plugin);
     inline LocalTrackView* getLocalTrackView() const{return localTrackView;}
+    inline QList<FxPanelItem*> getItems() const{return items;}
 protected:
     void paintEvent(QPaintEvent* );
 private:
