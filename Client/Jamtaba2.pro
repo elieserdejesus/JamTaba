@@ -1,6 +1,5 @@
-#está bugando o FXPanelItem quando carrego um plugin bypassado
-
-#ver canais ninjam, eu mudei um monte de coisas
+#ver canais ninjam, eu mudei um monte de coisas, tirei a label do canal, etc.
+#Fazer o agrumento dos canais que são do mesmo user vai ficar show demais
 
 #mudança de nome nos canais ninjam está comentada
 
@@ -10,6 +9,8 @@
 #usuário entrar em um server que aceita menos canais do que ele tinha criado. Pegar
 #os subchannels dos canais adicionais e fazer um merge com o último canal válido. Por
 #exemplo, se o server aceita 2 canais e eu estou com 3 então ele vai fazer um merge 2+3
+#Na hora de salvar eu preciso saber que houve um merge e salvar os canais no modo original, assim o usuário não perde
+#suas configurações originais
 
 
 #implementar os subchannels
