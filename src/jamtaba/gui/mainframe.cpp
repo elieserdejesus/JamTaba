@@ -11,7 +11,7 @@
 #include "PreferencesDialog.h"
 #include "JamRoomViewPanel.h"
 #include "LocalTrackView.h"
-#include "LocalTrackGroupView.h"
+//#include "LocalTrackGroupView.h"
 #include "plugins/guis.h"
 #include "FxPanel.h"
 #include "pluginscandialog.h"
@@ -69,6 +69,7 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 Persistence::InputsSettings MainFrame::getInputsSettings() const{
     InputsSettings settings;
     foreach (LocalTrackGroupView* trackGroupView, localChannels) {
+        trackGroupView->getTracks();
         Persistence::Channel channel(trackGroupView->getGroupName());
         foreach (LocalTrackView* trackView, trackGroupView->getTracks()) {
             Audio::LocalInputAudioNode* inputNode = trackView->getInputNode();
@@ -117,7 +118,7 @@ void MainFrame::on_toolButtonMenuActionTriggered(QAction *action){
     if(action->data().isValid()){//only remove actions contains valid data (the channel index)
         int channelIndex = action->data().toInt();
         if(channelIndex >= 0 && channelIndex < localChannels.size()){
-            LocalTrackGroupView* channel = localChannels.at(channelIndex);
+            TrackGroupView* channel = localChannels.at(channelIndex);
             ui.localTracksLayout->removeWidget(channel);
             localChannels.removeAt(channelIndex);
             channel->deleteLater();
@@ -176,7 +177,7 @@ LocalTrackGroupView *MainFrame::addLocalChannel(QString channelName, bool create
     ui.localTracksLayout->addWidget(localChannel);
 
     if(createFirstSubchannel){
-        LocalTrackView* localTrackView = new LocalTrackView(localChannel, this->mainController);
+        LocalTrackView* localTrackView = new LocalTrackView(this->mainController);
         localChannel->addTrackView( localTrackView );
 
         if(localChannels.size() > 1){
@@ -194,7 +195,7 @@ void MainFrame::initializeLocalInputChannels(){
     foreach (Persistence::Channel channel, inputsSettings.channels) {
         LocalTrackGroupView* channelView = addLocalChannel(channel.name, channel.subChannels.isEmpty());
         foreach (Persistence::Subchannel subChannel, channel.subChannels) {
-            LocalTrackView* subChannelView = new LocalTrackView(channelView, mainController, subChannel.gain, subChannel.pan);
+            LocalTrackView* subChannelView = new LocalTrackView( mainController, subChannel.gain, subChannel.pan);
             channelView->addTrackView(subChannelView);
             if(subChannel.usingMidi){
                 mainController->setInputTrackToMIDI( subChannelView->getInputIndex(), subChannel.midiDevice);
@@ -370,7 +371,7 @@ void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
     //add metronome track view
     float metronomeInitialGain = mainController->getSettings().getMetronomeGain();
     float metronomeInitialPan = mainController->getSettings().getMetronomePan();
-    metronomeTrackView = new MetronomeTrackView(this, mainController, NinjamJamRoomController::METRONOME_TRACK_ID, metronomeInitialGain, metronomeInitialPan );
+    metronomeTrackView = new MetronomeTrackView(mainController, NinjamJamRoomController::METRONOME_TRACK_ID, metronomeInitialGain, metronomeInitialPan );
 
     ui.localTracksLayout->addWidget(metronomeTrackView);
 
@@ -406,15 +407,14 @@ void MainFrame::on_exitedFromRoom(bool normalDisconnection){
 void MainFrame::timerEvent(QTimerEvent *){
     //update local input track peaks
 
-    foreach (LocalTrackGroupView* channel, localChannels) {
+    foreach (TrackGroupView* channel, localChannels) {
         channel->updatePeaks();
     }
 
     //update metronome peaks
     if(mainController->isPlayingInNinjamRoom()){
         if(metronomeTrackView){
-            AudioPeak peaks = mainController->getTrackPeak(metronomeTrackView->getTrackID());
-            metronomeTrackView->setPeaks(peaks.getLeft(), peaks.getRight());
+            metronomeTrackView->updatePeaks();;
         }
 
         //update tracks peaks

@@ -8,7 +8,7 @@
 #include "ChatPanel.h"
 
 
-class NinjamTrackView;
+class NinjamTrackGroupView;
 
 
 namespace Ui {
@@ -35,7 +35,7 @@ public:
 private:
     Ui::NinjamRoomWindow *ui;
     Controller::MainController* mainController;
-    QList<NinjamTrackView*> tracks;
+    QMap<QString, NinjamTrackGroupView*> trackGroups;
     ChatPanel* chatPanel;
 
 private slots:

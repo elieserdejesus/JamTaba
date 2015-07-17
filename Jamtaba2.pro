@@ -1,9 +1,8 @@
-#ver canais ninjam, eu mudei um monte de coisas, tirei a label do canal, etc.
-#Fazer o agrumento dos canais que são do mesmo user vai ficar show demais
+#implementar os subchannels
+#por enquanto comentei o código do NinjamController que encodava, depois tenho que pensar em como vou encodar vários canais
+#no método que recria os encoders eu estou dando o migué e estou recriando apenas um
 
-#mudança de nome nos canais ninjam está comentada
-
-#drummix stereo abre, mas o drummix multi dá pau. Talvez a quantidade de canais esteja gerando problema.
+#implementar xmit
 
 #implementar a conversão de vários canais para um só. Isso será necessário quando o
 #usuário entrar em um server que aceita menos canais do que ele tinha criado. Pegar
@@ -12,15 +11,7 @@
 #Na hora de salvar eu preciso saber que houve um merge e salvar os canais no modo original, assim o usuário não perde
 #suas configurações originais
 
-
-#implementar os subchannels
-#por enquanto comentei o código do NinjamController que encodava, depois tenho que pensar em como vou encodar vários canais
-#no método que recria os encoders eu estou dando o migué e estou recriando apenas um
-
-
-
-#implementar xmit
-
+#drummix stereo abre, mas o drummix multi dá pau. Talvez a quantidade de canais esteja gerando problema.
 
 #se adiciono um plugin e fecho dá pau
 
@@ -32,10 +23,15 @@
 
 #nome do plugin bypassado aparece embaixo do botãode bypass, problema no layout?
 
+#tenho dúvida se os ID dos canais ninjam não ficar bagunçados quando tiver mais usuários na sala
+#testei em uma sala com 2 players (3 canais) estava ok, inclusive o agrupemento fechou 100%
+
 
 #dar feedback quando o usuário escolher noInput. Deixar a pista esmaecida seria legal.
 #Usar setEnabled não funcionou porque desabilita inclusive o combo de selação, o que
 #impossibilita que o usuário volte a deixar a pista ativa.
+
+#nomes grandes estragam os nome dos canais nas entradas, os nomes dos canais ninjam, etc. Uma AutoElidedQLabel seria legal.
 
 
 #também preciso tratar a situação onde o usuário está usando midi como entrada e o driver midi é alterado nas preferencias
@@ -233,12 +229,12 @@ HEADERS += \
     src/jamtaba/gui/ChatMessagePanel.h \
     src/jamtaba/audio/SamplesBufferResampler.h \
     src/jamtaba/audio/samplesbufferrecorder.h \
-    src/jamtaba/gui/TrackIOPanel.h \
     src/jamtaba/audio/vorbis/VorbisEncoder.h \
-    src/jamtaba/gui/LocalTrackGroupView.h \
     src/jamtaba/gui/Highligther.h \
     src/jamtaba/persistence/Settings.h \
-    src/jamtaba/Utils.h
+    src/jamtaba/Utils.h \
+    src/jamtaba/gui/TrackGroupView.h \
+    src/jamtaba/gui/LocalTrackGroupView.h
 
 
 SOURCES += \
@@ -302,11 +298,11 @@ SOURCES += \
     src/jamtaba/gui/ChatMessagePanel.cpp \
     src/jamtaba/audio/SamplesBufferResampler.cpp \
     src/jamtaba/audio/samplesbufferrecorder.cpp \
-    src/jamtaba/gui/TrackIoPanel.cpp \
     src/jamtaba/audio/vorbis/VorbisEncoder.cpp \
-    src/jamtaba/gui/LocalTrackGroupView.cpp \
     src/jamtaba/gui/Highligther.cpp \
-    src/jamtaba/persistence/Settings.cpp
+    src/jamtaba/persistence/Settings.cpp \
+    src/jamtaba/gui/TrackGroupView.cpp \
+    src/jamtaba/gui/LocalTrackGroupView.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
@@ -319,8 +315,7 @@ FORMS += \
     src/jamtaba/gui/BusyDialog.ui \
     src/jamtaba/gui/ChatPanel.ui \
     src/jamtaba/gui/ChatMessagePanel.ui \
-    src/jamtaba/gui/TrackIOPanel.ui \
-    src/jamtaba/gui/LocalTrackGroupView.ui
+    src/jamtaba/gui/TrackGroupView.ui
 
 
 #macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \

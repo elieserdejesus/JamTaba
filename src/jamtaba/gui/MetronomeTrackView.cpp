@@ -3,8 +3,8 @@
 #include "../MainController.h"
 #include "../NinjamJamRoomController.h"
 
-MetronomeTrackView::MetronomeTrackView(QWidget *parent, Controller::MainController *mainController, long metronomeID, float initialGain, float initialPan)
-    :BaseTrackView(parent, mainController, metronomeID)
+MetronomeTrackView::MetronomeTrackView(Controller::MainController *mainController, long metronomeID, float initialGain, float initialPan)
+    :BaseTrackView( mainController, metronomeID)
 {
     //ui->channelName->setVisible(false);
     //ui->trackName->setTextFormat(Qt::RichText);

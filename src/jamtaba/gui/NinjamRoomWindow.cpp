@@ -16,6 +16,8 @@
 #include "../MainController.h"
 #include "../ninjam/Service.h"
 
+#include <cassert>
+
 #include "NinjamPanel.h"
 #include "ChatPanel.h"
 
@@ -81,48 +83,63 @@ void NinjamRoomWindow::on_chatMessageReceived(Ninjam::User user, QString message
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::updatePeaks(){
-    foreach (NinjamTrackView* view, tracks) {
+    foreach (NinjamTrackGroupView* view, trackGroups) {
         if(view){
-            Audio::AudioPeak peak = mainController->getTrackPeak(view->getTrackID());
-            view->setPeaks(peak.getLeft(), peak.getRight());
+            view->updatePeaks();
         }
     }
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::on_channelXmitChanged(long channelID, bool transmiting){
-    NinjamTrackView* trackView = dynamic_cast<NinjamTrackView*>(NinjamTrackView::getTrackViewByID(channelID));
+    BaseTrackView* trackView = NinjamTrackView::getTrackViewByID(channelID);
     if(trackView){
         trackView->setEnabled(transmiting);
     }
-
 }
 
-void NinjamRoomWindow::on_channelRemoved(Ninjam::User, Ninjam::UserChannel /*channel*/, long channelID){
-    BaseTrackView* trackView = NinjamTrackView::getTrackViewByID(channelID);
-    if(trackView){
-        ui->tracksPanel->layout()->removeWidget(trackView);
-        tracks.removeOne(dynamic_cast<NinjamTrackView*>(trackView));
-        trackView->deleteLater();
+void NinjamRoomWindow::on_channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID){
+    Q_UNUSED(channel);
+
+    NinjamTrackGroupView* group = trackGroups[user.getFullName()];
+    if(group){
+        if(group->getTracksCount() == 1){//removing the last track, the group is removed too
+            trackGroups.remove(user.getFullName());
+            ui->tracksPanel->layout()->removeWidget(group);
+            group->deleteLater();
+        }
+        else{//remove one subchannel
+            BaseTrackView* trackView = BaseTrackView::getTrackViewByID(channelID);
+            if(trackView){
+                group->removeTrackView(trackView);
+            }
+        }
     }
 }
 
 void NinjamRoomWindow::on_channelNameChanged(Ninjam::User, Ninjam::UserChannel channel, long channelID){
-    NinjamTrackView* trackView = static_cast<NinjamTrackView*>(NinjamTrackView::getTrackViewByID(channelID));
+    Q_UNUSED(channel);
+    NinjamTrackView* trackView = dynamic_cast<NinjamTrackView*>(NinjamTrackView::getTrackViewByID(channelID));
     if(trackView){
-        //trackView->setChannelName(channel.getName());
+        trackView->setChannelName(channel.getName());
     }
 }
 
 void NinjamRoomWindow::on_channelAdded(Ninjam::User user, Ninjam::UserChannel channel, long channelID){
-    QString userName = user.getName();
-    QString channelName = channel.getName();
-    Geo::Location userLocation = mainController->getLocation(user.getIp());
-    QString countryName = userLocation.getCountryName();
-    QString countryCode = userLocation.getCountryCode().toLower();
-    NinjamTrackView* trackView = new NinjamTrackView(ui->tracksPanel, this->mainController, channelID, userName, channelName, countryName, countryCode );
-    ui->tracksPanel->layout()->addWidget(trackView);
-    tracks.append(trackView);
+    if(!trackGroups.contains(user.getFullName())){//first channel from this user?
+        QString userName = user.getName();
+        QString channelName = channel.getName();
+        Geo::Location userGeoLocation = mainController->getGeoLocation(user.getIp());
+        QString countryName = userGeoLocation.getCountryName();
+        QString countryCode = userGeoLocation.getCountryCode().toLower();
+        NinjamTrackGroupView* trackView = new NinjamTrackGroupView(ui->tracksPanel, this->mainController, channelID, userName, channelName, countryName, countryCode );
+        ui->tracksPanel->layout()->addWidget(trackView);
+        trackGroups.insert(user.getFullName(), trackView);
+    }
+    else{//the second, or third channel from same user, group with other channels
+        NinjamTrackGroupView* trackView = trackGroups[user.getFullName()];
+        trackView->addTrackView(new NinjamTrackView(mainController, channelID, channel.getName()));
+    }
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

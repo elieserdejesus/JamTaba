@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LocalTrackGroupView</class>
- <widget class="QWidget" name="LocalTrackGroupView">
+ <class>TrackGroupView</class>
+ <widget class="QWidget" name="TrackGroupView">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -19,7 +19,10 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <property name="leftMargin">
     <number>1</number>
    </property>
@@ -32,12 +35,12 @@
    <property name="bottomMargin">
     <number>1</number>
    </property>
-   <property name="spacing">
-    <number>0</number>
-   </property>
-   <item row="1" column="0" colspan="2">
+   <item>
     <widget class="QWidget" name="topPanel" native="true">
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>3</number>
+      </property>
       <property name="leftMargin">
        <number>3</number>
       </property>
@@ -50,30 +53,17 @@
       <property name="bottomMargin">
        <number>3</number>
       </property>
-      <property name="spacing">
-       <number>3</number>
-      </property>
-      <item row="0" column="1">
+      <item>
        <widget class="QLineEdit" name="groupNameField">
         <property name="text">
          <string>...</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <widget class="QPushButton" name="toolButton">
-        <property name="toolTip">
-         <string>add or remove sub channels ...</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
-   <item row="2" column="0" colspan="2">
+   <item>
     <widget class="QWidget" name="tracksPanel" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">

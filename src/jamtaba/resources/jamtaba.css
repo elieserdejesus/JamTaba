@@ -437,36 +437,30 @@ BaseTrackView .QPushButton:hover:checked#muteButton {
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 110, 122), stop:1 rgb(120, 0, 0));
 color: white;
 }
-/* LOCAL TRACK GROUP */
 
-LocalTrackGroupView {
+/* TRACK GROUPs */
+
+TrackGroupView {
     border: none;
     background-color: none;
-
 }
 
-LocalTrackGroupView[highlighted="true"] {
-    border: 1px solid white;
-    border-radius: 3px;
-}
-
-LocalTrackGroupView > #topPanel{
+TrackGroupView > #topPanel{
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), stop:1 rgb(100, 100, 100));
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
 }
 
-
-MainFrame  #userNameLabel {
-    color: rgb(0, 0, 0);
-    font-weight: bold;
-    margin-top:5px;
-    text-align: center;
-}
-
-LocalTrackGroupView   #groupNameField {
+TrackGroupView #groupNameField {
     margin-bottom: 10px;
     margin-top: 10px;
+}
+
+
+/* LOCAL TRACK GROUP */
+LocalTrackGroupView[highlighted="true"] {
+    border: 1px solid white;
+    border-radius: 3px;
 }
 
 LocalTrackGroupView  #toolButton, #leftPanel > #toolButton {
@@ -491,7 +485,7 @@ background-color: rgb(180, 180, 180);
 }
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++*/
-LocalTrackView{
+LocalTrackView, NinjamTrackView{
     border: none;
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
@@ -525,6 +519,19 @@ LocalTrackView #inputSelectionButton{
 /*+++++++++++++++++++++++++++++++++++++++++++++++*/
 
 /* NINJAM */
+
+NinjamTrackView > .QLabel#channelName{
+    border: none;
+    qproperty-alignment: AlignCenter;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgba(0, 0, 0, 50), stop:1 rgba(0, 0, 0, 90));
+    border-radius: 2px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-size: 8pt;
+    color: rgba(0,0,0, 180);
+}
+
+
 NinjamPanel{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(253, 253, 253), stop:1 rgb(193, 193, 193));
     border-radius: 3px;
