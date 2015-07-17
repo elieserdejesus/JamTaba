@@ -52,11 +52,7 @@ bool FxPanelItem::pluginIsBypassed(){
 void FxPanelItem::on_buttonClicked() {
     if(plugin){
         this->plugin->setBypass(!this->button->isChecked());
-
-        //update style sheet
-        style()->unpolish(this);
-        style()->polish(this);
-        update();
+        updateStyleSheet();
     }
 }
 
@@ -65,11 +61,18 @@ FxPanelItem::~FxPanelItem()
 
 }
 
+void FxPanelItem::updateStyleSheet(){
+    style()->unpolish(this);
+    style()->polish(this);
+    update();
+}
+
 void FxPanelItem::setPlugin(Audio::Plugin* plugin){
     this->plugin = plugin;
     this->setText( plugin->getName());
     this->button->setVisible(true);
     this->button->setChecked(!plugin->isBypassed());
+    updateStyleSheet();
 }
 
 void FxPanelItem::unsetPlugin(){
@@ -77,10 +80,7 @@ void FxPanelItem::unsetPlugin(){
     this->setText("");
     this->button->setVisible(false);
 
-    //update style sheet
-    style()->unpolish(this);
-    style()->polish(this);
-    update();
+    updateStyleSheet();
 }
 
 void FxPanelItem::paintEvent(QPaintEvent* ev){

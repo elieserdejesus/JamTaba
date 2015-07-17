@@ -53,6 +53,8 @@ private:
     static const QString NEW_EFFECT_STRING;
 
     LocalTrackView* localTrackView;
+
+    void updateStyleSheet();
 };
 
 #endif // FXPANELITEM_H
