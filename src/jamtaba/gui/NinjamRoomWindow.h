@@ -17,7 +17,7 @@ namespace Ui {
 }
 
 namespace Controller {
-    class NinjamJamRoomController;
+    class NinjamController;
     class MainController;
 }
 

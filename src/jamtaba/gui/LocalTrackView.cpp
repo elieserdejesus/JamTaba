@@ -16,19 +16,19 @@ const QString LocalTrackView::MONO_ICON = ":/images/input_mono.png";
 const QString LocalTrackView::STEREO_ICON = ":/images/input_stereo.png";
 const QString LocalTrackView::NO_INPUT_ICON= ":/images/input_no.png";
 
-LocalTrackView::LocalTrackView(Controller::MainController *mainController, float initialGain, float initialPan)
+LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex, float initialGain, float initialPan)
     :BaseTrackView( mainController, 1), fxPanel(nullptr), inputNode(nullptr)
 {
-    init(initialGain, initialPan);
+    init(channelIndex, initialGain, initialPan);
 }
 
-LocalTrackView::LocalTrackView(Controller::MainController *mainController)
+LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex)
     :BaseTrackView(mainController, 1), fxPanel(nullptr), inputNode(nullptr)
 {
-    init(1, 0);//unit gain and pan in center
+    init(channelIndex, 1, 0);//unit gain and pan in center
 }
 
-void LocalTrackView::init(float initialGain, float initialPan){
+void LocalTrackView::init(int channelIndex, float initialGain, float initialPan){
     //add separator before effects panel
     ui->mainLayout->addSpacing(20);
     fxPanel = createFxPanel();
@@ -39,7 +39,7 @@ void LocalTrackView::init(float initialGain, float initialPan){
     ui->mainLayout->addWidget(createInputPanel());
 
     //insert a input node in controller
-    this->inputNode = new Audio::LocalInputAudioNode();
+    this->inputNode = new Audio::LocalInputAudioNode(channelIndex);
     this->trackID = mainController->addInputTrackNode(this->inputNode);
 
     ui->levelSlider->setValue( 100 * initialGain );

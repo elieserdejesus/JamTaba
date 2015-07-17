@@ -136,8 +136,9 @@ private:
     //use the channels 2 and 3 (the second input pair in a multichannel audio interface)
 
     int midiDeviceIndex; //setted when user choose MIDI as input method
+    int channelIndex; //the group index (a group contain N LocalInputAudioNode instances)
 public:
-    LocalInputAudioNode(bool isMono=true);
+    LocalInputAudioNode(int parentChannelIndex, bool isMono=true);
     virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
     virtual int getSampleRate() const{return 0;}
     inline int getChannels() const{return audioInputRange.getChannels();}
@@ -151,7 +152,7 @@ public:
     inline int getMidiDeviceIndex() const{return midiDeviceIndex;}
     inline ChannelRange getAudioInputRange() const{return audioInputRange;}
     inline void setGlobalFirstInputIndex(int firstInputIndex){this->globalFirstInputIndex = firstInputIndex;}
-
+    inline int getGroupChannelIndex() const {return channelIndex;}
     const Audio::SamplesBuffer& getLastBuffer() const{return internalBuffer;}
 };
 //++++++++++++++++++++++++

@@ -1,8 +1,10 @@
-#implementar os subchannels
-#por enquanto comentei o código do NinjamController que encodava, depois tenho que pensar em como vou encodar vários canais
-#no método que recria os encoders eu estou dando o migué e estou recriando apenas um
+#2 - implementar envio de mais de um canal, mixando os subchannels como no item anterior
 
 #implementar xmit
+
+#como mudar a quantidade de canais do encoder quando o usuário mudar a quantidade de entradas dos canais?
+
+#leak - quando deletar um encode do map de encoders? Como saber lá no NinjamController que o usuário está com um canal a menos?
 
 #implementar a conversão de vários canais para um só. Isso será necessário quando o
 #usuário entrar em um server que aceita menos canais do que ele tinha criado. Pegar
@@ -217,7 +219,6 @@ HEADERS += \
     src/jamtaba/gui/NinjamPanel.h \
     src/jamtaba/gui/FancyProgressDisplay.h \
     src/jamtaba/audio/Resampler.h \
-    src/jamtaba/NinjamJamRoomController.h \
     src/jamtaba/gui/MetronomeTrackView.h \
     src/jamtaba/audio/vorbis/VorbisDecoder.h \
     src/jamtaba/ninjam/UserChannel.h \
@@ -234,7 +235,8 @@ HEADERS += \
     src/jamtaba/persistence/Settings.h \
     src/jamtaba/Utils.h \
     src/jamtaba/gui/TrackGroupView.h \
-    src/jamtaba/gui/LocalTrackGroupView.h
+    src/jamtaba/gui/LocalTrackGroupView.h \
+    src/jamtaba/NinjamController.h
 
 
 SOURCES += \
@@ -286,7 +288,6 @@ SOURCES += \
     src/jamtaba/gui/NinjamPanel.cpp \
     src/jamtaba/gui/FancyProgressDisplay.cpp \
     src/jamtaba/audio/Resampler.cpp \
-    src/jamtaba/NinjamJamRoomController.cpp \
     src/jamtaba/gui/MetronomeTrackView.cpp \
     src/jamtaba/audio/vorbis/VorbisDecoder.cpp \
     src/jamtaba/ninjam/UserChannel.cpp \
@@ -302,7 +303,8 @@ SOURCES += \
     src/jamtaba/gui/Highligther.cpp \
     src/jamtaba/persistence/Settings.cpp \
     src/jamtaba/gui/TrackGroupView.cpp \
-    src/jamtaba/gui/LocalTrackGroupView.cpp
+    src/jamtaba/gui/LocalTrackGroupView.cpp \
+    src/jamtaba/NinjamController.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \

@@ -215,8 +215,8 @@ void OscillatorAudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out
     */
 }
 //++++++++++++++++++++++++++++++++++++++++++++++
-LocalInputAudioNode::LocalInputAudioNode(bool isMono)
-    :globalFirstInputIndex(0)
+LocalInputAudioNode::LocalInputAudioNode(int parentChannelIndex, bool isMono)
+    :channelIndex(parentChannelIndex),  globalFirstInputIndex(0)
 {
     setAudioInputSelection(0, isMono ? 1 : 2);
 }

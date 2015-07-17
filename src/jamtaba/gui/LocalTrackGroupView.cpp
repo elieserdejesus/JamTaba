@@ -8,7 +8,9 @@
 #include <QPushButton>
 #include <QMenu>
 
-LocalTrackGroupView::LocalTrackGroupView(){
+LocalTrackGroupView::LocalTrackGroupView(int index)
+    :index(index)
+{
     toolButton = new QPushButton();
     toolButton->setObjectName("toolButton");
     toolButton->setText("");
@@ -60,9 +62,11 @@ void LocalTrackGroupView::on_toolButtonClicked()
 }
 
 void LocalTrackGroupView::onAddSubChannelClicked(){
-    LocalTrackView* trackView = new LocalTrackView(trackViews.at(0)->getMainController());
-    addTrackView(trackView);
-    trackView->getMainController()->setInputTrackToNoInput(trackView->getInputIndex());
+    if(!trackViews.isEmpty()){
+        LocalTrackView* trackView = new LocalTrackView( trackViews.at(0)->getMainController(), getIndex());
+        addTrackView(trackView);
+        trackView->getMainController()->setInputTrackToNoInput(trackView->getInputIndex());
+    }
 }
 
 void LocalTrackGroupView::addTrackView(BaseTrackView *trackView){

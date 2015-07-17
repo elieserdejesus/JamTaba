@@ -12,7 +12,7 @@
 #include "../audio/MetronomeTrackNode.h"
 #include "../audio/core/AudioDriver.h"
 
-#include "../NinjamJamRoomController.h"
+#include "../NinjamController.h"
 #include "../MainController.h"
 #include "../ninjam/Service.h"
 
@@ -43,7 +43,7 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Co
 
     ui->tracksPanel->layout()->setAlignment(Qt::AlignLeft);//tracks are left aligned
 
-    Controller::NinjamJamRoomController* ninjamController = mainController->getNinjamController();
+    Controller::NinjamController* ninjamController = mainController->getNinjamController();
     QObject::connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(on_bpiChanged(int)));
     QObject::connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(on_bpmChanged(int)));
     QObject::connect(ninjamController, SIGNAL(intervalBeatChanged(int)), this, SLOT(on_intervalBeatChanged(int)));
@@ -190,7 +190,7 @@ void NinjamRoomWindow::ninjamBpmComboChanged(QString newText){
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NinjamRoomWindow::~NinjamRoomWindow(){
-    Controller::NinjamJamRoomController* ninjamController = mainController->getNinjamController();
+    Controller::NinjamController* ninjamController = mainController->getNinjamController();
     if(ninjamController){
         QObject::disconnect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(on_bpiChanged(int)));
         QObject::disconnect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(on_bpmChanged(int)));

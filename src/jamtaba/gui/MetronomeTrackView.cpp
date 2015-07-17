@@ -1,7 +1,7 @@
 #include "MetronomeTrackView.h"
 #include "ui_BaseTrackView.h"
 #include "../MainController.h"
-#include "../NinjamJamRoomController.h"
+#include "../NinjamController.h"
 
 MetronomeTrackView::MetronomeTrackView(Controller::MainController *mainController, long metronomeID, float initialGain, float initialPan)
     :BaseTrackView( mainController, metronomeID)

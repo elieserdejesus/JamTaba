@@ -55,7 +55,7 @@ class JamtabaFactory;
 namespace Controller {
 
 class AudioListener;
-class NinjamJamRoomController;
+class NinjamController;
 
 
 
@@ -65,7 +65,7 @@ class MainController : public QApplication, public Audio::AudioDriverListener
     Q_OBJECT
 
     friend class Controller::AudioListener;
-    friend class Controller::NinjamJamRoomController;
+    friend class Controller::NinjamController;
 
 public:
     MainController(JamtabaFactory *factory, Persistence::Settings settings, int& argc, char** argv);
@@ -96,7 +96,7 @@ public:
     Login::LoginService* getLoginService() const;
 
 
-    inline Controller::NinjamJamRoomController* getNinjamController() const{return ninjamController;}
+    inline Controller::NinjamController* getNinjamController() const{return ninjamController;}
 
     QList<Audio::PluginDescriptor> getPluginsDescriptors();
 
@@ -136,7 +136,8 @@ public:
     Audio::LocalInputAudioNode* getInputTrack(int localInputIndex);
     int addInputTrackNode(Audio::LocalInputAudioNode* inputTrackNode);
     void removeInputTrackNode(int inputTrackIndex);
-    QList<Audio::LocalInputAudioNode*> inputTracks;
+
+    inline int getInputTracksCount() const{return inputTracks.size();}
 
     inline int getAudioDriverSampleRate() const{return audioDriver->getSampleRate();}
 
@@ -177,9 +178,11 @@ private:
     Audio::AbstractMp3Streamer* roomStreamer;
     long long currentStreamingRoomID;
 
+    QList<Audio::LocalInputAudioNode*> inputTracks;
+
     //ninjam
     Ninjam::Service* ninjamService;
-    Controller::NinjamJamRoomController* ninjamController;
+    Controller::NinjamController* ninjamController;
 
     QMap<long, Audio::AudioNode*> tracksNodes;
     mutable QMutex mutex;

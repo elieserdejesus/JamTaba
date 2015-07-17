@@ -24,13 +24,13 @@ namespace Controller {
 class MainController;
 
 
-class NinjamJamRoomController : public QObject
+class NinjamController : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit NinjamJamRoomController(Controller::MainController* mainController);
-    ~NinjamJamRoomController();
+    explicit NinjamController(Controller::MainController* mainController);
+    ~NinjamController();
     void process(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
     void start(const Ninjam::Server& server);
     void stop();
@@ -45,6 +45,7 @@ public:
 
     static const long METRONOME_TRACK_ID = 123456789; //just a number :)
 
+    void recreateEncoderForChannel(int channelIndex);
     void recreateEncoders();
 
 signals:
@@ -65,10 +66,9 @@ private:
     Audio::MetronomeTrackNode* metronomeTrackNode;
 
 
-    QMap<QString, NinjamTrackNode*> trackNodes;
+    QMap<QString, NinjamTrackNode*> trackNodes;//the other users channels
 
     static QString getUniqueKey(Ninjam::UserChannel channel);
-
 
     //SamplesBufferRecorder recorder;
 
@@ -82,7 +82,7 @@ private:
     long intervalPosition;
     long samplesInInterval;
 
-    int newBpi;
+    int newBpi;//used to schedule a change in bpi
     int newBpm;
     int currentBpi;
     int currentBpm;
@@ -98,10 +98,11 @@ private:
     static long generateNewTrackID();
 
     static Audio::MetronomeTrackNode* createMetronomeTrackNode(int sampleRate);
-    VorbisEncoder* encoder;
+
+    QMap<int, VorbisEncoder*> encoders;
     VorbisEncoder* getEncoder(quint8 channelIndex);
 
-
+    void handleNewInterval();
 
 private slots:
     //ninjam events
