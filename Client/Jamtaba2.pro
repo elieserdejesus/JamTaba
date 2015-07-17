@@ -30,8 +30,8 @@
 #o botão clear cache não dá nenhum feedback. Seria legal mostrar a lista de plugins
 #que estão na cache e depois limpar essa lista
 
+#nome do plugin bypassado aparece embaixo do botãode bypass, problema no layout?
 
-#Preciso persistir os plugins que foram insertados no canal, essa é a melhor feature do mundo
 
 #dar feedback quando o usuário escolher noInput. Deixar a pista esmaecida seria legal.
 #Usar setEnabled não funcionou porque desabilita inclusive o combo de selação, o que
