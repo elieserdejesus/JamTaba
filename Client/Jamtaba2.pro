@@ -1,4 +1,25 @@
-# 3 - tratar o encoding do segundo canal, acho que já está encaminhado
+
+#deu pau quando troquei as entradas, deu pau no destrutor do encoder
+
+#comentei o código no destrutor do Encoder porque estava crashando.
+#mesmo comentando o código do destrutor do encoder ainda está crashando
+
+#agendar a criação de um encoder para os novos canais (acho que já fiz)
+
+#como vou fazer com a troca de sample rate? Recrio todos os encoders na hora ou agendo? Eu vi que seu limpara o mapa de encoders
+    # a transmissão vai parar, só tenho que sincronizar as threads
+
+
+#deu pau em duas situações: quando troquei as entradas e quando fechei
+
+
+
+#notei que usando noInput o metronomo ficou normal, mas quando selecionei entrada estereo
+    #o metronomo perdeu as primeiras amostras do tempo 1 do intervalo. O encoding está engasgando a thread do áudio?
+
+# 4 voltou a dar o estalo no início da transmissão. Problema no tamanho dos chunks? Enviar chunks maiores
+
+# 4 - deixei o código enviando cada pedacinho de áudio encodado. Melhorar isso enviando chunks maiores
 
 # 4 - Tratar a restrição da quantidade de canais de acordo com a restrição do servidor
     #a - não pode criar mais canais do que o servidor permite.

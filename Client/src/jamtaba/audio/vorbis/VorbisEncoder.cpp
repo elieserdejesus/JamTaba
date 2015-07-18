@@ -1,6 +1,7 @@
 #include "VorbisEncoder.h"
 #include <QDebug>
 #include <ctime>
+#include <QThread>
 
 VorbisEncoder::VorbisEncoder()
     :initialized(false)
@@ -18,6 +19,7 @@ VorbisEncoder::VorbisEncoder(int channels, int sampleRate):
 
 void VorbisEncoder::init(int channels, int sampleRate){
     //vorbis init
+    //qDebug() << "Encoder init Thread:" << QThread::currentThreadId();
     vorbis_info_init(&info);
 
     if(vorbis_encode_init_vbr(&info, (long) channels, (long) sampleRate, 0.4) != 0){
@@ -31,12 +33,13 @@ void VorbisEncoder::init(int channels, int sampleRate){
 
 //++++++++++++++++++++++++++++++++++++++++++
 VorbisEncoder::~VorbisEncoder() {
+    //qDebug() << "ENCODER DESTRUCTOR! Thread:" <<  QThread::currentThreadId();;
     ogg_stream_clear(&streamState);
     vorbis_block_clear(&block);
     vorbis_dsp_clear(&dspState);
     vorbis_comment_clear(&comment);
     vorbis_info_clear(&info);
-    qDebug() << "ENCODER DESTRUCTOR!";
+
 }
 //++++++++++++++++++++++++++++++++++++++++++
 void VorbisEncoder::initializeVorbis() {
@@ -71,6 +74,7 @@ void VorbisEncoder::initializeVorbis() {
 }
 //++++++++++++++++++++++++++++++++++++++++++
 QByteArray VorbisEncoder::encode(const Audio::SamplesBuffer& samples) {
+    //qDebug() << "Encoder::encode() Thread:" << QThread::currentThreadId();
     if (!initialized) {
         initializeVorbis();
     }

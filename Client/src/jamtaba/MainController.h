@@ -58,7 +58,6 @@ class AudioListener;
 class NinjamController;
 
 
-
 //++++++++++++++++++++++++++++
 class MainController : public QApplication, public Audio::AudioDriverListener
 {
@@ -140,7 +139,9 @@ public:
     int addInputTrackNode(Audio::LocalInputAudioNode* inputTrackNode);
     void removeInputTrackNode(int inputTrackIndex);
 
+    //return the individual tracks (subchannels) count
     inline int getInputTracksCount() const{return inputTracks.size();}
+    int getInputTrackGroupsCount() const{return trackGroups.size();} //return the track groups (channels) count
 
     inline int getAudioDriverSampleRate() const{return audioDriver->getSampleRate();}
 
@@ -183,6 +184,9 @@ private:
 
     QList<Audio::LocalInputAudioNode*> inputTracks;
 
+    class InputTrackGroup;
+    QMap<int, InputTrackGroup*> trackGroups;
+
     //ninjam
     Ninjam::Service* ninjamService;
     Controller::NinjamController* ninjamController;
@@ -203,9 +207,11 @@ private:
 
     Geo::IpToLocationResolver ipToLocationResolver;
 
-    QByteArray currentGUID;
+    QMap<int, QByteArray> currentGUIDs;//map the input channel indexes to a GUID (used to upload audio to ninjam server)
 
     Persistence::Settings settings;
+
+
 
 private slots:
     //Login server

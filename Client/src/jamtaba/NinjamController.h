@@ -23,6 +23,7 @@ namespace Controller {
 
 class MainController;
 
+//++++++++++++++++++++++++++
 
 class NinjamController : public QObject
 {
@@ -45,8 +46,8 @@ public:
 
     static const long METRONOME_TRACK_ID = 123456789; //just a number :)
 
-    void recreateEncoderForChannel(int channelIndex);
     void recreateEncoders();
+    void scheduleEncoderChangeForChannel(int channelIndex);
 
 signals:
     void currentBpiChanged(int newBpi);
@@ -82,8 +83,8 @@ private:
     long intervalPosition;
     long samplesInInterval;
 
-    int newBpi;//used to schedule a change in bpi
-    int newBpm;
+    //int newBpi;//used to schedule a change in bpi
+    //int newBpm;
     int currentBpi;
     int currentBpm;
 
@@ -93,7 +94,7 @@ private:
     long getSamplesPerBeat();
 
     void processScheduledChanges();
-    inline bool hasScheduledChanges() const{return newBpi > 0 || newBpm > 0;}
+    inline bool hasScheduledChanges() const{return !scheduledEvents.isEmpty();}
 
     static long generateNewTrackID();
 
@@ -103,6 +104,15 @@ private:
     VorbisEncoder* getEncoder(quint8 channelIndex);
 
     void handleNewInterval();
+    void recreateEncoderForChannel(int channelIndex);
+
+    //++++++++++++++++++++ nested classes to handle scheduled events +++++++++++++++++
+    class SchedulableEvent;//the interface for all events
+    class BpiChangeEvent;
+    class BpiChangeEvent;
+    class BpmChangeEvent;
+    class InputChannelChangedEvent;//user change the channel input selection from mono to stereo or vice-versa, or user added a new channel, both cases requires a new encoder in next interval
+    QList<SchedulableEvent*> scheduledEvents;
 
 private slots:
     //ninjam events
