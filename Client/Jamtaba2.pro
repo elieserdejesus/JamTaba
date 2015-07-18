@@ -1,16 +1,8 @@
 
-#deu pau quando troquei as entradas, deu pau no destrutor do encoder
-
-#comentei o código no destrutor do Encoder porque estava crashando.
-#mesmo comentando o código do destrutor do encoder ainda está crashando
-
-#agendar a criação de um encoder para os novos canais (acho que já fiz)
+#melhorar o código que está fazendo a mix dos subcanais
 
 #como vou fazer com a troca de sample rate? Recrio todos os encoders na hora ou agendo? Eu vi que seu limpara o mapa de encoders
     # a transmissão vai parar, só tenho que sincronizar as threads
-
-
-#deu pau em duas situações: quando troquei as entradas e quando fechei
 
 
 

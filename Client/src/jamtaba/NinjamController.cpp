@@ -287,9 +287,6 @@ void NinjamController::handleNewInterval(){
 void NinjamController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
     deleteDeactivatedTracks();
 
-    //QMutexLocker locker(&mutex);
-    //qDebug()<< "ninjamController process";
-
     int totalSamplesToProcess = out.getFrameLenght();
     int samplesProcessed = 0;
     static int lastBeat = 0;
@@ -487,10 +484,10 @@ void NinjamController::scheduleEncoderChangeForChannel(int channelIndex){
 }
 
 void NinjamController::recreateEncoderForChannel(int channelIndex){
-    qDebug() << "recreating encoder for channel index" << channelIndex;
+
     QMutexLocker locker(&mutex);
     int inputsCount = mainController->getInputTracksCount();
-    int maxChannelsFounded = 1;//at least a mono channel
+    int maxChannelsFounded = 0;//at least a mono channel
     for (int i = 0; i < inputsCount; ++i) {
         Audio::LocalInputAudioNode* inputTrack = mainController->getInputTrack(i);
         if(inputTrack && inputTrack->getGroupChannelIndex() == channelIndex){
@@ -502,10 +499,13 @@ void NinjamController::recreateEncoderForChannel(int channelIndex){
             }
         }
     }
-
+    if(maxChannelsFounded <= 0){//input tracks are setted as noInput
+        return;
+    }
     bool currentEncoderIsInvalid = encoders.contains(channelIndex) && encoders[channelIndex]->getChannels() != maxChannelsFounded;
 
     if(!encoders.contains(channelIndex) || currentEncoderIsInvalid){//a new encoder is necessary?
+        qDebug() << "recreating encoder for channel index" << channelIndex;
         if(currentEncoderIsInvalid){
             delete encoders[channelIndex];
         }
