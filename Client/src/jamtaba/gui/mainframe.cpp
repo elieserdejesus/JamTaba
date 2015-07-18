@@ -114,16 +114,21 @@ void MainFrame::on_toolButtonClicked(){
     menu.exec();
 }
 
+void MainFrame::removeLocalChannel(int channelIndex){
+    if(channelIndex >= 0 && channelIndex < localChannels.size()){
+        TrackGroupView* channel = localChannels.at(channelIndex);
+        ui.localTracksLayout->removeWidget(channel);
+        localChannels.removeAt(channelIndex);
+        channel->deleteLater();
+        mainController->sendRemovedChannelMessage(channelIndex);
+        update();
+    }
+}
+
 void MainFrame::on_toolButtonMenuActionTriggered(QAction *action){
     if(action->data().isValid()){//only remove actions contains valid data (the channel index)
         int channelIndex = action->data().toInt();
-        if(channelIndex >= 0 && channelIndex < localChannels.size()){
-            TrackGroupView* channel = localChannels.at(channelIndex);
-            ui.localTracksLayout->removeWidget(channel);
-            localChannels.removeAt(channelIndex);
-            channel->deleteLater();
-            update();
-        }
+        removeLocalChannel(channelIndex);
     }
 }
 void MainFrame::on_toolButtonMenuActionHovered(QAction *action){
@@ -139,6 +144,7 @@ void MainFrame::on_addChannelClicked(){
     int channelIndex = localChannels.size();
     addLocalChannel( channelIndex, "new channel", true);
     mainController->updateInputTracksRange();
+    mainController->sendNewChannelsNames(getChannelsNames());
 }
 
 //++++++++++++++++++++++++=
@@ -171,8 +177,13 @@ void MainFrame::initializeVstFinderStuff(){
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++
+void MainFrame::on_channelNameChanged(){
+    mainController->sendNewChannelsNames(getChannelsNames());
+}
+
 LocalTrackGroupView *MainFrame::addLocalChannel(int channelGroupIndex, QString channelName, bool createFirstSubchannel){
     LocalTrackGroupView* localChannel = new LocalTrackGroupView(channelGroupIndex);
+    QObject::connect(localChannel, SIGNAL(nameChanged()), this, SLOT(on_channelNameChanged()));
     localChannels.append( localChannel );
     localChannel->setGroupName(channelName);
     ui.localTracksLayout->addWidget(localChannel);
@@ -190,7 +201,7 @@ LocalTrackGroupView *MainFrame::addLocalChannel(int channelGroupIndex, QString c
     }
     return localChannel;
 }
-
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::initializeLocalInputChannels(){
     Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
     int channelIndex = 0;
@@ -352,9 +363,17 @@ void MainFrame::on_stoppingRoomStream(Login::RoomInfo roomInfo){
     roomViewPanels[roomInfo.getID()]->clearPeaks();
 }
 
+QStringList MainFrame::getChannelsNames() const{
+    QStringList channelsNames;
+    foreach (LocalTrackGroupView* channel, localChannels) {
+        channelsNames.append(channel->getGroupName());
+    }
+    return channelsNames;
+}
+
 void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo){
     showBusyDialog("Connecting in " + roomInfo.getName() + " ...");
-    mainController->enterInRoom(roomInfo);
+    mainController->enterInRoom(roomInfo, getChannelsNames());
 
 }
 

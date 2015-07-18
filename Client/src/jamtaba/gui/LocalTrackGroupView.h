@@ -22,6 +22,8 @@ public:
     QList<LocalTrackView*> getTracks() const;
     virtual void addTrackView(BaseTrackView *trackView);
     inline int getIndex() const{return index;}
+signals:
+    void nameChanged();
 private:
     QPushButton* toolButton;
     static const int MAX_SUB_CHANNELS = 3;
@@ -31,6 +33,7 @@ private slots:
     void onAddSubChannelClicked();
     void on_toolButtonActionHovered(QAction *action);
     void on_toolButtonActionTriggered(QAction *action);
+
 };
 
 

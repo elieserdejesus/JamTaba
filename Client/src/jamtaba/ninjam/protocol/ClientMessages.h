@@ -44,19 +44,16 @@ public:
 };
 //+++++++++++++++++++++++++++++++++++++++=
 class ClientSetChannel : public ClientMessage {
-
-private:
-    //static const quint8 messageType = 0x82;
-    //quint32 payloadLenght;
-    QStringList channelNames;// = {"channel" + '\0'};//, "Canal 2" + '\0'};
-    quint16 volume;// = 0;
-    quint8 pan;// = 0;
-    quint8 flags;// = 0;//????
-
 public:
     virtual void serializeTo(QByteArray &stream);
     virtual void printDebug(QDebug dbg) const;
-    explicit ClientSetChannel(QString channelName);
+    ClientSetChannel(QStringList channels);
+    ClientSetChannel(QString channelNameToRemove);
+private:
+    QStringList channelNames;
+    quint16 volume;// = 0;
+    quint8 pan;// = 0;
+    quint8 flags;// = 0;
 };
 //++++++++++++++++++++++++++
 class ClientKeepAlive : public ClientMessage{

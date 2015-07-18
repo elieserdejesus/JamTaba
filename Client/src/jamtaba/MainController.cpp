@@ -525,22 +525,33 @@ bool MainController::isPlayingRoomStream() const{
     return roomStreamer->isStreaming();
 }
 
-void MainController::enterInRoom(Login::RoomInfo room){
+void MainController::enterInRoom(Login::RoomInfo room, QStringList channelsNames){
     if(isPlayingRoomStream()){
         stopRoomStream();
     }
 
     if(room.getType() == Login::RoomTYPE::NINJAM){
-        tryConnectInNinjamServer(room);
+        tryConnectInNinjamServer(room, channelsNames);
     }
 }
 
-void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom){
+void MainController::sendNewChannelsNames(QStringList channelsNames){
+    if(isPlayingInNinjamRoom()){
+        ninjamService->sendNewChannelsListToServer(channelsNames);
+    }
+}
+
+void MainController::sendRemovedChannelMessage(int removedChannelIndex){
+    if(isPlayingInNinjamRoom()){
+        ninjamService->sendRemovedChannelIndex(removedChannelIndex);
+    }
+}
+
+void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStringList channelsNames){
 
     QString serverIp = ninjamRoom.getName();
     int serverPort = ninjamRoom.getPort();
     QString userName = "Test user name";
-    QStringList channelsNames("channel name");
     QString password = "";
 
     this->ninjamService->startServerConnection(serverIp, serverPort, userName, channelsNames, password);
