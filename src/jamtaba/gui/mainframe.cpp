@@ -145,6 +145,9 @@ void MainFrame::on_addChannelClicked(){
     addLocalChannel( channelIndex, "new channel", true);
     mainController->updateInputTracksRange();
     mainController->sendNewChannelsNames(getChannelsNames());
+    if(mainController->isPlayingInNinjamRoom()){
+        mainController->getNinjamController()->scheduleEncoderChangeForChannel(channelIndex);//create an encoder for this channel in next interval
+    }
 }
 
 //++++++++++++++++++++++++=

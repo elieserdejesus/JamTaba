@@ -8,7 +8,10 @@
 #include <QHostAddress>
 #include <QDateTime>
 #include <QDataStream>
-#include <assert.h>
+
+#include <QThread>
+
+#include <cassert>
 
 using namespace Ninjam;
 
@@ -19,7 +22,7 @@ const QStringList Service::botNames = buildBotNamesList();
 Service::Service()
     :
       lastSendTime(0),
-      running(false),
+//      running(false),
       initialized(false)
 
 {
@@ -36,19 +39,23 @@ Service::~Service(){
     disconnect(&socket, SIGNAL(disconnected()), this, SLOT(socketDisconnectSlot()));
     disconnect(&socket, SIGNAL(connected()), this, SLOT(socketConnectedSlot()));
 
-    socket.disconnectFromHost();
+    if(socket.isOpen()){
+        socket.disconnectFromHost();
+    }
 }
 
-//void Service::sendAudioIntervalPart(char* currentGUID, QString userName, quint8 userChannelIndex){
-//    enqueueMessageToSend(new ClientIntervalUploadWrite(GUID, encodedAudioBuffer, isLastPart));
-//}
-
 void Service::sendAudioIntervalPart(QByteArray GUID, QByteArray encodedAudioBuffer, bool isLastPart){
+    if(!initialized){
+        return;
+    }
     ClientIntervalUploadWrite msg(GUID, encodedAudioBuffer, isLastPart);
     sendMessageToServer(&msg);
 }
 
 void Service::sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex){
+    if(!initialized){
+        return;
+    }
     ClientUploadIntervalBegin msg(GUID, channelIndex, this->userName);
     sendMessageToServer(&msg);
 }
@@ -107,8 +114,8 @@ void Service::socketConnectedSlot(){
     currentServer.reset( new Server(serverIp, serverPort));
 }
 
-void Service::socketDisconnectSlot()
-{
+void Service::socketDisconnectSlot(){
+    this->initialized = false;
     emit disconnectedFromServer(*currentServer);
 }
 
@@ -171,16 +178,18 @@ void Service::sendChatMessageToServer(QString message){
 }
 
 void Service::sendMessageToServer(ClientMessage *message){
-
-    //qDebug() << message;
     QByteArray outBuffer;
     message->serializeTo(outBuffer);
+
     int bytesWrited = socket.write(outBuffer);
-    socket.flush();
-    if(bytesWrited <= 0){
-        qFatal("não escreveu os bytes");
+    if(bytesWrited > 0){
+        socket.flush();
+        lastSendTime = QDateTime::currentMSecsSinceEpoch();
     }
-    lastSendTime = QDateTime::currentMSecsSinceEpoch();
+    else{
+        qCritical("não escreveu os bytes");
+    }
+
     if((int)message->getPayload() + 5 != outBuffer.size()){
         qWarning() << "(int)message->getPayload() + 5: " << ((int)message->getPayload() + 5) << "outbuffer.size():" << outBuffer.size();
     }
@@ -275,7 +284,7 @@ void Service::handle(const ServerAuthReplyMessage& msg){
 }
 
 void Service::startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password){
-    initialized = running = false;
+    initialized = false;
     this->userName = userName;
     this->password = password;
     this->channels = channels;
@@ -283,72 +292,10 @@ void Service::startServerConnection(QString serverIp, int serverPort, QString us
     socket.connectToHost(serverIp, serverPort);
 }
 
-void Service::disconnectFromServer()
-{
-    //Q_UNUSED(normalDisconnection);
-
+void Service::disconnectFromServer(){
     socket.disconnectFromHost();
-    //emit disconnectedFromServer(*currentServer, normalDisconnection);
 }
-/*
 
-
-    void sendNewUserInfos(QString newChannelName) {
-        sendMessageToServer(new ClientSetChannel(newChannelName));
-    }
-
-    void sendChatMessage(QString message){
-        enqueueMessageToSend(new ChatMessage(message));
-    }
-
-    public void sendPrivateChatMessage(String message, String user) throws NinjaMSendException {
-        enqueueMessageToSend(new PrivateChatMessage(message, user));
-    }
-
-    public void voteToChangeBPM(int newBPM) {
-        throw new RuntimeException("not implemented");
-    }
-
-    public void voteToChangeBPI(int newBPI) {
-        throw new RuntimeException("not implemented");
-    }
-
-    public void changeTopic(String newTopic) {
-        throw new RuntimeException("not implemented");
-    }
-    */
-
-//FileChannel channel = null;
-//int intervalo = 0;
-
-/*
-
-    private void enqueueMessageToSend(ClientMessage message) {
-        try {
-            messagesToSend.put(message);
-        } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
-    private class SendMessageTask implements Runnable {
-
-        @Override
-        public void run() {
-            try {
-                while (!Thread.currentThread().isInterrupted()) {
-                    ClientMessage message = messagesToSend.take();
-                    sendMessageToServer(message);
-                }
-            } catch (InterruptedException iEx) {
-                //
-            } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, e.getMessage(), e);
-                disconnect(false);//not a normal disconnection
-            }
-        }
-    }
-*/
 void Service::setBpm(quint16 newBpm){
     if (currentServer == nullptr) {
         throw ("currentServer == null");

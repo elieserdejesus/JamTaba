@@ -63,7 +63,7 @@ private:
 
     void init(int channelIndex, float initialGain, float initialPan);
 private slots:
-    void on_inputSelectionButtonClicked();
+    void on_inputSelectionButtonClicked();//build and show de input selection menu
 
     void on_monoInputMenuSelected(QAction*);
     void on_stereoInputMenuSelected(QAction*);
