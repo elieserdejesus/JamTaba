@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <QHostAddress>
 #include <QDateTime>
+#include <QDataStream>
 #include <assert.h>
 
 using namespace Ninjam;
@@ -247,9 +248,23 @@ void Service::handle(const ServerAuthChallengeMessage& msg){
     this->serverKeepAlivePeriod = msg.getServerKeepAlivePeriod();
 }
 
+void Service::sendNewChannelsListToServer(QStringList channelsNames){
+    this->channels = channelsNames;
+    ClientSetChannel setChannelMsg(this->channels);
+    sendMessageToServer(&setChannelMsg);
+}
+
+void Service::sendRemovedChannelIndex(int removedChannelIndex){
+    assert( removedChannelIndex >= 0 && removedChannelIndex < channels.size() );
+    channels.removeAt(removedChannelIndex);
+    ClientSetChannel setChannelMsg(this->channels);
+    sendMessageToServer(&setChannelMsg);
+
+}
+
 void Service::handle(const ServerAuthReplyMessage& msg){
     if(msg.userIsAuthenticated()){
-        ClientSetChannel setChannelMsg(this->channels[0]);
+        ClientSetChannel setChannelMsg(this->channels);
         sendMessageToServer(&setChannelMsg);
 
     }
@@ -464,145 +479,6 @@ void Service::handle(const ServerChatMessage& msg) {
 }
 
 
-/*
-    public long getReceivedBytesPerSecond() {
-        return receivedBytes.getAccumulatedValueInPeriod();
-    }
-
-    public long getSendedBytesPerSecond() {
-        return sendedBytes.getAccumulatedValueInPeriod();
-    }
-
-    public NinjaMServer getCurrentServer() {
-        return currentServer;
-    }
-
-    private void disconnect(boolean normalDisconnection) {
-        if (running) {
-            messageHandlerTask.cancel(true);
-            messageReceiveTask.cancel(true);
-            messageSendTask.cancel(true);
-            running = false;
-            downloads.clear();
-            LOGGER.info("disconnecting...");
-            synchronized (listeners) {
-                for (NinjaMServiceListener l : listeners) {
-                    l.disconnectedFromServer(normalDisconnection);
-                }
-            }
-        }
-    }
-
-    public void disconnect() {
-        disconnect(true);
-    }
-
-    private void closeSocketChannel() {
-        if (socketChannel != null && socketChannel.isOpen()) {
-            try {
-                socketChannel.close();
-                socketChannel = null;
-            } catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
-            }
-        }
-
-    }
-
-    public void sendAudioIntervalPart(ByteBuffer encodedAudioBuffer, byte GUID[], boolean isLastPart) throws NinjaMSendException {
-        enqueueMessageToSend(new ClientIntervalUploadWrite(GUID, encodedAudioBuffer, isLastPart));
-    }
-
-    public void sendAudioIntervalBegin(byte[] currentGUID, String userName, byte userChannelIndex) throws NinjaMSendException {
-        enqueueMessageToSend(new ClientUploadIntervalBegin(currentGUID, userChannelIndex, userName));
-    }
-
-    public void stopTransmitting(byte GUID[], byte userChannel) throws NinjaMSendException {
-        enqueueMessageToSend(new ClientUploadIntervalBegin(userChannel, newUserName));
-    }
-
-    //++++++++++++++++++++++++++
-    private class MessageReceiveTask implements Runnable {
-
-        private final ByteBuffer receiveBuffer = ByteBuffer.allocateDirect(1024 * 1024).order(ByteOrder.LITTLE_ENDIAN);
-
-        @Override
-        public void run() {
-            running = true;
-            LOGGER.info("Starting receiver thread to ninjam service");
-            while (!Thread.currentThread().isInterrupted() && running) {
-                try {
-                    if (socketChannel.read(receiveBuffer) < 0 || !running) {//end of stream?
-                        LOGGER.severe("Disconnecting in ReceiverTask, socket read return <= 0");
-                        disconnect(false);//not a normal disconnection
-                    }
-
-                    receiveBuffer.flip();
-                    while (receiveBuffer.hasRemaining()) {
-                        if (receiveBuffer.remaining() < 5) {
-                            break;
-                        }
-                        byte messageTypeCode = receiveBuffer.get();
-                        int payloadLenght = receiveBuffer.getInt();
-                        if (receiveBuffer.remaining() >= payloadLenght) {
-                            ServerMessageParser parser = ServerMessageParserFactory.createParser(ServerMessageType.fromTypeCode(messageTypeCode));
-                            final ServerMessage message = parser.parse(receiveBuffer, payloadLenght);
-                            //LOGGER.log(Level.INFO, "receive {0}", message);
-                            //System.out.println(message);
-                            receivedMessages.put(message);//enqueue to process by another thread
-                            receivedBytes.accumulate(payloadLenght + 5);
-                        } else {
-                            receiveBuffer.position(receiveBuffer.position() - 5);
-                            break;//not enough bytes, wait to receive the other bytes
-                        }
-                    }
-                    if (!receiveBuffer.hasRemaining()) {
-                        receiveBuffer.clear();
-                    } else {//keep the non handled bytes to the next parsing
-                        receiveBuffer.compact();
-                        LOGGER.log(Level.INFO, "waiting more bytes");
-                    }
-                    if (needSendKeepAliveToServer()) {
-                        sendMessageToServer(new ClientKeepAlive());
-                    }
-                } catch (InterruptedException e) {
-                    //
-                } catch (AsynchronousCloseException iEx) {
-                    //System.out.println("Message Receive Task interrupted");
-                } catch (Exception e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
-                    running = false;
-                    disconnect(false);//not a normal disconnection
-                    break;
-                }
-            }
-
-        }
-
-    }
-
-    private boolean needSendKeepAliveToServer() {
-        return System.currentTimeMillis() - lastSendTime >= serverKeepAlivePeriod;
-    }
-
-    private class MessageHandlerTask implements Runnable {
-
-        @Override
-        public void run() {
-            try {
-                while (!Thread.currentThread().isInterrupted()) {
-                    invokeMessageHandler(receivedMessages.take());
-                }
-            } catch (InterruptedException iEx) {
-                //System.out.println("Message Handler Task interrupted");
-            } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            }
-        }
-
-    }
-*/
-
 void Service::handle(const ServerConfigChangeNotifyMessage& msg)
 {
     quint16 bpi = msg.getBpi();
@@ -616,6 +492,7 @@ void Service::handle(const ServerConfigChangeNotifyMessage& msg)
 }
 
 void Service::invokeMessageHandler(const ServerMessage& message){
+    //qDebug() << message;
     switch (message.getMessageType()) {
     case ServerMessageType::AUTH_CHALLENGE:
         handle((ServerAuthChallengeMessage&)message);

@@ -1,8 +1,17 @@
-#2 - implementar envio de mais de um canal, mixando os subchannels como no item anterior
+# 3 - tratar o encoding do segundo canal, acho que já está encaminhado
+
+# 4 - Tratar a restrição da quantidade de canais de acordo com a restrição do servidor
+    #a - não pode criar mais canais do que o servidor permite.
+    #b - se o jogador já tinha mais canais do que o permitido é necessário fazer
+        #um merge antes de se conectar no servidor. Em que momento eu recebo a informação
+            #de quantos canais o servidor suporta?
+
+#visual do metronomo bugando quando saio da sala. A track do metronomo não está sendo removida do layout
 
 #implementar xmit
 
-#como mudar a quantidade de canais do encoder quando o usuário mudar a quantidade de entradas dos canais?
+#perdendo samples do metronome no tempo 1 do intervalo
+
 
 #leak - quando deletar um encode do map de encoders? Como saber lá no NinjamController que o usuário está com um canal a menos?
 

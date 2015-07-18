@@ -78,6 +78,9 @@ public:
 
     virtual void process(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
 
+    void sendNewChannelsNames(QStringList channelsNames);
+    void sendRemovedChannelMessage(int removedChannelIndex);
+
     bool addTrack(long trackID, Audio::AudioNode* trackNode);
     void removeTrack(long trackID);
 
@@ -89,7 +92,7 @@ public:
     void stopRoomStream();//stop currentRoom stream
     inline long long getCurrentStreamingRoomID() const{return currentStreamingRoomID;}
 
-    void enterInRoom(Login::RoomInfo room);
+    void enterInRoom(Login::RoomInfo room, QStringList channelsNames);
 
     Audio::AudioDriver* getAudioDriver() const;
     Midi::MidiDriver* getMidiDriver() const;
@@ -196,7 +199,7 @@ private:
     //+++++++++++++++++++++++++
     void configureStyleSheet();
 
-    void tryConnectInNinjamServer(Login::RoomInfo ninjamRoom);
+    void tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStringList channels);
 
     Geo::IpToLocationResolver ipToLocationResolver;
 

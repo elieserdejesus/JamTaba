@@ -18,12 +18,14 @@ LocalTrackGroupView::LocalTrackGroupView(int index)
     this->ui->topPanel->layout()->addWidget(toolButton);
 
     QObject::connect(toolButton, SIGNAL(clicked()), this, SLOT(on_toolButtonClicked()));
+    QObject::connect(this->ui->groupNameField, SIGNAL(editingFinished()), this, SIGNAL(nameChanged()) );
 }
 
 LocalTrackGroupView::~LocalTrackGroupView()
 {
 
 }
+
 
 QList<LocalTrackView*> LocalTrackGroupView::getTracks() const{
     QList<LocalTrackView*> tracks;

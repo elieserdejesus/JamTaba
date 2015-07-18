@@ -87,15 +87,27 @@ void ClientAuthUserMessage::printDebug(QDebug dbg) const
     dbg << "SEND ClientAuthUserMessage{  userName:" << userName << " challenge:" << challenge <<"}" << endl;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-ClientSetChannel::ClientSetChannel(QString channelName)//handling just one channel at moment
+ClientSetChannel::ClientSetChannel(QStringList channels)
     : ClientMessage(0x82, 0), volume(0), pan(0), flags(0)
 {
     payload = 2;
-    channelNames.append(channelName);
+    channelNames.append(channels);
     for (int i = 0; i < channelNames.size(); i++) {
         payload += (channelNames[i].size() + 1) + 2 + 1 + 1;//NUL + volume(short) + pan(byte) + flags(byte)
     }
 }
+
+
+ClientSetChannel::ClientSetChannel(QString channelNameToRemove)
+    : ClientMessage(0x82, 0), volume(0), pan(0), flags(1)//to remove
+{
+    payload = 2;
+    channelNames.append(channelNameToRemove);
+    for (int i = 0; i < channelNames.size(); i++) {
+        payload += (channelNames[i].size() + 1) + 2 + 1 + 1;//NUL + volume(short) + pan(byte) + flags(byte)
+    }
+}
+
 
 void ClientSetChannel::serializeTo(QByteArray &buffer){
     QDataStream stream(&buffer, QIODevice::WriteOnly);

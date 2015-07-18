@@ -54,6 +54,9 @@ public:
     void sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex);
     //void stopTransmitting(char* GUID[], quint8 userChannel);
 
+    void sendNewChannelsListToServer(QStringList channelsNames);
+    void sendRemovedChannelIndex(int removedChannelIndex);
+
     QString getConnectedUserName() ;
     QString getCurrentServerLicence() const;
     float getIntervalPeriod() ;

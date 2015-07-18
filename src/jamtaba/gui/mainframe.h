@@ -80,6 +80,9 @@ private slots:
     void on_toolButtonMenuActionTriggered(QAction*);
     void on_toolButtonMenuActionHovered(QAction*);//highlight the hovered channel
 
+    //channel name changed
+    void on_channelNameChanged();
+
 private:
 
     BusyDialog busyDialog;
@@ -115,7 +118,10 @@ private:
     void initializeMainControllerEvents();
     void initializeMainTabWidget();
 
+    QStringList getChannelsNames() const;
+
     LocalTrackGroupView* addLocalChannel(int channelGroupIndex, QString channelName, bool createFirstSubchannel);
+    void removeLocalChannel(int channelGroupIndex);
 };
 
 
