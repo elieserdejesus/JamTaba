@@ -771,8 +771,10 @@ void MainController::on_ninjamAudioAvailableToSend(QByteArray encodedAudio, quin
         bool canSend = upload->getTotalBytes() >= 4096 || isLastPart;
         if( canSend  ){
             ninjamService->sendAudioIntervalPart( upload->getGUID(), upload->getStoredBytes(), isLastPart);
+            upload->clear();
         }
     }
+    //ninjamService->sendAudioIntervalPart(intervalsToUpload[channelIndex]->getGUID(), encodedAudio, isLastPart);
 }
 
 void MainController::on_errorInNinjamServer(QString error){
