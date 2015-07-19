@@ -48,7 +48,9 @@ public:
 
     void mixGroupedInputs(Audio::SamplesBuffer& out){
         foreach (Audio::LocalInputAudioNode* inputTrack, groupedInputs) {
-            out.add(inputTrack->getLastBuffer());
+            if(!inputTrack->isMuted()){
+                out.add(inputTrack->getLastBuffer());
+            }
         }
     }
 
