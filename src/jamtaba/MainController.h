@@ -156,7 +156,7 @@ public:
     inline const Persistence::Settings& getSettings() const{return settings;}
 
     //store settings
-    void storeMetronomeSettings(float gain, float pan);
+    void storeMetronomeSettings(float gain, float pan, bool muted);
     void addVstScanPath(QString path);
     void removeVstScanPath(int index);
     void clearVstCache();

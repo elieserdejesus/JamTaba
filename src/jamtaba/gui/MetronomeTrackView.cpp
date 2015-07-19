@@ -3,7 +3,7 @@
 #include "../MainController.h"
 #include "../NinjamController.h"
 
-MetronomeTrackView::MetronomeTrackView(Controller::MainController *mainController, long metronomeID, float initialGain, float initialPan)
+MetronomeTrackView::MetronomeTrackView(Controller::MainController *mainController, long metronomeID, float initialGain, float initialPan, bool muted)
     :BaseTrackView( mainController, metronomeID)
 {
     //ui->channelName->setVisible(false);
@@ -19,6 +19,10 @@ MetronomeTrackView::MetronomeTrackView(Controller::MainController *mainControlle
 
     //set pan slider to initial position [-4, 0, 4] = left, center. right
     ui->panSlider->setValue( initialPan * 4 );
+
+    if(muted){
+        ui->muteButton->click();
+    }
 }
 
 MetronomeTrackView::~MetronomeTrackView()
