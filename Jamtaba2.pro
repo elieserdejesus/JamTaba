@@ -1,18 +1,10 @@
 
+#se eu muto um subcanal ele ainda é enviado
 
 #estalos ainda existem se uso um buffer pequeno (128) no Jamtaba. Testei enviando chunks pequenos e grande e o resultado foi o mesmo.
     #O problema realmente parece ser o buffer size.
-    #quando mudei para usar a mixagem dos subcanais deu estalo também .Então a mixagem dos subs tem problema, mas o buffer size
-    #pequeno também tem. Só mudei o loop que faz a mix dos subchannels para envair o tempInBuffer e não teve mais estalos, então
-    # a mixagem dos subchannels realmente está com problemas;
-
-#mix de subchannel parece que deu problema, só um dos subcanais apareceu na mix
 
 
-
-#testar pan dos canais transmitidos
-
-#o estalo na transmissão está acontecendo porque quando eu mixo os subcanais eu não estou considerando o offset da entrada
 
 #como vou fazer com a troca de sample rate? Recrio todos os encoders na hora ou agendo? Eu vi que seu limpara o mapa de encoders
     # a transmissão vai parar, só tenho que sincronizar as threads
