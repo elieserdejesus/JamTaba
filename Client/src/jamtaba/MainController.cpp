@@ -41,6 +41,11 @@ public:
         :groupIndex(groupIndex){
         addInput(firstInput);
     }
+
+    ~InputTrackGroup(){
+        groupedInputs.clear();
+    }
+
     void addInput(Audio::LocalInputAudioNode* input){
         groupedInputs.append(input);
     }
@@ -52,6 +57,12 @@ public:
                 out.add(inputTrack->getLastBuffer());
             }
         }
+    }
+
+    void removeInput(Audio::LocalInputAudioNode* input){
+       if(!groupedInputs.removeOne(input)){
+           qCritical() << "the input track was not removed!";
+       }
     }
 
 private:
@@ -220,9 +231,15 @@ void MainController::updateInputTracksRange(){
 
 void MainController::removeInputTrackNode(int inputTrackIndex){
     if(inputTrackIndex >= 0 && inputTrackIndex < inputTracks.size()){
-        //Audio::LocalInputAudioNode* inputTrack = inputTracks.at(inputTrackIndex);
+        //remove from group
+        Audio::LocalInputAudioNode* inputTrack = inputTracks[inputTrackIndex];
+        int trackGroupIndex = inputTrack->getGroupChannelIndex();
+        if(trackGroups.contains(trackGroupIndex)){
+            trackGroups[trackGroupIndex]->removeInput(inputTrack);
+        }
+
         inputTracks.removeAt(inputTrackIndex);
-        removeTrack(inputTrackIndex);;
+        removeTrack(inputTrackIndex);
     }
 }
 
