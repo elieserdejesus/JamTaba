@@ -181,7 +181,7 @@ AudioPeak SamplesBuffer::computePeak() const
 //    }
 //}
 
-void SamplesBuffer::add(const SamplesBuffer &buffer, int offset){
+void SamplesBuffer::add(const SamplesBuffer &buffer, int internalWriteOffset){
     //QMutexLocker locker(&mutex);
     unsigned int framesToProcess = std::min( (int)frameLenght, buffer.getFrameLenght());
 //    if(framesToProcess < (unsigned int)buffer.getFrameLenght()){
@@ -190,14 +190,14 @@ void SamplesBuffer::add(const SamplesBuffer &buffer, int offset){
     if( buffer.channels >= channels){
         for (unsigned int c = 0; c < channels; ++c) {
             for (unsigned int s = 0; s < framesToProcess; ++s) {
-                samples[c][s + offset] += buffer.samples[c][s];
+                samples[c][s + internalWriteOffset] += buffer.samples[c][s];
             }
         }
     }
     else{//samples is stereo and buffer is mono
         for (unsigned int s = 0; s < framesToProcess; ++s) {
-            samples[0][s + offset] += buffer.samples[0][s];
-            samples[1][s + offset] += buffer.samples[0][s];
+            samples[0][s + internalWriteOffset] += buffer.samples[0][s];
+            samples[1][s + internalWriteOffset] += buffer.samples[0][s];
         }
     }
 }

@@ -38,7 +38,7 @@ private:
 
     QList<AudioNode*> nodes;
     int sampleRate;
-    QMutex mutex;
+    //QMutex mutex;
     QMap<AudioNode*, SamplesBufferResampler*> resamplers;
 };
 //+++++++++++++++++++++++

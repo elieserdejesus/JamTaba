@@ -28,10 +28,11 @@ VorbisDecoder::VorbisDecoder()
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::~VorbisDecoder(){
     qDebug() << "Destrutor Vorbis Decoder";
-    delete [] outBuffer[0];
-    delete [] outBuffer[1];
-    delete [] outBuffer;
-    ov_clear(&vorbisFile);
+    //TODO this destructor is crashing when a track is removed
+    //delete [] outBuffer[0];
+    //delete [] outBuffer[1];
+    //delete [] outBuffer;
+    //ov_clear(&vorbisFile);
 }
 //+++++++++++++++++++++++++++++++++++++++++++
 int VorbisDecoder::consumeTo(void *oggOutBuffer, int bytesToConsume){

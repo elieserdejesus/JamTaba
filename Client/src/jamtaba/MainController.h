@@ -143,6 +143,9 @@ public:
     inline int getInputTracksCount() const{return inputTracks.size();}
     int getInputTrackGroupsCount() const{return trackGroups.size();} //return the track groups (channels) count
 
+    void mixGroupedInputs(int groupIndex, Audio::SamplesBuffer& out);
+
+
     inline int getAudioDriverSampleRate() const{return audioDriver->getSampleRate();}
 
     static QByteArray newGUID();
@@ -192,7 +195,9 @@ private:
     Controller::NinjamController* ninjamController;
 
     QMap<long, Audio::AudioNode*> tracksNodes;
-    mutable QMutex mutex;
+    QMutex mutex;
+    void* threadHandle;
+    void checkThread(QString methodName) const;
 
     bool started;
 

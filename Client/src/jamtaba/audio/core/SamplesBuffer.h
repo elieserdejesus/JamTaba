@@ -54,7 +54,7 @@ public:
 
     inline void add(const SamplesBuffer& buffer){add(buffer, 0);}
     void add(int channel, int sampleIndex, float sampleValue);
-    void add(const SamplesBuffer& buffer, int offset);//the offset is used in internal buffer, not in parameter buffer
+    void add(const SamplesBuffer& buffer, int internalWriteOffset);//the offset is used in internal buffer, not in parameter buffer
     void add(unsigned int channel, float* samples, int samplesToAdd);
 
     /***

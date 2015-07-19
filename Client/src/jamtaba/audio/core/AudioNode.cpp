@@ -244,10 +244,10 @@ void LocalInputAudioNode::setMidiInputSelection(int midiDeviceIndex){
 void LocalInputAudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out){
     /* The input buffer (in) is a multichannel buffer. So, this buffer contains
      * all channels grabbed from soundcard inputs. If the user select a range of 4
-     * input channels in audio preferences menu this buffer will contain 4 channels.
+     * input channels in audio preferences this buffer will contain 4 channels.
      *
-     * A LocalInputAudioNode instance grab only your input range from this input buffer.
-     * Other LocalInputAudioNode instances will read other channels from in buffer.
+     * A LocalInputAudioNode instance grab only your input range from this input SamplesBuffer.
+     * Other LocalInputAudioNode instances will read other channels from input SamplesBuffer.
      */
 
     if(audioInputRange.isEmpty()){

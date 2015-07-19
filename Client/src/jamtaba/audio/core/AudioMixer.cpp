@@ -19,13 +19,13 @@ AudioMixer::AudioMixer(int sampleRate)
 }
 
 void AudioMixer::addNode(AudioNode *node){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
     nodes.append(node);
     resamplers.insert(node, new SamplesBufferResampler());
 }
 
 void AudioMixer::removeNode(AudioNode *node){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
     SamplesBufferResampler* resampler = resamplers[node];
     nodes.removeOne(node);
     delete resampler;
@@ -43,7 +43,7 @@ void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out, bool attenuateAf
     //--------------------------------------
     bool hasSoloedBuffers = soloedBuffersInLastProcess > 0;
     soloedBuffersInLastProcess = 0;
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
     foreach (AudioNode* node , nodes) {
         bool canProcess = (!hasSoloedBuffers && !node->isMuted()) || (hasSoloedBuffers && node->isSoloed());
         if(canProcess ){

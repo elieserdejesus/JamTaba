@@ -5,11 +5,9 @@
 #include <QMutex>
 #include "../ninjam/User.h"
 #include "../ninjam/Server.h"
-//#include "../audio/core/SamplesBuffer.h"
-
 #include "../audio/vorbis/VorbisEncoder.h"
 
-//#include "audio/samplesbufferrecorder.h"
+#include <QThread>
 
 class NinjamTrackNode;
 
@@ -66,6 +64,8 @@ private:
     Controller::MainController* mainController;
     Audio::MetronomeTrackNode* metronomeTrackNode;
 
+    void* threadHandle;
+    void checkThread(QString methodName);
 
     QMap<QString, NinjamTrackNode*> trackNodes;//the other users channels
 
@@ -76,7 +76,7 @@ private:
     void addTrack(Ninjam::User user, Ninjam::UserChannel channel);
     void removeTrack(Ninjam::User, Ninjam::UserChannel channel);
 
-    void deleteDeactivatedTracks();
+    //void deleteDeactivatedTracks();
 
     bool running;
 
