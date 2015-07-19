@@ -21,7 +21,8 @@ namespace Controller {
 
 class MainController;
 
-//++++++++++++++++++++++++++
+
+//++++++++++++++++++++
 
 class NinjamController : public QObject
 {
@@ -59,7 +60,7 @@ signals:
     void chatMsgReceived(Ninjam::User user, QString message);
 
     void encodedAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart);
-    //void startingNewInterval();
+
 private:
     Controller::MainController* mainController;
     Audio::MetronomeTrackNode* metronomeTrackNode;

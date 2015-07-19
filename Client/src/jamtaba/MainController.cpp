@@ -33,6 +33,7 @@ using namespace Ninjam;
 
 using namespace Controller;
 
+
 //++++++++++++++++++++++++++++
 //Nested class to group input tracks
 class MainController::InputTrackGroup{
@@ -749,6 +750,10 @@ bool MainController::isPlayingInNinjamRoom() const{
 
 //++++++++++++= NINJAM ++++++++++++++++
 
+void MainController::on_ninjamInputAvailableToEncode(const Audio::SamplesBuffer &inputBuffer, quint8 channelIndex){
+    qDebug() << inputBuffer.getFrameLenght();
+}
+
 void MainController::on_ninjamAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart){
     Q_UNUSED(channelIndex);
 
@@ -794,8 +799,9 @@ void MainController::on_disconnectedFromNinjamServer(const Server &server){
 }
 
 void MainController::on_connectedInNinjamServer(Ninjam::Server server){
-    //emit event after start controller to create view widgets before start
-    emit enteredInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers()));
+
+   //emit event after start controller to create view widgets before start
+    emit enteredInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers(), server.getMaxChannels()));
     ninjamController->start(server);
 }
 

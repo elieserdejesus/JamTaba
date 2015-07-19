@@ -1,4 +1,11 @@
 
+#visual do metronomo bugando quando saio da sala. A track do metronomo não está sendo removida do layout
+
+#lembrar o mute do metronomo é uma boa.
+
+#implementar xmit
+
+
 #estou usando o mesmo byte array para armazenar os bytes dos canais e enviar quando tem bytes suficientes (> 4096).
     #Se estou usando apenas um byte array é uma cagada que isso tenha funcionado para transmitir mais de um canal.
     #É perfeitamente possível que os problemas que eu ouvi na transmissão com muitos canais seja disso e não de um possível
@@ -9,6 +16,8 @@
 #esteja gerando  um gargalo na thread do áudio. A solução seria despachar o buffer de áudio para a main thread e ela encoda e envia.
     #De qualquer maneira não vale a pena perder tempo otimizando para funcionar bem com mais de dois canais, já que isso
     #nunca vai acontecer na prática.
+
+    #Decidi deixar isso de lado até que eu tenha mais certeza que é realmente o encoding que está gerando problema
 
 #não rolou resampling para o metronomo?
 
@@ -23,20 +32,8 @@
 
 #notei que usando noInput o metronomo ficou normal, mas quando selecionei entrada estereo
     #o metronomo perdeu as primeiras amostras do tempo 1 do intervalo. O encoding está engasgando a thread do áudio? Ver anotações acima
+    #Na VERDADE testei novamente e perdeu a primeira batida do metronomo mesmo com o noInput
 
-# 4 - deixei o código enviando cada pedacinho de áudio encodado. Melhorar isso enviando chunks maiores
-
-# 4 - Tratar a restrição da quantidade de canais de acordo com a restrição do servidor
-    #a - não pode criar mais canais do que o servidor permite.
-    #b - se o jogador já tinha mais canais do que o permitido é necessário fazer
-        #um merge antes de se conectar no servidor. Em que momento eu recebo a informação
-            #de quantos canais o servidor suporta?
-
-#visual do metronomo bugando quando saio da sala. A track do metronomo não está sendo removida do layout
-
-#lembrar o mute do metronomo é uma boa.
-
-#implementar xmit
 
 #perdendo samples do metronome no tempo 1 do intervalo
 
