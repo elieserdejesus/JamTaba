@@ -32,7 +32,7 @@ public:
     explicit NinjamController(Controller::MainController* mainController);
     ~NinjamController();
     void process(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
-    void start(const Ninjam::Server& server);
+    void start(const Ninjam::Server& server, bool transmiting);
     void stop();
     bool inline isRunning() const{return running;}
     void setMetronomeBeatsPerAccent(int beatsPerAccent);
@@ -47,6 +47,8 @@ public:
 
     void recreateEncoders();
     void scheduleEncoderChangeForChannel(int channelIndex);
+
+    void setTransmitStatus(bool transmiting);
 
 signals:
     void currentBpiChanged(int newBpi);
@@ -80,12 +82,11 @@ private:
     //void deleteDeactivatedTracks();
 
     bool running;
+    bool transmiting;
 
     long intervalPosition;
     long samplesInInterval;
 
-    //int newBpi;//used to schedule a change in bpi
-    //int newBpm;
     int currentBpi;
     int currentBpm;
 
@@ -110,9 +111,9 @@ private:
     //++++++++++++++++++++ nested classes to handle scheduled events +++++++++++++++++
     class SchedulableEvent;//the interface for all events
     class BpiChangeEvent;
-    class BpiChangeEvent;
     class BpmChangeEvent;
     class InputChannelChangedEvent;//user change the channel input selection from mono to stereo or vice-versa, or user added a new channel, both cases requires a new encoder in next interval
+    class XmitChangedEvent;
     QList<SchedulableEvent*> scheduledEvents;
 
 private slots:

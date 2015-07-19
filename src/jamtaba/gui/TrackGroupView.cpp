@@ -18,6 +18,20 @@ TrackGroupView::TrackGroupView(QWidget *parent) :
 
 }
 
+void TrackGroupView::setUnlightStatus(bool unlighted){
+    setProperty("unlighted", QVariant(unlighted));
+    style()->unpolish(this);
+    style()->polish(this);
+
+    style()->unpolish(ui->topPanel);
+    style()->polish(ui->topPanel);
+
+    foreach (BaseTrackView* localTrack, trackViews) {
+        localTrack->setUnlightStatus(unlighted);
+    }
+
+}
+
 void TrackGroupView::updatePeaks(){
     foreach (BaseTrackView* trackView, trackViews) {
         trackView->updatePeaks();

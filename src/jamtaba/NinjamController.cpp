@@ -40,13 +40,11 @@ public:
         :SchedulableEvent(controller), newBpi(newBpi){
 
     }
-    //++++++++++++++++++++++++++++++
     void process(){
         controller->currentBpi = newBpi;
         controller->samplesInInterval = controller->computeTotalSamplesInInterval();
         emit controller->currentBpiChanged(controller->currentBpi);
     }
-    //++++++++++++++++++++++++++++++
 private:
     int newBpi;
 
@@ -77,6 +75,20 @@ class NinjamController::InputChannelChangedEvent : public SchedulableEvent{
     private:
         int channelIndex;
 };
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class NinjamController::XmitChangedEvent : public SchedulableEvent{
+public:
+    XmitChangedEvent(NinjamController* controller, bool transmiting)
+        : SchedulableEvent(controller), transmiting(transmiting) {
+
+    }
+    void process(){
+        controller->transmiting = this->transmiting;
+    }
+
+private:
+    bool transmiting;
+};
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NinjamController::NinjamController(Controller::MainController* mainController)
@@ -86,7 +98,8 @@ NinjamController::NinjamController(Controller::MainController* mainController)
     samplesInInterval(0),
     //newBpi(-1), newBpm(-1),
     currentBpi(0),
-    currentBpm(0)
+    currentBpm(0),
+    transmiting(false)
 
     //recorder("record.wav", mainController->getAudioDriver()->getSampleRate())
 {
@@ -108,10 +121,11 @@ NinjamController::~NinjamController(){
     QObject::disconnect( mainController->getAudioDriver(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamController::start(const Ninjam::Server& server){
+void NinjamController::start(const Ninjam::Server& server, bool transmiting){
     //schedule an update in internal attributes
     scheduledEvents.append(new BpiChangeEvent(this, server.getBpi()));
     scheduledEvents.append(new BpmChangeEvent(this, server.getBpm()));
+    scheduledEvents.append(new XmitChangedEvent(this, transmiting));
 
     //schedule the encoders creation (one encoder for each channel)
     int channels = mainController->getInputTrackGroupsCount();
@@ -344,32 +358,37 @@ void NinjamController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &o
             lastBeat = currentBeat;
             emit intervalBeatChanged(currentBeat);
         }
-        //+++++++++++ MAIN PROCESS +++++++++++++++
+        //+++++++++++ MAIN AUDIO OUTPUT PROCESS +++++++++++++++
         mainController->doAudioProcess(tempInBuffer, tempOutBuffer);
         out.add(tempOutBuffer, offset); //generate audio output
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-        //1) mix subchannels, 2) encode and 3) send the encoded audio
 
-        //1 - mix the groups subchannels
-        static Audio::SamplesBuffer inputMixBuffer(2, 4096); //TODO esse canal sempre estereo nãi vai dar problema com pitas mono?
-        inputMixBuffer.setFrameLenght(samplesToProcessInThisStep);
+        if(transmiting){
+            //1) mix subchannels, 2) encode and 3) send the encoded audio
 
-        int groupedChannels = mainController->getInputTrackGroupsCount();
-        for (int channelIndex = 0; channelIndex < groupedChannels; ++channelIndex) {
-            if(encoders.contains(channelIndex)){
-                inputMixBuffer.zero();
-                mainController->mixGroupedInputs(channelIndex, inputMixBuffer);
-                // 3 - encoding
-                QByteArray encodedBytes = encoders[channelIndex]->encode(inputMixBuffer);
-                bool isLastPart = intervalPosition + samplesToProcessInThisStep >= samplesInInterval;
-                bool isFirstPart = intervalPosition == 0;
-                if(isLastPart){//get the last encoded bytes
-                    encodedBytes.append( encoders[channelIndex]->finishIntervalEncoding() );
+            //1 - mix the groups subchannels
+            static Audio::SamplesBuffer inputMixBuffer(2, 4096); //TODO esse canal sempre estereo nãi vai dar problema com pitas mono?
+            inputMixBuffer.setFrameLenght(samplesToProcessInThisStep);
+
+            int groupedChannels = mainController->getInputTrackGroupsCount();
+            for (int channelIndex = 0; channelIndex < groupedChannels; ++channelIndex) {
+                if(encoders.contains(channelIndex)){
+                    inputMixBuffer.zero();
+                    mainController->mixGroupedInputs(channelIndex, inputMixBuffer);
+
+                    // 3 - encoding
+                    QByteArray encodedBytes = encoders[channelIndex]->encode(inputMixBuffer);
+                    bool isLastPart = intervalPosition + samplesToProcessInThisStep >= samplesInInterval;
+                    bool isFirstPart = intervalPosition == 0;
+                    if(isLastPart){//get the last encoded bytes
+                        encodedBytes.append( encoders[channelIndex]->finishIntervalEncoding() );
+                    }
+
+                    // 4 - send encoded bytes to main thread (only the main thread can do socket writing)
+                    emit encodedAudioAvailableToSend(encodedBytes, channelIndex, isFirstPart, isLastPart);
                 }
-
-                // 4 - send encoded bytes to main thread (only the main thread can do socket writing)
-                emit encodedAudioAvailableToSend(encodedBytes, channelIndex, isFirstPart, isLastPart);
             }
         }
         //++++++++++++++++++++++++++++++++++++++++
@@ -492,6 +511,10 @@ void NinjamController::on_audioDriverStopped(){
     }
     intervalPosition = 0;
     threadHandle = nullptr;
+}
+
+void NinjamController::setTransmitStatus(bool transmiting){
+    scheduledEvents.append(new XmitChangedEvent(this, transmiting));
 }
 
 void NinjamController::scheduleEncoderChangeForChannel(int channelIndex){

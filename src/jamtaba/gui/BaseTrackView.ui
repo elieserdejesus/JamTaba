@@ -289,7 +289,7 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <property name="spacing">
-          <number>3</number>
+          <number>2</number>
          </property>
          <property name="leftMargin">
           <number>0</number>

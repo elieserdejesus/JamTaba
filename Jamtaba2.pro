@@ -1,6 +1,12 @@
-#lembrar o mute do metronomo é uma boa.
 
 #implementar xmit
+    #onde vai o botão?
+
+#iniciar com o xmit desativado? Faz sentido, você não entrada tocando, não tem como
+
+#depois de algum tempo dar um feedback se o xmit não foi ativado
+
+#dar um feedback nas pistas locais quando o xmit estiver desativado
 
 #visual do metronomo bugando quando saio da sala. A track do metronomo não está sendo removida do layout. Onde vou colocar o metronomo?
 

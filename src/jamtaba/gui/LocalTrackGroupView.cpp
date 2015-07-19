@@ -27,6 +27,7 @@ LocalTrackGroupView::~LocalTrackGroupView()
 }
 
 
+
 QList<LocalTrackView*> LocalTrackGroupView::getTracks() const{
     QList<LocalTrackView*> tracks;
     foreach (BaseTrackView* baseView, trackViews) {
