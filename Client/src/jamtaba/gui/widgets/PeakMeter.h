@@ -16,7 +16,7 @@ public:
    void setPeak(float) ;
 
 protected:
-    void paintEvent(QPaintEvent */*event*/);
+    void paintEvent(QPaintEvent *event);
     void resizeEvent (QResizeEvent *);
 
 private:

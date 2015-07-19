@@ -1,6 +1,7 @@
 #include "Server.h"
 #include "User.h"
 #include <QDebug>
+#include <QDataStream>
 
 using namespace Ninjam;
 
