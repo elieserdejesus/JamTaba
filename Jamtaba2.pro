@@ -7,6 +7,8 @@
 
 #hipótese para o estalo: Quando adicionei vários canais (vários encoders) vi que o bicho pega e engasga. Então é provavel que o encoder
 #esteja gerando  um gargalo na thread do áudio. A solução seria despachar o buffer de áudio para a main thread e ela encoda e envia.
+    #De qualquer maneira não vale a pena perder tempo otimizando para funcionar bem com mais de dois canais, já que isso
+    #nunca vai acontecer na prática.
 
 #não rolou resampling para o metronomo?
 
