@@ -18,15 +18,15 @@ UserInfo::UserInfo(long long id, QString name, QString ip)
 
 }
 
-RoomInfo::RoomInfo(long long id, QString roomName, int roomPort, RoomTYPE roomType, int maxUsers, QList<UserInfo> users, QString streamUrl)
-    :id(id), name(roomName), port(roomPort), type(roomType) , maxUsers(maxUsers),
+RoomInfo::RoomInfo(long long id, QString roomName, int roomPort, RoomTYPE roomType, int maxUsers, QList<UserInfo> users, int maxChannels, QString streamUrl)
+    :id(id), name(roomName), port(roomPort), type(roomType) , maxUsers(maxUsers), maxChannels(maxChannels),
       users(users), streamUrl(streamUrl)
 {
 
 }
 
-RoomInfo::RoomInfo(QString roomName, int roomPort, RoomTYPE roomType, int maxUsers)
-    :id(-1000), name(roomName), port(roomPort), type(roomType) , maxUsers(maxUsers),
+RoomInfo::RoomInfo(QString roomName, int roomPort, RoomTYPE roomType, int maxUsers, int maxChannels)
+    :id(-1000), name(roomName), port(roomPort), type(roomType) , maxUsers(maxUsers), maxChannels(maxChannels),
       users(QList<Login::UserInfo>()), streamUrl("")
 {
 
@@ -144,7 +144,7 @@ void LoginService::connectedSlot(){
     }
     else{//local host - test mode
         QList<Login::RoomInfo> publicRooms;
-        publicRooms.append(RoomInfo(1, "localhost", 2049, Login::RoomTYPE::NINJAM, 16, QList<UserInfo>()));
+        publicRooms.append(RoomInfo(1, "localhost", 2049, Login::RoomTYPE::NINJAM, 16, QList<UserInfo>(), 16));
         emit roomsListAvailable(publicRooms);
     }
 }
@@ -180,7 +180,7 @@ RoomInfo LoginService::buildRoomInfoFromJson(QJsonObject jsonObject){
         QString userIp =  userObject.value("ip").toString();
         users.append(Login::UserInfo(userID, userName, userIp));
     }
-    return Login::RoomInfo(id, name, port, type, maxUsers, users, streamLink);
+    return Login::RoomInfo(id, name, port, type, maxUsers, users, 0, streamLink);
 }
 
 

@@ -108,10 +108,8 @@ void Service::socketErrorSlot(QAbstractSocket::SocketError e)
 }
 
 void Service::socketConnectedSlot(){
-    //the old current server is deleted by unique_ptr
-    QString serverIp = socket.peerName();
-    quint16 serverPort = socket.peerPort();
-    currentServer.reset( new Server(serverIp, serverPort));
+
+
 }
 
 void Service::socketDisconnectSlot(){
@@ -285,7 +283,10 @@ void Service::handle(const ServerAuthReplyMessage& msg){
     if(msg.userIsAuthenticated()){
         ClientSetChannel setChannelMsg(this->channels);
         sendMessageToServer(&setChannelMsg);
-
+        quint8 serverMaxChannels = msg.getMaxChannels();
+        QString serverIp = socket.peerName();
+        quint16 serverPort = socket.peerPort();
+        currentServer.reset( new Server(serverIp, serverPort, serverMaxChannels));
     }
     //when user is not authenticated the socketErrorSlot is called and dispatch an error signal
 //    else{
@@ -413,8 +414,10 @@ void Service::handle(const ServerChatMessage& msg) {
         QString topicText = msg.getArguments().at(1);
         if (!initialized) {
             initialized = true;
+
             currentServer->setTopic(topicText);
             currentServer->setLicence(serverLicence);//server licence is received when the hand shake with server is started
+
             //serverLicence.clear();
             emit connectedInServer(*currentServer);
             emit chatMessageReceived(Ninjam::User(currentServer->getHostName()), topicText);

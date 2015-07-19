@@ -98,6 +98,7 @@ void MainFrame::on_toolButtonClicked(){
     QMenu menu;
     QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
     QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(on_addChannelClicked()));
+    addChannelAction->setEnabled(localChannels.size() < 2);//at this moment users can't create more channels
     if(localChannels.size() > 1){
         menu.addSeparator();
         for (int i = 2; i <= localChannels.size(); ++i) {
@@ -384,6 +385,7 @@ void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo){
 //estes eventos são disparados pelo controlador depois que já aconteceu a conexão com uma das salas
 
 void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
+
     hideBusyDialog();
 
 //    if(ninjamWindow){

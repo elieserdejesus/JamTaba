@@ -232,6 +232,7 @@ private slots:
     void on_disconnectedFromNinjamServer(const Ninjam::Server& server);
     void on_errorInNinjamServer(QString error);
     void on_ninjamAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart);
+    void on_ninjamInputAvailableToEncode(const Audio::SamplesBuffer& inputBuffer, quint8 channelIndex);
 
     //audio driver
     void on_audioDriverSampleRateChanged(int newSampleRate);

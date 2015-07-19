@@ -27,9 +27,10 @@ private:
     QString licence;
     QMap<QString, User*> users;
     bool containBot;// = false;
+    int maxChannels;
 public:
-    Server(QString host, int port);
-    Server(QString host, int port, int maxUsers);
+    Server(QString host, int port, int maxChannels);
+    Server(QString host, int port, int maxChannels, int maxUsers);
 
     //static Server* getServer(QString host, int port) ;
     ~Server();
@@ -41,6 +42,9 @@ public:
     inline QString getStreamUrl() const { return streamUrl; }
 
     inline bool isLocalHostServer() const{return host == "localhost"; }
+
+    inline int getMaxChannels() const{return maxChannels;}
+    void setMaxChannels(int max){this->maxChannels = max;}
 
     inline bool hasStream() const{
         //tirei o stream do server do mutant porque ele usa nsv, e não encontrei lib para esse formato
