@@ -71,7 +71,31 @@ private:
 };
 
 //+++++++++++++++++++++++++++++
+//nested class to store interval upload data
+class MainController::UploadIntervalData{
+public:
+    UploadIntervalData(quint8 channelIndex)
+        :channelIndex(channelIndex), GUID(newGUID()){
 
+    }
+
+    inline QByteArray getGUID() const{return GUID;}
+
+    void appendData(QByteArray encodedData){
+        dataToUpload.append(encodedData);
+    }
+
+private:
+     QByteArray newGUID(){
+        QUuid uuid = QUuid::createUuid();
+        return uuid.toRfc4122();
+    }
+    const quint8 channelIndex;
+    const QByteArray GUID;
+    QByteArray dataToUpload;
+};
+
+//++++++++++++++++++++++++++++++++++++++++++++
 MainController::MainController(JamtabaFactory* factory, Settings settings, int &argc, char **argv)
     :QApplication(argc, argv),
       audioMixer(nullptr),
@@ -308,8 +332,8 @@ void MainController::setInputTrackToNoInput(int localChannelIndex){
         inputTrack->setToNoInput();
         emit inputSelectionChanged(localChannelIndex);
         if(isPlayingInNinjamRoom()){//send the finish interval message
-            if(currentGUIDs.contains(localChannelIndex)){
-                ninjamService->sendAudioIntervalPart(currentGUIDs[localChannelIndex], QByteArray(), true);
+            if(intervalsToUpload.contains(localChannelIndex)){
+                ninjamService->sendAudioIntervalPart(intervalsToUpload[localChannelIndex]->getGUID(), QByteArray(), true);
                 //ninjamController->recreateEncoderForChannel(inputTrack->getGroupChannelIndex());
                 ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
             }
@@ -649,10 +673,11 @@ void MainController::on_audioDriverSampleRateChanged(int newSampleRate){
 }
 
 void MainController::on_audioDriverStopped(){
+    threadHandle = nullptr;
     if(isPlayingInNinjamRoom()){
         //send the last interval part when audio driver is stopped
-        foreach (int channelIndex, currentGUIDs.keys()) {
-            ninjamService->sendAudioIntervalPart(currentGUIDs[channelIndex], QByteArray(), true);
+        foreach (int channelIndex, intervalsToUpload.keys()) {
+            ninjamService->sendAudioIntervalPart(intervalsToUpload[channelIndex]->getGUID(), QByteArray(), true);
         }
     }
 }
@@ -719,11 +744,6 @@ bool MainController::isPlayingInNinjamRoom() const{
 }
 
 //++++++++++++= NINJAM ++++++++++++++++
-QByteArray MainController::newGUID(){
-    QUuid uuid = QUuid::createUuid();
-    return uuid.toRfc4122();
-}
-
 
 void MainController::on_ninjamAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart){
     Q_UNUSED(channelIndex);
@@ -737,11 +757,16 @@ void MainController::on_ninjamAudioAvailableToSend(QByteArray encodedAudio, quin
     //write the encoded bytes in socket. We can't write in socket from audio thread.
 
     if(isFirstPart){
-        currentGUIDs.insert(channelIndex, newGUID());
-        ninjamService->sendAudioIntervalBegin(currentGUIDs[channelIndex], channelIndex);
+        if(intervalsToUpload.contains(channelIndex)){
+            delete intervalsToUpload[channelIndex];
+        }
+        intervalsToUpload.insert(channelIndex, new UploadIntervalData(channelIndex));
+        ninjamService->sendAudioIntervalBegin(intervalsToUpload[channelIndex]->getGUID(), channelIndex);
     }
-
-    ninjamService->sendAudioIntervalPart(currentGUIDs[channelIndex], encodedAudio, isLastPart);
+    if(intervalsToUpload[channelIndex]){//just in case...
+        intervalsToUpload[channelIndex]->appendData(encodedAudio);
+        ninjamService->sendAudioIntervalPart(intervalsToUpload[channelIndex]->getGUID(), encodedAudio, isLastPart);
+    }
 }
 
 void MainController::on_errorInNinjamServer(QString error){

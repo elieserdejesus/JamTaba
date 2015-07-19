@@ -148,7 +148,7 @@ private:
 
         }
 
-        inline void appendVorbisData(QByteArray data){ this->vorbisData.append(data); }
+        inline void appendVorbisData(QByteArray data){ this->vorbisData.appendDataToUpload(data); }
 
         inline quint8 getChannelIndex() const{return channelIndex;}
         inline QString getUserFullName() const{return userFullName;}

@@ -1,19 +1,26 @@
 
+#estou usando o mesmo byte array para armazenar os bytes dos canais e enviar quando tem bytes suficientes (> 4096).
+    #Se estou usando apenas um byte array é uma cagada que isso tenha funcionado para transmitir mais de um canal.
+    #É perfeitamente possível que os problemas que eu ouvi na transmissão com muitos canais seja disso e não de um possível
+    #engasgo do encoder. Tenho que ver isso.
+
+
 #hipótese para o estalo: Quando adicionei vários canais (vários encoders) vi que o bicho pega e engasga. Então é provavel que o encoder
 #esteja gerando  um gargalo na thread do áudio. A solução seria despachar o buffer de áudio para a main thread e ela encoda e envia.
 
-#Tenho que verificar a quantidade de bytes que estão sendo enviados no socket.write, existe a possibilidade do socket não enviar tudo.
-
+#não rolou resampling para o metronomo?
 
 #estalos ainda existem se uso um buffer pequeno (128) no Jamtaba. Testei enviando chunks pequenos e grande e o resultado foi o mesmo.
     #O problema realmente parece ser o buffer size.
 
 
+#Fiquei com a impressão que com uma taxa de amostragem alta os estalos no início do intervalo que estou trasnmitindo aumenta, assim como
+#os estalos que recebo. Talvez a origem do problema seja a mesma, o calculo que faço para saber quantas amostras vou pegar de cada vez.
+    # se bem que no caso do envio eu só pego e mando. Poderia ter algum problema no Reaninjam relacionado com o mesmo cálculo que eu estou fazendo.
+
 
 #notei que usando noInput o metronomo ficou normal, mas quando selecionei entrada estereo
-    #o metronomo perdeu as primeiras amostras do tempo 1 do intervalo. O encoding está engasgando a thread do áudio?
-
-# 4 voltou a dar o estalo no início da transmissão. Problema no tamanho dos chunks? Enviar chunks maiores
+    #o metronomo perdeu as primeiras amostras do tempo 1 do intervalo. O encoding está engasgando a thread do áudio? Ver anotações acima
 
 # 4 - deixei o código enviando cada pedacinho de áudio encodado. Melhorar isso enviando chunks maiores
 
@@ -24,6 +31,8 @@
             #de quantos canais o servidor suporta?
 
 #visual do metronomo bugando quando saio da sala. A track do metronomo não está sendo removida do layout
+
+#lembrar o mute do metronomo é uma boa.
 
 #implementar xmit
 

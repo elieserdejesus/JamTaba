@@ -363,7 +363,7 @@ void NinjamController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &o
                 bool isLastPart = intervalPosition + samplesToProcessInThisStep >= samplesInInterval;
                 bool isFirstPart = intervalPosition == 0;
                 if(isLastPart){//get the last encoded bytes
-                    encodedBytes.append( encoders[channelIndex]->finishIntervalEncoding() );
+                    encodedBytes.appendDataToUpload( encoders[channelIndex]->finishIntervalEncoding() );
                 }
 
                 // 4 - send encoded bytes to main thread (only the main thread can do socket writing)
@@ -489,6 +489,7 @@ void NinjamController::on_audioDriverStopped(){
         trackNode->discardIntervals();
     }
     intervalPosition = 0;
+    threadHandle = nullptr;
 }
 
 void NinjamController::scheduleEncoderChangeForChannel(int channelIndex){
