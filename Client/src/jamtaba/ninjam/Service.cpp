@@ -181,7 +181,17 @@ void Service::sendMessageToServer(ClientMessage *message){
     QByteArray outBuffer;
     message->serializeTo(outBuffer);
 
-    int bytesWrited = socket.write(outBuffer);
+    int totalDataToSend = outBuffer.size();
+    int dataSended = 0;
+    int bytesWrited = -1;
+    do{
+        bytesWrited =  socket.write(outBuffer.data() + dataSended, totalDataToSend - dataSended);
+        if(bytesWrited > 0){
+            dataSended += bytesWrited;
+        }
+    }
+    while(dataSended < totalDataToSend && bytesWrited != -1);
+
     if(bytesWrited > 0){
         socket.flush();
         lastSendTime = QDateTime::currentMSecsSinceEpoch();

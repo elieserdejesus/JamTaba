@@ -527,11 +527,18 @@ void NinjamController::recreateEncoderForChannel(int channelIndex){
 }
 
 void NinjamController::recreateEncoders(){
-//    QMutexLocker locker(&mutex); //this method is called from main thread, and the encoder are off course used in audio thread every time
-//    for (int e = 0; e < encoders.size(); ++e) {
-//        delete encoders[e];
-//    }
-//    encoders.clear();//new encoders will be create on demand
+    if(isRunning()){
+        QMutexLocker locker(&mutex); //this method is called from main thread, and the encoder are off course used in audio thread every time
+        for (int e = 0; e < encoders.size(); ++e) {
+            delete encoders[e];
+        }
+        encoders.clear();//new encoders will be create on demand
+
+        int trackGroupsCount = mainController->getInputTrackGroupsCount();
+        for (int channelIndex = 0; channelIndex < trackGroupsCount; ++channelIndex) {
+            recreateEncoderForChannel(channelIndex);
+        }
+    }
 }
 
 void NinjamController::on_audioDriverSampleRateChanged(int newSampleRate){
