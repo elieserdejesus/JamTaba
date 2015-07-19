@@ -1,7 +1,7 @@
 #include "ServerMessageParser.h"
 #include "ServerMessages.h"
 #include "../User.h"
-
+#include <QDataStream>
 #include <QSharedPointer>
 #include <QDebug>
 
@@ -177,7 +177,7 @@ const ServerMessage& ServerMessageParser::parseDownloadIntervalBegin(QDataStream
     quint8 byte;
     for (int i = 0; i < 16; ++i) {
         stream >> byte;//será que é suficiente?
-        GUID.appendDataToUpload(byte);
+        GUID.append(byte);
     }
     quint32 estimatedSize;
     stream >> estimatedSize;
@@ -201,7 +201,7 @@ const ServerMessage &ServerMessageParser::parseDownloadIntervalWrite(QDataStream
     quint8 byte;
     for (int i = 0; i < 16; ++i) {
         stream >> byte;//será que é suficiente?
-        GUID.appendDataToUpload(byte);
+        GUID.append(byte);
     }
     quint8 flags;
     stream >> flags;

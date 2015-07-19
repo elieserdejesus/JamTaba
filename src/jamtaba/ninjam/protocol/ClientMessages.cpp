@@ -4,6 +4,7 @@
 #include <QIODevice>
 #include <cassert>
 #include <QDebug>
+#include <QDataStream>
 //#include <QUuid>
 //++++++++++++++
 

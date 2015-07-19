@@ -39,6 +39,10 @@
 #perdendo samples do metronome no tempo 1 do intervalo
 
 
+#está bugando o parser da lista de servers públicos no servidor
+
+#GAz deu a ideia de fazer um translate usando o site do google translate e HTML scrapping.
+
 #quando solo uma das inputs as outras também são enviadas. Ou seja, o solo está atuando apenas localmente. Faz sentido mudar isso?
 
 #leak - quando deletar um encode do map de encoders? Como saber lá no NinjamController que o usuário está com um canal a menos?

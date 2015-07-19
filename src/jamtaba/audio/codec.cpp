@@ -29,7 +29,7 @@ void Mp3DecoderMiniMp3::reset(){
 }
 
 const SamplesBuffer* Mp3DecoderMiniMp3::decode(char *inputBuffer, int bytesToDecode){
-    array.appendDataToUpload(inputBuffer, bytesToDecode);
+    array.append(inputBuffer, bytesToDecode);
     if(array.size() < MINIMUM_SIZE_TO_DECODE ){
         return NULL_BUFFER;
     }

@@ -64,10 +64,10 @@ void VorbisEncoder::initializeVorbis() {
             int result = ogg_stream_flush(&streamState, &page);
             if (result == 0) break;
             //header
-            outBuffer.appendDataToUpload((const char*)page.header, page.header_len);//memcpy(buffer, page.header, page.header_len);
+            outBuffer.append((const char*)page.header, page.header_len);//memcpy(buffer, page.header, page.header_len);
             //body
 
-            outBuffer.appendDataToUpload((const char*)page.body, page.body_len);//memcpy(buffer, page.body, page.body_len);
+            outBuffer.append((const char*)page.body, page.body_len);//memcpy(buffer, page.body, page.body_len);
         }
 
     }
@@ -116,9 +116,9 @@ QByteArray VorbisEncoder::encode(const Audio::SamplesBuffer& samples) {
                 }
 
                 //header
-                outBuffer.appendDataToUpload((const char*)page.header, page.header_len);//memcpy(buffer, page.header, page.header_len);
+                outBuffer.append((const char*)page.header, page.header_len);//memcpy(buffer, page.header, page.header_len);
                 //body
-                outBuffer.appendDataToUpload((const char*)page.body, page.body_len);//memcpy(buffer, page.body, page.body_len);
+                outBuffer.append((const char*)page.body, page.body_len);//memcpy(buffer, page.body, page.body_len);
 
                 if (ogg_page_eos(&page)) {
                     endOfStream = 1;

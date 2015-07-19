@@ -6,6 +6,7 @@
 #include <cmath>
 #include <QtEndian>
 #include "Resampler.h"
+#include <QDataStream>
 #include <QMutexLocker>
 
 using namespace Audio;

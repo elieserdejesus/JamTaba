@@ -87,7 +87,7 @@ void VorbisDecoder::reset(){
 //++++++++++++++++++++++++++++++++++++++++++++++
 void VorbisDecoder::setInput(QByteArray vorbisData){
     vorbisInput.clear();
-    vorbisInput.appendDataToUpload(vorbisData);
+    vorbisInput.append(vorbisData);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++

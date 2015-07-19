@@ -74,8 +74,8 @@ private:
 //nested class to store interval upload data
 class MainController::UploadIntervalData{
 public:
-    UploadIntervalData(quint8 channelIndex)
-        :channelIndex(channelIndex), GUID(newGUID()){
+    UploadIntervalData()
+        :GUID(newGUID()){
 
     }
 
@@ -85,12 +85,16 @@ public:
         dataToUpload.append(encodedData);
     }
 
+    inline int getTotalBytes() const{return dataToUpload.size();}
+
+    inline QByteArray getStoredBytes() const{return dataToUpload;}
+
+    inline void clear(){ dataToUpload.clear();}
 private:
-     QByteArray newGUID(){
+     static QByteArray newGUID(){
         QUuid uuid = QUuid::createUuid();
         return uuid.toRfc4122();
     }
-    const quint8 channelIndex;
     const QByteArray GUID;
     QByteArray dataToUpload;
 };
@@ -752,20 +756,22 @@ void MainController::on_ninjamAudioAvailableToSend(QByteArray encodedAudio, quin
         qCritical() << "ninjamService nulo";
         return;
     }
-
     //audio thread fire this event. This thread (main/gui thread)
     //write the encoded bytes in socket. We can't write in socket from audio thread.
-
     if(isFirstPart){
         if(intervalsToUpload.contains(channelIndex)){
             delete intervalsToUpload[channelIndex];
         }
-        intervalsToUpload.insert(channelIndex, new UploadIntervalData(channelIndex));
+        intervalsToUpload.insert(channelIndex, new UploadIntervalData());
         ninjamService->sendAudioIntervalBegin(intervalsToUpload[channelIndex]->getGUID(), channelIndex);
     }
     if(intervalsToUpload[channelIndex]){//just in case...
-        intervalsToUpload[channelIndex]->appendData(encodedAudio);
-        ninjamService->sendAudioIntervalPart(intervalsToUpload[channelIndex]->getGUID(), encodedAudio, isLastPart);
+        UploadIntervalData* upload = intervalsToUpload[channelIndex];
+        upload->appendData(encodedAudio);
+        bool canSend = upload->getTotalBytes() >= 4096 || isLastPart;
+        if( canSend  ){
+            ninjamService->sendAudioIntervalPart( upload->getGUID(), upload->getStoredBytes(), isLastPart);
+        }
     }
 }
 
