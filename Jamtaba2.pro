@@ -1,15 +1,12 @@
 
-#quando remove um subcanal um ruído ficou sendo enviado. Acho que não desagrupando e o grupo pode estar apontando para o ponteiro do canal.
+#hipótese para o estalo: Quando adicionei vários canais (vários encoders) vi que o bicho pega e engasga. Então é provavel que o encoder
+#esteja gerando  um gargalo na thread do áudio. A solução seria despachar o buffer de áudio para a main thread e ela encoda e envia.
 
-#se eu muto um canal ele ainda é enviado?
+#Tenho que verificar a quantidade de bytes que estão sendo enviados no socket.write, existe a possibilidade do socket não enviar tudo.
+
 
 #estalos ainda existem se uso um buffer pequeno (128) no Jamtaba. Testei enviando chunks pequenos e grande e o resultado foi o mesmo.
     #O problema realmente parece ser o buffer size.
-
-
-
-#como vou fazer com a troca de sample rate? Recrio todos os encoders na hora ou agendo? Eu vi que seu limpara o mapa de encoders
-    # a transmissão vai parar, só tenho que sincronizar as threads
 
 
 
@@ -32,6 +29,8 @@
 
 #perdendo samples do metronome no tempo 1 do intervalo
 
+
+#quando solo uma das inputs as outras também são enviadas. Ou seja, o solo está atuando apenas localmente. Faz sentido mudar isso?
 
 #leak - quando deletar um encode do map de encoders? Como saber lá no NinjamController que o usuário está com um canal a menos?
 
