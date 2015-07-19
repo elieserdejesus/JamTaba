@@ -1,5 +1,7 @@
 
-#se eu muto um subcanal ele ainda é enviado
+#quando remove um subcanal um ruído ficou sendo enviado. Acho que não desagrupando e o grupo pode estar apontando para o ponteiro do canal.
+
+#se eu muto um canal ele ainda é enviado?
 
 #estalos ainda existem se uso um buffer pequeno (128) no Jamtaba. Testei enviando chunks pequenos e grande e o resultado foi o mesmo.
     #O problema realmente parece ser o buffer size.
