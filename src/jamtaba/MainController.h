@@ -212,7 +212,9 @@ private:
 
     Geo::IpToLocationResolver ipToLocationResolver;
 
-    QMap<int, QByteArray> currentGUIDs;//map the input channel indexes to a GUID (used to upload audio to ninjam server)
+    class UploadIntervalData;
+
+    QMap<int, UploadIntervalData*> intervalsToUpload;//map the input channel indexes to a GUID (used to upload audio to ninjam server)
 
     Persistence::Settings settings;
 

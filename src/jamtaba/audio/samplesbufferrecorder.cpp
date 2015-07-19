@@ -9,7 +9,7 @@
 SamplesBufferRecorder::SamplesBufferRecorder(QString fileName, quint32 sampleRate)
     :fileName(fileName), sampleRate(sampleRate){
     char header[44];
-    array.append(header, 44);//create empty space in first 44 bytes to write header in desctructor
+    array.appendDataToUpload(header, 44);//create empty space in first 44 bytes to write header in desctructor
 }
 
 SamplesBufferRecorder::~SamplesBufferRecorder(){
