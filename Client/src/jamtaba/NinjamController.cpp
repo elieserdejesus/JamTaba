@@ -126,9 +126,11 @@ void NinjamController::start(const Ninjam::Server& server){
         //mainController->addTrack(-5, osc);
         //mainController->setTrackLevel(-5, 0.6);
 
+
         mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
-        mainController->setTrackLevel(METRONOME_TRACK_ID, mainController->getSettings().getMetronomeGain());
-        mainController->setTrackPan(METRONOME_TRACK_ID, mainController->getSettings().getMetronomePan());
+        mainController->setTrackMute(METRONOME_TRACK_ID, mainController->getSettings().getMetronomeMuteStatus());
+        mainController->setTrackLevel(METRONOME_TRACK_ID,mainController->getSettings().getMetronomeGain());
+        mainController->setTrackPan(METRONOME_TRACK_ID,  mainController->getSettings().getMetronomePan());
 
         this->intervalPosition  = 0;
         this->running = true;
@@ -260,7 +262,7 @@ void NinjamController::stop(){
             if(metronomeTrack){
                                     //  std::pow( metronomeTrack->getGain(), 1.0/4);//4th root - save the metronome gain in linear
                 float correctedGain = Utils::poweredGainToLinear(metronomeTrack->getGain());
-                mainController->storeMetronomeSettings(correctedGain, metronomeTrack->getPan());
+                mainController->storeMetronomeSettings(correctedGain, metronomeTrack->getPan(), metronomeTrack->isMuted());
                 mainController->removeTrack(METRONOME_TRACK_ID);//remove metronome
             }
             //clear all tracks

@@ -375,8 +375,8 @@ bool MainController::addTrack(long trackID, Audio::AudioNode* trackNode){
 }
 
 //+++++++++++++++  SETTINGS +++++++++++
-void MainController::storeMetronomeSettings(float gain, float pan){
-    settings.setMetronomeSettings(gain, pan);
+void MainController::storeMetronomeSettings(float gain, float pan, bool muted){
+    settings.setMetronomeSettings(gain, pan, muted);
 }
 
 void MainController::addVstScanPath(QString path){

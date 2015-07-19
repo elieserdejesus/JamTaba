@@ -1,9 +1,8 @@
-
-#visual do metronomo bugando quando saio da sala. A track do metronomo não está sendo removida do layout
-
 #lembrar o mute do metronomo é uma boa.
 
 #implementar xmit
+
+#visual do metronomo bugando quando saio da sala. A track do metronomo não está sendo removida do layout. Onde vou colocar o metronomo?
 
 
 #estou usando o mesmo byte array para armazenar os bytes dos canais e enviar quando tem bytes suficientes (> 4096).

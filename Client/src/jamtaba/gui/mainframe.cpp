@@ -398,7 +398,8 @@ void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
     //add metronome track view
     float metronomeInitialGain = mainController->getSettings().getMetronomeGain();
     float metronomeInitialPan = mainController->getSettings().getMetronomePan();
-    metronomeTrackView = new MetronomeTrackView(mainController, NinjamController::METRONOME_TRACK_ID, metronomeInitialGain, metronomeInitialPan );
+    bool metronomeInitialMuteStatus = mainController->getSettings().getMetronomeMuteStatus();
+    metronomeTrackView = new MetronomeTrackView(mainController, NinjamController::METRONOME_TRACK_ID, metronomeInitialGain, metronomeInitialPan, metronomeInitialMuteStatus );
 
     ui.localTracksLayout->addWidget(metronomeTrackView);
 

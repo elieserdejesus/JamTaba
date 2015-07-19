@@ -53,6 +53,7 @@ public:
     void read(QJsonObject in);
     float pan;
     float gain;
+    bool muted;
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -143,9 +144,10 @@ public:
     QStringList getVstScanPaths() const;
 
     //++++++++++++++ Metronome ++++++++++
-    void setMetronomeSettings(float gain, float pan);
+    void setMetronomeSettings(float gain, float pan, bool muted);
     inline float getMetronomeGain() const{return metronomeSettings.gain;}
     inline float getMetronomePan() const{return metronomeSettings.pan;}
+    inline bool getMetronomeMuteStatus() const{return metronomeSettings.muted;}
 
     //+++++++++   Window  +++++++++++++++++++++++
     inline QPointF getLastWindowLocation() const{return windowSettings.location;}

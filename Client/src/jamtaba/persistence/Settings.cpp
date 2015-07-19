@@ -88,11 +88,13 @@ MetronomeSettings::MetronomeSettings()
 void MetronomeSettings::read(QJsonObject in){
     pan =    getValueFromJson(in, "pan", (float)0);
     gain=    getValueFromJson(in, "gain", (float)1);
+    muted=   getValueFromJson(in, "muted", false);
 }
 
 void MetronomeSettings::write(QJsonObject &out){
     out["pan"]   = pan;
-    out["gain"]   = gain;
+    out["gain"]  = gain;
+    out["muted"] = muted;
 }
 //+++++++++++++++++++++++++++
 WindowSettings::WindowSettings()
@@ -277,9 +279,10 @@ QStringList Settings::getVstScanPaths() const{
 //++++++++++++++++++
 
 //+++++++++++++++++++++++++++++
-void Settings::setMetronomeSettings(float gain, float pan){
+void Settings::setMetronomeSettings(float gain, float pan, bool muted){
     metronomeSettings.pan = pan;
-    metronomeSettings.gain = gain;//= MetronomeSettings(pan, gain);
+    metronomeSettings.gain = gain;
+    metronomeSettings.muted = muted;
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

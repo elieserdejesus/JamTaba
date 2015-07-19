@@ -6,7 +6,7 @@
 class MetronomeTrackView : public BaseTrackView
 {
 public:
-    MetronomeTrackView(Controller::MainController* mainController, long metronomeID, float initialGain, float initialPan);
+    MetronomeTrackView(Controller::MainController* mainController, long metronomeID, float initialGain, float initialPan, bool muted);
     ~MetronomeTrackView();
 };
 
