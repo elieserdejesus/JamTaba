@@ -45,6 +45,13 @@ public:
         groupedInputs.append(input);
     }
     inline int getIndex() const{return groupIndex;}
+
+    void mixGroupedInputs(Audio::SamplesBuffer& out){
+        foreach (Audio::LocalInputAudioNode* inputTrack, groupedInputs) {
+            out.add(inputTrack->getLastBuffer());
+        }
+    }
+
 private:
     int groupIndex;
     QList<Audio::LocalInputAudioNode*> groupedInputs;
@@ -59,13 +66,14 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
       currentStreamingRoomID(-1000),
       ninjamService(nullptr),
       ninjamController(nullptr),
-      mutex(QMutex::Recursive),
       started(false),
       vstHost(Vst::VstHost::getInstance()),
       //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
       ipToLocationResolver("../Jamtaba2/GeoLite2-Country.mmdb"),
       settings(settings)
 {
+
+    threadHandle = nullptr;//QThread::currentThreadId();
 
     setQuitOnLastWindowClosed(false);//wait disconnect from server to close
     configureStyleSheet();
@@ -145,6 +153,13 @@ QStringList MainController::getBotNames() const{
 Geo::Location MainController::getGeoLocation(QString ip) {
     return ipToLocationResolver.resolve(ip);
 }
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void MainController::mixGroupedInputs(int groupIndex, Audio::SamplesBuffer &out){
+    if(groupIndex >= 0 && groupIndex < trackGroups.size()){
+        trackGroups[groupIndex]->mixGroupedInputs(out);
+    }
+}
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainController::updateInputTracksRange(){
 
@@ -284,7 +299,8 @@ void MainController::setInputTrackToNoInput(int localChannelIndex){
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Audio::AudioNode *MainController::getTrackNode(long ID){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
+    //checkThread("getTrackNode()");
     if(tracksNodes.contains(ID)){
         return tracksNodes[ID];
     }
@@ -293,6 +309,8 @@ Audio::AudioNode *MainController::getTrackNode(long ID){
 
 bool MainController::addTrack(long trackID, Audio::AudioNode* trackNode){
     QMutexLocker locker(&mutex);
+    //checkThread("addTrack()");
+
 //    qDebug() << "adicionando track " << trackID;
 //    if(!tracksNodes.contains(trackID)){
         tracksNodes.insert( trackID, trackNode );
@@ -337,6 +355,8 @@ void MainController::storeIOSettings(int firstIn, int lastIn, int firstOut, int 
 
 void MainController::removeTrack(long trackID){
     QMutexLocker locker(&mutex); //remove Track is called from ninjam service thread, and cause a crash if the process callback (audio Thread) is iterating over tracksNodes to render audio
+    //checkThread("removeTrack();");
+
     Audio::AudioNode* trackNode = tracksNodes[trackID];
     if(trackNode){
         audioMixer->removeNode(trackNode);
@@ -373,7 +393,12 @@ void MainController::on_VSTPluginFounded(QString name, QString group, QString pa
 }
 
 void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
-    QMutexLocker locker(&mutex);
+    if(!threadHandle){
+        threadHandle = QThread::currentThreadId();
+    }
+    //QMutexLocker locker(&mutex);
+    checkThread("doAudioProcess();");
+
     MidiBuffer midiBuffer = midiDriver->getBuffer();
     vstHost->fillMidiEvents(midiBuffer);//pass midi events to vst host
 
@@ -382,7 +407,8 @@ void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuff
 
 
 void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
+    checkThread("process();");
     if(!isPlayingInNinjamRoom()){
         doAudioProcess(in, out);
     }
@@ -393,6 +419,7 @@ void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out
 
 Audio::AudioPeak MainController::getTrackPeak(int trackID){
     QMutexLocker locker(&mutex);
+    //checkThread("getTrackPeak()");
     Audio::AudioNode* trackNode = tracksNodes[trackID];
     if(trackNode && !trackNode->isMuted()){
         return trackNode->getLastPeak(true);//get last peak and reset
@@ -409,7 +436,8 @@ Audio::AudioPeak MainController::getRoomStreamPeak(){
 
 //++++++++++ TRACKS ++++++++++++
 void MainController::setTrackPan(int trackID, float pan){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
+    //checkThread("setTrackPan();");
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->setPan(pan);
@@ -417,7 +445,8 @@ void MainController::setTrackPan(int trackID, float pan){
 }
 
 void MainController::setTrackLevel(int trackID, float level){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
+    //checkThread("setTrackLevel();");
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         //node->setGain( std::pow( level, 4));
@@ -426,7 +455,8 @@ void MainController::setTrackLevel(int trackID, float level){
 }
 
 void MainController::setTrackMute(int trackID, bool muteStatus){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
+    //checkThread("setTrackMute();");
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->setMuteStatus(muteStatus);
@@ -434,7 +464,8 @@ void MainController::setTrackMute(int trackID, bool muteStatus){
 }
 
 void MainController::setTrackSolo(int trackID, bool soloStatus){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
+    //checkThread("setTrackSolo();");
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->setSoloStatus(soloStatus);
@@ -442,7 +473,8 @@ void MainController::setTrackSolo(int trackID, bool soloStatus){
 }
 
 bool MainController::trackIsMuted(int trackID) const{
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
+    //checkThread("trackIsMuted()");
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         return node->isMuted();
@@ -451,7 +483,8 @@ bool MainController::trackIsMuted(int trackID) const{
 }
 
 bool MainController::trackIsSoloed(int trackID) const{
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
+    //checkThread("trackIsSoloed()");
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         return node->isSoloed();
@@ -688,8 +721,8 @@ void MainController::on_ninjamAudioAvailableToSend(QByteArray encodedAudio, quin
         currentGUIDs.insert(channelIndex, newGUID());
         ninjamService->sendAudioIntervalBegin(currentGUIDs[channelIndex], channelIndex);
     }
-    Ninjam::Service::getInstance()->sendAudioIntervalPart(currentGUIDs[channelIndex], encodedAudio, isLastPart);
-    //ninjamService->sendAudioIntervalPart(currentGUIDs[channelIndex], encodedAudio, isLastPart);
+
+    ninjamService->sendAudioIntervalPart(currentGUIDs[channelIndex], encodedAudio, isLastPart);
 }
 
 void MainController::on_errorInNinjamServer(QString error){
@@ -712,4 +745,11 @@ void MainController::on_connectedInNinjamServer(Ninjam::Server server){
     //emit event after start controller to create view widgets before start
     emit enteredInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers()));
     ninjamController->start(server);
+}
+
+
+void MainController::checkThread(QString methodName) const{
+    if(threadHandle && QThread::currentThreadId() != threadHandle ){
+        qCritical() << "different Thread in " << methodName;
+    }
 }
