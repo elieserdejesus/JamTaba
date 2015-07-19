@@ -88,6 +88,9 @@ public:
 
     bool isPlayingInNinjamRoom() const;
 
+    void setTransmitingStatus(bool transmiting);
+    inline bool isTransmiting() const{return transmiting;}
+
     void stopRoomStream();//stop currentRoom stream
     inline long long getCurrentStreamingRoomID() const{return currentStreamingRoomID;}
 
@@ -190,14 +193,16 @@ private:
     class InputTrackGroup;
     QMap<int, InputTrackGroup*> trackGroups;
 
+    bool transmiting;
+
     //ninjam
     Ninjam::Service* ninjamService;
     Controller::NinjamController* ninjamController;
 
     QMap<long, Audio::AudioNode*> tracksNodes;
     QMutex mutex;
-    void* threadHandle;
-    void checkThread(QString methodName) const;
+    //void* threadHandle;
+    //void checkThread(QString methodName) const;
 
     bool started;
 

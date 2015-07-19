@@ -2,6 +2,8 @@
 #define TRACKVIEW_H
 
 #include <QWidget>
+#include <QVariant>
+#include <QStyle>
 
 namespace Ui {
     class TrackView;
@@ -21,7 +23,7 @@ public:
 
     inline long getTrackID() const{return trackID;}
     static BaseTrackView* getTrackViewByID(long trackID);
-    virtual void setEnabled(bool);
+
 
     virtual void setToNarrow();
     virtual void setToWide();
@@ -34,6 +36,8 @@ public:
     inline Controller::MainController* getMainController() const{return mainController;}
 
     static const int NARROW_WIDTH = 80;
+
+    void setUnlightStatus(bool unlighted);
 protected:
     Ui::TrackView *ui;
     Controller::MainController* mainController;
@@ -47,6 +51,8 @@ protected:
     void setPeaks(float left, float right);
 private:
     static QMap<long, BaseTrackView*> trackViews;
+
+
 
 private slots:
     void onMuteClicked();

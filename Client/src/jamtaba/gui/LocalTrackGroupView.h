@@ -22,6 +22,7 @@ public:
     QList<LocalTrackView*> getTracks() const;
     virtual void addTrackView(BaseTrackView *trackView);
     inline int getIndex() const{return index;}
+
 signals:
     void nameChanged();
 private:

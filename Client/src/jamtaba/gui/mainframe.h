@@ -83,6 +83,9 @@ private slots:
     //channel name changed
     void on_channelNameChanged();
 
+    //xmit
+    void on_xmitButtonClicked(bool checked);
+
 private:
 
     BusyDialog busyDialog;

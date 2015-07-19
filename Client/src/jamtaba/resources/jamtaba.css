@@ -179,36 +179,62 @@ border: 1px solid rgba(0, 0, 0, 55);
 border-radius: 3px;
 }
 
-QSlider::add-page:vertical[enabled="false"]{
+QSlider::groove:horizontal{
+    background-color: rgba(255, 255, 255, 60);
+    height: 3px;
+    border-radius: 3px;
     border: none;
 }
 
-QSlider::groove:horizontal[enabled="false"]{
-    background-color: rgba(0, 0, 0, 20);
-    height: 5px;
+BaseTrackView[unlighted="true"] QSlider::groove:horizontal{
+    background-color: rgba(255,255,255, 40);
 }
+
+BaseTrackView[unlighted="true"] QSlider::add-page:vertical{
+    background: rgb(255,255,255, 50);
+
+}
+
+QSlider::add-page:vertical{
+    background: rgb(255,255,255, 130);
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    margin: 3px;
+}
+
 
 QSlider::groove:vertical {
-background-color: rgba(0, 0, 0, 50);
-width: 8px;
+    background-color: rgba(0, 0, 0, 50);
+    width: 8px;
 }
-
-QSlider::groove:vertical[enabled="false"]{
-    background-color: rgba(0, 0, 0, 20);
+BaseTrackView[unlighted="true"] QSlider::groove:vertical{
+    background-color: rgba(0, 0, 0, 40);
     border-color: rgba(0, 0, 0, 25);
 }
 
+
 QSlider::handle:vertical, QSlider::handle:horizontal {
-background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgb(220, 220,220), stop:1 rgb(45, 45, 45));
-border: 1px solid rgb(120, 120, 120);
-height: 12px;
-margin-left: -12px;
-margin-right: -12px;
-border-radius: 3px;
+    background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgb(220, 220,220), stop:1 rgb(45, 45, 45));
+    border: 1px solid rgb(120, 120, 120);
+    border-radius: 3px;
 }
 
-QSlider::handle:vertical[enabled="false"], QSlider::handle:horizontal[enabled="false"]{
-    background-color:rgb(120, 120, 120);
+
+QSlider:handle:vertical{
+    margin-left: -12px;
+    margin-right: -12px;
+    height: 12px;
+}
+
+QSlider:handle:horizontal{
+    margin-top: -8px;
+    margin-bottom: -8px;
+    width: 10px;
+    /*height: 12px;*/
+}
+
+BaseTrackView[unlighted="true"] QSlider::handle:vertical, BaseTrackView[unlighted="true"] QSlider::handle:horizontal{
+    background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgb(150, 150,150), stop:1 rgb(35, 35, 35));
 }
 
 QSlider::handle:vertical:hover, QSlider::handle:horizontal:hover {
@@ -216,23 +242,19 @@ border: 1px solid rgb(70, 70, 70);
 background-color: qlineargradient(x1:0, y1:0.5, x2:0, y2:1, stop:0 rgb(220, 220,220), stop:1 rgb(45, 45, 45));
 }
 
-QSlider::add-page:vertical[enabled="true"] {
-background: rgb(255,255,255, 130);
-border-top-left-radius: 0px;
-border-top-right-radius: 0px;
-margin: 3px;
-}
+
 
 /* +++++++++++++++++++++++++++++++++++++++++++ */
 PeakMeter{
-    background-color: rgba(0, 0, 0, 100);
+    background-color: rgba(0, 0, 0, 140);
     border: 1px solid rgba(0, 0, 0, 25);
-    max-width: 4px;
-    min-width: 4px;
+    max-width: 3px;
+    min-width: 3px;
+    border-radius: 2px;
 }
-PeakMeter[enabled="false"]{
+BaseTrackView[unlighted="true"] PeakMeter{
     background-color: rgba(0, 0, 0, 20);
-    border: none;
+    /*border: none;*/
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++ */
@@ -367,6 +389,32 @@ border: 1px solid black;
 border-radius: 5px;
 }
 
+/*+++++++++++++++++++++++++++++++*/
+
+#xmitButton{
+    border-radius: 2px;
+    border: 1px solid rgba(0,0, 0, 100);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgba(90, 255, 62, 150), stop:1 rgba(0, 175, 0, 150));
+    font-size: 8pt;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    color: black;
+}
+
+#xmitButton:hover{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(0, 175, 0), stop:1 rgb(90, 255, 62));
+}
+#xmitButton:!checked{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgba(255, 255, 255, 30), stop:1 rgba(255, 255, 255, 60));
+    border-color: gray;
+    color: black;
+}
+
+#xmitButton:hover:!checked{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgba(255, 255, 255, 60), stop:1 rgba(255, 255, 255, 90));
+}
+/*+++++++++++++++++++++++++++++++*/
+
 /*  Track view +++++++++++++++++++++++++++++++++++++++++++++++ */
 BaseTrackView{
 border-radius: 3px;
@@ -374,32 +422,23 @@ background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), s
 border: 1px solid rgb(61,61,61);
 }
 
-BaseTrackView[enabled="false"] > QFrame#topSeparator, BaseTrackView[enabled="false"] > QFrame#panSectionSeparator{
+BaseTrackView[unlighted="true"] > QFrame#topSeparator, BaseTrackView[unlighted="true"] > QFrame#panSectionSeparator{
     background-color: rgba(0, 0, 0, 5);
 }
 
-BaseTrackView[enabled="false"]{
-    background: rgba(0, 0, 0, 30);
+BaseTrackView[unlighted="true"]{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(150, 150, 150), stop:1 rgb(50, 50, 50));
+}
+
+/*
+BaseTrackView #peaksPanel{
+    background-color: rgba(0, 0, 0, 100);
+    padding: 2px;
+    border-radius: 2px;
     border: none;
 }
+*/
 
-
-BaseTrackView  QGroupBox{
-border: 1px solid rgba(0, 0, 0, 50);
-border-radius: 3px;
-margin-top: 5px;
-}
-
-
-BaseTrackView  QGroupBox::title{
-subcontrol-origin: margin;
-subcontrol-position: top left;
-padding: 1 3px;
-margin-left: 5px;
-margin-right:5px;
-left: 10px;
-
-}
 
 BaseTrackView .QPushButton#soloButton, BaseTrackView .QPushButton#muteButton {
 border-radius: 3px;
@@ -449,6 +488,10 @@ TrackGroupView > #topPanel{
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), stop:1 rgb(100, 100, 100));
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
+}
+
+TrackGroupView[unlighted="true"] > #topPanel  {
+   background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(180, 180, 180), stop:1 rgb(70, 70, 70));
 }
 
 TrackGroupView #groupNameField {

@@ -31,6 +31,8 @@ public:
     void refreshInputSelectionName(int inputTrackIndex);
     inline int getTracksCount() const{return trackViews.size();}
 
+    void setUnlightStatus(bool unlighted);
+
 protected:
     void paintEvent(QPaintEvent* );
 

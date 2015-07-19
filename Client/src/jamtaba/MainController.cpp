@@ -112,10 +112,11 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
       vstHost(Vst::VstHost::getInstance()),
       //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
       ipToLocationResolver("../Jamtaba2/GeoLite2-Country.mmdb"),
-      settings(settings)
+      settings(settings),
+      transmiting(true)
 {
 
-    threadHandle = nullptr;//QThread::currentThreadId();
+    //threadHandle = nullptr;//QThread::currentThreadId();
 
     setQuitOnLastWindowClosed(false);//wait disconnect from server to close
     configureStyleSheet();
@@ -441,11 +442,11 @@ void MainController::on_VSTPluginFounded(QString name, QString group, QString pa
 }
 
 void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
-    if(!threadHandle){
-        threadHandle = QThread::currentThreadId();
-    }
-    //QMutexLocker locker(&mutex);
-    checkThread("doAudioProcess();");
+//    if(!threadHandle){
+//        threadHandle = QThread::currentThreadId();
+//    }
+//    //QMutexLocker locker(&mutex);
+//    checkThread("doAudioProcess();");
 
     MidiBuffer midiBuffer = midiDriver->getBuffer();
     vstHost->fillMidiEvents(midiBuffer);//pass midi events to vst host
@@ -456,7 +457,7 @@ void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuff
 
 void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
     //QMutexLocker locker(&mutex);
-    checkThread("process();");
+    //checkThread("process();");
     if(!isPlayingInNinjamRoom()){
         doAudioProcess(in, out);
     }
@@ -480,6 +481,16 @@ Audio::AudioPeak MainController::getTrackPeak(int trackID){
 
 Audio::AudioPeak MainController::getRoomStreamPeak(){
     return roomStreamer->getLastPeak(true);
+}
+
+
+void MainController::setTransmitingStatus(bool transmiting){
+    if(this->transmiting != transmiting){
+        this->transmiting = transmiting;
+        if(isPlayingInNinjamRoom()){
+            ninjamController->setTransmitStatus(transmiting);
+        }
+    }
 }
 
 //++++++++++ TRACKS ++++++++++++
@@ -678,7 +689,7 @@ void MainController::on_audioDriverSampleRateChanged(int newSampleRate){
 }
 
 void MainController::on_audioDriverStopped(){
-    threadHandle = nullptr;
+    //threadHandle = nullptr;
     if(isPlayingInNinjamRoom()){
         //send the last interval part when audio driver is stopped
         foreach (int channelIndex, intervalsToUpload.keys()) {
@@ -802,12 +813,12 @@ void MainController::on_connectedInNinjamServer(Ninjam::Server server){
 
    //emit event after start controller to create view widgets before start
     emit enteredInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers(), server.getMaxChannels()));
-    ninjamController->start(server);
+    ninjamController->start(server, transmiting);
 }
 
 
-void MainController::checkThread(QString methodName) const{
-    if(threadHandle && QThread::currentThreadId() != threadHandle ){
-        qCritical() << "different Thread in " << methodName;
-    }
-}
+//void MainController::checkThread(QString methodName) const{
+//    if(threadHandle && QThread::currentThreadId() != threadHandle ){
+//        qCritical() << "different Thread in " << methodName;
+//    }
+//}

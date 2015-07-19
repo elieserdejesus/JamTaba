@@ -63,6 +63,10 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 
     QObject::connect( ui.toolButton, SIGNAL(clicked()), this, SLOT(on_toolButtonClicked()));
 
+    QObject::connect(ui.xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
+
+    ui.xmitButton->setChecked(mainController->isTransmiting());
+
     initializeLocalInputChannels();
 }
 //++++++++++++++++++++++++=
@@ -459,6 +463,14 @@ void MainFrame::timerEvent(QTimerEvent *){
               roomView->addPeak(mainController->getRoomStreamPeak().max());
           }
     }
+}
+
+//++++++++++++=
+void MainFrame::on_xmitButtonClicked(bool checked){
+    foreach (LocalTrackGroupView* localChannel, localChannels) {
+        localChannel->setUnlightStatus(!checked);
+    }
+    mainController->setTransmitingStatus(checked);
 }
 
 //++++++++++++=

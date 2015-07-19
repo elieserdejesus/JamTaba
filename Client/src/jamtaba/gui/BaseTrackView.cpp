@@ -77,8 +77,8 @@ void BaseTrackView::setToWide(){
     }
 }
 
-void BaseTrackView::setEnabled(bool enabled){
-    QWidget::setEnabled(enabled);
+void BaseTrackView::setUnlightStatus(bool unlighted){
+    setProperty("unlighted", QVariant(unlighted));
     style()->unpolish(this);
     style()->polish(this);
 
@@ -94,7 +94,7 @@ void BaseTrackView::setEnabled(bool enabled){
     style()->unpolish(ui->peakMeterRight);
     style()->polish(ui->peakMeterRight);
 
-
+    update();
 }
 
 BaseTrackView* BaseTrackView::getTrackViewByID(long trackID){
