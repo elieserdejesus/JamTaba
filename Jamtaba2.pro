@@ -1,5 +1,4 @@
-
-#implementar o circular interval progress
+#inicializar o componente de progresso de intervalo
 
 #implementar os controles do metronomo, ainda não estão funcionando
 
