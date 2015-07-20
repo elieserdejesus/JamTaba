@@ -8,7 +8,6 @@
 #include "../ninjam/User.h"
 #include "../ninjam/Server.h"
 
-//#include "../audio/NinjamTrackNode.h"
 #include "../audio/MetronomeTrackNode.h"
 #include "../audio/core/AudioDriver.h"
 
@@ -63,10 +62,16 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Co
     QObject::connect(chatPanel, SIGNAL(userSendingNewMessage(QString)), this, SLOT(userSendingNewChatMessage(QString)));
 
 
-//    float initialMetronomeGain = mainController->getSettings().getMetronomeGain();
-//    float initialMetronomePan = mainController->getSettings().getMetronomePan();
-//    bool initialMetronomeMuteStatus = mainController->getSettings().getMetronomeMuteStatus();
+    float initialMetronomeGain = mainController->getSettings().getMetronomeGain();
+    float initialMetronomePan = mainController->getSettings().getMetronomePan();
+    bool initialMetronomeMuteStatus = mainController->getSettings().getMetronomeMuteStatus();
 
+
+    ui->topPanel->getGainSlider()->setValue(100*initialMetronomeGain);
+    ui->topPanel->getPanSlider()->setValue(4 * initialMetronomePan);
+    ui->topPanel->getMuteButton()->setChecked(initialMetronomeMuteStatus);
+
+    initializeMetronomeEvents();//signals and slots
 
     //testing many tracks
 //    for (int t = 0; t < 16; ++t) {
@@ -75,6 +80,34 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Co
 //    }
 
 
+}
+
+void NinjamRoomWindow::initializeMetronomeEvents(){
+    QObject::connect( ui->topPanel->getGainSlider(), SIGNAL(valueChanged(int)), this, SLOT(onFaderMoved(int)));
+    QObject::connect( ui->topPanel->getPanSlider(), SIGNAL(valueChanged(int)), this, SLOT(onPanSliderMoved(int)));
+    QObject::connect( ui->topPanel->getMuteButton(), SIGNAL(clicked(bool)), this, SLOT(onMuteClicked()));
+    QObject::connect( ui->topPanel->getSoloButton(), SIGNAL(clicked(bool)), this, SLOT(onSoloClicked()));
+
+
+    //ui->topPanel->getMuteButton()->installEventFilter(this);
+    //ui->topPanel->getSoloButton()->installEventFilter(this);
+}
+
+void NinjamRoomWindow::onPanSliderMoved(int value){
+    float sliderValue = value/(float)ui->topPanel->getPanSlider()->maximum();
+    mainController->setTrackPan(Controller::NinjamController::METRONOME_TRACK_ID, sliderValue);
+}
+
+void NinjamRoomWindow::onFaderMoved(int value){
+    mainController->setTrackLevel(Controller::NinjamController::METRONOME_TRACK_ID, value/100.0);
+}
+
+void NinjamRoomWindow::onMuteClicked(){
+    mainController->setTrackMute(Controller::NinjamController::METRONOME_TRACK_ID, !mainController->trackIsMuted(Controller::NinjamController::METRONOME_TRACK_ID));
+}
+
+void NinjamRoomWindow::onSoloClicked(){
+    mainController->setTrackSolo(Controller::NinjamController::METRONOME_TRACK_ID, !mainController->trackIsSoloed(Controller::NinjamController::METRONOME_TRACK_ID));
 }
 
 void NinjamRoomWindow::userSendingNewChatMessage(QString msg){
@@ -94,7 +127,8 @@ void NinjamRoomWindow::updatePeaks(){
             view->updatePeaks();
         }
     }
-
+    Audio::AudioPeak metronomePeak = mainController->getTrackPeak(Controller::NinjamController::METRONOME_TRACK_ID);
+    ui->topPanel->setMetronomePeaks(metronomePeak.getLeft(), metronomePeak.getRight());
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

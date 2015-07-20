@@ -1,9 +1,13 @@
 #inicializar o componente de progresso de intervalo
 
+
+
 #implementar os controles do metronomo, ainda não estão funcionando
 
 #carregar os valores iniciais do metronomoda persistência
 
+
+#duplo clique no botão de entrar na sala buga
 
 #sobre o estalo: eu senti mais estalos usando um buffer size pequeno. É bem possível que eu tenha testado com o ASio4ALL usando
     #um buffer size de 128. Nesse caso talvez a coisa complique mesmo, 256 já está de bom tamanho para o asio4all.
