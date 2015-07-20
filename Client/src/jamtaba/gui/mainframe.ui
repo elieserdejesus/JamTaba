@@ -45,7 +45,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Your inputs</string>
+          <string>Your controls</string>
          </property>
         </widget>
        </item>
@@ -162,7 +162,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>679</width>
+                <width>670</width>
                 <height>644</height>
                </rect>
               </property>
@@ -236,6 +236,16 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="CircularIntervalProgressDisplay" name="circularProgress" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>200</height>
+          </size>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
@@ -270,6 +280,14 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>CircularIntervalProgressDisplay</class>
+   <extends>QWidget</extends>
+   <header>CircularIntervalProgressDisplay.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

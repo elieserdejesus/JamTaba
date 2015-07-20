@@ -16,7 +16,6 @@
 #include "FxPanel.h"
 #include "pluginscandialog.h"
 #include "NinjamRoomWindow.h"
-#include "MetronomeTrackView.h"
 #include "Highligther.h"
 #include "ChatPanel.h"
 #include "BusyDialog.h"
@@ -45,7 +44,7 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     busyDialog(0),
     mainController(mainController),
     pluginScanDialog(nullptr),
-    metronomeTrackView(nullptr),
+    //metronomeTrackView(nullptr),
     ninjamWindow(nullptr)
 {
 	ui.setupUi(this);
@@ -400,12 +399,12 @@ void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
     ui.tabWidget->setCurrentIndex(index);
 
     //add metronome track view
-    float metronomeInitialGain = mainController->getSettings().getMetronomeGain();
-    float metronomeInitialPan = mainController->getSettings().getMetronomePan();
-    bool metronomeInitialMuteStatus = mainController->getSettings().getMetronomeMuteStatus();
-    metronomeTrackView = new MetronomeTrackView(mainController, NinjamController::METRONOME_TRACK_ID, metronomeInitialGain, metronomeInitialPan, metronomeInitialMuteStatus );
+//    float metronomeInitialGain = mainController->getSettings().getMetronomeGain();
+//    float metronomeInitialPan = mainController->getSettings().getMetronomePan();
+//    bool metronomeInitialMuteStatus = mainController->getSettings().getMetronomeMuteStatus();
+//    metronomeTrackView = new MetronomeTrackView(mainController, NinjamController::METRONOME_TRACK_ID, metronomeInitialGain, metronomeInitialPan, metronomeInitialMuteStatus );
 
-    ui.localTracksLayout->addWidget(metronomeTrackView);
+    //ui.localTracksLayout->addWidget(metronomeTrackView);
 
     //add the chat panel in main window
     ChatPanel* chatPanel = ninjamWindow->getChatPanel();
@@ -414,9 +413,6 @@ void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
 
 void MainFrame::on_exitedFromRoom(bool normalDisconnection){
     hideBusyDialog();
-    if(metronomeTrackView){
-        ui.localTracksLayout->removeWidget(metronomeTrackView);
-    }
 
     //remove the jam room tab (the last tab)
     if(ui.tabWidget->count() > 1){
@@ -439,15 +435,21 @@ void MainFrame::on_exitedFromRoom(bool normalDisconnection){
 void MainFrame::timerEvent(QTimerEvent *){
     //update local input track peaks
 
+    static long lastBeatUpdate = QDateTime::currentMSecsSinceEpoch();
+    static int beat = 0;
+    long ellapsed = QDateTime::currentMSecsSinceEpoch() - lastBeatUpdate;
+    if(ellapsed >= 500){
+        lastBeatUpdate = QDateTime::currentMSecsSinceEpoch();
+        beat = (beat + 1) % ui.circularProgress->getBeatsPerInterval();
+        ui.circularProgress->setCurrentBeat(beat);
+    }
+
     foreach (TrackGroupView* channel, localChannels) {
         channel->updatePeaks();
     }
 
     //update metronome peaks
     if(mainController->isPlayingInNinjamRoom()){
-        if(metronomeTrackView){
-            metronomeTrackView->updatePeaks();;
-        }
 
         //update tracks peaks
         if(ninjamWindow){

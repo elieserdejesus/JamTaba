@@ -8,7 +8,7 @@
 QMap<long, BaseTrackView*> BaseTrackView::trackViews;//static map
 
 BaseTrackView::BaseTrackView(Controller::MainController *mainController, long trackID) :
-    ui(new Ui::TrackView),
+    ui(new Ui::BaseTrackView),
     mainController(mainController),
     trackID(trackID),
     activated(true),

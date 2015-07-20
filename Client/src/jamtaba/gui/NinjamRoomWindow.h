@@ -7,7 +7,6 @@
 #include "../loginserver/LoginService.h"
 #include "ChatPanel.h"
 
-
 class NinjamTrackGroupView;
 
 
@@ -37,6 +36,7 @@ private:
     Controller::MainController* mainController;
     QMap<QString, NinjamTrackGroupView*> trackGroups;
     ChatPanel* chatPanel;
+
 
 private slots:
     //ninja interval controls
