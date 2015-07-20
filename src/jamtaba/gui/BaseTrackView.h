@@ -6,7 +6,7 @@
 #include <QStyle>
 
 namespace Ui {
-    class TrackView;
+    class BaseTrackView;
 }
 
 namespace Controller {
@@ -39,7 +39,7 @@ public:
 
     void setUnlightStatus(bool unlighted);
 protected:
-    Ui::TrackView *ui;
+    Ui::BaseTrackView *ui;
     Controller::MainController* mainController;
     void paintEvent(QPaintEvent *);
     bool eventFilter(QObject *source, QEvent *ev);

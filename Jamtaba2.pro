@@ -1,28 +1,21 @@
 
-#implementar xmit
-    #onde vai o botão?
+#implementar o circular interval progress
 
-#iniciar com o xmit desativado? Faz sentido, você não entrada tocando, não tem como
+#implementar os controles do metronomo, ainda não estão funcionando
 
-#depois de algum tempo dar um feedback se o xmit não foi ativado
-
-#dar um feedback nas pistas locais quando o xmit estiver desativado
-
-#visual do metronomo bugando quando saio da sala. A track do metronomo não está sendo removida do layout. Onde vou colocar o metronomo?
+#carregar os valores iniciais do metronomoda persistência
 
 
-#estou usando o mesmo byte array para armazenar os bytes dos canais e enviar quando tem bytes suficientes (> 4096).
-    #Se estou usando apenas um byte array é uma cagada que isso tenha funcionado para transmitir mais de um canal.
-    #É perfeitamente possível que os problemas que eu ouvi na transmissão com muitos canais seja disso e não de um possível
-    #engasgo do encoder. Tenho que ver isso.
-
-
+#sobre o estalo: eu senti mais estalos usando um buffer size pequeno. É bem possível que eu tenha testado com o ASio4ALL usando
+    #um buffer size de 128. Nesse caso talvez a coisa complique mesmo, 256 já está de bom tamanho para o asio4all.
 #hipótese para o estalo: Quando adicionei vários canais (vários encoders) vi que o bicho pega e engasga. Então é provavel que o encoder
 #esteja gerando  um gargalo na thread do áudio. A solução seria despachar o buffer de áudio para a main thread e ela encoda e envia.
     #De qualquer maneira não vale a pena perder tempo otimizando para funcionar bem com mais de dois canais, já que isso
     #nunca vai acontecer na prática.
 
     #Decidi deixar isso de lado até que eu tenha mais certeza que é realmente o encoding que está gerando problema
+
+
 
 #não rolou resampling para o metronomo?
 
@@ -46,6 +39,8 @@
 #está bugando o parser da lista de servers públicos no servidor
 
 #GAz deu a ideia de fazer um translate usando o site do google translate e HTML scrapping.
+
+#Comentei com o Marcello sobre a ideia de criar um segundo chat para mensagens privadas.
 
 #quando solo uma das inputs as outras também são enviadas. Ou seja, o solo está atuando apenas localmente. Faz sentido mudar isso?
 
@@ -264,7 +259,6 @@ HEADERS += \
     src/jamtaba/gui/NinjamPanel.h \
     src/jamtaba/gui/FancyProgressDisplay.h \
     src/jamtaba/audio/Resampler.h \
-    src/jamtaba/gui/MetronomeTrackView.h \
     src/jamtaba/audio/vorbis/VorbisDecoder.h \
     src/jamtaba/ninjam/UserChannel.h \
     src/jamtaba/audio/core/SamplesBuffer.h \
@@ -281,7 +275,8 @@ HEADERS += \
     src/jamtaba/Utils.h \
     src/jamtaba/gui/TrackGroupView.h \
     src/jamtaba/gui/LocalTrackGroupView.h \
-    src/jamtaba/NinjamController.h
+    src/jamtaba/NinjamController.h \
+    src/jamtaba/gui/CircularIntervalProgressDisplay.h
 
 
 SOURCES += \
@@ -333,7 +328,6 @@ SOURCES += \
     src/jamtaba/gui/NinjamPanel.cpp \
     src/jamtaba/gui/FancyProgressDisplay.cpp \
     src/jamtaba/audio/Resampler.cpp \
-    src/jamtaba/gui/MetronomeTrackView.cpp \
     src/jamtaba/audio/vorbis/VorbisDecoder.cpp \
     src/jamtaba/ninjam/UserChannel.cpp \
     src/jamtaba/audio/core/SamplesBuffer.cpp \
@@ -349,7 +343,8 @@ SOURCES += \
     src/jamtaba/persistence/Settings.cpp \
     src/jamtaba/gui/TrackGroupView.cpp \
     src/jamtaba/gui/LocalTrackGroupView.cpp \
-    src/jamtaba/NinjamController.cpp
+    src/jamtaba/NinjamController.cpp \
+    src/jamtaba/gui/CircularIntervalProgressDisplay.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \

@@ -36,7 +36,7 @@ class PluginDescriptor;
 class JamRoomViewPanel;
 class PluginGui;
 class LocalTrackGroupView;
-class MetronomeTrackView;
+//class MetronomeTrackView;
 
 class MainFrame : public QMainWindow
 {
@@ -105,7 +105,7 @@ private:
     PluginScanDialog* pluginScanDialog;
     Ui::MainFrameClass ui;
     QList<LocalTrackGroupView*> localChannels;
-    MetronomeTrackView* metronomeTrackView;
+    //MetronomeTrackView* metronomeTrackView;
     NinjamRoomWindow* ninjamWindow;
 
 

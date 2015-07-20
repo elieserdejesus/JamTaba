@@ -62,6 +62,12 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Co
 
     QObject::connect(chatPanel, SIGNAL(userSendingNewMessage(QString)), this, SLOT(userSendingNewChatMessage(QString)));
 
+
+//    float initialMetronomeGain = mainController->getSettings().getMetronomeGain();
+//    float initialMetronomePan = mainController->getSettings().getMetronomePan();
+//    bool initialMetronomeMuteStatus = mainController->getSettings().getMetronomeMuteStatus();
+
+
     //testing many tracks
 //    for (int t = 0; t < 16; ++t) {
 //        BaseTrackView* trackView = new NinjamTrackView(ui->tracksPanel, this->mainController, t, "User", QString::number(t), "BR", "BR" );
@@ -88,6 +94,7 @@ void NinjamRoomWindow::updatePeaks(){
             view->updatePeaks();
         }
     }
+
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
