@@ -563,6 +563,7 @@ LocalTrackView #inputSelectionButton{
 
 /* NINJAM */
 
+
 NinjamTrackView > .QLabel#channelName{
     border: none;
     qproperty-alignment: AlignCenter;
@@ -580,6 +581,12 @@ NinjamPanel{
     border-radius: 3px;
     border: 1px solid rgb(135, 135, 135);
     min-height: 100px;
+}
+
+NinjamPanel #intervalPanel{
+    color: black;
+    font-weight: bold;
+    font-size: 8pt;
 }
 
 /*Chat */

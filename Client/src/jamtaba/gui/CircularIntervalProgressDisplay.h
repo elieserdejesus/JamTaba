@@ -9,7 +9,7 @@ class QPaintEvent;
 class QPainter;
 
 class CircularIntervalProgressDisplay : public QWidget{
-
+    Q_OBJECT
 public:
     CircularIntervalProgressDisplay(QWidget* parent) ;
     inline bool isShowingAccents() const{ return showAccents;}
@@ -25,16 +25,18 @@ public:
 
 private:
 
-    void drawCircles(QPainter* p, int theRadius, int circles, int startIterval) ;
+    void drawCircles(QPainter* p, int hRadius, int vRadius, int circles, int startIterval) ;
     void initialize();
 
     static const int MARGIN = 2;
-    static const int OVAL_SIZE = 6;
+    static const int PREFERRED_OVAL_SIZE = 6;
+    int ovalSize;// = PREFERRED_OVAL_SIZE ;
 
     int currentBeat = 0;
     int beats = 16;
 
-    int radius;// = size / 2;
+    int horizontalRadius;
+    int verticalRadius;
     int centerX;// = getWidth() / 2;
     int centerY;// = getHeight() / 2;
 
@@ -43,6 +45,7 @@ private:
     int beatsPerAccent;
 
     bool showAccents = true;
+
 
 };
 

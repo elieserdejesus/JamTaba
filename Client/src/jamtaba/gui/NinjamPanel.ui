@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>736</width>
-    <height>90</height>
+    <height>150</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
     <width>16777215</width>
-    <height>120</height>
+    <height>150</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -30,12 +30,12 @@
     <number>12</number>
    </property>
    <property name="bottomMargin">
-    <number>6</number>
+    <number>0</number>
    </property>
    <property name="spacing">
     <number>6</number>
    </property>
-   <item row="0" column="6" rowspan="2">
+   <item row="1" column="6" rowspan="2">
     <spacer name="horizontalSpacer_3">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -48,7 +48,20 @@
      </property>
     </spacer>
    </item>
-   <item row="0" column="2">
+   <item row="1" column="3">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="2">
     <widget class="QWidget" name="panelCombos" native="true">
      <layout class="QGridLayout" name="gridLayout_3">
       <property name="leftMargin">
@@ -122,23 +135,7 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="4">
-    <widget class="CircularIntervalProgressDisplay" name="intervalPanel" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>200</width>
-       <height>0</height>
-      </size>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="7" rowspan="2">
+   <item row="1" column="7" rowspan="2">
     <widget class="QWidget" name="widget" native="true">
      <property name="minimumSize">
       <size>
@@ -398,32 +395,29 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="3">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+   <item row="1" column="4">
+    <widget class="CircularIntervalProgressDisplay" name="intervalPanel" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
+    </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PeakMeter</class>
-   <extends>QWidget</extends>
-   <header>peakmeter.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>CircularIntervalProgressDisplay</class>
    <extends>QWidget</extends>
    <header>CircularIntervalProgressDisplay.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PeakMeter</class>
+   <extends>QWidget</extends>
+   <header>peakmeter.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
