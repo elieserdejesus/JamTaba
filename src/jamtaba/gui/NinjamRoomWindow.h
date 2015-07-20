@@ -37,12 +37,19 @@ private:
     QMap<QString, NinjamTrackGroupView*> trackGroups;
     ChatPanel* chatPanel;
 
+    void initializeMetronomeEvents();
 
 private slots:
     //ninja interval controls
     void ninjamBpiComboChanged(QString);
     void ninjamBpmComboChanged(QString);
     void ninjamAccentsComboChanged(int );
+
+    //metronome events
+    void onPanSliderMoved(int value);
+    void onFaderMoved(int value);
+    void onMuteClicked();
+    void onSoloClicked();
 
     //ninjam controller events
     void on_bpiChanged(int bpi);

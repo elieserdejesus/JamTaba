@@ -23,8 +23,31 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     ui->comboBpi->setValidator(new QIntValidator(4, 64, ui->comboBpi));
 
     QObject::connect( ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)), this, SLOT(comboAccentsChanged(int)));
+
+    ui->levelSlider->installEventFilter(this);
+    ui->panSlider->installEventFilter(this);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamPanel::setMetronomePeaks(float left, float right){
+    ui->peakMeterLeft->setPeak(left);
+    ui->peakMeterRight->setPeak(right);
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++
+bool NinjamPanel::eventFilter(QObject *source, QEvent *ev){
+    if(ev->type() == QEvent::MouseButtonDblClick){
+        if(source == ui->panSlider){
+            ui->panSlider->setValue(0);//center
+        }
+        if(source == ui->levelSlider){
+            ui->levelSlider->setValue(100);//unit gain
+        }
+
+        return true;
+    }
+    return QWidget::eventFilter(source, ev);
+}
+//++++++++++++++++++++++++++++++++++++
 void NinjamPanel::comboAccentsChanged(int index){
     ui->intervalPanel->setShowAccents(index > 0);
     if(ui->intervalPanel->isShowingAccents()){
@@ -95,6 +118,21 @@ QComboBox* NinjamPanel::getBpmCombo() const{
 
 QComboBox* NinjamPanel::getAccentsCombo() const{
     return ui->comboBeatsPerAccent;
+}
+
+QSlider* NinjamPanel::getGainSlider() const{
+    return ui->levelSlider;
+}
+QSlider* NinjamPanel::getPanSlider() const{
+    return ui->panSlider;
+}
+
+QPushButton* NinjamPanel::getMuteButton() const{
+    return ui->muteButton;
+}
+
+QPushButton* NinjamPanel::getSoloButton() const{
+    return ui->soloButton;
 }
 
 NinjamPanel::~NinjamPanel()

@@ -18,10 +18,12 @@ public:
     void setBeatsPerAccent(int beats) ;
     inline int getBeatsPerInterval() const{return beats; }
     void setBeatsPerInterval(int beats) ;
-    virtual void paintEvent(QPaintEvent* e);
-    virtual void resizeEvent(QResizeEvent * event);
     void setSliceNumberColor(QColor sliceNumberColor) ;
     inline QColor getSliceNumberColor() const{ return sliceNumberColor; }
+
+protected:
+    virtual void paintEvent(QPaintEvent* e);
+    virtual void resizeEvent(QResizeEvent * event);
 
 private:
 

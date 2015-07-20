@@ -433,17 +433,17 @@ void MainFrame::on_exitedFromRoom(bool normalDisconnection){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::timerEvent(QTimerEvent *){
+
+//    static long lastBeatUpdate = QDateTime::currentMSecsSinceEpoch();
+//    static int beat = 0;
+//    long ellapsed = QDateTime::currentMSecsSinceEpoch() - lastBeatUpdate;
+//    if(ellapsed >= 500){
+//        lastBeatUpdate = QDateTime::currentMSecsSinceEpoch();
+//        beat = (beat + 1) % ui.circularProgress->getBeatsPerInterval();
+//        ui.circularProgress->setCurrentBeat(beat);
+//    }
+
     //update local input track peaks
-
-    static long lastBeatUpdate = QDateTime::currentMSecsSinceEpoch();
-    static int beat = 0;
-    long ellapsed = QDateTime::currentMSecsSinceEpoch() - lastBeatUpdate;
-    if(ellapsed >= 500){
-        lastBeatUpdate = QDateTime::currentMSecsSinceEpoch();
-        beat = (beat + 1) % ui.circularProgress->getBeatsPerInterval();
-        ui.circularProgress->setCurrentBeat(beat);
-    }
-
     foreach (TrackGroupView* channel, localChannels) {
         channel->updatePeaks();
     }

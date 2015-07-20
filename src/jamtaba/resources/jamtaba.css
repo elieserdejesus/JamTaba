@@ -226,6 +226,32 @@ QSlider:handle:vertical{
     height: 12px;
 }
 
+/* Ninjam metronome */
+NinjamPanel QSlider:handle:vertical{
+    margin-left: -8px;
+    margin-right: -8px;
+    height: 10px;
+    border-radius: 2px;
+}
+
+NinjamPanel QSlider:handle:horizontal{
+    width: 8px;
+    border-radius: 2px;
+}
+
+NinjamPanel QSlider::groove:vertical{
+    width: 5px;
+    margin: 2px;
+    border-radius: 2px;
+}
+
+NinjamPanel QSlider::groove:horizontal{
+    background-color: rgba(0,0, 0, 40);
+}
+
+
+/*+++++++++++++++++++++++++ */
+
 QSlider:handle:horizontal{
     margin-top: -8px;
     margin-bottom: -8px;
@@ -440,7 +466,7 @@ BaseTrackView #peaksPanel{
 */
 
 
-BaseTrackView .QPushButton#soloButton, BaseTrackView .QPushButton#muteButton {
+QPushButton#soloButton, QPushButton#muteButton {
 border-radius: 3px;
 border: 1px solid gray;
 color: rgba(0, 0, 0, 80);
@@ -452,27 +478,27 @@ BaseTrackView .QLabel#labelPanR, BaseTrackView .QLabel#labelPanL{
 color: rgba(0, 0, 0, 80);
 }
 
-BaseTrackView .QPushButton:hover#soloButton, BaseTrackView .QPushButton:hover#muteButton{
+QPushButton:hover#soloButton, QPushButton:hover#muteButton{
 background-color: rgba(255, 255, 255, 80);
 color: rgba(0, 0, 0, 200);
 }
 
-BaseTrackView .QPushButton:checked#soloButton{
+QPushButton:checked#soloButton{
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
 color: black;
 }
 
-BaseTrackView .QPushButton:hover:checked#soloButton {
+QPushButton:hover:checked#soloButton {
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(110, 255, 82), stop:1 rgb(30, 195, 30));
 color: gray;
 }
 
-BaseTrackView .QPushButton:checked#muteButton {
+QPushButton:checked#muteButton {
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
 color: lightgray;
 }
 
-BaseTrackView .QPushButton:hover:checked#muteButton {
+QPushButton:hover:checked#muteButton {
 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 110, 122), stop:1 rgb(120, 0, 0));
 color: white;
 }
@@ -583,10 +609,22 @@ NinjamPanel{
     min-height: 100px;
 }
 
+
+
 NinjamPanel #intervalPanel{
     color: black;
     font-weight: bold;
     font-size: 8pt;
+}
+
+NinjamPanel #metronomeControls{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.3, stop:0 rgba(0, 0, 0, 30), stop:1 rgba(0,0,0,0));
+    border-radius: 3px;
+    border: none;
+}
+
+NinjamPanel #metronomeControls QLabel{
+    color: gray; /* metrono pan (L & R) labels
 }
 
 /*Chat */
