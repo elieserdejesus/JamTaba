@@ -8,6 +8,8 @@
 
 #include <QThread>
 
+Q_LOGGING_CATEGORY(portaudio, "portaudio")
+
 #if _WIN32
     #include "pa_asio.h"
 #endif
@@ -20,7 +22,7 @@ PortAudioDriver::PortAudioDriver(AudioDriverListener *audioDriverListener)
     //initialize portaudio using default devices, mono input and try estereo output if possible
     PaError error = Pa_Initialize();
     if (error != paNoError){
-        qDebug() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
+        qCCritical(portaudio) << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
         throw std::runtime_error(Pa_GetErrorText(error));
     }
     this->globalInputRange = ChannelRange(0, 1);//one channel for input
@@ -37,22 +39,6 @@ PortAudioDriver::PortAudioDriver(AudioDriverListener *audioDriverListener)
 PortAudioDriver::PortAudioDriver(AudioDriverListener* audioDriverListener, int inputDeviceIndex, int outputDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize )
     :AudioDriver(audioDriverListener)
 {
-//    int maxInputs = getMaxInputs();
-//    if(firstInputIndex < 0 || firstInputIndex >= maxInputs){
-//        firstInputIndex = lastInputIndex = 0;
-//    }
-//    if(lastInputIndex < 0 || lastInputIndex >= maxInputs){
-//        lastInputIndex = 0;
-//    }
-
-//    int maxOutputs = getMaxOutputs();
-//    if(firstOutputIndex < 0 || firstOutputIndex >= maxOutputs){
-//        firstOutputIndex = lastOutputIndex = 0;
-//    }
-//    if(lastOutputIndex < 0 || lastOutputIndex >= maxOutputs){
-//        lastOutputIndex = 0;
-//    }
-
     this->globalInputRange = ChannelRange(firstInputIndex, (lastInputIndex - firstInputIndex) + 1);
     this->globalOutputRange = ChannelRange(firstOutputIndex, (lastOutputIndex - firstOutputIndex) + 1);
     this->inputDeviceIndex = inputDeviceIndex;// (inputDeviceIndex >= 0 && inputDeviceIndex < getDevicesCount()) ? inputDeviceIndex : paNoDevice;
@@ -62,10 +48,10 @@ PortAudioDriver::PortAudioDriver(AudioDriverListener* audioDriverListener, int i
 
 void PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
 {
-    //qDebug() << "initializing portaudio...";
+    qCDebug(portaudio) << "initializing portaudio...";
     PaError error = Pa_Initialize();
     if (error != paNoError){
-        qDebug() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
+        qCCritical(portaudio) << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
         throw std::runtime_error(Pa_GetErrorText(error));
     }
     paStream = nullptr;// inputBuffer = outputBuffer = NULL;
@@ -102,13 +88,12 @@ void PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
 
     //set sample rate
     this->sampleRate = (sampleRate >= 44100 && sampleRate <= 192000) ? sampleRate : 44100;
-
     this->bufferSize = (bufferSize >= 64 && bufferSize <= 4096) ? bufferSize : paFramesPerBufferUnspecified;
 }
 
 PortAudioDriver::~PortAudioDriver()
 {
-    //qDebug() << "destrutor PortAudioDriver";
+    qCDebug(portaudio) << "destructor PortAudioDriver";
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -165,6 +150,8 @@ int portaudioCallBack(const void *inputBuffer, void *outputBuffer,
 void PortAudioDriver::start(){
     stop();
 
+    qCDebug(portaudio) << "Starting portaudio driver";
+
     recreateBuffers();//adjust the input and output buffers channels
 
     unsigned long framesPerBuffer = bufferSize;// paFramesPerBufferUnspecified;
@@ -179,6 +166,7 @@ void PortAudioDriver::start(){
 
 //+++++++++++++++ ASIO SPECIFIC CODE FOR INPUT ++++++++++++++++++++++++++++++++
 #ifdef _WIN32
+    qCDebug(portaudio) << "using __WIN32 scpecific stream infos for inputs";
     PaAsioStreamInfo asioInputInfo;
     asioInputInfo.size = sizeof(PaAsioStreamInfo);
     asioInputInfo.hostApiType = paASIO;
@@ -202,6 +190,7 @@ void PortAudioDriver::start(){
 
 //+++++++++++++++ ASIO SPECIFIC CODE FOR OUTPUT ++++++++++++++++++++++++++++++++
 #ifdef _WIN32
+    qCDebug(portaudio) << "using __WIN32 scpecific stream infos for outputs";
     PaAsioStreamInfo asioOutputInfo;
     asioOutputInfo.size = sizeof(PaAsioStreamInfo);
     asioOutputInfo.hostApiType = paASIO;
@@ -218,17 +207,10 @@ void PortAudioDriver::start(){
 
     PaError error =  Pa_IsFormatSupported( !globalInputRange.isEmpty() ? (&inputParams) : NULL, &outputParams, sampleRate);
     if(error != paNoError){
-        qDebug() << "unsuported format: " << Pa_GetErrorText(error);
+        qCCritical(portaudio) << "unsuported format: " << Pa_GetErrorText(error) << "sampleRate: " << sampleRate ;
         throw std::runtime_error(std::string(Pa_GetErrorText(error) ));
     }
 
-//    if(inputDeviceIndex == outputDeviceIndex){
-//        qDebug() << "initializing " << Pa_GetDeviceInfo(inputDeviceIndex)->name << " inputs:" << inputParams.channelCount << " outputs:" << outputParams.channelCount << " sampleRate:" << sampleRate << " bufferSize:" << bufferSize;
-//    }
-//    else{
-//        qDebug() << "initializing " << Pa_GetDeviceInfo(inputDeviceIndex)->name << " inputs:" << inputParams.channelCount << " sampleRate:" << sampleRate << " bufferSize:" << bufferSize;
-//        qDebug() << "initializing " << Pa_GetDeviceInfo(outputDeviceIndex)->name << "outputs:" << outputParams.channelCount << " sampleRate:" << sampleRate << " bufferSize:" << bufferSize;
-//    }
     paStream = NULL;
     error = Pa_OpenStream(&paStream,
                           (!globalInputRange.isEmpty()) ? (&inputParams) : NULL,
@@ -244,6 +226,7 @@ void PortAudioDriver::start(){
             throw std::runtime_error(Pa_GetErrorText(error));
         }
     }
+    qCDebug(portaudio) << "portaudio driver started ok!";
     emit started();
 }
 
@@ -251,9 +234,10 @@ void PortAudioDriver::stop(){
     //QMutexLocker(&mutex);
     if (paStream != NULL){
         if (!Pa_IsStreamStopped(paStream)){
+            qCDebug(portaudio) << "closing portaudio stream";
             PaError error = Pa_CloseStream(paStream);
             if(error != paNoError){
-                qDebug() << Pa_GetErrorText(error);
+                qCCritical(portaudio) << "error closing portaudio stream: " << Pa_GetErrorText(error);
                 throw std::runtime_error(std::string(Pa_GetErrorText(error)));
             }
             emit stopped(); //fireDriverStopped();
@@ -262,8 +246,10 @@ void PortAudioDriver::stop(){
 }
 
 void PortAudioDriver::release(){
+    qCDebug(portaudio) << "releasing portaudio resources...";
     stop();
     Pa_Terminate();
+    qCDebug(portaudio) << "portaudio terminated!";
 }
 
 int PortAudioDriver::getMaxInputs() const{

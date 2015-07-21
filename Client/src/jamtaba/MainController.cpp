@@ -21,9 +21,12 @@
 #include <QFile>
 #include <QDebug>
 #include <QApplication>
+#include <QSysInfo>
 #include <QUuid>
 #include "audio/NinjamTrackNode.h"
 #include "Utils.h"
+
+Q_LOGGING_CATEGORY(controllerMain, "controller.main")
 
 using namespace Persistence;
 using namespace Midi;
@@ -726,9 +729,23 @@ void MainController::start()
         audioDriver->start();
         midiDriver->start();
 
-        NatMap map;
-        loginService->connectInServer("elieser teste", 0, "channel", map, 0, "teste env", 44100);
+        NatMap map;//not used yet,will be used in future to real time rooms
+
+        //connect with login server and receive a list of public rooms to play
+
+        QString userEnvironment = getUserEnvironmentString();
+        loginService->connectInServer("Jamtaba USER", 0, "", map, 0, userEnvironment, getAudioDriverSampleRate());
+        //(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
+
+        qCInfo(controllerMain) << "Starting " + userEnvironment;
     }
+}
+
+QString MainController::getUserEnvironmentString() const{
+    QString systemName = QSysInfo::prettyProductName();
+    QString userMachineArch = QSysInfo::currentCpuArchitecture();
+    QString jamtabaArch = QSysInfo::buildCpuArchitecture();
+    return "Jamtaba (" + jamtabaArch + ") running on " + systemName + " (" + userMachineArch + ")";
 }
 
 void MainController::stop()

@@ -4,6 +4,9 @@
 #include "vorbis/vorbisenc.h"
 #include "../audio/core/SamplesBuffer.h"
 #include <QByteArray>
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(vorbisEncoder)
 
 class VorbisEncoder
 {

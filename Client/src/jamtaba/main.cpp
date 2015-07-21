@@ -38,28 +38,37 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
 {
     QByteArray localMsg = msg.toLocal8Bit();
     QString stringMsg;
+    QString fullFileName(context.file);
+    const char* file;
+    int lastPathSeparatorIndex = fullFileName.lastIndexOf(QDir::separator());
+    if(lastPathSeparatorIndex){
+        file = fullFileName.right(fullFileName.size() - lastPathSeparatorIndex - 1).toStdString().c_str();
+    }
+    else{
+        file = fullFileName.toStdString().c_str();
+    }
 
     switch (type) {
     case QtDebugMsg:
-        stringMsg = QString::asprintf("\nDEBUG: %s [%s: %u]\n", localMsg.constData(), context.file , context.line);
+        stringMsg = QString::asprintf("\nDEBUG: %s [%s: %u]", localMsg.constData(), file , context.line);
         break;
     case QtWarningMsg:
-        stringMsg = QString::asprintf("\n\nWARNING: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, context.file, context.line);
+        stringMsg = QString::asprintf("\n\nWARNING: %s (%s) [%s:%u]\n", localMsg.constData(), context.function, file, context.line);
         break;
     case QtCriticalMsg:
-        stringMsg = QString::asprintf("\n\nCRITICAL: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, context.file, context.line);
+        stringMsg = QString::asprintf("\n\nCRITICAL: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, file, context.line);
         break;
     case QtFatalMsg:
-        stringMsg = QString::asprintf("\n\nFATAL: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, context.file, context.line);
+        stringMsg = QString::asprintf("\n\nFATAL: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, file, context.line);
         //abort();
         break;
     case QtInfoMsg:
-        stringMsg = QString::asprintf("\nINFO: %s (%s) [%s:%u]\n", localMsg.constData(), context.function, context.file, context.line);
+        stringMsg = QString::asprintf("\n\nINFO: %s [%s:%u]\n\n", localMsg.constData(), file, context.line);
     }
     fprintf(stderr, stringMsg.toStdString().c_str());//write log message to console
     fflush(stderr);
 
-    if(type != QtInfoMsg && type == QtDebugMsg){//write the critical messages to log file
+    if(type != QtDebugMsg){//write the critical messages to log file
         QFile outFile("log.txt");
         outFile.open(QIODevice::WriteOnly | QIODevice::Append);
         QTextStream ts(&outFile);

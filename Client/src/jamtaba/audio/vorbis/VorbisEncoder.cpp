@@ -3,6 +3,8 @@
 #include <ctime>
 #include <QThread>
 
+Q_LOGGING_CATEGORY(vorbisEncoder, "vorbis.encoder")
+
 VorbisEncoder::VorbisEncoder()
     :initialized(false)
 {
@@ -18,8 +20,7 @@ VorbisEncoder::VorbisEncoder(int channels, int sampleRate):
 }
 
 void VorbisEncoder::init(int channels, int sampleRate){
-    //vorbis init
-    //qDebug() << "Encoder init Thread:" << QThread::currentThreadId();
+    qCDebug(vorbisEncoder) << "Initializing VorbisEncoder Thread:" << QThread::currentThreadId();
     vorbis_info_init(&info);
 
     if(vorbis_encode_init_vbr(&info, (long) channels, (long) sampleRate, 0.4) != 0){
@@ -33,7 +34,7 @@ void VorbisEncoder::init(int channels, int sampleRate){
 
 //++++++++++++++++++++++++++++++++++++++++++
 VorbisEncoder::~VorbisEncoder() {
-    //qDebug() << "ENCODER DESTRUCTOR! Thread:" <<  QThread::currentThreadId();;
+    qCDebug(vorbisEncoder) << "ENCODER DESTRUCTOR! Thread:" <<  QThread::currentThreadId();
     ogg_stream_clear(&streamState);
     vorbis_block_clear(&block);
     vorbis_dsp_clear(&dspState);
@@ -59,22 +60,19 @@ void VorbisEncoder::initializeVorbis() {
         ogg_stream_packetin(&streamState, &header_code);
 
         //write ogg_page page in out buffer;
-        //char buffer[4096];
         while (true) {
             int result = ogg_stream_flush(&streamState, &page);
             if (result == 0) break;
             //header
             outBuffer.append((const char*)page.header, page.header_len);//memcpy(buffer, page.header, page.header_len);
             //body
-
             outBuffer.append((const char*)page.body, page.body_len);//memcpy(buffer, page.body, page.body_len);
         }
-
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++
 QByteArray VorbisEncoder::encode(const Audio::SamplesBuffer& samples) {
-    //qDebug() << "Encoder::encode() Thread:" << QThread::currentThreadId();
+    //qCDebug(vorbisEncoder) << "Encoding " << samples.getFrameLenght() << " samples.";
     if (!initialized) {
         initializeVorbis();
     }
@@ -94,13 +92,16 @@ QByteArray VorbisEncoder::encode(const Audio::SamplesBuffer& samples) {
     //lenght == 0 in the end of interval
     int result = vorbis_analysis_wrote(&dspState, samples.getFrameLenght()); // tell the library how much we actually submitted
     if(result != 0){
-        qCritical() << "encoder error!";
+        qCCritical(vorbisEncoder) << "encoder error!";
     }
-    //    if (samples.getFrameLenght() <= 0) {
-//        finishIntervalRequested = true;
-//    }
+
+    bool finishEncodingRequested = true;
+    if (samples.getFrameLenght() <= 0) {
+        finishEncodingRequested = true;
+    }
     //++++++++++++++++++++++++ encoding +++++++++
     bool endOfStream = false;
+
     while (vorbis_analysis_blockout(&dspState, &block)) {
         vorbis_analysis(&block, NULL);
         vorbis_bitrate_addblock(&block);
@@ -120,12 +121,19 @@ QByteArray VorbisEncoder::encode(const Audio::SamplesBuffer& samples) {
                 //body
                 outBuffer.append((const char*)page.body, page.body_len);//memcpy(buffer, page.body, page.body_len);
 
+                qCDebug(vorbisEncoder) << "encoded bytes added to out buffer  bytes:" << outBuffer.size();
+
                 if (ogg_page_eos(&page)) {
-                    endOfStream = 1;
+                    endOfStream = true;
+                }
+                if(endOfStream && finishEncodingRequested){
+                    qCDebug(vorbisEncoder) << "finishing the encoding process! frameLenght:  " << samples.getFrameLenght();
+                    break;
                 }
             }
         }
     }//end of encoding loop
+    //qCDebug(vorbisEncoder) << "encoded step finished bytes encoded: " << outBuffer.size();
     return outBuffer;//return the byte Array
 }
 //++++++++++++++++++++++++++++++++++++++++++

@@ -13,6 +13,10 @@
 #include "../audio/vst/PluginFinder.h"
 #include "../persistence/Settings.h"
 
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(controllerMain)
+
 class MainFrame;
 
 namespace Ninjam{
@@ -231,6 +235,8 @@ private:
     Persistence::Settings settings;
 
     bool userNameChoosed;
+
+    QString getUserEnvironmentString() const;
 
 private slots:
     //Login server

@@ -122,6 +122,7 @@ NinjamController::~NinjamController(){
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::start(const Ninjam::Server& server, bool transmiting){
+    QMutexLocker locker(&mutex);
     //schedule an update in internal attributes
     scheduledEvents.append(new BpiChangeEvent(this, server.getBpi()));
     scheduledEvents.append(new BpmChangeEvent(this, server.getBpm()));
@@ -132,7 +133,7 @@ void NinjamController::start(const Ninjam::Server& server, bool transmiting){
     for (int channelIndex = 0; channelIndex < channels; ++channelIndex) {
         scheduledEvents.append(new InputChannelChangedEvent(this, channelIndex));
     }
-    //processScheduledChanges();
+    processScheduledChanges();
 
     if(!running){
 
@@ -328,6 +329,11 @@ void NinjamController::checkThread(QString methodName){
 void NinjamController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
 
     QMutexLocker locker(&mutex);
+
+    if(samplesInInterval <= 0){
+        return;//not initialized
+    }
+
     if(!threadHandle){
         threadHandle = QThread::currentThreadId();
     }
@@ -340,6 +346,9 @@ void NinjamController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &o
     int offset = 0;
     do{
         int samplesToProcessInThisStep = std::min((int)(samplesInInterval - intervalPosition), totalSamplesToProcess - offset);
+
+        assert(samplesToProcessInThisStep);
+
         static Audio::SamplesBuffer tempOutBuffer(out.getChannels(), samplesToProcessInThisStep);
         tempOutBuffer.setFrameLenght(samplesToProcessInThisStep);
         tempOutBuffer.zero();
@@ -365,7 +374,7 @@ void NinjamController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &o
 
 
 
-        if(transmiting){
+        if( transmiting){
             //1) mix subchannels, 2) encode and 3) send the encoded audio
 
             //1 - mix the groups subchannels
@@ -387,7 +396,9 @@ void NinjamController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &o
                     }
 
                     // 4 - send encoded bytes to main thread (only the main thread can do socket writing)
-                    emit encodedAudioAvailableToSend(encodedBytes, channelIndex, isFirstPart, isLastPart);
+                    if(encodedBytes.size() > 0 || isLastPart){
+                        emit encodedAudioAvailableToSend(encodedBytes, channelIndex, isFirstPart, isLastPart);
+                    }
                 }
             }
         }
