@@ -1,6 +1,3 @@
-#contorno do mute e solo do metronomo podem ser mais claros
-
-#melhorar a cor do nome do país na sala ninjam, está muito escuro
 
 #duplo clique no botão de entrar na sala buga
 
