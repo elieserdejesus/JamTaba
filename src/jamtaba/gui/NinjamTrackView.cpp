@@ -16,7 +16,8 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
     channelNameLabel->setText(channelName);
 
     //channelNameLabel->setWordWrap(true);
-    ui->mainLayout->insertWidget(0, channelNameLabel);
+    ui->mainLayout->insertSpacing(0, 12);
+    ui->mainLayout->insertWidget(1, channelNameLabel);
 }
 
 void NinjamTrackView::setChannelName(QString name){
@@ -45,12 +46,14 @@ NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainCont
     countryLabel->setObjectName("countryLabel");
     countryLabel->setTextFormat(Qt::RichText);
     countryLabel->setText("<img src=:/flags/flags/" + countryCode +".png> <br>" + countryName);
-    countryLabel->setStyleSheet("font-size: 7pt;");
-    countryLabel->setAlignment(Qt::AlignCenter);
+    //countryLabel->setStyleSheet("font-size: 7pt;");
+    //countryLabel->setAlignment(Qt::AlignCenter);
     ui->topPanel->layout()->addWidget(countryLabel);
 
     //create the first subchannel by default
     addTrackView(new NinjamTrackView(mainController, trackID, channelName));
+
+    ui->groupNameField->setReadOnly(true);
 
 //    ui->channelName->setStyleSheet("font-size: 7pt");
 

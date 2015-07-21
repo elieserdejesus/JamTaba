@@ -58,6 +58,9 @@
         <property name="text">
          <string>...</string>
         </property>
+        <property name="readOnly">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
      </layout>

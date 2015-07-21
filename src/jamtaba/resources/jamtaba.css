@@ -317,14 +317,19 @@ background-color: rgb(100, 100, 100);
 /* ------------------------------ */
 
 .QWidget#contentPanel{
-background: rgb(128, 128, 128);
+    background: transparent;
+    border: none;
 }
 
-.QTabWidget::pane{
-background-color: rgba(255, 255, 255, 80);
-border: 1px solid rgba(0, 0, 0, 60);
-border-radius: 5px;
-padding: -4px;
+#contentPanel .QTabWidget:pane, #chatArea .QTabWidget:pane{
+    background-color: qlineargradient(x1: 0, y1: 0.3, x2: 0, y2: 1, stop: 0 rgb(250, 250, 250), stop: 1.0 rgb(100, 100, 100));
+    border: 1px solid rgba(0, 0, 0, 60);
+    border-radius: 5px;
+    padding: -4px;
+}
+
+#chatArea .QTabWidget:pane{
+    background-color: rgba(255, 255, 255, 80);
 }
 
  .QTabWidget::tab-bar {
@@ -397,9 +402,14 @@ BusyDialog > QLabel{
 
 
 JamRoomViewPanel{
-background: rgba(255,255, 255, 180);
-border: 1px solid rgba(0, 0, 0, 30);
+background: rgba(0, 0, 0, 30);
+border: 1px solid rgba(0, 0, 0, 60);
 border-radius: 5px;
+}
+
+JamRoomViewPanel #content{
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.035, stop:0 rgba(0, 0, 0, 40), stop:1 rgba(0, 0, 0, 0));
+border-top: 1px solid rgba(0, 0, 0, 25);
 }
 
 JamRoomViewPanel  QWebView{
@@ -444,7 +454,7 @@ border-radius: 5px;
 /*  Track view +++++++++++++++++++++++++++++++++++++++++++++++ */
 BaseTrackView{
 border-radius: 3px;
-background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), stop:1 rgb(100, 100, 100));
+background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(140,140,140), stop:0.015 rgb(220, 220, 220), stop:1 rgb(100, 100, 100));
 border: 1px solid rgb(61,61,61);
 }
 
@@ -590,42 +600,117 @@ LocalTrackView #inputSelectionButton{
 /* NINJAM */
 
 
+NinjamRoomWindow #licenceButton{
+    background-color: rgba(220, 220, 220);
+    border: 1px solid rgba(0, 0,0, 40);
+    border-radius: 3px;
+    background-image: url(':/images/licence.png');
+    min-height: 32px;
+    min-width: 32px;
+    margin-right: 12px;
+}
+
+NinjamRoomWindow #licenceButton:hover{
+    background-color: rgba(0, 0, 0, 40);
+    border: 1px solid rgba(0, 0, 0, 60);
+
+}
+
+
+
 NinjamTrackView > .QLabel#channelName{
-    border: none;
+    border: 1px solid rgba(0, 0, 0, 25);
     qproperty-alignment: AlignCenter;
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgba(0, 0, 0, 50), stop:1 rgba(0, 0, 0, 90));
+    background-color: rgba(0, 0, 0, 20);
     border-radius: 2px;
     padding-top: 3px;
     padding-bottom: 3px;
     font-size: 8pt;
-    color: rgba(0,0,0, 180);
+    color: rgb(80, 80, 80);
 }
 
-
-NinjamPanel{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(253, 253, 253), stop:1 rgb(193, 193, 193));
+NinjamRoomWindow TrackGroupView #groupNameField{
     border-radius: 3px;
-    border: 1px solid rgb(135, 135, 135);
-    min-height: 100px;
+    background-color: rgba(255,255, 255, 120);
+    border-color: rgb(150, 150, 150);
+    color: black;
+    qproperty-alignment: AlignCenter;
 }
 
-
-
-NinjamPanel #intervalPanel{
-    color: black;
-    font-weight: bold;
+NinjamRoomWindow TrackGroupView #countryLabel{
+    color: rgb(210, 210, 210);
+    qproperty-alignment: AlignCenter;
     font-size: 8pt;
 }
 
-NinjamPanel #metronomeControls{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.3, stop:0 rgba(0, 0, 0, 30), stop:1 rgba(0,0,0,0));
+NinjamRoomWindow TrackGroupView{
+    border: 1px solid rgb(128, 128, 128);
+    border-bottom: 1px solid rgb(70, 70, 70);
+    border-top: 1px solid rgb(180, 180, 180);
     border-radius: 3px;
-    border: none;
+    background-color: rgba(0, 0, 0, 40);
 }
 
-NinjamPanel #metronomeControls QLabel{
-    color: gray; /* metrono pan (L & R) labels
+NinjamRoomWindow TrackGroupView #groupNameField {
+    margin-bottom: 3px;
+    margin-top: 3px;
 }
+
+NinjamPanel{
+    background-color: qlineargradient(x1:0, y1:0.55, x2:0, y2:0.99, stop:0 rgba(0,0, 0, 0), stop:0.8 rgba(0, 0, 0, 25), stop:1 rgba(0, 0, 0, 55));
+    border-radius: 3px;
+    border: none;
+    min-height: 100px;
+    border-bottom: 1px solid rgba(0, 0, 0, 50);
+
+}
+
+
+
+NinjamPanel #intervalPanel{/* beats text */
+    color: rgb(80, 80, 80);
+    font-weight: normal;
+    font-size: 12pt;
+
+}
+
+NinjamPanel #metronomeControls{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.3, stop:0 rgba(0, 0, 0, 60), stop:0.2 rgba(0, 0, 0, 30), stop:1 rgba(0,0,0,0));
+    border-radius: 3px;
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 50);
+    border-left: 1px solid rgba(0, 0, 0, 30);
+}
+
+NinjamPanel #soloButton, NinjamPanel #muteButton{
+    border: 1px solid rgba(0, 0, 0, 60);
+}
+
+NinjamPanel QLabel{
+    color: rgba(0, 0, 0, 150); /* metrono pan (L & R) labels, BPI and BPM labels */
+    font-size: 8pt;
+}
+
+NinjamPanel QComboBox{
+    background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 30), stop:1 rgba(0, 0, 0, 50));
+    background-position: center right;
+    background-repeat: none;
+    font-size: 8pt;
+    color: rgb(50, 50, 50);
+    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 40);
+}
+
+NinjamPanel QComboBox::down-arrow {
+    image: url(':/images/arrow-down.png');
+
+}
+
+NinjamRoomWindow #content{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.035, stop:0 rgba(0, 0, 0, 40), stop:1 rgba(0, 0, 0, 0));
+    border-top: 1px solid rgba(0, 0, 0, 25);
+}
+
 
 /*Chat */
 ChatPanel > QPushButton#buttonClear{
