@@ -1,6 +1,8 @@
 
 #como vou fazer o chat geral? Vou realmente fazer? Acho que é melhor deixar para mais tarde
 
+#não estou conseguindo inicializar com a Fast track. Sample rate inválida
+
 #sobre o estalo: eu senti mais estalos usando um buffer size pequeno. É bem possível que eu tenha testado com o ASio4ALL usando
     #um buffer size de 128. Nesse caso talvez a coisa complique mesmo, 256 já está de bom tamanho para o asio4all.
 #hipótese para o estalo: Quando adicionei vários canais (vários encoders) vi que o bicho pega e engasga. Então é provavel que o encoder
