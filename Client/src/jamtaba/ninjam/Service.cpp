@@ -300,7 +300,9 @@ void Service::startServerConnection(QString serverIp, int serverPort, QString us
     this->password = password;
     this->channels = channels;
 
-    socket.connectToHost(serverIp, serverPort);
+    if(socket.state() == QTcpSocket::UnconnectedState){//check state to avoid a bug if user try enter in a server using double click in the button
+        socket.connectToHost(serverIp, serverPort);
+    }
 }
 
 void Service::disconnectFromServer(){
