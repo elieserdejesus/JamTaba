@@ -1,11 +1,6 @@
-#inicializar o componente de progresso de intervalo
+#contorno do mute e solo do metronomo podem ser mais claros
 
-
-
-#implementar os controles do metronomo, ainda não estão funcionando
-
-#carregar os valores iniciais do metronomoda persistência
-
+#melhorar a cor do nome do país na sala ninjam, está muito escuro
 
 #duplo clique no botão de entrar na sala buga
 
@@ -18,6 +13,17 @@
 
     #Decidi deixar isso de lado até que eu tenha mais certeza que é realmente o encoding que está gerando problema
 
+
+#Em vários testes quando estava implementando o metronomo com visual novo eu percebi que o início do intervalo dava uma baita engasgada,
+    #demorava um monte para sair a primeira nota do metronomo. Pode ter alguma coisa travando a thread do áudio? Nos testes
+    #eu estava usando BPis grandes.
+
+#Deu tanto trabalho implementar o visual do metronomo que agora enquanto eu não botar várias opções de progresso no intervalo eu não
+    #vou morrer em paz:
+    # 1 - Elipse (está pronto)
+    # 2 - Círculo (praticamente pronto, só aproveitar o código da ellipse).
+    # 3 - Espiral (deixei o código comentado)
+    # 4 - Fancy display (a classe já está pronta);
 
 
 #não rolou resampling para o metronomo?
@@ -39,7 +45,9 @@
 #perdendo samples do metronome no tempo 1 do intervalo
 
 
-#está bugando o parser da lista de servers públicos no servidor
+#como vai ficar o nome do usuário?
+
+#estava bugando o parser da lista de servers públicos no servidor
 
 #GAz deu a ideia de fazer um translate usando o site do google translate e HTML scrapping.
 
