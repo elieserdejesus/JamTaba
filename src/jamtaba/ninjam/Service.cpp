@@ -13,6 +13,8 @@
 
 #include <cassert>
 
+Q_LOGGING_CATEGORY(ninjamService, "ninjam.service")
+
 using namespace Ninjam;
 
 std::unique_ptr<Service> Service::serviceInstance;
@@ -33,7 +35,7 @@ Service::Service()
 }
 
 Service::~Service(){
-    qDebug() << "NinjamService destructor";
+    qCDebug(ninjamService) << "NinjamService destructor";
     disconnect(&socket, SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
     disconnect(&socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
     disconnect(&socket, SIGNAL(disconnected()), this, SLOT(socketDisconnectSlot()));
@@ -45,6 +47,7 @@ Service::~Service(){
 }
 
 void Service::sendAudioIntervalPart(QByteArray GUID, QByteArray encodedAudioBuffer, bool isLastPart){
+    qCDebug(ninjamService) << "sending audio interval part";
     if(!initialized){
         return;
     }
@@ -53,6 +56,7 @@ void Service::sendAudioIntervalPart(QByteArray GUID, QByteArray encodedAudioBuff
 }
 
 void Service::sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex){
+    qCDebug(ninjamService) << "sending audio interval begin";
     if(!initialized){
         return;
     }
@@ -68,7 +72,7 @@ void Service::sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex){
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Service::socketReadSlot(){
     if(socket.bytesAvailable() < 5){
-        qDebug() << "not have enough bytes to read message header (5 bytes)";
+        qCDebug(ninjamService) << "not have enough bytes to read message header (5 bytes)";
         return;
     }
 
@@ -85,7 +89,7 @@ void Service::socketReadSlot(){
         if (socket.bytesAvailable() >= (int)payloadLenght) {//message payload is available to read
             lastMessageWasIncomplete = false;
             const Ninjam::ServerMessage& message = ServerMessageParser::parse(static_cast<ServerMessageType>(messageTypeCode), stream, payloadLenght) ;
-            //qDebug() << message;
+            qCDebug(ninjamService) << message;
             invokeMessageHandler(message);
             if(needSendKeepAlive()){
                 ClientKeepAlive clientKeepAliveMessage;
@@ -93,7 +97,7 @@ void Service::socketReadSlot(){
             }
         }
         else{
-            //qWarning() << "incomplete message!";
+            qCDebug(ninjamService) << "incomplete message!";
             lastMessageWasIncomplete = true;
             break;
         }
@@ -103,17 +107,19 @@ void Service::socketReadSlot(){
 void Service::socketErrorSlot(QAbstractSocket::SocketError e)
 {
     Q_UNUSED(e);
+    qCWarning(ninjamService) << QString(socket.errorString());
     currentServer.reset(nullptr);
     emit error(socket.errorString());
 }
 
 void Service::socketConnectedSlot(){
-
+    qCDebug(ninjamService) << "socket connected on " << socket.peerName();
 
 }
 
 void Service::socketDisconnectSlot(){
     this->initialized = false;
+    qCDebug(ninjamService) << "socket disconnected from " << socket.peerName();
     emit disconnectedFromServer(*currentServer);
 }
 
@@ -176,6 +182,7 @@ void Service::sendChatMessageToServer(QString message){
 }
 
 void Service::sendMessageToServer(ClientMessage *message){
+    //qCDebug(ninjamService) << *message;
     QByteArray outBuffer;
     message->serializeTo(outBuffer);
 
@@ -195,11 +202,11 @@ void Service::sendMessageToServer(ClientMessage *message){
         lastSendTime = QDateTime::currentMSecsSinceEpoch();
     }
     else{
-        qCritical("não escreveu os bytes");
+        qCCritical(ninjamService) << "Bytes not writed in socket!";
     }
 
     if((int)message->getPayload() + 5 != outBuffer.size()){
-        qWarning() << "(int)message->getPayload() + 5: " << ((int)message->getPayload() + 5) << "outbuffer.size():" << outBuffer.size();
+        qCWarning(ninjamService()) << "(int)message->getPayload() + 5: " << ((int)message->getPayload() + 5) << "outbuffer.size():" << outBuffer.size();
     }
 
 }
@@ -306,6 +313,7 @@ void Service::startServerConnection(QString serverIp, int serverPort, QString us
 }
 
 void Service::disconnectFromServer(){
+    qCDebug(ninjamService) << "disconnecting from " << socket.peerName();
     socket.disconnectFromHost();
 }
 
@@ -482,79 +490,10 @@ void Service::invokeMessageHandler(const ServerMessage& message){
         break;
 
     default:
-        qCritical("receive a not implemented yet message!");
+        qCCritical(ninjamService) << "receive a not implemented yet message!";
     }
 }
 
 QString Service::getCurrentServerLicence() const{
     return serverLicence;
 }
-
-
-
-/*
-//++++++
-
-    public void close() {
-        publicServersParser.shutdown();
-        publicServersParser = null;
-        LOGGER.info("Closing ninjamservice...");
-        closeSocketChannel();
-        if (serviceThread != null) {
-            LOGGER.info("closing NinjamService serviceThread...");
-            serviceThread.shutdownNow();
-            serviceThread = null;
-            LOGGER.info("NinjamService serviceThread closed!");
-        }
-        LOGGER.info("NInjaM service closed sucessfull!");
-
-    }
-
-    public void addListener(NinjaMServiceListener l) {
-        synchronized (listeners) {
-            if (!listeners.contains(l)) {
-                listeners.add(l);
-                //System.out.println("listener " + l.getClass().getName() + " added in NinjamService");
-                //for (NinjaMServiceListener lstnr : listeners) {
-                //  System.out.println("\t" + lstnr.getClass().getName());
-                //}
-            }
-            //else{
-            //  LOGGER.log(Level.SEVERE, "listener {0} not added in NinjamService!", l.getClass().getName());
-            //}
-        }
-    }
-
-    public void removeListener(NinjaMServiceListener l) {
-        synchronized (listeners) {
-            listeners.remove(l);
-            //System.out.println("listener " + l.getClass().getName() + " removed from NinjamService");
-        }
-    }
-
-
-
-    public static byte[] newGUID() {
-
-        UUID id = UUID.randomUUID();
-        ByteBuffer b = ByteBuffer.wrap(new byte[16]).order(ByteOrder.LITTLE_ENDIAN);
-        b.putLong(id.getMostSignificantBits());
-        b.putLong(id.getLeastSignificantBits());
-        return b.array();
-//        String idString = Long.toHexString(id.getLeastSignificantBits() + id.getMostSignificantBits()).toUpperCase();
-//        if (idString.length() < 16) {
-//            int diff = 16 - idString.length();
-//            byte bytes[] = new byte[16];
-//            byte stringBytes[] = idString.getBytes();
-//            System.arraycopy(stringBytes, 0, bytes, diff, stringBytes.length);
-//            for (int i = 0; i < diff; i++) {
-//                bytes[i] = (byte) 'A';
-//            }
-//            return bytes;
-//
-//        }
-
-        //return idString.getBytes();
-    }
-*/
-

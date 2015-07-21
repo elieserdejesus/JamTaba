@@ -3,13 +3,18 @@
 #include "JamtabaFactory.h"
 #include "persistence/Settings.h"
 #include <QTextCodec>
+#include <QLoggingCategory>
+#include <QDir>
+#include <QFile>
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
 int main(int argc, char* args[] ){
     QApplication::setApplicationName("Jamtaba 2");
 
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+    qputenv("QT_LOGGING_CONF", ":/qtlogging.ini");//log cconfigurations is in resources at moment
+
+    //QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
     qInstallMessageHandler(customLogHandler);
 
@@ -18,6 +23,7 @@ int main(int argc, char* args[] ){
     settings.load();
 
     Controller::MainController mainController(factory, settings, argc, args);//MainController extends QApplication
+
     MainFrame mainFrame(&mainController);
     mainFrame.show();
 
@@ -31,20 +37,37 @@ int main(int argc, char* args[] ){
 void customLogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QByteArray localMsg = msg.toLocal8Bit();
+    QString stringMsg;
+
     switch (type) {
     case QtDebugMsg:
-        fprintf(stderr, "DEBUG: %s [%s: %u]\n", localMsg.constData(), context.file , context.line);
+        stringMsg = QString::asprintf("\nDEBUG: %s [%s: %u]\n", localMsg.constData(), context.file , context.line);
         break;
     case QtWarningMsg:
-        fprintf(stderr, "\n\nWARNING: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, context.file, context.line);
+        stringMsg = QString::asprintf("\n\nWARNING: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, context.file, context.line);
         break;
     case QtCriticalMsg:
-        fprintf(stderr, "\n\nCRITICAL: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, context.file, context.line);
+        stringMsg = QString::asprintf("\n\nCRITICAL: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, context.file, context.line);
         break;
     case QtFatalMsg:
-        fprintf(stderr, "\n\nFATAL: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, context.file, context.line);
+        stringMsg = QString::asprintf("\n\nFATAL: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, context.file, context.line);
+        //abort();
+        break;
+    case QtInfoMsg:
+        stringMsg = QString::asprintf("\nINFO: %s (%s) [%s:%u]\n", localMsg.constData(), context.function, context.file, context.line);
+    }
+    fprintf(stderr, stringMsg.toStdString().c_str());//write log message to console
+    fflush(stderr);
+
+    if(type != QtInfoMsg && type == QtDebugMsg){//write the critical messages to log file
+        QFile outFile("log.txt");
+        outFile.open(QIODevice::WriteOnly | QIODevice::Append);
+        QTextStream ts(&outFile);
+        ts << stringMsg << "\n\r";
+    }
+
+    if(type == QtFatalMsg){
         abort();
     }
-    fflush(stderr);
 }
 

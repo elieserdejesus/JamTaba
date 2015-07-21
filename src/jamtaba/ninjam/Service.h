@@ -2,11 +2,13 @@
 
 #include <QTcpSocket>
 #include <memory>
-
-//#include "nvwa/debug_new.h"
+#include <QLoggingCategory>
 
 #include "../ninjam/User.h"
 #include "../ninjam/UserChannel.h"
+
+
+Q_DECLARE_LOGGING_CATEGORY(ninjamService)
 
 
 namespace Ninjam {
