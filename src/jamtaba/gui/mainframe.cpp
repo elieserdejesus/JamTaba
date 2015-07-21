@@ -68,6 +68,9 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     ui.xmitButton->setChecked(mainController->isTransmiting());
 
     initializeLocalInputChannels();
+
+    //hide chat area
+    ui.chatArea->setVisible(false);
 }
 //++++++++++++++++++++++++=
 Persistence::InputsSettings MainFrame::getInputsSettings() const{
@@ -424,6 +427,9 @@ void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
     //add the chat panel in main window
     ChatPanel* chatPanel = ninjamWindow->getChatPanel();
     ui.chatTabWidget->addTab(chatPanel, QIcon(":/images/ninja.png"), roomInfo.getName());
+
+    //show chat area
+    ui.chatArea->setVisible(true);
 }
 
 void MainFrame::on_exitedFromRoom(bool normalDisconnection){
@@ -439,6 +445,9 @@ void MainFrame::on_exitedFromRoom(bool normalDisconnection){
         ui.chatTabWidget->widget(0)->deleteLater();
         ui.chatTabWidget->removeTab(0);
     }
+
+    //hide chat area
+    ui.chatArea->setVisible(false);
 
     if(!normalDisconnection){
         QMessageBox::warning(this, "Warning", "Disconnected from server!", QMessageBox::NoButton, QMessageBox::NoButton);
