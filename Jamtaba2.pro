@@ -1,10 +1,13 @@
 
-#melhorar o meu esquema de log, facilita a minha própria vida
+#descobri facilmente que o engasgo está no final do intervalo, provavelmente meu loop que fica encodando o final deve estar preso.
 
-# a conexão com o login service já envia um nome de usuário. Tenho que pensar nisso
+#decobri que o primeiro intervalo não estava sendo encodado. Estou passando 0 samples logo de cara, ou seja, tem algum problema
+    #no loop principal do controlador ninjam. Tenho que ver este problema.
 
-#sobre o estalo: eu senti mais estalos usando um buffer size pequeno. É bem possível que eu tenha testado com o ASio4ALL usando
-    #um buffer size de 128. Nesse caso talvez a coisa complique mesmo, 256 já está de bom tamanho para o asio4all.
+#Possível otimização: talvez a inicialização do encoder a cada intervalo seja desnecessária. Acho que tenho que gerar um novo arquivo
+    #ogg a cada intervalo, mas não preciso reinicilizar toda a estrutura interna do encoder. Quem sabe ganho alguns ms evitando essas
+    #chamadas para o código da libvorbis
+
 #hipótese para o estalo: Quando adicionei vários canais (vários encoders) vi que o bicho pega e engasga. Então é provavel que o encoder
 #esteja gerando  um gargalo na thread do áudio. A solução seria despachar o buffer de áudio para a main thread e ela encoda e envia.
     #De qualquer maneira não vale a pena perder tempo otimizando para funcionar bem com mais de dois canais, já que isso
