@@ -166,6 +166,13 @@ public:
     void storeWindowSettings(bool maximized, QPointF location);
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize, int midiDevice) ;
     //void storeInputChannels()
+
+
+    void setUserName(QString newUserName);
+    inline QString getUserName() const;//{return userName;}
+    inline bool userNameWasChoosed() const{return userNameChoosed;}
+
+
 signals:
     void enteredInRoom(Login::RoomInfo room);
     void exitedFromRoom(bool error);
@@ -223,7 +230,7 @@ private:
 
     Persistence::Settings settings;
 
-
+    bool userNameChoosed;
 
 private slots:
     //Login server

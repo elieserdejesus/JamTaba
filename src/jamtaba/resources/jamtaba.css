@@ -3,6 +3,24 @@ font-family: "Dialog";
 font-size: 9pt;
 }
 
+QInputDialog{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), stop:1 rgba(90, 90, 90));
+    border-radius: 3px;
+    border: 1px solid gray;
+}
+
+QInputDialog QLineEdit{
+    margin: 20px;
+}
+
+
+QInputDialog QPushButton{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(80,80,80), stop:0.02 rgb(150, 150, 150), stop:0.7 rgba(160, 160, 160), stop:1 rgb(90,90,90));
+    border-color: rgb(60, 60, 60);
+    color: rgb(45,45,45);
+}
+
+
 FxPanel{
     /*border: 1px solid gray;*/
     background-color: rgba(0, 0, 0, 20);
@@ -476,16 +494,37 @@ BaseTrackView #peaksPanel{
 */
 
 
+/*  BUTTONS */
+
+/*
 QPushButton#soloButton, QPushButton#muteButton {
-border-radius: 3px;
-border: 1px solid gray;
-color: rgba(0, 0, 0, 80);
-padding: 3px 6px 3px 6px;
-font-size: 8pt;
+    border-radius: 3px;
+    border: 1px solid gray;
+    color: rgba(0, 0, 0, 80);
+    padding: 3px 6px 3px 6px;
+    font-size: 8pt;
+}
+*/
+
+QPushButton{
+    border-radius: 3px;
+    border: 1px solid gray;
+    color: rgba(0, 0, 0, 80);
+    padding: 3px 6px 3px 6px;
+    font-size: 8pt;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(0, 0, 0, 50), stop:0.02 rgba(0, 0, 0, 0), stop:0.7 rgba(0, 0, 0, 0), stop:1 rgba(0,0,0,60));
+    color: rgb(60, 60, 60);
 }
 
-BaseTrackView .QLabel#labelPanR, BaseTrackView .QLabel#labelPanL{
-color: rgba(0, 0, 0, 80);
+QPushButton:hover{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(0, 0, 0, 60), stop:0.02 rgba(0, 0, 0, 0) stop:0.9 rgba(0,0,0,100));
+    color: black;
+}
+
+QPushButton[enabled="false"]{
+    background: none;
+    color: rgba(0, 0, 0, 80);
+    border-color: rgba(0, 0, 0, 80);
 }
 
 QPushButton:hover#soloButton, QPushButton:hover#muteButton{
@@ -555,6 +594,10 @@ LocalTrackGroupView   #toolButton:hover, #leftPanel > #toolButton:hover {
 }
 /* ++++++++++++++++++++++++++++++++++ */
 
+BaseTrackView .QLabel#labelPanR, BaseTrackView .QLabel#labelPanL{
+color: rgba(0, 0, 0, 80);
+}
+
 BaseTrackView > .QFrame#topSeparator{
 background-color: rgb(210, 210, 210);
 }
@@ -605,8 +648,10 @@ NinjamRoomWindow #licenceButton{
     border: 1px solid rgba(0, 0,0, 40);
     border-radius: 3px;
     background-image: url(':/images/licence.png');
-    min-height: 32px;
-    min-width: 32px;
+    background-position: center center;
+    background-repeat: none;
+    min-height: 20px;
+    min-width: 28px;
     margin-right: 12px;
 }
 

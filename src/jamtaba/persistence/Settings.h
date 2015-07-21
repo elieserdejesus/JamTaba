@@ -121,6 +121,7 @@ private:
     MetronomeSettings metronomeSettings;
     VstSettings vstSettings;
     InputsSettings inputsSettings;
+    QString lastUserName;//the nick name choosed by user
 public:
     Settings();
     ~Settings();
@@ -132,6 +133,10 @@ public:
 
     inline int getLastSampleRate() const{return audioSettings.sampleRate;}
     inline int getLastBufferSize() const{return audioSettings.bufferSize;}
+
+    //user name
+    inline QString getUserName() const{return lastUserName;}
+    void setUserName(QString newUserName);
 
     //VST
     void addVstPlugin(QString pluginPath);

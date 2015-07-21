@@ -87,11 +87,11 @@ void CircularIntervalProgressDisplay::paintEvent(QPaintEvent* e){
     //draw current beat text in center
     p.setPen(textColor);//use text color form pallete, allowing style sheet
     QString numberString( QString::number(currentBeat + 1) + " / " + QString::number(beats));
-    if(currentBeat + 1 < 10){
-        numberString.insert(0, ' ');
-    }
+//    if(currentBeat + 1 < 10){
+//        numberString.insert(0, ' ');
+//    }
     int strWidth = fontMetrics().width(numberString);
-    p.drawText(centerX - strWidth / 2, centerY, numberString);
+    p.drawText(centerX - strWidth / 2, centerY + fontMetrics().height()/2 , numberString);
     //p.drawText(5, fontMetrics().height(), numberString);
 }
 

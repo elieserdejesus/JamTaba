@@ -7,6 +7,7 @@
 #include <QList>
 #include <QAction>
 #include <QMessageBox>
+#include <QInputDialog>
 
 #include "PreferencesDialog.h"
 #include "JamRoomViewPanel.h"
@@ -379,8 +380,22 @@ QStringList MainFrame::getChannelsNames() const{
 }
 
 void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo){
-    showBusyDialog("Connecting in " + roomInfo.getName() + " ...");
-    mainController->enterInRoom(roomInfo, getChannelsNames());
+
+    if(!mainController->userNameWasChoosed()){
+        bool ok;
+        QString lastUserName = mainController->getUserName();
+        QString newUserName = QInputDialog::getText(this, "Please enter your nick name:", "User name:", QLineEdit::Normal, lastUserName , &ok, Qt::FramelessWindowHint);
+        if (ok && !newUserName.isEmpty()){
+           mainController->setUserName(newUserName);
+        }
+    }
+
+    if(mainController->userNameWasChoosed()){
+        showBusyDialog("Connecting in " + roomInfo.getName() + " ...");
+        mainController->enterInRoom(roomInfo, getChannelsNames());
+
+        setWindowTitle("Jamtaba (" + mainController->getUserName() + ")");
+    }
 
 }
 
