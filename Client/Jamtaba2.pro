@@ -1,5 +1,5 @@
 
-#duplo clique no botão de entrar na sala buga
+#como vou fazer o chat geral? Vou realmente fazer? Acho que é melhor deixar para mais tarde
 
 #sobre o estalo: eu senti mais estalos usando um buffer size pequeno. É bem possível que eu tenha testado com o ASio4ALL usando
     #um buffer size de 128. Nesse caso talvez a coisa complique mesmo, 256 já está de bom tamanho para o asio4all.
@@ -41,8 +41,6 @@
 
 #perdendo samples do metronome no tempo 1 do intervalo
 
-
-#como vai ficar o nome do usuário?
 
 #estava bugando o parser da lista de servers públicos no servidor
 

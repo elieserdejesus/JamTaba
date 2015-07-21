@@ -249,6 +249,10 @@ void InputsSettings::read(QJsonObject in){
 }
 
 //++++++++++++++++++++++++++++++++++++++++++
+void Settings::setUserName(QString newUserName){
+    this->lastUserName = newUserName;
+}
+
 void Settings::addVstPlugin(QString pluginPath){
     vstSettings.cachedPlugins.append(pluginPath);
 }
@@ -328,6 +332,13 @@ void Settings::load(){
     if(file.open(QIODevice::ReadOnly)){
         QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
         QJsonObject root = doc.object();
+
+        //read user name
+        if(root.contains("userName")){
+            this->lastUserName = root["userName"].toString();
+        }
+
+        //read sections
         foreach (SettingsObject* so, sections) {
             so->read(root[so->getName()].toObject());
         }
@@ -359,6 +370,10 @@ void Settings::save(Persistence::InputsSettings inputsSettings){
     QFile file(absolutePath);
     if(file.open(QIODevice::WriteOnly)){
         QJsonObject root;
+        //write user name
+        root["userName"] = this->lastUserName;
+
+        //write sections
         foreach (SettingsObject* so, sections) {
             QJsonObject sectionObject;
             so->write(sectionObject);

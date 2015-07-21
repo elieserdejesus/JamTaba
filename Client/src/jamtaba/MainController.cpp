@@ -113,7 +113,8 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
       //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
       ipToLocationResolver("../Jamtaba2/GeoLite2-Country.mmdb"),
       settings(settings),
-      transmiting(true)
+      transmiting(true),
+      userNameChoosed(false)
 {
 
     //threadHandle = nullptr;//QThread::currentThreadId();
@@ -188,6 +189,22 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 
     //qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
 }
+
+//++++++++++++++++++++
+void MainController::setUserName(QString newUserName){
+    if(!newUserName.isEmpty()){
+        settings.setUserName(newUserName);
+        userNameChoosed = true;
+    }
+    else{
+        qCritical() << "empty userNAme";
+    }
+}
+
+QString MainController::getUserName() const{
+    return settings.getUserName();
+}
+//++++++++++++++++++++
 
 QStringList MainController::getBotNames() const{
     return Ninjam::Service::getBotNamesList();
@@ -673,14 +690,17 @@ void MainController::sendRemovedChannelMessage(int removedChannelIndex){
 }
 
 void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStringList channelsNames){
+    if(userNameWasChoosed()){//just in case :)
+        QString serverIp = ninjamRoom.getName();
+        int serverPort = ninjamRoom.getPort();
+        QString userName = getUserName();
+        QString password = "";
 
-    QString serverIp = ninjamRoom.getName();
-    int serverPort = ninjamRoom.getPort();
-    QString userName = "Test user name";
-    QString password = "";
-
-    this->ninjamService->startServerConnection(serverIp, serverPort, userName, channelsNames, password);
-
+        this->ninjamService->startServerConnection(serverIp, serverPort, userName, channelsNames, password);
+    }
+    else{
+        qCritical() << "user name not choosed yet!";
+    }
 }
 
 void MainController::on_audioDriverSampleRateChanged(int newSampleRate){
