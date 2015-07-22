@@ -7,9 +7,31 @@
 #include <QDir>
 #include <QFile>
 
+#include "../audio/vorbis/VorbisEncoder.h"
+#include "../audio/core/AudioNode.h"
+
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
 int main(int argc, char* args[] ){
+
+//    VorbisEncoder enc(2, 44100);
+//    Audio::SamplesBuffer in(2, 44100 * 5);
+//    Audio::SamplesBuffer dummyBuffer(2);
+//    Audio::OscillatorAudioNode osc(440, 44100);
+//    osc.processReplacing(dummyBuffer, in);
+
+//    for (int x = 0; x < 5; ++x) {
+
+//        QByteArray encodedData( enc.encode(in));
+//        encodedData.append( enc.finishIntervalEncoding());
+
+//        QString fileName = "teste encoder" + QString::number(x) + ".ogg";
+//        QFile outFile(fileName);
+//        outFile.open(QIODevice::WriteOnly);
+//        outFile.write(encodedData.data(), encodedData.size());
+//    }
+//    return 0;
+
     QApplication::setApplicationName("Jamtaba 2");
 
     qputenv("QT_LOGGING_CONF", ":/qtlogging.ini");//log cconfigurations is in resources at moment
@@ -31,6 +53,7 @@ int main(int argc, char* args[] ){
     int returnCode = mainController.exec();
     mainController.saveLastUserSettings(mainFrame.getInputsSettings());
     return returnCode;
+
  }
 //++++++++++++++++++++++++++++++++++
 

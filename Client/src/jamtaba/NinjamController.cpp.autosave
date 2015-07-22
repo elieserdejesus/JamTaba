@@ -29,7 +29,7 @@ class NinjamController::EncodingThread : public QThread{
 public:
     EncodingThread(NinjamController* controller)
         :stopRequested(false), controller(controller){
-        start();
+        sta 
     }
 
     ~EncodingThread(){
@@ -58,7 +58,6 @@ protected:
 
             EncodingChunk* chunk = chunksToEncode.first();
             chunksToEncode.removeFirst();
-            mutex.unlock();
             if(controller->encoders.contains(chunk->channelIndex)){
                 QByteArray encodedBytes( controller->encoders[chunk->channelIndex]->encode(chunk->buffer));
                 if(chunk->lastPart){
@@ -70,7 +69,7 @@ protected:
             }
 
             delete chunk;
-
+            mutex.unlock();
         }
         qWarning() << "Encoding thread stopped!";
     }
@@ -262,7 +261,6 @@ void NinjamController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &o
         //recorder.addSamples(tempBuffer);
     }
     while( samplesProcessed < totalSamplesToProcess);
-
 
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -492,6 +490,27 @@ void NinjamController::checkThread(QString methodName){
         qCritical() << "diferente thread detected! " << methodName;
     }
 }
+
+//+++++++++++++++++++++++++=
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//VorbisEncoder* NinjamController::getEncoder(quint8 channelIndex){
+//    QMutexLocker locker(&mutex);
+//    if(!encoders.contains(channelIndex)){
+//        //all subchannels in the channel are mono, stereo, or a mix?
+//        int inputsCount = mainController->getInputTracksCount();
+//        bool encoderWillBeStereo = false;
+//        for (int i = 0; i < inputsCount; ++i) {
+//            Audio::LocalInputAudioNode* inputTrack = mainController->getInputTrack(i);
+//            assert(inputTrack);
+//            if(!inputTrack->isNoInput() && !inputTrack->isMono()){
+//                encoderWillBeStereo = true;// stereo inputTracks or midiTracks will use stereo encoders
+//            }
+//        }
+//        encoders.insert(channelIndex, new VorbisEncoder(encoderWillBeStereo ? 2 : 1, mainController->getAudioDriverSampleRate()));
+//    }
+//    return encoders[channelIndex];
+//}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::processScheduledChanges(){

@@ -166,8 +166,10 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     this->ninjamController = new Controller::NinjamController(this);
     //QObject::connect(this->ninjamController, SIGNAL(startingNewInterval()), this, SLOT(on_ninjamStartingNewInterval()));
     QObject::connect(this->ninjamController,
-                     SIGNAL(encodedAudioAvailableToSend(QByteArray,quint8, bool, bool)),
-                     this, SLOT(on_ninjamAudioAvailableToSend(QByteArray,quint8,bool,  bool)));
+                     SIGNAL(encodedAudioAvailableToSend(QByteArray,quint8,bool,bool)),
+                     this, SLOT(on_ninjamEncodedAudioAvailableToSend(QByteArray,quint8,bool,  bool)));
+
+    //addInputTrackNode(new Audio::LocalInputTestStreamer(440, getAudioDriverSampleRate()));
 
     //test ninjam stream
 //    NinjamTrackNode* trackTest = new NinjamTrackNode(2);
@@ -798,11 +800,7 @@ bool MainController::isPlayingInNinjamRoom() const{
 
 //++++++++++++= NINJAM ++++++++++++++++
 
-void MainController::on_ninjamInputAvailableToEncode(const Audio::SamplesBuffer &inputBuffer, quint8 channelIndex){
-    qDebug() << inputBuffer.getFrameLenght();
-}
-
-void MainController::on_ninjamAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart){
+void MainController::on_ninjamEncodedAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart){
     Q_UNUSED(channelIndex);
 
     if(!ninjamService){
@@ -824,10 +822,10 @@ void MainController::on_ninjamAudioAvailableToSend(QByteArray encodedAudio, quin
         bool canSend = upload->getTotalBytes() >= 4096 || isLastPart;
         if( canSend  ){
             ninjamService->sendAudioIntervalPart( upload->getGUID(), upload->getStoredBytes(), isLastPart);
+            //qWarning() << " sending " << upload->getTotalBytes();
             upload->clear();
         }
     }
-    //ninjamService->sendAudioIntervalPart(intervalsToUpload[channelIndex]->getGUID(), encodedAudio, isLastPart);
 }
 
 void MainController::on_errorInNinjamServer(QString error){

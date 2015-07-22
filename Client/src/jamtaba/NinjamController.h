@@ -11,6 +11,8 @@
 
 class NinjamTrackNode;
 
+//Q_DECLARE_METATYPE(Audio::SamplesBuffer)
+
 namespace Audio {
     class MetronomeTrackNode;
     class SamplesBuffer;
@@ -62,7 +64,7 @@ signals:
     void chatMsgReceived(Ninjam::User user, QString message);
 
     void encodedAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart);
-
+    //void audioAvailableToEncode(QList<float*>, quint8 channelIndex, bool isFirstPart, bool isLastPart);
 private:
     Controller::MainController* mainController;
     Audio::MetronomeTrackNode* metronomeTrackNode;
@@ -115,6 +117,10 @@ private:
     class InputChannelChangedEvent;//user change the channel input selection from mono to stereo or vice-versa, or user added a new channel, both cases requires a new encoder in next interval
     class XmitChangedEvent;
     QList<SchedulableEvent*> scheduledEvents;
+
+    class EncodingThread;
+
+    EncodingThread* encodingThread;
 
 private slots:
     //ninjam events

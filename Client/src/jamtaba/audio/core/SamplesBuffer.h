@@ -24,7 +24,6 @@ private:
 
 
     SamplesBuffer& operator=(const SamplesBuffer& other);
-
 public:
     SamplesBuffer(unsigned int channels);
     SamplesBuffer(unsigned int channels, unsigned int frameLenght);

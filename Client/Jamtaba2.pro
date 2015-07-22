@@ -1,9 +1,16 @@
+#coloquei a sine wave simulando a entrada e vi que com buffers pequenos dá estalo o tempo todo.
+    #Com buffer pequeno dá estalo direto, com buffer grande o estalo é esporádico. Tanto com o Asio4All quanto com a fast.
+    #Comentando o encoding o áudio fica perfeito.
 
+#Em alguns casos o encoder chega a demorar 17 ms para inicializar, isso trava a thread do áudio. Ou seja, encoding tem que ser
+    #em outra thread
 
 #Possível otimização: talvez a inicialização do encoder a cada intervalo seja desnecessária. Acho que tenho que gerar um novo arquivo
     #ogg a cada intervalo, mas não preciso reinicilizar toda a estrutura interna do encoder. Quem sabe ganho alguns ms evitando essas
     #chamadas para o código da libvorbis
 
+
+#se ligo a fast enquanto o Jamtaba está aberto ela não aparece na lista. Algum tipo de cache na portaudio?
 
 #mudei do asio4all para FAst track mas as entradas continuaram como "microfones"
 
