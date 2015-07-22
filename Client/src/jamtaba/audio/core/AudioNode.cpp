@@ -51,20 +51,17 @@ void AudioNode::deactivate(){
 
 //+++++++++++++++
 
-bool AudioNode::needResamplingFor(int targetSampleRate) const{
-    Q_UNUSED(targetSampleRate);
-    return false;
-}
 
-void AudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out){
+void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate){
     if(!activated){
         return;
     }
+
     internalBuffer.setFrameLenght(out.getFrameLenght());
     {
         QMutexLocker locker(&mutex);
         foreach (AudioNode* node, connections) {//ask connected nodes to generate audio
-            node->processReplacing(in, internalBuffer);
+            node->processReplacing(in, internalBuffer, sampleRate);
         }
     }
 
@@ -96,29 +93,12 @@ AudioNode::AudioNode()
 
 }
 
-int AudioNode::getInputResamplingLength(int targetSampleRate, int outFrameLenght) const{
-    double factor = (double)getSampleRate()/(double)targetSampleRate;
+int AudioNode::getInputResamplingLength(int sourceSampleRate, int targetSampleRate, int outFrameLenght) {
+    double factor = (double)sourceSampleRate/(double)targetSampleRate;
     double doubleLenght = (double)outFrameLenght * factor;// + resamplingCorrection;
     int intLenght = std::ceil(doubleLenght);
-
-
-//    double reverseFactor = (double)targetSampleRate/(double)getSampleRate();
-//    int resampledLenght = intLenght * reverseFactor;
-//    resamplingCorrection += (double)(intLenght * reverseFactor) - resampledLenght;
-//    qDebug() << "correction:" << resamplingCorrection << "intLenght:" << intLenght << "doubleLenght: " << doubleLenght << "outFrameLenght" << outFrameLenght;
-
     return intLenght;
 }
-
-//void AudioNode::pushBackDiscardedSamples(const SamplesBuffer &buffer, unsigned int discardedSamples){
-//    if(discardedSamples < buffer.getFrameLenght()){
-//        discardedBuffer.setFrameLenght(discardedSamples);
-//        discardedBuffer.set(buffer, buffer.getFrameLenght() - discardedSamples, discardedSamples, 0);
-//    }
-//    else{
-//        qCritical() << "too many discarded samples?";
-//    }
-//}
 
 Audio::AudioPeak AudioNode::getLastPeak(bool resetPeak) const{
     AudioPeak peak = this->lastPeak;
@@ -241,7 +221,9 @@ void LocalInputAudioNode::setMidiInputSelection(int midiDeviceIndex){
     this->midiDeviceIndex = midiDeviceIndex;
 }
 
-void LocalInputAudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out){
+void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate){
+    Q_UNUSED(sampleRate);
+
     /* The input buffer (in) is a multichannel buffer. So, this buffer contains
      * all channels grabbed from soundcard inputs. If the user select a range of 4
      * input channels in audio preferences this buffer will contain 4 channels.
@@ -257,6 +239,6 @@ void LocalInputAudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out
     int inChannelOffset = audioInputRange.getFirstChannel() - globalFirstInputIndex;
     internalBuffer.set(in, inChannelOffset, audioInputRange.getChannels());
 
-    AudioNode::processReplacing(in, out);
+    AudioNode::processReplacing(in, out, sampleRate);
 }
 //++++++++++++=

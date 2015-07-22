@@ -13,7 +13,7 @@ public:
     MetronomeTrackNode(QString metronomeWaveFile, int localSampleRate);
 
     ~MetronomeTrackNode();
-    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
+    virtual void processReplacing(const SamplesBuffer&in, SamplesBuffer& out, int SampleRate);
     void setSamplesPerBeat(long samplesPerBeat);
     void setIntervalPosition(long intervalPosition);
     void reset();

@@ -123,7 +123,7 @@ void PortAudioDriver::translatePortAudioCallBack(const void *in, void *out, unsi
 
     //all application audio processing is computed here
     if(audioDriverListener){
-        audioDriverListener->process(*inputBuffer, *outputBuffer);
+        audioDriverListener->process(*inputBuffer, *outputBuffer, sampleRate);
     }
 
     //convert application output buffers to portaudio format

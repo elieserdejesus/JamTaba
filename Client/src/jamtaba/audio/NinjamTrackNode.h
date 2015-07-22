@@ -4,7 +4,8 @@
 #include "core/AudioNode.h"
 #include <QByteArray>
 #include "vorbis/VorbisDecoder.h"
-#include "Resampler.h"
+#include "SamplesBufferResampler.h"
+
 
 namespace Audio{
     class SamplesBuffer;
@@ -17,11 +18,11 @@ public:
     explicit NinjamTrackNode(int ID);
     virtual ~NinjamTrackNode();
     void addVorbisEncodedInterval(QByteArray encodedBytes);
-    void processReplacing(Audio::SamplesBuffer&in, Audio::SamplesBuffer& out);
+    void processReplacing(const Audio::SamplesBuffer&in, Audio::SamplesBuffer& out, int sampleRate);
     bool startNewInterval();
     inline int getID() const{return ID;}
-    virtual bool needResamplingFor(int targetSampleRate) const;
-    virtual int getSampleRate() const;
+
+    int getSampleRate() const;
     inline bool isPlaying() const{return playing;}
     void discardIntervals();
 private:
@@ -30,8 +31,11 @@ private:
     QList<QByteArray> intervals;
     //QMutex mutex;
     int ID;
-    //Resampler resamplerLeft;
-    //Resampler resamplerRight;
+    SamplesBufferResampler resampler;
+
+    bool needResamplingFor(int targetSampleRate) const;
+
+    int getFramesToProcess(int targetSampleRate, int outFrameLenght);
 };
 
 #endif // NINJAMTRACKNODE_H

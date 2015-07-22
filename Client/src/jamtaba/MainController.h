@@ -79,7 +79,7 @@ public:
 
     void saveLastUserSettings(const Persistence::InputsSettings &inputsSettings);
 
-    virtual void process(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
+    virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate);
 
     void sendNewChannelsNames(QStringList channelsNames);
     void sendRemovedChannelMessage(int removedChannelIndex);
@@ -186,7 +186,7 @@ signals:
 
 private:
 
-    void doAudioProcess(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out);
+    void doAudioProcess(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate);
     Audio::Plugin* createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
     Audio::AudioDriver* audioDriver;
