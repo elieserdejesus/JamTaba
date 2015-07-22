@@ -38,7 +38,7 @@ AudioMixer::~AudioMixer(){
     resamplers.clear();
 }
 
-void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out, bool attenuateAfterSumming){
+void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, bool attenuateAfterSumming){
     static int soloedBuffersInLastProcess = 0;
     //--------------------------------------
     bool hasSoloedBuffers = soloedBuffersInLastProcess > 0;
@@ -47,36 +47,12 @@ void AudioMixer::process(SamplesBuffer &in, SamplesBuffer &out, bool attenuateAf
     foreach (AudioNode* node , nodes) {
         bool canProcess = (!hasSoloedBuffers && !node->isMuted()) || (hasSoloedBuffers && node->isSoloed());
         if(canProcess ){
-            if(node->needResamplingFor(sampleRate)){
-                //qDebug() << node->getSampleRate() << "=>" << sampleRate;
-                //read N samples from the node
-                static SamplesBuffer tempBuffer(2);
-                tempBuffer.zero();
-                int samplesToGrabFromNode = node->getInputResamplingLength(sampleRate, out.getFrameLenght());
-
-                tempBuffer.setFrameLenght(samplesToGrabFromNode);
-                node->processReplacing(in, tempBuffer);
-
-                const SamplesBuffer& resampledBuffer = resamplers[node]->resample(tempBuffer, node->getSampleRate(), out.getFrameLenght(), this->sampleRate);
-                out.add(resampledBuffer);
-
-                int discardedSamples = resampledBuffer.getFrameLenght() - out.getFrameLenght();
-                if(discardedSamples != 0){
-                    qDebug() << "discarded: " << discardedSamples;
-                }
-
-                if(resampledBuffer.getFrameLenght() != out.getFrameLenght()){
-                    qDebug() << "resampled buffer size problem: " << resampledBuffer.getFrameLenght() << " != " << out.getFrameLenght();
-                }
-            }
-            else{
-                node->processReplacing(in, out);
-            }
+                node->processReplacing(in, out, sampleRate);
         }
         else{//just discard the samples if node is muted, the internalBuffer is not copyed to out buffer
             static Audio::SamplesBuffer internalBuffer(2);
             internalBuffer.setFrameLenght(out.getFrameLenght());
-            node->processReplacing(in, internalBuffer);
+            node->processReplacing(in, internalBuffer, sampleRate);
         }
         if(node->isSoloed()){
             soloedBuffersInLastProcess++;

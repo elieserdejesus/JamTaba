@@ -4,7 +4,7 @@
 class Resampler
 {
 public:
-    int process(const float* in, int inLength, int inSampleRate, float *out, int outLenght, int outSampleRate);
+    int process(const float* in, int inLength, int inSampleRate, bool lastInputChunk, float *out, int outLenght, int outSampleRate);
     Resampler();
     ~Resampler();
 

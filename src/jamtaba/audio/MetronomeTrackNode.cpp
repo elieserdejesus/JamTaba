@@ -17,7 +17,7 @@ SamplesBuffer* createResampledBuffer(const SamplesBuffer& buffer, int originalSa
     SamplesBuffer* newBuffer = new SamplesBuffer(channels, finalSize);
     for (int c = 0; c < channels; ++c) {
         Resampler resampler;
-        resampler.process(buffer.getSamplesArray(c), buffer.getFrameLenght(), originalSampleRate, newBuffer->getSamplesArray(c), finalSize, finalSampleRate);
+        resampler.process(buffer.getSamplesArray(c), buffer.getFrameLenght(), true, originalSampleRate, newBuffer->getSamplesArray(c), finalSize, finalSampleRate);
     }
     return newBuffer;
 }
@@ -82,7 +82,7 @@ SamplesBuffer* MetronomeTrackNode::getBuffer(int beat){
     return clickSoundBuffer;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MetronomeTrackNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out){
+void MetronomeTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int SampleRate){
     if(samplesPerBeat <= 0){
         return;
     }
@@ -102,7 +102,7 @@ void MetronomeTrackNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out)
     }
     if(samplesToCopy > 0){
         internalBuffer.set(*samplesBuffer, clickSoundBufferOffset, samplesToCopy, internalOffset);
-        AudioNode::processReplacing(in, out);
+        AudioNode::processReplacing(in, out, SampleRate);
     }
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

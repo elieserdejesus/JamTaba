@@ -9,7 +9,7 @@ SamplesBufferResampler::~SamplesBufferResampler(){
 
 }
 
-const Audio::SamplesBuffer& SamplesBufferResampler::resample(Audio::SamplesBuffer &in, int inSampleRate, int desiredOutLenght, int targetSampleRate)
+const Audio::SamplesBuffer& SamplesBufferResampler::resample(Audio::SamplesBuffer &in, int inSampleRate, bool lastInChunck, int desiredOutLenght, int targetSampleRate)
 {
     int lenght = 0;
     outBuffer.zero();
@@ -17,7 +17,7 @@ const Audio::SamplesBuffer& SamplesBufferResampler::resample(Audio::SamplesBuffe
     for (int c = 0; c < 2; ++c) {
         float* input = in.getSamplesArray(c);
         float* output = outBuffer.getSamplesArray(c);
-        lenght = resamplers[c].process(input, in.getFrameLenght(), inSampleRate, output, desiredOutLenght, targetSampleRate);
+        lenght = resamplers[c].process(input, in.getFrameLenght(), inSampleRate, lastInChunck, output, desiredOutLenght, targetSampleRate);
     }
     outBuffer.setFrameLenght(lenght);
     return outBuffer;

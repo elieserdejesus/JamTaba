@@ -25,7 +25,7 @@ public:
 
 class AudioDriverListener{
 public:
-    virtual void process(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out) = 0;
+    virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate) = 0;
 };
 
 class AudioDriver : public QObject

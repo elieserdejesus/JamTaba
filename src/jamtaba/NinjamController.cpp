@@ -188,7 +188,7 @@ NinjamController::NinjamController(Controller::MainController* mainController)
 
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
+void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
 
     QMutexLocker locker(&mutex);
 
@@ -230,7 +230,7 @@ void NinjamController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &o
             emit intervalBeatChanged(currentBeat);
         }
         //+++++++++++ MAIN AUDIO OUTPUT PROCESS +++++++++++++++
-        mainController->doAudioProcess(tempInBuffer, tempOutBuffer);
+        mainController->doAudioProcess(tempInBuffer, tempOutBuffer, sampleRate);
         out.add(tempOutBuffer, offset); //generate audio output
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

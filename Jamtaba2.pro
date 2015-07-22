@@ -1,3 +1,7 @@
+#colocar o resample nos audio Nodes, como está eu não sei quando passar a flag de final de decoding para o vorbis. Só o node
+    #ninjam precisa dessa flag, então o ideal seria esse nó passar a flag, e os outros nós seriam contínuos, não tem final no stream.
+    #Essa falta   da indicação do final do stream recebido pode gerar alguma problema a mais nos estalos.
+
 #Transmitindo a 44.1 no reaninjam e recebendo em 48 no Jamtaba deu muitos estalos durante o decoding, problema no resampling?
     #dá mais estalos no início do intervalo, talvez esteja perdendo amostras.
 
@@ -9,6 +13,9 @@
 
 #Estava com o metronomo mutado, alterei as configurações de áudio, quando voltei o metronomo saiu do mute
 
+#Mudança no resampling
+#implementar resample no metronomo?
+#implementar resample no stream das salas
 
 #no ninjamJamController estou recriando o tempInBuffer em cada callback. Otimizar isso.
 
@@ -22,8 +29,12 @@
 #mudei do asio4all para FAst track mas as entradas continuaram como "microfones"
 
 
-#Entrei em uma sala com uns 5 caras e estava usando 25:% da minha CPU. Entrei na mesma sala usando o Reaninjam e não chegou a 1% da minha
-    #CPU. Que magia negra é essa que os caras usam. Quando tiver tentar otimizar.
+#Entrei em uma sala com uns 5 caras e estava usando 25:% da minha CPU.
+#Entrei na mesma sala usando o Reaninjam e não chegou a 1% da minha CPU. Mas depois eu descobri que se não estiver encodando
+#o reaninjam usa pouca CPU. O bicho pega mesmo quando tem que encodar. Mesmo assim acho que estou usando muita CPU.
+    #Quanto de cpu usa sem entrar em uma sala?
+    #Quanto de CPU usa para encoder?
+    #E os decoders, acrescentam muita coisa na CPU? Posso criar um monte de canais no reaninjam e ver o que acontece.
 
 #O consumo de memória está aumentando sem parar e não consegui achar o erro. Preciso de um Valgrind.
 

@@ -463,7 +463,7 @@ void MainController::on_VSTPluginFounded(QString name, QString group, QString pa
     settings.addVstPlugin(path);
 }
 
-void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
+void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
 //    if(!threadHandle){
 //        threadHandle = QThread::currentThreadId();
 //    }
@@ -473,18 +473,18 @@ void MainController::doAudioProcess(Audio::SamplesBuffer &in, Audio::SamplesBuff
     MidiBuffer midiBuffer = midiDriver->getBuffer();
     vstHost->fillMidiEvents(midiBuffer);//pass midi events to vst host
 
-    audioMixer->process(in, out);
+    audioMixer->process(in, out, sampleRate);
 }
 
 
-void MainController::process(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
+void MainController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
     //QMutexLocker locker(&mutex);
     //checkThread("process();");
     if(!isPlayingInNinjamRoom()){
-        doAudioProcess(in, out);
+        doAudioProcess(in, out, sampleRate);
     }
     else{
-        ninjamController->process(in, out);
+        ninjamController->process(in, out, sampleRate);
     }
 }
 

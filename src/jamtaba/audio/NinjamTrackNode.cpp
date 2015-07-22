@@ -58,7 +58,12 @@ void NinjamTrackNode::addVorbisEncodedInterval(QByteArray vorbisData){
 }
 //++++++++++++++++++++++++++++++++++++++
 
-void NinjamTrackNode::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out){
+
+int NinjamTrackNode::getFramesToProcess(int targetSampleRate, int outFrameLenght){
+    return needResamplingFor(targetSampleRate) ? getInputResamplingLength(getSampleRate(), targetSampleRate, outFrameLenght) : outFrameLenght;
+}
+
+void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
     {
         QMutexLocker locker(&mutex);
         if(!isActivated()){
@@ -69,17 +74,13 @@ void NinjamTrackNode::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesB
         return;
     }
     int totalDecoded = 0;
-    internalBuffer.setFrameLenght(out.getFrameLenght());
+
+
+    int framesToDecode= getFramesToProcess(sampleRate, out.getFrameLenght());
+    internalBuffer.setFrameLenght(framesToDecode);
     internalBuffer.zero();
-
-//    if(discardedBuffer.getFrameLenght() > 0){//use the discarded samples decoded in last audio callback (resampler generates a buffer with many samples)
-//        internalBuffer.add(discardedBuffer);
-//        totalDecoded += discardedBuffer.getFrameLenght();
-//        discardedBuffer.setFrameLenght(0);
-//    }
-
-    while(totalDecoded < out.getFrameLenght() ){
-        const Audio::SamplesBuffer& decodedBuffer = decoder.decode(out.getFrameLenght() - totalDecoded);
+    while(totalDecoded < framesToDecode ){
+        const Audio::SamplesBuffer& decodedBuffer = decoder.decode(framesToDecode - totalDecoded);
         if(decodedBuffer.getFrameLenght() > 0){
             internalBuffer.add(decodedBuffer, totalDecoded);//total decoded is the offset
             totalDecoded += decodedBuffer.getFrameLenght();
@@ -89,9 +90,14 @@ void NinjamTrackNode::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesB
         }
     }
 
-    if(totalDecoded > 0){
-        Audio::AudioNode::processReplacing(in, out);//process internal buffer pan, gain, etc
-    }
+    //if(totalDecoded > 0){
+        if(needResamplingFor(sampleRate)){
+              const Audio::SamplesBuffer& resampledBuffer = resampler.resample(internalBuffer, getSampleRate(), false, out.getFrameLenght(), sampleRate );
+              internalBuffer.setFrameLenght(resampledBuffer.getFrameLenght());
+              internalBuffer.set(resampledBuffer);
+        }
+        Audio::AudioNode::processReplacing(in, out, sampleRate);//process internal buffer pan, gain, etc
+    //}
 }
 
 bool NinjamTrackNode::needResamplingFor(int targetSampleRate) const{

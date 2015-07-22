@@ -46,7 +46,7 @@ public:
     AudioNode();
     virtual ~AudioNode();
 
-    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
+    virtual void processReplacing(const SamplesBuffer& in, SamplesBuffer& out, int sampleRate);
     virtual inline void setMuteStatus(bool muted){ this->muted = muted;}
     void inline setSoloStatus(bool soloed){ this->soloed = soloed; }
     inline bool isMuted() const {return muted;}
@@ -64,9 +64,7 @@ public:
         this->gain = gainValue;
     }
 
-    //virtual inline void setSampleRate(int newSampleRate){this->sampleRate = newSampleRate;}
-
-    virtual int getSampleRate() const = 0;
+    //virtual int getSampleRate() const = 0;
 
     inline float getGain() const{
         return gain;
@@ -80,10 +78,12 @@ public:
     void deactivate();
     inline bool isActivated() const{return activated;}
 
-    virtual bool needResamplingFor(int targetSampleRate) const;
-    int getInputResamplingLength(int targetSampleRate, int outFrameLenght) const;
 
 protected:
+
+    static int getInputResamplingLength(int sourceSampleRate, int targetSampleRate, int outFrameLenght) ;
+
+
     QSet<AudioNode*> connections;
     QSet<AudioNodeProcessor*> processors;
     SamplesBuffer internalBuffer;
@@ -139,7 +139,7 @@ private:
     int channelIndex; //the group index (a group contain N LocalInputAudioNode instances)
 public:
     LocalInputAudioNode(int parentChannelIndex, bool isMono=true);
-    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
+    virtual void processReplacing(const SamplesBuffer&in, SamplesBuffer& out, int sampleRate);
     virtual int getSampleRate() const{return 0;}
     inline int getChannels() const{return audioInputRange.getChannels();}
     inline bool isMono() const{return audioInputRange.isMono();}

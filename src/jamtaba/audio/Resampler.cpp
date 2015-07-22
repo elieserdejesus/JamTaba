@@ -13,7 +13,7 @@ Resampler::~Resampler(){
     resample_close(libHandler);
 }
 
-int Resampler::process(const float *in, int inLength, int inSampleRate, float *out, int outLenght, int outSampleRate){
+int Resampler::process(const float *in, int inLength, int inSampleRate, bool lastInputChunk, float *out, int outLenght, int outSampleRate){
     double factor = (double)outSampleRate/(double)inSampleRate;
     int inOffset = 0;
     int totalResampled = 0;
@@ -24,7 +24,7 @@ int Resampler::process(const float *in, int inLength, int inSampleRate, float *o
                                            factor,
                                            (float*)(in + inOffset), //input
                                            inBlock,
-                                           0,//last flag
+                                           lastInputChunk,//last flag
                                             &inOffset, //inBufferUsed
                                            out + totalResampled, //out buffer
                                            outLenght - totalResampled );//outBufferLen
