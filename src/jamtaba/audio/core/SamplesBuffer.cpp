@@ -43,10 +43,10 @@ SamplesBuffer::SamplesBuffer(const SamplesBuffer& other)
     //qWarning() << "Samples Buffer copy constructor!";
 }
 
-SamplesBuffer& SamplesBuffer::operator=(const SamplesBuffer& /*other*/){
-    qCritical() << "assignment operator";
-    return *this;
-}
+//SamplesBuffer& SamplesBuffer::operator=(const SamplesBuffer& /*other*/){
+//    qCritical() << "assignment operator";
+//    return *this;
+//}
 
 SamplesBuffer::~SamplesBuffer(){
 

@@ -156,4 +156,21 @@ public:
     const Audio::SamplesBuffer& getLastBuffer() const{return internalBuffer;}
 };
 //++++++++++++++++++++++++
+
+class LocalInputTestStreamer : public Audio::LocalInputAudioNode{//used to send a sine wave and test the audio transmission
+public:
+    LocalInputTestStreamer(float frequency, int sampleRate)
+        :LocalInputAudioNode(0), osc(frequency, sampleRate) {
+        osc.setGain(0.5);
+    }
+
+    void processReplacing(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out){
+        osc.processReplacing(in, out);//copy sine samples to out and simulate an input, just to test audio transmission
+    }
+
+private:
+    Audio::OscillatorAudioNode osc;
+};
+
+
 }
