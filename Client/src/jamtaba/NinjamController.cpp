@@ -302,7 +302,7 @@ void NinjamController::start(const Ninjam::Server& server, bool transmiting){
         encodingThread = new NinjamController::EncodingThread(this);
 
         //add a sine wave generator as input to test audio transmission
-        mainController->addInputTrackNode(new Audio::LocalInputTestStreamer(440, mainController->getAudioDriverSampleRate()));
+        //mainController->addInputTrackNode(new Audio::LocalInputTestStreamer(440, mainController->getAudioDriverSampleRate()));
 
 
         mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
