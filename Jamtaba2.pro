@@ -1,30 +1,34 @@
-#coloquei a sine wave simulando a entrada e vi que com buffers pequenos dá estalo o tempo todo.
-    #Com buffer pequeno dá estalo direto, com buffer grande o estalo é esporádico. Tanto com o Asio4All quanto com a fast.
-    #Comentando o encoding o áudio fica perfeito.
+#Transmitindo a 44.1 no reaninjam e recebendo em 48 no Jamtaba deu muitos estalos durante o decoding, problema no resampling?
+    #dá mais estalos no início do intervalo, talvez esteja perdendo amostras.
 
-#Em alguns casos o encoder chega a demorar 17 ms para inicializar, isso trava a thread do áudio. Ou seja, encoding tem que ser
-    #em outra thread
+#será que o resampler não acumula as amostras? Eu estou achando que sim. Se
+#eu passar out.frameLenght para ele mas o buffer resampleado tiver out.lenght + 1 samples
+#eu acho que ele vai guardar essa última amostra no buffer interno, mas eu teria
+#que sair do loop do resampler exatamente em out.lenght
 
-#Possível otimização: talvez a inicialização do encoder a cada intervalo seja desnecessária. Acho que tenho que gerar um novo arquivo
-    #ogg a cada intervalo, mas não preciso reinicilizar toda a estrutura interna do encoder. Quem sabe ganho alguns ms evitando essas
-    #chamadas para o código da libvorbis
+
+#Estava com o metronomo mutado, alterei as configurações de áudio, quando voltei o metronomo saiu do mute
+
+
+#no ninjamJamController estou recriando o tempInBuffer em cada callback. Otimizar isso.
+
+#ver o construtor do mainController, acho que comentei a inserção do roomStreamer na lista de nodes, por isso não está tocando os streams
+#acho que quando fico alternando entre os streams das salas não está funcionando muito bem, parece que o botão ficou pressionado.
+#acho que o stream do ninjamer não está rolando
 
 
 #se ligo a fast enquanto o Jamtaba está aberto ela não aparece na lista. Algum tipo de cache na portaudio?
 
 #mudei do asio4all para FAst track mas as entradas continuaram como "microfones"
 
-#hipótese para o estalo: Quando adicionei vários canais (vários encoders) vi que o bicho pega e engasga. Então é provavel que o encoder
-#esteja gerando  um gargalo na thread do áudio. A solução seria despachar o buffer de áudio para a main thread e ela encoda e envia.
-    #De qualquer maneira não vale a pena perder tempo otimizando para funcionar bem com mais de dois canais, já que isso
-    #nunca vai acontecer na prática.
 
-    #Decidi deixar isso de lado até que eu tenha mais certeza que é realmente o encoding que está gerando problema
+#Entrei em uma sala com uns 5 caras e estava usando 25:% da minha CPU. Entrei na mesma sala usando o Reaninjam e não chegou a 1% da minha
+    #CPU. Que magia negra é essa que os caras usam. Quando tiver tentar otimizar.
+
+#O consumo de memória está aumentando sem parar e não consegui achar o erro. Preciso de um Valgrind.
 
 
-#Em vários testes quando estava implementando o metronomo com visual novo eu percebi que o início do intervalo dava uma baita engasgada,
-    #demorava um monte para sair a primeira nota do metronomo. Pode ter alguma coisa travando a thread do áudio? Nos testes
-    #eu estava usando BPis grandes.
+#leak - quando deletar um encode do map de encoders? Como saber lá no NinjamController que o usuário está com um canal a menos?
 
 #Deu tanto trabalho implementar o visual do metronomo que agora enquanto eu não botar várias opções de progresso no intervalo eu não
     #vou morrer em paz:
@@ -36,23 +40,6 @@
 
 #não rolou resampling para o metronomo?
 
-#estalos ainda existem se uso um buffer pequeno (128) no Jamtaba. Testei enviando chunks pequenos e grande e o resultado foi o mesmo.
-    #O problema realmente parece ser o buffer size.
-
-
-#Fiquei com a impressão que com uma taxa de amostragem alta os estalos no início do intervalo que estou trasnmitindo aumenta, assim como
-#os estalos que recebo. Talvez a origem do problema seja a mesma, o calculo que faço para saber quantas amostras vou pegar de cada vez.
-    # se bem que no caso do envio eu só pego e mando. Poderia ter algum problema no Reaninjam relacionado com o mesmo cálculo que eu estou fazendo.
-
-
-#notei que usando noInput o metronomo ficou normal, mas quando selecionei entrada estereo
-    #o metronomo perdeu as primeiras amostras do tempo 1 do intervalo. O encoding está engasgando a thread do áudio? Ver anotações acima
-    #Na VERDADE testei novamente e perdeu a primeira batida do metronomo mesmo com o noInput
-
-
-#perdendo samples do metronome no tempo 1 do intervalo
-
-
 #estava bugando o parser da lista de servers públicos no servidor
 
 #GAz deu a ideia de fazer um translate usando o site do google translate e HTML scrapping.
@@ -61,18 +48,10 @@
 
 #quando solo uma das inputs as outras também são enviadas. Ou seja, o solo está atuando apenas localmente. Faz sentido mudar isso?
 
-#leak - quando deletar um encode do map de encoders? Como saber lá no NinjamController que o usuário está com um canal a menos?
-
-#implementar a conversão de vários canais para um só. Isso será necessário quando o
-#usuário entrar em um server que aceita menos canais do que ele tinha criado. Pegar
-#os subchannels dos canais adicionais e fazer um merge com o último canal válido. Por
-#exemplo, se o server aceita 2 canais e eu estou com 3 então ele vai fazer um merge 2+3
-#Na hora de salvar eu preciso saber que houve um merge e salvar os canais no modo original, assim o usuário não perde
-#suas configurações originais
-
 #drummix stereo abre, mas o drummix multi dá pau. Talvez a quantidade de canais esteja gerando problema.
 
-#se adiciono um plugin e fecho dá pau
+#se adiciono um plugin e fecho dá pau - Só acontece com alguns plugins. Como os plugins grandes não estão carregando eu acho
+    #que deve ser alguma coisa relacionada com as funções de iniciallização dos plugins que eu não estou invocando.
 
 #quando mando scanear arquivos de programa dá pau em algumas DLLs. ACho que um
 #try catch poderia melhorar isso
@@ -118,35 +97,17 @@
 
 #não está lembrando das entradas estereo com a fast track
 
-#acho que poderia simplificar a criação do menu de plugins usando a mesma ideia
-#que usei para gerar o menu das inputs da pista local. Como a pista local tem
-#uma referência para o mainController eu posso pedir para ele os PluginDEscriptors
-
-#no ninjamJamController estou recriando o tempInBuffer em cada callback. Otimizar isso.
 
 # a mensagem de crowded está errada?
 
 
-#será que o resampler não acumula as amostras? Eu estou achando que sim. Se
-#eu passar out.frameLenght para ele mas o buffer resampleado tiver out.lenght + 1 samples
-#eu acho que ele vai guardar essa última amostra no buffer interno, mas eu teria
-#que sair do loop do resampler exatamente em out.lenght
-
 #separar o carregamento do plugin VST da instância. No momento uma instância é criada e depois é que o plugin é carregado. Pra mim
 #isso é um bad design
-
-
-#o metronome precisa ficar na tela o tempo todo, ele é muito importante. Se ele ficar junto com as pistas locais ele sumirá
-#quando a seção com as pistas locais for contraída
 
 #Preciso mudar a cor de fundo da pistas de acordo com o tipo. Pistas locais de uma cor, metronomo de outra, pistas ninjam de outra.
 #Talvez seja uma boa hora para usar HSV e ter variações
 
 #tirar spacers dos títulos das seções?
-
-#ver o construtor do mainController, acho que comentei a inserção do roomStreamer na lista de nodes, por isso não está tocando os streams
-#acho que quando fico alternando entre os streams das salas não está funcionando muito bem, parece que o botão ficou pressionado.
-#acho que o stream do ninjamer não está rolando
 
 # MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais. Testar com o controlador AKAI também para ver
 
