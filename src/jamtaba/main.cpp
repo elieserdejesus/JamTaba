@@ -9,28 +9,49 @@
 
 #include "../audio/vorbis/VorbisEncoder.h"
 #include "../audio/core/AudioNode.h"
+#include "../audio/Resampler.h"
+#include "../audio/SamplesBufferResampler.h"
+#include "../audio/core/SamplesBuffer.h"
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
 int main(int argc, char* args[] ){
+/*
+    SamplesBufferResampler resampler;
 
-//    VorbisEncoder enc(2, 44100);
-//    Audio::SamplesBuffer in(2, 44100 * 5);
-//    Audio::SamplesBuffer dummyBuffer(2);
-//    Audio::OscillatorAudioNode osc(440, 44100);
-//    osc.processReplacing(dummyBuffer, in);
+    Audio::SamplesBuffer in(1, 64);
+    in.zero();
+    for (int x = 0; x < in.getFrameLenght(); ++x) {
+        in.set(0, x, (float)x/in.getFrameLenght());
+    }
 
-//    for (int x = 0; x < 5; ++x) {
 
-//        QByteArray encodedData( enc.encode(in));
-//        encodedData.append( enc.finishIntervalEncoding());
+    //se eu passo a flag de final na hora errada vem muitas amostras a mais, 10x mais
+    int total = 0;
+    int resampled = 0;
+    for (int x = 0; x < 10; ++x) {
+        Audio::SamplesBuffer resampledBuffer = resampler.resample(in, 1, in.getFrameLenght()==1, 128 , 2);
+        resampled = resampledBuffer.getFrameLenght();
+        total += resampled;
+        qWarning() << "new size: " << resampledBuffer.getFrameLenght();
 
-//        QString fileName = "teste encoder" + QString::number(x) + ".ogg";
-//        QFile outFile(fileName);
-//        outFile.open(QIODevice::WriteOnly);
-//        outFile.write(encodedData.data(), encodedData.size());
-//    }
-//    return 0;
+//        for (int x = 0; x < resampledBuffer.getFrameLenght(); ++x) {
+//            qWarning() << resampledBuffer.get(0, x);
+//        }
+        if(x == 0){
+            in.setFrameLenght(1);
+        }
+        else{
+            in.setFrameLenght(0);
+        }
+    }
+
+    qWarning() << "Total: " << total;
+    return 0;
+
+    */
+
+
 
     QApplication::setApplicationName("Jamtaba 2");
 

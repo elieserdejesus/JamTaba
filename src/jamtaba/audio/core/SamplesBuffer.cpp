@@ -274,8 +274,10 @@ void SamplesBuffer::setFrameLenght(unsigned int newFrameLenght){
         return;
     }
 
-    for (unsigned int c = 0; c < channels; ++c) {
-        samples[c].resize(newFrameLenght);
+    if(newFrameLenght > 0){
+        for (unsigned int c = 0; c < channels; ++c) {
+            samples[c].resize(newFrameLenght);
+        }
     }
     this->frameLenght = newFrameLenght;
 }

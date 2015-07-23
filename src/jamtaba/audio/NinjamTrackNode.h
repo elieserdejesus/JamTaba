@@ -25,6 +25,7 @@ public:
     int getSampleRate() const;
     inline bool isPlaying() const{return playing;}
     void discardIntervals();
+    inline void setProcessingLastPartOfInterval(bool status){this->processingLastPartOfInterval = status;}
 private:
     bool playing;//playing one interval or waiting for more vorbis data to decode
     VorbisDecoder decoder;
@@ -36,6 +37,8 @@ private:
     bool needResamplingFor(int targetSampleRate) const;
 
     int getFramesToProcess(int targetSampleRate, int outFrameLenght);
+
+    bool processingLastPartOfInterval;
 };
 
 #endif // NINJAMTRACKNODE_H

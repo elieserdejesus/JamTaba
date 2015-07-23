@@ -94,9 +94,15 @@ AudioNode::AudioNode()
 }
 
 int AudioNode::getInputResamplingLength(int sourceSampleRate, int targetSampleRate, int outFrameLenght) {
+    static float correction = 0;
     double factor = (double)sourceSampleRate/(double)targetSampleRate;
     double doubleLenght = (double)outFrameLenght * factor;// + resamplingCorrection;
-    int intLenght = std::ceil(doubleLenght);
+    int intLenght = (int)doubleLenght;//decidi arrendar para baixo, assim pode ficar faltando uma amostra, eu compenso depois, melhor do que sobrar amostra e ser descartada
+    correction += doubleLenght - intLenght;
+    if(correction >= 1){
+        intLenght++;
+        correction -= 1;
+    }
     return intLenght;
 }
 

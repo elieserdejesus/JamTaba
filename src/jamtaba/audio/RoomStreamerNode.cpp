@@ -35,7 +35,7 @@ AbstractMp3Streamer::~AbstractMp3Streamer(){
 }
 
 void AbstractMp3Streamer::stopCurrentStream(){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
     faderProcessor.reset();//aply fadein in next stream
     if(device){
         device->close();
@@ -47,7 +47,7 @@ void AbstractMp3Streamer::stopCurrentStream(){
 }
 
 void AbstractMp3Streamer::processReplacing(SamplesBuffer &/*in*/, SamplesBuffer &out){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
     if(samplesBuffer.empty()){
         return;
     }
@@ -85,7 +85,7 @@ bool AbstractMp3Streamer::needResamplingFor(int targetSampleRate) const{
 }
 
 void AbstractMp3Streamer::decodeBytesFromDevice(QIODevice* device, const unsigned int bytesToRead){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
     if(!device){
         return;
     }
@@ -167,7 +167,7 @@ void RoomStreamerNode::reply_read(){
     if(!device){
         return;
     }
-    QMutexLocker(&this->mutex);
+    //QMutexLocker(&this->mutex);
     AbstractMp3Streamer::decodeBytesFromDevice(device, device->bytesAvailable());
     if(buffering && !samplesBuffer.empty() && (int)samplesBuffer[0].size() >= bufferSize){
         buffering = false;

@@ -16,7 +16,7 @@ SamplesBuffer* createResampledBuffer(const SamplesBuffer& buffer, int originalSa
     int channels = buffer.getChannels();
     SamplesBuffer* newBuffer = new SamplesBuffer(channels, finalSize);
     for (int c = 0; c < channels; ++c) {
-        Resampler resampler;
+        ResamplerLibResampler resampler;
         resampler.process(buffer.getSamplesArray(c), buffer.getFrameLenght(), true, originalSampleRate, newBuffer->getSamplesArray(c), finalSize, finalSampleRate);
     }
     return newBuffer;
@@ -46,7 +46,7 @@ MetronomeTrackNode::~MetronomeTrackNode(){
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MetronomeTrackNode::setBeatsPerAccent(int beatsPerAccent){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
     this->beatsPerAccent = beatsPerAccent;
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
