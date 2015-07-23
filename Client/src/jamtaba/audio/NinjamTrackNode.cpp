@@ -6,10 +6,11 @@
 #include <QList>
 #include <QByteArray>
 #include <QMutexLocker>
+#include <QDateTime>
 
 
 NinjamTrackNode::NinjamTrackNode(int ID)
-    : playing(false), ID(ID)
+    : playing(false), ID(ID), processingLastPartOfInterval(false)
       //resamplerLeft(Resampler())
 {
 
@@ -73,10 +74,11 @@ void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::Sa
     if(!playing){
         return;
     }
+
+    qint64 inicio = QDateTime::currentMSecsSinceEpoch();
+
     int totalDecoded = 0;
-
-
-    int framesToDecode= getFramesToProcess(sampleRate, out.getFrameLenght());
+    int framesToDecode = getFramesToProcess(sampleRate, out.getFrameLenght()) ;
     internalBuffer.setFrameLenght(framesToDecode);
     internalBuffer.zero();
     while(totalDecoded < framesToDecode ){
@@ -89,15 +91,32 @@ void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::Sa
             break;
         }
     }
+//    if(totalDecoded != framesToDecode){
+//        qWarning() << "totalDecoded != framesToDecode" << totalDecoded << " != " << framesToDecode;
+//    }
 
-    //if(totalDecoded > 0){
+//    if(totalDecoded == 0 && !processingLastPartOfInterval){
+//        qWarning() << "totalDecoded ZERO e nao estah processando ultima parte do intervalo";
+//    }
+
+    if(totalDecoded > 0){
+
+        internalBuffer.setFrameLenght(totalDecoded);
+
         if(needResamplingFor(sampleRate)){
-              const Audio::SamplesBuffer& resampledBuffer = resampler.resample(internalBuffer, getSampleRate(), false, out.getFrameLenght(), sampleRate );
-              internalBuffer.setFrameLenght(resampledBuffer.getFrameLenght());
-              internalBuffer.set(resampledBuffer);
+            const Audio::SamplesBuffer& resampledBuffer = resampler.resample(internalBuffer, getSampleRate(), processingLastPartOfInterval, out.getFrameLenght(), sampleRate );
+            internalBuffer.setFrameLenght(resampledBuffer.getFrameLenght());
+            internalBuffer.set(resampledBuffer);
+            if(internalBuffer.getFrameLenght() != out.getFrameLenght()){
+                qWarning() << internalBuffer.getFrameLenght() << " != " << out.getFrameLenght();
+            }
         }
         Audio::AudioNode::processReplacing(in, out, sampleRate);//process internal buffer pan, gain, etc
-    //}
+    }
+    qint64 processamento = QDateTime::currentMSecsSinceEpoch() - inicio;
+    if(processamento > 1){
+        qWarning() << processamento;
+    }
 }
 
 bool NinjamTrackNode::needResamplingFor(int targetSampleRate) const{

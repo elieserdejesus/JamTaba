@@ -230,11 +230,16 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
             emit intervalBeatChanged(currentBeat);
         }
         //+++++++++++ MAIN AUDIO OUTPUT PROCESS +++++++++++++++
+        bool isLastPart = intervalPosition + samplesToProcessInThisStep >= samplesInInterval;
+        foreach (NinjamTrackNode* track, trackNodes) {
+            track->setProcessingLastPartOfInterval(isLastPart);//resampler need a flat indicating the last part
+        }
         mainController->doAudioProcess(tempInBuffer, tempOutBuffer, sampleRate);
         out.add(tempOutBuffer, offset); //generate audio output
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         if( transmiting){
+            bool isFirstPart = intervalPosition == 0;
             //1) mix subchannels, 2) encode and 3) send the encoded audio
 
             //1 - mix the groups subchannels
@@ -248,8 +253,6 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
                     mainController->mixGroupedInputs(channelIndex, inputMixBuffer);
 
                     // 3 - encoding
-                    bool isLastPart = intervalPosition + samplesToProcessInThisStep >= samplesInInterval;
-                    bool isFirstPart = intervalPosition == 0;
                     encodingThread->addSamplesToEncode(inputMixBuffer, channelIndex, isFirstPart, isLastPart);
                 }
             }
@@ -296,6 +299,8 @@ void NinjamController::start(const Ninjam::Server& server, bool transmiting){
 
 
     processScheduledChanges();
+
+    qWarning() << "Samples in interval:" << samplesInInterval;
 
     if(!running){
 

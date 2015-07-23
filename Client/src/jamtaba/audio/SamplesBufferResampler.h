@@ -13,7 +13,7 @@ public:
     const Audio::SamplesBuffer& resample(Audio::SamplesBuffer& in, int inSampleRate, bool lastInChunk, int desiredOutLenght, int targetSampleRate);
 private:
     Audio::SamplesBuffer outBuffer;
-    Resampler resamplers[2];
+    ResamplerTest resamplers[2];
 };
 
 #endif // SAMPLESBUFFERRESAMPLER_H
