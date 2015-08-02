@@ -9,11 +9,11 @@ class SamplesBufferResampler
 public:
     SamplesBufferResampler();
     ~SamplesBufferResampler();
-    //const Audio::SamplesBuffer& resample(Audio::SamplesBuffer& in, int desiredOutLenght);
-    const Audio::SamplesBuffer& resample(Audio::SamplesBuffer& in, int inSampleRate, bool lastInChunk, int desiredOutLenght, int targetSampleRate);
+    const Audio::SamplesBuffer& resample(const Audio::SamplesBuffer& in, int desiredOutLenght);
 private:
     Audio::SamplesBuffer outBuffer;
     ResamplerTest resamplers[2];
+
 };
 
 #endif // SAMPLESBUFFERRESAMPLER_H

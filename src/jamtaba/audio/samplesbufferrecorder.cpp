@@ -5,6 +5,7 @@
 #include <QByteArray>
 #include <QFile>
 #include <QDir>
+#include <QDebug>
 
 SamplesBufferRecorder::SamplesBufferRecorder(QString fileName, quint32 sampleRate)
     :fileName(fileName), sampleRate(sampleRate){
@@ -20,9 +21,15 @@ void SamplesBufferRecorder::addSamples(const Audio::SamplesBuffer &buffer){
     QDataStream stream(&array, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
     stream.skipRawData(array.size());
+    if(buffer.getChannels() < 2){
+        qCritical() << "buffer is mono!";
+        return;
+    }
     for (int s = 0; s < buffer.getFrameLenght(); ++s) {
-        quint16 sampleVale = (quint16)(buffer.get(0, s) * 32767);
-        stream << sampleVale;
+        for (int c = 0; c < buffer.getChannels(); ++c) {
+            quint16 sampleVale = (quint16)(buffer.get(c, s) * 32767);
+            stream << sampleVale;
+        }
     }
 }
 
@@ -30,7 +37,7 @@ void SamplesBufferRecorder::writeWavHeader(){
     quint32 frameLenght = (quint32)(array.size() - 44);
     quint32 chunckSize = (quint32)16;
     quint16 audioFormat = (quint16)1;//PCM
-    quint16 channels = (quint16)1;
+    quint16 channels = (quint16)2;
     quint32 bytesPerSecond = (quint32)(sampleRate * 2);
     quint16 bytesPerSample = (quint16)2;
     quint16 bitDepth = (quint16)16;

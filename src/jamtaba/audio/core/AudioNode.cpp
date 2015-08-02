@@ -88,22 +88,12 @@ AudioNode::AudioNode()
       pan(0)/*center*/,
       leftGain(1.0),
       rightGain(1.0)
-
 {
 
 }
 
 int AudioNode::getInputResamplingLength(int sourceSampleRate, int targetSampleRate, int outFrameLenght) {
-    static float correction = 0;
-    double factor = (double)sourceSampleRate/(double)targetSampleRate;
-    double doubleLenght = (double)outFrameLenght * factor;// + resamplingCorrection;
-    int intLenght = (int)doubleLenght;//decidi arrendar para baixo, assim pode ficar faltando uma amostra, eu compenso depois, melhor do que sobrar amostra e ser descartada
-    correction += doubleLenght - intLenght;
-    if(correction >= 1){
-        intLenght++;
-        correction -= 1;
-    }
-    return intLenght;
+    return (int) (((double)sourceSampleRate*(double)outFrameLenght/(double)targetSampleRate));
 }
 
 Audio::AudioPeak AudioNode::getLastPeak(bool resetPeak) const{

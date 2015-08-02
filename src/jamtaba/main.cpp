@@ -16,42 +16,25 @@
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
 int main(int argc, char* args[] ){
+
 /*
-    SamplesBufferResampler resampler;
+SamplesBufferResampler resampler;
+Audio::SamplesBuffer samples(1, 3);
+samples.set(0, 0, 1);
+samples.set(0, 1, 2);
+samples.set(0, 2, 3);
 
-    Audio::SamplesBuffer in(1, 64);
-    in.zero();
-    for (int x = 0; x < in.getFrameLenght(); ++x) {
-        in.set(0, x, (float)x/in.getFrameLenght());
+
+for (int i = 0; i < 1; ++i) {
+    const Audio::SamplesBuffer resampledBuffer = resampler.resample(samples, 1, false, 7, 1);
+    for (int x = 0; x < resampledBuffer.getFrameLenght() ; ++x) {
+        qWarning() << resampledBuffer.get(0, x) << "\t" << resampler.getCursor();
     }
+}
 
+return 0;
 
-    //se eu passo a flag de final na hora errada vem muitas amostras a mais, 10x mais
-    int total = 0;
-    int resampled = 0;
-    for (int x = 0; x < 10; ++x) {
-        Audio::SamplesBuffer resampledBuffer = resampler.resample(in, 1, in.getFrameLenght()==1, 128 , 2);
-        resampled = resampledBuffer.getFrameLenght();
-        total += resampled;
-        qWarning() << "new size: " << resampledBuffer.getFrameLenght();
-
-//        for (int x = 0; x < resampledBuffer.getFrameLenght(); ++x) {
-//            qWarning() << resampledBuffer.get(0, x);
-//        }
-        if(x == 0){
-            in.setFrameLenght(1);
-        }
-        else{
-            in.setFrameLenght(0);
-        }
-    }
-
-    qWarning() << "Total: " << total;
-    return 0;
-
-    */
-
-
+*/
 
     QApplication::setApplicationName("Jamtaba 2");
 

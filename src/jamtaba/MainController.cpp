@@ -36,7 +36,6 @@ using namespace Ninjam;
 
 using namespace Controller;
 
-
 //++++++++++++++++++++++++++++
 //Nested class to group input tracks
 class MainController::InputTrackGroup{
@@ -118,6 +117,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
       settings(settings),
       transmiting(true),
       userNameChoosed(false)
+
 {
 
     //threadHandle = nullptr;//QThread::currentThreadId();
@@ -140,6 +140,11 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 
     audioMixer = new Audio::AudioMixer(audioDriver->getSampleRate());
     roomStreamer = new Audio::RoomStreamerNode();
+
+    QString dateString = QDateTime::currentDateTime().time().toString().replace(":", "-");
+    //QString fileName = "output_" + dateString + ".wav";
+    QString fileName = "output.wav";
+    recorder = new SamplesBufferRecorder(fileName, audioDriver->getSampleRate());
 
     midiDriver = new PortMidiDriver();
     midiDriver->setInputDeviceIndex(settings.getLastMidiDeviceIndex());
@@ -170,21 +175,24 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
                      this, SLOT(on_ninjamEncodedAudioAvailableToSend(QByteArray,quint8,bool,  bool)));
 
     //addInputTrackNode(new Audio::LocalInputTestStreamer(440, getAudioDriverSampleRate()));
-
+/*
     //test ninjam stream
-//    NinjamTrackNode* trackTest = new NinjamTrackNode(2);
-//    //QStringList testFiles({":/bateria mono.ogg"});
-//    QStringList testFiles({":/loop 192KHz.wav.ogg"});
-//    addTrack(2, trackTest);
-//    for (int i = 0; i < testFiles.size(); ++i) {
-//        QFile file(testFiles.at(i));
-//        if(!file.exists()){
-//            qCritical() << "File not exists! " << file.errorString();
-//        }
-//        file.open(QIODevice::ReadOnly);
-//        trackTest->addVorbisEncodedInterval(file.readAll());
-//    }
-//    trackTest->startNewInterval();
+    NinjamTrackNode* trackTest = new NinjamTrackNode(2);
+    //QStringList testFiles({":/bateria mono.ogg"});
+    QStringList testFiles({":/loop 192KHz.wav.ogg"});
+    //QStringList testFiles({":/loop estereo 44100KHz.ogg"});
+    addTrack(2, trackTest);
+    for (int i = 0; i < testFiles.size(); ++i) {
+        QFile file(testFiles.at(i));
+        if(!file.exists()){
+            qCritical() << "File not exists! " << file.errorString();
+        }
+        file.open(QIODevice::ReadOnly);
+        trackTest->addVorbisEncodedInterval(file.readAll());
+    }
+    trackTest->startNewInterval();
+*/
+
 
 
     //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
@@ -486,6 +494,7 @@ void MainController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffe
     else{
         ninjamController->process(in, out, sampleRate);
     }
+    recorder->addSamples(out);
 }
 
 Audio::AudioPeak MainController::getTrackPeak(int trackID){
@@ -650,6 +659,8 @@ MainController::~MainController(){
         ninjamController = nullptr;
     }
     QObject::disconnect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
+
+    delete recorder;
 }
 
 void MainController::saveLastUserSettings(const Persistence::InputsSettings& inputsSettings){

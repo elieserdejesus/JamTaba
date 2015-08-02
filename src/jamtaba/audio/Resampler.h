@@ -5,21 +5,11 @@
 class ResamplerTest
 {
 public:
-    int process(const float* in, int inLength, int inSampleRate, bool lastInputChunk, float *out, int outLenght, int outSampleRate);
-
-};
-
-
-class ResamplerLibResampler
-{
-public:
-    int process(const float* in, int inLength, int inSampleRate, bool lastInputChunk, float *out, int outLenght, int outSampleRate);
-    ResamplerLibResampler();
-    ~ResamplerLibResampler();
-
+    explicit ResamplerTest();
+    void process(const float* in, int inLength, float *out, int outLenght);
 private:
-    void* libHandler;
 
 };
+
 
 #endif // RESAMPLER_H
