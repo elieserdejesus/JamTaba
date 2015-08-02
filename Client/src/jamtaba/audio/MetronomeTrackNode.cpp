@@ -2,6 +2,7 @@
 #include <QDebug>
 #include "../audio/core/AudioDriver.h"
 #include "../audio/core/SamplesBuffer.h"
+#include "../audio/SamplesBufferResampler.h"
 #include <QFile>
 #include <cmath>
 #include <QtEndian>
@@ -13,13 +14,9 @@ using namespace Audio;
 
 SamplesBuffer* createResampledBuffer(const SamplesBuffer& buffer, int originalSampleRate, int finalSampleRate){
     int finalSize = (double)finalSampleRate/originalSampleRate * buffer.getFrameLenght();
-    int channels = buffer.getChannels();
-    SamplesBuffer* newBuffer = new SamplesBuffer(channels, finalSize);
-    for (int c = 0; c < channels; ++c) {
-        ResamplerLibResampler resampler;
-        resampler.process(buffer.getSamplesArray(c), buffer.getFrameLenght(), true, originalSampleRate, newBuffer->getSamplesArray(c), finalSize, finalSampleRate);
-    }
-    return newBuffer;
+    SamplesBufferResampler resampler;
+    const SamplesBuffer& newBuffer = resampler.resample(buffer, finalSize);
+    return new SamplesBuffer( newBuffer);
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MetronomeTrackNode::MetronomeTrackNode(QString metronomeWaveFile, int localSampleRate)

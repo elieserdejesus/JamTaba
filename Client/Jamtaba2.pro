@@ -1,14 +1,55 @@
-#parece que o primeiro buffer resampleado nunca tem todas as amostras que preciso por causa do filter width
+#testar meu resampler com valores simples e depois gerando audio
+    #do jeito que fiz originalmente, repetindo as amostras
+    #com o código do wahjam
+    #inserindo zeros nas amostras (upsampling)
 
-#Acho que meu problema está relacionado com o filter_width.
+#testar com sine waves para ver se encontro um padrão na descontinuidade da onda, observar
+    #esses problemas em ondas complexas é muito 'complexo'
 
-#Tenho que ver se depois de enviar a flag de final eu não precisa injetar zeros novamente no resampler
+#fazer um teste com o resampler usando números onde eu possa simular e ver o que acontece com os dados. Testar com o áudio
+    #é complexo demais. Tenho que concentrar a minha atenção no que acontece entre os buffers, como ficam os valores, como
+    #fica a posição do cursor de um buffer para outro.
 
-#quando eu não passo a flag de final para o resampler ele retorna zero. Acho que no meu caso
-#eu sempre preciso enganar ele dizendo que é o final para que ele gere alguma coisa na saída.
 
-#Se eu passo a flag de final sempre como verdadeira ele sempre me retorna as amostras. O que é
-#estranho é que eu mando duas vezes a mesma sequencia de input mas recebo outputs diferentes
+
+
+#o low pass mais simples: https://ccrma.stanford.edu/~jos/fp/Definition_Simplest_Low_Pass.html
+
+#gera código para low pass: http://www-users.cs.york.ac.uk/~fisher/cgi-bin/mkfscript
+
+#That’s it—to double the sample rate, we insert a zero between each sample, and low-pass filter to clear the extended
+#part of the audio band. Any low-pass filter will do, as long as you pick one steep enough to get the job done,
+#removing the aliased copy without removing much of the existing signal band. Most often, a linear phase FIR filter is
+#used—performance is good at the relatively high cut-off frequency, phase is maintained, and we have good control over
+#its characteristics.
+
+#Downsampling
+
+#The process of reducing the sample rate—downsampling—is similar, except we low-pass filter first, to reduce the bandwidth,
+#then discard samples. The filter stage is essential, since the signal will alias if we try to fit it into a narrower
+#band without removing the portion that can’t be encoded at the lower rate. So, we set the filter cut-off to half the
+#new, lower sample rate, then simply discard every other sample for a 2:1 downsample ratio.
+#(Yes, the result will be slightly different depending on whether you discard the odd samples or even ones.
+#And no, it doesn’t matter, just as the exact sampling phase didn’t matter when you converted from analog to digital
+#in the first place.)
+
+
+#Não está lembrando o mute da minha entrada?
+
+#desisti da libresample
+
+#Vi que existem 2 problemas
+#1 - o número de amostras que eu leio do decoder é truncado, então ele precisa de correção. Sem a correção os testes
+    #com buffer size em 64 e 96KHz claramente faltava amostra no final no intervalo. Ou seja, estava lendo amostras demais.
+    #Corrigi isso e agora o intervalo fechou certinho.
+    #Preciso testar com outras taxas de amostragem nos dois lados para ver
+
+#2 - O segundo problema são os artefatos gerados pelo menu resampling. Fiz o mais simples possível, e funcinou.
+    #No momento meu resampler está copiando a amostra anterior no upsampling. Não estou nem usando interpolação linear.
+    #Vi em um fórum que a interpolação cúbica já dá uma liga.
+
+#3 - Depois preciso ver o filtro, parece que é mais importante no downsampling.
+
 
 #In general, the algorithm for resampling to a higher frequency is:
 #* maintain a 'cursor': a floating-point sample index, into the source sample
@@ -111,6 +152,8 @@
 #Comentei com o Marcello sobre a ideia de criar um segundo chat para mensagens privadas.
 
 #quando solo uma das inputs as outras também são enviadas. Ou seja, o solo está atuando apenas localmente. Faz sentido mudar isso?
+
+#usuário kn00t perguntou sobre um log do chat. Pode ser interessante. Talvez ele só queira ver as mensagens mais antigas de uma sessão, e não ver mensagens de outras sessões.
 
 #drummix stereo abre, mas o drummix multi dá pau. Talvez a quantidade de canais esteja gerando problema.
 
@@ -416,12 +459,11 @@ INCLUDEPATH += src/jamtaba/gui                  \
                $$PWD/libs/includes/portmidi     \
                $$PWD/libs/includes/ogg          \
                $$PWD/libs/includes/vorbis       \
-               $$PWD/libs/includes/libresample  \
                $$PWD/libs/includes/minimp3      \
                $$PWD/libs/includes/libmaxmind   \
 
 
-win32: LIBS +=  -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi -lvorbisfile -lvorbis -lvorbisenc -logg -lminimp3 -lmaxminddb -lresample \
+win32: LIBS +=  -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi -lvorbisfile -lvorbis -lvorbisenc -logg -lminimp3 -lmaxminddb  \
 
 win32: LIBS +=  -lwinmm     \
                 -lole32     \

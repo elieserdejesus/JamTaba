@@ -300,8 +300,6 @@ void NinjamController::start(const Ninjam::Server& server, bool transmiting){
 
     processScheduledChanges();
 
-    qWarning() << "Samples in interval:" << samplesInInterval;
-
     if(!running){
 
         encodingThread = new NinjamController::EncodingThread(this);

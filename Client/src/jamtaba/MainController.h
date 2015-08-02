@@ -13,6 +13,8 @@
 #include "../audio/vst/PluginFinder.h"
 #include "../persistence/Settings.h"
 
+#include "../audio/samplesbufferrecorder.h"
+
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(controllerMain)
@@ -237,6 +239,8 @@ private:
     bool userNameChoosed;
 
     QString getUserEnvironmentString() const;
+
+    SamplesBufferRecorder* recorder;
 
 private slots:
     //Login server

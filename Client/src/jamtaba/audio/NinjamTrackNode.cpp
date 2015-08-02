@@ -75,7 +75,7 @@ void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::Sa
         return;
     }
 
-    qint64 inicio = QDateTime::currentMSecsSinceEpoch();
+    //qint64 inicio = QDateTime::currentMSecsSinceEpoch();
 
     int totalDecoded = 0;
     int framesToDecode = getFramesToProcess(sampleRate, out.getFrameLenght()) ;
@@ -104,7 +104,7 @@ void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::Sa
         internalBuffer.setFrameLenght(totalDecoded);
 
         if(needResamplingFor(sampleRate)){
-            const Audio::SamplesBuffer& resampledBuffer = resampler.resample(internalBuffer, getSampleRate(), processingLastPartOfInterval, out.getFrameLenght(), sampleRate );
+            const Audio::SamplesBuffer& resampledBuffer = resampler.resample(internalBuffer, out.getFrameLenght() );
             internalBuffer.setFrameLenght(resampledBuffer.getFrameLenght());
             internalBuffer.set(resampledBuffer);
             if(internalBuffer.getFrameLenght() != out.getFrameLenght()){
@@ -113,10 +113,8 @@ void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::Sa
         }
         Audio::AudioNode::processReplacing(in, out, sampleRate);//process internal buffer pan, gain, etc
     }
-    qint64 processamento = QDateTime::currentMSecsSinceEpoch() - inicio;
-    if(processamento > 1){
-        qWarning() << processamento;
-    }
+    //qint64 processamento = QDateTime::currentMSecsSinceEpoch() - inicio;
+
 }
 
 bool NinjamTrackNode::needResamplingFor(int targetSampleRate) const{

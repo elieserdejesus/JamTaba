@@ -58,13 +58,9 @@ public:
     void addProcessor(AudioNodeProcessor &newProcessor);
     void removeProcessor(AudioNodeProcessor &processor);
 
-    //void pushBackDiscardedSamples(const Audio::SamplesBuffer& buffer, unsigned int discardedSamples);
-
     inline void setGain(float gainValue){
         this->gain = gainValue;
     }
-
-    //virtual int getSampleRate() const = 0;
 
     inline float getGain() const{
         return gain;
