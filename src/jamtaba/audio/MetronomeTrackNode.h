@@ -23,15 +23,11 @@ public:
     inline bool isPlayingAccents() const{ return beatsPerAccent > 0; }
 
     virtual int getSampleRate() const{return waveFileSampleRate;}
-
+    inline int getBeatsPerAccent() const{return beatsPerAccent;}
 private:
     SamplesBuffer* clickSoundBuffer;
     SamplesBuffer* firstIntervalBeatBuffer;
     SamplesBuffer* firstMeasureBeatBuffer;
-
-    //QMutex mutex;
-
-    //unsigned int clickBufferOffset;
 
     long samplesPerBeat;
     long intervalPosition;
@@ -39,10 +35,8 @@ private:
     int currentBeat;
     int beatsPerAccent;
 
-    quint32 waveFileSampleRate;
-
-    SamplesBuffer* readWavFile(QString fileName, quint32 &sampleRate);//the second parameter is a output parameter
-
+    quint32 waveFileSampleRate;//metrono wav file sample rate
+    SamplesBuffer* readWavFile(QString fileName, quint32 &sampleRate);
     SamplesBuffer* getBuffer(int beat);//return the correct buffer to play in each beat
 };
 
