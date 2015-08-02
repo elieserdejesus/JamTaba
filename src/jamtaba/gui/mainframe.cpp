@@ -431,6 +431,9 @@ void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
 
     //show chat area
     ui.chatArea->setVisible(true);
+
+    ui.leftPanel->adjustSize();
+    //ui.leftPanel->setMinimumWidth(500);
 }
 
 void MainFrame::on_exitedFromRoom(bool normalDisconnection){

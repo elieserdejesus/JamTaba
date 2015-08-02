@@ -1,11 +1,10 @@
-#Deu tanto trabalho implementar o visual do metronomo que agora enquanto eu não botar várias opções de progresso no intervalo eu não
-    #vou morrer em paz:
-    # 1 - Elipse (está pronto) - deixar sempre em ellipse, mesmo com poucos BPIs
-    # 2 - Círculo (praticamente pronto, só aproveitar o código da ellipse).
-    # 3 - Espiral (deixei o código comentado)
-    # 4 - Fancy display (a classe já está pronta);
-
 #arrumar o problema no layout das inputs quando não estou em tela cheia.
+
+#melhorei o layout. Entretanto, quando crio 2 canais com 3 sub cada um
+    #as inputs ocupam muito espaço e na tela do note não sobra espaço para o
+    #display do progresso
+    #Acho que um scroll é a melhor solução
+
 
 #melhorar o visual o suficiente para um primeiro release
 
@@ -60,6 +59,7 @@
 
 #mudei do asio4all para FAst track mas as entradas continuaram como "microfones"
 
+#exibir uma mensagem no chat quando um usuário sai da sala
 
 #Entrei em uma sala com uns 5 caras e estava usando 25:% da minha CPU.
 #Entrei na mesma sala usando o Reaninjam e não chegou a 1% da minha CPU. Mas depois eu descobri que se não estiver encodando
