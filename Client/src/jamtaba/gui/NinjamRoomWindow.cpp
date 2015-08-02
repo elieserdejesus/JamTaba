@@ -70,6 +70,7 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Co
     ui->topPanel->getGainSlider()->setValue(100*initialMetronomeGain);
     ui->topPanel->getPanSlider()->setValue(4 * initialMetronomePan);
     ui->topPanel->getMuteButton()->setChecked(initialMetronomeMuteStatus);
+    ui->topPanel->setIntervalShape(mainController->getSettings().getIntervalProgressShape());
 
     initializeMetronomeEvents();//signals and slots
 
@@ -242,6 +243,8 @@ NinjamRoomWindow::~NinjamRoomWindow(){
         QObject::disconnect(ninjamController, SIGNAL(chatMsgReceived(Ninjam::User,QString)), this, SLOT(on_chatMessageReceived(Ninjam::User,QString)));
         QObject::disconnect(ninjamController, SIGNAL(channelXmitChanged(long,bool)), this, SLOT(on_channelXmitChanged(long,bool)));
     }
+
+    mainController->storeIntervalProgressShape( ui->topPanel->getIntervalShape());
 
     delete ui;
 }

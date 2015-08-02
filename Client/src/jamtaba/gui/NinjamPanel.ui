@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>823</width>
+    <width>927</width>
     <height>150</height>
    </rect>
   </property>
@@ -40,6 +40,9 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Preferred</enum>
+     </property>
      <property name="sizeHint" stdset="0">
       <size>
        <width>40</width>
@@ -52,6 +55,9 @@
     <spacer name="horizontalSpacer_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Preferred</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -396,10 +402,10 @@
     </widget>
    </item>
    <item row="0" column="4" rowspan="4">
-    <widget class="CircularIntervalProgressDisplay" name="intervalPanel" native="true">
+    <widget class="IntervalProgressDisplay" name="intervalPanel" native="true">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
        <verstretch>1</verstretch>
       </sizepolicy>
      </property>
@@ -407,12 +413,6 @@
       <size>
        <width>300</width>
        <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>300</width>
-       <height>16777215</height>
       </size>
      </property>
     </widget>
@@ -461,16 +461,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="labelBPM">
-        <property name="toolTip">
-         <string>Beats per minute</string>
-        </property>
-        <property name="text">
-         <string>BPM</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="comboBpm">
         <property name="toolTip">
@@ -484,6 +474,19 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelBPM">
+        <property name="toolTip">
+         <string>Beats per minute</string>
+        </property>
+        <property name="text">
+         <string>BPM</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="comboBeatsPerAccent"/>
+      </item>
       <item row="2" column="0">
        <widget class="QLabel" name="labelAccent">
         <property name="text">
@@ -491,8 +494,15 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="comboBeatsPerAccent"/>
+      <item row="3" column="0">
+       <widget class="QLabel" name="labelShape">
+        <property name="text">
+         <string>Shape</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QComboBox" name="comboShape"/>
       </item>
      </layout>
     </widget>
@@ -501,15 +511,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>CircularIntervalProgressDisplay</class>
-   <extends>QWidget</extends>
-   <header>CircularIntervalProgressDisplay.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>PeakMeter</class>
    <extends>QWidget</extends>
    <header>peakmeter.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>IntervalProgressDisplay</class>
+   <extends>QWidget</extends>
+   <header>IntervalProgressDisplay.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -12,7 +12,7 @@ namespace Persistence{
 
 class Settings;
 
-class SettingsObject{
+class SettingsObject{//base class for the settings components
 
 protected:
     QString name;
@@ -123,6 +123,7 @@ private:
     VstSettings vstSettings;
     InputsSettings inputsSettings;
     QString lastUserName;//the nick name choosed by user
+    int ninjamIntervalProgressShape;//Circle, Ellipe or Line
 public:
     Settings();
     ~Settings();
@@ -138,6 +139,9 @@ public:
     //user name
     inline QString getUserName() const{return lastUserName;}
     void setUserName(QString newUserName);
+
+    void setIntervalProgressShape(int shape){this->ninjamIntervalProgressShape = shape;}
+    inline int getIntervalProgressShape() const{return this->ninjamIntervalProgressShape;}
 
     //VST
     void addVstPlugin(QString pluginPath);

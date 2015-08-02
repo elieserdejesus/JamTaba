@@ -37,17 +37,21 @@ public:
     void setCurrentBeat(int currentBeat);
 
     void setMetronomePeaks(float left, float right);
+
+    int getIntervalShape() const;
+    void setIntervalShape(int shape);
 protected:
     void paintEvent(QPaintEvent *);
     bool eventFilter(QObject *source, QEvent *ev);
     Ui::NinjamPanel *ui;
 private:
-
+    void buildShapeModel();
     void buildAccentsdModel(int bpi);
-    QStringList getDividers(int bpi);
+    QStringList getBpiDividers(int bpi);
     static bool compareBpis(const QString& s1, const QString& s2);
 private slots:
     void comboAccentsChanged(int index);
+    void comboShapeChanged(int index);
 };
 
 #endif // NINJAMPANEL_H

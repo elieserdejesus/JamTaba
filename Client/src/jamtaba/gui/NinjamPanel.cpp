@@ -1,6 +1,7 @@
 #include "NinjamPanel.h"
 #include "ui_ninjampanel.h"
 #include <QPainter>
+#include <QDebug>
 #include <QtAlgorithms>
 
 NinjamPanel::NinjamPanel(QWidget *parent) :
@@ -23,6 +24,9 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     ui->comboBpi->setValidator(new QIntValidator(4, 64, ui->comboBpi));
 
     QObject::connect( ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)), this, SLOT(comboAccentsChanged(int)));
+    QObject::connect(ui->comboShape, SIGNAL(currentIndexChanged(int)), this, SLOT(comboShapeChanged(int)));
+
+    buildShapeModel();
 
     ui->levelSlider->installEventFilter(this);
     ui->panSlider->installEventFilter(this);
@@ -55,8 +59,14 @@ void NinjamPanel::comboAccentsChanged(int index){
     }
 }
 
+void NinjamPanel::comboShapeChanged(int index){
+    Q_UNUSED(index);
+    qDebug() << index;
+    ui->intervalPanel->setPaintMode((IntervalProgressDisplay::PaintMode)ui->comboShape->currentData().toInt());
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++
-QStringList NinjamPanel::getDividers(int bpi){
+QStringList NinjamPanel::getBpiDividers(int bpi){
     QStringList foundedDividers;
     int divider = 2;
     while (divider <= bpi / 2) {
@@ -67,7 +77,7 @@ QStringList NinjamPanel::getDividers(int bpi){
     }
 
     if (foundedDividers.isEmpty()) {
-        foundedDividers.append(QString::number(bpi));//uso o próprio bpi
+        foundedDividers.append(QString::number(bpi));//using bpi as default
     }
     qSort(foundedDividers.begin(), foundedDividers.end(), compareBpis);
     return foundedDividers;
@@ -77,10 +87,40 @@ bool NinjamPanel::compareBpis(const QString &s1, const QString &s2){
     return s1.toInt() < s2.toInt();
 }
 
+int NinjamPanel::getIntervalShape() const{
+    return ui->comboShape->currentData().toInt();
+}
+
+void NinjamPanel::setIntervalShape(int shape){
+    int index = 0;
+    switch ((IntervalProgressDisplay::PaintMode)shape) {
+
+    case IntervalProgressDisplay::PaintMode::CIRCULAR:
+        index = 0;
+        break;
+    case IntervalProgressDisplay::PaintMode::ELLIPTICAL:
+        index = 1;
+        break;
+    case IntervalProgressDisplay::PaintMode::LINEAR:
+        index = 2;
+        break;
+    default:
+        break;
+    }
+    ui->comboShape->setCurrentIndex(index);
+}
+
+void NinjamPanel::buildShapeModel(){
+    ui->comboShape->clear();
+    ui->comboShape->addItem("Circle", IntervalProgressDisplay::PaintMode::CIRCULAR);
+    ui->comboShape->addItem("Ellipse", IntervalProgressDisplay::PaintMode::ELLIPTICAL);
+    ui->comboShape->addItem("Line", IntervalProgressDisplay::PaintMode::LINEAR);
+}
+
 void NinjamPanel::buildAccentsdModel(int bpi){
     ui->comboBeatsPerAccent->clear();
     ui->comboBeatsPerAccent->addItem("off", 0);
-    QStringList bpiDividers = getDividers(bpi);
+    QStringList bpiDividers = getBpiDividers(bpi);
     for (int d = 0; d < bpiDividers.size(); ++d) {
         QString divider = bpiDividers.at(d);
         ui->comboBeatsPerAccent->addItem(divider + " beats", divider.toInt());
