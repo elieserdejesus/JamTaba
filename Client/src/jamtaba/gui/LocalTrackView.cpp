@@ -16,19 +16,19 @@ const QString LocalTrackView::MONO_ICON = ":/images/input_mono.png";
 const QString LocalTrackView::STEREO_ICON = ":/images/input_stereo.png";
 const QString LocalTrackView::NO_INPUT_ICON= ":/images/input_no.png";
 
-LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex, float initialGain, float initialPan)
+LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex, float initialGain, float initialPan, bool muted)
     :BaseTrackView( mainController, 1), fxPanel(nullptr), inputNode(nullptr)
 {
-    init(channelIndex, initialGain, initialPan);
+    init(channelIndex, initialGain, initialPan, muted);
 }
 
 LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex)
     :BaseTrackView(mainController, 1), fxPanel(nullptr), inputNode(nullptr)
 {
-    init(channelIndex, 1, 0);//unit gain and pan in center
+    init(channelIndex, 1, 0, false);//unit gain and pan in center, not muted
 }
 
-void LocalTrackView::init(int channelIndex, float initialGain, float initialPan){
+void LocalTrackView::init(int channelIndex, float initialGain, float initialPan, bool muted){
     //add separator before effects panel
     ui->mainLayout->addSpacing(20);
     fxPanel = createFxPanel();
@@ -44,6 +44,10 @@ void LocalTrackView::init(int channelIndex, float initialGain, float initialPan)
 
     ui->levelSlider->setValue( 100 * initialGain );
     ui->panSlider->setValue( initialPan * 4 );
+
+    if(muted){
+        ui->muteButton->click();
+    }
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -86,13 +86,14 @@ Persistence::InputsSettings MainFrame::getInputsSettings() const{
             bool isMidiTrack = inputNode->isMidi();
             float gain = Utils::poweredGainToLinear( inputNode->getGain() );
             float pan = inputNode->getPan();
+            bool muted = inputNode->isMuted();
 
             QList<const Audio::Plugin*> insertedPlugins = trackView->getInsertedPlugins();
             QList<Persistence::Plugin> plugins;
             foreach (const Audio::Plugin* p, insertedPlugins) {
                 plugins.append(Persistence::Plugin(p->getPath(), p->isBypassed()));
             }
-            Persistence::Subchannel sub(firstInput, channelsCount, isMidiTrack, gain, pan, plugins);
+            Persistence::Subchannel sub(firstInput, channelsCount, isMidiTrack, gain, pan, muted, plugins);
 
             channel.subChannels.append(sub);
         }
@@ -219,7 +220,7 @@ void MainFrame::initializeLocalInputChannels(){
     foreach (Persistence::Channel channel, inputsSettings.channels) {
         LocalTrackGroupView* channelView = addLocalChannel(channelIndex, channel.name, channel.subChannels.isEmpty());
         foreach (Persistence::Subchannel subChannel, channel.subChannels) {
-            LocalTrackView* subChannelView = new LocalTrackView( mainController, channelIndex, subChannel.gain, subChannel.pan);
+            LocalTrackView* subChannelView = new LocalTrackView( mainController, channelIndex, subChannel.gain, subChannel.pan, subChannel.muted);
             channelView->addTrackView(subChannelView);
             if(subChannel.usingMidi){
                 mainController->setInputTrackToMIDI( subChannelView->getInputIndex(), subChannel.midiDevice);

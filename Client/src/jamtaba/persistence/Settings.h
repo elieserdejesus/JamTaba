@@ -86,13 +86,14 @@ public:
 
 class Subchannel{
 public:
-    Subchannel(int firstInput, int channelsCount, bool isMidi, float gain, float pan, QList<Plugin> plugins);
+    Subchannel(int firstInput, int channelsCount, bool isMidi, float gain, float pan, bool muted, QList<Plugin> plugins);
     int firstInput;
     int channelsCount;
     bool usingMidi;
     int midiDevice;
     float gain;
     float pan;
+    bool muted;
     QList<Plugin> plugins;
 };
 
