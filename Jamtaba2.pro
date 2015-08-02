@@ -1,4 +1,6 @@
-#se o canal está mutado ele não deveria deixar de ser encodado?
+#Estava na sala com uns 4 usuários, eles mudaram o bpi e deu esse erro e crashou a aplicação:
+    #WARNING: "VORBIS DECODER INIT ERROR:  Bitstream does not contain any Vorbis data." (bool VorbisDecoder::initialize()) [VorbisDecoder.cpp:117]
+    #Tenho que tratar essa exceção e simplesmente não tocar o intervalo
 
 #3 - Preciso melhorar o resampling aplicando o low pass.
     #o low pass mais simples: https://ccrma.stanford.edu/~jos/fp/Definition_Simplest_Low_Pass.html

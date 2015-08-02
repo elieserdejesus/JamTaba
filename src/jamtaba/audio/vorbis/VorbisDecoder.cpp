@@ -57,6 +57,11 @@ const Audio::SamplesBuffer &VorbisDecoder::decode(int maxSamplesToDecode){
     if(!initialized){
         initialize();
     }
+    if(!initialized){
+        internalBuffer.setFrameLenght(maxSamplesToDecode);
+        internalBuffer.zero();
+        return internalBuffer;
+    }
     //static float decoderOutBuffer[vorbisFile.vi->channels]
     long samplesDecoded = ov_read_float(&vorbisFile, &outBuffer, maxSamplesToDecode, NULL);//currentSection is not used
     if(samplesDecoded < 0){//error
