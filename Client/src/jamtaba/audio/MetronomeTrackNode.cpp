@@ -14,9 +14,13 @@ using namespace Audio;
 
 SamplesBuffer* createResampledBuffer(const SamplesBuffer& buffer, int originalSampleRate, int finalSampleRate){
     int finalSize = (double)finalSampleRate/originalSampleRate * buffer.getFrameLenght();
-    SamplesBufferResampler resampler;
-    const SamplesBuffer& newBuffer = resampler.resample(buffer, finalSize);
-    return new SamplesBuffer( newBuffer);
+       int channels = buffer.getChannels();
+       SamplesBuffer* newBuffer = new SamplesBuffer(channels, finalSize);
+       for (int c = 0; c < channels; ++c) {
+           ResamplerTest resampler;
+           resampler.process(buffer.getSamplesArray(c), buffer.getFrameLenght(), newBuffer->getSamplesArray(c), finalSize);
+       }
+       return newBuffer;
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MetronomeTrackNode::MetronomeTrackNode(QString metronomeWaveFile, int localSampleRate)

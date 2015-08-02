@@ -187,7 +187,7 @@ NinjamController::NinjamController(Controller::MainController* mainController)
 
 
 }
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++ THE MAIN LOGIC IS HERE  ++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
 
     QMutexLocker locker(&mutex);
@@ -240,9 +240,8 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
 
         if( transmiting){
             bool isFirstPart = intervalPosition == 0;
-            //1) mix subchannels, 2) encode and 3) send the encoded audio
+            //1) mix input subchannels, 2) encode and 3) send the encoded audio
 
-            //1 - mix the groups subchannels
             static Audio::SamplesBuffer inputMixBuffer(2, 4096); //TODO esse canal sempre estereo nãi vai dar problema com pitas mono?
             inputMixBuffer.setFrameLenght(samplesToProcessInThisStep);
 
@@ -252,7 +251,7 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
                     inputMixBuffer.zero();
                     mainController->mixGroupedInputs(channelIndex, inputMixBuffer);
 
-                    // 3 - encoding
+                    //encoding is running in another thread to avoid slow down the audio thread
                     encodingThread->addSamplesToEncode(inputMixBuffer, channelIndex, isFirstPart, isLastPart);
                 }
             }
@@ -329,15 +328,13 @@ void NinjamController::start(const Ninjam::Server& server, bool transmiting){
 
         QObject::connect(ninjamService, SIGNAL(chatMessageReceived(Ninjam::User,QString)), this, SIGNAL(chatMsgReceived(Ninjam::User,QString)));
 
-        //add server users
+        //add tracks for users connected in server
         QList<Ninjam::User*> users = server.getUsers();
         foreach (Ninjam::User* user, users) {
             foreach (Ninjam::UserChannel* channel, user->getChannels()) {
                 addTrack(*user, *channel);
             }
         }
-
-
     }
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

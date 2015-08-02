@@ -16,7 +16,7 @@ public:
     inline bool isMono() const{return vorbisFile.vi->channels == 1;}
     inline int getChannels() const{return vorbisFile.vi->channels;}
     inline int getSampleRate() const{return vorbisFile.vi->rate;}
-
+    inline bool isInitialized() const{return initialized;}
     void setInput(QByteArray vorbisData);
     void reset();
     inline int getTotalDecodedSamples() const{return decodedSamples;}

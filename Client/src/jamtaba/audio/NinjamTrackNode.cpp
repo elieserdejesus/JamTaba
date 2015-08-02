@@ -118,7 +118,7 @@ void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::Sa
 }
 
 bool NinjamTrackNode::needResamplingFor(int targetSampleRate) const{
-    if(playing){
+    if(playing && decoder.isInitialized()){
         return decoder.getSampleRate() != targetSampleRate;
     }
     return false;

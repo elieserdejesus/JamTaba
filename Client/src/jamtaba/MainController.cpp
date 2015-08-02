@@ -175,12 +175,13 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
                      this, SLOT(on_ninjamEncodedAudioAvailableToSend(QByteArray,quint8,bool,  bool)));
 
     //addInputTrackNode(new Audio::LocalInputTestStreamer(440, getAudioDriverSampleRate()));
-/*
+
     //test ninjam stream
     NinjamTrackNode* trackTest = new NinjamTrackNode(2);
     //QStringList testFiles({":/bateria mono.ogg"});
-    QStringList testFiles({":/loop 192KHz.wav.ogg"});
+    //QStringList testFiles({":/loop 192KHz.wav.ogg"});
     //QStringList testFiles({":/loop estereo 44100KHz.ogg"});
+    QStringList testFiles({":/click.wav"});
     addTrack(2, trackTest);
     for (int i = 0; i < testFiles.size(); ++i) {
         QFile file(testFiles.at(i));
@@ -191,7 +192,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
         trackTest->addVorbisEncodedInterval(file.readAll());
     }
     trackTest->startNewInterval();
-*/
+
 
 
 
