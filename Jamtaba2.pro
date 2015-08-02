@@ -1,115 +1,35 @@
-#testar meu resampler com valores simples e depois gerando audio
-    #do jeito que fiz originalmente, repetindo as amostras
-    #com o código do wahjam
-    #inserindo zeros nas amostras (upsampling)
+#se o canal está mutado ele não deveria deixar de ser encodado?
 
-#testar com sine waves para ver se encontro um padrão na descontinuidade da onda, observar
-    #esses problemas em ondas complexas é muito 'complexo'
+#3 - Preciso melhorar o resampling aplicando o low pass.
+    #o low pass mais simples: https://ccrma.stanford.edu/~jos/fp/Definition_Simplest_Low_Pass.html
 
-#fazer um teste com o resampler usando números onde eu possa simular e ver o que acontece com os dados. Testar com o áudio
-    #é complexo demais. Tenho que concentrar a minha atenção no que acontece entre os buffers, como ficam os valores, como
-    #fica a posição do cursor de um buffer para outro.
+    #gera código para low pass: http://www-users.cs.york.ac.uk/~fisher/cgi-bin/mkfscript
 
+    #That’s it—to double the sample rate, we insert a zero between each sample, and low-pass filter to clear the extended
+    #part of the audio band. Any low-pass filter will do, as long as you pick one steep enough to get the job done,
+    #removing the aliased copy without removing much of the existing signal band. Most often, a linear phase FIR filter is
+    #used—performance is good at the relatively high cut-off frequency, phase is maintained, and we have good control over
+    #its characteristics.
 
+    #Downsampling
 
+        #The process of reducing the sample rate—downsampling—is similar, except we low-pass filter first, to reduce the bandwidth,
+        #then discard samples. The filter stage is essential, since the signal will alias if we try to fit it into a narrower
+        #band without removing the portion that can’t be encoded at the lower rate. So, we set the filter cut-off to half the
+        #new, lower sample rate, then simply discard every other sample for a 2:1 downsample ratio.
+        #(Yes, the result will be slightly different depending on whether you discard the odd samples or even ones.
+        #And no, it doesn’t matter, just as the exact sampling phase didn’t matter when you converted from analog to digital
+        #in the first place.)
 
-#o low pass mais simples: https://ccrma.stanford.edu/~jos/fp/Definition_Simplest_Low_Pass.html
-
-#gera código para low pass: http://www-users.cs.york.ac.uk/~fisher/cgi-bin/mkfscript
-
-#That’s it—to double the sample rate, we insert a zero between each sample, and low-pass filter to clear the extended
-#part of the audio band. Any low-pass filter will do, as long as you pick one steep enough to get the job done,
-#removing the aliased copy without removing much of the existing signal band. Most often, a linear phase FIR filter is
-#used—performance is good at the relatively high cut-off frequency, phase is maintained, and we have good control over
-#its characteristics.
-
-#Downsampling
-
-#The process of reducing the sample rate—downsampling—is similar, except we low-pass filter first, to reduce the bandwidth,
-#then discard samples. The filter stage is essential, since the signal will alias if we try to fit it into a narrower
-#band without removing the portion that can’t be encoded at the lower rate. So, we set the filter cut-off to half the
-#new, lower sample rate, then simply discard every other sample for a 2:1 downsample ratio.
-#(Yes, the result will be slightly different depending on whether you discard the odd samples or even ones.
-#And no, it doesn’t matter, just as the exact sampling phase didn’t matter when you converted from analog to digital
-#in the first place.)
-
-
-#Não está lembrando o mute da minha entrada?
-
-#desisti da libresample
-
-#Vi que existem 2 problemas
-#1 - o número de amostras que eu leio do decoder é truncado, então ele precisa de correção. Sem a correção os testes
-    #com buffer size em 64 e 96KHz claramente faltava amostra no final no intervalo. Ou seja, estava lendo amostras demais.
-    #Corrigi isso e agora o intervalo fechou certinho.
-    #Preciso testar com outras taxas de amostragem nos dois lados para ver
-
-#2 - O segundo problema são os artefatos gerados pelo menu resampling. Fiz o mais simples possível, e funcinou.
-    #No momento meu resampler está copiando a amostra anterior no upsampling. Não estou nem usando interpolação linear.
-    #Vi em um fórum que a interpolação cúbica já dá uma liga.
-
-#3 - Depois preciso ver o filtro, parece que é mais importante no downsampling.
-
-
-#In general, the algorithm for resampling to a higher frequency is:
-#* maintain a 'cursor': a floating-point sample index, into the source sample
-#* for each sample, advance the cursor by (sourceSampleRate/targetSampleRate), which will be < 1.0
-#* interpolate data from the source sample according to the cursor position using the interpolation method of your choice; this will generally involve a polynomial using a small number of source samples around the cursor
-#For resampling to a lower frequency, the process is similar but the source sample should be lowpass filtered to attenuate everything above half the target sample rate before interpolation.
-
-
-#meu resampler tem problema:  se eu passo um desiredOutLength maior que o tamanho real do
-    #buffer resampleado ele fica gerando lixo até atingir o desiredOutLenght.
-
-    #Mas mesmo que eu corrija isso e limite a quantida de amostras na saída (o correto), sobrarão
-    #algumas amostras não usadas no buffer interno do resampler. Nao tenho certeza se ele vai
-    #me cuspir essas amostras restantes nas próximas chamadas. Mas dá pra testar isso passando
-    #um input zerado e ver o que o resampler bota na saída.
-
-
-#testei com a fast em 64 e 96 KHz, o resultado fica muito ruim e da pra perceber que o intervalo termina antes de chegar no próximo
-    #tempo 1.  Tenho duas hipóteses:
-
-#Hipótese 1 - Quando maior o número de callbacks maior setá o número de arredondamentos que o resampler faz, o que no total vai perder muitas
-    #amostras. Isso explicaria porque com um buffer grande eu não sinto os estalos.
-    #Pelo teste que fiz com a fast track (64 e 96 KHz) acho que estou consumindo mais amostras do que deveria em cada callback.
-    #O problema é que devo estar descartando as amotras excedentes, fazendo com que o intervalo acabe antes.
-
-
-#Hipótese 2 - É possível que eu esteja sobrescrevendo a mesma área de memória com callbacks consecutivos. Tirei os statics dos
-    #buffers temporários no NinjamController mas não mudou nada. Talvez a forma que eu estou usando o internalBuffer para fazer
-    #o resampling possa dar problema;
-
-
-
-#mudei para um buffer size grande e os estalos do decoder quase sumiram. Com 4096 eu não ouvi estalos.
-    #Com 1024 eu ouvi estalos apenas no início dos intervalos.
-    #Com 512 já comecei a ouvir estalos pelo meio do intervalo.
-        #ideia: mensurar o tempo de resampling
-
-    #o tempo de processamento do ninjamTrackNode foi de no máximo 2ms (incluindo resampling). Não é tanto assim, e ouvi estalos
-        #em momentos onde o tempo de processamento foi inferior aos 2ms, então acho que o problema não é esse.
-        #Poder que algum mutex está travando a thread do audio?
-        #desativei o timer da GUI para garantir que a thread da gui não parasse o audio, mas os estalos continuaram
-        #Eu desativei todos os mutexes da Classe AudioNode e parece que melhorou bastante, mas continua
-        #Mesmo com a fast track, usando 128 e 48 KHz ainda tem estalo, não deveria.
-
-
-
-#Transmitindo a 44.1 no reaninjam e recebendo em 48 no Jamtaba deu muitos estalos durante o decoding, problema no resampling?
-    #dá mais estalos no início do intervalo, talvez esteja perdendo amostras.
-
-#será que o resampler não acumula as amostras? Eu estou achando que sim. Se
-#eu passar out.frameLenght para ele mas o buffer resampleado tiver out.lenght + 1 samples
-#eu acho que ele vai guardar essa última amostra no buffer interno, mas eu teria
-#que sair do loop do resampler exatamente em out.lenght
+        #In general, the algorithm for resampling to a higher frequency is:
+        #* maintain a 'cursor': a floating-point sample index, into the source sample
+        #* for each sample, advance the cursor by (sourceSampleRate/targetSampleRate), which will be < 1.0
+        #* interpolate data from the source sample according to the cursor position using the interpolation method of your choice; this will generally involve a polynomial using a small number of source samples around the cursor
+        #For resampling to a lower frequency, the process is similar but the source sample should be lowpass filtered to attenuate everything above half the target sample rate before interpolation.
 
 
 #Estava com o metronomo mutado, alterei as configurações de áudio, quando voltei o metronomo saiu do mute
 
-#Mudança no resampling
-#implementar resample no metronomo?
-#implementar resample no stream das salas
 
 #no ninjamJamController estou recriando o tempInBuffer em cada callback. Otimizar isso.
 

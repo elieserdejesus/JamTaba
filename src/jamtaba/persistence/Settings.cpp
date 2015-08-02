@@ -168,9 +168,9 @@ Plugin::Plugin(QString path, bool bypassed)
 
 }
 
-Subchannel::Subchannel(int firstInput, int channelsCount, bool isMidi, float gain, float pan, QList<Plugin> plugins)
+Subchannel::Subchannel(int firstInput, int channelsCount, bool isMidi, float gain, float pan, bool muted, QList<Plugin> plugins)
     :firstInput(firstInput), channelsCount(channelsCount),
-      usingMidi(isMidi), gain(gain), pan(pan), plugins(plugins){
+      usingMidi(isMidi), gain(gain), pan(pan), muted(muted), plugins(plugins){
 
 }
 
@@ -192,6 +192,7 @@ void InputsSettings::write(QJsonObject &out){
             subChannelObject["usingMidi"] = sub.usingMidi;
             subChannelObject["gain"] = sub.gain;
             subChannelObject["pan"] = sub.pan;
+            subChannelObject["muted"] = sub.muted;
 
             QJsonArray pluginsArray;
             foreach (Persistence::Plugin plugin, sub.plugins) {
@@ -225,7 +226,7 @@ void InputsSettings::read(QJsonObject in){
                     bool isMidi = getValueFromJson(subChannelObject, "usingMidi", false);
                     float gain = getValueFromJson(subChannelObject, "gain", (float)1);
                     float pan = getValueFromJson(subChannelObject, "pan", (float)0);
-
+                    bool muted = getValueFromJson(subChannelObject, "muted", false);
 
                     QList<Plugin> plugins;
                     if(subChannelObject.contains("plugins")){
@@ -239,7 +240,7 @@ void InputsSettings::read(QJsonObject in){
                             }
                         }
                     }
-                    Persistence::Subchannel subChannel(firstInput, channelsCount, isMidi, gain, pan, plugins);
+                    Persistence::Subchannel subChannel(firstInput, channelsCount, isMidi, gain, pan, muted, plugins);
                     channel.subChannels.append(subChannel);
                 }
                 this->channels.append(channel);
