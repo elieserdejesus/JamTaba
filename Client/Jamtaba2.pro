@@ -1,6 +1,4 @@
-#Estava na sala com uns 4 usuários, eles mudaram o bpi e deu esse erro e crashou a aplicação:
-    #WARNING: "VORBIS DECODER INIT ERROR:  Bitstream does not contain any Vorbis data." (bool VorbisDecoder::initialize()) [VorbisDecoder.cpp:117]
-    #Tenho que tratar essa exceção e simplesmente não tocar o intervalo
+#Estava com o metronomo mutado, alterei as configurações de áudio mudando samplerate, quando voltei o metronomo saiu do mute
 
 #3 - Preciso melhorar o resampling aplicando o low pass.
     #o low pass mais simples: https://ccrma.stanford.edu/~jos/fp/Definition_Simplest_Low_Pass.html
@@ -30,8 +28,7 @@
         #For resampling to a lower frequency, the process is similar but the source sample should be lowpass filtered to attenuate everything above half the target sample rate before interpolation.
 
 
-#Estava com o metronomo mutado, alterei as configurações de áudio, quando voltei o metronomo saiu do mute
-
+#parece que quando ativo o encoding (entradas setadas) a memória não para de crescer. Fica mais evidente com dois canais.
 
 #no ninjamJamController estou recriando o tempInBuffer em cada callback. Otimizar isso.
 

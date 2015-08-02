@@ -656,6 +656,9 @@ void NinjamController::on_audioDriverSampleRateChanged(int newSampleRate){
     this->metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
     this->metronomeTrackNode->setGain(oldMetronomeTrack->getGain());
     this->metronomeTrackNode->setPan(oldMetronomeTrack->getPan());
+    this->metronomeTrackNode->setMuteStatus(oldMetronomeTrack->isMuted());
+    this->metronomeTrackNode->setSoloStatus(oldMetronomeTrack->isSoloed());
+    this->metronomeTrackNode->setBeatsPerAccent(oldMetronomeTrack->getBeatsPerAccent());
     mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
 
     delete oldMetronomeTrack;
