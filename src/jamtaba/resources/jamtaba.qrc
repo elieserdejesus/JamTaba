@@ -281,7 +281,5 @@
         <file>click.wav</file>
         <file>loading.gif</file>
         <file>../../../qtlogging.ini</file>
-        <file>../../../../loop estereo 44100KHz.ogg</file>
-        <file>../../../../loop 192KHz.wav.ogg</file>
     </qresource>
 </RCC>
