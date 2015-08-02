@@ -702,12 +702,13 @@ NinjamRoomWindow TrackGroupView #groupNameField {
 }
 
 NinjamPanel{
-    background-color: qlineargradient(x1:0, y1:0.55, x2:0, y2:0.99, stop:0 rgba(0,0, 0, 0), stop:0.8 rgba(0, 0, 0, 25), stop:1 rgba(0, 0, 0, 55));
+   /*
+     background-color: qlineargradient(x1:0, y1:0.55, x2:0, y2:0.99, stop:0 rgba(0,0, 0, 0), stop:0.8 rgba(0, 0, 0, 25), stop:1 rgba(0, 0, 0, 55));
     border-radius: 3px;
     border: none;
     min-height: 100px;
     border-bottom: 1px solid rgba(0, 0, 0, 50);
-
+*/
 }
 
 
@@ -719,12 +720,13 @@ NinjamPanel #intervalPanel{/* beats text */
 
 }
 
-NinjamPanel #metronomeControls{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.3, stop:0 rgba(0, 0, 0, 60), stop:0.2 rgba(0, 0, 0, 30), stop:1 rgba(0,0,0,0));
+NinjamPanel #metronomeControls, NinjamPanel #panelCombos{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255,255,255,255), stop:0.06 rgba(0, 0, 0, 10) stop:0.95 rgba(0, 0, 0, 30), stop:1 rgba(0,0,0,60));
     border-radius: 3px;
     border: none;
-    border-top: 1px solid rgba(0, 0, 0, 50);
+    border-top: 1px solid rgba(0, 0, 0, 30);
     border-left: 1px solid rgba(0, 0, 0, 30);
+    border-right: 1px solid rgba(0, 0, 0, 30);
 }
 
 NinjamPanel #soloButton, NinjamPanel #muteButton{
@@ -752,8 +754,8 @@ NinjamPanel QComboBox::down-arrow {
 }
 
 NinjamRoomWindow #content{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.035, stop:0 rgba(0, 0, 0, 40), stop:1 rgba(0, 0, 0, 0));
-    border-top: 1px solid rgba(0, 0, 0, 25);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.01, stop:0 rgba(0, 0, 0, 25), stop:1 rgba(0, 0, 0, 0));
+    border-top: 1px solid rgba(0, 0, 0, 10);
 }
 
 
