@@ -407,8 +407,12 @@ bool MainController::addTrack(long trackID, Audio::AudioNode* trackNode){
 }
 
 //+++++++++++++++  SETTINGS +++++++++++
-void MainController::storeMetronomeSettings(float gain, float pan, bool muted){
-    settings.setMetronomeSettings(gain, pan, muted);
+void MainController::storeMetronomeSettings(float metronomeGain, float metronomePan, bool metronomeMuted){
+    settings.setMetronomeSettings(metronomeGain, metronomePan, metronomeMuted);
+}
+
+void MainController::storeIntervalProgressShape(int shape){
+    settings.setIntervalProgressShape(shape);
 }
 
 void MainController::addVstScanPath(QString path){

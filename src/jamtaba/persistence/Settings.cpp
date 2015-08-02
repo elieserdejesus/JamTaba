@@ -339,6 +339,14 @@ void Settings::load(){
             this->lastUserName = root["userName"].toString();
         }
 
+        //read intervall progress shape
+        if(root.contains("intervalProgressShape")){
+            this->ninjamIntervalProgressShape = root["intervalProgressShape"].toInt();
+        }
+        else{
+            this->ninjamIntervalProgressShape = 0;
+        }
+
         //read sections
         foreach (SettingsObject* so, sections) {
             so->read(root[so->getName()].toObject());
@@ -373,6 +381,7 @@ void Settings::save(Persistence::InputsSettings inputsSettings){
         QJsonObject root;
         //write user name
         root["userName"] = this->lastUserName;
+        root["intervalProgressShape"] = this->ninjamIntervalProgressShape;
 
         //write sections
         foreach (SettingsObject* so, sections) {

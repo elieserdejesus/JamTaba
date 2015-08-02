@@ -1,4 +1,23 @@
-#Estava com o metronomo mutado, alterei as configurações de áudio mudando samplerate, quando voltei o metronomo saiu do mute
+#Deu tanto trabalho implementar o visual do metronomo que agora enquanto eu não botar várias opções de progresso no intervalo eu não
+    #vou morrer em paz:
+    # 1 - Elipse (está pronto) - deixar sempre em ellipse, mesmo com poucos BPIs
+    # 2 - Círculo (praticamente pronto, só aproveitar o código da ellipse).
+    # 3 - Espiral (deixei o código comentado)
+    # 4 - Fancy display (a classe já está pronta);
+
+#arrumar o problema no layout das inputs quando não estou em tela cheia.
+
+#melhorar o visual o suficiente para um primeiro release
+
+#Já consigo transmitir e receber, ou seja, já dá pra tocar.
+
+#Prioridades para um primeiro release
+    #Melhorar o suporte para VST
+    #Melhorar o suporte de MIDI
+    #Ver o usode memória para não queimar o filme
+    #resolver os bugs de layout (inputs estão muito finas se não estou em tela cheia)
+    #melhorias no layout, o visual do Jamtaba 1 é mais interessante em vários aspectos.
+
 
 #3 - Preciso melhorar o resampling aplicando o low pass.
     #o low pass mais simples: https://ccrma.stanford.edu/~jos/fp/Definition_Simplest_Low_Pass.html
@@ -49,22 +68,12 @@
     #Quanto de CPU usa para encoder?
     #E os decoders, acrescentam muita coisa na CPU? Posso criar um monte de canais no reaninjam e ver o que acontece.
 
-#O consumo de memória está aumentando sem parar e não consegui achar o erro. Preciso de um Valgrind.
+#O consumo de memória está aumentando sem parar e não consegui achar o erro. Preciso de um Valgrind. Mas parece que o problema é no encoding. Testar isso.
 
 
 #leak - quando deletar um encode do map de encoders? Como saber lá no NinjamController que o usuário está com um canal a menos?
 
-#Deu tanto trabalho implementar o visual do metronomo que agora enquanto eu não botar várias opções de progresso no intervalo eu não
-    #vou morrer em paz:
-    # 1 - Elipse (está pronto)
-    # 2 - Círculo (praticamente pronto, só aproveitar o código da ellipse).
-    # 3 - Espiral (deixei o código comentado)
-    # 4 - Fancy display (a classe já está pronta);
-
-
-#não rolou resampling para o metronomo?
-
-#estava bugando o parser da lista de servers públicos no servidor
+#estava bugando o parser da lista de servers públicos no servidor, mas vi que no reaper também bugou. O problema é que o Jamtaba nem abre se tem esse problema, dá um erro no servidor.
 
 #GAz deu a ideia de fazer um translate usando o site do google translate e HTML scrapping.
 
@@ -280,7 +289,7 @@ HEADERS += \
     src/jamtaba/gui/TrackGroupView.h \
     src/jamtaba/gui/LocalTrackGroupView.h \
     src/jamtaba/NinjamController.h \
-    src/jamtaba/gui/CircularIntervalProgressDisplay.h
+    src/jamtaba/gui/IntervalProgressDisplay.h
 
 
 SOURCES += \
@@ -348,7 +357,7 @@ SOURCES += \
     src/jamtaba/gui/TrackGroupView.cpp \
     src/jamtaba/gui/LocalTrackGroupView.cpp \
     src/jamtaba/NinjamController.cpp \
-    src/jamtaba/gui/CircularIntervalProgressDisplay.cpp
+    src/jamtaba/gui/IntervalProgressDisplay.cpp
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \

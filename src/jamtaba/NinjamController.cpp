@@ -447,6 +447,8 @@ void NinjamController::stop(){
                 float correctedGain = Utils::poweredGainToLinear(metronomeTrack->getGain());
                 mainController->storeMetronomeSettings(correctedGain, metronomeTrack->getPan(), metronomeTrack->isMuted());
                 mainController->removeTrack(METRONOME_TRACK_ID);//remove metronome
+
+
             }
             //clear all tracks
             foreach(NinjamTrackNode* trackNode, trackNodes.values()){
