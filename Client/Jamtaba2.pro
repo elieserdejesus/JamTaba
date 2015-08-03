@@ -1,18 +1,9 @@
-#melhorei o layout. Entretanto, quando crio 2 canais com 3 sub cada um
-    #as inputs ocupam muito espaço e na tela do note não sobra espaço para o
-    #display do progresso
-    #Acho que um scroll é a melhor solução
-
-
-#melhorar o visual o suficiente para um primeiro release
-
 #Já consigo transmitir e receber, ou seja, já dá pra tocar.
 
 #Prioridades para um primeiro release
     #Melhorar o suporte para VST
     #Melhorar o suporte de MIDI
     #Ver o usode memória para não queimar o filme
-    #resolver os bugs de layout (inputs estão muito finas se não estou em tela cheia)
     #melhorias no layout, o visual do Jamtaba 1 é mais interessante em vários aspectos.
 
 

@@ -231,31 +231,41 @@ BaseTrackView[unlighted="true"] QSlider::groove:vertical{
 }
 
 
-QSlider::handle:vertical, QSlider::handle:horizontal {
-    background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgb(220, 220,220), stop:1 rgb(45, 45, 45));
-    border: 1px solid rgb(120, 120, 120);
-    border-radius: 3px;
+QSlider::handle:horizontal {
+    background-image: url(':/images/fader_shadow_horizontal.png');
+    background-repeat: no-repeat;
+    background-color: none;
+    margin-top: -5px;
+    margin-bottom: -7px;
+    width: 16px;
+    border: none;
 }
 
-
-QSlider:handle:vertical{
-    margin-left: -12px;
-    margin-right: -12px;
-    height: 12px;
+QSlider::handle:horizontal:hover {
+   background-image: url(':/images/fader_shadow_horizontal_hover.png');
 }
 
-/* Ninjam metronome */
-NinjamPanel QSlider:handle:vertical{
+QSlider::handle:vertical{
+    background-image: url(':/images/fader_shadow.png');
+    background-repeat: no-repeat;
+    background-color: none;
     margin-left: -8px;
-    margin-right: -8px;
-    height: 10px;
-    border-radius: 2px;
+    margin-right: -10px;
+    height: 45px;
+    border: none;
 }
 
-NinjamPanel QSlider:handle:horizontal{
-    width: 8px;
-    border-radius: 2px;
+QSlider::handle:vertical:hover{
+    background-image: url(':/images/fader_shadow_hover.png');
 }
+
+BaseTrackView[unlighted="true"] QSlider::handle:vertical{
+    background-image: url(':/images/fader_shadow_unlighted.png');
+}
+BaseTrackView[unlighted="true"] QSlider::handle:horizontal{
+    background-image: url(':/images/fader_shadow_horizontal_unlighted.png');
+}
+
 
 NinjamPanel QSlider::groove:vertical{
     width: 5px;
@@ -269,24 +279,6 @@ NinjamPanel QSlider::groove:horizontal{
 
 
 /*+++++++++++++++++++++++++ */
-
-QSlider:handle:horizontal{
-    margin-top: -8px;
-    margin-bottom: -8px;
-    width: 10px;
-    /*height: 12px;*/
-}
-
-BaseTrackView[unlighted="true"] QSlider::handle:vertical, BaseTrackView[unlighted="true"] QSlider::handle:horizontal{
-    background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgb(150, 150,150), stop:1 rgb(35, 35, 35));
-}
-
-QSlider::handle:vertical:hover, QSlider::handle:horizontal:hover {
-border: 1px solid rgb(70, 70, 70);
-background-color: qlineargradient(x1:0, y1:0.5, x2:0, y2:1, stop:0 rgb(220, 220,220), stop:1 rgb(45, 45, 45));
-}
-
-
 
 /* +++++++++++++++++++++++++++++++++++++++++++ */
 PeakMeter{
