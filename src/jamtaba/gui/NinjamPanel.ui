@@ -409,12 +409,6 @@
        <verstretch>1</verstretch>
       </sizepolicy>
      </property>
-     <property name="minimumSize">
-      <size>
-       <width>200</width>
-       <height>0</height>
-      </size>
-     </property>
     </widget>
    </item>
    <item row="0" column="2" rowspan="4">

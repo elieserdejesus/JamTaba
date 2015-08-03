@@ -1,5 +1,3 @@
-#arrumar o problema no layout das inputs quando não estou em tela cheia.
-
 #melhorei o layout. Entretanto, quando crio 2 canais com 3 sub cada um
     #as inputs ocupam muito espaço e na tela do note não sobra espaço para o
     #display do progresso

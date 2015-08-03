@@ -27,7 +27,7 @@ signals:
     void nameChanged();
 private:
     QPushButton* toolButton;
-    static const int MAX_SUB_CHANNELS = 3;
+    static const int MAX_SUB_CHANNELS = 2;
     int index;
 private slots:
     void on_toolButtonClicked();
