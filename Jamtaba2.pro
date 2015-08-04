@@ -1,10 +1,5 @@
 #Já consigo transmitir e receber, ou seja, já dá pra tocar.
 
-#não estou atualizando as salas periodicamente
-
-
-
-
 #pistas estão usando muito espaço. Seria legal diminuir a largura das pistas conforme
     #o número de usuários. Poderia guardar uma lista estática de instâncias na próppria
     #classe da track ninjam, assim cada instância retorna o valor de preferredSize considerando

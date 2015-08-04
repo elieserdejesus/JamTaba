@@ -6,6 +6,7 @@
 #include "../ninjam/Server.h"
 
 class NatMap;
+class QTimer;
 
 namespace Login {
 
@@ -69,9 +70,7 @@ class LoginService : public QObject
 Q_OBJECT
 
 public:
-    enum class Command{
-         CONNECT, DISCONNECT
-     };
+
     explicit LoginService(QObject *parent=0);
     ~LoginService();
     virtual void connectInServer(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
@@ -82,14 +81,12 @@ signals:
     void roomsListAvailable(QList<Login::RoomInfo> publicRooms);
     void disconnectedFromServer();
 
-private slots:
-    void connectedSlot();
-    void disconnectedSlot();
-    void errorSlot(QNetworkReply::NetworkError);
-    void sslErrorsSlot(QList<QSslError>);
-    void connectNetworkReplySlots(QNetworkReply *reply, Command command);
-
 private:
+
+    enum Command{
+         CONNECT, DISCONNECT, REFRESH_ROOMS_LIST
+     };
+
     QNetworkAccessManager httpClient;
     QNetworkReply* pendingReply;
     QNetworkReply* sendCommandToServer(const QUrlQuery&);
@@ -99,6 +96,21 @@ private:
     void handleJson(QString json);
 
     RoomInfo buildRoomInfoFromJson(QJsonObject json);
+
+    static const int REFRESH_PERIOD = 6000;
+    QTimer* refreshTimer;
+
+private slots:
+    void connectedSlot();
+    void disconnectedSlot();
+    void roomsListReceivedSlot();
+
+    void errorSlot(QNetworkReply::NetworkError);
+    void sslErrorsSlot(QList<QSslError>);
+    void connectNetworkReplySlots(QNetworkReply *reply, Command command);
+
+    void refreshTimerSlot();
+
 };
 
 }

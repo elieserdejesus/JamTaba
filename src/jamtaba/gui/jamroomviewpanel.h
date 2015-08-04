@@ -21,9 +21,11 @@ public:
     //JamRoomViewPanel(QWidget *parent, Controller::MainController* mainController);
     JamRoomViewPanel(Login::RoomInfo roomInfo, QWidget *parent, Controller::MainController* mainController);
     ~JamRoomViewPanel();
-    void paintEvent( QPaintEvent */*e*/ );
     void addPeak(float peak);
     void clearPeaks();
+    void refreshUsersList(Login::RoomInfo roomInfo);
+protected:
+    void paintEvent( QPaintEvent* e );
 signals:
     void startingListeningTheRoom(Login::RoomInfo roomInfo);
     void finishingListeningTheRoom(Login::RoomInfo roomInfo);
@@ -36,7 +38,7 @@ private:
     Ui::RoomViewPanel *ui;
     Controller::MainController* mainController;
     Login::RoomInfo roomInfo;
-    void initialize();
+    void initialize(Login::RoomInfo roomInfo);
     bool roomContainsBotsOnly(Login::RoomInfo roomInfo);
     bool userIsBot(Login::UserInfo userInfo);
 
