@@ -394,22 +394,26 @@ QStringList MainFrame::getChannelsNames() const{
     return channelsNames;
 }
 
+//user trying enter in a room
 void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo){
+
+    if(mainController->isPlayingInNinjamRoom()){
+        mainController->getNinjamController()->stop();//disconnect from current ninjam server
+    }
 
     if(!mainController->userNameWasChoosed()){
         bool ok;
         QString lastUserName = mainController->getUserName();
-        QString newUserName = QInputDialog::getText(this, "Please enter your nick name:", "Enter your user name:", QLineEdit::Normal, lastUserName , &ok, Qt::FramelessWindowHint);
+        QString newUserName = QInputDialog::getText(this, "", "Enter your user name:", QLineEdit::Normal, lastUserName , &ok, Qt::FramelessWindowHint);
         if (ok && !newUserName.isEmpty()){
            mainController->setUserName(newUserName);
+           setWindowTitle("Jamtaba (" + mainController->getUserName() + ")");
         }
     }
 
     if(mainController->userNameWasChoosed()){
         showBusyDialog("Connecting in " + roomInfo.getName() + " ...");
         mainController->enterInRoom(roomInfo, getChannelsNames());
-
-        setWindowTitle("Jamtaba (" + mainController->getUserName() + ")");
     }
 
 }
