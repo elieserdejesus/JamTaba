@@ -95,7 +95,7 @@
      </property>
      <layout class="QVBoxLayout" name="contentLayout">
       <property name="spacing">
-       <number>6</number>
+       <number>24</number>
       </property>
       <property name="leftMargin">
        <number>9</number>
@@ -133,7 +133,7 @@
            <x>0</x>
            <y>0</y>
            <width>727</width>
-           <height>208</height>
+           <height>199</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">

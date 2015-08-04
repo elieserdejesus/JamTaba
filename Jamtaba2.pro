@@ -1,11 +1,4 @@
-#Já consigo transmitir e receber, ou seja, já dá pra tocar.
-
-#pistas estão usando muito espaço. Seria legal diminuir a largura das pistas conforme
-    #o número de usuários. Poderia guardar uma lista estática de instâncias na próppria
-    #classe da track ninjam, assim cada instância retorna o valor de preferredSize considerando
-    #a quantidade de usuários no servidor.
-
-#não faz muito sentido ter o botão listen habilitado em salas vazias
+#quando não tem barra de rolagem horizontal na sala ninjam fica um espaço grande embaixo das pistas
 
 #acho que consigo dar duplo clique para entrar em uma sala. O que acontece?
 

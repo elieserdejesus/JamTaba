@@ -97,7 +97,7 @@ private:
 
     RoomInfo buildRoomInfoFromJson(QJsonObject json);
 
-    static const int REFRESH_PERIOD = 6000;
+    static const int REFRESH_PERIOD = 30000;
     QTimer* refreshTimer;
 
 private slots:

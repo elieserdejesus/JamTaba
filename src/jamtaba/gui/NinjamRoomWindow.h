@@ -39,6 +39,8 @@ private:
 
     void initializeMetronomeEvents();
 
+    void adjustTracksWidth();
+
 private slots:
     //ninja interval controls
     void ninjamBpiComboChanged(QString);

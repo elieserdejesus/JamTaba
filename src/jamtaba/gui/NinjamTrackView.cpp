@@ -24,7 +24,9 @@ void NinjamTrackView::setChannelName(QString name){
     this->channelNameLabel->setText(name);
 }
 
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainController *mainController, long trackID, QString userName, QString channelName, QString countryName, QString countryCode)
     :TrackGroupView(parent), mainController(mainController)
 {
@@ -64,24 +66,16 @@ NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainCont
     //setActivated(false);
 }
 
-//void NinjamTrackView::setUserName(QString newName){
-//    ui->trackName->setText( ui->trackName->fontMetrics().elidedText(newName, Qt::ElideRight, ui->trackName->width() * 0.8));
-//    ui->trackName->setToolTip(newName);
-//}
-
-//void NinjamTrackView::setChannelName(QString newChannelName){
-//    ui->channelName->setText(newChannelName);
-//    int textWidth = ui->channelName->fontMetrics().width(newChannelName);
-//    if(ui->channelName->contentsRect().width() < textWidth){
-//        ui->channelName->setAlignment(Qt::AlignLeft);
-//        ui->channelName->setToolTip(newChannelName);
-//        ui->channelName->home(false);//back to first character, user can read the first letter in channel name
-//    }
-//    else{
-//        ui->channelName->setAlignment(Qt::AlignHCenter);
-//        ui->channelName->setToolTip("");
-//    }
-//}
+void NinjamTrackGroupView::setNarrowStatus(bool narrow){
+    foreach (BaseTrackView* trackView, trackViews) {
+        if(narrow || trackViews.size() > 1){
+            trackView->setToNarrow();
+        }
+        else{
+            trackView->setToWide();
+        }
+    }
+}
 
 NinjamTrackGroupView::~NinjamTrackGroupView()
 {

@@ -33,6 +33,7 @@ public:
 
     void setUnlightStatus(bool unlighted);
 
+
 protected:
     void paintEvent(QPaintEvent* );
 

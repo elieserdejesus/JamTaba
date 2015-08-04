@@ -35,10 +35,12 @@ public:
 
     inline Controller::MainController* getMainController() const{return mainController;}
 
-    static const int NARROW_WIDTH = 80;
-
     void setUnlightStatus(bool unlighted);
+
+    static const int NARROW_WIDTH = 80;
+    static const int WIDE_WIDTH = 120;
 protected:
+
     Ui::BaseTrackView *ui;
     Controller::MainController* mainController;
     void paintEvent(QPaintEvent *);

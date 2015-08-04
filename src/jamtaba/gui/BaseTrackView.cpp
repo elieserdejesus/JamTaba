@@ -38,14 +38,11 @@ QSize BaseTrackView::sizeHint() const{
     if(narrowed){
         return QSize(NARROW_WIDTH, height());
     }
-    return QSize(120, height());
+    return QSize(WIDE_WIDTH, height());
 }
 
 QSize BaseTrackView::minimumSizeHint() const{
-    if(narrowed){
-        return QSize(NARROW_WIDTH, height());
-    }
-    return QSize(120, height());
+    return sizeHint();
 }
 
 void BaseTrackView::setToNarrow(){
