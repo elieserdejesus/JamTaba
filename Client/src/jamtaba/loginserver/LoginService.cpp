@@ -5,6 +5,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QUrlQuery>
+#include <QTimer>
 #include "../ninjam/Server.h"
 
 using namespace Login;
@@ -40,7 +41,7 @@ bool RoomInfo::isEmpty() const{
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class HttpParamsFactory{
 public:
-    static QUrlQuery parametersToConnect(QString userName, int instrumentID, QString channelName, NatMap localPeerMap, int version, QString environment, int sampleRate) {
+    static QUrlQuery createParametersToConnect(QString userName, int instrumentID, QString channelName, NatMap localPeerMap, int version, QString environment, int sampleRate) {
         QUrlQuery query;
         query.addQueryItem("cmd", "CONNECT");
         query.addQueryItem("userName", userName);
@@ -54,9 +55,15 @@ public:
         return query;
     }
 
-    static QUrlQuery parametersToDisconnect() {
+    static QUrlQuery createParametersToDisconnect() {
         QUrlQuery query;
         query.addQueryItem("cmd", "DISCONNECT");
+        return query;
+    }
+
+    static QUrlQuery createParametersToRefreshRoomsList(){
+        QUrlQuery query;
+        query.addQueryItem("cmd", "KEEP_ALIVE");
         return query;
     }
 };
@@ -66,7 +73,8 @@ public:
 LoginService::LoginService(QObject* parent)
      : QObject(parent), pendingReply(nullptr), connected(false)
 {
-
+    refreshTimer = new QTimer(this);
+    QObject::connect( refreshTimer, SIGNAL(timeout()), this, SLOT(refreshTimerSlot()));
 }
 
 LoginService::~LoginService()
@@ -77,17 +85,24 @@ LoginService::~LoginService()
 
 void LoginService::connectInServer(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate)
 {
-    QUrlQuery query = HttpParamsFactory::parametersToConnect(userName, instrumentID, channelName, localPeerMap, version, environment, sampleRate);
+    QUrlQuery query = HttpParamsFactory::createParametersToConnect(userName, instrumentID, channelName, localPeerMap, version, environment, sampleRate);
     pendingReply = sendCommandToServer(query);
     connectNetworkReplySlots(pendingReply, LoginService::Command::CONNECT);
 
+}
+
+void LoginService::refreshTimerSlot(){
+    QUrlQuery query = HttpParamsFactory::createParametersToRefreshRoomsList();
+    pendingReply = sendCommandToServer(query);
+    connectNetworkReplySlots(pendingReply, LoginService::Command::REFRESH_ROOMS_LIST);
 }
 
 void LoginService::disconnect()
 {
     if(isConnected()){
         qDebug() << "DISCONNECTING from server...";
-        QUrlQuery query = HttpParamsFactory::parametersToDisconnect();
+        refreshTimer->stop();
+        QUrlQuery query = HttpParamsFactory::createParametersToDisconnect();
         pendingReply = sendCommandToServer(query);
         connectNetworkReplySlots(pendingReply, LoginService::Command::DISCONNECT);
     }
@@ -106,11 +121,6 @@ QNetworkReply* LoginService::sendCommandToServer(const QUrlQuery &query)
 }
 
 
-void LoginService::disconnectedSlot(){
-    this->connected = false;
-    emit disconnectedFromServer();
-}
-
 void LoginService::sslErrorsSlot(QList<QSslError> errorList){
     foreach (const QSslError& error, errorList) {
         qDebug() << error;
@@ -127,8 +137,9 @@ void LoginService::errorSlot(QNetworkReply::NetworkError /*error*/){
 void LoginService::connectNetworkReplySlots(QNetworkReply* reply, Command command)
 {
     switch (command) {
-    case LoginService::Command::CONNECT: reply->connect(reply, SIGNAL(finished()), this, SLOT(connectedSlot()));  break;
-    case LoginService::Command::DISCONNECT: reply->connect(reply, SIGNAL(finished()), this, SLOT(disconnectedSlot()));  break;
+    case LoginService::Command::CONNECT: QObject::connect(reply, SIGNAL(finished()), this, SLOT(connectedSlot()));  break;
+    case LoginService::Command::DISCONNECT: QObject::connect(reply, SIGNAL(finished()), this, SLOT(disconnectedSlot()));  break;
+    case LoginService::Command::REFRESH_ROOMS_LIST: QObject::connect(reply, SIGNAL(finished()), this, SLOT(roomsListReceivedSlot())); break;
     default:
         break;
     }
@@ -138,6 +149,16 @@ void LoginService::connectNetworkReplySlots(QNetworkReply* reply, Command comman
 
 void LoginService::connectedSlot(){
     connected = true;
+    refreshTimer->start(REFRESH_PERIOD);
+    roomsListReceivedSlot();
+}
+
+void LoginService::disconnectedSlot(){
+    this->connected = false;
+    emit disconnectedFromServer();
+}
+
+void LoginService::roomsListReceivedSlot(){
     if(!LOCAL_HOST_MODE){
         QString json = QString( pendingReply->readAll());
         handleJson(json);

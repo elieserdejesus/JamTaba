@@ -71,10 +71,11 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 
     initializeLocalInputChannels();
 
-    //hide chat area
-    ui.chatArea->setVisible(false);
+    ui.chatArea->setVisible(false);//hide chat area until connect in a server to play
 
-    //setWindowIcon(QIcon(":/images"));
+    ui.allRoomsContent->setLayout(new QVBoxLayout());
+    ui.allRoomsContent->layout()->setContentsMargins(0,0,6,0);
+    ui.allRoomsContent->layout()->setSpacing(24);
 }
 //++++++++++++++++++++++++=
 Persistence::InputsSettings MainFrame::getInputsSettings() const{
@@ -346,24 +347,26 @@ bool MainFrame::jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2){
 
 void MainFrame::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
     hideBusyDialog();
-    ui.allRoomsContent->setLayout(new QVBoxLayout());
-    ui.allRoomsContent->layout()->setContentsMargins(0,0,6,0);
-    ui.allRoomsContent->layout()->setSpacing(24);
     qSort(publicRooms.begin(), publicRooms.end(), jamRoomLessThan);
     foreach(Login::RoomInfo roomInfo, publicRooms ){
         if(roomInfo.getType() == Login::RoomTYPE::NINJAM){//skipping other rooms at moment
-            JamRoomViewPanel* roomViewPanel = new JamRoomViewPanel(roomInfo, ui.allRoomsContent, mainController);
-            roomViewPanels.insert(roomInfo.getID(), roomViewPanel);
-            ui.allRoomsContent->layout()->addWidget(roomViewPanel);
-            connect( roomViewPanel, SIGNAL(startingListeningTheRoom(Login::RoomInfo)),
-                     this, SLOT(on_startingRoomStream(Login::RoomInfo)));
-            connect( roomViewPanel, SIGNAL(finishingListeningTheRoom(Login::RoomInfo)),
-                     this, SLOT(on_stoppingRoomStream(Login::RoomInfo)));
-            connect( roomViewPanel, SIGNAL(enteringInTheRoom(Login::RoomInfo)),
-                     this, SLOT(on_enteringInRoom(Login::RoomInfo)));
+            if(roomViewPanels.contains(roomInfo.getID())){
+                JamRoomViewPanel* roomViewPanel = roomViewPanels[roomInfo.getID()];
+                roomViewPanel->refreshUsersList(roomInfo);
+            }
+            else{
+                JamRoomViewPanel* roomViewPanel = new JamRoomViewPanel(roomInfo, ui.allRoomsContent, mainController);
+                roomViewPanels.insert(roomInfo.getID(), roomViewPanel);
+                ui.allRoomsContent->layout()->addWidget(roomViewPanel);
+                connect( roomViewPanel, SIGNAL(startingListeningTheRoom(Login::RoomInfo)),
+                         this, SLOT(on_startingRoomStream(Login::RoomInfo)));
+                connect( roomViewPanel, SIGNAL(finishingListeningTheRoom(Login::RoomInfo)),
+                         this, SLOT(on_stoppingRoomStream(Login::RoomInfo)));
+                connect( roomViewPanel, SIGNAL(enteringInTheRoom(Login::RoomInfo)),
+                         this, SLOT(on_enteringInRoom(Login::RoomInfo)));
+            }
         }
     }
-
 }
 
 //+++++++++++++++++++++++++++++++++++++
