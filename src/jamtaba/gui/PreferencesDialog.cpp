@@ -27,6 +27,17 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
     populateAudioTab();
 }
 
+void PreferencesDialog::selectAudioTab(){
+    ui->prefsTab->setCurrentWidget(ui->tabAudio);
+}
+
+void PreferencesDialog::selectMidiTab(){
+    ui->prefsTab->setCurrentWidget(ui->tabMidi);
+}
+void PreferencesDialog::selectVstPluginsTab(){
+    ui->prefsTab->setCurrentWidget(ui->tabVST);
+}
+
 void PreferencesDialog::populateMidiInputCombo(){
     Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
     int maxDevices = midiDriver->getMaxInputDevices();

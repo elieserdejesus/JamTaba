@@ -30,6 +30,7 @@
         <file>fader_shadow_horizontal.png</file>
         <file>fader_shadow_horizontal_hover.png</file>
         <file>fader_shadow_horizontal_unlighted.png</file>
+        <file>jt_0001.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

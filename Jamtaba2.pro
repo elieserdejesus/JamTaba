@@ -1,11 +1,26 @@
 #Já consigo transmitir e receber, ou seja, já dá pra tocar.
 
+#não estou atualizando as salas periodicamente
+
+
+
+
+#pistas estão usando muito espaço. Seria legal diminuir a largura das pistas conforme
+    #o número de usuários. Poderia guardar uma lista estática de instâncias na próppria
+    #classe da track ninjam, assim cada instância retorna o valor de preferredSize considerando
+    #a quantidade de usuários no servidor.
+
+#não faz muito sentido ter o botão listen habilitado em salas vazias
+
+#acho que consigo dar duplo clique para entrar em uma sala. O que acontece?
+
 #Prioridades para um primeiro release
     #Melhorar o suporte para VST
     #Melhorar o suporte de MIDI
     #Ver o usode memória para não queimar o filme
-    #melhorias no layout, o visual do Jamtaba 1 é mais interessante em vários aspectos.
+    #auto updater
 
+  #estou usando ícone de alto falante para representar inputs, é estranho
 
 #3 - Preciso melhorar o resampling aplicando o low pass.
     #o low pass mais simples: https://ccrma.stanford.edu/~jos/fp/Definition_Simplest_Low_Pass.html

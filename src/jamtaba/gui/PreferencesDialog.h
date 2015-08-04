@@ -16,6 +16,9 @@ public:
     PreferencesDialog(Controller::MainController* mainController, QWidget *parent = 0);
     ~PreferencesDialog();
    // virtual void closeEvent(QCloseEvent *);
+    void selectAudioTab();
+    void selectMidiTab();
+    void selectVstPluginsTab();
 
 private slots:
     //void on_comboAsioDriver_currentIndexChanged(int);

@@ -3,10 +3,16 @@ font-family: "Dialog";
 font-size: 9pt;
 }
 
-QInputDialog{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), stop:1 rgba(90, 90, 90));
+
+QMessageBox, QInputDialog{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(250, 250, 250),
+        stop:1 rgba(180, 180, 180));
     border-radius: 3px;
-    border: 1px solid gray;
+    border: 1px outset gray;
+}
+QInputDialog{
+    min-width: 400px;
 }
 
 QInputDialog QLineEdit{
@@ -83,12 +89,17 @@ QScrollBar:horizontal{
 }
 QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
   border: 1px solid rgba(0, 0, 0, 85);
-  border-radius:4px;
+  border-radius:3px;
   margin: 0px;
 }
 QScrollBar::handle:vertical {
-  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(120, 126, 118, 255), stop:0.47 rgba(91, 91, 91, 255), stop:0.49 rgba(81, 75, 77, 255), stop:0.92 rgba(142, 140, 140, 255));
-  max-height: 20px;
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+    stop:0 rgba(120, 126, 118, 64),
+    stop:0.47 rgba(91, 91, 91, 64),
+    stop:0.49 rgba(81, 75, 77, 64),
+    stop:0.92 rgba(142, 140, 140, 64));
+
+    max-height: 20px;
   height: 20px;
 }
 
@@ -97,7 +108,11 @@ QScrollBar::handle:vertical:hover {
 }
 
 QScrollBar::handle:horizontal {
-  background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0.92 rgba(120, 126, 118, 255), stop:0.49 rgba(91, 91, 91, 255), stop:0.47 rgba(81, 75, 77, 255), stop:0 rgba(142, 140, 140, 255));
+  background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0,
+    stop:0.92 rgba(120, 126, 118, 64),
+    stop:0.49 rgba(91, 91, 91, 64),
+    stop:0.47 rgba(81, 75, 77, 64),
+    stop:0 rgba(142, 140, 140, 64));
   max-width: 20px;
   width: 20px;
 }
@@ -143,11 +158,11 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-pa
 /* common widgets */
 
 .QLineEdit{
-    border-radius: 10px;
+    border-radius: 6px;
     padding: 2px;
     background: rgb(100, 100, 100);
     color: white;
-    border: 1px solid rgb(51, 51, 51);
+    border: 1px inset rgb(51, 51, 51);
 }
 
 .QLineEdit[enabled="false"]{
@@ -194,14 +209,18 @@ border-color: rgb(90, 90, 90);
 /*  SLIDER ++++++++++++++++++++++++++++++++ */
 QSlider::add-page:vertical, QSlider::groove:vertical {
 border: 1px solid rgba(0, 0, 0, 55);
-border-radius: 3px;
+border-radius: 2px;
+}
+
+QSlider::groove:vertical{
+    border: 1px inset rgb(110, 110, 110);
 }
 
 QSlider::groove:horizontal{
-    background-color: rgba(255, 255, 255, 60);
+    background-color: rgba(0, 0, 0, 30);
     height: 3px;
-    border-radius: 3px;
-    border: none;
+    border-radius: 2px;
+    border: 1px inset rgb(140, 140, 140);
 }
 
 BaseTrackView[unlighted="true"] QSlider::groove:horizontal{
@@ -214,10 +233,10 @@ BaseTrackView[unlighted="true"] QSlider::add-page:vertical{
 }
 
 QSlider::add-page:vertical{
-    background: rgb(255,255,255, 130);
+    background: rgb(255,255,255, 120);
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
-    margin: 3px;
+    margin: 4px;
 }
 
 
@@ -296,7 +315,7 @@ BaseTrackView[unlighted="true"] PeakMeter{
 /* ++++++++++++++++++++++++++++++++++++++++ */
 
 QMainWindow{
-background-color: rgb(60, 60, 60);
+background-color: rgb(74,74,74);
 }
 
 /* painéis principais */
@@ -318,7 +337,7 @@ qproperty-alignment: AlignCenter;
 
 /* define os separadores horizontais abaixo dos títulos as seções principais   */
 .QWidget#leftPanel > .QFrame, .QWidget#chatArea > .QFrame{
-background-color: rgb(80,80,80);
+background-color: rgb(75, 75, 75);
 }
 
 .QWidget#contentPanel > .QFrame{
@@ -331,11 +350,16 @@ background-color: rgb(100, 100, 100);
     border: none;
 }
 
+#contentPanel .QTabWidget:pane{
+    background-color: qlineargradient(x1:0, y1:0.3, x2:0, y2:1,
+        stop: 0     rgb(245, 245, 245),
+        stop: 1.0   rgb(190, 190, 190));
+}
+
 #contentPanel .QTabWidget:pane, #chatArea .QTabWidget:pane{
-    background-color: qlineargradient(x1: 0, y1: 0.3, x2: 0, y2: 1, stop: 0 rgb(240, 240, 240), stop: 1.0 rgb(160, 160, 160));
     border: 1px solid rgba(0, 0, 0, 60);
-    border-radius: 5px;
-    padding: -4px;
+    border-radius: 3px;
+    padding: 0px;
 }
 
 #chatArea .QTabWidget:pane{
@@ -344,39 +368,35 @@ background-color: rgb(100, 100, 100);
 
  .QTabWidget::tab-bar {
  left: 10px; /* move to the right by 5px */
+
  }
 
 /* Style the tab using the tab sub-control. Note that
 it reads QTabBar _not_ QTabWidget */
 .QTabBar::tab {
-background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
-stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
-border: 1px solid #C4C4C3;
-border-bottom-color: #C2C7CB; /* same as the pane color */
-border-top-left-radius: 5px;
-border-top-right-radius: 5px;
-min-width: 8ex;
-padding: 2px;
-padding-left: 10px;
-padding-right: 10px;
-
+    background-color: rgb(180, 180, 180);
+    border: none;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    min-width: 8ex;
+    padding: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
  }
 
  .QTabBar::tab:selected, .QTabBar::tab:hover {
- background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
- stop: 0 #fafafa, stop: 0.4 #f4f4f4,
- stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
+    background-color: rgb(210, 210, 210)
  }
 
  .QTabBar::tab:selected {
- border-color: #9B9B9B;
- border-bottom-color: #C2C7CB; /* same as pane color */
-
+    border: 1px solid;
+    border-color: #9B9B9B;
+    border-bottom-color: #C2C7CB; /* same as pane color */
  }
 
  .QTabBar::tab:!selected {
- margin-top: 5px; /* make non-selected tabs look smaller */
+    margin-top: 3px; /* make non-selected tabs look smaller */
+    color: rgb(90, 90, 90);
  }
 
 /*++++++++++++++++++++*/
@@ -401,9 +421,22 @@ background: transparent;
 }
 
 BusyDialog{
-    background: qradialgradient(cx:0.5, cy:0.5, radius: 0.6, fx:0.5, fy:0.5, stop:0 rgba(45, 45, 45, 200), stop:1 rgba(220, 220, 220, 200));
-    border: 1px solid rgb(180, 180, 180);
-    border-radius: 8px;
+    border: 1px outset rgb(130, 130, 130);
+    border-radius: 3px;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgb(255, 255, 255),
+            stop:0.1 rgb(240, 240, 240)
+            stop:0.9 rgba(200, 200, 200),
+            stop:1 rgba(180, 180, 180));
+}
+BusyDialog #labelGif{
+    border: none;
+    background-color: rgba(0, 0, 0, 80);
+    border-radius: 32px;/*simulate a circle as background */
+    max-width: 64px;
+    max-height: 64px;
+    qproperty-alignment: AlignCenter;
+    text-align: center;
 }
 
 BusyDialog > QLabel{
@@ -412,27 +445,41 @@ BusyDialog > QLabel{
 
 
 JamRoomViewPanel{
-background: rgba(0, 0, 0, 30);
-border: 1px solid rgba(0, 0, 0, 60);
-border-radius: 5px;
+    background-color: rgb(200, 200, 200);
+
+    border: 2px outset rgb(150, 150, 150);
+    border-top: 1px solid rgba(0, 0, 0, 60);
+    border-left: 1px solid rgba(0, 0, 0, 60);
+    border-radius: 3px;
+
 }
 
 JamRoomViewPanel #content{
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.035, stop:0 rgba(0, 0, 0, 40), stop:1 rgba(0, 0, 0, 0));
-border-top: 1px solid rgba(0, 0, 0, 25);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgb(255, 255, 255),
+            stop:0.5 rgba(255, 255, 255, 128)
+            stop:1 rgba(0, 0, 0, 0));
+    border-top: 2px ridge rgba(0, 0, 0, 40);
 }
 
-JamRoomViewPanel  QWebView{
-    border: 1px solid black;
-    height: 100%;
-    max-height: 120px;
+JamRoomViewPanel #labelName{
+    font-size: 10pt;
 }
 
 JamRoomViewPanel > #plotPanel{
-min-height: 50px;
-background: red;
-border: 1px solid black;
-border-radius: 5px;
+    min-height: 50px;
+    background: red;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+JamRoomViewPanel  #labelRoomStatus, JamRoomViewPanel  #labelRoomType{
+    font-size: 8pt;
+    color: rgb(90, 90, 90);
+}
+JamRoomViewPanel  #labelRoomType{
+    margin-right: 3px;
+    margin-bottom: -3px;
 }
 
 /*+++++++++++++++++++++++++++++++*/
@@ -579,6 +626,11 @@ LocalTrackGroupView  #toolButton, #leftPanel > #toolButton {
     background-repeat: none;
     background-position: center center;
     border: none;
+    padding: 0px;
+    margin: 0px;
+    width: 14px;
+    height: 14px;
+
 }
 
 LocalTrackGroupView   #toolButton:hover, #leftPanel > #toolButton:hover {

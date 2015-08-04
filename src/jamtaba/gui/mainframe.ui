@@ -19,14 +19,42 @@
   <property name="windowTitle">
    <string notr="true">Jamtaba</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../resources/jamtaba.qrc">
+    <normaloff>:/images/jt_0001.png</normaloff>:/images/jt_0001.png</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>12</number>
+    </property>
     <property name="sizeConstraint">
      <enum>QLayout::SetDefaultConstraint</enum>
+    </property>
+    <property name="leftMargin">
+     <number>3</number>
+    </property>
+    <property name="topMargin">
+     <number>3</number>
+    </property>
+    <property name="rightMargin">
+     <number>3</number>
+    </property>
+    <property name="bottomMargin">
+     <number>3</number>
     </property>
     <item>
      <widget class="QWidget" name="leftPanel" native="true">
       <layout class="QGridLayout" name="gridLayout">
+       <property name="leftMargin">
+        <number>6</number>
+       </property>
+       <property name="rightMargin">
+        <number>6</number>
+       </property>
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
        <item row="0" column="0">
         <widget class="QLabel" name="labelSectionTitle">
          <property name="sizePolicy">
@@ -171,11 +199,26 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>688</width>
-                <height>662</height>
+                <width>694</width>
+                <height>674</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
+               <property name="spacing">
+                <number>50</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QWidget" name="allRoomsContent" native="true">
                  <property name="sizePolicy">
@@ -275,7 +318,9 @@
     <property name="title">
      <string>Preferences</string>
     </property>
-    <addaction name="menuAudioPreferences"/>
+    <addaction name="actionAudioPreferences"/>
+    <addaction name="actionMidiPreferences"/>
+    <addaction name="actionVstPreferences"/>
    </widget>
    <addaction name="menuPreferences"/>
   </widget>
@@ -284,13 +329,25 @@
     <string>test</string>
    </property>
   </action>
-  <action name="menuAudioPreferences">
+  <action name="actionAudioPreferences">
    <property name="text">
-    <string>Audio...</string>
+    <string>Audio ...</string>
+   </property>
+  </action>
+  <action name="actionMidiPreferences">
+   <property name="text">
+    <string>Midi ...</string>
+   </property>
+  </action>
+  <action name="actionVstPreferences">
+   <property name="text">
+    <string>VST Plugins</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="../resources/jamtaba.qrc"/>
+ </resources>
  <connections/>
 </ui>

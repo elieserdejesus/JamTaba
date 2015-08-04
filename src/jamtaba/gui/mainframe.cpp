@@ -58,7 +58,9 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     initializeMainTabWidget();
     timerID = startTimer(1000/50);
 
-    QObject::connect(ui.menuAudioPreferences, SIGNAL(triggered()), this, SLOT(on_preferencesClicked()));
+    //ui.menuPreferences
+    QObject::connect(ui.menuPreferences, SIGNAL(triggered(QAction*)), this, SLOT(on_preferencesClicked(QAction*)));
+
     QObject::connect(mainController, SIGNAL(inputSelectionChanged(int)), this, SLOT(on_inputSelectionChanged(int)));
 
     QObject::connect( ui.toolButton, SIGNAL(clicked()), this, SLOT(on_toolButtonClicked()));
@@ -71,6 +73,8 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 
     //hide chat area
     ui.chatArea->setVisible(false);
+
+    //setWindowIcon(QIcon(":/images"));
 }
 //++++++++++++++++++++++++=
 Persistence::InputsSettings MainFrame::getInputsSettings() const{
@@ -342,18 +346,22 @@ bool MainFrame::jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2){
 
 void MainFrame::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
     hideBusyDialog();
-    ui.allRoomsContent->setLayout(new QVBoxLayout(ui.allRoomsContent));
+    ui.allRoomsContent->setLayout(new QVBoxLayout());
+    ui.allRoomsContent->layout()->setContentsMargins(0,0,6,0);
+    ui.allRoomsContent->layout()->setSpacing(24);
     qSort(publicRooms.begin(), publicRooms.end(), jamRoomLessThan);
-    foreach(Login::RoomInfo server, publicRooms ){
-        JamRoomViewPanel* roomViewPanel = new JamRoomViewPanel(server, ui.allRoomsContent, mainController);
-        roomViewPanels.insert(server.getID(), roomViewPanel);
-        ui.allRoomsContent->layout()->addWidget(roomViewPanel);
-        connect( roomViewPanel, SIGNAL(startingListeningTheRoom(Login::RoomInfo)),
-                 this, SLOT(on_startingRoomStream(Login::RoomInfo)));
-        connect( roomViewPanel, SIGNAL(finishingListeningTheRoom(Login::RoomInfo)),
-                 this, SLOT(on_stoppingRoomStream(Login::RoomInfo)));
-        connect( roomViewPanel, SIGNAL(enteringInTheRoom(Login::RoomInfo)),
-                 this, SLOT(on_enteringInRoom(Login::RoomInfo)));
+    foreach(Login::RoomInfo roomInfo, publicRooms ){
+        if(roomInfo.getType() == Login::RoomTYPE::NINJAM){//skipping other rooms at moment
+            JamRoomViewPanel* roomViewPanel = new JamRoomViewPanel(roomInfo, ui.allRoomsContent, mainController);
+            roomViewPanels.insert(roomInfo.getID(), roomViewPanel);
+            ui.allRoomsContent->layout()->addWidget(roomViewPanel);
+            connect( roomViewPanel, SIGNAL(startingListeningTheRoom(Login::RoomInfo)),
+                     this, SLOT(on_startingRoomStream(Login::RoomInfo)));
+            connect( roomViewPanel, SIGNAL(finishingListeningTheRoom(Login::RoomInfo)),
+                     this, SLOT(on_stoppingRoomStream(Login::RoomInfo)));
+            connect( roomViewPanel, SIGNAL(enteringInTheRoom(Login::RoomInfo)),
+                     this, SLOT(on_enteringInRoom(Login::RoomInfo)));
+        }
     }
 
 }
@@ -388,7 +396,7 @@ void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo){
     if(!mainController->userNameWasChoosed()){
         bool ok;
         QString lastUserName = mainController->getUserName();
-        QString newUserName = QInputDialog::getText(this, "Please enter your nick name:", "User name:", QLineEdit::Normal, lastUserName , &ok, Qt::FramelessWindowHint);
+        QString newUserName = QInputDialog::getText(this, "Please enter your nick name:", "Enter your user name:", QLineEdit::Normal, lastUserName , &ok, Qt::FramelessWindowHint);
         if (ok && !newUserName.isEmpty()){
            mainController->setUserName(newUserName);
         }
@@ -565,18 +573,28 @@ MainFrame::~MainFrame()
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 // preferences menu
-void MainFrame::on_preferencesClicked()
+void MainFrame::on_preferencesClicked(QAction* action)
 {
     Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
     AudioDriver* audioDriver = mainController->getAudioDriver();
     audioDriver->stop();
     midiDriver->stop();
     PreferencesDialog dialog(mainController, this);
+    if(action == ui.actionAudioPreferences){
+        dialog.selectAudioTab();
+    }
+    else if(action == ui.actionMidiPreferences){
+        dialog.selectMidiTab();
+    }
+    else{
+        dialog.selectVstPluginsTab();
+    }
     connect(&dialog, SIGNAL(ioChanged(int,int,int,int,int,int,int,int)), this, SLOT(on_IOPropertiesChanged(int, int,int,int,int,int,int,int)));
-    dialog.exec();
-
-    //midiDriver->start();
-    //audioDriver->start();
+    int result = dialog.exec();
+    if(result == QDialog::Rejected){
+        midiDriver->start();//restart audio and midi drivers if user cancel the preferences menu
+        audioDriver->start();
+    }
 
     //audio driver parameters are changed in on_IOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.
 }
