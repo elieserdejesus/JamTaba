@@ -53,7 +53,7 @@ void JamRoomViewPanel::refreshUsersList(Login::RoomInfo roomInfo){
 //    gMapURL = "http://maps.google.com.sg/maps?q="+gMapURL+"&oe=utf-8&rls=org.mozilla:en-US:official&client=firefox-a&um=1&ie=UTF-8&hl=en&sa=N&tab=wl";
 //    //ui->webView->setUrl(gMapURL);
 
-    ui->buttonListen->setEnabled(roomInfo.hasStream());
+    ui->buttonListen->setEnabled(roomInfo.hasStream() && !roomInfo.isEmpty());
     ui->buttonEnter->setEnabled(!roomInfo.isFull());
 }
 

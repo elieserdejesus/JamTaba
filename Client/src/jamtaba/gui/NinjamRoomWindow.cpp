@@ -156,6 +156,7 @@ void NinjamRoomWindow::on_channelRemoved(Ninjam::User user, Ninjam::UserChannel 
                 group->removeTrackView(trackView);
             }
         }
+        adjustTracksWidth();
     }
 }
 
@@ -177,6 +178,7 @@ void NinjamRoomWindow::on_channelAdded(Ninjam::User user, Ninjam::UserChannel ch
         NinjamTrackGroupView* trackView = new NinjamTrackGroupView(ui->tracksPanel, this->mainController, channelID, userName, channelName, countryName, countryCode );
         ui->tracksPanel->layout()->addWidget(trackView);
         trackGroups.insert(user.getFullName(), trackView);
+        adjustTracksWidth();
     }
     else{//the second, or third channel from same user, group with other channels
         NinjamTrackGroupView* trackView = trackGroups[user.getFullName()];
@@ -230,6 +232,23 @@ void NinjamRoomWindow::ninjamBpmComboChanged(QString newText){
         ui->topPanel->getBpmCombo()->blockSignals(false);
     }
 }
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamRoomWindow::adjustTracksWidth(){
+    int availableWidth = ui->scrollArea->width();
+
+    //can use wide to all tracks?
+    int wideWidth = 0;
+    foreach (NinjamTrackGroupView* trackGroup, trackGroups) {
+        int subTracks = trackGroup->getTracksCount();
+        wideWidth += (subTracks > 1) ? BaseTrackView::WIDE_WIDTH : BaseTrackView::NARROW_WIDTH * subTracks;
+    }
+    bool canUseWideTracks = wideWidth <= availableWidth;
+    foreach (NinjamTrackGroupView* trackGroup, trackGroups) {
+        trackGroup->setNarrowStatus(!canUseWideTracks);
+    }
+
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NinjamRoomWindow::~NinjamRoomWindow(){
     Controller::NinjamController* ninjamController = mainController->getNinjamController();

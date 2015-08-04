@@ -688,8 +688,8 @@ LocalTrackView #inputSelectionButton{
 
 
 NinjamRoomWindow #licenceButton{
-    background-color: rgba(220, 220, 220);
-    border: 1px solid rgba(0, 0,0, 40);
+    background-color: rgba(0, 0, 0, 8);
+    border: 1px solid rgba(0, 0,0, 12);
     border-radius: 3px;
     background-image: url(':/images/licence.png');
     background-position: center center;
@@ -700,8 +700,8 @@ NinjamRoomWindow #licenceButton{
 }
 
 NinjamRoomWindow #licenceButton:hover{
-    background-color: rgba(0, 0, 0, 40);
-    border: 1px solid rgba(0, 0, 0, 60);
+    background-color: rgba(0, 0, 0, 30);
+    border: 1px solid rgba(0, 0, 0, 40);
 
 }
 

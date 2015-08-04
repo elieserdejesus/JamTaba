@@ -94,15 +94,16 @@ void TrackGroupView::removeTrackView(int trackIndex){
     }
 }
 //+++++++++++++++++++++++++++++++++++++++++
+
 QSize TrackGroupView::minimumSizeHint() const{
     return sizeHint();
 }
 
 QSize TrackGroupView::sizeHint() const{
-    if(trackViews.size() > 1){
-        return QSize(trackViews.size() * BaseTrackView::NARROW_WIDTH, 10);
-    }else if(trackViews.size() == 1){
-        return trackViews.at(0)->sizeHint();
+    int width = 0;
+    foreach (BaseTrackView* trackView, trackViews) {
+        width += trackView->sizeHint().width();
     }
-    return QSize(BaseTrackView::NARROW_WIDTH, 10);
+    return QSize(std::max(width, 100), 10);
 }
+

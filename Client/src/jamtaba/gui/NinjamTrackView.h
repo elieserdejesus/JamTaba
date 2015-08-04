@@ -9,8 +9,8 @@ namespace Controller{
 }
 
 class QLabel;
-//class QLineEdit;
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class NinjamTrackView : public BaseTrackView{
     Q_OBJECT
 public:
@@ -19,17 +19,16 @@ public:
 private:
     QLabel* channelNameLabel;
 };
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class NinjamTrackGroupView : public TrackGroupView
 {
 public:
     NinjamTrackGroupView(QWidget *parent, Controller::MainController *mainController, long trackID, QString userName, QString channelName, QString countryName, QString countyCode);
     ~NinjamTrackGroupView();
-//    void setChannelName(QString newChannelName);
-
+    void setNarrowStatus(bool narrow);
 private:
     Controller::MainController* mainController;
     QLabel* countryLabel;
 };
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endif // NINJAMTRACKVIEW_H
