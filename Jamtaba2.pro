@@ -1,6 +1,8 @@
-#quando não tem barra de rolagem horizontal na sala ninjam fica um espaço grande embaixo das pistas
-
 #acho que consigo dar duplo clique para entrar em uma sala. O que acontece?
+
+#se eu já estou na sala, clico na aba de salas e tento entrar na mesma sala?
+
+#se eu tento conectar em outra sala, funciona?
 
 #Prioridades para um primeiro release
     #Melhorar o suporte para VST
@@ -8,7 +10,6 @@
     #Ver o usode memória para não queimar o filme
     #auto updater
 
-  #estou usando ícone de alto falante para representar inputs, é estranho
 
 #3 - Preciso melhorar o resampling aplicando o low pass.
     #o low pass mais simples: https://ccrma.stanford.edu/~jos/fp/Definition_Simplest_Low_Pass.html
@@ -62,6 +63,7 @@
 
 #O consumo de memória está aumentando sem parar e não consegui achar o erro. Preciso de um Valgrind. Mas parece que o problema é no encoding. Testar isso.
 
+#preciso tratar a situação onde não tem driver ASIO instalado
 
 #leak - quando deletar um encode do map de encoders? Como saber lá no NinjamController que o usuário está com um canal a menos?
 
@@ -87,6 +89,8 @@
 #que estão na cache e depois limpar essa lista
 
 #nome do plugin bypassado aparece embaixo do botãode bypass, problema no layout?
+
+#estou usando ícone de alto falante para representar inputs, é estranho
 
 #tenho dúvida se os ID dos canais ninjam não ficar bagunçados quando tiver mais usuários na sala
 #testei em uma sala com 2 players (3 canais) estava ok, inclusive o agrupemento fechou 100%
