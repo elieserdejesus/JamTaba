@@ -13,6 +13,7 @@
 #include <QLibrary>
 #include <string>
 #include <locale>
+#include <QThread>
 
 
 using namespace Vst;
@@ -33,7 +34,7 @@ VstPlugin::VstPlugin(VstHost* host)
 }
 
 bool VstPlugin::load(VstHost *host, QString path){
-    //qDebug() << "loading " << path;
+    qWarning() << "Carregando plugin " << path << " thread: " << QThread::currentThreadId();
     pluginLib.setFileName(path);
     effect = nullptr;
 
@@ -101,6 +102,8 @@ void VstPlugin::start(int sampleRate, int bufferSize){
         return;
     }
 
+    qWarning() << "inicializando plugin " << getName() << " thread: " << QThread::currentThreadId();
+
     //long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
     //qDebug() << "Starting " << getName() << " version " << ver;
     internalBuffer = new Audio::SamplesBuffer(effect->numOutputs, host->getBufferSize());
@@ -116,6 +119,7 @@ void VstPlugin::start(int sampleRate, int bufferSize){
 
 VstPlugin::~VstPlugin()
 {
+    qWarning() << getName() << " VSt plugin destructor ";
     unload();
     delete internalBuffer;
 }

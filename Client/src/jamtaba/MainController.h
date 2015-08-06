@@ -241,7 +241,7 @@ private:
 
     QString getUserEnvironmentString() const;
 
-    SamplesBufferRecorder* recorder;
+    //SamplesBufferRecorder* recorder;
 
 private slots:
     //Login server

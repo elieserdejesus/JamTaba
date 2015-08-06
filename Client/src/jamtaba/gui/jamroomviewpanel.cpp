@@ -36,7 +36,9 @@ void JamRoomViewPanel::refreshUsersList(Login::RoomInfo roomInfo){
         label->deleteLater();
     }
 
-    foreach (Login::UserInfo user, roomInfo.getUsers()) {
+    QList<Login::UserInfo> userInfos = roomInfo.getUsers();
+    qSort(userInfos.begin(), userInfos.end(), userInfoLessThan);
+    foreach (Login::UserInfo user, userInfos) {
         if(!userIsBot(user)){
             QLabel* label = new QLabel(ui->usersPanel);
             label->setTextFormat(Qt::RichText);
@@ -55,6 +57,10 @@ void JamRoomViewPanel::refreshUsersList(Login::RoomInfo roomInfo){
 
     ui->buttonListen->setEnabled(roomInfo.hasStream() && !roomInfo.isEmpty());
     ui->buttonEnter->setEnabled(!roomInfo.isFull());
+}
+
+bool JamRoomViewPanel::userInfoLessThan(Login::UserInfo u1, Login::UserInfo u2){
+    return u1.getName() < u2.getName();
 }
 
 void JamRoomViewPanel::addPeak(float peak){

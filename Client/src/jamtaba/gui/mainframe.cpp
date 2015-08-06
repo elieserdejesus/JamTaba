@@ -551,9 +551,14 @@ void MainFrame::closeEvent(QCloseEvent *)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::showEvent(QShowEvent *)
 {
-    if(!mainController->isStarted()){
+    int availableDevices = mainController->getAudioDriver()->getDevicesCount();
+    if(!mainController->isStarted() && availableDevices > 0){
         showBusyDialog("Loading rooms list ...");
         mainController->start();
+    }
+    else{
+        QMessageBox::critical(this, "ERROR", "No audio device!");
+        close();
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

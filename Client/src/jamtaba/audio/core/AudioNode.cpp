@@ -3,6 +3,7 @@
 #include "SamplesBuffer.h"
 #include "AudioPeak.h"
 #include <cmath>
+#include <cassert>
 #include <QDebug>
 #include "../midi/MidiDriver.h"
 #include <QMutexLocker>
@@ -144,13 +145,16 @@ bool AudioNode::disconnect(AudioNode &otherNode){
     return true;
 }
 
-void AudioNode::addProcessor( AudioNodeProcessor& newProcessor)
+void AudioNode::addProcessor( AudioNodeProcessor* newProcessor)
 {
-    processors.insert(&newProcessor);
+    assert(newProcessor);
+    processors.insert(newProcessor);
 }
 
-void AudioNode::removeProcessor(AudioNodeProcessor &processor){
-    processors.erase(processors.find(&processor));
+void AudioNode::removeProcessor(AudioNodeProcessor* processor){
+    assert(processor);
+    processors.erase(processors.find(processor));
+    delete processor;
 }
 
 //+++++++++++++++++++++++++++++++++++++++
@@ -195,6 +199,10 @@ LocalInputAudioNode::LocalInputAudioNode(int parentChannelIndex, bool isMono)
     :channelIndex(parentChannelIndex),  globalFirstInputIndex(0)
 {
     setAudioInputSelection(0, isMono ? 1 : 2);
+}
+
+LocalInputAudioNode::~LocalInputAudioNode(){
+    qWarning() << "Destrutor LocalInputAudioNode";
 }
 
 void LocalInputAudioNode::setAudioInputSelection(int firstChannelIndex, int channelCount){
