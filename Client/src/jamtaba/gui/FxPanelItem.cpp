@@ -8,6 +8,7 @@
 #include <QPainter>
 #include <QStyleOption>
 #include <QPushButton>
+#include <QLabel>
 #include <QHBoxLayout>
 #include <QSpacerItem>
 #include <QAction>
@@ -19,9 +20,10 @@
 const QString FxPanelItem::NEW_EFFECT_STRING = "new effect...";
 
 FxPanelItem::FxPanelItem(LocalTrackView *parent, Controller::MainController *mainController)
-    :QLabel(parent),
+    :QWidget(parent),
       plugin(nullptr),
       button(new QPushButton(this)),
+      label(new QLabel()),
       mainController(mainController),
       localTrackView(parent)
 {
@@ -29,9 +31,15 @@ FxPanelItem::FxPanelItem(LocalTrackView *parent, Controller::MainController *mai
     connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(on_contextMenu(QPoint)));
 
     QHBoxLayout* layout = new QHBoxLayout(this);
-    layout->addStretch();
     layout->setContentsMargins(1, 1, 1, 1);
+    layout->setSpacing(2);
     layout->addWidget(this->button);
+    layout->addWidget(this->label);
+    //this->label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    //this->button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    //layout->setAlignment(this->button, Qt::AlignRight);
+    //layout->setAlignment(this->label, Qt::AlignLeft);
 
     this->button->setVisible(false);
     this->button->setCheckable(true);
@@ -69,7 +77,7 @@ void FxPanelItem::updateStyleSheet(){
 
 void FxPanelItem::setPlugin(Audio::Plugin* plugin){
     this->plugin = plugin;
-    this->setText( plugin->getName());
+    this->label->setText( plugin->getName());
     this->button->setVisible(true);
     this->button->setChecked(!plugin->isBypassed());
     updateStyleSheet();
@@ -77,14 +85,15 @@ void FxPanelItem::setPlugin(Audio::Plugin* plugin){
 
 void FxPanelItem::unsetPlugin(){
     this->plugin = nullptr;
-    this->setText("");
+    this->label->setText("");
     this->button->setVisible(false);
 
     updateStyleSheet();
 }
 
 void FxPanelItem::paintEvent(QPaintEvent* ev){
-    QLabel::paintEvent(ev);
+    Q_UNUSED(ev);
+    //QLabel::paintEvent(ev);
     QStyleOption opt;
     opt.init(this);
     QPainter p(this);
@@ -106,13 +115,13 @@ void FxPanelItem::mousePressEvent(QMouseEvent *event){
 
 void FxPanelItem::enterEvent(QEvent *){
     if(!containPlugin()){
-        setText(FxPanelItem::NEW_EFFECT_STRING);
+        label->setText(FxPanelItem::NEW_EFFECT_STRING);
     }
 }
 
 void FxPanelItem::leaveEvent(QEvent *){
     if(!containPlugin()){
-        setText("");
+        label->setText("");
     }
 }
 

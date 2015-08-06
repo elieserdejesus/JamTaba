@@ -1,19 +1,10 @@
-#quando mando scanear arquivos de programa dá pau em algumas DLLs. ACho que um
-#try catch poderia melhorar isso
-    #Try catch não resolveu, tenho vários runtime errors
-
-#o botão clear cache não dá nenhum feedback. Seria legal mostrar a lista de plugins
-#que estão na cache e depois limpar essa lista
-
-#nome do plugin bypassado aparece embaixo do botãode bypass, problema no layout?
-
 #dar feedback quando o usuário escolher noInput. Deixar a pista esmaecida seria legal.
 #Usar setEnabled não funcionou porque desabilita inclusive o combo de selação, o que
 #impossibilita que o usuário volte a deixar a pista ativa.
 
 #nomes grandes estragam os nome dos canais nas entradas, os nomes dos canais ninjam, etc. Uma AutoElidedQLabel seria legal.
 
-
+#adicionar diretórios default para scanear plugins caso a lista de diretórios esteja vazia na inicialização
 
 
 # Se adiciono o addicitve drums e fecho agora não dá mais erro. Mas se ele já esta na lista
@@ -22,6 +13,9 @@
             #insiro o Addicive e fecho. Mas se o programa abre com o Addicive na lista de
             #plugins dá o erro.
 
+
+#o botão clear cache não dá nenhum feedback. Seria legal mostrar a lista de plugins
+#que estão na cache e depois limpar essa lista
 
 #Não estava deletando as tracks de input, por isso o plugin vst não era deletado, o destrutor
     #nunca era invocado e a DLL não era descarregada, gerando um erro no fechamento.
@@ -38,12 +32,6 @@
     #Talvez eu tenha que carregar os plugins só depois que a aplicação já estiver visível, caso
     #contrário demora demais para ver a tela principal se a lista de plugins para carregar
     #for grande e os plugins forem pesados.
-
-
-#drummix stereo abre, mas o drummix multi dá pau. Talvez a quantidade de canais esteja gerando problema.
-    #tive um erro, parece que ele não consegue carregar arquivos relacionados com o plugin
-    #parece ser problema no carregamento das dependências: QCoreApplication::addLibraryPath(
-
 
 
 #se ligo a fast enquanto o Jamtaba está aberto ela não aparece na lista. Algum tipo de cache na portaudio?
