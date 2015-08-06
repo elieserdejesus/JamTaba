@@ -41,13 +41,16 @@ FxPanelItem{
     background-repeat: none;
     max-height: 14px;
     width: 100%;
-    qproperty-alignment: AlignCenter;
-    font-size: 8pt;
-    color: rgb(255, 255, 255);
     border-radius: 2px;
 }
+FxPanelItem > QLabel{
+    qproperty-alignment: AlignCenter;
+    font-size: 8pt;
+    color: rgba(255, 255, 255, 120);
+    margin: 0px;
+}
 
-FxPanelItem[pluginBypassed="true"]{
+FxPanelItem[pluginBypassed="true"] > QLabel{
     background: rgba(0, 0, 0, 60);
     color: rgb(25, 25, 25);
 }
@@ -56,6 +59,8 @@ FxPanelItem[pluginBypassed="true"]{
 FxPanelItem > QPushButton{
      max-width: 10px;
      max-height: 10px;
+     margin: 0px;
+     padding: 0px;
      border-radius: 2px;
      border: 1px solid rgba(0, 0, 0, 80);
      background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgba(0, 0, 0, 120), stop:1 rgb(0, 0, 0, 50));
@@ -72,7 +77,6 @@ FxPanelItem > QPushButton:checked{
 
 FxPanelItem:hover{
     background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgba(0, 0, 0, 50), stop:1 rgba(0, 0, 0, 70));
-    width: 100%;
 }
 /*----------------------*/
 QScrollBar:vertical, QScrollBar:horizontal {
