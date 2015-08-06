@@ -13,6 +13,9 @@
 #include <QLibrary>
 #include <string>
 #include <locale>
+#include <QApplication>
+#include <QFileInfo>
+#include <QDir>
 #include <QThread>
 
 
@@ -34,17 +37,23 @@ VstPlugin::VstPlugin(VstHost* host)
 }
 
 bool VstPlugin::load(VstHost *host, QString path){
-    qWarning() << "Carregando plugin " << path << " thread: " << QThread::currentThreadId();
+    QString pluginDir = QFileInfo(path).absoluteDir().absolutePath();
+    //qWarning() << "Adicionando " << pluginDir << " em LibraryPath";
+    QApplication::addLibraryPath(pluginDir);
+
+
     pluginLib.setFileName(path);
     effect = nullptr;
 
-    if(!pluginLib.load()){
-        qCritical() << "error when loading VST plugin " << path;
-        return false;
-    }
-
     vstPluginFuncPtr entryPoint=0;
     try {
+        //qWarning() << "vai carregar " << path;
+        if(!pluginLib.load()){
+            qCritical() << "error when loading VST plugin " << path;
+            return false;
+        }
+        //qWarning() << "carregou " << path;
+        //qWarning() << "vai procurar entry point" << path;
         entryPoint = (vstPluginFuncPtr)pluginLib.resolve("VSTPluginMain");
         if(!entryPoint){
             entryPoint = (vstPluginFuncPtr)pluginLib.resolve("main");
@@ -52,6 +61,7 @@ bool VstPlugin::load(VstHost *host, QString path){
     }
     catch(...)
     {
+        //qWarning() << "ERRO! " << path;
         qCritical() << "exception when  getting entry point " << pluginLib.fileName();
     }
     if(!entryPoint) {

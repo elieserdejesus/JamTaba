@@ -176,7 +176,7 @@ public:
 
 
     void setUserName(QString newUserName);
-    inline QString getUserName() const;//{return userName;}
+    QString getUserName() const;
     inline bool userNameWasChoosed() const{return userNameChoosed;}
 
 
