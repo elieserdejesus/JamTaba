@@ -141,10 +141,10 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     audioMixer = new Audio::AudioMixer(audioDriver->getSampleRate());
     roomStreamer = new Audio::RoomStreamerNode();
 
-    QString dateString = QDateTime::currentDateTime().time().toString().replace(":", "-");
+    //QString dateString = QDateTime::currentDateTime().time().toString().replace(":", "-");
     //QString fileName = "output_" + dateString + ".wav";
-    QString fileName = "output.wav";
-    recorder = new SamplesBufferRecorder(fileName, audioDriver->getSampleRate());
+    //QString fileName = "output.wav";
+    //recorder = new SamplesBufferRecorder(fileName, audioDriver->getSampleRate());
 
     midiDriver = new PortMidiDriver();
     midiDriver->setInputDeviceIndex(settings.getLastMidiDeviceIndex());
@@ -152,7 +152,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromLoginServer()));
 
 
-    //this->audioMixer->addNode( this->roomStreamer);
+    this->audioMixer->addNode( this->roomStreamer);
 
     //tracksNodes.insert(INPUT_TRACK_ID, audioMixer->getLocalInput());
 
@@ -445,7 +445,7 @@ void MainController::removeTrack(long trackID){
     if(trackNode){
         audioMixer->removeNode(trackNode);
         tracksNodes.remove(trackID);
-        //delete trackNode;
+        delete trackNode;
     }
 }
 
@@ -499,7 +499,7 @@ void MainController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffe
     else{
         ninjamController->process(in, out, sampleRate);
     }
-    recorder->addSamples(out);
+    //recorder->addSamples(out);
 }
 
 Audio::AudioPeak MainController::getTrackPeak(int trackID){
@@ -617,13 +617,12 @@ QList<Audio::PluginDescriptor> MainController::getPluginsDescriptors(){
 Audio::Plugin* MainController::addPlugin(int inputTrackIndex, const Audio::PluginDescriptor& descriptor){
     Audio::Plugin* plugin = createPluginInstance(descriptor);
     plugin->start(audioDriver->getSampleRate(), audioDriver->getBufferSize());
-    getInputTrack(inputTrackIndex)->addProcessor(*plugin);
+    getInputTrack(inputTrackIndex)->addProcessor(plugin);
     return plugin;
 }
 
 void MainController::removePlugin(int inputTrackIndex, Audio::Plugin *plugin){
-    getInputTrack(inputTrackIndex)->removeProcessor(*plugin);
-    delete plugin;
+    getInputTrack(inputTrackIndex)->removeProcessor(plugin);
 }
 
 Audio::Plugin *MainController::createPluginInstance(const Audio::PluginDescriptor& descriptor)
@@ -638,7 +637,6 @@ Audio::Plugin *MainController::createPluginInstance(const Audio::PluginDescripto
         if(vstPlugin->load(this->vstHost, descriptor.getPath())){
             return vstPlugin;
         }
-        return nullptr;
     }
     return nullptr;
 }
@@ -652,10 +650,19 @@ MainController::~MainController(){
     stop();
     delete roomStreamer;
 
-    foreach (Audio::AudioNode* track, tracksNodes) {
-        delete track;
-    }
+//    foreach (Audio::AudioNode* track, tracksNodes) {
+//        delete track;
+//    }
     tracksNodes.clear();
+    foreach (Audio::LocalInputAudioNode* input, inputTracks) {
+        delete input;
+    }
+    inputTracks.clear();
+
+    foreach (MainController::InputTrackGroup* group, trackGroups) {
+        delete group;
+    }
+    trackGroups.clear();
 
     pluginsDescriptors.clear();
 
@@ -665,7 +672,7 @@ MainController::~MainController(){
     }
     QObject::disconnect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
 
-    delete recorder;
+    //delete recorder;
 }
 
 void MainController::saveLastUserSettings(const Persistence::InputsSettings& inputsSettings){
@@ -774,6 +781,9 @@ void MainController::stop()
             this->audioDriver->release();
             this->midiDriver->release();
         }
+
+
+
         //qDebug() << "disconnecting...";
         loginService->disconnect();
         if(ninjamController){

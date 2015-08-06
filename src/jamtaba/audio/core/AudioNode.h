@@ -55,8 +55,8 @@ public:
     virtual bool connect(AudioNode &other) ;
     virtual bool disconnect(AudioNode &otherNode);
 
-    void addProcessor(AudioNodeProcessor &newProcessor);
-    void removeProcessor(AudioNodeProcessor &processor);
+    void addProcessor(AudioNodeProcessor *newProcessor);
+    void removeProcessor(AudioNodeProcessor* processor);
 
     inline void setGain(float gainValue){
         this->gain = gainValue;
@@ -135,6 +135,7 @@ private:
     int channelIndex; //the group index (a group contain N LocalInputAudioNode instances)
 public:
     LocalInputAudioNode(int parentChannelIndex, bool isMono=true);
+    ~LocalInputAudioNode();
     virtual void processReplacing(const SamplesBuffer&in, SamplesBuffer& out, int sampleRate);
     virtual int getSampleRate() const{return 0;}
     inline int getChannels() const{return audioInputRange.getChannels();}

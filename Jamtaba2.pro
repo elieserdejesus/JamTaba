@@ -1,8 +1,39 @@
-#acho que consigo dar duplo clique para entrar em uma sala. O que acontece?
+# Se adiciono o addicitve drums e fecho agora não dá mais erro. Mas se ele já esta na lista
+    #de plugins e é carregado durante a abertura do programa dá erro na finalização.
+        #Threads diferentes? Realmente não dá erro se eu abro o programa sem plugins,
+            #insiro o Addicive e fecho. Mas se o programa abre com o Addicive na lista de
+            #plugins dá o erro.
 
-#se eu já estou na sala, clico na aba de salas e tento entrar na mesma sala?
 
-#se eu tento conectar em outra sala, funciona?
+#Não estava deletando as tracks de input, por isso o plugin vst não era deletado, o destrutor
+    #nunca era invocado e a DLL não era descarregada, gerando um erro no fechamento.
+# tirei o comentário do código que deleta a pista, tenho que ver se ainda tem o bug quando
+    #deleto um canal no Reaninjam.
+
+#parece que o stream das salas não está rolando mesmo.
+
+#feedback para o carregamento de plugin pode ser interessante, o Addicitve drum leva uma eternidade.
+    #Talvez eu tenha que carregar os plugins só depois que a aplicação já estiver visível, caso
+    #contrário demora demais para ver a tela principal se a lista de plugins para carregar
+    #for grande e os plugins forem pesados.
+
+
+#drummix stereo abre, mas o drummix multi dá pau. Talvez a quantidade de canais esteja gerando problema.
+    #tive um erro, parece que ele não consegue carregar arquivos relacionados com o plugin
+
+
+
+#ver o construtor do mainController, acho que comentei a inserção do roomStreamer na lista de nodes, por isso não está tocando os streams
+    #não consegui testar os streams ainda
+
+#acho que quando fico alternando entre os streams das salas não está funcionando muito bem, parece que o botão ficou pressionado.
+
+#acho que o stream do ninjamer não está rolando
+
+#se ligo a fast enquanto o Jamtaba está aberto ela não aparece na lista. Algum tipo de cache na portaudio?
+
+#mudei do asio4all para FAst track mas as entradas continuaram como "microfones"
+
 
 #Prioridades para um primeiro release
     #Melhorar o suporte para VST
@@ -11,77 +42,6 @@
     #auto updater
 
 
-#3 - Preciso melhorar o resampling aplicando o low pass.
-    #o low pass mais simples: https://ccrma.stanford.edu/~jos/fp/Definition_Simplest_Low_Pass.html
-
-    #gera código para low pass: http://www-users.cs.york.ac.uk/~fisher/cgi-bin/mkfscript
-
-    #That’s it—to double the sample rate, we insert a zero between each sample, and low-pass filter to clear the extended
-    #part of the audio band. Any low-pass filter will do, as long as you pick one steep enough to get the job done,
-    #removing the aliased copy without removing much of the existing signal band. Most often, a linear phase FIR filter is
-    #used—performance is good at the relatively high cut-off frequency, phase is maintained, and we have good control over
-    #its characteristics.
-
-    #Downsampling
-
-        #The process of reducing the sample rate—downsampling—is similar, except we low-pass filter first, to reduce the bandwidth,
-        #then discard samples. The filter stage is essential, since the signal will alias if we try to fit it into a narrower
-        #band without removing the portion that can’t be encoded at the lower rate. So, we set the filter cut-off to half the
-        #new, lower sample rate, then simply discard every other sample for a 2:1 downsample ratio.
-        #(Yes, the result will be slightly different depending on whether you discard the odd samples or even ones.
-        #And no, it doesn’t matter, just as the exact sampling phase didn’t matter when you converted from analog to digital
-        #in the first place.)
-
-        #In general, the algorithm for resampling to a higher frequency is:
-        #* maintain a 'cursor': a floating-point sample index, into the source sample
-        #* for each sample, advance the cursor by (sourceSampleRate/targetSampleRate), which will be < 1.0
-        #* interpolate data from the source sample according to the cursor position using the interpolation method of your choice; this will generally involve a polynomial using a small number of source samples around the cursor
-        #For resampling to a lower frequency, the process is similar but the source sample should be lowpass filtered to attenuate everything above half the target sample rate before interpolation.
-
-
-#parece que quando ativo o encoding (entradas setadas) a memória não para de crescer. Fica mais evidente com dois canais.
-
-#no ninjamJamController estou recriando o tempInBuffer em cada callback. Otimizar isso.
-
-#ver o construtor do mainController, acho que comentei a inserção do roomStreamer na lista de nodes, por isso não está tocando os streams
-#acho que quando fico alternando entre os streams das salas não está funcionando muito bem, parece que o botão ficou pressionado.
-#acho que o stream do ninjamer não está rolando
-
-
-#se ligo a fast enquanto o Jamtaba está aberto ela não aparece na lista. Algum tipo de cache na portaudio?
-
-#mudei do asio4all para FAst track mas as entradas continuaram como "microfones"
-
-#exibir uma mensagem no chat quando um usuário sai da sala
-
-#Entrei em uma sala com uns 5 caras e estava usando 25:% da minha CPU.
-#Entrei na mesma sala usando o Reaninjam e não chegou a 1% da minha CPU. Mas depois eu descobri que se não estiver encodando
-#o reaninjam usa pouca CPU. O bicho pega mesmo quando tem que encodar. Mesmo assim acho que estou usando muita CPU.
-    #Quanto de cpu usa sem entrar em uma sala?
-    #Quanto de CPU usa para encoder?
-    #E os decoders, acrescentam muita coisa na CPU? Posso criar um monte de canais no reaninjam e ver o que acontece.
-
-#O consumo de memória está aumentando sem parar e não consegui achar o erro. Preciso de um Valgrind. Mas parece que o problema é no encoding. Testar isso.
-
-#preciso tratar a situação onde não tem driver ASIO instalado
-
-#leak - quando deletar um encode do map de encoders? Como saber lá no NinjamController que o usuário está com um canal a menos?
-
-#estava bugando o parser da lista de servers públicos no servidor, mas vi que no reaper também bugou. O problema é que o Jamtaba nem abre se tem esse problema, dá um erro no servidor.
-
-#GAz deu a ideia de fazer um translate usando o site do google translate e HTML scrapping.
-
-#Comentei com o Marcello sobre a ideia de criar um segundo chat para mensagens privadas.
-
-#quando solo uma das inputs as outras também são enviadas. Ou seja, o solo está atuando apenas localmente. Faz sentido mudar isso?
-
-#usuário kn00t perguntou sobre um log do chat. Pode ser interessante. Talvez ele só queira ver as mensagens mais antigas de uma sessão, e não ver mensagens de outras sessões.
-
-#drummix stereo abre, mas o drummix multi dá pau. Talvez a quantidade de canais esteja gerando problema.
-
-#se adiciono um plugin e fecho dá pau - Só acontece com alguns plugins. Como os plugins grandes não estão carregando eu acho
-    #que deve ser alguma coisa relacionada com as funções de iniciallização dos plugins que eu não estou invocando.
-
 #quando mando scanear arquivos de programa dá pau em algumas DLLs. ACho que um
 #try catch poderia melhorar isso
 
@@ -89,12 +49,6 @@
 #que estão na cache e depois limpar essa lista
 
 #nome do plugin bypassado aparece embaixo do botãode bypass, problema no layout?
-
-#estou usando ícone de alto falante para representar inputs, é estranho
-
-#tenho dúvida se os ID dos canais ninjam não ficar bagunçados quando tiver mais usuários na sala
-#testei em uma sala com 2 players (3 canais) estava ok, inclusive o agrupemento fechou 100%
-
 
 #dar feedback quando o usuário escolher noInput. Deixar a pista esmaecida seria legal.
 #Usar setEnabled não funcionou porque desabilita inclusive o combo de selação, o que
@@ -135,11 +89,6 @@
 #separar o carregamento do plugin VST da instância. No momento uma instância é criada e depois é que o plugin é carregado. Pra mim
 #isso é um bad design
 
-#Preciso mudar a cor de fundo da pistas de acordo com o tipo. Pistas locais de uma cor, metronomo de outra, pistas ninjam de outra.
-#Talvez seja uma boa hora para usar HSV e ter variações
-
-#tirar spacers dos títulos das seções?
-
 # MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais. Testar com o controlador AKAI também para ver
 
 #dialogo de IO do midi - testar novamente, ver se a seleção do midi device está funcionando
@@ -155,6 +104,84 @@
 # drummix multi deu problema na mixagem dos canais, acho que só consegui ouvir o bumbo e o vazamendo das outras peças
 
 #buga tudo se não tem conexão com a internet
+
+
+#BUGS relacionados com o diálogo de audioIO:
+#1 - quando seleciono as entradas sPDIF da fast track a aplicação encerra
+#2 - quando seleciono saídas que não são 1 e 2 dá um crash também.
+#3 - Com a fast track quando seleciono as entradas e simplesmente volto para a tela de audio IO o valor do segundo combo está bugado.
+#4 - preciso testar com a fonte da fast track para ver se os outros canais estão realmente funcionando
+
+
+
+
+#3 - Preciso melhorar o resampling aplicando o low pass.
+    #o low pass mais simples: https://ccrma.stanford.edu/~jos/fp/Definition_Simplest_Low_Pass.html
+
+    #gera código para low pass: http://www-users.cs.york.ac.uk/~fisher/cgi-bin/mkfscript
+
+    #That’s it—to double the sample rate, we insert a zero between each sample, and low-pass filter to clear the extended
+    #part of the audio band. Any low-pass filter will do, as long as you pick one steep enough to get the job done,
+    #removing the aliased copy without removing much of the existing signal band. Most often, a linear phase FIR filter is
+    #used—performance is good at the relatively high cut-off frequency, phase is maintained, and we have good control over
+    #its characteristics.
+
+    #Downsampling
+
+        #The process of reducing the sample rate—downsampling—is similar, except we low-pass filter first, to reduce the bandwidth,
+        #then discard samples. The filter stage is essential, since the signal will alias if we try to fit it into a narrower
+        #band without removing the portion that can’t be encoded at the lower rate. So, we set the filter cut-off to half the
+        #new, lower sample rate, then simply discard every other sample for a 2:1 downsample ratio.
+        #(Yes, the result will be slightly different depending on whether you discard the odd samples or even ones.
+        #And no, it doesn’t matter, just as the exact sampling phase didn’t matter when you converted from analog to digital
+        #in the first place.)
+
+        #In general, the algorithm for resampling to a higher frequency is:
+        #* maintain a 'cursor': a floating-point sample index, into the source sample
+        #* for each sample, advance the cursor by (sourceSampleRate/targetSampleRate), which will be < 1.0
+        #* interpolate data from the source sample according to the cursor position using the interpolation method of your choice; this will generally involve a polynomial using a small number of source samples around the cursor
+        #For resampling to a lower frequency, the process is similar but the source sample should be lowpass filtered to attenuate everything above half the target sample rate before interpolation.
+
+
+#parece que quando ativo o encoding (entradas setadas) a memória não para de crescer. Fica mais evidente com dois canais.
+
+#no ninjamJamController estou recriando o tempInBuffer em cada callback. Otimizar isso.
+
+#exibir uma mensagem no chat quando um usuário sai da sala
+
+#Entrei em uma sala com uns 5 caras e estava usando 25:% da minha CPU.
+#Entrei na mesma sala usando o Reaninjam e não chegou a 1% da minha CPU. Mas depois eu descobri que se não estiver encodando
+#o reaninjam usa pouca CPU. O bicho pega mesmo quando tem que encodar. Mesmo assim acho que estou usando muita CPU.
+    #Quanto de cpu usa sem entrar em uma sala?
+    #Quanto de CPU usa para encoder?
+    #E os decoders, acrescentam muita coisa na CPU? Posso criar um monte de canais no reaninjam e ver o que acontece.
+
+#O consumo de memória está aumentando sem parar e não consegui achar o erro. Preciso de um Valgrind. Mas parece que o problema é no encoding. Testar isso.
+
+
+
+#leak - quando deletar um encode do map de encoders? Como saber lá no NinjamController que o usuário está com um canal a menos?
+
+#estava bugando o parser da lista de servers públicos no servidor, mas vi que no reaper também bugou. O problema é que o Jamtaba nem abre se tem esse problema, dá um erro no servidor.
+
+
+#estou usando ícone de alto falante para representar inputs, é estranho
+
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++
+#GAz deu a ideia de fazer um translate usando o site do google translate e HTML scrapping.
+
+#Comentei com o Marcello sobre a ideia de criar um segundo chat para mensagens privadas.
+
+#quando solo uma das inputs as outras também são enviadas. Ou seja, o solo está atuando apenas localmente. Faz sentido mudar isso?
+
+#usuário kn00t perguntou sobre um log do chat. Pode ser interessante. Talvez ele só queira ver as mensagens mais antigas de uma sessão, e não ver mensagens de outras sessões.
+#++++++++++++++++++++++++++++++++++++++++++++++
+
+#Preciso mudar a cor de fundo da pistas de acordo com o tipo. Pistas locais de uma cor, metronomo de outra, pistas ninjam de outra.
+#Talvez seja uma boa hora para usar HSV e ter variações
+
 
 #Resampling
     #Ainda tem um probleminha nos início de alguns intervalos, mas só acontece em
@@ -186,12 +213,6 @@
 
 #quando trocar de bpi ver se ainda é possível usar a mesma acentuação procurando pelo valor
 #antigo na nova lista
-
-#BUGS relacionados com o diálogo de audioIO:
-#1 - quando seleciono as entradas sPDIF da fast track a aplicação encerra
-#2 - quando seleciono saídas que não são 1 e 2 dá um crash também.
-#3 - Com a fast track quando seleciono as entradas e simplesmente volto para a tela de audio IO o valor do segundo combo está bugado.
-#4 - preciso testar com a fonte da fast track para ver se os outros canais estão realmente funcionando
 
 
 #-------------------------------------------------

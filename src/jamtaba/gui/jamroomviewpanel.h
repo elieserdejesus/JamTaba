@@ -42,6 +42,8 @@ private:
     bool roomContainsBotsOnly(Login::RoomInfo roomInfo);
     bool userIsBot(Login::UserInfo userInfo);
 
+    static bool userInfoLessThan(Login::UserInfo u1, Login::UserInfo u2);
+
 };
 
 #endif // JAMROOMVIEWPANEL_H
