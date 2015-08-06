@@ -1,3 +1,21 @@
+#quando mando scanear arquivos de programa dá pau em algumas DLLs. ACho que um
+#try catch poderia melhorar isso
+    #Try catch não resolveu, tenho vários runtime errors
+
+#o botão clear cache não dá nenhum feedback. Seria legal mostrar a lista de plugins
+#que estão na cache e depois limpar essa lista
+
+#nome do plugin bypassado aparece embaixo do botãode bypass, problema no layout?
+
+#dar feedback quando o usuário escolher noInput. Deixar a pista esmaecida seria legal.
+#Usar setEnabled não funcionou porque desabilita inclusive o combo de selação, o que
+#impossibilita que o usuário volte a deixar a pista ativa.
+
+#nomes grandes estragam os nome dos canais nas entradas, os nomes dos canais ninjam, etc. Uma AutoElidedQLabel seria legal.
+
+
+
+
 # Se adiciono o addicitve drums e fecho agora não dá mais erro. Mas se ele já esta na lista
     #de plugins e é carregado durante a abertura do programa dá erro na finalização.
         #Threads diferentes? Realmente não dá erro se eu abro o programa sem plugins,
@@ -11,6 +29,10 @@
     #deleto um canal no Reaninjam.
 
 #parece que o stream das salas não está rolando mesmo.
+    #não consegui testar os streams adequadamente ainda
+#acho que quando fico alternando entre os streams das salas não está funcionando muito bem, parece que o botão ficou pressionado.
+#acho que o stream do ninjamer não está rolando
+
 
 #feedback para o carregamento de plugin pode ser interessante, o Addicitve drum leva uma eternidade.
     #Talvez eu tenha que carregar os plugins só depois que a aplicação já estiver visível, caso
@@ -20,15 +42,9 @@
 
 #drummix stereo abre, mas o drummix multi dá pau. Talvez a quantidade de canais esteja gerando problema.
     #tive um erro, parece que ele não consegue carregar arquivos relacionados com o plugin
+    #parece ser problema no carregamento das dependências: QCoreApplication::addLibraryPath(
 
 
-
-#ver o construtor do mainController, acho que comentei a inserção do roomStreamer na lista de nodes, por isso não está tocando os streams
-    #não consegui testar os streams ainda
-
-#acho que quando fico alternando entre os streams das salas não está funcionando muito bem, parece que o botão ficou pressionado.
-
-#acho que o stream do ninjamer não está rolando
 
 #se ligo a fast enquanto o Jamtaba está aberto ela não aparece na lista. Algum tipo de cache na portaudio?
 
@@ -40,22 +56,6 @@
     #Melhorar o suporte de MIDI
     #Ver o usode memória para não queimar o filme
     #auto updater
-
-
-#quando mando scanear arquivos de programa dá pau em algumas DLLs. ACho que um
-#try catch poderia melhorar isso
-
-#o botão clear cache não dá nenhum feedback. Seria legal mostrar a lista de plugins
-#que estão na cache e depois limpar essa lista
-
-#nome do plugin bypassado aparece embaixo do botãode bypass, problema no layout?
-
-#dar feedback quando o usuário escolher noInput. Deixar a pista esmaecida seria legal.
-#Usar setEnabled não funcionou porque desabilita inclusive o combo de selação, o que
-#impossibilita que o usuário volte a deixar a pista ativa.
-
-#nomes grandes estragam os nome dos canais nas entradas, os nomes dos canais ninjam, etc. Uma AutoElidedQLabel seria legal.
-
 
 #também preciso tratar a situação onde o usuário está usando midi como entrada e o driver midi é alterado nas preferencias
 
