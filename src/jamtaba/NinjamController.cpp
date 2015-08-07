@@ -43,19 +43,22 @@ public:
     }
 
     void stop(){
+        //QMutexLocker locker(&mutex);
         stopRequested = true;
+        hasAvailableChunksToEncode.wakeAll();
     }
 
 protected:
     void run(){
         while(!stopRequested){
-
             mutex.lock();
-            while(chunksToEncode.isEmpty()){
-                //qWarning() << "waiting...";
+            if(chunksToEncode.isEmpty()){
                 hasAvailableChunksToEncode.wait(&mutex);
             }
-
+            if(stopRequested){
+                mutex.unlock();
+                break;
+            }
             EncodingChunk* chunk = chunksToEncode.first();
             chunksToEncode.removeFirst();
             mutex.unlock();
@@ -91,7 +94,7 @@ private:
 
     QList<EncodingChunk*> chunksToEncode;
     QMutex mutex;
-    bool stopRequested;
+    volatile bool stopRequested;
     NinjamController* controller;
     QWaitCondition hasAvailableChunksToEncode;
 
@@ -192,8 +195,7 @@ NinjamController::NinjamController(Controller::MainController* mainController)
 void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
 
     QMutexLocker locker(&mutex);
-
-    if(samplesInInterval <= 0){
+    if(!running || samplesInInterval <= 0){
         return;//not initialized
     }
 
@@ -280,6 +282,7 @@ NinjamController::~NinjamController(){
     QObject::disconnect( mainController->getAudioDriver(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
     if(encodingThread){
         delete encodingThread;
+        encodingThread = nullptr;
     }
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -415,10 +418,14 @@ void NinjamController::setMetronomeBeatsPerAccent(int beatsPerAccent){
 void NinjamController::stop(){
 
     //checkThread("stop();");
+    QMutexLocker locker(&mutex);
     if(running){
-
-        delete encodingThread;
-        encodingThread = nullptr;
+        if(encodingThread){
+            encodingThread->stop();
+            encodingThread->wait();//wait the encoding thread to finish
+            delete encodingThread;
+            encodingThread = nullptr;
+        }
 
         this->running = false;
 
@@ -439,7 +446,7 @@ void NinjamController::stop(){
 
 
         {
-            QMutexLocker locker(&mutex);
+
 
             //store metronome settings
             Audio::AudioNode* metronomeTrack = mainController->getTrackNode(METRONOME_TRACK_ID);
