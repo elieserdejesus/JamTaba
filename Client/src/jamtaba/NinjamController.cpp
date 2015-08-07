@@ -175,7 +175,8 @@ NinjamController::NinjamController(Controller::MainController* mainController)
     currentBpi(0),
     currentBpm(0),
     transmiting(false),
-    mutex(QMutex::Recursive)
+    mutex(QMutex::Recursive),
+    encodingThread(nullptr)
 
     //recorder("record.wav", mainController->getAudioDriver()->getSampleRate())
 {

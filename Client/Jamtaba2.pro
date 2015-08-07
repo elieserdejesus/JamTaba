@@ -1,4 +1,8 @@
-#dar feedback quando plugin for desativado, deixar label mais escura
+#Não estava deletando as tracks de input, por isso o plugin vst não era deletado, o destrutor
+    #nunca era invocado e a DLL não era descarregada, gerando um erro no fechamento.
+# tirei o comentário do código que deleta a pista, tenho que ver se ainda tem o bug quando
+    #deleto um canal no Reaninjam.
+
 
 # Se adiciono o addicitve drums e fecho agora não dá mais erro. Mas se ele já esta na lista
     #de plugins e é carregado durante a abertura do programa dá erro na finalização.
@@ -7,24 +11,12 @@
             #plugins dá o erro.
 
 
-#o botão clear cache não dá nenhum feedback. Seria legal mostrar a lista de plugins
-#que estão na cache e depois limpar essa lista
 
-#Não estava deletando as tracks de input, por isso o plugin vst não era deletado, o destrutor
-    #nunca era invocado e a DLL não era descarregada, gerando um erro no fechamento.
-# tirei o comentário do código que deleta a pista, tenho que ver se ainda tem o bug quando
-    #deleto um canal no Reaninjam.
 
 #parece que o stream das salas não está rolando mesmo.
     #não consegui testar os streams adequadamente ainda
 #acho que quando fico alternando entre os streams das salas não está funcionando muito bem, parece que o botão ficou pressionado.
 #acho que o stream do ninjamer não está rolando
-
-
-#feedback para o carregamento de plugin pode ser interessante, o Addicitve drum leva uma eternidade.
-    #Talvez eu tenha que carregar os plugins só depois que a aplicação já estiver visível, caso
-    #contrário demora demais para ver a tela principal se a lista de plugins para carregar
-    #for grande e os plugins forem pesados.
 
 
 #se ligo a fast enquanto o Jamtaba está aberto ela não aparece na lista. Algum tipo de cache na portaudio?
@@ -67,9 +59,6 @@
 # a mensagem de crowded está errada?
 
 
-#separar o carregamento do plugin VST da instância. No momento uma instância é criada e depois é que o plugin é carregado. Pra mim
-#isso é um bad design
-
 # MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais. Testar com o controlador AKAI também para ver
 
 #dialogo de IO do midi - testar novamente, ver se a seleção do midi device está funcionando
@@ -80,12 +69,11 @@
 # Quando botei o reverb depois do B4 ouvi o reverb na entrada do mic mas não no B4, o encadeamento tem problema
 #Na verdade preciso repensar isso, não faz sentido ter midi e áudio ao mesmo tempo em uma pista
 
-# não estou chamando o startProcess nos VSTs, isso pode bugar VSTs que utilizam
+
 
 # drummix multi deu problema na mixagem dos canais, acho que só consegui ouvir o bumbo e o vazamendo das outras peças
 
 #buga tudo se não tem conexão com a internet
-
 
 #BUGS relacionados com o diálogo de audioIO:
 #1 - quando seleciono as entradas sPDIF da fast track a aplicação encerra
@@ -93,10 +81,27 @@
 #3 - Com a fast track quando seleciono as entradas e simplesmente volto para a tela de audio IO o valor do segundo combo está bugado.
 #4 - preciso testar com a fonte da fast track para ver se os outros canais estão realmente funcionando
 
+#-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#separar o carregamento do plugin VST da instância. No momento uma instância é criada e depois é que o plugin é carregado. Pra mim
+#isso é um bad design
+
+# não estou chamando o startProcess nos VSTs, isso pode bugar VSTs que utilizam
 
 #nomes grandes estragam os nome dos canais nas entradas, os nomes dos canais ninjam, etc. Uma AutoElidedQLabel seria legal.
 
 #adicionar diretórios default para scanear plugins no win 64
+
+#dar feedback quando plugin for bypassado, deixar label mais escura - Não consegui fazer isso, a propriedade existe no objeto, mas o CSS não está funcionando, desisti
+
+#o botão clear cache não dá nenhum feedback. Seria legal mostrar a lista de plugins
+#que estão na cache e depois limpar essa lista
+
+
+#feedback para o carregamento de plugin pode ser interessante, o Addicitve drum leva uma eternidade.
+    #Talvez eu tenha que carregar os plugins só depois que a aplicação já estiver visível, caso
+    #contrário demora demais para ver a tela principal se a lista de plugins para carregar
+    #for grande e os plugins forem pesados.
 
 #3 - Preciso melhorar o resampling aplicando o low pass.
     #o low pass mais simples: https://ccrma.stanford.edu/~jos/fp/Definition_Simplest_Low_Pass.html

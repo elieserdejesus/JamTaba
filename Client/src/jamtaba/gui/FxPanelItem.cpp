@@ -22,7 +22,7 @@ const QString FxPanelItem::NEW_EFFECT_STRING = "new effect...";
 FxPanelItem::FxPanelItem(LocalTrackView *parent, Controller::MainController *mainController)
     :QWidget(parent),
       plugin(nullptr),
-      button(new QPushButton(this)),
+      bypassButton(new QPushButton(this)),
       label(new QLabel()),
       mainController(mainController),
       localTrackView(parent)
@@ -33,18 +33,25 @@ FxPanelItem::FxPanelItem(LocalTrackView *parent, Controller::MainController *mai
     QHBoxLayout* layout = new QHBoxLayout(this);
     layout->setContentsMargins(1, 1, 1, 1);
     layout->setSpacing(2);
-    layout->addWidget(this->button);
-    layout->addWidget(this->label);
+    layout->addWidget(this->bypassButton);
+    layout->addWidget(this->label, 1);
+    //layout->addWidget(this->menuButton);
+
+    //this->bypassButton->setObjectName("bypassButton");
+    //this->menuButton->setObjectName("menuButton");
     //this->label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     //this->button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     //layout->setAlignment(this->button, Qt::AlignRight);
     //layout->setAlignment(this->label, Qt::AlignLeft);
 
-    this->button->setVisible(false);
-    this->button->setCheckable(true);
-    this->button->setChecked(true);
-    QObject::connect( this->button, SIGNAL(clicked()), this, SLOT(on_buttonClicked()) );
+    this->bypassButton->setVisible(false);
+    this->bypassButton->setCheckable(true);
+    this->bypassButton->setChecked(true);
+
+    //this->menuButton->setCheckable(false);
+
+    QObject::connect( this->bypassButton, SIGNAL(clicked()), this, SLOT(on_buttonClicked()) );
 
     //this->actionsMenu = createActionsMenu();
 }
@@ -54,13 +61,15 @@ FxPanelItem::FxPanelItem(LocalTrackView *parent, Controller::MainController *mai
 //}
 
 bool FxPanelItem::pluginIsBypassed(){
+    //qWarning() << "consultando";
     return containPlugin() && plugin->isBypassed();
 }
 
 void FxPanelItem::on_buttonClicked() {
     if(plugin){
-        this->plugin->setBypass(!this->button->isChecked());
+        this->plugin->setBypass(!this->bypassButton->isChecked());
         updateStyleSheet();
+
     }
 }
 
@@ -73,20 +82,21 @@ void FxPanelItem::updateStyleSheet(){
     style()->unpolish(this);
     style()->polish(this);
     update();
+    //qWarning() << "bypassed: " << ((pluginIsBypassed()) ? "true" : "false");
 }
 
 void FxPanelItem::setPlugin(Audio::Plugin* plugin){
     this->plugin = plugin;
     this->label->setText( plugin->getName());
-    this->button->setVisible(true);
-    this->button->setChecked(!plugin->isBypassed());
+    this->bypassButton->setVisible(true);
+    this->bypassButton->setChecked(!plugin->isBypassed());
     updateStyleSheet();
 }
 
 void FxPanelItem::unsetPlugin(){
     this->plugin = nullptr;
     this->label->setText("");
-    this->button->setVisible(false);
+    this->bypassButton->setVisible(false);
 
     updateStyleSheet();
 }
@@ -160,7 +170,7 @@ void FxPanelItem::on_fxMenuActionTriggered(QAction* action){
 void FxPanelItem::on_actionMenuTriggered(QAction* a){
     if(containPlugin()){
         if( a->text() == "bypass"){
-            button->click();//simulate a click in the bypass button
+            bypassButton->click();//simulate a click in the bypass button
         }
         else if(a->text() == "remove"){
             Audio::Plugin* plugin = this->plugin;

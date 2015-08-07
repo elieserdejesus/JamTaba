@@ -29,7 +29,8 @@ public:
     inline bool containPlugin() const{ return plugin; }
     bool pluginIsBypassed();
     const Audio::Plugin* getAudioPlugin() const{return plugin;}
-    Q_PROPERTY(bool pluginBypassed READ pluginIsBypassed())//to use in stylesheet
+    Q_PROPERTY(bool bypassed READ pluginIsBypassed())//to use in stylesheet
+    Q_PROPERTY(bool containPlugin READ containPlugin())//to use in stylesheet
 protected:
     void mousePressEvent ( QMouseEvent * event ) ;
     void paintEvent(QPaintEvent* );
@@ -42,8 +43,9 @@ private slots:
     void on_fxMenuActionTriggered(QAction* a);
 private:
     Audio::Plugin* plugin;
-    QPushButton* button;
+    QPushButton* bypassButton;
     QLabel* label;
+    //QPushButton* menuButton;
     Controller::MainController* mainController;//used to ask about plugins
 
     void showPluginGui(Audio::Plugin *plugin);
