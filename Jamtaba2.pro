@@ -1,4 +1,4 @@
-#adicionar diretórios default para scanear plugins caso a lista de diretórios esteja vazia na inicialização
+#dar feedback quando plugin for desativado, deixar label mais escura
 
 # Se adiciono o addicitve drums e fecho agora não dá mais erro. Mas se ele já esta na lista
     #de plugins e é carregado durante a abertura do programa dá erro na finalização.
@@ -95,6 +95,8 @@
 
 
 #nomes grandes estragam os nome dos canais nas entradas, os nomes dos canais ninjam, etc. Uma AutoElidedQLabel seria legal.
+
+#adicionar diretórios default para scanear plugins no win 64
 
 #3 - Preciso melhorar o resampling aplicando o low pass.
     #o low pass mais simples: https://ccrma.stanford.edu/~jos/fp/Definition_Simplest_Low_Pass.html

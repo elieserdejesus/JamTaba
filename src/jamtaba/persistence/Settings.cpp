@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QDir>
 #include <QList>
+#include <QSettings>
 
 using namespace Persistence;
 
@@ -277,7 +278,8 @@ void Settings::removeVstScanPath(int index){
     vstSettings.scanPaths.removeAt(index);
 }
 
-QStringList Settings::getVstScanPaths() const{
+QStringList Settings::getVstScanPaths() const {
+
     return vstSettings.scanPaths;
 }
 
