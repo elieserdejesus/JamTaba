@@ -36,25 +36,34 @@ FxPanel{
 
 FxPanelItem{
     background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 30), stop:1 rgba(0, 0, 0, 50));
-    background-image: url(':/images/arrow-down-lighter.png');
     background-position: center right;
     background-repeat: none;
     max-height: 14px;
     width: 100%;
     border-radius: 2px;
 }
+FxPanelItem[containPlugin="false"]{
+    background-image: url(':/images/arrow-down-lighter.png');
+}
+FxPanelItem[containPlugin="true"]{
+    background-image: none;
+}
+
 FxPanelItem > QLabel{
     qproperty-alignment: AlignCenter;
     font-size: 8pt;
     color: rgba(255, 255, 255, 120);
     margin: 0px;
 }
-
-FxPanelItem[pluginBypassed="true"] > QLabel{
-    background: rgba(0, 0, 0, 60);
-    color: rgb(25, 25, 25);
+/* Não funcionou
+FxPanelItem[bypassed] > QLabel{
+    color: red;
 }
+*/
 
+FxPanelItem:hover{
+    background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgba(0, 0, 0, 50), stop:1 rgba(0, 0, 0, 70));
+}
 
 FxPanelItem > QPushButton{
      max-width: 10px;
@@ -75,9 +84,7 @@ FxPanelItem > QPushButton:checked{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
 }
 
-FxPanelItem:hover{
-    background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgba(0, 0, 0, 50), stop:1 rgba(0, 0, 0, 70));
-}
+
 /*----------------------*/
 QScrollBar:vertical, QScrollBar:horizontal {
     border: 1px solid rgba(0, 0, 0, 45);
