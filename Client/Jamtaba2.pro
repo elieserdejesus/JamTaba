@@ -1,3 +1,5 @@
+#no modo debug se conecto em uma sala e fecho a aplicação dá um erro no destrutor do ninjamController
+
 #Não estava deletando as tracks de input, por isso o plugin vst não era deletado, o destrutor
     #nunca era invocado e a DLL não era descarregada, gerando um erro no fechamento.
 # tirei o comentário do código que deleta a pista, tenho que ver se ainda tem o bug quando
