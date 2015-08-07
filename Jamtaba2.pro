@@ -1,11 +1,4 @@
-#dar feedback quando o usuário escolher noInput. Deixar a pista esmaecida seria legal.
-#Usar setEnabled não funcionou porque desabilita inclusive o combo de selação, o que
-#impossibilita que o usuário volte a deixar a pista ativa.
-
-#nomes grandes estragam os nome dos canais nas entradas, os nomes dos canais ninjam, etc. Uma AutoElidedQLabel seria legal.
-
 #adicionar diretórios default para scanear plugins caso a lista de diretórios esteja vazia na inicialização
-
 
 # Se adiciono o addicitve drums e fecho agora não dá mais erro. Mas se ele já esta na lista
     #de plugins e é carregado durante a abertura do programa dá erro na finalização.
@@ -101,7 +94,7 @@
 #4 - preciso testar com a fonte da fast track para ver se os outros canais estão realmente funcionando
 
 
-
+#nomes grandes estragam os nome dos canais nas entradas, os nomes dos canais ninjam, etc. Uma AutoElidedQLabel seria legal.
 
 #3 - Preciso melhorar o resampling aplicando o low pass.
     #o low pass mais simples: https://ccrma.stanford.edu/~jos/fp/Definition_Simplest_Low_Pass.html
