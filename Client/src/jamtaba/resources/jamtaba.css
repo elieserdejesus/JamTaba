@@ -676,6 +676,16 @@ LocalTrackView #inputPanel:hover{
     background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgba(0, 0, 0, 20), stop:1 rgba(0, 0, 0, 40));
 }
 
+LocalTrackView #inputSelectionIcon{
+    border: none;
+    margin: 0px;
+    padding: 0px;
+    max-width: 18px;
+    min-width: 18px;
+    background-position: center;
+    background-repeat: none;
+}
+
 LocalTrackView #inputSelectionButton{
     background-color: none;
     background-image: url(':/images/arrow-down.png');
@@ -685,6 +695,9 @@ LocalTrackView #inputSelectionButton{
     color: rgba(255,255, 255, 160);
     font-size: 7pt;
     text-align: left;
+    margin: 0px;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 /*+++++++++++++++++++++++++++++++++++++++++++++++*/
 

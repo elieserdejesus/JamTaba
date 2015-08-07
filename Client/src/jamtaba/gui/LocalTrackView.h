@@ -59,7 +59,7 @@ private:
 
     Audio::LocalInputAudioNode* inputNode;
 
-    bool inputIsUsedByMe(int inputIndexInAudioDevice) const;
+    bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;
 
     void init(int channelIndex, float initialGain, float initialPan, bool muted);
 private slots:

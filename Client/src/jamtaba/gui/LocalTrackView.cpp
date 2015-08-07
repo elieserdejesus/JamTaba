@@ -72,7 +72,7 @@ QWidget* LocalTrackView::createInputPanel(){
     inputPanel->setObjectName("inputPanel");
     inputPanel->setLayout(new QHBoxLayout(inputPanel));
     inputPanel->layout()->setContentsMargins(0, 0, 0, 0);
-    inputPanel->layout()->setSpacing(3);
+    inputPanel->layout()->setSpacing(0);
     inputPanel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
     this->inputTypeIconLabel = createInputTypeIconLabel(inputPanel);
@@ -86,7 +86,7 @@ QLabel* LocalTrackView::createInputTypeIconLabel(QWidget *parent){
     QLabel* label = new QLabel(parent);
     label->setObjectName("inputSelectionIcon");
     label->setTextFormat(Qt::RichText);
-    label->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding));
+    label->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding));
     return label;
 }
 
@@ -116,6 +116,7 @@ void LocalTrackView::on_inputSelectionButtonClicked(){
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void LocalTrackView::on_noInputMenuSelected(){
     mainController->setInputTrackToNoInput(getTrackID());
+    setUnlightStatus(true);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -152,7 +153,7 @@ QMenu* LocalTrackView::createMonoInputsMenu(QMenu* parent){
 void LocalTrackView::on_monoInputMenuSelected(QAction *action){
     int selectedInputIndexInAudioDevice = action->data().toInt();
     mainController->setInputTrackToMono(getTrackID(), selectedInputIndexInAudioDevice);
-
+    setUnlightStatus(false);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -198,7 +199,7 @@ QMenu* LocalTrackView::createStereoInputsMenu(QMenu* parent){
 void LocalTrackView::on_stereoInputMenuSelected(QAction *action){
     int firstInputIndexInAudioDevice = action->data().toInt();
     mainController->setInputTrackToStereo(getTrackID(), firstInputIndexInAudioDevice);
-
+    setUnlightStatus(false);
 }
 
 QString LocalTrackView::getInputChannelNameOnly(int inputIndex){
@@ -242,7 +243,10 @@ void LocalTrackView::refreshInputSelectionName(){
     inputSelectionButton->setText(elidedName);
 
     //set the icon
-    this->inputTypeIconLabel->setText("<img src=" + iconFile + "/>");
+    this->inputTypeIconLabel->setStyleSheet("background-image: url(" + iconFile + ");");
+    //this->inputTypeIconLabel->setText("<img src=" + iconFile + "/>");
+
+    updateGeometry();
 
     update();
 }
@@ -268,7 +272,7 @@ QMenu* LocalTrackView::createMidiInputsMenu(QMenu* parent){
 void LocalTrackView::on_MidiInputMenuSelected(QAction *action){
     int midiDeviceIndex = action->data().toInt();
     mainController->setInputTrackToMIDI(getTrackID(), midiDeviceIndex);
-
+    setUnlightStatus(false);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
