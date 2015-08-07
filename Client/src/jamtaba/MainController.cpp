@@ -419,6 +419,17 @@ void MainController::addVstScanPath(QString path){
     settings.addVstScanPath(path);
 }
 
+void MainController::addDefaultVstScanPath(){
+    //#if _WIN32
+        QSettings settings("HKEY_LOCAL_MACHINE\\SOFTWARE\\VST\\", QSettings::NativeFormat);
+        QString VSTPluginsPath = settings.value("VSTPluginsPath").toString();
+        if(!VSTPluginsPath.isEmpty() && QDir(VSTPluginsPath).exists()){
+            qWarning() << "adding VST scan path: " << VSTPluginsPath;
+            mainController->addVstScanPath(VSTPluginsPath);
+        }
+    //#endif
+}
+
 void MainController::removeVstScanPath(int index){
    settings.removeVstScanPath(index);
 }
@@ -465,6 +476,7 @@ void MainController::scanPlugins(){
     //ConfigStore::clearVstCache();
     pluginFinder.clearScanPaths();
     QStringList scanPaths = settings.getVstScanPaths();
+
     foreach (QString path, scanPaths) {
         pluginFinder.addPathToScan(path);
     }

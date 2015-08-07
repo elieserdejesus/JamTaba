@@ -151,7 +151,7 @@ public:
     //VST paths
     void addVstScanPath(QString path);
     void removeVstScanPath(int index);
-    QStringList getVstScanPaths() const;
+    QStringList getVstScanPaths() const ;
 
     //++++++++++++++ Metronome ++++++++++
     void setMetronomeSettings(float gain, float pan, bool muted);

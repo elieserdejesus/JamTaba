@@ -168,6 +168,7 @@ public:
     void storeMetronomeSettings(float metronomeGain, float metronomePan, bool metronomeMuted);
     void storeIntervalProgressShape(int shape);
     void addVstScanPath(QString path);
+    void addDefaultVstScanPath();//add vst path from registry
     void removeVstScanPath(int index);
     void clearVstCache();
     void storeWindowSettings(bool maximized, QPointF location);
