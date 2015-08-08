@@ -1,4 +1,6 @@
-#no modo debug se conecto em uma sala e fecho a aplicação dá um erro no destrutor do ninjamController
+#no modo debug se conecto em uma sala e fecho a aplicação dá um erro no destrutor do ninjamController.
+    #Vi que o problema é que o MainController deleta o ninjamController no seu destrutor. SE eu comento
+    #essa linha o erro não acontece mais. Não consegui descobrir o motivo ainda.
 
 #Não estava deletando as tracks de input, por isso o plugin vst não era deletado, o destrutor
     #nunca era invocado e a DLL não era descarregada, gerando um erro no fechamento.
