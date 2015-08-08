@@ -19,6 +19,7 @@ public:
     LocalTrackGroupView(int index);
     ~LocalTrackGroupView();
     void refreshInputSelectionName(int inputTrackIndex);
+    void refreshInputSelectionNames();
     QList<LocalTrackView*> getTracks() const;
     virtual void addTrackView(BaseTrackView *trackView);
     inline int getIndex() const{return index;}
