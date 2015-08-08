@@ -632,6 +632,9 @@ void MainFrame::on_IOPropertiesChanged(int midiDeviceIndex, int audioDevice, int
     //audioDriver->setProperties(selectedDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
 #endif
     mainController->updateInputTracksRange();
+    foreach (LocalTrackGroupView* channel, localChannels) {
+        channel->refreshInputSelectionNames();
+    }
     mainController->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, audioDevice, sampleRate, bufferSize, midiDeviceIndex);
 
     mainController->getMidiDriver()->start();

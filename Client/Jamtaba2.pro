@@ -1,21 +1,4 @@
-#no modo debug se conecto em uma sala e fecho a aplicação dá um erro no destrutor do ninjamController.
-    #Vi que o problema é que o MainController deleta o ninjamController no seu destrutor. SE eu comento
-    #essa linha o erro não acontece mais. Não consegui descobrir o motivo ainda.
-
-#Não estava deletando as tracks de input, por isso o plugin vst não era deletado, o destrutor
-    #nunca era invocado e a DLL não era descarregada, gerando um erro no fechamento.
-# tirei o comentário do código que deleta a pista, tenho que ver se ainda tem o bug quando
-    #deleto um canal no Reaninjam.
-
-
-# Se adiciono o addicitve drums e fecho agora não dá mais erro. Mas se ele já esta na lista
-    #de plugins e é carregado durante a abertura do programa dá erro na finalização.
-        #Threads diferentes? Realmente não dá erro se eu abro o programa sem plugins,
-            #insiro o Addicive e fecho. Mas se o programa abre com o Addicive na lista de
-            #plugins dá o erro.
-
-
-
+#mudei do asio4all para FAst track mas as entradas continuaram como "microfones"
 
 #parece que o stream das salas não está rolando mesmo.
     #não consegui testar os streams adequadamente ainda
@@ -23,9 +6,16 @@
 #acho que o stream do ninjamer não está rolando
 
 
-#se ligo a fast enquanto o Jamtaba está aberto ela não aparece na lista. Algum tipo de cache na portaudio?
+#Não estava deletando as tracks de input, por isso o plugin vst não era deletado, o destrutor
+    #nunca era invocado e a DLL não era descarregada, gerando um erro no fechamento.
+# tirei o comentário do código que deleta a pista, tenho que ver se ainda tem o bug quando
+    #deleto um canal no Reaninjam.
 
-#mudei do asio4all para FAst track mas as entradas continuaram como "microfones"
+# Se adiciono o addicitve drums e fecho agora não dá mais erro. Mas se ele já esta na lista
+    #de plugins e é carregado durante a abertura do programa dá erro na finalização.
+        #Threads diferentes? Realmente não dá erro se eu abro o programa sem plugins,
+            #insiro o Addicive e fecho. Mas se o programa abre com o Addicive na lista de
+            #plugins dá o erro.
 
 
 #Prioridades para um primeiro release
@@ -86,6 +76,10 @@
 #4 - preciso testar com a fonte da fast track para ver se os outros canais estão realmente funcionando
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+
+
+#se ligo a fast enquanto o Jamtaba está aberto ela não aparece na lista. Algum tipo de cache na portaudio?
 
 #separar o carregamento do plugin VST da instância. No momento uma instância é criada e depois é que o plugin é carregado. Pra mim
 #isso é um bad design

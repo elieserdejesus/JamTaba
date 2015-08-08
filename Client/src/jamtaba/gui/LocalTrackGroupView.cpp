@@ -45,6 +45,13 @@ void LocalTrackGroupView::refreshInputSelectionName(int inputTrackIndex){
     }
 }
 
+void LocalTrackGroupView::refreshInputSelectionNames(){
+    QList<LocalTrackView*> tracks = getTracks();
+    foreach (LocalTrackView* trackView, tracks) {
+        trackView->refreshInputSelectionName();
+    }
+}
+
 void LocalTrackGroupView::on_toolButtonClicked()
 {
     QMenu menu;
