@@ -1,4 +1,36 @@
-#mudei do asio4all para FAst track mas as entradas continuaram como "microfones"
+# se eu seleciono midi como input nenhum áudio e gerado para a pista. No entanto, se eu seleciono mono ou estereo
+    #eu consigo tocar usando o controlador, porque a minha pista local não estou sempre mandando os eventos midi para
+    #o VST e depois processo esse VST no process() da pista local.
+
+    #Mesmo que todos os midi devices estejam habilitados globalmente eu só deveria processar os eventos desses
+        #devices se a pista local estiver usando o device.
+        #preciso consumir os eventos midi o tempo todo para evitar enfileiramento, mando o buffer MIDI
+            #para o process replacing como estou fazendo com o inputBuffer de audio, cada pista se vira
+                #para pegar o que lhe interessa no buffer de midi de acordo com o device escolhido pelo usuário
+
+#como vou permitir vários devices midi? Pelo que vi no portaudio.h o único jeito seria abrir vários streams midi, um para cada device.
+#acho que é melhor deixar isso para mais adiante, por que também terei que mudar a forma como estou lendo as mensagens midi e passando
+#elas adiante. Como cada pista local vai poder ler de um midi device diferente eu acho que a solução seria criar um MidiBuffer e disponibilizá-lo
+#para o processReplacing como eu fiz com o SamplesBuffer. Esse MidiBuffer teria vários canais, cada canal contendo as mensagens midi de um device
+#diferente
+
+#Preciso de um dialogo de IO MIDI? Acho que preciso para não ficar abrindo todos os streams de midi disponíveis na máquina e impedir
+    #que os usuários usem um device no Jamtaba e outro device midi em outro software. É a mesma situação dos canais ASIO, não
+    #posso simplesmente abrir tudo e usar apenas um subconjunto dos canais, impedindo o usuário de usar outras aplicações.
+
+# MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais. Testar com o controlador AKAI também para ver
+
+
+#dialogo de IO do midi - testar novamente, ver se a seleção do midi device está funcionando
+
+#também preciso tratar a situação onde o usuário está usando midi como entrada e o driver midi é alterado nas preferencias
+
+#abri a aplicação com a fast track e deu pau porque 192 é uma SR inválida. Tenho que pedir as SR válidas para cada device.
+#já aproveitar para pedir os buffer sizes
+
+#consegui entrar no jamtaba com a fast track desligada. O canal apareceu como "not connected"
+
+#não consegui votar para trocar bpi
 
 #parece que o stream das salas não está rolando mesmo.
     #não consegui testar os streams adequadamente ainda
@@ -24,26 +56,12 @@
     #Ver o usode memória para não queimar o filme
     #auto updater
 
-#também preciso tratar a situação onde o usuário está usando midi como entrada e o driver midi é alterado nas preferencias
-
-
-#como vou permitir vários devices midi? Pelo que vi no portaudio.h o único jeito seria abrir vários streams midi, um para cada device.
-#acho que é melhor deixar isso para mais adiante, por que também terei que mudar a forma como estou lendo as mensagens midi e passando
-#elas adiante. Como cada pista local vai poder ler de um midi device diferente eu acho que a solução seria criar um MidiBuffer e disponibilizá-lo
-#para o processReplacing como eu fiz com o SamplesBuffer. Esse MidiBuffer teria vários canais, cada canal contendo as mensagens midi de um device
-#diferente
 
 #deu pau com o kontakt também. Só está carregando plugins pequenos?
 
 #deu pau quando tentei colocar o Addictive Drums
 
-#abri a aplicação com a fast track e deu pau porque 192 é uma SR inválida. Tenho que pedir as SR válidas para cada device.
-#já aproveitar para pedir os buffer sizes
 
-
-#consegui entrar no jamtaba com a fast track desligada. O canal apareceu como "not connected"
-
-#não consegui votar para trocar bpi
 
 #preciso testar nome de usuário com caracter especial para ver se o utf está funcionando
 
@@ -52,10 +70,6 @@
 
 # a mensagem de crowded está errada?
 
-
-# MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais. Testar com o controlador AKAI também para ver
-
-#dialogo de IO do midi - testar novamente, ver se a seleção do midi device está funcionando
 
 #não consegui resolver o bug que acontece quando as pistas são removidas, por hora apenas comentei a linha que delete as pistas no NinjamJamRoomController. Ou seja, a memoria não está sendo liberada.
 #Agora estou usando vector<float> para guardar as amostras, ver o que acontece.
