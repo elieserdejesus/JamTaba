@@ -112,6 +112,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
       currentStreamingRoomID(-1000),
       ninjamService(nullptr),
       ninjamController(nullptr),
+      mutex(QMutex::Recursive),
       started(false),
       vstHost(Vst::VstHost::getInstance()),
       //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
@@ -493,7 +494,7 @@ void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::Sampl
 //    if(!threadHandle){
 //        threadHandle = QThread::currentThreadId();
 //    }
-//    //QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
 //    checkThread("doAudioProcess();");
 
     MidiBuffer midiBuffer = midiDriver->getBuffer();
@@ -793,16 +794,15 @@ void MainController::stop()
             //QMutexLocker locker(&mutex);
             this->audioDriver->release();
             this->midiDriver->release();
+
+            if(ninjamController){
+                ninjamController->stop();
+            }
+            started = false;
         }
 
-
-
-        //qDebug() << "disconnecting...";
         loginService->disconnect();
-        if(ninjamController){
-            ninjamController->stop();
-        }
-        started = false;
+
     }
 }
 
