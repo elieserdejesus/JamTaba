@@ -150,7 +150,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     //recorder = new SamplesBufferRecorder(fileName, audioDriver->getSampleRate());
 
     midiDriver = new PortMidiDriver();
-    midiDriver->setInputDeviceIndex(settings.getLastMidiDeviceIndex());
+    //midiDriver->setInputDeviceIndex(settings.getLastMidiDeviceIndex());
 
     QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromLoginServer()));
 
@@ -357,7 +357,7 @@ void MainController::setInputTrackToStereo(int localChannelIndex, int firstInput
 void MainController::setInputTrackToMIDI(int localChannelIndex, int midiDevice){
     Audio::LocalInputAudioNode* inputTrack = getInputTrack(localChannelIndex);
     if(inputTrack){
-        midiDriver->setInputDeviceIndex(midiDevice);
+        //midiDriver->setInputDeviceIndex(midiDevice);
         inputTrack->setMidiInputSelection(midiDevice);
         emit inputSelectionChanged(localChannelIndex);
         if(isPlayingInNinjamRoom()){

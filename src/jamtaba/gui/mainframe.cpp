@@ -622,7 +622,7 @@ void MainFrame::on_IOPropertiesChanged(int midiDeviceIndex, int audioDevice, int
     //bool midiDeviceChanged =  midiDeviceIndex
 
     Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
-    midiDriver->setInputDeviceIndex(midiDeviceIndex);
+    //midiDriver->setInputDeviceIndex(midiDeviceIndex);
 
 #ifdef _WIN32
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();

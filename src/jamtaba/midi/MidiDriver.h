@@ -2,6 +2,7 @@
 #define MIDIDRIVER_H
 
 #include <QtGlobal>
+#include <QMap>
 
 namespace Midi {
 
@@ -9,14 +10,16 @@ namespace Midi {
 struct MidiMessage{
     qint32 data;
     qint32 timestamp;
+    int sourceDeviceIndex;
 
-    MidiMessage(qint32 data, qint32 timestamp){
+    MidiMessage(qint32 data, qint32 timestamp, int sourceDeviceIndex){
         this->data = data;
         this->timestamp = timestamp;
+        this->sourceDeviceIndex = sourceDeviceIndex;
     }
 
     MidiMessage(){
-        this->data = this->timestamp = 0;
+        this->data = this->timestamp = this->sourceDeviceIndex = 0;
     }
 };
 
@@ -47,40 +50,19 @@ public:
     virtual void release() = 0;
 
     virtual bool hasInputDevices() const = 0;
-    //virtual void initialize() = 0;
 
     virtual int getMaxInputDevices() const = 0;
+
     virtual const char* getInputDeviceName(int index) const = 0;
     virtual MidiBuffer getBuffer() = 0;
-    virtual int getInputDeviceIndex() const = 0;
-    virtual void setInputDeviceIndex(int index) = 0;
+    //virtual int getInputDeviceIndex() const = 0;
+    //virtual void setInputDeviceIndex(int deviceIndex) = 0;
 
-    /*
+    virtual void setDeviceGlobalEnabledStatus(int deviceIndex, bool enabled);
+    virtual bool deviceIsGloballyEnabled(int deviceIndex) const;
 
-    //virtual int getMaxInputs() const = 0;
-
-    //virtual int getMaxOutputs() const = 0;
-
-    //virtual int getInputs() const = 0;
-    //virtual int getFirstInput() const = 0;
-    //virtual int getOutputs() const = 0;
-    //virtual int getFirstOutput() const = 0;
-
-
-
-    //virtual int getOutputDeviceIndex() const = 0;
-    //virtual void setOutputDeviceIndex(int index) = 0;
-
-    virtual const char* getInputDeviceName(int index) const = 0;
-    virtual const char* getOutputDeviceName(int index) const = 0;
-    virtual int getDevicesCount() const = 0;
-
-    virtual const char* getInputChannelName(unsigned const int index) const = 0;
-    virtual const char* getOutputChannelName(unsigned const int index) const = 0;
-
-    virtual int getSampleRate() const = 0;
-    virtual int getBufferSize() const = 0;
-    */
+protected:
+    QMap<int, bool> inputDevicesEnabledStatuses;//stode the globally enabled midi input devices
 };
 
 }

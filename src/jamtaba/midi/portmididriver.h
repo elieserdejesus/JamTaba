@@ -3,6 +3,7 @@
 
 #include "MidiDriver.h"
 #include "portmidi.h"
+#include <QList>
 
 namespace Midi {
 
@@ -19,17 +20,18 @@ public:
     virtual void release();
 
     virtual bool hasInputDevices() const;
-    //virtual void initialize();
     virtual int getMaxInputDevices() const;
     virtual const char *getInputDeviceName(int index) const;
     virtual MidiBuffer getBuffer();
-    virtual int getInputDeviceIndex() const;
-    virtual void setInputDeviceIndex(int index);
+    //virtual int getInputDeviceIndex() const;
+    //virtual void setInputDeviceIndex(int index);
 
 private:
-    PmDeviceID deviceId;
-    PmStream* stream;
-    //QList<PmEvent> eventQueue;
+    //PmDeviceID deviceId;
+    //PmStream* stream;
+    QList<PmStream*> streams;
+
+    int getDeviceIDFromGlobalIndex(int globalIndex);
 };
 
 }

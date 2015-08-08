@@ -53,3 +53,13 @@ MidiDriver::~MidiDriver()
 
 }
 
+void MidiDriver::setDeviceGlobalEnabledStatus(int deviceIndex, bool enabled){
+    inputDevicesEnabledStatuses.insert(deviceIndex, enabled);
+}
+
+bool MidiDriver::deviceIsGloballyEnabled(int deviceIndex) const{
+    if(inputDevicesEnabledStatuses.contains(deviceIndex)){
+        return inputDevicesEnabledStatuses[deviceIndex];
+    }
+    return false;
+}
