@@ -54,6 +54,8 @@ public:
     virtual inline int getSampleRate() const {return sampleRate;}
     virtual inline int getBufferSize() const {return bufferSize;}
 
+    virtual QList<int> getValidSampleRates(int deviceIndex) const = 0;
+
     virtual int getMaxInputs() const = 0;//return max inputs for an audio device. My fast track ultra (8 channels) return 8, etc.
     virtual int getMaxOutputs() const = 0;
 

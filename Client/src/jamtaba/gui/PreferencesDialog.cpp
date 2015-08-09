@@ -179,12 +179,13 @@ void PreferencesDialog::populateLastOutputCombo()
 void PreferencesDialog::populateSampleRateCombo()
 {
     ui->comboSampleRate->clear();
-    ui->comboSampleRate->addItem("44100", 44100);
-    ui->comboSampleRate->addItem("48000", 48000);
-    ui->comboSampleRate->addItem("96000", 96000);
-    ui->comboSampleRate->addItem("192000", 192000);
 
-    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
+    AudioDriver* audioDriver = mainController->getAudioDriver();
+    QList<int> sampleRates = audioDriver->getValidSampleRates( audioDriver->getOutputDeviceIndex());
+    foreach (int sampleRate, sampleRates) {
+        ui->comboSampleRate->addItem(QString::number(sampleRate), sampleRate);
+    }
+
     ui->comboSampleRate->setCurrentText(QString::number( audioDriver->getSampleRate()));
 }
 
@@ -215,7 +216,7 @@ void PreferencesDialog::on_comboAsioDriver_activated(int index)
 #endif
     populateFirstInputCombo();
     populateFirstOutputCombo();
-
+    populateSampleRateCombo();
 }
 
 void PreferencesDialog::on_comboFirstInput_currentIndexChanged(int /*index*/)
