@@ -1,15 +1,4 @@
 
-#Kontak deu pau quando inseri, travou tudo
-
-#dialogo de preferencias midi para escolher midi devices ativos
-
-#Preciso de um dialogo de IO MIDI? Acho que preciso para não ficar abrindo todos os streams de midi disponíveis na máquina e impedir
-    #que os usuários usem um device no Jamtaba e outro device midi em outro software. É a mesma situação dos canais ASIO, não
-    #posso simplesmente abrir tudo e usar apenas um subconjunto dos canais, impedindo o usuário de usar outras aplicações.
-
-#dialogo de IO do midi - testar novamente, ver se a seleção do midi device está funcionando
-
-#também preciso tratar a situação onde o usuário está usando midi como entrada e o driver midi é alterado nas preferencias
 
 #abri a aplicação com a fast track e deu pau porque 192 é uma SR inválida. Tenho que pedir as SR válidas para cada device.
 #já aproveitar para pedir os buffer sizes
@@ -18,7 +7,9 @@
 
 #não consegui votar para trocar bpi
 
-#parece que o stream das salas não está rolando mesmo.
+#Kontak deu pau quando inseri, travou tudo
+
+#parece que o stream das salas não está rolando mesmo. Vi que tinha problema na assinatura dos métodos.
     #não consegui testar os streams adequadamente ainda
 #acho que quando fico alternando entre os streams das salas não está funcionando muito bem, parece que o botão ficou pressionado.
 #acho que o stream do ninjamer não está rolando
@@ -71,9 +62,7 @@
 
 #BUGS relacionados com o diálogo de audioIO:
 #1 - quando seleciono as entradas sPDIF da fast track a aplicação encerra
-#2 - quando seleciono saídas que não são 1 e 2 dá um crash também.
 #3 - Com a fast track quando seleciono as entradas e simplesmente volto para a tela de audio IO o valor do segundo combo está bugado.
-#4 - preciso testar com a fonte da fast track para ver se os outros canais estão realmente funcionando
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 

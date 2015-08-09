@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include <QFileDialog>
+#include <QCheckBox>
 #include "../audio/core/AudioDriver.h"
 #include "../midi/MidiDriver.h"
 #include "../persistence/Settings.h"
@@ -25,6 +26,7 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
 
     ui->prefsTab->setCurrentIndex(0);
     populateAudioTab();
+    populateMidiTab();
 }
 
 void PreferencesDialog::selectAudioTab(){
@@ -38,22 +40,30 @@ void PreferencesDialog::selectVstPluginsTab(){
     ui->prefsTab->setCurrentWidget(ui->tabVST);
 }
 
-void PreferencesDialog::populateMidiInputCombo(){
+
+void PreferencesDialog::populateMidiTab(){
+    //clear
+    QLayoutItem *item;
+    while ((item = ui->midiContentPanel->layout()->takeAt(0)) != 0) {
+        ui->midiContentPanel->layout()->removeItem(item);
+        delete item;
+    }
+
     Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
-    int maxDevices = midiDriver->getMaxInputDevices();
-    ui->comboMidiInput->clear();
-    if(maxDevices > 0){
-        for (int i = 0; i < maxDevices; ++i) {
-            ui->comboMidiInput->addItem( QString( midiDriver->getInputDeviceName(i)));
+    int maxInputDevices = midiDriver->getMaxInputDevices();
+    if(maxInputDevices > 0){
+        QList<bool> midiInputsStatus = mainController->getSettings().getMidiInputDevicesStatus();
+        for (int i = 0; i < maxInputDevices; ++i) {
+            QCheckBox* checkBox = new QCheckBox(midiDriver->getInputDeviceName(i));
+            ui->midiContentPanel->layout()->addWidget( checkBox );
+            checkBox->setChecked( midiInputsStatus.isEmpty() || i > midiInputsStatus.size()-1 ||  midiInputsStatus.at(i) );
         }
-        int selectedDeviceIndex = mainController->getSettings().getLastMidiDeviceIndex();
-        if(selectedDeviceIndex >= 0 && selectedDeviceIndex < maxDevices){
-            ui->comboMidiInput->setCurrentIndex(selectedDeviceIndex);
-        }
+        ui->midiContentPanel->layout()->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding));
     }
     else{//no devices detected
-        ui->comboMidiInput->addItem( "No Midi Device Detected!" );
-        ui->comboMidiInput->setEnabled(false);
+        QLabel* label = new QLabel("No midi input device detected!");
+        ui->midiContentPanel->layout()->addWidget(label);
+        ui->midiContentPanel->layout()->setAlignment(label, Qt::AlignCenter);
     }
 }
 
@@ -229,16 +239,24 @@ void PreferencesDialog::on_okButton_released()
     int lastOut = ui->comboLastOutput->currentData().toInt();
     int sampleRate = ui->comboSampleRate->currentText().toInt();
     int bufferSize = ui->comboBufferSize->currentText().toInt();
-    int selectedMidiDevice = (ui->comboMidiInput->count() > 0) ? ui->comboMidiInput->currentIndex() : -1;
-    this->close();
-    emit ioChanged(selectedMidiDevice, selectedAudioDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
+
+    //build midi inputs devices status
+    QList<bool> midiInputsStatus;
+    QList<QCheckBox*> boxes = ui->midiContentPanel->findChildren<QCheckBox*>();
+    foreach (QCheckBox* check, boxes) {
+        midiInputsStatus.append(check->isChecked());
+    }
+
+    this->accept();
+
+    emit ioPreferencesChanged(midiInputsStatus, selectedAudioDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
 }
 
 void PreferencesDialog::on_prefsTab_currentChanged(int index)
 {
     switch(index){
         case 0: populateAudioTab(); break;
-        case 1: populateMidiInputCombo(); break;
+        case 1: populateMidiTab(); break;
         case 2: populateVstTab(); break;
     }
 }

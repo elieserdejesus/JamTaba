@@ -618,7 +618,7 @@ void MainFrame::on_preferencesClicked(QAction* action)
     else{
         dialog.selectVstPluginsTab();
     }
-    connect(&dialog, SIGNAL(ioChanged(int,int,int,int,int,int,int,int)), this, SLOT(on_IOPropertiesChanged(int, int,int,int,int,int,int,int)));
+    connect(&dialog, SIGNAL(ioPreferencesChanged(QList<bool>,int,int,int,int,int,int,int)), this, SLOT(on_IOPreferencesChanged(QList<bool>,int,int,int,int,int,int,int)));
     int result = dialog.exec();
     if(result == QDialog::Rejected){
         midiDriver->start();//restart audio and midi drivers if user cancel the preferences menu
@@ -628,13 +628,11 @@ void MainFrame::on_preferencesClicked(QAction* action)
     //audio driver parameters are changed in on_IOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.
 }
 
-void MainFrame::on_IOPropertiesChanged(int midiDeviceIndex, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)
-{
+void MainFrame::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize){
     //qDebug() << "midi device: " << midiDeviceIndex << endl;
     //bool midiDeviceChanged =  midiDeviceIndex
 
-    Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
-    //midiDriver->setInputDeviceIndex(midiDeviceIndex);
+
 
 #ifdef _WIN32
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
@@ -643,11 +641,18 @@ void MainFrame::on_IOPropertiesChanged(int midiDeviceIndex, int audioDevice, int
     //preciso de um outro on_audioIoPropertiesChanged que me dê o input e o output device
     //audioDriver->setProperties(selectedDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
 #endif
+    mainController->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, audioDevice, sampleRate, bufferSize, midiInputsStatus);
+
+    Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
+    midiDriver->setInputDevicesStatus(midiInputsStatus);
+
     mainController->updateInputTracksRange();
+
     foreach (LocalTrackGroupView* channel, localChannels) {
         channel->refreshInputSelectionNames();
     }
-    mainController->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, audioDevice, sampleRate, bufferSize, midiDeviceIndex);
+
+
 
     mainController->getMidiDriver()->start();
     mainController->getAudioDriver()->start();

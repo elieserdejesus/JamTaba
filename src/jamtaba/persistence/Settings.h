@@ -4,6 +4,7 @@
 #include <QPointF>
 #include <QJsonObject>
 #include <QList>
+#include <QMap>
 #include <QStringList>
 
 namespace Persistence{
@@ -41,9 +42,16 @@ public:
     int lastOut;
     int inputDevice;
     int outputDevice;
-    int midiDevice;
-
 };
+
+class MidiSettings : public SettingsObject{
+public:
+    MidiSettings();
+    void write(QJsonObject& out);
+    void read(QJsonObject in);
+    QList<bool> inputDevicesStatus;
+};
+
 //+++++++++++++++++++++++++++++++++++
 class MetronomeSettings : public SettingsObject{
 
@@ -117,6 +125,7 @@ private:
     QString fileDir;
     static QString fileName;
     AudioSettings audioSettings;
+    MidiSettings midiSettings;
     WindowSettings windowSettings;
     MetronomeSettings metronomeSettings;
     VstSettings vstSettings;
@@ -164,7 +173,7 @@ public:
     inline bool windowWasMaximized() const{return windowSettings.maximized;}
 
     //++++++++++++++++++++++++++++++++++++++++
-    void setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize, int midiDevice) ;
+    void setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize) ;
 
     inline int getFirstGlobalAudioInput() const {return audioSettings.firstIn;}
     inline int getLastGlobalAudioInput() const  {return audioSettings.lastIn;}
@@ -172,7 +181,9 @@ public:
     inline int getLastGlobalAudioOutput() const {return audioSettings.lastOut;}
     inline int getLastInputDevice() const       {return audioSettings.inputDevice;}
     inline int getLastOutputDevice() const      {return audioSettings.outputDevice;}
-    inline int getLastMidiDeviceIndex() const   {return audioSettings.midiDevice;}
+
+    inline void setMidiSettings(QList<bool> inputDevicesStatus){ midiSettings.inputDevicesStatus = inputDevicesStatus; }
+    inline QList<bool> getMidiInputDevicesStatus() const{return midiSettings.inputDevicesStatus;}
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     QString getLastUserName() const;

@@ -10,7 +10,7 @@ namespace Midi {
 class PortMidiDriver : public MidiDriver
 {
 public:
-    PortMidiDriver();
+    PortMidiDriver(QList<bool> deviceStatuses);
     ~PortMidiDriver();
 
     // MidiDriver interface
@@ -23,8 +23,8 @@ public:
     virtual int getMaxInputDevices() const;
     virtual const char *getInputDeviceName(int index) const;
     virtual MidiBuffer getBuffer();
-    //virtual int getInputDeviceIndex() const;
-    //virtual void setInputDeviceIndex(int index);
+
+    virtual void setInputDevicesStatus(QList<bool> statuses);
 
 private:
     //PmDeviceID deviceId;

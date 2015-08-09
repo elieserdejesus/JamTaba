@@ -53,13 +53,23 @@ MidiDriver::~MidiDriver()
 
 }
 
-void MidiDriver::setDeviceGlobalEnabledStatus(int deviceIndex, bool enabled){
-    inputDevicesEnabledStatuses.insert(deviceIndex, enabled);
+int MidiDriver::getFirstGloballyEnableInputDevice() const{
+    int total = getMaxInputDevices();
+    for (int i = 0; i < total; ++i) {
+        if(deviceIsGloballyEnabled(i)){
+            return i;
+        }
+    }
+    return -1;
+}
+
+void MidiDriver::setInputDevicesStatus(QList<bool> statuses){
+    this->inputDevicesEnabledStatuses = statuses;
 }
 
 bool MidiDriver::deviceIsGloballyEnabled(int deviceIndex) const{
-    if(inputDevicesEnabledStatuses.contains(deviceIndex)){
-        return inputDevicesEnabledStatuses[deviceIndex];
+    if(deviceIndex >= 0 && deviceIndex < inputDevicesEnabledStatuses.size()){
+        return inputDevicesEnabledStatuses.at(deviceIndex);
     }
     return false;
 }

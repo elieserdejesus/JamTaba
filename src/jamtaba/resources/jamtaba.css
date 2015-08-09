@@ -185,7 +185,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-pa
 }
 
 
-
+/*
 QCheckBox::indicator, QGroupBox::indicator  {
 background: url(:/images/check.png);
 width: 15px;
@@ -199,6 +199,7 @@ background: url(:/images/check_hover.png);
 QCheckBox::indicator:checked, QGroupBox::indicator:checked {
 background: url(:/images/check_checked.png);
 }
+*/
 
 /*
 QCheckBox::indicator:hover, QGroupBox::indicator:hover  {

@@ -172,7 +172,7 @@ public:
     void removeVstScanPath(int index);
     void clearVstCache();
     void storeWindowSettings(bool maximized, QPointF location);
-    void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize, int midiDevice) ;
+    void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize, QList<bool> midiInputStatus) ;
     //void storeInputChannels()
 
 

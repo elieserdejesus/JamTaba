@@ -151,8 +151,8 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     //QString fileName = "output.wav";
     //recorder = new SamplesBufferRecorder(fileName, audioDriver->getSampleRate());
 
-    midiDriver = new PortMidiDriver();
-    //midiDriver->setInputDeviceIndex(settings.getLastMidiDeviceIndex());
+    midiDriver = new PortMidiDriver(settings.getMidiInputDevicesStatus());
+
 
     QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromLoginServer()));
 
@@ -244,31 +244,47 @@ void MainController::updateInputTracksRange(){
 
     Audio::ChannelRange globalInputRange = audioDriver->getSelectedInputs();
 
-
     for (int trackIndex = 0; trackIndex < inputTracks.size(); ++trackIndex) {
         Audio::LocalInputAudioNode* inputTrack = getInputTrack(trackIndex);
-        Audio::ChannelRange inputTrackRange = inputTrack->getAudioInputRange();
-        inputTrack->setGlobalFirstInputIndex(globalInputRange.getFirstChannel());
-
-        //    //If global input range is reduced to 2 channels and user previous selected inputs 3+4 the input range need be corrected to avoid a beautiful crash :)
-        if(globalInputRange.getChannels() < inputTrackRange.getChannels()){
-            if(globalInputRange.isMono()){
-                setInputTrackToMono(trackIndex, globalInputRange.getFirstChannel());
-            }
-            else{
-                setInputTrackToNoInput(trackIndex);
-            }
-        }
 
         if(!inputTrack->isNoInput()){
-            //check if localInputRange is valid after the change in globalInputRange
-            int firstChannel = inputTrackRange.getFirstChannel();
-            int globalFirstChannel = globalInputRange.getFirstChannel();
-            if( firstChannel < globalFirstChannel || inputTrackRange.getLastChannel() > globalInputRange.getLastChannel()){
-                if(globalInputRange.isMono()){
-                    setInputTrackToMono(trackIndex, globalInputRange.getFirstChannel());
-                }else if(globalInputRange.getChannels() >= 2){
-                    setInputTrackToStereo(trackIndex, globalInputRange.getFirstChannel());
+            if(!inputTrack->isMidi()){//audio track
+                Audio::ChannelRange inputTrackRange = inputTrack->getAudioInputRange();
+                inputTrack->setGlobalFirstInputIndex(globalInputRange.getFirstChannel());
+
+                //    //If global input range is reduced to 2 channels and user previous selected inputs 3+4 the input range need be corrected to avoid a beautiful crash :)
+                if(globalInputRange.getChannels() < inputTrackRange.getChannels()){
+                    if(globalInputRange.isMono()){
+                        setInputTrackToMono(trackIndex, globalInputRange.getFirstChannel());
+                    }
+                    else{
+                        setInputTrackToNoInput(trackIndex);
+                    }
+                }
+
+                //check if localInputRange is valid after the change in globalInputRange
+                int firstChannel = inputTrackRange.getFirstChannel();
+                int globalFirstChannel = globalInputRange.getFirstChannel();
+                if( firstChannel < globalFirstChannel || inputTrackRange.getLastChannel() > globalInputRange.getLastChannel()){
+                    if(globalInputRange.isMono()){
+                        setInputTrackToMono(trackIndex, globalInputRange.getFirstChannel());
+                    }else if(globalInputRange.getChannels() >= 2){
+                        setInputTrackToStereo(trackIndex, globalInputRange.getFirstChannel());
+                    }
+                }
+            }
+            else{//midi track
+                int selectedDevice = inputTrack->getMidiDeviceIndex();
+                bool deviceIsValid = selectedDevice >= 0 && selectedDevice < midiDriver->getMaxInputDevices() && midiDriver->deviceIsGloballyEnabled(selectedDevice);
+                if(!deviceIsValid){
+                    //try another available midi input device
+                    int firstAvailableDevice = midiDriver->getFirstGloballyEnableInputDevice();
+                    if(firstAvailableDevice >= 0){
+                        setInputTrackToMIDI(trackIndex, firstAvailableDevice);
+                    }
+                    else{
+                        setInputTrackToNoInput(trackIndex);
+                    }
                 }
             }
         }
@@ -446,8 +462,9 @@ void MainController::storeWindowSettings(bool maximized, QPointF location){
     settings.setWindowSettings(maximized, location);
 }
 
-void MainController::storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize, int midiDevice){
-    settings.setAudioSettings(firstIn, lastIn, firstOut, lastOut, inputDevice, outputDevice, sampleRate, bufferSize, midiDevice);
+void MainController::storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize, QList<bool> midiInputsStatus){
+    settings.setAudioSettings(firstIn, lastIn, firstOut, lastOut, inputDevice, outputDevice, sampleRate, bufferSize);
+    settings.setMidiSettings(midiInputsStatus);
 }
 
 //+++++++++++++++++
