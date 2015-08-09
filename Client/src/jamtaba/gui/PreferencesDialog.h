@@ -1,5 +1,6 @@
 #pragma once
 #include <QDialog>
+#include <QMap>
 //#include <QCloseEvent>
 
 namespace Audio {    class AudioDriver; }
@@ -21,10 +22,8 @@ public:
     void selectVstPluginsTab();
 
 private slots:
-    //void on_comboAsioDriver_currentIndexChanged(int);
     void on_comboFirstInput_currentIndexChanged(int);
     void on_comboFirstOutput_currentIndexChanged(int);
-    //void on_comboAsioDriver_activated(const QString &arg1);
     void on_comboAsioDriver_activated(int index);
     void on_okButton_released();
 
@@ -36,10 +35,8 @@ private slots:
 
     void on_buttonScanVSTs_clicked();
 
-    //void on_okButton_clicked();
-
 signals:
-    void ioChanged(int selectedMidiDevice, int selectedAudioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
+    void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
 private:
     Ui::IODialog *ui;
     Controller::MainController* mainController;
@@ -53,19 +50,20 @@ private:
     void populateSampleRateCombo();
     void populateBufferSizeCombo();
     void populateAudioTab();
-    void populateVstTab();
 
-    //void clearLayout(QLayout* layout, bool deleteWidgets = true);
 
     //MIDI
-    void populateMidiInputCombo();
+    void populateMidiTab();
 
     //VST
+    void populateVstTab();
     void addVstScanPath(QString path);
     void createWidgetsToNewScanPath(QString path);
     void clearScanPathWidgets();
     QList<QPushButton*> scanPathButtons;
     //void removeVstScanPath(QString path);
+
+    //QMap<int, bool> midiInputsStatus;
 };
 
 

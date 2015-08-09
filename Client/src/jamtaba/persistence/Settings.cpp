@@ -65,7 +65,6 @@ void AudioSettings::read(QJsonObject in){
     lastOut =       getValueFromJson(in, "lastOut", 0);
     inputDevice =   getValueFromJson(in, "inputDevice", -1);
     outputDevice =  getValueFromJson(in, "outputDevice", -1);
-    midiDevice =    getValueFromJson(in, "midiDevice", -1);
 }
 
 void AudioSettings::write(QJsonObject &out){
@@ -77,8 +76,31 @@ void AudioSettings::write(QJsonObject &out){
     out["lastOut"]      = lastOut;
     out["inputDevice"]  = inputDevice;
     out["outputDevice"] = outputDevice;
-    out["midiDevice"]   = midiDevice;
 }
+//+++++++++++++++++++++++++++++
+MidiSettings::MidiSettings()
+    :SettingsObject("midi"){
+
+}
+
+void MidiSettings::write(QJsonObject &out){
+    QJsonArray midiArray;
+    foreach (bool state, inputDevicesStatus) {
+        midiArray.append(state);
+    }
+    out["inputsState"] = midiArray;
+}
+
+void MidiSettings::read(QJsonObject in){
+    inputDevicesStatus.clear();
+    if(in.contains("inputsState")){
+        QJsonArray inputsArray = in["inputsState"].toArray();
+        for (int i = 0; i < inputsArray.size(); ++i) {
+            inputDevicesStatus.append(inputsArray.at(i).toBool(true));
+        }
+    }
+}
+
 //+++++++++++++++++++++++++++++
 MetronomeSettings::MetronomeSettings()
     : SettingsObject("metronome"), pan(0), gain(0)
@@ -308,7 +330,7 @@ void Settings::setWindowSettings(bool windowIsMaximized, QPointF location){
 }
 
 //++++++++++++++++++++++++++++++++++++++++
-void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize, int midiDevice){
+void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize){
     audioSettings.bufferSize = bufferSize;
     audioSettings.sampleRate = sampleRate;
     audioSettings.firstIn = firstIn;
@@ -317,13 +339,14 @@ void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastO
     audioSettings.lastOut = lastOut;
     audioSettings.inputDevice = inputDevice;
     audioSettings.outputDevice = outputDevice;
-    audioSettings.midiDevice = midiDevice;
+    //audioSettings.midiDevice = midiDevice;
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Settings::load(){
     QList<Persistence::SettingsObject*> sections;
     sections.append(&audioSettings);
+    sections.append(&midiSettings);
     sections.append(&windowSettings);
     sections.append(&metronomeSettings);
     sections.append(&vstSettings);
@@ -370,6 +393,7 @@ void Settings::save(Persistence::InputsSettings inputsSettings){
     this->inputsSettings = inputsSettings;
     QList<Persistence::SettingsObject*> sections;
     sections.append(&audioSettings);
+    sections.append(&midiSettings);
     sections.append(&windowSettings);
     sections.append(&metronomeSettings);
     sections.append(&vstSettings);

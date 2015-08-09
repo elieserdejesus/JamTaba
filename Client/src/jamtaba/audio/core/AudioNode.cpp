@@ -208,6 +208,26 @@ LocalInputAudioNode::~LocalInputAudioNode(){
     qWarning() << "Destrutor LocalInputAudioNode";
 }
 
+bool LocalInputAudioNode::isMono() const{
+    return isAudio() && audioInputRange.isMono();
+}
+
+bool LocalInputAudioNode::isStereo() const{
+    return isAudio() && audioInputRange.getChannels() == 2;
+}
+
+bool LocalInputAudioNode::isNoInput() const{
+    return inputMode == DISABLED;
+}
+
+bool LocalInputAudioNode::isMidi() const{
+    return inputMode == MIDI;// && midiDeviceIndex >= 0;
+}
+
+bool LocalInputAudioNode::isAudio() const{
+    return inputMode == AUDIO;
+}
+
 void LocalInputAudioNode::setAudioInputSelection(int firstChannelIndex, int channelCount){
     audioInputRange = ChannelRange(firstChannelIndex, channelCount);
     if(audioInputRange.isMono())
@@ -216,16 +236,19 @@ void LocalInputAudioNode::setAudioInputSelection(int firstChannelIndex, int chan
         internalBuffer.setToStereo();
 
     midiDeviceIndex = -1;//disable midi input
+    inputMode = AUDIO;
 }
 
 void LocalInputAudioNode::setToNoInput(){
     audioInputRange = ChannelRange(-1, 0);//disable audio input
     midiDeviceIndex = -1;//disable midi input
+    inputMode = DISABLED;
 }
 
 void LocalInputAudioNode::setMidiInputSelection(int midiDeviceIndex){
     audioInputRange = ChannelRange(-1, 0);//disable audio input
     this->midiDeviceIndex = midiDeviceIndex;
+    inputMode = MIDI;
 }
 
 void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer){
@@ -239,18 +262,22 @@ void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffe
      * Other LocalInputAudioNode instances will read other channels from input SamplesBuffer.
      */
 
+    if(isNoInput()){
+        return;
+    }
+
     Midi::MidiBuffer filteredMidiBuffer(midiBuffer.getMessagesCount());
 
     internalBuffer.setFrameLenght(out.getFrameLenght());
     internalBuffer.zero();
-    if(midiDeviceIndex < 0){//using audio input
+    if(isAudio()){//using audio input
         if(audioInputRange.isEmpty()){
             return;
         }
         int inChannelOffset = audioInputRange.getFirstChannel() - globalFirstInputIndex;
         internalBuffer.set(in, inChannelOffset, audioInputRange.getChannels());
     }
-    else{//using midi input
+    else if(isMidi()){//just in case
         int total = midiBuffer.getMessagesCount();
         for (int m = 0; m < total; ++m) {
             //qWarning() << midiBuffer.getMessage(m).globalSourceDeviceIndex << " " << midiDeviceIndex;

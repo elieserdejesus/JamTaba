@@ -341,7 +341,7 @@
   </action>
   <action name="actionVstPreferences">
    <property name="text">
-    <string>VST Plugins</string>
+    <string>VST Plugins ...</string>
    </property>
   </action>
  </widget>

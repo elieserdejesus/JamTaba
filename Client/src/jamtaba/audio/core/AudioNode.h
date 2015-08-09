@@ -124,6 +124,27 @@ private:
 
 //++++++++++++++++++
 class LocalInputAudioNode : public AudioNode{
+
+public:
+    LocalInputAudioNode(int parentChannelIndex, bool isMono=true);
+    ~LocalInputAudioNode();
+    virtual void processReplacing(const SamplesBuffer&in, SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer &midiBuffer);
+    virtual int getSampleRate() const{return 0;}
+    inline int getChannels() const{return audioInputRange.getChannels();}
+    bool isMono() const;//{return audioInputRange.isMono();}
+    bool isStereo() const;//{return audioInputRange.getChannels() == 2;}
+    bool isNoInput() const;//{return audioInputRange.isEmpty();}
+    bool isMidi() const;//{return midiDeviceIndex >= 0;}
+    bool isAudio() const;
+    void setAudioInputSelection(int firstChannelIndex, int channelCount);
+    void setMidiInputSelection(int midiDeviceIndex);
+    void setToNoInput();
+    inline int getMidiDeviceIndex() const{return midiDeviceIndex;}
+    inline ChannelRange getAudioInputRange() const{return audioInputRange;}
+    inline void setGlobalFirstInputIndex(int firstInputIndex){this->globalFirstInputIndex = firstInputIndex;}
+    inline int getGroupChannelIndex() const {return channelIndex;}
+    const Audio::SamplesBuffer& getLastBuffer() const{return internalBuffer;}
+
 private:
     int globalFirstInputIndex; //store the first input index selected globally by users in preferences menu
     ChannelRange audioInputRange;
@@ -133,24 +154,10 @@ private:
 
     int midiDeviceIndex; //setted when user choose MIDI as input method
     int channelIndex; //the group index (a group contain N LocalInputAudioNode instances)
-public:
-    LocalInputAudioNode(int parentChannelIndex, bool isMono=true);
-    ~LocalInputAudioNode();
-    virtual void processReplacing(const SamplesBuffer&in, SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer &midiBuffer);
-    virtual int getSampleRate() const{return 0;}
-    inline int getChannels() const{return audioInputRange.getChannels();}
-    inline bool isMono() const{return audioInputRange.isMono();}
-    inline bool isStereo() const{return audioInputRange.getChannels() == 2;}
-    inline bool isNoInput() const{return audioInputRange.isEmpty();}
-    inline bool isMidi() const{return midiDeviceIndex >= 0;}
-    void setAudioInputSelection(int firstChannelIndex, int channelCount);
-    void setMidiInputSelection(int midiDeviceIndex);
-    void setToNoInput();
-    inline int getMidiDeviceIndex() const{return midiDeviceIndex;}
-    inline ChannelRange getAudioInputRange() const{return audioInputRange;}
-    inline void setGlobalFirstInputIndex(int firstInputIndex){this->globalFirstInputIndex = firstInputIndex;}
-    inline int getGroupChannelIndex() const {return channelIndex;}
-    const Audio::SamplesBuffer& getLastBuffer() const{return internalBuffer;}
+
+    enum InputMode{ AUDIO, MIDI, DISABLED };
+
+    InputMode inputMode = DISABLED;
 };
 //++++++++++++++++++++++++
 

@@ -4,15 +4,12 @@
 
 using namespace Midi;
 
-PortMidiDriver::PortMidiDriver()
+PortMidiDriver::PortMidiDriver(QList<bool> deviceStatuses)
 {
     Pm_Initialize();
 
-    //enable all input devices
-    int maxDevices = getMaxInputDevices();
-    for (int globalIndex = 0; globalIndex < maxDevices; ++globalIndex) {
-        this->setDeviceGlobalEnabledStatus(globalIndex, true);
-    }
+    setInputDevicesStatus(deviceStatuses);
+
 }
 
 PortMidiDriver::~PortMidiDriver()
@@ -22,9 +19,16 @@ PortMidiDriver::~PortMidiDriver()
 }
 
 
-//int PortMidiDriver::getInputDeviceIndex() const{
-//    return deviceId;
-//}
+void PortMidiDriver::setInputDevicesStatus(QList<bool> statuses){
+    MidiDriver::setInputDevicesStatus(statuses);
+    foreach (PmStream* stream, streams) {
+        if(stream){
+            Pm_Abort( stream );
+            Pm_Close( stream );
+        }
+    }
+    streams.clear();
+}
 
 int PortMidiDriver::getDeviceIDFromGlobalIndex(int globalIndex){
     //A port Midi não diferencia entrada de saida, então os índices precisam ser convertidos. Por exemplo, usar a entrada
@@ -48,17 +52,23 @@ void PortMidiDriver::start(){
     }
     stop();
 
-    foreach (int globalDeviceIndex, inputDevicesEnabledStatuses.keys()) {
-        if(inputDevicesEnabledStatuses[globalDeviceIndex]){//device is globally enabled?
+    for(int globalDeviceIndex=0; globalDeviceIndex < inputDevicesEnabledStatuses.size(); globalDeviceIndex++) {
+        if(inputDevicesEnabledStatuses.at(globalDeviceIndex)){//device is globally enabled?
             PmDeviceID deviceId = getDeviceIDFromGlobalIndex(globalDeviceIndex);
             const PmDeviceInfo* deviceInfo = Pm_GetDeviceInfo(deviceId);
             if(deviceInfo){
-                qWarning() << "Iniciando MIDI em " << Pm_GetDeviceInfo(deviceId)->name;
+                //qWarning() << "Iniciando MIDI em " << Pm_GetDeviceInfo(deviceId)->name;
                 PmStream* stream;
                 Pm_OpenInput(&stream, deviceId, nullptr, 256, nullptr, nullptr );
 
                 streams.append(stream);
             }
+            else{
+                streams.append(nullptr);//just to keep correct size in streams list
+            }
+        }
+        else{
+            streams.append(nullptr);//just to keep correct size in streams list
         }
 
     }
@@ -74,7 +84,7 @@ MidiBuffer PortMidiDriver::getBuffer(){
     MidiBuffer buffer(BUFFER_SIZE);
     int globalDeviceID = 0;
     foreach (PmStream* stream, streams) {
-        if(deviceIsGloballyEnabled(globalDeviceID)){
+        if(deviceIsGloballyEnabled(globalDeviceID) && stream){
             if(Pm_HasHostError(stream)){
                 char msg[64];
                 Pm_GetHostErrorText(msg, 64);
@@ -87,8 +97,9 @@ MidiBuffer PortMidiDriver::getBuffer(){
                     buffer.addMessage(MidiMessage(events[e].message, events[e].timestamp, globalDeviceID));
                 }
             }
-            globalDeviceID++;//process next device midi messages
+
         }
+        globalDeviceID++;//process next device midi messages
     }
     return buffer;
 }
@@ -97,7 +108,9 @@ MidiBuffer PortMidiDriver::getBuffer(){
 
 void PortMidiDriver::stop(){
     foreach (PmStream* stream, streams) {
-        Pm_Abort(stream);
+        if(stream){
+            Pm_Abort(stream);
+        }
     }
     //streams.clear();
 }
@@ -105,7 +118,9 @@ void PortMidiDriver::stop(){
 void PortMidiDriver::release(){
     stop();
     foreach (PmStream* stream, streams) {
-        Pm_Close(stream);
+        if(stream){
+            Pm_Close(stream);
+        }
     }
     Pm_Terminate();
 }

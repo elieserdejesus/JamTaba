@@ -37,10 +37,6 @@ public:
 
     virtual int getDevicesCount() const;
 
-//    virtual void setInputToMono(int inputIndex);
-//    virtual void setInputToStereo(int firstInputIndex);
-//    virtual void setInputToNoInput();
-
     //portaudio callback function
     friend int portaudioCallBack(const void *inputBuffer, void *outputBuffer,
         unsigned long framesPerBuffer,

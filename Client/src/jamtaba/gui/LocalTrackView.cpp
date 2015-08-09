@@ -234,8 +234,17 @@ void LocalTrackView::refreshInputSelectionName(){
         }
     }
     else{//using midi as input method
-        channelName = mainController->getMidiDriver()->getInputDeviceName(inputTrack->getMidiDeviceIndex());
-        iconFile = MIDI_ICON;
+        Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
+        int selectedDeviceIndex = inputTrack->getMidiDeviceIndex();
+        if( selectedDeviceIndex < midiDriver->getMaxInputDevices() && midiDriver->deviceIsGloballyEnabled(selectedDeviceIndex)){
+            channelName = midiDriver->getInputDeviceName(selectedDeviceIndex);
+            iconFile = MIDI_ICON;
+        }
+        else{
+            channelName = "No input";
+            iconFile = NO_INPUT_ICON;
+        }
+
     }
 
     //set the input name
@@ -255,15 +264,19 @@ void LocalTrackView::refreshInputSelectionName(){
 QMenu* LocalTrackView::createMidiInputsMenu(QMenu* parent){
     QMenu* midiInputsMenu = new QMenu("MIDI", parent);
     midiInputsMenu->setIcon(QIcon(MIDI_ICON));
-    int midiDevices = mainController->getMidiDriver()->getMaxInputDevices();
-    for (int d = 0; d < midiDevices; ++d) {
-        QAction* action = midiInputsMenu->addAction(QString(mainController->getMidiDriver()->getInputDeviceName(d)));
-        action->setData(d);//using midi device index as action data
-        action->setIcon(midiInputsMenu->icon());
+    int totalMidiDevices = mainController->getMidiDriver()->getMaxInputDevices();
+    int globallyEnabledMidiDevices = 0;
+    for (int d = 0; d < totalMidiDevices; ++d) {
+        if(mainController->getMidiDriver()->deviceIsGloballyEnabled(d)){
+            globallyEnabledMidiDevices++;
+            QAction* action = midiInputsMenu->addAction(QString(mainController->getMidiDriver()->getInputDeviceName(d)));
+            action->setData(d);//using midi device index as action data
+            action->setIcon(midiInputsMenu->icon());
+        }
     }
-    midiInputsMenu->setEnabled(midiDevices > 0);
+    midiInputsMenu->setEnabled(globallyEnabledMidiDevices > 0);
     if(!midiInputsMenu->isEnabled()){
-        midiInputsMenu->setTitle( midiInputsMenu->title() + "  (no MIDI devices detected)" );
+        midiInputsMenu->setTitle( midiInputsMenu->title() + "  (no MIDI devices detected or enabled in 'Preferences' menu')" );
     }
     QObject::connect(midiInputsMenu, SIGNAL(triggered(QAction*)), this, SLOT(on_MidiInputMenuSelected(QAction*)));
     return midiInputsMenu;

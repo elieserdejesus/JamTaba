@@ -56,14 +56,14 @@ public:
 
     virtual const char* getInputDeviceName(int index) const = 0;
     virtual MidiBuffer getBuffer() = 0;
-    //virtual int getInputDeviceIndex() const = 0;
-    //virtual void setInputDeviceIndex(int deviceIndex) = 0;
 
-    virtual void setDeviceGlobalEnabledStatus(int deviceIndex, bool enabled);
+
     virtual bool deviceIsGloballyEnabled(int deviceIndex) const;
+    int getFirstGloballyEnableInputDevice() const;
+    virtual void setInputDevicesStatus(QList<bool> statuses);
 
 protected:
-    QMap<int, bool> inputDevicesEnabledStatuses;//stode the globally enabled midi input devices
+    QList<bool> inputDevicesEnabledStatuses;//stode the globally enabled midi input devices
 };
 
 }
