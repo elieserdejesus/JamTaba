@@ -64,7 +64,7 @@ int NinjamTrackNode::getFramesToProcess(int targetSampleRate, int outFrameLenght
     return needResamplingFor(targetSampleRate) ? getInputResamplingLength(getSampleRate(), targetSampleRate, outFrameLenght) : outFrameLenght;
 }
 
-void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
+void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer){
     {
         QMutexLocker locker(&mutex);
         if(!isActivated()){
@@ -111,7 +111,7 @@ void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::Sa
                 qWarning() << internalBuffer.getFrameLenght() << " != " << out.getFrameLenght();
             }
         }
-        Audio::AudioNode::processReplacing(in, out, sampleRate);//process internal buffer pan, gain, etc
+        Audio::AudioNode::processReplacing(in, out, sampleRate, midiBuffer);//process internal buffer pan, gain, etc
     }
     //qint64 processamento = QDateTime::currentMSecsSinceEpoch() - inicio;
 

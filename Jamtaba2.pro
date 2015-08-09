@@ -1,25 +1,11 @@
-# se eu seleciono midi como input nenhum áudio e gerado para a pista. No entanto, se eu seleciono mono ou estereo
-    #eu consigo tocar usando o controlador, porque a minha pista local não estou sempre mandando os eventos midi para
-    #o VST e depois processo esse VST no process() da pista local.
 
-    #Mesmo que todos os midi devices estejam habilitados globalmente eu só deveria processar os eventos desses
-        #devices se a pista local estiver usando o device.
-        #preciso consumir os eventos midi o tempo todo para evitar enfileiramento, mando o buffer MIDI
-            #para o process replacing como estou fazendo com o inputBuffer de audio, cada pista se vira
-                #para pegar o que lhe interessa no buffer de midi de acordo com o device escolhido pelo usuário
+#Kontak deu pau quando inseri, travou tudo
 
-#como vou permitir vários devices midi? Pelo que vi no portaudio.h o único jeito seria abrir vários streams midi, um para cada device.
-#acho que é melhor deixar isso para mais adiante, por que também terei que mudar a forma como estou lendo as mensagens midi e passando
-#elas adiante. Como cada pista local vai poder ler de um midi device diferente eu acho que a solução seria criar um MidiBuffer e disponibilizá-lo
-#para o processReplacing como eu fiz com o SamplesBuffer. Esse MidiBuffer teria vários canais, cada canal contendo as mensagens midi de um device
-#diferente
+#dialogo de preferencias midi para escolher midi devices ativos
 
 #Preciso de um dialogo de IO MIDI? Acho que preciso para não ficar abrindo todos os streams de midi disponíveis na máquina e impedir
     #que os usuários usem um device no Jamtaba e outro device midi em outro software. É a mesma situação dos canais ASIO, não
     #posso simplesmente abrir tudo e usar apenas um subconjunto dos canais, impedindo o usuário de usar outras aplicações.
-
-# MIDI funcionando, mas se seleciono o midi da FAST track e depois volto para o SPS ele não funciona mais. Testar com o controlador AKAI também para ver
-
 
 #dialogo de IO do midi - testar novamente, ver se a seleção do midi device está funcionando
 

@@ -22,7 +22,7 @@ const int AbstractMp3Streamer::MAX_BYTES_PER_DECODING = 2048;
 //+++++++++++++
 AbstractMp3Streamer::AbstractMp3Streamer( Audio::Mp3Decoder *decoder)
     :
-      faderProcessor(FaderProcessor(0, 1, 44100*3)),//3 seconds fade in
+      faderProcessor(0, 1, 44100*3),//3 seconds fade in
       decoder(decoder),
       device(nullptr),
       streaming(false)
@@ -46,7 +46,9 @@ void AbstractMp3Streamer::stopCurrentStream(){
     }
 }
 
-void AbstractMp3Streamer::processReplacing(SamplesBuffer &/*in*/, SamplesBuffer &out){
+void AbstractMp3Streamer::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer &midiBuffer){
+    Q_UNUSED(in);
+    Q_UNUSED(sampleRate);
     //QMutexLocker locker(&mutex);
     if(samplesBuffer.empty()){
         return;
@@ -63,7 +65,7 @@ void AbstractMp3Streamer::processReplacing(SamplesBuffer &/*in*/, SamplesBuffer 
     }
     this->lastPeak.update(buffer.computePeak());
 
-    faderProcessor.process(buffer);//aply fade in in stream
+    faderProcessor.process(buffer, midiBuffer);//aply fade in in stream
 
     out.add(buffer);
 }
@@ -179,12 +181,12 @@ RoomStreamerNode::~RoomStreamerNode(){
     //qDebug() << "RoomStreamerNode destructor!";
 }
 
-void RoomStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out){
+void RoomStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer &midiBuffer){
     if(buffering){
         lastPeak.zero();
         return;
     }
-    AbstractMp3Streamer::processReplacing(in, out);
+    AbstractMp3Streamer::processReplacing(in, out, sampleRate, midiBuffer);
 }
 
 //++++++++++++++++++
@@ -208,9 +210,9 @@ AudioFileStreamerNode::~AudioFileStreamerNode(){
     //device->deleteLater();
 }
 
-void AudioFileStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out){
+void AudioFileStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer &midiBuffer){
     decodeBytesFromDevice(this->device, 1024 + 256);
-    AbstractMp3Streamer::processReplacing(in, out);
+    AbstractMp3Streamer::processReplacing(in, out, sampleRate, midiBuffer);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++/*
 
@@ -229,11 +231,11 @@ void TestStreamerNode::initialize(QString streamPath){
     AbstractMp3Streamer::initialize(streamPath);
 }
 
-void TestStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out){
+void TestStreamerNode::processReplacing(Audio::SamplesBuffer & in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer &midiBuffer){
 
     if(playing){
-        oscilator->processReplacing(in, out);
-        faderProcessor.process(out);
+        oscilator->processReplacing(in, out, sampleRate, midiBuffer);
+        faderProcessor.process(out, midiBuffer);
     }
     lastPeak.update( out.computePeak());
 }

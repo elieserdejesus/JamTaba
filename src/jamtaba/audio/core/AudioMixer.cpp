@@ -38,7 +38,7 @@ AudioMixer::~AudioMixer(){
     resamplers.clear();
 }
 
-void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, bool attenuateAfterSumming){
+void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer, bool attenuateAfterSumming){
     static int soloedBuffersInLastProcess = 0;
     //--------------------------------------
     bool hasSoloedBuffers = soloedBuffersInLastProcess > 0;
@@ -47,12 +47,12 @@ void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sample
     foreach (AudioNode* node , nodes) {
         bool canProcess = (!hasSoloedBuffers && !node->isMuted()) || (hasSoloedBuffers && node->isSoloed());
         if(canProcess ){
-                node->processReplacing(in, out, sampleRate);
+                node->processReplacing(in, out, sampleRate, midiBuffer);
         }
         else{//just discard the samples if node is muted, the internalBuffer is not copyed to out buffer
             static Audio::SamplesBuffer internalBuffer(2);
             internalBuffer.setFrameLenght(out.getFrameLenght());
-            node->processReplacing(in, internalBuffer, sampleRate);
+            node->processReplacing(in, internalBuffer, sampleRate, midiBuffer);
         }
         if(node->isSoloed()){
             soloedBuffersInLastProcess++;

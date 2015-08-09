@@ -90,7 +90,7 @@ Persistence::InputsSettings MainFrame::getInputsSettings() const{
             Audio::ChannelRange inputNodeRange = inputNode->getAudioInputRange();
             int firstInput = inputNodeRange.getFirstChannel();
             int channelsCount = inputNodeRange.getChannels();
-            bool isMidiTrack = inputNode->isMidi();
+            int midiDevice = inputNode->getMidiDeviceIndex();
             float gain = Utils::poweredGainToLinear( inputNode->getGain() );
             float pan = inputNode->getPan();
             bool muted = inputNode->isMuted();
@@ -100,7 +100,7 @@ Persistence::InputsSettings MainFrame::getInputsSettings() const{
             foreach (const Audio::Plugin* p, insertedPlugins) {
                 plugins.append(Persistence::Plugin(p->getPath(), p->isBypassed()));
             }
-            Persistence::Subchannel sub(firstInput, channelsCount, isMidiTrack, gain, pan, muted, plugins);
+            Persistence::Subchannel sub(firstInput, channelsCount, midiDevice, gain, pan, muted, plugins);
 
             channel.subChannels.append(sub);
         }
@@ -232,8 +232,20 @@ void MainFrame::initializeLocalInputChannels(){
         foreach (Persistence::Subchannel subChannel, channel.subChannels) {
             LocalTrackView* subChannelView = new LocalTrackView( mainController, channelIndex, subChannel.gain, subChannel.pan, subChannel.muted);
             channelView->addTrackView(subChannelView);
-            if(subChannel.usingMidi){
-                mainController->setInputTrackToMIDI( subChannelView->getInputIndex(), subChannel.midiDevice);
+            if(subChannel.midiDevice >= 0){//using midi
+                //check if midiDevice index is valid
+                if(subChannel.midiDevice < mainController->getMidiDriver()->getMaxInputDevices()){
+                    mainController->setInputTrackToMIDI( subChannelView->getInputIndex(), subChannel.midiDevice);
+                }
+                else{
+                    if(mainController->getMidiDriver()->hasInputDevices()){
+                        //use the first midi device
+                        mainController->setInputTrackToMIDI(subChannelView->getInputIndex(), 0);
+                    }
+                    else{
+                        mainController->setInputTrackToNoInput(subChannelView->getInputIndex());
+                    }
+                }
             }
             else if(subChannel.channelsCount <= 0){
                 mainController->setInputTrackToNoInput(subChannelView->getInputIndex());

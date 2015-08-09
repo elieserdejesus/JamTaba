@@ -17,7 +17,7 @@ namespace Audio{
 
 class AudioNodeProcessor{
 public:
-    virtual void process(SamplesBuffer& buffer) = 0;
+    virtual void process(Audio::SamplesBuffer& buffer, const Midi::MidiBuffer& midiBuffer) = 0;
     virtual ~AudioNodeProcessor(){}
 };
 
@@ -32,7 +32,7 @@ private:
     int processedSamples;
 public:
     FaderProcessor(float startGain, float endGain, int samplesToFade);
-    virtual void process(SamplesBuffer &buffer);
+    virtual void process(Audio::SamplesBuffer &buffer, const Midi::MidiBuffer& midiBuffer);
     bool finished();
     void reset();
 };
@@ -46,7 +46,7 @@ public:
     AudioNode();
     virtual ~AudioNode();
 
-    virtual void processReplacing(const SamplesBuffer& in, SamplesBuffer& out, int sampleRate);
+    virtual void processReplacing(const SamplesBuffer& in, SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
     virtual inline void setMuteStatus(bool muted){ this->muted = muted;}
     void inline setSoloStatus(bool soloed){ this->soloed = soloed; }
     inline bool isMuted() const {return muted;}
@@ -113,7 +113,7 @@ class OscillatorAudioNode : public AudioNode{
 
 public:
     OscillatorAudioNode(float frequency, int sampleRate);
-    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out);
+    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer &midiBuffer);
     virtual int getSampleRate() const{return sampleRate;}
 private:
     float phase;
@@ -136,7 +136,7 @@ private:
 public:
     LocalInputAudioNode(int parentChannelIndex, bool isMono=true);
     ~LocalInputAudioNode();
-    virtual void processReplacing(const SamplesBuffer&in, SamplesBuffer& out, int sampleRate);
+    virtual void processReplacing(const SamplesBuffer&in, SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer &midiBuffer);
     virtual int getSampleRate() const{return 0;}
     inline int getChannels() const{return audioInputRange.getChannels();}
     inline bool isMono() const{return audioInputRange.isMono();}
@@ -161,8 +161,8 @@ public:
         osc.setGain(0.5);
     }
 
-    void processReplacing(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out){
-        osc.processReplacing(in, out);//copy sine samples to out and simulate an input, just to test audio transmission
+    void processReplacing(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer& midiBuffer){
+        osc.processReplacing(in, out, sampleRate, midiBuffer);//copy sine samples to out and simulate an input, just to test audio transmission
     }
 
 private:

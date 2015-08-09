@@ -169,9 +169,9 @@ Plugin::Plugin(QString path, bool bypassed)
 
 }
 
-Subchannel::Subchannel(int firstInput, int channelsCount, bool isMidi, float gain, float pan, bool muted, QList<Plugin> plugins)
+Subchannel::Subchannel(int firstInput, int channelsCount, int midiDevice, float gain, float pan, bool muted, QList<Plugin> plugins)
     :firstInput(firstInput), channelsCount(channelsCount),
-      usingMidi(isMidi), gain(gain), pan(pan), muted(muted), plugins(plugins){
+      midiDevice(midiDevice), gain(gain), pan(pan), muted(muted), plugins(plugins){
 
 }
 
@@ -190,7 +190,7 @@ void InputsSettings::write(QJsonObject &out){
             QJsonObject subChannelObject;
             subChannelObject["firstInput"] = sub.firstInput;
             subChannelObject["channelsCount"] = sub.channelsCount;
-            subChannelObject["usingMidi"] = sub.usingMidi;
+            subChannelObject["midiDevice"] = sub.midiDevice;
             subChannelObject["gain"] = sub.gain;
             subChannelObject["pan"] = sub.pan;
             subChannelObject["muted"] = sub.muted;
@@ -224,7 +224,7 @@ void InputsSettings::read(QJsonObject in){
                     QJsonObject subChannelObject = subChannelsArray.at(k).toObject();
                     int firstInput = getValueFromJson(subChannelObject, "firstInput", 0);
                     int channelsCount = getValueFromJson(subChannelObject, "channelsCount", 0);
-                    bool isMidi = getValueFromJson(subChannelObject, "usingMidi", false);
+                    int midiDevice = getValueFromJson(subChannelObject, "midiDevice", -1);
                     float gain = getValueFromJson(subChannelObject, "gain", (float)1);
                     float pan = getValueFromJson(subChannelObject, "pan", (float)0);
                     bool muted = getValueFromJson(subChannelObject, "muted", false);
@@ -241,7 +241,7 @@ void InputsSettings::read(QJsonObject in){
                             }
                         }
                     }
-                    Persistence::Subchannel subChannel(firstInput, channelsCount, isMidi, gain, pan, muted, plugins);
+                    Persistence::Subchannel subChannel(firstInput, channelsCount, midiDevice, gain, pan, muted, plugins);
                     channel.subChannels.append(subChannel);
                 }
                 this->channels.append(channel);

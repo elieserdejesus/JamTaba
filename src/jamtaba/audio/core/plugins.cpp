@@ -125,7 +125,8 @@ void JamtabaDelay::start(int sampleRate, int /*bufferSize*/){
     }
 }
 
-void JamtabaDelay::process(Audio::SamplesBuffer &buffer){
+void JamtabaDelay::process(Audio::SamplesBuffer &buffer, const Midi::MidiBuffer &midiBuffer){
+    Q_UNUSED(midiBuffer)
     if(isBypassed()){
         return;
     }

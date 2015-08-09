@@ -33,7 +33,11 @@ VstPlugin::VstPlugin(VstHost* host)
         internalBuffer(nullptr),
         host(host)
 {
-
+    this->vstMidiEvents.reserved = 0;
+    this->vstMidiEvents.numEvents = 0;
+    for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
+        this->vstMidiEvents.events[i] = (VstEvent*)(new VstMidiEvent);
+    }
 }
 
 bool VstPlugin::load(VstHost *host, QString path){
@@ -132,6 +136,10 @@ VstPlugin::~VstPlugin()
     qWarning() << getName() << " VSt plugin destructor ";
     unload();
     delete internalBuffer;
+
+    for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
+        delete this->vstMidiEvents.events[i];
+    }
 }
 
 void VstPlugin::unload(){
@@ -148,29 +156,49 @@ void VstPlugin::unload(){
     }
 }
 
-void VstPlugin::process(Audio::SamplesBuffer &buffer){
+void VstPlugin::fillVstEventsList(const Midi::MidiBuffer &midiBuffer){
+    int midiMessages = std::min( midiBuffer.getMessagesCount(), MAX_MIDI_EVENTS);
+    this->vstMidiEvents.numEvents = midiMessages;
+    for (int m = 0; m < midiMessages; ++m) {
+        Midi::MidiMessage message = midiBuffer.getMessage(m);
+        VstMidiEvent* vstEvent = (VstMidiEvent*)vstMidiEvents.events[m];
+        vstEvent->type = kVstMidiType;
+        vstEvent->byteSize = sizeof(vstEvent);
+        vstEvent->deltaFrames = 0;
+        vstEvent->midiData[0] = Pm_MessageStatus(message.data);
+        vstEvent->midiData[1] = Pm_MessageData1(message.data);
+        vstEvent->midiData[2] = Pm_MessageData2(message.data);
+        vstEvent->midiData[3] = 0;
+        vstEvent->reserved1 = vstEvent->reserved2 = 0;
+        vstEvent->flags = kVstMidiEventIsRealtime;
+    }
+}
+
+void VstPlugin::process( Audio::SamplesBuffer &audioBuffer, const Midi::MidiBuffer& midiBuffer){
     if(isBypassed() || !effect || !internalBuffer){
         return;
     }
 
     if(wantMidi){
-        const VstEvents* events = host->getVstMidiEvents();
-        effect->dispatcher(effect, effProcessEvents, 0, 0, (void*)events, 0);
+        //const VstEvents* events = host->getVstMidiEvents();
+        fillVstEventsList(midiBuffer);//translate midiBuffer messages in VstEvents
+        //qWarning() << vstMidiEvents.numEvents;
+        effect->dispatcher(effect, effProcessEvents, 0, 0, (void*)&vstMidiEvents, 0);
     }
 
-    internalBuffer->setFrameLenght(buffer.getFrameLenght());
+    internalBuffer->setFrameLenght(audioBuffer.getFrameLenght());
 
     float* in[2] = {
-        buffer.getSamplesArray(0),
-        buffer.getSamplesArray(1)
+        audioBuffer.getSamplesArray(0),
+        audioBuffer.getSamplesArray(1)
     };
      float* out[2] = {
         internalBuffer->getSamplesArray(0),
         internalBuffer->getSamplesArray(1)
     };
-    VstInt32 sampleFrames = buffer.getFrameLenght();
+    VstInt32 sampleFrames = audioBuffer.getFrameLenght();
     effect->processReplacing(effect, in, out, sampleFrames);
-    buffer.add(*internalBuffer);
+    audioBuffer.add(*internalBuffer);
 }
 /*
 // C callbacks

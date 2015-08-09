@@ -83,7 +83,7 @@ SamplesBuffer* MetronomeTrackNode::getBuffer(int beat){
     return clickSoundBuffer;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MetronomeTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int SampleRate){
+void MetronomeTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int SampleRate, const Midi::MidiBuffer &midiBuffer){
     if(samplesPerBeat <= 0){
         return;
     }
@@ -103,7 +103,7 @@ void MetronomeTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer
     }
     if(samplesToCopy > 0){
         internalBuffer.set(*samplesBuffer, clickSoundBufferOffset, samplesToCopy, internalOffset);
-        AudioNode::processReplacing(in, out, SampleRate);
+        AudioNode::processReplacing(in, out, SampleRate, midiBuffer);
     }
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
