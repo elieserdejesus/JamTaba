@@ -1,12 +1,6 @@
 
 
-#abri a aplicação com a fast track e deu pau porque 192 é uma SR inválida. Tenho que pedir as SR válidas para cada device.
-
-#quando troco de um device para outro preciso testar se a SR que estava sendo usada é válida no novo audio device
-
-#já aproveitar para pedir os buffer sizes
-
-#consegui entrar no jamtaba com a fast track desligada. O canal apareceu como "not connected"
+#se desligo a fast enquanto estou com o dialogo de preferencias aberto dá pau em seguida
 
 #não consegui votar para trocar bpi
 

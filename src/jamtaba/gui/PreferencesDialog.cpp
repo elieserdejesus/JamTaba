@@ -45,7 +45,10 @@ void PreferencesDialog::populateMidiTab(){
     //clear
     QLayoutItem *item;
     while ((item = ui->midiContentPanel->layout()->takeAt(0)) != 0) {
-        ui->midiContentPanel->layout()->removeItem(item);
+        if(item->widget()){
+            delete item->widget();
+        }
+        //ui->midiContentPanel->layout()->removeItem(item);
         delete item;
     }
 
