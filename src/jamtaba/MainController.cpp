@@ -132,6 +132,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 
     Login::LoginService* loginService = factory->createLoginService();
     this->loginService = std::unique_ptr<Login::LoginService>( loginService );
+
     this->audioDriver = new Audio::PortAudioDriver(
                 this, //the AudioDriverListener instance
                 settings.getLastInputDevice(), settings.getLastOutputDevice(),
@@ -139,6 +140,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
                 settings.getFirstGlobalAudioOutput(), settings.getLastGlobalAudioOutput(),
                 settings.getLastSampleRate(), settings.getLastBufferSize()
                 );
+
 
     QObject::connect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
     QObject::connect(this->audioDriver, SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));

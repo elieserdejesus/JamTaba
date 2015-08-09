@@ -88,6 +88,11 @@ void PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
 
     //set sample rate
     this->sampleRate = (sampleRate >= 44100 && sampleRate <= 192000) ? sampleRate : 44100;
+    QList<int> validSampleRates = getValidSampleRates(outputDeviceIndex);
+    if(this->sampleRate > validSampleRates.last()){
+        this->sampleRate = validSampleRates.last();//use the max support sample rate
+    }
+
     this->bufferSize = (bufferSize >= 64 && bufferSize <= 4096) ? bufferSize : paFramesPerBufferUnspecified;
 }
 
@@ -228,6 +233,25 @@ void PortAudioDriver::start(){
     }
     qCDebug(portaudio) << "portaudio driver started ok!";
     emit started();
+}
+
+QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const{
+    int sampleRatesToTest[] = {44100, 48000, 96000, 192000};
+    PaStreamParameters outputParams;
+    outputParams.channelCount = 1;
+    outputParams.device = deviceIndex;
+    outputParams.sampleFormat = paFloat32;
+    outputParams.suggestedLatency = Pa_GetDeviceInfo(deviceIndex)->defaultLowOutputLatency;
+    outputParams.hostApiSpecificStreamInfo = NULL;
+    QList<int> validSRs;
+    for (int t = 0; t < 4; ++t) {//test 4 sample rates
+        int sampleRate = sampleRatesToTest[t];
+        PaError error =  Pa_IsFormatSupported(  NULL, &outputParams, sampleRate);
+        if(error == paNoError){
+            validSRs.append(sampleRate);
+        }
+    }
+    return validSRs;
 }
 
 void PortAudioDriver::stop(){
