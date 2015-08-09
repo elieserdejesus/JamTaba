@@ -30,14 +30,14 @@ MidiBuffer::~MidiBuffer(){
 void MidiBuffer::addMessage(const MidiMessage &m){
     messages[writeIndex].data = m.data;
     messages[writeIndex].timestamp = m.timestamp;
+    messages[writeIndex].globalSourceDeviceIndex = m.globalSourceDeviceIndex;
     writeIndex = (writeIndex + 1) % maxMessages;
     messagesCount++;
 }
 
-MidiMessage MidiBuffer::consumeMessage(){
-    if(messagesCount > 0){
-        messagesCount--;
-        return messages[readIndex++];
+MidiMessage MidiBuffer::getMessage(int index) const{
+    if(index >= 0 && index < messagesCount){
+        return messages[index];
     }
     return MidiMessage();
 }

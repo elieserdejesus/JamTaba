@@ -31,7 +31,8 @@ void FaderProcessor::reset(){
     currentGain = startGain;
 }
 
-void FaderProcessor::process(SamplesBuffer &buffer){
+void FaderProcessor::process(Audio::SamplesBuffer &buffer, const Midi::MidiBuffer &midiBuffer){
+    Q_UNUSED(midiBuffer);
     if(finished()){
         return;
     }
@@ -53,7 +54,7 @@ void AudioNode::deactivate(){
 //+++++++++++++++
 
 
-void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate){
+void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer){
     if(!activated){
         return;
     }
@@ -62,13 +63,13 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
     {
         QMutexLocker locker(&mutex);
         foreach (AudioNode* node, connections) {//ask connected nodes to generate audio
-            node->processReplacing(in, internalBuffer, sampleRate);
+            node->processReplacing(in, internalBuffer, sampleRate, midiBuffer);
         }
     }
 
     //plugins
     foreach (AudioNodeProcessor* processor, processors) {
-        processor->process(internalBuffer);
+        processor->process(internalBuffer, midiBuffer);
     }
     internalBuffer.applyGain(gain, leftGain, rightGain);
 
@@ -167,8 +168,10 @@ OscillatorAudioNode::OscillatorAudioNode(float frequency, int sampleRate)
 
 }
 
-void OscillatorAudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out){
-    Q_UNUSED(in);
+void OscillatorAudioNode::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer){
+    Q_UNUSED(in)
+    Q_UNUSED(sampleRate)
+    Q_UNUSED(midiBuffer)
     int frames = out.getFrameLenght();
     int outChannels = out.getChannels();
     for (int i = 0; i < frames; ++i) {
@@ -196,7 +199,7 @@ void OscillatorAudioNode::processReplacing(SamplesBuffer &in, SamplesBuffer &out
 }
 //++++++++++++++++++++++++++++++++++++++++++++++
 LocalInputAudioNode::LocalInputAudioNode(int parentChannelIndex, bool isMono)
-    :channelIndex(parentChannelIndex),  globalFirstInputIndex(0)
+    : globalFirstInputIndex(0), channelIndex(parentChannelIndex)
 {
     setAudioInputSelection(0, isMono ? 1 : 2);
 }
@@ -225,7 +228,7 @@ void LocalInputAudioNode::setMidiInputSelection(int midiDeviceIndex){
     this->midiDeviceIndex = midiDeviceIndex;
 }
 
-void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate){
+void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer){
     Q_UNUSED(sampleRate);
 
     /* The input buffer (in) is a multichannel buffer. So, this buffer contains
@@ -236,13 +239,26 @@ void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffe
      * Other LocalInputAudioNode instances will read other channels from input SamplesBuffer.
      */
 
-    if(audioInputRange.isEmpty()){
-        return;
-    }
-    internalBuffer.setFrameLenght(out.getFrameLenght());
-    int inChannelOffset = audioInputRange.getFirstChannel() - globalFirstInputIndex;
-    internalBuffer.set(in, inChannelOffset, audioInputRange.getChannels());
+    Midi::MidiBuffer filteredMidiBuffer(midiBuffer.getMessagesCount());
 
-    AudioNode::processReplacing(in, out, sampleRate);
+    internalBuffer.setFrameLenght(out.getFrameLenght());
+    internalBuffer.zero();
+    if(midiDeviceIndex < 0){//using audio input
+        if(audioInputRange.isEmpty()){
+            return;
+        }
+        int inChannelOffset = audioInputRange.getFirstChannel() - globalFirstInputIndex;
+        internalBuffer.set(in, inChannelOffset, audioInputRange.getChannels());
+    }
+    else{//using midi input
+        int total = midiBuffer.getMessagesCount();
+        for (int m = 0; m < total; ++m) {
+            //qWarning() << midiBuffer.getMessage(m).globalSourceDeviceIndex << " " << midiDeviceIndex;
+            if( midiBuffer.getMessage(m).globalSourceDeviceIndex == midiDeviceIndex){
+                filteredMidiBuffer.addMessage(midiBuffer.getMessage(m));
+            }
+        }
+    }
+    AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer);
 }
 //++++++++++++=

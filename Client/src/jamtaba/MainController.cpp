@@ -111,6 +111,8 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
       roomStreamer(nullptr),
       currentStreamingRoomID(-1000),
       ninjamService(nullptr),
+
+      transmiting(true),
       ninjamController(nullptr),
       mutex(QMutex::Recursive),
       started(false),
@@ -118,7 +120,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
       //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
       ipToLocationResolver("../Jamtaba2/GeoLite2-Country.mmdb"),
       settings(settings),
-      transmiting(true),
+
       userNameChoosed(false)
 
 {
@@ -498,9 +500,9 @@ void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::Sampl
 //    checkThread("doAudioProcess();");
 
     MidiBuffer midiBuffer = midiDriver->getBuffer();
-    vstHost->fillMidiEvents(midiBuffer);//pass midi events to vst host
+    //vstHost->fillMidiEvents(midiBuffer);//pass midi events to vst host
 
-    audioMixer->process(in, out, sampleRate);
+    audioMixer->process(in, out, sampleRate, midiBuffer);
 }
 
 

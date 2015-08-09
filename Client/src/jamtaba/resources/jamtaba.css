@@ -687,8 +687,9 @@ LocalTrackView #inputSelectionIcon{
     border: none;
     margin: 0px;
     padding: 0px;
-    max-width: 18px;
-    min-width: 18px;
+    max-width: 22px;
+    min-width: 22px;
+    min-height: 22px;
     background-position: center;
     background-repeat: none;
 }

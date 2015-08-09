@@ -10,16 +10,16 @@ namespace Midi {
 struct MidiMessage{
     qint32 data;
     qint32 timestamp;
-    int sourceDeviceIndex;
+    int globalSourceDeviceIndex;
 
     MidiMessage(qint32 data, qint32 timestamp, int sourceDeviceIndex){
         this->data = data;
         this->timestamp = timestamp;
-        this->sourceDeviceIndex = sourceDeviceIndex;
+        this->globalSourceDeviceIndex = sourceDeviceIndex;
     }
 
     MidiMessage(){
-        this->data = this->timestamp = this->sourceDeviceIndex = 0;
+        this->data = this->timestamp = this->globalSourceDeviceIndex = 0;
     }
 };
 
@@ -28,7 +28,8 @@ public:
     explicit MidiBuffer(int maxMessages);
     ~MidiBuffer();
     void addMessage(const MidiMessage& m);
-    MidiMessage consumeMessage();
+    //MidiMessage consumeMessage();
+    MidiMessage getMessage(int index) const;
     int getMessagesCount() const {return messagesCount;}
     MidiBuffer(const MidiBuffer& other);
 private:
