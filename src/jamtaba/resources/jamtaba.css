@@ -28,7 +28,7 @@ QInputDialog QPushButton{
 
 
 FxPanel{
-    /*border: 1px solid gray;*/
+    border: 1px inset rgb(60, 60, 60);
     background-color: rgba(0, 0, 0, 20);
     max-height: 80px;
     border-radius: 2px;
@@ -41,6 +41,7 @@ FxPanelItem{
     max-height: 14px;
     width: 100%;
     border-radius: 2px;
+    border: 1px outset rgb(60, 60, 60);
 }
 FxPanelItem[containPlugin="false"]{
     background-image: url(':/images/arrow-down-lighter.png');
@@ -676,7 +677,7 @@ LocalTrackView[highlighted="true"]{
 LocalTrackView #inputPanel{
     padding: 2px;
     background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 60), stop:1 rgba(0, 0, 0, 140));
-    border: 1px solid rgba(0, 0, 0, 60);
+    border: 1px outset rgb(80,80,80);
     border-radius: 3px;
 }
 

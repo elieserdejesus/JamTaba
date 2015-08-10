@@ -1,8 +1,4 @@
-
-
-#se desligo a fast enquanto estou com o dialogo de preferencias aberto dá pau em seguida
-
-#não consegui votar para trocar bpi
+#usar margens inset e outset nos fxPanel
 
 #Kontak deu pau quando inseri, travou tudo
 
@@ -60,6 +56,8 @@
 #BUGS relacionados com o diálogo de audioIO:
 #1 - quando seleciono as entradas sPDIF da fast track a aplicação encerra
 #3 - Com a fast track quando seleciono as entradas e simplesmente volto para a tela de audio IO o valor do segundo combo está bugado.
+
+#se desligo a fast enquanto estou com o dialogo de preferencias aberto dá pau em seguida
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
