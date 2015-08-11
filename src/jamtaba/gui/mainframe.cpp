@@ -98,7 +98,8 @@ Persistence::InputsSettings MainFrame::getInputsSettings() const{
             QList<const Audio::Plugin*> insertedPlugins = trackView->getInsertedPlugins();
             QList<Persistence::Plugin> plugins;
             foreach (const Audio::Plugin* p, insertedPlugins) {
-                plugins.append(Persistence::Plugin(p->getPath(), p->isBypassed()));
+                QByteArray serializedData = p->getSerializedData();
+                plugins.append(Persistence::Plugin(p->getPath(), p->isBypassed(), serializedData));
             }
             Persistence::Subchannel sub(firstInput, channelsCount, midiDevice, gain, pan, muted, plugins);
 
@@ -263,6 +264,7 @@ void MainFrame::initializeLocalInputChannels(){
                 Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path );
                 Audio::Plugin* pluginInstance = mainController->addPlugin(subChannelView->getInputIndex(), descriptor);
                 subChannelView->addPlugin(pluginInstance, plugin.bypassed);
+                pluginInstance->restoreFromSerializedData( plugin.data);
             }
 
             //mainController->setTrackLevel(subChannelView->getInputIndex(), subChannel.gain);
@@ -533,6 +535,9 @@ void MainFrame::on_xmitButtonClicked(bool checked){
         localChannel->setUnlightStatus(!checked);
     }
     mainController->setTransmitingStatus(checked);
+
+
+
 }
 
 //++++++++++++=

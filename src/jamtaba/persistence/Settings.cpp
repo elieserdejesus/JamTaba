@@ -34,6 +34,13 @@ bool SettingsObject::getValueFromJson(const QJsonObject &json, QString propertyN
     return fallBackValue;
 }
 
+QString SettingsObject::getValueFromJson(const QJsonObject &json, QString propertyName, QString fallBackValue){
+    if(json.contains(propertyName)){
+        return json[propertyName].toString();
+    }
+    return fallBackValue;
+}
+
 
 float SettingsObject::getValueFromJson(const QJsonObject &json, QString propertyName, float fallBackValue){
     if(json.contains(propertyName)){
@@ -42,12 +49,6 @@ float SettingsObject::getValueFromJson(const QJsonObject &json, QString property
     return fallBackValue;
 }
 
-QString SettingsObject::getValueFromJson(const QJsonObject &json, QString propertyName, QString fallBackValue){
-    if(json.contains(propertyName)){
-        return json[propertyName].toString();
-    }
-    return fallBackValue;
-}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 AudioSettings::AudioSettings()
@@ -186,8 +187,8 @@ Channel::Channel(QString name)
 
 }
 
-Plugin::Plugin(QString path, bool bypassed)
-    :path(path), bypassed(bypassed){
+Plugin::Plugin(QString path, bool bypassed, QByteArray data)
+    :path(path), bypassed(bypassed), data(data){
 
 }
 
@@ -222,6 +223,7 @@ void InputsSettings::write(QJsonObject &out){
                 QJsonObject pluginObject;
                 pluginObject["path"] = plugin.path;
                 pluginObject["bypassed"] = plugin.bypassed;
+                pluginObject["data"] =  QString(plugin.data.toBase64());
                 pluginsArray.append(pluginObject);
             }
             subChannelObject["plugins"] = pluginsArray;
@@ -258,8 +260,10 @@ void InputsSettings::read(QJsonObject in){
                             QJsonObject pluginObject = pluginsArray.at(p).toObject();
                             QString pluginPath = getValueFromJson(pluginObject, "path", QString(""));
                             bool bypassed = getValueFromJson(pluginObject, "bypassed", false);
+                            QString dataString = getValueFromJson(pluginObject, "data", QString(""));
                             if( !pluginPath.isEmpty() && QFile(pluginPath).exists() ){
-                                plugins.append(Persistence::Plugin(pluginPath, bypassed));
+                                QByteArray rawByteArray(dataString.toStdString().c_str());
+                                plugins.append(Persistence::Plugin(pluginPath, bypassed, QByteArray::fromBase64(rawByteArray)));
                             }
                         }
                     }
