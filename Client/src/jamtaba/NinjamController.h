@@ -11,8 +11,6 @@
 
 class NinjamTrackNode;
 
-//Q_DECLARE_METATYPE(Audio::SamplesBuffer)
-
 namespace Audio {
     class MetronomeTrackNode;
     class SamplesBuffer;

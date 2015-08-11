@@ -1,9 +1,11 @@
 #pragma once
 
 #include "../core/plugins.h"
-//#include "aeffect.h"
 #include "aeffectx.h"
 #include <QLibrary>
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(vst)
 
 #define MAX_MIDI_EVENTS 40 //in my tests playing piano I can genenerate just 3 messages per block (256 samples) at maximum
 
@@ -18,7 +20,7 @@ public:
 
     explicit VstPlugin(Vst::VstHost* host);
     ~VstPlugin();
-    void start(int sampleRate, int bufferSize);
+    void start();
     void resume();
     void suspend();
     virtual void process( Audio::SamplesBuffer &audioBuffer, const Midi::MidiBuffer& midiBuffer);
@@ -36,6 +38,8 @@ private:
     Vst::VstHost* host;
     bool wantMidi;
     QString path;
+
+    bool started;
 
     //VstEvents* vstEvents;
     void fillVstEventsList(const Midi::MidiBuffer& midiBuffer);
