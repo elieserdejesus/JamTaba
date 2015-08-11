@@ -1,13 +1,7 @@
-#addictive sem som
-
-#como carregar presets nos VSTs? Eu gostaria de já abrir com os meus plugins
-    #carregados e os presets setados em seus devidos canais
-
 #parece que o stream das salas não está rolando mesmo. Vi que tinha problema na assinatura dos métodos.
     #não consegui testar os streams adequadamente ainda
 #acho que quando fico alternando entre os streams das salas não está funcionando muito bem, parece que o botão ficou pressionado.
 #acho que o stream do ninjamer não está rolando
-
 
 #Não estava deletando as tracks de input, por isso o plugin vst não era deletado, o destrutor
     #nunca era invocado e a DLL não era descarregada, gerando um erro no fechamento.
@@ -16,11 +10,8 @@
 
 
 #Prioridades para um primeiro release
-    #Melhorar o suporte para VST
     #Ver o usode memória para não queimar o filme
     #auto updater
-
-
 
 #preciso testar nome de usuário com caracter especial para ver se o utf está funcionando
 
@@ -37,6 +28,8 @@
 #1 - quando seleciono as entradas sPDIF da fast track a aplicação encerra
 #3 - Com a fast track quando seleciono as entradas e simplesmente volto para a tela de audio IO o valor do segundo combo está bugado.
 
+
+#tocar em algumas Jams para ver se está rolando
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
 #se desligo a fast enquanto estou com o dialogo de preferencias aberto dá pau em seguida

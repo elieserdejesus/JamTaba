@@ -87,9 +87,10 @@ public:
 
 class Plugin{
 public:
-    Plugin(QString path, bool bypassed);
+    Plugin(QString path, bool bypassed, QByteArray data);
     QString path;
     bool bypassed;
+    QByteArray data;//saved data to restore in next jam session
 };
 
 class Subchannel{

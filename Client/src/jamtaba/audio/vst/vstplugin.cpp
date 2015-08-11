@@ -111,6 +111,24 @@ bool VstPlugin::load(VstHost *host, QString path){
 }
 
 
+QByteArray VstPlugin::getSerializedData() const{
+    if(effect->flags & effFlagsProgramChunks){//can serialize chunks?
+        char* chunk = 0;
+        long result = effect->dispatcher(effect, effGetChunk, false, 0, &chunk, 0 );
+        if(result){
+            qCDebug(vst) << "saving " << getName() << " state";
+            return QByteArray(chunk, result);
+        }
+    }
+    return QByteArray();//empty byte array
+}
+
+void VstPlugin::restoreFromSerializedData(QByteArray dataToRestore){
+    qWarning() << "restoring plugin data";
+    char* data = dataToRestore.data();
+    effect->dispatcher(effect, effSetChunk, false, dataToRestore.size(), data, 0 );
+}
+
 void VstPlugin::resume(){
     qCDebug(vst) << "Resuming " << getName() << "thread: " << QThread::currentThreadId();
     effect->dispatcher(effect, effMainsChanged, 0, 1, NULL, 0.0f);
@@ -119,6 +137,8 @@ void VstPlugin::resume(){
 void VstPlugin::suspend(){
     qCDebug(vst) << "Suspending " << getName() << "Thread: " << QThread::currentThreadId();
     effect->dispatcher(effect, effMainsChanged, 0, 0, NULL, 0.0f);
+
+    getSerializedData();
 }
 
 
@@ -146,8 +166,14 @@ void VstPlugin::start(){
     wantMidi = (effect->dispatcher(effect, effCanDo, 0, 0, (void*)"receiveVstMidiEvent", 0) == 1);
     //qCDebug(vst) << "plugin midi capabilities done: " << wantMidi;
 
-    resume();
 
+    //read chunk to test
+    QFile f("test.dat");
+    if(!f.open(QFile::ReadOnly)){
+        qCritical() << "Não conseguiu abrir o arquivo ";
+    }
+
+    resume();
 
     //effect->dispatcher(effect, effStartProcess, 0, 1, NULL, 0.0f);
 
@@ -247,30 +273,7 @@ void VstPlugin::process( Audio::SamplesBuffer &audioBuffer, const Midi::MidiBuff
     audioBuffer.add(*internalBuffer);
     //qCDebug(vst) << "audioBuffer filled " << getName();
 }
-/*
-// C callbacks
-extern "C" {
-// Main host callback
-  VstIntPtr VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode,
-    VstInt32 index, VstInt32 value, void *ptr, float opt){
-        //qDebug() << "opcode:" <<opcode << "index:" <<index << "value:" <<value  ;
-        if(opcode == audioMasterGetCurrentProcessLevel){
-            return 1;
-        }
-        if(opcode == audioMasterVersion){
-            return 2400;// VST 2.4
-        }
-        if(opcode == audioMasterGetProductString || opcode == audioMasterGetVendorString){
-            ptr = (void*)"Jamtaba";
-            return 1;
-        }
 
-        if(opcode == audioMasterIOChanged){
-            return 1;//
-        }
-    }
-}
-*/
 void VstPlugin::openEditor(QPoint centerOfScreen){
     if(!effect ){
         return;
@@ -279,9 +282,6 @@ void VstPlugin::openEditor(QPoint centerOfScreen){
     if(!(effect->flags & effFlagsHasEditor || !hasEditorWindow())){
         return;
     }
-    //suspend();
-    //abre o editor do plugin usando o handle do diálogo
-    //effect->dispatcher(effect, effEditOpen, 0, 0, (void*)(w->effectiveWinId()), 0);
 
     qCDebug(vst) << "opening " <<getName() << "editor thread: " << QThread::currentThreadId();
 
@@ -441,90 +441,3 @@ bool VstPlugin::initPlugin()
     return true;
 }
 */
-
-/*
-// Plugin's entry point
-typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
-
-//// Plugin's dispatcher function
-typedef VstIntPtr (*dispatcherFuncPtr)(AEffect *effect, VstInt32 opCode,
-  VstInt32 index, VstInt32 value, void *ptr, float opt);
-*/
-//+++++++++++++++++++++++++++++++++++++
-
-//Vst::VstPlugin* Vst::load(QString pluginPath){
-//    AEffect *plugin = nullptr;
-
-//    QLibrary* pluginLib = new QLibrary(pluginPath);
-//    if(!pluginLib->load()){
-//        qCritical() << "não foi possível carregar " << pluginPath;
-//        return nullptr;
-//    }
-
-//    vstPluginFuncPtr entryPoint=0;
-//    try {
-//        entryPoint = (vstPluginFuncPtr)pluginLib->resolve("VSTPluginMain");
-//        if(!entryPoint)
-//            entryPoint = (vstPluginFuncPtr)pluginLib->resolve("main");
-//    }
-//    catch(...)
-//    {
-//        qCritical() << "exception when  getting entry point";
-//    }
-//    if(!entryPoint) {
-//        pluginLib->unload();
-//        return nullptr;
-//    }
-
-//    try
-//    {
-//        plugin = entryPoint(hostCallback);// myHost->vstHost->AudioMasterCallback);
-//    }
-//    catch(...)
-//    {
-//        plugin = nullptr;
-//    }
-
-//    if(!plugin) {
-//        pluginLib->unload();
-//        return false;
-//    }
-
-//    if (plugin->magic != kEffectMagic) {
-//        pluginLib->unload();
-//        delete plugin;
-//        return false;
-//    }
-
-//    char name[kVstMaxEffectNameLen];
-//    vstPluginFuncPtr dispatcher = (vstPluginFuncPtr)plugin->dispatcher;
-//    dispatcher(plugin, effGetEffectName, 0, 0, name, 0);
-
-    //void startPlugin(AEffect *plugin) {
-//      dispatcher(plugin, effOpen, 0, 0, NULL, 0.0f);
-
-//      // Set some default properties
-//      float sampleRate = 44100.0f;
-//      dispatcher(plugin, effSetSampleRate, 0, 0, NULL, sampleRate);
-//      int blocksize = 2048;
-//      dispatcher(plugin, effSetBlockSize, 0, blocksize, NULL, 0.0f);
-
-//      //void resumePlugin(AEffect *plugin) {
-//        dispatcher(plugin, effMainsChanged, 0, 1, NULL, 0.0f);
-
-//        //virtual long EffEditOpen(void *ptr) { long l = EffDispatch(effEditOpen, 0, 0, ptr); /* if (l > 0) */ bEditOpen = true; return l; }
-
-//      //}
-
-//      //void suspendPlugin(AEffect *plugin) {
-////        dispatcher(plugin, effMainsChanged, 0, 0, NULL, 0.0f);
-////      }
-
-//      //resume();
-//    //}
-
-
-
-
-////    return new Vst::VstPlugin(QString(name), pluginPath, plugin);
-////}

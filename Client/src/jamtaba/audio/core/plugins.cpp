@@ -108,6 +108,14 @@ JamtabaDelay::JamtabaDelay(int sampleRate)
     setSampleRate(sampleRate);
 }
 
+QByteArray JamtabaDelay::getSerializedData() const{
+
+}
+
+void JamtabaDelay::restoreFromSerializedData(QByteArray data){
+
+}
+
 void JamtabaDelay::setSampleRate(int newSampleRate){
     this->sampleRate = newSampleRate;
     delayTimeInSamples = this->sampleRate/2;//half second

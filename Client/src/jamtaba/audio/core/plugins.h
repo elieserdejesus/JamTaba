@@ -66,6 +66,8 @@ public:
     PluginWindow* getEditor() const{return editorWindow;}
     inline bool hasEditorWindow() const{return editorWindow;}
     virtual QString getPath() const = 0;
+    virtual QByteArray getSerializedData() const = 0;
+    virtual void restoreFromSerializedData(QByteArray data) = 0;
 protected:
     QString name;
     bool bypassed;
@@ -91,6 +93,9 @@ public:
     virtual void openEditor(QPoint centerOfScreen);
     virtual void start();
     inline QString getPath() const{return "";}
+
+    virtual QByteArray getSerializedData() const;
+    virtual void restoreFromSerializedData(QByteArray data);
 private:
     void setSampleRate(int newSampleRate);
 

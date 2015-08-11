@@ -27,6 +27,8 @@ public:
     virtual void openEditor(QPoint centerOfScreen);
     bool load(Vst::VstHost* host, QString path);
     inline QString getPath() const{return path;}
+    virtual QByteArray getSerializedData() const;
+    virtual void restoreFromSerializedData(QByteArray dataToRestore);
 protected:
     void unload();
     //void processMidiEvents(Midi::MidiBuffer& midiIn);
