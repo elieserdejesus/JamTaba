@@ -119,10 +119,11 @@ JamtabaDelay::~JamtabaDelay(){
     //delete mutex;
 }
 
-void JamtabaDelay::start(int sampleRate, int /*bufferSize*/){
-    if(sampleRate != this->sampleRate){
-        setSampleRate(sampleRate);
-    }
+void JamtabaDelay::start(){
+//    if(sampleRate != this->sampleRate){
+//        setSampleRate(sampleRate);
+//    }
+    qCritical() << "preciso setar a sample rate";
 }
 
 void JamtabaDelay::process(Audio::SamplesBuffer &buffer, const Midi::MidiBuffer &midiBuffer){

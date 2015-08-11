@@ -651,7 +651,7 @@ QList<Audio::PluginDescriptor> MainController::getPluginsDescriptors(){
 
 Audio::Plugin* MainController::addPlugin(int inputTrackIndex, const Audio::PluginDescriptor& descriptor){
     Audio::Plugin* plugin = createPluginInstance(descriptor);
-    plugin->start(audioDriver->getSampleRate(), audioDriver->getBufferSize());
+    plugin->start();
     getInputTrack(inputTrackIndex)->addProcessor(plugin);
     return plugin;
 }

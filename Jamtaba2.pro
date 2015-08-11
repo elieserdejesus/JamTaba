@@ -1,6 +1,7 @@
-#usar margens inset e outset nos fxPanel
+#addictive sem som
 
-#Kontak deu pau quando inseri, travou tudo
+#como carregar presets nos VSTs? Eu gostaria de já abrir com os meus plugins
+    #carregados e os presets setados em seus devidos canais
 
 #parece que o stream das salas não está rolando mesmo. Vi que tinha problema na assinatura dos métodos.
     #não consegui testar os streams adequadamente ainda
@@ -13,23 +14,11 @@
 # tirei o comentário do código que deleta a pista, tenho que ver se ainda tem o bug quando
     #deleto um canal no Reaninjam.
 
-# Se adiciono o addicitve drums e fecho agora não dá mais erro. Mas se ele já esta na lista
-    #de plugins e é carregado durante a abertura do programa dá erro na finalização.
-        #Threads diferentes? Realmente não dá erro se eu abro o programa sem plugins,
-            #insiro o Addicive e fecho. Mas se o programa abre com o Addicive na lista de
-            #plugins dá o erro.
-
 
 #Prioridades para um primeiro release
     #Melhorar o suporte para VST
-    #Melhorar o suporte de MIDI
     #Ver o usode memória para não queimar o filme
     #auto updater
-
-
-#deu pau com o kontakt também. Só está carregando plugins pequenos?
-
-#deu pau quando tentei colocar o Addictive Drums
 
 
 
@@ -37,38 +26,33 @@
 
 #não está lembrando das entradas estereo com a fast track
 
-
 # a mensagem de crowded está errada?
-
 
 #não consegui resolver o bug que acontece quando as pistas são removidas, por hora apenas comentei a linha que delete as pistas no NinjamJamRoomController. Ou seja, a memoria não está sendo liberada.
 #Agora estou usando vector<float> para guardar as amostras, ver o que acontece.
 
 # Quando botei o reverb depois do B4 ouvi o reverb na entrada do mic mas não no B4, o encadeamento tem problema
-#Na verdade preciso repensar isso, não faz sentido ter midi e áudio ao mesmo tempo em uma pista
-
-
-
-# drummix multi deu problema na mixagem dos canais, acho que só consegui ouvir o bumbo e o vazamendo das outras peças
-
-#buga tudo se não tem conexão com a internet
 
 #BUGS relacionados com o diálogo de audioIO:
 #1 - quando seleciono as entradas sPDIF da fast track a aplicação encerra
 #3 - Com a fast track quando seleciono as entradas e simplesmente volto para a tela de audio IO o valor do segundo combo está bugado.
 
-#se desligo a fast enquanto estou com o dialogo de preferencias aberto dá pau em seguida
-
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
+#se desligo a fast enquanto estou com o dialogo de preferencias aberto dá pau em seguida
 
+#buga tudo se não tem conexão com a internet
 
 #se ligo a fast enquanto o Jamtaba está aberto ela não aparece na lista. Algum tipo de cache na portaudio?
 
 #separar o carregamento do plugin VST da instância. No momento uma instância é criada e depois é que o plugin é carregado. Pra mim
 #isso é um bad design
 
-# não estou chamando o startProcess nos VSTs, isso pode bugar VSTs que utilizam
+#VST
+    #agora que estou usando todos os canais de saida do plugin tive um
+        #memory corruption quando fechei o kontakt, mas foi esporárico, provavelmente
+        #alguma coisa relacionada com a thread que está removendo o plugin
+    #preciso mixar as várias saídas do plugin para um par estereo
 
 #nomes grandes estragam os nome dos canais nas entradas, os nomes dos canais ninjam, etc. Uma AutoElidedQLabel seria legal.
 

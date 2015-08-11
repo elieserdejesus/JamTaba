@@ -568,6 +568,8 @@ void MainFrame::closeEvent(QCloseEvent *)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::showEvent(QShowEvent *)
 {
+    qWarning() << "Thread da GUI: " << QThread::currentThreadId();
+
     int availableDevices = mainController->getAudioDriver()->getDevicesCount();
     if(!mainController->isStarted() && availableDevices > 0){
         showBusyDialog("Loading rooms list ...");

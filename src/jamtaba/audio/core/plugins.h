@@ -61,7 +61,7 @@ public:
     virtual void setBypass(bool state);
     inline bool isBypassed() const{return bypassed;}
     virtual void openEditor(QPoint centerOfScreen) = 0;
-    virtual void start(int sampleRate, int bufferSize) = 0;
+    virtual void start() = 0;
     void setEditor(PluginWindow* editorWindow);
     PluginWindow* getEditor() const{return editorWindow;}
     inline bool hasEditorWindow() const{return editorWindow;}
@@ -89,7 +89,7 @@ public:
     inline float getFeedback() const{return feedbackGain;}
     inline float getLevel() const{return level;}
     virtual void openEditor(QPoint centerOfScreen);
-    virtual void start(int sampleRate, int bufferSize);
+    virtual void start();
     inline QString getPath() const{return "";}
 private:
     void setSampleRate(int newSampleRate);
