@@ -22,8 +22,10 @@ public:
     JamRoomViewPanel(Login::RoomInfo roomInfo, QWidget *parent, Controller::MainController* mainController);
     ~JamRoomViewPanel();
     void addPeak(float peak);
-    void clearPeaks();
+    void clearPeaks(bool resetListenButton);
     void refreshUsersList(Login::RoomInfo roomInfo);
+
+    inline Login::RoomInfo getRoomInfo() const{return roomInfo;}
 protected:
     void paintEvent( QPaintEvent* e );
 signals:
@@ -33,6 +35,8 @@ signals:
 private slots:
     void on_buttonListen_clicked();
     void on_buttonEnter_clicked();
+
+
 
 private:
     Ui::RoomViewPanel *ui;

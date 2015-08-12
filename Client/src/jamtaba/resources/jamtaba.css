@@ -28,10 +28,13 @@ QInputDialog QPushButton{
 
 
 FxPanel{
-    border: 1px inset rgb(60, 60, 60);
+    border: none;
     background-color: rgba(0, 0, 0, 20);
     max-height: 80px;
     border-radius: 2px;
+}
+BaseTrackView[unlighted="false"] FxPanel{
+   border: 1px inset rgb(60, 60, 60);
 }
 
 FxPanelItem{
@@ -41,8 +44,13 @@ FxPanelItem{
     max-height: 14px;
     width: 100%;
     border-radius: 2px;
+    border: none;
+}
+
+BaseTrackView[unlighted="false"] FxPanelItem{
     border: 1px outset rgb(60, 60, 60);
 }
+
 FxPanelItem[containPlugin="false"]{
     background-image: url(':/images/arrow-down-lighter.png');
 }
@@ -499,25 +507,42 @@ JamRoomViewPanel  #labelRoomType{
 
 #xmitButton{
     border-radius: 2px;
-    border: 1px solid rgba(0,0, 0, 100);
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgba(90, 255, 62, 150), stop:1 rgba(0, 175, 0, 150));
+    border-width: 1px;
     font-size: 8pt;
     padding-top: 3px;
     padding-bottom: 3px;
     color: black;
+    min-height: 15px;
+}
+
+#xmitButton:checked{
+    background-color: rgb(90,90,90);
+    border-color: rgb(55,55,55);
+    border-style: inset;
+    color: rgb(30,30,30);
+
+
+}
+
+
+#xmitButton:!checked{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+    stop:0 rgba(255, 255, 255, 90),
+    stop:1 rgba(255, 255, 255, 160));
+    border-style: outset;
+    border-color: rgb(50,50,50);
+    color: black;
+
+
 }
 
 #xmitButton:hover{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(0, 175, 0), stop:1 rgb(90, 255, 62));
-}
-#xmitButton:!checked{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgba(255, 255, 255, 30), stop:1 rgba(255, 255, 255, 60));
-    border-color: gray;
-    color: black;
+    background-color: rgb(80,80,80);
 }
 
 #xmitButton:hover:!checked{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgba(255, 255, 255, 60), stop:1 rgba(255, 255, 255, 90));
+    background-color: rgba(255, 255, 255, 190);
+
 }
 /*+++++++++++++++++++++++++++++++*/
 
@@ -560,12 +585,17 @@ QPushButton#soloButton, QPushButton#muteButton {
 
 QPushButton{
     border-radius: 3px;
-    border: 1px solid gray;
+    border: 1px outset gray;
     color: rgba(0, 0, 0, 80);
     padding: 3px 6px 3px 6px;
     font-size: 8pt;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(0, 0, 0, 50), stop:0.02 rgba(0, 0, 0, 0), stop:0.7 rgba(0, 0, 0, 0), stop:1 rgba(0,0,0,60));
     color: rgb(60, 60, 60);
+}
+
+QPushButton:checked{
+    border-style: inset;
+    background-color: rgba(0, 0, 0, 70);
 }
 
 QPushButton:hover{
@@ -677,8 +707,12 @@ LocalTrackView[highlighted="true"]{
 LocalTrackView #inputPanel{
     padding: 2px;
     background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 60), stop:1 rgba(0, 0, 0, 140));
-    border: 1px outset rgb(80,80,80);
     border-radius: 3px;
+    border: none;
+}
+
+BaseTrackView[unlighted="false"] #inputPanel{
+    border: 1px outset rgb(80,80,80);
 }
 
 LocalTrackView #inputPanel:hover{

@@ -17,7 +17,7 @@ class AbstractMp3Streamer : public QObject, public AudioNode{
 public:
     explicit AbstractMp3Streamer(Audio::Mp3Decoder* decoder);
     ~AbstractMp3Streamer();
-    virtual void processReplacing(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
+    virtual void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
     virtual void stopCurrentStream();
     virtual void setStreamPath(QString streamPath);
     inline bool isStreaming() const{return streaming;}
@@ -49,7 +49,7 @@ public:
     explicit RoomStreamerNode(int bufferTimeInSeconds=3);
     ~RoomStreamerNode();
 
-    virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
+    virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
     //virtual void stopCurrentStream();
     virtual bool needResamplingFor(int targetSampleRate) const;
 protected:

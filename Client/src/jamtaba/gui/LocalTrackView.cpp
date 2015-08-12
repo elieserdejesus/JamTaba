@@ -36,7 +36,8 @@ void LocalTrackView::init(int channelIndex, float initialGain, float initialPan,
 
     //create input panel in the bottom
     ui->mainLayout->addSpacing(20);
-    ui->mainLayout->addWidget(createInputPanel());
+    this->inputPanel = createInputPanel();
+    ui->mainLayout->addWidget(inputPanel);
 
     //insert a input node in controller
     this->inputNode = new Audio::LocalInputAudioNode(channelIndex);
@@ -48,6 +49,25 @@ void LocalTrackView::init(int channelIndex, float initialGain, float initialPan,
     if(muted){
         ui->muteButton->click();
     }
+
+    setUnlightStatus(false);
+
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void LocalTrackView::setUnlightStatus(bool unlighted){
+    BaseTrackView::setUnlightStatus(unlighted);
+    style()->unpolish(fxPanel);
+    style()->polish(fxPanel);
+    QList<FxPanelItem*> items = fxPanel->getItems();
+    foreach (FxPanelItem* item, items) {
+        style()->unpolish(item);
+        style()->polish(item);
+    }
+
+    style()->unpolish(inputPanel);
+    style()->polish(inputPanel);
+    update();
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

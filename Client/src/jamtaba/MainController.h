@@ -76,6 +76,7 @@ public:
     MainController(JamtabaFactory *factory, Persistence::Settings settings, int& argc, char** argv);
     ~MainController();
 
+
     void start();
     void stop();
 

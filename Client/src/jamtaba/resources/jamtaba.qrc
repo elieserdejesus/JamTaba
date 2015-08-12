@@ -9,7 +9,6 @@
         <file>check_hover.png</file>
         <file>check_checked.png</file>
         <file>on.png</file>
-        <file>off.png</file>
         <file>metronome.png</file>
         <file>ninja.png</file>
         <file>licence.png</file>
@@ -31,6 +30,7 @@
         <file>fader_shadow_horizontal_hover.png</file>
         <file>fader_shadow_horizontal_unlighted.png</file>
         <file>jt_0001.png</file>
+        <file>off.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

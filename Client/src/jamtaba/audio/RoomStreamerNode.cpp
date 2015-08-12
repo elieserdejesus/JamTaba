@@ -46,10 +46,10 @@ void AbstractMp3Streamer::stopCurrentStream(){
     }
 }
 
-void AbstractMp3Streamer::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer &midiBuffer){
+void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer &midiBuffer){
     Q_UNUSED(in);
     Q_UNUSED(sampleRate);
-    //QMutexLocker locker(&mutex);
+    QMutexLocker locker(&mutex);
     if(samplesBuffer.empty()){
         return;
     }
@@ -57,8 +57,9 @@ void AbstractMp3Streamer::processReplacing(Audio::SamplesBuffer &in, Audio::Samp
 
     SamplesBuffer buffer(samplesBuffer.size());
     buffer.setFrameLenght(samplesToRender);
+
     for (int c = 0; c < buffer.getChannels(); ++c) {
-        for (int s = 0; s < buffer.getFrameLenght(); ++s) {
+        for (int s = 0; s < samplesToRender; ++s) {
             buffer.set(c, s, samplesBuffer[c].front());
             samplesBuffer[c].pop_front();
         }
@@ -87,7 +88,7 @@ bool AbstractMp3Streamer::needResamplingFor(int targetSampleRate) const{
 }
 
 void AbstractMp3Streamer::decodeBytesFromDevice(QIODevice* device, const unsigned int bytesToRead){
-    //QMutexLocker locker(&mutex);
+    QMutexLocker locker(&mutex);
     if(!device){
         return;
     }
@@ -97,7 +98,7 @@ void AbstractMp3Streamer::decodeBytesFromDevice(QIODevice* device, const unsigne
     if(totalBytesToProcess > 0){
         int bytesProcessed = 0;
         char* in = inputBuffer;
-        while(bytesProcessed < totalBytesToProcess){//splite bytesReaded in chunks to avoid a very large decoded buffer
+        while(bytesProcessed < totalBytesToProcess){//split bytesReaded in chunks to avoid a very large decoded buffer
             int bytesToProcess = std::min((int)(totalBytesToProcess - bytesProcessed), MAX_BYTES_PER_DECODING);//chunks maxsize is 2048 bytes
             const Audio::SamplesBuffer* decodedBuffer = decoder->decode(in, bytesToProcess);
             //prepare in for the next decoding
@@ -126,6 +127,10 @@ void AbstractMp3Streamer::setStreamPath(QString streamPath){
     initialize(streamPath);
 }
 
+//+++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++
 RoomStreamerNode::RoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds)
     : AbstractMp3Streamer( new Mp3DecoderMiniMp3()),
@@ -162,7 +167,7 @@ void RoomStreamerNode::initialize(QString streamPath){
 
 
 void RoomStreamerNode::reply_error(QNetworkReply::NetworkError /*error*/){
-    qDebug() << "ERROR" ;
+    qCritical() << "ERROR playing room stream" ;
 }
 
 void RoomStreamerNode::reply_read(){
@@ -181,7 +186,7 @@ RoomStreamerNode::~RoomStreamerNode(){
     //qDebug() << "RoomStreamerNode destructor!";
 }
 
-void RoomStreamerNode::processReplacing(SamplesBuffer & in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer &midiBuffer){
+void RoomStreamerNode::processReplacing(const SamplesBuffer & in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer &midiBuffer){
     if(buffering){
         lastPeak.zero();
         return;
