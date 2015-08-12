@@ -5,6 +5,9 @@
 #include <QNetworkAccessManager>
 #include <QObject>
 #include <deque>
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(roomStreamer)
 
 class QIODevice;
 
@@ -30,11 +33,13 @@ protected:
     Audio::FaderProcessor faderProcessor;//used to apply fade in in stream
     //QMutex mutex;
     Audio::Mp3Decoder* decoder;
-    std::vector<std::deque<float>> samplesBuffer;
+
     QIODevice* device;
-    void decodeBytesFromDevice(QIODevice* device, const unsigned int bytesToRead);
+    void decode(const unsigned int maxBytesToDecode);
+    QByteArray bytesToDecode;
     virtual void initialize(QString streamPath);
     bool streaming;
+    SamplesBuffer bufferedSamples;
 };
 //+++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++
@@ -59,17 +64,13 @@ private:
     bool buffering;
     int bufferSize;
 
-
-    //QByteArray byteArray;
 private slots:
     void reply_error(QNetworkReply::NetworkError);
     void reply_read();
 };
 //++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++
 class AudioFileStreamerNode : public AbstractMp3Streamer
 {
-Q_OBJECT//allow signal/slots
     //Q_OBJECT//allow signal/slots
 
 protected:
@@ -78,11 +79,12 @@ protected:
 public:
     explicit AudioFileStreamerNode(QString file);
     ~AudioFileStreamerNode();
-    virtual void processReplacing(SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
+    virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
 
 };
 
 //++++++++++++++++++++++
+/*
 class TestStreamerNode : public AbstractMp3Streamer{
 private:
     OscillatorAudioNode* oscilator;
@@ -94,7 +96,8 @@ public:
     ~TestStreamerNode();
     void stopCurrentStream();
     void setStreamPath(QString streamPath);
-    virtual void processReplacing(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
+    virtual void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
 };
+*/
 
 }//namespace end

@@ -168,7 +168,7 @@ OscillatorAudioNode::OscillatorAudioNode(float frequency, int sampleRate)
 
 }
 
-void OscillatorAudioNode::processReplacing(Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer){
+void OscillatorAudioNode::processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer){
     Q_UNUSED(in)
     Q_UNUSED(sampleRate)
     Q_UNUSED(midiBuffer)

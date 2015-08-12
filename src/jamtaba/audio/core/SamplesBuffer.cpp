@@ -52,6 +52,23 @@ SamplesBuffer::~SamplesBuffer(){
 
 }
 
+void SamplesBuffer::discardFirstSamples(unsigned int samplesToDiscard){
+    int toDiscard = std::min(frameLenght, samplesToDiscard);
+    int newFrameLenght = frameLenght - toDiscard;
+    for (uint s = 0; s < newFrameLenght; ++s) {
+        for (uint c = 0; c < channels; ++c) {
+            samples[c][s] = samples[c][toDiscard + s];
+        }
+    }
+    setFrameLenght(newFrameLenght);
+}
+
+void SamplesBuffer::append(const SamplesBuffer &other){
+    int internalOffset = frameLenght;
+    int newFrameLenght = frameLenght + other.frameLenght;
+    setFrameLenght(newFrameLenght);
+    set(other, 0, other.frameLenght, internalOffset);
+}
 
 float* SamplesBuffer::getSamplesArray(unsigned int channel) const{
     if( channel > samples.size()){
@@ -257,7 +274,8 @@ void SamplesBuffer::setToStereo(){
 }
 
 void SamplesBuffer::set(const SamplesBuffer &buffer){
-    set(buffer, 0, buffer.getFrameLenght(), 0);
+
+    set(buffer, 0, std::min( buffer.frameLenght, frameLenght), 0);
 }
 
 float SamplesBuffer::get(int channel, int sampleIndex) const{

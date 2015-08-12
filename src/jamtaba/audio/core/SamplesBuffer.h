@@ -34,6 +34,10 @@ public:
 
     float* getSamplesArray(unsigned int channel) const;
 
+    void discardFirstSamples(unsigned int samplesToDiscard);//discard N samples and set frame lenght to new size
+    void append(const SamplesBuffer& other);
+
+
     //inline int getID() const{return ID;}
     void applyGain(float gainFactor);
 
@@ -71,6 +75,8 @@ public:
     int getFrameLenght() const;//{ return frameLenght; }
     void setFrameLenght(unsigned int newFrameLenght);
     inline int getChannels() const { return channels; }
+
+    inline bool isEmpty() const{return frameLenght <= 0;}
 };
 
 }

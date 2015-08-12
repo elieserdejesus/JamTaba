@@ -1,4 +1,13 @@
-#crashou enquanto eu passava de um stream para o outro. Meu esquema de bufferização está zoado mesmo
+#melhorei o stream das salas, mas se paro e inicou o mesmo stream algumas vezes simplesmente para de funcionar
+    #eu acho que tenho muitas variáveis de estado, está confuso reiniciar o estado do
+    #streamer, por isso deve estar dando problema
+
+#testei no banheiro aqui em cima e o stream interrompeu depois de uns segundos
+    #talvez eu não esteja decodificando ou então não chegou a baixar os bytes mesmo.
+        #Tenho que plotar a quantidade de bytes baixados para ver se estou comendo
+        #mosca e não estou tocando bytes que já estão disponíveis
+        #A ideia do plot que mostra o que já foi decodificado ajudaria a debugar isso
+        #visualmente.
 
 #bufferSize do roomStreamer node deveria ser calculado somente quando eu já sei a sampleRate do stream
     #já estou calculando no construtor e chutando 48 KHz como sampleRate
