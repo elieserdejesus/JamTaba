@@ -113,7 +113,7 @@ class OscillatorAudioNode : public AudioNode{
 
 public:
     OscillatorAudioNode(float frequency, int sampleRate);
-    virtual void processReplacing(SamplesBuffer&in, SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer &midiBuffer);
+    virtual void processReplacing(const SamplesBuffer&in, SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer &midiBuffer);
     virtual int getSampleRate() const{return sampleRate;}
 private:
     float phase;

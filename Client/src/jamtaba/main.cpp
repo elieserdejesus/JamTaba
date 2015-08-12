@@ -15,26 +15,15 @@
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
-int main(int argc, char* args[] ){
-
-/*
-SamplesBufferResampler resampler;
-Audio::SamplesBuffer samples(1, 3);
-samples.set(0, 0, 1);
-samples.set(0, 1, 2);
-samples.set(0, 2, 3);
-
-
-for (int i = 0; i < 1; ++i) {
-    const Audio::SamplesBuffer resampledBuffer = resampler.resample(samples, 1, false, 7, 1);
-    for (int x = 0; x < resampledBuffer.getFrameLenght() ; ++x) {
-        qWarning() << resampledBuffer.get(0, x) << "\t" << resampler.getCursor();
+void showBuffer(const Audio::SamplesBuffer& buffer){
+    for (int s = 0; s < buffer.getFrameLenght(); ++s) {
+        qWarning() << buffer.get(0, s);
     }
 }
 
-return 0;
+int main(int argc, char* args[] ){
 
-*/
+
 
     QApplication::setApplicationName("Jamtaba 2");
 
@@ -57,6 +46,7 @@ return 0;
     int returnCode = mainController.exec();
     mainController.saveLastUserSettings(mainFrame.getInputsSettings());
     return returnCode;
+
 
  }
 //++++++++++++++++++++++++++++++++++

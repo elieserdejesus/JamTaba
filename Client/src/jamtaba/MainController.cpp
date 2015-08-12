@@ -146,7 +146,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     QObject::connect(this->audioDriver, SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
 
     audioMixer = new Audio::AudioMixer(audioDriver->getSampleRate());
-    roomStreamer = new Audio::RoomStreamerNode();
+    roomStreamer = new Audio::RoomStreamerNode();//new Audio::AudioFileStreamerNode(":/teste.mp3");
 
     //QString dateString = QDateTime::currentDateTime().time().toString().replace(":", "-");
     //QString fileName = "output_" + dateString + ".wav";
