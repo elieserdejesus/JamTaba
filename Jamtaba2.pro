@@ -1,3 +1,18 @@
+#crashou enquanto eu passava de um stream para o outro. Meu esquema de bufferização está zoado mesmo
+
+#bufferSize do roomStreamer node deveria ser calculado somente quando eu já sei a sampleRate do stream
+    #já estou calculando no construtor e chutando 48 KHz como sampleRate
+
+#muito flickering no plot do stream das salas - Pensei em um plot que vai mostrando
+    #os picos do áudio já baixado em cinza e depois vai acendendo esses picos conforme vai tocando.
+    #não teria o sliding que tem no momento.
+
+#o plot reseta sozinho depois de um tempo tocando o stream
+
+#se eu abro o sofware com a pista em noInput ela não fica esmaecida
+
+# Quando botei o reverb depois do B4 ouvi o reverb na entrada do mic mas não no B4, o encadeamento tem problema
+
 #parece que o stream das salas não está rolando mesmo. Vi que tinha problema na assinatura dos métodos.
     #não consegui testar os streams adequadamente ainda
 #acho que quando fico alternando entre os streams das salas não está funcionando muito bem, parece que o botão ficou pressionado.
@@ -7,6 +22,9 @@
     #nunca era invocado e a DLL não era descarregada, gerando um erro no fechamento.
 # tirei o comentário do código que deleta a pista, tenho que ver se ainda tem o bug quando
     #deleto um canal no Reaninjam.
+#não consegui resolver o bug que acontece quando as pistas são removidas, por hora apenas comentei a linha que delete as pistas no NinjamJamRoomController. Ou seja, a memoria não está sendo liberada.
+#Agora estou usando vector<float> para guardar as amostras, ver o que acontece.
+
 
 
 #Prioridades para um primeiro release
@@ -15,18 +33,7 @@
 
 #preciso testar nome de usuário com caracter especial para ver se o utf está funcionando
 
-#não está lembrando das entradas estereo com a fast track
-
 # a mensagem de crowded está errada?
-
-#não consegui resolver o bug que acontece quando as pistas são removidas, por hora apenas comentei a linha que delete as pistas no NinjamJamRoomController. Ou seja, a memoria não está sendo liberada.
-#Agora estou usando vector<float> para guardar as amostras, ver o que acontece.
-
-# Quando botei o reverb depois do B4 ouvi o reverb na entrada do mic mas não no B4, o encadeamento tem problema
-
-#BUGS relacionados com o diálogo de audioIO:
-#1 - quando seleciono as entradas sPDIF da fast track a aplicação encerra
-#3 - Com a fast track quando seleciono as entradas e simplesmente volto para a tela de audio IO o valor do segundo combo está bugado.
 
 
 #tocar em algumas Jams para ver se está rolando

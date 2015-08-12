@@ -29,7 +29,7 @@ void TrackGroupView::setUnlightStatus(bool unlighted){
     foreach (BaseTrackView* localTrack, trackViews) {
         localTrack->setUnlightStatus(unlighted);
     }
-
+    update();
 }
 
 void TrackGroupView::updatePeaks(){

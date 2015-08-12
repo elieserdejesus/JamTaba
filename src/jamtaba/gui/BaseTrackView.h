@@ -35,7 +35,7 @@ public:
 
     inline Controller::MainController* getMainController() const{return mainController;}
 
-    void setUnlightStatus(bool unlighted);
+    virtual void setUnlightStatus(bool unlighted);
 
     static const int NARROW_WIDTH = 80;
     static const int WIDE_WIDTH = 120;

@@ -104,8 +104,11 @@ JamRoomViewPanel::~JamRoomViewPanel()
     delete ui;
 }
 
-void JamRoomViewPanel::clearPeaks(){
+void JamRoomViewPanel::clearPeaks(bool resetListenButton){
     ui->wavePeakPanel->clearPeaks();
+    if(resetListenButton){
+        ui->buttonListen->setChecked(false);
+    }
 }
 
 void JamRoomViewPanel::on_buttonListen_clicked(){

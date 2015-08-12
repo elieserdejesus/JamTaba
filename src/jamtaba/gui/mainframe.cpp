@@ -392,7 +392,7 @@ void MainFrame::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
 void MainFrame::on_startingRoomStream(Login::RoomInfo roomInfo){
     //clear all plots
     foreach (JamRoomViewPanel* viewPanel, this->roomViewPanels.values()) {
-        viewPanel->clearPeaks();
+        viewPanel->clearPeaks(roomInfo.getID() != viewPanel->getRoomInfo().getID());
     }
 
     if(roomInfo.hasStream()){//just in case...
@@ -402,7 +402,7 @@ void MainFrame::on_startingRoomStream(Login::RoomInfo roomInfo){
 
 void MainFrame::on_stoppingRoomStream(Login::RoomInfo roomInfo){
     mainController->stopRoomStream();
-    roomViewPanels[roomInfo.getID()]->clearPeaks();
+    roomViewPanels[roomInfo.getID()]->clearPeaks(true);
 }
 
 QStringList MainFrame::getChannelsNames() const{

@@ -35,6 +35,8 @@ public:
     void setToNoInput();
     Audio::LocalInputAudioNode* getInputNode() const;
     QList<const Audio::Plugin*> getInsertedPlugins() const;
+
+    virtual void setUnlightStatus(bool unlighted);
 private:
     //int inputIndex;
     FxPanel* fxPanel;
@@ -49,6 +51,8 @@ private:
 
     QPushButton* inputSelectionButton;
     QLabel* inputTypeIconLabel;
+
+    QWidget* inputPanel;
 
     static const QString MIDI_ICON;
     static const QString MONO_ICON;
