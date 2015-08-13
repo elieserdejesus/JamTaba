@@ -14,6 +14,8 @@ JamRoomViewPanel::JamRoomViewPanel(Login::RoomInfo roomInfo, QWidget* parent, Co
 {
     ui->setupUi(this);
     initialize(roomInfo);
+
+    ui->wavePeakPanel->setEnabled(false);//is enable when user click in listen button
 }
 
 
@@ -119,6 +121,8 @@ void JamRoomViewPanel::on_buttonListen_clicked(){
     else{
         emit finishingListeningTheRoom(roomInfo);
     }
+    ui->wavePeakPanel->setEnabled(ui->buttonListen->isChecked());
+    ui->wavePeakPanel->updateGeometry();
 }
 
 void JamRoomViewPanel::on_buttonEnter_clicked(){

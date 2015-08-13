@@ -44,8 +44,9 @@ void AbstractMp3Streamer::stopCurrentStream(){
     //QMutexLocker locker(&mutex);
     faderProcessor.reset();//aply fadein in next stream
     if(device){
-        device->close();
+        //device->close();
         decoder->reset();//discard unprocessed bytes
+        device->deleteLater();
         device = nullptr;
         bufferedSamples.zero();//discard samples
         streaming = false;
@@ -58,7 +59,9 @@ void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in, Audio
     Q_UNUSED(sampleRate);
     //QMutexLocker locker(&mutex);
     if(bufferedSamples.isEmpty() || !streaming){
-        //qCDebug(roomStreamer) << "buffered samples is empty";
+//        if(streaming && bufferedSamples.isEmpty()){
+//            qCDebug(roomStreamer) << "buffered samples is empty bytesToDecode:" << bytesToDecode.size();
+//        }
         return;
     }
     int samplesToRender = std::min(out.getFrameLenght(), bufferedSamples.getFrameLenght());
@@ -120,6 +123,9 @@ void AbstractMp3Streamer::decode(const unsigned int maxBytesToDecode){
             bufferedSamples.append(*decodedBuffer);
         }
         bytesToDecode = bytesToDecode.right(bytesToDecode.size() - bytesProcessed);
+        if(bytesToDecode.isEmpty()){
+            qCDebug(roomStreamer) << bytesProcessed << " decoded  bytesToDecode: " << bytesToDecode.size();
+        }
     }
 }
 
@@ -179,6 +185,7 @@ void RoomStreamerNode::reply_read(){
     }
     QMutexLocker locker(&mutex);
     bytesToDecode.append(device->readAll());
+    //qCDebug(roomStreamer) << "bytes downloaded  bytesToDecode:"<<bytesToDecode.size();
 
 }
 
