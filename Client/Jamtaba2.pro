@@ -1,33 +1,39 @@
-#melhorei o stream das salas, mas se paro e inicou o mesmo stream algumas vezes simplesmente para de funcionar
-    #eu acho que tenho muitas variáveis de estado, está confuso reiniciar o estado do
-    #streamer, por isso deve estar dando problema
+#quando fiquei alternando entre os streams das salas vi que chega um momento em que não tem mais bytes.
+    #o log mostrou que não tinha bytes para decodificar. Então acho que pode estar dando um erro na conexão
+    #com o servidor e não estou tratando isso
+    #Agora estou deletando o reply e ele fecha a conexão
+    #com o servidor, eu não estava fechando antes. Mas
+    #não consegui testar mais detalhadamente para ver
+    #se realmente resolveu.
+
+#botão listen está habilitado em salas vazias
+
+#se mexo em qualquer coisa enquanto está tocando o stream da sala
+    #dá ruído no áudio, acho que decoding do mp3 na thread
+    #de áudio não é uma boa
 
 #testei no banheiro aqui em cima e o stream interrompeu depois de uns segundos
     #talvez eu não esteja decodificando ou então não chegou a baixar os bytes mesmo.
         #Tenho que plotar a quantidade de bytes baixados para ver se estou comendo
         #mosca e não estou tocando bytes que já estão disponíveis
-        #A ideia do plot que mostra o que já foi decodificado ajudaria a debugar isso
-        #visualmente.
+
+#Fiz um teste tocando uma batera no addictive pelo Reaninjam. Abri o Jamtaba e dei play no stream. Ficou péssimo. Vi
+    #que o ícone do ASio4ALL fica em vermelho o tempo todo. Bastou desligar o Reaper e tudo voltou ao normal. Parece que
+    #com os dois software funcionando o decoder do mp3 argolou o processador ou alguma coisa parecida.
+    #O que acontece se eu estiver tocando em uma sala com algumas pessoas e tentar ouvir o stream de outra sala, vai rolar?
+
+#Esta ouvindo o stream da sala e usando a fast. Mudei para asio4all e crashou quando dei ok no dialogo de preferencias
 
 #quando dá erro no stream eu preciso resetar o botão
+
+#se eu estou ouvindo uma sala e entro nela o botão de stream fica pressionado
 
 #bufferSize do roomStreamer node deveria ser calculado somente quando eu já sei a sampleRate do stream
     #já estou calculando no construtor e chutando 48 KHz como sampleRate
 
-#muito flickering no plot do stream das salas - Pensei em um plot que vai mostrando
-    #os picos do áudio já baixado em cinza e depois vai acendendo esses picos conforme vai tocando.
-    #não teria o sliding que tem no momento.
-
-#o plot reseta sozinho depois de um tempo tocando o stream
-
 #se eu abro o sofware com a pista em noInput ela não fica esmaecida
 
 # Quando botei o reverb depois do B4 ouvi o reverb na entrada do mic mas não no B4, o encadeamento tem problema
-
-#parece que o stream das salas não está rolando mesmo. Vi que tinha problema na assinatura dos métodos.
-    #não consegui testar os streams adequadamente ainda
-#acho que quando fico alternando entre os streams das salas não está funcionando muito bem, parece que o botão ficou pressionado.
-#acho que o stream do ninjamer não está rolando
 
 #Não estava deletando as tracks de input, por isso o plugin vst não era deletado, o destrutor
     #nunca era invocado e a DLL não era descarregada, gerando um erro no fechamento.
@@ -49,6 +55,8 @@
 
 #tocar em algumas Jams para ver se está rolando
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#acho que o stream do ninjamer não está rolando
 
 #se desligo a fast enquanto estou com o dialogo de preferencias aberto dá pau em seguida
 
