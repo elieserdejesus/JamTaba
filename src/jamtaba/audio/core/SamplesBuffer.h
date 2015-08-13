@@ -16,8 +16,6 @@ private:
 
     std::vector< std::vector<float>> samples;
 
-    inline bool isMono() const {return channels == 1;}
-
 
     inline bool channelIsValid(unsigned int channel) const{return channel < channels;}
     inline bool sampleIndexIsValid(unsigned int sampleIndex) const{return sampleIndex < frameLenght;}
@@ -31,6 +29,8 @@ public:
     ~SamplesBuffer();
 
     static const SamplesBuffer ZERO_BUFFER;//a static buffer with zero samples
+
+    inline bool isMono() const {return channels == 1;}
 
     float* getSamplesArray(unsigned int channel) const;
 

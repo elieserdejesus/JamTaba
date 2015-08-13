@@ -487,13 +487,6 @@ JamRoomViewPanel #labelName{
     font-size: 10pt;
 }
 
-JamRoomViewPanel > #plotPanel{
-    min-height: 50px;
-    background: red;
-    border: 1px solid black;
-    border-radius: 5px;
-}
-
 JamRoomViewPanel  #labelRoomStatus, JamRoomViewPanel  #labelRoomType{
     font-size: 8pt;
     color: rgb(90, 90, 90);

@@ -1,6 +1,7 @@
 #include "WavePeakPanel.h"
 
 #include <QPainter>
+#include <QStyleOption>
 
 const int WavePeakPanel::peaksRectWidth = 3;
 const int WavePeakPanel::peaksPad = 2;
@@ -58,9 +59,9 @@ void WavePeakPanel::addPeak(float peak) {
 
 
 void WavePeakPanel::paintEvent(QPaintEvent */*event*/){
-
     if (isVisible()) {
         QPainter painter(this);
+
         int size = totalPeaks;
         for (int i = 0; i < size; i++) {
             int xPos = i * (peaksRectWidth + peaksPad);// (i + startIndex) % size;

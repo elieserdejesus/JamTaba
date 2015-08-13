@@ -9,6 +9,8 @@
         #A ideia do plot que mostra o que já foi decodificado ajudaria a debugar isso
         #visualmente.
 
+#quando dá erro no stream eu preciso resetar o botão
+
 #bufferSize do roomStreamer node deveria ser calculado somente quando eu já sei a sampleRate do stream
     #já estou calculando no construtor e chutando 48 KHz como sampleRate
 

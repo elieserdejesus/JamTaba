@@ -34,6 +34,7 @@
 #include "../MainController.h"
 #include "../loginserver/LoginService.h"
 #include "../Utils.h"
+#include "../audio/RoomStreamerNode.h"
 
 using namespace Audio;
 using namespace Persistence;

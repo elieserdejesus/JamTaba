@@ -16,6 +16,7 @@ JamRoomViewPanel::JamRoomViewPanel(Login::RoomInfo roomInfo, QWidget* parent, Co
     initialize(roomInfo);
 }
 
+
 void JamRoomViewPanel::refreshUsersList(Login::RoomInfo roomInfo){
     this->roomInfo = roomInfo;
 
