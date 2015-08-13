@@ -26,6 +26,7 @@ public:
     inline bool isStreaming() const{return streaming;}
     virtual int getSampleRate() const;
     virtual bool needResamplingFor(int targetSampleRate) const;
+
 private:
     static const int MAX_BYTES_PER_DECODING;
 
