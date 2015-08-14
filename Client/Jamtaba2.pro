@@ -1,16 +1,15 @@
 #quando fiquei alternando entre os streams das salas vi que chega um momento em que não tem mais bytes.
     #o log mostrou que não tinha bytes para decodificar. Então acho que pode estar dando um erro na conexão
     #com o servidor e não estou tratando isso
-    #Agora estou deletando o reply e ele fecha a conexão
-    #com o servidor, eu não estava fechando antes. Mas
-    #não consegui testar mais detalhadamente para ver
-    #se realmente resolveu.
+
 
 #botão listen está habilitado em salas vazias
 
 #se mexo em qualquer coisa enquanto está tocando o stream da sala
     #dá ruído no áudio, acho que decoding do mp3 na thread
-    #de áudio não é uma boa
+    #de áudio não é uma boa. Poderia tentar o decoding na thread da gui para ver
+    #mas isso pode gerar gargalo na rede. Como é só um stream acho que não teria
+    #tanto impacto.
 
 #testei no banheiro aqui em cima e o stream interrompeu depois de uns segundos
     #talvez eu não esteja decodificando ou então não chegou a baixar os bytes mesmo.
@@ -22,7 +21,7 @@
     #com os dois software funcionando o decoder do mp3 argolou o processador ou alguma coisa parecida.
     #O que acontece se eu estiver tocando em uma sala com algumas pessoas e tentar ouvir o stream de outra sala, vai rolar?
 
-#Esta ouvindo o stream da sala e usando a fast. Mudei para asio4all e crashou quando dei ok no dialogo de preferencias
+#Estava ouvindo o stream da sala e usando a fast. Mudei para asio4all e crashou quando dei ok no dialogo de preferencias
 
 #quando dá erro no stream eu preciso resetar o botão
 

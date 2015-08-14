@@ -61,13 +61,14 @@ public:
 protected:
     void initialize(QString streamPath);
 private:
-    QNetworkAccessManager httpClient;
+    QNetworkAccessManager* httpClient;
     bool buffering;
     int bufferSize;
 
 private slots:
-    void reply_error(QNetworkReply::NetworkError);
-    void reply_read();
+    void on_reply_error(QNetworkReply::NetworkError);
+    void on_reply_read();
+    void on_reply_finished();
 };
 //++++++++++++++++++++++++++++
 class AudioFileStreamerNode : public AbstractMp3Streamer
