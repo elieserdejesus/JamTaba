@@ -1,16 +1,3 @@
-#botão listen está habilitado em salas vazias
-
-#se mexo em qualquer coisa enquanto está tocando o stream da sala
-    #dá ruído no áudio, acho que decoding do mp3 na thread
-    #de áudio não é uma boa. Poderia tentar o decoding na thread da gui para ver
-    #mas isso pode gerar gargalo na rede. Como é só um stream acho que não teria
-    #tanto impacto.
-
-#testei no banheiro aqui em cima e o stream interrompeu depois de uns segundos
-    #talvez eu não esteja decodificando ou então não chegou a baixar os bytes mesmo.
-        #Tenho que plotar a quantidade de bytes baixados para ver se estou comendo
-        #mosca e não estou tocando bytes que já estão disponíveis
-
 #Fiz um teste tocando uma batera no addictive pelo Reaninjam. Abri o Jamtaba e dei play no stream. Ficou péssimo. Vi
     #que o ícone do ASio4ALL fica em vermelho o tempo todo. Bastou desligar o Reaper e tudo voltou ao normal. Parece que
     #com os dois software funcionando o decoder do mp3 argolou o processador ou alguma coisa parecida.
