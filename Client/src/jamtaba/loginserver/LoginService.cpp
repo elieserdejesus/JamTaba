@@ -7,6 +7,7 @@
 #include <QUrlQuery>
 #include <QTimer>
 #include "../ninjam/Server.h"
+#include "../ninjam/Service.h"
 
 using namespace Login;
 
@@ -35,7 +36,12 @@ RoomInfo::RoomInfo(QString roomName, int roomPort, RoomTYPE roomType, int maxUse
 
 
 bool RoomInfo::isEmpty() const{
-    return users.isEmpty();
+    foreach (const UserInfo& userInfo, users) {
+        if(!Ninjam::Service::isBotName(userInfo.getName())){
+            return false;
+        }
+    }
+    return true;
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

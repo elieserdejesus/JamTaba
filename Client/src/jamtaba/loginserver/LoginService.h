@@ -32,6 +32,7 @@ private:
     long long id;
     QString name;
     QString ip;
+
 };
 //+++++++++++++++++++++++++++++++++++++++++++++++++++
 enum class RoomTYPE{NINJAM, REALTIME};

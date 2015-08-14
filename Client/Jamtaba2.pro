@@ -1,8 +1,3 @@
-#quando fiquei alternando entre os streams das salas vi que chega um momento em que não tem mais bytes.
-    #o log mostrou que não tinha bytes para decodificar. Então acho que pode estar dando um erro na conexão
-    #com o servidor e não estou tratando isso
-
-
 #botão listen está habilitado em salas vazias
 
 #se mexo em qualquer coisa enquanto está tocando o stream da sala
