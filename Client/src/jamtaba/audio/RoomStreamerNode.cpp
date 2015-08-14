@@ -103,7 +103,7 @@ bool AbstractMp3Streamer::needResamplingFor(int targetSampleRate) const{
 }
 
 void AbstractMp3Streamer::decode(const unsigned int maxBytesToDecode){
-    QMutexLocker locker(&mutex);
+    //QMutexLocker locker(&mutex);
     if(!device ){
         return;
     }
@@ -200,9 +200,18 @@ void RoomStreamerNode::on_reply_read(){
         qCDebug(roomStreamer) << "device is null!";
         return;
     }
-    QMutexLocker locker(&mutex);
+
     bytesToDecode.append(device->readAll());
-    qCDebug(roomStreamer) << "bytes downloaded  bytesToDecode:"<<bytesToDecode.size();
+
+    qCDebug(roomStreamer) << "bytes downloaded  bytesToDecode:"<<bytesToDecode.size() << " bufferedSamples: " << bufferedSamples.getFrameLenght();
+
+    //QMutexLocker locker(&mutex);
+    //if(initialBuffering || bufferedSamples.getFrameLenght() < bufferSize){
+       //decode(512);
+    //}
+//    if(buffering && bufferedSamples.getFrameLenght() >= bufferSize){
+//        buffering = false;
+//    }
 
 }
 
@@ -212,9 +221,18 @@ RoomStreamerNode::~RoomStreamerNode(){
 
 void RoomStreamerNode::processReplacing(const SamplesBuffer & in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer &midiBuffer){
     //QMutexLocker locker(&mutex);
-    if(buffering || bufferedSamples.getFrameLenght() < bufferSize){
-        decode(1024);
+    if(!buffering){
+        while(bufferedSamples.getFrameLenght() < out.getFrameLenght()){
+            decode(128);
+            if(bytesToDecode.isEmpty()){
+                break;//no more bytes to decode
+            }
+        }
     }
+    else{
+        decode(2048);
+    }
+
     if(buffering && bufferedSamples.getFrameLenght() >= bufferSize){
         buffering = false;
     }
@@ -225,6 +243,8 @@ void RoomStreamerNode::processReplacing(const SamplesBuffer & in, SamplesBuffer 
     else{//buffering
         lastPeak.zero();
     }
+
+
 
 }
 
