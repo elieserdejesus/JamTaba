@@ -141,14 +141,17 @@ void AbstractMp3Streamer::setStreamPath(QString streamPath){
 //+++++++++++++++++++++++++++++++++++++++
 RoomStreamerNode::RoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds)
     : AbstractMp3Streamer( new Mp3DecoderMiniMp3()),
-      bufferSize(bufferTimeInSeconds * 48000)
+      bufferSize(bufferTimeInSeconds * 48000),
+      httpClient(nullptr)
 {
+
     setStreamPath(streamPath.toString());
 }
 
 RoomStreamerNode::RoomStreamerNode(int bufferTimeInSeconds)
     :AbstractMp3Streamer( new Mp3DecoderMiniMp3()),
-      bufferSize(bufferTimeInSeconds * 48000)//TODO melhorar isso
+      bufferSize(bufferTimeInSeconds * 48000),//TODO melhorar isso
+      httpClient(nullptr)
 {
     setStreamPath("");
 }
@@ -167,25 +170,39 @@ void RoomStreamerNode::initialize(QString streamPath){
     bufferedSamples.zero();
     bytesToDecode.clear();
     if(!streamPath.isEmpty()){
-        QNetworkReply* reply = httpClient.get(QNetworkRequest(QUrl(streamPath)));
-        QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(reply_read()));
-        QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(reply_error(QNetworkReply::NetworkError)));
+        qCDebug(roomStreamer) << "connecting in " << streamPath;
+        if(httpClient){
+            httpClient->deleteLater();
+        }
+        httpClient = new QNetworkAccessManager(this);
+        QNetworkReply* reply = httpClient->get(QNetworkRequest(QUrl(streamPath)));
+        QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(on_reply_read()));
+        QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(on_reply_error(QNetworkReply::NetworkError)));
+        QObject::connect(httpClient, SIGNAL(finished(QNetworkReply*)), this, SLOT(on_reply_finished()));
         this->device = reply;
+    }
+    else{
+        qCCritical(roomStreamer) << "streamPath is empty!";
     }
 }
 
+void RoomStreamerNode::on_reply_finished(){
+    qCCritical(roomStreamer) << "reply finished!!" ;
+}
 
-void RoomStreamerNode::reply_error(QNetworkReply::NetworkError /*error*/){
+void RoomStreamerNode::on_reply_error(QNetworkReply::NetworkError /*error*/){
     qCCritical(roomStreamer) << "ERROR playing room stream" ;
 }
 
-void RoomStreamerNode::reply_read(){
+void RoomStreamerNode::on_reply_read(){
+    //qCDebug(roomStreamer) << "on_reply_read";
     if(!device){
+        qCDebug(roomStreamer) << "device is null!";
         return;
     }
     QMutexLocker locker(&mutex);
     bytesToDecode.append(device->readAll());
-    //qCDebug(roomStreamer) << "bytes downloaded  bytesToDecode:"<<bytesToDecode.size();
+    qCDebug(roomStreamer) << "bytes downloaded  bytesToDecode:"<<bytesToDecode.size();
 
 }
 
