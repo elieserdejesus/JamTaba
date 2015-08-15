@@ -18,10 +18,10 @@ FxPanel::FxPanel(LocalTrackView *parent, Controller::MainController *mainControl
 
     QWidget* contentPane = new QWidget(this);
     QScrollArea* scrollArea = new QScrollArea(this);
-    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     QVBoxLayout* contentLayout = new QVBoxLayout( contentPane);
-    contentLayout->setContentsMargins(QMargins(1, 0, 2, 0));
+    contentLayout->setContentsMargins(QMargins(2, 2, 2, 2));
     contentLayout->setSpacing(2);
 
     scrollArea->setWidget(contentPane);

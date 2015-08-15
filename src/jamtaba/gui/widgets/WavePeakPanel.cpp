@@ -59,8 +59,8 @@ void WavePeakPanel::paintEvent(QPaintEvent */*event*/){
         //qWarning() << "size: " << peaksArray.size();
         uint size = peaksArray.size();
         for (uint i = 0; i < size; i++) {
-            int alpha = ((float)(i+1)/(size)) * 255;
-            QColor color(90, 90, 90, alpha);
+            float alpha = ((float)(i+1)/(size));
+            QColor color(90, 90, 90, std::pow(alpha, 2) * 255);
             int xPos = i * (peaksRectWidth + peaksPad);
             drawPeak(&painter, xPos, peaksArray[i], color);
         }

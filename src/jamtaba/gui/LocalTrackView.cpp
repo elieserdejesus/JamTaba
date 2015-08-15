@@ -235,7 +235,7 @@ void LocalTrackView::refreshInputSelectionName(){
     Audio::LocalInputAudioNode* inputTrack = mainController->getInputTrack(getTrackID());
     QString channelName;
     QString iconFile;
-    if(!inputTrack->isMidi()){//using audio as input method
+    if(inputTrack->isAudio()){//using audio as input method
         Audio::ChannelRange inputRange = inputTrack->getAudioInputRange();
         if(inputTrack->isStereo()){
             int firstInputIndex = inputRange.getFirstChannel();
@@ -254,11 +254,13 @@ void LocalTrackView::refreshInputSelectionName(){
         }
     }
     else{//using midi as input method
-        Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
-        int selectedDeviceIndex = inputTrack->getMidiDeviceIndex();
-        if( selectedDeviceIndex < midiDriver->getMaxInputDevices() && midiDriver->deviceIsGloballyEnabled(selectedDeviceIndex)){
-            channelName = midiDriver->getInputDeviceName(selectedDeviceIndex);
-            iconFile = MIDI_ICON;
+        if(inputTrack->isMidi()){
+            Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
+            int selectedDeviceIndex = inputTrack->getMidiDeviceIndex();
+            if( selectedDeviceIndex < midiDriver->getMaxInputDevices() && midiDriver->deviceIsGloballyEnabled(selectedDeviceIndex)){
+                channelName = midiDriver->getInputDeviceName(selectedDeviceIndex);
+                iconFile = MIDI_ICON;
+            }
         }
         else{
             channelName = "No input";
@@ -274,6 +276,8 @@ void LocalTrackView::refreshInputSelectionName(){
     //set the icon
     this->inputTypeIconLabel->setStyleSheet("background-image: url(" + iconFile + ");");
     //this->inputTypeIconLabel->setText("<img src=" + iconFile + "/>");
+
+    setUnlightStatus(inputTrack->isNoInput());
 
     updateGeometry();
 

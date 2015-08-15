@@ -155,13 +155,9 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 
     midiDriver = new PortMidiDriver(settings.getMidiInputDevicesStatus());
 
-
     QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromLoginServer()));
 
-
     this->audioMixer->addNode( this->roomStreamer);
-
-    //tracksNodes.insert(INPUT_TRACK_ID, audioMixer->getLocalInput());
 
     vstHost->setSampleRate(audioDriver->getSampleRate());
     vstHost->setBlockSize(audioDriver->getBufferSize());
@@ -176,7 +172,6 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 
 
     this->ninjamController = new Controller::NinjamController(this);
-    //QObject::connect(this->ninjamController, SIGNAL(startingNewInterval()), this, SLOT(on_ninjamStartingNewInterval()));
     QObject::connect(this->ninjamController,
                      SIGNAL(encodedAudioAvailableToSend(QByteArray,quint8,bool,bool)),
                      this, SLOT(on_ninjamEncodedAudioAvailableToSend(QByteArray,quint8,bool,  bool)));
@@ -200,8 +195,6 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     }
     trackTest->startNewInterval();
 */
-
-
 
     //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
     //QString vstDir = "C:/Program Files (x86)/VSTPlugins/";
@@ -714,16 +707,32 @@ void MainController::saveLastUserSettings(const Persistence::InputsSettings& inp
     settings.save(inputsSettings);
 }
 
+void MainController::setAllTracksActivation(bool activated){
+    foreach (Audio::AudioNode* track, tracksNodes) {
+        if(activated)
+            track->activate();
+        else
+            track->deactivate();
+    }
+}
+
 void MainController::playRoomStream(Login::RoomInfo roomInfo){
     if(roomInfo.hasStream()){
         roomStreamer->setStreamPath(roomInfo.getStreamUrl());
         currentStreamingRoomID = roomInfo.getID();
+
+        //mute all tracks and unmute the room Streamer
+        setAllTracksActivation(false);
+        roomStreamer->activate();
     }
 }
 
 void MainController::stopRoomStream(){
     roomStreamer->stopCurrentStream();
     currentStreamingRoomID = -1000;
+
+    setAllTracksActivation(true);
+    //roomStreamer->setMuteStatus(true);
 }
 
 bool MainController::isPlayingRoomStream() const{

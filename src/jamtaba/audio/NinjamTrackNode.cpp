@@ -34,9 +34,9 @@ void NinjamTrackNode::discardIntervals(){
 
 bool NinjamTrackNode::startNewInterval(){
     QMutexLocker locker(&mutex);
-    if(!isActivated()){
-        return false;
-    }
+//    if(!isActivated()){
+//        return false;
+//    }
     if(!intervals.isEmpty()){
         decoder.setInput(intervals.front());
         intervals.removeFirst();
@@ -52,9 +52,9 @@ bool NinjamTrackNode::startNewInterval(){
 
 void NinjamTrackNode::addVorbisEncodedInterval(QByteArray vorbisData){
     QMutexLocker locker(&mutex);
-    if(!isActivated()){
-        return;
-    }
+//    if(!isActivated()){
+//        return;
+//    }
     intervals.append(vorbisData);//enqueue a new interval
 }
 //++++++++++++++++++++++++++++++++++++++
@@ -65,12 +65,6 @@ int NinjamTrackNode::getFramesToProcess(int targetSampleRate, int outFrameLenght
 }
 
 void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer){
-    {
-        QMutexLocker locker(&mutex);
-        if(!isActivated()){
-            return;
-        }
-    }
     if(!playing){
         return;
     }

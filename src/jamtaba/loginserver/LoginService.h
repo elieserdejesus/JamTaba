@@ -47,12 +47,13 @@ public:
     bool isEmpty() const;
     inline bool isFull() const{return users.size() >= maxUsers;}
     inline int getPort() const{return port;}
-    bool containsBotsOnly() const;
+    //bool containsBotsOnly() const;
     inline QList<UserInfo> getUsers() const{return users;}
     inline bool hasStream() const{return !streamUrl.isEmpty();}
     inline long long getID() const{return id;}
     inline QString getStreamUrl() const{return streamUrl;}
     inline int getMaxChannels() const {return maxChannels;}
+    int getNonBotUsersCount() const;
 protected:
     long long id;
     QString name;
@@ -62,6 +63,7 @@ protected:
     int maxChannels;
     QList<UserInfo> users;
     QString streamUrl;
+
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -91,7 +93,7 @@ private:
     QNetworkAccessManager httpClient;
     QNetworkReply* pendingReply;
     QNetworkReply* sendCommandToServer(const QUrlQuery&);
-    static const bool LOCAL_HOST_MODE = false;
+    static const bool LOCAL_HOST_MODE = true;
     static const QString SERVER;
     bool connected;
     void handleJson(QString json);

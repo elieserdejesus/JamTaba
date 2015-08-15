@@ -287,6 +287,5 @@
         <file>click.wav</file>
         <file>loading.gif</file>
         <file>../../../qtlogging.ini</file>
-        <file>../../../../../teste.mp3</file>
     </qresource>
 </RCC>

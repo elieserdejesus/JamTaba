@@ -54,6 +54,8 @@ public:
     Persistence::InputsSettings getInputsSettings() const;
 private slots:
     void on_tabCloseRequest(int index);
+    void on_tabChanged(int index);
+
     void on_preferencesClicked(QAction *action);
     void on_IOPreferencesChanged(QList<bool>, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
     void on_roomsListAvailable(QList<Login::RoomInfo> publicRooms);
@@ -86,6 +88,9 @@ private slots:
     //xmit
     void on_xmitButtonClicked(bool checked);
 
+    //room streamer
+    void on_RoomStreamerError(QString msg);
+
 private:
 
     BusyDialog busyDialog;
@@ -94,6 +99,8 @@ private:
     void showBusyDialog();
     void hideBusyDialog();
     void centerBusyDialog();
+
+    void stopCurrentRoomStream();
 
     int timerID;
 

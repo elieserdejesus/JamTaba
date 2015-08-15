@@ -141,7 +141,7 @@ void AbstractMp3Streamer::setStreamPath(QString streamPath){
 //+++++++++++++++++++++++++++++++++++++++
 RoomStreamerNode::RoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds)
     : AbstractMp3Streamer( new Mp3DecoderMiniMp3()),
-      bufferSize(bufferTimeInSeconds * 48000),
+      bufferTime(bufferTimeInSeconds),
       httpClient(nullptr)
 {
 
@@ -150,7 +150,7 @@ RoomStreamerNode::RoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds)
 
 RoomStreamerNode::RoomStreamerNode(int bufferTimeInSeconds)
     :AbstractMp3Streamer( new Mp3DecoderMiniMp3()),
-      bufferSize(bufferTimeInSeconds * 48000),//TODO melhorar isso
+      bufferTime(bufferTimeInSeconds),
       httpClient(nullptr)
 {
     setStreamPath("");
@@ -178,49 +178,37 @@ void RoomStreamerNode::initialize(QString streamPath){
         QNetworkReply* reply = httpClient->get(QNetworkRequest(QUrl(streamPath)));
         QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(on_reply_read()));
         QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(on_reply_error(QNetworkReply::NetworkError)));
-        QObject::connect(httpClient, SIGNAL(finished(QNetworkReply*)), this, SLOT(on_reply_finished()));
         this->device = reply;
     }
-    else{
-        qCCritical(roomStreamer) << "streamPath is empty!";
-    }
-}
-
-void RoomStreamerNode::on_reply_finished(){
-    qCCritical(roomStreamer) << "reply finished!!" ;
 }
 
 void RoomStreamerNode::on_reply_error(QNetworkReply::NetworkError /*error*/){
-    qCCritical(roomStreamer) << "ERROR playing room stream" ;
+    QString msg = "ERROR playing room stream";
+    qCCritical(roomStreamer) << msg;
+    emit error(msg);
 }
 
 void RoomStreamerNode::on_reply_read(){
-    //qCDebug(roomStreamer) << "on_reply_read";
     if(!device){
-        qCDebug(roomStreamer) << "device is null!";
+        qCCritical(roomStreamer) << "device is null!";
         return;
     }
-
-    bytesToDecode.append(device->readAll());
-
-    qCDebug(roomStreamer) << "bytes downloaded  bytesToDecode:"<<bytesToDecode.size() << " bufferedSamples: " << bufferedSamples.getFrameLenght();
-
-    //QMutexLocker locker(&mutex);
-    //if(initialBuffering || bufferedSamples.getFrameLenght() < bufferSize){
-       //decode(512);
-    //}
-//    if(buffering && bufferedSamples.getFrameLenght() >= bufferSize){
-//        buffering = false;
-//    }
-
+    if(device->isOpen() && device->isReadable()){
+        QMutexLocker locker(&mutex);
+        bytesToDecode.append(device->readAll());
+        qCDebug(roomStreamer) << "bytes downloaded  bytesToDecode:"<<bytesToDecode.size() << " bufferedSamples: " << bufferedSamples.getFrameLenght();
+    }
+    else{
+        qCCritical(roomStreamer) << "problem in device!";
+    }
 }
 
 RoomStreamerNode::~RoomStreamerNode(){
-    //qDebug() << "RoomStreamerNode destructor!";
+    qCDebug(roomStreamer) << "RoomStreamerNode destructor!";
 }
 
 void RoomStreamerNode::processReplacing(const SamplesBuffer & in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer &midiBuffer){
-    //QMutexLocker locker(&mutex);
+    QMutexLocker locker(&mutex);
     if(!buffering){
         while(bufferedSamples.getFrameLenght() < out.getFrameLenght()){
             decode(128);
@@ -233,7 +221,7 @@ void RoomStreamerNode::processReplacing(const SamplesBuffer & in, SamplesBuffer 
         decode(2048);
     }
 
-    if(buffering && bufferedSamples.getFrameLenght() >= bufferSize){
+    if(buffering && bufferedSamples.getFrameLenght() >= bufferTime * decoder->getSampleRate()){
         buffering = false;
     }
 
@@ -243,9 +231,6 @@ void RoomStreamerNode::processReplacing(const SamplesBuffer & in, SamplesBuffer 
     else{//buffering
         lastPeak.zero();
     }
-
-
-
 }
 
 //++++++++++++++++++

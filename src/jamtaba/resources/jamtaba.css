@@ -34,7 +34,7 @@ FxPanel{
     border-radius: 2px;
 }
 BaseTrackView[unlighted="false"] FxPanel{
-   border: 1px inset rgb(60, 60, 60);
+   border: 1px inset rgb(86,86,86);
 }
 
 FxPanelItem{
@@ -237,6 +237,10 @@ QSlider::groove:vertical{
     border: 1px inset rgb(110, 110, 110);
 }
 
+NinjamRoomWindow TrackGroupView BaseTrackView QSlider::groove:vertical{
+    border: 1px inset rgb(100, 100,100);
+}
+
 QSlider::groove:horizontal{
     background-color: rgba(0, 0, 0, 30);
     height: 3px;
@@ -245,7 +249,8 @@ QSlider::groove:horizontal{
 }
 
 BaseTrackView[unlighted="true"] QSlider::groove:horizontal{
-    background-color: rgba(255,255,255, 40);
+    background-color: rgba(0,0,0,60);
+    border: 1px inset rgb(70, 70, 70);
 }
 
 BaseTrackView[unlighted="true"] QSlider::add-page:vertical{
@@ -545,9 +550,15 @@ JamRoomViewPanel  #labelRoomType{
 
 /*  Track view +++++++++++++++++++++++++++++++++++++++++++++++ */
 BaseTrackView{
-border-radius: 3px;
-background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(140,140,140), stop:0.015 rgb(220, 220, 220), stop:1 rgb(100, 100, 100));
-border: 1px solid rgb(61,61,61);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(140,140,140),
+        stop:0.01 rgb(220, 220, 220),
+        stop:1 rgb(100, 100, 100)
+    );
+   border: 1px solid rgb(61,61,61);
+   border-radius: 0px;
+   border-bottom-left-radius: 3px;
+   border-bottom-right-radius: 3px;
 }
 
 BaseTrackView[unlighted="true"] > QFrame#topSeparator, BaseTrackView[unlighted="true"] > QFrame#panSectionSeparator{
@@ -583,7 +594,6 @@ QPushButton#soloButton, QPushButton#muteButton {
 QPushButton{
     border-radius: 3px;
     border: 1px outset gray;
-    color: rgba(0, 0, 0, 80);
     padding: 3px 6px 3px 6px;
     font-size: 8pt;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(0, 0, 0, 50), stop:0.02 rgba(0, 0, 0, 0), stop:0.7 rgba(0, 0, 0, 0), stop:1 rgba(0,0,0,60));
@@ -637,10 +647,11 @@ color: white;
 TrackGroupView {
     border: none;
     background-color: none;
+    border-radius: 3px;
 }
 
 TrackGroupView > #topPanel{
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), stop:1 rgb(100, 100, 100));
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(245, 245, 245), stop:0.06 rgb(220, 220, 220), stop:1 rgb(100, 100, 100));
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
 }
@@ -658,7 +669,7 @@ TrackGroupView #groupNameField {
 /* LOCAL TRACK GROUP */
 LocalTrackGroupView[highlighted="true"] {
     border: 1px solid white;
-    border-radius: 3px;
+
 }
 
 LocalTrackGroupView  #toolButton, #leftPanel > #toolButton {
@@ -694,8 +705,6 @@ background-color: rgb(180, 180, 180);
 /*+++++++++++++++++++++++++++++++++++++++++++++++*/
 LocalTrackView, NinjamTrackView{
     border: none;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
 }
 
 LocalTrackView[highlighted="true"]{
@@ -791,12 +800,26 @@ NinjamRoomWindow TrackGroupView #countryLabel{
 }
 
 NinjamRoomWindow TrackGroupView{
-    border: 1px solid rgb(128, 128, 128);
-    border-bottom: 1px solid rgb(70, 70, 70);
-    border-top: 1px solid rgb(180, 180, 180);
-    border-radius: 3px;
-    background-color: rgba(0, 0, 0, 40);
+    border-left: 1px solid rgb(200, 200, 200);
+    border-top: 1px solid qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 rgb(250, 250, 250),
+        stop:1 rgb(230, 230, 230)
+    );
+    border-right: 1px solid qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(145, 145, 145),
+        stop:1 rgb(77, 77, 77)
+    );
+    border-bottom: 1px solid rgb(69,69,69);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0      rgba(0, 0, 0, 0),
+        stop:0.2    rgb(127,127,127)
+        stop:1      rgb(127,127,127)
+    );
+
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
 }
+
 
 NinjamRoomWindow TrackGroupView #groupNameField {
     margin-bottom: 3px;
@@ -820,15 +843,36 @@ NinjamPanel #intervalPanel{/* beats text */
     font-weight: normal;
     font-size: 12pt;
 
+
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 rgba(255,255,255,0),
+        stop:0.3 rgba(255, 255, 255, 30),
+        stop:0.5 rgba(255, 255, 255, 80),
+        stop:0.7 rgba(255, 255, 255, 30),
+        stop:1 rgba(255,255,255,0));
+        /*
+    background-color: qradialgradient(cx:0.5, cy:0.5, radius:0.35, fx:0.5, fy:0.5,
+            stop:0 rgba(255, 255, 255, 100),
+            stop:1 rgba(255, 0, 0, 0));
+            */
 }
 
 NinjamPanel #metronomeControls, NinjamPanel #panelCombos{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255,255,255,255), stop:0.06 rgba(0, 0, 0, 10) stop:0.95 rgba(0, 0, 0, 30), stop:1 rgba(0,0,0,60));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(255,255,255),
+    stop:0.06 rgb(230, 230, 230)
+    stop:0.95 rgb(205, 205, 205),
+    stop:1 rgba(0,0,0,60));
+
     border-radius: 3px;
     border: none;
     border-top: 1px solid rgba(0, 0, 0, 30);
     border-left: 1px solid rgba(0, 0, 0, 30);
     border-right: 1px solid rgba(0, 0, 0, 30);
+}
+
+NinjamPanel #metronomeControls QSlider::groove:vertical{
+    border: 1px inset rgb(140, 140, 140);
 }
 
 NinjamPanel #soloButton, NinjamPanel #muteButton{
@@ -871,6 +915,7 @@ ChatPanel > QPushButton#buttonClear{
     background-repeat: no-repeat;
     background-position: center;
     margin-left: 0px;
+    border: 1px outset rgb(100, 100, 100);
 }
 
 ChatMessagePanel > QLabel#labelUserName{

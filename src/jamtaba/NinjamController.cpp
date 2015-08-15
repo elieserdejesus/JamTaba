@@ -464,7 +464,7 @@ void NinjamController::stop(){
             //clear all tracks
             foreach(NinjamTrackNode* trackNode, trackNodes.values()){
                 mainController->removeTrack(trackNode->getID());
-                trackNode->deactivate();
+                //trackNode->deactivate();
             }
             trackNodes.clear();
         }

@@ -14,7 +14,6 @@
 #include "PreferencesDialog.h"
 #include "JamRoomViewPanel.h"
 #include "LocalTrackView.h"
-//#include "LocalTrackGroupView.h"
 #include "plugins/guis.h"
 #include "FxPanel.h"
 #include "pluginscandialog.h"
@@ -48,7 +47,6 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     busyDialog(0),
     mainController(mainController),
     pluginScanDialog(nullptr),
-    //metronomeTrackView(nullptr),
     ninjamWindow(nullptr)
 {
 	ui.setupUi(this);
@@ -70,6 +68,9 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 
     QObject::connect(ui.xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
 
+
+    QObject::connect( mainController->getRoomStreamer(), SIGNAL(error(QString)), this, SLOT(on_RoomStreamerError(QString)));
+
     ui.xmitButton->setChecked(mainController->isTransmiting());
 
     initializeLocalInputChannels();
@@ -79,6 +80,10 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     ui.allRoomsContent->setLayout(new QVBoxLayout());
     ui.allRoomsContent->layout()->setContentsMargins(0,0,6,0);
     ui.allRoomsContent->layout()->setSpacing(24);
+
+    foreach (LocalTrackGroupView* channel, localChannels) {
+        channel->refreshInputSelectionNames();
+    }
 }
 //++++++++++++++++++++++++=
 Persistence::InputsSettings MainFrame::getInputsSettings() const{
@@ -110,6 +115,23 @@ Persistence::InputsSettings MainFrame::getInputsSettings() const{
     }
     return settings;
 }
+//++++++++++++++++++++++++=
+void MainFrame::stopCurrentRoomStream(){
+    if(mainController->isPlayingRoomStream()){
+        long long roomID = mainController->getCurrentStreamingRoomID();
+        if(roomViewPanels[roomID]){
+            roomViewPanels[roomID]->clearPeaks(true);
+        }
+    }
+    mainController->stopRoomStream();
+}
+
+
+void MainFrame::on_RoomStreamerError(QString msg){
+    stopCurrentRoomStream();
+    QMessageBox::information(this, "Error!", msg);
+}
+
 //++++++++++++++++++++++++=
 void MainFrame::on_toolButtonClicked(){
     QMenu menu;
@@ -175,6 +197,7 @@ void MainFrame::initializeMainTabWidget(){
     ui.tabWidget->tabBar()->tabButton(0, QTabBar::RightSide)->hide();
 
     connect( ui.tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(on_tabCloseRequest(int)));
+    connect( ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tabChanged(int)));
 }
 
 void MainFrame::initializeMainControllerEvents(){
@@ -308,6 +331,14 @@ void MainFrame::on_tabCloseRequest(int index){
     }
 }
 
+void MainFrame::on_tabChanged(int index){
+    if(index > 0){//click in room tab?
+        if(mainController->isPlayingInNinjamRoom() && mainController->isPlayingRoomStream()){
+            stopCurrentRoomStream();
+        }
+    }
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::showBusyDialog(){
     showBusyDialog("");
@@ -362,7 +393,7 @@ void MainFrame::centerBusyDialog(){
 //esses eventos deveriam ser tratados no controller
 
 bool MainFrame::jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2){
-     return r1.getUsers().size() > r2.getUsers().size();
+     return r1.getNonBotUsersCount() > r2.getNonBotUsersCount();
 }
 
 void MainFrame::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
@@ -402,8 +433,7 @@ void MainFrame::on_startingRoomStream(Login::RoomInfo roomInfo){
 }
 
 void MainFrame::on_stoppingRoomStream(Login::RoomInfo roomInfo){
-    mainController->stopRoomStream();
-    roomViewPanels[roomInfo.getID()]->clearPeaks(true);
+    stopCurrentRoomStream();
 }
 
 QStringList MainFrame::getChannelsNames() const{
@@ -416,6 +446,16 @@ QStringList MainFrame::getChannelsNames() const{
 
 //user trying enter in a room
 void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo){
+
+    //stop room stream before enter in a room
+    if(mainController->isPlayingRoomStream()){
+        long long roomID = mainController->getCurrentStreamingRoomID();
+        if(roomViewPanels[roomID]){
+            roomViewPanels[roomID]->clearPeaks(true);
+        }
+        mainController->stopRoomStream();
+    }
+
 
     if(mainController->isPlayingInNinjamRoom()){
         mainController->getNinjamController()->stop();//disconnect from current ninjam server
