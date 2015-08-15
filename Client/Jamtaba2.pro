@@ -1,12 +1,3 @@
-
-
-
-# Quando botei o reverb depois do B4 ouvi o reverb na entrada do mic mas não no B4, o encadeamento tem problema
-    #quando coloquei o reverb depois do plugin não ouvi o reverb, só o plugin. Entretanto, quando salvei e abri o Jamtaba
-        #novamente o reverb funcionou.
-    #Entretanto, o reverb adicionou ganho no som. Quando desativei o DRY do reverb ficou ok. Ou seja, meu encadeamento
-        #não está funcionando como deveria para insert, está funcionando para mandadas.
-
 #liguei o LPK mas ele não apareceu no combo de input select da pista. Abri as preferencias, o LPK estava habilitado. Apenas
     #dei ok e ele apareceu no combo de input select. Quando inicio não estou incluindo os devices que não estavam salvos.
 

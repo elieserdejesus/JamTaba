@@ -23,7 +23,7 @@ public:
     void start();
     void resume();
     void suspend();
-    virtual void process( Audio::SamplesBuffer &audioBuffer, const Midi::MidiBuffer& midiBuffer);
+    virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer &outBuffer, const Midi::MidiBuffer& midiBuffer);
     virtual void openEditor(QPoint centerOfScreen);
     bool load(Vst::VstHost* host, QString path);
     inline QString getPath() const{return path;}

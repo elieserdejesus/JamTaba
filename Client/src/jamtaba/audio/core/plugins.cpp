@@ -134,21 +134,21 @@ void JamtabaDelay::start(){
     qCritical() << "preciso setar a sample rate";
 }
 
-void JamtabaDelay::process(Audio::SamplesBuffer &buffer, const Midi::MidiBuffer &midiBuffer){
-    Q_UNUSED(midiBuffer)
-    if(isBypassed()){
-        return;
-    }
-    float bufferValue = 0, internalValue = 0;
-    for (int s = 0; s < buffer.getFrameLenght(); ++s) {
-        for (int c = 0; c < buffer.getChannels(); ++c) {
-            bufferValue = buffer.get(c, s);
-            internalValue = internalBuffer->get(c, internalIndex);
-            buffer.add(c, s, internalValue * level);//copy the internal sample to out buffer
-            internalBuffer->set(c, internalIndex, bufferValue + internalValue * feedbackGain  ); //acumulate the sample in internal buffer
-        }
-        internalIndex = (internalIndex + 1) % internalBuffer->getFrameLenght();
-    }
+void JamtabaDelay::process(const Audio::SamplesBuffer &in, SamplesBuffer &out, const Midi::MidiBuffer &midiBuffer){
+//    Q_UNUSED(midiBuffer)
+//    if(isBypassed()){
+//        return;
+//    }
+//    float bufferValue = 0, internalValue = 0;
+//    for (int s = 0; s < in.getFrameLenght(); ++s) {
+//        for (int c = 0; c < in.getChannels(); ++c) {
+//            bufferValue = in.get(c, s);
+//            internalValue = internalBuffer->get(c, internalIndex);
+//            in.add(c, s, internalValue * level);//copy the internal sample to out buffer
+//            internalBuffer->set(c, internalIndex, bufferValue + internalValue * feedbackGain  ); //acumulate the sample in internal buffer
+//        }
+//        internalIndex = (internalIndex + 1) % internalBuffer->getFrameLenght();
+//    }
 }
 
 void JamtabaDelay::setDelayTime(int delayTimeInMs){

@@ -17,7 +17,7 @@ namespace Audio{
 
 class AudioNodeProcessor{
 public:
-    virtual void process(Audio::SamplesBuffer& buffer, const Midi::MidiBuffer& midiBuffer) = 0;
+    virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, const Midi::MidiBuffer& midiBuffer) = 0;
     virtual ~AudioNodeProcessor(){}
 };
 
@@ -32,7 +32,7 @@ private:
     int processedSamples;
 public:
     FaderProcessor(float startGain, float endGain, int samplesToFade);
-    virtual void process(Audio::SamplesBuffer &buffer, const Midi::MidiBuffer& midiBuffer);
+    virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer &out, const Midi::MidiBuffer& midiBuffer);
     bool finished();
     void reset();
 };
@@ -83,7 +83,9 @@ protected:
 
     QSet<AudioNode*> connections;
     QList<AudioNodeProcessor*> processors;
-    SamplesBuffer internalBuffer;
+    SamplesBuffer internalInputBuffer;
+    SamplesBuffer internalOutputBuffer;
+
     //SamplesBuffer discardedBuffer;//store samples discarded in AudioMixer to avoid loose samples in resampling process
     mutable Audio::AudioPeak lastPeak;
     QMutex mutex; //used to protected connections manipulation because nodes can be added or removed by different threads
@@ -147,7 +149,7 @@ public:
     inline ChannelRange getAudioInputRange() const{return audioInputRange;}
     inline void setGlobalFirstInputIndex(int firstInputIndex){this->globalFirstInputIndex = firstInputIndex;}
     inline int getGroupChannelIndex() const {return channelIndex;}
-    const Audio::SamplesBuffer& getLastBuffer() const{return internalBuffer;}
+    const Audio::SamplesBuffer& getLastBuffer() const{return internalInputBuffer;}
 
 private:
     int globalFirstInputIndex; //store the first input index selected globally by users in preferences menu

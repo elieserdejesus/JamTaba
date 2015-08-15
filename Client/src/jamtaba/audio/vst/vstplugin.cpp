@@ -227,7 +227,7 @@ void VstPlugin::fillVstEventsList(const Midi::MidiBuffer &midiBuffer){
     }
 }
 
-void VstPlugin::process( Audio::SamplesBuffer &audioBuffer, const Midi::MidiBuffer& midiBuffer){
+void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, const Midi::MidiBuffer& midiBuffer){
     if(isBypassed() || !effect || !internalBuffer){
         qWarning() << "returning";
         return;
@@ -241,26 +241,26 @@ void VstPlugin::process( Audio::SamplesBuffer &audioBuffer, const Midi::MidiBuff
         effect->dispatcher(effect, effProcessEvents, 0, 0, (void*)&vstMidiEvents, 0);
     }
 
-    internalBuffer->setFrameLenght(audioBuffer.getFrameLenght());
+    internalBuffer->setFrameLenght(outBuffer.getFrameLenght());
 
-    float* in[2] = {
-        audioBuffer.getSamplesArray(0),
-        audioBuffer.getSamplesArray(1)
+    float* inArray[2] = {
+        outBuffer.getSamplesArray(0),
+        outBuffer.getSamplesArray(1)
     };
     //vst plugins maybe have many output channels
     int outChannels = internalBuffer->getChannels();
-     float* out[outChannels];
-     for (int c = 0; c < outChannels; ++c) {
-        out[c] = internalBuffer->getSamplesArray(c);
-     }
+    float* out[outChannels];
+    for (int c = 0; c < outChannels; ++c) {
+       out[c] = internalBuffer->getSamplesArray(c);
+    }
 
-    VstInt32 sampleFrames = audioBuffer.getFrameLenght();
+    VstInt32 sampleFrames = outBuffer.getFrameLenght();
 
     //qCDebug(vst) << "calling processReplacing in " << getName() << " thread" << QThread::currentThreadId();
-    effect->processReplacing(effect, in, out, sampleFrames);
+    effect->processReplacing(effect, inArray, out, sampleFrames);
     //qCDebug(vst) << "processReplacing called " << getName();
 
-    //mix multipli out plugins to stereo
+    //mix multiple out plugins to stereo
     int totalChannels = internalBuffer->getChannels();
     if(totalChannels > 2){
         for (int s = 0; s < internalBuffer->getFrameLenght(); ++s) {
@@ -270,7 +270,7 @@ void VstPlugin::process( Audio::SamplesBuffer &audioBuffer, const Midi::MidiBuff
         }
     }
 
-    audioBuffer.add(*internalBuffer);
+    outBuffer.set(*internalBuffer);
     //qCDebug(vst) << "audioBuffer filled " << getName();
 }
 

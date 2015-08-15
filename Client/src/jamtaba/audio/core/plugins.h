@@ -82,7 +82,7 @@ class JamtabaDelay  : public Plugin{
 public:
     explicit JamtabaDelay(int sampleRate);
     ~JamtabaDelay();
-    virtual void process(Audio::SamplesBuffer &buffer, const Midi::MidiBuffer& midiBuffer);
+    virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, const Midi::MidiBuffer& midiBuffer);
     void setDelayTime(int delayTimeInMs);
     void setFeedback(float feedback);
     void setLevel(float level);
