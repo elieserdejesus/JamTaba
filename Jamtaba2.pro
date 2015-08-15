@@ -1,13 +1,3 @@
-#liguei o LPK mas ele não apareceu no combo de input select da pista. Abri as preferencias, o LPK estava habilitado. Apenas
-    #dei ok e ele apareceu no combo de input select. Quando inicio não estou incluindo os devices que não estavam salvos.
-
-#Não estava deletando as tracks de input, por isso o plugin vst não era deletado, o destrutor
-    #nunca era invocado e a DLL não era descarregada, gerando um erro no fechamento.
-# tirei o comentário do código que deleta a pista, tenho que ver se ainda tem o bug quando
-    #deleto um canal no Reaninjam.
-#não consegui resolver o bug que acontece quando as pistas são removidas, por hora apenas comentei a linha que delete as pistas no NinjamJamRoomController. Ou seja, a memoria não está sendo liberada.
-#Agora estou usando vector<float> para guardar as amostras, ver o que acontece.
-
 #Prioridades para um primeiro release
     #Ver o usode memória para não queimar o filme
     #auto updater - pelo menos alguma forma de indicar que existe uma versão

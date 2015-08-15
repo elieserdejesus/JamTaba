@@ -120,6 +120,8 @@ private:
 
     EncodingThread* encodingThread;
 
+    QList<NinjamTrackNode*> tracksToDelete;
+
 private slots:
     //ninjam events
     void on_ninjamServerBpmChanged(short newBpm);

@@ -23,7 +23,7 @@ int NinjamTrackNode::getSampleRate() const{
 NinjamTrackNode::~NinjamTrackNode()
 {
     //QMutexLocker locker(&mutex);
-    //qDebug() << "Destruindo ninjamTrack Node " << this->getID();
+    //qWarning() << "Destruindo ninjamTrack Node " << this->getID();
 }
 
 void NinjamTrackNode::discardIntervals(){
