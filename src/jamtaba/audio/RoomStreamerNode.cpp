@@ -67,23 +67,23 @@ void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in, Audio
     int samplesToRender = std::min(out.getFrameLenght(), bufferedSamples.getFrameLenght());
     //qCDebug(roomStreamer) << "samples to render:"<< samplesToRender << " out.frameLenght:" << out.getFrameLenght() << " bufferedSamples:" << bufferedSamples.getFrameLenght();
 
-    internalBuffer.setFrameLenght(samplesToRender);
-    internalBuffer.zero();
-    internalBuffer.set(bufferedSamples);
+    internalOutputBuffer.setFrameLenght(samplesToRender);
+    internalOutputBuffer.zero();
+    internalOutputBuffer.set(bufferedSamples);
 
     //qCDebug(roomStreamer) << "discarding " << samplesToRender << " samples";
     bufferedSamples.discardFirstSamples(samplesToRender);//keep non rendered samples for next audio callback
     //qCDebug(roomStreamer) << "new frameLenght:" << bufferedSamples.getFrameLenght();
 
-    if(internalBuffer.getFrameLenght() < out.getFrameLenght()){
-        qCDebug(roomStreamer) << out.getFrameLenght() - internalBuffer.getFrameLenght() << " samples missing";
+    if(internalOutputBuffer.getFrameLenght() < out.getFrameLenght()){
+        qCDebug(roomStreamer) << out.getFrameLenght() - internalOutputBuffer.getFrameLenght() << " samples missing";
     }
 
-    this->lastPeak.update(internalBuffer.computePeak());
+    faderProcessor.process(internalInputBuffer, internalOutputBuffer, midiBuffer);//aply fade in in stream
 
-    faderProcessor.process(internalBuffer, midiBuffer);//aply fade in in stream
+    this->lastPeak.update(internalOutputBuffer.computePeak());
 
-    out.add(internalBuffer);
+    out.add(internalOutputBuffer);
 }
 
 void AbstractMp3Streamer::initialize(QString streamPath){

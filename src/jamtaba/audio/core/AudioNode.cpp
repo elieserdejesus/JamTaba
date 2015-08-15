@@ -31,15 +31,16 @@ void FaderProcessor::reset(){
     currentGain = startGain;
 }
 
-void FaderProcessor::process(Audio::SamplesBuffer &buffer, const Midi::MidiBuffer &midiBuffer){
+void FaderProcessor::process(const Audio::SamplesBuffer &in, SamplesBuffer &out, const Midi::MidiBuffer &midiBuffer){
     Q_UNUSED(midiBuffer);
     if(finished()){
         return;
     }
-    float finalGain = currentGain + (gainStep * buffer.getFrameLenght());
-    buffer.fade(currentGain, finalGain);
+    out.set(in);//copy in to out
+    float finalGain = currentGain + (gainStep * out.getFrameLenght());
+    out.fade(currentGain, finalGain);
     currentGain = finalGain + gainStep;
-    processedSamples += buffer.getFrameLenght();
+    processedSamples += out.getFrameLenght();
 }
 
 bool FaderProcessor::finished(){
@@ -59,29 +60,34 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
         return;
     }
 
-    internalBuffer.setFrameLenght(out.getFrameLenght());
+    internalInputBuffer.setFrameLenght(out.getFrameLenght());
+    internalOutputBuffer.setFrameLenght(out.getFrameLenght() );
+
+    internalOutputBuffer.set(internalInputBuffer);
+
     {
         QMutexLocker locker(&mutex);
         foreach (AudioNode* node, connections) {//ask connected nodes to generate audio
-            node->processReplacing(in, internalBuffer, sampleRate, midiBuffer);
+            node->processReplacing(in, internalOutputBuffer, sampleRate, midiBuffer);
         }
     }
 
     //inserted plugins
     foreach (AudioNodeProcessor* processor, processors) {
-        processor->process(internalBuffer, midiBuffer);
+        processor->process(internalInputBuffer, internalOutputBuffer, midiBuffer);
     }
-    internalBuffer.applyGain(gain, leftGain, rightGain);
+    internalOutputBuffer.applyGain(gain, leftGain, rightGain);
 
-    lastPeak.update(internalBuffer.computePeak());
+    lastPeak.update(internalOutputBuffer.computePeak());
 
-    out.add(internalBuffer);
+    out.add(internalOutputBuffer);
 }
 
 
 AudioNode::AudioNode()
      :
-      internalBuffer(2),
+      internalInputBuffer(2),
+      internalOutputBuffer(2),
       lastPeak(0, 0),
       muted(false),
       soloed(false),
@@ -231,9 +237,9 @@ bool LocalInputAudioNode::isAudio() const{
 void LocalInputAudioNode::setAudioInputSelection(int firstChannelIndex, int channelCount){
     audioInputRange = ChannelRange(firstChannelIndex, channelCount);
     if(audioInputRange.isMono())
-        internalBuffer.setToMono();
+        internalInputBuffer.setToMono();
     else
-        internalBuffer.setToStereo();
+        internalInputBuffer.setToStereo();
 
     midiDeviceIndex = -1;//disable midi input
     inputMode = AUDIO;
@@ -268,14 +274,14 @@ void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffe
 
     Midi::MidiBuffer filteredMidiBuffer(midiBuffer.getMessagesCount());
 
-    internalBuffer.setFrameLenght(out.getFrameLenght());
-    internalBuffer.zero();
+    internalInputBuffer.setFrameLenght(out.getFrameLenght());
+    internalInputBuffer.zero();
     if(isAudio()){//using audio input
         if(audioInputRange.isEmpty()){
             return;
         }
         int inChannelOffset = audioInputRange.getFirstChannel() - globalFirstInputIndex;
-        internalBuffer.set(in, inChannelOffset, audioInputRange.getChannels());
+        internalInputBuffer.set(in, inChannelOffset, audioInputRange.getChannels());
     }
     else if(isMidi()){//just in case
         int total = midiBuffer.getMessagesCount();

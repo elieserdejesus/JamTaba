@@ -73,12 +73,12 @@ void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::Sa
 
     int totalDecoded = 0;
     int framesToDecode = getFramesToProcess(sampleRate, out.getFrameLenght()) ;
-    internalBuffer.setFrameLenght(framesToDecode);
-    internalBuffer.zero();
+    internalInputBuffer.setFrameLenght(framesToDecode);
+    internalInputBuffer.zero();
     while(totalDecoded < framesToDecode ){
         const Audio::SamplesBuffer& decodedBuffer = decoder.decode(framesToDecode - totalDecoded);
         if(decodedBuffer.getFrameLenght() > 0){
-            internalBuffer.add(decodedBuffer, totalDecoded);//total decoded is the offset
+            internalInputBuffer.add(decodedBuffer, totalDecoded);//total decoded is the offset
             totalDecoded += decodedBuffer.getFrameLenght();
         }
         else{//no more samples to decode
@@ -95,14 +95,14 @@ void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::Sa
 
     if(totalDecoded > 0){
 
-        internalBuffer.setFrameLenght(totalDecoded);
+        internalInputBuffer.setFrameLenght(totalDecoded);
 
         if(needResamplingFor(sampleRate)){
-            const Audio::SamplesBuffer& resampledBuffer = resampler.resample(internalBuffer, out.getFrameLenght() );
-            internalBuffer.setFrameLenght(resampledBuffer.getFrameLenght());
-            internalBuffer.set(resampledBuffer);
-            if(internalBuffer.getFrameLenght() != out.getFrameLenght()){
-                qWarning() << internalBuffer.getFrameLenght() << " != " << out.getFrameLenght();
+            const Audio::SamplesBuffer& resampledBuffer = resampler.resample(internalInputBuffer, out.getFrameLenght() );
+            internalInputBuffer.setFrameLenght(resampledBuffer.getFrameLenght());
+            internalInputBuffer.set(resampledBuffer);
+            if(internalInputBuffer.getFrameLenght() != out.getFrameLenght()){
+                qWarning() << internalInputBuffer.getFrameLenght() << " != " << out.getFrameLenght();
             }
         }
         Audio::AudioNode::processReplacing(in, out, sampleRate, midiBuffer);//process internal buffer pan, gain, etc
