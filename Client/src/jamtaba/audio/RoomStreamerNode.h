@@ -26,7 +26,8 @@ public:
     inline bool isStreaming() const{return streaming;}
     virtual int getSampleRate() const;
     virtual bool needResamplingFor(int targetSampleRate) const;
-
+signals:
+    void error(QString errorMsg);
 private:
     static const int MAX_BYTES_PER_DECODING;
 
@@ -63,12 +64,12 @@ protected:
 private:
     QNetworkAccessManager* httpClient;
     bool buffering;
-    int bufferSize;
+    int bufferTime;//in seconds
 
 private slots:
     void on_reply_error(QNetworkReply::NetworkError);
     void on_reply_read();
-    void on_reply_finished();
+    //void on_reply_finished();
 };
 //++++++++++++++++++++++++++++
 class AudioFileStreamerNode : public AbstractMp3Streamer

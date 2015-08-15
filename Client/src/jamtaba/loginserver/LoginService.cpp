@@ -34,6 +34,15 @@ RoomInfo::RoomInfo(QString roomName, int roomPort, RoomTYPE roomType, int maxUse
 
 }
 
+int RoomInfo::getNonBotUsersCount() const{
+    int nonBots = 0;
+    foreach (const UserInfo& userInfo, users) {
+        if(!Ninjam::Service::isBotName(userInfo.getName())){
+            nonBots++;
+        }
+    }
+    return nonBots;
+}
 
 bool RoomInfo::isEmpty() const{
     foreach (const UserInfo& userInfo, users) {

@@ -1,20 +1,14 @@
-#Fiz um teste tocando uma batera no addictive pelo Reaninjam. Abri o Jamtaba e dei play no stream. Ficou péssimo. Vi
-    #que o ícone do ASio4ALL fica em vermelho o tempo todo. Bastou desligar o Reaper e tudo voltou ao normal. Parece que
-    #com os dois software funcionando o decoder do mp3 argolou o processador ou alguma coisa parecida.
-    #O que acontece se eu estiver tocando em uma sala com algumas pessoas e tentar ouvir o stream de outra sala, vai rolar?
 
-#Estava ouvindo o stream da sala e usando a fast. Mudei para asio4all e crashou quando dei ok no dialogo de preferencias
 
-#quando dá erro no stream eu preciso resetar o botão
-
-#se eu estou ouvindo uma sala e entro nela o botão de stream fica pressionado
-
-#bufferSize do roomStreamer node deveria ser calculado somente quando eu já sei a sampleRate do stream
-    #já estou calculando no construtor e chutando 48 KHz como sampleRate
-
-#se eu abro o sofware com a pista em noInput ela não fica esmaecida
 
 # Quando botei o reverb depois do B4 ouvi o reverb na entrada do mic mas não no B4, o encadeamento tem problema
+    #quando coloquei o reverb depois do plugin não ouvi o reverb, só o plugin. Entretanto, quando salvei e abri o Jamtaba
+        #novamente o reverb funcionou.
+    #Entretanto, o reverb adicionou ganho no som. Quando desativei o DRY do reverb ficou ok. Ou seja, meu encadeamento
+        #não está funcionando como deveria para insert, está funcionando para mandadas.
+
+#liguei o LPK mas ele não apareceu no combo de input select da pista. Abri as preferencias, o LPK estava habilitado. Apenas
+    #dei ok e ele apareceu no combo de input select. Quando inicio não estou incluindo os devices que não estavam salvos.
 
 #Não estava deletando as tracks de input, por isso o plugin vst não era deletado, o destrutor
     #nunca era invocado e a DLL não era descarregada, gerando um erro no fechamento.
@@ -23,19 +17,28 @@
 #não consegui resolver o bug que acontece quando as pistas são removidas, por hora apenas comentei a linha que delete as pistas no NinjamJamRoomController. Ou seja, a memoria não está sendo liberada.
 #Agora estou usando vector<float> para guardar as amostras, ver o que acontece.
 
-
-
 #Prioridades para um primeiro release
     #Ver o usode memória para não queimar o filme
-    #auto updater
+    #auto updater - pelo menos alguma forma de indicar que existe uma versão
+        #mais atual
 
 #preciso testar nome de usuário com caracter especial para ver se o utf está funcionando
 
-# a mensagem de crowded está errada?
-
+#Estava ouvindo o stream da sala e usando a fast. Mudei para asio4all e crashou quando dei ok no dialogo de preferencias
 
 #tocar em algumas Jams para ver se está rolando
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#de vez em quando o plot do room stream reseta sozinho antes de chegar no fim do Widget.
+    #estou desconfiado que o problema é com as threads. Estou acessando o bufferedSamples
+        #de threads diferentes.
+
+#a ideia do botão "check server mix" é muibo boa. Não tenho certeza se funcionaria, pois quando
+    ´#o usuário clica no botão ele parou de tocar. Ou seja, eu só conseguirir renderizar os intervalos
+        #que o usuário já enviou para o servidor. Como ele parou de tocar para clicar no
+            #botão e ouvir a mix, os próximos intervalos estarão zerados ou apenas com
+            #ruídos
+
 
 #acho que o stream do ninjamer não está rolando
 

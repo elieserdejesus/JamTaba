@@ -71,7 +71,8 @@ public:
 
     AudioPeak getLastPeak(bool resetPeak=false) const;
 
-    void deactivate();
+    inline void deactivate(){activated = false;}
+    inline void activate(){activated = true;}
     inline bool isActivated() const{return activated;}
 
 
@@ -86,13 +87,16 @@ protected:
     //SamplesBuffer discardedBuffer;//store samples discarded in AudioMixer to avoid loose samples in resampling process
     mutable Audio::AudioPeak lastPeak;
     QMutex mutex; //used to protected connections manipulation because nodes can be added or removed by different threads
-    bool activated; //used to safely remove non activated nodes
     //int sampleRate;
 private:
     AudioNode(const AudioNode& other);
     AudioNode& operator=(const AudioNode& other);
+
     bool muted;
     bool soloed;
+
+    bool activated;//used when room stream is played. All tracks are disabled, except the room streamer.
+
     float gain;
 
     //pan

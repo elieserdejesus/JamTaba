@@ -175,6 +175,7 @@ public:
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize, QList<bool> midiInputStatus) ;
     //void storeInputChannels()
 
+    inline Audio::AbstractMp3Streamer* getRoomStreamer() const{return roomStreamer;}
 
     void setUserName(QString newUserName);
     QString getUserName() const;
@@ -189,6 +190,8 @@ signals:
     void inputSelectionChanged(int inputTrackIndex);
 
 private:
+
+    void setAllTracksActivation(bool activated);
 
     void doAudioProcess(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate);
     Audio::Plugin* createPluginInstance(const Audio::PluginDescriptor &descriptor);
@@ -261,6 +264,7 @@ private slots:
     //audio driver
     void on_audioDriverSampleRateChanged(int newSampleRate);
     void on_audioDriverStopped();
+
 };
 
 }

@@ -46,16 +46,16 @@ bool FaderProcessor::finished(){
     return processedSamples >= totalSamplesToProcess;
 }
 //++++++++++++++++++++++++
-void AudioNode::deactivate(){
-    QMutexLocker locker(&mutex);
-    this->activated = false;
-}
+//void AudioNode::deactivate(){
+//    QMutexLocker locker(&mutex);
+//    this->activated = false;
+//}
 
 //+++++++++++++++
 
 
 void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer){
-    if(!activated){
+    if(!isActivated()){
         return;
     }
 
