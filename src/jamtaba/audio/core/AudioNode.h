@@ -82,7 +82,7 @@ protected:
 
 
     QSet<AudioNode*> connections;
-    QSet<AudioNodeProcessor*> processors;
+    QList<AudioNodeProcessor*> processors;
     SamplesBuffer internalBuffer;
     //SamplesBuffer discardedBuffer;//store samples discarded in AudioMixer to avoid loose samples in resampling process
     mutable Audio::AudioPeak lastPeak;

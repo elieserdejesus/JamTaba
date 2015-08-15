@@ -67,7 +67,7 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
         }
     }
 
-    //plugins
+    //inserted plugins
     foreach (AudioNodeProcessor* processor, processors) {
         processor->process(internalBuffer, midiBuffer);
     }
@@ -83,9 +83,9 @@ AudioNode::AudioNode()
      :
       internalBuffer(2),
       lastPeak(0, 0),
-      activated(true),
       muted(false),
       soloed(false),
+      activated(true),
       gain(1),
       pan(0)/*center*/,
       leftGain(1.0),
@@ -149,12 +149,12 @@ bool AudioNode::disconnect(AudioNode &otherNode){
 void AudioNode::addProcessor( AudioNodeProcessor* newProcessor)
 {
     assert(newProcessor);
-    processors.insert(newProcessor);
+    processors.append(newProcessor);
 }
 
 void AudioNode::removeProcessor(AudioNodeProcessor* processor){
     assert(processor);
-    processors.erase(processors.find(processor));
+    processors.removeOne(processor);
     delete processor;
 }
 
