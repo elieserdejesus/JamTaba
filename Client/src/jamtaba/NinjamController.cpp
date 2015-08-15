@@ -194,6 +194,11 @@ NinjamController::NinjamController(Controller::MainController* mainController)
 //+++++++++++++++++++++++++ THE MAIN LOGIC IS HERE  ++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
 
+    foreach (NinjamTrackNode* track, tracksToDelete) {
+        delete track;
+    }
+    tracksToDelete.clear();
+
     QMutexLocker locker(&mutex);
     if(!running || samplesInInterval <= 0){
         return;//not initialized
@@ -202,8 +207,6 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
     if(!threadHandle){
         threadHandle = QThread::currentThreadId();
     }
-
-    //deleteDeactivatedTracks();
 
     int totalSamplesToProcess = out.getFrameLenght();
     int samplesProcessed = 0;
@@ -397,7 +400,8 @@ void NinjamController::removeTrack(Ninjam::User user, Ninjam::UserChannel channe
             ID = trackNode->getID();
             trackNodes.remove(uniqueKey);
             mainController->removeTrack(ID);
-            delete trackNode; //BUG - sometimes Jamtaba crash when trackNode is deleted
+            //delete trackNode; //BUG - sometimes Jamtaba crash when trackNode is deleted
+            //tracksToDelete.append(trackNode);
             channelDeleted = true;
         }
     }
@@ -552,7 +556,7 @@ void NinjamController::on_ninjamUserChannelRemoved(Ninjam::User user, Ninjam::Us
 
 void NinjamController::on_ninjamUserChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel){
     QString uniqueKey = getUniqueKey(channel);
-    //QMutexLocker locker(&mutex);
+    QMutexLocker locker(&mutex);
     //checkThread("on_ninjamUserChannelUpdated();");
     if(trackNodes.contains(uniqueKey)){
         NinjamTrackNode* trackNode = trackNodes[uniqueKey];
@@ -578,7 +582,7 @@ void NinjamController::on_ninjamAudiointervalCompleted(Ninjam::User user, int ch
     //qDebug() << "audio available  Thread ID: " << QThread::currentThreadId();
     Ninjam::UserChannel channel = user.getChannel(channelIndex);
     QString channelKey = getUniqueKey(channel);
-    //QMutexLocker locker(&mutex);
+    QMutexLocker locker(&mutex);
     //checkThread("on_ninjamAudiointervalCompleted();");
     if(trackNodes.contains(channelKey)){
         NinjamTrackNode* trackNode = trackNodes[channelKey];
@@ -686,7 +690,7 @@ void NinjamController::on_ninjamAudiointervalDownloading(Ninjam::User user, int 
     Q_UNUSED(downloadedBytes);
     Ninjam::UserChannel channel = user.getChannel(channelIndex);
     QString channelKey = getUniqueKey(channel);
-    //QMutexLocker locker(&mutex);
+    QMutexLocker locker(&mutex);
     //checkThread("on_ninjamAudiointervalDownloading();");
     if(trackNodes.contains(channelKey)){
         NinjamTrackNode* track = dynamic_cast<NinjamTrackNode*>( trackNodes[channelKey]);

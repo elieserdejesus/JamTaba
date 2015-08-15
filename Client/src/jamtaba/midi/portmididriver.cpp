@@ -7,7 +7,13 @@ using namespace Midi;
 PortMidiDriver::PortMidiDriver(QList<bool> deviceStatuses)
 {
     Pm_Initialize();
-
+    int maxInputDevices = getMaxInputDevices();
+    if(deviceStatuses.size() < maxInputDevices){
+        int itemsToAdd = maxInputDevices - deviceStatuses.size();
+        for (int i = 0; i < itemsToAdd; ++i) {
+            deviceStatuses.append(true);
+        }
+    }
     setInputDevicesStatus(deviceStatuses);
 
 }
