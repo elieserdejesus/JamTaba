@@ -236,7 +236,6 @@ void PortAudioDriver::start(){
 }
 
 QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const{
-    int sampleRatesToTest[] = {44100, 48000, 96000, 192000};
     PaStreamParameters outputParams;
     outputParams.channelCount = 1;
     outputParams.device = deviceIndex;
@@ -244,11 +243,18 @@ QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const{
     outputParams.suggestedLatency = Pa_GetDeviceInfo(deviceIndex)->defaultLowOutputLatency;
     outputParams.hostApiSpecificStreamInfo = NULL;
     QList<int> validSRs;
-    for (int t = 0; t < 4; ++t) {//test 4 sample rates
-        int sampleRate = sampleRatesToTest[t];
+    validSRs.append(44100);
+    validSRs.append(48000);
+    validSRs.append(96000);
+    validSRs.append(192000);
+    for (int t = validSRs.size()-1; t >= 0; --t) {
+        int sampleRate = validSRs.at(t);
         PaError error =  Pa_IsFormatSupported(  NULL, &outputParams, sampleRate);
-        if(error == paNoError){
-            validSRs.append(sampleRate);
+        if(error != paNoError){
+            validSRs.removeAt(t);
+        }
+        else{
+            break;//test bigger sample rates first, and when the first big sample rate pass the test assume all other small sample rates are ok
         }
     }
     return validSRs;
