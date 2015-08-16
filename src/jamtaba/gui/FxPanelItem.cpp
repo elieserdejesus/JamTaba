@@ -1,4 +1,4 @@
-#include "fxpanelitem.h"
+#include "../gui/FxPanelItem.h"
 #include "plugins/guis.h"
 #include "../audio/core/plugins.h"
 #include "../MainController.h"

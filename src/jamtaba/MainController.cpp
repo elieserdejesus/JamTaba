@@ -10,8 +10,10 @@
 
 #include "JamtabaFactory.h"
 #include "audio/core/plugins.h"
-#include "audio/vst/VstPlugin.h"
-#include "audio/vst/vsthost.h"
+#if _WIN32
+    #include "audio/vst/VstPlugin.h"
+    #include "audio/vst/vsthost.h"
+#endif
 #include "persistence/Settings.h"
 
 #include "../ninjam/Service.h"
@@ -116,9 +118,11 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
       ninjamController(nullptr),
       mutex(QMutex::Recursive),
       started(false),
-      vstHost(Vst::VstHost::getInstance()),
+      #if _WIN32
+        vstHost(Vst::VstHost::getInstance()),
+      #endif
       //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
-      ipToLocationResolver("../Jamtaba2/GeoLite2-Country.mmdb"),
+      ipToLocationResolver("../GeoLite2-Country.mmdb"),
       settings(settings),
 
       userNameChoosed(false)
@@ -159,8 +163,10 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 
     this->audioMixer->addNode( this->roomStreamer);
 
-    vstHost->setSampleRate(audioDriver->getSampleRate());
-    vstHost->setBlockSize(audioDriver->getBufferSize());
+    #if _WIN32
+        vstHost->setSampleRate(audioDriver->getSampleRate());
+        vstHost->setBlockSize(audioDriver->getBufferSize());
+    #endif
 
     QObject::connect(&pluginFinder, SIGNAL(vstPluginFounded(QString,QString,QString)), this, SLOT(on_VSTPluginFounded(QString,QString,QString)));
 
@@ -661,10 +667,12 @@ Audio::Plugin *MainController::createPluginInstance(const Audio::PluginDescripto
         }
     }
     else if(descriptor.isVST()){
-        Vst::VstPlugin* vstPlugin = new Vst::VstPlugin(this->vstHost);
-        if(vstPlugin->load(this->vstHost, descriptor.getPath())){
-            return vstPlugin;
-        }
+        #if _WIN32
+            Vst::VstPlugin* vstPlugin = new Vst::VstPlugin(this->vstHost);
+            if(vstPlugin->load(this->vstHost, descriptor.getPath())){
+                return vstPlugin;
+            }
+        #endif
     }
     return nullptr;
 }

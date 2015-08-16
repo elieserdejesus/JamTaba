@@ -1,7 +1,10 @@
 #ifndef VSTHOST_H
 #define VSTHOST_H
 
-#include "aeffectx.h"
+#if _WIN32
+    #include "aeffectx.h"
+#endif
+
 //#include <QDebug>
 
 namespace Midi {

@@ -1,5 +1,5 @@
 #include "NinjamPanel.h"
-#include "ui_ninjampanel.h"
+#include "ui_NinjamPanel.h"
 #include <QPainter>
 #include <QDebug>
 #include <QtAlgorithms>

@@ -1,4 +1,4 @@
-#include "JamRoomViewPanel.h"
+#include "../gui/jamroomviewpanel.h"
 #include "ui_jamroomviewpanel.h"
 #include "../MainController.h"
 #include "../ninjam/User.h"

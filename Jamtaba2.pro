@@ -178,43 +178,37 @@ MAIN = src/jamtaba/main.cpp
 
 
 HEADERS += \
-    #nvwa/debug_new.h \
-    #--------------------------------
-#    #--------------------------------
     src/jamtaba/audio/core/AudioDriver.h \
     src/jamtaba/audio/core/AudioNode.h \
     src/jamtaba/audio/core/AudioMixer.h \
     src/jamtaba/audio/core/PortAudioDriver.h \
-#    #--------------------------------
+    #--------------------------------
     src/jamtaba/gui/widgets/PeakMeter.h \
     src/jamtaba/gui/widgets/WavePeakPanel.h \
-#    #--------------------------------
+    #--------------------------------
     src/jamtaba/loginserver/LoginService.h \
     src/jamtaba/loginserver/JsonUtils.h \
-#    #--------------------------------
+    #--------------------------------
     src/jamtaba/MainController.h \
     src/jamtaba/JamtabaFactory.h \
-#    #--------------------------------
+    #--------------------------------
     src/jamtaba/ninjam/protocol/ServerMessageParser.h \
     src/jamtaba/ninjam/protocol/ServerMessages.h \
     src/jamtaba/ninjam/protocol/ClientMessages.h \
     src/jamtaba/ninjam/User.h \
     src/jamtaba/ninjam/Service.h \
     src/jamtaba/ninjam/Server.h \
-#    #--------------------------------
+    #--------------------------------
     src/jamtaba/loginserver/natmap.h \
     src/jamtaba/audio/RoomStreamerNode.h \
     src/jamtaba/audio/codec.h \
     src/jamtaba/gui/LocalTrackView.h \
-    src/jamtaba/gui/JamRoomViewPanel.h \
-    src/jamtaba/gui/MainFrame.h \
+    src/jamtaba/gui/jamroomviewpanel.h \
+    src/jamtaba/gui/mainframe.h \
     src/jamtaba/gui/FxPanel.h \
     src/jamtaba/gui/FxPanelItem.h \
     src/jamtaba/audio/core/plugins.h \
     src/jamtaba/gui/plugins/guis.h \
-    src/jamtaba/audio/vst/PluginFinder.h \
-    src/jamtaba/audio/vst/VstPlugin.h \
-    src/jamtaba/audio/vst/vsthost.h \
     src/jamtaba/midi/MidiDriver.h \
     src/jamtaba/midi/portmididriver.h \
     src/jamtaba/gui/pluginscandialog.h \
@@ -244,29 +238,29 @@ HEADERS += \
     src/jamtaba/gui/TrackGroupView.h \
     src/jamtaba/gui/LocalTrackGroupView.h \
     src/jamtaba/NinjamController.h \
-    src/jamtaba/gui/IntervalProgressDisplay.h
+    src/jamtaba/gui/IntervalProgressDisplay.h \
+    src/jamtaba/audio/vst/PluginFinder.h \
 
+win32:HEADERS +=    src/jamtaba/audio/vst/VstPlugin.h \
+                    src/jamtaba/audio/vst/vsthost.h \
 
 SOURCES += \
     $$MAIN \
-#    nvwa/debug_new.cpp \
-#-----------------------------------------
-##------------------------------------------------
     src/jamtaba/audio/core/AudioDriver.cpp \
     src/jamtaba/audio/core/AudioNode.cpp \
     src/jamtaba/audio/core/AudioMixer.cpp \
     src/jamtaba/audio/core/PortAudioDriver.cpp \
     src/jamtaba/audio/RoomStreamerNode.cpp \
-##------------------------------------------------
+#------------------------------------------------
     src/jamtaba/gui/widgets/PeakMeter.cpp \
     src/jamtaba/gui/widgets/WavePeakPanel.cpp \
-##------------------------------------------------
+#------------------------------------------------
     src/jamtaba/JamtabaFactory.cpp \
     src/jamtaba/MainController.cpp \
-##------------------------------------------------
+#------------------------------------------------
     src/jamtaba/loginserver/LoginService.cpp \
     src/jamtaba/loginserver/JsonUtils.cpp \
-##------------------------------------------------
+#------------------------------------------------
     src/jamtaba/ninjam/protocol/ServerMessages.cpp \
     src/jamtaba/ninjam/protocol/ClientMessages.cpp \
     src/jamtaba/ninjam/protocol/ServerMessageParser.cpp \
@@ -277,17 +271,15 @@ SOURCES += \
     src/jamtaba/gui/FxPanel.cpp \
     src/jamtaba/gui/FxPanelItem.cpp \
     src/jamtaba/audio/core/plugins.cpp \
-    src/jamtaba/audio/codec.cpp \
+   src/jamtaba/audio/codec.cpp \
     src/jamtaba/gui/plugins/guis.cpp \
-    src/jamtaba/gui/JamRoomViewPanel.cpp \
-    src/jamtaba/gui/MainFrame.cpp \
-    src/jamtaba/audio/vst/PluginFinder.cpp \
-    src/jamtaba/audio/vst/VstPlugin.cpp \
-    src/jamtaba/audio/vst/vsthost.cpp \
+    src/jamtaba/gui/jamroomviewpanel.cpp \
+    src/jamtaba/gui/mainframe.cpp \
+   src/jamtaba/audio/vst/PluginFinder.cpp \
     src/jamtaba/midi/MidiDriver.cpp \
     src/jamtaba/gui/PreferencesDialog.cpp \
-    src/jamtaba/gui/PluginScanDialog.cpp \
-    src/jamtaba/midi/PortMidiDriver.cpp \
+    src/jamtaba/gui/pluginscandialog.cpp \
+    src/jamtaba/midi/portmididriver.cpp \
     src/jamtaba/gui/NinjamRoomWindow.cpp \
     src/jamtaba/gui/BaseTrackView.cpp \
     src/jamtaba/audio/NinjamTrackNode.cpp \
@@ -311,28 +303,29 @@ SOURCES += \
     src/jamtaba/persistence/Settings.cpp \
     src/jamtaba/gui/TrackGroupView.cpp \
     src/jamtaba/gui/LocalTrackGroupView.cpp \
-    src/jamtaba/NinjamController.cpp \
+   src/jamtaba/NinjamController.cpp \
     src/jamtaba/gui/IntervalProgressDisplay.cpp
+
+win32:SOURCES +=    src/jamtaba/audio/vst/VstPlugin.cpp \
+                    src/jamtaba/audio/vst/vsthost.cpp \
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
-    src/jamtaba/gui/PluginScanDialog.ui \
-    src/jamtaba/gui/MainFrame.ui \
-    src/jamtaba/gui/JamRoomViewPanel.ui \
+    src/jamtaba/gui/pluginscandialog.ui \
+    src/jamtaba/gui/mainframe.ui \
     src/jamtaba/gui/NinjamRoomWindow.ui \
     src/jamtaba/gui/BaseTrackView.ui \
     src/jamtaba/gui/NinjamPanel.ui \
     src/jamtaba/gui/BusyDialog.ui \
     src/jamtaba/gui/ChatPanel.ui \
     src/jamtaba/gui/ChatMessagePanel.ui \
-    src/jamtaba/gui/TrackGroupView.ui
+    src/jamtaba/gui/TrackGroupView.ui \
+    src/jamtaba/gui/jamroomviewpanel.ui \
 
 
-#macx: LIBPATH += /Users/Eliesr/Qt5.4.0/5.4/clang_64/lib \
-#win32:LIBPATH += C:/Qt/Qt5.4.0/Tools/mingw491_32/i686-w64-mingw32/lib/ \
-#win32:LIBPATH += C:\Qt\Qt5.4.2\5.4\msvc2013\lib
-
-VST_SDK_PATH = "D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3_SDK/pluginterfaces/vst2.x/"
+win32{
+    VST_SDK_PATH = "D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3_SDK/pluginterfaces/vst2.x/"
+}
 
 
 INCLUDEPATH += src/jamtaba/gui                  \
@@ -352,7 +345,17 @@ win32: LIBS +=  -lwinmm     \
                 -lole32     \
                 -lws2_32    \
 
-RESOURCES += src/jamtaba/resources/jamtaba.qrc
 
-#INCLUDEPATH += $$PWD/libs/includes/portaudio
-#DEPENDPATH += $$PWD/libs/includes/portaudio
+unix:!macx: LIBS += -L$$PWD/libs/linux64/ -lportaudio -lportmidi -lvorbisfile -lvorbis -lvorbisenc -logg  -lmaxminddb -lminimp3
+#unix:!macx: LIBS += -L$$PWD/libs/linux64/ -lminimp3
+
+#unix:!macx: PRE_TARGETDEPS += $$PWD/libs/linux64/libportaudio.a
+#unix:!macx: PRE_TARGETDEPS += $$PWD/libs/linux64/libminimp3.a
+
+unix:!macx: LIBS += -lrt -lasound
+
+
+
+
+
+RESOURCES += src/jamtaba/resources/jamtaba.qrc

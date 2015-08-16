@@ -1,7 +1,9 @@
 #pragma once
 
 #include "../core/plugins.h"
-#include "aeffectx.h"
+#if _WIN32
+    #include "aeffectx.h"
+#endif
 #include <QLibrary>
 #include <QLoggingCategory>
 

@@ -1,4 +1,4 @@
-#include "MainFrame.h"
+#include "mainframe.h"
 
 #include <QCloseEvent>
 #include <QDebug>
@@ -12,7 +12,7 @@
 #include <QDir>
 
 #include "PreferencesDialog.h"
-#include "JamRoomViewPanel.h"
+#include "jamroomviewpanel.h"
 #include "LocalTrackView.h"
 #include "plugins/guis.h"
 #include "FxPanel.h"

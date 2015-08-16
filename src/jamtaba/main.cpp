@@ -1,4 +1,4 @@
-#include "gui/MainFrame.h"
+#include "gui/mainframe.h"
 #include "MainController.h"
 #include "JamtabaFactory.h"
 #include "persistence/Settings.h"
@@ -6,23 +6,18 @@
 #include <QLoggingCategory>
 #include <QDir>
 #include <QFile>
+#include <QSsl>
 
-#include "../audio/vorbis/VorbisEncoder.h"
-#include "../audio/core/AudioNode.h"
-#include "../audio/Resampler.h"
-#include "../audio/SamplesBufferResampler.h"
-#include "../audio/core/SamplesBuffer.h"
+//#include "../audio/vorbis/VorbisEncoder.h"
+//#include "../audio/core/AudioNode.h"
+//#include "../audio/Resampler.h"
+//#include "../audio/SamplesBufferResampler.h"
+//#include "../audio/core/SamplesBuffer.h"
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
-void showBuffer(const Audio::SamplesBuffer& buffer){
-    for (int s = 0; s < buffer.getFrameLenght(); ++s) {
-        qWarning() << buffer.get(0, s);
-    }
-}
 
 int main(int argc, char* args[] ){
-
 
 
     QApplication::setApplicationName("Jamtaba 2");
@@ -46,7 +41,6 @@ int main(int argc, char* args[] ){
     int returnCode = mainController.exec();
     mainController.saveLastUserSettings(mainFrame.getInputsSettings());
     return returnCode;
-
 
  }
 //++++++++++++++++++++++++++++++++++
