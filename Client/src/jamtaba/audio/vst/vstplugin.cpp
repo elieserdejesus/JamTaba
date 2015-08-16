@@ -19,7 +19,7 @@
 #include <QThread>
 #include <cassert>
 
-Q_LOGGING_CATEGORY(vst, "vst")
+Q_LOGGING_CATEGORY(vst, "vst");
 
 using namespace Vst;
 

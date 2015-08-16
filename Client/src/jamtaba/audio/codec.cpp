@@ -5,6 +5,8 @@
 #include <QDebug>
 #include <cmath>
 
+
+
 using namespace Audio;
 
 const int Mp3DecoderMiniMp3::MINIMUM_SIZE_TO_DECODE = 1024 + 256;
@@ -26,6 +28,10 @@ void Mp3DecoderMiniMp3::reset(){
     for (int i = 0; i < INTERNAL_SHORT_BUFFER_SIZE; ++i) {
         internalShortBuffer[i] = 0;
     }
+}
+
+int Mp3DecoderMiniMp3::getSampleRate() const{
+        return mp3Info.sample_rate;
 }
 
 const SamplesBuffer* Mp3DecoderMiniMp3::decode(char *inputBuffer, int bytesToDecode){

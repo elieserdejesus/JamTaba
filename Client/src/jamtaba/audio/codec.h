@@ -1,11 +1,13 @@
 #pragma once
 
+//extern "C"{ //deu erro no linux
+    #include "minimp3.h"
+//}
+
 //#include <memory>
 #include <QByteArray>
 
-extern "C"{
-    #include "minimp3.h"
-}
+
 
 namespace Audio{
 
@@ -30,13 +32,14 @@ public:
     ~Mp3DecoderMiniMp3();
     virtual const Audio::SamplesBuffer* decode(char *inputBuffer, int bytesToDecode);
     virtual void reset();
-    virtual inline int getSampleRate() const {return mp3Info.sample_rate;}
+    virtual int getSampleRate() const;// {return mp3Info.sample_rate;}
 private:
     static const int MINIMUM_SIZE_TO_DECODE;// = 1024 + 256;
     static const int AUDIO_SAMPLES_BUFFER_MAX_SIZE;// = 4096 * 4;
     static const int INTERNAL_SHORT_BUFFER_SIZE;
     mp3_decoder_t mp3Decoder;
-    mp3_info_t mp3Info;
+    mp3_info_t
+    mp3Info;
     signed short* internalShortBuffer;
     Audio::SamplesBuffer* buffer;
     Audio::SamplesBuffer* NULL_BUFFER;

@@ -3,9 +3,11 @@
 #include <QFileInfo>
 #include <QDebug>
 #include "../audio/core/plugins.h"
-#include "windows.h"
-#include "VstPlugin.h"
-#include "vsthost.h"
+#if _WIN32
+    #include "windows.h"
+    #include "VstPlugin.h"
+    #include "vsthost.h"
+#endif
 #include <QApplication>
 #include <QSettings>
 
@@ -69,11 +71,13 @@ Audio::PluginDescriptor PluginFinder::getPluginDescriptor(QFileInfo f, Vst::VstH
         return Audio::PluginDescriptor();//invalid descriptor
 
     try{
-        Vst::VstPlugin plugin(host);
-        if(plugin.load(host, f.absoluteFilePath())){
-            QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
-            return Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
-        }
+        #if _WIN32
+            Vst::VstPlugin plugin(host);
+            if(plugin.load(host, f.absoluteFilePath())){
+                QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
+                return Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
+            }
+        #endif
     }
     catch(...){
         qCritical() << "não carregou " << f.absoluteFilePath();

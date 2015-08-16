@@ -2,7 +2,9 @@
 #include "AudioNode.h"
 #include <QDebug>
 #include "plugins.h"
-#include "../vst/VstPlugin.h"
+#if _WIN32
+    #include "../vst/vstplugin.h"
+#endif
 #include "../midi/MidiDriver.h"
 #include <QMutexLocker>
 
