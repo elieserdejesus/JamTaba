@@ -1,8 +1,13 @@
 #pragma once
 
-//extern "C"{ //deu erro no linux
-    #include "minimp3.h"
-//}
+#ifdef __WIN32
+    extern "C"{ //deu erro no linux
+#endif
+        #include "minimp3.h"
+
+#ifdef __WIN32
+}
+#endif
 
 //#include <memory>
 #include <QByteArray>
