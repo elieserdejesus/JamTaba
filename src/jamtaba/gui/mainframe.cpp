@@ -659,6 +659,9 @@ void MainFrame::on_preferencesClicked(QAction* action)
     AudioDriver* audioDriver = mainController->getAudioDriver();
     audioDriver->stop();
     midiDriver->stop();
+
+    stopCurrentRoomStream();
+
     PreferencesDialog dialog(mainController, this);
     if(action == ui.actionAudioPreferences){
         dialog.selectAudioTab();

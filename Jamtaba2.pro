@@ -1,13 +1,9 @@
-#quando abri no linux sem um arquivo de settings não apareceu nenhum canal de entrada
-
 #Prioridades para um primeiro release
     #Ver o usode memória para não queimar o filme
     #auto updater - pelo menos alguma forma de indicar que existe uma versão
         #mais atual
 
 #preciso testar nome de usuário com caracter especial para ver se o utf está funcionando
-
-#Estava ouvindo o stream da sala e usando a fast. Mudei para asio4all e crashou quando dei ok no dialogo de preferencias
 
 #tocar em algumas Jams para ver se está rolando
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------

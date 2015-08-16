@@ -190,7 +190,7 @@ void RoomStreamerNode::on_reply_error(QNetworkReply::NetworkError /*error*/){
 
 void RoomStreamerNode::on_reply_read(){
     if(!device){
-        qCCritical(roomStreamer) << "device is null!";
+        qCDebug(roomStreamer) << "device is null!";
         return;
     }
     if(device->isOpen() && device->isReadable()){
