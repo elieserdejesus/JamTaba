@@ -6,7 +6,6 @@
 #include <QLoggingCategory>
 #include <QDir>
 #include <QFile>
-#include <QSsl>
 
 //#include "../audio/vorbis/VorbisEncoder.h"
 //#include "../audio/core/AudioNode.h"

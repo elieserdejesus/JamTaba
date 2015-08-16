@@ -296,6 +296,9 @@ void MainFrame::initializeLocalInputChannels(){
         }
         channelIndex++;
     }
+    if(channelIndex == 0){//no channels in settings file or no settings file...
+        addLocalChannel(0, "your channel", true);
+    }
 }
 
 void MainFrame::initializeLoginService(){

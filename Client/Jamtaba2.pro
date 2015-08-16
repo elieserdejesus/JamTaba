@@ -1,3 +1,5 @@
+#quando abri no linux sem um arquivo de settings não apareceu nenhum canal de entrada
+
 #Prioridades para um primeiro release
     #Ver o usode memória para não queimar o filme
     #auto updater - pelo menos alguma forma de indicar que existe uma versão
@@ -347,15 +349,7 @@ win32: LIBS +=  -lwinmm     \
 
 
 unix:!macx: LIBS += -L$$PWD/libs/linux64/ -lportaudio -lportmidi -lvorbisfile -lvorbis -lvorbisenc -logg  -lmaxminddb -lminimp3
-#unix:!macx: LIBS += -L$$PWD/libs/linux64/ -lminimp3
-
-#unix:!macx: PRE_TARGETDEPS += $$PWD/libs/linux64/libportaudio.a
-#unix:!macx: PRE_TARGETDEPS += $$PWD/libs/linux64/libminimp3.a
-
 unix:!macx: LIBS += -lrt -lasound
-
-
-
 
 
 RESOURCES += src/jamtaba/resources/jamtaba.qrc
