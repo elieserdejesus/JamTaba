@@ -35,7 +35,7 @@ AbstractMp3Streamer::AbstractMp3Streamer( Audio::Mp3Decoder *decoder)
 }
 
 AbstractMp3Streamer::~AbstractMp3Streamer(){
-
+	delete decoder;
 }
 
 void AbstractMp3Streamer::stopCurrentStream(){

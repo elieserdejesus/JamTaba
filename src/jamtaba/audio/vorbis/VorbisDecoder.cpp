@@ -104,7 +104,8 @@ bool VorbisDecoder::initialize(){
     callbacks.tell_func = NULL;
     //int lastChannels = (initialized) ? (vorbisFile.vi->channels) : 0;
     int result = ov_open_callbacks((void*)this, &vorbisFile, NULL, 0, callbacks );
-    initialized = result == 0;
+    
+	initialized = result == 0;
 
     if(!initialized){
         QString message;

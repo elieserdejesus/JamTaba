@@ -6,6 +6,7 @@
 #include "SamplesBuffer.h"
 #include "../persistence/Settings.h"
 
+
 #include <QThread>
 
 Q_LOGGING_CATEGORY(portaudio, "portaudio")
@@ -177,11 +178,13 @@ void PortAudioDriver::start(){
     asioInputInfo.hostApiType = paASIO;
     asioInputInfo.version = 1;
     asioInputInfo.flags = paAsioUseChannelSelectors;
-    int inputChannelSelectors[inputParams.channelCount];
+	//const int size = ;
+    //int inputChannelSelectors[size];
+    std::vector<int> inputChannelSelectors(inputParams.channelCount);
     for (int c = 0; c < inputParams.channelCount; ++c) {
         inputChannelSelectors[c] = globalInputRange.getFirstChannel() + c;//inputs are always sequential
     }
-    asioInputInfo.channelSelectors = inputChannelSelectors;
+    asioInputInfo.channelSelectors = inputChannelSelectors.data();
     inputParams.hostApiSpecificStreamInfo = &asioInputInfo;
 #endif
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -201,11 +204,11 @@ void PortAudioDriver::start(){
     asioOutputInfo.hostApiType = paASIO;
     asioOutputInfo.version = 1;
     asioOutputInfo.flags = paAsioUseChannelSelectors;
-    int outputChannelSelectors[outputParams.channelCount];
+    std::vector<int> outputChannelSelectors(outputParams.channelCount);
     for (int c = 0; c < outputParams.channelCount; ++c) {
         outputChannelSelectors[c] = globalOutputRange.getFirstChannel() + c;//outputs are always sequential
     }
-    asioOutputInfo.channelSelectors = outputChannelSelectors;
+    asioOutputInfo.channelSelectors = outputChannelSelectors.data();
     outputParams.hostApiSpecificStreamInfo = &asioOutputInfo;
 #endif
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

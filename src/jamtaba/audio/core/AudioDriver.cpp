@@ -54,11 +54,15 @@ void AudioDriver::recreateBuffers(){
     }
     inputBuffer = new SamplesBuffer(globalInputRange.getChannels());
 
-    if(outputBuffer)
-    if (outputBuffer != NULL){
+    if(outputBuffer){
         delete outputBuffer;
     }
     outputBuffer = new SamplesBuffer(globalOutputRange.getChannels());
+}
+
+AudioDriver::~AudioDriver(){
+	delete this->inputBuffer;
+	delete this->outputBuffer;
 }
 
 void AudioDriver::setProperties(int deviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)

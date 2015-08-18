@@ -35,7 +35,7 @@ void AudioPeak::setRight(float newRightValue){
     this->right = newRightValue;
 }
 
-float AudioPeak::max() const{
+float AudioPeak::getMax() const{
     return std::max(std::abs(left), std::abs(right));
 }
 

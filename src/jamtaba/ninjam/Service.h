@@ -132,33 +132,7 @@ private:
     void handle(const DownloadIntervalWrite& msg);
     //++++++++++++=
 
-    class Download {//TODO: move the class definition to cpp file
-    private:
-        quint8 channelIndex;
-        QString userFullName;
-        QString GUID;
-        QByteArray vorbisData;
-    public:
-        Download(QString userFullName, quint8 channelIndex, QString GUID)
-            :channelIndex(channelIndex), userFullName(userFullName), GUID(GUID){
-        }
-        Download(){
-            qWarning() << "using the default constructor!";
-        }
-
-        ~Download(){
-
-        }
-
-        inline void appendVorbisData(QByteArray data){ this->vorbisData.append(data); }
-
-        inline quint8 getChannelIndex() const{return channelIndex;}
-        inline QString getUserFullName() const{return userFullName;}
-        inline QString getGUI() const{return GUID;}
-        inline QByteArray getVorbisData() const{return vorbisData;}
-
-    };
-
+    class Download;
     //using GUID as key
     QMap<QString, Download*> downloads;
 

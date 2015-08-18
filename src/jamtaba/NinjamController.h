@@ -7,7 +7,11 @@
 #include "../ninjam/Server.h"
 #include "../audio/vorbis/VorbisEncoder.h"
 
+#include <QLoggingCategory>
+
 #include <QThread>
+
+Q_DECLARE_LOGGING_CATEGORY(controllerNinjam)
 
 class NinjamTrackNode;
 
@@ -33,7 +37,6 @@ public:
     ~NinjamController();
     void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate);
     void start(const Ninjam::Server& server, bool transmiting);
-    void stop();
     bool inline isRunning() const{return running;}
     void setMetronomeBeatsPerAccent(int beatsPerAccent);
     inline int getCurrentBpi() const{return currentBpi;}

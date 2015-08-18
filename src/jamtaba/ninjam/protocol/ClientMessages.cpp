@@ -202,11 +202,14 @@ ClientUploadIntervalBegin::ClientUploadIntervalBegin(QByteArray GUID, quint8 cha
     :ClientMessage( 0x83, 16 + 4 + 4 + 1 + userName.size()),
       GUID(GUID),
       estimatedSize(0),
-      fourCC{'O', 'G', 'G', 'v'},
+      //fourCC{'O', 'G', 'G', 'v'},
       channelIndex(channelIndex),
       userName(userName)
 {
-
+	fourCC[0] = 'O';
+	fourCC[1] = 'G';
+	fourCC[2] = 'G';
+	fourCC[3] = 'v';
 }
 
 void ClientUploadIntervalBegin::serializeTo(QByteArray &buffer){

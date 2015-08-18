@@ -6,6 +6,9 @@
 #include "../ninjam/Server.h"
 #include "../loginserver/LoginService.h"
 #include "ChatPanel.h"
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(ninjamRoomWindow)
 
 class NinjamTrackGroupView;
 

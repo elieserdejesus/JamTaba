@@ -2,7 +2,7 @@
 #define IPTOCOUNTRYRESOLVER_H
 
 #include <QString>
-#include <maxminddb.h>
+//#include <maxminddb.h>
 
 
 namespace Geo {
@@ -35,7 +35,7 @@ public:
     ~IpToLocationResolver();
     Location resolve(QString ip);
 private:
-    MMDB_s mmdb_s;
+    //MMDB_s mmdb_s;
 };
 
 }

@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DEFECTS><DEFECT><SFA><FILEPATH>c:\qt\qt5.5.0-msvc\5.5\msvc2013\include\qtgui\</FILEPATH><FILENAME>qpixelformat.h</FILENAME><LINE>214</LINE><COLUMN>54</COLUMN></SFA><DEFECTCODE>6326</DEFECTCODE><DESCRIPTION>Potential comparison of a constant with another constant.</DESCRIPTION><FUNCTION>QPixelFormat::resolveByteOrder</FUNCTION><DECORATED>?resolveByteOrder@QPixelFormat@@CA?AW4ByteOrder@1@W421@@Z</DECORATED><FUNCLINE>213</FUNCLINE><PATH/></DEFECT></DEFECTS>

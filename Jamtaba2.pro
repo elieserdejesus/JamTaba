@@ -1,9 +1,27 @@
+#congelando quando entro na sala local e tem algum canal no reaper
+    #problema resolvido no teste onde criei um canal manualmente. Testar novamente
+    #com o Reaninjam para ver.
+
+
+
+#eliminar tracksToDelete no NinjamController
+
+
+#o Reaper encontra a fast se eu ligo ela no meio de uma sessão?
+
 #Prioridades para um primeiro release
     #Ver o usode memória para não queimar o filme
     #auto updater - pelo menos alguma forma de indicar que existe uma versão
         #mais atual
 
+
+#caracteres especiais do chat
+    #wahjam pega o char* que chega pelo chat e transforma em QSTring usando fromUtf8
+    #na hora de enviar mensagem pelo chat o wahjam usa command.toUtf8().data(), sendo
+    #que command é uma QString
+
 #preciso testar nome de usuário com caracter especial para ver se o utf está funcionando
+
 
 #tocar em algumas Jams para ver se está rolando
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
@@ -162,7 +180,7 @@ QT       +=  gui  network
 #DEFINES += QT_NO_CAST_FROM_ASCII
 #DEFINES += QT_NO_CAST_TO_ASCII
 
-QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS #-Wno-unused-parameter
+QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS -Wall #-Wno-unused-parameter
 
 CONFIG += c++11
 
@@ -244,6 +262,7 @@ win32:HEADERS +=    src/jamtaba/audio/vst/VstPlugin.h \
 
 SOURCES += \
     $$MAIN \
+    src/jamtaba/minimp3/minimp3.c \
     src/jamtaba/audio/core/AudioDriver.cpp \
     src/jamtaba/audio/core/AudioNode.cpp \
     src/jamtaba/audio/core/AudioMixer.cpp \
@@ -337,11 +356,16 @@ INCLUDEPATH += src/jamtaba/gui                  \
                $$PWD/libs/includes/libmaxmind   \
 
 
-win32: LIBS +=  -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi -lvorbisfile -lvorbis -lvorbisenc -logg -lminimp3 -lmaxminddb  \
+win32-g++: LIBS += -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi -lvorbisfile -lvorbis -lvorbisenc -logg -lminimp3 -lmaxminddb  \
+#win32-g++: PRE_TARGETDEPS += $$PWD/libs/win32-mingw/libportaudio.a \
+
+#msvc configs
 
 win32: LIBS +=  -lwinmm     \
                 -lole32     \
                 -lws2_32    \
+                -lAdvapi32  \
+                -lUser32    \
 
 
 unix:!macx: LIBS += -L$$PWD/libs/linux64/ -lportaudio -lportmidi -lvorbisfile -lvorbis -lvorbisenc -logg  -lmaxminddb -lminimp3
@@ -349,3 +373,11 @@ unix:!macx: LIBS += -lrt -lasound
 
 
 RESOURCES += src/jamtaba/resources/jamtaba.qrc
+
+win32:!win32-g++:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/win32-msvc/ -lportaudio -lportmidi -lvorbisfile -lvorbis -logg
+else:win32:!win32-g++:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/win32-msvc/ -lportaudiod  -lportmidid -lvorbisfiled -lvorbisd -lvorbisencd  -loggd \
+
+#win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/win32-msvc/libportaudio.a
+#else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/win32-msvc/libportaudiod.a
+#else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/win32-msvc/portaudio.lib
+#else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/win32-msvc/portaudiod.lib

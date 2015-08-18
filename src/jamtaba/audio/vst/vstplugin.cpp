@@ -107,6 +107,8 @@ bool VstPlugin::load(VstHost *host, QString path){
     qCDebug(vst) << "Criando internalBuffer com " << outputs << " canais e " << host->getBufferSize() << " samples";
     internalBuffer = new Audio::SamplesBuffer(outputs, host->getBufferSize());
 
+    out = new float*[outputs];
+
     return true;
 }
 
@@ -190,6 +192,8 @@ VstPlugin::~VstPlugin()
     for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
         delete this->vstMidiEvents.events[i];
     }
+
+    delete [] out;
 }
 
 void VstPlugin::unload(){
@@ -210,7 +214,7 @@ void VstPlugin::fillVstEventsList(const Midi::MidiBuffer &midiBuffer){
 
     //qCDebug(vst) << "filling VST midi event list";
 
-    int midiMessages = std::min( midiBuffer.getMessagesCount(), MAX_MIDI_EVENTS);
+    int midiMessages = (std::min)( midiBuffer.getMessagesCount(), MAX_MIDI_EVENTS);
     this->vstMidiEvents.numEvents = midiMessages;
     for (int m = 0; m < midiMessages; ++m) {
         Midi::MidiMessage message = midiBuffer.getMessage(m);
@@ -249,9 +253,9 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
     };
     //vst plugins maybe have many output channels
     int outChannels = internalBuffer->getChannels();
-    float* out[outChannels];
     for (int c = 0; c < outChannels; ++c) {
-       out[c] = internalBuffer->getSamplesArray(c);
+       //out is initialized when plugin is loaded
+        out[c] = internalBuffer->getSamplesArray(c);
     }
 
     VstInt32 sampleFrames = outBuffer.getFrameLenght();
@@ -300,14 +304,15 @@ void VstPlugin::openEditor(QPoint centerOfScreen){
 
     //Some plugins don't return the real size until after effEditOpen
     effect->dispatcher(effect, effEditGetRect, 0, 0, (void*)&rect, 0);
-    if (rect) {
-      w->setFixedSize(rect->right - rect->left, rect->bottom - rect->top);
-    }
+	if (rect) {
+		w->setFixedSize(rect->right - rect->left, rect->bottom - rect->top);
 
-    rectWidth = rect->right - rect->left;
-    rectHeight = rect->bottom - rect->top;
 
-    w->move(centerOfScreen.x() - rectWidth/2, centerOfScreen.y() - rectHeight/2);
+		rectWidth = rect->right - rect->left;
+		rectHeight = rect->bottom - rect->top;
+
+		w->move(centerOfScreen.x() - rectWidth / 2, centerOfScreen.y() - rectHeight / 2);
+	}
 
     qCDebug(vst) << getName() << " editor opened";
 

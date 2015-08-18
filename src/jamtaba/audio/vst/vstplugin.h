@@ -45,6 +45,8 @@ private:
 
     bool started;
 
+    float** out;
+
     //VstEvents* vstEvents;
     void fillVstEventsList(const Midi::MidiBuffer& midiBuffer);
 

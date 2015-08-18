@@ -93,6 +93,7 @@ public:
     bool isPlayingRoomStream() const;
 
     bool isPlayingInNinjamRoom() const;
+    void stopNinjamController();
 
     void setTransmitingStatus(bool transmiting);
     inline bool isTransmiting() const{return transmiting;}

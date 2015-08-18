@@ -1,18 +1,9 @@
 #pragma once
 
-#ifdef __WIN32
-    extern "C"{ //deu erro no linux
-#endif
-        #include "minimp3.h"
-
-#ifdef __WIN32
+extern "C"{ //deu erro no linux
+    #include "minimp3.h"
 }
-#endif
-
-//#include <memory>
 #include <QByteArray>
-
-
 
 namespace Audio{
 

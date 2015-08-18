@@ -18,12 +18,15 @@ void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
 int main(int argc, char* args[] ){
 
+    if (!QTextCodec::codecForLocale()) {
+      QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+    }
 
     QApplication::setApplicationName("Jamtaba 2");
 
     qputenv("QT_LOGGING_CONF", ":/qtlogging.ini");//log cconfigurations is in resources at moment
 
-    //QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+
 
     qInstallMessageHandler(customLogHandler);
 

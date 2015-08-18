@@ -1,4 +1,5 @@
 #include "SamplesBufferResampler.h"
+#include <algorithm>
 
 SamplesBufferResampler::SamplesBufferResampler()
     :outBuffer(2, 4096 * 2){
