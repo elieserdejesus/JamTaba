@@ -19,11 +19,6 @@ VorbisDecoder::VorbisDecoder()
     outBuffer[1] = new float[2048];
 
     decodedSamples = 0;
-
-    Q_UNUSED(OV_CALLBACKS_DEFAULT);
-    Q_UNUSED(OV_CALLBACKS_NOCLOSE);
-    Q_UNUSED(OV_CALLBACKS_STREAMONLY);
-    Q_UNUSED(OV_CALLBACKS_STREAMONLY_NOCLOSE);
 }
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::~VorbisDecoder(){
@@ -32,7 +27,9 @@ VorbisDecoder::~VorbisDecoder(){
     //delete [] outBuffer[0];
     //delete [] outBuffer[1];
     //delete [] outBuffer;
-    //ov_clear(&vorbisFile);
+    //if(initialized){
+//        ov_clear(&vorbisFile);
+//    }
 }
 //+++++++++++++++++++++++++++++++++++++++++++
 int VorbisDecoder::consumeTo(void *oggOutBuffer, int bytesToConsume){
@@ -58,9 +55,7 @@ const Audio::SamplesBuffer &VorbisDecoder::decode(int maxSamplesToDecode){
         initialize();
     }
     if(!initialized){
-        internalBuffer.setFrameLenght(maxSamplesToDecode);
-        internalBuffer.zero();
-        return internalBuffer;
+        return Audio::SamplesBuffer::ZERO_BUFFER;
     }
     //static float decoderOutBuffer[vorbisFile.vi->channels]
     long samplesDecoded = ov_read_float(&vorbisFile, &outBuffer, maxSamplesToDecode, NULL);//currentSection is not used
@@ -102,7 +97,11 @@ bool VorbisDecoder::initialize(){
     callbacks.seek_func = NULL;
     callbacks.close_func = NULL;
     callbacks.tell_func = NULL;
-    //int lastChannels = (initialized) ? (vorbisFile.vi->channels) : 0;
+
+    if(initialized){
+        ov_clear(&vorbisFile);
+    }
+
     int result = ov_open_callbacks((void*)this, &vorbisFile, NULL, 0, callbacks );
     
 	initialized = result == 0;

@@ -1,13 +1,5 @@
-#congelando quando entro na sala local e tem algum canal no reaper
-    #problema resolvido no teste onde criei um canal manualmente. Testar novamente
-    #com o Reaninjam para ver.
-
-
-
-#eliminar tracksToDelete no NinjamController
-
-
-#o Reaper encontra a fast se eu ligo ela no meio de uma sessão?
+#o NinjamService está com a memória sob controle.
+#O problema do uso de memória é o vorbis decoder
 
 #Prioridades para um primeiro release
     #Ver o usode memória para não queimar o filme
@@ -25,6 +17,8 @@
 
 #tocar em algumas Jams para ver se está rolando
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#o Reaper encontra a fast se eu ligo ela no meio de uma sessão?
 
 #de vez em quando o plot do room stream reseta sozinho antes de chegar no fim do Widget.
     #estou desconfiado que o problema é com as threads. Estou acessando o bufferedSamples

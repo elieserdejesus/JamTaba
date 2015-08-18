@@ -202,10 +202,10 @@ NinjamController::NinjamController(Controller::MainController* mainController)
 //+++++++++++++++++++++++++ THE MAIN LOGIC IS HERE  ++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
 
-    foreach (NinjamTrackNode* track, tracksToDelete) {
-        delete track;
-    }
-    tracksToDelete.clear();
+//    foreach (NinjamTrackNode* track, tracksToDelete) {
+//        delete track;
+//    }
+//    tracksToDelete.clear();
 
     QMutexLocker locker(&mutex);
     if(!running || samplesInInterval <= 0){
@@ -459,8 +459,6 @@ void NinjamController::removeTrack(Ninjam::User user, Ninjam::UserChannel channe
             ID = trackNode->getID();
             trackNodes.remove(uniqueKey);
             mainController->removeTrack(ID);
-            //delete trackNode; //BUG - sometimes Jamtaba crash when trackNode is deleted
-            //tracksToDelete.append(trackNode);
             channelDeleted = true;
         }
     }

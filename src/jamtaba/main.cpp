@@ -15,8 +15,34 @@
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
+#include "audio/vorbis/VorbisDecoder.h"
 
 int main(int argc, char* args[] ){
+/*
+    VorbisDecoder decoder;
+    QFile file(":/bateria mono.ogg");
+    if(!file.open(QFile::ReadOnly)){
+        qFatal("Não abriu o arquivo");
+    }
+
+    QByteArray fileContent = file.readAll();
+
+    while(true){
+        qWarning() << "reinicializando ";
+        decoder.setInput(fileContent);
+        decoder.reset();//read headers
+
+        int framesDecoded = 0;
+        do{
+            framesDecoded = decoder.decode(256).getFrameLenght();
+            qWarning() << "decoded: " << framesDecoded;
+        }
+        while(framesDecoded > 0);
+    }
+
+
+    return 0;
+*/
 
     if (!QTextCodec::codecForLocale()) {
       QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));

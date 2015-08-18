@@ -123,7 +123,7 @@ private:
 
     EncodingThread* encodingThread;
 
-    QList<NinjamTrackNode*> tracksToDelete;
+    //QList<NinjamTrackNode*> tracksToDelete;
 
 private slots:
     //ninjam events
