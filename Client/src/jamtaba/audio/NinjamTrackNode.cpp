@@ -40,7 +40,6 @@ bool NinjamTrackNode::startNewInterval(){
     if(!intervals.isEmpty()){
         decoder.setInput(intervals.front());
         intervals.removeFirst();
-        //qDebug() << "total samples decoded: " << decoder.getTotalDecodedSamples();
         decoder.reset();//head the headers from new interval
         playing = true;
     }
@@ -65,6 +64,7 @@ int NinjamTrackNode::getFramesToProcess(int targetSampleRate, int outFrameLenght
 }
 
 void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer){
+
     if(!playing){
         return;
     }

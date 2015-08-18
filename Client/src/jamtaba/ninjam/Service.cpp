@@ -129,7 +129,7 @@ void Service::socketReadSlot(){
         if (socket.bytesAvailable() >= (int)payloadLenght) {//message payload is available to read
             lastMessageWasIncomplete = false;
             const Ninjam::ServerMessage& message = ServerMessageParser::parse(static_cast<ServerMessageType>(messageTypeCode), stream, payloadLenght) ;
-            qCDebug(ninjamService) << message;
+            //qCDebug(ninjamService) << message;
             invokeMessageHandler(message);
             if(needSendKeepAlive()){
                 ClientKeepAlive clientKeepAliveMessage;
