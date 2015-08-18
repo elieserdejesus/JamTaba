@@ -1,5 +1,8 @@
-#o NinjamService está com a memória sob controle.
-#O problema do uso de memória é o vorbis decoder
+#botei muito lixo no repositório
+
+#testar uso de memória do stream da sala
+
+#reativar o maxmind ou qt geolocation?
 
 #Prioridades para um primeiro release
     #Ver o usode memória para não queimar o filme
