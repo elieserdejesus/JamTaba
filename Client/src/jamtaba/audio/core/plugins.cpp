@@ -109,7 +109,7 @@ JamtabaDelay::JamtabaDelay(int sampleRate)
 }
 
 QByteArray JamtabaDelay::getSerializedData() const{
-
+    return QByteArray();
 }
 
 void JamtabaDelay::restoreFromSerializedData(QByteArray data){
@@ -135,7 +135,8 @@ void JamtabaDelay::start(){
 }
 
 void JamtabaDelay::process(const Audio::SamplesBuffer &in, SamplesBuffer &out, const Midi::MidiBuffer &midiBuffer){
-//    Q_UNUSED(midiBuffer)
+
+//        Q_UNUSED(midiBuffer)
 //    if(isBypassed()){
 //        return;
 //    }

@@ -327,9 +327,8 @@ void MainFrame::on_tabCloseRequest(int index){
     if(index > 0){//the first tab is not closable
         showBusyDialog("disconnecting ...");
         if(mainController->getNinjamController()->isRunning()){
-            //mainController->getAudioDriver()->stop();
-            mainController->getNinjamController()->stop();//disconnect from server
-            //mainController->getAudioDriver()->start();
+
+            mainController->stopNinjamController();
         }
     }
 }
@@ -461,7 +460,7 @@ void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo){
 
 
     if(mainController->isPlayingInNinjamRoom()){
-        mainController->getNinjamController()->stop();//disconnect from current ninjam server
+        mainController->stopNinjamController();//disconnect from current ninjam server
     }
 
     if(!mainController->userNameWasChoosed()){
@@ -568,7 +567,8 @@ void MainFrame::timerEvent(QTimerEvent *){
           long long roomID = mainController->getCurrentStreamingRoomID();
           JamRoomViewPanel* roomView = roomViewPanels[roomID];
           if(roomView){
-              roomView->addPeak(mainController->getRoomStreamPeak().max());
+              Audio::AudioPeak peak = mainController->getRoomStreamPeak();
+              roomView->addPeak(peak.getMax());
           }
     }
 }

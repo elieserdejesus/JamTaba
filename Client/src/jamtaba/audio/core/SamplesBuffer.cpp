@@ -49,7 +49,7 @@ SamplesBuffer::SamplesBuffer(const SamplesBuffer& other)
 //}
 
 SamplesBuffer::~SamplesBuffer(){
-
+	
 }
 
 void SamplesBuffer::discardFirstSamples(unsigned int samplesToDiscard){
@@ -175,7 +175,7 @@ AudioPeak SamplesBuffer::computePeak() const
 {
     //QMutexLocker locker(&mutex);
     float abs;
-    float peaks[2];//left and right peaks
+	float peaks[2] = {0};//left and right peaks
     for (unsigned int c = 0; c < channels; ++c) {
         float maxPeak = 0;
         for (unsigned int i = 0; i < frameLenght; ++i) {

@@ -10,7 +10,7 @@ public:
     explicit AudioPeak();
     void setLeft(float newLeftValue);
     void setRight(float newRightValue);
-    float max() const;
+    float getMax() const;
     inline float getLeft() const{return left;}
     inline float getRight() const{return right;}
     void update(const AudioPeak& other);

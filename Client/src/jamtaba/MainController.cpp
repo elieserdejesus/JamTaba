@@ -177,10 +177,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     QObject::connect(this->ninjamService, SIGNAL(error(QString)), this, SLOT(on_errorInNinjamServer(QString)));
 
 
-    this->ninjamController = new Controller::NinjamController(this);
-    QObject::connect(this->ninjamController,
-                     SIGNAL(encodedAudioAvailableToSend(QByteArray,quint8,bool,bool)),
-                     this, SLOT(on_ninjamEncodedAudioAvailableToSend(QByteArray,quint8,bool,  bool)));
+
 
     //addInputTrackNode(new Audio::LocalInputTestStreamer(440, getAudioDriverSampleRate()));
 
@@ -357,8 +354,9 @@ void MainController::setInputTrackToMono(int localChannelIndex, int inputIndexIn
         inputTrack->setAudioInputSelection(inputIndexInAudioDevice, 1);//mono
         emit inputSelectionChanged(localChannelIndex);
         if(isPlayingInNinjamRoom()){
-            //ninjamController->recreateEncoderForChannel(inputTrack->getGroupChannelIndex());
-            ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
+            if(ninjamController){//just in case
+                ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
+            }
         }
     }
 }
@@ -368,8 +366,9 @@ void MainController::setInputTrackToStereo(int localChannelIndex, int firstInput
         inputTrack->setAudioInputSelection(firstInputIndex, 2);//stereo
         emit inputSelectionChanged(localChannelIndex);
         if(isPlayingInNinjamRoom()){
-            //ninjamController->recreateEncoderForChannel(inputTrack->getGroupChannelIndex());
-            ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
+            if(ninjamController){
+                ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
+            }
         }
     }
 }
@@ -380,8 +379,9 @@ void MainController::setInputTrackToMIDI(int localChannelIndex, int midiDevice){
         inputTrack->setMidiInputSelection(midiDevice);
         emit inputSelectionChanged(localChannelIndex);
         if(isPlayingInNinjamRoom()){
-            //ninjamController->recreateEncoderForChannel(inputTrack->getGroupChannelIndex());
-            ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
+            if(ninjamController){
+                ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
+            }
         }
     }
 }
@@ -393,8 +393,9 @@ void MainController::setInputTrackToNoInput(int localChannelIndex){
         if(isPlayingInNinjamRoom()){//send the finish interval message
             if(intervalsToUpload.contains(localChannelIndex)){
                 ninjamService->sendAudioIntervalPart(intervalsToUpload[localChannelIndex]->getGUID(), QByteArray(), true);
-                //ninjamController->recreateEncoderForChannel(inputTrack->getGroupChannelIndex());
-                ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
+                if(ninjamController){
+                    ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
+                }
             }
         }
     }
@@ -525,13 +526,15 @@ void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::Sampl
 
 
 void MainController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
-    //QMutexLocker locker(&mutex);
+    QMutexLocker locker(&mutex);
     //checkThread("process();");
     if(!isPlayingInNinjamRoom()){
         doAudioProcess(in, out, sampleRate);
     }
     else{
-        ninjamController->process(in, out, sampleRate);
+        if(ninjamController){
+            ninjamController->process(in, out, sampleRate);
+        }
     }
     //recorder->addSamples(out);
 }
@@ -684,6 +687,10 @@ void MainController::on_disconnectedFromLoginServer(){
 
 MainController::~MainController(){
     stop();
+
+	//delete audioDriver;
+	//delete midiDriver;
+
     delete roomStreamer;
 
 //    foreach (Audio::AudioNode* track, tracksNodes) {
@@ -709,6 +716,8 @@ MainController::~MainController(){
     QObject::disconnect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
 
     //delete recorder;
+
+
 }
 
 void MainController::saveLastUserSettings(const Persistence::InputsSettings& inputsSettings){
@@ -748,6 +757,7 @@ bool MainController::isPlayingRoomStream() const{
 }
 
 void MainController::enterInRoom(Login::RoomInfo room, QStringList channelsNames){
+    qCDebug(controllerMain) << "EnterInRoom slot";
     if(isPlayingRoomStream()){
         stopRoomStream();
     }
@@ -770,6 +780,7 @@ void MainController::sendRemovedChannelMessage(int removedChannelIndex){
 }
 
 void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStringList channelsNames){
+    qCDebug(controllerMain) << "connecting...";
     if(userNameWasChoosed()){//just in case :)
         QString serverIp = ninjamRoom.getName();
         int serverPort = ninjamRoom.getPort();
@@ -827,18 +838,23 @@ QString MainController::getUserEnvironmentString() const{
 
 void MainController::stop()
 {
+    qCDebug(controllerMain) << "Stopping MainController...";
     if(started){
         {
             //QMutexLocker locker(&mutex);
             this->audioDriver->release();
             this->midiDriver->release();
+            qCDebug(controllerMain) << "audio and midi drivers released";
 
             if(ninjamController){
-                ninjamController->stop();
+                qCDebug(controllerMain) << "deleting ninjamController...";
+                delete ninjamController;
+                ninjamController = nullptr;
             }
             started = false;
         }
 
+        qCDebug(controllerMain) << "disconnecting from login server...";
         loginService->disconnect();
 
     }
@@ -905,26 +921,39 @@ void MainController::on_ninjamEncodedAudioAvailableToSend(QByteArray encodedAudi
     }
 }
 
-void MainController::on_errorInNinjamServer(QString error){
-    qWarning() << error;
+void MainController::stopNinjamController(){
+    QMutexLocker locker(&mutex);
     if(ninjamController){
-        ninjamController->stop();
+        ninjamController->deleteLater();
+        //delete ninjamController;
+        ninjamController = nullptr;
     }
+}
+
+void MainController::on_errorInNinjamServer(QString error){
+    qCWarning(controllerMain) << error;
+    stopNinjamController();
     emit exitedFromRoom(false);//not a normal disconnection
 }
 
 void MainController::on_disconnectedFromNinjamServer(const Server &server){
     Q_UNUSED(server);
-    if(ninjamController){
-        ninjamController->stop();
-    }
+    stopNinjamController();
     emit exitedFromRoom(true);//normal disconnection
 }
 
 void MainController::on_connectedInNinjamServer(Ninjam::Server server){
+    qCDebug(controllerMain) << "connected in ninjam server";
+    stopNinjamController();
+    ninjamController = new Controller::NinjamController(this);
+    QObject::connect(ninjamController,
+                     SIGNAL(encodedAudioAvailableToSend(QByteArray,quint8,bool,bool)),
+                     this, SLOT(on_ninjamEncodedAudioAvailableToSend(QByteArray,quint8,bool,  bool)));
 
    //emit event after start controller to create view widgets before start
     emit enteredInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers(), server.getMaxChannels()));
+
+    qCDebug(controllerMain) << "starting ninjamController...";
     ninjamController->start(server, transmiting);
 }
 

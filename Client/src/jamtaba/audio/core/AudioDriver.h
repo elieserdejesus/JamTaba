@@ -40,7 +40,7 @@ signals:
 
 public:
     AudioDriver( AudioDriverListener* audioDriverListener );
-    virtual ~AudioDriver(){}
+	virtual ~AudioDriver();
     virtual void setProperties(int deviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
     virtual void setProperties(int inputDeviceIndex, int outputDeviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
 

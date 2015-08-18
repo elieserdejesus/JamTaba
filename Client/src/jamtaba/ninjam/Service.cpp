@@ -21,6 +21,46 @@ std::unique_ptr<Service> Service::serviceInstance;
 
 const QStringList Service::botNames = buildBotNamesList();
 
+//++++++++++++++++++++++++++++
+
+//class Download;
+
+class Service::Download {
+private:
+    quint8 channelIndex;
+    QString userFullName;
+    QString GUID;
+    QByteArray vorbisData;
+    static int instances;
+public:
+    Download(QString userFullName, quint8 channelIndex, QString GUID)
+        :channelIndex(channelIndex), userFullName(userFullName), GUID(GUID){
+        instances++;
+        qCDebug(ninjamService) << "Download constructor instances: " << instances;
+    }
+    Download(){
+        qCritical() << "using the default constructor!";
+    }
+
+    ~Download(){
+        instances--;
+        qCDebug(ninjamService) << "Download destructor instances: " << instances;
+    }
+
+    inline void appendVorbisData(QByteArray data){ this->vorbisData.append(data); }
+
+    inline quint8 getChannelIndex() const{return channelIndex;}
+    inline QString getUserFullName() const{return userFullName;}
+    inline QString getGUI() const{return GUID;}
+    inline QByteArray getVorbisData() const{return vorbisData;}
+
+};
+int Ninjam::Service::Download::instances = 0;
+
+
+//++++++++++++++++++++++++++++++++++++++++
+
+
 Service::Service()
     :
       lastSendTime(0),
