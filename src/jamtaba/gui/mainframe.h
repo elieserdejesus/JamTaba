@@ -58,7 +58,12 @@ private slots:
 
     void on_preferencesClicked(QAction *action);
     void on_IOPreferencesChanged(QList<bool>, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
+
+    //login service
     void on_roomsListAvailable(QList<Login::RoomInfo> publicRooms);
+    void on_newVersionAvailableForDownload();
+    void on_incompatibilityWithServerDetected();
+    void on_errorConnectingToServer();
 
     //+++++  ROOM FEATURES ++++++++
     void on_startingRoomStream(Login::RoomInfo roomInfo);
@@ -66,7 +71,6 @@ private slots:
     void on_enteringInRoom(Login::RoomInfo roomInfo);
     void on_enteredInRoom(Login::RoomInfo roomInfo);
     void on_exitedFromRoom(bool normalDisconnection);
-    //
 
     //plugin finder
     void onPluginScanStarted();

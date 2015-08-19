@@ -19,11 +19,14 @@ void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
 int main(int argc, char* args[] ){
 
-    if (!QTextCodec::codecForLocale()) {
+    //if (!QTextCodec::codecForLocale()) {
       QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
-    }
+      //QTextCodec::set
+    //}
 
     QApplication::setApplicationName("Jamtaba 2");
+    QApplication::setApplicationVersion(APP_VERSION);
+
 
     qputenv("QT_LOGGING_CONF", ":/qtlogging.ini");//log cconfigurations is in resources at moment
 
@@ -34,6 +37,7 @@ int main(int argc, char* args[] ){
     settings.load();
 
     Controller::MainController mainController(factory, settings, argc, args);//MainController extends QApplication
+
 
     MainFrame mainFrame(&mainController);
     mainFrame.show();

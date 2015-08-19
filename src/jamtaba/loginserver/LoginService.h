@@ -76,14 +76,16 @@ public:
 
     explicit LoginService(QObject *parent=0);
     ~LoginService();
-    virtual void connectInServer(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
+    virtual void connectInServer(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, QString version, QString environment, int sampleRate);
     virtual void disconnect();
     inline bool isConnected() const {return connected;}
 
 signals:
     void roomsListAvailable(QList<Login::RoomInfo> publicRooms);
     void disconnectedFromServer();
-
+    void incompatibilityWithServerDetected();
+    void newVersionAvailableForDownload();
+    void errorWhenConnectingToServer();
 private:
 
     enum Command{

@@ -18,7 +18,10 @@ ClientMessage::ClientMessage(quint8 msgCode, quint32 payload)
 void ClientMessage::serializeString(const QString &str, QDataStream &stream){
     //serializeByteArray(QByteArray(str.toStdString().c_str()), stream);
 
-    serializeByteArray(str.toUtf8(), stream);
+    //serializeByteArray(str.toUtf8(), stream);
+    QByteArray utf8Array = str.toUtf8();
+    stream.writeRawData(utf8Array.data(), utf8Array.size());
+
     stream << quint8('\0'); // NUL TERMINATED
 }
 

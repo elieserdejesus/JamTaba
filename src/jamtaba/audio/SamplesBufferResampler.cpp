@@ -1,5 +1,6 @@
 #include "SamplesBufferResampler.h"
 #include <algorithm>
+#include <QDebug>
 
 SamplesBufferResampler::SamplesBufferResampler()
     :outBuffer(2, 4096 * 2){
@@ -7,7 +8,7 @@ SamplesBufferResampler::SamplesBufferResampler()
 }
 
 SamplesBufferResampler::~SamplesBufferResampler(){
-
+    //qWarning() << "destrutor SamplesBufferResampler";
 }
 
 const Audio::SamplesBuffer& SamplesBufferResampler::resample(const Audio::SamplesBuffer &in, int desiredOutLenght){

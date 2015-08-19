@@ -19,6 +19,9 @@
 #include "../ninjam/Service.h"
 #include "../ninjam/Server.h"
 #include "NinjamController.h"
+
+#include "geo/MaxMindIpToLocationResolver.h"
+
 #include <QTimer>
 #include <QFile>
 #include <QDebug>
@@ -122,10 +125,11 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
         vstHost(Vst::VstHost::getInstance()),
       #endif
       //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
-      ipToLocationResolver("../Jamtaba2/GeoLite2-Country.mmdb"),
+      ipToLocationResolver( new Geo::MaxMindIpToLocationResolver("../Jamtaba2/GeoLite2-Country.mmdb")),
       settings(settings),
 
-      userNameChoosed(false)
+      userNameChoosed(false),
+      loginService(factory->createLoginService())
 
 {
 
@@ -133,9 +137,6 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 
     setQuitOnLastWindowClosed(false);//wait disconnect from server to close
     configureStyleSheet();
-
-    Login::LoginService* loginService = factory->createLoginService();
-    this->loginService = std::unique_ptr<Login::LoginService>( loginService );
 
     this->audioDriver = new Audio::PortAudioDriver(
                 this, //the AudioDriverListener instance
@@ -161,7 +162,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 
     QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromLoginServer()));
 
-    this->audioMixer->addNode( this->roomStreamer);
+    this->audioMixer->addNode( roomStreamer);
 
     #if _WIN32
         vstHost->setSampleRate(audioDriver->getSampleRate());
@@ -228,7 +229,7 @@ QStringList MainController::getBotNames() const{
 }
 
 Geo::Location MainController::getGeoLocation(QString ip) {
-    return ipToLocationResolver.resolve(ip);
+    return ipToLocationResolver->resolve(ip);
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainController::mixGroupedInputs(int groupIndex, Audio::SamplesBuffer &out){
@@ -688,10 +689,14 @@ void MainController::on_disconnectedFromLoginServer(){
 MainController::~MainController(){
     stop();
 
-	//delete audioDriver;
-	//delete midiDriver;
+    QObject::disconnect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
+    //delete audioMixer; crashing :(
+    delete audioDriver;
+    delete midiDriver;
 
     delete roomStreamer;
+
+
 
 //    foreach (Audio::AudioNode* track, tracksNodes) {
 //        delete track;
@@ -713,11 +718,7 @@ MainController::~MainController(){
         delete ninjamController;
         ninjamController = nullptr;
     }
-    QObject::disconnect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
-
     //delete recorder;
-
-
 }
 
 void MainController::saveLastUserSettings(const Persistence::InputsSettings& inputsSettings){
@@ -822,7 +823,8 @@ void MainController::start()
         //connect with login server and receive a list of public rooms to play
 
         QString userEnvironment = getUserEnvironmentString();
-        loginService->connectInServer("Jamtaba USER", 0, "", map, 0, userEnvironment, getAudioDriverSampleRate());
+        QString version = applicationVersion();
+        loginService->connectInServer("Jamtaba2 USER", 0, "", map, version, userEnvironment, getAudioDriverSampleRate());
         //(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
 
         qCInfo(controllerMain) << "Starting " + userEnvironment;
@@ -833,7 +835,8 @@ QString MainController::getUserEnvironmentString() const{
     QString systemName = QSysInfo::prettyProductName();
     QString userMachineArch = QSysInfo::currentCpuArchitecture();
     QString jamtabaArch = QSysInfo::buildCpuArchitecture();
-    return "Jamtaba (" + jamtabaArch + ") running on " + systemName + " (" + userMachineArch + ")";
+    QString version = applicationVersion();
+    return "Jamtaba " + version + " (" + jamtabaArch + ") running on " + systemName + " (" + userMachineArch + ")";
 }
 
 void MainController::stop()

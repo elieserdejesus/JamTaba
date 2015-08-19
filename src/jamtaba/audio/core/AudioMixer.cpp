@@ -30,14 +30,18 @@ void AudioMixer::removeNode(AudioNode *node){
     //QMutexLocker locker(&mutex);
     SamplesBufferResampler* resampler = resamplers[node];
     nodes.removeOne(node);
-    delete resampler;
+    if(resampler){
+        delete resampler;
+    }
 }
 
 AudioMixer::~AudioMixer(){
+    qWarning() << "Destrutor audio mixer...";
     foreach (SamplesBufferResampler* resampler, resamplers.values()) {
         delete resampler;
     }
     resamplers.clear();
+    qWarning() << "finalizou Destrutor audio mixer...";
 }
 
 void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer, bool attenuateAfterSumming){

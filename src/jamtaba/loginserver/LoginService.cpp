@@ -6,6 +6,7 @@
 #include <QJsonArray>
 #include <QUrlQuery>
 #include <QTimer>
+#include <QDebug>
 #include "../ninjam/Server.h"
 #include "../ninjam/Service.h"
 
@@ -56,16 +57,16 @@ bool RoomInfo::isEmpty() const{
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class HttpParamsFactory{
 public:
-    static QUrlQuery createParametersToConnect(QString userName, int instrumentID, QString channelName, NatMap localPeerMap, int version, QString environment, int sampleRate) {
+    static QUrlQuery createParametersToConnect(QString userName, int instrumentID, QString channelName, NatMap localPeerMap, QString version, QString environment, int sampleRate) {
         QUrlQuery query;
         query.addQueryItem("cmd", "CONNECT");
         query.addQueryItem("userName", userName);
-        query.addQueryItem("instrumentID", QString::number(instrumentID));
-        query.addQueryItem("channelName", channelName);
-        query.addQueryItem("publicIp", localPeerMap.getPublicIp());
-        query.addQueryItem("publicPort", QString::number(localPeerMap.getPublicPort()));
+        query.addQueryItem("instrumentID", QString::number(instrumentID));//used in real time rooms
+        query.addQueryItem("channelName", channelName);//use in real time room, need update to allow more channels
+        query.addQueryItem("publicIp", localPeerMap.getPublicIp());//used in real time rooms
+        query.addQueryItem("publicPort", QString::number(localPeerMap.getPublicPort())); //real time rooms only
         query.addQueryItem("environment", environment );
-        query.addQueryItem("version", QString::number(version));
+        query.addQueryItem("version", version);
         query.addQueryItem("sampleRate", QString::number(sampleRate));
         return query;
     }
@@ -98,18 +99,21 @@ LoginService::~LoginService()
 
 }
 
-void LoginService::connectInServer(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate)
+void LoginService::connectInServer(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, QString version, QString environment, int sampleRate)
 {
     QUrlQuery query = HttpParamsFactory::createParametersToConnect(userName, instrumentID, channelName, localPeerMap, version, environment, sampleRate);
     pendingReply = sendCommandToServer(query);
-    connectNetworkReplySlots(pendingReply, LoginService::Command::CONNECT);
-
+    if(pendingReply){
+        connectNetworkReplySlots(pendingReply, LoginService::Command::CONNECT);
+    }
 }
 
 void LoginService::refreshTimerSlot(){
     QUrlQuery query = HttpParamsFactory::createParametersToRefreshRoomsList();
     pendingReply = sendCommandToServer(query);
-    connectNetworkReplySlots(pendingReply, LoginService::Command::REFRESH_ROOMS_LIST);
+    if(pendingReply){
+        connectNetworkReplySlots(pendingReply, LoginService::Command::REFRESH_ROOMS_LIST);
+    }
 }
 
 void LoginService::disconnect()
@@ -119,7 +123,12 @@ void LoginService::disconnect()
         refreshTimer->stop();
         QUrlQuery query = HttpParamsFactory::createParametersToDisconnect();
         pendingReply = sendCommandToServer(query);
-        connectNetworkReplySlots(pendingReply, LoginService::Command::DISCONNECT);
+        if(pendingReply){
+            connectNetworkReplySlots(pendingReply, LoginService::Command::DISCONNECT);
+        }
+    }
+    else{
+        emit disconnectedFromServer();
     }
 }
 
@@ -127,6 +136,11 @@ QNetworkReply* LoginService::sendCommandToServer(const QUrlQuery &query)
 {
     if(pendingReply != NULL){
         pendingReply->deleteLater();
+
+    }
+    if(httpClient.networkAccessible() == QNetworkAccessManager::NetworkAccessibility::NotAccessible){
+        emit errorWhenConnectingToServer();
+        return nullptr;
     }
     QUrl url(SERVER);
     QByteArray postData(query.toString(QUrl::EncodeUnicode).toStdString().c_str());
@@ -140,17 +154,18 @@ void LoginService::sslErrorsSlot(QList<QSslError> errorList){
     foreach (const QSslError& error, errorList) {
         qDebug() << error;
     }
+    emit errorWhenConnectingToServer();
 }
 
 void LoginService::errorSlot(QNetworkReply::NetworkError /*error*/){
-    if(pendingReply != NULL){
-        qCritical() << pendingReply->errorString();
-        //qFatal(pendingReply->errorString().toStdString().c_str());
-    }
+    emit errorWhenConnectingToServer();
 }
 
 void LoginService::connectNetworkReplySlots(QNetworkReply* reply, Command command)
 {
+    if(!reply){
+        return;
+    }
     switch (command) {
     case LoginService::Command::CONNECT: QObject::connect(reply, SIGNAL(finished()), this, SLOT(connectedSlot()));  break;
     case LoginService::Command::DISCONNECT: QObject::connect(reply, SIGNAL(finished()), this, SLOT(disconnectedSlot()));  break;
@@ -163,9 +178,10 @@ void LoginService::connectNetworkReplySlots(QNetworkReply* reply, Command comman
 }
 
 void LoginService::connectedSlot(){
-    connected = true;
+
     refreshTimer->start(REFRESH_PERIOD);
     roomsListReceivedSlot();
+    connected = true;
 }
 
 void LoginService::disconnectedSlot(){
@@ -186,8 +202,27 @@ void LoginService::roomsListReceivedSlot(){
 }
 
 void LoginService::handleJson(QString json){
+    if(json.isEmpty()){
+        return;
+    }
     QJsonDocument document = QJsonDocument::fromJson(QByteArray(json.toStdString().c_str()));
     QJsonObject root = document.object();
+    if(!connected){//first time handling json?
+        bool clientIsServerCompatible = root["clientCompatibility"].toBool();
+        bool newVersionAvailable = root["newVersionAvailable"].toBool();
+
+        if(!clientIsServerCompatible){
+            refreshTimer->stop();
+            connected = false;
+            emit incompatibilityWithServerDetected();
+            return;
+        }
+
+        if(newVersionAvailable){
+            emit newVersionAvailableForDownload();
+        }
+    }
+
     QJsonArray allRooms = root["rooms"].toArray();
     QList<RoomInfo> publicRooms;
     for (int i = 0; i < allRooms.size(); ++i) {
