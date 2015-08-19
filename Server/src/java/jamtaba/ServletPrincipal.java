@@ -39,7 +39,10 @@ public class ServletPrincipal extends HttpServlet {
 
         ObjectifyService.register(Peer.class);
         ObjectifyService.register(RealtimeRoom.class);
-
+        ObjectifyService.register(Version.class);
+        
+        DbUtils.tryCreateCurrenVersion();//create current version objet in data store if necessary
+        
         //+++++++++ CREATE THE STATIC (created by the system) ROOMS
         Collection<RealtimeRoom> rooms = DbUtils.loadRooms();
         if (rooms.isEmpty()) {

@@ -58,13 +58,16 @@ public class DbUtils {
         return ofy().load().key(key).now();
     }
 
-    static Version getCurrentVersion(){
-        Key<Version> key = Key.create(Version.class, 0);
-        Version v = ofy().load().key(key).now();
-        if(v == null){
-            return Version.fromString("2.0.0");
+    public static void tryCreateCurrenVersion(){
+        Version v = getCurrentVersion();
+        if(v == null || v.getMajorVersion() < 2){
+            DbUtils.save(Version.fromString("2.0.0"));
         }
-        return v;
+    }
+    
+    public static Version getCurrentVersion(){
+        Key<Version> key = Key.create(Version.class, 1);
+        return ofy().load().key(key).now();
     }
     
     static void createWaitingRoom(RealtimeRoom waitintRoom) {
