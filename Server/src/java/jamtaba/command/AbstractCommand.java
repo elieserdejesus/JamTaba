@@ -20,8 +20,6 @@ public abstract class AbstractCommand implements Command {
     private final Set entitiesToSave = new HashSet();
     
     private static final Logger LOGGEr = Logger.getLogger(AbstractCommand.class.getName());
-
-    
    
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
         try {
