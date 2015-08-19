@@ -2,8 +2,6 @@
 #define IPTOCOUNTRYRESOLVER_H
 
 #include <QString>
-//#include <maxminddb.h>
-
 
 namespace Geo {
 
@@ -24,18 +22,12 @@ private:
     QString city;
     double latitude;
     double longitude;
-
-
 };
 
 class IpToLocationResolver
 {
 public:
-    IpToLocationResolver(QString databasePath);
-    ~IpToLocationResolver();
-    Location resolve(QString ip);
-private:
-    //MMDB_s mmdb_s;
+    virtual Location resolve(QString ip) = 0;
 };
 
 }

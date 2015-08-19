@@ -1,25 +1,41 @@
-#botei muito lixo no repositório
 
-#testar uso de memória do stream da sala
+#Testar a feature da mensagem para confirmar voto, preciso pegar o valor digitado pelo usuário
 
-#reativar o maxmind ou qt geolocation?
+#In the absence of the BOM, Unicode assumes that the string is big-endian.
+    #O byte Order Mark (BOM) é um caractere que fica no início de um arquivo ou string
+        #indicando se é big ou little endian. Sem ele o utf-8 assume que é big endian.
+        #Não tem bom nas strings ninjam e o stream está setado para LittleEndian. Ou seja
+            #se alguém me envia caracteres com 2 bytes será que eles não estão sendo lidos
+            #na ordem errada?
 
-#Prioridades para um primeiro release
-    #Ver o usode memória para não queimar o filme
-    #auto updater - pelo menos alguma forma de indicar que existe uma versão
-        #mais atual
 
+
+#tocar em algumas Jams para ver se está rolando
+
+#-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
 #caracteres especiais do chat
+    #Se eu digito uma mensagem com acento funciona no meu chat local. Essa mensagem vai para o server e volta para mim?
+        #caso sim, então eu estou enviando todos os bytes utf-8 e recebendo eles do server, ou seja,
+            #o server está retransmitindo o que ele recebe.
+        #Se for isso, então talvez o Reaninjam não esteja usando utf-8?
+            #Fiz o teste e quando eu envio do Reaninjam para outro REaninjam
+                #funciona.
+            #será que o Reaninjam usa o encoding da máquina ou alguma coisa do tipo?
+                #Talvez eu possa testar isso forçando latin no Qt para ver se recebe corretamente.
+                #Outra possibilidade seria pegar os bytes como eles chegam e jogar em um arquivo, assim posso testar facilmente
+                    #outros decodings.
+
     #wahjam pega o char* que chega pelo chat e transforma em QSTring usando fromUtf8
     #na hora de enviar mensagem pelo chat o wahjam usa command.toUtf8().data(), sendo
     #que command é uma QString
 
-#preciso testar nome de usuário com caracter especial para ver se o utf está funcionando
+#nome de usuário com caracter especial nem conecta
 
 
-#tocar em algumas Jams para ver se está rolando
-#-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+#voltei para os ponteiros no MainController mas ainda está crashando quando fecho.
+    #O problema está no destrutor do AudioMixer.
+
 
 #o Reaper encontra a fast se eu ligo ela no meio de uma sessão?
 
@@ -38,7 +54,7 @@
 
 #se desligo a fast enquanto estou com o dialogo de preferencias aberto dá pau em seguida
 
-#buga tudo se não tem conexão com a internet
+
 
 #se ligo a fast enquanto o Jamtaba está aberto ela não aparece na lista. Algum tipo de cache na portaudio?
 
@@ -171,6 +187,10 @@
 # Project created by QtCreator 2015-01-13T11:05:00
 #
 #-------------------------------------------------
+VERSION = 2.0.0
+
+# Define the preprocessor macro to get the application version in Jamtaba application.
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 QT       +=  gui  network
 
@@ -253,13 +273,15 @@ HEADERS += \
     src/jamtaba/NinjamController.h \
     src/jamtaba/gui/IntervalProgressDisplay.h \
     src/jamtaba/audio/vst/PluginFinder.h \
+   src/jamtaba/geo/MaxMindIpToLocationResolver.h \
+#    src/jamtaba/geo/FreeGeoIpToLocationResolver.h
 
 win32:HEADERS +=    src/jamtaba/audio/vst/VstPlugin.h \
                     src/jamtaba/audio/vst/vsthost.h \
 
 SOURCES += \
     $$MAIN \
-    src/jamtaba/minimp3/minimp3.c \
+    #src/jamtaba/minimp3/minimp3.c \
     src/jamtaba/audio/core/AudioDriver.cpp \
     src/jamtaba/audio/core/AudioNode.cpp \
     src/jamtaba/audio/core/AudioMixer.cpp \
@@ -317,8 +339,10 @@ SOURCES += \
     src/jamtaba/persistence/Settings.cpp \
     src/jamtaba/gui/TrackGroupView.cpp \
     src/jamtaba/gui/LocalTrackGroupView.cpp \
-   src/jamtaba/NinjamController.cpp \
-    src/jamtaba/gui/IntervalProgressDisplay.cpp
+    src/jamtaba/NinjamController.cpp \
+    src/jamtaba/gui/IntervalProgressDisplay.cpp \
+    src/jamtaba/geo/MaxMindIpToLocationResolver.cpp \
+#    src/jamtaba/geo/FreeGeoIpToLocationResolver.cpp
 
 win32:SOURCES +=    src/jamtaba/audio/vst/VstPlugin.cpp \
                     src/jamtaba/audio/vst/vsthost.cpp \

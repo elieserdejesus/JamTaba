@@ -49,7 +49,7 @@ SamplesBuffer::SamplesBuffer(const SamplesBuffer& other)
 //}
 
 SamplesBuffer::~SamplesBuffer(){
-	
+    //qWarning() << "Destrutor SamplesBuffer";
 }
 
 void SamplesBuffer::discardFirstSamples(unsigned int samplesToDiscard){

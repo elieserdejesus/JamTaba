@@ -8,22 +8,17 @@
 using namespace Ninjam;
 
 
-QString ServerMessageParser::extractString(QDataStream &stream)
-{
-    QString str;
+QString ServerMessageParser::extractString(QDataStream &stream){
     quint8 byte;
+    QByteArray byteArray;
     while(!stream.atEnd()){
         stream >> byte;
-        if(byte != 0x00){
-            str.append(byte);
-        }
-        else{
+        if(byte == '\0'){
             break;
         }
+        byteArray.append(byte);
     }
-
-    QByteArray bArray(str.toStdString().c_str());
-    return QString::fromUtf8(bArray.data(), bArray.size());
+    return QString::fromUtf8(byteArray.data(), byteArray.size());
 }
 //+++++++++++++++++++++++++++++++++++++++++
 const ServerMessage& ServerMessageParser::parse(ServerMessageType msgType, QDataStream &stream, quint32 payloadLenght){
@@ -140,19 +135,37 @@ const ServerMessage& ServerMessageParser::parseUserInfoChangeNotify(QDataStream 
  PART <username> -- user leaves server
  USERCOUNT <users> <maxusers> -- server status
  */
-const ServerMessage& ServerMessageParser::parseChatMessage(QDataStream &stream, quint32 payloadLenght){
-    quint32 consumedBytes = 0;
-    QString command = ServerMessageParser::extractString(stream);
-    consumedBytes += command.size() + 1;
-    QStringList arguments;
-    int parsedArgs = 0;
-    while(consumedBytes < payloadLenght && parsedArgs < 4){
-        QString arg = ServerMessageParser::extractString(stream);
-        arguments.append(arg);
-        parsedArgs++;
-        consumedBytes += arg.size() + 1;
+
+int getStringSize(char* data, int maxLenght){
+    int p = 0;
+    for (; p < maxLenght-1; ++p) {
+        if(data[p] == '\0'){
+            break;
+        }
     }
-    Q_ASSERT(consumedBytes == payloadLenght);
+    return p + 1;
+}
+
+const ServerMessage& ServerMessageParser::parseChatMessage(QDataStream &stream, quint32 payloadLenght){
+    char data[payloadLenght];
+    stream.readRawData(data, payloadLenght);
+    quint32 consumedBytes = 0;
+
+    int commandStringSize = getStringSize(data, payloadLenght);
+    QString command = QString::fromUtf8(data, commandStringSize-1);//remove the NULL terminator (2 bytes - utf-8)
+    consumedBytes += commandStringSize;
+
+
+    int parsedArgs = 0;
+    QStringList arguments;
+    while(consumedBytes < payloadLenght && parsedArgs < 4){
+        int argStringSize = getStringSize(data + consumedBytes, payloadLenght - consumedBytes);
+        QString arg = QString::fromUtf8(data + consumedBytes, argStringSize-1);
+        arguments.append(arg);
+        consumedBytes += argStringSize;
+        parsedArgs++;
+    }
+
     static ServerChatMessage msg;
     msg.set(command, arguments);
     return msg;

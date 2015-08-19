@@ -123,7 +123,35 @@ void NinjamRoomWindow::userSendingNewChatMessage(QString msg){
 void NinjamRoomWindow::on_chatMessageReceived(Ninjam::User user, QString message){
     //qDebug() << user.getFullName() << message;
     chatPanel->addMessage(user.getName(), message);
+
+    //local user is voting?
+    static long lastVoteCommand = 0;
+    QString localUserName = Ninjam::Service::getInstance()->getConnectedUserName();
+    if (user.getName() == localUserName && message.toLower().contains("!vote")) {
+        lastVoteCommand = QDateTime::currentMSecsSinceEpoch();
+    }
+    bool isVoteMessage = !message.isNull() && message.toLower().startsWith("[voting system] leading candidate:");
+    long timeSinceLastVote = QDateTime::currentMSecsSinceEpoch() - lastVoteCommand;
+    if (isVoteMessage && timeSinceLastVote >= 1000) {
+        QString commandType = (message.toLower().contains("bpm")) ? "BPM" : "BPI";
+        QString text = user.getName() + " is proposing a change in " + commandType + ". You accept the change?";
+        QMessageBox::StandardButton reply = QMessageBox::question(this, "Change " + commandType, text );
+        int newValue = 110;//preciso pegar o valor dentro da string;
+        if(reply == QMessageBox::Yes){
+            if(mainController->isPlayingInNinjamRoom()){
+                if(commandType == "BPM"){
+                    mainController->getNinjamController()->voteBpm(newValue);
+                }
+                else{
+                    mainController->getNinjamController()->voteBpi(newValue);
+                }
+            }
+        }
+    }
+
 }
+
+
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::updatePeaks(){

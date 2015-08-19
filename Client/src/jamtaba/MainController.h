@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <memory>
 #include <QMutex>
+#include <QScopedPointer>
 #include "audio/core/AudioPeak.h"
 
 #include "geo/IpToLocationResolver.h"
@@ -198,9 +199,9 @@ private:
     Audio::Plugin* createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
     Audio::AudioDriver* audioDriver;
-    Midi::MidiDriver* midiDriver;//TODO use unique_ptr
+    Midi::MidiDriver* midiDriver;
 
-    std::unique_ptr<Login::LoginService> loginService;
+    Login::LoginService* loginService;
 
     Audio::AudioMixer* audioMixer;
 
@@ -234,7 +235,8 @@ private:
 
     void tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStringList channels);
 
-    Geo::IpToLocationResolver ipToLocationResolver;
+    QScopedPointer<Geo::IpToLocationResolver> ipToLocationResolver;
+
 
     class UploadIntervalData;
 

@@ -303,8 +303,10 @@ void MainFrame::initializeLocalInputChannels(){
 
 void MainFrame::initializeLoginService(){
     Login::LoginService* loginService = this->mainController->getLoginService();
-    connect(loginService, SIGNAL(roomsListAvailable(QList<Login::RoomInfo>)),
-            this, SLOT(on_roomsListAvailable(QList<Login::RoomInfo>)));
+    connect( loginService, SIGNAL(roomsListAvailable(QList<Login::RoomInfo>)), this, SLOT(on_roomsListAvailable(QList<Login::RoomInfo>)));
+    connect( loginService, SIGNAL(incompatibilityWithServerDetected()), this, SLOT(on_incompatibilityWithServerDetected()));
+    connect( loginService, SIGNAL(newVersionAvailableForDownload()), this, SLOT(on_newVersionAvailableForDownload()));
+    connect( loginService, SIGNAL(errorWhenConnectingToServer()), this, SLOT(on_errorConnectingToServer()));
 }
 
 void MainFrame::initializeWindowState(){
@@ -396,6 +398,25 @@ void MainFrame::centerBusyDialog(){
 
 bool MainFrame::jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2){
      return r1.getNonBotUsersCount() > r2.getNonBotUsersCount();
+}
+
+void MainFrame::on_incompatibilityWithServerDetected(){
+    hideBusyDialog();
+    QString text = "Your Jamtaba version is not compatible with previous versions! Please download the new <a href='http://www.jamtaba.com'>Jamtaba</a> version!";
+    QMessageBox::warning(this, "Compatibility error!", text );
+    close();
+}
+
+void MainFrame::on_errorConnectingToServer(){
+    hideBusyDialog();
+    QMessageBox::warning(this, "Error!", "Error connecting in Jamtaba server!");
+    close();
+}
+
+void MainFrame::on_newVersionAvailableForDownload(){
+    hideBusyDialog();
+    QString text = "A new Jamtaba version is available for download! Please use the <a href='http://www.jamtaba.com'>new version</a>!";
+    QMessageBox::information(this, "New Jamtaba version available!", text );
 }
 
 void MainFrame::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
