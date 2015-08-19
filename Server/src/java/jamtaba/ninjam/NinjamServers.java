@@ -1,6 +1,7 @@
 
 package jamtaba.ninjam;
 
+import jamtaba.ninjam.public_servers.ServersParser;
 import jamtaba.ip2c.IpToCountryResolver;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class NinjamServers {
                Logger.getLogger(NinjamServers.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
            }
         }
+        lastUpdate = System.currentTimeMillis();
         return servers;
     }
     

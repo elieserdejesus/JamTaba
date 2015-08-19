@@ -1,6 +1,8 @@
-package jamtaba.ninjam;
+package jamtaba.ninjam.public_servers;
 
 import jamtaba.ip2c.IpToCountryResolver;
+import jamtaba.ninjam.NinjaMServer;
+import jamtaba.ninjam.NinjaMUser;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -168,16 +169,16 @@ public class ServersParser {
 //        }
     }
     
-    private static String usersLine(List<NinjaMUser> users){
-        String line  = "{";
-        for (int i = 0; i < users.size(); i++) {
-            line += users.get(i).getName();
-            if(i < users.size() - 1){
-                line += ", ";
-            }
-        }
-        line += "}";
-        return line;
-    }
+//    private static String usersLine(List<NinjaMUser> users){
+//        String line  = "{";
+//        for (int i = 0; i < users.size(); i++) {
+//            line += users.get(i).getName();
+//            if(i < users.size() - 1){
+//                line += ", ";
+//            }
+//        }
+//        line += "}";
+//        return line;
+//    }
 
 }
