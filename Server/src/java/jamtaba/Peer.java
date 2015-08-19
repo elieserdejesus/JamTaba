@@ -38,7 +38,7 @@ public class Peer {
     /**
      * jamtaba version
      */
-    private int version;
+    String version;
     //private int audioBufferSize;
     private int sampleRate;
     private String environment;//vst host name or standalone 
@@ -51,7 +51,7 @@ public class Peer {
         //audioLatency = 0;
     }
 
-    public Peer(String publicIp, String publicPort, String userName, String region, String country, int instrumentID, String channelName, int version,  int sampleRate, String environment) {
+    public Peer(String publicIp, String publicPort, String userName, String region, String country, int instrumentID, String channelName, String version,  int sampleRate, String environment) {
         this.publicIp = publicIp;
         this.publicPort = publicPort;
         this.userName = userName;
@@ -162,7 +162,7 @@ public class Peer {
         return hash;
     }
 
-    public int getVersion() {
+    public String getVersion() {
         return version;
     }
 

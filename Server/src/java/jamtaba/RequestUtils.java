@@ -51,7 +51,7 @@ public class RequestUtils {
         int instrumentID = (req.getParameter("instrumentID") != null) ? Integer.parseInt(req.getParameter("instrumentID")) : 0;
         String channelName = (req.getParameter("channelName") != null) ? req.getParameter("channelName") : "";
         String environment = req.getParameter("environment");
-        int version = Integer.parseInt(req.getParameter("version"));
+        String version = req.getParameter("version");
         //int bufferSize = Integer.parseInt(req.getParameter("bufferSize"));
         int sampleRate = Integer.parseInt(req.getParameter("sampleRate"));
         //String city = req.getHeader("X-AppEngine-City");
