@@ -36,9 +36,24 @@ public class VsJsonUtils {
         if (connectedPeer != null) {
             json.put("peer", peerAsJSONObject(connectedPeer));
         }
+        
+        json.put("clientCompatibility", clientVersionIsCompatible(connectedPeer) );
+        json.put("newVersionAvailable", newVersionIsAvailable(connectedPeer));
         return json.toString();
     }
 
+    private static boolean newVersionIsAvailable(Peer connectedPeer){
+        Version clientVersion = Version.fromString(connectedPeer.getVersion());
+        Version serverVersion = DbUtils.getCurrentVersion();
+        return serverVersion.isNewer(clientVersion);
+    }
+    
+    private static boolean clientVersionIsCompatible(Peer connectedPeer){
+        Version clientVersion = Version.fromString(connectedPeer.getVersion());
+        Version serverVersion = DbUtils.getCurrentVersion();
+        return clientVersion.isCompatibleWith(serverVersion);
+    }
+    
     public static String getJsonToResponse(List<RealtimeRoom> jamRooms, Collection<NinjaMServer> ninjamServers) throws JSONException {
         return getJsonToResponse(jamRooms, ninjamServers, null);
     }

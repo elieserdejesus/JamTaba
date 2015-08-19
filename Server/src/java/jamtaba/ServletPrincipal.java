@@ -3,7 +3,6 @@ package jamtaba;
 import com.googlecode.objectify.ObjectifyService;
 import jamtaba.command.AbstractCommand;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -13,7 +12,6 @@ import jamtaba.command.DisconnectFromServer;
 import jamtaba.ip2c.Ip2CResolver;
 import jamtaba.ip2c.IpToCountryResolver;
 import jamtaba.ninjam.NinjaMServer;
-import jamtaba.ninjam.NinjaMUser;
 import jamtaba.ninjam.NinjamServers;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -42,8 +40,7 @@ public class ServletPrincipal extends HttpServlet {
         ObjectifyService.register(Peer.class);
         ObjectifyService.register(RealtimeRoom.class);
 
-        //+++++++++ CREATE THE STATIC ROOMS, ONE FOR EACH LOADED STYLE ++++
-        //++++++++++++
+        //+++++++++ CREATE THE STATIC (created by the system) ROOMS
         Collection<RealtimeRoom> rooms = DbUtils.loadRooms();
         if (rooms.isEmpty()) {
             List<RealtimeRoom> jamRooms = new ArrayList<RealtimeRoom>(STATIC_REAL_TIME_ROOMS);

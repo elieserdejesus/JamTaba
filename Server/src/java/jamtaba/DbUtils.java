@@ -2,7 +2,6 @@ package jamtaba;
 
 import com.googlecode.objectify.Key;
 import static com.googlecode.objectify.ObjectifyService.ofy;
-import com.googlecode.objectify.Ref;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -59,6 +58,15 @@ public class DbUtils {
         return ofy().load().key(key).now();
     }
 
+    static Version getCurrentVersion(){
+        Key<Version> key = Key.create(Version.class, 0);
+        Version v = ofy().load().key(key).now();
+        if(v == null){
+            return Version.fromString("2.0.0");
+        }
+        return v;
+    }
+    
     static void createWaitingRoom(RealtimeRoom waitintRoom) {
         ofy().save().entity(waitintRoom).now();
     }

@@ -10,13 +10,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import jamtaba.DbUtils;
-import jamtaba.ninjam.NinjamServers;
 import jamtaba.RealtimeRoom;
 import jamtaba.Peer;
 import jamtaba.PeerCleaner;
 import jamtaba.RequestUtils;
-import jamtaba.VsJsonUtils;
-import jamtaba.ninjam.NinjaMServer;
 
 public abstract class AbstractCommand implements Command {
 
