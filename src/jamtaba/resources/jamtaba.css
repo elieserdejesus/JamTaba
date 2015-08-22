@@ -229,8 +229,8 @@ border-color: rgb(90, 90, 90);
 
 /*  SLIDER ++++++++++++++++++++++++++++++++ */
 QSlider::add-page:vertical, QSlider::groove:vertical {
-border: 1px solid rgba(0, 0, 0, 55);
-border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 55);
+    border-radius: 2px;
 }
 
 QSlider::groove:vertical{
@@ -294,7 +294,7 @@ QSlider::handle:vertical{
     background-image: url(':/images/fader_shadow.png');
     background-repeat: no-repeat;
     background-color: none;
-    margin-left: -8px;
+    margin-left: -7px;
     margin-right: -10px;
     height: 45px;
     border: none;
@@ -873,6 +873,10 @@ NinjamPanel #metronomeControls, NinjamPanel #panelCombos{
 
 NinjamPanel #metronomeControls QSlider::groove:vertical{
     border: 1px inset rgb(140, 140, 140);
+}
+
+NinjamPanel #metronomeControls QSlider::handle:vertical{
+    margin-left: -9px;
 }
 
 NinjamPanel #soloButton, NinjamPanel #muteButton{
