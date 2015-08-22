@@ -1,5 +1,7 @@
+# a linha do interval progress não está aparecendo mais
 
-#Testar a feature da mensagem para confirmar voto, preciso pegar o valor digitado pelo usuário
+#alinhamento horizontal dos faders não está legal
+    #ver pistas ninjam e pista do metronomo
 
 #In the absence of the BOM, Unicode assumes that the string is big-endian.
     #O byte Order Mark (BOM) é um caractere que fica no início de um arquivo ou string
@@ -9,10 +11,25 @@
             #na ordem errada?
 
 
-
 #tocar em algumas Jams para ver se está rolando
 
+
+#se eu for fazer release em 64 bits acho que isso é importante
+    #adicionar diretórios default para scanear plugins no win 64
+
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#leak - quando deletar um encode do map de encoders? Como saber lá no NinjamController que o usuário está com um canal a menos?
+
+#no ninjamJamController estou recriando o tempInBuffer em cada callback. Otimizar isso.
+
+#Entrei em uma sala com uns 5 caras e estava usando 25:% da minha CPU.
+#Entrei na mesma sala usando o Reaninjam e não chegou a 1% da minha CPU. Mas depois eu descobri que se não estiver encodando
+#o reaninjam usa pouca CPU. O bicho pega mesmo quando tem que encodar. Mesmo assim acho que estou usando muita CPU.
+    #Quanto de cpu usa sem entrar em uma sala?
+    #Quanto de CPU usa para encoder?
+    #E os decoders, acrescentam muita coisa na CPU? Posso criar um monte de canais no reaninjam e ver o que acontece.
+
 
 #caracteres especiais do chat
     #Se eu digito uma mensagem com acento funciona no meu chat local. Essa mensagem vai para o server e volta para mim?
@@ -55,9 +72,6 @@
 #se desligo a fast enquanto estou com o dialogo de preferencias aberto dá pau em seguida
 
 
-
-#se ligo a fast enquanto o Jamtaba está aberto ela não aparece na lista. Algum tipo de cache na portaudio?
-
 #separar o carregamento do plugin VST da instância. No momento uma instância é criada e depois é que o plugin é carregado. Pra mim
 #isso é um bad design
 
@@ -68,8 +82,6 @@
     #preciso mixar as várias saídas do plugin para um par estereo
 
 #nomes grandes estragam os nome dos canais nas entradas, os nomes dos canais ninjam, etc. Uma AutoElidedQLabel seria legal.
-
-#adicionar diretórios default para scanear plugins no win 64
 
 #dar feedback quando plugin for bypassado, deixar label mais escura - Não consegui fazer isso, a propriedade existe no objeto, mas o CSS não está funcionando, desisti
 
@@ -110,24 +122,9 @@
         #For resampling to a lower frequency, the process is similar but the source sample should be lowpass filtered to attenuate everything above half the target sample rate before interpolation.
 
 
-#parece que quando ativo o encoding (entradas setadas) a memória não para de crescer. Fica mais evidente com dois canais.
-
-#no ninjamJamController estou recriando o tempInBuffer em cada callback. Otimizar isso.
-
 #exibir uma mensagem no chat quando um usuário sai da sala
 
-#Entrei em uma sala com uns 5 caras e estava usando 25:% da minha CPU.
-#Entrei na mesma sala usando o Reaninjam e não chegou a 1% da minha CPU. Mas depois eu descobri que se não estiver encodando
-#o reaninjam usa pouca CPU. O bicho pega mesmo quando tem que encodar. Mesmo assim acho que estou usando muita CPU.
-    #Quanto de cpu usa sem entrar em uma sala?
-    #Quanto de CPU usa para encoder?
-    #E os decoders, acrescentam muita coisa na CPU? Posso criar um monte de canais no reaninjam e ver o que acontece.
 
-#O consumo de memória está aumentando sem parar e não consegui achar o erro. Preciso de um Valgrind. Mas parece que o problema é no encoding. Testar isso.
-
-
-
-#leak - quando deletar um encode do map de encoders? Como saber lá no NinjamController que o usuário está com um canal a menos?
 
 #estava bugando o parser da lista de servers públicos no servidor, mas vi que no reaper também bugou. O problema é que o Jamtaba nem abre se tem esse problema, dá um erro no servidor.
 

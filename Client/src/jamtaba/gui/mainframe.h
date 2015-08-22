@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <QMessageBox>
 #include "ui_mainframe.h"
 #include "BusyDialog.h"
 #include "../ninjam/Server.h"
@@ -105,6 +106,8 @@ private:
     void centerBusyDialog();
 
     void stopCurrentRoomStream();
+
+    void showMessageBox(QString title, QString text, QMessageBox::Icon icon);
 
     int timerID;
 

@@ -328,6 +328,7 @@ void Service::sendRemovedChannelIndex(int removedChannelIndex){
 
 void Service::handle(const ServerAuthReplyMessage& msg){
     if(msg.userIsAuthenticated()){
+        this->newUserName = msg.getNewUserName();
         ClientSetChannel setChannelMsg(this->channels);
         sendMessageToServer(&setChannelMsg);
         quint8 serverMaxChannels = msg.getMaxChannels();

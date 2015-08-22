@@ -126,10 +126,18 @@ void MainFrame::stopCurrentRoomStream(){
     mainController->stopRoomStream();
 }
 
+void MainFrame::showMessageBox(QString title, QString text, QMessageBox::Icon icon){
+    QMessageBox* messageBox = new QMessageBox(this);
+    messageBox->setWindowTitle(title);
+    messageBox->setText(text);
+    messageBox->setIcon(icon);
+    messageBox->setAttribute(Qt::WA_DeleteOnClose, true);
+    messageBox->show();
+}
 
 void MainFrame::on_RoomStreamerError(QString msg){
     stopCurrentRoomStream();
-    QMessageBox::information(this, "Error!", msg);
+    showMessageBox("Error!", msg, QMessageBox::Critical);
 }
 
 //++++++++++++++++++++++++=
