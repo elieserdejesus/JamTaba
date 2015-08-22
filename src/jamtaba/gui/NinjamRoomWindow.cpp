@@ -25,23 +25,32 @@
 Q_LOGGING_CATEGORY(ninjamRoomWindow, "ninjamRoomWindow")
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+VoteConfirmationDialog::VoteConfirmationDialog(QWidget *parent, QString title, QString text, int voteValue, VoteConfirmationType voteType)
+    :QMessageBox(parent), voteValue(voteValue), voteType(voteType)
+{
+    setIcon(QMessageBox::Warning);
+    setText(text);
+    setWindowTitle(title);
+    setStandardButtons(QMessageBox::Yes|QMessageBox::No);
+
+    setAttribute(Qt::WA_DeleteOnClose, true);
+}
+
+//+++++++++++++++++++++++++
 
 NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Controller::MainController *mainController) :
     QWidget(parent),
     ui(new Ui::NinjamRoomWindow),
     mainController(mainController),
-    chatPanel(new ChatPanel(this, mainController->getBotNames() ))
+    chatPanel(new ChatPanel(this, mainController->getBotNames() )),
+    voteConfirmationDialog(nullptr)
 {
     qCDebug(ninjamRoomWindow) << "NinjamRoomWindow construtor..";
     ui->setupUi(this);
 
     ui->licenceButton->setIcon(QIcon(QPixmap(":/images/licence.png")));
 
-    //QString roomName = room.getHostName() + ":" + QString::number(room.getHostPort());
     ui->labelRoomName->setText(roomInfo.getName());
-
-    //ui->topPanel->setBpi(server.getBpi());
-    //ui->topPanel->setBpm(server.getBpm());
 
     ui->tracksPanel->layout()->setAlignment(Qt::AlignLeft);//tracks are left aligned
 
@@ -65,11 +74,9 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Co
 
     QObject::connect(chatPanel, SIGNAL(userSendingNewMessage(QString)), this, SLOT(userSendingNewChatMessage(QString)));
 
-
     float initialMetronomeGain = mainController->getSettings().getMetronomeGain();
     float initialMetronomePan = mainController->getSettings().getMetronomePan();
     bool initialMetronomeMuteStatus = mainController->getSettings().getMetronomeMuteStatus();
-
 
     ui->topPanel->getGainSlider()->setValue(100*initialMetronomeGain);
     ui->topPanel->getPanSlider()->setValue(4 * initialMetronomePan);
@@ -83,8 +90,6 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Co
 //        BaseTrackView* trackView = new NinjamTrackView(ui->tracksPanel, this->mainController, t, "User", QString::number(t), "BR", "BR" );
 //        ui->tracksPanel->layout()->addWidget(trackView);
 //    }
-
-
 }
 
 void NinjamRoomWindow::initializeMetronomeEvents(){
@@ -92,10 +97,6 @@ void NinjamRoomWindow::initializeMetronomeEvents(){
     QObject::connect( ui->topPanel->getPanSlider(), SIGNAL(valueChanged(int)), this, SLOT(onPanSliderMoved(int)));
     QObject::connect( ui->topPanel->getMuteButton(), SIGNAL(clicked(bool)), this, SLOT(onMuteClicked()));
     QObject::connect( ui->topPanel->getSoloButton(), SIGNAL(clicked(bool)), this, SLOT(onSoloClicked()));
-
-
-    //ui->topPanel->getMuteButton()->installEventFilter(this);
-    //ui->topPanel->getSoloButton()->installEventFilter(this);
 }
 
 void NinjamRoomWindow::onPanSliderMoved(int value){
@@ -126,32 +127,57 @@ void NinjamRoomWindow::on_chatMessageReceived(Ninjam::User user, QString message
 
     //local user is voting?
     static long lastVoteCommand = 0;
-    QString localUserName = Ninjam::Service::getInstance()->getConnectedUserName();
-    if (user.getName() == localUserName && message.toLower().contains("!vote")) {
+    QString localUserFullName = Ninjam::Service::getInstance()->getConnectedUserName();
+    if (user.getFullName() == localUserFullName && message.toLower().contains("!vote")) {
         lastVoteCommand = QDateTime::currentMSecsSinceEpoch();
     }
     bool isVoteMessage = !message.isNull() && message.toLower().startsWith("[voting system] leading candidate:");
     long timeSinceLastVote = QDateTime::currentMSecsSinceEpoch() - lastVoteCommand;
     if (isVoteMessage && timeSinceLastVote >= 1000) {
+        qWarning() << message;
         QString commandType = (message.toLower().contains("bpm")) ? "BPM" : "BPI";
-        QString text = user.getName() + " is proposing a change in " + commandType + ". You accept the change?";
-        QMessageBox::StandardButton reply = QMessageBox::question(this, "Change " + commandType, text );
-        int newValue = 110;//preciso pegar o valor dentro da string;
-        if(reply == QMessageBox::Yes){
+        QString text = "A musician is proposing a change in " + commandType + ". You accept the change?";
+        QString title = "Change " + commandType;
+
+        //[voting system] leading candidate: 1/2 votes for 12 BPI [each vote expires in 60s]
+        int forIndex = message.indexOf("for");
+        assert(forIndex >= 0);
+        int spaceAfterValueIndex = message.indexOf(" ", forIndex + 4);
+        QString voteValueString = message.mid(forIndex + 4, spaceAfterValueIndex - (forIndex + 4));
+        int voteValue = voteValueString.toInt();
+
+        VoteConfirmationType voteType = (commandType == "BPI") ? VoteConfirmationType::BPI_CONFIRMATION_VOTE : VoteConfirmationType::BPM_CONFIRMATION_VOTE;
+        showVoteConfirmationMessageBox(title, text, voteValue, voteType);
+    }
+}
+
+void NinjamRoomWindow::on_voteConfirmationDialogClosed(QAbstractButton *button){
+    if(this->voteConfirmationDialog){
+        if(this->voteConfirmationDialog->standardButton(button) == QMessageBox::Yes){
             if(mainController->isPlayingInNinjamRoom()){
-                if(commandType == "BPM"){
-                    mainController->getNinjamController()->voteBpm(newValue);
-                }
-                else{
-                    mainController->getNinjamController()->voteBpi(newValue);
+                Controller::NinjamController* controller = mainController->getNinjamController();
+                if(controller){
+                    if(voteConfirmationDialog->getVoteType() == VoteConfirmationType::BPI_CONFIRMATION_VOTE){
+                        controller->voteBpi(voteConfirmationDialog->getVoteValue());
+                    }
+                    else{
+                        controller->voteBpm(voteConfirmationDialog->getVoteValue());
+                    }
                 }
             }
         }
+        this->voteConfirmationDialog = nullptr;
     }
-
 }
 
-
+void NinjamRoomWindow::showVoteConfirmationMessageBox(QString title, QString text, int voteValue, VoteConfirmationType voteType){
+    if(this->voteConfirmationDialog){
+        voteConfirmationDialog->close();
+    }
+    this->voteConfirmationDialog = new VoteConfirmationDialog(this, title, text, voteValue, voteType);
+    this->voteConfirmationDialog->show();
+    this->voteConfirmationDialog->open(this, SLOT(on_voteConfirmationDialogClosed(QAbstractButton*)));
+}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::updatePeaks(){

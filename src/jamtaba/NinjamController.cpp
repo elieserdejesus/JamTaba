@@ -194,26 +194,13 @@ NinjamController::NinjamController(Controller::MainController* mainController)
     running = false;
     QObject::connect( mainController->getAudioDriver(), SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
     QObject::connect( mainController->getAudioDriver(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
-
-    threadHandle = nullptr;
-
-
 }
 //+++++++++++++++++++++++++ THE MAIN LOGIC IS HERE  ++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
 
-//    foreach (NinjamTrackNode* track, tracksToDelete) {
-//        delete track;
-//    }
-//    tracksToDelete.clear();
-
     QMutexLocker locker(&mutex);
     if(!running || samplesInInterval <= 0){
         return;//not initialized
-    }
-
-    if(!threadHandle){
-        threadHandle = QThread::currentThreadId();
     }
 
     int totalSamplesToProcess = out.getFrameLenght();
@@ -499,7 +486,6 @@ void NinjamController::handleNewInterval(){
         processScheduledChanges();
     }
     //QMutexLocker locker(&mutex);
-    checkThread("handleNewInterval();");
     foreach (NinjamTrackNode* track, trackNodes.values()) {
         bool trackWasPlaying = track->isPlaying();
         bool trackIsPlaying = track->startNewInterval();
@@ -509,13 +495,6 @@ void NinjamController::handleNewInterval(){
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamController::checkThread(QString methodName){
-    if(threadHandle && QThread::currentThreadId() != threadHandle){
-        qCritical() << "diferente thread detected! " << methodName;
-    }
-}
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::processScheduledChanges(){
     foreach (SchedulableEvent* event, scheduledEvents) {
         event->process();
@@ -605,7 +584,6 @@ void NinjamController::on_audioDriverStopped(){
         trackNode->discardIntervals();
     }
     intervalPosition = 0;
-    threadHandle = nullptr;
 }
 
 void NinjamController::setTransmitStatus(bool transmiting){
@@ -619,7 +597,6 @@ void NinjamController::scheduleEncoderChangeForChannel(int channelIndex){
 void NinjamController::recreateEncoderForChannel(int channelIndex){
 
     //QMutexLocker locker(&mutex);
-    checkThread("recreateEncoderForChannel() ");
     int inputsCount = mainController->getInputTracksCount();
     int maxChannelsFounded = 0;//at least a mono channel
     for (int i = 0; i < inputsCount; ++i) {

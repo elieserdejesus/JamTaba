@@ -70,9 +70,6 @@ private:
     Controller::MainController* mainController;
     Audio::MetronomeTrackNode* metronomeTrackNode;
 
-    void* threadHandle;
-    void checkThread(QString methodName);
-
     QMap<QString, NinjamTrackNode*> trackNodes;//the other users channels
 
     static QString getUniqueKey(Ninjam::UserChannel channel);

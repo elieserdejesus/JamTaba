@@ -7,6 +7,7 @@
 #include "../loginserver/LoginService.h"
 #include "ChatPanel.h"
 #include <QLoggingCategory>
+#include <QMessageBox>
 
 Q_DECLARE_LOGGING_CATEGORY(ninjamRoomWindow)
 
@@ -22,6 +23,19 @@ namespace Controller {
     class NinjamController;
     class MainController;
 }
+
+enum VoteConfirmationType {BPM_CONFIRMATION_VOTE, BPI_CONFIRMATION_VOTE};
+
+class VoteConfirmationDialog : public QMessageBox{
+public:
+    VoteConfirmationDialog(QWidget *parent, QString title, QString text, int voteValue, VoteConfirmationType voteType);
+    inline int getVoteValue() const{return voteValue;}
+    inline VoteConfirmationType getVoteType() const{return voteType;}
+private:
+    int voteValue;//bpm or bpi value
+    VoteConfirmationType voteType;
+};
+
 
 class NinjamRoomWindow : public QWidget
 {
@@ -43,6 +57,10 @@ private:
     void initializeMetronomeEvents();
 
     void adjustTracksWidth();
+
+    void showVoteConfirmationMessageBox(QString title, QString text, int voteValue, VoteConfirmationType voteType);
+
+    VoteConfirmationDialog* voteConfirmationDialog;
 
 private slots:
     //ninja interval controls
@@ -69,6 +87,8 @@ private slots:
     void userSendingNewChatMessage(QString msg);
 
     void on_licenceButton_clicked();
+
+    void on_voteConfirmationDialogClosed(QAbstractButton *);
 };
 
 #endif // NINJAMROOMWINDOW_H
