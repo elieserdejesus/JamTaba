@@ -1,8 +1,3 @@
-# a linha do interval progress não está aparecendo mais
-
-#alinhamento horizontal dos faders não está legal
-    #ver pistas ninjam e pista do metronomo
-
 #In the absence of the BOM, Unicode assumes that the string is big-endian.
     #O byte Order Mark (BOM) é um caractere que fica no início de um arquivo ou string
         #indicando se é big ou little endian. Sem ele o utf-8 assume que é big endian.
@@ -16,6 +11,8 @@
 
 #se eu for fazer release em 64 bits acho que isso é importante
     #adicionar diretórios default para scanear plugins no win 64
+
+#release para as 3 plataformas? Seria legal, why not?
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
