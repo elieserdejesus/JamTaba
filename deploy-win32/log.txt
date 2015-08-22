@@ -1,0 +1,185 @@
+
+
+WARNING: can't open  "../Jamtaba2/GeoLite2-Country.mmdb" () [:0]
+
+
+
+WARNING: Thread da GUI:  0xfb0 () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
+
+
+WARNING: can't open  "../Jamtaba2/GeoLite2-Country.mmdb" () [:0]
+
+
+
+WARNING: Thread da GUI:  0x114c () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
+
+
+WARNING: can't open  "../Jamtaba2/GeoLite2-Country.mmdb" () [:0]
+
+
+
+WARNING: Thread da GUI:  0x127c () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
+
+
+WARNING: Thread da GUI:  0x470 () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
+
+
+WARNING: Thread da GUI:  0x4d8 () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
+
+
+WARNING: Thread da GUI:  0x11f8 () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
+
+
+WARNING: Thread da GUI:  0x6dc () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
+
+
+WARNING: Thread da GUI:  0x914 () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
+

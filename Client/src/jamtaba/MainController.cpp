@@ -125,7 +125,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
         vstHost(Vst::VstHost::getInstance()),
       #endif
       //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
-      ipToLocationResolver( new Geo::MaxMindIpToLocationResolver("../Jamtaba2/GeoLite2-Country.mmdb")),
+      ipToLocationResolver( new Geo::MaxMindIpToLocationResolver("./GeoLite2-Country.mmdb")),
       settings(settings),
 
       userNameChoosed(false),

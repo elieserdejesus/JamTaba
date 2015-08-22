@@ -1,20 +1,20 @@
+#se eu for fazer release em 64 bits acho que isso é importante
+    #adicionar diretórios default para scanear plugins no win 64
+
 #In the absence of the BOM, Unicode assumes that the string is big-endian.
     #O byte Order Mark (BOM) é um caractere que fica no início de um arquivo ou string
         #indicando se é big ou little endian. Sem ele o utf-8 assume que é big endian.
         #Não tem bom nas strings ninjam e o stream está setado para LittleEndian. Ou seja
             #se alguém me envia caracteres com 2 bytes será que eles não estão sendo lidos
             #na ordem errada?
-
+        #outra possibilidade - testar o latin. Será que o server pega algum encoding da máquina?
+            #testar no meu server local e testar nos servers públicos para ver se o resultado é diferente
 
 #tocar em algumas Jams para ver se está rolando
 
-
-#se eu for fazer release em 64 bits acho que isso é importante
-    #adicionar diretórios default para scanear plugins no win 64
-
-#release para as 3 plataformas? Seria legal, why not?
-
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+#não estou escondendo o painel de plugins (FxPanel) quando não encontro plugins na máquina do usuário. Aconteceu isso na máquina
+    #da dê. Deve acontecer também se eu deletar todos os caminhos para pastas de plugins
 
 #leak - quando deletar um encode do map de encoders? Como saber lá no NinjamController que o usuário está com um canal a menos?
 
@@ -191,9 +191,10 @@ QT       +=  gui  network
 #DEFINES += QT_NO_CAST_FROM_ASCII
 #DEFINES += QT_NO_CAST_TO_ASCII
 
-QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS -Wall #-Wno-unused-parameter
+QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS -Wall
 
 CONFIG += c++11
+CONFIG += openssl-linked
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -371,7 +372,7 @@ INCLUDEPATH += src/jamtaba/gui                  \
                $$PWD/libs/includes/libmaxmind   \
 
 
-win32-g++: LIBS += -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi -lvorbisfile -lvorbis -lvorbisenc -logg -lminimp3 -lmaxminddb  \
+win32-g++: LIBS += -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi -lvorbisfile -lvorbis -lvorbisenc -logg -lminimp3 -lmaxminddb \
 #win32-g++: PRE_TARGETDEPS += $$PWD/libs/win32-mingw/libportaudio.a \
 
 #msvc configs
