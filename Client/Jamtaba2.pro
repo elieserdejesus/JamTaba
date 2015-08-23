@@ -1,3 +1,21 @@
+#quando mando escanear dá um crash quando tenta
+    #ler a DLL do addictive 64 bits
+
+
+#removi um subchannel e crashow. Estava tocando um loop do addictve no canal2, sampletank no subchanel 2 e kontakt no 1
+
+#inseri um plugin durante uma jam onde estava tocando kontakt e addictive e crashow geral.
+    #Inseri o Mr ray. Parece que ele é o problema
+
+#tentei fazer split com kontakt e 4front bass e não rolou.
+
+#parece que o sample tank nem recebe minhas mensagens midi
+
+#para tocar um loop do addictive eu preciso ter algum tipo de entrada na pista. Se o usuário deixar a pista como "noInpu" o loop
+    #não é ouvido nem enviado. Preciso repensar isso.
+
+#não consegui fazer o spli de baixo e piano usando kontakt e sampletank. TEnho que ver isso
+
 #In the absence of the BOM, Unicode assumes that the string is big-endian.
     #O byte Order Mark (BOM) é um caractere que fica no início de um arquivo ou string
         #indicando se é big ou little endian. Sem ele o utf-8 assume que é big endian.

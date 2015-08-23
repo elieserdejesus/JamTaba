@@ -1,310 +1,11 @@
 
 
-WARNING: can't open  "../Jamtaba2/GeoLite2-Country.mmdb" () [:0]
+CRITICAL: Não conseguiu abrir o arquivo  () [:0]
 
 
 
-WARNING: Thread da GUI:  0xfb0 () [:0]
 
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Destrutor LocalInputAudioNode () [:0]
-
-
-
-WARNING: can't open  "../Jamtaba2/GeoLite2-Country.mmdb" () [:0]
-
-
-
-WARNING: Thread da GUI:  0x114c () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Destrutor LocalInputAudioNode () [:0]
-
-
-
-WARNING: can't open  "../Jamtaba2/GeoLite2-Country.mmdb" () [:0]
-
-
-
-WARNING: Thread da GUI:  0x127c () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Got an error from libmaxminddb:  The MaxMind DB file is in a format this library can't handle (unknown record size or binary format version) () [:0]
-
-
-
-WARNING: Destrutor LocalInputAudioNode () [:0]
-
-
-
-WARNING: Thread da GUI:  0x470 () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-WARNING: Destrutor LocalInputAudioNode () [:0]
-
-
-
-WARNING: Thread da GUI:  0x4d8 () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-WARNING: Destrutor LocalInputAudioNode () [:0]
-
-
-
-WARNING: Thread da GUI:  0x11f8 () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-WARNING: Destrutor LocalInputAudioNode () [:0]
-
-
-
-WARNING: Thread da GUI:  0x6dc () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-WARNING: Destrutor LocalInputAudioNode () [:0]
-
-
-
-WARNING: Thread da GUI:  0x914 () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-WARNING: Destrutor LocalInputAudioNode () [:0]
-
-
-
-WARNING: Thread da GUI:  0x848 () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-WARNING: Destrutor LocalInputAudioNode () [:0]
-
-
-
-WARNING: Thread da GUI:  0xe1c () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-WARNING: Destrutor LocalInputAudioNode () [:0]
-
-
-
-WARNING: Thread da GUI:  0x111c () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-WARNING: Destrutor LocalInputAudioNode () [:0]
-
-
-
-WARNING: Thread da GUI:  0xa08 () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-CRITICAL: Entry point not founded, unloading plugin  "C:/Program Files (x86)/Cakewalk/Vstplugins/R-Mix SONAR Edition/sds32.dll" () [:0]
-
-
-
-
-WARNING: Thread da GUI:  0x40c () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-CRITICAL: error when loading VST plugin  "C:/Program Files (x86)/VSTPlugins/4Front Bass x64.dll" () [:0]
-
-
-
-
-WARNING: Thread da GUI:  0x1254 () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-WARNING: Destrutor LocalInputAudioNode () [:0]
-
-
-
-WARNING: Thread da GUI:  0xe90 () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-CRITICAL: Entry point not founded, unloading plugin  "C:/Program Files (x86)/Cakewalk/Vstplugins/R-Mix SONAR Edition/sds32.dll" () [:0]
-
-
-
-
-CRITICAL: Entry point not founded, unloading plugin  "C:/Program Files (x86)/Cakewalk/Vstplugins/R-Mix SONAR Edition/trex32.dll" () [:0]
-
-
-
-
-CRITICAL: Entry point not founded, unloading plugin  "C:/Program Files (x86)/Cakewalk/Vstplugins/R-Mix SONAR Edition/sds32.dll" () [:0]
-
-
-
-
-CRITICAL: Entry point not founded, unloading plugin  "C:/Program Files (x86)/Cakewalk/Vstplugins/R-Mix SONAR Edition/trex32.dll" () [:0]
-
-
-
-
-CRITICAL: error when loading VST plugin  "C:/Program Files (x86)/VSTPlugins/4Front Bass x64.dll" () [:0]
-
-
-
-
-CRITICAL: error when loading VST plugin  "C:/Program Files (x86)/VSTPlugins/Crystal/64 bit/Crystal.dll" () [:0]
-
-
-
-
-CRITICAL: error when loading VST plugin  "C:/Program Files (x86)/VSTPlugins/XLN Audio/Addictive Drums 2/Addictive Drums 2 x64.dll" () [:0]
-
+WARNING: restoring plugin data () [:0]
 
 
 
@@ -313,6 +14,56 @@ CRITICAL: Não conseguiu abrir o arquivo  () [:0]
 
 
 
+WARNING: restoring plugin data () [:0]
+
+
+
+WARNING: Thread da GUI:  0x1008 () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
 WARNING: Destrutor LocalInputAudioNode () [:0]
+
+
+
+WARNING: "The remote host closed the connection" () [:0]
+
+
+
+WARNING: "The remote host closed the connection" () [:0]
+
+
+
+WARNING: "The remote host closed the connection" () [:0]
+
+
+
+WARNING: "The remote host closed the connection" () [:0]
+
+
+
+CRITICAL: Não conseguiu abrir o arquivo  () [:0]
+
+
+
+
+WARNING: "[voting system] leading candidate: 1/2 votes for 70 BPM [each vote expires in 60s]" () [:0]
+
+
+
+WARNING: "[voting system] leading candidate: 1/2 votes for 70 BPM [each vote expires in 60s]" () [:0]
+
+
+
+WARNING: "Unable to write" () [:0]
+
+
+
+WARNING: "Unable to write" () [:0]
 
 

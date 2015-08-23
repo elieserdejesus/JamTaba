@@ -15,7 +15,8 @@
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
-#include "audio/vorbis/VorbisDecoder.h"
+#include <QFile>
+
 
 int main(int argc, char* args[] ){
 
