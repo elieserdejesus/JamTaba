@@ -233,7 +233,7 @@ void VstPlugin::fillVstEventsList(const Midi::MidiBuffer &midiBuffer){
 
 void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, const Midi::MidiBuffer& midiBuffer){
     if(isBypassed() || !effect || !internalBuffer){
-        qWarning() << "returning";
+        qDebug() << "returning";
         return;
     }
 

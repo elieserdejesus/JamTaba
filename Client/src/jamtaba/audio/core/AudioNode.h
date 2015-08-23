@@ -149,7 +149,7 @@ public:
     inline ChannelRange getAudioInputRange() const{return audioInputRange;}
     inline void setGlobalFirstInputIndex(int firstInputIndex){this->globalFirstInputIndex = firstInputIndex;}
     inline int getGroupChannelIndex() const {return channelIndex;}
-    const Audio::SamplesBuffer& getLastBuffer() const{return internalInputBuffer;}
+    const Audio::SamplesBuffer& getLastBuffer() const{return internalOutputBuffer;}
 
 private:
     int globalFirstInputIndex; //store the first input index selected globally by users in preferences menu

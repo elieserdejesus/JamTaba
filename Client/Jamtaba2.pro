@@ -1,6 +1,3 @@
-#se eu for fazer release em 64 bits acho que isso é importante
-    #adicionar diretórios default para scanear plugins no win 64
-
 #In the absence of the BOM, Unicode assumes that the string is big-endian.
     #O byte Order Mark (BOM) é um caractere que fica no início de um arquivo ou string
         #indicando se é big ou little endian. Sem ele o utf-8 assume que é big endian.
@@ -13,6 +10,10 @@
 #tocar em algumas Jams para ver se está rolando
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#se eu for fazer release em 64 bits acho que isso é importante
+    #adicionar diretórios default para scanear plugins no win 64
+
 #não estou escondendo o painel de plugins (FxPanel) quando não encontro plugins na máquina do usuário. Aconteceu isso na máquina
     #da dê. Deve acontecer também se eu deletar todos os caminhos para pastas de plugins
 

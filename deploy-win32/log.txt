@@ -182,4 +182,137 @@ INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
 
 WARNING: Destrutor LocalInputAudioNode () [:0]
 
+
+
+WARNING: Thread da GUI:  0x848 () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
+
+
+WARNING: Thread da GUI:  0xe1c () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
+
+
+WARNING: Thread da GUI:  0x111c () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
+
+
+WARNING: Thread da GUI:  0xa08 () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+CRITICAL: Entry point not founded, unloading plugin  "C:/Program Files (x86)/Cakewalk/Vstplugins/R-Mix SONAR Edition/sds32.dll" () [:0]
+
+
+
+
+WARNING: Thread da GUI:  0x40c () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+CRITICAL: error when loading VST plugin  "C:/Program Files (x86)/VSTPlugins/4Front Bass x64.dll" () [:0]
+
+
+
+
+WARNING: Thread da GUI:  0x1254 () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
+
+
+WARNING: Thread da GUI:  0xe90 () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+CRITICAL: Entry point not founded, unloading plugin  "C:/Program Files (x86)/Cakewalk/Vstplugins/R-Mix SONAR Edition/sds32.dll" () [:0]
+
+
+
+
+CRITICAL: Entry point not founded, unloading plugin  "C:/Program Files (x86)/Cakewalk/Vstplugins/R-Mix SONAR Edition/trex32.dll" () [:0]
+
+
+
+
+CRITICAL: Entry point not founded, unloading plugin  "C:/Program Files (x86)/Cakewalk/Vstplugins/R-Mix SONAR Edition/sds32.dll" () [:0]
+
+
+
+
+CRITICAL: Entry point not founded, unloading plugin  "C:/Program Files (x86)/Cakewalk/Vstplugins/R-Mix SONAR Edition/trex32.dll" () [:0]
+
+
+
+
+CRITICAL: error when loading VST plugin  "C:/Program Files (x86)/VSTPlugins/4Front Bass x64.dll" () [:0]
+
+
+
+
+CRITICAL: error when loading VST plugin  "C:/Program Files (x86)/VSTPlugins/Crystal/64 bit/Crystal.dll" () [:0]
+
+
+
+
+CRITICAL: error when loading VST plugin  "C:/Program Files (x86)/VSTPlugins/XLN Audio/Addictive Drums 2/Addictive Drums 2 x64.dll" () [:0]
+
+
+
+
+CRITICAL: Não conseguiu abrir o arquivo  () [:0]
+
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
 

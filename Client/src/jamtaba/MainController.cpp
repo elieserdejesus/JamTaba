@@ -75,6 +75,21 @@ public:
        }
     }
 
+    int getMaxInputChannelsForEncoding() const{
+        if(groupedInputs.size() > 1){
+            return 2;//stereo encoding
+        }
+        if(!groupedInputs.isEmpty()){
+            if(groupedInputs.first()->isMidi()){
+                return 2;//just one midi track, use stereo encoding
+            }
+            if(!groupedInputs.first()->isNoInput()){
+                return groupedInputs.first()->getAudioInputRange().getChannels();
+            }
+        }
+        return 0;//no channels to encoding
+    }
+
 private:
     int groupIndex;
     QList<Audio::LocalInputAudioNode*> groupedInputs;
@@ -208,6 +223,16 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     //qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
 }
 
+//++++++++++++++++++++
+int MainController::getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const{
+    if(trackGroups.contains(trackGroupIndex)){
+        InputTrackGroup* group = trackGroups[trackGroupIndex];
+        if(group){
+            return group->getMaxInputChannelsForEncoding();
+        }
+    }
+    return 0;
+}
 //++++++++++++++++++++
 void MainController::setUserName(QString newUserName){
     if(!newUserName.isEmpty()){
