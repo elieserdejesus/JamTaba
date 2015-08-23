@@ -183,6 +183,8 @@ public:
     QString getUserName() const;
     inline bool userNameWasChoosed() const{return userNameChoosed;}
 
+    //used to recreate audio encoder with enough channels
+    int getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const;
 
 signals:
     void enteredInRoom(Login::RoomInfo room);

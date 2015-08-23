@@ -10,11 +10,11 @@
 #include "../NinjamRoomWindow.h"
 #include "../audio/NinjamTrackNode.h"
 #include "../persistence/Settings.h"
-#include <QMutexLocker>
 #include "../audio/MetronomeTrackNode.h"
+
 #include <cmath>
 #include <cassert>
-
+#include <QMutexLocker>
 #include <QDebug>
 #include <QThread>
 
@@ -26,7 +26,7 @@ Q_LOGGING_CATEGORY(controllerNinjam, "controller.ninjam")
 
 using namespace Controller;
 
-//+++++++++++++  ENCODING THREAD +++++++++++++
+//+++++++++++++  ENCODING THREAD  +++++++++++++
 class NinjamController::EncodingThread : public QThread{
 public:
     EncodingThread(NinjamController* controller)
@@ -43,7 +43,9 @@ public:
         qCDebug(controllerNinjam) << "Adding samples to encode";
         QMutexLocker locker(&mutex);
         chunksToEncode.append(new EncodingChunk(samplesToEncode, channelIndex, isFirstPart, isLastPart));
-        hasAvailableChunksToEncode.wakeAll();
+        //this method is called by Qt main thread (the producer thread).
+        hasAvailableChunksToEncode.wakeAll();//wakeup the encoding thread (consumer thread)
+        //qWarning() << "Adding samples to encode:" << samplesToEncode.computePeak().getMax();
     }
 
     void stop(){
@@ -70,16 +72,14 @@ protected:
             chunksToEncode.removeFirst();
             mutex.unlock();
 			if (chunk){
-				if (controller->encoders.contains(chunk->channelIndex)){
-					QByteArray encodedBytes(controller->encoders[chunk->channelIndex]->encode(chunk->buffer));
-					if (chunk->lastPart){
-						encodedBytes.append(controller->encoders[chunk->channelIndex]->finishIntervalEncoding());
-					}
+                QByteArray encodedBytes( controller->encode(chunk->buffer, chunk->channelIndex));
+                if (chunk->lastPart){
+                    encodedBytes.append( controller->encodeLastPartOfInterval(chunk->channelIndex));
+                }
 
-					//qWarning() << "emmitint";
-					emit controller->encodedAudioAvailableToSend(encodedBytes, chunk->channelIndex, chunk->firstPart, chunk->lastPart);
-				}
-
+                if(!encodedBytes.isEmpty()){
+                    emit controller->encodedAudioAvailableToSend(encodedBytes, chunk->channelIndex, chunk->firstPart, chunk->lastPart);
+                }
 				delete chunk;
 			}
 
@@ -187,6 +187,7 @@ NinjamController::NinjamController(Controller::MainController* mainController)
     currentBpm(0),
     transmiting(false),
     mutex(QMutex::Recursive),
+    encodersMutex(QMutex::Recursive),
     encodingThread(nullptr)
 
     //recorder("record.wav", mainController->getAudioDriver()->getSampleRate())
@@ -195,6 +196,8 @@ NinjamController::NinjamController(Controller::MainController* mainController)
     QObject::connect( mainController->getAudioDriver(), SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
     QObject::connect( mainController->getAudioDriver(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
 }
+
+//++++++++++++++++++++++++++
 //+++++++++++++++++++++++++ THE MAIN LOGIC IS HERE  ++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
 
@@ -233,7 +236,7 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
         //+++++++++++ MAIN AUDIO OUTPUT PROCESS +++++++++++++++
         bool isLastPart = intervalPosition + samplesToProcessInThisStep >= samplesInInterval;
         foreach (NinjamTrackNode* track, trackNodes) {
-            track->setProcessingLastPartOfInterval(isLastPart);//resampler need a flat indicating the last part
+            track->setProcessingLastPartOfInterval(isLastPart);//TODO resampler still need a flag indicating the last part?
         }
         mainController->doAudioProcess(tempInBuffer, tempOutBuffer, sampleRate);
         out.add(tempOutBuffer, offset); //generate audio output
@@ -594,39 +597,44 @@ void NinjamController::scheduleEncoderChangeForChannel(int channelIndex){
     scheduledEvents.append(new InputChannelChangedEvent(this, channelIndex));
 }
 
+QByteArray NinjamController::encode(const Audio::SamplesBuffer &buffer, uint channelIndex){
+    QMutexLocker locker(&encodersMutex);
+    if(encoders.contains(channelIndex)){
+        return encoders[channelIndex]->encode(buffer);
+    }
+    return QByteArray();
+}
+
+QByteArray NinjamController::encodeLastPartOfInterval(uint channelIndex){
+    QMutexLocker locker(&encodersMutex);
+    if(encoders.contains(channelIndex)){
+        return encoders[channelIndex]->finishIntervalEncoding();
+    }
+    return QByteArray();
+}
+
 void NinjamController::recreateEncoderForChannel(int channelIndex){
 
-    //QMutexLocker locker(&mutex);
-    int inputsCount = mainController->getInputTracksCount();
-    int maxChannelsFounded = 0;//at least a mono channel
-    for (int i = 0; i < inputsCount; ++i) {
-        Audio::LocalInputAudioNode* inputTrack = mainController->getInputTrack(i);
-        if(inputTrack && inputTrack->getGroupChannelIndex() == channelIndex){
-            if( !inputTrack->isNoInput()  ){//stereo or midi tracks are always stereo
-                int trackChannels = inputTrack->isMidi() ? 2 : inputTrack->getAudioInputRange().getChannels();
-                if(trackChannels > maxChannelsFounded){
-                    maxChannelsFounded = inputTrack->getAudioInputRange().getChannels();
-                }
-            }
-        }
-    }
-    if(maxChannelsFounded <= 0){//input tracks are setted as noInput
+    QMutexLocker locker(&encodersMutex);
+    int maxChannelsForEncoding = mainController->getMaxChannelsForEncodingInTrackGroup(channelIndex);
+    //qWarning() << "recreating encoding using " << maxChannelsForEncoding << " channels";
+    if(maxChannelsForEncoding <= 0){//input tracks are setted as noInput?
         return;
     }
-    bool currentEncoderIsInvalid = encoders.contains(channelIndex) && encoders[channelIndex]->getChannels() != maxChannelsFounded;
+    bool currentEncoderIsInvalid = encoders.contains(channelIndex) && encoders[channelIndex]->getChannels() != maxChannelsForEncoding;
 
     if(!encoders.contains(channelIndex) || currentEncoderIsInvalid){//a new encoder is necessary?
         //qDebug() << "recreating encoder for channel index" << channelIndex;
         if(currentEncoderIsInvalid){
             delete encoders[channelIndex];
         }
-        encoders[channelIndex] = new VorbisEncoder(maxChannelsFounded, mainController->getAudioDriverSampleRate());
+        encoders[channelIndex] = new VorbisEncoder(maxChannelsForEncoding, mainController->getAudioDriverSampleRate());
     }
 }
 
 void NinjamController::recreateEncoders(){
     if(isRunning()){
-        QMutexLocker locker(&mutex); //this method is called from main thread, and the encoders are used in audio thread every time
+        QMutexLocker locker(&encodersMutex); //this method is called from main thread, and the encoders are used in audio thread every time
         for (int e = 0; e < encoders.size(); ++e) {
             delete encoders[e];
         }

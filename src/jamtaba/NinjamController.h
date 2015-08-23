@@ -49,9 +49,15 @@ public:
     static const long METRONOME_TRACK_ID = 123456789; //just a number :)
 
     void recreateEncoders();
+
+    QByteArray encode(const Audio::SamplesBuffer& buffer, uint channelIndex);
+    QByteArray encodeLastPartOfInterval(uint channelIndex);
+
     void scheduleEncoderChangeForChannel(int channelIndex);
 
     void setTransmitStatus(bool transmiting);
+
+
 
 signals:
     void currentBpiChanged(int newBpi);
@@ -91,6 +97,8 @@ private:
     int currentBpm;
 
     QMutex mutex;
+
+    QMutex encodersMutex;
 
     long computeTotalSamplesInInterval();
     long getSamplesPerBeat();

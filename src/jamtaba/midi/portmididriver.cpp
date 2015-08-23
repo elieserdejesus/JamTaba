@@ -118,7 +118,7 @@ void PortMidiDriver::stop(){
             Pm_Abort(stream);
         }
     }
-    //streams.clear();
+    streams.clear();
 }
 
 void PortMidiDriver::release(){
