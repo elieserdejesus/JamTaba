@@ -6,6 +6,7 @@ Client/build/
 build/
 Client/*.pro.user
 Client/release
+deploy-win32/
 
 Server/build/
 Server/dist
