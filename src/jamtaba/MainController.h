@@ -186,6 +186,9 @@ public:
     //used to recreate audio encoder with enough channels
     int getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const;
 
+    inline Vst::VstHost* getVstHost() const{return vstHost;}
+
+
 signals:
     void enteredInRoom(Login::RoomInfo room);
     void exitedFromRoom(bool error);

@@ -41,6 +41,7 @@ private:
     QLibrary pluginLib;
     Vst::VstHost* host;
     bool wantMidi;
+    //bool canProcessReplacing;
     QString path;
 
     bool started;

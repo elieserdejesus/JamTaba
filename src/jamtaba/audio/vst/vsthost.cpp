@@ -17,8 +17,7 @@ VstHost* VstHost::getInstance(){
 }
 
 VstHost::VstHost()
-    :vstTimeInfo(new VstTimeInfo()),
-      sampleRate(0), blockSize(0)
+    : sampleRate(0), blockSize(0)
 {
 //    this->vstMidiEvents.reserved = 0;
 //    this->vstMidiEvents.numEvents = 0;
@@ -26,6 +25,54 @@ VstHost::VstHost()
 //    for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
 //        this->vstMidiEvents.events[i] = (VstEvent*)(new VstMidiEvent);
 //    }
+    clearVstTimeInfoFlags();
+}
+
+void VstHost::clearVstTimeInfoFlags(){
+    memset(&vstTimeInfo, 0, sizeof(vstTimeInfo));
+    vstTimeInfo.timeSigNumerator = 4;
+    vstTimeInfo.timeSigDenominator = 4;
+
+    vstTimeInfo.sampleRate = this->sampleRate;
+    vstTimeInfo.flags |= kVstTimeSigValid;
+    vstTimeInfo.flags |= kVstPpqPosValid;
+    vstTimeInfo.flags |= kVstTempoValid;
+    vstTimeInfo.flags |= kVstBarsValid;
+}
+
+void VstHost::setPlayingFlag(bool playing){
+    if(playing){
+        vstTimeInfo.flags |= kVstTransportPlaying;
+    }
+    else{
+        clearVstTimeInfoFlags();
+    }
+}
+
+//void VstHost::setTransportChangedFlag(bool transportChanged){
+//    if(transportChanged){
+//        vstTimeInfo.flags |= kVstTransportChanged;
+//    }
+//    else{
+//        vstTimeInfo.flags = vstTimeInfo.flags & (~kVstTransportChanged);
+//    }
+//}
+
+
+void VstHost::update(int intervalPosition){
+    //qWarning() << "updating";
+    vstTimeInfo.samplePos = intervalPosition;
+    double quarterTime = 60000.0/vstTimeInfo.tempo;
+    double samplesPerQuarter = sampleRate * quarterTime / 1000;
+
+    vstTimeInfo.ppqPos =  intervalPosition/samplesPerQuarter;
+    vstTimeInfo.barStartPos = ((int)vstTimeInfo.ppqPos/vstTimeInfo.timeSigNumerator) * vstTimeInfo.timeSigNumerator;
+    //the ppq value returned by vsttimeinfo is a float which will vary from 0 to 3.999999999(etc) over the 4 beats of a typical 16 semiquaver bar of 4/4.
+
+    vstTimeInfo.flags |= kVstPpqPosValid;
+    vstTimeInfo.flags |= kVstBarsValid;
+    vstTimeInfo.flags |= kVstTempoValid;
+    vstTimeInfo.flags |= kVstTransportPlaying;
 }
 
 //const VstEvents* VstHost::getVstMidiEvents() const{
@@ -52,7 +99,7 @@ VstHost::VstHost()
 
 VstHost::~VstHost()
 {
-    delete this->vstTimeInfo;
+    //delete this->vstTimeInfo;
 //    for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
 //        delete this->vstMidiEvents.events[i];
 //    }
@@ -65,6 +112,12 @@ void VstHost::setBlockSize(int blockSize){
 
 void VstHost::setSampleRate(int sampleRate){
     this->sampleRate = sampleRate;
+    this->vstTimeInfo.sampleRate = this->sampleRate;
+}
+
+void VstHost::setTempo(int bpm){
+    this->vstTimeInfo.tempo = bpm;
+    this->vstTimeInfo.flags |= kVstTempoValid;
 }
 
 VstIntPtr VSTCALLBACK VstHost::hostCallback(AEffect */*effect*/, VstInt32 opcode,
@@ -78,13 +131,14 @@ VstIntPtr VSTCALLBACK VstHost::hostCallback(AEffect */*effect*/, VstInt32 opcode
             return 2400L;
 
         case audioMasterGetTime : //7
-            return (long)(VstHost::getInstance()->vstTimeInfo);
+            //qWarning() << "retornando timeInfo";
+            return (VstIntPtr)(&VstHost::getInstance()->vstTimeInfo);
 
 //        case audioMasterSetTime  : //9
 //            pHost->SetTimeInfo((VstTimeInfo*)ptr);
 //            return 1L;
 
-//        case audioMasterTempoAt : //10
+//        case audioMasterTimeAt : //10
 //            return 1000L*pHost->vstTimeInfo.tempo;
 
         case audioMasterGetCurrentProcessLevel : //23

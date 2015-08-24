@@ -32,19 +32,18 @@ public:
     inline int getBufferSize() const {return blockSize;}
     void setSampleRate(int sampleRate);
     void setBlockSize(int blockSize);
-    //void fillMidiEvents(Midi::MidiBuffer& midiIn);
+    void setTempo(int bpm);
+    void setPlayingFlag(bool playing);
+    //void setTransportChangedFlag(bool transportChanged);
+    void update(int intervalPosition);
 protected:
-    static VstIntPtr VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode,
-      VstInt32 index, VstInt32 value, void *ptr, float opt);
-
-
-    //const VstEvents* getVstMidiEvents() const;
-
+    static VstIntPtr VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index, VstInt32 value, void *ptr, float opt);
 private:
-    VstTimeInfo* vstTimeInfo;
+    VstTimeInfo vstTimeInfo;
     int sampleRate;
     int blockSize;
 
+    void clearVstTimeInfoFlags();
 
 
     static VstHost* hostInstance;

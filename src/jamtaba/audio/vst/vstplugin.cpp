@@ -1,5 +1,5 @@
 #include "VstPlugin.h"
-#include "aeffectx.h"
+//#include "aeffectx.h"
 #include "vsthost.h"
 #include <windows.h>
 #include <QDebug>
@@ -19,7 +19,7 @@
 #include <QThread>
 #include <cassert>
 
-Q_LOGGING_CATEGORY(vst, "vst");
+Q_LOGGING_CATEGORY(vst, "vst")
 
 using namespace Vst;
 
@@ -34,6 +34,7 @@ VstPlugin::VstPlugin(VstHost* host)
         effect(nullptr),
         internalBuffer(nullptr),
         host(host)
+        //canProcessReplacing(true)
         //started(false)
 {
     this->vstMidiEvents.reserved = 0;
@@ -41,6 +42,7 @@ VstPlugin::VstPlugin(VstHost* host)
     for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
         this->vstMidiEvents.events[i] = (VstEvent*)(new VstMidiEvent);
     }
+
 }
 
 bool VstPlugin::load(VstHost *host, QString path){
@@ -74,10 +76,10 @@ bool VstPlugin::load(VstHost *host, QString path){
         unload();
         return false;
     }
-    //qCDebug(vst) << "Entry point founded for " << path ;
+    qCDebug(vst) << "Entry point founded for " << path ;
     try
     {
-        //qCDebug(vst) << "Initializing effect for " << path ;
+        qCDebug(vst) << "Initializing effect for " << path ;
         effect = entryPoint( host->hostCallback);// myHost->vstHost->AudioMasterCallback);
     }
     catch(...)
@@ -177,7 +179,7 @@ void VstPlugin::start(){
 
     resume();
 
-    //effect->dispatcher(effect, effStartProcess, 0, 1, NULL, 0.0f);
+    effect->dispatcher(effect, effStartProcess, 0, 1, NULL, 0.0f);
 
 
     //started = true;
@@ -185,6 +187,9 @@ void VstPlugin::start(){
 
 VstPlugin::~VstPlugin()
 {
+    if(effect){
+        effect->dispatcher(effect, effStopProcess, 0, 1, NULL, 0.0f);
+    }
     qCDebug(vst) << getName() << " VSt plugin destructor ";
     unload();
     delete internalBuffer;
@@ -200,6 +205,7 @@ void VstPlugin::unload(){
     qCDebug(vst) << "unloading VST plugin " << getName();
     if(effect){
         effect->dispatcher(effect, effEditClose, 0, 0, NULL, 0);//fecha o editor
+
         suspend();
         effect->dispatcher(effect, effClose, 0, 0, NULL, 0);
         //delete effect;
@@ -232,6 +238,7 @@ void VstPlugin::fillVstEventsList(const Midi::MidiBuffer &midiBuffer){
 }
 
 void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, const Midi::MidiBuffer& midiBuffer){
+    Q_UNUSED(in)
     if(isBypassed() || !effect || !internalBuffer){
         qDebug() << "returning";
         return;
@@ -261,7 +268,12 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
     VstInt32 sampleFrames = outBuffer.getFrameLenght();
 
     //qCDebug(vst) << "calling processReplacing in " << getName() << " thread" << QThread::currentThreadId();
-    effect->processReplacing(effect, inArray, out, sampleFrames);
+    if(effect->flags & effFlagsCanReplacing){
+        effect->processReplacing(effect, inArray, out, sampleFrames);
+    }
+
+
+
     //qCDebug(vst) << "processReplacing called " << getName();
 
     //mix multiple out plugins to stereo

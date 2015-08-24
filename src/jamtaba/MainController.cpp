@@ -222,6 +222,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 
     //qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
 }
+//++++++++++++++++++++
 
 //++++++++++++++++++++
 int MainController::getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const{
@@ -821,7 +822,7 @@ void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStrin
 }
 
 void MainController::on_audioDriverSampleRateChanged(int newSampleRate){
-    Q_UNUSED(newSampleRate);
+    vstHost->setSampleRate(newSampleRate);
     audioMixer->setSampleRate(newSampleRate);
 }
 
@@ -956,6 +957,7 @@ void MainController::stopNinjamController(){
         //delete ninjamController;
         ninjamController = nullptr;
     }
+    vstHost->setPlayingFlag(false);
 }
 
 void MainController::on_errorInNinjamServer(QString error){
@@ -983,6 +985,7 @@ void MainController::on_connectedInNinjamServer(Ninjam::Server server){
 
     qCDebug(controllerMain) << "starting ninjamController...";
     ninjamController->start(server, transmiting);
+    vstHost->setTempo(server.getBpm());
 }
 
 
