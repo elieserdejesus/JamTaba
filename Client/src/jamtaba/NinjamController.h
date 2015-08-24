@@ -44,6 +44,8 @@ public:
     void voteBpi(int newBpi);
     void voteBpm(int newBpm);
 
+    void setBpm(int newBpm);
+
     void sendChatMessage(QString msg);
 
     static const long METRONOME_TRACK_ID = 123456789; //just a number :)

@@ -11,6 +11,7 @@
 #include "../audio/NinjamTrackNode.h"
 #include "../persistence/Settings.h"
 #include "../audio/MetronomeTrackNode.h"
+#include "../audio/vst/vsthost.h"
 
 #include <cmath>
 #include <cassert>
@@ -142,10 +143,7 @@ public:
     BpmChangeEvent(NinjamController* controller, int newBpm)
         :SchedulableEvent(controller), newBpm(newBpm){}
     void process(){
-        controller->currentBpm = newBpm;
-        controller->samplesInInterval = controller->computeTotalSamplesInInterval();
-        controller->metronomeTrackNode->setSamplesPerBeat(controller->getSamplesPerBeat());
-        emit controller->currentBpmChanged(controller->currentBpm);
+        controller->setBpm(newBpm);
     }
 private:
     int newBpm;
@@ -198,6 +196,14 @@ NinjamController::NinjamController(Controller::MainController* mainController)
 }
 
 //++++++++++++++++++++++++++
+void NinjamController::setBpm(int newBpm){
+    currentBpm = newBpm;
+    samplesInInterval = computeTotalSamplesInInterval();
+    metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
+    mainController->getVstHost()->setTempo(newBpm);
+    emit currentBpmChanged(currentBpm);
+}
+
 //+++++++++++++++++++++++++ THE MAIN LOGIC IS HERE  ++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
 
@@ -210,7 +216,12 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
     int samplesProcessed = 0;
     static int lastBeat = 0;
     int offset = 0;
+
+
+
     do{
+        mainController->getVstHost()->update(intervalPosition);//update the vst host time line.
+
         int samplesToProcessInThisStep = (std::min)((int)(samplesInInterval - intervalPosition), totalSamplesToProcess - offset);
 
         assert(samplesToProcessInThisStep);
@@ -225,6 +236,7 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
         bool newInterval = intervalPosition == 0;
         if(newInterval){//starting new interval
             handleNewInterval();
+            //mainController->getVstHost()->setTransportChangedFlag(true);
         }
 
         metronomeTrackNode->setIntervalPosition(this->intervalPosition);
@@ -269,6 +281,7 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
     }
     while( samplesProcessed < totalSamplesToProcess);
 
+    //mainController->getVstHost()->setTransportChangedFlag(false);
 
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -343,8 +356,6 @@ void NinjamController::start(const Ninjam::Server& server, bool transmiting){
     for (int channelIndex = 0; channelIndex < channels; ++channelIndex) {
         scheduledEvents.append(new InputChannelChangedEvent(this, channelIndex));
     }
-
-
 
     processScheduledChanges();
 
@@ -485,6 +496,9 @@ void NinjamController::setMetronomeBeatsPerAccent(int beatsPerAccent){
 //}
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::handleNewInterval(){
+    //mainController->getVstHost()->setPlayingFlag(true);
+    mainController->getVstHost()->setPlayingFlag(true);
+
     if(hasScheduledChanges()){
         processScheduledChanges();
     }
@@ -496,6 +510,7 @@ void NinjamController::handleNewInterval(){
             emit channelXmitChanged(track->getID(), trackIsPlaying);
         }
     }
+    //mainController->
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::processScheduledChanges(){
@@ -651,7 +666,8 @@ void NinjamController::on_audioDriverSampleRateChanged(int newSampleRate){
     if(!isRunning()){
         return;
     }
-    Q_UNUSED(newSampleRate);
+
+
     this->samplesInInterval = computeTotalSamplesInInterval();
 
     //remove the old metronome
