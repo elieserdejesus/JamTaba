@@ -268,27 +268,25 @@ void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffe
      * Other LocalInputAudioNode instances will read other channels from input SamplesBuffer.
      */
 
-    if(isNoInput()){
-        return;
-    }
-
     Midi::MidiBuffer filteredMidiBuffer(midiBuffer.getMessagesCount());
-
     internalInputBuffer.setFrameLenght(out.getFrameLenght());
     internalInputBuffer.zero();
-    if(isAudio()){//using audio input
-        if(audioInputRange.isEmpty()){
-            return;
+
+    if(!isNoInput()){
+        if(isAudio()){//using audio input
+            if(audioInputRange.isEmpty()){
+                return;
+            }
+            int inChannelOffset = audioInputRange.getFirstChannel() - globalFirstInputIndex;
+            internalInputBuffer.set(in, inChannelOffset, audioInputRange.getChannels());
         }
-        int inChannelOffset = audioInputRange.getFirstChannel() - globalFirstInputIndex;
-        internalInputBuffer.set(in, inChannelOffset, audioInputRange.getChannels());
-    }
-    else if(isMidi()){//just in case
-        int total = midiBuffer.getMessagesCount();
-        for (int m = 0; m < total; ++m) {
-            //qWarning() << midiBuffer.getMessage(m).globalSourceDeviceIndex << " " << midiDeviceIndex;
-            if( midiBuffer.getMessage(m).globalSourceDeviceIndex == midiDeviceIndex){
-                filteredMidiBuffer.addMessage(midiBuffer.getMessage(m));
+        else if(isMidi()){//just in case
+            int total = midiBuffer.getMessagesCount();
+            for (int m = 0; m < total; ++m) {
+                //qWarning() << midiBuffer.getMessage(m).globalSourceDeviceIndex << " " << midiDeviceIndex;
+                if( midiBuffer.getMessage(m).globalSourceDeviceIndex == midiDeviceIndex){
+                    filteredMidiBuffer.addMessage(midiBuffer.getMessage(m));
+                }
             }
         }
     }

@@ -1,5 +1,15 @@
+#desativei o addictive enquanto estava tocando e deu um rúido, não estou zerando os buffers
 
-#removi um subchannel e crashow. Estava tocando um loop do addictve no canal2, sampletank no subchanel 2 e kontakt no 1
+#fui testar o addictive com a fast e parece que só funciona com buffer de 128? Quando
+    #dei o play no addictive com buffer de 256 ficou estranho. A mesma coisa com buffer de 256.
+        #Tenho que testar com a fast também.
+    #É um problema mais geral, talvez
+        #O problema fica evidente quando eu mudo a samplerate
+        #acho que eu preciso setar a samplerate e o block size no host, e acho
+            #que o host precisa avisar os plugins também
+
+#removi um subchannel e crashow. Estava tocando um loop do addictve no canal2,
+        #sampletank no subchanel 2 e kontakt no 1
 
 #tentei fazer split com kontakt e 4front bass e não rolou. Os plugins recebem todos
     #os canais. Tenho que ver como o Reaper faz isso.
@@ -7,12 +17,8 @@
 
 #parece que o sampletank nem recebe minhas mensagens midi
 
-#para tocar um loop do addictive eu preciso ter algum tipo de entrada na pista. Se o usuário deixar a pista como "noInpu" o loop
-    #não é ouvido nem enviado. Preciso repensar isso.
 
 #não consegui fazer o spli de baixo e piano usando kontakt e sampletank. TEnho que ver isso
-
-
 
 #In the absence of the BOM, Unicode assumes that the string is big-endian.
     #O byte Order Mark (BOM) é um caractere que fica no início de um arquivo ou string
@@ -211,7 +217,7 @@ QT       +=  gui  network
 #DEFINES += QT_NO_CAST_FROM_ASCII
 #DEFINES += QT_NO_CAST_TO_ASCII
 
-QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS -Wall
+QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS -Wall -fpermissive
 
 CONFIG += c++11
 CONFIG += openssl-linked

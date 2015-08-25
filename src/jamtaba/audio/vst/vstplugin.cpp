@@ -1,5 +1,5 @@
 #include "VstPlugin.h"
-//#include "aeffectx.h"
+#include "aeffectx.h"
 #include "vsthost.h"
 #include <windows.h>
 #include <QDebug>
@@ -42,6 +42,7 @@ VstPlugin::VstPlugin(VstHost* host)
     for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
         this->vstMidiEvents.events[i] = (VstEvent*)(new VstMidiEvent);
     }
+
 
 }
 
@@ -279,11 +280,11 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
     //mix multiple out plugins to stereo
     int totalChannels = internalBuffer->getChannels();
     if(totalChannels > 2){
-        for (int s = 0; s < internalBuffer->getFrameLenght(); ++s) {
-            for (int c = 2; c < totalChannels; ++c) {
-                internalBuffer->add(c % 2, s, internalBuffer->get(c, s));
-            }
-        }
+//        for (int s = 0; s < internalBuffer->getFrameLenght(); ++s) {
+//            for (int c = 2; c < totalChannels; ++c) {
+//                internalBuffer->add(c % 2, s, internalBuffer->get(c, s));
+//            }
+//        }
     }
 
     outBuffer.set(*internalBuffer);
@@ -327,6 +328,8 @@ void VstPlugin::openEditor(QPoint centerOfScreen){
 	}
 
     qCDebug(vst) << getName() << " editor opened";
+
+
 
     //resume();
 }

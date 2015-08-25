@@ -83,8 +83,11 @@ public:
             if(groupedInputs.first()->isMidi()){
                 return 2;//just one midi track, use stereo encoding
             }
-            if(!groupedInputs.first()->isNoInput()){
+            if(groupedInputs.first()->isAudio()){
                 return groupedInputs.first()->getAudioInputRange().getChannels();
+            }
+            if(groupedInputs.first()->isNoInput()){
+                return 2;//allow channels using noInput but processing some vst looper in stereo
             }
         }
         return 0;//no channels to encoding
@@ -273,7 +276,7 @@ void MainController::updateInputTracksRange(){
         Audio::LocalInputAudioNode* inputTrack = getInputTrack(trackIndex);
 
         if(!inputTrack->isNoInput()){
-            if(!inputTrack->isMidi()){//audio track
+            if(inputTrack->isAudio()){//audio track
                 Audio::ChannelRange inputTrackRange = inputTrack->getAudioInputRange();
                 inputTrack->setGlobalFirstInputIndex(globalInputRange.getFirstChannel());
 

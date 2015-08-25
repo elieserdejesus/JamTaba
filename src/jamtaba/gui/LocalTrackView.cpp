@@ -136,7 +136,7 @@ void LocalTrackView::on_inputSelectionButtonClicked(){
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void LocalTrackView::on_noInputMenuSelected(){
     mainController->setInputTrackToNoInput(getTrackID());
-    setUnlightStatus(true);
+    //setUnlightStatus(true);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -173,7 +173,7 @@ QMenu* LocalTrackView::createMonoInputsMenu(QMenu* parent){
 void LocalTrackView::on_monoInputMenuSelected(QAction *action){
     int selectedInputIndexInAudioDevice = action->data().toInt();
     mainController->setInputTrackToMono(getTrackID(), selectedInputIndexInAudioDevice);
-    setUnlightStatus(false);
+    //setUnlightStatus(false);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -219,7 +219,7 @@ QMenu* LocalTrackView::createStereoInputsMenu(QMenu* parent){
 void LocalTrackView::on_stereoInputMenuSelected(QAction *action){
     int firstInputIndexInAudioDevice = action->data().toInt();
     mainController->setInputTrackToStereo(getTrackID(), firstInputIndexInAudioDevice);
-    setUnlightStatus(false);
+    //setUnlightStatus(false);
 }
 
 QString LocalTrackView::getInputChannelNameOnly(int inputIndex){
@@ -277,7 +277,7 @@ void LocalTrackView::refreshInputSelectionName(){
     this->inputTypeIconLabel->setStyleSheet("background-image: url(" + iconFile + ");");
     //this->inputTypeIconLabel->setText("<img src=" + iconFile + "/>");
 
-    setUnlightStatus(inputTrack->isNoInput());
+    //setUnlightStatus(inputTrack->isNoInput());
 
     updateGeometry();
 
@@ -309,7 +309,7 @@ QMenu* LocalTrackView::createMidiInputsMenu(QMenu* parent){
 void LocalTrackView::on_MidiInputMenuSelected(QAction *action){
     int midiDeviceIndex = action->data().toInt();
     mainController->setInputTrackToMIDI(getTrackID(), midiDeviceIndex);
-    setUnlightStatus(false);
+    //setUnlightStatus(false);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
