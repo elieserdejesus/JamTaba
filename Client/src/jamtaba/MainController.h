@@ -138,7 +138,8 @@ public:
     void updateInputTracksRange();//called when input range or method (audio or midi) are changed in preferences
     void setInputTrackToMono(int localChannelIndex, int inputIndexInAudioDevice);
     void setInputTrackToStereo(int localChannelIndex, int firstInputIndex);
-    void setInputTrackToMIDI(int localChannelIndex, int midiDevice);
+
+    void setInputTrackToMIDI(int localChannelIndex, int midiDevice, int midiChannel);//use -1 to select all channels
     void setInputTrackToNoInput(int localChannelIndex);
 
     inline bool isStarted() const{return started;}

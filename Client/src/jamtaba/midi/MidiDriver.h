@@ -21,6 +21,11 @@ struct MidiMessage{
     MidiMessage(){
         this->data = this->timestamp = this->globalSourceDeviceIndex = 0;
     }
+
+    inline int getChannel() const{
+        return data & 0x0000000F;
+    }
+
 };
 
 class MidiBuffer{
@@ -54,6 +59,9 @@ public:
 
     virtual int getMaxInputDevices() const = 0;
 
+    //virtual void setSelectedChannel(int globalDeviceID, int channelIndex);
+    //virtual void useAllChannels(int globalDeviceID);
+
     virtual const char* getInputDeviceName(int index) const = 0;
     virtual MidiBuffer getBuffer() = 0;
 
@@ -64,6 +72,7 @@ public:
 
 protected:
     QList<bool> inputDevicesEnabledStatuses;//stode the globally enabled midi input devices
+    int selectedChannel;//-1 to use all channels
 };
 
 }

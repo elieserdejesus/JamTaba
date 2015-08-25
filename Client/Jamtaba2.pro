@@ -1,12 +1,8 @@
-#removi um subchannel e crashow. Estava tocando um loop do addictve no canal2,
-        #sampletank no subchanel 2 e kontakt no 1
-
 #tentei fazer split com kontakt e 4front bass e não rolou. Os plugins recebem todos
     #os canais. Tenho que ver como o Reaper faz isso.
     #Será que eu não estou repassando a informação do canal midi recebido?
 
 #parece que o sampletank nem recebe minhas mensagens midi
-
 
 #não consegui fazer o spli de baixo e piano usando kontakt e sampletank. TEnho que ver isso
 
@@ -22,6 +18,8 @@
 #tocar em algumas Jams para ver se está rolando
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#removi um subchannel e crashow. O problema é o sampletank, quando removo um subnal com ele insertado dá pau.
 
 #Inseri o Mr ray. Parece que ele é o problema.
     #quando eu mando dados para ele processar explode o mundo.

@@ -309,7 +309,7 @@ void MainController::updateInputTracksRange(){
                     //try another available midi input device
                     int firstAvailableDevice = midiDriver->getFirstGloballyEnableInputDevice();
                     if(firstAvailableDevice >= 0){
-                        setInputTrackToMIDI(trackIndex, firstAvailableDevice);
+                        setInputTrackToMIDI(trackIndex, firstAvailableDevice, -1);//select all channels
                     }
                     else{
                         setInputTrackToNoInput(trackIndex);
@@ -403,11 +403,10 @@ void MainController::setInputTrackToStereo(int localChannelIndex, int firstInput
         }
     }
 }
-void MainController::setInputTrackToMIDI(int localChannelIndex, int midiDevice){
+void MainController::setInputTrackToMIDI(int localChannelIndex, int midiDevice, int midiChannel){
     Audio::LocalInputAudioNode* inputTrack = getInputTrack(localChannelIndex);
     if(inputTrack){
-        //midiDriver->setInputDeviceIndex(midiDevice);
-        inputTrack->setMidiInputSelection(midiDevice);
+        inputTrack->setMidiInputSelection(midiDevice, midiChannel);
         emit inputSelectionChanged(localChannelIndex);
         if(isPlayingInNinjamRoom()){
             if(ninjamController){
@@ -508,6 +507,7 @@ void MainController::removeTrack(long trackID){
 
     Audio::AudioNode* trackNode = tracksNodes[trackID];
     if(trackNode){
+        trackNode->suspendProcessors();
         audioMixer->removeNode(trackNode);
         tracksNodes.remove(trackID);
         delete trackNode;

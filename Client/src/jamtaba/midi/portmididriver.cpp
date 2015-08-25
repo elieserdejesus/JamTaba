@@ -100,6 +100,9 @@ MidiBuffer PortMidiDriver::getBuffer(){
                 PmEvent events[BUFFER_SIZE];
                 int eventsReaded = Pm_Read(stream, events, BUFFER_SIZE);
                 for(int e = 0; e < eventsReaded; ++e){
+                    //int status = Pm_MessageStatus(events[e].message);
+                    //int channel = status & 0x0000000F;
+                    //qWarning() << channel;
                     buffer.addMessage(MidiMessage(events[e].message, events[e].timestamp, globalDeviceID));
                 }
             }
@@ -109,8 +112,6 @@ MidiBuffer PortMidiDriver::getBuffer(){
     }
     return buffer;
 }
-
-
 
 void PortMidiDriver::stop(){
     foreach (PmStream* stream, streams) {

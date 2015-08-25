@@ -97,6 +97,7 @@ Persistence::InputsSettings MainFrame::getInputsSettings() const{
             int firstInput = inputNodeRange.getFirstChannel();
             int channelsCount = inputNodeRange.getChannels();
             int midiDevice = inputNode->getMidiDeviceIndex();
+            int midiChannel = inputNode->getMidiChannelIndex();
             float gain = Utils::poweredGainToLinear( inputNode->getGain() );
             float pan = inputNode->getPan();
             bool muted = inputNode->isMuted();
@@ -107,7 +108,7 @@ Persistence::InputsSettings MainFrame::getInputsSettings() const{
                 QByteArray serializedData = p->getSerializedData();
                 plugins.append(Persistence::Plugin(p->getPath(), p->isBypassed(), serializedData));
             }
-            Persistence::Subchannel sub(firstInput, channelsCount, midiDevice, gain, pan, muted, plugins);
+            Persistence::Subchannel sub(firstInput, channelsCount, midiDevice, midiChannel, gain, pan, muted, plugins);
 
             channel.subChannels.append(sub);
         }
@@ -268,12 +269,12 @@ void MainFrame::initializeLocalInputChannels(){
             if(subChannel.midiDevice >= 0){//using midi
                 //check if midiDevice index is valid
                 if(subChannel.midiDevice < mainController->getMidiDriver()->getMaxInputDevices()){
-                    mainController->setInputTrackToMIDI( subChannelView->getInputIndex(), subChannel.midiDevice);
+                    mainController->setInputTrackToMIDI( subChannelView->getInputIndex(), subChannel.midiDevice, subChannel.midiChannel);
                 }
                 else{
                     if(mainController->getMidiDriver()->hasInputDevices()){
-                        //use the first midi device
-                        mainController->setInputTrackToMIDI(subChannelView->getInputIndex(), 0);
+                        //use the first midi device and all channels
+                        mainController->setInputTrackToMIDI(subChannelView->getInputIndex(), 0, -1);
                     }
                     else{
                         mainController->setInputTrackToNoInput(subChannelView->getInputIndex());

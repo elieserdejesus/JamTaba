@@ -263,10 +263,18 @@ void LocalInputAudioNode::setToNoInput(){
     inputMode = DISABLED;
 }
 
-void LocalInputAudioNode::setMidiInputSelection(int midiDeviceIndex){
+void LocalInputAudioNode::setMidiInputSelection(int midiDeviceIndex, int midiChannelIndex){
     audioInputRange = ChannelRange(-1, 0);//disable audio input
     this->midiDeviceIndex = midiDeviceIndex;
+    this->midiChannelIndex = midiChannelIndex;
     inputMode = MIDI;
+}
+
+bool LocalInputAudioNode::isReceivingAllMidiChannels() const{
+    if(inputMode == MIDI){
+        return midiChannelIndex < 0 || midiChannelIndex > 16;
+    }
+    return false;
 }
 
 void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer){
@@ -297,9 +305,9 @@ void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffe
         else if(isMidi()){//just in case
             int total = midiBuffer.getMessagesCount();
             for (int m = 0; m < total; ++m) {
-                //qWarning() << midiBuffer.getMessage(m).globalSourceDeviceIndex << " " << midiDeviceIndex;
-                if( midiBuffer.getMessage(m).globalSourceDeviceIndex == midiDeviceIndex){
-                    filteredMidiBuffer.addMessage(midiBuffer.getMessage(m));
+                Midi::MidiMessage message = midiBuffer.getMessage(m);
+                if( message.globalSourceDeviceIndex == midiDeviceIndex && (isReceivingAllMidiChannels() || message.getChannel() == midiChannelIndex)){
+                    filteredMidiBuffer.addMessage(message);
                 }
             }
         }
