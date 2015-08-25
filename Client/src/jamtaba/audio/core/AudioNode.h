@@ -19,6 +19,8 @@ class AudioNodeProcessor{
 public:
     virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, const Midi::MidiBuffer& midiBuffer) = 0;
     virtual ~AudioNodeProcessor(){}
+    virtual void suspend() = 0;
+    virtual void resume() = 0;
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++
@@ -35,6 +37,8 @@ public:
     virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer &out, const Midi::MidiBuffer& midiBuffer);
     bool finished();
     void reset();
+    void resume(){}
+    void suspend(){}
 };
 //++++++++++++++++++++++++++++++++++++++++++++
 
@@ -57,6 +61,8 @@ public:
 
     void addProcessor(AudioNodeProcessor *newProcessor);
     void removeProcessor(AudioNodeProcessor* processor);
+    void suspendProcessors();
+    void resumeProcessors();
 
     inline void setGain(float gainValue){this->gain = gainValue;}
 

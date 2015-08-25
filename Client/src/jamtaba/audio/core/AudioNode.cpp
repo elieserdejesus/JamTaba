@@ -164,6 +164,18 @@ void AudioNode::removeProcessor(AudioNodeProcessor* processor){
     delete processor;
 }
 
+void AudioNode::suspendProcessors(){
+    foreach (AudioNodeProcessor* processor, processors) {
+        processor->suspend();
+    }
+}
+
+void AudioNode::resumeProcessors(){
+    foreach (AudioNodeProcessor* processor, processors) {
+        processor->resume();
+    }
+}
+
 //+++++++++++++++++++++++++++++++++++++++
 OscillatorAudioNode::OscillatorAudioNode(float frequency, int sampleRate)
     :

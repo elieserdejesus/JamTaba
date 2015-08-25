@@ -96,6 +96,9 @@ public:
 
     virtual QByteArray getSerializedData() const;
     virtual void restoreFromSerializedData(QByteArray data);
+
+    void suspend(){}
+    void resume(){}
 private:
     void setSampleRate(int newSampleRate);
 

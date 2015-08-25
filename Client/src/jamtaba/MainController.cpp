@@ -167,6 +167,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 
     QObject::connect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
     QObject::connect(this->audioDriver, SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
+    QObject::connect(this->audioDriver, SIGNAL(started()), this, SLOT(on_audioDriverStarted()));
 
     audioMixer = new Audio::AudioMixer(audioDriver->getSampleRate());
     roomStreamer = new Audio::RoomStreamerNode();//new Audio::AudioFileStreamerNode(":/teste.mp3");
@@ -829,6 +830,15 @@ void MainController::on_audioDriverSampleRateChanged(int newSampleRate){
     audioMixer->setSampleRate(newSampleRate);
 }
 
+void MainController::on_audioDriverStarted(){
+    vstHost->setSampleRate(audioDriver->getSampleRate());
+    vstHost->setBlockSize(audioDriver->getBufferSize());
+
+    foreach (Audio::LocalInputAudioNode* inputTrack, inputTracks) {
+        inputTrack->resumeProcessors();
+    }
+}
+
 void MainController::on_audioDriverStopped(){
     //threadHandle = nullptr;
     if(isPlayingInNinjamRoom()){
@@ -836,6 +846,10 @@ void MainController::on_audioDriverStopped(){
         foreach (int channelIndex, intervalsToUpload.keys()) {
             ninjamService->sendAudioIntervalPart(intervalsToUpload[channelIndex]->getGUID(), QByteArray(), true);
         }
+    }
+
+    foreach (Audio::LocalInputAudioNode* inputTrack, inputTracks) {
+        inputTrack->suspendProcessors();//suspend plugins
     }
 }
 

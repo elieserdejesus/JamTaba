@@ -1,13 +1,3 @@
-#desativei o addictive enquanto estava tocando e deu um rúido, não estou zerando os buffers
-
-#fui testar o addictive com a fast e parece que só funciona com buffer de 128? Quando
-    #dei o play no addictive com buffer de 256 ficou estranho. A mesma coisa com buffer de 256.
-        #Tenho que testar com a fast também.
-    #É um problema mais geral, talvez
-        #O problema fica evidente quando eu mudo a samplerate
-        #acho que eu preciso setar a samplerate e o block size no host, e acho
-            #que o host precisa avisar os plugins também
-
 #removi um subchannel e crashow. Estava tocando um loop do addictve no canal2,
         #sampletank no subchanel 2 e kontakt no 1
 

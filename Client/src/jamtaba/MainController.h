@@ -272,7 +272,7 @@ private slots:
     //audio driver
     void on_audioDriverSampleRateChanged(int newSampleRate);
     void on_audioDriverStopped();
-
+    void on_audioDriverStarted();
 };
 
 }

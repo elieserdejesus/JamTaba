@@ -28,7 +28,7 @@ class VstHost
 
 public:
     static VstHost* getInstance();
-    inline int getSampleRate() const {return sampleRate;}
+    int getSampleRate() const;// {return sampleRate;}
     inline int getBufferSize() const {return blockSize;}
     void setSampleRate(int sampleRate);
     void setBlockSize(int blockSize);
@@ -40,7 +40,7 @@ protected:
     static VstIntPtr VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index, VstInt32 value, void *ptr, float opt);
 private:
     VstTimeInfo vstTimeInfo;
-    int sampleRate;
+    //int sampleRate;
     int blockSize;
 
     void clearVstTimeInfoFlags();
