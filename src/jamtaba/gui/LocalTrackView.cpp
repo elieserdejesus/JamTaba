@@ -293,23 +293,54 @@ QMenu* LocalTrackView::createMidiInputsMenu(QMenu* parent){
     for (int d = 0; d < totalMidiDevices; ++d) {
         if(mainController->getMidiDriver()->deviceIsGloballyEnabled(d)){
             globallyEnabledMidiDevices++;
+            QMenu* midiChannelsMenu = new QMenu(midiInputsMenu);
+            QActionGroup* actionGroup = new QActionGroup(midiChannelsMenu);
+
+            QAction* allChannelsAction = midiChannelsMenu->addAction("All channels");
+            allChannelsAction->setData(QString(QString::number(d) + ":" + QString::number(-1)));//use -1 to all channels
+            allChannelsAction->setActionGroup(actionGroup);
+            allChannelsAction->setCheckable(true);
+            allChannelsAction->setChecked(getInputNode()->isMidi() && getInputNode()->getMidiDeviceIndex() == d && getInputNode()->isReceivingAllMidiChannels());
+
+            midiChannelsMenu->addSeparator();
+            for (int c = 0; c < 16; ++c) {
+                QAction* a = midiChannelsMenu->addAction("Channel " + QString::number(c+1));
+                a->setData(QString(QString::number(d) + ":" + QString::number(c)));//use device:channel_index as data
+                a->setActionGroup(actionGroup);
+                a->setCheckable(true);
+                a->setChecked(getInputNode()->isMidi() && getInputNode()->getMidiChannelIndex() == c && getInputNode()->getMidiDeviceIndex() == d);
+            }
+
             QAction* action = midiInputsMenu->addAction(QString(mainController->getMidiDriver()->getInputDeviceName(d)));
+            action->setMenu(midiChannelsMenu);
             action->setData(d);//using midi device index as action data
             action->setIcon(midiInputsMenu->icon());
+            QObject::connect(midiChannelsMenu, SIGNAL(triggered(QAction*)), this, SLOT(on_MidiInputDeviceSelected(QAction*)));
         }
     }
     midiInputsMenu->setEnabled(globallyEnabledMidiDevices > 0);
     if(!midiInputsMenu->isEnabled()){
         midiInputsMenu->setTitle( midiInputsMenu->title() + "  (no MIDI devices detected or enabled in 'Preferences' menu')" );
     }
-    QObject::connect(midiInputsMenu, SIGNAL(triggered(QAction*)), this, SLOT(on_MidiInputMenuSelected(QAction*)));
+    //QObject::connect(midiInputsMenu, SIGNAL(triggered(QAction*)), this, SLOT(on_MidiInputDeviceSelected(QAction*)));
     return midiInputsMenu;
 }
 
-void LocalTrackView::on_MidiInputMenuSelected(QAction *action){
-    int midiDeviceIndex = action->data().toInt();
-    mainController->setInputTrackToMIDI(getTrackID(), midiDeviceIndex);
-    //setUnlightStatus(false);
+void LocalTrackView::on_MidiInputDeviceSelected(QAction *action){
+    QString indexes = action->data().toString();
+    if(!indexes.contains(":")){
+        return;
+    }
+    QStringList indexesParts = indexes.split(":");
+    if(indexesParts.size() != 2){
+        return;
+    }
+    QString midiChannelString = indexesParts.at(1);
+    QString midiDeviceString = indexesParts.at(0);
+    int midiChannel = midiChannelString.toInt();
+    int midiDeviceIndex = midiDeviceString.toInt();
+
+    mainController->setInputTrackToMIDI(getTrackID(), midiDeviceIndex, midiChannel);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

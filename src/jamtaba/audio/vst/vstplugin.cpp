@@ -144,14 +144,16 @@ void VstPlugin::resume(){
     qCDebug(vst) << "Resuming " << getName() << "thread: " << QThread::currentThreadId();
     effect->dispatcher(effect, effMainsChanged, 0, 1, NULL, 0.0f);
 
+    effect->dispatcher(effect, effStartProcess, 0, 1, NULL, 0.0f);
 
 }
 
 void VstPlugin::suspend(){
     qCDebug(vst) << "Suspending " << getName() << "Thread: " << QThread::currentThreadId();
-    effect->dispatcher(effect, effMainsChanged, 0, 0, NULL, 0.0f);
 
-    getSerializedData();
+    effect->dispatcher(effect, effStopProcess, 0, 1, NULL, 0.0f);
+
+    effect->dispatcher(effect, effMainsChanged, 0, 0, NULL, 0.0f);
 }
 
 
@@ -185,17 +187,13 @@ void VstPlugin::start(){
 
     resume();
 
-    effect->dispatcher(effect, effStartProcess, 0, 1, NULL, 0.0f);
-
 
     //started = true;
 }
 
 VstPlugin::~VstPlugin()
 {
-    if(effect){
-        effect->dispatcher(effect, effStopProcess, 0, 1, NULL, 0.0f);
-    }
+
     qCDebug(vst) << getName() << " VSt plugin destructor ";
     unload();
     delete internalBuffer;
@@ -210,11 +208,11 @@ VstPlugin::~VstPlugin()
 void VstPlugin::unload(){
     qCDebug(vst) << "unloading VST plugin " << getName();
     if(effect){
-        effect->dispatcher(effect, effEditClose, 0, 0, NULL, 0);//fecha o editor
+        //effect->dispatcher(effect, effEditClose, 0, 0, NULL, 0);
 
         suspend();
+
         effect->dispatcher(effect, effClose, 0, 0, NULL, 0);
-        //delete effect;
         effect = nullptr;
     }
     if(pluginLib.isLoaded()){

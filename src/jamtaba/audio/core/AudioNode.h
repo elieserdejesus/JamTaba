@@ -145,9 +145,11 @@ public:
     bool isMidi() const;//{return midiDeviceIndex >= 0;}
     bool isAudio() const;
     void setAudioInputSelection(int firstChannelIndex, int channelCount);
-    void setMidiInputSelection(int midiDeviceIndex);
+    void setMidiInputSelection(int midiDeviceIndex, int midiChannelIndex);
     void setToNoInput();
     inline int getMidiDeviceIndex() const{return midiDeviceIndex;}
+    inline int getMidiChannelIndex() const{return midiChannelIndex;}
+    bool isReceivingAllMidiChannels() const;
     inline ChannelRange getAudioInputRange() const{return audioInputRange;}
     inline void setGlobalFirstInputIndex(int firstInputIndex){this->globalFirstInputIndex = firstInputIndex;}
     inline int getGroupChannelIndex() const {return channelIndex;}
@@ -161,6 +163,9 @@ private:
     //use the channels 2 and 3 (the second input pair in a multichannel audio interface)
 
     int midiDeviceIndex; //setted when user choose MIDI as input method
+    int midiChannelIndex;
+
+
     int channelIndex; //the group index (a group contain N LocalInputAudioNode instances)
 
     enum InputMode{ AUDIO, MIDI, DISABLED };

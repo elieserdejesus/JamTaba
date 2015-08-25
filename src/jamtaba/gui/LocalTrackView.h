@@ -71,7 +71,7 @@ private slots:
 
     void on_monoInputMenuSelected(QAction*);
     void on_stereoInputMenuSelected(QAction*);
-    void on_MidiInputMenuSelected(QAction*);
+    void on_MidiInputDeviceSelected(QAction*);
     void on_noInputMenuSelected();
 };
 
