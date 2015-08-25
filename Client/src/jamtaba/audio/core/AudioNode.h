@@ -58,13 +58,9 @@ public:
     void addProcessor(AudioNodeProcessor *newProcessor);
     void removeProcessor(AudioNodeProcessor* processor);
 
-    inline void setGain(float gainValue){
-        this->gain = gainValue;
-    }
+    inline void setGain(float gainValue){this->gain = gainValue;}
 
-    inline float getGain() const{
-        return gain;
-    }
+    inline float getGain() const{return gain;}
 
     void setPan(float pan);
     inline float getPan() const {return pan;}
