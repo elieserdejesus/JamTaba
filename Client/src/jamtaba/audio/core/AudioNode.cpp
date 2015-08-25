@@ -270,7 +270,9 @@ void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffe
 
     Midi::MidiBuffer filteredMidiBuffer(midiBuffer.getMessagesCount());
     internalInputBuffer.setFrameLenght(out.getFrameLenght());
+    internalOutputBuffer.setFrameLenght(out.getFrameLenght());
     internalInputBuffer.zero();
+    internalOutputBuffer.zero();
 
     if(!isNoInput()){
         if(isAudio()){//using audio input
