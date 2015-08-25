@@ -135,8 +135,16 @@ void VstPlugin::restoreFromSerializedData(QByteArray dataToRestore){
 }
 
 void VstPlugin::resume(){
+
+    qCDebug(vst) << "setting sample rate and block size";
+    effect->dispatcher(effect, effSetSampleRate, 0, 0, NULL, host->getSampleRate());
+    effect->dispatcher(effect, effSetBlockSize, 0, host->getBufferSize(), NULL, 0.0f);
+    //qCDebug(vst) << "sample rate and block size setted for " << getName();
+
     qCDebug(vst) << "Resuming " << getName() << "thread: " << QThread::currentThreadId();
     effect->dispatcher(effect, effMainsChanged, 0, 1, NULL, 0.0f);
+
+
 }
 
 void VstPlugin::suspend(){
@@ -162,10 +170,7 @@ void VstPlugin::start(){
     //qCDebug(vst) << "opening" << getName();
     effect->dispatcher(effect, effOpen, 0, 0, NULL, 0.0f);
     //qCDebug(vst) << getName() << "opened";
-    //qCDebug(vst) << "setting sample rate and block size";
-    effect->dispatcher(effect, effSetSampleRate, 0, 0, NULL, host->getSampleRate());
-    effect->dispatcher(effect, effSetBlockSize, 0, host->getBufferSize(), NULL, 0.0f);
-    //qCDebug(vst) << "sample rate and block size setted for " << getName();
+
 
     //qCDebug(vst) << "checking for plugin midi capabilities";
     wantMidi = (effect->dispatcher(effect, effCanDo, 0, 0, (void*)"receiveVstMidiEvent", 0) == 1);
