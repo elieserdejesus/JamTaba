@@ -53,6 +53,14 @@ public:
     virtual void resizeEvent(QResizeEvent*);
 
     Persistence::InputsSettings getInputsSettings() const;
+
+    inline int getChannelGroupsCount() const{return localChannels.size();}
+    inline QString getChannelGroupName(int index) const{return localChannels.at(index)->getGroupName();}
+    void highlightChannelGroup(int index) const;
+
+    void addChannelsGroup(QString name);
+    void removeChannelsGroup(int channelGroupIndex);
+
 private slots:
     void on_tabCloseRequest(int index);
     void on_tabChanged(int index);
@@ -82,10 +90,10 @@ private slots:
     void on_inputSelectionChanged(int inputTrackIndex);
 
     //add/remove channels
-    void on_toolButtonClicked();//show the channels menu
-    void on_addChannelClicked();//add a new channel (a group of subchannels)
-    void on_toolButtonMenuActionTriggered(QAction*);
-    void on_toolButtonMenuActionHovered(QAction*);//highlight the hovered channel
+    //void on_toolButtonClicked();//show the channels menu
+    //void on_addChannelClicked();//add a new channel (a group of subchannels)
+    //void on_toolButtonMenuActionTriggered(QAction*);
+    //void on_toolButtonMenuActionHovered(QAction*);//highlight the hovered channel
 
     //channel name changed
     void on_channelNameChanged();
@@ -138,7 +146,7 @@ private:
     QStringList getChannelsNames() const;
 
     LocalTrackGroupView* addLocalChannel(int channelGroupIndex, QString channelName, bool createFirstSubchannel);
-    void removeLocalChannel(int channelGroupIndex);
+
 };
 
 
