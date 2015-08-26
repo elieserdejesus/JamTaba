@@ -1,7 +1,6 @@
+
 #o lugar onde está o botão de adicionar canais será ocupado pelo botão de fechar a áre dos
     #controles locais
-
-#o botão listen resabilitado poderia ter borda mais clara, para ficar mais evidente que está desabilitado
 
 #parece que o sampletank nem recebe minhas mensagens midi
 

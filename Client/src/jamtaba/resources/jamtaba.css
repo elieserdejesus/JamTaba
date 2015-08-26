@@ -614,7 +614,7 @@ QPushButton:hover{
 QPushButton[enabled="false"]{
     background: none;
     color: rgba(0, 0, 0, 80);
-    border-color: rgba(0, 0, 0, 80);
+    border-color: rgba(0, 0, 0, 40);
 }
 
 QPushButton:hover#soloButton, QPushButton:hover#muteButton{
