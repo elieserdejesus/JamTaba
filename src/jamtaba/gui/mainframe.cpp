@@ -64,7 +64,7 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 
     QObject::connect(mainController, SIGNAL(inputSelectionChanged(int)), this, SLOT(on_inputSelectionChanged(int)));
 
-    QObject::connect( ui.toolButton, SIGNAL(clicked()), this, SLOT(on_toolButtonClicked()));
+    //QObject::connect( ui.toolButton, SIGNAL(clicked()), this, SLOT(on_toolButtonClicked()));
 
     QObject::connect(ui.xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
 
@@ -142,56 +142,56 @@ void MainFrame::on_RoomStreamerError(QString msg){
 }
 
 //++++++++++++++++++++++++=
-void MainFrame::on_toolButtonClicked(){
-    QMenu menu;
-    QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
-    QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(on_addChannelClicked()));
-    addChannelAction->setEnabled(localChannels.size() < 2);//at this moment users can't create more channels
-    if(localChannels.size() > 1){
-        menu.addSeparator();
-        for (int i = 2; i <= localChannels.size(); ++i) {
-            QString channelName = localChannels.at(i-1)->getGroupName();
-            QAction* action = menu.addAction(QIcon(":/images/less.png"), "Remove channel \"" + channelName + "\"");
-            action->setData( i-1 );//use channel index as action data
-        }
-    }
-    QObject::connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(on_toolButtonMenuActionTriggered(QAction*)));
-    QObject::connect(&menu, SIGNAL(hovered(QAction*)), this, SLOT(on_toolButtonMenuActionHovered(QAction*)));
-    QPoint pos = ui.toolButton->parentWidget()->mapToGlobal(ui.toolButton->pos() + QPoint(ui.toolButton->width(), 0));
+//void MainFrame::on_toolButtonClicked(){
+//    QMenu menu;
+//    QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
+//    QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(on_addChannelClicked()));
+//    addChannelAction->setEnabled(localChannels.size() < 2);//at this moment users can't create more channels
+//    if(localChannels.size() > 1){
+//        menu.addSeparator();
+//        for (int i = 2; i <= localChannels.size(); ++i) {
+//            QString channelName = localChannels.at(i-1)->getGroupName();
+//            QAction* action = menu.addAction(QIcon(":/images/less.png"), "Remove channel \"" + channelName + "\"");
+//            action->setData( i-1 );//use channel index as action data
+//        }
+//    }
+//    QObject::connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(on_toolButtonMenuActionTriggered(QAction*)));
+//    QObject::connect(&menu, SIGNAL(hovered(QAction*)), this, SLOT(on_toolButtonMenuActionHovered(QAction*)));
+//    QPoint pos = ui.toolButton->parentWidget()->mapToGlobal(ui.toolButton->pos() + QPoint(ui.toolButton->width(), 0));
 
-    menu.move( pos );
-    menu.exec();
-}
+//    menu.move( pos );
+//    menu.exec();
+//}
 
-void MainFrame::removeLocalChannel(int channelIndex){
-    if(channelIndex >= 0 && channelIndex < localChannels.size()){
-        TrackGroupView* channel = localChannels.at(channelIndex);
-        ui.localTracksLayout->removeWidget(channel);
-        localChannels.removeAt(channelIndex);
-        channel->deleteLater();
-        mainController->sendRemovedChannelMessage(channelIndex);
-        update();
-    }
-}
-
-void MainFrame::on_toolButtonMenuActionTriggered(QAction *action){
-    if(action->data().isValid()){//only remove actions contains valid data (the channel index)
-        int channelIndex = action->data().toInt();
-        removeLocalChannel(channelIndex);
-    }
-}
-void MainFrame::on_toolButtonMenuActionHovered(QAction *action){
-    if(action->data().isValid()){//only remove actions contains valid data (the channel index)
-        int channelIndex = action->data().toInt();
+void MainFrame::removeChannelsGroup(int channelIndex){
+    if(localChannels.size() > 1){//the first channel group can't be removed
         if(channelIndex >= 0 && channelIndex < localChannels.size()){
-            Highligther::getInstance()->highlight(localChannels.at(channelIndex));
+            TrackGroupView* channel = localChannels.at(channelIndex);
+            ui.localTracksLayout->removeWidget(channel);
+            localChannels.removeAt(channelIndex);
+            channel->deleteLater();
+            mainController->sendRemovedChannelMessage(channelIndex);
+            update();
         }
     }
 }
 
-void MainFrame::on_addChannelClicked(){
+//void MainFrame::on_toolButtonMenuActionTriggered(QAction *action){
+//    if(action->data().isValid()){//only remove actions contains valid data (the channel index)
+//        int channelIndex = action->data().toInt();
+//        removeLocalChannel(channelIndex);
+//    }
+//}
+
+void MainFrame::highlightChannelGroup(int index) const{
+    if(index >= 0 && index < localChannels.size()){
+        Highligther::getInstance()->highlight(localChannels.at(index));
+    }
+}
+
+void MainFrame::addChannelsGroup(QString name){
     int channelIndex = localChannels.size();
-    addLocalChannel( channelIndex, "new channel", true);
+    addLocalChannel( channelIndex, name, true);
     mainController->updateInputTracksRange();
     mainController->sendNewChannelsNames(getChannelsNames());
     if(mainController->isPlayingInNinjamRoom()){
@@ -238,7 +238,7 @@ void MainFrame::on_channelNameChanged(){
 }
 
 LocalTrackGroupView *MainFrame::addLocalChannel(int channelGroupIndex, QString channelName, bool createFirstSubchannel){
-    LocalTrackGroupView* localChannel = new LocalTrackGroupView(channelGroupIndex);
+    LocalTrackGroupView* localChannel = new LocalTrackGroupView(channelGroupIndex, this);
     QObject::connect(localChannel, SIGNAL(nameChanged()), this, SLOT(on_channelNameChanged()));
     localChannels.append( localChannel );
     localChannel->setGroupName(channelName);
@@ -465,6 +465,7 @@ void MainFrame::on_startingRoomStream(Login::RoomInfo roomInfo){
 }
 
 void MainFrame::on_stoppingRoomStream(Login::RoomInfo roomInfo){
+    Q_UNUSED(roomInfo)
     stopCurrentRoomStream();
 }
 

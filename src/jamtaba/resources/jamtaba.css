@@ -672,7 +672,7 @@ LocalTrackGroupView[highlighted="true"] {
 
 }
 
-LocalTrackGroupView  #toolButton, #leftPanel > #toolButton {
+LocalTrackGroupView  #toolButton {
     background-color: none;
     background-image: url(':/images/gear.png');
     background-repeat: none;
@@ -682,10 +682,9 @@ LocalTrackGroupView  #toolButton, #leftPanel > #toolButton {
     margin: 0px;
     width: 14px;
     height: 14px;
-
 }
 
-LocalTrackGroupView   #toolButton:hover, #leftPanel > #toolButton:hover {
+LocalTrackGroupView   #toolButton:hover{
     background-image: url(':/images/gear-hover.png');
 }
 /* ++++++++++++++++++++++++++++++++++ */

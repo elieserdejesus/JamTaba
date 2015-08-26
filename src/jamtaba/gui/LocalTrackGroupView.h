@@ -6,6 +6,7 @@
 class LocalTrackView;
 
 class QPushButton;
+class MainFrame;
 
 namespace Ui {
 class LocalTrackGroupView;
@@ -16,7 +17,7 @@ class LocalTrackGroupView : public TrackGroupView
 {
     Q_OBJECT
 public:
-    LocalTrackGroupView(int index);
+    LocalTrackGroupView(int index, MainFrame* mainFrame);
     ~LocalTrackGroupView();
     void refreshInputSelectionName(int inputTrackIndex);
     void refreshInputSelectionNames();
@@ -30,11 +31,19 @@ private:
     QPushButton* toolButton;
     static const int MAX_SUB_CHANNELS = 2;
     int index;
+    MainFrame* mainFrame;
+    bool eventFilter(QObject *target, QEvent *event);
 private slots:
     void on_toolButtonClicked();
-    void onAddSubChannelClicked();
-    void on_toolButtonActionHovered(QAction *action);
-    void on_toolButtonActionTriggered(QAction *action);
+
+    void on_addSubChannelClicked();
+    void on_addChannelClicked();
+
+    void on_removeSubchannelHovered();
+    void on_removeChannelHovered();
+
+    void on_removeSubChannelClicked();
+    void on_removeChannelClicked();
 
 };
 

@@ -25,12 +25,16 @@ void Highligther::highlight(QWidget *w){
     lastHighlightedWidget = w;
 }
 
-void Highligther::on_timerStopped(){
+void Highligther::stopHighlight(){
     if(lastHighlightedWidget){
         setWidgetHighlightStatus(lastHighlightedWidget, false);
         QObject::disconnect(lastHighlightedWidget, SIGNAL(destroyed(QObject*)), this, SLOT(on_objectDestroyed(QObject*)));
         lastHighlightedWidget = nullptr;
     }
+}
+
+void Highligther::on_timerStopped(){
+    stopHighlight();
 }
 
 void Highligther::on_objectDestroyed(QObject *ob){

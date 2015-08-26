@@ -15,6 +15,7 @@ public:
     static Highligther* getInstance();
 
     void highlight(QWidget*);
+    void stopHighlight();
 
 private slots:
     void on_timerStopped();

@@ -1,10 +1,9 @@
-#tentei fazer split com kontakt e 4front bass e não rolou. Os plugins recebem todos
-    #os canais. Tenho que ver como o Reaper faz isso.
-    #Será que eu não estou repassando a informação do canal midi recebido?
+#o lugar onde está o botão de adicionar canais será ocupado pelo botão de fechar a áre dos
+    #controles locais
+
+#o botão listen resabilitado poderia ter borda mais clara, para ficar mais evidente que está desabilitado
 
 #parece que o sampletank nem recebe minhas mensagens midi
-
-#não consegui fazer o spli de baixo e piano usando kontakt e sampletank. TEnho que ver isso
 
 #In the absence of the BOM, Unicode assumes that the string is big-endian.
     #O byte Order Mark (BOM) é um caractere que fica no início de um arquivo ou string
@@ -15,9 +14,14 @@
         #outra possibilidade - testar o latin. Será que o server pega algum encoding da máquina?
             #testar no meu server local e testar nos servers públicos para ver se o resultado é diferente
 
+#permitir que as seções sejam contraídas como no jamtaba 1
+
 #tocar em algumas Jams para ver se está rolando
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#não consegui fazer o evento LEAVe funcionar para desativar o highlight dos canais quando
+    #uso o menu para adicionar e remover canais e subcanais
 
 #removi um subchannel e crashow. O problema é o sampletank, quando removo um subnal com ele insertado dá pau.
 
