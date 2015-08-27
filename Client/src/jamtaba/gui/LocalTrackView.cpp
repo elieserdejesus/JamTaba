@@ -35,7 +35,8 @@ void LocalTrackView::init(int channelIndex, float initialGain, float initialPan,
     ui->mainLayout->addWidget( fxPanel );
 
     //create input panel in the bottom
-    ui->mainLayout->addSpacing(20);
+    fxSpacer = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Fixed);
+    ui->mainLayout->addSpacerItem(fxSpacer);
     this->inputPanel = createInputPanel();
     ui->mainLayout->addWidget(inputPanel);
 
@@ -52,6 +53,14 @@ void LocalTrackView::init(int channelIndex, float initialGain, float initialPan,
 
     setUnlightStatus(false);
 
+    faderOnly = false;
+}
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void LocalTrackView::setFaderOnlyMode(bool faderOnly){
+    BaseTrackView::setFaderOnlyMode(faderOnly);
+    fxPanel->setVisible(!faderOnly);
+    inputPanel->setVisible(!faderOnly);
+    fxSpacer->changeSize(20, faderOnly ? 0 : 20, QSizePolicy::Minimum, faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

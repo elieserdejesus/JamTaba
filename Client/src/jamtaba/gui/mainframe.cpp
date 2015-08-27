@@ -64,7 +64,7 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 
     QObject::connect(mainController, SIGNAL(inputSelectionChanged(int)), this, SLOT(on_inputSelectionChanged(int)));
 
-    //QObject::connect( ui.toolButton, SIGNAL(clicked()), this, SLOT(on_toolButtonClicked()));
+    QObject::connect( ui.localControlsCollapseButton, SIGNAL(clicked()), this, SLOT(on_localControlsCollapseButtonClicked()));
 
     QObject::connect(ui.xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
 
@@ -84,6 +84,16 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     foreach (LocalTrackGroupView* channel, localChannels) {
         channel->refreshInputSelectionNames();
     }
+}
+//++++++++++++++++++++++++=
+void MainFrame::on_localControlsCollapseButtonClicked(){
+    foreach (LocalTrackGroupView* channel, localChannels) {
+        channel->toggleFaderOnlyMode();
+    }
+    ui.labelSectionTitle->setVisible(!localChannels.first()->isFaderOnly());
+    //ui.localControlsCollapseButton->setVisible(false);
+    ui.xmitButton->setVisible(false);
+    //adjustSize();
 }
 //++++++++++++++++++++++++=
 Persistence::InputsSettings MainFrame::getInputsSettings() const{

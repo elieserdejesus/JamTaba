@@ -9,6 +9,7 @@ class FxPanel;
 class QFrame;
 class QPushButton;
 class QLabel;
+class QSpacerItem;
 
 namespace Audio {
 class Plugin;
@@ -37,9 +38,14 @@ public:
     QList<const Audio::Plugin*> getInsertedPlugins() const;
 
     virtual void setUnlightStatus(bool unlighted);
+
+    virtual void setFaderOnlyMode(bool faderOnly);
+    //virtual void toggleFaderOnlyMode();
+
 private:
     //int inputIndex;
     FxPanel* fxPanel;
+    QSpacerItem* fxSpacer;
     FxPanel* createFxPanel();
     QWidget* createInputPanel();
     QPushButton* createInputSelectionButton(QWidget* parent);
@@ -66,6 +72,7 @@ private:
     bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;
 
     void init(int channelIndex, float initialGain, float initialPan, bool muted);
+
 private slots:
     void on_inputSelectionButtonClicked();//build and show de input selection menu
 
