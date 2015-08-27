@@ -25,9 +25,35 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
 
     //add in static map
     trackViews.insert(trackID, this);
-
-
 }
+
+void BaseTrackView::setFaderOnlyMode(bool faderOnly){
+    if(this->faderOnly != faderOnly){
+        this->faderOnly = faderOnly;
+        //ui->faderPanel->setVisible(!this->faderOnly);
+        ui->topPanel->setVisible(!this->faderOnly);
+        ui->levelSlider->setVisible(!this->faderOnly);
+        ui->panSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
+        ui->panSpacer->invalidate();
+
+        QMargins margins = layout()->contentsMargins();
+        margins.setLeft(faderOnly ? 2 : 6);
+        margins.setRight(faderOnly ? 2 : 6);
+        layout()->setContentsMargins(margins);
+
+        updateGeometry();
+
+        setProperty("faderOnly", QVariant(faderOnly));
+        style()->unpolish(this);
+        style()->polish(this);
+
+    }
+}
+
+void BaseTrackView::toggleFaderOnlyMode(){
+    setFaderOnlyMode(!faderOnly);
+}
+
 
 void BaseTrackView::updatePeaks(){
     Audio::AudioPeak peak = mainController->getTrackPeak(getTrackID());
@@ -35,9 +61,14 @@ void BaseTrackView::updatePeaks(){
 }
 
 QSize BaseTrackView::sizeHint() const{
+    if(faderOnly){
+        int width = ui->faderPanel->sizeHint().width() + layout()->contentsMargins().left() + layout()->contentsMargins().right();
+        return QSize( width, height());
+    }
     if(narrowed){
         return QSize(NARROW_WIDTH, height());
     }
+
     return QSize(WIDE_WIDTH, height());
 }
 

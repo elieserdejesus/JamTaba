@@ -31,6 +31,10 @@
         <file>fader_shadow_horizontal_unlighted.png</file>
         <file>jt_0001.png</file>
         <file>off.png</file>
+        <file>mini arrow left.png</file>
+        <file>mini arrow right.png</file>
+        <file>mini arrow left hover.png</file>
+        <file>mini arrow right hover.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

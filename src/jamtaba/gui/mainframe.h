@@ -89,11 +89,8 @@ private slots:
     //input selection
     void on_inputSelectionChanged(int inputTrackIndex);
 
-    //add/remove channels
-    //void on_toolButtonClicked();//show the channels menu
-    //void on_addChannelClicked();//add a new channel (a group of subchannels)
-    //void on_toolButtonMenuActionTriggered(QAction*);
-    //void on_toolButtonMenuActionHovered(QAction*);//highlight the hovered channel
+    //collpse
+    void on_localControlsCollapseButtonClicked();
 
     //channel name changed
     void on_channelNameChanged();

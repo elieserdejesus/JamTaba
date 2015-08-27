@@ -45,7 +45,16 @@
     </property>
     <item>
      <widget class="QWidget" name="leftPanel" native="true">
-      <layout class="QGridLayout" name="gridLayout">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
        <property name="leftMargin">
         <number>6</number>
        </property>
@@ -55,30 +64,57 @@
        <property name="bottomMargin">
         <number>6</number>
        </property>
-       <item row="0" column="0">
-        <widget class="QLabel" name="labelSectionTitle">
+       <item>
+        <widget class="QWidget" name="widget" native="true">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>1</horstretch>
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="text">
-          <string>Your controls</string>
-         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="labelSectionTitle">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>1</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Your controls</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="localControlsCollapseButton">
+            <property name="toolTip">
+             <string>collapse/expand your controls ...</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QPushButton" name="toolButton">
-         <property name="toolTip">
-          <string>add or remove channels ...</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="2">
+       <item>
         <widget class="Line" name="line">
          <property name="autoFillBackground">
           <bool>false</bool>
@@ -91,11 +127,20 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2">
+       <item>
         <widget class="QWidget" name="localTracksWidget" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <layout class="QHBoxLayout" name="localTracksLayout">
           <property name="spacing">
            <number>3</number>
+          </property>
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
           </property>
           <property name="leftMargin">
            <number>0</number>
@@ -112,7 +157,7 @@
          </layout>
         </widget>
        </item>
-       <item row="3" column="0" colspan="2">
+       <item>
         <widget class="QPushButton" name="xmitButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">

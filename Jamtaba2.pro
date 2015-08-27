@@ -1,6 +1,4 @@
-
-#o lugar onde está o botão de adicionar canais será ocupado pelo botão de fechar a áre dos
-    #controles locais
+#implementar gravação dos audios? acho que isso é muito importante
 
 #parece que o sampletank nem recebe minhas mensagens midi
 
@@ -13,11 +11,18 @@
         #outra possibilidade - testar o latin. Será que o server pega algum encoding da máquina?
             #testar no meu server local e testar nos servers públicos para ver se o resultado é diferente
 
-#permitir que as seções sejam contraídas como no jamtaba 1
+
 
 #tocar em algumas Jams para ver se está rolando
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#features legais do Jamtaba 1
+    #server privado
+    #posso contrair o chat
+    #avisa se chegou mensagem quando o chat está contraído
+    #avisa quando chega mensagem se a aplicação está minimizada
+    #chord panel
 
 #não consegui fazer o evento LEAVe funcionar para desativar o highlight dos canais quando
     #uso o menu para adicionar e remover canais e subcanais

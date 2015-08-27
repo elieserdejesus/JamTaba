@@ -355,7 +355,7 @@ margin-top: 1ex;
 }
 
 /* títulos dos painéis principais */
-.QWidget#leftPanel > .QLabel, .QWidget#chatArea  > .QLabel, .QWidget#contentPanel > .QLabel{
+.QWidget#leftPanel .QLabel#labelSectionTitle, .QWidget#chatArea  > .QLabel, .QWidget#contentPanel > .QLabel{
 font-size: 10pt;
 color: rgb(190, 190, 190);
 qproperty-alignment: AlignCenter;
@@ -368,6 +368,32 @@ background-color: rgb(75, 75, 75);
 
 .QWidget#contentPanel > .QFrame{
 background-color: rgb(100, 100, 100);
+}
+
+QPushButton#localControlsCollapseButton{
+    border: none;
+    border-radius: 0px;
+    background: none;
+    max-width: 6px;
+    width: 6px;
+    background-repeat: none;
+    background-position: right center;
+}
+
+QPushButton#localControlsCollapseButton:!checked{
+   background-image: url(:/images/mini arrow left.png);
+}
+
+QPushButton#localControlsCollapseButton::hover:!checked{
+   background-image: url(:/images/mini arrow left hover.png);
+}
+
+QPushButton#localControlsCollapseButton:checked{
+   background-image: url(:/images/mini arrow right.png);
+   background-position: center center;
+}
+QPushButton#localControlsCollapseButton::hover:checked{
+   background-image: url(:/images/mini arrow right hover.png);
 }
 /* ------------------------------ */
 
@@ -667,6 +693,10 @@ TrackGroupView #groupNameField {
 
 
 /* LOCAL TRACK GROUP */
+LocalTrackGroupView{
+    border: none;
+}
+
 LocalTrackGroupView[highlighted="true"] {
     border: 1px solid white;
 
@@ -704,6 +734,11 @@ background-color: rgb(180, 180, 180);
 /*+++++++++++++++++++++++++++++++++++++++++++++++*/
 LocalTrackView, NinjamTrackView{
     border: none;
+}
+
+LocalTrackView[faderOnly="true"]{
+    background: none;
+
 }
 
 LocalTrackView[highlighted="true"]{
