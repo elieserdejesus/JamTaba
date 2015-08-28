@@ -56,15 +56,15 @@ public:
     QByteArray encodeLastPartOfInterval(uint channelIndex);
 
     void scheduleEncoderChangeForChannel(int channelIndex);
+    void removeEncoder(int groupChannelIndex);
 
     void setTransmitStatus(bool transmiting);
-
-
 
 signals:
     void currentBpiChanged(int newBpi);
     void currentBpmChanged(int newBpm);
     void intervalBeatChanged(int intervalBeat);
+    void startingNewInterval();
     void channelAdded(Ninjam::User user,   Ninjam::UserChannel channel, long channelID);
     void channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
     void channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
@@ -73,7 +73,6 @@ signals:
     void chatMsgReceived(Ninjam::User user, QString message);
 
     void encodedAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart);
-    //void audioAvailableToEncode(QList<float*>, quint8 channelIndex, bool isFirstPart, bool isLastPart);
 private:
     Controller::MainController* mainController;
     Audio::MetronomeTrackNode* metronomeTrackNode;

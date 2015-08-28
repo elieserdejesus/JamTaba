@@ -204,6 +204,13 @@ void NinjamController::setBpm(int newBpm){
     emit currentBpmChanged(currentBpm);
 }
 
+void NinjamController::removeEncoder(int groupChannelIndex){
+    QMutexLocker locker(&mutex);
+    if(encoders.contains(groupChannelIndex)){
+        encoders.remove(groupChannelIndex);
+    }
+}
+
 //+++++++++++++++++++++++++ THE MAIN LOGIC IS HERE  ++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
 
@@ -268,7 +275,7 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
                     mainController->mixGroupedInputs(channelIndex, inputMixBuffer);
 
                     //encoding is running in another thread to avoid slow down the audio thread
-                    encodingThread->addSamplesToEncode(inputMixBuffer, channelIndex, isFirstPart, isLastPart);
+                    encodingThread->addSamplesToEncode( inputMixBuffer, channelIndex, isFirstPart, isLastPart);
                 }
             }
         }
@@ -510,7 +517,7 @@ void NinjamController::handleNewInterval(){
             emit channelXmitChanged(track->getID(), trackIsPlaying);
         }
     }
-    //mainController->
+    emit startingNewInterval();
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::processScheduledChanges(){

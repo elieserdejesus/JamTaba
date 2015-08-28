@@ -1,4 +1,6 @@
-#implementar gravação dos audios? acho que isso é muito importante
+#criei um segundo e os audios foram gravados. Entretanto eu deletei o canal e os audios
+    #continuaram sendo gravados. O Encoder ainda está trabalhando?
+    #confirmei que o encoder realmente ainda está trabalhando quando o canal é removido
 
 #parece que o sampletank nem recebe minhas mensagens midi
 
@@ -22,7 +24,7 @@
     #posso contrair o chat
     #avisa se chegou mensagem quando o chat está contraído
     #avisa quando chega mensagem se a aplicação está minimizada
-    #chord panel
+    #chord panel - o reconhecimento de progressões ficou animal
 
 #não consegui fazer o evento LEAVe funcionar para desativar o highlight dos canais quando
     #uso o menu para adicionar e remover canais e subcanais
@@ -242,6 +244,8 @@ HEADERS += \
     src/jamtaba/MainController.h \
     src/jamtaba/JamtabaFactory.h \
     #--------------------------------
+    src/jamtaba/recorder/JamRecorder.h \
+    #--------------------------------
     src/jamtaba/ninjam/protocol/ServerMessageParser.h \
     src/jamtaba/ninjam/protocol/ServerMessages.h \
     src/jamtaba/ninjam/protocol/ClientMessages.h \
@@ -304,6 +308,8 @@ SOURCES += \
     src/jamtaba/audio/core/AudioMixer.cpp \
     src/jamtaba/audio/core/PortAudioDriver.cpp \
     src/jamtaba/audio/RoomStreamerNode.cpp \
+#------------------------------------------------
+    src/jamtaba/recorder/JamRecorder.cpp \
 #------------------------------------------------
     src/jamtaba/gui/widgets/PeakMeter.cpp \
     src/jamtaba/gui/widgets/WavePeakPanel.cpp \

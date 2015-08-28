@@ -180,6 +180,7 @@ void MainFrame::removeChannelsGroup(int channelIndex){
             ui.localTracksLayout->removeWidget(channel);
             localChannels.removeAt(channelIndex);
             channel->deleteLater();
+
             mainController->sendRemovedChannelMessage(channelIndex);
             update();
         }

@@ -56,6 +56,8 @@ public:
         groupedInputs.clear();
     }
 
+    inline bool isEmpty() const{return groupedInputs.empty();}
+
     void addInput(Audio::LocalInputAudioNode* input){
         groupedInputs.append(input);
     }
@@ -147,7 +149,8 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
       settings(settings),
 
       userNameChoosed(false),
-      loginService(factory->createLoginService())
+      loginService(factory->createLoginService()),
+      jamRecorder(nullptr)
 
 {
 
@@ -347,6 +350,10 @@ void MainController::removeInputTrackNode(int inputTrackIndex){
         int trackGroupIndex = inputTrack->getGroupChannelIndex();
         if(trackGroups.contains(trackGroupIndex)){
             trackGroups[trackGroupIndex]->removeInput(inputTrack);
+            if(trackGroups[trackGroupIndex]->isEmpty() ){
+                trackGroups.remove(trackGroupIndex);
+                //ninjamController->removeEncoder(trackGroupIndex);
+            }
         }
 
         inputTracks.removeAt(inputTrackIndex);
@@ -939,8 +946,13 @@ bool MainController::isPlayingInNinjamRoom() const{
 
 //++++++++++++= NINJAM ++++++++++++++++
 
+void MainController::on_newNinjamInterval(){
+    if(jamRecorder.isRecordingActivated()){
+        jamRecorder.newInterval();
+    }
+}
+
 void MainController::on_ninjamEncodedAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart){
-    Q_UNUSED(channelIndex);
 
     if(!ninjamService){
         qCritical() << "ninjamService nulo";
@@ -965,6 +977,10 @@ void MainController::on_ninjamEncodedAudioAvailableToSend(QByteArray encodedAudi
             upload->clear();
         }
     }
+
+    if(jamRecorder.isRecordingActivated()){
+        jamRecorder.appendLocalUserAudio(encodedAudio, channelIndex, isFirstPart, isLastPart);
+    }
 }
 
 void MainController::stopNinjamController(){
@@ -987,6 +1003,9 @@ void MainController::on_disconnectedFromNinjamServer(const Server &server){
     Q_UNUSED(server);
     stopNinjamController();
     emit exitedFromRoom(true);//normal disconnection
+    if(jamRecorder.isRecordingActivated()){
+        jamRecorder.stopRecording();
+    }
 }
 
 void MainController::on_connectedInNinjamServer(Ninjam::Server server){
@@ -996,6 +1015,7 @@ void MainController::on_connectedInNinjamServer(Ninjam::Server server){
     QObject::connect(ninjamController,
                      SIGNAL(encodedAudioAvailableToSend(QByteArray,quint8,bool,bool)),
                      this, SLOT(on_ninjamEncodedAudioAvailableToSend(QByteArray,quint8,bool,  bool)));
+    QObject::connect(ninjamController, SIGNAL(startingNewInterval()), this, SLOT(on_newNinjamInterval()));
 
    //emit event after start controller to create view widgets before start
     emit enteredInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers(), server.getMaxChannels()));
@@ -1003,11 +1023,8 @@ void MainController::on_connectedInNinjamServer(Ninjam::Server server){
     qCDebug(controllerMain) << "starting ninjamController...";
     ninjamController->start(server, transmiting);
     vstHost->setTempo(server.getBpm());
+
+    if(jamRecorder.isRecordingActivated()){
+        jamRecorder.startRecording(getUserName(), QDir("./"), server.getBpm(), server.getBpi(), getAudioDriverSampleRate());
+    }
 }
-
-
-//void MainController::checkThread(QString methodName) const{
-//    if(threadHandle && QThread::currentThreadId() != threadHandle ){
-//        qCritical() << "different Thread in " << methodName;
-//    }
-//}
