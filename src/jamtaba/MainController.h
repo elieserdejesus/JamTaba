@@ -16,6 +16,8 @@
 
 #include "../audio/samplesbufferrecorder.h"
 
+#include "../recorder/JamRecorder.h"
+
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(controllerMain)
@@ -188,8 +190,6 @@ public:
     int getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const;
 
     inline Vst::VstHost* getVstHost() const{return vstHost;}
-
-
 signals:
     void enteredInRoom(Login::RoomInfo room);
     void exitedFromRoom(bool error);
@@ -254,6 +254,7 @@ private:
 
     QString getUserEnvironmentString() const;
 
+    Recorder::JamRecorder jamRecorder;
     //SamplesBufferRecorder* recorder;
 
 private slots:
@@ -268,7 +269,7 @@ private slots:
     void on_disconnectedFromNinjamServer(const Ninjam::Server& server);
     void on_errorInNinjamServer(QString error);
     void on_ninjamEncodedAudioAvailableToSend(QByteArray, quint8 channelIndex, bool isFirstPart, bool isLastPart);
-    //void on_ninjamInputAvailableToEncode(const Audio::SamplesBuffer& inputBuffer, quint8 channelIndex);
+    void on_newNinjamInterval();
 
     //audio driver
     void on_audioDriverSampleRateChanged(int newSampleRate);
