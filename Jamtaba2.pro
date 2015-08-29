@@ -1,6 +1,18 @@
-#criei um segundo e os audios foram gravados. Entretanto eu deletei o canal e os audios
-    #continuaram sendo gravados. O Encoder ainda está trabalhando?
-    #confirmei que o encoder realmente ainda está trabalhando quando o canal é removido
+#quando carreguei o Addictive durante uma jam eu deixei de receber os streams dos canais.
+    #Eu teria que carregar os plugins em uma thread diferente para não comprometer a thread
+        #do qt, caso contrário o QTcpSocket vai parar.
+
+#continuar trabalhando nas preferências de gravação
+
+#problema no visual das pistas no ninjam, acho que tem a ver com a mudança que fiz
+    #para o Vus only. Acho que isso deveria estar somente nas pistas de entrada, acho que
+        #botei o código na classe base e esse é o problema.
+
+
+#abri o ogg gerado no reaper tocando o addictive e ele tem 134 kbps, acho que é muito para o ninjam
+    #quando rodei o arquivo no oggz mostrou um ogg overhead de 11%. É um valor maior
+    #do que outros oggs que testei, mas não sei se isso é bom ou ruim. Overhead costuma ser ruim.
+
 
 #parece que o sampletank nem recebe minhas mensagens midi
 
@@ -245,6 +257,7 @@ HEADERS += \
     src/jamtaba/JamtabaFactory.h \
     #--------------------------------
     src/jamtaba/recorder/JamRecorder.h \
+    src/jamtaba/recorder/ReaperProjectGenerator.h \
     #--------------------------------
     src/jamtaba/ninjam/protocol/ServerMessageParser.h \
     src/jamtaba/ninjam/protocol/ServerMessages.h \
@@ -310,6 +323,7 @@ SOURCES += \
     src/jamtaba/audio/RoomStreamerNode.cpp \
 #------------------------------------------------
     src/jamtaba/recorder/JamRecorder.cpp \
+    src/jamtaba/recorder/ReaperProjectGenerator.cpp \
 #------------------------------------------------
     src/jamtaba/gui/widgets/PeakMeter.cpp \
     src/jamtaba/gui/widgets/WavePeakPanel.cpp \

@@ -42,6 +42,7 @@ void VorbisEncoder::clearState(){
     ogg_stream_clear(&streamState);
     vorbis_block_clear(&block);
     vorbis_dsp_clear(&dspState);
+    outBuffer.clear();
 }
 
 VorbisEncoder::~VorbisEncoder() {

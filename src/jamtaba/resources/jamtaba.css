@@ -3,6 +3,16 @@ font-family: "Dialog";
 font-size: 9pt;
 }
 
+#recButton{
+    min-height: 32px;
+
+}
+#recButton:checked{
+    background-image: url(':/images/rec on.png');
+}
+#recButton:!checked{
+    background-image: url(':/images/rec on.png');
+}
 
 QMessageBox, QInputDialog{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
