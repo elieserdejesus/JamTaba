@@ -21,13 +21,7 @@ public:
     inline int getChannels() const{return info.channels;}
 //    inline int getTotalEncoded() const{return totalEncoded;}
 private:
-
-    //int totalEncoded;
-
     ogg_stream_state streamState; /* take physical pages, weld into a logical stream of packets */
-    //ogg_page         page; /* one Ogg bitstream page.  Vorbis packets are inside */
-    //ogg_packet       packet; /* one raw packet of data for decode */
-
     vorbis_info      info; /* struct that stores all the static vorbis bitstream settings */
     vorbis_comment   comment; /* struct that stores all the user comments */
 

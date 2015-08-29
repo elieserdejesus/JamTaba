@@ -1,4 +1,5 @@
 #include "MainController.h"
+#include "recorder/ReaperProjectGenerator.h"
 #include "audio/core/AudioDriver.h"
 #include "midi/portmididriver.h"
 #include "audio/core/PortAudioDriver.h"
@@ -150,7 +151,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 
       userNameChoosed(false),
       loginService(factory->createLoginService()),
-      jamRecorder(nullptr)
+      jamRecorder(new Recorder::ReaperProjectGenerator())
 
 {
 

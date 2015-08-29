@@ -65,7 +65,7 @@
         <number>6</number>
        </property>
        <item>
-        <widget class="QWidget" name="widget" native="true">
+        <widget class="QWidget" name="topWidget" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -366,6 +366,7 @@
     <addaction name="actionAudioPreferences"/>
     <addaction name="actionMidiPreferences"/>
     <addaction name="actionVstPreferences"/>
+    <addaction name="actionRecording"/>
    </widget>
    <addaction name="menuPreferences"/>
   </widget>
@@ -387,6 +388,11 @@
   <action name="actionVstPreferences">
    <property name="text">
     <string>VST Plugins ...</string>
+   </property>
+  </action>
+  <action name="actionRecording">
+   <property name="text">
+    <string>Recording ...</string>
    </property>
   </action>
  </widget>

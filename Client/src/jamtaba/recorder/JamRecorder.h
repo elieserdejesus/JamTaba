@@ -27,6 +27,8 @@ class JamAudioFile{
 public:
     JamAudioFile(QString path, uint intervalIndex);
     JamAudioFile();//default construtor to use this class in QMap and QList without pointers
+    inline uint getIntervalIndex() const{return intervalIndex;}
+    inline QString getPath() const{return path;}
 private:
     QString path;
     uint intervalIndex;
@@ -37,6 +39,9 @@ public:
     JamTrack(QString userName, quint8 channelIndex);
     JamTrack();//default construtor to use this class in QMap and QList without pointers
     void addAudioFile(QString path, int intervalIndex);
+    inline QString getUserName() const{return userName;}
+    inline quint8 getChannelIndex() const{return channelIndex;}
+    inline QList<JamAudioFile> getAudioFiles() const{return audioFiles;}
 private:
     QString userName;
     quint8 channelIndex;
@@ -55,6 +60,11 @@ public:
     //QString getJamAudioDirectoryName() const;
     //QDir getRecordingBaseDirectory() const;
     QString getAudioAbsolutePath() const{return audioPath;}
+    inline int getSampleRate() const{return sampleRate;}
+    inline int getBpm() const{return bpm;}
+    inline int getBpi() const{return bpi;}
+
+    QList<JamTrack> getJamTracks() const;
 private:
     int bpm;
     int bpi;
