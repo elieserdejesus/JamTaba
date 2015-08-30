@@ -20,7 +20,7 @@ public:
     void selectAudioTab();
     void selectMidiTab();
     void selectVstPluginsTab();
-
+    void selectRecordingTab();
 private slots:
     void on_comboFirstInput_currentIndexChanged(int);
     void on_comboFirstOutput_currentIndexChanged(int);
@@ -34,6 +34,10 @@ private slots:
     void on_buttonClearVstCache_clicked();
 
     void on_buttonScanVSTs_clicked();
+
+    void on_browseRecPathButton_clicked();
+
+    void on_recordingCheckBox_clicked();
 
 signals:
     void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
@@ -64,6 +68,9 @@ private:
     //void removeVstScanPath(QString path);
 
     //QMap<int, bool> midiInputsStatus;
+
+    //recording
+    void populateRecordingTab();
 };
 
 

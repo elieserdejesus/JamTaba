@@ -38,6 +38,7 @@
         <file>rec maginifier.png</file>
         <file>rec off.png</file>
         <file>rec on.png</file>
+        <file>translate.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

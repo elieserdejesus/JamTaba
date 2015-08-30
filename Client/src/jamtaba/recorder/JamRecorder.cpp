@@ -39,9 +39,7 @@ Jam::Jam(int bpm, int bpi, int sampleRate, QString jamName, QString baseDir)
     this->audioPath = jamDir.absoluteFilePath("audio");
 }
 
-Jam Jam::cloneToNewRecordPath(QString newRecordBasePath){
-    return Jam(bpm, bpi, sampleRate, name, newRecordBasePath);
-}
+//+++++++++++++++++++++++++++++++++++++++++++
 
 QList<JamTrack> Jam::getJamTracks() const{
     QList<JamTrack> tracks;
@@ -92,10 +90,9 @@ QString JamRecorder::buildAudioFileName(QString userName, quint8 channelIndex, i
 }
 
 JamRecorder::JamRecorder(JamMetadataWriter* jamMetadataWritter)
-    : jam(nullptr), jamMetadataWritter(jamMetadataWritter), globalIntervalIndex(0),
-      running(false), recordingActivated(false) {
+    : jam(nullptr), jamMetadataWritter(jamMetadataWritter), globalIntervalIndex(0), running(false){
 
-    this->recordingActivated = true;//just to test
+    //this->recordingActivated = true;//just to test
 }
 
 
@@ -121,31 +118,65 @@ void JamRecorder::appendLocalUserAudio(QByteArray encodedaudio, quint8 channelIn
     }
 }
 
+void JamRecorder::addRemoteUserAudio(QString userName, QByteArray encodedAudio, quint8 channelIndex){
+    if(!running){
+        qCCritical(recorder) << "Illegal state! Recorder is not running!";
+        return;
+    }
+    int intervalIndex = globalIntervalIndex;
+    QString audioFileName = buildAudioFileName(userName, channelIndex, intervalIndex);
+    QString audioFilePath = QDir(jam->getAudioAbsolutePath()).absoluteFilePath(audioFileName);
+    QtConcurrent::run(this, &JamRecorder::writeEncodedFile, encodedAudio, audioFilePath);
+    jam->addAudioFile(userName, channelIndex, audioFilePath, intervalIndex);
+}
+
 void JamRecorder::startRecording(QString localUser, QDir recordBasePath, int bpm, int bpi, int sampleRate){
     this->localUserName = localUser;
 
     this->currentJamName = getNewJamName();
+    if(this->jam){
+        delete this->jam;
+    }
     this->jam = new Jam(bpm, bpi, sampleRate, currentJamName, recordBasePath.absolutePath());
     this->running = true;
 }
 
-void JamRecorder::stopRecording() {
-    //        for (UserChannelKey key : fileChannels.keySet()) {
-    //        try {
-    //            fileChannels.get(key).close();
-    //        } catch (Exception e) {
-    //            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-    //        }
-    //    }
-    //    fileChannels.clear();
-    //    for (String userName : keysCache.keySet()) {
-    //        keysCache.get(userName).clear();
-    //    }
-    //    keysCache.clear();
-    if (recordingActivated) {
-        writeProjectFile();
+//these methods are called when the user change the preferences. All these methods start a new recording
+void JamRecorder::setBpi(int newBpi){
+    if(running){
+        stopRecording();
+        startRecording(localUserName, QDir(jam->getBaseDir()), jam->getBpm(), newBpi, jam->getSampleRate() );
     }
-    this->running = false;
+}
+
+void JamRecorder::setBpm(int newBpm){
+    if(running){
+        stopRecording();
+        startRecording(localUserName, QDir(jam->getBaseDir()), newBpm, jam->getBpi(), jam->getSampleRate() );
+    }
+}
+
+void JamRecorder::setRecordPath(QDir recordBasePath){
+    if(running){
+        stopRecording();
+        startRecording(localUserName, recordBasePath, jam->getBpm(), jam->getBpi(), jam->getSampleRate() );
+    }
+}
+
+void JamRecorder::setSampleRate(int newSampleRate){
+    if(running){
+        stopRecording();
+        startRecording(localUserName, QDir(jam->getBaseDir()), jam->getBpm(), jam->getBpi(), newSampleRate );
+    }
+}
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void JamRecorder::stopRecording() {
+    if(running){
+        writeProjectFile();
+        this->running = false;
+        this->globalIntervalIndex = 0;
+        this->localUserIntervals.clear();
+    }
 }
 
 
@@ -157,7 +188,7 @@ void JamRecorder::writeProjectFile() {
 
 
 void JamRecorder::newInterval() {
-    if (isRecordingActivated()) {
+    if (running) {
         globalIntervalIndex++;
         writeProjectFile();
     }
@@ -172,14 +203,5 @@ void JamRecorder::newInterval() {
     //            jam = jam.cloneToNewRecordPath(newPath);
     //            newPath = null;
     //        }
-}
-
-void JamRecorder::setRecordingPath(QDir newPath) {
-    this->newPath = newPath; //set the new path in the next interval
-}
-
-
-void JamRecorder::setRecordingStatus(bool status) {
-    this->recordingActivated = status;
 }
 

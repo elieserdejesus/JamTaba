@@ -5,6 +5,8 @@
 
 Q_LOGGING_CATEGORY(vorbisEncoder, "vorbis.encoder")
 
+const float VorbisEncoder::QUALITY = 0.32;
+
 VorbisEncoder::VorbisEncoder()
     :initialized(false)
 {
@@ -23,7 +25,7 @@ void VorbisEncoder::init(int channels, int sampleRate){
     qCDebug(vorbisEncoder) << "Initializing VorbisEncoder Thread:" << QThread::currentThreadId();
     vorbis_info_init(&info);
 
-    if(vorbis_encode_init_vbr(&info, (long) channels, (long) sampleRate, 0.4) != 0){
+    if(vorbis_encode_init_vbr(&info, (long) channels, (long) sampleRate, QUALITY) != 0){
         qCritical() << "vorbis encoder initialization error!";
     }
     vorbis_comment_init(&comment);

@@ -101,6 +101,32 @@ void MidiSettings::read(QJsonObject in){
         }
     }
 }
+//++++++++++++++++++++++++++++++
+RecordingSettings::RecordingSettings()
+    : SettingsObject("recording"), saveMultiTracksActivated(false), recordingPath(""){
+
+}
+
+void RecordingSettings::write(QJsonObject &out){
+    out["recordingPath"] = recordingPath;
+    out["recordActivated"] = saveMultiTracksActivated;
+}
+
+void RecordingSettings::read(QJsonObject in){
+    if(in.contains("recordingPath")){
+        recordingPath = in["recordingPath"].toString();
+        QDir dir(recordingPath);
+        if(!dir.exists()){
+            qWarning() << "Dir " << dir << " not exists, using the application directory to save multitracks!";
+            recordingPath = QApplication::applicationDirPath();
+        }
+    }
+    else{
+        recordingPath = QApplication::applicationDirPath();
+    }
+    saveMultiTracksActivated = getValueFromJson(in, "recordActivated", false);
+}
+
 
 //+++++++++++++++++++++++++++++
 MetronomeSettings::MetronomeSettings()
@@ -357,6 +383,7 @@ void Settings::load(){
     sections.append(&metronomeSettings);
     sections.append(&vstSettings);
     sections.append(&inputsSettings);
+    sections.append(&recordingSettings);
 
     QDir dir(fileDir);
     QString absolutePath = dir.absoluteFilePath(fileName);
@@ -404,6 +431,7 @@ void Settings::save(Persistence::InputsSettings inputsSettings){
     sections.append(&metronomeSettings);
     sections.append(&vstSettings);
     sections.append(&this->inputsSettings);
+    sections.append(&recordingSettings);
     //++++++++++++++++++++++++++
     QDir dir(fileDir);
     dir.mkpath(fileDir);

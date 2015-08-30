@@ -2,6 +2,9 @@
 #define CHATMESSAGEPANEL_H
 
 #include <QWidget>
+#include <QNetworkAccessManager>
+
+class QNetworkReply;
 
 namespace Ui {
 class ChatMessagePanel;
@@ -17,7 +20,13 @@ public:
     ChatMessagePanel(QWidget *parent, QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool drawBorder=true);
     ~ChatMessagePanel();
 
+private slots:
+    void on_translateButton_clicked();
+    void on_networkReplyFinished(QNetworkReply*);
+
 private:
+    QString originalText;
+    QString translatedText;
     Ui::ChatMessagePanel *ui;
     static QString colorToCSS(QColor);
     static QString replaceLinksInString(QString str);
@@ -25,6 +34,8 @@ private:
     static QString buildCssString(QColor bgColor, QColor textColor, bool drawBorder);
 
     void initialize(QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool drawBorder);
+
+    void setTranslatedMessage(QString translatedMessage);
 };
 
 #endif // CHATMESSAGEPANEL_H

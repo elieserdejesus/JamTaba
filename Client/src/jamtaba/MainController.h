@@ -178,7 +178,12 @@ public:
     void clearVstCache();
     void storeWindowSettings(bool maximized, QPointF location);
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize, QList<bool> midiInputStatus) ;
-    //void storeInputChannels()
+    void storeRecordingPath(QString newPath);
+    void storeRecordingMultiTracksStatus(bool savingMultiTracks);
+    inline bool isRecordingMultiTracksActivated() const{return settings.isSaveMultiTrackActivated();}
+
+    void saveEncodedAudio(QString userName, quint8 channelIndex, QByteArray encodedAudio);
+
 
     inline Audio::AbstractMp3Streamer* getRoomStreamer() const{return roomStreamer;}
 
@@ -269,6 +274,8 @@ private slots:
     void on_disconnectedFromNinjamServer(const Ninjam::Server& server);
     void on_errorInNinjamServer(QString error);
     void on_ninjamEncodedAudioAvailableToSend(QByteArray, quint8 channelIndex, bool isFirstPart, bool isLastPart);
+    void on_ninjamBpiChanged(int newBpi);
+    void on_ninjamBpmChanged(int newBpm);
     void on_newNinjamInterval();
 
     //audio driver

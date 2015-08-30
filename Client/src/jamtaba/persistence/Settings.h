@@ -84,6 +84,16 @@ public:
     QStringList scanPaths;
 };
 //++++++++++++++++++++++++
+class RecordingSettings  : public SettingsObject{
+public:
+    RecordingSettings();
+    void write(QJsonObject &out);
+    void read(QJsonObject in);
+    bool saveMultiTracksActivated;
+    QString recordingPath;
+};
+
+//++++++++++++++++++++++++
 
 class Plugin{
 public:
@@ -132,6 +142,7 @@ private:
     MetronomeSettings metronomeSettings;
     VstSettings vstSettings;
     InputsSettings inputsSettings;
+    RecordingSettings recordingSettings;
     QString lastUserName;//the nick name choosed by user
     int ninjamIntervalProgressShape;//Circle, Ellipe or Line
 public:
@@ -145,6 +156,12 @@ public:
 
     inline int getLastSampleRate() const{return audioSettings.sampleRate;}
     inline int getLastBufferSize() const{return audioSettings.bufferSize;}
+
+    //recording settings
+    inline bool isSaveMultiTrackActivated() const{return recordingSettings.saveMultiTracksActivated;}
+    inline QString getRecordingPath() const{return recordingSettings.recordingPath;}
+    inline void setSaveMultiTrack(bool saveMultiTracks){recordingSettings.saveMultiTracksActivated = saveMultiTracks;}
+    inline void setRecordingPath(QString newPath) {recordingSettings.recordingPath = newPath;}
 
     //user name
     inline QString getUserName() const{return lastUserName;}

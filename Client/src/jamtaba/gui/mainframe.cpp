@@ -711,8 +711,11 @@ void MainFrame::on_preferencesClicked(QAction* action)
     else if(action == ui.actionMidiPreferences){
         dialog.selectMidiTab();
     }
-    else{
+    else if(action == ui.actionVstPreferences){
         dialog.selectVstPluginsTab();
+    }
+    else{
+        dialog.selectRecordingTab();
     }
     connect(&dialog, SIGNAL(ioPreferencesChanged(QList<bool>,int,int,int,int,int,int,int)), this, SLOT(on_IOPreferencesChanged(QList<bool>,int,int,int,int,int,int,int)));
     int result = dialog.exec();
@@ -722,6 +725,8 @@ void MainFrame::on_preferencesClicked(QAction* action)
     }
 
     //audio driver parameters are changed in on_IOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.
+
+
 }
 
 void MainFrame::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize){

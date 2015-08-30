@@ -97,4 +97,44 @@ CRITICAL: Não conseguiu abrir o arquivo  () [:0]
 
 WARNING: Destrutor LocalInputAudioNode () [:0]
 
+
+
+CRITICAL: Não conseguiu abrir o arquivo  () [:0]
+
+
+
+
+WARNING: restoring plugin data () [:0]
+
+
+
+WARNING: Thread da GUI:  0xfd0 () [:0]
+
+
+
+INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
+
+
+
+
+CRITICAL: Não conseguiu abrir o arquivo  () [:0]
+
+
+
+
+CRITICAL: Não conseguiu abrir o arquivo  () [:0]
+
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
+
+
+WARNING: Destrutor LocalInputAudioNode () [:0]
+
 
