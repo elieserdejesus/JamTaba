@@ -51,18 +51,17 @@ private:
 class Jam {
 public:
     Jam(int bpm, int bpi, int sampleRate, QString jamName, QString baseDir);
-    Jam cloneToNewRecordPath(QString newRecordBasePath);
+
     double getIntervalsLenght();
 
     //called when a new file is writed in disk
     void addAudioFile(QString userName, quint8 channelIndex, QString filePath, int intervalIndex);
-    //QDir getResolvedJamAudioDirectory() const;
-    //QString getJamAudioDirectoryName() const;
-    //QDir getRecordingBaseDirectory() const;
     QString getAudioAbsolutePath() const{return audioPath;}
     inline int getSampleRate() const{return sampleRate;}
     inline int getBpm() const{return bpm;}
     inline int getBpi() const{return bpi;}
+
+    inline QString getBaseDir() const{return baseDir;}
 
     QList<JamTrack> getJamTracks() const;
 private:
@@ -106,13 +105,18 @@ class JamRecorder {
 public:
     JamRecorder(JamMetadataWriter* jamMetadataWritter);
     void appendLocalUserAudio(QByteArray encodedaudio, quint8 channelIndex, bool isFirstPartOfInterval, bool isLastPastOfInterval);
+    void addRemoteUserAudio(QString userName, QByteArray encodedAudio, quint8 channelIndex);
     void startRecording(QString localUser, QDir recordBasePath, int bpm, int bpi, int sampleRate);
+
+    //these methods start a new recording
+    void setRecordPath(QDir recordBasePath);
+    void setBpm(int newBpm);
+    void setBpi(int newBpi);
+    void setSampleRate(int newSampleRate);
+
     void stopRecording() ;
     void newInterval();
-    void setRecordingPath(QDir newPath);
-    //inline QDir getRecordingPath() const{return jam->getRecordingBaseDirectory();}
-    void setRecordingStatus(bool status);
-    inline bool isRecordingActivated() const{return recordingActivated;}
+
 private:
     QString currentJamName;
     Jam* jam;
@@ -120,7 +124,7 @@ private:
     int globalIntervalIndex;
     QString localUserName;
     bool running;
-    bool recordingActivated;
+    //bool recordingActivated;
     QDir newPath;//used to set the newPath in the next interval
 
     QMap<quint8, NinjamInterval> localUserIntervals;//use channel index as key and store encoded bytes. When a full interval is stored the encoded bytes are store in a ogg file.

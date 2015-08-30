@@ -392,8 +392,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>348</width>
-               <height>210</height>
+               <width>60</width>
+               <height>165</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -457,7 +457,7 @@
        <item row="1" column="1">
         <widget class="QLineEdit" name="recordPathLineEdit">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -471,7 +471,7 @@
        <item row="0" column="0" colspan="3">
         <widget class="QCheckBox" name="recordingCheckBox">
          <property name="text">
-          <string>Recording</string>
+          <string>Save multi tracks </string>
          </property>
         </widget>
        </item>

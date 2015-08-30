@@ -1,17 +1,18 @@
+#implementar tradução no chat seria um diferencial legal e é rápido de fazer
+
+#testar a gravação em uma sala pública
+
+#tem algum problema no meu mono. Quando escolho mono input fica só um VU.
+
 #quando carreguei o Addictive durante uma jam eu deixei de receber os streams dos canais.
     #Eu teria que carregar os plugins em uma thread diferente para não comprometer a thread
         #do qt, caso contrário o QTcpSocket vai parar.
 
-#continuar trabalhando nas preferências de gravação
 
 #problema no visual das pistas no ninjam, acho que tem a ver com a mudança que fiz
     #para o Vus only. Acho que isso deveria estar somente nas pistas de entrada, acho que
         #botei o código na classe base e esse é o problema.
 
-
-#abri o ogg gerado no reaper tocando o addictive e ele tem 134 kbps, acho que é muito para o ninjam
-    #quando rodei o arquivo no oggz mostrou um ogg overhead de 11%. É um valor maior
-    #do que outros oggs que testei, mas não sei se isso é bom ou ruim. Overhead costuma ser ruim.
 
 
 #parece que o sampletank nem recebe minhas mensagens midi
@@ -30,6 +31,9 @@
 #tocar em algumas Jams para ver se está rolando
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#quando troco de bpi ou bpm o primeiro intervalo gravado aparece offline. Tem um erro no parsing do ogg. Devo
+    #estar escrevendo alguma coisa errada no arquivo quando inicia uma nova gravação.
 
 #features legais do Jamtaba 1
     #server privado

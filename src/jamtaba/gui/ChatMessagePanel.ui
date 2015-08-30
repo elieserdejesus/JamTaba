@@ -88,9 +88,29 @@
      </property>
     </widget>
    </item>
+   <item alignment="Qt::AlignTop">
+    <widget class="QPushButton" name="translateButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>translate ...</string>
+     </property>
+     <property name="text">
+      <string>T</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
   <zorder>labelMessage</zorder>
   <zorder>labelUserName</zorder>
+  <zorder>translateButton</zorder>
  </widget>
  <resources/>
  <connections/>

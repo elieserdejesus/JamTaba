@@ -21,6 +21,7 @@ public:
     inline int getChannels() const{return info.channels;}
 //    inline int getTotalEncoded() const{return totalEncoded;}
 private:
+    static const float QUALITY;// = 0.32;//vorbis default quality is 0.3
     ogg_stream_state streamState; /* take physical pages, weld into a logical stream of packets */
     vorbis_info      info; /* struct that stores all the static vorbis bitstream settings */
     vorbis_comment   comment; /* struct that stores all the user comments */

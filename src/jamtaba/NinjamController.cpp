@@ -588,6 +588,11 @@ void NinjamController::on_ninjamServerBpmChanged(short newBpm){
 }
 
 void NinjamController::on_ninjamAudiointervalCompleted(Ninjam::User user, int channelIndex, QByteArray encodedAudioData){
+
+    if(mainController->isRecordingMultiTracksActivated()){
+        mainController->saveEncodedAudio(user.getFullName(), channelIndex, encodedAudioData);
+    }
+
     //qDebug() << "audio available  Thread ID: " << QThread::currentThreadId();
     Ninjam::UserChannel channel = user.getChannel(channelIndex);
     QString channelKey = getUniqueKey(channel);

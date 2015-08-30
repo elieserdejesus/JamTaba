@@ -323,6 +323,15 @@ void MainController::updateInputTracksRange(){
         }
     }
 }
+//++++++++++++++++++++++++
+//this method is called when a new ninjam interval is received and the 'record multi track' option is enabled
+void MainController::saveEncodedAudio(QString userName, quint8 channelIndex, QByteArray encodedAudio){
+    if(settings.isSaveMultiTrackActivated()){//just in case
+        jamRecorder.addRemoteUserAudio(userName, encodedAudio, channelIndex);
+    }
+}
+
+//+++++++++++++++++++++=
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //bool MainController::audioMonoInputIsFreeToSelect(int inputIndexInAudioDevice) const{
 //    foreach (Audio::LocalInputAudioNode* inputTrack, inputTracks) {
@@ -468,6 +477,20 @@ bool MainController::addTrack(long trackID, Audio::AudioNode* trackNode){
 }
 
 //+++++++++++++++  SETTINGS +++++++++++
+void MainController::storeRecordingMultiTracksStatus(bool savingMultiTracks){
+    if(settings.isSaveMultiTrackActivated() && !savingMultiTracks){//user is disabling recording multi tracks?
+        jamRecorder.stopRecording();
+    }
+    settings.setSaveMultiTrack(savingMultiTracks);
+}
+
+void MainController::storeRecordingPath(QString newPath){
+    settings.setRecordingPath(newPath);
+    if(settings.isSaveMultiTrackActivated()){
+        jamRecorder.setRecordPath(newPath);
+    }
+}
+//---------------------------------
 void MainController::storeMetronomeSettings(float metronomeGain, float metronomePan, bool metronomeMuted){
     settings.setMetronomeSettings(metronomeGain, metronomePan, metronomeMuted);
 }
@@ -836,6 +859,10 @@ void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStrin
 void MainController::on_audioDriverSampleRateChanged(int newSampleRate){
     vstHost->setSampleRate(newSampleRate);
     audioMixer->setSampleRate(newSampleRate);
+
+    if(settings.isSaveMultiTrackActivated()){
+        jamRecorder.setSampleRate(newSampleRate);
+    }
 }
 
 void MainController::on_audioDriverStarted(){
@@ -854,11 +881,14 @@ void MainController::on_audioDriverStopped(){
         foreach (int channelIndex, intervalsToUpload.keys()) {
             ninjamService->sendAudioIntervalPart(intervalsToUpload[channelIndex]->getGUID(), QByteArray(), true);
         }
+
     }
 
     foreach (Audio::LocalInputAudioNode* inputTrack, inputTracks) {
         inputTrack->suspendProcessors();//suspend plugins
     }
+
+
 }
 
 void MainController::start()
@@ -948,8 +978,20 @@ bool MainController::isPlayingInNinjamRoom() const{
 //++++++++++++= NINJAM ++++++++++++++++
 
 void MainController::on_newNinjamInterval(){
-    if(jamRecorder.isRecordingActivated()){
+    if(settings.isSaveMultiTrackActivated()){
         jamRecorder.newInterval();
+    }
+}
+
+void MainController::on_ninjamBpiChanged(int newBpi){
+    if(settings.isSaveMultiTrackActivated()){
+        jamRecorder.setBpi(newBpi);
+    }
+}
+
+void MainController::on_ninjamBpmChanged(int newBpm){
+    if(settings.isSaveMultiTrackActivated()){
+        jamRecorder.setBpm(newBpm);
     }
 }
 
@@ -979,7 +1021,7 @@ void MainController::on_ninjamEncodedAudioAvailableToSend(QByteArray encodedAudi
         }
     }
 
-    if(jamRecorder.isRecordingActivated()){
+    if(settings.isSaveMultiTrackActivated()){
         jamRecorder.appendLocalUserAudio(encodedAudio, channelIndex, isFirstPart, isLastPart);
     }
 }
@@ -1004,7 +1046,7 @@ void MainController::on_disconnectedFromNinjamServer(const Server &server){
     Q_UNUSED(server);
     stopNinjamController();
     emit exitedFromRoom(true);//normal disconnection
-    if(jamRecorder.isRecordingActivated()){
+    if(settings.isSaveMultiTrackActivated()){
         jamRecorder.stopRecording();
     }
 }
@@ -1017,6 +1059,8 @@ void MainController::on_connectedInNinjamServer(Ninjam::Server server){
                      SIGNAL(encodedAudioAvailableToSend(QByteArray,quint8,bool,bool)),
                      this, SLOT(on_ninjamEncodedAudioAvailableToSend(QByteArray,quint8,bool,  bool)));
     QObject::connect(ninjamController, SIGNAL(startingNewInterval()), this, SLOT(on_newNinjamInterval()));
+    QObject::connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(on_ninjamBpiChanged(int)));
+    QObject::connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(on_ninjamBpmChanged(int)));
 
    //emit event after start controller to create view widgets before start
     emit enteredInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers(), server.getMaxChannels()));
@@ -1025,7 +1069,7 @@ void MainController::on_connectedInNinjamServer(Ninjam::Server server){
     ninjamController->start(server, transmiting);
     vstHost->setTempo(server.getBpm());
 
-    if(jamRecorder.isRecordingActivated()){
-        jamRecorder.startRecording(getUserName(), QDir("./"), server.getBpm(), server.getBpi(), getAudioDriverSampleRate());
+    if(settings.isSaveMultiTrackActivated()){
+        jamRecorder.startRecording(getUserName(), QDir(settings.getRecordingPath()), server.getBpm(), server.getBpi(), getAudioDriverSampleRate());
     }
 }

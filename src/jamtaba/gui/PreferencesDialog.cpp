@@ -24,9 +24,11 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
 
     ui->comboLastOutput->setEnabled(false);
 
-    ui->prefsTab->setCurrentIndex(0);
+    //selectAudioTab();
+    //ui->prefsTab->setCurrentIndex(0);
     populateAudioTab();
     populateMidiTab();
+    populateRecordingTab();
 }
 
 void PreferencesDialog::selectAudioTab(){
@@ -38,6 +40,11 @@ void PreferencesDialog::selectMidiTab(){
 }
 void PreferencesDialog::selectVstPluginsTab(){
     ui->prefsTab->setCurrentWidget(ui->tabVST);
+}
+
+void PreferencesDialog::selectRecordingTab(){
+    ui->prefsTab->setCurrentWidget(ui->tabRecording);
+    //populateRecordingTab();
 }
 
 
@@ -92,6 +99,14 @@ void PreferencesDialog::populateVstTab(){
     foreach (QString path, paths) {
         createWidgetsToNewScanPath(path);
     }
+}
+
+void PreferencesDialog::populateRecordingTab(){
+    QString recordingPath = mainController->getSettings().getRecordingPath();
+    QDir recordDir(recordingPath);
+    bool isSaveMultiTrackActivated = mainController->getSettings().isSaveMultiTrackActivated();
+    ui->recordingCheckBox->setChecked(isSaveMultiTrackActivated);
+    ui->recordPathLineEdit->setText(recordDir.absolutePath());
 }
 
 PreferencesDialog::~PreferencesDialog()
@@ -262,6 +277,7 @@ void PreferencesDialog::on_prefsTab_currentChanged(int index)
         case 0: populateAudioTab(); break;
         case 1: populateMidiTab(); break;
         case 2: populateVstTab(); break;
+        case 3: populateRecordingTab(); break;
     }
 }
 
@@ -316,23 +332,6 @@ void PreferencesDialog::addVstScanPath(QString path){
     mainController->addVstScanPath(path);
 }
 
-//void PreferencesDialog::clearLayout(QLayout* layout, bool deleteWidgets)
-//{
-//    while (QLayoutItem* item = layout->takeAt(0))
-//    {
-//        if (deleteWidgets)
-//        {
-//            if (QWidget* widget = item->widget())
-//                delete widget;
-//        }
-//        if (QLayout* childLayout = item->layout())
-//            clearLayout(childLayout, deleteWidgets);
-//        delete item;
-//    }
-//}
-
-
-
 void PreferencesDialog::on_buttonClearVstCache_clicked()
 {
     mainController->clearVstCache();
@@ -345,4 +344,19 @@ void PreferencesDialog::on_buttonScanVSTs_clicked()
     }
 }
 
+//Recording TAB controls --------------------
+void PreferencesDialog::on_browseRecPathButton_clicked(){
+    QFileDialog fileDialog(this, "Choosing recording path ...");
+    fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
+    fileDialog.setFileMode(QFileDialog::DirectoryOnly);
+    if(fileDialog.exec() ){
+        QDir dir = fileDialog.directory();
+        mainController->storeRecordingPath(dir.absolutePath());
+        ui->recordPathLineEdit->setText(dir.absolutePath());
+    }
+}
 
+void PreferencesDialog::on_recordingCheckBox_clicked(){
+    mainController->storeRecordingMultiTracksStatus( ui->recordingCheckBox->isChecked());
+}
+//+++++++++++++++++++++++++++

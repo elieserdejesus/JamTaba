@@ -21,9 +21,9 @@ void ReaperProjectGenerator::write(Jam jam){
         stringBuffer.append("    TRACKID " + trackGUID).append("\n");
         QList<JamAudioFile> channelAudioFiles = track.getAudioFiles();
         int part = 1;
-        for (JamAudioFile audioChunk : channelAudioFiles) {
-            double position = audioChunk.getIntervalIndex() * jam.getIntervalsLenght();
-            QString filePath = audioChunk.getPath();
+        for (JamAudioFile audioFile : channelAudioFiles) {
+            double position = (audioFile.getIntervalIndex()-1) * jam.getIntervalsLenght();
+            QString filePath = audioFile.getPath();
             stringBuffer.append("    <ITEM").append("\n");
             stringBuffer.append("      POSITION " + QString::number(position)).append("\n");
             stringBuffer.append("      LENGTH " + QString::number(jam.getIntervalsLenght())).append("\n");
@@ -31,7 +31,7 @@ void ReaperProjectGenerator::write(Jam jam){
             stringBuffer.append("      FADEOUT 1 0.01 0 1 0 0").append("\n");
             stringBuffer.append("      IID " + QString::number(part)).append("\n");
             stringBuffer.append("      IGUID "+ QUuid::createUuid().toString()).append("\n");
-            stringBuffer.append("      NAME \"" + QFileInfo(audioChunk.getPath()).baseName() + "\"").append("\n");
+            stringBuffer.append("      NAME \"" + QFileInfo(audioFile.getPath()).baseName() + "\"").append("\n");
             stringBuffer.append("      GUID "+ trackGUID).append("\n");
             stringBuffer.append("      <SOURCE VORBIS").append("\n");
             stringBuffer.append("        FILE \"" + filePath + "\"").append("\n");
