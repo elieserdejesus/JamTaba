@@ -1,13 +1,11 @@
-#implementar tradução no chat seria um diferencial legal e é rápido de fazer
-
-#testar a gravação em uma sala pública
-
-#tem algum problema no meu mono. Quando escolho mono input fica só um VU.
+#o metronomo também estava estranho. Alguma coisa relacionada com o mono? Ver se arrumou, meni no método set do SamplesBuffer
 
 #quando carreguei o Addictive durante uma jam eu deixei de receber os streams dos canais.
     #Eu teria que carregar os plugins em uma thread diferente para não comprometer a thread
         #do qt, caso contrário o QTcpSocket vai parar.
 
+
+#comentei o método de conexão com o server - tenho que descomentar
 
 #problema no visual das pistas no ninjam, acho que tem a ver com a mudança que fiz
     #para o Vus only. Acho que isso deveria estar somente nas pistas de entrada, acho que
