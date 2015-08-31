@@ -50,7 +50,8 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     busyDialog(0),
     mainController(mainController),
     pluginScanDialog(nullptr),
-    ninjamWindow(nullptr)
+    ninjamWindow(nullptr),
+    roomToJump(nullptr)
 {
 	ui.setupUi(this);
     initializeWindowState();//window size, maximization ...
@@ -568,11 +569,6 @@ void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo){
         mainController->stopRoomStream();
     }
 
-
-    if(mainController->isPlayingInNinjamRoom()){
-        mainController->stopNinjamController();//disconnect from current ninjam server
-    }
-
     if(!mainController->userNameWasChoosed()){
         bool ok;
         QString lastUserName = mainController->getUserName();
@@ -583,7 +579,12 @@ void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo){
         }
     }
 
-    if(mainController->userNameWasChoosed()){
+    if(mainController->isPlayingInNinjamRoom()){
+        mainController->stopNinjamController();//disconnect from current ninjam server
+        //store the room to jump and wait for disconnectedFromServer event to connect in this new room
+        roomToJump = new Login::RoomInfo(roomInfo);
+    }
+    else if(mainController->userNameWasChoosed()){
         showBusyDialog("Connecting in " + roomInfo.getName() + " ...");
         mainController->enterInRoom(roomInfo, getChannelsNames());
     }
@@ -642,6 +643,14 @@ void MainFrame::on_exitedFromRoom(bool normalDisconnection){
 
     if(!normalDisconnection){
         QMessageBox::warning(this, "Warning", "Disconnected from server!", QMessageBox::NoButton, QMessageBox::NoButton);
+    }
+    else{
+        if(roomToJump){//waiting the disconnection to connect in a new room?
+            showBusyDialog("Connecting in " + roomToJump->getName());
+            mainController->enterInRoom(*roomToJump, getChannelsNames());
+            delete roomToJump;
+            roomToJump = nullptr;
+        }
     }
 }
 

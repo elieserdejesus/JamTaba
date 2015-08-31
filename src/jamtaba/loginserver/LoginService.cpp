@@ -35,6 +35,12 @@ RoomInfo::RoomInfo(QString roomName, int roomPort, RoomTYPE roomType, int maxUse
 
 }
 
+RoomInfo::RoomInfo(const RoomInfo &other)
+    :id(other.id), name(other.name), port(other.port), type(other.type),
+        maxUsers(other.maxUsers), maxChannels(other.maxChannels), users(other.users), streamUrl(other.streamUrl){
+
+}
+
 int RoomInfo::getNonBotUsersCount() const{
     int nonBots = 0;
     foreach (const UserInfo& userInfo, users) {
