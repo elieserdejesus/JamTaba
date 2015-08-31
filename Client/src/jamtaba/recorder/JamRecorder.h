@@ -10,19 +10,6 @@ Q_DECLARE_LOGGING_CATEGORY(recorder)
 namespace Recorder {
 
 //++++++++++++++++++++++++++++++++++++++++++++++
-//class JamPaths {
-//public:
-//    JamPaths(QDir baseDirectory, QDir jamdirectory, QDir audiodirectory);
-//    JamPaths cloneUsingNewBaseDirectory(QDir newBaseDirectory);
-//    inline QDir getBaseDir() const{return baseDirectory;}
-//    inline QDir getJamDir() const {return jamdirectory;}
-//    inline QDir getAudioDir() const{return audiodirectory;}
-//private:
-//    QDir baseDirectory;
-//    QDir jamdirectory;
-//    QDir audiodirectory;
-//};
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class JamAudioFile{
 public:
     JamAudioFile(QString path, uint intervalIndex);
@@ -81,13 +68,13 @@ public:
     virtual void write(Jam metadata) = 0;
 };
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class NinjamInterval{
+class LocalNinjamInterval{
 public:
-    NinjamInterval(int intervalIndex)
+    LocalNinjamInterval(int intervalIndex)
         :intervalIndex(intervalIndex){
 
     }
-    NinjamInterval(){}
+    LocalNinjamInterval(){}
     void appendEncodedAudio(QByteArray data){encodedAudio.append(data);}
     inline QByteArray getEncodedData() const{return encodedAudio;}
     void clear(){
@@ -127,7 +114,7 @@ private:
     //bool recordingActivated;
     QDir newPath;//used to set the newPath in the next interval
 
-    QMap<quint8, NinjamInterval> localUserIntervals;//use channel index as key and store encoded bytes. When a full interval is stored the encoded bytes are store in a ogg file.
+    QMap<quint8, LocalNinjamInterval> localUserIntervals;//use channel index as key and store encoded bytes. When a full interval is stored the encoded bytes are store in a ogg file.
 
     QString getNewJamName() ;
     void writeEncodedFile(const QByteArray& encodedData, QString path);

@@ -104,7 +104,7 @@ void JamRecorder::appendLocalUserAudio(QByteArray encodedaudio, quint8 channelIn
     //qCDebug(recorder) << "appending encoded audio to a local user channel index:" <<channelIndex;
     Q_UNUSED(isFirstPartOfInterval)
     if(!localUserIntervals.contains(channelIndex)){
-        localUserIntervals.insert(channelIndex, NinjamInterval(globalIntervalIndex));
+        localUserIntervals.insert(channelIndex, LocalNinjamInterval(globalIntervalIndex));
     }
     localUserIntervals[channelIndex].appendEncodedAudio(encodedaudio);
     if(isLastPastOfInterval){

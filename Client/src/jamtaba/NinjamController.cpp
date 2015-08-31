@@ -265,17 +265,20 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
             bool isFirstPart = intervalPosition == 0;
             //1) mix input subchannels, 2) encode and 3) send the encoded audio
 
-            static Audio::SamplesBuffer inputMixBuffer(2, 4096); //TODO esse canal sempre estereo nãi vai dar problema com pitas mono?
-            inputMixBuffer.setFrameLenght(samplesToProcessInThisStep);
-
             int groupedChannels = mainController->getInputTrackGroupsCount();
-            for (int channelIndex = 0; channelIndex < groupedChannels; ++channelIndex) {
-                if(encoders.contains(channelIndex)){
-                    inputMixBuffer.zero();
-                    mainController->mixGroupedInputs(channelIndex, inputMixBuffer);
+            for (int groupIndex = 0; groupIndex < groupedChannels; ++groupIndex) {
+                int channels = mainController->getMaxChannelsForEncodingInTrackGroup(groupIndex);
+                qWarning() << channels;
+                if(channels > 0){
+                    Audio::SamplesBuffer inputMixBuffer(channels, samplesToProcessInThisStep);
 
-                    //encoding is running in another thread to avoid slow down the audio thread
-                    encodingThread->addSamplesToEncode( inputMixBuffer, channelIndex, isFirstPart, isLastPart);
+                    if(encoders.contains(groupIndex)){
+                        inputMixBuffer.zero();
+                        mainController->mixGroupedInputs(groupIndex, inputMixBuffer);
+
+                        //encoding is running in another thread to avoid slow down the audio thread
+                        encodingThread->addSamplesToEncode( inputMixBuffer, groupIndex, isFirstPart, isLastPart);
+                    }
                 }
             }
         }
