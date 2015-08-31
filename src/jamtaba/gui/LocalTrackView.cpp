@@ -358,6 +358,7 @@ void LocalTrackView::addPlugin(Audio::Plugin* plugin, bool bypassed){
         plugin->setEditor(new Audio::PluginWindow(plugin));
         plugin->setBypass(bypassed);
         this->fxPanel->addPlugin(plugin);
+        update();
     }
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

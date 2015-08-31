@@ -33,9 +33,8 @@ VstPlugin::VstPlugin(VstHost* host)
     :   Audio::Plugin("name"),
         effect(nullptr),
         internalBuffer(nullptr),
-        host(host)
-        //canProcessReplacing(true)
-        //started(false)
+        host(host),
+        loaded(false)
 {
     this->vstMidiEvents.reserved = 0;
     this->vstMidiEvents.numEvents = 0;
@@ -47,6 +46,7 @@ VstPlugin::VstPlugin(VstHost* host)
 }
 
 bool VstPlugin::load(VstHost *host, QString path){
+    loaded = false;
     QString pluginDir = QFileInfo(path).absoluteDir().absolutePath();
     //qCDebug(vst) << "adding " << pluginDir << "in library path";
     QApplication::addLibraryPath(pluginDir);
@@ -111,6 +111,8 @@ bool VstPlugin::load(VstHost *host, QString path){
     internalBuffer = new Audio::SamplesBuffer(outputs, host->getBufferSize());
 
     out = new float*[outputs];
+
+    loaded = true;
 
     return true;
 }
@@ -243,7 +245,7 @@ void VstPlugin::fillVstEventsList(const Midi::MidiBuffer &midiBuffer){
 
 void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, const Midi::MidiBuffer& midiBuffer){
     Q_UNUSED(in)
-    if(isBypassed() || !effect || !internalBuffer){
+    if(isBypassed() || !effect || !loaded){
         //qDebug(vst) << "returning";
         return;
     }

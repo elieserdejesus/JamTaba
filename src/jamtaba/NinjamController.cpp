@@ -268,7 +268,7 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
             int groupedChannels = mainController->getInputTrackGroupsCount();
             for (int groupIndex = 0; groupIndex < groupedChannels; ++groupIndex) {
                 int channels = mainController->getMaxChannelsForEncodingInTrackGroup(groupIndex);
-                qWarning() << channels;
+                //qWarning() << channels;
                 if(channels > 0){
                     Audio::SamplesBuffer inputMixBuffer(channels, samplesToProcessInThisStep);
 

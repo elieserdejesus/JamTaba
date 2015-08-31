@@ -1,8 +1,20 @@
-#o metronomo também estava estranho. Alguma coisa relacionada com o mono? Ver se arrumou, meni no método set do SamplesBuffer
+#resolvido o problema do mono
+
+#vu do metronomo está invertido. Quando boto pra esquerda o vu da direita se move
 
 #quando carreguei o Addictive durante uma jam eu deixei de receber os streams dos canais.
     #Eu teria que carregar os plugins em uma thread diferente para não comprometer a thread
         #do qt, caso contrário o QTcpSocket vai parar.
+    #Fiz um PluginLoader e funcionou. Consegui carregar em outra thread, mas quando
+        #abri o editor do plugin deu problema. Eu lembro de ter lido alguma coisa
+        #sobre o handler da janela estar vinculado a thread da gui. Acho que vai
+        #ser complicado carregar o plugin em outra thread
+
+#pensei em da uns traces no carregamento do addictive e ver qual é a etapa mais demorada.
+    #talvez chamando um processEvents em cada etapa do carregamento já ajude.
+
+#Outra coisa interessante seria iniciarlizar os plugins somente depois que aplicação
+    #abre para evitar o problema de carregar plugins muito grandes
 
 
 #comentei o método de conexão com o server - tenho que descomentar

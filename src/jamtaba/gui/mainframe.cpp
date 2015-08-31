@@ -10,6 +10,9 @@
 #include <QInputDialog>
 #include <QSettings>
 #include <QDir>
+#include <QtConcurrent/QtConcurrent>
+#include <QFutureWatcher>
+#include <QFuture>
 
 #include "PreferencesDialog.h"
 #include "jamroomviewpanel.h"
@@ -269,6 +272,40 @@ LocalTrackGroupView *MainFrame::addLocalChannel(int channelGroupIndex, QString c
     return localChannel;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+//PluginLoader::PluginLoader(Controller::MainController* mainController, Persistence::Plugin plugin, LocalTrackView* trackView)
+//    :plugin(plugin), trackView(trackView), mainController(mainController){
+
+//}
+
+//PluginLoader::~PluginLoader(){
+//    qWarning() << "destrutor Plugin Loader";
+//}
+
+//void PluginLoader::load(){
+//    qWarning() << "loading plugin";
+//    QObject::connect(&futureWatcher, SIGNAL(finished()), this, SLOT(on_futureWatcherFinished()));
+//    QFuture<Audio::Plugin*> result = QtConcurrent::run(this, &loadPlugin);
+//    futureWatcher.setFuture(result);
+//}
+
+//void PluginLoader::on_futureWatcherFinished(){
+//    qWarning() << "plugin loaded, adding in trackview";
+//    Audio::Plugin* pluginInstance = futureWatcher.future().result();
+//    trackView->addPlugin(pluginInstance, this->plugin.bypassed);
+//    deleteLater();
+//}
+
+//Audio::Plugin* PluginLoader::loadPlugin(){
+//    QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
+//    Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path );
+//    Audio::Plugin* pluginInstance = mainController->addPlugin(trackView->getInputIndex(), descriptor);// subChannelView->getInputIndex(), descriptor);
+//    pluginInstance->restoreFromSerializedData( plugin.data);
+//    return pluginInstance;
+//}
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::initializeLocalInputChannels(){
     Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
     int channelIndex = 0;
@@ -307,12 +344,12 @@ void MainFrame::initializeLocalInputChannels(){
                 QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
                 Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path );
                 Audio::Plugin* pluginInstance = mainController->addPlugin(subChannelView->getInputIndex(), descriptor);
-                subChannelView->addPlugin(pluginInstance, plugin.bypassed);
                 pluginInstance->restoreFromSerializedData( plugin.data);
-            }
+                subChannelView->addPlugin(pluginInstance, plugin.bypassed);
 
-            //mainController->setTrackLevel(subChannelView->getInputIndex(), subChannel.gain);
-            //mainController->setTrackPan(subChannelView->getInputIndex(), subChannel.pan);
+                //PluginLoader* loader = new PluginLoader(mainController, plugin, subChannelView);
+                //loader->load();
+            }
         }
         channelIndex++;
     }

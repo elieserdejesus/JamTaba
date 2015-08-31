@@ -46,6 +46,8 @@ private:
 
     bool started;
 
+    bool loaded;
+
     float** out;
 
     //VstEvents* vstEvents;

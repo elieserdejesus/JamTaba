@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QMessageBox>
+#include <QFutureWatcher>
 #include "ui_mainframe.h"
 #include "BusyDialog.h"
 #include "../ninjam/Server.h"
@@ -38,6 +39,28 @@ class JamRoomViewPanel;
 class PluginGui;
 class LocalTrackGroupView;
 //class MetronomeTrackView;
+
+
+//class PluginLoader : public QObject{
+//    Q_OBJECT
+//public:
+//    PluginLoader(Controller::MainController* mainController, Persistence::Plugin plugin, LocalTrackView* trackView);
+//    ~PluginLoader();
+
+//    void load();
+//private slots:
+//    void on_futureWatcherFinished();
+
+//private:
+//    Persistence::Plugin plugin;
+//    LocalTrackView* trackView;
+//    Controller::MainController* mainController;
+
+//    QFutureWatcher<Audio::Plugin*> futureWatcher;
+
+//    Audio::Plugin* loadPlugin();
+//};
+
 
 class MainFrame : public QMainWindow
 {
@@ -127,7 +150,7 @@ private:
     //MetronomeTrackView* metronomeTrackView;
     NinjamRoomWindow* ninjamWindow;
 
-
+//    void restorePlugin(LocalTrackView* channelView, const Persistence::Plugin &plugin);
 
     void showPluginGui(Audio::Plugin* plugin);
 
