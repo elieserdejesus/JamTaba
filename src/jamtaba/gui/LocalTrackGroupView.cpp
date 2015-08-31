@@ -11,7 +11,7 @@
 #include <QMenu>
 
 LocalTrackGroupView::LocalTrackGroupView(int index, MainFrame *mainFrame)
-    :index(index), mainFrame(mainFrame)
+    :index(index), mainFrame(mainFrame), faderOnly(false)
 {
     toolButton = new QPushButton();
     toolButton->setObjectName("toolButton");
@@ -142,4 +142,20 @@ void LocalTrackGroupView::on_removeSubChannelClicked(){
 
 void LocalTrackGroupView::on_removeChannelClicked(){
     mainFrame->removeChannelsGroup(mainFrame->getChannelGroupsCount()-1);
+}
+//+++++++++++++++++++++++++++++
+void LocalTrackGroupView::setFaderOnlyMode(bool faderOnly){
+    if(this->faderOnly != faderOnly){
+        this->faderOnly = faderOnly;
+        this->ui->topPanel->setVisible(!this->faderOnly);
+        foreach (BaseTrackView* baseView, trackViews) {
+            dynamic_cast<LocalTrackView*> (baseView)->setFaderOnlyMode(faderOnly);
+        }
+        updateGeometry();
+        adjustSize();
+    }
+}
+
+void LocalTrackGroupView::toggleFaderOnlyMode(){
+    setFaderOnlyMode(!this->faderOnly);
 }
