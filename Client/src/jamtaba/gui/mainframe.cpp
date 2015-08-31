@@ -306,6 +306,37 @@ LocalTrackGroupView *MainFrame::addLocalChannel(int channelGroupIndex, QString c
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void MainFrame::restorePluginsList(){
+    Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
+    int channelIndex = 0;
+    foreach (Persistence::Channel channel, inputsSettings.channels) {
+        LocalTrackGroupView* channelView = localChannels.at(channelIndex);
+        if(channelView){
+            int subChannelIndex = 0;
+            QList<LocalTrackView*> tracks = channelView->getTracks();
+            foreach (Persistence::Subchannel subChannel, channel.subChannels) {
+                LocalTrackView* subChannelView = tracks.at(subChannelIndex);
+                if(subChannelView){
+                    //create the plugins list
+                    foreach (Persistence::Plugin plugin, subChannel.plugins) {
+                        QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
+                        Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path );
+                        Audio::Plugin* pluginInstance = mainController->addPlugin(subChannelView->getInputIndex(), descriptor);
+                        pluginInstance->restoreFromSerializedData( plugin.data);
+                        subChannelView->addPlugin(pluginInstance, plugin.bypassed);
+                        QApplication::processEvents();
+
+                        //PluginLoader* loader = new PluginLoader(mainController, plugin, subChannelView);
+                        //loader->load();
+                    }
+                }
+                subChannelIndex++;
+            }
+        }
+        channelIndex++;
+    }
+}
+
 void MainFrame::initializeLocalInputChannels(){
     Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
     int channelIndex = 0;
@@ -340,16 +371,16 @@ void MainFrame::initializeLocalInputChannels(){
             }
 
             //create the plugins list
-            foreach (Persistence::Plugin plugin, subChannel.plugins) {
-                QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
-                Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path );
-                Audio::Plugin* pluginInstance = mainController->addPlugin(subChannelView->getInputIndex(), descriptor);
-                pluginInstance->restoreFromSerializedData( plugin.data);
-                subChannelView->addPlugin(pluginInstance, plugin.bypassed);
+//            foreach (Persistence::Plugin plugin, subChannel.plugins) {
+//                QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
+//                Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path );
+//                Audio::Plugin* pluginInstance = mainController->addPlugin(subChannelView->getInputIndex(), descriptor);
+//                pluginInstance->restoreFromSerializedData( plugin.data);
+//                subChannelView->addPlugin(pluginInstance, plugin.bypassed);
 
-                //PluginLoader* loader = new PluginLoader(mainController, plugin, subChannelView);
-                //loader->load();
-            }
+//                //PluginLoader* loader = new PluginLoader(mainController, plugin, subChannelView);
+//                //loader->load();
+//            }
         }
         channelIndex++;
     }
@@ -702,6 +733,9 @@ void MainFrame::showEvent(QShowEvent *)
     if(!mainController->isStarted() && availableDevices > 0){
         showBusyDialog("Loading rooms list ...");
         mainController->start();
+
+        //wait 50 ms before resotre the plugins list to avoid freeze the GUI in hidden state while plugins are loaded
+        QTimer::singleShot(50, this, restorePluginsList);
     }
     else{
         QMessageBox::critical(this, "ERROR", "No audio device!");

@@ -1,31 +1,7 @@
-#resolvido o problema do mono
-
-#vu do metronomo está invertido. Quando boto pra esquerda o vu da direita se move
-
-#quando carreguei o Addictive durante uma jam eu deixei de receber os streams dos canais.
-    #Eu teria que carregar os plugins em uma thread diferente para não comprometer a thread
-        #do qt, caso contrário o QTcpSocket vai parar.
-    #Fiz um PluginLoader e funcionou. Consegui carregar em outra thread, mas quando
-        #abri o editor do plugin deu problema. Eu lembro de ter lido alguma coisa
-        #sobre o handler da janela estar vinculado a thread da gui. Acho que vai
-        #ser complicado carregar o plugin em outra thread
-
-#pensei em da uns traces no carregamento do addictive e ver qual é a etapa mais demorada.
-    #talvez chamando um processEvents em cada etapa do carregamento já ajude.
-
-#Outra coisa interessante seria iniciarlizar os plugins somente depois que aplicação
-    #abre para evitar o problema de carregar plugins muito grandes
-
-
-#comentei o método de conexão com o server - tenho que descomentar
-
 #problema no visual das pistas no ninjam, acho que tem a ver com a mudança que fiz
     #para o Vus only. Acho que isso deveria estar somente nas pistas de entrada, acho que
         #botei o código na classe base e esse é o problema.
 
-
-
-#parece que o sampletank nem recebe minhas mensagens midi
 
 #In the absence of the BOM, Unicode assumes that the string is big-endian.
     #O byte Order Mark (BOM) é um caractere que fica no início de um arquivo ou string
@@ -41,6 +17,11 @@
 #tocar em algumas Jams para ver se está rolando
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#parece que o sampletank nem recebe minhas mensagens midi
+
+#importante para VST plugin no MAC com Qt. ou seja é possível fazer o plugin VST:
+    #https://forum.qt.io/topic/13731/solved-qt-gui-in-vst-plug-in-clicking-menu-bar-crashes-the-host
 
 #quando troco de bpi ou bpm o primeiro intervalo gravado aparece offline. Tem um erro no parsing do ogg. Devo
     #estar escrevendo alguma coisa errada no arquivo quando inicia uma nova gravação.

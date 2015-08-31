@@ -78,6 +78,7 @@ bool VstPlugin::load(VstHost *host, QString path){
         return false;
     }
     qCDebug(vst) << "Entry point founded for " << path ;
+    QApplication::processEvents();
     try
     {
         qCDebug(vst) << "Initializing effect for " << path ;
@@ -93,7 +94,7 @@ bool VstPlugin::load(VstHost *host, QString path){
         unload();
         return false;
     }
-
+    QApplication::processEvents();
     if (effect->magic != kEffectMagic) {
         qCCritical(vst) << "KEffectMagic error for " << path ;
         unload();

@@ -159,6 +159,7 @@ private:
     void initializeWindowState();
     void initializeLoginService();
     void initializeLocalInputChannels();
+    void restorePluginsList();
     void initializeVstFinderStuff();
     void initializeMainControllerEvents();
     void initializeMainTabWidget();
