@@ -317,22 +317,6 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="PeakMeter" name="peakMeterRight" native="true">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>5</width>
-                <height>0</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="PeakMeter" name="peakMeterLeft" native="true">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
@@ -348,6 +332,22 @@
               </property>
               <property name="styleSheet">
                <string notr="true"/>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="PeakMeter" name="peakMeterRight" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>5</width>
+                <height>0</height>
+               </size>
               </property>
              </widget>
             </item>
