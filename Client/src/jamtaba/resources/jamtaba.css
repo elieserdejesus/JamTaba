@@ -69,7 +69,7 @@ FxPanelItem[containPlugin="true"]{
 }
 
 FxPanelItem > QLabel{
-    qproperty-alignment: AlignCenter;
+    qproperty-alignment: AlignLeft;
     font-size: 8pt;
     color: rgba(255, 255, 255, 120);
     margin: 0px;

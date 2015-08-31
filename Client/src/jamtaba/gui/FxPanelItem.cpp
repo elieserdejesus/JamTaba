@@ -33,27 +33,19 @@ FxPanelItem::FxPanelItem(LocalTrackView *parent, Controller::MainController *mai
     QHBoxLayout* layout = new QHBoxLayout(this);
     layout->setContentsMargins(1, 1, 1, 1);
     layout->setSpacing(2);
-    layout->addWidget(this->bypassButton);
+
     layout->addWidget(this->label, 1);
-    //layout->addWidget(this->menuButton);
+    layout->addWidget(this->bypassButton);
 
-    //this->bypassButton->setObjectName("bypassButton");
-    //this->menuButton->setObjectName("menuButton");
-    //this->label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    //this->button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-
-    //layout->setAlignment(this->button, Qt::AlignRight);
-    //layout->setAlignment(this->label, Qt::AlignLeft);
+    //label->setAlignment();
 
     this->bypassButton->setVisible(false);
     this->bypassButton->setCheckable(true);
     this->bypassButton->setChecked(true);
 
-    //this->menuButton->setCheckable(false);
-
     QObject::connect( this->bypassButton, SIGNAL(clicked()), this, SLOT(on_buttonClicked()) );
 
-    //this->actionsMenu = createActionsMenu();
+    //setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 }
 
 //void FxPanelItem::setFxMenu(QMenu* fxMenu){
