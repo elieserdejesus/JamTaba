@@ -6,6 +6,7 @@
 #include <QScrollArea>
 #include <QVBoxLayout>
 #include <QStyleOption>
+#include <QLayout>
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FxPanel::FxPanel(LocalTrackView *parent, Controller::MainController *mainController)
     :
@@ -15,25 +16,28 @@ FxPanel::FxPanel(LocalTrackView *parent, Controller::MainController *mainControl
 {
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(QMargins(2, 2, 2, 2));
+    mainLayout->setSpacing(2);
 
-    QWidget* contentPane = new QWidget(this);
-    QScrollArea* scrollArea = new QScrollArea(this);
-    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    QVBoxLayout* contentLayout = new QVBoxLayout( contentPane);
-    contentLayout->setContentsMargins(QMargins(2, 2, 2, 2));
-    contentLayout->setSpacing(2);
+    //QWidget* contentPane = new QWidget(this);
 
-    scrollArea->setWidget(contentPane);
-    scrollArea->setWidgetResizable(true);
-    mainLayout->addWidget(scrollArea);
+    //QScrollArea* scrollArea = new QScrollArea(this);
+    //scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    //scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    //QVBoxLayout* contentLayout = new QVBoxLayout( contentPane);
+    //contentLayout->setContentsMargins(QMargins(2, 2, 2, 2));
+    //contentLayout->setSpacing(2);
+    //contentLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+
+    //scrollArea->setWidget(contentPane);
+    //scrollArea->setWidgetResizable(true);
+    //mainLayout->addWidget(scrollArea);
 
     for(int i=0; i < 4; i++){
         FxPanelItem* item = new FxPanelItem(localTrackView, mainController);
         items.append(item);
-        contentLayout->addWidget(item);
-        //QObject::connect(item, SIGNAL(editingPlugin(Audio::Plugin*)), this, SIGNAL(editingPlugin(Audio::Plugin*)));
-        //QObject::connect(item, SIGNAL(pluginRemoved(Audio::Plugin*)), this, SIGNAL(pluginRemoved(Audio::Plugin*)));
+        //contentLayout->addWidget(item);
+        mainLayout->addWidget(item);
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
