@@ -335,14 +335,20 @@ void SamplesBuffer::set(const SamplesBuffer& buffer, unsigned int bufferOffset, 
     }
     else{//different number of channels
         if(!isMono()){//copy every &buffer samples to LR in this buffer
-            //int channelsToCopy = qMin(channels, buffer.channels);
-            //for (int c = 0; c < channelsToCopy; ++c) {
+            if(!buffer.isMono()){
+                int channelsToCopy = qMin(channels, buffer.channels);
+                for (int c = 0; c < channelsToCopy; ++c) {
+                    for (unsigned int s = 0; s < framesToProcess; ++s) {
+                        samples[c][s + internalOffset] = buffer.samples[c][s + bufferOffset];
+                    }
+                }
+            }
+            else{
                 for (unsigned int s = 0; s < framesToProcess; ++s) {
-                    //samples[c][s + internalOffset] = buffer.samples[c][s + bufferOffset];
                     samples[0][s + internalOffset] = buffer.samples[0][s + bufferOffset];
                     samples[1][s + internalOffset] = buffer.samples[0][s + bufferOffset];
                 }
-            //}
+            }
         }
         else{//this buffer is mono, but the buffer in parameter is not! Mix down the stereo samples in one mono sample value.
             for (unsigned int s = 0; s < framesToProcess; ++s) {

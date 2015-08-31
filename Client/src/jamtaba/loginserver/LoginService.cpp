@@ -104,7 +104,7 @@ void LoginService::connectInServer(QString userName, int instrumentID, QString c
     QUrlQuery query = HttpParamsFactory::createParametersToConnect(userName, instrumentID, channelName, localPeerMap, version, environment, sampleRate);
     pendingReply = sendCommandToServer(query);
     if(pendingReply){
-        //connectNetworkReplySlots(pendingReply, LoginService::Command::CONNECT);
+        connectNetworkReplySlots(pendingReply, LoginService::Command::CONNECT);
     }
 }
 
