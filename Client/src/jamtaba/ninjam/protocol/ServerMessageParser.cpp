@@ -152,7 +152,7 @@ const ServerMessage& ServerMessageParser::parseChatMessage(QDataStream &stream, 
     quint32 consumedBytes = 0;
 
     int commandStringSize = getStringSize(data, payloadLenght);
-    QString command = QString::fromUtf8(data, commandStringSize-1);//remove the NULL terminator (2 bytes - utf-8)
+    QString command = QString::fromLatin1(data, commandStringSize-1);//remove the NULL terminator (2 bytes - utf-8)
     consumedBytes += commandStringSize;
 
 
@@ -160,7 +160,12 @@ const ServerMessage& ServerMessageParser::parseChatMessage(QDataStream &stream, 
     QStringList arguments;
     while(consumedBytes < payloadLenght && parsedArgs < 4){
         int argStringSize = getStringSize(data + consumedBytes, payloadLenght - consumedBytes);
-        QString arg = QString::fromUtf8(data + consumedBytes, argStringSize-1);
+        if(parsedArgs > 0){
+            for (int c = 0; c < argStringSize-1; ++c) {
+                qWarning() << "'" << data[consumedBytes + c] << "'";
+            }
+        }
+        QString arg = QString::fromLatin1(data + consumedBytes, argStringSize-1);
         arguments.append(arg);
         consumedBytes += argStringSize;
         parsedArgs++;

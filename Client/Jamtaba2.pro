@@ -1,16 +1,3 @@
-#pulo de uma sala para outra não está mais rolando?
-    #sai de uma sala e não consegui entrar em outra
-
-#In the absence of the BOM, Unicode assumes that the string is big-endian.
-    #O byte Order Mark (BOM) é um caractere que fica no início de um arquivo ou string
-        #indicando se é big ou little endian. Sem ele o utf-8 assume que é big endian.
-        #Não tem bom nas strings ninjam e o stream está setado para LittleEndian. Ou seja
-            #se alguém me envia caracteres com 2 bytes será que eles não estão sendo lidos
-            #na ordem errada?
-        #outra possibilidade - testar o latin. Será que o server pega algum encoding da máquina?
-            #testar no meu server local e testar nos servers públicos para ver se o resultado é diferente
-
-
 
 #tocar em algumas Jams para ver se está rolando
 

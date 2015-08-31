@@ -19,8 +19,8 @@ void ClientMessage::serializeString(const QString &str, QDataStream &stream){
     //serializeByteArray(QByteArray(str.toStdString().c_str()), stream);
 
     //serializeByteArray(str.toUtf8(), stream);
-    QByteArray utf8Array = str.toUtf8();
-    stream.writeRawData(utf8Array.data(), utf8Array.size());
+    QByteArray dataArray = str.toLatin1();
+    stream.writeRawData(dataArray.data(), dataArray.size());
 
     stream << quint8('\0'); // NUL TERMINATED
 }
@@ -183,7 +183,7 @@ void ClientSetUserMask::printDebug(QDebug dbg) const
 ChatMessage::ChatMessage(QString text)
     : ClientMessage(0xc0, 0), text(text), command("MSG")
 {
-    payload = text.toUtf8().size() + 1 + command.length() + 1;
+    payload = text.toLatin1().size() + 1 + command.length() + 1;
 }
 
 void ChatMessage::serializeTo(QByteArray &buffer){
