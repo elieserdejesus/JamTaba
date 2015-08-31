@@ -147,12 +147,10 @@ private:
     PluginScanDialog* pluginScanDialog;
     Ui::MainFrameClass ui;
     QList<LocalTrackGroupView*> localChannels;
-    //MetronomeTrackView* metronomeTrackView;
+
     NinjamRoomWindow* ninjamWindow;
 
-    Login::RoomInfo* roomToJump;
-
-//    void restorePlugin(LocalTrackView* channelView, const Persistence::Plugin &plugin);
+    Login::RoomInfo* roomToJump;//store the next room reference when jumping from on room to another
 
     void showPluginGui(Audio::Plugin* plugin);
 

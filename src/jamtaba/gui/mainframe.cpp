@@ -573,6 +573,7 @@ void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo){
         bool ok;
         QString lastUserName = mainController->getUserName();
         QString newUserName = QInputDialog::getText(this, "", "Enter your user name:", QLineEdit::Normal, lastUserName , &ok, Qt::FramelessWindowHint);
+        //newUserName = QString(newUserName.toLatin1());
         if (ok && !newUserName.isEmpty()){
            mainController->setUserName(newUserName);
            setWindowTitle("Jamtaba (" + mainController->getUserName() + ")");
