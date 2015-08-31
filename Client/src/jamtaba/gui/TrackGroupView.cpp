@@ -7,7 +7,7 @@
 
 TrackGroupView::TrackGroupView(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::TrackGroupView), faderOnly(false)
+    ui(new Ui::TrackGroupView)
 {
     ui->setupUi(this);
 
@@ -16,21 +16,7 @@ TrackGroupView::TrackGroupView(QWidget *parent) :
     ui->tracksPanel->layout()->setSpacing(1);
 }
 
-void TrackGroupView::setFaderOnlyMode(bool faderOnly){
-    if(this->faderOnly != faderOnly){
-        this->faderOnly = faderOnly;
-        this->ui->topPanel->setVisible(!this->faderOnly);
-        foreach (BaseTrackView* baseView, trackViews) {
-            baseView->setFaderOnlyMode(faderOnly);
-        }
-        updateGeometry();
-        adjustSize();
-    }
-}
 
-void TrackGroupView::toggleFaderOnlyMode(){
-    setFaderOnlyMode(!this->faderOnly);
-}
 
 void TrackGroupView::setUnlightStatus(bool unlighted){
     setProperty("unlighted", QVariant(unlighted));
@@ -117,9 +103,6 @@ QSize TrackGroupView::sizeHint() const{
     int width = 0;
     foreach (BaseTrackView* trackView, trackViews) {
         width += trackView->minimumSizeHint().width();
-    }
-    if(!faderOnly){
-        return QSize(std::max(width, 100), 10);
     }
     return QSize(width, 10);
 }

@@ -1,7 +1,7 @@
-#problema no visual das pistas no ninjam, acho que tem a ver com a mudança que fiz
-    #para o Vus only. Acho que isso deveria estar somente nas pistas de entrada, acho que
-        #botei o código na classe base e esse é o problema.
+#bug no visual do fxPanelItem quando tem um plugin com nome grande
 
+#pulo de uma sala para outra não está mais rolando?
+    #sai de uma sala e não consegui entrar em outra
 
 #In the absence of the BOM, Unicode assumes that the string is big-endian.
     #O byte Order Mark (BOM) é um caractere que fica no início de um arquivo ou string

@@ -56,12 +56,45 @@ void LocalTrackView::init(int channelIndex, float initialGain, float initialPan,
     faderOnly = false;
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void LocalTrackView::setFaderOnlyMode(bool faderOnly){
-    BaseTrackView::setFaderOnlyMode(faderOnly);
-    fxPanel->setVisible(!faderOnly);
-    inputPanel->setVisible(!faderOnly);
-    fxSpacer->changeSize(20, faderOnly ? 0 : 20, QSizePolicy::Minimum, faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
+
+QSize LocalTrackView::sizeHint() const{
+    if(faderOnly){
+        int width = ui->faderPanel->sizeHint().width() + layout()->contentsMargins().left() + layout()->contentsMargins().right();
+        return QSize( width, height());
+    }
+    return BaseTrackView::sizeHint();
 }
+
+void LocalTrackView::setFaderOnlyMode(bool faderOnly){
+    if(this->faderOnly != faderOnly){
+        this->faderOnly = faderOnly;
+        //ui->faderPanel->setVisible(!this->faderOnly);
+        ui->topPanel->setVisible(!this->faderOnly);
+        ui->levelSlider->setVisible(!this->faderOnly);
+        ui->panSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
+        ui->panSpacer->invalidate();
+
+        QMargins margins = layout()->contentsMargins();
+        margins.setLeft(faderOnly ? 2 : 6);
+        margins.setRight(faderOnly ? 2 : 6);
+        layout()->setContentsMargins(margins);
+
+        fxPanel->setVisible(!faderOnly);
+        inputPanel->setVisible(!faderOnly);
+        fxSpacer->changeSize(20, faderOnly ? 0 : 20, QSizePolicy::Minimum, faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
+
+        updateGeometry();
+
+        setProperty("faderOnly", QVariant(faderOnly));
+        style()->unpolish(this);
+        style()->polish(this);
+    }
+}
+
+void LocalTrackView::toggleFaderOnlyMode(){
+    setFaderOnlyMode(!faderOnly);
+}
+
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void LocalTrackView::setUnlightStatus(bool unlighted){

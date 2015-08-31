@@ -39,8 +39,10 @@ public:
 
     virtual void setUnlightStatus(bool unlighted);
 
-    virtual void setFaderOnlyMode(bool faderOnly);
-    //virtual void toggleFaderOnlyMode();
+    void setFaderOnlyMode(bool faderOnly);
+    void toggleFaderOnlyMode();
+
+    QSize sizeHint() const;
 
 private:
     //int inputIndex;
@@ -72,6 +74,8 @@ private:
     bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;
 
     void init(int channelIndex, float initialGain, float initialPan, bool muted);
+
+    bool faderOnly;
 
 private slots:
     void on_inputSelectionButtonClicked();//build and show de input selection menu

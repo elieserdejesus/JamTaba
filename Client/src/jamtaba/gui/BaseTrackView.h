@@ -33,9 +33,6 @@ public:
 
     void updatePeaks();
 
-    virtual void setFaderOnlyMode(bool faderOnly);
-    virtual void toggleFaderOnlyMode();
-
     inline Controller::MainController* getMainController() const{return mainController;}
 
     virtual void setUnlightStatus(bool unlighted);
@@ -52,7 +49,6 @@ protected:
     bool activated;
 
     bool narrowed;
-    bool faderOnly;
 
     void setPeaks(float left, float right);
 private:

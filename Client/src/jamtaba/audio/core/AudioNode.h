@@ -171,6 +171,9 @@ private:
     enum InputMode{ AUDIO, MIDI, DISABLED };
 
     InputMode inputMode = DISABLED;
+
+
+
 };
 //++++++++++++++++++++++++
 

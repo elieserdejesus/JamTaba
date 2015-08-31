@@ -25,6 +25,12 @@ public:
     virtual void addTrackView(BaseTrackView *trackView);
     inline int getIndex() const{return index;}
 
+    virtual void setFaderOnlyMode(bool faderOnly);
+    virtual void toggleFaderOnlyMode();
+    bool isFaderOnly() const{return faderOnly;}
+
+    //QSize sizeHint() const;
+
 signals:
     void nameChanged();
 private:
@@ -33,6 +39,9 @@ private:
     int index;
     MainFrame* mainFrame;
     bool eventFilter(QObject *target, QEvent *event);
+
+    bool faderOnly;
+
 private slots:
     void on_toolButtonClicked();
 
