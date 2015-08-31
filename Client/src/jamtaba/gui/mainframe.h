@@ -150,6 +150,8 @@ private:
     //MetronomeTrackView* metronomeTrackView;
     NinjamRoomWindow* ninjamWindow;
 
+    Login::RoomInfo* roomToJump;
+
 //    void restorePlugin(LocalTrackView* channelView, const Persistence::Plugin &plugin);
 
     void showPluginGui(Audio::Plugin* plugin);

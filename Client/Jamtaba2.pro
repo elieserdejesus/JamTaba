@@ -1,5 +1,3 @@
-#bug no visual do fxPanelItem quando tem um plugin com nome grande
-
 #pulo de uma sala para outra não está mais rolando?
     #sai de uma sala e não consegui entrar em outra
 
