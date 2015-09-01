@@ -146,9 +146,9 @@ int getStringSize(char* data, int maxLenght){
     return p + 1;
 }
 
-const ServerMessage& ServerMessageParser::parseChatMessage(QDataStream &stream, quint32 payloadLenght){
-    char data[payloadLenght];
-    stream.readRawData(data, payloadLenght);
+const ServerMessage& ServerMessageParser::parseChatMessage(QDataStream &stream, const quint32 payloadLenght){
+    static char data[4096];
+    stream.readRawData(data, qMin((int)payloadLenght, 4096));
     quint32 consumedBytes = 0;
 
     int commandStringSize = getStringSize(data, payloadLenght);
@@ -160,11 +160,6 @@ const ServerMessage& ServerMessageParser::parseChatMessage(QDataStream &stream, 
     QStringList arguments;
     while(consumedBytes < payloadLenght && parsedArgs < 4){
         int argStringSize = getStringSize(data + consumedBytes, payloadLenght - consumedBytes);
-        if(parsedArgs > 0){
-            for (int c = 0; c < argStringSize-1; ++c) {
-                qWarning() << "'" << data[consumedBytes + c] << "'";
-            }
-        }
         QString arg = QString::fromLatin1(data + consumedBytes, argStringSize-1);
         arguments.append(arg);
         consumedBytes += argStringSize;
