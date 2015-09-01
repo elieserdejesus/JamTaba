@@ -82,7 +82,8 @@ bool VstPlugin::load(VstHost *host, QString path){
     try
     {
         qCDebug(vst) << "Initializing effect for " << path ;
-        effect = entryPoint( host->hostCallback);// myHost->vstHost->AudioMasterCallback);
+        //TODO fiz esse cast para compilar no msvc x64, mas ele dá um warning
+        effect = entryPoint( (audioMasterCallback)host->hostCallback);// myHost->vstHost->AudioMasterCallback);
     }
     catch(...)
     {

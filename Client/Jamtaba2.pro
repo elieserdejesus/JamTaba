@@ -1,7 +1,27 @@
+#minimp3 só compilou em 64 bits depois que eu mudei o código para não usar
+    #mais assembly e não usar mais a libc, que era uma substitura para
+        #a biblioteca c padrão.
+
+#double disse que o BFD 2 não sincou. Tenho que baixar ele
+    #it was a special part bfd2 eco dv . dll (  ,  even dont know is utility ?);
+    #bfd2 run under jamtaba2 but strangely theres a delay  with the metronome
+        #but it react for change of tempo
 
 #tocar em algumas Jams para ver se está rolando
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#64 bits
+
+#compilar no mac - começar sem plugin para facilitar
+
+#-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#um looper seria interessate. Carrega um arquivo de áudio
+    #e permite a edição do inicio e do fim. Como os softwares sabem que é um loop? Teria que saber o bpm
+    #legal, é possível obter algums informações do loop a partir do arquivo: http://www.recordingmag.com/resources/resourceDetail/323.html
+
+#nomes dos canais ninjam não ficam legais quando são grandes
 
 #parece que o sampletank nem recebe minhas mensagens midi
 

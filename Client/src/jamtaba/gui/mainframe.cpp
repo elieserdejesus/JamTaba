@@ -745,7 +745,7 @@ void MainFrame::showEvent(QShowEvent *)
         mainController->start();
 
         //wait 50 ms before resotre the plugins list to avoid freeze the GUI in hidden state while plugins are loaded
-        QTimer::singleShot(50, this, restorePluginsList);
+        QTimer::singleShot(50, this, &MainFrame::restorePluginsList);
     }
     else{
         QMessageBox::critical(this, "ERROR", "No audio device!");

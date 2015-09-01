@@ -1,101 +1,11 @@
 
 
-WARNING: Thread da GUI:  0xd2c () [:0]
+WARNING: Thread da GUI:  0xbe8 () [:0]
 
 
 
 INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
 
-
-
-
-CRITICAL: Não conseguiu abrir o arquivo  () [:0]
-
-
-
-
-CRITICAL: Não conseguiu abrir o arquivo  () [:0]
-
-
-
-
-WARNING: ShellExecute 'http://www.pcadvisor.co.uk/buying-advice/gadget/oculus-rift-release-date-specs-features-hands-on-3522990/' failed (error 2). () [:0]
-
-
-
-WARNING: ShellExecute 'http://www.pcadvisor.co.uk/buying-advice/gadget/oculus-rift-release-date-specs-features-hands-on-3522990/' failed (error 2). () [:0]
-
-
-
-WARNING: "[voting system] leading candidate: 1/2 votes for 130 BPM [each vote expires in 60s]" () [:0]
-
-
-
-WARNING: "[voting system] leading candidate: 1/2 votes for 130 BPM [each vote expires in 60s]" () [:0]
-
-
-
-WARNING: Thread da GUI:  0x588 () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-WARNING: Destrutor LocalInputAudioNode () [:0]
-
-
-
-WARNING: Thread da GUI:  0xc48 () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-WARNING: Destrutor LocalInputAudioNode () [:0]
-
-
-
-WARNING: Thread da GUI:  0xd08 () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
-CRITICAL: Não conseguiu abrir o arquivo  () [:0]
-
-
-
-
-CRITICAL: Não conseguiu abrir o arquivo  () [:0]
-
-
-
-
-CRITICAL: Não conseguiu abrir o arquivo  () [:0]
-
-
-
-
-CRITICAL: Não conseguiu abrir o arquivo  () [:0]
-
-
-
-
-CRITICAL: Não conseguiu abrir o arquivo  () [:0]
-
-
-
-
-WARNING: Destrutor LocalInputAudioNode () [:0]
 
 
 
@@ -108,26 +18,30 @@ WARNING: restoring plugin data () [:0]
 
 
 
-WARNING: Thread da GUI:  0xfd0 () [:0]
-
-
-
-INFO: "Starting Jamtaba 2.0.0 (i386) running on Windows 8.1 (x86_64)" [:0]
-
-
-
-
 CRITICAL: Não conseguiu abrir o arquivo  () [:0]
 
 
 
 
-CRITICAL: Não conseguiu abrir o arquivo  () [:0]
-
+WARNING: restoring plugin data () [:0]
 
 
 
 WARNING: Destrutor LocalInputAudioNode () [:0]
+
+
+
+CRITICAL: Não conseguiu abrir o arquivo  () [:0]
+
+
+
+
+WARNING: "[voting system] leading candidate: 1/2 votes for 130 BPM [each vote expires in 60s]" () [:0]
+
+
+
+CRITICAL: Não conseguiu abrir o arquivo  () [:0]
+
 
 
 
