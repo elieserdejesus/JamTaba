@@ -12,7 +12,11 @@
 
 using namespace Persistence;
 
-QString Settings::fileName = "Jamtaba.json";
+#ifdef Q_OS_WIN64 || Q_OS_MAC64
+    QString Settings::fileName = "Jamtaba64.json";
+#else
+    QString Settings::fileName = "Jamtaba.json";
+#endif
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SettingsObject::SettingsObject(QString name)
@@ -310,7 +314,9 @@ void Settings::setUserName(QString newUserName){
 }
 
 void Settings::addVstPlugin(QString pluginPath){
-    vstSettings.cachedPlugins.append(pluginPath);
+    if(!vstSettings.cachedPlugins.contains(pluginPath)){
+        vstSettings.cachedPlugins.append(pluginPath);
+    }
 }
 
 QStringList Settings::getVstPluginsPaths() const{

@@ -5,7 +5,7 @@
     #include "aeffectx.h"
 #endif
 
-//#include <QDebug>
+
 
 namespace Midi {
 class MidiBuffer;
@@ -37,7 +37,7 @@ public:
     //void setTransportChangedFlag(bool transportChanged);
     void update(int intervalPosition);
 protected:
-    static VstIntPtr VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index, VstInt32 value, void *ptr, float opt);
+    static VstInt32 VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index, VstInt32 value, void *ptr, float opt);
 private:
     VstTimeInfo vstTimeInfo;
     //int sampleRate;

@@ -24,6 +24,10 @@ Location::Location(QString country, QString countryCode, QString city, double la
       latitude(latitude), longitude(longitude){
 
 }
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++
+Location NullIpToLocationResolver::resolve(QString ip){
+    Q_UNUSED(ip)
+    return Location();
+}
 
 

@@ -1,6 +1,8 @@
 #pragma once
 #include "AudioNode.h"
-#include <QDialog>
+//#include <QDialog>
+
+class QDialog;
 
 namespace Audio {
 class SamplesBuffer;
@@ -41,19 +43,19 @@ public:
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++
-class PluginWindow : public QDialog
-{
-    Q_OBJECT
+//class PluginWindow : public QDialog
+//{
+//    Q_OBJECT
 
-public:
-    PluginWindow(Audio::Plugin* plugin);
-    ~PluginWindow();
-private:
-    Audio::Plugin* plugin;
-};
+//public:
+//    PluginWindow(Audio::Plugin* plugin);
+//    ~PluginWindow();
+//private:
+//    Audio::Plugin* plugin;
+//};
 //+++++++++++++++++++++++
 class Plugin : public Audio::AudioNodeProcessor{
-
+    Q_OBJECT
 public:
     explicit Plugin(QString name);
     virtual inline QString getName() const {return name;}
@@ -61,17 +63,20 @@ public:
     virtual void setBypass(bool state);
     inline bool isBypassed() const{return bypassed;}
     virtual void openEditor(QPoint centerOfScreen) = 0;
+    virtual void closeEditor();
     virtual void start() = 0;
-    void setEditor(PluginWindow* editorWindow);
-    PluginWindow* getEditor() const{return editorWindow;}
-    inline bool hasEditorWindow() const{return editorWindow;}
+    //void setEditor(PluginWindow* editorWindow);
+    //PluginWindow* getEditor() const{return editorWindow;}
+    //inline bool hasEditorWindow() const{return editorWindow;}
     virtual QString getPath() const = 0;
     virtual QByteArray getSerializedData() const = 0;
     virtual void restoreFromSerializedData(QByteArray data) = 0;
 protected:
     QString name;
     bool bypassed;
-    PluginWindow* editorWindow;
+    QDialog* editorWindow;
+private slots:
+    void editorDialogFinished();
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -91,6 +96,7 @@ public:
     inline float getFeedback() const{return feedbackGain;}
     inline float getLevel() const{return level;}
     virtual void openEditor(QPoint centerOfScreen);
+    //virtual void closeEditor();
     virtual void start();
     inline QString getPath() const{return "";}
 

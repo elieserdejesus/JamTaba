@@ -52,12 +52,13 @@ void WavePeakPanel::addPeak(float peak) {
 }
 
 
-void WavePeakPanel::paintEvent(QPaintEvent */*event*/){
+void WavePeakPanel::paintEvent(QPaintEvent *event){
+    Q_UNUSED(event)
     if (isVisible()) {
         QPainter painter(this);
         //painter.drawRect(QRect(0, 0, width()-1, height()-1));
         //qWarning() << "size: " << peaksArray.size();
-        uint size = peaksArray.size();
+        size_t size = peaksArray.size();
         for (uint i = 0; i < size; i++) {
             float alpha = ((float)(i+1)/(size));
             QColor color(90, 90, 90, std::pow(alpha, 2) * 255);

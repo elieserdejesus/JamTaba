@@ -29,7 +29,7 @@ private:
     float** outBuffer;
     static size_t readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *decoderInstance);
 
-    int consumeTo(void* oggOutBuffer, int bytesToConsume);
+    size_t consumeTo(void* oggOutBuffer, size_t bytesToConsume);
 
     int decodedSamples;
 };

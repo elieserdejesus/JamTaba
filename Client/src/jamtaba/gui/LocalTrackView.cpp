@@ -388,7 +388,7 @@ void LocalTrackView::on_MidiInputDeviceSelected(QAction *action){
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void LocalTrackView::addPlugin(Audio::Plugin* plugin, bool bypassed){
     if(fxPanel){
-        plugin->setEditor(new Audio::PluginWindow(plugin));
+        //plugin->setEditor(new Audio::PluginWindow(plugin));
         plugin->setBypass(bypassed);
         this->fxPanel->addPlugin(plugin);
         update();

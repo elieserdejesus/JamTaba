@@ -43,6 +43,7 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
 }
 
 void ChatPanel::on_verticalScrollBarRangeChanged(int min, int max){
+    Q_UNUSED(min)
     //used to auto scroll down to keep the last added message visible
     ui->chatScroll->verticalScrollBar()->setValue(max + 10);
 }

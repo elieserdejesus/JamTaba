@@ -17,6 +17,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QThread>
+#include <QDebug>
 #include <cassert>
 
 Q_LOGGING_CATEGORY(vst, "vst")
@@ -34,7 +35,8 @@ VstPlugin::VstPlugin(VstHost* host)
         effect(nullptr),
         internalBuffer(nullptr),
         host(host),
-        loaded(false)
+        loaded(false),
+        out(nullptr)
 {
     this->vstMidiEvents.reserved = 0;
     this->vstMidiEvents.numEvents = 0;
@@ -42,10 +44,14 @@ VstPlugin::VstPlugin(VstHost* host)
         this->vstMidiEvents.events[i] = (VstEvent*)(new VstMidiEvent);
     }
 
+    assert(host);
 
 }
 
-bool VstPlugin::load(VstHost *host, QString path){
+bool VstPlugin::load(QString path){
+    if(!host){
+        return false;
+    }
     loaded = false;
     QString pluginDir = QFileInfo(path).absoluteDir().absolutePath();
     //qCDebug(vst) << "adding " << pluginDir << "in library path";
@@ -55,15 +61,16 @@ bool VstPlugin::load(VstHost *host, QString path){
     effect = nullptr;
 
     vstPluginFuncPtr entryPoint=0;
+
     try {
-        qCDebug(vst) << "loading VST plugin " << path << " thread:" << QThread::currentThreadId();
+        qCDebug(vst) << "loading " << path << " thread:" << QThread::currentThreadId();
         if(!pluginLib.load()){
             qCCritical(vst) << "error when loading VST plugin " << path;
             return false;
         }
         //qCDebug(vst) << path << " loaded";
         //qCDebug(vst) << "searching VST plugin entry point for" << path;
-        entryPoint = (vstPluginFuncPtr)pluginLib.resolve("VSTPluginMain");
+        entryPoint = (vstPluginFuncPtr) pluginLib.resolve("VSTPluginMain");
         if(!entryPoint){
             entryPoint = (vstPluginFuncPtr)pluginLib.resolve("main");
         }
@@ -82,11 +89,12 @@ bool VstPlugin::load(VstHost *host, QString path){
     try
     {
         qCDebug(vst) << "Initializing effect for " << path ;
-        //TODO fiz esse cast para compilar no msvc x64, mas ele dá um warning
+
         effect = entryPoint( (audioMasterCallback)host->hostCallback);// myHost->vstHost->AudioMasterCallback);
     }
-    catch(...)
+    catch(... )
     {
+        qCCritical(vst) << "ERRO carregando plugin VST";
         effect = nullptr;
     }
 
@@ -101,10 +109,19 @@ bool VstPlugin::load(VstHost *host, QString path){
         unload();
         return false;
     }
-    char name[kVstMaxEffectNameLen];
+    char temp[kVstMaxEffectNameLen];
     //qCDebug(vst) << "getting name for " << path ;
-    effect->dispatcher(effect, effGetEffectName, 0, 0, name, 0);
-    this->name = QString(name);
+    effect->dispatcher(effect, effGetEffectName, 0, 0, temp, 0);
+    this->name = QString(temp);
+
+    if(!this->name.at(0).isLetterOrNumber()){
+        effect->dispatcher(effect, effGetProductString, 0, 0, temp, 0);
+        this->name = QString(temp);
+    }
+
+    //effect->dispatcher(effect, effGetProductString, 0, 0, temp, 0);
+    //qWarning() << QString(temp);
+
     //qCDebug(vst) << "Name readed: " << name ;
     this->path = path;
 
@@ -148,14 +165,14 @@ void VstPlugin::resume(){
     qCDebug(vst) << "Resuming " << getName() << "thread: " << QThread::currentThreadId();
     effect->dispatcher(effect, effMainsChanged, 0, 1, NULL, 0.0f);
 
-    effect->dispatcher(effect, effStartProcess, 0, 1, NULL, 0.0f);
+    //effect->dispatcher(effect, effStartProcess, 0, 1, NULL, 0.0f);
 
 }
 
 void VstPlugin::suspend(){
     qCDebug(vst) << "Suspending " << getName() << "Thread: " << QThread::currentThreadId();
 
-    effect->dispatcher(effect, effStopProcess, 0, 1, NULL, 0.0f);
+    //effect->dispatcher(effect, effStopProcess, 0, 1, NULL, 0.0f);
 
     effect->dispatcher(effect, effMainsChanged, 0, 0, NULL, 0.0f);
 }
@@ -182,23 +199,13 @@ void VstPlugin::start(){
     wantMidi = (effect->dispatcher(effect, effCanDo, 0, 0, (void*)"receiveVstMidiEvent", 0) == 1);
     //qCDebug(vst) << "plugin midi capabilities done: " << wantMidi;
 
-
-    //read chunk to test
-    QFile f("test.dat");
-    if(!f.open(QFile::ReadOnly)){
-        qCritical() << "Não conseguiu abrir o arquivo ";
-    }
-
     resume();
-
-
-    //started = true;
 }
 
 VstPlugin::~VstPlugin()
 {
 
-    qCDebug(vst) << getName() << " VSt plugin destructor ";
+    qCDebug(vst) << getName() << " VSt plugin destructor Thread:" << QThread::currentThreadId();
     unload();
     delete internalBuffer;
 
@@ -206,19 +213,23 @@ VstPlugin::~VstPlugin()
         delete this->vstMidiEvents.events[i];
     }
 
-    delete [] out;
+    if(out){
+        delete [] out;
+    }
 }
 
 void VstPlugin::unload(){
-    qCDebug(vst) << "unloading VST plugin " << getName();
+    qCDebug(vst) << "unloading VST plugin " << getName() << " Thread:" << QThread::currentThreadId();
     if(effect){
-        //effect->dispatcher(effect, effEditClose, 0, 0, NULL, 0);
+        closeEditor();
 
         suspend();
 
         effect->dispatcher(effect, effClose, 0, 0, NULL, 0);
+
         effect = nullptr;
     }
+    //pluginLib.
     if(pluginLib.isLoaded()){
         pluginLib.unload();
     }
@@ -298,12 +309,20 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
     //qCDebug(vst) << "audioBuffer filled " << getName();
 }
 
+void VstPlugin::closeEditor(){
+    qCDebug(vst) << "Closing " << getName() << " editor. Thread:" << QThread::currentThreadId();
+    Audio::Plugin::closeEditor();
+    if(effect){
+        effect->dispatcher(effect, effEditClose, 0, 0, NULL, 0);
+    }
+}
+
 void VstPlugin::openEditor(QPoint centerOfScreen){
     if(!effect ){
         return;
     }
 
-    if(!(effect->flags & effFlagsHasEditor || !hasEditorWindow())){
+    if(!(effect->flags & effFlagsHasEditor)){
         return;
     }
 
@@ -318,20 +337,22 @@ void VstPlugin::openEditor(QPoint centerOfScreen){
     }
     int rectWidth = rect->right - rect->left;
     int rectHeight = rect->bottom - rect->top;
-    Audio::PluginWindow* w = getEditor();
-    w->setFixedSize(rectWidth, rectHeight);
-    effect->dispatcher(effect, effEditOpen, 0, 0, (void*)(w->effectiveWinId()), 0);
+    this->editorWindow= new QDialog(0, Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
+    this->editorWindow->setWindowTitle(getName());
+    this->editorWindow->setFixedSize(rectWidth, rectHeight);
+    QObject::connect( this->editorWindow, SIGNAL(finished(int)), this, SLOT(editorDialogFinished()));
+    this->editorWindow->show();
+    effect->dispatcher(effect, effEditOpen, 0, 0, (void*)(editorWindow->effectiveWinId()), 0);
 
     //Some plugins don't return the real size until after effEditOpen
     effect->dispatcher(effect, effEditGetRect, 0, 0, (void*)&rect, 0);
 	if (rect) {
-		w->setFixedSize(rect->right - rect->left, rect->bottom - rect->top);
-
+        editorWindow->setFixedSize(rect->right - rect->left, rect->bottom - rect->top);
 
 		rectWidth = rect->right - rect->left;
 		rectHeight = rect->bottom - rect->top;
 
-		w->move(centerOfScreen.x() - rectWidth / 2, centerOfScreen.y() - rectHeight / 2);
+        editorWindow->move(centerOfScreen.x() - rectWidth / 2, centerOfScreen.y() - rectHeight / 2);
 	}
 
     qCDebug(vst) << getName() << " editor opened";

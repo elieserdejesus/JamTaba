@@ -79,7 +79,7 @@ private:
 
     bool showAccents = true;
 
-    static const float PI;
+    static const double PI;
 
 };
 

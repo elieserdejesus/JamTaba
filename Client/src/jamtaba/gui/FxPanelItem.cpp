@@ -131,12 +131,17 @@ void FxPanelItem::on_contextMenu(QPoint p){
     if(!containPlugin()){//show plugins list
         QMenu menu;
         QList<Audio::PluginDescriptor> plugins = mainController->getPluginsDescriptors();
-        for(const Audio::PluginDescriptor& pluginDescriptor  : plugins){
-            QAction* action = menu.addAction(pluginDescriptor.getName());
-            action->setData(pluginDescriptor.toString());
-        }
+        if(!plugins.isEmpty()){
+            for(const Audio::PluginDescriptor& pluginDescriptor  : plugins){
+                QAction* action = menu.addAction(pluginDescriptor.getName());
+                action->setData(pluginDescriptor.toString());
+            }
 
-        QObject::connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(on_fxMenuActionTriggered(QAction*)));
+            QObject::connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(on_fxMenuActionTriggered(QAction*)));
+        }
+        else{//no plugin found
+            menu.addAction("No plugin found! Check the 'Preferences -> Vst plugins' menu.");
+        }
         menu.move(mapToGlobal(p));
         menu.exec();
     }
@@ -168,12 +173,12 @@ void FxPanelItem::on_actionMenuTriggered(QAction* a){
             Audio::Plugin* plugin = this->plugin;
             unsetPlugin();//set this->plugin to nullptr
 
-            if(plugin->hasEditorWindow()){
-                Audio::PluginWindow* window = plugin->getEditor();
-                if(window){
-                    window->close();
-                }
-            }
+//            if(plugin->hasEditorWindow()){
+//                Audio::PluginWindow* window = plugin->getEditor();
+//                if(window){
+//                    window->close();
+//                }
+//            }
             mainController->removePlugin(this->localTrackView->getInputIndex(), plugin);
         }
     }
@@ -181,19 +186,19 @@ void FxPanelItem::on_actionMenuTriggered(QAction* a){
 
 //++++++++++++++++++++++++++
 void FxPanelItem::showPluginGui(Audio::Plugin *plugin){
-    if(plugin && plugin->hasEditorWindow()){
-        Audio::PluginWindow* window = plugin->getEditor();
+    if(plugin ){
+//        Audio::PluginWindow* window = plugin->getEditor();
 
-        if(!window->isVisible()){
-            window->show();//show to generate a window handle, VST plugins use this handle to draw plugin GUI
+//        if(!window->isVisible()){
+//            window->show();//show to generate a window handle, VST plugins use this handle to draw plugin GUI
             QDesktopWidget desktop;
 
             int hCenter = desktop.geometry().width()/2;// - window->width();
             int vCenter = desktop.geometry().height()/2;// - window->height();
             plugin->openEditor(QPoint(hCenter, vCenter));
-        }
-        else{
-            window->activateWindow();
-        }
+//        }
+//        else{
+//            window->activateWindow();
+//        }
     }
 }

@@ -1,7 +1,9 @@
 #include "plugins.h"
 #include "AudioDriver.h"
+#include "../midi/MidiDriver.h"
 #include "SamplesBuffer.h"
 #include <QDebug>
+#include <QDialog>
 #include <QMutexLocker>
 #include "../../audio/vst/PluginFinder.h"
 
@@ -61,18 +63,26 @@ Plugin::Plugin(QString name)
 
 }
 
-void Plugin::setEditor(PluginWindow *editorWindow){
-    if(this->editorWindow){
+//void Plugin::setEditor(PluginWindow *editorWindow){
+//    if(this->editorWindow){
+//        editorWindow->deleteLater();
+//    }
+//    this->editorWindow = editorWindow;
+//}
+
+void Plugin::closeEditor(){
+    if (editorWindow) {
         editorWindow->deleteLater();
+        editorWindow = nullptr;
     }
-    this->editorWindow = editorWindow;
+}
+
+void Plugin::editorDialogFinished(){
+    closeEditor();
 }
 
 Plugin::~Plugin(){
-    //qDebug() << "Plugin destructor";
-    if(editorWindow){
-       delete editorWindow;
-    }
+    closeEditor();
 }
 
 void Plugin::setBypass(bool state){
@@ -81,17 +91,17 @@ void Plugin::setBypass(bool state){
     }
 }
 //++++++++++++++++++++++++++++
-PluginWindow::PluginWindow( Plugin *plugin)
-    :QDialog(nullptr, Qt::WindowTitleHint | Qt::WindowCloseButtonHint),
-      plugin(plugin)
-{
-    //setAttribute( Qt::WA_DeleteOnClose, true );
-    setWindowTitle(plugin->getName());
-}
+//PluginWindow::PluginWindow( Plugin *plugin)
+//    :QDialog(nullptr, Qt::WindowTitleHint | Qt::WindowCloseButtonHint),
+//      plugin(plugin)
+//{
+//    //setAttribute( Qt::WA_DeleteOnClose, true );
+//    setWindowTitle(plugin->getName());
+//}
 
-PluginWindow::~PluginWindow(){
-    //qDebug() << "PLugin window destructor";
-}
+//PluginWindow::~PluginWindow(){
+//    qWarning() << "PLugin window destructor";
+//}
 
 //+++++++++++++++++++++++++++++++++++++++++
 const int JamtabaDelay::MAX_DELAY_IN_SECONDS = 3;
@@ -136,7 +146,9 @@ void JamtabaDelay::start(){
 
 void JamtabaDelay::process(const Audio::SamplesBuffer &in, SamplesBuffer &out, const Midi::MidiBuffer &midiBuffer){
 
-//        Q_UNUSED(midiBuffer)
+      Q_UNUSED(midiBuffer)
+      Q_UNUSED(in)
+      Q_UNUSED(out)
 //    if(isBypassed()){
 //        return;
 //    }

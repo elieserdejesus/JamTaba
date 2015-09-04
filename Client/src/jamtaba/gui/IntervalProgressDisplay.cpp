@@ -12,7 +12,7 @@ QColor IntervalProgressDisplay::PLAYED_BEATS_FIRST_COLOR = QColor(200, 200, 200)
 QColor IntervalProgressDisplay::PLAYED_BEATS_SECOND_COLOR = QColor(180, 180, 180);
 QColor IntervalProgressDisplay::PATH_COLOR = QColor(0,0,0, 20);
 
-const float IntervalProgressDisplay::PI = 3.141592653589793238462643383279502884;
+const double IntervalProgressDisplay::PI = 3.141592653589793238462643383279502884;
 
 
 

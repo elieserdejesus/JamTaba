@@ -8,8 +8,8 @@
 class WavePeakPanel : public QWidget{
 
 protected:
-    void resizeEvent( QResizeEvent * /*event*/ );
-    void paintEvent(QPaintEvent */*event*/);
+    void resizeEvent( QResizeEvent * event );
+    void paintEvent(QPaintEvent *event);
 
 private:
     static const int peaksRectWidth;

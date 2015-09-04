@@ -2,58 +2,24 @@
 #include "MainController.h"
 #include "JamtabaFactory.h"
 #include "persistence/Settings.h"
-#include <QTextCodec>
+#include <QApplication>
 #include <QLoggingCategory>
 #include <QDir>
-#include <QFile>
+
+#include "../audio/vst/VstPlugin.h"
+#include "../audio/vst/vsthost.h"
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
-#include <QFile>
-#include "../audio/vorbis/VorbisEncoder.h"
-#include "../audio/vorbis/VorbisDecoder.h"
-
-#include "../audio/core/AudioNode.h"
-#include "../midi/MidiDriver.h"
-
 int main(int argc, char* args[] ){
-//    int sampleRate = 44100;
-//    int channels = 1;
-//    Audio::OscillatorAudioNode osc(440, sampleRate);
-//    int samplesPerInterval = sampleRate * 5;
-//    VorbisEncoder encoder(channels, sampleRate);
-
-//    for (int i = 0; i < 2; ++i) {
-//        int encodedSamples = 0;
-//        QByteArray intervalBytes;
-//        while(encodedSamples < samplesPerInterval){
-//            Audio::SamplesBuffer tempBuffer(channels, qMin(256, samplesPerInterval - encodedSamples));
-//            Midi::MidiBuffer midiBuffer(0);
-//            osc.processReplacing(tempBuffer, tempBuffer, sampleRate, midiBuffer);
-//            QByteArray encodedBytes = encoder.encode(tempBuffer);
-//            intervalBytes.append(encodedBytes);
-//            encodedSamples += tempBuffer.getFrameLenght();
-//            if(encodedSamples >= samplesPerInterval){
-//                intervalBytes.append(encoder.finishIntervalEncoding());
-//            }
-//        }
-//        QFile oggFile("../../Jamtaba/oggz-tools-0.9.9/testeEncoder" + QString::number(i) + ".ogg");
-//        if(!oggFile.open(QFile::WriteOnly)){
-//            qFatal("can't open the file");
-//        }
-//        oggFile.write(intervalBytes.data(), intervalBytes.size());
-//    }
+//    Vst::VstHost* host = Vst::VstHost::getInstance();
+//    Vst::VstPlugin plugin(host);
+//    bool result = plugin.load(host, "C:\\Program Files (x86)\\VSTPlugins\\4Front Bass x64.dll");
+//    qWarning() << "result: " << result;
 //    return 0;
-
-
-    //if (!QTextCodec::codecForLocale()) {
-      QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
-      //QTextCodec::set
-    //}
 
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
-
 
     qputenv("QT_LOGGING_CONF", ":/qtlogging.ini");//log cconfigurations is in resources at moment
 
@@ -65,13 +31,13 @@ int main(int argc, char* args[] ){
 
     Controller::MainController mainController(factory, settings, argc, args);//MainController extends QApplication
 
-
     MainFrame mainFrame(&mainController);
     mainFrame.show();
 
     delete factory;
     int returnCode = mainController.exec();
     mainController.saveLastUserSettings(mainFrame.getInputsSettings());
+
     return returnCode;
 
  }

@@ -54,7 +54,7 @@ SamplesBuffer::~SamplesBuffer(){
 
 void SamplesBuffer::discardFirstSamples(unsigned int samplesToDiscard){
     int toDiscard = std::min(frameLenght, samplesToDiscard);
-    int newFrameLenght = frameLenght - toDiscard;
+    uint newFrameLenght = frameLenght - toDiscard;
     for (uint s = 0; s < newFrameLenght; ++s) {
         for (uint c = 0; c < channels; ++c) {
             samples[c][s] = samples[c][toDiscard + s];
@@ -112,7 +112,7 @@ void SamplesBuffer::applyGain(float gainFactor)
 }
 
 void SamplesBuffer::fadeOut(int fadeFrameLenght, float endGain){
-    int lenght = std::min(fadeFrameLenght, (int)frameLenght);
+    uint lenght = std::min(fadeFrameLenght, (int)frameLenght);
     float gainStep = (1 - endGain)/lenght;
     for (unsigned int c = 0; c < channels; ++c) {
         float gain = 1;
@@ -124,7 +124,7 @@ void SamplesBuffer::fadeOut(int fadeFrameLenght, float endGain){
 }
 
 void SamplesBuffer::fadeIn(int fadeFrameLenght, float beginGain){
-    int lenght = std::min(fadeFrameLenght, (int)frameLenght);
+    uint lenght = std::min(fadeFrameLenght, (int)frameLenght);
     float gainStep = (1 - beginGain)/lenght;
     for (unsigned int c = 0; c < channels; ++c) {
         float gain = beginGain;
@@ -262,7 +262,7 @@ void SamplesBuffer::setToMono(){
 
 void SamplesBuffer::setToStereo(){
     if(this->samples.size() < 2){
-        int channelsToAdd = 2 - this->samples.size();
+        size_t channelsToAdd = 2 - this->samples.size();
         for (int c = 0; c < channelsToAdd; ++c) {
             samples.push_back(std::vector<float>(frameLenght));
         }

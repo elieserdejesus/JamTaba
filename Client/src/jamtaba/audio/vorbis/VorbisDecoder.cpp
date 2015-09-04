@@ -32,11 +32,11 @@ VorbisDecoder::~VorbisDecoder(){
 //    }
 }
 //+++++++++++++++++++++++++++++++++++++++++++
-int VorbisDecoder::consumeTo(void *oggOutBuffer, int bytesToConsume){
-    int len = std::min( bytesToConsume, vorbisInput.size());
+size_t VorbisDecoder::consumeTo(void *oggOutBuffer, size_t bytesToConsume){
+    size_t len = qMin( bytesToConsume, (size_t)vorbisInput.size());
     if(len > 0){
         memcpy(oggOutBuffer, vorbisInput.data(), len);
-        vorbisInput.remove(0, len);
+        vorbisInput.remove(0, (uint)len);
     }
 //    else{
 //        qCritical() << "len " << len;
