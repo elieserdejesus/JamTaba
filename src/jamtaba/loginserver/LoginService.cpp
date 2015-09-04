@@ -97,6 +97,7 @@ LoginService::LoginService(QObject* parent)
 {
     refreshTimer = new QTimer(this);
     QObject::connect( refreshTimer, SIGNAL(timeout()), this, SLOT(refreshTimerSlot()));
+    //QObject::connect(&httpClient, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), this, SLOT(sslErrorsSlot(QNetworkReply*,QList<QSslError>)));
 }
 
 LoginService::~LoginService()
@@ -122,7 +123,7 @@ void LoginService::refreshTimerSlot(){
     }
 }
 
-void LoginService::disconnect()
+void LoginService::disconnectFromServer()
 {
     if(isConnected()){
         qDebug() << "DISCONNECTING from server...";
@@ -156,12 +157,10 @@ QNetworkReply* LoginService::sendCommandToServer(const QUrlQuery &query)
 }
 
 
-void LoginService::sslErrorsSlot(QList<QSslError> errorList){
-    foreach (const QSslError& error, errorList) {
-        qDebug() << error;
-    }
-    emit errorWhenConnectingToServer();
-}
+//void LoginService::sslErrorsSlot(QNetworkReply* reply, QList<QSslError> errors){
+//    Q_UNUSED(errors);
+//    reply->ignoreSslErrors();
+//}
 
 void LoginService::errorSlot(QNetworkReply::NetworkError /*error*/){
     emit errorWhenConnectingToServer();
@@ -179,8 +178,9 @@ void LoginService::connectNetworkReplySlots(QNetworkReply* reply, Command comman
     default:
         break;
     }
+
     reply->connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),  this, SLOT(errorSlot(QNetworkReply::NetworkError)));
-    reply->connect(reply, SIGNAL(sslErrors(QList<QSslError>)),  this, SLOT(sslErrorsSlot(QList<QSslError>)));
+    //reply->connect(reply, SIGNAL(sslErrors(QList<QSslError>)),  this, SLOT(sslErrorsSlot(QList<QSslError>)));
 }
 
 void LoginService::connectedSlot(){
@@ -193,6 +193,7 @@ void LoginService::connectedSlot(){
 void LoginService::disconnectedSlot(){
     this->connected = false;
     emit disconnectedFromServer();
+    qDebug() << "disconnected from login server!";
 }
 
 void LoginService::roomsListReceivedSlot(){

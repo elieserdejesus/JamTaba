@@ -9,6 +9,8 @@
 #include "../loginserver/LoginService.h"
 #include "../loginserver/natmap.h"
 
+#include "../audio/core/plugins.h"
+
 #include "JamtabaFactory.h"
 #include "audio/core/plugins.h"
 #if _WIN32
@@ -146,7 +148,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
         vstHost(Vst::VstHost::getInstance()),
       #endif
       //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
-      ipToLocationResolver( new Geo::MaxMindIpToLocationResolver("./GeoLite2-Country.mmdb")),
+      ipToLocationResolver( buildIpToLocationResolver()),
       settings(settings),
 
       userNameChoosed(false),
@@ -231,6 +233,20 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     //qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
 }
 //++++++++++++++++++++
+Geo::IpToLocationResolver* MainController::buildIpToLocationResolver(){
+    bool maxMindDataBaseFounded = true;
+    QFileInfo maxMindDbFile("./GeoLite2-Country.mmdb");
+    if(!maxMindDbFile.exists()){
+        maxMindDbFile.setFile("./../GeoLite2-Country.mmdb");
+        if(!maxMindDbFile.exists()){
+            maxMindDataBaseFounded = false;
+        }
+    }
+    if(maxMindDataBaseFounded){
+        return new Geo::MaxMindIpToLocationResolver(maxMindDbFile.absoluteFilePath());
+    }
+    return new Geo::NullIpToLocationResolver();
+}
 
 //++++++++++++++++++++
 int MainController::getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const{
@@ -354,6 +370,7 @@ void MainController::saveEncodedAudio(QString userName, quint8 channelIndex, QBy
 //+++++++++++++++++++++++++++++++++++++++++++++++
 
 void MainController::removeInputTrackNode(int inputTrackIndex){
+    QMutexLocker locker(&mutex);
     if(inputTrackIndex >= 0 && inputTrackIndex < inputTracks.size()){
         //remove from group
         Audio::LocalInputAudioNode* inputTrack = inputTracks[inputTrackIndex];
@@ -504,13 +521,27 @@ void MainController::addVstScanPath(QString path){
 }
 
 void MainController::addDefaultVstScanPath(){
-    //#if _WIN32
-        QSettings settings("HKEY_LOCAL_MACHINE\\SOFTWARE\\VST\\", QSettings::NativeFormat);
-        QString VSTPluginsPath = settings.value("VSTPluginsPath").toString();
-        if(!VSTPluginsPath.isEmpty() && QDir(VSTPluginsPath).exists()){
-            addVstScanPath(VSTPluginsPath);
+    /*
+    On a 64-bit OS
+
+    64-bit plugins path = HKEY_LOCAL_MACHINE\SOFTWARE\VST
+    32-bit plugins path = HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\VST
+    */
+    QStringList vstPaths;
+#ifdef Q_OS_WIN
+    QSettings settings("HKEY_LOCAL_MACHINE\\SOFTWARE\\VST\\", QSettings::NativeFormat);
+    vstPaths.append(settings.value("VSTPluginsPath").toString());
+
+    #ifdef _WIN64//64 bits?
+        QSettings wowSettings("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\VST\\", QSettings::NativeFormat);
+        vstPaths.append(wowSettings.value("VSTPluginsPath").toString());
+    #endif
+#endif
+    foreach (QString vstPath, vstPaths) {
+        if(!vstPath.isEmpty() && QDir(vstPath).exists()){
+            addVstScanPath(vstPath);
         }
-    //#endif
+    }
 }
 
 void MainController::removeVstScanPath(int index){
@@ -688,7 +719,13 @@ bool MainController::trackIsSoloed(int trackID) const{
 
 //+++++++++++++++++++++++++++++++++
 
+bool MainController::pluginDescriptorLessThan(const Audio::PluginDescriptor& d1, const Audio::PluginDescriptor& d2){
+     return d1.getName().localeAwareCompare(d2.getName()) < 0;
+}
+
 QList<Audio::PluginDescriptor> MainController::getPluginsDescriptors(){
+
+    qSort(pluginsDescriptors.begin(), pluginsDescriptors.end(), pluginDescriptorLessThan);
     return pluginsDescriptors;
     //Audio::getPluginsDescriptors(this->vstHost);
 
@@ -721,7 +758,17 @@ Audio::Plugin* MainController::addPlugin(int inputTrackIndex, const Audio::Plugi
 }
 
 void MainController::removePlugin(int inputTrackIndex, Audio::Plugin *plugin){
-    getInputTrack(inputTrackIndex)->removeProcessor(plugin);
+    QMutexLocker locker(&mutex);
+    QString pluginName = plugin->getName();
+    try{
+        //Audio::PluginWindow* window = plugin->getEditor();
+
+        getInputTrack(inputTrackIndex)->removeProcessor(plugin);
+        //window->deleteLater();
+    }
+    catch(...){
+        qCritical() << "Erro removendo plugin " << pluginName;
+    }
 }
 
 Audio::Plugin *MainController::createPluginInstance(const Audio::PluginDescriptor& descriptor)
@@ -734,7 +781,7 @@ Audio::Plugin *MainController::createPluginInstance(const Audio::PluginDescripto
     else if(descriptor.isVST()){
         #if _WIN32
             Vst::VstPlugin* vstPlugin = new Vst::VstPlugin(this->vstHost);
-            if(vstPlugin->load(this->vstHost, descriptor.getPath())){
+            if(vstPlugin->load( descriptor.getPath())){
                 return vstPlugin;
             }
         #endif
@@ -748,6 +795,7 @@ void MainController::on_disconnectedFromLoginServer(){
 }
 
 MainController::~MainController(){
+    qCDebug(controllerMain()) << "MainController destrutor!";
     stop();
 
     QObject::disconnect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
@@ -780,6 +828,7 @@ MainController::~MainController(){
         ninjamController = nullptr;
     }
     //delete recorder;
+    qCDebug(controllerMain) << "Finishing MainController destructor!";
 }
 
 void MainController::saveLastUserSettings(const Persistence::InputsSettings& inputsSettings){
@@ -939,7 +988,7 @@ void MainController::stop()
         }
 
         qCDebug(controllerMain) << "disconnecting from login server...";
-        loginService->disconnect();
+        loginService->disconnectFromServer();
 
     }
 }

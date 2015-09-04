@@ -15,7 +15,7 @@ namespace Audio{
 
 //class SamplesBuffer;
 
-class AudioNodeProcessor{
+class AudioNodeProcessor : public QObject{
 public:
     virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, const Midi::MidiBuffer& midiBuffer) = 0;
     virtual ~AudioNodeProcessor(){}

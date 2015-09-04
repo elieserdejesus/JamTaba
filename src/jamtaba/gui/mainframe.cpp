@@ -755,7 +755,9 @@ void MainFrame::showEvent(QShowEvent *)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainFrame::~MainFrame()
 {
+    qDebug() << "Main frame desctructor!";
     killTimer(timerID);
+    qDebug() << "Main frame timer killed!";
 
     //delete peakMeter;
 }

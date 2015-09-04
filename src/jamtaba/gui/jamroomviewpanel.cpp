@@ -70,7 +70,8 @@ void JamRoomViewPanel::addPeak(float peak){
     ui->wavePeakPanel->addPeak(peak);
 }
 
-void JamRoomViewPanel::paintEvent( QPaintEvent */*e*/ ){
+void JamRoomViewPanel::paintEvent( QPaintEvent *e ){
+    Q_UNUSED(e)
     QStyleOption opt;
     opt.init(this);
     QPainter p(this);

@@ -5,7 +5,7 @@
 
 Q_LOGGING_CATEGORY(vorbisEncoder, "vorbis.encoder")
 
-const float VorbisEncoder::QUALITY = 0.32;
+const float VorbisEncoder::QUALITY = 0.32f;
 
 VorbisEncoder::VorbisEncoder()
     :initialized(false)

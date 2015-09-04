@@ -1,11 +1,12 @@
-#minimp3 só compilou em 64 bits depois que eu mudei o código para não usar
-    #mais assembly e não usar mais a libc, que era uma substitura para
-        #a biblioteca c padrão.
+#não consegui baixar o licence manager do BFD2 pela univali.
+#vi que é possível baixar o BFD2 demo (300MB) no site da FxPansion
 
 #double disse que o BFD 2 não sincou. Tenho que baixar ele
     #it was a special part bfd2 eco dv . dll (  ,  even dont know is utility ?);
     #bfd2 run under jamtaba2 but strangely theres a delay  with the metronome
         #but it react for change of tempo
+
+#Quando mudo o buffer size parece que não afeta o Asio4ALL. Testar com a fast para ver
 
 #tocar em algumas Jams para ver se está rolando
 
@@ -16,6 +17,8 @@
 #compilar no mac - começar sem plugin para facilitar
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#não está finalizando direito no QT creator, mas o processo é finalizado, então deixei prá lá
 
 #um looper seria interessate. Carrega um arquivo de áudio
     #e permite a edição do inicio e do fim. Como os softwares sabem que é um loop? Teria que saber o bpm
@@ -227,10 +230,10 @@ QT       +=  gui  network
 #DEFINES += QT_NO_CAST_FROM_ASCII
 #DEFINES += QT_NO_CAST_TO_ASCII
 
-QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS -Wall -fpermissive
+QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS
 
 CONFIG += c++11
-CONFIG += openssl-linked
+#CONFIG += openssl-linked
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -238,7 +241,7 @@ TARGET = Jamtaba2
 TEMPLATE = app
 
 MAIN = src/jamtaba/main.cpp
-#MAIN = src/jamtaba/ninjam/main.cpp
+#MAIN = src/jamtaba/ninjam/_main.cpp
 
 
 HEADERS += \
@@ -307,15 +310,14 @@ HEADERS += \
     src/jamtaba/NinjamController.h \
     src/jamtaba/gui/IntervalProgressDisplay.h \
     src/jamtaba/audio/vst/PluginFinder.h \
-   src/jamtaba/geo/MaxMindIpToLocationResolver.h \
-#    src/jamtaba/geo/FreeGeoIpToLocationResolver.h
+    src/jamtaba/geo/MaxMindIpToLocationResolver.h \
+    src/jamtaba/geo/FreeGeoIpToLocationResolver.h
 
 win32:HEADERS +=    src/jamtaba/audio/vst/VstPlugin.h \
                     src/jamtaba/audio/vst/vsthost.h \
 
 SOURCES += \
     $$MAIN \
-    #src/jamtaba/minimp3/minimp3.c \
     src/jamtaba/audio/core/AudioDriver.cpp \
     src/jamtaba/audio/core/AudioNode.cpp \
     src/jamtaba/audio/core/AudioMixer.cpp \
@@ -344,11 +346,11 @@ SOURCES += \
     src/jamtaba/gui/FxPanel.cpp \
     src/jamtaba/gui/FxPanelItem.cpp \
     src/jamtaba/audio/core/plugins.cpp \
-   src/jamtaba/audio/codec.cpp \
+    src/jamtaba/audio/codec.cpp \
     src/jamtaba/gui/plugins/guis.cpp \
     src/jamtaba/gui/jamroomviewpanel.cpp \
     src/jamtaba/gui/mainframe.cpp \
-   src/jamtaba/audio/vst/PluginFinder.cpp \
+    src/jamtaba/audio/vst/PluginFinder.cpp \
     src/jamtaba/midi/MidiDriver.cpp \
     src/jamtaba/gui/PreferencesDialog.cpp \
     src/jamtaba/gui/pluginscandialog.cpp \
@@ -379,7 +381,7 @@ SOURCES += \
     src/jamtaba/NinjamController.cpp \
     src/jamtaba/gui/IntervalProgressDisplay.cpp \
     src/jamtaba/geo/MaxMindIpToLocationResolver.cpp \
-#    src/jamtaba/geo/FreeGeoIpToLocationResolver.cpp
+    src/jamtaba/geo/FreeGeoIpToLocationResolver.cpp
 
 win32:SOURCES +=    src/jamtaba/audio/vst/VstPlugin.cpp \
                     src/jamtaba/audio/vst/vsthost.cpp \
@@ -397,15 +399,8 @@ FORMS += \
     src/jamtaba/gui/TrackGroupView.ui \
     src/jamtaba/gui/jamroomviewpanel.ui \
 
-
-win32{
-    VST_SDK_PATH = "D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3_SDK/pluginterfaces/vst2.x/"
-}
-
-
 INCLUDEPATH += src/jamtaba/gui                  \
                src/jamtaba/gui/widgets          \
-               $$VST_SDK_PATH                   \
                $$PWD/libs/includes/portaudio    \
                $$PWD/libs/includes/portmidi     \
                $$PWD/libs/includes/ogg          \
@@ -413,29 +408,32 @@ INCLUDEPATH += src/jamtaba/gui                  \
                $$PWD/libs/includes/minimp3      \
                $$PWD/libs/includes/libmaxmind   \
 
-
-win32-g++: LIBS += -L$$PWD/libs/win32-mingw/ -lportaudio -lportmidi -lvorbisfile -lvorbis -lvorbisenc -logg -lminimp3 -lmaxminddb \
-#win32-g++: PRE_TARGETDEPS += $$PWD/libs/win32-mingw/libportaudio.a \
-
-#msvc configs
-
-win32: LIBS +=  -lwinmm     \
-                -lole32     \
-                -lws2_32    \
-                -lAdvapi32  \
-                -lUser32    \
+DEPENDPATH += $$PWD/libs/includes/portaudio     \
+               $$PWD/libs/includes/portmidi     \
+               $$PWD/libs/includes/ogg          \
+               $$PWD/libs/includes/vorbis       \
+               $$PWD/libs/includes/minimp3      \
+               $$PWD/libs/includes/libmaxmind   \
 
 
-unix:!macx: LIBS += -L$$PWD/libs/linux64/ -lportaudio -lportmidi -lvorbisfile -lvorbis -lvorbisenc -logg  -lmaxminddb -lminimp3
-unix:!macx: LIBS += -lrt -lasound
+win32 {
 
+    LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32    \
+
+    VST_SDK_PATH = "D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3_SDK/pluginterfaces/vst2.x/"
+
+    INCLUDEPATH += $$VST_SDK_PATH  \
+
+    !contains(QMAKE_TARGET.arch, x86_64) {
+        message("x86 build") ## Windows x86 (32bit) specific build here
+        LIBS_PATH = "win32-msvc"
+    } else {
+        message("x86_64 build") ## Windows x64 (64bit) specific build here
+        LIBS_PATH = "win64-msvc"
+    }
+
+    CONFIG(release, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbis -logg -lmaxminddb
+    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisd -loggd -lmaxminddbd
+}
 
 RESOURCES += src/jamtaba/resources/jamtaba.qrc
-
-win32:!win32-g++:CONFIG(release, debug|release): LIBS += -L$$PWD/libs/win32-msvc/ -lportaudio -lportmidi -lvorbisfile -lvorbis -logg
-else:win32:!win32-g++:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/win32-msvc/ -lportaudiod  -lportmidid -lvorbisfiled -lvorbisd -lvorbisencd  -loggd \
-
-#win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/win32-msvc/libportaudio.a
-#else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/win32-msvc/libportaudiod.a
-#else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/libs/win32-msvc/portaudio.lib
-#else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/libs/win32-msvc/portaudiod.lib

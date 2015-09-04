@@ -78,7 +78,7 @@ public:
     explicit LoginService(QObject *parent=0);
     ~LoginService();
     virtual void connectInServer(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, QString version, QString environment, int sampleRate);
-    virtual void disconnect();
+    virtual void disconnectFromServer();
     inline bool isConnected() const {return connected;}
 
 signals:
@@ -112,7 +112,7 @@ private slots:
     void roomsListReceivedSlot();
 
     void errorSlot(QNetworkReply::NetworkError);
-    void sslErrorsSlot(QList<QSslError>);
+    //void sslErrorsSlot(QNetworkReply*,QList<QSslError>);
     void connectNetworkReplySlots(QNetworkReply *reply, Command command);
 
     void refreshTimerSlot();

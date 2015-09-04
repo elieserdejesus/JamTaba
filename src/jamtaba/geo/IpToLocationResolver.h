@@ -30,6 +30,11 @@ public:
     virtual Location resolve(QString ip) = 0;
 };
 
+class NullIpToLocationResolver : public IpToLocationResolver{
+public:
+    Location resolve(QString ip);
+};
+
 }
 
 #endif // IPTOCOUNTRYRESOLVER_H

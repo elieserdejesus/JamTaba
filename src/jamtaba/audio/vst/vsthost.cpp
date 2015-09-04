@@ -104,7 +104,9 @@ void VstHost::setTempo(int bpm){
     this->vstTimeInfo.flags |= kVstTempoValid;
 }
 
-VstIntPtr VSTCALLBACK VstHost::hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index, VstInt32 value, void *ptr, float opt)
+//static long VSTCALLBACK AudioMasterCallback(AEffect *effect, long opcode, long index, long value, void *ptr, float opt);
+
+VstInt32 VSTCALLBACK VstHost::hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index, VstInt32 value, void *ptr, float opt)
 {
     Q_UNUSED(effect)
     Q_UNUSED(index)

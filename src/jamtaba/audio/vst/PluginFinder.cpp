@@ -10,6 +10,7 @@
 #endif
 #include <QApplication>
 #include <QSettings>
+#include <QDataStream>
 
 using namespace Vst;
 
@@ -36,7 +37,7 @@ void PluginFinder::run(){
             if(descriptor.isValid()){
                 emit vstPluginFounded(descriptor.getName(), descriptor.getGroup(), descriptor.getPath());
             }
-            QApplication::processEvents();
+            //QApplication::processEvents();
         }
     }
     emit scanFinished();
@@ -109,22 +110,25 @@ private:
 
 //retorna nullptr se não for um plugin
 Audio::PluginDescriptor PluginFinder::getPluginDescriptor(QFileInfo f, Vst::VstHost* host){
-    if (!f.isFile() || f.suffix() != "dll")
+    if (!f.isFile() || !QLibrary::isLibrary(f.fileName()) || f.fileName() == "Jamtaba.dll")
         return Audio::PluginDescriptor();//invalid descriptor
 
     try{
-        #if _WIN32
-            if(WindowsDllArchChecker::is32Bits(f.absoluteFilePath())){
-                Vst::VstPlugin plugin(host);
-                if(plugin.load(host, f.absoluteFilePath())){
-                    QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
-                    return Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
-                }
-            }
-//            else{
-//                qWarning() << "skipping 64 bits dll: " << f.fileName();
-//            }
+        #ifdef Q_OS_WIN
+            bool archIsValid = false;
+            #ifdef _WIN64
+                archIsValid = WindowsDllArchChecker::is64Bits(f.absoluteFilePath());
+            #else
+                archIsValid = WindowsDllArchChecker::is32Bits(f.absoluteFilePath());
+            #endif
         #endif
+                if(archIsValid){
+                    Vst::VstPlugin plugin(host);
+                    if(plugin.load(f.absoluteFilePath())){
+                        QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
+                        return Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
+                    }
+                }
     }
     catch(...){
         qCritical() << "não carregou " << f.absoluteFilePath();

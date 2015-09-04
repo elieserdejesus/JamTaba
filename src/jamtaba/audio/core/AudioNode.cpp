@@ -160,6 +160,7 @@ void AudioNode::addProcessor( AudioNodeProcessor* newProcessor)
 
 void AudioNode::removeProcessor(AudioNodeProcessor* processor){
     assert(processor);
+    //processor->suspend();
     processors.removeOne(processor);
     delete processor;
 }

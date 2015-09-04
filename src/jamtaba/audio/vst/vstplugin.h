@@ -16,10 +16,8 @@ namespace Vst {
 class VstHost;
 class VstEvents;
 
-class VstPlugin : public Audio::Plugin
-{
+class VstPlugin : public Audio::Plugin{
 public:
-
     explicit VstPlugin(Vst::VstHost* host);
     ~VstPlugin();
     void start();
@@ -27,7 +25,8 @@ public:
     void suspend();
     virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer &outBuffer, const Midi::MidiBuffer& midiBuffer);
     virtual void openEditor(QPoint centerOfScreen);
-    bool load(Vst::VstHost* host, QString path);
+    virtual void closeEditor();
+    bool load(QString path);
     inline QString getPath() const{return path;}
     virtual QByteArray getSerializedData() const;
     virtual void restoreFromSerializedData(QByteArray dataToRestore);
