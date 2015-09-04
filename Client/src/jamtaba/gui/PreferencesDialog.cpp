@@ -210,14 +210,19 @@ void PreferencesDialog::populateSampleRateCombo()
 void PreferencesDialog::populateBufferSizeCombo()
 {
     ui->comboBufferSize->clear();
-    ui->comboBufferSize->addItem("64", 64);
-    ui->comboBufferSize->addItem("128", 128);
-    ui->comboBufferSize->addItem("256", 256);
-    ui->comboBufferSize->addItem("512", 512);
-    ui->comboBufferSize->addItem("1024", 1024);
-    ui->comboBufferSize->addItem("2048", 2048);
-    ui->comboBufferSize->addItem("4096", 4096);
-    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
+    AudioDriver* audioDriver = mainController->getAudioDriver();
+    QList<int> bufferSizes = audioDriver->getValidBufferSizes(audioDriver->getInputDeviceIndex());
+    foreach (int size, bufferSizes) {
+        ui->comboBufferSize->addItem(QString::number(size), size);
+    }
+//    ui->comboBufferSize->addItem("64", 64);
+//    ui->comboBufferSize->addItem("128", 128);
+//    ui->comboBufferSize->addItem("256", 256);
+//    ui->comboBufferSize->addItem("512", 512);
+//    ui->comboBufferSize->addItem("1024", 1024);
+//    ui->comboBufferSize->addItem("2048", 2048);
+//    ui->comboBufferSize->addItem("4096", 4096);
+//    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     ui->comboBufferSize->setCurrentText(QString::number(audioDriver->getBufferSize()));
     //ui->comboBufferSize->addItem("4096", 4096);
 }

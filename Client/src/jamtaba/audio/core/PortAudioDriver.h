@@ -22,6 +22,7 @@ public:
 	virtual void release();
 
     virtual QList<int> getValidSampleRates(int deviceIndex) const;
+    virtual QList<int> getValidBufferSizes(int deviceIndex) const;
 
     virtual int getMaxInputs() const;
     virtual int getMaxOutputs() const;
