@@ -3,6 +3,7 @@
 #include "../midi/MidiDriver.h"
 #include "portmidi.h"
 #include <QDebug>
+#include <QDateTime>
 
 using namespace Vst;
 
@@ -34,12 +35,16 @@ void VstHost::clearVstTimeInfoFlags(){
     memset(&vstTimeInfo, 0, sizeof(vstTimeInfo));
     vstTimeInfo.timeSigNumerator = 4;
     vstTimeInfo.timeSigDenominator = 4;
+    vstTimeInfo.smpteOffset = 1;
+//    vstTimeInfo.nanoSeconds = QDateTime::currentMSecsSinceEpoch();
 
     vstTimeInfo.sampleRate = tempSampleRate;
-    vstTimeInfo.flags |= kVstTimeSigValid;
-    vstTimeInfo.flags |= kVstPpqPosValid;
-    vstTimeInfo.flags |= kVstTempoValid;
-    vstTimeInfo.flags |= kVstBarsValid;
+//    vstTimeInfo.flags |= kVstTimeSigValid;
+//    vstTimeInfo.flags |= kVstPpqPosValid;
+//    vstTimeInfo.flags |= kVstTempoValid;
+//    vstTimeInfo.flags |= kVstBarsValid;
+//    vstTimeInfo.flags |= kVstNanosValid;
+//    vstTimeInfo.flags |= kVstTransportChanged;
 }
 
 void VstHost::setPlayingFlag(bool playing){
@@ -68,13 +73,20 @@ void VstHost::update(int intervalPosition){
     double samplesPerQuarter = vstTimeInfo.sampleRate * quarterTime / 1000;
 
     vstTimeInfo.ppqPos =  intervalPosition/samplesPerQuarter;
-    vstTimeInfo.barStartPos = ((int)vstTimeInfo.ppqPos/vstTimeInfo.timeSigNumerator) * vstTimeInfo.timeSigNumerator;
+    int measure = (int)vstTimeInfo.ppqPos/vstTimeInfo.timeSigNumerator;
+    vstTimeInfo.barStartPos = measure * vstTimeInfo.timeSigNumerator;
     //the ppq value returned by vsttimeinfo is a float which will vary from 0 to 3.999999999(etc) over the 4 beats of a typical 16 semiquaver bar of 4/4.
+
+    vstTimeInfo.smpteOffset = measure + 1;
+
+    vstTimeInfo.nanoSeconds = QDateTime::currentDateTime().currentMSecsSinceEpoch()/1000.0;
 
     vstTimeInfo.flags |= kVstPpqPosValid;
     vstTimeInfo.flags |= kVstBarsValid;
     vstTimeInfo.flags |= kVstTempoValid;
     vstTimeInfo.flags |= kVstTransportPlaying;
+    vstTimeInfo.flags |= kVstNanosValid;
+    vstTimeInfo.flags |= kVstTransportChanged;
 }
 
 VstHost::~VstHost()

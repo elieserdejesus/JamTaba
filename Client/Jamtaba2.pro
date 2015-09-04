@@ -1,11 +1,3 @@
-#não consegui baixar o licence manager do BFD2 pela univali.
-#vi que é possível baixar o BFD2 demo (300MB) no site da FxPansion
-
-#double disse que o BFD 2 não sincou. Tenho que baixar ele
-    #it was a special part bfd2 eco dv . dll (  ,  even dont know is utility ?);
-    #bfd2 run under jamtaba2 but strangely theres a delay  with the metronome
-        #but it react for change of tempo
-
 #Quando mudo o buffer size parece que não afeta o Asio4ALL. Testar com a fast para ver
 
 #tocar em algumas Jams para ver se está rolando
