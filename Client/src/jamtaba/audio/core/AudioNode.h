@@ -136,7 +136,7 @@ class LocalInputAudioNode : public AudioNode{
 public:
     LocalInputAudioNode(int parentChannelIndex, bool isMono=true);
     ~LocalInputAudioNode();
-    virtual void processReplacing(const SamplesBuffer&in, SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer &midiBuffer);
+    virtual void processReplacing(const SamplesBuffer& in, SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer &midiBuffer);
     virtual int getSampleRate() const{return 0;}
     inline int getChannels() const{return audioInputRange.getChannels();}
     bool isMono() const;//{return audioInputRange.isMono();}
@@ -184,7 +184,7 @@ public:
         osc.setGain(0.5);
     }
 
-    void processReplacing(Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer& midiBuffer){
+    void processReplacing(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer& midiBuffer){
         osc.processReplacing(in, out, sampleRate, midiBuffer);//copy sine samples to out and simulate an input, just to test audio transmission
     }
 
