@@ -322,6 +322,12 @@ void VstPlugin::openEditor(QPoint centerOfScreen){
         return;
     }
 
+    if(editorWindow && editorWindow->isVisible()){
+        editorWindow->setFocus();
+        editorWindow->activateWindow();
+        return;
+    }
+
     qCDebug(vst) << "opening " <<getName() << "editor thread: " << QThread::currentThreadId();
 
     //obtém o tamanho da janela do plugin
