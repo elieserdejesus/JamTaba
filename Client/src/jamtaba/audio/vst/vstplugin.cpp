@@ -114,15 +114,11 @@ bool VstPlugin::load(QString path){
     effect->dispatcher(effect, effGetEffectName, 0, 0, temp, 0);
     this->name = QString(temp);
 
-    if(!this->name.at(0).isLetterOrNumber()){
+    if(!this->name.at(0).isLetterOrNumber()){//some plugins (it's rare) are returning trash in effGetEffectName, but returning a nice string in effGetProductString
         effect->dispatcher(effect, effGetProductString, 0, 0, temp, 0);
         this->name = QString(temp);
     }
 
-    //effect->dispatcher(effect, effGetProductString, 0, 0, temp, 0);
-    //qWarning() << QString(temp);
-
-    //qCDebug(vst) << "Name readed: " << name ;
     this->path = path;
 
     int outputs = effect->numOutputs;
