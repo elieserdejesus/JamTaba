@@ -1,5 +1,3 @@
-#Quando mudo o buffer size parece que não afeta o Asio4ALL. Testar com a fast para ver
-
 #tocar em algumas Jams para ver se está rolando
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------

@@ -167,7 +167,7 @@ void PortAudioDriver::start(){
     inputParams.channelCount = globalInputRange.getChannels();// maxInputChannels;//*/ inputChannels;
     inputParams.device = inputDeviceIndex;
     inputParams.sampleFormat = sampleFormat;
-    inputParams.suggestedLatency = Pa_GetDeviceInfo(inputDeviceIndex)->defaultLowOutputLatency;
+    inputParams.suggestedLatency = 0;//Pa_GetDeviceInfo(inputDeviceIndex)->defaultLowOutputLatency;
     inputParams.hostApiSpecificStreamInfo = NULL;
 
 //+++++++++++++++ ASIO SPECIFIC CODE FOR INPUT ++++++++++++++++++++++++++++++++
@@ -193,7 +193,7 @@ void PortAudioDriver::start(){
     outputParams.channelCount = globalOutputRange.getChannels();// */outputChannels;
     outputParams.device = outputDeviceIndex;
     outputParams.sampleFormat = sampleFormat;
-    outputParams.suggestedLatency = Pa_GetDeviceInfo(outputDeviceIndex)->defaultLowOutputLatency;
+    outputParams.suggestedLatency = 0;//Pa_GetDeviceInfo(outputDeviceIndex)->defaultLowOutputLatency;
     outputParams.hostApiSpecificStreamInfo = NULL;
 
 //+++++++++++++++ ASIO SPECIFIC CODE FOR OUTPUT ++++++++++++++++++++++++++++++++
@@ -236,6 +236,13 @@ void PortAudioDriver::start(){
     }
     qCDebug(portaudio) << "portaudio driver started ok!";
     emit started();
+
+    qWarning() << "Valid buffers Size:";
+    QList<int> sizes = getValidBufferSizes(this->inputDeviceIndex);
+    for (int s = 0; s < sizes.size(); ++s) {
+        qWarning() << sizes.at(s);
+    }
+    qWarning() << "-----------------";
 }
 
 QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const{
@@ -261,6 +268,24 @@ QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const{
         }
     }
     return validSRs;
+}
+
+QList<int> PortAudioDriver::getValidBufferSizes(int deviceIndex) const{
+    long maxBufferSize;
+    long minBufferSize;
+    long preferredBuffersize;
+    long granularity;
+    PaError result = PaAsio_GetAvailableBufferSizes(deviceIndex, &minBufferSize, &maxBufferSize, &preferredBuffersize, &granularity);
+    QList<int> completeList;
+    if(result != paNoError){
+        completeList.append(256);
+        return completeList;//return 256 as the only possible value
+    }
+    //when granularity is -1 the values are power of two
+    for (long size = minBufferSize; size <= maxBufferSize; size *= 2) {
+        completeList.append(size);
+    }
+    return completeList;
 }
 
 void PortAudioDriver::stop(){
