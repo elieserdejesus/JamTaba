@@ -32,14 +32,16 @@ void ChannelRange::setToMono(){
 //+++++++++++++++++++++++++++++++++++++++++++
 AudioDriver::AudioDriver(AudioDriverListener *audioDriverListener)
     :
-    inputDeviceIndex(0),//index of selected device index. In ASIO the inputDeviceIndex and outputDeviceIndex are equal.
+      globalInputRange(0, 0),
+      globalOutputRange(0, 0),
+      inputDeviceIndex(0),//index of selected device index. In ASIO the inputDeviceIndex and outputDeviceIndex are equal.
     outputDeviceIndex(0),
     sampleRate(44100),
     bufferSize(128),
+
     inputBuffer(nullptr),
     outputBuffer(nullptr),
-    globalInputRange(0, 0),
-    globalOutputRange(0, 0),
+
     //selectedInputs(0, 0),
     //selectedOutpus(0, 0),
     audioDriverListener(audioDriverListener)

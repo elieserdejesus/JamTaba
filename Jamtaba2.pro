@@ -412,8 +412,6 @@ win32 {
 
     VST_SDK_PATH = "D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3_SDK/pluginterfaces/vst2.x/"
 
-    INCLUDEPATH += $$VST_SDK_PATH  \
-
     !contains(QMAKE_TARGET.arch, x86_64) {
         message("x86 build") ## Windows x86 (32bit) specific build here
         LIBS_PATH = "win32-msvc"
@@ -421,9 +419,29 @@ win32 {
         message("x86_64 build") ## Windows x64 (64bit) specific build here
         LIBS_PATH = "win64-msvc"
     }
-
-    CONFIG(release, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbis -logg -lmaxminddb
-    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisd -loggd -lmaxminddbd
 }
 
+macx{
+    message("Mac build")
+
+    VST_SDK_PATH = "/Volumes/mac dados/VST3_SDK/pluginterfaces/vst2.x"
+
+    LIBS_PATH = "mac"
+
+    LIBS += -framework CoreAudio
+    LIBS += -framework AudioToolbox
+    LIBS += -framework AudioUnit
+    LIBS += -framework CoreServices
+    LIBS += -framework Carbon
+}
+
+INCLUDEPATH += $$VST_SDK_PATH  \
+
+
+CONFIG(release, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbis -logg -lmaxminddb
+else:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisd -loggd -lmaxminddbd
+
+
+
 RESOURCES += src/jamtaba/resources/jamtaba.qrc
+

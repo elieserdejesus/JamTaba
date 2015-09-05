@@ -2,12 +2,14 @@
 #include <QDirIterator>
 #include <QFileInfo>
 #include <QDebug>
+#include <QLibrary>
 #include "../audio/core/plugins.h"
 #if _WIN32
     #include "windows.h"
-    #include "VstPlugin.h"
-    #include "vsthost.h"
 #endif
+#include "VstPlugin.h"
+#include "vsthost.h"
+
 #include <QApplication>
 #include <QSettings>
 #include <QDataStream>
@@ -67,6 +69,7 @@ void PluginFinder::clearScanPaths(){
 //}
 
 //++++++++++++++++++++++++++++++++++++++++++++
+#ifdef Q_OS_WIN
 class WindowsDllArchChecker{
 public:
     static bool is32Bits(QString dllPath){
@@ -104,7 +107,7 @@ private:
         return machineType;
     }
 };
-
+#endif
 //++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -114,8 +117,8 @@ Audio::PluginDescriptor PluginFinder::getPluginDescriptor(QFileInfo f, Vst::VstH
         return Audio::PluginDescriptor();//invalid descriptor
 
     try{
+        bool archIsValid = false;
         #ifdef Q_OS_WIN
-            bool archIsValid = false;
             #ifdef _WIN64
                 archIsValid = WindowsDllArchChecker::is64Bits(f.absoluteFilePath());
             #else

@@ -2,6 +2,7 @@
 
 #include <QPainter>
 #include <QDebug>
+#include <cmath>
 
 const int WavePeakPanel::peaksRectWidth = 2;
 const int WavePeakPanel::peaksPad = 0;
