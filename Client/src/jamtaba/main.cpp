@@ -58,25 +58,27 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
         file = fullFileName.toStdString().c_str();
     }
 
+    QTextStream stream(&stringMsg);
     switch (type) {
     case QtDebugMsg:
-        stringMsg = QString::asprintf("\nDEBUG: %s [%s: %u]", localMsg.constData(), file , context.line);
+        stream << "\nDEBUG:" << localMsg.constData() << file << context.line;
         break;
     case QtWarningMsg:
-        stringMsg = QString::asprintf("\n\nWARNING: %s (%s) [%s:%u]\n", localMsg.constData(), context.function, file, context.line);
+        stream << "\n\nWARNING: " << localMsg.constData() << context.function << file << context.line;
         break;
     case QtCriticalMsg:
-        stringMsg = QString::asprintf("\n\nCRITICAL: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, file, context.line);
+        stream << "\n\nCRITICAL:" << localMsg.constData() << context.function << file << context.line << "\n\n";
         break;
     case QtFatalMsg:
-        stringMsg = QString::asprintf("\n\nFATAL: %s (%s) [%s:%u]\n\n", localMsg.constData(), context.function, file, context.line);
+        stream << "\n\nFATAL:" << localMsg.constData() << context.function << file << context.line << "\n\n";
         //abort();
         break;
-    case QtInfoMsg:
-        stringMsg = QString::asprintf("\n\nINFO: %s [%s:%u]\n\n", localMsg.constData(), file, context.line);
+    //case QtInfoMsg:
+    //    stream << "\n\nINFO:" << localMsg.constData() << file << context.line << "\n\n";
     }
-    fprintf(stderr, stringMsg.toStdString().c_str());//write log message to console
-    fflush(stderr);
+    QTextStream(stdout) << stringMsg << endl;
+    //fprintf(stderr, stringMsg.toStdString().c_str());//write log message to console
+    //fflush(stderr);
 
     if(type != QtDebugMsg){//write the critical messages to log file
         QFile outFile("log.txt");

@@ -13,10 +13,10 @@
 
 #include "JamtabaFactory.h"
 #include "audio/core/plugins.h"
-#if _WIN32
+//#if _WIN32
     #include "audio/vst/VstPlugin.h"
     #include "audio/vst/vsthost.h"
-#endif
+//#endif
 #include "persistence/Settings.h"
 
 #include "../ninjam/Service.h"
@@ -138,21 +138,23 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
       audioMixer(nullptr),
       roomStreamer(nullptr),
       currentStreamingRoomID(-1000),
-      ninjamService(nullptr),
+
 
       transmiting(true),
+      ninjamService(nullptr),
       ninjamController(nullptr),
       mutex(QMutex::Recursive),
       started(false),
-      #if _WIN32
+      //#if _WIN32
         vstHost(Vst::VstHost::getInstance()),
-      #endif
+      //#endif
       //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
       ipToLocationResolver( buildIpToLocationResolver()),
       settings(settings),
 
-      userNameChoosed(false),
       loginService(factory->createLoginService()),
+      userNameChoosed(false),
+
       jamRecorder(new Recorder::ReaperProjectGenerator())
 
 {
@@ -957,7 +959,7 @@ void MainController::start()
         loginService->connectInServer("Jamtaba2 USER", 0, "", map, version, userEnvironment, getAudioDriverSampleRate());
         //(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
 
-        qCInfo(controllerMain) << "Starting " + userEnvironment;
+        qCDebug(controllerMain) << "Starting " + userEnvironment;
     }
 }
 

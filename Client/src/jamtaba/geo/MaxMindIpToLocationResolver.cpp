@@ -8,9 +8,9 @@ MaxMindIpToLocationResolver::MaxMindIpToLocationResolver(QString databasePath){
     int status = MMDB_open(databasePath.toStdString().c_str(), MMDB_MODE_MMAP, &this->mmdb_s);
     if (MMDB_SUCCESS != status) {
         qWarning() << "can't open " << databasePath;
-        if (MMDB_IO_ERROR == status) {
-            qWarning() << strerror(errno);
-        }
+        //if (MMDB_IO_ERROR == status) {
+          //  qWarning() << strerror(errno);
+       // }
     }
 }
 

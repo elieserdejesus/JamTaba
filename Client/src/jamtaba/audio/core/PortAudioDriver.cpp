@@ -11,9 +11,12 @@
 
 Q_LOGGING_CATEGORY(portaudio, "portaudio")
 
-#if _WIN32
+#if Q_OS_WIN
     #include "pa_asio.h"
+#else
+    #include "pa_mac_core.h"
 #endif
+
 
 namespace Audio{
 
@@ -271,20 +274,29 @@ QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const{
 }
 
 QList<int> PortAudioDriver::getValidBufferSizes(int deviceIndex) const{
+
+    QList<int> completeList;
+
+
     long maxBufferSize;
     long minBufferSize;
-    long preferredBuffersize;
-    long granularity;
-    PaError result = PaAsio_GetAvailableBufferSizes(deviceIndex, &minBufferSize, &maxBufferSize, &preferredBuffersize, &granularity);
-    QList<int> completeList;
+
+    #if Q_OS_WIN
+        long preferredBuffersize;//note used
+        long granularity;//note used
+        PaError result = PaAsio_GetAvailableBufferSizes(deviceIndex, &minBufferSize, &maxBufferSize, &preferredBuffersize, &granularity);
+    #else//mac
+        PaError result = PaMacCore_GetBufferSizeRange(deviceIndex, &minBufferSize, &maxBufferSize);
+    #endif
     if(result != paNoError){
         completeList.append(256);
         return completeList;//return 256 as the only possible value
     }
-    //when granularity is -1 the values are power of two
+    //in windows ASIO when granularity is -1 the values are power of two
     for (long size = minBufferSize; size <= maxBufferSize; size *= 2) {
         completeList.append(size);
     }
+
     return completeList;
 }
 
@@ -325,21 +337,25 @@ int PortAudioDriver::getMaxOutputs() const{
 
 const char *PortAudioDriver::getInputChannelName(const unsigned int index) const
 {
-#if _WIN32
+#ifdef Q_OS_WIN
     const char *channelName = new char[30];
     PaAsio_GetInputChannelName(inputDeviceIndex, index, &channelName);
     return channelName;
-#endif /* _WIN32*/
+#else
+    return PaMacCore_GetChannelName(inputDeviceIndex, index, true);
+#endif
     return "error";
 }
 
 const char *PortAudioDriver::getOutputChannelName(const unsigned int index) const
 {
-#if _WIN32
+#ifdef Q_OS_WIN
     const char *channelName = new char[30];
     PaAsio_GetOutputChannelName(inputDeviceIndex, index, &channelName);
     return channelName;
-#endif /* _WIN32*/
+#else
+    return PaMacCore_GetChannelName(outputDeviceIndex, index, false);
+#endif
     return "error";
 }
 

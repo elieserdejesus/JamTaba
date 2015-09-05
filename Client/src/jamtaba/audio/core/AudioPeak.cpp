@@ -1,5 +1,6 @@
 #include "AudioPeak.h"
 #include <algorithm>
+#include <QtGlobal>
 
 using namespace Audio ;
 
@@ -36,7 +37,7 @@ void AudioPeak::setRight(float newRightValue){
 }
 
 float AudioPeak::getMax() const{
-    return std::max(std::abs(left), std::abs(right));
+    return std::max(qAbs(left), qAbs(right));
 }
 
 

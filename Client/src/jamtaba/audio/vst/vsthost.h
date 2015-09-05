@@ -1,9 +1,9 @@
 #ifndef VSTHOST_H
 #define VSTHOST_H
 
-#if _WIN32
+//#if _WIN32
     #include "aeffectx.h"
-#endif
+//#endif
 
 
 
