@@ -240,12 +240,6 @@ void PortAudioDriver::start(){
     qCDebug(portaudio) << "portaudio driver started ok!";
     emit started();
 
-    qWarning() << "Valid buffers Size:";
-    QList<int> sizes = getValidBufferSizes(this->inputDeviceIndex);
-    for (int s = 0; s < sizes.size(); ++s) {
-        qWarning() << sizes.at(s);
-    }
-    qWarning() << "-----------------";
 }
 
 QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const{

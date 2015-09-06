@@ -1,6 +1,7 @@
 #include "MaxMindIpToLocationResolver.h"
 
 #include <QDebug>
+#include <QtGlobal>
 
 using namespace Geo;
 
@@ -12,6 +13,7 @@ MaxMindIpToLocationResolver::MaxMindIpToLocationResolver(QString databasePath){
           //  qWarning() << strerror(errno);
        // }
     }
+
 }
 
 MaxMindIpToLocationResolver::~MaxMindIpToLocationResolver(){
@@ -33,10 +35,10 @@ Location MaxMindIpToLocationResolver::resolve(QString ip) {
     if (result.found_entry) {
         MMDB_entry_data_s data;
         MMDB_get_value(&result.entry, &data, "country", "names", "en", NULL);
-        QString countryName = QString(data.utf8_string).left(data.data_size);
+        QString countryName = QString(data.utf8_string).left(qMax(data.data_size, (uint32_t)30));
 
         MMDB_get_value(&result.entry, &data, "country", "iso_code", NULL);
-        QString countryCode = QString(data.utf8_string).left(data.data_size);
+        QString countryCode = QString(data.utf8_string).left(qMax(data.data_size, (uint32_t)30));
         return Location(countryName, countryCode);
     }
     return Location();//return an empty location

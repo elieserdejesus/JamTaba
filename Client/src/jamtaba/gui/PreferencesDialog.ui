@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>412</width>
-    <height>376</height>
+    <width>447</width>
+    <height>435</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -73,7 +73,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="prefsTab">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
@@ -103,12 +103,12 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>ASIO driver</string>
+               <string>Device</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboAsioDriver">
+             <widget class="QComboBox" name="comboAudioDevice">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -392,8 +392,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>60</width>
-               <height>165</height>
+               <width>98</width>
+               <height>28</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_10">
