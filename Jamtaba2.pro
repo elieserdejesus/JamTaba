@@ -270,7 +270,7 @@ HEADERS += \
     src/jamtaba/audio/core/plugins.h \
     src/jamtaba/gui/plugins/guis.h \
     src/jamtaba/midi/MidiDriver.h \
-    src/jamtaba/midi/portmididriver.h \
+   # src/jamtaba/midi/portmididriver.h \
     src/jamtaba/gui/pluginscandialog.h \
     src/jamtaba/gui/PreferencesDialog.h \
     src/jamtaba/gui/NinjamRoomWindow.h \
@@ -301,10 +301,9 @@ HEADERS += \
     src/jamtaba/gui/IntervalProgressDisplay.h \
     src/jamtaba/audio/vst/PluginFinder.h \
     src/jamtaba/geo/MaxMindIpToLocationResolver.h \
-    src/jamtaba/geo/FreeGeoIpToLocationResolver.h
-
-win32:HEADERS +=    src/jamtaba/audio/vst/VstPlugin.h \
-                    src/jamtaba/audio/vst/vsthost.h \
+    src/jamtaba/geo/FreeGeoIpToLocationResolver.h \
+    src/jamtaba/audio/vst/VstPlugin.h \
+    src/jamtaba/audio/vst/vsthost.h \
 
 SOURCES += \
     $$MAIN \
@@ -344,7 +343,7 @@ SOURCES += \
     src/jamtaba/midi/MidiDriver.cpp \
     src/jamtaba/gui/PreferencesDialog.cpp \
     src/jamtaba/gui/pluginscandialog.cpp \
-    src/jamtaba/midi/portmididriver.cpp \
+  #  src/jamtaba/midi/portmididriver.cpp \
     src/jamtaba/gui/NinjamRoomWindow.cpp \
     src/jamtaba/gui/BaseTrackView.cpp \
     src/jamtaba/audio/NinjamTrackNode.cpp \
@@ -371,10 +370,9 @@ SOURCES += \
     src/jamtaba/NinjamController.cpp \
     src/jamtaba/gui/IntervalProgressDisplay.cpp \
     src/jamtaba/geo/MaxMindIpToLocationResolver.cpp \
-    src/jamtaba/geo/FreeGeoIpToLocationResolver.cpp
-
-win32:SOURCES +=    src/jamtaba/audio/vst/VstPlugin.cpp \
-                    src/jamtaba/audio/vst/vsthost.cpp \
+    src/jamtaba/geo/FreeGeoIpToLocationResolver.cpp \
+    src/jamtaba/audio/vst/VstPlugin.cpp \
+    src/jamtaba/audio/vst/vsthost.cpp \
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
@@ -419,12 +417,15 @@ win32 {
         message("x86_64 build") ## Windows x64 (64bit) specific build here
         LIBS_PATH = "win64-msvc"
     }
+
+    CONFIG(release, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbis -logg -lmaxminddb
+    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisd -loggd -lmaxminddbd
 }
 
 macx{
     message("Mac build")
 
-    VST_SDK_PATH = "/Volumes/mac dados/VST3_SDK/pluginterfaces/vst2.x"
+    VST_SDK_PATH = "/Users/elieser/Desktop/VST3 SDK/pluginterfaces/vst2.x"
 
     LIBS_PATH = "mac"
 
@@ -433,13 +434,15 @@ macx{
     LIBS += -framework AudioUnit
     LIBS += -framework CoreServices
     LIBS += -framework Carbon
+
+    #LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg -lmaxminddb
+    LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3  -lvorbisfile -lvorbisenc -lvorbis -logg -lmaxminddb
 }
 
 INCLUDEPATH += $$VST_SDK_PATH  \
 
 
-CONFIG(release, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbis -logg -lmaxminddb
-else:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisd -loggd -lmaxminddbd
+
 
 
 

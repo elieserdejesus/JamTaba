@@ -217,9 +217,10 @@ void MainFrame::addChannelsGroup(QString name){
 //++++++++++++++++++++++++=
 void MainFrame::initializeMainTabWidget(){
     //the rooms list tab bar is not closable
+#ifdef Q_OS_WIN
     ui.tabWidget->tabBar()->tabButton(0, QTabBar::RightSide)->resize(0, 0);
     ui.tabWidget->tabBar()->tabButton(0, QTabBar::RightSide)->hide();
-
+#endif
     connect( ui.tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(on_tabCloseRequest(int)));
     connect( ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tabChanged(int)));
 }

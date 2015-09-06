@@ -1,7 +1,8 @@
 #include "MainController.h"
 #include "recorder/ReaperProjectGenerator.h"
 #include "audio/core/AudioDriver.h"
-#include "midi/portmididriver.h"
+//#include "midi/portmididriver.h"
+#include "midi/MidiDriver.h"
 #include "audio/core/PortAudioDriver.h"
 #include "audio/core/AudioMixer.h"
 #include "audio/core/AudioNode.h"
@@ -13,10 +14,10 @@
 
 #include "JamtabaFactory.h"
 #include "audio/core/plugins.h"
-//#if _WIN32
+
     #include "audio/vst/VstPlugin.h"
     #include "audio/vst/vsthost.h"
-//#endif
+
 #include "persistence/Settings.h"
 
 #include "../ninjam/Service.h"
@@ -145,9 +146,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
       ninjamController(nullptr),
       mutex(QMutex::Recursive),
       started(false),
-      //#if _WIN32
         vstHost(Vst::VstHost::getInstance()),
-      //#endif
       //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
       ipToLocationResolver( buildIpToLocationResolver()),
       settings(settings),
@@ -185,16 +184,16 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     //QString fileName = "output.wav";
     //recorder = new SamplesBufferRecorder(fileName, audioDriver->getSampleRate());
 
-    midiDriver = new PortMidiDriver(settings.getMidiInputDevicesStatus());
+    midiDriver = new NullMidiDriver();// new PortMidiDriver(settings.getMidiInputDevicesStatus());
 
     QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromLoginServer()));
 
     this->audioMixer->addNode( roomStreamer);
 
-    #if _WIN32
-        vstHost->setSampleRate(audioDriver->getSampleRate());
-        vstHost->setBlockSize(audioDriver->getBufferSize());
-    #endif
+
+    vstHost->setSampleRate(audioDriver->getSampleRate());
+    vstHost->setBlockSize(audioDriver->getBufferSize());
+
 
     QObject::connect(&pluginFinder, SIGNAL(vstPluginFounded(QString,QString,QString)), this, SLOT(on_VSTPluginFounded(QString,QString,QString)));
 

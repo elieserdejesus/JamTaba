@@ -16,7 +16,7 @@ SamplesBuffer::SamplesBuffer(unsigned int channels)
       frameLenght(0)
 {
     if(channels == 0){
-        throw std::runtime_error(std::string("AudioSamplesBuffer::channels == 0"));
+        qCritical() << "AudioSamplesBuffer::channels == 0";
     }
     for (unsigned int c = 0; c < channels; ++c) {
         samples.push_back(std::vector<float>());
@@ -28,7 +28,7 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, unsigned int frameLenght)
       frameLenght(frameLenght)
 {
     if(channels == 0){
-        throw std::runtime_error(std::string("AudioSamplesBuffer::channels == 0"));
+        qCritical() << "AudioSamplesBuffer::channels == 0";
     }
     for (unsigned int c = 0; c < channels; ++c) {
         samples.push_back(std::vector<float>(frameLenght));
