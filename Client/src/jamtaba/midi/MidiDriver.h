@@ -75,6 +75,19 @@ protected:
     int selectedChannel;//-1 to use all channels
 };
 
+class NullMidiDriver : public MidiDriver{
+    virtual void start() {}
+    virtual void stop() {}
+    virtual void release(){}
+
+    virtual bool hasInputDevices() const{return false;}
+
+    virtual int getMaxInputDevices() const {return 0;}
+
+    virtual const char* getInputDeviceName(int index) const{Q_UNUSED(index); return "";}
+    virtual MidiBuffer getBuffer(){return MidiBuffer(0);}
+};
+
 }
 
 #endif // MIDIDRIVER_H

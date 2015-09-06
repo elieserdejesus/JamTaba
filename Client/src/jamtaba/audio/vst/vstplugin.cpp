@@ -1,7 +1,11 @@
 #include "VstPlugin.h"
 #include "aeffectx.h"
 #include "vsthost.h"
+
+#ifdef Q_OS_WIN
 #include <windows.h>
+#endif
+
 #include <QDebug>
 #include "../audio/core/AudioDriver.h"
 #include "../audio/core/SamplesBuffer.h"
