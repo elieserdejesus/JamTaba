@@ -24,6 +24,9 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
 
     ui->comboLastOutput->setEnabled(false);
 
+#ifdef Q_OS_MACX
+ ui->comboAudioDevice->setEnabled(false);
+#endif
     //selectAudioTab();
     //ui->prefsTab->setCurrentIndex(0);
     populateAudioTab();
@@ -118,12 +121,12 @@ void PreferencesDialog::populateAsioDriverCombo()
 {
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     int devices = audioDriver->getDevicesCount();
-    ui->comboAsioDriver->clear();
+    ui->comboAudioDevice->clear();
     for(int d=0; d < devices; d++){
-        ui->comboAsioDriver->addItem(audioDriver->getInputDeviceName(d), d);//using device index as userData in comboBox
+        ui->comboAudioDevice->addItem(audioDriver->getInputDeviceName(d), d);//using device index as userData in comboBox
     }
     //qDebug() << "setando combo para inputDeviceIndex: " << audioDriver->getInputDeviceIndex() << " outputDeviceIndex: " << audioDriver->getOutputDeviceIndex();
-    ui->comboAsioDriver->setCurrentIndex(audioDriver->getInputDeviceIndex());
+    ui->comboAudioDevice->setCurrentIndex(audioDriver->getInputDeviceIndex());
 
 }
 
@@ -231,7 +234,7 @@ void PreferencesDialog::populateBufferSizeCombo()
 
 void PreferencesDialog::on_comboAsioDriver_activated(int index)
 {
-    int deviceIndex = ui->comboAsioDriver->itemData(index).toInt();
+    int deviceIndex = ui->comboAudioDevice->itemData(index).toInt();
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     audioDriver->setInputDeviceIndex(deviceIndex);
 #ifdef _WIN32
@@ -256,7 +259,7 @@ void PreferencesDialog::on_comboFirstOutput_currentIndexChanged(int /*index*/)
 
 void PreferencesDialog::on_okButton_released()
 {
-    int selectedAudioDevice = ui->comboAsioDriver->currentIndex();
+    int selectedAudioDevice = ui->comboAudioDevice->currentIndex();
     int firstIn = ui->comboFirstInput->currentData().toInt();
     int lastIn = ui->comboLastInput->currentData().toInt();
     int firstOut = ui->comboFirstOutput->currentData().toInt();

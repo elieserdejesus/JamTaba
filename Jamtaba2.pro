@@ -300,10 +300,9 @@ HEADERS += \
     src/jamtaba/NinjamController.h \
     src/jamtaba/gui/IntervalProgressDisplay.h \
     src/jamtaba/audio/vst/PluginFinder.h \
-    src/jamtaba/geo/MaxMindIpToLocationResolver.h \
-    src/jamtaba/geo/FreeGeoIpToLocationResolver.h \
     src/jamtaba/audio/vst/VstPlugin.h \
     src/jamtaba/audio/vst/vsthost.h \
+    src/jamtaba/geo/IpToLocationLITEResolver.h
 
 SOURCES += \
     $$MAIN \
@@ -369,10 +368,12 @@ SOURCES += \
     src/jamtaba/gui/LocalTrackGroupView.cpp \
     src/jamtaba/NinjamController.cpp \
     src/jamtaba/gui/IntervalProgressDisplay.cpp \
-    src/jamtaba/geo/MaxMindIpToLocationResolver.cpp \
-    src/jamtaba/geo/FreeGeoIpToLocationResolver.cpp \
+    #src/jamtaba/geo/MaxMindIpToLocationResolver.cpp \
+    #src/jamtaba/geo/FreeGeoIpToLocationResolver.cpp \
+    src/jamtaba/geo/IpToLocationLITEResolver.cpp \
     src/jamtaba/audio/vst/VstPlugin.cpp \
     src/jamtaba/audio/vst/vsthost.cpp \
+
 
 FORMS += \
     src/jamtaba/gui/PreferencesDialog.ui \
@@ -394,14 +395,14 @@ INCLUDEPATH += src/jamtaba/gui                  \
                $$PWD/libs/includes/ogg          \
                $$PWD/libs/includes/vorbis       \
                $$PWD/libs/includes/minimp3      \
-               $$PWD/libs/includes/libmaxmind   \
+               $$PWD/libs/includes/libip2location   \
 
 DEPENDPATH += $$PWD/libs/includes/portaudio     \
                $$PWD/libs/includes/portmidi     \
                $$PWD/libs/includes/ogg          \
                $$PWD/libs/includes/vorbis       \
                $$PWD/libs/includes/minimp3      \
-               $$PWD/libs/includes/libmaxmind   \
+               $$PWD/libs/includes/libip2location   \
 
 
 win32 {
@@ -418,8 +419,8 @@ win32 {
         LIBS_PATH = "win64-msvc"
     }
 
-    CONFIG(release, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbis -logg -lmaxminddb
-    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisd -loggd -lmaxminddbd
+    CONFIG(release, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbis -logg #-lmaxminddb
+    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisd -loggd #-lmaxminddbd
 }
 
 macx{
@@ -435,15 +436,11 @@ macx{
     LIBS += -framework CoreServices
     LIBS += -framework Carbon
 
-    #LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg -lmaxminddb
-    LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3  -lvorbisfile -lvorbisenc -lvorbis -logg -lmaxminddb
+    #LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg #-lmaxminddb
+    LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3  -lvorbisfile -lvorbisenc -lvorbis -logg -lIP2Location #-lmaxminddb
 }
 
 INCLUDEPATH += $$VST_SDK_PATH  \
-
-
-
-
 
 
 RESOURCES += src/jamtaba/resources/jamtaba.qrc

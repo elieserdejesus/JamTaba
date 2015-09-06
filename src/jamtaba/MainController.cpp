@@ -24,7 +24,8 @@
 #include "../ninjam/Server.h"
 #include "NinjamController.h"
 
-#include "geo/MaxMindIpToLocationResolver.h"
+//#include "geo/MaxMindIpToLocationResolver.h"
+#include "geo/IpToLocationLITEResolver.h"
 
 #include <QTimer>
 #include <QFile>
@@ -235,10 +236,33 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 }
 //++++++++++++++++++++
 Geo::IpToLocationResolver* MainController::buildIpToLocationResolver(){
-    bool maxMindDataBaseFounded = true;
-    QFileInfo maxMindDbFile("./GeoLite2-Country.mmdb");
+    bool dataBaseFounded = true;
+    QString currentDir = "./";
+#ifdef Q_OS_MACX
+    currentDir += "../../../";
+#endif
+    QString fileName = "IP2LOCATION-LITE-DB1.BIN";
+    QFileInfo dbFile(currentDir + "/" + fileName);
+    qWarning() << "procurando em " << dbFile.absoluteFilePath();
+    if(!dbFile.exists()){
+        dbFile.setFile(currentDir + "../" + fileName);
+        qWarning() << "procurando em " << dbFile.absoluteFilePath();
+        if(!dbFile.exists()){
+            dataBaseFounded = false;
+        }
+    }
+    if(dataBaseFounded){
+        return new Geo::IpToLocationLITEResolver(dbFile.absoluteFilePath());// new Geo::MaxMindIpToLocationResolver(dbFile.absoluteFilePath());
+    }
+    else{
+        qWarning() << "não encontrou " ;
+    }
+    /*
+    QFileInfo maxMindDbFile(currentDir + "/GeoLite2-Country.mmdb");
+    qWarning() << "procurando em " << maxMindDbFile.absoluteFilePath();
     if(!maxMindDbFile.exists()){
-        maxMindDbFile.setFile("./../GeoLite2-Country.mmdb");
+        maxMindDbFile.setFile(currentDir + "/../GeoLite2-Country.mmdb");
+        qWarning() << "procurando em " << maxMindDbFile.absoluteFilePath();
         if(!maxMindDbFile.exists()){
             maxMindDataBaseFounded = false;
         }
@@ -246,6 +270,10 @@ Geo::IpToLocationResolver* MainController::buildIpToLocationResolver(){
     if(maxMindDataBaseFounded){
         return new Geo::MaxMindIpToLocationResolver(maxMindDbFile.absoluteFilePath());
     }
+    else{
+        qWarning() << "não encontrou " ;
+    }
+     */
     return new Geo::NullIpToLocationResolver();
 }
 
