@@ -5,17 +5,17 @@
 #include "portaudio.h"
 #include "SamplesBuffer.h"
 #include "../persistence/Settings.h"
-
-
+#include <QtGlobal>
 #include <QThread>
-
-Q_LOGGING_CATEGORY(portaudio, "portaudio")
-
-#if Q_OS_WIN
+#ifdef Q_OS_WIN
     #include "pa_asio.h"
 #else
     #include "pa_mac_core.h"
 #endif
+
+Q_LOGGING_CATEGORY(portaudio, "portaudio")
+
+
 
 
 namespace Audio{
@@ -275,7 +275,7 @@ QList<int> PortAudioDriver::getValidBufferSizes(int deviceIndex) const{
     long maxBufferSize;
     long minBufferSize;
 
-    #if Q_OS_WIN
+    #ifdef Q_OS_WIN
         long preferredBuffersize;//note used
         long granularity;//note used
         PaError result = PaAsio_GetAvailableBufferSizes(deviceIndex, &minBufferSize, &maxBufferSize, &preferredBuffersize, &granularity);

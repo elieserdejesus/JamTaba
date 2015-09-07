@@ -245,7 +245,7 @@ Geo::IpToLocationResolver* MainController::buildIpToLocationResolver(){
     QFileInfo dbFile(currentDir + "/" + fileName);
     qWarning() << "procurando em " << dbFile.absoluteFilePath();
     if(!dbFile.exists()){
-        dbFile.setFile(currentDir + "../" + fileName);
+        dbFile.setFile(currentDir + "../Jamtaba2/" + fileName);
         qWarning() << "procurando em " << dbFile.absoluteFilePath();
         if(!dbFile.exists()){
             dataBaseFounded = false;
