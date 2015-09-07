@@ -25,7 +25,8 @@
 #include "NinjamController.h"
 
 //#include "geo/MaxMindIpToLocationResolver.h"
-#include "geo/IpToLocationLITEResolver.h"
+//#include "geo/IpToLocationLITEResolver.h"
+#include "geo/WebIpToLocationResolver.h"
 
 #include <QTimer>
 #include <QFile>
@@ -236,6 +237,8 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 }
 //++++++++++++++++++++
 Geo::IpToLocationResolver* MainController::buildIpToLocationResolver(){
+    return new Geo::WebIpToLocationResolver();
+/*
     bool dataBaseFounded = true;
     QString currentDir = "./";
 #ifdef Q_OS_MACX
@@ -257,24 +260,9 @@ Geo::IpToLocationResolver* MainController::buildIpToLocationResolver(){
     else{
         qWarning() << "não encontrou " ;
     }
-    /*
-    QFileInfo maxMindDbFile(currentDir + "/GeoLite2-Country.mmdb");
-    qWarning() << "procurando em " << maxMindDbFile.absoluteFilePath();
-    if(!maxMindDbFile.exists()){
-        maxMindDbFile.setFile(currentDir + "/../GeoLite2-Country.mmdb");
-        qWarning() << "procurando em " << maxMindDbFile.absoluteFilePath();
-        if(!maxMindDbFile.exists()){
-            maxMindDataBaseFounded = false;
-        }
-    }
-    if(maxMindDataBaseFounded){
-        return new Geo::MaxMindIpToLocationResolver(maxMindDbFile.absoluteFilePath());
-    }
-    else{
-        qWarning() << "não encontrou " ;
-    }
-     */
+
     return new Geo::NullIpToLocationResolver();
+    */
 }
 
 //++++++++++++++++++++

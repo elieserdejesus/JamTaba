@@ -13,6 +13,7 @@ using namespace Ninjam;
 User::User(QString fullName)
     :  fullName(fullName)
 {
+    //qWarning() << "fullname: " << fullName;
     QStringList fullNameParts = fullName.split("@");
     this->name = fullNameParts.at(0);
     if (fullNameParts.size() > 1) {

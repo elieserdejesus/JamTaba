@@ -1,3 +1,11 @@
+#parece que o freegeoip não é muito confiável
+    #ver http://www.telize.com/
+    #ver http://geoip.nekudo.com/
+
+#implementar a cache dos países em arquivo local
+
+#remover as tralhas das bibliotecas de ipTocountry
+
 #tocar em algumas Jams para ver se está rolando
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
@@ -220,12 +228,10 @@ QT       +=  gui  network
 #DEFINES += QT_NO_CAST_FROM_ASCII
 #DEFINES += QT_NO_CAST_TO_ASCII
 
-QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS
+#QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS
 macx{
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.5
 }
-
-QMAKE_LIBFLAGS += /VERBOSE:LIB
 
 CONFIG += c++11
 #CONFIG += openssl-linked
@@ -307,7 +313,8 @@ HEADERS += \
     src/jamtaba/audio/vst/PluginFinder.h \
     src/jamtaba/audio/vst/VstPlugin.h \
     src/jamtaba/audio/vst/vsthost.h \
-    src/jamtaba/geo/IpToLocationLITEResolver.h
+    #src/jamtaba/geo/IpToLocationLITEResolver.h
+    src/jamtaba/geo/WebIpToLocationResolver.h
 
 SOURCES += \
     $$MAIN \
@@ -374,10 +381,10 @@ SOURCES += \
     src/jamtaba/NinjamController.cpp \
     src/jamtaba/gui/IntervalProgressDisplay.cpp \
     #src/jamtaba/geo/MaxMindIpToLocationResolver.cpp \
-    #src/jamtaba/geo/FreeGeoIpToLocationResolver.cpp \
-    src/jamtaba/geo/IpToLocationLITEResolver.cpp \
+    #src/jamtaba/geo/IpToLocationLITEResolver.cpp \
     src/jamtaba/audio/vst/VstPlugin.cpp \
     src/jamtaba/audio/vst/vsthost.cpp \
+    src/jamtaba/geo/WebIpToLocationResolver.cpp
 
 
 FORMS += \
@@ -412,7 +419,7 @@ DEPENDPATH += $$PWD/libs/includes/portaudio     \
 
 win32 {
 
-    LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32 \
+    LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32  \
 
     VST_SDK_PATH = "D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3_SDK/pluginterfaces/vst2.x/"
 
@@ -424,8 +431,8 @@ win32 {
         LIBS_PATH = "win64-msvc"
     }
 
-    CONFIG(release, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbis -logg -lip2location
-    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisd -loggd -lip2locationd
+    CONFIG(release, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbis -logg
+    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisd -loggd
 }
 
 macx{
@@ -442,8 +449,8 @@ macx{
     LIBS += -framework CoreServices
     LIBS += -framework Carbon
 
-    #LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg #-lmaxminddb
-    LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3  -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg -lIP2Location #-lmaxminddb
+    #LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg
+    LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3  -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg
 }
 
 INCLUDEPATH += $$VST_SDK_PATH  \

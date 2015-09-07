@@ -11,6 +11,10 @@ Location::Location()
 
 }
 
+bool Location::isUnknown() const{
+    return countryName == "UNKNOWN" && countryCode == "UNKNOWN";
+}
+
 Location::Location(QString country, QString countryCode)
     : countryName(country), countryCode(countryCode),
       city("UNKNOWN"),
@@ -27,7 +31,7 @@ Location::Location(QString country, QString countryCode, QString city, double la
 //+++++++++++++++++++++++++++++++++++++++++++++++++++
 Location NullIpToLocationResolver::resolve(QString ip){
     Q_UNUSED(ip)
-    return Location();
+    return Geo::Location();
 }
 
 

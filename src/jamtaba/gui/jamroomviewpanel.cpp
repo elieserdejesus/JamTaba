@@ -48,7 +48,7 @@ void JamRoomViewPanel::refreshUsersList(Login::RoomInfo roomInfo){
             Geo::Location userLocation = mainController->getGeoLocation(user.getIp());
             QString countryCode = userLocation.getCountryCode().toLower();
             QString countryName = userLocation.getCountryName();
-            QString userString = user.getName() + " <i>(" + countryName + ")</i>";
+            QString userString = user.getName() +  ( !userLocation.isUnknown() ? (" <i>(" + countryName + ")</i>") : "");
             label->setText("<img src=:/flags/flags/" + countryCode +".png> " + userString);
             ui->usersPanel->layout()->addWidget(label);
         }
