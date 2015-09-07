@@ -2,6 +2,7 @@
 #define IPTOLOCATIONLITERESOLVER_H
 
 #include "IpToLocationResolver.h"
+
 #include "IP2Location.h"
 
 

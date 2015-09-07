@@ -2,6 +2,7 @@
 #define IPTOCOUNTRYRESOLVER_H
 
 #include <QString>
+#include <QObject>
 
 namespace Geo {
 
@@ -16,6 +17,7 @@ public:
     inline QString getCountryName() const{ return countryName;  }
     inline QString getCountryCode() const {return countryCode; }
     inline QString getCity()    const{ return city;     }
+    bool isUnknown() const;
 private:
     QString countryName;
     QString countryCode;
@@ -24,10 +26,12 @@ private:
     double longitude;
 };
 
-class IpToLocationResolver
+class IpToLocationResolver : public QObject
 {
+
 public:
     virtual Location resolve(QString ip) = 0;
+
 };
 
 class NullIpToLocationResolver : public IpToLocationResolver{
