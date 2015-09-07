@@ -2,6 +2,16 @@
 
 #Terminar a versão para Mac
 
+# onde foi parar o xmit do mac - tem um bug, quando encolho a sessao de controles o xmit nao aparece novamente
+
+#entradas de audio, permitir que o usuário configure block size e sample rate
+
+#midi
+
+#icone que fica no negocio que esqueci o nome
+
+
+
 #como conferir se está rodando em outros Macs?
     #instalar uma imagem antiga de Mac em máquina virtual dentro do prórpio mac?
 
@@ -442,7 +452,6 @@ macx{
     LIBS += -framework CoreServices
     LIBS += -framework Carbon
 
-    #LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg
     LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3  -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg
 }
 
