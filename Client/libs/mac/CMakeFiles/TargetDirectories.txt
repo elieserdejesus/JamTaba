@@ -1,2 +1,0 @@
-/Volumes/mac dados/jamtaba2/Client/libs/mac/CMakeFiles/portmidi-static.dir
-/Volumes/mac dados/jamtaba2/Client/libs/mac/CMakeFiles/pmjni.dir
