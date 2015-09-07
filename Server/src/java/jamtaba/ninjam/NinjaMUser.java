@@ -31,7 +31,7 @@ public class NinjaMUser {
             return "";
         }
         if(cleanIp.endsWith("x")){
-            int rndValue = random.nextInt(180) + 20;// [20-200]
+            int rndValue = 128;//returning a fixed value to allow caching in Jamtaba client. random.nextInt(180) + 20;// [20-200]
             cleanIp = cleanIp.replace("x", String.valueOf(rndValue));
         }
         return cleanIp;
