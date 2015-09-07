@@ -167,7 +167,7 @@ void SamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain)
 void SamplesBuffer::zero()
 {
     for (unsigned int c = 0; c < channels; ++c) {
-        std::fill(samples[c].begin(), samples[c].end(), 0);
+        std::fill(samples[c].begin(), samples[c].end(), (float)0);
     }
 }
 
@@ -263,7 +263,7 @@ void SamplesBuffer::setToMono(){
 void SamplesBuffer::setToStereo(){
     if(this->samples.size() < 2){
         size_t channelsToAdd = 2 - this->samples.size();
-        for (int c = 0; c < channelsToAdd; ++c) {
+        for (uint c = 0; c < channelsToAdd; ++c) {
             samples.push_back(std::vector<float>(frameLenght));
         }
     }

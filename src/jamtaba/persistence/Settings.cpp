@@ -12,7 +12,7 @@
 
 using namespace Persistence;
 
-#ifdef Q_OS_WIN64 || Q_OS_MAC64
+#if defined(Q_OS_WIN64) || defined(Q_OS_MAC64)
     QString Settings::fileName = "Jamtaba64.json";
 #else
     QString Settings::fileName = "Jamtaba.json";
