@@ -1,8 +1,8 @@
 #include "MainController.h"
 #include "recorder/ReaperProjectGenerator.h"
 #include "audio/core/AudioDriver.h"
-//#include "midi/portmididriver.h"
-#include "midi/MidiDriver.h"
+#include "midi/portmididriver.h"
+//#include "midi/MidiDriver.h"
 #include "audio/core/PortAudioDriver.h"
 #include "audio/core/AudioMixer.h"
 #include "audio/core/AudioNode.h"
@@ -185,7 +185,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     //QString fileName = "output.wav";
     //recorder = new SamplesBufferRecorder(fileName, audioDriver->getSampleRate());
 
-    midiDriver = new NullMidiDriver();// new PortMidiDriver(settings.getMidiInputDevicesStatus());
+    midiDriver = new PortMidiDriver(settings.getMidiInputDevicesStatus());
 
     QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromLoginServer()));
 

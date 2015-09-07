@@ -270,7 +270,7 @@ HEADERS += \
     src/jamtaba/audio/core/plugins.h \
     src/jamtaba/gui/plugins/guis.h \
     src/jamtaba/midi/MidiDriver.h \
-   # src/jamtaba/midi/portmididriver.h \
+    src/jamtaba/midi/portmididriver.h \
     src/jamtaba/gui/pluginscandialog.h \
     src/jamtaba/gui/PreferencesDialog.h \
     src/jamtaba/gui/NinjamRoomWindow.h \
@@ -342,7 +342,7 @@ SOURCES += \
     src/jamtaba/midi/MidiDriver.cpp \
     src/jamtaba/gui/PreferencesDialog.cpp \
     src/jamtaba/gui/pluginscandialog.cpp \
-  #  src/jamtaba/midi/portmididriver.cpp \
+    src/jamtaba/midi/portmididriver.cpp \
     src/jamtaba/gui/NinjamRoomWindow.cpp \
     src/jamtaba/gui/BaseTrackView.cpp \
     src/jamtaba/audio/NinjamTrackNode.cpp \
@@ -437,7 +437,7 @@ macx{
     LIBS += -framework Carbon
 
     #LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg #-lmaxminddb
-    LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3  -lvorbisfile -lvorbisenc -lvorbis -logg -lIP2Location #-lmaxminddb
+    LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3  -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg -lIP2Location #-lmaxminddb
 }
 
 INCLUDEPATH += $$VST_SDK_PATH  \
