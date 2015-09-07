@@ -221,6 +221,7 @@ QT       +=  gui  network
 #DEFINES += QT_NO_CAST_TO_ASCII
 
 QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS
+QMAKE_CXXFLAGS += -mmacosx-version-min=10.5
 
 CONFIG += c++11
 #CONFIG += openssl-linked
@@ -431,6 +432,7 @@ macx{
     LIBS_PATH = "mac"
 
     LIBS += -framework CoreAudio
+    LIBS += -framework CoreMidi
     LIBS += -framework AudioToolbox
     LIBS += -framework AudioUnit
     LIBS += -framework CoreServices
