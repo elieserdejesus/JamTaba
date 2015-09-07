@@ -1,6 +1,6 @@
 *{
-font-family: "Dialog";
-font-size: 9pt;
+font-family: "Verdana";
+font-size: 11pt;
 }
 
 #recButton{
@@ -529,11 +529,12 @@ JamRoomViewPanel #content{
 }
 
 JamRoomViewPanel #labelName{
-    font-size: 10pt;
+    /*font-size: 10pt;*/
+    font-weight: bold;
 }
 
 JamRoomViewPanel  #labelRoomStatus, JamRoomViewPanel  #labelRoomType{
-    font-size: 8pt;
+    font-size: 10pt;
     color: rgb(90, 90, 90);
 }
 JamRoomViewPanel  #labelRoomType{
@@ -631,7 +632,7 @@ QPushButton{
     border-radius: 3px;
     border: 1px outset gray;
     padding: 3px 6px 3px 6px;
-    font-size: 8pt;
+    font-size: 10pt;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(0, 0, 0, 50), stop:0.02 rgba(0, 0, 0, 0), stop:0.7 rgba(0, 0, 0, 0), stop:1 rgba(0,0,0,60));
     color: rgb(60, 60, 60);
 }
