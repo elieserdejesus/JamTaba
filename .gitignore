@@ -8,6 +8,7 @@ Client/*.pro.user
 Client/release
 deploy-win32/
 deploy-win64/
+*.zip
 
 Server/build/
 Server/dist
