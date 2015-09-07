@@ -1,18 +1,11 @@
-#parece que o freegeoip não é muito confiável
-    #ver http://www.telize.com/
-    #ver http://geoip.nekudo.com/
-
-#implementar a cache dos países em arquivo local
-
-#remover as tralhas das bibliotecas de ipTocountry
-
-#tocar em algumas Jams para ver se está rolando
-
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
-#64 bits
+#Terminar a versão para Mac
 
-#compilar no mac - começar sem plugin para facilitar
+#como conferir se está rodando em outros Macs?
+    #instalar uma imagem antiga de Mac em máquina virtual dentro do prórpio mac?
+
+#tocar em algumas Jams para ver se está rolando
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
