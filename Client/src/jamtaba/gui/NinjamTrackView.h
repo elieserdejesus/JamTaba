@@ -27,7 +27,7 @@ public:
     ~NinjamTrackGroupView();
     void setNarrowStatus(bool narrow);
 private:
-    Controller::MainController* mainController;
+    //Controller::MainController* mainController;
     QLabel* countryLabel;
 };
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

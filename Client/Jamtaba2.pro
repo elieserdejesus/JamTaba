@@ -2,7 +2,19 @@
 
 #Terminar a versão para Mac
 
-#botao de fechar na primeira tab
+#layout do chat
+
+#som do metronomo
+
+#fontes do chat
+
+#combos nao estao legais
+
+#icone do metronomo
+
+#tela da licenca do server muito estreita
+
+#layout da parte de cima do chat (secao de titulo) ficou ruim
 
 #entradas de audio, permitir que o usuário configure block size e sample rate
 

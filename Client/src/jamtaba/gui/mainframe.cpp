@@ -215,10 +215,16 @@ void MainFrame::addChannelsGroup(QString name){
 //++++++++++++++++++++++++=
 void MainFrame::initializeMainTabWidget(){
     //the rooms list tab bar is not closable
-#ifdef Q_OS_WIN
-    ui.tabWidget->tabBar()->tabButton(0, QTabBar::RightSide)->resize(0, 0);
-    ui.tabWidget->tabBar()->tabButton(0, QTabBar::RightSide)->hide();
-#endif
+    QWidget* tabBar = nullptr;
+    tabBar = ui.tabWidget->tabBar()->tabButton(0, QTabBar::RightSide);//try get the tabBar in right side (Windows)
+    if(!tabBar){//try get the tabBar in left side (MAC OSX)
+        tabBar = ui.tabWidget->tabBar()->tabButton(0, QTabBar::LeftSide);
+    }
+    if(tabBar){
+        tabBar->resize(0, 0);
+        tabBar->hide();
+    }
+
     connect( ui.tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(on_tabCloseRequest(int)));
     connect( ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tabChanged(int)));
 }
