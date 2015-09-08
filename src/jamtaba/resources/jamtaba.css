@@ -1,6 +1,6 @@
 *{
 font-family: "Verdana";
-font-size: 11pt;
+font-size: 12pt;
 }
 
 #recButton{
@@ -20,13 +20,15 @@ QMessageBox, QInputDialog{
         stop:1 rgba(180, 180, 180));
     border-radius: 3px;
     border: 1px outset gray;
+    padding: 32px;
 }
+
 QInputDialog{
     min-width: 400px;
 }
 
 QInputDialog QLineEdit{
-    margin: 20px;
+
 }
 
 
@@ -70,7 +72,7 @@ FxPanelItem[containPlugin="true"]{
 
 FxPanelItem > QLabel{
     qproperty-alignment: AlignLeft;
-    font-size: 8pt;
+    font-size: 11pt;
     color: rgba(255, 255, 255, 120);
     margin: 0px;
 }
@@ -194,6 +196,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-pa
     color: white;
     border: 1px inset rgb(51, 51, 51);
 }
+
 
 .QLineEdit[enabled="false"]{
     border-radius: 3px;
@@ -355,25 +358,25 @@ background-color: rgb(74,74,74);
 }
 
 /* painéis principais */
-.QWidget#leftPanel, .QWidget#chatArea, .QWidget#contentPanel{
+.QWidget#leftPanel, .QWidget#contentPanel{
 /*background: url(:/images/gradient.bmp) repeat-x;*/
 /*background-color: rgb(39, 39, 39);*/
 /*background-color: red;*/
-border: 1px solid rgb(45, 45, 45);
+border: 1px solid rgb(65, 65, 65);
 border-radius: 5px;
-margin-top: 1ex;
+
 }
 
 /* títulos dos painéis principais */
-.QWidget#leftPanel .QLabel#labelSectionTitle, .QWidget#chatArea  > .QLabel, .QWidget#contentPanel > .QLabel{
-font-size: 10pt;
+.QWidget#leftPanel .QLabel#labelSectionTitle, .QWidget#contentPanel > .QLabel{
+font-size: 11pt;
 color: rgb(190, 190, 190);
 qproperty-alignment: AlignCenter;
 }
 
 /* define os separadores horizontais abaixo dos títulos as seções principais   */
-.QWidget#leftPanel > .QFrame, .QWidget#chatArea > .QFrame{
-background-color: rgb(75, 75, 75);
+.QWidget#leftPanel > .QFrame{
+background-color: rgb(47, 47, 47);
 }
 
 .QWidget#contentPanel > .QFrame{
@@ -425,7 +428,11 @@ QPushButton#localControlsCollapseButton::hover:checked{
 }
 
 #chatArea .QTabWidget:pane{
-    background-color: rgba(255, 255, 255, 80);
+    /* background-color: rgba(255, 255, 255, 80); */
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0     rgba(255, 255, 255, 80),
+        stop: 0.85   rgba(255, 255, 255, 90),
+        stop: 1.0   rgba(255, 255, 255, 140));
 }
 
  .QTabWidget::tab-bar {
@@ -444,6 +451,7 @@ it reads QTabBar _not_ QTabWidget */
     padding: 2px;
     padding-left: 10px;
     padding-right: 10px;
+    font-size: 12pt;
  }
 
  .QTabBar::tab:selected, .QTabBar::tab:hover {
@@ -547,7 +555,7 @@ JamRoomViewPanel  #labelRoomType{
 #xmitButton{
     border-radius: 2px;
     border-width: 1px;
-    font-size: 8pt;
+    font-size: 11pt;
     padding-top: 3px;
     padding-bottom: 3px;
     color: black;
@@ -632,7 +640,7 @@ QPushButton{
     border-radius: 3px;
     border: 1px outset gray;
     padding: 3px 6px 3px 6px;
-    font-size: 10pt;
+    font-size: 12pt;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(0, 0, 0, 50), stop:0.02 rgba(0, 0, 0, 0), stop:0.7 rgba(0, 0, 0, 0), stop:1 rgba(0,0,0,60));
     color: rgb(60, 60, 60);
 }
@@ -652,6 +660,10 @@ QPushButton[enabled="false"]{
     background: none;
     color: rgba(0, 0, 0, 80);
     border-color: rgba(0, 0, 0, 40);
+}
+
+QPushButton#soloButton, QPushButton#muteButton{
+font-size: 10pt;
 }
 
 QPushButton:hover#soloButton, QPushButton:hover#muteButton{
@@ -700,6 +712,8 @@ TrackGroupView[unlighted="true"] > #topPanel  {
 TrackGroupView #groupNameField {
     margin-bottom: 10px;
     margin-top: 10px;
+    font-size: 11pt;
+    font-weight: normal;
 }
 
 
@@ -789,7 +803,7 @@ LocalTrackView #inputSelectionButton{
     background-position: center right;
     border: none;
     color: rgba(255,255, 255, 160);
-    font-size: 7pt;
+    font-size: 9pt;
     text-align: left;
     margin: 0px;
     padding-left: 2px;
@@ -817,7 +831,11 @@ NinjamRoomWindow #licenceButton:hover{
 
 }
 
-
+NinjamRoomWindow #labelRoomName{
+    font-size: 12pt;
+    font-weight: bold;
+    margin-left: 32px;/* shift from right side to compensate licence button and appears in center */
+}
 
 NinjamTrackView > .QLabel#channelName{
     border: 1px solid rgba(0, 0, 0, 25);
@@ -826,7 +844,7 @@ NinjamTrackView > .QLabel#channelName{
     border-radius: 2px;
     padding-top: 3px;
     padding-bottom: 3px;
-    font-size: 8pt;
+    font-size: 10pt;
     color: rgb(80, 80, 80);
 }
 
@@ -836,12 +854,13 @@ NinjamRoomWindow TrackGroupView #groupNameField{
     border-color: rgb(150, 150, 150);
     color: black;
     qproperty-alignment: AlignCenter;
+
 }
 
 NinjamRoomWindow TrackGroupView #countryLabel{
     color: rgb(210, 210, 210);
     qproperty-alignment: AlignCenter;
-    font-size: 8pt;
+    font-size: 11pt;
 }
 
 NinjamRoomWindow TrackGroupView{
@@ -886,7 +905,7 @@ NinjamPanel{
 NinjamPanel #intervalPanel{/* beats text */
     color: rgb(80, 80, 80);
     font-weight: normal;
-    font-size: 12pt;
+    font-size: 13pt;
 
 
     background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
@@ -930,17 +949,18 @@ NinjamPanel #soloButton, NinjamPanel #muteButton{
 
 NinjamPanel QLabel{
     color: rgba(0, 0, 0, 150); /* metrono pan (L & R) labels, BPI and BPM labels */
-    font-size: 8pt;
+    font-size: 11pt;
 }
 
 NinjamPanel QComboBox{
     background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 30), stop:1 rgba(0, 0, 0, 50));
     background-position: center right;
     background-repeat: none;
-    font-size: 8pt;
+    font-size: 11pt;
     color: rgb(50, 50, 50);
     border-radius: 2px;
     border: 1px solid rgba(0, 0, 0, 40);
+    padding: 0px 5px 0px 5px;
 }
 
 NinjamPanel QComboBox::down-arrow {
@@ -956,7 +976,7 @@ NinjamRoomWindow #content{
 
 /*Chat */
 ChatPanel > QPushButton#buttonClear{
-    font-size: 8pt;
+    font-size: 10pt;
     color: rgb(120, 120, 120);
     height: 20px;
     width: 17px;
@@ -975,7 +995,7 @@ ChatMessagePanel > QLabel#labelUserName{
     border-radius: 3px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
-    font-size: 8pt;
+    font-size: 11pt;
     margin-top: 3px;
     margin-bottom: 3px;
     margin-right: -1px;

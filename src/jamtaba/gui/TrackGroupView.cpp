@@ -14,6 +14,10 @@ TrackGroupView::TrackGroupView(QWidget *parent) :
     //ui->tracksPanel->setLayout(new QHBoxLayout(ui->tracksPanel));
     ui->tracksPanel->layout()->setContentsMargins(0, 0, 0, 0);
     ui->tracksPanel->layout()->setSpacing(1);
+
+    //disable blue border when QLineEdit has focus in mac
+    ui->groupNameField->setAttribute(Qt::WA_MacShowFocusRect, 0);
+
 }
 
 
