@@ -2,7 +2,7 @@
 
 #Terminar a versão para Mac
 
-# onde foi parar o xmit do mac - tem um bug, quando encolho a sessao de controles o xmit nao aparece novamente
+#botao de fechar na primeira tab
 
 #entradas de audio, permitir que o usuário configure block size e sample rate
 

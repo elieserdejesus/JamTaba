@@ -95,9 +95,7 @@ void MainFrame::on_localControlsCollapseButtonClicked(){
         channel->toggleFaderOnlyMode();
     }
     ui.labelSectionTitle->setVisible(!localChannels.first()->isFaderOnly());
-    //ui.localControlsCollapseButton->setVisible(false);
-    ui.xmitButton->setVisible(false);
-    //adjustSize();
+    ui.xmitButton->setVisible(!localChannels.first()->isFaderOnly());
 }
 //++++++++++++++++++++++++=
 Persistence::InputsSettings MainFrame::getInputsSettings() const{
