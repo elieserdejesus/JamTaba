@@ -2,27 +2,28 @@
 
 #Terminar a versão para Mac
 
-#layout do chat
+#icone do dock esta funcionando no modo release, mas tenho que fazer um icone usando
+    #imagens de maior qualidade. Peguei o icone do Jamtaba 1, mas está ruim. Nao tenho certeza
+    #se está compilando e utilizando o ícone novo que botei na pasta.
 
-#som do metronomo
+#meu fader não tem utilidade do meio para baixo. Ver se consigo melhorar
 
-#fontes do chat
-
-#combos nao estao legais
-
-#icone do metronomo
-
-#tela da licenca do server muito estreita
-
-#layout da parte de cima do chat (secao de titulo) ficou ruim
+#pensar em um jeito de atualizar o pais de quem esta tocando na sala
 
 #entradas de audio, permitir que o usuário configure block size e sample rate
 
 #midi
 
-#icone que fica no negocio que esqueci o nome
+#icone
+
+#gravao está funcionando
+
+#vst
 
 
+#windows - acho que o botao de play do bfd fica clicado direto porque eu estou deixando
+    #o transportChanged habilitado o tempo todo. O correto seria mudar isso e ver
+    #se o BFD já sincroniza.
 
 #como conferir se está rodando em outros Macs?
     #instalar uma imagem antiga de Mac em máquina virtual dentro do prórpio mac?
@@ -465,6 +466,11 @@ macx{
     LIBS += -framework Carbon
 
     LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3  -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg
+
+    #mac osx doc icon
+    ICON = Jamtaba.icns
+
+
 }
 
 INCLUDEPATH += $$VST_SDK_PATH  \

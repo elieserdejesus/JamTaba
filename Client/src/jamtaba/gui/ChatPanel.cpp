@@ -23,6 +23,9 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
     //this event is used to auto scroll down when new messages are added
     QObject::connect(ui->chatScroll->verticalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(on_verticalScrollBarRangeChanged(int,int)));
 
+    //disable blue border when QLineEdit has focus in mac
+    ui->chatText->setAttribute(Qt::WA_MacShowFocusRect, 0);
+
     //create some messages to test
     /*
     for (int user = 0; user < 11; ++user) {

@@ -54,6 +54,9 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     roomToJump(nullptr)
 {
 	ui.setupUi(this);
+
+
+
     initializeWindowState();//window size, maximization ...
     initializeLoginService();
 
@@ -621,7 +624,7 @@ void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
 
     //add the chat panel in main window
     ChatPanel* chatPanel = ninjamWindow->getChatPanel();
-    ui.chatTabWidget->addTab(chatPanel, QIcon(":/images/ninja.png"), roomInfo.getName());
+    ui.chatTabWidget->addTab(chatPanel, QIcon(":/images/ninja.png"), "chat " + roomInfo.getName());
 
     //show chat area
     ui.chatArea->setVisible(true);

@@ -349,5 +349,5 @@ void NinjamRoomWindow::on_intervalBeatChanged(int beat){
 void NinjamRoomWindow::on_licenceButton_clicked()
 {
     QString licence = Ninjam::Service::getInstance()->getCurrentServerLicence();
-    QMessageBox::information(this, ui->labelRoomName->text(), licence, QMessageBox::NoButton, QMessageBox::NoButton);
+    QMessageBox::about(this, ui->labelRoomName->text(), licence);//, QMessageBox::NoButton, QMessageBox::NoButton);
 }

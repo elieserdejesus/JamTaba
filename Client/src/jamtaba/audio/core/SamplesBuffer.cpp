@@ -28,7 +28,7 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, unsigned int frameLenght)
       frameLenght(frameLenght)
 {
     if(channels == 0){
-        qCritical() << "AudioSamplesBuffer::channels == 0";
+        //qCritical() << "AudioSamplesBuffer::channels == 0";
     }
     for (unsigned int c = 0; c < channels; ++c) {
         samples.push_back(std::vector<float>(frameLenght));
