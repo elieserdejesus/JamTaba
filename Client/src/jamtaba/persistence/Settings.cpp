@@ -117,16 +117,23 @@ void RecordingSettings::write(QJsonObject &out){
 }
 
 void RecordingSettings::read(QJsonObject in){
+    bool useDefaultRecordingPath = false;
     if(in.contains("recordingPath")){
         recordingPath = in["recordingPath"].toString();
         QDir dir(recordingPath);
-        if(!dir.exists()){
-            qWarning() << "Dir " << dir << " not exists, using the application directory to save multitracks!";
-            recordingPath = QApplication::applicationDirPath();
+        if(recordingPath.isEmpty() || !dir.exists()){
+            //qWarning() << "Dir " << dir << " not exists, using the application directory to save multitracks!";
+            useDefaultRecordingPath = true;
         }
     }
     else{
-        recordingPath = QApplication::applicationDirPath();
+        useDefaultRecordingPath = true;
+    }
+    if(useDefaultRecordingPath){
+        QString userDocuments = QStandardPaths::displayName(QStandardPaths::DocumentsLocation);
+        QDir pathDir(QDir::homePath());
+        QDir documentsDir(pathDir.absoluteFilePath(userDocuments));
+        recordingPath = QDir(documentsDir).absoluteFilePath("Jamtaba");
     }
     saveMultiTracksActivated = getValueFromJson(in, "recordActivated", false);
 }

@@ -1,11 +1,15 @@
 #include "portmididriver.h"
 
+
 #include <QDebug>
+
+Q_LOGGING_CATEGORY(midi, "midi")
 
 using namespace Midi;
 
 PortMidiDriver::PortMidiDriver(QList<bool> deviceStatuses)
 {
+    qCDebug(midi) << "Initializing portmidi...";
     Pm_Initialize();
     int maxInputDevices = getMaxInputDevices();
     if(deviceStatuses.size() < maxInputDevices){
@@ -15,7 +19,7 @@ PortMidiDriver::PortMidiDriver(QList<bool> deviceStatuses)
         }
     }
     setInputDevicesStatus(deviceStatuses);
-
+    qCDebug(midi) << "portmidi... initialized";
 }
 
 PortMidiDriver::~PortMidiDriver()

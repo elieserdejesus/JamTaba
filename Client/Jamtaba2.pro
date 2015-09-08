@@ -2,19 +2,11 @@
 
 #Terminar a versão para Mac
 
-#testar entradas da fast
-
-#acho que isso vai dar problema ne selecao do audio device: No matching signal for on_comboAsioDriver_activated
-
-#gravação no mac vai ficar dentro de contents? poderia pegar o writable location do Qt
-
-#usar entrada padrão sempre
-
-#midi
+#fonte do dialogo de licença
 
 #icone
 
-#gravao está funcionando
+#acho que isso vai dar problema ne selecao do audio device: No matching signal for on_comboAsioDriver_activated
 
 #vst
 
@@ -25,6 +17,8 @@
     #imagens de maior qualidade. Fiz o icone mas ainda esta ruim.
     #Acho que está faltando as imagens intermediarias e o mac está interpolando, por isso fica ruim.
     #instruções detalhadas: http://stackoverflow.com/questions/6337787/how-can-i-set-the-icon-for-a-mac-application-in-xcode
+
+#sem o cabo de rede o comportamento ficou estranho no mac - nao fecha corretamente
 
 #meu fader não tem utilidade do meio para baixo. Ver se consigo melhorar
 
