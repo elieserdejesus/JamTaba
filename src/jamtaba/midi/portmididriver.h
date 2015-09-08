@@ -5,6 +5,10 @@
 #include "portmidi.h"
 #include <QList>
 
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(midi)
+
 namespace Midi {
 
 class PortMidiDriver : public MidiDriver
