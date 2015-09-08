@@ -147,7 +147,7 @@ int PortMidiDriver::getMaxInputDevices() const{
 
 const char* PortMidiDriver::getInputDeviceName(int index) const{
     int totalDevices = Pm_CountDevices();
-    int inputIndex = -1;
+    int inputIndex = 0; //-1 change to 0 to fix a bug in mac
     for (int i = 0; i < totalDevices; ++i) {
         const PmDeviceInfo* info = Pm_GetDeviceInfo(i);
         if(info->input > 0 && inputIndex == index){

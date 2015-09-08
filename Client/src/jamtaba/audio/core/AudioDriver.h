@@ -65,6 +65,8 @@ public:
     virtual const char* getOutputChannelName(unsigned const int index) const = 0;
 
     virtual const char* getInputDeviceName(int index) const = 0;
+    inline const char* getInputDeviceName() const{return getInputDeviceName(inputDeviceIndex);}
+
     virtual const char* getOutputDeviceName(int index) const = 0;
 
     virtual int getInputDeviceIndex() const = 0;

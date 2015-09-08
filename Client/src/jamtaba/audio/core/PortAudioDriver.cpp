@@ -29,10 +29,11 @@ namespace Audio{
                 throw std::runtime_error(Pa_GetErrorText(error));
             }
 
-            this->globalInputRange = ChannelRange(0, getMaxInputs());
-            this->globalOutputRange = ChannelRange(0, 2);//2 channels for output
             this->inputDeviceIndex = Pa_GetDefaultInputDevice();
             this->outputDeviceIndex = Pa_GetDefaultOutputDevice();
+            this->globalInputRange = ChannelRange(0, getMaxInputs());
+            this->globalOutputRange = ChannelRange(0, 2);//2 channels for output
+
             int maxOutputs = getMaxOutputs();
             if(maxOutputs > 1){
                 globalOutputRange.setToStereo();
@@ -78,8 +79,8 @@ void PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
         int inputsCount = globalInputRange.getChannels();
         int maxInputs = getMaxInputs();
         if(inputsCount > maxInputs || globalInputRange.getFirstChannel() >= maxInputs || inputsCount <= 0 ){
-            const PaDeviceInfo* deviceInfo = Pa_GetDeviceInfo(inputDeviceIndex);
-            globalInputRange = ChannelRange( deviceInfo->defaultLowInputLatency, std::min(maxInputs, 1));
+            //const PaDeviceInfo* deviceInfo = Pa_GetDeviceInfo(inputDeviceIndex);
+            globalInputRange = ChannelRange( 0, std::min(maxInputs, 1));
         }
     }
 
@@ -342,26 +343,35 @@ void PortAudioDriver::release(){
 }
 
 int PortAudioDriver::getMaxInputs() const{
+
     if(inputDeviceIndex != paNoDevice){
         return Pa_GetDeviceInfo(inputDeviceIndex)->maxInputChannels;
     }
-    return 0;
+    #ifdef Q_OS_WIN
+        return 0;
+    #endif
+    //mac
+    return Pa_GetDeviceInfo(Pa_GetDefaultInputDevice())->maxInputChannels;
 }
 int PortAudioDriver::getMaxOutputs() const{
     if(outputDeviceIndex != paNoDevice){
         return Pa_GetDeviceInfo(outputDeviceIndex)->maxOutputChannels;
     }
+#ifdef Q_OS_WIN
     return 0;
+#endif
+    return Pa_GetDeviceInfo(Pa_GetDefaultOutputDevice())->maxOutputChannels;
 }
 
 const char *PortAudioDriver::getInputChannelName(const unsigned int index) const
 {
+
 #ifdef Q_OS_WIN
     const char *channelName = new char[30];
     PaAsio_GetInputChannelName(inputDeviceIndex, index, &channelName);
     return channelName;
 #else
-    return PaMacCore_GetChannelName(inputDeviceIndex, index, true);
+    return PaMacCore_GetChannelName(this->inputDeviceIndex, index, true);
 #endif
     return "error";
 }
