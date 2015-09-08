@@ -2,8 +2,7 @@
 
 #Terminar a versão para Mac
 
-
-#nome do input selecionado nao aparece
+#testar entradas da fast
 
 #acho que isso vai dar problema ne selecao do audio device: No matching signal for on_comboAsioDriver_activated
 
@@ -34,6 +33,8 @@
 #windows - acho que o botao de play do bfd fica clicado direto porque eu estou deixando
     #o transportChanged habilitado o tempo todo. O correto seria mudar isso e ver
     #se o BFD já sincroniza.
+
+#items dos combos de input muito amontados no mac
 
 #tocar em algumas Jams para ver se está rolando
 

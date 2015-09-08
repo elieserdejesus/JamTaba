@@ -195,7 +195,11 @@ QMenu* LocalTrackView::createMonoInputsMenu(QMenu* parent){
     //bool canEnableMenu = false;
     for (int i = 0; i < globalInputs; ++i) {
         int index = firstGlobalInputIndex + i;
-        QString inputName = QString(audioDriver->getInputChannelName(index)) + "  (" + deviceName + ")";
+        QString channelName = QString(audioDriver->getInputChannelName(index)).trimmed();
+        if(channelName.isNull() || channelName.isEmpty()){
+            channelName  = QString::number(i+1)  + " "+ audioDriver->getInputDeviceName();
+        }
+        QString inputName = channelName + "  (" + deviceName + ")";
         QAction* action = monoInputsMenu->addAction(inputName);
         action->setData( index );//using the channel index as action data
         action->setIcon(monoInputsMenu->icon());
@@ -266,6 +270,9 @@ void LocalTrackView::on_stereoInputMenuSelected(QAction *action){
 
 QString LocalTrackView::getInputChannelNameOnly(int inputIndex){
     QString fullName(mainController->getAudioDriver()->getInputChannelName(inputIndex));
+    if(fullName.isEmpty()){//mac return empy channel names if user don't rename the channels
+        fullName = mainController->getAudioDriver()->getInputDeviceName();
+    }
     int spaceIndex = fullName.lastIndexOf(" ");
     if(spaceIndex > 0){
         return fullName.left( spaceIndex );
@@ -287,7 +294,15 @@ void LocalTrackView::refreshInputSelectionName(){
         }
         else if(inputTrack->isMono()){
             int index = inputRange.getFirstChannel();
-            channelName = QString(QString::number(index+1) + " - ") + mainController->getAudioDriver()->getInputChannelName(index);
+            QString name = QString(mainController->getAudioDriver()->getInputChannelName(index));
+            channelName = QString(QString::number(index+1) + " - ");
+            if(!name.isNull() && !name.isEmpty()){
+                channelName += name;
+            }
+            else{
+                channelName += QString(mainController->getAudioDriver()->getInputDeviceName());
+            }
+
             iconFile = MONO_ICON;
         }
         else{//range is empty = no audio input
