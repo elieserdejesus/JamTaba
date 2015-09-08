@@ -473,7 +473,7 @@ QString Settings::getLastUserName() const{
 //    if(audioObject.contains("name")){
 //        return audioObject["name"].toString();
 //    }
-    return "no save yet";
+    return "no saved yet";
 }
 
 

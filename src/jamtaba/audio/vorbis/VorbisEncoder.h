@@ -43,7 +43,7 @@ private:
     //void writeVorbisHeaderInOutputBuffer();
     //void clearStreamResources();
     //void initializeAnalysisResources();
-    int streamSerialNumber;
+    //int streamSerialNumber;
 
     void encodeFirstVorbisHeaders();
     void clearState();
