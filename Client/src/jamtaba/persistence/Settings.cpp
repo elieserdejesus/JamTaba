@@ -395,6 +395,7 @@ void Settings::load(){
     QString absolutePath = dir.absoluteFilePath(fileName);
     QFile file(absolutePath);
     if(file.open(QIODevice::ReadOnly)){
+        qWarning() << "Reading settings from " << absolutePath;
         QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
         QJsonObject root = doc.object();
 

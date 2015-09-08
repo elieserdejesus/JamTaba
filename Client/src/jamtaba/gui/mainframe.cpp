@@ -745,7 +745,7 @@ void MainFrame::closeEvent(QCloseEvent *)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainFrame::showEvent(QShowEvent *)
 {
-    qWarning() << "Thread da GUI: " << QThread::currentThreadId();
+    //qWarning() << "Thread da GUI: " << QThread::currentThreadId();
 
     int availableDevices = mainController->getAudioDriver()->getDevicesCount();
     if(!mainController->isStarted() && availableDevices > 0){
@@ -825,13 +825,13 @@ void MainFrame::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audioD
     //bool midiDeviceChanged =  midiDeviceIndex
 
 
-
-#ifdef _WIN32
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
+
+#ifdef Q_OS_WIN
     audioDriver->setProperties(audioDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
-#else
-    //preciso de um outro on_audioIoPropertiesChanged que me dê o input e o output device
-    //audioDriver->setProperties(selectedDevice, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);
+#endif
+#ifdef Q_OS_MACX
+    audioDriver->setProperties(sampleRate, bufferSize);
 #endif
     mainController->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, audioDevice, sampleRate, bufferSize, midiInputsStatus);
 

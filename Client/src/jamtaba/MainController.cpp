@@ -151,11 +151,9 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
         vstHost(Vst::VstHost::getInstance()),
       //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
       ipToLocationResolver( buildIpToLocationResolver()),
-      settings(settings),
-
       loginService(factory->createLoginService()),
+      settings(settings),
       userNameChoosed(false),
-
       jamRecorder(new Recorder::ReaperProjectGenerator())
 
 {
@@ -165,13 +163,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     setQuitOnLastWindowClosed(false);//wait disconnect from server to close
     configureStyleSheet();
 
-    this->audioDriver = new Audio::PortAudioDriver(
-                this, //the AudioDriverListener instance
-                settings.getLastInputDevice(), settings.getLastOutputDevice(),
-                settings.getFirstGlobalAudioInput(), settings.getLastGlobalAudioInput(),
-                settings.getFirstGlobalAudioOutput(), settings.getLastGlobalAudioOutput(),
-                settings.getLastSampleRate(), settings.getLastBufferSize()
-                );
+    this->audioDriver = buildAudioDriver(settings);
 
 
     QObject::connect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
@@ -238,31 +230,21 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 //++++++++++++++++++++
 Geo::IpToLocationResolver* MainController::buildIpToLocationResolver(){
     return new Geo::WebIpToLocationResolver();
-/*
-    bool dataBaseFounded = true;
-    QString currentDir = "./";
-#ifdef Q_OS_MACX
-    currentDir += "../../../";
-#endif
-    QString fileName = "IP2LOCATION-LITE-DB1.BIN";
-    QFileInfo dbFile(currentDir + "/" + fileName);
-    qWarning() << "procurando em " << dbFile.absoluteFilePath();
-    if(!dbFile.exists()){
-        dbFile.setFile(currentDir + "../Jamtaba2/" + fileName);
-        qWarning() << "procurando em " << dbFile.absoluteFilePath();
-        if(!dbFile.exists()){
-            dataBaseFounded = false;
-        }
-    }
-    if(dataBaseFounded){
-        return new Geo::IpToLocationLITEResolver(dbFile.absoluteFilePath());// new Geo::MaxMindIpToLocationResolver(dbFile.absoluteFilePath());
-    }
-    else{
-        qWarning() << "não encontrou " ;
-    }
+}
 
-    return new Geo::NullIpToLocationResolver();
-    */
+Audio::AudioDriver* MainController::buildAudioDriver(const Persistence::Settings &settings){
+#ifdef Q_OS_WIN
+    return new Audio::PortAudioDriver(
+                    this, //the AudioDriverListener instance
+                    settings.getLastInputDevice(), settings.getLastOutputDevice(),
+                    settings.getFirstGlobalAudioInput(), settings.getLastGlobalAudioInput(),
+                    settings.getFirstGlobalAudioOutput(), settings.getLastGlobalAudioOutput(),
+                    settings.getLastSampleRate(), settings.getLastBufferSize()
+                    );
+#endif
+
+    //MAC
+    return new Audio::PortAudioDriver(this, settings.getLastSampleRate(), settings.getLastBufferSize());
 }
 
 //++++++++++++++++++++
@@ -974,7 +956,7 @@ void MainController::start()
         loginService->connectInServer("Jamtaba2 USER", 0, "", map, version, userEnvironment, getAudioDriverSampleRate());
         //(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
 
-        qCDebug(controllerMain) << "Starting " + userEnvironment;
+        qCWarning(controllerMain) << "Starting " + userEnvironment;
     }
 }
 

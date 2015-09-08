@@ -25,7 +25,10 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
     ui->comboLastOutput->setEnabled(false);
 
 #ifdef Q_OS_MACX
- ui->comboAudioDevice->setEnabled(false);
+ ui->comboAudioDevice->setVisible(false);
+ ui->asioDriverLabel->setVisible(false);
+ ui->groupBoxInputs->setVisible(false);
+ ui->groupBoxOutputs->setVisible(false);
 #endif
     //selectAudioTab();
     //ui->prefsTab->setCurrentIndex(0);

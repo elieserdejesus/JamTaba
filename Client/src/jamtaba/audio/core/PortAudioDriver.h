@@ -13,8 +13,13 @@ namespace Audio{
 class PortAudioDriver : public AudioDriver
 {
 public:
+#ifdef Q_OS_WIN
     PortAudioDriver(AudioDriverListener* audioDriverListener, int inputDeviceIndex, int outputDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize);
-    PortAudioDriver(AudioDriverListener* audioDriverListener);
+#endif
+#ifdef Q_OS_MACX
+    PortAudioDriver(AudioDriverListener* audioDriverListener, int sampleRate, int  bufferSize);
+#endif
+    //PortAudioDriver(AudioDriverListener* audioDriverListener);
     virtual ~PortAudioDriver();
 
 	virtual void start();
@@ -53,6 +58,8 @@ private:
     void translatePortAudioCallBack(const void *in, void *out, unsigned long framesPerBuffer);
 
     void changeInputSelection(int firstInputChannelIndex, int inputChannelCount);
+
+    //static PaTime computeSuggestedLatency(int sampleRate, int bufferSize);
 };
 
 
