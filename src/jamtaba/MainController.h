@@ -263,6 +263,7 @@ private:
     //SamplesBufferRecorder* recorder;
 
     static Geo::IpToLocationResolver* buildIpToLocationResolver();
+    Audio::AudioDriver* buildAudioDriver(const Persistence::Settings& settings);
 
     //used to sort plugins list
     static bool pluginDescriptorLessThan(const Audio::PluginDescriptor& d1, const Audio::PluginDescriptor& d2);

@@ -2,15 +2,14 @@
 
 #Terminar a versão para Mac
 
-#icone do dock esta funcionando no modo release, mas tenho que fazer um icone usando
-    #imagens de maior qualidade. Peguei o icone do Jamtaba 1, mas está ruim. Nao tenho certeza
-    #se está compilando e utilizando o ícone novo que botei na pasta.
 
-#meu fader não tem utilidade do meio para baixo. Ver se consigo melhorar
+#nome do input selecionado nao aparece
 
-#pensar em um jeito de atualizar o pais de quem esta tocando na sala
+#acho que isso vai dar problema ne selecao do audio device: No matching signal for on_comboAsioDriver_activated
 
-#entradas de audio, permitir que o usuário configure block size e sample rate
+#gravação no mac vai ficar dentro de contents? poderia pegar o writable location do Qt
+
+#usar entrada padrão sempre
 
 #midi
 
@@ -20,13 +19,21 @@
 
 #vst
 
+#como conferir se está rodando em outros Macs?
+    #instalar uma imagem antiga de Mac em máquina virtual dentro do prórpio mac?
+
+#icone do dock esta funcionando no modo release, mas tenho que fazer um icone usando
+    #imagens de maior qualidade. Fiz o icone mas ainda esta ruim.
+    #Acho que está faltando as imagens intermediarias e o mac está interpolando, por isso fica ruim.
+    #instruções detalhadas: http://stackoverflow.com/questions/6337787/how-can-i-set-the-icon-for-a-mac-application-in-xcode
+
+#meu fader não tem utilidade do meio para baixo. Ver se consigo melhorar
+
+#pensar em um jeito de atualizar o pais de quem esta tocando na sala
 
 #windows - acho que o botao de play do bfd fica clicado direto porque eu estou deixando
     #o transportChanged habilitado o tempo todo. O correto seria mudar isso e ver
     #se o BFD já sincroniza.
-
-#como conferir se está rodando em outros Macs?
-    #instalar uma imagem antiga de Mac em máquina virtual dentro do prórpio mac?
 
 #tocar em algumas Jams para ver se está rolando
 

@@ -43,6 +43,7 @@ public:
 	virtual ~AudioDriver();
     virtual void setProperties(int deviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
     virtual void setProperties(int inputDeviceIndex, int outputDeviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
+    virtual void setProperties(int sampleRate, int bufferSize);//used in mac
 
     virtual void stop() = 0;
     virtual void start() = 0;

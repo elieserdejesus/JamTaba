@@ -87,7 +87,7 @@
            <number>20</number>
           </property>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
+           <layout class="QHBoxLayout" name="deviceLayout" stretch="0,0">
             <property name="spacing">
              <number>6</number>
             </property>
@@ -201,7 +201,7 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <layout class="QHBoxLayout" name="sampleRateBfferSizeLayout">
             <property name="spacing">
              <number>3</number>
             </property>
@@ -227,6 +227,22 @@
                <size>
                 <width>0</width>
                 <height>0</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>30</width>
+                <height>20</height>
                </size>
               </property>
              </spacer>

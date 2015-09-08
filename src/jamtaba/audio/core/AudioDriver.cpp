@@ -67,6 +67,17 @@ AudioDriver::~AudioDriver(){
 	delete this->outputBuffer;
 }
 
+void AudioDriver::setProperties(int sampleRate, int bufferSize){
+    stop();
+
+    this->bufferSize = bufferSize;
+
+    if(this->sampleRate != sampleRate){
+        this->sampleRate = sampleRate;
+        emit sampleRateChanged(this->sampleRate);
+    }
+}
+
 void AudioDriver::setProperties(int deviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize)
 {
     setProperties(deviceIndex, deviceIndex, firstIn, lastIn, firstOut, lastOut, sampleRate, bufferSize);

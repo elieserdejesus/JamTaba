@@ -68,14 +68,14 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
         stream << "\n\nWARNING: " << localMsg.constData() << context.function << file << context.line;
         break;
     case QtCriticalMsg:
-        stream << "\n\nCRITICAL:" << localMsg.constData() << context.function << file << context.line << "\n\n";
+        stream << "\n\nCRITICAL:" << localMsg.constData() << context.function << file << context.line << endl <<endl;
         break;
     case QtFatalMsg:
-        stream << "\n\nFATAL:" << localMsg.constData() << context.function << file << context.line << "\n\n";
+        stream << "\n\nFATAL:" << localMsg.constData() << context.function << file << context.line << endl << endl;
         //abort();
         break;
-    //case QtInfoMsg:
-    //    stream << "\n\nINFO:" << localMsg.constData() << file << context.line << "\n\n";
+    default:
+       stream << "\n\nINFO:" << localMsg.constData() << file << context.line << endl << endl;
     }
     QTextStream(stdout) << stringMsg << endl;
     //fprintf(stderr, stringMsg.toStdString().c_str());//write log message to console
