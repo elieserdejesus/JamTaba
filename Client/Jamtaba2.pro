@@ -2,9 +2,7 @@
 
 #Terminar a versão para Mac
 
-#fonte do dialogo de licença
-
-#icone
+#icone - fazer no windows mesmo
 
 #acho que isso vai dar problema ne selecao do audio device: No matching signal for on_comboAsioDriver_activated
 
@@ -18,7 +16,7 @@
     #Acho que está faltando as imagens intermediarias e o mac está interpolando, por isso fica ruim.
     #instruções detalhadas: http://stackoverflow.com/questions/6337787/how-can-i-set-the-icon-for-a-mac-application-in-xcode
 
-#sem o cabo de rede o comportamento ficou estranho no mac - nao fecha corretamente
+
 
 #meu fader não tem utilidade do meio para baixo. Ver se consigo melhorar
 
@@ -33,6 +31,8 @@
 #tocar em algumas Jams para ver se está rolando
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#sem o cabo de rede o comportamento ficou estranho no mac - nao fecha corretamente
 
 #não está finalizando direito no QT creator, mas o processo é finalizado, então deixei prá lá
 

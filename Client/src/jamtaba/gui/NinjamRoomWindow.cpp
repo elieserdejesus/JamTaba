@@ -349,5 +349,15 @@ void NinjamRoomWindow::on_intervalBeatChanged(int beat){
 void NinjamRoomWindow::on_licenceButton_clicked()
 {
     QString licence = Ninjam::Service::getInstance()->getCurrentServerLicence();
-    QMessageBox::about(this, ui->labelRoomName->text(), licence);//, QMessageBox::NoButton, QMessageBox::NoButton);
+    QMessageBox* msgBox = new QMessageBox(this);
+    msgBox->setText(licence);
+    msgBox->setWindowTitle(ui->labelRoomName->text());
+    msgBox->setAttribute( Qt::WA_DeleteOnClose );
+
+    //hack to set minimum width in QMEsageBox
+    QSpacerItem* horizontalSpacer = new QSpacerItem(500, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    QGridLayout* layout = (QGridLayout*)msgBox->layout();
+    layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
+    //QMessageBox::about(this, ui->labelRoomName->text(), licence);//, QMessageBox::NoButton, QMessageBox::NoButton);
+    msgBox->show();
 }

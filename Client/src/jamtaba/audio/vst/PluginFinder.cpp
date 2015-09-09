@@ -113,18 +113,22 @@ private:
 
 //retorna nullptr se não for um plugin
 Audio::PluginDescriptor PluginFinder::getPluginDescriptor(QFileInfo f, Vst::VstHost* host){
-    if (!f.isFile() || !QLibrary::isLibrary(f.fileName()) || f.fileName() == "Jamtaba.dll")
-        return Audio::PluginDescriptor();//invalid descriptor
 
     try{
-        bool archIsValid = false;
+        bool archIsValid = true;
         #ifdef Q_OS_WIN
+            if (!f.isFile() || !QLibrary::isLibrary(f.fileName()) || f.fileName() == "Jamtaba.dll"){
+                return Audio::PluginDescriptor();//invalid descriptor
+            }
             #ifdef _WIN64
                 archIsValid = WindowsDllArchChecker::is64Bits(f.absoluteFilePath());
             #else
                 archIsValid = WindowsDllArchChecker::is32Bits(f.absoluteFilePath());
             #endif
         #endif
+                if(!f.isBundle() || f.completeSuffix() != "vst"){
+                    return Audio::PluginDescriptor();//invalid descriptor
+                }
                 if(archIsValid){
                     Vst::VstPlugin plugin(host);
                     if(plugin.load(f.absoluteFilePath())){

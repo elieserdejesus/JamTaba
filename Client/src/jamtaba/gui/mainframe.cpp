@@ -508,6 +508,7 @@ void MainFrame::on_errorConnectingToServer(){
     hideBusyDialog();
     QMessageBox::warning(this, "Error!", "Error connecting in Jamtaba server!");
     close();
+    mainController->quit();
 }
 
 void MainFrame::on_newVersionAvailableForDownload(){
