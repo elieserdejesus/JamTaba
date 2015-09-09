@@ -2,10 +2,12 @@
 
 #Terminar a versão para Mac
 
-#icone - fazer no windows mesmo
-
 #acho que isso vai dar problema ne selecao do audio device: No matching signal for on_comboAsioDriver_activated
 
+#Double:
+    #Elastik2 but it can loop ? - eu respondi dizendo que ia ver o "Cycle"
+    #Ezdrummer1  some freeze in the looper window the blue blue line dont progress , but the loop is good playing  , the play button dont work we need often to launch the loop directly in the groove window
+    #Rmx Stylus funcionou perfeitamente - ver como ele é para ver o comportamento
 #vst
 
 #como conferir se está rodando em outros Macs?
