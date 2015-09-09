@@ -536,6 +536,11 @@ void MainController::addDefaultVstScanPath(){
         vstPaths.append(wowSettings.value("VSTPluginsPath").toString());
     #endif
 #endif
+
+#ifdef Q_OS_MACX
+       vstPaths.append("/Library/Audio/Plug-Ins/VST");
+       vstPaths.append( QDir::homePath() + "/Library/Audio/Plug-Ins/VST");
+#endif
     foreach (QString vstPath, vstPaths) {
         if(!vstPath.isEmpty() && QDir(vstPath).exists()){
             addVstScanPath(vstPath);
