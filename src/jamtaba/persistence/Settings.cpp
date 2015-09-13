@@ -141,7 +141,7 @@ void RecordingSettings::read(QJsonObject in){
 
 //+++++++++++++++++++++++++++++
 MetronomeSettings::MetronomeSettings()
-    : SettingsObject("metronome"), pan(0), gain(0)
+    : SettingsObject("metronome"), pan(0), gain(1), muted(false)
 {
 
 }
