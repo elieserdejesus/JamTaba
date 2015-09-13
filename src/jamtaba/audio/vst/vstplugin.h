@@ -19,9 +19,7 @@ class VstPlugin : public Audio::Plugin{
 public:
     explicit VstPlugin(Vst::VstHost* host);
     ~VstPlugin();
-    void start();
-    void resume();
-    void suspend();
+
     virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer &outBuffer, const Midi::MidiBuffer& midiBuffer);
     virtual void openEditor(QPoint centerOfScreen);
     virtual void closeEditor();
@@ -29,8 +27,12 @@ public:
     inline QString getPath() const{return path;}
     virtual QByteArray getSerializedData() const;
     virtual void restoreFromSerializedData(QByteArray dataToRestore);
+    void start();
 protected:
     void unload();
+
+    void resume();
+    void suspend();
     //void processMidiEvents(Midi::MidiBuffer& midiIn);
 private:
     bool initPlugin();
@@ -43,6 +45,7 @@ private:
     QString path;
 
     bool started;
+    bool turnedOn;
 
     bool loaded;
 

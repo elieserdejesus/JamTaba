@@ -756,8 +756,11 @@ QList<Audio::PluginDescriptor> MainController::getPluginsDescriptors(){
 
 Audio::Plugin* MainController::addPlugin(int inputTrackIndex, const Audio::PluginDescriptor& descriptor){
     Audio::Plugin* plugin = createPluginInstance(descriptor);
-    plugin->start();
-    getInputTrack(inputTrackIndex)->addProcessor(plugin);
+    if(plugin){
+        plugin->start();
+        QMutexLocker locker(&mutex);
+        getInputTrack(inputTrackIndex)->addProcessor(plugin);
+    }
     return plugin;
 }
 
@@ -783,12 +786,10 @@ Audio::Plugin *MainController::createPluginInstance(const Audio::PluginDescripto
         }
     }
     else if(descriptor.isVST()){
-        #if _WIN32
             Vst::VstPlugin* vstPlugin = new Vst::VstPlugin(this->vstHost);
             if(vstPlugin->load( descriptor.getPath())){
                 return vstPlugin;
             }
-        #endif
     }
     return nullptr;
 }

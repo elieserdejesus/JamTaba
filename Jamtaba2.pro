@@ -2,6 +2,16 @@
 
 #Terminar a versão para Mac
 
+
+#precisei recompilar a libvorvis, deu um erro dizendo que ela não tinha um símbolo para 64 bits.
+    #Recompilei ela e funcionou, mas recompilei usando o SDK 1.8, tenho que recompilar usando um SDK mais antigo.
+
+#quando entro pela primeira vez e não tem um arquivo de settings válido parece que o volume do metronomo vem zerado, isso é ruim
+
+#quando coloco dois plugins midi em sequencia na mesma pista só um recebe as mensagens
+
+#testar melhor os plugins no mac
+
 #acho que isso vai dar problema ne selecao do audio device: No matching signal for on_comboAsioDriver_activated
 
 #Double:
@@ -12,12 +22,6 @@
 
 #como conferir se está rodando em outros Macs?
     #instalar uma imagem antiga de Mac em máquina virtual dentro do prórpio mac?
-
-#icone do dock esta funcionando no modo release, mas tenho que fazer um icone usando
-    #imagens de maior qualidade. Fiz o icone mas ainda esta ruim.
-    #Acho que está faltando as imagens intermediarias e o mac está interpolando, por isso fica ruim.
-    #instruções detalhadas: http://stackoverflow.com/questions/6337787/how-can-i-set-the-icon-for-a-mac-application-in-xcode
-
 
 
 #meu fader não tem utilidade do meio para baixo. Ver se consigo melhorar
@@ -251,9 +255,11 @@ QT       +=  gui  network
 #QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS
 macx{
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.5
+    QMAKE_CFLAGS += -stdlib=libstdc++
 }
 
 CONFIG += c++11
+
 #CONFIG += openssl-linked
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -458,7 +464,7 @@ win32 {
 macx{
     message("Mac build")
 
-    VST_SDK_PATH = "/Users/elieser/Desktop/VST3 SDK/pluginterfaces/vst2.x"
+    VST_SDK_PATH = "/private/var/root/Desktop/VST3 SDK/pluginterfaces/vst2.x"
 
     LIBS_PATH = "mac"
 
