@@ -1,11 +1,12 @@
 #ifndef VSTHOST_H
 #define VSTHOST_H
 
-//#if _WIN32
-    #include "aeffectx.h"
-//#endif
+#include "aeffectx.h"
 
 
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(vstHost)
 
 namespace Midi {
 class MidiBuffer;
@@ -37,7 +38,7 @@ public:
     //void setTransportChangedFlag(bool transportChanged);
     void update(int intervalPosition);
 protected:
-    static VstInt32 VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index, VstInt32 value, void *ptr, float opt);
+    static long VSTCALLBACK hostCallback(AEffect *effect, long opcode, long index, long value, void *ptr, float opt);
 private:
     VstTimeInfo vstTimeInfo;
     //int sampleRate;
@@ -50,6 +51,10 @@ private:
     VstHost();
     VstHost(const VstHost&);//copy constructor
     ~VstHost();
+
+    bool tempoIsValid() const;
+
+    long callBack(AEffect *effect, long opcode, long index, long value, void *ptr, float opt);
 };
 
 }

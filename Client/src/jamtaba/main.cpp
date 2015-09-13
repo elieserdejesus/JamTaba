@@ -19,6 +19,8 @@ int main(int argc, char* args[] ){
 //    qWarning() << "result: " << result;
 //    return 0;
 
+
+
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
 

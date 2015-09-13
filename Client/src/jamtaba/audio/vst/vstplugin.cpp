@@ -40,6 +40,8 @@ VstPlugin::VstPlugin(VstHost* host)
         internalBuffer(nullptr),
         host(host),
         loaded(false),
+        started(false),
+        turnedOn(false),
         out(nullptr)
 {
     this->vstMidiEvents.reserved = 0;
@@ -69,7 +71,7 @@ bool VstPlugin::load(QString path){
     try {
         qCDebug(vst) << "loading " << path << " thread:" << QThread::currentThreadId();
         if(!pluginLib.load()){
-            qCCritical(vst) << "error when loading VST plugin " << path;
+            qCCritical(vst) << "error when loading VST plugin " << path << " -> " << pluginLib.errorString();
             return false;
         }
         //qCDebug(vst) << path << " loaded";
@@ -125,13 +127,9 @@ bool VstPlugin::load(QString path){
 
     this->path = path;
 
-    int outputs = effect->numOutputs;
-    qCDebug(vst) << "Criando internalBuffer com " << outputs << " canais e " << host->getBufferSize() << " samples";
-    internalBuffer = new Audio::SamplesBuffer(outputs, host->getBufferSize());
-
-    out = new float*[outputs];
 
     loaded = true;
+
 
     return true;
 }
@@ -157,22 +155,17 @@ void VstPlugin::restoreFromSerializedData(QByteArray dataToRestore){
 
 void VstPlugin::resume(){
 
-    qCDebug(vst) << "setting sample rate and block size";
-    effect->dispatcher(effect, effSetSampleRate, 0, 0, NULL, host->getSampleRate());
-    effect->dispatcher(effect, effSetBlockSize, 0, host->getBufferSize(), NULL, 0.0f);
-    //qCDebug(vst) << "sample rate and block size setted for " << getName();
-
     qCDebug(vst) << "Resuming " << getName() << "thread: " << QThread::currentThreadId();
     effect->dispatcher(effect, effMainsChanged, 0, 1, NULL, 0.0f);
 
-    //effect->dispatcher(effect, effStartProcess, 0, 1, NULL, 0.0f);
+    effect->dispatcher(effect, effStartProcess, 0, 1, NULL, 0.0f);
 
 }
 
 void VstPlugin::suspend(){
     qCDebug(vst) << "Suspending " << getName() << "Thread: " << QThread::currentThreadId();
 
-    //effect->dispatcher(effect, effStopProcess, 0, 1, NULL, 0.0f);
+    effect->dispatcher(effect, effStopProcess, 0, 1, NULL, 0.0f);
 
     effect->dispatcher(effect, effMainsChanged, 0, 0, NULL, 0.0f);
 }
@@ -186,20 +179,35 @@ void VstPlugin::start(){
 
     qCDebug(vst) << "starting plugin " << getName() << " thread: " << QThread::currentThreadId();
 
-    //long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
-    //qDebug() << "Starting " << getName() << " version " << ver;
+    int outputs = effect->numOutputs;
+    qCDebug(vst) << "Criando internalBuffer com " << outputs << " canais e " << host->getBufferSize() << " samples";
+    internalBuffer = new Audio::SamplesBuffer(outputs, host->getBufferSize());
 
+    out = new float*[outputs];
+
+
+    long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
+    qCDebug(vst) << "Starting " << getName() << " version " << ver;
 
     //qCDebug(vst) << "opening" << getName();
     effect->dispatcher(effect, effOpen, 0, 0, NULL, 0.0f);
     //qCDebug(vst) << getName() << "opened";
+
+    qCDebug(vst) << "setting sample rate and block size " << QThread::currentThreadId();
+    effect->dispatcher(effect, effSetSampleRate, 0, 0, NULL, host->getSampleRate());
+    effect->dispatcher(effect, effSetBlockSize, 0, host->getBufferSize(), NULL, 0.0f);
+    //qCDebug(vst) << "sample rate and block size setted for " << getName();
+
 
 
     //qCDebug(vst) << "checking for plugin midi capabilities";
     wantMidi = (effect->dispatcher(effect, effCanDo, 0, 0, (void*)"receiveVstMidiEvent", 0) == 1);
     //qCDebug(vst) << "plugin midi capabilities done: " << wantMidi;
 
-    resume();
+    started = true;
+    turnedOn = false;
+
+    //resume();
 }
 
 VstPlugin::~VstPlugin()
@@ -258,9 +266,14 @@ void VstPlugin::fillVstEventsList(const Midi::MidiBuffer &midiBuffer){
 
 void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, const Midi::MidiBuffer& midiBuffer){
     Q_UNUSED(in)
-    if(isBypassed() || !effect || !loaded){
+    if(isBypassed() || !effect || !loaded || !started){
         //qDebug(vst) << "returning";
         return;
+    }
+
+    if(!turnedOn){
+        resume();
+        turnedOn = true;
     }
 
     //qCDebug(vst) << "processing...";
@@ -290,20 +303,9 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
     if(effect->flags & effFlagsCanReplacing){
         effect->processReplacing(effect, inArray, out, sampleFrames);
     }
-
-
-
     //qCDebug(vst) << "processReplacing called " << getName();
 
-    //mix multiple out plugins to stereo
-    int totalChannels = internalBuffer->getChannels();
-    if(totalChannels > 2){
-//        for (int s = 0; s < internalBuffer->getFrameLenght(); ++s) {
-//            for (int c = 2; c < totalChannels; ++c) {
-//                internalBuffer->add(c % 2, s, internalBuffer->get(c, s));
-//            }
-//        }
-    }
+
 
     outBuffer.set(*internalBuffer);
     //qCDebug(vst) << "audioBuffer filled " << getName();

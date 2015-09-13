@@ -331,8 +331,10 @@ void MainFrame::restorePluginsList(){
                         QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
                         Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path );
                         Audio::Plugin* pluginInstance = mainController->addPlugin(subChannelView->getInputIndex(), descriptor);
-                        pluginInstance->restoreFromSerializedData( plugin.data);
-                        subChannelView->addPlugin(pluginInstance, plugin.bypassed);
+                        if(pluginInstance){
+                            pluginInstance->restoreFromSerializedData( plugin.data);
+                            subChannelView->addPlugin(pluginInstance, plugin.bypassed);
+                        }
                         QApplication::processEvents();
 
                         //PluginLoader* loader = new PluginLoader(mainController, plugin, subChannelView);
