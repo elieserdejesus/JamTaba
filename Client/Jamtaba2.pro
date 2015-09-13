@@ -11,6 +11,9 @@
 #quando coloco dois plugins midi em sequencia na mesma pista só um recebe as mensagens
 
 #testar melhor os plugins no mac
+    #bfd 3 demo não está em sync
+
+#Elastik não sinca, mas que ele não sinca mesmo. Testar no Reaper para ver.
 
 #acho que isso vai dar problema ne selecao do audio device: No matching signal for on_comboAsioDriver_activated
 
@@ -24,6 +27,13 @@
     #instalar uma imagem antiga de Mac em máquina virtual dentro do prórpio mac?
 
 
+#fazer a opção de servidor privado em um menu
+
+#colocar referência para o ninbot no menu ninjam
+
+#colocar referências para ninjam, qt, portmedia, minimp3, libvorbis e libogg no site
+
+
 #meu fader não tem utilidade do meio para baixo. Ver se consigo melhorar
 
 #pensar em um jeito de atualizar o pais de quem esta tocando na sala
@@ -31,6 +41,8 @@
 #windows - acho que o botao de play do bfd fica clicado direto porque eu estou deixando
     #o transportChanged habilitado o tempo todo. O correto seria mudar isso e ver
     #se o BFD já sincroniza.
+
+
 
 #items dos combos de input muito amontados no mac
 
