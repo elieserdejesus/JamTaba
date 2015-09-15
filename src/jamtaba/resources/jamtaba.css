@@ -369,7 +369,7 @@ border-radius: 5px;
 
 /* títulos dos painéis principais */
 .QWidget#leftPanel .QLabel#labelSectionTitle, .QWidget#contentPanel > .QLabel{
-font-size: 11pt;
+font-size: 12pt;
 color: rgb(190, 190, 190);
 qproperty-alignment: AlignCenter;
 }
