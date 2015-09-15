@@ -329,7 +329,7 @@ void VstPlugin::openEditor(QPoint centerOfScreen){
     }
 
     if(editorWindow && editorWindow->isVisible()){
-        editorWindow->setFocus();
+        editorWindow->raise();
         editorWindow->activateWindow();
         return;
     }

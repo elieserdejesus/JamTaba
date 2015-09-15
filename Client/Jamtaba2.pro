@@ -2,24 +2,21 @@
 
 #Terminar a versão para Mac
 
+#como conferir se está rodando em outros Macs?
+    #instalar uma imagem antiga de Mac em máquina virtual dentro do prórpio mac?
+
+#---------
 
 #quando coloco dois plugins midi em sequencia na mesma pista só um recebe as mensagens
 
 #testar melhor os plugins no mac
-    #bfd 3 demo não está em sync
+    #bfd 3 demo não está maie em sync depois que mudei algumas coisas na class VstPlugin
 
-#Elastik não sinca, mas que ele não sinca mesmo. Testar no Reaper para ver.
 
 #acho que isso vai dar problema ne selecao do audio device: No matching signal for on_comboAsioDriver_activated
 
 #Double:
-    #Elastik2 but it can loop ? - eu respondi dizendo que ia ver o "Cycle"
     #Ezdrummer1  some freeze in the looper window the blue blue line dont progress , but the loop is good playing  , the play button dont work we need often to launch the loop directly in the groove window
-    #Rmx Stylus funcionou perfeitamente - ver como ele é para ver o comportamento
-#vst
-
-#como conferir se está rodando em outros Macs?
-    #instalar uma imagem antiga de Mac em máquina virtual dentro do prórpio mac?
 
 
 #fazer a opção de servidor privado em um menu
@@ -37,9 +34,6 @@
     #o transportChanged habilitado o tempo todo. O correto seria mudar isso e ver
     #se o BFD já sincroniza.
 
-
-
-#items dos combos de input muito amontados no mac
 
 #tocar em algumas Jams para ver se está rolando
 
@@ -472,7 +466,7 @@ win32 {
 macx{
     message("Mac build")
 
-    VST_SDK_PATH = "/private/var/root/Desktop/VST3 SDK/pluginterfaces/vst2.x"
+    VST_SDK_PATH = "/Users/elieser/Desktop/VST3 SDK/pluginterfaces/vst2.x"
 
     LIBS_PATH = "mac"
 
