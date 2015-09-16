@@ -126,7 +126,7 @@ void NinjamRoomWindow::on_chatMessageReceived(Ninjam::User user, QString message
     chatPanel->addMessage(user.getName(), message);
 
     //local user is voting?
-    static long lastVoteCommand = 0;
+    static long long lastVoteCommand = 0;
     QString localUserFullName = Ninjam::Service::getInstance()->getConnectedUserName();
     if (user.getFullName() == localUserFullName && message.toLower().contains("!vote")) {
         lastVoteCommand = QDateTime::currentMSecsSinceEpoch();

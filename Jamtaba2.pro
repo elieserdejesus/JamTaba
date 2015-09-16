@@ -2,8 +2,25 @@
 
 #Terminar a versão para Mac
 
+#compilado em 32 bits no mac.
+
+#no mac em 32 bits a tela dos VSTs não funcionou. Alguma coisa com CArbon. Parece que não tem como compilar o QT 5 com carbon.
+    #Realmente preciso ver o código do Ardour.
+
+
+
 #como conferir se está rodando em outros Macs?
     #instalar uma imagem antiga de Mac em máquina virtual dentro do prórpio mac?
+
+#parece que para compilar em 32 bits em teria que ter uma versão 32 bits do QT, e teria que compilar ela.
+    #Então vou liberar somenta a versão 64 por enquanto
+#Resta saber se o meu executábel funcinará em versões mais antigas do OSX.
+
+#The most common way to distribute applications is to provide a compressed disk image (.dmg file)
+#that the user can mount in Finder. The Mac deployment tool (macdeployqt) can be used to create the
+#self-contained bundles, and optionally also create a .dmg archive. See the Mac deployment guide for more
+#information about deployment. It is also possible to use an installer wizard. More information on this option
+#can be found in Apple's documentation.
 
 #---------
 
@@ -255,9 +272,8 @@ QT       +=  gui  network
 
 #QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS
 macx{
-    #QMAKE_CXXFLAGS += -mmacosx-version-min=10.5
-    #QMAKE_CFLAGS += -stdlib=libstdc++
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.6
+    CONFIG += x86 x86_64 #não está funcionando
 }
 
 CONFIG += c++11
@@ -468,7 +484,13 @@ macx{
 
     VST_SDK_PATH = "/Users/elieser/Desktop/VST3 SDK/pluginterfaces/vst2.x"
 
-    LIBS_PATH = "mac"
+    macx-clang-32 {
+        message("i386 build") ## mac 32bit specific build here
+        LIBS_PATH = "mac32"
+    } else {
+        message("x86_64 build") ## mac 64bit specific build here
+        LIBS_PATH = "mac64"
+    }
 
     LIBS += -framework CoreAudio
     LIBS += -framework CoreMidi
