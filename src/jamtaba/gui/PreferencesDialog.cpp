@@ -235,7 +235,7 @@ void PreferencesDialog::populateBufferSizeCombo()
 
 //++++++++++++
 
-void PreferencesDialog::on_comboAsioDriver_activated(int index)
+void PreferencesDialog::on_comboAudioDevice_activated(int index)
 {
     int deviceIndex = ui->comboAudioDevice->itemData(index).toInt();
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
