@@ -1,34 +1,5 @@
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
-
-#Terminar a versão para Mac
-
-#compilado em 32 bits no mac.
-
-#no mac em 32 bits a tela dos VSTs não funcionou. Alguma coisa com CArbon. Parece que não tem como compilar o QT 5 com carbon.
-    #Realmente preciso ver o código do Ardour.
-
-
-
-#como conferir se está rodando em outros Macs?
-    #instalar uma imagem antiga de Mac em máquina virtual dentro do prórpio mac?
-
-#parece que para compilar em 32 bits em teria que ter uma versão 32 bits do QT, e teria que compilar ela.
-    #Então vou liberar somenta a versão 64 por enquanto
-#Resta saber se o meu executábel funcinará em versões mais antigas do OSX.
-
-#The most common way to distribute applications is to provide a compressed disk image (.dmg file)
-#that the user can mount in Finder. The Mac deployment tool (macdeployqt) can be used to create the
-#self-contained bundles, and optionally also create a .dmg archive. See the Mac deployment guide for more
-#information about deployment. It is also possible to use an installer wizard. More information on this option
-#can be found in Apple's documentation.
-
-#---------
-
 #quando coloco dois plugins midi em sequencia na mesma pista só um recebe as mensagens
-
-#testar melhor os plugins no mac
-    #bfd 3 demo não está maie em sync depois que mudei algumas coisas na class VstPlugin
-
 
 #acho que isso vai dar problema ne selecao do audio device: No matching signal for on_comboAsioDriver_activated
 
@@ -56,6 +27,31 @@
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
+#testar melhor os plugins no mac
+    #bfd 3 demo não está maie em sync depois que mudei algumas coisas na class VstPlugin
+
+#Terminar a versão para Mac
+
+#compilado em 32 bits no mac.
+
+#no mac em 32 bits a tela dos VSTs não funcionou. Alguma coisa com CArbon. Parece que não tem como compilar o QT 5 com carbon.
+    #Realmente preciso ver o código do Ardour.
+
+
+
+#como conferir se está rodando em outros Macs?
+    #instalar uma imagem antiga de Mac em máquina virtual dentro do prórpio mac?
+
+#parece que para compilar em 32 bits em teria que ter uma versão 32 bits do QT, e teria que compilar ela.
+    #Então vou liberar somenta a versão 64 por enquanto
+#Resta saber se o meu executábel funcinará em versões mais antigas do OSX.
+
+#The most common way to distribute applications is to provide a compressed disk image (.dmg file)
+#that the user can mount in Finder. The Mac deployment tool (macdeployqt) can be used to create the
+#self-contained bundles, and optionally also create a .dmg archive. See the Mac deployment guide for more
+#information about deployment. It is also possible to use an installer wizard. More information on this option
+#can be found in Apple's documentation.
+#--------------
 #sem o cabo de rede o comportamento ficou estranho no mac - nao fecha corretamente
 
 #não está finalizando direito no QT creator, mas o processo é finalizado, então deixei prá lá
@@ -465,7 +461,7 @@ win32 {
 
     LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32  \
 
-    VST_SDK_PATH = "D:/Documents/Estudos/ComputacaoMusical/Jamtaba2/VST3_SDK/pluginterfaces/vst2.x/"
+    VST_SDK_PATH = "E:/Jamtaba2\VST3 SDK/pluginterfaces/vst2.x/"
 
     !contains(QMAKE_TARGET.arch, x86_64) {
         message("x86 build") ## Windows x86 (32bit) specific build here
