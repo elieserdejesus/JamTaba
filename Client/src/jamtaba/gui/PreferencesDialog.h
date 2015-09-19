@@ -24,7 +24,7 @@ public:
 private slots:
     void on_comboFirstInput_currentIndexChanged(int);
     void on_comboFirstOutput_currentIndexChanged(int);
-    void on_comboAsioDriver_activated(int index);
+    void on_comboAudioDevice_activated(int index);
     void on_okButton_released();
 
     void on_prefsTab_currentChanged(int index);
