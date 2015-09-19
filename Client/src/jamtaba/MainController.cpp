@@ -241,10 +241,10 @@ Audio::AudioDriver* MainController::buildAudioDriver(const Persistence::Settings
                     settings.getFirstGlobalAudioOutput(), settings.getLastGlobalAudioOutput(),
                     settings.getLastSampleRate(), settings.getLastBufferSize()
                     );
-#endif
-
+#else
     //MAC
     return new Audio::PortAudioDriver(this, settings.getLastSampleRate(), settings.getLastBufferSize());
+#endif
 }
 
 //++++++++++++++++++++
