@@ -1,7 +1,5 @@
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
-#pensar em um jeito de atualizar o pais de quem esta tocando na sala
-
 #saí de uma sala e não consegui entrar em outras. Testei e vi que é um bug estranho. Parece que dá problema quando pulo de uma
     #sala que tem bastante gente para outra que também tem. Quando pulei de sala vazia para sala vazia não deu problema. Pulei
     #de uma sala com apenas um musico para uma vazia e também não deu nada.

@@ -91,7 +91,14 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Co
 //        ui->tracksPanel->layout()->addWidget(trackView);
 //    }
 }
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamRoomWindow::updateGeoLocations(){
+    foreach (NinjamTrackGroupView* trackGroup, trackGroups) {
+        trackGroup->updateGeoLocation();
+    }
+}
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::initializeMetronomeEvents(){
     QObject::connect( ui->topPanel->getGainSlider(), SIGNAL(valueChanged(int)), this, SLOT(onFaderMoved(int)));
     QObject::connect( ui->topPanel->getPanSlider(), SIGNAL(valueChanged(int)), this, SLOT(onPanSliderMoved(int)));
@@ -234,10 +241,8 @@ void NinjamRoomWindow::on_channelAdded(Ninjam::User user, Ninjam::UserChannel ch
     if(!trackGroups.contains(user.getFullName())){//first channel from this user?
         QString userName = user.getName();
         QString channelName = channel.getName();
-        Geo::Location userGeoLocation = mainController->getGeoLocation(user.getIp());
-        QString countryName = userGeoLocation.getCountryName();
-        QString countryCode = userGeoLocation.getCountryCode().toLower();
-        NinjamTrackGroupView* trackView = new NinjamTrackGroupView(ui->tracksPanel, this->mainController, channelID, userName, channelName, countryName, countryCode );
+        QString userIp = user.getIp();
+        NinjamTrackGroupView* trackView = new NinjamTrackGroupView(ui->tracksPanel, this->mainController, channelID, userName, channelName, userIp );
         ui->tracksPanel->layout()->addWidget(trackView);
         trackGroups.insert(user.getFullName(), trackView);
         adjustTracksWidth();

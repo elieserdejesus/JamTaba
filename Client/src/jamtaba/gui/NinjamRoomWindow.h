@@ -45,7 +45,7 @@ public:
     explicit NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Controller::MainController *mainController);
     ~NinjamRoomWindow();
     void updatePeaks();
-
+    void updateGeoLocations();
     inline ChatPanel* getChatPanel() const{return chatPanel;}
 
 private:

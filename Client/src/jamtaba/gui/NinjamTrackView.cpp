@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QDebug>
 #include <QStyle>
+#include "../MainController.h"
 
 //+++++++++++++++++++++++++
 NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, long trackID, QString channelName)
@@ -26,13 +27,16 @@ void NinjamTrackView::setChannelName(QString name){
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamTrackGroupView::updateGeoLocation(){
+    Geo::Location location = mainController->getGeoLocation(this->userIP);
+    countryLabel->setText("<img src=:/flags/flags/" + location.getCountryCode().toLower() +".png> <br>" + location.getCountryName());
+}
 
-NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainController *mainController, long trackID, QString userName, QString channelName, QString countryName, QString countryCode)
-    :TrackGroupView(parent), mainController(mainController)
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainController *mainController, long trackID, QString userName, QString channelName, QString userIP)
+    :TrackGroupView(parent), mainController(mainController), userIP(userIP)
 {
-    //this->setMaximumWidth(100);
-    //this->setMinimumWidth(100);
-
     setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred));
 
     //change the top panel layout to vertical (original is horizontal)
@@ -47,9 +51,9 @@ NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainCont
     countryLabel = new QLabel();
     countryLabel->setObjectName("countryLabel");
     countryLabel->setTextFormat(Qt::RichText);
-    countryLabel->setText("<img src=:/flags/flags/" + countryCode +".png> <br>" + countryName);
-    //countryLabel->setStyleSheet("font-size: 7pt;");
-    //countryLabel->setAlignment(Qt::AlignCenter);
+    updateGeoLocation();
+    //countryLabel->setText("<img src=:/flags/flags/" + countryCode +".png> <br>" + countryName);
+
     ui->topPanel->layout()->addWidget(countryLabel);
 
     //create the first subchannel by default
@@ -57,13 +61,6 @@ NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainCont
 
     ui->groupNameField->setReadOnly(true);
 
-//    ui->channelName->setStyleSheet("font-size: 7pt");
-
-//    //disable channel name, not editable
-//    ui->channelName->setEnabled(false);
-
-    //setEnabled(false);
-    //setActivated(false);
 }
 
 void NinjamTrackGroupView::setNarrowStatus(bool narrow){
