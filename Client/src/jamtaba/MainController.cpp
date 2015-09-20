@@ -507,6 +507,11 @@ void MainController::storeRecordingPath(QString newPath){
     }
 }
 //---------------------------------
+void MainController::storePrivateServerSettings(QString server, int serverPort, QString password){
+    settings.setPrivateServerData(server, serverPort, password);
+}
+
+//---------------------------------
 void MainController::storeMetronomeSettings(float metronomeGain, float metronomePan, bool metronomeMuted){
     settings.setMetronomeSettings(metronomeGain, metronomePan, metronomeMuted);
 }
@@ -872,14 +877,14 @@ bool MainController::isPlayingRoomStream() const{
     return roomStreamer->isStreaming();
 }
 
-void MainController::enterInRoom(Login::RoomInfo room, QStringList channelsNames){
+void MainController::enterInRoom(Login::RoomInfo room, QStringList channelsNames, QString password){
     qCDebug(controllerMain) << "EnterInRoom slot";
     if(isPlayingRoomStream()){
         stopRoomStream();
     }
 
     if(room.getType() == Login::RoomTYPE::NINJAM){
-        tryConnectInNinjamServer(room, channelsNames);
+        tryConnectInNinjamServer(room, channelsNames, password);
     }
 }
 
@@ -895,15 +900,15 @@ void MainController::sendRemovedChannelMessage(int removedChannelIndex){
     }
 }
 
-void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStringList channelsNames){
+void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStringList channelsNames, QString password){
     qCDebug(controllerMain) << "connecting...";
     if(userNameWasChoosed()){//just in case :)
         QString serverIp = ninjamRoom.getName();
         int serverPort = ninjamRoom.getPort();
         QString userName = getUserName();
-        QString password = "";
+        QString pass = (password.isNull() || password.isEmpty()) ? "" : password;
 
-        this->ninjamService->startServerConnection(serverIp, serverPort, userName, channelsNames, password);
+        this->ninjamService->startServerConnection(serverIp, serverPort, userName, channelsNames, pass);
     }
     else{
         qCritical() << "user name not choosed yet!";

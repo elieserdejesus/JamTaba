@@ -55,6 +55,30 @@ float SettingsObject::getValueFromJson(const QJsonObject &json, QString property
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+PrivateServerSettings::PrivateServerSettings()
+    :SettingsObject("PrivateServer"), server("localhost"), serverPort(2049), password(""){
+
+}
+
+void PrivateServerSettings::write(QJsonObject &out){
+    out["server"] = server;
+    out["password"] = password;
+    out["port"] = serverPort;
+}
+
+void PrivateServerSettings::read(QJsonObject in){
+    server = getValueFromJson(in, "server", QString("localhost"));
+    password = getValueFromJson(in, "password", QString(""));
+    serverPort = getValueFromJson(in, "port", 2049);
+}
+
+void Settings::setPrivateServerData(QString server, int serverPort, QString password){
+    privateServerSettings.server = server;
+    privateServerSettings.serverPort = serverPort;
+    privateServerSettings.password = password;
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 AudioSettings::AudioSettings()
     : SettingsObject("audio"), sampleRate(44100), bufferSize(128)
 {
@@ -397,6 +421,7 @@ void Settings::load(){
     sections.append(&vstSettings);
     sections.append(&inputsSettings);
     sections.append(&recordingSettings);
+    sections.append(&privateServerSettings);
 
     QDir dir(fileDir);
     QString absolutePath = dir.absoluteFilePath(fileName);
@@ -446,6 +471,7 @@ void Settings::save(Persistence::InputsSettings inputsSettings){
     sections.append(&vstSettings);
     sections.append(&this->inputsSettings);
     sections.append(&recordingSettings);
+    sections.append(&privateServerSettings);
     //++++++++++++++++++++++++++
     QDir dir(fileDir);
     dir.mkpath(fileDir);

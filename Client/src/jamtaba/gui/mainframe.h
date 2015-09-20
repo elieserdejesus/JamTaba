@@ -88,8 +88,16 @@ private slots:
     void on_tabCloseRequest(int index);
     void on_tabChanged(int index);
 
+
+    //main menu
     void on_preferencesClicked(QAction *action);
     void on_IOPreferencesChanged(QList<bool>, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
+    void on_ninjamCommunityMenuItemTriggered();
+    void on_ninjamOfficialSiteMenuItemTriggered();
+    void on_privateServerMenuItemTriggered();
+
+    //private server
+    void on_privateServerConnectionAccepted(QString server, int serverPort, QString password);
 
     //login service
     void on_roomsListAvailable(QList<Login::RoomInfo> publicRooms);
@@ -100,7 +108,7 @@ private slots:
     //+++++  ROOM FEATURES ++++++++
     void on_startingRoomStream(Login::RoomInfo roomInfo);
     void on_stoppingRoomStream(Login::RoomInfo roomInfo);
-    void on_enteringInRoom(Login::RoomInfo roomInfo);
+    void on_enteringInRoom(Login::RoomInfo roomInfo, QString password = "");
     void on_enteredInRoom(Login::RoomInfo roomInfo);
     void on_exitedFromRoom(bool normalDisconnection);
 
@@ -151,6 +159,7 @@ private:
     NinjamRoomWindow* ninjamWindow;
 
     Login::RoomInfo* roomToJump;//store the next room reference when jumping from on room to another
+    QString passwordToJump;
 
     void showPluginGui(Audio::Plugin* plugin);
 

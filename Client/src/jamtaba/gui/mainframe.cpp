@@ -13,6 +13,7 @@
 #include <QtConcurrent/QtConcurrent>
 #include <QFutureWatcher>
 #include <QFuture>
+#include <QDesktopServices>
 
 #include "PreferencesDialog.h"
 #include "jamroomviewpanel.h"
@@ -24,6 +25,7 @@
 #include "Highligther.h"
 #include "ChatPanel.h"
 #include "BusyDialog.h"
+#include "PrivateServerDialog.h"
 
 #include "../NinjamController.h"
 #include "../ninjam/Server.h"
@@ -68,6 +70,9 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 
     //ui.menuPreferences
     QObject::connect(ui.menuPreferences, SIGNAL(triggered(QAction*)), this, SLOT(on_preferencesClicked(QAction*)));
+    QObject::connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this, SLOT(on_ninjamCommunityMenuItemTriggered()));
+    QObject::connect(ui.actionNinjam_Official_Site, SIGNAL(triggered(bool)), this, SLOT(on_ninjamOfficialSiteMenuItemTriggered()));
+    QObject::connect(ui.actionPrivate_Server, SIGNAL(triggered(bool)), this, SLOT(on_privateServerMenuItemTriggered()));
 
     QObject::connect(mainController, SIGNAL(inputSelectionChanged(int)), this, SLOT(on_inputSelectionChanged(int)));
 
@@ -569,7 +574,7 @@ QStringList MainFrame::getChannelsNames() const{
 }
 
 //user trying enter in a room
-void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo){
+void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
 
     //stop room stream before enter in a room
     if(mainController->isPlayingRoomStream()){
@@ -595,10 +600,11 @@ void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo){
         mainController->stopNinjamController();//disconnect from current ninjam server
         //store the room to jump and wait for disconnectedFromServer event to connect in this new room
         roomToJump = new Login::RoomInfo(roomInfo);
+        passwordToJump = password;
     }
     else if(mainController->userNameWasChoosed()){
         showBusyDialog("Connecting in " + roomInfo.getName() + " ...");
-        mainController->enterInRoom(roomInfo, getChannelsNames());
+        mainController->enterInRoom(roomInfo, getChannelsNames(), password);
     }
 
 }
@@ -659,9 +665,10 @@ void MainFrame::on_exitedFromRoom(bool normalDisconnection){
     else{
         if(roomToJump){//waiting the disconnection to connect in a new room?
             showBusyDialog("Connecting in " + roomToJump->getName());
-            mainController->enterInRoom(*roomToJump, getChannelsNames());
+            mainController->enterInRoom(*roomToJump, getChannelsNames(), (passwordToJump.isNull() || passwordToJump.isEmpty()) ? "" : passwordToJump);
             delete roomToJump;
             roomToJump = nullptr;
+            passwordToJump = "";
         }
     }
 }
@@ -787,6 +794,33 @@ MainFrame::~MainFrame()
 //}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+void MainFrame::on_privateServerConnectionAccepted(QString server, int serverPort, QString password){
+
+    mainController->storePrivateServerSettings(server, serverPort, password);
+
+    Login::RoomInfo roomInfo(server, serverPort, Login::RoomTYPE::NINJAM,32, 32);
+    on_enteringInRoom(roomInfo, password);
+}
+
+void MainFrame::on_privateServerMenuItemTriggered(){
+    Settings settings = mainController->getSettings();
+    QString server = settings.getLastPrivateServer();
+    QString password = settings.getLastPrivateServerPassword();
+    int port = settings.getLastPrivateServerPort();
+    PrivateServerDialog* privateServerDialog = new PrivateServerDialog(this, server, port, password);
+    QObject::connect(privateServerDialog, SIGNAL(connectionAccepted(QString, int, QString)), this, SLOT(on_privateServerConnectionAccepted(QString, int, QString)));
+    privateServerDialog->show();
+}
+
+void MainFrame::on_ninjamCommunityMenuItemTriggered(){
+    QDesktopServices::openUrl(QUrl("http://www.ninbot.com"));
+}
+
+void MainFrame::on_ninjamOfficialSiteMenuItemTriggered(){
+    QDesktopServices::openUrl(QUrl("http://www.cockos.com/ninjam/"));
+
+}
 
 // preferences menu
 void MainFrame::on_preferencesClicked(QAction* action)

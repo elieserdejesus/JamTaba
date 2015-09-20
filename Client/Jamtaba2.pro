@@ -1,30 +1,29 @@
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
-#quando coloco dois plugins midi em sequencia na mesma pista só um (o último) recebe as mensagens
-
-#Double:
-    #Ezdrummer1  some freeze in the looper window the blue blue line dont progress , but the loop is good playing  , the play button dont work we need often to launch the loop directly in the groove window
-
-
-#fazer a opção de servidor privado em um menu
-
-#colocar referência para o ninbot no menu ninjam
-
-#colocar referências para ninjam, qt, portmedia, minimp3, libvorbis e libogg no site
-
-
-#meu fader não tem utilidade do meio para baixo. Ver se consigo melhorar
-
 #pensar em um jeito de atualizar o pais de quem esta tocando na sala
+
+#saí de uma sala e não consegui entrar em outras. Testei e vi que é um bug estranho. Parece que dá problema quando pulo de uma
+    #sala que tem bastante gente para outra que também tem. Quando pulei de sala vazia para sala vazia não deu problema. Pulei
+    #de uma sala com apenas um musico para uma vazia e também não deu nada.
+    #não consigo testar se não tiver salas com bastante pessoas
 
 #windows - acho que o botao de play do bfd fica clicado direto porque eu estou deixando
     #o transportChanged habilitado o tempo todo. O correto seria mudar isso e ver
     #se o BFD já sincroniza.
 
+#mexer no site - manter o site do jamtaba 1 e fazer um link no novo site
+#colocar referências para ninjam, qt, portmedia, minimp3, libvorbis e libogg no site
+
+#Double:
+    #Ezdrummer1  some freeze in the looper window the blue blue line dont progress , but the loop is good playing  , the play button dont work we need often to launch the loop directly in the groove window
 
 #tocar em algumas Jams para ver se está rolando
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#de vez em quando o minimp3 fica engasgando a thread do áudio. Será que o Qt não tem um player de mp3?
+
+#quando coloco dois plugins midi em sequencia na mesma pista só um (o último) recebe as mensagens
 
 #testar melhor os plugins no mac
     #bfd 3 demo não está maie em sync depois que mudei algumas coisas na class VstPlugin
@@ -353,7 +352,8 @@ HEADERS += \
     src/jamtaba/audio/vst/VstPlugin.h \
     src/jamtaba/audio/vst/vsthost.h \
     #src/jamtaba/geo/IpToLocationLITEResolver.h
-    src/jamtaba/geo/WebIpToLocationResolver.h
+    src/jamtaba/geo/WebIpToLocationResolver.h \
+    src/jamtaba/gui/PrivateServerDialog.h
 
 SOURCES += \
     $$MAIN \
@@ -423,7 +423,8 @@ SOURCES += \
     #src/jamtaba/geo/IpToLocationLITEResolver.cpp \
     src/jamtaba/audio/vst/VstPlugin.cpp \
     src/jamtaba/audio/vst/vsthost.cpp \
-    src/jamtaba/geo/WebIpToLocationResolver.cpp
+    src/jamtaba/geo/WebIpToLocationResolver.cpp \
+    src/jamtaba/gui/PrivateServerDialog.cpp
 
 
 FORMS += \
@@ -438,6 +439,7 @@ FORMS += \
     src/jamtaba/gui/ChatMessagePanel.ui \
     src/jamtaba/gui/TrackGroupView.ui \
     src/jamtaba/gui/jamroomviewpanel.ui \
+    src/jamtaba/gui/PrivateServerDialog.ui
 
 INCLUDEPATH += src/jamtaba/gui                  \
                src/jamtaba/gui/widgets          \
