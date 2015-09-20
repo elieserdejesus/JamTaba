@@ -5,7 +5,7 @@ using namespace Midi;
 MidiBuffer::MidiBuffer(int maxMessages)
     : maxMessages(maxMessages),
       messages(new MidiMessage[maxMessages]),
-      writeIndex(0), readIndex(0),
+      //writeIndex(0), readIndex(0),
       messagesCount(0)
 {
 
@@ -14,12 +14,13 @@ MidiBuffer::MidiBuffer(int maxMessages)
 MidiBuffer::MidiBuffer(const MidiBuffer &other)
     : maxMessages(other.maxMessages),
       messages(new MidiMessage[other.maxMessages]),
-      writeIndex(other.writeIndex), readIndex(other.readIndex),
+      //writeIndex(other.writeIndex), readIndex(other.readIndex),
       messagesCount(other.messagesCount)
 {
     for (int m = 0; m < other.messagesCount; ++m) {
         this->messages[m].data = other.messages[m].data;
         this->messages[m].timestamp = other.messages[m].timestamp;
+        this->messages[m].globalSourceDeviceIndex = other.messages[m].globalSourceDeviceIndex;
     }
 }
 
@@ -28,11 +29,15 @@ MidiBuffer::~MidiBuffer(){
 }
 
 void MidiBuffer::addMessage(const MidiMessage &m){
-    messages[writeIndex].data = m.data;
-    messages[writeIndex].timestamp = m.timestamp;
-    messages[writeIndex].globalSourceDeviceIndex = m.globalSourceDeviceIndex;
-    writeIndex = (writeIndex + 1) % maxMessages;
-    messagesCount++;
+    if(messagesCount < maxMessages){
+        messages[messagesCount].data = m.data;
+        messages[messagesCount].timestamp = m.timestamp;
+        messages[messagesCount].globalSourceDeviceIndex = m.globalSourceDeviceIndex;
+        messagesCount++;
+    }
+    else{
+        qWarning() << "MidiBuffer full, discarding the message!";
+    }
 }
 
 MidiMessage MidiBuffer::getMessage(int index) const{

@@ -245,12 +245,15 @@ void VstPlugin::unload(){
 
 void VstPlugin::fillVstEventsList(const Midi::MidiBuffer &midiBuffer){
 
-    //qCDebug(vst) << "filling VST midi event list";
+//    if(midiBuffer.getMessagesCount() > 0){
+//        qCDebug(vst) << getName() << "filling VST midi event list. " << midiBuffer.getMessagesCount() << " messages";
+//    }
 
     int midiMessages = (std::min)( midiBuffer.getMessagesCount(), MAX_MIDI_EVENTS);
     this->vstMidiEvents.numEvents = midiMessages;
     for (int m = 0; m < midiMessages; ++m) {
         Midi::MidiMessage message = midiBuffer.getMessage(m);
+        qCDebug(vst) << getName() << "Midi message: channel " << message.getChannel() << " data: " << message.data;
         VstMidiEvent* vstEvent = (VstMidiEvent*)vstMidiEvents.events[m];
         vstEvent->type = kVstMidiType;
         vstEvent->byteSize = sizeof(vstEvent);
