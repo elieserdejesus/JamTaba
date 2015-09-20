@@ -117,7 +117,11 @@ Audio::PluginDescriptor PluginFinder::getPluginDescriptor(QFileInfo f, Vst::VstH
     try{
         bool archIsValid = true;
         #ifdef Q_OS_WIN
-            if (!f.isFile() || !QLibrary::isLibrary(f.fileName()) || f.fileName() == "Jamtaba.dll"){
+            //qCDebug(vst) << "Testing " << f.absoluteFilePath();
+            bool isFile = f.isFile();
+            bool isLibrary = QLibrary::isLibrary(f.fileName());
+            bool isJamtabaVstPlugin = f.fileName().contains("Jamtaba");
+            if (!isFile || !isLibrary || isJamtabaVstPlugin){
                 return Audio::PluginDescriptor();//invalid descriptor
             }
             #ifdef _WIN64
@@ -125,17 +129,19 @@ Audio::PluginDescriptor PluginFinder::getPluginDescriptor(QFileInfo f, Vst::VstH
             #else
                 archIsValid = WindowsDllArchChecker::is32Bits(f.absoluteFilePath());
             #endif
+        #else
+            //MAC
+            if(!f.isBundle() || f.completeSuffix() != "vst"){
+                return Audio::PluginDescriptor();//invalid descriptor
+            }
         #endif
-                if(!f.isBundle() || f.completeSuffix() != "vst"){
-                    return Audio::PluginDescriptor();//invalid descriptor
+            if(archIsValid){
+                Vst::VstPlugin plugin(host);
+                if(plugin.load(f.absoluteFilePath())){
+                    QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
+                    return Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
                 }
-                if(archIsValid){
-                    Vst::VstPlugin plugin(host);
-                    if(plugin.load(f.absoluteFilePath())){
-                        QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
-                        return Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
-                    }
-                }
+            }
     }
     catch(...){
         qCritical() << "não carregou " << f.absoluteFilePath();
