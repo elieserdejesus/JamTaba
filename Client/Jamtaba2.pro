@@ -1,7 +1,6 @@
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
-#quando coloco dois plugins midi em sequencia na mesma pista só um recebe as mensagens
 
-#acho que isso vai dar problema ne selecao do audio device: No matching signal for on_comboAsioDriver_activated
+#quando coloco dois plugins midi em sequencia na mesma pista só um (o último) recebe as mensagens
 
 #Double:
     #Ezdrummer1  some freeze in the looper window the blue blue line dont progress , but the loop is good playing  , the play button dont work we need often to launch the loop directly in the groove window

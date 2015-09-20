@@ -23,7 +23,7 @@ struct MidiMessage{
     }
 
     MidiMessage(){
-        this->data = this->timestamp = this->globalSourceDeviceIndex = 0;
+        this->data = this->timestamp = this->globalSourceDeviceIndex = -1;
     }
 
     inline int getChannel() const{
@@ -44,8 +44,8 @@ public:
 private:
     int maxMessages;
     MidiMessage* messages;
-    int writeIndex;
-    int readIndex;
+    //int writeIndex;
+    //int readIndex;
     int messagesCount;
 };
 
