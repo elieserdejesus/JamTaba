@@ -120,7 +120,7 @@ private slots:
     //input selection
     void on_inputSelectionChanged(int inputTrackIndex);
 
-    //collpse
+    //collapse local controls
     void on_localControlsCollapseButtonClicked();
 
     //channel name changed

@@ -23,12 +23,15 @@ private:
 class NinjamTrackGroupView : public TrackGroupView
 {
 public:
-    NinjamTrackGroupView(QWidget *parent, Controller::MainController *mainController, long trackID, QString userName, QString channelName, QString countryName, QString countyCode);
+    NinjamTrackGroupView(QWidget *parent, Controller::MainController *mainController, long trackID, QString userName, QString channelName, QString userIP);
     ~NinjamTrackGroupView();
     void setNarrowStatus(bool narrow);
+     void updateGeoLocation();
+
 private:
     Controller::MainController* mainController;
     QLabel* countryLabel;
+    QString userIP;
 };
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endif // NINJAMTRACKVIEW_H

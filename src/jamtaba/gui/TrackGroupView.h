@@ -29,6 +29,7 @@ public:
     QSize sizeHint() const;
 
     void updatePeaks();
+
     void refreshInputSelectionName(int inputTrackIndex);
     inline int getTracksCount() const{return trackViews.size();}
 

@@ -546,6 +546,12 @@ void MainFrame::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
             }
         }
     }
+
+    if(mainController->isPlayingInNinjamRoom()){
+        this->ninjamWindow->updateGeoLocations();
+        //update country flag and country names. This is necessary because the call to webservice used to get country codes and
+        //country names is not synchronous. So, if country code and name are not cached we receive these data in some seconds.
+    }
 }
 
 //+++++++++++++++++++++++++++++++++++++
