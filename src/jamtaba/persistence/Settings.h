@@ -53,6 +53,17 @@ public:
 };
 
 //+++++++++++++++++++++++++++++++++++
+class PrivateServerSettings : public SettingsObject{
+public:
+    PrivateServerSettings();
+    void write(QJsonObject& out);
+    void read(QJsonObject in);
+    QString server;
+    int serverPort;
+    QString password;
+};
+
+//+++++++++++++++++++++++++++++++++++
 class MetronomeSettings : public SettingsObject{
 
 public:
@@ -143,6 +154,7 @@ private:
     VstSettings vstSettings;
     InputsSettings inputsSettings;
     RecordingSettings recordingSettings;
+    PrivateServerSettings privateServerSettings;
     QString lastUserName;//the nick name choosed by user
     int ninjamIntervalProgressShape;//Circle, Ellipe or Line
 public:
@@ -156,6 +168,12 @@ public:
 
     inline int getLastSampleRate() const{return audioSettings.sampleRate;}
     inline int getLastBufferSize() const{return audioSettings.bufferSize;}
+
+    //private server
+    inline QString getLastPrivateServer() const{return privateServerSettings.server;}
+    inline int getLastPrivateServerPort() const{return privateServerSettings.serverPort;}
+    inline QString getLastPrivateServerPassword() const{return privateServerSettings.password;}
+    void setPrivateServerData(QString server, int serverPort, QString password);
 
     //recording settings
     inline bool isSaveMultiTrackActivated() const{return recordingSettings.saveMultiTracksActivated;}

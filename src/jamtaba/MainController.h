@@ -104,7 +104,7 @@ public:
     void stopRoomStream();//stop currentRoom stream
     inline long long getCurrentStreamingRoomID() const{return currentStreamingRoomID;}
 
-    void enterInRoom(Login::RoomInfo room, QStringList channelsNames);
+    void enterInRoom(Login::RoomInfo room, QStringList channelsNames, QString password = "");
 
     Audio::AudioDriver* getAudioDriver() const;
     Midi::MidiDriver* getMidiDriver() const;
@@ -181,6 +181,7 @@ public:
     void storeRecordingPath(QString newPath);
     void storeRecordingMultiTracksStatus(bool savingMultiTracks);
     inline bool isRecordingMultiTracksActivated() const{return settings.isSaveMultiTrackActivated();}
+    void storePrivateServerSettings(QString server, int serverPort, QString password);
 
     void saveEncodedAudio(QString userName, quint8 channelIndex, QByteArray encodedAudio);
 
@@ -244,7 +245,7 @@ private:
     //+++++++++++++++++++++++++
     void configureStyleSheet();
 
-    void tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStringList channels);
+    void tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStringList channels, QString password="");
 
     QScopedPointer<Geo::IpToLocationResolver> ipToLocationResolver;
 

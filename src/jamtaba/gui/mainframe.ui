@@ -53,16 +53,16 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="leftMargin">
-        <number>3</number>
+        <number>6</number>
        </property>
        <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
         <number>3</number>
        </property>
+       <property name="rightMargin">
+        <number>6</number>
+       </property>
        <property name="bottomMargin">
-        <number>4</number>
+        <number>6</number>
        </property>
        <item>
         <widget class="QWidget" name="topWidget" native="true">
@@ -231,8 +231,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>608</width>
-                <height>659</height>
+                <width>694</width>
+                <height>674</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -329,7 +329,7 @@
      <x>0</x>
      <y>0</y>
      <width>1160</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPreferences">
@@ -341,7 +341,16 @@
     <addaction name="actionVstPreferences"/>
     <addaction name="actionRecording"/>
    </widget>
+   <widget class="QMenu" name="menuNinjam">
+    <property name="title">
+     <string>Ninjam</string>
+    </property>
+    <addaction name="actionPrivate_Server"/>
+    <addaction name="actionNinjam_community_forum"/>
+    <addaction name="actionNinjam_Official_Site"/>
+   </widget>
    <addaction name="menuPreferences"/>
+   <addaction name="menuNinjam"/>
   </widget>
   <action name="actionTest">
    <property name="text">
@@ -366,6 +375,21 @@
   <action name="actionRecording">
    <property name="text">
     <string>Recording ...</string>
+   </property>
+  </action>
+  <action name="actionPrivate_Server">
+   <property name="text">
+    <string>Private Server ...</string>
+   </property>
+  </action>
+  <action name="actionNinjam_community_forum">
+   <property name="text">
+    <string>Ninjam community (Ninbot) ...</string>
+   </property>
+  </action>
+  <action name="actionNinjam_Official_Site">
+   <property name="text">
+    <string>Ninjam Official Site ...</string>
    </property>
   </action>
  </widget>

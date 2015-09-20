@@ -38,7 +38,7 @@ private:
     quint32 protocolVersion;
     QByteArray challenge;
 public:
-    ClientAuthUserMessage(QString userName, QByteArray challenge, quint32 protocolVersion, QString password = "");
+    ClientAuthUserMessage(QString userName, QByteArray challenge, quint32 protocolVersion, QString password);
     void serializeTo(QByteArray& buffer) ;
     void virtual printDebug(QDebug dbg) const;
 };

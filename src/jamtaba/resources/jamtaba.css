@@ -358,14 +358,22 @@ background-color: rgb(74,74,74);
 }
 
 /* painéis principais */
-.QWidget#leftPanel, .QWidget#contentPanel{
-/*background: url(:/images/gradient.bmp) repeat-x;*/
-/*background-color: rgb(39, 39, 39);*/
-/*background-color: red;*/
-border: 1px solid rgb(65, 65, 65);
-border-radius: 5px;
-
+#leftPanel, #contentPanel{
+    /*background: url(:/images/gradient.bmp) repeat-x;*/
+    /*background-color: rgb(39, 39, 39);*/
+    /*background-color: red;*/
+    border: 1px solid rgb(55, 55, 55);
+    border-radius: 3px;
 }
+
+#leftPanel{
+   background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0     rgba(0, 0, 0, 30),
+        stop: 1.0   rgba(0,0,0, 60));
+
+    border: 1px outset rgb(38,38,38);
+}
+
 
 /* títulos dos painéis principais */
 .QWidget#leftPanel .QLabel#labelSectionTitle, .QWidget#contentPanel > .QLabel{

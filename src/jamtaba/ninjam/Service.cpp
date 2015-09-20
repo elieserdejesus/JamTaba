@@ -306,7 +306,7 @@ void Service::handle(const ServerKeepAliveMessage& /*msg*/){
 }
 
 void Service::handle(const ServerAuthChallengeMessage& msg){
-    ClientAuthUserMessage msgAuthUser(this->userName, msg.getChallenge(), msg.getProtocolVersion());
+    ClientAuthUserMessage msgAuthUser(this->userName, msg.getChallenge(), msg.getProtocolVersion(), this->password);
     sendMessageToServer(&msgAuthUser);
     this->serverLicence = msg.getLicenceAgreement();
     this->serverKeepAlivePeriod = msg.getServerKeepAlivePeriod();
