@@ -1,6 +1,7 @@
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
-#comitar código do EZDrummer funcionando, incluindo as animações - SHOW de bola
+#voltar com o meu código do update na classe VStPlugin
+    #questão de honra
 
 #gerar instaladores?
 

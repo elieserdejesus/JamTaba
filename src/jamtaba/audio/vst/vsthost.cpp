@@ -39,7 +39,7 @@ void VstHost::clearVstTimeInfoFlags(){
     int tempSampleRate = vstTimeInfo.sampleRate;
 
     vstTimeInfo.samplePos = 0.0;
-    vstTimeInfo.sampleRate = this->getSampleRate();
+    vstTimeInfo.sampleRate = tempSampleRate;
     vstTimeInfo.nanoSeconds = 0.0;
     vstTimeInfo.ppqPos = 0.0;
     vstTimeInfo.tempo = 120.0;
@@ -184,12 +184,6 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
     Q_UNUSED(value)
     Q_UNUSED(opt)
 
-    const char* str;
-
-    //0 - audiomasterAutomate
-    //43 - audioMasterBeginEdit
-    //44 - audioMasterEndEdit
-
     switch(opcode) {
 
 
@@ -248,7 +242,7 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
 
 
     case audioMasterCanDo : //37
-        str = (const char*)ptr;
+        const char* str = (const char*)ptr;
 
         if ((!strcmp(str, "sendVstEvents")) ||
                 (!strcmp(str, "sendVstMidiEvent")) ||
