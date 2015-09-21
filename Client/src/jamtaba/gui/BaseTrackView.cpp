@@ -29,9 +29,10 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
 
 
 
-void BaseTrackView::updatePeaks(){
+void BaseTrackView::updateGuiElements(){
     Audio::AudioPeak peak = mainController->getTrackPeak(getTrackID());
     setPeaks(peak.getLeft(), peak.getRight());
+    mainController->getTrackNode(getTrackID())->updateProcessorsGui();
 }
 
 QSize BaseTrackView::sizeHint() const{

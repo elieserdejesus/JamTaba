@@ -1,23 +1,23 @@
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
-#saí de uma sala e não consegui entrar em outras. Testei e vi que é um bug estranho. Parece que dá problema quando pulo de uma
-    #sala que tem bastante gente para outra que também tem. Quando pulei de sala vazia para sala vazia não deu problema. Pulei
-    #de uma sala com apenas um musico para uma vazia e também não deu nada.
-    #não consigo testar se não tiver salas com bastante pessoas
+#comitar código do EZDrummer funcionando, incluindo as animações - SHOW de bola
 
-#windows - acho que o botao de play do bfd fica clicado direto porque eu estou deixando
-    #o transportChanged habilitado o tempo todo. O correto seria mudar isso e ver
-    #se o BFD já sincroniza.
+#gerar instaladores?
 
 #mexer no site - manter o site do jamtaba 1 e fazer um link no novo site
 #colocar referências para ninjam, qt, portmedia, minimp3, libvorbis e libogg no site
 
-#Double:
-    #Ezdrummer1  some freeze in the looper window the blue blue line dont progress , but the loop is good playing  , the play button dont work we need often to launch the loop directly in the groove window
-
 #tocar em algumas Jams para ver se está rolando
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+#Double:
+    #Ezdrummer1  some freeze in the looper window the blue blue line dont progress , but the loop is good playing  , the play button dont work we need often to launch the loop directly in the groove window
+
+#saí de uma sala e não consegui entrar em outras. Testei e vi que é um bug estranho. Parece que dá problema quando pulo de uma
+    #sala que tem bastante gente para outra que também tem. Quando pulei de sala vazia para sala vazia não deu problema. Pulei
+    #de uma sala com apenas um musico para uma vazia e também não deu nada.
+    #não consigo testar se não tiver salas com bastante pessoas
 
 #de vez em quando o minimp3 fica engasgando a thread do áudio. Será que o Qt não tem um player de mp3?
 

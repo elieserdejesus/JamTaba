@@ -171,6 +171,13 @@ void AudioNode::suspendProcessors(){
     }
 }
 
+void AudioNode::updateProcessorsGui(){
+    QMutexLocker locker(&mutex);
+    foreach (AudioNodeProcessor* processor, processors) {
+        processor->updateGui();
+    }
+}
+
 void AudioNode::resumeProcessors(){
     foreach (AudioNodeProcessor* processor, processors) {
         processor->resume();

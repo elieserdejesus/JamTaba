@@ -189,6 +189,11 @@ void VstPlugin::start(){
     long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
     qCDebug(vst) << "Starting " << getName() << " version " << ver;
 
+    //setting buffer size and sample before open just to avoid problems (I see this trick in VstBoard source code)
+    qCDebug(vst) << "setting sample rate and block size " << QThread::currentThreadId();
+    effect->dispatcher(effect, effSetSampleRate, 0, 0, NULL, host->getSampleRate());
+    effect->dispatcher(effect, effSetBlockSize, 0, host->getBufferSize(), NULL, 0.0f);
+
     //qCDebug(vst) << "opening" << getName();
     effect->dispatcher(effect, effOpen, 0, 0, NULL, 0.0f);
     //qCDebug(vst) << getName() << "opened";
@@ -207,7 +212,10 @@ void VstPlugin::start(){
     started = true;
     turnedOn = false;
 
-    //resume();
+    //I see this in VstBoard sources, and this save my life solving a bug in EzDrummer. Some Vst Plugins
+    //do initialization in first resume?
+    resume();
+    suspend();
 }
 
 VstPlugin::~VstPlugin()
@@ -372,6 +380,14 @@ void VstPlugin::openEditor(QPoint centerOfScreen){
 
     //resume();
 }
+
+void VstPlugin::updateGui(){
+    if(isBypassed() || !effect || !loaded || !started){
+        return;
+    }
+    effect->dispatcher(effect, effEditIdle, 0, 0, 0, 0);
+}
+
 /*
 bool VstPlugin::initPlugin()
 {

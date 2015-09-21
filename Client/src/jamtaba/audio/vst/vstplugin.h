@@ -28,6 +28,7 @@ public:
     virtual QByteArray getSerializedData() const;
     virtual void restoreFromSerializedData(QByteArray dataToRestore);
     void start();
+    void updateGui();
 protected:
     void unload();
 

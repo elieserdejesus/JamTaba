@@ -337,7 +337,13 @@ void MainFrame::restorePluginsList(){
                         Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path );
                         Audio::Plugin* pluginInstance = mainController->addPlugin(subChannelView->getInputIndex(), descriptor);
                         if(pluginInstance){
-                            pluginInstance->restoreFromSerializedData( plugin.data);
+                            try{
+                                pluginInstance->restoreFromSerializedData( plugin.data);
+                            }
+                            catch(...){
+                                qWarning() << "Exception restoring " << pluginInstance->getName();
+                            }
+
                             subChannelView->addPlugin(pluginInstance, plugin.bypassed);
                         }
                         QApplication::processEvents();

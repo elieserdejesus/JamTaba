@@ -5,6 +5,7 @@
 #include "portmidi.h"
 #include <QDebug>
 #include <QDateTime>
+#include <QApplication>
 
 using namespace Vst;
 
@@ -23,13 +24,13 @@ VstHost* VstHost::getInstance(){
 VstHost::VstHost()
     : blockSize(0)
 {
-//    qCritical() << "VstHost Construtor";
-//    this->vstMidiEvents.reserved = 0;
-//    this->vstMidiEvents.numEvents = 0;
-//    //this->vstMidiEvents.events = new VstEvent*[MAX_EVENTS];
-//    for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
-//        this->vstMidiEvents.events[i] = (VstEvent*)(new VstMidiEvent);
-//    }
+    //    qCritical() << "VstHost Construtor";
+    //    this->vstMidiEvents.reserved = 0;
+    //    this->vstMidiEvents.numEvents = 0;
+    //    //this->vstMidiEvents.events = new VstEvent*[MAX_EVENTS];
+    //    for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
+    //        this->vstMidiEvents.events[i] = (VstEvent*)(new VstMidiEvent);
+    //    }
 
     clearVstTimeInfoFlags();
 }
@@ -75,10 +76,10 @@ void VstHost::setPlayingFlag(bool playing){
 void VstHost::update(int intervalPosition){
 
     vstTimeInfo.samplePos = intervalPosition;
-    double quarterTime = 60000.0/vstTimeInfo.tempo;
-    double samplesPerQuarter = vstTimeInfo.sampleRate * quarterTime / 1000;
 
-    vstTimeInfo.ppqPos =  intervalPosition/samplesPerQuarter;
+    int loopLenght = 16; // TODO pegar o bpi
+
+    //vstTimeInfo.ppqPos =  (vstTimeInfo.samplePos / vstTimeInfo.sampleRate) * (vstTimeInfo.tempo / 60.);
     int measure = (int)vstTimeInfo.ppqPos/vstTimeInfo.timeSigNumerator;
     vstTimeInfo.barStartPos = measure * vstTimeInfo.timeSigNumerator;
     //the ppq value returned by vsttimeinfo is a float which will vary from 0 to 3.999999999(etc) over the 4 beats of a typical 16 semiquaver bar of 4/4.
@@ -89,30 +90,70 @@ void VstHost::update(int intervalPosition){
     vstTimeInfo.timeSigDenominator = 4;
     vstTimeInfo.timeSigDenominator = 4;
 
-    vstTimeInfo.nanoSeconds = QDateTime::currentDateTime().currentMSecsSinceEpoch()/1000.0;
+    vstTimeInfo.nanoSeconds = QDateTime::currentDateTime().currentMSecsSinceEpoch() * 1000000.0;
 
-    vstTimeInfo.flags |= kVstPpqPosValid;
-    vstTimeInfo.flags |= kVstTempoValid;
-    vstTimeInfo.flags |= kVstBarsValid;
-    vstTimeInfo.flags |= kVstTransportPlaying;
-    vstTimeInfo.flags |= kVstNanosValid;
-    vstTimeInfo.flags |= kVstTimeSigValid;
+    //++++++++++++++
+    //bar length in quarter notes
+    float barLengthq =  (float)(4*vstTimeInfo.timeSigNumerator)/vstTimeInfo.timeSigDenominator;
 
+    vstTimeInfo.cycleEndPos = barLengthq*loopLenght;
+    vstTimeInfo.cycleStartPos = 0;
 
-    //kVstCyclePosValid        = 1 << 12,	///< VstTimeInfo::cycleStartPos and VstTimeInfo::cycleEndPos valid
-    //kVstTimeSigValid         = 1 << 13,	///< VstTimeInfo::timeSigNumerator and VstTimeInfo::timeSigDenominator valid
-    //kVstSmpteValid           = 1 << 14,	///< VstTimeInfo::smpteOffset and VstTimeInfo::smpteFrameRate valid
-    //kVstClockValid           = 1 << 15	///< VstTimeInfo::samplesToNextClock valid
-    //vstTimeInfo.flags |= kVstTransportChanged;
+    // we don't care for the mask in here
+    static double fSmpteDiv[] =
+    {
+        24.f,
+        25.f,
+        24.f,
+        30.f,
+        29.97f,
+        30.f
+    };
+
+    double dPos = vstTimeInfo.samplePos / vstTimeInfo.sampleRate;
+    vstTimeInfo.ppqPos = dPos * vstTimeInfo.tempo / 60.L;
+
+    if(vstTimeInfo.ppqPos > vstTimeInfo.cycleEndPos) {
+
+        vstTimeInfo.ppqPos -= vstTimeInfo.cycleEndPos;
+        dPos = vstTimeInfo.ppqPos / vstTimeInfo.tempo * 60.L;
+        vstTimeInfo.samplePos = dPos * vstTimeInfo.sampleRate;
+        double dOffsetInSecond = dPos - floor(dPos);
+        vstTimeInfo.smpteOffset = (long)(dOffsetInSecond * fSmpteDiv[vstTimeInfo.smpteFrameRate] * 80.L);
+
+    }
+
+    /* offset in fractions of a second   */
+    double dOffsetInSecond = dPos - floor(dPos);
+    vstTimeInfo.smpteOffset = (long)(dOffsetInSecond * fSmpteDiv[vstTimeInfo.smpteFrameRate] * 80.L);
+
+    //start of last bar
+    int currentBar = std::floor(vstTimeInfo.ppqPos/barLengthq);
+    vstTimeInfo.barStartPos = barLengthq*currentBar;
+    //+++++++
+
+    vstTimeInfo.flags = 0;
+    vstTimeInfo.flags |= kVstTransportChanged;//     = 1,		///< indicates that play, cycle or record state has changed
+    vstTimeInfo.flags |= kVstTransportPlaying;//     = 1 << 1,	///< set if Host sequencer is currently playing
+    //vstTimeInfo.flags |= kVstTransportCycleActive;// = 1 << 2,	///< set if Host sequencer is in cycle mode
+    //vstTimeInfo.flags |= kVstAutomationReading;//    = 1 << 7,	///< set if automation read mode active (play parameter changes)
+    vstTimeInfo.flags |= kVstNanosValid;//           = 1 << 8,	///< VstTimeInfo::nanoSeconds valid
+    vstTimeInfo.flags |= kVstPpqPosValid;//          = 1 << 9,	///< VstTimeInfo::ppqPos valid
+    vstTimeInfo.flags |= kVstTempoValid;//           = 1 << 10,	///< VstTimeInfo::tempo valid
+    vstTimeInfo.flags |= kVstBarsValid;//            = 1 << 11,	///< VstTimeInfo::barStartPos valid
+    //vstTimeInfo.flags |= kVstCyclePosValid;//        = 1 << 12,	///< VstTimeInfo::cycleStartPos and VstTimeInfo::cycleEndPos valid
+    vstTimeInfo.flags |= kVstTimeSigValid;//         = 1 << 13,	///< VstTimeInfo::timeSigNumerator and VstTimeInfo::timeSigDenominator valid
+    vstTimeInfo.flags |= kVstSmpteValid;//           = 1 << 14,	///< VstTimeInfo::smpteOffset and VstTimeInfo::smpteFrameRate valid
+    vstTimeInfo.flags |= kVstClockValid;
 }
 
 VstHost::~VstHost()
 {
     //delete this->vstTimeInfo;
-//    for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
-//        delete this->vstMidiEvents.events[i];
-//    }
-//    delete [] this->vstMidiEvents.events;
+    //    for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
+    //        delete this->vstMidiEvents.events[i];
+    //    }
+    //    delete [] this->vstMidiEvents.events;
 }
 
 void VstHost::setBlockSize(int blockSize){
@@ -143,61 +184,73 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
     Q_UNUSED(value)
     Q_UNUSED(opt)
 
-    qCDebug(vstHost) << "hostCallBack opcode:" << opcode;
-
     const char* str;
+
+    //0 - audiomasterAutomate
+    //43 - audioMasterBeginEdit
+    //44 - audioMasterEndEdit
+
     switch(opcode) {
-        case audioMasterVersion : //1
-            return 2400L;
 
-        case audioMasterGetBlockSize:
-            return VstHost::getInstance()->blockSize;
 
-        case audioMasterGetSampleRate:
-            return VstHost::getInstance()->getSampleRate();
+    case 6: //audioMasterWantMidi
+        return true;
 
-//        case audioMasterWantMidi:
-//            return 1L;
+    case audioMasterIdle:
+            QApplication::processEvents();
+            return 0L;
 
-        case audioMasterGetTime : //7
+    case audioMasterVersion : //1
+        return 2400L;
+
+    case audioMasterGetBlockSize:
+        return VstHost::getInstance()->blockSize;
+
+    case audioMasterGetSampleRate:
+        return VstHost::getInstance()->getSampleRate();
+
+        //        case audioMasterWantMidi:
+        //            return 1L;
+
+    case audioMasterGetTime : //7
     {
-        if(VstHost::getInstance()->tempoIsValid()){
-            //retornar uma copia como sugerido no kvr. Ver o wahjam e o vst host
+        //if(VstHost::getInstance()->tempoIsValid()){
+        //retornar uma copia como sugerido no kvr. Ver o wahjam e o vst host
 
-            //VstTimeInfo hostTimeInfo = ;
-           return (long)(&(VstHost::getInstance()->vstTimeInfo));
-        }
-        qCDebug(vstHost) << "Returning 0 for VstTime";
-        return 0L;//avoid crash some plugins
+        //VstTimeInfo hostTimeInfo = ;
+        return (long)(&(VstHost::getInstance()->vstTimeInfo));
+        //}
+        //qCDebug(vstHost) << "Returning 0 for VstTime";
+        //return 0L;//avoid crash some plugins
     }
 
-//        case audioMasterSetTime  : //9
-//            pHost->SetTimeInfo((VstTimeInfo*)ptr);
-//            return 1L;
+        //        case audioMasterSetTime  : //9
+        //            pHost->SetTimeInfo((VstTimeInfo*)ptr);
+        //            return 1L;
 
-//        case audioMasterTimeAt : //10
-//            return 1000L*pHost->vstTimeInfo.tempo;
+        //        case audioMasterTimeAt : //10
+        //            return 1000L*pHost->vstTimeInfo.tempo;
 
-        case audioMasterGetCurrentProcessLevel : //23
-            return 2L;
+    case audioMasterGetCurrentProcessLevel : //23
+        return 2L;
 
-        case audioMasterGetVendorString : //32
-            strcpy((char *)ptr,"www.jamtaba.com");
-            return 1L;
+    case audioMasterGetVendorString : //32
+        strcpy((char *)ptr,"www.jamtaba.com");
+        return 1L;
 
-        case audioMasterGetProductString : //33
-            strcpy((char *)ptr,"Jamtaba II");
-            return 1L;
+    case audioMasterGetProductString : //33
+        strcpy((char *)ptr,"Jamtaba II");
+        return 1L;
 
-        case audioMasterGetVendorVersion : //34
-            return 0001L;
+    case audioMasterGetVendorVersion : //34
+        return 0001L;
 
 
 
-        case audioMasterCanDo : //37
-            str = (const char*)ptr;
+    case audioMasterCanDo : //37
+        str = (const char*)ptr;
 
-            if ((!strcmp(str, "sendVstEvents")) ||
+        if ((!strcmp(str, "sendVstEvents")) ||
                 (!strcmp(str, "sendVstMidiEvent")) ||
                 (!strcmp(str, "receiveVstEvents")) ||
                 (!strcmp(str, "receiveVstMidiEvent")) ||
@@ -212,14 +265,15 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
                 //(!strcmp(str, "receiveVstTimeInfo")) ||
                 //(!strcmp(str, "shellCategory")) ||
                 ){
-                qCDebug(vstHost) << "Host CAN DO " << str;
-                return 1L;
-            }
+            //qCDebug(vstHost) << "Host CAN DO " << str;
+            return 1L;
+        }
 
 
-            //ignore the rest
-            qCDebug(vstHost) << "host can't do"<<str;
-
+        //ignore the rest
+        qCDebug(vstHost) << "host can't do"<<str;
+        return 0;
     }
+    qCDebug(vstHost) << "not handled hostCallBack opcode:" << opcode;
     return 0L;
 }
