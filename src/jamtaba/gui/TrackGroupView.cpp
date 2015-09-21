@@ -38,7 +38,7 @@ void TrackGroupView::setUnlightStatus(bool unlighted){
 
 void TrackGroupView::updatePeaks(){
     foreach (BaseTrackView* trackView, trackViews) {
-        trackView->updatePeaks();
+        trackView->updateGuiElements();
     }
 }
 

@@ -21,6 +21,7 @@ public:
     virtual ~AudioNodeProcessor(){}
     virtual void suspend() = 0;
     virtual void resume() = 0;
+    virtual void updateGui(){}
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++
@@ -63,6 +64,7 @@ public:
     void removeProcessor(AudioNodeProcessor* processor);
     void suspendProcessors();
     void resumeProcessors();
+    virtual void updateProcessorsGui();
 
     inline void setGain(float gainValue){this->gain = gainValue;}
 
