@@ -74,15 +74,10 @@ void VstHost::setPlayingFlag(bool playing){
 
 
 void VstHost::update(int intervalPosition){
-
     vstTimeInfo.samplePos = intervalPosition;
 
-    int loopLenght = 16; // TODO pegar o bpi
-
-    //vstTimeInfo.ppqPos =  (vstTimeInfo.samplePos / vstTimeInfo.sampleRate) * (vstTimeInfo.tempo / 60.);
     int measure = (int)vstTimeInfo.ppqPos/vstTimeInfo.timeSigNumerator;
     vstTimeInfo.barStartPos = measure * vstTimeInfo.timeSigNumerator;
-    //the ppq value returned by vsttimeinfo is a float which will vary from 0 to 3.999999999(etc) over the 4 beats of a typical 16 semiquaver bar of 4/4.
 
     vstTimeInfo.smpteOffset = measure + 1;
 
@@ -96,38 +91,12 @@ void VstHost::update(int intervalPosition){
     //bar length in quarter notes
     float barLengthq =  (float)(4*vstTimeInfo.timeSigNumerator)/vstTimeInfo.timeSigDenominator;
 
-    vstTimeInfo.cycleEndPos = barLengthq*loopLenght;
+    vstTimeInfo.cycleEndPos = 0; //barLengthq*loopLenght;
     vstTimeInfo.cycleStartPos = 0;
-
-    // we don't care for the mask in here
-    static double fSmpteDiv[] =
-    {
-        24.f,
-        25.f,
-        24.f,
-        30.f,
-        29.97f,
-        30.f
-    };
 
     double dPos = vstTimeInfo.samplePos / vstTimeInfo.sampleRate;
     vstTimeInfo.ppqPos = dPos * vstTimeInfo.tempo / 60.L;
 
-    if(vstTimeInfo.ppqPos > vstTimeInfo.cycleEndPos) {
-
-        vstTimeInfo.ppqPos -= vstTimeInfo.cycleEndPos;
-        dPos = vstTimeInfo.ppqPos / vstTimeInfo.tempo * 60.L;
-        vstTimeInfo.samplePos = dPos * vstTimeInfo.sampleRate;
-        double dOffsetInSecond = dPos - floor(dPos);
-        vstTimeInfo.smpteOffset = (long)(dOffsetInSecond * fSmpteDiv[vstTimeInfo.smpteFrameRate] * 80.L);
-
-    }
-
-    /* offset in fractions of a second   */
-    double dOffsetInSecond = dPos - floor(dPos);
-    vstTimeInfo.smpteOffset = (long)(dOffsetInSecond * fSmpteDiv[vstTimeInfo.smpteFrameRate] * 80.L);
-
-    //start of last bar
     int currentBar = std::floor(vstTimeInfo.ppqPos/barLengthq);
     vstTimeInfo.barStartPos = barLengthq*currentBar;
     //+++++++
@@ -143,7 +112,7 @@ void VstHost::update(int intervalPosition){
     vstTimeInfo.flags |= kVstBarsValid;//            = 1 << 11,	///< VstTimeInfo::barStartPos valid
     //vstTimeInfo.flags |= kVstCyclePosValid;//        = 1 << 12,	///< VstTimeInfo::cycleStartPos and VstTimeInfo::cycleEndPos valid
     vstTimeInfo.flags |= kVstTimeSigValid;//         = 1 << 13,	///< VstTimeInfo::timeSigNumerator and VstTimeInfo::timeSigDenominator valid
-    vstTimeInfo.flags |= kVstSmpteValid;//           = 1 << 14,	///< VstTimeInfo::smpteOffset and VstTimeInfo::smpteFrameRate valid
+    //vstTimeInfo.flags |= kVstSmpteValid;//           = 1 << 14,	///< VstTimeInfo::smpteOffset and VstTimeInfo::smpteFrameRate valid
     vstTimeInfo.flags |= kVstClockValid;
 }
 

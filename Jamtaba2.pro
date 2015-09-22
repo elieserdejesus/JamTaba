@@ -1,7 +1,6 @@
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
-#voltar com o meu código do update na classe VStPlugin
-    #questão de honra
+#ver o restore do EzDrummer
 
 #gerar instaladores?
 
