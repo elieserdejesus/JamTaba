@@ -4,7 +4,7 @@ SET DEPLOY_DIR=..\deploy-win64
 
 mkdir %DEPLOY_DIR%
 
-SET QT_DIR=C:\Qt-x64\Qt5.5.0\5.5\msvc2013_64\bin
+SET QT_DIR=C:\Qt\Qt5.5.0-64\5.5\msvc2013_64\bin
 
 REM run qmake, clean and compile the release version
 
@@ -13,9 +13,9 @@ REM %QT_DIR%\..\..\..\Tools\QtCreator\bin\jom.exe clean
 REM %QT_DIR%\..\..\..\Tools\QtCreator\bin\jom.exe -j 4
 REM        %QT_DIR%\..\..\..\Tools\QtCreator\bin\jom.exe -f Makefile.Release
 
-SET SSL_LIBS_DIR=C:\OpenSSL-Win64\bin
+SET SSL_LIBS_DIR=C:\OpenSSL-Win64
 
-SET BUILD_DIR=..\..\build-x64\release
+SET BUILD_DIR=..\..\build-Jamtaba2-Desktop_Qt_5_5_0_MSVC2013_64bit-Release\release
 
 SET ROBOCOPY_OPTIONS=/NFL /NDL /NJH /NJS /nc /ns /np
 

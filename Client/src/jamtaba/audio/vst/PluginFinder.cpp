@@ -35,11 +35,12 @@ void PluginFinder::run(){
         while (dirIt.hasNext()) {
             dirIt.next();
             QFileInfo fileInfo (dirIt.filePath());
+            emit pluginScanStarted(fileInfo.absoluteFilePath());
             const Audio::PluginDescriptor& descriptor = getPluginDescriptor(fileInfo, host);
             if(descriptor.isValid()){
-                emit vstPluginFounded(descriptor.getName(), descriptor.getGroup(), descriptor.getPath());
+                emit pluginScanFinished(descriptor.getName(), descriptor.getGroup(), descriptor.getPath());
             }
-            //QApplication::processEvents();
+            QApplication::processEvents();
         }
     }
     emit scanFinished();

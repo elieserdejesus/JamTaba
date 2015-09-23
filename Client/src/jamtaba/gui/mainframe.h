@@ -113,9 +113,10 @@ private slots:
     void on_exitedFromRoom(bool normalDisconnection);
 
     //plugin finder
-    void onPluginScanStarted();
-    void onPluginScanFinished();
+    void onScanPluginsStarted();
+    void onScanPluginsFinished();
     void onPluginFounded(QString name, QString group, QString path);
+    void onScanPluginsStarted(QString pluginPath);
 
     //input selection
     void on_inputSelectionChanged(int inputTrackIndex);

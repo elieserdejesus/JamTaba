@@ -244,9 +244,10 @@ void MainFrame::initializeMainControllerEvents(){
 
 void MainFrame::initializeVstFinderStuff(){
     const Vst::PluginFinder& pluginFinder = mainController->getPluginFinder();
-    QObject::connect(&pluginFinder, SIGNAL(scanStarted()), this, SLOT(onPluginScanStarted()));
-    QObject::connect(&pluginFinder, SIGNAL(scanFinished()), this, SLOT(onPluginScanFinished()));
-    QObject::connect(&pluginFinder, SIGNAL(vstPluginFounded(QString,QString,QString)), this, SLOT(onPluginFounded(QString,QString,QString)));
+    QObject::connect(&pluginFinder, SIGNAL(scanStarted()), this, SLOT(onScanPluginsStarted()));
+    QObject::connect(&pluginFinder, SIGNAL(scanFinished()), this, SLOT(onScanPluginsFinished()));
+    QObject::connect(&pluginFinder, SIGNAL(pluginScanFinished(QString,QString,QString)), this, SLOT(onPluginFounded(QString,QString,QString)));
+    QObject::connect(&pluginFinder, SIGNAL(pluginScanStarted(QString)), this, SLOT(onScanPluginsStarted(QString)));
 
     QStringList vstPaths = mainController->getSettings().getVstPluginsPaths();
     if(vstPaths.empty()){//no vsts in database cache, try scan
@@ -257,7 +258,7 @@ void MainFrame::initializeVstFinderStuff(){
     }
     else{//use vsts stored in settings file
         mainController->initializePluginsList(vstPaths);
-        onPluginScanFinished();
+        onScanPluginsFinished();
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++
@@ -908,14 +909,14 @@ void MainFrame::on_inputSelectionChanged(int inputTrackIndex){
 }
 
 //plugin finder events
-void MainFrame::onPluginScanStarted(){
+void MainFrame::onScanPluginsStarted(){
     if(!pluginScanDialog){
         pluginScanDialog = new PluginScanDialog(this);
     }
     pluginScanDialog->show();
 }
 
-void MainFrame::onPluginScanFinished(){
+void MainFrame::onScanPluginsFinished(){
     if(pluginScanDialog){
         pluginScanDialog->close();
     }
@@ -925,10 +926,17 @@ void MainFrame::onPluginScanFinished(){
 }
 
 void MainFrame::onPluginFounded(QString name, QString group, QString path){
-    Q_UNUSED(name);
+    Q_UNUSED(path);
     Q_UNUSED(group);
     if(pluginScanDialog){
-        pluginScanDialog->setText(path);
+        //pluginScanDialog->setCurrentScaning(path);
+        pluginScanDialog->addFoundedPlugin(name);
+    }
+}
+
+void MainFrame::onScanPluginsStarted(QString pluginPath){
+    if(pluginScanDialog){
+        pluginScanDialog->setCurrentScaning(pluginPath);
     }
 }
 

@@ -29,7 +29,8 @@ private:
 signals:
     void scanStarted();
     void scanFinished();
-    void vstPluginFounded(QString name, QString group, QString path);
+    void pluginScanStarted(QString path);
+    void pluginScanFinished(QString name, QString group, QString path);
 private:
     QList<QString> scanPaths;
     Audio::PluginDescriptor getPluginDescriptor(QFileInfo f, Vst::VstHost* host);

@@ -189,16 +189,13 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     vstHost->setBlockSize(audioDriver->getBufferSize());
 
 
-    QObject::connect(&pluginFinder, SIGNAL(vstPluginFounded(QString,QString,QString)), this, SLOT(on_VSTPluginFounded(QString,QString,QString)));
+    QObject::connect(&pluginFinder, SIGNAL(pluginScanFinished(QString,QString,QString)), this, SLOT(on_VSTPluginFounded(QString,QString,QString)));
 
     //ninjam service
     this->ninjamService = Ninjam::Service::getInstance();
     QObject::connect( this->ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), SLOT(on_connectedInNinjamServer(Ninjam::Server)) );
     QObject::connect(this->ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(on_disconnectedFromNinjamServer(Ninjam::Server)));
     QObject::connect(this->ninjamService, SIGNAL(error(QString)), this, SLOT(on_errorInNinjamServer(QString)));
-
-
-
 
     //addInputTrackNode(new Audio::LocalInputTestStreamer(440, getAudioDriverSampleRate()));
 

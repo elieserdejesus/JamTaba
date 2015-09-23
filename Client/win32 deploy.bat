@@ -8,7 +8,7 @@ SET QT_DIR=C:\Qt\Qt5.5.0\5.5\msvc2013\bin
 
 SET SSL_LIBS_DIR=C:\Qt\Qt5.5.0\Tools\QtCreator\bin
 
-SET BUILD_DIR=..\..\build-x32\release
+SET BUILD_DIR=..\..\build-Jamtaba2-Desktop_Qt_5_5_0_MSVC2013_32bit-Release\release
 
 robocopy %BUILD_DIR% %DEPLOY_DIR% %ROBOCOPY_OPTIONS% Jamtaba2.exe
 robocopy %QT_DIR% %DEPLOY_DIR% %ROBOCOPY_OPTIONS% Qt5Core.dll

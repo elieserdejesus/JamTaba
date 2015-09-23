@@ -1,11 +1,15 @@
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
-#ver o restore do EzDrummer
+#fazer o feedback do escaneamento de plugins na tela de preferências
+
+#escaneio plugins, minimizo e tenho um no audio device error ?
+
+#mexer no site - manter o site do jamtaba 1 e fazer um link no novo site
+    #Fazer mais uma imagem tocando para mostrar o mixer e o chat, tem que ter uma galera legal
 
 #gerar instaladores?
 
-#mexer no site - manter o site do jamtaba 1 e fazer um link no novo site
-#colocar referências para ninjam, qt, portmedia, minimp3, libvorbis e libogg no site
+#mudar a imagem da página do facebook
 
 #tocar em algumas Jams para ver se está rolando
 
