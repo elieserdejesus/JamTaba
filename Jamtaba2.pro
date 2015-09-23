@@ -1,8 +1,6 @@
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
-#fazer o feedback do escaneamento de plugins na tela de preferências
-
-#escaneio plugins, minimizo e tenho um no audio device error ?
+#minimizo e tenho um no audio device error ?
 
 #mexer no site - manter o site do jamtaba 1 e fazer um link no novo site
     #Fazer mais uma imagem tocando para mostrar o mixer e o chat, tem que ter uma galera legal
