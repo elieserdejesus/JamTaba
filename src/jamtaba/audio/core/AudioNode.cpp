@@ -231,7 +231,7 @@ LocalInputAudioNode::LocalInputAudioNode(int parentChannelIndex, bool isMono)
 }
 
 LocalInputAudioNode::~LocalInputAudioNode(){
-    qWarning() << "Destrutor LocalInputAudioNode";
+    //qWarning() << "Destrutor LocalInputAudioNode";
 }
 
 bool LocalInputAudioNode::isMono() const{

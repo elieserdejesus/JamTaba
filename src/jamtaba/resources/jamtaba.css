@@ -104,7 +104,14 @@ FxPanelItem > QPushButton:hover{
 FxPanelItem > QPushButton:checked{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
 }
+/*----------------------*/
+PluginScanDialog QPlainTextEdit{
+    background: transparent;
+}
 
+PluginScanDialog #labelPluginText{
+    font-weight: bold;
+}
 
 /*----------------------*/
 QScrollBar:vertical, QScrollBar:horizontal {
