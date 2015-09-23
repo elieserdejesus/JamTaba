@@ -766,21 +766,21 @@ void MainFrame::closeEvent(QCloseEvent *)
     mainController->storeWindowSettings(isMaximized(), computeLocation() );
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainFrame::showEvent(QShowEvent *)
-{
-    //qWarning() << "Thread da GUI: " << QThread::currentThreadId();
+void MainFrame::showEvent(QShowEvent *){
 
-    int availableDevices = mainController->getAudioDriver()->getDevicesCount();
-    if(!mainController->isStarted() && availableDevices > 0){
-        showBusyDialog("Loading rooms list ...");
-        mainController->start();
+    if(!mainController->isStarted()){//first show?
+        int availableDevices = mainController->getAudioDriver()->getDevicesCount();
+        if(availableDevices > 0){
+            showBusyDialog("Loading rooms list ...");
+            mainController->start();
 
-        //wait 50 ms before resotre the plugins list to avoid freeze the GUI in hidden state while plugins are loaded
-        QTimer::singleShot(50, this, &MainFrame::restorePluginsList);
-    }
-    else{
-        QMessageBox::critical(this, "ERROR", "No audio device!");
-        close();
+            //wait 50 ms before resotre the plugins list to avoid freeze the GUI in hidden state while plugins are loaded
+            QTimer::singleShot(50, this, &MainFrame::restorePluginsList);
+        }
+        else{
+            QMessageBox::critical(this, "ERROR", "No audio device!");
+            close();
+        }
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
