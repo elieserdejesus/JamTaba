@@ -5,7 +5,7 @@
 #include <QApplication>
 #include <QLoggingCategory>
 #include <QDir>
-
+#include <QStandardPaths>
 
 #include "../audio/vst/VstPlugin.h"
 #include "../audio/vst/vsthost.h"
@@ -84,10 +84,11 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
     //fflush(stderr);
 
     if(type != QtDebugMsg){//write the critical messages to log file
-        QFile outFile("log.txt");
-        outFile.open(QIODevice::WriteOnly | QIODevice::Append);
+        QDir logDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+        QFile outFile( logDir.absoluteFilePath("log.txt"));
+        outFile.open(QIODevice::WriteOnly | QIODevice::Truncate);
         QTextStream ts(&outFile);
-        ts << stringMsg << "\n\r";
+        ts << stringMsg << endl;
     }
 
     if(type == QtFatalMsg){
