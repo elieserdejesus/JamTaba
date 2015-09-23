@@ -15,7 +15,7 @@ REM        %QT_DIR%\..\..\..\Tools\QtCreator\bin\jom.exe -f Makefile.Release
 
 SET SSL_LIBS_DIR=C:\OpenSSL-Win64
 
-SET BUILD_DIR=..\..\build-Jamtaba2-Desktop_Qt_5_5_0_MSVC2013_64bit-Release\release
+SET BUILD_DIR=E:\Jamtaba2\build-64bit\release
 
 SET ROBOCOPY_OPTIONS=/NFL /NDL /NJH /NJS /nc /ns /np
 
