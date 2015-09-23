@@ -1,8 +1,11 @@
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
-#mudar os scrips para ao inves de gerar o zip rodar o script do instalador
+#fazer um post script no Istool para gerar o rar dos instaladores.
+    #Talvez dê até para copiar para a pasta do dropbox
 
 #gerar instaladores windows
+
+#mudar os scrips para ao inves de gerar o zip rodar o script do instalador
 
 #testar as coisas do mac
 
