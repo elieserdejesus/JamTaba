@@ -46,6 +46,7 @@ void PreferencesDialog::selectMidiTab(){
 }
 void PreferencesDialog::selectVstPluginsTab(){
     ui->prefsTab->setCurrentWidget(ui->tabVST);
+
 }
 
 void PreferencesDialog::selectRecordingTab(){

@@ -456,7 +456,7 @@ void Settings::load(){
 }
 
 Settings::Settings()
-    :fileDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation))
+    :fileDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation))
 
 {
 }

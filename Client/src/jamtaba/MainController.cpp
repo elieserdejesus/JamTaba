@@ -541,7 +541,7 @@ void MainController::addDefaultVstScanPath(){
 
 #ifdef Q_OS_MACX
        vstPaths.append("/Library/Audio/Plug-Ins/VST");
-       vstPaths.append( QDir::homePath() + "/Library/Audio/Plug-Ins/VST");
+       vstPaths.append( "~/Library/Audio/Plug-Ins/VST");
 #endif
     foreach (QString vstPath, vstPaths) {
         if(!vstPath.isEmpty() && QDir(vstPath).exists()){

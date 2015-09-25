@@ -84,11 +84,14 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
     //fflush(stderr);
 
     if(type != QtDebugMsg){//write the critical messages to log file
-        QDir logDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+        QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
         QFile outFile( logDir.absoluteFilePath("log.txt"));
         if(outFile.open(QIODevice::WriteOnly | QIODevice::Truncate)){
-            QTextStream ts(&outFile);
-            ts << stringMsg << endl;
+           QTextStream ts(&outFile);
+           ts << stringMsg << endl;
+        }
+        else{
+            qWarning() << "Can't write log file in " << QFileInfo(outFile).absoluteFilePath();
         }
     }
 
