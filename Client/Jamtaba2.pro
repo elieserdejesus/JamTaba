@@ -1,5 +1,9 @@
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
+#scan dos plugins esta estranho no mac
+
+#arquivo de log nao esta sendo criado no mac - ver qual e o problema
+
 #fazer um post script no Istool para gerar o rar dos instaladores.
     #Talvez dê até para copiar para a pasta do dropbox
 

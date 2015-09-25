@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QDateTime>
 #include <QApplication>
+#include <cmath>
 
 using namespace Vst;
 
