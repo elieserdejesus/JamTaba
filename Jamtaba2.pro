@@ -1,8 +1,7 @@
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
-#scan dos plugins esta estranho no mac
-
-#arquivo de log nao esta sendo criado no mac - ver qual e o problema
+# No mac, quando abro a tela de preferencias dos VSTs os PAThs nao aparecem
+    #eles so aparecem se eu clico em outras tabs e volto para a tab VST
 
 #fazer um post script no Istool para gerar o rar dos instaladores.
     #Talvez dê até para copiar para a pasta do dropbox
