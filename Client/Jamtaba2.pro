@@ -1,20 +1,11 @@
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
-# No mac, quando abro a tela de preferencias dos VSTs os PAThs nao aparecem
-    #eles so aparecem se eu clico em outras tabs e volto para a tab VST
-
 #fazer um post script no Istool para gerar o rar dos instaladores.
     #Talvez dê até para copiar para a pasta do dropbox
 
 #gerar instaladores windows
 
 #mudar os scrips para ao inves de gerar o zip rodar o script do instalador
-
-#testar as coisas do mac
-
-#gerar instalador e executável do mac
-
-#Fazer mais uma imagem para o site novo tocando para mostrar o mixer e o chat, tem que ter uma galera legal
 
 #mudar a imagem da página do facebook
 
@@ -270,18 +261,9 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 QT       +=  gui  network
 
-#DEFINES += QT_NO_CAST_FROM_ASCII
-#DEFINES += QT_NO_CAST_TO_ASCII
-
-#QMAKE_CXXFLAGS += -D _CRT_SECURE_NO_WARNINGS
-macx{
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.6
-    CONFIG += x86 x86_64 #não está funcionando
-}
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.6
 
 CONFIG += c++11
-
-#CONFIG += openssl-linked
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

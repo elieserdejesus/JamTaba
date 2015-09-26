@@ -16,7 +16,6 @@ class PreferencesDialog : public QDialog
 public:
     PreferencesDialog(Controller::MainController* mainController, QWidget *parent = 0);
     ~PreferencesDialog();
-   // virtual void closeEvent(QCloseEvent *);
     void selectAudioTab();
     void selectMidiTab();
     void selectVstPluginsTab();
@@ -28,7 +27,9 @@ private slots:
     void on_okButton_released();
 
     void on_prefsTab_currentChanged(int index);
+
     void on_buttonAddVstPath_clicked();
+
     void on_buttonRemoveVstPathClicked();
 
     void on_buttonClearVstCache_clicked();
@@ -38,6 +39,8 @@ private slots:
     void on_browseRecPathButton_clicked();
 
     void on_recordingCheckBox_clicked();
+
+
 
 signals:
     void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);

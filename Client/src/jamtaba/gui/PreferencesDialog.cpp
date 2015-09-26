@@ -35,6 +35,8 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
     populateAudioTab();
     populateMidiTab();
     populateRecordingTab();
+
+
 }
 
 void PreferencesDialog::selectAudioTab(){
@@ -46,7 +48,7 @@ void PreferencesDialog::selectMidiTab(){
 }
 void PreferencesDialog::selectVstPluginsTab(){
     ui->prefsTab->setCurrentWidget(ui->tabVST);
-
+//    qWarning() << "selection VST TAB";
 }
 
 void PreferencesDialog::selectRecordingTab(){
@@ -372,3 +374,5 @@ void PreferencesDialog::on_recordingCheckBox_clicked(){
     mainController->storeRecordingMultiTracksStatus( ui->recordingCheckBox->isChecked());
 }
 //+++++++++++++++++++++++++++
+
+
