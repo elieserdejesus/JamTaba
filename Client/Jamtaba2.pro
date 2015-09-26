@@ -1,18 +1,5 @@
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
-#fazer um post script no Istool para gerar o rar dos instaladores.
-    #Talvez dê até para copiar para a pasta do dropbox
-
-#gerar instaladores windows
-
-#mudar os scrips para ao inves de gerar o zip rodar o script do instalador
-
-#mudar a imagem da página do facebook
-
-#tocar em algumas Jams para ver se está rolando
-
-#-------------------------------- PRIMEIRO RELEASE ----------------------------------------
-
 #Double:
     #Ezdrummer1  some freeze in the looper window the blue blue line dont progress , but the loop is good playing  , the play button dont work we need often to launch the loop directly in the groove window
 
