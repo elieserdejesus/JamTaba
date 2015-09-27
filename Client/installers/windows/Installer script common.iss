@@ -4,7 +4,6 @@
 #define MyAppURL "http://www.jamtaba.com"
 #define MyAppExeName "Jamtaba2.exe"
 
-#define MsvcRedistDir "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x86\Microsoft.VC120.CRT"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
