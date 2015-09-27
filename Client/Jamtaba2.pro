@@ -255,7 +255,10 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 QT       +=  gui  network
 
-QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.6
+#QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.6
+
+QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -stdlib=libc++ #-std=c++11
+LIBS += -mmacosx-version-min=10.7 -stdlib=libc++
 
 CONFIG += c++11
 
