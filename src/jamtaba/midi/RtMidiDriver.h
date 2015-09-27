@@ -1,0 +1,37 @@
+#ifndef RTMIDIDRIVER_H
+#define RTMIDIDRIVER_H
+
+#include "MidiDriver.h"
+#include "RtMidi.h"
+
+namespace Midi {
+
+//class RtMidiIn;
+
+class RtMidiDriver : public MidiDriver
+{
+public:
+    RtMidiDriver(QList<bool> deviceStatuses);
+    ~RtMidiDriver();
+
+    virtual void start();
+    virtual void stop();
+    virtual void release();
+
+    virtual bool hasInputDevices() const;
+    virtual int getMaxInputDevices() const;
+    virtual const char *getInputDeviceName(int index) const;
+    virtual MidiBuffer getBuffer();
+
+    virtual void setInputDevicesStatus(QList<bool> statuses);
+
+private:
+
+    //int getDeviceIDFromGlobalIndex(int globalIndex);
+    RtMidiIn* rtMidi;
+
+};
+
+
+}
+#endif // RTMIDIDRIVER_H

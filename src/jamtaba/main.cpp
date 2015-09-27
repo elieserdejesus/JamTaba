@@ -7,18 +7,28 @@
 #include <QDir>
 #include <QStandardPaths>
 
-#include "../audio/vst/VstPlugin.h"
-#include "../audio/vst/vsthost.h"
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
-int main(int argc, char* args[] ){
-//    Vst::VstHost* host = Vst::VstHost::getInstance();
-//    Vst::VstPlugin plugin(host);
-//    bool result = plugin.load(host, "C:\\Program Files (x86)\\VSTPlugins\\4Front Bass x64.dll");
-//    qWarning() << "result: " << result;
-//    return 0;
+//#include "portmidi.h"
+//#include <QDebug>
 
+int main(int argc, char* args[] ){
+
+//    Pm_Initialize();
+//    qWarning() << Pm_GetDeviceInfo(1)->name;
+//    PmStream* stream;
+//    PmError error = Pm_OpenInput(&stream, 1, 0, 256, 0, 0);
+//    if(error != pmNoError){
+//        qCritical() << Pm_GetErrorText(error);
+//    }
+//    else{
+//        qWarning() << "no error";
+//    }
+//    Pm_Close(stream);
+
+
+//    return 0;
 
 
     QApplication::setApplicationName("Jamtaba 2");
@@ -85,13 +95,13 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
 
     if(type != QtDebugMsg){//write the critical messages to log file
         QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
+        if(!logDir.exists()){
+            logDir.mkpath(".");
+        }
         QFile outFile( logDir.absoluteFilePath("log.txt"));
         if(outFile.open(QIODevice::WriteOnly | QIODevice::Truncate)){
            QTextStream ts(&outFile);
            ts << stringMsg << endl;
-        }
-        else{
-            qWarning() << "Can't write log file in " << QFileInfo(outFile).absoluteFilePath();
         }
     }
 
@@ -99,4 +109,5 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
         abort();
     }
 }
+
 

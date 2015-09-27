@@ -46,9 +46,11 @@ int PortMidiDriver::getDeviceIDFromGlobalIndex(int globalIndex){
     int totalDevices = Pm_CountDevices();
     int inputDeviceID = -1;
     for (int i = 0; i < totalDevices; ++i) {
-        if(Pm_GetDeviceInfo(i)->input > 0){//index is a input device?
+        const PmDeviceInfo* info = Pm_GetDeviceInfo(i);
+        if(info->input ){//index is a input device?
             inputDeviceID++;
             if( inputDeviceID == globalIndex){
+                qDebug(midi) << info->name << "is mapped to " << inputDeviceID;
                 return i;
             }
         }
@@ -67,11 +69,16 @@ void PortMidiDriver::start(){
             PmDeviceID deviceId = getDeviceIDFromGlobalIndex(globalDeviceIndex);
             const PmDeviceInfo* deviceInfo = Pm_GetDeviceInfo(deviceId);
             if(deviceInfo){
-                //qWarning() << "Iniciando MIDI em " << Pm_GetDeviceInfo(deviceId)->name;
+                qDebug(midi) << "Iniciando MIDI em " << Pm_GetDeviceInfo(deviceId)->name;
                 PmStream* stream;
-                Pm_OpenInput(&stream, deviceId, nullptr, 256, nullptr, nullptr );
+                PmError error = Pm_OpenInput(&stream, deviceId, NULL, 256, NULL, NULL);
+                if(error != pmNoError){
+                    qCritical() << QString( Pm_GetErrorText(error));
+                }
+                else{
+                    streams.append(stream);
+                }
 
-                streams.append(stream);
             }
             else{
                 streams.append(nullptr);//just to keep correct size in streams list
