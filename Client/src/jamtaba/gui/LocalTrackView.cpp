@@ -367,8 +367,10 @@ QMenu* LocalTrackView::createMidiInputsMenu(QMenu* parent){
                 a->setCheckable(true);
                 a->setChecked(getInputNode()->isMidi() && getInputNode()->getMidiChannelIndex() == c && getInputNode()->getMidiDeviceIndex() == d);
             }
+            char deviceName[32];
+            strcpy(deviceName, mainController->getMidiDriver()->getInputDeviceName(d));
 
-            QAction* action = midiInputsMenu->addAction(QString(mainController->getMidiDriver()->getInputDeviceName(d)));
+            QAction* action = midiInputsMenu->addAction(QString(deviceName));
             action->setMenu(midiChannelsMenu);
             action->setData(d);//using midi device index as action data
             action->setIcon(midiInputsMenu->icon());

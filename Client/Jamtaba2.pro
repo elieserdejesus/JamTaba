@@ -1,4 +1,11 @@
+
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
+
+# Deu problema no MIDI no windows em 64 bits. Precilei compilar a portmidi  como MT ao invés de MD, port isso está dando
+    #o warning sobre a mistura de libs MT e MD. Será que eu poderia usar tudo MT entao?
+
+#no Windows quando instalei o ícone do Jamtaba não aparece na barra de aplicações
+
 
 #Double:
     #Ezdrummer1  some freeze in the looper window the blue blue line dont progress , but the loop is good playing  , the play button dont work we need often to launch the loop directly in the groove window
@@ -331,7 +338,8 @@ HEADERS += \
     src/jamtaba/audio/vst/vsthost.h \
     #src/jamtaba/geo/IpToLocationLITEResolver.h
     src/jamtaba/geo/WebIpToLocationResolver.h \
-    src/jamtaba/gui/PrivateServerDialog.h
+    src/jamtaba/gui/PrivateServerDialog.h \
+    #src/jamtaba/midi/RtMidiDriver.h
 
 SOURCES += \
     $$MAIN \
@@ -402,7 +410,8 @@ SOURCES += \
     src/jamtaba/audio/vst/VstPlugin.cpp \
     src/jamtaba/audio/vst/vsthost.cpp \
     src/jamtaba/geo/WebIpToLocationResolver.cpp \
-    src/jamtaba/gui/PrivateServerDialog.cpp
+    src/jamtaba/gui/PrivateServerDialog.cpp \
+    #src/jamtaba/midi/RtMidiDriver.cpp
 
 
 FORMS += \
@@ -422,14 +431,14 @@ FORMS += \
 INCLUDEPATH += src/jamtaba/gui                  \
                src/jamtaba/gui/widgets          \
                $$PWD/libs/includes/portaudio    \
-               $$PWD/libs/includes/portmidi     \
+               $$PWD/libs/includes/portmidi       \
                $$PWD/libs/includes/ogg          \
                $$PWD/libs/includes/vorbis       \
                $$PWD/libs/includes/minimp3      \
                $$PWD/libs/includes/libip2location   \
 
 DEPENDPATH += $$PWD/libs/includes/portaudio     \
-               $$PWD/libs/includes/portmidi     \
+               $$PWD/libs/includes/portmidi       \
                $$PWD/libs/includes/ogg          \
                $$PWD/libs/includes/vorbis       \
                $$PWD/libs/includes/minimp3      \
