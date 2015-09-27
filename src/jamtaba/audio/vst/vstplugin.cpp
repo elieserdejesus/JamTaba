@@ -115,7 +115,7 @@ bool VstPlugin::load(QString path){
         unload();
         return false;
     }
-    char temp[kVstMaxEffectNameLen];
+    char temp[128];//kVstMaxEffectNameLen]; //some dumb plugins don't respect
     //qCDebug(vst) << "getting name for " << path ;
     effect->dispatcher(effect, effGetEffectName, 0, 0, temp, 0);
     this->name = QString(temp);
@@ -124,6 +124,10 @@ bool VstPlugin::load(QString path){
         effect->dispatcher(effect, effGetProductString, 0, 0, temp, 0);
         this->name = QString(temp);
     }
+
+    long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
+    qCDebug(vst) << "loading " << getName() << " version " << ver;
+
 
     this->path = path;
 
@@ -324,10 +328,11 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
 
 void VstPlugin::closeEditor(){
     qCDebug(vst) << "Closing " << getName() << " editor. Thread:" << QThread::currentThreadId();
-    Audio::Plugin::closeEditor();
-    if(effect){
+
+    if(effect && editorWindow){
         effect->dispatcher(effect, effEditClose, 0, 0, NULL, 0);
     }
+    Audio::Plugin::closeEditor();
 }
 
 void VstPlugin::openEditor(QPoint centerOfScreen){
