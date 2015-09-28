@@ -1,4 +1,6 @@
 
+#testar os plugins nos windows da virtual box
+
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
 # Deu problema no MIDI no windows em 64 bits. Precilei compilar a portmidi  como MT ao invés de MD, port isso está dando
