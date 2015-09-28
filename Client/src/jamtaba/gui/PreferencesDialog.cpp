@@ -18,6 +18,7 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
 {
     ui->setupUi(this);
     setModal(true);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     //populateAudioTab();
     //populateMidiInputCombo();

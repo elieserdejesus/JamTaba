@@ -14,7 +14,7 @@
     background-image: url(':/images/rec on.png');
 }
 
-QMessageBox, QInputDialog{
+QMessageBox, QInputDialog, PluginScanDialog{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop:0 rgb(250, 250, 250),
         stop:1 rgba(180, 180, 180));
@@ -25,10 +25,6 @@ QMessageBox, QInputDialog{
 
 QInputDialog{
     min-width: 400px;
-}
-
-QInputDialog QLineEdit{
-
 }
 
 
@@ -105,6 +101,14 @@ FxPanelItem > QPushButton:checked{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
 }
 /*----------------------*/
+
+PluginScanDialog{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(250, 250, 250),
+        stop:1 rgb(220, 220, 220));
+}
+
+
 PluginScanDialog QPlainTextEdit{
     background: transparent;
 }
@@ -213,6 +217,26 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-pa
     border: 1px solid rgb(51, 51, 51, 70);
 }
 
+QGroupBox{
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 30);
+    padding-top: 0px;
+
+}
+
+QGroupBox::title {
+    subcontrol-origin: content;
+    subcontrol-position: top center; /* position at the top center */
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 0px;
+    border-radius: 3px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border: 1px solid rgba(0, 0, 0, 35);
+    background-color: rgba(0, 0, 0,10);
+    margin-top: 0px;
+}
 
 /*
 QCheckBox::indicator, QGroupBox::indicator  {

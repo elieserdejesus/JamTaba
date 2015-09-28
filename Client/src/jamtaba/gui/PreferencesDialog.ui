@@ -73,7 +73,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="prefsTab">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
@@ -329,6 +329,9 @@
        <string>VST</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_8">
+       <property name="spacing">
+        <number>12</number>
+       </property>
        <item>
         <layout class="QHBoxLayout" name="topButtonsLayout">
          <property name="spacing">
@@ -371,13 +374,6 @@
         </layout>
        </item>
        <item>
-        <widget class="Line" name="line">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QGroupBox" name="groupBoxPaths">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -408,8 +404,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>381</width>
-               <height>216</height>
+               <width>416</width>
+               <height>272</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_10">
