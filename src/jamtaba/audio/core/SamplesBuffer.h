@@ -14,7 +14,7 @@ private:
     unsigned int channels;
     unsigned int frameLenght;
 
-    std::vector< std::vector<float>> samples;
+    std::vector< std::vector<float> > samples;
 
 
     inline bool channelIsValid(unsigned int channel) const{return channel < channels;}
