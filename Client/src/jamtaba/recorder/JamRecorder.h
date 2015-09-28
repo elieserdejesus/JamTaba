@@ -60,7 +60,7 @@ private:
     QString audioPath;
 
     //the first map key is userName. The second map key is channelIndex
-    QMap<QString, QMap<quint8, JamTrack>> jamTracks;
+    QMap<QString, QMap<quint8, JamTrack> > jamTracks;
 };
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class JamMetadataWriter {
