@@ -5,6 +5,7 @@
 #include <QNetworkAccessManager>
 #include <QObject>
 #include <deque>
+#include "SamplesBufferResampler.h"
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(roomStreamer)
@@ -42,19 +43,20 @@ protected:
     virtual void initialize(QString streamPath);
     bool streaming;
     SamplesBuffer bufferedSamples;
+    SamplesBufferResampler resampler;
 };
 //+++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++
-class RoomStreamerNode : public AbstractMp3Streamer
+class NinjamRoomStreamerNode : public AbstractMp3Streamer
 {
 
 Q_OBJECT//allow signal/slots
 
 public:
-    RoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds=3);
-    explicit RoomStreamerNode(int bufferTimeInSeconds=3);
-    ~RoomStreamerNode();
+    NinjamRoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds=3);
+    explicit NinjamRoomStreamerNode(int bufferTimeInSeconds=3);
+    ~NinjamRoomStreamerNode();
 
     virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
     //virtual void stopCurrentStream();
