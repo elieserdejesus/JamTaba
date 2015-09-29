@@ -44,6 +44,8 @@ protected:
     bool streaming;
     SamplesBuffer bufferedSamples;
     SamplesBufferResampler resampler;
+
+    int getSamplesToRender(int targetSampleRate, int outLenght);
 };
 //+++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++
@@ -59,7 +61,6 @@ public:
     ~NinjamRoomStreamerNode();
 
     virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
-    //virtual void stopCurrentStream();
     virtual bool needResamplingFor(int targetSampleRate) const;
 protected:
     void initialize(QString streamPath);
@@ -67,7 +68,6 @@ private:
     QNetworkAccessManager* httpClient;
     bool buffering;
     int bufferTime;//in seconds
-
 private slots:
     void on_reply_error(QNetworkReply::NetworkError);
     void on_reply_read();
@@ -89,7 +89,7 @@ public:
 };
 
 //++++++++++++++++++++++
-/*
+
 class TestStreamerNode : public AbstractMp3Streamer{
 private:
     OscillatorAudioNode* oscilator;
@@ -103,6 +103,6 @@ public:
     void setStreamPath(QString streamPath);
     virtual void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
 };
-*/
+
 
 }//namespace end

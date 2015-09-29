@@ -217,27 +217,22 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-pa
     border: 1px solid rgb(51, 51, 51, 70);
 }
 
+/*
 QGroupBox{
     border-radius: 3px;
     border: 1px solid rgba(0, 0, 0, 30);
-    padding-top: 0px;
-
+    padding-top: 24px;
 }
 
 QGroupBox::title {
     subcontrol-origin: content;
-    subcontrol-position: top center; /* position at the top center */
-    padding-left: 10px;
+    subcontrol-position: top left;
+    padding-left: 6px;
     padding-right: 10px;
     padding-top: 0px;
-    border-radius: 3px;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-    border: 1px solid rgba(0, 0, 0, 35);
-    background-color: rgba(0, 0, 0,10);
     margin-top: 0px;
 }
-
+*/
 /*
 QCheckBox::indicator, QGroupBox::indicator  {
 background: url(:/images/check.png);

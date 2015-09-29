@@ -50,7 +50,7 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Co
 
     ui->licenceButton->setIcon(QIcon(QPixmap(":/images/licence.png")));
 
-    ui->labelRoomName->setText(roomInfo.getName());
+    ui->labelRoomName->setText(roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")");
 
     ui->tracksPanel->layout()->setAlignment(Qt::AlignLeft);//tracks are left aligned
 

@@ -13,23 +13,9 @@ void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 //#include "portmidi.h"
 //#include <QDebug>
 
+#include "../audio/core/SamplesBuffer.h"
+
 int main(int argc, char* args[] ){
-
-//    Pm_Initialize();
-//    qWarning() << Pm_GetDeviceInfo(1)->name;
-//    PmStream* stream;
-//    PmError error = Pm_OpenInput(&stream, 1, 0, 256, 0, 0);
-//    if(error != pmNoError){
-//        qCritical() << Pm_GetErrorText(error);
-//    }
-//    else{
-//        qWarning() << "no error";
-//    }
-//    Pm_Close(stream);
-
-
-//    return 0;
-
 
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
