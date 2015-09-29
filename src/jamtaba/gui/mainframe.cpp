@@ -633,7 +633,8 @@ void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
 //        ninjamWindow->deleteLater();
 //    }
     ninjamWindow = new NinjamRoomWindow(ui.tabWidget, roomInfo, mainController);
-    int index = ui.tabWidget->addTab(ninjamWindow, roomInfo.getName());
+    QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
+    int index = ui.tabWidget->addTab(ninjamWindow, tabName);
     ui.tabWidget->setCurrentIndex(index);
 
     //add metronome track view

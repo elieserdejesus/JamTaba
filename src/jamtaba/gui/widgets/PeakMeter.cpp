@@ -6,7 +6,7 @@
 #include <QDateTime>
 #include <QPainter>
 
-const int PeakMeter::LINES_MARGIN = 4;
+const int PeakMeter::LINES_MARGIN = 3;
 
 
 const QColor PeakMeter::HORIZONTAL_LINES_COLOR = QColor(0, 0, 0, 90);

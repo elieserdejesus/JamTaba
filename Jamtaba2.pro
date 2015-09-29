@@ -1,6 +1,40 @@
-#fazendo resampleing do streaming das salas, mas tem muito problema
+#fazendo resampling do streaming das salas, mas tem muito problema
+    #quando uso uma SR de 192 o buffer é esgotado muito rapidamente, aí está o problema.
+    #mesmo quando uso uma SR de 48 KHz o buffer quase zera rapidamente, isso está
+    #estranho.
 
-#preferencias de audio estão zuadas
+#Guitar Rig 5 com noise digital - echnaton
+
+#Hi Elieser, I just got a new machine a couple of months ago (x99 motherboard,
+#5820K cpu, ddr4 ram, 64-bit Win 8.1 pro on SSD, Focusrite Scarlett USB 2 ASIO interface)
+#and Jamtaba 2 installs / runs seamlessly including all 64-bit VSTs in several different
+#folders.
+#However, my input on the VU meters seems low and peaks at around 33% using the same
+#external settings (i.e. amp, ASIO box, etc) that I use for Reaper. I went into a session
+# and was told that everything sounded fine, but Db markings on all the meters except
+#the metro might be more reassuring for adjusting levels in a jam.
+
+#Red and green states on the 'Transmit' button also might be more foolproof than
+#just shading out the user panel (which I like) and you could use an avatar on the
+#task bar which currently shows as a blank page.
+
+
+#*** May Have Found a BUG... Had Jamtaba up for about an hour unused and noticed
+#that the 'Rooms to Play' list didn't update. Several shutdowns and restarts of the
+#program failed to clear the old list which didn't reset to the current users until
+#the program crashed.
+#The program then stuck on the 'new' old set of users even after stopping the program
+#using the task manager or going to a room in use to prompt a reset (Ninbot 2050 showed
+#the old list on 'rooms to play' tab and the correct list on the active room tab.)
+
+#On rebooting the computer Jamtaba crashed again, but then came up with the correct
+#current list. Here are the details given on the crashes which was apparently caused
+#by the GTune VST:
+
+#After removing the GTune VST Jamtaba 2 (64) no longer crashes, but it still seems to
+#take a full reboot of the computer to refresh the 'rooms to play' list.
+
+
 
 #o que acontece com os plugins se mudo a taxa de amostragem? Acho que
     #não estou chamando o setSampleRAte dos plugins

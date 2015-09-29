@@ -54,25 +54,30 @@ void AbstractMp3Streamer::stopCurrentStream(){
     bytesToDecode.clear();
 }
 
+int AbstractMp3Streamer::getSamplesToRender(int targetSampleRate, int outLenght){
+    bool needResampling =  needResamplingFor(targetSampleRate);
+    int samplesToRender = needResampling ? getInputResamplingLength(getSampleRate(), targetSampleRate, outLenght) : outLenght;
+    return samplesToRender;
+}
+
 void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int targetSampleRate, const Midi::MidiBuffer &midiBuffer){
     Q_UNUSED(in);
     //QMutexLocker locker(&mutex);
+
     if(bufferedSamples.isEmpty() || !streaming){
         return;
     }
 
-
     int outLenght = std::min(out.getFrameLenght(), bufferedSamples.getFrameLenght());
-
-    bool needResampling = needResamplingFor(targetSampleRate);
-
-    int samplesToRender = needResampling ? getInputResamplingLength(getSampleRate(), targetSampleRate, outLenght) : outLenght;
+    int samplesToRender = getSamplesToRender(targetSampleRate, outLenght);
+    if(samplesToRender <= 0){
+        return;
+    }
 
     internalInputBuffer.setFrameLenght(samplesToRender);
-    internalInputBuffer.zero();
-    internalInputBuffer.set(bufferedSamples);//copy 'samplesToRender' samples to internalInputBuffer
+    internalInputBuffer.set(bufferedSamples);
 
-    if(needResampling){
+    if( needResamplingFor(targetSampleRate)){
         const Audio::SamplesBuffer& resampledBuffer = resampler.resample(internalInputBuffer, outLenght );
         internalOutputBuffer.setFrameLenght(resampledBuffer.getFrameLenght());
         internalOutputBuffer.set(resampledBuffer);
@@ -96,7 +101,7 @@ void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in, Audio
         qCDebug(roomStreamer) << out.getFrameLenght() - internalOutputBuffer.getFrameLenght() << " samples missing";
     }
 
-    faderProcessor.process(internalInputBuffer, internalOutputBuffer, midiBuffer);//aply fade in in stream
+    //faderProcessor.process(internalInputBuffer, internalOutputBuffer, midiBuffer);//aply fade in in stream
 
     this->lastPeak.update(internalOutputBuffer.computePeak());
 
@@ -160,6 +165,7 @@ NinjamRoomStreamerNode::NinjamRoomStreamerNode(QUrl streamPath, int bufferTimeIn
     : AbstractMp3Streamer( new Mp3DecoderMiniMp3()),
       bufferTime(bufferTimeInSeconds),
       httpClient(nullptr)
+      //osc(440, 44100)
 {
 
     setStreamPath(streamPath.toString());
@@ -169,6 +175,7 @@ NinjamRoomStreamerNode::NinjamRoomStreamerNode(int bufferTimeInSeconds)
     :AbstractMp3Streamer( new Mp3DecoderMiniMp3()),
       bufferTime(bufferTimeInSeconds),
       httpClient(nullptr)
+      //osc(440, 44100)
 {
     setStreamPath("");
 }
@@ -176,17 +183,14 @@ NinjamRoomStreamerNode::NinjamRoomStreamerNode(int bufferTimeInSeconds)
 
 bool NinjamRoomStreamerNode::needResamplingFor(int targetSampleRate) const{
     if(!streaming || buffering){
-        //qWarning() << "returning false";
         return false;
     }
     return  AbstractMp3Streamer::needResamplingFor(targetSampleRate);
-    //qWarning() << "returning " << needResampling << " sr:" << getSampleRate() << " targetSR:" << targetSampleRate;
-    //return needResampling;
 }
 
 void NinjamRoomStreamerNode::initialize(QString streamPath){
     AbstractMp3Streamer::initialize(streamPath);
-    buffering = true;
+    buffering =  true;
     bufferedSamples.zero();
     bytesToDecode.clear();
     if(!streamPath.isEmpty()){
@@ -228,18 +232,25 @@ NinjamRoomStreamerNode::~NinjamRoomStreamerNode(){
 }
 
 void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer & in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer &midiBuffer){
+
     QMutexLocker locker(&mutex);
     if(!buffering){
-        while(bufferedSamples.getFrameLenght() < out.getFrameLenght()){
-            decode(128);
-            if(bytesToDecode.isEmpty()){
-                break;//no more bytes to decode
-            }
+        int outLenght = out.getFrameLenght();// std::min(out.getFrameLenght(), bufferedSamples.getFrameLenght());
+        int samplesToRender = getSamplesToRender( sampleRate, outLenght);
+        if(bufferedSamples.getFrameLenght() < samplesToRender){
+            decode(4096);
+
         }
+        //decode(256);
     }
-    else{
-        decode(2048);
-    }
+    //else{
+        decode(4096);
+    //}
+
+    //AbstractMp3Streamer::processReplacing(in, out, sampleRate, midiBuffer);
+
+    qWarning() << "Buffered samples:" << bufferedSamples.getFrameLenght() << " bytesToDecode:" << bytesToDecode.size();
+    //return;
 
     if(buffering && bufferedSamples.getFrameLenght() >= bufferTime * decoder->getSampleRate()){
         buffering = false;
@@ -285,12 +296,12 @@ void AudioFileStreamerNode::processReplacing(const SamplesBuffer & in, SamplesBu
     AbstractMp3Streamer::processReplacing(in, out, sampleRate, midiBuffer);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++/*
-/*
+
 TestStreamerNode::TestStreamerNode(int sampleRate)
     :AbstractMp3Streamer(new Mp3DecoderMiniMp3())
 {
-    oscilator = new OscillatorAudioNode(2, sampleRate);
-    playing = false;
+    oscilator = new OscillatorAudioNode(440, sampleRate);
+    playing = true;
 }
 
 TestStreamerNode::~TestStreamerNode(){
@@ -305,7 +316,7 @@ void TestStreamerNode::processReplacing(const Audio::SamplesBuffer & in, Audio::
 
     if(playing){
         oscilator->processReplacing(in, out, sampleRate, midiBuffer);
-        faderProcessor.process(out, midiBuffer);
+        //faderProcessor.process(in, out, midiBuffer);
     }
     lastPeak.update( out.computePeak());
 }
@@ -320,4 +331,4 @@ void TestStreamerNode::setStreamPath(QString streamPath){
 void TestStreamerNode::stopCurrentStream(){
     playing = false;
 }
-*/
+
