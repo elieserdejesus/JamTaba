@@ -1,5 +1,17 @@
+#fazendo resampleing do streaming das salas, mas tem muito problema
 
-#testar os plugins nos windows da virtual box
+#preferencias de audio estão zuadas
+
+#o que acontece com os plugins se mudo a taxa de amostragem? Acho que
+    #não estou chamando o setSampleRAte dos plugins
+
+#Another thing is that once inside a room using sample rate 48000 hz
+    #the jam sounds out of sync with regards to the metronome.
+
+#Antonio sugeriu colocar o botão de boost. Mas na verdade ele acha que o som dele
+    #está baixo se comparado com o som dos outros. Eu poderia voltar com o controle
+    #de volume do xmit ou inicializar os outros em -6db como faz o Reaninjam.
+
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 
@@ -259,10 +271,10 @@ QT       +=  gui  network
 
 #QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.6
 
-QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -stdlib=libc++ #-std=c++11
-LIBS += -mmacosx-version-min=10.7 -stdlib=libc++
+QMAKE_CXXFLAGS += -mmacosx-version-min=10.6 -stdlib=libc++ #-std=c++11
+LIBS += -mmacosx-version-min=10.6 -stdlib=libc++
 
-CONFIG += c++11
+CONFIG += no-c++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
