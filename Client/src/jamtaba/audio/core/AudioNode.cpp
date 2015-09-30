@@ -89,6 +89,7 @@ AudioNode::AudioNode()
       internalInputBuffer(2),
       internalOutputBuffer(2),
       lastPeak(0, 0),
+      //mutex(QMutex::Recursive),
       muted(false),
       soloed(false),
       activated(true),

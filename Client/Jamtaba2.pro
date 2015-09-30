@@ -1,9 +1,33 @@
 #fazendo resampling do streaming das salas, mas tem muito problema
-    #quando uso uma SR de 192 o buffer é esgotado muito rapidamente, aí está o problema.
-    #mesmo quando uso uma SR de 48 KHz o buffer quase zera rapidamente, isso está
-    #estranho.
+    #quando uso buffer size pequeno dá muito estalo.
+    #Estou movimentando muitas amostras para descartar as amostras iniciais do buffer
+    #uma solução seria um buffer circular. Se eu conseguir extender o buffer atual
+        #acho que rola
 
-#Guitar Rig 5 com noise digital - echnaton
+
+
+
+
+
+
+
+#stringer disse que o programa não abre. Possivelmente tem alguma coisa
+    #usando o driver asio. Ver se consigo descobrir se o driver está
+    #aberto e exibir uma mensagem.
+
+#plugins dando problema
+    #Guitar Rig 5 com noise digital - echnaton
+    #Native Instruments Studio Drums - Gaz disse que deu problema
+
+#colocar vst wrapper no isseu tracker
+
+#colocar port para linux no tracker
+
+#adicionar issues no issue tracker
+
+#Colocar uma opção para reportar bugs apontando para o issue tracker
+
+#avisar o pessoal no ninbot para postar no issue tracker
 
 #Hi Elieser, I just got a new machine a couple of months ago (x99 motherboard,
 #5820K cpu, ddr4 ram, 64-bit Win 8.1 pro on SSD, Focusrite Scarlett USB 2 ASIO interface)
@@ -389,7 +413,7 @@ HEADERS += \
     src/jamtaba/audio/vst/vsthost.h \
     #src/jamtaba/geo/IpToLocationLITEResolver.h
     src/jamtaba/geo/WebIpToLocationResolver.h \
-    src/jamtaba/gui/PrivateServerDialog.h \
+    src/jamtaba/gui/PrivateServerDialog.h
     #src/jamtaba/midi/RtMidiDriver.h
 
 SOURCES += \
@@ -461,7 +485,7 @@ SOURCES += \
     src/jamtaba/audio/vst/VstPlugin.cpp \
     src/jamtaba/audio/vst/vsthost.cpp \
     src/jamtaba/geo/WebIpToLocationResolver.cpp \
-    src/jamtaba/gui/PrivateServerDialog.cpp \
+    src/jamtaba/gui/PrivateServerDialog.cpp
     #src/jamtaba/midi/RtMidiDriver.cpp
 
 
