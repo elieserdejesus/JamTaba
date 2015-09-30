@@ -1,16 +1,3 @@
-#fazendo resampling do streaming das salas, mas tem muito problema
-    #quando uso buffer size pequeno dá muito estalo.
-    #Estou movimentando muitas amostras para descartar as amostras iniciais do buffer
-    #uma solução seria um buffer circular. Se eu conseguir extender o buffer atual
-        #acho que rola
-
-
-
-
-
-
-
-
 #stringer disse que o programa não abre. Possivelmente tem alguma coisa
     #usando o driver asio. Ver se consigo descobrir se o driver está
     #aberto e exibir uma mensagem.
@@ -28,6 +15,8 @@
 #Colocar uma opção para reportar bugs apontando para o issue tracker
 
 #avisar o pessoal no ninbot para postar no issue tracker
+
+#com buffer grande o desenho do stream da sala fica estranho
 
 #Hi Elieser, I just got a new machine a couple of months ago (x99 motherboard,
 #5820K cpu, ddr4 ram, 64-bit Win 8.1 pro on SSD, Focusrite Scarlett USB 2 ASIO interface)

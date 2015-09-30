@@ -34,7 +34,7 @@ public:
 
     float* getSamplesArray(unsigned int channel) const;
 
-    //void discardFirstSamples(unsigned int samplesToDiscard);//discard N samples and set frame lenght to new size
+    void discardFirstSamples(unsigned int samplesToDiscard);//discard N samples and set frame lenght to new size
     void append(const SamplesBuffer& other);
 
 
