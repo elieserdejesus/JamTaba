@@ -598,32 +598,27 @@ JamRoomViewPanel  #labelRoomType{
 }
 
 #xmitButton:checked{
-    background-color: rgb(90,90,90);
-    border-color: rgb(55,55,55);
+    /*background-color: rgb(90,90,90);*/
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgba(90, 255, 62, 140), stop:1 rgb(0, 175, 0, 140));
+    border-color: rgb(50, 50, 50);
     border-style: inset;
-    color: rgb(30,30,30);
-
-
+    color: rgba(0,40, 0);
 }
 
 
 #xmitButton:!checked{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
-    stop:0 rgba(255, 255, 255, 90),
-    stop:1 rgba(255, 255, 255, 160));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgba(255, 90, 62, 140), stop:1 rgba(175, 0, 0, 140));
     border-style: outset;
     border-color: rgb(50,50,50);
-    color: black;
-
-
+    color: rgb(140, 140, 140);
 }
 
 #xmitButton:hover{
-    background-color: rgb(80,80,80);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgba(90, 255, 62, 170), stop:1 rgb(0, 175, 0, 170));
 }
 
 #xmitButton:hover:!checked{
-    background-color: rgba(255, 255, 255, 190);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgba(255, 90, 62, 180), stop:1 rgba(175, 0, 0, 180));
 
 }
 /*+++++++++++++++++++++++++++++++*/
