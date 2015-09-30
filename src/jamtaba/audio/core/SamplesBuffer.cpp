@@ -52,22 +52,22 @@ SamplesBuffer::~SamplesBuffer(){
     //qWarning() << "Destrutor SamplesBuffer";
 }
 
-void SamplesBuffer::discardFirstSamples(unsigned int samplesToDiscard){
-    int toDiscard = std::min(frameLenght, samplesToDiscard);
-    uint newFrameLenght = frameLenght - toDiscard;
-    for (uint c = 0; c < channels; ++c) {
-        std::rotate(samples[c].begin(), samples[c].begin() + toDiscard, samples[c].end() );
-        //samples[c].erase(samples[c].begin(), samples[c].begin() + toDiscard);
-    }
-
-//    for (uint s = 0; s < newFrameLenght; ++s) {
-//        for (uint c = 0; c < channels; ++c) {
-//            samples[c][s] = samples[c][toDiscard + s];
-//        }
+//void SamplesBuffer::discardFirstSamples(unsigned int samplesToDiscard){
+//    int toDiscard = std::min(frameLenght, samplesToDiscard);
+//    uint newFrameLenght = frameLenght - toDiscard;
+//    for (uint c = 0; c < channels; ++c) {
+//        //std::rotate(samples[c].begin(), samples[c].begin() + toDiscard, samples[c].end() );
+//        samples[c].erase(samples[c].begin(), samples[c].begin() + toDiscard);
 //    }
 
-    setFrameLenght(newFrameLenght);
-}
+////    for (uint s = 0; s < newFrameLenght; ++s) {
+////        for (uint c = 0; c < channels; ++c) {
+////            samples[c][s] = samples[c][toDiscard + s];
+////        }
+////    }
+
+//    setFrameLenght(newFrameLenght);
+//}
 
 void SamplesBuffer::append(const SamplesBuffer &other){
     int internalOffset = frameLenght;

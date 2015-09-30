@@ -26,7 +26,7 @@ class Mp3DecoderMiniMp3 : public Mp3Decoder{
 public:
     Mp3DecoderMiniMp3();
     ~Mp3DecoderMiniMp3();
-    virtual const Audio::SamplesBuffer* decode(char *inputBuffer, int bytesToDecode);
+    virtual const Audio::SamplesBuffer* decode(char *inputBuffer, int inputBufferLenght);
     virtual void reset();
     virtual int getSampleRate() const;// {return mp3Info.sample_rate;}
 private:

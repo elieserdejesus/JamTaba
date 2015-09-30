@@ -31,9 +31,10 @@ signals:
     void error(QString errorMsg);
 private:
     static const int MAX_BYTES_PER_DECODING;
+    //circular buffer
 
 protected:
-    Audio::FaderProcessor faderProcessor;//used to apply fade in in stream
+    //Audio::FaderProcessor faderProcessor;//used to apply fade in in stream
     //QMutex mutex;
     Audio::Mp3Decoder* decoder;
 
@@ -46,6 +47,10 @@ protected:
     SamplesBufferResampler resampler;
 
     int getSamplesToRender(int targetSampleRate, int outLenght);
+
+    int writeIndex;
+    int readIndex;
+    int available;
 };
 //+++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++
@@ -66,8 +71,10 @@ protected:
     void initialize(QString streamPath);
 private:
     QNetworkAccessManager* httpClient;
-    bool buffering;
+    //bool buffering;
     int bufferTime;//in seconds
+
+
 private slots:
     void on_reply_error(QNetworkReply::NetworkError);
     void on_reply_read();
