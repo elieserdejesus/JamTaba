@@ -28,8 +28,7 @@ AbstractMp3Streamer::AbstractMp3Streamer( Audio::Mp3Decoder *decoder)
       decoder(decoder),
       device(nullptr),
       streaming(false),
-      bufferedSamples(2, 4096),
-      writeIndex(0), readIndex(0), available(0)
+      bufferedSamples(2, 4096)
 {
     //addProcessor(faderProcessor);
     bufferedSamples.setFrameLenght(0);//reset internal offset
@@ -63,50 +62,38 @@ int AbstractMp3Streamer::getSamplesToRender(int targetSampleRate, int outLenght)
 
 void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int targetSampleRate, const Midi::MidiBuffer &midiBuffer){
     Q_UNUSED(in);
+    //Q_UNUSED(midiBuffer);
     //QMutexLocker locker(&mutex);
 
     if(bufferedSamples.isEmpty() || !streaming){
         return;
     }
 
-    int outLenght = std::min(out.getFrameLenght(), bufferedSamples.getFrameLenght());
-    int samplesToRender = getSamplesToRender(targetSampleRate, outLenght);
+
+    int samplesToRender = getSamplesToRender(targetSampleRate, out.getFrameLenght());
+    //int outLenght = std::min(out.getFrameLenght(), bufferedSamples.getFrameLenght());
     if(samplesToRender <= 0){
         return;
     }
 
     internalInputBuffer.setFrameLenght(samplesToRender);
-    int channels = qMin(internalInputBuffer.getChannels(), bufferedSamples.getChannels());
-    for (int s = 0; s < samplesToRender; ++s) {
-        for (int c = 0; c < channels; ++c) {
-            internalInputBuffer.set(c, s, bufferedSamples.get(c, readIndex));
-        }
-        readIndex = (readIndex + 1) % bufferedSamples.getFrameLenght();
-        available--;
-    }
-    qWarning() << "read index:" << readIndex << " write index:" << writeIndex << " available" << available;
-
-    //internalInputBuffer.set(bufferedSamples);
+    internalInputBuffer.set(bufferedSamples);
 
     if( needResamplingFor(targetSampleRate)){
-        const Audio::SamplesBuffer& resampledBuffer = resampler.resample(internalInputBuffer, outLenght );
+        const Audio::SamplesBuffer& resampledBuffer = resampler.resample(internalInputBuffer, out.getFrameLenght() );
         internalOutputBuffer.setFrameLenght(resampledBuffer.getFrameLenght());
         internalOutputBuffer.set(resampledBuffer);
+//        if(resampledBuffer.getFrameLenght() != out.getFrameLenght()){
+//            qCritical() << "resampled != out" << resampledBuffer.getFrameLenght() << "!=" << out.getFrameLenght() << "outLenght:" << outLenght << " samplesToRender:" << samplesToRender << "buffered:"<<bufferedSamples.getFrameLenght() << " bytesToDecode:" << bytesToDecode.size();
+//        }
     }
     else{
         internalOutputBuffer.setFrameLenght(out.getFrameLenght());
         internalOutputBuffer.set(internalInputBuffer);
     }
 
-    //qWarning() << "samples to render:"<< samplesToRender << " out.frameLenght:" << out.getFrameLenght() << " bufferedSamples:" << bufferedSamples.getFrameLenght();
-
-    //internalOutputBuffer.setFrameLenght(samplesToRender);
-    //internalOutputBuffer.zero();
-    //internalOutputBuffer.set(bufferedSamples);//copy 'samplesToRender' samples to internalOutputBuffer
-
-    //qCDebug(roomStreamer) << "discarding " << samplesToRender << " samples";
-    //bufferedSamples.discardFirstSamples(samplesToRender);//keep non rendered samples for next audio callback
-    //qCDebug(roomStreamer) << "new frameLenght:" << bufferedSamples.getFrameLenght();
+    qCDebug(roomStreamer) << "discarding " << samplesToRender << " samples";
+    bufferedSamples.discardFirstSamples(samplesToRender);//keep non rendered samples for next audio callback
 
     if(internalOutputBuffer.getFrameLenght() < out.getFrameLenght()){
         qCDebug(roomStreamer) << out.getFrameLenght() - internalOutputBuffer.getFrameLenght() << " samples missing";
@@ -151,17 +138,8 @@ void AbstractMp3Streamer::decode(const unsigned int maxBytesToDecode){
             in += bytesToProcess;
             bytesProcessed += bytesToProcess;
             //+++++++++++++++++  PROCESS DECODED SAMPLES ++++++++++++++++
-            //write in circular buffer scheme
-            int channels = qMin(decodedBuffer->getChannels(), bufferedSamples.getChannels());
-            for (int s = 0; s < decodedBuffer->getFrameLenght(); ++s) {
-                for (int c = 0; c < channels; ++c) {
-                    bufferedSamples.set(c, writeIndex, decodedBuffer->get(c, s));
-                }
-                writeIndex = (writeIndex + 1) % bufferedSamples.getFrameLenght();
-                available++;
-            }
+            bufferedSamples.append(*decodedBuffer);
         }
-        qWarning() << "read index:" << readIndex << " write index:" << writeIndex << " available" << available;
 
         bytesToDecode = bytesToDecode.right(bytesToDecode.size() - bytesProcessed);
         if(bytesToDecode.isEmpty()){
@@ -183,28 +161,23 @@ void AbstractMp3Streamer::setStreamPath(QString streamPath){
 NinjamRoomStreamerNode::NinjamRoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds)
     : AbstractMp3Streamer( new Mp3DecoderMiniMp3()),
       bufferTime(bufferTimeInSeconds),
-      httpClient(nullptr)
+      httpClient(nullptr),
+      buffering(false)
       //osc(440, 44100)
 {
 
     setStreamPath(streamPath.toString());
-    bufferedSamples.setFrameLenght(bufferTimeInSeconds * 2 * 44100);
-    writeIndex = bufferedSamples.getFrameLenght()/2;
-    available = writeIndex;
 }
 
 NinjamRoomStreamerNode::NinjamRoomStreamerNode(int bufferTimeInSeconds)
     :AbstractMp3Streamer( new Mp3DecoderMiniMp3()),
       bufferTime(bufferTimeInSeconds),
-      httpClient(nullptr)
+      httpClient(nullptr),
+      buffering(false)
       //osc(440, 44100)
 {
     setStreamPath("");
-    bufferedSamples.setFrameLenght(bufferTimeInSeconds * 2 * 44100);
-    writeIndex = bufferedSamples.getFrameLenght()/2;
-    available = writeIndex;
-
-    setStreamPath("http://vprclassical.streamguys.net/vprclassical128.mp3");
+    //setStreamPath("http://vprclassical.streamguys.net/vprclassical128.mp3");
 }
 
 
@@ -217,7 +190,7 @@ bool NinjamRoomStreamerNode::needResamplingFor(int targetSampleRate) const{
 
 void NinjamRoomStreamerNode::initialize(QString streamPath){
     AbstractMp3Streamer::initialize(streamPath);
-    //buffering =  true;
+    buffering =  true;
     bufferedSamples.zero();
     bytesToDecode.clear();
     if(!streamPath.isEmpty()){
@@ -247,20 +220,13 @@ void NinjamRoomStreamerNode::on_reply_read(){
     if(device->isOpen() && device->isReadable()){
         QMutexLocker locker(&mutex);
         bytesToDecode.append(device->readAll());
-        int toDecode = 0;
-        if(available <= 0){
-            toDecode = bytesToDecode.size();
-        }
-        else{
-            if(available < bufferedSamples.getFrameLenght() / 4){
-                toDecode = 1024;
-            }
-            else{
-                toDecode = 128;
-            }
-        }
-        decode( toDecode );
         qCDebug(roomStreamer) << "bytes downloaded  bytesToDecode:"<<bytesToDecode.size() << " bufferedSamples: " << bufferedSamples.getFrameLenght();
+//        if(bufferedSamples.getFrameLenght() < 3500){
+//            decode(256);
+//        }
+        //if(!buffering){
+            //decode(512);
+        //}
     }
     else{
         qCCritical(roomStreamer) << "problem in device!";
@@ -274,13 +240,32 @@ NinjamRoomStreamerNode::~NinjamRoomStreamerNode(){
 void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer & in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer &midiBuffer){
     Q_UNUSED(in)
     QMutexLocker locker(&mutex);
-    //long long start = QDateTime::currentMSecsSinceEpoch();
-    AbstractMp3Streamer::processReplacing(in, out, sampleRate, midiBuffer);
-    //qWarning() << "available:" << available;
-//    long long time = QDateTime::currentMSecsSinceEpoch() - start;
-//    if(time > 1){
-//        qWarning() << "AbstractMp3Streamer::processReplacing: " << time << "ms";
-//    }
+    //qWarning() << "bytesToDecode: " << bytesToDecode.size() << " buffered:" << bufferedSamples.getFrameLenght();
+    //buffering = false;
+    if(buffering && bytesToDecode.size() >= 120000){
+        buffering = false;
+    }
+    if(!buffering && bytesToDecode.isEmpty()){
+        buffering = true;
+    }
+    if(buffering){
+        return;
+    }
+    int samplesToRender = getSamplesToRender(sampleRate, out.getFrameLenght());
+    while(bufferedSamples.getFrameLenght() < samplesToRender){//need decoding?
+        decode(256);
+        if(bytesToDecode.isEmpty()){//no more bytes to decode
+            qCritical() << "BREAK";
+            break;
+        }
+    }
+    if(!bufferedSamples.isEmpty()){
+        AbstractMp3Streamer::processReplacing(in, out, sampleRate, midiBuffer);
+    }
+    else{
+        qWarning() << "EMPTY BUFFER";
+    }
+
 }
 //++++++++++++++++++
 AudioFileStreamerNode::AudioFileStreamerNode(QString file)

@@ -47,10 +47,6 @@ protected:
     SamplesBufferResampler resampler;
 
     int getSamplesToRender(int targetSampleRate, int outLenght);
-
-    int writeIndex;
-    int readIndex;
-    int available;
 };
 //+++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++
@@ -73,7 +69,7 @@ private:
     QNetworkAccessManager* httpClient;
     //bool buffering;
     int bufferTime;//in seconds
-
+    bool buffering;
 
 private slots:
     void on_reply_error(QNetworkReply::NetworkError);

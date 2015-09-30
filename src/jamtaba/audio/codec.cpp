@@ -31,7 +31,10 @@ void Mp3DecoderMiniMp3::reset(){
 }
 
 int Mp3DecoderMiniMp3::getSampleRate() const{
-        return mp3Info.sample_rate;
+    if(mp3Info.sample_rate <= 0){
+        return 44100;
+    }
+    return mp3Info.sample_rate;
 }
 
 const SamplesBuffer* Mp3DecoderMiniMp3::decode(char *inputBuffer, int inputBufferLenght){
