@@ -34,6 +34,7 @@ public:
     inline int getTracksCount() const{return trackViews.size();}
 
     void setUnlightStatus(bool unlighted);
+    bool isUnlighted() const;
 
 protected:
     void paintEvent(QPaintEvent* );

@@ -267,6 +267,7 @@ border-color: rgb(90, 90, 90);
 */
 
 /*  SLIDER ++++++++++++++++++++++++++++++++ */
+
 QSlider::add-page:vertical, QSlider::groove:vertical {
     border: 1px solid rgba(0, 0, 0, 55);
     border-radius: 2px;
@@ -288,13 +289,28 @@ QSlider::groove:horizontal{
 }
 
 BaseTrackView[unlighted="true"] QSlider::groove:horizontal{
-    background-color: rgba(0,0,0,60);
+    background-color: rgb(0,0,0,60);
     border: 1px inset rgb(70, 70, 70);
 }
 
 BaseTrackView[unlighted="true"] QSlider::add-page:vertical{
     background: rgb(255,255,255, 50);
 
+}
+
+BaseTrackView #peaksDbLabel{
+    border-radius: 2px;
+    border: 1px inset rgb(90,90,90);
+    background-color: rgba(0, 0, 0, 20);
+    font-size: 8px;
+    qproperty-alignment: AlignCenter;
+    color: rgb(70,70,70);
+    padding: 1px;
+}
+
+BaseTrackView #peaksDbLabel:hover{
+    background-color: rgba(255,255,255, 30);
+    color: black;
 }
 
 QSlider::add-page:vertical{
@@ -304,11 +320,14 @@ QSlider::add-page:vertical{
     margin: 4px;
 }
 
-
 QSlider::groove:vertical {
-    background-color: rgba(0, 0, 0, 50);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop: 0     rgb(156, 156, 156),
+            stop: 1.0   rgb(107,107,107)
+            );
     width: 8px;
 }
+
 BaseTrackView[unlighted="true"] QSlider::groove:vertical{
     background-color: rgba(0, 0, 0, 40);
     border-color: rgba(0, 0, 0, 25);
@@ -368,9 +387,9 @@ NinjamPanel QSlider::groove:horizontal{
 PeakMeter{
     background-color: rgba(0, 0, 0, 140);
     border: 1px solid rgba(0, 0, 0, 25);
-    max-width: 3px;
-    min-width: 3px;
-    border-radius: 2px;
+    max-width: 5px;
+    min-width: 5px;
+    border-radius: 1px;
 }
 BaseTrackView[unlighted="true"] PeakMeter{
     background-color: rgba(0, 0, 0, 20);
@@ -634,6 +653,7 @@ BaseTrackView{
    border-radius: 0px;
    border-bottom-left-radius: 3px;
    border-bottom-right-radius: 3px;
+   font-size: 8px; /*db value */
 }
 
 BaseTrackView[unlighted="true"] > QFrame#topSeparator, BaseTrackView[unlighted="true"] > QFrame#panSectionSeparator{

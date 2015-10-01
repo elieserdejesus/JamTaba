@@ -1,6 +1,28 @@
 #--------- LISTA DE MELHORIAS -------
 #1 - corrigido o problema no resampling do stream das salas
+#2 - cores do xmit
+#3 - menu option to report bugs and suggest improvements.
+#4 - melhoria no unlighted dos canais de acordo com o xmit
 #----------------
+
+#deletar a classe TrackFader
+
+#tentar desenhar o handle do meu slider para desenhar o valor em db
+
+#testar a zero db mark na tela grande para ver se está na posição correta
+
+#a marca de zero db não apareceu com a pista no modo narrow
+
+#BUG - deixo o kontakt tocando o metronomo dele, quando deleto o kontato da pista dá um erro.
+
+#logic mostra os DBs de maneira inteligente e super clean:
+    #http://static.kvraudio.com/i/b/logicpro.jpg
+    #o sonar mostra tudo na tela o tempo todo, muito poluído
+
+#logic usa um push button para ativar e desativar plugins, posso tirar o radio
+
+#se eu colocar o ícone da entrada embaixo do seletor vai sobrar mais espaço para o
+    #o nome do device
 
 #stringer disse que o programa não abre. Instalar o JamKazam para ver.
 
@@ -483,6 +505,9 @@ win32 {
 
     CONFIG(release, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbis -logg
     else:CONFIG(debug, debug|release): LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisd -loggd
+
+    RC_FILE = Jamtaba2.rc #windows icon
+
 }
 
 macx{
