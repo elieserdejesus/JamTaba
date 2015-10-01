@@ -60,7 +60,7 @@ Source: {#QtDir}\..\plugins\platforms\qwindows.dll; DestDir: {app}\platforms; Fl
 Source: {#QtDir}\..\plugins\bearer\qgenericbearer.dll; DestDir: {app}\bearer; Flags: ignoreversion replacesameversion
 Source: {#QtDir}\..\plugins\bearer\qnativewifibearer.dll; DestDir: {app}\bearer; Flags: ignoreversion replacesameversion
 Source: {#QtDir}\..\plugins\imageformats\qgif.dll; DestDir: {app}\imageformats; Flags: ignoreversion replacesameversion
-Source: 48x48.ico; DestDir: {app}; Flags: deleteafterinstall
+Source: 48x48.ico; DestDir: {app}
 
 [Icons]
 Name: {group}\{#MyAppName}; Filename: {app}\{#MyAppExeName}; IconFilename: {app}\48x48.ico; IconIndex: 0

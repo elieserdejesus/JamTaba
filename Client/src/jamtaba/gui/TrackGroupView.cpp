@@ -21,6 +21,9 @@ TrackGroupView::TrackGroupView(QWidget *parent) :
 }
 
 
+bool TrackGroupView::isUnlighted() const{
+    return property("unlighted").toBool();
+}
 
 void TrackGroupView::setUnlightStatus(bool unlighted){
     setProperty("unlighted", QVariant(unlighted));
@@ -67,6 +70,7 @@ void TrackGroupView::addTrackView(BaseTrackView *trackView){
                 trackView->setToNarrow();
             }
             updateGeometry();
+            trackView->setUnlightStatus(isUnlighted() );
         }
     }
 }

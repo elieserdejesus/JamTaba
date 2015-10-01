@@ -4,6 +4,7 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <QDebug>
+#include "../Utils.h"
 
 QMap<long, BaseTrackView*> BaseTrackView::trackViews;//static map
 
@@ -22,6 +23,7 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
 
     ui->panSlider->installEventFilter(this);
     ui->levelSlider->installEventFilter(this);
+    ui->peaksDbLabel->installEventFilter(this);
 
     //add in static map
     trackViews.insert(trackID, this);
@@ -31,8 +33,16 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
 
 void BaseTrackView::updateGuiElements(){
     Audio::AudioPeak peak = mainController->getTrackPeak(getTrackID());
+    if(peak.getMax() > maxPeak.getMax()){
+        maxPeak.update(peak);
+        double db = 20 * std::log10(maxPeak.getMax());
+        ui->peaksDbLabel->setText(QString::number(db, 'f', 0));
+//        setProperty("clip", QVariant(db >= 0));
+//        style()->unpolish(this);
+//        style()->polish(this);
+    }
     setPeaks(peak.getLeft(), peak.getRight());
-    mainController->getTrackNode(getTrackID())->updateProcessorsGui();
+    mainController->getTrackNode(getTrackID())->updateProcessorsGui();//call idle in VST plugins
 }
 
 QSize BaseTrackView::sizeHint() const{
@@ -114,16 +124,25 @@ void BaseTrackView::setPeaks(float left, float right){
 
 //event filter used to handle double clicks
 bool BaseTrackView::eventFilter(QObject *source, QEvent *ev){
+    if(source == ui->peaksDbLabel && ev->type() == QEvent::MouseButtonRelease){
+        maxPeak.zero();
+        ui->peaksDbLabel->setText("");
+        return true;
+    }
+    //--------------
     if(ev->type() == QEvent::MouseButtonDblClick){
         if(source == ui->panSlider){
-
             ui->panSlider->setValue(0);//center
         }
         if(source == ui->levelSlider){
             ui->levelSlider->setValue(100);
+            update();
         }
 
         return true;
+    }
+    if(ev->type() == QEvent::MouseMove && source == ui->levelSlider){
+        update();
     }
     return QWidget::eventFilter(source, ev);
 }
@@ -157,4 +176,38 @@ void BaseTrackView::paintEvent(QPaintEvent* ){
     opt.init(this);
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+
+
+//    drawFaderDbMarks(p);
+
+    drawFaderDbValue(p);
+
+}
+
+//void BaseTrackView::drawFaderDbMarks(QPainter &p){
+
+
+//    double poweredGain = Utils::linearGainToPower(ui->levelSlider->value()/100.0);
+
+//    QString text = QString::number(faderDb, 'f', 1);
+//    int textWidth = p.fontMetrics().width(text);
+//    int textX = ui->faderPanel->x() + ui->levelSlider->x() + ui->levelSlider->width()/2 - textWidth  - 14;
+//    int textY =  (1 - ((double)ui->levelSlider->value()/ui->levelSlider->maximum())) * (ui->levelSlider->height() - FADER_ICON_HEIGHT) + ui->faderPanel->y() + ui->levelSlider->y();
+
+//}
+
+void BaseTrackView::drawFaderDbValue(QPainter &p){
+    static QColor textColor(0,0,0, 100);
+    static int FADER_ICON_HEIGHT = 48;
+
+    p.setPen(textColor);
+    double poweredGain = Utils::linearGainToPower(ui->levelSlider->value()/100.0);
+    double faderDb = 20 * std::log10(poweredGain);
+    QString text = QString::number(faderDb, 'f', 1);
+    int textWidth = p.fontMetrics().width(text);
+    int textX = ui->faderPanel->x() + ui->levelSlider->x() + ui->levelSlider->width()/2 - textWidth  - 14;
+    int textY =  (1 - ((double)ui->levelSlider->value()/ui->levelSlider->maximum())) * (ui->levelSlider->height() - FADER_ICON_HEIGHT) + ui->faderPanel->y() + ui->levelSlider->y();
+
+    textY += FADER_ICON_HEIGHT/2;//icon height
+    p.drawText(textX, textY, text);
 }

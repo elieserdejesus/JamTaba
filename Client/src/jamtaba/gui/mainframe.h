@@ -95,6 +95,7 @@ private slots:
     void on_ninjamCommunityMenuItemTriggered();
     void on_ninjamOfficialSiteMenuItemTriggered();
     void on_privateServerMenuItemTriggered();
+    void on_reportBugMenuItemTriggered();
 
     //private server
     void on_privateServerConnectionAccepted(QString server, int serverPort, QString password);

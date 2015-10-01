@@ -73,6 +73,7 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     QObject::connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this, SLOT(on_ninjamCommunityMenuItemTriggered()));
     QObject::connect(ui.actionNinjam_Official_Site, SIGNAL(triggered(bool)), this, SLOT(on_ninjamOfficialSiteMenuItemTriggered()));
     QObject::connect(ui.actionPrivate_Server, SIGNAL(triggered(bool)), this, SLOT(on_privateServerMenuItemTriggered()));
+    QObject::connect(ui.actionReport_bugs_or_suggest_improvements, SIGNAL(triggered(bool)), this, SLOT(on_reportBugMenuItemTriggered()));
 
     QObject::connect(mainController, SIGNAL(inputSelectionChanged(int)), this, SLOT(on_inputSelectionChanged(int)));
 
@@ -270,6 +271,7 @@ LocalTrackGroupView *MainFrame::addLocalChannel(int channelGroupIndex, QString c
     LocalTrackGroupView* localChannel = new LocalTrackGroupView(channelGroupIndex, this);
     QObject::connect(localChannel, SIGNAL(nameChanged()), this, SLOT(on_channelNameChanged()));
     localChannels.append( localChannel );
+
     localChannel->setGroupName(channelName);
     ui.localTracksLayout->addWidget(localChannel);
 
@@ -284,6 +286,7 @@ LocalTrackGroupView *MainFrame::addLocalChannel(int channelGroupIndex, QString c
             localTrackView->refreshInputSelectionName();
         }
     }
+    localChannel->setUnlightStatus(!ui.xmitButton->isChecked());
     return localChannel;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -816,6 +819,11 @@ void MainFrame::on_privateServerConnectionAccepted(QString server, int serverPor
     Login::RoomInfo roomInfo(server, serverPort, Login::RoomTYPE::NINJAM,32, 32);
     on_enteringInRoom(roomInfo, password);
 }
+
+void MainFrame::on_reportBugMenuItemTriggered(){
+    QDesktopServices::openUrl(QUrl("https://bitbucket.org/elieserdejesus/jamtaba2/issues"));
+}
+
 
 void MainFrame::on_privateServerMenuItemTriggered(){
     Settings settings = mainController->getSettings();

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QVariant>
 #include <QStyle>
+#include "../audio/core/AudioPeak.h"
 
 namespace Ui {
     class BaseTrackView;
@@ -53,6 +54,10 @@ protected:
     void setPeaks(float left, float right);
 private:
     static QMap<long, BaseTrackView*> trackViews;
+    Audio::AudioPeak maxPeak;
+
+    void drawFaderDbValue(QPainter& p);
+    //void drawFaderDbMarks(QPainter& p);
 
 private slots:
     void onMuteClicked();

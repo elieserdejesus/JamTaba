@@ -349,8 +349,15 @@
     <addaction name="actionNinjam_community_forum"/>
     <addaction name="actionNinjam_Official_Site"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionReport_bugs_or_suggest_improvements"/>
+   </widget>
    <addaction name="menuPreferences"/>
    <addaction name="menuNinjam"/>
+   <addaction name="menuHelp"/>
   </widget>
   <action name="actionTest">
    <property name="text">
@@ -390,6 +397,11 @@
   <action name="actionNinjam_Official_Site">
    <property name="text">
     <string>Ninjam Official Site ...</string>
+   </property>
+  </action>
+  <action name="actionReport_bugs_or_suggest_improvements">
+   <property name="text">
+    <string>Report bugs or suggest improvements ...</string>
    </property>
   </action>
  </widget>
