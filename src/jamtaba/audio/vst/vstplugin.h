@@ -29,6 +29,7 @@ public:
     virtual void restoreFromSerializedData(QByteArray dataToRestore);
     void start();
     void updateGui();
+    void setSampleRate(int newSampleRate);
 protected:
     void unload();
 

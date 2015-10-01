@@ -22,6 +22,7 @@ public:
     virtual void suspend() = 0;
     virtual void resume() = 0;
     virtual void updateGui(){}
+    virtual void setSampleRate(int newSampleRate){}
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++
@@ -156,7 +157,7 @@ public:
     inline void setGlobalFirstInputIndex(int firstInputIndex){this->globalFirstInputIndex = firstInputIndex;}
     inline int getGroupChannelIndex() const {return channelIndex;}
     const Audio::SamplesBuffer& getLastBuffer() const{return internalOutputBuffer;}
-
+    void setProcessorsSampleRate(int newSampleRate);
 private:
     int globalFirstInputIndex; //store the first input index selected globally by users in preferences menu
     ChannelRange audioInputRange;

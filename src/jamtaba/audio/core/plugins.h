@@ -65,9 +65,6 @@ public:
     virtual void openEditor(QPoint centerOfScreen) = 0;
     virtual void closeEditor();
     virtual void start() = 0;
-    //void setEditor(PluginWindow* editorWindow);
-    //PluginWindow* getEditor() const{return editorWindow;}
-    //inline bool hasEditorWindow() const{return editorWindow;}
     virtual QString getPath() const = 0;
     virtual QByteArray getSerializedData() const = 0;
     virtual void restoreFromSerializedData(QByteArray data) = 0;

@@ -41,7 +41,7 @@ void BaseTrackView::updateGuiElements(){
 //        style()->unpolish(this);
 //        style()->polish(this);
     }
-    setPeaks(peak.getLeft(), peak.getRight());
+    setPeaks( peak.getLeft(), peak.getRight());
     mainController->getTrackNode(getTrackID())->updateProcessorsGui();//call idle in VST plugins
 }
 

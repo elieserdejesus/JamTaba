@@ -7,17 +7,14 @@
 #6 - improvements in tracks ui
 #----------------
 
-#acho que meu PeakMeter não está exponencial, por isso estou estranhando. O
-    #zero db bate, mas os outros valores ficam muito diferentes.
+#o que acontece com os plugins se mudo a taxa de amostragem? Acho que
+    #não estou chamando o setSampleRAte dos plugins
 
 #stringer disse que o programa não abre. Instalar o JamKazam para ver.
 
 #avisar o pessoal no ninbot para postar no issue tracker
 
-#BUG - deixo o kontakt tocando o metronomo dele, quando deleto o kontato da pista dá um erro.
 
-#o que acontece com os plugins se mudo a taxa de amostragem? Acho que
-    #não estou chamando o setSampleRAte dos plugins
 
 #-------------
 #Antonio sugeriu colocar o botão de boost. Mas na verdade ele acha que o som dele
