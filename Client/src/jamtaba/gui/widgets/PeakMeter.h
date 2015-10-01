@@ -30,7 +30,7 @@ private:
     qint64 lastMaxPeakTime;
 
     qint64 lastUpdate;// QDateTime::currentMSecsSinceEpoch()
-    static const int DECAY_TIME = 1500;
+    static const int DECAY_TIME = 800;
     static const int MAX_PEAK_SHOW_TIME = 1500;
 };
 

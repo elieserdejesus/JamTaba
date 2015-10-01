@@ -915,6 +915,10 @@ void MainController::on_audioDriverSampleRateChanged(int newSampleRate){
     vstHost->setSampleRate(newSampleRate);
     audioMixer->setSampleRate(newSampleRate);
 
+    foreach (Audio::LocalInputAudioNode* inputNode, inputTracks) {
+        inputNode->setProcessorsSampleRate(newSampleRate);
+    }
+
     if(settings.isSaveMultiTrackActivated()){
         jamRecorder.setSampleRate(newSampleRate);
     }

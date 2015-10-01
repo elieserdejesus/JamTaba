@@ -257,6 +257,12 @@ bool LocalInputAudioNode::isAudio() const{
     return inputMode == AUDIO;
 }
 
+void LocalInputAudioNode::setProcessorsSampleRate(int newSampleRate){
+    foreach (Audio::AudioNodeProcessor* p, processors) {
+        p->setSampleRate(newSampleRate);
+    }
+}
+
 void LocalInputAudioNode::setAudioInputSelection(int firstChannelIndex, int channelCount){
     audioInputRange = ChannelRange(firstChannelIndex, channelCount);
     if(audioInputRange.isMono())

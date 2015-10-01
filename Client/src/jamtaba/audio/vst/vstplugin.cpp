@@ -222,6 +222,12 @@ void VstPlugin::start(){
     suspend();
 }
 
+void VstPlugin::setSampleRate(int newSampleRate){
+    if(effect){
+        effect->dispatcher(effect, effSetSampleRate, 0, 0, NULL, newSampleRate);
+    }
+}
+
 VstPlugin::~VstPlugin()
 {
 
