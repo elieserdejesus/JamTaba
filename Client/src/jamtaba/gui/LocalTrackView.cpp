@@ -40,6 +40,10 @@ void LocalTrackView::init(int channelIndex, float initialGain, float initialPan,
     this->inputPanel = createInputPanel();
     ui->mainLayout->addWidget(inputPanel);
 
+    this->inputTypeIconLabel = createInputTypeIconLabel(this);
+    ui->mainLayout->addWidget(inputTypeIconLabel);
+    ui->mainLayout->setAlignment(this->inputTypeIconLabel, Qt::AlignCenter);
+
     //insert a input node in controller
     this->inputNode = new Audio::LocalInputAudioNode(channelIndex);
     this->trackID = mainController->addInputTrackNode(this->inputNode);
@@ -137,9 +141,9 @@ QWidget* LocalTrackView::createInputPanel(){
     inputPanel->layout()->setSpacing(0);
     inputPanel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    this->inputTypeIconLabel = createInputTypeIconLabel(inputPanel);
+
     this->inputSelectionButton = createInputSelectionButton(inputPanel);
-    inputPanel->layout()->addWidget(inputTypeIconLabel);
+    //inputPanel->layout()->addWidget(inputTypeIconLabel);
     inputPanel->layout()->addWidget(inputSelectionButton);//button in right
     return inputPanel;
 }

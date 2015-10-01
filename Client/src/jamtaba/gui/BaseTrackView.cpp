@@ -62,11 +62,11 @@ void BaseTrackView::setToNarrow(){
     //this->setMaximumWidth(NARROW_WIDTH);
     this->narrowed = true;
 
-    ui->soloButton->setText("S");
-    ui->soloButton->setToolTip("Solo");
+    //ui->soloButton->setText("S");
+    //ui->soloButton->setToolTip("Solo");
 
-    ui->muteButton->setText("M");
-    ui->muteButton->setToolTip("Mute");
+    //ui->muteButton->setText("M");
+    //ui->muteButton->setToolTip("Mute");
 
     ui->panSlider->setTickInterval(2);
     updateGeometry();
@@ -76,11 +76,11 @@ void BaseTrackView::setToWide(){
     if(narrowed){
         //setMaximumWidth(QWIDGETSIZE_MAX);
         this->narrowed = false;
-        ui->soloButton->setText("SOLO");
-        ui->soloButton->setToolTip("Solo");
+//        ui->soloButton->setText("SOLO");
+//        ui->soloButton->setToolTip("Solo");
 
-        ui->muteButton->setText("MUTE");
-        ui->muteButton->setToolTip("Mute");
+//        ui->muteButton->setText("MUTE");
+//        ui->muteButton->setToolTip("Mute");
 
         ui->panSlider->setTickInterval(0);
         updateGeometry();
@@ -103,6 +103,15 @@ void BaseTrackView::setUnlightStatus(bool unlighted){
 
     style()->unpolish(ui->peakMeterRight);
     style()->polish(ui->peakMeterRight);
+
+    style()->unpolish(ui->peaksDbLabel);
+    style()->polish(ui->peaksDbLabel);
+
+    style()->unpolish(ui->muteButton);
+    style()->polish(ui->muteButton);
+
+    style()->unpolish(ui->soloButton);
+    style()->polish(ui->soloButton);
 
     update();
 }
@@ -197,7 +206,7 @@ void BaseTrackView::paintEvent(QPaintEvent* ){
 //}
 
 void BaseTrackView::drawFaderDbValue(QPainter &p){
-    static QColor textColor(0,0,0, 100);
+    static QColor textColor(0,0,0, 70);
     static int FADER_ICON_HEIGHT = 48;
 
     p.setPen(textColor);
@@ -205,7 +214,8 @@ void BaseTrackView::drawFaderDbValue(QPainter &p){
     double faderDb = 20 * std::log10(poweredGain);
     QString text = QString::number(faderDb, 'f', 1);
     int textWidth = p.fontMetrics().width(text);
-    int textX = ui->faderPanel->x() + ui->levelSlider->x() + ui->levelSlider->width()/2 - textWidth  - 14;
+
+    int textX = ui->faderPanel->x() + ui->levelSlider->x() + ui->levelSlider->width()/2 - textWidth  - ((!narrowed) ? 14 : 11);
     int textY =  (1 - ((double)ui->levelSlider->value()/ui->levelSlider->maximum())) * (ui->levelSlider->height() - FADER_ICON_HEIGHT) + ui->faderPanel->y() + ui->levelSlider->y();
 
     textY += FADER_ICON_HEIGHT/2;//icon height

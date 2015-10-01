@@ -3,30 +3,18 @@
 #2 - cores do xmit
 #3 - menu option to report bugs and suggest improvements.
 #4 - melhoria no unlighted dos canais de acordo com o xmit
+#5 - db values
+#6 - improvements in tracks ui
 #----------------
 
-#deletar a classe TrackFader
-
-#tentar desenhar o handle do meu slider para desenhar o valor em db
-
-#testar a zero db mark na tela grande para ver se está na posição correta
-
-#a marca de zero db não apareceu com a pista no modo narrow
-
-#BUG - deixo o kontakt tocando o metronomo dele, quando deleto o kontato da pista dá um erro.
-
-#logic mostra os DBs de maneira inteligente e super clean:
-    #http://static.kvraudio.com/i/b/logicpro.jpg
-    #o sonar mostra tudo na tela o tempo todo, muito poluído
-
-#logic usa um push button para ativar e desativar plugins, posso tirar o radio
-
-#se eu colocar o ícone da entrada embaixo do seletor vai sobrar mais espaço para o
-    #o nome do device
+#acho que meu PeakMeter não está exponencial, por isso estou estranhando. O
+    #zero db bate, mas os outros valores ficam muito diferentes.
 
 #stringer disse que o programa não abre. Instalar o JamKazam para ver.
 
 #avisar o pessoal no ninbot para postar no issue tracker
+
+#BUG - deixo o kontakt tocando o metronomo dele, quando deleto o kontato da pista dá um erro.
 
 #o que acontece com os plugins se mudo a taxa de amostragem? Acho que
     #não estou chamando o setSampleRAte dos plugins

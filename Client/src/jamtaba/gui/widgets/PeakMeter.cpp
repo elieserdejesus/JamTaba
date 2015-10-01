@@ -9,7 +9,7 @@
 const int PeakMeter::LINES_MARGIN = 3;
 
 
-const QColor PeakMeter::HORIZONTAL_LINES_COLOR = QColor(0, 0, 0, 90);
+const QColor PeakMeter::HORIZONTAL_LINES_COLOR = QColor(255,255,255, 50);
 const QColor PeakMeter::MAX_PEAK_COLOR = QColor(255, 255, 255, 120);
 
 PeakMeter::PeakMeter(QWidget *)
@@ -52,13 +52,13 @@ void PeakMeter::paintEvent(QPaintEvent *){
         painter.fillRect(1, height()-1 , width()-2, -currentPeak * height(), gradient);
 
         //draw horizontal lines
-        int lines = height()/LINES_MARGIN;
-        int y = 0;
-        painter.setPen(HORIZONTAL_LINES_COLOR);
-        for(int line=0; line < lines; line++){
-            painter.drawLine(1, y, width()-2, y);
-            y += LINES_MARGIN;
-        }
+//        int lines = height()/LINES_MARGIN;
+//        int y = 0;
+//        painter.setPen(HORIZONTAL_LINES_COLOR);
+//        for(int line=0; line < lines; line++){
+//            painter.drawLine(1, y, width()-2, y);
+//            y += LINES_MARGIN;
+//        }
 
         //draw max peak
         if(maxPeak > 0){
