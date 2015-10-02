@@ -43,6 +43,75 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
 
     //QString teste("Ã©");
     //addMessage("elieser", QString::fromUtf8(teste.toStdString().c_str()));
+
+    //addBpiVoteConfirmationMessage(33);
+    //addBpmVoteConfirmationMessage(140);
+}
+
+//void ChatPanel::on_buttonVoteBpi_Clicked(){
+////    if(mainController->isPlayingInNinjamRoom()){
+////        Controller::NinjamController* controller = mainController->getNinjamController();
+////        if(controller){
+////            if(voteConfirmationDialog->getVoteType() == VoteConfirmationType::BPI_CONFIRMATION_VOTE){
+////                controller->voteBpi(voteConfirmationDialog->getVoteValue());
+////            }
+////            else{
+////                controller->voteBpm(voteConfirmationDialog->getVoteValue());
+////            }
+////        }
+////    }
+//}
+
+//void ChatPanel::on_buttonVoteBpm_clicked(){
+
+//}
+
+class VoteButton : public QPushButton{
+public:
+    VoteButton(QString voteType,  int voteValue)
+        :QPushButton(
+             "Vote - change "+ voteType +" to " + QString::number(voteValue)
+             )
+        ,voteValue(voteValue), voteType(voteType)
+    {
+        setObjectName("voteButton");
+    }
+
+    inline int getVoteValue() const{ return voteValue; }
+    inline bool isBpiVote() const{return voteType == "BPI";}
+    inline bool isBpmVote() const{return voteType == "BPM";}
+private:
+    int voteValue;
+    QString voteType;
+};
+
+void ChatPanel::createVoteButton(QString voteType, int value){
+    QPushButton* voteButton = new VoteButton(voteType, value);
+    voteButton->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
+    ui->scrollContent->layout()->addWidget(voteButton);
+    ui->scrollContent->layout()->setAlignment(voteButton, Qt::AlignRight);
+    QObject::connect(voteButton, SIGNAL(clicked(bool)), this, SLOT(on_voteButtonClicked()));
+}
+
+void ChatPanel::addBpiVoteConfirmationMessage(int newBpiValue){
+    createVoteButton("BPI", newBpiValue);
+}
+
+void ChatPanel::addBpmVoteConfirmationMessage(int newBpmValue){
+    createVoteButton("BPM", newBpmValue);
+}
+
+void ChatPanel::on_voteButtonClicked(){
+    VoteButton* voteButton = static_cast<VoteButton*>(QObject::sender());
+    if(voteButton->isBpiVote()){
+        emit userConfirmingVoteToBpiChange(voteButton->getVoteValue());
+    }
+    else if(voteButton->isBpmVote()){
+        emit userConfirmingVoteToBpmChange(voteButton->getVoteValue());
+    }
+
+    voteButton->parentWidget()->layout()->removeWidget(voteButton);
+    voteButton->deleteLater();
 }
 
 void ChatPanel::on_verticalScrollBarRangeChanged(int min, int max){

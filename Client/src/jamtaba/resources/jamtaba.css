@@ -3,6 +3,22 @@
     font-size: 11px;
 }
 
+#voteButton{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgba(255,255,255, 240),
+    stop:1 rgba(255,255,255, 100));
+
+    border: 1px outset rgb(45,45,45);
+}
+
+#voteButton:hover{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgba(255,255,255, 200),
+        stop:1 rgba(255,255,255, 50));
+
+}
+
+/*
 #recButton{
     min-height: 32px;
 
@@ -13,6 +29,7 @@
 #recButton:!checked{
     background-image: url(':/images/rec on.png');
 }
+*/
 
 QMessageBox, QInputDialog, PluginScanDialog{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -26,7 +43,6 @@ QMessageBox, QInputDialog, PluginScanDialog{
 QInputDialog{
     min-width: 400px;
 }
-
 
 QInputDialog QPushButton{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(80,80,80), stop:0.02 rgb(150, 150, 150), stop:0.7 rgba(160, 160, 160), stop:1 rgb(90,90,90));

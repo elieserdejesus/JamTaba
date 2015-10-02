@@ -5,16 +5,13 @@
 #4 - melhoria no unlighted dos canais de acordo com o xmit
 #5 - db values
 #6 - improvements in tracks ui
+#7 - Changing the VST sample rate.
+#8 - vote buttons in chat - less invasive
 #----------------
-
-#o que acontece com os plugins se mudo a taxa de amostragem? Acho que
-    #não estou chamando o setSampleRAte dos plugins
 
 #stringer disse que o programa não abre. Instalar o JamKazam para ver.
 
 #avisar o pessoal no ninbot para postar no issue tracker
-
-
 
 #-------------
 #Antonio sugeriu colocar o botão de boost. Mas na verdade ele acha que o som dele
