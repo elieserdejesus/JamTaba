@@ -24,17 +24,17 @@ namespace Controller {
     class MainController;
 }
 
-enum VoteConfirmationType {BPM_CONFIRMATION_VOTE, BPI_CONFIRMATION_VOTE};
+//enum VoteConfirmationType {BPM_CONFIRMATION_VOTE, BPI_CONFIRMATION_VOTE};
 
-class VoteConfirmationDialog : public QMessageBox{
-public:
-    VoteConfirmationDialog(QWidget *parent, QString title, QString text, int voteValue, VoteConfirmationType voteType);
-    inline int getVoteValue() const{return voteValue;}
-    inline VoteConfirmationType getVoteType() const{return voteType;}
-private:
-    int voteValue;//bpm or bpi value
-    VoteConfirmationType voteType;
-};
+//class VoteConfirmationDialog : public QMessageBox{
+//public:
+//    VoteConfirmationDialog(QWidget *parent, QString title, QString text, int voteValue, VoteConfirmationType voteType);
+//    inline int getVoteValue() const{return voteValue;}
+//    inline VoteConfirmationType getVoteType() const{return voteType;}
+//private:
+//    int voteValue;//bpm or bpi value
+//    VoteConfirmationType voteType;
+//};
 
 
 class NinjamRoomWindow : public QWidget
@@ -58,9 +58,9 @@ private:
 
     void adjustTracksWidth();
 
-    void showVoteConfirmationMessageBox(QString title, QString text, int voteValue, VoteConfirmationType voteType);
+    //void showVoteConfirmationMessageBox(QString title, QString text, int voteValue, VoteConfirmationType voteType);
 
-    VoteConfirmationDialog* voteConfirmationDialog;
+    //VoteConfirmationDialog* voteConfirmationDialog;
 
 private slots:
     //ninja interval controls
@@ -88,7 +88,10 @@ private slots:
 
     void on_licenceButton_clicked();
 
-    void on_voteConfirmationDialogClosed(QAbstractButton *);
+    //chat panel
+    void on_userConfirmingVoteToChangeBpi(int newBpi);
+    void on_userConfirmingVoteToChangeBpm(int newBpm);
+    //void on_voteConfirmationDialogClosed(QAbstractButton *);
 };
 
 #endif // NINJAMROOMWINDOW_H

@@ -25,16 +25,16 @@
 Q_LOGGING_CATEGORY(ninjamRoomWindow, "ninjamRoomWindow")
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-VoteConfirmationDialog::VoteConfirmationDialog(QWidget *parent, QString title, QString text, int voteValue, VoteConfirmationType voteType)
-    :QMessageBox(parent), voteValue(voteValue), voteType(voteType)
-{
-    setIcon(QMessageBox::Warning);
-    setText(text);
-    setWindowTitle(title);
-    setStandardButtons(QMessageBox::Yes|QMessageBox::No);
+//VoteConfirmationDialog::VoteConfirmationDialog(QWidget *parent, QString title, QString text, int voteValue, VoteConfirmationType voteType)
+//    :QMessageBox(parent), voteValue(voteValue), voteType(voteType)
+//{
+//    setIcon(QMessageBox::Warning);
+//    setText(text);
+//    setWindowTitle(title);
+//    setStandardButtons(QMessageBox::Yes|QMessageBox::No);
 
-    setAttribute(Qt::WA_DeleteOnClose, true);
-}
+//    setAttribute(Qt::WA_DeleteOnClose, true);
+//}
 
 //+++++++++++++++++++++++++
 
@@ -42,8 +42,8 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Co
     QWidget(parent),
     ui(new Ui::NinjamRoomWindow),
     mainController(mainController),
-    chatPanel(new ChatPanel(this, mainController->getBotNames() )),
-    voteConfirmationDialog(nullptr)
+    chatPanel(new ChatPanel(this, mainController->getBotNames() ))
+    //voteConfirmationDialog(nullptr)
 {
     qCDebug(ninjamRoomWindow) << "NinjamRoomWindow construtor..";
     ui->setupUi(this);
@@ -84,6 +84,9 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Co
     ui->topPanel->setIntervalShape(mainController->getSettings().getIntervalProgressShape());
 
     initializeMetronomeEvents();//signals and slots
+
+    QObject::connect(chatPanel, SIGNAL(userConfirmingVoteToBpiChange(int)), this, SLOT(on_userConfirmingVoteToChangeBpi(int)));
+    QObject::connect(chatPanel,SIGNAL(userConfirmingVoteToBpmChange(int)), this, SLOT(on_userConfirmingVoteToChangeBpm(int)));
 
     //testing many tracks
 //    for (int t = 0; t < 16; ++t) {
@@ -141,10 +144,7 @@ void NinjamRoomWindow::on_chatMessageReceived(Ninjam::User user, QString message
     bool isVoteMessage = !message.isNull() && message.toLower().startsWith("[voting system] leading candidate:");
     long timeSinceLastVote = QDateTime::currentMSecsSinceEpoch() - lastVoteCommand;
     if (isVoteMessage && timeSinceLastVote >= 1000) {
-        qWarning() << message;
         QString commandType = (message.toLower().contains("bpm")) ? "BPM" : "BPI";
-        QString text = "A musician is proposing a change in " + commandType + ". You accept the change?";
-        QString title = "Change " + commandType;
 
         //[voting system] leading candidate: 1/2 votes for 12 BPI [each vote expires in 60s]
         int forIndex = message.indexOf("for");
@@ -153,38 +153,52 @@ void NinjamRoomWindow::on_chatMessageReceived(Ninjam::User user, QString message
         QString voteValueString = message.mid(forIndex + 4, spaceAfterValueIndex - (forIndex + 4));
         int voteValue = voteValueString.toInt();
 
-        VoteConfirmationType voteType = (commandType == "BPI") ? VoteConfirmationType::BPI_CONFIRMATION_VOTE : VoteConfirmationType::BPM_CONFIRMATION_VOTE;
-        showVoteConfirmationMessageBox(title, text, voteValue, voteType);
-    }
-}
-
-void NinjamRoomWindow::on_voteConfirmationDialogClosed(QAbstractButton *button){
-    if(this->voteConfirmationDialog){
-        if(this->voteConfirmationDialog->standardButton(button) == QMessageBox::Yes){
-            if(mainController->isPlayingInNinjamRoom()){
-                Controller::NinjamController* controller = mainController->getNinjamController();
-                if(controller){
-                    if(voteConfirmationDialog->getVoteType() == VoteConfirmationType::BPI_CONFIRMATION_VOTE){
-                        controller->voteBpi(voteConfirmationDialog->getVoteValue());
-                    }
-                    else{
-                        controller->voteBpm(voteConfirmationDialog->getVoteValue());
-                    }
-                }
-            }
+        if(commandType == "BPI"){
+            chatPanel->addBpiVoteConfirmationMessage(voteValue);
         }
-        this->voteConfirmationDialog = nullptr;
+        else if(commandType == "BPM"){//just in case
+            chatPanel->addBpmVoteConfirmationMessage(voteValue);
+        }
     }
 }
 
-void NinjamRoomWindow::showVoteConfirmationMessageBox(QString title, QString text, int voteValue, VoteConfirmationType voteType){
-    if(this->voteConfirmationDialog){
-        voteConfirmationDialog->close();
+void NinjamRoomWindow::on_userConfirmingVoteToChangeBpi(int newBpi){
+    if(mainController->isPlayingInNinjamRoom()){
+        Controller::NinjamController* controller = mainController->getNinjamController();
+        if(controller){
+             controller->voteBpi(newBpi);
+        }
     }
-    this->voteConfirmationDialog = new VoteConfirmationDialog(this, title, text, voteValue, voteType);
-    this->voteConfirmationDialog->show();
-    this->voteConfirmationDialog->open(this, SLOT(on_voteConfirmationDialogClosed(QAbstractButton*)));
 }
+
+void NinjamRoomWindow::on_userConfirmingVoteToChangeBpm(int newBpm){
+    if(mainController->isPlayingInNinjamRoom()){
+        Controller::NinjamController* controller = mainController->getNinjamController();
+        if(controller){
+             controller->voteBpm(newBpm);
+        }
+    }
+}
+
+//void NinjamRoomWindow::on_voteConfirmationDialogClosed(QAbstractButton *button){
+//    if(this->voteConfirmationDialog){
+//        if(this->voteConfirmationDialog->standardButton(button) == QMessageBox::Yes){
+//            if(mainController->isPlayingInNinjamRoom()){
+//                Controller::NinjamController* controller = mainController->getNinjamController();
+//                if(controller){
+//                    if(voteConfirmationDialog->getVoteType() == VoteConfirmationType::BPI_CONFIRMATION_VOTE){
+//                        controller->voteBpi(voteConfirmationDialog->getVoteValue());
+//                    }
+//                    else{
+//                        controller->voteBpm(voteConfirmationDialog->getVoteValue());
+//                    }
+//                }
+//            }
+//        }
+//        this->voteConfirmationDialog = nullptr;
+//    }
+//}
+
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::updatePeaks(){
