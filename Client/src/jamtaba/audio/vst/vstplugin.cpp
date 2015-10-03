@@ -251,9 +251,11 @@ void VstPlugin::unload(){
 
         suspend();
 
-        effect->dispatcher(effect, effClose, 0, 0, NULL, 0);
+        if(effect){
+            effect->dispatcher(effect, effClose, 0, 0, NULL, 0);
 
-        effect = nullptr;
+            effect = nullptr;
+        }
     }
     //pluginLib.
     if(pluginLib.isLoaded()){
@@ -306,6 +308,7 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
     }
 
     internalBuffer->setFrameLenght(outBuffer.getFrameLenght());
+    //internalBuffer->zero();
 
     float* inArray[2] = {
         outBuffer.getSamplesArray(0),

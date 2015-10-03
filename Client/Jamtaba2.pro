@@ -9,11 +9,22 @@
 #8 - vote buttons in chat - less invasive
 #----------------
 
+#streams pararam de funcionar?
+
+#estava tocando com uns 5, maximizei e crashou
+
+#guitar rig realmente gerando ruído
+
+#realmente existe o problema no resampling e sync da sala. Confirmei usando
+    #192 KHz e vi que não fechou com o metronomo. Estava fechando em 44.1
+
 #stringer disse que o programa não abre. Instalar o JamKazam para ver.
 
 #avisar o pessoal no ninbot para postar no issue tracker
 
 #-------------
+#alinhar mensagens do chat como o facebook - o botão de tradução não fica legal, tem que pensar em algo
+
 #Antonio sugeriu colocar o botão de boost. Mas na verdade ele acha que o som dele
     #está baixo se comparado com o som dos outros. Eu poderia voltar com o controle
     #de volume do xmit ou inicializar os outros em -6db como faz o Reaninjam.

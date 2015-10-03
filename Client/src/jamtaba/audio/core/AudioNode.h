@@ -22,7 +22,7 @@ public:
     virtual void suspend() = 0;
     virtual void resume() = 0;
     virtual void updateGui(){}
-    virtual void setSampleRate(int newSampleRate){}
+    virtual void setSampleRate(int newSampleRate){ Q_UNUSED(newSampleRate);}
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++
@@ -81,9 +81,10 @@ public:
     inline bool isActivated() const{return activated;}
 
 
+
 protected:
 
-    static int getInputResamplingLength(int sourceSampleRate, int targetSampleRate, int outFrameLenght) ;
+    int getInputResamplingLength(int sourceSampleRate, int targetSampleRate, int outFrameLenght) ;
 
 
     QSet<AudioNode*> connections;
@@ -113,6 +114,8 @@ private:
 
 	static const double root2Over2;// = 1.414213562373095;// *0.5;
 	static const double piOver2;// = 3.141592653589793238463 * 0.5;
+
+    double resamplingCorrection;
 
     void updateGains();
 

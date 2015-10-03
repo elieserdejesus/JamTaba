@@ -625,6 +625,7 @@ void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::Sampl
 
 void MainController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
     QMutexLocker locker(&mutex);
+
     //checkThread("process();");
     if(!isPlayingInNinjamRoom()){
         doAudioProcess(in, out, sampleRate);
@@ -765,14 +766,12 @@ Audio::Plugin* MainController::addPlugin(int inputTrackIndex, const Audio::Plugi
     return plugin;
 }
 
+
 void MainController::removePlugin(int inputTrackIndex, Audio::Plugin *plugin){
     QMutexLocker locker(&mutex);
     QString pluginName = plugin->getName();
     try{
-        //Audio::PluginWindow* window = plugin->getEditor();
-
         getInputTrack(inputTrackIndex)->removeProcessor(plugin);
-        //window->deleteLater();
     }
     catch(...){
         qCritical() << "Erro removendo plugin " << pluginName;
