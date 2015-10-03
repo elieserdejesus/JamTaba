@@ -536,6 +536,15 @@ void MainFrame::on_newVersionAvailableForDownload(){
 
 void MainFrame::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
     hideBusyDialog();
+//    qWarning() << "Atualizando lista de salas";
+//    foreach (Login::RoomInfo room, publicRooms) {
+//        if(room.getNonBotUsersCount() > 0 ){
+//            qWarning() << room.getName();
+//            foreach (Login::UserInfo user, room.getUsers()) {
+//                qWarning() << "\t" << user.getName();
+//            }
+//        }
+//    }
     qSort(publicRooms.begin(), publicRooms.end(), jamRoomLessThan);
     foreach(Login::RoomInfo roomInfo, publicRooms ){
         if(roomInfo.getType() == Login::RoomTYPE::NINJAM){//skipping other rooms at moment

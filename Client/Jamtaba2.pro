@@ -7,11 +7,8 @@
 #6 - improvements in tracks ui
 #7 - Changing the VST sample rate.
 #8 - vote buttons in chat - less invasive
+#9 - Fix the problem in streams out of sync when users are using high sample rates and small buffer sizes
 #----------------
-
-#streams pararam de funcionar?
-
-#estava tocando com uns 5, maximizei e crashou
 
 #guitar rig realmente gerando ruído
 

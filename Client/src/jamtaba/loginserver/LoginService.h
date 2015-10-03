@@ -96,7 +96,6 @@ private:
     QNetworkAccessManager httpClient;
     QNetworkReply* pendingReply;
     QNetworkReply* sendCommandToServer(const QUrlQuery&);
-    static const bool LOCAL_HOST_MODE = false;
     static const QString SERVER;
     bool connected;
     void handleJson(QString json);
