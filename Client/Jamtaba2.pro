@@ -8,16 +8,16 @@
 #7 - Changing the VST sample rate.
 #8 - vote buttons in chat - less invasive
 #9 - Fix the problem in streams out of sync when users are using high sample rates and small buffer sizes
+#10 - Fixed the big in guitar and possibily in more plugins when using more then 2 inputs.
 #----------------
 
 #guitar rig realmente gerando ruído
 
-#realmente existe o problema no resampling e sync da sala. Confirmei usando
-    #192 KHz e vi que não fechou com o metronomo. Estava fechando em 44.1
+#estou correndo risco em mandar 3 entradas para os plugins. Se encontrar um
+    #plugin com mais entradas isso pode dar problemas. O plugin vai tentar
+        #escrever em uma área de memória que não deveria.
 
 #stringer disse que o programa não abre. Instalar o JamKazam para ver.
-
-#avisar o pessoal no ninbot para postar no issue tracker
 
 #-------------
 #alinhar mensagens do chat como o facebook - o botão de tradução não fica legal, tem que pensar em algo

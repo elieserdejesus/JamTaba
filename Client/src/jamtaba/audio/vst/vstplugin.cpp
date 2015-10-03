@@ -37,12 +37,13 @@ typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
 VstPlugin::VstPlugin(VstHost* host)
     :   Audio::Plugin("name"),
         effect(nullptr),
-        internalBuffer(nullptr),
+        internalOutputBuffer(nullptr),
         host(host),
         loaded(false),
         started(false),
         turnedOn(false),
-        out(nullptr)
+        vstOutputArray(nullptr),
+        vstInputArray(nullptr)
 {
     this->vstMidiEvents.reserved = 0;
     this->vstMidiEvents.numEvents = 0;
@@ -128,16 +129,12 @@ bool VstPlugin::load(QString path){
     long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
     qCDebug(vst) << "loading " << getName() << " version " << ver;
 
-
     this->path = path;
-
 
     loaded = true;
 
-
     return true;
 }
-
 
 QByteArray VstPlugin::getSerializedData() const{
     if(effect->flags & effFlagsProgramChunks){//can serialize chunks?
@@ -184,10 +181,15 @@ void VstPlugin::start(){
     qCDebug(vst) << "starting plugin " << getName() << " thread: " << QThread::currentThreadId();
 
     int outputs = effect->numOutputs;
+    int inputs = effect->numInputs;
     qCDebug(vst) << "Criando internalBuffer com " << outputs << " canais e " << host->getBufferSize() << " samples";
-    internalBuffer = new Audio::SamplesBuffer(outputs, host->getBufferSize());
 
-    out = new float*[outputs];
+    //qWarning() << getName() << " ins:" << effect->numInputs << " outs:" << effect->numOutputs;
+    internalOutputBuffer = new Audio::SamplesBuffer(outputs, host->getBufferSize());
+    internalInputBuffer  = new Audio::SamplesBuffer(inputs, host->getBufferSize());
+
+    vstOutputArray = new float*[outputs];
+    vstInputArray = new float*[inputs];
 
 
     long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
@@ -233,14 +235,17 @@ VstPlugin::~VstPlugin()
 
     qCDebug(vst) << getName() << " VSt plugin destructor Thread:" << QThread::currentThreadId();
     unload();
-    delete internalBuffer;
+    delete internalOutputBuffer;
 
     for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
         delete this->vstMidiEvents.events[i];
     }
 
-    if(out){
-        delete [] out;
+    if(vstOutputArray){
+        delete [] vstOutputArray;
+    }
+    if(vstInputArray){
+        delete [] vstInputArray;
     }
 }
 
@@ -299,40 +304,40 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
         turnedOn = true;
     }
 
-    //qCDebug(vst) << "processing...";
     if(wantMidi){
-        //const VstEvents* events = host->getVstMidiEvents();
         fillVstEventsList(midiBuffer);//translate midiBuffer messages in VstEvents
-        //qCDebug(vst) << "sending effProcessEvents to plugin " + getName();
         effect->dispatcher(effect, effProcessEvents, 0, 0, (void*)&vstMidiEvents, 0);
     }
 
-    internalBuffer->setFrameLenght(outBuffer.getFrameLenght());
-    //internalBuffer->zero();
+    internalOutputBuffer->setFrameLenght(outBuffer.getFrameLenght());
 
-    float* inArray[2] = {
-        outBuffer.getSamplesArray(0),
-        outBuffer.getSamplesArray(1)
-    };
-    //vst plugins maybe have many output channels
-    int outChannels = internalBuffer->getChannels();
+//    float* inArray[2] = {
+//        outBuffer.getSamplesArray(0),
+//        outBuffer.getSamplesArray(1)
+//    };
+
+    internalInputBuffer->zero();
+    internalInputBuffer->set(outBuffer);
+
+    int inChannels = internalInputBuffer->getChannels();
+    for (int c = 0; c < inChannels; ++c) {
+        vstInputArray[c] = internalInputBuffer->getSamplesArray(c);
+    }
+
+
+    int outChannels = internalOutputBuffer->getChannels();
     for (int c = 0; c < outChannels; ++c) {
        //out is initialized when plugin is loaded
-        out[c] = internalBuffer->getSamplesArray(c);
+        vstOutputArray[c] = internalOutputBuffer->getSamplesArray(c);
     }
 
     VstInt32 sampleFrames = outBuffer.getFrameLenght();
-
-    //qCDebug(vst) << "calling processReplacing in " << getName() << " thread" << QThread::currentThreadId();
     if(effect->flags & effFlagsCanReplacing){
-        effect->processReplacing(effect, inArray, out, sampleFrames);
+        effect->processReplacing(effect, vstInputArray, vstOutputArray, sampleFrames);
     }
-    //qCDebug(vst) << "processReplacing called " << getName();
 
 
-
-    outBuffer.set(*internalBuffer);
-    //qCDebug(vst) << "audioBuffer filled " << getName();
+    outBuffer.set(*internalOutputBuffer);
 }
 
 void VstPlugin::closeEditor(){

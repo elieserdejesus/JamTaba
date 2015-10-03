@@ -20,7 +20,7 @@ public:
     explicit VstPlugin(Vst::VstHost* host);
     ~VstPlugin();
 
-    virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer &outBuffer, const Midi::MidiBuffer& midiBuffer);
+    virtual void process(const Audio::SamplesBuffer& vstInputArray, Audio::SamplesBuffer &outBuffer, const Midi::MidiBuffer& midiBuffer);
     virtual void openEditor(QPoint centerOfScreen);
     virtual void closeEditor();
     bool load(QString path);
@@ -39,7 +39,8 @@ protected:
 private:
     bool initPlugin();
     AEffect* effect;
-    Audio::SamplesBuffer* internalBuffer;
+    Audio::SamplesBuffer* internalOutputBuffer;
+    Audio::SamplesBuffer* internalInputBuffer;
     QLibrary pluginLib;
     Vst::VstHost* host;
     bool wantMidi;
@@ -51,7 +52,8 @@ private:
 
     bool loaded;
 
-    float** out;
+    float** vstOutputArray;
+    float** vstInputArray;
 
     //VstEvents* vstEvents;
     void fillVstEventsList(const Midi::MidiBuffer& midiBuffer);
