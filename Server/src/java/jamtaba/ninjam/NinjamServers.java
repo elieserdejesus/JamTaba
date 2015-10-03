@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class NinjamServers {
     
-    private static final int UPDATE_PERIOD = 30000;//30 seconds
+    private static final int UPDATE_PERIOD = 10000;//10 seconds
     private static Collection<NinjaMServer> servers = new ArrayList<NinjaMServer>();
     private static long lastUpdate=  0;
     
