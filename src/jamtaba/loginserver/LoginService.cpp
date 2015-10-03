@@ -197,15 +197,8 @@ void LoginService::disconnectedSlot(){
 }
 
 void LoginService::roomsListReceivedSlot(){
-    if(!LOCAL_HOST_MODE){
-        QString json = QString( pendingReply->readAll());
-        handleJson(json);
-    }
-    else{//local host - test mode
-        QList<Login::RoomInfo> publicRooms;
-        publicRooms.append(RoomInfo(1, "localhost", 2049, Login::RoomTYPE::NINJAM, 16, QList<UserInfo>(), 16));
-        emit roomsListAvailable(publicRooms);
-    }
+    QString json = QString( pendingReply->readAll());
+    handleJson(json);
 }
 
 void LoginService::handleJson(QString json){
