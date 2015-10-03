@@ -269,6 +269,7 @@ private:
     //used to sort plugins list
     static bool pluginDescriptorLessThan(const Audio::PluginDescriptor& d1, const Audio::PluginDescriptor& d2);
 
+
 private slots:
     //Login server
     void on_disconnectedFromLoginServer();

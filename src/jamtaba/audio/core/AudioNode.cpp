@@ -96,13 +96,26 @@ AudioNode::AudioNode()
       gain(1),
       pan(0)/*center*/,
       leftGain(1.0),
-      rightGain(1.0)
+      rightGain(1.0),
+      resamplingCorrection(0)
 {
 
 }
 
 int AudioNode::getInputResamplingLength(int sourceSampleRate, int targetSampleRate, int outFrameLenght) {
-    return (int) (((double)sourceSampleRate*(double)outFrameLenght/(double)targetSampleRate));
+    double doubleValue = (double)sourceSampleRate*(double)outFrameLenght/(double)targetSampleRate;
+    int intValue = (int)doubleValue;
+    resamplingCorrection += doubleValue - intValue;
+    if(qAbs(resamplingCorrection) > 1){
+        intValue += resamplingCorrection;
+        if(resamplingCorrection > 0){
+            resamplingCorrection--;
+        }
+        else{
+            resamplingCorrection++;
+        }
+    }
+    return intValue;
 }
 
 Audio::AudioPeak AudioNode::getLastPeak(bool resetPeak) const{

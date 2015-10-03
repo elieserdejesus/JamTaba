@@ -262,9 +262,9 @@ void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer & in, SamplesB
     if(!bufferedSamples.isEmpty()){
         AbstractMp3Streamer::processReplacing(in, out, sampleRate, midiBuffer);
     }
-    else{
-        qWarning() << "EMPTY BUFFER";
-    }
+//    else{
+//        qWarning() << "EMPTY BUFFER";
+//    }
 
 }
 //++++++++++++++++++
