@@ -56,6 +56,8 @@ bool FaderProcessor::finished(){
 
 
 void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer){
+    Q_UNUSED(in);
+
     if(!isActivated()){
         return;
     }
@@ -68,7 +70,8 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
     {
         QMutexLocker locker(&mutex);
         foreach (AudioNode* node, connections) {//ask connected nodes to generate audio
-            node->processReplacing(in, internalOutputBuffer, sampleRate, midiBuffer);
+            //node->processReplacing(in, internalOutputBuffer, sampleRate, midiBuffer);
+            node->processReplacing(internalInputBuffer, internalOutputBuffer, sampleRate, midiBuffer);
         }
     }
 
