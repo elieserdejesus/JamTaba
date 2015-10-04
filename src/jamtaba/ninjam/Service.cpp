@@ -385,6 +385,7 @@ void Service::setBpi(quint16 bpi) {
 void Service::handleUserChannels(QString userFullName, QList<UserChannel> channelsInTheServer) {
     //check for new channels
     User* user = this->currentServer->getUser(userFullName);
+    qWarning() << user->getName() << " canais:" << user->getChannels().size();
     foreach (UserChannel c , channelsInTheServer) {
         if (c.isActive()) {
             if (!user->hasChannel(c.getIndex())) {
@@ -405,9 +406,6 @@ void Service::handleUserChannels(QString userFullName, QList<UserChannel> channe
         else{
             user->removeChannel(c.getIndex());
             emit userChannelRemoved(*user, c);
-            if(!user->hasChannels()){
-                emit userLeaveTheJam(*user);
-            }
         }
     }
 }

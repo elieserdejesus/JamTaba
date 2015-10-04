@@ -70,6 +70,7 @@ signals:
     void channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
     void channelXmitChanged(long channelID, bool transmiting);
     void userLeave(QString userName);
+    void userEnter(QString userName);
 
     void chatMsgReceived(Ninjam::User user, QString message);
 
@@ -142,6 +143,7 @@ private slots:
     void on_ninjamUserChannelRemoved(Ninjam::User user, Ninjam::UserChannel channel);
     void on_ninjamUserChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel);
     void on_ninjamUserLeave(Ninjam::User user);
+    void on_ninjamUserEnter(Ninjam::User user);
     void on_ninjamDisconnectedFromServer(Ninjam::Server server);
 
     //audio driver events

@@ -1,13 +1,13 @@
-#trabalhando na mensagem de user leave. Não está funcionando
-    #e parece que está disparando o evento na hora errada
+#no collapsed está mostrando os DBs, não faz sentido
 
-#usar QDial no pan, parece que algumas poucas coisas podem ser customizadas no css
 
-#o collapse está bem tosco, preciso arrumar o visual
+#ninjam narrow não tem espaço para exibir os dbs
+
+#esconder o painel de server privado quando exibir o painel de user name
 
 #change log
 #1 - little change in chat translate button
-#2 -
+#2 - Using dial in pan and improvements in local controls ui
 
 #stringer disse que o programa não abre. Instalar o JamKazam para ver.
 
