@@ -396,6 +396,7 @@ void NinjamController::start(const Ninjam::Server& server, bool transmiting){
         QObject::connect(ninjamService, SIGNAL(userChannelUpdated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelUpdated(Ninjam::User, Ninjam::UserChannel)));
         QObject::connect(ninjamService, SIGNAL(audioIntervalDownloading(Ninjam::User,int,int)), this, SLOT(on_ninjamAudiointervalDownloading(Ninjam::User,int,int)));
         QObject::connect(ninjamService, SIGNAL(userLeaveTheJam(Ninjam::User)), this, SLOT(on_ninjamUserLeave(Ninjam::User)));
+        QObject::connect(ninjamService, SIGNAL(userEnterInTheJam(Ninjam::User)), this, SLOT(on_ninjamUserEnter(Ninjam::User)));
 
         QObject::connect(ninjamService, SIGNAL(chatMessageReceived(Ninjam::User,QString)), this, SIGNAL(chatMsgReceived(Ninjam::User,QString)));
 
@@ -551,6 +552,10 @@ void NinjamController::on_ninjamDisconnectedFromServer(Ninjam::Server server){
     Q_UNUSED(server);
     //emit disconnected(normalDisconnection);
 
+}
+
+void NinjamController::on_ninjamUserEnter(Ninjam::User user){
+    emit userEnter(user.getName());
 }
 
 void NinjamController::on_ninjamUserLeave(Ninjam::User user){
