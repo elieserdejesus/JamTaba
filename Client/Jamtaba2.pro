@@ -1,21 +1,8 @@
-#--------- LISTA DE MELHORIAS -------
-#1 - corrigido o problema no resampling do stream das salas
-#2 - cores do xmit
-#3 - menu option to report bugs and suggest improvements.
-#4 - melhoria no unlighted dos canais de acordo com o xmit
-#5 - db values
-#6 - improvements in tracks ui
-#7 - Changing the VST sample rate.
-#8 - vote buttons in chat - less invasive
-#9 - Fix the problem in streams out of sync when users are using high sample rates and small buffer sizes
-#10 - Fixed the big in guitar and possibily in more plugins when using more then 2 inputs.
 #----------------
 
-#guitar rig realmente gerando ruído
+#colocar versão no topo
 
-#estou correndo risco em mandar 3 entradas para os plugins. Se encontrar um
-    #plugin com mais entradas isso pode dar problemas. O plugin vai tentar
-        #escrever em uma área de memória que não deveria.
+#gerar instalador MAC
 
 #stringer disse que o programa não abre. Instalar o JamKazam para ver.
 
@@ -279,7 +266,7 @@
 # Project created by QtCreator 2015-01-13T11:05:00
 #
 #-------------------------------------------------
-VERSION = 2.0.0
+VERSION = 2.0.1
 
 # Define the preprocessor macro to get the application version in Jamtaba application.
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
@@ -288,8 +275,10 @@ QT       +=  gui  network
 
 #QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.6
 
-QMAKE_CXXFLAGS += -mmacosx-version-min=10.6 -stdlib=libc++ #-std=c++11
-LIBS += -mmacosx-version-min=10.6 -stdlib=libc++
+macx{
+    QMAKE_CXXFLAGS += -mmacosx-version-min=10.6 -stdlib=libc++ #-std=c++11
+    LIBS += -mmacosx-version-min=10.6 -stdlib=libc++
+}
 
 CONFIG += no-c++11
 
