@@ -27,6 +27,8 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
 
     //add in static map
     trackViews.insert(trackID, this);
+
+    //ui->panSlider->setAttribute(Qt::WA_);
 }
 
 
@@ -68,7 +70,7 @@ void BaseTrackView::setToNarrow(){
     //ui->muteButton->setText("M");
     //ui->muteButton->setToolTip("Mute");
 
-    ui->panSlider->setTickInterval(2);
+    //ui->panSlider->setTickInterval(2);
     updateGeometry();
 }
 
@@ -82,7 +84,7 @@ void BaseTrackView::setToWide(){
 //        ui->muteButton->setText("MUTE");
 //        ui->muteButton->setToolTip("Mute");
 
-        ui->panSlider->setTickInterval(0);
+        //ui->panSlider->setTickInterval(0);
         updateGeometry();
     }
 }

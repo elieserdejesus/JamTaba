@@ -44,6 +44,9 @@ private:
     static const int MAX_MESSAGES = 50;
 
     void createVoteButton(QString voteType, int value);
+
+    //QString lastUserName;//used to control message alignment - left or right
+    //Qt::AlignmentFlag lastAlign;
 };
 
 #endif // CHATPANEL_H

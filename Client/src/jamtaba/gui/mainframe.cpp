@@ -57,7 +57,7 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 {
 	ui.setupUi(this);
 
-
+    setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
 
     initializeWindowState();//window size, maximization ...
     initializeLoginService();

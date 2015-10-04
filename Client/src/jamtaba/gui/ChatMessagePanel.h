@@ -20,6 +20,9 @@ public:
     ChatMessagePanel(QWidget *parent, QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool drawBorder=true);
     ~ChatMessagePanel();
 
+//    QSize sizeHint() const;
+//    QSize minimumSizeHint() const;
+
 private slots:
     void on_translateButton_clicked();
     void on_networkReplyFinished(QNetworkReply*);

@@ -401,10 +401,13 @@ void Service::handleUserChannels(QString userFullName, QList<UserChannel> channe
                     }
                 }
             }
-        } else {
+        }
+        else{
             user->removeChannel(c.getIndex());
             emit userChannelRemoved(*user, c);
-
+            if(!user->hasChannels()){
+                emit userLeaveTheJam(*user);
+            }
         }
     }
 }

@@ -87,6 +87,15 @@ void LocalTrackView::setFaderOnlyMode(bool faderOnly){
         inputPanel->setVisible(!faderOnly);
         fxSpacer->changeSize(20, faderOnly ? 0 : 20, QSizePolicy::Minimum, faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
 
+        ui->soloButton->setVisible(!faderOnly);
+        ui->muteButton->setVisible(!faderOnly);
+        ui->peaksDbLabel->setVisible(!faderOnly);
+        //vertical spacer in bottom of VUs
+        ui->verticalSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
+
+        inputTypeIconLabel->setVisible(!faderOnly);
+
+
         updateGeometry();
 
         setProperty("faderOnly", QVariant(faderOnly));

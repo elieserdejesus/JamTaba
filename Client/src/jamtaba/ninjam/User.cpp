@@ -70,6 +70,9 @@ void User::addChannel(UserChannel c){
 }
 
 void User::removeChannel(int channelIndex) {
+    if(this->channels[channelIndex]){
+        delete this->channels[channelIndex];
+    }
     this->channels.remove(channelIndex);
 }
 

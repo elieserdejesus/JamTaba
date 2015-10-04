@@ -69,6 +69,7 @@ signals:
     void channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
     void channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
     void channelXmitChanged(long channelID, bool transmiting);
+    void userLeave(QString userName);
 
     void chatMsgReceived(Ninjam::User user, QString message);
 

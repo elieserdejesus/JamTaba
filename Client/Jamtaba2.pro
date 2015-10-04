@@ -1,181 +1,29 @@
-#----------------
+#trabalhando na mensagem de user leave. Não está funcionando
+    #e parece que está disparando o evento na hora errada
 
-#colocar versão no topo
+#usar QDial no pan, parece que algumas poucas coisas podem ser customizadas no css
 
-#gerar instalador MAC
+#o collapse está bem tosco, preciso arrumar o visual
+
+#change log
+#1 - little change in chat translate button
+#2 -
 
 #stringer disse que o programa não abre. Instalar o JamKazam para ver.
 
-#-------------
-#alinhar mensagens do chat como o facebook - o botão de tradução não fica legal, tem que pensar em algo
-
-#Antonio sugeriu colocar o botão de boost. Mas na verdade ele acha que o som dele
-    #está baixo se comparado com o som dos outros. Eu poderia voltar com o controle
-    #de volume do xmit ou inicializar os outros em -6db como faz o Reaninjam.
-
-#com buffer grande o desenho do stream da sala fica estranho
-
-#colocar vst wrapper no isseu tracker
-
-#colocar port para linux no tracker
-
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
-
 # Deu problema no MIDI no windows em 64 bits. Precilei compilar a portmidi  como MT ao invés de MD, port isso está dando
     #o warning sobre a mistura de libs MT e MD. Será que eu poderia usar tudo MT entao?
+    #isso me deu várias horas de dor de cabeça, achei essa solução praticamente na sorte.
 
-
-#Double:
-    #Ezdrummer1  some freeze in the looper window the blue blue line dont progress , but the loop is good playing  , the play button dont work we need often to launch the loop directly in the groove window
-
-#saí de uma sala e não consegui entrar em outras. Testei e vi que é um bug estranho. Parece que dá problema quando pulo de uma
-    #sala que tem bastante gente para outra que também tem. Quando pulei de sala vazia para sala vazia não deu problema. Pulei
-    #de uma sala com apenas um musico para uma vazia e também não deu nada.
-    #não consigo testar se não tiver salas com bastante pessoas
-
-#de vez em quando o minimp3 fica engasgando a thread do áudio. Será que o Qt não tem um player de mp3?
-
-#quando coloco dois plugins midi em sequencia na mesma pista só um (o último) recebe as mensagens
-
-#testar melhor os plugins no mac
-    #bfd 3 demo não está maie em sync depois que mudei algumas coisas na class VstPlugin
-
-#Terminar a versão para Mac
-
-#compilado em 32 bits no mac.
-
-#no mac em 32 bits a tela dos VSTs não funcionou. Alguma coisa com CArbon. Parece que não tem como compilar o QT 5 com carbon.
-    #Realmente preciso ver o código do Ardour.
-
-
-
-#como conferir se está rodando em outros Macs?
-    #instalar uma imagem antiga de Mac em máquina virtual dentro do prórpio mac?
-
-#parece que para compilar em 32 bits em teria que ter uma versão 32 bits do QT, e teria que compilar ela.
-    #Então vou liberar somenta a versão 64 por enquanto
-#Resta saber se o meu executábel funcinará em versões mais antigas do OSX.
-
-#The most common way to distribute applications is to provide a compressed disk image (.dmg file)
-#that the user can mount in Finder. The Mac deployment tool (macdeployqt) can be used to create the
-#self-contained bundles, and optionally also create a .dmg archive. See the Mac deployment guide for more
-#information about deployment. It is also possible to use an installer wizard. More information on this option
-#can be found in Apple's documentation.
 #--------------
-#sem o cabo de rede o comportamento ficou estranho no mac - nao fecha corretamente
-
-#não está finalizando direito no QT creator, mas o processo é finalizado, então deixei prá lá
-
-#um looper seria interessate. Carrega um arquivo de áudio
-    #e permite a edição do inicio e do fim. Como os softwares sabem que é um loop? Teria que saber o bpm
-    #legal, é possível obter algums informações do loop a partir do arquivo: http://www.recordingmag.com/resources/resourceDetail/323.html
-
-#nomes dos canais ninjam não ficam legais quando são grandes
-
-#parece que o sampletank nem recebe minhas mensagens midi
-
 #importante para VST plugin no MAC com Qt. ou seja é possível fazer o plugin VST:
     #https://forum.qt.io/topic/13731/solved-qt-gui-in-vst-plug-in-clicking-menu-bar-crashes-the-host
 
-#quando troco de bpi ou bpm o primeiro intervalo gravado aparece offline. Tem um erro no parsing do ogg. Devo
-    #estar escrevendo alguma coisa errada no arquivo quando inicia uma nova gravação.
-
-#features legais do Jamtaba 1
-    #server privado
-    #posso contrair o chat
-    #avisa se chegou mensagem quando o chat está contraído
-    #avisa quando chega mensagem se a aplicação está minimizada
-    #chord panel - o reconhecimento de progressões ficou animal
-
-#não consegui fazer o evento LEAVe funcionar para desativar o highlight dos canais quando
-    #uso o menu para adicionar e remover canais e subcanais
-
-#removi um subchannel e crashow. O problema é o sampletank, quando removo um subnal com ele insertado dá pau.
-
-#Inseri o Mr ray. Parece que ele é o problema.
-    #quando eu mando dados para ele processar explode o mundo.
-
-#se eu for fazer release em 64 bits acho que isso é importante
-    #adicionar diretórios default para scanear plugins no win 64
-
-#não estou escondendo o painel de plugins (FxPanel) quando não encontro plugins na máquina do usuário. Aconteceu isso na máquina
-    #da dê. Deve acontecer também se eu deletar todos os caminhos para pastas de plugins
-
-#leak - quando deletar um encode do map de encoders? Como saber lá no NinjamController que o usuário está com um canal a menos?
-
-#no ninjamJamController estou recriando o tempInBuffer em cada callback. Otimizar isso.
-
-#Entrei em uma sala com uns 5 caras e estava usando 25:% da minha CPU.
-#Entrei na mesma sala usando o Reaninjam e não chegou a 1% da minha CPU. Mas depois eu descobri que se não estiver encodando
-#o reaninjam usa pouca CPU. O bicho pega mesmo quando tem que encodar. Mesmo assim acho que estou usando muita CPU.
-    #Quanto de cpu usa sem entrar em uma sala?
-    #Quanto de CPU usa para encoder?
-    #E os decoders, acrescentam muita coisa na CPU? Posso criar um monte de canais no reaninjam e ver o que acontece.
-
-
-#caracteres especiais do chat
-    #Se eu digito uma mensagem com acento funciona no meu chat local. Essa mensagem vai para o server e volta para mim?
-        #caso sim, então eu estou enviando todos os bytes utf-8 e recebendo eles do server, ou seja,
-            #o server está retransmitindo o que ele recebe.
-        #Se for isso, então talvez o Reaninjam não esteja usando utf-8?
-            #Fiz o teste e quando eu envio do Reaninjam para outro REaninjam
-                #funciona.
-            #será que o Reaninjam usa o encoding da máquina ou alguma coisa do tipo?
-                #Talvez eu possa testar isso forçando latin no Qt para ver se recebe corretamente.
-                #Outra possibilidade seria pegar os bytes como eles chegam e jogar em um arquivo, assim posso testar facilmente
-                    #outros decodings.
-
-    #wahjam pega o char* que chega pelo chat e transforma em QSTring usando fromUtf8
-    #na hora de enviar mensagem pelo chat o wahjam usa command.toUtf8().data(), sendo
-    #que command é uma QString
-
-#nome de usuário com caracter especial nem conecta
-
-
-#voltei para os ponteiros no MainController mas ainda está crashando quando fecho.
-    #O problema está no destrutor do AudioMixer.
-
-
-#o Reaper encontra a fast se eu ligo ela no meio de uma sessão?
-
-#de vez em quando o plot do room stream reseta sozinho antes de chegar no fim do Widget.
-    #estou desconfiado que o problema é com as threads. Estou acessando o bufferedSamples
-        #de threads diferentes.
-
-#a ideia do botão "check server mix" é muibo boa. Não tenho certeza se funcionaria, pois quando
-    ´#o usuário clica no botão ele parou de tocar. Ou seja, eu só conseguirir renderizar os intervalos
-        #que o usuário já enviou para o servidor. Como ele parou de tocar para clicar no
-            #botão e ouvir a mix, os próximos intervalos estarão zerados ou apenas com
-            #ruídos
-
-
-#acho que o stream do ninjamer não está rolando
-
-#se desligo a fast enquanto estou com o dialogo de preferencias aberto dá pau em seguida
-
-
+#---------------------------------------------------------
 #separar o carregamento do plugin VST da instância. No momento uma instância é criada e depois é que o plugin é carregado. Pra mim
 #isso é um bad design
-
-#VST
-    #agora que estou usando todos os canais de saida do plugin tive um
-        #memory corruption quando fechei o kontakt, mas foi esporárico, provavelmente
-        #alguma coisa relacionada com a thread que está removendo o plugin
-    #preciso mixar as várias saídas do plugin para um par estereo
-
-#nomes grandes estragam os nome dos canais nas entradas, os nomes dos canais ninjam, etc. Uma AutoElidedQLabel seria legal.
-
-#dar feedback quando plugin for bypassado, deixar label mais escura - Não consegui fazer isso, a propriedade existe no objeto, mas o CSS não está funcionando, desisti
-
-#o botão clear cache não dá nenhum feedback. Seria legal mostrar a lista de plugins
-#que estão na cache e depois limpar essa lista
-
-
-#feedback para o carregamento de plugin pode ser interessante, o Addicitve drum leva uma eternidade.
-    #Talvez eu tenha que carregar os plugins só depois que a aplicação já estiver visível, caso
-    #contrário demora demais para ver a tela principal se a lista de plugins para carregar
-    #for grande e os plugins forem pesados.
-
+#---------------------------------------------------------
 #3 - Preciso melhorar o resampling aplicando o low pass.
     #o low pass mais simples: https://ccrma.stanford.edu/~jos/fp/Definition_Simplest_Low_Pass.html
 
@@ -203,63 +51,11 @@
         #* interpolate data from the source sample according to the cursor position using the interpolation method of your choice; this will generally involve a polynomial using a small number of source samples around the cursor
         #For resampling to a lower frequency, the process is similar but the source sample should be lowpass filtered to attenuate everything above half the target sample rate before interpolation.
 
-
-#exibir uma mensagem no chat quando um usuário sai da sala
-
-
-
-#estava bugando o parser da lista de servers públicos no servidor, mas vi que no reaper também bugou. O problema é que o Jamtaba nem abre se tem esse problema, dá um erro no servidor.
-
-
-#estou usando ícone de alto falante para representar inputs, é estranho
-
-
-
 #++++++++++++++++++++++++++++++++++++++++++++++
-#GAz deu a ideia de fazer um translate usando o site do google translate e HTML scrapping.
-
-#Comentei com o Marcello sobre a ideia de criar um segundo chat para mensagens privadas.
 
 #quando solo uma das inputs as outras também são enviadas. Ou seja, o solo está atuando apenas localmente. Faz sentido mudar isso?
 
-#usuário kn00t perguntou sobre um log do chat. Pode ser interessante. Talvez ele só queira ver as mensagens mais antigas de uma sessão, e não ver mensagens de outras sessões.
 #++++++++++++++++++++++++++++++++++++++++++++++
-
-#Preciso mudar a cor de fundo da pistas de acordo com o tipo. Pistas locais de uma cor, metronomo de outra, pistas ninjam de outra.
-#Talvez seja uma boa hora para usar HSV e ter variações
-
-
-#Resampling
-    #Ainda tem um probleminha nos início de alguns intervalos, mas só acontece em
-    #algumas combinações de SR e como está já está bem aceitável. Eu não estou corrigindo
-    #a perda de amostras que vai acontecendo aos poucos, por isso chega no final do intervalo
-    #pode dar algumas amostras de diferença.
-
-#tem um bug quando o bpi está em 4
-
-#chat ninjam
-    #problema nos caracteres especiais - tenho que testar se o envio está correto e depois testar a recepção
-
-# feature - botão para ouvir o stream dos server e ver como está a mix geral
-
-#audo update: https://wiki.qt.io/Qt-Installer-Framework
-
-#mapa com os jogadores? É possível?
-
-#PLUGINS NATIVOS
-    # mostrar plugins nativos
-    # Melhorar o visual do Delay, os LineEdit estão grandes demais
-    # Seria interessante possibilitar que os parâmetros do delay sejam alterados através dos lineEdit
-
-#Magnus e Doublebass agradeceram pelo esforço e disseram que ter um canal de backing track é muito importante.
-
-# - Coisas legais para implementar: fazer um plugin de delay para iniciar a saga dos plugins nativos do Jamtaba
-# - O stream do ninjamer.com não é mono como achei que era, mas está dando problema
-
-
-#quando trocar de bpi ver se ainda é possível usar a mesma acentuação procurando pelo valor
-#antigo na nova lista
-
 
 #-------------------------------------------------
 #
@@ -273,14 +69,12 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 QT       +=  gui  network
 
-#QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.6
-
 macx{
-    QMAKE_CXXFLAGS += -mmacosx-version-min=10.6 -stdlib=libc++ #-std=c++11
+    QMAKE_CXXFLAGS += -mmacosx-version-min=10.6 -stdlib=libc++
     LIBS += -mmacosx-version-min=10.6 -stdlib=libc++
 }
 
-CONFIG += no-c++11
+CONFIG += c++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
