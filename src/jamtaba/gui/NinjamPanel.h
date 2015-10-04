@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QStringList>
 class QComboBox;
-class QSlider;
+class QAbstractSlider;
 class QPushButton;
 class QObject;
 class QEvent;
@@ -27,8 +27,8 @@ public:
     QComboBox* getBpiCombo() const;
     QComboBox* getBpmCombo() const;
     QComboBox* getAccentsCombo() const;
-    QSlider* getGainSlider() const;
-    QSlider* getPanSlider() const;
+    QAbstractSlider* getGainSlider() const;
+    QAbstractSlider *getPanSlider() const;
     QPushButton* getMuteButton() const;
     QPushButton* getSoloButton() const;
 

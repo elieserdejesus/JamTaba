@@ -831,9 +831,18 @@ LocalTrackGroupView   #toolButton:hover{
 }
 /* ++++++++++++++++++++++++++++++++++ */
 
-BaseTrackView .QLabel#labelPanR, BaseTrackView .QLabel#labelPanL{
-color: rgba(0, 0, 0, 60);
+/*BaseTrackView .QLabel#labelPanR, BaseTrackView .QLabel#labelPanL{*/
+QLabel#labelPanR, QLabel#labelPanL{
+    color: rgba(0, 0, 0, 60);
+    font-size: 9px;
 }
+
+QDial{
+    background: rgb(130, 130, 130);
+    max-width: 32px;
+    max-height: 32px;
+}
+
 
 BaseTrackView > .QFrame#topSeparator{
 background-color: rgb(210, 210, 210);
@@ -1092,6 +1101,7 @@ ChatMessagePanel > QLabel#labelMessage{
     padding: 2px;
     border: 1px solid rgb(0, 0, 0, 80);
     border-radius: 3px;
+    min-height: 20px;
 }
 
 ChatMessagePanel #translateButton{
@@ -1100,8 +1110,18 @@ ChatMessagePanel #translateButton{
     max-height: 6px;
     height: 6px;
     min-height: 6px;
-    margin-left: 2px;
     padding: 3px;
-    border: 1px outset rgba(255,255, 255, 30) ;
+    border: 1px solid rgb(0, 0, 0, 80);
+    border-left: none;
+    border-radius: 3px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    margin-top: 3px;
 }
 
+ChatMessagePanel QPushButton:hover#translateButton{
+    border-color: rgb(200, 200, 200);
+    font-weight: bold;
+    border-style: outset;
+
+}

@@ -64,6 +64,7 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Co
     QObject::connect(ninjamController, SIGNAL(channelNameChanged(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(on_channelNameChanged(Ninjam::User, Ninjam::UserChannel, long)));
     QObject::connect(ninjamController, SIGNAL(chatMsgReceived(Ninjam::User,QString)), this, SLOT(on_chatMessageReceived(Ninjam::User,QString)));
     QObject::connect(ninjamController, SIGNAL(channelXmitChanged(long,bool)), this, SLOT(on_channelXmitChanged(long,bool)));
+    QObject::connect(ninjamController, SIGNAL(userLeave(QString)), this, SLOT(on_userLeave(QString)));
 
     QObject::connect(ui->topPanel->getBpiCombo(), SIGNAL(activated(QString)), this, SLOT(ninjamBpiComboChanged(QString)));
     QObject::connect(ui->topPanel->getBpmCombo(), SIGNAL(activated(QString)), this, SLOT(ninjamBpmComboChanged(QString)));
@@ -131,6 +132,12 @@ void NinjamRoomWindow::userSendingNewChatMessage(QString msg){
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamRoomWindow::on_userLeave(QString userName){
+    if(chatPanel){
+        chatPanel->addMessage("Jamtaba", userName + " leave the room.");
+    }
+}
+
 void NinjamRoomWindow::on_chatMessageReceived(Ninjam::User user, QString message){
     //qDebug() << user.getFullName() << message;
     chatPanel->addMessage(user.getName(), message);

@@ -24,7 +24,15 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent, QString userName, QString ms
     //QObject::connect( translationHttpClient, SIGNAL()
 }
 
-void ChatMessagePanel::initialize(QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool drawBorder){
+//QSize ChatMessagePanel::sizeHint() const{
+//    return minimumSizeHint();
+//}
+//QSize ChatMessagePanel::minimumSizeHint() const{
+
+//    return QSize( width(), ui->labelMessage->height());
+//}
+
+void ChatMessagePanel::initialize(QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool drawBorder ){
     if(!userName.isEmpty() && !userName.isNull()){
         ui->labelUserName->setText(userName);
         ui->labelUserName->setStyleSheet(buildCssString(userNameBackgroundColor, textColor, drawBorder));
@@ -38,6 +46,7 @@ void ChatMessagePanel::initialize(QString userName, QString msg, QColor userName
     msg = replaceLinksInString(msg);
     ui->labelMessage->setText(msg);
     ui->labelMessage->setStyleSheet(buildCssString(msgBackgroundColor, textColor, drawBorder));
+    ui->translateButton->setStyleSheet(buildCssString(userNameBackgroundColor, textColor, drawBorder));
 
     this->originalText = msg;
 }
