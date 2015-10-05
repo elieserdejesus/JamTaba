@@ -66,6 +66,7 @@ private:
         VstEvent* events[N];
     };
 
+
     VSTEventBlock<MAX_MIDI_EVENTS> vstMidiEvents;
 };
 

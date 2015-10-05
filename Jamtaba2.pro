@@ -1,3 +1,6 @@
+#trabalhar no bug das entradas midi. Quando mais de um VSTi está no mesmo
+    #canal somente o último recebe os inputs.
+
 #change log
 #1 - little change in chat translate button
 #2 - Using dial in pan and improvements in local controls ui

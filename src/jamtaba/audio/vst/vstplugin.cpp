@@ -269,12 +269,7 @@ void VstPlugin::unload(){
 }
 
 void VstPlugin::fillVstEventsList(const Midi::MidiBuffer &midiBuffer){
-
-//    if(midiBuffer.getMessagesCount() > 0){
-//        qCDebug(vst) << getName() << "filling VST midi event list. " << midiBuffer.getMessagesCount() << " messages";
-//    }
-
-    int midiMessages = (std::min)( midiBuffer.getMessagesCount(), MAX_MIDI_EVENTS);
+    int midiMessages = qMin( midiBuffer.getMessagesCount(), MAX_MIDI_EVENTS);
     this->vstMidiEvents.numEvents = midiMessages;
     for (int m = 0; m < midiMessages; ++m) {
         Midi::MidiMessage message = midiBuffer.getMessage(m);
@@ -310,11 +305,7 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
     }
 
     internalOutputBuffer->setFrameLenght(outBuffer.getFrameLenght());
-
-//    float* inArray[2] = {
-//        outBuffer.getSamplesArray(0),
-//        outBuffer.getSamplesArray(1)
-//    };
+    internalInputBuffer->setFrameLenght(outBuffer.getFrameLenght());
 
     internalInputBuffer->zero();
     internalInputBuffer->set(outBuffer);
@@ -323,7 +314,6 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
     for (int c = 0; c < inChannels; ++c) {
         vstInputArray[c] = internalInputBuffer->getSamplesArray(c);
     }
-
 
     int outChannels = internalOutputBuffer->getChannels();
     for (int c = 0; c < outChannels; ++c) {
@@ -336,8 +326,7 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
         effect->processReplacing(effect, vstInputArray, vstOutputArray, sampleFrames);
     }
 
-
-    outBuffer.set(*internalOutputBuffer);
+    outBuffer.add(*internalOutputBuffer);
 }
 
 void VstPlugin::closeEditor(){
