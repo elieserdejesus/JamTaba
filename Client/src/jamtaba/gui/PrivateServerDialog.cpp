@@ -18,8 +18,9 @@ PrivateServerDialog::PrivateServerDialog(QWidget *parent, QString lastServer, in
 }
 
 void PrivateServerDialog::on_okButtonTriggered(){
-    emit connectionAccepted(ui->serverTextField->text(), ui->serverPortTextField->text().toInt(), ui->passwordTextField->text());
     accept();
+    emit connectionAccepted(ui->serverTextField->text(), ui->serverPortTextField->text().toInt(), ui->passwordTextField->text());
+
 }
 
 QString PrivateServerDialog::getPassword() const{

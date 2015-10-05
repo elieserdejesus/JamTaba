@@ -51,6 +51,8 @@ protected:
 
     bool narrowed;
 
+    bool drawDbValue;
+
     void setPeaks(float left, float right);
 private:
     static QMap<long, BaseTrackView*> trackViews;
@@ -58,6 +60,8 @@ private:
 
     void drawFaderDbValue(QPainter& p);
     //void drawFaderDbMarks(QPainter& p);
+
+
 
 private slots:
     void onMuteClicked();

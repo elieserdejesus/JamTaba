@@ -39,6 +39,7 @@
 #include "../loginserver/LoginService.h"
 #include "../Utils.h"
 #include "../audio/RoomStreamerNode.h"
+#include "UserNameDialog.h"
 
 using namespace Audio;
 using namespace Persistence;
@@ -611,13 +612,21 @@ void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
     }
 
     if(!mainController->userNameWasChoosed()){
-        bool ok;
+//        bool ok;
+//        QString lastUserName = mainController->getUserName();
+//        QString newUserName = QInputDialog::getText(this, "", "Enter your user name:", QLineEdit::Normal, lastUserName , &ok, Qt::FramelessWindowHint);
+//        if (ok && !newUserName.isEmpty()){
+//           mainController->setUserName(newUserName);
+//           setWindowTitle("Jamtaba (" + mainController->getUserName() + ")");
+//        }
         QString lastUserName = mainController->getUserName();
-        QString newUserName = QInputDialog::getText(this, "", "Enter your user name:", QLineEdit::Normal, lastUserName , &ok, Qt::FramelessWindowHint);
-        //newUserName = QString(newUserName.toLatin1());
-        if (ok && !newUserName.isEmpty()){
-           mainController->setUserName(newUserName);
-           setWindowTitle("Jamtaba (" + mainController->getUserName() + ")");
+        UserNameDialog dialog(this, lastUserName);
+        if(dialog.exec() == QDialog::Accepted){
+            QString userName = dialog.getUserName();
+            if(!userName.isEmpty()){
+                mainController->setUserName(userName);
+                setWindowTitle("Jamtaba v" + QApplication::applicationVersion() + " (" + userName + ")");
+            }
         }
     }
 

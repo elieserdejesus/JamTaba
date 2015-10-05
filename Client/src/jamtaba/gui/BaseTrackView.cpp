@@ -13,7 +13,8 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     mainController(mainController),
     trackID(trackID),
     activated(true),
-    narrowed(false)
+    narrowed(false),
+    drawDbValue(true)
 {
     ui->setupUi(this);
     QObject::connect(ui->muteButton, SIGNAL(clicked()), this, SLOT(onMuteClicked()));
@@ -190,8 +191,9 @@ void BaseTrackView::paintEvent(QPaintEvent* ){
 
 
 //    drawFaderDbMarks(p);
-
-    drawFaderDbValue(p);
+    if(drawDbValue){
+        drawFaderDbValue(p);
+    }
 
 }
 

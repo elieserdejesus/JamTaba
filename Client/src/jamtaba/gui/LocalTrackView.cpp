@@ -92,9 +92,11 @@ void LocalTrackView::setFaderOnlyMode(bool faderOnly){
         ui->peaksDbLabel->setVisible(!faderOnly);
         //vertical spacer in bottom of VUs
         ui->verticalSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
+        ui->horizontalSpacer->changeSize( faderOnly ? 0 : 20,20, QSizePolicy::Minimum, QSizePolicy::Fixed);
 
         inputTypeIconLabel->setVisible(!faderOnly);
 
+        this->drawDbValue = !faderOnly;
 
         updateGeometry();
 
