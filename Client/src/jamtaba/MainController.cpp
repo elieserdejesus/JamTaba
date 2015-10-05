@@ -643,7 +643,7 @@ Audio::AudioPeak MainController::getTrackPeak(int trackID){
     //checkThread("getTrackPeak()");
     Audio::AudioNode* trackNode = tracksNodes[trackID];
     if(trackNode && !trackNode->isMuted()){
-        return trackNode->getLastPeak(true);//get last peak and reset
+        return trackNode->getLastPeak();
     }
     if(!trackNode){
         qWarning() << "trackNode not found! ID:" << trackID;
@@ -652,7 +652,7 @@ Audio::AudioPeak MainController::getTrackPeak(int trackID){
 }
 
 Audio::AudioPeak MainController::getRoomStreamPeak(){
-    return roomStreamer->getLastPeak(true);
+    return roomStreamer->getLastPeak();
 }
 
 

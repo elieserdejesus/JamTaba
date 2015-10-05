@@ -74,7 +74,7 @@ public:
     void setPan(float pan);
     inline float getPan() const {return pan;}
 
-    AudioPeak getLastPeak(bool resetPeak=false) const;
+    AudioPeak getLastPeak() const;
 
     inline void deactivate(){activated = false;}
     inline void activate(){activated = true;}

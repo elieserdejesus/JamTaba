@@ -1,5 +1,3 @@
-#esconder o painel de server privado quando exibir o painel de user name
-
 #change log
 #1 - little change in chat translate button
 #2 - Using dial in pan and improvements in local controls ui

@@ -935,7 +935,7 @@ NinjamRoomWindow #labelRoomName{
 
 NinjamTrackView > .QLabel#channelName{
     border: 1px solid rgba(0, 0, 0, 25);
-    qproperty-alignment: AlignCenter;
+    /*qproperty-alignment: AlignCenter;*/
     background-color: rgba(0, 0, 0, 20);
     border-radius: 2px;
     padding-top: 3px;
