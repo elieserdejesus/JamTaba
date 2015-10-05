@@ -333,15 +333,12 @@ void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffe
         else if(isMidi()){//just in case
             int total = midiBuffer.getMessagesCount();
             if(total > 0){
-                //qWarning() << "--------------";
                 for (int m = 0; m < total; ++m) {
                     Midi::MidiMessage message = midiBuffer.getMessage(m);
-                    //qWarning() << "message device: " << message.globalSourceDeviceIndex;
-                    if( message.globalSourceDeviceIndex == midiDeviceIndex && (isReceivingAllMidiChannels() || message.getChannel() == midiChannelIndex)){
+                    if(  message.globalSourceDeviceIndex == midiDeviceIndex && (isReceivingAllMidiChannels() || message.getChannel() == midiChannelIndex)){
                         filteredMidiBuffer.addMessage(message);
                     }
                 }
-                //qWarning() << "--------------";
             }
         }
     }
