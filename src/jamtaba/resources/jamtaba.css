@@ -735,7 +735,7 @@ QPushButton:hover{
 
 QPushButton[enabled="false"]{
     background: none;
-    color: rgba(0, 0, 0, 80);
+    color: rgba(0, 0, 0, 30);
     border-color: rgba(0, 0, 0, 40);
 }
 

@@ -1,13 +1,9 @@
-#no collapsed está mostrando os DBs, não faz sentido
-
-
-#ninjam narrow não tem espaço para exibir os dbs
-
 #esconder o painel de server privado quando exibir o painel de user name
 
 #change log
 #1 - little change in chat translate button
 #2 - Using dial in pan and improvements in local controls ui
+#3 - fix minor issues in ui
 
 #stringer disse que o programa não abre. Instalar o JamKazam para ver.
 
@@ -155,7 +151,8 @@ HEADERS += \
     src/jamtaba/audio/vst/vsthost.h \
     #src/jamtaba/geo/IpToLocationLITEResolver.h
     src/jamtaba/geo/WebIpToLocationResolver.h \
-    src/jamtaba/gui/PrivateServerDialog.h
+    src/jamtaba/gui/PrivateServerDialog.h \
+    src/jamtaba/gui/UserNameDialog.h
     #src/jamtaba/midi/RtMidiDriver.h
 
 SOURCES += \
@@ -227,7 +224,8 @@ SOURCES += \
     src/jamtaba/audio/vst/VstPlugin.cpp \
     src/jamtaba/audio/vst/vsthost.cpp \
     src/jamtaba/geo/WebIpToLocationResolver.cpp \
-    src/jamtaba/gui/PrivateServerDialog.cpp
+    src/jamtaba/gui/PrivateServerDialog.cpp \
+    src/jamtaba/gui/UserNameDialog.cpp
     #src/jamtaba/midi/RtMidiDriver.cpp
 
 
@@ -243,7 +241,8 @@ FORMS += \
     src/jamtaba/gui/ChatMessagePanel.ui \
     src/jamtaba/gui/TrackGroupView.ui \
     src/jamtaba/gui/jamroomviewpanel.ui \
-    src/jamtaba/gui/PrivateServerDialog.ui
+    src/jamtaba/gui/PrivateServerDialog.ui \
+    src/jamtaba/gui/UserNameDialog.ui
 
 INCLUDEPATH += src/jamtaba/gui                  \
                src/jamtaba/gui/widgets          \
