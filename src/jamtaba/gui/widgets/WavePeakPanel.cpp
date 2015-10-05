@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <cmath>
 
-const int WavePeakPanel::peaksRectWidth = 2;
+const int WavePeakPanel::peaksRectWidth = 1;
 const int WavePeakPanel::peaksPad = 0;
 
 WavePeakPanel::WavePeakPanel(QWidget* parent)

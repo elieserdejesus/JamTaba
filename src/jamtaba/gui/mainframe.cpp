@@ -742,6 +742,7 @@ void MainFrame::timerEvent(QTimerEvent *){
           if(roomView){
               Audio::AudioPeak peak = mainController->getRoomStreamPeak();
               roomView->addPeak(peak.getMax());
+              qWarning() << peak.getMax();
           }
     }
 }

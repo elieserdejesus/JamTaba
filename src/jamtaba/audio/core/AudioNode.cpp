@@ -121,13 +121,8 @@ int AudioNode::getInputResamplingLength(int sourceSampleRate, int targetSampleRa
     return intValue;
 }
 
-Audio::AudioPeak AudioNode::getLastPeak(bool resetPeak) const{
-    AudioPeak peak = this->lastPeak;
-    if(resetPeak){
-        this->lastPeak.zero();
-    }
-
-    return peak;
+Audio::AudioPeak AudioNode::getLastPeak() const{
+    return this->lastPeak;
 }
 
 void AudioNode::setPan(float pan) {
