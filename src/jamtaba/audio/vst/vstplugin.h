@@ -55,6 +55,8 @@ private:
 
     bool loaded;
 
+    QMutex editorMutex;
+
     float** vstOutputArray;
     float** vstInputArray;
 

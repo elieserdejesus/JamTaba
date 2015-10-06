@@ -230,6 +230,7 @@ VstPlugin::~VstPlugin(){
     unload();
     if(editorWindow){
         editorWindow->deleteLater();
+        editorWindow = nullptr;
     }
     delete internalOutputBuffer;
 
@@ -320,35 +321,22 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
 
     VstInt32 sampleFrames = outBuffer.getFrameLenght();
     if(effect->flags & effFlagsCanReplacing){
+        QMutexLocker locker(&editorMutex);
         effect->processReplacing(effect, vstInputArray, vstOutputArray, sampleFrames);
     }
-
 
     outBuffer.add(*internalOutputBuffer);
 }
 
 void VstPlugin::closeEditor(){
     qCDebug(vst) << "Closing " << getName() << " editor. Thread:" << QThread::currentThreadId();
+    QMutexLocker locker(&editorMutex);
     if(effect && editorWindow){
         effect->dispatcher(effect, effEditClose, 0, 0, NULL, 0);
     }
     Audio::Plugin::closeEditor();
     qCDebug(vst) << "Editor closed";
 }
-
-class VstPluginWindow : public QDialog{
-public:
-    VstPluginWindow()
-        :QDialog(0, Qt::WindowTitleHint | Qt::WindowCloseButtonHint){
-
-    }
-
-protected:
-    void closeEvent(QCloseEvent*){
-        //hide();//without this workround some Korg Legacy plugins crash when editor is closed
-        QDialog::close();
-    }
-};
 
 void VstPlugin::openEditor(QPoint centerOfScreen){
     if(!effect ){
@@ -359,6 +347,8 @@ void VstPlugin::openEditor(QPoint centerOfScreen){
         return;
     }
 
+    QMutexLocker locker(&editorMutex);
+
     if(editorWindow && editorWindow->isVisible()){
         editorWindow->raise();
         editorWindow->activateWindow();
@@ -367,11 +357,12 @@ void VstPlugin::openEditor(QPoint centerOfScreen){
 
     qCDebug(vst) << "opening " <<getName() << "editor thread: " << QThread::currentThreadId();
 
-    if(!editorWindow){
-        this->editorWindow = new VstPluginWindow();
-        this->editorWindow->setWindowTitle(getName());
-        QObject::connect( this->editorWindow, SIGNAL(finished(int)), this, SLOT(editorDialogFinished()));
+    if(editorWindow){
+        editorWindow->deleteLater();
     }
+    this->editorWindow = new QDialog(0, Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
+    this->editorWindow->setWindowTitle(getName());
+    QObject::connect( this->editorWindow, SIGNAL(finished(int)), this, SLOT(editorDialogFinished()));
 
     //obtém o tamanho da janela do plugin
     ERect* rect;
@@ -386,6 +377,7 @@ void VstPlugin::openEditor(QPoint centerOfScreen){
     this->editorWindow->setFixedSize(rectWidth, rectHeight);
 
     this->editorWindow->show();
+
     effect->dispatcher(effect, effEditOpen, 0, 0, (void*)(editorWindow->effectiveWinId()), 0);
 
     //Some plugins don't return the real size until after effEditOpen
@@ -413,5 +405,6 @@ void VstPlugin::updateGui(){
     if(!editorWindow || !editorWindow->isVisible()){
         return;
     }
+
     effect->dispatcher(effect, effEditIdle, 0, 0, 0, 0);
 }
