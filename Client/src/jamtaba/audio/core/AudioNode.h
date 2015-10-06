@@ -18,7 +18,7 @@ namespace Audio{
 class AudioNodeProcessor : public QObject{
 public:
     virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, const Midi::MidiBuffer& midiBuffer) = 0;
-    virtual ~AudioNodeProcessor(){}
+    //virtual ~AudioNodeProcessor(){}
     virtual void suspend() = 0;
     virtual void resume() = 0;
     virtual void updateGui(){}

@@ -154,6 +154,8 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
     Q_UNUSED(value)
     Q_UNUSED(opt)
 
+    qCDebug(vstHost) << "opcode: " << opcode;
+
     switch(opcode) {
 
 
@@ -207,9 +209,12 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
         return 1L;
 
     case audioMasterGetVendorVersion : //34
-        return 0001L;
+        return 1L;
 
 
+    case audioMasterUpdateDisplay://42
+        QApplication::processEvents();
+        return 1L;
 
     case audioMasterCanDo : //37
         const char* str = (const char*)ptr;
@@ -222,12 +227,12 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
                 (!strcmp(str, "sendVstMidiEventFlagIsRealtime")) ||
                 //(!strcmp(str, "reportConnectionChanges")) ||
                 //(!strcmp(str, "acceptIOChanges")) ||
-                (!strcmp(str, "sendVstTimeInfo"))
+                (!strcmp(str, "sendVstTimeInfo")) ||
                 //(!strcmp(str, "openFileSelector")) ||
                 //(!strcmp(str, "closeFileSelector")) ||
-                //(!strcmp(str, "supplyIdle")) ||
+                (!strcmp(str, "supplyIdle"))
                 //(!strcmp(str, "receiveVstTimeInfo")) ||
-                //(!strcmp(str, "shellCategory")) ||
+                //(!strcmp(str, "shellCategory"))
                 ){
             //qCDebug(vstHost) << "Host CAN DO " << str;
             return 1L;
