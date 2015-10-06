@@ -1,5 +1,9 @@
-#MS20 deu problema quando reabri a janela
-    #monopoly também deu problema quando reabri
+#sampletank 2 deu problema quando abro uma segunda janela e tento fechar
+    #a thread da gui está morrendo
+
+#Testar a restauração dos Korg Legacy
+
+#ver se acho o problema do maldito LegacyCell
 
 #abro a tela de preferencias VST, sem PATHs, mando escanear e crash
 

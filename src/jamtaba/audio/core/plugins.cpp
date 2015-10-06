@@ -72,7 +72,8 @@ Plugin::Plugin(QString name)
 
 void Plugin::closeEditor(){
     if (editorWindow) {
-        editorWindow->hide();
+        editorWindow->setVisible(false);
+        editorWindow->deleteLater();
         editorWindow = nullptr;
     }
 }
