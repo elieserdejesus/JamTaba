@@ -1,6 +1,5 @@
 #pragma once
 #include "AudioNode.h"
-//#include <QDialog>
 
 class QDialog;
 
@@ -43,17 +42,6 @@ public:
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++
-//class PluginWindow : public QDialog
-//{
-//    Q_OBJECT
-
-//public:
-//    PluginWindow(Audio::Plugin* plugin);
-//    ~PluginWindow();
-//private:
-//    Audio::Plugin* plugin;
-//};
-//+++++++++++++++++++++++
 class Plugin : public Audio::AudioNodeProcessor{
     Q_OBJECT
 public:

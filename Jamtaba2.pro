@@ -1,10 +1,23 @@
-#trabalhar no bug das entradas midi. Quando mais de um VSTi está no mesmo
-    #canal somente o último recebe os inputs.
+#MS20 deu problema quando reabri a janela
+    #monopoly também deu problema quando reabri
+
+#abro a tela de preferencias VST, sem PATHs, mando escanear e crash
+
+#ver o Blue - recebendo mensagens midi - aguardando detalhes do Ancibug - Antonio
+
+#Korg LegacyCell realmente crasha na inicialização
+
+#Korg M1 parece que não recebeu mensagens midi
+#Korg M1 crashow na inicialização quando foi restaurar
+
+
+#baixar groove agent na univali - 6 GB
 
 #change log
 #1 - little change in chat translate button
 #2 - Using dial in pan and improvements in local controls ui
 #3 - fix minor issues in ui
+#4 - fixed the problem in plugin chain - only the last vsti was generating sound
 
 #stringer disse que o programa não abre. Instalar o JamKazam para ver.
 
@@ -63,6 +76,7 @@ VERSION = 2.0.1
 
 # Define the preprocessor macro to get the application version in Jamtaba application.
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+DEFINES += VST_FORCE_DEPRECATED=0
 
 QT       +=  gui  network
 

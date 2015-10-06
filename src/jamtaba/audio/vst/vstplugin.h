@@ -15,6 +15,9 @@ namespace Vst {
 class VstHost;
 class VstEvents;
 
+// Plugin's entry point
+typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
+
 class VstPlugin : public Audio::Plugin{
 public:
     explicit VstPlugin(Vst::VstHost* host);
@@ -55,6 +58,7 @@ private:
     float** vstOutputArray;
     float** vstInputArray;
 
+
     //VstEvents* vstEvents;
     void fillVstEventsList(const Midi::MidiBuffer& midiBuffer);
 
@@ -68,6 +72,8 @@ private:
 
 
     VSTEventBlock<MAX_MIDI_EVENTS> vstMidiEvents;
+
+
 };
 
 

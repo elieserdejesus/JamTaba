@@ -4,6 +4,7 @@
 
 #ifdef Q_OS_WIN
 #include <windows.h>
+#include <excpt.h>
 #endif
 
 #include <QDebug>
@@ -30,9 +31,6 @@ using namespace Vst;
 
 //+++++++++++++++++++++++++++
 
-// Plugin's entry point
-typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 VstPlugin::VstPlugin(VstHost* host)
     :   Audio::Plugin("name"),
@@ -54,6 +52,7 @@ VstPlugin::VstPlugin(VstHost* host)
     assert(host);
 
 }
+
 
 bool VstPlugin::load(QString path){
     if(!host){
@@ -82,25 +81,21 @@ bool VstPlugin::load(QString path){
             entryPoint = (vstPluginFuncPtr)pluginLib.resolve("main");
         }
     }
-    catch(...)
-    {
+    catch(...){
         qCCritical(vst) << "exception when  getting entry point " << pluginLib.fileName();
     }
     if(!entryPoint) {
-        qCCritical(vst) << "Entry point not founded, unloading plugin " << path ;
+        qCDebug(vst) << "Entry point not founded, unloading plugin " << path ;
         unload();
         return false;
     }
     qCDebug(vst) << "Entry point founded for " << path ;
     QApplication::processEvents();
-    try
-    {
+    try{
         qCDebug(vst) << "Initializing effect for " << path ;
-
         effect = entryPoint( (audioMasterCallback)host->hostCallback);// myHost->vstHost->AudioMasterCallback);
     }
-    catch(... )
-    {
+    catch(... ){
         qCCritical(vst) << "ERRO carregando plugin VST";
         effect = nullptr;
     }
@@ -230,11 +225,12 @@ void VstPlugin::setSampleRate(int newSampleRate){
     }
 }
 
-VstPlugin::~VstPlugin()
-{
-
+VstPlugin::~VstPlugin(){
     qCDebug(vst) << getName() << " VSt plugin destructor Thread:" << QThread::currentThreadId();
     unload();
+    if(editorWindow){
+        editorWindow->deleteLater();
+    }
     delete internalOutputBuffer;
 
     for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
@@ -252,6 +248,7 @@ VstPlugin::~VstPlugin()
 void VstPlugin::unload(){
     qCDebug(vst) << "unloading VST plugin " << getName() << " Thread:" << QThread::currentThreadId();
     if(effect){
+
         closeEditor();
 
         suspend();
@@ -262,8 +259,7 @@ void VstPlugin::unload(){
             effect = nullptr;
         }
     }
-    //pluginLib.
-    if(pluginLib.isLoaded()){
+    if( pluginLib.isLoaded()){
         pluginLib.unload();
     }
 }
@@ -288,9 +284,10 @@ void VstPlugin::fillVstEventsList(const Midi::MidiBuffer &midiBuffer){
 }
 
 void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, const Midi::MidiBuffer& midiBuffer){
+
     Q_UNUSED(in)
+    qCDebug(vst) << "processing ...";
     if(isBypassed() || !effect || !loaded || !started){
-        //qDebug(vst) << "returning";
         return;
     }
 
@@ -326,17 +323,32 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
         effect->processReplacing(effect, vstInputArray, vstOutputArray, sampleFrames);
     }
 
+
     outBuffer.add(*internalOutputBuffer);
 }
 
 void VstPlugin::closeEditor(){
     qCDebug(vst) << "Closing " << getName() << " editor. Thread:" << QThread::currentThreadId();
-
     if(effect && editorWindow){
         effect->dispatcher(effect, effEditClose, 0, 0, NULL, 0);
     }
     Audio::Plugin::closeEditor();
+    qCDebug(vst) << "Editor closed";
 }
+
+class VstPluginWindow : public QDialog{
+public:
+    VstPluginWindow()
+        :QDialog(0, Qt::WindowTitleHint | Qt::WindowCloseButtonHint){
+
+    }
+
+protected:
+    void closeEvent(QCloseEvent*){
+        //hide();//without this workround some Korg Legacy plugins crash when editor is closed
+        QDialog::close();
+    }
+};
 
 void VstPlugin::openEditor(QPoint centerOfScreen){
     if(!effect ){
@@ -355,6 +367,12 @@ void VstPlugin::openEditor(QPoint centerOfScreen){
 
     qCDebug(vst) << "opening " <<getName() << "editor thread: " << QThread::currentThreadId();
 
+    if(!editorWindow){
+        this->editorWindow = new VstPluginWindow();
+        this->editorWindow->setWindowTitle(getName());
+        QObject::connect( this->editorWindow, SIGNAL(finished(int)), this, SLOT(editorDialogFinished()));
+    }
+
     //obtém o tamanho da janela do plugin
     ERect* rect;
     effect->dispatcher(effect, effEditGetRect, 0, 0, (void*)&rect, 0);
@@ -364,10 +382,9 @@ void VstPlugin::openEditor(QPoint centerOfScreen){
     }
     int rectWidth = rect->right - rect->left;
     int rectHeight = rect->bottom - rect->top;
-    this->editorWindow= new QDialog(0, Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
-    this->editorWindow->setWindowTitle(getName());
+
     this->editorWindow->setFixedSize(rectWidth, rectHeight);
-    QObject::connect( this->editorWindow, SIGNAL(finished(int)), this, SLOT(editorDialogFinished()));
+
     this->editorWindow->show();
     effect->dispatcher(effect, effEditOpen, 0, 0, (void*)(editorWindow->effectiveWinId()), 0);
 
@@ -391,6 +408,9 @@ void VstPlugin::openEditor(QPoint centerOfScreen){
 
 void VstPlugin::updateGui(){
     if(isBypassed() || !effect || !loaded || !started){
+        return;
+    }
+    if(!editorWindow || !editorWindow->isVisible()){
         return;
     }
     effect->dispatcher(effect, effEditIdle, 0, 0, 0, 0);
