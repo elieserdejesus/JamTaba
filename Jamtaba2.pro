@@ -1,29 +1,23 @@
-#sampletank 2 deu problema quando abro uma segunda janela e tento fechar
-    #a thread da gui está morrendo
-
-#Testar a restauração dos Korg Legacy
-
-#ver se acho o problema do maldito LegacyCell
-
-#abro a tela de preferencias VST, sem PATHs, mando escanear e crash
-
-#ver o Blue - recebendo mensagens midi - aguardando detalhes do Ancibug - Antonio
-
-#Korg LegacyCell realmente crasha na inicialização
-
-#Korg M1 parece que não recebeu mensagens midi
-#Korg M1 crashow na inicialização quando foi restaurar
-
-
-#baixar groove agent na univali - 6 GB
-
 #change log
 #1 - little change in chat translate button
 #2 - Using dial in pan and improvements in local controls ui
 #3 - fix minor issues in ui
 #4 - fixed the problem in plugin chain - only the last vsti was generating sound
+#5 - fixed the bugs in KorgLegacy plugins
+
+# pulo das salas não funciona sempre
+# ordenação dos painéis das salas
+
+# ---------------------------
+
+#hypersonic 2
+
+#ver se acho o problema do maldito LegacyCell
 
 #stringer disse que o programa não abre. Instalar o JamKazam para ver.
+
+#sampletank 2 deu problema quando abro uma segunda janela e tento fechar
+    #a thread da gui está morrendo
 
 #-------------------------------- PRIMEIRO RELEASE ----------------------------------------
 # Deu problema no MIDI no windows em 64 bits. Precilei compilar a portmidi  como MT ao invés de MD, port isso está dando

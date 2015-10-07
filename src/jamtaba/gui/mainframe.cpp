@@ -547,11 +547,15 @@ void MainFrame::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
 //        }
 //    }
     qSort(publicRooms.begin(), publicRooms.end(), jamRoomLessThan);
+    int roomViewPanelIndex = 0;
     foreach(Login::RoomInfo roomInfo, publicRooms ){
         if(roomInfo.getType() == Login::RoomTYPE::NINJAM){//skipping other rooms at moment
             if(roomViewPanels.contains(roomInfo.getID())){
                 JamRoomViewPanel* roomViewPanel = roomViewPanels[roomInfo.getID()];
                 roomViewPanel->refreshUsersList(roomInfo);
+                ui.allRoomsContent->layout()->removeWidget(roomViewPanel);
+                ((QVBoxLayout*)ui.allRoomsContent->layout())->insertWidget(roomViewPanelIndex, roomViewPanel);
+                roomViewPanelIndex++;
             }
             else{
                 JamRoomViewPanel* roomViewPanel = new JamRoomViewPanel(roomInfo, ui.allRoomsContent, mainController);
