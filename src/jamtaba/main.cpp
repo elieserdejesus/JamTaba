@@ -10,12 +10,26 @@
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
-//#include "portmidi.h"
-//#include <QDebug>
+//#include "audio/vst/vsthost.h"
+//#include "audio/vst/VstPlugin.h"
 
-#include "../audio/core/SamplesBuffer.h"
 
 int main(int argc, char* args[] ){
+
+
+//    Vst::VstHost* host = Vst::VstHost::getInstance();
+//    Vst::VstPlugin plugin(host);
+//    bool ok = false;
+//    ok = test(plugin);
+
+//    qWarning() << "loading finished";
+//    if(!ok){
+//        qWarning() << "loading fail!";
+//    }
+//    else{
+//        qWarning() << "loading ok!";
+//    }
+
 
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);

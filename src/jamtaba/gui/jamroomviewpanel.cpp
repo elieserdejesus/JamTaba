@@ -51,6 +51,7 @@ void JamRoomViewPanel::refreshUsersList(Login::RoomInfo roomInfo){
             QString userString = user.getName() +  ( !userLocation.isUnknown() ? (" <i>(" + countryName + ")</i>") : "");
             label->setText("<img src=:/flags/flags/" + countryCode +".png> " + userString);
             ui->usersPanel->layout()->addWidget(label);
+            ui->usersPanel->layout()->setAlignment(Qt::AlignTop);
         }
     }
 
@@ -98,7 +99,7 @@ void JamRoomViewPanel::initialize(Login::RoomInfo roomInfo){
         roomName += " (" + QString::number(roomInfo.getPort()) + ")";
     }
     ui->labelName->setText( roomName );
-    ui->labelRoomType->setText( (roomInfo.getType() == Login::RoomTYPE::NINJAM) ? "Ninjam" : "RealTime");
+    //ui->labelRoomType->setText( (roomInfo.getType() == Login::RoomTYPE::NINJAM) ? "Ninjam" : "RealTime");
 
     refreshUsersList(roomInfo);
 }

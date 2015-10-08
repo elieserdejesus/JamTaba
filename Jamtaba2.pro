@@ -1,14 +1,39 @@
+#ideia do Echnaton para o chord progression
+#https://dl.dropboxusercontent.com/u/7757890/jamtaba-chords.jpg
+
+#Ideias do stringer sobre cores
+    #The simplest idea I can share beforehand is that you might replace the light
+    #grey backgrounds with a very light (semi-transparent or mixed with white)
+    #pastel of the tan/yellow color to give everything a light, but warm feel.
+    #The large darker bands and footer could be slightly less transparent,
+    #but still light variation of the orange which is very compatible with
+    #the yellow/tan (a washed out, semi-transparent version of the green might
+    #also be useful for larger blocks like a feature box.)
+
+    #Finally, the hard colors might be reserved just for headers, menu bars, tabs,
+    #sub-menus, borders or other elements that you want to stand out
+    #(like the yellow/tan color on the installer window border you just sent...
+    #might be a nice border for the app) You run the risk of getting a website
+    #or app that looks like a toucan if you overdo these lol.
+
+
+
+#ele também falou alguma coisa sobre armazenar as progressões. Ver
+    #a mensagem privada no ninbot
+
 #change log
 #1 - little change in chat translate button
 #2 - Using dial in pan and improvements in local controls ui
 #3 - fix minor issues in ui
 #4 - fixed the problem in plugin chain - only the last vsti was generating sound
 #5 - fixed the bugs in KorgLegacy plugins
-
-# pulo das salas não funciona sempre
-# ordenação dos painéis das salas
+#6 - new logo by Stringer
+#7 - new colors?
+#8 - fixed the order in public rooms by musicians count
 
 # ---------------------------
+
+# pulo das salas não funciona sempre - talvez eu não esteja desconectando todos os signals
 
 #hypersonic 2
 

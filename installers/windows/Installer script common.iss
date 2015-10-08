@@ -66,7 +66,7 @@ Source: ..\..\Jamtaba2.ico; DestDir: {app}; Flags: ignoreversion
 Name: {group}\{#MyAppName}; Filename: {app}\{#MyAppExeName}; IconFilename: {app}\Jamtaba2.ico; IconIndex: 0
 Name: {group}\{cm:ProgramOnTheWeb,{#MyAppName}}; Filename: {#MyAppURL}; IconFilename: {app}\Jamtaba2.ico; IconIndex: 0
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; IconFilename: {app}\Jamtaba2.ico; IconIndex: 0
-Name: {commondesktop}\{#MyAppName}; Filename: {app}\{#MyAppExeName}; Tasks: desktopicon; IconFilename: {app}\Jamtaba2.ico; IconIndex: 0
+Name: {commondesktop}\{#MyAppName}; Filename: {app}\{#MyAppExeName}; Tasks: desktopicon; IconFilename: {app}\Jamtaba2.ico; IconIndex: 0; Languages: 
 Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}; Filename: {app}\{#MyAppExeName}; Tasks: quicklaunchicon; IconFilename: {app}\Jamtaba2.ico; IconIndex: 0
 
 [Run]
