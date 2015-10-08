@@ -160,7 +160,8 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
     //threadHandle = nullptr;//QThread::currentThreadId();
 
     setQuitOnLastWindowClosed(false);//wait disconnect from server to close
-    configureStyleSheet();
+    //configureStyleSheet("jamtaba_orange.css");
+    configureStyleSheet("jamtaba.css");
 
     this->audioDriver = buildAudioDriver(settings);
 
@@ -1011,8 +1012,8 @@ Midi::MidiDriver* MainController::getMidiDriver() const{
     return midiDriver;
 }
 
-void MainController::configureStyleSheet(){
-    QFile styleFile( ":/style/jamtaba.css" );
+void MainController::configureStyleSheet(QString cssFile){
+    QFile styleFile( ":/style/" + cssFile );
     if(!styleFile.open( QFile::ReadOnly )){
         qFatal("não carregou estilo!");
     }

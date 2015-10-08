@@ -89,6 +89,9 @@ private slots:
     void on_tabChanged(int index);
 
 
+    //themes
+    void on_newThemeSelected(QAction*);
+
     //main menu
     void on_preferencesClicked(QAction *action);
     void on_IOPreferencesChanged(QList<bool>, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);

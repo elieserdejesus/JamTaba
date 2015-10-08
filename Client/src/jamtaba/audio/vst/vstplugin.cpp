@@ -288,7 +288,7 @@ void VstPlugin::fillVstEventsList(const Midi::MidiBuffer &midiBuffer){
 void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, const Midi::MidiBuffer& midiBuffer){
 
     Q_UNUSED(in)
-    qCDebug(vst) << "processing ...";
+    //qCDebug(vst) << "processing ...";
     if(isBypassed() || !effect || !loaded || !started){
         return;
     }

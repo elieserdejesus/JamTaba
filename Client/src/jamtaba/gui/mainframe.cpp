@@ -67,6 +67,20 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 
     initializeMainControllerEvents();
     initializeMainTabWidget();
+
+
+    QDir stylesDir(":/style");
+    QStringList cssList = stylesDir.entryList(QStringList("*.css"));
+    foreach (QString css, cssList) {
+        QAction* action = ui.menuThemes->addAction(css);
+        action->setData(css);
+    }
+    QObject::connect(ui.menuThemes, SIGNAL(triggered(QAction*)), this, SLOT(on_newThemeSelected(QAction*)));
+
+    //hide the the menus for while
+    ui.menuThemes->setVisible(false);
+
+
     timerID = startTimer(1000/50);
 
     //ui.menuPreferences
@@ -91,14 +105,21 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 
     ui.chatArea->setVisible(false);//hide chat area until connect in a server to play
 
-    ui.allRoomsContent->setLayout(new QVBoxLayout());
-    ui.allRoomsContent->layout()->setContentsMargins(0,0,6,0);
+    ui.allRoomsContent->setLayout(new QGridLayout());
+    ui.allRoomsContent->layout()->setContentsMargins(0,0,0,0);
     ui.allRoomsContent->layout()->setSpacing(24);
 
     foreach (LocalTrackGroupView* channel, localChannels) {
         channel->refreshInputSelectionNames();
     }
 }
+//++++++++++++++++++++++++=
+void MainFrame::on_newThemeSelected(QAction *a){
+    QString css = a->data().toString();
+    mainController->configureStyleSheet(css);
+
+}
+
 //++++++++++++++++++++++++=
 void MainFrame::on_localControlsCollapseButtonClicked(){
     foreach (LocalTrackGroupView* channel, localChannels) {
@@ -547,20 +568,20 @@ void MainFrame::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
 //        }
 //    }
     qSort(publicRooms.begin(), publicRooms.end(), jamRoomLessThan);
-    int roomViewPanelIndex = 0;
+    int index = 0;
     foreach(Login::RoomInfo roomInfo, publicRooms ){
         if(roomInfo.getType() == Login::RoomTYPE::NINJAM){//skipping other rooms at moment
             if(roomViewPanels.contains(roomInfo.getID())){
                 JamRoomViewPanel* roomViewPanel = roomViewPanels[roomInfo.getID()];
                 roomViewPanel->refreshUsersList(roomInfo);
                 ui.allRoomsContent->layout()->removeWidget(roomViewPanel);
-                ((QVBoxLayout*)ui.allRoomsContent->layout())->insertWidget(roomViewPanelIndex, roomViewPanel);
-                roomViewPanelIndex++;
+                ((QGridLayout*)ui.allRoomsContent->layout())->addWidget(roomViewPanel, index / 2, index % 2);
+
             }
             else{
                 JamRoomViewPanel* roomViewPanel = new JamRoomViewPanel(roomInfo, ui.allRoomsContent, mainController);
                 roomViewPanels.insert(roomInfo.getID(), roomViewPanel);
-                ui.allRoomsContent->layout()->addWidget(roomViewPanel);
+                ((QGridLayout*)ui.allRoomsContent->layout())->addWidget(roomViewPanel, index / 2, index % 2);
                 connect( roomViewPanel, SIGNAL(startingListeningTheRoom(Login::RoomInfo)),
                          this, SLOT(on_startingRoomStream(Login::RoomInfo)));
                 connect( roomViewPanel, SIGNAL(finishingListeningTheRoom(Login::RoomInfo)),
@@ -568,6 +589,7 @@ void MainFrame::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
                 connect( roomViewPanel, SIGNAL(enteringInTheRoom(Login::RoomInfo)),
                          this, SLOT(on_enteringInRoom(Login::RoomInfo)));
             }
+            index++;
         }
     }
 
@@ -746,7 +768,6 @@ void MainFrame::timerEvent(QTimerEvent *){
           if(roomView){
               Audio::AudioPeak peak = mainController->getRoomStreamPeak();
               roomView->addPeak(peak.getMax());
-              qWarning() << peak.getMax();
           }
     }
 }
