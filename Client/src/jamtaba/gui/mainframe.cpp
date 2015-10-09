@@ -79,6 +79,7 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
 
     //hide the the menus for while
     ui.menuThemes->setVisible(false);
+    ui.menuThemes->setEnabled(false);
 
 
     timerID = startTimer(1000/50);
