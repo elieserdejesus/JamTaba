@@ -13,6 +13,7 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
     ui(new Ui::ChatPanel),
     botNames(botNames),
     availableColors(createColors())
+    //lastAlign(Qt::AlignLeft)
 {
     ui->setupUi(this);
     ui->scrollContent->setLayout(new QVBoxLayout(ui->scrollContent));
@@ -27,19 +28,19 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
     ui->chatText->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
     //create some messages to test
-    /*
-    for (int user = 0; user < 11; ++user) {
-        for (int c = 0; c < 1; ++c) {
-            QString userName = "User " + QString::number(user);
-            QString message = "Message masdasd masd amsd amsd masd masd masd masd masd masd masd masd masd masd amsda";
-            if(user % 2 == 0){
-                userName = userName + " test";
-                message = "short message";
-            }
-            addMessage(userName, message);
-        }
-    }
-    */
+
+//    for (int user = 0; user < 2; ++user) {
+//        for (int c = 0; c < 3; ++c) {
+//            QString userName = "User " + QString::number(user);
+//            QString message = "Bit chat message with many lines to test the layout behavior";
+//            if(user % 3 == 0){
+//                userName = userName + " test";
+//                message = "short message";
+//            }
+//            addMessage(userName, message);
+//        }
+//    }
+
 
     //QString teste("Ã©");
     //addMessage("elieser", QString::fromUtf8(teste.toStdString().c_str()));
@@ -147,6 +148,15 @@ void ChatPanel::addMessage(QString userName, QString userMessage){
         delete panels.first();
     }
     ui->scrollContent->layout()->setAlignment(Qt::AlignTop);
+
+//    bool sameUserFromLastMessage = userName == lastUserName;
+//    if(!sameUserFromLastMessage && !(msgBackgroundColor == BOT_COLOR)){
+//        lastUserName = userName;
+//        lastAlign = (lastAlign == Qt::AlignLeft) ? Qt::AlignRight : Qt::AlignLeft;
+//    }
+//    if(msgBackgroundColor != BOT_COLOR){
+        ui->scrollContent->layout()->setAlignment(msgPanel,  Qt::AlignTop);
+//    }
 }
 
 QList<QColor> ChatPanel::createColors(){
@@ -162,7 +172,7 @@ QList<QColor> ChatPanel::createColors(){
 }
 
 QColor ChatPanel::getUserColor(QString userName) {
-    if ( botNames.contains(userName) || userName.isNull() || userName.isEmpty() ) {
+    if ( botNames.contains(userName) || userName.isNull() || userName.isEmpty() || userName == "Jamtaba" ) {
         return BOT_COLOR;
     }
 

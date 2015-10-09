@@ -22,14 +22,14 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=true
 OutputDir=.
 OutputBaseFilename={#InstallerFileName}
-SetupIconFile=16x16.ico
+SetupIconFile=E:\Jamtaba2\jamtaba2\Client\Jamtaba2.ico
 Compression=lzma
 SolidCompression=true
 ShowLanguageDialog=no
-WizardImageFile=jamtaba.bmp
+WizardImageFile=E:\Jamtaba2\jamtaba2\Client\installers\windows\Jamtaba.bmp
 WizardImageBackColor=clWhite
 WizardImageStretch=false
-WizardSmallImageFile=Jamtaba48x48.bmp
+WizardSmallImageFile=E:\Jamtaba2\jamtaba2\Client\installers\windows\Jamtaba48x48.bmp
 UsePreviousAppDir=false
 UsePreviousUserInfo=false
 UsePreviousGroup=false
@@ -60,14 +60,14 @@ Source: {#QtDir}\..\plugins\platforms\qwindows.dll; DestDir: {app}\platforms; Fl
 Source: {#QtDir}\..\plugins\bearer\qgenericbearer.dll; DestDir: {app}\bearer; Flags: ignoreversion replacesameversion
 Source: {#QtDir}\..\plugins\bearer\qnativewifibearer.dll; DestDir: {app}\bearer; Flags: ignoreversion replacesameversion
 Source: {#QtDir}\..\plugins\imageformats\qgif.dll; DestDir: {app}\imageformats; Flags: ignoreversion replacesameversion
-Source: 48x48.ico; DestDir: {app}
+Source: ..\..\Jamtaba2.ico; DestDir: {app}; Flags: ignoreversion
 
 [Icons]
-Name: {group}\{#MyAppName}; Filename: {app}\{#MyAppExeName}; IconFilename: {app}\48x48.ico; IconIndex: 0
-Name: {group}\{cm:ProgramOnTheWeb,{#MyAppName}}; Filename: {#MyAppURL}
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
-Name: {commondesktop}\{#MyAppName}; Filename: {app}\{#MyAppExeName}; Tasks: desktopicon; IconFilename: {app}\48x48.ico; IconIndex: 0
-Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}; Filename: {app}\{#MyAppExeName}; Tasks: quicklaunchicon
+Name: {group}\{#MyAppName}; Filename: {app}\{#MyAppExeName}; IconFilename: {app}\Jamtaba2.ico; IconIndex: 0
+Name: {group}\{cm:ProgramOnTheWeb,{#MyAppName}}; Filename: {#MyAppURL}; IconFilename: {app}\Jamtaba2.ico; IconIndex: 0
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; IconFilename: {app}\Jamtaba2.ico; IconIndex: 0
+Name: {commondesktop}\{#MyAppName}; Filename: {app}\{#MyAppExeName}; Tasks: desktopicon; IconFilename: {app}\Jamtaba2.ico; IconIndex: 0; Languages: 
+Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}; Filename: {app}\{#MyAppExeName}; Tasks: quicklaunchicon; IconFilename: {app}\Jamtaba2.ico; IconIndex: 0
 
 [Run]
 Filename: {app}\{#MyAppExeName}; Description: {cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}; Flags: nowait postinstall skipifsilent

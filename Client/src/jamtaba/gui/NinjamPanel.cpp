@@ -160,10 +160,10 @@ QComboBox* NinjamPanel::getAccentsCombo() const{
     return ui->comboBeatsPerAccent;
 }
 
-QSlider* NinjamPanel::getGainSlider() const{
+QAbstractSlider *NinjamPanel::getGainSlider() const{
     return ui->levelSlider;
 }
-QSlider* NinjamPanel::getPanSlider() const{
+QAbstractSlider* NinjamPanel::getPanSlider() const{
     return ui->panSlider;
 }
 

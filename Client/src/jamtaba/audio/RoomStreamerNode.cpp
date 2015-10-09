@@ -52,6 +52,7 @@ void AbstractMp3Streamer::stopCurrentStream(){
         streaming = false;
     }
     bytesToDecode.clear();
+    lastPeak.zero();
 }
 
 int AbstractMp3Streamer::getSamplesToRender(int targetSampleRate, int outLenght){

@@ -121,13 +121,8 @@ int AudioNode::getInputResamplingLength(int sourceSampleRate, int targetSampleRa
     return intValue;
 }
 
-Audio::AudioPeak AudioNode::getLastPeak(bool resetPeak) const{
-    AudioPeak peak = this->lastPeak;
-    if(resetPeak){
-        this->lastPeak.zero();
-    }
-
-    return peak;
+Audio::AudioPeak AudioNode::getLastPeak() const{
+    return this->lastPeak;
 }
 
 void AudioNode::setPan(float pan) {
@@ -177,8 +172,9 @@ void AudioNode::addProcessor( AudioNodeProcessor* newProcessor)
 
 void AudioNode::removeProcessor(AudioNodeProcessor* processor){
     assert(processor);
-    //processor->suspend();
+    processor->suspend();
     processors.removeOne(processor);
+
     delete processor;
 }
 
@@ -338,15 +334,12 @@ void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffe
         else if(isMidi()){//just in case
             int total = midiBuffer.getMessagesCount();
             if(total > 0){
-                //qWarning() << "--------------";
                 for (int m = 0; m < total; ++m) {
                     Midi::MidiMessage message = midiBuffer.getMessage(m);
-                    //qWarning() << "message device: " << message.globalSourceDeviceIndex;
-                    if( message.globalSourceDeviceIndex == midiDeviceIndex && (isReceivingAllMidiChannels() || message.getChannel() == midiChannelIndex)){
+                    if(  message.globalSourceDeviceIndex == midiDeviceIndex && (isReceivingAllMidiChannels() || message.getChannel() == midiChannelIndex)){
                         filteredMidiBuffer.addMessage(message);
                     }
                 }
-                //qWarning() << "--------------";
             }
         }
     }

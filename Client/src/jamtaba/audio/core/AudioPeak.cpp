@@ -16,12 +16,12 @@ AudioPeak::AudioPeak()
 }
 
 void AudioPeak::update(const AudioPeak &other){
-    if(other.left > left){
+    //if(other.left > left){
         left = other.left;
-    }
-    if(other.right > right){
+    //}
+    //if(other.right > right){
         right = other.right;
-    }
+    //}
 }
 
 void AudioPeak::zero(){

@@ -72,6 +72,7 @@ Plugin::Plugin(QString name)
 
 void Plugin::closeEditor(){
     if (editorWindow) {
+        editorWindow->setVisible(false);
         editorWindow->deleteLater();
         editorWindow = nullptr;
     }
@@ -91,19 +92,6 @@ void Plugin::setBypass(bool state){
     }
 }
 //++++++++++++++++++++++++++++
-//PluginWindow::PluginWindow( Plugin *plugin)
-//    :QDialog(nullptr, Qt::WindowTitleHint | Qt::WindowCloseButtonHint),
-//      plugin(plugin)
-//{
-//    //setAttribute( Qt::WA_DeleteOnClose, true );
-//    setWindowTitle(plugin->getName());
-//}
-
-//PluginWindow::~PluginWindow(){
-//    qWarning() << "PLugin window destructor";
-//}
-
-//+++++++++++++++++++++++++++++++++++++++++
 const int JamtabaDelay::MAX_DELAY_IN_SECONDS = 3;
 
 JamtabaDelay::JamtabaDelay(int sampleRate)

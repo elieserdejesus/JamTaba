@@ -196,6 +196,8 @@ public:
     int getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const;
 
     inline Vst::VstHost* getVstHost() const{return vstHost;}
+
+    void configureStyleSheet(QString cssFile);
 signals:
     void enteredInRoom(Login::RoomInfo room);
     void exitedFromRoom(bool error);
@@ -243,7 +245,7 @@ private:
     QList<Audio::PluginDescriptor> pluginsDescriptors;
     Vst::PluginFinder pluginFinder;
     //+++++++++++++++++++++++++
-    void configureStyleSheet();
+
 
     void tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStringList channels, QString password="");
 

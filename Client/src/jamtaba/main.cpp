@@ -10,12 +10,26 @@
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
-//#include "portmidi.h"
-//#include <QDebug>
+//#include "audio/vst/vsthost.h"
+//#include "audio/vst/VstPlugin.h"
 
-#include "../audio/core/SamplesBuffer.h"
 
 int main(int argc, char* args[] ){
+
+
+//    Vst::VstHost* host = Vst::VstHost::getInstance();
+//    Vst::VstPlugin plugin(host);
+//    bool ok = false;
+//    ok = test(plugin);
+
+//    qWarning() << "loading finished";
+//    if(!ok){
+//        qWarning() << "loading fail!";
+//    }
+//    else{
+//        qWarning() << "loading ok!";
+//    }
+
 
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
@@ -48,25 +62,25 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
     QByteArray localMsg = msg.toLocal8Bit();
     QString stringMsg;
     QString fullFileName(context.file);
-    const char* file;
+    QString file;
     int lastPathSeparatorIndex = fullFileName.lastIndexOf(QDir::separator());
     if(lastPathSeparatorIndex){
-        file = fullFileName.right(fullFileName.size() - lastPathSeparatorIndex - 1).toStdString().c_str();
+        file = fullFileName.right(fullFileName.size() - lastPathSeparatorIndex - 1);//.toStdString().c_str();
     }
     else{
-        file = fullFileName.toStdString().c_str();
+        file = fullFileName;//.toStdString().c_str();
     }
 
     QTextStream stream(&stringMsg);
     switch (type) {
     case QtDebugMsg:
-        stream << "\nDEBUG:" << localMsg.constData() << endl << file << " " << context.line << endl;
+        stream << "\nDEBUG:" << localMsg.constData() << " "  << " in " << file << " " << context.line << endl;
         break;
     case QtWarningMsg:
-        stream << "\n\nWARNING: " << localMsg.constData() <<  endl << context.function <<  " " << file << context.line << endl;
+        stream << "\n\nWARNING: " << localMsg.constData() <<  context.function <<  " " << file << context.line << endl;
         break;
     case QtCriticalMsg:
-        stream << "\n\nCRITICAL:" << localMsg.constData() <<  endl << context.function << " " << file << context.line << endl <<endl;
+        stream << "\n\nCRITICAL:" << localMsg.constData() <<  context.function << " " << file << context.line << endl <<endl;
         break;
     case QtFatalMsg:
         stream << "\n\nFATAL:" << localMsg.constData() << context.function << file << context.line << endl << endl;

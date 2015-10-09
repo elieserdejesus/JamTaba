@@ -13,7 +13,8 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     mainController(mainController),
     trackID(trackID),
     activated(true),
-    narrowed(false)
+    narrowed(false),
+    drawDbValue(true)
 {
     ui->setupUi(this);
     QObject::connect(ui->muteButton, SIGNAL(clicked()), this, SLOT(onMuteClicked()));
@@ -27,6 +28,8 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
 
     //add in static map
     trackViews.insert(trackID, this);
+
+    //ui->panSlider->setAttribute(Qt::WA_);
 }
 
 
@@ -68,7 +71,7 @@ void BaseTrackView::setToNarrow(){
     //ui->muteButton->setText("M");
     //ui->muteButton->setToolTip("Mute");
 
-    ui->panSlider->setTickInterval(2);
+    //ui->panSlider->setTickInterval(2);
     updateGeometry();
 }
 
@@ -82,7 +85,7 @@ void BaseTrackView::setToWide(){
 //        ui->muteButton->setText("MUTE");
 //        ui->muteButton->setToolTip("Mute");
 
-        ui->panSlider->setTickInterval(0);
+        //ui->panSlider->setTickInterval(0);
         updateGeometry();
     }
 }
@@ -188,8 +191,9 @@ void BaseTrackView::paintEvent(QPaintEvent* ){
 
 
 //    drawFaderDbMarks(p);
-
-    drawFaderDbValue(p);
+    if(drawDbValue){
+        drawFaderDbValue(p);
+    }
 
 }
 

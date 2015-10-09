@@ -15,14 +15,24 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
     channelNameLabel = new QLabel();
     channelNameLabel->setObjectName("channelName");
     channelNameLabel->setText(channelName);
+    //channelNameLabel->setEnabled(true);
 
     //channelNameLabel->setWordWrap(true);
     ui->mainLayout->insertSpacing(0, 12);
     ui->mainLayout->insertWidget(1, channelNameLabel);
+
 }
 
 void NinjamTrackView::setChannelName(QString name){
     this->channelNameLabel->setText(name);
+    int nameWidth = this->channelNameLabel->fontMetrics().width(name);
+    if(nameWidth <= this->channelNameLabel->contentsRect().width()){
+        this->channelNameLabel->setAlignment(Qt::AlignCenter);
+    }
+    else{
+        this->channelNameLabel->setAlignment(Qt::AlignLeft);
+    }
+    this->channelNameLabel->setToolTip(name);
 }
 
 

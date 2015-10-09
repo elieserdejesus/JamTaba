@@ -18,7 +18,7 @@ namespace Audio{
 class AudioNodeProcessor : public QObject{
 public:
     virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, const Midi::MidiBuffer& midiBuffer) = 0;
-    virtual ~AudioNodeProcessor(){}
+    //virtual ~AudioNodeProcessor(){}
     virtual void suspend() = 0;
     virtual void resume() = 0;
     virtual void updateGui(){}
@@ -74,7 +74,7 @@ public:
     void setPan(float pan);
     inline float getPan() const {return pan;}
 
-    AudioPeak getLastPeak(bool resetPeak=false) const;
+    AudioPeak getLastPeak() const;
 
     inline void deactivate(){activated = false;}
     inline void activate(){activated = true;}

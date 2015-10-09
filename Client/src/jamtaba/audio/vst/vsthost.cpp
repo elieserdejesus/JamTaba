@@ -154,6 +154,8 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
     Q_UNUSED(value)
     Q_UNUSED(opt)
 
+    qCDebug(vstHost) << "opcode: " << opcode;
+
     switch(opcode) {
 
 
@@ -165,7 +167,11 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
             return 0L;
 
     case audioMasterVersion : //1
-        return 2400L;
+        return 2;
+        //	return 2400L; // Supports VST v2.4
+        //	return 2300L; // Supports VST v2.3
+        //	return 2200L; // Supports VST v2.2
+        //	return 2100L; // Supports VST v2.1
 
     case audioMasterGetBlockSize:
         return VstHost::getInstance()->blockSize;
@@ -173,27 +179,8 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
     case audioMasterGetSampleRate:
         return VstHost::getInstance()->getSampleRate();
 
-        //        case audioMasterWantMidi:
-        //            return 1L;
-
     case audioMasterGetTime : //7
-    {
-        //if(VstHost::getInstance()->tempoIsValid()){
-        //retornar uma copia como sugerido no kvr. Ver o wahjam e o vst host
-
-        //VstTimeInfo hostTimeInfo = ;
         return (long)(&(VstHost::getInstance()->vstTimeInfo));
-        //}
-        //qCDebug(vstHost) << "Returning 0 for VstTime";
-        //return 0L;//avoid crash some plugins
-    }
-
-        //        case audioMasterSetTime  : //9
-        //            pHost->SetTimeInfo((VstTimeInfo*)ptr);
-        //            return 1L;
-
-        //        case audioMasterTimeAt : //10
-        //            return 1000L*pHost->vstTimeInfo.tempo;
 
     case audioMasterGetCurrentProcessLevel : //23
         return 2L;
@@ -207,9 +194,12 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
         return 1L;
 
     case audioMasterGetVendorVersion : //34
-        return 0001L;
+        return 1L;
 
 
+    case audioMasterUpdateDisplay://42
+        QApplication::processEvents();
+        return 1L;
 
     case audioMasterCanDo : //37
         const char* str = (const char*)ptr;
@@ -222,17 +212,12 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
                 (!strcmp(str, "sendVstMidiEventFlagIsRealtime")) ||
                 //(!strcmp(str, "reportConnectionChanges")) ||
                 //(!strcmp(str, "acceptIOChanges")) ||
-                (!strcmp(str, "sendVstTimeInfo"))
-                //(!strcmp(str, "openFileSelector")) ||
-                //(!strcmp(str, "closeFileSelector")) ||
-                //(!strcmp(str, "supplyIdle")) ||
-                //(!strcmp(str, "receiveVstTimeInfo")) ||
-                //(!strcmp(str, "shellCategory")) ||
+                (!strcmp(str, "sendVstTimeInfo")) ||
+                (!strcmp(str, "supplyIdle"))
+                //(!strcmp(str, "shellCategory"))
                 ){
-            //qCDebug(vstHost) << "Host CAN DO " << str;
             return 1L;
         }
-
 
         //ignore the rest
         qCDebug(vstHost) << "host can't do"<<str;

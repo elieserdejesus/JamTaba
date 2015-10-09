@@ -83,6 +83,8 @@ private slots:
     void on_channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
     void on_channelXmitChanged(long channelID, bool transmiting);
     void on_chatMessageReceived(Ninjam::User, QString message);
+    void on_userLeave(QString userName);
+    void on_userEnter(QString userName);
 
     void userSendingNewChatMessage(QString msg);
 
