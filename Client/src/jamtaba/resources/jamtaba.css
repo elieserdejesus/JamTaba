@@ -294,7 +294,9 @@ QSlider::groove:vertical{
 }
 
 NinjamRoomWindow TrackGroupView BaseTrackView QSlider::groove:vertical{
-    border: 1px inset rgb(140, 140, 140);
+    border: 1px solid #AAAAAA;
+    border-right-color: #C1C1C1;
+    border-bottom-color: #C1C1C1;
 }
 
 QSlider::groove:horizontal{
@@ -324,7 +326,7 @@ BaseTrackView #peaksDbLabel{
     padding: 1px;
 }
 NinjamTrackView #peaksDbLabel{
-    border: 1px inset rgb(95,95,95);
+    border: 1px solid rgba(0, 0, 0, 8);
 }
 
 
@@ -499,7 +501,10 @@ QPushButton#localControlsCollapseButton::hover:checked{
 }
 
 #contentPanel .QTabWidget:pane{
-    background-color: #BCBCBC;
+    /*background-color: #BCBCBC;*/
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop: 0     #dedede,
+            stop: 1.0   #bcbcbc);
 }
 
 #contentPanel .QTabWidget:pane, #chatArea .QTabWidget:pane{
@@ -596,10 +601,12 @@ BusyDialog > QLabel{
 
 
 JamRoomViewPanel{
-    background-color: rgb(220, 220, 220);
-    border: 1px solid rgb(230,230,230);
-    border-bottom: 1px solid rgb(167, 167, 167);
-    border-right: 1px solid rgb(180,180,180);
+    background-color: #EAEAEA;
+    border: 1px solid rgb(180,180,180);
+    /*border-bottom: 1px solid rgb(167, 167, 167);
+    border-right: 1px solid rgb(180,180,180);*/
+    border-left-color: #C6C6C6;
+    border-top-color:#C6C6C6;
 
     border-radius: 2px;
     padding: 1px;
@@ -609,7 +616,7 @@ JamRoomViewPanel #content{
     background-color: rgb(253, 253, 253);
     border: none;
     margin: 1px;
-    border-top: 1px solid rgb(181,181,181);
+    border-top: 1px solid #dddddd;
 
 }
 
@@ -788,9 +795,9 @@ TrackGroupView {
 
 TrackGroupView > #topPanel{
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgb(255, 255, 255),
+    stop:0 rgb(245, 245, 245),
     stop:0.06 rgb(240, 240, 240),
-    stop:1 rgb(160, 160, 160));
+    stop:1 rgb(150, 150, 150));
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
 }
@@ -959,7 +966,7 @@ NinjamRoomWindow TrackGroupView #groupNameField{
 }
 
 NinjamRoomWindow TrackGroupView #countryLabel{
-    color: #727979;
+    color: #505858;
     qproperty-alignment: AlignCenter;
     font-size: 11px;
 }
