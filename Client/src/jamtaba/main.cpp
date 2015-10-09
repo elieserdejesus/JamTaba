@@ -90,10 +90,8 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
        stream << "\n\nINFO:" << localMsg.constData() << file << context.line << endl << endl;
     }
     QTextStream(stdout) << stringMsg << endl;
-    //fprintf(stderr, stringMsg.toStdString().c_str());//write log message to console
-    //fflush(stderr);
 
-    //if(type != QtDebugMsg){//write the critical messages to log file
+    if(type != QtDebugMsg){//write the critical messages to log file
         QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
         if(!logDir.exists()){
             logDir.mkpath(".");
@@ -103,7 +101,7 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
            QTextStream ts(&outFile);
            ts << stringMsg << endl;
         }
-    //}
+    }
 
     if(type == QtFatalMsg){
         abort();

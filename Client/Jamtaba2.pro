@@ -29,6 +29,7 @@
 #5 - fixed the bugs in KorgLegacy plugins
 #6 - new logo by Stringer
 #7 - new colors?
+#8 - showing public rooms in a grid
 #8 - fixed the order in public rooms by musicians count
 
 # ---------------------------
@@ -95,7 +96,7 @@
 # Project created by QtCreator 2015-01-13T11:05:00
 #
 #-------------------------------------------------
-VERSION = 2.0.1
+VERSION = 2.0.2
 
 # Define the preprocessor macro to get the application version in Jamtaba application.
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
