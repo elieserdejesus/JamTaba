@@ -489,7 +489,7 @@ QPushButton#localControlsCollapseButton::hover:checked{
 }
 
 #contentPanel .QTabWidget:pane, #leftPanel{
-    background-color: #EFEEC2;
+    background-color: #EDE3D7;
     border: none;/* 1px solid #EFEEC2;*/
     border-radius: 1px;
     padding: 0px;
