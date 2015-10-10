@@ -1,5 +1,14 @@
+#ver o problema do mac, talvez a solução seja desativar o ssl. Se eu fizer
+    #isso os usuários de versões anteriores vão parar.
+
+#botão enter da sala não atualizou quando diminuiu a quantidade de usuários
+
+#sistema de versão deu problema, não avisou que tem versão mais nova.Mas avisou quando rodei local.
+
 #ideia do Echnaton para o chord progression
 #https://dl.dropboxusercontent.com/u/7757890/jamtaba-chords.jpg
+    #Echnaton deu uma ideia muito legal para um sistema de voto de chord progression,
+        #ver a mensagem no ninbot
 
 #Ideias do stringer sobre cores
     #The simplest idea I can share beforehand is that you might replace the light
