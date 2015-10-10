@@ -443,7 +443,7 @@ void MainFrame::initializeLoginService(){
     connect( loginService, SIGNAL(roomsListAvailable(QList<Login::RoomInfo>)), this, SLOT(on_roomsListAvailable(QList<Login::RoomInfo>)));
     connect( loginService, SIGNAL(incompatibilityWithServerDetected()), this, SLOT(on_incompatibilityWithServerDetected()));
     connect( loginService, SIGNAL(newVersionAvailableForDownload()), this, SLOT(on_newVersionAvailableForDownload()));
-    connect( loginService, SIGNAL(errorWhenConnectingToServer()), this, SLOT(on_errorConnectingToServer()));
+    connect( loginService, SIGNAL(errorWhenConnectingToServer(QString)), this, SLOT(on_errorConnectingToServer(QString)));
 }
 
 void MainFrame::initializeWindowState(){
@@ -544,9 +544,9 @@ void MainFrame::on_incompatibilityWithServerDetected(){
     close();
 }
 
-void MainFrame::on_errorConnectingToServer(){
+void MainFrame::on_errorConnectingToServer(QString errorMsg){
     hideBusyDialog();
-    QMessageBox::warning(this, "Error!", "Error connecting in Jamtaba server!");
+    QMessageBox::warning(this, "Error!", "Error connecting in Jamtaba server!\n" + errorMsg);
     close();
     mainController->quit();
 }

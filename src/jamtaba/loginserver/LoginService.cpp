@@ -146,7 +146,7 @@ QNetworkReply* LoginService::sendCommandToServer(const QUrlQuery &query)
 
     }
     if(httpClient.networkAccessible() == QNetworkAccessManager::NetworkAccessibility::NotAccessible){
-        emit errorWhenConnectingToServer();
+        emit errorWhenConnectingToServer("network is not acessible");
         return nullptr;
     }
     QUrl url(SERVER);
@@ -162,8 +162,29 @@ QNetworkReply* LoginService::sendCommandToServer(const QUrlQuery &query)
 //    reply->ignoreSslErrors();
 //}
 
-void LoginService::errorSlot(QNetworkReply::NetworkError /*error*/){
-    emit errorWhenConnectingToServer();
+QString getNetworkErrorMsg(QNetworkReply::NetworkError error){
+    switch(error){
+    case QNetworkReply::ConnectionRefusedError: return "Connection refused!";
+    case QNetworkReply::RemoteHostClosedError: return "Remote host closed!";
+    case QNetworkReply::HostNotFoundError: return "Host not found!";
+    case QNetworkReply::TimeoutError: return "Time out!";
+    case QNetworkReply::OperationCanceledError: return "Operation canceled!";
+    case QNetworkReply::SslHandshakeFailedError: return "Ssl handshake failed!";
+    case QNetworkReply::TemporaryNetworkFailureError: return "Temporary network failure!";
+    case QNetworkReply::NetworkSessionFailedError: return "Network Session Failed";
+    case QNetworkReply::BackgroundRequestNotAllowedError: return "background request not allowed!";
+    case QNetworkReply::UnknownNetworkError: return "Unknown network error!";
+    default: return "no error description!";
+    }
+}
+
+void LoginService::errorSlot(QNetworkReply::NetworkError error){
+    QString errorMsg;
+    if(pendingReply)
+        errorMsg = pendingReply->errorString();
+    else
+        errorMsg = getNetworkErrorMsg(error);
+    emit errorWhenConnectingToServer(errorMsg);
 }
 
 void LoginService::connectNetworkReplySlots(QNetworkReply* reply, Command command)
@@ -184,7 +205,7 @@ void LoginService::connectNetworkReplySlots(QNetworkReply* reply, Command comman
 }
 
 void LoginService::connectedSlot(){
-
+    //emit errorWhenConnectingToServer("teste");
     refreshTimer->start(REFRESH_PERIOD);
     roomsListReceivedSlot();
     connected = true;

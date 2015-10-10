@@ -75,13 +75,13 @@ Service::Service()
 }
 
 Service::~Service(){
-    qCDebug(ninjamService) << "NinjamService destructor";
+    //qCDebug(ninjamService) << "NinjamService destructor";
     disconnect(&socket, SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
     disconnect(&socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
     disconnect(&socket, SIGNAL(disconnected()), this, SLOT(socketDisconnectSlot()));
     disconnect(&socket, SIGNAL(connected()), this, SLOT(socketConnectedSlot()));
 
-    if(socket.isOpen()){
+    if( socket.isValid() && socket.isOpen()){
         socket.disconnectFromHost();
     }
 }
