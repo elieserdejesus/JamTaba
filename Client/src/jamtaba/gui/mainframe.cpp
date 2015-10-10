@@ -78,8 +78,8 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     QObject::connect(ui.menuThemes, SIGNAL(triggered(QAction*)), this, SLOT(on_newThemeSelected(QAction*)));
 
     //hide the the menus for while
-    ui.menuThemes->setVisible(false);
-    ui.menuThemes->setEnabled(false);
+    //ui.menuThemes->setVisible(false);
+    //ui.menuThemes->setEnabled(false);
 
 
     timerID = startTimer(1000/50);
