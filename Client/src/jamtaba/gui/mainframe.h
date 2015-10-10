@@ -107,7 +107,7 @@ private slots:
     void on_roomsListAvailable(QList<Login::RoomInfo> publicRooms);
     void on_newVersionAvailableForDownload();
     void on_incompatibilityWithServerDetected();
-    void on_errorConnectingToServer();
+    void on_errorConnectingToServer(QString errorMsg);
 
     //+++++  ROOM FEATURES ++++++++
     void on_startingRoomStream(Login::RoomInfo roomInfo);

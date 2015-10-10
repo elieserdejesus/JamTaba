@@ -111,16 +111,14 @@ VERSION = 2.0.2
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += VST_FORCE_DEPRECATED=0
 
-QT       +=  gui  network
+QT       +=  gui  network widgets
 
 macx{
-    QMAKE_CXXFLAGS += -mmacosx-version-min=10.6 -stdlib=libc++
-    LIBS += -mmacosx-version-min=10.6 -stdlib=libc++
+    QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -stdlib=libc++
+    LIBS += -mmacosx-version-min=10.7 -stdlib=libc++
 }
 
 CONFIG += c++11
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Jamtaba2
 TEMPLATE = app

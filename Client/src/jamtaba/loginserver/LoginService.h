@@ -86,7 +86,7 @@ signals:
     void disconnectedFromServer();
     void incompatibilityWithServerDetected();
     void newVersionAvailableForDownload();
-    void errorWhenConnectingToServer();
+    void errorWhenConnectingToServer(QString error);
 private:
 
     enum Command{
@@ -110,7 +110,7 @@ private slots:
     void disconnectedSlot();
     void roomsListReceivedSlot();
 
-    void errorSlot(QNetworkReply::NetworkError);
+    void errorSlot(QNetworkReply::NetworkError error);
     //void sslErrorsSlot(QNetworkReply*,QList<QSslError>);
     void connectNetworkReplySlots(QNetworkReply *reply, Command command);
 
