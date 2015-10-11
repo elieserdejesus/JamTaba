@@ -27,7 +27,7 @@
 
 Q_LOGGING_CATEGORY(vst, "vst")
 
-using namespace Vst;
+using namespace Jamtaba;
 
 //+++++++++++++++++++++++++++
 

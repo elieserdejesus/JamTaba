@@ -267,7 +267,7 @@ void MainFrame::initializeMainControllerEvents(){
 }
 
 void MainFrame::initializeVstFinderStuff(){
-    const Vst::PluginFinder& pluginFinder = mainController->getPluginFinder();
+    const Jamtaba::PluginFinder& pluginFinder = mainController->getPluginFinder();
     QObject::connect(&pluginFinder, SIGNAL(scanStarted()), this, SLOT(onScanPluginsStarted()));
     QObject::connect(&pluginFinder, SIGNAL(scanFinished()), this, SLOT(onScanPluginsFinished()));
     QObject::connect(&pluginFinder, SIGNAL(pluginScanFinished(QString,QString,QString)), this, SLOT(onPluginFounded(QString,QString,QString)));

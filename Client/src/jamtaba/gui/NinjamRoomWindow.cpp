@@ -4,6 +4,7 @@
 
 #include <QComboBox>
 #include <QDebug>
+#include <QDateTime>
 
 #include "../ninjam/User.h"
 #include "../ninjam/Server.h"

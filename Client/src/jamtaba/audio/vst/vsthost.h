@@ -13,7 +13,7 @@ class MidiBuffer;
 }
 
 
-namespace Vst {
+namespace Jamtaba {
 
 class VstPlugin;
 

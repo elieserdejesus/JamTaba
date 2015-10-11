@@ -14,7 +14,7 @@
 #include <QSettings>
 #include <QDataStream>
 
-using namespace Vst;
+using namespace Jamtaba;
 
 PluginFinder::PluginFinder()
     :host(nullptr)
@@ -46,7 +46,7 @@ void PluginFinder::run(){
     emit scanFinished();
 }
 
-void PluginFinder::scan(Vst::VstHost* host){
+void PluginFinder::scan(Jamtaba::VstHost* host){
     this->host = host;
     if(!isRunning()){
         start();
@@ -113,7 +113,7 @@ private:
 
 
 //retorna nullptr se não for um plugin
-Audio::PluginDescriptor PluginFinder::getPluginDescriptor(QFileInfo f, Vst::VstHost* host){
+Audio::PluginDescriptor PluginFinder::getPluginDescriptor(QFileInfo f, Jamtaba::VstHost* host){
 
     try{
         bool archIsValid = true;
@@ -121,7 +121,7 @@ Audio::PluginDescriptor PluginFinder::getPluginDescriptor(QFileInfo f, Vst::VstH
             //qCDebug(vst) << "Testing " << f.absoluteFilePath();
             bool isFile = f.isFile();
             bool isLibrary = QLibrary::isLibrary(f.fileName());
-            bool isJamtabaVstPlugin = f.fileName().contains("Jamtaba");
+            bool isJamtabaVstPlugin = false;//f.fileName().contains("Jamtaba");
             if (!isFile || !isLibrary || isJamtabaVstPlugin){
                 return Audio::PluginDescriptor();//invalid descriptor
             }
@@ -137,7 +137,7 @@ Audio::PluginDescriptor PluginFinder::getPluginDescriptor(QFileInfo f, Vst::VstH
             }
         #endif
             if(archIsValid){
-                Vst::VstPlugin plugin(host);
+                Jamtaba::VstPlugin plugin(host);
                 if(plugin.load(f.absoluteFilePath())){
                     QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
                     return Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
