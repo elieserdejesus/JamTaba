@@ -147,7 +147,7 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
       ninjamController(nullptr),
       mutex(QMutex::Recursive),
       started(false),
-        vstHost(Vst::VstHost::getInstance()),
+        vstHost(Jamtaba::VstHost::getInstance()),
       //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
       ipToLocationResolver( buildIpToLocationResolver()),
       loginService(factory->createLoginService()),
@@ -787,7 +787,7 @@ Audio::Plugin *MainController::createPluginInstance(const Audio::PluginDescripto
         }
     }
     else if(descriptor.isVST()){
-            Vst::VstPlugin* vstPlugin = new Vst::VstPlugin(this->vstHost);
+            Jamtaba::VstPlugin* vstPlugin = new Jamtaba::VstPlugin(this->vstHost);
             if(vstPlugin->load( descriptor.getPath())){
                 return vstPlugin;
             }

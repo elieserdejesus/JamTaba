@@ -1,3 +1,13 @@
+#Drumazon deu problema no mac. Talvez também esteja dando problema no windows. O Torben atualizou o plugin
+    #e foi dando problema em outros plugins da mesma empresa.
+
+#é possível escanear os plugins em outro processo para evitar os crashs?
+    #http://www.cantabilesoftware.com/blog/posts/40-Robust-Plugin-Scanning
+
+#quando limpo o chat os botões de votação não são removidos
+
+#gaz sugeriu ter a possibilidade de carregar diferentes setups
+
 #ver o problema do mac, talvez a solução seja desativar o ssl. Se eu fizer
     #isso os usuários de versões anteriores vão parar.
 

@@ -12,7 +12,7 @@
 
 using namespace Login;
 
-const QString LoginService::SERVER = "https://jamtaba2.appspot.com/vs";
+const QString LoginService::SERVER = "http://jamtaba2.appspot.com/vs";
 //const QString LoginService::SERVER = "http://localhost:8080/vs";
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

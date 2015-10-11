@@ -52,7 +52,7 @@ namespace Login {
     class LoginServiceListener;
 }
 
-namespace Vst {
+namespace Jamtaba {
     class VstHost;
     class PluginFinder;
 }
@@ -131,7 +131,7 @@ public:
     Audio::AudioPeak getRoomStreamPeak();
     Audio::AudioPeak getTrackPeak(int trackID);
 
-    const Vst::PluginFinder& getPluginFinder() const{return pluginFinder;}
+    const Jamtaba::PluginFinder& getPluginFinder() const{return pluginFinder;}
     void scanPlugins();
     void initializePluginsList(QStringList paths);
 
@@ -195,7 +195,7 @@ public:
     //used to recreate audio encoder with enough channels
     int getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const;
 
-    inline Vst::VstHost* getVstHost() const{return vstHost;}
+    inline Jamtaba::VstHost* getVstHost() const{return vstHost;}
 
     void configureStyleSheet(QString cssFile);
 signals:
@@ -241,9 +241,9 @@ private:
     bool started;
 
     //VST
-    Vst::VstHost* vstHost;
+    Jamtaba::VstHost* vstHost;
     QList<Audio::PluginDescriptor> pluginsDescriptors;
-    Vst::PluginFinder pluginFinder;
+    Jamtaba::PluginFinder pluginFinder;
     //+++++++++++++++++++++++++
 
 

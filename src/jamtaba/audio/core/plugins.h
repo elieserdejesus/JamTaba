@@ -8,7 +8,7 @@ class SamplesBuffer;
 class Plugin;
 }
 
-namespace Vst {
+namespace Jamtaba {
     class VstHost;
 }
 

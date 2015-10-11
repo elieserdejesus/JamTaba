@@ -8,7 +8,7 @@
 #include <QApplication>
 #include <cmath>
 
-using namespace Vst;
+using namespace Jamtaba;
 
 Q_LOGGING_CATEGORY(vstHost, "vst.host")
 
@@ -206,8 +206,8 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
 
         if ((!strcmp(str, "sendVstEvents")) ||
                 (!strcmp(str, "sendVstMidiEvent")) ||
-                (!strcmp(str, "receiveVstEvents")) ||
-                (!strcmp(str, "receiveVstMidiEvent")) ||
+                //(!strcmp(str, "receiveVstEvents")) ||
+                //(!strcmp(str, "receiveVstMidiEvent")) ||
                 (!strcmp(str, "sizeWindow")) ||
                 (!strcmp(str, "sendVstMidiEventFlagIsRealtime")) ||
                 //(!strcmp(str, "reportConnectionChanges")) ||

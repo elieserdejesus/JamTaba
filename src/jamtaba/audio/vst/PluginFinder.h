@@ -7,7 +7,7 @@ namespace Audio {
     class PluginDescriptor;
 }
 
-namespace Vst {
+namespace Jamtaba {
 
 class VstHost;
 
@@ -21,7 +21,7 @@ public:
     PluginFinder();
     ~PluginFinder();
     void addPathToScan(QString path);
-    void scan(Vst::VstHost *host);
+    void scan(Jamtaba::VstHost *host);
     void clearScanPaths();
 
 private:
@@ -33,8 +33,8 @@ signals:
     void pluginScanFinished(QString name, QString group, QString path);
 private:
     QList<QString> scanPaths;
-    Audio::PluginDescriptor getPluginDescriptor(QFileInfo f, Vst::VstHost* host);
-    Vst::VstHost* host;
+    Audio::PluginDescriptor getPluginDescriptor(QFileInfo f, Jamtaba::VstHost* host);
+    Jamtaba::VstHost* host;
 };
 
 }
