@@ -1,1 +1,9 @@
-configure -prefix Qt32Bits -debug-and-release -opensource -confirm-license -static -no-sql-psql -no-sql-mysql -no-sql-odbc -no-sql-tds -no-sql-oci -no-sql-db2 -no-sql-sqlite -no-sql-sqlite2 -no-sql-ibase -no-audio-backend -no-cups -no-nis -no-dbus -nomake examples -nomake tests
+configure -debug-and-release -opensource -confirm-license -static -no-sql-psql -no-sql-mysql -no-sql-odbc -no-sql-tds -no-sql-oci -no-sql-db2 -no-sql-sqlite -no-sql-sqlite2 -no-sql-ibase -no-audio-backend -no-cups -no-nis -no-dbus -nomake examples -nomake tests
+
+
+
+PAra compilar eu baixei somente os pacotes qt e qtbase.
+
+Descompactei o qt e depois descompactei o qtbase para dentro do qt.
+
+Acabei descobrindo que se usar o -prefix dá muito problema no windows. Então o melhor é deixar a compilação no mesmo diretório so source.

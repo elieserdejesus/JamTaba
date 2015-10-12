@@ -24,12 +24,12 @@ const QColor IntervalProgressDisplay::LINEAR_BORDER_COLOR = QColor(200, 200, 200
 const QColor IntervalProgressDisplay::LINEAR_TEXT_COLOR = QColor(180, 180, 180);// Color.LIGHT_GRAY;
 const QColor IntervalProgressDisplay::LINEAR_ACCENT_BORDER_COLOR = QColor(160, 160, 160);
 
-const QFont IntervalProgressDisplay::SMALL_FONT = QFont("Verdana", 7);
-const QFont IntervalProgressDisplay::BIG_FONT = QFont("Verdana", 10);
+//const QFont IntervalProgressDisplay::SMALL_FONT = QFont("Verdana", 7);
+//const QFont IntervalProgressDisplay::BIG_FONT = QFont("Verdana", 10);
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++
 IntervalProgressDisplay::IntervalProgressDisplay(QWidget*parent)
-    :QWidget(parent), ovalSize(PREFERRED_OVAL_SIZE), paintMode(PaintMode::CIRCULAR){
+    :QWidget(parent), SMALL_FONT("Verdana, 7"), BIG_FONT("Verdana, 10"), ovalSize(PREFERRED_OVAL_SIZE), paintMode(PaintMode::CIRCULAR){
     setBeatsPerInterval(64);
 
     setBeatsPerAccent(4);

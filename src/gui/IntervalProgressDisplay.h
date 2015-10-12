@@ -56,8 +56,8 @@ private:
     void drawPoints(QPainter* g, int yPos, int startPoint, int totalPoinstToDraw) ;
     float getHorizontalSpace(int totalPoinstToDraw, int initialXPos) const;
 
-    static const QFont SMALL_FONT;
-    static const QFont BIG_FONT;
+    const QFont SMALL_FONT;
+    const QFont BIG_FONT;
 
     void initialize();
 
