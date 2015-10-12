@@ -10,19 +10,20 @@
 #include "../ninjam/Server.h"
 #include "../loginserver/LoginService.h"
 #include "../audio/core/AudioDriver.h"
-#include "../audio/core/plugins.h"
-#include "../audio/vst/PluginFinder.h"
 #include "../persistence/Settings.h"
 
 #include "../audio/samplesbufferrecorder.h"
 
 #include "../recorder/JamRecorder.h"
 
+#include "audio/core/plugins.h"
+#include "audio/vst/PluginFinder.h"
+
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(controllerMain)
 
-class MainFrame;
+class MainWindow;
 
 namespace Ninjam{
     class Service;
@@ -33,11 +34,11 @@ namespace Audio {
     class AudioDriver;
     class AudioDriverListener;
     class AbstractMp3Streamer;
-    class Plugin;
+    //class Plugin;
     class AudioMixer;
     class SamplesBuffer;
     class AudioNode;
-    class PluginDescriptor;
+    //class PluginDescriptor;
     class LocalInputAudioNode;
 }
 
@@ -52,14 +53,12 @@ namespace Login {
     class LoginServiceListener;
 }
 
-namespace Jamtaba {
-    class VstHost;
-    class PluginFinder;
-}
 
 class JamtabaFactory;
 
 //+++++++++++++
+
+class MainWindow;
 
 namespace Controller {
 
@@ -68,19 +67,58 @@ class NinjamController;
 
 
 //++++++++++++++++++++++++++++
-class MainController : public QApplication, public Audio::AudioDriverListener
-{
+
+class MainController;
+
+class MainControllerSignalsHandler : public QObject{//using this class to avoid MainController inheriting from QObject
     Q_OBJECT
+public:
+    MainControllerSignalsHandler(MainController* controller);
+protected:
+    MainController* mainController;
+public slots:
+    //Login server
+    virtual void on_disconnectedFromLoginServer();
+
+    //ninjam
+    virtual void on_connectedInNinjamServer(Ninjam::Server server);
+    virtual void on_disconnectedFromNinjamServer(const Ninjam::Server& server);
+    virtual void on_errorInNinjamServer(QString error);
+    virtual void on_ninjamEncodedAudioAvailableToSend(QByteArray, quint8 channelIndex, bool isFirstPart, bool isLastPart);
+    virtual void on_ninjamBpiChanged(int newBpi);
+    virtual void on_ninjamBpmChanged(int newBpm);
+    virtual void on_newNinjamInterval();
+    virtual void on_ninjamStartProcessing(int intervalPosition);
+
+    //audio driver
+    virtual void on_audioDriverSampleRateChanged(int newSampleRate);
+    virtual void on_audioDriverStarted();
+    virtual void on_audioDriverStopped();
+
+    //
+    virtual void on_VSTPluginFounded(QString name, QString group, QString path){}
+};
+
+
+
+
+class MainController :  public Audio::AudioDriverListener
+{
 
     friend class Controller::AudioListener;
     friend class Controller::NinjamController;
+    friend class Controller::MainControllerSignalsHandler;
 
+protected:
+    MainController(Persistence::Settings settings);
 public:
-    MainController(JamtabaFactory *factory, Persistence::Settings settings, int& argc, char** argv);
-    ~MainController();
+
+    virtual ~MainController();
 
     void start();
     void stop();
+
+    inline void setMainWindow(MainWindow* mainWindow){this->mainWindow = mainWindow;}
 
     void saveLastUserSettings(const Persistence::InputsSettings &inputsSettings);
 
@@ -96,7 +134,7 @@ public:
     bool isPlayingRoomStream() const;
 
     bool isPlayingInNinjamRoom() const;
-    void stopNinjamController();
+    virtual void stopNinjamController();
 
     void setTransmitingStatus(bool transmiting);
     inline bool isTransmiting() const{return transmiting;}
@@ -113,10 +151,7 @@ public:
 
     inline Controller::NinjamController* getNinjamController() const{return ninjamController;}
 
-    QList<Audio::PluginDescriptor> getPluginsDescriptors();
 
-    Audio::Plugin* addPlugin(int inputTrackIndex, const Audio::PluginDescriptor& descriptor);
-    void removePlugin(int inputTrackIndex, Audio::Plugin* plugin);
 
     QStringList getBotNames() const;
 
@@ -131,9 +166,6 @@ public:
     Audio::AudioPeak getRoomStreamPeak();
     Audio::AudioPeak getTrackPeak(int trackID);
 
-    const Jamtaba::PluginFinder& getPluginFinder() const{return pluginFinder;}
-    void scanPlugins();
-    void initializePluginsList(QStringList paths);
 
     Audio::AudioNode* getTrackNode(long ID);
 
@@ -172,10 +204,7 @@ public:
     //store settings
     void storeMetronomeSettings(float metronomeGain, float metronomePan, bool metronomeMuted);
     void storeIntervalProgressShape(int shape);
-    void addVstScanPath(QString path);
-    void addDefaultVstScanPath();//add vst path from registry
-    void removeVstScanPath(int index);
-    void clearVstCache();
+
     void storeWindowSettings(bool maximized, QPointF location);
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize, QList<bool> midiInputStatus) ;
     void storeRecordingPath(QString newPath);
@@ -195,23 +224,26 @@ public:
     //used to recreate audio encoder with enough channels
     int getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const;
 
-    inline Jamtaba::VstHost* getVstHost() const{return vstHost;}
+    QList<Audio::PluginDescriptor> pluginsDescriptors;
+    //used to sort plugins list
+    static bool pluginDescriptorLessThan(const Audio::PluginDescriptor& d1, const Audio::PluginDescriptor& d2);
+
+    virtual Audio::Plugin* createPluginInstance(const Audio::PluginDescriptor &descriptor) = 0;
+    QList<Audio::PluginDescriptor> getPluginsDescriptors();
+    Audio::Plugin* addPlugin(int inputTrackIndex, const Audio::PluginDescriptor& descriptor);
+    void removePlugin(int inputTrackIndex, Audio::Plugin* plugin);
 
     void configureStyleSheet(QString cssFile);
+
+    const Jamtaba::PluginFinder& getPluginFinder() const{return pluginFinder;}
 signals:
-    void enteredInRoom(Login::RoomInfo room);
-    void exitedFromRoom(bool error);
+    //void enteredInRoom(Login::RoomInfo room);
+    //void exitedFromRoom(bool error);
 
     //input selection
-    void inputSelectionChanged(int inputTrackIndex);
+    //void inputSelectionChanged(int inputTrackIndex);
 
-private:
-
-    void setAllTracksActivation(bool activated);
-
-    void doAudioProcess(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate);
-    Audio::Plugin* createPluginInstance(const Audio::PluginDescriptor &descriptor);
-
+protected:
     Audio::AudioDriver* audioDriver;
     Midi::MidiDriver* midiDriver;
 
@@ -219,19 +251,41 @@ private:
 
     Audio::AudioMixer* audioMixer;
 
+    //ninjam
+    Ninjam::Service* ninjamService;
+    Controller::NinjamController* ninjamController;
+
+    Persistence::Settings settings;
+
+    QList<Audio::LocalInputAudioNode*> inputTracks;
+
+    Jamtaba::PluginFinder pluginFinder;
+
+    virtual void exit() = 0;
+
+    virtual MainControllerSignalsHandler* createSignalsHandler();
+
+    MainWindow* mainWindow;
+
+    MainControllerSignalsHandler* signalsHandler;
+
+    virtual void setCSS(QString css) = 0;
+private:
+    void setAllTracksActivation(bool activated);
+    void doAudioProcess(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate);
+
+
     Audio::AbstractMp3Streamer* roomStreamer;
     long long currentStreamingRoomID;
 
-    QList<Audio::LocalInputAudioNode*> inputTracks;
+
 
     class InputTrackGroup;
     QMap<int, InputTrackGroup*> trackGroups;
 
     bool transmiting;
 
-    //ninjam
-    Ninjam::Service* ninjamService;
-    Controller::NinjamController* ninjamController;
+
 
     QMap<long, Audio::AudioNode*> tracksNodes;
     QMutex mutex;
@@ -240,10 +294,7 @@ private:
 
     bool started;
 
-    //VST
-    Jamtaba::VstHost* vstHost;
-    QList<Audio::PluginDescriptor> pluginsDescriptors;
-    Jamtaba::PluginFinder pluginFinder;
+
     //+++++++++++++++++++++++++
 
 
@@ -256,7 +307,7 @@ private:
 
     QMap<int, UploadIntervalData*> intervalsToUpload;//map the input channel indexes to a GUID (used to upload audio to ninjam server)
 
-    Persistence::Settings settings;
+
 
     bool userNameChoosed;
 
@@ -268,30 +319,8 @@ private:
     static Geo::IpToLocationResolver* buildIpToLocationResolver();
     Audio::AudioDriver* buildAudioDriver(const Persistence::Settings& settings);
 
-    //used to sort plugins list
-    static bool pluginDescriptorLessThan(const Audio::PluginDescriptor& d1, const Audio::PluginDescriptor& d2);
 
 
-private slots:
-    //Login server
-    void on_disconnectedFromLoginServer();
-
-    //VST
-    void on_VSTPluginFounded(QString name, QString group, QString path);
-
-    //ninjam
-    void on_connectedInNinjamServer(Ninjam::Server server);
-    void on_disconnectedFromNinjamServer(const Ninjam::Server& server);
-    void on_errorInNinjamServer(QString error);
-    void on_ninjamEncodedAudioAvailableToSend(QByteArray, quint8 channelIndex, bool isFirstPart, bool isLastPart);
-    void on_ninjamBpiChanged(int newBpi);
-    void on_ninjamBpmChanged(int newBpm);
-    void on_newNinjamInterval();
-
-    //audio driver
-    void on_audioDriverSampleRateChanged(int newSampleRate);
-    void on_audioDriverStopped();
-    void on_audioDriverStarted();
 };
 
 }

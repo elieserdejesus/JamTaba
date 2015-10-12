@@ -6,7 +6,7 @@
 class LocalTrackView;
 
 class QPushButton;
-class MainFrame;
+class MainWindow;
 
 namespace Ui {
 class LocalTrackGroupView;
@@ -17,7 +17,7 @@ class LocalTrackGroupView : public TrackGroupView
 {
     Q_OBJECT
 public:
-    LocalTrackGroupView(int index, MainFrame* mainFrame);
+    LocalTrackGroupView(int index, MainWindow* mainFrame);
     ~LocalTrackGroupView();
     void refreshInputSelectionName(int inputTrackIndex);
     void refreshInputSelectionNames();
@@ -37,7 +37,7 @@ private:
     QPushButton* toolButton;
     static const int MAX_SUB_CHANNELS = 2;
     int index;
-    MainFrame* mainFrame;
+    MainWindow* mainFrame;
     bool eventFilter(QObject *target, QEvent *event);
 
     bool faderOnly;

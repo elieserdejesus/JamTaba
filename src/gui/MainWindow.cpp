@@ -1,4 +1,4 @@
-#include "mainframe.h"
+#include "MainWindow.h"
 
 #include <QCloseEvent>
 #include <QDebug>
@@ -30,7 +30,6 @@
 #include "../NinjamController.h"
 #include "../ninjam/Server.h"
 #include "../persistence/Settings.h"
-#include "../JamtabaFactory.h"
 #include "../audio/core/AudioDriver.h"
 #include "../audio/vst/PluginFinder.h"
 #include "../audio/core/plugins.h"
@@ -47,7 +46,7 @@ using namespace Controller;
 using namespace Ninjam;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent)
+MainWindow::MainWindow(Controller::MainController *mainController, QWidget *parent)
     :
       QMainWindow(parent),
     busyDialog(0),
@@ -63,9 +62,9 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     initializeWindowState();//window size, maximization ...
     initializeLoginService();
 
-    initializeVstFinderStuff();//vst finder...
+    initializePluginFinder();
 
-    initializeMainControllerEvents();
+    //initializeMainControllerEvents();
     initializeMainTabWidget();
 
 
@@ -91,7 +90,7 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     QObject::connect(ui.actionPrivate_Server, SIGNAL(triggered(bool)), this, SLOT(on_privateServerMenuItemTriggered()));
     QObject::connect(ui.actionReport_bugs_or_suggest_improvements, SIGNAL(triggered(bool)), this, SLOT(on_reportBugMenuItemTriggered()));
 
-    QObject::connect(mainController, SIGNAL(inputSelectionChanged(int)), this, SLOT(on_inputSelectionChanged(int)));
+    //QObject::connect(mainController, SIGNAL(inputSelectionChanged(int)), this, SLOT(on_inputSelectionChanged(int)));
 
     QObject::connect( ui.localControlsCollapseButton, SIGNAL(clicked()), this, SLOT(on_localControlsCollapseButtonClicked()));
 
@@ -115,14 +114,23 @@ MainFrame::MainFrame(Controller::MainController *mainController, QWidget *parent
     }
 }
 //++++++++++++++++++++++++=
-void MainFrame::on_newThemeSelected(QAction *a){
+void MainWindow::initializePluginFinder(){
+    const Jamtaba::PluginFinder& pluginFinder = mainController->getPluginFinder();
+    QObject::connect(&pluginFinder, SIGNAL(scanStarted()), this, SLOT(onScanPluginsStarted()));
+    QObject::connect(&pluginFinder, SIGNAL(scanFinished()), this, SLOT(onScanPluginsFinished()));
+    QObject::connect(&pluginFinder, SIGNAL(pluginScanFinished(QString,QString,QString)), this, SLOT(onPluginFounded(QString,QString,QString)));
+    QObject::connect(&pluginFinder, SIGNAL(pluginScanStarted(QString)), this, SLOT(onScanPluginsStarted(QString)));
+}
+
+//++++++++++++++++++++++++=
+void MainWindow::on_newThemeSelected(QAction *a){
     QString css = a->data().toString();
     mainController->configureStyleSheet(css);
 
 }
 
 //++++++++++++++++++++++++=
-void MainFrame::on_localControlsCollapseButtonClicked(){
+void MainWindow::on_localControlsCollapseButtonClicked(){
     foreach (LocalTrackGroupView* channel, localChannels) {
         channel->toggleFaderOnlyMode();
     }
@@ -130,7 +138,7 @@ void MainFrame::on_localControlsCollapseButtonClicked(){
     ui.xmitButton->setVisible(!localChannels.first()->isFaderOnly());
 }
 //++++++++++++++++++++++++=
-Persistence::InputsSettings MainFrame::getInputsSettings() const{
+Persistence::InputsSettings MainWindow::getInputsSettings() const{
     InputsSettings settings;
     foreach (LocalTrackGroupView* trackGroupView, localChannels) {
         trackGroupView->getTracks();
@@ -161,7 +169,7 @@ Persistence::InputsSettings MainFrame::getInputsSettings() const{
     return settings;
 }
 //++++++++++++++++++++++++=
-void MainFrame::stopCurrentRoomStream(){
+void MainWindow::stopCurrentRoomStream(){
     if(mainController->isPlayingRoomStream()){
         long long roomID = mainController->getCurrentStreamingRoomID();
         if(roomViewPanels[roomID]){
@@ -171,7 +179,7 @@ void MainFrame::stopCurrentRoomStream(){
     mainController->stopRoomStream();
 }
 
-void MainFrame::showMessageBox(QString title, QString text, QMessageBox::Icon icon){
+void MainWindow::showMessageBox(QString title, QString text, QMessageBox::Icon icon){
     QMessageBox* messageBox = new QMessageBox(this);
     messageBox->setWindowTitle(title);
     messageBox->setText(text);
@@ -180,7 +188,7 @@ void MainFrame::showMessageBox(QString title, QString text, QMessageBox::Icon ic
     messageBox->show();
 }
 
-void MainFrame::on_RoomStreamerError(QString msg){
+void MainWindow::on_RoomStreamerError(QString msg){
     stopCurrentRoomStream();
     showMessageBox("Error!", msg, QMessageBox::Critical);
 }
@@ -207,7 +215,7 @@ void MainFrame::on_RoomStreamerError(QString msg){
 //    menu.exec();
 //}
 
-void MainFrame::removeChannelsGroup(int channelIndex){
+void MainWindow::removeChannelsGroup(int channelIndex){
     if(localChannels.size() > 1){//the first channel group can't be removed
         if(channelIndex >= 0 && channelIndex < localChannels.size()){
             TrackGroupView* channel = localChannels.at(channelIndex);
@@ -228,13 +236,13 @@ void MainFrame::removeChannelsGroup(int channelIndex){
 //    }
 //}
 
-void MainFrame::highlightChannelGroup(int index) const{
+void MainWindow::highlightChannelGroup(int index) const{
     if(index >= 0 && index < localChannels.size()){
         Highligther::getInstance()->highlight(localChannels.at(index));
     }
 }
 
-void MainFrame::addChannelsGroup(QString name){
+void MainWindow::addChannelsGroup(QString name){
     int channelIndex = localChannels.size();
     addLocalChannel( channelIndex, name, true);
     mainController->updateInputTracksRange();
@@ -245,7 +253,7 @@ void MainFrame::addChannelsGroup(QString name){
 }
 
 //++++++++++++++++++++++++=
-void MainFrame::initializeMainTabWidget(){
+void MainWindow::initializeMainTabWidget(){
     //the rooms list tab bar is not closable
     QWidget* tabBar = nullptr;
     tabBar = ui.tabWidget->tabBar()->tabButton(0, QTabBar::RightSide);//try get the tabBar in right side (Windows)
@@ -261,36 +269,13 @@ void MainFrame::initializeMainTabWidget(){
     connect( ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tabChanged(int)));
 }
 
-void MainFrame::initializeMainControllerEvents(){
-    QObject::connect(mainController, SIGNAL(enteredInRoom(Login::RoomInfo)), this, SLOT(on_enteredInRoom(Login::RoomInfo)));
-    QObject::connect(mainController, SIGNAL(exitedFromRoom(bool)), this, SLOT(on_exitedFromRoom(bool)));
-}
 
-void MainFrame::initializeVstFinderStuff(){
-    const Jamtaba::PluginFinder& pluginFinder = mainController->getPluginFinder();
-    QObject::connect(&pluginFinder, SIGNAL(scanStarted()), this, SLOT(onScanPluginsStarted()));
-    QObject::connect(&pluginFinder, SIGNAL(scanFinished()), this, SLOT(onScanPluginsFinished()));
-    QObject::connect(&pluginFinder, SIGNAL(pluginScanFinished(QString,QString,QString)), this, SLOT(onPluginFounded(QString,QString,QString)));
-    QObject::connect(&pluginFinder, SIGNAL(pluginScanStarted(QString)), this, SLOT(onScanPluginsStarted(QString)));
-
-    QStringList vstPaths = mainController->getSettings().getVstPluginsPaths();
-    if(vstPaths.empty()){//no vsts in database cache, try scan
-        if(mainController->getSettings().getVstScanPaths().isEmpty()){
-            mainController->addDefaultVstScanPath();
-        }
-        mainController->scanPlugins();
-    }
-    else{//use vsts stored in settings file
-        mainController->initializePluginsList(vstPaths);
-        onScanPluginsFinished();
-    }
-}
 //++++++++++++++++++++++++++++++++++++++++++++++++
-void MainFrame::on_channelNameChanged(){
+void MainWindow::on_channelNameChanged(){
     mainController->sendNewChannelsNames(getChannelsNames());
 }
 
-LocalTrackGroupView *MainFrame::addLocalChannel(int channelGroupIndex, QString channelName, bool createFirstSubchannel){
+LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString channelName, bool createFirstSubchannel){
     LocalTrackGroupView* localChannel = new LocalTrackGroupView(channelGroupIndex, this);
     QObject::connect(localChannel, SIGNAL(nameChanged()), this, SLOT(on_channelNameChanged()));
     localChannels.append( localChannel );
@@ -347,7 +332,7 @@ LocalTrackGroupView *MainFrame::addLocalChannel(int channelGroupIndex, QString c
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainFrame::restorePluginsList(){
+void MainWindow::restorePluginsList(){
     Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
     int channelIndex = 0;
     foreach (Persistence::Channel channel, inputsSettings.channels) {
@@ -386,7 +371,7 @@ void MainFrame::restorePluginsList(){
     }
 }
 
-void MainFrame::initializeLocalInputChannels(){
+void MainWindow::initializeLocalInputChannels(){
     Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
     int channelIndex = 0;
     foreach (Persistence::Channel channel, inputsSettings.channels) {
@@ -438,7 +423,7 @@ void MainFrame::initializeLocalInputChannels(){
     }
 }
 
-void MainFrame::initializeLoginService(){
+void MainWindow::initializeLoginService(){
     Login::LoginService* loginService = this->mainController->getLoginService();
     connect( loginService, SIGNAL(roomsListAvailable(QList<Login::RoomInfo>)), this, SLOT(on_roomsListAvailable(QList<Login::RoomInfo>)));
     connect( loginService, SIGNAL(incompatibilityWithServerDetected()), this, SLOT(on_incompatibilityWithServerDetected()));
@@ -446,7 +431,7 @@ void MainFrame::initializeLoginService(){
     connect( loginService, SIGNAL(errorWhenConnectingToServer(QString)), this, SLOT(on_errorConnectingToServer(QString)));
 }
 
-void MainFrame::initializeWindowState(){
+void MainWindow::initializeWindowState(){
     if(mainController->getSettings().windowWasMaximized()){
         setWindowState(Qt::WindowMaximized);
     }
@@ -462,7 +447,7 @@ void MainFrame::initializeWindowState(){
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainFrame::on_tabCloseRequest(int index){
+void MainWindow::on_tabCloseRequest(int index){
     if(index > 0){//the first tab is not closable
         showBusyDialog("disconnecting ...");
         if(mainController->getNinjamController()->isRunning()){
@@ -472,7 +457,7 @@ void MainFrame::on_tabCloseRequest(int index){
     }
 }
 
-void MainFrame::on_tabChanged(int index){
+void MainWindow::on_tabChanged(int index){
     if(index > 0){//click in room tab?
         if(mainController->isPlayingInNinjamRoom() && mainController->isPlayingRoomStream()){
             stopCurrentRoomStream();
@@ -481,22 +466,22 @@ void MainFrame::on_tabChanged(int index){
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainFrame::showBusyDialog(){
+void MainWindow::showBusyDialog(){
     showBusyDialog("");
 }
 
-void MainFrame::showBusyDialog(QString message){
+void MainWindow::showBusyDialog(QString message){
     busyDialog.setParent(this);
     centerBusyDialog();
     busyDialog.show(message);
 }
 
-void MainFrame::hideBusyDialog(){
+void MainWindow::hideBusyDialog(){
     busyDialog.hide();
 }
 
 
-void MainFrame::centerBusyDialog(){
+void MainWindow::centerBusyDialog(){
     int newX = ui.contentPanel->width()/2 - busyDialog.width()/2;
     int newY = ui.contentPanel->height()/2 - busyDialog.height()/2;
     busyDialog.move(newX + ui.contentPanel->x(), newY + ui.contentPanel->y());
@@ -533,31 +518,31 @@ void MainFrame::centerBusyDialog(){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //esses eventos deveriam ser tratados no controller
 
-bool MainFrame::jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2){
+bool MainWindow::jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2){
      return r1.getNonBotUsersCount() > r2.getNonBotUsersCount();
 }
 
-void MainFrame::on_incompatibilityWithServerDetected(){
+void MainWindow::on_incompatibilityWithServerDetected(){
     hideBusyDialog();
     QString text = "Your Jamtaba version is not compatible with previous versions! Please download the new <a href='http://www.jamtaba.com'>Jamtaba</a> version!";
     QMessageBox::warning(this, "Compatibility error!", text );
     close();
 }
 
-void MainFrame::on_errorConnectingToServer(QString errorMsg){
+void MainWindow::on_errorConnectingToServer(QString errorMsg){
     hideBusyDialog();
     QMessageBox::warning(this, "Error!", "Error connecting in Jamtaba server!\n" + errorMsg);
     close();
-    mainController->quit();
+
 }
 
-void MainFrame::on_newVersionAvailableForDownload(){
+void MainWindow::on_newVersionAvailableForDownload(){
     hideBusyDialog();
     QString text = "A new Jamtaba version is available for download! Please use the <a href='http://www.jamtaba.com'>new version</a>!";
     QMessageBox::information(this, "New Jamtaba version available!", text );
 }
 
-void MainFrame::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
+void MainWindow::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
     hideBusyDialog();
 //    qWarning() << "Atualizando lista de salas";
 //    foreach (Login::RoomInfo room, publicRooms) {
@@ -602,7 +587,7 @@ void MainFrame::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
 }
 
 //+++++++++++++++++++++++++++++++++++++
-void MainFrame::on_startingRoomStream(Login::RoomInfo roomInfo){
+void MainWindow::on_startingRoomStream(Login::RoomInfo roomInfo){
     //clear all plots
     foreach (JamRoomViewPanel* viewPanel, this->roomViewPanels.values()) {
         viewPanel->clearPeaks(roomInfo.getID() != viewPanel->getRoomInfo().getID());
@@ -613,12 +598,12 @@ void MainFrame::on_startingRoomStream(Login::RoomInfo roomInfo){
     }
 }
 
-void MainFrame::on_stoppingRoomStream(Login::RoomInfo roomInfo){
+void MainWindow::on_stoppingRoomStream(Login::RoomInfo roomInfo){
     Q_UNUSED(roomInfo)
     stopCurrentRoomStream();
 }
 
-QStringList MainFrame::getChannelsNames() const{
+QStringList MainWindow::getChannelsNames() const{
     QStringList channelsNames;
     foreach (LocalTrackGroupView* channel, localChannels) {
         channelsNames.append(channel->getGroupName());
@@ -627,7 +612,7 @@ QStringList MainFrame::getChannelsNames() const{
 }
 
 //user trying enter in a room
-void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
+void MainWindow::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
 
     //stop room stream before enter in a room
     if(mainController->isPlayingRoomStream()){
@@ -673,7 +658,7 @@ void MainFrame::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //estes eventos são disparados pelo controlador depois que já aconteceu a conexão com uma das salas
 
-void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
+void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
 
     hideBusyDialog();
 
@@ -704,7 +689,7 @@ void MainFrame::on_enteredInRoom(Login::RoomInfo roomInfo){
     //ui.leftPanel->setMinimumWidth(500);
 }
 
-void MainFrame::on_exitedFromRoom(bool normalDisconnection){
+void MainWindow::exitFromRoom(bool normalDisconnection){
     hideBusyDialog();
 
     //remove the jam room tab (the last tab)
@@ -737,7 +722,7 @@ void MainFrame::on_exitedFromRoom(bool normalDisconnection){
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainFrame::timerEvent(QTimerEvent *){
+void MainWindow::timerEvent(QTimerEvent *){
 
 //    static long lastBeatUpdate = QDateTime::currentMSecsSinceEpoch();
 //    static int beat = 0;
@@ -774,7 +759,7 @@ void MainFrame::timerEvent(QTimerEvent *){
 }
 
 //++++++++++++=
-void MainFrame::on_xmitButtonClicked(bool checked){
+void MainWindow::on_xmitButtonClicked(bool checked){
     foreach (LocalTrackGroupView* localChannel, localChannels) {
         localChannel->setUnlightStatus(!checked);
     }
@@ -786,27 +771,27 @@ void MainFrame::on_xmitButtonClicked(bool checked){
 
 //++++++++++++=
 
-void MainFrame::resizeEvent(QResizeEvent *){
+void MainWindow::resizeEvent(QResizeEvent *){
     if(busyDialog.isVisible()){
         centerBusyDialog();
     }
 }
 
-void MainFrame::changeEvent(QEvent *ev){
+void MainWindow::changeEvent(QEvent *ev){
     if(ev->type() == QEvent::WindowStateChange){
         mainController->storeWindowSettings(isMaximized(), computeLocation() );
     }
     ev->accept();
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-QPointF MainFrame::computeLocation() const{
+QPointF MainWindow::computeLocation() const{
     QRect screen = QApplication::desktop()->screenGeometry();
     float x = (float)this->pos().x()/screen.width();
     float y = (float)this->pos().y()/screen.height();
     return QPointF(x, y);
 }
 
-void MainFrame::closeEvent(QCloseEvent *)
+void MainWindow::closeEvent(QCloseEvent *)
  {
     //qDebug() << "MainFrame::closeEvent";
     if(mainController != NULL){
@@ -815,7 +800,7 @@ void MainFrame::closeEvent(QCloseEvent *)
     mainController->storeWindowSettings(isMaximized(), computeLocation() );
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainFrame::showEvent(QShowEvent *){
+void MainWindow::showEvent(QShowEvent *){
 
     if(!mainController->isStarted()){//first show?
         int availableDevices = mainController->getAudioDriver()->getDevicesCount();
@@ -824,7 +809,7 @@ void MainFrame::showEvent(QShowEvent *){
             mainController->start();
 
             //wait 50 ms before resotre the plugins list to avoid freeze the GUI in hidden state while plugins are loaded
-            QTimer::singleShot(50, this, &MainFrame::restorePluginsList);
+            QTimer::singleShot(50, this, &MainWindow::restorePluginsList);
         }
         else{
             QMessageBox::critical(this, "ERROR", "No audio device!");
@@ -833,7 +818,7 @@ void MainFrame::showEvent(QShowEvent *){
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-MainFrame::~MainFrame()
+MainWindow::~MainWindow()
 {
     qDebug() << "Main frame desctructor!";
     killTimer(timerID);
@@ -857,7 +842,7 @@ MainFrame::~MainFrame()
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-void MainFrame::on_privateServerConnectionAccepted(QString server, int serverPort, QString password){
+void MainWindow::on_privateServerConnectionAccepted(QString server, int serverPort, QString password){
 
     mainController->storePrivateServerSettings(server, serverPort, password);
 
@@ -865,12 +850,12 @@ void MainFrame::on_privateServerConnectionAccepted(QString server, int serverPor
     on_enteringInRoom(roomInfo, password);
 }
 
-void MainFrame::on_reportBugMenuItemTriggered(){
+void MainWindow::on_reportBugMenuItemTriggered(){
     QDesktopServices::openUrl(QUrl("https://bitbucket.org/elieserdejesus/jamtaba2/issues"));
 }
 
 
-void MainFrame::on_privateServerMenuItemTriggered(){
+void MainWindow::on_privateServerMenuItemTriggered(){
     Settings settings = mainController->getSettings();
     QString server = settings.getLastPrivateServer();
     QString password = settings.getLastPrivateServerPassword();
@@ -880,17 +865,17 @@ void MainFrame::on_privateServerMenuItemTriggered(){
     privateServerDialog->show();
 }
 
-void MainFrame::on_ninjamCommunityMenuItemTriggered(){
+void MainWindow::on_ninjamCommunityMenuItemTriggered(){
     QDesktopServices::openUrl(QUrl("http://www.ninbot.com"));
 }
 
-void MainFrame::on_ninjamOfficialSiteMenuItemTriggered(){
+void MainWindow::on_ninjamOfficialSiteMenuItemTriggered(){
     QDesktopServices::openUrl(QUrl("http://www.cockos.com/ninjam/"));
 
 }
 
 // preferences menu
-void MainFrame::on_preferencesClicked(QAction* action)
+void MainWindow::on_preferencesClicked(QAction* action)
 {
     Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
     AudioDriver* audioDriver = mainController->getAudioDriver();
@@ -924,7 +909,7 @@ void MainFrame::on_preferencesClicked(QAction* action)
 
 }
 
-void MainFrame::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize){
+void MainWindow::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize){
     //qDebug() << "midi device: " << midiDeviceIndex << endl;
     //bool midiDeviceChanged =  midiDeviceIndex
 
@@ -955,7 +940,7 @@ void MainFrame::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audioD
 }
 
 //input selection changed by user or by system
-void MainFrame::on_inputSelectionChanged(int inputTrackIndex){
+void MainWindow::refreshTrackInputSelection(int inputTrackIndex){
     foreach (LocalTrackGroupView* channel, localChannels) {
         channel->refreshInputSelectionName(inputTrackIndex);
     }
@@ -963,14 +948,14 @@ void MainFrame::on_inputSelectionChanged(int inputTrackIndex){
 }
 
 //plugin finder events
-void MainFrame::onScanPluginsStarted(){
+void MainWindow::onScanPluginsStarted(){
     if(!pluginScanDialog){
         pluginScanDialog = new PluginScanDialog(this);
     }
     pluginScanDialog->show();
 }
 
-void MainFrame::onScanPluginsFinished(){
+void MainWindow::onScanPluginsFinished(){
     if(pluginScanDialog){
         pluginScanDialog->close();
     }
@@ -979,7 +964,7 @@ void MainFrame::onScanPluginsFinished(){
 
 }
 
-void MainFrame::onPluginFounded(QString name, QString group, QString path){
+void MainWindow::onPluginFounded(QString name, QString group, QString path){
     Q_UNUSED(path);
     Q_UNUSED(group);
     if(pluginScanDialog){
@@ -988,7 +973,7 @@ void MainFrame::onPluginFounded(QString name, QString group, QString path){
     }
 }
 
-void MainFrame::onScanPluginsStarted(QString pluginPath){
+void MainWindow::onScanPluginsStarted(QString pluginPath){
     if(pluginScanDialog){
         pluginScanDialog->setCurrentScaning(pluginPath);
     }

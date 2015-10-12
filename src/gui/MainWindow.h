@@ -3,7 +3,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QMessageBox>
 #include <QFutureWatcher>
-#include "ui_mainframe.h"
+#include "ui_MainWindow.h"
 #include "BusyDialog.h"
 #include "../ninjam/Server.h"
 #include "../loginserver/LoginService.h"
@@ -38,37 +38,14 @@ class PluginDescriptor;
 class JamRoomViewPanel;
 class PluginGui;
 class LocalTrackGroupView;
-//class MetronomeTrackView;
 
-
-//class PluginLoader : public QObject{
-//    Q_OBJECT
-//public:
-//    PluginLoader(Controller::MainController* mainController, Persistence::Plugin plugin, LocalTrackView* trackView);
-//    ~PluginLoader();
-
-//    void load();
-//private slots:
-//    void on_futureWatcherFinished();
-
-//private:
-//    Persistence::Plugin plugin;
-//    LocalTrackView* trackView;
-//    Controller::MainController* mainController;
-
-//    QFutureWatcher<Audio::Plugin*> futureWatcher;
-
-//    Audio::Plugin* loadPlugin();
-//};
-
-
-class MainFrame : public QMainWindow
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainFrame(Controller::MainController* mainController, QWidget *parent=0);
-    ~MainFrame();
+    MainWindow(Controller::MainController* mainController, QWidget *parent=0);
+    ~MainWindow();
     virtual void closeEvent(QCloseEvent *);
     virtual void showEvent(QShowEvent*);
     virtual void changeEvent(QEvent *);
@@ -84,7 +61,18 @@ public:
     void addChannelsGroup(QString name);
     void removeChannelsGroup(int channelGroupIndex);
 
-private slots:
+    void refreshTrackInputSelection(int inputTrackIndex);
+
+    void enterInRoom(Login::RoomInfo roomInfo);
+    void exitFromRoom(bool normalDisconnection);
+
+protected:
+    Controller::MainController* mainController;
+    virtual void initializePluginFinder();
+
+
+
+protected slots:
     void on_tabCloseRequest(int index);
     void on_tabChanged(int index);
 
@@ -107,14 +95,14 @@ private slots:
     void on_roomsListAvailable(QList<Login::RoomInfo> publicRooms);
     void on_newVersionAvailableForDownload();
     void on_incompatibilityWithServerDetected();
-    void on_errorConnectingToServer(QString errorMsg);
+    virtual void on_errorConnectingToServer(QString errorMsg);
 
     //+++++  ROOM FEATURES ++++++++
     void on_startingRoomStream(Login::RoomInfo roomInfo);
     void on_stoppingRoomStream(Login::RoomInfo roomInfo);
     void on_enteringInRoom(Login::RoomInfo roomInfo, QString password = "");
-    void on_enteredInRoom(Login::RoomInfo roomInfo);
-    void on_exitedFromRoom(bool normalDisconnection);
+
+
 
     //plugin finder
     void onScanPluginsStarted();
@@ -122,8 +110,7 @@ private slots:
     void onPluginFounded(QString name, QString group, QString path);
     void onScanPluginsStarted(QString pluginPath);
 
-    //input selection
-    void on_inputSelectionChanged(int inputTrackIndex);
+
 
     //collapse local controls
     void on_localControlsCollapseButtonClicked();
@@ -156,7 +143,7 @@ private:
 
     QMap<long long, JamRoomViewPanel*> roomViewPanels;
 
-    Controller::MainController* mainController;
+
     PluginScanDialog* pluginScanDialog;
     Ui::MainFrameClass ui;
     QList<LocalTrackGroupView*> localChannels;
@@ -174,8 +161,8 @@ private:
     void initializeLoginService();
     void initializeLocalInputChannels();
     void restorePluginsList();
-    void initializeVstFinderStuff();
-    void initializeMainControllerEvents();
+    //void initializeVstFinderStuff();
+    //void initializeMainControllerEvents();
     void initializeMainTabWidget();
 
     QStringList getChannelsNames() const;

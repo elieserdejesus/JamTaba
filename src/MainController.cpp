@@ -9,13 +9,9 @@
 #include "../loginserver/LoginService.h"
 #include "../loginserver/natmap.h"
 
-#include "../audio/core/plugins.h"
+#include "MainWindow.h"
 
-#include "JamtabaFactory.h"
-#include "audio/core/plugins.h"
-
-    #include "audio/vst/VstPlugin.h"
-    #include "audio/vst/vsthost.h"
+//#include "../audio/core/plugins.h"
 
 #include "persistence/Settings.h"
 
@@ -23,8 +19,6 @@
 #include "../ninjam/Server.h"
 #include "NinjamController.h"
 
-//#include "geo/MaxMindIpToLocationResolver.h"
-//#include "geo/IpToLocationLITEResolver.h"
 #include "geo/WebIpToLocationResolver.h"
 
 #include <QTimer>
@@ -135,40 +129,175 @@ private:
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++
-MainController::MainController(JamtabaFactory* factory, Settings settings, int &argc, char **argv)
-    :QApplication(argc, argv),
+MainControllerSignalsHandler::MainControllerSignalsHandler(MainController *controller)
+    :mainController(controller){
+
+}
+
+void MainControllerSignalsHandler::on_disconnectedFromLoginServer(){
+    mainController->exit();
+}
+
+void MainControllerSignalsHandler::on_audioDriverSampleRateChanged(int newSampleRate){
+    mainController->audioMixer->setSampleRate(newSampleRate);
+    if(mainController->settings.isSaveMultiTrackActivated()){
+        mainController->jamRecorder.setSampleRate(newSampleRate);
+    }
+}
+
+void MainControllerSignalsHandler::on_audioDriverStarted(){
+
+}
+
+void MainControllerSignalsHandler::on_audioDriverStopped(){
+    if(mainController->isPlayingInNinjamRoom()){
+        //send the last interval part when audio driver is stopped
+        foreach (int channelIndex, mainController->intervalsToUpload.keys()) {
+            mainController->ninjamService->sendAudioIntervalPart(mainController->intervalsToUpload[channelIndex]->getGUID(), QByteArray(), true);
+        }
+
+    }
+}
+
+void MainControllerSignalsHandler::on_errorInNinjamServer(QString error){
+    qCWarning(controllerMain) << error;
+    mainController->stopNinjamController();
+    //emit exitedFromRoom(false);//not a normal disconnection
+    if(mainController->mainWindow){
+        mainController->mainWindow->exitFromRoom(false);
+    }
+}
+
+void MainControllerSignalsHandler::on_disconnectedFromNinjamServer(const Server &server){
+    Q_UNUSED(server);
+    mainController->stopNinjamController();
+    //emit exitedFromRoom(true);//normal disconnection
+    if(mainController->mainWindow){
+        mainController->mainWindow->exitFromRoom(true);
+    }
+    if(mainController->settings.isSaveMultiTrackActivated()){
+        mainController->jamRecorder.stopRecording();
+    }
+}
+
+void MainControllerSignalsHandler::on_connectedInNinjamServer(Ninjam::Server server){
+    qCDebug(controllerMain) << "connected in ninjam server";
+    mainController->stopNinjamController();
+    mainController->ninjamController = new Controller::NinjamController(mainController);
+    QObject::connect(mainController->ninjamController,
+                     SIGNAL(encodedAudioAvailableToSend(QByteArray,quint8,bool,bool)),
+                     this, SLOT(on_ninjamEncodedAudioAvailableToSend(QByteArray,quint8,bool,  bool)));
+    QObject::connect(mainController->ninjamController, SIGNAL(startingNewInterval()), this, SLOT(on_newNinjamInterval()));
+    QObject::connect(mainController->ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(on_ninjamBpiChanged(int)));
+    QObject::connect(mainController->ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(on_ninjamBpmChanged(int)));
+    QObject::connect(mainController->ninjamController, SIGNAL(startProcessing(int)), this, SLOT(on_ninjamStartProcessing(int)));
+   //emit event after start controller to create view widgets before start
+    //emit enteredInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers(), server.getMaxChannels()));
+    if(mainController->mainWindow){
+        mainController->mainWindow->enterInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers(), server.getMaxChannels()));
+    }
+    qCDebug(controllerMain) << "starting ninjamController...";
+    mainController->ninjamController->start(server, mainController->transmiting);
+
+
+    if(mainController->settings.isSaveMultiTrackActivated()){
+        mainController->jamRecorder.startRecording(mainController->getUserName(), QDir(mainController->settings.getRecordingPath()), server.getBpm(), server.getBpi(), mainController->getAudioDriverSampleRate());
+    }
+}
+
+void MainControllerSignalsHandler::on_ninjamStartProcessing(int intervalPosition){
+    Q_UNUSED(intervalPosition)
+}
+
+void MainControllerSignalsHandler::on_newNinjamInterval(){
+    if(mainController->settings.isSaveMultiTrackActivated()){
+        mainController->jamRecorder.newInterval();
+    }
+}
+
+void MainControllerSignalsHandler::on_ninjamBpiChanged(int newBpi){
+    if(mainController->settings.isSaveMultiTrackActivated()){
+        mainController->jamRecorder.setBpi(newBpi);
+    }
+}
+
+void MainControllerSignalsHandler::on_ninjamBpmChanged(int newBpm){
+    if(mainController->settings.isSaveMultiTrackActivated()){
+        mainController->jamRecorder.setBpm(newBpm);
+    }
+}
+
+void MainControllerSignalsHandler::on_ninjamEncodedAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart){
+
+    if(!mainController->ninjamService){
+        qCritical() << "ninjamService nulo";
+        return;
+    }
+    //audio thread fire this event. This thread (main/gui thread)
+    //write the encoded bytes in socket. We can't write in socket from audio thread.
+    if(isFirstPart){
+        if(mainController->intervalsToUpload.contains(channelIndex)){
+            delete mainController->intervalsToUpload[channelIndex];
+        }
+        mainController->intervalsToUpload.insert(channelIndex, new MainController::UploadIntervalData());
+        mainController->ninjamService->sendAudioIntervalBegin(mainController->intervalsToUpload[channelIndex]->getGUID(), channelIndex);
+    }
+    if(mainController->intervalsToUpload[channelIndex]){//just in case...
+        MainController::UploadIntervalData* upload = mainController->intervalsToUpload[channelIndex];
+        upload->appendData(encodedAudio);
+        bool canSend = upload->getTotalBytes() >= 4096 || isLastPart;
+        if( canSend  ){
+            mainController->ninjamService->sendAudioIntervalPart( upload->getGUID(), upload->getStoredBytes(), isLastPart);
+            //qWarning() << " sending " << upload->getTotalBytes();
+            upload->clear();
+        }
+    }
+
+    if(mainController->settings.isSaveMultiTrackActivated()){
+        mainController->jamRecorder.appendLocalUserAudio(encodedAudio, channelIndex, isFirstPart, isLastPart);
+    }
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++
+MainController::MainController(Settings settings)
+    :
       audioMixer(nullptr),
       roomStreamer(nullptr),
       currentStreamingRoomID(-1000),
-
 
       transmiting(true),
       ninjamService(nullptr),
       ninjamController(nullptr),
       mutex(QMutex::Recursive),
       started(false),
-        vstHost(Jamtaba::VstHost::getInstance()),
+
       //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
       ipToLocationResolver( buildIpToLocationResolver()),
-      loginService(factory->createLoginService()),
+      loginService(new Login::LoginService()),
       settings(settings),
       userNameChoosed(false),
-      jamRecorder(new Recorder::ReaperProjectGenerator())
+      jamRecorder(new Recorder::ReaperProjectGenerator()),
+      signalsHandler(nullptr),
+      mainWindow(nullptr)
 
 {
 
-    //threadHandle = nullptr;//QThread::currentThreadId();
+    signalsHandler = createSignalsHandler();//factory method
 
-    setQuitOnLastWindowClosed(false);//wait disconnect from server to close
+
     //configureStyleSheet("jamtaba_orange.css");
-    configureStyleSheet("jamtaba.css");
+    //configureStyleSheet("jamtaba.css");
 
     this->audioDriver = buildAudioDriver(settings);
 
 
-    QObject::connect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
-    QObject::connect(this->audioDriver, SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
-    QObject::connect(this->audioDriver, SIGNAL(started()), this, SLOT(on_audioDriverStarted()));
+    if(!signalsHandler){
+        qFatal("signals handler is null!");
+    }
+
+    QObject::connect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this->signalsHandler, SLOT(on_audioDriverSampleRateChanged(int)));
+    QObject::connect(this->audioDriver, SIGNAL(stopped()), this->signalsHandler, SLOT(on_audioDriverStopped()));
+    QObject::connect(this->audioDriver, SIGNAL(started()), this->signalsHandler, SLOT(on_audioDriverStarted()));
 
     audioMixer = new Audio::AudioMixer(audioDriver->getSampleRate());
     roomStreamer = new Audio::NinjamRoomStreamerNode();//new Audio::AudioFileStreamerNode(":/teste.mp3");
@@ -180,24 +309,21 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 
     midiDriver = new PortMidiDriver(settings.getMidiInputDevicesStatus());
 
-    QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this, SLOT(on_disconnectedFromLoginServer()));
+    QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this->signalsHandler, SLOT(on_disconnectedFromLoginServer()));
 
     this->audioMixer->addNode( roomStreamer);
 
-
-    vstHost->setSampleRate(audioDriver->getSampleRate());
-    vstHost->setBlockSize(audioDriver->getBufferSize());
-
-
-    QObject::connect(&pluginFinder, SIGNAL(pluginScanFinished(QString,QString,QString)), this, SLOT(on_VSTPluginFounded(QString,QString,QString)));
-
     //ninjam service
+    if(!signalsHandler){
+        qFatal("SignalsHandler is null!");
+    }
     this->ninjamService = Ninjam::Service::getInstance();
-    QObject::connect( this->ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), SLOT(on_connectedInNinjamServer(Ninjam::Server)) );
-    QObject::connect(this->ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(on_disconnectedFromNinjamServer(Ninjam::Server)));
-    QObject::connect(this->ninjamService, SIGNAL(error(QString)), this, SLOT(on_errorInNinjamServer(QString)));
+    QObject::connect( this->ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), this->signalsHandler, SLOT(on_connectedInNinjamServer(Ninjam::Server)) );
+    QObject::connect(this->ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this->signalsHandler, SLOT(on_disconnectedFromNinjamServer(Ninjam::Server)));
+    QObject::connect(this->ninjamService, SIGNAL(error(QString)), this->signalsHandler, SLOT(on_errorInNinjamServer(QString)));
 
-    //addInputTrackNode(new Audio::LocalInputTestStreamer(440, getAudioDriverSampleRate()));
+
+   //addInputTrackNode(new Audio::LocalInputTestStreamer(440, getAudioDriverSampleRate()));
 
 /*
     //test ninjam stream
@@ -224,6 +350,11 @@ MainController::MainController(JamtabaFactory* factory, Settings settings, int &
 
     //qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
 }
+//++++++++++++++++++++
+MainControllerSignalsHandler* MainController::createSignalsHandler(){
+    return new MainControllerSignalsHandler(this);
+}
+
 //++++++++++++++++++++
 Geo::IpToLocationResolver* MainController::buildIpToLocationResolver(){
     return new Geo::WebIpToLocationResolver();
@@ -413,7 +544,10 @@ void MainController::setInputTrackToMono(int localChannelIndex, int inputIndexIn
     Audio::LocalInputAudioNode* inputTrack = getInputTrack(localChannelIndex);
     if(inputTrack){
         inputTrack->setAudioInputSelection(inputIndexInAudioDevice, 1);//mono
-        emit inputSelectionChanged(localChannelIndex);
+        //emit inputSelectionChanged(localChannelIndex);
+        if(mainWindow){
+            mainWindow->refreshTrackInputSelection(localChannelIndex);
+        }
         if(isPlayingInNinjamRoom()){
             if(ninjamController){//just in case
                 ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
@@ -425,7 +559,10 @@ void MainController::setInputTrackToStereo(int localChannelIndex, int firstInput
     Audio::LocalInputAudioNode* inputTrack = getInputTrack(localChannelIndex);
     if(inputTrack){
         inputTrack->setAudioInputSelection(firstInputIndex, 2);//stereo
-        emit inputSelectionChanged(localChannelIndex);
+        //emit inputSelectionChanged(localChannelIndex);
+        if(mainWindow){
+            mainWindow->refreshTrackInputSelection(localChannelIndex);
+        }
         if(isPlayingInNinjamRoom()){
             if(ninjamController){
                 ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
@@ -437,7 +574,9 @@ void MainController::setInputTrackToMIDI(int localChannelIndex, int midiDevice, 
     Audio::LocalInputAudioNode* inputTrack = getInputTrack(localChannelIndex);
     if(inputTrack){
         inputTrack->setMidiInputSelection(midiDevice, midiChannel);
-        emit inputSelectionChanged(localChannelIndex);
+        if(mainWindow){
+            mainWindow->refreshTrackInputSelection(localChannelIndex);
+        }
         if(isPlayingInNinjamRoom()){
             if(ninjamController){
                 ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
@@ -449,7 +588,9 @@ void MainController::setInputTrackToNoInput(int localChannelIndex){
     Audio::LocalInputAudioNode* inputTrack = getInputTrack(localChannelIndex);
     if(inputTrack){
         inputTrack->setToNoInput();
-        emit inputSelectionChanged(localChannelIndex);
+        if(mainWindow){
+            mainWindow->refreshTrackInputSelection(localChannelIndex);
+        }
         if(isPlayingInNinjamRoom()){//send the finish interval message
             if(intervalsToUpload.contains(localChannelIndex)){
                 ninjamService->sendAudioIntervalPart(intervalsToUpload[localChannelIndex]->getGUID(), QByteArray(), true);
@@ -517,46 +658,7 @@ void MainController::storeIntervalProgressShape(int shape){
     settings.setIntervalProgressShape(shape);
 }
 
-void MainController::addVstScanPath(QString path){
-    settings.addVstScanPath(path);
-}
 
-void MainController::addDefaultVstScanPath(){
-    /*
-    On a 64-bit OS
-
-    64-bit plugins path = HKEY_LOCAL_MACHINE\SOFTWARE\VST
-    32-bit plugins path = HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\VST
-    */
-    QStringList vstPaths;
-#ifdef Q_OS_WIN
-    QSettings settings("HKEY_LOCAL_MACHINE\\SOFTWARE\\VST\\", QSettings::NativeFormat);
-    vstPaths.append(settings.value("VSTPluginsPath").toString());
-
-    #ifdef _WIN64//64 bits?
-        QSettings wowSettings("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\VST\\", QSettings::NativeFormat);
-        vstPaths.append(wowSettings.value("VSTPluginsPath").toString());
-    #endif
-#endif
-
-#ifdef Q_OS_MACX
-       vstPaths.append("/Library/Audio/Plug-Ins/VST");
-       vstPaths.append( "~/Library/Audio/Plug-Ins/VST");
-#endif
-    foreach (QString vstPath, vstPaths) {
-        if(!vstPath.isEmpty() && QDir(vstPath).exists()){
-            addVstScanPath(vstPath);
-        }
-    }
-}
-
-void MainController::removeVstScanPath(int index){
-   settings.removeVstScanPath(index);
-}
-
-void MainController::clearVstCache(){
-    settings.clearVstCache();
-}
 
 void MainController::storeWindowSettings(bool maximized, QPointF location){
     settings.setWindowSettings(maximized, location);
@@ -582,33 +684,7 @@ void MainController::removeTrack(long trackID){
     }
 }
 
-void MainController::initializePluginsList(QStringList paths){
-    pluginsDescriptors.clear();
-    foreach (QString path, paths) {
-        QFile file(path);
-        if(file.exists()){
-            QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(path);
-            pluginsDescriptors.append(Audio::PluginDescriptor(pluginName, "VST", path));
-        }
-    }
-}
 
-void MainController::scanPlugins(){
-    pluginsDescriptors.clear();
-    //ConfigStore::clearVstCache();
-    pluginFinder.clearScanPaths();
-    QStringList scanPaths = settings.getVstScanPaths();
-
-    foreach (QString path, scanPaths) {
-        pluginFinder.addPathToScan(path);
-    }
-    pluginFinder.scan(vstHost);
-}
-
-void MainController::on_VSTPluginFounded(QString name, QString group, QString path){
-    pluginsDescriptors.append(Audio::PluginDescriptor(name, group, path));
-    settings.addVstPlugin(path);
-}
 
 void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
 //    if(!threadHandle){
@@ -726,85 +802,11 @@ bool MainController::trackIsSoloed(int trackID) const{
 
 //+++++++++++++++++++++++++++++++++
 
-bool MainController::pluginDescriptorLessThan(const Audio::PluginDescriptor& d1, const Audio::PluginDescriptor& d2){
-     return d1.getName().localeAwareCompare(d2.getName()) < 0;
-}
-
-QList<Audio::PluginDescriptor> MainController::getPluginsDescriptors(){
-
-    qSort(pluginsDescriptors.begin(), pluginsDescriptors.end(), pluginDescriptorLessThan);
-    return pluginsDescriptors;
-    //Audio::getPluginsDescriptors(this->vstHost);
-
-//        static std::vector<Audio::PluginDescriptor*> descriptors;
-//        descriptors.clear();
-//        //+++++++++++++++++
-//        descriptors.push_back(new Audio::PluginDescriptor("Delay", "Jamtaba"));
-
-//        Vst::PluginFinder finder;
-
-//        //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
-//        QString vstDir = "C:/Program Files (x86)/VSTPlugins/";
-//        finder.addPathToScan(vstDir.toStdString());
-//        std::vector<Audio::PluginDescriptor*> vstDescriptors = finder.scan(host);
-//        //add all vstDescriptors
-//        descriptors.insert(descriptors.end(), vstDescriptors.begin(), vstDescriptors.end());
-
-//        //descriptors.push_back(new Audio::PluginDescriptor("OldSkool test", "VST", "C:/Program Files (x86)/VSTPlugins/OldSkoolVerb.dll"));
-
-//        return descriptors;
-
-
-}
-
-Audio::Plugin* MainController::addPlugin(int inputTrackIndex, const Audio::PluginDescriptor& descriptor){
-    Audio::Plugin* plugin = createPluginInstance(descriptor);
-    if(plugin){
-        plugin->start();
-        QMutexLocker locker(&mutex);
-        getInputTrack(inputTrackIndex)->addProcessor(plugin);
-    }
-    return plugin;
-}
-
-
-void MainController::removePlugin(int inputTrackIndex, Audio::Plugin *plugin){
-    QMutexLocker locker(&mutex);
-    QString pluginName = plugin->getName();
-    try{
-        getInputTrack(inputTrackIndex)->removeProcessor(plugin);
-    }
-    catch(...){
-        qCritical() << "Erro removendo plugin " << pluginName;
-    }
-}
-
-Audio::Plugin *MainController::createPluginInstance(const Audio::PluginDescriptor& descriptor)
-{
-    if(descriptor.isNative()){
-        if(descriptor.getName() == "Delay"){
-            return new Audio::JamtabaDelay(audioDriver->getSampleRate());
-        }
-    }
-    else if(descriptor.isVST()){
-            Jamtaba::VstPlugin* vstPlugin = new Jamtaba::VstPlugin(this->vstHost);
-            if(vstPlugin->load( descriptor.getPath())){
-                return vstPlugin;
-            }
-    }
-    return nullptr;
-}
-
-
-void MainController::on_disconnectedFromLoginServer(){
-    exit(0);
-}
-
 MainController::~MainController(){
     qCDebug(controllerMain()) << "MainController destrutor!";
     stop();
 
-    QObject::disconnect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
+    QObject::disconnect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this->signalsHandler, SLOT(on_audioDriverSampleRateChanged(int)));
     //delete audioMixer; crashing :(
     delete audioDriver;
     delete midiDriver;
@@ -827,7 +829,7 @@ MainController::~MainController(){
     }
     trackGroups.clear();
 
-    pluginsDescriptors.clear();
+
 
     if(this->ninjamController){
         delete ninjamController;
@@ -911,44 +913,7 @@ void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStrin
     }
 }
 
-void MainController::on_audioDriverSampleRateChanged(int newSampleRate){
-    vstHost->setSampleRate(newSampleRate);
-    audioMixer->setSampleRate(newSampleRate);
 
-    foreach (Audio::LocalInputAudioNode* inputNode, inputTracks) {
-        inputNode->setProcessorsSampleRate(newSampleRate);
-    }
-
-    if(settings.isSaveMultiTrackActivated()){
-        jamRecorder.setSampleRate(newSampleRate);
-    }
-}
-
-void MainController::on_audioDriverStarted(){
-    vstHost->setSampleRate(audioDriver->getSampleRate());
-    vstHost->setBlockSize(audioDriver->getBufferSize());
-
-    foreach (Audio::LocalInputAudioNode* inputTrack, inputTracks) {
-        inputTrack->resumeProcessors();
-    }
-}
-
-void MainController::on_audioDriverStopped(){
-    //threadHandle = nullptr;
-    if(isPlayingInNinjamRoom()){
-        //send the last interval part when audio driver is stopped
-        foreach (int channelIndex, intervalsToUpload.keys()) {
-            ninjamService->sendAudioIntervalPart(intervalsToUpload[channelIndex]->getGUID(), QByteArray(), true);
-        }
-
-    }
-
-    foreach (Audio::LocalInputAudioNode* inputTrack, inputTracks) {
-        inputTrack->suspendProcessors();//suspend plugins
-    }
-
-
-}
 
 void MainController::start()
 {
@@ -963,7 +928,7 @@ void MainController::start()
         //connect with login server and receive a list of public rooms to play
 
         QString userEnvironment = getUserEnvironmentString();
-        QString version = applicationVersion();
+        QString version = QApplication::applicationVersion();// applicationVersion();
         loginService->connectInServer("Jamtaba2 USER", 0, "", map, version, userEnvironment, getAudioDriverSampleRate());
         //(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
 
@@ -975,7 +940,7 @@ QString MainController::getUserEnvironmentString() const{
     QString systemName = QSysInfo::prettyProductName();
     QString userMachineArch = QSysInfo::currentCpuArchitecture();
     QString jamtabaArch = QSysInfo::buildCpuArchitecture();
-    QString version = applicationVersion();
+    QString version = QApplication::applicationVersion();
     return "Jamtaba " + version + " (" + jamtabaArch + ") running on " + systemName + " (" + userMachineArch + ")";
 }
 
@@ -1012,15 +977,70 @@ Midi::MidiDriver* MainController::getMidiDriver() const{
     return midiDriver;
 }
 
+//+++++++++++
+bool MainController::pluginDescriptorLessThan(const Audio::PluginDescriptor& d1, const Audio::PluginDescriptor& d2){
+     return d1.getName().localeAwareCompare(d2.getName()) < 0;
+}
+
+QList<Audio::PluginDescriptor> MainController::getPluginsDescriptors(){
+
+    qSort(pluginsDescriptors.begin(), pluginsDescriptors.end(), pluginDescriptorLessThan);
+    return pluginsDescriptors;
+    //Audio::getPluginsDescriptors(this->vstHost);
+
+//        static std::vector<Audio::PluginDescriptor*> descriptors;
+//        descriptors.clear();
+//        //+++++++++++++++++
+//        descriptors.push_back(new Audio::PluginDescriptor("Delay", "Jamtaba"));
+
+//        Vst::PluginFinder finder;
+
+//        //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
+//        QString vstDir = "C:/Program Files (x86)/VSTPlugins/";
+//        finder.addPathToScan(vstDir.toStdString());
+//        std::vector<Audio::PluginDescriptor*> vstDescriptors = finder.scan(host);
+//        //add all vstDescriptors
+//        descriptors.insert(descriptors.end(), vstDescriptors.begin(), vstDescriptors.end());
+
+//        //descriptors.push_back(new Audio::PluginDescriptor("OldSkool test", "VST", "C:/Program Files (x86)/VSTPlugins/OldSkoolVerb.dll"));
+
+//        return descriptors;
+
+
+}
+
+Audio::Plugin* MainController::addPlugin(int inputTrackIndex, const Audio::PluginDescriptor& descriptor){
+    Audio::Plugin* plugin = createPluginInstance(descriptor);
+    if(plugin){
+        plugin->start();
+        QMutexLocker locker(&mutex);
+        getInputTrack(inputTrackIndex)->addProcessor(plugin);
+    }
+    return plugin;
+}
+
+
+void MainController::removePlugin(int inputTrackIndex, Audio::Plugin *plugin){
+    QMutexLocker locker(&mutex);
+    QString pluginName = plugin->getName();
+    try{
+        getInputTrack(inputTrackIndex)->removeProcessor(plugin);
+    }
+    catch(...){
+        qCritical() << "Erro removendo plugin " << pluginName;
+    }
+}
+
+
+//+++++=
+
 void MainController::configureStyleSheet(QString cssFile){
     QFile styleFile( ":/style/" + cssFile );
     if(!styleFile.open( QFile::ReadOnly )){
         qFatal("não carregou estilo!");
     }
-
     // Apply the loaded stylesheet
-    QString style( styleFile.readAll() );
-    setStyleSheet( style );
+    setCSS(styleFile.readAll());
 }
 
 Login::LoginService* MainController::getLoginService() const{
@@ -1036,54 +1056,7 @@ bool MainController::isPlayingInNinjamRoom() const{
 
 //++++++++++++= NINJAM ++++++++++++++++
 
-void MainController::on_newNinjamInterval(){
-    if(settings.isSaveMultiTrackActivated()){
-        jamRecorder.newInterval();
-    }
-}
 
-void MainController::on_ninjamBpiChanged(int newBpi){
-    if(settings.isSaveMultiTrackActivated()){
-        jamRecorder.setBpi(newBpi);
-    }
-}
-
-void MainController::on_ninjamBpmChanged(int newBpm){
-    if(settings.isSaveMultiTrackActivated()){
-        jamRecorder.setBpm(newBpm);
-    }
-}
-
-void MainController::on_ninjamEncodedAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart){
-
-    if(!ninjamService){
-        qCritical() << "ninjamService nulo";
-        return;
-    }
-    //audio thread fire this event. This thread (main/gui thread)
-    //write the encoded bytes in socket. We can't write in socket from audio thread.
-    if(isFirstPart){
-        if(intervalsToUpload.contains(channelIndex)){
-            delete intervalsToUpload[channelIndex];
-        }
-        intervalsToUpload.insert(channelIndex, new UploadIntervalData());
-        ninjamService->sendAudioIntervalBegin(intervalsToUpload[channelIndex]->getGUID(), channelIndex);
-    }
-    if(intervalsToUpload[channelIndex]){//just in case...
-        UploadIntervalData* upload = intervalsToUpload[channelIndex];
-        upload->appendData(encodedAudio);
-        bool canSend = upload->getTotalBytes() >= 4096 || isLastPart;
-        if( canSend  ){
-            ninjamService->sendAudioIntervalPart( upload->getGUID(), upload->getStoredBytes(), isLastPart);
-            //qWarning() << " sending " << upload->getTotalBytes();
-            upload->clear();
-        }
-    }
-
-    if(settings.isSaveMultiTrackActivated()){
-        jamRecorder.appendLocalUserAudio(encodedAudio, channelIndex, isFirstPart, isLastPart);
-    }
-}
 
 void MainController::stopNinjamController(){
     QMutexLocker locker(&mutex);
@@ -1092,43 +1065,7 @@ void MainController::stopNinjamController(){
         //delete ninjamController;
         ninjamController = nullptr;
     }
-    vstHost->setPlayingFlag(false);
+
 }
 
-void MainController::on_errorInNinjamServer(QString error){
-    qCWarning(controllerMain) << error;
-    stopNinjamController();
-    emit exitedFromRoom(false);//not a normal disconnection
-}
 
-void MainController::on_disconnectedFromNinjamServer(const Server &server){
-    Q_UNUSED(server);
-    stopNinjamController();
-    emit exitedFromRoom(true);//normal disconnection
-    if(settings.isSaveMultiTrackActivated()){
-        jamRecorder.stopRecording();
-    }
-}
-
-void MainController::on_connectedInNinjamServer(Ninjam::Server server){
-    qCDebug(controllerMain) << "connected in ninjam server";
-    stopNinjamController();
-    ninjamController = new Controller::NinjamController(this);
-    QObject::connect(ninjamController,
-                     SIGNAL(encodedAudioAvailableToSend(QByteArray,quint8,bool,bool)),
-                     this, SLOT(on_ninjamEncodedAudioAvailableToSend(QByteArray,quint8,bool,  bool)));
-    QObject::connect(ninjamController, SIGNAL(startingNewInterval()), this, SLOT(on_newNinjamInterval()));
-    QObject::connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(on_ninjamBpiChanged(int)));
-    QObject::connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(on_ninjamBpmChanged(int)));
-
-   //emit event after start controller to create view widgets before start
-    emit enteredInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers(), server.getMaxChannels()));
-
-    qCDebug(controllerMain) << "starting ninjamController...";
-    ninjamController->start(server, transmiting);
-    vstHost->setTempo(server.getBpm());
-
-    if(settings.isSaveMultiTrackActivated()){
-        jamRecorder.startRecording(getUserName(), QDir(settings.getRecordingPath()), server.getBpm(), server.getBpi(), getAudioDriverSampleRate());
-    }
-}
