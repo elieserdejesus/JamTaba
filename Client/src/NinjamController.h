@@ -65,6 +65,7 @@ signals:
     void currentBpmChanged(int newBpm);
     void intervalBeatChanged(int intervalBeat);
     void startingNewInterval();
+    void startProcessing(int intervalPosition);
     void channelAdded(Ninjam::User user,   Ninjam::UserChannel channel, long channelID);
     void channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
     void channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
@@ -132,6 +133,8 @@ private:
     EncodingThread* encodingThread;
 
     //QList<NinjamTrackNode*> tracksToDelete;
+
+
 
 private slots:
     //ninjam events

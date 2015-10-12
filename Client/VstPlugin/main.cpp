@@ -1,8 +1,8 @@
 #include "vst.h"
 
 
-//these two lines are necessary to Qt load the windows platform plugin statically. By default
-    //qt load the platform plugin from a external dll.
+//these two lines are necessary to load the Qt windows platform plugin statically. By default
+    //qt load the platform plugin from a external dll and I have an error about loading the windows platform DLL.
 #include <QtPlugin>
 Q_IMPORT_PLUGIN (QWindowsIntegrationPlugin);
 

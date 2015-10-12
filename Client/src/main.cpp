@@ -1,6 +1,5 @@
-#include "gui/mainframe.h"
-#include "MainController.h"
-#include "JamtabaFactory.h"
+#include "gui/MainWindowStandalone.h"
+#include "StandAloneMainController.h"
 #include "persistence/Settings.h"
 #include <QApplication>
 #include <QLoggingCategory>
@@ -10,46 +9,26 @@
 
 void customLogHandler(QtMsgType, const QMessageLogContext &, const QString &);
 
-//#include "audio/vst/vsthost.h"
-//#include "audio/vst/VstPlugin.h"
-
-
 int main(int argc, char* args[] ){
-
-
-//    Vst::VstHost* host = Vst::VstHost::getInstance();
-//    Vst::VstPlugin plugin(host);
-//    bool ok = false;
-//    ok = test(plugin);
-
-//    qWarning() << "loading finished";
-//    if(!ok){
-//        qWarning() << "loading fail!";
-//    }
-//    else{
-//        qWarning() << "loading ok!";
-//    }
-
 
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
 
-    qputenv("QT_LOGGING_CONF", ":/qtlogging.ini");//log cconfigurations is in resources at moment
+    qputenv("QT_LOGGING_CONF", ":/Standalone/qtlogging.ini");//log cconfigurations is in resources at moment
 
     qInstallMessageHandler(customLogHandler);
 
-    JamtabaFactory* factory = new ReleaseFactory();
     Persistence::Settings settings;//read from file in constructor
     settings.load();
 
-    Controller::MainController mainController(factory, settings, argc, args);//MainController extends QApplication
+    Controller::StandaloneMainController mainController(settings, argc, args);//MainController extends QApplication
+    mainController.configureStyleSheet("jamtaba.css");
+    MainWindowStandalone  mainWindow(&mainController);
+    mainController.setMainWindow(&mainWindow);
+    mainWindow.show();
 
-    MainFrame mainFrame(&mainController);
-    mainFrame.show();
-
-    delete factory;
     int returnCode = mainController.exec();
-    mainController.saveLastUserSettings(mainFrame.getInputsSettings());
+    mainController.saveLastUserSettings(mainWindow.getInputsSettings());
 
     return returnCode;
 

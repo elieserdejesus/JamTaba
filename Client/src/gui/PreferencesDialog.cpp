@@ -7,7 +7,7 @@
 #include "../audio/core/AudioDriver.h"
 #include "../midi/MidiDriver.h"
 #include "../persistence/Settings.h"
-#include "../MainController.h"
+#include "../StandAloneMainController.h"
 
 using namespace Audio;
 using namespace Controller;
@@ -321,7 +321,7 @@ void PreferencesDialog::on_buttonRemoveVstPathClicked(){
         ui->panelPaths->layout()->removeWidget(buttonClicked->parentWidget());
         scanPathButtons.removeOne(buttonClicked);
         delete buttonClicked->parentWidget();
-        mainController->removeVstScanPath(buttonIndex);
+        (dynamic_cast<StandaloneMainController*>(mainController))->removeVstScanPath(buttonIndex);
     }
 }
 
@@ -344,18 +344,18 @@ void PreferencesDialog::createWidgetsToNewScanPath(QString path){
 
 void PreferencesDialog::addVstScanPath(QString path){
     createWidgetsToNewScanPath( path );
-    mainController->addVstScanPath(path);
+    (dynamic_cast<StandaloneMainController*>(mainController))->addVstScanPath(path);
 }
 
 void PreferencesDialog::on_buttonClearVstCache_clicked()
 {
-    mainController->clearVstCache();
+    (dynamic_cast<StandaloneMainController*>(mainController))->clearVstCache();
 }
 
 void PreferencesDialog::on_buttonScanVSTs_clicked()
 {
     if(mainController){
-        mainController->scanPlugins();
+        (dynamic_cast<StandaloneMainController*>(mainController))->scanPlugins();
     }
 }
 

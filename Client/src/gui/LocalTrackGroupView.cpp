@@ -5,12 +5,12 @@
 #include "../MainController.h"
 #include "Highligther.h"
 
-#include "MainFrame.h"
+#include "MainWindow.h"
 
 #include <QPushButton>
 #include <QMenu>
 
-LocalTrackGroupView::LocalTrackGroupView(int index, MainFrame *mainFrame)
+LocalTrackGroupView::LocalTrackGroupView(int index, MainWindow *mainFrame)
     :index(index), mainFrame(mainFrame), faderOnly(false)
 {
     toolButton = new QPushButton();
