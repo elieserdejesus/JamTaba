@@ -1,3 +1,5 @@
+#arquivo de log vai crescer muito, estou sempre fazendo append. Tenho que mudar isso.
+
 #Drumazon deu problema no mac. Talvez também esteja dando problema no windows. O Torben atualizou o plugin
     #e foi dando problema em outros plugins da mesma empresa.
 
