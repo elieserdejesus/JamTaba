@@ -235,7 +235,13 @@ public:
 
     void configureStyleSheet(QString cssFile);
 
-    const Jamtaba::PluginFinder& getPluginFinder() const{return pluginFinder;}
+    Vst::PluginFinder* getPluginFinder() const{return pluginFinder;}
+
+    void addPluginsScanPath(QString path);
+    virtual void addDefaultPluginsScanPath() = 0;//add vst path from registry
+    void removePluginsScanPath(int index);
+    void clearPluginsCache();
+    virtual void scanPlugins() = 0;
 signals:
     //void enteredInRoom(Login::RoomInfo room);
     //void exitedFromRoom(bool error);
@@ -259,17 +265,24 @@ protected:
 
     QList<Audio::LocalInputAudioNode*> inputTracks;
 
-    Jamtaba::PluginFinder pluginFinder;
+    Vst::PluginFinder* pluginFinder;
 
     virtual void exit() = 0;
 
+    //factory methods
     virtual MainControllerSignalsHandler* createSignalsHandler();
+    virtual Midi::MidiDriver* createMidiDriver() = 0;
+    virtual Audio::AudioDriver* buildAudioDriver(const Persistence::Settings& settings) = 0;
+    virtual Vst::PluginFinder* createPluginFinder() = 0;
 
     MainWindow* mainWindow;
 
     MainControllerSignalsHandler* signalsHandler;
 
     virtual void setCSS(QString css) = 0;
+
+    virtual bool useMidiDriver(){ return true;}
+
 private:
     void setAllTracksActivation(bool activated);
     void doAudioProcess(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate);
@@ -317,7 +330,7 @@ private:
     //SamplesBufferRecorder* recorder;
 
     static Geo::IpToLocationResolver* buildIpToLocationResolver();
-    Audio::AudioDriver* buildAudioDriver(const Persistence::Settings& settings);
+
 
 
 

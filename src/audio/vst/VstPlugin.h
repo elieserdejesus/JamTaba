@@ -10,9 +10,9 @@ Q_DECLARE_LOGGING_CATEGORY(vst)
 
 #define MAX_MIDI_EVENTS 40 //in my tests playing piano I can genenerate just 3 messages per block (256 samples) at maximum
 
-namespace Jamtaba {
+namespace Vst {
 
-class VstHost;
+class Host;
 class VstEvents;
 
 // Plugin's entry point
@@ -20,7 +20,7 @@ typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
 
 class VstPlugin : public Audio::Plugin{
 public:
-    explicit VstPlugin(Jamtaba::VstHost* host);
+    explicit VstPlugin(Vst::Host* host);
     ~VstPlugin();
 
     virtual void process(const Audio::SamplesBuffer& vstInputArray, Audio::SamplesBuffer &outBuffer, const Midi::MidiBuffer& midiBuffer);
@@ -45,7 +45,7 @@ private:
     Audio::SamplesBuffer* internalOutputBuffer;
     Audio::SamplesBuffer* internalInputBuffer;
     QLibrary pluginLib;
-    Jamtaba::VstHost* host;
+    Vst::Host* host;
     bool wantMidi;
     //bool canProcessReplacing;
     QString path;

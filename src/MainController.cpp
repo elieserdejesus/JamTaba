@@ -1,8 +1,9 @@
 #include "MainController.h"
 #include "recorder/ReaperProjectGenerator.h"
 #include "audio/core/AudioDriver.h"
-#include "midi/portmididriver.h"
-#include "audio/core/PortAudioDriver.h"
+#include "midi/MidiDriver.h"
+//#include "midi/portmididriver.h"
+//#include "audio/core/PortAudioDriver.h"
 #include "audio/core/AudioMixer.h"
 #include "audio/core/AudioNode.h"
 #include "audio/RoomStreamerNode.h"
@@ -278,49 +279,12 @@ MainController::MainController(Settings settings)
       userNameChoosed(false),
       jamRecorder(new Recorder::ReaperProjectGenerator()),
       signalsHandler(nullptr),
-      mainWindow(nullptr)
+      mainWindow(nullptr),
+      midiDriver(nullptr),
+      audioDriver(nullptr)
 
 {
 
-    signalsHandler = createSignalsHandler();//factory method
-
-
-    //configureStyleSheet("jamtaba_orange.css");
-    //configureStyleSheet("jamtaba.css");
-
-    this->audioDriver = buildAudioDriver(settings);
-
-
-    if(!signalsHandler){
-        qFatal("signals handler is null!");
-    }
-
-    QObject::connect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this->signalsHandler, SLOT(on_audioDriverSampleRateChanged(int)));
-    QObject::connect(this->audioDriver, SIGNAL(stopped()), this->signalsHandler, SLOT(on_audioDriverStopped()));
-    QObject::connect(this->audioDriver, SIGNAL(started()), this->signalsHandler, SLOT(on_audioDriverStarted()));
-
-    audioMixer = new Audio::AudioMixer(audioDriver->getSampleRate());
-    roomStreamer = new Audio::NinjamRoomStreamerNode();//new Audio::AudioFileStreamerNode(":/teste.mp3");
-
-    //QString dateString = QDateTime::currentDateTime().time().toString().replace(":", "-");
-    //QString fileName = "output_" + dateString + ".wav";
-    //QString fileName = "output.wav";
-    //recorder = new SamplesBufferRecorder(fileName, audioDriver->getSampleRate());
-
-    midiDriver = new PortMidiDriver(settings.getMidiInputDevicesStatus());
-
-    QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this->signalsHandler, SLOT(on_disconnectedFromLoginServer()));
-
-    this->audioMixer->addNode( roomStreamer);
-
-    //ninjam service
-    if(!signalsHandler){
-        qFatal("SignalsHandler is null!");
-    }
-    this->ninjamService = Ninjam::Service::getInstance();
-    QObject::connect( this->ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), this->signalsHandler, SLOT(on_connectedInNinjamServer(Ninjam::Server)) );
-    QObject::connect(this->ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this->signalsHandler, SLOT(on_disconnectedFromNinjamServer(Ninjam::Server)));
-    QObject::connect(this->ninjamService, SIGNAL(error(QString)), this->signalsHandler, SLOT(on_errorInNinjamServer(QString)));
 
 
    //addInputTrackNode(new Audio::LocalInputTestStreamer(440, getAudioDriverSampleRate()));
@@ -358,21 +322,6 @@ MainControllerSignalsHandler* MainController::createSignalsHandler(){
 //++++++++++++++++++++
 Geo::IpToLocationResolver* MainController::buildIpToLocationResolver(){
     return new Geo::WebIpToLocationResolver();
-}
-
-Audio::AudioDriver* MainController::buildAudioDriver(const Persistence::Settings &settings){
-#ifdef Q_OS_WIN
-    return new Audio::PortAudioDriver(
-                    this, //the AudioDriverListener instance
-                    settings.getLastInputDevice(), settings.getLastOutputDevice(),
-                    settings.getFirstGlobalAudioInput(), settings.getLastGlobalAudioInput(),
-                    settings.getFirstGlobalAudioOutput(), settings.getLastGlobalAudioOutput(),
-                    settings.getLastSampleRate(), settings.getLastBufferSize()
-                    );
-#else
-    //MAC
-    return new Audio::PortAudioDriver(this, settings.getLastSampleRate(), settings.getLastBufferSize());
-#endif
 }
 
 //++++++++++++++++++++
@@ -920,8 +869,67 @@ void MainController::start()
     if(!started){
         started = true;
 
-        audioDriver->start();
-        midiDriver->start();
+        qCDebug(controllerMain) << "creating signals handler";
+        signalsHandler = createSignalsHandler();//factory method
+        if(signalsHandler){
+            qCDebug(controllerMain) << "signals handler sucefull created!";
+        }
+        else{
+                qWarning(controllerMain) <<  "ERROR creating signals handler!";
+        }
+
+        pluginFinder = createPluginFinder();
+        if(pluginFinder){
+            qCDebug(controllerMain) << "plugin finder sucefull created!";
+        }
+        else{
+            qCWarning(controllerMain()) << "error creating plugin finder";
+        }
+
+        if(!midiDriver && useMidiDriver()){
+            qCDebug(controllerMain()) << "creating MidiDriver";
+            midiDriver = createMidiDriver();
+            if(midiDriver){
+                qCDebug(controllerMain()) << "Midi driver created!";
+            }
+            else{
+                qCDebug(controllerMain()) << "ERROr creating midi driver!";
+            }
+        }
+        if(!audioDriver){
+            qCDebug(controllerMain()) << "creating AudioDriver";
+            audioDriver = buildAudioDriver(settings);
+            if(audioDriver){
+                qCDebug(controllerMain()) << "AudioDriver created!";
+            }
+            qCDebug(controllerMain()) << "connecting audio driver signals...";
+            QObject::connect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this->signalsHandler, SLOT(on_audioDriverSampleRateChanged(int)));
+            QObject::connect(this->audioDriver, SIGNAL(stopped()), this->signalsHandler, SLOT(on_audioDriverStopped()));
+            QObject::connect(this->audioDriver, SIGNAL(started()), this->signalsHandler, SLOT(on_audioDriverStarted()));
+            qCDebug(controllerMain()) << "done!";
+        }
+
+        qCDebug(controllerMain()) << "Creating audio mixer...";
+        audioMixer = new Audio::AudioMixer(audioDriver->getSampleRate());
+        roomStreamer = new Audio::NinjamRoomStreamerNode();//new Audio::AudioFileStreamerNode(":/teste.mp3");
+        this->audioMixer->addNode( roomStreamer);
+        qCDebug(controllerMain()) << "done!";
+
+        QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this->signalsHandler, SLOT(on_disconnectedFromLoginServer()));
+
+        qCDebug(controllerMain()) << "Initializing ninjamServive...";
+        this->ninjamService = Ninjam::Service::getInstance();
+        QObject::connect( this->ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), this->signalsHandler, SLOT(on_connectedInNinjamServer(Ninjam::Server)) );
+        QObject::connect(this->ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this->signalsHandler, SLOT(on_disconnectedFromNinjamServer(Ninjam::Server)));
+        QObject::connect(this->ninjamService, SIGNAL(error(QString)), this->signalsHandler, SLOT(on_errorInNinjamServer(QString)));
+        qCDebug(controllerMain()) << "done!";
+
+        if(audioDriver){
+            audioDriver->start();
+        }
+        if(midiDriver){
+            midiDriver->start();
+        }
 
         NatMap map;//not used yet,will be used in future to real time rooms
 
@@ -950,8 +958,12 @@ void MainController::stop()
     if(started){
         {
             //QMutexLocker locker(&mutex);
-            this->audioDriver->release();
-            this->midiDriver->release();
+            if(audioDriver){
+                this->audioDriver->release();
+            }
+            if(midiDriver){
+                this->midiDriver->release();
+            }
             qCDebug(controllerMain) << "audio and midi drivers released";
 
             if(ninjamController){
@@ -980,6 +992,18 @@ Midi::MidiDriver* MainController::getMidiDriver() const{
 //+++++++++++
 bool MainController::pluginDescriptorLessThan(const Audio::PluginDescriptor& d1, const Audio::PluginDescriptor& d2){
      return d1.getName().localeAwareCompare(d2.getName()) < 0;
+}
+
+void MainController::addPluginsScanPath(QString path){
+    settings.addVstScanPath(path);
+}
+
+void MainController::removePluginsScanPath(int index){
+   settings.removeVstScanPath(index);
+}
+
+void MainController::clearPluginsCache(){
+    settings.clearVstCache();
 }
 
 QList<Audio::PluginDescriptor> MainController::getPluginsDescriptors(){
@@ -1037,10 +1061,12 @@ void MainController::removePlugin(int inputTrackIndex, Audio::Plugin *plugin){
 void MainController::configureStyleSheet(QString cssFile){
     QFile styleFile( ":/style/" + cssFile );
     if(!styleFile.open( QFile::ReadOnly )){
-        qFatal("não carregou estilo!");
+        qCritical("não carregou estilo!");
     }
-    // Apply the loaded stylesheet
-    setCSS(styleFile.readAll());
+    else{
+        // Apply the loaded stylesheet
+        setCSS(styleFile.readAll());
+    }
 }
 
 Login::LoginService* MainController::getLoginService() const{

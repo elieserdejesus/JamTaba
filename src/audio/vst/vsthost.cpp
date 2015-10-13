@@ -8,21 +8,21 @@
 #include <QApplication>
 #include <cmath>
 
-using namespace Jamtaba;
+using namespace Vst;
 
 Q_LOGGING_CATEGORY(vstHost, "vst.host")
 
-VstHost* VstHost::hostInstance = nullptr;
+Host* Host::hostInstance = nullptr;
 
 
-VstHost* VstHost::getInstance(){
+Host* Host::getInstance(){
     if(!hostInstance){
-        hostInstance = new VstHost();
+        hostInstance = new Host();
     }
     return hostInstance;
 }
 
-VstHost::VstHost()
+Host::Host()
     : blockSize(0)
 {
     //    qCritical() << "VstHost Construtor";
@@ -36,7 +36,7 @@ VstHost::VstHost()
     clearVstTimeInfoFlags();
 }
 
-void VstHost::clearVstTimeInfoFlags(){
+void Host::clearVstTimeInfoFlags(){
     int tempSampleRate = vstTimeInfo.sampleRate;
 
     vstTimeInfo.samplePos = 0.0;
@@ -55,7 +55,7 @@ void VstHost::clearVstTimeInfoFlags(){
     vstTimeInfo.flags = 0;
 }
 
-void VstHost::setPlayingFlag(bool playing){
+void Host::setPlayingFlag(bool playing){
     if(playing){
         vstTimeInfo.flags |= kVstTransportPlaying;
     }
@@ -74,7 +74,7 @@ void VstHost::setPlayingFlag(bool playing){
 //}
 
 
-void VstHost::update(int intervalPosition){
+void Host::update(int intervalPosition){
     vstTimeInfo.samplePos = intervalPosition;
 
     int measure = (int)vstTimeInfo.ppqPos/vstTimeInfo.timeSigNumerator;
@@ -117,7 +117,7 @@ void VstHost::update(int intervalPosition){
     vstTimeInfo.flags |= kVstClockValid;
 }
 
-VstHost::~VstHost()
+Host::~Host()
 {
     //delete this->vstTimeInfo;
     //    for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
@@ -126,28 +126,28 @@ VstHost::~VstHost()
     //    delete [] this->vstMidiEvents.events;
 }
 
-void VstHost::setBlockSize(int blockSize){
+void Host::setBlockSize(int blockSize){
     this->blockSize = blockSize;
 }
 
-void VstHost::setSampleRate(int sampleRate){
+void Host::setSampleRate(int sampleRate){
     this->vstTimeInfo.sampleRate = sampleRate;
 }
 
-int VstHost::getSampleRate() const{
+int Host::getSampleRate() const{
     return (int)this->vstTimeInfo.sampleRate;
 }
 
-void VstHost::setTempo(int bpm){
+void Host::setTempo(int bpm){
     this->vstTimeInfo.tempo = bpm;
     this->vstTimeInfo.flags |= kVstTempoValid;
 }
 
-bool VstHost::tempoIsValid() const{
+bool Host::tempoIsValid() const{
     return this->vstTimeInfo.flags & kVstTempoValid;
 }
 
-long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index, long value, void *ptr, float opt)
+long VSTCALLBACK Host::hostCallback(AEffect *effect, long opcode, long index, long value, void *ptr, float opt)
 {
     Q_UNUSED(effect)
     Q_UNUSED(index)
@@ -174,13 +174,13 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
         //	return 2100L; // Supports VST v2.1
 
     case audioMasterGetBlockSize:
-        return VstHost::getInstance()->blockSize;
+        return Host::getInstance()->blockSize;
 
     case audioMasterGetSampleRate:
-        return VstHost::getInstance()->getSampleRate();
+        return Host::getInstance()->getSampleRate();
 
     case audioMasterGetTime : //7
-        return (long)(&(VstHost::getInstance()->vstTimeInfo));
+        return (long)(&(Host::getInstance()->vstTimeInfo));
 
     case audioMasterGetCurrentProcessLevel : //23
         return 2L;

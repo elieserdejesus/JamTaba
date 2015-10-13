@@ -13,7 +13,7 @@ class MidiBuffer;
 }
 
 
-namespace Jamtaba {
+namespace Vst {
 
 class VstPlugin;
 
@@ -23,12 +23,12 @@ class VstPlugin;
 //VstIntPtr reserved;		///< zero (Reserved for future use)
 //VstEvent* events[2];
 
-class VstHost
+class Host
 {
     friend class VstPlugin;
 
 public:
-    static VstHost* getInstance();
+    static Host* getInstance();
     int getSampleRate() const;// {return sampleRate;}
     inline int getBufferSize() const {return blockSize;}
     void setSampleRate(int sampleRate);
@@ -47,10 +47,10 @@ private:
     void clearVstTimeInfoFlags();
 
 
-    static VstHost* hostInstance;
-    VstHost();
-    VstHost(const VstHost&);//copy constructor
-    ~VstHost();
+    static Host* hostInstance;
+    Host();
+    Host(const Host&);//copy constructor
+    ~Host();
 
     bool tempoIsValid() const;
 

@@ -27,12 +27,12 @@
 
 Q_LOGGING_CATEGORY(vst, "vst")
 
-using namespace Jamtaba;
+using namespace Vst;
 
 //+++++++++++++++++++++++++++
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-VstPlugin::VstPlugin(VstHost* host)
+VstPlugin::VstPlugin(Vst::Host* host)
     :   Audio::Plugin("name"),
         effect(nullptr),
         internalOutputBuffer(nullptr),

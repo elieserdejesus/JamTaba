@@ -7,35 +7,26 @@ namespace Audio {
     class PluginDescriptor;
 }
 
-namespace Jamtaba {
+namespace Vst {
 
-class VstHost;
+class Host;
 
-class ScanThread;
-
-class PluginFinder : public QThread
+class PluginFinder : public QObject
 {
     Q_OBJECT
-
 public:
-    PluginFinder();
-    ~PluginFinder();
+    virtual void scan() = 0;
     void addPathToScan(QString path);
-    void scan(Jamtaba::VstHost *host);
     void clearScanPaths();
-
-private:
-    void run();
+protected:
+    QList<QString> scanPaths;
 signals:
     void scanStarted();
     void scanFinished();
     void pluginScanStarted(QString path);
     void pluginScanFinished(QString name, QString group, QString path);
-private:
-    QList<QString> scanPaths;
-    Audio::PluginDescriptor getPluginDescriptor(QFileInfo f, Jamtaba::VstHost* host);
-    Jamtaba::VstHost* host;
 };
+
 
 }
 

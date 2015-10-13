@@ -5,49 +5,42 @@
 #include <QSlider>
 #include <QHBoxLayout>
 #include <Windows.h>
+#include "../MainController.h"
+#include "../log/logHandler.h"
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-JamtabaWindow::JamtabaWindow(Jamtaba *jamtaba, HWND parent)
-    :QWinWidget(parent, NULL), jamtaba(jamtaba), h_parent(parent)
+JamtabaWindow::JamtabaWindow(Controller::MainController* controller, HWND parent)
+    :QWinWidget(parent, NULL), h_parent(parent)
 {
     setAttribute(Qt::WA_DeleteOnClose);
 
-    QLabel *label = new QLabel("Gain", this);
-    valueLabel = new QLabel("0", this);
-    slider = new QSlider(Qt::Horizontal, this);
-    QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->addWidget(label);
-    layout->addWidget(valueLabel);
-    layout->addWidget(slider);
-    setLayout(layout);
-
-    QObject::connect(slider, SIGNAL(valueChanged(int)), this, SLOT(on_sliderChanged(int)));
+    mainWindow = new MainWindow(controller, this);
+    setLayout(new QHBoxLayout());
+    layout()->addWidget(mainWindow);
+    setMinimumSize(800, 600);
+    updateGeometry();
 }
 
-void JamtabaWindow::on_sliderChanged(int value){
-    jamtaba->setGain((float)value/slider->maximum());
-    valueLabel->setText(QString::number(value));
-}
-
-
-
-
-JamtabaEditor::JamtabaEditor(Jamtaba* jamtaba)
-    :widget(NULL), jamtaba(jamtaba)
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+JamtabaVstEditor::JamtabaVstEditor(JamtabaPlugin *jamtaba)
+    :widget(NULL), jamtaba(jamtaba), mainWindow(nullptr)
 {
 }
 
-JamtabaEditor::~JamtabaEditor()
+JamtabaVstEditor::~JamtabaVstEditor()
 {
+    if(mainWindow){
+        mainWindow->deleteLater();
+    }
 }
 
-bool JamtabaEditor::getRect (ERect** rect)
+bool JamtabaVstEditor::getRect (ERect** rect)
 {
     *rect = &rectangle;
     return true;
 }
 
-void JamtabaEditor::clientResize(HWND h_parent, int width, int height)
+void JamtabaVstEditor::clientResize(HWND h_parent, int width, int height)
 {
     RECT rcClient, rcWindow;
     POINT ptDiff;
@@ -58,52 +51,134 @@ void JamtabaEditor::clientResize(HWND h_parent, int width, int height)
     MoveWindow(h_parent, rcWindow.left, rcWindow.top, width + ptDiff.x, height + ptDiff.y, TRUE);
 }
 
-bool JamtabaEditor::open(void* ptr){
-    AEffEditor::open (ptr);
-    widget = new JamtabaWindow(jamtaba, static_cast<HWND>(ptr));
+bool JamtabaVstEditor::open(void* ptr){
+
+    if(!ptr )
+        return false;
+
+    AEffEditor::open(ptr);
+    widget = new QWinWidget(static_cast<HWND>(ptr));
+    widget->setAutoFillBackground(false);
+    widget->setObjectName("QWinWidget");
+
+    if(!mainWindow){
+        mainWindow = new MainWindow(jamtaba->getController());
+        rectangle.left = mainWindow->pos().x();
+        rectangle.top = mainWindow->pos().y();
+        rectangle.right = mainWindow->pos().x() + mainWindow->width();
+        rectangle.bottom = mainWindow->pos().y() + mainWindow->height();
+    }
+    mainWindow->setParent(widget);
+    //mainWindow->readSettings();
+    mainWindow->move(0,0);
+
+    rectangle.bottom = mainWindow->height();
+    rectangle.right = mainWindow->width();
+
     widget->move( 0, 0 );
-    widget->adjustSize();
-    rectangle.top = 0;
-    rectangle.left = 0;
-    rectangle.bottom = widget->height();
-    rectangle.right = widget->width();
-    widget->setMinimumSize(widget->size());
+    widget->resize( rectangle.right, rectangle.bottom );
+
+    qDebug() << "Window Rect  width:" << rectangle.right - rectangle.left;
+
+    widget->setPalette( mainWindow->palette() );
+
+//    resizeH = new ResizeHandle(widget);
+//    QPoint pos( widget->geometry().bottomRight() );
+//    pos.rx()-=resizeH->width();
+//    pos.ry()-=resizeH->height();
+//    resizeH->move(pos);
+//    resizeH->show();
+
+//    connect(resizeH, SIGNAL(Moved(QPoint)),
+//            this, SLOT(OnResizeHandleMove(QPoint)));
+
     widget->show();
-    clientResize(static_cast<HWND>(ptr), widget->width(), widget->height());
-
-
     return true;
-}
+ }
 
-void JamtabaEditor::close(){
+void JamtabaVstEditor::close(){
     delete widget;
 }
 
+//+++++++++++++
+class AudioDriverVST : public Audio::AudioDriver{
+public:
+    AudioDriverVST(Audio::AudioDriverListener* listener)
+        :AudioDriver(listener){
+
+    }
+
+    void stop(){}
+    void start(){}
+    void release(){}
+    QList<int> getValidSampleRates(int deviceIndex) const{return QList<int>();}
+    QList<int> getValidBufferSizes(int deviceIndex) const{return QList<int>();}
+    int getMaxInputs() const{return 2;}
+    int getMaxOutputs() const{return 2;}
+    const char* getInputChannelName(const unsigned int index) const{return "";}
+    const char* getOutputChannelName(const unsigned int index) const{return "";}
+    const char* getInputDeviceName(int index) const{return "";}
+    const char* getOutputDeviceName(int index) const{return "";}
+    int getInputDeviceIndex() const{return -1;}
+    int getOutputDeviceIndex() const{return -1;}
+    void setInputDeviceIndex(int ){}
+    void setOutputDeviceIndex(int){}
+    int getDevicesCount() const{return 1;}
+};
+
+//+++++++++++++
+class MainControllerVST : public Controller::MainController{
+public:
+    MainControllerVST(Persistence::Settings settings)
+        :MainController(settings){
+        qDebug() << "Creating MainControllerVST instance!";
+    }
+
+    Audio::AudioDriver* buildAudioDriver(const Persistence::Settings &settings){
+        return new AudioDriverVST(nullptr);
+    }
+
+    void setCSS(QString css){
+        qDebug() << "setting CSS";
+        qApp->setStyleSheet(css);//qApp is a global variable created in dll main.
+    }
+
+    Vst::PluginFinder* createPluginFinder(){return nullptr;}
+
+    Audio::Plugin* createPluginInstance(const Audio::PluginDescriptor &descriptor){
+        Q_UNUSED(descriptor);
+        return nullptr;//vst plugin can't load other plugins
+    }
+
+
+    Midi::MidiDriver* createMidiDriver(){return nullptr;}
+
+    bool useMidiDriver(){return false;}
+
+    void exit(){}
+
+    void addDefaultPluginsScanPath(){}
+    void scanPlugins(){}
+};
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 AudioEffect* createEffectInstance (audioMasterCallback audioMaster)
 {
-    return new Jamtaba (audioMaster);
+    QApplication::setApplicationName("Jamtaba 2");
+    QApplication::setApplicationVersion(APP_VERSION);
+
+    //qputenv("QT_LOGGING_CONF", ":/Standalone/qtlogging.ini");//log cconfigurations is in resources at moment
+    //qInstallMessageHandler(customLogHandler);
+
+    return new JamtabaPlugin (audioMaster);
 }
 
-Jamtaba::Jamtaba (audioMasterCallback audioMaster) :
+JamtabaPlugin::JamtabaPlugin (audioMasterCallback audioMaster) :
     AudioEffectX (audioMaster, 0, 0),
     bufferSize(0),
     listEvnts(0),
-    hostSendVstEvents(false),
-    hostSendVstMidiEvent(false),
-    hostReportConnectionChanges(false),
-    hostAcceptIOChanges(false),
-    hostSendVstTimeInfo(false),
-    hostReceiveVstEvents(false),
-    hostReceiveVstMidiEvents(false),
-    hostReceiveVstTimeInfo(false),
-    opened(false)
-  //editor(nullptr)
-
+    controller(nullptr)
 {
-
-    this->gain = 1;
 
     setNumInputs (DEFAULT_INPUTS*2);
     setNumOutputs (DEFAULT_OUTPUTS*2);
@@ -113,80 +188,80 @@ Jamtaba::Jamtaba (audioMasterCallback audioMaster) :
     programsAreChunks(false);
     vst_strncpy (programName, "Default", kVstMaxProgNameLen);	// default program name
 
-    //QCoreApplication::setOrganizationName("www.jamtaba.com");
-    //QCoreApplication::setApplicationName("Jamtaba 2");
-
-
+    QCoreApplication::setOrganizationName("www.jamtaba.com");
+    QCoreApplication::setApplicationName("Jamtaba 2");
 
     canDoubleReplacing(false);
 
     //this->editor = new QVstGui();
-    setEditor(new JamtabaEditor(this));
+    setEditor(new JamtabaVstEditor(this));
 
     //qEditor = new Gui(this);
     //setEditor(qEditor);
     //qEditor->SetMainWindow(myWindow);
 }
 
-VstInt32 Jamtaba::fxIdle(){
-    //QApplication::processEvents();
+VstInt32 JamtabaPlugin::fxIdle(){
+    QApplication::processEvents();
     return 0;
 }
 
-bool Jamtaba::needIdle(){
+bool JamtabaPlugin::needIdle(){
     return true;
 }
 
-Jamtaba::~Jamtaba ()
+JamtabaPlugin::~JamtabaPlugin ()
 {
 
 }
 
 
-void Jamtaba::open()
-{
-    //     char str[64];
-    //     getHostVendorString(str);
-    //     getHostProductString(str);
-    //     VstInt32 hostVer = getHostVendorVersion();
+void JamtabaPlugin::open(){
+    qDebug()<<"opening Jamtaba!";
+    if(!controller){
+        Persistence::Settings settings;//read from file in constructor
+        settings.load();
+        qDebug()<< "settings loaded!";
+        qDebug()<< "Creating controller!";
+        controller = new MainControllerVST(settings);
+        controller->configureStyleSheet("jamtaba.css");
+        qDebug()<< "Controller created!";
+        qDebug()<< "Starting controller!";
+        controller->start();
+        qDebug()<< "Controller started!";
+    }
 
-    //hostSendVstEvents = (bool)canHostDo((char*)"sendVstEvents");
-    //hostSendVstMidiEvent = (bool)canHostDo((char*)"sendVstMidiEvent");
-    //hostSendVstTimeInfo = (bool)canHostDo((char*)"sendVstTimeInfo");
-    //hostReceiveVstEvents = (bool)canHostDo((char*)"receiveVstEvents");
-    //hostReceiveVstMidiEvents = (bool)canHostDo((char*)"receiveVstMidiEvents");
-    //hostReceiveVstTimeInfo = (bool)canHostDo((char*)"receiveVstTimeInfo");
     //hostReportConnectionChanges = (bool)canHostDo((char*)"reportConnectionChanges");
     //hostAcceptIOChanges = (bool)canHostDo((char*)"acceptIOChanges");
 
     //reaper returns false :-/
-    char str[64];
-    getHostProductString(str);
-    if(!strcmp(str,"REAPER")) {
-        hostAcceptIOChanges = true;
-    }
+//    char str[64];
+//    getHostProductString(str);
+//    if(!strcmp(str,"REAPER")) {
+//        hostAcceptIOChanges = true;
+//    }
 
-    opened=true;
+//    opened=true;
 
 }
 
-void Jamtaba::close()
+void JamtabaPlugin::close()
 {
 
-    opened=false;
+
 }
 
-VstInt32 Jamtaba::getNumMidiInputChannels()
+VstInt32 JamtabaPlugin::getNumMidiInputChannels()
 {
-    return 15;
+    return 0;
 }
 
-VstInt32 Jamtaba::getNumMidiOutputChannels()
+VstInt32 JamtabaPlugin::getNumMidiOutputChannels()
 {
-    return 15;
+    return 0;
 }
 
-bool Jamtaba::getEffectName (char* name)
+bool JamtabaPlugin::getEffectName (char* name)
 {
     if(!name)
         return false;
@@ -194,7 +269,7 @@ bool Jamtaba::getEffectName (char* name)
     return true;
 }
 
-bool Jamtaba::getProductString (char* text)
+bool JamtabaPlugin::getProductString (char* text)
 {
     if(!text)
         return false;
@@ -202,7 +277,7 @@ bool Jamtaba::getProductString (char* text)
     return true;
 }
 
-bool Jamtaba::getVendorString (char* text)
+bool JamtabaPlugin::getVendorString (char* text)
 {
     if(!text)
         return false;
@@ -210,12 +285,12 @@ bool Jamtaba::getVendorString (char* text)
     return true;
 }
 
-VstInt32 Jamtaba::getVendorVersion ()
+VstInt32 JamtabaPlugin::getVendorVersion ()
 {
     return 2;
 }
 
-VstInt32 Jamtaba::canDo(char* text)
+VstInt32 JamtabaPlugin::canDo(char* text)
 {
     if(!text)
         return 0;
@@ -262,29 +337,18 @@ VstInt32 Jamtaba::canDo(char* text)
 //    return 1;
 //}
 
-float angulo = 0;
-float phaseIncrement = 2 * 3.1415 / 44100 * 440;
-
-void Jamtaba::processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames)
-{
-    if(!inputs || !outputs || sampleFrames<=0)
-        return;
-
-    //int inputs = DEFAULT_INPUTS * 2;
-    //int outputChannels = DEFAULT_OUTPUTS * 2;
-    for (int s = 0; s < sampleFrames; ++s) {
-        outputs[0][s] = std::sin(angulo) * this->gain;
-        angulo += phaseIncrement;
-    }
-}
-
-
-void Jamtaba::setSampleRate(float sampleRate)
+void JamtabaPlugin::processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames)
 {
 
 }
 
-void Jamtaba::setBlockSize (VstInt32 blockSize)
+
+void JamtabaPlugin::setSampleRate(float sampleRate)
+{
+
+}
+
+void JamtabaPlugin::setBlockSize (VstInt32 blockSize)
 {
     if(blockSize<=0)
         return;
@@ -292,12 +356,12 @@ void Jamtaba::setBlockSize (VstInt32 blockSize)
 
 }
 
-void Jamtaba::suspend()
+void JamtabaPlugin::suspend()
 {
 
 }
 
-void Jamtaba::resume()
+void JamtabaPlugin::resume()
 {
 
 }
