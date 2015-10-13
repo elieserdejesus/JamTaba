@@ -9,20 +9,6 @@
 #include "../MainController.h"
 #include "../log/logHandler.h"
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-JamtabaWindow::JamtabaWindow(Controller::MainController* controller, HWND parent)
-    :QWinWidget(parent, NULL), h_parent(parent)
-{
-    setAttribute(Qt::WA_DeleteOnClose);
-
-    mainWindow = new MainWindow(controller, this);
-    setLayout(new QHBoxLayout());
-    layout()->addWidget(mainWindow);
-    setMinimumSize(800, 600);
-    updateGeometry();
-}
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 JamtabaVstEditor::JamtabaVstEditor(JamtabaPlugin *jamtaba)
     :widget(NULL), jamtaba(jamtaba), mainWindow(nullptr)
 {
@@ -64,10 +50,10 @@ bool JamtabaVstEditor::open(void* ptr){
 
     if(!mainWindow){
         mainWindow = new MainWindow(jamtaba->getController());
-        rectangle.left = mainWindow->pos().x();
-        rectangle.top = mainWindow->pos().y();
-        rectangle.right = mainWindow->pos().x() + mainWindow->width();
-        rectangle.bottom = mainWindow->pos().y() + mainWindow->height();
+        rectangle.left = 0;
+        rectangle.top = 0;
+        rectangle.right = mainWindow->width();
+        rectangle.bottom = mainWindow->height();
     }
     mainWindow->setParent(widget);
     //mainWindow->readSettings();
@@ -78,6 +64,7 @@ bool JamtabaVstEditor::open(void* ptr){
 
     widget->move( 0, 0 );
     widget->resize( rectangle.right, rectangle.bottom );
+    widget->setMinimumSize(mainWindow->minimumSize());
 
     qDebug() << "Window Rect  width:" << rectangle.right - rectangle.left;
 
@@ -185,12 +172,7 @@ JamtabaPlugin::JamtabaPlugin (audioMasterCallback audioMaster) :
 
     canDoubleReplacing(false);
 
-    //this->editor = new QVstGui();
     setEditor(new JamtabaVstEditor(this));
-
-    //qEditor = new Gui(this);
-    //setEditor(qEditor);
-    //qEditor->SetMainWindow(myWindow);
 }
 
 VstInt32 JamtabaPlugin::fxIdle(){
@@ -209,14 +191,11 @@ JamtabaPlugin::~JamtabaPlugin ()
 
 
 void JamtabaPlugin::open(){
-    qDebug()<<"opening Jamtaba!";
     if(!controller){
-        qDebug() << "settings " << QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+        //qDebug() << "settings " << QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
         QApplication::setApplicationName("Jamtaba 2");
-        QApplication::setOrganizationDomain("");
-        QApplication::setOrganizationName("");
         QApplication::setApplicationVersion(APP_VERSION);
-        qputenv("QT_LOGGING_CONF", ":/Standalone/qtlogging.ini");//log cconfigurations is in resources at moment
+
         qInstallMessageHandler(customLogHandler);
         Persistence::Settings settings;//read from file in constructor
         settings.load();

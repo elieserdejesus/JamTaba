@@ -22,19 +22,6 @@ AudioEffect* createEffectInstance (audioMasterCallback audioMaster);
 
 class JamtabaPlugin;
 
-class JamtabaWindow : public QWinWidget{
-    Q_OBJECT
-public:
-    JamtabaWindow(Controller::MainController *controller, HWND parent = NULL);
-
-
-private:
-    HWND h_parent;
-    JamtabaPlugin *jamtaba;
-    MainWindow* mainWindow;
-
-};
-
 class JamtabaVstEditor : public AEffEditor{
     QWinWidget* widget;
     JamtabaPlugin* jamtaba;
