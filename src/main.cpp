@@ -12,7 +12,7 @@ int main(int argc, char* args[] ){
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
 
-    qputenv("QT_LOGGING_CONF", ":/Standalone/qtlogging.ini");//log cconfigurations is in resources at moment
+    qputenv("QT_LOGGING_CONF", ":/qtlogging.ini");//log cconfigurations is in resources at moment
     qInstallMessageHandler(customLogHandler);
 
     Persistence::Settings settings;//read from file in constructor

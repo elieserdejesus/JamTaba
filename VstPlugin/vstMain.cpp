@@ -1,4 +1,5 @@
 #include "vst.h"
+#include <QtGlobal>
 
 
 //these two lines are necessary to load the Qt windows platform plugin statically. By default
@@ -40,6 +41,7 @@ extern "C" {
 extern "C" {
 BOOL WINAPI DllMain( HINSTANCE hInst, DWORD dwReason, LPVOID /*lpvReserved*/ )
 {
+    qputenv("QT_LOGGING_CONF", ":/qtlogging.ini");//log cconfigurations is in resources at moment
     static bool ownApplication = FALSE;
      if ( dwReason == DLL_PROCESS_ATTACH )
          ownApplication = QMfcApp::pluginInstance( hInst );
