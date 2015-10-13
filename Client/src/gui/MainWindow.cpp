@@ -55,19 +55,30 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     ninjamWindow(nullptr),
     roomToJump(nullptr)
 {
+    qDebug() << "MainWindow constructor!";
 	ui.setupUi(this);
+    qDebug() << "MainWindow Ui setup done!";
 
     setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
+    qDebug() << "Window title: " << windowTitle();
 
+    qDebug() << "Initializing window state...";
     initializeWindowState();//window size, maximization ...
+    qDebug() << "Done!";
+    qDebug() << "Initializing login service!";
     initializeLoginService();
+    qDebug() << "Done!";
 
+    qDebug() << "Initializing plugin finder";
     initializePluginFinder();
+    qDebug() << "Done!";
 
-    //initializeMainControllerEvents();
+    qDebug() << "Initializing main tab widget!";
     initializeMainTabWidget();
+    qDebug() << "Done!";
 
 
+    qDebug() << "Creating themes menu...";
     QDir stylesDir(":/style");
     QStringList cssList = stylesDir.entryList(QStringList("*.css"));
     foreach (QString css, cssList) {
@@ -75,6 +86,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
         action->setData(css);
     }
     QObject::connect(ui.menuThemes, SIGNAL(triggered(QAction*)), this, SLOT(on_newThemeSelected(QAction*)));
+    qDebug() << "Done!";
 
     //hide the the menus for while
     //ui.menuThemes->setVisible(false);
@@ -83,6 +95,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     timerID = startTimer(1000/50);
 
+    qDebug() << "Connecting menu signals...";
     //ui.menuPreferences
     QObject::connect(ui.menuPreferences, SIGNAL(triggered(QAction*)), this, SLOT(on_preferencesClicked(QAction*)));
     QObject::connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this, SLOT(on_ninjamCommunityMenuItemTriggered()));
@@ -99,9 +112,13 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     QObject::connect( mainController->getRoomStreamer(), SIGNAL(error(QString)), this, SLOT(on_RoomStreamerError(QString)));
 
+    qDebug() << "Done!";
+
     ui.xmitButton->setChecked(mainController->isTransmiting());
 
+    qDebug() << "Creating local input channels!";
     initializeLocalInputChannels();
+    qDebug() << "Done!";
 
     ui.chatArea->setVisible(false);//hide chat area until connect in a server to play
 
@@ -112,14 +129,20 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     foreach (LocalTrackGroupView* channel, localChannels) {
         channel->refreshInputSelectionNames();
     }
+
+    qDebug() << "swing busy dialog...";
+    showBusyDialog("Loading rooms list ...");
+    qDebug() << "Done!";
 }
 //++++++++++++++++++++++++=
 void MainWindow::initializePluginFinder(){
-    const Jamtaba::PluginFinder& pluginFinder = mainController->getPluginFinder();
-    QObject::connect(&pluginFinder, SIGNAL(scanStarted()), this, SLOT(onScanPluginsStarted()));
-    QObject::connect(&pluginFinder, SIGNAL(scanFinished()), this, SLOT(onScanPluginsFinished()));
-    QObject::connect(&pluginFinder, SIGNAL(pluginScanFinished(QString,QString,QString)), this, SLOT(onPluginFounded(QString,QString,QString)));
-    QObject::connect(&pluginFinder, SIGNAL(pluginScanStarted(QString)), this, SLOT(onScanPluginsStarted(QString)));
+    Vst::PluginFinder* pluginFinder = mainController->getPluginFinder();
+    if(pluginFinder){
+        QObject::connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(onScanPluginsStarted()));
+        QObject::connect(pluginFinder, SIGNAL(scanFinished()), this, SLOT(onScanPluginsFinished()));
+        QObject::connect(pluginFinder, SIGNAL(pluginScanFinished(QString,QString,QString)), this, SLOT(onPluginFounded(QString,QString,QString)));
+        QObject::connect(pluginFinder, SIGNAL(pluginScanStarted(QString)), this, SLOT(onScanPluginsStarted(QString)));
+    }
 }
 
 //++++++++++++++++++++++++=
@@ -433,6 +456,7 @@ void MainWindow::initializeLoginService(){
 
 void MainWindow::initializeWindowState(){
     if(mainController->getSettings().windowWasMaximized()){
+        qDebug()<< "setting window state to maximized";
         setWindowState(Qt::WindowMaximized);
     }
     else{
@@ -443,6 +467,8 @@ void MainWindow::initializeWindowState(){
         int x = desktopWidth * location.x();
         int y = desktopHeight * location.y();
         this->move(x, y);
+        qDebug()<< "Restoring window to position:" << x << ", " << y;
+        qDebug()<< "Window size:" << width() << ", " << height();
     }
 }
 
@@ -484,7 +510,12 @@ void MainWindow::hideBusyDialog(){
 void MainWindow::centerBusyDialog(){
     int newX = ui.contentPanel->width()/2 - busyDialog.width()/2;
     int newY = ui.contentPanel->height()/2 - busyDialog.height()/2;
-    busyDialog.move(newX + ui.contentPanel->x(), newY + ui.contentPanel->y());
+    if(newX > 0){
+        busyDialog.move(newX + ui.contentPanel->x(), newY + ui.contentPanel->y());
+    }
+    else{//first time ("loading rooms list message") the contentPanel.width is zero
+        busyDialog.move(this->width()/2 - busyDialog.width()/2, height()/2 - busyDialog.height()/2);
+    }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //void MainFrame::on_removingPlugin(Audio::Plugin *plugin){
@@ -800,23 +831,7 @@ void MainWindow::closeEvent(QCloseEvent *)
     mainController->storeWindowSettings(isMaximized(), computeLocation() );
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainWindow::showEvent(QShowEvent *){
 
-    if(!mainController->isStarted()){//first show?
-        int availableDevices = mainController->getAudioDriver()->getDevicesCount();
-        if(availableDevices > 0){
-            showBusyDialog("Loading rooms list ...");
-            mainController->start();
-
-            //wait 50 ms before resotre the plugins list to avoid freeze the GUI in hidden state while plugins are loaded
-            QTimer::singleShot(50, this, &MainWindow::restorePluginsList);
-        }
-        else{
-            QMessageBox::critical(this, "ERROR", "No audio device!");
-            close();
-        }
-    }
-}
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainWindow::~MainWindow()
 {

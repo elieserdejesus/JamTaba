@@ -31,7 +31,7 @@ class Plugin;
 class PluginDescriptor;
 }
 
-namespace Plugin {
+namespace Vst {
 class PluginDescriptor;
 }
 
@@ -47,7 +47,7 @@ public:
     MainWindow(Controller::MainController* mainController, QWidget *parent=0);
     ~MainWindow();
     virtual void closeEvent(QCloseEvent *);
-    virtual void showEvent(QShowEvent*);
+    //virtual void showEvent(QShowEvent*);
     virtual void changeEvent(QEvent *);
     virtual void timerEvent(QTimerEvent *);
     virtual void resizeEvent(QResizeEvent*);
@@ -69,7 +69,7 @@ public:
 protected:
     Controller::MainController* mainController;
     virtual void initializePluginFinder();
-
+    void restorePluginsList();
 
 
 protected slots:
@@ -160,7 +160,7 @@ private:
     void initializeWindowState();
     void initializeLoginService();
     void initializeLocalInputChannels();
-    void restorePluginsList();
+
     //void initializeVstFinderStuff();
     //void initializeMainControllerEvents();
     void initializeMainTabWidget();

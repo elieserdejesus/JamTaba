@@ -1,7 +1,6 @@
 #pragma once
 #include <QDialog>
 #include <QMap>
-//#include <QCloseEvent>
 
 namespace Audio {    class AudioDriver; }
 namespace Ui    {    class IODialog; }
@@ -68,9 +67,6 @@ private:
     void createWidgetsToNewScanPath(QString path);
     void clearScanPathWidgets();
     QList<QPushButton*> scanPathButtons;
-    //void removeVstScanPath(QString path);
-
-    //QMap<int, bool> midiInputsStatus;
 
     //recording
     void populateRecordingTab();

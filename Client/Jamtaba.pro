@@ -1,7 +1,8 @@
 TEMPLATE = subdirs
 
-SUBDIRS =   Standalone \
-            #VstPlugin \
-            #ThemeEditor
+SUBDIRS =   VstPlugin
+#Standalone
+#PluginTester
+#ThemeEditor
 
 CONFIG += ordered

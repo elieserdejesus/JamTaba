@@ -8,6 +8,9 @@ class MainWindowStandalone : public MainWindow
     Q_OBJECT
 public:
     MainWindowStandalone(Controller::MainController *controller);
+
+protected:
+    void showEvent(QShowEvent *);
 private:
     void initializePluginFinder();
 protected slots:

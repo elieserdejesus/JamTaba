@@ -83,7 +83,8 @@ HEADERS += \
     #../src/geo/WebIpToLocationResolver.h \
     ../src/gui/PrivateServerDialog.h \
     ../src/gui/UserNameDialog.h \
-    $$PWD/src/gui/MainWindow.h
+    $$PWD/src/gui/MainWindow.h \
+    $$PWD/src/log/logHandler.h
 
 SOURCES += \
     #$$MAIN \
@@ -117,7 +118,7 @@ SOURCES += \
     ../src/audio/codec.cpp \
     ../src/gui/plugins/guis.cpp \
     ../src/gui/jamroomviewpanel.cpp \
-    #../src/audio/vst/PluginFinder.cpp \
+    ../src/audio/vst/PluginFinder.cpp \
     ../src/midi/MidiDriver.cpp \
     ../src/gui/PreferencesDialog.cpp \
     ../src/gui/pluginscandialog.cpp \
@@ -154,11 +155,12 @@ SOURCES += \
     #../src/geo/WebIpToLocationResolver.cpp \
     ../src/gui/PrivateServerDialog.cpp \
     ../src/gui/UserNameDialog.cpp \
-    $$PWD/src/gui/MainWindow.cpp
+    $$PWD/src/gui/MainWindow.cpp \
+    $$PWD/src/log/logHandler.cpp
 
 FORMS += \
     ../src/gui/PreferencesDialog.ui \
-    #../src/gui/pluginscandialog.ui \
+    ../src/gui/pluginscandialog.ui \
     ../src/gui/NinjamRoomWindow.ui \
     ../src/gui/BaseTrackView.ui \
     ../src/gui/NinjamPanel.ui \

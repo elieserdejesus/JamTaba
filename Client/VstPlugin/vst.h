@@ -13,35 +13,37 @@
 #include <QWinWidget>
 #include <QLabel>
 #include <QSlider>
+#include "../MainController.h"
+#include "MainWindow.h"
 
 AudioEffect* createEffectInstance (audioMasterCallback audioMaster);
 
 //++++++++++++++++++++++++++++++++
 
-class Jamtaba;
+class JamtabaPlugin;
 
 class JamtabaWindow : public QWinWidget{
     Q_OBJECT
 public:
-    JamtabaWindow(Jamtaba *jamtaba, HWND parent = NULL);
-private slots:
-    void on_sliderChanged(int value);
+    JamtabaWindow(Controller::MainController *controller, HWND parent = NULL);
+
+
 private:
     HWND h_parent;
-    Jamtaba *jamtaba;
+    JamtabaPlugin *jamtaba;
+    MainWindow* mainWindow;
 
-    QLabel *valueLabel;
-    QSlider *slider;
 };
 
-class JamtabaEditor : public AEffEditor{
+class JamtabaVstEditor : public AEffEditor{
     QWinWidget* widget;
-    Jamtaba* jamtaba;
+    JamtabaPlugin* jamtaba;
     ERect rectangle;
+    MainWindow* mainWindow;
 
 public:
-    JamtabaEditor(Jamtaba* jamtaba);
-    ~JamtabaEditor();
+    JamtabaVstEditor(JamtabaPlugin* jamtaba);
+    ~JamtabaVstEditor();
     bool getRect (ERect** rect);
     void clientResize(HWND h_parent, int width, int height);
     bool open(void* ptr);
@@ -50,29 +52,24 @@ public:
 
 
 //-------------------------------------------------------------------------------------------------------
-class Jamtaba :  public AudioEffectX
+//-------------------------------------------------------------------------------------------------------
+class MainControllerVST;
+class JamtabaPlugin :  public AudioEffectX
 {
 //    Q_OBJECT
 public:
 
-        Jamtaba (audioMasterCallback audioMaster);
-        ~Jamtaba ();
+        JamtabaPlugin (audioMasterCallback audioMaster);
+        ~JamtabaPlugin ();
 
         VstInt32 canDo(char* text);
         //VstInt32 processEvents(VstEvents* events);
 
         void processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames);
-        void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames){}
+        //void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames){}
 
         VstInt32 fxIdle();
         bool needIdle();
-
-        inline void setGain(float newGain){this->gain = newGain;}
-
-        //void setProgramName (char* name){}
-        //void getProgramName (char* name){}
-        //void setProgram(VstInt32 program){}
-        //VstInt32 getProgram(){ return 0;}
 
         bool getEffectName (char* name);
         bool getVendorString (char* text);
@@ -92,36 +89,17 @@ public:
 
         void updateParameter(int index, float value);
 
-
+        inline Controller::MainController* getController() {return controller;}
 
 protected:
-        //QApplication *myApp;
-        //MainHostVst *myHost;
-        //MainWindowVst *myWindow;
-
         char programName[kVstMaxProgNameLen + 1];
         VstInt32 bufferSize;
 
         //Gui *qEditor;
-
         VstEvents *listEvnts;
-
-        bool hostSendVstEvents;
-        bool hostSendVstMidiEvent;
-        bool hostReportConnectionChanges;
-        bool hostAcceptIOChanges;
-        bool hostSendVstTimeInfo;
-        bool hostReceiveVstEvents;
-        bool hostReceiveVstMidiEvents;
-        bool hostReceiveVstTimeInfo;
-        bool opened;
-        //VstInt32 currentHostProg;
-
-        //char *chunkData;
-        //void deleteChunkData();
 private:
-        //QVstGui* editor;
-        float gain;
+        Controller::MainController* controller;
+
 };
 
 

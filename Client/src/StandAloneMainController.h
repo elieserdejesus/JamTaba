@@ -3,11 +3,30 @@
 
 #include "MainController.h"
 #include <QApplication>
+#include "audio/vst/PluginFinder.h"
 
-namespace Jamtaba {
+namespace JamtabaVstPlugin {
     class VstHost;
+    class StandalonePluginFinder;
     class PluginFinder;
 }
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++
+class StandalonePluginFinder : public Vst::PluginFinder
+{
+
+public:
+    StandalonePluginFinder(Vst::Host *host);
+    ~StandalonePluginFinder();
+    void scan();
+private:
+    void run();
+
+private:
+    Audio::PluginDescriptor getPluginDescriptor(QFileInfo f, Vst::Host *host);
+    Vst::Host* host;
+};
+//++++++++++++++++++++++++++++++++++++++++++
 
 namespace Controller {
 
@@ -41,29 +60,32 @@ public:
     StandaloneMainController(Persistence::Settings settings, int& argc, char** argv);
     ~StandaloneMainController();
 
-    void scanPlugins();
+
     void initializePluginsList(QStringList paths);
+    void scanPlugins();
 
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
+    virtual void addDefaultPluginsScanPath();
 
-    void addVstScanPath(QString path);
-    void addDefaultVstScanPath();//add vst path from registry
-    void removeVstScanPath(int index);
-    void clearVstCache();
 
-    inline Jamtaba::VstHost* getVstHost() const{return vstHost;}
+    inline Vst::Host* getVstHost() const{return vstHost;}
 
     void stopNinjamController();
+
+    void start();
 
 protected:
     virtual void exit();
     virtual MainControllerSignalsHandler* createSignalsHandler();
+    virtual Midi::MidiDriver* createMidiDriver();
+    virtual Audio::AudioDriver* buildAudioDriver(const Persistence::Settings &settings);
+    virtual Vst::PluginFinder* createPluginFinder();
 
     void setCSS(QString css);
 private:
     //VST
-    Jamtaba::VstHost* vstHost;
+    Vst::Host* vstHost;
 
 
 //private slots:

@@ -48,10 +48,10 @@ HEADERS += \
 
 
 SOURCES += \
-    main.cpp \
     audioeffectx.cpp \
     audioeffect.cpp \
     vst.cpp \
+    vstMain.cpp \
     ../src/recorder/JamRecorder.cpp \
     ../src/recorder/ReaperProjectGenerator.cpp \
     ../src/loginserver/LoginService.cpp \
@@ -61,7 +61,6 @@ SOURCES += \
     ../src/ninjam/protocol/ServerMessageParser.cpp \
     ../src/ninjam/Server.cpp \
     #../src/audio/vst/PluginFinder.cpp \
-    #../src/midi/portmididriver.cpp \
     ../src/audio/Resampler.cpp \
     ../src/audio/vorbis/VorbisDecoder.cpp \
     ../src/audio/SamplesBufferResampler.cpp \
@@ -92,20 +91,16 @@ win32 {
         LIBS_PATH = "win64-msvc"
     }
 
-    CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbis -logg
-    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisd -loggd
+    CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lminimp3 -lvorbisfile -lvorbis -logg
+    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lminimp3d -lvorbisfiled -lvorbisd -loggd
 }
 
-INCLUDEPATH += $$PWD/../libs/includes/portaudio        \
-               $$PWD/../libs/includes/portmidi         \
-               $$PWD/../libs/includes/ogg              \
+INCLUDEPATH += $$PWD/../libs/includes/ogg              \
                $$PWD/../libs/includes/vorbis           \
                $$PWD/../libs/includes/minimp3          \
                #$$PWD/../libs/includes/libip2location   \
 
-DEPENDPATH += $$PWD/../libs/includes/portaudio         \
-               $$PWD/../libs/includes/portmidi         \
-               $$PWD/../libs/includes/ogg              \
+DEPENDPATH +=  $$PWD/../libs/includes/ogg              \
                $$PWD/../libs/includes/vorbis           \
                $$PWD/../libs/includes/minimp3          \
                #$$PWD/../libs/includes/libip2location   \

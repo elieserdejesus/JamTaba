@@ -158,7 +158,6 @@ SOURCES += \
     ../src/ninjam/protocol/ClientMessages.cpp \
     ../src/ninjam/protocol/ServerMessageParser.cpp \
     ../src/ninjam/Server.cpp \
-    ../src/audio/vst/PluginFinder.cpp \
     ../src/midi/portmididriver.cpp \
     ../src/audio/Resampler.cpp \
     ../src/audio/vorbis/VorbisDecoder.cpp \
@@ -171,9 +170,6 @@ SOURCES += \
     ../src/geo/WebIpToLocationResolver.cpp \
     ../src/StandAloneMainController.cpp \
     ../src/gui/MainWindowStandalone.cpp
-
-FORMS += \
-    ../src/gui/pluginscandialog.ui \
 
 INCLUDEPATH += $$PWD/../libs/includes/portaudio        \
                $$PWD/../libs/includes/portmidi         \
