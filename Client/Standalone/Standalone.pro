@@ -123,7 +123,6 @@
 
 QT       +=  gui  network widgets
 
-
 TARGET = Jamtaba2
 TEMPLATE = app
 
@@ -176,16 +175,12 @@ INCLUDEPATH += $$PWD/../libs/includes/portaudio        \
                $$PWD/../libs/includes/ogg              \
                $$PWD/../libs/includes/vorbis           \
                $$PWD/../libs/includes/minimp3          \
-               #$$PWD/../libs/includes/libip2location   \
 
 DEPENDPATH += $$PWD/../libs/includes/portaudio         \
                $$PWD/../libs/includes/portmidi         \
                $$PWD/../libs/includes/ogg              \
                $$PWD/../libs/includes/vorbis           \
                $$PWD/../libs/includes/minimp3          \
-               #$$PWD/../libs/includes/libip2location   \
-
-
 win32 {
 
     LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32  \

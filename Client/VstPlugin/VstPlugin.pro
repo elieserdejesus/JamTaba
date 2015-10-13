@@ -8,7 +8,7 @@
     error( "Couldn't find the qtwinmigrate common.pri file!" )
 }
 
-QT += core widgets network
+QT += gui  network widgets
 
 TARGET = "JamtabaVST"
 TEMPLATE = lib
@@ -16,9 +16,7 @@ DEFINES += VST_FORCE_DEPRECATED=0
 CONFIG += shared
 
 win32 {
-    LIBS += -lwinmm
-    LIBS += -ladvapi32
-    LIBS += -lws2_32
+    #LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32  \
     LIBS += -lQt5PlatformSupport #link windows platform statically
     LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindows #link windows platform statically
     #LIBS += -limm32

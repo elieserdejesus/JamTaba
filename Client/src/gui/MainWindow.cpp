@@ -55,30 +55,15 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     ninjamWindow(nullptr),
     roomToJump(nullptr)
 {
-    qDebug() << "MainWindow constructor!";
 	ui.setupUi(this);
-    qDebug() << "MainWindow Ui setup done!";
 
     setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
-    qDebug() << "Window title: " << windowTitle();
 
-    qDebug() << "Initializing window state...";
     initializeWindowState();//window size, maximization ...
-    qDebug() << "Done!";
-    qDebug() << "Initializing login service!";
     initializeLoginService();
-    qDebug() << "Done!";
-
-    qDebug() << "Initializing plugin finder";
     initializePluginFinder();
-    qDebug() << "Done!";
-
-    qDebug() << "Initializing main tab widget!";
     initializeMainTabWidget();
-    qDebug() << "Done!";
 
-
-    qDebug() << "Creating themes menu...";
     QDir stylesDir(":/style");
     QStringList cssList = stylesDir.entryList(QStringList("*.css"));
     foreach (QString css, cssList) {
@@ -86,7 +71,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
         action->setData(css);
     }
     QObject::connect(ui.menuThemes, SIGNAL(triggered(QAction*)), this, SLOT(on_newThemeSelected(QAction*)));
-    qDebug() << "Done!";
 
     //hide the the menus for while
     //ui.menuThemes->setVisible(false);
@@ -95,7 +79,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     timerID = startTimer(1000/50);
 
-    qDebug() << "Connecting menu signals...";
     //ui.menuPreferences
     QObject::connect(ui.menuPreferences, SIGNAL(triggered(QAction*)), this, SLOT(on_preferencesClicked(QAction*)));
     QObject::connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this, SLOT(on_ninjamCommunityMenuItemTriggered()));
@@ -112,13 +95,9 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     QObject::connect( mainController->getRoomStreamer(), SIGNAL(error(QString)), this, SLOT(on_RoomStreamerError(QString)));
 
-    qDebug() << "Done!";
-
     ui.xmitButton->setChecked(mainController->isTransmiting());
 
-    qDebug() << "Creating local input channels!";
     initializeLocalInputChannels();
-    qDebug() << "Done!";
 
     ui.chatArea->setVisible(false);//hide chat area until connect in a server to play
 
@@ -130,9 +109,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
         channel->refreshInputSelectionNames();
     }
 
-    qDebug() << "swing busy dialog...";
     showBusyDialog("Loading rooms list ...");
-    qDebug() << "Done!";
 }
 //++++++++++++++++++++++++=
 void MainWindow::initializePluginFinder(){
