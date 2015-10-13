@@ -757,16 +757,20 @@ MainController::~MainController(){
 
     QObject::disconnect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this->signalsHandler, SLOT(on_audioDriverSampleRateChanged(int)));
     //delete audioMixer; crashing :(
-    delete audioDriver;
-    delete midiDriver;
+    if(audioDriver){
+        delete audioDriver;
+        audioDriver = nullptr;
+    }
+    if(midiDriver){
+        delete midiDriver;
+        midiDriver = nullptr;
+    }
 
-    delete roomStreamer;
+    if(roomStreamer){
+        delete roomStreamer;
+        roomStreamer = nullptr;
+    }
 
-
-
-//    foreach (Audio::AudioNode* track, tracksNodes) {
-//        delete track;
-//    }
     tracksNodes.clear();
     foreach (Audio::LocalInputAudioNode* input, inputTracks) {
         delete input;
@@ -866,6 +870,7 @@ void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStrin
 
 void MainController::start()
 {
+
     if(!started){
         started = true;
 

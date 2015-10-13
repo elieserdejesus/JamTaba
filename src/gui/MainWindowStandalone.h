@@ -11,6 +11,7 @@ public:
 
 protected:
     void showEvent(QShowEvent *);
+    void closeEvent(QCloseEvent *);
 private:
     void initializePluginFinder();
 protected slots:

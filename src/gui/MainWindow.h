@@ -52,6 +52,8 @@ public:
     virtual void timerEvent(QTimerEvent *);
     virtual void resizeEvent(QResizeEvent*);
 
+    void detachMainController();
+
     Persistence::InputsSettings getInputsSettings() const;
 
     inline int getChannelGroupsCount() const{return localChannels.size();}

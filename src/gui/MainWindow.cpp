@@ -537,6 +537,10 @@ void MainWindow::on_incompatibilityWithServerDetected(){
     close();
 }
 
+void MainWindow::detachMainController(){
+    mainController = nullptr;
+}
+
 void MainWindow::on_errorConnectingToServer(QString errorMsg){
     hideBusyDialog();
     QMessageBox::warning(this, "Error!", "Error connecting in Jamtaba server!\n" + errorMsg);
@@ -732,6 +736,10 @@ void MainWindow::exitFromRoom(bool normalDisconnection){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::timerEvent(QTimerEvent *){
 
+    if(!mainController){
+        return;
+    }
+
 //    static long lastBeatUpdate = QDateTime::currentMSecsSinceEpoch();
 //    static int beat = 0;
 //    long ellapsed = QDateTime::currentMSecsSinceEpoch() - lastBeatUpdate;
@@ -786,7 +794,7 @@ void MainWindow::resizeEvent(QResizeEvent *){
 }
 
 void MainWindow::changeEvent(QEvent *ev){
-    if(ev->type() == QEvent::WindowStateChange){
+    if(ev->type() == QEvent::WindowStateChange && mainController){
         mainController->storeWindowSettings(isMaximized(), computeLocation() );
     }
     ev->accept();
@@ -799,23 +807,22 @@ QPointF MainWindow::computeLocation() const{
     return QPointF(x, y);
 }
 
-void MainWindow::closeEvent(QCloseEvent *)
- {
-    //qDebug() << "MainFrame::closeEvent";
-    if(mainController != NULL){
-        mainController->stop();
+void MainWindow::closeEvent(QCloseEvent *){
+    if(mainController){
+        mainController->storeWindowSettings(isMaximized(), computeLocation() );
     }
-    mainController->storeWindowSettings(isMaximized(), computeLocation() );
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainWindow::~MainWindow()
 {
+    mainController = nullptr;
+    qWarning() << "Destrutor main window";
     qDebug() << "Main frame desctructor!";
     killTimer(timerID);
     qDebug() << "Main frame timer killed!";
-
+    qWarning() << "destrutor main window finalizado";
     //delete peakMeter;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

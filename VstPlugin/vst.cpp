@@ -16,8 +16,18 @@ JamtabaVstEditor::JamtabaVstEditor(JamtabaPlugin *jamtaba)
 
 JamtabaVstEditor::~JamtabaVstEditor()
 {
+    qWarning() << "JamtabaVstEditor destructor";
     if(mainWindow){
-        mainWindow->deleteLater();
+        qWarning() << "deleting main window";
+        delete mainWindow;
+        mainWindow = nullptr;
+    }
+    qWarning() << "JamtabaVstEditor destructor finished!";
+}
+
+void JamtabaVstEditor::detachMainController(){
+    if(mainWindow){
+        mainWindow->detachMainController();
     }
 }
 
@@ -43,12 +53,17 @@ bool JamtabaVstEditor::open(void* ptr){
     if(!ptr )
         return false;
 
+    if(!jamtaba->isRunning()){
+        jamtaba->initialize();//initialize first time editor is opened
+    }
+
     AEffEditor::open(ptr);
     widget = new QWinWidget(static_cast<HWND>(ptr));
     widget->setAutoFillBackground(false);
     widget->setObjectName("QWinWidget");
 
     if(!mainWindow){
+        qWarning() << "Criando MainWindow";
         mainWindow = new MainWindow(jamtaba->getController());
         rectangle.left = 0;
         rectangle.top = 0;
@@ -56,8 +71,7 @@ bool JamtabaVstEditor::open(void* ptr){
         rectangle.bottom = mainWindow->height();
     }
     mainWindow->setParent(widget);
-    //mainWindow->readSettings();
-    mainWindow->move(0,0);
+    mainWindow->move( 0, 0 );
 
     rectangle.bottom = mainWindow->height();
     rectangle.right = mainWindow->width();
@@ -85,7 +99,14 @@ bool JamtabaVstEditor::open(void* ptr){
  }
 
 void JamtabaVstEditor::close(){
-    delete widget;
+    qWarning() << "JamtabaVstEditor::close()";
+    if(mainWindow){
+        mainWindow->setParent(nullptr);
+    }
+    if(widget){
+        delete widget;
+        widget = nullptr;
+    }
 }
 
 //+++++++++++++
@@ -159,7 +180,8 @@ JamtabaPlugin::JamtabaPlugin (audioMasterCallback audioMaster) :
     AudioEffectX (audioMaster, 0, 0),
     bufferSize(0),
     listEvnts(0),
-    controller(nullptr)
+    controller(nullptr),
+    running(false)
 {
 
     setNumInputs (DEFAULT_INPUTS*2);
@@ -189,22 +211,28 @@ JamtabaPlugin::~JamtabaPlugin ()
 
 }
 
+void JamtabaPlugin::initialize(){
+    if(!isRunning()){
+        if(!controller){
+            //qDebug() << "settings " << QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+            QApplication::setApplicationName("Jamtaba 2");
+            QApplication::setApplicationVersion(APP_VERSION);
+
+            qInstallMessageHandler(customLogHandler);
+            Persistence::Settings settings;//read from file in constructor
+            settings.load();
+            qDebug()<< "Creating controller!";
+            controller = new MainControllerVST(settings);
+            controller->configureStyleSheet("jamtaba.css");
+            controller->start();
+            qDebug()<< "Controller started!";
+            running = true;
+        }
+    }
+}
 
 void JamtabaPlugin::open(){
-    if(!controller){
-        //qDebug() << "settings " << QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-        QApplication::setApplicationName("Jamtaba 2");
-        QApplication::setApplicationVersion(APP_VERSION);
 
-        qInstallMessageHandler(customLogHandler);
-        Persistence::Settings settings;//read from file in constructor
-        settings.load();
-        qDebug()<< "Creating controller!";
-        controller = new MainControllerVST(settings);
-        controller->configureStyleSheet("jamtaba.css");
-        controller->start();
-        qDebug()<< "Controller started!";
-    }
 
     //hostReportConnectionChanges = (bool)canHostDo((char*)"reportConnectionChanges");
     //hostAcceptIOChanges = (bool)canHostDo((char*)"acceptIOChanges");
@@ -222,8 +250,21 @@ void JamtabaPlugin::open(){
 
 void JamtabaPlugin::close()
 {
-
-
+    qWarning() << "JamtabaPlugin::close()";
+    if(editor){
+        qWarning() << "JamtabaPlugin::close() deleting editor";
+        AEffEditor* theEditor = editor;
+        setEditor(nullptr);
+        delete theEditor;
+        qWarning() << "JamtabaPlugin::close() editor deleted!";
+    }
+    if(controller){
+        qWarning() << "JamtabaPlugin::close() deleting controller!";
+        delete controller;
+        controller = nullptr;
+        qWarning() << "JamtabaPlugin::close() controller deleted!";
+    }
+    running = false;
 }
 
 VstInt32 JamtabaPlugin::getNumMidiInputChannels()
