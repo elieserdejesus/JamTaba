@@ -8,6 +8,13 @@ MainWindowStandalone::MainWindowStandalone(Controller::MainController* controlle
 
 }
 
+void MainWindowStandalone::closeEvent(QCloseEvent * e){
+    MainWindow::closeEvent(e);
+    if(mainController){
+        mainController->stop();
+    }
+}
+
 void MainWindowStandalone::showEvent(QShowEvent *){
 
     if(!mainController->isStarted()){//first show?

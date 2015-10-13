@@ -35,6 +35,7 @@ public:
     void clientResize(HWND h_parent, int width, int height);
     bool open(void* ptr);
     void close();
+    void detachMainController();
 };
 
 
@@ -48,6 +49,10 @@ public:
 
         JamtabaPlugin (audioMasterCallback audioMaster);
         ~JamtabaPlugin ();
+
+        inline bool isRunning() const{return running;}
+
+        void initialize();//called first time editor is opened
 
         VstInt32 canDo(char* text);
         //VstInt32 processEvents(VstEvents* events);
@@ -86,6 +91,7 @@ protected:
         VstEvents *listEvnts;
 private:
         Controller::MainController* controller;
+        bool running;
 
 };
 
