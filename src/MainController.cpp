@@ -869,60 +869,30 @@ void MainController::start()
     if(!started){
         started = true;
 
-        qCDebug(controllerMain) << "creating signals handler";
         signalsHandler = createSignalsHandler();//factory method
-        if(signalsHandler){
-            qCDebug(controllerMain) << "signals handler sucefull created!";
-        }
-        else{
-                qWarning(controllerMain) <<  "ERROR creating signals handler!";
-        }
 
         pluginFinder = createPluginFinder();
-        if(pluginFinder){
-            qCDebug(controllerMain) << "plugin finder sucefull created!";
-        }
-        else{
-            qCWarning(controllerMain()) << "error creating plugin finder";
-        }
 
         if(!midiDriver && useMidiDriver()){
-            qCDebug(controllerMain()) << "creating MidiDriver";
             midiDriver = createMidiDriver();
-            if(midiDriver){
-                qCDebug(controllerMain()) << "Midi driver created!";
-            }
-            else{
-                qCDebug(controllerMain()) << "ERROr creating midi driver!";
-            }
         }
         if(!audioDriver){
-            qCDebug(controllerMain()) << "creating AudioDriver";
             audioDriver = buildAudioDriver(settings);
-            if(audioDriver){
-                qCDebug(controllerMain()) << "AudioDriver created!";
-            }
-            qCDebug(controllerMain()) << "connecting audio driver signals...";
             QObject::connect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this->signalsHandler, SLOT(on_audioDriverSampleRateChanged(int)));
             QObject::connect(this->audioDriver, SIGNAL(stopped()), this->signalsHandler, SLOT(on_audioDriverStopped()));
             QObject::connect(this->audioDriver, SIGNAL(started()), this->signalsHandler, SLOT(on_audioDriverStarted()));
-            qCDebug(controllerMain()) << "done!";
         }
 
-        qCDebug(controllerMain()) << "Creating audio mixer...";
         audioMixer = new Audio::AudioMixer(audioDriver->getSampleRate());
         roomStreamer = new Audio::NinjamRoomStreamerNode();//new Audio::AudioFileStreamerNode(":/teste.mp3");
         this->audioMixer->addNode( roomStreamer);
-        qCDebug(controllerMain()) << "done!";
 
         QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this->signalsHandler, SLOT(on_disconnectedFromLoginServer()));
 
-        qCDebug(controllerMain()) << "Initializing ninjamServive...";
         this->ninjamService = Ninjam::Service::getInstance();
         QObject::connect( this->ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), this->signalsHandler, SLOT(on_connectedInNinjamServer(Ninjam::Server)) );
         QObject::connect(this->ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this->signalsHandler, SLOT(on_disconnectedFromNinjamServer(Ninjam::Server)));
         QObject::connect(this->ninjamService, SIGNAL(error(QString)), this->signalsHandler, SLOT(on_errorInNinjamServer(QString)));
-        qCDebug(controllerMain()) << "done!";
 
         if(audioDriver){
             audioDriver->start();

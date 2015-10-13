@@ -108,10 +108,16 @@ LoginService::~LoginService()
 
 void LoginService::connectInServer(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, QString version, QString environment, int sampleRate)
 {
+
     QUrlQuery query = HttpParamsFactory::createParametersToConnect(userName, instrumentID, channelName, localPeerMap, version, environment, sampleRate);
+    qDebug() << "Connecting in server ..." ;
     pendingReply = sendCommandToServer(query);
     if(pendingReply){
+        qDebug() << "Waiting for server reply..." ;
         connectNetworkReplySlots(pendingReply, LoginService::Command::CONNECT);
+    }
+    else{
+        qCritical() << "Pending reply is null!";
     }
 }
 
@@ -145,10 +151,11 @@ QNetworkReply* LoginService::sendCommandToServer(const QUrlQuery &query)
         pendingReply->deleteLater();
 
     }
-    if(httpClient.networkAccessible() == QNetworkAccessManager::NetworkAccessibility::NotAccessible){
-        emit errorWhenConnectingToServer("network is not acessible");
-        return nullptr;
-    }
+//    if(httpClient.networkAccessible() == QNetworkAccessManager::NetworkAccessibility::NotAccessible){
+//        qCritical() << "network is not acessible";
+//        emit errorWhenConnectingToServer("network is not acessible");
+//        return nullptr;
+//    }
     QUrl url(SERVER);
     QByteArray postData(query.toString(QUrl::EncodeUnicode).toStdString().c_str());
     QNetworkRequest request(url);
@@ -206,6 +213,7 @@ void LoginService::connectNetworkReplySlots(QNetworkReply* reply, Command comman
 
 void LoginService::connectedSlot(){
     //emit errorWhenConnectingToServer("teste");
+    qDebug() << "CONNECTED in server!" ;
     refreshTimer->start(REFRESH_PERIOD);
     roomsListReceivedSlot();
     connected = true;

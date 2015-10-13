@@ -219,14 +219,13 @@ JamtabaPlugin::~JamtabaPlugin ()
 void JamtabaPlugin::open(){
     qDebug()<<"opening Jamtaba!";
     if(!controller){
+        qputenv("QT_LOGGING_CONF", ":/Standalone/qtlogging.ini");//log cconfigurations is in resources at moment
+        qInstallMessageHandler(customLogHandler);
         Persistence::Settings settings;//read from file in constructor
         settings.load();
-        qDebug()<< "settings loaded!";
         qDebug()<< "Creating controller!";
         controller = new MainControllerVST(settings);
         controller->configureStyleSheet("jamtaba.css");
-        qDebug()<< "Controller created!";
-        qDebug()<< "Starting controller!";
         controller->start();
         qDebug()<< "Controller started!";
     }
