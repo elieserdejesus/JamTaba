@@ -5,6 +5,7 @@
 #include <QSlider>
 #include <QHBoxLayout>
 #include <Windows.h>
+#include <QStandardPaths>
 #include "../MainController.h"
 #include "../log/logHandler.h"
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -164,12 +165,6 @@ public:
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 AudioEffect* createEffectInstance (audioMasterCallback audioMaster)
 {
-    QApplication::setApplicationName("Jamtaba 2");
-    QApplication::setApplicationVersion(APP_VERSION);
-
-    //qputenv("QT_LOGGING_CONF", ":/Standalone/qtlogging.ini");//log cconfigurations is in resources at moment
-    //qInstallMessageHandler(customLogHandler);
-
     return new JamtabaPlugin (audioMaster);
 }
 
@@ -187,9 +182,6 @@ JamtabaPlugin::JamtabaPlugin (audioMasterCallback audioMaster) :
     canProcessReplacing(true);
     programsAreChunks(false);
     vst_strncpy (programName, "Default", kVstMaxProgNameLen);	// default program name
-
-    QCoreApplication::setOrganizationName("www.jamtaba.com");
-    QCoreApplication::setApplicationName("Jamtaba 2");
 
     canDoubleReplacing(false);
 
@@ -219,6 +211,11 @@ JamtabaPlugin::~JamtabaPlugin ()
 void JamtabaPlugin::open(){
     qDebug()<<"opening Jamtaba!";
     if(!controller){
+        qDebug() << "settings " << QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+        QApplication::setApplicationName("Jamtaba 2");
+        QApplication::setOrganizationDomain("");
+        QApplication::setOrganizationName("");
+        QApplication::setApplicationVersion(APP_VERSION);
         qputenv("QT_LOGGING_CONF", ":/Standalone/qtlogging.ini");//log cconfigurations is in resources at moment
         qInstallMessageHandler(customLogHandler);
         Persistence::Settings settings;//read from file in constructor

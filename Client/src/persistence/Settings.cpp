@@ -459,6 +459,7 @@ Settings::Settings()
     :fileDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation))
 
 {
+    qDebug() << "Settings in " << fileDir;
 }
 
 void Settings::save(Persistence::InputsSettings inputsSettings){
