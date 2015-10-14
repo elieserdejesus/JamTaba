@@ -95,4 +95,28 @@ protected:
     AudioDriverListener* audioDriverListener;
 };
 
+class NullAudioDriver : public AudioDriver{
+public:
+    NullAudioDriver()
+        :AudioDriver(nullptr){
+
+    }
+    inline void stop(){}
+    inline void start(){}
+    inline void release(){}
+    inline QList<int> getValidBufferSizes(int ) const{return QList<int>();}
+    inline QList<int> getValidSampleRates(int ) const{return QList<int>();}
+    inline int getMaxInputs() const{return 0;}
+    inline int getMaxOutputs() const{return 0;}
+    inline const char* getInputChannelName(const unsigned int ) const{return "";}
+    inline const char* getOutputChannelName(const unsigned int ) const{return "";}
+    inline const char* getInputDeviceName(int) const{return "NullAudioDriver";}
+    inline const char* getOutputDeviceName(int) const{return "NullAudioDriver";}
+    inline int getInputDeviceIndex() const{return -1;}
+    inline int getOutputDeviceIndex() const{return -1;}
+    inline void setInputDeviceIndex(int ){}
+    inline void setOutputDeviceIndex(int){}
+    inline int getDevicesCount() const{return 0;}
+};
+
 }

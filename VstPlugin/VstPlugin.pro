@@ -28,7 +28,6 @@ win32-msvc* {
 }
 
 HEADERS += \
-    vst.h \
     ../src/recorder/JamRecorder.h \
     ../src/recorder/ReaperProjectGenerator.h \
     ../src/ninjam/protocol/ServerMessageParser.h \
@@ -40,16 +39,15 @@ HEADERS += \
     ../src/audio/vorbis/VorbisDecoder.h \
     ../src/audio/vorbis/VorbisEncoder.h \
     ../src/persistence/Settings.h \
-    #../src/audio/vst/VstPlugin.h \
-    #../src/audio/vst/vsthost.h \
     ../src/geo/WebIpToLocationResolver.h \
+    Plugin.h \
+    Editor.h \
+    MainControllerVST.h
 
 
 SOURCES += \
     audioeffectx.cpp \
     audioeffect.cpp \
-    vst.cpp \
-    vstMain.cpp \
     ../src/recorder/JamRecorder.cpp \
     ../src/recorder/ReaperProjectGenerator.cpp \
     ../src/loginserver/LoginService.cpp \
@@ -58,16 +56,17 @@ SOURCES += \
     ../src/ninjam/protocol/ClientMessages.cpp \
     ../src/ninjam/protocol/ServerMessageParser.cpp \
     ../src/ninjam/Server.cpp \
-    #../src/audio/vst/PluginFinder.cpp \
     ../src/audio/Resampler.cpp \
     ../src/audio/vorbis/VorbisDecoder.cpp \
     ../src/audio/SamplesBufferResampler.cpp \
     ../src/audio/samplesbufferrecorder.cpp \
     ../src/audio/vorbis/VorbisEncoder.cpp \
     ../src/persistence/Settings.cpp \
-    #../src/audio/vst/VstPlugin.cpp \
-    #../src/audio/vst/vsthost.cpp \
     ../src/geo/WebIpToLocationResolver.cpp \
+    VstMain.cpp \
+    Plugin.cpp \
+    Editor.cpp \
+    MainControllerVST.cpp
 
 
 win32 {

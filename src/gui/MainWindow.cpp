@@ -64,18 +64,17 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializePluginFinder();
     initializeMainTabWidget();
 
-    QDir stylesDir(":/style");
-    QStringList cssList = stylesDir.entryList(QStringList("*.css"));
-    foreach (QString css, cssList) {
-        QAction* action = ui.menuThemes->addAction(css);
-        action->setData(css);
-    }
-    QObject::connect(ui.menuThemes, SIGNAL(triggered(QAction*)), this, SLOT(on_newThemeSelected(QAction*)));
 
-    //hide the the menus for while
-    //ui.menuThemes->setVisible(false);
-    //ui.menuThemes->setEnabled(false);
+//    QDir stylesDir(":/style");
+//    QStringList cssList = stylesDir.entryList(QStringList("*.css"));
+//    foreach (QString css, cssList) {
+//        QAction* action = ui.menuThemes->addAction(css);
+        //action->setData(css);
+        //action->setEnabled(false);
+        //action->setVisible(false);
+//    }
 
+//    QObject::connect(ui.menuThemes, SIGNAL(triggered(QAction*)), this, SLOT(on_newThemeSelected(QAction*)));
 
     timerID = startTimer(1000/50);
 
@@ -107,6 +106,12 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     foreach (LocalTrackGroupView* channel, localChannels) {
         channel->refreshInputSelectionNames();
+    }
+
+    if(mainController->isRunningAsVstPlugin()){
+        this->ui.actionVstPreferences->setVisible(false);
+        this->ui.actionAudioPreferences->setVisible(false);
+        this->ui.actionMidiPreferences->setVisible(false);
     }
 
     showBusyDialog("Loading rooms list ...");
@@ -403,18 +408,6 @@ void MainWindow::initializeLocalInputChannels(){
             else{
                 mainController->setInputTrackToStereo(subChannelView->getInputIndex(), subChannel.firstInput);
             }
-
-            //create the plugins list
-//            foreach (Persistence::Plugin plugin, subChannel.plugins) {
-//                QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
-//                Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path );
-//                Audio::Plugin* pluginInstance = mainController->addPlugin(subChannelView->getInputIndex(), descriptor);
-//                pluginInstance->restoreFromSerializedData( plugin.data);
-//                subChannelView->addPlugin(pluginInstance, plugin.bypassed);
-
-//                //PluginLoader* loader = new PluginLoader(mainController, plugin, subChannelView);
-//                //loader->load();
-//            }
         }
         channelIndex++;
     }
@@ -877,20 +870,29 @@ void MainWindow::on_preferencesClicked(QAction* action)
 {
     Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
     AudioDriver* audioDriver = mainController->getAudioDriver();
-    audioDriver->stop();
-    midiDriver->stop();
+    if(audioDriver){
+        audioDriver->stop();
+    }
+    if(midiDriver){
+        midiDriver->stop();
+    }
 
     stopCurrentRoomStream();
 
     PreferencesDialog dialog(mainController, this);
-    if(action == ui.actionAudioPreferences){
-        dialog.selectAudioTab();
-    }
-    else if(action == ui.actionMidiPreferences){
-        dialog.selectMidiTab();
-    }
-    else if(action == ui.actionVstPreferences){
-        dialog.selectVstPluginsTab();
+    if(!mainController->isRunningAsVstPlugin()){
+        if(action == ui.actionAudioPreferences){
+            dialog.selectAudioTab();
+        }
+        else if(action == ui.actionMidiPreferences){
+            dialog.selectMidiTab();
+        }
+        else if(action == ui.actionVstPreferences){
+            dialog.selectVstPluginsTab();
+        }
+        else{
+            dialog.selectRecordingTab();
+        }
     }
     else{
         dialog.selectRecordingTab();
@@ -898,13 +900,15 @@ void MainWindow::on_preferencesClicked(QAction* action)
     connect(&dialog, SIGNAL(ioPreferencesChanged(QList<bool>,int,int,int,int,int,int,int)), this, SLOT(on_IOPreferencesChanged(QList<bool>,int,int,int,int,int,int,int)));
     int result = dialog.exec();
     if(result == QDialog::Rejected){
-        midiDriver->start();//restart audio and midi drivers if user cancel the preferences menu
-        audioDriver->start();
+        if(midiDriver){
+            midiDriver->start();//restart audio and midi drivers if user cancel the preferences menu
+        }
+        if(audioDriver){
+            audioDriver->start();
+        }
     }
 
     //audio driver parameters are changed in on_IOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.
-
-
 }
 
 void MainWindow::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize){
