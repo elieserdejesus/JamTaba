@@ -77,8 +77,6 @@ public:
 protected:
     MainController* mainController;
 public slots:
-    //Login server
-    //virtual void on_disconnectedFromLoginServer();
 
     //ninjam
     virtual void on_connectedInNinjamServer(Ninjam::Server server);
@@ -117,6 +115,8 @@ public:
 
     void start();
     void stop();
+
+    virtual bool isRunningAsVstPlugin() const = 0;
 
     inline void setMainWindow(MainWindow* mainWindow){this->mainWindow = mainWindow;}
 

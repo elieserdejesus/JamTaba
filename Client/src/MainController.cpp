@@ -2,8 +2,6 @@
 #include "recorder/ReaperProjectGenerator.h"
 #include "audio/core/AudioDriver.h"
 #include "midi/MidiDriver.h"
-//#include "midi/portmididriver.h"
-//#include "audio/core/PortAudioDriver.h"
 #include "audio/core/AudioMixer.h"
 #include "audio/core/AudioNode.h"
 #include "audio/RoomStreamerNode.h"
@@ -11,8 +9,6 @@
 #include "../loginserver/natmap.h"
 
 #include "MainWindow.h"
-
-//#include "../audio/core/plugins.h"
 
 #include "persistence/Settings.h"
 

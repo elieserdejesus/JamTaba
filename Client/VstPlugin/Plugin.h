@@ -1,5 +1,5 @@
-#ifndef VST_H
-#define VST_H
+#ifndef VST_PLUGIN_H
+#define VST_PLUGIN_H
 
 #define uniqueIDEffect CCONST('V','b','P','l')
 #define uniqueIDInstrument CCONST('V','b','I','s')
@@ -7,14 +7,15 @@
 #define DEFAULT_INPUTS 1
 #define DEFAULT_OUTPUTS 1
 
-//#include <QObject>
 #include "audioeffectx.h"
-#include "aeffeditor.h"
-#include <QWinWidget>
 #include <QLabel>
 #include <QSlider>
 #include "../MainController.h"
 #include "MainWindow.h"
+
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(pluginVst)
 
 AudioEffect* createEffectInstance (audioMasterCallback audioMaster);
 
@@ -22,22 +23,6 @@ AudioEffect* createEffectInstance (audioMasterCallback audioMaster);
 
 class JamtabaPlugin;
 
-class JamtabaVstEditor : public AEffEditor{
-    QWinWidget* widget;
-    JamtabaPlugin* jamtaba;
-    ERect rectangle;
-    MainWindow* mainWindow;
-
-public:
-    JamtabaVstEditor(JamtabaPlugin* jamtaba);
-    ~JamtabaVstEditor();
-    bool getRect (ERect** rect);
-    void clientResize(HWND h_parent, int width, int height);
-    bool open(void* ptr);
-    void close();
-    void detachMainController();
-
-};
 
 
 //-------------------------------------------------------------------------------------------------------
@@ -48,6 +33,8 @@ public:
         ~JamtabaPlugin ();
 
         inline bool isRunning() const{return running;}
+
+        bool isRunningAsVstPlugin() const;
 
         void initialize();//called first time editor is opened
 
@@ -71,7 +58,7 @@ public:
         void open();
         void close();
         void setSampleRate(float sampleRate);
-        void setBlockSize (VstInt32 blockSize);
+        //void setBlockSize (VstInt32 blockSize);
         void suspend();
         void resume();
         inline VstPlugCategory getPlugCategory() {return kPlugCategEffect;}
@@ -82,13 +69,15 @@ public:
 
 protected:
         char programName[kVstMaxProgNameLen + 1];
-        VstInt32 bufferSize;
+        int sampleRate;
 
         //Gui *qEditor;
         VstEvents *listEvnts;
 private:
         Controller::MainController* controller;
         bool running;
+        Audio::SamplesBuffer inputBuffer;
+        Audio::SamplesBuffer outputBuffer;
 
 };
 

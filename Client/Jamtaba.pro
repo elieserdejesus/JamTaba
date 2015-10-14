@@ -7,7 +7,15 @@ SUBDIRS = VstPlugin
 
 CONFIG += ordered
 
-#quando deleto o plugin no Reaper dá um crash. Tentar colocar o Jamtaba dentro do Jamtaba para debugar
+#enable logging in release
+#QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
+#QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
+
+
+
+#Continuar trabalhando no process do MainControllerVST
+
+#standalone não está fechando - Quando fecho o plugin no minihost aparece algo sobre WaitCondition.
 
 #arquivo de log vai crescer muito, estou sempre fazendo append. Tenho que mudar isso.
 

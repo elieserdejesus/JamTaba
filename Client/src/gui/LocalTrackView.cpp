@@ -29,20 +29,33 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
 }
 
 void LocalTrackView::init(int channelIndex, float initialGain, float initialPan, bool muted){
+    if(!mainController){
+        qCritical() << "LocalTrackView::init() mainController is null!";
+        return;
+    }
+
     //add separator before effects panel
-    ui->mainLayout->addSpacing(20);
     fxPanel = createFxPanel();
+    ui->mainLayout->addSpacing(20);
     ui->mainLayout->addWidget( fxPanel );
 
     //create input panel in the bottom
+    this->inputPanel = createInputPanel();
     fxSpacer = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Fixed);
     ui->mainLayout->addSpacerItem(fxSpacer);
-    this->inputPanel = createInputPanel();
+
     ui->mainLayout->addWidget(inputPanel);
 
     this->inputTypeIconLabel = createInputTypeIconLabel(this);
     ui->mainLayout->addWidget(inputTypeIconLabel);
     ui->mainLayout->setAlignment(this->inputTypeIconLabel, Qt::AlignCenter);
+
+    if(mainController->isRunningAsVstPlugin()){
+        fxPanel->setVisible(false);
+        fxSpacer->changeSize(0, 0);
+        inputPanel->setVisible(false);
+        inputTypeIconLabel->setVisible(false);
+    }
 
     //insert a input node in controller
     this->inputNode = new Audio::LocalInputAudioNode(channelIndex);
@@ -83,10 +96,12 @@ void LocalTrackView::setFaderOnlyMode(bool faderOnly){
         margins.setRight(faderOnly ? 2 : 6);
         layout()->setContentsMargins(margins);
 
-        fxPanel->setVisible(!faderOnly);
-        inputPanel->setVisible(!faderOnly);
-        fxSpacer->changeSize(20, faderOnly ? 0 : 20, QSizePolicy::Minimum, faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
+        if(fxPanel){
+            fxPanel->setVisible(!faderOnly);
+            inputPanel->setVisible(!faderOnly);
 
+            fxSpacer->changeSize(20, faderOnly ? 0 : 20, QSizePolicy::Minimum, faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
+        }
         ui->soloButton->setVisible(!faderOnly);
         ui->muteButton->setVisible(!faderOnly);
         ui->peaksDbLabel->setVisible(!faderOnly);
@@ -94,7 +109,9 @@ void LocalTrackView::setFaderOnlyMode(bool faderOnly){
         ui->verticalSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
         ui->horizontalSpacer->changeSize( faderOnly ? 0 : 20,20, QSizePolicy::Minimum, QSizePolicy::Fixed);
 
-        inputTypeIconLabel->setVisible(!faderOnly);
+        if(inputTypeIconLabel){
+            inputTypeIconLabel->setVisible(!faderOnly);
+        }
 
         this->drawDbValue = !faderOnly;
 
@@ -114,16 +131,20 @@ void LocalTrackView::toggleFaderOnlyMode(){
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void LocalTrackView::setUnlightStatus(bool unlighted){
     BaseTrackView::setUnlightStatus(unlighted);
-    style()->unpolish(fxPanel);
-    style()->polish(fxPanel);
-    QList<FxPanelItem*> items = fxPanel->getItems();
-    foreach (FxPanelItem* item, items) {
-        style()->unpolish(item);
-        style()->polish(item);
-    }
+    if(fxPanel){
+        style()->unpolish(fxPanel);
+        style()->polish(fxPanel);
 
-    style()->unpolish(inputPanel);
-    style()->polish(inputPanel);
+        QList<FxPanelItem*> items = fxPanel->getItems();
+        foreach (FxPanelItem* item, items) {
+            style()->unpolish(item);
+            style()->polish(item);
+        }
+    }
+    if(inputPanel){
+        style()->unpolish(inputPanel);
+        style()->polish(inputPanel);
+    }
     update();
 }
 
@@ -346,10 +367,9 @@ void LocalTrackView::refreshInputSelectionName(){
     inputSelectionButton->setText(elidedName);
 
     //set the icon
-    this->inputTypeIconLabel->setStyleSheet("background-image: url(" + iconFile + ");");
-    //this->inputTypeIconLabel->setText("<img src=" + iconFile + "/>");
-
-    //setUnlightStatus(inputTrack->isNoInput());
+    if(inputTypeIconLabel){
+        this->inputTypeIconLabel->setStyleSheet("background-image: url(" + iconFile + ");");
+    }
 
     updateGeometry();
 

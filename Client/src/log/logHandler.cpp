@@ -4,6 +4,8 @@
 #include <QDir>
 #include <QStandardPaths>
 
+static bool logFileCreated = false;
+
 void customLogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QByteArray localMsg = msg.toLocal8Bit();
@@ -38,17 +40,24 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
     }
     QTextStream(stdout) << stringMsg << endl;
 
-    if(type != QtDebugMsg){//write the critical messages to log file
+    //if(type != QtDebugMsg){//write the critical messages to log file
         QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
         if(!logDir.exists()){
             logDir.mkpath(".");
         }
         QFile outFile( logDir.absoluteFilePath("log.txt"));
-        if(outFile.open(QIODevice::WriteOnly | QIODevice::Append)){
+        QIODevice::OpenMode ioFlags = QIODevice::WriteOnly;
+        if(logFileCreated)
+            ioFlags |= QIODevice::Append;
+        else{
+            ioFlags |= QIODevice::Truncate;
+            logFileCreated = true;
+        }
+        if(outFile.open(ioFlags)){
            QTextStream ts(&outFile);
            ts << stringMsg << endl;
         }
-    }
+    //}
 
     if(type == QtFatalMsg){
         abort();

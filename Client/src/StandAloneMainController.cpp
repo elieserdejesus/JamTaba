@@ -198,6 +198,10 @@ MainControllerSignalsHandler* StandaloneMainController::createSignalsHandler(){
     return new StandaloneSignalsHandler(this);
 }
 
+bool StandaloneMainController::isRunningAsVstPlugin() const{
+    return false;
+}
+
 Vst::PluginFinder* StandaloneMainController::createPluginFinder(){
     return new StandalonePluginFinder(vstHost);
 }

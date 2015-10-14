@@ -1,4 +1,4 @@
-#include "vst.h"
+#include "Plugin.h"
 #include <QtGlobal>
 
 

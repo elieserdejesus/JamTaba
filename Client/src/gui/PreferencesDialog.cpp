@@ -26,40 +26,55 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
 
     ui->comboLastOutput->setEnabled(false);
 
-#ifdef Q_OS_MACX
- ui->comboAudioDevice->setVisible(false);
- ui->asioDriverLabel->setVisible(false);
- ui->groupBoxInputs->setVisible(false);
- ui->groupBoxOutputs->setVisible(false);
-#endif
-    //selectAudioTab();
-    //ui->prefsTab->setCurrentIndex(0);
-    populateAudioTab();
-    populateMidiTab();
+    if(!mainController->isRunningAsVstPlugin()){
+        #ifdef Q_OS_MACX
+            ui->comboAudioDevice->setVisible(false);
+            ui->asioDriverLabel->setVisible(false);
+            ui->groupBoxInputs->setVisible(false);
+            ui->groupBoxOutputs->setVisible(false);
+        #endif
+        populateAudioTab();
+        populateMidiTab();
+    }
+    else{
+        //remove the first 3 tabs (audio, midi and VSTs)
+        ui->prefsTab->removeTab(0);
+        ui->prefsTab->removeTab(0);
+        ui->prefsTab->removeTab(0);
+    }
+
     populateRecordingTab();
+
 
 
 }
 
 void PreferencesDialog::selectAudioTab(){
-    ui->prefsTab->setCurrentWidget(ui->tabAudio);
+    if(mainController->isRunningAsVstPlugin()){
+        ui->prefsTab->setCurrentWidget(ui->tabAudio);
+    }
 }
 
 void PreferencesDialog::selectMidiTab(){
-    ui->prefsTab->setCurrentWidget(ui->tabMidi);
+    if(mainController->isRunningAsVstPlugin()){
+        ui->prefsTab->setCurrentWidget(ui->tabMidi);
+    }
 }
 void PreferencesDialog::selectVstPluginsTab(){
-    ui->prefsTab->setCurrentWidget(ui->tabVST);
-//    qWarning() << "selection VST TAB";
+    if(mainController->isRunningAsVstPlugin()){
+        ui->prefsTab->setCurrentWidget(ui->tabVST);
+    }
 }
 
 void PreferencesDialog::selectRecordingTab(){
     ui->prefsTab->setCurrentWidget(ui->tabRecording);
-    //populateRecordingTab();
 }
 
 
 void PreferencesDialog::populateMidiTab(){
+    if(mainController->isRunningAsVstPlugin()){
+        return;
+    }
     //clear
     QLayoutItem *item;
     while ((item = ui->midiContentPanel->layout()->takeAt(0)) != 0) {
@@ -89,6 +104,9 @@ void PreferencesDialog::populateMidiTab(){
 }
 
 void PreferencesDialog::populateAudioTab(){
+    if(mainController->isRunningAsVstPlugin()){
+        return;
+    }
     populateAsioDriverCombo();
     populateFirstInputCombo();
     populateFirstOutputCombo();
@@ -105,6 +123,9 @@ void PreferencesDialog::clearScanPathWidgets(){
 }
 
 void PreferencesDialog::populateVstTab(){
+    if(mainController->isRunningAsVstPlugin()){
+        return;
+    }
     clearScanPathWidgets();//remove all widgets before add the paths
     QStringList paths = mainController->getSettings().getVstScanPaths();
     foreach (QString path, paths) {
@@ -120,13 +141,14 @@ void PreferencesDialog::populateRecordingTab(){
     ui->recordPathLineEdit->setText(recordDir.absolutePath());
 }
 
-PreferencesDialog::~PreferencesDialog()
-{
+PreferencesDialog::~PreferencesDialog(){
     delete ui;
 }
 
-void PreferencesDialog::populateAsioDriverCombo()
-{
+void PreferencesDialog::populateAsioDriverCombo(){
+    if(mainController->isRunningAsVstPlugin()){
+        return;
+    }
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     int devices = audioDriver->getDevicesCount();
     ui->comboAudioDevice->clear();
@@ -226,20 +248,9 @@ void PreferencesDialog::populateBufferSizeCombo()
     foreach (int size, bufferSizes) {
         ui->comboBufferSize->addItem(QString::number(size), size);
     }
-//    ui->comboBufferSize->addItem("64", 64);
-//    ui->comboBufferSize->addItem("128", 128);
-//    ui->comboBufferSize->addItem("256", 256);
-//    ui->comboBufferSize->addItem("512", 512);
-//    ui->comboBufferSize->addItem("1024", 1024);
-//    ui->comboBufferSize->addItem("2048", 2048);
-//    ui->comboBufferSize->addItem("4096", 4096);
-//    Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
     ui->comboBufferSize->setCurrentText(QString::number(audioDriver->getBufferSize()));
-    //ui->comboBufferSize->addItem("4096", 4096);
 }
-
 //++++++++++++
-
 void PreferencesDialog::on_comboAudioDevice_activated(int index)
 {
     int deviceIndex = ui->comboAudioDevice->itemData(index).toInt();
@@ -267,6 +278,10 @@ void PreferencesDialog::on_comboFirstOutput_currentIndexChanged(int /*index*/)
 
 void PreferencesDialog::on_okButton_released()
 {
+    if(mainController->isRunningAsVstPlugin()){
+        this->accept();
+        return;
+    }
     int selectedAudioDevice = ui->comboAudioDevice->currentIndex();
     int firstIn = ui->comboFirstInput->currentData().toInt();
     int lastIn = ui->comboLastInput->currentData().toInt();
@@ -289,6 +304,11 @@ void PreferencesDialog::on_okButton_released()
 
 void PreferencesDialog::on_prefsTab_currentChanged(int index)
 {
+    if(mainController->isRunningAsVstPlugin()){
+        populateRecordingTab();
+        return;
+    }
+
     switch(index){
         case 0: populateAudioTab(); break;
         case 1: populateMidiTab(); break;

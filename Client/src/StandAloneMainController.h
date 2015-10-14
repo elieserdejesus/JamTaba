@@ -60,6 +60,7 @@ public:
     StandaloneMainController(Persistence::Settings settings, int& argc, char** argv);
     ~StandaloneMainController();
 
+    bool isRunningAsVstPlugin() const;
 
     void initializePluginsList(QStringList paths);
     void scanPlugins();
