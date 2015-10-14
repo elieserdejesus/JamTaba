@@ -80,16 +80,16 @@ protected:
 };
 
 class NullMidiDriver : public MidiDriver{
-    virtual void start() {}
-    virtual void stop() {}
-    virtual void release(){}
+    inline virtual void start() {}
+    inline virtual void stop() {}
+    inline virtual void release(){}
 
-    virtual bool hasInputDevices() const{return false;}
+    inline virtual bool hasInputDevices() const{return false;}
 
-    virtual int getMaxInputDevices() const {return 0;}
+    inline virtual int getMaxInputDevices() const {return 0;}
 
-    virtual const char* getInputDeviceName(int index) const{Q_UNUSED(index); return "";}
-    virtual MidiBuffer getBuffer(){return MidiBuffer(0);}
+    inline virtual const char* getInputDeviceName(int index) const{Q_UNUSED(index); return "";}
+    inline virtual MidiBuffer getBuffer(){return MidiBuffer(0);}
 };
 
 }

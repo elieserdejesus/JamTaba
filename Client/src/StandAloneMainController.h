@@ -80,7 +80,7 @@ protected:
     virtual void exit();
     virtual MainControllerSignalsHandler* createSignalsHandler();
     virtual Midi::MidiDriver* createMidiDriver();
-    virtual Audio::AudioDriver* buildAudioDriver(const Persistence::Settings &settings);
+    virtual Audio::AudioDriver* createAudioDriver(const Persistence::Settings &settings);
     virtual Vst::PluginFinder* createPluginFinder();
 
     void setCSS(QString css);

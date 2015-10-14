@@ -46,7 +46,7 @@ public:
         chunksToEncode.append(new EncodingChunk(samplesToEncode, channelIndex, isFirstPart, isLastPart));
         //this method is called by Qt main thread (the producer thread).
         hasAvailableChunksToEncode.wakeAll();//wakeup the encoding thread (consumer thread)
-        //qWarning() << "Adding samples to encode:" << samplesToEncode.computePeak().getMax();
+
     }
 
     void stop(){

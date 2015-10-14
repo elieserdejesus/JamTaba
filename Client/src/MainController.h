@@ -148,10 +148,7 @@ public:
     Midi::MidiDriver* getMidiDriver() const;
     Login::LoginService* getLoginService() const;
 
-
     inline Controller::NinjamController* getNinjamController() const{return ninjamController;}
-
-
 
     QStringList getBotNames() const;
 
@@ -165,7 +162,6 @@ public:
 
     Audio::AudioPeak getRoomStreamPeak();
     Audio::AudioPeak getTrackPeak(int trackID);
-
 
     Audio::AudioNode* getTrackNode(long ID);
 
@@ -272,7 +268,7 @@ protected:
     //factory methods
     virtual MainControllerSignalsHandler* createSignalsHandler();
     virtual Midi::MidiDriver* createMidiDriver() = 0;
-    virtual Audio::AudioDriver* buildAudioDriver(const Persistence::Settings& settings) = 0;
+    virtual Audio::AudioDriver* createAudioDriver(const Persistence::Settings& settings) = 0;
     virtual Vst::PluginFinder* createPluginFinder() = 0;
 
     MainWindow* mainWindow;
@@ -281,7 +277,7 @@ protected:
 
     virtual void setCSS(QString css) = 0;
 
-    virtual bool useMidiDriver(){ return true;}
+    //virtual bool useMidiDriver(){ return true;}
 
 private:
     void setAllTracksActivation(bool activated);

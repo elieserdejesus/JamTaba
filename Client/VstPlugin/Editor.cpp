@@ -53,11 +53,12 @@ bool VstEditor::open(void* ptr){
     AEffEditor::open(ptr);
     widget = new QWinWidget(static_cast<HWND>(ptr));
     widget->setAutoFillBackground(false);
-    widget->setObjectName("QWinWidget");
+    //widget->setObjectName("QWinWidget");
 
     if(!mainWindow){
         qCDebug(pluginVst) << "Creating MainWindow...";
         mainWindow = new MainWindow(jamtaba->getController());
+        jamtaba->getController()->setMainWindow(mainWindow);
         rectangle.left = 0;
         rectangle.top = 0;
         rectangle.right = mainWindow->width();

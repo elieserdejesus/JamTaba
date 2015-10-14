@@ -11,7 +11,7 @@ public:
         return true;
     }
 
-    Audio::AudioDriver* buildAudioDriver(const Persistence::Settings &settings);
+    Audio::AudioDriver* createAudioDriver(const Persistence::Settings &settings);
 
     void setCSS(QString css);
 
@@ -23,9 +23,7 @@ public:
     }
 
 
-    inline Midi::MidiDriver* createMidiDriver(){return nullptr;}
-
-    inline bool useMidiDriver(){return false;}
+    Midi::MidiDriver* createMidiDriver();
 
     inline void exit(){}
 

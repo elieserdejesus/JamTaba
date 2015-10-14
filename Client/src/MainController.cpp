@@ -188,8 +188,12 @@ void MainControllerSignalsHandler::on_connectedInNinjamServer(Ninjam::Server ser
     QObject::connect(mainController->ninjamController, SIGNAL(startProcessing(int)), this, SLOT(on_ninjamStartProcessing(int)));
    //emit event after start controller to create view widgets before start
     //emit enteredInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers(), server.getMaxChannels()));
+
     if(mainController->mainWindow){
         mainController->mainWindow->enterInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers(), server.getMaxChannels()));
+    }
+    else{
+        qCCritical(controllerMain) << "mainController->mainWindow is null!";
     }
     qCDebug(controllerMain) << "starting ninjamController...";
     mainController->ninjamController->start(server, mainController->transmiting);
@@ -630,15 +634,7 @@ void MainController::removeTrack(long trackID){
 
 
 void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
-//    if(!threadHandle){
-//        threadHandle = QThread::currentThreadId();
-//    }
-    //QMutexLocker locker(&mutex);
-//    checkThread("doAudioProcess();");
-
-    MidiBuffer midiBuffer = midiDriver->getBuffer();
-    //vstHost->fillMidiEvents(midiBuffer);//pass midi events to vst host
-
+    MidiBuffer midiBuffer ( midiDriver ? midiDriver->getBuffer() : MidiBuffer(0));
     audioMixer->process(in, out, sampleRate, midiBuffer);
 }
 
@@ -884,11 +880,11 @@ void MainController::start()
 
         pluginFinder = createPluginFinder();
 
-        if(!midiDriver && useMidiDriver()){
+        if(!midiDriver){
             midiDriver = createMidiDriver();
         }
         if(!audioDriver){
-            audioDriver = buildAudioDriver(settings);
+            audioDriver = createAudioDriver(settings);
             QObject::connect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this->signalsHandler, SLOT(on_audioDriverSampleRateChanged(int)));
             QObject::connect(this->audioDriver, SIGNAL(stopped()), this->signalsHandler, SLOT(on_audioDriverStopped()));
             QObject::connect(this->audioDriver, SIGNAL(started()), this->signalsHandler, SLOT(on_audioDriverStarted()));
