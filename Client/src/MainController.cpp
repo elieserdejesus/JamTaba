@@ -135,9 +135,7 @@ MainControllerSignalsHandler::MainControllerSignalsHandler(MainController *contr
 
 }
 
-void MainControllerSignalsHandler::on_disconnectedFromLoginServer(){
-    mainController->exit();
-}
+
 
 void MainControllerSignalsHandler::on_audioDriverSampleRateChanged(int newSampleRate){
     mainController->audioMixer->setSampleRate(newSampleRate);
@@ -754,23 +752,32 @@ bool MainController::trackIsSoloed(int trackID) const{
 MainController::~MainController(){
     qCDebug(controllerMain()) << "MainController destrutor!";
     stop();
+    qCDebug(controllerMain()) << "main controller stopped!";
 
-    QObject::disconnect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this->signalsHandler, SLOT(on_audioDriverSampleRateChanged(int)));
     //delete audioMixer; crashing :(
     if(audioDriver){
+        qCDebug(controllerMain()) << "deleting audio driver...";
+        QObject::disconnect(this->audioDriver, SIGNAL(sampleRateChanged(int)), this->signalsHandler, SLOT(on_audioDriverSampleRateChanged(int)));
         delete audioDriver;
         audioDriver = nullptr;
+        qCDebug(controllerMain()) << "audio driver deleted!";
     }
+
     if(midiDriver){
+        qCDebug(controllerMain()) << "deleting midi driver...";
         delete midiDriver;
         midiDriver = nullptr;
+        qCDebug(controllerMain()) << "midi driver deleted.";
     }
 
     if(roomStreamer){
+        qCDebug(controllerMain()) << "deleting room streamer...";
         delete roomStreamer;
         roomStreamer = nullptr;
+        qCDebug(controllerMain()) << "room streamer deleted.";
     }
 
+    qCDebug(controllerMain()) << "clearing tracksNodes...";
     tracksNodes.clear();
     foreach (Audio::LocalInputAudioNode* input, inputTracks) {
         delete input;
@@ -781,15 +788,18 @@ MainController::~MainController(){
         delete group;
     }
     trackGroups.clear();
-
+    qCDebug(controllerMain()) << "clearing tracksNodes done!";
 
 
     if(this->ninjamController){
+        qCDebug(controllerMain()) << "deleting ninjamController...";
         delete ninjamController;
         ninjamController = nullptr;
+        qCDebug(controllerMain()) << "deleting ninjamController done!";
     }
     //delete recorder;
-    qCDebug(controllerMain) << "Finishing MainController destructor!";
+    qCDebug(controllerMain) << "MainController destructor finished!";
+
 }
 
 void MainController::saveLastUserSettings(const Persistence::InputsSettings& inputsSettings){
@@ -892,7 +902,7 @@ void MainController::start()
         roomStreamer = new Audio::NinjamRoomStreamerNode();//new Audio::AudioFileStreamerNode(":/teste.mp3");
         this->audioMixer->addNode( roomStreamer);
 
-        QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this->signalsHandler, SLOT(on_disconnectedFromLoginServer()));
+        //QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this->signalsHandler, SLOT(on_disconnectedFromLoginServer()));
 
         this->ninjamService = Ninjam::Service::getInstance();
         QObject::connect( this->ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), this->signalsHandler, SLOT(on_connectedInNinjamServer(Ninjam::Server)) );

@@ -817,13 +817,12 @@ void MainWindow::closeEvent(QCloseEvent *){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainWindow::~MainWindow()
 {
+    qWarning() << "MainWindow destructor...";
+    setParent(nullptr);
     mainController = nullptr;
-    qWarning() << "Destrutor main window";
-    qDebug() << "Main frame desctructor!";
     killTimer(timerID);
     qDebug() << "Main frame timer killed!";
-    qWarning() << "destrutor main window finalizado";
-    //delete peakMeter;
+    qWarning() << "MainWindow destructor finished.";
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //void MainFrame::on_freshDataReceivedFromLoginServer(const Login::LoginServiceParser &response){

@@ -10,6 +10,8 @@ MainWindowStandalone::MainWindowStandalone(Controller::MainController* controlle
 
 void MainWindowStandalone::closeEvent(QCloseEvent * e){
     MainWindow::closeEvent(e);
+    hide();//hide before stop main controller and disconnect from login server to
+    //avoid freeze the main window for some seconds while is disconnecting
     if(mainController){
         mainController->stop();
     }

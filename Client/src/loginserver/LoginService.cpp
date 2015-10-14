@@ -7,6 +7,7 @@
 #include <QUrlQuery>
 #include <QTimer>
 #include <QDebug>
+#include <QApplication>
 #include "../ninjam/Server.h"
 #include "../ninjam/Service.h"
 
@@ -134,20 +135,28 @@ void LoginService::disconnectFromServer()
     if(isConnected()){
         qDebug() << "DISCONNECTING from server...";
         refreshTimer->stop();
-        QUrlQuery query = HttpParamsFactory::createParametersToDisconnect();
-        pendingReply = sendCommandToServer(query);
         if(pendingReply){
-            connectNetworkReplySlots(pendingReply, LoginService::Command::DISCONNECT);
+            pendingReply->deleteLater();
+        }
+        QUrlQuery query = HttpParamsFactory::createParametersToDisconnect();
+        qWarning() << "sending disconnect command to server...";
+        pendingReply = sendCommandToServer(query, true);
+        qWarning() << "disconnected";
+        if(pendingReply){
+            pendingReply->readAll();
+            qWarning() << "reply content readed and discarded!";
+            //delete pendingReply;
+            //qWarning() << "reply deleted!";
         }
     }
-    else{
-        emit disconnectedFromServer();
-    }
+    this->connected = false;
+
+    qDebug() << "disconnected from login server!";
 }
 
-QNetworkReply* LoginService::sendCommandToServer(const QUrlQuery &query)
+QNetworkReply* LoginService::sendCommandToServer(const QUrlQuery &query, bool synchronous )
 {
-    if(pendingReply != NULL){
+    if(pendingReply){
         pendingReply->deleteLater();
 
     }
@@ -160,7 +169,13 @@ QNetworkReply* LoginService::sendCommandToServer(const QUrlQuery &query)
     QByteArray postData(query.toString(QUrl::EncodeUnicode).toStdString().c_str());
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded; charset=utf-8"));
-    return httpClient.post(request, postData);
+    pendingReply = httpClient.post(request, postData);
+    if(synchronous && pendingReply){
+        QEventLoop loop;
+        connect(pendingReply, SIGNAL(finished()), &loop, SLOT(quit()));
+        loop.exec();
+    }
+    return pendingReply;
 }
 
 
@@ -201,7 +216,7 @@ void LoginService::connectNetworkReplySlots(QNetworkReply* reply, Command comman
     }
     switch (command) {
     case LoginService::Command::CONNECT: QObject::connect(reply, SIGNAL(finished()), this, SLOT(connectedSlot()));  break;
-    case LoginService::Command::DISCONNECT: QObject::connect(reply, SIGNAL(finished()), this, SLOT(disconnectedSlot()));  break;
+    //case LoginService::Command::DISCONNECT: QObject::connect(reply, SIGNAL(finished()), this, SLOT(disconnectedSlot()));  break;
     case LoginService::Command::REFRESH_ROOMS_LIST: QObject::connect(reply, SIGNAL(finished()), this, SLOT(roomsListReceivedSlot())); break;
     default:
         break;
@@ -219,11 +234,9 @@ void LoginService::connectedSlot(){
     connected = true;
 }
 
-void LoginService::disconnectedSlot(){
-    this->connected = false;
-    emit disconnectedFromServer();
-    qDebug() << "disconnected from login server!";
-}
+
+
+
 
 void LoginService::roomsListReceivedSlot(){
     QString json = QString( pendingReply->readAll());
