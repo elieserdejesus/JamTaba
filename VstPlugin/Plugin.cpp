@@ -23,7 +23,7 @@ JamtabaPlugin::JamtabaPlugin (audioMasterCallback audioMaster) :
     controller(nullptr),
     running(false),
     inputBuffer( DEFAULT_INPUTS*2),
-    outputBuffer(DEFAULT_INPUTS*2)
+    outputBuffer(DEFAULT_OUTPUTS*2)
 {
     qCDebug(pluginVst) << "Plugin constructor...";
     setNumInputs (DEFAULT_INPUTS*2);
@@ -148,7 +148,7 @@ bool JamtabaPlugin::getVendorString (char* text)
 {
     if(!text)
         return false;
-    vst_strncpy (text, "Elieser de Jesus", kVstMaxVendorStrLen);
+    vst_strncpy (text, "", kVstMaxVendorStrLen);
     return true;
 }
 
@@ -206,25 +206,29 @@ VstInt32 JamtabaPlugin::canDo(char* text)
 
 void JamtabaPlugin::processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames)
 {
-//    if(!controller){
-//        return;
-//    }
-//    inputBuffer.setFrameLenght(sampleFrames);
-//    for (int c = 0; c < inputBuffer.getChannels(); ++c) {
+    if(!controller){
+        return;
+    }
+    inputBuffer.setFrameLenght(sampleFrames);
+    for (int c = 0; c < inputBuffer.getChannels(); ++c) {
 //        for (int s = 0; s < sampleFrames ; ++s) {
 //            inputBuffer.set(c, s, inputs[c][s]);
 //        }
-//    }
+        memcpy(inputBuffer.getSamplesArray(c), inputs[c], sizeof(float) * sampleFrames);
+    }
 
-//    outputBuffer.setFrameLenght(sampleFrames);
-
-//    controller->process(inputBuffer, outputBuffer, this->sampleRate);
-
-//    for (int c = 0; c < outputBuffer.getChannels(); ++c) {
-//        for (int s = 0; s < sampleFrames; ++s) {
-//            outputs[c][s] = outputBuffer.get(c, s);
+    outputBuffer.setFrameLenght(sampleFrames);
+    outputBuffer.zero();
+    controller->process(inputBuffer, outputBuffer, this->sampleRate);
+//    for (int s = 0; s < sampleFrames; ++s) {
+//        for (int c = 0; c < outputBuffer.getChannels(); ++c) {
+//            outputs[c][s] = outputBuffer.get(c,s);// sample;
 //        }
 //    }
+    int channels = outputBuffer.getChannels();
+    for (int c = 0; c < channels ; ++c) {
+        memcpy(outputs[c], outputBuffer.getSamplesArray(c), sizeof(float) * sampleFrames);
+    }
 
 }
 

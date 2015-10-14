@@ -208,9 +208,10 @@ Vst::PluginFinder* StandaloneMainController::createPluginFinder(){
 
 Midi::MidiDriver* StandaloneMainController::createMidiDriver(){
     return new Midi::PortMidiDriver(settings.getMidiInputDevicesStatus());
+    //return new Midi::NullMidiDriver();
 }
 
-Audio::AudioDriver* StandaloneMainController::buildAudioDriver(const Persistence::Settings &settings){
+Audio::AudioDriver* StandaloneMainController::createAudioDriver(const Persistence::Settings &settings){
 #ifdef Q_OS_WIN
     return new Audio::PortAudioDriver(
                 this, //the AudioDriverListener instance

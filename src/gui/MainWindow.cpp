@@ -664,26 +664,21 @@ void MainWindow::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
 //estes eventos são disparados pelo controlador depois que já aconteceu a conexão com uma das salas
 
 void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
-
+    qWarning() << "hidding busy dialog...";
     hideBusyDialog();
 
 //    if(ninjamWindow){
 //        ninjamWindow->deleteLater();
 //    }
+    qWarning() << "creating NinjamRoomWindow...";
     ninjamWindow = new NinjamRoomWindow(ui.tabWidget, roomInfo, mainController);
     QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
     int index = ui.tabWidget->addTab(ninjamWindow, tabName);
     ui.tabWidget->setCurrentIndex(index);
 
-    //add metronome track view
-//    float metronomeInitialGain = mainController->getSettings().getMetronomeGain();
-//    float metronomeInitialPan = mainController->getSettings().getMetronomePan();
-//    bool metronomeInitialMuteStatus = mainController->getSettings().getMetronomeMuteStatus();
-//    metronomeTrackView = new MetronomeTrackView(mainController, NinjamController::METRONOME_TRACK_ID, metronomeInitialGain, metronomeInitialPan, metronomeInitialMuteStatus );
-
-    //ui.localTracksLayout->addWidget(metronomeTrackView);
 
     //add the chat panel in main window
+    qWarning() << "adding ninjam chat panel...";
     ChatPanel* chatPanel = ninjamWindow->getChatPanel();
     ui.chatTabWidget->addTab(chatPanel, QIcon(":/images/ninja.png"), "chat " + roomInfo.getName());
 
@@ -692,6 +687,7 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
 
     ui.leftPanel->adjustSize();
     //ui.leftPanel->setMinimumWidth(500);
+    qWarning() << "MainWindow::enterInRoom() done!";
 }
 
 void MainWindow::exitFromRoom(bool normalDisconnection){

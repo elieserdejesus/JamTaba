@@ -8,12 +8,24 @@ SUBDIRS = VstPlugin
 CONFIG += ordered
 
 #enable logging in release
-#QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
-#QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
+QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
+QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
 
+#com o transmit ligado fica tudo muito lento. Quando eu armo para gravação fica
+    #realmente muito lento. Coloquei o JT no master e ficou bem lento.
+        #Estou desconfiado dos locks na thread do encoder.
 
+#tradução não funcou
 
-#Continuar trabalhando no process do MainControllerVST
+#tecla enter não funcionou no chat, não consegui enviar mensagem
+
+#erro quando sai da sala.
+
+#acho que quando desconecta do server ninjam dá pau.
+
+#melhorar o duplo clique do Dial.
+
+#otimizar o processamento de áudio do plugin
 
 #standalone não está fechando - Quando fecho o plugin no minihost aparece algo sobre WaitCondition.
 
