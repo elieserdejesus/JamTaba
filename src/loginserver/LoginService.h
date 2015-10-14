@@ -83,7 +83,7 @@ public:
 
 signals:
     void roomsListAvailable(QList<Login::RoomInfo> publicRooms);
-    void disconnectedFromServer();
+    //void disconnectedFromServer();
     void incompatibilityWithServerDetected();
     void newVersionAvailableForDownload();
     void errorWhenConnectingToServer(QString error);
@@ -95,7 +95,7 @@ private:
 
     QNetworkAccessManager httpClient;
     QNetworkReply* pendingReply;
-    QNetworkReply* sendCommandToServer(const QUrlQuery&);
+    QNetworkReply* sendCommandToServer(const QUrlQuery&, bool synchronous=false);
     static const QString SERVER;
     bool connected;
     void handleJson(QString json);
@@ -107,7 +107,7 @@ private:
 
 private slots:
     void connectedSlot();
-    void disconnectedSlot();
+    //void disconnectedSlot();
     void roomsListReceivedSlot();
 
     void errorSlot(QNetworkReply::NetworkError error);

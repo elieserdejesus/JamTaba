@@ -16,9 +16,8 @@ JamtabaVstEditor::JamtabaVstEditor(JamtabaPlugin *jamtaba)
 
 JamtabaVstEditor::~JamtabaVstEditor()
 {
-    qWarning() << "JamtabaVstEditor destructor";
+    qWarning() << "JamtabaVstEditor destructor...";
     if(mainWindow){
-        qWarning() << "deleting main window";
         delete mainWindow;
         mainWindow = nullptr;
     }
@@ -27,7 +26,7 @@ JamtabaVstEditor::~JamtabaVstEditor()
 
 void JamtabaVstEditor::detachMainController(){
     if(mainWindow){
-        mainWindow->detachMainController();
+        //mainWindow->detachMainController();
     }
 }
 
@@ -98,8 +97,8 @@ bool JamtabaVstEditor::open(void* ptr){
     return true;
  }
 
+
 void JamtabaVstEditor::close(){
-    qWarning() << "JamtabaVstEditor::close()";
     if(mainWindow){
         mainWindow->setParent(nullptr);
     }
@@ -107,6 +106,7 @@ void JamtabaVstEditor::close(){
         delete widget;
         widget = nullptr;
     }
+    AEffEditor::close();
 }
 
 //+++++++++++++
@@ -208,7 +208,8 @@ bool JamtabaPlugin::needIdle(){
 
 JamtabaPlugin::~JamtabaPlugin ()
 {
-
+    qWarning() << "JamtabaPLugin destructor";
+    qWarning() << "JamtabaPLugin destructor finished";
 }
 
 void JamtabaPlugin::initialize(){
@@ -252,19 +253,22 @@ void JamtabaPlugin::close()
 {
     qWarning() << "JamtabaPlugin::close()";
     if(editor){
-        qWarning() << "JamtabaPlugin::close() deleting editor";
+        if(editor->isOpen()){
+            editor->close();
+        }
+        //qWarning() << "JamtabaPlugin::close() deleting editor";
         AEffEditor* theEditor = editor;
         setEditor(nullptr);
         delete theEditor;
-        qWarning() << "JamtabaPlugin::close() editor deleted!";
+        //qWarning() << "JamtabaPlugin::close() editor deleted!";
     }
     if(controller){
-        qWarning() << "JamtabaPlugin::close() deleting controller!";
         delete controller;
         controller = nullptr;
-        qWarning() << "JamtabaPlugin::close() controller deleted!";
     }
     running = false;
+    qWarning() << "JamtabaPLugin::close() finished";
+    AudioEffectX::close();
 }
 
 VstInt32 JamtabaPlugin::getNumMidiInputChannels()

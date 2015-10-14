@@ -36,17 +36,14 @@ public:
     bool open(void* ptr);
     void close();
     void detachMainController();
+
 };
 
 
 //-------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------
 class MainControllerVST;
-class JamtabaPlugin :  public AudioEffectX
-{
-//    Q_OBJECT
+class JamtabaPlugin :  public AudioEffectX{
 public:
-
         JamtabaPlugin (audioMasterCallback audioMaster);
         ~JamtabaPlugin ();
 
@@ -77,7 +74,7 @@ public:
         void setBlockSize (VstInt32 blockSize);
         void suspend();
         void resume();
-        VstPlugCategory getPlugCategory() {return kPlugCategEffect;}
+        inline VstPlugCategory getPlugCategory() {return kPlugCategEffect;}
 
         void updateParameter(int index, float value);
 

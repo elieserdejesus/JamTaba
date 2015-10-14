@@ -78,7 +78,7 @@ protected:
     MainController* mainController;
 public slots:
     //Login server
-    virtual void on_disconnectedFromLoginServer();
+    //virtual void on_disconnectedFromLoginServer();
 
     //ninjam
     virtual void on_connectedInNinjamServer(Ninjam::Server server);
