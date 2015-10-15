@@ -420,6 +420,9 @@ void MainWindow::initializeLocalInputChannels(){
             else{//VST plugin always use stereo audio input
                 mainController->setInputTrackToStereo(subChannelView->getInputIndex(), 0 + (channelIndex * 2));
             }
+            if(mainController->isRunningAsVstPlugin()){
+                break;//avoid hacking in config file to create more subchannels in VST plugin.
+            }
         }
         channelIndex++;
     }
