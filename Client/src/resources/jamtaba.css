@@ -3,6 +3,11 @@
     font-size: 11px;
 }
 
+/* Remove the focus rect. The annoying focus appears only in VSt plugin*/
+QPushButton:focus {
+    outline: none;
+}
+
 #voteButton{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
     stop:0 rgba(255,255,255, 240),
