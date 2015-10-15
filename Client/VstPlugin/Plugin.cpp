@@ -211,20 +211,13 @@ void JamtabaPlugin::processReplacing (float** inputs, float** outputs, VstInt32 
     }
     inputBuffer.setFrameLenght(sampleFrames);
     for (int c = 0; c < inputBuffer.getChannels(); ++c) {
-//        for (int s = 0; s < sampleFrames ; ++s) {
-//            inputBuffer.set(c, s, inputs[c][s]);
-//        }
         memcpy(inputBuffer.getSamplesArray(c), inputs[c], sizeof(float) * sampleFrames);
     }
 
     outputBuffer.setFrameLenght(sampleFrames);
     outputBuffer.zero();
     controller->process(inputBuffer, outputBuffer, this->sampleRate);
-//    for (int s = 0; s < sampleFrames; ++s) {
-//        for (int c = 0; c < outputBuffer.getChannels(); ++c) {
-//            outputs[c][s] = outputBuffer.get(c,s);// sample;
-//        }
-//    }
+
     int channels = outputBuffer.getChannels();
     for (int c = 0; c < channels ; ++c) {
         memcpy(outputs[c], outputBuffer.getSamplesArray(c), sizeof(float) * sampleFrames);

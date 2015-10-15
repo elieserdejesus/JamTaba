@@ -4,7 +4,7 @@
 #define uniqueIDEffect CCONST('V','b','P','l')
 #define uniqueIDInstrument CCONST('V','b','I','s')
 #define VST_EVENT_BUFFER_SIZE 1000
-#define DEFAULT_INPUTS 1
+#define DEFAULT_INPUTS 2
 #define DEFAULT_OUTPUTS 1
 
 #include "audioeffectx.h"

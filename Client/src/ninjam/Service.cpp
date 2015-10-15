@@ -183,6 +183,7 @@ QStringList Service::buildBotNamesList(){
     names.append("ninbot");
     names.append("ninbot.com");
     names.append("MUTANTLAB");
+    names.append("mutantlab.com");
     names.append("LiveStream");
     names.append("localhost");
     return names;
@@ -355,6 +356,7 @@ void Service::startServerConnection(QString serverIp, int serverPort, QString us
 
 void Service::disconnectFromServer(){
     qCDebug(ninjamService) << "disconnecting from " << socket.peerName();
+    socket.blockSignals(true); //avoid generate events when disconnecting/exiting
     socket.disconnectFromHost();
 }
 
