@@ -12,18 +12,19 @@ QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
 QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
 
 
-
-#entradas não funcionam. Como vou fazer as entradas?
-    #entradas realmente precisam de VUs?
-        #Talvez tirar o fader já resolva
-
-#plot do preview indo longe demais, preciso de um spacer
-
 #existe uma propriedade chamada show focus rect. Desabilitei ela na classe
     #ChatPanel para resolver a boda do foco no Mac. Talvez esse seja o
     #problema com os retangulos que estão aparecendo em alguns componentes.
 
 #tecla enter não funcionou no chat, não consegui enviar mensagem
+
+
+#entradas não funcionam. Como vou fazer as entradas?
+    #entradas realmente precisam de VUs?
+        #Talvez tirar o fader já resolva
+
+
+
 
 #ver a questão das multiplas instancias do plugin
 
