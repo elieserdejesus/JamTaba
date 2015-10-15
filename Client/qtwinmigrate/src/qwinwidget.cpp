@@ -167,12 +167,12 @@ void QWinWidget::childEvent(QChildEvent *e)
     QObject *obj = e->child();
     if (obj->isWidgetType()) {
         if (e->added()) {
-	    if (obj->isWidgetType()) {
-	        obj->installEventFilter(this);
-	    }
+            if (obj->isWidgetType()) {
+                obj->installEventFilter(this);
+            }
         } else if (e->removed() && reenable_parent) {
-	    reenable_parent = false;
-	    EnableWindow(hParent, true);
+            reenable_parent = false;
+            EnableWindow(hParent, true);
             obj->removeEventFilter(this);
         }
     }
