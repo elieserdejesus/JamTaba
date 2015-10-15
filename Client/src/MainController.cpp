@@ -644,6 +644,9 @@ void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::Sampl
 
 void MainController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
     QMutexLocker locker(&mutex);
+    if(!started){
+        return;
+    }
 
     //checkThread("process();");
     if(!isPlayingInNinjamRoom()){
@@ -873,12 +876,9 @@ void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStrin
 
 
 
-void MainController::start()
-{
+void MainController::start(){
 
     if(!started){
-        started = true;
-
         signalsHandler = createSignalsHandler();//factory method
 
         pluginFinder = createPluginFinder();
@@ -921,6 +921,7 @@ void MainController::start()
         //(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
 
         qCWarning(controllerMain) << "Starting " + userEnvironment;
+        started = true;
     }
 }
 

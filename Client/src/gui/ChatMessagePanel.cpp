@@ -6,7 +6,6 @@
 #include <QNetworkRequest>
 #include <QMetaMethod>
 
-
 ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ChatMessagePanel)
@@ -81,11 +80,14 @@ void ChatMessagePanel::on_translateButton_clicked(){
             QLocale userLocale;
             QString targetLanguage =  userLocale.bcp47Name().left(2);
             QString encodedText(QUrl::toPercentEncoding(originalText));
-            QString url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl="+ targetLanguage +"&dt=t&q=" + encodedText;
+            QString url = "http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl="+ targetLanguage +"&dt=t&q=" + encodedText;
             QNetworkRequest req;//(QUrl(url));
             req.setUrl(QUrl(url));
             req.setOriginatingObject(this);
-            httpClient->get(req);
+            req.setRawHeader( "User-Agent" , "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36" );
+            qDebug() << url;
+            QNetworkReply* reply = httpClient->get(req);
+            QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(on_networkReplyError(QNetworkReply::NetworkError)));
 
             QObject::connect(httpClient, SIGNAL(finished(QNetworkReply*)), this, SLOT(on_networkReplyFinished(QNetworkReply*)));
         }
@@ -98,17 +100,21 @@ void ChatMessagePanel::on_translateButton_clicked(){
     }
 }
 
+void ChatMessagePanel::on_networkReplyError(QNetworkReply::NetworkError ){
+    QString errorString = ((QNetworkReply*) QObject::sender())->errorString();
+    qCritical() << "Translation error:" << errorString;
+}
+
 void ChatMessagePanel::on_networkReplyFinished(QNetworkReply *reply){
     QString data(reply->readAll());
     ChatMessagePanel* messagePanel = static_cast<ChatMessagePanel*>( reply->request().originatingObject());
-    //qWarning() << data;
-
     int startSlash = data.indexOf(QRegExp("\""));
     int endSlash = data.indexOf(QRegExp("\""), startSlash + 1 ) ;
-    //qWarning() << "start: " << startSlash;
-    //qWarning() << "end:" <<endSlash;
-
-    messagePanel->setTranslatedMessage(data.mid(startSlash+1, endSlash - startSlash - 1));
+    QString translated = data.mid(startSlash+1, endSlash - startSlash - 1);
+    if(translated.isEmpty()){
+        translated = "translation error!";
+    }
+    messagePanel->setTranslatedMessage(translated);
 
     reply->manager()->deleteLater();
     reply->deleteLater();
