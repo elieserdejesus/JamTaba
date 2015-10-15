@@ -15,13 +15,6 @@ TEMPLATE = lib
 DEFINES += VST_FORCE_DEPRECATED=0
 CONFIG += shared
 
-win32 {
-    #LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32  \
-    LIBS += -lQt5PlatformSupport #link windows platform statically
-    LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindows #link windows platform statically
-    #LIBS += -limm32
-}
-
 win32-msvc* {
     DEFINES += _CRT_SECURE_NO_WARNINGS
     #RC_FILE = vstdll.rc
@@ -87,6 +80,16 @@ win32 {
         message("x86_64 build") ## Windows x64 (64bit) specific build here
         LIBS_PATH = "win64-msvc"
     }
+
+    #+++++++++++++ link windows platform statically +++++++++++++++++++++++++++++++++++
+    #relese platform libs
+    CONFIG(release, debug|release): LIBS += -lQt5PlatformSupport
+    CONFIG(release, debug|release): LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindows #link windows platform statically
+
+    #debug platform libs
+    CONFIG(debug, debug|release): LIBS += -lQt5PlatformSupportd #link windows platform statically
+    CONFIG(debug, debug|release): LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindowsd #link windows platform statically
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lminimp3 -lvorbisfile -lvorbis -logg
     else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lminimp3d -lvorbisfiled -lvorbisd -loggd

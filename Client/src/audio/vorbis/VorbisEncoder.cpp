@@ -49,11 +49,11 @@ void VorbisEncoder::clearState(){
 
 VorbisEncoder::~VorbisEncoder() {
     qCDebug(vorbisEncoder) << "ENCODER DESTRUCTOR! Thread:" <<  QThread::currentThreadId();
-    clearState();
-
+    if(initialized){
+        clearState();
+    }
     vorbis_comment_clear(&comment);
     vorbis_info_clear(&info);
-
 }
 //++++++++++++++++++++++++++++++++++++++++++
 void VorbisEncoder::encodeFirstVorbisHeaders(){

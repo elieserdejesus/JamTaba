@@ -475,7 +475,10 @@ int MainController::addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode
         trackGroups[trackGroupIndex]->addInput(inputTrackNode);
     }
 
-    //updateInputTracksRange();
+    if(isRunningAsVstPlugin()){//VST plugins always use audio as input
+        inputTrackNode->setAudioInputSelection(0, 2);
+    }
+
     return inputTrackID;
 }
 

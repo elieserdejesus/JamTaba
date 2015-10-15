@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 
-SUBDIRS = VstPlugin
+SUBDIRS = Standalone #VstPlugin
 #Standalone
 #PluginTester
 #ThemeEditor
@@ -17,6 +17,10 @@ QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
 
 #tradução não funcou
 
+#entradas não funcionam. Como vou fazer as entradas?
+    #entradas realmente precisam de VUs?
+        #Talvez tirar o fader já resolva
+
 #tecla enter não funcionou no chat, não consegui enviar mensagem
 
 #erro quando sai da sala.
@@ -25,11 +29,10 @@ QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
 
 #melhorar o duplo clique do Dial.
 
-#otimizar o processamento de áudio do plugin
-
 #standalone não está fechando - Quando fecho o plugin no minihost aparece algo sobre WaitCondition.
 
-#arquivo de log vai crescer muito, estou sempre fazendo append. Tenho que mudar isso.
+#arakula: does your host calls the PlugIn dispatcher with effIdle (if the PlugIn wants this) and effEditIdle from time to time?
+    #Parece que isso resolveu um bug em um host de um membro do KVr.
 
 #Drumazon deu problema no mac. Talvez também esteja dando problema no windows. O Torben atualizou o plugin
     #e foi dando problema em outros plugins da mesma empresa.

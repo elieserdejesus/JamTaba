@@ -1,0 +1,1655 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{079e8ff8-63f5-4b27-8705-596d610eb229}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{7579d6ae-7917-400b-bdc7-8c0bf17cbfe8}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\audio\core\AudioDriver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\core\AudioMixer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\core\AudioNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\core\AudioPeak.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\BaseTrackView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\BusyDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\ChatMessagePanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\ChatPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ninjam\protocol\ClientMessages.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\FancyProgressDisplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\FxPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\FxPanelItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\Highligther.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\IntervalProgressDisplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\geo\IpToLocationResolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\recorder\JamRecorder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\loginserver\JsonUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\LocalTrackGroupView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\LocalTrackView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\loginserver\LoginService.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MainController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainControllerVST.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\MainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\MetronomeTrackNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\midi\MidiDriver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\NinjamController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\NinjamPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\NinjamRoomWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\NinjamTrackNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\NinjamTrackView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\widgets\PeakMeter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\vst\PluginFinder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\PreferencesDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\PrivateServerDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\recorder\ReaperProjectGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\Resampler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\RoomStreamerNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\core\SamplesBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\SamplesBufferResampler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ninjam\Server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ninjam\protocol\ServerMessageParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ninjam\protocol\ServerMessages.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ninjam\Service.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\persistence\Settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\TrackGroupView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ninjam\User.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ninjam\UserChannel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\UserNameDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\vorbis\VorbisDecoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\vorbis\VorbisEncoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VstMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\widgets\WavePeakPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\geo\WebIpToLocationResolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="audioeffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="audioeffectx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\codec.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\plugins\guis.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\jamroomviewpanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\log\logHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\core\plugins.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gui\pluginscandialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\qtwinmigrate\src\qmfcapp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\qtwinmigrate\src\qwinhost.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\qtwinmigrate\src\qwinwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio\samplesbufferrecorder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_AudioDriver.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_AudioDriver.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_BaseTrackView.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_BaseTrackView.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_BusyDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_BusyDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_ChatMessagePanel.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_ChatMessagePanel.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_ChatPanel.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_ChatPanel.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_FxPanel.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_FxPanel.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_FxPanelItem.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_FxPanelItem.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_Highligther.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_Highligther.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_IntervalProgressDisplay.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_IntervalProgressDisplay.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_LocalTrackGroupView.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_LocalTrackGroupView.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_LocalTrackView.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_LocalTrackView.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_LoginService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_LoginService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_MainController.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_MainController.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_MainWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_MainWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_NinjamController.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_NinjamController.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_NinjamPanel.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_NinjamPanel.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_NinjamRoomWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_NinjamRoomWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_NinjamTrackView.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_NinjamTrackView.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_PeakMeter.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_PeakMeter.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_PluginFinder.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_PluginFinder.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_PreferencesDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_PreferencesDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_PrivateServerDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_PrivateServerDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_RoomStreamerNode.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_RoomStreamerNode.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_Service.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_Service.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_TrackGroupView.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_TrackGroupView.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_UserNameDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_UserNameDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_WebIpToLocationResolver.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_WebIpToLocationResolver.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_guis.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_guis.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_jamroomviewpanel.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_jamroomviewpanel.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_plugins.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_plugins.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_pluginscandialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_pluginscandialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_qwinhost.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_qwinhost.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_qwinwidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_qwinwidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_jamtaba.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\audio\core\AudioDriver.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="..\src\audio\core\AudioMixer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\audio\core\AudioNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\audio\core\AudioPeak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="..\src\gui\BaseTrackView.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\BusyDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\ChatMessagePanel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\ChatPanel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="..\src\ninjam\protocol\ClientMessages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\FancyProgressDisplay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="..\src\gui\FxPanel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\FxPanelItem.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\Highligther.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\IntervalProgressDisplay.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="..\src\geo\IpToLocationResolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\recorder\JamRecorder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\loginserver\JsonUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="..\src\gui\LocalTrackGroupView.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\LocalTrackView.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\loginserver\LoginService.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\MainController.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="MainControllerVST.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="..\src\gui\MainWindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="..\src\audio\MetronomeTrackNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\midi\MidiDriver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="..\src\NinjamController.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\NinjamPanel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\NinjamRoomWindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="..\src\audio\NinjamTrackNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="..\src\gui\NinjamTrackView.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\widgets\PeakMeter.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="Plugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="..\src\audio\vst\PluginFinder.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\PreferencesDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\PrivateServerDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="..\src\recorder\ReaperProjectGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\audio\Resampler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="..\src\audio\RoomStreamerNode.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="..\src\audio\core\SamplesBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\audio\SamplesBufferResampler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ninjam\Server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ninjam\protocol\ServerMessageParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ninjam\protocol\ServerMessages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="..\src\ninjam\Service.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="..\src\persistence\Settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="..\src\gui\TrackGroupView.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="..\src\ninjam\User.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ninjam\UserChannel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="..\src\gui\UserNameDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="..\src\Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\audio\vorbis\VorbisDecoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\audio\vorbis\VorbisEncoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gui\widgets\WavePeakPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="..\src\geo\WebIpToLocationResolver.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="..\src\audio\codec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="..\src\gui\plugins\guis.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\jamroomviewpanel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="..\src\log\logHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\loginserver\natmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="..\src\audio\core\plugins.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\pluginscandialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="..\qtwinmigrate\src\qmfcapp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <CustomBuild Include="..\qtwinmigrate\src\qwinhost.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\qtwinmigrate\src\qwinwidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <ClInclude Include="..\src\audio\samplesbufferrecorder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\src\gui\BaseTrackView.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\BusyDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\ChatMessagePanel.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\ChatPanel.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\MainWindow.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\NinjamPanel.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\NinjamRoomWindow.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\PreferencesDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\PrivateServerDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\TrackGroupView.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\UserNameDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\jamroomviewpanel.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\src\gui\pluginscandialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\resources\flags\Thumbs.db">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ad.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ae.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\af.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ag.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ai.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\al.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\am.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\an.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ao.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ar.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\arrow-down-lighter.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\arrow-down.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="arrow">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\as.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\at.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\au.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\aw.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ax.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\az.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ba.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\bb.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\bd.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\be.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\bf.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\bg.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\bh.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\bi.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\bj.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\bm.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\bn.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\bo.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\br.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\broom.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\bs.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\bt.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\bv.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\bw.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\by.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\bz.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ca.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\catalonia.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\cc.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\cd.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\cf.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\cg.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ch.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\chat.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\check.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\check_checked.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\check_hover.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ci.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ck.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\cl.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\click.wav">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\cm.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\cn.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\co.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\cr.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\cs.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\cu.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\cv.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\cx.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\cy.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\cz.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\de.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\dj.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\dk.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\dm.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\do.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\dz.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ec.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ee.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\eg.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\eh.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\england.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\er.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\es.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\et.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\europeanunion.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\fader_shadow.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\fader_shadow_horizontal.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\fader_shadow_horizontal_hover.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\fader_shadow_horizontal_unlighted.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\fader_shadow_hover.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\fader_shadow_unlighted.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\fam.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\fi.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\fj.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\fk.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\fm.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\fo.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\fr.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ga.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gb.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gd.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ge.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\gear-hover.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\gear.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gf.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gh.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gi.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gl.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gm.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gn.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gp.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gq.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gr.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\gradient.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gs.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gt.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gu.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gw.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\gy.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\hk.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\hm.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\hn.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="hover.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\hr.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ht.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\hu.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\id.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ie.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\il.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\in.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\input_midi.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\input_mono.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\input_no.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\input_stereo.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\io.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\iq.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ir.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\is.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\it.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\jamtaba.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <CustomBuild Include="..\src\resources\jamtaba.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <None Include="..\src\resources\jamtaba_orange.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\jm.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\jo.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\jp.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ke.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\kg.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\kh.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ki.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\km.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\kn.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\kp.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\kr.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\kw.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ky.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\kz.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\la.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\lb.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\lc.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="left.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="left">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\less.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\li.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\licence.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\lk.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\loading.gif">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\lr.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ls.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\lt.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\lu.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\lv.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ly.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ma.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="maginifier.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mc.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\md.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\me.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\metronome.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mg.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mh.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\mini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mk.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ml.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mm.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mn.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mo.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\more.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mp.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mq.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mr.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ms.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mt.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mu.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mv.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mw.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mx.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\my.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\mz.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\na.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\nc.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ne.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\nf.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ng.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ni.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\ninja.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\nl.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\no.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\np.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\nr.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\nu.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\nz.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\off.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="off.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\om.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\on.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="on.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\pa.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\pe.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\pf.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\pg.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ph.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\pk.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\pl.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\pm.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\pn.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\pr.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ps.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\pt.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\pw.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\py.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\qa.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\qtlogging.ini">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\re.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\rec">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="right.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="right">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ro.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\rs.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ru.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\rw.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\sa.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\sb.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\sc.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\scotland.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\sd.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\se.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\sg.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\sh.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\si.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\sj.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\sk.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\sl.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\sm.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\sn.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\so.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\sr.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\st.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\sv.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\sy.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\sz.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\tc.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\td.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\tf.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\tg.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\th.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\tj.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\tk.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\tl.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\tm.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\tn.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\to.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\tr.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\translate.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\tt.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\tv.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\tw.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\tz.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ua.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ug.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\um.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\unknown.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\us.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\uy.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\uz.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\va.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\vc.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ve.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\vg.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\vi.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\vn.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\vu.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\wales.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\wf.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ws.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\ye.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\yt.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\za.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\zm.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\src\resources\flags\zw.png">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="E:\Jamtaba2\jamtaba2\Client\VstPlugin\JamtabaVST_resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GeneratedFiles\ui_BaseTrackView.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_BusyDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_ChatMessagePanel.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_ChatPanel.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_MainWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_NinjamPanel.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_NinjamRoomWindow.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_PreferencesDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_PrivateServerDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_TrackGroupView.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_UserNameDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_jamroomviewpanel.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_pluginscandialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\src\resources\mini arrow left.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\src\resources\mini arrow right.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\src\resources\mini arrow left hover.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\src\resources\mini arrow right hover.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\src\resources\rec maginifier.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\src\resources\rec off.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\src\resources\rec on.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
