@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 
-SUBDIRS = Standalone #VstPlugin
+SUBDIRS = Standalone VstPlugin
 #Standalone
 #PluginTester
 #ThemeEditor

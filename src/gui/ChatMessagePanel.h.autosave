@@ -5,7 +5,6 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
-class QNetworkReply;
 
 namespace Ui {
 class ChatMessagePanel;

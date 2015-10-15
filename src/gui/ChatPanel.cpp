@@ -41,6 +41,7 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
 //        }
 //    }
 
+    addMessage("tester", "hi");
 
     //QString teste("Ã©");
     //addMessage("elieser", QString::fromUtf8(teste.toStdString().c_str()));
