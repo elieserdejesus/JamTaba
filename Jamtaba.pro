@@ -11,21 +11,24 @@ CONFIG += ordered
 QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
 QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
 
-#com o transmit ligado fica tudo muito lento. Quando eu armo para gravação fica
-    #realmente muito lento. Coloquei o JT no master e ficou bem lento.
-        #Estou desconfiado dos locks na thread do encoder.
 
-#tradução não funcou
 
 #entradas não funcionam. Como vou fazer as entradas?
     #entradas realmente precisam de VUs?
         #Talvez tirar o fader já resolva
 
+#plot do preview indo longe demais, preciso de um spacer
+
+#existe uma propriedade chamada show focus rect. Desabilitei ela na classe
+    #ChatPanel para resolver a boda do foco no Mac. Talvez esse seja o
+    #problema com os retangulos que estão aparecendo em alguns componentes.
+
 #tecla enter não funcionou no chat, não consegui enviar mensagem
 
-#erro quando sai da sala.
+#ver a questão das multiplas instancias do plugin
 
-#acho que quando desconecta do server ninjam dá pau.
+#acho que quando desconecta do server ninjam dá pau. Vi que também dá
+    #problema no standalone.
 
 #melhorar o duplo clique do Dial.
 
