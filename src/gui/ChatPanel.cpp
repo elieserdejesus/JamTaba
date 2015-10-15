@@ -5,6 +5,8 @@
 #include <QWidget>
 #include <QScrollBar>
 #include <QDebug>
+#include <QKeyEvent>
+#include <QWidget>
 
 const QColor ChatPanel::BOT_COLOR(120, 120, 120);
 
@@ -19,7 +21,10 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
     ui->scrollContent->setLayout(new QVBoxLayout(ui->scrollContent));
     ui->scrollContent->layout()->setContentsMargins(0, 0, 0, 0);
 
+    //QObject::connect(ui->chatText, SIGNAL())
     QObject::connect(ui->chatText, SIGNAL(returnPressed()), this, SLOT(on_chatTextEditionFinished()));
+    //QObject::connect(ui->chatText, SIGNAL())
+    ui->chatText->installEventFilter(this);
 
     //this event is used to auto scroll down when new messages are added
     QObject::connect(ui->chatScroll->verticalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(on_verticalScrollBarRangeChanged(int,int)));
@@ -67,6 +72,15 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
 //void ChatPanel::on_buttonVoteBpm_clicked(){
 
 //}
+
+bool ChatPanel::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == ui->chatText && event->type() == QEvent::MouseButtonPress)
+    {
+        ui->chatText->setFocus();
+    }
+    return QWidget::eventFilter(obj, event);
+}
 
 class VoteButton : public QPushButton{
 public:

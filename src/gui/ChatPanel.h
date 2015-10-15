@@ -30,8 +30,10 @@ private slots:
     void on_buttonClear_clicked();
 
     void on_voteButtonClicked();
-
+protected:
+    bool eventFilter(QObject *obj, QEvent *event);
 private:
+
     Ui::ChatPanel *ui;
     QColor getUserColor(QString userName);
     QStringList botNames;

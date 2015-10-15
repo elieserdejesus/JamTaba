@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 
-SUBDIRS = Standalone VstPlugin
+SUBDIRS = VstPlugin
 #Standalone
 #PluginTester
 #ThemeEditor
@@ -12,12 +12,7 @@ QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
 QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
 
 
-#existe uma propriedade chamada show focus rect. Desabilitei ela na classe
-    #ChatPanel para resolver a boda do foco no Mac. Talvez esse seja o
-    #problema com os retangulos que estão aparecendo em alguns componentes.
-
-#tecla enter não funcionou no chat, não consegui enviar mensagem
-
+#quando fecho a aplicação debugando o Reaper dá um erro no método hide de QWidget.
 
 #entradas não funcionam. Como vou fazer as entradas?
     #entradas realmente precisam de VUs?

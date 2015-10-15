@@ -3,6 +3,31 @@
 #include "Plugin.h"
 #include <Windows.h>
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++
+/***
+ * This class is used to allow ARROWS and RETURN key in vst plugin. Using
+ *  QWinWidget directly the ARROW and RETURN keys don't work. The REturn/ENTER
+ *  key are very important in chat, so this workaround is necessary.
+ */
+class CustomWinWidget : public QWinWidget{
+public:
+    CustomWinWidget(HWND parent)
+        :QWinWidget(parent){
+   }
+protected:
+    //trap the native message and say to Windows: Hey, I want all key pressing, including Arrows and RETURN!
+    bool nativeEvent(const QByteArray &eventType, void *message, long *result){
+        MSG *msg = (MSG *)message;
+        if(msg->message == WM_GETDLGCODE){
+           *result = DLGC_WANTALLKEYS;
+           return true;
+        }
+        return QWinWidget::nativeEvent(eventType, message, result);
+    }
+
+};
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++
 VstEditor::VstEditor(JamtabaPlugin *jamtaba)
     :widget(NULL), jamtaba(jamtaba), mainWindow(nullptr)
 {
@@ -51,7 +76,7 @@ bool VstEditor::open(void* ptr){
     }
 
     AEffEditor::open(ptr);
-    widget = new QWinWidget(static_cast<HWND>(ptr));
+    widget = new CustomWinWidget(static_cast<HWND>(ptr));
     widget->setAutoFillBackground(false);
     //widget->setObjectName("QWinWidget");
 
