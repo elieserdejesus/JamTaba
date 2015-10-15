@@ -2,13 +2,24 @@
 
 #include "../midi/MidiDriver.h"
 
+class AudioDriverVST : public Audio::NullAudioDriver{
+public:
+    AudioDriverVST()
+        :NullAudioDriver(){
+        globalInputRange = Audio::ChannelRange(0, 4);//4 inputs
+        globalOutputRange = Audio::ChannelRange(0,2);//2 outputs
+
+    }
+};
+
 MainControllerVST::MainControllerVST(Persistence::Settings settings)
     :MainController(settings){
+
     qDebug() << "Creating MainControllerVST instance!";
 }
 
 Audio::AudioDriver* MainControllerVST::createAudioDriver(const Persistence::Settings &){
-    return new Audio::NullAudioDriver();
+    return new AudioDriverVST();
 }
 
 Midi::MidiDriver* MainControllerVST::createMidiDriver(){

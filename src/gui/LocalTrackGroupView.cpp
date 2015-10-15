@@ -86,21 +86,24 @@ void LocalTrackGroupView::on_toolButtonClicked(){
 
     menu.addSeparator();
 
-    QAction* addSubchannelAction = menu.addAction(QIcon(":/images/more.png"), "Add subchannel");
-    QObject::connect(addSubchannelAction, SIGNAL(triggered()), this, SLOT(on_addSubChannelClicked()));
-    addSubchannelAction->setEnabled(trackViews.size() < MAX_SUB_CHANNELS);
-    if(trackViews.size() > 1 ){
-        //menu.addSeparator();
-        for (int i = 2; i <= trackViews.size(); ++i) {
-            QAction* action = menu.addAction(QIcon(":/images/less.png"), "Remove subchannel " + QString::number(i));
-            action->setData( i-1 );//use track view index as user data
-            QObject::connect(action, SIGNAL(triggered(bool)), this, SLOT(on_removeSubChannelClicked()));
-            QObject::connect(action, SIGNAL(hovered()), this, SLOT(on_removeSubchannelHovered()));
-            action->installEventFilter(this);
+    if(!mainFrame->isRunningAsVstPlugin()){//subchannels are disabled in VST Plugin
+        QAction* addSubchannelAction = menu.addAction(QIcon(":/images/more.png"), "Add subchannel");
+        QObject::connect(addSubchannelAction, SIGNAL(triggered()), this, SLOT(on_addSubChannelClicked()));
+        addSubchannelAction->setEnabled(trackViews.size() < MAX_SUB_CHANNELS);
+        if(trackViews.size() > 1 ){
+            //menu.addSeparator();
+            for (int i = 2; i <= trackViews.size(); ++i) {
+                QAction* action = menu.addAction(QIcon(":/images/less.png"), "Remove subchannel " + QString::number(i));
+                action->setData( i-1 );//use track view index as user data
+                QObject::connect(action, SIGNAL(triggered(bool)), this, SLOT(on_removeSubChannelClicked()));
+                QObject::connect(action, SIGNAL(hovered()), this, SLOT(on_removeSubchannelHovered()));
+                action->installEventFilter(this);
+            }
         }
+
+        //QObject::connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(on_RemoveSubChannelTriggered(QAction*)));
+        //QObject::connect(&menu, SIGNAL(hovered(QAction*)), this, SLOT(on_removeSubchannelHovered(QAction*)));
     }
-    //QObject::connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(on_RemoveSubChannelTriggered(QAction*)));
-    //QObject::connect(&menu, SIGNAL(hovered(QAction*)), this, SLOT(on_removeSubchannelHovered(QAction*)));
     menu.move( mapToGlobal( toolButton->pos() + QPoint(toolButton->width(), 0) ));
     menu.exec();
 }

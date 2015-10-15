@@ -293,7 +293,10 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
         localChannel->addTrackView( localTrackView );
 
         if(localChannels.size() > 1){
-            localTrackView->setToNoInput();
+            if(!mainController->isRunningAsVstPlugin()){
+                //in standalone the second channel is always initialized as noInput
+                localTrackView->setToNoInput();
+            }
         }
         else{
             localTrackView->refreshInputSelectionName();
@@ -301,6 +304,10 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
     }
     localChannel->setUnlightStatus(!ui.xmitButton->isChecked());
     return localChannel;
+}
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+bool MainWindow::isRunningAsVstPlugin() const{
+    return mainController->isRunningAsVstPlugin();
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -384,29 +391,34 @@ void MainWindow::initializeLocalInputChannels(){
         foreach (Persistence::Subchannel subChannel, channel.subChannels) {
             LocalTrackView* subChannelView = new LocalTrackView( mainController, channelIndex, subChannel.gain, subChannel.pan, subChannel.muted);
             channelView->addTrackView(subChannelView);
-            if(subChannel.midiDevice >= 0){//using midi
-                //check if midiDevice index is valid
-                if(subChannel.midiDevice < mainController->getMidiDriver()->getMaxInputDevices()){
-                    mainController->setInputTrackToMIDI( subChannelView->getInputIndex(), subChannel.midiDevice, subChannel.midiChannel);
-                }
-                else{
-                    if(mainController->getMidiDriver()->hasInputDevices()){
-                        //use the first midi device and all channels
-                        mainController->setInputTrackToMIDI(subChannelView->getInputIndex(), 0, -1);
+            if(!mainController->isRunningAsVstPlugin()){
+                if(subChannel.midiDevice >= 0){//using midi
+                    //check if midiDevice index is valid
+                    if(subChannel.midiDevice < mainController->getMidiDriver()->getMaxInputDevices()){
+                        mainController->setInputTrackToMIDI( subChannelView->getInputIndex(), subChannel.midiDevice, subChannel.midiChannel);
                     }
                     else{
-                        mainController->setInputTrackToNoInput(subChannelView->getInputIndex());
+                        if(mainController->getMidiDriver()->hasInputDevices()){
+                            //use the first midi device and all channels
+                            mainController->setInputTrackToMIDI(subChannelView->getInputIndex(), 0, -1);
+                        }
+                        else{
+                            mainController->setInputTrackToNoInput(subChannelView->getInputIndex());
+                        }
                     }
                 }
+                else if(subChannel.channelsCount <= 0){
+                    mainController->setInputTrackToNoInput(subChannelView->getInputIndex());
+                }
+                else if(subChannel.channelsCount == 1){
+                    mainController->setInputTrackToMono(subChannelView->getInputIndex(), subChannel.firstInput);
+                }
+                else{
+                    mainController->setInputTrackToStereo(subChannelView->getInputIndex(), subChannel.firstInput);
+                }
             }
-            else if(subChannel.channelsCount <= 0){
-                mainController->setInputTrackToNoInput(subChannelView->getInputIndex());
-            }
-            else if(subChannel.channelsCount == 1){
-                mainController->setInputTrackToMono(subChannelView->getInputIndex(), subChannel.firstInput);
-            }
-            else{
-                mainController->setInputTrackToStereo(subChannelView->getInputIndex(), subChannel.firstInput);
+            else{//VST plugin always use stereo audio input
+                mainController->setInputTrackToStereo(subChannelView->getInputIndex(), 0 + (channelIndex * 2));
             }
         }
         channelIndex++;

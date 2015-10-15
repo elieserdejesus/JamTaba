@@ -8,17 +8,8 @@ SUBDIRS = VstPlugin
 CONFIG += ordered
 
 #enable logging in release
-QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
-QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
-
-
-#quando fecho a aplicação debugando o Reaper dá um erro no método hide de QWidget.
-
-#entradas não funcionam. Como vou fazer as entradas?
-    #entradas realmente precisam de VUs?
-        #Talvez tirar o fader já resolva
-
-
+#QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
+#QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
 
 
 #ver a questão das multiplas instancias do plugin

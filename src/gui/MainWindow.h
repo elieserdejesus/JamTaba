@@ -68,6 +68,7 @@ public:
     void enterInRoom(Login::RoomInfo roomInfo);
     void exitFromRoom(bool normalDisconnection);
 
+    bool isRunningAsVstPlugin() const;
 protected:
     Controller::MainController* mainController;
     virtual void initializePluginFinder();

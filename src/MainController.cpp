@@ -476,7 +476,9 @@ int MainController::addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode
     }
 
     if(isRunningAsVstPlugin()){//VST plugins always use audio as input
-        inputTrackNode->setAudioInputSelection(0, 2);
+        //setInputTrackToStereo(0, 0);
+        int firstChannelIndex = (inputTracks.size()-1) * 2;
+        inputTrackNode->setAudioInputSelection(firstChannelIndex , 2);
     }
 
     return inputTrackID;
@@ -749,6 +751,12 @@ bool MainController::trackIsSoloed(int trackID) const{
 
 MainController::~MainController(){
     qCDebug(controllerMain()) << "MainController destrutor!";
+    if(mainWindow){
+        mainWindow->detachMainController();
+    }
+
+    //signalsHandler->disconnect();//disconnect all handlers;
+
     stop();
     qCDebug(controllerMain()) << "main controller stopped!";
 
@@ -795,6 +803,9 @@ MainController::~MainController(){
         ninjamController = nullptr;
         qCDebug(controllerMain()) << "deleting ninjamController done!";
     }
+
+    delete signalsHandler;
+
     //delete recorder;
     qCDebug(controllerMain) << "MainController destructor finished!";
 
@@ -936,6 +947,7 @@ QString MainController::getUserEnvironmentString() const{
 void MainController::stop()
 {
     qCDebug(controllerMain) << "Stopping MainController...";
+
     if(started){
         {
             //QMutexLocker locker(&mutex);
