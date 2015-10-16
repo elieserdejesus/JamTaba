@@ -854,8 +854,8 @@ QLabel#labelPanR, QLabel#labelPanL{
 
 QDial{
     background: rgb(200, 200, 200);
-    max-width: 32px;
-    max-height: 32px;
+    max-width: 38px;
+    max-height: 38px;
 }
 
 

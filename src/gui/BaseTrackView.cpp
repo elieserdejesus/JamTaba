@@ -20,7 +20,8 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     QObject::connect(ui->muteButton, SIGNAL(clicked()), this, SLOT(onMuteClicked()));
     QObject::connect(ui->soloButton, SIGNAL(clicked()), this, SLOT(onSoloClicked()));
     QObject::connect(ui->levelSlider, SIGNAL(valueChanged(int)), this, SLOT(onFaderMoved(int)));
-    QObject::connect(ui->panSlider, SIGNAL(valueChanged(int)), this, SLOT(onPanSliderMoved(int)));
+    QObject::connect(ui->panSlider, SIGNAL(sliderMoved(int)), this, SLOT(onPanSliderMoved(int)));
+    //QObject::connect(ui->panSlider, SIGNAL())
 
     ui->panSlider->installEventFilter(this);
     ui->levelSlider->installEventFilter(this);
@@ -143,9 +144,9 @@ bool BaseTrackView::eventFilter(QObject *source, QEvent *ev){
     }
     //--------------
     if(ev->type() == QEvent::MouseButtonDblClick){
-        if(source == ui->panSlider){
-            ui->panSlider->setValue(0);//center
-        }
+//        if(source == ui->panSlider){
+//            ui->panSlider->setValue(0);//center
+//        }
         if(source == ui->levelSlider){
             ui->levelSlider->setValue(100);
             update();

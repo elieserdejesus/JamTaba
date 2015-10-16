@@ -9,8 +9,6 @@ CONFIG += ordered
 
 
 
-#melhorar o duplo clique do Dial.
-
 #testar a gravação com o plugin
 
 #ver a questão das multiplas instancias do plugin
