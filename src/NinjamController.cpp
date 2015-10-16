@@ -300,9 +300,8 @@ Audio::MetronomeTrackNode* NinjamController::createMetronomeTrackNode(int sample
 }
 
 //+++++++++++++++
-NinjamController::~NinjamController(){
-    //QMutexLocker locker(&mutex);
-    qCDebug(controllerNinjam) << "NinjamController destructor";
+
+void NinjamController::stop(bool emitDisconnectedingSignal){
     if(isRunning()){
         this->running = false;
 
@@ -342,7 +341,7 @@ NinjamController::~NinjamController(){
     QObject::disconnect(ninjamService, SIGNAL(serverBpmChanged(short)), this, SLOT(on_ninjamServerBpmChanged(short)));
     QObject::disconnect(ninjamService, SIGNAL(serverBpiChanged(short,short)), this, SLOT(on_ninjamServerBpiChanged(short,short)));
     QObject::disconnect(ninjamService, SIGNAL(audioIntervalCompleted(Ninjam::User,int,QByteArray)), this, SLOT(on_ninjamAudiointervalCompleted(Ninjam::User,int,QByteArray)));
-    QObject::disconnect(ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(on_ninjamDisconnectedFromServer(Ninjam::Server)));
+    //QObject::disconnect(ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(on_ninjamDisconnectedFromServer(Ninjam::Server)));
 
     QObject::disconnect(ninjamService, SIGNAL(userChannelCreated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelCreated(Ninjam::User, Ninjam::UserChannel)));
     QObject::disconnect(ninjamService, SIGNAL(userChannelRemoved(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelRemoved(Ninjam::User, Ninjam::UserChannel)));
@@ -350,7 +349,18 @@ NinjamController::~NinjamController(){
     QObject::disconnect(ninjamService, SIGNAL(audioIntervalDownloading(Ninjam::User,int,int)), this, SLOT(on_ninjamAudiointervalDownloading(Ninjam::User,int,int)));
 
     QObject::disconnect(ninjamService, SIGNAL(chatMessageReceived(Ninjam::User,QString)), this, SIGNAL(chatMsgReceived(Ninjam::User,QString)));
-    ninjamService->disconnectFromServer();
+
+    ninjamService->disconnectFromServer(emitDisconnectedingSignal);
+
+}
+
+NinjamController::~NinjamController(){
+    //QMutexLocker locker(&mutex);
+    qCDebug(controllerNinjam) << "NinjamController destructor";
+    if(isRunning()){
+        stop(false);
+    }
+
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::start(const Ninjam::Server& server, bool transmiting){
@@ -389,7 +399,7 @@ void NinjamController::start(const Ninjam::Server& server, bool transmiting){
         QObject::connect(ninjamService, SIGNAL(serverBpmChanged(short)), this, SLOT(on_ninjamServerBpmChanged(short)));
         QObject::connect(ninjamService, SIGNAL(serverBpiChanged(short,short)), this, SLOT(on_ninjamServerBpiChanged(short,short)));
         QObject::connect(ninjamService, SIGNAL(audioIntervalCompleted(Ninjam::User,int,QByteArray)), this, SLOT(on_ninjamAudiointervalCompleted(Ninjam::User,int,QByteArray)));
-        QObject::connect(ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(on_ninjamDisconnectedFromServer(Ninjam::Server)));
+        //QObject::connect(ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(on_ninjamDisconnectedFromServer(Ninjam::Server)));
 
         QObject::connect(ninjamService, SIGNAL(userChannelCreated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelCreated(Ninjam::User, Ninjam::UserChannel)));
         QObject::connect(ninjamService, SIGNAL(userChannelRemoved(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelRemoved(Ninjam::User, Ninjam::UserChannel)));
@@ -546,11 +556,11 @@ long NinjamController::computeTotalSamplesInInterval(){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //ninjam events
 
-void NinjamController::on_ninjamDisconnectedFromServer(Ninjam::Server server){
-    Q_UNUSED(server);
-    //emit disconnected(normalDisconnection);
+//void NinjamController::on_ninjamDisconnectedFromServer(Ninjam::Server server){
+//    Q_UNUSED(server);
+//    //emit disconnected(normalDisconnection);
 
-}
+//}
 
 void NinjamController::on_ninjamUserEnter(Ninjam::User user){
     emit userEnter(user.getName());
