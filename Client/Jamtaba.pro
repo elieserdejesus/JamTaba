@@ -7,17 +7,20 @@ SUBDIRS = VstPlugin
 
 CONFIG += ordered
 
-#enable logging in release
-#QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
-#QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
 
+#dialogos estão centralizados no monitor e não na tela do plugin
+
+#melhorar o duplo clique do Dial.
+
+#testar a gravação com o plugin
 
 #ver a questão das multiplas instancias do plugin
 
-#acho que quando desconecta do server ninjam dá pau. Vi que também dá
-    #problema no standalone.
 
-#melhorar o duplo clique do Dial.
+
+
+
+
 
 #standalone não está fechando - Quando fecho o plugin no minihost aparece algo sobre WaitCondition.
 

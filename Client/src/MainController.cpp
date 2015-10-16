@@ -960,6 +960,7 @@ void MainController::stop()
             qCDebug(controllerMain) << "audio and midi drivers released";
 
             if(ninjamController){
+                ninjamController->stop(false);//block disconnected signal
                 qCDebug(controllerMain) << "deleting ninjamController...";
                 delete ninjamController;
                 ninjamController = nullptr;
@@ -1079,7 +1080,8 @@ bool MainController::isPlayingInNinjamRoom() const{
 
 void MainController::stopNinjamController(){
     QMutexLocker locker(&mutex);
-    if(ninjamController){
+    if(ninjamController && ninjamController->isRunning()){
+        ninjamController->stop(true);
         ninjamController->deleteLater();
         //delete ninjamController;
         ninjamController = nullptr;

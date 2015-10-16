@@ -37,6 +37,7 @@ public:
     ~NinjamController();
     void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate);
     void start(const Ninjam::Server& server, bool transmiting);
+    void stop(bool emitDisconnectedingSignal);
     bool inline isRunning() const{return running;}
     void setMetronomeBeatsPerAccent(int beatsPerAccent);
     inline int getCurrentBpi() const{return currentBpi;}
@@ -147,7 +148,7 @@ private slots:
     void on_ninjamUserChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel);
     void on_ninjamUserLeave(Ninjam::User user);
     void on_ninjamUserEnter(Ninjam::User user);
-    void on_ninjamDisconnectedFromServer(Ninjam::Server server);
+    //void on_ninjamDisconnectedFromServer(Ninjam::Server server);
 
     //audio driver events
     void on_audioDriverSampleRateChanged(int newSampleRate);

@@ -59,7 +59,7 @@ public:
     float getIntervalPeriod() ;
 
     void startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password = "");
-    void disconnectFromServer();
+    void disconnectFromServer(bool emitDisconnectedSignal);
 
     void voteToChangeBPM(int newBPM);
     void voteToChangeBPI(int newBPI);

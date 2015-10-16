@@ -354,10 +354,14 @@ void Service::startServerConnection(QString serverIp, int serverPort, QString us
     }
 }
 
-void Service::disconnectFromServer(){
+void Service::disconnectFromServer(bool emitDisconnectedSignal){
     qCDebug(ninjamService) << "disconnecting from " << socket.peerName();
-    socket.blockSignals(true); //avoid generate events when disconnecting/exiting
-    socket.disconnectFromHost();
+    if(socket.isOpen()){
+        if(!emitDisconnectedSignal){
+            socket.blockSignals(true); //avoid generate events when disconnecting/exiting
+        }
+        socket.disconnectFromHost();
+    }
 }
 
 void Service::setBpm(quint16 newBpm){
