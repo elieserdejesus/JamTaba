@@ -74,6 +74,7 @@ protected:
     virtual void initializePluginFinder();
     void restorePluginsList();
 
+    void centerDialog(QWidget* dialog);
 
 protected slots:
     void on_tabCloseRequest(int index);

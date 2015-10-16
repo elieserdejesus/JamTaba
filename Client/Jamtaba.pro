@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 
-SUBDIRS = VstPlugin
+SUBDIRS = Standalone VstPlugin
 #Standalone
 #PluginTester
 #ThemeEditor
@@ -8,7 +8,6 @@ SUBDIRS = VstPlugin
 CONFIG += ordered
 
 
-#dialogos estão centralizados no monitor e não na tela do plugin
 
 #melhorar o duplo clique do Dial.
 
