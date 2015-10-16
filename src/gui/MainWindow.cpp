@@ -191,6 +191,9 @@ void MainWindow::showMessageBox(QString title, QString text, QMessageBox::Icon i
     messageBox->setIcon(icon);
     messageBox->setAttribute(Qt::WA_DeleteOnClose, true);
     messageBox->show();
+    if(isRunningAsVstPlugin()){
+        centerDialog(messageBox);
+    }
 }
 
 void MainWindow::on_RoomStreamerError(QString msg){
@@ -653,6 +656,9 @@ void MainWindow::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
 //        }
         QString lastUserName = mainController->getUserName();
         UserNameDialog dialog(this, lastUserName);
+        if(isRunningAsVstPlugin()){
+            centerDialog(&dialog);
+        }
         if(dialog.exec() == QDialog::Accepted){
             QString userName = dialog.getUserName();
             if(!userName.isEmpty()){
@@ -723,7 +729,8 @@ void MainWindow::exitFromRoom(bool normalDisconnection){
     ui.chatArea->setVisible(false);
 
     if(!normalDisconnection){
-        QMessageBox::warning(this, "Warning", "Disconnected from server!", QMessageBox::NoButton, QMessageBox::NoButton);
+        //QMessageBox::warning(this, "Warning", "Disconnected from server!", QMessageBox::NoButton, QMessageBox::NoButton);
+        showMessageBox("Error", "Disconnected from ninjam server", QMessageBox::Warning);
     }
     else{
         if(roomToJump){//waiting the disconnection to connect in a new room?
@@ -865,6 +872,18 @@ void MainWindow::on_privateServerMenuItemTriggered(){
     PrivateServerDialog* privateServerDialog = new PrivateServerDialog(this, server, port, password);
     QObject::connect(privateServerDialog, SIGNAL(connectionAccepted(QString, int, QString)), this, SLOT(on_privateServerConnectionAccepted(QString, int, QString)));
     privateServerDialog->show();
+
+    if(isRunningAsVstPlugin()){//dialogs need a workaround to appear in center of plugin screen
+        centerDialog(privateServerDialog);
+    }
+
+}
+
+void MainWindow::centerDialog(QWidget *dialog){
+    QPoint mainWindowPosition = mapToGlobal( this->pos());
+    int x = mainWindowPosition.x() + width()/2 - dialog->width()/2;
+    int y = mainWindowPosition.y() + height()/2 - dialog->height()/2;
+    dialog->move(x,y);
 }
 
 void MainWindow::on_ninjamCommunityMenuItemTriggered(){
