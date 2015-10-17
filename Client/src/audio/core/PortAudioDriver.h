@@ -14,7 +14,7 @@ class PortAudioDriver : public AudioDriver
 {
 public:
 #ifdef Q_OS_WIN
-    PortAudioDriver(AudioDriverListener* audioDriverListener, int inputDeviceIndex, int outputDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize);
+    PortAudioDriver(Controller::MainController* mainController, int inputDeviceIndex, int outputDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize);
 #endif
 #ifdef Q_OS_MACX
     PortAudioDriver(AudioDriverListener* audioDriverListener, int sampleRate, int  bufferSize);

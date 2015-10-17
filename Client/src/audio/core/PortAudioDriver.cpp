@@ -5,8 +5,9 @@
 #include "portaudio.h"
 #include "SamplesBuffer.h"
 #include "../persistence/Settings.h"
+#include "../MainController.h"
 #include <QtGlobal>
-#include <QThread>
+//#include <QThread>
 #ifdef Q_OS_WIN
     #include "pa_asio.h"
 #else
@@ -43,8 +44,8 @@ namespace Audio{
 #endif
 
 #ifdef Q_OS_WIN
-PortAudioDriver::PortAudioDriver(AudioDriverListener* audioDriverListener, int inputDeviceIndex, int outputDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize )
-    :AudioDriver(audioDriverListener)
+PortAudioDriver::PortAudioDriver(Controller::MainController* mainController, int inputDeviceIndex, int outputDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize )
+    :AudioDriver(mainController)
 {
     this->globalInputRange = ChannelRange(firstInputIndex, (lastInputIndex - firstInputIndex) + 1);
     this->globalOutputRange = ChannelRange(firstOutputIndex, (lastOutputIndex - firstOutputIndex) + 1);
@@ -142,8 +143,8 @@ void PortAudioDriver::translatePortAudioCallBack(const void *in, void *out, unsi
 
 
     //all application audio processing is computed here
-    if(audioDriverListener){
-        audioDriverListener->process(*inputBuffer, *outputBuffer, sampleRate);
+    if(mainController){
+        mainController->process(*inputBuffer, *outputBuffer, sampleRate);
     }
 
     //convert application output buffers to portaudio format

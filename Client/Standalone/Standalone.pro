@@ -2,7 +2,7 @@
     error( "Couldn't find the common.pri file!" )
 }
 
-QT       +=  gui  network widgets
+QT       += core gui network widgets
 
 TARGET = Jamtaba2
 TEMPLATE = app
@@ -41,7 +41,6 @@ SOURCES += \
     ../src/midi/portmididriver.cpp \
     ../src/audio/Resampler.cpp \
     ../src/audio/vorbis/VorbisDecoder.cpp \
-    ../src/audio/SamplesBufferResampler.cpp \
     ../src/audio/samplesbufferrecorder.cpp \
     ../src/audio/vorbis/VorbisEncoder.cpp \
     ../src/persistence/Settings.cpp \
@@ -65,17 +64,19 @@ DEPENDPATH +=  $$PWD/../libs/includes/portaudio        \
 
 win32{
     LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32
+
     VST_SDK_PATH = "E:/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x/"
 
     !contains(QMAKE_TARGET.arch, x86_64) {
         message("Windows x86 build") ## Windows x86 (32bit) specific build here
-        LIBS_PATH = "win32-msvc"
+        LIBS_PATH = "static/win32-msvc"
     } else {
         message("Windows x86_64 build") ## Windows x64 (64bit) specific build here
-        LIBS_PATH = "win64-msvc"
+        LIBS_PATH = "static/win64-msvc"
+        message("LIBS PATH: " + ($$PWD/../libs/$$LIBS_PATH))
     }
 
-    CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbis -logg
+    CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbis -logg
     else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisd -loggd
 
     RC_FILE = Jamtaba2.rc #windows icon

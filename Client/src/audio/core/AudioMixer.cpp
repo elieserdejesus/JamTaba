@@ -31,16 +31,20 @@ void AudioMixer::removeNode(AudioNode *node){
     SamplesBufferResampler* resampler = resamplers[node];
     nodes.removeOne(node);
     if(resampler){
+        resamplers[node] = nullptr;
         delete resampler;
     }
 }
 
 AudioMixer::~AudioMixer(){
     qWarning() << "Destrutor audio mixer...";
-    foreach (SamplesBufferResampler* resampler, resamplers.values()) {
-        delete resampler;
+//    foreach (SamplesBufferResampler* resampler, resamplers.values()) {
+//        delete resampler;
+//    }
+//    resamplers.clear();
+    foreach (Audio::AudioNode* node, resamplers.keys()) {
+        removeNode(node);
     }
-    resamplers.clear();
     qWarning() << "finalizou Destrutor audio mixer...";
 }
 

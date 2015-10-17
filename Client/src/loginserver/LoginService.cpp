@@ -104,6 +104,7 @@ LoginService::LoginService(QObject* parent)
 LoginService::~LoginService()
 {
     //disconnect();
+    qDebug() << "LoginService Destructor";
 
 }
 

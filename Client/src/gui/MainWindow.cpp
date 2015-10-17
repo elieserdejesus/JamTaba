@@ -671,7 +671,7 @@ void MainWindow::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
     if(mainController->isPlayingInNinjamRoom()){
         mainController->stopNinjamController();//disconnect from current ninjam server
         //store the room to jump and wait for disconnectedFromServer event to connect in this new room
-        roomToJump = new Login::RoomInfo(roomInfo);
+        roomToJump.reset( new Login::RoomInfo(roomInfo));
         passwordToJump = password;
     }
     else if(mainController->userNameWasChoosed()){
@@ -692,9 +692,9 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
 //        ninjamWindow->deleteLater();
 //    }
     qWarning() << "creating NinjamRoomWindow...";
-    ninjamWindow = new NinjamRoomWindow(ui.tabWidget, roomInfo, mainController);
+    ninjamWindow.reset( new NinjamRoomWindow(ui.tabWidget, roomInfo, mainController));
     QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
-    int index = ui.tabWidget->addTab(ninjamWindow, tabName);
+    int index = ui.tabWidget->addTab(ninjamWindow.data(), tabName);
     ui.tabWidget->setCurrentIndex(index);
 
 
@@ -736,8 +736,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection){
         if(roomToJump){//waiting the disconnection to connect in a new room?
             showBusyDialog("Connecting in " + roomToJump->getName());
             mainController->enterInRoom(*roomToJump, getChannelsNames(), (passwordToJump.isNull() || passwordToJump.isEmpty()) ? "" : passwordToJump);
-            delete roomToJump;
-            roomToJump = nullptr;
+            roomToJump.reset();
             passwordToJump = "";
         }
     }
@@ -830,6 +829,9 @@ MainWindow::~MainWindow()
 {
     qWarning() << "MainWindow destructor...";
     setParent(nullptr);
+    if(mainController){
+        mainController->saveLastUserSettings(getInputsSettings());
+    }
     mainController = nullptr;
     killTimer(timerID);
     qDebug() << "Main frame timer killed!";
@@ -982,7 +984,7 @@ void MainWindow::refreshTrackInputSelection(int inputTrackIndex){
 //plugin finder events
 void MainWindow::onScanPluginsStarted(){
     if(!pluginScanDialog){
-        pluginScanDialog = new PluginScanDialog(this);
+        pluginScanDialog.reset( new PluginScanDialog(this));
     }
     pluginScanDialog->show();
 }
@@ -991,8 +993,7 @@ void MainWindow::onScanPluginsFinished(){
     if(pluginScanDialog){
         pluginScanDialog->close();
     }
-    delete pluginScanDialog;
-    pluginScanDialog = nullptr;
+    pluginScanDialog.reset();
 
 }
 

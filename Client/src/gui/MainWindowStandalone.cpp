@@ -5,16 +5,19 @@
 MainWindowStandalone::MainWindowStandalone(Controller::MainController* controller)
     :MainWindow(controller){
 
-
+    //setAttribute(Qt::WA_QuitOnClose, true);
+    //setQu
 }
 
 void MainWindowStandalone::closeEvent(QCloseEvent * e){
     MainWindow::closeEvent(e);
     hide();//hide before stop main controller and disconnect from login server to
     //avoid freeze the main window for some seconds while is disconnecting
-    if(mainController){
-        mainController->stop();
-    }
+//    if(mainController){
+//        mainController->stop();
+//    }
+    //mainController->exit();
+    //deleteLater();
 }
 
 void MainWindowStandalone::showEvent(QShowEvent *){

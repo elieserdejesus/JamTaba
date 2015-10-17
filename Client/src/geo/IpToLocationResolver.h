@@ -31,6 +31,7 @@ class IpToLocationResolver : public QObject
 
 public:
     virtual Location resolve(QString ip) = 0;
+    virtual ~IpToLocationResolver();
 
 };
 

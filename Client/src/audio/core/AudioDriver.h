@@ -4,6 +4,11 @@
 #include <QObject>
 #include <QMutex>
 
+namespace Controller {
+    class MainController;
+}
+
+
 namespace Audio{
 
 class ChannelRange{
@@ -23,10 +28,13 @@ public:
     inline bool isEmpty() const{return getChannels() <= 0;}
 };
 
-class AudioDriverListener{
-public:
-    virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate) = 0;
-};
+//class AudioDriverListener{
+//public:
+//    virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate) = 0;
+//    virtual ~AudioDriverListener();
+//protected:
+//    AudioDriverListener(){}
+//};
 
 class AudioDriver : public QObject
 {
@@ -36,10 +44,9 @@ signals:
     void sampleRateChanged(int newSampleRate);//invocado quando acontece alguma mudança na configuração de buffer size, por exemplo
     void stopped();
     void started();
-    //void driverException(const char* msg) = 0;
 
 public:
-    AudioDriver( AudioDriverListener* audioDriverListener );
+    explicit AudioDriver( Controller::MainController* mainController);
 	virtual ~AudioDriver();
     virtual void setProperties(int deviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
     virtual void setProperties(int inputDeviceIndex, int outputDeviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
@@ -87,12 +94,12 @@ protected:
     int sampleRate;
     int bufferSize;
 
-    SamplesBuffer* inputBuffer;
-    SamplesBuffer* outputBuffer;
+    QScopedPointer<SamplesBuffer> inputBuffer;
+    QScopedPointer<SamplesBuffer> outputBuffer;
 
     void recreateBuffers();
 
-    AudioDriverListener* audioDriverListener;
+    Controller::MainController* mainController;
 };
 
 class NullAudioDriver : public AudioDriver{

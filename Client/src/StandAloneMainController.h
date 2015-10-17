@@ -5,6 +5,12 @@
 #include <QApplication>
 #include "audio/vst/PluginFinder.h"
 
+class QCoreApplication;
+
+namespace Midi {
+    class MidiDriver;
+}
+
 namespace JamtabaVstPlugin {
     class VstHost;
     class StandalonePluginFinder;
@@ -31,39 +37,20 @@ private:
 namespace Controller {
 
 
-class StandaloneMainController;
-
-class StandaloneSignalsHandler : public MainControllerSignalsHandler{
-    Q_OBJECT
-
-public:
-    StandaloneSignalsHandler(StandaloneMainController* mainController);
-public slots:
-    void on_ninjamBpmChanged(int newBpm);
-    void on_newNinjamInterval();
-    void on_ninjamStartProcessing(int intervalPosition);
-    void on_connectedInNinjamServer(Ninjam::Server server);
-    void on_audioDriverSampleRateChanged(int newSampleRate);
-    void on_audioDriverStarted();
-    void on_audioDriverStopped();
-    void on_VSTPluginFounded(QString name, QString group, QString path);
-private:
-    StandaloneMainController* controller;
-};
-
-class StandaloneMainController : public QApplication, public MainController
+class StandaloneMainController : public MainController
 {
     Q_OBJECT
-
-    friend class StandaloneSignalsHandler;
 public:
-    StandaloneMainController(Persistence::Settings settings, int& argc, char** argv);
+    StandaloneMainController(Persistence::Settings settings, QApplication *application);
     ~StandaloneMainController();
 
     bool isRunningAsVstPlugin() const;
 
     void initializePluginsList(QStringList paths);
     void scanPlugins();
+
+//    inline int exec(){ return application->exec(); }
+    inline void quit(){ application->quit();}
 
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
@@ -77,30 +64,26 @@ public:
     void start();
 
 protected:
-    virtual void exit();
-    virtual MainControllerSignalsHandler* createSignalsHandler();
     virtual Midi::MidiDriver* createMidiDriver();
     virtual Audio::AudioDriver* createAudioDriver(const Persistence::Settings &settings);
     virtual Vst::PluginFinder* createPluginFinder();
 
     void setCSS(QString css);
+
+protected slots:
+    void on_ninjamBpmChanged(int newBpm);
+    void on_connectedInNinjamServer(Ninjam::Server server);
+    void on_audioDriverSampleRateChanged(int newSampleRate);
+    void on_audioDriverStarted();
+    void on_audioDriverStopped();
+    void on_newNinjamInterval();
+    void on_ninjamStartProcessing(int intervalPosition);
+    void on_VSTPluginFounded(QString name, QString group, QString path);
+
 private:
     //VST
-    Vst::Host* vstHost;
-
-
-//private slots:
-//    //VST
-//    void on_VSTPluginFounded(QString name, QString group, QString path);
-//protected slots:
-//    void on_audioDriverSampleRateChanged(int newSampleRate);
-//    void on_audioDriverStarted();
-//    void on_audioDriverStopped();
-
-//    void on_connectedInNinjamServer(Ninjam::Server server);
-//    void on_ninjamBpmChanged(int newBpm);
-//    void on_ninjamStartProcessing(int intervalPosition);
-//    void on_newNinjamInterval();
+    Vst::Host* vstHost;//static instance released inside Vst::Host using QSCopedPointer
+    QApplication* application;
 };
 
 }

@@ -29,6 +29,7 @@ class Host
 
 public:
     static Host* getInstance();
+    ~Host();
     int getSampleRate() const;// {return sampleRate;}
     inline int getBufferSize() const {return blockSize;}
     void setSampleRate(int sampleRate);
@@ -47,10 +48,10 @@ private:
     void clearVstTimeInfoFlags();
 
 
-    static Host* hostInstance;
+    static QScopedPointer<Host> hostInstance;
     Host();
     Host(const Host&);//copy constructor
-    ~Host();
+
 
     bool tempoIsValid() const;
 

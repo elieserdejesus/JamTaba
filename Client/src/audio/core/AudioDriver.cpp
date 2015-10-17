@@ -7,6 +7,8 @@
 
 using namespace Audio;
 
+//+++++++++++++++++++++
+
 ChannelRange::ChannelRange(int firstChannel, int channelsCount)
     :firstChannel(firstChannel), channelsCount(channelsCount){
     if(firstChannel < 0 || channelsCount < 0){
@@ -30,7 +32,7 @@ void ChannelRange::setToMono(){
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++
-AudioDriver::AudioDriver(AudioDriverListener *audioDriverListener)
+AudioDriver::AudioDriver(Controller::MainController *mainController)
     :
       globalInputRange(0, 0),
       globalOutputRange(0, 0),
@@ -44,27 +46,26 @@ AudioDriver::AudioDriver(AudioDriverListener *audioDriverListener)
 
     //selectedInputs(0, 0),
     //selectedOutpus(0, 0),
-    audioDriverListener(audioDriverListener)
+    mainController(mainController)
 
 {
 
 }
 
 void AudioDriver::recreateBuffers(){
-    if (inputBuffer){
-        delete inputBuffer;
-    }
-    inputBuffer = new SamplesBuffer(globalInputRange.getChannels());
+//    if (inputBuffer){
+//        delete inputBuffer;
+//    }
+    inputBuffer.reset( new SamplesBuffer(globalInputRange.getChannels()));
 
-    if(outputBuffer){
-        delete outputBuffer;
-    }
-    outputBuffer = new SamplesBuffer(globalOutputRange.getChannels());
+
+    outputBuffer.reset( new SamplesBuffer(globalOutputRange.getChannels()));
 }
 
 AudioDriver::~AudioDriver(){
-	delete this->inputBuffer;
-	delete this->outputBuffer;
+    qDebug() << "AudioDriver destructor.";
+    /*delete this->inputBuffer;
+    delete this->outputBuffer*/;
 }
 
 void AudioDriver::setProperties(int sampleRate, int bufferSize){

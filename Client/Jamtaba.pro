@@ -1,6 +1,13 @@
+#Depois de muitas horas tentando descobrir o problema no fechamento da aplicação
+    #descobri que basta comentar a criação do driverMidi em MainController
+        #funciona sem problemas. A PortMidi está dando algum problema. Recompilei
+        #todas as libs como MD e MDd, e mesmo assim a portmidi não deixa a aplicação fechar
+        #se executo no modo debug (No release funciona normalmente). Tenho que ver se isso também acontece em 32 bits.
+
+
 TEMPLATE = subdirs
 
-SUBDIRS = Standalone VstPlugin
+SUBDIRS = Standalone
 #Standalone
 #PluginTester
 #ThemeEditor
@@ -8,18 +15,30 @@ SUBDIRS = Standalone VstPlugin
 CONFIG += ordered
 
 
+#gravação no standalone: Os arquivos de áudio fora gravados, mas não foram adicionados ao projeto do Reaper.
+
+#não está gravando nada além da primeira parte do áudio
+
+#clique no dial não funciona mais
+
+#no debug, quando saio de uma sala do ninjam com a gravação ligada dá um erro na destruição de algum objeto.
+    #Não tenho certeza se tem relação coma gravação ativada.
 
 #testar a gravação com o plugin
 
+#não está salvando o estado do check "save multitrack". Será que tem relação com o fato de que não está fechando corretamente?
+
+#não está enviando meu audio?
+
 #ver a questão das multiplas instancias do plugin
 
-
-
-
-
-
-
 #standalone não está fechando - Quando fecho o plugin no minihost aparece algo sobre WaitCondition.
+
+#Fazer o instalador
+    #http://stackoverflow.com/questions/11137424/how-to-make-vcredist-x86-reinstall-only-if-not-yet-installed
+
+#testar o plugin na máquina virtual - provavelmente vou precisar instalar
+    #o redistributable.
 
 #arakula: does your host calls the PlugIn dispatcher with effIdle (if the PlugIn wants this) and effEditIdle from time to time?
     #Parece que isso resolveu um bug em um host de um membro do KVr.

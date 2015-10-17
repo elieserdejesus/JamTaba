@@ -12,14 +12,13 @@ using namespace Vst;
 
 Q_LOGGING_CATEGORY(vstHost, "vst.host")
 
-Host* Host::hostInstance = nullptr;
-
+QScopedPointer<Host> Host::hostInstance;
 
 Host* Host::getInstance(){
     if(!hostInstance){
-        hostInstance = new Host();
+        hostInstance.reset( new Host());
     }
-    return hostInstance;
+    return hostInstance.data();
 }
 
 Host::Host()
@@ -174,13 +173,13 @@ long VSTCALLBACK Host::hostCallback(AEffect *effect, long opcode, long index, lo
         //	return 2100L; // Supports VST v2.1
 
     case audioMasterGetBlockSize:
-        return Host::getInstance()->blockSize;
+        return hostInstance->blockSize;
 
     case audioMasterGetSampleRate:
-        return Host::getInstance()->getSampleRate();
+        return hostInstance->getSampleRate();
 
     case audioMasterGetTime : //7
-        return (long)(&(Host::getInstance()->vstTimeInfo));
+        return (long)(&hostInstance->vstTimeInfo);
 
     case audioMasterGetCurrentProcessLevel : //23
         return 2L;

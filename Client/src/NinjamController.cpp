@@ -41,7 +41,7 @@ public:
     }
 
     void addSamplesToEncode(const Audio::SamplesBuffer& samplesToEncode, quint8 channelIndex, bool isFirstPart, bool isLastPart){
-        qCDebug(controllerNinjam) << "Adding samples to encode";
+        //qCDebug(controllerNinjam) << "Adding samples to encode";
         QMutexLocker locker(&mutex);
         chunksToEncode.append(new EncodingChunk(samplesToEncode, channelIndex, isFirstPart, isLastPart));
         //this method is called by Qt main thread (the producer thread).
@@ -337,7 +337,7 @@ void NinjamController::stop(bool emitDisconnectedingSignal){
     QObject::disconnect( mainController->getAudioDriver(), SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
     QObject::disconnect( mainController->getAudioDriver(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
 
-    Ninjam::Service* ninjamService = Ninjam::Service::getInstance();
+    Ninjam::Service* ninjamService = mainController->getNinjamService();// Ninjam::Service::getInstance();
     QObject::disconnect(ninjamService, SIGNAL(serverBpmChanged(short)), this, SLOT(on_ninjamServerBpmChanged(short)));
     QObject::disconnect(ninjamService, SIGNAL(serverBpiChanged(short,short)), this, SLOT(on_ninjamServerBpiChanged(short,short)));
     QObject::disconnect(ninjamService, SIGNAL(audioIntervalCompleted(Ninjam::User,int,QByteArray)), this, SLOT(on_ninjamAudiointervalCompleted(Ninjam::User,int,QByteArray)));
@@ -395,7 +395,7 @@ void NinjamController::start(const Ninjam::Server& server, bool transmiting){
         this->intervalPosition  = 0;
 
 
-        Ninjam::Service* ninjamService = Ninjam::Service::getInstance();
+        Ninjam::Service* ninjamService = mainController->getNinjamService();// Ninjam::Service::getInstance();
         QObject::connect(ninjamService, SIGNAL(serverBpmChanged(short)), this, SLOT(on_ninjamServerBpmChanged(short)));
         QObject::connect(ninjamService, SIGNAL(serverBpiChanged(short,short)), this, SLOT(on_ninjamServerBpiChanged(short,short)));
         QObject::connect(ninjamService, SIGNAL(audioIntervalCompleted(Ninjam::User,int,QByteArray)), this, SLOT(on_ninjamAudiointervalCompleted(Ninjam::User,int,QByteArray)));
@@ -431,7 +431,7 @@ void NinjamController::start(const Ninjam::Server& server, bool transmiting){
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::sendChatMessage(QString msg){
-    Ninjam::Service::getInstance()->sendChatMessageToServer(msg);
+    mainController->getNinjamService()->sendChatMessageToServer(msg);
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 long NinjamController::generateNewTrackID(){
@@ -491,11 +491,11 @@ void NinjamController::removeTrack(Ninjam::User user, Ninjam::UserChannel channe
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::voteBpi(int bpi){
-    Ninjam::Service::getInstance()->voteToChangeBPI(bpi);
+    mainController->getNinjamService()->voteToChangeBPI(bpi);
 }
 
 void NinjamController::voteBpm(int bpm){
-    Ninjam::Service::getInstance()->voteToChangeBPM(bpm);
+    mainController->getNinjamService()->voteToChangeBPM(bpm);
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::setMetronomeBeatsPerAccent(int beatsPerAccent){
@@ -530,6 +530,7 @@ void NinjamController::handleNewInterval(){
             emit channelXmitChanged(track->getID(), trackIsPlaying);
         }
     }
+    qCDebug(controllerNinjam()) << "emitint startingNewInterval signal";
     emit startingNewInterval();
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -608,7 +609,9 @@ void NinjamController::on_ninjamServerBpmChanged(short newBpm){
 void NinjamController::on_ninjamAudiointervalCompleted(Ninjam::User user, int channelIndex, QByteArray encodedAudioData){
 
     if(mainController->isRecordingMultiTracksActivated()){
-        mainController->saveEncodedAudio(user.getFullName(), channelIndex, encodedAudioData);
+        Geo::Location geoLocation = mainController->getGeoLocation(user.getIp());
+        QString userName = user.getName() + " from " + geoLocation.getCountryName();
+        mainController->saveEncodedAudio(userName, channelIndex, encodedAudioData);
     }
 
     //qDebug() << "audio available  Thread ID: " << QThread::currentThreadId();

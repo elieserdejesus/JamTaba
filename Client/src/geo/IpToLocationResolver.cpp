@@ -29,6 +29,11 @@ Location::Location(QString country, QString countryCode, QString city, double la
 
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++
+IpToLocationResolver::~IpToLocationResolver(){
+    qDebug() << "IpToLocationResolver destructor";
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++
 Location NullIpToLocationResolver::resolve(QString ip){
     Q_UNUSED(ip)
     return Geo::Location();

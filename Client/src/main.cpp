@@ -1,10 +1,8 @@
-#include "gui/MainWindowStandalone.h"
+#include <QApplication>
+#include <QMainWindow>
 #include "StandAloneMainController.h"
 #include "persistence/Settings.h"
-#include <QApplication>
-#include <QLoggingCategory>
-#include <QDir>
-#include <QStandardPaths>
+#include "MainWindowStandalone.h"
 #include "log/logHandler.h"
 
 int main(int argc, char* args[] ){
@@ -18,18 +16,15 @@ int main(int argc, char* args[] ){
     Persistence::Settings settings;//read from file in constructor
     settings.load();
 
-    Controller::StandaloneMainController mainController(settings, argc, args);//MainController extends QApplication
+    QApplication* application = new QApplication(argc, args);
+    Controller::StandaloneMainController mainController(settings, application);//MainController extends QApplication
     mainController.configureStyleSheet("jamtaba.css");
     mainController.start();
     MainWindowStandalone  mainWindow(&mainController);
     mainController.setMainWindow(&mainWindow);
     mainWindow.show();
 
-    int returnCode = mainController.exec();
-    mainController.saveLastUserSettings(mainWindow.getInputsSettings());
-
-    return returnCode;
-
+    return application->exec();
  }
 
 //++++++++++++++++++++++++++++++++++

@@ -68,9 +68,9 @@ void Jam::addAudioFile(QString userName, quint8 channelIndex, QString filePath, 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QString JamRecorder::getNewJamName() {
     QDateTime now = QDateTime::currentDateTime();
-    QString dateString = now.toString();
-    dateString = dateString.replace(QRegExp("[/: ]"), "-");
-    return "Jam-" + dateString;
+    QString nowString = now.toString(Qt::SystemLocaleShortDate);
+    nowString = nowString.replace(QRegExp("[/:]"), "-").replace(QRegExp("[ ]"), "_");
+    return "Jam-" + nowString;
 }
 
 void JamRecorder::writeEncodedFile(const QByteArray& encodedData, QString path){
