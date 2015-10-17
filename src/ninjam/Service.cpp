@@ -17,7 +17,7 @@ Q_LOGGING_CATEGORY(ninjamService, "ninjam.service")
 
 using namespace Ninjam;
 
-std::unique_ptr<Service> Service::serviceInstance;
+//std::unique_ptr<Service> Service::serviceInstance;
 
 const QStringList Service::botNames = buildBotNamesList();
 
@@ -164,12 +164,12 @@ void Service::socketDisconnectSlot(){
 }
 
 
-Service* Service::getInstance() {
-    if(!serviceInstance){
-        serviceInstance = std::unique_ptr<Service>(new Service());
-    }
-    return serviceInstance.get();
-}
+//Service* Service::getInstance() {
+//    if(!serviceInstance){
+//        serviceInstance = std::unique_ptr<Service>(new Service());
+//    }
+//    return serviceInstance.get();
+//}
 
 bool Service::isBotName(QString userName) {
     userName = userName.trimmed();

@@ -5,6 +5,8 @@
 #include <QMap>
 #include "../SamplesBufferResampler.h"
 
+#include <QScopedPointer>
+
 namespace Midi {
     class MidiBuffer;
 }
@@ -29,16 +31,11 @@ public:
     void addNode(AudioNode* node);
     void removeNode(AudioNode* node);
 
-    //LocalInputAudioNode* getLocalInput() const{return inputNode;}
-
     inline void setSampleRate(int newSampleRate){this->sampleRate = newSampleRate;}
 
 private:
-    //LocalInputAudioNode* inputNode;
-
     QList<AudioNode*> nodes;
     int sampleRate;
-    //QMutex mutex;
     QMap<AudioNode*, SamplesBufferResampler*> resamplers;
 };
 //+++++++++++++++++++++++

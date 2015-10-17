@@ -529,6 +529,7 @@ QPushButton#localControlsCollapseButton::hover:checked{
 
  .QTabWidget::tab-bar {
     left: 10px; /* move to the right by 5px */
+    padding: 3px;
  }
 
 /* Style the tab using the tab sub-control. Note that
@@ -539,7 +540,7 @@ it reads QTabBar _not_ QTabWidget */
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
     min-width: 8ex;
-    padding: 0px;
+    padding: 3px;
     padding-left: 10px;
     padding-right: 10px;
     font-size: 11px;

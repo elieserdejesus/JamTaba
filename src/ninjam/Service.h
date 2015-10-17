@@ -7,9 +7,7 @@
 #include "../ninjam/User.h"
 #include "../ninjam/UserChannel.h"
 
-
 Q_DECLARE_LOGGING_CATEGORY(ninjamService)
-
 
 namespace Ninjam {
 
@@ -41,7 +39,10 @@ class Service : public QObject{
     Q_OBJECT
 
 public:
-    static Service* getInstance();
+
+    explicit Service();
+    ~Service();
+    //static Service* getInstance();
     static bool isBotName(QString userName) ;
 
     void sendChatMessageToServer(QString message);
@@ -64,7 +65,7 @@ public:
     void voteToChangeBPM(int newBPM);
     void voteToChangeBPI(int newBPI);
 
-    ~Service();
+
 
     static inline QStringList getBotNamesList(){ return botNames; }
 
@@ -90,7 +91,7 @@ private:
 
     static const long DEFAULT_KEEP_ALIVE_PERIOD = 3000;
     static std::unique_ptr<PublicServersParser> publicServersParser;// = new MixedPublicServersParser();
-    Service();
+
     QTcpSocket socket;
     QByteArray byteArray;
 

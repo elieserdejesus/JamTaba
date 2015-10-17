@@ -26,12 +26,15 @@ WebIpToLocationResolver::WebIpToLocationResolver()
     if(cacheFile.open(QFile::ReadOnly)){
         QTextStream inputStream(&cacheFile);
         while(!inputStream.atEnd()){
-            QStringList parts = inputStream.readLine().split(";");
-            if(!parts.isEmpty()){
-                QString ip = parts.at(0);
-                QString countryName = (parts.size() >= 1) ? parts.at(1) : "";
-                QString countryCode = (parts.size() >= 2) ? parts.at(2) : "";
-                locationCache.insert(ip, Geo::Location(countryName, countryCode));
+            QString line = inputStream.readLine();
+            if(!line.isNull() && !line.isEmpty()){
+                QStringList parts = line.split(";");
+                if(!parts.isEmpty()){
+                    QString ip = parts.at(0);
+                    QString countryName = (parts.size() >= 1) ? parts.at(1) : "";
+                    QString countryCode = (parts.size() >= 2) ? parts.at(2) : "";
+                    locationCache.insert(ip, Geo::Location(countryName, countryCode));
+                }
             }
         }
     }

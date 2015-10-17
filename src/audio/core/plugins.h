@@ -25,7 +25,7 @@ public:
     PluginDescriptor(QString name, QString group, QString path);
     PluginDescriptor();
     //PluginDescriptor(const PluginDescriptor&);
-    //~PluginDescriptor();
+    virtual ~PluginDescriptor();
     inline QString getName() const{return name;}
     inline QString getGroup() const{return group;}
     inline QString getPath() const{return path;}

@@ -138,65 +138,59 @@ void StandalonePluginFinder::scan(){
 
 //++++++++++++++++++++++++++++++++++
 
-StandaloneSignalsHandler::StandaloneSignalsHandler(StandaloneMainController *mainController)
-    :MainControllerSignalsHandler(mainController){
-    this->controller = mainController;
+void StandaloneMainController::on_ninjamBpmChanged(int newBpm){
+    MainController::on_ninjamBpmChanged(newBpm);
+    vstHost->setTempo(newBpm);
 }
 
-void StandaloneSignalsHandler::on_ninjamBpmChanged(int newBpm){
-    MainControllerSignalsHandler::on_ninjamBpmChanged(newBpm);
-    this->controller->vstHost->setTempo(newBpm);
+void StandaloneMainController::on_connectedInNinjamServer(Ninjam::Server server){
+    MainController::on_connectedInNinjamServer(server);
+    vstHost->setTempo(server.getBpm());
 }
 
-void StandaloneSignalsHandler::on_connectedInNinjamServer(Ninjam::Server server){
-    MainControllerSignalsHandler::on_connectedInNinjamServer(server);
-    this->controller->vstHost->setTempo(server.getBpm());
-}
-
-void StandaloneSignalsHandler::on_audioDriverSampleRateChanged(int newSampleRate){
-    MainControllerSignalsHandler::on_audioDriverSampleRateChanged(newSampleRate);
-    this->controller->vstHost->setSampleRate(newSampleRate);
-    foreach (Audio::LocalInputAudioNode* inputNode, controller->inputTracks) {
+void StandaloneMainController::on_audioDriverSampleRateChanged(int newSampleRate){
+    MainController::on_audioDriverSampleRateChanged(newSampleRate);
+    vstHost->setSampleRate(newSampleRate);
+    foreach (Audio::LocalInputAudioNode* inputNode, inputTracks) {
         inputNode->setProcessorsSampleRate(newSampleRate);
     }
 }
 
-void StandaloneSignalsHandler::on_audioDriverStarted(){
-    MainControllerSignalsHandler::on_audioDriverStarted();
+void StandaloneMainController::on_audioDriverStarted(){
+    MainController::on_audioDriverStarted();
 
-    controller->vstHost->setSampleRate(controller->audioDriver->getSampleRate());
-    controller->vstHost->setBlockSize(controller->audioDriver->getBufferSize());
+    vstHost->setSampleRate(audioDriver->getSampleRate());
+    vstHost->setBlockSize(audioDriver->getBufferSize());
 
-    foreach (Audio::LocalInputAudioNode* inputTrack, controller->inputTracks) {
+    foreach (Audio::LocalInputAudioNode* inputTrack, inputTracks) {
         inputTrack->resumeProcessors();
     }
 }
 
-void StandaloneSignalsHandler::on_audioDriverStopped(){
-    MainControllerSignalsHandler::on_audioDriverStopped();
-    foreach (Audio::LocalInputAudioNode* inputTrack, controller->inputTracks) {
+void StandaloneMainController::on_audioDriverStopped(){
+    MainController::on_audioDriverStopped();
+    foreach (Audio::LocalInputAudioNode* inputTrack, inputTracks) {
         inputTrack->suspendProcessors();//suspend plugins
     }
 }
 
-void StandaloneSignalsHandler::on_newNinjamInterval(){
-    controller->vstHost->setPlayingFlag(true);
+void StandaloneMainController::on_newNinjamInterval(){
+    MainController::on_newNinjamInterval();
+    vstHost->setPlayingFlag(true);
 }
 
-void StandaloneSignalsHandler::on_ninjamStartProcessing(int intervalPosition){
-    controller->vstHost->update(intervalPosition);//update the vst host time line.
+void StandaloneMainController::on_ninjamStartProcessing(int intervalPosition){
+    MainController::on_ninjamStartProcessing(intervalPosition);
+    vstHost->update(intervalPosition);//update the vst host time line.
 }
 
 
-void StandaloneSignalsHandler::on_VSTPluginFounded(QString name, QString group, QString path){
-    controller->pluginsDescriptors.append(Audio::PluginDescriptor(name, group, path));
-    controller->settings.addVstPlugin(path);
+void StandaloneMainController::on_VSTPluginFounded(QString name, QString group, QString path){
+    pluginsDescriptors.append(Audio::PluginDescriptor(name, group, path));
+    settings.addVstPlugin(path);
 }
 
 //++++++++++++++++++++++++++++++++++++++++++
-MainControllerSignalsHandler* StandaloneMainController::createSignalsHandler(){
-    return new StandaloneSignalsHandler(this);
-}
 
 bool StandaloneMainController::isRunningAsVstPlugin() const{
     return false;
@@ -227,31 +221,33 @@ Audio::AudioDriver* StandaloneMainController::createAudioDriver(const Persistenc
 }
 
 //++++++++++++++++++++++++++++++++++++++++++
-StandaloneMainController::StandaloneMainController(Persistence::Settings settings, int &argc, char **argv)
-    : QApplication(argc, argv), MainController(settings), vstHost(Vst::Host::getInstance()){
+StandaloneMainController::StandaloneMainController(Persistence::Settings settings, QApplication* application)
+    : MainController(settings), vstHost(Vst::Host::getInstance()), application(application){
 
-
-    setQuitOnLastWindowClosed(false);//wait disconnect from server to close
+    application->setQuitOnLastWindowClosed(true);
 }
 
 void StandaloneMainController::start(){
     MainController::start();
-    QObject::connect(pluginFinder, SIGNAL(pluginScanFinished(QString,QString,QString)), this->signalsHandler, SLOT(on_VSTPluginFounded(QString,QString,QString)));
+    QObject::connect(pluginFinder.data(), SIGNAL(pluginScanFinished(QString,QString,QString)), this, SLOT(on_VSTPluginFounded(QString,QString,QString)));
 
-    vstHost->setSampleRate(audioDriver->getSampleRate());
-    vstHost->setBlockSize(audioDriver->getBufferSize());
+    if(audioDriver){
+        vstHost->setSampleRate(audioDriver->getSampleRate());
+        vstHost->setBlockSize(audioDriver->getBufferSize());
+    }
 }
 
-void StandaloneMainController::exit(){
-    QApplication::exit(0); //call exit in QApplication
-}
+//void StandaloneMainController::exit(){
+//    application.exit(0); //call exit in QApplication
+//}
 
 void StandaloneMainController::setCSS(QString css){
-    QApplication::setStyleSheet(css);
+    application->setStyleSheet(css);
 }
 
 StandaloneMainController::~StandaloneMainController(){
-    pluginsDescriptors.clear();
+    qDebug() << "StandaloneMainController destructor!";
+    //pluginsDescriptors.clear();
 }
 
 Audio::Plugin *StandaloneMainController::createPluginInstance(const Audio::PluginDescriptor& descriptor)

@@ -23,22 +23,22 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
     QTextStream stream(&stringMsg);
     switch (type) {
     case QtDebugMsg:
-        stream << "\nDEBUG:" << localMsg.constData() << " "  << " in " << file << " " << context.line << endl;
+        stream << "DEBUG:  " << localMsg.constData() << " "  << " in " << file << " " << context.line << endl;
         break;
     case QtWarningMsg:
-        stream << "\n\nWARNING: " << localMsg.constData() <<  context.function <<  " " << file << context.line << endl;
+        stream << endl<< "WARNING:  " << localMsg.constData() <<  context.function <<  " " << file << context.line << endl << endl;
         break;
     case QtCriticalMsg:
-        stream << "\n\nCRITICAL:" << localMsg.constData() <<  context.function << " " << file << context.line << endl <<endl;
+        stream << endl << "CRITICAL:  " << localMsg.constData() <<  context.function << " " << file << context.line << endl << endl;
         break;
     case QtFatalMsg:
-        stream << "\n\nFATAL:" << localMsg.constData() << context.function << file << context.line << endl << endl;
+        stream << endl << "FATAL:  " << localMsg.constData() << context.function << file << context.line << endl << endl;
         //abort();
         break;
     default:
-       stream << "\n\nINFO:" << localMsg.constData() << file << context.line << endl << endl;
+       stream << "\n\nINFO:  " << localMsg.constData() << file << context.line;
     }
-    QTextStream(stdout) << stringMsg << endl;
+    QTextStream(stdout) << stringMsg;
 
     //if(type != QtDebugMsg){//write the critical messages to log file
         QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));

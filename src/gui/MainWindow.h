@@ -106,15 +106,11 @@ protected slots:
     void on_stoppingRoomStream(Login::RoomInfo roomInfo);
     void on_enteringInRoom(Login::RoomInfo roomInfo, QString password = "");
 
-
-
     //plugin finder
     void onScanPluginsStarted();
     void onScanPluginsFinished();
     void onPluginFounded(QString name, QString group, QString path);
     void onScanPluginsStarted(QString pluginPath);
-
-
 
     //collapse local controls
     void on_localControlsCollapseButtonClicked();
@@ -148,13 +144,13 @@ private:
     QMap<long long, JamRoomViewPanel*> roomViewPanels;
 
 
-    PluginScanDialog* pluginScanDialog;
+    QScopedPointer<PluginScanDialog> pluginScanDialog;
     Ui::MainFrameClass ui;
     QList<LocalTrackGroupView*> localChannels;
 
-    NinjamRoomWindow* ninjamWindow;
+    QScopedPointer<NinjamRoomWindow> ninjamWindow;
 
-    Login::RoomInfo* roomToJump;//store the next room reference when jumping from on room to another
+    QScopedPointer<Login::RoomInfo> roomToJump;//store the next room reference when jumping from on room to another
     QString passwordToJump;
 
     void showPluginGui(Audio::Plugin* plugin);

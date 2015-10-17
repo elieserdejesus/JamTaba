@@ -72,7 +72,7 @@ NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Co
     QObject::connect(ui->topPanel->getBpmCombo(), SIGNAL(activated(QString)), this, SLOT(ninjamBpmComboChanged(QString)));
     QObject::connect(ui->topPanel->getAccentsCombo(), SIGNAL(currentIndexChanged(int)), this, SLOT(ninjamAccentsComboChanged(int)));
 
-    QString serverLicence = Ninjam::Service::getInstance()->getCurrentServerLicence();
+    QString serverLicence = mainController->getNinjamService()->getCurrentServerLicence();
     ui->licenceButton->setVisible(!serverLicence.isEmpty());
 
     QObject::connect(chatPanel, SIGNAL(userSendingNewMessage(QString)), this, SLOT(userSendingNewChatMessage(QString)));
@@ -152,7 +152,7 @@ void NinjamRoomWindow::on_chatMessageReceived(Ninjam::User user, QString message
 
     //local user is voting?
     static long long lastVoteCommand = 0;
-    QString localUserFullName = Ninjam::Service::getInstance()->getConnectedUserName();
+    QString localUserFullName = mainController->getNinjamService()->getConnectedUserName();
     if (user.getFullName() == localUserFullName && message.toLower().contains("!vote")) {
         lastVoteCommand = QDateTime::currentMSecsSinceEpoch();
     }
@@ -382,7 +382,7 @@ void NinjamRoomWindow::on_intervalBeatChanged(int beat){
 
 void NinjamRoomWindow::on_licenceButton_clicked()
 {
-    QString licence = Ninjam::Service::getInstance()->getCurrentServerLicence();
+    QString licence = mainController->getNinjamService()->getCurrentServerLicence();
     QMessageBox* msgBox = new QMessageBox(this);
     msgBox->setText(licence);
     msgBox->setWindowTitle(ui->labelRoomName->text());
