@@ -7,7 +7,7 @@
 
 TEMPLATE = subdirs
 
-SUBDIRS = VstPlugin
+SUBDIRS = Standalone
 #Standalone
 #PluginTester
 #ThemeEditor
@@ -15,8 +15,9 @@ SUBDIRS = VstPlugin
 CONFIG += ordered
 
 
-#quando removi o plugin crashou. Mudei o processo de limpeza, tenho que ver o que tá rolando
+#No minihost: entrei em uma sala, sai, entrei em outra e crashou
 
+#pelo log, parece que estou tentando gravar o audio local mesmo quando não estou em uma sala
 
 #clique no dial não funciona mais
 

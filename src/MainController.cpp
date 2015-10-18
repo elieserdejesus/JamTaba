@@ -199,7 +199,7 @@ void MainController::on_connectedInNinjamServer(Ninjam::Server server){
 
 void MainController::on_ninjamStartProcessing(int intervalPosition){
     Q_UNUSED(intervalPosition)
-    qDebug() << "MainController: on_ninjamStartProcessing";
+   // qDebug() << "MainController: on_ninjamStartProcessing";
 }
 
 void MainController::on_newNinjamInterval(){
@@ -914,7 +914,7 @@ void MainController::start(){
 
         QString userEnvironment = getUserEnvironmentString();
         QString version = QApplication::applicationVersion();// applicationVersion();
-        //loginService.connectInServer("Jamtaba2 USER", 0, "", map, version, userEnvironment, getAudioDriverSampleRate());
+        loginService.connectInServer("Jamtaba2 USER", 0, "", map, version, userEnvironment, getAudioDriverSampleRate());
         //(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
 
         qCWarning(controllerMain) << "Starting " + userEnvironment;
