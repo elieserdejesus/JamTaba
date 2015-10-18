@@ -9,6 +9,9 @@
 #include <QLoggingCategory>
 #include <QMessageBox>
 
+
+class MainWindow;
+
 Q_DECLARE_LOGGING_CATEGORY(ninjamRoomWindow)
 
 class NinjamTrackGroupView;
@@ -42,7 +45,7 @@ class NinjamRoomWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Controller::MainController *mainController);
+    explicit NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo, Controller::MainController *mainController);
     ~NinjamRoomWindow();
     void updatePeaks();
     void updateGeoLocations();

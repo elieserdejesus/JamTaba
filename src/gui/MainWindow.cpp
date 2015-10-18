@@ -693,7 +693,7 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
 //        ninjamWindow->deleteLater();
 //    }
     qWarning() << "creating NinjamRoomWindow...";
-    ninjamWindow.reset( new NinjamRoomWindow(ui.tabWidget, roomInfo, mainController));
+    ninjamWindow.reset( new NinjamRoomWindow(this, roomInfo, mainController));
     QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
     int index = ui.tabWidget->addTab(ninjamWindow.data(), tabName);
     ui.tabWidget->setCurrentIndex(index);
@@ -891,9 +891,9 @@ void MainWindow::on_privateServerMenuItemTriggered(){
 }
 
 void MainWindow::centerDialog(QWidget *dialog){
-    QPoint mainWindowPosition = mapToGlobal( this->pos());
-    int x = mainWindowPosition.x() + width()/2 - dialog->width()/2;
-    int y = mainWindowPosition.y() + height()/2 - dialog->height()/2;
+    QPoint globalPosition = mapToGlobal( this->pos());
+    int x = globalPosition.x() + width()/2 - dialog->width()/2;
+    int y = globalPosition.y() + height()/2 - dialog->height()/2;
     dialog->move(x,y);
 }
 

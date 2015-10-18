@@ -70,7 +70,6 @@ private slots:
     void onFaderMoved(int value);
     void onPanSliderMoved(int value);
 
-
 };
 
 

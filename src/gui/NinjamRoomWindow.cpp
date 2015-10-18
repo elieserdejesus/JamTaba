@@ -21,6 +21,8 @@
 #include "NinjamPanel.h"
 #include "ChatPanel.h"
 
+#include "MainWindow.h"
+
 #include <QMessageBox>
 
 Q_LOGGING_CATEGORY(ninjamRoomWindow, "ninjamRoomWindow")
@@ -39,7 +41,7 @@ Q_LOGGING_CATEGORY(ninjamRoomWindow, "ninjamRoomWindow")
 
 //+++++++++++++++++++++++++
 
-NinjamRoomWindow::NinjamRoomWindow(QWidget *parent, Login::RoomInfo roomInfo, Controller::MainController *mainController) :
+NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo, Controller::MainController *mainController) :
     QWidget(parent),
     ui(new Ui::NinjamRoomWindow),
     mainController(mainController),
@@ -383,10 +385,11 @@ void NinjamRoomWindow::on_intervalBeatChanged(int beat){
 void NinjamRoomWindow::on_licenceButton_clicked()
 {
     QString licence = mainController->getNinjamService()->getCurrentServerLicence();
-    QMessageBox* msgBox = new QMessageBox(this);
+    QMessageBox* msgBox = new QMessageBox(parentWidget());
     msgBox->setText(licence);
     msgBox->setWindowTitle(ui->labelRoomName->text());
     msgBox->setAttribute( Qt::WA_DeleteOnClose );
+
 
     //hack to set minimum width in QMEsageBox
     QSpacerItem* horizontalSpacer = new QSpacerItem(500, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
@@ -394,4 +397,12 @@ void NinjamRoomWindow::on_licenceButton_clicked()
     layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
     //QMessageBox::about(this, ui->labelRoomName->text(), licence);//, QMessageBox::NoButton, QMessageBox::NoButton);
     msgBox->show();
+
+    if(mainController->isRunningAsVstPlugin()){
+        QPoint basePosition = mapToGlobal(parentWidget()->pos());//parent widget is QTabWidget;
+        int x = basePosition.x() + parentWidget()->width()/2 - msgBox->width()/2;
+        int y = basePosition.y() + parentWidget()->height()/2 - msgBox->height()/2;
+        msgBox->move(x,y);
+    }
+
 }
