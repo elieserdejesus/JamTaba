@@ -885,7 +885,11 @@ void MainController::start(){
 
         QString userEnvironment = getUserEnvironmentString();
         QString version = QApplication::applicationVersion();// applicationVersion();
-        loginService.connectInServer("Jamtaba2 USER", 0, "", map, version, userEnvironment, getSampleRate());
+        QString userName = settings.getUserName();
+        if(userName.isEmpty()){
+            userName = "No name!";
+        }
+        loginService.connectInServer(userName, 0, "", map, version, userEnvironment, getSampleRate());
         //(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
 
         qCWarning(controllerMain) << "Starting " + userEnvironment;
@@ -898,7 +902,8 @@ QString MainController::getUserEnvironmentString() const{
     QString userMachineArch = QSysInfo::currentCpuArchitecture();
     QString jamtabaArch = QSysInfo::buildCpuArchitecture();
     QString version = QApplication::applicationVersion();
-    return "Jamtaba " + version + " (" + jamtabaArch + ") running on " + systemName + " (" + userMachineArch + ")";
+    QString flavor = isRunningAsVstPlugin() ? "VST Plugin" : "Standalone";
+    return "Jamtaba " + version + " " + flavor + " (" + jamtabaArch + ") running on " + systemName + " (" + userMachineArch + ")";
 }
 
 void MainController::stop()
