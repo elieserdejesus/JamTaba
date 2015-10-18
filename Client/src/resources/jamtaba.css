@@ -607,7 +607,7 @@ BusyDialog > QLabel{
 
 
 JamRoomViewPanel{
-    background-color: #EAEAEA;
+    background-color: none;/*#EAEAEA;*/
     border: 1px solid rgb(180,180,180);
     /*border-bottom: 1px solid rgb(167, 167, 167);
     border-right: 1px solid rgb(180,180,180);*/
@@ -616,6 +616,18 @@ JamRoomViewPanel{
 
     border-radius: 2px;
     padding: 1px;
+}
+
+JamRoomViewPanel #panelTop{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+       stop:0 #EAEAEA,
+        stop:1 #CACACA);
+
+    margin: 1px;
+    margin-bottom: 0px;
+
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
 }
 
 JamRoomViewPanel #content{

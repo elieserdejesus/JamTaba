@@ -50,18 +50,18 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
 }
 
 void PreferencesDialog::selectAudioTab(){
-    if(mainController->isRunningAsVstPlugin()){
+    if(!mainController->isRunningAsVstPlugin()){
         ui->prefsTab->setCurrentWidget(ui->tabAudio);
     }
 }
 
 void PreferencesDialog::selectMidiTab(){
-    if(mainController->isRunningAsVstPlugin()){
+    if(!mainController->isRunningAsVstPlugin()){
         ui->prefsTab->setCurrentWidget(ui->tabMidi);
     }
 }
 void PreferencesDialog::selectVstPluginsTab(){
-    if(mainController->isRunningAsVstPlugin()){
+    if(!mainController->isRunningAsVstPlugin()){
         ui->prefsTab->setCurrentWidget(ui->tabVST);
     }
 }

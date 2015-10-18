@@ -16,8 +16,6 @@ CONFIG += ordered
 
 #---------------------
 
-#botar um degradê na barra de título das JamRoomViewPanel
-
 #se eu clico em Preferencias->Audio cai na aba de VST
 
 #deu pau na portmidi com a fast track ligada. Será que é só a versão debug da portmidi?
