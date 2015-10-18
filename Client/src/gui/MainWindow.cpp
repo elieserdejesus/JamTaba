@@ -726,6 +726,8 @@ void MainWindow::exitFromRoom(bool normalDisconnection){
         ui.chatTabWidget->removeTab(0);
     }
 
+    ninjamWindow.reset();
+
     //hide chat area
     ui.chatArea->setVisible(false);
 
