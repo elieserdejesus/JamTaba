@@ -247,7 +247,7 @@ void MainController::on_ninjamEncodedAudioAvailableToSend(QByteArray encodedAudi
         }
     }
 
-    if(settings.isSaveMultiTrackActivated()){
+    if(settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom()){
         jamRecorder.appendLocalUserAudio(encodedAudio, channelIndex, isFirstPart, isLastPart);
     }
 }

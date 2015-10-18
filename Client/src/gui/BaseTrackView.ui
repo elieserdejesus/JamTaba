@@ -67,6 +67,9 @@
         <property name="tracking">
          <bool>false</bool>
         </property>
+        <property name="wrapping">
+         <bool>false</bool>
+        </property>
         <property name="notchesVisible">
          <bool>false</bool>
         </property>

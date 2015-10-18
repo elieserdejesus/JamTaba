@@ -7,25 +7,20 @@
 
 TEMPLATE = subdirs
 
-SUBDIRS = Standalone
+SUBDIRS = Standalone VstPlugin
 #Standalone
 #PluginTester
 #ThemeEditor
 
 CONFIG += ordered
 
+#fechei o jamtaba e o Kontakt ficou aberto.
 
-#No minihost: entrei em uma sala, sai, entrei em outra e crashou
+#---------------------
 
-#pelo log, parece que estou tentando gravar o audio local mesmo quando não estou em uma sala
-
-#clique no dial não funciona mais
-
-#no debug, quando saio de uma sala do ninjam com a gravação ligada dá um erro na destruição de algum objeto.
-    #Não tenho certeza se tem relação coma gravação ativada.
+#tratar redimensionamento da tela do host
 
 #testar se o plugin está enviando os dois canais
-
 
 #ver a questão das multiplas instancias do plugin
 
