@@ -46,13 +46,13 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
 //        }
 //    }
 
-    //addMessage("tester", "hi");
+    addMessage("tester", "hi");
 
-    //QString teste("Ã©");
-    //addMessage("elieser", QString::fromUtf8(teste.toStdString().c_str()));
+    QString teste("Ã©");
+    addMessage("elieser", QString::fromUtf8(teste.toStdString().c_str()));
 
-    //addBpiVoteConfirmationMessage(33);
-    //addBpmVoteConfirmationMessage(140);
+    addBpiVoteConfirmationMessage(33);
+    addBpmVoteConfirmationMessage(140);
 }
 
 //void ChatPanel::on_buttonVoteBpi_Clicked(){
@@ -206,10 +206,17 @@ ChatPanel::~ChatPanel(){
 }
 
 void ChatPanel::on_buttonClear_clicked(){
+    //remove message panels
     QList<ChatMessagePanel*> panels = ui->scrollContent->findChildren<ChatMessagePanel*>();
     foreach (ChatMessagePanel* msgPanel, panels) {
         ui->scrollContent->layout()->removeWidget(msgPanel);
-        delete msgPanel;
+        msgPanel->deleteLater();
     }
 
+    //remove Vote buttons
+    QList<VoteButton*> buttons = ui->scrollContent->findChildren<VoteButton*>();
+    foreach (VoteButton* button, buttons) {
+        ui->scrollContent->layout()->removeWidget(button);
+        button->deleteLater();
+    }
 }

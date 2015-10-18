@@ -16,16 +16,15 @@ CONFIG += ordered
 
 #---------------------
 
-
-#mudar a string de ambiente para incluir VST
+#botar um degradê na barra de título das JamRoomViewPanel
 
 #se eu clico em Preferencias->Audio cai na aba de VST
 
-#botar um degradê na barra de título das JamRoomViewPanel
-
-#deu pau na portmidi com a fast track ligada
+#deu pau na portmidi com a fast track ligada. Será que é só a versão debug da portmidi?
 
 #ver a questão das multiplas instancias do plugin
+
+#sync com o host? Isso é muito importante, acho que consigo resolver em algumas horas, já tenho toda a ideia.
 
 #Fazer o instalador
     #http://stackoverflow.com/questions/11137424/how-to-make-vcredist-x86-reinstall-only-if-not-yet-installed
@@ -33,10 +32,6 @@ CONFIG += ordered
 #testar o plugin na máquina virtual - provavelmente vou precisar instalar
     #o redistributable.
 
-#quando limpo o chat os botões de votação não são removidos
-
-
-#sync com o host? Isso é muito importante
 #----------------------------------
 
 #tratar redimensionamento da tela do host
