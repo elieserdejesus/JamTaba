@@ -12,6 +12,11 @@ public:
     }
 };
 
+void MainControllerVST::setSampleRate(int newSampleRate){
+    this->sampleRate = newSampleRate;
+    MainController::setSampleRate(newSampleRate);
+}
+
 MainControllerVST::MainControllerVST(Persistence::Settings settings)
     :MainController(settings){
 

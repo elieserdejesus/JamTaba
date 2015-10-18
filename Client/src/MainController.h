@@ -112,7 +112,7 @@ public:
 
     void enterInRoom(Login::RoomInfo room, QStringList channelsNames, QString password = "");
 
-    Audio::AudioDriver* getAudioDriver() const;
+    inline Audio::AudioDriver* getAudioDriver() const{return audioDriver.data();}
     Midi::MidiDriver* getMidiDriver() const;
     Login::LoginService* getLoginService() const;
 
@@ -157,7 +157,8 @@ public:
 
     void mixGroupedInputs(int groupIndex, Audio::SamplesBuffer& out);
 
-    inline int getAudioDriverSampleRate() const{return audioDriver->getSampleRate();}
+    inline virtual int getSampleRate() const{return audioDriver->getSampleRate();}
+    virtual void setSampleRate(int newSampleRate);
 
     static QByteArray newGUID();
 
@@ -206,6 +207,8 @@ public:
     void removePluginsScanPath(int index);
     void clearPluginsCache();
     virtual void scanPlugins() = 0;
+
+
 
 protected:
     QScopedPointer<Audio::AudioDriver> audioDriver;

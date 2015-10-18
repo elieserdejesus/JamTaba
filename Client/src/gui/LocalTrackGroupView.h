@@ -30,7 +30,7 @@ public:
     bool isFaderOnly() const{return faderOnly;}
 
     void detachMainControllerInSubchannels();
-
+    void closePluginsWindows();
     //QSize sizeHint() const;
 
 signals:

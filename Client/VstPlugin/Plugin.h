@@ -26,7 +26,7 @@ class JamtabaPlugin;
 
 
 //-------------------------------------------------------------------------------------------------------
-class MainControllerVST;
+
 class JamtabaPlugin :  public AudioEffectX{
 public:
         JamtabaPlugin (audioMasterCallback audioMaster);
@@ -39,10 +39,8 @@ public:
         void initialize();//called first time editor is opened
 
         VstInt32 canDo(char* text);
-        //VstInt32 processEvents(VstEvents* events);
 
         void processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames);
-        //void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames){}
 
         VstInt32 fxIdle();
         bool needIdle();
@@ -58,6 +56,7 @@ public:
         void open();
         void close();
         void setSampleRate(float sampleRate);
+        inline int getSampleRate() const{return sampleRate;}
         //void setBlockSize (VstInt32 blockSize);
         void suspend();
         void resume();

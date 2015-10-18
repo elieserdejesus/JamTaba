@@ -127,11 +127,18 @@ private:
 
 //++++++++++++++++++++++++++++++++++++++++++++
 
-void MainController::on_audioDriverSampleRateChanged(int newSampleRate){
+void MainController::setSampleRate(int newSampleRate){
     audioMixer.setSampleRate(newSampleRate);
     if(settings.isSaveMultiTrackActivated()){
         jamRecorder.setSampleRate(newSampleRate);
     }
+    if(isPlayingInNinjamRoom()){
+        ninjamController->setSampleRate(newSampleRate);
+    }
+}
+
+void MainController::on_audioDriverSampleRateChanged(int newSampleRate){
+    setSampleRate(newSampleRate);
 }
 
 void MainController::on_audioDriverStarted(){
@@ -144,7 +151,7 @@ void MainController::on_audioDriverStopped(){
         foreach (int channelIndex, intervalsToUpload.keys()) {
             ninjamService.sendAudioIntervalPart(intervalsToUpload[channelIndex]->getGUID(), QByteArray(), true);
         }
-
+        ninjamController.reset();//discard downloaded intervals and reset interval position
     }
 }
 
@@ -193,7 +200,7 @@ void MainController::on_connectedInNinjamServer(Ninjam::Server server){
 
 
     if(settings.isSaveMultiTrackActivated()){
-        jamRecorder.startRecording(getUserName(), QDir(settings.getRecordingPath()), server.getBpm(), server.getBpi(), getAudioDriverSampleRate());
+        jamRecorder.startRecording(getUserName(), QDir(settings.getRecordingPath()), server.getBpm(), server.getBpi(), getSampleRate());
     }
 }
 
@@ -746,29 +753,6 @@ MainController::~MainController(){
     stop();
     qCDebug(controllerMain()) << "main controller stopped!";
 
-    //delete audioMixer; crashing :(
-//    if(audioDriver){
-//        qCDebug(controllerMain()) << "deleting audio driver...";
-//        QObject::disconnect(&audioDriver, SIGNAL(sampleRateChanged(int)), this->signalsHandler, SLOT(on_audioDriverSampleRateChanged(int)));
-//        //delete audioDriver;
-//        //audioDriver = nullptr;
-//        qCDebug(controllerMain()) << "audio driver deleted!";
-//    }
-
-//    if(midiDriver){
-//        qCDebug(controllerMain()) << "deleting midi driver...";
-//        delete midiDriver;
-//        midiDriver = nullptr;
-//        qCDebug(controllerMain()) << "midi driver deleted.";
-//    }
-
-//    if(roomStreamer){
-//        qCDebug(controllerMain()) << "deleting room streamer...";
-//        delete roomStreamer;
-//        roomStreamer = nullptr;
-//        qCDebug(controllerMain()) << "room streamer deleted.";
-//    }
-
     qCDebug(controllerMain()) << "clearing tracksNodes...";
     tracksNodes.clear();
     foreach (Audio::LocalInputAudioNode* input, inputTracks) {
@@ -782,19 +766,6 @@ MainController::~MainController(){
     trackGroups.clear();
     qCDebug(controllerMain()) << "clearing tracksNodes done!";
 
-
-//    if(this->ninjamController){
-//        qCDebug(controllerMain()) << "deleting ninjamController...";
-//        delete ninjamController;
-//        ninjamController = nullptr;
-//        qCDebug(controllerMain()) << "deleting ninjamController done!";
-//    }
-
-    //delete signalsHandler;
-
-    //delete loginService;
-
-    //delete recorder;
     qCDebug(controllerMain) << "MainController destructor finished!";
 
 }
@@ -914,7 +885,7 @@ void MainController::start(){
 
         QString userEnvironment = getUserEnvironmentString();
         QString version = QApplication::applicationVersion();// applicationVersion();
-        loginService.connectInServer("Jamtaba2 USER", 0, "", map, version, userEnvironment, getAudioDriverSampleRate());
+        loginService.connectInServer("Jamtaba2 USER", 0, "", map, version, userEnvironment, getSampleRate());
         //(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
 
         qCWarning(controllerMain) << "Starting " + userEnvironment;
@@ -960,10 +931,10 @@ void MainController::stop()
 
 }
 
-Audio::AudioDriver *MainController::getAudioDriver() const
-{
-    return audioDriver.data();
-}
+//Audio::AudioDriver *MainController::getAudioDriver() const
+//{
+//    return audioDriver.data();
+//}
 
 Midi::MidiDriver* MainController::getMidiDriver() const{
     return midiDriver.data();

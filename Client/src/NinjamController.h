@@ -61,6 +61,10 @@ public:
 
     void setTransmitStatus(bool transmiting);
 
+    void setSampleRate(int newSampleRate);
+
+    void reset();//discard downloaded intervals and reset intervalPosition
+
 signals:
     void currentBpiChanged(int newBpi);
     void currentBpmChanged(int newBpm);
@@ -149,10 +153,6 @@ private slots:
     void on_ninjamUserLeave(Ninjam::User user);
     void on_ninjamUserEnter(Ninjam::User user);
     //void on_ninjamDisconnectedFromServer(Ninjam::Server server);
-
-    //audio driver events
-    void on_audioDriverSampleRateChanged(int newSampleRate);
-    void on_audioDriverStopped();
 };
 
 }
