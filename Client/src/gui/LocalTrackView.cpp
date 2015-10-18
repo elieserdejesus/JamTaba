@@ -28,6 +28,10 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
     init(channelIndex, 1, 0, false);//unit gain and pan in center, not muted
 }
 
+void LocalTrackView::detachMainController(){
+    this->mainController = nullptr;
+}
+
 void LocalTrackView::init(int channelIndex, float initialGain, float initialPan, bool muted){
     if(!mainController){
         qCritical() << "LocalTrackView::init() mainController is null!";
@@ -457,7 +461,10 @@ FxPanel *LocalTrackView::createFxPanel(){
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 LocalTrackView::~LocalTrackView()
 {
-    mainController->removeInputTrackNode(getTrackID());
+    if(mainController){
+        mainController->removeInputTrackNode(getTrackID());
+        //mainController->removeTrack(getTrackID());
+    }
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QList<const Audio::Plugin *> LocalTrackView::getInsertedPlugins() const{

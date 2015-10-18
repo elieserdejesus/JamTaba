@@ -26,6 +26,7 @@ public:
     static BaseTrackView* getTrackViewByID(long trackID);
 
 
+
     virtual void setToNarrow();
     virtual void setToWide();
 

@@ -143,6 +143,12 @@ void LocalTrackGroupView::on_removeSubChannelClicked(){
     }
 }
 
+void LocalTrackGroupView::detachMainControllerInSubchannels(){
+    foreach (BaseTrackView* view, trackViews) {
+        (dynamic_cast<LocalTrackView*>(view))->detachMainController();
+    }
+}
+
 void LocalTrackGroupView::on_removeChannelClicked(){
     mainFrame->removeChannelsGroup(mainFrame->getChannelGroupsCount()-1);
 }

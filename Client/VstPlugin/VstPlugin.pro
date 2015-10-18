@@ -1,18 +1,16 @@
-#CONFIG += qtwinmigrate-uselib
-
 !include( ../Jamtaba-common.pri ) {
     error( "Couldn't find the Jamtaba-common.pri file!" )
 }
 
+#CONFIG += qtwinmigrate-uselib
 !include(../qtwinmigrate/src/qtwinmigrate.pri) {
     error( "Couldn't find the qtwinmigrate common.pri file!" )
 }
 
-QT += gui  network widgets
+QT *= core gui widgets network
 
 TARGET = "JamtabaVST"
 TEMPLATE = lib
-DEFINES += VST_FORCE_DEPRECATED=0
 CONFIG += shared
 
 win32-msvc* {
@@ -51,7 +49,6 @@ SOURCES += \
     ../src/ninjam/Server.cpp \
     ../src/audio/Resampler.cpp \
     ../src/audio/vorbis/VorbisDecoder.cpp \
-    ../src/audio/SamplesBufferResampler.cpp \
     ../src/audio/samplesbufferrecorder.cpp \
     ../src/audio/vorbis/VorbisEncoder.cpp \
     ../src/persistence/Settings.cpp \
@@ -75,14 +72,14 @@ win32 {
 
     !contains(QMAKE_TARGET.arch, x86_64) {
         message("x86 build") ## Windows x86 (32bit) specific build here
-        LIBS_PATH = "win32-msvc"
+        LIBS_PATH = "static/win32-msvc"
     } else {
         message("x86_64 build") ## Windows x64 (64bit) specific build here
-        LIBS_PATH = "win64-msvc"
+        LIBS_PATH = "static/win64-msvc"
     }
 
     #+++++++++++++ link windows platform statically +++++++++++++++++++++++++++++++++++
-    #relese platform libs
+    #release platform libs
     CONFIG(release, debug|release): LIBS += -lQt5PlatformSupport
     CONFIG(release, debug|release): LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindows #link windows platform statically
 
@@ -95,12 +92,12 @@ win32 {
     else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lminimp3d -lvorbisfiled -lvorbisd -loggd
 }
 
+
 INCLUDEPATH += $$PWD/../libs/includes/ogg              \
                $$PWD/../libs/includes/vorbis           \
                $$PWD/../libs/includes/minimp3          \
-               #$$PWD/../libs/includes/libip2location   \
+#               $$PWD/../qtwinmigrate/src                  \
 
 DEPENDPATH +=  $$PWD/../libs/includes/ogg              \
                $$PWD/../libs/includes/vorbis           \
                $$PWD/../libs/includes/minimp3          \
-               #$$PWD/../libs/includes/libip2location   \

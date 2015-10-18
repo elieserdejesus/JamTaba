@@ -65,7 +65,7 @@ public:
 
         void updateParameter(int index, float value);
 
-        inline Controller::MainController* getController() {return controller;}
+        inline Controller::MainController* getController() {return controller.data();}
 
 protected:
         char programName[kVstMaxProgNameLen + 1];
@@ -74,7 +74,7 @@ protected:
         //Gui *qEditor;
         VstEvents *listEvnts;
 private:
-        Controller::MainController* controller;
+        QScopedPointer<Controller::MainController> controller;
         bool running;
         Audio::SamplesBuffer inputBuffer;
         Audio::SamplesBuffer outputBuffer;

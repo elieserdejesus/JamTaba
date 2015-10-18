@@ -96,6 +96,7 @@ void TrackGroupView::removeTrackView(BaseTrackView* trackView){
 void TrackGroupView::removeTrackView(int trackIndex){
     if(trackIndex >= 0 && trackIndex < trackViews.size()){
         removeTrackView(trackViews.at(trackIndex));
+
     }
     else{
         qCritical() << "Invalid index " << trackIndex;

@@ -229,6 +229,7 @@ void MainWindow::removeChannelsGroup(int channelIndex){
             TrackGroupView* channel = localChannels.at(channelIndex);
             ui.localTracksLayout->removeWidget(channel);
             localChannels.removeAt(channelIndex);
+
             channel->deleteLater();
 
             mainController->sendRemovedChannelMessage(channelIndex);
@@ -832,7 +833,13 @@ MainWindow::~MainWindow()
     if(mainController){
         mainController->saveLastUserSettings(getInputsSettings());
     }
+
+
+    foreach (LocalTrackGroupView* groupView, this->localChannels ) {
+        groupView->detachMainControllerInSubchannels();
+    }
     mainController = nullptr;
+
     killTimer(timerID);
     qDebug() << "Main frame timer killed!";
     qWarning() << "MainWindow destructor finished.";

@@ -36,6 +36,9 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
 
 
 void BaseTrackView::updateGuiElements(){
+    if(!mainController){
+        return;
+    }
     Audio::AudioPeak peak = mainController->getTrackPeak(getTrackID());
     if(peak.getMax() > maxPeak.getMax()){
         maxPeak.update(peak);
