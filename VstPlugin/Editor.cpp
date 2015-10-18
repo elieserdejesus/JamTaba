@@ -2,6 +2,7 @@
 
 #include "Plugin.h"
 #include <Windows.h>
+#include <QTimer>
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++
 /***
@@ -33,13 +34,20 @@ VstEditor::VstEditor(JamtabaPlugin *jamtaba)
 {
 }
 
+void VstEditor::deleteMainWindow(){
+    if(mainWindow){
+        if(mainWindow->isVisible()){
+            QTimer::singleShot(0, mainWindow, &MainWindow::close);
+        }
+        mainWindow->deleteLater();
+        mainWindow = nullptr;
+    }
+}
+
 VstEditor::~VstEditor()
 {
     qCDebug(pluginVst) << "VstEditor detructor...";
-    if(mainWindow){
-        delete mainWindow;
-        mainWindow = nullptr;
-    }
+    deleteMainWindow();
     qCDebug(pluginVst) << "VstEditor detructor done.";
 }
 

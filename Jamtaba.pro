@@ -7,7 +7,7 @@
 
 TEMPLATE = subdirs
 
-SUBDIRS = Standalone
+SUBDIRS = VstPlugin
 #Standalone
 #PluginTester
 #ThemeEditor
@@ -15,20 +15,16 @@ SUBDIRS = Standalone
 CONFIG += ordered
 
 
-#gravação no standalone: Os arquivos de áudio fora gravados, mas não foram adicionados ao projeto do Reaper.
+#quando removi o plugin crashou. Mudei o processo de limpeza, tenho que ver o que tá rolando
 
-#não está gravando nada além da primeira parte do áudio
 
 #clique no dial não funciona mais
 
 #no debug, quando saio de uma sala do ninjam com a gravação ligada dá um erro na destruição de algum objeto.
     #Não tenho certeza se tem relação coma gravação ativada.
 
-#testar a gravação com o plugin
+#testar se o plugin está enviando os dois canais
 
-#não está salvando o estado do check "save multitrack". Será que tem relação com o fato de que não está fechando corretamente?
-
-#não está enviando meu audio?
 
 #ver a questão das multiplas instancias do plugin
 

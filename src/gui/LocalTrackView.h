@@ -31,6 +31,8 @@ public:
     void addPlugin(Audio::Plugin* plugin, bool bypassed=false);
     void refreshInputSelectionName();
 
+    void detachMainController();
+
     inline int getInputIndex() const{return getTrackID();}
 
     void setToNoInput();

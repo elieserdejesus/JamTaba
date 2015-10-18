@@ -21,6 +21,7 @@ public:
     bool open(void* ptr);
     void close();
     void detachMainController();
+    void deleteMainWindow();
 
 };
 

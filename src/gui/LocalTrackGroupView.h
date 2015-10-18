@@ -29,6 +29,8 @@ public:
     virtual void toggleFaderOnlyMode();
     bool isFaderOnly() const{return faderOnly;}
 
+    void detachMainControllerInSubchannels();
+
     //QSize sizeHint() const;
 
 signals:

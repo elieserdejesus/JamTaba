@@ -67,7 +67,7 @@ void JamtabaPlugin::initialize(){
             Persistence::Settings settings;//read from file in constructor
             settings.load();
             qCDebug(pluginVst)<< "Creating controller!";
-            controller = new MainControllerVST(settings);
+            controller.reset( new MainControllerVST(settings));
             controller->configureStyleSheet("jamtaba.css");
             controller->start();
             qCDebug(pluginVst)<< "Controller started!";
@@ -101,20 +101,21 @@ void JamtabaPlugin::close()
         if(editor->isOpen()){
             editor->close();
         }
-        qCDebug(pluginVst) << "deleting editor...";
-        AEffEditor* theEditor = editor;
-        setEditor(nullptr);
-        delete theEditor;
-        qCDebug(pluginVst) << "deleting editor done!";
+        //qCDebug(pluginVst) << "deleting editor...";
+        ((VstEditor*)editor)->deleteMainWindow();
+        //AEffEditor* theEditor = editor;
+        //setEditor(nullptr);
+        //delete theEditor;
+        //qCDebug(pluginVst) << "deleting editor done!";
     }
-    if(controller){
-        qCDebug(pluginVst) << "deleting controller...";
-        delete controller;
-        controller = nullptr;
-        qCDebug(pluginVst) << "deleting controller done!";
-    }
+//    if(controller){
+//        qCDebug(pluginVst) << "deleting controller...";
+//        delete controller;
+//        controller = nullptr;
+//        qCDebug(pluginVst) << "deleting controller done!";
+//    }
     running = false;
-    AudioEffectX::close();
+    //AudioEffectX::close();
     qCDebug(pluginVst) << "JamtabaPLugin::close() finished";
 }
 

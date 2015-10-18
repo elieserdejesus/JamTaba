@@ -105,6 +105,9 @@ LoginService::~LoginService()
 {
     //disconnect();
     qDebug() << "LoginService Destructor";
+    if(pendingReply){
+        pendingReply->deleteLater();
+    }
 
 }
 
@@ -145,6 +148,7 @@ void LoginService::disconnectFromServer()
         qWarning() << "disconnected";
         if(pendingReply){
             pendingReply->readAll();
+            pendingReply->deleteLater();
             qWarning() << "reply content readed and discarded!";
             //delete pendingReply;
             //qWarning() << "reply deleted!";
