@@ -178,7 +178,7 @@ private:
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NinjamController::NinjamController(Controller::MainController* mainController)
     :mainController(mainController),
-    metronomeTrackNode(createMetronomeTrackNode( mainController->getAudioDriverSampleRate())),
+    metronomeTrackNode(createMetronomeTrackNode( mainController->getSampleRate())),
     intervalPosition(0),
     samplesInInterval(0),
     currentBpi(0),
@@ -191,8 +191,7 @@ NinjamController::NinjamController(Controller::MainController* mainController)
     //recorder("record.wav", mainController->getAudioDriver()->getSampleRate())
 {
     running = false;
-    QObject::connect( mainController->getAudioDriver(), SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
-    QObject::connect( mainController->getAudioDriver(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
+
 }
 
 //++++++++++++++++++++++++++
@@ -334,8 +333,6 @@ void NinjamController::stop(bool emitDisconnectedingSignal){
     encoders.clear();
 
     qCDebug(controllerNinjam) << "NinjamController destructor - disconnecting...";
-    QObject::disconnect( mainController->getAudioDriver(), SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
-    QObject::disconnect( mainController->getAudioDriver(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
 
     Ninjam::Service* ninjamService = mainController->getNinjamService();// Ninjam::Service::getInstance();
     QObject::disconnect(ninjamService, SIGNAL(serverBpmChanged(short)), this, SLOT(on_ninjamServerBpmChanged(short)));
@@ -412,13 +409,6 @@ void NinjamController::start(const Ninjam::Server& server, bool transmiting){
 
         //add tracks for users connected in server
         QList<Ninjam::User*> users = server.getUsers();
-
-//        Ninjam::User user("teste@localhost");
-//        for (int c = 0; c < 6; ++c) {
-//            Ninjam::UserChannel channel(user.getFullName(), "channel", true, c, 0, 0, 0);
-//            user.addChannel(channel);
-//        }
-//        users.append(&user);
         foreach (Ninjam::User* user, users) {
             foreach (Ninjam::UserChannel* channel, user->getChannels()) {
                 addTrack(*user, *channel);
@@ -550,8 +540,7 @@ long NinjamController::getSamplesPerBeat(){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 long NinjamController::computeTotalSamplesInInterval(){
     double intervalPeriod =  60000.0 / currentBpm * currentBpi;
-    int sampleRate = mainController->getAudioDriver()->getSampleRate();
-    return (long)(sampleRate * intervalPeriod / 1000.0);
+    return (long)(mainController->getSampleRate() * intervalPeriod / 1000.0);
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -628,7 +617,7 @@ void NinjamController::on_ninjamAudiointervalCompleted(Ninjam::User user, int ch
     }
 }
 
-void NinjamController::on_audioDriverStopped(){
+void NinjamController::reset(){
     QMutexLocker locker(&mutex);
     //checkThread("on_audioDriverStopped();");
     foreach (NinjamTrackNode* trackNode, this->trackNodes.values()) {
@@ -636,6 +625,7 @@ void NinjamController::on_audioDriverStopped(){
     }
     intervalPosition = 0;
 }
+
 
 void NinjamController::setTransmitStatus(bool transmiting){
     scheduledEvents.append(new XmitChangedEvent(this, transmiting));
@@ -669,14 +659,16 @@ void NinjamController::recreateEncoderForChannel(int channelIndex){
     if(maxChannelsForEncoding <= 0){//input tracks are setted as noInput?
         return;
     }
-    bool currentEncoderIsInvalid = encoders.contains(channelIndex) && encoders[channelIndex]->getChannels() != maxChannelsForEncoding;
+    bool currentEncoderIsInvalid = encoders.contains(channelIndex) &&
+            (encoders[channelIndex]->getChannels() != maxChannelsForEncoding
+                || encoders[channelIndex]->getSampleRate() != mainController->getSampleRate());
 
     if(!encoders.contains(channelIndex) || currentEncoderIsInvalid){//a new encoder is necessary?
         //qDebug() << "recreating encoder for channel index" << channelIndex;
         if(currentEncoderIsInvalid){
             delete encoders[channelIndex];
         }
-        encoders[channelIndex] = new VorbisEncoder(maxChannelsForEncoding, mainController->getAudioDriverSampleRate());
+        encoders[channelIndex] = new VorbisEncoder(maxChannelsForEncoding, mainController->getSampleRate());
     }
 }
 
@@ -695,11 +687,12 @@ void NinjamController::recreateEncoders(){
     }
 }
 
-void NinjamController::on_audioDriverSampleRateChanged(int newSampleRate){
+void NinjamController::setSampleRate(int newSampleRate){
     if(!isRunning()){
         return;
     }
 
+    reset();//discard downloaded intervals
 
     this->samplesInInterval = computeTotalSamplesInInterval();
 
@@ -724,6 +717,8 @@ void NinjamController::on_audioDriverSampleRateChanged(int newSampleRate){
 
     recreateEncoders();
 }
+
+
 
 void NinjamController::on_ninjamAudiointervalDownloading(Ninjam::User user, int channelIndex, int downloadedBytes){
     Q_UNUSED(downloadedBytes);

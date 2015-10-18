@@ -37,6 +37,13 @@ QList<LocalTrackView*> LocalTrackGroupView::getTracks() const{
     return tracks;
 }
 
+void LocalTrackGroupView::closePluginsWindows(){
+    QList<LocalTrackView*> trackViews = getTracks();
+    foreach (LocalTrackView* trackView, trackViews) {
+        trackView->closeAllPlugins();
+    }
+}
+
 void LocalTrackGroupView::refreshInputSelectionName(int inputTrackIndex){
     QList<LocalTrackView*> tracks = getTracks();
     foreach (LocalTrackView* trackView, tracks) {

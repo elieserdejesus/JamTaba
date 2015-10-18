@@ -29,6 +29,9 @@ public:
     ~LocalTrackView();
 
     void addPlugin(Audio::Plugin* plugin, bool bypassed=false);
+
+    void closeAllPlugins();
+
     void refreshInputSelectionName();
 
     void detachMainController();

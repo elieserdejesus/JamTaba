@@ -22,6 +22,9 @@ public:
         return nullptr;//vst plugin can't load other plugins
     }
 
+    void setSampleRate(int newSampleRate);
+
+    inline int getSampleRate() const{return sampleRate;}
 
     Midi::MidiDriver* createMidiDriver();
 
@@ -29,6 +32,8 @@ public:
 
     inline void addDefaultPluginsScanPath(){}
     inline void scanPlugins(){}
+private:
+    int sampleRate;
 };
 
 

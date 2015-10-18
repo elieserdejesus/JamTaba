@@ -275,6 +275,12 @@ void LocalInputAudioNode::setProcessorsSampleRate(int newSampleRate){
     }
 }
 
+void LocalInputAudioNode::closeProcessorsWindows(){
+    foreach (Audio::AudioNodeProcessor* p, processors) {
+        p->closeEditor();
+    }
+}
+
 void LocalInputAudioNode::setAudioInputSelection(int firstChannelIndex, int channelCount){
     audioInputRange = ChannelRange(firstChannelIndex, channelCount);
     if(audioInputRange.isMono())

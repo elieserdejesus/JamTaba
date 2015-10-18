@@ -18,10 +18,12 @@ namespace Audio{
 class AudioNodeProcessor : public QObject{
 public:
     virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, const Midi::MidiBuffer& midiBuffer) = 0;
-    //virtual ~AudioNodeProcessor(){}
+    virtual ~AudioNodeProcessor(){}
     virtual void suspend() = 0;
     virtual void resume() = 0;
-    virtual void updateGui(){}
+    virtual void updateGui() = 0;
+    virtual void openEditor(QPoint centerOfScreen) = 0;
+    virtual void closeEditor() = 0;
     virtual void setSampleRate(int newSampleRate){ Q_UNUSED(newSampleRate);}
 };
 
@@ -161,6 +163,7 @@ public:
     inline int getGroupChannelIndex() const {return channelIndex;}
     const Audio::SamplesBuffer& getLastBuffer() const{return internalOutputBuffer;}
     void setProcessorsSampleRate(int newSampleRate);
+    void closeProcessorsWindows();
 private:
     int globalFirstInputIndex; //store the first input index selected globally by users in preferences menu
     ChannelRange audioInputRange;

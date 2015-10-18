@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include <QStandardPaths>
 #include "MainControllerVST.h"
+#include "../NinjamController.h"
 #include "../log/logHandler.h"
 #include "Editor.h"
 
@@ -69,6 +70,7 @@ void JamtabaPlugin::initialize(){
             qCDebug(pluginVst)<< "Creating controller!";
             controller.reset( new MainControllerVST(settings));
             controller->configureStyleSheet("jamtaba.css");
+            controller->setSampleRate(getSampleRate());
             controller->start();
             qCDebug(pluginVst)<< "Controller started!";
             running = true;
@@ -230,6 +232,9 @@ void JamtabaPlugin::processReplacing (float** inputs, float** outputs, VstInt32 
 void JamtabaPlugin::setSampleRate(float sampleRate){
     qCDebug(pluginVst) << "JamtabaPlugin::setSampleRate()";
     this->sampleRate = sampleRate;
+    if(controller){
+        controller->setSampleRate(sampleRate);
+    }
 
 }
 
@@ -237,6 +242,9 @@ void JamtabaPlugin::setSampleRate(float sampleRate){
 void JamtabaPlugin::suspend()
 {
     qCDebug(pluginVst) << "JamtabaPLugin::suspend()";
+    if(controller && controller->isPlayingInNinjamRoom()){
+        controller->getNinjamController()->reset();//discard downloaded intervals
+    }
 }
 
 void JamtabaPlugin::resume()

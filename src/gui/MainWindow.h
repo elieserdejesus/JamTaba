@@ -76,6 +76,8 @@ protected:
 
     void centerDialog(QWidget* dialog);
 
+    QList<LocalTrackGroupView*> localChannels;
+
 protected slots:
     void on_tabCloseRequest(int index);
     void on_tabChanged(int index);
@@ -146,7 +148,7 @@ private:
 
     QScopedPointer<PluginScanDialog> pluginScanDialog;
     Ui::MainFrameClass ui;
-    QList<LocalTrackGroupView*> localChannels;
+
 
     QScopedPointer<NinjamRoomWindow> ninjamWindow;
 

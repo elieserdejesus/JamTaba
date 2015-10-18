@@ -14,23 +14,34 @@ SUBDIRS = Standalone VstPlugin
 
 CONFIG += ordered
 
-#fechei o jamtaba e o Kontakt ficou aberto.
-
 #---------------------
 
-#tratar redimensionamento da tela do host
 
-#testar se o plugin está enviando os dois canais
+#mudar a string de ambiente para incluir VST
+
+#se eu clico em Preferencias->Audio cai na aba de VST
+
+#botar um degradê na barra de título das JamRoomViewPanel
+
+#deu pau na portmidi com a fast track ligada
 
 #ver a questão das multiplas instancias do plugin
-
-#standalone não está fechando - Quando fecho o plugin no minihost aparece algo sobre WaitCondition.
 
 #Fazer o instalador
     #http://stackoverflow.com/questions/11137424/how-to-make-vcredist-x86-reinstall-only-if-not-yet-installed
 
 #testar o plugin na máquina virtual - provavelmente vou precisar instalar
     #o redistributable.
+
+#quando limpo o chat os botões de votação não são removidos
+
+
+#sync com o host? Isso é muito importante
+#----------------------------------
+
+#tratar redimensionamento da tela do host
+
+#standalone não está fechando - Quando fecho o plugin no minihost aparece algo sobre WaitCondition.
 
 #arakula: does your host calls the PlugIn dispatcher with effIdle (if the PlugIn wants this) and effEditIdle from time to time?
     #Parece que isso resolveu um bug em um host de um membro do KVr.
@@ -41,12 +52,9 @@ CONFIG += ordered
 #é possível escanear os plugins em outro processo para evitar os crashs?
     #http://www.cantabilesoftware.com/blog/posts/40-Robust-Plugin-Scanning
 
-#quando limpo o chat os botões de votação não são removidos
 
 #gaz sugeriu ter a possibilidade de carregar diferentes setups
 
-#ver o problema do mac, talvez a solução seja desativar o ssl. Se eu fizer
-    #isso os usuários de versões anteriores vão parar.
 
 #botão enter da sala não atualizou quando diminuiu a quantidade de usuários
 

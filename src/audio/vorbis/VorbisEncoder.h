@@ -19,6 +19,7 @@ public:
     QByteArray encode(const Audio::SamplesBuffer& in);
     QByteArray finishIntervalEncoding();
     inline int getChannels() const{return info.channels;}
+    inline int getSampleRate() const{return info.rate;}
 //    inline int getTotalEncoded() const{return totalEncoded;}
 private:
     static const float QUALITY;// = 0.32;//vorbis default quality is 0.3

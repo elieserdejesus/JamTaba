@@ -32,6 +32,10 @@ void LocalTrackView::detachMainController(){
     this->mainController = nullptr;
 }
 
+void LocalTrackView::closeAllPlugins(){
+    inputNode->closeProcessorsWindows();//close vst editors
+}
+
 void LocalTrackView::init(int channelIndex, float initialGain, float initialPan, bool muted){
     if(!mainController){
         qCritical() << "LocalTrackView::init() mainController is null!";
