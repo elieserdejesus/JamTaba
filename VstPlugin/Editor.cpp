@@ -3,6 +3,7 @@
 #include "Plugin.h"
 #include <Windows.h>
 #include <QTimer>
+#include "MainWindowVST.h"
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++
 /***
@@ -90,7 +91,7 @@ bool VstEditor::open(void* ptr){
 
     if(!mainWindow){
         qCDebug(pluginVst) << "Creating MainWindow...";
-        mainWindow = new MainWindow(jamtaba->getController());
+        mainWindow = new MainWindowVST(jamtaba->getController());
         jamtaba->getController()->setMainWindow(mainWindow);
         rectangle.left = 0;
         rectangle.top = 0;

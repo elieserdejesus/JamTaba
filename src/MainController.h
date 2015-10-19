@@ -208,6 +208,7 @@ public:
     void clearPluginsCache();
     virtual void scanPlugins() = 0;
 
+    void finishUploads();//used to send the last part of ninjam intervals when audio is stopped.
 
 
 protected:
@@ -234,6 +235,7 @@ protected:
     virtual Midi::MidiDriver* createMidiDriver() = 0;
     virtual Audio::AudioDriver* createAudioDriver(const Persistence::Settings& settings) = 0;
     virtual Vst::PluginFinder* createPluginFinder() = 0;
+    virtual Controller::NinjamController* createNinjamController(MainController*) = 0;
 
     MainWindow* mainWindow;
 

@@ -12,6 +12,8 @@ public:
 protected:
     void showEvent(QShowEvent *);
     void closeEvent(QCloseEvent *);
+
+    virtual NinjamRoomWindow* createNinjamWindow(Login::RoomInfo, Controller::MainController*);
 private:
     void initializePluginFinder();
 protected slots:

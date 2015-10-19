@@ -116,7 +116,7 @@
           <number>12</number>
          </property>
          <property name="bottomMargin">
-          <number>6</number>
+          <number>9</number>
          </property>
          <item row="0" column="1" rowspan="6">
           <widget class="QSlider" name="levelSlider">
@@ -460,6 +460,16 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelBPM">
+        <property name="toolTip">
+         <string>Beats per minute</string>
+        </property>
+        <property name="text">
+         <string>BPM</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="comboBpm">
         <property name="toolTip">
@@ -473,25 +483,15 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="labelBPM">
-        <property name="toolTip">
-         <string>Beats per minute</string>
-        </property>
-        <property name="text">
-         <string>BPM</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="comboBeatsPerAccent"/>
-      </item>
       <item row="2" column="0">
        <widget class="QLabel" name="labelAccent">
         <property name="text">
          <string>Accent</string>
         </property>
        </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="comboBeatsPerAccent"/>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="labelShape">
@@ -523,6 +523,7 @@
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="../resources/jamtaba.qrc"/>
   <include location="../resources/jamtaba.qrc"/>
  </resources>
  <connections/>

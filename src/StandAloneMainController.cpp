@@ -6,6 +6,7 @@
 #include "audio/vst/VstPlugin.h"
 #include "audio/vst/vsthost.h"
 #include "../audio/vst/PluginFinder.h"
+#include "../NinjamController.h"
 
 #if _WIN32
     #include "windows.h"
@@ -203,6 +204,10 @@ Vst::PluginFinder* StandaloneMainController::createPluginFinder(){
 Midi::MidiDriver* StandaloneMainController::createMidiDriver(){
     return new Midi::PortMidiDriver(settings.getMidiInputDevicesStatus());
     //return new Midi::NullMidiDriver();
+}
+
+Controller::NinjamController* StandaloneMainController::createNinjamController(MainController *c){
+    return new NinjamController(c);
 }
 
 Audio::AudioDriver* StandaloneMainController::createAudioDriver(const Persistence::Settings &settings){

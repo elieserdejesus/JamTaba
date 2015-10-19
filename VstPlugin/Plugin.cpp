@@ -24,7 +24,9 @@ JamtabaPlugin::JamtabaPlugin (audioMasterCallback audioMaster) :
     controller(nullptr),
     running(false),
     inputBuffer( DEFAULT_INPUTS*2),
-    outputBuffer(DEFAULT_OUTPUTS*2)
+    outputBuffer(DEFAULT_OUTPUTS*2),
+    timeInfo(nullptr),
+    hostWasPlayingInLastAudioCallBack(false)
 {
     qCDebug(pluginVst) << "Plugin constructor...";
     setNumInputs (DEFAULT_INPUTS*2);
@@ -41,6 +43,20 @@ JamtabaPlugin::JamtabaPlugin (audioMasterCallback audioMaster) :
 
     //suspend();
     qCDebug(pluginVst) << "Plugin constructor done.";
+}
+
+bool JamtabaPlugin::hostIsPlaying() const{
+    if(timeInfo){
+        return (timeInfo->flags & kVstTransportPlaying) != 0;
+    }
+    return false;
+}
+
+int JamtabaPlugin::getHostBpm() const{
+    if(timeInfo){
+        return (int) timeInfo->tempo;
+    }
+    return 0;
 }
 
 VstInt32 JamtabaPlugin::fxIdle(){
@@ -68,7 +84,7 @@ void JamtabaPlugin::initialize(){
             Persistence::Settings settings;//read from file in constructor
             settings.load();
             qCDebug(pluginVst)<< "Creating controller!";
-            controller.reset( new MainControllerVST(settings));
+            controller.reset( new MainControllerVST(settings, this));
             controller->configureStyleSheet("jamtaba.css");
             controller->setSampleRate(getSampleRate());
             controller->start();
@@ -162,56 +178,33 @@ VstInt32 JamtabaPlugin::getVendorVersion ()
 
 VstInt32 JamtabaPlugin::canDo(char* text)
 {
-    if(!text)
+    if(!text){
         return 0;
-
-    //     "offline", plug-in supports offline functions (offlineNotify, offlinePrepare, offlineRun)
-    //     "midiProgramNames", plug-in supports function getMidiProgramName ()
-    //     "bypass", plug-in supports function setBypass ()
-
-    //    if (
-    //            (!strcmp(text, "sendVstEvents")) ||
-    //            (!strcmp(text, "sendVstMidiEvent")) ||
-    //            (!strcmp(text, "receiveVstEvents")) ||
-    //            (!strcmp(text, "receiveVstMidiEvent")) ||
-    //            (!strcmp(text, "receiveVstTimeInfo"))
-    //         )
-    //         return 1;
-
+    }
+    if (!strcmp(text, "receiveVstTimeInfo")){
+        return 1;
+    }
     return 0;
-
 }
-
-//VstInt32 Vst::processEvents(VstEvents* events)
-//{
-//    if(!events || !hostSendVstEvents || !hostSendVstMidiEvent)
-//        return 0;
-
-//    VstEvent *evnt=0;
-
-//    for(int i=0; i<events->numEvents; i++) {
-//        evnt=events->events[i];
-//        if( evnt->type==kVstMidiType) {
-//            VstMidiEvent *midiEvnt = (VstMidiEvent*)evnt;
-
-//            foreach(Connectables::VstMidiDevice *dev, lstMidiIn) {
-//                long msg;
-//                memcpy(&msg, midiEvnt->midiData, sizeof(midiEvnt->midiData));
-//                dev->midiQueue << msg;
-//            }
-//        } else {
-//            LOG("other vst event");
-//        }
-//    }
-
-//    return 1;
-//}
 
 void JamtabaPlugin::processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames)
 {
     if(!controller){
         return;
     }
+    if(controller->isPlayingInNinjamRoom()){
+        //++++++++++ sync ninjam BPM with host BPM ++++++++++++
+        //ask timeInfo to VST host
+        timeInfo = getTimeInfo ( kVstTransportPlaying | kVstTransportChanged | kVstTempoValid);
+        if(transportStartDetectedInHost()){//user pressing play/start in host?
+            NinjamControllerVST* ninjamController = dynamic_cast<NinjamControllerVST*>(controller->getNinjamController());
+            if(ninjamController->isWaitingForHostSync()){
+                ninjamController->syncWithHost();
+            }
+        }
+    }
+
+    //++++++++++ Audio processing +++++++++++++++
     inputBuffer.setFrameLenght(sampleFrames);
     for (int c = 0; c < inputBuffer.getChannels(); ++c) {
         memcpy(inputBuffer.getSamplesArray(c), inputs[c], sizeof(float) * sampleFrames);
@@ -219,6 +212,7 @@ void JamtabaPlugin::processReplacing (float** inputs, float** outputs, VstInt32 
 
     outputBuffer.setFrameLenght(sampleFrames);
     outputBuffer.zero();
+
     controller->process(inputBuffer, outputBuffer, this->sampleRate);
 
     int channels = outputBuffer.getChannels();
@@ -226,6 +220,8 @@ void JamtabaPlugin::processReplacing (float** inputs, float** outputs, VstInt32 
         memcpy(outputs[c], outputBuffer.getSamplesArray(c), sizeof(float) * sampleFrames);
     }
 
+    //++++++++++++++++++++++++++++++
+    hostWasPlayingInLastAudioCallBack = hostIsPlaying();
 }
 
 
@@ -244,6 +240,7 @@ void JamtabaPlugin::suspend()
     qCDebug(pluginVst) << "JamtabaPLugin::suspend()";
     if(controller && controller->isPlayingInNinjamRoom()){
         controller->getNinjamController()->reset();//discard downloaded intervals
+        controller->finishUploads();//send the last part of ninjam intervals
     }
 }
 

@@ -693,7 +693,8 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
 //        ninjamWindow->deleteLater();
 //    }
     qWarning() << "creating NinjamRoomWindow...";
-    ninjamWindow.reset( new NinjamRoomWindow(this, roomInfo, mainController));
+    //ninjamWindow.reset( new NinjamRoomWindow(this, roomInfo, mainController));
+    ninjamWindow.reset( createNinjamWindow(roomInfo, mainController));
     QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
     int index = ui.tabWidget->addTab(ninjamWindow.data(), tabName);
     ui.tabWidget->setCurrentIndex(index);

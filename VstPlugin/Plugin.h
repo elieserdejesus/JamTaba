@@ -13,6 +13,8 @@
 #include "../MainController.h"
 #include "MainWindow.h"
 
+#include "aeffectx.h"
+
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(pluginVst)
@@ -20,26 +22,16 @@ Q_DECLARE_LOGGING_CATEGORY(pluginVst)
 AudioEffect* createEffectInstance (audioMasterCallback audioMaster);
 
 //++++++++++++++++++++++++++++++++
-
 class JamtabaPlugin;
-
-
-
-//-------------------------------------------------------------------------------------------------------
 
 class JamtabaPlugin :  public AudioEffectX{
 public:
         JamtabaPlugin (audioMasterCallback audioMaster);
         ~JamtabaPlugin ();
-
         inline bool isRunning() const{return running;}
-
         bool isRunningAsVstPlugin() const;
-
         void initialize();//called first time editor is opened
-
         VstInt32 canDo(char* text);
-
         void processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames);
 
         VstInt32 fxIdle();
@@ -62,21 +54,30 @@ public:
         void resume();
         inline VstPlugCategory getPlugCategory() {return kPlugCategEffect;}
 
-        void updateParameter(int index, float value);
+        //void updateParameter(int index, float value);
 
         inline Controller::MainController* getController() {return controller.data();}
+
+        int getHostBpm() const;
 
 protected:
         char programName[kVstMaxProgNameLen + 1];
         int sampleRate;
-
-        //Gui *qEditor;
         VstEvents *listEvnts;
+
 private:
         QScopedPointer<Controller::MainController> controller;
         bool running;
         Audio::SamplesBuffer inputBuffer;
         Audio::SamplesBuffer outputBuffer;
+
+        VstTimeInfo* timeInfo;// = getTimeInfo(VSTTimeInfo.VST_TIME_TRANSPORT_PLAYING | VSTTimeInfo.VST_TIME_TRANSPORT_CHANGED);
+        bool hostWasPlayingInLastAudioCallBack;
+
+        bool hostIsPlaying() const;
+
+
+        inline bool transportStartDetectedInHost() const{return hostIsPlaying() && !hostWasPlayingInLastAudioCallBack;}
 
 };
 
