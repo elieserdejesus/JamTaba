@@ -16,13 +16,11 @@ CONFIG += ordered
 
 #---------------------
 
-#se eu clico em Preferencias->Audio cai na aba de VST
+#deu pau na portmidi com a fast track ligada. Testei debug e release e deu problema também.
+    #Desliguei a fast e testei com o AKAI e deu o mesmo problema.
+    #Realmente tenho que ver isso. Fazer uma aplicação mínima que use a port midi pra ver.
 
-#deu pau na portmidi com a fast track ligada. Será que é só a versão debug da portmidi?
 
-#ver a questão das multiplas instancias do plugin
-
-#sync com o host? Isso é muito importante, acho que consigo resolver em algumas horas, já tenho toda a ideia.
 
 #Fazer o instalador
     #http://stackoverflow.com/questions/11137424/how-to-make-vcredist-x86-reinstall-only-if-not-yet-installed
@@ -31,6 +29,12 @@ CONFIG += ordered
     #o redistributable.
 
 #----------------------------------
+
+
+#se eu pressiono o play enquanto estou tocando em uma sala perco todos os intervalos baixados.
+    #tem como resolver?
+
+#mensagens de voto de BPM/BPI não estão centralizadas
 
 #tratar redimensionamento da tela do host
 

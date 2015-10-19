@@ -34,8 +34,8 @@ class NinjamController : public QObject
 
 public:
     explicit NinjamController(Controller::MainController* mainController);
-    ~NinjamController();
-    void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate);
+    virtual ~NinjamController();
+    virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate);
     void start(const Ninjam::Server& server, bool transmiting);
     void stop(bool emitDisconnectedingSignal);
     bool inline isRunning() const{return running;}

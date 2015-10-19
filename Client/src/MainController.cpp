@@ -148,10 +148,14 @@ void MainController::on_audioDriverStarted(){
 void MainController::on_audioDriverStopped(){
     if(isPlayingInNinjamRoom()){
         //send the last interval part when audio driver is stopped
-        foreach (int channelIndex, intervalsToUpload.keys()) {
-            ninjamService.sendAudioIntervalPart(intervalsToUpload[channelIndex]->getGUID(), QByteArray(), true);
-        }
+        finishUploads();
         ninjamController.reset();//discard downloaded intervals and reset interval position
+    }
+}
+
+void MainController::finishUploads(){
+    foreach (int channelIndex, intervalsToUpload.keys()) {
+        ninjamService.sendAudioIntervalPart(intervalsToUpload[channelIndex]->getGUID(), QByteArray(), true);
     }
 }
 
@@ -176,10 +180,11 @@ void MainController::on_disconnectedFromNinjamServer(const Server &server){
     }
 }
 
+
 void MainController::on_connectedInNinjamServer(Ninjam::Server server){
     qCDebug(controllerMain) << "connected in ninjam server";
     stopNinjamController();
-    Controller::NinjamController* newNinjamController = new Controller::NinjamController(this);
+    Controller::NinjamController* newNinjamController = createNinjamController(this);// new Controller::NinjamController(this);
     this->ninjamController.reset( newNinjamController );
     QObject::connect(newNinjamController, SIGNAL(encodedAudioAvailableToSend(QByteArray,quint8,bool,bool)),
                      this, SLOT(on_ninjamEncodedAudioAvailableToSend(QByteArray,quint8,bool,  bool)));

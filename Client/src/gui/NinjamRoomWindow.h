@@ -51,9 +51,11 @@ public:
     void updateGeoLocations();
     inline ChatPanel* getChatPanel() const{return chatPanel;}
 
-private:
+protected:
     Ui::NinjamRoomWindow *ui;
     Controller::MainController* mainController;
+private:
+
     QMap<QString, NinjamTrackGroupView*> trackGroups;
     ChatPanel* chatPanel;
 
@@ -66,7 +68,7 @@ private:
     //VoteConfirmationDialog* voteConfirmationDialog;
 
 private slots:
-    //ninja interval controls
+    //ninjam panel controls
     void ninjamBpiComboChanged(QString);
     void ninjamBpmComboChanged(QString);
     void ninjamAccentsComboChanged(int );

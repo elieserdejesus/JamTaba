@@ -1,7 +1,6 @@
 #include "Plugin.h"
 #include <QtGlobal>
 
-
 //these two lines are necessary to load the Qt windows platform plugin statically. By default
     //qt load the platform plugin from a external dll and I have an error about loading the windows platform DLL.
 #include <QtPlugin>
@@ -39,12 +38,14 @@ extern "C" {
 #include <QMfcApp>
 
 extern "C" {
+
 BOOL WINAPI DllMain( HINSTANCE hInst, DWORD dwReason, LPVOID /*lpvReserved*/ )
 {
-    qputenv("QT_LOGGING_CONF", ":/qtlogging.ini");//log cconfigurations is in resources at moment
     static bool ownApplication = FALSE;
-     if ( dwReason == DLL_PROCESS_ATTACH )
+     if ( dwReason == DLL_PROCESS_ATTACH ){
+         qputenv("QT_LOGGING_CONF", ":/qtlogging.ini");//log cconfigurations is in resources at moment
          ownApplication = QMfcApp::pluginInstance( hInst );
+     }
      if ( dwReason == DLL_PROCESS_DETACH && ownApplication ) {
          delete qApp;
      }

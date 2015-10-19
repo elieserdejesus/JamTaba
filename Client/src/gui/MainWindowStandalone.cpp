@@ -1,12 +1,17 @@
 #include "MainWindowStandalone.h"
 #include "../StandAloneMainController.h"
 #include <QTimer>
+#include "NinjamRoomWindow.h"
 
 MainWindowStandalone::MainWindowStandalone(Controller::MainController* controller)
     :MainWindow(controller){
 
     //setAttribute(Qt::WA_QuitOnClose, true);
     //setQu
+}
+
+NinjamRoomWindow* MainWindowStandalone::createNinjamWindow(Login::RoomInfo roomInfo, Controller::MainController* mainController){
+    return new NinjamRoomWindow(this, roomInfo, mainController);
 }
 
 void MainWindowStandalone::closeEvent(QCloseEvent * e){

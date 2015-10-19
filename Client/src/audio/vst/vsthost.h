@@ -3,7 +3,6 @@
 
 #include "aeffectx.h"
 
-
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(vstHost)
@@ -12,16 +11,9 @@ namespace Midi {
 class MidiBuffer;
 }
 
-
 namespace Vst {
 
 class VstPlugin;
-
-
-
-//VstInt32 numEvents;		///< number of Events in array
-//VstIntPtr reserved;		///< zero (Reserved for future use)
-//VstEvent* events[2];
 
 class Host
 {

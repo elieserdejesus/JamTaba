@@ -67,6 +67,7 @@ protected:
     virtual Midi::MidiDriver* createMidiDriver();
     virtual Audio::AudioDriver* createAudioDriver(const Persistence::Settings &settings);
     virtual Vst::PluginFinder* createPluginFinder();
+    virtual Controller::NinjamController* createNinjamController(MainController *);
 
     void setCSS(QString css);
 

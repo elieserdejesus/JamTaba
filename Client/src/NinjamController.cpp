@@ -28,7 +28,7 @@ Q_LOGGING_CATEGORY(controllerNinjam, "controller.ninjam")
 using namespace Controller;
 
 //+++++++++++++  ENCODING THREAD  +++++++++++++
-class NinjamController::EncodingThread : public QThread{
+class NinjamController::EncodingThread : public QThread{//TODO: use better thread approach, avoid inheritance form QThread
 public:
     EncodingThread(NinjamController* controller)
         :stopRequested(false), controller(controller){

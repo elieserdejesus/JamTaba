@@ -33,7 +33,9 @@ HEADERS += \
     ../src/geo/WebIpToLocationResolver.h \
     Plugin.h \
     Editor.h \
-    MainControllerVST.h
+    MainControllerVST.h \
+    NinjamRoomWindowVST.h \
+    MainWindowVST.h
 
 
 SOURCES += \
@@ -56,7 +58,9 @@ SOURCES += \
     VstMain.cpp \
     Plugin.cpp \
     Editor.cpp \
-    MainControllerVST.cpp
+    MainControllerVST.cpp \
+    NinjamRoomWindowVST.cpp \
+    MainWindowVST.cpp
 
 
 win32 {

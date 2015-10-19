@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QDebug>
 #include <QtAlgorithms>
+#include <QFormLayout>
 
 NinjamPanel::NinjamPanel(QWidget *parent) :
     QWidget(parent),
@@ -30,7 +31,66 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
 
     ui->levelSlider->installEventFilter(this);
     ui->panSlider->installEventFilter(this);
+
+    QObject::connect(ui->comboBpi, SIGNAL(activated(QString)), this, SIGNAL(bpiComboActivated(QString)));
+    QObject::connect(ui->comboBpm, SIGNAL(activated(QString)), this, SIGNAL(bpmComboActivated(QString)));
+    QObject::connect(ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)), SIGNAL(accentsComboChanged(int)));
+    QObject::connect(ui->levelSlider, SIGNAL(valueChanged(int)), this, SIGNAL(gainSliderChanged(int)));
+    QObject::connect(ui->panSlider, SIGNAL(valueChanged(int)), this, SIGNAL(panSliderChanged(int)));
+    QObject::connect(ui->muteButton, SIGNAL(clicked(bool)), this, SIGNAL(muteButtonClicked()));
+    QObject::connect(ui->soloButton, SIGNAL(clicked(bool)), this, SIGNAL(soloButtonClicked()));
 }
+//++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamPanel::createHostSyncButton(QString buttonText){
+    hostSyncButton = new QPushButton(buttonText);
+    QGridLayout* layout = dynamic_cast<QGridLayout*>(ui->panelCombos->layout());
+    layout->addWidget(hostSyncButton, layout->rowCount(), 0, 1, 2);
+
+    QObject::connect(hostSyncButton, SIGNAL(clicked(bool)), this, SIGNAL(hostSyncButtonClicked()));
+}
+
+void NinjamPanel::setHostSyncButtonAvailability(bool enabled){
+    if(hostSyncButton){
+        hostSyncButton->setEnabled(enabled);
+    }
+}
+
+void NinjamPanel::setBpiComboText(QString text){
+    ui->comboBpi->blockSignals(true);
+    ui->comboBpi->setCurrentText(text);
+    ui->comboBpi->blockSignals(false);
+}
+
+void NinjamPanel::setBpmComboText(QString text){
+    ui->comboBpm->blockSignals(true);
+    ui->comboBpm->setCurrentText(text);
+    ui->comboBpm->blockSignals(false);
+}
+
+int NinjamPanel::getPanSliderMaximumValue() const{
+    return ui->panSlider->maximum();
+}
+
+int NinjamPanel::getCurrentBeatsPerAccent() const{
+    return ui->comboBeatsPerAccent->currentData().toInt();
+}
+
+int NinjamPanel::getGainSliderMaximumValue() const{
+    return ui->levelSlider->maximum();
+}
+
+void NinjamPanel::setMuteButtonStatus(bool checked){
+    ui->muteButton->setChecked(checked);
+}
+
+void NinjamPanel::setPanSliderValue(int value){
+    ui->panSlider->setValue(value);
+}
+
+void NinjamPanel::setGainSliderValue(int value){
+    ui->levelSlider->setValue(value);
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamPanel::setMetronomePeaks(float left, float right){
     ui->peakMeterLeft->setPeak(left);
@@ -148,32 +208,32 @@ void NinjamPanel::setBpm(int bpm){
     ui->comboBpm->blockSignals(false);
 }
 
-QComboBox* NinjamPanel::getBpiCombo() const{
-    return ui->comboBpi;
-}
+//QComboBox* NinjamPanel::getBpiCombo() const{
+//    return ui->comboBpi;
+//}
 
-QComboBox* NinjamPanel::getBpmCombo() const{
-    return ui->comboBpm;
-}
+//QComboBox* NinjamPanel::getBpmCombo() const{
+//    return ui->comboBpm;
+//}
 
-QComboBox* NinjamPanel::getAccentsCombo() const{
-    return ui->comboBeatsPerAccent;
-}
+//QComboBox* NinjamPanel::getAccentsCombo() const{
+//    return ui->comboBeatsPerAccent;
+//}
 
-QAbstractSlider *NinjamPanel::getGainSlider() const{
-    return ui->levelSlider;
-}
-QAbstractSlider* NinjamPanel::getPanSlider() const{
-    return ui->panSlider;
-}
+//QAbstractSlider *NinjamPanel::getGainSlider() const{
+//    return ui->levelSlider;
+//}
+//QAbstractSlider* NinjamPanel::getPanSlider() const{
+//    return ui->panSlider;
+//}
 
-QPushButton* NinjamPanel::getMuteButton() const{
-    return ui->muteButton;
-}
+//QPushButton* NinjamPanel::getMuteButton() const{
+//    return ui->muteButton;
+//}
 
-QPushButton* NinjamPanel::getSoloButton() const{
-    return ui->soloButton;
-}
+//QPushButton* NinjamPanel::getSoloButton() const{
+//    return ui->soloButton;
+//}
 
 NinjamPanel::~NinjamPanel()
 {

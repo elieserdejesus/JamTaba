@@ -1,7 +1,8 @@
 #include "MainControllerVST.h"
-
 #include "../midi/MidiDriver.h"
-
+#include "../NinjamController.h"
+#include "../VstPlugin/Plugin.h"
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class AudioDriverVST : public Audio::NullAudioDriver{
 public:
     AudioDriverVST()
@@ -11,20 +12,53 @@ public:
 
     }
 };
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+NinjamControllerVST::NinjamControllerVST(Controller::MainController* c)
+    :NinjamController(c), waitingForHostSync(false){
+
+}
+
+void NinjamControllerVST::waitForHostSync(){
+    waitingForHostSync = true;
+}
+
+void NinjamControllerVST::syncWithHost(){
+    waitingForHostSync = false;
+}
+
+void NinjamControllerVST::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
+    if(waitingForHostSync){//skip the ninjam processing if is waiting for sync
+        return;
+    }
+    NinjamController::process(in, out, sampleRate);
+}
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+MainControllerVST::MainControllerVST(Persistence::Settings settings, JamtabaPlugin *plugin)
+    :MainController(settings), plugin(plugin){
+
+    qDebug() << "Creating MainControllerVST instance!";
+}
+
+int MainControllerVST::getHostBpm() const{
+    if(plugin){
+        return plugin->getHostBpm();
+    }
+    return -1;
+}
 
 void MainControllerVST::setSampleRate(int newSampleRate){
     this->sampleRate = newSampleRate;
     MainController::setSampleRate(newSampleRate);
 }
 
-MainControllerVST::MainControllerVST(Persistence::Settings settings)
-    :MainController(settings){
-
-    qDebug() << "Creating MainControllerVST instance!";
-}
-
 Audio::AudioDriver* MainControllerVST::createAudioDriver(const Persistence::Settings &){
     return new AudioDriverVST();
+}
+
+Controller::NinjamController* MainControllerVST::createNinjamController(MainController *c){
+    return new NinjamControllerVST(c);
 }
 
 Midi::MidiDriver* MainControllerVST::createMidiDriver(){

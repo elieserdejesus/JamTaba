@@ -78,6 +78,7 @@ protected:
 
     QList<LocalTrackGroupView*> localChannels;
 
+    virtual NinjamRoomWindow* createNinjamWindow(Login::RoomInfo, Controller::MainController*) = 0;
 protected slots:
     void on_tabCloseRequest(int index);
     void on_tabChanged(int index);
