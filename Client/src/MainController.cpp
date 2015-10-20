@@ -10,6 +10,8 @@
 
 #include "MainWindow.h"
 
+#include <QDateTime>
+
 #include "persistence/Settings.h"
 
 #include "../ninjam/Service.h"
@@ -889,7 +891,7 @@ void MainController::start(){
         loginService.connectInServer(userName, 0, "", map, version, userEnvironment, getSampleRate());
         //(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
 
-        qCWarning(controllerMain) << "Starting " + userEnvironment;
+        qInfo() << "Starting " + userEnvironment;
         started = true;
     }
 }

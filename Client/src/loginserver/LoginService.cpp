@@ -143,13 +143,13 @@ void LoginService::disconnectFromServer()
             pendingReply->deleteLater();
         }
         QUrlQuery query = HttpParamsFactory::createParametersToDisconnect();
-        qWarning() << "sending disconnect command to server...";
+        qDebug() << "sending disconnect command to server...";
         pendingReply = sendCommandToServer(query, true);
-        qWarning() << "disconnected";
+        qDebug() << "disconnected";
         if(pendingReply){
             pendingReply->readAll();
             pendingReply->deleteLater();
-            qWarning() << "reply content readed and discarded!";
+            qDebug() << "reply content readed and discarded!";
             //delete pendingReply;
             //qWarning() << "reply deleted!";
         }

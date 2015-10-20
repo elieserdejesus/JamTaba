@@ -686,13 +686,13 @@ void MainWindow::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
 //estes eventos são disparados pelo controlador depois que já aconteceu a conexão com uma das salas
 
 void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
-    qWarning() << "hidding busy dialog...";
+    qDebug() << "hidding busy dialog...";
     hideBusyDialog();
 
 //    if(ninjamWindow){
 //        ninjamWindow->deleteLater();
 //    }
-    qWarning() << "creating NinjamRoomWindow...";
+    qDebug() << "creating NinjamRoomWindow...";
     //ninjamWindow.reset( new NinjamRoomWindow(this, roomInfo, mainController));
     ninjamWindow.reset( createNinjamWindow(roomInfo, mainController));
     QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
@@ -701,7 +701,7 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
 
 
     //add the chat panel in main window
-    qWarning() << "adding ninjam chat panel...";
+    qDebug() << "adding ninjam chat panel...";
     ChatPanel* chatPanel = ninjamWindow->getChatPanel();
     ui.chatTabWidget->addTab(chatPanel, QIcon(":/images/ninja.png"), "chat " + roomInfo.getName());
 
@@ -710,7 +710,7 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
 
     ui.leftPanel->adjustSize();
     //ui.leftPanel->setMinimumWidth(500);
-    qWarning() << "MainWindow::enterInRoom() done!";
+    qDebug() << "MainWindow::enterInRoom() done!";
 }
 
 void MainWindow::exitFromRoom(bool normalDisconnection){
@@ -831,7 +831,7 @@ void MainWindow::closeEvent(QCloseEvent *){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainWindow::~MainWindow()
 {
-    qWarning() << "MainWindow destructor...";
+    qDebug() << "MainWindow destructor...";
     setParent(nullptr);
     if(mainController){
         mainController->saveLastUserSettings(getInputsSettings());
@@ -845,7 +845,7 @@ MainWindow::~MainWindow()
 
     killTimer(timerID);
     qDebug() << "Main frame timer killed!";
-    qWarning() << "MainWindow destructor finished.";
+    qDebug() << "MainWindow destructor finished.";
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //void MainFrame::on_freshDataReceivedFromLoginServer(const Login::LoginServiceParser &response){

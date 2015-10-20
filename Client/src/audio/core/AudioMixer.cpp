@@ -37,7 +37,7 @@ void AudioMixer::removeNode(AudioNode *node){
 }
 
 AudioMixer::~AudioMixer(){
-    qWarning() << "Destrutor audio mixer...";
+    qDebug() << "Audio mixer destructor...";
 //    foreach (SamplesBufferResampler* resampler, resamplers.values()) {
 //        delete resampler;
 //    }
@@ -45,7 +45,7 @@ AudioMixer::~AudioMixer(){
     foreach (Audio::AudioNode* node, resamplers.keys()) {
         removeNode(node);
     }
-    qWarning() << "finalizou Destrutor audio mixer...";
+    qDebug() << "Audio mixer destructor finished!";
 }
 
 void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer, bool attenuateAfterSumming){
