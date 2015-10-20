@@ -61,10 +61,8 @@ int AbstractMp3Streamer::getSamplesToRender(int targetSampleRate, int outLenght)
     return samplesToRender;
 }
 
-void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int targetSampleRate, const Midi::MidiBuffer &midi){
+void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int targetSampleRate, const Midi::MidiBuffer &){
     Q_UNUSED(in);
-    Q_UNUSED(midi);
-    //QMutexLocker locker(&mutex);
 
     if(bufferedSamples.isEmpty() || !streaming){
         return;
