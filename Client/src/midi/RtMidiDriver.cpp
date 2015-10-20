@@ -16,7 +16,7 @@ RtMidiDriver::RtMidiDriver(QList<bool> deviceStatuses)
     }
 
 
-    qCDebug(midi) << "Initializing portmidi...";
+    qCDebug(midi) << "Initializing rtmidi...";
     int maxInputDevices = getMaxInputDevices();
     if(deviceStatuses.size() < maxInputDevices){
         int itemsToAdd = maxInputDevices - deviceStatuses.size();
@@ -32,7 +32,9 @@ RtMidiDriver::RtMidiDriver(QList<bool> deviceStatuses)
 void RtMidiDriver::setInputDevicesStatus(QList<bool> statuses){
     MidiDriver::setInputDevicesStatus(statuses);
 
-    rtMidi->openPort(0);
+    if(!statuses.isEmpty()){
+        rtMidi->openPort(0);
+    }
 
     //    foreach (PmStream* stream, streams) {
 //        if(stream){
@@ -48,11 +50,16 @@ void RtMidiDriver::start(){
 }
 
 void RtMidiDriver::stop(){
-
+    if(rtMidi){
+        rtMidi->closePort();
+    }
 }
 
 void RtMidiDriver::release(){
-
+    if(rtMidi){
+        rtMidi->closePort();
+        delete rtMidi;
+    }
 }
 
 const char* RtMidiDriver::getInputDeviceName(int index) const{
@@ -66,12 +73,36 @@ const char* RtMidiDriver::getInputDeviceName(int index) const{
 }
 
 MidiBuffer RtMidiDriver::getBuffer(){
+    MidiBuffer buffer(32);//max 32 midi messages
     if(rtMidi){
-        std::vector<unsigned char> messages;
-        rtMidi->getMessage(&messages);
+        while(true){
+            std::vector<unsigned char> message;
+            double stamp = rtMidi->getMessage(&message);
+            if(!message.empty()){
+                int msgData = 0;
+                msgData |= message.at(0);
+                msgData |= message.at(1) << 8;
+                msgData |= message.at(2) << 16;
+                //            qDebug(midi) << "original msgData:";
+                //            qDebug(midi) << "Status:" << message.at(0);
+                //            qDebug(midi) << "data 1:" << message.at(1);
+                //            qDebug(midi) << "data 2:" << message.at(2) << endl;
 
+                int sourceIndexDevice = 0;//TODO change this
+
+                buffer.addMessage(MidiMessage(msgData, qint32(stamp), sourceIndexDevice));
+
+                //            qDebug(midi) << "msgData:" << msgData;
+                //            qDebug(midi) << "Status:" << ((msgData) & 0xFF);
+                //            qDebug(midi) << "data 1:" << (((msgData) >> 8) & 0xFF);
+                //            qDebug(midi) << "data 2:" << (((msgData) >> 16) & 0xFF);
+            }
+            else{
+                break;
+            }
+        }
     }
-    return MidiBuffer(0);
+    return buffer;
 }
 
 bool RtMidiDriver::hasInputDevices() const{
