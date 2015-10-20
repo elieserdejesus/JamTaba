@@ -1,4 +1,12 @@
-USING MinGW
+Get Jamtaba source code
+-----------------------
+1) - Using Git: git clone https://elieserdejesus@bitbucket.org/elieserdejesus/jamtaba2.git
+
+or 2) Download the repository: https://bitbucket.org/elieserdejesus/jamtaba2/downloads
+
+
+Build Using MinGW
+-----------------
 
 1 - Download Qt OffLine Installer for Windows MinGW: http://www.qt.io/download-open-source/#section-2
  
@@ -11,7 +19,7 @@ USING MinGW
 
 4 - Open QtCreator (the Qt IDE). QtCreator is located in[Qt install folder]/Tools/QtCreator.exe. If you select Tools->MinGW in setp 3 QtCreator is configured to use MinGW, this is the easy way!
 
-5 - Open the Jamtaba.pro file in QtCreator
+5 - Open the Jamtaba.pro file in QtCreator (use the button "Open Project in QtCreator start screen).
 
 
 6 - In QtCreator project tree (left side) open the file Standalone.pro and change 
@@ -25,5 +33,10 @@ to the correct VST SDK PATH in your hard disk.
 
 8 - Have fun! This is the most important step!
 
+
+
+Build Using msvc
+-----------------
+TODO or not TODO, that is the question :)
 
 
