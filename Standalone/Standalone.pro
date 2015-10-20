@@ -77,8 +77,8 @@ win32{
         }
 
 
-        CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg
-        else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisencd -lvorbisd -loggd
+        CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbis -logg
+        else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisd -loggd
     }
 
     win32-g++{#MinGW compiler
