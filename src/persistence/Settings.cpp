@@ -427,7 +427,7 @@ void Settings::load(){
     QString absolutePath = dir.absoluteFilePath(fileName);
     QFile file(absolutePath);
     if(file.open(QIODevice::ReadOnly)){
-        qWarning() << "Reading settings from " << absolutePath;
+        qInfo() << "Reading settings from " << absolutePath;
         QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
         QJsonObject root = doc.object();
 
@@ -459,7 +459,7 @@ Settings::Settings()
     :fileDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation))
 
 {
-    qDebug() << "Settings in " << fileDir;
+    //qDebug() << "Settings in " << fileDir;
 }
 
 void Settings::save(Persistence::InputsSettings inputsSettings){

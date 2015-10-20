@@ -210,6 +210,7 @@ public:
 
     void finishUploads();//used to send the last part of ninjam intervals when audio is stopped.
 
+    QString getUserEnvironmentString() const;
 
 protected:
     QScopedPointer<Audio::AudioDriver> audioDriver;
@@ -266,7 +267,7 @@ private:
     class UploadIntervalData;
     QMap<int, UploadIntervalData*> intervalsToUpload;//map the input channel indexes to a GUID (used to upload audio to ninjam server)
     bool userNameChoosed;
-    QString getUserEnvironmentString() const;
+
     Recorder::JamRecorder jamRecorder;
 
 protected slots:
