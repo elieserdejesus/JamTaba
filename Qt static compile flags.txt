@@ -1,4 +1,13 @@
+
+USING MSVC
+----------
 configure -debug-and-release -opensource -confirm-license -static -no-sql-psql -no-sql-mysql -no-sql-odbc -no-sql-tds -no-sql-oci -no-sql-db2 -no-sql-sqlite -no-sql-sqlite2 -no-sql-ibase -no-audio-backend -no-cups -no-nis -no-dbus -nomake examples -nomake tests
+
+
+USING MinGW
+-----------
+./configure -release -opensource -confirm-license -static -no-sql-psql -no-sql-mysql -no-sql-odbc -no-sql-tds -no-sql-oci -no-sql-db2 -no-sql-sqlite -no-sql-sqlite2 -no-sql-ibase -no-audio-backend -no-cups -no-nis -no-dbus -nomake examples -nomake tests -platform win32-g++
+
 
 
 

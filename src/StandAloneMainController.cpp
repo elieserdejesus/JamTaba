@@ -211,6 +211,7 @@ Controller::NinjamController* StandaloneMainController::createNinjamController(M
 }
 
 Audio::AudioDriver* StandaloneMainController::createAudioDriver(const Persistence::Settings &settings){
+//return new Audio::NullAudioDriver();
 #ifdef Q_OS_WIN
     return new Audio::PortAudioDriver(
                 this, //the AudioDriverListener instance
