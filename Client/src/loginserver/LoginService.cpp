@@ -165,11 +165,11 @@ QNetworkReply* LoginService::sendCommandToServer(const QUrlQuery &query, bool sy
         pendingReply->deleteLater();
 
     }
-//    if(httpClient.networkAccessible() == QNetworkAccessManager::NetworkAccessibility::NotAccessible){
-//        qCritical() << "network is not acessible";
-//        emit errorWhenConnectingToServer("network is not acessible");
-//        return nullptr;
-//    }
+    if(httpClient.networkAccessible() == QNetworkAccessManager::NetworkAccessibility::NotAccessible){
+        qCritical() << "network is not acessible";
+        //emit errorWhenConnectingToServer("network is not acessible");
+        return nullptr;
+    }
     QUrl url(SERVER);
     QByteArray postData(query.toString(QUrl::EncodeUnicode).toStdString().c_str());
     QNetworkRequest request(url);
