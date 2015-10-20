@@ -5,3 +5,4 @@ SUBDIRS += Standalone
 #SUBDIRS += ThemeEditor
 
 CONFIG += ordered
+

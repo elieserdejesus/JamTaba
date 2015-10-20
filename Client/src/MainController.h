@@ -263,18 +263,11 @@ private:
     void tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStringList channels, QString password="");
 
     QScopedPointer<Geo::IpToLocationResolver> ipToLocationResolver;
-
     class UploadIntervalData;
-
     QMap<int, UploadIntervalData*> intervalsToUpload;//map the input channel indexes to a GUID (used to upload audio to ninjam server)
-
     bool userNameChoosed;
-
     QString getUserEnvironmentString() const;
-
     Recorder::JamRecorder jamRecorder;
-
-    //static Geo::IpToLocationResolver* buildIpToLocationResolver();
 
 protected slots:
 
@@ -294,7 +287,11 @@ protected slots:
     virtual void on_audioDriverStopped();
 
     //
-    virtual void on_VSTPluginFounded(QString name, QString group, QString path){}
+    virtual void on_VSTPluginFounded(QString name, QString group, QString path){
+        Q_UNUSED(name)
+        Q_UNUSED(group)
+        Q_UNUSED(path)
+    }
 };
 
 }
