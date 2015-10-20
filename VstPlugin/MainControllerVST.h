@@ -23,9 +23,7 @@ class MainControllerVST : public Controller::MainController{
 public:
     MainControllerVST(Persistence::Settings settings, JamtabaPlugin* plugin);
 
-    inline bool MainControllerVST::isRunningAsVstPlugin() const{
-        return true;
-    }
+    inline bool isRunningAsVstPlugin() const{ return true;}
 
     Audio::AudioDriver* createAudioDriver(const Persistence::Settings &settings);
 

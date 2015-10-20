@@ -61,9 +61,9 @@ int AbstractMp3Streamer::getSamplesToRender(int targetSampleRate, int outLenght)
     return samplesToRender;
 }
 
-void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int targetSampleRate, const Midi::MidiBuffer &midiBuffer){
+void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int targetSampleRate, const Midi::MidiBuffer &midi){
     Q_UNUSED(in);
-    //Q_UNUSED(midiBuffer);
+    Q_UNUSED(midi);
     //QMutexLocker locker(&mutex);
 
     if(bufferedSamples.isEmpty() || !streaming){
@@ -161,8 +161,8 @@ void AbstractMp3Streamer::setStreamPath(QString streamPath){
 //+++++++++++++++++++++++++++++++++++++++
 NinjamRoomStreamerNode::NinjamRoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds)
     : AbstractMp3Streamer( new Mp3DecoderMiniMp3()),
-      bufferTime(bufferTimeInSeconds),
       httpClient(nullptr),
+      bufferTime(bufferTimeInSeconds),
       buffering(false)
       //osc(440, 44100)
 {
@@ -172,8 +172,8 @@ NinjamRoomStreamerNode::NinjamRoomStreamerNode(QUrl streamPath, int bufferTimeIn
 
 NinjamRoomStreamerNode::NinjamRoomStreamerNode(int bufferTimeInSeconds)
     :AbstractMp3Streamer( new Mp3DecoderMiniMp3()),
-      bufferTime(bufferTimeInSeconds),
       httpClient(nullptr),
+      bufferTime(bufferTimeInSeconds),
       buffering(false)
       //osc(440, 44100)
 {
