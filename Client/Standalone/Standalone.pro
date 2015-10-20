@@ -62,32 +62,39 @@ DEPENDPATH +=  $$PWD/../libs/includes/portaudio        \
                $$PWD/../libs/includes/vorbis           \
                $$PWD/../libs/includes/minimp3          \
 
+#please change this PATH
+VST_SDK_PATH = "E:/Jamtaba2/VST3 SDK"
+
 win32{
-    LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32
 
-    VST_SDK_PATH = "E:/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x/"
+    win32-msvc*{#all msvc compilers
+        !contains(QMAKE_TARGET.arch, x86_64) {
+            message("msvc x86 build") ## Windows x86 (32bit) specific build here
+            LIBS_PATH = "static/win32-msvc"
+        } else {
+            message("msvc x86_64 build") ## Windows x64 (64bit) specific build here
+            LIBS_PATH = "static/win64-msvc"
+        }
 
-    !contains(QMAKE_TARGET.arch, x86_64) {
-        message("Windows x86 build") ## Windows x86 (32bit) specific build here
-        LIBS_PATH = "static/win32-msvc"
-    } else {
-        message("Windows x86_64 build") ## Windows x64 (64bit) specific build here
-        LIBS_PATH = "static/win64-msvc"
-        message("LIBS PATH: " + ($$PWD/../libs/$$LIBS_PATH))
+
+        CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg
+        else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisencd -lvorbisd -loggd
     }
 
-    CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbis -logg
-    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisd -loggd
+    win32-g++{#MinGW compiler
+        message("MinGW x86 build")
+        LIBS_PATH = "static/win32-mingw"
+        LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg
+    }
+
+    LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32
 
     RC_FILE = Jamtaba2.rc #windows icon
-
 }
 
 
 macx{
     message("Mac build")
-
-    VST_SDK_PATH = "/Users/elieser/Desktop/VST3 SDK/pluginterfaces/vst2.x"
 
     macx-clang-32 {
         message("i386 build") ## mac 32bit specific build here
@@ -110,7 +117,4 @@ macx{
     ICON = Jamtaba.icns
 }
 
-INCLUDEPATH += $$VST_SDK_PATH
-
-
-
+INCLUDEPATH += $$VST_SDK_PATH/pluginterfaces/vst2.x/
