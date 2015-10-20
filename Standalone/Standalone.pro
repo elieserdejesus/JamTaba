@@ -85,6 +85,10 @@ win32{
         message("MinGW x86 build")
         LIBS_PATH = "static/win32-mingw"
         LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg
+
+        #supressing some MinGW annoying warnings
+        QMAKE_CXXFLAGS_WARN_ON += -Wunused-variable
+        QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
     }
 
     LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32

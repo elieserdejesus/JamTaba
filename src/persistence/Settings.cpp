@@ -513,7 +513,8 @@ QString Settings::getLastUserName() const{
 
 
 void Settings::storeLasUserName(QString userName) {
-//    QJsonObject object = instance->rootObject["User"].toObject();
+    Q_UNUSED(userName)
+    //    QJsonObject object = instance->rootObject["User"].toObject();
 //    object["name"] = userName;
 //    save();
 }

@@ -270,23 +270,15 @@ MainController::MainController(Settings settings)
       audioMixer(44100),
       //roomStreamer(nullptr),
       currentStreamingRoomID(-1000),
-
       transmiting(true),
-      //ninjamService(),
-      //ninjamController(nullptr),
       mutex(QMutex::Recursive),
       started(false),
-
-      //pluginFinder(std::unique_ptr<Vst::PluginFinder>(new Vst::PluginFinder())),
       ipToLocationResolver( new Geo::WebIpToLocationResolver()),
       loginService(new Login::LoginService()),
       settings(settings),
       userNameChoosed(false),
-      jamRecorder(new Recorder::ReaperProjectGenerator()),
-      //signalsHandler(nullptr),
-      mainWindow(nullptr)
-      //midiDriver(nullptr),
-      //audioDriver(nullptr)
+      mainWindow(nullptr),
+      jamRecorder(new Recorder::ReaperProjectGenerator())
 
 {
 

@@ -115,7 +115,7 @@ QByteArray JamtabaDelay::getSerializedData() const{
 }
 
 void JamtabaDelay::restoreFromSerializedData(QByteArray data){
-
+    Q_UNUSED(data)
 }
 
 void JamtabaDelay::setSampleRate(int newSampleRate){
