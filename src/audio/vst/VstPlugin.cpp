@@ -144,10 +144,12 @@ QByteArray VstPlugin::getSerializedData() const{
 }
 
 void VstPlugin::restoreFromSerializedData(QByteArray dataToRestore){
-    qCDebug(vst) << "restoring plugin data";
-    char* data = dataToRestore.data();
-    effect->dispatcher(effect, effSetChunk, false, dataToRestore.size(), data, 0 );
-    qCDebug(vst) << "restore plugin data finished";
+    if(!dataToRestore.isEmpty()){
+        qCDebug(vst) << "restoring plugin data";
+        char* data = dataToRestore.data();
+        effect->dispatcher(effect, effSetChunk, false, dataToRestore.size(), data, 0 );
+        qCDebug(vst) << "restore plugin data finished";
+    }
 }
 
 void VstPlugin::resume(){

@@ -81,6 +81,7 @@ protected slots:
     void on_ninjamStartProcessing(int intervalPosition);
     void on_VSTPluginFounded(QString name, QString group, QString path);
 
+
 private:
     //VST
     Vst::Host* vstHost;//static instance released inside Vst::Host using QSCopedPointer

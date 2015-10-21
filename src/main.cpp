@@ -24,6 +24,10 @@ int main(int argc, char* args[] ){
     Controller::StandaloneMainController mainController(settings, application);//MainController extends QApplication
     mainController.configureStyleSheet("jamtaba.css");
     mainController.start();
+    if(mainController.getAudioDriver()->getDevicesCount() <= 0){
+        QMessageBox::about(nullptr, "Fatal error!", "Jamtaba can't detect any audio device in your machine!");
+        application->quit();
+    }
     MainWindowStandalone  mainWindow(&mainController);
     mainController.setMainWindow(&mainWindow);
     mainWindow.show();

@@ -10,12 +10,12 @@ public:
     MainWindowStandalone(Controller::MainController *controller);
 
 protected:
-    void showEvent(QShowEvent *);
+    virtual void showEvent(QShowEvent *);
     void closeEvent(QCloseEvent *);
 
     virtual NinjamRoomWindow* createNinjamWindow(Login::RoomInfo, Controller::MainController*);
-private:
-    void initializePluginFinder();
+
+    virtual void initializePluginFinder();
 protected slots:
     void on_errorConnectingToServer(QString msg);
 };
