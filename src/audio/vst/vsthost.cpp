@@ -2,7 +2,7 @@
 #include "vsthost.h"
 #include "aeffectx.h"
 #include "../midi/MidiDriver.h"
-#include "portmidi.h"
+//#include "portmidi.h"
 #include <QDebug>
 #include <QDateTime>
 #include <QApplication>
@@ -157,10 +157,6 @@ long VSTCALLBACK Host::hostCallback(AEffect *effect, long opcode, long index, lo
 
     switch(opcode) {
 
-
-    case 6: //audioMasterWantMidi
-        return true;
-
     case audioMasterIdle:
             QApplication::processEvents();
             return 0L;
@@ -173,13 +169,16 @@ long VSTCALLBACK Host::hostCallback(AEffect *effect, long opcode, long index, lo
         //	return 2100L; // Supports VST v2.1
 
     case audioMasterGetBlockSize:
-        return hostInstance->blockSize;
+        return Host::getInstance()->blockSize;
 
     case audioMasterGetSampleRate:
-        return hostInstance->getSampleRate();
+        return Host::getInstance()->getSampleRate();
+
+    case audioMasterWantMidi://6
+        return true;
 
     case audioMasterGetTime : //7
-        return (long)(&hostInstance->vstTimeInfo);
+        return (long)(&Host::getInstance()->vstTimeInfo);
 
     case audioMasterGetCurrentProcessLevel : //23
         return 2L;

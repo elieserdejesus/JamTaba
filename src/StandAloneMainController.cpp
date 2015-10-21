@@ -1,6 +1,7 @@
 #include "StandAloneMainController.h"
 
-#include "midi/portmididriver.h"
+//#include "midi/portmididriver.h"
+#include "midi/RtMidiDriver.h"
 #include "audio/core/PortAudioDriver.h"
 
 #include "audio/vst/VstPlugin.h"
@@ -202,7 +203,8 @@ Vst::PluginFinder* StandaloneMainController::createPluginFinder(){
 }
 
 Midi::MidiDriver* StandaloneMainController::createMidiDriver(){
-    return new Midi::PortMidiDriver(settings.getMidiInputDevicesStatus());
+    //return new Midi::PortMidiDriver(settings.getMidiInputDevicesStatus());
+    return new Midi::RtMidiDriver(settings.getMidiInputDevicesStatus());
     //return new Midi::NullMidiDriver();
 }
 

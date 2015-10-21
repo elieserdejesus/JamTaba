@@ -342,7 +342,7 @@ void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffe
             if(total > 0){
                 for (int m = 0; m < total; ++m) {
                     Midi::MidiMessage message = midiBuffer.getMessage(m);
-                    if(  message.globalSourceDeviceIndex == midiDeviceIndex && (isReceivingAllMidiChannels() || message.getChannel() == midiChannelIndex)){
+                    if( message.getDeviceIndex() == midiDeviceIndex && (isReceivingAllMidiChannels() || message.getChannel() == midiChannelIndex)){
                         filteredMidiBuffer.addMessage(message);
                     }
                 }
