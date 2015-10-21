@@ -444,13 +444,13 @@ void Settings::load(){
             this->ninjamIntervalProgressShape = 0;
         }
 
-        //read sections
+        //read settings sections (Audio settings, Midi settings, ninjam settings, etc...)
         foreach (SettingsObject* so, sections) {
             so->read(root[so->getName()].toObject());
         }
     }
     else{
-        qCritical() << file.errorString();
+        qWarning() << "Can't load Jamtaba config file:" << file.errorString();
     }
 
 }
