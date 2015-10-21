@@ -16,7 +16,8 @@ HEADERS += \
     ../src/ninjam/protocol/ClientMessages.h \
     ../src/loginserver/natmap.h \
     ../src/audio/codec.h \
-    ../src/midi/portmididriver.h \
+    #../src/midi/portmididriver.h \
+    ../src/midi/rtMidiDriver.h \
     ../src/audio/Resampler.h \
     ../src/audio/vorbis/VorbisDecoder.h \
     ../src/audio/vorbis/VorbisEncoder.h \
@@ -38,7 +39,8 @@ SOURCES += \
     ../src/ninjam/protocol/ClientMessages.cpp \
     ../src/ninjam/protocol/ServerMessageParser.cpp \
     ../src/ninjam/Server.cpp \
-    ../src/midi/portmididriver.cpp \
+    #../src/midi/portmididriver.cpp \
+    ../src/midi/rtMidiDriver.cpp \
     ../src/audio/Resampler.cpp \
     ../src/audio/vorbis/VorbisDecoder.cpp \
     ../src/audio/samplesbufferrecorder.cpp \
@@ -51,13 +53,13 @@ SOURCES += \
     ../src/gui/MainWindowStandalone.cpp
 
 INCLUDEPATH += $$PWD/../libs/includes/portaudio        \
-               $$PWD/../libs/includes/portmidi         \
+               $$PWD/../libs/includes/rtmidi           \
                $$PWD/../libs/includes/ogg              \
                $$PWD/../libs/includes/vorbis           \
                $$PWD/../libs/includes/minimp3          \
 
 DEPENDPATH +=  $$PWD/../libs/includes/portaudio        \
-               $$PWD/../libs/includes/portmidi         \
+               $$PWD/../libs/includes/rtmidi           \
                $$PWD/../libs/includes/ogg              \
                $$PWD/../libs/includes/vorbis           \
                $$PWD/../libs/includes/minimp3          \
@@ -81,10 +83,15 @@ win32{
         else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lportmidid -lvorbisfiled -lvorbisd -loggd
     }
 
+<<<<<<< HEAD
     win32-g++{#MinGW compiler
         message("MinGW x86 build")
         LIBS_PATH = "static/win32-mingw"
         LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudio -lminimp3 -lportmidi -lvorbisfile -lvorbisenc -lvorbis -logg
+=======
+    CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbis -logg
+    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lrtmidid -lvorbisfiled -lvorbisd -loggd
+>>>>>>> rtMidi
 
         #supressing some MinGW annoying warnings
         QMAKE_CXXFLAGS_WARN_ON += -Wunused-variable
@@ -121,4 +128,13 @@ macx{
     ICON = Jamtaba.icns
 }
 
+<<<<<<< HEAD
 INCLUDEPATH += $$VST_SDK_PATH/pluginterfaces/vst2.x/
+=======
+INCLUDEPATH += $$VST_SDK_PATH
+
+#turn on debug info on release build, usefull sometimes
+QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
+QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
+
+>>>>>>> rtMidi

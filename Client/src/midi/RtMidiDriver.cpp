@@ -5,18 +5,8 @@ Q_LOGGING_CATEGORY(midi, "midi")
 
 using namespace Midi;
 
-RtMidiDriver::RtMidiDriver(QList<bool> deviceStatuses)
-    : rtMidi(nullptr){
-
-    try{
-        this->rtMidi = new RtMidiIn();
-    }
-    catch(RtMidiError &error) {
-        qCCritical(midi) << QString( error.getMessage().c_str());
-    }
-
-
-    qCDebug(midi) << "Initializing portmidi...";
+RtMidiDriver::RtMidiDriver(QList<bool> deviceStatuses){
+    qCDebug(midi) << "Initializing rtmidi...";
     int maxInputDevices = getMaxInputDevices();
     if(deviceStatuses.size() < maxInputDevices){
         int itemsToAdd = maxInputDevices - deviceStatuses.size();
@@ -32,46 +22,99 @@ RtMidiDriver::RtMidiDriver(QList<bool> deviceStatuses)
 void RtMidiDriver::setInputDevicesStatus(QList<bool> statuses){
     MidiDriver::setInputDevicesStatus(statuses);
 
-    rtMidi->openPort(0);
+    release();
 
-    //    foreach (PmStream* stream, streams) {
-//        if(stream){
-//            Pm_Abort( stream );
-//            Pm_Close( stream );
-//        }
-//    }
-    //streams.clear();
+    for (int s = 0; s < statuses.size(); ++s) {
+        midiStreams.append(new RtMidiIn());
+    }
 }
 
 void RtMidiDriver::start(){
+    if(!hasInputDevices()){
+        return;
+    }
+    stop();
+
+    for(int deviceIndex=0; deviceIndex < inputDevicesEnabledStatuses.size(); deviceIndex++) {
+        RtMidiIn* stream = midiStreams.at(deviceIndex);
+        if(stream && inputDevicesEnabledStatuses.at(deviceIndex)){//device is globally enabled?
+            if(!stream->isPortOpen()){
+                try{
+                    qDebug(midi) << "Iniciando MIDI em " << QString::fromStdString(stream->getPortName(deviceIndex));
+                    stream->openPort(deviceIndex);
+                    //midiStreams.append(stream);
+                }
+                catch(RtMidiError e){
+                    qCCritical(midi) << "Error opening midi port " << QString::fromStdString(e.getMessage());
+                }
+            }
+            else{
+                qCCritical(midi) << "Port " << QString::fromStdString(stream->getPortName(deviceIndex)) << " already opened!";
+            }
+        }
+
+    }
 
 }
 
 void RtMidiDriver::stop(){
-
+    foreach (RtMidiIn* stream, midiStreams) {
+        if(stream){
+            stream->closePort();
+        }
+    }
 }
 
 void RtMidiDriver::release(){
-
+    foreach (RtMidiIn* stream, midiStreams) {
+        if(stream){
+            if(stream->isPortOpen()){
+                stream->closePort();
+            }
+            delete stream;
+        }
+    }
+    midiStreams.clear();
 }
 
-const char* RtMidiDriver::getInputDeviceName(int index) const{
-    if(rtMidi){
-         if(index >= 0 && index < rtMidi->getPortCount()){
-             //qWarning() << QString(rtMidi->getPortName(index).c_str());
-             return  rtMidi->getPortName((uint)index).c_str();
-         }
+QString RtMidiDriver::getInputDeviceName(int index) const{
+    if(midiStreams.at(index)){
+        return  midiStreams.at(index)->getPortName(index).c_str();
     }
     return "error";
 }
 
 MidiBuffer RtMidiDriver::getBuffer(){
-    if(rtMidi){
-        std::vector<unsigned char> messages;
-        rtMidi->getMessage(&messages);
+    MidiBuffer buffer(32);//max 32 midi messages
+    int deviceIndex = 0;
+    foreach (RtMidiIn* stream, midiStreams) {
+        while(true){
+            std::vector<unsigned char> message;
+            double stamp = stream->getMessage(&message);
+            if(!message.empty() && message.size() <= 3){
+                int msgData = 0;
+                msgData |= message.at(0);
+                msgData |= message.at(1) << 8;
+                msgData |= message.at(2) << 16;
+                //            qDebug(midi) << "original msgData:";
+                //            qDebug(midi) << "Status:" << message.at(0);
+                //            qDebug(midi) << "data 1:" << message.at(1);
+                //            qDebug(midi) << "data 2:" << message.at(2) << endl;
 
+                buffer.addMessage(MidiMessage(msgData, qint32(stamp), deviceIndex));
+
+                //            qDebug(midi) << "msgData:" << msgData;
+                //            qDebug(midi) << "Status:" << ((msgData) & 0xFF);
+                //            qDebug(midi) << "data 1:" << (((msgData) >> 8) & 0xFF);
+                //            qDebug(midi) << "data 2:" << (((msgData) >> 16) & 0xFF);
+            }
+            else{
+                break;
+            }
+        }
+        deviceIndex++;
     }
-    return MidiBuffer(0);
+    return buffer;
 }
 
 bool RtMidiDriver::hasInputDevices() const{
@@ -79,14 +122,10 @@ bool RtMidiDriver::hasInputDevices() const{
 }
 
 int RtMidiDriver::getMaxInputDevices() const{
-    if(rtMidi){
-        return this->rtMidi->getPortCount();
-    }
-    return 0;
+    RtMidiIn rtMidi;
+    return rtMidi.getPortCount();
 }
 
 RtMidiDriver::~RtMidiDriver(){
-    if(this->rtMidi){
-        delete rtMidi;
-    }
+    release();
 }
