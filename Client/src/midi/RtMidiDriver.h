@@ -20,7 +20,7 @@ public:
 
     virtual bool hasInputDevices() const;
     virtual int getMaxInputDevices() const;
-    virtual const char *getInputDeviceName(int index) const;
+    virtual QString getInputDeviceName(int index) const;
     virtual MidiBuffer getBuffer();
 
     virtual void setInputDevicesStatus(QList<bool> statuses);
@@ -28,7 +28,7 @@ public:
 private:
 
     //int getDeviceIDFromGlobalIndex(int globalIndex);
-    RtMidiIn* rtMidi;
+    QList<RtMidiIn*> midiStreams;
 
 };
 

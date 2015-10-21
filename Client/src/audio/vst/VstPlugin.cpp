@@ -11,7 +11,7 @@
 #include "../audio/core/AudioDriver.h"
 #include "../audio/core/SamplesBuffer.h"
 #include "../midi/MidiDriver.h"
-#include "portmidi.h"
+//#include "portmidi.h"
 #include <QDialog>
 #include <QVBoxLayout>
 #include <QDesktopWidget>
@@ -271,14 +271,14 @@ void VstPlugin::fillVstEventsList(const Midi::MidiBuffer &midiBuffer){
     this->vstMidiEvents.numEvents = midiMessages;
     for (int m = 0; m < midiMessages; ++m) {
         Midi::MidiMessage message = midiBuffer.getMessage(m);
-        qCDebug(vst) << getName() << "Midi message: channel " << message.getChannel() << " data: " << message.data;
+        qCDebug(vst) << getName() << "Midi message: channel " << message.getChannel();
         VstMidiEvent* vstEvent = (VstMidiEvent*)vstMidiEvents.events[m];
         vstEvent->type = kVstMidiType;
         vstEvent->byteSize = sizeof(vstEvent);
         vstEvent->deltaFrames = 0;
-        vstEvent->midiData[0] = Pm_MessageStatus(message.data);
-        vstEvent->midiData[1] = Pm_MessageData1(message.data);
-        vstEvent->midiData[2] = Pm_MessageData2(message.data);
+        vstEvent->midiData[0] = message.getStatus();
+        vstEvent->midiData[1] = message.getData1();
+        vstEvent->midiData[2] = message.getData2();
         vstEvent->midiData[3] = 0;
         vstEvent->reserved1 = vstEvent->reserved2 = 0;
         vstEvent->flags = kVstMidiEventIsRealtime;

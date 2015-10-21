@@ -11,25 +11,37 @@ Q_DECLARE_LOGGING_CATEGORY(portmidi)
 namespace Midi {
 
 
-struct MidiMessage{
-    qint32 data;
-    qint32 timestamp;
-    int globalSourceDeviceIndex;
-
+class MidiMessage{
+public:
     MidiMessage(qint32 data, qint32 timestamp, int sourceDeviceIndex){
         this->data = data;
         this->timestamp = timestamp;
-        this->globalSourceDeviceIndex = sourceDeviceIndex;
+        this->deviceIndex = sourceDeviceIndex;
     }
 
     MidiMessage(){
-        this->data = this->timestamp = this->globalSourceDeviceIndex = -1;
+        this->data = this->timestamp = this->deviceIndex = -1;
+    }
+
+    MidiMessage(const MidiMessage& other){
+        this->data = other.data;
+        this->timestamp = other.timestamp;
+        this->deviceIndex = other.deviceIndex;
     }
 
     inline int getChannel() const{
         return data & 0x0000000F;
     }
 
+    inline int getDeviceIndex() const{return deviceIndex;}
+
+    inline int getStatus() const{ return data & 0xFF;}
+    inline int getData1() const{ return (data >> 8) & 0xFF;}
+    inline int getData2() const{ return (data >> 16) & 0xFF;}
+private:
+    qint32 data;
+    qint32 timestamp;
+    int deviceIndex;
 };
 
 class MidiBuffer{
@@ -66,7 +78,7 @@ public:
     //virtual void setSelectedChannel(int globalDeviceID, int channelIndex);
     //virtual void useAllChannels(int globalDeviceID);
 
-    virtual const char* getInputDeviceName(int index) const = 0;
+    virtual QString getInputDeviceName(int index) const = 0;
     virtual MidiBuffer getBuffer() = 0;
 
 
@@ -88,7 +100,7 @@ class NullMidiDriver : public MidiDriver{
 
     inline virtual int getMaxInputDevices() const {return 0;}
 
-    inline virtual const char* getInputDeviceName(int index) const{Q_UNUSED(index); return "";}
+    inline virtual QString getInputDeviceName(int index) const{Q_UNUSED(index); return "";}
     inline virtual MidiBuffer getBuffer(){return MidiBuffer(0);}
 };
 

@@ -18,9 +18,7 @@ MidiBuffer::MidiBuffer(const MidiBuffer &other)
       messagesCount(other.messagesCount)
 {
     for (int m = 0; m < other.messagesCount; ++m) {
-        this->messages[m].data = other.messages[m].data;
-        this->messages[m].timestamp = other.messages[m].timestamp;
-        this->messages[m].globalSourceDeviceIndex = other.messages[m].globalSourceDeviceIndex;
+        this->messages[m] = other.messages[m];
     }
 }
 
@@ -30,9 +28,7 @@ MidiBuffer::~MidiBuffer(){
 
 void MidiBuffer::addMessage(const MidiMessage &m){
     if(messagesCount < maxMessages){
-        messages[messagesCount].data = m.data;
-        messages[messagesCount].timestamp = m.timestamp;
-        messages[messagesCount].globalSourceDeviceIndex = m.globalSourceDeviceIndex;
+        messages[messagesCount] = m;
         messagesCount++;
     }
     else{
