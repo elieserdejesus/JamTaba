@@ -233,6 +233,8 @@ StandaloneMainController::StandaloneMainController(Persistence::Settings setting
     : MainController(settings), vstHost(Vst::Host::getInstance()), application(application){
 
     application->setQuitOnLastWindowClosed(true);
+
+    //initializePluginsList();
 }
 
 void StandaloneMainController::start(){

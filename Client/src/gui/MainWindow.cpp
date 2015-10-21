@@ -61,7 +61,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     initializeWindowState();//window size, maximization ...
     initializeLoginService();
-    initializePluginFinder();
+    //initializePluginFinder(); //called in derived classes
     initializeMainTabWidget();
 
 
