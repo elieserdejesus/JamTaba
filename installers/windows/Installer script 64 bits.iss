@@ -3,7 +3,7 @@
 #define SslLibsDir "C:\OpenSSL-Win64"
 #define BuildDir ".\..\..\..\..\build-64bit\release"
 
-#define MsvcRedistDir "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x64\Microsoft.VC120.CRT"
+#define MsvcRedistributable "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\1033\vcredist_x64.exe"
 
 #include "Installer script common.iss"
 

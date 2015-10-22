@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 
-SUBDIRS += Standalone VstPlugin
+SUBDIRS += Standalone
 #SUBDIRS += VstPlugin  #VstPlugin need Qt static build
 #SUBDIRS += ThemeEditor
 

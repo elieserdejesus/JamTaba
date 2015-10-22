@@ -39,8 +39,8 @@ HEADERS += \
 
 
 SOURCES += \
-    audioeffectx.cpp \
-    audioeffect.cpp \
+    $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffectx.cpp \
+    $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffect.cpp \
     ../src/recorder/JamRecorder.cpp \
     ../src/recorder/ReaperProjectGenerator.cpp \
     ../src/loginserver/LoginService.cpp \
@@ -66,13 +66,11 @@ SOURCES += \
 win32 {
     message("Windows VST build")
 
-    INCLUDEPATH += "E:/Jamtaba2/VST3 SDK/"
-    INCLUDEPATH += "E:/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x/"
-    INCLUDEPATH += "E:/Jamtaba2/VST3 SDK/public.sdk/source/vst2.x"
+    INCLUDEPATH += $$VST_SDK_PATH/
+    INCLUDEPATH += $$VST_SDK_PATH/pluginterfaces/vst2.x/
+    INCLUDEPATH += $$VST_SDK_PATH/public.sdk/source/vst2.x
 
     LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32  \
-
-    VST_SDK_PATH = "E:/Jamtaba2/VST3 SDK/pluginterfaces/vst2.x/"
 
     !contains(QMAKE_TARGET.arch, x86_64) {
         message("x86 build") ## Windows x86 (32bit) specific build here
