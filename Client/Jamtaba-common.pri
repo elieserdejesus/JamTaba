@@ -1,4 +1,4 @@
-VST_SDK_PATH = "$$PWD/../VST3 SDK"
+VST_SDK_PATH = "$$PWD/../VST_SDK"
 
 TEMPLATE = lib
 

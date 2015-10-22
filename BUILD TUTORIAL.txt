@@ -12,13 +12,13 @@ Build Using MinGW
  
 2 - Download VST SDK: http://www.steinberg.net/en/company/developers.html
 
-3 - Unpack the content of downloaded VST SDK inside "VST3 SDK" folder in Jamtaba source code. After this you have something like that:
+3 - Unpack the download VST SDK content inside a "VST_SDK" folder (you need create this folder) in Jamtaba source code path. After this you have something like that:
 	
 Jamtaba source code dir in your hard disk
 	|_ Client
 	|_ Icons
 	|_ Server
-	|_ VST3 SDK
+	|_ VST_SDK 
 		|_ base
 		|_ bin
 		|_ doc
