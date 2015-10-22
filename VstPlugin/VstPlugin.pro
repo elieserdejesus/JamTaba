@@ -66,9 +66,9 @@ SOURCES += \
 win32 {
     message("Windows VST build")
 
-    INCLUDEPATH += $$VST_SDK_PATH/
-    INCLUDEPATH += $$VST_SDK_PATH/pluginterfaces/vst2.x/
-    INCLUDEPATH += $$VST_SDK_PATH/public.sdk/source/vst2.x
+    INCLUDEPATH += "$$VST_SDK_PATH/"
+    INCLUDEPATH += "$$VST_SDK_PATH/pluginterfaces/vst2.x/"
+    INCLUDEPATH += "$$VST_SDK_PATH/public.sdk/source/vst2.x"
 
     LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32  \
 
