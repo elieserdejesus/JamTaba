@@ -1,10 +1,12 @@
+VST_SDK_PATH = "$$PWD/../VST3 SDK"
+
 TEMPLATE = lib
 
-VERSION = 2.0.2
+VERSION = 2.0.3
 
 # Define the preprocessor macro to get the application version in Jamtaba application.
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
-DEFINES += VST_FORCE_DEPRECATED=0
+DEFINES += VST_FORCE_DEPRECATED=0 #enable VST 2.3 features
 
 macx{
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -stdlib=libc++

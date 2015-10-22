@@ -62,9 +62,6 @@ DEPENDPATH +=  $$PWD/../libs/includes/portaudio        \
                $$PWD/../libs/includes/vorbis           \
                $$PWD/../libs/includes/minimp3          \
 
-#please change this PATH
-VST_SDK_PATH = "E:/Jamtaba2/VST3 SDK"
-
 win32{
 
     win32-msvc*{#all msvc compilers
