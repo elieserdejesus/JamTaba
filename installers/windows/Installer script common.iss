@@ -4,6 +4,7 @@
 #define MyAppURL "http://www.jamtaba.com"
 #define MyAppExeName "Jamtaba2.exe"
 
+#define MsvcRedistributablesPath "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\1033\"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -47,7 +48,7 @@ WelcomeLabel2=This will install Jamtaba 2 on your computer.
 
 [Files]
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: {#MsvcRedistributable}; DestDir: {tmp}; Flags: deleteafterinstall
+Source: {#MsvcRedistributablesPath}\{#Redistributable}; DestDir: {tmp}; Flags: deleteafterinstall
 
 Source: {#BuildDir}\Standalone\release\Jamtaba2.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: {#BuildDir}\VstPlugin\release\JamtabaVST2.dll; DestDir: {code:GetVST2Dir}; Flags: ignoreversion replacesameversion
@@ -62,14 +63,10 @@ Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}; Filen
 
 [Run]
 ; add the Parameters, WorkingDir and StatusMsg as you wish, just keep here the conditional installation Check
-Filename: {tmp}\{#MsvcRedistributable}; Check: VCRedistNeedsInstall
+Filename: {tmp}\{#Redistributable}; Check: VCRedistNeedsInstall; Parameters: "/install /quiet /norestart "
+
 Filename: {app}\{#MyAppExeName}; Description: {cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}; Flags: nowait postinstall skipifsilent
 
-; add the Parameters, WorkingDir and StatusMsg as you wish, just keep here
-; the conditional installation Check
-Filename: {tmp}\vcredist_x86.exe; Check: VCRedistNeedsInstall
-
-[Components]
 
 [Code]
 var
