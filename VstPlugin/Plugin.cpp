@@ -119,21 +119,10 @@ void JamtabaPlugin::close()
         if(editor->isOpen()){
             editor->close();
         }
-        //qCDebug(pluginVst) << "deleting editor...";
         ((VstEditor*)editor)->deleteMainWindow();
-        //AEffEditor* theEditor = editor;
-        //setEditor(nullptr);
-        //delete theEditor;
-        //qCDebug(pluginVst) << "deleting editor done!";
     }
-//    if(controller){
-//        qCDebug(pluginVst) << "deleting controller...";
-//        delete controller;
-//        controller = nullptr;
-//        qCDebug(pluginVst) << "deleting controller done!";
-//    }
+
     running = false;
-    //AudioEffectX::close();
     qCDebug(pluginVst) << "JamtabaPLugin::close() finished";
 }
 

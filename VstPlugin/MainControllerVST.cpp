@@ -41,6 +41,12 @@ MainControllerVST::MainControllerVST(Persistence::Settings settings, JamtabaPlug
     qDebug() << "Creating MainControllerVST instance!";
 }
 
+MainControllerVST::~MainControllerVST(){
+    if(mainWindow){
+        saveLastUserSettings(mainWindow->getInputsSettings());
+    }
+}
+
 int MainControllerVST::getHostBpm() const{
     if(plugin){
         return plugin->getHostBpm();
