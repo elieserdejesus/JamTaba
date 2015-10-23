@@ -7,7 +7,7 @@
     error( "Couldn't find the qtwinmigrate common.pri file!" )
 }
 
-QT *= core gui widgets network
+QT       += core gui network widgets
 
 TARGET = "JamtabaVST"
 TEMPLATE = lib
@@ -103,3 +103,7 @@ INCLUDEPATH += $$PWD/../libs/includes/ogg              \
 DEPENDPATH +=  $$PWD/../libs/includes/ogg              \
                $$PWD/../libs/includes/vorbis           \
                $$PWD/../libs/includes/minimp3          \
+
+#turn on debug info on release build, usefull sometimes
+#QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
+#QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
