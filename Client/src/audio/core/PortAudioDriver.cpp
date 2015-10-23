@@ -20,8 +20,8 @@ Q_LOGGING_CATEGORY(portaudio, "portaudio")
 namespace Audio{
 
 #ifdef Q_OS_MACX
-    PortAudioDriver::PortAudioDriver(AudioDriverListener* audioDriverListener, int sampleRate, int  bufferSize)
-        :AudioDriver(audioDriverListener){
+    PortAudioDriver::PortAudioDriver(Controller::MainController* mainController, int sampleRate, int  bufferSize)
+        :AudioDriver(mainController){
 
             //initialize portaudio using default devices, mono input and try estereo output if possible
             PaError error = Pa_Initialize();

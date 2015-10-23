@@ -98,10 +98,10 @@ macx{
 
     macx-clang-32 {
         message("i386 build") ## mac 32bit specific build here
-        LIBS_PATH = "mac32"
+        LIBS_PATH = "static/mac32"
     } else {
         message("x86_64 build") ## mac 64bit specific build here
-        LIBS_PATH = "mac64"
+        LIBS_PATH = "static/mac64"
     }
 
     LIBS += -framework CoreAudio
@@ -111,7 +111,7 @@ macx{
     LIBS += -framework CoreServices
     LIBS += -framework Carbon
 
-    LIBS += -L$$PWD/libs/$$LIBS_PATH/ -lportaudio -lminimp3  -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
+    LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudio -lminimp3  -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
 
     #mac osx doc icon
     ICON = Jamtaba.icns
