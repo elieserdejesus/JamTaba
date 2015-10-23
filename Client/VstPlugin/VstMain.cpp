@@ -10,8 +10,8 @@ extern AudioEffect* createEffectInstance (audioMasterCallback audioMaster);
 
 extern "C" {
 
-//#define VST_EXPORT _declspec(dllexport)
-#define VST_EXPORT
+#define VST_EXPORT _declspec(dllexport)
+//#define VST_EXPORT
 
     //------------------------------------------------------------------------
     /** Prototype of the export function main */
