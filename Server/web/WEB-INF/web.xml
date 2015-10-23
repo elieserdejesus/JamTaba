@@ -41,7 +41,7 @@
         <url-pattern>/vs/*</url-pattern>
     </filter-mapping>
     <!-- HTTPs -->
-    <security-constraint>
+    <!--security-constraint>
         <display-name>HTTPS</display-name>
         <web-resource-collection>
             <web-resource-name>HTTPs</web-resource-name>
@@ -52,5 +52,5 @@
             <description>Toda a comunicação dos peers com o Servlet é feita usando HTTPS</description>
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
-    </security-constraint>
+    </security-constraint-->
 </web-app>

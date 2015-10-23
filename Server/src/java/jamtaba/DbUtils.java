@@ -61,7 +61,7 @@ public class DbUtils {
     public static void tryCreateCurrenVersion(){
         Version v = getCurrentVersion();
         if(v == null || v.getMajorVersion() < 2){
-            DbUtils.save(Version.fromString("2.0.0"));
+            DbUtils.save(Version.fromString("2.0.2"));
         }
     }
     

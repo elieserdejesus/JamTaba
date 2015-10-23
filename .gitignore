@@ -9,6 +9,8 @@ Client/release
 deploy-win32/
 deploy-win64/
 *.zip
+VST_SDK/*
+Client/installers/windows/*.exe
 
 Server/build/
 Server/dist
