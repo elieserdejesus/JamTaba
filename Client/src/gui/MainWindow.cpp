@@ -85,8 +85,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     QObject::connect(ui.actionPrivate_Server, SIGNAL(triggered(bool)), this, SLOT(on_privateServerMenuItemTriggered()));
     QObject::connect(ui.actionReport_bugs_or_suggest_improvements, SIGNAL(triggered(bool)), this, SLOT(on_reportBugMenuItemTriggered()));
 
-    //QObject::connect(mainController, SIGNAL(inputSelectionChanged(int)), this, SLOT(on_inputSelectionChanged(int)));
-
     QObject::connect( ui.localControlsCollapseButton, SIGNAL(clicked()), this, SLOT(on_localControlsCollapseButtonClicked()));
 
     QObject::connect(ui.xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));

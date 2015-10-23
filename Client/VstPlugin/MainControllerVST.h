@@ -22,6 +22,7 @@ class JamtabaPlugin;
 class MainControllerVST : public Controller::MainController{
 public:
     MainControllerVST(Persistence::Settings settings, JamtabaPlugin* plugin);
+    ~MainControllerVST();
 
     inline bool isRunningAsVstPlugin() const{ return true;}
 
