@@ -35,6 +35,7 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
         #endif
         populateAudioTab();
         populateMidiTab();
+        populateVstTab();
     }
     else{
         //remove the first 3 tabs (audio, midi and VSTs)
