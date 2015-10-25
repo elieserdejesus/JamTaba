@@ -12,10 +12,20 @@
 
 Q_LOGGING_CATEGORY(pluginVst, "plugin.vst")
 
+//anti troll scheme to avoid multiple connections in ninjam servers
+bool JamtabaPlugin::instanceIsInitialized = false;
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 AudioEffect* createEffectInstance (audioMasterCallback audioMaster)
 {
-    return new JamtabaPlugin (audioMaster);
+    if(!JamtabaPlugin::pluginIsInitialized()){//avoid multiple instances inside a DAW.
+        return new JamtabaPlugin (audioMaster);
+    }
+    return nullptr;
+}
+
+bool JamtabaPlugin::pluginIsInitialized(){
+    return JamtabaPlugin::instanceIsInitialized;
 }
 
 JamtabaPlugin::JamtabaPlugin (audioMasterCallback audioMaster) :
@@ -91,6 +101,8 @@ void JamtabaPlugin::initialize(){
             qCDebug(pluginVst)<< "Controller started!";
             running = true;
             qCDebug(pluginVst) << "Plugin initialize() done";
+
+            JamtabaPlugin::instanceIsInitialized = true; //the anti troll flag :)
         }
     }
 }
@@ -124,6 +136,8 @@ void JamtabaPlugin::close()
 
     running = false;
     qCDebug(pluginVst) << "JamtabaPLugin::close() finished";
+
+    JamtabaPlugin::instanceIsInitialized = false; //the anti troll flag :)
 }
 
 VstInt32 JamtabaPlugin::getNumMidiInputChannels()
