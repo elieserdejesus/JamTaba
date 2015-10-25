@@ -25,7 +25,9 @@ AudioEffect* createEffectInstance (audioMasterCallback audioMaster);
 class JamtabaPlugin;
 
 class JamtabaPlugin :  public AudioEffectX{
+
 public:
+        static bool pluginIsInitialized();
         JamtabaPlugin (audioMasterCallback audioMaster);
         ~JamtabaPlugin ();
         inline bool isRunning() const{return running;}
@@ -76,9 +78,9 @@ private:
 
         bool hostIsPlaying() const;
 
-
         inline bool transportStartDetectedInHost() const{return hostIsPlaying() && !hostWasPlayingInLastAudioCallBack;}
 
+        static bool instanceIsInitialized;
 };
 
 
