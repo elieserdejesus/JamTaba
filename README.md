@@ -15,11 +15,11 @@ or
 
 ##Steps to build Using MinGW##
 
-1. Download Qt OffLine Installer for Windows MinGW: http://www.qt.io/download-open-source/
+1 - Download Qt OffLine Installer for Windows MinGW: http://www.qt.io/download-open-source/
  
-2. Download VST SDK: http://www.steinberg.net/en/company/developers.html
+2 - Download VST SDK: http://www.steinberg.net/en/company/developers.html
 
-3. Unpack the download VST SDK content inside a "VST_SDK" folder (you need create this folder) in Jamtaba source code path. After this you have something like that:
+3 - Unpack the download VST SDK content inside a "VST_SDK" folder (you need create this folder) in Jamtaba source code path. After this you have something like that:
 ```	
 Jamtaba source code dir in your hard disk
 	|_ Client
@@ -35,18 +35,18 @@ Jamtaba source code dir in your hard disk
 		|_ vstgui4
 		|_ index.html
 ```
-4. Run Qt installer and check the options below: 
+4 - Run Qt installer and check the options below: 
 	Qt -> Qt 5.5 -> MinGW 4.9.2 32 bit
 	Qt -> Tools -> MinGW 4.9.2
 	This will install Qt compiled with MinGW and install MinGW tools (compiler, debugger, etc) in [Qt install folder]/Tools. 
 
-5. Open QtCreator (the Qt IDE). QtCreator is located in[Qt install folder]/Tools/QtCreator.exe. If you select Tools->MinGW in setp 3 QtCreator is configured to use MinGW, this is the easy way!
+5 - Open QtCreator (the Qt IDE). QtCreator is located in[Qt install folder]/Tools/QtCreator.exe. If you select Tools->MinGW in setp 3 QtCreator is configured to use MinGW, this is the easy way!
 
-6. Open the Jamtaba.pro file in QtCreator (use the button "Open Project in QtCreator start screen).
+6 - Open the Jamtaba.pro file in QtCreator (use the button "Open Project in QtCreator start screen).
 
-7. [Optional Step]: In QtCreator click in "Projects" in left side to open the "Build Settings" page. In "Build Steps" section expand you will see "qmake" and "Make" details. Open "Make" details (click in the combo in right side). Now you see a text field for "Make arguments". Put "-j 4" in this text field, where "4" is the number of cores in your processor. This will speed up the compilation using all your processor cores.
+7 - [Optional Step]: In QtCreator click in "Projects" in left side to open the "Build Settings" page. In "Build Steps" section expand you will see "qmake" and "Make" details. Open "Make" details (click in the combo in right side). Now you see a text field for "Make arguments". Put "-j 4" in this text field, where "4" is the number of cores in your processor. This will speed up the compilation using all your processor cores.
 
-8. Have fun! This is the most important step!
+8 - Have fun! This is the most important step!
 
 
 
