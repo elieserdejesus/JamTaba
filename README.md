@@ -2,13 +2,6 @@
 
 Jamtaba is a standalone software and a VST plugin. Using the standalone version you can use your audio and midi devices and use VST plugins inside Jamtaba (Jamtaba standalone is a VST host). Using the VST plugin you can use Jamtaba in your preferred DAW and send your audio tracks to Jamtaba, and Jamtaba will stream these audio tracks to ninjam servers. Off course Jamtaba will receive and play the other musicians audio streams, so you can play with others and have some fun playing online!
 
-###Get Jamtaba source code###
-
-1. ***Using Git***: git clone https://github.com/elieserdejesus/JamTaba.git
-
-or 
-2. ***Download the repository***: https://github.com/elieserdejesus/JamTaba/archive/master.zip
-
 ***
 
 ###Windows Development###
