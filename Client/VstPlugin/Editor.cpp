@@ -3,21 +3,65 @@
 #include "Plugin.h"
 #include <Windows.h>
 #include <QTimer>
+#include <QKeyEvent>
 #include "MainWindowVST.h"
+/*
+    This is a callback function to hook VST host key pressing. This is a workaround to
+solve the problem of "space bar" pressing in VST hosts. In general hosts
+use the space bar to stop/play. If the host is using space bar as a HotKey the Jamtaba
+text input widgets never receive the WM_KEY[DOWN/UP] messages. I confirmed
+this issue disabling the play/stop hotkey in Reaper and see the space bar
+working without problem.
 
+    So, I'm hooking the global key pressing, and IF A JAMTABA WIDGET is FOCUSED pass the
+key[press/release] message to this widget and not pass the same message to VST host,
+avoiding start/stop VST host every time we press space bar in chat.
+*/
+LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lParam){
+    if(nCode == HC_ACTION){
+        KBDLLHOOKSTRUCT *p = (KBDLLHOOKSTRUCT *) lParam;
+        if(p->vkCode == VK_SPACE){
+            QWidget* focusWidget = QApplication::focusWidget();
+            if(focusWidget){
+                QKeyEvent::Type evType = (wParam == WM_KEYDOWN) ? QKeyEvent::KeyPress : QKeyEvent::KeyRelease;
+                QKeyEvent* ev = new QKeyEvent(evType, Qt::Key_Space, Qt::NoModifier, " ");
+                QCoreApplication::postEvent(QApplication::focusWidget(), ev );
+                return 1;//The VST host don't receive the key event, we are handling this event now.
+            }
+        }
+    }
+    return CallNextHookEx(NULL,nCode,wParam,lParam);// Forward the event to VST host
+}
 //++++++++++++++++++++++++++++++++++++++++++++++++++
 /***
- * This class is used to allow ARROWS and RETURN key in vst plugin. Using
- *  QWinWidget directly the ARROW and RETURN keys don't work. The REturn/ENTER
- *  key are very important in chat, so this workaround is necessary.
- */
+This class is used to allow ARROWS and RETURN key in VST plugin text input widgets
+Using QWinWidget directly the ARROW and RETURN keys don't work. The Return/ENTER
+key are very important in chat, so this workaround is necessary.
+*/
 class CustomWinWidget : public QWinWidget{
 public:
     CustomWinWidget(HWND parent)
         :QWinWidget(parent){
-   }
+        //installing the global keyboard hook in constructor and de-installing in destructor.
+        //See the description in the first lines of this file to understand why we are using
+        //this keyboard hook.
+        globalKeyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, globalKeyboardHookProcedure, qWinAppInst(), NULL);
+        if (!globalKeyboardHook){
+            qCritical() << "Hook failed for application instance" << qWinAppInst() << "with error:" << GetLastError();
+        }
+    }
+
+    ~CustomWinWidget(){
+        if(globalKeyboardHook){
+            UnhookWindowsHookEx(globalKeyboardHook);
+        }
+    }
+private:
+    HHOOK globalKeyboardHook;
 protected:
-    //trap the native message and say to Windows: Hey, I want all key pressing, including Arrows and RETURN!
+    //Trapping the native message and say to Windows: Hey, I want all key pressing, including Arrows and RETURN!
+    //This not work when VST Host is using hotKeys, a very common case. The globalKeyboardHook
+    //is used to solve the scenarios where VST host is using hotKeys and we need these keys too.
     bool nativeEvent(const QByteArray &eventType, void *message, long *result){
         MSG *msg = (MSG *)message;
         if(msg->message == WM_GETDLGCODE){
