@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <QTimer>
 #include <QKeyEvent>
+#include <QLineEdit>
 #include "MainWindowVST.h"
 /*
     This is a callback function to hook VST host key pressing. This is a workaround to
@@ -13,7 +14,7 @@ text input widgets never receive the WM_KEY[DOWN/UP] messages. I confirmed
 this issue disabling the play/stop hotkey in Reaper and see the space bar
 working without problem.
 
-    So, I'm hooking the global key pressing, and IF A JAMTABA WIDGET is FOCUSED pass the
+    So, I'm hooking the global key pressing, and IF A JAMTABA QLineEdit WIDGET is FOCUSED pass the
 key[press/release] message to this widget and not pass the same message to VST host,
 avoiding start/stop VST host every time we press space bar in chat.
 */
@@ -22,7 +23,8 @@ LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lP
         KBDLLHOOKSTRUCT *p = (KBDLLHOOKSTRUCT *) lParam;
         if(p->vkCode == VK_SPACE){
             QWidget* focusWidget = QApplication::focusWidget();
-            if(focusWidget){
+            bool widgetIsQLineEditInstance = qobject_cast<QLineEdit*>(focusWidget);//qobject_cast return NULL when the cast fail.
+            if(widgetIsQLineEditInstance){//just apply the keyboard hook
                 QKeyEvent::Type evType = (wParam == WM_KEYDOWN) ? QKeyEvent::KeyPress : QKeyEvent::KeyRelease;
                 QKeyEvent* ev = new QKeyEvent(evType, Qt::Key_Space, Qt::NoModifier, " ");
                 QCoreApplication::postEvent(QApplication::focusWidget(), ev );
