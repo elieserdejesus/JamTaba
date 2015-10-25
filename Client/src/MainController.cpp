@@ -871,7 +871,10 @@ void MainController::start(){
         QObject::connect(&ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(on_disconnectedFromNinjamServer(Ninjam::Server)));
         QObject::connect(&ninjamService, SIGNAL(error(QString)), this, SLOT(on_errorInNinjamServer(QString)));
 
-        if(audioDriver){
+        if(audioDriver ){
+            if(!audioDriver->canBeStarted()){
+                audioDriver.reset(new Audio::NullAudioDriver());
+            }
             audioDriver->start();
         }
         if(midiDriver){
@@ -894,6 +897,10 @@ void MainController::start(){
         qInfo() << "Starting " + userEnvironment;
         started = true;
     }
+}
+
+bool MainController::isUsingNullAudioDriver() const{
+    return qobject_cast<Audio::NullAudioDriver*>(audioDriver.data()) != nullptr;
 }
 
 QString MainController::getUserEnvironmentString() const{
