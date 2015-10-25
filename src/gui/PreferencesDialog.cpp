@@ -156,7 +156,6 @@ void PreferencesDialog::populateAsioDriverCombo(){
     for(int d=0; d < devices; d++){
         ui->comboAudioDevice->addItem(audioDriver->getInputDeviceName(d), d);//using device index as userData in comboBox
     }
-    //qDebug() << "setando combo para inputDeviceIndex: " << audioDriver->getInputDeviceIndex() << " outputDeviceIndex: " << audioDriver->getOutputDeviceIndex();
     ui->comboAudioDevice->setCurrentIndex(audioDriver->getInputDeviceIndex());
 
 }
@@ -237,8 +236,9 @@ void PreferencesDialog::populateSampleRateCombo()
     foreach (int sampleRate, sampleRates) {
         ui->comboSampleRate->addItem(QString::number(sampleRate), sampleRate);
     }
-
     ui->comboSampleRate->setCurrentText(QString::number( audioDriver->getSampleRate()));
+
+    ui->comboSampleRate->setEnabled(!sampleRates.isEmpty());
 }
 
 void PreferencesDialog::populateBufferSizeCombo()
@@ -250,6 +250,7 @@ void PreferencesDialog::populateBufferSizeCombo()
         ui->comboBufferSize->addItem(QString::number(size), size);
     }
     ui->comboBufferSize->setCurrentText(QString::number(audioDriver->getBufferSize()));
+    ui->comboBufferSize->setEnabled(!bufferSizes.isEmpty());
 }
 //++++++++++++
 void PreferencesDialog::on_comboAudioDevice_activated(int index)

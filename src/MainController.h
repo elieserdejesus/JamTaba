@@ -212,6 +212,8 @@ public:
 
     QString getUserEnvironmentString() const;
 
+    bool isUsingNullAudioDriver() const;
+
 protected:
     QScopedPointer<Audio::AudioDriver> audioDriver;
     QScopedPointer<Midi::MidiDriver> midiDriver;

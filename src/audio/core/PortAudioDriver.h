@@ -45,6 +45,8 @@ public:
 
     virtual int getDevicesCount() const;
 
+    virtual bool canBeStarted() const;
+
     //portaudio callback function
     friend int portaudioCallBack(const void *inputBuffer, void *outputBuffer,
         unsigned long framesPerBuffer,
@@ -59,7 +61,7 @@ private:
 
     void changeInputSelection(int firstInputChannelIndex, int inputChannelCount);
 
-    //static PaTime computeSuggestedLatency(int sampleRate, int bufferSize);
+    bool deviceIndexedAreValid() const;
 };
 
 

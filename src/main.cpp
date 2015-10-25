@@ -17,16 +17,15 @@ int main(int argc, char* args[] ){
     qputenv("QT_LOGGING_CONF", ":/qtlogging.ini");//log cconfigurations is in resources at moment
     qInstallMessageHandler(customLogHandler);
 
-    Persistence::Settings settings;//read from file in constructor
+    Persistence::Settings settings;
     settings.load();
 
     QApplication* application = new QApplication(argc, args);
     Controller::StandaloneMainController mainController(settings, application);//MainController extends QApplication
     mainController.configureStyleSheet("jamtaba.css");
     mainController.start();
-    if(mainController.getAudioDriver()->getDevicesCount() <= 0){
+    if(mainController.isUsingNullAudioDriver()){
         QMessageBox::about(nullptr, "Fatal error!", "Jamtaba can't detect any audio device in your machine!");
-        application->quit();
     }
     MainWindowStandalone  mainWindow(&mainController);
     mainController.setMainWindow(&mainWindow);

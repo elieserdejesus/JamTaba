@@ -55,6 +55,14 @@ PortAudioDriver::PortAudioDriver(Controller::MainController* mainController, int
 }
 #endif
 
+bool PortAudioDriver::canBeStarted() const{
+    return deviceIndexedAreValid();
+}
+
+bool PortAudioDriver::deviceIndexedAreValid() const{
+    return outputDeviceIndex != paNoDevice && inputDeviceIndex != paNoDevice;
+}
+
 void PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
 {
     qCDebug(portaudio) << "initializing portaudio...";
@@ -97,18 +105,22 @@ void PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
 
     //set sample rate
     this->sampleRate = (sampleRate >= 44100 && sampleRate <= 192000) ? sampleRate : 44100;
-    QList<int> validSampleRates = getValidSampleRates(outputDeviceIndex);
-    if(this->sampleRate > validSampleRates.last()){
-        this->sampleRate = validSampleRates.last();//use the max supported sample rate
+    if(deviceIndexedAreValid()){
+        QList<int> validSampleRates = getValidSampleRates(outputDeviceIndex);
+        if(this->sampleRate > validSampleRates.last()){
+            this->sampleRate = validSampleRates.last();//use the max supported sample rate
+        }
     }
 
-    QList<int> validBufferSizes = getValidBufferSizes(outputDeviceIndex);
     this->bufferSize = bufferSize;
-    if(this->bufferSize < validBufferSizes.first()){
-        this->bufferSize = validBufferSizes.first();//use the minimum supported buffer size
-    }
-    if(this->bufferSize > validBufferSizes.last()){
-        this->bufferSize = validBufferSizes.last();//use the max supported buffer size
+    if(deviceIndexedAreValid()){
+        QList<int> validBufferSizes = getValidBufferSizes(outputDeviceIndex);
+        if(this->bufferSize < validBufferSizes.first()){
+            this->bufferSize = validBufferSizes.first();//use the minimum supported buffer size
+        }
+        if(this->bufferSize > validBufferSizes.last()){
+            this->bufferSize = validBufferSizes.last();//use the max supported buffer size
+        }
     }
 }
 
@@ -170,6 +182,11 @@ int portaudioCallBack(const void *inputBuffer, void *outputBuffer,
 
 
 void PortAudioDriver::start(){
+
+    if(inputDeviceIndex == paNoDevice || outputDeviceIndex == paNoDevice){
+        return;
+    }
+
     stop();
 
     qCDebug(portaudio) << "Starting portaudio driver";

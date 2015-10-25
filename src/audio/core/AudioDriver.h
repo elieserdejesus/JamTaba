@@ -10,7 +10,7 @@ namespace Controller {
 
 
 namespace Audio{
-
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class ChannelRange{
 
 private:
@@ -28,20 +28,13 @@ public:
     inline bool isEmpty() const{return getChannels() <= 0;}
 };
 
-//class AudioDriverListener{
-//public:
-//    virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate) = 0;
-//    virtual ~AudioDriverListener();
-//protected:
-//    AudioDriverListener(){}
-//};
-
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class AudioDriver : public QObject
 {
     Q_OBJECT
 
 signals:
-    void sampleRateChanged(int newSampleRate);//invocado quando acontece alguma mudança na configuração de buffer size, por exemplo
+    void sampleRateChanged(int newSampleRate);
     void stopped();
     void started();
 
@@ -84,6 +77,8 @@ public:
     virtual int getDevicesCount() const = 0;
 
     const SamplesBuffer& getOutputBuffer() const {return *outputBuffer;}
+
+    virtual bool canBeStarted() const = 0;
 protected:
     ChannelRange globalInputRange;//the range of input channels selected in audio preferences menu
     ChannelRange globalOutputRange;//the range of output channels selected in audio preferences menu
@@ -103,6 +98,7 @@ protected:
 };
 
 class NullAudioDriver : public AudioDriver{
+    Q_OBJECT //just to use qobject_cast and check if NullAudioDriver is being used in MainController
 public:
     NullAudioDriver()
         :AudioDriver(nullptr){
@@ -113,17 +109,18 @@ public:
     inline void release(){}
     inline QList<int> getValidBufferSizes(int ) const{return QList<int>();}
     inline QList<int> getValidSampleRates(int ) const{return QList<int>();}
-    inline int getMaxInputs() const{return 0;}
-    inline int getMaxOutputs() const{return 0;}
-    inline const char* getInputChannelName(const unsigned int ) const{return "";}
-    inline const char* getOutputChannelName(const unsigned int ) const{return "";}
+    inline int getMaxInputs() const{return 1;}
+    inline int getMaxOutputs() const{return 2;}
+    inline const char* getInputChannelName(const unsigned int ) const{return "Silence";}
+    inline const char* getOutputChannelName(const unsigned int ) const{return "Silence";}
     inline const char* getInputDeviceName(int) const{return "NullAudioDriver";}
     inline const char* getOutputDeviceName(int) const{return "NullAudioDriver";}
-    inline int getInputDeviceIndex() const{return -1;}
-    inline int getOutputDeviceIndex() const{return -1;}
+    inline int getInputDeviceIndex() const{return 0;}
+    inline int getOutputDeviceIndex() const{return 0;}
     inline void setInputDeviceIndex(int ){}
     inline void setOutputDeviceIndex(int){}
-    inline int getDevicesCount() const{return 0;}
+    inline int getDevicesCount() const{return 1;}
+    inline bool canBeStarted() const{return true;}
 };
 
 }

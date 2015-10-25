@@ -213,10 +213,10 @@ Controller::NinjamController* StandaloneMainController::createNinjamController(M
 }
 
 Audio::AudioDriver* StandaloneMainController::createAudioDriver(const Persistence::Settings &settings){
-//return new Audio::NullAudioDriver();
+
 #ifdef Q_OS_WIN
     return new Audio::PortAudioDriver(
-                this, //the AudioDriverListener instance
+                this,
                 settings.getLastInputDevice(), settings.getLastOutputDevice(),
                 settings.getFirstGlobalAudioInput(), settings.getLastGlobalAudioInput(),
                 settings.getFirstGlobalAudioOutput(), settings.getLastGlobalAudioOutput(),
@@ -246,10 +246,6 @@ void StandaloneMainController::start(){
         vstHost->setBlockSize(audioDriver->getBufferSize());
     }
 }
-
-//void StandaloneMainController::exit(){
-//    application.exit(0); //call exit in QApplication
-//}
 
 void StandaloneMainController::setCSS(QString css){
     application->setStyleSheet(css);
