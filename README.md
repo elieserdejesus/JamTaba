@@ -4,14 +4,16 @@ Jamtaba is a standalone software and a VST plugin. Using the standalone version 
 
 ###Get Jamtaba source code###
 
-1) - **Using Git**: git clone https://github.com/elieserdejesus/JamTaba.git
+1. **Using Git**: git clone https://github.com/elieserdejesus/JamTaba.git
 
-or 2) **Download the repository**: https://github.com/elieserdejesus/JamTaba/archive/master.zip
+or 
+2. **Download the repository**: https://github.com/elieserdejesus/JamTaba/archive/master.zip
+
 
 
 ### Windows Development ###
 
-##Build Using MinGW##
+##Steps to build Using MinGW##
 
 1. Download Qt OffLine Installer for Windows MinGW: http://www.qt.io/download-open-source/
  
