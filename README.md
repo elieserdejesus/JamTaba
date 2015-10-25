@@ -4,14 +4,14 @@ Jamtaba is a standalone software and a VST plugin. Using the standalone version 
 
 ###Get Jamtaba source code###
 
-1. **Using Git**: git clone https://github.com/elieserdejesus/JamTaba.git
+1. ***Using Git***: git clone https://github.com/elieserdejesus/JamTaba.git
 
 or 
-2. **Download the repository**: https://github.com/elieserdejesus/JamTaba/archive/master.zip
+2. ***Download the repository***: https://github.com/elieserdejesus/JamTaba/archive/master.zip
 
+***
 
-
-### Windows Development ###
+###Windows Development###
 
 ##Steps to build Using MinGW##
 
@@ -20,7 +20,7 @@ or
 2. Download VST SDK: http://www.steinberg.net/en/company/developers.html
 
 3. Unpack the download VST SDK content inside a "VST_SDK" folder (you need create this folder) in Jamtaba source code path. After this you have something like that:
-'''	
+```	
 Jamtaba source code dir in your hard disk
 	|_ Client
 	|_ Icons
@@ -34,7 +34,7 @@ Jamtaba source code dir in your hard disk
 		|_ vstgui.sf
 		|_ vstgui4
 		|_ index.html
-'''
+```
 4. Run Qt installer and check the options below: 
 	Qt -> Qt 5.5 -> MinGW 4.9.2 32 bit
 	Qt -> Tools -> MinGW 4.9.2
