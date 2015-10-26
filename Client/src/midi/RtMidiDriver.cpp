@@ -6,7 +6,7 @@ Q_LOGGING_CATEGORY(midi, "midi")
 using namespace Midi;
 
 RtMidiDriver::RtMidiDriver(QList<bool> deviceStatuses){
-    qCDebug(midi) << "Initializing rtmidi...";
+    qCInfo(midi) << "Initializing rtmidi...";
     int maxInputDevices = getMaxInputDevices();
     if(deviceStatuses.size() < maxInputDevices){
         int itemsToAdd = maxInputDevices - deviceStatuses.size();
@@ -15,7 +15,7 @@ RtMidiDriver::RtMidiDriver(QList<bool> deviceStatuses){
         }
     }
     setInputDevicesStatus(deviceStatuses);
-    qCDebug(midi) << "rtmidi... initialized";
+    qCInfo(midi) << "rtmidi initialized!";
 
 }
 
@@ -40,9 +40,8 @@ void RtMidiDriver::start(){
         if(stream && inputDevicesEnabledStatuses.at(deviceIndex)){//device is globally enabled?
             if(!stream->isPortOpen()){
                 try{
-                    qDebug(midi) << "Iniciando MIDI em " << QString::fromStdString(stream->getPortName(deviceIndex));
+                    qCInfo(midi) << "Starting MIDI in " << QString::fromStdString(stream->getPortName(deviceIndex));
                     stream->openPort(deviceIndex);
-                    //midiStreams.append(stream);
                 }
                 catch(RtMidiError e){
                     qCCritical(midi) << "Error opening midi port " << QString::fromStdString(e.getMessage());

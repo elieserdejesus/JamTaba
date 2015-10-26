@@ -55,6 +55,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     ninjamWindow(nullptr),
     roomToJump(nullptr)
 {
+    qInfo() << "Creating MainWindow...";
 	ui.setupUi(this);
 
     setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
@@ -113,6 +114,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     }
 
     showBusyDialog("Loading rooms list ...");
+    qInfo() << "MainWindow created!";
 }
 //++++++++++++++++++++++++=
 void MainWindow::initializePluginFinder(){
@@ -347,6 +349,7 @@ bool MainWindow::isRunningAsVstPlugin() const{
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::restorePluginsList(){
+    qInfo() << "Restoring plugins list...";
     Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
     int channelIndex = 0;
     foreach (Persistence::Channel channel, inputsSettings.channels) {
@@ -383,18 +386,23 @@ void MainWindow::restorePluginsList(){
         }
         channelIndex++;
     }
+    qInfo() << "Restoring plugins list done!";
 }
 
 void MainWindow::initializeLocalInputChannels(){
+    qInfo() << "Initializing local inputs...";
     Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
     int channelIndex = 0;
     foreach (Persistence::Channel channel, inputsSettings.channels) {
+        qInfo() << "\tCreating channel "<< channel.name;
         LocalTrackGroupView* channelView = addLocalChannel(channelIndex, channel.name, channel.subChannels.isEmpty());
         foreach (Persistence::Subchannel subChannel, channel.subChannels) {
+            qInfo() << "\t\tCreating sub-channel ";
             LocalTrackView* subChannelView = new LocalTrackView( mainController, channelIndex, subChannel.gain, subChannel.pan, subChannel.muted);
             channelView->addTrackView(subChannelView);
             if(!mainController->isRunningAsVstPlugin()){
                 if(subChannel.midiDevice >= 0){//using midi
+                    qInfo() << "\t\tSubchannel using MIDI";
                     //check if midiDevice index is valid
                     if(subChannel.midiDevice < mainController->getMidiDriver()->getMaxInputDevices()){
                         mainController->setInputTrackToMIDI( subChannelView->getInputIndex(), subChannel.midiDevice, subChannel.midiChannel);
@@ -410,12 +418,15 @@ void MainWindow::initializeLocalInputChannels(){
                     }
                 }
                 else if(subChannel.channelsCount <= 0){
+                    qInfo() << "\t\tsetting Subchannel to no noinput";
                     mainController->setInputTrackToNoInput(subChannelView->getInputIndex());
                 }
                 else if(subChannel.channelsCount == 1){
+                    qInfo() << "\t\tsetting Subchannel to mono input";
                     mainController->setInputTrackToMono(subChannelView->getInputIndex(), subChannel.firstInput);
                 }
                 else{
+                    qInfo() << "\t\tsetting Subchannel to stereo input";
                     mainController->setInputTrackToStereo(subChannelView->getInputIndex(), subChannel.firstInput);
                 }
             }
@@ -431,6 +442,7 @@ void MainWindow::initializeLocalInputChannels(){
     if(channelIndex == 0){//no channels in settings file or no settings file...
         addLocalChannel(0, "your channel", true);
     }
+    qInfo() << "Initializing local inputs done!";
 }
 
 void MainWindow::initializeLoginService(){

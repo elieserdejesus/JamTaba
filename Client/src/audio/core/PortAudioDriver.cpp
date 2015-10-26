@@ -65,7 +65,7 @@ bool PortAudioDriver::deviceIndexedAreValid() const{
 
 void PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
 {
-    qCDebug(portaudio) << "initializing portaudio...";
+    qCInfo(portaudio) << "initializing portaudio...";
     PaError error = Pa_Initialize();
     if (error != paNoError){
         qCCritical(portaudio) << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
@@ -189,7 +189,7 @@ void PortAudioDriver::start(){
 
     stop();
 
-    qCDebug(portaudio) << "Starting portaudio driver";
+    qCInfo(portaudio) << "Starting portaudio driver using" << getInputDeviceName(inputDeviceIndex);
 
     recreateBuffers();//adjust the input and output buffers channels
 
@@ -281,7 +281,7 @@ void PortAudioDriver::start(){
             throw std::runtime_error(Pa_GetErrorText(error));
         }
     }
-    qCDebug(portaudio) << "portaudio driver started ok!";
+    qCInfo(portaudio) << "portaudio driver started ok!";
     emit started();
 
 }

@@ -111,8 +111,7 @@ bool VstPlugin::load(QString path){
         unload();
         return false;
     }
-    char temp[128];//kVstMaxEffectNameLen]; //some dumb plugins don't respect
-    //qCDebug(vst) << "getting name for " << path ;
+    char temp[128];//kVstMaxEffectNameLen]; //some dumb plugins don't respect kVstMaxEffectNameLen
     effect->dispatcher(effect, effGetEffectName, 0, 0, temp, 0);
     this->name = QString(temp);
 
@@ -145,10 +144,10 @@ QByteArray VstPlugin::getSerializedData() const{
 
 void VstPlugin::restoreFromSerializedData(QByteArray dataToRestore){
     if(!dataToRestore.isEmpty()){
-        qCDebug(vst) << "restoring plugin data";
+        qCInfo(vst) << "\t\trestoring plugin data to" << getName();
         char* data = dataToRestore.data();
         effect->dispatcher(effect, effSetChunk, false, dataToRestore.size(), data, 0 );
-        qCDebug(vst) << "restore plugin data finished";
+        qCInfo(vst) << "\t\trestore finished for" << getName();
     }
 }
 
@@ -189,7 +188,6 @@ void VstPlugin::start(){
     vstOutputArray = new float*[outputs];
     vstInputArray = new float*[inputs];
 
-
     long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
     qCDebug(vst) << "Starting " << getName() << " version " << ver;
 
@@ -206,8 +204,6 @@ void VstPlugin::start(){
     effect->dispatcher(effect, effSetSampleRate, 0, 0, NULL, host->getSampleRate());
     effect->dispatcher(effect, effSetBlockSize, 0, host->getBufferSize(), NULL, 0.0f);
     //qCDebug(vst) << "sample rate and block size setted for " << getName();
-
-
 
     //qCDebug(vst) << "checking for plugin midi capabilities";
     wantMidi = (effect->dispatcher(effect, effCanDo, 0, 0, (void*)"receiveVstMidiEvent", 0) == 1);
@@ -310,29 +306,23 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
 
     internalInputBuffer->set(in);
 
-    //if(!isBypassed()){
-        int inChannels = internalInputBuffer->getChannels();
-        for (int c = 0; c < inChannels; ++c) {
-            vstInputArray[c] = internalInputBuffer->getSamplesArray(c);
-        }
+    int inChannels = internalInputBuffer->getChannels();
+    for (int c = 0; c < inChannels; ++c) {
+        vstInputArray[c] = internalInputBuffer->getSamplesArray(c);
+    }
 
-        int outChannels = internalOutputBuffer->getChannels();
-        for (int c = 0; c < outChannels; ++c) {
-            vstOutputArray[c] = internalOutputBuffer->getSamplesArray(c);
-        }
+    int outChannels = internalOutputBuffer->getChannels();
+    for (int c = 0; c < outChannels; ++c) {
+        vstOutputArray[c] = internalOutputBuffer->getSamplesArray(c);
+    }
 
-        VstInt32 sampleFrames = outBuffer.getFrameLenght();
-        if(effect->flags & effFlagsCanReplacing){
-            QMutexLocker locker(&editorMutex);
-            effect->processReplacing(effect, vstInputArray, vstOutputArray, sampleFrames);
-        }
-    //}
-    //else{//bypassed, just copy in to out   TODO: copy in directly to outBuffer, avoid copy to internalOut and after this copy to outBuffer
-    //    internalOutputBuffer->set(*internalInputBuffer);
-    //}
+    VstInt32 sampleFrames = outBuffer.getFrameLenght();
+    if(effect->flags & effFlagsCanReplacing){
+        QMutexLocker locker(&editorMutex);
+        effect->processReplacing(effect, vstInputArray, vstOutputArray, sampleFrames);
+    }
 
     outBuffer.add(*internalOutputBuffer);
-    //outBuffer.set(*internalOutputBuffer);
 }
 
 void VstPlugin::setBypass(bool state){
