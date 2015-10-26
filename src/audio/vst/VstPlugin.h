@@ -33,6 +33,7 @@ public:
     void start();
     void updateGui();
     void setSampleRate(int newSampleRate);
+    void setBypass(bool state);
 protected:
     void unload();
 

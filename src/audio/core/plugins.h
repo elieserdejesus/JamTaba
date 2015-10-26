@@ -49,7 +49,7 @@ public:
     virtual inline QString getName() const {return name;}
     virtual ~Plugin();
     virtual void setBypass(bool state);
-    inline bool isBypassed() const{return bypassed;}
+    bool isBypassed() const{return bypassed;}
     //virtual void openEditor(QPoint centerOfScreen);
     virtual void closeEditor();
     virtual void start() = 0;
