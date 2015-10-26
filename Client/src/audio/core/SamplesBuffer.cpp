@@ -309,6 +309,9 @@ void SamplesBuffer::setFrameLenght(unsigned int newFrameLenght){
 }
 
 void SamplesBuffer::set(const SamplesBuffer &buffer, int bufferChannelOffset, int channelsToCopy){
+    if(buffer.channels <= 0 || channels <= 0){
+        return;
+    }
     int framesToCopy = std::min(buffer.getFrameLenght(), (int)frameLenght);
     int channelsToProcess = std::min(channelsToCopy, std::min(buffer.getChannels(), (int)channels));
     if(channelsToProcess + bufferChannelOffset <= buffer.getChannels()){//avoid invalid channel index
@@ -324,8 +327,10 @@ void SamplesBuffer::set(const SamplesBuffer &buffer, int bufferChannelOffset, in
 
 void SamplesBuffer::set(const SamplesBuffer& buffer, unsigned int bufferOffset, unsigned int samplesToCopy, unsigned int internalOffset){
 
-    //QMutexLocker locker(&mutex);
-    //qDebug() << "set";
+    if(buffer.channels <= 0 || channels <= 0){
+        return;
+    }
+
     unsigned int framesToProcess = std::min(samplesToCopy, buffer.getFrameLenght() - bufferOffset);
     if(framesToProcess > buffer.frameLenght){//não processa mais samples do que a quantidade existente em buffer
         framesToProcess = buffer.frameLenght;

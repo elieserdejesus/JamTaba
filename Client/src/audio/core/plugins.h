@@ -48,8 +48,7 @@ public:
     explicit Plugin(QString name);
     virtual inline QString getName() const {return name;}
     virtual ~Plugin();
-    virtual void setBypass(bool state);
-    bool isBypassed() const{return bypassed;}
+
     //virtual void openEditor(QPoint centerOfScreen);
     virtual void closeEditor();
     virtual void start() = 0;
@@ -58,7 +57,7 @@ public:
     virtual void restoreFromSerializedData(QByteArray data) = 0;
 protected:
     QString name;
-    bool bypassed;
+
     QDialog* editorWindow;
 private slots:
     void editorDialogFinished();
