@@ -62,7 +62,7 @@ QString PluginDescriptor::getPluginNameFromPath(QString path){
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Plugin::Plugin(QString name)
-    :name(name), bypassed(false), editorWindow(nullptr)
+    :name(name),  editorWindow(nullptr)
 {
 
 }
@@ -90,11 +90,7 @@ Plugin::~Plugin(){
     closeEditor();
 }
 
-void Plugin::setBypass(bool state){
-    if(state != bypassed){
-        bypassed = state;
-    }
-}
+
 //++++++++++++++++++++++++++++
 const int JamtabaDelay::MAX_DELAY_IN_SECONDS = 3;
 

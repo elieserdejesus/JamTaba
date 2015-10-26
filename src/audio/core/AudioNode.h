@@ -17,14 +17,19 @@ namespace Audio{
 
 class AudioNodeProcessor : public QObject{
 public:
-    virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, const Midi::MidiBuffer& midiBuffer) = 0;
+    AudioNodeProcessor();
     virtual ~AudioNodeProcessor(){}
+    virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, const Midi::MidiBuffer& midiBuffer) = 0;
     virtual void suspend() = 0;
     virtual void resume() = 0;
     virtual void updateGui() = 0;
     virtual void openEditor(QPoint centerOfScreen) = 0;
     virtual void closeEditor() = 0;
     virtual void setSampleRate(int newSampleRate){ Q_UNUSED(newSampleRate);}
+    virtual void setBypass(bool state);
+    bool isBypassed() const{return bypassed;}
+protected:
+    bool bypassed;
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++

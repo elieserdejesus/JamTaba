@@ -291,7 +291,7 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
 
     Q_UNUSED(in)
     //qCDebug(vst) << "processing ...";
-    if( !effect || !loaded || !started){
+    if( isBypassed() || !effect || !loaded || !started){
         return;
     }
 
@@ -308,11 +308,9 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
     internalOutputBuffer->setFrameLenght(outBuffer.getFrameLenght());
     internalInputBuffer->setFrameLenght(outBuffer.getFrameLenght());
 
-    //internalInputBuffer->zero();
-    //internalInputBuffer->set(outBuffer);
     internalInputBuffer->set(in);
 
-    if(!isBypassed()){
+    //if(!isBypassed()){
         int inChannels = internalInputBuffer->getChannels();
         for (int c = 0; c < inChannels; ++c) {
             vstInputArray[c] = internalInputBuffer->getSamplesArray(c);
@@ -320,7 +318,6 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
 
         int outChannels = internalOutputBuffer->getChannels();
         for (int c = 0; c < outChannels; ++c) {
-           //out is initialized when plugin is loaded
             vstOutputArray[c] = internalOutputBuffer->getSamplesArray(c);
         }
 
@@ -329,13 +326,13 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
             QMutexLocker locker(&editorMutex);
             effect->processReplacing(effect, vstInputArray, vstOutputArray, sampleFrames);
         }
-    }
-    else{//bypassed, just copy in to out
-        internalOutputBuffer->set(*internalInputBuffer);
-    }
+    //}
+    //else{//bypassed, just copy in to out   TODO: copy in directly to outBuffer, avoid copy to internalOut and after this copy to outBuffer
+    //    internalOutputBuffer->set(*internalInputBuffer);
+    //}
 
-    //outBuffer.add(*internalOutputBuffer);
-    outBuffer.set(*internalOutputBuffer);
+    outBuffer.add(*internalOutputBuffer);
+    //outBuffer.set(*internalOutputBuffer);
 }
 
 void VstPlugin::setBypass(bool state){

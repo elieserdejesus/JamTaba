@@ -14,6 +14,19 @@ using namespace Audio;
 const double AudioNode::root2Over2 = 1.414213562373095 *0.5;
 const double AudioNode::piOver2 = 3.141592653589793238463 * 0.5;
 
+//+++++++++++++++++
+
+AudioNodeProcessor::AudioNodeProcessor()
+    :bypassed(false){
+
+}
+
+void AudioNodeProcessor::setBypass(bool state){
+    if(state != bypassed){
+        bypassed = state;
+    }
+}
+
 //+++++++++++++++
 
 FaderProcessor::FaderProcessor(float startGain, float endGain, int samplesToFade)
@@ -76,9 +89,6 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
         }
     }
 
-    //the input will be in the ouput, even if no processor are inserted
-    internalOutputBuffer.set(internalInputBuffer);
-
     //process inserted plugins
     foreach (AudioNodeProcessor* processor, processors) {
         //in the first iteration internalOutputBuffer contains the internalInputBuffer
@@ -86,9 +96,18 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
         //input for the next plugin. So, the 2nd plugin in the list receive the first
         //plugin output as input. The 3rd plugin receive the 2nd plugin output as
         //input, etc.
-        processor->process(internalOutputBuffer, internalOutputBuffer, midiBuffer);
+        if(!processor->isBypassed() ){
+            processor->process(internalInputBuffer, internalOutputBuffer, midiBuffer);
+            internalInputBuffer.set(internalOutputBuffer);
+        }
+        else{
+            internalOutputBuffer.add(internalInputBuffer);//bypassed, just accumulate input in output buffer
+        }
     }
 
+    if(processors.isEmpty()){
+        internalOutputBuffer.set(internalInputBuffer);
+    }
     internalOutputBuffer.applyGain(gain, leftGain, rightGain);
 
     lastPeak.update(internalOutputBuffer.computePeak());
