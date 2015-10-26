@@ -2,6 +2,17 @@
 
 Jamtaba is a standalone software and a VST plugin. Using the standalone version you can use your audio and midi devices and use VST plugins inside Jamtaba (Jamtaba standalone is a VST host). Using the VST plugin you can use Jamtaba in your preferred DAW and send your audio tracks to Jamtaba, and Jamtaba will stream these audio tracks to ninjam servers. Off course Jamtaba will receive and play the other musicians audio streams, so you can play with others and have some fun playing online!
 
+At moment Jamtaba standalone works for Windows (32 and 64 bits) and Mac OSX (10.7+). The VST plugin is available only for windows (32 and 64 bits).
+
+***
+
+###Tools and dependencies###
+JamTaba is builded using Qt. We are using Qt for many things: Gui, threads, sockets, json, http requests, file handling, etc. At moment Jamtaba is very coupled with Qt. This is a good thing if you like Qt, but can be terrible if you don't like. 
+
+Jamtaba is using some libraries: portaudio, rtmidi, minimp3, libvorbis and libogg. We are distributing pre compiled static libs for some platforms (Windows 32 and 64 bits and Mac OSX 64 bits). The linux port is in the TODO list, but we don't have nothing interesting enough yet.
+
+The library portaudio was compiled in windows using only the ASIO flags. So, if you don't have any ASIO driver installed JamTaba will emit an error message in initialization and fallback to an NullAudioDriver, and no sound will be produced.
+
 ***
 
 ###Windows Development###
