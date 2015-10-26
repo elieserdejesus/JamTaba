@@ -65,7 +65,8 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
     internalInputBuffer.setFrameLenght(out.getFrameLenght());
     internalOutputBuffer.setFrameLenght(out.getFrameLenght() );
 
-    internalOutputBuffer.set(internalInputBuffer);
+    //internalInputBuffer.set(in);
+    //internalOutputBuffer.set(internalInputBuffer);
 
     {
         QMutexLocker locker(&mutex);
@@ -75,10 +76,19 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
         }
     }
 
-    //inserted plugins
+    //the input will be in the ouput, even if no processor are inserted
+    internalOutputBuffer.set(internalInputBuffer);
+
+    //process inserted plugins
     foreach (AudioNodeProcessor* processor, processors) {
-        processor->process(internalInputBuffer, internalOutputBuffer, midiBuffer);
+        //in the first iteration internalOutputBuffer contains the internalInputBuffer
+        //content. In next interations the internalOutputBuffer is used as
+        //input for the next plugin. So, the 2nd plugin in the list receive the first
+        //plugin output as input. The 3rd plugin receive the 2nd plugin output as
+        //input, etc.
+        processor->process(internalOutputBuffer, internalOutputBuffer, midiBuffer);
     }
+
     internalOutputBuffer.applyGain(gain, leftGain, rightGain);
 
     lastPeak.update(internalOutputBuffer.computePeak());

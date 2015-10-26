@@ -291,7 +291,7 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
 
     Q_UNUSED(in)
     //qCDebug(vst) << "processing ...";
-    if(isBypassed() || !effect || !loaded || !started){
+    if( !effect || !loaded || !started){
         return;
     }
 
@@ -308,27 +308,41 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
     internalOutputBuffer->setFrameLenght(outBuffer.getFrameLenght());
     internalInputBuffer->setFrameLenght(outBuffer.getFrameLenght());
 
-    internalInputBuffer->zero();
-    internalInputBuffer->set(outBuffer);
+    //internalInputBuffer->zero();
+    //internalInputBuffer->set(outBuffer);
+    internalInputBuffer->set(in);
 
-    int inChannels = internalInputBuffer->getChannels();
-    for (int c = 0; c < inChannels; ++c) {
-        vstInputArray[c] = internalInputBuffer->getSamplesArray(c);
+    if(!isBypassed()){
+        int inChannels = internalInputBuffer->getChannels();
+        for (int c = 0; c < inChannels; ++c) {
+            vstInputArray[c] = internalInputBuffer->getSamplesArray(c);
+        }
+
+        int outChannels = internalOutputBuffer->getChannels();
+        for (int c = 0; c < outChannels; ++c) {
+           //out is initialized when plugin is loaded
+            vstOutputArray[c] = internalOutputBuffer->getSamplesArray(c);
+        }
+
+        VstInt32 sampleFrames = outBuffer.getFrameLenght();
+        if(effect->flags & effFlagsCanReplacing){
+            QMutexLocker locker(&editorMutex);
+            effect->processReplacing(effect, vstInputArray, vstOutputArray, sampleFrames);
+        }
+    }
+    else{//bypassed, just copy in to out
+        internalOutputBuffer->set(*internalInputBuffer);
     }
 
-    int outChannels = internalOutputBuffer->getChannels();
-    for (int c = 0; c < outChannels; ++c) {
-       //out is initialized when plugin is loaded
-        vstOutputArray[c] = internalOutputBuffer->getSamplesArray(c);
-    }
+    //outBuffer.add(*internalOutputBuffer);
+    outBuffer.set(*internalOutputBuffer);
+}
 
-    VstInt32 sampleFrames = outBuffer.getFrameLenght();
-    if(effect->flags & effFlagsCanReplacing){
-        QMutexLocker locker(&editorMutex);
-        effect->processReplacing(effect, vstInputArray, vstOutputArray, sampleFrames);
+void VstPlugin::setBypass(bool state){
+    Plugin::setBypass(state);
+    if(effect){
+        effect->dispatcher(effect, effSetBypass, 0, state, NULL, 0);
     }
-
-    outBuffer.add(*internalOutputBuffer);
 }
 
 void VstPlugin::closeEditor(){
