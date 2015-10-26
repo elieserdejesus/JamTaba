@@ -36,7 +36,7 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
         //abort();
         break;
     default:
-       stream << endl << "INFO:  " << localMsg.constData() << endl;
+       stream << "INFO:  " << localMsg.constData() <<endl;
     }
     QTextStream(stdout) << stringMsg;
 
@@ -55,7 +55,7 @@ void customLogHandler(QtMsgType type, const QMessageLogContext &context, const Q
         }
         if(outFile.open(ioFlags)){
            QTextStream ts(&outFile);
-           ts << stringMsg << endl;
+           ts << stringMsg;
         }
     //}
 

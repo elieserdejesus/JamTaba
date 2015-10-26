@@ -270,7 +270,6 @@ void MainController::on_ninjamEncodedAudioAvailableToSend(QByteArray encodedAudi
 MainController::MainController(Settings settings)
     :
       audioMixer(44100),
-      //roomStreamer(nullptr),
       currentStreamingRoomID(-1000),
       transmiting(true),
       mutex(QMutex::Recursive),
@@ -281,39 +280,9 @@ MainController::MainController(Settings settings)
       userNameChoosed(false),
       mainWindow(nullptr),
       jamRecorder(new Recorder::ReaperProjectGenerator())
-
 {
 
-
-
-   //addInputTrackNode(new Audio::LocalInputTestStreamer(440, getAudioDriverSampleRate()));
-
-/*
-    //test ninjam stream
-    NinjamTrackNode* trackTest = new NinjamTrackNode(2);
-    //QStringList testFiles({":/bateria mono.ogg"});
-    //QStringList testFiles({":/loop 192KHz.wav.ogg"});
-    QStringList testFiles({":/loop estereo 44100KHz.ogg"});
-    addTrack(2, trackTest);
-    for (int i = 0; i < testFiles.size(); ++i) {
-        QFile file(testFiles.at(i));
-        if(!file.exists()){
-            qCritical() << "File not exists! " << file.errorString();
-        }
-        file.open(QIODevice::ReadOnly);
-        trackTest->addVorbisEncodedInterval(file.readAll());
-    }
-    trackTest->startNewInterval();
-*/
-
-    //QString vstDir = "C:/Users/elieser/Desktop/TesteVSTs";
-    //QString vstDir = "C:/Program Files (x86)/VSTPlugins/";
-    //pluginFinder->addPathToScan(vstDir.toStdString());
-    //scanPlugins();
-
-    //qDebug() << "QSetting in " << ConfigStore::getSettingsFilePath();
 }
-//++++++++++++++++++++
 
 //++++++++++++++++++++
 int MainController::getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const{
@@ -407,32 +376,12 @@ void MainController::updateInputTracksRange(){
     }
 }
 //++++++++++++++++++++++++
-//this method is called when a new ninjam interval is received and the 'record multi track' option is enabled
+//this is called when a new ninjam interval is received and the 'record multi track' option is enabled
 void MainController::saveEncodedAudio(QString userName, quint8 channelIndex, QByteArray encodedAudio){
     if(settings.isSaveMultiTrackActivated()){//just in case
         jamRecorder.addRemoteUserAudio(userName, encodedAudio, channelIndex);
     }
 }
-
-//+++++++++++++++++++++=
-//+++++++++++++++++++++++++++++++++++++++++++++++
-//bool MainController::audioMonoInputIsFreeToSelect(int inputIndexInAudioDevice) const{
-//    foreach (Audio::LocalInputAudioNode* inputTrack, inputTracks) {
-//        if(!inputTrack->isNoInput() && !inputTrack->isMidi()){
-//            Audio::ChannelRange trackRange = inputTrack->getAudioInputRange();
-//            if(trackRange.getFirstChannel() == inputIndexInAudioDevice || trackRange.getLastChannel() == inputIndexInAudioDevice){
-//                return false;
-//            }
-//        }
-//    }
-//    return true;
-//}
-
-//bool MainController::audioStereoInputIsFreeToSelect(int firstInputIndexInAudioDevice) const{
-//    bool firstChannelIsFree = audioMonoInputIsFreeToSelect(firstInputIndexInAudioDevice);
-//    bool secondChannelIsFree = audioMonoInputIsFreeToSelect(firstInputIndexInAudioDevice + 1);
-//    return firstChannelIsFree && secondChannelIsFree;
-//}
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -848,31 +797,32 @@ void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStrin
 void MainController::start(){
 
     if(!started){
+        qCInfo(controllerMain()) << "Creating plugin finder...";
         pluginFinder.reset( createPluginFinder());
 
         if(!midiDriver){
+            qCInfo(controllerMain()) << "Creating midi driver...";
             midiDriver.reset( createMidiDriver());
         }
         if(!audioDriver){
+            qCInfo(controllerMain()) << "Creating audio driver...";
             audioDriver.reset( createAudioDriver(settings));
             QObject::connect(audioDriver.data(), SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
             QObject::connect(audioDriver.data(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
             QObject::connect(audioDriver.data(), SIGNAL(started()), this, SLOT(on_audioDriverStarted()));
         }
 
-        //audioMixer = new Audio::AudioMixer(audioDriver->getSampleRate());
+        qCInfo(controllerMain()) << "Creating roomStreamer ...";
         roomStreamer.reset( new Audio::NinjamRoomStreamerNode());//new Audio::AudioFileStreamerNode(":/teste.mp3");
         this->audioMixer.addNode( roomStreamer.data());
 
-        //QObject::connect(loginService, SIGNAL(disconnectedFromServer()), this->signalsHandler, SLOT(on_disconnectedFromLoginServer()));
-
-        //this->ninjamService = Ninjam::Service::getInstance();
         QObject::connect(&ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), this, SLOT(on_connectedInNinjamServer(Ninjam::Server)) );
         QObject::connect(&ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this, SLOT(on_disconnectedFromNinjamServer(Ninjam::Server)));
         QObject::connect(&ninjamService, SIGNAL(error(QString)), this, SLOT(on_errorInNinjamServer(QString)));
 
         if(audioDriver ){
             if(!audioDriver->canBeStarted()){
+                qCWarning(controllerMain()) << "Audio driver can't be used, using NullAudioDriver!";
                 audioDriver.reset(new Audio::NullAudioDriver());
             }
             audioDriver->start();
@@ -884,13 +834,13 @@ void MainController::start(){
         NatMap map;//not used yet,will be used in future to real time rooms
 
         //connect with login server and receive a list of public rooms to play
-
         QString userEnvironment = getUserEnvironmentString();
         QString version = QApplication::applicationVersion();// applicationVersion();
         QString userName = settings.getUserName();
         if(userName.isEmpty()){
             userName = "No name!";
         }
+        qCInfo(controllerMain()) << "Connecting in Jamtaba server...";
         loginService.connectInServer(userName, 0, "", map, version, userEnvironment, getSampleRate());
         //(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
 
