@@ -66,6 +66,40 @@ BaseTrackView[unlighted="false"] FxPanel{
    /*border:  1px inset rgb(100, 100, 100);*/
 }
 
+BaseTrackView #boostPanel{
+    border: none;
+    padding: 0px;
+}
+
+BaseTrackView #boostPanel QPushButton {
+   margin: 0;
+   padding: 0px;
+   padding-top: 3px;
+   padding-bottom: 3px;
+   border: 0px;
+   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                              stop: 0 #f6f7fa, stop: 1 #aaabae);
+   font-size: 9px;
+   border-radius: 0px;
+}
+
+BaseTrackView #boostPanel QPushButton#buttonBoostMinus12{
+   border-top-left-radius: 3px;
+   border-bottom-left-radius: 3px;
+   border-right: 1px solid rgba(0, 0, 0, 10);
+}
+
+BaseTrackView #boostPanel QPushButton#buttonBoostPlus12{
+   border-top-right-radius: 3px;
+   border-bottom-right-radius: 3px;
+   border-left: 1px solid rgba(0, 0, 0, 10);
+}
+
+BaseTrackView #boostPanel QPushButton:checked {
+   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                              stop: 0 #aaabae, stop: 1 #f6f7fa);
+}
+
 FxPanelItem{
     background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 30), stop:1 rgba(0, 0, 0, 50));
     background-position: center right;
