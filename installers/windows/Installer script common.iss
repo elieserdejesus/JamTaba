@@ -31,9 +31,11 @@ WizardImageFile=Jamtaba.bmp
 WizardImageBackColor=clWhite
 WizardImageStretch=false
 WizardSmallImageFile=Jamtaba48x48.bmp
-UsePreviousAppDir=false
-UsePreviousUserInfo=false
-UsePreviousGroup=false
+UsePreviousAppDir=true
+UsePreviousUserInfo=true
+UsePreviousGroup=true
+DirExistsWarning=no
+;EnableDirDoesntExistWarning=false
 
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl
@@ -80,7 +82,8 @@ begin
     'Select the folder in which setup should install the 64-bit VST Plugin, then click Next.',
     False, '');
     VST2DirPage.Add('');
-    VST2DirPage.Values[0] := ExpandConstant('{reg:HKLM\SOFTWARE\VST,VSTPluginsPath|{pf}\Steinberg\VSTPlugins}\');
+    //try recoder the VST directory used in last install. If this value is not founded use the VST path in windows registry.
+    VST2DirPage.Values[0] := GetPreviousData('VST2InstallDir', ExpandConstant('{reg:HKLM\SOFTWARE\VST,VSTPluginsPath|{pf}\Steinberg\VSTPlugins}\'));
   end else begin
     VST2DirPage := CreateInputDirPage(wpSelectDir,
       'Confirm 32-Bit VST Plugin Directory', '',
@@ -96,6 +99,12 @@ begin
   Result := VST2DirPage.Values[0]
 end;
 
+//+++++++++++++++++++++++++
+//Remember VST2 dir in next installs
+procedure RegisterPreviousData(PreviousDataKey: Integer);
+begin
+  SetPreviousData(PreviousDataKey, 'VST2InstallDir', VST2DirPage.Values[0]);
+end;
 //+++++++++++++++++++++++++
 
 // MSVC REDISTRIBUTABLE
@@ -181,3 +190,4 @@ begin
 		Result := not VCVersionInstalled(VC_2013_REDIST_X86_ADD);
    end;
 end;
+
