@@ -253,9 +253,11 @@ Plugin::Plugin(QString path, bool bypassed, QByteArray data)
 
 }
 
-Subchannel::Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel, float gain, float pan, bool muted, QList<Plugin> plugins)
+Subchannel::Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel, float gain, int boost, float pan, bool muted, QList<Plugin> plugins)
     :firstInput(firstInput), channelsCount(channelsCount),
-      midiDevice(midiDevice), midiChannel(midiChannel), gain(gain), pan(pan), muted(muted), plugins(plugins){
+      midiDevice(midiDevice), midiChannel(midiChannel),
+      gain(gain), boost(boost),
+      pan(pan), muted(muted), plugins(plugins){
 
 }
 
@@ -277,6 +279,7 @@ void InputsSettings::write(QJsonObject &out){
             subChannelObject["midiDevice"] = sub.midiDevice;
             subChannelObject["midiChannel"] = sub.midiChannel;
             subChannelObject["gain"] = sub.gain;
+            subChannelObject["boost"] = sub.boost;
             subChannelObject["pan"] = sub.pan;
             subChannelObject["muted"] = sub.muted;
 
@@ -313,6 +316,7 @@ void InputsSettings::read(QJsonObject in){
                     int midiDevice = getValueFromJson(subChannelObject, "midiDevice", -1);
                     int midiChannel = getValueFromJson(subChannelObject, "midiChannel", -1);
                     float gain = getValueFromJson(subChannelObject, "gain", (float)1);
+                    int boost = getValueFromJson(subChannelObject, "boost", (int)0);
                     float pan = getValueFromJson(subChannelObject, "pan", (float)0);
                     bool muted = getValueFromJson(subChannelObject, "muted", false);
 
@@ -330,7 +334,7 @@ void InputsSettings::read(QJsonObject in){
                             }
                         }
                     }
-                    Persistence::Subchannel subChannel(firstInput, channelsCount, midiDevice, midiChannel, gain, pan, muted, plugins);
+                    Persistence::Subchannel subChannel(firstInput, channelsCount, midiDevice, midiChannel, gain, boost, pan, muted, plugins);
                     channel.subChannels.append(subChannel);
                 }
                 this->channels.append(channel);

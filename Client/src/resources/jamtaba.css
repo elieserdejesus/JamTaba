@@ -77,10 +77,18 @@ BaseTrackView #boostPanel QPushButton {
    padding-top: 3px;
    padding-bottom: 3px;
    border: 0px;
-   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                              stop: 0 #f6f7fa, stop: 1 #aaabae);
-   font-size: 9px;
+   /*background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                              stop: 0 #f6f7fa, stop: 1 #aaabae);*/
+   font-size: 8px;
    border-radius: 0px;
+}
+
+BaseTrackView #boostPanel QPushButton:checked {
+background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+    stop:0 rgba(255, 255, 255, 200),
+    stop:0.2 rgba(255, 255, 255, 180),
+    stop:0.7 rgba(255, 255, 255, 180),
+    stop:1 rgba(255,255, 255, 40));
 }
 
 BaseTrackView #boostPanel QPushButton#buttonBoostMinus12{
@@ -95,10 +103,7 @@ BaseTrackView #boostPanel QPushButton#buttonBoostPlus12{
    border-left: 1px solid rgba(0, 0, 0, 10);
 }
 
-BaseTrackView #boostPanel QPushButton:checked {
-   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                              stop: 0 #aaabae, stop: 1 #f6f7fa);
-}
+
 
 FxPanelItem{
     background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 30), stop:1 rgba(0, 0, 0, 50));
@@ -788,7 +793,12 @@ QPushButton:checked{
 }
 
 QPushButton:hover{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(0, 0, 0, 60), stop:0.02 rgba(0, 0, 0, 0) stop:0.9 rgba(0,0,0,100));
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(240, 240, 240),
+    stop:0.2 rgb(255, 255, 255),
+    stop:0.7 rgb(240, 240, 240),
+    stop:1 rgb(210,210, 210)
+    );
     color: black;
 }
 
@@ -813,7 +823,7 @@ NinjamTrackView #soloButton, NinjamTrackView #muteButton{
 }
 
 QPushButton:hover#soloButton, QPushButton:hover#muteButton{
-background-color: rgba(255, 255, 255, 80);
+/*background-color: rgba(255, 255, 255, 80);*/
 color: rgba(0, 0, 0, 200);
 }
 

@@ -39,14 +39,17 @@ public:
 
 
     //inline int getID() const{return ID;}
-    void applyGain(float gainFactor);
+    //inline void applyGain(float gainFactor){applyGain(gainFactor, 0);}
+    void applyGain(float gainFactor, float boostFactor);
 
     void fade(float beginGain=0, float endGain=1);
     void fadeIn(int fadeFrameLenght,  float beginGain = 0);
     void fadeOut(int fadeFrameLenght, float endGain = 0);
 
     //overload applyGain used to compute main gain and pan gains in one pass
-    void applyGain(float gainFactor, float leftGain, float rightGain);//panValue between [-1, 0, 1] => LEFT, CENTER, RIGHT
+    //panValue between [-1, 0, 1] => LEFT, CENTER, RIGHT
+    //inline void applyGain(float gainFactor, float leftGain, float rightGain){applyGain(gainFactor, leftGain, rightGain, 0);}
+    void applyGain(float gainFactor, float leftGain, float rightGain, float boostFactor);//panValue between [-1, 0, 1] => LEFT, CENTER, RIGHT
 
     void zero();
 

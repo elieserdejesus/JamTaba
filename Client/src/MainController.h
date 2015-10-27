@@ -128,6 +128,7 @@ public:
     void setTrackSolo(int trackID, bool soloStatus);
     bool trackIsSoloed(int trackID) const;
     void setTrackLevel(int trackID, float level);
+    void setTrackBoost(int trackID, float boostInDecibels);
     void setTrackPan(int trackID, float pan);
 
     Audio::AudioPeak getRoomStreamPeak();

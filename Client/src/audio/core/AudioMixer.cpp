@@ -72,7 +72,7 @@ void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sample
     if(attenuateAfterSumming){
         int nodesConnected = nodes.size();
         if(nodesConnected > 1){//attenuate
-            out.applyGain( 1.0/nodesConnected );
+            out.applyGain( 1.0/nodesConnected, 0.0 );
         }
     }
 

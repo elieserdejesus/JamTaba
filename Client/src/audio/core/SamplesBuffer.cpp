@@ -85,36 +85,10 @@ float* SamplesBuffer::getSamplesArray(unsigned int channel) const{
     return const_cast<float*>(&(samples[channel][0]));
 }
 
-
-//void SamplesBuffer::setOffset(int offset){
-//    //QMutexLocker locker(&mutex);
-//    if(offset > 0){
-//        for (unsigned int c = 0; c < channels; ++c) {
-//            samples[c] += offset;
-//        }
-//        this->offset = offset;
-//        this->frameLenght -= offset;
-//    }
-//    else{
-//        resetOffset();
-//    }
-
-//}
-
-//void SamplesBuffer::resetOffset(){
-//    //QMutexLocker locker(&mutex);
-//    for (unsigned int c = 0; c < channels; ++c) {
-//        samples[c] -= offset;
-//    }
-//    this->offset = 0;
-//}
-
-void SamplesBuffer::applyGain(float gainFactor)
-{
-    //QMutexLocker locker(&mutex);
+void SamplesBuffer::applyGain(float gainFactor, float boostFactor){
     for (unsigned int c = 0; c < channels; ++c) {
         for (unsigned int i = 0; i < frameLenght; ++i) {
-            samples[c][i] *= gainFactor;
+            samples[c][i] *= (gainFactor * boostFactor);
         }
     }
 }
@@ -155,19 +129,18 @@ void SamplesBuffer::fade(float beginGain, float endGain){
     }
 }
 
-void SamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain)
-{
-    //QMutexLocker locker(&mutex);
+void SamplesBuffer::applyGain(float gainFactor, float leftGain, float rightGain, float boostFactor){
     if(!isMono()){
-        float finalLeftGain = gainFactor * leftGain;
-        float finalRightGain = gainFactor * rightGain;
+        float commonGain = gainFactor * boostFactor;
+        float finalLeftGain = commonGain * leftGain;
+        float finalRightGain = commonGain * rightGain;
         for (unsigned int i = 0; i < frameLenght; ++i) {
             samples[0][i] *= finalLeftGain;
             samples[1][i] *= finalRightGain;
         }
     }
     else{
-        applyGain(gainFactor);
+        applyGain(gainFactor, boostFactor);
     }
 }
 

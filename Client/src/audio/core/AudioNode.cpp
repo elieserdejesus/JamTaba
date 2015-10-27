@@ -11,8 +11,8 @@
 
 using namespace Audio;
 
-const double AudioNode::root2Over2 = 1.414213562373095 *0.5;
-const double AudioNode::piOver2 = 3.141592653589793238463 * 0.5;
+const double AudioNode::ROOT_2_OVER_2 = 1.414213562373095 *0.5;
+const double AudioNode::PI_OVER_2 = 3.141592653589793238463 * 0.5;
 
 //+++++++++++++++++
 
@@ -108,7 +108,7 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
     if(processors.isEmpty()){
         internalOutputBuffer.set(internalInputBuffer);
     }
-    internalOutputBuffer.applyGain(gain, leftGain, rightGain);
+    internalOutputBuffer.applyGain(gain, leftGain, rightGain, boost);
 
     lastPeak.update(internalOutputBuffer.computePeak());
 
@@ -121,12 +121,12 @@ AudioNode::AudioNode()
       internalInputBuffer(2),
       internalOutputBuffer(2),
       lastPeak(0, 0),
-      //mutex(QMutex::Recursive),
       muted(false),
       soloed(false),
       activated(true),
       gain(1),
-      pan(0)/*center*/,
+      boost(1),//no boost
+      pan(0),//center
       leftGain(1.0),
       rightGain(1.0),
       resamplingCorrection(0)
@@ -166,9 +166,9 @@ void AudioNode::setPan(float pan) {
 }
 
 void AudioNode::updateGains(){
-    double angle = pan * piOver2 * 0.5;
-    leftGain = (float) (root2Over2 * (cos(angle) - sin(angle)));
-    rightGain = (float) (root2Over2 * (cos(angle) + sin(angle)));
+    double angle = pan * PI_OVER_2 * 0.5;
+    leftGain = (float) (ROOT_2_OVER_2 * (cos(angle) - sin(angle)));
+    rightGain = (float) (ROOT_2_OVER_2 * (cos(angle) + sin(angle)));
 }
 
 AudioNode::~AudioNode()

@@ -16,16 +16,16 @@ const QString LocalTrackView::MONO_ICON = ":/images/input_mono.png";
 const QString LocalTrackView::STEREO_ICON = ":/images/input_stereo.png";
 const QString LocalTrackView::NO_INPUT_ICON= ":/images/input_no.png";
 
-LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex, float initialGain, float initialPan, bool muted)
+LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex, float initialGain, BaseTrackView::BoostValue boostValue, float initialPan, bool muted)
     :BaseTrackView( mainController, 1), fxPanel(nullptr), inputNode(nullptr)
 {
-    init(channelIndex, initialGain, initialPan, muted);
+    init(channelIndex, initialGain, boostValue, initialPan, muted);
 }
 
 LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex)
     :BaseTrackView(mainController, 1), fxPanel(nullptr), inputNode(nullptr)
 {
-    init(channelIndex, 1, 0, false);//unit gain and pan in center, not muted
+    init(channelIndex, 1, BaseTrackView::BoostValue::ZERO, 0, false);//unit gain and pan in center, not muted
 }
 
 void LocalTrackView::detachMainController(){
@@ -36,7 +36,7 @@ void LocalTrackView::closeAllPlugins(){
     inputNode->closeProcessorsWindows();//close vst editors
 }
 
-void LocalTrackView::init(int channelIndex, float initialGain, float initialPan, bool muted){
+void LocalTrackView::init(int channelIndex, float initialGain, BaseTrackView::BoostValue boostValue, float initialPan, bool muted){
     if(!mainController){
         qCritical() << "LocalTrackView::init() mainController is null!";
         return;
@@ -71,7 +71,7 @@ void LocalTrackView::init(int channelIndex, float initialGain, float initialPan,
 
     ui->levelSlider->setValue( 100 * initialGain );
     ui->panSlider->setValue( initialPan * 4 );
-
+    initializeBoostButtons(boostValue);
     if(muted){
         ui->muteButton->click();
     }
@@ -80,6 +80,21 @@ void LocalTrackView::init(int channelIndex, float initialGain, float initialPan,
 
     faderOnly = false;
 }
+
+void LocalTrackView::initializeBoostButtons(BoostValue boostValue){
+    switch (boostValue) {
+        case BoostValue::MINUS:
+            ui->buttonBoostMinus12->click();
+            break;
+        case BoostValue::PLUS:
+            ui->buttonBoostPlus12->click();
+            break;
+        default:
+            ui->buttonBoostZero->click();
+    }
+
+}
+
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 QSize LocalTrackView::sizeHint() const{

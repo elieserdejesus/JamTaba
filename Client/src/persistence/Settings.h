@@ -116,12 +116,13 @@ public:
 
 class Subchannel{
 public:
-    Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel, float gain, float pan, bool muted, QList<Plugin> plugins);
+    Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel, float gain, int boost, float pan, bool muted, QList<Plugin> plugins);
     int firstInput;
     int channelsCount;
     int midiDevice;
     int midiChannel;
     float gain;
+    int boost;//[-1, 0, +1]
     float pan;
     bool muted;
     QList<Plugin> plugins;
@@ -155,7 +156,7 @@ private:
     InputsSettings inputsSettings;
     RecordingSettings recordingSettings;
     PrivateServerSettings privateServerSettings;
-    QString lastUserName;//the nick name choosed by user
+    QString lastUserName;//the last nick name choosed by user
     int ninjamIntervalProgressShape;//Circle, Ellipe or Line
 public:
     Settings();
@@ -229,7 +230,7 @@ public:
     void storeLasUserName(QString userName);
     void storeLastChannelName(int channelIndex, QString channelName) ;
 
-    void teste(QJsonObject& ob);
+    //void teste(QJsonObject& ob);
 };
 
 }

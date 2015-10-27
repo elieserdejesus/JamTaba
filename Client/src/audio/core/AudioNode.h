@@ -75,6 +75,9 @@ public:
     virtual void updateProcessorsGui();
 
     inline void setGain(float gainValue){this->gain = gainValue;}
+    inline void setBoost(float boostValue){this->boost = boostValue;}
+
+    inline float getBoost() const {return boost;}
 
     inline float getGain() const{return gain;}
 
@@ -87,22 +90,17 @@ public:
     inline void activate(){activated = true;}
     inline bool isActivated() const{return activated;}
 
-
-
 protected:
 
     int getInputResamplingLength(int sourceSampleRate, int targetSampleRate, int outFrameLenght) ;
-
 
     QSet<AudioNode*> connections;
     QList<AudioNodeProcessor*> processors;
     SamplesBuffer internalInputBuffer;
     SamplesBuffer internalOutputBuffer;
 
-    //SamplesBuffer discardedBuffer;//store samples discarded in AudioMixer to avoid loose samples in resampling process
     mutable Audio::AudioPeak lastPeak;
     QMutex mutex; //used to protected connections manipulation because nodes can be added or removed by different threads
-    //int sampleRate;
 private:
     AudioNode(const AudioNode& other);
     AudioNode& operator=(const AudioNode& other);
@@ -113,20 +111,19 @@ private:
     bool activated;//used when room stream is played. All tracks are disabled, except the room streamer.
 
     float gain;
+    float boost;
 
     //pan
     float pan;
     float leftGain;
     float rightGain;
 
-	static const double root2Over2;// = 1.414213562373095;// *0.5;
-	static const double piOver2;// = 3.141592653589793238463 * 0.5;
+    static const double ROOT_2_OVER_2;// = 1.414213562373095;// *0.5;
+    static const double PI_OVER_2;// = 3.141592653589793238463 * 0.5;
 
     double resamplingCorrection;
 
     void updateGains();
-
-    //mutable double resamplingCorrection;
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
