@@ -641,19 +641,22 @@ void MainController::setTrackPan(int trackID, float pan){
     }
 }
 
-void MainController::setTrackLevel(int trackID, float level){
-    //QMutexLocker locker(&mutex);
-    //checkThread("setTrackLevel();");
+void MainController::setTrackBoost(int trackID, float boostInDecibels){
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
-        //node->setGain( std::pow( level, 4));
+        //qInfo() << "Boost: " << boostInDecibels << " linear:" << Utils::dbToLinear(boostInDecibels);
+        node->setBoost(Utils::dbToLinear(boostInDecibels));
+    }
+}
+
+void MainController::setTrackLevel(int trackID, float level){
+    Audio::AudioNode* node = tracksNodes[trackID];
+    if(node){
         node->setGain(Utils::linearGainToPower(level));
     }
 }
 
 void MainController::setTrackMute(int trackID, bool muteStatus){
-    //QMutexLocker locker(&mutex);
-    //checkThread("setTrackMute();");
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->setMuteStatus(muteStatus);

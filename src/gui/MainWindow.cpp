@@ -156,6 +156,8 @@ Persistence::InputsSettings MainWindow::getInputsSettings() const{
             int midiDevice = inputNode->getMidiDeviceIndex();
             int midiChannel = inputNode->getMidiChannelIndex();
             float gain = Utils::poweredGainToLinear( inputNode->getGain() );
+            float b = inputNode->getBoost();
+            float boost = Utils::linearToDb(inputNode->getBoost());
             float pan = inputNode->getPan();
             bool muted = inputNode->isMuted();
 
@@ -165,7 +167,7 @@ Persistence::InputsSettings MainWindow::getInputsSettings() const{
                 QByteArray serializedData = p->getSerializedData();
                 plugins.append(Persistence::Plugin(p->getPath(), p->isBypassed(), serializedData));
             }
-            Persistence::Subchannel sub(firstInput, channelsCount, midiDevice, midiChannel, gain, pan, muted, plugins);
+            Persistence::Subchannel sub(firstInput, channelsCount, midiDevice, midiChannel, gain, boost, pan, muted, plugins);
 
             channel.subChannels.append(sub);
         }
@@ -398,7 +400,8 @@ void MainWindow::initializeLocalInputChannels(){
         LocalTrackGroupView* channelView = addLocalChannel(channelIndex, channel.name, channel.subChannels.isEmpty());
         foreach (Persistence::Subchannel subChannel, channel.subChannels) {
             qInfo() << "\t\tCreating sub-channel ";
-            LocalTrackView* subChannelView = new LocalTrackView( mainController, channelIndex, subChannel.gain, subChannel.pan, subChannel.muted);
+            BaseTrackView::BoostValue boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
+            LocalTrackView* subChannelView = new LocalTrackView( mainController, channelIndex, subChannel.gain, boostValue, subChannel.pan, subChannel.muted);
             channelView->addTrackView(subChannelView);
             if(!mainController->isRunningAsVstPlugin()){
                 if(subChannel.midiDevice >= 0){//using midi

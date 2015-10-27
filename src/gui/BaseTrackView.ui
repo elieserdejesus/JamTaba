@@ -331,10 +331,13 @@
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>12</height>
+       <height>24</height>
       </size>
      </property>
     </spacer>
@@ -362,6 +365,9 @@
       </property>
       <item>
        <widget class="QPushButton" name="buttonBoostMinus12">
+        <property name="toolTip">
+         <string>-12 db boost</string>
+        </property>
         <property name="text">
          <string>-12db</string>
         </property>
@@ -372,8 +378,11 @@
       </item>
       <item>
        <widget class="QPushButton" name="buttonBoostZero">
+        <property name="toolTip">
+         <string>no boost</string>
+        </property>
         <property name="text">
-         <string>0db</string>
+         <string>0 db</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -382,6 +391,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="buttonBoostPlus12">
+        <property name="toolTip">
+         <string>+12 db boost</string>
+        </property>
         <property name="text">
          <string>+12db</string>
         </property>

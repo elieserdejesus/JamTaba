@@ -24,7 +24,7 @@ class LocalTrackView : public BaseTrackView
 {
     Q_OBJECT
 public:
-    LocalTrackView(Controller::MainController* mainController, int channelIndex, float initialGain, float initialPan, bool muted);
+    LocalTrackView(Controller::MainController* mainController, int channelIndex, float initialGain, BoostValue boostValue, float initialPan, bool muted);
     LocalTrackView(Controller::MainController* mainController, int channelIndex);
     ~LocalTrackView();
 
@@ -78,10 +78,11 @@ private:
 
     bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;
 
-    void init(int channelIndex, float initialGain, float initialPan, bool muted);
+    void init(int channelIndex, float initialGain, BoostValue boostValue, float initialPan, bool muted);
 
     bool faderOnly;
 
+    void initializeBoostButtons(BoostValue boostValue);
 private slots:
     void on_inputSelectionButtonClicked();//build and show de input selection menu
 

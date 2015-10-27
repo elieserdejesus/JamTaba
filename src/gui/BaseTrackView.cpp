@@ -22,7 +22,9 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     QObject::connect(ui->levelSlider, SIGNAL(valueChanged(int)), this, SLOT(onFaderMoved(int)));
     QObject::connect(ui->panSlider, SIGNAL(sliderMoved(int)), this, SLOT(onPanSliderMoved(int)));
     QObject::connect(ui->panSlider, SIGNAL(valueChanged(int)), this, SLOT(onPanSliderMoved(int)));
-
+    QObject::connect(ui->buttonBoostZero, SIGNAL(clicked(bool)), this, SLOT(onBoostButtonClicked()));
+    QObject::connect(ui->buttonBoostMinus12, SIGNAL(clicked(bool)), this, SLOT(onBoostButtonClicked()));
+    QObject::connect(ui->buttonBoostPlus12, SIGNAL(clicked(bool)), this, SLOT(onBoostButtonClicked()));
 
     ui->panSlider->installEventFilter(this);
     ui->levelSlider->installEventFilter(this);
@@ -35,9 +37,23 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     boostButtonGroup->addButton(ui->buttonBoostMinus12);
     boostButtonGroup->addButton(ui->buttonBoostZero);
     boostButtonGroup->addButton(ui->buttonBoostPlus12);
+
+    ui->buttonBoostZero->setChecked(true);
 }
 
 
+void BaseTrackView::onBoostButtonClicked(){
+    float boostValue = 0;
+    if(ui->buttonBoostMinus12->isChecked()){
+        boostValue = -12;
+    }
+    else if(ui->buttonBoostPlus12->isChecked()){
+        boostValue = 12;
+    }
+    if(mainController){
+        mainController->setTrackBoost(getTrackID(), boostValue);
+    }
+}
 
 void BaseTrackView::updateGuiElements(){
     if(!mainController){
@@ -69,31 +85,24 @@ QSize BaseTrackView::minimumSizeHint() const{
     return sizeHint();
 }
 
+void BaseTrackView::updateBoostButtonsText(){
+    ui->buttonBoostZero->setText(narrowed ? "0" : "0 db");
+    ui->buttonBoostMinus12->setText(narrowed ? "-12" : "-12db");
+    ui->buttonBoostPlus12->setText(narrowed ? "+12" : "+12db");
+}
+
 void BaseTrackView::setToNarrow(){
-    //this->setMaximumWidth(NARROW_WIDTH);
-    this->narrowed = true;
-
-    //ui->soloButton->setText("S");
-    //ui->soloButton->setToolTip("Solo");
-
-    //ui->muteButton->setText("M");
-    //ui->muteButton->setToolTip("Mute");
-
-    //ui->panSlider->setTickInterval(2);
-    updateGeometry();
+    if(!this->narrowed){
+        this->narrowed = true;
+        updateBoostButtonsText();
+        updateGeometry();
+    }
 }
 
 void BaseTrackView::setToWide(){
     if(narrowed){
-        //setMaximumWidth(QWIDGETSIZE_MAX);
         this->narrowed = false;
-//        ui->soloButton->setText("SOLO");
-//        ui->soloButton->setToolTip("Solo");
-
-//        ui->muteButton->setText("MUTE");
-//        ui->muteButton->setToolTip("Mute");
-
-        //ui->panSlider->setTickInterval(0);
+        updateBoostButtonsText();
         updateGeometry();
     }
 }

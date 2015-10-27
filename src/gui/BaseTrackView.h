@@ -22,10 +22,22 @@ public:
     BaseTrackView(Controller::MainController* mainController, long trackID);
     virtual ~BaseTrackView();
 
+    enum BoostValue{
+        ZERO, MINUS, PLUS
+    };
+
+    static BoostValue intToBoostValue(int intValue){
+        if(intValue == 0){
+            return BoostValue::ZERO;
+        }
+        if(intValue > 0){
+            return BoostValue::PLUS;
+        }
+        return BoostValue::MINUS;
+    }
+
     inline long getTrackID() const{return trackID;}
     static BaseTrackView* getTrackViewByID(long trackID);
-
-
 
     virtual void setToNarrow();
     virtual void setToWide();
@@ -62,13 +74,15 @@ private:
     void drawFaderDbValue(QPainter& p);
     //void drawFaderDbMarks(QPainter& p);
 
-
+    void updateBoostButtonsText();
 
 private slots:
     void onMuteClicked();
     void onSoloClicked();
     void onFaderMoved(int value);
     void onPanSliderMoved(int value);
+
+    void onBoostButtonClicked();
 
 };
 

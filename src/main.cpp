@@ -4,12 +4,8 @@
 #include "persistence/Settings.h"
 #include "MainWindowStandalone.h"
 #include "log/logHandler.h"
-//#include <QDebug>
-//#include <QStandardPaths>
 
 int main(int argc, char* args[] ){
-
-    //qDebug() << QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
 
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
