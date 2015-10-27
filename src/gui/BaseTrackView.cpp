@@ -31,7 +31,10 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     //add in static map
     trackViews.insert(trackID, this);
 
-    //ui->panSlider->setAttribute(Qt::WA_);
+    QButtonGroup* boostButtonGroup = new QButtonGroup(this);
+    boostButtonGroup->addButton(ui->buttonBoostMinus12);
+    boostButtonGroup->addButton(ui->buttonBoostZero);
+    boostButtonGroup->addButton(ui->buttonBoostPlus12);
 }
 
 
