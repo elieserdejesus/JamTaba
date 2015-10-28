@@ -57,3 +57,25 @@ Jamtaba source code dir in your hard disk
 
 ##Build Using msvc##
 TODO
+
+##Working with Git -ToolTips-##
+I use git in command line prompt.  
+My Git knowledge is limited, but it is enough to let us rock !
+
+Let' me share the 2 things I know about Git, maybe this can usefull for you too:
+
+**When I will work in something new (bug or issue):**
+
+git checkout -b "branchName"  //this create a new branch with  the specified name
+
+**When I've finished the work with the branch "branchName":**
+git add .  //to add all changes
+git commit -m "my cool commit message"
+
+**Now I go back to the master and merge master with the branch:**
+git checkout master  
+git merge branchName  //master is merged with "branchName" branch
+
+git push //to send the files for the remote repository
+
+You are done !
