@@ -75,6 +75,10 @@ win32{
 
         CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbis -logg
         else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lrtmidid -lvorbisfiled -lvorbisd -loggd
+
+        #after a lot or research Ezee found this userfull link explaining how compile to be compatible with Windows XP: http://www.tripleboot.org/?p=423
+        QMAKE_LFLAGS_WINDOWS = /SUBSYSTEM:WINDOWS,5.01
+
     }
 
     win32-g++{#MinGW compiler
@@ -90,9 +94,6 @@ win32{
     LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32
 
     RC_FILE = Jamtaba2.rc #windows icon
-
-    #after a lot or research Ezee found this userfull link explaining how compile to be compatible with Windows XP: http://www.tripleboot.org/?p=423
-    QMAKE_LFLAGS_WINDOWS = /SUBSYSTEM:WINDOWS,5.01
 }
 
 
