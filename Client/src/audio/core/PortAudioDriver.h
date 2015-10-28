@@ -19,7 +19,6 @@ public:
 #ifdef Q_OS_MACX
     PortAudioDriver(Controller::MainController* mainController, int sampleRate, int  bufferSize);
 #endif
-    //PortAudioDriver(AudioDriverListener* audioDriverListener);
     virtual ~PortAudioDriver();
 
 	virtual void start();

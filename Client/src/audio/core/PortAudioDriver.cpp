@@ -189,11 +189,13 @@ void PortAudioDriver::start(){
 
     stop();
 
-    qCInfo(portaudio) << "Starting portaudio driver using" << getInputDeviceName(inputDeviceIndex);
+    qCInfo(portaudio) << "Starting portaudio driver using" << getInputDeviceName(inputDeviceIndex) << " as input device.";
+    qCInfo(portaudio) << "Starting portaudio driver using" << getOutputDeviceName(outputDeviceIndex) << " as output device.";
 
     recreateBuffers();//adjust the input and output buffers channels
 
     unsigned long framesPerBuffer = bufferSize;// paFramesPerBufferUnspecified;
+    qCInfo(portaudio) << "Starting portaudio driver using" << framesPerBuffer << " as buffer size.";
     PaSampleFormat sampleFormat = paFloat32;// | paNonInterleaved;
 
     PaStreamParameters inputParams;
@@ -259,6 +261,15 @@ void PortAudioDriver::start(){
 //    //outputParams.hostApiSpecificStreamInfo = &outStreamInfo;
 //#endif
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    bool willUseInputParams = !globalInputRange.isEmpty();
+    if(willUseInputParams){
+        qCInfo(portaudio) << "Trying initialize portaudio using inputParams and samplerate=" << sampleRate;
+    }
+    else{
+        qCInfo(portaudio) << "Trying initialize portaudio WITHOUT inputParams becouse globalInputRange is empty!";
+        qCInfo(portaudio) << "Detected inputs for " << getInputDeviceName(inputDeviceIndex) << ":" << getMaxInputs();
+    }
 
     PaError error =  Pa_IsFormatSupported( !globalInputRange.isEmpty() ? (&inputParams) : NULL, &outputParams, sampleRate);
     if(error != paNoError){
