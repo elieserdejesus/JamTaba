@@ -36,7 +36,7 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
         QObject::connect( mainController->getPluginFinder(),
                                   SIGNAL(scanFinished()),
                                   this,
-                                  SLOT(onPluginsScanFinished));
+                                  SLOT(on_pluginsScanFinished()));
         populateAudioTab();
         populateMidiTab();
         populateVstTab();
@@ -334,7 +334,7 @@ void PreferencesDialog::on_prefsTab_currentChanged(int index)
 
 //VST
 
-void PreferencesDialog::onPluginsScanFinished(){
+void PreferencesDialog::on_pluginsScanFinished(){
     populateVstTab();
 }
 void PreferencesDialog::on_buttonAddVstPath_clicked()
