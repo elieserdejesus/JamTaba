@@ -14,7 +14,7 @@ class PortAudioDriver : public AudioDriver
 {
 public:
 #ifdef Q_OS_WIN
-    PortAudioDriver(Controller::MainController* mainController, int inputDeviceIndex, int outputDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize);
+    PortAudioDriver(Controller::MainController* mainController, int audioDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize);
 #endif
 #ifdef Q_OS_MACX
     PortAudioDriver(Controller::MainController* mainController, int sampleRate, int  bufferSize);
@@ -34,13 +34,9 @@ public:
     virtual const char* getInputChannelName(unsigned const int index) const;
     virtual const char* getOutputChannelName(unsigned const int index) const;
 
-    virtual const char* getInputDeviceName(int index) const;
-    virtual const char* getOutputDeviceName(int index) const;
-
-    virtual int getInputDeviceIndex() const;
-    virtual void setInputDeviceIndex(int index);
-    virtual int getOutputDeviceIndex() const;
-    virtual void setOutputDeviceIndex(int index);
+    virtual const char* getAudioDeviceName(int index) const;
+    inline int getAudioDeviceIndex() const{return audioDeviceIndex;}
+    virtual void setAudioDeviceIndex(int index);
 
     virtual int getDevicesCount() const;
 
@@ -60,7 +56,6 @@ private:
 
     void changeInputSelection(int firstInputChannelIndex, int inputChannelCount);
 
-    bool deviceIndexedAreValid() const;
 };
 
 
