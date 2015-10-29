@@ -437,7 +437,7 @@ void PreferencesDialog::on_ButtonVST_AddToBlackList_clicked()
     QFileDialog VstDialog(this, "Add Vst(s) to BlackBox ...");
     VstDialog.setNameFilter(tr("Dll(*.dll)"));
     VstDialog.setAcceptMode(QFileDialog::AcceptOpen);
-    VstDialog.setFileMode(QFileDialog::AnyFile);
+    VstDialog.setFileMode(QFileDialog::ExistingFiles);
     if(VstDialog.exec() ){
         QStringList VstNames = VstDialog.selectedFiles();
         foreach (QString string, VstNames)
