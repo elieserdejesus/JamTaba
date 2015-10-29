@@ -885,7 +885,7 @@ void MainWindow::on_privateServerConnectionAccepted(QString server, int serverPo
 }
 
 void MainWindow::on_reportBugMenuItemTriggered(){
-    QDesktopServices::openUrl(QUrl("https://bitbucket.org/elieserdejesus/jamtaba2/issues"));
+    QDesktopServices::openUrl(QUrl("https://github.com/elieserdejesus/JamTaba/issues"));
 }
 
 
