@@ -118,6 +118,7 @@ Audio::PluginDescriptor StandalonePluginFinder::getPluginDescriptor(QFileInfo f,
 
 void StandalonePluginFinder::run(){
     emit scanStarted();
+
     for(QString scanPath : scanPaths){
         QDirIterator dirIt(scanPath, QDirIterator::Subdirectories);
         while (dirIt.hasNext()) {
@@ -132,10 +133,12 @@ void StandalonePluginFinder::run(){
         }
     }
     emit scanFinished();
+
 }
 
 void StandalonePluginFinder::scan(){
     QtConcurrent::run(this, &StandalonePluginFinder::run);
+
 }
 
 //++++++++++++++++++++++++++++++++++
@@ -190,6 +193,7 @@ void StandaloneMainController::on_ninjamStartProcessing(int intervalPosition){
 void StandaloneMainController::on_VSTPluginFounded(QString name, QString group, QString path){
     pluginsDescriptors.append(Audio::PluginDescriptor(name, group, path));
     settings.addVstPlugin(path);
+    //we want to add it also in the vst list on screen
 }
 
 //++++++++++++++++++++++++++++++++++++++++++
