@@ -273,47 +273,6 @@
        <string>VST</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="0">
-        <layout class="QHBoxLayout" name="topButtonsLayout">
-         <property name="spacing">
-          <number>10</number>
-         </property>
-         <item>
-          <widget class="QPushButton" name="buttonAddVstPath">
-           <property name="text">
-            <string>add path ...</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="buttonScanVSTs">
-           <property name="text">
-            <string>scan</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="buttonClearVstCache">
-           <property name="text">
-            <string>clear cache</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
        <item row="1" column="0">
         <widget class="QGroupBox" name="groupBoxPaths">
          <property name="minimumSize">
@@ -397,6 +356,47 @@
          </layout>
         </widget>
        </item>
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="topButtonsLayout">
+         <property name="spacing">
+          <number>10</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="buttonAddVstPath">
+           <property name="text">
+            <string>add path ...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="buttonScanVSTs">
+           <property name="text">
+            <string>scan</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="buttonClearVstCache">
+           <property name="text">
+            <string>clear cache</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
        <item row="2" column="0">
         <widget class="QGroupBox" name="groupBoxVst">
          <property name="minimumSize">
@@ -411,6 +411,20 @@
          <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
            <widget class="QPlainTextEdit" name="plainTextEdit"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="ButtonVst_Refresh">
+            <property name="text">
+             <string>Refresh</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="ButtonVST_AddToBlackList">
+            <property name="text">
+             <string>Add to black List</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
