@@ -392,6 +392,7 @@ void PreferencesDialog::addVstScanPath(QString path){
 void PreferencesDialog::on_buttonClearVstCache_clicked()
 {
     mainController->clearPluginsCache();
+    ui->plainTextEdit->clear();
 }
 
 void PreferencesDialog::on_buttonScanVSTs_clicked()
