@@ -38,7 +38,8 @@ private slots:
     void on_browseRecPathButton_clicked();
 
     void on_recordingCheckBox_clicked();
-    void onPluginsScanFinished();
+
+    void on_pluginsScanFinished();
 
     void on_ButtonVst_Refresh_clicked();
 
