@@ -31,7 +31,7 @@ const QColor IntervalProgressDisplay::LINEAR_ACCENT_BORDER_COLOR = QColor(160, 1
 IntervalProgressDisplay::IntervalProgressDisplay(QWidget*parent)
     :QWidget(parent), SMALL_FONT("Verdana, 7"), BIG_FONT("Verdana, 10"), ovalSize(PREFERRED_OVAL_SIZE), paintMode(PaintMode::CIRCULAR){
 
-    setAttribute(Qt::WA_OpaquePaintEvent);
+    setAttribute(Qt::WA_NoBackground);
 
     setBeatsPerInterval(64);
 
