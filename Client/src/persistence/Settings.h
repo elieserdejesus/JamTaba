@@ -91,6 +91,7 @@ public:
     void write(QJsonObject& out);
     void read(QJsonObject in);
     QStringList cachedPlugins;
+    QStringList blackedPlugins;//vst in blackbox....
     QStringList scanPaths;
 };
 //++++++++++++++++++++++++
@@ -190,13 +191,16 @@ public:
 
     //VST
     void addVstPlugin(QString pluginPath);
+    void addVstToBlackList(QString pluginPath);
     QStringList getVstPluginsPaths() const;
     void clearVstCache();
+    void clearBlackBox();
 
     //VST paths
     void addVstScanPath(QString path);
     void removeVstScanPath(int index);
     QStringList getVstScanPaths() const ;
+    QStringList getBlackBox()const ;
 
     //++++++++++++++ Metronome ++++++++++
     void setMetronomeSettings(float gain, float pan, bool muted);
