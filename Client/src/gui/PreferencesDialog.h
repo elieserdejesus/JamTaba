@@ -38,14 +38,13 @@ private slots:
     void on_browseRecPathButton_clicked();
 
     void on_recordingCheckBox_clicked();
+    void onPluginsScanFinished();
 
-
-
-
+    void on_ButtonVst_Refresh_clicked();
 
 signals:
     void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
-    void onPluginsScanFinished();
+
 private:
     Ui::IODialog *ui;
     Controller::MainController* mainController;
