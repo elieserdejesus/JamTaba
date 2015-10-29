@@ -134,6 +134,8 @@ void PreferencesDialog::populateVstTab(){
     clearScanPathWidgets();//remove all widgets before add the paths
     QStringList paths = mainController->getSettings().getVstScanPaths();
     QStringList VstList = mainController->getSettings().getVstPluginsPaths();
+    QStringList BlackVstList = mainController->getSettings().getBlackBox();
+
     //populate the paths
     foreach (QString path, paths) {
         createWidgetsToNewScanPath(path);
@@ -144,6 +146,12 @@ void PreferencesDialog::populateVstTab(){
     foreach (QString path, VstList) {
         UpdateVstList(path);
     }
+    //populate the VST
+   //refresh the widget
+   ui->BlackBoxText->clear();
+   foreach (QString path, BlackVstList) {
+       UpdateBlackBox(path);
+   }
 }
 
 void PreferencesDialog::populateRecordingTab(){
