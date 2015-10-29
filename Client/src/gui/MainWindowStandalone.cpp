@@ -35,6 +35,7 @@ void MainWindowStandalone::initializePluginFinder(){
         if(mainController->getSettings().getVstScanPaths().isEmpty()){
             (dynamic_cast<Controller::StandaloneMainController*>(mainController))->addDefaultPluginsScanPath();
         }
+        mainController->saveLastUserSettings(getInputsSettings());//save config file before scan
         (dynamic_cast<Controller::StandaloneMainController*>(mainController))->scanPlugins();
     }
     else{//use vsts stored in settings file

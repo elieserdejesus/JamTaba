@@ -7,13 +7,15 @@ namespace Ui    {    class IODialog; }
 namespace Midi  {    class MidiDriver;  }
 namespace Controller{class MainController; }
 
+class MainWindow;
+
 //++++++++++++++++++++++++++++++++++
 class PreferencesDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    PreferencesDialog(Controller::MainController* mainController, QWidget *parent = 0);
+    PreferencesDialog(Controller::MainController* mainController, MainWindow* mainWindow);
     ~PreferencesDialog();
     void selectAudioTab();
     void selectMidiTab();
@@ -51,6 +53,7 @@ signals:
 private:
     Ui::IODialog *ui;
     Controller::MainController* mainController;
+    MainWindow* mainWindow;
 
     //AUDIO
     void populateAsioDriverCombo();
