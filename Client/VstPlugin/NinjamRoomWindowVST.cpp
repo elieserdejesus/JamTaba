@@ -8,7 +8,8 @@ NinjamRoomWindowVST::NinjamRoomWindowVST(MainWindow *parent, Login::RoomInfo roo
     :NinjamRoomWindow(parent, roomInfo, mainController){
 
     if(mainController->isRunningAsVstPlugin()){//just in case
-        ui->topPanel->createHostSyncButton("Sync with host");
+        QString hostName = dynamic_cast<MainControllerVST*>(mainController)->getHostName();
+        ui->topPanel->createHostSyncButton("Sync with " + hostName);
         QObject::connect(ui->topPanel, SIGNAL(hostSyncButtonClicked()), this, SLOT(ninjamHostSyncButtonClicked()));
     }
 }
@@ -18,13 +19,14 @@ void NinjamRoomWindowVST::ninjamHostSyncButtonClicked(){
         MainControllerVST* controller = dynamic_cast<MainControllerVST*>(mainController);
         int ninjamBpm = controller->getNinjamController()->getCurrentBpm();
         bool canSync = controller->getHostBpm() == ninjamBpm;
+        QString hostName = dynamic_cast<MainControllerVST*>(mainController)->getHostName();
         if(canSync){
             dynamic_cast<NinjamControllerVST*>(controller->getNinjamController())->waitForHostSync();//stop ninjam streams and wait until user press play/start in host
             ui->topPanel->setCurrentBeat(0);
-            showMessageBox("Synchronizing...", "Press play/start in your host to sync with Jamtaba!");
+            showMessageBox("Synchronizing...", "Press play/start in " + hostName + " to sync with Jamtaba!");
         }
         else{
-            showMessageBox("Trying to sync ...", "Change your host BPM to " + QString::number(ninjamBpm) + " and try sync again!");
+            showMessageBox("Trying to sync ...", "Change " + hostName + " BPM to " + QString::number(ninjamBpm) + " and try sync again!");
         }
     }
 }

@@ -26,6 +26,8 @@ public:
 
     inline bool isRunningAsVstPlugin() const{ return true;}
 
+    QString getUserEnvironmentString() const;
+
     Audio::AudioDriver* createAudioDriver(const Persistence::Settings &settings);
 
     Controller::NinjamController* createNinjamController(MainController *c);
@@ -51,6 +53,8 @@ public:
     inline void scanPlugins(){}
 
     int getHostBpm() const;
+
+    QString getHostName() const;
 private:
     int sampleRate;
     JamtabaPlugin* plugin;
