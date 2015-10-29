@@ -71,6 +71,7 @@ private:
     void addVstScanPath(QString path);
     void createWidgetsToNewScanPath(QString path);
     void UpdateVstList(QString path);
+    void UpdateBlackBox(QString path);
     void clearScanPathWidgets();
     QList<QPushButton*> scanPathButtons;
 
