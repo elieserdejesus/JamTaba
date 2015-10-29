@@ -25,6 +25,7 @@ public:
     StandalonePluginFinder(Vst::Host *host);
     ~StandalonePluginFinder();
     void scan();
+
 private:
     void run();
 

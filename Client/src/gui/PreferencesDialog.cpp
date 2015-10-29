@@ -129,8 +129,14 @@ void PreferencesDialog::populateVstTab(){
     }
     clearScanPathWidgets();//remove all widgets before add the paths
     QStringList paths = mainController->getSettings().getVstScanPaths();
+    QStringList VstList = mainController->getSettings().getVstPluginsPaths();
+    //populate the paths
     foreach (QString path, paths) {
         createWidgetsToNewScanPath(path);
+    }
+     //populate the VST
+    foreach (QString path, VstList) {
+        createWidgetsToVstList(path);
     }
 }
 
@@ -348,7 +354,9 @@ void PreferencesDialog::on_buttonRemoveVstPathClicked(){
     }
 }
 
-
+void PreferencesDialog::createWidgetsToVstList(QString path){
+    ui->plainTextEdit->appendPlainText(path);
+    }
 void PreferencesDialog::createWidgetsToNewScanPath(QString path){
     QVBoxLayout* panelLayout = (QVBoxLayout*)ui->panelPaths->layout();
     QWidget* parent = new QWidget(this);
@@ -379,6 +387,7 @@ void PreferencesDialog::on_buttonScanVSTs_clicked()
 {
     if(mainController){
         mainController->scanPlugins();
+        //from here we should fill the vst list ?
     }
 }
 
@@ -398,5 +407,6 @@ void PreferencesDialog::on_recordingCheckBox_clicked(){
     mainController->storeRecordingMultiTracksStatus( ui->recordingCheckBox->isChecked());
 }
 //+++++++++++++++++++++++++++
+
 
 

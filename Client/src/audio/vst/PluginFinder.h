@@ -20,6 +20,7 @@ public:
     void clearScanPaths();
 protected:
     QList<QString> scanPaths;
+    QList<QString> VstList;
 signals:
     void scanStarted();
     void scanFinished();

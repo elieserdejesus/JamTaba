@@ -346,7 +346,7 @@
                <x>0</x>
                <y>0</y>
                <width>416</width>
-               <height>75</height>
+               <height>65</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -399,9 +399,20 @@
        </item>
        <item row="2" column="0">
         <widget class="QGroupBox" name="groupBoxVst">
-         <property name="title">
-          <string>GroupBox</string>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>100</height>
+          </size>
          </property>
+         <property name="title">
+          <string>Vst(i)s loaded</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <widget class="QPlainTextEdit" name="plainTextEdit"/>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
