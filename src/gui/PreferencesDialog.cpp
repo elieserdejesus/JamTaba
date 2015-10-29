@@ -8,21 +8,18 @@
 #include "../midi/MidiDriver.h"
 #include "../persistence/Settings.h"
 #include "../MainController.h"
-//#include "../StandAloneMainController.h"
+#include "MainWindow.h"
 
 using namespace Audio;
 using namespace Controller;
 
-PreferencesDialog::PreferencesDialog(Controller::MainController* mainController, QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::IODialog), mainController(mainController)
+PreferencesDialog::PreferencesDialog(Controller::MainController* mainController, MainWindow* mainWindow) :
+    QDialog(mainWindow),
+    ui(new Ui::IODialog), mainController(mainController), mainWindow(mainWindow)
 {
     ui->setupUi(this);
     setModal(true);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-
-    //populateAudioTab();
-    //populateMidiInputCombo();
 
     ui->comboLastOutput->setEnabled(false);
 
@@ -49,9 +46,6 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
     }
 
     populateRecordingTab();
-
-
-
 }
 
 void PreferencesDialog::selectAudioTab(){
@@ -402,8 +396,10 @@ void PreferencesDialog::on_buttonClearVstCache_clicked()
 void PreferencesDialog::on_buttonScanVSTs_clicked()
 {
     if(mainController){
+        if(mainWindow){//save the config file before start scanning
+            mainController->saveLastUserSettings(mainWindow->getInputsSettings());
+        }
         mainController->scanPlugins();
-        //from here we should fill the vst list ?
     }
 }
 
