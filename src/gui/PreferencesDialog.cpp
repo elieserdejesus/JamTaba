@@ -331,6 +331,7 @@ void PreferencesDialog::on_prefsTab_currentChanged(int index)
 
 
 //VST
+
 void PreferencesDialog::onPluginsScanFinished(){
     populateVstTab();
 }
@@ -417,3 +418,8 @@ void PreferencesDialog::on_recordingCheckBox_clicked(){
 
 
 
+
+void PreferencesDialog::on_ButtonVst_Refresh_clicked()
+{
+  populateVstTab();
+}
