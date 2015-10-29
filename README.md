@@ -11,7 +11,7 @@ JamTaba is builded using Qt. We are using Qt for many things: Gui, threads, sock
 
 Jamtaba is using some libraries: portaudio, rtmidi, minimp3, libvorbis and libogg. We are distributing pre compiled static libs for some platforms (Windows 32 and 64 bits and Mac OSX 64 bits). The linux port is in the TODO list, but we don't have nothing interesting enough yet.
 
-MPORTANT FOR WINDOWS :
+IMPORTANT FOR WINDOWS :
 The library portaudio was compiled in windows using only the ASIO flags. So, if you don't have any ASIO driver installed JamTaba will emit an error message in initialization and fallback to an NullAudioDriver, and no sound will be produced.
 
 ***
