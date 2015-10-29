@@ -33,6 +33,10 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
             ui->groupBoxInputs->setVisible(false);
             ui->groupBoxOutputs->setVisible(false);
         #endif
+        QObject::connect( mainController->getPluginFinder(),
+                                  SIGNAL(scanFinished()),
+                                  this,
+                                  SLOT(onPluginsScanFinished));
         populateAudioTab();
         populateMidiTab();
         populateVstTab();
@@ -327,6 +331,9 @@ void PreferencesDialog::on_prefsTab_currentChanged(int index)
 
 
 //VST
+void PreferencesDialog::onPluginsScanFinished(){
+    populateVstTab();
+}
 void PreferencesDialog::on_buttonAddVstPath_clicked()
 {
     QFileDialog fileDialog(this, "Adding VST path ...");
