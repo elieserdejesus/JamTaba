@@ -21,7 +21,7 @@ FancyProgressDisplay::FancyProgressDisplay(QWidget* parent)
     this->showAccents = false;
     this->currentBeat = 0;
 
-    setAttribute(Qt::WA_OpaquePaintEvent);
+    setAttribute(Qt::WA_NoBackground);
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void FancyProgressDisplay::setShowAccents(bool showAccents) {
