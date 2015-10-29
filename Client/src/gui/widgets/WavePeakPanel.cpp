@@ -11,8 +11,8 @@ WavePeakPanel::WavePeakPanel(QWidget* parent)
     :   QWidget(parent),
       maxPeaks(0)
 {
+    //setAttribute(Qt::WA_OpaquePaintEvent);
     setAutoFillBackground(false);
-
     recreatePeaksArray();
 }
 
