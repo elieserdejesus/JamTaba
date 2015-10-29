@@ -364,10 +364,14 @@ void PreferencesDialog::on_buttonRemoveVstPathClicked(){
     }
 }
 
-void PreferencesDialog::UpdateVstList(QString path){
-
+void PreferencesDialog::UpdateVstList(QString path)
+{
     ui->plainTextEdit->appendPlainText(path);
-    }
+}
+void PreferencesDialog::UpdateBlackBox(QString path)
+{
+    ui->BlackBoxText->appendPlainText(path);
+}
 void PreferencesDialog::createWidgetsToNewScanPath(QString path){
     QVBoxLayout* panelLayout = (QVBoxLayout*)ui->panelPaths->layout();
     QWidget* parent = new QWidget(this);
@@ -425,11 +429,23 @@ void PreferencesDialog::on_recordingCheckBox_clicked(){
 
 void PreferencesDialog::on_ButtonVst_Refresh_clicked()
 {
-
-  populateVstTab();
+    populateVstTab();
 }
 
 void PreferencesDialog::on_ButtonVST_AddToBlackList_clicked()
 {
+    QFileDialog VstDialog(this, "Add Vst(s) to BlackBox ...");
+    VstDialog.setNameFilter(tr("Dll(*.dll)"));
+    VstDialog.setAcceptMode(QFileDialog::AcceptOpen);
+    VstDialog.setFileMode(QFileDialog::AnyFile);
+    if(VstDialog.exec() ){
+        QStringList VstNames = VstDialog.selectedFiles();
+        foreach (QString string, VstNames)
+        {
+         UpdateBlackBox(string);
+        }
 
+        //mainController->storeRecordingPath(dir.absolutePath());
+        //ui->recordPathLineEdit->setText(dir.absolutePath());
+    }
 }
