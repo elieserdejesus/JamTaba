@@ -139,6 +139,8 @@ void PreferencesDialog::populateVstTab(){
         createWidgetsToNewScanPath(path);
     }
      //populate the VST
+    //refresh the widget
+    ui->plainTextEdit->clear();
     foreach (QString path, VstList) {
         createWidgetsToVstList(path);
     }
@@ -363,6 +365,7 @@ void PreferencesDialog::on_buttonRemoveVstPathClicked(){
 }
 
 void PreferencesDialog::createWidgetsToVstList(QString path){
+
     ui->plainTextEdit->appendPlainText(path);
     }
 void PreferencesDialog::createWidgetsToNewScanPath(QString path){
@@ -421,5 +424,6 @@ void PreferencesDialog::on_recordingCheckBox_clicked(){
 
 void PreferencesDialog::on_ButtonVst_Refresh_clicked()
 {
+
   populateVstTab();
 }
