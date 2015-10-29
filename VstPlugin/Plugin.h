@@ -39,6 +39,8 @@ public:
         VstInt32 fxIdle();
         bool needIdle();
 
+        QString getHostName() ;
+
         bool getEffectName (char* name);
         bool getVendorString (char* text);
         bool getProductString (char* text);

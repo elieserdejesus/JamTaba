@@ -211,7 +211,7 @@ public:
 
     void finishUploads();//used to send the last part of ninjam intervals when audio is stopped.
 
-    QString getUserEnvironmentString() const;
+    virtual QString getUserEnvironmentString() const;
 
     bool isUsingNullAudioDriver() const;
 

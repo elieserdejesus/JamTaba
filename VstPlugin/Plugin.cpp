@@ -55,6 +55,19 @@ JamtabaPlugin::JamtabaPlugin (audioMasterCallback audioMaster) :
     qCDebug(pluginVst) << "Plugin constructor done.";
 }
 
+QString JamtabaPlugin::getHostName() {
+    char tempChars[kVstMaxProductStrLen];
+    getHostProductString(tempChars);
+    QString hostName(QString(tempChars).toLower());
+    if(hostName.startsWith("cakewalk") || hostName.startsWith("fx teleport")){
+        hostName = "Sonar";
+    }
+    if(hostName.contains("reaper")){
+        hostName = "Reaper";//in x64 machines reaper host name is Reaperb32 if you are running a 32 bits plugin
+    }
+    return hostName;
+}
+
 bool JamtabaPlugin::hostIsPlaying() const{
     if(timeInfo){
         return (timeInfo->flags & kVstTransportPlaying) != 0;

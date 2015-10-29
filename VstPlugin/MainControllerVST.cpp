@@ -47,6 +47,17 @@ MainControllerVST::~MainControllerVST(){
     }
 }
 
+QString MainControllerVST::getUserEnvironmentString() const{
+    return MainController::getUserEnvironmentString() + " running in " + getHostName();
+}
+
+QString MainControllerVST::getHostName() const{
+    if(plugin){
+        return plugin->getHostName();
+    }
+    return "(Error getting host name)";
+}
+
 int MainControllerVST::getHostBpm() const{
     if(plugin){
         return plugin->getHostBpm();
