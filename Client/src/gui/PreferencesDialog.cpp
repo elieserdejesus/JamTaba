@@ -142,7 +142,7 @@ void PreferencesDialog::populateVstTab(){
     //refresh the widget
     ui->plainTextEdit->clear();
     foreach (QString path, VstList) {
-        createWidgetsToVstList(path);
+        UpdateVstList(path);
     }
 }
 
@@ -364,7 +364,7 @@ void PreferencesDialog::on_buttonRemoveVstPathClicked(){
     }
 }
 
-void PreferencesDialog::createWidgetsToVstList(QString path){
+void PreferencesDialog::UpdateVstList(QString path){
 
     ui->plainTextEdit->appendPlainText(path);
     }
@@ -427,4 +427,9 @@ void PreferencesDialog::on_ButtonVst_Refresh_clicked()
 {
 
   populateVstTab();
+}
+
+void PreferencesDialog::on_ButtonVST_AddToBlackList_clicked()
+{
+
 }
