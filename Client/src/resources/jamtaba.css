@@ -627,8 +627,8 @@ background: transparent;
 }
 
 BusyDialog{
-    border: 1px outset rgb(130, 130, 130);
-    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 50);
+    border-radius: 0px;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
             stop:0 rgb(255, 255, 255),
             stop:0.1 rgb(240, 240, 240)
@@ -637,7 +637,7 @@ BusyDialog{
 }
 BusyDialog #labelGif{
     border: none;
-    background-color: rgba(0, 0, 0, 80);
+    background-color: rgba(0, 0, 0, 10);
     border-radius: 32px;/*simulate a circle as background */
     max-width: 64px;
     max-height: 64px;
