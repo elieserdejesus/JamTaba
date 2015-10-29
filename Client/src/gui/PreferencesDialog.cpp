@@ -154,9 +154,9 @@ void PreferencesDialog::populateAsioDriverCombo(){
     int devices = audioDriver->getDevicesCount();
     ui->comboAudioDevice->clear();
     for(int d=0; d < devices; d++){
-        ui->comboAudioDevice->addItem(audioDriver->getInputDeviceName(d), d);//using device index as userData in comboBox
+        ui->comboAudioDevice->addItem(audioDriver->getAudioDeviceName(d), d);//using device index as userData in comboBox
     }
-    ui->comboAudioDevice->setCurrentIndex(audioDriver->getInputDeviceIndex());
+    ui->comboAudioDevice->setCurrentIndex(audioDriver->getAudioDeviceIndex());
 
 }
 
@@ -232,7 +232,7 @@ void PreferencesDialog::populateSampleRateCombo()
     ui->comboSampleRate->clear();
 
     AudioDriver* audioDriver = mainController->getAudioDriver();
-    QList<int> sampleRates = audioDriver->getValidSampleRates( audioDriver->getOutputDeviceIndex());
+    QList<int> sampleRates = audioDriver->getValidSampleRates( audioDriver->getAudioDeviceIndex());
     foreach (int sampleRate, sampleRates) {
         ui->comboSampleRate->addItem(QString::number(sampleRate), sampleRate);
     }
@@ -245,7 +245,7 @@ void PreferencesDialog::populateBufferSizeCombo()
 {
     ui->comboBufferSize->clear();
     AudioDriver* audioDriver = mainController->getAudioDriver();
-    QList<int> bufferSizes = audioDriver->getValidBufferSizes(audioDriver->getInputDeviceIndex());
+    QList<int> bufferSizes = audioDriver->getValidBufferSizes(audioDriver->getAudioDeviceIndex());
     foreach (int size, bufferSizes) {
         ui->comboBufferSize->addItem(QString::number(size), size);
     }
@@ -257,10 +257,10 @@ void PreferencesDialog::on_comboAudioDevice_activated(int index)
 {
     int deviceIndex = ui->comboAudioDevice->itemData(index).toInt();
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
-    audioDriver->setInputDeviceIndex(deviceIndex);
-#ifdef _WIN32
-    audioDriver->setOutputDeviceIndex(deviceIndex);
-#endif
+    audioDriver->setAudioDeviceIndex(deviceIndex);
+//#ifdef _WIN32
+//    audioDriver->setOutputDeviceIndex(deviceIndex);
+//#endif
     populateFirstInputCombo();
     populateFirstOutputCombo();
     populateSampleRateCombo();

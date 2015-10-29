@@ -41,8 +41,7 @@ signals:
 public:
     explicit AudioDriver( Controller::MainController* mainController);
 	virtual ~AudioDriver();
-    virtual void setProperties(int deviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
-    virtual void setProperties(int inputDeviceIndex, int outputDeviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
+    virtual void setProperties(int audioDeviceIndex, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
     virtual void setProperties(int sampleRate, int bufferSize);//used in mac
 
     virtual void stop() = 0;
@@ -64,15 +63,11 @@ public:
     virtual const char* getInputChannelName(unsigned const int index) const = 0;
     virtual const char* getOutputChannelName(unsigned const int index) const = 0;
 
-    virtual const char* getInputDeviceName(int index) const = 0;
-    inline const char* getInputDeviceName() const{return getInputDeviceName(inputDeviceIndex);}
+    virtual const char* getAudioDeviceName(int index) const = 0;
+    inline const char* getAudioDeviceName() const{return getAudioDeviceName(audioDeviceIndex);}
 
-    virtual const char* getOutputDeviceName(int index) const = 0;
-
-    virtual int getInputDeviceIndex() const = 0;
-    virtual void setInputDeviceIndex(int index) = 0;
-    virtual int getOutputDeviceIndex() const = 0;
-    virtual void setOutputDeviceIndex(int index) = 0;
+    virtual int getAudioDeviceIndex() const = 0;
+    virtual void setAudioDeviceIndex(int index) = 0;
 
     virtual int getDevicesCount() const = 0;
 
@@ -83,8 +78,7 @@ protected:
     ChannelRange globalInputRange;//the range of input channels selected in audio preferences menu
     ChannelRange globalOutputRange;//the range of output channels selected in audio preferences menu
 
-    int inputDeviceIndex;//index of selected device index. In ASIO the inputDeviceIndex and outputDeviceIndex are equal.
-    int outputDeviceIndex;
+    int audioDeviceIndex;//using same audio device for input and output
 
     int sampleRate;
     int bufferSize;
@@ -113,12 +107,9 @@ public:
     inline int getMaxOutputs() const{return 2;}
     inline const char* getInputChannelName(const unsigned int ) const{return "Silence";}
     inline const char* getOutputChannelName(const unsigned int ) const{return "Silence";}
-    inline const char* getInputDeviceName(int) const{return "NullAudioDriver";}
-    inline const char* getOutputDeviceName(int) const{return "NullAudioDriver";}
-    inline int getInputDeviceIndex() const{return 0;}
-    inline int getOutputDeviceIndex() const{return 0;}
-    inline void setInputDeviceIndex(int ){}
-    inline void setOutputDeviceIndex(int){}
+    inline const char* getAudioDeviceName(int) const{return "NullAudioDriver";}
+    inline int getAudioDeviceIndex() const{return 0;}
+    inline void setAudioDeviceIndex(int ){}
     inline int getDevicesCount() const{return 1;}
     inline bool canBeStarted() const{return true;}
 };
