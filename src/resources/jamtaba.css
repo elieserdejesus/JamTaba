@@ -77,6 +77,11 @@ BaseTrackView #boostPanel QPushButton {
    padding-top: 3px;
    padding-bottom: 3px;
    border: 0px;
+   background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+       stop:0 rgba(255, 255, 255, 200),
+       stop:0.2 rgba(255, 255, 255, 120),
+       stop:0.7 rgba(255, 255, 255, 120),
+       stop:1 rgba(255,255, 255, 30));
    /*background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                               stop: 0 #f6f7fa, stop: 1 #aaabae);*/
    font-size: 8px;
@@ -85,10 +90,10 @@ BaseTrackView #boostPanel QPushButton {
 
 BaseTrackView #boostPanel QPushButton:checked {
 background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
-    stop:0 rgba(255, 255, 255, 200),
-    stop:0.2 rgba(255, 255, 255, 180),
-    stop:0.7 rgba(255, 255, 255, 180),
-    stop:1 rgba(255,255, 255, 40));
+    stop:0 rgba(255, 255, 255, 160),
+    stop:0.2 rgba(255, 255, 255, 120),
+    stop:0.7 rgba(255, 255, 255, 120),
+    stop:1 rgba(255,255, 255, 30));
 }
 
 BaseTrackView #boostPanel QPushButton#buttonBoostMinus12{
