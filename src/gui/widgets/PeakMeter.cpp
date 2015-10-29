@@ -23,6 +23,8 @@ PeakMeter::PeakMeter(QWidget *)
     gradient.setColorAt(0.8, Qt::darkGreen);
     //horizontalLinesColor = QColor(0, 0, 0, 90);
     update();
+
+    setAttribute(Qt::WA_NoBackground);
 }
 
 void PeakMeter::setPeak(float peak){

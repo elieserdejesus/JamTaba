@@ -39,6 +39,8 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     boostButtonGroup->addButton(ui->buttonBoostPlus12);
 
     ui->buttonBoostZero->setChecked(true);
+
+    setAttribute(Qt::WA_NoBackground);
 }
 
 
