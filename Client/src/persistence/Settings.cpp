@@ -227,7 +227,7 @@ void VstSettings::write(QJsonObject &out){
     foreach (QString blackVst, blackedPlugins) {
         BlackedArray.append(blackVst);
     }
-    out["BlackListPlugins"] = cacheArray;
+    out["BlackListPlugins"] = BlackedArray;
 }
 
 void VstSettings::read(QJsonObject in){
@@ -243,6 +243,13 @@ void VstSettings::read(QJsonObject in){
         QJsonArray cacheArray = in["cachedPlugins"].toArray();
         for (int x = 0; x < cacheArray.size(); ++x) {
             cachedPlugins.append(cacheArray.at(x).toString());
+        }
+    }
+    blackedPlugins.clear();
+    if(in.contains("BlackListPlugins")){
+        QJsonArray cacheArray = in["BlackListPlugins"].toArray();
+        for (int x = 0; x < cacheArray.size(); ++x) {
+            blackedPlugins.append(cacheArray.at(x).toString());
         }
     }
 }
