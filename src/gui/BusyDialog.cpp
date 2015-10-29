@@ -8,6 +8,7 @@ BusyDialog::BusyDialog(QWidget *parent) :
     ui(new Ui::BusyDialog)
 {
     ui->setupUi(this);
+    setWindowFlags(Qt::Popup);
     //setWindowFlags( Qt::FramelessWindowHint );
     //| Qt::WindowStaysOnTopHint
 
