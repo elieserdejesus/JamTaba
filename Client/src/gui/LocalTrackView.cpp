@@ -249,14 +249,13 @@ QMenu* LocalTrackView::createMonoInputsMenu(QMenu* parent){
     Audio::ChannelRange globalInputsRange = audioDriver->getSelectedInputs();
     int globalInputs = globalInputsRange.getChannels();
     int firstGlobalInputIndex = globalInputsRange.getFirstChannel();
-    QString deviceName(audioDriver->getInputDeviceName(audioDriver->getInputDeviceIndex()));
-    //Audio::ChannelRange thisTrackInputRange = inputNode->getAudioInputRange();
-    //bool canEnableMenu = false;
+    QString deviceName(audioDriver->getAudioDeviceName(audioDriver->getAudioDeviceIndex()));
+
     for (int i = 0; i < globalInputs; ++i) {
         int index = firstGlobalInputIndex + i;
         QString channelName = QString(audioDriver->getInputChannelName(index)).trimmed();
         if(channelName.isNull() || channelName.isEmpty()){
-            channelName  = QString::number(i+1)  + " "+ audioDriver->getInputDeviceName();
+            channelName  = QString::number(i+1)  + " "+ audioDriver->getAudioDeviceName();
         }
         QString inputName = channelName + "  (" + deviceName + ")";
         QAction* action = monoInputsMenu->addAction(inputName);
@@ -289,7 +288,7 @@ QMenu* LocalTrackView::createStereoInputsMenu(QMenu* parent){
     Audio::ChannelRange globalInputRange = audioDriver->getSelectedInputs();
     //Audio::ChannelRange thisTrackInputRange = mainController->getInputTrack(getTrackID())->getAudioInputRange();
     int globalInputs = globalInputRange.getChannels();
-    QString deviceName(audioDriver->getInputDeviceName(audioDriver->getInputDeviceIndex()));
+    QString deviceName(audioDriver->getAudioDeviceName(audioDriver->getAudioDeviceIndex()));
     //bool canEnableMenu = false;
     for (int i = 0; i < globalInputs; i += 2) {
         if(i + 1 < globalInputs){//we can make a channel pair using (i) and (i+1)?
@@ -330,7 +329,7 @@ void LocalTrackView::on_stereoInputMenuSelected(QAction *action){
 QString LocalTrackView::getInputChannelNameOnly(int inputIndex){
     QString fullName(mainController->getAudioDriver()->getInputChannelName(inputIndex));
     if(fullName.isEmpty()){//mac return empy channel names if user don't rename the channels
-        fullName = mainController->getAudioDriver()->getInputDeviceName();
+        fullName = mainController->getAudioDriver()->getAudioDeviceName();
     }
     int spaceIndex = fullName.lastIndexOf(" ");
     if(spaceIndex > 0){
@@ -359,7 +358,7 @@ void LocalTrackView::refreshInputSelectionName(){
                 channelName += name;
             }
             else{
-                channelName += QString(mainController->getAudioDriver()->getInputDeviceName());
+                channelName += QString(mainController->getAudioDriver()->getAudioDeviceName());
             }
 
             iconFile = MONO_ICON;

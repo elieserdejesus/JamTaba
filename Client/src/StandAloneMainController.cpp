@@ -217,10 +217,13 @@ Audio::AudioDriver* StandaloneMainController::createAudioDriver(const Persistenc
 #ifdef Q_OS_WIN
     return new Audio::PortAudioDriver(
                 this,
-                settings.getLastInputDevice(), settings.getLastOutputDevice(),
-                settings.getFirstGlobalAudioInput(), settings.getLastGlobalAudioInput(),
-                settings.getFirstGlobalAudioOutput(), settings.getLastGlobalAudioOutput(),
-                settings.getLastSampleRate(), settings.getLastBufferSize()
+                settings.getLastAudioDevice(),
+                settings.getFirstGlobalAudioInput(),
+                settings.getLastGlobalAudioInput(),
+                settings.getFirstGlobalAudioOutput(),
+                settings.getLastGlobalAudioOutput(),
+                settings.getLastSampleRate(),
+                settings.getLastBufferSize()
                 );
 #else
     //MAC

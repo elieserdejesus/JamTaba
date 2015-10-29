@@ -979,7 +979,7 @@ void MainWindow::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audio
 #ifdef Q_OS_MACX
     audioDriver->setProperties(sampleRate, bufferSize);
 #endif
-    mainController->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, audioDevice, sampleRate, bufferSize, midiInputsStatus);
+    mainController->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, sampleRate, bufferSize, midiInputsStatus);
 
     Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
     midiDriver->setInputDevicesStatus(midiInputsStatus);

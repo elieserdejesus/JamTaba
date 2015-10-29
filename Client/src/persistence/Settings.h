@@ -40,8 +40,7 @@ public:
     int firstOut;
     int lastIn;
     int lastOut;
-    int inputDevice;
-    int outputDevice;
+    int audioDevice;
 };
 
 class MidiSettings : public SettingsObject{
@@ -211,14 +210,13 @@ public:
     inline bool windowWasMaximized() const{return windowSettings.maximized;}
 
     //++++++++++++++++++++++++++++++++++++++++
-    void setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize) ;
+    void setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice, int sampleRate, int bufferSize) ;
 
     inline int getFirstGlobalAudioInput() const {return audioSettings.firstIn;}
     inline int getLastGlobalAudioInput() const  {return audioSettings.lastIn;}
     inline int getFirstGlobalAudioOutput() const{return audioSettings.firstOut;}
     inline int getLastGlobalAudioOutput() const {return audioSettings.lastOut;}
-    inline int getLastInputDevice() const       {return audioSettings.inputDevice;}
-    inline int getLastOutputDevice() const      {return audioSettings.outputDevice;}
+    inline int getLastAudioDevice() const       {return audioSettings.audioDevice;}
 
     inline void setMidiSettings(QList<bool> inputDevicesStatus){ midiSettings.inputDevicesStatus = inputDevicesStatus; }
     inline QList<bool> getMidiInputDevicesStatus() const{return midiSettings.inputDevicesStatus;}

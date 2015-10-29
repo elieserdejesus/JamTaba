@@ -92,8 +92,8 @@ void AudioSettings::read(QJsonObject in){
     firstOut =      getValueFromJson(in, "firstOut", 0);
     lastIn =        getValueFromJson(in, "lastIn", 0);
     lastOut =       getValueFromJson(in, "lastOut", 0);
-    inputDevice =   getValueFromJson(in, "inputDevice", -1);
-    outputDevice =  getValueFromJson(in, "outputDevice", -1);
+    audioDevice =   getValueFromJson(in, "audioDevice", -1);
+
 }
 
 void AudioSettings::write(QJsonObject &out){
@@ -103,8 +103,7 @@ void AudioSettings::write(QJsonObject &out){
     out["firstOut"]     = firstOut;
     out["lastIn"]       = lastIn;
     out["lastOut"]      = lastOut;
-    out["inputDevice"]  = inputDevice;
-    out["outputDevice"] = outputDevice;
+    out["audioDevice"]  = audioDevice;
 }
 //+++++++++++++++++++++++++++++
 MidiSettings::MidiSettings()
@@ -403,16 +402,14 @@ void Settings::setWindowSettings(bool windowIsMaximized, QPointF location){
 }
 
 //++++++++++++++++++++++++++++++++++++++++
-void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int inputDevice, int outputDevice, int sampleRate, int bufferSize){
+void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice, int sampleRate, int bufferSize){
     audioSettings.bufferSize = bufferSize;
     audioSettings.sampleRate = sampleRate;
     audioSettings.firstIn = firstIn;
     audioSettings.firstOut = firstOut;
     audioSettings.lastIn = lastIn;
     audioSettings.lastOut = lastOut;
-    audioSettings.inputDevice = inputDevice;
-    audioSettings.outputDevice = outputDevice;
-    //audioSettings.midiDevice = midiDevice;
+    audioSettings.audioDevice = audioDevice;
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
