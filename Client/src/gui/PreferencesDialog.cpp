@@ -146,7 +146,7 @@ void PreferencesDialog::populateVstTab(){
     foreach (QString path, VstList) {
         UpdateVstList(path);
     }
-    //populate the VST
+    //populate the BlackBox
    //refresh the widget
    ui->BlackBoxText->clear();
    foreach (QString path, BlackVstList) {
@@ -426,6 +426,7 @@ void PreferencesDialog::on_ButtonVST_AddToBlackList_clicked()
 {
     QFileDialog VstDialog(this, "Add Vst(s) to BlackBox ...");
     VstDialog.setNameFilter(tr("Dll(*.dll)"));
+    VstDialog.setDirectory(mainController->getSettings().getVstScanPaths().at(0));
     VstDialog.setAcceptMode(QFileDialog::AcceptOpen);
     VstDialog.setFileMode(QFileDialog::ExistingFiles);
     if(VstDialog.exec() )
