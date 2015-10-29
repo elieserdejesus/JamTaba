@@ -403,8 +403,33 @@ void PreferencesDialog::on_buttonScanVSTs_clicked()
 {
     if(mainController){
         mainController->scanPlugins();
-        //from here we should fill the vst list ?
+
     }
+}
+
+//REFRESH VST LIST
+void PreferencesDialog::on_ButtonVst_Refresh_clicked()
+{
+    populateVstTab();
+}
+
+// ADD A VST IN BLACKLIST
+void PreferencesDialog::on_ButtonVST_AddToBlackList_clicked()
+{
+    QFileDialog VstDialog(this, "Add Vst(s) to BlackBox ...");
+    VstDialog.setNameFilter(tr("Dll(*.dll)"));
+    VstDialog.setAcceptMode(QFileDialog::AcceptOpen);
+    VstDialog.setFileMode(QFileDialog::ExistingFiles);
+    if(VstDialog.exec() )
+    {
+        QStringList VstNames = VstDialog.selectedFiles();
+        foreach (QString string, VstNames)
+        {
+         UpdateBlackBox(string);
+         mainController->addBlackVstToSettings(string);
+        }
+
+     }
 }
 
 //Recording TAB controls --------------------
@@ -426,26 +451,3 @@ void PreferencesDialog::on_recordingCheckBox_clicked(){
 
 
 
-
-void PreferencesDialog::on_ButtonVst_Refresh_clicked()
-{
-    populateVstTab();
-}
-
-void PreferencesDialog::on_ButtonVST_AddToBlackList_clicked()
-{
-    QFileDialog VstDialog(this, "Add Vst(s) to BlackBox ...");
-    VstDialog.setNameFilter(tr("Dll(*.dll)"));
-    VstDialog.setAcceptMode(QFileDialog::AcceptOpen);
-    VstDialog.setFileMode(QFileDialog::ExistingFiles);
-    if(VstDialog.exec() ){
-        QStringList VstNames = VstDialog.selectedFiles();
-        foreach (QString string, VstNames)
-        {
-         UpdateBlackBox(string);
-        }
-
-        //mainController->storeRecordingPath(dir.absolutePath());
-        //ui->recordPathLineEdit->setText(dir.absolutePath());
-    }
-}

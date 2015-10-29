@@ -209,7 +209,7 @@ VstSettings::VstSettings()
 
 }
 
-
+//VST JSON WRITER
 void VstSettings::write(QJsonObject &out){
     QJsonArray scanPathsArray;
     foreach (QString scanPath, scanPaths) {
@@ -222,6 +222,12 @@ void VstSettings::write(QJsonObject &out){
         cacheArray.append(pluginPath);
     }
     out["cachedPlugins"] = cacheArray;
+
+    QJsonArray BlackedArray;
+    foreach (QString blackVst, blackedPlugins) {
+        BlackedArray.append(blackVst);
+    }
+    out["BlackListPlugins"] = cacheArray;
 }
 
 void VstSettings::read(QJsonObject in){
@@ -352,7 +358,11 @@ void Settings::addVstPlugin(QString pluginPath){
         vstSettings.cachedPlugins.append(pluginPath);
     }
 }
-
+void Settings::addVstToBlackList(QString pluginPath){
+    if(!vstSettings.blackedPlugins.contains(pluginPath)){
+        vstSettings.blackedPlugins.append(pluginPath);
+    }
+}
 QStringList Settings::getVstPluginsPaths() const{
     return vstSettings.cachedPlugins;
 }
@@ -362,6 +372,11 @@ QStringList Settings::getVstPluginsPaths() const{
 void Settings::clearVstCache(){
     vstSettings.cachedPlugins.clear();
 }
+//CLEAR VST BLACKBOX
+void Settings::clearBlackBox(){
+    vstSettings.blackedPlugins.clear();
+}
+
 
 //VST paths to scan
 void Settings::addVstScanPath(QString path){
@@ -376,6 +391,12 @@ QStringList Settings::getVstScanPaths() const {
 
     return vstSettings.scanPaths;
 }
+
+QStringList Settings::getBlackBox() const {
+
+    return vstSettings.blackedPlugins;
+}
+
 
 //++++++++++++++++++
 
