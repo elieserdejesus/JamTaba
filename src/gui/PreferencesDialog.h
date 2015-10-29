@@ -41,8 +41,11 @@ private slots:
 
 
 
+
+
 signals:
     void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
+    void onPluginsScanFinished();
 private:
     Ui::IODialog *ui;
     Controller::MainController* mainController;
@@ -65,6 +68,7 @@ private:
     void populateVstTab();
     void addVstScanPath(QString path);
     void createWidgetsToNewScanPath(QString path);
+    void createWidgetsToVstList(QString path);
     void clearScanPathWidgets();
     QList<QPushButton*> scanPathButtons;
 
