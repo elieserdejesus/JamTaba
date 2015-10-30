@@ -124,11 +124,15 @@ void StandalonePluginFinder::run(QStringList blackList){
         while (folderIterator.hasNext()) {
             folderIterator.next();//point to next file inside current folder
             QFileInfo pluginFileInfo (folderIterator.filePath());
-            //asd
-            emit pluginScanStarted(pluginFileInfo.absoluteFilePath());
-            const Audio::PluginDescriptor& descriptor = getPluginDescriptor(pluginFileInfo, host);
-            if(descriptor.isValid()){
-                emit pluginScanFinished(descriptor.getName(), descriptor.getGroup(), descriptor.getPath());
+            if(!blackList.contains(pluginFileInfo.absoluteFilePath())){
+                emit pluginScanStarted(pluginFileInfo.absoluteFilePath());
+                const Audio::PluginDescriptor& descriptor = getPluginDescriptor(pluginFileInfo, host);
+                if(descriptor.isValid()){
+                    emit pluginScanFinished(descriptor.getName(), descriptor.getGroup(), descriptor.getPath());
+                }
+            }
+            else{
+                qDebug() << "Filtering black listed plugin:" <<pluginFileInfo.fileName();
             }
             QApplication::processEvents();
         }
