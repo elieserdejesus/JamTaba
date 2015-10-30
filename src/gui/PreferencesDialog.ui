@@ -273,59 +273,43 @@
        <string>VST</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="1" column="0">
+       <item row="0" column="0">
         <widget class="QGroupBox" name="groupBoxPaths">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>70</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>120</height>
-          </size>
-         </property>
          <property name="title">
           <string>Plugin Paths:</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_8">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="spacing">
-           <number>0</number>
-          </property>
-          <property name="leftMargin">
-           <number>3</number>
-          </property>
-          <property name="topMargin">
            <number>6</number>
           </property>
+          <property name="leftMargin">
+           <number>9</number>
+          </property>
+          <property name="topMargin">
+           <number>9</number>
+          </property>
           <property name="rightMargin">
-           <number>3</number>
+           <number>9</number>
           </property>
           <property name="bottomMargin">
-           <number>3</number>
+           <number>9</number>
           </property>
+          <item>
+           <widget class="QPushButton" name="buttonAddVstScanFolder">
+            <property name="toolTip">
+             <string>Add a new folder ...</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
           <item>
            <widget class="QScrollArea" name="scrollArea">
             <property name="widgetResizable">
              <bool>true</bool>
             </property>
             <widget class="QWidget" name="panelScanFolders">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>428</width>
-               <height>44</height>
-              </rect>
-             </property>
              <layout class="QVBoxLayout" name="verticalLayout_10">
               <property name="spacing">
                <number>3</number>
@@ -349,48 +333,7 @@
          </layout>
         </widget>
        </item>
-       <item row="0" column="0">
-        <layout class="QHBoxLayout" name="topButtonsLayout">
-         <property name="spacing">
-          <number>10</number>
-         </property>
-         <item>
-          <widget class="QPushButton" name="buttonAddVstPath">
-           <property name="text">
-            <string>add path ...</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="buttonScanVSTs">
-           <property name="text">
-            <string>scan</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="buttonClearVstCache">
-           <property name="text">
-            <string>clear cache</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item row="2" column="0">
+       <item row="1" column="0">
         <widget class="QGroupBox" name="groupBoxVst">
          <property name="title">
           <string>Vst(i)s loaded</string>
@@ -410,17 +353,39 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="ButtonVst_Refresh">
-            <property name="text">
-             <string>Refresh</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="ButtonVST_AddToBlackList">
-            <property name="text">
-             <string>Add to black List</string>
-            </property>
+           <widget class="QWidget" name="widget_2" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="ButtonVst_Refresh">
+               <property name="text">
+                <string>Refresh</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="buttonClearVstCache">
+               <property name="text">
+                <string>clear cache</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="ButtonVST_AddToBlackList">
+               <property name="text">
+                <string>Add to black List</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item>
