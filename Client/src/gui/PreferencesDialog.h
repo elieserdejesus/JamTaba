@@ -7,13 +7,15 @@ namespace Ui    {    class IODialog; }
 namespace Midi  {    class MidiDriver;  }
 namespace Controller{class MainController; }
 
+class MainWindow;
+
 //++++++++++++++++++++++++++++++++++
 class PreferencesDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    PreferencesDialog(Controller::MainController* mainController, QWidget *parent = 0);
+    PreferencesDialog(Controller::MainController* mainController, MainWindow* mainWindow);
     ~PreferencesDialog();
     void selectAudioTab();
     void selectMidiTab();
@@ -43,12 +45,15 @@ private slots:
 
     void on_ButtonVst_Refresh_clicked();
 
+    void on_ButtonVST_AddToBlackList_clicked();
+
 signals:
     void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
 
 private:
     Ui::IODialog *ui;
     Controller::MainController* mainController;
+    MainWindow* mainWindow;
 
     //AUDIO
     void populateAsioDriverCombo();
@@ -68,7 +73,8 @@ private:
     void populateVstTab();
     void addVstScanPath(QString path);
     void createWidgetsToNewScanPath(QString path);
-    void createWidgetsToVstList(QString path);
+    void UpdateVstList(QString path);
+    void UpdateBlackBox(QString path);
     void clearScanPathWidgets();
     QList<QPushButton*> scanPathButtons;
 
