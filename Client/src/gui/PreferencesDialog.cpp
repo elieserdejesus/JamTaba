@@ -411,10 +411,18 @@ void PreferencesDialog::on_buttonScanVSTs_clicked()
 //REFRESH VST LIST
 void PreferencesDialog::on_ButtonVst_Refresh_clicked()
 {
-    //clear the cache
-    mainController->clearPluginsCache();
-    //scan again
-    mainController->scanPlugins();
+    if(mainController)
+    {
+        if(mainWindow)
+        {//save the config file before start scanning
+            mainController->saveLastUserSettings(mainWindow->getInputsSettings());
+        }
+        //clear the cache
+        mainController->clearPluginsCache();
+        //scan again
+        mainController->scanPlugins();
+    }
+
     populateVstTab();
 }
 
