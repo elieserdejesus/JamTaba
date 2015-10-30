@@ -195,7 +195,7 @@ void StandaloneMainController::on_ninjamStartProcessing(int intervalPosition){
 void StandaloneMainController::on_VSTPluginFounded(QString name, QString group, QString path){
     pluginsDescriptors.append(Audio::PluginDescriptor(name, group, path));
     settings.addVstPlugin(path);
-    //we want to add it also in the vst list on screen
+
 }
 
 //++++++++++++++++++++++++++++++++++++++++++
@@ -336,7 +336,7 @@ void StandaloneMainController::scanPlugins(){
         foreach (QString folder, foldersToScan) {
             pluginFinder->addFolderToScan(folder);
         }
-        pluginFinder->scan(settings.get);
+        pluginFinder->scan(settings.getBlackBox());
     }
 }
 

@@ -917,8 +917,15 @@ void MainController::removePluginsScanPath(int index){
    settings.removeVstScanPath(index);
 }
 
+
 void MainController::clearPluginsCache(){
     settings.clearVstCache();
+}
+
+//VST BlackList ...
+void MainController::addBlackVstToSettings(QString path)
+{
+    settings.addVstToBlackList(path);
 }
 
 QList<Audio::PluginDescriptor> MainController::getPluginsDescriptors(){

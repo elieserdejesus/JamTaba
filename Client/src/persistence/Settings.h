@@ -92,6 +92,7 @@ public:
     void read(QJsonObject in);
     QStringList cachedPlugins;
     QStringList foldersToScan;
+    QStringList blackedPlugins;//vst in blackbox....
 };
 //++++++++++++++++++++++++
 class RecordingSettings  : public SettingsObject{
@@ -190,13 +191,17 @@ public:
 
     //VST
     void addVstPlugin(QString pluginPath);
+    void addVstToBlackList(QString pluginPath);
     QStringList getVstPluginsPaths() const;
+    QStringList getBlackBox()const ;
     void clearVstCache();
+    void clearBlackBox();
 
     //VST paths
     void addVstScanPath(QString path);
     void removeVstScanPath(int index);
     QStringList getVstScanFolders() const ;
+
 
     //++++++++++++++ Metronome ++++++++++
     void setMetronomeSettings(float gain, float pan, bool muted);
