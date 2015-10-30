@@ -5,21 +5,19 @@
 #include "audio/core/AudioMixer.h"
 #include "audio/core/AudioNode.h"
 #include "audio/RoomStreamerNode.h"
+#include "persistence/Settings.h"
+#include "MainWindow.h"
+#include "NinjamController.h"
+#include "geo/WebIpToLocationResolver.h"
+#include "audio/NinjamTrackNode.h"
+#include "Utils.h"
 #include "../loginserver/LoginService.h"
 #include "../loginserver/natmap.h"
-
-#include "MainWindow.h"
-
-#include <QDateTime>
-
-#include "persistence/Settings.h"
-
 #include "../ninjam/Service.h"
 #include "../ninjam/Server.h"
-#include "NinjamController.h"
 
-#include "geo/WebIpToLocationResolver.h"
-
+#include <QDateTime>
+#include <QStandardPaths>
 #include <QTimer>
 #include <QFile>
 #include <QDebug>
@@ -28,10 +26,10 @@
 #include <QUuid>
 #include <QSettings>
 #include <QDir>
-#include "audio/NinjamTrackNode.h"
-#include "Utils.h"
 
 Q_LOGGING_CATEGORY(controllerMain, "controller.main")
+
+QString Controller::MainController::LOG_CONFIG_FILE = "logging.ini";
 
 using namespace Persistence;
 using namespace Midi;
@@ -128,7 +126,32 @@ private:
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++
+QString MainController::getLogConfigFilePath(){
+    QDir logDir(Controller::MainController::getWritablePath());
+    if(logDir.exists()){
+        QString logConfigFilePath = logDir.absoluteFilePath(LOG_CONFIG_FILE);
+        if(QFile(logConfigFilePath).exists()){//log config file in application directory? (same dir as json config files, cache.bin, etc.)
+            return logConfigFilePath;
+        }
+        else{//search log config file in resources
+            qDebug(controllerMain) << "Log file not founded in release folder (" <<logDir.absolutePath() << "), searching in resources...";
+            logConfigFilePath = ":/" + LOG_CONFIG_FILE;
+            if(QFile(logConfigFilePath).exists()){
+                qDebug(controllerMain) << "Log file founded in resources...";
+                return logConfigFilePath;
+            }
+            qWarning(controllerMain) << "Log file not founded in source code tree: " << logDir.absolutePath();
+        }
+    }
+    qWarning(controllerMain) << "Log folder not exists!" << logDir.absolutePath();
+    return "";
+}
 
+QString MainController::getWritablePath(){
+    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++
 void MainController::setSampleRate(int newSampleRate){
     audioMixer.setSampleRate(newSampleRate);
     if(settings.isSaveMultiTrackActivated()){
