@@ -72,11 +72,11 @@ private:
     //VST
     void populateVstTab();
     void addVstScanPath(QString path);
-    void createWidgetsToNewScanPath(QString path);
+    void createWidgetsToNewScanFolder(QString path);
     void UpdateVstList(QString path);
     void UpdateBlackBox(QString path);
-    void clearScanPathWidgets();
-    QList<QPushButton*> scanPathButtons;
+    void clearScanFolderWidgets();
+    QList<QPushButton*> scanFoldersButtons;
 
     //recording
     void populateRecordingTab();
