@@ -209,7 +209,7 @@ VstSettings::VstSettings()
 
 }
 
-
+//VST JSON WRITER
 void VstSettings::write(QJsonObject &out){
     QJsonArray scanPathsArray;
     foreach (QString scanPath, foldersToScan) {
@@ -222,6 +222,12 @@ void VstSettings::write(QJsonObject &out){
         cacheArray.append(pluginPath);
     }
     out["cachedPlugins"] = cacheArray;
+
+    QJsonArray BlackedArray;
+    foreach (QString blackVst, blackedPlugins) {
+        BlackedArray.append(blackVst);
+    }
+    out["BlackListPlugins"] = BlackedArray;
 }
 
 void VstSettings::read(QJsonObject in){
@@ -237,6 +243,13 @@ void VstSettings::read(QJsonObject in){
         QJsonArray cacheArray = in["cachedPlugins"].toArray();
         for (int x = 0; x < cacheArray.size(); ++x) {
             cachedPlugins.append(cacheArray.at(x).toString());
+        }
+    }
+    blackedPlugins.clear();
+    if(in.contains("BlackListPlugins")){
+        QJsonArray cacheArray = in["BlackListPlugins"].toArray();
+        for (int x = 0; x < cacheArray.size(); ++x) {
+            blackedPlugins.append(cacheArray.at(x).toString());
         }
     }
 }
@@ -352,7 +365,11 @@ void Settings::addVstPlugin(QString pluginPath){
         vstSettings.cachedPlugins.append(pluginPath);
     }
 }
-
+void Settings::addVstToBlackList(QString pluginPath){
+    if(!vstSettings.blackedPlugins.contains(pluginPath)){
+        vstSettings.blackedPlugins.append(pluginPath);
+    }
+}
 QStringList Settings::getVstPluginsPaths() const{
     return vstSettings.cachedPlugins;
 }
@@ -362,6 +379,11 @@ QStringList Settings::getVstPluginsPaths() const{
 void Settings::clearVstCache(){
     vstSettings.cachedPlugins.clear();
 }
+//CLEAR VST BLACKBOX
+void Settings::clearBlackBox(){
+    vstSettings.blackedPlugins.clear();
+}
+
 
 //VST paths to scan
 void Settings::addVstScanPath(QString path){
@@ -376,6 +398,12 @@ QStringList Settings::getVstScanFolders() const {
 
     return vstSettings.foldersToScan;
 }
+
+QStringList Settings::getBlackBox() const {
+
+    return vstSettings.blackedPlugins;
+}
+
 
 //++++++++++++++++++
 
