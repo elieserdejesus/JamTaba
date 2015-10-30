@@ -8,8 +8,6 @@
 #include "SamplesBufferResampler.h"
 #include <QLoggingCategory>
 
-Q_DECLARE_LOGGING_CATEGORY(roomStreamer)
-
 class QIODevice;
 
 namespace Audio {

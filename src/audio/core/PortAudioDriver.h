@@ -3,10 +3,6 @@
 #include "AudioDriver.h"
 #include "portaudio.h"
 
-#include <QLoggingCategory>
-
-Q_DECLARE_LOGGING_CATEGORY(portaudio)
-
 namespace Audio{
 
 

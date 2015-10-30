@@ -1,4 +1,5 @@
 #include "MidiDriver.h"
+#include "../log/logging.h"
 
 using namespace Midi;
 
@@ -32,7 +33,7 @@ void MidiBuffer::addMessage(const MidiMessage &m){
         messagesCount++;
     }
     else{
-        qWarning() << "MidiBuffer full, discarding the message!";
+        qCWarning(jtMidi) << "MidiBuffer full, discarding the message!";
     }
 }
 

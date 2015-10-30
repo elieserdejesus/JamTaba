@@ -4,7 +4,7 @@
 #include "StandAloneMainController.h"
 #include "persistence/Settings.h"
 #include "MainWindowStandalone.h"
-#include "log/logHandler.h"
+#include "log/logging.h"
 
 int main(int argc, char* args[] ){
 
@@ -14,7 +14,7 @@ int main(int argc, char* args[] ){
     QString logFile = Controller::MainController::getLogConfigFilePath();
     if(!logFile.isEmpty()){
         qputenv("QT_LOGGING_CONF", QByteArray(logFile.toUtf8()));
-        qInstallMessageHandler(customLogHandler);
+        qInstallMessageHandler(jamtabaLogHandler);
     }
 
     Persistence::Settings settings;

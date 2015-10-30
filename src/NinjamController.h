@@ -7,11 +7,7 @@
 #include "../ninjam/Server.h"
 #include "../audio/vorbis/VorbisEncoder.h"
 
-#include <QLoggingCategory>
-
 #include <QThread>
-
-Q_DECLARE_LOGGING_CATEGORY(controllerNinjam)
 
 class NinjamTrackNode;
 

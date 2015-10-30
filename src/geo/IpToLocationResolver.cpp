@@ -1,6 +1,7 @@
 #include "IpToLocationResolver.h"
 
-#include <QDebug>
+#include "../log/logging.h"
+
 
 using namespace Geo ;
 
@@ -30,7 +31,7 @@ Location::Location(QString country, QString countryCode, QString city, double la
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++
 IpToLocationResolver::~IpToLocationResolver(){
-    qDebug() << "IpToLocationResolver destructor";
+    qCDebug(jtIpToLocation) << "IpToLocationResolver destructor";
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++

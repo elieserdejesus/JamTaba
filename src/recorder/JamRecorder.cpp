@@ -2,8 +2,7 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QtConcurrent/QtConcurrent>
-
-Q_LOGGING_CATEGORY(recorder, "recorder")
+#include "../log/logging.h"
 
 using namespace Recorder;
 
@@ -62,7 +61,7 @@ void Jam::addAudioFile(QString userName, quint8 channelIndex, QString filePath, 
         jamTracks[userName].insert(channelIndex, JamTrack(userName, channelIndex));
     }
     jamTracks[userName][channelIndex].addAudioFile(filePath, intervalIndex);
-    qCDebug(recorder) << "adding a file in jam interval:" <<intervalIndex << " path:" << filePath;
+    qCDebug(jtJamRecorder) << "adding a file in jam interval:" <<intervalIndex << " path:" << filePath;
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -81,7 +80,7 @@ void JamRecorder::writeEncodedFile(const QByteArray& encodedData, QString path){
         return;
     }
     audioFile.write(encodedData.data(), encodedData.size());
-    qCDebug(recorder) << "file writed:" <<path;
+    qCDebug(jtJamRecorder) << "file writed:" <<path;
 }
 
 QString JamRecorder::buildAudioFileName(QString userName, quint8 channelIndex, int currentInterval) {
@@ -98,7 +97,7 @@ JamRecorder::JamRecorder(JamMetadataWriter* jamMetadataWritter)
 
 void JamRecorder::appendLocalUserAudio(QByteArray encodedaudio, quint8 channelIndex, bool isFirstPartOfInterval, bool isLastPastOfInterval){
     if(!running){
-        qCCritical(recorder) << "Illegal state! Recorder is not running!";
+        qCCritical(jtJamRecorder) << "Illegal state! Recorder is not running!";
         return;
     }
     //qCDebug(recorder) << "appending encoded audio to a local user channel index:" <<channelIndex;
@@ -120,7 +119,7 @@ void JamRecorder::appendLocalUserAudio(QByteArray encodedaudio, quint8 channelIn
 
 void JamRecorder::addRemoteUserAudio(QString userName, QByteArray encodedAudio, quint8 channelIndex){
     if(!running){
-        qCCritical(recorder) << "Illegal state! Recorder is not running!";
+        qCCritical(jtJamRecorder) << "Illegal state! Recorder is not running!";
         return;
     }
     int intervalIndex = globalIntervalIndex;

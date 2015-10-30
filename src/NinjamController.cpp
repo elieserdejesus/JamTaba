@@ -22,8 +22,8 @@
 #include "audio/samplesbufferrecorder.h"
 #include "Utils.h"
 #include <QWaitCondition>
+#include "../log/logging.h"
 
-Q_LOGGING_CATEGORY(controllerNinjam, "controller.ninjam")
 
 using namespace Controller;
 
@@ -32,7 +32,7 @@ class NinjamController::EncodingThread : public QThread{//TODO: use better threa
 public:
     EncodingThread(NinjamController* controller)
         :stopRequested(false), controller(controller){
-        qCDebug(controllerNinjam) << "Starting Encoding Thread";
+        qCDebug(jtNinjamCore) << "Starting Encoding Thread";
         start();
     }
 
@@ -41,7 +41,7 @@ public:
     }
 
     void addSamplesToEncode(const Audio::SamplesBuffer& samplesToEncode, quint8 channelIndex, bool isFirstPart, bool isLastPart){
-        //qCDebug(controllerNinjam) << "Adding samples to encode";
+        //qCDebug(jtNinjamCore) << "Adding samples to encode";
         QMutexLocker locker(&mutex);
         chunksToEncode.append(new EncodingChunk(samplesToEncode, channelIndex, isFirstPart, isLastPart));
         //this method is called by Qt main thread (the producer thread).
@@ -54,7 +54,7 @@ public:
             //QMutexLocker locker(&mutex);
             stopRequested = true;
             hasAvailableChunksToEncode.wakeAll();
-            qCDebug(controllerNinjam) << "Stopping Encoding Thread";
+            qCDebug(jtNinjamCore) << "Stopping Encoding Thread";
         }
     }
 
@@ -85,7 +85,7 @@ protected:
 			}
 
         }
-        qCDebug(controllerNinjam) << "Encoding thread stopped!";
+        qCDebug(jtNinjamCore) << "Encoding thread stopped!";
     }
 
 private:
@@ -332,7 +332,7 @@ void NinjamController::stop(bool emitDisconnectedingSignal){
     }
     encoders.clear();
 
-    qCDebug(controllerNinjam) << "NinjamController destructor - disconnecting...";
+    qCDebug(jtNinjamCore) << "NinjamController destructor - disconnecting...";
 
     Ninjam::Service* ninjamService = mainController->getNinjamService();// Ninjam::Service::getInstance();
     QObject::disconnect(ninjamService, SIGNAL(serverBpmChanged(short)), this, SLOT(on_ninjamServerBpmChanged(short)));
@@ -353,7 +353,7 @@ void NinjamController::stop(bool emitDisconnectedingSignal){
 
 NinjamController::~NinjamController(){
     //QMutexLocker locker(&mutex);
-    qCDebug(controllerNinjam) << "NinjamController destructor";
+    qCDebug(jtNinjamCore) << "NinjamController destructor";
     if(isRunning()){
         stop(false);
     }
@@ -361,7 +361,7 @@ NinjamController::~NinjamController(){
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::start(const Ninjam::Server& server, bool transmiting){
-    qCDebug(controllerNinjam) << "starting ninjam controller...";
+    qCDebug(jtNinjamCore) << "starting ninjam controller...";
     QMutexLocker locker(&mutex);
     //schedule an update in internal attributes
     scheduledEvents.append(new BpiChangeEvent(this, server.getBpi()));
@@ -417,7 +417,7 @@ void NinjamController::start(const Ninjam::Server& server, bool transmiting){
 
         this->running = true;
     }
-    qCDebug(controllerNinjam) << "ninjam controller started!";
+    qCDebug(jtNinjamCore) << "ninjam controller started!";
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::sendChatMessage(QString msg){
@@ -520,7 +520,7 @@ void NinjamController::handleNewInterval(){
             emit channelXmitChanged(track->getID(), trackIsPlaying);
         }
     }
-    qCDebug(controllerNinjam()) << "emitint startingNewInterval signal";
+    qCDebug(jtNinjamCore) << "emitint startingNewInterval signal";
     emit startingNewInterval();
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
