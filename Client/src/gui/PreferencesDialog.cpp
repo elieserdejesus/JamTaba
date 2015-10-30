@@ -337,7 +337,7 @@ void PreferencesDialog::on_prefsTab_currentChanged(int index)
 void PreferencesDialog::on_pluginsScanFinished(){
     populateVstTab();
 }
-void PreferencesDialog::on_buttonAddVstPath_clicked()
+void PreferencesDialog::on_buttonAddVstScanFolder_clicked()
 {
     QFileDialog fileDialog(this, "Adding VST path ...");
     fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
@@ -377,13 +377,14 @@ void PreferencesDialog::createWidgetsToNewScanFolder(QString path){
     QWidget* parent = new QWidget(this);
     QHBoxLayout* lineLayout = new QHBoxLayout(parent);
     lineLayout->setContentsMargins(0, 0, 0, 0);
-    QPushButton* removeButton = new QPushButton("Remove", parent);
+    QPushButton* removeButton = new QPushButton(QIcon(":/images/less.png"),"", parent);
+    removeButton->setToolTip("Remove this folder from scanning");
     QObject::connect( removeButton, SIGNAL(clicked()), this, SLOT(on_buttonRemoveVstPathClicked()));
     lineLayout->addWidget(removeButton);
     lineLayout->addWidget( new QLabel(path, this), 1.0);
     panelLayout->addWidget(parent);
-
     scanFoldersButtons.push_back(removeButton);//save the widget to easy remove all widgets when the VSt Scan path tab is populated
+
 }
 
 void PreferencesDialog::addVstScanPath(QString path){

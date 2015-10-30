@@ -29,7 +29,7 @@ private slots:
 
     void on_prefsTab_currentChanged(int index);
 
-    void on_buttonAddVstPath_clicked();
+    void on_buttonAddVstScanFolder_clicked();
 
     void on_buttonRemoveVstPathClicked();
 
