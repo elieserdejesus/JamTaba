@@ -216,7 +216,13 @@ public:
 
     bool isUsingNullAudioDriver() const;
 
+    static QString getWritablePath();
+    static QString getLogConfigFilePath();
+
 protected:
+
+    static QString LOG_CONFIG_FILE;
+
     QScopedPointer<Audio::AudioDriver> audioDriver;
     QScopedPointer<Midi::MidiDriver> midiDriver;
 
