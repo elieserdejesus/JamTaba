@@ -87,16 +87,10 @@ QSize BaseTrackView::minimumSizeHint() const{
     return sizeHint();
 }
 
-void BaseTrackView::updateBoostButtonsText(){
-    ui->buttonBoostZero->setText(narrowed ? "0" : "0 db");
-    ui->buttonBoostMinus12->setText(narrowed ? "-12" : "-12db");
-    ui->buttonBoostPlus12->setText(narrowed ? "+12" : "+12db");
-}
 
 void BaseTrackView::setToNarrow(){
     if(!this->narrowed){
         this->narrowed = true;
-        updateBoostButtonsText();
         updateGeometry();
     }
 }
@@ -104,7 +98,6 @@ void BaseTrackView::setToNarrow(){
 void BaseTrackView::setToWide(){
     if(narrowed){
         this->narrowed = false;
-        updateBoostButtonsText();
         updateGeometry();
     }
 }
