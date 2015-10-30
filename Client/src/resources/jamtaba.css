@@ -77,11 +77,11 @@ BaseTrackView #boostPanel QPushButton {
    padding-top: 3px;
    padding-bottom: 3px;
    border: 0px;
-   background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+   /*background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
        stop:0 rgba(255, 255, 255, 200),
        stop:0.2 rgba(255, 255, 255, 120),
        stop:0.7 rgba(255, 255, 255, 120),
-       stop:1 rgba(255,255, 255, 30));
+       stop:1 rgba(255,255, 255, 30));*/
    /*background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                               stop: 0 #f6f7fa, stop: 1 #aaabae);*/
    font-size: 8px;
@@ -97,15 +97,17 @@ background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
 }
 
 BaseTrackView #boostPanel QPushButton#buttonBoostMinus12{
-   border-top-left-radius: 3px;
+
    border-bottom-left-radius: 3px;
-   border-right: 1px solid rgba(0, 0, 0, 10);
+   border-bottom-right-radius: 3px;
+   border-top: 1px solid rgba(0, 0, 0, 10);
 }
 
 BaseTrackView #boostPanel QPushButton#buttonBoostPlus12{
+   border-top-left-radius: 3px;
    border-top-right-radius: 3px;
-   border-bottom-right-radius: 3px;
-   border-left: 1px solid rgba(0, 0, 0, 10);
+   border-bottom: 1px solid rgba(0, 0, 0, 10);
+   margin-top: 6px;
 }
 
 
@@ -384,6 +386,10 @@ BaseTrackView[unlighted="true"] #peaksDbLabel,
 BaseTrackView[unlighted="true"] #muteButton,
 BaseTrackView[unlighted="true"] #soloButton{
    border: none;
+}
+
+BaseTrackView #muteButton{
+    margin-top: 6px;
 }
 
 BaseTrackView #peaksDbLabel:hover{

@@ -74,7 +74,6 @@ private:
     void drawFaderDbValue(QPainter& p);
     //void drawFaderDbMarks(QPainter& p);
 
-    void updateBoostButtonsText();
 
 private slots:
     void onMuteClicked();

@@ -111,7 +111,7 @@ void LocalTrackView::setFaderOnlyMode(bool faderOnly){
         ui->topPanel->setVisible(!this->faderOnly);
         ui->levelSlider->setVisible(!this->faderOnly);
         ui->boostPanel->setVisible(!this->faderOnly);
-        ui->boostSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
+        //ui->boostSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
         ui->panSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
         //ui->panSpacer->invalidate();
 
@@ -130,7 +130,7 @@ void LocalTrackView::setFaderOnlyMode(bool faderOnly){
         ui->muteButton->setVisible(!faderOnly);
         ui->peaksDbLabel->setVisible(!faderOnly);
         //vertical spacer in bottom of VUs
-        ui->verticalSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
+        //ui->verticalSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
         ui->horizontalSpacer->changeSize( faderOnly ? 0 : 20,20, QSizePolicy::Minimum, QSizePolicy::Fixed);
 
         if(inputTypeIconLabel){
