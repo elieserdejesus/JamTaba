@@ -27,10 +27,6 @@
 
 #include <QScopedPointer>
 
-#include <QLoggingCategory>
-
-Q_DECLARE_LOGGING_CATEGORY(controllerMain)
-
 class MainWindow;
 
 namespace Audio {

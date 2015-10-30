@@ -8,6 +8,7 @@
 #include "../audio/core/SamplesBuffer.h"
 #include <vorbis/vorbisfile.h>
 #include <QThread>
+#include "../log/logging.h"
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::VorbisDecoder()
     : internalBuffer(2, 4096),
@@ -22,7 +23,7 @@ VorbisDecoder::VorbisDecoder()
 }
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::~VorbisDecoder(){
-    qDebug() << "Destrutor Vorbis Decoder";
+    qCDebug(jtNinjamVorbisDecoder) << "Destrutor Vorbis Decoder";
     //TODO this destructor is crashing when a track is removed
     //delete [] outBuffer[0];
     //delete [] outBuffer[1];
@@ -68,7 +69,7 @@ const Audio::SamplesBuffer &VorbisDecoder::decode(int maxSamplesToDecode){
                 break;
             case OV_EINVAL: message = "VORBIS ERROR: the initial file headers couldn't be read or are corrupt, or that the initial open call for vf failed.";
         }
-        qWarning() << message;
+        qCWarning(jtNinjamVorbisDecoder) << message;
         return Audio::SamplesBuffer::ZERO_BUFFER;
     }
     internalBuffer.setFrameLenght(samplesDecoded);
@@ -119,7 +120,7 @@ bool VorbisDecoder::initialize(){
             break;
         case OV_EFAULT: message = "VORBIS DECODER INIT ERROR: Internal logic fault; indicates a bug or heap/stack corruption.";
         }
-        qWarning() << message;
+        qCWarning(jtNinjamVorbisDecoder) << message;
     }
     return initialized;
 }

@@ -1,7 +1,9 @@
 #include "ReaperProjectGenerator.h"
 #include <QUuid>
+#include "../log/logging.h"
 
 using namespace Recorder;
+
 
 void ReaperProjectGenerator::write(Jam jam){
     QString stringBuffer("");
@@ -49,7 +51,7 @@ void ReaperProjectGenerator::write(Jam jam){
     jamDir.cdUp();
     QFile projectFile(jamDir.absoluteFilePath("Reaper project.rpp"));
     if(!projectFile.open(QFile::WriteOnly)){
-        qCCritical(recorder) << "Can't write the reaper project file in " << jamDir;
+        qCCritical(jtJamRecorder) << "Can't write the reaper project file in " << jamDir;
     }
     QTextStream stream(&projectFile);
     QByteArray byteArray(stringBuffer.toUtf8());

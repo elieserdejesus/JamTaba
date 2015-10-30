@@ -10,10 +10,9 @@
 #include <QDataStream>
 
 #include <QThread>
-
 #include <cassert>
 
-Q_LOGGING_CATEGORY(ninjamService, "ninjam.service")
+#include "../log/logging.h"
 
 using namespace Ninjam;
 
@@ -36,7 +35,7 @@ public:
     Download(QString userFullName, quint8 channelIndex, QString GUID)
         :channelIndex(channelIndex), userFullName(userFullName), GUID(GUID){
         instances++;
-        qCDebug(ninjamService) << "Download constructor instances: " << instances;
+        qCDebug(jtNinjamProtocol) << "Download constructor instances: " << instances;
     }
     Download(){
         qCritical() << "using the default constructor!";
@@ -44,7 +43,7 @@ public:
 
     ~Download(){
         instances--;
-        qCDebug(ninjamService) << "Download destructor instances: " << instances;
+        qCDebug(jtNinjamProtocol) << "Download destructor instances: " << instances;
     }
 
     inline void appendVorbisData(QByteArray data){ this->vorbisData.append(data); }
@@ -87,7 +86,7 @@ Service::~Service(){
 }
 
 void Service::sendAudioIntervalPart(QByteArray GUID, QByteArray encodedAudioBuffer, bool isLastPart){
-    qCDebug(ninjamService) << "sending audio interval part";
+    qCDebug(jtNinjamProtocol) << "sending audio interval part";
     if(!initialized){
         return;
     }
@@ -96,7 +95,7 @@ void Service::sendAudioIntervalPart(QByteArray GUID, QByteArray encodedAudioBuff
 }
 
 void Service::sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex){
-    qCDebug(ninjamService) << "sending audio interval begin";
+    qCDebug(jtNinjamProtocol) << "sending audio interval begin";
     if(!initialized){
         return;
     }
@@ -112,7 +111,7 @@ void Service::sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex){
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Service::socketReadSlot(){
     if(socket.bytesAvailable() < 5){
-        qCDebug(ninjamService) << "not have enough bytes to read message header (5 bytes)";
+        qCDebug(jtNinjamProtocol) << "not have enough bytes to read message header (5 bytes)";
         return;
     }
 
@@ -129,7 +128,7 @@ void Service::socketReadSlot(){
         if (socket.bytesAvailable() >= (int)payloadLenght) {//message payload is available to read
             lastMessageWasIncomplete = false;
             const Ninjam::ServerMessage& message = ServerMessageParser::parse(static_cast<ServerMessageType>(messageTypeCode), stream, payloadLenght) ;
-            //qCDebug(ninjamService) << message;
+            //qCDebug(jtNinjamProtocol) << message;
             invokeMessageHandler(message);
             if(needSendKeepAlive()){
                 ClientKeepAlive clientKeepAliveMessage;
@@ -137,7 +136,7 @@ void Service::socketReadSlot(){
             }
         }
         else{
-            qCDebug(ninjamService) << "incomplete message!";
+            qCDebug(jtNinjamProtocol) << "incomplete message!";
             lastMessageWasIncomplete = true;
             break;
         }
@@ -147,19 +146,19 @@ void Service::socketReadSlot(){
 void Service::socketErrorSlot(QAbstractSocket::SocketError e)
 {
     Q_UNUSED(e);
-    qCWarning(ninjamService) << QString(socket.errorString());
+    qCWarning(jtNinjamProtocol) << QString(socket.errorString());
     currentServer.reset(nullptr);
     emit error(socket.errorString());
 }
 
 void Service::socketConnectedSlot(){
-    qCDebug(ninjamService) << "socket connected on " << socket.peerName();
+    qCDebug(jtNinjamProtocol) << "socket connected on " << socket.peerName();
 
 }
 
 void Service::socketDisconnectSlot(){
     this->initialized = false;
-    qCDebug(ninjamService) << "socket disconnected from " << socket.peerName();
+    qCDebug(jtNinjamProtocol) << "socket disconnected from " << socket.peerName();
     emit disconnectedFromServer(*currentServer);
 }
 
@@ -243,11 +242,11 @@ void Service::sendMessageToServer(ClientMessage *message){
         lastSendTime = QDateTime::currentMSecsSinceEpoch();
     }
     else{
-        qCCritical(ninjamService) << "Bytes not writed in socket!";
+        qCCritical(jtNinjamProtocol) << "Bytes not writed in socket!";
     }
 
     if((int)message->getPayload() + 5 != outBuffer.size()){
-        qCWarning(ninjamService()) << "(int)message->getPayload() + 5: " << ((int)message->getPayload() + 5) << "outbuffer.size():" << outBuffer.size();
+        qCWarning(jtNinjamProtocol()) << "(int)message->getPayload() + 5: " << ((int)message->getPayload() + 5) << "outbuffer.size():" << outBuffer.size();
     }
 
 }
@@ -355,7 +354,7 @@ void Service::startServerConnection(QString serverIp, int serverPort, QString us
 }
 
 void Service::disconnectFromServer(bool emitDisconnectedSignal){
-    qCDebug(ninjamService) << "disconnecting from " << socket.peerName();
+    qCDebug(jtNinjamProtocol) << "disconnecting from " << socket.peerName();
     if(socket.isOpen()){
         if(!emitDisconnectedSignal){
             socket.blockSignals(true); //avoid generate events when disconnecting/exiting
@@ -538,7 +537,7 @@ void Service::invokeMessageHandler(const ServerMessage& message){
         break;
 
     default:
-        qCCritical(ninjamService) << "receive a not implemented yet message!";
+        qCCritical(jtNinjamProtocol) << "receive a not implemented yet message!";
     }
 }
 

@@ -15,10 +15,6 @@
 
 #include "aeffectx.h"
 
-#include <QLoggingCategory>
-
-Q_DECLARE_LOGGING_CATEGORY(pluginVst)
-
 AudioEffect* createEffectInstance (audioMasterCallback audioMaster);
 
 //++++++++++++++++++++++++++++++++
