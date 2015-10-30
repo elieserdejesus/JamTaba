@@ -427,13 +427,6 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="ButtonVST_Remove_BlkList">
-            <property name="text">
-             <string>Remove from black list</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QPlainTextEdit" name="BlackBoxText">
             <property name="palette">
              <palette>
