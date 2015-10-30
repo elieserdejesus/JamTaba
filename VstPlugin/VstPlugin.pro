@@ -92,6 +92,13 @@ win32 {
 
     CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lminimp3 -lvorbisfile -lvorbis -logg
     else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lminimp3d -lvorbisfiled -lvorbisd -loggd
+
+    CONFIG(release, debug|release) {
+      #ltcg - http://blogs.msdn.com/b/vcblog/archive/2009/02/24/quick-tips-on-using-whole-program-optimization.aspx
+      QMAKE_CXXFLAGS_RELEASE +=  -GL
+      QMAKE_LFLAGS_RELEASE += /LTCG
+    }
+
 }
 
 
