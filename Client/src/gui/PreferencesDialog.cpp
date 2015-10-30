@@ -113,35 +113,33 @@ void PreferencesDialog::populateAudioTab(){
     populateBufferSizeCombo();
 }
 
-void PreferencesDialog::clearScanPathWidgets(){
-    foreach (QWidget* removeButton, scanPathButtons) {
-        ui->panelPaths->layout()->removeWidget(removeButton->parentWidget());
+void PreferencesDialog::clearScanFolderWidgets(){
+    foreach (QWidget* removeButton, scanFoldersButtons) {
+        ui->panelScanFolders->layout()->removeWidget(removeButton->parentWidget());
         delete removeButton->parentWidget();
     }
-    scanPathButtons.clear();
+    scanFoldersButtons.clear();
 }
 
 void PreferencesDialog::populateVstTab(){
     if(mainController->isRunningAsVstPlugin()){
         return;
     }
-    clearScanPathWidgets();//remove all widgets before add the paths
-    QStringList paths = mainController->getSettings().getVstScanFolders();
+    clearScanFolderWidgets();//remove all widgets before add the paths
+    QStringList ScanFoldersList = mainController->getSettings().getVstScanFolders();
     QStringList VstList = mainController->getSettings().getVstPluginsPaths();
     QStringList BlackVstList = mainController->getSettings().getBlackBox();
 
     //populate the paths
-    foreach (QString path, paths) {
-        createWidgetsToNewScanPath(path);
+    foreach (QString scanFolder, ScanFoldersList) {
+        createWidgetsToNewScanFolder(scanFolder);
     }
-     //populate the VST
-    //refresh the widget
+     //populate the VST list
     ui->plainTextEdit->clear();
     foreach (QString path, VstList) {
         UpdateVstList(path);
     }
     //populate the BlackBox
-   //refresh the widget
    ui->BlackBoxText->clear();
    foreach (QString path, BlackVstList) {
        UpdateBlackBox(path);
@@ -354,13 +352,13 @@ void PreferencesDialog::on_buttonRemoveVstPathClicked(){
     QPushButton* buttonClicked = (QPushButton*)sender();
     //find the index of button clicked
     int buttonIndex = 0;
-    while(scanPathButtons.at(buttonIndex) != buttonClicked){
+    while(scanFoldersButtons.at(buttonIndex) != buttonClicked){
         buttonIndex++;
     }
-    if(buttonIndex < scanPathButtons.size()){
+    if(buttonIndex < scanFoldersButtons.size()){
         //ui->panelPaths->layout()->removeWidget(scanPathButtons.at(buttonIndex));
-        ui->panelPaths->layout()->removeWidget(buttonClicked->parentWidget());
-        scanPathButtons.removeOne(buttonClicked);
+        ui->panelScanFolders->layout()->removeWidget(buttonClicked->parentWidget());
+        scanFoldersButtons.removeOne(buttonClicked);
         delete buttonClicked->parentWidget();
         mainController->removePluginsScanPath(buttonIndex);
     }
@@ -374,24 +372,22 @@ void PreferencesDialog::UpdateBlackBox(QString path)
 {
     ui->BlackBoxText->appendPlainText(path);
 }
-void PreferencesDialog::createWidgetsToNewScanPath(QString path){
-    QVBoxLayout* panelLayout = (QVBoxLayout*)ui->panelPaths->layout();
+void PreferencesDialog::createWidgetsToNewScanFolder(QString path){
+    QVBoxLayout* panelLayout = (QVBoxLayout*)ui->panelScanFolders->layout();
     QWidget* parent = new QWidget(this);
     QHBoxLayout* lineLayout = new QHBoxLayout(parent);
-    QPushButton* removeButton = new QPushButton("Remove", this);
+    lineLayout->setContentsMargins(0, 0, 0, 0);
+    QPushButton* removeButton = new QPushButton("Remove", parent);
     QObject::connect( removeButton, SIGNAL(clicked()), this, SLOT(on_buttonRemoveVstPathClicked()));
     lineLayout->addWidget(removeButton);
     lineLayout->addWidget( new QLabel(path, this), 1.0);
-    panelLayout->removeItem(ui->verticalSpacer_2);
-    int index = panelLayout->count();//the last widget is a spacer, add before spacer
-    panelLayout->insertWidget(index, parent);
-    panelLayout->addSpacerItem(ui->verticalSpacer_2);
+    panelLayout->addWidget(parent);
 
-    scanPathButtons.push_back(removeButton);//save the widget to easy remove all widgets when the VSt Scan path tab is populated
+    scanFoldersButtons.push_back(removeButton);//save the widget to easy remove all widgets when the VSt Scan path tab is populated
 }
 
 void PreferencesDialog::addVstScanPath(QString path){
-    createWidgetsToNewScanPath( path );
+    createWidgetsToNewScanFolder( path );
     mainController->addPluginsScanPath(path);
 }
 

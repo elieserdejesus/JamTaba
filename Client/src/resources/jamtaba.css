@@ -189,7 +189,7 @@ QScrollBar:vertical, QScrollBar:horizontal {
     border: 1px solid rgba(0, 0, 0, 45);
     background-color: rgba(0, 0, 0, 40);
     margin: 0px;/* 22px 0 22px 0;*/
-    border-radius: 4px;
+    border-radius: 2px;
 }
 QScrollBar:vertical{
     width: 12px;
@@ -626,6 +626,10 @@ border-width: 3px;
 QScrollArea{
 border: none;
 background: transparent;
+}
+
+QPlainTextEdit{
+    border: none;
 }
 
 QScrollArea > QWidget > QWidget{/*the content panel - QSCroll contém um QWidget privado que já é uma view port,além disso eu usei o meu próprio widget*/
