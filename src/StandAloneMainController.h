@@ -24,10 +24,10 @@ class StandalonePluginFinder : public Vst::PluginFinder
 public:
     StandalonePluginFinder(Vst::Host *host);
     ~StandalonePluginFinder();
-    void scan();
+    void scan(QStringList blackList);
 
 private:
-    void run();
+    void run(QStringList blackList);
 
 private:
     Audio::PluginDescriptor getPluginDescriptor(QFileInfo f, Vst::Host *host);

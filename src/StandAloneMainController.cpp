@@ -116,18 +116,23 @@ Audio::PluginDescriptor StandalonePluginFinder::getPluginDescriptor(QFileInfo f,
     return Audio::PluginDescriptor();//invalid descriptor
 }
 
-void StandalonePluginFinder::run(){
+void StandalonePluginFinder::run(QStringList blackList){
     emit scanStarted();
 
-    for(QString scanPath : scanPaths){
-        QDirIterator dirIt(scanPath, QDirIterator::Subdirectories);
-        while (dirIt.hasNext()) {
-            dirIt.next();
-            QFileInfo fileInfo (dirIt.filePath());
-            emit pluginScanStarted(fileInfo.absoluteFilePath());
-            const Audio::PluginDescriptor& descriptor = getPluginDescriptor(fileInfo, host);
-            if(descriptor.isValid()){
-                emit pluginScanFinished(descriptor.getName(), descriptor.getGroup(), descriptor.getPath());
+    for(QString scanFolder : scanFolders){
+        QDirIterator folderIterator(scanFolder, QDirIterator::Subdirectories);
+        while (folderIterator.hasNext()) {
+            folderIterator.next();//point to next file inside current folder
+            QFileInfo pluginFileInfo (folderIterator.filePath());
+            if(!blackList.contains(pluginFileInfo.absoluteFilePath())){
+                emit pluginScanStarted(pluginFileInfo.absoluteFilePath());
+                const Audio::PluginDescriptor& descriptor = getPluginDescriptor(pluginFileInfo, host);
+                if(descriptor.isValid()){
+                    emit pluginScanFinished(descriptor.getName(), descriptor.getGroup(), descriptor.getPath());
+                }
+            }
+            else{
+                qDebug() << "Filtering black listed plugin:" <<pluginFileInfo.fileName();
             }
             QApplication::processEvents();
         }
@@ -136,9 +141,10 @@ void StandalonePluginFinder::run(){
 
 }
 
-void StandalonePluginFinder::scan(){
-    QtConcurrent::run(this, &StandalonePluginFinder::run);
-
+void StandalonePluginFinder::scan(QStringList blackList){
+    //run the VST plugins scanning in another tread to void block Qt thread
+    //If Qt main thread is block the GUI will be unresponsive, can't send or receive network data
+    QtConcurrent::run(this, &StandalonePluginFinder::run, blackList);
 }
 
 //++++++++++++++++++++++++++++++++++
@@ -193,7 +199,7 @@ void StandaloneMainController::on_ninjamStartProcessing(int intervalPosition){
 void StandaloneMainController::on_VSTPluginFounded(QString name, QString group, QString path){
     pluginsDescriptors.append(Audio::PluginDescriptor(name, group, path));
     settings.addVstPlugin(path);
-    //we want to add it also in the vst list on screen
+
 }
 
 //++++++++++++++++++++++++++++++++++++++++++
@@ -328,13 +334,13 @@ void StandaloneMainController::scanPlugins(){
     pluginsDescriptors.clear();
     //ConfigStore::clearVstCache();
     if(pluginFinder){
-        pluginFinder->clearScanPaths();
-        QStringList scanPaths = settings.getVstScanPaths();
+        pluginFinder->clearScanFolders();
+        QStringList foldersToScan = settings.getVstScanFolders();
 
-        foreach (QString path, scanPaths) {
-            pluginFinder->addPathToScan(path);
+        foreach (QString folder, foldersToScan) {
+            pluginFinder->addFolderToScan(folder);
         }
-        pluginFinder->scan();
+        pluginFinder->scan(settings.getBlackBox());
     }
 }
 

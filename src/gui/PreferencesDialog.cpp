@@ -8,21 +8,18 @@
 #include "../midi/MidiDriver.h"
 #include "../persistence/Settings.h"
 #include "../MainController.h"
-//#include "../StandAloneMainController.h"
+#include "MainWindow.h"
 
 using namespace Audio;
 using namespace Controller;
 
-PreferencesDialog::PreferencesDialog(Controller::MainController* mainController, QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::IODialog), mainController(mainController)
+PreferencesDialog::PreferencesDialog(Controller::MainController* mainController, MainWindow* mainWindow) :
+    QDialog(mainWindow),
+    ui(new Ui::IODialog), mainController(mainController), mainWindow(mainWindow)
 {
     ui->setupUi(this);
     setModal(true);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-
-    //populateAudioTab();
-    //populateMidiInputCombo();
 
     ui->comboLastOutput->setEnabled(false);
 
@@ -49,9 +46,6 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
     }
 
     populateRecordingTab();
-
-
-
 }
 
 void PreferencesDialog::selectAudioTab(){
@@ -132,8 +126,10 @@ void PreferencesDialog::populateVstTab(){
         return;
     }
     clearScanPathWidgets();//remove all widgets before add the paths
-    QStringList paths = mainController->getSettings().getVstScanPaths();
+    QStringList paths = mainController->getSettings().getVstScanFolders();
     QStringList VstList = mainController->getSettings().getVstPluginsPaths();
+    QStringList BlackVstList = mainController->getSettings().getBlackBox();
+
     //populate the paths
     foreach (QString path, paths) {
         createWidgetsToNewScanPath(path);
@@ -142,8 +138,14 @@ void PreferencesDialog::populateVstTab(){
     //refresh the widget
     ui->plainTextEdit->clear();
     foreach (QString path, VstList) {
-        createWidgetsToVstList(path);
+        UpdateVstList(path);
     }
+    //populate the BlackBox
+   //refresh the widget
+   ui->BlackBoxText->clear();
+   foreach (QString path, BlackVstList) {
+       UpdateBlackBox(path);
+   }
 }
 
 void PreferencesDialog::populateRecordingTab(){
@@ -364,10 +366,14 @@ void PreferencesDialog::on_buttonRemoveVstPathClicked(){
     }
 }
 
-void PreferencesDialog::createWidgetsToVstList(QString path){
-
+void PreferencesDialog::UpdateVstList(QString path)
+{
     ui->plainTextEdit->appendPlainText(path);
-    }
+}
+void PreferencesDialog::UpdateBlackBox(QString path)
+{
+    ui->BlackBoxText->appendPlainText(path);
+}
 void PreferencesDialog::createWidgetsToNewScanPath(QString path){
     QVBoxLayout* panelLayout = (QVBoxLayout*)ui->panelPaths->layout();
     QWidget* parent = new QWidget(this);
@@ -398,9 +404,38 @@ void PreferencesDialog::on_buttonClearVstCache_clicked()
 void PreferencesDialog::on_buttonScanVSTs_clicked()
 {
     if(mainController){
+        if(mainWindow){//save the config file before start scanning
+            mainController->saveLastUserSettings(mainWindow->getInputsSettings());
+        }
         mainController->scanPlugins();
-        //from here we should fill the vst list ?
     }
+}
+
+
+//REFRESH VST LIST
+void PreferencesDialog::on_ButtonVst_Refresh_clicked()
+{
+    populateVstTab();
+}
+
+// ADD A VST IN BLACKLIST
+void PreferencesDialog::on_ButtonVST_AddToBlackList_clicked()
+{
+    QFileDialog VstDialog(this, "Add Vst(s) to BlackBox ...");
+    VstDialog.setNameFilter(tr("Dll(*.dll)"));
+    VstDialog.setDirectory(mainController->getSettings().getVstScanFolders().at(0));
+    VstDialog.setAcceptMode(QFileDialog::AcceptOpen);
+    VstDialog.setFileMode(QFileDialog::ExistingFiles);
+    if(VstDialog.exec() )
+    {
+        QStringList VstNames = VstDialog.selectedFiles();
+        foreach (QString string, VstNames)
+        {
+         UpdateBlackBox(string);
+         mainController->addBlackVstToSettings(string);
+        }
+
+     }
 }
 
 //Recording TAB controls --------------------
@@ -422,9 +457,3 @@ void PreferencesDialog::on_recordingCheckBox_clicked(){
 
 
 
-
-void PreferencesDialog::on_ButtonVst_Refresh_clicked()
-{
-
-  populateVstTab();
-}

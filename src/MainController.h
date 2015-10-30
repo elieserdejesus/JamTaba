@@ -204,6 +204,7 @@ public:
     Vst::PluginFinder* getPluginFinder() const{return pluginFinder.data();}
 
     void addPluginsScanPath(QString path);
+    void addBlackVstToSettings(QString path);
     virtual void addDefaultPluginsScanPath() = 0;//add vst path from registry
     void removePluginsScanPath(int index);
     void clearPluginsCache();
