@@ -2,12 +2,12 @@
 
 using namespace Vst;
 
-void PluginFinder::clearScanPaths(){
-    scanPaths.clear();
+void PluginFinder::clearScanFolders(){
+    scanFolders.clear();
 }
 
-void PluginFinder::addPathToScan(QString path){
-    if(!scanPaths.contains(path)){
-        scanPaths.append(path);
+void PluginFinder::addFolderToScan(QString path){
+    if(!scanFolders.contains(path)){
+        scanFolders.append(path);
     }
 }

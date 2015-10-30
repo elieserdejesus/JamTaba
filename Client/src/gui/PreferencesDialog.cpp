@@ -126,7 +126,7 @@ void PreferencesDialog::populateVstTab(){
         return;
     }
     clearScanPathWidgets();//remove all widgets before add the paths
-    QStringList paths = mainController->getSettings().getVstScanPaths();
+    QStringList paths = mainController->getSettings().getVstScanFolders();
     QStringList VstList = mainController->getSettings().getVstPluginsPaths();
     //populate the paths
     foreach (QString path, paths) {

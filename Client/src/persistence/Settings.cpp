@@ -212,7 +212,7 @@ VstSettings::VstSettings()
 
 void VstSettings::write(QJsonObject &out){
     QJsonArray scanPathsArray;
-    foreach (QString scanPath, scanPaths) {
+    foreach (QString scanPath, foldersToScan) {
         scanPathsArray.append(scanPath);
     }
     out["scanPaths"] = scanPathsArray;
@@ -225,11 +225,11 @@ void VstSettings::write(QJsonObject &out){
 }
 
 void VstSettings::read(QJsonObject in){
-    scanPaths.clear();
+    foldersToScan.clear();
     if(in.contains("scanPaths")){
         QJsonArray scanPathsArray = in["scanPaths"].toArray();
         for (int i = 0; i < scanPathsArray.size(); ++i) {
-           scanPaths.append(scanPathsArray.at(i).toString());
+           foldersToScan.append(scanPathsArray.at(i).toString());
         }
     }
     cachedPlugins.clear();
@@ -365,16 +365,16 @@ void Settings::clearVstCache(){
 
 //VST paths to scan
 void Settings::addVstScanPath(QString path){
-    vstSettings.scanPaths.append(path);
+    vstSettings.foldersToScan.append(path);
 }
 
 void Settings::removeVstScanPath(int index){
-    vstSettings.scanPaths.removeAt(index);
+    vstSettings.foldersToScan.removeAt(index);
 }
 
-QStringList Settings::getVstScanPaths() const {
+QStringList Settings::getVstScanFolders() const {
 
-    return vstSettings.scanPaths;
+    return vstSettings.foldersToScan;
 }
 
 //++++++++++++++++++
