@@ -370,6 +370,9 @@ void Settings::addVstToBlackList(QString pluginPath){
         vstSettings.blackedPlugins.append(pluginPath);
     }
 }
+void Settings::RemVstFromBlackList(int index){
+   vstSettings.blackedPlugins.removeAt(index);
+}
 QStringList Settings::getVstPluginsPaths() const{
     return vstSettings.cachedPlugins;
 }
