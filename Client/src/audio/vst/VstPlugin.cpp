@@ -96,7 +96,7 @@ bool VstPlugin::load(QString path){
         effect = entryPoint( (audioMasterCallback)host->hostCallback);// myHost->vstHost->AudioMasterCallback);
     }
     catch(... ){
-        qCCritical(vst) << "ERRO carregando plugin VST";
+        qCCritical(vst) << "Error loading VST plugin";
         effect = nullptr;
     }
 
