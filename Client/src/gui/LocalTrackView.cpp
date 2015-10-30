@@ -42,9 +42,9 @@ void LocalTrackView::init(int channelIndex, float initialGain, BaseTrackView::Bo
         return;
     }
 
-    //add separator before effects panel
+
     fxPanel = createFxPanel();
-    ui->mainLayout->addSpacing(20);
+    ui->mainLayout->addSpacing(20);//add separator before effects panel
     ui->mainLayout->addWidget( fxPanel );
 
     //create input panel in the bottom
@@ -108,11 +108,12 @@ QSize LocalTrackView::sizeHint() const{
 void LocalTrackView::setFaderOnlyMode(bool faderOnly){
     if(this->faderOnly != faderOnly){
         this->faderOnly = faderOnly;
-        //ui->faderPanel->setVisible(!this->faderOnly);
         ui->topPanel->setVisible(!this->faderOnly);
         ui->levelSlider->setVisible(!this->faderOnly);
+        ui->boostPanel->setVisible(!this->faderOnly);
+        ui->boostSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
         ui->panSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
-        ui->panSpacer->invalidate();
+        //ui->panSpacer->invalidate();
 
         QMargins margins = layout()->contentsMargins();
         margins.setLeft(faderOnly ? 2 : 6);
