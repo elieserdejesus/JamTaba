@@ -87,7 +87,7 @@ Audio::PluginDescriptor StandalonePluginFinder::getPluginDescriptor(QFileInfo f,
             //qCDebug(vst) << "Testing " << f.absoluteFilePath();
             bool isFile = f.isFile();
             bool isLibrary = QLibrary::isLibrary(f.fileName());
-            bool isJamtabaVstPlugin = false;//f.fileName().contains("Jamtaba");
+            bool isJamtabaVstPlugin = f.fileName().contains("Jamtaba");
             if (!isFile || !isLibrary || isJamtabaVstPlugin){
                 return Audio::PluginDescriptor();//invalid descriptor
             }
@@ -120,19 +120,24 @@ void StandalonePluginFinder::run(QStringList blackList){
     emit scanStarted();
 
     for(QString scanFolder : scanFolders){
+        qInfo() << "Scanning the folder " << scanFolder;
         QDirIterator folderIterator(scanFolder, QDirIterator::Subdirectories);
         while (folderIterator.hasNext()) {
             folderIterator.next();//point to next file inside current folder
             QFileInfo pluginFileInfo (folderIterator.filePath());
-            if(!blackList.contains(pluginFileInfo.absoluteFilePath())){
-                emit pluginScanStarted(pluginFileInfo.absoluteFilePath());
-                const Audio::PluginDescriptor& descriptor = getPluginDescriptor(pluginFileInfo, host);
-                if(descriptor.isValid()){
-                    emit pluginScanFinished(descriptor.getName(), descriptor.getGroup(), descriptor.getPath());
+            if(pluginFileInfo.isFile()){
+                qInfo() << "Scanning " << pluginFileInfo.absoluteFilePath();
+                if(!blackList.contains(pluginFileInfo.absoluteFilePath())){
+                    emit pluginScanStarted(pluginFileInfo.absoluteFilePath());
+
+                    const Audio::PluginDescriptor& descriptor = getPluginDescriptor(pluginFileInfo, host);
+                    if(descriptor.isValid()){
+                        emit pluginScanFinished(descriptor.getName(), descriptor.getGroup(), descriptor.getPath());
+                    }
                 }
-            }
-            else{
-                qDebug() << "Filtering black listed plugin:" <<pluginFileInfo.fileName();
+                else{
+                    qInfo() << "\nFiltering black listed plugin:" <<pluginFileInfo.fileName() << endl;
+                }
             }
             QApplication::processEvents();
         }
