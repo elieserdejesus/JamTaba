@@ -15,12 +15,11 @@ class PluginFinder : public QObject
 {
     Q_OBJECT
 public:
-    virtual void scan() = 0;
-    void addPathToScan(QString path);
-    void clearScanPaths();
+    virtual void scan(QStringList blackList) = 0;
+    void addFolderToScan(QString path);
+    void clearScanFolders();
 protected:
-    QList<QString> scanPaths;
-    QList<QString> VstList;
+    QList<QString> scanFolders;
 signals:
     void scanStarted();
     void scanFinished();

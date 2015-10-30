@@ -116,16 +116,17 @@ Audio::PluginDescriptor StandalonePluginFinder::getPluginDescriptor(QFileInfo f,
     return Audio::PluginDescriptor();//invalid descriptor
 }
 
-void StandalonePluginFinder::run(){
+void StandalonePluginFinder::run(QStringList blackList){
     emit scanStarted();
 
-    for(QString scanPath : scanPaths){
-        QDirIterator dirIt(scanPath, QDirIterator::Subdirectories);
-        while (dirIt.hasNext()) {
-            dirIt.next();
-            QFileInfo fileInfo (dirIt.filePath());
-            emit pluginScanStarted(fileInfo.absoluteFilePath());
-            const Audio::PluginDescriptor& descriptor = getPluginDescriptor(fileInfo, host);
+    for(QString scanFolder : scanFolders){
+        QDirIterator folderIterator(scanFolder, QDirIterator::Subdirectories);
+        while (folderIterator.hasNext()) {
+            folderIterator.next();//point to next file inside current folder
+            QFileInfo pluginFileInfo (folderIterator.filePath());
+            //asd
+            emit pluginScanStarted(pluginFileInfo.absoluteFilePath());
+            const Audio::PluginDescriptor& descriptor = getPluginDescriptor(pluginFileInfo, host);
             if(descriptor.isValid()){
                 emit pluginScanFinished(descriptor.getName(), descriptor.getGroup(), descriptor.getPath());
             }
@@ -136,9 +137,10 @@ void StandalonePluginFinder::run(){
 
 }
 
-void StandalonePluginFinder::scan(){
-    QtConcurrent::run(this, &StandalonePluginFinder::run);
-
+void StandalonePluginFinder::scan(QStringList blackList){
+    //run the VST plugins scanning in another tread to void block Qt thread
+    //If Qt main thread is block the GUI will be unresponsive, can't send or receive network data
+    QtConcurrent::run(this, &StandalonePluginFinder::run, blackList);
 }
 
 //++++++++++++++++++++++++++++++++++
@@ -328,13 +330,13 @@ void StandaloneMainController::scanPlugins(){
     pluginsDescriptors.clear();
     //ConfigStore::clearVstCache();
     if(pluginFinder){
-        pluginFinder->clearScanPaths();
-        QStringList scanPaths = settings.getVstScanPaths();
+        pluginFinder->clearScanFolders();
+        QStringList foldersToScan = settings.getVstScanFolders();
 
-        foreach (QString path, scanPaths) {
-            pluginFinder->addPathToScan(path);
+        foreach (QString folder, foldersToScan) {
+            pluginFinder->addFolderToScan(folder);
         }
-        pluginFinder->scan();
+        pluginFinder->scan(settings.get);
     }
 }
 

@@ -32,7 +32,7 @@ void MainWindowStandalone::initializePluginFinder(){
 
     QStringList vstPaths = mainController->getSettings().getVstPluginsPaths();
     if(vstPaths.empty()){//no vsts in database cache, try scan
-        if(mainController->getSettings().getVstScanPaths().isEmpty()){
+        if(mainController->getSettings().getVstScanFolders().isEmpty()){
             (dynamic_cast<Controller::StandaloneMainController*>(mainController))->addDefaultPluginsScanPath();
         }
         mainController->saveLastUserSettings(getInputsSettings());//save config file before scan
