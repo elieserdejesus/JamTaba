@@ -362,13 +362,6 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="buttonScanVSTs">
-           <property name="text">
-            <string>scan</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QPushButton" name="buttonClearVstCache">
            <property name="text">
             <string>clear cache</string>
@@ -420,6 +413,13 @@
            <widget class="QPushButton" name="ButtonVST_AddToBlackList">
             <property name="text">
              <string>Add to black List</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="ButtonVST_RemFromBlkList">
+            <property name="text">
+             <string>Remove from blackList</string>
             </property>
            </widget>
           </item>
