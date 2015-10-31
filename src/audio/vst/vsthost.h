@@ -2,10 +2,7 @@
 #define VSTHOST_H
 
 #include "aeffectx.h"
-
-#include <QLoggingCategory>
-
-Q_DECLARE_LOGGING_CATEGORY(vstHost)
+#include <QScopedPointer>
 
 namespace Midi {
 class MidiBuffer;

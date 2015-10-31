@@ -4,9 +4,6 @@
 #include "aeffectx.h"
 
 #include <QLibrary>
-#include <QLoggingCategory>
-
-Q_DECLARE_LOGGING_CATEGORY(vst)
 
 #define MAX_MIDI_EVENTS 40 //in my tests playing piano I can genenerate just 3 messages per block (256 samples) at maximum
 

@@ -2,15 +2,13 @@
 #include "vsthost.h"
 #include "aeffectx.h"
 #include "../midi/MidiDriver.h"
-//#include "portmidi.h"
 #include <QDebug>
 #include <QDateTime>
 #include <QApplication>
 #include <cmath>
+#include "../log/logging.h"
 
 using namespace Vst;
-
-Q_LOGGING_CATEGORY(vstHost, "vst.host")
 
 QScopedPointer<Host> Host::hostInstance;
 
@@ -153,7 +151,7 @@ long VSTCALLBACK Host::hostCallback(AEffect *effect, long opcode, long index, lo
     Q_UNUSED(value)
     Q_UNUSED(opt)
 
-    qCDebug(vstHost) << "opcode: " << opcode;
+    qCDebug(jtStandaloneVstHost) << "opcode: " << opcode;
 
     switch(opcode) {
 
@@ -218,9 +216,9 @@ long VSTCALLBACK Host::hostCallback(AEffect *effect, long opcode, long index, lo
         }
 
         //ignore the rest
-        qCDebug(vstHost) << "host can't do"<<str;
+        qCDebug(jtStandaloneVstHost) << "host can't do"<<str;
         return 0;
     }
-    qCDebug(vstHost) << "not handled hostCallBack opcode:" << opcode;
+    qCDebug(jtStandaloneVstHost) << "not handled hostCallBack opcode:" << opcode;
     return 0L;
 }

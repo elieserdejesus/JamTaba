@@ -27,10 +27,6 @@
 
 #include <QScopedPointer>
 
-#include <QLoggingCategory>
-
-Q_DECLARE_LOGGING_CATEGORY(controllerMain)
-
 class MainWindow;
 
 namespace Audio {
@@ -217,7 +213,13 @@ public:
 
     bool isUsingNullAudioDriver() const;
 
+    static QString getWritablePath();
+    static QString getLogConfigFilePath();
+
 protected:
+
+    static QString LOG_CONFIG_FILE;
+
     QScopedPointer<Audio::AudioDriver> audioDriver;
     QScopedPointer<Midi::MidiDriver> midiDriver;
 

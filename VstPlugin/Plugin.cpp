@@ -10,8 +10,6 @@
 #include "../log/logHandler.h"
 #include "Editor.h"
 
-Q_LOGGING_CATEGORY(pluginVst, "plugin.vst")
-
 //anti troll scheme to avoid multiple connections in ninjam servers
 bool JamtabaPlugin::instanceIsInitialized = false;
 

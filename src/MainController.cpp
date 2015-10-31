@@ -5,21 +5,19 @@
 #include "audio/core/AudioMixer.h"
 #include "audio/core/AudioNode.h"
 #include "audio/RoomStreamerNode.h"
+#include "persistence/Settings.h"
+#include "MainWindow.h"
+#include "NinjamController.h"
+#include "geo/WebIpToLocationResolver.h"
+#include "audio/NinjamTrackNode.h"
+#include "Utils.h"
 #include "../loginserver/LoginService.h"
 #include "../loginserver/natmap.h"
-
-#include "MainWindow.h"
-
-#include <QDateTime>
-
-#include "persistence/Settings.h"
-
 #include "../ninjam/Service.h"
 #include "../ninjam/Server.h"
-#include "NinjamController.h"
 
-#include "geo/WebIpToLocationResolver.h"
-
+#include <QDateTime>
+#include <QStandardPaths>
 #include <QTimer>
 #include <QFile>
 #include <QDebug>
@@ -28,10 +26,10 @@
 #include <QUuid>
 #include <QSettings>
 #include <QDir>
-#include "audio/NinjamTrackNode.h"
-#include "Utils.h"
 
-Q_LOGGING_CATEGORY(controllerMain, "controller.main")
+#include "../log/logging.h"
+
+QString Controller::MainController::LOG_CONFIG_FILE = "logging.ini";
 
 using namespace Persistence;
 using namespace Midi;
@@ -128,7 +126,32 @@ private:
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++
+QString MainController::getLogConfigFilePath(){
+    QDir logDir(Controller::MainController::getWritablePath());
+    if(logDir.exists()){
+        QString logConfigFilePath = logDir.absoluteFilePath(LOG_CONFIG_FILE);
+        if(QFile(logConfigFilePath).exists()){//log config file in application directory? (same dir as json config files, cache.bin, etc.)
+            return logConfigFilePath;
+        }
+        else{//search log config file in resources
+            //qDebug(jtCore) << "Log file not founded in release folder (" <<logDir.absolutePath() << "), searching in resources...";
+            logConfigFilePath = ":/" + LOG_CONFIG_FILE;
+            if(QFile(logConfigFilePath).exists()){
+                //qDebug(jtCore) << "Log file founded in resources...";
+                return logConfigFilePath;
+            }
+            //qWarning(jtCore) << "Log file not founded in source code tree: " << logDir.absolutePath();
+        }
+    }
+    qWarning(jtCore) << "Log folder not exists!" << logDir.absolutePath();
+    return "";
+}
 
+QString MainController::getWritablePath(){
+    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++
 void MainController::setSampleRate(int newSampleRate){
     audioMixer.setSampleRate(newSampleRate);
     if(settings.isSaveMultiTrackActivated()){
@@ -162,7 +185,7 @@ void MainController::finishUploads(){
 }
 
 void MainController::on_errorInNinjamServer(QString error){
-    qCWarning(controllerMain) << error;
+    qCWarning(jtCore) << error;
     stopNinjamController();
     //emit exitedFromRoom(false);//not a normal disconnection
     if(mainWindow){
@@ -184,7 +207,7 @@ void MainController::on_disconnectedFromNinjamServer(const Server &server){
 
 
 void MainController::on_connectedInNinjamServer(Ninjam::Server server){
-    qCDebug(controllerMain) << "connected in ninjam server";
+    qCDebug(jtCore) << "connected in ninjam server";
     stopNinjamController();
     Controller::NinjamController* newNinjamController = createNinjamController(this);// new Controller::NinjamController(this);
     this->ninjamController.reset( newNinjamController );
@@ -200,9 +223,9 @@ void MainController::on_connectedInNinjamServer(Ninjam::Server server){
         mainWindow->enterInRoom(Login::RoomInfo(server.getHostName(), server.getPort(), Login::RoomTYPE::NINJAM, server.getMaxUsers(), server.getMaxChannels()));
     }
     else{
-        qCCritical(controllerMain) << "mainWindow is null!";
+        qCCritical(jtCore) << "mainWindow is null!";
     }
-    qCDebug(controllerMain) << "starting ninjamController...";
+    qCDebug(jtCore) << "starting ninjamController...";
     newNinjamController->start(server, transmiting);
 
 
@@ -217,7 +240,7 @@ void MainController::on_ninjamStartProcessing(int intervalPosition){
 }
 
 void MainController::on_newNinjamInterval(){
-    qDebug() << "MainController: on_newNinjamInterval";
+    qCDebug(jtCore) << "MainController: on_newNinjamInterval";
     if(settings.isSaveMultiTrackActivated()){
         jamRecorder.newInterval();
     }
@@ -696,15 +719,15 @@ bool MainController::trackIsSoloed(int trackID) const{
 
 
 MainController::~MainController(){
-    qCDebug(controllerMain()) << "MainController destrutor!";
+    qCDebug(jtCore()) << "MainController destrutor!";
     if(mainWindow){
         mainWindow->detachMainController();
     }
 
     stop();
-    qCDebug(controllerMain()) << "main controller stopped!";
+    qCDebug(jtCore()) << "main controller stopped!";
 
-    qCDebug(controllerMain()) << "clearing tracksNodes...";
+    qCDebug(jtCore()) << "clearing tracksNodes...";
     tracksNodes.clear();
     foreach (Audio::LocalInputAudioNode* input, inputTracks) {
         delete input;
@@ -715,9 +738,9 @@ MainController::~MainController(){
         delete group;
     }
     trackGroups.clear();
-    qCDebug(controllerMain()) << "clearing tracksNodes done!";
+    qCDebug(jtCore()) << "clearing tracksNodes done!";
 
-    qCDebug(controllerMain) << "MainController destructor finished!";
+    qCDebug(jtCore) << "MainController destructor finished!";
 
 }
 
@@ -758,7 +781,7 @@ bool MainController::isPlayingRoomStream() const{
 }
 
 void MainController::enterInRoom(Login::RoomInfo room, QStringList channelsNames, QString password){
-    qCDebug(controllerMain) << "EnterInRoom slot";
+    qCDebug(jtCore) << "EnterInRoom slot";
     if(isPlayingRoomStream()){
         stopRoomStream();
     }
@@ -781,7 +804,7 @@ void MainController::sendRemovedChannelMessage(int removedChannelIndex){
 }
 
 void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStringList channelsNames, QString password){
-    qCDebug(controllerMain) << "connecting...";
+    qCDebug(jtCore) << "connecting...";
     if(userNameWasChoosed()){//just in case :)
         QString serverIp = ninjamRoom.getName();
         int serverPort = ninjamRoom.getPort();
@@ -800,22 +823,22 @@ void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStrin
 void MainController::start(){
 
     if(!started){
-        qCInfo(controllerMain()) << "Creating plugin finder...";
+        qCInfo(jtCore) << "Creating plugin finder...";
         pluginFinder.reset( createPluginFinder());
 
         if(!midiDriver){
-            qCInfo(controllerMain()) << "Creating midi driver...";
+            qCInfo(jtCore) << "Creating midi driver...";
             midiDriver.reset( createMidiDriver());
         }
         if(!audioDriver){
-            qCInfo(controllerMain()) << "Creating audio driver...";
+            qCInfo(jtCore) << "Creating audio driver...";
             audioDriver.reset( createAudioDriver(settings));
             QObject::connect(audioDriver.data(), SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
             QObject::connect(audioDriver.data(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
             QObject::connect(audioDriver.data(), SIGNAL(started()), this, SLOT(on_audioDriverStarted()));
         }
 
-        qCInfo(controllerMain()) << "Creating roomStreamer ...";
+        qCInfo(jtCore) << "Creating roomStreamer ...";
         roomStreamer.reset( new Audio::NinjamRoomStreamerNode());//new Audio::AudioFileStreamerNode(":/teste.mp3");
         this->audioMixer.addNode( roomStreamer.data());
 
@@ -825,7 +848,7 @@ void MainController::start(){
 
         if(audioDriver ){
             if(!audioDriver->canBeStarted()){
-                qCWarning(controllerMain()) << "Audio driver can't be used, using NullAudioDriver!";
+                qCWarning(jtCore) << "Audio driver can't be used, using NullAudioDriver!";
                 audioDriver.reset(new Audio::NullAudioDriver());
             }
             audioDriver->start();
@@ -843,7 +866,7 @@ void MainController::start(){
         if(userName.isEmpty()){
             userName = "No name!";
         }
-        qCInfo(controllerMain()) << "Connecting in Jamtaba server...";
+        qCInfo(jtCore) << "Connecting in Jamtaba server...";
         loginService.connectInServer(userName, 0, "", map, version, userEnvironment, getSampleRate());
         //(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
 
@@ -868,7 +891,7 @@ QString MainController::getUserEnvironmentString() const{
 void MainController::stop()
 {
     if(started){
-        qCDebug(controllerMain) << "Stopping MainController...";
+        qCDebug(jtCore) << "Stopping MainController...";
         {
             //QMutexLocker locker(&mutex);
             if(audioDriver){
@@ -877,7 +900,7 @@ void MainController::stop()
             if(midiDriver){
                 this->midiDriver->release();
             }
-            qCDebug(controllerMain) << "audio and midi drivers released";
+            qCDebug(jtCore) << "audio and midi drivers released";
 
             if(ninjamController){
                 ninjamController->stop(false);//block disconnected signal
@@ -888,7 +911,7 @@ void MainController::stop()
             started = false;
         }
 
-        qCDebug(controllerMain) << "disconnecting from login server...";
+        qCDebug(jtCore) << "disconnecting from login server...";
         loginService.disconnectFromServer();
 
     }

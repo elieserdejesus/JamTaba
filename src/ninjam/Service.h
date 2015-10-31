@@ -7,8 +7,6 @@
 #include "../ninjam/User.h"
 #include "../ninjam/UserChannel.h"
 
-Q_DECLARE_LOGGING_CATEGORY(ninjamService)
-
 namespace Ninjam {
 
 class PublicServersParser;

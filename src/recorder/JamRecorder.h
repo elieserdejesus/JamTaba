@@ -3,9 +3,6 @@
 
 #include <QDir>
 #include <QMap>
-#include <QLoggingCategory>
-
-Q_DECLARE_LOGGING_CATEGORY(recorder)
 
 namespace Recorder {
 

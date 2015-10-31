@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QtAlgorithms>
 #include <QFormLayout>
+#include "../log/logging.h"
 
 NinjamPanel::NinjamPanel(QWidget *parent) :
     QWidget(parent),
@@ -121,7 +122,7 @@ void NinjamPanel::comboAccentsChanged(int index){
 
 void NinjamPanel::comboShapeChanged(int index){
     Q_UNUSED(index);
-    qDebug() << index;
+    qCDebug(jtNinjamGUI) << index;
     ui->intervalPanel->setPaintMode((IntervalProgressDisplay::PaintMode)ui->comboShape->currentData().toInt());
 }
 

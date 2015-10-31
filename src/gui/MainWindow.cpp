@@ -39,6 +39,7 @@
 #include "../Utils.h"
 #include "../audio/RoomStreamerNode.h"
 #include "UserNameDialog.h"
+#include "../log/logging.h"
 
 using namespace Audio;
 using namespace Persistence;
@@ -55,7 +56,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     ninjamWindow(nullptr),
     roomToJump(nullptr)
 {
-    qInfo() << "Creating MainWindow...";
+    qCInfo(jtGUI) << "Creating MainWindow...";
 	ui.setupUi(this);
 
     setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
@@ -114,7 +115,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     }
 
     showBusyDialog("Loading rooms list ...");
-    qInfo() << "MainWindow created!";
+    qCInfo(jtGUI) << "MainWindow created!";
 }
 //++++++++++++++++++++++++=
 void MainWindow::initializePluginFinder(){
@@ -351,7 +352,7 @@ bool MainWindow::isRunningAsVstPlugin() const{
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::restorePluginsList(){
-    qInfo() << "Restoring plugins list...";
+    qCInfo(jtGUI) << "Restoring plugins list...";
     Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
     int channelIndex = 0;
     foreach (Persistence::Channel channel, inputsSettings.channels) {
@@ -388,24 +389,24 @@ void MainWindow::restorePluginsList(){
         }
         channelIndex++;
     }
-    qInfo() << "Restoring plugins list done!";
+    qCInfo(jtGUI) << "Restoring plugins list done!";
 }
 
 void MainWindow::initializeLocalInputChannels(){
-    qInfo() << "Initializing local inputs...";
+    qCInfo(jtGUI) << "Initializing local inputs...";
     Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
     int channelIndex = 0;
     foreach (Persistence::Channel channel, inputsSettings.channels) {
-        qInfo() << "\tCreating channel "<< channel.name;
+        qCInfo(jtGUI) << "\tCreating channel "<< channel.name;
         LocalTrackGroupView* channelView = addLocalChannel(channelIndex, channel.name, channel.subChannels.isEmpty());
         foreach (Persistence::Subchannel subChannel, channel.subChannels) {
-            qInfo() << "\t\tCreating sub-channel ";
+            qCInfo(jtGUI) << "\t\tCreating sub-channel ";
             BaseTrackView::BoostValue boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
             LocalTrackView* subChannelView = new LocalTrackView( mainController, channelIndex, subChannel.gain, boostValue, subChannel.pan, subChannel.muted);
             channelView->addTrackView(subChannelView);
             if(!mainController->isRunningAsVstPlugin()){
                 if(subChannel.midiDevice >= 0){//using midi
-                    qInfo() << "\t\tSubchannel using MIDI";
+                    qCInfo(jtGUI) << "\t\tSubchannel using MIDI";
                     //check if midiDevice index is valid
                     if(subChannel.midiDevice < mainController->getMidiDriver()->getMaxInputDevices()){
                         mainController->setInputTrackToMIDI( subChannelView->getInputIndex(), subChannel.midiDevice, subChannel.midiChannel);
@@ -421,15 +422,15 @@ void MainWindow::initializeLocalInputChannels(){
                     }
                 }
                 else if(subChannel.channelsCount <= 0){
-                    qInfo() << "\t\tsetting Subchannel to no noinput";
+                    qCInfo(jtGUI) << "\t\tsetting Subchannel to no noinput";
                     mainController->setInputTrackToNoInput(subChannelView->getInputIndex());
                 }
                 else if(subChannel.channelsCount == 1){
-                    qInfo() << "\t\tsetting Subchannel to mono input";
+                    qCInfo(jtGUI) << "\t\tsetting Subchannel to mono input";
                     mainController->setInputTrackToMono(subChannelView->getInputIndex(), subChannel.firstInput);
                 }
                 else{
-                    qInfo() << "\t\tsetting Subchannel to stereo input";
+                    qCInfo(jtGUI) << "\t\tsetting Subchannel to stereo input";
                     mainController->setInputTrackToStereo(subChannelView->getInputIndex(), subChannel.firstInput);
                 }
             }
@@ -445,7 +446,7 @@ void MainWindow::initializeLocalInputChannels(){
     if(channelIndex == 0){//no channels in settings file or no settings file...
         addLocalChannel(0, "your channel", true);
     }
-    qInfo() << "Initializing local inputs done!";
+    qCInfo(jtGUI) << "Initializing local inputs done!";
 }
 
 void MainWindow::initializeLoginService(){
@@ -458,7 +459,7 @@ void MainWindow::initializeLoginService(){
 
 void MainWindow::initializeWindowState(){
     if(mainController->getSettings().windowWasMaximized()){
-        qDebug()<< "setting window state to maximized";
+        qCDebug(jtGUI)<< "setting window state to maximized";
         setWindowState(Qt::WindowMaximized);
     }
     else{
@@ -469,8 +470,8 @@ void MainWindow::initializeWindowState(){
         int x = desktopWidth * location.x();
         int y = desktopHeight * location.y();
         this->move(x, y);
-        qDebug()<< "Restoring window to position:" << x << ", " << y;
-        qDebug()<< "Window size:" << width() << ", " << height();
+        qCDebug(jtGUI)<< "Restoring window to position:" << x << ", " << y;
+        qCDebug(jtGUI)<< "Window size:" << width() << ", " << height();
     }
 }
 
@@ -699,13 +700,13 @@ void MainWindow::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
 //estes eventos são disparados pelo controlador depois que já aconteceu a conexão com uma das salas
 
 void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
-    qDebug() << "hidding busy dialog...";
+    qCDebug(jtGUI) << "hidding busy dialog...";
     hideBusyDialog();
 
 //    if(ninjamWindow){
 //        ninjamWindow->deleteLater();
 //    }
-    qDebug() << "creating NinjamRoomWindow...";
+    qCDebug(jtGUI) << "creating NinjamRoomWindow...";
     //ninjamWindow.reset( new NinjamRoomWindow(this, roomInfo, mainController));
     ninjamWindow.reset( createNinjamWindow(roomInfo, mainController));
     QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
@@ -714,7 +715,7 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
 
 
     //add the chat panel in main window
-    qDebug() << "adding ninjam chat panel...";
+    qCDebug(jtGUI) << "adding ninjam chat panel...";
     ChatPanel* chatPanel = ninjamWindow->getChatPanel();
     ui.chatTabWidget->addTab(chatPanel, QIcon(":/images/ninja.png"), "chat " + roomInfo.getName());
 
@@ -723,7 +724,7 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
 
     ui.leftPanel->adjustSize();
     //ui.leftPanel->setMinimumWidth(500);
-    qDebug() << "MainWindow::enterInRoom() done!";
+    qCDebug(jtGUI) << "MainWindow::enterInRoom() done!";
 }
 
 void MainWindow::exitFromRoom(bool normalDisconnection){
@@ -844,7 +845,7 @@ void MainWindow::closeEvent(QCloseEvent *){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainWindow::~MainWindow()
 {
-    qDebug() << "MainWindow destructor...";
+    qCDebug(jtGUI) << "MainWindow destructor...";
     setParent(nullptr);
     if(mainController){
         mainController->saveLastUserSettings(getInputsSettings());
@@ -857,8 +858,8 @@ MainWindow::~MainWindow()
     mainController = nullptr;
 
     killTimer(timerID);
-    qDebug() << "Main frame timer killed!";
-    qDebug() << "MainWindow destructor finished.";
+    qCDebug(jtGUI) << "Main frame timer killed!";
+    qCDebug(jtGUI) << "MainWindow destructor finished.";
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //void MainFrame::on_freshDataReceivedFromLoginServer(const Login::LoginServiceParser &response){
@@ -967,7 +968,7 @@ void MainWindow::on_preferencesClicked(QAction* action)
 }
 
 void MainWindow::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize){
-    //qDebug() << "midi device: " << midiDeviceIndex << endl;
+    //qCDebug(jtGUI) << "midi device: " << midiDeviceIndex << endl;
     //bool midiDeviceChanged =  midiDeviceIndex
 
 
