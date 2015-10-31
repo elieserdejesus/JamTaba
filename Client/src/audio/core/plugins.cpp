@@ -32,7 +32,7 @@ PluginDescriptor::PluginDescriptor(QString name, QString group, QString path)
 }
 
 PluginDescriptor::~PluginDescriptor(){
-    qDebug() << "Plugin descriptor!";
+    //qDebug() << "Plugin descriptor!";
 }
 
 QString PluginDescriptor::toString() const{

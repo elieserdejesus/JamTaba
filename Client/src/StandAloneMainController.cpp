@@ -121,13 +121,13 @@ void StandalonePluginFinder::run(QStringList blackList){
     emit scanStarted();
 
     for(QString scanFolder : scanFolders){
-        qInfo() << "Scanning the folder " << scanFolder;
+        qCDebug(jtStandalonePluginFinder) << "Scanning the folder " << scanFolder;
         QDirIterator folderIterator(scanFolder, QDirIterator::Subdirectories);
         while (folderIterator.hasNext()) {
             folderIterator.next();//point to next file inside current folder
             QFileInfo pluginFileInfo (folderIterator.filePath());
             if(pluginFileInfo.isFile()){
-                qInfo() << "Scanning " << pluginFileInfo.absoluteFilePath();
+                qCDebug(jtStandalonePluginFinder) << "Scanning " << pluginFileInfo.absoluteFilePath();
                 if(!blackList.contains(pluginFileInfo.absoluteFilePath())){
                     emit pluginScanStarted(pluginFileInfo.absoluteFilePath());
 
@@ -137,7 +137,7 @@ void StandalonePluginFinder::run(QStringList blackList){
                     }
                 }
                 else{
-                    qInfo() << "\nFiltering black listed plugin:" <<pluginFileInfo.fileName() << endl;
+                    qCDebug(jtStandalonePluginFinder) << "\nFiltering black listed plugin:" <<pluginFileInfo.fileName() << endl;
                 }
             }
             QApplication::processEvents();
