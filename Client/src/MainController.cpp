@@ -951,6 +951,11 @@ void MainController::addBlackVstToSettings(QString path)
     settings.addVstToBlackList(path);
 }
 
+void MainController::removeBlackVst(int index){
+   settings.RemVstFromBlackList(index);
+}
+
+
 QList<Audio::PluginDescriptor> MainController::getPluginsDescriptors(){
 
     qSort(pluginsDescriptors.begin(), pluginsDescriptors.end(), pluginDescriptorLessThan);

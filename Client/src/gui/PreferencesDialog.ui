@@ -333,7 +333,45 @@
          </layout>
         </widget>
        </item>
+<<<<<<< HEAD
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="topButtonsLayout">
+         <property name="spacing">
+          <number>10</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="buttonAddVstPath">
+           <property name="text">
+            <string>add path ...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="buttonClearVstCache">
+           <property name="text">
+            <string>clear cache</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="0">
+=======
        <item row="1" column="0">
+>>>>>>> 13614c914f6451b1e17ed21edea50abe15e5affa
         <widget class="QGroupBox" name="groupBoxVst">
          <property name="title">
           <string>Vst(i)s loaded</string>
@@ -386,6 +424,13 @@
               </widget>
              </item>
             </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="ButtonVST_RemFromBlkList">
+            <property name="text">
+             <string>Remove from blackList</string>
+            </property>
            </widget>
           </item>
           <item>

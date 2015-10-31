@@ -47,6 +47,8 @@ private slots:
 
     void on_ButtonVST_AddToBlackList_clicked();
 
+    void on_ButtonVST_RemFromBlkList_clicked();
+
 signals:
     void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
 
@@ -74,7 +76,7 @@ private:
     void addVstScanPath(QString path);
     void createWidgetsToNewScanFolder(QString path);
     void UpdateVstList(QString path);
-    void UpdateBlackBox(QString path);
+    void UpdateBlackBox(QString path, bool add);
     void clearScanFolderWidgets();
     QList<QPushButton*> scanFoldersButtons;
 
