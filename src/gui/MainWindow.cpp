@@ -131,11 +131,10 @@ void MainWindow::initializePluginFinder(){
 }
 
 //++++++++++++++++++++++++=
-void MainWindow::on_newThemeSelected(QAction *a){
-    QString css = a->data().toString();
-    mainController->configureStyleSheet(css);
-
-}
+//void MainWindow::on_newThemeSelected(QAction *a){
+//    QString css = a->data().toString();
+//    mainController->configureStyleSheet(css);
+//}
 
 //++++++++++++++++++++++++=
 void MainWindow::on_localControlsCollapseButtonClicked(){

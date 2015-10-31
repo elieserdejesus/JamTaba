@@ -357,14 +357,8 @@
     <addaction name="actionUsersManual"/>
     <addaction name="actionReportBugs"/>
    </widget>
-   <widget class="QMenu" name="menuThemes">
-    <property name="title">
-     <string>Themes</string>
-    </property>
-   </widget>
    <addaction name="menuPreferences"/>
    <addaction name="menuNinjam"/>
-   <addaction name="menuThemes"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionTest">
