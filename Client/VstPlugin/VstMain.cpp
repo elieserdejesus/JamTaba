@@ -46,6 +46,7 @@ BOOL WINAPI DllMain( HINSTANCE hInst, DWORD dwReason, LPVOID /*lpvReserved*/ )
 {
     static bool ownApplication = FALSE;
      if ( dwReason == DLL_PROCESS_ATTACH ){
+         Controller::MainController::exportLogFile();//copy logging.ini from resources to Jamtaba writable path
          QString logFile = Controller::MainController::getLogConfigFilePath();
          if(!logFile.isEmpty()){
              qputenv("QT_LOGGING_CONF", QByteArray(logFile.toUtf8()));

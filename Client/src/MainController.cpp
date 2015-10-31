@@ -151,6 +151,23 @@ QString MainController::getWritablePath(){
     return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
 }
 
+
+//copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
+void MainController::exportLogFile(){
+    QDir logDir(Controller::MainController::getWritablePath());
+    if(logDir.exists()){
+        QString logConfigFilePath = logDir.absoluteFilePath(LOG_CONFIG_FILE);
+        if(!QFile(logConfigFilePath).exists()){//log config file in application directory? (same dir as json config files, cache.bin, etc.)
+            QFile::copy(":/" + LOG_CONFIG_FILE, logConfigFilePath ) ;
+            QFile loggingFile(logConfigFilePath);
+            loggingFile.setPermissions(QFile::WriteOther);//The file is writable by anyone.
+        }
+    }
+    else{
+        qWarning(jtCore) << "Log folder not exists!" << logDir.absolutePath();
+    }
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++
 void MainController::setSampleRate(int newSampleRate){
     audioMixer.setSampleRate(newSampleRate);

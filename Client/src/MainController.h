@@ -215,6 +215,7 @@ public:
 
     static QString getWritablePath();
     static QString getLogConfigFilePath();
+    static void exportLogFile();//write log file in the application writable path, so users can change log details
 
 protected:
 
