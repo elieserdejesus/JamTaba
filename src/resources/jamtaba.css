@@ -9,12 +9,22 @@ QPushButton:focus {
 }
 
 PreferencesDialog #buttonAddVstScanFolder{
-background-image: url(:/images/more.png);
-background-position: center center;
-background-repeat: none;
-height: 32px;
-margin-right: 24px;
+    background-image: url(:/images/more.png);
+    background-position: center center;
+    background-repeat: none;
+    height: 32px;
+    margin-right: 24px;
 }
+
+PreferencesDialog #BlackBoxText{
+    background-color: black;
+    color: orange;
+}
+
+PreferencesDialog #plainTextEdit{
+    background: transparent;
+}
+
 
 #voteButton{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
