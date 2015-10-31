@@ -12,7 +12,7 @@ PreferencesDialog #buttonAddVstScanFolder{
 background-image: url(:/images/more.png);
 background-position: center center;
 background-repeat: none;
-/*height: %;*/
+height: 32px;
 margin-right: 24px;
 }
 

@@ -414,15 +414,15 @@ void PreferencesDialog::on_buttonClearVstCache_clicked()
     ui->plainTextEdit->clear();
 }
 
-void PreferencesDialog::on_buttonScanVSTs_clicked()
-{
-    if(mainController){
-        if(mainWindow){//save the config file before start scanning
-            mainController->saveLastUserSettings(mainWindow->getInputsSettings());
-        }
-        mainController->scanPlugins();
-    }
-}
+//void PreferencesDialog::on_buttonScanVSTs_clicked()
+//{
+//    if(mainController){
+//        if(mainWindow){//save the config file before start scanning
+//            mainController->saveLastUserSettings(mainWindow->getInputsSettings());
+//        }
+//        mainController->scanPlugins();
+//    }
+//}
 
 
 //REFRESH VST LIST
@@ -448,7 +448,10 @@ void PreferencesDialog::on_ButtonVST_AddToBlackList_clicked()
 {
     QFileDialog VstDialog(this, "Add Vst(s) to BlackBox ...");
     VstDialog.setNameFilter(tr("Dll(*.dll)"));
-    VstDialog.setDirectory(mainController->getSettings().getVstScanFolders().at(0));
+    QStringList foldersToScan = mainController->getSettings().getVstScanFolders();
+    if(!foldersToScan.isEmpty()){
+        VstDialog.setDirectory(foldersToScan.first());
+    }
     VstDialog.setAcceptMode(QFileDialog::AcceptOpen);
     VstDialog.setFileMode(QFileDialog::ExistingFiles);
     if(VstDialog.exec() )
@@ -466,7 +469,10 @@ void PreferencesDialog::on_ButtonVST_RemFromBlkList_clicked()
 {
     QFileDialog VstDialog(this, "Remove Vst(s) to BlackBox ...");
     VstDialog.setNameFilter(tr("Dll(*.dll)"));
-    VstDialog.setDirectory(mainController->getSettings().getVstScanFolders().at(0));
+    QStringList foldersToScan = mainController->getSettings().getVstScanFolders();
+    if(!foldersToScan.isEmpty()){
+        VstDialog.setDirectory(foldersToScan.first());
+    }
     VstDialog.setAcceptMode(QFileDialog::AcceptOpen);
     VstDialog.setFileMode(QFileDialog::ExistingFiles);
     if(VstDialog.exec() )

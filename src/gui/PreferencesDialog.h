@@ -35,7 +35,7 @@ private slots:
 
     void on_buttonClearVstCache_clicked();
 
-    void on_buttonScanVSTs_clicked();
+    //void on_buttonScanVSTs_clicked();
 
     void on_browseRecPathButton_clicked();
 
