@@ -7,7 +7,7 @@
 #include <QStandardPaths>
 #include "MainControllerVST.h"
 #include "../NinjamController.h"
-#include "../log/logHandler.h"
+#include "../log/logging.h"
 #include "Editor.h"
 
 //anti troll scheme to avoid multiple connections in ninjam servers
@@ -36,7 +36,7 @@ JamtabaPlugin::JamtabaPlugin (audioMasterCallback audioMaster) :
     timeInfo(nullptr),
     hostWasPlayingInLastAudioCallBack(false)
 {
-    qCDebug(pluginVst) << "Plugin constructor...";
+    qCDebug(jtVstPlugin) << "Plugin constructor...";
     setNumInputs (DEFAULT_INPUTS*2);
     setNumOutputs (DEFAULT_OUTPUTS*2);
 
@@ -50,7 +50,7 @@ JamtabaPlugin::JamtabaPlugin (audioMasterCallback audioMaster) :
     setEditor(new VstEditor(this));
 
     //suspend();
-    qCDebug(pluginVst) << "Plugin constructor done.";
+    qCDebug(jtVstPlugin) << "Plugin constructor done.";
 }
 
 QString JamtabaPlugin::getHostName() {
@@ -91,27 +91,26 @@ bool JamtabaPlugin::needIdle(){
 
 JamtabaPlugin::~JamtabaPlugin ()
 {
-    qCDebug(pluginVst) << "Plugin destructor";
+    qCDebug(jtVstPlugin) << "Plugin destructor";
 }
 
 void JamtabaPlugin::initialize(){
     if(!isRunning()){
         if(!controller){
-            qCDebug(pluginVst) << "Plugin initialize()...";
+            qCDebug(jtVstPlugin) << "Plugin initialize()...";
             QApplication::setApplicationName("Jamtaba 2");
             QApplication::setApplicationVersion(APP_VERSION);
 
-            qInstallMessageHandler(customLogHandler);
             Persistence::Settings settings;//read from file in constructor
             settings.load();
-            qCDebug(pluginVst)<< "Creating controller!";
+            qCDebug(jtVstPlugin)<< "Creating controller!";
             controller.reset( new MainControllerVST(settings, this));
             controller->configureStyleSheet("jamtaba.css");
             controller->setSampleRate(getSampleRate());
             controller->start();
-            qCDebug(pluginVst)<< "Controller started!";
+            qCDebug(jtVstPlugin)<< "Controller started!";
             running = true;
-            qCDebug(pluginVst) << "Plugin initialize() done";
+            qCDebug(jtVstPlugin) << "Plugin initialize() done";
 
             JamtabaPlugin::instanceIsInitialized = true; //the anti troll flag :)
         }
@@ -119,7 +118,7 @@ void JamtabaPlugin::initialize(){
 }
 
 void JamtabaPlugin::open(){
-    qCDebug(pluginVst) << "Plugin open()";
+    qCDebug(jtVstPlugin) << "Plugin open()";
 
     //hostReportConnectionChanges = (bool)canHostDo((char*)"reportConnectionChanges");
     //hostAcceptIOChanges = (bool)canHostDo((char*)"acceptIOChanges");
@@ -137,7 +136,7 @@ void JamtabaPlugin::open(){
 
 void JamtabaPlugin::close()
 {
-    qCDebug(pluginVst) << "JamtabaPlugin::close()";
+    qCDebug(jtVstPlugin) << "JamtabaPlugin::close()";
     if(editor){
         if(editor->isOpen()){
             editor->close();
@@ -146,7 +145,7 @@ void JamtabaPlugin::close()
     }
 
     running = false;
-    qCDebug(pluginVst) << "JamtabaPLugin::close() finished";
+    qCDebug(jtVstPlugin) << "JamtabaPLugin::close() finished";
 
     JamtabaPlugin::instanceIsInitialized = false; //the anti troll flag :)
 }
@@ -240,7 +239,7 @@ void JamtabaPlugin::processReplacing (float** inputs, float** outputs, VstInt32 
 
 
 void JamtabaPlugin::setSampleRate(float sampleRate){
-    qCDebug(pluginVst) << "JamtabaPlugin::setSampleRate()";
+    qCDebug(jtVstPlugin) << "JamtabaPlugin::setSampleRate()";
     this->sampleRate = sampleRate;
     if(controller){
         controller->setSampleRate(sampleRate);
@@ -251,7 +250,7 @@ void JamtabaPlugin::setSampleRate(float sampleRate){
 
 void JamtabaPlugin::suspend()
 {
-    qCDebug(pluginVst) << "JamtabaPLugin::suspend()";
+    qCDebug(jtVstPlugin) << "JamtabaPLugin::suspend()";
     if(controller && controller->isPlayingInNinjamRoom()){
         controller->getNinjamController()->reset();//discard downloaded intervals
         controller->finishUploads();//send the last part of ninjam intervals
@@ -260,5 +259,5 @@ void JamtabaPlugin::suspend()
 
 void JamtabaPlugin::resume()
 {
-    qCDebug(pluginVst) << "JamtabaPLugin::resume()";
+    qCDebug(jtVstPlugin) << "JamtabaPLugin::resume()";
 }

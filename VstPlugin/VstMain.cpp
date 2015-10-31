@@ -1,5 +1,7 @@
 #include "Plugin.h"
 #include <QtGlobal>
+#include "MainControllerVST.h"
+#include "../log/logging.h"
 
 //these two lines are necessary to load the Qt windows platform plugin statically. By default
     //qt load the platform plugin from a external dll and I have an error about loading the windows platform DLL.
@@ -44,7 +46,11 @@ BOOL WINAPI DllMain( HINSTANCE hInst, DWORD dwReason, LPVOID /*lpvReserved*/ )
 {
     static bool ownApplication = FALSE;
      if ( dwReason == DLL_PROCESS_ATTACH ){
-         qputenv("QT_LOGGING_CONF", ":/qtlogging.ini");//log cconfigurations is in resources at moment
+         QString logFile = Controller::MainController::getLogConfigFilePath();
+         if(!logFile.isEmpty()){
+             qputenv("QT_LOGGING_CONF", QByteArray(logFile.toUtf8()));
+             qInstallMessageHandler(jamtabaLogHandler);
+         }
          ownApplication = QMfcApp::pluginInstance( hInst );
      }
      if ( dwReason == DLL_PROCESS_DETACH && ownApplication ) {
