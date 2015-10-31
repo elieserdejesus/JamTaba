@@ -7,8 +7,6 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
-Q_DECLARE_LOGGING_CATEGORY(ipToLocation)
-
 namespace Geo {
 
 class WebIpToLocationResolver : public IpToLocationResolver

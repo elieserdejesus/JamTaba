@@ -1,17 +1,21 @@
 #include <QApplication>
 #include <QMainWindow>
+#include <QDir>
 #include "StandAloneMainController.h"
 #include "persistence/Settings.h"
 #include "MainWindowStandalone.h"
-#include "log/logHandler.h"
+#include "log/logging.h"
 
 int main(int argc, char* args[] ){
 
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
 
-    qputenv("QT_LOGGING_CONF", ":/qtlogging.ini");//log cconfigurations is in resources at moment
-    qInstallMessageHandler(customLogHandler);
+    QString logFile = Controller::MainController::getLogConfigFilePath();
+    if(!logFile.isEmpty()){
+        qputenv("QT_LOGGING_CONF", QByteArray(logFile.toUtf8()));
+        qInstallMessageHandler(jamtabaLogHandler);
+    }
 
     Persistence::Settings settings;
     settings.load();

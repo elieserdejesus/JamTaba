@@ -8,7 +8,7 @@ SamplesBufferResampler::SamplesBufferResampler()
 }
 
 SamplesBufferResampler::~SamplesBufferResampler(){
-    qDebug() << "destrutor SamplesBufferResampler";
+    //qDebug() << "destrutor SamplesBufferResampler";
 }
 
 const Audio::SamplesBuffer& SamplesBufferResampler::resample(const Audio::SamplesBuffer &in, int desiredOutLenght){

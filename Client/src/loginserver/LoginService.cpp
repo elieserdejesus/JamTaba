@@ -10,6 +10,7 @@
 #include <QApplication>
 #include "../ninjam/Server.h"
 #include "../ninjam/Service.h"
+#include "../log/logging.h"
 
 using namespace Login;
 
@@ -104,7 +105,7 @@ LoginService::LoginService(QObject* parent)
 LoginService::~LoginService()
 {
     //disconnect();
-    qDebug() << "LoginService Destructor";
+    qCDebug(jtLoginService) << "LoginService Destructor";
     if(pendingReply){
         pendingReply->deleteLater();
     }
@@ -115,14 +116,14 @@ void LoginService::connectInServer(QString userName, int instrumentID, QString c
 {
 
     QUrlQuery query = HttpParamsFactory::createParametersToConnect(userName, instrumentID, channelName, localPeerMap, version, environment, sampleRate);
-    qDebug() << "Connecting in server ..." ;
+    qCDebug(jtLoginService) << "Connecting in server ..." ;
     pendingReply = sendCommandToServer(query);
     if(pendingReply){
-        qDebug() << "Waiting for server reply..." ;
+        qDebug(jtLoginService) << "Waiting for server reply..." ;
         connectNetworkReplySlots(pendingReply, LoginService::Command::CONNECT);
     }
     else{
-        qCritical() << "Pending reply is null!";
+        qCritical(jtLoginService) << "Pending reply is null!";
     }
 }
 
@@ -137,26 +138,26 @@ void LoginService::refreshTimerSlot(){
 void LoginService::disconnectFromServer()
 {
     if(isConnected()){
-        qDebug() << "DISCONNECTING from server...";
+        qDebug(jtLoginService) << "DISCONNECTING from server...";
         refreshTimer->stop();
         if(pendingReply){
             pendingReply->deleteLater();
         }
         QUrlQuery query = HttpParamsFactory::createParametersToDisconnect();
-        qDebug() << "sending disconnect command to server...";
+        qDebug(jtLoginService) << "sending disconnect command to server...";
         pendingReply = sendCommandToServer(query, true);
-        qDebug() << "disconnected";
+        qDebug(jtLoginService) << "disconnected";
         if(pendingReply){
             pendingReply->readAll();
             pendingReply->deleteLater();
-            qDebug() << "reply content readed and discarded!";
+            qDebug(jtLoginService) << "reply content readed and discarded!";
             //delete pendingReply;
             //qWarning() << "reply deleted!";
         }
     }
     this->connected = false;
 
-    qDebug() << "disconnected from login server!";
+    qDebug(jtLoginService) << "disconnected from login server!";
 }
 
 QNetworkReply* LoginService::sendCommandToServer(const QUrlQuery &query, bool synchronous )
@@ -229,7 +230,7 @@ void LoginService::connectNetworkReplySlots(QNetworkReply* reply, Command comman
 
 void LoginService::connectedSlot(){
     //emit errorWhenConnectingToServer("teste");
-    qDebug() << "CONNECTED in server!" ;
+    qDebug(jtLoginService) << "CONNECTED in server!" ;
     refreshTimer->start(REFRESH_PERIOD);
     roomsListReceivedSlot();
     connected = true;

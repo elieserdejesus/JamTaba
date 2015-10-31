@@ -14,8 +14,7 @@
 #include <cmath>
 #include <QMutexLocker>
 #include <QFile>
-
-Q_LOGGING_CATEGORY(roomStreamer, "roomStreamer")
+#include "../log/logging.h"
 
 using namespace Audio;
 
@@ -39,7 +38,7 @@ AbstractMp3Streamer::~AbstractMp3Streamer(){
 }
 
 void AbstractMp3Streamer::stopCurrentStream(){
-    qCDebug(roomStreamer) << "stopping room stream";
+    qCDebug(jtNinjamRoomStreamer) << "stopping room stream";
 
     //QMutexLocker locker(&mutex);
     //faderProcessor.reset();//aply fadein in next stream
@@ -91,11 +90,11 @@ void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in, Audio
         internalOutputBuffer.set(internalInputBuffer);
     }
 
-    qCDebug(roomStreamer) << "discarding " << samplesToRender << " samples";
+    qCDebug(jtNinjamRoomStreamer) << "discarding " << samplesToRender << " samples";
     bufferedSamples.discardFirstSamples(samplesToRender);//keep non rendered samples for next audio callback
 
     if(internalOutputBuffer.getFrameLenght() < out.getFrameLenght()){
-        qCDebug(roomStreamer) << out.getFrameLenght() - internalOutputBuffer.getFrameLenght() << " samples missing";
+        qCDebug(jtNinjamRoomStreamer) << out.getFrameLenght() - internalOutputBuffer.getFrameLenght() << " samples missing";
     }
 
     //faderProcessor.process(internalInputBuffer, internalOutputBuffer, midiBuffer);//aply fade in in stream
@@ -142,7 +141,7 @@ void AbstractMp3Streamer::decode(const unsigned int maxBytesToDecode){
 
         bytesToDecode = bytesToDecode.right(bytesToDecode.size() - bytesProcessed);
         if(bytesToDecode.isEmpty()){
-            qCDebug(roomStreamer) << bytesProcessed << " decoded  bytesToDecode: " << bytesToDecode.size();
+            qCDebug(jtNinjamRoomStreamer) << bytesProcessed << " decoded  bytesToDecode: " << bytesToDecode.size();
         }
     }
 }
@@ -193,7 +192,7 @@ void NinjamRoomStreamerNode::initialize(QString streamPath){
     bufferedSamples.zero();
     bytesToDecode.clear();
     if(!streamPath.isEmpty()){
-        qCDebug(roomStreamer) << "connecting in " << streamPath;
+        qCDebug(jtNinjamRoomStreamer) << "connecting in " << streamPath;
         if(httpClient){
             httpClient->deleteLater();
         }
@@ -207,19 +206,19 @@ void NinjamRoomStreamerNode::initialize(QString streamPath){
 
 void NinjamRoomStreamerNode::on_reply_error(QNetworkReply::NetworkError /*error*/){
     QString msg = "ERROR playing room stream";
-    qCCritical(roomStreamer) << msg;
+    qCCritical(jtNinjamRoomStreamer) << msg;
     emit error(msg);
 }
 
 void NinjamRoomStreamerNode::on_reply_read(){
     if(!device){
-        qCDebug(roomStreamer) << "device is null!";
+        qCDebug(jtNinjamRoomStreamer) << "device is null!";
         return;
     }
     if(device->isOpen() && device->isReadable()){
         QMutexLocker locker(&mutex);
         bytesToDecode.append(device->readAll());
-        qCDebug(roomStreamer) << "bytes downloaded  bytesToDecode:"<<bytesToDecode.size() << " bufferedSamples: " << bufferedSamples.getFrameLenght();
+        qCDebug(jtNinjamRoomStreamer) << "bytes downloaded  bytesToDecode:"<<bytesToDecode.size() << " bufferedSamples: " << bufferedSamples.getFrameLenght();
 //        if(bufferedSamples.getFrameLenght() < 3500){
 //            decode(256);
 //        }
@@ -228,12 +227,12 @@ void NinjamRoomStreamerNode::on_reply_read(){
         //}
     }
     else{
-        qCCritical(roomStreamer) << "problem in device!";
+        qCCritical(jtNinjamRoomStreamer) << "problem in device!";
     }
 }
 
 NinjamRoomStreamerNode::~NinjamRoomStreamerNode(){
-    qCDebug(roomStreamer) << "RoomStreamerNode destructor!";
+    qCDebug(jtNinjamRoomStreamer) << "RoomStreamerNode destructor!";
 }
 
 void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer & in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer &midiBuffer){
@@ -277,7 +276,7 @@ void AudioFileStreamerNode::initialize(QString streamPath){
     AbstractMp3Streamer::initialize(streamPath);
     QFile* f = new QFile(streamPath);
     if(!f->open(QIODevice::ReadOnly)){
-        qCCritical(roomStreamer) << "não foi possivel abrir o arquivo " << streamPath;
+        qCCritical(jtNinjamRoomStreamer) << "não foi possivel abrir o arquivo " << streamPath;
     }
     this->device = f;
     bytesToDecode.append(f->readAll());
