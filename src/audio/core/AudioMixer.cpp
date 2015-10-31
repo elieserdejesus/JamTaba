@@ -7,6 +7,7 @@
 #endif
 #include "../midi/MidiDriver.h"
 #include <QMutexLocker>
+#include "../log/logging.h"
 
 using namespace Audio;
 
@@ -37,7 +38,7 @@ void AudioMixer::removeNode(AudioNode *node){
 }
 
 AudioMixer::~AudioMixer(){
-    qDebug() << "Audio mixer destructor...";
+    qCDebug(jtAudio) << "Audio mixer destructor...";
 //    foreach (SamplesBufferResampler* resampler, resamplers.values()) {
 //        delete resampler;
 //    }
@@ -45,7 +46,7 @@ AudioMixer::~AudioMixer(){
     foreach (Audio::AudioNode* node, resamplers.keys()) {
         removeNode(node);
     }
-    qDebug() << "Audio mixer destructor finished!";
+    qCDebug(jtAudio) << "Audio mixer destructor finished!";
 }
 
 void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer, bool attenuateAfterSumming){

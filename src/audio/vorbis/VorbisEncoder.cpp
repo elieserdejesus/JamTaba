@@ -2,8 +2,7 @@
 #include <QDebug>
 #include <ctime>
 #include <QThread>
-
-Q_LOGGING_CATEGORY(vorbisEncoder, "vorbis.encoder")
+#include "../log/logging.h"
 
 const float VorbisEncoder::QUALITY = 0.32f;
 
@@ -22,7 +21,7 @@ VorbisEncoder::VorbisEncoder(int channels, int sampleRate):
 }
 
 void VorbisEncoder::init(int channels, int sampleRate){
-    qCDebug(vorbisEncoder) << "Initializing VorbisEncoder Thread:" << QThread::currentThreadId();
+    qCDebug(jtNinjamVorbisEncoder) << "Initializing VorbisEncoder Thread:" << QThread::currentThreadId();
     vorbis_info_init(&info);
 
     if(vorbis_encode_init_vbr(&info, (long) channels, (long) sampleRate, QUALITY) != 0){
@@ -48,7 +47,7 @@ void VorbisEncoder::clearState(){
 }
 
 VorbisEncoder::~VorbisEncoder() {
-    qCDebug(vorbisEncoder) << "ENCODER DESTRUCTOR! Thread:" <<  QThread::currentThreadId();
+    qCDebug(jtNinjamVorbisEncoder) << "ENCODER DESTRUCTOR! Thread:" <<  QThread::currentThreadId();
     if(initialized){
         clearState();
     }
@@ -106,7 +105,7 @@ QByteArray VorbisEncoder::encode(const Audio::SamplesBuffer& samples) {
     //lenght == 0 in the end of interval
     int result = vorbis_analysis_wrote(&dspState, samples.getFrameLenght()); // tell the library how much we actually submitted
     if(result != 0){
-        qCCritical(vorbisEncoder) << "encoder error!";
+        qCCritical(jtNinjamVorbisEncoder) << "encoder error!";
     }
 
     //++++++++++++++++++++++++ encoding +++++++++
@@ -129,7 +128,7 @@ QByteArray VorbisEncoder::encode(const Audio::SamplesBuffer& samples) {
                 //header and body
                 outBuffer.append((const char*)page.header, page.header_len);//memcpy(buffer, page.header, page.header_len);
                 outBuffer.append((const char*)page.body, page.body_len);//memcpy(buffer, page.body, page.body_len);
-                qCDebug(vorbisEncoder) << "encoded bytes added to out buffer  bytes:" << outBuffer.size();
+                qCDebug(jtNinjamVorbisEncoder) << "encoded bytes added to out buffer  bytes:" << outBuffer.size();
                 if (ogg_page_eos(&page))
                     endOfStream = true;
             }

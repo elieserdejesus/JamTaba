@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <cmath>
 #include <QMutexLocker>
+#include "../log/logging.h"
 
 using namespace Audio;
 
@@ -62,7 +63,7 @@ void AudioDriver::recreateBuffers(){
 }
 
 AudioDriver::~AudioDriver(){
-    qDebug() << "AudioDriver destructor.";
+    qCDebug(jtAudio) << "AudioDriver destructor.";
     /*delete this->inputBuffer;
     delete this->outputBuffer*/;
 }

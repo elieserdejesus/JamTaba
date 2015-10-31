@@ -68,7 +68,7 @@ HEADERS += \
     ../src/gui/PrivateServerDialog.h \
     ../src/gui/UserNameDialog.h \
     ../src/gui/MainWindow.h \
-    ../src/log/logHandler.h
+    $$PWD/src/log/logging.h
 
 SOURCES += \
     ../src/audio/core/AudioDriver.cpp \
@@ -117,7 +117,7 @@ SOURCES += \
     ../src/gui/PrivateServerDialog.cpp \
     ../src/gui/UserNameDialog.cpp \
     $$PWD/src/gui/MainWindow.cpp \
-    $$PWD/src/log/logHandler.cpp
+    $$PWD/src/log/logging.cpp
 
 FORMS += \
     ../src/gui/PreferencesDialog.ui \

@@ -19,6 +19,7 @@
 #include <QDirIterator>
 #include <QSettings>
 #include <QtConcurrent/QtConcurrent>
+#include "../log/logging.h"
 
 using namespace Controller;
 
@@ -270,7 +271,7 @@ void StandaloneMainController::setCSS(QString css){
 }
 
 StandaloneMainController::~StandaloneMainController(){
-    qDebug() << "StandaloneMainController destructor!";
+    qCDebug(jtCore) << "StandaloneMainController destructor!";
     //pluginsDescriptors.clear();
 }
 

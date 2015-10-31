@@ -12,8 +12,6 @@
 
 class MainWindow;
 
-Q_DECLARE_LOGGING_CATEGORY(ninjamRoomWindow)
-
 class NinjamTrackGroupView;
 
 
