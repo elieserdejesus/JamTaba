@@ -2,6 +2,7 @@
 #include "../midi/MidiDriver.h"
 #include "../NinjamController.h"
 #include "../VstPlugin/Plugin.h"
+#include "../log/logging.h"
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class AudioDriverVST : public Audio::NullAudioDriver{
 public:
@@ -38,7 +39,7 @@ void NinjamControllerVST::process(const Audio::SamplesBuffer &in, Audio::Samples
 MainControllerVST::MainControllerVST(Persistence::Settings settings, JamtabaPlugin *plugin)
     :MainController(settings), plugin(plugin){
 
-    qDebug() << "Creating MainControllerVST instance!";
+    qCDebug(jtCore) << "Creating MainControllerVST instance!";
 }
 
 MainControllerVST::~MainControllerVST(){
@@ -83,7 +84,7 @@ Midi::MidiDriver* MainControllerVST::createMidiDriver(){
 }
 
 void MainControllerVST::setCSS(QString css){
-    qDebug() << "setting CSS";
+    qCDebug(jtCore) << "setting CSS";
     qApp->setStyleSheet(css);//qApp is a global variable created in dll main.
 }
 

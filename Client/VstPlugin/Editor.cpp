@@ -6,6 +6,8 @@
 #include <QKeyEvent>
 #include <QLineEdit>
 #include "MainWindowVST.h"
+#include "../log/logging.h"
+
 /*
     This is a callback function to hook VST host key pressing. This is a workaround to
 solve the problem of "space bar" pressing in VST hosts. In general hosts
@@ -93,9 +95,9 @@ void VstEditor::deleteMainWindow(){
 
 VstEditor::~VstEditor()
 {
-    qCDebug(pluginVst) << "VstEditor detructor...";
+    qCDebug(jtVstPlugin) << "VstEditor detructor...";
     deleteMainWindow();
-    qCDebug(pluginVst) << "VstEditor detructor done.";
+    qCDebug(jtVstPlugin) << "VstEditor detructor done.";
 }
 
 void VstEditor::detachMainController(){
@@ -122,7 +124,7 @@ void VstEditor::clientResize(HWND h_parent, int width, int height)
 }
 
 bool VstEditor::open(void* ptr){
-    qCDebug(pluginVst) << "VstEditor::open()...";
+    qCDebug(jtVstPlugin) << "VstEditor::open()...";
     if(!ptr )
         return false;
 
@@ -136,14 +138,14 @@ bool VstEditor::open(void* ptr){
     //widget->setObjectName("QWinWidget");
 
     if(!mainWindow){
-        qCDebug(pluginVst) << "Creating MainWindow...";
+        qCDebug(jtVstPlugin) << "Creating MainWindow...";
         mainWindow = new MainWindowVST(jamtaba->getController());
         jamtaba->getController()->setMainWindow(mainWindow);
         rectangle.left = 0;
         rectangle.top = 0;
         rectangle.right = mainWindow->width();
         rectangle.bottom = mainWindow->height();
-        qCDebug(pluginVst) << "Creating MainWindow done.";
+        qCDebug(jtVstPlugin) << "Creating MainWindow done.";
     }
     mainWindow->setParent(widget);
     mainWindow->move( 0, 0 );
@@ -155,7 +157,7 @@ bool VstEditor::open(void* ptr){
     widget->resize( rectangle.right, rectangle.bottom );
     widget->setMinimumSize(mainWindow->minimumSize());
 
-    qCDebug(pluginVst) << "Window Rect  width:" << rectangle.right - rectangle.left;
+    qCDebug(jtVstPlugin) << "Window Rect  width:" << rectangle.right - rectangle.left;
 
     widget->setPalette( mainWindow->palette() );
 
@@ -170,13 +172,13 @@ bool VstEditor::open(void* ptr){
 //            this, SLOT(OnResizeHandleMove(QPoint)));
 
     widget->show();
-    qCDebug(pluginVst) << "VstEditor::open() done.";
+    qCDebug(jtVstPlugin) << "VstEditor::open() done.";
     return true;
  }
 
 
 void VstEditor::close(){
-    qCDebug(pluginVst) << "VstEditor::close()...";
+    qCDebug(jtVstPlugin) << "VstEditor::close()...";
     if(mainWindow){
         mainWindow->setParent(nullptr);
     }
@@ -185,5 +187,5 @@ void VstEditor::close(){
         widget = nullptr;
     }
     AEffEditor::close();
-    qCDebug(pluginVst) << "VstEditor::close() done.";
+    qCDebug(jtVstPlugin) << "VstEditor::close() done.";
 }
