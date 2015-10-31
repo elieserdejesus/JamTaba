@@ -132,7 +132,8 @@ FORMS += \
     ../src/gui/jamroomviewpanel.ui \
     ../src/gui/PrivateServerDialog.ui \
     ../src/gui/UserNameDialog.ui \
-    $$PWD/src/gui/MainWindow.ui
+    $$PWD/src/gui/MainWindow.ui \
+    $$PWD/src/gui/PreferencesDialog.ui
 
 INCLUDEPATH += ../src/gui                  \
                ../src/gui/widgets          \
