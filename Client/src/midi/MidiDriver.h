@@ -4,12 +4,7 @@
 #include <QtGlobal>
 #include <QMap>
 
-#include <QLoggingCategory>
-
-Q_DECLARE_LOGGING_CATEGORY(portmidi)
-
 namespace Midi {
-
 
 class MidiMessage{
 public:

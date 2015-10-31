@@ -25,7 +25,7 @@
 
 #include <QMessageBox>
 
-Q_LOGGING_CATEGORY(ninjamRoomWindow, "ninjamRoomWindow")
+#include "../log/logging.h"
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //VoteConfirmationDialog::VoteConfirmationDialog(QWidget *parent, QString title, QString text, int voteValue, VoteConfirmationType voteType)
@@ -48,7 +48,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
     chatPanel(new ChatPanel(this, mainController->getBotNames() ))
     //voteConfirmationDialog(nullptr)
 {
-    qCDebug(ninjamRoomWindow) << "NinjamRoomWindow construtor..";
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow construtor..";
     ui->setupUi(this);
 
     ui->licenceButton->setIcon(QIcon(QPixmap(":/images/licence.png")));
@@ -57,7 +57,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
 
     ui->tracksPanel->layout()->setAlignment(Qt::AlignLeft);//tracks are left aligned
 
-    qCDebug(ninjamRoomWindow) << "connecting signals in ninjamController...";
+    qCDebug(jtNinjamGUI) << "connecting signals in ninjamController...";
     Controller::NinjamController* ninjamController = mainController->getNinjamController();
     QObject::connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(on_bpiChanged(int)));
     QObject::connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(on_bpmChanged(int)));
@@ -232,7 +232,7 @@ void NinjamRoomWindow::updatePeaks(){
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::on_channelXmitChanged(long channelID, bool transmiting){
-    qCDebug(ninjamRoomWindow) << "channel xmit changed:" << channelID << " state:" << transmiting;
+    qCDebug(jtNinjamGUI) << "channel xmit changed:" << channelID << " state:" << transmiting;
     BaseTrackView* trackView = NinjamTrackView::getTrackViewByID(channelID);
     if(trackView){
         trackView->setEnabled(transmiting);
@@ -240,7 +240,7 @@ void NinjamRoomWindow::on_channelXmitChanged(long channelID, bool transmiting){
 }
 
 void NinjamRoomWindow::on_channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID){
-    qCDebug(ninjamRoomWindow) << "channel removed:" << channel.getName();
+    qCDebug(jtNinjamGUI) << "channel removed:" << channel.getName();
     Q_UNUSED(channel);
 
     NinjamTrackGroupView* group = trackGroups[user.getFullName()];
@@ -261,7 +261,7 @@ void NinjamRoomWindow::on_channelRemoved(Ninjam::User user, Ninjam::UserChannel 
 }
 
 void NinjamRoomWindow::on_channelNameChanged(Ninjam::User, Ninjam::UserChannel channel, long channelID){
-    qCDebug(ninjamRoomWindow) << "channel name changed:" << channel.getName();
+    qCDebug(jtNinjamGUI) << "channel name changed:" << channel.getName();
     //Q_UNUSED(channel);
     NinjamTrackView* trackView = dynamic_cast<NinjamTrackView*>(NinjamTrackView::getTrackViewByID(channelID));
     if(trackView){
@@ -270,7 +270,7 @@ void NinjamRoomWindow::on_channelNameChanged(Ninjam::User, Ninjam::UserChannel c
 }
 
 void NinjamRoomWindow::on_channelAdded(Ninjam::User user, Ninjam::UserChannel channel, long channelID){
-    qCDebug(ninjamRoomWindow) << "channel added - creating channel view:" << user.getFullName() << " " << channel.getName();
+    qCDebug(jtNinjamGUI) << "channel added - creating channel view:" << user.getFullName() << " " << channel.getName();
     if(!trackGroups.contains(user.getFullName())){//first channel from this user?
         QString userName = user.getName();
         QString channelName = channel.getName();
@@ -284,7 +284,7 @@ void NinjamRoomWindow::on_channelAdded(Ninjam::User user, Ninjam::UserChannel ch
         NinjamTrackGroupView* trackView = trackGroups[user.getFullName()];
         trackView->addTrackView(new NinjamTrackView(mainController, channelID, channel.getName()));
     }
-    qCDebug(ninjamRoomWindow) << "channel view created";
+    qCDebug(jtNinjamGUI) << "channel view created";
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -349,7 +349,7 @@ void NinjamRoomWindow::adjustTracksWidth(){
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NinjamRoomWindow::~NinjamRoomWindow(){
-    qCDebug(ninjamRoomWindow) << "NinjamRoomWindow destructor";
+    qCDebug(jtNinjamGUI) << "NinjamRoomWindow destructor";
     Controller::NinjamController* ninjamController = mainController->getNinjamController();
     if(ninjamController){
         QObject::disconnect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(on_bpiChanged(int)));
