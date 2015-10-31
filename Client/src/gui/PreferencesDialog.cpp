@@ -142,7 +142,7 @@ void PreferencesDialog::populateVstTab(){
     //populate the BlackBox
    ui->BlackBoxText->clear();
    foreach (QString path, BlackVstList) {
-       UpdateBlackBox(path,true);//add vst
+       UpdateBlackBox(path);
    }
 }
 
@@ -368,25 +368,9 @@ void PreferencesDialog::UpdateVstList(QString path)
 {
     ui->plainTextEdit->appendPlainText(path);
 }
-void PreferencesDialog::UpdateBlackBox(QString path, bool add)
+void PreferencesDialog::UpdateBlackBox(QString path)
 {
-    if(add)
     ui->BlackBoxText->appendPlainText(path);
-    else
-    {
-       QString str=ui->BlackBoxText->toPlainText();
-            if(str.contains(path))
-            {
-              ui->BlackBoxText->clear();
-              mainController->removeBlackVst(str.indexOf(path));
-              QStringList list=mainController->getSettings().getBlackBox();
-               foreach(QString s,list)
-               {
-                 ui->BlackBoxText->appendPlainText(s);
-               }
-             }
-     }
-
 }
 void PreferencesDialog::createWidgetsToNewScanFolder(QString path){
     QVBoxLayout* panelLayout = (QVBoxLayout*)ui->panelScanFolders->layout();
@@ -456,30 +440,11 @@ void PreferencesDialog::on_ButtonVST_AddToBlackList_clicked()
         QStringList VstNames = VstDialog.selectedFiles();
         foreach (QString string, VstNames)
         {
-         UpdateBlackBox(string,true);//add to
+         UpdateBlackBox(string);
          mainController->addBlackVstToSettings(string);
         }
 
      }
-}
-void PreferencesDialog::on_ButtonVST_RemFromBlkList_clicked()
-{
-    QFileDialog VstDialog(this, "Remove Vst(s) to BlackBox ...");
-    VstDialog.setNameFilter(tr("Dll(*.dll)"));
-    VstDialog.setDirectory(mainController->getSettings().getVstScanFolders().at(0));
-    VstDialog.setAcceptMode(QFileDialog::AcceptOpen);
-    VstDialog.setFileMode(QFileDialog::ExistingFiles);
-    if(VstDialog.exec() )
-    {
-        QStringList VstNames = VstDialog.selectedFiles();
-        foreach (QString string, VstNames)
-        {
-         UpdateBlackBox(string,false);//Remove from
-         mainController->removeBlackVst(0);//index
-        }
-
-     }
-
 }
 
 //Recording TAB controls --------------------
@@ -498,7 +463,6 @@ void PreferencesDialog::on_recordingCheckBox_clicked(){
     mainController->storeRecordingMultiTracksStatus( ui->recordingCheckBox->isChecked());
 }
 //+++++++++++++++++++++++++++
-
 
 
 
