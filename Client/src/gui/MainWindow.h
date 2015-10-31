@@ -93,7 +93,11 @@ protected slots:
     void on_ninjamCommunityMenuItemTriggered();
     void on_ninjamOfficialSiteMenuItemTriggered();
     void on_privateServerMenuItemTriggered();
+
+    //help menu
     void on_reportBugMenuItemTriggered();
+    void on_wikiMenuItemTriggered();
+    void on_UsersManualMenuItemTriggered();
 
     //private server
     void on_privateServerConnectionAccepted(QString server, int serverPort, QString password);

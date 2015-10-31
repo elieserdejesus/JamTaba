@@ -353,7 +353,9 @@
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionReport_bugs_or_suggest_improvements"/>
+    <addaction name="actionWiki"/>
+    <addaction name="actionUsersManual"/>
+    <addaction name="actionReportBugs"/>
    </widget>
    <widget class="QMenu" name="menuThemes">
     <property name="title">
@@ -405,9 +407,19 @@
     <string>Ninjam Official Site ...</string>
    </property>
   </action>
-  <action name="actionReport_bugs_or_suggest_improvements">
+  <action name="actionReportBugs">
    <property name="text">
     <string>Report bugs or suggest improvements ...</string>
+   </property>
+  </action>
+  <action name="actionWiki">
+   <property name="text">
+    <string>Wiki ...</string>
+   </property>
+  </action>
+  <action name="actionUsersManual">
+   <property name="text">
+    <string>Users Manual ...</string>
    </property>
   </action>
  </widget>
