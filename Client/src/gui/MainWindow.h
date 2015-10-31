@@ -85,7 +85,7 @@ protected slots:
 
 
     //themes
-    void on_newThemeSelected(QAction*);
+    //void on_newThemeSelected(QAction*);
 
     //main menu
     void on_preferencesClicked(QAction *action);
