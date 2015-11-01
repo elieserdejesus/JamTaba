@@ -101,6 +101,20 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
 //        ui->tracksPanel->layout()->addWidget(trackView);
 //    }
 }
+//+++++++++=
+void NinjamRoomWindow::setFullViewStatus(bool fullView){
+    int contentMargin = fullView ? 9 : 3;
+    ui->contentLayout->setContentsMargins(contentMargin, 0, contentMargin, 0);
+    ui->contentLayout->setSpacing(fullView ? 24 : 0);
+
+    //main layout
+    int topMargim = fullView ? 9 : 0;
+    int bottomMargim = fullView ? 9 : 3;
+    layout()->setContentsMargins(0, topMargim, 0, bottomMargim);
+
+    update();
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::updateGeoLocations(){
     foreach (NinjamTrackGroupView* trackGroup, trackGroups) {

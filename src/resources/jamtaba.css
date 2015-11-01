@@ -92,8 +92,8 @@ BaseTrackView #boostPanel{
 BaseTrackView #boostPanel QPushButton {
    margin: 0;
    padding: 0px;
-   padding-top: 3px;
-   padding-bottom: 3px;
+   padding-top: 1px;
+   padding-bottom: 1px;
    border: 0px;
    /*background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
        stop:0 rgba(255, 255, 255, 200),

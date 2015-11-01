@@ -54,7 +54,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     mainController(mainController),
     pluginScanDialog(nullptr),
     ninjamWindow(nullptr),
-    roomToJump(nullptr)
+    roomToJump(nullptr),
+    fullViewMode(false)
 {
     qCInfo(jtGUI) << "Creating MainWindow...";
 	ui.setupUi(this);
@@ -65,6 +66,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeLoginService();
     //initializePluginFinder(); //called in derived classes
     initializeMainTabWidget();
+    initializeViewModeMenu();
 
 
 //    QDir stylesDir(":/style");
@@ -137,12 +139,20 @@ void MainWindow::initializePluginFinder(){
 //}
 
 //++++++++++++++++++++++++=
-void MainWindow::on_localControlsCollapseButtonClicked(){
+void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly){
     foreach (LocalTrackGroupView* channel, localChannels) {
-        channel->toggleFaderOnlyMode();
+        //channel->togglePeakMeterOnlyMode();
+        channel->setPeakMeterMode(showPeakMetersOnly);
     }
-    ui.labelSectionTitle->setVisible(!localChannels.first()->isFaderOnly());
-    ui.xmitButton->setVisible(!localChannels.first()->isFaderOnly());
+    ui.labelSectionTitle->setVisible(!localChannels.first()->isShowingPeakMeterOnly());
+    ui.xmitButton->setVisible(!localChannels.first()->isShowingPeakMeterOnly());
+
+    ui.localControlsCollapseButton->setChecked(localChannels.first()->isShowingPeakMeterOnly());
+}
+
+void MainWindow::on_localControlsCollapseButtonClicked(){
+    bool isShowingPeakMetersOnly = localChannels.first()->isShowingPeakMeterOnly();
+    showPeakMetersOnlyInLocalControls(!isShowingPeakMetersOnly);//toggle
 }
 //++++++++++++++++++++++++=
 Persistence::InputsSettings MainWindow::getInputsSettings() const{
@@ -158,7 +168,6 @@ Persistence::InputsSettings MainWindow::getInputsSettings() const{
             int midiDevice = inputNode->getMidiDeviceIndex();
             int midiChannel = inputNode->getMidiChannelIndex();
             float gain = Utils::poweredGainToLinear( inputNode->getGain() );
-            float b = inputNode->getBoost();
             float boost = Utils::linearToDb(inputNode->getBoost());
             float pan = inputNode->getPan();
             bool muted = inputNode->isMuted();
@@ -459,7 +468,7 @@ void MainWindow::initializeLoginService(){
 }
 
 void MainWindow::initializeWindowState(){
-    if(mainController->getSettings().windowWasMaximized()){
+    if(mainController->getSettings().windowWasMaximized() && fullViewMode){
         qCDebug(jtGUI)<< "setting window state to maximized";
         setWindowState(Qt::WindowMaximized);
     }
@@ -583,45 +592,39 @@ void MainWindow::on_newVersionAvailableForDownload(){
 
 void MainWindow::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
     hideBusyDialog();
-//    qWarning() << "Atualizando lista de salas";
-//    foreach (Login::RoomInfo room, publicRooms) {
-//        if(room.getNonBotUsersCount() > 0 ){
-//            qWarning() << room.getName();
-//            foreach (Login::UserInfo user, room.getUsers()) {
-//                qWarning() << "\t" << user.getName();
-//            }
-//        }
-//    }
-    qSort(publicRooms.begin(), publicRooms.end(), jamRoomLessThan);
-    int index = 0;
-    foreach(Login::RoomInfo roomInfo, publicRooms ){
-        if(roomInfo.getType() == Login::RoomTYPE::NINJAM){//skipping other rooms at moment
-            if(roomViewPanels.contains(roomInfo.getID())){
-                JamRoomViewPanel* roomViewPanel = roomViewPanels[roomInfo.getID()];
-                roomViewPanel->refreshUsersList(roomInfo);
-                ui.allRoomsContent->layout()->removeWidget(roomViewPanel);
-                ((QGridLayout*)ui.allRoomsContent->layout())->addWidget(roomViewPanel, index / 2, index % 2);
 
-            }
-            else{
-                JamRoomViewPanel* roomViewPanel = new JamRoomViewPanel(roomInfo, ui.allRoomsContent, mainController);
-                roomViewPanels.insert(roomInfo.getID(), roomViewPanel);
-                ((QGridLayout*)ui.allRoomsContent->layout())->addWidget(roomViewPanel, index / 2, index % 2);
-                connect( roomViewPanel, SIGNAL(startingListeningTheRoom(Login::RoomInfo)),
-                         this, SLOT(on_startingRoomStream(Login::RoomInfo)));
-                connect( roomViewPanel, SIGNAL(finishingListeningTheRoom(Login::RoomInfo)),
-                         this, SLOT(on_stoppingRoomStream(Login::RoomInfo)));
-                connect( roomViewPanel, SIGNAL(enteringInTheRoom(Login::RoomInfo)),
-                         this, SLOT(on_enteringInRoom(Login::RoomInfo)));
-            }
-            index++;
-        }
-    }
+    refreshPublicRoomsList(publicRooms);
 
     if(mainController->isPlayingInNinjamRoom()){
         this->ninjamWindow->updateGeoLocations();
         //update country flag and country names. This is necessary because the call to webservice used to get country codes and
         //country names is not synchronous. So, if country code and name are not cached we receive these data in some seconds.
+    }
+}
+
+
+void MainWindow::refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms){
+    qSort(publicRooms.begin(), publicRooms.end(), jamRoomLessThan);
+    int index = 0;
+    foreach(Login::RoomInfo roomInfo, publicRooms ){
+        if(roomInfo.getType() == Login::RoomTYPE::NINJAM){//skipping other rooms at moment
+            int rowIndex = fullViewMode ? (index / 2) : (index);
+            int collumnIndex = fullViewMode ? (index % 2) : 0;//use one collumn if user choosing mini view mode
+            JamRoomViewPanel* roomViewPanel = roomViewPanels[roomInfo.getID()];
+            if(roomViewPanel){
+                roomViewPanel->refreshUsersList(roomInfo);
+                ui.allRoomsContent->layout()->removeWidget(roomViewPanel); //the widget is removed but added again
+            }
+            else{
+                roomViewPanel = new JamRoomViewPanel(roomInfo, ui.allRoomsContent, mainController);
+                roomViewPanels.insert(roomInfo.getID(), roomViewPanel);
+                connect( roomViewPanel, SIGNAL(startingListeningTheRoom(Login::RoomInfo)), this, SLOT(on_startingRoomStream(Login::RoomInfo)));
+                connect( roomViewPanel, SIGNAL(finishingListeningTheRoom(Login::RoomInfo)), this, SLOT(on_stoppingRoomStream(Login::RoomInfo)));
+                connect( roomViewPanel, SIGNAL(enteringInTheRoom(Login::RoomInfo)), this, SLOT(on_enteringInRoom(Login::RoomInfo)));
+            }
+            ((QGridLayout*)ui.allRoomsContent->layout())->addWidget(roomViewPanel, rowIndex, collumnIndex);
+            index++;
+        }
     }
 }
 
@@ -711,6 +714,7 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
     //ninjamWindow.reset( new NinjamRoomWindow(this, roomInfo, mainController));
     ninjamWindow.reset( createNinjamWindow(roomInfo, mainController));
     QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
+    ninjamWindow->setFullViewStatus(this->fullViewMode);
     int index = ui.tabWidget->addTab(ninjamWindow.data(), tabName);
     ui.tabWidget->setCurrentIndex(index);
 
@@ -1045,6 +1049,57 @@ void MainWindow::onScanPluginsStarted(QString pluginPath){
     }
 }
 
+void MainWindow::initializeViewModeMenu(){
+
+    QObject::connect(ui.menuViewMode, SIGNAL(triggered(QAction*)), this, SLOT(on_menuViewModeTriggered(QAction*)));
+
+    QActionGroup* group = new QActionGroup(this);
+    ui.actionFullView->setActionGroup(group);
+    ui.actionMiniView->setActionGroup(group);
+}
+
+
+void MainWindow::on_menuViewModeTriggered(QAction *){
+    setFullViewStatus(ui.actionFullView->isChecked());
+}
+
+void MainWindow::setFullViewStatus(bool fullViewActivated){
+    if(fullViewActivated == this->fullViewMode){
+        return;
+    }
+
+    this->fullViewMode = fullViewActivated;
+    if(!fullViewActivated){//mini view
+        setMinimumSize(QSize(800, 600));
+        setMaximumSize(minimumSize());
+    }
+    else{
+        setMinimumSize(QSize(1180, 790));
+        setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
+    }
+
+    int tabLayoutMargim = fullViewMode ? 9 : 0;
+    ui.tabLayout->setContentsMargins(tabLayoutMargim, tabLayoutMargim, tabLayoutMargim, tabLayoutMargim);
+
+    showPeakMetersOnlyInLocalControls(!fullViewMode || localChannels.first()->isShowingPeakMeterOnly());
+
+
+    //refresh the public rooms list
+    if(!mainController->isPlayingInNinjamRoom()){
+        QList<Login::RoomInfo> roomInfos;
+        foreach (JamRoomViewPanel* roomView, roomViewPanels) {
+            roomInfos.append(roomView->getRoomInfo());
+        }
+        refreshPublicRoomsList(roomInfos);
+    }
+    else{
+        if(ninjamWindow){
+            ninjamWindow->setFullViewStatus(fullViewMode);
+        }
+    }
+
+    ui.centralWidget->layout()->setSpacing(fullViewMode ? 12 : 3);
+}
 
 
 

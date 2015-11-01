@@ -10,12 +10,6 @@
     <height>750</height>
    </rect>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>1160</width>
-    <height>750</height>
-   </size>
-  </property>
   <property name="windowTitle">
    <string notr="true">Jamtaba</string>
   </property>
@@ -211,7 +205,10 @@
           <attribute name="title">
            <string>Rooms to play</string>
           </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_5">
+          <layout class="QVBoxLayout" name="tabLayout">
+           <property name="spacing">
+            <number>0</number>
+           </property>
            <item>
             <widget class="QScrollArea" name="allRoomsScroll">
              <property name="styleSheet">
@@ -246,7 +243,7 @@
                 <number>0</number>
                </property>
                <property name="rightMargin">
-                <number>0</number>
+                <number>3</number>
                </property>
                <property name="bottomMargin">
                 <number>0</number>
@@ -357,7 +354,15 @@
     <addaction name="actionUsersManual"/>
     <addaction name="actionReportBugs"/>
    </widget>
+   <widget class="QMenu" name="menuViewMode">
+    <property name="title">
+     <string>View Mode</string>
+    </property>
+    <addaction name="actionFullView"/>
+    <addaction name="actionMiniView"/>
+   </widget>
    <addaction name="menuPreferences"/>
+   <addaction name="menuViewMode"/>
    <addaction name="menuNinjam"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -414,6 +419,22 @@
   <action name="actionUsersManual">
    <property name="text">
     <string>Users Manual ...</string>
+   </property>
+  </action>
+  <action name="actionFullView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Full View</string>
+   </property>
+  </action>
+  <action name="actionMiniView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Mini View</string>
    </property>
   </action>
  </widget>

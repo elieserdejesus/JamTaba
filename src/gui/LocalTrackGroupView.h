@@ -25,9 +25,9 @@ public:
     virtual void addTrackView(BaseTrackView *trackView);
     inline int getIndex() const{return index;}
 
-    virtual void setFaderOnlyMode(bool faderOnly);
-    virtual void toggleFaderOnlyMode();
-    bool isFaderOnly() const{return faderOnly;}
+    virtual void setPeakMeterMode(bool peakMeterOnly);
+    virtual void togglePeakMeterOnlyMode();
+    bool isShowingPeakMeterOnly() const{return peakMeterOnly;}
 
     void detachMainControllerInSubchannels();
     void closePluginsWindows();
@@ -42,7 +42,7 @@ private:
     MainWindow* mainFrame;
     bool eventFilter(QObject *target, QEvent *event);
 
-    bool faderOnly;
+    bool peakMeterOnly;
 
 private slots:
     void on_toolButtonClicked();
