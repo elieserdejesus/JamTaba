@@ -1,14 +1,12 @@
 #include "AutoUpdaterDialog.h"
 #include <QDesktopWidget>
 #include "AutoUpdater.h"
-#include "../src/log/logHandler.h"
+#include "../src/log/logging.h"
 
 int main(int argc, char *argv[]){
 
     qputenv("QT_LOGGING_CONF", ":/log.ini");//log cconfigurations is in resources bundle
-    qInstallMessageHandler(customLogHandler);
-
-
+    qInstallMessageHandler(jamtabaLogHandler);
 
     AutoUpdater autoUpdater(argc, argv);
     AutoUpdaterDialog view;

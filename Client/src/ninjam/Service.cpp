@@ -380,9 +380,7 @@ void Service::setBpi(quint16 bpi) {
     }
     quint16 lastBpi = currentServer->getBpi();
     if (currentServer->setBpi(bpi) && initialized) {
-
         emit serverBpiChanged(currentServer->getBpi(), lastBpi);
-
     }
 }
 

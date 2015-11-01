@@ -31,7 +31,7 @@ SOURCES += src\autoUpdaterMain.cpp \
     src\AutoUpdater.cpp \
     src\WindowsExecutableVersionExtractor.cpp \
     src\Downloader.cpp \
-    ..\src\log\logHandler.cpp \
+    ..\src\log\logging.cpp \
 
 
 HEADERS  += \
@@ -39,7 +39,7 @@ HEADERS  += \
     src\AutoUpdater.h \
     src\WindowsExecutableVersionExtractor.h \
     src\Downloader.h \
-    ..\src\log\logHandler.h \
+    ..\src\log\logging.h \
 
 
 FORMS    += \
