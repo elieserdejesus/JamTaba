@@ -94,6 +94,10 @@ protected slots:
     void on_ninjamOfficialSiteMenuItemTriggered();
     void on_privateServerMenuItemTriggered();
 
+    //view mode menu
+    void on_menuViewModeTriggered(QAction* action);
+
+
     //help menu
     void on_reportBugMenuItemTriggered();
     void on_wikiMenuItemTriggered();
@@ -171,10 +175,19 @@ private:
     //void initializeVstFinderStuff();
     //void initializeMainControllerEvents();
     void initializeMainTabWidget();
+    void initializeViewModeMenu();
 
     QStringList getChannelsNames() const;
 
     LocalTrackGroupView* addLocalChannel(int channelGroupIndex, QString channelName, bool createFirstSubchannel);
+
+    bool fullViewMode;//full view or mini view mode?
+
+    void setFullViewStatus(bool fullViewActivated);
+
+    void refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms);
+
+    void showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly);
 
 };
 

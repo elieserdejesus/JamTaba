@@ -48,6 +48,7 @@ public:
     void updatePeaks();
     void updateGeoLocations();
     inline ChatPanel* getChatPanel() const{return chatPanel;}
+    void setFullViewStatus(bool fullView);
 
 protected:
     Ui::NinjamRoomWindow *ui;
