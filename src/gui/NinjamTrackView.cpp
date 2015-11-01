@@ -75,11 +75,13 @@ NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainCont
 
 void NinjamTrackGroupView::setNarrowStatus(bool narrow){
     foreach (BaseTrackView* trackView, trackViews) {
-        if(narrow || trackViews.size() > 1){
-            trackView->setToNarrow();
+        bool setToWide = !narrow && trackViews.size() <= 1;
+        if(setToWide){
+           trackView->setToWide();
         }
         else{
-            trackView->setToWide();
+
+           trackView->setToNarrow();
         }
     }
 }

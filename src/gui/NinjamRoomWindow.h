@@ -25,19 +25,6 @@ namespace Controller {
     class MainController;
 }
 
-//enum VoteConfirmationType {BPM_CONFIRMATION_VOTE, BPI_CONFIRMATION_VOTE};
-
-//class VoteConfirmationDialog : public QMessageBox{
-//public:
-//    VoteConfirmationDialog(QWidget *parent, QString title, QString text, int voteValue, VoteConfirmationType voteType);
-//    inline int getVoteValue() const{return voteValue;}
-//    inline VoteConfirmationType getVoteType() const{return voteType;}
-//private:
-//    int voteValue;//bpm or bpi value
-//    VoteConfirmationType voteType;
-//};
-
-
 class NinjamRoomWindow : public QWidget
 {
     Q_OBJECT
@@ -62,9 +49,7 @@ private:
 
     void adjustTracksWidth();
 
-    //void showVoteConfirmationMessageBox(QString title, QString text, int voteValue, VoteConfirmationType voteType);
-
-    //VoteConfirmationDialog* voteConfirmationDialog;
+    bool fullViewMode;
 
 private slots:
     //ninjam panel controls

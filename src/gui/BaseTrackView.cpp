@@ -91,6 +91,7 @@ QSize BaseTrackView::minimumSizeHint() const{
 void BaseTrackView::setToNarrow(){
     if(!this->narrowed){
         this->narrowed = true;
+        ui->mainLayout->setContentsMargins(3,3,3,3);
         updateGeometry();
     }
 }
@@ -98,6 +99,7 @@ void BaseTrackView::setToNarrow(){
 void BaseTrackView::setToWide(){
     if(narrowed){
         this->narrowed = false;
+        ui->mainLayout->setContentsMargins(3,3,3,3);
         updateGeometry();
     }
 }
@@ -235,8 +237,8 @@ void BaseTrackView::drawFaderDbValue(QPainter &p){
     QString text = QString::number(faderDb, 'f', 1);
     int textWidth = p.fontMetrics().width(text);
 
-    int textX = ui->faderPanel->x() + ui->levelSlider->x() + ui->levelSlider->width()/2 - textWidth  - ((!narrowed) ? 14 : 11);
-    int textY =  (1 - ((double)ui->levelSlider->value()/ui->levelSlider->maximum())) * (ui->levelSlider->height() - FADER_ICON_HEIGHT) + ui->faderPanel->y() + ui->levelSlider->y();
+    int textX = ui->mainWidget->x() + ui->levelSlider->x() + ui->levelSlider->width()/2 - textWidth  - ((!narrowed) ? 14 : 11);
+    int textY =  (1 - ((double)ui->levelSlider->value()/ui->levelSlider->maximum())) * (ui->levelSlider->height() - FADER_ICON_HEIGHT) + ui->mainWidget->y() + ui->levelSlider->y();
 
     textY += FADER_ICON_HEIGHT/2;//icon height
     p.drawText(textX, textY, text);

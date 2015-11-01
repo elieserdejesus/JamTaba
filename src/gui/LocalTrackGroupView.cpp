@@ -165,7 +165,7 @@ void LocalTrackGroupView::setPeakMeterMode(bool faderOnly){
         this->peakMeterOnly = faderOnly;
         this->ui->topPanel->setVisible(!this->peakMeterOnly);
         foreach (BaseTrackView* baseView, trackViews) {
-            dynamic_cast<LocalTrackView*> (baseView)->setFaderOnlyMode(faderOnly);
+            dynamic_cast<LocalTrackView*> (baseView)->setPeakMetersOnlyMode(faderOnly);
         }
         updateGeometry();
         adjustSize();

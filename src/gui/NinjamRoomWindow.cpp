@@ -45,7 +45,8 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
     QWidget(parent),
     ui(new Ui::NinjamRoomWindow),
     mainController(mainController),
-    chatPanel(new ChatPanel(this, mainController->getBotNames() ))
+    chatPanel(new ChatPanel(this, mainController->getBotNames() )),
+    fullViewMode(true)
     //voteConfirmationDialog(nullptr)
 {
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow construtor..";
@@ -103,14 +104,24 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
 }
 //+++++++++=
 void NinjamRoomWindow::setFullViewStatus(bool fullView){
+    if(fullView == this->fullViewMode){
+        return;
+    }
+    this->fullViewMode = fullView;
     int contentMargin = fullView ? 9 : 3;
-    ui->contentLayout->setContentsMargins(contentMargin, 0, contentMargin, 0);
-    ui->contentLayout->setSpacing(fullView ? 24 : 0);
+    ui->contentLayout->setContentsMargins(contentMargin, 6, contentMargin, 0);
+    ui->contentLayout->setSpacing(fullView ? 24 : 6);
 
     //main layout
     int topMargim = fullView ? 9 : 0;
     int bottomMargim = fullView ? 9 : 3;
     layout()->setContentsMargins(0, topMargim, 0, bottomMargim);
+
+    ui->tracksPanel->layout()->setSpacing(fullView ? 6 : 3);
+
+    foreach (NinjamTrackGroupView* trackGroup, trackGroups.values()) {
+        trackGroup->setNarrowStatus(!fullView);
+    }
 
     update();
 }
@@ -290,6 +301,7 @@ void NinjamRoomWindow::on_channelAdded(Ninjam::User user, Ninjam::UserChannel ch
         QString channelName = channel.getName();
         QString userIp = user.getIp();
         NinjamTrackGroupView* trackView = new NinjamTrackGroupView(ui->tracksPanel, this->mainController, channelID, userName, channelName, userIp );
+        trackView->setNarrowStatus(!fullViewMode);
         ui->tracksPanel->layout()->addWidget(trackView);
         trackGroups.insert(user.getFullName(), trackView);
         adjustTracksWidth();
@@ -346,6 +358,10 @@ void NinjamRoomWindow::ninjamBpmComboChanged(QString newText){
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::adjustTracksWidth(){
+    if(!fullViewMode){//in mini view mode tracks are always narrowed
+        return;
+    }
+
     int availableWidth = ui->scrollArea->width();
 
     //can use wide to all tracks?

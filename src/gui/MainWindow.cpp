@@ -1083,6 +1083,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
 
     showPeakMetersOnlyInLocalControls(!fullViewMode || localChannels.first()->isShowingPeakMeterOnly());
 
+    ui.chatArea->setMinimumWidth(fullViewMode ? 280 : 180);
 
     //refresh the public rooms list
     if(!mainController->isPlayingInNinjamRoom()){

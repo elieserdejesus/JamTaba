@@ -44,8 +44,8 @@ public:
 
     virtual void setUnlightStatus(bool unlighted);
 
-    void setFaderOnlyMode(bool faderOnly);
-    void toggleFaderOnlyMode();
+    void setPeakMetersOnlyMode(bool peakMetersOnly);
+    void togglePeakMetersOnlyMode();
 
     QSize sizeHint() const;
 
@@ -80,7 +80,7 @@ private:
 
     void init(int channelIndex, float initialGain, BoostValue boostValue, float initialPan, bool muted);
 
-    bool faderOnly;
+    bool peakMetersOnly;
 
     void initializeBoostButtons(BoostValue boostValue);
 private slots:
