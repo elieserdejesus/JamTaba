@@ -14,16 +14,19 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
 
 
     //initialize combos
-    for (int bpm = 60; bpm < 200; bpm += 10) {
+    for (int bpm = 40; bpm <= 400; bpm += 10) {
         ui->comboBpm->addItem(QString::number(bpm), bpm);
     }
-    int bpis[] = {16, 32, 48, 64};
+    int bpis[] = {8, 16, 32, 48, 64};
     for (int i = 0; i < 4; ++i) {
         ui->comboBpi->addItem(QString::number(bpis[i]), bpis[i]);
     }
 
-    ui->comboBpm->setValidator(new QIntValidator(60, 240, ui->comboBpm));
-    ui->comboBpi->setValidator(new QIntValidator(4, 64, ui->comboBpi));
+    ui->comboBpm->setValidator(new QIntValidator(40, 400, ui->comboBpm));
+    ui->comboBpi->setValidator(new QIntValidator(3, 64, ui->comboBpi));
+
+    ui->comboBpi->setCompleter(0);//disabling completer
+    ui->comboBpm->setCompleter(0);//disabling completer
 
     QObject::connect( ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)), this, SLOT(comboAccentsChanged(int)));
     QObject::connect(ui->comboShape, SIGNAL(currentIndexChanged(int)), this, SLOT(comboShapeChanged(int)));

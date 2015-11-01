@@ -484,6 +484,9 @@
         <property name="currentText">
          <string notr="true"/>
         </property>
+        <property name="maxVisibleItems">
+         <number>40</number>
+        </property>
        </widget>
       </item>
       <item row="2" column="0">

@@ -9,9 +9,6 @@ class QPushButton;
 class QObject;
 class QEvent;
 
-//#include <QComboBox>
-//#include <QStringListModel>
-
 namespace Ui {
 class NinjamPanel;
 }
