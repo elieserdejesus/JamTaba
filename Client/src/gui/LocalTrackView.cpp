@@ -78,7 +78,7 @@ void LocalTrackView::init(int channelIndex, float initialGain, BaseTrackView::Bo
 
     setUnlightStatus(false);
 
-    faderOnly = false;
+    peakMetersOnly = false;
 }
 
 void LocalTrackView::initializeBoostButtons(BoostValue boostValue){
@@ -98,57 +98,61 @@ void LocalTrackView::initializeBoostButtons(BoostValue boostValue){
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 QSize LocalTrackView::sizeHint() const{
-    if(faderOnly){
-        int width = ui->faderPanel->sizeHint().width() + layout()->contentsMargins().left() + layout()->contentsMargins().right();
+    if(peakMetersOnly){
+        int width = ui->mainWidget->sizeHint().width() + layout()->contentsMargins().left() + layout()->contentsMargins().right();
         return QSize( width, height());
     }
     return BaseTrackView::sizeHint();
 }
 
-void LocalTrackView::setFaderOnlyMode(bool faderOnly){
-    if(this->faderOnly != faderOnly){
-        this->faderOnly = faderOnly;
-        ui->topPanel->setVisible(!this->faderOnly);
-        ui->levelSlider->setVisible(!this->faderOnly);
-        ui->boostPanel->setVisible(!this->faderOnly);
-        //ui->boostSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
-        ui->panSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
-        //ui->panSpacer->invalidate();
+void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly){
+    if(this->peakMetersOnly != peakMetersOnly){
+        this->peakMetersOnly = peakMetersOnly;
+        //ui->panPanel->setVisible(!this->peakMetersOnly);
+        //ui->levelSlider->setVisible(!this->peakMetersOnly);
+        ui->boostPanel->setVisible(!this->peakMetersOnly);
+
+        ui->leftWidget->setVisible(!this->peakMetersOnly);
+
+
+        ui->panSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->peakMetersOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
+
 
         QMargins margins = layout()->contentsMargins();
-        margins.setLeft(faderOnly ? 2 : 6);
-        margins.setRight(faderOnly ? 2 : 6);
+        margins.setLeft(peakMetersOnly ? 2 : 6);
+        margins.setRight(peakMetersOnly ? 2 : 6);
         layout()->setContentsMargins(margins);
 
         if(fxPanel){
-            fxPanel->setVisible(!faderOnly);
-            inputPanel->setVisible(!faderOnly);
+            fxPanel->setVisible(!peakMetersOnly);
+            inputPanel->setVisible(!peakMetersOnly);
 
-            fxSpacer->changeSize(20, faderOnly ? 0 : 20, QSizePolicy::Minimum, faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
+            fxSpacer->changeSize(20, peakMetersOnly ? 0 : 20, QSizePolicy::Minimum, peakMetersOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
         }
-        ui->soloButton->setVisible(!faderOnly);
-        ui->muteButton->setVisible(!faderOnly);
-        ui->peaksDbLabel->setVisible(!faderOnly);
+        ui->soloButton->setVisible(!peakMetersOnly);
+        ui->muteButton->setVisible(!peakMetersOnly);
+        ui->peaksDbLabel->setVisible(!peakMetersOnly);
         //vertical spacer in bottom of VUs
         //ui->verticalSpacer->changeSize(20, 20, QSizePolicy::Minimum, this->faderOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
-        ui->horizontalSpacer->changeSize( faderOnly ? 0 : 20,20, QSizePolicy::Minimum, QSizePolicy::Fixed);
+        //ui->horizontalSpacer->changeSize( peakMetersOnly ? 0 : 20,20, QSizePolicy::Minimum, QSizePolicy::Fixed);
+         ui->levelSlider->parentWidget()->layout()->setAlignment( ui->levelSlider, peakMetersOnly ? Qt::AlignRight : Qt::AlignHCenter);
 
         if(inputTypeIconLabel){
-            inputTypeIconLabel->setVisible(!faderOnly);
+            inputTypeIconLabel->setVisible(!peakMetersOnly);
         }
 
-        this->drawDbValue = !faderOnly;
+        this->drawDbValue = !peakMetersOnly;
 
         updateGeometry();
 
-        setProperty("faderOnly", QVariant(faderOnly));
+        setProperty("faderOnly", QVariant(peakMetersOnly));
         style()->unpolish(this);
         style()->polish(this);
     }
 }
 
-void LocalTrackView::toggleFaderOnlyMode(){
-    setFaderOnlyMode(!faderOnly);
+void LocalTrackView::togglePeakMetersOnlyMode(){
+    setPeakMetersOnlyMode(!peakMetersOnly);
 }
 
 
