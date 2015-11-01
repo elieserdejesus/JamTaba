@@ -80,6 +80,7 @@ public:
     WindowSettings();
     QPointF location;
     bool maximized;
+    bool fullViewMode;
     void write(QJsonObject& out);
     void read(QJsonObject in);
 };
@@ -212,8 +213,9 @@ public:
 
     //+++++++++   Window  +++++++++++++++++++++++
     inline QPointF getLastWindowLocation() const{return windowSettings.location;}
-    void setWindowSettings(bool windowIsMaximized, QPointF location) ;
+    void setWindowSettings(bool windowIsMaximized, bool usingFullView, QPointF location) ;
     inline bool windowWasMaximized() const{return windowSettings.maximized;}
+    inline bool windowsWasFullViewMode() const{return windowSettings.fullViewMode;}
 
     //++++++++++++++++++++++++++++++++++++++++
     void setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice, int sampleRate, int bufferSize) ;

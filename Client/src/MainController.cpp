@@ -594,8 +594,8 @@ void MainController::storeIntervalProgressShape(int shape){
 
 
 
-void MainController::storeWindowSettings(bool maximized, QPointF location){
-    settings.setWindowSettings(maximized, location);
+void MainController::storeWindowSettings(bool maximized, bool usingFullViewMode, QPointF location){
+    settings.setWindowSettings(maximized, usingFullViewMode, location);
 }
 
 void MainController::storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice, int sampleRate, int bufferSize, QList<bool> midiInputsStatus){
