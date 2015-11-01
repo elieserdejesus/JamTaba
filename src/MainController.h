@@ -168,7 +168,7 @@ public:
     void storeMetronomeSettings(float metronomeGain, float metronomePan, bool metronomeMuted);
     void storeIntervalProgressShape(int shape);
 
-    void storeWindowSettings(bool maximized, QPointF location);
+    void storeWindowSettings(bool maximized, bool usingFullViewMode, QPointF location);
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice, int sampleRate, int bufferSize, QList<bool> midiInputStatus) ;
     void storeRecordingPath(QString newPath);
     void storeRecordingMultiTracksStatus(bool savingMultiTracks);

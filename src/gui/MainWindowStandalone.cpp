@@ -15,7 +15,7 @@ NinjamRoomWindow* MainWindowStandalone::createNinjamWindow(Login::RoomInfo roomI
 
 void MainWindowStandalone::closeEvent(QCloseEvent * e){
     MainWindow::closeEvent(e);
-    hide();//hide before stop main controller and disconnect from login server to
+    hide();//hide before stop main controller and disconnect from login server
 
     foreach (LocalTrackGroupView* trackGroup, localChannels) {
         trackGroup->closePluginsWindows();
@@ -23,7 +23,7 @@ void MainWindowStandalone::closeEvent(QCloseEvent * e){
 }
 
 void MainWindowStandalone::showEvent(QShowEvent *){
-    //wait 50 ms before restore the plugins list to avoid freeze the GUI in hidden state while plugins are loaded
+    //wait 50 ms before restore the plugins list to avoid freeze the GUI in hidden state while plugins are loading
     QTimer::singleShot(50, this, &MainWindowStandalone::restorePluginsList);
 }
 

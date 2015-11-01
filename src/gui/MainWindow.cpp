@@ -55,14 +55,13 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     pluginScanDialog(nullptr),
     ninjamWindow(nullptr),
     roomToJump(nullptr),
-    fullViewMode(false)
+    fullViewMode(true)
 {
     qCInfo(jtGUI) << "Creating MainWindow...";
 	ui.setupUi(this);
 
     setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
 
-    initializeWindowState();//window size, maximization ...
     initializeLoginService();
     //initializePluginFinder(); //called in derived classes
     initializeMainTabWidget();
@@ -117,6 +116,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
         this->ui.actionAudioPreferences->setVisible(false);
         this->ui.actionMidiPreferences->setVisible(false);
     }
+
+    initializeWindowState();//window size, maximization ...
 
     showBusyDialog("Loading rooms list ...");
     qCInfo(jtGUI) << "MainWindow created!";
@@ -468,11 +469,14 @@ void MainWindow::initializeLoginService(){
 }
 
 void MainWindow::initializeWindowState(){
+    setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
+
     if(mainController->getSettings().windowWasMaximized() && fullViewMode){
         qCDebug(jtGUI)<< "setting window state to maximized";
         setWindowState(Qt::WindowMaximized);
     }
     else{
+
         QPointF location = mainController->getSettings().getLastWindowLocation();
         QDesktopWidget* desktop = QApplication::desktop();
         int desktopWidth = desktop->width();
@@ -828,7 +832,10 @@ void MainWindow::resizeEvent(QResizeEvent *){
 
 void MainWindow::changeEvent(QEvent *ev){
     if(ev->type() == QEvent::WindowStateChange && mainController){
-        mainController->storeWindowSettings(isMaximized(), computeLocation() );
+        if(!fullViewMode && isMaximized()){//user is in mini mode but maximizing window
+            setFullViewStatus(true);
+        }
+        //mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation() );
     }
     ev->accept();
 }
@@ -842,7 +849,7 @@ QPointF MainWindow::computeLocation() const{
 
 void MainWindow::closeEvent(QCloseEvent *){
     if(mainController){
-        mainController->storeWindowSettings(isMaximized(), computeLocation() );
+        mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation() );
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1061,6 +1068,7 @@ void MainWindow::initializeViewModeMenu(){
 
 void MainWindow::on_menuViewModeTriggered(QAction *){
     setFullViewStatus(ui.actionFullView->isChecked());
+
 }
 
 void MainWindow::setFullViewStatus(bool fullViewActivated){
@@ -1076,6 +1084,9 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
     else{
         setMinimumSize(QSize(1180, 790));
         setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
+    }
+    if(!isMaximized()){
+        setWindowState(Qt::WindowNoState);
     }
 
     int tabLayoutMargim = fullViewMode ? 9 : 0;
@@ -1100,6 +1111,10 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
     }
 
     ui.centralWidget->layout()->setSpacing(fullViewMode ? 12 : 3);
+
+    ui.actionFullView->setChecked(fullViewMode);
+
+    //mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation() );
 }
 
 
