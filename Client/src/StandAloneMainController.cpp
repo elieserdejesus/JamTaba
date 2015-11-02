@@ -314,12 +314,13 @@ void StandaloneMainController::addDefaultPluginsScanPath(){
     */
     QStringList vstPaths;
 #ifdef Q_OS_WIN
-    QSettings settings("HKEY_LOCAL_MACHINE\\SOFTWARE\\VST\\", QSettings::NativeFormat);
-    vstPaths.append(settings.value("VSTPluginsPath").toString());
 
-    #ifdef _WIN64//64 bits?
+    #ifdef _WIN64//64 bits
         QSettings wowSettings("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\VST\\", QSettings::NativeFormat);
         vstPaths.append(wowSettings.value("VSTPluginsPath").toString());
+    #else//32 bits
+        QSettings settings("HKEY_LOCAL_MACHINE\\SOFTWARE\\VST\\", QSettings::NativeFormat);
+        vstPaths.append(settings.value("VSTPluginsPath").toString());
     #endif
 #endif
 
