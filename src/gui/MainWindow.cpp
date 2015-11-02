@@ -1074,14 +1074,10 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
     if(!fullViewActivated){//mini view
         setMinimumSize(QSize(800, 600));
         setMaximumSize(minimumSize());
-//        setWindowFlags(
-//                    (windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMaximizeButtonHint
-//                );
     }
     else{//full view
         setMinimumSize(QSize(1180, 790));
         setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-        //setFixedSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
     }
 
     int tabLayoutMargim = fullViewMode ? 9 : 0;

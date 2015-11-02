@@ -3,6 +3,7 @@
 #include "../NinjamController.h"
 #include "../VstPlugin/Plugin.h"
 #include "../log/logging.h"
+#include "Editor.h"
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class AudioDriverVST : public Audio::NullAudioDriver{
 public:
@@ -45,6 +46,16 @@ MainControllerVST::MainControllerVST(Persistence::Settings settings, JamtabaPlug
 MainControllerVST::~MainControllerVST(){
     if(mainWindow){
         saveLastUserSettings(mainWindow->getInputsSettings());
+    }
+}
+
+void MainControllerVST::resizePluginEditor(int newWidth, int newHeight){
+    if(plugin){
+        VstEditor* editor = (VstEditor*)plugin->getEditor();
+        if(editor){
+            editor->resize(newWidth, newHeight);
+        }
+        plugin->sizeWindow(newWidth, newHeight);
     }
 }
 

@@ -79,6 +79,8 @@ protected:
     QList<LocalTrackGroupView*> localChannels;
 
     virtual NinjamRoomWindow* createNinjamWindow(Login::RoomInfo, Controller::MainController*) = 0;
+
+    virtual void setFullViewStatus(bool fullViewActivated);
 protected slots:
     void on_tabCloseRequest(int index);
     void on_tabChanged(int index);
@@ -183,7 +185,7 @@ private:
 
     bool fullViewMode;//full view or mini view mode?
 
-    void setFullViewStatus(bool fullViewActivated);
+
 
     void refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms);
 

@@ -55,6 +55,8 @@ public:
     int getHostBpm() const;
 
     QString getHostName() const;
+
+    void resizePluginEditor(int newWidth, int newHeight);
 private:
     int sampleRate;
     JamtabaPlugin* plugin;

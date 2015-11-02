@@ -108,6 +108,7 @@ void VstEditor::detachMainController(){
 
 bool VstEditor::getRect (ERect** rect)
 {
+    //rectangle.
     *rect = &rectangle;
     return true;
 }
@@ -118,9 +119,39 @@ void VstEditor::clientResize(HWND h_parent, int width, int height)
     POINT ptDiff;
     GetClientRect(h_parent, &rcClient);
     GetWindowRect(h_parent, &rcWindow);
+//    qDebug() << "ClientRect" << "top: " << rcClient.top
+//             << "left: " << rcClient.left
+//             << "right: " << rcClient.right
+//             << "bottom: " << rcClient.bottom;
+
+//    qDebug() << "WindowRect" << "top: " << rcWindow.top
+//             << "left: " << rcWindow.left
+//             << "right: " << rcWindow.right
+//             << "bottom: " << rcWindow.bottom;
+//    qDebug() << "Width: " << width << " Height:" << height;
+
     ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
     ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
-    MoveWindow(h_parent, rcWindow.left, rcWindow.top, width + ptDiff.x, height + ptDiff.y, TRUE);
+    //MoveWindow(h_parent, rcWindow.left, rcWindow.top, width + ptDiff.x, height + ptDiff.y, TRUE);
+    //MoveWindow(h_parent, rectangle.left, rectangle.top, width, height, TRUE);
+    //MoveWindow(h_parent, rcWindow.left, rcWindow.top, width - ptDiff.x, height - ptDiff.y, TRUE);
+    //rectangle.left = rcWindow.left;
+    //rectangle.right = rcWindow.right;
+    //rectangle.top = rcWindow.top;
+    //rectangle.left = rcWindow.left;
+}
+
+void VstEditor::resize(int width, int height){
+    if(widget){
+        widget->resize(width, height);
+    }
+    if(mainWindow){
+        mainWindow->resize(width, height);
+    }
+    rectangle.right = width;
+    rectangle.bottom = height;
+
+    clientResize( (HWND)systemWindow, width, height );
 }
 
 bool VstEditor::open(void* ptr){
