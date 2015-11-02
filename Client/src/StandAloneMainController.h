@@ -82,6 +82,8 @@ protected slots:
     void on_ninjamStartProcessing(int intervalPosition);
     void on_VSTPluginFounded(QString name, QString group, QString path);
 
+private slots:
+    void on_vstPluginRequestedWindowResize(QString pluginName, int newWidht, int newHeight);
 
 private:
     //VST

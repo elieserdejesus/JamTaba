@@ -68,6 +68,9 @@ win32{
         !contains(QMAKE_TARGET.arch, x86_64) {
             message("msvc x86 build") ## Windows x86 (32bit) specific build here
             LIBS_PATH = "static/win32-msvc"
+
+            #after a lot or research Ezee found this userfull link explaining how compile to be compatible with Windows XP: http://www.tripleboot.org/?p=423
+            QMAKE_LFLAGS_WINDOWS = /SUBSYSTEM:WINDOWS,5.01
         } else {
             message("msvc x86_64 build") ## Windows x64 (64bit) specific build here
             LIBS_PATH = "static/win64-msvc"
@@ -75,9 +78,6 @@ win32{
 
         CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbis -logg
         else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lrtmidid -lvorbisfiled -lvorbisd -loggd
-
-        #after a lot or research Ezee found this userfull link explaining how compile to be compatible with Windows XP: http://www.tripleboot.org/?p=423
-        QMAKE_LFLAGS_WINDOWS = /SUBSYSTEM:WINDOWS,5.01
 
         CONFIG(release, debug|release) {
             #ltcg - http://blogs.msdn.com/b/vcblog/archive/2009/02/24/quick-tips-on-using-whole-program-optimization.aspx

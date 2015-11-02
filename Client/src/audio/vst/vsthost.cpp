@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QDateTime>
 #include <QApplication>
+#include <QMap>
 #include <cmath>
 #include "../log/logging.h"
 
@@ -160,11 +161,22 @@ long VSTCALLBACK Host::hostCallback(AEffect *effect, long opcode, long index, lo
             return 0L;
 
     case audioMasterVersion : //1
-        return 2;
+        return 2400L;
         //	return 2400L; // Supports VST v2.4
         //	return 2300L; // Supports VST v2.3
         //	return 2200L; // Supports VST v2.2
         //	return 2100L; // Supports VST v2.1
+
+    case audioMasterSizeWindow:
+    {
+        //[index]: new width [value]: new height [return value]: 1 if supported
+        int newWidth = index;
+        int newHeight = value;
+        char temp[128];//kVstMaxEffectNameLen]; //some dumb plugins don't respect kVstMaxEffectNameLen
+        effect->dispatcher(effect, effGetEffectName, 0, 0, temp, 0);
+        emit Host::getInstance()->pluginRequestingWindowResize(QString::fromUtf8(temp), newWidth, newHeight);
+        return 1L;
+    }
 
     case audioMasterGetBlockSize:
         return Host::getInstance()->blockSize;
