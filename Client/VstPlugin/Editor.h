@@ -17,7 +17,7 @@ public:
     VstEditor(JamtabaPlugin* jamtaba);
     ~VstEditor();
     bool getRect (ERect** rect);
-    void clientResize(HWND h_parent, int width, int height);
+    void resize(int width, int height);
     bool open(void* ptr);
     void close();
     void detachMainController();

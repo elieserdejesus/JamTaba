@@ -11,6 +11,7 @@ public:
     MainWindowVST(Controller::MainController* mainController);
 protected:
     NinjamRoomWindow* createNinjamWindow(Login::RoomInfo, Controller::MainController *);
+    void setFullViewStatus(bool fullViewActivated);
 };
 
 #endif // MAINWINDOWVST_H

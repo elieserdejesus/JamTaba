@@ -124,10 +124,10 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly){
         layout()->setContentsMargins(margins);
 
         if(fxPanel){
-            fxPanel->setVisible(!peakMetersOnly);
-            inputPanel->setVisible(!peakMetersOnly);
+            fxPanel->setVisible(!peakMetersOnly && !mainController->isRunningAsVstPlugin());
+            inputPanel->setVisible(!peakMetersOnly && !mainController->isRunningAsVstPlugin());
 
-            fxSpacer->changeSize(20, peakMetersOnly ? 0 : 20, QSizePolicy::Minimum, peakMetersOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
+            fxSpacer->changeSize(20, peakMetersOnly || mainController->isRunningAsVstPlugin() ? 0 : 20, QSizePolicy::Minimum, peakMetersOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
         }
         ui->soloButton->setVisible(!peakMetersOnly);
         ui->muteButton->setVisible(!peakMetersOnly);
@@ -138,7 +138,7 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly){
          ui->levelSlider->parentWidget()->layout()->setAlignment( ui->levelSlider, peakMetersOnly ? Qt::AlignRight : Qt::AlignHCenter);
 
         if(inputTypeIconLabel){
-            inputTypeIconLabel->setVisible(!peakMetersOnly);
+            inputTypeIconLabel->setVisible(!peakMetersOnly && !mainController->isRunningAsVstPlugin());
         }
 
         this->drawDbValue = !peakMetersOnly;
