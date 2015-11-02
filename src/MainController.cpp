@@ -158,9 +158,11 @@ void MainController::exportLogFile(){
     if(logDir.exists()){
         QString logConfigFilePath = logDir.absoluteFilePath(LOG_CONFIG_FILE);
         if(!QFile(logConfigFilePath).exists()){//log config file in application directory? (same dir as json config files, cache.bin, etc.)
-            QFile::copy(":/" + LOG_CONFIG_FILE, logConfigFilePath ) ;
-            QFile loggingFile(logConfigFilePath);
-            loggingFile.setPermissions(QFile::WriteOther);//The file is writable by anyone.
+            bool result = QFile::copy(":/" + LOG_CONFIG_FILE, logConfigFilePath ) ;
+            if(result){
+                QFile loggingFile(logConfigFilePath);
+                loggingFile.setPermissions(QFile::WriteOther);//The file is writable by anyone.
+            }
         }
     }
     else{
