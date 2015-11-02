@@ -46,6 +46,8 @@ BOOL WINAPI DllMain( HINSTANCE hInst, DWORD dwReason, LPVOID /*lpvReserved*/ )
 {
     static bool ownApplication = FALSE;
      if ( dwReason == DLL_PROCESS_ATTACH ){
+         QApplication::setApplicationName("Jamtaba 2");
+         QApplication::setApplicationVersion(APP_VERSION);
          Controller::MainController::exportLogFile();//copy logging.ini from resources to Jamtaba writable path
          QString logFile = Controller::MainController::getLogConfigFilePath();
          if(!logFile.isEmpty()){

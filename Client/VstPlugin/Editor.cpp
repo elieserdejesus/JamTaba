@@ -123,7 +123,7 @@ void VstEditor::resize(int width, int height){
     rectangle.right = width;
     rectangle.bottom = height;
 
-    clientResize( (HWND)systemWindow, width, height );
+    //clientResize( (HWND)systemWindow, width, height );
 }
 
 bool VstEditor::open(void* ptr){
