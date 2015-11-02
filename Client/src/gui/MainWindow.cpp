@@ -832,10 +832,10 @@ void MainWindow::resizeEvent(QResizeEvent *){
 
 void MainWindow::changeEvent(QEvent *ev){
     if(ev->type() == QEvent::WindowStateChange && mainController){
-        if(!fullViewMode && isMaximized()){//user is in mini mode but maximizing window
-            setFullViewStatus(true);
-        }
-        //mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation() );
+//        if(isMaximized() && !fullViewMode){
+//            setFullViewStatus(true);
+//        }
+        mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation() );
     }
     ev->accept();
 }
@@ -1011,8 +1011,6 @@ void MainWindow::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audio
         channel->refreshInputSelectionNames();
     }
 
-
-
     mainController->getMidiDriver()->start();
     mainController->getAudioDriver()->start();
 }
@@ -1072,21 +1070,18 @@ void MainWindow::on_menuViewModeTriggered(QAction *){
 }
 
 void MainWindow::setFullViewStatus(bool fullViewActivated){
-    if(fullViewActivated == this->fullViewMode){
-        return;
-    }
-
     this->fullViewMode = fullViewActivated;
     if(!fullViewActivated){//mini view
         setMinimumSize(QSize(800, 600));
         setMaximumSize(minimumSize());
+//        setWindowFlags(
+//                    (windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMaximizeButtonHint
+//                );
     }
-    else{
+    else{//full view
         setMinimumSize(QSize(1180, 790));
         setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-    }
-    if(!isMaximized()){
-        setWindowState(Qt::WindowNoState);
+        //setFixedSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
     }
 
     int tabLayoutMargim = fullViewMode ? 9 : 0;
@@ -1113,6 +1108,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
     ui.centralWidget->layout()->setSpacing(fullViewMode ? 12 : 3);
 
     ui.actionFullView->setChecked(fullViewMode);
+    ui.actionMiniView->setChecked(!fullViewMode);
 
     //mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation() );
 }
