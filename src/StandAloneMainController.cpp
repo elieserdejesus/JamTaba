@@ -8,6 +8,7 @@
 #include "audio/vst/vsthost.h"
 #include "../audio/vst/PluginFinder.h"
 #include "../NinjamController.h"
+#include <QDialog>
 
 #if _WIN32
     #include "windows.h"
@@ -253,7 +254,19 @@ StandaloneMainController::StandaloneMainController(Persistence::Settings setting
 
     application->setQuitOnLastWindowClosed(true);
 
-    //initializePluginsList();
+    QObject::connect(Vst::Host::getInstance(), SIGNAL(pluginRequestingWindowResize(QString,int,int)),
+                     this, SLOT(on_vstPluginRequestedWindowResize(QString,int,int)));
+
+
+}
+
+void StandaloneMainController::on_vstPluginRequestedWindowResize(QString pluginName, int newWidht, int newHeight){
+    QDialog* pluginEditorWindow = Vst::VstPlugin::getPluginEditorWindow(pluginName);
+    if(pluginEditorWindow){
+        pluginEditorWindow->setFixedSize(newWidht, newHeight);
+        //pluginEditorWindow->updateGeometry();
+
+    }
 }
 
 void StandaloneMainController::start(){

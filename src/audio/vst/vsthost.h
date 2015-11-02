@@ -3,6 +3,7 @@
 
 #include "aeffectx.h"
 #include <QScopedPointer>
+#include <QObject>
 
 namespace Midi {
 class MidiBuffer;
@@ -12,8 +13,10 @@ namespace Vst {
 
 class VstPlugin;
 
-class Host
+class Host : public QObject
 {
+    Q_OBJECT
+
     friend class VstPlugin;
 
 public:
@@ -29,9 +32,13 @@ public:
     void update(int intervalPosition);
 protected:
     static long VSTCALLBACK hostCallback(AEffect *effect, long opcode, long index, long value, void *ptr, float opt);
+
+signals:
+    void pluginRequestingWindowResize(QString pluginName, int newWidth, int newHeight);
+
 private:
     VstTimeInfo vstTimeInfo;
-    //int sampleRate;
+
     int blockSize;
 
     void clearVstTimeInfoFlags();

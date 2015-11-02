@@ -2,7 +2,7 @@
 
 #include "../core/plugins.h"
 #include "aeffectx.h"
-
+#include <QMap>
 #include <QLibrary>
 
 #define MAX_MIDI_EVENTS 40 //in my tests playing piano I can genenerate just 3 messages per block (256 samples) at maximum
@@ -31,6 +31,7 @@ public:
     void updateGui();
     void setSampleRate(int newSampleRate);
     void setBypass(bool state);
+    static QDialog* getPluginEditorWindow(QString pluginName);
 protected:
     void unload();
 
@@ -72,6 +73,8 @@ private:
 
 
     VSTEventBlock<MAX_MIDI_EVENTS> vstMidiEvents;
+
+    static QMap<QString, QDialog*> editorsWindows;
 
 
 };

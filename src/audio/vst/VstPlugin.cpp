@@ -1,6 +1,7 @@
 #include "VstPlugin.h"
 #include "aeffectx.h"
 #include "vsthost.h"
+#include <QMap>
 
 #ifdef Q_OS_WIN
     #include <windows.h>
@@ -27,6 +28,7 @@
 
 using namespace Vst;
 
+QMap<QString, QDialog*> VstPlugin::editorsWindows;
 //+++++++++++++++++++++++++++
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -338,6 +340,8 @@ void VstPlugin::closeEditor(){
     }
     Audio::Plugin::closeEditor();
     qCDebug(jtVstPlugin) << "Editor closed";
+
+    VstPlugin::editorsWindows.remove(getName());//remove the plugin editor reference from map
 }
 
 void VstPlugin::openEditor(QPoint centerOfScreen){
@@ -395,9 +399,15 @@ void VstPlugin::openEditor(QPoint centerOfScreen){
 
     qCDebug(jtVstPlugin) << getName() << " editor opened";
 
+    //save the editor in a map to use this reference when plugin request a window resize
+    VstPlugin::editorsWindows.insert(getName(), editorWindow);
 
 
     //resume();
+}
+
+QDialog* VstPlugin::getPluginEditorWindow(QString pluginName){
+    return VstPlugin::editorsWindows[pluginName];
 }
 
 void VstPlugin::updateGui(){
