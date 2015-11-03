@@ -492,7 +492,7 @@ PeakMeter{
     background-color: rgba(0, 0, 0, 10);
     border: 1px inset rgba(0, 0, 0, 15);
     max-width: 5px;
-    min-width: 5px;
+    min-width: 2px;
     border-radius: 2px;
 }
 BaseTrackView[unlighted="true"] PeakMeter{
