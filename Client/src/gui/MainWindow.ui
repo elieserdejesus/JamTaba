@@ -140,11 +140,8 @@
        </item>
        <item>
         <widget class="QPushButton" name="xmitButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+         <property name="toolTip">
+          <string>Enable/disable audio transmission ...</string>
          </property>
          <property name="text">
           <string>Transmit</string>
