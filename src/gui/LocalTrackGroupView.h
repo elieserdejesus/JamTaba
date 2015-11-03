@@ -38,6 +38,8 @@ public:
 
 signals:
     void nameChanged();
+    void trackRemoved();
+    void trackAdded();
 private:
     QPushButton* toolButton;
     static const int MAX_SUB_CHANNELS = 2;

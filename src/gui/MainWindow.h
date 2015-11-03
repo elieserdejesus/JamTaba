@@ -80,10 +80,16 @@ protected:
     virtual NinjamRoomWindow* createNinjamWindow(Login::RoomInfo, Controller::MainController*) = 0;
 
     virtual void setFullViewStatus(bool fullViewActivated);
+
+    bool eventFilter(QObject *target, QEvent *event);
+
 protected slots:
     void on_tabCloseRequest(int index);
     void on_tabChanged(int index);
 
+
+    void on_localTrackAdded();
+    void on_localTrackRemoved();
 
     //themes
     //void on_newThemeSelected(QAction*);
@@ -190,6 +196,7 @@ private:
 
     void showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly);
 
+     void recalculateLeftPanelWidth();
 
 };
 

@@ -128,6 +128,7 @@ void LocalTrackGroupView::addTrackView(BaseTrackView *trackView){
         return;
     }
     TrackGroupView::addTrackView(trackView);
+    emit trackAdded();
 }
 
 void LocalTrackGroupView::setToWide(){
@@ -161,6 +162,7 @@ void LocalTrackGroupView::on_removeSubchannelHovered(){
 void LocalTrackGroupView::on_removeSubChannelClicked(){
     if(trackViews.size() > 1){//can't remove the default/first subchannel
        removeTrackView(1);//always remove the second channel
+       emit trackRemoved();
     }
 }
 

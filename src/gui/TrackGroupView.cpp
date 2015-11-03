@@ -91,6 +91,7 @@ void TrackGroupView::removeTrackView(BaseTrackView* trackView){
         trackViews.at(0)->setToWide();
     }
     updateGeometry();
+
 }
 
 void TrackGroupView::removeTrackView(int trackIndex){
