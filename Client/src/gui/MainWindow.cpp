@@ -1112,6 +1112,9 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
     int tabLayoutMargim = fullViewMode ? 9 : 0;
     ui.tabLayout->setContentsMargins(tabLayoutMargim, tabLayoutMargim, tabLayoutMargim, tabLayoutMargim);
 
+    //int leftPanelMargim = fullViewMode ? 6 : 3;
+    //ui.leftPanel->setContentsMargins(leftPanelMargim, 3, leftPanelMargim, leftPanelMargim);
+
     showPeakMetersOnlyInLocalControls(!fullViewMode || localChannels.first()->isShowingPeakMeterOnly());
 
     ui.chatArea->setMinimumWidth(fullViewMode ? 280 : 180);
