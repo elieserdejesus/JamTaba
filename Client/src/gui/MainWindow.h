@@ -47,7 +47,6 @@ public:
     MainWindow(Controller::MainController* mainController, QWidget *parent=0);
     ~MainWindow();
     virtual void closeEvent(QCloseEvent *);
-    //virtual void showEvent(QShowEvent*);
     virtual void changeEvent(QEvent *);
     virtual void timerEvent(QTimerEvent *);
     virtual void resizeEvent(QResizeEvent*);

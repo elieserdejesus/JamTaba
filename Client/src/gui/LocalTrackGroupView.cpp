@@ -130,6 +130,20 @@ void LocalTrackGroupView::addTrackView(BaseTrackView *trackView){
     TrackGroupView::addTrackView(trackView);
 }
 
+void LocalTrackGroupView::setToWide(){
+    if(trackViews.count() <= 1){//don't allow 2 wide subchannels
+        foreach (BaseTrackView* trackView, this->trackViews) {
+            trackView->setToWide();
+        }
+    }
+}
+
+void LocalTrackGroupView::setToNarrow(){
+    foreach (BaseTrackView* trackView, this->trackViews) {
+        trackView->setToNarrow();
+    }
+}
+
 void LocalTrackGroupView::on_removeChannelHovered(){
     int channelGroupIndex = 1;//just the second channel can be highlighted at moment
     if(channelGroupIndex >= 0 && channelGroupIndex < mainFrame->getChannelGroupsCount()){
