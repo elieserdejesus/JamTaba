@@ -64,6 +64,9 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="accessibleDescription">
+         <string>This is the server's name to join</string>
+        </property>
         <property name="text">
          <string>Name</string>
         </property>
@@ -96,6 +99,12 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="accessibleDescription">
+         <string>Press that button to listen to that server's room</string>
+        </property>
+        <property name="locale">
+         <locale language="English" country="UnitedStates"/>
+        </property>
         <property name="text">
          <string>listen</string>
         </property>
@@ -111,6 +120,9 @@
           <width>50</width>
           <height>16777215</height>
          </size>
+        </property>
+        <property name="accessibleDescription">
+         <string>Press this button to enter that room !</string>
         </property>
         <property name="text">
          <string>enter</string>
@@ -154,6 +166,9 @@
           <width>150</width>
           <height>0</height>
          </size>
+        </property>
+        <property name="accessibleDescription">
+         <string>That zone shows the musicians names</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2"/>
        </widget>
