@@ -33,6 +33,9 @@ public:
     void closePluginsWindows();
     //QSize sizeHint() const;
 
+    void setToNarrow();
+    void setToWide();
+
 signals:
     void nameChanged();
 private:

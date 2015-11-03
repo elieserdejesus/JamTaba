@@ -147,7 +147,6 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly){
     }
     ui.labelSectionTitle->setVisible(!showPeakMetersOnly);
     ui.xmitButton->setText(showPeakMetersOnly ? "X" : "Transmit");
-    //ui.xmitButton->setVisible(!localChannels.first()->isShowingPeakMeterOnly());
 
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
 }
@@ -241,9 +240,11 @@ void MainWindow::on_RoomStreamerError(QString msg){
 void MainWindow::removeChannelsGroup(int channelIndex){
     if(localChannels.size() > 1){//the first channel group can't be removed
         if(channelIndex >= 0 && channelIndex < localChannels.size()){
-            TrackGroupView* channel = localChannels.at(channelIndex);
+            LocalTrackGroupView* channel = localChannels.at(channelIndex);
             ui.localTracksLayout->removeWidget(channel);
             localChannels.removeAt(channelIndex);
+
+            localChannels.first()->setToWide();
 
             channel->deleteLater();
 
@@ -252,13 +253,6 @@ void MainWindow::removeChannelsGroup(int channelIndex){
         }
     }
 }
-
-//void MainFrame::on_toolButtonMenuActionTriggered(QAction *action){
-//    if(action->data().isValid()){//only remove actions contains valid data (the channel index)
-//        int channelIndex = action->data().toInt();
-//        removeLocalChannel(channelIndex);
-//    }
-//}
 
 void MainWindow::highlightChannelGroup(int index) const{
     if(index >= 0 && index < localChannels.size()){
@@ -322,6 +316,11 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
         }
     }
     localChannel->setUnlightStatus(!ui.xmitButton->isChecked());
+    if(!fullViewMode && localChannels.count() > 1){
+        foreach (LocalTrackGroupView* trackGroup, localChannels) {
+            trackGroup->setToNarrow();
+        }
+    }
     return localChannel;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1102,12 +1101,18 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
         }
     }
 
+    if(!fullViewMode && localChannels.count() > 1){
+        foreach (LocalTrackGroupView* localTrackGroup, localChannels) {
+            localTrackGroup->setToNarrow();
+        }
+    }
+
     ui.centralWidget->layout()->setSpacing(fullViewMode ? 12 : 3);
 
     ui.actionFullView->setChecked(fullViewMode);
     ui.actionMiniView->setChecked(!fullViewMode);
 
-    //mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation() );
+
 }
 
 
