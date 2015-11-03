@@ -730,10 +730,13 @@ JamRoomViewPanel  #labelRoomType{
     border-radius: 2px;
     border-width: 1px;
     font-size: 11px;
+    padding: 0px;
     padding-top: 3px;
     padding-bottom: 3px;
     color: black;
     min-height: 15px;
+    min-width: 10px;
+
 }
 
 #xmitButton:checked{

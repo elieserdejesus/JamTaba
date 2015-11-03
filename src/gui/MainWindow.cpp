@@ -145,10 +145,11 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly){
         //channel->togglePeakMeterOnlyMode();
         channel->setPeakMeterMode(showPeakMetersOnly);
     }
-    ui.labelSectionTitle->setVisible(!localChannels.first()->isShowingPeakMeterOnly());
-    ui.xmitButton->setVisible(!localChannels.first()->isShowingPeakMeterOnly());
+    ui.labelSectionTitle->setVisible(!showPeakMetersOnly);
+    ui.xmitButton->setText(showPeakMetersOnly ? "X" : "Transmit");
+    //ui.xmitButton->setVisible(!localChannels.first()->isShowingPeakMeterOnly());
 
-    ui.localControlsCollapseButton->setChecked(localChannels.first()->isShowingPeakMeterOnly());
+    ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
 }
 
 void MainWindow::on_localControlsCollapseButtonClicked(){
