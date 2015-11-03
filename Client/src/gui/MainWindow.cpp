@@ -119,6 +119,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     initializeWindowState();//window size, maximization ...
 
+    ui.localTracksWidget->installEventFilter(this);
+
     showBusyDialog("Loading rooms list ...");
     qCInfo(jtGUI) << "MainWindow created!";
 }
@@ -149,11 +151,32 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly){
     ui.xmitButton->setText(showPeakMetersOnly ? "X" : "Transmit");
 
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
+    recalculateLeftPanelWidth();
+}
+
+void MainWindow::recalculateLeftPanelWidth(){
+    int min = ui.localTracksWidget->sizeHint().width() + 12;
+    int max = min;
+    bool showingPeakMeterOnly = localChannels.first()->isShowingPeakMeterOnly();
+    Qt::ScrollBarPolicy scrollPolicy = Qt::ScrollBarAlwaysOff;
+
+    //limit the local inputs widget in mini mode
+    if(!showingPeakMeterOnly && !fullViewMode){
+        max = 180;
+        if(min > max){
+            min = max;
+            scrollPolicy = Qt::ScrollBarAlwaysOn;
+        }
+    }
+    ui.leftPanel->setMaximumWidth(max);
+    ui.leftPanel->setMinimumWidth(min);
+    ui.scrollArea->setHorizontalScrollBarPolicy(scrollPolicy);
 }
 
 void MainWindow::on_localControlsCollapseButtonClicked(){
     bool isShowingPeakMetersOnly = localChannels.first()->isShowingPeakMeterOnly();
     showPeakMetersOnlyInLocalControls(!isShowingPeakMetersOnly);//toggle
+    recalculateLeftPanelWidth();
 }
 //++++++++++++++++++++++++=
 Persistence::InputsSettings MainWindow::getInputsSettings() const{
@@ -251,6 +274,7 @@ void MainWindow::removeChannelsGroup(int channelIndex){
             mainController->sendRemovedChannelMessage(channelIndex);
             update();
         }
+        recalculateLeftPanelWidth();
     }
 }
 
@@ -268,6 +292,7 @@ void MainWindow::addChannelsGroup(QString name){
     if(mainController->isPlayingInNinjamRoom()){
         mainController->getNinjamController()->scheduleEncoderChangeForChannel(channelIndex);//create an encoder for this channel in next interval
     }
+    recalculateLeftPanelWidth();
 }
 
 //++++++++++++++++++++++++=
@@ -296,6 +321,9 @@ void MainWindow::on_channelNameChanged(){
 LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString channelName, bool createFirstSubchannel){
     LocalTrackGroupView* localChannel = new LocalTrackGroupView(channelGroupIndex, this);
     QObject::connect(localChannel, SIGNAL(nameChanged()), this, SLOT(on_channelNameChanged()));
+    QObject::connect(localChannel, SIGNAL(trackAdded()), this, SLOT(on_localTrackAdded()));
+    QObject::connect(localChannel, SIGNAL(trackRemoved()), this, SLOT(on_localTrackRemoved()));
+
     localChannels.append( localChannel );
 
     localChannel->setGroupName(channelName);
@@ -321,6 +349,7 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
             trackGroup->setToNarrow();
         }
     }
+
     return localChannel;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1101,6 +1130,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
         }
     }
 
+    //local tracks are narrowed in mini mode
     if(!fullViewMode && localChannels.count() > 1){
         foreach (LocalTrackGroupView* localTrackGroup, localChannels) {
             localTrackGroup->setToNarrow();
@@ -1112,8 +1142,26 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
     ui.actionFullView->setChecked(fullViewMode);
     ui.actionMiniView->setChecked(!fullViewMode);
 
+    //recalculateLeftPanelWidth();
+}
+//+++++++++++++++++++++++++++
+void MainWindow::on_localTrackAdded(){
+    recalculateLeftPanelWidth();
+}
 
+void MainWindow::on_localTrackRemoved(){
+    recalculateLeftPanelWidth();
 }
 
 
-
+//++++++++++
+bool MainWindow::eventFilter(QObject *target, QEvent *event)
+{
+    if (target == ui.localTracksWidget) {
+        if (event->type() == QEvent::Resize) {
+            recalculateLeftPanelWidth();
+            return true;
+        }
+    }
+    return QMainWindow::eventFilter(target, event);
+}
