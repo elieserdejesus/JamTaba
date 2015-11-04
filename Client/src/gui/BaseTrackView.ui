@@ -88,6 +88,9 @@
              <verstretch>1</verstretch>
             </sizepolicy>
            </property>
+           <property name="accessibleDescription">
+            <string>This is the volume slider, Moove up to increase the volume or down to decrease it </string>
+           </property>
            <property name="maximum">
             <number>120</number>
            </property>
@@ -200,6 +203,9 @@
             </item>
             <item row="0" column="1" rowspan="2" colspan="2" alignment="Qt::AlignHCenter">
              <widget class="QDial" name="panSlider">
+              <property name="accessibleDescription">
+               <string>This is the Pan knob</string>
+              </property>
               <property name="minimum">
                <number>-4</number>
               </property>
@@ -268,6 +274,9 @@
              <verstretch>1</verstretch>
             </sizepolicy>
            </property>
+           <property name="accessibleDescription">
+            <string>This is the peak meter left </string>
+           </property>
           </widget>
          </item>
          <item row="0" column="1">
@@ -277,6 +286,9 @@
              <horstretch>0</horstretch>
              <verstretch>1</verstretch>
             </sizepolicy>
+           </property>
+           <property name="accessibleDescription">
+            <string>This is the peak meter right </string>
            </property>
           </widget>
          </item>
@@ -299,6 +311,9 @@
            </property>
            <property name="toolTip">
             <string>mute</string>
+           </property>
+           <property name="accessibleDescription">
+            <string>This is the mute button</string>
            </property>
            <property name="layoutDirection">
             <enum>Qt::LeftToRight</enum>
@@ -333,6 +348,9 @@
            </property>
            <property name="toolTip">
             <string>solo</string>
+           </property>
+           <property name="accessibleDescription">
+            <string>this is the solo mode button</string>
            </property>
            <property name="layoutDirection">
             <enum>Qt::LeftToRight</enum>
@@ -371,6 +389,9 @@
               <property name="toolTip">
                <string>+12 db boost</string>
               </property>
+              <property name="accessibleDescription">
+               <string>this is the +12 decibel</string>
+              </property>
               <property name="text">
                <string>+12</string>
               </property>
@@ -384,6 +405,9 @@
               <property name="toolTip">
                <string>no boost</string>
               </property>
+              <property name="accessibleDescription">
+               <string>This is the zero decibel button</string>
+              </property>
               <property name="text">
                <string>0</string>
               </property>
@@ -396,6 +420,9 @@
              <widget class="QPushButton" name="buttonBoostMinus12">
               <property name="toolTip">
                <string>-12 db boost</string>
+              </property>
+              <property name="accessibleDescription">
+               <string>This is -12 decibels button</string>
               </property>
               <property name="text">
                <string>-12</string>
