@@ -67,12 +67,12 @@ My Git knowledge is limited, but it is enough to let us rock !
 Let' me share the 2 things I know about Git, maybe this can usefull for you too:
 
 **When I will work in something new (bug or issue):**
-
+```
 git checkout -b "branchName"  //this create a new branch with  the specified name
-
+```
 **When I've finished the work with the branch "branchName":**
 ```
-git add .  				  //to add all changes
+git add .  				  //to add all changes (don't forget the dot in the command!)
 git commit -m "my cool commit message"    //to commit/confirm all changes
 ```
 
