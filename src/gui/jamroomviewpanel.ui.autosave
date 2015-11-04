@@ -114,6 +114,9 @@
         <property name="accessibleDescription">
          <string>Click that button to listen that room</string>
         </property>
+        <property name="locale">
+         <locale language="English" country="UnitedStates"/>
+        </property>
         <property name="text">
          <string>listen</string>
         </property>
