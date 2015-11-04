@@ -19,6 +19,9 @@
   <property name="windowOpacity">
    <double>1.000000000000000</double>
   </property>
+  <property name="accessibleDescription">
+   <string>This is the busy dialog window</string>
+  </property>
   <property name="modal">
    <bool>false</bool>
   </property>

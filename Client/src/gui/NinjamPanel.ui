@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>NinjamPanel</class>
  <widget class="QWidget" name="NinjamPanel">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>381</width>
+    <height>112</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -124,6 +132,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="accessibleDescription">
+            <string>Slider to change the BPM of the metronome</string>
+           </property>
            <property name="maximum">
             <number>120</number>
            </property>
@@ -241,6 +252,9 @@
                    <height>32</height>
                   </size>
                  </property>
+                 <property name="accessibleDescription">
+                  <string>This is a knob to pan the metronome sound</string>
+                 </property>
                  <property name="minimum">
                   <number>-4</number>
                  </property>
@@ -306,6 +320,9 @@
                  <property name="enabled">
                   <bool>true</bool>
                  </property>
+                 <property name="accessibleDescription">
+                  <string>Button to mute the metronome</string>
+                 </property>
                  <property name="text">
                   <string notr="true">M</string>
                  </property>
@@ -327,6 +344,9 @@
                    <width>16777215</width>
                    <height>24</height>
                   </size>
+                 </property>
+                 <property name="accessibleDescription">
+                  <string>Button to soloing the metronome</string>
                  </property>
                  <property name="layoutDirection">
                   <enum>Qt::LeftToRight</enum>
@@ -400,6 +420,9 @@
         <property name="toolTip">
          <string>Beats per interval</string>
         </property>
+        <property name="accessibleDescription">
+         <string>Change the BPI here</string>
+        </property>
         <property name="editable">
          <bool>true</bool>
         </property>
@@ -420,6 +443,9 @@
         <property name="toolTip">
          <string>Beats per minute</string>
         </property>
+        <property name="accessibleDescription">
+         <string>Change the BPM here</string>
+        </property>
         <property name="editable">
          <bool>true</bool>
         </property>
@@ -439,7 +465,11 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QComboBox" name="comboBeatsPerAccent"/>
+       <widget class="QComboBox" name="comboBeatsPerAccent">
+        <property name="accessibleDescription">
+         <string>Change the accent here</string>
+        </property>
+       </widget>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="labelShape">
@@ -449,7 +479,11 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QComboBox" name="comboShape"/>
+       <widget class="QComboBox" name="comboShape">
+        <property name="accessibleDescription">
+         <string>Change the shape here</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

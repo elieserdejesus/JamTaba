@@ -22,6 +22,9 @@
   <property name="windowTitle">
    <string>[Jamtaba] Scanning plugins ...</string>
   </property>
+  <property name="accessibleDescription">
+   <string>This is the plugin scanning dialog box</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>24</number>
@@ -49,6 +52,9 @@
        <widget class="QPlainTextEdit" name="plainTextEdit">
         <property name="acceptDrops">
          <bool>false</bool>
+        </property>
+        <property name="accessibleDescription">
+         <string>This is the plugin founded list box</string>
         </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
