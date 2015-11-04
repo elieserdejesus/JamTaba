@@ -16,6 +16,9 @@
   <property name="windowTitle">
    <string>Connecting in private Ninjam server ...</string>
   </property>
+  <property name="accessibleDescription">
+   <string>This the private server dialog</string>
+  </property>
   <property name="modal">
    <bool>true</bool>
   </property>
@@ -32,6 +35,9 @@
       </item>
       <item row="0" column="1">
        <widget class="QLineEdit" name="serverTextField">
+        <property name="accessibleDescription">
+         <string>type here the name of the server to join</string>
+        </property>
         <property name="text">
          <string>localhost</string>
         </property>
@@ -52,6 +58,9 @@
         <property name="toolTip">
          <string>leave blank to connect as annonymous</string>
         </property>
+        <property name="accessibleDescription">
+         <string>type here the password</string>
+        </property>
        </widget>
       </item>
       <item row="1" column="0">
@@ -63,6 +72,9 @@
       </item>
       <item row="1" column="1">
        <widget class="QLineEdit" name="serverPortTextField">
+        <property name="accessibleDescription">
+         <string>type here the port to use</string>
+        </property>
         <property name="text">
          <string>2049</string>
         </property>
@@ -89,6 +101,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="okButton">
+        <property name="accessibleDescription">
+         <string>Press this button if you are ok</string>
+        </property>
         <property name="text">
          <string>OK</string>
         </property>

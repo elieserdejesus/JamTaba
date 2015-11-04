@@ -19,6 +19,9 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="accessibleDescription">
+   <string>you are in the ninjam room window</string>
+  </property>
   <property name="styleSheet">
    <string notr="true"/>
   </property>
@@ -63,6 +66,9 @@
           <horstretch>1</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="accessibleDescription">
+         <string>This is the room where you are</string>
         </property>
         <property name="text">
          <string notr="true">TextLabel</string>

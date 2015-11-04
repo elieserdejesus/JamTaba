@@ -390,7 +390,7 @@
                <string>+12 db boost</string>
               </property>
               <property name="accessibleDescription">
-               <string>this is the +12 decibel</string>
+               <string>this is the +12 decibel button</string>
               </property>
               <property name="text">
                <string>+12</string>
