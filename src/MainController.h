@@ -30,17 +30,12 @@
 class MainWindow;
 
 namespace Audio {
-    //class AudioDriver;
-    //class AudioDriverListener;
-    //class AbstractMp3Streamer;
-    //class AudioMixer;
     class SamplesBuffer;
     class AudioNode;
     class LocalInputAudioNode;
 }
 
 namespace Midi{
-    //class MidiDriver;
     class MidiBuffer;
 }
 
@@ -119,13 +114,13 @@ public:
     QStringList getBotNames() const;
 
     //tracks
-    void setTrackMute(int trackID, bool muteStatus);
+    void setTrackMute(int trackID, bool muteStatus, bool blockSignals=false);
     bool trackIsMuted(int trackID) const;
-    void setTrackSolo(int trackID, bool soloStatus);
+    void setTrackSolo(int trackID, bool soloStatus, bool blockSignals=false);
     bool trackIsSoloed(int trackID) const;
-    void setTrackLevel(int trackID, float level);
+    void setTrackGain(int trackID, float gain, bool blockSignals=false);
     void setTrackBoost(int trackID, float boostInDecibels);
-    void setTrackPan(int trackID, float pan);
+    void setTrackPan(int trackID, float pan, bool blockSignals=false);
 
     Audio::AudioPeak getRoomStreamPeak();
     Audio::AudioPeak getTrackPeak(int trackID);
@@ -158,9 +153,6 @@ public:
     virtual void setSampleRate(int newSampleRate);
 
     static QByteArray newGUID();
-
-    //bool audioMonoInputIsFreeToSelect(int inputIndexInAudioDevice) const;
-    //bool audioStereoInputIsFreeToSelect( int firstInputIndexInAudioDevice)const;
 
     inline const Persistence::Settings& getSettings() const{return settings;}
 
@@ -301,6 +293,7 @@ protected slots:
         Q_UNUSED(group)
         Q_UNUSED(path)
     }
+
 };
 
 }

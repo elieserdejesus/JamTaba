@@ -147,7 +147,7 @@ void NinjamRoomWindow::onPanSliderMoved(int value){
 }
 
 void NinjamRoomWindow::onFaderMoved(int value){
-    mainController->setTrackLevel(Controller::NinjamController::METRONOME_TRACK_ID, value/100.0);
+    mainController->setTrackGain(Controller::NinjamController::METRONOME_TRACK_ID, value/100.0);
 }
 
 void NinjamRoomWindow::onMuteClicked(){

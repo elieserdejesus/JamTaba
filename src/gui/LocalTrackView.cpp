@@ -68,12 +68,16 @@ void LocalTrackView::init(int channelIndex, float initialGain, BaseTrackView::Bo
     //insert a input node in controller
     this->inputNode = new Audio::LocalInputAudioNode(channelIndex);
     this->trackID = mainController->addInputTrackNode(this->inputNode);
+    bindThisViewWithTrackNodeSignals();//now is secure bind this LocalTrackView with the respective TrackNode model
 
-    ui->levelSlider->setValue( 100 * initialGain );
-    ui->panSlider->setValue( initialPan * 4 );
+    this->inputNode->setGain(initialGain);
+    this->inputNode->setPan(initialPan);
+    //ui->levelSlider->setValue( 100 * initialGain );
+    //ui->panSlider->setValue( initialPan * 4 );
     initializeBoostButtons(boostValue);
     if(muted){
-        ui->muteButton->click();
+        //ui->muteButton->click();
+        this->inputNode->setMuteStatus(muted);
     }
 
     setUnlightStatus(false);

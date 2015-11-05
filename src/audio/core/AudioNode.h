@@ -15,7 +15,7 @@ namespace Audio{
 
 //class SamplesBuffer;
 
-class AudioNodeProcessor : public QObject{
+class AudioNodeProcessor : public QObject{ //TODO - this inheritance is really necessary?
 public:
     AudioNodeProcessor();
     virtual ~AudioNodeProcessor(){}
@@ -53,15 +53,15 @@ public:
 
 
 
-class AudioNode {
-
+class AudioNode  : public QObject{
+    Q_OBJECT
 public:
     AudioNode();
     virtual ~AudioNode();
 
     virtual void processReplacing(const SamplesBuffer& in, SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
-    virtual inline void setMuteStatus(bool muted){ this->muted = muted;}
-    void inline setSoloStatus(bool soloed){ this->soloed = soloed; }
+    virtual void setMuteStatus(bool muted);
+    void setSoloStatus(bool soloed);
     inline bool isMuted() const {return muted;}
     inline bool isSoloed() const {return soloed;}
 
@@ -74,7 +74,7 @@ public:
     void resumeProcessors();
     virtual void updateProcessorsGui();
 
-    inline void setGain(float gainValue){this->gain = gainValue;}
+    void setGain(float gainValue);
     inline void setBoost(float boostValue){this->boost = boostValue;}
 
     inline float getBoost() const {return boost;}
@@ -124,6 +124,12 @@ private:
     double resamplingCorrection;
 
     void updateGains();
+
+signals:
+    void gainChanged(float newGain);
+    void panChanged(float newPan);
+    void muteChanged(bool muteStatus);
+    void soloChanged(bool soloStatus);
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -149,10 +155,10 @@ public:
     virtual void processReplacing(const SamplesBuffer& in, SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer &midiBuffer);
     virtual int getSampleRate() const{return 0;}
     inline int getChannels() const{return audioInputRange.getChannels();}
-    bool isMono() const;//{return audioInputRange.isMono();}
-    bool isStereo() const;//{return audioInputRange.getChannels() == 2;}
-    bool isNoInput() const;//{return audioInputRange.isEmpty();}
-    bool isMidi() const;//{return midiDeviceIndex >= 0;}
+    bool isMono() const;
+    bool isStereo() const;
+    bool isNoInput() const;
+    bool isMidi() const;
     bool isAudio() const;
     void setAudioInputSelection(int firstChannelIndex, int channelCount);
     void setMidiInputSelection(int midiDeviceIndex, int midiChannelIndex);
