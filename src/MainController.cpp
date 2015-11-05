@@ -621,15 +621,18 @@ void MainController::removeTrack(long trackID){
 }
 
 
-
+//adding my comment just for fun : ezee
 void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
     MidiBuffer midiBuffer ( midiDriver ? midiDriver->getBuffer() : MidiBuffer(0));
     int messages = midiBuffer.getMessagesCount();
     for(int m=0; m < messages; m++){
         if(midiBuffer.getMessage(m).isControl()){
             int inputTrackIndex = 0;//just for test for while, we need get this index from the mapping pair
-            char cc = midiBuffer.getMessage(m).getData1();
-            char ccValue = midiBuffer.getMessage(m).getData2();
+            //char cc = midiBuffer.getMessage(m).getData1();
+            //char ccValue = midiBuffer.getMessage(m).getData2();
+            //human readability below...
+            char cc = midiBuffer.getMessage(m).getControlType();
+            char ccValue = midiBuffer.getMessage(m).getControlVal();
             getInputTrack(inputTrackIndex)->setGain(ccValue/127.0);
         }
     }
