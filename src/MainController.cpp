@@ -624,6 +624,15 @@ void MainController::removeTrack(long trackID){
 
 void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
     MidiBuffer midiBuffer ( midiDriver ? midiDriver->getBuffer() : MidiBuffer(0));
+    int messages = midiBuffer.getMessagesCount();
+    for(int m=0; m < messages; m++){
+        if(midiBuffer.getMessage(m).isControl()){
+            int inputTrackIndex = 0;//just for test for while, we need get this index from the mapping pair
+            char cc = midiBuffer.getMessage(m).getData1();
+            char ccValue = midiBuffer.getMessage(m).getData2();
+            getInputTrack(inputTrackIndex)->setGain(ccValue/127.0);
+        }
+    }
     audioMixer.process(in, out, sampleRate, midiBuffer);
 }
 
@@ -634,7 +643,6 @@ void MainController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffe
         return;
     }
 
-    //checkThread("process();");
     if(!isPlayingInNinjamRoom()){
         doAudioProcess(in, out, sampleRate);
     }
