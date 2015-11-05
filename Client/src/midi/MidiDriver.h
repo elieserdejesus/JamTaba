@@ -19,6 +19,9 @@ public:
     inline int getStatus() const{ return data & 0xFF;}
     inline int getData1() const{ return (data >> 8) & 0xFF;}
     inline int getData2() const{ return (data >> 16) & 0xFF;}
+
+    inline bool isControl() const{return getStatus() == 0xB0;}
+
 private:
     qint32 data;
     qint32 timestamp;

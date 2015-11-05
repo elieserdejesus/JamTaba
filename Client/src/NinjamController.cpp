@@ -386,7 +386,7 @@ void NinjamController::start(const Ninjam::Server& server, bool transmiting){
 
         mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
         mainController->setTrackMute(METRONOME_TRACK_ID, mainController->getSettings().getMetronomeMuteStatus());
-        mainController->setTrackLevel(METRONOME_TRACK_ID,mainController->getSettings().getMetronomeGain());
+        mainController->setTrackGain(METRONOME_TRACK_ID,mainController->getSettings().getMetronomeGain());
         mainController->setTrackPan(METRONOME_TRACK_ID,  mainController->getSettings().getMetronomePan());
 
         this->intervalPosition  = 0;
