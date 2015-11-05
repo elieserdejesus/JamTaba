@@ -93,12 +93,17 @@ MidiBuffer RtMidiDriver::getBuffer(){
             if(!message.empty() && message.size() <= 3){
                 int msgData = 0;
                 msgData |= message.at(0);
-                msgData |= message.at(1) << 8;
-                msgData |= message.at(2) << 16;
-                //            qDebug(midi) << "original msgData:";
-                //            qDebug(midi) << "Status:" << message.at(0);
-                //            qDebug(midi) << "data 1:" << message.at(1);
-                //            qDebug(midi) << "data 2:" << message.at(2) << endl;
+                if(message.size() == 3){
+                    msgData |= message.at(1) << 8;
+                    msgData |= message.at(2) << 16;
+                }else{
+                    msgData = 0;
+                    qCWarning(jtMidi) << "We receive a not common midi message with just" << message.size() << "bytes";
+                }
+                //qDebug(midi) << "original msgData:";
+                //qDebug(midi) << "Status:" << message.at(0);
+                //qDebug(midi) << "data 1:" << message.at(1);
+                //qDebug(midi) << "data 2:" << message.at(2) << endl;
 
                 buffer.addMessage(MidiMessage(msgData, qint32(stamp), deviceIndex));
 
