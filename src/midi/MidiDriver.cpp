@@ -2,7 +2,23 @@
 #include "../log/logging.h"
 
 using namespace Midi;
+//+++++++++++++++++++++++
+MidiMessage::MidiMessage(qint32 data, qint32 timestamp, int sourceDeviceIndex){
+    this->data = data;
+    this->timestamp = timestamp;
+    this->deviceIndex = sourceDeviceIndex;
+}
 
+MidiMessage::MidiMessage(){
+    this->data = this->timestamp = this->deviceIndex = -1;
+}
+
+MidiMessage::MidiMessage(const MidiMessage& other){
+    this->data = other.data;
+    this->timestamp = other.timestamp;
+    this->deviceIndex = other.deviceIndex;
+}
+//+++++++++++++++++++++++
 MidiBuffer::MidiBuffer(int maxMessages)
     : maxMessages(maxMessages),
       messages(new MidiMessage[maxMessages]),

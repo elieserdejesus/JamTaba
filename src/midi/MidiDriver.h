@@ -8,25 +8,11 @@ namespace Midi {
 
 class MidiMessage{
 public:
-    MidiMessage(qint32 data, qint32 timestamp, int sourceDeviceIndex){
-        this->data = data;
-        this->timestamp = timestamp;
-        this->deviceIndex = sourceDeviceIndex;
-    }
+    MidiMessage(qint32 data, qint32 timestamp, int sourceDeviceIndex);
+    MidiMessage();
+    MidiMessage(const MidiMessage& other);
 
-    MidiMessage(){
-        this->data = this->timestamp = this->deviceIndex = -1;
-    }
-
-    MidiMessage(const MidiMessage& other){
-        this->data = other.data;
-        this->timestamp = other.timestamp;
-        this->deviceIndex = other.deviceIndex;
-    }
-
-    inline int getChannel() const{
-        return data & 0x0000000F;
-    }
+    inline int getChannel() const{ return data & 0x0000000F; }
 
     inline int getDeviceIndex() const{return deviceIndex;}
 
