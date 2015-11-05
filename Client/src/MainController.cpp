@@ -729,6 +729,8 @@ void MainController::setTrackSolo(int trackID, bool soloStatus, bool blockSignal
 }
 
 bool MainController::trackIsMuted(int trackID) const{
+    //QMutexLocker locker(&mutex);
+    //checkThread("trackIsMuted()");
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         return node->isMuted();
@@ -737,6 +739,8 @@ bool MainController::trackIsMuted(int trackID) const{
 }
 
 bool MainController::trackIsSoloed(int trackID) const{
+    //QMutexLocker locker(&mutex);
+    //checkThread("trackIsSoloed()");
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         return node->isSoloed();
