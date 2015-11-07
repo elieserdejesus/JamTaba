@@ -11,7 +11,7 @@ import jamtaba.command.CommandFactory;
 import jamtaba.command.DisconnectFromServer;
 import jamtaba.ip2c.Ip2CResolver;
 import jamtaba.ip2c.IpToCountryResolver;
-import jamtaba.ninjam.NinjaMServer;
+import jamtaba.ninjam.NinjamServer;
 import jamtaba.ninjam.NinjamServers;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -74,7 +74,7 @@ public class ServletPrincipal extends HttpServlet {
                 if(!(command instanceof DisconnectFromServer)){
                     //build the response
                     Collection<RealtimeRoom> jamRooms = DbUtils.loadRooms();
-                    Collection<NinjaMServer> ninjamServers = NinjamServers.getServers(ipToCountryResolver);
+                    Collection<NinjamServer> ninjamServers = NinjamServers.getServers(ipToCountryResolver);
                     //++++++++++++++++++
                     Peer connectedPeer = AbstractCommand.getConnectedPeer(req);
                     resp.getWriter().print(VsJsonUtils.getJsonToResponse(jamRooms, ninjamServers, connectedPeer));

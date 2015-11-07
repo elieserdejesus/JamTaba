@@ -3,8 +3,8 @@ package jamtaba;
 import com.google.appengine.labs.repackaged.org.json.JSONArray;
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
-import jamtaba.ninjam.NinjaMServer;
-import jamtaba.ninjam.NinjaMUser;
+import jamtaba.ninjam.NinjamServer;
+import jamtaba.ninjam.NinjamUser;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
@@ -21,14 +21,14 @@ public class VsJsonUtils {
 //    }
 
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-    public static String getJsonToResponse(Collection<RealtimeRoom> realtimeRooms, Collection<NinjaMServer> ninjamServers, Peer connectedPeer) throws JSONException {
+    public static String getJsonToResponse(Collection<RealtimeRoom> realtimeRooms, Collection<NinjamServer> ninjamServers, Peer connectedPeer) throws JSONException {
         JSONObject json = new JSONObject();
         
         JSONArray jamRoomsArray = new JSONArray();
         for (RealtimeRoom jamRoom : realtimeRooms) {
             jamRoomsArray.put(jamRoomToJSONObject(jamRoom));
         }
-        for (NinjaMServer ninjamServer : ninjamServers) {
+        for (NinjamServer ninjamServer : ninjamServers) {
             jamRoomsArray.put(ninjamServerToJSONObject(ninjamServer));
         }
         json.put("rooms", jamRoomsArray);
@@ -54,7 +54,7 @@ public class VsJsonUtils {
         return clientVersion.isCompatibleWith(serverVersion);
     }
     
-    public static String getJsonToResponse(List<RealtimeRoom> jamRooms, Collection<NinjaMServer> ninjamServers) throws JSONException {
+    public static String getJsonToResponse(List<RealtimeRoom> jamRooms, Collection<NinjamServer> ninjamServers) throws JSONException {
         return getJsonToResponse(jamRooms, ninjamServers, null);
     }
 
@@ -104,7 +104,7 @@ public class VsJsonUtils {
         return peerMap;
     }
 
-    private static JSONObject ninjamServerToJSONObject(NinjaMServer server) throws JSONException {
+    private static JSONObject ninjamServerToJSONObject(NinjamServer server) throws JSONException {
         JSONObject serverObject = new JSONObject();
         serverObject.put("id", server.getUniqueName().hashCode());
         serverObject.put("type", "ninjam");
@@ -116,7 +116,7 @@ public class VsJsonUtils {
         serverObject.put("streamUrl", server.getStreamUrl());
         //users
         JSONArray usersArray = new JSONArray();
-        for (NinjaMUser user : server.getUsers()) {
+        for (NinjamUser user : server.getUsers()) {
             JSONObject userObject = new JSONObject();
             userObject.put("id", user.getFullName().hashCode());
             userObject.put("name", user.getName());
