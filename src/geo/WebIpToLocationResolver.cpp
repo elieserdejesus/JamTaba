@@ -103,8 +103,6 @@ Geo::Location WebIpToLocationResolver::resolve(QString ip){
         qCDebug(jtIpToLocation) << "cache hit for " << ip;
         return locationCache[ip];
     }
-//QTimer::singleShot(50, this, &MainFrame::restorePluginsList)
-    //QTimer::singleShot(1000, this, &Geo::FreeGeoIpToLocationResolver::requestDataFromWebServer, ip);
     if(!ip.isEmpty() && !ip.isNull()){
         requestDataFromWebServer(ip);
     }
