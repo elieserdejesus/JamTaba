@@ -1,12 +1,12 @@
 #include "ChatPanel.h"
 #include "ui_ChatPanel.h"
-
 #include "ChatMessagePanel.h"
 #include <QWidget>
 #include <QScrollBar>
 #include <QDebug>
 #include <QKeyEvent>
 #include <QWidget>
+
 
 const QColor ChatPanel::BOT_COLOR(120, 120, 120);
 

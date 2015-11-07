@@ -158,6 +158,7 @@ private:
     RecordingSettings recordingSettings;
     PrivateServerSettings privateServerSettings;
     QString lastUserName;//the last nick name choosed by user
+    QString translation;//the translation being used in tha chat
     int ninjamIntervalProgressShape;//Circle, Ellipe or Line
 public:
     Settings();
@@ -186,6 +187,8 @@ public:
     //user name
     inline QString getUserName() const{return lastUserName;}
     void setUserName(QString newUserName);
+    void storeLasUserName(QString userName);
+    void storeLastChannelName(int channelIndex, QString channelName) ;
 
     void setIntervalProgressShape(int shape){this->ninjamIntervalProgressShape = shape;}
     inline int getIntervalProgressShape() const{return this->ninjamIntervalProgressShape;}
@@ -231,10 +234,14 @@ public:
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     QString getLastUserName() const;
+
+    //TRANSLATION
+    QString getTranslation() const;
+    void setTranslation(QString translate);
+
     QString getLastChannelName(int channelIndex) const;
 
-    void storeLasUserName(QString userName);
-    void storeLastChannelName(int channelIndex, QString channelName) ;
+
 
     //void teste(QJsonObject& ob);
 };

@@ -5,6 +5,8 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QMetaMethod>
+#include "../src/persistence/Settings.h"// for chat translation
+
 
 ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
     QWidget(parent),
@@ -77,8 +79,22 @@ void ChatMessagePanel::on_translateButton_clicked(){
     if(ui->translateButton->isChecked()){
         if(translatedText.isEmpty()){
             QNetworkAccessManager* httpClient = new QNetworkAccessManager(this);
+            //now we use Settings in the Json file !
+            Persistence::Settings *translation=new Persistence::Settings();
+            translation->load();
+            const QString lang=translation->getTranslation();
             QLocale userLocale;
-            QString targetLanguage =  userLocale.bcp47Name().left(2);
+            QString targetLanguage;
+            // if setting exists
+            if(lang.count()>0)
+            {
+              targetLanguage  = lang;
+            }
+            else
+            {
+              targetLanguage =  userLocale.bcp47Name().left(2);
+            }
+
             QString encodedText(QUrl::toPercentEncoding(originalText));
             QString url = "http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl="+ targetLanguage +"&dt=t&q=" + encodedText;
             QNetworkRequest req;//(QUrl(url));

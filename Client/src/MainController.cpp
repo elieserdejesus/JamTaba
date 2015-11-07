@@ -885,6 +885,8 @@ void MainController::start(){
         if(userName.isEmpty()){
             userName = "No name!";
         }
+        //CHAT TRANSLATION ?
+
         qCInfo(jtCore) << "Connecting in Jamtaba server...";
         loginService.connectInServer(userName, 0, "", map, version, userEnvironment, getSampleRate());
         //(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);

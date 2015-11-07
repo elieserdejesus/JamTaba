@@ -362,6 +362,11 @@ void Settings::setUserName(QString newUserName){
     this->lastUserName = newUserName;
 }
 
+void Settings::setTranslation(QString translate){
+    this->translation = translate;
+}
+
+
 void Settings::addVstPlugin(QString pluginPath){
     if(!vstSettings.cachedPlugins.contains(pluginPath)){
         vstSettings.cachedPlugins.append(pluginPath);
@@ -470,6 +475,10 @@ void Settings::load(){
         if(root.contains("userName")){
             this->lastUserName = root["userName"].toString();
         }
+        //read Translation
+        if(root.contains("translation")){
+            this->translation = root["translation"].toString();
+        }
 
         //read intervall progress shape
         if(root.contains("intervalProgressShape")){
@@ -518,7 +527,7 @@ void Settings::save(Persistence::InputsSettings inputsSettings){
         //write user name
         root["userName"] = this->lastUserName;
         //write translate locale
-        root["translation"] = "fr";
+        root["translation"] = this->translation;
 
         root["intervalProgressShape"] = this->ninjamIntervalProgressShape;
 
@@ -547,6 +556,11 @@ QString Settings::getLastUserName() const{
 //        return audioObject["name"].toString();
 //    }
     return "no saved yet";
+}
+
+QString Settings::getTranslation() const
+{
+ return translation;
 }
 
 
