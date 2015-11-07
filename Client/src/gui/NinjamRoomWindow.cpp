@@ -328,7 +328,8 @@ void NinjamRoomWindow::ninjamBpiComboChanged(QString newText){
     if(newBpi == currentBpi){
         return;
     }
-    QMessageBox::StandardButton reply;
+    // I keep it commented elieser in case you change your opinion ... ezee
+    /*QMessageBox::StandardButton reply;
     QString message = "Vote to change the BPI to " + QString::number(newBpi) + "?";
     reply = QMessageBox::question(this, "Changing BPI ...", message,
                                   QMessageBox::Yes|QMessageBox::No);
@@ -337,7 +338,8 @@ void NinjamRoomWindow::ninjamBpiComboChanged(QString newText){
     }
     else{
         ui->topPanel->setBpiComboText(QString::number(currentBpi));
-    }
+    }*/
+     mainController->getNinjamController()->voteBpi(newBpi);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::ninjamBpmComboChanged(QString newText){
@@ -346,7 +348,8 @@ void NinjamRoomWindow::ninjamBpmComboChanged(QString newText){
     if(newBpm == currentBpm){
         return;
     }
-    QMessageBox::StandardButton reply;
+    // I keep it commented elieser in case you change your opinion ... ezee
+    /*QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Changing BPM ...", "Vote to change the BPM to " + QString::number(newBpm) + "?",
                                   QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::Yes) {
@@ -354,7 +357,8 @@ void NinjamRoomWindow::ninjamBpmComboChanged(QString newText){
     }
     else{
         ui->topPanel->setBpmComboText(QString::number(currentBpm));
-    }
+    }*/
+    mainController->getNinjamController()->voteBpm(newBpm);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::adjustTracksWidth(){
