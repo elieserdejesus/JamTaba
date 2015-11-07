@@ -479,6 +479,11 @@ void Settings::load(){
         if(root.contains("translation")){
             this->translation = root["translation"].toString();
         }
+        if(this->translation.isEmpty()){
+            QLocale userLocale;
+            this->translation = userLocale.bcp47Name().left(2);
+        }
+
 
         //read intervall progress shape
         if(root.contains("intervalProgressShape")){

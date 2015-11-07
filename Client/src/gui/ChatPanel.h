@@ -20,6 +20,7 @@ public:
     void addMessage(QString userName, QString userMessage);
     void addBpmVoteConfirmationMessage(int newBpmValue);
     void addBpiVoteConfirmationMessage(int newBpmValue);
+    void setPreferredTranslationLanguage(QString targetLanguage);
 signals:
     void userSendingNewMessage(QString msg);
     void userConfirmingVoteToBpiChange(int newBpi);
@@ -45,10 +46,11 @@ private:
 
     static const int MAX_MESSAGES = 50;
 
+    QString preferredTargetTranslationLanguage;
+
     void createVoteButton(QString voteType, int value);
 
-    //QString lastUserName;//used to control message alignment - left or right
-    //Qt::AlignmentFlag lastAlign;
+
 };
 
 #endif // CHATPANEL_H

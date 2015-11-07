@@ -95,6 +95,8 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
     QObject::connect(chatPanel,SIGNAL(userConfirmingVoteToBpmChange(int)), this, SLOT(on_userConfirmingVoteToChangeBpm(int)));
 
 
+    chatPanel->setPreferredTranslationLanguage(mainController->getSettings().getTranslation());
+
 
     //testing many tracks
 //    for (int t = 0; t < 16; ++t) {
