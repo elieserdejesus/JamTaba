@@ -15,7 +15,6 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
     ui(new Ui::ChatPanel),
     botNames(botNames),
     availableColors(createColors())
-    //lastAlign(Qt::AlignLeft)
 {
     ui->setupUi(this);
     ui->scrollContent->setLayout(new QVBoxLayout(ui->scrollContent));
@@ -55,23 +54,6 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
 //    addBpmVoteConfirmationMessage(140);
 }
 
-//void ChatPanel::on_buttonVoteBpi_Clicked(){
-////    if(mainController->isPlayingInNinjamRoom()){
-////        Controller::NinjamController* controller = mainController->getNinjamController();
-////        if(controller){
-////            if(voteConfirmationDialog->getVoteType() == VoteConfirmationType::BPI_CONFIRMATION_VOTE){
-////                controller->voteBpi(voteConfirmationDialog->getVoteValue());
-////            }
-////            else{
-////                controller->voteBpm(voteConfirmationDialog->getVoteValue());
-////            }
-////        }
-////    }
-//}
-
-//void ChatPanel::on_buttonVoteBpm_clicked(){
-
-//}
 
 bool ChatPanel::eventFilter(QObject *obj, QEvent *event)
 {
@@ -155,6 +137,8 @@ void ChatPanel::addMessage(QString userName, QString userMessage){
         drawBorder = false;
     }
     ChatMessagePanel* msgPanel = new ChatMessagePanel(ui->scrollContent, userName, userMessage, userNameBackgroundColor, msgBackgroundColor, textColor, drawBorder);
+    msgPanel->setPrefferedTranslationLanguage(this->preferredTargetTranslationLanguage);
+
     ui->scrollContent->layout()->addWidget(msgPanel);
     if(ui->scrollContent->layout()->count() > MAX_MESSAGES){
         //remove the first widget
@@ -218,5 +202,15 @@ void ChatPanel::on_buttonClear_clicked(){
     foreach (VoteButton* button, buttons) {
         ui->scrollContent->layout()->removeWidget(button);
         button->deleteLater();
+    }
+}
+
+void ChatPanel::setPreferredTranslationLanguage(QString targetLanguage){
+    if(targetLanguage != this->preferredTargetTranslationLanguage){
+        this->preferredTargetTranslationLanguage = targetLanguage;
+        QList<ChatMessagePanel*> panels = ui->scrollContent->findChildren<ChatMessagePanel*>();
+        foreach (ChatMessagePanel* msgPanel, panels) {
+            msgPanel->setPrefferedTranslationLanguage(targetLanguage);
+        }
     }
 }

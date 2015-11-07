@@ -22,16 +22,7 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent, QString userName, QString ms
 {
     ui->setupUi(this);
     initialize(userName, msg, userNameBackgroundColor, msgBackgroundColor, textColor, drawBorder);
-    //QObject::connect( translationHttpClient, SIGNAL()
 }
-
-//QSize ChatMessagePanel::sizeHint() const{
-//    return minimumSizeHint();
-//}
-//QSize ChatMessagePanel::minimumSizeHint() const{
-
-//    return QSize( width(), ui->labelMessage->height());
-//}
 
 void ChatMessagePanel::initialize(QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool drawBorder ){
     if(!userName.isEmpty() && !userName.isNull()){
@@ -79,25 +70,9 @@ void ChatMessagePanel::on_translateButton_clicked(){
     if(ui->translateButton->isChecked()){
         if(translatedText.isEmpty()){
             QNetworkAccessManager* httpClient = new QNetworkAccessManager(this);
-            //now we use Settings in the Json file !
-            Persistence::Settings *translation=new Persistence::Settings();
-            translation->load();
-            const QString lang=translation->getTranslation();
-            QLocale userLocale;
-            QString targetLanguage;
-            // if setting exists
-            if(lang.count()>0)
-            {
-              targetLanguage  = lang;
-            }
-            else
-            {
-              targetLanguage =  userLocale.bcp47Name().left(2);
-            }
-
             QString encodedText(QUrl::toPercentEncoding(originalText));
-            QString url = "http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl="+ targetLanguage +"&dt=t&q=" + encodedText;
-            QNetworkRequest req;//(QUrl(url));
+            QString url = "http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl="+ preferredTargetTranslationLanguage +"&dt=t&q=" + encodedText;
+            QNetworkRequest req;
             req.setUrl(QUrl(url));
             req.setOriginatingObject(this);
             req.setRawHeader( "User-Agent" , "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36" );
@@ -114,6 +89,10 @@ void ChatMessagePanel::on_translateButton_clicked(){
     else{
         ui->labelMessage->setText(originalText);
     }
+}
+
+void ChatMessagePanel::setPrefferedTranslationLanguage(QString targetLanguage){
+    this->preferredTargetTranslationLanguage = targetLanguage;
 }
 
 void ChatMessagePanel::on_networkReplyError(QNetworkReply::NetworkError ){
