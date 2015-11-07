@@ -517,6 +517,9 @@ void Settings::save(Persistence::InputsSettings inputsSettings){
         QJsonObject root;
         //write user name
         root["userName"] = this->lastUserName;
+        //write translate locale
+        root["translation"] = "fr";
+
         root["intervalProgressShape"] = this->ninjamIntervalProgressShape;
 
         //write sections
