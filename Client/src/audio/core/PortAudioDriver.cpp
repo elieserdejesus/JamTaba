@@ -266,7 +266,10 @@ void PortAudioDriver::start(){
     PaError error =  Pa_IsFormatSupported( !globalInputRange.isEmpty() ? (&inputParams) : NULL, &outputParams, sampleRate);
     if(error != paNoError){
         qCCritical(jtAudio) << "unsuported format: " << Pa_GetErrorText(error) << "sampleRate: " << sampleRate ;
-        throw std::runtime_error(std::string(Pa_GetErrorText(error) ));
+        this->audioDeviceIndex = paNoDevice;
+        const char* errorMsg = Pa_GetErrorText(error);
+        qCCritical(jtAudio) << "Error message: " << QString::fromUtf8(errorMsg);
+        throw std::runtime_error(std::string(errorMsg));
     }
 
     paStream = NULL;
