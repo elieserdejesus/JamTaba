@@ -480,7 +480,7 @@ void MainController::setInputTrackToMono(int localChannelIndex, int inputIndexIn
     Audio::LocalInputAudioNode* inputTrack = getInputTrack(localChannelIndex);
     if(inputTrack){
         if( !inputIndexIsValid(inputIndexInAudioDevice) ){
-            firstInputIndex = audioDriver->getSelectedInputs().getFirstChannel();//use the first available channel
+            inputIndexInAudioDevice = audioDriver->getSelectedInputs().getFirstChannel();//use the first available channel
         }
         inputTrack->setAudioInputSelection(inputIndexInAudioDevice, 1);//mono
         //emit inputSelectionChanged(localChannelIndex);
