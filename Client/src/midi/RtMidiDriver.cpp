@@ -1,6 +1,10 @@
 #include "RtMidiDriver.h"
 #include "RtMidi.h"
 
+//#if _WIN32
+//   #define __WINDOWS_MM__ //some midi devices need it like swissonic
+//#endif
+
 using namespace Midi;
 
 #include "../log/logging.h"
