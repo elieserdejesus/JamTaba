@@ -49,7 +49,7 @@ SOURCES += \
     ../src/geo/WebIpToLocationResolver.cpp \
     ../src/StandAloneMainController.cpp \
     ../src/gui/MainWindowStandalone.cpp \
-    ../../RtMidi/RtMidi.cpp
+#    ../../RtMidi/RtMidi.cpp
 
 INCLUDEPATH += $$PWD/../libs/includes/portaudio        \
                $$PWD/../libs/includes/rtmidi           \
