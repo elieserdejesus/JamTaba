@@ -83,7 +83,7 @@ void RtMidiDriver::release(){
 
 QString RtMidiDriver::getInputDeviceName(int index) const{
     if(midiStreams.at(index)){
-        return  midiStreams.at(index)->getPortName(index).c_str();
+        return  QString::fromStdString( midiStreams.at(index)->getPortName(index));
     }
     return "error";
 }
