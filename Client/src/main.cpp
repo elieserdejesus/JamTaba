@@ -5,7 +5,9 @@
 #include "persistence/Settings.h"
 #include "MainWindowStandalone.h"
 #include "log/logging.h"
-#include "SingleApplication/singleapplication.h"
+
+#define QAPPLICATION_CLASS QApplication
+#include "Libs/SingleApplication/singleapplication.h"
 
 int main(int argc, char* args[] ){
 
@@ -28,7 +30,7 @@ int main(int argc, char* args[] ){
     //SingleApplication application(argc, args);
     SingleApplication* application = new SingleApplication(argc, args);
 
-    Controller::StandaloneMainController mainController(settings, application);//MainController extends QApplication
+    Controller::StandaloneMainController mainController(settings, (QApplication*)application);
     mainController.configureStyleSheet("jamtaba.css");
     mainController.start();
     if(mainController.isUsingNullAudioDriver()){
@@ -37,9 +39,10 @@ int main(int argc, char* args[] ){
     MainWindowStandalone  mainWindow(&mainController);
     mainController.setMainWindow(&mainWindow);
     mainWindow.show();
+
     //The SingleApplication class implements a showUp() signal. You can bind to that signal to raise your application's
     //window when a new instance had been started.
-    QObject::connect(QApplication::instance(), SIGNAL(showUp()), mainWindow, SLOT(raise()));
+    //QObject::connect(application, SIGNAL(showUp()), &mainWindow, SLOT(raise()));
 
     return application->exec();
  }
