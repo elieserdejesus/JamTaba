@@ -23,7 +23,10 @@ int main(int argc, char* args[] ){
     Persistence::Settings settings;
     settings.load();
 
-    QApplication* application = new QApplication(argc, args);
+    //QApplication* application = new QApplication(argc, args);
+    //SINGLE APPLICATION HERE
+    SingleApplication application(argc, args);
+
     Controller::StandaloneMainController mainController(settings, application);//MainController extends QApplication
     mainController.configureStyleSheet("jamtaba.css");
     mainController.start();
@@ -33,6 +36,9 @@ int main(int argc, char* args[] ){
     MainWindowStandalone  mainWindow(&mainController);
     mainController.setMainWindow(&mainWindow);
     mainWindow.show();
+    //The SingleApplication class implements a showUp() signal. You can bind to that signal to raise your application's
+    //window when a new instance had been started.
+    QObject::connect(QApplication::instance(), SIGNAL(showUp()), mainWindow, SLOT(raise()));
 
     return application->exec();
  }
