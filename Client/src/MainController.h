@@ -217,6 +217,8 @@ public:
     static QString getLogConfigFilePath();
     static void exportLogFile();//write log file in the application writable path, so users can change log details
 
+    void useNullAudioDriver();//use when the audio driver fails
+
 protected:
 
     static QString LOG_CONFIG_FILE;

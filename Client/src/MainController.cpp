@@ -851,6 +851,10 @@ void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStrin
 }
 
 
+void MainController::useNullAudioDriver(){
+    qCWarning(jtCore) << "Audio driver can't be used, using NullAudioDriver!";
+    audioDriver.reset(new Audio::NullAudioDriver());
+}
 
 void MainController::start(){
 
@@ -880,8 +884,7 @@ void MainController::start(){
 
         if(audioDriver ){
             if(!audioDriver->canBeStarted()){
-                qCWarning(jtCore) << "Audio driver can't be used, using NullAudioDriver!";
-                audioDriver.reset(new Audio::NullAudioDriver());
+                useNullAudioDriver();
             }
             audioDriver->start();
         }
