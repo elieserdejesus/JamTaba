@@ -49,8 +49,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
-
+#define __WINDOWS_MM__
 /************************************************************************/
 /*! \class RtMidiError
     \brief Exception handling class for RtMidi.
@@ -110,7 +109,7 @@ class RtMidiError : public std::exception
     Note that class behaviour is undefined after a critical error (not
     a warning) is reported.
  */
-typedef void (*RtMidiErrorCallback)( RtMidiError::Type type, const std::string &errorText, void *userData );
+typedef void (*RtMidiErrorCallback)( RtMidiError::Type type, const std::string &errorText );
 
 class MidiApi;
 
@@ -162,7 +161,7 @@ class RtMidi
     The callback function will be called whenever an error has occured. It is best
     to set the error callback function before opening a port.
   */
-  virtual void setErrorCallback( RtMidiErrorCallback errorCallback = NULL, void *userData = 0 ) = 0;
+  virtual void setErrorCallback( RtMidiErrorCallback errorCallback = NULL ) = 0;
 
  protected:
 
@@ -323,7 +322,7 @@ class RtMidiIn : public RtMidi
     The callback function will be called whenever an error has occured. It is best
     to set the error callback function before opening a port.
   */
-  virtual void setErrorCallback( RtMidiErrorCallback errorCallback = NULL, void *userData = 0 );
+  virtual void setErrorCallback( RtMidiErrorCallback errorCallback = NULL );
 
  protected:
   void openMidiApi( RtMidi::Api api, const std::string clientName, unsigned int queueSizeLimit );
@@ -414,7 +413,7 @@ class RtMidiOut : public RtMidi
     The callback function will be called whenever an error has occured. It is best
     to set the error callback function before opening a port.
   */
-  virtual void setErrorCallback( RtMidiErrorCallback errorCallback = NULL, void *userData = 0 );
+  virtual void setErrorCallback( RtMidiErrorCallback errorCallback = NULL );
 
  protected:
   void openMidiApi( RtMidi::Api api, const std::string clientName );
@@ -449,7 +448,7 @@ class MidiApi
   virtual std::string getPortName( unsigned int portNumber ) = 0;
 
   inline bool isPortOpen() const { return connected_; }
-  void setErrorCallback( RtMidiErrorCallback errorCallback, void *userData );
+  void setErrorCallback( RtMidiErrorCallback errorCallback );
 
   //! A basic error reporting function for RtMidi classes.
   void error( RtMidiError::Type type, std::string errorString );
@@ -461,8 +460,6 @@ protected:
   bool connected_;
   std::string errorString_;
   RtMidiErrorCallback errorCallback_;
-  bool firstErrorOccurred_;
-  void *errorCallbackUserData_;
 };
 
 class MidiInApi : public MidiApi
@@ -550,7 +547,7 @@ inline unsigned int RtMidiIn :: getPortCount( void ) { return rtapi_->getPortCou
 inline std::string RtMidiIn :: getPortName( unsigned int portNumber ) { return rtapi_->getPortName( portNumber ); }
 inline void RtMidiIn :: ignoreTypes( bool midiSysex, bool midiTime, bool midiSense ) { ((MidiInApi *)rtapi_)->ignoreTypes( midiSysex, midiTime, midiSense ); }
 inline double RtMidiIn :: getMessage( std::vector<unsigned char> *message ) { return ((MidiInApi *)rtapi_)->getMessage( message ); }
-inline void RtMidiIn :: setErrorCallback( RtMidiErrorCallback errorCallback, void *userData ) { rtapi_->setErrorCallback(errorCallback, userData); }
+inline void RtMidiIn :: setErrorCallback( RtMidiErrorCallback errorCallback ) { rtapi_->setErrorCallback(errorCallback); }
 
 inline RtMidi::Api RtMidiOut :: getCurrentApi( void ) throw() { return rtapi_->getCurrentApi(); }
 inline void RtMidiOut :: openPort( unsigned int portNumber, const std::string portName ) { rtapi_->openPort( portNumber, portName ); }
@@ -560,7 +557,7 @@ inline bool RtMidiOut :: isPortOpen() const { return rtapi_->isPortOpen(); }
 inline unsigned int RtMidiOut :: getPortCount( void ) { return rtapi_->getPortCount(); }
 inline std::string RtMidiOut :: getPortName( unsigned int portNumber ) { return rtapi_->getPortName( portNumber ); }
 inline void RtMidiOut :: sendMessage( std::vector<unsigned char> *message ) { ((MidiOutApi *)rtapi_)->sendMessage( message ); }
-inline void RtMidiOut :: setErrorCallback( RtMidiErrorCallback errorCallback, void *userData ) { rtapi_->setErrorCallback(errorCallback, userData); }
+inline void RtMidiOut :: setErrorCallback( RtMidiErrorCallback errorCallback ) { rtapi_->setErrorCallback(errorCallback); }
 
 // **************************************************************** //
 //

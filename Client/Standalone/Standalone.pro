@@ -48,7 +48,8 @@ SOURCES += \
     ../src/audio/vst/vsthost.cpp \
     ../src/geo/WebIpToLocationResolver.cpp \
     ../src/StandAloneMainController.cpp \
-    ../src/gui/MainWindowStandalone.cpp
+    ../src/gui/MainWindowStandalone.cpp \
+    ../../RtMidi/RtMidi.cpp
 
 INCLUDEPATH += $$PWD/../libs/includes/portaudio        \
                $$PWD/../libs/includes/rtmidi           \
