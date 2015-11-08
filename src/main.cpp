@@ -5,7 +5,9 @@
 #include "persistence/Settings.h"
 #include "MainWindowStandalone.h"
 #include "log/logging.h"
-
+#if _WIN32
+   #define __WINDOWS_MM__ //some midi devices need it like swissonic
+#endif
 int main(int argc, char* args[] ){
 
     QApplication::setApplicationName("Jamtaba 2");
