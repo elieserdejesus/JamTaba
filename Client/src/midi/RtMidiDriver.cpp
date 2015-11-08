@@ -83,10 +83,7 @@ void RtMidiDriver::release(){
 
 QString RtMidiDriver::getInputDeviceName(int index) const{
     if(midiStreams.at(index)){
-
-        //return  QString::fromUtf8("Périphérique");
-
-        return  QString::fromStdString(midiStreams.at(index)->getPortName(index));
+    return  QString::fromStdString(midiStreams.at(index)->getPortName(index));
     }
     return "error";
 }

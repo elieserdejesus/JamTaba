@@ -25,7 +25,8 @@ HEADERS += \
     ../src/audio/vst/vsthost.h \
     ../src/geo/WebIpToLocationResolver.h \
     ../src/StandAloneMainController.h \
-    ../src/gui/MainWindowStandalone.h
+    ../src/gui/MainWindowStandalone.h \
+    ../src/Libs/SingleApplication/singleapplication.h \
 
 SOURCES += \
     ../src/main.cpp \
@@ -50,6 +51,8 @@ SOURCES += \
     ../src/StandAloneMainController.cpp \
     ../src/gui/MainWindowStandalone.cpp \
 #    ../../RtMidi/RtMidi.cpp
+    ../src/Libs/SingleApplication/singleapplication.cpp \
+
 
 INCLUDEPATH += $$PWD/../libs/includes/portaudio        \
                $$PWD/../libs/includes/rtmidi           \
