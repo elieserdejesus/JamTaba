@@ -25,7 +25,8 @@ int main(int argc, char* args[] ){
 
     //QApplication* application = new QApplication(argc, args);
     //SINGLE APPLICATION HERE
-    SingleApplication application(argc, args);
+    //SingleApplication application(argc, args);
+    SingleApplication* application = new SingleApplication(argc, args);
 
     Controller::StandaloneMainController mainController(settings, application);//MainController extends QApplication
     mainController.configureStyleSheet("jamtaba.css");
