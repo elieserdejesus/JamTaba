@@ -254,6 +254,8 @@ private:
     void setAllTracksActivation(bool activated);
     void doAudioProcess(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate);
 
+    bool inputIndexIsValid(int inputIndex);
+
     QScopedPointer<Audio::AbstractMp3Streamer> roomStreamer;
     long long currentStreamingRoomID;
 

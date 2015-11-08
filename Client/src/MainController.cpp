@@ -479,6 +479,9 @@ Audio::LocalInputAudioNode* MainController::getInputTrack(int localInputIndex){
 void MainController::setInputTrackToMono(int localChannelIndex, int inputIndexInAudioDevice){
     Audio::LocalInputAudioNode* inputTrack = getInputTrack(localChannelIndex);
     if(inputTrack){
+        if( !inputIndexIsValid(inputIndexInAudioDevice) ){
+            firstInputIndex = audioDriver->getSelectedInputs().getFirstChannel();//use the first available channel
+        }
         inputTrack->setAudioInputSelection(inputIndexInAudioDevice, 1);//mono
         //emit inputSelectionChanged(localChannelIndex);
         if(mainWindow){
@@ -491,11 +494,21 @@ void MainController::setInputTrackToMono(int localChannelIndex, int inputIndexIn
         }
     }
 }
+
+bool MainController::inputIndexIsValid(int inputIndex){
+    Audio::ChannelRange globalInputsRange = audioDriver->getSelectedInputs();
+    return inputIndex >= globalInputsRange.getFirstChannel() && inputIndex <= globalInputsRange.getLastChannel();
+}
+
 void MainController::setInputTrackToStereo(int localChannelIndex, int firstInputIndex){
     Audio::LocalInputAudioNode* inputTrack = getInputTrack(localChannelIndex);
     if(inputTrack){
+
+        if( !inputIndexIsValid(firstInputIndex) ){
+            firstInputIndex = audioDriver->getSelectedInputs().getFirstChannel();//use the first available channel
+        }
         inputTrack->setAudioInputSelection(firstInputIndex, 2);//stereo
-        //emit inputSelectionChanged(localChannelIndex);
+
         if(mainWindow){
             mainWindow->refreshTrackInputSelection(localChannelIndex);
         }
