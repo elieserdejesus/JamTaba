@@ -3,7 +3,7 @@
 
 // Change this to inherit from QGuiApplication or QCoreApplication
 #ifndef QAPPLICATION_CLASS
-  #define QAPPLICATION_CLASS QCoreApplication
+  #define QAPPLICATION_CLASS QApplication// QCoreApplication
 #endif
 
 #define  QUOTE(C) #C
