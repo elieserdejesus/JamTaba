@@ -56,7 +56,7 @@ public:
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
     virtual void addDefaultPluginsScanPath();
-
+    QStringList getSteinbergRecommendedPaths();
 
     inline Vst::Host* getVstHost() const{return vstHost;}
 

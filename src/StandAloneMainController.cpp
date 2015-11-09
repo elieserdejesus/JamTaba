@@ -304,8 +304,7 @@ Audio::Plugin *StandaloneMainController::createPluginInstance(const Audio::Plugi
     return nullptr;
 }
 
-
-void StandaloneMainController::addDefaultPluginsScanPath(){
+QStringList StandaloneMainController::getSteinbergRecommendedPaths(){
     /*
     On a 64-bit OS
 
@@ -328,6 +327,22 @@ void StandaloneMainController::addDefaultPluginsScanPath(){
        vstPaths.append("/Library/Audio/Plug-Ins/VST");
        vstPaths.append( "~/Library/Audio/Plug-Ins/VST");
 #endif
+       return vstPaths;
+}
+
+void StandaloneMainController::addDefaultPluginsScanPath(){
+    QStringList vstPaths;
+
+    //first try read the path store in registry by Jamtaba installer.
+    //If this value is not founded use the Steinberg recommended paths.
+    QSettings jamtabaRegistryEntry("HKEY_CURRENT_USER\\SOFTWARE\\Jamtaba", QSettings::NativeFormat);
+    QString vst2InstallDir = jamtabaRegistryEntry.value("VST2InstallDir").toString();
+    if(!vst2InstallDir.isEmpty()){
+        vstPaths.append(vst2InstallDir);
+    }else{
+        vstPaths.append(getSteinbergRecommendedPaths());
+    }
+
     foreach (QString vstPath, vstPaths) {
         if(!vstPath.isEmpty() && QDir(vstPath).exists()){
             addPluginsScanPath(vstPath);
