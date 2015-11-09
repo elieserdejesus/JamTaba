@@ -1,3 +1,6 @@
+
+![ezgif com-gif-maker 1](https://cloud.githubusercontent.com/assets/1283808/11020730/0d9e58ba-8629-11e5-8e55-b8cd89b568c0.gif)
+
 **Jamtaba 2** is a software to play online music jam sessions. At moment you can use Jamtaba to play with musicians around the world using [ninjam ](http://www.cockos.com/ninjam/) servers.
 
 Jamtaba is a standalone software and a VST plugin. Using the standalone version you can use your audio and midi devices and use VST plugins inside Jamtaba (Jamtaba standalone is a VST host). Using the VST plugin you can use Jamtaba in your preferred DAW and send your audio tracks to Jamtaba, and Jamtaba will stream these audio tracks to ninjam servers. Off course Jamtaba will receive and play the other musicians audio streams, so you can play with others and have some fun playing online!
