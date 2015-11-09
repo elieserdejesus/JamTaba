@@ -28,6 +28,7 @@ public:
     virtual void setSampleRate(int newSampleRate){ Q_UNUSED(newSampleRate);}
     virtual void setBypass(bool state);
     bool isBypassed() const{return bypassed;}
+
 protected:
     bool bypassed;
 };
