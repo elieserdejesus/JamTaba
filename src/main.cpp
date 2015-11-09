@@ -6,7 +6,6 @@
 #include "MainWindowStandalone.h"
 #include "log/logging.h"
 
-#define QAPPLICATION_CLASS QApplication
 #include "Libs/SingleApplication/singleapplication.h"
 
 int main(int argc, char* args[] ){
@@ -25,9 +24,6 @@ int main(int argc, char* args[] ){
     Persistence::Settings settings;
     settings.load();
 
-    //QApplication* application = new QApplication(argc, args);
-    //SINGLE APPLICATION HERE
-    //SingleApplication application(argc, args);
     SingleApplication* application = new SingleApplication(argc, args);
 
     Controller::StandaloneMainController mainController(settings, (QApplication*)application);
@@ -42,7 +38,7 @@ int main(int argc, char* args[] ){
 
     //The SingleApplication class implements a showUp() signal. You can bind to that signal to raise your application's
     //window when a new instance had been started.
-    //QObject::connect(application, SIGNAL(showUp()), &mainWindow, SLOT(raise()));
+    QObject::connect(application, SIGNAL(showUp()), &mainWindow, SLOT(raise()));
 
     return application->exec();
  }
