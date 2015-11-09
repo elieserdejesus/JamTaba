@@ -104,6 +104,9 @@ end;
 procedure RegisterPreviousData(PreviousDataKey: Integer);
 begin
   SetPreviousData(PreviousDataKey, 'VST2InstallDir', VST2DirPage.Values[0]);
+
+  //store vst path in registry too, so Jamtaba can this path and use to scan vst plugins
+  RegWriteStringValue(HKEY_CURRENT_USER, 'Software\Jamtaba', 'VST2InstallDir', VST2DirPage.Values[0]);
 end;
 //+++++++++++++++++++++++++
 
@@ -191,3 +194,6 @@ begin
    end;
 end;
 
+
+[Registry]
+Root: HKCU; Subkey: Software\Jamtaba; ValueType: string; ValueName: VST2InstallDir; Flags: uninsdeletekey
