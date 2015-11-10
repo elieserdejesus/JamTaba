@@ -26,6 +26,7 @@
 #include "ChatPanel.h"
 #include "BusyDialog.h"
 #include "PrivateServerDialog.h"
+#include "ResourcesUsage.h"
 
 #include "../NinjamController.h"
 #include "../ninjam/Server.h"
@@ -828,6 +829,11 @@ void MainWindow::timerEvent(QTimerEvent *){
             ninjamWindow->updatePeaks();
         }
     }
+
+    //update resources usage
+
+    ResourcesUsage resourcesUsage = resourcesUsageReader.getResourcesUsage();
+    ui.tabWidget->setResourcesUsage(resourcesUsage.getCpuUsage(), resourcesUsage.getMemoryUsage());
 
     //update room stream plot
     if(mainController->isPlayingRoomStream()){
