@@ -69,7 +69,8 @@ HEADERS += \
     ../src/gui/UserNameDialog.h \
     ../src/gui/MainWindow.h \
     $$PWD/src/log/logging.h \
-    $$PWD/src/gui/widgets/CustomTabWidget.h
+    $$PWD/src/gui/widgets/CustomTabWidget.h \
+    $$PWD/src/gui/ResourcesUsage.h
 
 SOURCES += \
     ../src/audio/core/AudioDriver.cpp \
@@ -119,7 +120,8 @@ SOURCES += \
     ../src/gui/UserNameDialog.cpp \
     $$PWD/src/gui/MainWindow.cpp \
     $$PWD/src/log/logging.cpp \
-    $$PWD/src/gui/widgets/CustomTabWidget.cpp
+    $$PWD/src/gui/widgets/CustomTabWidget.cpp \
+    $$PWD/src/gui/ResourcesUsage.cpp
 
 FORMS += \
     ../src/gui/PreferencesDialog.ui \

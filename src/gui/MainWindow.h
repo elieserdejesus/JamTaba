@@ -9,6 +9,7 @@
 #include "../loginserver/LoginService.h"
 #include "../persistence/Settings.h"
 #include "../LocalTrackGroupView.h"
+#include "ResourcesUsage.h"
 
 class PluginScanDialog;
 class NinjamRoomWindow;
@@ -196,7 +197,9 @@ private:
 
     void showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly);
 
-     void recalculateLeftPanelWidth();
+    void recalculateLeftPanelWidth();
+
+    ResourcesUsageReader resourcesUsageReader;
 
 };
 
