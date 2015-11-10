@@ -868,7 +868,18 @@ void MainController::start(){
         }
         if(!audioDriver){
             qCInfo(jtCore) << "Creating audio driver...";
-            audioDriver.reset( createAudioDriver(settings));
+            Audio::AudioDriver* driver = nullptr;
+            try{
+                driver = createAudioDriver(settings);
+            }
+            catch(const std::runtime_error &error){
+                qCCritical(jtCore) << "Audio initialization fail: " << QString::fromUtf8(error.what());
+                QMessageBox::warning(mainWindow, "Audio Initialization Problem!", error.what());
+            }
+            if(!driver){
+                driver = new Audio::NullAudioDriver();
+            }
+            audioDriver.reset( driver );
             QObject::connect(audioDriver.data(), SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
             QObject::connect(audioDriver.data(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
             QObject::connect(audioDriver.data(), SIGNAL(started()), this, SLOT(on_audioDriverStarted()));
