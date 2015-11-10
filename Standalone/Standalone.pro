@@ -103,7 +103,8 @@ win32{
         QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
     }
 
-    LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32
+    LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32 -lPsapi
+    QMAKE_CXXFLAGS += -DPSAPI_VERSION=1
 
     RC_FILE = Jamtaba2.rc #windows icon
 }

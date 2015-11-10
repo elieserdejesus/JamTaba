@@ -9,7 +9,7 @@
 #include "../loginserver/LoginService.h"
 #include "../persistence/Settings.h"
 #include "../LocalTrackGroupView.h"
-#include "ResourcesUsage.h"
+#include "../performance/PerformanceMonitor.h"
 
 class PluginScanDialog;
 class NinjamRoomWindow;
@@ -199,7 +199,7 @@ private:
 
     void recalculateLeftPanelWidth();
 
-    ResourcesUsageReader resourcesUsageReader;
+    PerformanceMonitor performanceMonitor;//cpu and memmory usage
 
 };
 

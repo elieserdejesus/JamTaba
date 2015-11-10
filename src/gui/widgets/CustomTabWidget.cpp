@@ -3,7 +3,7 @@
 #include <QPainter>
 
 QColor CustomTabWidget::RESOURCES_USAGE_BG_COLOR = QColor(0, 0, 0, 60);
-QColor CustomTabWidget::RESOURCES_USAGE_TEXT_COLOR = QColor(255,255, 255, 80);
+QColor CustomTabWidget::RESOURCES_USAGE_TEXT_COLOR = QColor(255,255, 255, 160);
 
 CustomTabWidget::CustomTabWidget(QWidget *parent)
     :QTabWidget(parent), cpuUsage(0), memoryUsage(0){
