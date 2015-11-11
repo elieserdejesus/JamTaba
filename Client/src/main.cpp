@@ -34,6 +34,7 @@ int main(int argc, char* args[] ){
     }
     MainWindowStandalone  mainWindow(&mainController);
     mainController.setMainWindow(&mainWindow);
+
     mainWindow.show();
 
     //The SingleApplication class implements a showUp() signal. You can bind to that signal to raise your application's
