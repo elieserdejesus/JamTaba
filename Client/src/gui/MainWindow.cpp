@@ -26,6 +26,7 @@
 #include "ChatPanel.h"
 #include "BusyDialog.h"
 #include "PrivateServerDialog.h"
+#include "../performance/PerformanceMonitor.h"
 
 #include "../NinjamController.h"
 #include "../ninjam/Server.h"
@@ -828,6 +829,10 @@ void MainWindow::timerEvent(QTimerEvent *){
             ninjamWindow->updatePeaks();
         }
     }
+
+    //update cpu and memmory usage
+    //TODO slown down the performance monitoring
+    ui.tabWidget->setResourcesUsage(performanceMonitor.getCpuUsage(), performanceMonitor.getMemmoryUsage());
 
     //update room stream plot
     if(mainController->isPlayingRoomStream()){
