@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>239</width>
-    <height>39</height>
+    <width>257</width>
+    <height>58</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -72,10 +72,13 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>bit chat message with many lines to test the behavior</string>
+      <string>big chat message with many lines to test the behavior</string>
      </property>
      <property name="textFormat">
       <enum>Qt::RichText</enum>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
