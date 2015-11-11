@@ -176,12 +176,12 @@ void LocalTrackGroupView::on_removeChannelClicked(){
     mainFrame->removeChannelsGroup(mainFrame->getChannelGroupsCount()-1);
 }
 //+++++++++++++++++++++++++++++
-void LocalTrackGroupView::setPeakMeterMode(bool faderOnly){
-    if(this->peakMeterOnly != faderOnly){
-        this->peakMeterOnly = faderOnly;
+void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly){
+    if(this->peakMeterOnly != peakMeterOnly){
+        this->peakMeterOnly = peakMeterOnly;
         this->ui->topPanel->setVisible(!this->peakMeterOnly);
         foreach (BaseTrackView* baseView, trackViews) {
-            dynamic_cast<LocalTrackView*> (baseView)->setPeakMetersOnlyMode(faderOnly);
+            dynamic_cast<LocalTrackView*> (baseView)->setPeakMetersOnlyMode(peakMeterOnly, mainFrame->isRunningInMiniMode() );
         }
         updateGeometry();
         adjustSize();

@@ -105,13 +105,10 @@ QSize LocalTrackView::sizeHint() const{
     return BaseTrackView::sizeHint();
 }
 
-void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly){
+void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode){
     if(this->peakMetersOnly != peakMetersOnly){
         this->peakMetersOnly = peakMetersOnly;
-        //ui->panPanel->setVisible(!this->peakMetersOnly);
-        //ui->levelSlider->setVisible(!this->peakMetersOnly);
         ui->boostPanel->setVisible(!this->peakMetersOnly);
-
         ui->leftWidget->setVisible(!this->peakMetersOnly);
 
 
@@ -119,8 +116,8 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly){
 
 
         QMargins margins = layout()->contentsMargins();
-        margins.setLeft(peakMetersOnly ? 2 : 6);
-        margins.setRight(peakMetersOnly ? 2 : 6);
+        margins.setLeft( (peakMetersOnly || runningInMiniMode) ? 2 : 6);
+        margins.setRight( (peakMetersOnly || runningInMiniMode) ? 2 : 6);
         layout()->setContentsMargins(margins);
 
         if(fxPanel){
@@ -151,8 +148,8 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly){
     }
 }
 
-void LocalTrackView::togglePeakMetersOnlyMode(){
-    setPeakMetersOnlyMode(!peakMetersOnly);
+void LocalTrackView::togglePeakMetersOnlyMode(bool runninsInMiniMode){
+    setPeakMetersOnlyMode(!peakMetersOnly, runninsInMiniMode);
 }
 
 

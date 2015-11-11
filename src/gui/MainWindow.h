@@ -69,6 +69,9 @@ public:
     void exitFromRoom(bool normalDisconnection);
 
     bool isRunningAsVstPlugin() const;
+
+    inline bool isRunningInMiniMode() const{return !fullViewMode;}
+    inline bool isRunningInFullViewMode() const{return fullViewMode;}
 protected:
     Controller::MainController* mainController;
     virtual void initializePluginFinder();
