@@ -34,7 +34,7 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
     //create some messages to test
 
 //    for (int user = 0; user < 2; ++user) {
-//        for (int c = 0; c < 3; ++c) {
+//        for (int c = 0; c < 10; ++c) {
 //            QString userName = "User " + QString::number(user);
 //            QString message = "Bit chat message with many lines to test the layout behavior";
 //            if(user % 3 == 0){
@@ -45,7 +45,7 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
 //        }
 //    }
 
-//    addMessage("tester", "hi");
+    //addMessage("tester", "bigasdoiu asdoiuasdasdasdasdasdasdasdasdasdasdasasd");
 
 //    QString teste("Ã©");
 //    addMessage("elieser", QString::fromUtf8(teste.toStdString().c_str()));
