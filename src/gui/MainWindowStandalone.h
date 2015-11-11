@@ -10,7 +10,7 @@ public:
     MainWindowStandalone(Controller::MainController *controller);
 
 protected:
-    virtual void showEvent(QShowEvent *);
+    virtual void showEvent(QShowEvent *ent);
     void closeEvent(QCloseEvent *);
 
     virtual NinjamRoomWindow* createNinjamWindow(Login::RoomInfo, Controller::MainController*);
