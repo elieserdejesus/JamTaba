@@ -44,8 +44,8 @@ public:
 
     virtual void setUnlightStatus(bool unlighted);
 
-    void setPeakMetersOnlyMode(bool peakMetersOnly);
-    void togglePeakMetersOnlyMode();
+    void setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode);
+    void togglePeakMetersOnlyMode(bool runninsInMiniMode);
 
     QSize sizeHint() const;
 
