@@ -5,8 +5,6 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QMetaMethod>
-#include "../src/persistence/Settings.h"// for chat translation
-
 
 ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
     QWidget(parent),
@@ -38,9 +36,13 @@ void ChatMessagePanel::initialize(QString userName, QString msg, QColor userName
     msg = replaceLinksInString(msg);
     ui->labelMessage->setText(msg);
     ui->labelMessage->setStyleSheet(buildCssString(msgBackgroundColor, textColor, drawBorder));
-    ui->translateButton->setStyleSheet(buildCssString(userNameBackgroundColor, textColor, drawBorder));
+
+    ui->translateButton->setStyleSheet( buildCssString(userNameBackgroundColor, textColor, drawBorder));
 
     this->originalText = msg;
+
+    //ui->widget->setFixedHeight(sizeHint().height());
+
 }
 
 QString ChatMessagePanel::buildCssString(QColor bgColor, QColor textColor, bool drawBorder){

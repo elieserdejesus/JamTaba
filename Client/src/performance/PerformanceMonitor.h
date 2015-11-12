@@ -11,7 +11,7 @@ public:
     explicit PerformanceMonitor();
     ~PerformanceMonitor();
     int getMemmoryUsage();
-    int getCpuUsage();
+    double getCpuUsage();
 private:
     int processorsCount;
 };

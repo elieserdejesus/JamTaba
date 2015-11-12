@@ -63,6 +63,8 @@ private:
     void buildAccentsdModel(int bpi);
     QStringList getBpiDividers(int bpi);
     static bool compareBpis(const QString& s1, const QString& s2);
+    void selectClosestBeatsPerAccentInCombo(int currentBeatsPerAccent);
+    void selectBeatsPerAccentInCombo(int beatsPerAccent);
 private slots:
     void comboAccentsChanged(int index);
     void comboShapeChanged(int index);

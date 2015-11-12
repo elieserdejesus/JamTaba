@@ -19,6 +19,7 @@ public:
     void setCurrentBeat(int interval) ;
     void setBeatsPerAccent(int beats) ;
     inline int getBeatsPerInterval() const{return beats; }
+    inline int getBeatsPerAccent() const{return beatsPerAccent;}
     void setBeatsPerInterval(int beats) ;
     void setSliceNumberColor(QColor sliceNumberColor) ;
     inline QColor getSliceNumberColor() const{ return sliceNumberColor; }
