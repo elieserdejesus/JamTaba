@@ -37,19 +37,12 @@ void ChatMessagePanel::initialize(QString userName, QString msg, QColor userName
     ui->labelMessage->setText(msg);
     ui->labelMessage->setStyleSheet(buildCssString(msgBackgroundColor, textColor, drawBorder));
 
-//    //check for big words and split these words to avoid big messagePanels hidding the translate button (bug #118)
-//    QStringList words = msg.split(" ");
-//    QFontMetrics fontMetrics = ui->labelMessage->fontMetrics();
-//    int availableWidthForMessageText = parentWidget()->sizeHint().width() - ui->labelUserName->width() - ui->translateButton->width();
-//    foreach (QString word, words) {
-//        if(fontMetrics.width(word) > availableWidthForMessageText){
-//            msg.replace(word, "")
-//        }
-//    }
-
-    ui->translateButton->setStyleSheet(buildCssString(userNameBackgroundColor, textColor, drawBorder));
+    ui->translateButton->setStyleSheet( buildCssString(userNameBackgroundColor, textColor, drawBorder));
 
     this->originalText = msg;
+
+    //ui->widget->setFixedHeight(sizeHint().height());
+
 }
 
 QString ChatMessagePanel::buildCssString(QColor bgColor, QColor textColor, bool drawBorder){

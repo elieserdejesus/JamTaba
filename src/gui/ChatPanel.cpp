@@ -7,7 +7,6 @@
 #include <QKeyEvent>
 #include <QWidget>
 
-
 const QColor ChatPanel::BOT_COLOR(120, 120, 120);
 
 ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
@@ -20,9 +19,7 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
     ui->scrollContent->setLayout(new QVBoxLayout(ui->scrollContent));
     ui->scrollContent->layout()->setContentsMargins(0, 0, 0, 0);
 
-    //QObject::connect(ui->chatText, SIGNAL())
     QObject::connect(ui->chatText, SIGNAL(returnPressed()), this, SLOT(on_chatTextEditionFinished()));
-    //QObject::connect(ui->chatText, SIGNAL())
     ui->chatText->installEventFilter(this);
 
     //this event is used to auto scroll down when new messages are added
@@ -31,39 +28,16 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
     //disable blue border when QLineEdit has focus in mac
     ui->chatText->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
-    //create some messages to test
-
-//    for (int user = 0; user < 2; ++user) {
-//        for (int c = 0; c < 10; ++c) {
-//            QString userName = "User " + QString::number(user);
-//            QString message = "Bit chat message with many lines to test the layout behavior";
-//            if(user % 3 == 0){
-//                userName = userName + " test";
-//                message = "short message";
-//            }
-//            addMessage(userName, message);
-//        }
-//    }
-
-    //addMessage("tester", "bigasdoiu asdoiuasdasdasdasdasdasdasdasdasdasdasasd");
-
-//    QString teste("Ã©");
-//    addMessage("elieser", QString::fromUtf8(teste.toStdString().c_str()));
-
-//    addBpiVoteConfirmationMessage(33);
-//    addBpmVoteConfirmationMessage(140);
 }
 
 
-bool ChatPanel::eventFilter(QObject *obj, QEvent *event)
-{
-    if (obj == ui->chatText && event->type() == QEvent::MouseButtonPress)
-    {
+bool ChatPanel::eventFilter(QObject *obj, QEvent *event){
+    if (obj == ui->chatText && event->type() == QEvent::MouseButtonPress){
         ui->chatText->setFocus();
     }
     return QWidget::eventFilter(obj, event);
 }
-
+//++++++++++++++++++++++++++++++++
 class VoteButton : public QPushButton{
 public:
     VoteButton(QString voteType,  int voteValue)
@@ -127,18 +101,14 @@ void ChatPanel::on_chatTextEditionFinished(){
 
 void ChatPanel::addMessage(QString userName, QString userMessage){
     QColor msgBackgroundColor = getUserColor(userName);
-    QColor textColor = msgBackgroundColor == BOT_COLOR ? QColor(50, 50, 50) : QColor(0, 0, 0);
+    QColor textColor = (msgBackgroundColor == BOT_COLOR) ? QColor(50, 50, 50) : QColor(0, 0, 0);
     QColor userNameBackgroundColor = msgBackgroundColor;
-    bool drawBorder = true;
     if(msgBackgroundColor != BOT_COLOR){
         userNameBackgroundColor.setHsvF(msgBackgroundColor.hueF(), msgBackgroundColor.saturationF(), msgBackgroundColor.valueF() - 0.2);
     }
-    else{
-        drawBorder = false;
-    }
-    ChatMessagePanel* msgPanel = new ChatMessagePanel(ui->scrollContent, userName, userMessage, userNameBackgroundColor, msgBackgroundColor, textColor, drawBorder);
+    ChatMessagePanel* msgPanel = new ChatMessagePanel(ui->scrollContent, userName, userMessage, userNameBackgroundColor, msgBackgroundColor, textColor);
     msgPanel->setPrefferedTranslationLanguage(this->preferredTargetTranslationLanguage);
-
+    msgPanel->setMaximumWidth(ui->scrollContent->width());
     ui->scrollContent->layout()->addWidget(msgPanel);
     if(ui->scrollContent->layout()->count() > MAX_MESSAGES){
         //remove the first widget

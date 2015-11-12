@@ -1188,45 +1188,46 @@ ChatPanel > QPushButton#buttonClear{
     border: 1px solid #919191;
 }
 
-ChatMessagePanel > QLabel#labelUserName{
+ChatMessagePanel #labelUserName{
     padding: 0px;
-    padding-right: 3px;
+    padding-right: 2px;
     border: 1px solid rgb(0, 0, 0, 70);
     border-right: none;
     border-radius: 2px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
-    font-size: 11px;
-    margin-top: 3px;
-    margin-bottom: 3px;
-    margin-right: -1px;
+    font-size: 10px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-right: 0px;
+    margin-left: 0px;
 }
 
-ChatMessagePanel > QLabel#labelMessage{
+ChatMessagePanel #labelMessage{
     padding: 2px;
     border: 1px solid rgb(0, 0, 0, 80);
     border-radius: 2px;
-    min-height: 20px;
+    min-height: 16px;
 }
 
 ChatMessagePanel #translateButton{
-    /*background-image: url(':/images/translate.png');*/
     max-width: 8px;
     max-height: 6px;
     height: 6px;
     min-height: 6px;
-    padding: 3px;
+    padding: 2px;
     border: 1px solid rgb(0, 0, 0, 80);
-    border-left: none;
+    border-right: none;
     border-radius: 2px;
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-    margin-top: 3px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    font-size: 8px;
 }
 
 ChatMessagePanel QPushButton:hover#translateButton{
     border-color: rgb(200, 200, 200);
     font-weight: bold;
     border-style: outset;
-
 }
