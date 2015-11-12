@@ -25,9 +25,9 @@ void MainWindowStandalone::closeEvent(QCloseEvent * e){
 
 void MainWindowStandalone::showEvent(QShowEvent *ent){
 
-
+//TODO restorePluginsList(bool fromSettings)
     //wait 50 ms before restore the plugins list to avoid freeze the GUI in hidden state while plugins are loading
-   // QTimer::singleShot(50, this, &MainWindowStandalone::restorePluginsList);
+    //QTimer::singleShot(50, this, &MainWindowStandalone::restorePluginsList);
 }
 
 void MainWindowStandalone::initializePluginFinder(){
