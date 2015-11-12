@@ -47,6 +47,8 @@ using namespace Persistence;
 using namespace Controller;
 using namespace Ninjam;
 
+const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 1000;//in miliseconds
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainWindow::MainWindow(Controller::MainController *mainController, QWidget *parent)
     :
@@ -56,7 +58,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     pluginScanDialog(nullptr),
     ninjamWindow(nullptr),
     roomToJump(nullptr),
-    fullViewMode(true)
+    fullViewMode(true),
+    lastPerformanceMonitorUpdate(0)
 {
     qCInfo(jtGUI) << "Creating MainWindow...";
 	ui.setupUi(this);
@@ -831,8 +834,11 @@ void MainWindow::timerEvent(QTimerEvent *){
     }
 
     //update cpu and memmory usage
-    //TODO slown down the performance monitoring
-    ui.tabWidget->setResourcesUsage(performanceMonitor.getCpuUsage(), performanceMonitor.getMemmoryUsage());
+    qint64 now = QDateTime::currentMSecsSinceEpoch();
+    if(now - lastPerformanceMonitorUpdate >= PERFORMANCE_MONITOR_REFRESH_TIME){
+        ui.tabWidget->setResourcesUsage(performanceMonitor.getCpuUsage(), performanceMonitor.getMemmoryUsage());
+        lastPerformanceMonitorUpdate = now;
+    }
 
     //update room stream plot
     if(mainController->isPlayingRoomStream()){
