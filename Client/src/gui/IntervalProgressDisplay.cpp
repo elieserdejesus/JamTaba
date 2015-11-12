@@ -65,6 +65,9 @@ void IntervalProgressDisplay::setCurrentBeat(int beat) {
 
 void IntervalProgressDisplay::setBeatsPerAccent(int beats) {
     beatsPerAccent = beats;
+    if(!isShowingAccents() && beatsPerAccent > 1){
+        this->showAccents = true;
+    }
     update();
 }
 
