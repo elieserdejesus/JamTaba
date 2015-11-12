@@ -46,7 +46,7 @@ double PerformanceMonitor::getCpuUsage(){
     lastCPU = now;
     lastUserCPU = user;
     lastSysCPU = sys;
-    qInfo() << "percent:" << percent * 100;
+    //qInfo() << "percent:" << percent * 100;
     return percent * 100;
 }
 
