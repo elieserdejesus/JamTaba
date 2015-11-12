@@ -70,7 +70,8 @@ HEADERS += \
     ../src/gui/MainWindow.h \
     $$PWD/src/log/logging.h \
     $$PWD/src/gui/widgets/CustomTabWidget.h \
-    $$PWD/src/performance/PerformanceMonitor.h
+    $$PWD/src/performance/PerformanceMonitor.h \
+    $$PWD/src/configurator.h
 
 SOURCES += \
     ../src/audio/core/AudioDriver.cpp \
@@ -121,6 +122,7 @@ SOURCES += \
     $$PWD/src/gui/MainWindow.cpp \
     $$PWD/src/log/logging.cpp \
     $$PWD/src/gui/widgets/CustomTabWidget.cpp \
+    $$PWD/src/configurator.cpp
 
 #multiplatform implementations
 win32:SOURCES += $$PWD/src/performance/WindowsPerformanceMonitor.cpp

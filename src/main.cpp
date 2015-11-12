@@ -7,6 +7,9 @@
 #include "log/logging.h"
 
 #include "Libs/SingleApplication/singleapplication.h"
+#include "configurator.h"
+
+extern Configurator *JTBConfig=NULL;
 
 int main(int argc, char* args[] ){
 
