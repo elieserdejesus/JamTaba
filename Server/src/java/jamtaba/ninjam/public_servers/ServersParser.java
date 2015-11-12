@@ -4,21 +4,13 @@ import jamtaba.ip2c.IpToCountryResolver;
 import jamtaba.ninjam.NinjamServer;
 import jamtaba.ninjam.NinjamUser;
 import jamtaba.ninjam.public_servers.AutoSongParser.AutoSongServer;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  * @author zeh
