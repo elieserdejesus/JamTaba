@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
+#include <QApplication> //to check plugin or standalone
 
 Q_LOGGING_CATEGORY(jtCore,                  "jt.Core")
 Q_LOGGING_CATEGORY(jtLoginService,          "jt.LoginService")
@@ -60,9 +61,12 @@ void jamtabaLogHandler(QtMsgType type, const QMessageLogContext &context, const 
 
     QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
     if(!logDir.exists()){
-        logDir.mkpath(".");
+        //check if we are plugin or standalone
+        QString s=QApplication::instance()->applicationName();
+        qDebug() << "Jamtaba Instance:" << s;
+        logDir.mkpath("s");
     }
-    QFile outFile( logDir.absoluteFilePath("log.txt"));
+    QFile outFile( logDir.absoluteFilePath("logg.txt"));
     QIODevice::OpenMode ioFlags = QIODevice::WriteOnly;
     if(logFileCreated)
         ioFlags |= QIODevice::Append;

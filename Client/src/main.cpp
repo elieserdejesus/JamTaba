@@ -12,6 +12,7 @@ int main(int argc, char* args[] ){
 
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
+    //QApplication::setApplicationDisplayName("Jamtaba Standalone");
 
     Controller::MainController::exportLogFile();//copy logging.ini from resources to Jamtaba writable path
 
