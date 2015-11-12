@@ -29,7 +29,7 @@
 
 #include "../log/logging.h"
 
-QString Controller::MainController::LOG_CONFIG_FILE = "logging.ini";
+//QString Controller::MainController::LOG_CONFIG_FILE = "logging.ini";
 
 using namespace Persistence;
 using namespace Midi;
@@ -127,7 +127,7 @@ private:
 
 //++++++++++++++++++++++++++++++++++++++++++++
 QString MainController::getLogConfigFilePath(){
-    QDir logDir(Controller::MainController::getWritablePath());
+   /* QDir logDir(Controller::MainController::getWritablePath());
     if(logDir.exists()){
         QString logConfigFilePath = logDir.absoluteFilePath(LOG_CONFIG_FILE);
         if(QFile(logConfigFilePath).exists()){//log config file in application directory? (same dir as json config files, cache.bin, etc.)
@@ -145,6 +145,7 @@ QString MainController::getLogConfigFilePath(){
     }
     qWarning(jtCore) << "Log folder not exists!" << logDir.absolutePath();
     return "";
+    */
 }
 
 QString MainController::getWritablePath(){
@@ -154,7 +155,7 @@ QString MainController::getWritablePath(){
 
 //copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
 void MainController::exportLogFile(){
-    QDir logDir(Controller::MainController::getWritablePath());
+   /* QDir logDir(Controller::MainController::getWritablePath());
     if(logDir.exists()){
         QString logConfigFilePath = logDir.absoluteFilePath(LOG_CONFIG_FILE);
         if(!QFile(logConfigFilePath).exists()){//log config file in application directory? (same dir as json config files, cache.bin, etc.)
@@ -167,7 +168,7 @@ void MainController::exportLogFile(){
     }
     else{
         qWarning(jtCore) << "Log folder not exists!" << logDir.absolutePath();
-    }
+    }*/
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++
