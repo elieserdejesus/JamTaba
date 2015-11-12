@@ -16,6 +16,7 @@
 Configurator::Configurator()
 {
  logFilename = "logging.ini";
+ logFileCreated = false;
 }
 
 //copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
@@ -97,6 +98,30 @@ void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context,
     if(type == QtFatalMsg){
         abort();
     }
+}
+
+QString Configurator::getLogConfigFilePath()
+{
+   QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
+    if(logDir.exists())
+    {
+        QString logConfigFilePath = logDir.absoluteFilePath(logFilename);
+        if(QFile(logConfigFilePath).exists()){//log config file in application directory? (same dir as json config files, cache.bin, etc.)
+            return logConfigFilePath;
+        }
+        else{//search log config file in resources
+            //qDebug(jtCore) << "Log file not founded in release folder (" <<logDir.absolutePath() << "), searching in resources...";
+            logConfigFilePath = ":/" + logFilename ;
+            if(QFile(logConfigFilePath).exists()){
+                //qDebug(jtCore) << "Log file founded in resources...";
+                return logConfigFilePath;
+            }
+            //qWarning(jtCore) << "Log file not founded in source code tree: " << logDir.absolutePath();
+        }
+    }
+    qWarning(jtCore) << "Log folder not exists!" << logDir.absolutePath();
+    return "";
+
 }
 Configurator::~Configurator()
 {

@@ -17,9 +17,12 @@ int main(int argc, char* args[] ){
     QApplication::setApplicationVersion(APP_VERSION);
     //QApplication::setApplicationDisplayName("Jamtaba Standalone");
 
-    Controller::MainController::exportLogFile();//copy logging.ini from resources to Jamtaba writable path
+    //start the configurator
+    JTBConfig=new Configurator();
+    JTBConfig->exportLogFile();//copy logging.ini from resources to Jamtaba writable path
+    //Controller::MainController::exportLogFile();//copy logging.ini from resources to Jamtaba writable path
 
-    QString logFile = Controller::MainController::getLogConfigFilePath();
+    QString logFile =JTBConfig->getLogConfigFilePath();
     if(!logFile.isEmpty()){
         qputenv("QT_LOGGING_CONF", QByteArray(logFile.toUtf8()));
         qInstallMessageHandler(jamtabaLogHandler);
