@@ -28,9 +28,11 @@
 #include <QDir>
 
 #include "../log/logging.h"
+#include "configurator.h"
 
 //QString Controller::MainController::LOG_CONFIG_FILE = "logging.ini";
 
+extern Configurator *JTBConfig;
 using namespace Persistence;
 using namespace Midi;
 using namespace Ninjam;
@@ -125,6 +127,7 @@ private:
     QByteArray dataToUpload;
 };
 
+//TO BE REMOVED
 //++++++++++++++++++++++++++++++++++++++++++++
 QString MainController::getLogConfigFilePath(){
    /* QDir logDir(Controller::MainController::getWritablePath());
@@ -148,11 +151,12 @@ QString MainController::getLogConfigFilePath(){
     */
 }
 
+//TO BE REMOVED
 QString MainController::getWritablePath(){
     return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
 }
 
-
+//TO BE REMOVED
 //copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
 void MainController::exportLogFile(){
    /* QDir logDir(Controller::MainController::getWritablePath());
