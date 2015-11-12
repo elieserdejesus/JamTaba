@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+    
     <application>jamtaba2</application>
     <version>3</version>
     <threadsafe>true</threadsafe>
@@ -8,10 +9,16 @@
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
     </system-properties>
     <!-- Enable Channel Service -->
-    <inbound-services>
+    <!--inbound-services>
         <service>channel_presence</service>
-    </inbound-services>
+    </inbound-services-->
     <!--static-files>
         <include path="/favicon.ico" />
     </static-files-->
+    
+    <!-- put a appstats link in console panel -->
+    <admin-console>
+        <page name="Jamtaba Appstats" url="/appstats" />
+    </admin-console>
+    
 </appengine-web-app>
