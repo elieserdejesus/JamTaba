@@ -23,12 +23,11 @@ PerformanceMonitor::~PerformanceMonitor(){
 }
 
 //http://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
-int PerformanceMonitor::getCpuUsage(){
+double PerformanceMonitor::getCpuUsage(){
     static ULARGE_INTEGER lastCPU;
     static ULARGE_INTEGER lastSysCPU;
     static ULARGE_INTEGER lastUserCPU;
     static HANDLE thisProcessHande;
-    const static int BYTES_DIVIDER = 1024 * 1024;
 
     FILETIME ftime, fsys, fuser;
     ULARGE_INTEGER now, sys, user;
@@ -43,12 +42,12 @@ int PerformanceMonitor::getCpuUsage(){
     percent = (sys.QuadPart - lastSysCPU.QuadPart) +
             (user.QuadPart - lastUserCPU.QuadPart);
     percent /= (now.QuadPart - lastCPU.QuadPart);
-    percent /= this->processorsCount;
+    //percent /= this->processorsCount;
     lastCPU = now;
     lastUserCPU = user;
     lastSysCPU = sys;
-
-    return (percent * 100)/BYTES_DIVIDER;
+    qInfo() << "percent:" << percent * 100;
+    return percent * 100;
 }
 
 int PerformanceMonitor::getMemmoryUsage(){

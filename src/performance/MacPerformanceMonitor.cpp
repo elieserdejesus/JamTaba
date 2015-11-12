@@ -9,7 +9,7 @@ PerformanceMonitor::~PerformanceMonitor(){
 
 }
 
-int PerformanceMonitor::getCpuUsage(){
+double PerformanceMonitor::getCpuUsage(){
     return 0;
 }
 

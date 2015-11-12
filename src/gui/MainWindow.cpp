@@ -47,7 +47,7 @@ using namespace Persistence;
 using namespace Controller;
 using namespace Ninjam;
 
-const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 1000;//in miliseconds
+const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200;//in miliseconds
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainWindow::MainWindow(Controller::MainController *mainController, QWidget *parent)
