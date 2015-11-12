@@ -25,29 +25,31 @@ PerformanceMonitor::~PerformanceMonitor(){
 //http://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
 double PerformanceMonitor::getCpuUsage(){
     static ULARGE_INTEGER lastCPU;
-    static ULARGE_INTEGER lastSysCPU;
-    static ULARGE_INTEGER lastUserCPU;
-    static HANDLE thisProcessHande;
+        static ULARGE_INTEGER lastSysCPU;
+        static ULARGE_INTEGER lastUserCPU;
+        static HANDLE thisProcessHande = GetCurrentProcess();
 
-    FILETIME ftime, fsys, fuser;
-    ULARGE_INTEGER now, sys, user;
-    double percent;
+        FILETIME ftime, fsys, fuser;
+        ULARGE_INTEGER now, sys, user;
+        double percent;
 
-    GetSystemTimeAsFileTime(&ftime);
-    memcpy(&now, &ftime, sizeof(FILETIME));
+        GetSystemTimeAsFileTime(&ftime);
+        memcpy(&now, &ftime, sizeof(FILETIME));
 
-    GetProcessTimes(thisProcessHande, &ftime, &ftime, &fsys, &fuser);
-    memcpy(&sys, &fsys, sizeof(FILETIME));
-    memcpy(&user, &fuser, sizeof(FILETIME));
-    percent = (sys.QuadPart - lastSysCPU.QuadPart) +
-            (user.QuadPart - lastUserCPU.QuadPart);
-    percent /= (now.QuadPart - lastCPU.QuadPart);
-    //percent /= this->processorsCount;
-    lastCPU = now;
-    lastUserCPU = user;
-    lastSysCPU = sys;
-    //qInfo() << "percent:" << percent * 100;
-    return percent * 100;
+        if(GetProcessTimes(thisProcessHande, &ftime, &ftime, &fsys, &fuser)){
+            memcpy(&sys, &fsys, sizeof(FILETIME));
+            memcpy(&user, &fuser, sizeof(FILETIME));
+            percent = (sys.QuadPart - lastSysCPU.QuadPart) +
+                (user.QuadPart - lastUserCPU.QuadPart);
+            percent /= (now.QuadPart - lastCPU.QuadPart);
+            percent /= this->processorsCount;
+            lastCPU = now;
+            lastUserCPU = user;
+            lastSysCPU = sys;
+            //qInfo() << "percent:" << percent * 100;
+            return percent * 100;
+        }
+        return 0;
 }
 
 int PerformanceMonitor::getMemmoryUsage(){
