@@ -64,7 +64,7 @@ void jamtabaLogHandler(QtMsgType type, const QMessageLogContext &context, const 
         //check if we are plugin or standalone
         QString s=QApplication::instance()->applicationName();
         qDebug() << "Jamtaba Instance:" << s;
-        logDir.mkpath("s");
+        logDir.mkpath(".");
     }
     QFile outFile( logDir.absoluteFilePath("logg.txt"));
     QIODevice::OpenMode ioFlags = QIODevice::WriteOnly;
