@@ -3,20 +3,30 @@
 
 #include <QObject>
 #include <QString>
+#include <QStandardPaths>
+#include <QDir>
+
+void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
+
+struct SHOMEDIR{bool exist;QDir Dir;};
 
 class Configurator
 {
+private :
+    QString logFilename;//contains the name of the log file
+    SHOMEDIR HomeDir;
+
 public:
     Configurator();
-    bool homeExists();//check if Jamtaba 2 folder exists in application data
-    void exportLogFile();
-    void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
-    QString getLogConfigFilePath();
+
+        void exportLogFile();
+        QString getLogConfigFilePath();
+        //check if Jamtaba 2 folder exists in application data
+         bool homeExists();
+         inline QDir getHomeDir(){return HomeDir.Dir ;}
 
     ~Configurator();
-private :
-     QString logFilename;//contains the name of the log file
-     bool logFileCreated ;
+
 };
 extern Configurator *JTBConfig;
 #endif // CONFIGURATOR_H

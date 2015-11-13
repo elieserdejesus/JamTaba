@@ -1,6 +1,6 @@
 #include "configurator.h"
 //#include <QDateTime>
-#include <QStandardPaths>
+
 //#include <QTimer>
 #include <QFile>
 #include <QDebug>
@@ -8,41 +8,13 @@
 //#include <QSysInfo>
 //#include <QUuid>
 //#include <QSettings>
-#include <QDir>
+
 
 #include "../log/logging.h"
 
-
-Configurator::Configurator()
-{
- logFilename = "logging.ini";
- logFileCreated = false;
-}
-
-//copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
-void Configurator::exportLogFile()
-{
-    QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
-    if(logDir.exists())
-    {
-        QString logConfigFilePath = logDir.absoluteFilePath(logFilename);
-        if(!QFile(logConfigFilePath).exists())
-        {//log config file in application directory? (same dir as json config files, cache.bin, etc.)
-            bool result = QFile::copy(":/" + logFilename, logConfigFilePath ) ;
-            if(result)
-            {
-                QFile loggingFile(logConfigFilePath);
-                loggingFile.setPermissions(QFile::WriteOther);//The file is writable by anyone.
-            }
-        }
-    }
-    else
-    {
-        qWarning(jtCore) << "Log folder not exists!" << logDir.absolutePath();
-    }
-}
-
-void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+ static bool logFileCreated = false;
+ extern Configurator *JTBConfig;
+void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QByteArray localMsg = msg.toLocal8Bit();
     QString stringMsg;
@@ -73,16 +45,19 @@ void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context,
     default:
        stream << context.category << ".INFO:  " << localMsg.constData() <<endl;
     }
+
     QTextStream(stdout) << stringMsg;
 
-    QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
+    /*QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
     if(!logDir.exists()){
         //check if we are plugin or standalone
         QString s=QApplication::instance()->applicationName();
         qDebug() << "Jamtaba Instance:" << s;
-        logDir.mkpath("s");
-    }
-    QFile outFile( logDir.absoluteFilePath("logg.txt"));
+        logDir.mkpath(".");
+    }*/
+    JTBConfig->homeExists();
+
+    QFile outFile( JTBConfig->getHomeDir().absoluteFilePath("log.txt"));
     QIODevice::OpenMode ioFlags = QIODevice::WriteOnly;
     if(logFileCreated)
         ioFlags |= QIODevice::Append;
@@ -99,6 +74,45 @@ void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context,
         abort();
     }
 }
+
+Configurator::Configurator()
+{
+ logFilename = "logging.ini";
+
+}
+bool Configurator::homeExists()
+{
+    QDir d(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
+    HomeDir.Dir=d;
+    HomeDir.exist=d.exists();return HomeDir.exist;
+}
+
+//copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
+void Configurator::exportLogFile()
+{
+     if(!homeExists()){
+        //check if we are plugin or standalone
+        QString s=QApplication::instance()->applicationName();
+        qDebug() << "Jamtaba Instance:" << s;
+        HomeDir.Dir.mkpath("PluginVst");
+    }
+
+   else
+    {
+        QString logConfigFilePath = HomeDir.Dir.absoluteFilePath(logFilename);
+        if(!QFile(logConfigFilePath).exists())
+        {//log config file in application directory? (same dir as json config files, cache.bin, etc.)
+            bool result = QFile::copy(":/" + logFilename, logConfigFilePath ) ;
+            if(result)
+            {
+                QFile loggingFile(logConfigFilePath);
+                loggingFile.setPermissions(QFile::WriteOther);//The file is writable by anyone.
+            }
+        }
+    }
+
+}
+
 
 QString Configurator::getLogConfigFilePath()
 {

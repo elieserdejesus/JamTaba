@@ -25,7 +25,7 @@ int main(int argc, char* args[] ){
     QString logFile =JTBConfig->getLogConfigFilePath();
     if(!logFile.isEmpty()){
         qputenv("QT_LOGGING_CONF", QByteArray(logFile.toUtf8()));
-        qInstallMessageHandler(jamtabaLogHandler);
+        qInstallMessageHandler(LogHandler);
     }
 
     Persistence::Settings settings;
