@@ -19,12 +19,12 @@ int main(int argc, char* args[] ){
 
     //start the configurator
     JTBConfig=new Configurator();
-    JTBConfig->exportLogFile();//copy logging.ini from resources to Jamtaba writable path
-    //Controller::MainController::exportLogFile();//copy logging.ini from resources to Jamtaba writable path
+    if(!JTBConfig->setUp(standalone)) qWarning() << "JTBConfig->setUp() FAILED !" ;
 
-    QString logFile =JTBConfig->getLogConfigFilePath();
-    if(!logFile.isEmpty()){
-        qputenv("QT_LOGGING_CONF", QByteArray(logFile.toUtf8()));
+    //setup ini
+    QString iniFilePath =JTBConfig->getIniFilePath();
+    if(!iniFilePath.isEmpty()){
+        qputenv("QT_LOGGING_CONF", QByteArray(iniFilePath.toUtf8()));
         qInstallMessageHandler(LogHandler);
     }
 

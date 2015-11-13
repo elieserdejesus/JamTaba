@@ -14,6 +14,7 @@
 
  static bool logFileCreated = false;
  extern Configurator *JTBConfig;
+
 void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QByteArray localMsg = msg.toLocal8Bit();
@@ -55,7 +56,7 @@ void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString
         qDebug() << "Jamtaba Instance:" << s;
         logDir.mkpath(".");
     }*/
-    JTBConfig->homeExists();
+    //JTBConfig->homeExists();
 
     QFile outFile( JTBConfig->getHomeDir().absoluteFilePath("log.txt"));
     QIODevice::OpenMode ioFlags = QIODevice::WriteOnly;
@@ -75,46 +76,94 @@ void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString
     }
 }
 
+//--------------------------------Configurator-----------------------------------
+//
+//-------------------------------------------------------------------------------
+
 Configurator::Configurator()
 {
  logFilename = "logging.ini";
 
 }
+//-------------------------------------------------------------------------------
+
+bool Configurator::setUp(APPTYPE type)
+{
+
+    switch(type)
+    {
+     case standalone:
+     {
+        //find the directory and store the name
+        if(!homeExists())createTree();
+        exportIniFile();
+        return true;
+
+     }
+     case plugin :
+     {
+       break;
+     }
+    default: return false;
+    }
+return false;
+}
+//-------------------------------------------------------------------------------
+void Configurator::createTree()
+{
+    //create the folder
+    QDir d(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
+    HomeDir.Dir=d;
+    qDebug(jtCore) << "Configurator: Creating PluginVst folder...";
+    HomeDir.Dir.mkpath("PluginVst");
+    HomeDir.HomePath=HomeDir.Dir.absoluteFilePath(".");
+    HomeDir.Pluginpath=HomeDir.Dir.absoluteFilePath("PluginVst");
+    if( HomeDir.Dir.exists(HomeDir.HomePath))
+        qDebug(jtCore) << "Configurator: HomePath folder CREATED !";
+    else
+        qDebug(jtCore) << "Configurator: HomePath folder NOT CREATED !";
+    if( HomeDir.Dir.exists(HomeDir.Pluginpath))
+        qDebug(jtCore) << "Configurator: PluginVst folder CREATED !";
+    else
+        qDebug(jtCore) << "Configurator: PluginVst folder NOT CREATED !";
+}
+
 bool Configurator::homeExists()
 {
     QDir d(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
-    HomeDir.Dir=d;
-    HomeDir.exist=d.exists();return HomeDir.exist;
+    return d.exists();
 }
 
-//copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
-void Configurator::exportLogFile()
-{
-     if(!homeExists()){
-        //check if we are plugin or standalone
-        QString s=QApplication::instance()->applicationName();
-        qDebug() << "Jamtaba Instance:" << s;
-        HomeDir.Dir.mkpath("PluginVst");
-    }
+//-------------------------------------------------------------------------------
 
-   else
-    {
-        QString logConfigFilePath = HomeDir.Dir.absoluteFilePath(logFilename);
-        if(!QFile(logConfigFilePath).exists())
+//copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
+void Configurator::exportIniFile()
+{
+    /*
+     if(!homeExists()){
+        //create the folder
+        qDebug(jtCore) << "Configurator: Creating PluginVst folder...";
+        HomeDir.Dir.mkpath("PluginVst");
+        HomeDir.Pluginpath=HomeDir.Dir.absoluteFilePath("PluginVst");
+    }*/
+
+
+        QString FilePath = HomeDir.Dir.absoluteFilePath(logFilename);
+        if(!QFile(FilePath).exists())
         {//log config file in application directory? (same dir as json config files, cache.bin, etc.)
-            bool result = QFile::copy(":/" + logFilename, logConfigFilePath ) ;
+            bool result = QFile::copy(":/" + logFilename,FilePath ) ;
             if(result)
             {
-                QFile loggingFile(logConfigFilePath);
+                QFile loggingFile(FilePath);
                 loggingFile.setPermissions(QFile::WriteOther);//The file is writable by anyone.
             }
         }
-    }
+
 
 }
+//-------------------------------------------------------------------------------
 
-
-QString Configurator::getLogConfigFilePath()
+QString Configurator::getIniFilePath()
 {
    QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
     if(logDir.exists())
@@ -127,17 +176,21 @@ QString Configurator::getLogConfigFilePath()
             //qDebug(jtCore) << "Log file not founded in release folder (" <<logDir.absolutePath() << "), searching in resources...";
             logConfigFilePath = ":/" + logFilename ;
             if(QFile(logConfigFilePath).exists()){
-                //qDebug(jtCore) << "Log file founded in resources...";
+                qDebug(jtCore) << "Log file founded in resources...";
                 return logConfigFilePath;
             }
-            //qWarning(jtCore) << "Log file not founded in source code tree: " << logDir.absolutePath();
+            qWarning(jtCore) << "Log file not founded in source code tree: " << logDir.absolutePath();
         }
     }
     qWarning(jtCore) << "Log folder not exists!" << logDir.absolutePath();
     return "";
 
 }
+//-------------------------------------------------------------------------------
+
 Configurator::~Configurator()
 {
 
 }
+//-------------------------------------------------------------------------------
+
