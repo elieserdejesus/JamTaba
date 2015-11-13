@@ -6,6 +6,7 @@
 #include <QList>
 #include <QMap>
 #include <QStringList>
+#include <QFile>
 
 namespace Persistence{
 
@@ -160,6 +161,7 @@ private:
     QString lastUserName;//the last nick name choosed by user
     QString translation;//the translation being used in tha chat
     int ninjamIntervalProgressShape;//Circle, Ellipe or Line
+    bool readFile(QList<SettingsObject *> sections);// io ops ...
 public:
     Settings();
     ~Settings();
