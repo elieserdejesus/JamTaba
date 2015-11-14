@@ -5,7 +5,6 @@
 #include "persistence/Settings.h"
 #include "MainWindowStandalone.h"
 #include "log/logging.h"
-
 #include "Libs/SingleApplication/singleapplication.h"
 #include "configurator.h"
 
@@ -21,11 +20,11 @@ int main(int argc, char* args[] ){
     if(!JTBConfig->setUp(standalone)) qWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
 
     //setup ini
-    QString iniFilePath =JTBConfig->getIniFilePath();
+    /*QString iniFilePath =JTBConfig->getIniFilePath();
     if(!iniFilePath.isEmpty()){
         qputenv("QT_LOGGING_CONF", QByteArray(iniFilePath.toUtf8()));
         qInstallMessageHandler(LogHandler);
-    }
+    }*/
 
     Persistence::Settings settings;
     settings.load();

@@ -9,6 +9,7 @@
 #include <QDir>
 #include <QList>
 #include <QSettings>
+#include "../log/logging.h"
 
 
 extern Configurator *JTBConfig;
@@ -467,10 +468,10 @@ bool Settings::readFile(APPTYPE type,QList<Persistence::SettingsObject*> section
     QString absolutePath = dir.absoluteFilePath(fileName);
     //QFile file(absolutePath);
     QFile f(absolutePath);
-    qWarning() << "JSON :"<<fileDir;
+    qInfo(jtConfigurator) << "JSON Location :"<<fileDir;
     if(f.open(QIODevice::ReadOnly))
     {
-        qInfo() << "Reading settings from " << f.fileName() ;
+        qInfo(jtConfigurator) << "Reading settings from " << f.fileName() ;
         QJsonDocument doc = QJsonDocument::fromJson(f.readAll());
         QJsonObject root = doc.object();
 

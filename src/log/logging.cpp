@@ -25,7 +25,7 @@ Q_LOGGING_CATEGORY(jtMidi,                  "jt.Midi")
 Q_LOGGING_CATEGORY(jtConfigurator,          "jt.Configurator")
 
 
-
+/*
 static bool logFileCreated = false;
 
 void jamtabaLogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -85,3 +85,4 @@ void jamtabaLogHandler(QtMsgType type, const QMessageLogContext &context, const 
         abort();
     }
 }
+*/

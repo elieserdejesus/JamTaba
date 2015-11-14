@@ -14,7 +14,7 @@ enum APPTYPE{standalone,plugin};
 class Configurator
 {
 private :
-    QString logFilename;//contains the name of the log file
+    QString IniFilename;//contains the name of the Ini file
     SHOMEDIR HomeDir;
     APPTYPE AppType ;
     void createTree();
@@ -24,6 +24,7 @@ public:
     bool setUp(APPTYPE type);
 
         void exportIniFile();
+        void setupIni();
         QString getIniFilePath();
 
         //check if Jamtaba 2 folder exists in application data
