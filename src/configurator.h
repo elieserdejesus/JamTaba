@@ -29,7 +29,7 @@ public:
         //check if Jamtaba 2 folder exists in application data
          bool homeExists();
          inline QDir getHomeDir(){return HomeDir.Dir ;}
-         inline QString getHomeDirPath(){return HomeDir.HomePath;}
+         inline QString getHomeDirPath(){return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);}
          inline QString getPluginDirPath(){return HomeDir.Pluginpath ;}
          inline APPTYPE getAppType(){return AppType; }
          inline void setAppType(APPTYPE type){AppType=type; }

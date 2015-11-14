@@ -127,53 +127,9 @@ private:
     QByteArray dataToUpload;
 };
 
-//TO BE REMOVED
-//++++++++++++++++++++++++++++++++++++++++++++
-QString MainController::getLogConfigFilePath(){
-   /* QDir logDir(Controller::MainController::getWritablePath());
-    if(logDir.exists()){
-        QString logConfigFilePath = logDir.absoluteFilePath(LOG_CONFIG_FILE);
-        if(QFile(logConfigFilePath).exists()){//log config file in application directory? (same dir as json config files, cache.bin, etc.)
-            return logConfigFilePath;
-        }
-        else{//search log config file in resources
-            //qDebug(jtCore) << "Log file not founded in release folder (" <<logDir.absolutePath() << "), searching in resources...";
-            logConfigFilePath = ":/" + LOG_CONFIG_FILE;
-            if(QFile(logConfigFilePath).exists()){
-                //qDebug(jtCore) << "Log file founded in resources...";
-                return logConfigFilePath;
-            }
-            //qWarning(jtCore) << "Log file not founded in source code tree: " << logDir.absolutePath();
-        }
-    }
-    qWarning(jtCore) << "Log folder not exists!" << logDir.absolutePath();
-    return "";
-    */
-}
 
-//TO BE REMOVED
-QString MainController::getWritablePath(){
-    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-}
 
-//TO BE REMOVED
-//copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
-void MainController::exportLogFile(){
-   /* QDir logDir(Controller::MainController::getWritablePath());
-    if(logDir.exists()){
-        QString logConfigFilePath = logDir.absoluteFilePath(LOG_CONFIG_FILE);
-        if(!QFile(logConfigFilePath).exists()){//log config file in application directory? (same dir as json config files, cache.bin, etc.)
-            bool result = QFile::copy(":/" + LOG_CONFIG_FILE, logConfigFilePath ) ;
-            if(result){
-                QFile loggingFile(logConfigFilePath);
-                loggingFile.setPermissions(QFile::WriteOther);//The file is writable by anyone.
-            }
-        }
-    }
-    else{
-        qWarning(jtCore) << "Log folder not exists!" << logDir.absolutePath();
-    }*/
-}
+
 
 //++++++++++++++++++++++++++++++++++++++++++++++
 void MainController::setSampleRate(int newSampleRate){

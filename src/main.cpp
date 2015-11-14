@@ -15,11 +15,10 @@ int main(int argc, char* args[] ){
 
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
-    //QApplication::setApplicationDisplayName("Jamtaba Standalone");
 
     //start the configurator
     JTBConfig=new Configurator();
-    if(!JTBConfig->setUp(standalone)) qWarning() << "JTBConfig->setUp() FAILED !" ;
+    if(!JTBConfig->setUp(plugin)) qWarning() << "JTBConfig->setUp() FAILED !" ;
 
     //setup ini
     QString iniFilePath =JTBConfig->getIniFilePath();
