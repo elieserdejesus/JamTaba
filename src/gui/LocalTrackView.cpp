@@ -370,13 +370,18 @@ void LocalTrackView::refreshInputSelectionName(){
             iconFile = NO_INPUT_ICON;
         }
     }
-    else{//using midi as input method
+    else{
         if(inputTrack->isMidi()){
             Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
             int selectedDeviceIndex = inputTrack->getMidiDeviceIndex();
             if( selectedDeviceIndex < midiDriver->getMaxInputDevices() && midiDriver->deviceIsGloballyEnabled(selectedDeviceIndex)){
                 channelName = midiDriver->getInputDeviceName(selectedDeviceIndex);
                 iconFile = MIDI_ICON;
+            }
+            else{//midi device index invalid
+                inputTrack->setToNoInput();
+                channelName = "No input";
+                iconFile = NO_INPUT_ICON;
             }
         }
         else{
@@ -466,6 +471,7 @@ void LocalTrackView::addPlugin(Audio::Plugin* plugin, bool bypassed){
         //plugin->setEditor(new Audio::PluginWindow(plugin));
         plugin->setBypass(bypassed);
         this->fxPanel->addPlugin(plugin);
+        this->refreshInputSelectionName();//refresh input type combo box, if the added plugins is a virtual instrument Jamtaba will try auto change the input type to midi
         update();
     }
 }

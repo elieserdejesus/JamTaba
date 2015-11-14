@@ -130,6 +130,13 @@ bool VstPlugin::load(QString path){
     return true;
 }
 
+bool VstPlugin::isVirtualInstrument() const{
+    if(!effect){
+        return false;
+    }
+    return effect->flags & effFlagsIsSynth;
+}
+
 QByteArray VstPlugin::getSerializedData() const{
     if(effect->flags & effFlagsProgramChunks){//can serialize chunks?
         char* chunk = 0;
