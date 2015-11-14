@@ -58,7 +58,11 @@ void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString
     }*/
     //JTBConfig->homeExists();
 
-    QFile outFile( JTBConfig->getHomeDir().absoluteFilePath("log.txt"));
+    //Depends if standalone or plugin ....
+    QString path;
+    if (JTBConfig->getAppType()==standalone)
+    path=JTBConfig->getHomeDir().absoluteFilePath("log.txt");
+    QFile outFile(path );
     QIODevice::OpenMode ioFlags = QIODevice::WriteOnly;
     if(logFileCreated)
         ioFlags |= QIODevice::Append;
@@ -90,7 +94,7 @@ Configurator::Configurator()
 bool Configurator::setUp(APPTYPE type)
 {
  AppType=type;//plugin or standalone
- //find the directory and store the name
+
  if(!homeExists())createTree();
   exportIniFile();
   return true;
@@ -102,18 +106,21 @@ void Configurator::createTree()
     QDir d(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
     HomeDir.Dir=d;
     HomeDir.HomePath=d.currentPath();
-    qDebug(jtCore) << "Configurator: Creating PluginVst folder...";
+    if( HomeDir.Dir.exists(HomeDir.HomePath))
+        qWarning(jtConfigurator) << " HomePath folder CREATED !";
+    else
+        qWarning(jtConfigurator) << " HomePath folder NOT CREATED !";
+
+
+    qWarning(jtConfigurator) << " Creating PluginVst folder...";
     HomeDir.Dir.mkpath("PluginVst");
 
     HomeDir.Pluginpath=HomeDir.Dir.absoluteFilePath("PluginVst");
-    if( HomeDir.Dir.exists(HomeDir.HomePath))
-        qDebug(jtCore) << "Configurator: HomePath folder CREATED !";
-    else
-        qDebug(jtCore) << "Configurator: HomePath folder NOT CREATED !";
+
     if( HomeDir.Dir.exists(HomeDir.Pluginpath))
-        qDebug(jtCore) << "Configurator: PluginVst folder CREATED !";
+        qWarning(jtConfigurator) << " PluginVst folder CREATED !";
     else
-        qDebug(jtCore) << "Configurator: PluginVst folder NOT CREATED !";
+        qWarning(jtConfigurator) << " PluginVst folder NOT CREATED !";
 
 }
 
@@ -128,13 +135,23 @@ bool Configurator::homeExists()
 //copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
 void Configurator::exportIniFile()
 {
-
+        //we use one ini file ( in Home/) to all types for log
         QString FilePath = HomeDir.Dir.absoluteFilePath(logFilename);
+        //but we want the log to be in the right folder
         if(!QFile(FilePath).exists())
-        {//log config file in application directory? (same dir as json config files, cache.bin, etc.)
-            bool result = QFile::copy(":/" + logFilename,FilePath ) ;
+        {
+            qDebug(jtConfigurator) << "Ini file don't exist in' :"<<FilePath ;
+
+            bool result;
+            QString path(":/");
+            if(AppType==standalone)path+=logFilename;
+            else if(AppType==plugin)path+=HomeDir.Pluginpath+ logFilename ;
+            //log config file in application directory? (same dir as json config files, cache.bin, etc.)
+           // bool result = QFile::copy(":/" + logFilename,FilePath ) ;
+            result = QFile::copy(path,FilePath ) ;
             if(result)
             {
+                qDebug(jtConfigurator) << "Ini file copied in :"<<FilePath ;
                 QFile loggingFile(FilePath);
                 loggingFile.setPermissions(QFile::WriteOther);//The file is writable by anyone.
             }
@@ -157,13 +174,13 @@ QString Configurator::getIniFilePath()
             //qDebug(jtCore) << "Log file not founded in release folder (" <<logDir.absolutePath() << "), searching in resources...";
             logConfigFilePath = ":/" + logFilename ;
             if(QFile(logConfigFilePath).exists()){
-                qDebug(jtCore) << "Log file founded in resources...";
+                qDebug(jtConfigurator) << "Log file founded in resources...";
                 return logConfigFilePath;
             }
-            qWarning(jtCore) << "Log file not founded in source code tree: " << logDir.absolutePath();
+            qDebug(jtConfigurator) << "Log file not founded in source code tree: " << logDir.absolutePath();
         }
     }
-    qWarning(jtCore) << "Log folder not exists!" << logDir.absolutePath();
+    qDebug(jtConfigurator) << "Log folder not exists!" << logDir.absolutePath();
     return "";
 
 }
