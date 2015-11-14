@@ -9,7 +9,7 @@
 #include <QDir>
 #include <QList>
 #include <QSettings>
-#include "../src/configurator.h"
+
 
 extern Configurator *JTBConfig;
 
@@ -455,12 +455,19 @@ void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastO
 }
 
 // io ops ...
-bool Settings::readFile(QList<Persistence::SettingsObject*> sections)
+bool Settings::readFile(APPTYPE type,QList<Persistence::SettingsObject*> sections)
 {
 
-    if(!JTBConfig){qWarning() << "Settings::readFile No JTBConfig instance found !" ;return false;}
-    QFile f(JTBConfig->getHomeDirPath());
-    qWarning() << "JSON :"<<f.fileName() ;
+
+    if(type==plugin)
+        fileDir=JTBConfig->getPluginDirPath();
+        QDir dir(fileDir);//homepath
+     //dir(JTBConfig->getPluginDirPath());//homepath
+
+    QString absolutePath = dir.absoluteFilePath(fileName);
+    //QFile file(absolutePath);
+    QFile f(absolutePath);
+    qWarning() << "JSON :"<<fileDir;
     if(f.open(QIODevice::ReadOnly))
     {
         qInfo() << "Reading settings from " << f.fileName() ;
@@ -493,10 +500,14 @@ bool Settings::readFile(QList<Persistence::SettingsObject*> sections)
         foreach (SettingsObject* so, sections) {
             so->read(root[so->getName()].toObject());
         }
+        return true;
     }
-    else{
-        qWarning() << "Can't load Jamtaba config file:" << f.errorString();
+    else
+    {
+        qWarning() << "Can't load Jamtaba 2 config file:" << f.errorString();
     }
+
+    return false;
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -516,11 +527,8 @@ void Settings::load(){
     {
     switch(JTBConfig->getAppType())
     {
-    case standalone :
-    { readFile(sections);
-        break;
-    }
-    case plugin :break;
+    case standalone :readFile(standalone,sections);break;
+    case plugin : readFile(plugin,sections);break;
     default :break;
     }
 
@@ -529,8 +537,8 @@ void Settings::load(){
     QString absolutePath = dir.absoluteFilePath(fileName);
     QFile file(absolutePath);
     //TODO create a funk for that , ex ReadFile( QFile file)
-
-   /* if(file.open(QIODevice::ReadOnly))
+/*
+    if(file.open(QIODevice::ReadOnly))
     {
         qInfo() << "Reading settings from " << absolutePath;
         QJsonDocument doc = QJsonDocument::fromJson(file.readAll());

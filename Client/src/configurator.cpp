@@ -89,24 +89,11 @@ Configurator::Configurator()
 
 bool Configurator::setUp(APPTYPE type)
 {
-
-    switch(type)
-    {
-     case standalone:
-     {
-        //find the directory and store the name
-        if(!homeExists())createTree();
-        exportIniFile();
-        return true;
-
-     }
-     case plugin :
-     {
-       break;
-     }
-    default: return false;
-    }
-return false;
+ AppType=type;//plugin or standalone
+ //find the directory and store the name
+ if(!homeExists())createTree();
+  exportIniFile();
+  return true;
 }
 //-------------------------------------------------------------------------------
 void Configurator::createTree()
@@ -114,9 +101,10 @@ void Configurator::createTree()
     //create the folder
     QDir d(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
     HomeDir.Dir=d;
+    HomeDir.HomePath=d.currentPath();
     qDebug(jtCore) << "Configurator: Creating PluginVst folder...";
     HomeDir.Dir.mkpath("PluginVst");
-    HomeDir.HomePath=HomeDir.Dir.absoluteFilePath(".");
+
     HomeDir.Pluginpath=HomeDir.Dir.absoluteFilePath("PluginVst");
     if( HomeDir.Dir.exists(HomeDir.HomePath))
         qDebug(jtCore) << "Configurator: HomePath folder CREATED !";
@@ -126,6 +114,7 @@ void Configurator::createTree()
         qDebug(jtCore) << "Configurator: PluginVst folder CREATED !";
     else
         qDebug(jtCore) << "Configurator: PluginVst folder NOT CREATED !";
+
 }
 
 bool Configurator::homeExists()
@@ -139,14 +128,6 @@ bool Configurator::homeExists()
 //copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
 void Configurator::exportIniFile()
 {
-    /*
-     if(!homeExists()){
-        //create the folder
-        qDebug(jtCore) << "Configurator: Creating PluginVst folder...";
-        HomeDir.Dir.mkpath("PluginVst");
-        HomeDir.Pluginpath=HomeDir.Dir.absoluteFilePath("PluginVst");
-    }*/
-
 
         QString FilePath = HomeDir.Dir.absoluteFilePath(logFilename);
         if(!QFile(FilePath).exists())
