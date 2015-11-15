@@ -42,6 +42,7 @@ int main(int argc, char* args[] ){
     QObject::connect(application, SIGNAL(showUp()), &mainWindow, SLOT(raise()));
 
     return application->exec();
+
  }
 
 //++++++++++++++++++++++++++++++++++

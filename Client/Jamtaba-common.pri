@@ -48,7 +48,6 @@ HEADERS += \
     ../src/gui/NinjamTrackView.h \
     ../src/audio/MetronomeTrackNode.h \
     ../src/gui/NinjamPanel.h \
-    ../src/gui/FancyProgressDisplay.h \
     ../src/ninjam/UserChannel.h \
     ../src/audio/core/SamplesBuffer.h \
     ../src/gui/BusyDialog.h \
@@ -70,7 +69,12 @@ HEADERS += \
     ../src/gui/MainWindow.h \
     $$PWD/src/log/logging.h \
     $$PWD/src/gui/widgets/CustomTabWidget.h \
-    $$PWD/src/performance/PerformanceMonitor.h
+    $$PWD/src/performance/PerformanceMonitor.h \
+    $$PWD/src/gui/chords/ChordLabel.h \
+    $$PWD/src/gui/BpiUtils.h \
+    $$PWD/src/gui/chords/ChordsWidget.h \
+    $$PWD/src/gui/chords/ChordsPanel.h \
+    $$PWD/src/gui/chords/ChordProgression.h
 
 SOURCES += \
     ../src/audio/core/AudioDriver.cpp \
@@ -102,7 +106,6 @@ SOURCES += \
     ../src/gui/NinjamTrackView.cpp \
     ../src/audio/MetronomeTrackNode.cpp \
     ../src/gui/NinjamPanel.cpp \
-    ../src/gui/FancyProgressDisplay.cpp \
     ../src/ninjam/UserChannel.cpp \
     ../src/audio/core/SamplesBuffer.cpp \
     ../src/audio/SamplesBufferResampler.cpp \
@@ -121,6 +124,11 @@ SOURCES += \
     $$PWD/src/gui/MainWindow.cpp \
     $$PWD/src/log/logging.cpp \
     $$PWD/src/gui/widgets/CustomTabWidget.cpp \
+    $$PWD/src/gui/chords/ChordLabel.cpp \
+    $$PWD/src/gui/BpiUtils.cpp \
+    $$PWD/src/gui/chords/ChordsWidget.cpp \
+    $$PWD/src/gui/chords/ChordsPanel.cpp \
+    $$PWD/src/gui/chords/ChordProgression.cpp
 
 #multiplatform implementations
 win32:SOURCES += $$PWD/src/performance/WindowsPerformanceMonitor.cpp
@@ -140,7 +148,8 @@ FORMS += \
     ../src/gui/PrivateServerDialog.ui \
     ../src/gui/UserNameDialog.ui \
     $$PWD/src/gui/MainWindow.ui \
-    $$PWD/src/gui/PreferencesDialog.ui
+    $$PWD/src/gui/PreferencesDialog.ui \
+    $$PWD/src/gui/chords/ChordsPanel.ui
 
 INCLUDEPATH += ../src/gui                  \
                ../src/gui/widgets          \

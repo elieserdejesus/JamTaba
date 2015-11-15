@@ -5,6 +5,7 @@
 #include <QtAlgorithms>
 #include <QFormLayout>
 #include "../log/logging.h"
+#include "BpiUtils.h"
 
 NinjamPanel::NinjamPanel(QWidget *parent) :
     QWidget(parent),
@@ -132,16 +133,9 @@ void NinjamPanel::comboShapeChanged(int index){
 //++++++++++++++++++++++++++++++++++++++++++++++++
 QStringList NinjamPanel::getBpiDividers(int bpi){
     QStringList foundedDividers;
-    int divider = 2;
-    while (divider <= bpi / 2) {
-        if (bpi % divider == 0) {
-            foundedDividers.append(QString::number(divider));
-        }
-        divider++;
-    }
-
-    if (foundedDividers.isEmpty()) {
-        foundedDividers.append(QString::number(bpi));//using bpi as default
+    QList<int> intDividers = BpiUtils::getBpiDividers(bpi);
+    foreach (int divider, intDividers) {
+        foundedDividers.append(QString::number(divider));
     }
     qSort(foundedDividers.begin(), foundedDividers.end(), compareBpis);
     return foundedDividers;

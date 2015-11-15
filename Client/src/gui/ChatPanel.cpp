@@ -38,9 +38,9 @@ bool ChatPanel::eventFilter(QObject *obj, QEvent *event){
     return QWidget::eventFilter(obj, event);
 }
 //++++++++++++++++++++++++++++++++
-class VoteButton : public QPushButton{
+class NinjamVoteButton : public QPushButton{
 public:
-    VoteButton(QString voteType,  int voteValue)
+    NinjamVoteButton(QString voteType,  int voteValue)
         :QPushButton(
              "Vote - change "+ voteType +" to " + QString::number(voteValue)
              )
@@ -58,7 +58,7 @@ private:
 };
 
 void ChatPanel::createVoteButton(QString voteType, int value){
-    QPushButton* voteButton = new VoteButton(voteType, value);
+    QPushButton* voteButton = new NinjamVoteButton(voteType, value);
     voteButton->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
     ui->scrollContent->layout()->addWidget(voteButton);
     ui->scrollContent->layout()->setAlignment(voteButton, Qt::AlignRight);
@@ -74,7 +74,7 @@ void ChatPanel::addBpmVoteConfirmationMessage(int newBpmValue){
 }
 
 void ChatPanel::on_voteButtonClicked(){
-    VoteButton* voteButton = static_cast<VoteButton*>(QObject::sender());
+    NinjamVoteButton* voteButton = static_cast<NinjamVoteButton*>(QObject::sender());
     if(voteButton->isBpiVote()){
         emit userConfirmingVoteToBpiChange(voteButton->getVoteValue());
     }
@@ -85,7 +85,40 @@ void ChatPanel::on_voteButtonClicked(){
     voteButton->parentWidget()->layout()->removeWidget(voteButton);
     voteButton->deleteLater();
 }
+//++++++++++++++++++++++++++++++++++
 
+class ChordProgressionConfirmationButton : public QPushButton{
+public:
+    ChordProgressionConfirmationButton(QString text, ChordProgression progression)
+        : QPushButton(text), progression(progression){
+
+    }
+    inline ChordProgression getChordProgression() const{return progression;}
+private:
+    ChordProgression progression;
+};
+
+void ChatPanel::addChordProgressionConfirmationMessage(ChordProgression progression){
+    QString buttonText = "Use/load the chords above";
+    QPushButton* chordProgressionButton = new ChordProgressionConfirmationButton(buttonText, progression);
+    chordProgressionButton->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
+    ui->scrollContent->layout()->addWidget(chordProgressionButton);
+    ui->scrollContent->layout()->setAlignment(chordProgressionButton, Qt::AlignRight);
+    QObject::connect(chordProgressionButton, SIGNAL(clicked(bool)), this, SLOT(on_chordProgressionConfirmationButtonClicked()));
+}
+
+void ChatPanel::on_chordProgressionConfirmationButtonClicked(){
+    ChordProgressionConfirmationButton* chordProgressionButton = static_cast<ChordProgressionConfirmationButton*>(QObject::sender());
+
+    emit userConfirmingChordProgression(chordProgressionButton->getChordProgression());
+
+    chordProgressionButton->parentWidget()->layout()->removeWidget(chordProgressionButton);
+    chordProgressionButton->deleteLater();
+}
+
+
+
+//+++++++++++++++
 void ChatPanel::on_verticalScrollBarRangeChanged(int min, int max){
     Q_UNUSED(min)
     //used to auto scroll down to keep the last added message visible
@@ -168,8 +201,8 @@ void ChatPanel::on_buttonClear_clicked(){
     }
 
     //remove Vote buttons
-    QList<VoteButton*> buttons = ui->scrollContent->findChildren<VoteButton*>();
-    foreach (VoteButton* button, buttons) {
+    QList<NinjamVoteButton*> buttons = ui->scrollContent->findChildren<NinjamVoteButton*>();
+    foreach (NinjamVoteButton* button, buttons) {
         ui->scrollContent->layout()->removeWidget(button);
         button->deleteLater();
     }
