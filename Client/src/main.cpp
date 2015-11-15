@@ -17,7 +17,7 @@ int main(int argc, char* args[] ){
 
     //start the configurator
     JTBConfig=new Configurator();
-    if(!JTBConfig->setUp(standalone)) qWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
+    if(!JTBConfig->setUp(plugin)) qWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
 
     //setup ini
     /*QString iniFilePath =JTBConfig->getIniFilePath();
