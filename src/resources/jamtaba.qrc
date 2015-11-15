@@ -40,6 +40,7 @@
         <file>rec on.png</file>
         <file>translate.png</file>
         <file>warning.png</file>
+        <file>chat_small.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

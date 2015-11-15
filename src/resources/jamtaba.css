@@ -1231,3 +1231,42 @@ ChatMessagePanel QPushButton:hover#translateButton{
     font-weight: bold;
     border-style: outset;
 }
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+ChordsPanel #buttonSendToChat{
+    background-image: url(':/images/chat_small.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    max-width: 18px;
+    width: 18px;
+    padding: 2px;
+
+}
+
+ChordLabel{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgba(0,0,0, 5),
+    stop:1 rgba(0,0,0, 10));
+
+    color: gray;
+
+    padding: 6px;
+    padding-left: 3px;
+    padding-right: 3px;
+
+    border-radius: 2px;
+}
+
+ChordLabel[current="true"]{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgba(255,255,255, 220),
+    stop:1 rgba(255,255,255, 180));
+
+    color: black;
+
+    border: 1px solid rgb(180, 180, 180);
+}
+
+
+
