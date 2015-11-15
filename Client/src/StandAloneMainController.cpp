@@ -392,5 +392,6 @@ void StandaloneMainController::quit()
 {
     //destroy the extern !
     if(JTBConfig)delete JTBConfig;
+    qDebug() << "Thank you for Jamming with Jamtaba !";
     application->quit();
 }

@@ -54,9 +54,9 @@ void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString
     APPTYPE type=JTBConfig->getAppType();
     if (type==standalone)
         path=JTBConfig->getHomeDir().absoluteFilePath("log.txt");
-    else if (type==standalone)
-        path=JTBConfig->getHomeDir().absoluteFilePath("log.txt");
-    qDebug(jtConfigurator)<<"LOG PATH :"<<path;
+    else if (type==plugin)
+        path=JTBConfig->getPluginDir().absoluteFilePath("log.txt");
+    //qDebug(jtConfigurator)<<"LOG PATH :"<<path;
    // QDebug(jtConfigurator)
 
     QFile outFile(path );
@@ -81,16 +81,13 @@ void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString
 //
 //-------------------------------------------------------------------------------
 
-Configurator::Configurator()
-{
- IniFilename = "logging.ini";
+ Configurator::Configurator(){IniFilename = "logging.ini";}
 
-}
 //-------------------------------------------------------------------------------
 
-bool Configurator::setUp(APPTYPE type)
+bool Configurator::setUp(APPTYPE Type)
 {
- AppType=type;//plugin or standalone
+ AppType=Type;//plugin or standalone
 
  if(!homeExists())createTree();
   exportIniFile();
@@ -112,8 +109,8 @@ QDir Configurator::createDirPaths()
 {
     //create the Home folder
     QDir d(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
-    HomeDir.HomePath=d.path();
-    HomeDir.Pluginpath=d.absoluteFilePath("PluginVst");
+    HomePath=d.path();
+    Pluginpath=d.absoluteFilePath("PluginVst");
     return d;
 }
 
@@ -122,17 +119,17 @@ void Configurator::createTree()
     qWarning(jtConfigurator) << " Creating folders tree...";
     QDir d=createDirPaths();
     d.mkpath("PluginVst");
-    if( d.exists(HomeDir.HomePath))
-        qWarning(jtConfigurator) << " Home folder CREATED in :"<<HomeDir.HomePath;
+    if( d.exists(HomePath))
+        qWarning(jtConfigurator) << " Home folder CREATED in :"<<HomePath;
     else
-        qWarning(jtConfigurator) << " Home folder NOT CREATED in !"<<HomeDir.HomePath;;
+        qWarning(jtConfigurator) << " Home folder NOT CREATED in !"<<HomePath;
 
     //HomeDir.Pluginpath=d.absoluteFilePath("PluginVst");
 
-    if( d.exists(HomeDir.Pluginpath))
-        qWarning(jtConfigurator) << " PluginVst folder CREATED in :" <<HomeDir.Pluginpath;
+    if( d.exists(Pluginpath))
+        qWarning(jtConfigurator) << " PluginVst folder CREATED in :" <<Pluginpath;
     else
-        qWarning(jtConfigurator) << " PluginVst folder NOT CREATED in :" <<HomeDir.Pluginpath;
+        qWarning(jtConfigurator) << " PluginVst folder NOT CREATED in :" <<Pluginpath;
 
 }
 
@@ -162,7 +159,7 @@ void Configurator::exportIniFile()
             bool result;
             QString path(":/");
             if(AppType==standalone)path+=IniFilename;
-            else if(AppType==plugin)path+=HomeDir.Pluginpath+ IniFilename ;
+            else if(AppType==plugin)path+=Pluginpath+ IniFilename ;
             //log config file in application directory? (same dir as json config files, cache.bin, etc.)
            // bool result = QFile::copy(":/" + IniFilename,FilePath ) ;
             result = QFile::copy(path,FilePath ) ;

@@ -71,7 +71,7 @@ BOOL WINAPI DllMain( HINSTANCE hInst, DWORD dwReason, LPVOID /*lpvReserved*/ )
 
 
 ///**************************************************************************
-//#    Copyright 2010-2011 Raphaël François
+//#    Copyright 2010-2011 Rapha?l Fran?ois
 //#    Contact : ctrlbrk76@gmail.com
 //#
 //#    This file is part of VstBoard.
