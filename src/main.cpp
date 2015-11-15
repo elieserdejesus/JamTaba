@@ -17,14 +17,7 @@ int main(int argc, char* args[] ){
 
     //start the configurator
     JTBConfig=new Configurator();
-    if(!JTBConfig->setUp(plugin)) qWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
-
-    //setup ini
-    /*QString iniFilePath =JTBConfig->getIniFilePath();
-    if(!iniFilePath.isEmpty()){
-        qputenv("QT_LOGGING_CONF", QByteArray(iniFilePath.toUtf8()));
-        qInstallMessageHandler(LogHandler);
-    }*/
+    if(!JTBConfig->setUp(standalone)) qWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
 
     Persistence::Settings settings;
     settings.load();

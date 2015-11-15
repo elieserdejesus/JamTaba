@@ -519,7 +519,7 @@ bool Settings::writeFile(APPTYPE type, QList<SettingsObject *> sections)// io op
         fileDir=JTBConfig->getPluginDirPath();
     QDir dir(fileDir);//homepath
     dir.mkpath(fileDir);
-qWarning(jtConfigurator) << "SETTINGS WRITE JSON IN:" <<fileDir;
+    //qWarning(jtConfigurator) << "SETTINGS WRITE JSON IN:" <<fileDir;
     QString absolutePath = dir.absoluteFilePath(fileName);
     QFile file(absolutePath);
     if(file.open(QIODevice::WriteOnly)){
@@ -546,7 +546,8 @@ qWarning(jtConfigurator) << "SETTINGS WRITE JSON IN:" <<fileDir;
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void Settings::load(){
+void Settings::load()
+{
     QList<Persistence::SettingsObject*> sections;
     sections.append(&audioSettings);
     sections.append(&midiSettings);
@@ -560,57 +561,13 @@ void Settings::load(){
     //NEW COOL CONFIGURATOR STUFF
     if(JTBConfig)
     {
-    switch(JTBConfig->getAppType())
-    {
-    case standalone :readFile(standalone,sections);break;
-    case plugin : readFile(plugin,sections);break;
-    default :break;
+     switch(JTBConfig->getAppType())
+     {
+      case standalone :readFile(standalone,sections);break;
+      case plugin : readFile(plugin,sections);break;
+      default :break;
+     }
     }
-
-    }
-    /*
-    QDir dir(fileDir);//homepath
-    QString absolutePath = dir.absoluteFilePath(fileName);
-    QFile file(absolutePath);
-    //TODO create a funk for that , ex ReadFile( QFile file)
-
-    if(file.open(QIODevice::ReadOnly))
-    {
-        qInfo() << "Reading settings from " << absolutePath;
-        QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
-        QJsonObject root = doc.object();
-
-        //read user name
-        if(root.contains("userName")){
-            this->lastUserName = root["userName"].toString();
-        }
-        //read Translation
-        if(root.contains("translation")){
-            this->translation = root["translation"].toString();
-        }
-        if(this->translation.isEmpty()){
-            QLocale userLocale;
-            this->translation = userLocale.bcp47Name().left(2);
-        }
-
-
-        //read intervall progress shape
-        if(root.contains("intervalProgressShape")){
-            this->ninjamIntervalProgressShape = root["intervalProgressShape"].toInt();
-        }
-        else{
-            this->ninjamIntervalProgressShape = 0;
-        }
-
-        //read settings sections (Audio settings, Midi settings, ninjam settings, etc...)
-        foreach (SettingsObject* so, sections) {
-            so->read(root[so->getName()].toObject());
-        }
-    }
-    else{
-        qWarning() << "Can't load Jamtaba config file:" << file.errorString();
-    }*/
-
 }
 
 Settings::Settings()
@@ -642,32 +599,7 @@ void Settings::save(Persistence::InputsSettings inputsSettings){
     default :break;
      }
     }
-    //++++++++++++++++++++++++++
-   /* QDir dir(fileDir);
-    dir.mkpath(fileDir);
-    QString absolutePath = dir.absoluteFilePath(fileName);
-    QFile file(absolutePath);
-    if(file.open(QIODevice::WriteOnly)){
-        QJsonObject root;
-        //write user name
-        root["userName"] = this->lastUserName;
-        //write translate locale
-        root["translation"] = this->translation;
 
-        root["intervalProgressShape"] = this->ninjamIntervalProgressShape;
-
-        //write sections
-        foreach (SettingsObject* so, sections) {
-            QJsonObject sectionObject;
-            so->write(sectionObject);
-            root[so->getName()] = sectionObject;
-        }
-        QJsonDocument doc(root);
-        file.write(doc.toJson());
-    }
-    else{
-        qCritical() << file.errorString();
-    }*/
 }
 
 Settings::~Settings(){
