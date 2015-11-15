@@ -462,13 +462,15 @@ bool Settings::readFile(APPTYPE type,QList<Persistence::SettingsObject*> section
 
     if(type==plugin)
         fileDir=JTBConfig->getPluginDirPath();
+    else
+       fileDir=JTBConfig->getHomeDirPath();
         QDir dir(fileDir);//homepath
      //dir(JTBConfig->getPluginDirPath());//homepath
 
     QString absolutePath = dir.absoluteFilePath(fileName);
     //QFile file(absolutePath);
     QFile f(absolutePath);
-    qInfo(jtConfigurator) << "JSON Location :"<<fileDir;
+    //qInfo(jtConfigurator) << "JSON Location :"<<absolutePath;
     if(f.open(QIODevice::ReadOnly))
     {
         qInfo(jtConfigurator) << "Reading settings from " << f.fileName() ;
@@ -505,10 +507,42 @@ bool Settings::readFile(APPTYPE type,QList<Persistence::SettingsObject*> section
     }
     else
     {
-        qWarning() << "Can't load Jamtaba 2 config file:" << f.errorString();
+        qWarning(jtConfigurator) << "Settings : Can't load Jamtaba 2 config file:" << f.errorString();
     }
 
     return false;
+}
+bool Settings::writeFile(APPTYPE type, QList<SettingsObject *> sections)// io ops ...
+{
+   //Works with JTBConfig
+   if(type==plugin)
+        fileDir=JTBConfig->getPluginDirPath();
+    QDir dir(fileDir);//homepath
+    dir.mkpath(fileDir);
+qWarning(jtConfigurator) << "SETTINGS WRITE JSON IN:" <<fileDir;
+    QString absolutePath = dir.absoluteFilePath(fileName);
+    QFile file(absolutePath);
+    if(file.open(QIODevice::WriteOnly)){
+        QJsonObject root;
+        //write user name
+        root["userName"] = this->lastUserName;
+        //write translate locale
+        root["translation"] = this->translation;
+
+        root["intervalProgressShape"] = this->ninjamIntervalProgressShape;
+
+        //write sections
+        foreach (SettingsObject* so, sections) {
+            QJsonObject sectionObject;
+            so->write(sectionObject);
+            root[so->getName()] = sectionObject;
+        }
+        QJsonDocument doc(root);
+        file.write(doc.toJson());
+    }
+    else{
+        qCritical() << file.errorString();
+    }
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -534,11 +568,12 @@ void Settings::load(){
     }
 
     }
+    /*
     QDir dir(fileDir);//homepath
     QString absolutePath = dir.absoluteFilePath(fileName);
     QFile file(absolutePath);
     //TODO create a funk for that , ex ReadFile( QFile file)
-/*
+
     if(file.open(QIODevice::ReadOnly))
     {
         qInfo() << "Reading settings from " << absolutePath;
@@ -596,8 +631,19 @@ void Settings::save(Persistence::InputsSettings inputsSettings){
     sections.append(&this->inputsSettings);
     sections.append(&recordingSettings);
     sections.append(&privateServerSettings);
+
+    //NEW COOL CONFIGURATOR STUFF
+    if(JTBConfig)
+    {
+    switch(JTBConfig->getAppType())
+     {
+    case standalone :writeFile(standalone,sections);break;
+    case plugin : writeFile(plugin,sections);break;
+    default :break;
+     }
+    }
     //++++++++++++++++++++++++++
-    QDir dir(fileDir);
+   /* QDir dir(fileDir);
     dir.mkpath(fileDir);
     QString absolutePath = dir.absoluteFilePath(fileName);
     QFile file(absolutePath);
@@ -621,7 +667,7 @@ void Settings::save(Persistence::InputsSettings inputsSettings){
     }
     else{
         qCritical() << file.errorString();
-    }
+    }*/
 }
 
 Settings::~Settings(){

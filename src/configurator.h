@@ -8,7 +8,7 @@
 
 void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
-struct SHOMEDIR{bool exist;QDir Dir;QString HomePath;QString Pluginpath;};
+struct SHOMEDIR{bool exist;QString HomePath;QString Pluginpath;};
 enum APPTYPE{standalone,plugin};
 
 class Configurator
@@ -17,23 +17,23 @@ private :
     QString IniFilename;//contains the name of the Ini file
     SHOMEDIR HomeDir;
     APPTYPE AppType ;
+    QDir createDirPaths();
     void createTree();
 
 public:
-    Configurator();
+  Configurator();
     bool setUp(APPTYPE type);
-
-        void exportIniFile();
+      void exportIniFile();
         void setupIni();
         QString getIniFilePath();
-
-        //check if Jamtaba 2 folder exists in application data
+         //check if Jamtaba 2 folder exists in application data
          bool homeExists();
-         inline QDir getHomeDir(){return HomeDir.Dir ;}
-         inline QString getHomeDirPath(){return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);}
-         inline QString getPluginDirPath(){return HomeDir.Pluginpath ;}
-         inline APPTYPE getAppType(){return AppType; }
-         inline void setAppType(APPTYPE type){AppType=type; }
+        inline QDir getHomeDir(){ QDir dir(getHomeDirPath()) ;return dir;}
+       inline QDir getPluginDir(){QDir dir=getHomeDir();dir.cd("PluginVst");return dir ;}
+      inline QString getHomeDirPath(){return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);}
+     inline QString getPluginDirPath(){return getPluginDir().path() ;}
+   inline APPTYPE getAppType(){return AppType; }
+  inline void setAppType(APPTYPE type){AppType=type; }
 
 
     ~Configurator();

@@ -163,6 +163,8 @@ private:
     QString translation;//the translation being used in tha chat
     int ninjamIntervalProgressShape;//Circle, Ellipe or Line
     bool readFile(APPTYPE type, QList<SettingsObject *> sections);// io ops ...
+    bool writeFile(APPTYPE type, QList<SettingsObject *> sections);// io ops ...
+
 public:
     Settings();
     ~Settings();
