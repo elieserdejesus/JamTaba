@@ -14,8 +14,6 @@ int main(int argc, char* args[] ){
 
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
-    QApplication::setApplicationName("Jamtaba 2");
-    QApplication::setApplicationVersion(APP_VERSION);
     QApplication::setApplicationDisplayName( QApplication::applicationName() + " " + APP_VERSION );
     //start the configurator
     JTBConfig=new Configurator();
