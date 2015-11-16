@@ -51,10 +51,10 @@ void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString
 
     //Depends if standalone or plugin ....
     QString path;
-    APPTYPE type=JTBConfig->getAppType();
-    if (type==standalone)
+    APPTYPE appType= JTBConfig->getAppType();
+    if (appType==standalone)
         path=JTBConfig->getHomeDir().absoluteFilePath("log.txt");
-    else if (type==plugin)
+    else if (appType==plugin)
         path=JTBConfig->getPluginDir().absoluteFilePath("log.txt");
     //qDebug(jtConfigurator)<<"LOG PATH :"<<path;
    // QDebug(jtConfigurator)
@@ -72,7 +72,7 @@ void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString
         ts << stringMsg;
     }
 
-    if(type == QtFatalMsg){
+    if(appType == QtFatalMsg){
         abort();
     }
 }
@@ -84,6 +84,14 @@ void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString
  Configurator::Configurator(){IniFilename = "logging.ini";}
 
 //-------------------------------------------------------------------------------
+
+QDir Configurator::getPluginDir() {
+    QDir dir=getHomeDir();
+    if(!dir.cd("PluginVst")){
+        qCCritical(jtConfigurator) << "Cant' cd to PluginVst dir";
+    }
+    return dir;
+}
 
 bool Configurator::setUp(APPTYPE Type)
 {
@@ -149,30 +157,26 @@ bool Configurator::homeExists()
 //copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
 void Configurator::exportIniFile()
 {
-        //we use one ini file ( in Home/) to all types for log
-        QString FilePath = getHomeDir().absoluteFilePath(IniFilename);
-        //but we want the log to be in the right folder
-        if(!QFile(FilePath).exists())
+    //we use one ini file ( in Home/) to all types for log
+    QString FilePath = getHomeDir().absoluteFilePath(IniFilename);
+    //but we want the log to be in the right folder
+    if(!QFile(FilePath).exists())
+    {
+        qDebug(jtConfigurator) << "Ini file don't exist in' :"<<FilePath ;
+
+        bool result;
+
+        //log config file in application directory? (same dir as json config files, cache.bin, etc.)
+        // bool result = QFile::copy(":/" + IniFilename,FilePath ) ;
+        result = QFile::copy(":/" + IniFilename, FilePath ) ;
+        if(result)
         {
-            qDebug(jtConfigurator) << "Ini file don't exist in' :"<<FilePath ;
-
-            bool result;
-            QString path(":/");
-            if(AppType==standalone)path+=IniFilename;
-            else if(AppType==plugin)path+=Pluginpath+ IniFilename ;
-            //log config file in application directory? (same dir as json config files, cache.bin, etc.)
-           // bool result = QFile::copy(":/" + IniFilename,FilePath ) ;
-            result = QFile::copy(path,FilePath ) ;
-            if(result)
-            {
-                qDebug(jtConfigurator) << "Ini file copied in :"<<FilePath ;
-                QFile loggingFile(FilePath);
-                loggingFile.setPermissions(QFile::WriteOther);//The file is writable by anyone.
-            }
-            else  qDebug(jtConfigurator) << "FAILED to copy Ini file in :"<<FilePath ;
+            qDebug(jtConfigurator) << "Ini file copied in :"<<FilePath ;
+            QFile loggingFile(FilePath);
+            loggingFile.setPermissions(QFile::WriteOther);//The file is writable by anyone.
         }
-
-
+        else  qDebug(jtConfigurator) << "FAILED to copy Ini file in :"<<FilePath ;
+    }
 }
 //-------------------------------------------------------------------------------
 

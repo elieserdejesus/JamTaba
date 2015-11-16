@@ -38,8 +38,8 @@ public:
          //check if Jamtaba 2 folder exists in application data
          bool homeExists();
          //! Retrieve the root dir
-        inline QDir getHomeDir(){ QDir dir(getHomeDirPath()) ;return dir;}
-       inline QDir getPluginDir(){QDir dir=getHomeDir();dir.cd("PluginVst");return dir ;}
+         QDir getHomeDir() { QDir dir(getHomeDirPath()) ;return dir;}
+         QDir getPluginDir()  ;
       inline QString getHomeDirPath(){return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);}
      inline QString getPluginDirPath(){return getPluginDir().path() ;}
    inline APPTYPE getAppType(){return AppType; }
