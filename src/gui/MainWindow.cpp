@@ -102,7 +102,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     QObject::connect( ui.localControlsCollapseButton, SIGNAL(clicked()), this, SLOT(on_localControlsCollapseButtonClicked()));
     QObject::connect(ui.xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
     QObject::connect( mainController->getRoomStreamer(), SIGNAL(error(QString)), this, SLOT(on_RoomStreamerError(QString)));
-    QObject::connect(ui.actionQuit, SIGNAL(triggered(bool)), this, SLOT(~MainWindow()));
 
     ui.xmitButton->setChecked(mainController->isTransmiting());
 

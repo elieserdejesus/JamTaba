@@ -12,12 +12,14 @@ extern Configurator *JTBConfig=NULL;
 
 int main(int argc, char* args[] ){
 
-    QApplication::setApplicationName("Jomtobo 2");
+    QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
-    QApplication::setApplicationDisplayName("Jomtobo 2.0.6a");
+    QApplication::setApplicationName("Jamtaba 2");
+    QApplication::setApplicationVersion(APP_VERSION);
+    QApplication::setApplicationDisplayName( QApplication::applicationName() + " " + APP_VERSION );
     //start the configurator
     JTBConfig=new Configurator();
-    if(!JTBConfig->setUp(standalone)) qWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
+    if(!JTBConfig->setUp(standalone)) qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
 
     Persistence::Settings settings;
     settings.load();

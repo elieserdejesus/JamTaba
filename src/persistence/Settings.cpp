@@ -539,10 +539,12 @@ bool Settings::writeFile(APPTYPE type, QList<SettingsObject *> sections)// io op
         }
         QJsonDocument doc(root);
         file.write(doc.toJson());
+        return true;
     }
     else{
         qCritical() << file.errorString();
     }
+    return false;
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
