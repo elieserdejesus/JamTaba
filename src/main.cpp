@@ -12,9 +12,9 @@ extern Configurator *JTBConfig=NULL;
 
 int main(int argc, char* args[] ){
 
-    QApplication::setApplicationName("Jamtaba 2");
+    QApplication::setApplicationName("Jomtobo 2");
     QApplication::setApplicationVersion(APP_VERSION);
-    //QApplication::setApplicationDisplayName("Jomtobo 2.0.6a");
+    QApplication::setApplicationDisplayName("Jomtobo 2.0.6a");
     //start the configurator
     JTBConfig=new Configurator();
     if(!JTBConfig->setUp(standalone)) qWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
