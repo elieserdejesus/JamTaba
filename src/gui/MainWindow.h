@@ -202,9 +202,9 @@ private:
 
     void recalculateLeftPanelWidth();
 
-    PerformanceMonitor performanceMonitor;//cpu and memmory usage
-    qint64 lastPerformanceMonitorUpdate;
-    static const int PERFORMANCE_MONITOR_REFRESH_TIME;
+    //PerformanceMonitor performanceMonitor;//cpu and memmory usage
+    //qint64 lastPerformanceMonitorUpdate;
+    //static const int PERFORMANCE_MONITOR_REFRESH_TIME;
 
 };
 
