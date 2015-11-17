@@ -5,21 +5,19 @@
 #include "persistence/Settings.h"
 #include "MainWindowStandalone.h"
 #include "log/logging.h"
-
 #include "Libs/SingleApplication/singleapplication.h"
+#include "configurator.h"
+
+extern Configurator *JTBConfig=NULL;
 
 int main(int argc, char* args[] ){
 
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
 
-    Controller::MainController::exportLogFile();//copy logging.ini from resources to Jamtaba writable path
-
-    QString logFile = Controller::MainController::getLogConfigFilePath();
-    if(!logFile.isEmpty()){
-        qputenv("QT_LOGGING_CONF", QByteArray(logFile.toUtf8()));
-        qInstallMessageHandler(jamtabaLogHandler);
-    }
+    //start the configurator
+    JTBConfig=new Configurator();
+    if(!JTBConfig->setUp(standalone)) qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
 
     Persistence::Settings settings;
     settings.load();

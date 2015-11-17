@@ -74,7 +74,8 @@ HEADERS += \
     $$PWD/src/gui/BpiUtils.h \
     $$PWD/src/gui/chords/ChordsWidget.h \
     $$PWD/src/gui/chords/ChordsPanel.h \
-    $$PWD/src/gui/chords/ChordProgression.h
+    $$PWD/src/gui/chords/ChordProgression.h \
+    $$PWD/src/configurator.h
 
 SOURCES += \
     ../src/audio/core/AudioDriver.cpp \
@@ -128,7 +129,8 @@ SOURCES += \
     $$PWD/src/gui/BpiUtils.cpp \
     $$PWD/src/gui/chords/ChordsWidget.cpp \
     $$PWD/src/gui/chords/ChordsPanel.cpp \
-    $$PWD/src/gui/chords/ChordProgression.cpp
+    $$PWD/src/gui/chords/ChordProgression.cpp \
+    $$PWD/src/configurator.cpp
 
 #multiplatform implementations
 win32:SOURCES += $$PWD/src/performance/WindowsPerformanceMonitor.cpp

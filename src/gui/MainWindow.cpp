@@ -41,6 +41,7 @@
 #include "../audio/RoomStreamerNode.h"
 #include "UserNameDialog.h"
 #include "../log/logging.h"
+#include <QShortcut>
 
 using namespace Audio;
 using namespace Persistence;
@@ -64,6 +65,9 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     qCInfo(jtGUI) << "Creating MainWindow...";
 	ui.setupUi(this);
 
+    //FULLSCREEN STUFF
+    //this->showFullScreen();
+
     setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
 
     initializeLoginService();
@@ -86,6 +90,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     timerID = startTimer(1000/50);
 
     //ui.menuPreferences
+   // QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+Q"), parent);
+   // QObject::connect(shortcut, SIGNAL(activated()), this, SLOT(on_preferencesClicked(QAction*)));
     QObject::connect(ui.menuPreferences, SIGNAL(triggered(QAction*)), this, SLOT(on_preferencesClicked(QAction*)));
     QObject::connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this, SLOT(on_ninjamCommunityMenuItemTriggered()));
     QObject::connect(ui.actionNinjam_Official_Site, SIGNAL(triggered(bool)), this, SLOT(on_ninjamOfficialSiteMenuItemTriggered()));
@@ -93,12 +99,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     QObject::connect(ui.actionReportBugs, SIGNAL(triggered(bool)), this, SLOT(on_reportBugMenuItemTriggered()));
     QObject::connect(ui.actionWiki, SIGNAL(triggered(bool)), this, SLOT(on_wikiMenuItemTriggered()));
     QObject::connect(ui.actionUsersManual, SIGNAL(triggered(bool)), this, SLOT(on_UsersManualMenuItemTriggered()));
-
     QObject::connect( ui.localControlsCollapseButton, SIGNAL(clicked()), this, SLOT(on_localControlsCollapseButtonClicked()));
-
     QObject::connect(ui.xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
-
-
     QObject::connect( mainController->getRoomStreamer(), SIGNAL(error(QString)), this, SLOT(on_RoomStreamerError(QString)));
 
     ui.xmitButton->setChecked(mainController->isTransmiting());
@@ -984,6 +986,11 @@ void MainWindow::on_ninjamOfficialSiteMenuItemTriggered(){
 // preferences menu
 void MainWindow::on_preferencesClicked(QAction* action)
 {
+    //Use of action now !
+    if(!mainController->isRunningAsVstPlugin())
+    {if(action->objectName().contains("actionQuit"))
+       {this->close();return;}
+    }
     Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
     AudioDriver* audioDriver = mainController->getAudioDriver();
     if(audioDriver){

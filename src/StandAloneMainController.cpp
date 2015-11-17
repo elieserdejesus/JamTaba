@@ -21,8 +21,10 @@
 #include <QSettings>
 #include <QtConcurrent/QtConcurrent>
 #include "../log/logging.h"
+#include "configurator.h"
 
 using namespace Controller;
+extern Configurator *JTBConfig;
 
 //+++++++++++++++++++++++++
 StandalonePluginFinder::StandalonePluginFinder(Vst::Host *host)
@@ -386,3 +388,10 @@ void StandaloneMainController::stopNinjamController(){
 }
 
 
+void StandaloneMainController::quit()
+{
+    //destroy the extern !
+    if(JTBConfig)delete JTBConfig;
+    qDebug() << "Thank you for Jamming with Jamtaba !";
+    application->quit();
+}

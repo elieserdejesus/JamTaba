@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
+#include <QApplication> //to check plugin or standalone
 
 Q_LOGGING_CATEGORY(jtCore,                  "jt.Core")
 Q_LOGGING_CATEGORY(jtLoginService,          "jt.LoginService")
@@ -21,8 +22,10 @@ Q_LOGGING_CATEGORY(jtStandalonePluginFinder,"jt.Standalone.PluginFinder")
 Q_LOGGING_CATEGORY(jtVstPlugin,             "jt.VstPlugin")
 Q_LOGGING_CATEGORY(jtAudio,                 "jt.Audio")
 Q_LOGGING_CATEGORY(jtMidi,                  "jt.Midi")
+Q_LOGGING_CATEGORY(jtConfigurator,          "jt.Configurator")
 
 
+/*
 static bool logFileCreated = false;
 
 void jamtabaLogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -60,9 +63,12 @@ void jamtabaLogHandler(QtMsgType type, const QMessageLogContext &context, const 
 
     QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
     if(!logDir.exists()){
+        //check if we are plugin or standalone
+        QString s=QApplication::instance()->applicationName();
+        qDebug() << "Jamtaba Instance:" << s;
         logDir.mkpath(".");
     }
-    QFile outFile( logDir.absoluteFilePath("log.txt"));
+    QFile outFile( logDir.absoluteFilePath("logg.txt"));
     QIODevice::OpenMode ioFlags = QIODevice::WriteOnly;
     if(logFileCreated)
         ioFlags |= QIODevice::Append;
@@ -79,3 +85,4 @@ void jamtabaLogHandler(QtMsgType type, const QMessageLogContext &context, const 
         abort();
     }
 }
+*/
