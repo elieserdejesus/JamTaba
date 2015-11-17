@@ -15,7 +15,7 @@ void CustomTabWidget::setResourcesUsage(double cpuUsage, int memoryUsage){
     this->memoryUsage = memoryUsage;
     repaint();
 }
-
+/*
 void CustomTabWidget::paintEvent(QPaintEvent *e){
     QTabWidget::paintEvent(e);
 
@@ -40,5 +40,6 @@ void CustomTabWidget::paintEvent(QPaintEvent *e){
     painter.drawText(x + H_MARGIM, textY, string);
 
 }
+*/
 
 

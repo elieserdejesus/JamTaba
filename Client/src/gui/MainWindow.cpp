@@ -836,11 +836,11 @@ void MainWindow::timerEvent(QTimerEvent *){
     }
 
     //update cpu and memmory usage
-    qint64 now = QDateTime::currentMSecsSinceEpoch();
-    if(now - lastPerformanceMonitorUpdate >= PERFORMANCE_MONITOR_REFRESH_TIME){
-        ui.tabWidget->setResourcesUsage(performanceMonitor.getCpuUsage(), performanceMonitor.getMemmoryUsage());
-        lastPerformanceMonitorUpdate = now;
-    }
+//    qint64 now = QDateTime::currentMSecsSinceEpoch();
+//    if(now - lastPerformanceMonitorUpdate >= PERFORMANCE_MONITOR_REFRESH_TIME){
+//        ui.tabWidget->setResourcesUsage(performanceMonitor.getCpuUsage(), performanceMonitor.getMemmoryUsage());
+//        lastPerformanceMonitorUpdate = now;
+//    }
 
     //update room stream plot
     if(mainController->isPlayingRoomStream()){
