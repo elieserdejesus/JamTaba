@@ -36,6 +36,9 @@ extern "C" {
 } // extern "C"
 
 //------------------------------------------------------------------------
+
+extern Configurator *JTBConfig=NULL;
+
 #if WIN32
 #include <windows.h>
 #include <QMfcApp>
@@ -46,14 +49,16 @@ BOOL WINAPI DllMain( HINSTANCE hInst, DWORD dwReason, LPVOID /*lpvReserved*/ )
 {
     static bool ownApplication = FALSE;
      if ( dwReason == DLL_PROCESS_ATTACH ){
+
          QApplication::setApplicationName("Jamtaba 2");
          QApplication::setApplicationVersion(APP_VERSION);
-         Controller::MainController::exportLogFile();//copy logging.ini from resources to Jamtaba writable path
-         QString logFile = Controller::MainController::getLogConfigFilePath();
-         if(!logFile.isEmpty()){
-             qputenv("QT_LOGGING_CONF", QByteArray(logFile.toUtf8()));
-             qInstallMessageHandler(jamtabaLogHandler);
+
+         //start the configurator
+         if(!JTBConfig){
+            JTBConfig=new Configurator();
+            if(!JTBConfig->setUp(APPTYPE::plugin)) qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
          }
+
          ownApplication = QMfcApp::pluginInstance( hInst );
      }
      if ( dwReason == DLL_PROCESS_DETACH && ownApplication ) {
@@ -71,7 +76,7 @@ BOOL WINAPI DllMain( HINSTANCE hInst, DWORD dwReason, LPVOID /*lpvReserved*/ )
 
 
 ///**************************************************************************
-//#    Copyright 2010-2011 Raphaël François
+//#    Copyright 2010-2011 Rapha?l Fran?ois
 //#    Contact : ctrlbrk76@gmail.com
 //#
 //#    This file is part of VstBoard.

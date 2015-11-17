@@ -5,10 +5,14 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
-#include <QFile>
+
 #include <QDir>
 #include <QList>
 #include <QSettings>
+#include "../log/logging.h"
+
+
+extern Configurator *JTBConfig;
 
 using namespace Persistence;
 
@@ -451,24 +455,26 @@ void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastO
     audioSettings.audioDevice = audioDevice;
 }
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void Settings::load(){
-    QList<Persistence::SettingsObject*> sections;
-    sections.append(&audioSettings);
-    sections.append(&midiSettings);
-    sections.append(&windowSettings);
-    sections.append(&metronomeSettings);
-    sections.append(&vstSettings);
-    sections.append(&inputsSettings);
-    sections.append(&recordingSettings);
-    sections.append(&privateServerSettings);
+// io ops ...
+bool Settings::readFile(APPTYPE type,QList<Persistence::SettingsObject*> sections)
+{
 
-    QDir dir(fileDir);
+
+    if(type==plugin)
+        fileDir=JTBConfig->getPluginDirPath();
+    else
+       fileDir=JTBConfig->getHomeDirPath();
+        QDir dir(fileDir);//homepath
+     //dir(JTBConfig->getPluginDirPath());//homepath
+
     QString absolutePath = dir.absoluteFilePath(fileName);
-    QFile file(absolutePath);
-    if(file.open(QIODevice::ReadOnly)){
-        qInfo() << "Reading settings from " << absolutePath;
-        QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+    //QFile file(absolutePath);
+    QFile f(absolutePath);
+    //qInfo(jtConfigurator) << "JSON Location :"<<absolutePath;
+    if(f.open(QIODevice::ReadOnly))
+    {
+        qInfo(jtConfigurator) << "Reading settings from " << f.fileName() ;
+        QJsonDocument doc = QJsonDocument::fromJson(f.readAll());
         QJsonObject root = doc.object();
 
         //read user name
@@ -497,11 +503,73 @@ void Settings::load(){
         foreach (SettingsObject* so, sections) {
             so->read(root[so->getName()].toObject());
         }
+        return true;
     }
-    else{
-        qWarning() << "Can't load Jamtaba config file:" << file.errorString();
+    else
+    {
+        qWarning(jtConfigurator) << "Settings : Can't load Jamtaba 2 config file:" << f.errorString();
     }
 
+    return false;
+}
+bool Settings::writeFile(APPTYPE type, QList<SettingsObject *> sections)// io ops ...
+{
+   //Works with JTBConfig
+   if(type==plugin)
+        fileDir=JTBConfig->getPluginDirPath();
+    QDir dir(fileDir);//homepath
+    dir.mkpath(fileDir);
+    //qWarning(jtConfigurator) << "SETTINGS WRITE JSON IN:" <<fileDir;
+    QString absolutePath = dir.absoluteFilePath(fileName);
+    QFile file(absolutePath);
+    if(file.open(QIODevice::WriteOnly)){
+        QJsonObject root;
+        //write user name
+        root["userName"] = this->lastUserName;
+        //write translate locale
+        root["translation"] = this->translation;
+
+        root["intervalProgressShape"] = this->ninjamIntervalProgressShape;
+
+        //write sections
+        foreach (SettingsObject* so, sections) {
+            QJsonObject sectionObject;
+            so->write(sectionObject);
+            root[so->getName()] = sectionObject;
+        }
+        QJsonDocument doc(root);
+        file.write(doc.toJson());
+        return true;
+    }
+    else{
+        qCritical() << file.errorString();
+    }
+    return false;
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void Settings::load()
+{
+    QList<Persistence::SettingsObject*> sections;
+    sections.append(&audioSettings);
+    sections.append(&midiSettings);
+    sections.append(&windowSettings);
+    sections.append(&metronomeSettings);
+    sections.append(&vstSettings);
+    sections.append(&inputsSettings);
+    sections.append(&recordingSettings);
+    sections.append(&privateServerSettings);
+
+    //NEW COOL CONFIGURATOR STUFF
+    if(JTBConfig)
+    {
+     switch(JTBConfig->getAppType())
+     {
+      case standalone :readFile(standalone,sections);break;
+      case plugin : readFile(plugin,sections);break;
+      default :break;
+     }
+    }
 }
 
 Settings::Settings()
@@ -522,32 +590,18 @@ void Settings::save(Persistence::InputsSettings inputsSettings){
     sections.append(&this->inputsSettings);
     sections.append(&recordingSettings);
     sections.append(&privateServerSettings);
-    //++++++++++++++++++++++++++
-    QDir dir(fileDir);
-    dir.mkpath(fileDir);
-    QString absolutePath = dir.absoluteFilePath(fileName);
-    QFile file(absolutePath);
-    if(file.open(QIODevice::WriteOnly)){
-        QJsonObject root;
-        //write user name
-        root["userName"] = this->lastUserName;
-        //write translate locale
-        root["translation"] = this->translation;
 
-        root["intervalProgressShape"] = this->ninjamIntervalProgressShape;
+    //NEW COOL CONFIGURATOR STUFF
+    if(JTBConfig)
+    {
+    switch(JTBConfig->getAppType())
+     {
+    case standalone :writeFile(standalone,sections);break;
+    case plugin : writeFile(plugin,sections);break;
+    default :break;
+     }
+    }
 
-        //write sections
-        foreach (SettingsObject* so, sections) {
-            QJsonObject sectionObject;
-            so->write(sectionObject);
-            root[so->getName()] = sectionObject;
-        }
-        QJsonDocument doc(root);
-        file.write(doc.toJson());
-    }
-    else{
-        qCritical() << file.errorString();
-    }
 }
 
 Settings::~Settings(){

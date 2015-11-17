@@ -51,7 +51,7 @@ public:
     void scanPlugins();
 
 //    inline int exec(){ return application->exec(); }
-    inline void quit(){ application->quit();}
+    void quit();
 
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
