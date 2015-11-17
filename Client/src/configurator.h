@@ -20,6 +20,9 @@ enum APPTYPE{standalone,plugin};
 class Configurator
 {
 private :
+
+    static const QString VST_PLUGIN_FOLDER_NAME;
+
     QString IniFilename;//!contains the name of the Ini file
     //SHOMEDIR HomeDir;
     APPTYPE AppType ;//! Contains the type of configuration used : standalone or plugin
@@ -36,7 +39,8 @@ public:
         void setupIni();
         QString getIniFilePath();
          //check if Jamtaba 2 folder exists in application data
-         bool homeExists();
+         bool treeExists();
+         bool pluginDirExists();
          //! Retrieve the root dir
          QDir getHomeDir() { QDir dir(getHomeDirPath()) ;return dir;}
          QDir getPluginDir()  ;
