@@ -12,8 +12,11 @@
 
 #include "../log/logging.h"
 
- static bool logFileCreated = false;
- extern Configurator *JTBConfig;
+
+const QString Configurator::VST_PLUGIN_FOLDER_NAME = "PluginVst";
+
+bool logFileCreated = false;
+extern Configurator *JTBConfig;
 
 void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -44,7 +47,7 @@ void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString
         stream << context.category  << ".FATAL:  " << localMsg.constData() << context.function << file << context.line << endl << endl;
         break;
     default:
-       stream << context.category << ".INFO:  " << localMsg.constData() <<endl;
+        stream << context.category << ".INFO:  " << localMsg.constData() <<endl;
     }
 
     QTextStream(stdout) << stringMsg;
@@ -57,7 +60,7 @@ void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString
     else if (appType==plugin)
         path=JTBConfig->getPluginDir().absoluteFilePath("log.txt");
     //qDebug(jtConfigurator)<<"LOG PATH :"<<path;
-   // QDebug(jtConfigurator)
+    // QDebug(jtConfigurator)
 
     QFile outFile(path );
     QIODevice::OpenMode ioFlags = QIODevice::WriteOnly;
@@ -81,35 +84,37 @@ void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString
 //
 //-------------------------------------------------------------------------------
 
- Configurator::Configurator(){IniFilename = "logging.ini";}
+Configurator::Configurator(){IniFilename = "logging.ini";}
 
 //-------------------------------------------------------------------------------
 
 QDir Configurator::getPluginDir() {
     QDir dir=getHomeDir();
-    if(!dir.cd("PluginVst")){
-        qCCritical(jtConfigurator) << "Cant' cd to PluginVst dir";
+    if(!dir.cd(VST_PLUGIN_FOLDER_NAME)){
+        qCCritical(jtConfigurator) << "Cant' cd to " + VST_PLUGIN_FOLDER_NAME + " dir";
     }
     return dir;
 }
 
 bool Configurator::setUp(APPTYPE Type)
 {
- AppType=Type;//plugin or standalone
+    AppType=Type;//plugin or standalone
 
- if(!homeExists())createTree();
-  exportIniFile();
-  setupIni();
-  return true;
+    if(!treeExists() || !pluginDirExists()){
+        createTree();
+    }
+    exportIniFile();
+    setupIni();
+    return true;
 }
 void Configurator::setupIni()
 {
     QString iniFilePath =JTBConfig->getIniFilePath();
-        if(!iniFilePath.isEmpty())
-        {
-            qputenv("QT_LOGGING_CONF", QByteArray(iniFilePath.toUtf8()));
-            qInstallMessageHandler(LogHandler);
-        }
+    if(!iniFilePath.isEmpty())
+    {
+        qputenv("QT_LOGGING_CONF", QByteArray(iniFilePath.toUtf8()));
+        qInstallMessageHandler(LogHandler);
+    }
 }
 
 //-------------------------------------------------------------------------------
@@ -118,7 +123,7 @@ QDir Configurator::createDirPaths()
     //create the Home folder
     QDir d(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
     HomePath=d.path();
-    Pluginpath=d.absoluteFilePath("PluginVst");
+    Pluginpath=d.absoluteFilePath(VST_PLUGIN_FOLDER_NAME);
     return d;
 }
 
@@ -141,12 +146,20 @@ void Configurator::createTree()
 
 }
 
-bool Configurator::homeExists()
+bool Configurator::pluginDirExists(){
+    if(!treeExists()){
+        return false;
+    }
+    QDir homeDir = getHomeDir();
+    return homeDir.cd(VST_PLUGIN_FOLDER_NAME);
+}
+
+bool Configurator::treeExists()
 {
     QDir d(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
     if(!d.exists())
     {qWarning(jtConfigurator) << " HOME folder don't exist ! :" ;
-     return false;
+        return false;
     }
 
     return true;
@@ -183,7 +196,7 @@ void Configurator::exportIniFile()
 QString Configurator::getIniFilePath()
 {
     //HOMEPATH...
-   //QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
+    //QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
     QDir iniDir(JTBConfig->getHomeDirPath());
 
     if(iniDir.exists())
