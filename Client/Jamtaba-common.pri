@@ -69,7 +69,7 @@ HEADERS += \
     ../src/gui/MainWindow.h \
     $$PWD/src/log/logging.h \
     $$PWD/src/gui/widgets/CustomTabWidget.h \
-    $$PWD/src/performance/PerformanceMonitor.h \
+#    $$PWD/src/performance/PerformanceMonitor.h \
     $$PWD/src/gui/chords/ChordLabel.h \
     $$PWD/src/gui/BpiUtils.h \
     $$PWD/src/gui/chords/ChordsWidget.h \
@@ -133,8 +133,8 @@ SOURCES += \
     $$PWD/src/configurator.cpp
 
 #multiplatform implementations
-win32:SOURCES += $$PWD/src/performance/WindowsPerformanceMonitor.cpp
-macx:SOURCES += $$PWD/src/performance/MacPerformanceMonitor.cpp
+#win32:SOURCES += $$PWD/src/performance/WindowsPerformanceMonitor.cpp
+#macx:SOURCES += $$PWD/src/performance/MacPerformanceMonitor.cpp
 
 FORMS += \
     ../src/gui/PreferencesDialog.ui \

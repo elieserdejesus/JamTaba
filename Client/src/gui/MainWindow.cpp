@@ -26,7 +26,7 @@
 #include "ChatPanel.h"
 #include "BusyDialog.h"
 #include "PrivateServerDialog.h"
-#include "../performance/PerformanceMonitor.h"
+//#include "../performance/PerformanceMonitor.h"
 
 #include "../NinjamController.h"
 #include "../ninjam/Server.h"
@@ -48,7 +48,7 @@ using namespace Persistence;
 using namespace Controller;
 using namespace Ninjam;
 
-const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200;//in miliseconds
+//const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200;//in miliseconds
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainWindow::MainWindow(Controller::MainController *mainController, QWidget *parent)
@@ -59,8 +59,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     pluginScanDialog(nullptr),
     ninjamWindow(nullptr),
     roomToJump(nullptr),
-    fullViewMode(true),
-    lastPerformanceMonitorUpdate(0)
+    fullViewMode(true)
+    //lastPerformanceMonitorUpdate(0)
 {
     qCInfo(jtGUI) << "Creating MainWindow...";
 	ui.setupUi(this);
