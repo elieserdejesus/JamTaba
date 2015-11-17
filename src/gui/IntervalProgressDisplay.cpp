@@ -27,14 +27,18 @@ const QColor IntervalProgressDisplay::LINEAR_ACCENT_BORDER_COLOR = QColor(160, 1
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++
 IntervalProgressDisplay::IntervalProgressDisplay(QWidget*parent)
-    :QWidget(parent), SMALL_FONT("Verdana, 7"), BIG_FONT("Verdana, 10"), ovalSize(PREFERRED_OVAL_SIZE), paintMode(PaintMode::LINEAR){
+    :QWidget(parent),
+      SMALL_FONT("Verdana, 7"),
+      BIG_FONT("Verdana, 10"),
+      ovalSize(PREFERRED_OVAL_SIZE),
+      paintMode(PaintMode::LINEAR),
+      showAccents(false){
 
     setAttribute(Qt::WA_NoBackground);
 
     setBeatsPerInterval(32);
 
-    setBeatsPerAccent(4);
-    //setShowAccents(false);
+    setShowAccents(false);
 
     initialize();
 }

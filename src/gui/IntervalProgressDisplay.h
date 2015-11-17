@@ -78,7 +78,7 @@ private:
 
     int beatsPerAccent;
 
-    bool showAccents = true;
+    bool showAccents;// = true;
 
     static const double PI;
 
