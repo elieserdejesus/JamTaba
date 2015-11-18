@@ -17,7 +17,7 @@ class ChatPanel : public QWidget
 public:
     ChatPanel(QWidget *parent, QStringList botNames);
     virtual ~ChatPanel();
-    void addMessage(QString userName, QString userMessage);
+    void addMessage(QString userName, QString userMessage, bool showTranslationButton = true);
     void addBpmVoteConfirmationMessage(int newBpmValue);
     void addBpiVoteConfirmationMessage(int newBpmValue);
     void addChordProgressionConfirmationMessage(ChordProgression progression);

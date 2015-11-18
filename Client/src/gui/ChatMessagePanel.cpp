@@ -14,18 +14,18 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
 }
 
 
-ChatMessagePanel::ChatMessagePanel(QWidget *parent, QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool drawBorder)
+ChatMessagePanel::ChatMessagePanel(QWidget *parent, QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool showTranslationButton)
     :QWidget(parent),
       ui(new Ui::ChatMessagePanel)
 {
     ui->setupUi(this);
-    initialize(userName, msg, userNameBackgroundColor, msgBackgroundColor, textColor, drawBorder);
+    initialize(userName, msg, userNameBackgroundColor, msgBackgroundColor, textColor, showTranslationButton);
 }
 
-void ChatMessagePanel::initialize(QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool drawBorder ){
+void ChatMessagePanel::initialize(QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor , bool showTranslationButton){
     if(!userName.isEmpty() && !userName.isNull()){
         ui->labelUserName->setText(userName);
-        ui->labelUserName->setStyleSheet(buildCssString(userNameBackgroundColor, textColor, drawBorder));
+        ui->labelUserName->setStyleSheet(buildCssString(userNameBackgroundColor, textColor));
     }
     else{
         ui->labelUserName->setVisible(false);
@@ -35,22 +35,21 @@ void ChatMessagePanel::initialize(QString userName, QString msg, QColor userName
     msg = msg.replace("\n", "<br/>");
     msg = replaceLinksInString(msg);
     ui->labelMessage->setText(msg);
-    ui->labelMessage->setStyleSheet(buildCssString(msgBackgroundColor, textColor, drawBorder));
+    ui->labelMessage->setStyleSheet(buildCssString(msgBackgroundColor, textColor));
 
-    ui->translateButton->setStyleSheet( buildCssString(userNameBackgroundColor, textColor, drawBorder));
+    if(showTranslationButton){
+        ui->translateButton->setStyleSheet( buildCssString(userNameBackgroundColor, textColor));
+    }
+    else{
+        ui->translateButton->setVisible(false);
+    }
 
     this->originalText = msg;
-
-    //ui->widget->setFixedHeight(sizeHint().height());
-
 }
 
-QString ChatMessagePanel::buildCssString(QColor bgColor, QColor textColor, bool drawBorder){
+QString ChatMessagePanel::buildCssString(QColor bgColor, QColor textColor){
     QString css =   "background-color: " + colorToCSS(bgColor) + ";";
     css +=          "color: " + colorToCSS(textColor) + ";";
-    if(!drawBorder){
-        css +=          "border: none; ";
-    }
     return css;
 }
 
