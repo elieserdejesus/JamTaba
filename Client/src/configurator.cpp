@@ -8,6 +8,8 @@
 QScopedPointer<Configurator> Configurator::instance(nullptr);
 
 const QString Configurator::VST_PLUGIN_FOLDER_NAME = "PluginVst";
+const QString Configurator::STANDALONE_PRESET_FOLDER_NAME= "Presets";
+const QString Configurator::PLUGIN_PRESET_FOLDER_NAME= "PluginVst/Presets";
 
 void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -91,6 +93,29 @@ QDir Configurator::getPluginDir() const {
     if(!dir.cd(VST_PLUGIN_FOLDER_NAME)){
         qCCritical(jtConfigurator) << "Cant' cd to " + VST_PLUGIN_FOLDER_NAME + " dir";
     }
+    return dir;
+}
+//-------------------------------------------------------------------------------
+//Presets now ....
+QDir Configurator::getPresetsDir(APPTYPE type) const
+{
+    QDir dir=getHomeDir();
+    switch(type)
+    {
+    case standalone:
+        if(!dir.cd(STANDALONE_PRESET_FOLDER_NAME))
+        {
+            qCCritical(jtConfigurator) << "Cant' cd to " + STANDALONE_PRESET_FOLDER_NAME + " dir";
+        }break;
+    case plugin:
+        if(!dir.cd(PLUGIN_PRESET_FOLDER_NAME))
+        {
+            qCCritical(jtConfigurator) << "Cant' cd to " + PLUGIN_PRESET_FOLDER_NAME + " dir";
+        }break;
+    default:break;
+    }
+
+
     return dir;
 }
 
