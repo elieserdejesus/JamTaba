@@ -66,7 +66,7 @@ void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context,
         ts << stringMsg;
     }
 
-    if(appType == QtFatalMsg){
+    if(type == QtFatalMsg){
         abort();
     }
 }
