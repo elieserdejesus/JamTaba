@@ -49,6 +49,7 @@ public:
     QString getIniFilePath() const;
     bool treeExists() const;    //check if Jamtaba 2 folder exists in application data
     bool pluginDirExists() const;
+    bool presetsDirExists() const;
     inline QDir getHomeDir() const{ return QDir(getHomeDirPath());}
     QDir getPluginDir() const ;
     inline QString getHomeDirPath() const {return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);}
