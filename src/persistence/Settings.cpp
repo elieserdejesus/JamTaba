@@ -12,7 +12,7 @@
 #include "../log/logging.h"
 
 
-extern Configurator *JTBConfig;
+//extern Configurator *JTBConfig;
 
 using namespace Persistence;
 
@@ -456,16 +456,14 @@ void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastO
 }
 
 // io ops ...
-bool Settings::readFile(APPTYPE type,QList<Persistence::SettingsObject*> sections)
+bool Settings::readFile(APPTYPE type, QList<Persistence::SettingsObject*> sections)
 {
-
-
     if(type==plugin)
-        fileDir=JTBConfig->getPluginDirPath();
+        fileDir = Configurator::getInstance()->getPluginDirPath();
     else
-       fileDir=JTBConfig->getHomeDirPath();
-        QDir dir(fileDir);//homepath
-     //dir(JTBConfig->getPluginDirPath());//homepath
+       fileDir = Configurator::getInstance()->getHomeDirPath();
+
+    QDir dir(fileDir);//homepath
 
     QString absolutePath = dir.absoluteFilePath(fileName);
     //QFile file(absolutePath);
@@ -516,7 +514,7 @@ bool Settings::writeFile(APPTYPE type, QList<SettingsObject *> sections)// io op
 {
    //Works with JTBConfig
    if(type==plugin)
-        fileDir=JTBConfig->getPluginDirPath();
+        fileDir = Configurator::getInstance()->getPluginDirPath();
     QDir dir(fileDir);//homepath
     dir.mkpath(fileDir);
     //qWarning(jtConfigurator) << "SETTINGS WRITE JSON IN:" <<fileDir;
@@ -560,16 +558,9 @@ void Settings::load()
     sections.append(&recordingSettings);
     sections.append(&privateServerSettings);
 
+
     //NEW COOL CONFIGURATOR STUFF
-    if(JTBConfig)
-    {
-     switch(JTBConfig->getAppType())
-     {
-      case standalone :readFile(standalone,sections);break;
-      case plugin : readFile(plugin,sections);break;
-      default :break;
-     }
-    }
+    readFile(Configurator::getInstance()->getAppType(), sections);
 }
 
 Settings::Settings()
@@ -592,15 +583,7 @@ void Settings::save(Persistence::InputsSettings inputsSettings){
     sections.append(&privateServerSettings);
 
     //NEW COOL CONFIGURATOR STUFF
-    if(JTBConfig)
-    {
-    switch(JTBConfig->getAppType())
-     {
-    case standalone :writeFile(standalone,sections);break;
-    case plugin : writeFile(plugin,sections);break;
-    default :break;
-     }
-    }
+    writeFile(Configurator::getInstance()->getAppType(), sections);
 
 }
 

@@ -24,7 +24,6 @@
 #include "configurator.h"
 
 using namespace Controller;
-extern Configurator *JTBConfig;
 
 //+++++++++++++++++++++++++
 StandalonePluginFinder::StandalonePluginFinder(Vst::Host *host)
@@ -391,7 +390,7 @@ void StandaloneMainController::stopNinjamController(){
 void StandaloneMainController::quit()
 {
     //destroy the extern !
-    if(JTBConfig)delete JTBConfig;
+    //if(JTBConfig)delete JTBConfig;
     qDebug() << "Thank you for Jamming with Jamtaba !";
     application->quit();
 }
