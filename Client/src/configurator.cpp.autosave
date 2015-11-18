@@ -154,7 +154,7 @@ bool Configurator::treeExists() const
 {
     QDir d(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
     if(!d.exists()|| !pluginDirExists())
-    {qWarning(jtConfigurator) << " HOME folder don't exist ! :" ;
+    {qWarning(jtConfigurator) << " FOLDER'S TREE don't exist ! :" ;
         return false;
     }
 
