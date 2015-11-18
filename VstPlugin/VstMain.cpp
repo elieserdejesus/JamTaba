@@ -37,8 +37,6 @@ extern "C" {
 
 //------------------------------------------------------------------------
 
-extern Configurator *JTBConfig=NULL;
-
 #if WIN32
 #include <windows.h>
 #include <QMfcApp>
@@ -54,10 +52,9 @@ BOOL WINAPI DllMain( HINSTANCE hInst, DWORD dwReason, LPVOID /*lpvReserved*/ )
          QApplication::setApplicationVersion(APP_VERSION);
 
          //start the configurator
-         if(!JTBConfig){
-            JTBConfig=new Configurator();
-            if(!JTBConfig->setUp(APPTYPE::plugin)) qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
-         }
+         Configurator* configurator = Configurator::getInstance();
+         if(!configurator->setUp(APPTYPE::plugin)) qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
+
 
          ownApplication = QMfcApp::pluginInstance( hInst );
      }
