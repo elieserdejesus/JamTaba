@@ -8,16 +8,14 @@
 #include "Libs/SingleApplication/singleapplication.h"
 #include "configurator.h"
 
-extern Configurator *JTBConfig=NULL;
-
 int main(int argc, char* args[] ){
 
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
 
     //start the configurator
-    JTBConfig=new Configurator();
-    if(!JTBConfig->setUp(standalone)) qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
+    Configurator* configurator = Configurator::getInstance();
+    if(!configurator->setUp(standalone)) qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
 
     Persistence::Settings settings;
     settings.load();

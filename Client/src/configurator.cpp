@@ -1,24 +1,15 @@
 #include "configurator.h"
-//#include <QDateTime>
-
-//#include <QTimer>
 #include <QFile>
 #include <QDebug>
 #include <QApplication>
-//#include <QSysInfo>
-//#include <QUuid>
-//#include <QSettings>
-
 
 #include "../log/logging.h"
 
+QScopedPointer<Configurator> Configurator::instance(nullptr);
 
 const QString Configurator::VST_PLUGIN_FOLDER_NAME = "PluginVst";
 
-bool logFileCreated = false;
-extern Configurator *JTBConfig;
-
-void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QByteArray localMsg = msg.toLocal8Bit();
     QString stringMsg;
@@ -54,21 +45,21 @@ void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString
 
     //Depends if standalone or plugin ....
     QString path;
-    APPTYPE appType= JTBConfig->getAppType();
+    Configurator* configurator = Configurator::getInstance();
+    APPTYPE appType= configurator->getAppType();
     if (appType==standalone)
-        path=JTBConfig->getHomeDir().absoluteFilePath("log.txt");
+        path=configurator->getHomeDir().absoluteFilePath("log.txt");
     else if (appType==plugin)
-        path=JTBConfig->getPluginDir().absoluteFilePath("log.txt");
-    //qDebug(jtConfigurator)<<"LOG PATH :"<<path;
-    // QDebug(jtConfigurator)
+        path=configurator->getPluginDir().absoluteFilePath("log.txt");
 
     QFile outFile(path );
     QIODevice::OpenMode ioFlags = QIODevice::WriteOnly;
-    if(logFileCreated)
+    if(configurator->logFileIsCreated()){
         ioFlags |= QIODevice::Append;
+    }
     else{
         ioFlags |= QIODevice::Truncate;
-        logFileCreated = true;
+        configurator->setFileCreatedFlag();
     }
     if(outFile.open(ioFlags)){
         QTextStream ts(&outFile);
@@ -81,13 +72,20 @@ void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString
 }
 
 //--------------------------------Configurator-----------------------------------
-//
+Configurator::Configurator()
+    :IniFilename("logging.ini"), logFileCreated(false){
+
+}
+
 //-------------------------------------------------------------------------------
-
-Configurator::Configurator(){IniFilename = "logging.ini";}
+Configurator* Configurator::getInstance(){
+    if(Configurator::instance.isNull()){
+        instance.reset( new Configurator());
+    }
+    return instance.data();
+}
 
 //-------------------------------------------------------------------------------
-
 QDir Configurator::getPluginDir() {
     QDir dir=getHomeDir();
     if(!dir.cd(VST_PLUGIN_FOLDER_NAME)){
@@ -109,16 +107,16 @@ bool Configurator::setUp(APPTYPE Type)
 }
 void Configurator::setupIni()
 {
-    QString iniFilePath =JTBConfig->getIniFilePath();
+    QString iniFilePath = getIniFilePath();
     if(!iniFilePath.isEmpty())
     {
         qputenv("QT_LOGGING_CONF", QByteArray(iniFilePath.toUtf8()));
-        qInstallMessageHandler(LogHandler);
+        qInstallMessageHandler(&Configurator::LogHandler);
     }
 }
 
 //-------------------------------------------------------------------------------
-QDir Configurator::createDirPaths()
+QDir Configurator::buildDirPaths()
 {
     //create the Home folder
     QDir d(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
@@ -130,7 +128,7 @@ QDir Configurator::createDirPaths()
 void Configurator::createTree()
 {
     qWarning(jtConfigurator) << " Creating folders tree...";
-    QDir d=createDirPaths();
+    QDir d=buildDirPaths();
     d.mkpath("PluginVst");
     if( d.exists(HomePath))
         qWarning(jtConfigurator) << " Home folder CREATED in :"<<HomePath;
@@ -197,7 +195,7 @@ QString Configurator::getIniFilePath()
 {
     //HOMEPATH...
     //QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
-    QDir iniDir(JTBConfig->getHomeDirPath());
+    QDir iniDir(getHomeDirPath());
 
     if(iniDir.exists())
     {
@@ -223,7 +221,7 @@ QString Configurator::getIniFilePath()
 
 Configurator::~Configurator()
 {
-
+    //qCDebug(jtConfigurator) << "Configurator destructor!";
 }
 //-------------------------------------------------------------------------------
 
