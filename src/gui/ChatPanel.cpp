@@ -132,14 +132,14 @@ void ChatPanel::on_chatTextEditionFinished(){
     }
 }
 
-void ChatPanel::addMessage(QString userName, QString userMessage){
+void ChatPanel::addMessage(QString userName, QString userMessage, bool showTranslationButton){
     QColor msgBackgroundColor = getUserColor(userName);
     QColor textColor = (msgBackgroundColor == BOT_COLOR) ? QColor(50, 50, 50) : QColor(0, 0, 0);
     QColor userNameBackgroundColor = msgBackgroundColor;
     if(msgBackgroundColor != BOT_COLOR){
         userNameBackgroundColor.setHsvF(msgBackgroundColor.hueF(), msgBackgroundColor.saturationF(), msgBackgroundColor.valueF() - 0.2);
     }
-    ChatMessagePanel* msgPanel = new ChatMessagePanel(ui->scrollContent, userName, userMessage, userNameBackgroundColor, msgBackgroundColor, textColor);
+    ChatMessagePanel* msgPanel = new ChatMessagePanel(ui->scrollContent, userName, userMessage, userNameBackgroundColor, msgBackgroundColor, textColor, showTranslationButton);
     msgPanel->setPrefferedTranslationLanguage(this->preferredTargetTranslationLanguage);
     msgPanel->setMaximumWidth(ui->scrollContent->width());
     ui->scrollContent->layout()->addWidget(msgPanel);
