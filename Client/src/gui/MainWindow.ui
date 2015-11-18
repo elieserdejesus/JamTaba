@@ -373,7 +373,7 @@
     <string>Audio ...</string>
    </property>
    <property name="shortcut">
-    <string>F1</string>
+    <string>F5</string>
    </property>
   </action>
   <action name="actionMidiPreferences">
@@ -381,7 +381,7 @@
     <string>Midi ...</string>
    </property>
    <property name="shortcut">
-    <string>F2</string>
+    <string>F6</string>
    </property>
   </action>
   <action name="actionVstPreferences">
@@ -389,7 +389,7 @@
     <string>VST Plugins ...</string>
    </property>
    <property name="shortcut">
-    <string>F3</string>
+    <string>F7</string>
    </property>
   </action>
   <action name="actionRecording">
@@ -397,7 +397,7 @@
     <string>Recording ...</string>
    </property>
    <property name="shortcut">
-    <string>F4</string>
+    <string>F8</string>
    </property>
   </action>
   <action name="actionPrivate_Server">
@@ -429,6 +429,9 @@
    <property name="text">
     <string>Users Manual ...</string>
    </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
   </action>
   <action name="actionFullView">
    <property name="checkable">
@@ -451,7 +454,7 @@
     <string>Quit...</string>
    </property>
    <property name="shortcut">
-    <string>Q</string>
+    <string>Esc</string>
    </property>
   </action>
  </widget>
