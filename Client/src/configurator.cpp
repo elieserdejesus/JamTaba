@@ -168,6 +168,20 @@ void Configurator::createTree()
     else
         qWarning(jtConfigurator) << " PluginVst folder NOT CREATED in :" <<Pluginpath;
 
+    //now the presets for stand alone
+    d.mkpath(STANDALONE_PRESET_FOLDER_NAME);
+    if( d.exists(STANDALONE_PRESET_FOLDER_NAME))
+        qWarning(jtConfigurator) << " PRESETS folder CREATED in :"<<STANDALONE_PRESET_FOLDER_NAME;
+    else
+        qWarning(jtConfigurator) << " PRESETS folder NOT CREATED in !"<<STANDALONE_PRESET_FOLDER_NAME;
+
+    //now the presets for plugin
+    d.mkpath(PLUGIN_PRESET_FOLDER_NAME);
+    if( d.exists(PLUGIN_PRESET_FOLDER_NAME))
+        qWarning(jtConfigurator) << " PRESETS folder CREATED in :"<<PLUGIN_PRESET_FOLDER_NAME;
+    else
+        qWarning(jtConfigurator) << " PRESETS folder NOT CREATED in !"<<PLUGIN_PRESET_FOLDER_NAME;
+
 }
 
 bool Configurator::pluginDirExists() const{
