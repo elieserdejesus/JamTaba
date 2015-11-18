@@ -718,11 +718,17 @@ void MainWindow::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
             centerDialog(&dialog);
         }
         if(dialog.exec() == QDialog::Accepted){
-            QString userName = dialog.getUserName();
+            QString userName = dialog.getUserName().trimmed();
             if(!userName.isEmpty()){
                 mainController->setUserName(userName);
                 setWindowTitle("Jamtaba v" + QApplication::applicationVersion() + " (" + userName + ")");
             }
+            else{
+                QMessageBox::warning(this, "Warning!", "Empty name is not allowed!");
+            }
+        }
+        else{
+            qWarning() << "name dialog canceled";
         }
     }
 
