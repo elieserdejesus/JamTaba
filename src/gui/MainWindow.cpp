@@ -72,9 +72,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeLoginService();
     //initializePluginFinder(); //called in derived classes
     initializeMainTabWidget();
-    //FULLSCREEN MODE NOW
-    //QObject::connect(ui.actionFullscreenMode, SIGNAL(clicked()), this, SLOT(on_menuFULLSCREENModeTriggered()));
-
     initializeViewModeMenu();
 
 
@@ -91,9 +88,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     timerID = startTimer(1000/50);
 
-    //ui.menuPreferences
-   // QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+Q"), parent);
-   // QObject::connect(shortcut, SIGNAL(activated()), this, SLOT(on_preferencesClicked(QAction*)));
     QObject::connect(ui.menuPreferences, SIGNAL(triggered(QAction*)), this, SLOT(on_preferencesClicked(QAction*)));
     QObject::connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this, SLOT(on_ninjamCommunityMenuItemTriggered()));
     QObject::connect(ui.actionNinjam_Official_Site, SIGNAL(triggered(bool)), this, SLOT(on_ninjamOfficialSiteMenuItemTriggered()));
