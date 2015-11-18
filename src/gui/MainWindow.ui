@@ -357,6 +357,8 @@
     </property>
     <addaction name="actionFullView"/>
     <addaction name="actionMiniView"/>
+    <addaction name="separator"/>
+    <addaction name="actionFullscreenMode"/>
    </widget>
    <addaction name="menuPreferences"/>
    <addaction name="menuViewMode"/>
@@ -457,6 +459,17 @@
     <string>Esc</string>
    </property>
   </action>
+  <action name="actionFullscreenMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>FullscreenMode</string>
+   </property>
+   <property name="shortcut">
+    <string>F11</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -468,5 +481,22 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionFullscreenMode</sender>
+   <signal>triggered()</signal>
+   <receiver>MainFrameClass</receiver>
+   <slot>showFullScreen()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>579</x>
+     <y>374</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
