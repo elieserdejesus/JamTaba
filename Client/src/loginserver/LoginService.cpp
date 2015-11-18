@@ -23,25 +23,33 @@ UserInfo::UserInfo(long long id, QString name, QString ip)
 
 }
 
-RoomInfo::RoomInfo(long long id, QString roomName, int roomPort, RoomTYPE roomType, int maxUsers, QList<UserInfo> users, int maxChannels, QString streamUrl)
+
+RoomInfo::RoomInfo(long long id, QString roomName, int roomPort, RoomTYPE roomType, int maxUsers, QList<UserInfo> users, int maxChannels, int bpi, int bpm, QString streamUrl)
     :id(id), name(roomName), port(roomPort), type(roomType) , maxUsers(maxUsers), maxChannels(maxChannels),
-      users(users), streamUrl(streamUrl)
+      users(users), bpi(bpi), bpm(bpm), streamUrl(streamUrl)
 {
 
 }
+
+//RoomInfo::RoomInfo(long long id, QString roomName, int roomPort, RoomTYPE roomType, int maxUsers, QList<UserInfo> users, int maxChannels, QString streamUrl)
+//    :id(id), name(roomName), port(roomPort), type(roomType) , maxUsers(maxUsers), maxChannels(maxChannels),
+//      users(users), bpi(0), bpm(0), streamUrl(streamUrl)
+//{
+
+//}
 
 RoomInfo::RoomInfo(QString roomName, int roomPort, RoomTYPE roomType, int maxUsers, int maxChannels)
     :id(-1000), name(roomName), port(roomPort), type(roomType) , maxUsers(maxUsers), maxChannels(maxChannels),
-      users(QList<Login::UserInfo>()), streamUrl("")
+      users(QList<Login::UserInfo>()), bpi(0), bpm(0), streamUrl("")
 {
 
 }
 
-RoomInfo::RoomInfo(const RoomInfo &other)
-    :id(other.id), name(other.name), port(other.port), type(other.type),
-        maxUsers(other.maxUsers), maxChannels(other.maxChannels), users(other.users), streamUrl(other.streamUrl){
+//RoomInfo::RoomInfo(const RoomInfo &other)
+//    :id(other.id), name(other.name), port(other.port), type(other.type),
+//        maxUsers(other.maxUsers), maxChannels(other.maxChannels), users(other.users), streamUrl(other.streamUrl){
 
-}
+//}
 
 int RoomInfo::getNonBotUsersCount() const{
     int nonBots = 0;
@@ -285,6 +293,8 @@ RoomInfo LoginService::buildRoomInfoFromJson(QJsonObject jsonObject){
     int port = jsonObject["port"].toInt();
     int maxUsers = jsonObject["maxUsers"].toInt();
     QString streamLink = jsonObject["streamUrl"].toString();
+    int bpi = jsonObject["bpi"].toInt();
+    int bpm = jsonObject["bpm"].toInt();
 
     QJsonArray usersArray = jsonObject["users"].toArray();
     QList<UserInfo> users;
@@ -295,7 +305,7 @@ RoomInfo LoginService::buildRoomInfoFromJson(QJsonObject jsonObject){
         QString userIp =  userObject.value("ip").toString();
         users.append(Login::UserInfo(userID, userName, userIp));
     }
-    return Login::RoomInfo(id, name, port, type, maxUsers, users, 0, streamLink);
+    return Login::RoomInfo(id, name, port, type, maxUsers, users, 0, bpi, bpm, streamLink);
 }
 
 

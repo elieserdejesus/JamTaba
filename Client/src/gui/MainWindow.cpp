@@ -647,7 +647,7 @@ void MainWindow::refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms){
             int collumnIndex = fullViewMode ? (index % 2) : 0;//use one collumn if user choosing mini view mode
             JamRoomViewPanel* roomViewPanel = roomViewPanels[roomInfo.getID()];
             if(roomViewPanel){
-                roomViewPanel->refreshUsersList(roomInfo);
+                roomViewPanel->refresh(roomInfo);
                 ui.allRoomsContent->layout()->removeWidget(roomViewPanel); //the widget is removed but added again
             }
             else{
