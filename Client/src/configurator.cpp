@@ -86,7 +86,7 @@ Configurator* Configurator::getInstance(){
 }
 
 //-------------------------------------------------------------------------------
-QDir Configurator::getPluginDir() {
+QDir Configurator::getPluginDir() const {
     QDir dir=getHomeDir();
     if(!dir.cd(VST_PLUGIN_FOLDER_NAME)){
         qCCritical(jtConfigurator) << "Cant' cd to " + VST_PLUGIN_FOLDER_NAME + " dir";
@@ -144,7 +144,7 @@ void Configurator::createTree()
 
 }
 
-bool Configurator::pluginDirExists(){
+bool Configurator::pluginDirExists() const{
     if(!treeExists()){
         return false;
     }
@@ -152,7 +152,7 @@ bool Configurator::pluginDirExists(){
     return homeDir.cd(VST_PLUGIN_FOLDER_NAME);
 }
 
-bool Configurator::treeExists()
+bool Configurator::treeExists() const
 {
     QDir d(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
     if(!d.exists())
@@ -191,7 +191,7 @@ void Configurator::exportIniFile()
 }
 //-------------------------------------------------------------------------------
 
-QString Configurator::getIniFilePath()
+QString Configurator::getIniFilePath() const
 {
     //HOMEPATH...
     //QDir logDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
