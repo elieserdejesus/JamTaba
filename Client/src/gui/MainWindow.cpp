@@ -65,14 +65,16 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     qCInfo(jtGUI) << "Creating MainWindow...";
 	ui.setupUi(this);
 
-    //FULLSCREEN STUFF
-    //this->showFullScreen();
+
 
     setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
 
     initializeLoginService();
     //initializePluginFinder(); //called in derived classes
     initializeMainTabWidget();
+    //FULLSCREEN MODE NOW
+    //QObject::connect(ui.actionFullscreenMode, SIGNAL(clicked()), this, SLOT(on_menuFULLSCREENModeTriggered()));
+
     initializeViewModeMenu();
 
 
@@ -1116,13 +1118,15 @@ void MainWindow::initializeViewModeMenu(){
     QActionGroup* group = new QActionGroup(this);
     ui.actionFullView->setActionGroup(group);
     ui.actionMiniView->setActionGroup(group);
+
 }
 
 
-void MainWindow::on_menuViewModeTriggered(QAction *){
+void MainWindow::on_menuViewModeTriggered(QAction *)
+{
     setFullViewStatus(ui.actionFullView->isChecked());
-
 }
+
 
 void MainWindow::setFullViewStatus(bool fullViewActivated){
     this->fullViewMode = fullViewActivated;
@@ -1193,4 +1197,12 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
         }
     }
     return QMainWindow::eventFilter(target, event);
+}
+
+void MainWindow::on_actionFullscreenMode_triggered()
+{
+      if(!ui.actionFullscreenMode->isChecked())
+      {this->setWindowState(Qt::WindowMaximized);}
+      else
+      {this->setWindowState(Qt::WindowFullScreen);}
 }
