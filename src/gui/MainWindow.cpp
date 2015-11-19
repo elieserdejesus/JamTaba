@@ -65,8 +65,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     qCInfo(jtGUI) << "Creating MainWindow...";
 	ui.setupUi(this);
 
-    //FULLSCREEN STUFF
-    //this->showFullScreen();
+
 
     setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
 
@@ -89,9 +88,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     timerID = startTimer(1000/50);
 
-    //ui.menuPreferences
-   // QShortcut *shortcut = new QShortcut(QKeySequence("Ctrl+Q"), parent);
-   // QObject::connect(shortcut, SIGNAL(activated()), this, SLOT(on_preferencesClicked(QAction*)));
     QObject::connect(ui.menuPreferences, SIGNAL(triggered(QAction*)), this, SLOT(on_preferencesClicked(QAction*)));
     QObject::connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this, SLOT(on_ninjamCommunityMenuItemTriggered()));
     QObject::connect(ui.actionNinjam_Official_Site, SIGNAL(triggered(bool)), this, SLOT(on_ninjamOfficialSiteMenuItemTriggered()));
@@ -651,7 +647,7 @@ void MainWindow::refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms){
             int collumnIndex = fullViewMode ? (index % 2) : 0;//use one collumn if user choosing mini view mode
             JamRoomViewPanel* roomViewPanel = roomViewPanels[roomInfo.getID()];
             if(roomViewPanel){
-                roomViewPanel->refreshUsersList(roomInfo);
+                roomViewPanel->refresh(roomInfo);
                 ui.allRoomsContent->layout()->removeWidget(roomViewPanel); //the widget is removed but added again
             }
             else{
@@ -718,11 +714,17 @@ void MainWindow::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
             centerDialog(&dialog);
         }
         if(dialog.exec() == QDialog::Accepted){
-            QString userName = dialog.getUserName();
+            QString userName = dialog.getUserName().trimmed();
             if(!userName.isEmpty()){
                 mainController->setUserName(userName);
                 setWindowTitle("Jamtaba v" + QApplication::applicationVersion() + " (" + userName + ")");
             }
+            else{
+                QMessageBox::warning(this, "Warning!", "Empty name is not allowed!");
+            }
+        }
+        else{
+            qWarning() << "name dialog canceled";
         }
     }
 
@@ -1116,13 +1118,15 @@ void MainWindow::initializeViewModeMenu(){
     QActionGroup* group = new QActionGroup(this);
     ui.actionFullView->setActionGroup(group);
     ui.actionMiniView->setActionGroup(group);
+
 }
 
 
-void MainWindow::on_menuViewModeTriggered(QAction *){
+void MainWindow::on_menuViewModeTriggered(QAction *)
+{
     setFullViewStatus(ui.actionFullView->isChecked());
-
 }
+
 
 void MainWindow::setFullViewStatus(bool fullViewActivated){
     this->fullViewMode = fullViewActivated;
@@ -1193,4 +1197,12 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
         }
     }
     return QMainWindow::eventFilter(target, event);
+}
+
+void MainWindow::on_actionFullscreenMode_triggered()
+{
+      if(!ui.actionFullscreenMode->isChecked())
+      {this->setWindowState(Qt::WindowMaximized);}
+      else
+      {this->setWindowState(Qt::WindowFullScreen);}
 }

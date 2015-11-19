@@ -109,6 +109,7 @@ protected slots:
     void on_menuViewModeTriggered(QAction* action);
 
 
+
     //help menu
     void on_reportBugMenuItemTriggered();
     void on_wikiMenuItemTriggered();
@@ -145,6 +146,9 @@ protected slots:
 
     //room streamer
     void on_RoomStreamerError(QString msg);
+
+private slots:
+    void on_actionFullscreenMode_triggered();
 
 private:
 
