@@ -7,7 +7,11 @@
 
 QScopedPointer<Configurator> Configurator::instance(nullptr);
 
+//@elieser : i am not sure why we don't use member initialisation in the constructor
+// instead ? Data can be accessed ....
 const QString Configurator::VST_PLUGIN_FOLDER_NAME = "PluginVst";
+const QString Configurator::STANDALONE_PRESET_FOLDER_NAME= "Presets";
+const QString Configurator::PLUGIN_PRESET_FOLDER_NAME= "PluginVst/Presets";
 
 void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -93,6 +97,29 @@ QDir Configurator::getPluginDir() const {
     }
     return dir;
 }
+//-------------------------------------------------------------------------------
+//Presets now ....
+QDir Configurator::getPresetsDir(APPTYPE type) const
+{
+    QDir dir=getHomeDir();
+    switch(type)
+    {
+    case standalone:
+        if(!dir.cd(STANDALONE_PRESET_FOLDER_NAME))
+        {
+            qCCritical(jtConfigurator) << "Cant' cd to " + STANDALONE_PRESET_FOLDER_NAME + " dir";
+        }break;
+    case plugin:
+        if(!dir.cd(PLUGIN_PRESET_FOLDER_NAME))
+        {
+            qCCritical(jtConfigurator) << "Cant' cd to " + PLUGIN_PRESET_FOLDER_NAME + " dir";
+        }break;
+    default:break;
+    }
+
+
+    return dir;
+}
 
 bool Configurator::setUp(APPTYPE Type)
 {
@@ -140,6 +167,20 @@ void Configurator::createTree()
     else
         qWarning(jtConfigurator) << " PluginVst folder NOT CREATED in :" <<Pluginpath;
 
+    //now the presets for stand alone
+    d.mkpath(STANDALONE_PRESET_FOLDER_NAME);
+    if( d.exists(STANDALONE_PRESET_FOLDER_NAME))
+        qWarning(jtConfigurator) << " PRESETS folder CREATED in :"<<STANDALONE_PRESET_FOLDER_NAME;
+    else
+        qWarning(jtConfigurator) << " PRESETS folder NOT CREATED in !"<<STANDALONE_PRESET_FOLDER_NAME;
+
+    //now the presets for plugin
+    d.mkpath(PLUGIN_PRESET_FOLDER_NAME);
+    if( d.exists(PLUGIN_PRESET_FOLDER_NAME))
+        qWarning(jtConfigurator) << " PRESETS folder CREATED in :"<<PLUGIN_PRESET_FOLDER_NAME;
+    else
+        qWarning(jtConfigurator) << " PRESETS folder NOT CREATED in !"<<PLUGIN_PRESET_FOLDER_NAME;
+
 }
 
 bool Configurator::pluginDirExists() const{
@@ -149,16 +190,24 @@ bool Configurator::pluginDirExists() const{
     QDir homeDir = getHomeDir();
     return homeDir.cd(VST_PLUGIN_FOLDER_NAME);
 }
+bool Configurator::presetsDirExists() const
+{
+    QDir homeDir = getHomeDir();
+   if(AppType==standalone)
+    return homeDir.cd(STANDALONE_PRESET_FOLDER_NAME);
+   else
+    return homeDir.cd(PLUGIN_PRESET_FOLDER_NAME);
+}
 
 bool Configurator::treeExists() const
 {
     QDir d(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
-    if(!d.exists()|| !pluginDirExists())
+    if(!d.exists()|| !pluginDirExists()|| !presetsDirExists())
     {qWarning(jtConfigurator) << " FOLDER'S TREE don't exist ! :" ;
         return false;
     }
+    return true ;
 
-    return true;
 }
 
 //-------------------------------------------------------------------------------

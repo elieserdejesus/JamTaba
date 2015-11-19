@@ -18,6 +18,8 @@ class Configurator
 private :
 
     static const QString VST_PLUGIN_FOLDER_NAME;
+    static const QString STANDALONE_PRESET_FOLDER_NAME;
+    static const QString PLUGIN_PRESET_FOLDER_NAME ;
 
     QString IniFilename;//!contains the name of the Ini file
     APPTYPE AppType ;//! Contains the type of configuration used : standalone or plugin
@@ -47,12 +49,16 @@ public:
     QString getIniFilePath() const;
     bool treeExists() const;    //check if Jamtaba 2 folder exists in application data
     bool pluginDirExists() const;
+    bool presetsDirExists() const;
     inline QDir getHomeDir() const{ return QDir(getHomeDirPath());}
     QDir getPluginDir() const ;
     inline QString getHomeDirPath() const {return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);}
     inline QString getPluginDirPath() const {return getPluginDir().path() ;}
     inline APPTYPE getAppType() const{ return AppType; }
     //inline void setAppType(APPTYPE type){AppType=type; }
+    //Presets now ....
+    QDir getPresetsDir(APPTYPE type) const ;
+
 
 };
 #endif // CONFIGURATOR_H
