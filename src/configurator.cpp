@@ -99,10 +99,10 @@ QDir Configurator::getPluginDir() const {
 }
 //-------------------------------------------------------------------------------
 //Presets now ....
-QDir Configurator::getPresetsDir(APPTYPE type) const
+QDir Configurator::getPresetsDir() const
 {
     QDir dir=getHomeDir();
-    switch(type)
+    switch(AppType)
     {
     case standalone:
         if(!dir.cd(STANDALONE_PRESET_FOLDER_NAME))
@@ -264,6 +264,21 @@ QString Configurator::getIniFilePath() const
     return "";
 
 }
+//Retrieve the path for Settings class
+QString Configurator::getPresetPath(QString JsonFile)
+{
+    QString path("");
+    if (!presetsDirExists())
+    {   qDebug(jtConfigurator) << "Can't load preset file , preset dir inexistent !" ;
+        return path ;//Settings MUST CHECK THAT
+    }
+
+    QDir presetDir=getPresetsDir();
+    path=presetDir.absoluteFilePath(JsonFile);
+    qDebug(jtConfigurator) << "Path to presets is :" << path;
+    return path;
+}
+
 //-------------------------------------------------------------------------------
 
 Configurator::~Configurator()

@@ -40,6 +40,9 @@ signals:
     void nameChanged();
     void trackRemoved();
     void trackAdded();
+    void presetLoaded();
+    void presetSaved();
+
 private:
     QPushButton* toolButton;
     static const int MAX_SUB_CHANNELS = 2;
@@ -60,6 +63,11 @@ private slots:
 
     void on_removeSubChannelClicked();
     void on_removeChannelClicked();
+
+    //PRESETS
+    void on_LoadPresetClicked();
+    void on_SavePresetClicked();
+
 
 };
 
