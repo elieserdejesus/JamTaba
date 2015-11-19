@@ -136,7 +136,7 @@
             <string>Slider to change the BPM of the metronome</string>
            </property>
            <property name="maximum">
-            <number>120</number>
+            <number>160</number>
            </property>
            <property name="value">
             <number>100</number>
