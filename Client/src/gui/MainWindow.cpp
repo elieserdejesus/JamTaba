@@ -1084,8 +1084,14 @@ void MainWindow::refreshTrackInputSelection(int inputTrackIndex){
 void MainWindow::onScanPluginsStarted(){
     if(!pluginScanDialog){
         pluginScanDialog.reset( new PluginScanDialog(this));
+        QObject::connect(pluginScanDialog.data(), SIGNAL(rejected()), this, SLOT(on_pluginFinderDialogCanceled()));
     }
     pluginScanDialog->show();
+}
+
+void MainWindow::on_pluginFinderDialogCanceled(){
+    mainController->cancelPluginFinder();
+    pluginScanDialog.reset();//reset to null pointer
 }
 
 void MainWindow::onScanPluginsFinished(){

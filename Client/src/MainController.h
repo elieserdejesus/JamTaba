@@ -215,6 +215,8 @@ public:
 
     void useNullAudioDriver();//use when the audio driver fails
 
+    void cancelPluginFinder();
+
 protected:
 
     static QString LOG_CONFIG_FILE;
