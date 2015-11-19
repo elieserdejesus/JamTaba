@@ -77,6 +77,12 @@ void LocalTrackGroupView::on_toolButtonClicked(){
     QMenu menu;
 
     QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
+    //Presets
+    QAction* addPresetActionSave = menu.addAction(QIcon(":/images/more.png"), "Save preset");
+    addPresetActionSave->setDisabled(true);// so we can merge to master without confusion for the user until it works
+    QAction* addPresetActionLoad = menu.addAction(QIcon(":/images/more.png"), "Load preset");
+    addPresetActionLoad->setDisabled(true);// so we can merge to master without confusion for the user until it works
+
     QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(on_addChannelClicked()));
     addChannelAction->setEnabled(mainFrame->getChannelGroupsCount() < 2);//at this moment users can't create more channels
     if(mainFrame->getChannelGroupsCount() > 1){
@@ -111,6 +117,7 @@ void LocalTrackGroupView::on_toolButtonClicked(){
         //QObject::connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(on_RemoveSubChannelTriggered(QAction*)));
         //QObject::connect(&menu, SIGNAL(hovered(QAction*)), this, SLOT(on_removeSubchannelHovered(QAction*)));
     }
+
     menu.move( mapToGlobal( toolButton->pos() + QPoint(toolButton->width(), 0) ));
     menu.exec();
 }

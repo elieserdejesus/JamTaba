@@ -107,6 +107,17 @@ public:
     QString recordingPath;
 };
 
+
+//+++++++++PRESETS+++++++++++++++
+class PresetsSettings  : public SettingsObject{
+public:
+    PresetsSettings();
+    void write(QJsonObject &out);
+    void read(QJsonObject in);
+    //bool saveMultiTracksActivated;
+    QString recordingPath;
+};
+
 //++++++++++++++++++++++++
 
 class Plugin{

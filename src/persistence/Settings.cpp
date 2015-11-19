@@ -260,6 +260,26 @@ void VstSettings::read(QJsonObject in){
     }
 }
 
+//+++++++++++++++++++++++++++++++++++++++
+PresetsSettings::PresetsSettings()
+    :SettingsObject("PRESETS")
+{
+
+}
+
+//PRESET JSON WRITER
+void PresetsSettings::write(QJsonObject &out)
+{
+       //todooooo ....
+}
+
+
+
+void PresetsSettings::read(QJsonObject in)
+{
+   //todooooo ....
+}
+
 //++++++++++++++++++++++++++++++++++++++++++
 Channel::Channel(QString name)
     :name(name){
