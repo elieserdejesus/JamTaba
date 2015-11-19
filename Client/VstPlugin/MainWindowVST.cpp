@@ -13,6 +13,6 @@ NinjamRoomWindow* MainWindowVST::createNinjamWindow(Login::RoomInfo roomInfo, Co
 
 void MainWindowVST::setFullViewStatus(bool fullViewActivated){
     MainWindow::setFullViewStatus(fullViewActivated);
-
+    mainController->storeWindowSettings(isMaximized(), fullViewActivated, QPointF());
     dynamic_cast<MainControllerVST*>(mainController)->resizePluginEditor(width(), height());
 }
