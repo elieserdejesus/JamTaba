@@ -937,6 +937,12 @@ Midi::MidiDriver* MainController::getMidiDriver() const{
 }
 
 //+++++++++++
+void MainController::cancelPluginFinder(){
+    if(pluginFinder){
+        pluginFinder->cancel();
+    }
+}
+
 bool MainController::pluginDescriptorLessThan(const Audio::PluginDescriptor& d1, const Audio::PluginDescriptor& d2){
      return d1.getName().localeAwareCompare(d2.getName()) < 0;
 }

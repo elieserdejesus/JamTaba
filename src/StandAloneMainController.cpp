@@ -123,7 +123,6 @@ void StandalonePluginFinder::run(QStringList blackList){
     emit scanStarted();
 
     for(QString scanFolder : scanFolders){
-        qCDebug(jtStandalonePluginFinder) << "Scanning the folder " << scanFolder;
         QDirIterator folderIterator(scanFolder, QDirIterator::Subdirectories);
         while (folderIterator.hasNext()) {
             folderIterator.next();//point to next file inside current folder
@@ -143,7 +142,12 @@ void StandalonePluginFinder::run(QStringList blackList){
                 }
             }
             QApplication::processEvents();
+            if(cancelRequested){
+                emit scanFinished();
+                return;
+            }
         }
+
     }
     emit scanFinished();
 
@@ -152,7 +156,9 @@ void StandalonePluginFinder::run(QStringList blackList){
 void StandalonePluginFinder::scan(QStringList blackList){
     //run the VST plugins scanning in another tread to void block Qt thread
     //If Qt main thread is block the GUI will be unresponsive, can't send or receive network data
+    this->cancelRequested = false;
     QtConcurrent::run(this, &StandalonePluginFinder::run, blackList);
+
 }
 
 //++++++++++++++++++++++++++++++++++
