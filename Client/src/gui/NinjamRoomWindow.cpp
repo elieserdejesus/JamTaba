@@ -188,7 +188,6 @@ void NinjamRoomWindow::on_userEnter(QString userName){
 }
 
 void NinjamRoomWindow::on_chatMessageReceived(Ninjam::User user, QString message){
-    chatPanel->addMessage(user.getName(), message);
 
     bool isVoteMessage = !message.isNull() && message.toLower().startsWith("[voting system] leading candidate:");
     bool isChordProgressionMessage = false;
@@ -199,6 +198,9 @@ void NinjamRoomWindow::on_chatMessageReceived(Ninjam::User user, QString message
     catch(...){
         isChordProgressionMessage = false;//just in case
     }
+
+    bool showTranslationButton = !isChordProgressionMessage;
+    chatPanel->addMessage(user.getName(), message, showTranslationButton);
 
     if(isVoteMessage){
         handleVoteMessage(user, message);

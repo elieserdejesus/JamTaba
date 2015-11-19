@@ -19,18 +19,31 @@ JamRoomViewPanel::JamRoomViewPanel(Login::RoomInfo roomInfo, QWidget* parent, Co
 }
 
 
-void JamRoomViewPanel::refreshUsersList(Login::RoomInfo roomInfo){
+QString JamRoomViewPanel::buildRoomDescriptionString(Login::RoomInfo roomInfo){
+    if(roomInfo.isEmpty() || roomContainsBotsOnly(roomInfo)){
+        return "empty room";
+    }
+    if(roomInfo.isFull()){
+        return "crowded room";
+    }
+
+    int botsCount =roomInfo.getUsers().count() - roomInfo.getNonBotUsersCount();
+    int maxUsers = roomInfo.getMaxUsers() - botsCount;
+    int users = roomInfo.getNonBotUsersCount();
+    QString roomDescription = QString::number(users) + "/" + QString::number(maxUsers) + " musicians ";
+    if(roomInfo.getBpm() > 0){
+        roomDescription += "  " + QString::number(roomInfo.getBpm()) + " BPM ";
+    }
+    if(roomInfo.getType() == Login::RoomTYPE::NINJAM && roomInfo.getBpi() > 0){
+        roomDescription += "  " + QString::number(roomInfo.getBpi()) + " BPI";
+    }
+    return roomDescription;
+}
+
+void JamRoomViewPanel::refresh(Login::RoomInfo roomInfo){
     this->roomInfo = roomInfo;
 
-    if(roomInfo.isEmpty() || roomContainsBotsOnly(roomInfo)){
-        ui->labelRoomStatus->setText( "Empty room!"  );
-    }
-    else if(roomInfo.isFull() ){
-        ui->labelRoomStatus->setText( "Crowded room!");
-    }
-    else{
-        ui->labelRoomStatus->setText("");
-    }
+    ui->labelRoomStatus->setText(buildRoomDescriptionString(roomInfo));
 
     //remove all users labels from layout
     QList<QLabel*> allUserLabels = ui->usersPanel->findChildren<QLabel*>();
@@ -117,9 +130,7 @@ void JamRoomViewPanel::initialize(Login::RoomInfo roomInfo){
         roomName += " (" + QString::number(roomInfo.getPort()) + ")";
     }
     ui->labelName->setText( roomName );
-    //ui->labelRoomType->setText( (roomInfo.getType() == Login::RoomTYPE::NINJAM) ? "Ninjam" : "RealTime");
-
-    refreshUsersList(roomInfo);
+    refresh(roomInfo);
 }
 
 JamRoomViewPanel::~JamRoomViewPanel()
