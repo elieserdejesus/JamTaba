@@ -76,10 +76,10 @@ bool LocalTrackGroupView::eventFilter(QObject *target, QEvent *event){
 void LocalTrackGroupView::on_toolButtonClicked(){
     QMenu menu;
     //PRESETS-----------------------------
-    QAction* addPresetActionLoad = menu.addAction(QIcon(":/images/presets.ico"), "Load preset");
+    QAction* addPresetActionLoad = menu.addAction(QIcon(":/images/preset-load.png"), "Load preset");
     addPresetActionLoad->setDisabled(false);// so we can merge to master without confusion for the user until it works
 
-    QAction* addPresetActionSave = menu.addAction(QIcon(":/images/presets.ico"), "Save preset");
+    QAction* addPresetActionSave = menu.addAction(QIcon(":/images/preset-save.png"), "Save preset");
     addPresetActionSave->setDisabled(true);// so we can merge to master without confusion for the user until it works
 
     menu.addSeparator();
