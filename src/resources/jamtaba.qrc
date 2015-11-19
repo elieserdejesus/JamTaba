@@ -41,6 +41,7 @@
         <file>translate.png</file>
         <file>warning.png</file>
         <file>chat_small.png</file>
+        <file>presets.ico</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>
