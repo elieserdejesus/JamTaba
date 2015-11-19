@@ -73,16 +73,23 @@ bool LocalTrackGroupView::eventFilter(QObject *target, QEvent *event){
     return TrackGroupView::eventFilter(target, event);
 }
 
-void LocalTrackGroupView::on_toolButtonClicked(){
+void LocalTrackGroupView::on_toolButtonClicked()
+{
     QMenu menu;
+
     //PRESETS-----------------------------
+
+    //LOAD
     QAction* addPresetActionLoad = menu.addAction(QIcon(":/images/preset-load.png"), "Load preset");
     addPresetActionLoad->setDisabled(false);// so we can merge to master without confusion for the user until it works
-
+    QObject::connect(addPresetActionLoad, SIGNAL(triggered(bool)), this, SLOT(on_LoadPresetClicked()));
+    //SAVE
     QAction* addPresetActionSave = menu.addAction(QIcon(":/images/preset-save.png"), "Save preset");
-    addPresetActionSave->setDisabled(true);// so we can merge to master without confusion for the user until it works
+    addPresetActionSave->setDisabled(false);// so we can merge to master without confusion for the user until it works
+    QObject::connect(addPresetActionSave, SIGNAL(triggered(bool)), this, SLOT(on_SavePresetClicked()));
 
     menu.addSeparator();
+
     //-------------------------------------
     //CHANNELS
     QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
@@ -186,6 +193,24 @@ void LocalTrackGroupView::detachMainControllerInSubchannels(){
 void LocalTrackGroupView::on_removeChannelClicked(){
     mainFrame->removeChannelsGroup(mainFrame->getChannelGroupsCount()-1);
 }
+
+//PRESETS
+void LocalTrackGroupView::on_LoadPresetClicked()
+{
+    QMessageBox msgBox;
+    msgBox.setText("LoadPresetClicked()\nThat feature is not ready yet ...");
+    msgBox.exec();
+
+}
+
+void LocalTrackGroupView::on_SavePresetClicked()
+{
+
+    QMessageBox msgBox;
+    msgBox.setText("SavePresetClicked()\nThat feature is not ready yet ...");
+    msgBox.exec();
+}
+
 //+++++++++++++++++++++++++++++
 void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly){
     if(this->peakMeterOnly != peakMeterOnly){
