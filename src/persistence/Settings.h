@@ -184,6 +184,12 @@ public:
 
     void save(InputsSettings inputsSettings);
     void load();
+    //PRESETS
+    void savePresets(InputsSettings inputsSettings,QString name);
+    bool writePresetFile(QList<SettingsObject *> sections,QString name);// io ops ...
+    void loadPresets(QString name);
+    bool readPresetFile(QList<Persistence::SettingsObject*> sections,QString name);// io ops ...
+
 
     inline int getLastSampleRate() const{return audioSettings.sampleRate;}
     inline int getLastBufferSize() const{return audioSettings.bufferSize;}
