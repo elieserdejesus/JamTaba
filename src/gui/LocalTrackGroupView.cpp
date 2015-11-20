@@ -101,6 +101,12 @@ void LocalTrackGroupView::on_toolButtonClicked()
     addPresetActionSave->setDisabled(false);// so we can merge to master without confusion for the user until it works
     QObject::connect(addPresetActionSave, SIGNAL(triggered(bool)), this, SLOT(on_SavePresetClicked()));
 
+
+    //RESET - in case of panic
+    QAction* reset =  menu.addAction(QIcon(":/images/gear.png"),"Reset Preset");
+    reset->setDisabled(true);// so we can merge to master without confusion for the user until it works
+    QObject::connect(reset, SIGNAL(triggered(bool)), this, SLOT(on_ResetPresetClicked()));
+
     menu.addSeparator();
 
 
@@ -209,7 +215,7 @@ void LocalTrackGroupView::on_removeChannelClicked(){
 }
 
 //PRESETS
-void LocalTrackGroupView::on_presetMenuActionClicked()
+void LocalTrackGroupView::on_LoadPresetClicked()
 {
 
     mainFrame->getMainController()->loadPresets("testPreset.json");
@@ -221,7 +227,14 @@ void LocalTrackGroupView::on_presetMenuActionClicked()
 void LocalTrackGroupView::on_SavePresetClicked()
 {
 
-    mainFrame->getMainController()->savePresets(mainFrame->getInputsSettings(),"testPreset.json");
+    mainFrame->getMainController()->savePresets(mainFrame->getInputsSettings(),"PresetDefault.json");
+
+}
+
+void LocalTrackGroupView::on_ResetPresetClicked()
+{
+    //todo
+    //mainFrame->getMainController()->savePresets(mainFrame->getInputsSettings(),"PresetDefault.json");
 
 }
 
