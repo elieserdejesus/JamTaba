@@ -121,6 +121,29 @@ QDir Configurator::getPresetsDir() const
     return dir;
 }
 
+
+QStringList  Configurator::getPresetFilesNames()
+{
+    QStringList filesPaths;
+    QDir dir=getPresetsDir();
+    qInfo(jtConfigurator) << "Presets dir : "<<dir.absolutePath();
+     int count=0;//how many preset files
+    foreach(QFileInfo item, dir.entryInfoList() )
+       {
+           //if(item.isDir())
+           //    qDebug() << "Dir: " << item.absoluteFilePath();
+           if(item.isFile())
+           {    qDebug(jtConfigurator) << "File: " << item.absoluteFilePath();
+               count++;
+           }
+       }
+    filesPaths.size();
+    qInfo(jtConfigurator) << "Presets found : "<<count;
+    filesPaths.append("dummy.json");
+    return filesPaths;
+}
+
+//--------------------------------------------------------------------------------------------
 bool Configurator::setUp(APPTYPE Type)
 {
     AppType=Type;//plugin or standalone
