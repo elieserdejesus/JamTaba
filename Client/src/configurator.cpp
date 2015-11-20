@@ -126,7 +126,7 @@ QStringList  Configurator::getPresetFilesNames()
 {
     QStringList filesPaths;
     QDir dir=getPresetsDir();
-    qInfo(jtConfigurator) << "Presets dir : "<<dir.absolutePath();
+    qInfo(jtConfigurator) << "Looking in Presets dir : "<<dir.absolutePath();
      int count=0;//how many preset files
     foreach(QFileInfo item, dir.entryInfoList() )
        {
@@ -134,13 +134,12 @@ QStringList  Configurator::getPresetFilesNames()
            //    qDebug() << "Dir: " << item.absoluteFilePath();
            if(item.isFile())
            {   filesPaths.append(item.absoluteFilePath());
-               qDebug(jtConfigurator) << "File: " << item.absoluteFilePath();
+               qDebug(jtConfigurator) << "File Found: " << item.absoluteFilePath();
 
            }
        }
     count=filesPaths.size();
     qInfo(jtConfigurator) << "Presets found : "<<count;
-    filesPaths.append("dummy.json");
     return filesPaths;
 }
 
@@ -292,14 +291,26 @@ QString Configurator::getIniFilePath() const
 QString Configurator::getPresetPath(QString JsonFile)
 {
     QString path("");
+    //FIRST CHECK THE DIR
     if (!presetsDirExists())
     {   qDebug(jtConfigurator) << "Can't load preset file , preset dir inexistent !" ;
         return path ;//Settings MUST CHECK THAT
     }
 
     QDir presetDir=getPresetsDir();
+    //SEARCH IN THE DIR
+    //USE CONFIGURATOR FOR FILES STUFF
     path=presetDir.absoluteFilePath(JsonFile);
-    qDebug(jtConfigurator) << "Path to presets is :" << path;
+    QStringList list=getPresetFilesNames();
+    foreach(QString item, list )
+       {
+        if(item.contains(path))
+        {qDebug(jtConfigurator) << "Path to presets is :" << path;
+            return path;
+        }
+       }
+
+    qDebug(jtConfigurator) << "NO Path found !" << path;
     return path;
 }
 
