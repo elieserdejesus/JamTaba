@@ -79,10 +79,23 @@ void LocalTrackGroupView::on_toolButtonClicked()
 
     //PRESETS-----------------------------
 
-    //LOAD
-    QAction* addPresetActionLoad = menu.addAction(QIcon(":/images/preset-load.png"), "Load preset");
-    addPresetActionLoad->setDisabled(false);// so we can merge to master without confusion for the user until it works
-    QObject::connect(addPresetActionLoad, SIGNAL(triggered(bool)), this, SLOT(on_LoadPresetClicked()));
+    //LOAD - using a submenu to list stored presets
+    QMenu* loadPresetsSubmenu = new QMenu("Load preset");
+    loadPresetsSubmenu->setIcon(QIcon(":/images/preset-load.png"));
+    loadPresetsSubmenu->setDisabled(false);// so we can merge to master without confusion for the user until it works
+
+    //adding a menu action for each stored preset
+    QStringList presetsNames; //for test only. I suggest ask mainController about a list of Preset
+    presetsNames.append("Preset 1");
+    presetsNames.append("Preset 2");
+    presetsNames.append("Preset 3");
+    foreach (QString presetName, presetsNames) {
+        QAction* presetAction = loadPresetsSubmenu->addAction(presetName);
+        presetAction->setData(presetName);//putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
+        QObject::connect(presetAction, SIGNAL(triggered(bool)), this, SLOT(on_presetMenuActionClicked()));
+    }
+    menu.addMenu(loadPresetsSubmenu);
+
     //SAVE
     QAction* addPresetActionSave = menu.addAction(QIcon(":/images/preset-save.png"), "Save preset");
     addPresetActionSave->setDisabled(false);// so we can merge to master without confusion for the user until it works
@@ -196,12 +209,9 @@ void LocalTrackGroupView::on_removeChannelClicked(){
 }
 
 //PRESETS
-void LocalTrackGroupView::on_LoadPresetClicked()
+void LocalTrackGroupView::on_presetMenuActionClicked()
 {
-    /*QMessageBox msgBox;
-    msgBox.setText("LoadPresetClicked()\nThat feature is not ready yet ...");
-    msgBox.exec();
-    */
+
     mainFrame->getMainController()->loadPresets("testPreset.json");
     mainFrame->PresetInputChannels();
 
