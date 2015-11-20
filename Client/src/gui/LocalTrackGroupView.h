@@ -65,7 +65,7 @@ private slots:
     void on_removeChannelClicked();
 
     //PRESETS
-    void on_LoadPresetClicked();
+    void on_presetMenuActionClicked();
     void on_SavePresetClicked();
 
 
