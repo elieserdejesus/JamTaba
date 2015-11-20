@@ -305,7 +305,7 @@ QString Configurator::getPresetPath(QString JsonFile)
     foreach(QString item, list )
        {
         if(item.contains(path))
-        {qDebug(jtConfigurator) << "Path to presets is :" << path;
+        {qDebug(jtConfigurator) << "Path to required preset is :" << path;
             return path;
         }
        }
