@@ -133,11 +133,12 @@ QStringList  Configurator::getPresetFilesNames()
            //if(item.isDir())
            //    qDebug() << "Dir: " << item.absoluteFilePath();
            if(item.isFile())
-           {    qDebug(jtConfigurator) << "File: " << item.absoluteFilePath();
-               count++;
+           {   filesPaths.append(item.absoluteFilePath());
+               qDebug(jtConfigurator) << "File: " << item.absoluteFilePath();
+
            }
        }
-    filesPaths.size();
+    count=filesPaths.size();
     qInfo(jtConfigurator) << "Presets found : "<<count;
     filesPaths.append("dummy.json");
     return filesPaths;
