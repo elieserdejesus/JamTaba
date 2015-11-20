@@ -627,8 +627,7 @@ bool Settings::readPresetFile(QList<Persistence::SettingsObject*> sections,QStri
 }
 void Settings::loadPresets(QString name)
 {
-    //USE CONFIGURATOR FOR FILES STUFF
-    Configurator::getInstance()->getPresetFilesNames();
+
     QList<Persistence::SettingsObject*> sections;
     //sections.append(&audioSettings);
     //sections.append(&midiSettings);
