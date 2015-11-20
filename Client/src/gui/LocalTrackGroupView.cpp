@@ -90,6 +90,7 @@ void LocalTrackGroupView::on_toolButtonClicked()
 
     menu.addSeparator();
 
+
     //-------------------------------------
     //CHANNELS
     QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
@@ -197,18 +198,21 @@ void LocalTrackGroupView::on_removeChannelClicked(){
 //PRESETS
 void LocalTrackGroupView::on_LoadPresetClicked()
 {
-    QMessageBox msgBox;
+    /*QMessageBox msgBox;
     msgBox.setText("LoadPresetClicked()\nThat feature is not ready yet ...");
     msgBox.exec();
+    */
+    mainFrame->getMainController()->loadPresets("testPreset.json");
+    mainFrame->PresetInputChannels();
+
 
 }
 
 void LocalTrackGroupView::on_SavePresetClicked()
 {
 
-    QMessageBox msgBox;
-    msgBox.setText("SavePresetClicked()\nThat feature is not ready yet ...");
-    msgBox.exec();
+    mainFrame->getMainController()->savePresets(mainFrame->getInputsSettings(),"testPreset.json");
+
 }
 
 //+++++++++++++++++++++++++++++

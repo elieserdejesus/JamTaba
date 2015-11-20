@@ -72,8 +72,13 @@ public:
 
     inline bool isRunningInMiniMode() const{return !fullViewMode;}
     inline bool isRunningInFullViewMode() const{return fullViewMode;}
+    //EZEE PRESETS NEED THAT
+    inline Controller::MainController* getMainController(){return mainController ;}
+    void PresetInputChannels(){initializeLocalInputChannels();}
+
 protected:
     Controller::MainController* mainController;
+
     virtual void initializePluginFinder();
     void restorePluginsList();
 
