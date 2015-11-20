@@ -92,7 +92,7 @@ void LocalTrackGroupView::on_toolButtonClicked()
     foreach (QString presetName, presetsNames) {
         QAction* presetAction = loadPresetsSubmenu->addAction(presetName);
         presetAction->setData(presetName);//putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
-        QObject::connect(presetAction, SIGNAL(triggered(bool)), this, SLOT(on_presetMenuActionClicked()));
+        QObject::connect(presetAction, SIGNAL(triggered(bool)), this, SLOT(on_LoadPresetClicked()));
     }
     menu.addMenu(loadPresetsSubmenu);
 
