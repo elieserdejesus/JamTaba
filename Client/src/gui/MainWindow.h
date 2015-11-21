@@ -74,7 +74,7 @@ public:
     inline bool isRunningInFullViewMode() const{return fullViewMode;}
     //EZEE PRESETS NEED THAT
     inline Controller::MainController* getMainController(){return mainController ;}
-    void PresetInputChannels(){initializeLocalInputChannels();}
+    void presetInputChannels(){initializeLocalInputChannels();}
 
 protected:
     Controller::MainController* mainController;
