@@ -104,8 +104,8 @@ void LocalTrackGroupView::on_toolButtonClicked()
 
     //RESET - in case of panic
     QAction* reset =  menu.addAction(QIcon(":/images/gear.png"),"Reset Preset");
-    reset->setDisabled(true);// so we can merge to master without confusion for the user until it works
-    QObject::connect(reset, SIGNAL(triggered(bool)), this, SLOT(on_ResetPresetClicked()));
+    reset->setDisabled(false);// so we can merge to master without confusion for the user until it works
+    QObject::connect(reset, SIGNAL(triggered()), this, SLOT(on_ResetPresetClicked()));
 
     menu.addSeparator();
 
@@ -217,11 +217,8 @@ void LocalTrackGroupView::on_removeChannelClicked(){
 //PRESETS
 void LocalTrackGroupView::on_LoadPresetClicked()
 {
-
     mainFrame->getMainController()->loadPresets("testPreset.json");
-    mainFrame->presetInputChannels();
-
-
+    mainFrame->presetInputChannels();//that name is not so good
 }
 
 void LocalTrackGroupView::on_SavePresetClicked()
@@ -233,9 +230,8 @@ void LocalTrackGroupView::on_SavePresetClicked()
 
 void LocalTrackGroupView::on_ResetPresetClicked()
 {
-    //todo
-    //mainFrame->getMainController()->savePresets(mainFrame->getInputsSettings(),"PresetDefault.json");
-
+    //setToNoInput() i need or want to use that ?
+   mainFrame->resetGroupChannel(this);
 }
 
 //+++++++++++++++++++++++++++++

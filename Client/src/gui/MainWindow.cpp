@@ -1214,3 +1214,22 @@ void MainWindow::on_actionFullscreenMode_triggered()
       else
       {this->setWindowState(Qt::WindowFullScreen);}
 }
+
+//PRESETS STUFF
+void MainWindow::resetGroupChannel(LocalTrackGroupView *group)
+{
+    if(getChannelGroupsCount()<1)return;
+    qCInfo(jtConfigurator) << "Reseting local inputs...";
+    Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
+
+    QList<LocalTrackView*> trackViews = group->getTracks();
+    int channelIndex = 0;
+
+    foreach (Persistence::Channel channel, inputsSettings.channels)
+    {
+       trackViews.at(0)->setToNoInput();
+       qCInfo(jtConfigurator) << "\tInput reset on channel "<< channel.name;
+       //to do the vst , vol, pan etc ...
+    }
+        qCInfo(jtConfigurator) << "Reseting local inputs done!";
+}
