@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>219</width>
+    <width>138</width>
     <height>403</height>
    </rect>
   </property>
@@ -253,46 +253,7 @@
          <property name="verticalSpacing">
           <number>1</number>
          </property>
-         <item row="1" column="0" colspan="2">
-          <widget class="QLabel" name="peaksDbLabel">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="PeakMeter" name="peakMeterLeft" native="true">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>1</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="accessibleDescription">
-            <string>This is the peak meter left </string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="PeakMeter" name="peakMeterRight" native="true">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>1</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="accessibleDescription">
-            <string>This is the peak meter right </string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0" colspan="2">
+         <item row="3" column="0" colspan="2">
           <widget class="QPushButton" name="muteButton">
            <property name="enabled">
             <bool>true</bool>
@@ -332,7 +293,7 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="0" colspan="2">
+         <item row="4" column="0" colspan="2">
           <widget class="QPushButton" name="soloButton">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
@@ -363,7 +324,20 @@
            </property>
           </widget>
          </item>
-         <item row="4" column="0" colspan="2">
+         <item row="2" column="0" colspan="3">
+          <widget class="QLabel" name="peaksDbLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0" colspan="2">
           <widget class="QGroupBox" name="boostPanel">
            <property name="title">
             <string/>
@@ -433,6 +407,63 @@
              </widget>
             </item>
            </layout>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <widget class="QWidget" name="metersWidget" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>1</verstretch>
+            </sizepolicy>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <property name="spacing">
+             <number>1</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="PeakMeter" name="peakMeterLeft" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>1</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="accessibleDescription">
+               <string>This is the peak meter left </string>
+              </property>
+              <zorder>peakMeterRight</zorder>
+             </widget>
+            </item>
+            <item>
+             <widget class="PeakMeter" name="peakMeterRight" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>1</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="accessibleDescription">
+               <string>This is the peak meter right </string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+           <zorder>peakMeterLeft</zorder>
+           <zorder>peakMeterLeft</zorder>
+           <zorder>peakMeterRight</zorder>
           </widget>
          </item>
         </layout>

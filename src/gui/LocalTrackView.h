@@ -3,6 +3,7 @@
 #include "BaseTrackView.h"
 #include <QWidget>
 #include <QTimer>
+#include "PeakMeter.h"
 
 class QMenu;
 class FxPanel;
@@ -49,6 +50,8 @@ public:
 
     QSize sizeHint() const;
 
+    void updateGuiElements();//overriding to show midi activity
+
 private:
     //int inputIndex;
     FxPanel* fxPanel;
@@ -66,6 +69,8 @@ private:
     QLabel* inputTypeIconLabel;
 
     QWidget* inputPanel;
+
+    PeakMeter* midiPeakMeter;//show midi activity
 
     static const QString MIDI_ICON;
     static const QString MONO_ICON;

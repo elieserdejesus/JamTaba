@@ -6,8 +6,6 @@
 
 namespace Midi {
 
-//class RtMidiIn;
-
 class RtMidiDriver : public MidiDriver
 {
 public:

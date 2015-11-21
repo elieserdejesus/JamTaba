@@ -258,7 +258,8 @@ void OscillatorAudioNode::processReplacing(const Audio::SamplesBuffer &in, Audio
 }
 //++++++++++++++++++++++++++++++++++++++++++++++
 LocalInputAudioNode::LocalInputAudioNode(int parentChannelIndex, bool isMono)
-    : globalFirstInputIndex(0), channelIndex(parentChannelIndex)
+    : globalFirstInputIndex(0), channelIndex(parentChannelIndex),
+        lastMidiActivity(0)
 {
     Q_UNUSED(isMono)
     //setAudioInputSelection(0, isMono ? 1 : 2);
@@ -375,6 +376,14 @@ void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffe
                     Midi::MidiMessage message = midiBuffer.getMessage(m);
                     if( message.getDeviceIndex() == midiDeviceIndex && (isReceivingAllMidiChannels() || message.getChannel() == midiChannelIndex)){
                         filteredMidiBuffer.addMessage(message);
+
+                        //save the midi activity peak value for notes or controls
+                        if(message.isNote() || message.isControl()){
+                            quint8 activityValue = message.getData2();
+                            if(activityValue > lastMidiActivity){
+                                lastMidiActivity = activityValue;
+                            }
+                        }
                     }
                 }
             }
