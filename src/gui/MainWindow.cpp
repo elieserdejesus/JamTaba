@@ -730,10 +730,11 @@ void MainWindow::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
     }
 
     if(mainController->isPlayingInNinjamRoom()){
-        mainController->stopNinjamController();//disconnect from current ninjam server
         //store the room to jump and wait for disconnectedFromServer event to connect in this new room
         roomToJump.reset( new Login::RoomInfo(roomInfo));
         passwordToJump = password;
+
+        mainController->stopNinjamController();//disconnect from current ninjam server
     }
     else if(mainController->userNameWasChoosed()){
         showBusyDialog("Connecting in " + roomInfo.getName() + " ...");
