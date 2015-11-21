@@ -1015,6 +1015,12 @@ LocalTrackView #inputSelectionButton{
     padding-left: 2px;
     padding-right: 2px;
 }
+
+LocalTrackView #midiPeakMeter{
+    max-width: 1px;
+    min-width: 1px;
+    border-radius: 1px;
+}
 /*+++++++++++++++++++++++++++++++++++++++++++++++*/
 
 /* NINJAM */

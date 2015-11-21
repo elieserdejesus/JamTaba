@@ -7,7 +7,7 @@ Jamtaba is a standalone software and a VST plugin. Using the standalone version 
 
 At moment Jamtaba standalone works for Windows (32 and 64 bits) and Mac OSX (10.7+). The VST plugin is available only for windows (32 and 64 bits).
 More information and User's manual are here : https://github.com/elieserdejesus/JamTaba/wiki      
-FOR DEVs : Doxygen doc is here -> http://makeitezeeah.esy.es/Jamtaba2/master/html/index.html
+FOR DEVs : Doxygen doc is here -> http://makeitezeeah.esy.es/Jamtaba2/2.0.6/
 ***
 
 ###Tools and dependencies###

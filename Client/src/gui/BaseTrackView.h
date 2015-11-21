@@ -45,7 +45,7 @@ public:
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
 
-    void updateGuiElements();
+    virtual void updateGuiElements();
 
     inline Controller::MainController* getMainController() const{return mainController;}
 
