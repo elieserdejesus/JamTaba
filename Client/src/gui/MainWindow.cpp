@@ -117,6 +117,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
         this->ui.actionVstPreferences->setVisible(false);
         this->ui.actionAudioPreferences->setVisible(false);
         this->ui.actionMidiPreferences->setVisible(false);
+        this->ui.actionQuit->setVisible(false);
     }
 
     initializeWindowState();//window size, maximization ...
@@ -989,9 +990,10 @@ void MainWindow::on_ninjamOfficialSiteMenuItemTriggered(){
 void MainWindow::on_preferencesClicked(QAction* action)
 {
     //Use of action now !
-    if(!mainController->isRunningAsVstPlugin())
-    {if(action->objectName().contains("actionQuit"))
-       {this->close();return;}
+    if(!mainController->isRunningAsVstPlugin()){
+        if(action->objectName().contains("actionQuit")){
+            this->close();return;
+        }
     }
     Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
     AudioDriver* audioDriver = mainController->getAudioDriver();
