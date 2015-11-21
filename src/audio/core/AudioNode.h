@@ -169,6 +169,10 @@ public:
     void setProcessorsSampleRate(int newSampleRate);
     void closeProcessorsWindows();
 
+    inline bool hasMidiActivity() const{ return lastMidiActivity > 0;}
+    quint8 getMidiActivityValue() const {return lastMidiActivity;}
+    inline void resetMidiActivity() { lastMidiActivity = 0;}
+
     //overriding
     void addProcessor( AudioNodeProcessor* newProcessor);
 private:
@@ -188,7 +192,7 @@ private:
 
     InputMode inputMode = DISABLED;
 
-
+    quint8 lastMidiActivity;//max velocity or control value
 
 };
 //++++++++++++++++++++++++

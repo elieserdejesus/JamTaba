@@ -9,22 +9,41 @@
 const int PeakMeter::LINES_MARGIN = 3;
 
 
-const QColor PeakMeter::HORIZONTAL_LINES_COLOR = QColor(255,255,255, 50);
+//const QColor PeakMeter::HORIZONTAL_LINES_COLOR = QColor(255,255,255, 50);
 const QColor PeakMeter::MAX_PEAK_COLOR = QColor(255, 255, 255, 120);
 
 PeakMeter::PeakMeter(QWidget *)
     :   currentPeak(0),
         maxPeak(0),
-        lastUpdate(QDateTime::currentMSecsSinceEpoch())
+        lastUpdate(QDateTime::currentMSecsSinceEpoch()),
+        usingGradient(true),
+        paintingMaxPeak(true),
+        decayTime(DEFAULT_DECAY_TIME)
 {
     gradient = QLinearGradient(0, 0, 0, height()-1);
     gradient.setColorAt(0, Qt::red);
     gradient.setColorAt(0.4, QColor(0, 200, 0));
     gradient.setColorAt(0.8, Qt::darkGreen);
-    //horizontalLinesColor = QColor(0, 0, 0, 90);
-    update();
 
     setAttribute(Qt::WA_NoBackground);
+
+    update();
+}
+
+void PeakMeter::setDecayTime(quint32 decayTimeInMiliseconds){
+    this->decayTime = decayTimeInMiliseconds;
+    update();
+}
+
+void PeakMeter::setPaintMaxPeakMarker(bool paintMaxPeak){
+    this->paintingMaxPeak = paintMaxPeak;
+    update();
+}
+
+void PeakMeter::setSolidColor(QColor color){
+    this->usingGradient = false;
+    this->solidColor = color;
+    update();
 }
 
 void PeakMeter::setPeak(float peak){
@@ -44,6 +63,7 @@ void PeakMeter::setPeak(float peak){
 void PeakMeter::paintEvent(QPaintEvent *){
     QPainter painter(this);
 
+    //to allow stylesheets
     QStyleOption opt;
     opt.init(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
@@ -51,19 +71,10 @@ void PeakMeter::paintEvent(QPaintEvent *){
     //meter
     if(isEnabled()){
         //draw bottom to up
-        painter.fillRect(1, height()-1 , width()-2, -currentPeak * height(), gradient);
+        painter.fillRect(1, height()-1 , width()-2, -currentPeak * height(), usingGradient ? gradient : QBrush(solidColor) );
 
-        //draw horizontal lines
-//        int lines = height()/LINES_MARGIN;
-//        int y = 0;
-//        painter.setPen(HORIZONTAL_LINES_COLOR);
-//        for(int line=0; line < lines; line++){
-//            painter.drawLine(1, y, width()-2, y);
-//            y += LINES_MARGIN;
-//        }
-
-        //draw max peak
-        if(maxPeak > 0){
+        //draw max peak marker
+        if(maxPeak > 0 && paintingMaxPeak){
             int peakY = height() - maxPeak * height();
             painter.fillRect(0, peakY, width(), 3, MAX_PEAK_COLOR);
         }
@@ -71,7 +82,7 @@ void PeakMeter::paintEvent(QPaintEvent *){
 
     //decay
     long ellapsedTimeFromLastUpdate = QDateTime::currentMSecsSinceEpoch() - lastUpdate;
-    currentPeak -= (float)ellapsedTimeFromLastUpdate/DECAY_TIME;
+    currentPeak -= (float)ellapsedTimeFromLastUpdate/decayTime;
     if(currentPeak < 0){
         currentPeak = 0;
     }

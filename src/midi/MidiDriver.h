@@ -8,31 +8,30 @@ namespace Midi {
 
 class MidiMessage{
 public:
-    MidiMessage(qint32 data, qint32 timestamp, int sourceDeviceIndex){
-        this->data = data;
-        this->timestamp = timestamp;
-        this->deviceIndex = sourceDeviceIndex;
-    }
-
-    MidiMessage(){
-        this->data = this->timestamp = this->deviceIndex = -1;
-    }
-
-    MidiMessage(const MidiMessage& other){
-        this->data = other.data;
-        this->timestamp = other.timestamp;
-        this->deviceIndex = other.deviceIndex;
-    }
+    MidiMessage(qint32 data, qint32 timestamp, int sourceDeviceIndex);
+    MidiMessage();
+    MidiMessage(const MidiMessage& other);
 
     inline int getChannel() const{
         return data & 0x0000000F;
     }
+
+    bool isNote() const;
+
+    quint8 getNoteVelocity() const;
 
     inline int getDeviceIndex() const{return deviceIndex;}
 
     inline int getStatus() const{ return data & 0xFF;}
     inline int getData1() const{ return (data >> 8) & 0xFF;}
     inline int getData2() const{ return (data >> 16) & 0xFF;}
+
+    //MIDI Control Change
+    inline bool isControl() const{return getStatus() == 0xB0;}
+    //type=0 to 127
+    inline int getControlType() const{return getData1();}
+    //value=0 to 127
+    inline int getControlValue() const{return getData2();}
 private:
     qint32 data;
     qint32 timestamp;

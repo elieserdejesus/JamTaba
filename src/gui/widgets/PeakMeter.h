@@ -9,29 +9,35 @@ class PeakMeter : public QWidget
 
 public:
    explicit PeakMeter(QWidget *parent = 0);
-   virtual ~PeakMeter(){
-
-   }
-
+   virtual ~PeakMeter(){}
    void setPeak(float) ;
-
+   void setSolidColor(QColor color);
+   void setPaintMaxPeakMarker(bool paintMaxPeak);
+   void setDecayTime(quint32 decayTimeInMiliseconds);
 protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent (QResizeEvent *);
-
 private:
     static const int LINES_MARGIN;
-    QLinearGradient gradient;
-    static const QColor HORIZONTAL_LINES_COLOR;
-    static const QColor MAX_PEAK_COLOR;
+    QLinearGradient gradient;//used when meter is configured to fill using a gradient (default)
 
     float currentPeak;
     float maxPeak;
-    qint64 lastMaxPeakTime;
 
-    qint64 lastUpdate;// QDateTime::currentMSecsSinceEpoch()
-    static const int DECAY_TIME = 800;
+    qint64 lastMaxPeakTime;
+    qint64 lastUpdate;
+
+    int decayTime;
+
+    static const int DEFAULT_DECAY_TIME = 800;
     static const int MAX_PEAK_SHOW_TIME = 1500;
+    //static const QColor HORIZONTAL_LINES_COLOR;
+    static const QColor MAX_PEAK_COLOR;
+
+    bool usingGradient;
+    QColor solidColor;//used when setSolidColor is called to disable gradient painting
+
+    bool paintingMaxPeak;
 };
 
 

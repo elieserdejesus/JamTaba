@@ -1,10 +1,6 @@
 ﻿#include "RtMidiDriver.h"
 #include "RtMidi.h"
 
-//#if _WIN32
-//   #define __WINDOWS_MM__ //some midi devices need it like swissonic
-//#endif
-
 using namespace Midi;
 
 #include "../log/logging.h"
@@ -12,7 +8,7 @@ using namespace Midi;
 RtMidiDriver::RtMidiDriver(QList<bool> deviceStatuses){
     qCInfo(jtMidi) << "Initializing rtmidi...";
     int maxInputDevices = getMaxInputDevices();
-    qDebug("MIDI DEVICES FOUND idx: %d ",maxInputDevices);
+    qCDebug(jtMidi) << "MIDI DEVICES FOUND idx:" << maxInputDevices;
     if(deviceStatuses.size() < maxInputDevices){
         int itemsToAdd = maxInputDevices - deviceStatuses.size();
         for (int i = 0; i < itemsToAdd; ++i) {
