@@ -219,7 +219,7 @@ void LocalTrackGroupView::on_LoadPresetClicked()
 {
 
     mainFrame->getMainController()->loadPresets("testPreset.json");
-    mainFrame->PresetInputChannels();
+    mainFrame->presetInputChannels();
 
 
 }
