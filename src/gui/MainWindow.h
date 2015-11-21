@@ -74,7 +74,8 @@ public:
     inline bool isRunningInFullViewMode() const{return fullViewMode;}
     //EZEE PRESETS NEED THAT
     inline Controller::MainController* getMainController(){return mainController ;}
-    void presetInputChannels(){initializeLocalInputChannels();}
+    void presetInputChannels(){initializeLocalInputChannels();}// finally i don't like that name ...
+    void resetGroupChannel(LocalTrackGroupView *group);// should load the defaultPreset.json ?
 
 protected:
     Controller::MainController* mainController;
