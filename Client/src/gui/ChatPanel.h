@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QMap>
 #include <QList>
-
+#include "chords/ChordProgression.h"
 
 namespace Ui {
 class ChatPanel;
@@ -17,19 +17,23 @@ class ChatPanel : public QWidget
 public:
     ChatPanel(QWidget *parent, QStringList botNames);
     virtual ~ChatPanel();
-    void addMessage(QString userName, QString userMessage);
+    void addMessage(QString userName, QString userMessage, bool showTranslationButton = true);
     void addBpmVoteConfirmationMessage(int newBpmValue);
     void addBpiVoteConfirmationMessage(int newBpmValue);
+    void addChordProgressionConfirmationMessage(ChordProgression progression);
+    void setPreferredTranslationLanguage(QString targetLanguage);
 signals:
     void userSendingNewMessage(QString msg);
     void userConfirmingVoteToBpiChange(int newBpi);
     void userConfirmingVoteToBpmChange(int newBpm);
+    void userConfirmingChordProgression(ChordProgression chordProgression);
 private slots:
     void on_chatTextEditionFinished();
     void on_verticalScrollBarRangeChanged(int min, int max);
     void on_buttonClear_clicked();
 
     void on_voteButtonClicked();
+    void on_chordProgressionConfirmationButtonClicked();
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
 private:
@@ -45,10 +49,11 @@ private:
 
     static const int MAX_MESSAGES = 50;
 
+    QString preferredTargetTranslationLanguage;
+
     void createVoteButton(QString voteType, int value);
 
-    //QString lastUserName;//used to control message alignment - left or right
-    //Qt::AlignmentFlag lastAlign;
+
 };
 
 #endif // CHATPANEL_H

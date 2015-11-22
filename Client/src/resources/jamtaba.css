@@ -359,13 +359,21 @@ QSlider::add-page:vertical, QSlider::groove:vertical {
 }
 
 QSlider::groove:vertical{
-    border: 1px inset rgb(130, 130, 130);
+    /*border: 1px inset rgb(130, 130, 130);*/
+    border:         1px solid rgba(0, 0, 0, 40);
+    border-right:   1px solid rgb(255, 255, 255, 140);
+    border-bottom:  1px solid rgba(255, 255, 255, 140);
 }
 
 NinjamRoomWindow TrackGroupView BaseTrackView QSlider::groove:vertical{
-    border: 1px solid #AAAAAA;
+    /*border: 1px solid #AAAAAA;
     border-right-color: #C1C1C1;
-    border-bottom-color: #C1C1C1;
+    border-bottom-color: #C1C1C1;*/
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop: 0     rgba(0, 0, 0, 50),
+            stop: 1.0   rgba(0, 0, 0, 30)
+            );
+
 }
 
 
@@ -387,12 +395,12 @@ BaseTrackView[unlighted="true"] QSlider::add-page:vertical{
 }
 
 BaseTrackView #peaksDbLabel{
-    border-radius: 2px;
-    border: 1px solid rgba(0, 0, 0, 8);
-    background-color: rgba(0, 0, 0, 5);
+    border-radius: 1px;
+    border: 1px solid rgba(0, 0, 0, 25);
+    background-color: rgba(0, 0, 0, 15);
     font-size: 8px;
     qproperty-alignment: AlignCenter;
-    color: rgba(0,0,0, 90);
+    color: rgba(0,0,0, 120);
     padding: 1px;
 }
 NinjamTrackView #peaksDbLabel{
@@ -416,18 +424,18 @@ BaseTrackView #peaksDbLabel:hover{
 }
 
 
-
+/*
 QSlider::add-page:vertical{
     background: rgb(255,255,255, 120);
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
     margin: 4px;
 }
-
+*/
 QSlider::groove:vertical {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-            stop: 0     #BABABA,
-            stop: 1.0   #ABABAB
+            stop: 0     rgb(201, 201, 201),
+            stop: 1.0   rgb(115, 115, 115)
             );
     width: 8px;
 }
@@ -476,8 +484,9 @@ BaseTrackView[unlighted="true"] QSlider::handle:horizontal{
 
 NinjamPanel QSlider::groove:vertical{
     width: 5px;
-    margin: 2px;
+    margin: 0px;
     border-radius: 2px;
+    background: rgba(0, 0, 0, 40);
 }
 
 NinjamPanel QSlider::groove:horizontal{
@@ -491,9 +500,9 @@ NinjamPanel QSlider::groove:horizontal{
 PeakMeter{
     background-color: rgba(0, 0, 0, 10);
     border: 1px inset rgba(0, 0, 0, 15);
-    max-width: 5px;
-    min-width: 2px;
-    border-radius: 2px;
+    max-width: 6px;
+    min-width: 4px;
+    border-radius: 1px;
 }
 BaseTrackView[unlighted="true"] PeakMeter{
     background-color: rgba(0, 0, 0, 15);
@@ -716,7 +725,7 @@ JamRoomViewPanel #labelName{
 }
 
 JamRoomViewPanel  #labelRoomStatus, JamRoomViewPanel  #labelRoomType{
-    font-size: 10px;
+    font-size: 9px;
     color: rgb(90, 90, 90);
 }
 JamRoomViewPanel  #labelRoomType{
@@ -747,6 +756,10 @@ JamRoomViewPanel  #labelRoomType{
     color: rgba(0,40, 0);
 }
 
+
+QPushButton#xmitButton[preparing="true"]{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255,255,0), stop:1 rgb(204,204,0));
+}
 
 #xmitButton:!checked{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgba(255, 90, 62, 140), stop:1 rgba(175, 0, 0, 140));
@@ -786,6 +799,7 @@ BaseTrackView[unlighted="true"] > QFrame#topSeparator, BaseTrackView[unlighted="
 BaseTrackView[unlighted="true"]{
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(150, 150, 150), stop:1 rgb(50, 50, 50));
 }
+
 
 /*
 BaseTrackView #peaksPanel{
@@ -1015,6 +1029,12 @@ LocalTrackView #inputSelectionButton{
     padding-left: 2px;
     padding-right: 2px;
 }
+
+LocalTrackView #midiPeakMeter{
+    max-width: 1px;
+    min-width: 1px;
+    border-radius: 1px;
+}
 /*+++++++++++++++++++++++++++++++++++++++++++++++*/
 
 /* NINJAM */
@@ -1188,45 +1208,85 @@ ChatPanel > QPushButton#buttonClear{
     border: 1px solid #919191;
 }
 
-ChatMessagePanel > QLabel#labelUserName{
+ChatMessagePanel #labelUserName{
     padding: 0px;
-    padding-right: 3px;
-    border: 1px solid rgb(0, 0, 0, 70);
+    padding-right: 2px;
+    border: 1px solid rgb(0, 0, 0, 40);
     border-right: none;
     border-radius: 2px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
-    font-size: 11px;
-    margin-top: 3px;
-    margin-bottom: 3px;
-    margin-right: -1px;
+    font-size: 10px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-right: 0px;
+    margin-left: 0px;
 }
 
-ChatMessagePanel > QLabel#labelMessage{
+ChatMessagePanel #labelMessage{
     padding: 2px;
     border: 1px solid rgb(0, 0, 0, 80);
     border-radius: 2px;
-    min-height: 20px;
+    min-height: 16px;
 }
 
 ChatMessagePanel #translateButton{
-    /*background-image: url(':/images/translate.png');*/
     max-width: 8px;
     max-height: 6px;
     height: 6px;
     min-height: 6px;
-    padding: 3px;
+    padding: 2px;
     border: 1px solid rgb(0, 0, 0, 80);
-    border-left: none;
+    border-right: none;
     border-radius: 2px;
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-    margin-top: 3px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    font-size: 8px;
 }
 
 ChatMessagePanel QPushButton:hover#translateButton{
     border-color: rgb(200, 200, 200);
     font-weight: bold;
     border-style: outset;
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+ChordsPanel #buttonSendToChat{
+    background-image: url(':/images/chat_small.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    max-width: 18px;
+    width: 18px;
+    padding: 2px;
 
 }
+
+ChordLabel{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgba(0,0,0, 5),
+    stop:1 rgba(0,0,0, 10));
+
+    color: gray;
+
+    padding: 6px;
+    padding-left: 3px;
+    padding-right: 3px;
+
+    border-radius: 2px;
+}
+
+ChordLabel[current="true"]{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgba(255,255,255, 220),
+    stop:1 rgba(255,255,255, 180));
+
+    color: black;
+
+    border: 1px solid rgb(180, 180, 180);
+}
+
+
+

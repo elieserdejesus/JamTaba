@@ -51,12 +51,12 @@ public:
     void scanPlugins();
 
 //    inline int exec(){ return application->exec(); }
-    inline void quit(){ application->quit();}
+    void quit();
 
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
     virtual void addDefaultPluginsScanPath();
-
+    QStringList getSteinbergRecommendedPaths();
 
     inline Vst::Host* getVstHost() const{return vstHost;}
 

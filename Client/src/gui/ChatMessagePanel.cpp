@@ -14,27 +14,18 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
 }
 
 
-ChatMessagePanel::ChatMessagePanel(QWidget *parent, QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool drawBorder)
+ChatMessagePanel::ChatMessagePanel(QWidget *parent, QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool showTranslationButton)
     :QWidget(parent),
       ui(new Ui::ChatMessagePanel)
 {
     ui->setupUi(this);
-    initialize(userName, msg, userNameBackgroundColor, msgBackgroundColor, textColor, drawBorder);
-    //QObject::connect( translationHttpClient, SIGNAL()
+    initialize(userName, msg, userNameBackgroundColor, msgBackgroundColor, textColor, showTranslationButton);
 }
 
-//QSize ChatMessagePanel::sizeHint() const{
-//    return minimumSizeHint();
-//}
-//QSize ChatMessagePanel::minimumSizeHint() const{
-
-//    return QSize( width(), ui->labelMessage->height());
-//}
-
-void ChatMessagePanel::initialize(QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool drawBorder ){
+void ChatMessagePanel::initialize(QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor , bool showTranslationButton){
     if(!userName.isEmpty() && !userName.isNull()){
         ui->labelUserName->setText(userName);
-        ui->labelUserName->setStyleSheet(buildCssString(userNameBackgroundColor, textColor, drawBorder));
+        ui->labelUserName->setStyleSheet(buildCssString(userNameBackgroundColor, textColor));
     }
     else{
         ui->labelUserName->setVisible(false);
@@ -44,18 +35,21 @@ void ChatMessagePanel::initialize(QString userName, QString msg, QColor userName
     msg = msg.replace("\n", "<br/>");
     msg = replaceLinksInString(msg);
     ui->labelMessage->setText(msg);
-    ui->labelMessage->setStyleSheet(buildCssString(msgBackgroundColor, textColor, drawBorder));
-    ui->translateButton->setStyleSheet(buildCssString(userNameBackgroundColor, textColor, drawBorder));
+    ui->labelMessage->setStyleSheet(buildCssString(msgBackgroundColor, textColor));
+
+    if(showTranslationButton){
+        ui->translateButton->setStyleSheet( buildCssString(userNameBackgroundColor, textColor));
+    }
+    else{
+        ui->translateButton->setVisible(false);
+    }
 
     this->originalText = msg;
 }
 
-QString ChatMessagePanel::buildCssString(QColor bgColor, QColor textColor, bool drawBorder){
+QString ChatMessagePanel::buildCssString(QColor bgColor, QColor textColor){
     QString css =   "background-color: " + colorToCSS(bgColor) + ";";
     css +=          "color: " + colorToCSS(textColor) + ";";
-    if(!drawBorder){
-        css +=          "border: none; ";
-    }
     return css;
 }
 
@@ -77,11 +71,9 @@ void ChatMessagePanel::on_translateButton_clicked(){
     if(ui->translateButton->isChecked()){
         if(translatedText.isEmpty()){
             QNetworkAccessManager* httpClient = new QNetworkAccessManager(this);
-            QLocale userLocale;
-            QString targetLanguage =  userLocale.bcp47Name().left(2);
             QString encodedText(QUrl::toPercentEncoding(originalText));
-            QString url = "http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl="+ targetLanguage +"&dt=t&q=" + encodedText;
-            QNetworkRequest req;//(QUrl(url));
+            QString url = "http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl="+ preferredTargetTranslationLanguage +"&dt=t&q=" + encodedText;
+            QNetworkRequest req;
             req.setUrl(QUrl(url));
             req.setOriginatingObject(this);
             req.setRawHeader( "User-Agent" , "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36" );
@@ -98,6 +90,10 @@ void ChatMessagePanel::on_translateButton_clicked(){
     else{
         ui->labelMessage->setText(originalText);
     }
+}
+
+void ChatMessagePanel::setPrefferedTranslationLanguage(QString targetLanguage){
+    this->preferredTargetTranslationLanguage = targetLanguage;
 }
 
 void ChatMessagePanel::on_networkReplyError(QNetworkReply::NetworkError ){

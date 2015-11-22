@@ -28,9 +28,11 @@
 #include <QDir>
 
 #include "../log/logging.h"
+#include "configurator.h"
 
-QString Controller::MainController::LOG_CONFIG_FILE = "logging.ini";
+//QString Controller::MainController::LOG_CONFIG_FILE = "logging.ini";
 
+extern Configurator *JTBConfig;
 using namespace Persistence;
 using namespace Midi;
 using namespace Ninjam;
@@ -44,7 +46,7 @@ using namespace Controller;
 class MainController::InputTrackGroup{
 public:
     InputTrackGroup(int groupIndex, Audio::LocalInputAudioNode* firstInput)
-        :groupIndex(groupIndex){
+        :groupIndex(groupIndex), transmiting(true){
         addInput(firstInput);
     }
 
@@ -91,9 +93,13 @@ public:
         return 0;//no channels to encoding
     }
 
+    inline bool isTransmiting() const{return transmiting;}
+    void setTransmitingStatus(bool transmiting){this->transmiting = transmiting;}
+
 private:
     int groupIndex;
     QList<Audio::LocalInputAudioNode*> groupedInputs;
+    bool transmiting;
 };
 
 //+++++++++++++++++++++++++++++
@@ -124,51 +130,6 @@ private:
     const QByteArray GUID;
     QByteArray dataToUpload;
 };
-
-//++++++++++++++++++++++++++++++++++++++++++++
-QString MainController::getLogConfigFilePath(){
-    QDir logDir(Controller::MainController::getWritablePath());
-    if(logDir.exists()){
-        QString logConfigFilePath = logDir.absoluteFilePath(LOG_CONFIG_FILE);
-        if(QFile(logConfigFilePath).exists()){//log config file in application directory? (same dir as json config files, cache.bin, etc.)
-            return logConfigFilePath;
-        }
-        else{//search log config file in resources
-            //qDebug(jtCore) << "Log file not founded in release folder (" <<logDir.absolutePath() << "), searching in resources...";
-            logConfigFilePath = ":/" + LOG_CONFIG_FILE;
-            if(QFile(logConfigFilePath).exists()){
-                //qDebug(jtCore) << "Log file founded in resources...";
-                return logConfigFilePath;
-            }
-            //qWarning(jtCore) << "Log file not founded in source code tree: " << logDir.absolutePath();
-        }
-    }
-    qWarning(jtCore) << "Log folder not exists!" << logDir.absolutePath();
-    return "";
-}
-
-QString MainController::getWritablePath(){
-    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-}
-
-
-//copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
-void MainController::exportLogFile(){
-    QDir logDir(Controller::MainController::getWritablePath());
-    if(logDir.exists()){
-        QString logConfigFilePath = logDir.absoluteFilePath(LOG_CONFIG_FILE);
-        if(!QFile(logConfigFilePath).exists()){//log config file in application directory? (same dir as json config files, cache.bin, etc.)
-            bool result = QFile::copy(":/" + LOG_CONFIG_FILE, logConfigFilePath ) ;
-            if(result){
-                QFile loggingFile(logConfigFilePath);
-                loggingFile.setPermissions(QFile::WriteOther);//The file is writable by anyone.
-            }
-        }
-    }
-    else{
-        qWarning(jtCore) << "Log folder not exists!" << logDir.absolutePath();
-    }
-}
 
 //++++++++++++++++++++++++++++++++++++++++++++++
 void MainController::setSampleRate(int newSampleRate){
@@ -245,12 +206,22 @@ void MainController::on_connectedInNinjamServer(Ninjam::Server server){
         qCCritical(jtCore) << "mainWindow is null!";
     }
     qCDebug(jtCore) << "starting ninjamController...";
-    newNinjamController->start(server, transmiting);
+
+
+    newNinjamController->start(server, getXmitChannelsFlags());
 
 
     if(settings.isSaveMultiTrackActivated()){
         jamRecorder.startRecording(getUserName(), QDir(settings.getRecordingPath()), server.getBpm(), server.getBpi(), getSampleRate());
     }
+}
+
+QMap<int, bool> MainController::getXmitChannelsFlags() const{
+    QMap<int, bool> xmitFlags;
+    foreach (InputTrackGroup* inputGroup, trackGroups) {
+        xmitFlags.insert( inputGroup->getIndex(), inputGroup->isTransmiting());
+    }
+    return xmitFlags;
 }
 
 void MainController::on_ninjamStartProcessing(int intervalPosition){
@@ -313,7 +284,6 @@ MainController::MainController(Settings settings)
     :
       audioMixer(44100),
       currentStreamingRoomID(-1000),
-      transmiting(true),
       mutex(QMutex::Recursive),
       started(false),
       ipToLocationResolver( new Geo::WebIpToLocationResolver()),
@@ -479,6 +449,9 @@ Audio::LocalInputAudioNode* MainController::getInputTrack(int localInputIndex){
 void MainController::setInputTrackToMono(int localChannelIndex, int inputIndexInAudioDevice){
     Audio::LocalInputAudioNode* inputTrack = getInputTrack(localChannelIndex);
     if(inputTrack){
+        if( !inputIndexIsValid(inputIndexInAudioDevice) ){
+            inputIndexInAudioDevice = audioDriver->getSelectedInputs().getFirstChannel();//use the first available channel
+        }
         inputTrack->setAudioInputSelection(inputIndexInAudioDevice, 1);//mono
         //emit inputSelectionChanged(localChannelIndex);
         if(mainWindow){
@@ -491,11 +464,21 @@ void MainController::setInputTrackToMono(int localChannelIndex, int inputIndexIn
         }
     }
 }
+
+bool MainController::inputIndexIsValid(int inputIndex){
+    Audio::ChannelRange globalInputsRange = audioDriver->getSelectedInputs();
+    return inputIndex >= globalInputsRange.getFirstChannel() && inputIndex <= globalInputsRange.getLastChannel();
+}
+
 void MainController::setInputTrackToStereo(int localChannelIndex, int firstInputIndex){
     Audio::LocalInputAudioNode* inputTrack = getInputTrack(localChannelIndex);
     if(inputTrack){
+
+        if( !inputIndexIsValid(firstInputIndex) ){
+            firstInputIndex = audioDriver->getSelectedInputs().getFirstChannel();//use the first available channel
+        }
         inputTrack->setAudioInputSelection(firstInputIndex, 2);//stereo
-        //emit inputSelectionChanged(localChannelIndex);
+
         if(mainWindow){
             mainWindow->refreshTrackInputSelection(localChannelIndex);
         }
@@ -673,14 +656,23 @@ Audio::AudioPeak MainController::getRoomStreamPeak(){
     return roomStreamer->getLastPeak();
 }
 
-
-void MainController::setTransmitingStatus(bool transmiting){
-    if(this->transmiting != transmiting){
-        this->transmiting = transmiting;
-        if(isPlayingInNinjamRoom()){
-            ninjamController->setTransmitStatus(transmiting);
+//++++++++++++++ XMIT +++++++++
+void MainController::setTransmitingStatus(int channelID, bool transmiting){
+    if(trackGroups.contains(channelID)){
+        if(trackGroups[channelID]->isTransmiting() != transmiting){
+            trackGroups[channelID]->setTransmitingStatus(transmiting);
+            if(isPlayingInNinjamRoom()){
+                ninjamController->setTransmitStatus(channelID, transmiting);
+            }
         }
     }
+}
+
+bool MainController::isTransmiting(int channelID) const{
+    if(trackGroups.contains(channelID)){
+        return trackGroups[channelID]->isTransmiting();
+    }
+    return false;
 }
 
 //++++++++++ TRACKS ++++++++++++
@@ -796,7 +788,7 @@ void MainController::playRoomStream(Login::RoomInfo roomInfo){
         currentStreamingRoomID = roomInfo.getID();
 
         //mute all tracks and unmute the room Streamer
-        setAllTracksActivation(false);
+        setAllTracksActivation(true);
         roomStreamer->activate();
     }
 }
@@ -852,6 +844,10 @@ void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStrin
 }
 
 
+void MainController::useNullAudioDriver(){
+    qCWarning(jtCore) << "Audio driver can't be used, using NullAudioDriver!";
+    audioDriver.reset(new Audio::NullAudioDriver());
+}
 
 void MainController::start(){
 
@@ -865,7 +861,18 @@ void MainController::start(){
         }
         if(!audioDriver){
             qCInfo(jtCore) << "Creating audio driver...";
-            audioDriver.reset( createAudioDriver(settings));
+            Audio::AudioDriver* driver = nullptr;
+            try{
+                driver = createAudioDriver(settings);
+            }
+            catch(const std::runtime_error &error){
+                qCCritical(jtCore) << "Audio initialization fail: " << QString::fromUtf8(error.what());
+                QMessageBox::warning(mainWindow, "Audio Initialization Problem!", error.what());
+            }
+            if(!driver){
+                driver = new Audio::NullAudioDriver();
+            }
+            audioDriver.reset( driver );
             QObject::connect(audioDriver.data(), SIGNAL(sampleRateChanged(int)), this, SLOT(on_audioDriverSampleRateChanged(int)));
             QObject::connect(audioDriver.data(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
             QObject::connect(audioDriver.data(), SIGNAL(started()), this, SLOT(on_audioDriverStarted()));
@@ -881,8 +888,7 @@ void MainController::start(){
 
         if(audioDriver ){
             if(!audioDriver->canBeStarted()){
-                qCWarning(jtCore) << "Audio driver can't be used, using NullAudioDriver!";
-                audioDriver.reset(new Audio::NullAudioDriver());
+                useNullAudioDriver();
             }
             audioDriver->start();
         }
@@ -899,6 +905,8 @@ void MainController::start(){
         if(userName.isEmpty()){
             userName = "No name!";
         }
+        //CHAT TRANSLATION ?
+
         qCInfo(jtCore) << "Connecting in Jamtaba server...";
         loginService.connectInServer(userName, 0, "", map, version, userEnvironment, getSampleRate());
         //(QString userName, int instrumentID, QString channelName, const NatMap &localPeerMap, int version, QString environment, int sampleRate);
@@ -961,6 +969,12 @@ Midi::MidiDriver* MainController::getMidiDriver() const{
 }
 
 //+++++++++++
+void MainController::cancelPluginFinder(){
+    if(pluginFinder){
+        pluginFinder->cancel();
+    }
+}
+
 bool MainController::pluginDescriptorLessThan(const Audio::PluginDescriptor& d1, const Audio::PluginDescriptor& d2){
      return d1.getName().localeAwareCompare(d2.getName()) < 0;
 }

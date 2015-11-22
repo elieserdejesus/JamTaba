@@ -1,0 +1,2 @@
+g++ -c -DUNICODE -D__WINDOWS_MM__ rtmidi.cpp -o rtmidi.o
+ar rcs librtmidi.a rtmidi.o

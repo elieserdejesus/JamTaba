@@ -5,6 +5,7 @@
 #include <QtAlgorithms>
 #include <QFormLayout>
 #include "../log/logging.h"
+#include "BpiUtils.h"
 
 NinjamPanel::NinjamPanel(QWidget *parent) :
     QWidget(parent),
@@ -132,16 +133,9 @@ void NinjamPanel::comboShapeChanged(int index){
 //++++++++++++++++++++++++++++++++++++++++++++++++
 QStringList NinjamPanel::getBpiDividers(int bpi){
     QStringList foundedDividers;
-    int divider = 2;
-    while (divider <= bpi / 2) {
-        if (bpi % divider == 0) {
-            foundedDividers.append(QString::number(divider));
-        }
-        divider++;
-    }
-
-    if (foundedDividers.isEmpty()) {
-        foundedDividers.append(QString::number(bpi));//using bpi as default
+    QList<int> intDividers = BpiUtils::getBpiDividers(bpi);
+    foreach (int divider, intDividers) {
+        foundedDividers.append(QString::number(divider));
     }
     qSort(foundedDividers.begin(), foundedDividers.end(), compareBpis);
     return foundedDividers;
@@ -195,15 +189,55 @@ void NinjamPanel::setCurrentBeat(int currentBeat){
     ui->intervalPanel->setCurrentBeat(currentBeat);
 }
 
+void NinjamPanel::selectClosestBeatsPerAccentInCombo(int currentBeatsPerAccent){
+    int minorDifference = INT_MAX;
+    int closestIndex = -1;
+    for(int i=1; i < ui->comboBeatsPerAccent->count(); ++i){
+        int difference = std::abs( currentBeatsPerAccent - ui->comboBeatsPerAccent->itemData(i).toInt() );
+        if( difference < minorDifference ){
+            minorDifference = difference;
+            closestIndex = i;
+            if(minorDifference <= 1){
+                break;
+            }
+        }
+    }
+    if(closestIndex >= 0){
+        ui->comboBeatsPerAccent->setCurrentIndex(closestIndex);
+    }
+}
+
+//auto select the last beatsPerAccentValue in combo
+void NinjamPanel::selectBeatsPerAccentInCombo(int beatsPerAccent){
+    for(int i=0; i < ui->comboBeatsPerAccent->count(); ++i){
+        if( beatsPerAccent == ui->comboBeatsPerAccent->itemData(i).toInt() ){
+            ui->comboBeatsPerAccent->setCurrentIndex(i);
+            break;
+        }
+    }
+}
+
 void NinjamPanel::setBpi(int bpi){
     ui->comboBpi->blockSignals(true);
     ui->comboBpi->setCurrentText(QString::number(bpi));
     ui->comboBpi->blockSignals(false);
     ui->intervalPanel->setBeatsPerInterval(bpi);
+    bool showingAccents = ui->intervalPanel->isShowingAccents();
     buildAccentsdModel(bpi);
-    ui->comboBeatsPerAccent->setCurrentIndex(0);//off
-    ui->intervalPanel->setShowAccents(false);
-
+    if(showingAccents){
+        //find the closest possible accent value for the new bpi
+        int currentBeatsPerAccent = ui->intervalPanel->getBeatsPerAccent();
+        if( bpi % currentBeatsPerAccent == 0 ){//new bpi is compatible with last bpi value?
+            selectBeatsPerAccentInCombo(currentBeatsPerAccent);
+        }
+        else{//new bpi is incompatible with last bpi value. For example, bpi change from 16 to 13
+            selectClosestBeatsPerAccentInCombo(currentBeatsPerAccent);
+        }
+    }
+    else{
+        ui->comboBeatsPerAccent->setCurrentIndex(0);//off
+        ui->intervalPanel->setShowAccents(false);
+    }
 }
 
 void NinjamPanel::setBpm(int bpm){

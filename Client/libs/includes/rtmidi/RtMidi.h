@@ -50,6 +50,7 @@
 #include <string>
 #include <vector>
 
+
 /************************************************************************/
 /*! \class RtMidiError
     \brief Exception handling class for RtMidi.

@@ -1,6 +1,5 @@
 #include "ChatPanel.h"
 #include "ui_ChatPanel.h"
-
 #include "ChatMessagePanel.h"
 #include <QWidget>
 #include <QScrollBar>
@@ -15,15 +14,12 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
     ui(new Ui::ChatPanel),
     botNames(botNames),
     availableColors(createColors())
-    //lastAlign(Qt::AlignLeft)
 {
     ui->setupUi(this);
     ui->scrollContent->setLayout(new QVBoxLayout(ui->scrollContent));
     ui->scrollContent->layout()->setContentsMargins(0, 0, 0, 0);
 
-    //QObject::connect(ui->chatText, SIGNAL())
     QObject::connect(ui->chatText, SIGNAL(returnPressed()), this, SLOT(on_chatTextEditionFinished()));
-    //QObject::connect(ui->chatText, SIGNAL())
     ui->chatText->installEventFilter(this);
 
     //this event is used to auto scroll down when new messages are added
@@ -32,59 +28,19 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
     //disable blue border when QLineEdit has focus in mac
     ui->chatText->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
-    //create some messages to test
-
-//    for (int user = 0; user < 2; ++user) {
-//        for (int c = 0; c < 3; ++c) {
-//            QString userName = "User " + QString::number(user);
-//            QString message = "Bit chat message with many lines to test the layout behavior";
-//            if(user % 3 == 0){
-//                userName = userName + " test";
-//                message = "short message";
-//            }
-//            addMessage(userName, message);
-//        }
-//    }
-
-//    addMessage("tester", "hi");
-
-//    QString teste("Ã©");
-//    addMessage("elieser", QString::fromUtf8(teste.toStdString().c_str()));
-
-//    addBpiVoteConfirmationMessage(33);
-//    addBpmVoteConfirmationMessage(140);
 }
 
-//void ChatPanel::on_buttonVoteBpi_Clicked(){
-////    if(mainController->isPlayingInNinjamRoom()){
-////        Controller::NinjamController* controller = mainController->getNinjamController();
-////        if(controller){
-////            if(voteConfirmationDialog->getVoteType() == VoteConfirmationType::BPI_CONFIRMATION_VOTE){
-////                controller->voteBpi(voteConfirmationDialog->getVoteValue());
-////            }
-////            else{
-////                controller->voteBpm(voteConfirmationDialog->getVoteValue());
-////            }
-////        }
-////    }
-//}
 
-//void ChatPanel::on_buttonVoteBpm_clicked(){
-
-//}
-
-bool ChatPanel::eventFilter(QObject *obj, QEvent *event)
-{
-    if (obj == ui->chatText && event->type() == QEvent::MouseButtonPress)
-    {
+bool ChatPanel::eventFilter(QObject *obj, QEvent *event){
+    if (obj == ui->chatText && event->type() == QEvent::MouseButtonPress){
         ui->chatText->setFocus();
     }
     return QWidget::eventFilter(obj, event);
 }
-
-class VoteButton : public QPushButton{
+//++++++++++++++++++++++++++++++++
+class NinjamVoteButton : public QPushButton{
 public:
-    VoteButton(QString voteType,  int voteValue)
+    NinjamVoteButton(QString voteType,  int voteValue)
         :QPushButton(
              "Vote - change "+ voteType +" to " + QString::number(voteValue)
              )
@@ -102,7 +58,7 @@ private:
 };
 
 void ChatPanel::createVoteButton(QString voteType, int value){
-    QPushButton* voteButton = new VoteButton(voteType, value);
+    QPushButton* voteButton = new NinjamVoteButton(voteType, value);
     voteButton->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
     ui->scrollContent->layout()->addWidget(voteButton);
     ui->scrollContent->layout()->setAlignment(voteButton, Qt::AlignRight);
@@ -118,7 +74,7 @@ void ChatPanel::addBpmVoteConfirmationMessage(int newBpmValue){
 }
 
 void ChatPanel::on_voteButtonClicked(){
-    VoteButton* voteButton = static_cast<VoteButton*>(QObject::sender());
+    NinjamVoteButton* voteButton = static_cast<NinjamVoteButton*>(QObject::sender());
     if(voteButton->isBpiVote()){
         emit userConfirmingVoteToBpiChange(voteButton->getVoteValue());
     }
@@ -129,7 +85,40 @@ void ChatPanel::on_voteButtonClicked(){
     voteButton->parentWidget()->layout()->removeWidget(voteButton);
     voteButton->deleteLater();
 }
+//++++++++++++++++++++++++++++++++++
 
+class ChordProgressionConfirmationButton : public QPushButton{
+public:
+    ChordProgressionConfirmationButton(QString text, ChordProgression progression)
+        : QPushButton(text), progression(progression){
+
+    }
+    inline ChordProgression getChordProgression() const{return progression;}
+private:
+    ChordProgression progression;
+};
+
+void ChatPanel::addChordProgressionConfirmationMessage(ChordProgression progression){
+    QString buttonText = "Use/load the chords above";
+    QPushButton* chordProgressionButton = new ChordProgressionConfirmationButton(buttonText, progression);
+    chordProgressionButton->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
+    ui->scrollContent->layout()->addWidget(chordProgressionButton);
+    ui->scrollContent->layout()->setAlignment(chordProgressionButton, Qt::AlignRight);
+    QObject::connect(chordProgressionButton, SIGNAL(clicked(bool)), this, SLOT(on_chordProgressionConfirmationButtonClicked()));
+}
+
+void ChatPanel::on_chordProgressionConfirmationButtonClicked(){
+    ChordProgressionConfirmationButton* chordProgressionButton = static_cast<ChordProgressionConfirmationButton*>(QObject::sender());
+
+    emit userConfirmingChordProgression(chordProgressionButton->getChordProgression());
+
+    chordProgressionButton->parentWidget()->layout()->removeWidget(chordProgressionButton);
+    chordProgressionButton->deleteLater();
+}
+
+
+
+//+++++++++++++++
 void ChatPanel::on_verticalScrollBarRangeChanged(int min, int max){
     Q_UNUSED(min)
     //used to auto scroll down to keep the last added message visible
@@ -143,18 +132,16 @@ void ChatPanel::on_chatTextEditionFinished(){
     }
 }
 
-void ChatPanel::addMessage(QString userName, QString userMessage){
+void ChatPanel::addMessage(QString userName, QString userMessage, bool showTranslationButton){
     QColor msgBackgroundColor = getUserColor(userName);
-    QColor textColor = msgBackgroundColor == BOT_COLOR ? QColor(50, 50, 50) : QColor(0, 0, 0);
+    QColor textColor = (msgBackgroundColor == BOT_COLOR) ? QColor(50, 50, 50) : QColor(0, 0, 0);
     QColor userNameBackgroundColor = msgBackgroundColor;
-    bool drawBorder = true;
     if(msgBackgroundColor != BOT_COLOR){
         userNameBackgroundColor.setHsvF(msgBackgroundColor.hueF(), msgBackgroundColor.saturationF(), msgBackgroundColor.valueF() - 0.2);
     }
-    else{
-        drawBorder = false;
-    }
-    ChatMessagePanel* msgPanel = new ChatMessagePanel(ui->scrollContent, userName, userMessage, userNameBackgroundColor, msgBackgroundColor, textColor, drawBorder);
+    ChatMessagePanel* msgPanel = new ChatMessagePanel(ui->scrollContent, userName, userMessage, userNameBackgroundColor, msgBackgroundColor, textColor, showTranslationButton);
+    msgPanel->setPrefferedTranslationLanguage(this->preferredTargetTranslationLanguage);
+    msgPanel->setMaximumWidth(ui->scrollContent->width());
     ui->scrollContent->layout()->addWidget(msgPanel);
     if(ui->scrollContent->layout()->count() > MAX_MESSAGES){
         //remove the first widget
@@ -214,9 +201,19 @@ void ChatPanel::on_buttonClear_clicked(){
     }
 
     //remove Vote buttons
-    QList<VoteButton*> buttons = ui->scrollContent->findChildren<VoteButton*>();
-    foreach (VoteButton* button, buttons) {
+    QList<NinjamVoteButton*> buttons = ui->scrollContent->findChildren<NinjamVoteButton*>();
+    foreach (NinjamVoteButton* button, buttons) {
         ui->scrollContent->layout()->removeWidget(button);
         button->deleteLater();
+    }
+}
+
+void ChatPanel::setPreferredTranslationLanguage(QString targetLanguage){
+    if(targetLanguage != this->preferredTargetTranslationLanguage){
+        this->preferredTargetTranslationLanguage = targetLanguage;
+        QList<ChatMessagePanel*> panels = ui->scrollContent->findChildren<ChatMessagePanel*>();
+        foreach (ChatMessagePanel* msgPanel, panels) {
+            msgPanel->setPrefferedTranslationLanguage(targetLanguage);
+        }
     }
 }

@@ -78,36 +78,27 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
     internalInputBuffer.setFrameLenght(out.getFrameLenght());
     internalOutputBuffer.setFrameLenght(out.getFrameLenght() );
 
-    //internalInputBuffer.set(in);
-    //internalOutputBuffer.set(internalInputBuffer);
-
     {
         QMutexLocker locker(&mutex);
         foreach (AudioNode* node, connections) {//ask connected nodes to generate audio
-            //node->processReplacing(in, internalOutputBuffer, sampleRate, midiBuffer);
             node->processReplacing(internalInputBuffer, internalOutputBuffer, sampleRate, midiBuffer);
         }
     }
 
-    //process inserted plugins
-    foreach (AudioNodeProcessor* processor, processors) {
-        //in the first iteration internalOutputBuffer contains the internalInputBuffer
-        //content. In next interations the internalOutputBuffer is used as
-        //input for the next plugin. So, the 2nd plugin in the list receive the first
-        //plugin output as input. The 3rd plugin receive the 2nd plugin output as
-        //input, etc.
-        if(!processor->isBypassed() ){
-            processor->process(internalInputBuffer, internalOutputBuffer, midiBuffer);
-            internalInputBuffer.set(internalOutputBuffer);
-        }
-        else{
-            internalOutputBuffer.add(internalInputBuffer);//bypassed, just accumulate input in output buffer
+    internalOutputBuffer.set(internalInputBuffer);//if we have no plugins insert the input samples are just copied  to output buffer.
+
+    if(!processors.isEmpty()){
+        static SamplesBuffer tempInputBuffer(2);
+        //process inserted plugins
+        foreach (AudioNodeProcessor* processor, processors) {
+            if(!processor->isBypassed() ){
+                tempInputBuffer.setFrameLenght(internalOutputBuffer.getFrameLenght());
+                tempInputBuffer.set(internalOutputBuffer);
+                processor->process(tempInputBuffer, internalOutputBuffer, midiBuffer);
+            }
         }
     }
 
-    if(processors.isEmpty()){
-        internalOutputBuffer.set(internalInputBuffer);
-    }
     internalOutputBuffer.applyGain(gain, leftGain, rightGain, boost);
 
     lastPeak.update(internalOutputBuffer.computePeak());
@@ -287,7 +278,8 @@ void OscillatorAudioNode::processReplacing(const Audio::SamplesBuffer &in, Audio
 }
 //++++++++++++++++++++++++++++++++++++++++++++++
 LocalInputAudioNode::LocalInputAudioNode(int parentChannelIndex, bool isMono)
-    : globalFirstInputIndex(0), channelIndex(parentChannelIndex)
+    : globalFirstInputIndex(0), channelIndex(parentChannelIndex),
+        lastMidiActivity(0)
 {
     Q_UNUSED(isMono)
     //setAudioInputSelection(0, isMono ? 1 : 2);
@@ -327,6 +319,17 @@ void LocalInputAudioNode::setProcessorsSampleRate(int newSampleRate){
 void LocalInputAudioNode::closeProcessorsWindows(){
     foreach (Audio::AudioNodeProcessor* p, processors) {
         p->closeEditor();
+    }
+}
+
+void LocalInputAudioNode::addProcessor( AudioNodeProcessor* newProcessor){
+    AudioNode::addProcessor(newProcessor);
+
+    //if newProcessor is the first added processor and is a virtual instrument (VSTi) change the input selection to midi
+    if(processors.size() == 1 &&  newProcessor->isVirtualInstrument()){
+        if(!isMidi()){
+            setMidiInputSelection(0, -1);//select the first midi device, all channels (-1)
+        }
     }
 }
 
@@ -393,6 +396,14 @@ void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffe
                     Midi::MidiMessage message = midiBuffer.getMessage(m);
                     if( message.getDeviceIndex() == midiDeviceIndex && (isReceivingAllMidiChannels() || message.getChannel() == midiChannelIndex)){
                         filteredMidiBuffer.addMessage(message);
+
+                        //save the midi activity peak value for notes or controls
+                        if(message.isNote() || message.isControl()){
+                            quint8 activityValue = message.getData2();
+                            if(activityValue > lastMidiActivity){
+                                lastMidiActivity = activityValue;
+                            }
+                        }
                     }
                 }
             }

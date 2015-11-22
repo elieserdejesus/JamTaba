@@ -39,9 +39,10 @@ enum class RoomTYPE{NINJAM, REALTIME};
 
 class RoomInfo{
 public:
-    RoomInfo(long long id, QString roomName, int roomPort, RoomTYPE roomType, int maxUsers, QList<UserInfo> users, int maxChannels=0, QString streamUrl="");
+    RoomInfo(long long id, QString roomName, int roomPort, RoomTYPE roomType, int maxUsers, QList<UserInfo> users, int maxChannels, int bpi, int bpm, QString streamUrl="");
+    //RoomInfo(long long id, QString roomName, int roomPort, RoomTYPE roomType, int maxUsers, QList<UserInfo> users, int maxChannels=0, QString streamUrl="");
     RoomInfo(QString roomName, int roomPort, RoomTYPE roomType, int maxUsers, int maxChannels=0);
-    RoomInfo(const RoomInfo& other);
+    //RoomInfo(const RoomInfo& other);
     ~RoomInfo(){}
     inline QString getName() const{return name;}
     inline RoomTYPE getType() const{return type;}
@@ -55,6 +56,9 @@ public:
     inline QString getStreamUrl() const{return streamUrl;}
     inline int getMaxChannels() const {return maxChannels;}
     int getNonBotUsersCount() const;
+    inline int getMaxUsers() const{return maxUsers;}
+    inline int getBpm() const{return bpm;}
+    inline int getBpi() const{return bpi;}
 protected:
     long long id;
     QString name;
@@ -64,6 +68,8 @@ protected:
     int maxChannels;
     QList<UserInfo> users;
     QString streamUrl;
+    int bpi;
+    int bpm;
 
 };
 

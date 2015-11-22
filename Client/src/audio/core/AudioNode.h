@@ -28,6 +28,8 @@ public:
     virtual void setSampleRate(int newSampleRate){ Q_UNUSED(newSampleRate);}
     virtual void setBypass(bool state);
     bool isBypassed() const{return bypassed;}
+    virtual bool isVirtualInstrument() const{ return false;}
+
 protected:
     bool bypassed;
 };
@@ -68,7 +70,7 @@ public:
     virtual bool connect(AudioNode &other) ;
     virtual bool disconnect(AudioNode &otherNode);
 
-    void addProcessor(AudioNodeProcessor *newProcessor);
+    virtual void addProcessor(AudioNodeProcessor *newProcessor);
     void removeProcessor(AudioNodeProcessor* processor);
     void suspendProcessors();
     void resumeProcessors();
@@ -172,6 +174,13 @@ public:
     const Audio::SamplesBuffer& getLastBuffer() const{return internalOutputBuffer;}
     void setProcessorsSampleRate(int newSampleRate);
     void closeProcessorsWindows();
+
+    inline bool hasMidiActivity() const{ return lastMidiActivity > 0;}
+    quint8 getMidiActivityValue() const {return lastMidiActivity;}
+    inline void resetMidiActivity() { lastMidiActivity = 0;}
+
+    //overriding
+    void addProcessor( AudioNodeProcessor* newProcessor);
 private:
     int globalFirstInputIndex; //store the first input index selected globally by users in preferences menu
     ChannelRange audioInputRange;
@@ -189,7 +198,7 @@ private:
 
     InputMode inputMode = DISABLED;
 
-
+    quint8 lastMidiActivity;//max velocity or control value
 
 };
 //++++++++++++++++++++++++

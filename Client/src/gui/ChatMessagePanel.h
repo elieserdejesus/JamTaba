@@ -16,12 +16,9 @@ class ChatMessagePanel : public QWidget
 
 public:
     explicit ChatMessagePanel(QWidget *parent);
-    //ChatMessagePanel(QWidget *parent, QString userName, QString msg, QColor backgroundColor);
-    ChatMessagePanel(QWidget *parent, QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool drawBorder=true);
+    ChatMessagePanel(QWidget *parent, QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool showTranslationButton);
     ~ChatMessagePanel();
-
-//    QSize sizeHint() const;
-//    QSize minimumSizeHint() const;
+    void setPrefferedTranslationLanguage(QString targetLanguage);
 
 private slots:
     void on_translateButton_clicked();
@@ -32,12 +29,13 @@ private:
     QString originalText;
     QString translatedText;
     Ui::ChatMessagePanel *ui;
+    QString preferredTargetTranslationLanguage;
     static QString colorToCSS(QColor);
     static QString replaceLinksInString(QString str);
 
-    static QString buildCssString(QColor bgColor, QColor textColor, bool drawBorder);
+    static QString buildCssString(QColor bgColor, QColor textColor);
 
-    void initialize(QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool drawBorder);
+    void initialize(QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool showTranslationButton);
 
     void setTranslatedMessage(QString translatedMessage);
 };

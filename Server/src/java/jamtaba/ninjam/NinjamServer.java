@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * @author zeh
  */
-public class NinjaMServer {
+public class NinjamServer {
 
     private final int port;
     private final String host;
@@ -19,10 +19,10 @@ public class NinjaMServer {
     //private final boolean isActive;
     private final String streamUrl;
 
-    private final Map<String, NinjaMUser> users = new HashMap<String, NinjaMUser>();
+    private final Map<String, NinjamUser> users = new HashMap<String, NinjamUser>();
 
     
-    public NinjaMServer(String host, int port, int maxUsers, int bpm, short bpi, String streamUrl) {
+    public NinjamServer(String host, int port, int maxUsers, int bpm, short bpi, String streamUrl) {
         this.port = port;
         this.host = host;
         this.streamUrl = streamUrl;
@@ -35,7 +35,7 @@ public class NinjaMServer {
         return streamUrl;
     }
 
-    public void addUser(NinjaMUser user) {
+    public void addUser(NinjamUser user) {
         if (!users.containsKey(user.getFullName())) {
             users.put(user.getFullName(), user);
         }
@@ -53,7 +53,7 @@ public class NinjaMServer {
         return maxUsers;
     }
 
-    public List<NinjaMUser> getUsers() {
+    public List<NinjamUser> getUsers() {
         return new ArrayList(users.values());
     }
 

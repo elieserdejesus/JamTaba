@@ -65,11 +65,13 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply){
     if(reply->error() == QNetworkReply::NoError ){
         QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
         QJsonObject root = doc.object();
-        QString countryName = root["country"].toString();
-        QString countryCode = root["country_code"].toString();
+        QJsonObject countryObject = root["country"].toObject();
+        QString countryName = countryObject["name"].toString();
+        QString countryCode = countryObject["code"].toString();
         QString city        = "";//root["city"].toString();
-        double latitude     = root["latitude"].toDouble();
-        double longitude     = root["longitude"].toDouble();
+        QJsonObject locationObject = root["location"].toObject();
+        double latitude     = locationObject["latitude"].toDouble();
+        double longitude     = locationObject["longitude"].toDouble();
         Location location(countryName, countryCode, city, latitude, longitude);
         locationCache.insert(ip, location);
     }
@@ -83,11 +85,12 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply){
 void WebIpToLocationResolver::requestDataFromWebServer(QString ip){
     qCDebug(jtIpToLocation) << "requesting ip " << ip ;
     QNetworkRequest request;
-    // http://www.telize.com/geoip/
-    // http://geoip.nekudo.com/
+    // http://www.telize.com/geoip/ - The REST API is no longer free
+    // http://geoip.nekudo.com/ - the current API
     //https://freegeoip.net/json/
-    QString serviceUrl = "http://www.telize.com/geoip/";
-    request.setUrl(QUrl(serviceUrl + ip));
+    //http://geoip.nekudo.com/api/{ip}/{language}/{type}
+    QString serviceUrl = "http://geoip.nekudo.com/api/";
+    request.setUrl(QUrl(serviceUrl + ip + "/en/short"));
 
     QNetworkReply* reply = httpClient.get(request);
     reply->setProperty("ip", QVariant(ip));
@@ -103,8 +106,6 @@ Geo::Location WebIpToLocationResolver::resolve(QString ip){
         qCDebug(jtIpToLocation) << "cache hit for " << ip;
         return locationCache[ip];
     }
-//QTimer::singleShot(50, this, &MainFrame::restorePluginsList)
-    //QTimer::singleShot(1000, this, &Geo::FreeGeoIpToLocationResolver::requestDataFromWebServer, ip);
     if(!ip.isEmpty() && !ip.isNull()){
         requestDataFromWebServer(ip);
     }

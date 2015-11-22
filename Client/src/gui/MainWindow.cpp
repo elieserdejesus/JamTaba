@@ -26,6 +26,7 @@
 #include "ChatPanel.h"
 #include "BusyDialog.h"
 #include "PrivateServerDialog.h"
+//#include "../performance/PerformanceMonitor.h"
 
 #include "../NinjamController.h"
 #include "../ninjam/Server.h"
@@ -40,11 +41,14 @@
 #include "../audio/RoomStreamerNode.h"
 #include "UserNameDialog.h"
 #include "../log/logging.h"
+#include <QShortcut>
 
 using namespace Audio;
 using namespace Persistence;
 using namespace Controller;
 using namespace Ninjam;
+
+//const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200;//in miliseconds
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainWindow::MainWindow(Controller::MainController *mainController, QWidget *parent)
@@ -56,9 +60,12 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     ninjamWindow(nullptr),
     roomToJump(nullptr),
     fullViewMode(true)
+    //lastPerformanceMonitorUpdate(0)
 {
     qCInfo(jtGUI) << "Creating MainWindow...";
 	ui.setupUi(this);
+
+
 
     setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
 
@@ -81,7 +88,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     timerID = startTimer(1000/50);
 
-    //ui.menuPreferences
     QObject::connect(ui.menuPreferences, SIGNAL(triggered(QAction*)), this, SLOT(on_preferencesClicked(QAction*)));
     QObject::connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this, SLOT(on_ninjamCommunityMenuItemTriggered()));
     QObject::connect(ui.actionNinjam_Official_Site, SIGNAL(triggered(bool)), this, SLOT(on_ninjamOfficialSiteMenuItemTriggered()));
@@ -89,15 +95,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     QObject::connect(ui.actionReportBugs, SIGNAL(triggered(bool)), this, SLOT(on_reportBugMenuItemTriggered()));
     QObject::connect(ui.actionWiki, SIGNAL(triggered(bool)), this, SLOT(on_wikiMenuItemTriggered()));
     QObject::connect(ui.actionUsersManual, SIGNAL(triggered(bool)), this, SLOT(on_UsersManualMenuItemTriggered()));
-
     QObject::connect( ui.localControlsCollapseButton, SIGNAL(clicked()), this, SLOT(on_localControlsCollapseButtonClicked()));
-
-    QObject::connect(ui.xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
-
-
     QObject::connect( mainController->getRoomStreamer(), SIGNAL(error(QString)), this, SLOT(on_RoomStreamerError(QString)));
-
-    ui.xmitButton->setChecked(mainController->isTransmiting());
 
     initializeLocalInputChannels();
 
@@ -115,6 +114,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
         this->ui.actionVstPreferences->setVisible(false);
         this->ui.actionAudioPreferences->setVisible(false);
         this->ui.actionMidiPreferences->setVisible(false);
+        this->ui.actionQuit->setVisible(false);
     }
 
     initializeWindowState();//window size, maximization ...
@@ -148,7 +148,6 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly){
         channel->setPeakMeterMode(showPeakMetersOnly);
     }
     ui.labelSectionTitle->setVisible(!showPeakMetersOnly);
-    ui.xmitButton->setText(showPeakMetersOnly ? "X" : "Transmit");
 
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
     recalculateLeftPanelWidth();
@@ -343,7 +342,7 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
             localTrackView->refreshInputSelectionName();
         }
     }
-    localChannel->setUnlightStatus(!ui.xmitButton->isChecked());
+
     if(!fullViewMode && localChannels.count() > 1){
         foreach (LocalTrackGroupView* trackGroup, localChannels) {
             trackGroup->setToNarrow();
@@ -645,7 +644,7 @@ void MainWindow::refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms){
             int collumnIndex = fullViewMode ? (index % 2) : 0;//use one collumn if user choosing mini view mode
             JamRoomViewPanel* roomViewPanel = roomViewPanels[roomInfo.getID()];
             if(roomViewPanel){
-                roomViewPanel->refreshUsersList(roomInfo);
+                roomViewPanel->refresh(roomInfo);
                 ui.allRoomsContent->layout()->removeWidget(roomViewPanel); //the widget is removed but added again
             }
             else{
@@ -712,19 +711,26 @@ void MainWindow::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
             centerDialog(&dialog);
         }
         if(dialog.exec() == QDialog::Accepted){
-            QString userName = dialog.getUserName();
+            QString userName = dialog.getUserName().trimmed();
             if(!userName.isEmpty()){
                 mainController->setUserName(userName);
                 setWindowTitle("Jamtaba v" + QApplication::applicationVersion() + " (" + userName + ")");
             }
+            else{
+                QMessageBox::warning(this, "Warning!", "Empty name is not allowed!");
+            }
+        }
+        else{
+            qWarning() << "name dialog canceled";
         }
     }
 
     if(mainController->isPlayingInNinjamRoom()){
-        mainController->stopNinjamController();//disconnect from current ninjam server
         //store the room to jump and wait for disconnectedFromServer event to connect in this new room
         roomToJump.reset( new Login::RoomInfo(roomInfo));
         passwordToJump = password;
+
+        mainController->stopNinjamController();//disconnect from current ninjam server
     }
     else if(mainController->userNameWasChoosed()){
         showBusyDialog("Connecting in " + roomInfo.getName() + " ...");
@@ -740,11 +746,7 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
     qCDebug(jtGUI) << "hidding busy dialog...";
     hideBusyDialog();
 
-//    if(ninjamWindow){
-//        ninjamWindow->deleteLater();
-//    }
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
-    //ninjamWindow.reset( new NinjamRoomWindow(this, roomInfo, mainController));
     ninjamWindow.reset( createNinjamWindow(roomInfo, mainController));
     QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
     ninjamWindow->setFullViewStatus(this->fullViewMode);
@@ -763,8 +765,28 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
     ui.leftPanel->adjustSize();
     //ui.leftPanel->setMinimumWidth(500);
     qCDebug(jtGUI) << "MainWindow::enterInRoom() done!";
+
+    QObject::connect(mainController->getNinjamController(), SIGNAL(preparedToTransmit()), this, SLOT(ninjamTransmissionStarted()));
+    QObject::connect(mainController->getNinjamController(), SIGNAL(preparingTransmission()), this, SLOT(ninjamPreparingToTransmit()));
 }
 
+//+++++++++++++++ PREPARING TO XMIT +++++++++++
+//this signal is received when ninjam controller is ready to transmit (after wait for 1 or 2 complete intervals).
+void MainWindow::ninjamTransmissionStarted(){
+    foreach (LocalTrackGroupView* localChannel, localChannels) {
+        if(localChannel->isPreparingToTransmit()){
+            localChannel->setPreparingStatus(false);//tracks are transmiting now
+        }
+    }
+}
+
+void MainWindow::ninjamPreparingToTransmit(){
+    foreach (LocalTrackGroupView* localChannel, localChannels) {
+        localChannel->setPreparingStatus(true);//tracks are waiting to start transmiting
+    }
+}
+
+//+++++++++++++++++++++++++++++
 void MainWindow::exitFromRoom(bool normalDisconnection){
     hideBusyDialog();
 
@@ -829,6 +851,13 @@ void MainWindow::timerEvent(QTimerEvent *){
         }
     }
 
+    //update cpu and memmory usage
+//    qint64 now = QDateTime::currentMSecsSinceEpoch();
+//    if(now - lastPerformanceMonitorUpdate >= PERFORMANCE_MONITOR_REFRESH_TIME){
+//        ui.tabWidget->setResourcesUsage(performanceMonitor.getCpuUsage(), performanceMonitor.getMemmoryUsage());
+//        lastPerformanceMonitorUpdate = now;
+//    }
+
     //update room stream plot
     if(mainController->isPlayingRoomStream()){
           long long roomID = mainController->getCurrentStreamingRoomID();
@@ -841,18 +870,6 @@ void MainWindow::timerEvent(QTimerEvent *){
 }
 
 //++++++++++++=
-void MainWindow::on_xmitButtonClicked(bool checked){
-    foreach (LocalTrackGroupView* localChannel, localChannels) {
-        localChannel->setUnlightStatus(!checked);
-    }
-    mainController->setTransmitingStatus(checked);
-
-
-
-}
-
-//++++++++++++=
-
 void MainWindow::resizeEvent(QResizeEvent *){
     if(busyDialog.isVisible()){
         centerBusyDialog();
@@ -973,6 +990,12 @@ void MainWindow::on_ninjamOfficialSiteMenuItemTriggered(){
 // preferences menu
 void MainWindow::on_preferencesClicked(QAction* action)
 {
+    //Use of action now !
+    if(!mainController->isRunningAsVstPlugin()){
+        if(action->objectName().contains("actionQuit")){
+            this->close();return;
+        }
+    }
     Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
     AudioDriver* audioDriver = mainController->getAudioDriver();
     if(audioDriver){
@@ -1041,7 +1064,15 @@ void MainWindow::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audio
     }
 
     mainController->getMidiDriver()->start();
-    mainController->getAudioDriver()->start();
+    try{
+        mainController->getAudioDriver()->start();
+    }
+    catch(const std::runtime_error& error){
+        qCritical() << "Error starting audio device: " << QString::fromUtf8(error.what());
+        QMessageBox::warning(this, "Audio error!", "The audio device can't be started! Please check your audio device and try restart Jamtaba!");
+        mainController->useNullAudioDriver();
+    }
+
 }
 
 //input selection changed by user or by system
@@ -1056,8 +1087,14 @@ void MainWindow::refreshTrackInputSelection(int inputTrackIndex){
 void MainWindow::onScanPluginsStarted(){
     if(!pluginScanDialog){
         pluginScanDialog.reset( new PluginScanDialog(this));
+        QObject::connect(pluginScanDialog.data(), SIGNAL(rejected()), this, SLOT(on_pluginFinderDialogCanceled()));
     }
     pluginScanDialog->show();
+}
+
+void MainWindow::on_pluginFinderDialogCanceled(){
+    mainController->cancelPluginFinder();
+    pluginScanDialog.reset();//reset to null pointer
 }
 
 void MainWindow::onScanPluginsFinished(){
@@ -1090,13 +1127,15 @@ void MainWindow::initializeViewModeMenu(){
     QActionGroup* group = new QActionGroup(this);
     ui.actionFullView->setActionGroup(group);
     ui.actionMiniView->setActionGroup(group);
+
 }
 
 
-void MainWindow::on_menuViewModeTriggered(QAction *){
+void MainWindow::on_menuViewModeTriggered(QAction *)
+{
     setFullViewStatus(ui.actionFullView->isChecked());
-
 }
+
 
 void MainWindow::setFullViewStatus(bool fullViewActivated){
     this->fullViewMode = fullViewActivated;
@@ -1168,3 +1207,22 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
     }
     return QMainWindow::eventFilter(target, event);
 }
+
+void MainWindow::on_actionFullscreenMode_triggered()
+{
+      if(!ui.actionFullscreenMode->isChecked())
+      {this->setWindowState(Qt::WindowMaximized);}
+      else
+      {this->setWindowState(Qt::WindowFullScreen);}
+}
+
+//++++++++++++++++++++++++
+void MainWindow::setTransmitingStatus(int channelID, bool xmitStatus){
+    mainController->setTransmitingStatus(channelID, xmitStatus);
+}
+
+bool MainWindow::isTransmiting(int channelID) const{
+    return mainController->isTransmiting(channelID);
+}
+
+//++++++++++++

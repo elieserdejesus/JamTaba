@@ -5,7 +5,7 @@ import java.util.Random;
 /**
  * @author elieser
  */
-public class NinjaMUser {
+public class NinjamUser {
 
     private final static Random random = new Random(System.currentTimeMillis());
     
@@ -14,7 +14,7 @@ public class NinjaMUser {
     private final String fullName;
     private final String countryCode;
 
-    public NinjaMUser(String name, String ip, String coutryCode) {
+    public NinjamUser(String name, String ip, String coutryCode) {
         this.fullName = !ip.isEmpty() ? (name + "@" + ip) : name;
         this.name = name;
         this.ip = getSanitizedIp(ip);

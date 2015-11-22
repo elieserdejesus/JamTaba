@@ -3,6 +3,7 @@
 #include "BaseTrackView.h"
 #include <QWidget>
 #include <QTimer>
+#include "PeakMeter.h"
 
 class QMenu;
 class FxPanel;
@@ -44,10 +45,12 @@ public:
 
     virtual void setUnlightStatus(bool unlighted);
 
-    void setPeakMetersOnlyMode(bool peakMetersOnly);
-    void togglePeakMetersOnlyMode();
+    void setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode);
+    void togglePeakMetersOnlyMode(bool runninsInMiniMode);
 
     QSize sizeHint() const;
+
+    void updateGuiElements();//overriding to show midi activity
 
 private:
     //int inputIndex;
@@ -66,6 +69,10 @@ private:
     QLabel* inputTypeIconLabel;
 
     QWidget* inputPanel;
+
+    PeakMeter* midiPeakMeter;//show midi activity
+
+    void setMidiPeakMeterVisibility(bool visible);
 
     static const QString MIDI_ICON;
     static const QString MONO_ICON;

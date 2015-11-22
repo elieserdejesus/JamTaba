@@ -16,10 +16,10 @@ import java.util.logging.Logger;
 public class NinjamServers {
     
     private static final int UPDATE_PERIOD = 10000;//10 seconds
-    private static Collection<NinjaMServer> servers = new ArrayList<NinjaMServer>();
+    private static Collection<NinjamServer> servers = new ArrayList<NinjamServer>();
     private static long lastUpdate=  0;
     
-    public static Collection<NinjaMServer> getServers(IpToCountryResolver ipToCountryResolver){
+    public static Collection<NinjamServer> getServers(IpToCountryResolver ipToCountryResolver){
         if(needUpdate()){
            try{
             servers = ServersParser.getPublicServers(ipToCountryResolver);

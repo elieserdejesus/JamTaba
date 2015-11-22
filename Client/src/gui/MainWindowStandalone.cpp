@@ -7,6 +7,7 @@ MainWindowStandalone::MainWindowStandalone(Controller::MainController* controlle
     :MainWindow(controller){
 
     initializePluginFinder();
+    QTimer::singleShot(50, this, &MainWindowStandalone::restorePluginsList);
 }
 
 NinjamRoomWindow* MainWindowStandalone::createNinjamWindow(Login::RoomInfo roomInfo, Controller::MainController* mainController){
@@ -22,9 +23,11 @@ void MainWindowStandalone::closeEvent(QCloseEvent * e){
     }
 }
 
-void MainWindowStandalone::showEvent(QShowEvent *){
+void MainWindowStandalone::showEvent(QShowEvent *ent){
+
+//TODO restorePluginsList(bool fromSettings)
     //wait 50 ms before restore the plugins list to avoid freeze the GUI in hidden state while plugins are loading
-    QTimer::singleShot(50, this, &MainWindowStandalone::restorePluginsList);
+    //QTimer::singleShot(50, this, &MainWindowStandalone::restorePluginsList);
 }
 
 void MainWindowStandalone::initializePluginFinder(){
