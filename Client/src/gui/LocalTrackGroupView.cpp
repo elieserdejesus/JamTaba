@@ -11,7 +11,7 @@
 #include <QMenu>
 
 LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame)
-    :index(channelIndex), mainFrame(mainFrame), peakMeterOnly(false)
+    :index(channelIndex), mainFrame(mainFrame), peakMeterOnly(false), preparingToTransmit(false)
 {
     toolButton = createToolButton();
     this->ui->topPanel->layout()->addWidget(toolButton);
@@ -24,6 +24,7 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
     QObject::connect(xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
 
     xmitButton->setChecked(true);
+
 }
 
 LocalTrackGroupView::~LocalTrackGroupView()
@@ -31,9 +32,23 @@ LocalTrackGroupView::~LocalTrackGroupView()
 
 }
 
+void LocalTrackGroupView::setPreparingStatus(bool preparing){
+    this->preparingToTransmit = preparing;
+    xmitButton->setEnabled(!preparing);
+    if(!isShowingPeakMeterOnly()){
+        xmitButton->setText(preparing ? "Preparing" : "Transmiting" );
+    }
+
+    xmitButton->setProperty("preparing", QVariant(preparing));//change the button property to change stylesheet
+    style()->unpolish(xmitButton); //force the computation of the new stylesheet for "preparing" state in QPushButton
+    style()->polish(xmitButton);
+}
+
 void LocalTrackGroupView::on_xmitButtonClicked(bool checked){
-    setUnlightStatus(!checked);
-    mainFrame->setTransmitingStatus(getChannelIndex(), checked);
+    if(!preparingToTransmit){//users can't change xmit when is preparing
+        setUnlightStatus(!checked);
+        mainFrame->setTransmitingStatus(getChannelIndex(), checked);
+    }
 }
 
 QPushButton* LocalTrackGroupView::createXmitButton(){

@@ -746,11 +746,7 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
     qCDebug(jtGUI) << "hidding busy dialog...";
     hideBusyDialog();
 
-//    if(ninjamWindow){
-//        ninjamWindow->deleteLater();
-//    }
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
-    //ninjamWindow.reset( new NinjamRoomWindow(this, roomInfo, mainController));
     ninjamWindow.reset( createNinjamWindow(roomInfo, mainController));
     QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
     ninjamWindow->setFullViewStatus(this->fullViewMode);
@@ -769,8 +765,28 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
     ui.leftPanel->adjustSize();
     //ui.leftPanel->setMinimumWidth(500);
     qCDebug(jtGUI) << "MainWindow::enterInRoom() done!";
+
+    QObject::connect(mainController->getNinjamController(), SIGNAL(preparedToTransmit()), this, SLOT(ninjamTransmissionStarted()));
+    QObject::connect(mainController->getNinjamController(), SIGNAL(preparingTransmission()), this, SLOT(ninjamPreparingToTransmit()));
 }
 
+//+++++++++++++++ PREPARING TO XMIT +++++++++++
+//this signal is received when ninjam controller is ready to transmit (after wait for 1 or 2 complete intervals).
+void MainWindow::ninjamTransmissionStarted(){
+    foreach (LocalTrackGroupView* localChannel, localChannels) {
+        if(localChannel->isPreparingToTransmit()){
+            localChannel->setPreparingStatus(false);//tracks are transmiting now
+        }
+    }
+}
+
+void MainWindow::ninjamPreparingToTransmit(){
+    foreach (LocalTrackGroupView* localChannel, localChannels) {
+        localChannel->setPreparingStatus(true);//tracks are waiting to start transmiting
+    }
+}
+
+//+++++++++++++++++++++++++++++
 void MainWindow::exitFromRoom(bool normalDisconnection){
     hideBusyDialog();
 
