@@ -1254,7 +1254,7 @@ void MainWindow::resetGroupChannel(LocalTrackGroupView *group)
          //pan now
          trackViews.at(track)->getInputNode()->setPan(0.0f);
          //boost
-         trackViews.at(track)->getInputNode()->setBoost(0.0f);
+         trackViews.at(track)->getInputNode()->setBoost(1.0f);
 
 
      }
