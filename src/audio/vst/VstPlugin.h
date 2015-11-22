@@ -32,6 +32,7 @@ public:
     void setSampleRate(int newSampleRate);
     void setBypass(bool state);
     static QDialog* getPluginEditorWindow(QString pluginName);
+    bool isVirtualInstrument() const;
 protected:
     void unload();
 

@@ -95,8 +95,8 @@ public:
     bool isPlayingInNinjamRoom() const;
     virtual void stopNinjamController();
 
-    void setTransmitingStatus(bool transmiting);
-    inline bool isTransmiting() const{return transmiting;}
+    void setTransmitingStatus(int channelID, bool transmiting);
+    bool isTransmiting(int channelID) const;
 
     void stopRoomStream();//stop currentRoom stream
     inline long long getCurrentStreamingRoomID() const{return currentStreamingRoomID;}
@@ -205,9 +205,9 @@ public:
 
     bool isUsingNullAudioDriver() const;
 
-    static QString getWritablePath();
-    static QString getLogConfigFilePath();
-    static void exportLogFile();//write log file in the application writable path, so users can change log details
+    void useNullAudioDriver();//use when the audio driver fails
+
+    void cancelPluginFinder();
 
 protected:
 
@@ -246,13 +246,15 @@ private:
     void setAllTracksActivation(bool activated);
     void doAudioProcess(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate);
 
+    bool inputIndexIsValid(int inputIndex);
+
     QScopedPointer<Audio::AbstractMp3Streamer> roomStreamer;
     long long currentStreamingRoomID;
 
     class InputTrackGroup;
     QMap<int, InputTrackGroup*> trackGroups;
 
-    bool transmiting;
+    QMap<int, bool> getXmitChannelsFlags() const;
 
     QMap<long, Audio::AudioNode*> tracksNodes;
     QMutex mutex;

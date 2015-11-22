@@ -70,7 +70,9 @@ win32 {
     INCLUDEPATH += "$$VST_SDK_PATH/pluginterfaces/vst2.x/"
     INCLUDEPATH += "$$VST_SDK_PATH/public.sdk/source/vst2.x"
 
-    LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32  \
+    LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32 #-lPsapi
+    #performance monitor lib
+    #QMAKE_CXXFLAGS += -DPSAPI_VERSION=1
 
     !contains(QMAKE_TARGET.arch, x86_64) {
         message("x86 build") ## Windows x86 (32bit) specific build here

@@ -19,18 +19,27 @@ JamRoomViewPanel::JamRoomViewPanel(Login::RoomInfo roomInfo, QWidget* parent, Co
 }
 
 
-void JamRoomViewPanel::refreshUsersList(Login::RoomInfo roomInfo){
+QString JamRoomViewPanel::buildRoomDescriptionString(Login::RoomInfo roomInfo){
+    if(roomInfo.isEmpty() || roomContainsBotsOnly(roomInfo)){
+        return "empty room";
+    }
+    int botsCount =roomInfo.getUsers().count() - roomInfo.getNonBotUsersCount();
+    int maxUsers = roomInfo.getMaxUsers() - botsCount;
+    int users = roomInfo.getNonBotUsersCount();
+    QString roomDescription = (!roomInfo.isFull()) ? (QString::number(users) + "/" + QString::number(maxUsers) + " players ") : "crowded room";
+    if(roomInfo.getBpm() > 0){
+        roomDescription += "  " + QString::number(roomInfo.getBpm()) + " BPM ";
+    }
+    if(roomInfo.getType() == Login::RoomTYPE::NINJAM && roomInfo.getBpi() > 0){
+        roomDescription += "  " + QString::number(roomInfo.getBpi()) + " BPI";
+    }
+    return roomDescription;
+}
+
+void JamRoomViewPanel::refresh(Login::RoomInfo roomInfo){
     this->roomInfo = roomInfo;
 
-    if(roomInfo.isEmpty() || roomContainsBotsOnly(roomInfo)){
-        ui->labelRoomStatus->setText( "Empty room!"  );
-    }
-    else if(roomInfo.isFull() ){
-        ui->labelRoomStatus->setText( "Crowded room!");
-    }
-    else{
-        ui->labelRoomStatus->setText("");
-    }
+    ui->labelRoomStatus->setText(buildRoomDescriptionString(roomInfo));
 
     //remove all users labels from layout
     QList<QLabel*> allUserLabels = ui->usersPanel->findChildren<QLabel*>();
@@ -46,10 +55,20 @@ void JamRoomViewPanel::refreshUsersList(Login::RoomInfo roomInfo){
             QLabel* label = new QLabel(ui->usersPanel);
             label->setTextFormat(Qt::RichText);
             Geo::Location userLocation = mainController->getGeoLocation(user.getIp());
-            QString countryCode = userLocation.getCountryCode().toLower();
-            QString countryName = userLocation.getCountryName();
-            QString userString = user.getName() +  ( !userLocation.isUnknown() ? (" <i>(" + countryName + ")</i>") : "");
-            label->setText("<img src=:/flags/flags/" + countryCode +".png> " + userString);
+            QString userString = user.getName();
+            QString imageString = "";
+            if(!userLocation.isUnknown()){
+                userString += " <i>(" + userLocation.getCountryName() + ")</i>";
+                QString countryCode = userLocation.getCountryCode().toLower();
+                imageString = "<img src=:/flags/flags/" + countryCode +".png> ";
+                label->setToolTip("");
+            }
+            else{
+                imageString = "<img src=:/images/warning.png> ";
+                label->setToolTip(user.getName() + " location is not available at moment!");
+            }
+            label->setText(imageString + userString);
+
             ui->usersPanel->layout()->addWidget(label);
             ui->usersPanel->layout()->setAlignment(Qt::AlignTop);
         }
@@ -60,6 +79,14 @@ void JamRoomViewPanel::refreshUsersList(Login::RoomInfo roomInfo){
 //    //ui->webView->setUrl(gMapURL);
 
     ui->buttonListen->setEnabled(roomInfo.hasStream() && !roomInfo.isEmpty());
+    if(!roomInfo.hasStream()){
+        ui->buttonListen->setIcon(QIcon(":/images/warning.png"));
+        ui->buttonListen->setToolTip("The audio stream of this room is not available at moment!");
+    }
+    else{
+        ui->buttonListen->setIcon(QIcon());//remove the icon
+        ui->buttonListen->setToolTip("");//clean the tooltip
+    }
     ui->buttonEnter->setEnabled(!roomInfo.isFull());
 }
 
@@ -99,9 +126,7 @@ void JamRoomViewPanel::initialize(Login::RoomInfo roomInfo){
         roomName += " (" + QString::number(roomInfo.getPort()) + ")";
     }
     ui->labelName->setText( roomName );
-    //ui->labelRoomType->setText( (roomInfo.getType() == Login::RoomTYPE::NINJAM) ? "Ninjam" : "RealTime");
-
-    refreshUsersList(roomInfo);
+    refresh(roomInfo);
 }
 
 JamRoomViewPanel::~JamRoomViewPanel()

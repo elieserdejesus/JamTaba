@@ -65,6 +65,15 @@ void LocalTrackView::init(int channelIndex, float initialGain, BaseTrackView::Bo
         inputTypeIconLabel->setVisible(false);
     }
 
+    //create the peak meter to show midiactivity
+    midiPeakMeter = new PeakMeter();
+
+    midiPeakMeter->setObjectName("midiPeakMeter");
+    midiPeakMeter->setSolidColor(Qt::red);
+    midiPeakMeter->setPaintMaxPeakMarker(false);
+    midiPeakMeter->setDecayTime(500);//500 ms
+    midiPeakMeter->setAccessibleDescription("This is the midi activity meter");
+
     //insert a input node in controller
     this->inputNode = new Audio::LocalInputAudioNode(channelIndex);
     this->trackID = mainController->addInputTrackNode(this->inputNode);
@@ -100,6 +109,20 @@ void LocalTrackView::initializeBoostButtons(BoostValue boostValue){
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void LocalTrackView::updateGuiElements(){
+    BaseTrackView::updateGuiElements();
+
+    if(inputNode && inputNode->hasMidiActivity() ){
+        quint8 midiActivityValue = inputNode->getMidiActivityValue();
+        midiPeakMeter->setPeak(midiActivityValue/127.0);
+        inputNode->resetMidiActivity();
+    }
+    if(midiPeakMeter->isVisible()){
+        midiPeakMeter->update();
+    }
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 QSize LocalTrackView::sizeHint() const{
     if(peakMetersOnly){
@@ -109,13 +132,10 @@ QSize LocalTrackView::sizeHint() const{
     return BaseTrackView::sizeHint();
 }
 
-void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly){
+void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode){
     if(this->peakMetersOnly != peakMetersOnly){
         this->peakMetersOnly = peakMetersOnly;
-        //ui->panPanel->setVisible(!this->peakMetersOnly);
-        //ui->levelSlider->setVisible(!this->peakMetersOnly);
         ui->boostPanel->setVisible(!this->peakMetersOnly);
-
         ui->leftWidget->setVisible(!this->peakMetersOnly);
 
 
@@ -123,8 +143,8 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly){
 
 
         QMargins margins = layout()->contentsMargins();
-        margins.setLeft(peakMetersOnly ? 2 : 6);
-        margins.setRight(peakMetersOnly ? 2 : 6);
+        margins.setLeft( (peakMetersOnly || runningInMiniMode) ? 2 : 6);
+        margins.setRight( (peakMetersOnly || runningInMiniMode) ? 2 : 6);
         layout()->setContentsMargins(margins);
 
         if(fxPanel){
@@ -155,8 +175,8 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly){
     }
 }
 
-void LocalTrackView::togglePeakMetersOnlyMode(){
-    setPeakMetersOnlyMode(!peakMetersOnly);
+void LocalTrackView::togglePeakMetersOnlyMode(bool runninsInMiniMode){
+    setPeakMetersOnlyMode(!peakMetersOnly, runninsInMiniMode);
 }
 
 
@@ -286,7 +306,18 @@ QMenu* LocalTrackView::createMonoInputsMenu(QMenu* parent){
 void LocalTrackView::on_monoInputMenuSelected(QAction *action){
     int selectedInputIndexInAudioDevice = action->data().toInt();
     mainController->setInputTrackToMono(getTrackID(), selectedInputIndexInAudioDevice);
-    //setUnlightStatus(false);
+    setMidiPeakMeterVisibility(false);
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void LocalTrackView::setMidiPeakMeterVisibility(bool visible){
+    if(visible){
+        ui->metersWidget->layout()->addWidget(midiPeakMeter);
+    }
+    else{
+        ui->metersWidget->layout()->removeWidget(midiPeakMeter);
+    }
+    update();
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -332,7 +363,7 @@ QMenu* LocalTrackView::createStereoInputsMenu(QMenu* parent){
 void LocalTrackView::on_stereoInputMenuSelected(QAction *action){
     int firstInputIndexInAudioDevice = action->data().toInt();
     mainController->setInputTrackToStereo(getTrackID(), firstInputIndexInAudioDevice);
-    //setUnlightStatus(false);
+    setMidiPeakMeterVisibility(false);
 }
 
 QString LocalTrackView::getInputChannelNameOnly(int inputIndex){
@@ -377,13 +408,18 @@ void LocalTrackView::refreshInputSelectionName(){
             iconFile = NO_INPUT_ICON;
         }
     }
-    else{//using midi as input method
+    else{
         if(inputTrack->isMidi()){
             Midi::MidiDriver* midiDriver = mainController->getMidiDriver();
             int selectedDeviceIndex = inputTrack->getMidiDeviceIndex();
             if( selectedDeviceIndex < midiDriver->getMaxInputDevices() && midiDriver->deviceIsGloballyEnabled(selectedDeviceIndex)){
                 channelName = midiDriver->getInputDeviceName(selectedDeviceIndex);
                 iconFile = MIDI_ICON;
+            }
+            else{//midi device index invalid
+                inputTrack->setToNoInput();
+                channelName = "No input";
+                iconFile = NO_INPUT_ICON;
             }
         }
         else{
@@ -401,6 +437,8 @@ void LocalTrackView::refreshInputSelectionName(){
     if(inputTypeIconLabel){
         this->inputTypeIconLabel->setStyleSheet("background-image: url(" + iconFile + ");");
     }
+
+    setMidiPeakMeterVisibility(inputNode->isMidi());
 
     updateGeometry();
 
@@ -473,6 +511,7 @@ void LocalTrackView::addPlugin(Audio::Plugin* plugin, bool bypassed){
         //plugin->setEditor(new Audio::PluginWindow(plugin));
         plugin->setBypass(bypassed);
         this->fxPanel->addPlugin(plugin);
+        this->refreshInputSelectionName();//refresh input type combo box, if the added plugins is a virtual instrument Jamtaba will try auto change the input type to midi
         update();
     }
 }

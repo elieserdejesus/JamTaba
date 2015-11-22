@@ -23,7 +23,7 @@ public:
     ~JamRoomViewPanel();
     void addPeak(float peak);
     void clearPeaks(bool resetListenButton);
-    void refreshUsersList(Login::RoomInfo roomInfo);
+    void refresh(Login::RoomInfo roomInfo);
 
     inline Login::RoomInfo getRoomInfo() const{return roomInfo;}
 protected:
@@ -35,9 +35,6 @@ signals:
 private slots:
     void on_buttonListen_clicked();
     void on_buttonEnter_clicked();
-
-
-
 private:
     Ui::RoomViewPanel *ui;
     Controller::MainController* mainController;
@@ -47,7 +44,7 @@ private:
     bool userIsBot(Login::UserInfo userInfo);
 
     static bool userInfoLessThan(Login::UserInfo u1, Login::UserInfo u2);
-
+    QString buildRoomDescriptionString(Login::RoomInfo roomInfo);
 };
 
 #endif // JAMROOMVIEWPANEL_H

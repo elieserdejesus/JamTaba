@@ -1,4 +1,4 @@
-#include "RtMidiDriver.h"
+﻿#include "RtMidiDriver.h"
 #include "RtMidi.h"
 
 using namespace Midi;
@@ -8,6 +8,7 @@ using namespace Midi;
 RtMidiDriver::RtMidiDriver(QList<bool> deviceStatuses){
     qCInfo(jtMidi) << "Initializing rtmidi...";
     int maxInputDevices = getMaxInputDevices();
+    qCDebug(jtMidi) << "MIDI DEVICES FOUND idx:" << maxInputDevices;
     if(deviceStatuses.size() < maxInputDevices){
         int itemsToAdd = maxInputDevices - deviceStatuses.size();
         for (int i = 0; i < itemsToAdd; ++i) {
@@ -78,7 +79,7 @@ void RtMidiDriver::release(){
 
 QString RtMidiDriver::getInputDeviceName(int index) const{
     if(midiStreams.at(index)){
-        return  midiStreams.at(index)->getPortName(index).c_str();
+    return  QString::fromStdString(midiStreams.at(index)->getPortName(index));
     }
     return "error";
 }
@@ -126,8 +127,8 @@ bool RtMidiDriver::hasInputDevices() const{
 }
 
 int RtMidiDriver::getMaxInputDevices() const{
-    RtMidiIn rtMidi;
-    return rtMidi.getPortCount();
+    RtMidiIn* rtMidi=new RtMidiIn() ;
+    return rtMidi->getPortCount();
 }
 
 RtMidiDriver::~RtMidiDriver(){

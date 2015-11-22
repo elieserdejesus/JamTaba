@@ -25,7 +25,8 @@ HEADERS += \
     ../src/audio/vst/vsthost.h \
     ../src/geo/WebIpToLocationResolver.h \
     ../src/StandAloneMainController.h \
-    ../src/gui/MainWindowStandalone.h
+    ../src/gui/MainWindowStandalone.h \
+    ../src/Libs/SingleApplication/singleapplication.h \
 
 SOURCES += \
     ../src/main.cpp \
@@ -48,19 +49,24 @@ SOURCES += \
     ../src/audio/vst/vsthost.cpp \
     ../src/geo/WebIpToLocationResolver.cpp \
     ../src/StandAloneMainController.cpp \
-    ../src/gui/MainWindowStandalone.cpp
+    ../src/gui/MainWindowStandalone.cpp \
+#    ../../RtMidi/RtMidi.cpp
+    ../src/Libs/SingleApplication/singleapplication.cpp \
+
 
 INCLUDEPATH += $$PWD/../libs/includes/portaudio        \
                $$PWD/../libs/includes/rtmidi           \
                $$PWD/../libs/includes/ogg              \
                $$PWD/../libs/includes/vorbis           \
                $$PWD/../libs/includes/minimp3          \
+#               $$PWD/../src/Libs                       \
 
 DEPENDPATH +=  $$PWD/../libs/includes/portaudio        \
                $$PWD/../libs/includes/rtmidi           \
                $$PWD/../libs/includes/ogg              \
                $$PWD/../libs/includes/vorbis           \
                $$PWD/../libs/includes/minimp3          \
+#               $$PWD/../src/Libs                       \
 
 win32{
 
@@ -97,7 +103,9 @@ win32{
         QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
     }
 
-    LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32
+    LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32 #-lPsapi
+    #performance monitor lib
+    #QMAKE_CXXFLAGS += -DPSAPI_VERSION=1
 
     RC_FILE = Jamtaba2.rc #windows icon
 }

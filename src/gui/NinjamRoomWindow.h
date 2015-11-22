@@ -8,7 +8,7 @@
 #include "ChatPanel.h"
 #include <QLoggingCategory>
 #include <QMessageBox>
-
+#include "chords/ChordsPanel.h"
 
 class MainWindow;
 
@@ -36,6 +36,7 @@ public:
     void updateGeoLocations();
     inline ChatPanel* getChatPanel() const{return chatPanel;}
     void setFullViewStatus(bool fullView);
+    void showChordsPanel(ChordProgression progression);
 
 protected:
     Ui::NinjamRoomWindow *ui;
@@ -44,12 +45,18 @@ private:
 
     QMap<QString, NinjamTrackGroupView*> trackGroups;
     ChatPanel* chatPanel;
+    ChordsPanel* chordsPanel;
 
     void initializeMetronomeEvents();
 
     void adjustTracksWidth();
 
     bool fullViewMode;
+
+    void handleVoteMessage(Ninjam::User user, QString message);
+    void handleChordProgressionMessage(Ninjam::User user, QString message);
+
+    void hideChordsPanel();
 
 private slots:
     //ninjam panel controls
@@ -82,7 +89,10 @@ private slots:
     //chat panel
     void on_userConfirmingVoteToChangeBpi(int newBpi);
     void on_userConfirmingVoteToChangeBpm(int newBpm);
-    //void on_voteConfirmationDialogClosed(QAbstractButton *);
+    void on_userConfirmingChordProgression(ChordProgression chordProgression);
+
+    //chords panel
+    void on_buttonSendChordsToChatClicked();
 };
 
 #endif // NINJAMROOMWINDOW_H

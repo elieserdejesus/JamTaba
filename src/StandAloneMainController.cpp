@@ -21,6 +21,7 @@
 #include <QSettings>
 #include <QtConcurrent/QtConcurrent>
 #include "../log/logging.h"
+#include "configurator.h"
 
 using namespace Controller;
 
@@ -122,7 +123,6 @@ void StandalonePluginFinder::run(QStringList blackList){
     emit scanStarted();
 
     for(QString scanFolder : scanFolders){
-        qCDebug(jtStandalonePluginFinder) << "Scanning the folder " << scanFolder;
         QDirIterator folderIterator(scanFolder, QDirIterator::Subdirectories);
         while (folderIterator.hasNext()) {
             folderIterator.next();//point to next file inside current folder
@@ -142,7 +142,12 @@ void StandalonePluginFinder::run(QStringList blackList){
                 }
             }
             QApplication::processEvents();
+            if(cancelRequested){
+                emit scanFinished();
+                return;
+            }
         }
+
     }
     emit scanFinished();
 
@@ -151,7 +156,9 @@ void StandalonePluginFinder::run(QStringList blackList){
 void StandalonePluginFinder::scan(QStringList blackList){
     //run the VST plugins scanning in another tread to void block Qt thread
     //If Qt main thread is block the GUI will be unresponsive, can't send or receive network data
+    this->cancelRequested = false;
     QtConcurrent::run(this, &StandalonePluginFinder::run, blackList);
+
 }
 
 //++++++++++++++++++++++++++++++++++
@@ -304,8 +311,7 @@ Audio::Plugin *StandaloneMainController::createPluginInstance(const Audio::Plugi
     return nullptr;
 }
 
-
-void StandaloneMainController::addDefaultPluginsScanPath(){
+QStringList StandaloneMainController::getSteinbergRecommendedPaths(){
     /*
     On a 64-bit OS
 
@@ -328,6 +334,22 @@ void StandaloneMainController::addDefaultPluginsScanPath(){
        vstPaths.append("/Library/Audio/Plug-Ins/VST");
        vstPaths.append( "~/Library/Audio/Plug-Ins/VST");
 #endif
+       return vstPaths;
+}
+
+void StandaloneMainController::addDefaultPluginsScanPath(){
+    QStringList vstPaths;
+
+    //first try read the path store in registry by Jamtaba installer.
+    //If this value is not founded use the Steinberg recommended paths.
+    QSettings jamtabaRegistryEntry("HKEY_CURRENT_USER\\SOFTWARE\\Jamtaba", QSettings::NativeFormat);
+    QString vst2InstallDir = jamtabaRegistryEntry.value("VST2InstallDir").toString();
+    if(!vst2InstallDir.isEmpty()){
+        vstPaths.append(vst2InstallDir);
+    }else{
+        vstPaths.append(getSteinbergRecommendedPaths());
+    }
+
     foreach (QString vstPath, vstPaths) {
         if(!vstPath.isEmpty() && QDir(vstPath).exists()){
             addPluginsScanPath(vstPath);
@@ -371,3 +393,10 @@ void StandaloneMainController::stopNinjamController(){
 }
 
 
+void StandaloneMainController::quit()
+{
+    //destroy the extern !
+    //if(JTBConfig)delete JTBConfig;
+    qDebug() << "Thank you for Jamming with Jamtaba !";
+    application->quit();
+}

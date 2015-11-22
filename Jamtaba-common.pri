@@ -2,7 +2,7 @@ VST_SDK_PATH = "$$PWD/../VST_SDK"
 
 TEMPLATE = lib
 
-VERSION = 2.0.5
+VERSION = 2.0.7
 
 # Define the preprocessor macro to get the application version in Jamtaba application.
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
@@ -48,7 +48,6 @@ HEADERS += \
     ../src/gui/NinjamTrackView.h \
     ../src/audio/MetronomeTrackNode.h \
     ../src/gui/NinjamPanel.h \
-    ../src/gui/FancyProgressDisplay.h \
     ../src/ninjam/UserChannel.h \
     ../src/audio/core/SamplesBuffer.h \
     ../src/gui/BusyDialog.h \
@@ -68,7 +67,15 @@ HEADERS += \
     ../src/gui/PrivateServerDialog.h \
     ../src/gui/UserNameDialog.h \
     ../src/gui/MainWindow.h \
-    $$PWD/src/log/logging.h
+    $$PWD/src/log/logging.h \
+    $$PWD/src/gui/widgets/CustomTabWidget.h \
+#    $$PWD/src/performance/PerformanceMonitor.h \
+    $$PWD/src/gui/chords/ChordLabel.h \
+    $$PWD/src/gui/BpiUtils.h \
+    $$PWD/src/gui/chords/ChordsWidget.h \
+    $$PWD/src/gui/chords/ChordsPanel.h \
+    $$PWD/src/gui/chords/ChordProgression.h \
+    $$PWD/src/configurator.h
 
 SOURCES += \
     ../src/audio/core/AudioDriver.cpp \
@@ -100,7 +107,6 @@ SOURCES += \
     ../src/gui/NinjamTrackView.cpp \
     ../src/audio/MetronomeTrackNode.cpp \
     ../src/gui/NinjamPanel.cpp \
-    ../src/gui/FancyProgressDisplay.cpp \
     ../src/ninjam/UserChannel.cpp \
     ../src/audio/core/SamplesBuffer.cpp \
     ../src/audio/SamplesBufferResampler.cpp \
@@ -117,7 +123,18 @@ SOURCES += \
     ../src/gui/PrivateServerDialog.cpp \
     ../src/gui/UserNameDialog.cpp \
     $$PWD/src/gui/MainWindow.cpp \
-    $$PWD/src/log/logging.cpp
+    $$PWD/src/log/logging.cpp \
+    $$PWD/src/gui/widgets/CustomTabWidget.cpp \
+    $$PWD/src/gui/chords/ChordLabel.cpp \
+    $$PWD/src/gui/BpiUtils.cpp \
+    $$PWD/src/gui/chords/ChordsWidget.cpp \
+    $$PWD/src/gui/chords/ChordsPanel.cpp \
+    $$PWD/src/gui/chords/ChordProgression.cpp \
+    $$PWD/src/configurator.cpp
+
+#multiplatform implementations
+#win32:SOURCES += $$PWD/src/performance/WindowsPerformanceMonitor.cpp
+#macx:SOURCES += $$PWD/src/performance/MacPerformanceMonitor.cpp
 
 FORMS += \
     ../src/gui/PreferencesDialog.ui \
@@ -133,7 +150,8 @@ FORMS += \
     ../src/gui/PrivateServerDialog.ui \
     ../src/gui/UserNameDialog.ui \
     $$PWD/src/gui/MainWindow.ui \
-    $$PWD/src/gui/PreferencesDialog.ui
+    $$PWD/src/gui/PreferencesDialog.ui \
+    $$PWD/src/gui/chords/ChordsPanel.ui
 
 INCLUDEPATH += ../src/gui                  \
                ../src/gui/widgets          \

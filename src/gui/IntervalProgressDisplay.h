@@ -19,6 +19,7 @@ public:
     void setCurrentBeat(int interval) ;
     void setBeatsPerAccent(int beats) ;
     inline int getBeatsPerInterval() const{return beats; }
+    inline int getBeatsPerAccent() const{return beatsPerAccent;}
     void setBeatsPerInterval(int beats) ;
     void setSliceNumberColor(QColor sliceNumberColor) ;
     inline QColor getSliceNumberColor() const{ return sliceNumberColor; }
@@ -53,7 +54,7 @@ private:
 
     //linear painting
     void drawPoint(int x, int y, int size, QPainter* g, int value, QBrush bgPaint, QColor border, bool small) ;
-    void drawPoints(QPainter* g, int yPos, int startPoint, int totalPoinstToDraw) ;
+    void drawPoints(QPainter* painter, int yPos, int startPoint, int totalPoinstToDraw) ;
     float getHorizontalSpace(int totalPoinstToDraw, int initialXPos) const;
 
     const QFont SMALL_FONT;
@@ -77,7 +78,7 @@ private:
 
     int beatsPerAccent;
 
-    bool showAccents = true;
+    bool showAccents;// = true;
 
     static const double PI;
 

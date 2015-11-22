@@ -14,8 +14,6 @@ QColor IntervalProgressDisplay::PATH_COLOR = QColor(0,0,0, 20);
 
 const double IntervalProgressDisplay::PI = 3.141592653589793238462643383279502884;
 
-
-
 //LINEAR PAINTING CONSTANTS
 const QColor IntervalProgressDisplay::LINEAR_SLICE_NUMBER_COLOR = QColor(120, 120, 120);
 const QColor IntervalProgressDisplay::LINEAR_BG_COLOR = QColor(230, 230, 230);
@@ -29,14 +27,18 @@ const QColor IntervalProgressDisplay::LINEAR_ACCENT_BORDER_COLOR = QColor(160, 1
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++
 IntervalProgressDisplay::IntervalProgressDisplay(QWidget*parent)
-    :QWidget(parent), SMALL_FONT("Verdana, 7"), BIG_FONT("Verdana, 10"), ovalSize(PREFERRED_OVAL_SIZE), paintMode(PaintMode::CIRCULAR){
+    :QWidget(parent),
+      SMALL_FONT("Verdana, 7"),
+      BIG_FONT("Verdana, 10"),
+      ovalSize(PREFERRED_OVAL_SIZE),
+      paintMode(PaintMode::LINEAR),
+      showAccents(false){
 
     setAttribute(Qt::WA_NoBackground);
 
-    setBeatsPerInterval(64);
+    setBeatsPerInterval(32);
 
-    setBeatsPerAccent(4);
-    //setShowAccents(false);
+    setShowAccents(false);
 
     initialize();
 }
@@ -65,6 +67,9 @@ void IntervalProgressDisplay::setCurrentBeat(int beat) {
 
 void IntervalProgressDisplay::setBeatsPerAccent(int beats) {
     beatsPerAccent = beats;
+    if(!isShowingAccents() && beatsPerAccent > 1){
+        this->showAccents = true;
+    }
     update();
 }
 
@@ -272,13 +277,13 @@ float IntervalProgressDisplay::getHorizontalSpace(int totalPoinstToDraw, int ini
 }
 
 
-void IntervalProgressDisplay::drawPoints(QPainter* g, int yPos, int startPoint, int totalPoinstToDraw) {
+void IntervalProgressDisplay::drawPoints(QPainter* painter, int yPos, int startPoint, int totalPoinstToDraw) {
     int initialXPos = 0 + LINEAR_PAINT_MODE_OVAL_SIZE / 2 + 1;
     float xSpace = getHorizontalSpace(totalPoinstToDraw, initialXPos+1);
 
     //draw the background line
-    g->setPen(QPen(LINEAR_BORDER_COLOR,1));
-    g->drawLine(initialXPos + 1, yPos, (int) (initialXPos + (totalPoinstToDraw - 1) * xSpace), yPos);
+    painter->setPen(QPen(LINEAR_BORDER_COLOR,1));
+    painter->drawLine(initialXPos + 1, yPos, (int) (initialXPos + (totalPoinstToDraw - 1) * xSpace), yPos);
 
     float xPos = initialXPos;
     //draw all backgrounds first
@@ -288,7 +293,7 @@ void IntervalProgressDisplay::drawPoints(QPainter* g, int yPos, int startPoint, 
             QColor border = LINEAR_BORDER_COLOR;// (isShowingAccents() && isMeasureFirstBeat) ? accentBorderColor : borderPaint;
             int size = (int) (LINEAR_PAINT_MODE_OVAL_SIZE * 0.7f);// (i < currentInterval) ? ((int) (OVAL_SIZE * 0.7)) : ((int) (OVAL_SIZE * 0.85));
             QColor bg = (i < currentBeat) ? LINEAR_BG_COLOR : LINEAR_BG_SECOND_COLOR;
-            drawPoint((int) xPos, yPos, size, g, (i + 1), bg, border, true);
+            drawPoint((int) xPos, yPos, size, painter, (i + 1), bg, border, true);
         }
         xPos += xSpace;
     }
@@ -299,7 +304,7 @@ void IntervalProgressDisplay::drawPoints(QPainter* g, int yPos, int startPoint, 
         int size = (int)(LINEAR_PAINT_MODE_OVAL_SIZE * 0.9f);
         for (int i = 0; i < totalPoinstToDraw; i += beatsPerAccent) {
             QColor bg = (i < currentBeat) ? LINEAR_BG_COLOR : LINEAR_BG_SECOND_COLOR;
-            drawPoint((int) xPos, yPos, size, g, (i + 1), bg, LINEAR_ACCENT_BORDER_COLOR, true);
+            drawPoint((int) xPos, yPos, size, painter, (i + 1), bg, LINEAR_ACCENT_BORDER_COLOR, true);
             xPos += xSpace * beatsPerAccent;
         }
     }
@@ -308,7 +313,9 @@ void IntervalProgressDisplay::drawPoints(QPainter* g, int yPos, int startPoint, 
     QRadialGradient bgRadial(xPos-5, yPos-5, LINEAR_PAINT_MODE_OVAL_SIZE*2);//, new float[]{0.1f, 0.8f},
     bgRadial.setColorAt(0.1f, Qt::white);
     bgRadial.setColorAt(0.8f, Qt::black);
-    drawPoint((int) xPos, yPos, LINEAR_PAINT_MODE_OVAL_SIZE, g, (currentBeat + 1), bgRadial, Qt::darkGray, false);
+    drawPoint((int) xPos, yPos, LINEAR_PAINT_MODE_OVAL_SIZE, painter, (currentBeat + 1), bgRadial, Qt::darkGray, false);
+
+
 }
 //+++++++++++++++++++++++++++++++++
 

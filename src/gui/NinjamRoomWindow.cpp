@@ -16,6 +16,9 @@
 #include "../MainController.h"
 #include "../ninjam/Service.h"
 
+#include "chords/ChordsPanel.h"
+#include "chords/ChordProgression.h"
+
 #include <cassert>
 
 #include "NinjamPanel.h"
@@ -27,27 +30,14 @@
 
 #include "../log/logging.h"
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//VoteConfirmationDialog::VoteConfirmationDialog(QWidget *parent, QString title, QString text, int voteValue, VoteConfirmationType voteType)
-//    :QMessageBox(parent), voteValue(voteValue), voteType(voteType)
-//{
-//    setIcon(QMessageBox::Warning);
-//    setText(text);
-//    setWindowTitle(title);
-//    setStandardButtons(QMessageBox::Yes|QMessageBox::No);
-
-//    setAttribute(Qt::WA_DeleteOnClose, true);
-//}
-
 //+++++++++++++++++++++++++
-
 NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo, Controller::MainController *mainController) :
     QWidget(parent),
     ui(new Ui::NinjamRoomWindow),
     mainController(mainController),
     chatPanel(new ChatPanel(this, mainController->getBotNames() )),
-    fullViewMode(true)
-    //voteConfirmationDialog(nullptr)
+    fullViewMode(true),
+    chordsPanel(nullptr)
 {
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow construtor..";
     ui->setupUi(this);
@@ -92,15 +82,11 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
     initializeMetronomeEvents();//signals and slots
 
     QObject::connect(chatPanel, SIGNAL(userConfirmingVoteToBpiChange(int)), this, SLOT(on_userConfirmingVoteToChangeBpi(int)));
-    QObject::connect(chatPanel,SIGNAL(userConfirmingVoteToBpmChange(int)), this, SLOT(on_userConfirmingVoteToChangeBpm(int)));
+    QObject::connect(chatPanel, SIGNAL(userConfirmingVoteToBpmChange(int)), this, SLOT(on_userConfirmingVoteToChangeBpm(int)));
+    QObject::connect(chatPanel, SIGNAL(userConfirmingChordProgression(ChordProgression)), this, SLOT(on_userConfirmingChordProgression(ChordProgression)));
 
+    chatPanel->setPreferredTranslationLanguage(mainController->getSettings().getTranslation());
 
-
-    //testing many tracks
-//    for (int t = 0; t < 16; ++t) {
-//        BaseTrackView* trackView = new NinjamTrackView(ui->tracksPanel, this->mainController, t, "User", QString::number(t), "BR", "BR" );
-//        ui->tracksPanel->layout()->addWidget(trackView);
-//    }
 }
 //+++++++++=
 void NinjamRoomWindow::setFullViewStatus(bool fullView){
@@ -124,6 +110,32 @@ void NinjamRoomWindow::setFullViewStatus(bool fullView){
     }
 
     update();
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamRoomWindow::showChordsPanel(ChordProgression progression){
+    if(!chordsPanel){
+        chordsPanel = new ChordsPanel(this);
+        QObject::connect(chordsPanel, SIGNAL(buttonSendChordsToChatClicked()), this, SLOT(on_buttonSendChordsToChatClicked()));
+    }
+    else{
+        chordsPanel->setVisible(true);
+    }
+    chordsPanel->setChords(progression);
+    ui->contentLayout->insertWidget(1, chordsPanel);
+}
+
+void NinjamRoomWindow::on_buttonSendChordsToChatClicked(){
+    if(chordsPanel){//just in case
+        ChordProgression chordProgression = chordsPanel->getChordProgression();
+        mainController->getNinjamController()->sendChatMessage(chordProgression.toString());
+    }
+}
+
+void NinjamRoomWindow::hideChordsPanel(){
+    if(chordsPanel){
+        chordsPanel->setVisible(false);
+    }
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -176,18 +188,49 @@ void NinjamRoomWindow::on_userEnter(QString userName){
 }
 
 void NinjamRoomWindow::on_chatMessageReceived(Ninjam::User user, QString message){
-    //qDebug() << user.getFullName() << message;
-    chatPanel->addMessage(user.getName(), message);
 
+    bool isVoteMessage = !message.isNull() && message.toLower().startsWith("[voting system] leading candidate:");
+    bool isChordProgressionMessage = false;
+    try{
+        ChatChordsProgressionParser chordsParser;
+        isChordProgressionMessage = chordsParser.containsProgression(message);
+    }
+    catch(...){
+        isChordProgressionMessage = false;//just in case
+    }
+
+    bool showTranslationButton = !isChordProgressionMessage;
+    chatPanel->addMessage(user.getName(), message, showTranslationButton);
+
+    if(isVoteMessage){
+        handleVoteMessage(user, message);
+    }
+    else if(isChordProgressionMessage){
+        handleChordProgressionMessage(user, message);
+    }
+}
+
+void NinjamRoomWindow::handleChordProgressionMessage(Ninjam::User user, QString message){
+    Q_UNUSED(user)
+    ChatChordsProgressionParser parser;
+    try{
+        ChordProgression chordProgression = parser.parse(message);
+        chatPanel->addChordProgressionConfirmationMessage(chordProgression);
+    }
+    catch(const std::runtime_error& e){
+        qCCritical(jtNinjamGUI) << e.what();
+    }
+}
+
+void NinjamRoomWindow::handleVoteMessage(Ninjam::User user, QString message){
     //local user is voting?
     static long long lastVoteCommand = 0;
     QString localUserFullName = mainController->getNinjamService()->getConnectedUserName();
     if (user.getFullName() == localUserFullName && message.toLower().contains("!vote")) {
         lastVoteCommand = QDateTime::currentMSecsSinceEpoch();
     }
-    bool isVoteMessage = !message.isNull() && message.toLower().startsWith("[voting system] leading candidate:");
     long timeSinceLastVote = QDateTime::currentMSecsSinceEpoch() - lastVoteCommand;
-    if (isVoteMessage && timeSinceLastVote >= 1000) {
+    if (timeSinceLastVote >= 1000) {
         QString commandType = (message.toLower().contains("bpm")) ? "BPM" : "BPI";
 
         //[voting system] leading candidate: 1/2 votes for 12 BPI [each vote expires in 60s]
@@ -224,25 +267,18 @@ void NinjamRoomWindow::on_userConfirmingVoteToChangeBpm(int newBpm){
     }
 }
 
-//void NinjamRoomWindow::on_voteConfirmationDialogClosed(QAbstractButton *button){
-//    if(this->voteConfirmationDialog){
-//        if(this->voteConfirmationDialog->standardButton(button) == QMessageBox::Yes){
-//            if(mainController->isPlayingInNinjamRoom()){
-//                Controller::NinjamController* controller = mainController->getNinjamController();
-//                if(controller){
-//                    if(voteConfirmationDialog->getVoteType() == VoteConfirmationType::BPI_CONFIRMATION_VOTE){
-//                        controller->voteBpi(voteConfirmationDialog->getVoteValue());
-//                    }
-//                    else{
-//                        controller->voteBpm(voteConfirmationDialog->getVoteValue());
-//                    }
-//                }
-//            }
-//        }
-//        this->voteConfirmationDialog = nullptr;
-//    }
-//}
-
+void NinjamRoomWindow::on_userConfirmingChordProgression(ChordProgression chordProgression){
+    int currentBpi = mainController->getNinjamController()->getCurrentBpi();
+    if(chordProgression.canBeUsed(currentBpi)){
+        bool needStrech = chordProgression.getBeatsPerInterval() != currentBpi;
+        showChordsPanel( needStrech ? chordProgression.getStretchedVersion(currentBpi) : chordProgression );
+    }
+    else{
+        int measures = chordProgression.getMeasures().size();
+        QString msg = "These chords (" + QString::number(measures) + " measures) can't be use in a " + QString::number(currentBpi) + " bpi interval!";
+        QMessageBox::warning(this, "Problem...", msg);
+    }
+}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::updatePeaks(){
@@ -328,7 +364,8 @@ void NinjamRoomWindow::ninjamBpiComboChanged(QString newText){
     if(newBpi == currentBpi){
         return;
     }
-    QMessageBox::StandardButton reply;
+    // I keep it commented elieser in case you change your opinion ... ezee
+    /*QMessageBox::StandardButton reply;
     QString message = "Vote to change the BPI to " + QString::number(newBpi) + "?";
     reply = QMessageBox::question(this, "Changing BPI ...", message,
                                   QMessageBox::Yes|QMessageBox::No);
@@ -337,7 +374,8 @@ void NinjamRoomWindow::ninjamBpiComboChanged(QString newText){
     }
     else{
         ui->topPanel->setBpiComboText(QString::number(currentBpi));
-    }
+    }*/
+     mainController->getNinjamController()->voteBpi(newBpi);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::ninjamBpmComboChanged(QString newText){
@@ -346,7 +384,8 @@ void NinjamRoomWindow::ninjamBpmComboChanged(QString newText){
     if(newBpm == currentBpm){
         return;
     }
-    QMessageBox::StandardButton reply;
+    // I keep it commented elieser in case you change your opinion ... ezee
+    /*QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Changing BPM ...", "Vote to change the BPM to " + QString::number(newBpm) + "?",
                                   QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::Yes) {
@@ -354,7 +393,8 @@ void NinjamRoomWindow::ninjamBpmComboChanged(QString newText){
     }
     else{
         ui->topPanel->setBpmComboText(QString::number(currentBpm));
-    }
+    }*/
+    mainController->getNinjamController()->voteBpm(newBpm);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::adjustTracksWidth(){
@@ -401,6 +441,12 @@ NinjamRoomWindow::~NinjamRoomWindow(){
 //ninjam controller events
 void NinjamRoomWindow::on_bpiChanged(int bpi){
     ui->topPanel->setBpi(bpi);
+    if(chordsPanel){
+        bool bpiWasAccepted = chordsPanel->setBpi(bpi);
+        if(!bpiWasAccepted){
+            hideChordsPanel();
+        }
+    }
 }
 
 void NinjamRoomWindow::on_bpmChanged(int bpm){
@@ -409,6 +455,10 @@ void NinjamRoomWindow::on_bpmChanged(int bpm){
 
 void NinjamRoomWindow::on_intervalBeatChanged(int beat){
     ui->topPanel->setCurrentBeat(beat);
+
+    if(chordsPanel){
+        chordsPanel->setCurrentBeat(beat);
+    }
 }
 
 void NinjamRoomWindow::on_licenceButton_clicked()

@@ -9,6 +9,7 @@
 #include "../loginserver/LoginService.h"
 #include "../persistence/Settings.h"
 #include "../LocalTrackGroupView.h"
+#include "../performance/PerformanceMonitor.h"
 
 class PluginScanDialog;
 class NinjamRoomWindow;
@@ -68,6 +69,13 @@ public:
     void exitFromRoom(bool normalDisconnection);
 
     bool isRunningAsVstPlugin() const;
+
+    inline bool isRunningInMiniMode() const{return !fullViewMode;}
+    inline bool isRunningInFullViewMode() const{return fullViewMode;}
+
+    bool isTransmiting(int channelID) const;
+    void setTransmitingStatus(int channelID, bool xmitStatus);
+
 protected:
     Controller::MainController* mainController;
     virtual void initializePluginFinder();
@@ -105,6 +113,10 @@ protected slots:
     void on_menuViewModeTriggered(QAction* action);
 
 
+    //ninjam controller
+    void ninjamTransmissionStarted();
+    void ninjamPreparingToTransmit();
+
     //help menu
     void on_reportBugMenuItemTriggered();
     void on_wikiMenuItemTriggered();
@@ -136,12 +148,13 @@ protected slots:
     //channel name changed
     void on_channelNameChanged();
 
-    //xmit
-    void on_xmitButtonClicked(bool checked);
 
     //room streamer
     void on_RoomStreamerError(QString msg);
 
+private slots:
+    void on_actionFullscreenMode_triggered();
+    void on_pluginFinderDialogCanceled();
 private:
 
     BusyDialog busyDialog;
@@ -196,7 +209,11 @@ private:
 
     void showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly);
 
-     void recalculateLeftPanelWidth();
+    void recalculateLeftPanelWidth();
+
+    //PerformanceMonitor performanceMonitor;//cpu and memmory usage
+    //qint64 lastPerformanceMonitorUpdate;
+    //static const int PERFORMANCE_MONITOR_REFRESH_TIME;
 
 };
 

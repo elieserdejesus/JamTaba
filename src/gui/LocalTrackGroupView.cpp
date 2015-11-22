@@ -10,17 +10,21 @@
 #include <QPushButton>
 #include <QMenu>
 
-LocalTrackGroupView::LocalTrackGroupView(int index, MainWindow *mainFrame)
-    :index(index), mainFrame(mainFrame), peakMeterOnly(false)
+LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame)
+    :index(channelIndex), mainFrame(mainFrame), peakMeterOnly(false), preparingToTransmit(false)
 {
-    toolButton = new QPushButton();
-    toolButton->setObjectName("toolButton");
-    toolButton->setText("");
-    toolButton->setToolTip("Add or remove channels...");
+    toolButton = createToolButton();
     this->ui->topPanel->layout()->addWidget(toolButton);
+
+    xmitButton = createXmitButton();
+    this->layout()->addWidget(xmitButton);
 
     QObject::connect(toolButton, SIGNAL(clicked()), this, SLOT(on_toolButtonClicked()));
     QObject::connect(this->ui->groupNameField, SIGNAL(editingFinished()), this, SIGNAL(nameChanged()) );
+    QObject::connect(xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
+
+    xmitButton->setChecked(true);
+
 }
 
 LocalTrackGroupView::~LocalTrackGroupView()
@@ -28,6 +32,43 @@ LocalTrackGroupView::~LocalTrackGroupView()
 
 }
 
+void LocalTrackGroupView::setPreparingStatus(bool preparing){
+    this->preparingToTransmit = preparing;
+    xmitButton->setEnabled(!preparing);
+    if(!isShowingPeakMeterOnly()){
+        xmitButton->setText(preparing ? "Preparing" : "Transmiting" );
+    }
+
+    xmitButton->setProperty("preparing", QVariant(preparing));//change the button property to change stylesheet
+    style()->unpolish(xmitButton); //force the computation of the new stylesheet for "preparing" state in QPushButton
+    style()->polish(xmitButton);
+}
+
+void LocalTrackGroupView::on_xmitButtonClicked(bool checked){
+    if(!preparingToTransmit){//users can't change xmit when is preparing
+        setUnlightStatus(!checked);
+        mainFrame->setTransmitingStatus(getChannelIndex(), checked);
+    }
+}
+
+QPushButton* LocalTrackGroupView::createXmitButton(){
+    QPushButton* toolButton = new QPushButton();
+    toolButton->setObjectName("xmitButton");
+    toolButton->setCheckable(true);
+    toolButton->setText("Transmit");
+    toolButton->setToolTip("Enable/disable your audio transmission for others");
+    toolButton->setAccessibleDescription(toolTip());
+    return toolButton;
+}
+
+QPushButton* LocalTrackGroupView::createToolButton(){
+    QPushButton* toolButton = new QPushButton();
+    toolButton->setObjectName("toolButton");
+    toolButton->setText("");
+    toolButton->setToolTip("Add or remove channels...");
+    toolButton->setAccessibleDescription(toolTip());
+    return toolButton;
+}
 
 QList<LocalTrackView*> LocalTrackGroupView::getTracks() const{
     QList<LocalTrackView*> tracks;
@@ -77,6 +118,12 @@ void LocalTrackGroupView::on_toolButtonClicked(){
     QMenu menu;
 
     QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
+    //Presets
+    QAction* addPresetActionSave = menu.addAction(QIcon(":/images/more.png"), "Save preset");
+    addPresetActionSave->setDisabled(true);// so we can merge to master without confusion for the user until it works
+    QAction* addPresetActionLoad = menu.addAction(QIcon(":/images/more.png"), "Load preset");
+    addPresetActionLoad->setDisabled(true);// so we can merge to master without confusion for the user until it works
+
     QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(on_addChannelClicked()));
     addChannelAction->setEnabled(mainFrame->getChannelGroupsCount() < 2);//at this moment users can't create more channels
     if(mainFrame->getChannelGroupsCount() > 1){
@@ -111,13 +158,14 @@ void LocalTrackGroupView::on_toolButtonClicked(){
         //QObject::connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(on_RemoveSubChannelTriggered(QAction*)));
         //QObject::connect(&menu, SIGNAL(hovered(QAction*)), this, SLOT(on_removeSubchannelHovered(QAction*)));
     }
+
     menu.move( mapToGlobal( toolButton->pos() + QPoint(toolButton->width(), 0) ));
     menu.exec();
 }
 
 void LocalTrackGroupView::on_addSubChannelClicked(){
     if(!trackViews.isEmpty()){
-        LocalTrackView* trackView = new LocalTrackView( trackViews.at(0)->getMainController(), getIndex());
+        LocalTrackView* trackView = new LocalTrackView( trackViews.at(0)->getMainController(), getChannelIndex());
         addTrackView(trackView);
         trackView->getMainController()->setInputTrackToNoInput(trackView->getInputIndex());
     }
@@ -176,13 +224,14 @@ void LocalTrackGroupView::on_removeChannelClicked(){
     mainFrame->removeChannelsGroup(mainFrame->getChannelGroupsCount()-1);
 }
 //+++++++++++++++++++++++++++++
-void LocalTrackGroupView::setPeakMeterMode(bool faderOnly){
-    if(this->peakMeterOnly != faderOnly){
-        this->peakMeterOnly = faderOnly;
+void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly){
+    if(this->peakMeterOnly != peakMeterOnly){
+        this->peakMeterOnly = peakMeterOnly;
         this->ui->topPanel->setVisible(!this->peakMeterOnly);
         foreach (BaseTrackView* baseView, trackViews) {
-            dynamic_cast<LocalTrackView*> (baseView)->setPeakMetersOnlyMode(faderOnly);
+            dynamic_cast<LocalTrackView*> (baseView)->setPeakMetersOnlyMode(peakMeterOnly, mainFrame->isRunningInMiniMode() );
         }
+        xmitButton->setText(peakMeterOnly ? "X" : "Transmit");
         updateGeometry();
         adjustSize();
     }

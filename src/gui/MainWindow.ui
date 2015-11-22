@@ -119,7 +119,7 @@
             <x>0</x>
             <y>0</y>
             <width>99</width>
-            <height>654</height>
+            <height>683</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="localTracksLayout">
@@ -140,19 +140,6 @@
            </property>
           </layout>
          </widget>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="xmitButton">
-         <property name="toolTip">
-          <string>Enable/disable audio transmission ...</string>
-         </property>
-         <property name="text">
-          <string>Transmit</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
         </widget>
        </item>
       </layout>
@@ -183,7 +170,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QTabWidget" name="tabWidget">
+        <widget class="CustomTabWidget" name="tabWidget">
          <property name="tabPosition">
           <enum>QTabWidget::North</enum>
          </property>
@@ -332,6 +319,8 @@
     <addaction name="actionMidiPreferences"/>
     <addaction name="actionVstPreferences"/>
     <addaction name="actionRecording"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuNinjam">
     <property name="title">
@@ -355,6 +344,8 @@
     </property>
     <addaction name="actionFullView"/>
     <addaction name="actionMiniView"/>
+    <addaction name="separator"/>
+    <addaction name="actionFullscreenMode"/>
    </widget>
    <addaction name="menuPreferences"/>
    <addaction name="menuViewMode"/>
@@ -370,20 +361,32 @@
    <property name="text">
     <string>Audio ...</string>
    </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
   </action>
   <action name="actionMidiPreferences">
    <property name="text">
     <string>Midi ...</string>
+   </property>
+   <property name="shortcut">
+    <string>F6</string>
    </property>
   </action>
   <action name="actionVstPreferences">
    <property name="text">
     <string>VST Plugins ...</string>
    </property>
+   <property name="shortcut">
+    <string>F7</string>
+   </property>
   </action>
   <action name="actionRecording">
    <property name="text">
     <string>Recording ...</string>
+   </property>
+   <property name="shortcut">
+    <string>F8</string>
    </property>
   </action>
   <action name="actionPrivate_Server">
@@ -415,6 +418,9 @@
    <property name="text">
     <string>Users Manual ...</string>
    </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
   </action>
   <action name="actionFullView">
    <property name="checkable">
@@ -432,8 +438,52 @@
     <string>Mini View</string>
    </property>
   </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit...</string>
+   </property>
+   <property name="shortcut">
+    <string>Esc</string>
+   </property>
+  </action>
+  <action name="actionFullscreenMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>FullscreenMode</string>
+   </property>
+   <property name="shortcut">
+    <string>F11</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>CustomTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>CustomTabWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionFullscreenMode</sender>
+   <signal>triggered()</signal>
+   <receiver>MainFrameClass</receiver>
+   <slot>showFullScreen()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>579</x>
+     <y>374</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
