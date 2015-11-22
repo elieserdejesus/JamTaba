@@ -773,17 +773,12 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
 //+++++++++++++++ PREPARING TO XMIT +++++++++++
 //this signal is received when ninjam controller is ready to transmit (after wait for 1 or 2 complete intervals).
 void MainWindow::ninjamTransmissionStarted(){
-    foreach (LocalTrackGroupView* localChannel, localChannels) {
-        if(localChannel->isPreparingToTransmit()){
-            localChannel->setPreparingStatus(false);//tracks are transmiting now
-        }
-    }
+    setInputTracksPreparingStatus(false);//tracks are prepared to transmit
 }
 
 void MainWindow::ninjamPreparingToTransmit(){
-    foreach (LocalTrackGroupView* localChannel, localChannels) {
-        localChannel->setPreparingStatus(true);//tracks are waiting to start transmiting
-    }
+    //tracks are waiting to start transmiting
+    setInputTracksPreparingStatus(true);
 }
 
 //+++++++++++++++++++++++++++++
@@ -806,6 +801,8 @@ void MainWindow::exitFromRoom(bool normalDisconnection){
     //hide chat area
     ui.chatArea->setVisible(false);
 
+    setInputTracksPreparingStatus(false);//reset the prepating status when user leave the room. This is specially necessary if user enter in a room and leave before the track is prepared to transmit.
+
     if(!normalDisconnection){
         //QMessageBox::warning(this, "Warning", "Disconnected from server!", QMessageBox::NoButton, QMessageBox::NoButton);
         showMessageBox("Error", "Disconnected from ninjam server", QMessageBox::Warning);
@@ -821,6 +818,12 @@ void MainWindow::exitFromRoom(bool normalDisconnection){
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void MainWindow::setInputTracksPreparingStatus(bool preparing){
+    foreach (LocalTrackGroupView* trackGroup, localChannels) {
+        trackGroup->setPreparingStatus(preparing);
+    }
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::timerEvent(QTimerEvent *){
 

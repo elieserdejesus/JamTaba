@@ -115,15 +115,17 @@ void Service::socketReadSlot(){
         return;
     }
 
+    qCDebug(jtNinjamProtocol) << "socket read slot";
+
     QDataStream stream(&socket);
     stream.setByteOrder(QDataStream::LittleEndian);
 
     static quint8 messageTypeCode;
     static quint32 payloadLenght;
-    static bool lastMessageWasIncomplete = false;
     while (socket.bytesAvailable() >= 5){//consume all messages
         if(!lastMessageWasIncomplete){
             stream >> messageTypeCode >> payloadLenght;
+            qCDebug(jtNinjamProtocol) << "reading message from socket msgType:" << messageTypeCode << " payloadLenght:" << payloadLenght;
         }
         if (socket.bytesAvailable() >= (int)payloadLenght) {//message payload is available to read
             lastMessageWasIncomplete = false;
@@ -343,7 +345,7 @@ void Service::handle(const ServerAuthReplyMessage& msg){
 }
 
 void Service::startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password){
-    initialized = false;
+    initialized = lastMessageWasIncomplete = false;
     this->userName = userName;
     this->password = password;
     this->channels = channels;
