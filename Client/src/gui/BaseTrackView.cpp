@@ -20,7 +20,7 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     QObject::connect(ui->muteButton, SIGNAL(clicked()), this, SLOT(onMuteClicked()));
     QObject::connect(ui->soloButton, SIGNAL(clicked()), this, SLOT(onSoloClicked()));
     QObject::connect(ui->levelSlider, SIGNAL(valueChanged(int)), this, SLOT(onFaderMoved(int)));
-    QObject::connect(ui->panSlider, SIGNAL(sliderMoved(int)), this, SLOT(onPanSliderMoved(int)));
+    //QObject::connect(ui->panSlider, SIGNAL(sliderMoved(int)), this, SLOT(onPanSliderMoved(int)));
     QObject::connect(ui->panSlider, SIGNAL(valueChanged(int)), this, SLOT(onPanSliderMoved(int)));
     QObject::connect(ui->buttonBoostZero, SIGNAL(clicked(bool)), this, SLOT(onBoostButtonClicked()));
     QObject::connect(ui->buttonBoostMinus12, SIGNAL(clicked(bool)), this, SLOT(onBoostButtonClicked()));
@@ -42,6 +42,43 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
 
     setAttribute(Qt::WA_NoBackground);
 }
+
+void BaseTrackView::bindThisViewWithTrackNodeSignals(){
+    Audio::AudioNode* trackNode = mainController->getTrackNode(trackID);
+    Q_ASSERT(trackNode);
+    QObject::connect(trackNode, SIGNAL(gainChanged(float)), this, SLOT(onAudioNodeGainChanged(float)));
+    QObject::connect(trackNode, SIGNAL(panChanged(float)), this, SLOT(onAudioNodePanChanged(float)));
+    QObject::connect(trackNode, SIGNAL(muteChanged(bool)), this, SLOT(onAudioNodeMuteChanged(bool)));
+    QObject::connect(trackNode, SIGNAL(soloChanged(bool)), this, SLOT(onAudioNodeSoloChanged(bool)));
+}
+
+//++++++  signals emitted by Audio Node +++++++
+//The values are changed in the model, so the view (this class) need
+//react and update. This changes in the model can done in initialization (when
+//Jamtaba is opened the last gain, pan values are loaded) or by
+//a midi message for example. So we can't expect the values of gain, pan are
+//only change by user mouse interaction, the values can be changed using another
+//methods.
+
+void BaseTrackView::onAudioNodeGainChanged(float newGainValue){
+    ui->levelSlider->setValue(newGainValue * 100);
+}
+
+
+void BaseTrackView::onAudioNodePanChanged(float newPanValue){
+    //pan range is[-4,4], zero is center
+    ui->panSlider->setValue(newPanValue * 4);
+}
+
+void BaseTrackView::onAudioNodeMuteChanged(bool newMuteStatus){
+    ui->muteButton->setChecked(newMuteStatus);
+}
+
+void BaseTrackView::onAudioNodeSoloChanged(bool newSoloStatus){
+    ui->soloButton->setChecked(newSoloStatus);
+}
+
+//+++++++++
 
 
 void BaseTrackView::onBoostButtonClicked(){
@@ -66,20 +103,18 @@ void BaseTrackView::updateGuiElements(){
         maxPeak.update(peak);
         double db = 20 * std::log10(maxPeak.getMax());
         ui->peaksDbLabel->setText(QString::number(db, 'f', 0));
-//        setProperty("clip", QVariant(db >= 0));
-//        style()->unpolish(this);
-//        style()->polish(this);
     }
+    //update the track peaks
     setPeaks( peak.getLeft(), peak.getRight());
+
+    //update the track processors. At moment the VST plugins gui are updated. Some plugins need this to run your animations (see Ez Drummer, for example);
     mainController->getTrackNode(getTrackID())->updateProcessorsGui();//call idle in VST plugins
 }
 
 QSize BaseTrackView::sizeHint() const{
-
     if(narrowed){
         return QSize(NARROW_WIDTH, height());
     }
-
     return QSize(WIDE_WIDTH, height());
 }
 
@@ -156,12 +191,7 @@ bool BaseTrackView::eventFilter(QObject *source, QEvent *ev){
         return true;
     }
     //--------------
-
-    //--------------
     if(ev->type() == QEvent::MouseButtonDblClick){
-//        if(source == ui->panSlider){
-//            ui->panSlider->setValue(0);//center
-//        }
         if(source == ui->levelSlider){
             ui->levelSlider->setValue(100);
             update();
@@ -175,29 +205,27 @@ bool BaseTrackView::eventFilter(QObject *source, QEvent *ev){
     return QWidget::eventFilter(source, ev);
 }
 
-BaseTrackView::~BaseTrackView()
-{
+BaseTrackView::~BaseTrackView(){
     delete ui;
     trackViews.remove(this->getTrackID());//remove from static map
 }
 
-
-
 void BaseTrackView::onPanSliderMoved(int value){
     float sliderValue = value/(float)ui->panSlider->maximum();
-    mainController->setTrackPan(this->trackID, sliderValue);
+    mainController->setTrackPan(this->trackID, sliderValue, true);
 }
 
 void BaseTrackView::onFaderMoved(int value){
-    mainController->setTrackLevel(this->trackID, value/100.0);
+    //signals are blocked [the third parameter] to avoid a loop in signal/slot scheme.
+    mainController->setTrackGain(this->trackID, value/100.0, true);
 }
 
 void BaseTrackView::onMuteClicked(){
-    mainController->setTrackMute(this->trackID, !mainController->trackIsMuted(trackID));
+    mainController->setTrackMute(this->trackID, !mainController->trackIsMuted(trackID), true);
 }
 
 void BaseTrackView::onSoloClicked(){
-    mainController->setTrackSolo(this->trackID, !mainController->trackIsSoloed(this->trackID));
+    mainController->setTrackSolo(this->trackID, !mainController->trackIsSoloed(this->trackID), true);
 }
 
 //little to allow stylesheet in custom widget

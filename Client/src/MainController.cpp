@@ -607,6 +607,17 @@ void MainController::removeTrack(long trackID){
 
 void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
     MidiBuffer midiBuffer ( midiDriver ? midiDriver->getBuffer() : MidiBuffer(0));
+    int messages = midiBuffer.getMessagesCount();
+    for(int m=0; m < messages; m++){
+        Midi::MidiMessage msg = midiBuffer.getMessage(m);
+        if(msg.isControl()){
+            int inputTrackIndex = 0;//just for test for while, we need get this index from the mapping pair
+            char cc = msg.getData1();
+            char ccValue = msg.getData2();
+            qCDebug(jtMidi) << "Control Change received: " << QString::number(cc) << " -> " << QString::number(ccValue);
+            getInputTrack(inputTrackIndex)->setGain(ccValue/127.0);
+        }
+    }
     audioMixer.process(in, out, sampleRate, midiBuffer);
 }
 
@@ -617,7 +628,6 @@ void MainController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffe
         return;
     }
 
-    //checkThread("process();");
     if(!isPlayingInNinjamRoom()){
         doAudioProcess(in, out, sampleRate);
     }
@@ -666,12 +676,12 @@ bool MainController::isTransmiting(int channelID) const{
 }
 
 //++++++++++ TRACKS ++++++++++++
-void MainController::setTrackPan(int trackID, float pan){
-    //QMutexLocker locker(&mutex);
-    //checkThread("setTrackPan();");
+void MainController::setTrackPan(int trackID, float pan, bool blockSignals){
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
+        node->blockSignals(blockSignals);
         node->setPan(pan);
+        node->blockSignals(false);
     }
 }
 
@@ -683,26 +693,30 @@ void MainController::setTrackBoost(int trackID, float boostInDecibels){
     }
 }
 
-void MainController::setTrackLevel(int trackID, float level){
+void MainController::setTrackGain(int trackID, float gain, bool blockSignals){
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
-        node->setGain(Utils::linearGainToPower(level));
+        node->blockSignals(blockSignals);
+        node->setGain(Utils::linearGainToPower(gain));
+        node->blockSignals(false);
     }
 }
 
-void MainController::setTrackMute(int trackID, bool muteStatus){
+void MainController::setTrackMute(int trackID, bool muteStatus, bool blockSignals){
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
+        node->blockSignals(blockSignals);
         node->setMuteStatus(muteStatus);
+        node->blockSignals(false);//unblock signals by default
     }
 }
 
-void MainController::setTrackSolo(int trackID, bool soloStatus){
-    //QMutexLocker locker(&mutex);
-    //checkThread("setTrackSolo();");
+void MainController::setTrackSolo(int trackID, bool soloStatus, bool blockSignals){
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
+        node->blockSignals(blockSignals);
         node->setSoloStatus(soloStatus);
+        node->blockSignals(false);
     }
 }
 
