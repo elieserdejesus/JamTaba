@@ -72,6 +72,10 @@ public:
 
     inline bool isRunningInMiniMode() const{return !fullViewMode;}
     inline bool isRunningInFullViewMode() const{return fullViewMode;}
+
+    bool isTransmiting(int channelID) const;
+    void setTransmitingStatus(int channelID, bool xmitStatus);
+
 protected:
     Controller::MainController* mainController;
     virtual void initializePluginFinder();
@@ -141,8 +145,6 @@ protected slots:
     //channel name changed
     void on_channelNameChanged();
 
-    //xmit
-    void on_xmitButtonClicked(bool checked);
 
     //room streamer
     void on_RoomStreamerError(QString msg);

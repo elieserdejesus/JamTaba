@@ -96,10 +96,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     QObject::connect(ui.actionWiki, SIGNAL(triggered(bool)), this, SLOT(on_wikiMenuItemTriggered()));
     QObject::connect(ui.actionUsersManual, SIGNAL(triggered(bool)), this, SLOT(on_UsersManualMenuItemTriggered()));
     QObject::connect( ui.localControlsCollapseButton, SIGNAL(clicked()), this, SLOT(on_localControlsCollapseButtonClicked()));
-    QObject::connect(ui.xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
     QObject::connect( mainController->getRoomStreamer(), SIGNAL(error(QString)), this, SLOT(on_RoomStreamerError(QString)));
-
-    ui.xmitButton->setChecked(mainController->isTransmiting());
 
     initializeLocalInputChannels();
 
@@ -151,7 +148,6 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly){
         channel->setPeakMeterMode(showPeakMetersOnly);
     }
     ui.labelSectionTitle->setVisible(!showPeakMetersOnly);
-    ui.xmitButton->setText(showPeakMetersOnly ? "X" : "Transmit");
 
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
     recalculateLeftPanelWidth();
@@ -346,7 +342,7 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
             localTrackView->refreshInputSelectionName();
         }
     }
-    localChannel->setUnlightStatus(!ui.xmitButton->isChecked());
+
     if(!fullViewMode && localChannels.count() > 1){
         foreach (LocalTrackGroupView* trackGroup, localChannels) {
             trackGroup->setToNarrow();
@@ -858,18 +854,6 @@ void MainWindow::timerEvent(QTimerEvent *){
 }
 
 //++++++++++++=
-void MainWindow::on_xmitButtonClicked(bool checked){
-    foreach (LocalTrackGroupView* localChannel, localChannels) {
-        localChannel->setUnlightStatus(!checked);
-    }
-    mainController->setTransmitingStatus(checked);
-
-
-
-}
-
-//++++++++++++=
-
 void MainWindow::resizeEvent(QResizeEvent *){
     if(busyDialog.isVisible()){
         centerBusyDialog();
@@ -1215,3 +1199,14 @@ void MainWindow::on_actionFullscreenMode_triggered()
       else
       {this->setWindowState(Qt::WindowFullScreen);}
 }
+
+//++++++++++++++++++++++++
+void MainWindow::setTransmitingStatus(int channelID, bool xmitStatus){
+    mainController->setTransmitingStatus(channelID, xmitStatus);
+}
+
+bool MainWindow::isTransmiting(int channelID) const{
+    return mainController->isTransmiting(channelID);
+}
+
+//++++++++++++

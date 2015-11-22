@@ -67,7 +67,7 @@ void LocalTrackView::init(int channelIndex, float initialGain, BaseTrackView::Bo
 
     //create the peak meter to show midiactivity
     midiPeakMeter = new PeakMeter();
-    ui->metersWidget->layout()->addWidget(midiPeakMeter);
+
     midiPeakMeter->setObjectName("midiPeakMeter");
     midiPeakMeter->setSolidColor(Qt::red);
     midiPeakMeter->setPaintMaxPeakMarker(false);
@@ -302,7 +302,18 @@ QMenu* LocalTrackView::createMonoInputsMenu(QMenu* parent){
 void LocalTrackView::on_monoInputMenuSelected(QAction *action){
     int selectedInputIndexInAudioDevice = action->data().toInt();
     mainController->setInputTrackToMono(getTrackID(), selectedInputIndexInAudioDevice);
-    midiPeakMeter->setVisible(false);
+    setMidiPeakMeterVisibility(false);
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void LocalTrackView::setMidiPeakMeterVisibility(bool visible){
+    if(visible){
+        ui->metersWidget->layout()->addWidget(midiPeakMeter);
+    }
+    else{
+        ui->metersWidget->layout()->removeWidget(midiPeakMeter);
+    }
+    update();
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -348,7 +359,7 @@ QMenu* LocalTrackView::createStereoInputsMenu(QMenu* parent){
 void LocalTrackView::on_stereoInputMenuSelected(QAction *action){
     int firstInputIndexInAudioDevice = action->data().toInt();
     mainController->setInputTrackToStereo(getTrackID(), firstInputIndexInAudioDevice);
-    midiPeakMeter->setVisible(false);
+    setMidiPeakMeterVisibility(false);
 }
 
 QString LocalTrackView::getInputChannelNameOnly(int inputIndex){
@@ -423,7 +434,7 @@ void LocalTrackView::refreshInputSelectionName(){
         this->inputTypeIconLabel->setStyleSheet("background-image: url(" + iconFile + ");");
     }
 
-    midiPeakMeter->setVisible(inputNode->isMidi());
+    setMidiPeakMeterVisibility(inputNode->isMidi());
 
     updateGeometry();
 
