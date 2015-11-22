@@ -27,6 +27,7 @@ signals:
 private slots:
     void on_buttonTransposeUp_clicked();
     void on_buttonTransposeDown_clicked();
+    void on_buttonDiscardChordsClicked();
 
 private:
     Ui::ChordsPanel *ui;
