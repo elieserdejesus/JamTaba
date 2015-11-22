@@ -118,8 +118,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>655</height>
+            <width>99</width>
+            <height>683</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="localTracksLayout">
@@ -140,19 +140,6 @@
            </property>
           </layout>
          </widget>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="xmitButton">
-         <property name="toolTip">
-          <string>Enable/disable audio transmission ...</string>
-         </property>
-         <property name="text">
-          <string>Transmit</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
         </widget>
        </item>
       </layout>
@@ -229,8 +216,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>712</width>
-                <height>675</height>
+                <width>711</width>
+                <height>674</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -321,7 +308,7 @@
      <x>0</x>
      <y>0</y>
      <width>1160</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPreferences">

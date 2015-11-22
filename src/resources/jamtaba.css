@@ -716,7 +716,7 @@ JamRoomViewPanel #labelName{
 }
 
 JamRoomViewPanel  #labelRoomStatus, JamRoomViewPanel  #labelRoomType{
-    font-size: 10px;
+    font-size: 9px;
     color: rgb(90, 90, 90);
 }
 JamRoomViewPanel  #labelRoomType{
@@ -747,6 +747,10 @@ JamRoomViewPanel  #labelRoomType{
     color: rgba(0,40, 0);
 }
 
+
+QPushButton#xmitButton[preparing="true"]{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255,255,0), stop:1 rgb(204,204,0));
+}
 
 #xmitButton:!checked{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgba(255, 90, 62, 140), stop:1 rgba(175, 0, 0, 140));

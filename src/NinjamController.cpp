@@ -163,16 +163,17 @@ class NinjamController::InputChannelChangedEvent : public SchedulableEvent{
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class NinjamController::XmitChangedEvent : public SchedulableEvent{
 public:
-    XmitChangedEvent(NinjamController* controller, bool transmiting)
-        : SchedulableEvent(controller), transmiting(transmiting) {
+    XmitChangedEvent(NinjamController* controller, int channelID, bool transmiting)
+        : SchedulableEvent(controller), transmiting(transmiting), channelID(channelID) {
 
     }
     void process(){
-        controller->transmiting = this->transmiting;
+        controller->setTransmitStatus(channelID, transmiting);
     }
 
 private:
     bool transmiting;
+    int channelID;
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -183,12 +184,11 @@ NinjamController::NinjamController(Controller::MainController* mainController)
     samplesInInterval(0),
     currentBpi(0),
     currentBpm(0),
-    transmiting(false),
     mutex(QMutex::Recursive),
     encodersMutex(QMutex::Recursive),
-    encodingThread(nullptr)
-
-    //recorder("record.wav", mainController->getAudioDriver()->getSampleRate())
+    encodingThread(nullptr),
+    preparedForTransmit(false),
+    waitingIntervals(0)//waiting for start transmit
 {
     running = false;
 
@@ -223,8 +223,6 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
     static int lastBeat = 0;
     int offset = 0;
 
-
-
     do{
         emit startProcessing(intervalPosition);//vst host time line is updated with this event
 
@@ -242,7 +240,6 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
         bool newInterval = intervalPosition == 0;
         if(newInterval){//starting new interval
             handleNewInterval();
-            //mainController->getVstHost()->setTransportChangedFlag(true);
         }
 
         metronomeTrackNode->setIntervalPosition(this->intervalPosition);
@@ -251,6 +248,7 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
             lastBeat = currentBeat;
             emit intervalBeatChanged(currentBeat);
         }
+
         //+++++++++++ MAIN AUDIO OUTPUT PROCESS +++++++++++++++
         bool isLastPart = intervalPosition + samplesToProcessInThisStep >= samplesInInterval;
         foreach (NinjamTrackNode* track, trackNodes) {
@@ -260,38 +258,34 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
         out.add(tempOutBuffer, offset); //generate audio output
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-        if( transmiting){
-            bool isFirstPart = intervalPosition == 0;
+        if(preparedForTransmit){
             //1) mix input subchannels, 2) encode and 3) send the encoded audio
-
+            bool isFirstPart = intervalPosition == 0;
             int groupedChannels = mainController->getInputTrackGroupsCount();
             for (int groupIndex = 0; groupIndex < groupedChannels; ++groupIndex) {
-                int channels = mainController->getMaxChannelsForEncodingInTrackGroup(groupIndex);
-                //qWarning() << channels;
-                if(channels > 0){
-                    Audio::SamplesBuffer inputMixBuffer(channels, samplesToProcessInThisStep);
+                if(mainController->isTransmiting(groupIndex)){
+                    int channels = mainController->getMaxChannelsForEncodingInTrackGroup(groupIndex);
+                    if(channels > 0){
+                        Audio::SamplesBuffer inputMixBuffer(channels, samplesToProcessInThisStep);
 
-                    if(encoders.contains(groupIndex)){
-                        inputMixBuffer.zero();
-                        mainController->mixGroupedInputs(groupIndex, inputMixBuffer);
+                        if(encoders.contains(groupIndex)){
+                            inputMixBuffer.zero();
+                            mainController->mixGroupedInputs(groupIndex, inputMixBuffer);
 
-                        //encoding is running in another thread to avoid slow down the audio thread
-                        encodingThread->addSamplesToEncode( inputMixBuffer, groupIndex, isFirstPart, isLastPart);
+                            //encoding is running in another thread to avoid slow down the audio thread
+                            encodingThread->addSamplesToEncode( inputMixBuffer, groupIndex, isFirstPart, isLastPart);
+                        }
                     }
                 }
             }
         }
+
         //++++++++++++++++++++++++++++++++++++++++
         samplesProcessed += samplesToProcessInThisStep;
         offset += samplesToProcessInThisStep;
         this->intervalPosition = (this->intervalPosition + samplesToProcessInThisStep) % samplesInInterval;
-
-        //recorder.addSamples(tempBuffer);
     }
     while( samplesProcessed < totalSamplesToProcess);
-
-    //mainController->getVstHost()->setTransportChangedFlag(false);
-
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Audio::MetronomeTrackNode* NinjamController::createMetronomeTrackNode(int sampleRate){
@@ -360,13 +354,19 @@ NinjamController::~NinjamController(){
 
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamController::start(const Ninjam::Server& server, bool transmiting){
+void NinjamController::start(const Ninjam::Server& server, QMap<int, bool> channelsXmitFlags){
     qCDebug(jtNinjamCore) << "starting ninjam controller...";
     QMutexLocker locker(&mutex);
+
     //schedule an update in internal attributes
     scheduledEvents.append(new BpiChangeEvent(this, server.getBpi()));
     scheduledEvents.append(new BpmChangeEvent(this, server.getBpm()));
-    scheduledEvents.append(new XmitChangedEvent(this, transmiting));
+    foreach (int channelID, channelsXmitFlags.keys()) {
+        bool channelIsTransmiting = channelsXmitFlags[channelID];
+        scheduledEvents.append(new XmitChangedEvent(this, channelID, channelIsTransmiting));
+    }
+    preparedForTransmit = false; //the xmit start after the first interval is received
+    emit preparingTransmission();
 
     //schedule the encoders creation (one encoder for each channel)
     int channels = mainController->getInputTrackGroupsCount();
@@ -509,6 +509,18 @@ void NinjamController::setMetronomeBeatsPerAccent(int beatsPerAccent){
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamController::handleNewInterval(){
 
+    //check if the transmiting can start
+    if(!preparedForTransmit){
+        if(waitingIntervals >= TOTAL_PREPARED_INTERVALS){
+            preparedForTransmit = true;
+            waitingIntervals = 0;
+            emit preparedToTransmit();
+        }
+        else{
+            waitingIntervals++;
+        }
+    }
+
     if(hasScheduledChanges()){
         processScheduledChanges();
     }
@@ -627,8 +639,8 @@ void NinjamController::reset(){
 }
 
 
-void NinjamController::setTransmitStatus(bool transmiting){
-    scheduledEvents.append(new XmitChangedEvent(this, transmiting));
+void NinjamController::setTransmitStatus(int channelID, bool transmiting){
+    scheduledEvents.append(new XmitChangedEvent(this, channelID, transmiting));
 }
 
 void NinjamController::scheduleEncoderChangeForChannel(int channelIndex){

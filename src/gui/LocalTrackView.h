@@ -75,6 +75,8 @@ private:
 
     PeakMeter* midiPeakMeter;//show midi activity
 
+    void setMidiPeakMeterVisibility(bool visible);
+
     static const QString MIDI_ICON;
     static const QString MONO_ICON;
     static const QString STEREO_ICON;
