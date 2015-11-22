@@ -203,13 +203,13 @@ private:
 
     bool fullViewMode;//full view or mini view mode?
 
-
-
     void refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms);
 
     void showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly);
 
     void recalculateLeftPanelWidth();
+
+    void setInputTracksPreparingStatus(bool preparing);
 
     //PerformanceMonitor performanceMonitor;//cpu and memmory usage
     //qint64 lastPerformanceMonitorUpdate;
