@@ -32,7 +32,7 @@ public:
     explicit NinjamController(Controller::MainController* mainController);
     virtual ~NinjamController();
     virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate);
-    void start(const Ninjam::Server& server, bool transmiting);
+    void start(const Ninjam::Server& server, QMap<int, bool> channelsXmitFlags);
     void stop(bool emitDisconnectedingSignal);
     bool inline isRunning() const{return running;}
     void setMetronomeBeatsPerAccent(int beatsPerAccent);
@@ -55,7 +55,7 @@ public:
     void scheduleEncoderChangeForChannel(int channelIndex);
     void removeEncoder(int groupChannelIndex);
 
-    void setTransmitStatus(bool transmiting);
+    void setTransmitStatus(int channelID, bool transmiting);
 
     void setSampleRate(int newSampleRate);
 
@@ -93,7 +93,6 @@ private:
     //void deleteDeactivatedTracks();
 
     bool running;
-    bool transmiting;
 
     long intervalPosition;
     long samplesInInterval;

@@ -23,7 +23,7 @@ public:
     void refreshInputSelectionNames();
     QList<LocalTrackView*> getTracks() const;
     virtual void addTrackView(BaseTrackView *trackView);
-    inline int getIndex() const{return index;}
+    inline int getChannelIndex() const{return index;}
 
     virtual void setPeakMeterMode(bool peakMeterOnly);
     virtual void togglePeakMeterOnlyMode();
@@ -42,12 +42,17 @@ signals:
     void trackAdded();
 private:
     QPushButton* toolButton;
+    QPushButton* xmitButton;
+
     static const int MAX_SUB_CHANNELS = 2;
     int index;
     MainWindow* mainFrame;
     bool eventFilter(QObject *target, QEvent *event);
 
     bool peakMeterOnly;
+
+    QPushButton* createToolButton();
+    QPushButton* createXmitButton();
 
 private slots:
     void on_toolButtonClicked();
@@ -60,6 +65,9 @@ private slots:
 
     void on_removeSubChannelClicked();
     void on_removeChannelClicked();
+
+    //xmit
+    void on_xmitButtonClicked(bool checked);
 
 };
 
