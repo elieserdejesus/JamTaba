@@ -86,7 +86,6 @@ signals:
 
 private:
 
-
     static const long DEFAULT_KEEP_ALIVE_PERIOD = 3000;
     static std::unique_ptr<PublicServersParser> publicServersParser;// = new MixedPublicServersParser();
 
@@ -136,6 +135,8 @@ private:
     QMap<QString, Download*> downloads;
 
     bool needSendKeepAlive() const;
+
+    bool lastMessageWasIncomplete;
 
 private slots:
     void socketReadSlot();
