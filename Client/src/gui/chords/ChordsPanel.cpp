@@ -9,6 +9,7 @@ ChordsPanel::ChordsPanel(QWidget *parent) :
     ui->setupUi(this);
 
     QObject::connect(ui->buttonSendToChat, SIGNAL(clicked(bool)), this, SIGNAL(buttonSendChordsToChatClicked()));
+    QObject::connect(ui->buttonDiscardChords, SIGNAL(clicked(bool)), this, SLOT(on_buttonDiscardChordsClicked()));
 }
 
 ChordsPanel::~ChordsPanel()
@@ -74,3 +75,8 @@ void ChordsPanel::on_buttonTransposeDown_clicked()
     setChords(chordProgression.getTransposedVersion(-1));
 }
 
+void ChordsPanel::on_buttonDiscardChordsClicked(){
+    chordProgression.clear();
+    ui->chordsWidget->clear();
+    setVisible(false);
+}
