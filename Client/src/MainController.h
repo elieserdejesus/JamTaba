@@ -104,8 +104,8 @@ public:
     bool isPlayingInNinjamRoom() const;
     virtual void stopNinjamController();
 
-    void setTransmitingStatus(bool transmiting);
-    inline bool isTransmiting() const{return transmiting;}
+    void setTransmitingStatus(int channelID, bool transmiting);
+    bool isTransmiting(int channelID) const;
 
     void stopRoomStream();//stop currentRoom stream
     inline long long getCurrentStreamingRoomID() const{return currentStreamingRoomID;}
@@ -266,7 +266,7 @@ private:
     class InputTrackGroup;
     QMap<int, InputTrackGroup*> trackGroups;
 
-    bool transmiting;
+    QMap<int, bool> getXmitChannelsFlags() const;
 
     QMap<long, Audio::AudioNode*> tracksNodes;
     QMutex mutex;

@@ -72,10 +72,16 @@ public:
 
     inline bool isRunningInMiniMode() const{return !fullViewMode;}
     inline bool isRunningInFullViewMode() const{return fullViewMode;}
+
     //EZEE PRESETS NEED THAT
     inline Controller::MainController* getMainController(){return mainController ;}
     void presetInputChannels(){initializeLocalInputChannels();}// finally i don't like that name ...
     void resetGroupChannel(LocalTrackGroupView *group);// should load the defaultPreset.json ?
+
+
+    bool isTransmiting(int channelID) const;
+    void setTransmitingStatus(int channelID, bool xmitStatus);
+
 
 protected:
     Controller::MainController* mainController;
@@ -115,6 +121,9 @@ protected slots:
     void on_menuViewModeTriggered(QAction* action);
 
 
+    //ninjam controller
+    void ninjamTransmissionStarted();
+    void ninjamPreparingToTransmit();
 
     //help menu
     void on_reportBugMenuItemTriggered();
@@ -147,8 +156,6 @@ protected slots:
     //channel name changed
     void on_channelNameChanged();
 
-    //xmit
-    void on_xmitButtonClicked(bool checked);
 
     //room streamer
     void on_RoomStreamerError(QString msg);

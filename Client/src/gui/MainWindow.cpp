@@ -96,10 +96,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     QObject::connect(ui.actionWiki, SIGNAL(triggered(bool)), this, SLOT(on_wikiMenuItemTriggered()));
     QObject::connect(ui.actionUsersManual, SIGNAL(triggered(bool)), this, SLOT(on_UsersManualMenuItemTriggered()));
     QObject::connect( ui.localControlsCollapseButton, SIGNAL(clicked()), this, SLOT(on_localControlsCollapseButtonClicked()));
-    QObject::connect(ui.xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
     QObject::connect( mainController->getRoomStreamer(), SIGNAL(error(QString)), this, SLOT(on_RoomStreamerError(QString)));
-
-    ui.xmitButton->setChecked(mainController->isTransmiting());
 
     initializeLocalInputChannels();
 
@@ -151,7 +148,6 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly){
         channel->setPeakMeterMode(showPeakMetersOnly);
     }
     ui.labelSectionTitle->setVisible(!showPeakMetersOnly);
-    ui.xmitButton->setText(showPeakMetersOnly ? "X" : "Transmit");
 
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
     recalculateLeftPanelWidth();
@@ -346,7 +342,7 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
             localTrackView->refreshInputSelectionName();
         }
     }
-    localChannel->setUnlightStatus(!ui.xmitButton->isChecked());
+
     if(!fullViewMode && localChannels.count() > 1){
         foreach (LocalTrackGroupView* trackGroup, localChannels) {
             trackGroup->setToNarrow();
@@ -750,11 +746,7 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
     qCDebug(jtGUI) << "hidding busy dialog...";
     hideBusyDialog();
 
-//    if(ninjamWindow){
-//        ninjamWindow->deleteLater();
-//    }
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
-    //ninjamWindow.reset( new NinjamRoomWindow(this, roomInfo, mainController));
     ninjamWindow.reset( createNinjamWindow(roomInfo, mainController));
     QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
     ninjamWindow->setFullViewStatus(this->fullViewMode);
@@ -773,8 +765,28 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
     ui.leftPanel->adjustSize();
     //ui.leftPanel->setMinimumWidth(500);
     qCDebug(jtGUI) << "MainWindow::enterInRoom() done!";
+
+    QObject::connect(mainController->getNinjamController(), SIGNAL(preparedToTransmit()), this, SLOT(ninjamTransmissionStarted()));
+    QObject::connect(mainController->getNinjamController(), SIGNAL(preparingTransmission()), this, SLOT(ninjamPreparingToTransmit()));
 }
 
+//+++++++++++++++ PREPARING TO XMIT +++++++++++
+//this signal is received when ninjam controller is ready to transmit (after wait for 1 or 2 complete intervals).
+void MainWindow::ninjamTransmissionStarted(){
+    foreach (LocalTrackGroupView* localChannel, localChannels) {
+        if(localChannel->isPreparingToTransmit()){
+            localChannel->setPreparingStatus(false);//tracks are transmiting now
+        }
+    }
+}
+
+void MainWindow::ninjamPreparingToTransmit(){
+    foreach (LocalTrackGroupView* localChannel, localChannels) {
+        localChannel->setPreparingStatus(true);//tracks are waiting to start transmiting
+    }
+}
+
+//+++++++++++++++++++++++++++++
 void MainWindow::exitFromRoom(bool normalDisconnection){
     hideBusyDialog();
 
@@ -858,18 +870,6 @@ void MainWindow::timerEvent(QTimerEvent *){
 }
 
 //++++++++++++=
-void MainWindow::on_xmitButtonClicked(bool checked){
-    foreach (LocalTrackGroupView* localChannel, localChannels) {
-        localChannel->setUnlightStatus(!checked);
-    }
-    mainController->setTransmitingStatus(checked);
-
-
-
-}
-
-//++++++++++++=
-
 void MainWindow::resizeEvent(QResizeEvent *){
     if(busyDialog.isVisible()){
         centerBusyDialog();
@@ -1216,6 +1216,7 @@ void MainWindow::on_actionFullscreenMode_triggered()
       {this->setWindowState(Qt::WindowFullScreen);}
 }
 
+
 //PRESETS STUFF
 void MainWindow::resetGroupChannel(LocalTrackGroupView *group)
 {
@@ -1257,3 +1258,15 @@ void MainWindow::resetGroupChannel(LocalTrackGroupView *group)
 
         qCInfo(jtConfigurator) << "Reseting local inputs done!";
 }
+
+//++++++++++++++++++++++++
+void MainWindow::setTransmitingStatus(int channelID, bool xmitStatus){
+    mainController->setTransmitingStatus(channelID, xmitStatus);
+}
+
+bool MainWindow::isTransmiting(int channelID) const{
+    return mainController->isTransmiting(channelID);
+}
+
+//++++++++++++
+

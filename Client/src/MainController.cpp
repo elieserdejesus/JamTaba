@@ -46,7 +46,7 @@ using namespace Controller;
 class MainController::InputTrackGroup{
 public:
     InputTrackGroup(int groupIndex, Audio::LocalInputAudioNode* firstInput)
-        :groupIndex(groupIndex){
+        :groupIndex(groupIndex), transmiting(true){
         addInput(firstInput);
     }
 
@@ -93,9 +93,13 @@ public:
         return 0;//no channels to encoding
     }
 
+    inline bool isTransmiting() const{return transmiting;}
+    void setTransmitingStatus(bool transmiting){this->transmiting = transmiting;}
+
 private:
     int groupIndex;
     QList<Audio::LocalInputAudioNode*> groupedInputs;
+    bool transmiting;
 };
 
 //+++++++++++++++++++++++++++++
@@ -126,10 +130,6 @@ private:
     const QByteArray GUID;
     QByteArray dataToUpload;
 };
-
-
-
-
 
 //++++++++++++++++++++++++++++++++++++++++++++++
 void MainController::setSampleRate(int newSampleRate){
@@ -206,12 +206,22 @@ void MainController::on_connectedInNinjamServer(Ninjam::Server server){
         qCCritical(jtCore) << "mainWindow is null!";
     }
     qCDebug(jtCore) << "starting ninjamController...";
-    newNinjamController->start(server, transmiting);
+
+
+    newNinjamController->start(server, getXmitChannelsFlags());
 
 
     if(settings.isSaveMultiTrackActivated()){
         jamRecorder.startRecording(getUserName(), QDir(settings.getRecordingPath()), server.getBpm(), server.getBpi(), getSampleRate());
     }
+}
+
+QMap<int, bool> MainController::getXmitChannelsFlags() const{
+    QMap<int, bool> xmitFlags;
+    foreach (InputTrackGroup* inputGroup, trackGroups) {
+        xmitFlags.insert( inputGroup->getIndex(), inputGroup->isTransmiting());
+    }
+    return xmitFlags;
 }
 
 void MainController::on_ninjamStartProcessing(int intervalPosition){
@@ -274,7 +284,6 @@ MainController::MainController(Settings settings)
     :
       audioMixer(44100),
       currentStreamingRoomID(-1000),
-      transmiting(true),
       mutex(QMutex::Recursive),
       started(false),
       ipToLocationResolver( new Geo::WebIpToLocationResolver()),
@@ -637,14 +646,23 @@ Audio::AudioPeak MainController::getRoomStreamPeak(){
     return roomStreamer->getLastPeak();
 }
 
-
-void MainController::setTransmitingStatus(bool transmiting){
-    if(this->transmiting != transmiting){
-        this->transmiting = transmiting;
-        if(isPlayingInNinjamRoom()){
-            ninjamController->setTransmitStatus(transmiting);
+//++++++++++++++ XMIT +++++++++
+void MainController::setTransmitingStatus(int channelID, bool transmiting){
+    if(trackGroups.contains(channelID)){
+        if(trackGroups[channelID]->isTransmiting() != transmiting){
+            trackGroups[channelID]->setTransmitingStatus(transmiting);
+            if(isPlayingInNinjamRoom()){
+                ninjamController->setTransmitStatus(channelID, transmiting);
+            }
         }
     }
+}
+
+bool MainController::isTransmiting(int channelID) const{
+    if(trackGroups.contains(channelID)){
+        return trackGroups[channelID]->isTransmiting();
+    }
+    return false;
 }
 
 //++++++++++ TRACKS ++++++++++++
