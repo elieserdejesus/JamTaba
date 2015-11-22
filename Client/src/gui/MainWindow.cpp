@@ -1250,11 +1250,11 @@ void MainWindow::resetGroupChannel(LocalTrackGroupView *group)
            }
          }
          //volume now
-         trackViews.at(track)->getInputNode()->setGain(0.0f);
+         trackViews.at(track)->getInputNode()->setGain(1.0f);
          //pan now
          trackViews.at(track)->getInputNode()->setPan(0.0f);
          //boost
-         trackViews.at(track)->getInputNode()->setBoost(0.0f);
+         trackViews.at(track)->getInputNode()->setBoost(1.0f);
 
 
      }
