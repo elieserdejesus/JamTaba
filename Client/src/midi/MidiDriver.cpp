@@ -36,7 +36,14 @@ bool MidiMessage::isNote() const{
 }
 
 //+++++++++++++++++++++++++++++++++++++
+MidiBuffer::MidiBuffer(int maxMessages)
+    : maxMessages(maxMessages),
+      messages(new MidiMessage[maxMessages]),
+      //writeIndex(0), readIndex(0),
+      messagesCount(0)
+{
 
+}
 
 MidiBuffer::MidiBuffer(const MidiBuffer &other)
     : maxMessages(other.maxMessages),
