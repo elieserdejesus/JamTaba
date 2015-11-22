@@ -113,6 +113,9 @@ protected slots:
     void on_menuViewModeTriggered(QAction* action);
 
 
+    //ninjam controller
+    void ninjamTransmissionStarted();
+    void ninjamPreparingToTransmit();
 
     //help menu
     void on_reportBugMenuItemTriggered();

@@ -61,6 +61,8 @@ public:
 
     void reset();//discard downloaded intervals and reset intervalPosition
 
+    inline bool isPreparedForTransmit() const{return preparedForTransmit;}
+
 signals:
     void currentBpiChanged(int newBpi);
     void currentBpmChanged(int newBpm);
@@ -77,6 +79,9 @@ signals:
     void chatMsgReceived(Ninjam::User user, QString message);
 
     void encodedAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart);
+
+    void preparingTransmission();//waiting for start transmission
+    void preparedToTransmit(); //this signal is emmited one time, when Jamtaba is ready to transmit (after wait some complete itervals)
 private:
     Controller::MainController* mainController;
     Audio::MetronomeTrackNode* metronomeTrackNode;
@@ -132,9 +137,9 @@ private:
 
     EncodingThread* encodingThread;
 
-    //QList<NinjamTrackNode*> tracksToDelete;
-
-
+    bool preparedForTransmit;
+    int waitingIntervals;
+    static const int TOTAL_PREPARED_INTERVALS = 2;//how many intervals Jamtaba will wait to start trasmiting?
 
 private slots:
     //ninjam events

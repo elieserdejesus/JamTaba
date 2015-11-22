@@ -36,6 +36,9 @@ public:
     void setToNarrow();
     void setToWide();
 
+    void setPreparingStatus(bool preparing);//preparing to transmit
+    inline bool isPreparingToTransmit() const{return preparingToTransmit;}
+
 signals:
     void nameChanged();
     void trackRemoved();
@@ -43,6 +46,7 @@ signals:
 private:
     QPushButton* toolButton;
     QPushButton* xmitButton;
+    bool preparingToTransmit;
 
     static const int MAX_SUB_CHANNELS = 2;
     int index;

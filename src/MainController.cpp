@@ -131,10 +131,6 @@ private:
     QByteArray dataToUpload;
 };
 
-
-
-
-
 //++++++++++++++++++++++++++++++++++++++++++++++
 void MainController::setSampleRate(int newSampleRate){
     audioMixer.setSampleRate(newSampleRate);
