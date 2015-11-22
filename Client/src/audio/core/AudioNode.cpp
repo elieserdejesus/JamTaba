@@ -178,7 +178,7 @@ void AudioNode::setSoloStatus(bool soloed){
 
 void AudioNode::updateGains(){
     double angle = pan * PI_OVER_2 * 0.5;
-    leftGain = (float) (ROOT_2_OVER_2 * (cos(angle) - sin(angle)));
+    leftGain     = (float) (ROOT_2_OVER_2 * (cos(angle) - sin(angle)));
     rightGain = (float) (ROOT_2_OVER_2 * (cos(angle) + sin(angle)));
 }
 
