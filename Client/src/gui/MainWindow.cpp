@@ -1224,12 +1224,27 @@ void MainWindow::resetGroupChannel(LocalTrackGroupView *group)
 
     QList<LocalTrackView*> trackViews = group->getTracks();
     int channelIndex = 0;
-
-    foreach (Persistence::Channel channel, inputsSettings.channels)
+    for(int track=0;track<group->getTracksCount();track++)
     {
-       trackViews.at(0)->setToNoInput();
-       qCInfo(jtConfigurator) << "\tInput reset on channel "<< channel.name;
-       //to do the vst , vol, pan etc ...
+        trackViews.at(track)->setToNoInput();
+        qCInfo(jtConfigurator) << "\tInput reset on channel "<< trackViews.at(track)->getTrackID();
+        //todo the vst , vol, pan etc ...
+        //NEW FUNK getFxPanel() MADE FOR PRESETS
+         FxPanel *panel=trackViews.at(track)->getFxPanel();
+         if(panel)
+         {
+           int fxCount=panel->getItems().size();
+           if(fxCount>0)
+           {
+               for(int i=0;i<fxCount;i++)
+               {
+                   panel->removePlugin();
+               }
+           }
+          //trackViews.at(track)->closeAllPlugins();
+
+         }
     }
+
         qCInfo(jtConfigurator) << "Reseting local inputs done!";
 }
