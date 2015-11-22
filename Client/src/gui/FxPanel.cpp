@@ -41,6 +41,15 @@ FxPanel::FxPanel(LocalTrackView *parent, Controller::MainController *mainControl
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void FxPanel::removePlugin(){
+    QList<FxPanelItem*> items = findChildren<FxPanelItem*>();
+    for(FxPanelItem* item : items){//find the first free slot to put the new plugin
+        if(item->containPlugin()){
+            item->unsetPlugin();
+            return;
+        }
+    }
+}
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void FxPanel::addPlugin(Audio::Plugin * plugin){
     QList<FxPanelItem*> items = findChildren<FxPanelItem*>();

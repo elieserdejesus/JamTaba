@@ -772,6 +772,17 @@ MainController::~MainController(){
 void MainController::saveLastUserSettings(const Persistence::InputsSettings& inputsSettings){
     settings.save(inputsSettings);
 }
+//-------------------------      PRESETS   ----------------------------
+
+void  MainController::loadPresets(QString name)
+{
+    settings.loadPresets(name);
+}
+void  MainController::savePresets(const Persistence::InputsSettings &inputsSettings,QString name)
+{
+    settings.savePresets(inputsSettings,name);
+}
+
 
 void MainController::setAllTracksActivation(bool activated){
     foreach (Audio::AudioNode* track, tracksNodes) {

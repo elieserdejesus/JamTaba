@@ -73,11 +73,19 @@ public:
     inline bool isRunningInMiniMode() const{return !fullViewMode;}
     inline bool isRunningInFullViewMode() const{return fullViewMode;}
 
+    //EZEE PRESETS NEED THAT
+    inline Controller::MainController* getMainController(){return mainController ;}
+    void presetInputChannels(){initializeLocalInputChannels();}// finally i don't like that name ...
+    void resetGroupChannel(LocalTrackGroupView *group);// should load the defaultPreset.json ?
+
+
     bool isTransmiting(int channelID) const;
     void setTransmitingStatus(int channelID, bool xmitStatus);
 
+
 protected:
     Controller::MainController* mainController;
+
     virtual void initializePluginFinder();
     void restorePluginsList();
 

@@ -52,6 +52,9 @@ public:
 
     void updateGuiElements();//overriding to show midi activity
 
+    //PRESETS NEED THAT TOO
+    inline FxPanel* getFxPanel(){return fxPanel;}
+
 private:
     //int inputIndex;
     FxPanel* fxPanel;
