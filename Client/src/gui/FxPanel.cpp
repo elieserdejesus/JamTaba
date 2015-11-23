@@ -46,6 +46,7 @@ void FxPanel::removePlugin(){
     for(FxPanelItem* item : items){//find the first free slot to put the new plugin
         if(item->containPlugin()){
             item->unsetPlugin();
+
             return;
         }
     }
