@@ -497,6 +497,7 @@ void MainWindow::initializeLoginService(){
 }
 
 void MainWindow::initializeWindowState(){
+
     setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
 
     if(mainController->getSettings().windowWasMaximized() && fullViewMode){
@@ -504,7 +505,9 @@ void MainWindow::initializeWindowState(){
         setWindowState(Qt::WindowMaximized);
     }
     else{
-
+        //FULLSCREENMODE ?
+        if(mainController->getSettings().windowsWasFullViewMode())
+            this->setWindowState(Qt::WindowFullScreen);
         QPointF location = mainController->getSettings().getLastWindowLocation();
         QDesktopWidget* desktop = QApplication::desktop();
         int desktopWidth = desktop->width();
@@ -515,6 +518,7 @@ void MainWindow::initializeWindowState(){
         qCDebug(jtGUI)<< "Restoring window to position:" << x << ", " << y;
         qCDebug(jtGUI)<< "Window size:" << width() << ", " << height();
     }
+
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1214,9 +1218,14 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 void MainWindow::on_actionFullscreenMode_triggered()
 {
       if(!ui.actionFullscreenMode->isChecked())
-      {this->setWindowState(Qt::WindowMaximized);}
+      {
+          this->setWindowState(Qt::WindowMaximized);
+          mainController->setFullScreenView(false);
+
+      }
       else
-      {this->setWindowState(Qt::WindowFullScreen);}
+      {this->setWindowState(Qt::WindowFullScreen);
+       mainController->setFullScreenView(true);}
 }
 
 //++++++++++++++++++++++++
