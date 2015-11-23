@@ -74,6 +74,7 @@ public:
 
     void start();
     void stop();
+    void setFullScreenView( bool fullScreen );
 
     virtual bool isRunningAsVstPlugin() const = 0;
 
@@ -243,6 +244,7 @@ protected:
     virtual Controller::NinjamController* createNinjamController(MainController*) = 0;
 
     MainWindow* mainWindow;
+
 
     virtual void setCSS(QString css) = 0;
 

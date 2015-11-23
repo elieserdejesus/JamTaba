@@ -193,6 +193,7 @@ WindowSettings::WindowSettings()
 void WindowSettings::read(QJsonObject in){
     maximized = getValueFromJson(in, "maximized", false);//not maximized as default
     fullViewMode = getValueFromJson(in, "fullView", true);//use full view mode as default
+    fullScreenViewMode = getValueFromJson(in, "fullScreenView", false);//use normal mode as default;
     if(in.contains("location")){
         QJsonObject locationObj = in["location"].toObject();
         location.setX( getValueFromJson( locationObj, "x", (float)0));
@@ -203,6 +204,7 @@ void WindowSettings::read(QJsonObject in){
 void WindowSettings::write(QJsonObject &out){
     out["maximized"] = maximized;
     out["fullView"] = fullViewMode;
+    out["fullScreenView"] = fullScreenViewMode;
     QJsonObject locationObject;
     locationObject["x"] = this->location.x();
     locationObject["y"] = this->location.y();
@@ -449,6 +451,7 @@ void Settings::setMetronomeSettings(float gain, float pan, bool muted){
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void Settings::setFullScreenView(bool v){ windowSettings.fullScreenViewMode=v;}
 //+++++++++   Window Location  +++++++++++++++++++++++
 void Settings::setWindowSettings(bool windowIsMaximized, bool usingFullView, QPointF location){
     double x = (location.x() >= 0) ? location.x() : 0;
@@ -462,6 +465,7 @@ void Settings::setWindowSettings(bool windowIsMaximized, bool usingFullView, QPo
     windowSettings.location = location;
     windowSettings.maximized = windowIsMaximized;
     windowSettings.fullViewMode = usingFullView;
+
 }
 
 //++++++++++++++++++++++++++++++++++++++++
