@@ -1244,6 +1244,10 @@ void MainWindow::resetGroupChannel(LocalTrackGroupView *group)
         mainController->setTrackMute(track,false);
         trackViews.at(track)->mute(false);
 
+        //solo audio and gui
+        mainController->setTrackSolo(track,false);
+        trackViews.at(track)->solo(false);
+
         //reset audio and midi to none
         trackViews.at(track)->setToNoInput();
 

@@ -95,8 +95,14 @@ void LocalTrackView::init(int channelIndex, float
 void LocalTrackView::mute(bool b)
 {
     getInputNode()->setMuteStatus(b);//audio only
-    ui->muteButton->setChecked(false);//gui only
+    ui->muteButton->setChecked(b);//gui only
 }
+void LocalTrackView::solo(bool b)
+{
+    getInputNode()->setSoloStatus(b);//audio only
+    ui->soloButton->setChecked(b);//gui only
+}
+
 
 void LocalTrackView::initializeBoostButtons(BoostValue boostValue){
     switch (boostValue) {
