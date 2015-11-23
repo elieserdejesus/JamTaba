@@ -3,10 +3,8 @@
 #include "core/AudioNode.h"
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
-#include <QObject>
 #include <deque>
 #include "SamplesBufferResampler.h"
-#include <QLoggingCategory>
 
 class QIODevice;
 
@@ -14,7 +12,7 @@ namespace Audio {
 
 class Mp3Decoder;
 
-class AbstractMp3Streamer : public QObject, public AudioNode{
+class AbstractMp3Streamer : public AudioNode{
    Q_OBJECT//allow signal/slots
 public:
     explicit AbstractMp3Streamer(Audio::Mp3Decoder* decoder);
