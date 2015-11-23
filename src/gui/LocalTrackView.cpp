@@ -36,7 +36,8 @@ void LocalTrackView::closeAllPlugins(){
     inputNode->closeProcessorsWindows();//close vst editors
 }
 
-void LocalTrackView::init(int channelIndex, float initialGain, BaseTrackView::BoostValue boostValue, float initialPan, bool muted){
+void LocalTrackView::init(int channelIndex, float
+                          initialGain, BaseTrackView::BoostValue boostValue, float initialPan, bool muted){
     if(!mainController){
         qCritical() << "LocalTrackView::init() mainController is null!";
         return;
@@ -88,6 +89,13 @@ void LocalTrackView::init(int channelIndex, float initialGain, BaseTrackView::Bo
     setUnlightStatus(false);
 
     peakMetersOnly = false;
+}
+
+//ADDED FOR PRESETS
+void LocalTrackView::mute(bool b)
+{
+    getInputNode()->setMuteStatus(b);//audio only
+    ui->muteButton->setChecked(false);//gui only
 }
 
 void LocalTrackView::initializeBoostButtons(BoostValue boostValue){
