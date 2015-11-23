@@ -67,6 +67,9 @@ protected:
     bool drawDbValue;
 
     void setPeaks(float left, float right);
+
+    //this is called in inherited classes [LocalTrackView, NinjamTrackView]
+    void bindThisViewWithTrackNodeSignals();
 private:
     static QMap<long, BaseTrackView*> trackViews;
     Audio::AudioPeak maxPeak;
@@ -80,8 +83,13 @@ private slots:
     void onSoloClicked();
     void onFaderMoved(int value);
     void onPanSliderMoved(int value);
-
     void onBoostButtonClicked();
+
+    //signals emitted by AudioNode class when user activate the controle with mouse, or with midi CCs, or using joystick, or using mind control :)
+    void onAudioNodePanChanged(float newPanValue);
+    void onAudioNodeGainChanged(float newGainValue);
+    void onAudioNodeMuteChanged(bool newMuteStatus);
+    void onAudioNodeSoloChanged(bool newSoloStatus);
 
 };
 
