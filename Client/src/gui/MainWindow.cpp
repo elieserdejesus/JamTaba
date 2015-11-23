@@ -1240,8 +1240,13 @@ void MainWindow::resetGroupChannel(LocalTrackGroupView *group)
     //all tracks in a group
     for(int track=0;track<group->getTracksCount();track++)
     {
+        //mute audio and gui
+        mainController->setTrackMute(track,false);
+        trackViews.at(track)->mute(false);
+
         //reset audio and midi to none
         trackViews.at(track)->setToNoInput();
+
         qCInfo(jtConfigurator) << "\tInput reset on channel "<< trackViews.at(track)->getTrackID();
 
         //NEW FUNK getFxPanel() MADE FOR PRESETS
