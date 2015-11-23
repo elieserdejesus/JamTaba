@@ -202,6 +202,7 @@ private:
     LocalTrackGroupView* addLocalChannel(int channelGroupIndex, QString channelName, bool createFirstSubchannel);
 
     bool fullViewMode;//full view or mini view mode?
+    bool fullScreenViewMode;
 
     void refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms);
 

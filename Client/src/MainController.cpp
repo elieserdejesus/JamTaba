@@ -758,6 +758,10 @@ MainController::~MainController(){
 void MainController::saveLastUserSettings(const Persistence::InputsSettings& inputsSettings){
     settings.save(inputsSettings);
 }
+void MainController::setFullScreenView( bool fullScreen )
+{
+    settings.setFullScreenView(fullScreen);
+}
 
 void MainController::setAllTracksActivation(bool activated){
     foreach (Audio::AudioNode* track, tracksNodes) {
