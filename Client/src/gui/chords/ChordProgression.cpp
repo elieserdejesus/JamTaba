@@ -27,7 +27,8 @@ void Chord::initialize(QString chordText, int beat){
     int lettersBegin = (isFlat() || isSharp()) ? 2 : 1;
     int limit = hasBassInversion() ? indexOfInversionBar : this->chordText.length();
     int endOfLetters = lettersBegin;
-    while (endOfLetters < limit && !(chordText.at(endOfLetters).isDigit() || chordText.at(endOfLetters) == 'º' || chordText.at(endOfLetters) == '(')) {
+    bool diminishedSymbol = chordText.at(endOfLetters) == QChar(0xc2b0) ;
+    while (endOfLetters < limit && !(chordText.at(endOfLetters).isDigit() || diminishedSymbol || chordText.at(endOfLetters) == '(')) {
         endOfLetters++;
         hasLettersAfterChordRoot = true;
     }
@@ -122,7 +123,7 @@ ChordProgressionMeasure::ChordProgressionMeasure(int beatsInTheMeasure)
 
 void ChordProgressionMeasure::addChord(Chord chord, int beat){
     if(beat < 0 || beat >= this->beats){
-        throw std::runtime_error("invalid beat " + beat);
+        throw std::runtime_error("invalid beat ");
     }
     chords.insert(beat, chord);
 }
@@ -159,7 +160,7 @@ void ChordProgression::addMeasure(ChordProgressionMeasure measure){
 
 ChordProgression ChordProgression::getStretchedVersion(int bpi) {
     if (!canBeUsed(bpi)) {
-        throw std::runtime_error("This chord progression can't be used in bpi " + bpi);
+        throw std::runtime_error("This chord progression can't be used in current bpi ");
     }
     int newbeatsPerMesure = bpi / measures.size();
 

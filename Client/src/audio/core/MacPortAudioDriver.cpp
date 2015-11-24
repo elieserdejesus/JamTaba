@@ -14,12 +14,11 @@ PortAudioDriver::PortAudioDriver(Controller::MainController* mainController,
     //initialize portaudio using default devices, mono input and try estereo output if possible
     PaError error = Pa_Initialize();
     if (error != paNoError){
-        qCCritical(portaudio) << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
+        qCCritical(jtAudio) << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
         throw std::runtime_error(Pa_GetErrorText(error));
     }
 
-    this->inputDeviceIndex = Pa_GetDefaultInputDevice();
-    this->outputDeviceIndex = Pa_GetDefaultOutputDevice();
+    this->audioDeviceIndex = Pa_GetDefaultOutputDevice();
     this->globalInputRange = ChannelRange(0, getMaxInputs());
     this->globalOutputRange = ChannelRange(0, 2);//2 channels for output
 
@@ -68,6 +67,10 @@ void PortAudioDriver::configureHostSpecificOutputParameters(PaStreamParameters& 
     //PaMacCoreStreamInfo outStreamInfo;
     //PaMacCore_SetupStreamInfo(&outStreamInfo, paMacCorePro);
     //outputParams.hostApiSpecificStreamInfo = &outStreamInfo;
+}
+
+void PortAudioDriver::releaseHostSpecificParameters(const PaStreamParameters &inputParameters, const PaStreamParameters &outputParameters){
+
 }
 
 }//namespace

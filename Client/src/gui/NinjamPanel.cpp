@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QDebug>
 #include <QtAlgorithms>
+#include <QtMath>
 #include <QFormLayout>
 #include "../log/logging.h"
 #include "BpiUtils.h"
@@ -193,7 +194,7 @@ void NinjamPanel::selectClosestBeatsPerAccentInCombo(int currentBeatsPerAccent){
     int minorDifference = INT_MAX;
     int closestIndex = -1;
     for(int i=1; i < ui->comboBeatsPerAccent->count(); ++i){
-        int difference = std::abs( currentBeatsPerAccent - ui->comboBeatsPerAccent->itemData(i).toInt() );
+        int difference = qFabs( currentBeatsPerAccent - ui->comboBeatsPerAccent->itemData(i).toInt() );
         if( difference < minorDifference ){
             minorDifference = difference;
             closestIndex = i;
