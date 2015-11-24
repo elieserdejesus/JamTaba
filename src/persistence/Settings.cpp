@@ -272,7 +272,38 @@ PresetsSettings::PresetsSettings()
 //PRESET JSON WRITER
 void PresetsSettings::write(QJsonObject &out)
 {
-       //todooooo ....
+    QJsonArray channelsArray;
+    foreach (const Channel& channel, channels) {
+        QJsonObject channelObject;
+        channelObject["name"] = channel.name;
+        QJsonArray subchannelsArrays;
+        foreach (const Subchannel& sub, channel.subChannels) {
+            QJsonObject subChannelObject;
+            subChannelObject["firstInput"] = sub.firstInput;
+            subChannelObject["channelsCount"] = sub.channelsCount;
+            subChannelObject["midiDevice"] = sub.midiDevice;
+            subChannelObject["midiChannel"] = sub.midiChannel;
+            subChannelObject["gain"] = sub.gain;
+            subChannelObject["boost"] = sub.boost;
+            subChannelObject["pan"] = sub.pan;
+            subChannelObject["muted"] = sub.muted;
+
+            QJsonArray pluginsArray;
+            foreach (Persistence::Plugin plugin, sub.plugins) {
+                QJsonObject pluginObject;
+                pluginObject["path"] = plugin.path;
+                pluginObject["bypassed"] = plugin.bypassed;
+                pluginObject["data"] =  QString(plugin.data.toBase64());
+                pluginsArray.append(pluginObject);
+            }
+            subChannelObject["plugins"] = pluginsArray;
+
+            subchannelsArrays.append(subChannelObject);
+        }
+        channelObject["subchannels"] = subchannelsArrays;
+        channelsArray.append(channelObject);
+    }
+    out["channels"] = channelsArray;
 }
 
 
@@ -280,6 +311,45 @@ void PresetsSettings::write(QJsonObject &out)
 void PresetsSettings::read(QJsonObject in)
 {
    //todooooo ....
+    if(in.contains("channels")){
+        QJsonArray channelsArray = in["channels"].toArray();
+        for (int i = 0; i < channelsArray.size(); ++i) {
+            QJsonObject channelObject = channelsArray.at(i).toObject();
+            Persistence::Channel channel(getValueFromJson(channelObject, "name", QString("")));
+            if(channelObject.contains("subchannels")){
+                QJsonArray subChannelsArray = channelObject["subchannels"].toArray();
+                for (int k = 0; k < subChannelsArray.size(); ++k) {
+                    QJsonObject subChannelObject = subChannelsArray.at(k).toObject();
+                    int firstInput = getValueFromJson(subChannelObject, "firstInput", 0);
+                    int channelsCount = getValueFromJson(subChannelObject, "channelsCount", 0);
+                    int midiDevice = getValueFromJson(subChannelObject, "midiDevice", -1);
+                    int midiChannel = getValueFromJson(subChannelObject, "midiChannel", -1);
+                    float gain = getValueFromJson(subChannelObject, "gain", (float)1);
+                    int boost = getValueFromJson(subChannelObject, "boost", (int)0);
+                    float pan = getValueFromJson(subChannelObject, "pan", (float)0);
+                    bool muted = getValueFromJson(subChannelObject, "muted", false);
+
+                    QList<Plugin> plugins;
+                    if(subChannelObject.contains("plugins")){
+                        QJsonArray pluginsArray = subChannelObject["plugins"].toArray();
+                        for (int p = 0; p < pluginsArray.size(); ++p) {
+                            QJsonObject pluginObject = pluginsArray.at(p).toObject();
+                            QString pluginPath = getValueFromJson(pluginObject, "path", QString(""));
+                            bool bypassed = getValueFromJson(pluginObject, "bypassed", false);
+                            QString dataString = getValueFromJson(pluginObject, "data", QString(""));
+                            if( !pluginPath.isEmpty() && QFile(pluginPath).exists() ){
+                                QByteArray rawByteArray(dataString.toStdString().c_str());
+                                plugins.append(Persistence::Plugin(pluginPath, bypassed, QByteArray::fromBase64(rawByteArray)));
+                            }
+                        }
+                    }
+                    Persistence::Subchannel subChannel(firstInput, channelsCount, midiDevice, midiChannel, gain, boost, pan, muted, plugins);
+                    channel.subChannels.append(subChannel);
+                }
+                this->channels.append(channel);
+            }
+        }
+    }
 }
 
 //++++++++++++++++++++++++++++++++++++++++++
@@ -696,14 +766,16 @@ void Settings::save(Persistence::InputsSettings inputsSettings){
 //PRESETS TEST
 void Settings::savePresets(InputsSettings inputsSettings,QString name)
 {
-    this->inputsSettings = inputsSettings;
+
+    //this->inputsSettings = inputsSettings;
+    this->presetSettings.channels= inputsSettings.channels;
     QList<Persistence::SettingsObject*> sections;
      //sections.append(&audioSettings);
      //sections.append(&midiSettings);
      //sections.append(&windowSettings);
      //sections.append(&metronomeSettings);
      //sections.append(&vstSettings);
-    sections.append(&this->inputsSettings);
+    sections.append(&this->presetSettings);
      //sections.append(&recordingSettings);
      //sections.append(&privateServerSettings);
 

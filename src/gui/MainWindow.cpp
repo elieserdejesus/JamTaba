@@ -106,7 +106,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     ui.allRoomsContent->layout()->setContentsMargins(0,0,0,0);
     ui.allRoomsContent->layout()->setSpacing(24);
 
-    foreach (LocalTrackGroupView* channel, localChannels) {
+    foreach (LocalTrackGroupView* channel, controlSurfaceJTB) {
         channel->refreshInputSelectionNames();
     }
 
@@ -143,7 +143,7 @@ void MainWindow::initializePluginFinder(){
 
 //++++++++++++++++++++++++=
 void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly){
-    foreach (LocalTrackGroupView* channel, localChannels) {
+    foreach (LocalTrackGroupView* channel, controlSurfaceJTB) {
         //channel->togglePeakMeterOnlyMode();
         channel->setPeakMeterMode(showPeakMetersOnly);
     }
@@ -156,7 +156,7 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly){
 void MainWindow::recalculateLeftPanelWidth(){
     int min = ui.localTracksWidget->sizeHint().width() + 12;
     int max = min;
-    bool showingPeakMeterOnly = localChannels.first()->isShowingPeakMeterOnly();
+    bool showingPeakMeterOnly = controlSurfaceJTB.first()->isShowingPeakMeterOnly();
     Qt::ScrollBarPolicy scrollPolicy = Qt::ScrollBarAlwaysOff;
 
     //limit the local inputs widget in mini mode
@@ -173,14 +173,14 @@ void MainWindow::recalculateLeftPanelWidth(){
 }
 
 void MainWindow::on_localControlsCollapseButtonClicked(){
-    bool isShowingPeakMetersOnly = localChannels.first()->isShowingPeakMeterOnly();
+    bool isShowingPeakMetersOnly = controlSurfaceJTB.first()->isShowingPeakMeterOnly();
     showPeakMetersOnlyInLocalControls(!isShowingPeakMetersOnly);//toggle
     recalculateLeftPanelWidth();
 }
 //++++++++++++++++++++++++=
 Persistence::InputsSettings MainWindow::getInputsSettings() const{
     InputsSettings settings;
-    foreach (LocalTrackGroupView* trackGroupView, localChannels) {
+    foreach (LocalTrackGroupView* trackGroupView, controlSurfaceJTB) {
         trackGroupView->getTracks();
         Persistence::Channel channel(trackGroupView->getGroupName());
         foreach (LocalTrackView* trackView, trackGroupView->getTracks()) {
@@ -242,11 +242,11 @@ void MainWindow::on_RoomStreamerError(QString msg){
 //    QMenu menu;
 //    QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
 //    QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(on_addChannelClicked()));
-//    addChannelAction->setEnabled(localChannels.size() < 2);//at this moment users can't create more channels
-//    if(localChannels.size() > 1){
+//    addChannelAction->setEnabled(controlSurfaceJTB.size() < 2);//at this moment users can't create more channels
+//    if(controlSurfaceJTB.size() > 1){
 //        menu.addSeparator();
-//        for (int i = 2; i <= localChannels.size(); ++i) {
-//            QString channelName = localChannels.at(i-1)->getGroupName();
+//        for (int i = 2; i <= controlSurfaceJTB.size(); ++i) {
+//            QString channelName = controlSurfaceJTB.at(i-1)->getGroupName();
 //            QAction* action = menu.addAction(QIcon(":/images/less.png"), "Remove channel \"" + channelName + "\"");
 //            action->setData( i-1 );//use channel index as action data
 //        }
@@ -260,13 +260,14 @@ void MainWindow::on_RoomStreamerError(QString msg){
 //}
 
 void MainWindow::removeChannelsGroup(int channelIndex){
-    if(localChannels.size() > 1){//the first channel group can't be removed
-        if(channelIndex >= 0 && channelIndex < localChannels.size()){
-            LocalTrackGroupView* channel = localChannels.at(channelIndex);
+    if(controlSurfaceJTB.size() >1){//the first channel group can't be removed
+        if(channelIndex >= 0 && channelIndex < controlSurfaceJTB.size())
+        {
+            LocalTrackGroupView* channel = controlSurfaceJTB.at(channelIndex);
             ui.localTracksLayout->removeWidget(channel);
-            localChannels.removeAt(channelIndex);
+            controlSurfaceJTB.removeAt(channelIndex);
 
-            localChannels.first()->setToWide();
+            controlSurfaceJTB.first()->setToWide();
 
             channel->deleteLater();
 
@@ -278,13 +279,13 @@ void MainWindow::removeChannelsGroup(int channelIndex){
 }
 
 void MainWindow::highlightChannelGroup(int index) const{
-    if(index >= 0 && index < localChannels.size()){
-        Highligther::getInstance()->highlight(localChannels.at(index));
+    if(index >= 0 && index < controlSurfaceJTB.size()){
+        Highligther::getInstance()->highlight(controlSurfaceJTB.at(index));
     }
 }
 
 void MainWindow::addChannelsGroup(QString name){
-    int channelIndex = localChannels.size();
+    int channelIndex = controlSurfaceJTB.size();
     addLocalChannel( channelIndex, name, true);
     mainController->updateInputTracksRange();
     mainController->sendNewChannelsNames(getChannelsNames());
@@ -323,7 +324,7 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
     QObject::connect(localChannel, SIGNAL(trackAdded()), this, SLOT(on_localTrackAdded()));
     QObject::connect(localChannel, SIGNAL(trackRemoved()), this, SLOT(on_localTrackRemoved()));
 
-    localChannels.append( localChannel );
+    controlSurfaceJTB.append( localChannel );
 
     localChannel->setGroupName(channelName);
     ui.localTracksLayout->addWidget(localChannel);
@@ -332,7 +333,7 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
         LocalTrackView* localTrackView = new LocalTrackView(this->mainController, channelGroupIndex);
         localChannel->addTrackView( localTrackView );
 
-        if(localChannels.size() > 1){
+        if(controlSurfaceJTB.size() > 1){
             if(!mainController->isRunningAsVstPlugin()){
                 //in standalone the second channel is always initialized as noInput
                 localTrackView->setToNoInput();
@@ -343,8 +344,8 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
         }
     }
 
-    if(!fullViewMode && localChannels.count() > 1){
-        foreach (LocalTrackGroupView* trackGroup, localChannels) {
+    if(!fullViewMode && controlSurfaceJTB.count() > 1){
+        foreach (LocalTrackGroupView* trackGroup, controlSurfaceJTB) {
             trackGroup->setToNarrow();
         }
     }
@@ -395,7 +396,7 @@ void MainWindow::restorePluginsList(){
     Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
     int channelIndex = 0;
     foreach (Persistence::Channel channel, inputsSettings.channels) {
-        LocalTrackGroupView* channelView = localChannels.at(channelIndex);
+        LocalTrackGroupView* channelView = controlSurfaceJTB.at(channelIndex);
         if(channelView){
             int subChannelIndex = 0;
             QList<LocalTrackView*> tracks = channelView->getTracks();
@@ -429,6 +430,17 @@ void MainWindow::restorePluginsList(){
         channelIndex++;
     }
     qCInfo(jtGUI) << "Restoring plugins list done!";
+}
+
+//USED BY PRESETS
+void MainWindow::loadPresetToTrack()
+{
+//we gonna assign each group of the console surface
+//QList< LocalTrackView * >  controlSurface=controlSurfaceJTB;
+int groupSize=controlSurfaceJTB.size();
+ qCInfo(jtConfigurator) << "Initializing ControlSurface...";
+ qCInfo(jtConfigurator) << "Number of groups :"<<groupSize;
+
 }
 
 void MainWindow::initializeLocalInputChannels(){
@@ -683,7 +695,7 @@ void MainWindow::on_stoppingRoomStream(Login::RoomInfo roomInfo){
 
 QStringList MainWindow::getChannelsNames() const{
     QStringList channelsNames;
-    foreach (LocalTrackGroupView* channel, localChannels) {
+    foreach (LocalTrackGroupView* channel, controlSurfaceJTB) {
         channelsNames.append(channel->getGroupName());
     }
     return channelsNames;
@@ -823,7 +835,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection){
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::setInputTracksPreparingStatus(bool preparing){
-    foreach (LocalTrackGroupView* trackGroup, localChannels) {
+    foreach (LocalTrackGroupView* trackGroup, controlSurfaceJTB) {
         trackGroup->setPreparingStatus(preparing);
     }
 }
@@ -845,7 +857,7 @@ void MainWindow::timerEvent(QTimerEvent *){
 //    }
 
     //update local input track peaks
-    foreach (TrackGroupView* channel, localChannels) {
+    foreach (TrackGroupView* channel, controlSurfaceJTB) {
         channel->updatePeaks();
     }
 
@@ -917,7 +929,7 @@ MainWindow::~MainWindow()
     }
 
 
-    foreach (LocalTrackGroupView* groupView, this->localChannels ) {
+    foreach (LocalTrackGroupView* groupView, this->controlSurfaceJTB ) {
         groupView->detachMainControllerInSubchannels();
     }
     mainController = nullptr;
@@ -1066,7 +1078,7 @@ void MainWindow::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audio
 
     mainController->updateInputTracksRange();
 
-    foreach (LocalTrackGroupView* channel, localChannels) {
+    foreach (LocalTrackGroupView* channel, controlSurfaceJTB) {
         channel->refreshInputSelectionNames();
     }
 
@@ -1084,7 +1096,7 @@ void MainWindow::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audio
 
 //input selection changed by user or by system
 void MainWindow::refreshTrackInputSelection(int inputTrackIndex){
-    foreach (LocalTrackGroupView* channel, localChannels) {
+    foreach (LocalTrackGroupView* channel, controlSurfaceJTB) {
         channel->refreshInputSelectionName(inputTrackIndex);
     }
     //localTrackGroupView->refreshInputSelectionName();
@@ -1161,7 +1173,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
     //int leftPanelMargim = fullViewMode ? 6 : 3;
     //ui.leftPanel->setContentsMargins(leftPanelMargim, 3, leftPanelMargim, leftPanelMargim);
 
-    showPeakMetersOnlyInLocalControls(!fullViewMode || localChannels.first()->isShowingPeakMeterOnly());
+    showPeakMetersOnlyInLocalControls(!fullViewMode || controlSurfaceJTB.first()->isShowingPeakMeterOnly());
 
     ui.chatArea->setMinimumWidth(fullViewMode ? 280 : 180);
 
@@ -1180,8 +1192,8 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
     }
 
     //local tracks are narrowed in mini mode
-    if(!fullViewMode && localChannels.count() > 1){
-        foreach (LocalTrackGroupView* localTrackGroup, localChannels) {
+    if(!fullViewMode && controlSurfaceJTB.count() > 1){
+        foreach (LocalTrackGroupView* localTrackGroup, controlSurfaceJTB) {
             localTrackGroup->setToNarrow();
         }
     }

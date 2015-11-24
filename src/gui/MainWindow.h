@@ -56,8 +56,8 @@ public:
 
     Persistence::InputsSettings getInputsSettings() const;
 
-    inline int getChannelGroupsCount() const{return localChannels.size();}
-    inline QString getChannelGroupName(int index) const{return localChannels.at(index)->getGroupName();}
+    inline int getChannelGroupsCount() const{return controlSurfaceJTB.size();}
+    inline QString getChannelGroupName(int index) const{return controlSurfaceJTB.at(index)->getGroupName();}
     void highlightChannelGroup(int index) const;
 
     void addChannelsGroup(QString name);
@@ -75,7 +75,7 @@ public:
 
     //EZEE PRESETS NEED THAT
     inline Controller::MainController* getMainController(){return mainController ;}
-    void presetInputChannels(){initializeLocalInputChannels();}// finally i don't like that name ...
+    void loadPresetToTrack();//{initializeLocalInputChannels();}// finally i don't like that name ...
     void resetGroupChannel(LocalTrackGroupView *group);// should load the defaultPreset.json ?
 
 
@@ -91,7 +91,7 @@ protected:
 
     void centerDialog(QWidget* dialog);
 
-    QList<LocalTrackGroupView*> localChannels;
+    QList<LocalTrackGroupView*> controlSurfaceJTB;
 
     virtual NinjamRoomWindow* createNinjamWindow(Login::RoomInfo, Controller::MainController*) = 0;
 
