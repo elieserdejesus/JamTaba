@@ -67,7 +67,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
 
 
-    setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
+    setWindowTitle("Jomtobo v" + QApplication::applicationVersion());
 
     initializeLoginService();
     //initializePluginFinder(); //called in derived classes
