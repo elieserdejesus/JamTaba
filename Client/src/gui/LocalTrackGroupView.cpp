@@ -114,15 +114,46 @@ bool LocalTrackGroupView::eventFilter(QObject *target, QEvent *event){
     return TrackGroupView::eventFilter(target, event);
 }
 
-void LocalTrackGroupView::on_toolButtonClicked(){
+void LocalTrackGroupView::on_toolButtonClicked()
+{
     QMenu menu;
 
+    //PRESETS-----------------------------
+
+    //LOAD - using a submenu to list stored presets
+    QMenu* loadPresetsSubmenu = new QMenu("Load preset");
+    loadPresetsSubmenu->setIcon(QIcon(":/images/preset-load.png"));
+    loadPresetsSubmenu->setDisabled(false);// so we can merge to master without confusion for the user until it works
+
+    //adding a menu action for each stored preset
+    QStringList presetsNames; //for test only. I suggest ask mainController about a list of Preset
+    presetsNames.append("Preset 1");
+    presetsNames.append("Preset 2");
+    presetsNames.append("Preset 3");
+    foreach (QString presetName, presetsNames) {
+        QAction* presetAction = loadPresetsSubmenu->addAction(presetName);
+        presetAction->setData(presetName);//putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
+        QObject::connect(presetAction, SIGNAL(triggered(bool)), this, SLOT(on_LoadPresetClicked()));
+    }
+    menu.addMenu(loadPresetsSubmenu);
+
+    //SAVE
+    QAction* addPresetActionSave = menu.addAction(QIcon(":/images/preset-save.png"), "Save preset");
+    addPresetActionSave->setDisabled(false);// so we can merge to master without confusion for the user until it works
+    QObject::connect(addPresetActionSave, SIGNAL(triggered(bool)), this, SLOT(on_SavePresetClicked()));
+
+
+    //RESET - in case of panic
+    QAction* reset =  menu.addAction(QIcon(":/images/gear.png"),"Reset Preset");
+    reset->setDisabled(false);// so we can merge to master without confusion for the user until it works
+    QObject::connect(reset, SIGNAL(triggered()), this, SLOT(on_ResetPresetClicked()));
+
+    menu.addSeparator();
+
+
+    //-------------------------------------
+    //CHANNELS
     QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
-    //Presets
-    QAction* addPresetActionSave = menu.addAction(QIcon(":/images/more.png"), "Save preset");
-    addPresetActionSave->setDisabled(true);// so we can merge to master without confusion for the user until it works
-    QAction* addPresetActionLoad = menu.addAction(QIcon(":/images/more.png"), "Load preset");
-    addPresetActionLoad->setDisabled(true);// so we can merge to master without confusion for the user until it works
 
     QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(on_addChannelClicked()));
     addChannelAction->setEnabled(mainFrame->getChannelGroupsCount() < 2);//at this moment users can't create more channels
@@ -223,6 +254,27 @@ void LocalTrackGroupView::detachMainControllerInSubchannels(){
 void LocalTrackGroupView::on_removeChannelClicked(){
     mainFrame->removeChannelsGroup(mainFrame->getChannelGroupsCount()-1);
 }
+
+//PRESETS
+void LocalTrackGroupView::on_LoadPresetClicked()
+{
+    mainFrame->getMainController()->loadPresets("testPreset.json");
+    mainFrame->presetInputChannels();//that name is not so good
+}
+
+void LocalTrackGroupView::on_SavePresetClicked()
+{
+
+    mainFrame->getMainController()->savePresets(mainFrame->getInputsSettings(),"PresetDefault.json");
+
+}
+
+void LocalTrackGroupView::on_ResetPresetClicked()
+{
+    //setToNoInput() i need or want to use that ?
+   mainFrame->resetGroupChannel(this);
+}
+
 //+++++++++++++++++++++++++++++
 void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly){
     if(this->peakMeterOnly != peakMeterOnly){

@@ -534,6 +534,7 @@ bool Settings::readFile(APPTYPE type, QList<Persistence::SettingsObject*> sectio
 
     return false;
 }
+
 bool Settings::writeFile(APPTYPE type, QList<SettingsObject *> sections)// io ops ...
 {
    //Works with JTBConfig
@@ -567,6 +568,87 @@ bool Settings::writeFile(APPTYPE type, QList<SettingsObject *> sections)// io op
         qCritical() << file.errorString();
     }
     return false;
+}
+
+//PRESETS
+bool Settings::writePresetFile(QList<SettingsObject *> sections,QString name)
+{
+    //Works with Configurator
+
+     QString absolutePath = Configurator::getInstance()->getPresetPath(name);
+     QFile file(absolutePath);
+     if(file.open(QIODevice::WriteOnly)){
+         QJsonObject root;
+         root["presetName"] = name;
+
+         //write sections
+         foreach (SettingsObject* so, sections) {
+             QJsonObject sectionObject;
+             so->write(sectionObject);
+             root[so->getName()] = sectionObject;
+         }
+         QJsonDocument doc(root);
+         file.write(doc.toJson());
+         return true;
+     }
+     else{
+         qCritical() << file.errorString();
+     }
+     return false;
+}
+bool Settings::readPresetFile(QList<Persistence::SettingsObject*> sections,QString name)
+{
+
+    QString absolutePath = Configurator::getInstance()->getPresetPath(name);
+    //QFile file(absolutePath);
+    QFile f(absolutePath);
+    //qInfo(jtConfigurator) << "JSON Location :"<<absolutePath;
+    if(f.open(QIODevice::ReadOnly))
+    {
+        qInfo(jtConfigurator) << "Reading PRESET from " << f.fileName() ;
+        QJsonDocument doc = QJsonDocument::fromJson(f.readAll());
+        QJsonObject root = doc.object();
+
+        //read preset name , duno yet what it will serve ..
+        if(root.contains("presetName"))
+        {
+            QString presetName = root["userName"].toString();
+        }
+
+
+        //read settings sections (Audio settings, Midi settings, ninjam settings, etc...)
+        foreach (SettingsObject* so, sections) {
+            so->read(root[so->getName()].toObject());
+        }
+        return true;
+    }
+    else
+    {
+        qWarning(jtConfigurator) << "Settings : Can't load PRESET file:" << f.errorString();
+    }
+
+    return false;
+}
+void Settings::loadPresets(QString name)
+{
+
+    QList<Persistence::SettingsObject*> sections;
+    //sections.append(&audioSettings);
+    //sections.append(&midiSettings);
+    //sections.append(&windowSettings);
+    //sections.append(&metronomeSettings);
+    //sections.append(&vstSettings);
+   // sections.append(&inputsSettings);
+    //sections.append(&recordingSettings);
+    //sections.append(&privateServerSettings);
+
+
+    //NEW COOL CONFIGURATOR STUFF INSIDE
+    if(readPresetFile(sections,name))
+        qInfo(jtConfigurator) << "Settings : Presets loaded :" << name;
+        else
+        qInfo(jtConfigurator) << "Settings : Presets couldn't be loaded :" << name;
+
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -610,6 +692,31 @@ void Settings::save(Persistence::InputsSettings inputsSettings){
     writeFile(Configurator::getInstance()->getAppType(), sections);
 
 }
+
+//PRESETS TEST
+void Settings::savePresets(InputsSettings inputsSettings,QString name)
+{
+    this->inputsSettings = inputsSettings;
+    QList<Persistence::SettingsObject*> sections;
+     //sections.append(&audioSettings);
+     //sections.append(&midiSettings);
+     //sections.append(&windowSettings);
+     //sections.append(&metronomeSettings);
+     //sections.append(&vstSettings);
+    sections.append(&this->inputsSettings);
+     //sections.append(&recordingSettings);
+     //sections.append(&privateServerSettings);
+
+    //NEW COOL CONFIGURATOR STUFF
+    if(writePresetFile(sections,name))
+    qInfo(jtConfigurator) << "Settings : Presets written :" << name;
+    else
+    qInfo(jtConfigurator) << "Settings : Presets couldn't be written :" << name;
+
+
+
+}
+
 
 Settings::~Settings(){
 

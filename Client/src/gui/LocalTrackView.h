@@ -52,6 +52,11 @@ public:
 
     void updateGuiElements();//overriding to show midi activity
 
+    //PRESETS NEED THAT TOO
+    inline FxPanel* getFxPanel(){return fxPanel;}
+    void mute(bool b);
+    void solo(bool b);
+
 private:
     //int inputIndex;
     FxPanel* fxPanel;
@@ -90,6 +95,7 @@ private:
     bool peakMetersOnly;
 
     void initializeBoostButtons(BoostValue boostValue);
+
 private slots:
     void on_inputSelectionButtonClicked();//build and show de input selection menu
 

@@ -99,10 +99,10 @@ QDir Configurator::getPluginDir() const {
 }
 //-------------------------------------------------------------------------------
 //Presets now ....
-QDir Configurator::getPresetsDir(APPTYPE type) const
+QDir Configurator::getPresetsDir() const
 {
     QDir dir=getHomeDir();
-    switch(type)
+    switch(AppType)
     {
     case standalone:
         if(!dir.cd(STANDALONE_PRESET_FOLDER_NAME))
@@ -121,6 +121,29 @@ QDir Configurator::getPresetsDir(APPTYPE type) const
     return dir;
 }
 
+
+QStringList  Configurator::getPresetFilesNames()
+{
+    QStringList filesPaths;
+    QDir dir=getPresetsDir();
+    qInfo(jtConfigurator) << "Looking in Presets dir : "<<dir.absolutePath();
+     int count=0;//how many preset files
+    foreach(QFileInfo item, dir.entryInfoList() )
+       {
+           //if(item.isDir())
+           //    qDebug() << "Dir: " << item.absoluteFilePath();
+           if(item.isFile())
+           {   filesPaths.append(item.absoluteFilePath());
+               qDebug(jtConfigurator) << "File Found: " << item.absoluteFilePath();
+
+           }
+       }
+    count=filesPaths.size();
+    qInfo(jtConfigurator) << "Presets found : "<<count;
+    return filesPaths;
+}
+
+//--------------------------------------------------------------------------------------------
 bool Configurator::setUp(APPTYPE Type)
 {
     AppType=Type;//plugin or standalone
@@ -264,6 +287,33 @@ QString Configurator::getIniFilePath() const
     return "";
 
 }
+//Retrieve the path for Settings class
+QString Configurator::getPresetPath(QString JsonFile)
+{
+    QString path("");
+    //FIRST CHECK THE DIR
+    if (!presetsDirExists())
+    {   qDebug(jtConfigurator) << "Can't load preset file , preset dir inexistent !" ;
+        return path ;//Settings MUST CHECK THAT
+    }
+
+    QDir presetDir=getPresetsDir();
+    //SEARCH IN THE DIR
+    //USE CONFIGURATOR FOR FILES STUFF
+    path=presetDir.absoluteFilePath(JsonFile);
+    QStringList list=getPresetFilesNames();
+    foreach(QString item, list )
+       {
+        if(item.contains(path))
+        {qDebug(jtConfigurator) << "Path to required preset is :" << path;
+            return path;
+        }
+       }
+
+    qDebug(jtConfigurator) << "NO Path found !" << path;
+    return path;
+}
+
 //-------------------------------------------------------------------------------
 
 Configurator::~Configurator()

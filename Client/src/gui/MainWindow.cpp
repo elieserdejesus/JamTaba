@@ -1228,6 +1228,58 @@ void MainWindow::on_actionFullscreenMode_triggered()
        mainController->setFullScreenView(true);}
 }
 
+
+//PRESETS STUFF
+void MainWindow::resetGroupChannel(LocalTrackGroupView *group)
+{
+    if(getChannelGroupsCount()<1)
+        return;
+    qCInfo(jtConfigurator) << "Reseting local inputs...";
+    Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
+    QList<LocalTrackView*> trackViews = group->getTracks();
+    //all tracks in a group
+    for(int track=0;track<group->getTracksCount();track++)
+    {
+        //mute audio and gui
+        mainController->setTrackMute(track,false);
+        trackViews.at(track)->mute(false);
+
+        //solo audio and gui
+        mainController->setTrackSolo(track,false);
+        trackViews.at(track)->solo(false);
+
+        //reset audio and midi to none
+        trackViews.at(track)->setToNoInput();
+
+        qCInfo(jtConfigurator) << "\tInput reset on channel "<< trackViews.at(track)->getTrackID();
+
+        //NEW FUNK getFxPanel() MADE FOR PRESETS
+        //now we remove plugins
+         FxPanel *panel=trackViews.at(track)->getFxPanel();
+         if(panel)
+         {
+           int fxCount=panel->getItems().size();
+           if(fxCount>0)
+           {
+               for(int i=0;i<fxCount;i++)
+               {
+                   panel->removePlugin();
+               }
+           }
+         }
+         //volume now
+         trackViews.at(track)->getInputNode()->setGain(1.0f);
+         //pan now
+         trackViews.at(track)->getInputNode()->setPan(0.0f);
+         //boost
+         trackViews.at(track)->getInputNode()->setBoost(1.0f);
+
+
+     }
+
+        qCInfo(jtConfigurator) << "Reseting local inputs done!";
+}
+
 //++++++++++++++++++++++++
 void MainWindow::setTransmitingStatus(int channelID, bool xmitStatus){
     mainController->setTransmitingStatus(channelID, xmitStatus);
@@ -1238,3 +1290,4 @@ bool MainWindow::isTransmiting(int channelID) const{
 }
 
 //++++++++++++
+
