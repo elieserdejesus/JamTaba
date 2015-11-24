@@ -10,7 +10,7 @@
 
 int main(int argc, char* args[] ){
 
-    QApplication::setApplicationName("Jamtaba 2");
+    QApplication::setApplicationName("Jomtobo ");
     QApplication::setApplicationVersion(APP_VERSION);
 
     //start the configurator
