@@ -20,23 +20,6 @@ MidiMessage::MidiMessage(const MidiMessage& other){
     this->deviceIndex = other.deviceIndex;
 }
 //+++++++++++++++++++++++
-
-MidiMessage::MidiMessage(qint32 data, qint32 timestamp, int sourceDeviceIndex)
-    :data(data), timestamp(timestamp), deviceIndex(sourceDeviceIndex){
-
-}
-
-MidiMessage::MidiMessage()
-    :data(-1), timestamp(-1), deviceIndex(-1){
-
-}
-
-//this copy constructor is really necessary? The sky is really blue? I don't know ... :)
-MidiMessage::MidiMessage(const MidiMessage &other)
-    : data(other.data), timestamp(other.timestamp), deviceIndex(other.deviceIndex){
-
-}
-
 quint8 MidiMessage::getNoteVelocity() const{
     if(!isNote()){
         return 0;
@@ -62,6 +45,15 @@ MidiBuffer::MidiBuffer(const MidiBuffer &other)
     for (int m = 0; m < other.messagesCount; ++m) {
         this->messages[m] = other.messages[m];
     }
+}
+
+MidiBuffer::MidiBuffer(int maxMessages)
+    : maxMessages(maxMessages),
+      messages(new MidiMessage[maxMessages]),
+      //writeIndex(0), readIndex(0),
+      messagesCount(0)
+{
+
 }
 
 MidiBuffer::~MidiBuffer(){
