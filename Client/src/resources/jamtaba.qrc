@@ -2,6 +2,7 @@
     <qresource prefix="/style">
         <file>jamtaba.css</file>
         <file>jamtaba_orange.css</file>
+        <file>jomtobo.css</file>
     </qresource>
     <qresource prefix="/images">
         <file>gradient.bmp</file>
@@ -41,12 +42,9 @@
         <file>translate.png</file>
         <file>warning.png</file>
         <file>chat_small.png</file>
-
         <file>preset-load.png</file>
         <file>preset-save.png</file>
-
         <file>discard.png</file>
-
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

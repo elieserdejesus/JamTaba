@@ -109,17 +109,6 @@ public:
 };
 
 
-//+++++++++PRESETS+++++++++++++++
-class PresetsSettings  : public SettingsObject{
-public:
-    PresetsSettings();
-    void write(QJsonObject &out);
-    void read(QJsonObject in);
-    //bool saveMultiTracksActivated;
-    QString recordingPath;
-};
-
-//++++++++++++++++++++++++
 
 class Plugin{
 public:
@@ -157,6 +146,17 @@ public:
     void read(QJsonObject in);
     QList<Channel> channels;
 };
+//+++++++++PRESETS+++++++++++++++
+class PresetsSettings  : public SettingsObject{
+public:
+    PresetsSettings();
+    void write(QJsonObject &out);
+    void read(QJsonObject in);
+    QList<Channel> channels;
+};
+
+//++++++++++++++++++++++++
+
 //++++++++++++++++++++++++
 class Settings {
 
@@ -169,6 +169,7 @@ private:
     MetronomeSettings metronomeSettings;
     VstSettings vstSettings;
     InputsSettings inputsSettings;
+    PresetsSettings presetSettings;
     RecordingSettings recordingSettings;
     PrivateServerSettings privateServerSettings;
     QString lastUserName;//the last nick name choosed by user

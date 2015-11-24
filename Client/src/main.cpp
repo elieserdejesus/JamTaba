@@ -23,7 +23,8 @@ int main(int argc, char* args[] ){
     SingleApplication* application = new SingleApplication(argc, args);
 
     Controller::StandaloneMainController mainController(settings, (QApplication*)application);
-    mainController.configureStyleSheet("jamtaba.css");
+    //..JOMTOBO CSS
+    mainController.configureStyleSheet("jomtobo.css");
     mainController.start();
     if(mainController.isUsingNullAudioDriver()){
         QMessageBox::about(nullptr, "Fatal error!", "Jamtaba can't detect any audio device in your machine!");
