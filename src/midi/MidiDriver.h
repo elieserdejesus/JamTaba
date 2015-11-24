@@ -12,9 +12,7 @@ public:
     MidiMessage();
     MidiMessage(const MidiMessage& other);
 
-
     inline int getChannel() const{ return data & 0x0000000F; }
-
 
     bool isNote() const;
 
@@ -26,10 +24,7 @@ public:
     inline int getData1() const{ return (data >> 8) & 0xFF;}
     inline int getData2() const{ return (data >> 16) & 0xFF;}
 
-
     inline bool isControl() const{return getStatus() == 0xB0;}
-
-
 private:
     qint32 data;
     qint32 timestamp;

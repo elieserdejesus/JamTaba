@@ -1079,7 +1079,6 @@ void MainWindow::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audio
         QMessageBox::warning(this, "Audio error!", "The audio device can't be started! Please check your audio device and try restart Jamtaba!");
         mainController->useNullAudioDriver();
     }
-
 }
 
 //input selection changed by user or by system

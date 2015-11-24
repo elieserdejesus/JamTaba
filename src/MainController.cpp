@@ -154,7 +154,7 @@ void MainController::on_audioDriverStopped(){
     if(isPlayingInNinjamRoom()){
         //send the last interval part when audio driver is stopped
         finishUploads();
-        ninjamController.reset();//discard downloaded intervals and reset interval position
+        ninjamController->reset();//discard downloaded intervals and reset interval position
     }
 }
 
