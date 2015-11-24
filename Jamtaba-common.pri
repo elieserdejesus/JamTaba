@@ -130,7 +130,7 @@ SOURCES += \
     $$PWD/src/gui/chords/ChordsWidget.cpp \
     $$PWD/src/gui/chords/ChordsPanel.cpp \
     $$PWD/src/gui/chords/ChordProgression.cpp \
-    $$PWD/src/configurator.cpp
+    $$PWD/src/configurator.cpp \
 
 #multiplatform implementations
 #win32:SOURCES += $$PWD/src/performance/WindowsPerformanceMonitor.cpp

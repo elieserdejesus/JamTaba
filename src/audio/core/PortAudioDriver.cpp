@@ -9,49 +9,12 @@
 #include "../log/logging.h"
 #include <QtGlobal>
 
-#ifdef Q_OS_WIN
-    #include "pa_asio.h"
-#else
-    #include "pa_mac_core.h"
-#endif
+/*
+ * This file contain the platform independent PortAudio code. The platform specific
+ * code are in WindowsPortAudioDriver.cpp, MacPortAudioDriver.cpp and in future LinuxPortAudioDriver.cpp.
+*/
 
 namespace Audio{
-
-#ifdef Q_OS_MACX
-    PortAudioDriver::PortAudioDriver(Controller::MainController* mainController, int sampleRate, int  bufferSize)
-        :AudioDriver(mainController){
-
-            //initialize portaudio using default devices, mono input and try estereo output if possible
-            PaError error = Pa_Initialize();
-            if (error != paNoError){
-                qCCritical(portaudio) << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
-                throw std::runtime_error(Pa_GetErrorText(error));
-            }
-
-            this->inputDeviceIndex = Pa_GetDefaultInputDevice();
-            this->outputDeviceIndex = Pa_GetDefaultOutputDevice();
-            this->globalInputRange = ChannelRange(0, getMaxInputs());
-            this->globalOutputRange = ChannelRange(0, 2);//2 channels for output
-
-            int maxOutputs = getMaxOutputs();
-            if(maxOutputs > 1){
-                globalOutputRange.setToStereo();
-            }
-            initPortAudio(sampleRate, bufferSize);
-    }
-#endif
-
-#ifdef Q_OS_WIN
-PortAudioDriver::PortAudioDriver(Controller::MainController* mainController, int audioDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize )
-    :AudioDriver(mainController)
-{
-    this->globalInputRange = ChannelRange(firstInputIndex, (lastInputIndex - firstInputIndex) + 1);
-    this->globalOutputRange = ChannelRange(firstOutputIndex, (lastOutputIndex - firstOutputIndex) + 1);
-    this->audioDeviceIndex = audioDeviceIndex;// (inputDeviceIndex >= 0 && inputDeviceIndex < getDevicesCount()) ? inputDeviceIndex : paNoDevice;
-    //this->outputDeviceIndex = audioDeviceIndex;// (outputDeviceIndex >= 0 && outputDeviceIndex < getDevicesCount()) ? outputDeviceIndex : paNoDevice;
-    initPortAudio(sampleRate, bufferSize);
-}
-#endif
 
 bool PortAudioDriver::canBeStarted() const{
     return audioDeviceIndex != paNoDevice;
@@ -197,32 +160,9 @@ void PortAudioDriver::start(){
     inputParams.suggestedLatency = 0;//computeSuggestedLatency(sampleRate, bufferSize);// Pa_GetDeviceInfo(inputDeviceIndex)->defaultLowOutputLatency;
     inputParams.hostApiSpecificStreamInfo = NULL;
 
-//+++++++++++++++ ASIO SPECIFIC CODE FOR INPUT ++++++++++++++++++++++++++++++++
-#ifdef Q_OS_WIN
-    qCDebug(jtAudio) << "using __WIN32 scpecific stream infos for inputs";
-    PaAsioStreamInfo asioInputInfo;
-    asioInputInfo.size = sizeof(PaAsioStreamInfo);
-    asioInputInfo.hostApiType = paASIO;
-    asioInputInfo.version = 1;
-    asioInputInfo.flags = paAsioUseChannelSelectors;
-	//const int size = ;
-    //int inputChannelSelectors[size];
-    std::vector<int> inputChannelSelectors(inputParams.channelCount);
-    for (int c = 0; c < inputParams.channelCount; ++c) {
-        inputChannelSelectors[c] = globalInputRange.getFirstChannel() + c;//inputs are always sequential
-    }
-    asioInputInfo.channelSelectors = inputChannelSelectors.data();
-    inputParams.hostApiSpecificStreamInfo = &asioInputInfo;
-#endif
+    configureHostSpecificInputParameters(inputParams);//this can be different in different operational systems
 
-//#ifdef Q_OS_MACX
-//    qCDebug(portaudio) << "using MAC scpecific stream infos for inputs";
-//    PaMacCoreStreamInfo streamInfo;
-//    PaMacCore_SetupStreamInfo(&streamInfo, paMacCorePro);
-//    //inputParams.hostApiSpecificStreamInfo  = &streamInfo;
-//#endif
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
+    //+++++++++ OUTPUT
     PaStreamParameters outputParams;
     outputParams.channelCount = globalOutputRange.getChannels();// */outputChannels;
     outputParams.device = audioDeviceIndex;
@@ -230,36 +170,16 @@ void PortAudioDriver::start(){
     outputParams.suggestedLatency = 0;//computeSuggestedLatency(sampleRate, bufferSize);//  Pa_GetDeviceInfo(outputDeviceIndex)->defaultLowOutputLatency;
     outputParams.hostApiSpecificStreamInfo = NULL;
 
-//+++++++++++++++ ASIO SPECIFIC CODE FOR OUTPUT ++++++++++++++++++++++++++++++++
-#ifdef Q_OS_WIN
-    qCDebug(jtAudio) << "using __WIN32 scpecific stream infos for outputs";
-    PaAsioStreamInfo asioOutputInfo;
-    asioOutputInfo.size = sizeof(PaAsioStreamInfo);
-    asioOutputInfo.hostApiType = paASIO;
-    asioOutputInfo.version = 1;
-    asioOutputInfo.flags = paAsioUseChannelSelectors;
-    std::vector<int> outputChannelSelectors(outputParams.channelCount);
-    for (int c = 0; c < outputParams.channelCount; ++c) {
-        outputChannelSelectors[c] = globalOutputRange.getFirstChannel() + c;//outputs are always sequential
-    }
-    asioOutputInfo.channelSelectors = outputChannelSelectors.data();
-    outputParams.hostApiSpecificStreamInfo = &asioOutputInfo;
-#endif
+    configureHostSpecificOutputParameters(outputParams);
 
-//#ifdef Q_OS_MACX
-//    qCDebug(portaudio) << "using MAC scpecific stream infos for output";
-//    PaMacCoreStreamInfo outStreamInfo;
-//    PaMacCore_SetupStreamInfo(&outStreamInfo, paMacCorePro);
-//    //outputParams.hostApiSpecificStreamInfo = &outStreamInfo;
-//#endif
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     bool willUseInputParams = !globalInputRange.isEmpty();
     if(willUseInputParams){
         qCInfo(jtAudio) << "Trying initialize portaudio using inputParams and samplerate=" << sampleRate;
     }
     else{
-        qCInfo(jtAudio) << "Trying initialize portaudio WITHOUT inputParams becouse globalInputRange is empty!";
+        qCInfo(jtAudio) << "Trying initialize portaudio WITHOUT inputParams because globalInputRange is empty!";
         qCInfo(jtAudio) << "Detected inputs for " << getAudioDeviceName(audioDeviceIndex) << ":" << getMaxInputs();
     }
 
@@ -269,6 +189,7 @@ void PortAudioDriver::start(){
         this->audioDeviceIndex = paNoDevice;
         const char* errorMsg = Pa_GetErrorText(error);
         qCCritical(jtAudio) << "Error message: " << QString::fromUtf8(errorMsg);
+        releaseHostSpecificParameters(inputParams, outputParams);
         throw std::runtime_error(std::string(errorMsg));
     }
 
@@ -279,17 +200,20 @@ void PortAudioDriver::start(){
                           sampleRate, framesPerBuffer,
                           paNoFlag, portaudioCallBack, (void*)this);//I'm passing this to portaudio, so I can run methods inside the callback function
     if (error != paNoError){
+        releaseHostSpecificParameters(inputParams, outputParams);
         throw std::runtime_error(std::string(Pa_GetErrorText(error)));
     }
     if(paStream != NULL){
         error = Pa_StartStream(paStream);
         if (error != paNoError){
+            releaseHostSpecificParameters(inputParams, outputParams);
             throw std::runtime_error(Pa_GetErrorText(error));
         }
     }
     qCInfo(jtAudio) << "portaudio driver started ok!";
     emit started();
 
+    releaseHostSpecificParameters(inputParams, outputParams);
 }
 
 QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const{
@@ -315,33 +239,6 @@ QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const{
         }
     }
     return validSRs;
-}
-
-QList<int> PortAudioDriver::getValidBufferSizes(int deviceIndex) const{
-
-    QList<int> completeList;
-
-
-    long maxBufferSize;
-    long minBufferSize;
-
-    #ifdef Q_OS_WIN
-        long preferredBuffersize;//note used
-        long granularity;//note used
-        PaError result = PaAsio_GetAvailableBufferSizes(deviceIndex, &minBufferSize, &maxBufferSize, &preferredBuffersize, &granularity);
-    #else//mac
-        PaError result = PaMacCore_GetBufferSizeRange(deviceIndex, &minBufferSize, &maxBufferSize);
-    #endif
-    if(result != paNoError){
-        completeList.append(256);
-        return completeList;//return 256 as the only possible value
-    }
-    //in windows ASIO when granularity is -1 the values are power of two
-    for (long size = minBufferSize; size <= maxBufferSize; size *= 2) {
-        completeList.append(size);
-    }
-
-    return completeList;
 }
 
 void PortAudioDriver::stop(){
@@ -371,47 +268,15 @@ int PortAudioDriver::getMaxInputs() const{
     if(audioDeviceIndex != paNoDevice){
         return Pa_GetDeviceInfo(audioDeviceIndex)->maxInputChannels;
     }
-    #ifdef Q_OS_WIN
-        return 0;
-    #endif
-    //mac
-    return Pa_GetDeviceInfo(Pa_GetDefaultInputDevice())->maxInputChannels;
+    return 0;
 }
+
 int PortAudioDriver::getMaxOutputs() const{
     if(audioDeviceIndex != paNoDevice){
         return Pa_GetDeviceInfo(audioDeviceIndex)->maxOutputChannels;
     }
-#ifdef Q_OS_WIN
     return 0;
-#endif
-    return Pa_GetDeviceInfo(Pa_GetDefaultOutputDevice())->maxOutputChannels;
 }
-
-const char *PortAudioDriver::getInputChannelName(const unsigned int index) const
-{
-
-#ifdef Q_OS_WIN
-    const char *channelName = new char[30];
-    PaAsio_GetInputChannelName(audioDeviceIndex, index, &channelName);
-    return channelName;
-#else
-    return PaMacCore_GetChannelName(audioDeviceIndex, index, true);
-#endif
-    return "error";
-}
-
-const char *PortAudioDriver::getOutputChannelName(const unsigned int index) const
-{
-#ifdef Q_OS_WIN
-    const char *channelName = new char[30];
-    PaAsio_GetOutputChannelName(audioDeviceIndex, index, &channelName);
-    return channelName;
-#else
-    return PaMacCore_GetChannelName(audioDeviceIndex, index, false);
-#endif
-    return "error";
-}
-
 
 void PortAudioDriver::setAudioDeviceIndex(PaDeviceIndex index)
 {
