@@ -111,6 +111,7 @@ void PreferencesDialog::populateAudioTab(){
     populateFirstOutputCombo();
     populateSampleRateCombo();
     populateBufferSizeCombo();
+    ui->buttonControlPanel->setVisible(mainController->getAudioDriver()->hasControlPanel());
 }
 
 void PreferencesDialog::clearScanFolderWidgets(){
@@ -505,6 +506,10 @@ void PreferencesDialog::on_recordingCheckBox_clicked(){
 }
 //+++++++++++++++++++++++++++
 
-
-
-
+void PreferencesDialog::on_buttonControlPanel_clicked()
+{
+    AudioDriver* audioDriver = mainController->getAudioDriver();
+    if(audioDriver->hasControlPanel()){//just in case
+        audioDriver->openControlPanel((void*)mainWindow->winId());
+    }
+}

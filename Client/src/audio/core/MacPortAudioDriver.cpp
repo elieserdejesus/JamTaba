@@ -73,4 +73,8 @@ void PortAudioDriver::releaseHostSpecificParameters(const PaStreamParameters &in
 
 }
 
+bool PortAudioDriver::hasControlPanel() const{
+    return false;
+}
+
 }//namespace

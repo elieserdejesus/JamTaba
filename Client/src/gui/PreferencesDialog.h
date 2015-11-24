@@ -49,6 +49,8 @@ private slots:
 
     void on_ButtonVST_RemFromBlkList_clicked();
 
+    void on_buttonControlPanel_clicked();
+
 signals:
     void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
 
