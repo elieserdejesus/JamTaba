@@ -90,4 +90,14 @@ const char *PortAudioDriver::getOutputChannelName(const unsigned int index) cons
     return channelName;
 }
 
+bool PortAudioDriver::hasControlPanel() const{
+    return true;
+}
+
+void PortAudioDriver::openControlPanel(void* mainWindowHandle){
+    if(audioDeviceIndex != paNoDevice){
+        PaAsio_ShowControlPanel(audioDeviceIndex, mainWindowHandle);
+    }
+}
+
 }//namespace

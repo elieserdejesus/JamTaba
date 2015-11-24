@@ -33,6 +33,9 @@ public:
 
     virtual bool canBeStarted() const;
 
+    virtual bool hasControlPanel() const;
+    virtual void openControlPanel(void* mainWindowHandle);
+
     //portaudio callback function
     friend int portaudioCallBack(const void *inputBuffer, void *outputBuffer,
         unsigned long framesPerBuffer,
