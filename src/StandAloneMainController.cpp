@@ -238,7 +238,6 @@ Controller::NinjamController* StandaloneMainController::createNinjamController(M
 
 Audio::AudioDriver* StandaloneMainController::createAudioDriver(const Persistence::Settings &settings){
 
-#ifdef Q_OS_WIN
     return new Audio::PortAudioDriver(
                 this,
                 settings.getLastAudioDevice(),
@@ -249,10 +248,7 @@ Audio::AudioDriver* StandaloneMainController::createAudioDriver(const Persistenc
                 settings.getLastSampleRate(),
                 settings.getLastBufferSize()
                 );
-#else
-    //MAC
-    return new Audio::PortAudioDriver(this, settings.getLastSampleRate(), settings.getLastBufferSize());
-#endif
+
 }
 
 //++++++++++++++++++++++++++++++++++++++++++
