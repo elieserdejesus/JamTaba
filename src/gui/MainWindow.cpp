@@ -475,25 +475,24 @@ int groupSize=controlSurfaceJTB.size();
    //assign preset to indexed tracks
    for(int index=0;index<tracksCount;index++)
        {
-         //tracks.at(index)
-         //tracks.at(index)->getInputNode()->setGain(preset.channels.at(group).subChannels);
-        float gain=preset.channels.at(group).subChannels.at(index).gain;
+         //gain
+         float gain=preset.channels.at(group).subChannels.at(index).gain;
          tracks.at(index)->getInputNode()->setGain(gain);
          qCInfo(jtConfigurator) << "Track gain : "<<gain<<" for"<<index;
-
-        float pan=preset.channels.at(group).subChannels.at(index).pan;
+         //pan
+         float pan=preset.channels.at(group).subChannels.at(index).pan;
          tracks.at(index)->getInputNode()->setPan(pan);
          qCInfo(jtConfigurator) << "Track Pan : "<<pan<<" for"<<index;
+         //boost
+         int boost=preset.channels.at(group).subChannels.at(index).boost;
+         BaseTrackView::BoostValue boostValue = BaseTrackView::intToBoostValue(boost);
+         tracks.at(index)->initializeBoostButtons(boostValue);
+         qCInfo(jtConfigurator) << "Boost index : "<<boostValue<<" for"<<index;
+         //mute
+         bool muted=preset.channels.at(group).subChannels.at(index).muted;
+         tracks.at(index)->getInputNode()->setMuteStatus(muted);
 
-
-
-        int boost=preset.channels.at(group).subChannels.at(index).boost;
-        BaseTrackView::BoostValue boostValue = BaseTrackView::intToBoostValue(boost);
-        tracks.at(index)->initializeBoostButtons(boostValue);
-        qCInfo(jtConfigurator) << "Boost index : "<<boostValue<<" for"<<index;
-
-
-       //must skip a track or create new?
+        //must skip a track or create new?
         if(tracksCount>PRST_CH_COUNT && index==PRST_CH_COUNT )break;
        }
 
