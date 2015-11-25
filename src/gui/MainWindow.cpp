@@ -445,15 +445,18 @@ int groupSize=controlSurfaceJTB.size();
 
  for(int group=0;group<groupSize;group++)
  {
+     //load the name of the group
    controlSurfaceJTB.at(group)->setGroupName(preset.channels.at(group).name);
+   //get the tracks of that group
    tracks=controlSurfaceJTB.at(group)->getTracks();
    int tracksCount=tracks.size();
    qCInfo(jtConfigurator) << "Number of tracks :"<<tracksCount;
    //assign preset to indexed tracks
    for(int index=0;index<tracksCount;index++)
    {
-       //tracks.at(index)
-       //tracks.at(index)->getInputNode()->setGain(preset.channels.at(group).subChannels);
+
+     float gain=preset.channels.at(0).subChannels.at(index).gain;
+     tracks.at(index)->getInputNode()->setGain(gain);
    }
  }
 
