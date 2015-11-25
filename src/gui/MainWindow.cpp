@@ -444,13 +444,14 @@ int groupSize=controlSurfaceJTB.size();
  QList< LocalTrackView * > 	tracks;
  Persistence::PresetsSettings preset = mainController->getSettings().getPresetSettings();
  //now the preset's track count ;
- int PRST_TRK_COUNT=preset.channels.size();
- qCInfo(jtConfigurator) << "Number of groups in Preset :"<<PRST_TRK_COUNT;
+ int PRST_CH_COUNT=preset.channels.size();
+ qCInfo(jtConfigurator) << "Number of groups in Preset :"<<PRST_CH_COUNT;
 
+ //GO inside the controlSurfaceJTB groups
  for(int group=0;group<groupSize;group++)
  {
      //load the name of the group
-   controlSurfaceJTB.at(0)->setGroupName(preset.channels.at(0).name);
+   controlSurfaceJTB.at(group)->setGroupName(preset.channels.at(group).name);
 
    //get the tracks of that group
    tracks=controlSurfaceJTB.at(0)->getTracks();
@@ -462,17 +463,14 @@ int groupSize=controlSurfaceJTB.size();
    //int PRST_SUB_COUNT=preset.tracks.at(index).subChannels.size();
    //qCInfo(jtConfigurator) << "Number of Sub Tracks in group :"<<PRST_SUB_COUNT;
 
-
-
    //compute tracks to create ( if any ) in that group
    int TRK_TO_CREATE=0;
-   if(tracksCount<PRST_TRK_COUNT)//must create a track
+   if(tracksCount<PRST_CH_COUNT)//must create a track
    {
-     TRK_TO_CREATE=PRST_TRK_COUNT-tracksCount;
+     TRK_TO_CREATE=PRST_CH_COUNT-tracksCount;
      qCInfo(jtConfigurator) << "Number of tracks to create : "<<TRK_TO_CREATE;
 
    }
-
 
    //assign preset to indexed tracks
    for(int index=0;index<tracksCount;index++)
@@ -480,8 +478,14 @@ int groupSize=controlSurfaceJTB.size();
          //tracks.at(index)
          //tracks.at(index)->getInputNode()->setGain(preset.channels.at(group).subChannels);
         float gain=preset.channels.at(group).subChannels.at(index).gain;
-        tracks.at(index)->getInputNode()->setGain(gain);
-        if(tracksCount>PRST_TRK_COUNT && index==PRST_TRK_COUNT )break;//must skip a track
+         tracks.at(index)->getInputNode()->setGain(gain);
+         qCInfo(jtConfigurator) << "Track gain : "<<gain<<" for"<<index;
+
+        float pan=preset.channels.at(group).subChannels.at(index).pan;
+         tracks.at(index)->getInputNode()->setPan(pan);
+
+       //must skip a track or create new?
+        if(tracksCount>PRST_CH_COUNT && index==PRST_CH_COUNT )break;
        }
 
  }
