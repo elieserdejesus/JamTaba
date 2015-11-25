@@ -274,11 +274,11 @@ PresetsSettings::PresetsSettings()
 void PresetsSettings::write(QJsonObject &out)
 {
     QJsonArray channelsArray;
-    foreach (const Channel& channel, channels) {
+    foreach (const Channel& track, channels) {
         QJsonObject channelObject;
-        channelObject["name"] = channel.name;
+        channelObject["name"] = track.name;
         QJsonArray subchannelsArrays;
-        foreach (const Subchannel& sub, channel.subChannels) {
+        foreach (const Subchannel& sub, track.subChannels) {
             QJsonObject subChannelObject;
             subChannelObject["firstInput"] = sub.firstInput;
             subChannelObject["channelsCount"] = sub.channelsCount;
@@ -712,7 +712,7 @@ void Settings::loadPresets(QString name)
    // sections.append(&inputsSettings);
     //sections.append(&recordingSettings);
     //sections.append(&privateServerSettings);
-    //sections.append(&presetSettings);
+    sections.append(&presetSettings);
 
 
     //NEW COOL CONFIGURATOR STUFF INSIDE

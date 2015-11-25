@@ -439,25 +439,42 @@ void MainWindow::loadPresetToTrack()
 
 int groupSize=controlSurfaceJTB.size();
  qCInfo(jtConfigurator) << "Initializing ControlSurface...";
- qCInfo(jtConfigurator) << "Number of groups :"<<groupSize;
+ qCInfo(jtConfigurator) << "Number of groups in controlSurface :"<<groupSize;
+
  QList< LocalTrackView * > 	tracks;
  Persistence::PresetsSettings preset = mainController->getSettings().getPresetSettings();
+ //now the preset's track count ;
+ int PRST_TRK_COUNT=preset.channels.size();
+ qCInfo(jtConfigurator) << "Number of groups in Preset :"<<PRST_TRK_COUNT;
 
  for(int group=0;group<groupSize;group++)
  {
      //load the name of the group
-   controlSurfaceJTB.at(group)->setGroupName(preset.channels.at(group).name);
-   //get the tracks of that group
-   tracks=controlSurfaceJTB.at(group)->getTracks();
-   int tracksCount=tracks.size();
-   qCInfo(jtConfigurator) << "Number of tracks :"<<tracksCount;
-   //assign preset to indexed tracks
-   for(int index=0;index<tracksCount;index++)
-   {
+   //controlSurfaceJTB.at(0)->setGroupName(preset.tracks.at(0).name);
 
-     float gain=preset.channels.at(0).subChannels.at(index).gain;
-     tracks.at(index)->getInputNode()->setGain(gain);
+   //get the tracks of that group
+   tracks=controlSurfaceJTB.at(0)->getTracks();
+   int tracksCount=tracks.size();
+   qCInfo(jtConfigurator) << "Loading group :"<<group;
+   qCInfo(jtConfigurator) << "Number of tracks in group :"<<tracksCount;
+
+   //now the preset's SUB track count ;
+   //int PRST_SUB_COUNT=preset.tracks.at(index).subChannels.size();
+   //qCInfo(jtConfigurator) << "Number of Sub Tracks in group :"<<PRST_SUB_COUNT;
+
+
+
+   //compute tracks to create ( if any ) in that group
+   int TRK_TO_CREATE=0;
+   if(tracksCount<PRST_TRK_COUNT)//must create a track
+   {
+     TRK_TO_CREATE=PRST_TRK_COUNT-tracksCount;
+     qCInfo(jtConfigurator) << "Number of tracks to create : "<<TRK_TO_CREATE;
+
    }
+
+   //assign preset to indexed tracks
+
  }
 
 }
