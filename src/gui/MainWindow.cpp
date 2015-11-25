@@ -441,12 +441,20 @@ int groupSize=controlSurfaceJTB.size();
  qCInfo(jtConfigurator) << "Initializing ControlSurface...";
  qCInfo(jtConfigurator) << "Number of groups :"<<groupSize;
  QList< LocalTrackView * > 	tracks;
+ Persistence::PresetsSettings preset = mainController->getSettings().getPresetSettings();
+
  for(int group=0;group<groupSize;group++)
  {
+   controlSurfaceJTB.at(group)->setGroupName(preset.channels.at(group).name);
    tracks=controlSurfaceJTB.at(group)->getTracks();
-   qCInfo(jtConfigurator) << "Number of tracks :"<<tracks.size();
-   //assign preset
-
+   int tracksCount=tracks.size();
+   qCInfo(jtConfigurator) << "Number of tracks :"<<tracksCount;
+   //assign preset to indexed tracks
+   for(int index=0;index<tracksCount;index++)
+   {
+       //tracks.at(index)
+       //tracks.at(index)->getInputNode()->setGain(preset.channels.at(group).subChannels);
+   }
  }
 
 }
