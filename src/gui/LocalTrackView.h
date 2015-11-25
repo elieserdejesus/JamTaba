@@ -56,6 +56,7 @@ public:
     inline FxPanel* getFxPanel(){return fxPanel;}
     void mute(bool b);
     void solo(bool b);
+    void initializeBoostButtons(BoostValue boostValue);
 
 private:
     //int inputIndex;
@@ -94,7 +95,7 @@ private:
 
     bool peakMetersOnly;
 
-    void initializeBoostButtons(BoostValue boostValue);
+
 
 private slots:
     void on_inputSelectionButtonClicked();//build and show de input selection menu

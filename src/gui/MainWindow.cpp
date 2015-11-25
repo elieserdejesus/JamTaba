@@ -484,6 +484,12 @@ int groupSize=controlSurfaceJTB.size();
         float pan=preset.channels.at(group).subChannels.at(index).pan;
          tracks.at(index)->getInputNode()->setPan(pan);
 
+
+        int boost=preset.channels.at(group).subChannels.at(index).boost;
+        BaseTrackView::BoostValue boostValue = BaseTrackView::intToBoostValue(boost);
+
+        tracks.at(index)->initializeBoostButtons(boostValue);
+
        //must skip a track or create new?
         if(tracksCount>PRST_CH_COUNT && index==PRST_CH_COUNT )break;
        }
