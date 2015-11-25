@@ -505,7 +505,8 @@ int groupSize=controlSurfaceJTB.size();
           }*/
           ////////
           //create the plugins list
-          foreach (Persistence::Plugin plugin,preset.channels.at(group).subChannels.at(index).plugins) {
+         /* foreach (Persistence::Plugin plugin,preset.channels.at(group).subChannels.at(index).plugins)
+          {
               QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
               Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path );
               Audio::Plugin* pluginInstance = mainController->addPlugin(tracks.at(index)->getInputIndex(), descriptor);
@@ -523,7 +524,7 @@ int groupSize=controlSurfaceJTB.size();
 
               //PluginLoader* loader = new PluginLoader(mainController, plugin, subChannelView);
               //loader->load();
-          }
+          }*/
         //must skip a track or create new?
         if(tracksCount>PRST_CH_COUNT && index==PRST_CH_COUNT )break;
        }
