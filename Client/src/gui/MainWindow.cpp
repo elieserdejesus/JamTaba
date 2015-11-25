@@ -440,6 +440,12 @@ void MainWindow::loadPresetToTrack()
 int groupSize=controlSurfaceJTB.size();
  qCInfo(jtConfigurator) << "Initializing ControlSurface...";
  qCInfo(jtConfigurator) << "Number of groups :"<<groupSize;
+ QList< LocalTrackView * > 	tracks;//getTracks () const
+ for(int group=0;group<groupSize;group++)
+ {
+   tracks=controlSurfaceJTB.at(group)->getTracks();
+   qCInfo(jtConfigurator) << "Number of groups :"<<groupSize;
+ }
 
 }
 
