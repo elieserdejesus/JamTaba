@@ -96,6 +96,21 @@ void LocalTrackView::init(int channelIndex, float
 }
 
 //ADDED FOR PRESETS
+void  LocalTrackView::resetFXPanel()
+{
+   if(fxPanel)
+    {
+      int fxCount=fxPanel->getItems().size();
+      if(fxCount>0)
+      {
+          for(int i=0;i<fxCount;i++)
+          {
+              fxPanel->removePlugin();
+          }
+      }
+    }
+}
+
 void LocalTrackView::mute(bool b)
 {
     getInputNode()->setMuteStatus(b);//audio only

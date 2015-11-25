@@ -54,6 +54,7 @@ public:
 
     //PRESETS NEED THAT TOO
     inline FxPanel* getFxPanel(){return fxPanel;}
+    void resetFXPanel();
     void mute(bool b);
     void solo(bool b);
     void initializeBoostButtons(BoostValue boostValue);

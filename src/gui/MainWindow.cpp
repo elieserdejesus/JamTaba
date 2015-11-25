@@ -491,7 +491,39 @@ int groupSize=controlSurfaceJTB.size();
          //mute
          bool muted=preset.channels.at(group).subChannels.at(index).muted;
          tracks.at(index)->getInputNode()->setMuteStatus(muted);
+         qCInfo(jtConfigurator) << "Mute state : "<<muted<<" for"<<index;
 
+         //NEW FUNK getFxPanel() MADE FOR PRESETS
+         //first we remove plugins
+          tracks.at(index)->resetFXPanel();
+          //get plugins
+          //QList<Persistence::Plugin> plugins=preset.channels.at(group).subChannels.at(index).plugins;
+         /* int pluginsCount=plugins.size();
+          for(int plugin=0;plugin<pluginsCount;plugin++)
+          {
+             tracks.at(index)->addPlugin(plugins.at(plugin).,plugins.at(plugin).bypassed);
+          }*/
+          ////////
+          //create the plugins list
+          foreach (Persistence::Plugin plugin,preset.channels.at(group).subChannels.at(index).plugins) {
+              QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
+              Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path );
+              Audio::Plugin* pluginInstance = mainController->addPlugin(tracks.at(index)->getInputIndex(), descriptor);
+              if(pluginInstance){
+                  try{
+                      pluginInstance->restoreFromSerializedData( plugin.data);
+                  }
+                  catch(...){
+                      qWarning() << "Exception restoring " << pluginInstance->getName();
+                  }
+
+                 tracks.at(index)->addPlugin(pluginInstance, plugin.bypassed);
+              }
+              QApplication::processEvents();
+
+              //PluginLoader* loader = new PluginLoader(mainController, plugin, subChannelView);
+              //loader->load();
+          }
         //must skip a track or create new?
         if(tracksCount>PRST_CH_COUNT && index==PRST_CH_COUNT )break;
        }
