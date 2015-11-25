@@ -702,16 +702,8 @@ bool Settings::readPresetFile(QList<Persistence::SettingsObject*> sections,QStri
 }
 void Settings::loadPresets(QString name)
 {
-
+    presetSettings.channels.clear();//very important to avoid a stack...
     QList<Persistence::SettingsObject*> sections;
-    //sections.append(&audioSettings);
-    //sections.append(&midiSettings);
-    //sections.append(&windowSettings);
-    //sections.append(&metronomeSettings);
-    //sections.append(&vstSettings);
-   // sections.append(&inputsSettings);
-    //sections.append(&recordingSettings);
-    //sections.append(&privateServerSettings);
     sections.append(&presetSettings);
 
 
