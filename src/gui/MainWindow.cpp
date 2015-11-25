@@ -450,7 +450,7 @@ int groupSize=controlSurfaceJTB.size();
  for(int group=0;group<groupSize;group++)
  {
      //load the name of the group
-   //controlSurfaceJTB.at(0)->setGroupName(preset.tracks.at(0).name);
+   controlSurfaceJTB.at(0)->setGroupName(preset.channels.at(0).name);
 
    //get the tracks of that group
    tracks=controlSurfaceJTB.at(0)->getTracks();
@@ -473,7 +473,16 @@ int groupSize=controlSurfaceJTB.size();
 
    }
 
+
    //assign preset to indexed tracks
+   for(int index=0;index<tracksCount;index++)
+       {
+         //tracks.at(index)
+         //tracks.at(index)->getInputNode()->setGain(preset.channels.at(group).subChannels);
+        float gain=preset.channels.at(group).subChannels.at(index).gain;
+        tracks.at(index)->getInputNode()->setGain(gain);
+        if(tracksCount>PRST_TRK_COUNT && index==PRST_TRK_COUNT )break;//must skip a track
+       }
 
  }
 
