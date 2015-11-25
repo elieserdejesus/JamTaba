@@ -23,6 +23,7 @@ using namespace Persistence;
 #endif
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 SettingsObject::SettingsObject(QString name)
     :name(name){
 
@@ -672,7 +673,7 @@ bool Settings::readPresetFile(QList<Persistence::SettingsObject*> sections,QStri
     QString absolutePath = Configurator::getInstance()->getPresetPath(name);
     //QFile file(absolutePath);
     QFile f(absolutePath);
-    //qInfo(jtConfigurator) << "JSON Location :"<<absolutePath;
+    qInfo(jtConfigurator) << "JSON Location :"<<absolutePath;
     if(f.open(QIODevice::ReadOnly))
     {
         qInfo(jtConfigurator) << "Reading PRESET from " << f.fileName() ;
@@ -682,7 +683,7 @@ bool Settings::readPresetFile(QList<Persistence::SettingsObject*> sections,QStri
         //read preset name , duno yet what it will serve ..
         if(root.contains("presetName"))
         {
-            QString presetName = root["userName"].toString();
+            QString presetName = root["presetName"].toString();
         }
 
 
@@ -711,6 +712,7 @@ void Settings::loadPresets(QString name)
    // sections.append(&inputsSettings);
     //sections.append(&recordingSettings);
     //sections.append(&privateServerSettings);
+    //sections.append(&presetSettings);
 
 
     //NEW COOL CONFIGURATOR STUFF INSIDE

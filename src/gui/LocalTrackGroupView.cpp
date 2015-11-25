@@ -258,7 +258,7 @@ void LocalTrackGroupView::on_removeChannelClicked(){
 //PRESETS
 void LocalTrackGroupView::on_LoadPresetClicked()
 {
-    mainFrame->getMainController()->loadPresets("testPreset.json");
+    mainFrame->getMainController()->loadPresets("PresetDefault.json");
     mainFrame->loadPresetToTrack();//that name is so good
 }
 
