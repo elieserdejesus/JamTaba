@@ -436,15 +436,17 @@ void MainWindow::restorePluginsList(){
 void MainWindow::loadPresetToTrack()
 {
 //we gonna assign each group of the console surface
-//QList< LocalTrackView * >  controlSurface=controlSurfaceJTB;
+
 int groupSize=controlSurfaceJTB.size();
  qCInfo(jtConfigurator) << "Initializing ControlSurface...";
  qCInfo(jtConfigurator) << "Number of groups :"<<groupSize;
- QList< LocalTrackView * > 	tracks;//getTracks () const
+ QList< LocalTrackView * > 	tracks;
  for(int group=0;group<groupSize;group++)
  {
    tracks=controlSurfaceJTB.at(group)->getTracks();
-   qCInfo(jtConfigurator) << "Number of groups :"<<groupSize;
+   qCInfo(jtConfigurator) << "Number of tracks :"<<tracks.size();
+   //assign preset
+
  }
 
 }
