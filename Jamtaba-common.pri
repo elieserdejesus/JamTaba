@@ -157,5 +157,6 @@ FORMS += \
 INCLUDEPATH += ../src/ \
                ../src/gui \
                ../src/gui/widgets \
+               ../src/gui/chords \
 
 RESOURCES += ../src/resources/jamtaba.qrc

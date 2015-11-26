@@ -11,13 +11,13 @@ using namespace Vst;
 
 AEffect* VstLoader::load(QString path, Vst::Host* host){
     if(!host){
-        return nullptr;
+        return 0;
     }
     QString pluginDir = QFileInfo(path).absoluteDir().absolutePath();
     QApplication::addLibraryPath(pluginDir);
 
     QLibrary pluginLib(path);
-    AEffect* effect = nullptr;
+    AEffect* effect = 0;
 
     // Plugin's entry point
     typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
@@ -27,7 +27,7 @@ AEffect* VstLoader::load(QString path, Vst::Host* host){
         qCDebug(jtStandaloneVstPlugin) << "loading " << path;
         if(!pluginLib.load()){
             qCCritical(jtStandaloneVstPlugin) << "error when loading VST plugin " << path << " -> " << pluginLib.errorString();
-            return nullptr;
+            return 0;
         }
         qCDebug(jtStandaloneVstPlugin) << path << " loaded";
         qCDebug(jtStandaloneVstPlugin) << "searching VST plugin entry point for" << path;
@@ -41,7 +41,7 @@ AEffect* VstLoader::load(QString path, Vst::Host* host){
     }
     if(!entryPoint) {
         qCDebug(jtStandaloneVstPlugin) << "Entry point not founded, unloading plugin " << path ;
-        return nullptr;
+        return 0;
     }
     qCDebug(jtStandaloneVstPlugin) << "Entry point founded for " << path ;
     QApplication::processEvents();
@@ -51,17 +51,17 @@ AEffect* VstLoader::load(QString path, Vst::Host* host){
     }
     catch(... ){
         qCCritical(jtStandaloneVstPlugin) << "Error loading VST plugin";
-        effect = nullptr;
+        effect = 0;
     }
 
     if(!effect) {
         qCCritical(jtStandaloneVstPlugin) << "Error when initializing effect. Unloading " << path ;
-        return nullptr;
+        return 0;
     }
     QApplication::processEvents();
     if (effect->magic != kEffectMagic) {
         qCCritical(jtStandaloneVstPlugin) << "KEffectMagic error for " << path ;
-        return nullptr;
+        return 0;
     }
     return effect;
 }
