@@ -3,9 +3,9 @@
 
 #include <QObject>
 #include <QMutex>
-#include "../ninjam/User.h"
-#include "../ninjam/Server.h"
-#include "../audio/vorbis/VorbisEncoder.h"
+#include "ninjam/User.h"
+#include "ninjam/Server.h"
+#include "audio/vorbis/VorbisEncoder.h"
 
 #include <QThread>
 

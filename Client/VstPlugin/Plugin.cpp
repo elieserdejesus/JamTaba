@@ -6,8 +6,8 @@
 #include <QHBoxLayout>
 #include <QStandardPaths>
 #include "MainControllerVST.h"
-#include "../NinjamController.h"
-#include "../log/logging.h"
+#include "NinjamController.h"
+#include "log/logging.h"
 #include "Editor.h"
 
 //anti troll scheme to avoid multiple connections in ninjam servers

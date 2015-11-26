@@ -1,7 +1,7 @@
 #ifndef MAINWINDOWVST_H
 #define MAINWINDOWVST_H
 
-#include "MainWindow.h"
+#include "gui/MainWindow.h"
 
 class NinjamRoomWindow;
 

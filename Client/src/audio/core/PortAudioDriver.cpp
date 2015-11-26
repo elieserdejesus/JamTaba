@@ -4,9 +4,9 @@
 #include <algorithm>
 #include "portaudio.h"
 #include "SamplesBuffer.h"
-#include "../persistence/Settings.h"
-#include "../MainController.h"
-#include "../log/logging.h"
+#include "persistence/Settings.h"
+#include "MainController.h"
+#include "log/logging.h"
 #include <QtGlobal>
 
 /*

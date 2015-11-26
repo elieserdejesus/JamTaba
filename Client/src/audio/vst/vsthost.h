@@ -12,12 +12,14 @@ class MidiBuffer;
 namespace Vst {
 
 class VstPlugin;
+class VstLoader;
 
 class Host : public QObject
 {
     Q_OBJECT
 
     friend class VstPlugin;
+    friend class VstLoader;
 
 public:
     static Host* getInstance();

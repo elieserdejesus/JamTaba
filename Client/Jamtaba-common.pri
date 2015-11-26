@@ -75,7 +75,7 @@ HEADERS += \
     $$PWD/src/gui/chords/ChordsWidget.h \
     $$PWD/src/gui/chords/ChordsPanel.h \
     $$PWD/src/gui/chords/ChordProgression.h \
-    $$PWD/src/configurator.h
+    $$PWD/src/configurator.h \
 
 SOURCES += \
     ../src/audio/core/AudioDriver.cpp \
@@ -132,6 +132,7 @@ SOURCES += \
     $$PWD/src/gui/chords/ChordProgression.cpp \
     $$PWD/src/configurator.cpp \
 
+
 #multiplatform implementations
 #win32:SOURCES += $$PWD/src/performance/WindowsPerformanceMonitor.cpp
 #macx:SOURCES += $$PWD/src/performance/MacPerformanceMonitor.cpp
@@ -153,8 +154,8 @@ FORMS += \
     $$PWD/src/gui/PreferencesDialog.ui \
     $$PWD/src/gui/chords/ChordsPanel.ui
 
-INCLUDEPATH += ../src/gui                  \
-               ../src/gui/widgets          \
-               ../src/gui/chords
+INCLUDEPATH += ../src/ \
+               ../src/gui \
+               ../src/gui/widgets \
 
 RESOURCES += ../src/resources/jamtaba.qrc

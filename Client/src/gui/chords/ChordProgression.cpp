@@ -1,6 +1,6 @@
 #include "ChordProgression.h"
 #include <QRegularExpression>
-#include "BpiUtils.h"
+#include "gui/BpiUtils.h"
 
 //+++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++

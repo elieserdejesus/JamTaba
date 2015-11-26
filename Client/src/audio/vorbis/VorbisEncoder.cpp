@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <ctime>
 #include <QThread>
-#include "../log/logging.h"
+#include "log/logging.h"
 
 const float VorbisEncoder::QUALITY = 0.32f;
 

@@ -6,7 +6,7 @@
 #include <cmath>
 #include <QDebug>
 #include <QObject>
-#include "../audio/core/plugins.h"
+#include "audio/core/plugins.h"
 
 PluginGui::PluginGui(Audio::Plugin *plugin)
     :QWidget(0), plugin(plugin)

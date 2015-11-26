@@ -28,19 +28,19 @@
 #include "PrivateServerDialog.h"
 //#include "../performance/PerformanceMonitor.h"
 
-#include "../NinjamController.h"
-#include "../ninjam/Server.h"
-#include "../persistence/Settings.h"
-#include "../audio/core/AudioDriver.h"
-#include "../audio/vst/PluginFinder.h"
-#include "../audio/core/plugins.h"
-#include "../midi/MidiDriver.h"
-#include "../MainController.h"
-#include "../loginserver/LoginService.h"
-#include "../Utils.h"
-#include "../audio/RoomStreamerNode.h"
+#include "NinjamController.h"
+#include "ninjam/Server.h"
+#include "persistence/Settings.h"
+#include "audio/core/AudioDriver.h"
+#include "audio/vst/PluginFinder.h"
+#include "audio/core/PluginDescriptor.h"
+#include "midi/MidiDriver.h"
+#include "MainController.h"
+#include "loginserver/LoginService.h"
+#include "Utils.h"
+#include "audio/RoomStreamerNode.h"
 #include "UserNameDialog.h"
-#include "../log/logging.h"
+#include "log/logging.h"
 #include <QShortcut>
 
 using namespace Audio;
@@ -130,6 +130,7 @@ void MainWindow::initializePluginFinder(){
     if(pluginFinder){
         QObject::connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(onScanPluginsStarted()));
         QObject::connect(pluginFinder, SIGNAL(scanFinished()), this, SLOT(onScanPluginsFinished()));
+        QObject::connect(pluginFinder, SIGNAL(badPluginDetected(QString)), this, SLOT(onBadPluginDetected(QString)));
         QObject::connect(pluginFinder, SIGNAL(pluginScanFinished(QString,QString,QString)), this, SLOT(onPluginFounded(QString,QString,QString)));
         QObject::connect(pluginFinder, SIGNAL(pluginScanStarted(QString)), this, SLOT(onScanPluginsStarted(QString)));
     }
@@ -1109,6 +1110,13 @@ void MainWindow::onScanPluginsFinished(){
     }
     pluginScanDialog.reset();
 
+}
+
+void MainWindow::onBadPluginDetected(QString pluginPath){
+    QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(pluginPath);
+    QWidget* parent = pluginScanDialog ? (QWidget*)pluginScanDialog.data() : (QWidget*)this;
+    QMessageBox::warning(parent, "Plugin Error!", pluginName + " can't be loaded and will be black listed!");
+    mainController->addBlackVstToSettings(pluginPath);
 }
 
 void MainWindow::onPluginFounded(QString name, QString group, QString path){
