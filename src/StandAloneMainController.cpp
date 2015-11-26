@@ -1,14 +1,15 @@
 #include "StandAloneMainController.h"
 
-//#include "midi/portmididriver.h"
 #include "midi/RtMidiDriver.h"
 #include "audio/core/PortAudioDriver.h"
 
 #include "audio/vst/VstPlugin.h"
-#include "audio/vst/vsthost.h"
-#include "../audio/vst/PluginFinder.h"
-#include "../NinjamController.h"
+#include "audio/vst/VstHost.h"
+#include "audio/vst/PluginFinder.h"
+#include "audio/core/PluginDescriptor.h"
+#include "NinjamController.h"
 #include <QDialog>
+#include <QHostAddress>
 
 #if _WIN32
     #include "windows.h"
@@ -20,145 +21,116 @@
 #include <QDirIterator>
 #include <QSettings>
 #include <QtConcurrent/QtConcurrent>
-#include "../log/logging.h"
+#include "log/logging.h"
 #include "configurator.h"
 
 using namespace Controller;
 
 //+++++++++++++++++++++++++
-StandalonePluginFinder::StandalonePluginFinder(Vst::Host *host)
-    :host(host)
-{
+
+StandalonePluginFinder::StandalonePluginFinder(){
 
 }
 
-StandalonePluginFinder::~StandalonePluginFinder()
-{
+StandalonePluginFinder::~StandalonePluginFinder(){
 
 }
 
+Audio::PluginDescriptor StandalonePluginFinder::getPluginDescriptor(QFileInfo f){
+    QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
+    return Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
+}
 
-//++++++++++++++++++++++++++++++++++++++++++++
-#ifdef Q_OS_WIN
-class WindowsDllArchChecker{
-public:
-    static bool is32Bits(QString dllPath){
-        return getMachineHeader(dllPath) == 0x14c;//i386
-    }
 
-    static bool is64Bits(QString dllPath){
-        return getMachineHeader(dllPath) == 0x8664;//AMD64
-    }
-private:
-    static quint16 getMachineHeader(QString dllPath){
-        // See http://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx
-        // Offset to PE header is always at 0x3C.
-        // The PE header starts with "PE\0\0" =  0x50 0x45 0x00 0x00,
-        // followed by a 2-byte machine type field (see the document above for the enum).
-
-        QFile dllFile(dllPath);
-        if(!dllFile.open(QFile::ReadOnly)){
-            return 0;
+void StandalonePluginFinder::on_processFinished(){
+    QProcess::ExitStatus exitStatus = scanProcess.exitStatus();
+    scanProcess.close();
+    if(exitStatus == QProcess::CrashExit){
+        if(!lastScannedPlugin.isEmpty()){
+            emit badPluginDetected(lastScannedPlugin);
         }
-        dllFile.seek(0x3c);
-        QDataStream dataStream(&dllFile);
-        dataStream.setByteOrder(QDataStream::LittleEndian);
-        qint32 peOffset;
-        dataStream >> peOffset;
-        dllFile.seek(peOffset);
-        quint32 peHead;
-        dataStream >> peHead;
-        if (peHead!=0x00004550) // "PE\0\0", little-endian
-            return 0; //"Can't find PE header"
-
-        quint16 machineType;
-        dataStream >> machineType;
-        dllFile.close();
-        return machineType;
-    }
-};
-#endif
-//++++++++++++++++++++++++++++++++++++++++++++
-
-
-//retorna nullptr se não for um plugin
-Audio::PluginDescriptor StandalonePluginFinder::getPluginDescriptor(QFileInfo f, Vst::Host* host){
-
-    try{
-        bool archIsValid = true;
-        #ifdef Q_OS_WIN
-            //qCDebug(vst) << "Testing " << f.absoluteFilePath();
-            bool isFile = f.isFile();
-            bool isLibrary = QLibrary::isLibrary(f.fileName());
-            bool isJamtabaVstPlugin = f.fileName().contains("Jamtaba");
-            if (!isFile || !isLibrary || isJamtabaVstPlugin){
-                return Audio::PluginDescriptor();//invalid descriptor
-            }
-            #ifdef _WIN64
-                archIsValid = WindowsDllArchChecker::is64Bits(f.absoluteFilePath());
-            #else
-                archIsValid = WindowsDllArchChecker::is32Bits(f.absoluteFilePath());
-            #endif
-        #else
-            //MAC
-            if(!f.isBundle() || f.completeSuffix() != "vst"){
-                return Audio::PluginDescriptor();//invalid descriptor
-            }
-        #endif
-            if(archIsValid){
-                Vst::VstPlugin plugin(host);
-                if(plugin.load(f.absoluteFilePath())){
-                    QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
-                    return Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
-                }
-            }
-    }
-    catch(...){
-        qCritical() << "não carregou " << f.absoluteFilePath();
-    }
-    return Audio::PluginDescriptor();//invalid descriptor
-}
-
-void StandalonePluginFinder::run(QStringList blackList){
-    emit scanStarted();
-
-    for(QString scanFolder : scanFolders){
-        QDirIterator folderIterator(scanFolder, QDirIterator::Subdirectories);
-        while (folderIterator.hasNext()) {
-            folderIterator.next();//point to next file inside current folder
-            QFileInfo pluginFileInfo (folderIterator.filePath());
-            if(pluginFileInfo.isFile()){
-                qCDebug(jtStandalonePluginFinder) << "Scanning " << pluginFileInfo.absoluteFilePath();
-                if(!blackList.contains(pluginFileInfo.absoluteFilePath())){
-                    emit pluginScanStarted(pluginFileInfo.absoluteFilePath());
-
-                    const Audio::PluginDescriptor& descriptor = getPluginDescriptor(pluginFileInfo, host);
-                    if(descriptor.isValid()){
-                        emit pluginScanFinished(descriptor.getName(), descriptor.getGroup(), descriptor.getPath());
-                    }
-                }
-                else{
-                    qCDebug(jtStandalonePluginFinder) << "\nFiltering black listed plugin:" <<pluginFileInfo.fileName() << endl;
-                }
-            }
-            QApplication::processEvents();
-            if(cancelRequested){
-                emit scanFinished();
-                return;
-            }
-        }
-
     }
     emit scanFinished();
+    lastScannedPlugin.clear();
+}
+
+
+QString StandalonePluginFinder::getVstScannerExecutablePath() const{
+    //try the same jamtaba executable path first
+    QString scannerExeName = "VstScanner.exe";//In the deploy version the VstScanner.exe and Jamtaba2.exe are in the same folder.
+    if(QFile(scannerExeName).exists()){
+        return scannerExeName;
+    }
+
+    //In dev time the exes (Jamtaba2.exe and VstScanner.exe) are in different folders...
+    QString appPath = QCoreApplication::applicationDirPath();
+    QString buildType = QLibraryInfo::isDebugBuild() ? "debug" : "release";
+    QString scannerExePath = appPath + "/../../VstScanner/"+ buildType +"/" + scannerExeName;
+    if(QFile(scannerExePath).exists()){
+        return scannerExePath;
+    }
+    qCCritical(jtStandalonePluginFinder) << "Vst scanner exeutable not found in" << scannerExePath;
+    return "";
+}
+
+void StandalonePluginFinder::on_processStandardOutputReady(){
+    QByteArray readedData = scanProcess.readAll();
+    QTextStream stream(readedData, QIODevice::ReadOnly);
+    while(!stream.atEnd()){
+        QString readedLine = stream.readLine();
+        if(!readedLine.isNull() && !readedLine.isEmpty()){
+            bool startScanning = readedLine.startsWith("JT-Scanner-Scanning:");
+            bool finishedScanning = readedLine.startsWith("JT-Scanner-Scan-Finished");
+            if(startScanning || finishedScanning){
+                QString pluginPath = readedLine.split(": ").at(1);
+                if(startScanning){
+                    lastScannedPlugin = pluginPath;//store the plugin path, if the scanner process crash we can add this bad plugin in the black list
+                    emit pluginScanStarted(pluginPath);
+                }
+                else{
+                    QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(pluginPath);
+                    emit pluginScanFinished(pluginName, "VST", pluginPath);
+                }
+            }
+        }
+    }
 
 }
 
-void StandalonePluginFinder::scan(QStringList blackList){
-    //run the VST plugins scanning in another tread to void block Qt thread
-    //If Qt main thread is block the GUI will be unresponsive, can't send or receive network data
-    this->cancelRequested = false;
-    QtConcurrent::run(this, &StandalonePluginFinder::run, blackList);
+QString StandalonePluginFinder::buildCommaSeparetedString(QStringList list) const{
+    QString folderString;
+    for (int c = 0; c < list.size(); ++c) {
+        folderString += list.at(c);
+        if(c < list.size() -1){
+            folderString += ";";
+        }
+    }
+    return folderString;
+}
 
+
+void StandalonePluginFinder::scan(QStringList blackList){
+    if(scanProcess.isOpen()){
+        qCWarning(jtStandalonePluginFinder) << "scan process is already open!";
+        return;
+    }
+
+    QString scannerExePath = getVstScannerExecutablePath();
+    if(scannerExePath.isEmpty()){
+        return;//scanner exe not found!
+    }
+
+    emit scanStarted();
+    //execute the scanner in another process to avoid crash Jamtaba process
+    QStringList parameters;
+    parameters.append(buildCommaSeparetedString(scanFolders));
+    parameters.append(buildCommaSeparetedString(blackList));
+    QObject::connect( &scanProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(on_processStandardOutputReady()));
+    QObject::connect( &scanProcess, SIGNAL(finished(int)), this, SLOT(on_processFinished()));
+    QObject::connect( &scanProcess, SIGNAL(error(QProcess::ProcessError)), this, SLOT(on_processFinished()));
+    qCDebug(jtStandalonePluginFinder) << "Starting scan process...";
+    scanProcess.start(getVstScannerExecutablePath(), parameters);
+    qCDebug(jtStandalonePluginFinder) << "Scan process started!";
 }
 
 //++++++++++++++++++++++++++++++++++
@@ -223,7 +195,13 @@ bool StandaloneMainController::isRunningAsVstPlugin() const{
 }
 
 Vst::PluginFinder* StandaloneMainController::createPluginFinder(){
-    return new StandalonePluginFinder(vstHost);
+    return new StandalonePluginFinder();
+}
+
+void StandalonePluginFinder::cancel(){
+    if(scanProcess.isOpen()){
+        scanProcess.terminate();
+    }
 }
 
 Midi::MidiDriver* StandaloneMainController::createMidiDriver(){

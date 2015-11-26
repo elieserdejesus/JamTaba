@@ -4,11 +4,11 @@
 #include <QByteArray>
 #include <cmath>
 #include <QDebug>
-#include "../audio/core/AudioDriver.h"
-#include "../audio/core/SamplesBuffer.h"
+#include "audio/core/AudioDriver.h"
+#include "audio/core/SamplesBuffer.h"
 #include <vorbis/vorbisfile.h>
 #include <QThread>
-#include "../log/logging.h"
+#include "log/logging.h"
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::VorbisDecoder()
     : internalBuffer(2, 4096),

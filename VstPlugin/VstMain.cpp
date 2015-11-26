@@ -1,7 +1,7 @@
 #include "Plugin.h"
 #include <QtGlobal>
 #include "MainControllerVST.h"
-#include "../log/logging.h"
+#include "log/logging.h"
 
 //these two lines are necessary to load the Qt windows platform plugin statically. By default
     //qt load the platform plugin from a external dll and I have an error about loading the windows platform DLL.

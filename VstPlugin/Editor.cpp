@@ -6,7 +6,7 @@
 #include <QKeyEvent>
 #include <QLineEdit>
 #include "MainWindowVST.h"
-#include "../log/logging.h"
+#include "log/logging.h"
 
 /*
     This is a callback function to hook VST host key pressing. This is a workaround to
