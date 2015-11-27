@@ -115,6 +115,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
         this->ui.actionAudioPreferences->setVisible(false);
         this->ui.actionMidiPreferences->setVisible(false);
         this->ui.actionQuit->setVisible(false);
+        this->ui.actionFullscreenMode->setVisible(false);
     }
 
     initializeWindowState();//window size, maximization ...
