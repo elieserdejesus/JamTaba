@@ -493,6 +493,7 @@ void MainWindow::loadPresetToTrack()
    int TRK_TO_CREATE=0;
    int PRST_TRK_COUNT=preset.channels.at(group).subChannels.size();
     qCInfo(jtConfigurator) << "Number of tracks in preset :"<<PRST_TRK_COUNT;
+
    if(tracksCount<PRST_TRK_COUNT)//must create a track
    {
      TRK_TO_CREATE=PRST_TRK_COUNT-tracksCount;
@@ -501,10 +502,10 @@ void MainWindow::loadPresetToTrack()
      for(int i = 0 ; i < TRK_TO_CREATE ; i ++ )
      {
          LocalTrackView* subChannelView = new LocalTrackView( mainController, i, 0, BaseTrackView::intToBoostValue(0), 0, 0);
-         controlSurfaceJTB.at(group)->addTrackView(tracks.at(group));
+         controlSurfaceJTB.at(group)->addTrackView(subChannelView);
          qCInfo(jtConfigurator) << "SubTrack added in group : "<<group;
 
-         tracksCount++;
+         //tracksCount++;
 
      }
 
