@@ -271,7 +271,8 @@ void LocalTrackGroupView::on_SavePresetClicked()
 
 void LocalTrackGroupView::on_ResetPresetClicked()
 {
-    //setToNoInput() i need or want to use that ?
+
+   //qCDebug(jtConfigurator) << "************ PRESET RESET ***********";
    mainFrame->resetGroupChannel(this);
 }
 
