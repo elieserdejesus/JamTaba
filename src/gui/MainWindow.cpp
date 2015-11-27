@@ -436,6 +436,7 @@ void MainWindow::restorePluginsList(){
 //USED BY PRESETS
 void MainWindow::loadPresetToTrack()
 {
+
 //we gonna assign each group of the console surface
 
  int groupSize=controlSurfaceJTB.size();
@@ -448,7 +449,7 @@ void MainWindow::loadPresetToTrack()
  int PRST_CH_COUNT=preset.channels.size();
  qCInfo(jtConfigurator) << "Number of groups in Preset :"<<PRST_CH_COUNT;
 
- //if there is more groupe in the preset
+ //if there is more groups in the preset
  if(groupSize<PRST_CH_COUNT)
   {
      int count=PRST_CH_COUNT-groupSize;
@@ -458,8 +459,7 @@ void MainWindow::loadPresetToTrack()
      {
          addLocalChannel(0," new Group", true);groupSize++;
          qCInfo(jtConfigurator) << "Group size is now :"<<groupSize<<" group";
-
-
+         //groupSize++;
      }
   }
 
@@ -470,8 +470,8 @@ void MainWindow::loadPresetToTrack()
 
      for(int i = 0 ; i < count ; i ++ )
      {
-         removeChannelsGroup(i);
-         --groupSize;
+         removeChannelsGroup(count);
+         groupSize--;
          qCInfo(jtConfigurator) << "Group size is now :"<<groupSize<<" group";
 
 
