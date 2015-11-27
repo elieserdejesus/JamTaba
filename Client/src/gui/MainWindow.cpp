@@ -391,6 +391,7 @@ bool MainWindow::isRunningAsVstPlugin() const{
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 void MainWindow::restorePluginsList(){
     qCInfo(jtGUI) << "Restoring plugins list...";
     Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
@@ -437,40 +438,84 @@ void MainWindow::loadPresetToTrack()
 {
 //we gonna assign each group of the console surface
 
-int groupSize=controlSurfaceJTB.size();
+ int groupSize=controlSurfaceJTB.size();
  qCInfo(jtConfigurator) << "Initializing ControlSurface...";
  qCInfo(jtConfigurator) << "Number of groups in controlSurface :"<<groupSize;
 
  QList< LocalTrackView * > 	tracks;
  Persistence::PresetsSettings preset = mainController->getSettings().getPresetSettings();
- //now the preset's track count ;
+ //now the preset's group count ;
  int PRST_CH_COUNT=preset.channels.size();
  qCInfo(jtConfigurator) << "Number of groups in Preset :"<<PRST_CH_COUNT;
 
+ //if there is more groupe in the preset
+ if(groupSize<PRST_CH_COUNT)
+  {
+     int count=PRST_CH_COUNT-groupSize;
+     qCInfo(jtConfigurator) << "Creating :"<<count<<" group";
+
+     for(int i = 0 ; i < count ; i ++ )
+     {
+         addLocalChannel(0," new Group", true);groupSize++;
+         qCInfo(jtConfigurator) << "Group size is now :"<<groupSize<<" group";
+
+
+     }
+  }
+
+ else if(groupSize>PRST_CH_COUNT)
+ {
+     int count=groupSize-PRST_CH_COUNT;
+     qCInfo(jtConfigurator) << "removing :"<<count<<" group";
+
+     for(int i = 0 ; i < count ; i ++ )
+     {
+         removeChannelsGroup(i);
+         --groupSize;
+         qCInfo(jtConfigurator) << "Group size is now :"<<groupSize<<" group";
+
+
+     }
+
+ }
  //GO inside the controlSurfaceJTB groups
  for(int group=0;group<groupSize;group++)
- {
-     //load the name of the group
+  {
+   //load the name of the group
    controlSurfaceJTB.at(group)->setGroupName(preset.channels.at(group).name);
-
    //get the tracks of that group
-   tracks=controlSurfaceJTB.at(0)->getTracks();
+   tracks=controlSurfaceJTB.at(group)->getTracks();
    int tracksCount=tracks.size();
    qCInfo(jtConfigurator) << "Loading group :"<<group;
    qCInfo(jtConfigurator) << "Number of tracks in group :"<<tracksCount;
+
+   //compute tracks to create ( if any ) in that group
+   int TRK_TO_CREATE=0;
+   int PRST_TRK_COUNT=preset.channels.at(group).subChannels.size();
+    qCInfo(jtConfigurator) << "Number of tracks in preset :"<<PRST_TRK_COUNT;
+   if(tracksCount<PRST_TRK_COUNT)//must create a track
+   {
+     TRK_TO_CREATE=PRST_TRK_COUNT-tracksCount;
+     qCInfo(jtConfigurator) << "Number of tracks to create : "<<TRK_TO_CREATE;
+
+     for(int i = 0 ; i < TRK_TO_CREATE ; i ++ )
+     {
+         LocalTrackView* subChannelView = new LocalTrackView( mainController, i, 0, BaseTrackView::intToBoostValue(0), 0, 0);
+         controlSurfaceJTB.at(group)->addTrackView(tracks.at(group));
+         qCInfo(jtConfigurator) << "SubTrack added in group : "<<group;
+
+         tracksCount++;
+
+     }
+
+
+   }
 
    //now the preset's SUB track count ;
    //int PRST_SUB_COUNT=preset.tracks.at(index).subChannels.size();
    //qCInfo(jtConfigurator) << "Number of Sub Tracks in group :"<<PRST_SUB_COUNT;
 
-   //compute tracks to create ( if any ) in that group
-   int TRK_TO_CREATE=0;
-   if(tracksCount<PRST_CH_COUNT)//must create a track
-   {
-     TRK_TO_CREATE=PRST_CH_COUNT-tracksCount;
-     qCInfo(jtConfigurator) << "Number of tracks to create : "<<TRK_TO_CREATE;
 
-   }
 
    //assign preset to indexed tracks
    for(int index=0;index<tracksCount;index++)
@@ -493,40 +538,19 @@ int groupSize=controlSurfaceJTB.size();
          tracks.at(index)->getInputNode()->setMuteStatus(muted);
          qCInfo(jtConfigurator) << "Mute state : "<<muted<<" for"<<index;
 
+         //solo
+         //bool solo=preset.channels.at(group).subChannels.at(index).;
+         //tracks.at(index)->getInputNode()->setMuteStatus(muted);
+         //qCInfo(jtConfigurator) << "Mute state : "<<muted<<" for"<<index;
+
          //NEW FUNK getFxPanel() MADE FOR PRESETS
          //first we remove plugins
           tracks.at(index)->resetFXPanel();
           //get plugins
-          //QList<Persistence::Plugin> plugins=preset.channels.at(group).subChannels.at(index).plugins;
-         /* int pluginsCount=plugins.size();
-          for(int plugin=0;plugin<pluginsCount;plugin++)
-          {
-             tracks.at(index)->addPlugin(plugins.at(plugin).,plugins.at(plugin).bypassed);
-          }*/
-          ////////
-          //create the plugins list
-         /* foreach (Persistence::Plugin plugin,preset.channels.at(group).subChannels.at(index).plugins)
-          {
-              QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
-              Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path );
-              Audio::Plugin* pluginInstance = mainController->addPlugin(tracks.at(index)->getInputIndex(), descriptor);
-              if(pluginInstance){
-                  try{
-                      pluginInstance->restoreFromSerializedData( plugin.data);
-                  }
-                  catch(...){
-                      qWarning() << "Exception restoring " << pluginInstance->getName();
-                  }
 
-                 tracks.at(index)->addPlugin(pluginInstance, plugin.bypassed);
-              }
-              QApplication::processEvents();
 
-              //PluginLoader* loader = new PluginLoader(mainController, plugin, subChannelView);
-              //loader->load();
-          }*/
-        //must skip a track or create new?
-        if(tracksCount>PRST_CH_COUNT && index==PRST_CH_COUNT )break;
+        //if(tracksCount>PRST_CH_COUNT && index==PRST_CH_COUNT )break;
+
        }
 
  }
@@ -1016,6 +1040,7 @@ MainWindow::~MainWindow()
     setParent(nullptr);
     if(mainController){
         mainController->saveLastUserSettings(getInputsSettings());
+
     }
 
 
