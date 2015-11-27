@@ -541,6 +541,7 @@ tracksCount=tracks.size();
    for(int index=0;index<tracksCount;index++)
        {
          //gain
+         qCInfo(jtConfigurator) << "<<<<<<<<<<<<<<<<<<<<";
          float gain=preset.channels.at(group).subChannels.at(index).gain;
          tracks.at(index)->getInputNode()->setGain(gain);
          qCInfo(jtConfigurator) << "Track"<<index<<" gain : "<<gain<<" for"<<index;
