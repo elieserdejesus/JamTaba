@@ -24,7 +24,6 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
     QObject::connect(xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
 
     xmitButton->setChecked(true);
-
 }
 
 LocalTrackGroupView::~LocalTrackGroupView()
@@ -117,13 +116,16 @@ bool LocalTrackGroupView::eventFilter(QObject *target, QEvent *event){
 void LocalTrackGroupView::on_toolButtonClicked(){
     QMenu menu;
 
-    QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
+
     //Presets
     QAction* addPresetActionSave = menu.addAction(QIcon(":/images/more.png"), "Save preset");
     addPresetActionSave->setDisabled(true);// so we can merge to master without confusion for the user until it works
     QAction* addPresetActionLoad = menu.addAction(QIcon(":/images/more.png"), "Load preset");
     addPresetActionLoad->setDisabled(true);// so we can merge to master without confusion for the user until it works
 
+    menu.addSeparator();
+
+    QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
     QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(on_addChannelClicked()));
     addChannelAction->setEnabled(mainFrame->getChannelGroupsCount() < 2);//at this moment users can't create more channels
     if(mainFrame->getChannelGroupsCount() > 1){
