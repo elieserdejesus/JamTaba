@@ -440,6 +440,8 @@ void MainWindow::loadPresetToTrack()
 //we gonna assign each group of the console surface
 
  int groupSize=controlSurfaceJTB.size();
+ qCInfo(jtConfigurator) << "***********************************";
+
  qCInfo(jtConfigurator) << "Initializing ControlSurface...";
  qCInfo(jtConfigurator) << "Number of groups in controlSurface :"<<groupSize;
 
@@ -478,7 +480,8 @@ void MainWindow::loadPresetToTrack()
      }
 
  }
- //GO inside the controlSurfaceJTB groups
+
+ //LOOP inside the controlSurfaceJTB groups
  for(int group=0;group<groupSize;group++)
   {
    //load the name of the group
@@ -494,6 +497,7 @@ void MainWindow::loadPresetToTrack()
    int PRST_TRK_COUNT=preset.channels.at(group).subChannels.size();
     qCInfo(jtConfigurator) << "Number of tracks in preset :"<<PRST_TRK_COUNT;
 
+    //ADD OR DELETE TRACKS
    if(tracksCount<PRST_TRK_COUNT)//must create a track
    {
      TRK_TO_CREATE=PRST_TRK_COUNT-tracksCount;
@@ -508,8 +512,20 @@ void MainWindow::loadPresetToTrack()
          //tracksCount++;
 
      }
+   }
+   else if(tracksCount>PRST_TRK_COUNT)//must delete a track
+   {
+     TRK_TO_CREATE=tracksCount-PRST_TRK_COUNT;
+     qCInfo(jtConfigurator) << "Number of tracks to delete : "<<TRK_TO_CREATE;
 
+     for(int i = 0 ; i < TRK_TO_CREATE ; i ++ )
+     {
+        controlSurfaceJTB.at(group)->removeTrackView(TRK_TO_CREATE-i);
+         qCInfo(jtConfigurator) << "SubTrack removed in group : "<<group;
 
+         //tracksCount++;
+
+     }
    }
 
    //now the preset's SUB track count ;
@@ -555,7 +571,7 @@ void MainWindow::loadPresetToTrack()
        }
 
  }
-
+ qCInfo(jtConfigurator) << "***********************************";
 }
 
 void MainWindow::initializeLocalInputChannels(){
