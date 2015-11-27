@@ -11,6 +11,8 @@
 #include <QMenu>
 #include <QToolButton>
 
+#include "../log/logging.h"
+
 const QString LocalTrackView::MIDI_ICON = ":/images/input_midi.png";
 const QString LocalTrackView::MONO_ICON = ":/images/input_mono.png";
 const QString LocalTrackView::STEREO_ICON = ":/images/input_stereo.png";

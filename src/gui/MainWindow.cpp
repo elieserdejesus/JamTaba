@@ -41,7 +41,7 @@
 #include "../audio/RoomStreamerNode.h"
 #include "UserNameDialog.h"
 #include "../log/logging.h"
-#include <QShortcut>
+//#include <QShortcut>
 
 using namespace Audio;
 using namespace Persistence;
@@ -440,7 +440,7 @@ void MainWindow::loadPresetToTrack()
 //we gonna assign each group of the console surface
 
  int groupSize=controlSurfaceJTB.size();
- qCInfo(jtConfigurator) << "***********************************";
+ qCDebug(jtConfigurator) << "************PRESET LOADING ***********";
 
  qCInfo(jtConfigurator) << "Initializing ControlSurface...";
  qCInfo(jtConfigurator) << "Number of groups in controlSurface :"<<groupSize;
@@ -485,6 +485,7 @@ void MainWindow::loadPresetToTrack()
  for(int group=0;group<groupSize;group++)
   {
    //load the name of the group
+   qCInfo(jtConfigurator) << "......................................";
    controlSurfaceJTB.at(group)->setGroupName(preset.channels.at(group).name);
    //get the tracks of that group
    tracks=controlSurfaceJTB.at(group)->getTracks();
@@ -505,7 +506,8 @@ void MainWindow::loadPresetToTrack()
 
      for(int i = 0 ; i < TRK_TO_CREATE ; i ++ )
      {
-         LocalTrackView* subChannelView = new LocalTrackView( mainController, i, 0, BaseTrackView::intToBoostValue(0), 0, 0);
+         LocalTrackView* subChannelView = new LocalTrackView( mainController, i+1
+                                                              , 0, BaseTrackView::intToBoostValue(0), 0, 0);
          controlSurfaceJTB.at(group)->addTrackView(subChannelView);
          qCInfo(jtConfigurator) << "SubTrack added in group : "<<group;
 
@@ -515,15 +517,15 @@ void MainWindow::loadPresetToTrack()
    }
    else if(tracksCount>PRST_TRK_COUNT)//must delete a track
    {
-     TRK_TO_CREATE=tracksCount-PRST_TRK_COUNT;
-     qCInfo(jtConfigurator) << "Number of tracks to delete : "<<TRK_TO_CREATE;
+     int TRK_TO_DEL=tracksCount-PRST_TRK_COUNT;
+     qCInfo(jtConfigurator) << "Number of tracks to delete : "<<TRK_TO_DEL;
 
-     for(int i = 0 ; i < TRK_TO_CREATE ; i ++ )
+     for(int i = 0 ; i < TRK_TO_DEL ; i ++ )
      {
-        controlSurfaceJTB.at(group)->removeTrackView(TRK_TO_CREATE-i);
+        controlSurfaceJTB.at(group)->removeTrackView(TRK_TO_DEL);
          qCInfo(jtConfigurator) << "SubTrack removed in group : "<<group;
 
-         //tracksCount++;
+         //tracksCount--;
 
      }
    }
@@ -533,27 +535,28 @@ void MainWindow::loadPresetToTrack()
    //qCInfo(jtConfigurator) << "Number of Sub Tracks in group :"<<PRST_SUB_COUNT;
 
 
-
+tracks=controlSurfaceJTB.at(group)->getTracks();
+tracksCount=tracks.size();
    //assign preset to indexed tracks
    for(int index=0;index<tracksCount;index++)
        {
          //gain
          float gain=preset.channels.at(group).subChannels.at(index).gain;
          tracks.at(index)->getInputNode()->setGain(gain);
-         qCInfo(jtConfigurator) << "Track gain : "<<gain<<" for"<<index;
+         qCInfo(jtConfigurator) << "Track"<<index<<" gain : "<<gain<<" for"<<index;
          //pan
          float pan=preset.channels.at(group).subChannels.at(index).pan;
          tracks.at(index)->getInputNode()->setPan(pan);
-         qCInfo(jtConfigurator) << "Track Pan : "<<pan<<" for"<<index;
+         qCInfo(jtConfigurator) << "Track "<<index<<"Pan : "<<pan<<" for"<<index;
          //boost
          int boost=preset.channels.at(group).subChannels.at(index).boost;
          BaseTrackView::BoostValue boostValue = BaseTrackView::intToBoostValue(boost);
          tracks.at(index)->initializeBoostButtons(boostValue);
-         qCInfo(jtConfigurator) << "Boost index : "<<boostValue<<" for"<<index;
+         qCInfo(jtConfigurator) << "Boost "<<index<<"index : "<<boostValue<<" for"<<index;
          //mute
          bool muted=preset.channels.at(group).subChannels.at(index).muted;
          tracks.at(index)->getInputNode()->setMuteStatus(muted);
-         qCInfo(jtConfigurator) << "Mute state : "<<muted<<" for"<<index;
+         qCInfo(jtConfigurator) << "Mute "<<index<<"state : "<<muted<<" for"<<index;
 
          //solo
          //bool solo=preset.channels.at(group).subChannels.at(index).;
@@ -1378,6 +1381,7 @@ void MainWindow::resetGroupChannel(LocalTrackGroupView *group)
 {
     if(getChannelGroupsCount()<1)
         return;
+    qCInfo(jtConfigurator) << "!!!!!!!!!!!!!!!!!!!!!!!!!!!";
     qCInfo(jtConfigurator) << "Reseting local inputs...";
     Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
     QList<LocalTrackView*> trackViews = group->getTracks();
