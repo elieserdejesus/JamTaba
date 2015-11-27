@@ -96,6 +96,12 @@ void LocalTrackView::init(int channelIndex, float
 }
 
 //ADDED FOR PRESETS
+
+void  LocalTrackView::loadFXPanel()
+{
+    //todo
+}
+
 void  LocalTrackView::resetFXPanel()
 {
    if(fxPanel)
