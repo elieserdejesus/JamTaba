@@ -122,7 +122,7 @@ QDir Configurator::getPresetsDir() const
 }
 
 
-QStringList  Configurator::getPresetFilesNames()
+QStringList  Configurator::getPresetFilesNames(bool fullpath)
 {
     QStringList filesPaths;
     QDir dir=getPresetsDir();
@@ -133,7 +133,11 @@ QStringList  Configurator::getPresetFilesNames()
            //if(item.isDir())
            //    qDebug() << "Dir: " << item.absoluteFilePath();
            if(item.isFile())
-           {   filesPaths.append(item.absoluteFilePath());
+           {
+               if(fullpath)
+                   filesPaths.append(item.absoluteFilePath());
+               else
+               filesPaths.append(item.fileName());
                qDebug(jtConfigurator) << "File Found: " << item.absoluteFilePath();
 
            }
@@ -301,7 +305,7 @@ QString Configurator::getPresetPath(QString JsonFile)
     //SEARCH IN THE DIR
     //USE CONFIGURATOR FOR FILES STUFF
     path=presetDir.absoluteFilePath(JsonFile);
-    QStringList list=getPresetFilesNames();
+    QStringList list=getPresetFilesNames(true);
     foreach(QString item, list )
        {
         if(item.contains(path))

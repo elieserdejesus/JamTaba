@@ -191,7 +191,7 @@ public:
     inline PresetsSettings getPresetSettings() const{return presetSettings;}
     void savePresets(InputsSettings inputsSettings,QString name);
     bool writePresetFile(QList<SettingsObject *> sections,QString name);// io ops ...
-    void loadPresets(QString name);
+    void loadPreset(QString name);
     bool readPresetFile(QList<Persistence::SettingsObject*> sections,QString name);// io ops ...
 
 

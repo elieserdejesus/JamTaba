@@ -118,6 +118,7 @@ void LocalTrackGroupView::on_toolButtonClicked()
 {
     QMenu menu;
 
+
     //PRESETS-----------------------------
 
     //LOAD - using a submenu to list stored presets
@@ -126,15 +127,22 @@ void LocalTrackGroupView::on_toolButtonClicked()
     loadPresetsSubmenu->setDisabled(false);// so we can merge to master without confusion for the user until it works
 
     //adding a menu action for each stored preset
-    QStringList presetsNames; //for test only. I suggest ask mainController about a list of Preset
-    presetsNames.append("Preset 1");
-    presetsNames.append("Preset 2");
-    presetsNames.append("Preset 3");
-    foreach (QString presetName, presetsNames) {
+    Configurator *cfg= Configurator::getInstance();
+    QStringList presetsNames=cfg->getPresetFilesNames(false);
+    foreach(QString name,presetsNames )
+    {
+        presetsNames.append(name);
+        QAction* presetAction = loadPresetsSubmenu->addAction(name);
+        presetAction->setData(name);//putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
+        QObject::connect(presetAction, SIGNAL(triggered(bool)), this, SLOT(on_LoadPresetClicked()));
+
+    }
+
+   /* foreach (QString presetName, presetsNames) {
         QAction* presetAction = loadPresetsSubmenu->addAction(presetName);
         presetAction->setData(presetName);//putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
         QObject::connect(presetAction, SIGNAL(triggered(bool)), this, SLOT(on_LoadPresetClicked()));
-    }
+    }*/
     menu.addMenu(loadPresetsSubmenu);
 
     //SAVE

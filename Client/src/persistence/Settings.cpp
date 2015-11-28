@@ -700,8 +700,10 @@ bool Settings::readPresetFile(QList<Persistence::SettingsObject*> sections,QStri
 
     return false;
 }
-void Settings::loadPresets(QString name)
+//Using the new class presetSettings
+void Settings::loadPreset(QString name)
 {
+
     presetSettings.channels.clear();//very important to avoid a stack...
     QList<Persistence::SettingsObject*> sections;
     sections.append(&presetSettings);
