@@ -1116,7 +1116,7 @@ void MainWindow::onScanPluginsFinished(bool finishedWithoutError){
 
 void MainWindow::onBadPluginDetected(QString pluginPath){
     QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(pluginPath);
-    QWidget* parent = pluginScanDialog ? (QWidget*)pluginScanDialog.data() : (QWidget*)this;
+    QWidget* parent = !pluginScanDialog.isNull() ? (QWidget*)pluginScanDialog.data() : (QWidget*)this;
     QMessageBox::warning(parent, "Plugin Error!", pluginName + " can't be loaded and will be black listed!");
     mainController->addBlackVstToSettings(pluginPath);
 }

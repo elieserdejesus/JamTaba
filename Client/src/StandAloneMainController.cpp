@@ -47,7 +47,7 @@ void StandalonePluginFinder::on_processFinished(){
     scanProcess.close();
     bool exitingWithoutError = exitStatus == QProcess::NormalExit;
     emit scanFinished(exitingWithoutError);
-    QString lastScanned = lastScannedPlugin;
+    QString lastScanned(lastScannedPlugin);
     lastScannedPlugin.clear();
     if(!exitingWithoutError){
         if(!lastScanned.isEmpty()){
