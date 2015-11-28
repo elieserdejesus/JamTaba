@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <cmath>
 #include <QMutexLocker>
-#include "../log/logging.h"
+#include "log/logging.h"
 
 using namespace Audio;
 

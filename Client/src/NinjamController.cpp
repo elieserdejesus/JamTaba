@@ -7,11 +7,11 @@
 #include "ninjam/Server.h"
 #include "audio/core/AudioNode.h"
 #include "audio/core/SamplesBuffer.h"
-#include "../NinjamRoomWindow.h"
-#include "../audio/NinjamTrackNode.h"
-#include "../persistence/Settings.h"
-#include "../audio/MetronomeTrackNode.h"
-#include "../audio/vst/vsthost.h"
+#include "gui/NinjamRoomWindow.h"
+#include "audio/NinjamTrackNode.h"
+#include "persistence/Settings.h"
+#include "audio/MetronomeTrackNode.h"
+#include "audio/vst/vsthost.h"
 
 #include <cmath>
 #include <cassert>
@@ -22,7 +22,7 @@
 #include "audio/samplesbufferrecorder.h"
 #include "Utils.h"
 #include <QWaitCondition>
-#include "../log/logging.h"
+#include "log/logging.h"
 
 
 using namespace Controller;

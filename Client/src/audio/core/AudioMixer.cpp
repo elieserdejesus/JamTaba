@@ -5,9 +5,9 @@
 #if _WIN32
     #include "../vst/vstplugin.h"
 #endif
-#include "../midi/MidiDriver.h"
+#include "midi/MidiDriver.h"
 #include <QMutexLocker>
-#include "../log/logging.h"
+#include "log/logging.h"
 
 using namespace Audio;
 

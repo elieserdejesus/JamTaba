@@ -1,5 +1,5 @@
 #include <vorbis/vorbisfile.h>
-#include "../audio/core/SamplesBuffer.h"
+#include "audio/core/SamplesBuffer.h"
 #include <QByteArray>
 
 #ifndef VORBIS_DECODER_H

@@ -1,13 +1,12 @@
-
-#include "vsthost.h"
+#include "VstHost.h"
 #include "aeffectx.h"
-#include "../midi/MidiDriver.h"
+#include "midi/MidiDriver.h"
 #include <QDebug>
 #include <QDateTime>
 #include <QApplication>
 #include <QMap>
 #include <cmath>
-#include "../log/logging.h"
+#include "log/logging.h"
 
 using namespace Vst;
 

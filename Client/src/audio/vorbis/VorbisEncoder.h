@@ -2,7 +2,7 @@
 #define VORBISENCODER_H
 
 #include "vorbis/vorbisenc.h"
-#include "../audio/core/SamplesBuffer.h"
+#include "audio/core/SamplesBuffer.h"
 #include <QByteArray>
 
 class VorbisEncoder

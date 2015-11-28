@@ -74,6 +74,9 @@ public:
     const SamplesBuffer& getOutputBuffer() const {return *outputBuffer;}
 
     virtual bool canBeStarted() const = 0;
+
+    virtual bool hasControlPanel() const = 0; //ASIO drivers can open control panels to change audio device parameters
+    virtual void openControlPanel(void* mainWindowHandle) = 0;
 protected:
     ChannelRange globalInputRange;//the range of input channels selected in audio preferences menu
     ChannelRange globalOutputRange;//the range of output channels selected in audio preferences menu
@@ -112,6 +115,8 @@ public:
     inline void setAudioDeviceIndex(int ){}
     inline int getDevicesCount() const{return 1;}
     inline bool canBeStarted() const{return true;}
+    inline bool hasControlPanel() const{return false;}
+    inline void openControlPanel(void* ){}
 };
 
 }

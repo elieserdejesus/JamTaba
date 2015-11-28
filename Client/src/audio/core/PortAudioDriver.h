@@ -9,12 +9,7 @@ namespace Audio{
 class PortAudioDriver : public AudioDriver
 {
 public:
-#ifdef Q_OS_WIN
     PortAudioDriver(Controller::MainController* mainController, int audioDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize);
-#endif
-#ifdef Q_OS_MACX
-    PortAudioDriver(Controller::MainController* mainController, int sampleRate, int  bufferSize);
-#endif
     virtual ~PortAudioDriver();
 
 	virtual void start();
@@ -38,6 +33,9 @@ public:
 
     virtual bool canBeStarted() const;
 
+    virtual bool hasControlPanel() const;
+    virtual void openControlPanel(void* mainWindowHandle);
+
     //portaudio callback function
     friend int portaudioCallBack(const void *inputBuffer, void *outputBuffer,
         unsigned long framesPerBuffer,
@@ -52,6 +50,10 @@ private:
 
     void changeInputSelection(int firstInputChannelIndex, int inputChannelCount);
 
+    void configureHostSpecificInputParameters(PaStreamParameters& inputParameters);
+    void configureHostSpecificOutputParameters(PaStreamParameters& outputParameters);
+
+    void releaseHostSpecificParameters(const PaStreamParameters& inputParameters, const PaStreamParameters& outputParameters);
 };
 
 

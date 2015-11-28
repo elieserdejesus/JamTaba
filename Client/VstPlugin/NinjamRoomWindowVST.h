@@ -1,7 +1,7 @@
 #ifndef NINJAMROOMWINDOWVST_H
 #define NINJAMROOMWINDOWVST_H
 
-#include "NinjamRoomWindow.h"
+#include "gui/NinjamRoomWindow.h"
 
 class NinjamRoomWindowVST : public NinjamRoomWindow
 {

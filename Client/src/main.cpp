@@ -3,14 +3,25 @@
 #include <QDir>
 #include "StandAloneMainController.h"
 #include "persistence/Settings.h"
-#include "MainWindowStandalone.h"
+#include "gui/MainWindowStandalone.h"
 #include "log/logging.h"
 #include "Libs/SingleApplication/singleapplication.h"
 #include "configurator.h"
 
+#include "StandAloneMainController.h"
+
 int main(int argc, char* args[] ){
 
-    QApplication::setApplicationName("Jomtobo");
+
+//    QApplication app(argc, args);
+//    StandalonePluginFinder finder;
+//    finder.addFolderToScan("C:/VstPlugins");
+//    finder.scan(QStringList());
+//    return app.exec();
+
+
+    QApplication::setApplicationName("Jamtaba 2");
+
     QApplication::setApplicationVersion(APP_VERSION);
 
     //start the configurator

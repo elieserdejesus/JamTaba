@@ -7,21 +7,21 @@
 #include "audio/core/AudioPeak.h"
 
 #include "geo/IpToLocationResolver.h"
-#include "../ninjam/Server.h"
-#include "../loginserver/LoginService.h"
-#include "../audio/core/AudioDriver.h"
-#include "../persistence/Settings.h"
+#include "ninjam/Server.h"
+#include "loginserver/LoginService.h"
+#include "audio/core/AudioDriver.h"
+#include "persistence/Settings.h"
 
-#include "../audio/samplesbufferrecorder.h"
+#include "audio/samplesbufferrecorder.h"
 
-#include "../recorder/JamRecorder.h"
+#include "recorder/JamRecorder.h"
 
 #include "audio/core/plugins.h"
 #include "audio/vst/PluginFinder.h"
 
 #include "audio/core/AudioMixer.h"
 #include "midi/MidiDriver.h"
-#include  "audio/RoomStreamerNode.h"
+#include "audio/RoomStreamerNode.h"
 
 #include "ninjam/Service.h"
 

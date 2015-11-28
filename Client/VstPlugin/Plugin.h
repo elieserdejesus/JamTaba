@@ -10,8 +10,8 @@
 #include "audioeffectx.h"
 #include <QLabel>
 #include <QSlider>
-#include "../MainController.h"
-#include "MainWindow.h"
+#include "MainController.h"
+#include "gui/MainWindow.h"
 
 #include "aeffectx.h"
 

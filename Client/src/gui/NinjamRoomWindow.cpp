@@ -6,15 +6,15 @@
 #include <QDebug>
 #include <QDateTime>
 
-#include "../ninjam/User.h"
-#include "../ninjam/Server.h"
+#include "ninjam/User.h"
+#include "ninjam/Server.h"
 
-#include "../audio/MetronomeTrackNode.h"
-#include "../audio/core/AudioDriver.h"
+#include "audio/MetronomeTrackNode.h"
+#include "audio/core/AudioDriver.h"
 
-#include "../NinjamController.h"
-#include "../MainController.h"
-#include "../ninjam/Service.h"
+#include "NinjamController.h"
+#include "MainController.h"
+#include "ninjam/Service.h"
 
 #include "chords/ChordsPanel.h"
 #include "chords/ChordProgression.h"
@@ -28,7 +28,7 @@
 
 #include <QMessageBox>
 
-#include "../log/logging.h"
+#include "log/logging.h"
 
 //+++++++++++++++++++++++++
 NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo, Controller::MainController *mainController) :

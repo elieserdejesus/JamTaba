@@ -1,14 +1,11 @@
 #include "PluginFinder.h"
+#include "audio/core/PluginDescriptor.h"
 
 using namespace Vst;
 
 PluginFinder::PluginFinder()
-    :cancelRequested(false){
+{
 
-}
-
-void PluginFinder::cancel(){
-    this->cancelRequested = true;
 }
 
 void PluginFinder::clearScanFolders(){

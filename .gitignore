@@ -11,6 +11,8 @@ deploy-win64/
 *.zip
 VST_SDK/*
 Client/installers/windows/*.exe
+.DS_Store
+Client/.DS_Store
 
 Server/build/
 Server/dist
