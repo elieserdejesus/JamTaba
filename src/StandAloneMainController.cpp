@@ -45,13 +45,15 @@ Audio::PluginDescriptor StandalonePluginFinder::getPluginDescriptor(QFileInfo f)
 void StandalonePluginFinder::on_processFinished(){
     QProcess::ExitStatus exitStatus = scanProcess.exitStatus();
     scanProcess.close();
-    if(exitStatus == QProcess::CrashExit){
-        if(!lastScannedPlugin.isEmpty()){
-            emit badPluginDetected(lastScannedPlugin);
+    bool exitingWithoutError = exitStatus == QProcess::NormalExit;
+    emit scanFinished(exitingWithoutError);
+    QString lastScanned = lastScannedPlugin;
+    lastScannedPlugin.clear();
+    if(!exitingWithoutError){
+        if(!lastScanned.isEmpty()){
+            emit badPluginDetected(lastScanned);
         }
     }
-    emit scanFinished();
-    lastScannedPlugin.clear();
 }
 
 
@@ -129,6 +131,7 @@ void StandalonePluginFinder::scan(QStringList blackList){
     QObject::connect( &scanProcess, SIGNAL(finished(int)), this, SLOT(on_processFinished()));
     QObject::connect( &scanProcess, SIGNAL(error(QProcess::ProcessError)), this, SLOT(on_processFinished()));
     qCDebug(jtStandalonePluginFinder) << "Starting scan process...";
+    //scanProcess.setProcessChannelMode(QProcess::ForwardedChannels);
     scanProcess.start(getVstScannerExecutablePath(), parameters);
     qCDebug(jtStandalonePluginFinder) << "Scan process started!";
 }

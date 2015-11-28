@@ -130,7 +130,7 @@ void MainWindow::initializePluginFinder(){
     Vst::PluginFinder* pluginFinder = mainController->getPluginFinder();
     if(pluginFinder){
         QObject::connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(onScanPluginsStarted()));
-        QObject::connect(pluginFinder, SIGNAL(scanFinished()), this, SLOT(onScanPluginsFinished()));
+        QObject::connect(pluginFinder, SIGNAL(scanFinished(bool)), this, SLOT(onScanPluginsFinished(bool)));
         QObject::connect(pluginFinder, SIGNAL(badPluginDetected(QString)), this, SLOT(onBadPluginDetected(QString)));
         QObject::connect(pluginFinder, SIGNAL(pluginScanFinished(QString,QString,QString)), this, SLOT(onPluginFounded(QString,QString,QString)));
         QObject::connect(pluginFinder, SIGNAL(pluginScanStarted(QString)), this, SLOT(onScanPluginsStarted(QString)));
@@ -1105,7 +1105,8 @@ void MainWindow::on_pluginFinderDialogCanceled(){
     pluginScanDialog.reset();//reset to null pointer
 }
 
-void MainWindow::onScanPluginsFinished(){
+void MainWindow::onScanPluginsFinished(bool finishedWithoutError){
+    Q_UNUSED(finishedWithoutError);
     if(pluginScanDialog){
         pluginScanDialog->close();
     }
