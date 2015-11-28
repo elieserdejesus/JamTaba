@@ -78,5 +78,5 @@ Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(QFileInfo f){
 
 bool VstPluginScanner::isVstPluginFile(QString path){
     QFileInfo file(path);
-    return file.isFile() && QLibrary.isLibrary(path);
+    return file.isFile() && QLibrary::isLibrary(path);
 }
