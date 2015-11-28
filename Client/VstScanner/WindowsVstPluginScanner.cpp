@@ -62,8 +62,12 @@ Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(QFileInfo f){
         archIsValid = WindowsDllArchChecker::is32Bits(f.absoluteFilePath());
 #endif
         if(archIsValid){
-            if( Vst::VstLoader::load(f.absoluteFilePath(), Vst::Host::getInstance()) ){
+            AEffect* effect = Vst::VstLoader::load(f.absoluteFilePath(), Vst::Host::getInstance());
+            if( effect ){
                 QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
+                Vst::VstLoader::unload(effect);//delete the AEffect instance
+                QLibrary lib(f.absoluteFilePath());
+                lib.unload();//try unload the DLL to avoid consume memory resources
                 return Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
             }
         }

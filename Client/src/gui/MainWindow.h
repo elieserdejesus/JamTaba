@@ -138,7 +138,7 @@ protected slots:
 
     //plugin finder
     void onScanPluginsStarted();
-    void onScanPluginsFinished();
+    void onScanPluginsFinished(bool finishedWithoutError);
     void onPluginFounded(QString name, QString group, QString path);
     void onScanPluginsStarted(QString pluginPath);
     void onBadPluginDetected(QString pluginPath);

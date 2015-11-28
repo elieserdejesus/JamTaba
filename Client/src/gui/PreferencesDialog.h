@@ -41,7 +41,7 @@ private slots:
 
     void on_recordingCheckBox_clicked();
 
-    void on_pluginsScanFinished();
+    void on_pluginsScanFinished(bool);
 
     void on_ButtonVst_Refresh_clicked();
 

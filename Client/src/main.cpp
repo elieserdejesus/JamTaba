@@ -8,17 +8,7 @@
 #include "Libs/SingleApplication/singleapplication.h"
 #include "configurator.h"
 
-#include "StandAloneMainController.h"
-
 int main(int argc, char* args[] ){
-
-//    QApplication app(argc, args);
-//    StandalonePluginFinder finder;
-//    finder.addFolderToScan("C:/VstPlugins");
-//    finder.scan(QStringList());
-//    return app.exec();
-
-
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
 
