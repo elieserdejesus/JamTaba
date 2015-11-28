@@ -134,7 +134,7 @@ void LocalTrackGroupView::on_toolButtonClicked()
         presetsNames.append(name);
         QAction* presetAction = loadPresetsSubmenu->addAction(name);
         presetAction->setData(name);//putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
-        QObject::connect(presetAction, SIGNAL(triggered(bool)), this, SLOT(on_LoadPresetClicked()));
+        QObject::connect(loadPresetsSubmenu, SIGNAL(triggered(QAction*)), this, SLOT(on_LoadPresetClicked(QAction*)));
 
     }
 
@@ -264,16 +264,23 @@ void LocalTrackGroupView::on_removeChannelClicked(){
 }
 
 //PRESETS
-void LocalTrackGroupView::on_LoadPresetClicked()
+void LocalTrackGroupView::on_LoadPresetClicked(QAction* a)
 {
-    mainFrame->getMainController()->loadPresets("PresetDefault.json");
+    mainFrame->getMainController()->loadPresets(a->data().toString());
     mainFrame->loadPresetToTrack();//that name is so good
 }
 
+#include <QInputDialog>
 void LocalTrackGroupView::on_SavePresetClicked()
 {
-
-    mainFrame->getMainController()->savePresets(mainFrame->getInputsSettings(),"PresetDefault.json");
+    bool ok;
+        QString text = QInputDialog::getText(this, tr("Save the preset ..."),
+                                             tr("Preset name:"), QLineEdit::Normal,
+                                             QDir::home().dirName(), &ok);
+        if (ok && !text.isEmpty())
+        {text.append(".json");
+        mainFrame->getMainController()->savePresets(mainFrame->getInputsSettings(),text);
+        }
 
 }
 
@@ -282,6 +289,15 @@ void LocalTrackGroupView::on_ResetPresetClicked()
 
    //qCDebug(jtConfigurator) << "************ PRESET RESET ***********";
    mainFrame->resetGroupChannel(this);
+}
+
+void LocalTrackGroupView::on_presetMenuActionClicked()
+{
+bool ok;
+    QString text = QInputDialog::getText(this, tr("**************"),
+                                         tr("User name:"), QLineEdit::Normal,
+                                         QDir::home().dirName(), &ok);
+
 }
 
 //+++++++++++++++++++++++++++++

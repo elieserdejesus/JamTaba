@@ -75,9 +75,10 @@ private slots:
 
 
     //PRESETS
-    void on_LoadPresetClicked();
+    void on_LoadPresetClicked(QAction *a);
     void on_SavePresetClicked();
     void on_ResetPresetClicked();
+    void on_presetMenuActionClicked();
 
 
     //xmit
