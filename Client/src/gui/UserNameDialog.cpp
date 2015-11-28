@@ -9,7 +9,8 @@ UserNameDialog::UserNameDialog(QWidget *parent, QString lastUserName) :
     ui->setupUi(this);
     ui->lineEdit->setText(lastUserName);
     QObject::connect(ui->lineEdit, SIGNAL(textEdited(QString)), this, SLOT(on_textEdited()));
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    //setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    setWindowFlags(Qt::Popup);
 }
 
 void UserNameDialog::on_textEdited(){
