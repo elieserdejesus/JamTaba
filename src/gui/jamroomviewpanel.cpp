@@ -14,7 +14,7 @@ JamRoomViewPanel::JamRoomViewPanel(Login::RoomInfo roomInfo, QWidget* parent, Co
 {
     ui->setupUi(this);
     initialize(roomInfo);
-
+    //setWindowFlags(Qt::Popup);
     ui->wavePeakPanel->setEnabled(false);//is enable when user click in listen button
 }
 
@@ -141,11 +141,14 @@ void JamRoomViewPanel::clearPeaks(bool resetListenButton){
     }
 }
 
-void JamRoomViewPanel::on_buttonListen_clicked(){
+void JamRoomViewPanel::on_buttonListen_clicked()
+{
     if(ui->buttonListen->isChecked()){
+        setWindowFlags(Qt::Popup);
         emit startingListeningTheRoom(roomInfo);
     }
     else{
+         setWindowFlags(Qt::SplashScreen);
         emit finishingListeningTheRoom(roomInfo);
     }
     ui->wavePeakPanel->setEnabled(ui->buttonListen->isChecked());
