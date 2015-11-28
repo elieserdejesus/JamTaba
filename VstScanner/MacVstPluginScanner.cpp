@@ -10,11 +10,15 @@
 Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(QFileInfo f){
 
     try{
-        if(!f.isBundle() || f.completeSuffix() != "vst"){
+        if(!isVstPluginFile(f.absoluteFilePath())){
             return Audio::PluginDescriptor();//invalid descriptor
         }
-        if( Vst::VstLoader::load(f.absoluteFilePath(), Vst::Host::getInstance()) ){
+        AEffect* effect = Vst::VstLoader::load(f.absoluteFilePath(), Vst::Host::getInstance());
+        if( effect ){
             QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
+            Vst::VstLoader::unload(effect);//delete the AEffect instance
+            QLibrary lib(f.absoluteFilePath());
+            lib.unload();//try unload the shared lib
             return Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
         }
     }
@@ -22,4 +26,12 @@ Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(QFileInfo f){
         qCritical() << "Error loading " << f.absoluteFilePath();
     }
     return Audio::PluginDescriptor();//invalid descriptor
+}
+
+bool VstPluginScanner::isVstPluginFile(QString path){
+
+    QFileInfo file(path);
+    bool testResult = file.isBundle() && file.absoluteFilePath().endsWith(".vst");
+    //qDebug() << " IsBundle:" << file.isBundle() << " endsWithVst:" << file.absoluteFilePath().endsWith(".vst") <<  path;
+    return testResult;
 }

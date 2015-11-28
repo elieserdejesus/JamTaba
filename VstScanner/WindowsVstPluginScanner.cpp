@@ -50,10 +50,8 @@ Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(QFileInfo f){
 
     try{
         bool archIsValid = true;
-        bool isFile = f.isFile();
-        bool isLibrary = QLibrary::isLibrary(f.fileName());
         bool isJamtabaVstPlugin = f.fileName().contains("Jamtaba");
-        if (!isFile || !isLibrary || isJamtabaVstPlugin){
+        if (!isVstPluginFile(f.absoluteFilePath()) || isJamtabaVstPlugin){
             return Audio::PluginDescriptor();//invalid descriptor
         }
 #ifdef _WIN64
@@ -76,4 +74,9 @@ Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(QFileInfo f){
         qCritical() << "Error loading " << f.absoluteFilePath();
     }
     return Audio::PluginDescriptor();//invalid descriptor
+}
+
+bool VstPluginScanner::isVstPluginFile(QString path){
+    QFileInfo file(path);
+    return file.isFile() && QLibrary.isLibrary(path);
 }
