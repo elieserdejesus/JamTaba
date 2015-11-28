@@ -59,7 +59,7 @@ public:
     //Presets now ....
     QDir getPresetsDir() const ;
     QString getPresetPath(QString JsonFile);//used by Settings
-    QStringList getPresetFilesNames();//all the files names in a folder
+    QStringList getPresetFilesNames(bool fullpath);//all the files names in a folder
 
 
 };

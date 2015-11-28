@@ -46,7 +46,8 @@ using namespace Controller;
 class MainController::InputTrackGroup{
 public:
     InputTrackGroup(int groupIndex, Audio::LocalInputAudioNode* firstInput)
-        :groupIndex(groupIndex), transmiting(true){
+        :groupIndex(groupIndex), transmiting(true)
+    {
         addInput(firstInput);
     }
 
@@ -777,7 +778,7 @@ void MainController::saveLastUserSettings(const Persistence::InputsSettings& inp
 
 void  MainController::loadPresets(QString name)
 {
-    settings.loadPresets(name);
+    settings.loadPreset(name);
 }
 void  MainController::savePresets(const Persistence::InputsSettings &inputsSettings,QString name)
 {
