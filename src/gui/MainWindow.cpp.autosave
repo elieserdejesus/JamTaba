@@ -567,6 +567,7 @@ tracksCount=tracks.size();
          //NEW FUNK getFxPanel() MADE FOR PRESETS
          //first we remove plugins
           tracks.at(index)->resetFXPanel();
+          
           //get plugins
           //create the plugins list
           QList<Persistence::Plugin> plugins=preset.channels.at(group).subChannels.at(index).plugins;
