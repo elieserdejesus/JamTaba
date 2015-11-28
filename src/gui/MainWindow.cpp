@@ -67,7 +67,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
 
 
-    setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
+    setWindowTitle("Jomtobo v" + QApplication::applicationVersion());
 
     initializeLoginService();
     //initializePluginFinder(); //called in derived classes
@@ -586,28 +586,53 @@ tracksCount=tracks.size();
                   }
 
                  tracks.at(index)->addPlugin(pluginInstance, plugins.at(i).bypassed);
+                 qCInfo(jtConfigurator) << "Plugin Added :"<<pluginInstance->getName()<<" in track : "<<index;
+
               }
           }
-                   /*foreach (Persistence::Plugin plugin,preset.channels.at(group).subChannels.at(index).plugins) {
-                       QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
-                       Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path );
-                       Audio::Plugin* pluginInstance = mainController->addPlugin(index, descriptor);
-                       if(pluginInstance){
-                           try{
-                               pluginInstance->restoreFromSerializedData( plugin.data);
-                           }
-                           catch(...){
-                               qWarning() << "Exception restoring " << pluginInstance->getName();
-                           }
+          if(!mainController->isRunningAsVstPlugin())
+          {
+              Persistence::Subchannel subChannel=preset.channels.at(group).subChannels.at(index);
+              //using midi
+              if(subChannel.midiDevice >= 0)
+              {
+                  qCInfo(jtConfigurator) << "\t\tSubchannel using MIDI";
+                  //check if midiDevice index is valid
+                  if(subChannel.midiDevice < mainController->getMidiDriver()->getMaxInputDevices())
+                  {
+                      qCInfo(jtConfigurator) << "\t\tMidi device index : "<<subChannel.midiDevice;
 
-                          tracks.at(index)->addPlugin(pluginInstance, plugin.bypassed);
-                       }
-                       QApplication::processEvents();
+                      mainController->setInputTrackToMIDI(tracks.at(index)->getInputIndex(), subChannel.midiDevice, subChannel.midiChannel);
+                  }
+                  else
+                  {
+                      if(mainController->getMidiDriver()->hasInputDevices())
+                      {qCInfo(jtConfigurator) << "\t\tSubchannel using default Midi ";
 
-                       //PluginLoader* loader = new PluginLoader(mainController, plugin, subChannelView);
-                       //loader->load();
-                   }*/
+                          //use the first midi device and all channels
+                          mainController->setInputTrackToMIDI(tracks.at(index)->getInputIndex(), 0, -1);
+                      }
+                      else
+                      {
+                          qCInfo(jtConfigurator) << "\t\tSubchannel using "<<subChannel.midiDevice;
 
+                          mainController->setInputTrackToNoInput(tracks.at(index)->getInputIndex());
+                      }
+                  }
+              }
+              else if(subChannel.channelsCount <= 0){
+                  qCInfo(jtConfigurator) << "\t\tsetting Subchannel to no noinput";
+                  mainController->setInputTrackToNoInput(tracks.at(index)->getInputIndex());
+              }
+              else if(subChannel.channelsCount == 1){
+                  qCInfo(jtConfigurator) << "\t\tsetting Subchannel to mono input";
+                  mainController->setInputTrackToMono(tracks.at(index)->getInputIndex(), subChannel.firstInput);
+              }
+              else{
+                  qCInfo(jtConfigurator) << "\t\tsetting Subchannel to stereo input";
+                  mainController->setInputTrackToStereo(tracks.at(index)->getInputIndex(), subChannel.firstInput);
+              }
+          }
         //if(tracksCount>PRST_CH_COUNT && index==PRST_CH_COUNT )break;
 
        }
