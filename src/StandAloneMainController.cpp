@@ -56,7 +56,7 @@ void StandalonePluginFinder::on_processFinished(){
 
 void StandalonePluginFinder::on_processError(QProcess::ProcessError error){
 
-    qCritical(jtStandalonePluginFinder) << "ERROR:" << error << scanProcess.errorString();
+    qCritical() << "ERROR:" << error << scanProcess.errorString();
     on_processFinished();
 }
 
@@ -69,6 +69,9 @@ void StandalonePluginFinder::handleProcessError(QString lastScannedPlugin){
 QString StandalonePluginFinder::getVstScannerExecutablePath() const{
     //try the same jamtaba executable path first
     QString scannerExeName = "VstScanner";//In the deploy version the VstScanner and Jamtaba2 executables are in the same folder.
+#ifdef Q_OS_WIN
+    scannerExeName += ".exe";
+#endif
     if(QFile(scannerExeName).exists()){
         return scannerExeName;
     }
@@ -132,7 +135,7 @@ void StandalonePluginFinder::scan(QStringList blackList){
 
     QString scannerExePath = getVstScannerExecutablePath();
     if(scannerExePath.isEmpty()){
-        return;//scanner exe not found!
+        return;//scanner executable not found!
     }
 
     emit scanStarted();
