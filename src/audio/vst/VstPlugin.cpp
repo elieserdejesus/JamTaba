@@ -1,7 +1,9 @@
 #include "VstPlugin.h"
 #include "aeffectx.h"
-#include "vsthost.h"
+#include "VstHost.h"
 #include <QMap>
+#include <QApplication>
+#include <QDialog>
 
 #ifdef Q_OS_WIN
     #include <windows.h>
@@ -9,22 +11,19 @@
 #endif
 
 #include <QDebug>
-#include "../audio/core/AudioDriver.h"
-#include "../audio/core/SamplesBuffer.h"
-#include "../midi/MidiDriver.h"
-#include <QDialog>
-#include <QVBoxLayout>
-#include <QDesktopWidget>
+#include "audio/core/AudioDriver.h"
+#include "audio/core/SamplesBuffer.h"
+#include "midi/MidiDriver.h"
 #include <QLibrary>
 #include <string>
 #include <locale>
-#include <QApplication>
 #include <QFileInfo>
 #include <QDir>
 #include <QThread>
 #include <QDebug>
 #include <cassert>
-#include "../log/logging.h"
+#include "log/logging.h"
+#include "VstLoader.h"
 
 using namespace Vst;
 
@@ -59,66 +58,15 @@ bool VstPlugin::load(QString path){
         return false;
     }
     loaded = false;
-    QString pluginDir = QFileInfo(path).absoluteDir().absolutePath();
-    //qCDebug(vst) << "adding " << pluginDir << "in library path";
-    QApplication::addLibraryPath(pluginDir);
-
-    pluginLib.setFileName(path);
-    effect = nullptr;
-
-    vstPluginFuncPtr entryPoint=0;
-
-    try {
-        qCDebug(jtVstPlugin) << "loading " << path << " thread:" << QThread::currentThreadId();
-        if(!pluginLib.load()){
-            qCCritical(jtVstPlugin) << "error when loading VST plugin " << path << " -> " << pluginLib.errorString();
-            return false;
-        }
-        //qCDebug(vst) << path << " loaded";
-        //qCDebug(vst) << "searching VST plugin entry point for" << path;
-        entryPoint = (vstPluginFuncPtr) pluginLib.resolve("VSTPluginMain");
-        if(!entryPoint){
-            entryPoint = (vstPluginFuncPtr)pluginLib.resolve("main");
-        }
-    }
-    catch(...){
-        qCCritical(jtVstPlugin) << "exception when  getting entry point " << pluginLib.fileName();
-    }
-    if(!entryPoint) {
-        qCDebug(jtVstPlugin) << "Entry point not founded, unloading plugin " << path ;
+    this->effect = Vst::VstLoader::load(path, host);
+    if(!effect){
         unload();
         return false;
     }
-    qCDebug(jtVstPlugin) << "Entry point founded for " << path ;
-    QApplication::processEvents();
-    try{
-        qCDebug(jtVstPlugin) << "Initializing effect for " << path ;
-        effect = entryPoint( (audioMasterCallback)host->hostCallback);// myHost->vstHost->AudioMasterCallback);
-    }
-    catch(... ){
-        qCCritical(jtVstPlugin) << "Error loading VST plugin";
-        effect = nullptr;
-    }
 
-    if(!effect) {
-        qCCritical(jtVstPlugin) << "Error when initializing effect. Unloading " << path ;
-        unload();
-        return false;
-    }
-    QApplication::processEvents();
-    if (effect->magic != kEffectMagic) {
-        qCCritical(jtVstPlugin) << "KEffectMagic error for " << path ;
-        unload();
-        return false;
-    }
     char temp[128];//kVstMaxEffectNameLen]; //some dumb plugins don't respect kVstMaxEffectNameLen
     effect->dispatcher(effect, effGetEffectName, 0, 0, temp, 0);
-    this->name = QString(temp);
-
-    if(!this->name.at(0).isLetterOrNumber()){//some plugins (it's rare) are returning trash in effGetEffectName, but returning a nice string in effGetProductString
-        effect->dispatcher(effect, effGetProductString, 0, 0, temp, 0);
-        this->name = QString(temp);
-    }
+    this->name = QString::fromUtf8(temp);
 
     long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
     qCDebug(jtVstPlugin) << "loading " << getName() << " version " << ver;

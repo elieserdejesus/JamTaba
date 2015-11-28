@@ -6,15 +6,16 @@
 #include "audio/core/AudioNode.h"
 #include "audio/RoomStreamerNode.h"
 #include "persistence/Settings.h"
-#include "MainWindow.h"
+#include "gui/MainWindow.h"
 #include "NinjamController.h"
 #include "geo/WebIpToLocationResolver.h"
 #include "audio/NinjamTrackNode.h"
 #include "Utils.h"
-#include "../loginserver/LoginService.h"
-#include "../loginserver/natmap.h"
-#include "../ninjam/Service.h"
-#include "../ninjam/Server.h"
+#include "loginserver/LoginService.h"
+#include "loginserver/natmap.h"
+#include "ninjam/Service.h"
+#include "ninjam/Server.h"
+#include "audio/core/PluginDescriptor.h"
 
 #include <QDateTime>
 #include <QStandardPaths>
@@ -27,12 +28,12 @@
 #include <QSettings>
 #include <QDir>
 
-#include "../log/logging.h"
+#include "log/logging.h"
 #include "configurator.h"
 
 //QString Controller::MainController::LOG_CONFIG_FILE = "logging.ini";
 
-extern Configurator *JTBConfig;
+//extern Configurator *JTBConfig;
 using namespace Persistence;
 using namespace Midi;
 using namespace Ninjam;
@@ -155,7 +156,7 @@ void MainController::on_audioDriverStopped(){
     if(isPlayingInNinjamRoom()){
         //send the last interval part when audio driver is stopped
         finishUploads();
-        ninjamController.reset();//discard downloaded intervals and reset interval position
+        ninjamController->reset();//discard downloaded intervals and reset interval position
     }
 }
 

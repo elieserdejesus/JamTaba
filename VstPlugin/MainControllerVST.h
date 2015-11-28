@@ -1,8 +1,9 @@
 #ifndef MAINCONTROLLERVST_H
 #define MAINCONTROLLERVST_H
 
-#include "../MainController.h"
-#include "../NinjamController.h"
+#include "MainController.h"
+#include "NinjamController.h"
+#include "audio/core/PluginDescriptor.h"
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 class NinjamControllerVST : public Controller::NinjamController{

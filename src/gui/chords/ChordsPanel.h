@@ -2,7 +2,7 @@
 #define QCHORDPANEL_H
 
 #include <QWidget>
-#include "chords/ChordProgression.h"
+#include "ChordProgression.h"
 
 namespace Ui {
 class ChordsPanel;

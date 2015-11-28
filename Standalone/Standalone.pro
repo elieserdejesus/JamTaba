@@ -27,10 +27,11 @@ HEADERS += \
     ../src/StandAloneMainController.h \
     ../src/gui/MainWindowStandalone.h \
     ../src/Libs/SingleApplication/singleapplication.h \
+    ../src/audio/core/PluginDescriptor.h \
+    ../src/audio/vst/VstLoader.h \
 
 SOURCES += \
     ../src/main.cpp \
-    ../src/audio/core/PortAudioDriver.cpp \
     ../src/recorder/JamRecorder.cpp \
     ../src/recorder/ReaperProjectGenerator.cpp \
     ../src/loginserver/LoginService.cpp \
@@ -50,9 +51,18 @@ SOURCES += \
     ../src/geo/WebIpToLocationResolver.cpp \
     ../src/StandAloneMainController.cpp \
     ../src/gui/MainWindowStandalone.cpp \
-#    ../../RtMidi/RtMidi.cpp
     ../src/Libs/SingleApplication/singleapplication.cpp \
+    ../src/audio/core/PortAudioDriver.cpp \
+    ../src/audio/core/PluginDescriptor.cpp \
+    ../src/audio/vst/VstLoader.cpp \
 
+#conditional sources to different platforms
+win32{
+    SOURCES += ../src/audio/core/WindowsPortAudioDriver.cpp \
+}
+macx{
+    SOURCES += ../src/audio/core/MacPortAudioDriver.cpp \
+}
 
 INCLUDEPATH += $$PWD/../libs/includes/portaudio        \
                $$PWD/../libs/includes/rtmidi           \

@@ -3,12 +3,10 @@
 #include <QDebug>
 #include <QApplication>
 
-#include "../log/logging.h"
+#include "log/logging.h"
 
 QScopedPointer<Configurator> Configurator::instance(nullptr);
 
-//@elieser : i am not sure why we don't use member initialisation in the constructor
-// instead ? Data can be accessed ....
 const QString Configurator::VST_PLUGIN_FOLDER_NAME = "PluginVst";
 const QString Configurator::STANDALONE_PRESET_FOLDER_NAME= "Presets";
 const QString Configurator::PLUGIN_PRESET_FOLDER_NAME= "PluginVst/Presets";

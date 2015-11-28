@@ -5,10 +5,11 @@
 #include <cmath>
 #include <cassert>
 #include <QDebug>
-#include "../midi/MidiDriver.h"
+#include "midi/MidiDriver.h"
 #include <QMutexLocker>
-#include "../audio/Resampler.h"
-#include "../src/Utils.h"
+
+#include "audio/Resampler.h"
+
 
 using namespace Audio;
 

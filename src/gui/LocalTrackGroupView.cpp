@@ -24,7 +24,6 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
     QObject::connect(xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
 
     xmitButton->setChecked(true);
-
 }
 
 LocalTrackGroupView::~LocalTrackGroupView()
@@ -119,6 +118,7 @@ void LocalTrackGroupView::on_toolButtonClicked()
     QMenu menu;
 
 
+
     //PRESETS-----------------------------
 
     //LOAD - using a submenu to list stored presets
@@ -161,8 +161,10 @@ void LocalTrackGroupView::on_toolButtonClicked()
 
     //-------------------------------------
     //CHANNELS
-    QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
 
+    menu.addSeparator();
+
+    QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
     QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(on_addChannelClicked()));
     addChannelAction->setEnabled(mainFrame->getChannelGroupsCount() < 2);//at this moment users can't create more channels
     if(mainFrame->getChannelGroupsCount() > 1){

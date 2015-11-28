@@ -149,6 +149,7 @@ protected slots:
     void onScanPluginsFinished();
     void onPluginFounded(QString name, QString group, QString path);
     void onScanPluginsStarted(QString pluginPath);
+    void onBadPluginDetected(QString pluginPath);
 
     //collapse local controls
     void on_localControlsCollapseButtonClicked();
