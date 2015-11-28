@@ -55,12 +55,14 @@ SOURCES += \
     ../src/audio/vorbis/VorbisEncoder.cpp \
     ../src/persistence/Settings.cpp \
     ../src/geo/WebIpToLocationResolver.cpp \
+    ../src/audio/core/PluginDescriptor.cpp \
     VstMain.cpp \
     Plugin.cpp \
     Editor.cpp \
     MainControllerVST.cpp \
     NinjamRoomWindowVST.cpp \
-    MainWindowVST.cpp
+    MainWindowVST.cpp \
+
 
 
 win32 {

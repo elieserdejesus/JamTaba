@@ -109,17 +109,6 @@ public:
 };
 
 
-//+++++++++PRESETS+++++++++++++++
-class PresetsSettings  : public SettingsObject{
-public:
-    PresetsSettings();
-    void write(QJsonObject &out);
-    void read(QJsonObject in);
-    //bool saveMultiTracksActivated;
-    QString recordingPath;
-};
-
-//++++++++++++++++++++++++
 
 class Plugin{
 public:
@@ -157,6 +146,17 @@ public:
     void read(QJsonObject in);
     QList<Channel> channels;
 };
+//+++++++++PRESETS+++++++++++++++
+class PresetsSettings  : public SettingsObject{
+public:
+    PresetsSettings();
+    void write(QJsonObject &out);
+    void read(QJsonObject in);
+    QList<Channel> channels;
+};
+
+//++++++++++++++++++++++++
+
 //++++++++++++++++++++++++
 class Settings {
 
@@ -169,6 +169,7 @@ private:
     MetronomeSettings metronomeSettings;
     VstSettings vstSettings;
     InputsSettings inputsSettings;
+    PresetsSettings presetSettings;
     RecordingSettings recordingSettings;
     PrivateServerSettings privateServerSettings;
     QString lastUserName;//the last nick name choosed by user
@@ -185,10 +186,12 @@ public:
 
     void save(InputsSettings inputsSettings);
     void load();
+
     //PRESETS
+    inline PresetsSettings getPresetSettings() const{return presetSettings;}
     void savePresets(InputsSettings inputsSettings,QString name);
     bool writePresetFile(QList<SettingsObject *> sections,QString name);// io ops ...
-    void loadPresets(QString name);
+    void loadPreset(QString name);
     bool readPresetFile(QList<Persistence::SettingsObject*> sections,QString name);// io ops ...
 
 

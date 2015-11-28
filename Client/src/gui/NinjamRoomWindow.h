@@ -2,9 +2,9 @@
 #define NINJAMROOMWINDOW_H
 
 #include <QWidget>
-#include "../ninjam/User.h"
-#include "../ninjam/Server.h"
-#include "../loginserver/LoginService.h"
+#include "ninjam/User.h"
+#include "ninjam/Server.h"
+#include "loginserver/LoginService.h"
 #include "ChatPanel.h"
 #include <QLoggingCategory>
 #include <QMessageBox>

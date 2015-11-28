@@ -24,7 +24,6 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
     QObject::connect(xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
 
     xmitButton->setChecked(true);
-
 }
 
 LocalTrackGroupView::~LocalTrackGroupView()
@@ -118,6 +117,8 @@ void LocalTrackGroupView::on_toolButtonClicked()
 {
     QMenu menu;
 
+
+
     //PRESETS-----------------------------
 
     //LOAD - using a submenu to list stored presets
@@ -126,15 +127,22 @@ void LocalTrackGroupView::on_toolButtonClicked()
     loadPresetsSubmenu->setDisabled(false);// so we can merge to master without confusion for the user until it works
 
     //adding a menu action for each stored preset
-    QStringList presetsNames; //for test only. I suggest ask mainController about a list of Preset
-    presetsNames.append("Preset 1");
-    presetsNames.append("Preset 2");
-    presetsNames.append("Preset 3");
-    foreach (QString presetName, presetsNames) {
+    Configurator *cfg= Configurator::getInstance();
+    QStringList presetsNames=cfg->getPresetFilesNames(false);
+    foreach(QString name,presetsNames )
+    {
+        presetsNames.append(name);
+        QAction* presetAction = loadPresetsSubmenu->addAction(name);
+        presetAction->setData(name);//putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
+        QObject::connect(loadPresetsSubmenu, SIGNAL(triggered(QAction*)), this, SLOT(on_LoadPresetClicked(QAction*)));
+
+    }
+
+   /* foreach (QString presetName, presetsNames) {
         QAction* presetAction = loadPresetsSubmenu->addAction(presetName);
         presetAction->setData(presetName);//putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
         QObject::connect(presetAction, SIGNAL(triggered(bool)), this, SLOT(on_LoadPresetClicked()));
-    }
+    }*/
     menu.addMenu(loadPresetsSubmenu);
 
     //SAVE
@@ -153,8 +161,10 @@ void LocalTrackGroupView::on_toolButtonClicked()
 
     //-------------------------------------
     //CHANNELS
-    QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
 
+    menu.addSeparator();
+
+    QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
     QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(on_addChannelClicked()));
     addChannelAction->setEnabled(mainFrame->getChannelGroupsCount() < 2);//at this moment users can't create more channels
     if(mainFrame->getChannelGroupsCount() > 1){
@@ -256,23 +266,40 @@ void LocalTrackGroupView::on_removeChannelClicked(){
 }
 
 //PRESETS
-void LocalTrackGroupView::on_LoadPresetClicked()
+void LocalTrackGroupView::on_LoadPresetClicked(QAction* a)
 {
-    mainFrame->getMainController()->loadPresets("testPreset.json");
-    mainFrame->presetInputChannels();//that name is not so good
+    mainFrame->getMainController()->loadPresets(a->data().toString());
+    mainFrame->loadPresetToTrack();//that name is so good
 }
 
+#include <QInputDialog>
 void LocalTrackGroupView::on_SavePresetClicked()
 {
-
-    mainFrame->getMainController()->savePresets(mainFrame->getInputsSettings(),"PresetDefault.json");
+    bool ok;
+        QString text = QInputDialog::getText(this, tr("Save the preset ..."),
+                                             tr("Preset name:"), QLineEdit::Normal,
+                                             QDir::home().dirName(), &ok);
+        if (ok && !text.isEmpty())
+        {text.append(".json");
+        mainFrame->getMainController()->savePresets(mainFrame->getInputsSettings(),text);
+        }
 
 }
 
 void LocalTrackGroupView::on_ResetPresetClicked()
 {
-    //setToNoInput() i need or want to use that ?
+
+   //qCDebug(jtConfigurator) << "************ PRESET RESET ***********";
    mainFrame->resetGroupChannel(this);
+}
+
+void LocalTrackGroupView::on_presetMenuActionClicked()
+{
+bool ok;
+    QString text = QInputDialog::getText(this, tr("**************"),
+                                         tr("User name:"), QLineEdit::Normal,
+                                         QDir::home().dirName(), &ok);
+
 }
 
 //+++++++++++++++++++++++++++++

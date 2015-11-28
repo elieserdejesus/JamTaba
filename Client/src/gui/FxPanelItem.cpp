@@ -1,9 +1,9 @@
-#include "../gui/FxPanelItem.h"
+#include "gui/FxPanelItem.h"
 #include "plugins/guis.h"
-#include "../audio/core/plugins.h"
-#include "../MainController.h"
-#include "../gui/LocalTrackView.h"
-#include "../audio/core/plugins.h"
+#include "audio/core/plugins.h"
+#include "MainController.h"
+#include "gui/LocalTrackView.h"
+#include "audio/core/PluginDescriptor.h"
 #include <QDebug>
 #include <QPainter>
 #include <QStyleOption>

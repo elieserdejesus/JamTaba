@@ -54,6 +54,7 @@ WelcomeLabel2=This will install Jamtaba 2 on your computer.
 Source: {#MsvcRedistributablesPath}\{#Redistributable}; DestDir: {tmp}; Flags: deleteafterinstall
 
 Source: {#BuildDir}\Standalone\release\Jamtaba2.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
+Source: {#BuildDir}\VstScanner\release\VstScanner.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: {#BuildDir}\VstPlugin\release\JamtabaVST2.dll; DestDir: {code:GetVST2Dir}; Flags: ignoreversion replacesameversion
 Source: ..\..\Jamtaba2.ico; DestDir: {app}; Flags: ignoreversion
 
@@ -177,7 +178,6 @@ procedure CurUninstallStepChanged (CurUninstallStep: TUninstallStep);
        end;
    end;
 end;
-
 
 
 

@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="prefsTab">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
@@ -176,6 +176,22 @@
              </spacer>
             </item>
             <item>
+             <widget class="QLabel" name="bufferSizeLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Buffer size</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="comboBufferSize"/>
+            </item>
+            <item>
              <spacer name="horizontalSpacer_3">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -192,20 +208,11 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="bufferSizeLabel">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
+             <widget class="QPushButton" name="buttonControlPanel">
               <property name="text">
-               <string>Buffer size</string>
+               <string>Open Control Panel</string>
               </property>
              </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="comboBufferSize"/>
             </item>
            </layout>
           </item>

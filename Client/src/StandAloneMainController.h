@@ -3,6 +3,7 @@
 
 #include "MainController.h"
 #include <QApplication>
+#include <QTcpSocket>
 #include "audio/vst/PluginFinder.h"
 
 class QCoreApplication;
@@ -20,18 +21,21 @@ namespace JamtabaVstPlugin {
 //+++++++++++++++++++++++++++++++++++++++++++++++++
 class StandalonePluginFinder : public Vst::PluginFinder
 {
-
+    Q_OBJECT
 public:
-    StandalonePluginFinder(Vst::Host *host);
+    StandalonePluginFinder();
     ~StandalonePluginFinder();
     void scan(QStringList blackList);
-
+    void cancel();
 private:
-    void run(QStringList blackList);
-
-private:
-    Audio::PluginDescriptor getPluginDescriptor(QFileInfo f, Vst::Host *host);
-    Vst::Host* host;
+    Audio::PluginDescriptor getPluginDescriptor(QFileInfo f);
+    QString buildCommaSeparetedString(QStringList list) const;
+    QProcess scanProcess;
+    QString getVstScannerExecutablePath() const;
+    QString lastScannedPlugin;//used to recover the last plugin path when the scanner process crash
+private slots:
+    void on_processStandardOutputReady();
+    void on_processFinished();
 };
 //++++++++++++++++++++++++++++++++++++++++++
 

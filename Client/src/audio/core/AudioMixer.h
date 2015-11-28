@@ -3,7 +3,7 @@
 #include <QList>
 #include <QMutex>
 #include <QMap>
-#include "../SamplesBufferResampler.h"
+#include "audio/SamplesBufferResampler.h"
 
 #include <QScopedPointer>
 

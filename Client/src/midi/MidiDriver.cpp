@@ -21,8 +21,6 @@ MidiMessage::MidiMessage(const MidiMessage& other){
 }
 //+++++++++++++++++++++++
 
-
-
 quint8 MidiMessage::getNoteVelocity() const{
     if(!isNote()){
         return 0;
@@ -56,6 +54,8 @@ MidiBuffer::MidiBuffer(const MidiBuffer &other)
         this->messages[m] = other.messages[m];
     }
 }
+
+
 
 MidiBuffer::~MidiBuffer(){
     delete [] messages;
