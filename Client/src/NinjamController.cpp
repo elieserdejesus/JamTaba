@@ -242,7 +242,11 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
                             mainController->mixGroupedInputs(groupIndex, inputMixBuffer);
 
                             //encoding is running in another thread to avoid slow down the audio thread
-                            encodingWorker->addSamplesToEncode( inputMixBuffer, groupIndex, isFirstPart, isLastPart);
+                            QMetaObject::invokeMethod(encodingWorker, "addSamplesToEncode", Qt::QueuedConnection,
+                                                      Q_ARG(const Audio::SamplesBuffer, inputMixBuffer),
+                                                      Q_ARG(quint8, groupIndex),
+                                                      Q_ARG(bool, isFirstPart),
+                                                      Q_ARG(bool, isLastPart));
                         }
                     }
                 }
