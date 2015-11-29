@@ -144,11 +144,11 @@ void JamRoomViewPanel::clearPeaks(bool resetListenButton){
 void JamRoomViewPanel::on_buttonListen_clicked()
 {
     if(ui->buttonListen->isChecked()){
-        setWindowFlags(Qt::Popup);
+
         emit startingListeningTheRoom(roomInfo);
     }
     else{
-         setWindowFlags(Qt::SplashScreen);
+
         emit finishingListeningTheRoom(roomInfo);
     }
     ui->wavePeakPanel->setEnabled(ui->buttonListen->isChecked());
