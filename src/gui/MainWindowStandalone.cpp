@@ -43,7 +43,7 @@ void MainWindowStandalone::initializePluginFinder(){
     }
     else{//use vsts stored in settings file
         (dynamic_cast<Controller::StandaloneMainController*>(mainController))->initializePluginsList(vstPaths);
-        onScanPluginsFinished();
+        onScanPluginsFinished(true);
     }
 }
 

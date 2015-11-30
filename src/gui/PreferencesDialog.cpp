@@ -31,9 +31,9 @@ PreferencesDialog::PreferencesDialog(Controller::MainController* mainController,
             ui->groupBoxOutputs->setVisible(false);
         #endif
         QObject::connect( mainController->getPluginFinder(),
-                                  SIGNAL(scanFinished()),
+                                  SIGNAL(scanFinished(bool)),
                                   this,
-                                  SLOT(on_pluginsScanFinished()));
+                                  SLOT(on_pluginsScanFinished(bool)));
         populateAudioTab();
         populateMidiTab();
         populateVstTab();
@@ -335,7 +335,8 @@ void PreferencesDialog::on_prefsTab_currentChanged(int index)
 
 //VST
 
-void PreferencesDialog::on_pluginsScanFinished(){
+void PreferencesDialog::on_pluginsScanFinished(bool finishedWithoutError){
+    Q_UNUSED(finishedWithoutError);
     populateVstTab();
 }
 void PreferencesDialog::on_buttonAddVstScanFolder_clicked()

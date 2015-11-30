@@ -66,3 +66,8 @@ AEffect* VstLoader::load(QString path, Vst::Host* host){
     return effect;
 }
 
+void VstLoader::unload(AEffect *effect){
+    if(effect){
+        effect->dispatcher(effect, effClose, 0, 0, NULL, 0);
+    }
+}

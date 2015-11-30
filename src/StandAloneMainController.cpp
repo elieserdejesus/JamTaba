@@ -45,25 +45,43 @@ Audio::PluginDescriptor StandalonePluginFinder::getPluginDescriptor(QFileInfo f)
 void StandalonePluginFinder::on_processFinished(){
     QProcess::ExitStatus exitStatus = scanProcess.exitStatus();
     scanProcess.close();
-    if(exitStatus == QProcess::CrashExit){
-        if(!lastScannedPlugin.isEmpty()){
-            emit badPluginDetected(lastScannedPlugin);
-        }
-    }
-    emit scanFinished();
+    bool exitingWithoutError = exitStatus == QProcess::NormalExit;
+    emit scanFinished(exitingWithoutError);
+    QString lastScanned(lastScannedPlugin);
     lastScannedPlugin.clear();
+    if(!exitingWithoutError){
+        handleProcessError(lastScanned);
+    }
 }
 
+void StandalonePluginFinder::on_processError(QProcess::ProcessError error){
+
+    qCritical() << "ERROR:" << error << scanProcess.errorString();
+    on_processFinished();
+}
+
+void StandalonePluginFinder::handleProcessError(QString lastScannedPlugin){
+    if(!lastScannedPlugin.isEmpty()){
+        emit badPluginDetected(lastScannedPlugin);
+    }
+}
 
 QString StandalonePluginFinder::getVstScannerExecutablePath() const{
     //try the same jamtaba executable path first
-    QString scannerExeName = "VstScanner.exe";//In the deploy version the VstScanner.exe and Jamtaba2.exe are in the same folder.
+    QString scannerExeName = "VstScanner";//In the deploy version the VstScanner and Jamtaba2 executables are in the same folder.
+#ifdef Q_OS_WIN
+    scannerExeName += ".exe";
+#endif
     if(QFile(scannerExeName).exists()){
         return scannerExeName;
     }
 
-    //In dev time the exes (Jamtaba2.exe and VstScanner.exe) are in different folders...
+    //In dev time the executable (Jamtaba2 and VstScanner) are in different folders...
+    //We need a more elegant way to solve this at dev time. At moment I'm a very dirst approach to return the executable path in MacOsx, and just a little less dirty solution in windows.
     QString appPath = QCoreApplication::applicationDirPath();
+#ifdef Q_OS_MAC
+    return "/Users/elieser/Desktop/build-Jamtaba-Desktop_Qt_5_5_0_clang_64bit-Debug/VstScanner/VstScanner";
+#endif
     QString buildType = QLibraryInfo::isDebugBuild() ? "debug" : "release";
     QString scannerExePath = appPath + "/../../VstScanner/"+ buildType +"/" + scannerExeName;
     if(QFile(scannerExePath).exists()){
@@ -117,7 +135,7 @@ void StandalonePluginFinder::scan(QStringList blackList){
 
     QString scannerExePath = getVstScannerExecutablePath();
     if(scannerExePath.isEmpty()){
-        return;//scanner exe not found!
+        return;//scanner executable not found!
     }
 
     emit scanStarted();
@@ -127,8 +145,9 @@ void StandalonePluginFinder::scan(QStringList blackList){
     parameters.append(buildCommaSeparetedString(blackList));
     QObject::connect( &scanProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(on_processStandardOutputReady()));
     QObject::connect( &scanProcess, SIGNAL(finished(int)), this, SLOT(on_processFinished()));
-    QObject::connect( &scanProcess, SIGNAL(error(QProcess::ProcessError)), this, SLOT(on_processFinished()));
+    QObject::connect( &scanProcess, SIGNAL(error(QProcess::ProcessError)), this, SLOT(on_processError(QProcess::ProcessError)));
     qCDebug(jtStandalonePluginFinder) << "Starting scan process...";
+    //scanProcess.setProcessChannelMode(QProcess::ForwardedChannels);
     scanProcess.start(getVstScannerExecutablePath(), parameters);
     qCDebug(jtStandalonePluginFinder) << "Scan process started!";
 }
