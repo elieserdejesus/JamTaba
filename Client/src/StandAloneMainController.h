@@ -33,9 +33,11 @@ private:
     QProcess scanProcess;
     QString getVstScannerExecutablePath() const;
     QString lastScannedPlugin;//used to recover the last plugin path when the scanner process crash
+    void handleProcessError(QString lastScannedPlugin);
 private slots:
     void on_processStandardOutputReady();
     void on_processFinished();
+    void on_processError(QProcess::ProcessError);
 };
 //++++++++++++++++++++++++++++++++++++++++++
 

@@ -94,6 +94,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="localControlsCollapseButton">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
             <property name="toolTip">
              <string>collapse/expand your controls ...</string>
             </property>
@@ -312,6 +315,9 @@
     </rect>
    </property>
    <widget class="QMenu" name="menuPreferences">
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
     <property name="title">
      <string>Preferences</string>
     </property>
@@ -323,6 +329,9 @@
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuNinjam">
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
     <property name="title">
      <string>Ninjam</string>
     </property>
@@ -331,6 +340,9 @@
     <addaction name="actionNinjam_Official_Site"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
     <property name="title">
      <string>Help</string>
     </property>
@@ -339,6 +351,9 @@
     <addaction name="actionReportBugs"/>
    </widget>
    <widget class="QMenu" name="menuViewMode">
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
     <property name="title">
      <string>View Mode</string>
     </property>

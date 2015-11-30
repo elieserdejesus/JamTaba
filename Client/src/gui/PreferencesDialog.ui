@@ -209,8 +209,26 @@
             </item>
             <item>
              <widget class="QPushButton" name="buttonControlPanel">
+              <property name="minimumSize">
+               <size>
+                <width>118</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>110</width>
+                <height>39</height>
+               </size>
+              </property>
+              <property name="cursor">
+               <cursorShape>PointingHandCursor</cursorShape>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-image: url(:/images/asio.png);</string>
+              </property>
               <property name="text">
-               <string>Open Control Panel</string>
+               <string/>
               </property>
              </widget>
             </item>

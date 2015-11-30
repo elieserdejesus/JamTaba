@@ -32,8 +32,8 @@ void VstPluginScanner::scan(){
         QDirIterator folderIterator(scanFolder, QDirIterator::Subdirectories);
         while (folderIterator.hasNext()) {
             folderIterator.next();//point to next file inside current folder
-            QFileInfo pluginFileInfo (folderIterator.filePath());
-            if(pluginFileInfo.isFile()){
+            if(isVstPluginFile(folderIterator.filePath())){
+                QFileInfo pluginFileInfo(folderIterator.filePath());
                 if(!blackList.contains(pluginFileInfo.absoluteFilePath())){
                     writeToProcessOutput("JT-Scanner-Scanning: " + pluginFileInfo.absoluteFilePath());
                     const Audio::PluginDescriptor& descriptor = getPluginDescriptor(pluginFileInfo);

@@ -3,7 +3,7 @@ QT -= gui
 
 TARGET = VstScanner
 CONFIG += console
-CONFIG -= app_bundle
+CONFIG -= app_bundle #in MAC create just a binary, not a complete bundle
 
 DEFINES += VST_FORCE_DEPRECATED=0 #enable VST 2.3 features
 
