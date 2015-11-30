@@ -8,17 +8,7 @@
 #include "Libs/SingleApplication/singleapplication.h"
 #include "configurator.h"
 
-#include "StandAloneMainController.h"
-
 int main(int argc, char* args[] ){
-
-
-//    QApplication app(argc, args);
-//    StandalonePluginFinder finder;
-//    finder.addFolderToScan("C:/VstPlugins");
-//    finder.scan(QStringList());
-//    return app.exec();
-
 
     QApplication::setApplicationName("Jamtaba 2");
 
@@ -31,7 +21,12 @@ int main(int argc, char* args[] ){
     Persistence::Settings settings;
     settings.load();
 
-    SingleApplication* application = new SingleApplication(argc, args);
+//SingleApplication is not working in mac. Using a dirty ifdef until have time to solve the SingleApplication issue in Mac
+#ifdef Q_OS_WIN
+    QApplication* application = new SingleApplication(argc, args);
+#else
+    QApplication* application = new QApplication(argc, args);
+#endif
 
     Controller::StandaloneMainController mainController(settings, (QApplication*)application);
     //..JOMTOBO CSS
@@ -45,10 +40,11 @@ int main(int argc, char* args[] ){
 
     mainWindow.show();
 
+#ifdef Q_OS_WIN
     //The SingleApplication class implements a showUp() signal. You can bind to that signal to raise your application's
     //window when a new instance had been started.
     QObject::connect(application, SIGNAL(showUp()), &mainWindow, SLOT(raise()));
-
+#endif
     return application->exec();
 
  }

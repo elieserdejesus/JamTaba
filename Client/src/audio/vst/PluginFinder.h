@@ -24,7 +24,7 @@ protected:
     QList<QString> scanFolders;
 signals:
     void scanStarted();
-    void scanFinished();
+    void scanFinished(bool finishedWithoutError);
     void pluginScanStarted(QString path);
     void pluginScanFinished(QString name, QString group, QString path);
     void badPluginDetected(QString pluginPath);//a plugin crash the scanner process

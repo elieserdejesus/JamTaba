@@ -23,6 +23,7 @@ private:
     QProcess process;
     void writeToProcessOutput(QString);
 
+    bool static isVstPluginFile(QString path);
 
 };
 
