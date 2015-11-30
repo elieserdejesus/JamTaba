@@ -777,15 +777,24 @@ void MainController::saveLastUserSettings(const Persistence::InputsSettings& inp
 
 //-------------------------      PRESETS   ----------------------------
 
-void  MainController::loadPresets(QString name)
+void  MainController::loadPreset(QString name)
 {
     settings.loadPreset(name);
 }
+QStringList MainController::getPresetList()
+{
+    return settings.getPresetList();
+}
+
 void  MainController::savePresets(const Persistence::InputsSettings &inputsSettings,QString name)
 {
     settings.savePresets(inputsSettings,name);
 }
 
+void MainController::deletePreset(QString name)
+{
+    return settings.DeletePreset(name);
+}
 
 void MainController::setFullScreenView( bool fullScreen )
 {

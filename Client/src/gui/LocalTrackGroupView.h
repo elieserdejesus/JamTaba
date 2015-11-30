@@ -10,6 +10,7 @@ class MainWindow;
 
 namespace Ui {
 class LocalTrackGroupView;
+//class PresetMenu;
 }
 
 
@@ -79,6 +80,7 @@ private slots:
     void on_SavePresetClicked();
     void on_ResetPresetClicked();
     void on_presetMenuActionClicked();
+    void on_RemovePresetClicked();
 
 
     //xmit

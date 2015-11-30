@@ -83,9 +83,10 @@ public:
     void saveLastUserSettings(const Persistence::InputsSettings &inputsSettings);
 
     //PRESETS
-    void loadPresets(QString name);
+    void loadPreset(QString name);//one preset
+    QStringList getPresetList();//all presets
     void savePresets(const Persistence::InputsSettings &inputsSettings, QString name);
-
+    void deletePreset(QString name);
     virtual void process(const Audio::SamplesBuffer& in, Audio::SamplesBuffer& out, int sampleRate);
 
     void sendNewChannelsNames(QStringList channelsNames);

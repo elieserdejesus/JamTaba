@@ -315,6 +315,18 @@ QString Configurator::getPresetPath(QString JsonFile)
     qDebug(jtConfigurator) << "NO Path found !" << path;
     return path;
 }
+void Configurator::deletePreset(QString name)
+{
+    QString s=getPresetPath(name);
+    if(s.size()==0)return;
+    {
+        qInfo(jtConfigurator) << "!!! Preset to delete Path is " << s;
+        if(getPresetsDir().remove(s))
+            qInfo(jtConfigurator) << "!!! Preset deleted ! ";
+        else
+            qInfo(jtConfigurator) << "!!! Could not delete Preset ! ";
+    }
+}
 
 //-------------------------------------------------------------------------------
 

@@ -20,7 +20,7 @@ int main(int argc, char* args[] ){
 //    return app.exec();
 
 
-    QApplication::setApplicationName("Jamtaba 2");
+    QApplication::setApplicationName("Jomtobo");
 
     QApplication::setApplicationVersion(APP_VERSION);
 
