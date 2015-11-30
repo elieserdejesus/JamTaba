@@ -45,6 +45,7 @@
         <file>preset-load.png</file>
         <file>preset-save.png</file>
         <file>discard.png</file>
+        <file>asio.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

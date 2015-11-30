@@ -92,6 +92,9 @@
         <property name="accessibleDescription">
          <string>This is the status of this room</string>
         </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
         <property name="text">
          <string>testee</string>
         </property>

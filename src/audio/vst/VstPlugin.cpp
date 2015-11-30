@@ -209,8 +209,7 @@ void VstPlugin::unload(){
         suspend();
 
         if(effect){
-            effect->dispatcher(effect, effClose, 0, 0, NULL, 0);
-
+            VstLoader::unload(effect);
             effect = nullptr;
         }
     }

@@ -11,7 +11,8 @@ class Host;
 class VstLoader
 {
 public:
-    static AEffect* load(QString pluginPath, Vst::Host* host);
+    static AEffect* load(QString path, Vst::Host* host);
+    static void unload(AEffect* effect);
 };
 
 }
