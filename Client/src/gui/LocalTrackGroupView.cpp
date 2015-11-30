@@ -113,15 +113,54 @@ bool LocalTrackGroupView::eventFilter(QObject *target, QEvent *event){
     return TrackGroupView::eventFilter(target, event);
 }
 
-void LocalTrackGroupView::on_toolButtonClicked(){
+void LocalTrackGroupView::on_toolButtonClicked()
+{
     QMenu menu;
 
 
-    //Presets
-    QAction* addPresetActionSave = menu.addAction(QIcon(":/images/more.png"), "Save preset");
-    addPresetActionSave->setDisabled(true);// so we can merge to master without confusion for the user until it works
-    QAction* addPresetActionLoad = menu.addAction(QIcon(":/images/more.png"), "Load preset");
-    addPresetActionLoad->setDisabled(true);// so we can merge to master without confusion for the user until it works
+
+    //PRESETS-----------------------------
+
+    //LOAD - using a submenu to list stored presets
+    QMenu* loadPresetsSubmenu = new QMenu("Load preset");
+    loadPresetsSubmenu->setIcon(QIcon(":/images/preset-load.png"));
+    loadPresetsSubmenu->setDisabled(false);// so we can merge to master without confusion for the user until it works
+
+    //adding a menu action for each stored preset
+    Configurator *cfg= Configurator::getInstance();
+    QStringList presetsNames=cfg->getPresetFilesNames(false);
+    foreach(QString name,presetsNames )
+    {
+        presetsNames.append(name);
+        QAction* presetAction = loadPresetsSubmenu->addAction(name);
+        presetAction->setData(name);//putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
+        QObject::connect(loadPresetsSubmenu, SIGNAL(triggered(QAction*)), this, SLOT(on_LoadPresetClicked(QAction*)));
+
+    }
+
+   /* foreach (QString presetName, presetsNames) {
+        QAction* presetAction = loadPresetsSubmenu->addAction(presetName);
+        presetAction->setData(presetName);//putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
+        QObject::connect(presetAction, SIGNAL(triggered(bool)), this, SLOT(on_LoadPresetClicked()));
+    }*/
+    menu.addMenu(loadPresetsSubmenu);
+
+    //SAVE
+    QAction* addPresetActionSave = menu.addAction(QIcon(":/images/preset-save.png"), "Save preset");
+    addPresetActionSave->setDisabled(false);// so we can merge to master without confusion for the user until it works
+    QObject::connect(addPresetActionSave, SIGNAL(triggered(bool)), this, SLOT(on_SavePresetClicked()));
+
+
+    //RESET - in case of panic
+    QAction* reset =  menu.addAction(QIcon(":/images/gear.png"),"Reset Preset");
+    reset->setDisabled(false);// so we can merge to master without confusion for the user until it works
+    QObject::connect(reset, SIGNAL(triggered()), this, SLOT(on_ResetPresetClicked()));
+
+    menu.addSeparator();
+
+
+    //-------------------------------------
+    //CHANNELS
 
     menu.addSeparator();
 
@@ -225,6 +264,44 @@ void LocalTrackGroupView::detachMainControllerInSubchannels(){
 void LocalTrackGroupView::on_removeChannelClicked(){
     mainFrame->removeChannelsGroup(mainFrame->getChannelGroupsCount()-1);
 }
+
+//PRESETS
+void LocalTrackGroupView::on_LoadPresetClicked(QAction* a)
+{
+    mainFrame->getMainController()->loadPresets(a->data().toString());
+    mainFrame->loadPresetToTrack();//that name is so good
+}
+
+#include <QInputDialog>
+void LocalTrackGroupView::on_SavePresetClicked()
+{
+    bool ok;
+        QString text = QInputDialog::getText(this, tr("Save the preset ..."),
+                                             tr("Preset name:"), QLineEdit::Normal,
+                                             QDir::home().dirName(), &ok);
+        if (ok && !text.isEmpty())
+        {text.append(".json");
+        mainFrame->getMainController()->savePresets(mainFrame->getInputsSettings(),text);
+        }
+
+}
+
+void LocalTrackGroupView::on_ResetPresetClicked()
+{
+
+   //qCDebug(jtConfigurator) << "************ PRESET RESET ***********";
+   mainFrame->resetGroupChannel(this);
+}
+
+void LocalTrackGroupView::on_presetMenuActionClicked()
+{
+bool ok;
+    QString text = QInputDialog::getText(this, tr("**************"),
+                                         tr("User name:"), QLineEdit::Normal,
+                                         QDir::home().dirName(), &ok);
+
+}
+
 //+++++++++++++++++++++++++++++
 void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly){
     if(this->peakMeterOnly != peakMeterOnly){

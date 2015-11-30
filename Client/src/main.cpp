@@ -9,7 +9,10 @@
 #include "configurator.h"
 
 int main(int argc, char* args[] ){
-    QApplication::setApplicationName("Jamtaba 2");
+
+    //QApplication::setApplicationName("Jamtaba 2");
+    QApplication::setApplicationName("Jomtobo");
+
     QApplication::setApplicationVersion(APP_VERSION);
 
     //start the configurator
@@ -27,7 +30,8 @@ int main(int argc, char* args[] ){
 #endif
 
     Controller::StandaloneMainController mainController(settings, (QApplication*)application);
-    mainController.configureStyleSheet("jamtaba.css");
+    //..JOMTOBO CSS
+    mainController.configureStyleSheet("jomtobo.css");
     mainController.start();
     if(mainController.isUsingNullAudioDriver()){
         QMessageBox::about(nullptr, "Fatal error!", "Jamtaba can't detect any audio device in your machine!");

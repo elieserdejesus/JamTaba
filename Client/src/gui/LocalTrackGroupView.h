@@ -43,6 +43,9 @@ signals:
     void nameChanged();
     void trackRemoved();
     void trackAdded();
+    void presetLoaded();
+    void presetSaved();
+
 private:
     QPushButton* toolButton;
     QPushButton* xmitButton;
@@ -70,8 +73,18 @@ private slots:
     void on_removeSubChannelClicked();
     void on_removeChannelClicked();
 
+
+    //PRESETS
+    void on_LoadPresetClicked(QAction *a);
+    void on_SavePresetClicked();
+    void on_ResetPresetClicked();
+    void on_presetMenuActionClicked();
+
+
     //xmit
     void on_xmitButtonClicked(bool checked);
+
+
 
 };
 

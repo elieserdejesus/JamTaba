@@ -132,6 +132,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
            <property name="accessibleDescription">
             <string>Slider to change the BPM of the metronome</string>
            </property>
@@ -252,6 +255,9 @@
                    <height>32</height>
                   </size>
                  </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="accessibleDescription">
                   <string>This is a knob to pan the metronome sound</string>
                  </property>
@@ -320,6 +326,9 @@
                  <property name="enabled">
                   <bool>true</bool>
                  </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
                  <property name="accessibleDescription">
                   <string>Button to mute the metronome</string>
                  </property>
@@ -344,6 +353,9 @@
                    <width>16777215</width>
                    <height>24</height>
                   </size>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
                  </property>
                  <property name="accessibleDescription">
                   <string>Button to soloing the metronome</string>
@@ -378,6 +390,9 @@
        <horstretch>1</horstretch>
        <verstretch>1</verstretch>
       </sizepolicy>
+     </property>
+     <property name="cursor">
+      <cursorShape>ArrowCursor</cursorShape>
      </property>
     </widget>
    </item>
@@ -417,6 +432,9 @@
       </item>
       <item row="0" column="1">
        <widget class="QComboBox" name="comboBpi">
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
         <property name="toolTip">
          <string>Beats per interval</string>
         </property>
@@ -440,6 +458,9 @@
       </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="comboBpm">
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
         <property name="toolTip">
          <string>Beats per minute</string>
         </property>
@@ -466,6 +487,9 @@
       </item>
       <item row="2" column="1">
        <widget class="QComboBox" name="comboBeatsPerAccent">
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
         <property name="accessibleDescription">
          <string>Change the accent here</string>
         </property>
@@ -480,6 +504,9 @@
       </item>
       <item row="3" column="1">
        <widget class="QComboBox" name="comboShape">
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
         <property name="accessibleDescription">
          <string>Change the shape here</string>
         </property>

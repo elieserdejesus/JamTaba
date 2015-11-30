@@ -57,7 +57,9 @@ public:
     inline APPTYPE getAppType() const{ return AppType; }
     //inline void setAppType(APPTYPE type){AppType=type; }
     //Presets now ....
-    QDir getPresetsDir(APPTYPE type) const ;
+    QDir getPresetsDir() const ;
+    QString getPresetPath(QString JsonFile);//used by Settings
+    QStringList getPresetFilesNames(bool fullpath);//all the files names in a folder
 
 
 };

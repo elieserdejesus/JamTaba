@@ -41,6 +41,16 @@ FxPanel::FxPanel(LocalTrackView *parent, Controller::MainController *mainControl
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void FxPanel::removePlugin(){
+    QList<FxPanelItem*> items = findChildren<FxPanelItem*>();
+    for(FxPanelItem* item : items){
+        if(item->containPlugin()){
+            item->unsetPlugin();
+
+            return;
+        }
+    }
+}
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void FxPanel::addPlugin(Audio::Plugin * plugin){
     QList<FxPanelItem*> items = findChildren<FxPanelItem*>();
