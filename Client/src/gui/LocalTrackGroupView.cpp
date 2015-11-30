@@ -153,7 +153,7 @@ void LocalTrackGroupView::on_toolButtonClicked()
     QStringList presetsNames=cfg->getPresetFilesNames(false);
     foreach(QString name,presetsNames )
     {
-        presetsNames.append(name);
+        //presetsNames.append(name);
         QAction* presetAction = loadPresetsSubmenu->addAction(name);
         presetAction->setData(name);//putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
         QObject::connect(loadPresetsSubmenu, SIGNAL(triggered(QAction*)), this, SLOT(on_LoadPresetClicked(QAction*)));
