@@ -70,11 +70,16 @@ void PortAudioDriver::configureHostSpecificOutputParameters(PaStreamParameters& 
 }
 
 void PortAudioDriver::releaseHostSpecificParameters(const PaStreamParameters &inputParameters, const PaStreamParameters &outputParameters){
-
+    Q_UNUSED(inputParameters)
+    Q_UNUSED(outputParameters)
 }
 
 bool PortAudioDriver::hasControlPanel() const{
     return false;
+}
+
+void PortAudioDriver::openControlPanel(void *mainWindowHandle){
+    Q_UNUSED(mainWindowHandle)
 }
 
 }//namespace

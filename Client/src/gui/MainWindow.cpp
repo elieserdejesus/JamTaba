@@ -133,7 +133,7 @@ void MainWindow::initializePluginFinder(){
     Vst::PluginFinder* pluginFinder = mainController->getPluginFinder();
     if(pluginFinder){
         QObject::connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(onScanPluginsStarted()));
-        QObject::connect(pluginFinder, SIGNAL(scanFinished()), this, SLOT(onScanPluginsFinished()));
+        QObject::connect(pluginFinder, SIGNAL(scanFinished(bool)), this, SLOT(onScanPluginsFinished(bool)));
         QObject::connect(pluginFinder, SIGNAL(badPluginDetected(QString)), this, SLOT(onBadPluginDetected(QString)));
         QObject::connect(pluginFinder, SIGNAL(pluginScanFinished(QString,QString,QString)), this, SLOT(onPluginFounded(QString,QString,QString)));
         QObject::connect(pluginFinder, SIGNAL(pluginScanStarted(QString)), this, SLOT(onScanPluginsStarted(QString)));
@@ -1321,7 +1321,8 @@ void MainWindow::on_pluginFinderDialogCanceled(){
     pluginScanDialog.reset();//reset to null pointer
 }
 
-void MainWindow::onScanPluginsFinished(){
+void MainWindow::onScanPluginsFinished(bool finishedWithoutError){
+    Q_UNUSED(finishedWithoutError);
     if(pluginScanDialog){
         pluginScanDialog->close();
     }
@@ -1331,7 +1332,7 @@ void MainWindow::onScanPluginsFinished(){
 
 void MainWindow::onBadPluginDetected(QString pluginPath){
     QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(pluginPath);
-    QWidget* parent = pluginScanDialog ? (QWidget*)pluginScanDialog.data() : (QWidget*)this;
+    QWidget* parent = !pluginScanDialog.isNull() ? (QWidget*)pluginScanDialog.data() : (QWidget*)this;
     QMessageBox::warning(parent, "Plugin Error!", pluginName + " can't be loaded and will be black listed!");
     mainController->addBlackVstToSettings(pluginPath);
 }
