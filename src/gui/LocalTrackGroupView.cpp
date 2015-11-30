@@ -9,12 +9,16 @@
 
 #include <QPushButton>
 #include <QMenu>
+#include <QMouseEvent> //for menu
+#include <QInputDialog>//for menu
+
 
 LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame)
     :index(channelIndex), mainFrame(mainFrame), peakMeterOnly(false), preparingToTransmit(false)
 {
     toolButton = createToolButton();
     this->ui->topPanel->layout()->addWidget(toolButton);
+    //this->installEventFilter(this);
 
     xmitButton = createXmitButton();
     this->layout()->addWidget(xmitButton);
@@ -105,12 +109,30 @@ void LocalTrackGroupView::on_addChannelClicked(){
 }
 
 //NOT WORKING
-bool LocalTrackGroupView::eventFilter(QObject *target, QEvent *event){
-    qWarning() << event->type();
+bool LocalTrackGroupView::eventFilter(QObject *target, QEvent *event)
+{
+    bool val= QObject::eventFilter(target, event);
+
+    QMenu * menu = dynamic_cast<QMenu*>(target);
+    if(menu && event->type() == QEvent::MouseButtonPress)
+    {
+        QMouseEvent * ev = (QMouseEvent *)event;
+        if(ev)
+        {
+            if(ev->button() == Qt::RightButton)
+            {
+              on_RemovePresetClicked();
+                ev->ignore();
+                return true; // yes we filter the event
+            }
+        }
+    }
+    return val;
+    /*qWarning() << event->type();
     if (event->type() == QEvent::Leave) {
         Highligther::getInstance()->stopHighlight();
     }
-    return TrackGroupView::eventFilter(target, event);
+    return TrackGroupView::eventFilter(target, event);*/
 }
 
 void LocalTrackGroupView::on_toolButtonClicked()
@@ -125,7 +147,7 @@ void LocalTrackGroupView::on_toolButtonClicked()
     QMenu* loadPresetsSubmenu = new QMenu("Load preset");
     loadPresetsSubmenu->setIcon(QIcon(":/images/preset-load.png"));
     loadPresetsSubmenu->setDisabled(false);// so we can merge to master without confusion for the user until it works
-
+    loadPresetsSubmenu->installEventFilter(this);// to deal with mouse buttons
     //adding a menu action for each stored preset
     Configurator *cfg= Configurator::getInstance();
     QStringList presetsNames=cfg->getPresetFilesNames(false);
@@ -268,11 +290,11 @@ void LocalTrackGroupView::on_removeChannelClicked(){
 //PRESETS
 void LocalTrackGroupView::on_LoadPresetClicked(QAction* a)
 {
-    mainFrame->getMainController()->loadPresets(a->data().toString());
+    mainFrame->getMainController()->loadPreset(a->data().toString());
     mainFrame->loadPresetToTrack();//that name is so good
 }
 
-#include <QInputDialog>
+
 void LocalTrackGroupView::on_SavePresetClicked()
 {
     bool ok;
@@ -293,12 +315,24 @@ void LocalTrackGroupView::on_ResetPresetClicked()
    mainFrame->resetGroupChannel(this);
 }
 
+void LocalTrackGroupView::on_RemovePresetClicked()
+{
+
+    QStringList items=mainFrame->getMainController()->getPresetList();
+    bool ok;
+    QString item = QInputDialog::getItem(this, tr("Remove preset"),
+                                            tr("Preset:"), items, 0, false, &ok);
+
+    //delete the file
+
+    mainFrame->getMainController()->deletePreset(item);
+
+}
+
+//FOR TESTS ACTUALLY
 void LocalTrackGroupView::on_presetMenuActionClicked()
 {
-bool ok;
-    QString text = QInputDialog::getText(this, tr("**************"),
-                                         tr("User name:"), QLineEdit::Normal,
-                                         QDir::home().dirName(), &ok);
+
 
 }
 

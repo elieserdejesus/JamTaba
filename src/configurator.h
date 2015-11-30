@@ -60,6 +60,7 @@ public:
     QDir getPresetsDir() const ;
     QString getPresetPath(QString JsonFile);//used by Settings
     QStringList getPresetFilesNames(bool fullpath);//all the files names in a folder
+    void deletePreset(QString name);
 
 
 };

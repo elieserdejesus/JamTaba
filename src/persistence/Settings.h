@@ -153,6 +153,7 @@ public:
     void write(QJsonObject &out);
     void read(QJsonObject in);
     QList<Channel> channels;
+    QStringList names;
 };
 
 //++++++++++++++++++++++++
@@ -192,6 +193,8 @@ public:
     void savePresets(InputsSettings inputsSettings,QString name);
     bool writePresetFile(QList<SettingsObject *> sections,QString name);// io ops ...
     void loadPreset(QString name);
+    void DeletePreset(QString name);
+    QStringList getPresetList();
     bool readPresetFile(QList<Persistence::SettingsObject*> sections,QString name);// io ops ...
 
 

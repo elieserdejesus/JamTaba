@@ -690,6 +690,7 @@ bool Settings::readPresetFile(QList<Persistence::SettingsObject*> sections,QStri
         //read settings sections (Audio settings, Midi settings, ninjam settings, etc...)
         foreach (SettingsObject* so, sections) {
             so->read(root[so->getName()].toObject());
+            presetSettings.names.append(name);
         }
         return true;
     }
@@ -715,6 +716,12 @@ void Settings::loadPreset(QString name)
         else
         qInfo(jtConfigurator) << "Settings : Presets couldn't be loaded :" << name;
 
+}
+
+QStringList Settings::getPresetList()
+{
+
+  return Configurator::getInstance()->getPresetFilesNames(false);
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -765,6 +772,7 @@ void Settings::savePresets(InputsSettings inputsSettings,QString name)
 
     //this->inputsSettings = inputsSettings;
     this->presetSettings.channels= inputsSettings.channels;
+    this->presetSettings.names.append(name);
     QList<Persistence::SettingsObject*> sections;
      //sections.append(&audioSettings);
      //sections.append(&midiSettings);
@@ -784,7 +792,10 @@ void Settings::savePresets(InputsSettings inputsSettings,QString name)
 
 
 }
-
+void Settings::DeletePreset(QString name)
+{
+   Configurator::getInstance()->deletePreset(name);
+}
 
 Settings::~Settings(){
 
