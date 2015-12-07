@@ -8,6 +8,7 @@
 #include "audio/vorbis/VorbisEncoder.h"
 
 #include <QThread>
+#include <QWaitCondition>
 
 class NinjamTrackNode;
 
@@ -20,6 +21,44 @@ namespace Audio {
 namespace Controller {
 
 class MainController;
+class NinjamController;
+
+
+class EncodingChunk
+{
+public:
+    EncodingChunk(const Audio::SamplesBuffer& buffer, quint8 channelIndex, bool firstPart, bool lastPart)
+        :buffer(buffer), channelIndex(channelIndex), firstPart(firstPart), lastPart(lastPart )
+    {
+    }
+
+    Audio::SamplesBuffer buffer;
+    quint8 channelIndex;
+    bool firstPart;
+    bool lastPart;
+};
+
+
+class EncodingWorker : public QObject
+{
+    Q_OBJECT
+
+public:
+    EncodingWorker(NinjamController* controller, QObject *parent=0);
+    void addSamplesToEncode(const Audio::SamplesBuffer& samplesToEncode,
+                            quint8 channelIndex, bool isFirstPart, bool isLastPart);
+
+public slots:
+    void run();
+    void stop();
+
+private:
+    QList<EncodingChunk*> chunksToEncode;
+    QMutex mutex;
+    volatile bool stopRequested;
+    NinjamController* controller;
+    QWaitCondition hasAvailableChunksToEncode;
+};
 
 
 //++++++++++++++++++++
@@ -135,7 +174,8 @@ private:
 
     class EncodingThread;
 
-    EncodingThread* encodingThread;
+    QThread* encodingThread;
+    EncodingWorker* encodingWorker;
 
     bool preparedForTransmit;
     int waitingIntervals;
