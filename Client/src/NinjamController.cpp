@@ -21,94 +21,62 @@
 
 #include "audio/samplesbufferrecorder.h"
 #include "Utils.h"
-#include <QWaitCondition>
 #include "log/logging.h"
 
 
 using namespace Controller;
 
 //+++++++++++++  ENCODING THREAD  +++++++++++++
-class NinjamController::EncodingThread : public QThread{//TODO: use better thread approach, avoid inheritance form QThread
-public:
-    EncodingThread(NinjamController* controller)
-        :stopRequested(false), controller(controller){
-        qCDebug(jtNinjamCore) << "Starting Encoding Thread";
-        start();
+
+EncodingWorker::EncodingWorker(NinjamController *controller, QObject *parent)
+    : QObject(parent), stopRequested(false), controller(controller)
+{
+}
+
+void EncodingWorker::addSamplesToEncode(const Audio::SamplesBuffer& samplesToEncode, quint8 channelIndex, bool isFirstPart, bool isLastPart){
+    //qCDebug(jtNinjamCore) << "Adding samples to encode";
+    QMutexLocker locker(&mutex);
+    chunksToEncode.append(new EncodingChunk(samplesToEncode, channelIndex, isFirstPart, isLastPart));
+    //this method is called by Qt main thread (the producer thread).
+    hasAvailableChunksToEncode.wakeAll();//wakeup the encoding thread (consumer thread)
+}
+
+void EncodingWorker::stop(){
+    if(!stopRequested){
+        //QMutexLocker locker(&mutex);
+        stopRequested = true;
+        hasAvailableChunksToEncode.wakeAll();
+        qCDebug(jtNinjamCore) << "Stopping Encoding Thread";
     }
+}
 
-    ~EncodingThread(){
-        stop();
-    }
-
-    void addSamplesToEncode(const Audio::SamplesBuffer& samplesToEncode, quint8 channelIndex, bool isFirstPart, bool isLastPart){
-        //qCDebug(jtNinjamCore) << "Adding samples to encode";
-        QMutexLocker locker(&mutex);
-        chunksToEncode.append(new EncodingChunk(samplesToEncode, channelIndex, isFirstPart, isLastPart));
-        //this method is called by Qt main thread (the producer thread).
-        hasAvailableChunksToEncode.wakeAll();//wakeup the encoding thread (consumer thread)
-
-    }
-
-    void stop(){
-        if(!stopRequested){
-            //QMutexLocker locker(&mutex);
-            stopRequested = true;
-            hasAvailableChunksToEncode.wakeAll();
-            qCDebug(jtNinjamCore) << "Stopping Encoding Thread";
+void EncodingWorker::run(){
+    while(!stopRequested){
+        mutex.lock();
+        if(chunksToEncode.isEmpty()){
+            hasAvailableChunksToEncode.wait(&mutex);
         }
-    }
-
-protected:
-    void run(){
-        while(!stopRequested){
-            mutex.lock();
-            if(chunksToEncode.isEmpty()){
-                hasAvailableChunksToEncode.wait(&mutex);
-            }
-            if(stopRequested){
-                mutex.unlock();
-                break;
-            }
-            EncodingChunk* chunk = chunksToEncode.first();
-            chunksToEncode.removeFirst();
+        if(stopRequested){
             mutex.unlock();
-			if (chunk){
-                QByteArray encodedBytes( controller->encode(chunk->buffer, chunk->channelIndex));
-                if (chunk->lastPart){
-                    encodedBytes.append( controller->encodeLastPartOfInterval(chunk->channelIndex));
-                }
-
-                if(!encodedBytes.isEmpty()){
-                    emit controller->encodedAudioAvailableToSend(encodedBytes, chunk->channelIndex, chunk->firstPart, chunk->lastPart);
-                }
-				delete chunk;
-			}
-
+            break;
         }
-        qCDebug(jtNinjamCore) << "Encoding thread stopped!";
+        EncodingChunk* chunk = chunksToEncode.first();
+        chunksToEncode.removeFirst();
+        mutex.unlock();
+        if (chunk){
+            QByteArray encodedBytes( controller->encode(chunk->buffer, chunk->channelIndex));
+            if (chunk->lastPart){
+                encodedBytes.append( controller->encodeLastPartOfInterval(chunk->channelIndex));
+            }
+
+            if(!encodedBytes.isEmpty()){
+                emit controller->encodedAudioAvailableToSend(encodedBytes, chunk->channelIndex, chunk->firstPart, chunk->lastPart);
+            }
+            delete chunk;
+        }
     }
-
-private:
-    class EncodingChunk{
-    public:
-        EncodingChunk(const Audio::SamplesBuffer& buffer, quint8 channelIndex, bool firstPart, bool lastPart)
-            :buffer(buffer), channelIndex(channelIndex), firstPart(firstPart), lastPart(lastPart ) {
-
-        }
-
-        Audio::SamplesBuffer buffer;
-        quint8 channelIndex;
-        bool firstPart;
-        bool lastPart;
-    };
-
-    QList<EncodingChunk*> chunksToEncode;
-    QMutex mutex;
-    volatile bool stopRequested;
-    NinjamController* controller;
-    QWaitCondition hasAvailableChunksToEncode;
-
-};
+    qCDebug(jtNinjamCore) << "Encoding thread stopped!";
+}
 
 //+++++++++++++++++ Nested classes to handle schedulable events ++++++++++++++++
 
@@ -187,6 +155,7 @@ NinjamController::NinjamController(Controller::MainController* mainController)
     mutex(QMutex::Recursive),
     encodersMutex(QMutex::Recursive),
     encodingThread(nullptr),
+    encodingWorker(nullptr),
     preparedForTransmit(false),
     waitingIntervals(0)//waiting for start transmit
 {
@@ -273,7 +242,11 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
                             mainController->mixGroupedInputs(groupIndex, inputMixBuffer);
 
                             //encoding is running in another thread to avoid slow down the audio thread
-                            encodingThread->addSamplesToEncode( inputMixBuffer, groupIndex, isFirstPart, isLastPart);
+                            QMetaObject::invokeMethod(encodingWorker, "addSamplesToEncode", Qt::QueuedConnection,
+                                                      Q_ARG(const Audio::SamplesBuffer, inputMixBuffer),
+                                                      Q_ARG(quint8, groupIndex),
+                                                      Q_ARG(bool, isFirstPart),
+                                                      Q_ARG(bool, isLastPart));
                         }
                     }
                 }
@@ -315,9 +288,11 @@ void NinjamController::stop(bool emitDisconnectedingSignal){
     }
 
     if(encodingThread){
-        encodingThread->stop();
+        encodingWorker->stop();
         encodingThread->wait();//wait the encoding thread to finish
+        delete encodingWorker;
         delete encodingThread;
+        encodingWorker = nullptr;
         encodingThread = nullptr;
     }
 
@@ -377,8 +352,11 @@ void NinjamController::start(const Ninjam::Server& server, QMap<int, bool> chann
     processScheduledChanges();
 
     if(!running){
-
-        encodingThread = new NinjamController::EncodingThread(this);
+        encodingThread = new QThread(this);
+        encodingWorker = new EncodingWorker(this, this);
+        encodingWorker->moveToThread(encodingThread);
+        QObject::connect(encodingThread, SIGNAL(started()), encodingWorker, SLOT(run()));
+        encodingThread->start();
 
         //add a sine wave generator as input to test audio transmission
         //mainController->addInputTrackNode(new Audio::LocalInputTestStreamer(440, mainController->getAudioDriverSampleRate()));
