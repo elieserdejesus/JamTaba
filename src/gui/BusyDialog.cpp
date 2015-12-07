@@ -17,7 +17,7 @@ BusyDialog::BusyDialog(QWidget *parent) :
     movie->setSpeed(50);//50%
     movie->setScaledSize(QSize(64, 64));
     ui->labelGif->setMovie(movie);
-    setMask(roundedRect(geometry(), 6));//round corner in QDialog
+    setMask(roundedRect(geometry(), 160));//round corner in QDialog
 }
 
 void BusyDialog::show(QString message){

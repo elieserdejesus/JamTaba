@@ -54,6 +54,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
      <property name="toolTip">
       <string>clear the messages ...</string>
      </property>
@@ -75,6 +78,9 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="cursor" stdset="0">
+      <cursorShape>OpenHandCursor</cursorShape>
      </property>
      <property name="accessibleDescription">
       <string>This is the chat scroll area</string>

@@ -56,8 +56,8 @@ public:
 
     Persistence::InputsSettings getInputsSettings() const;
 
-    inline int getChannelGroupsCount() const{return localChannels.size();}
-    inline QString getChannelGroupName(int index) const{return localChannels.at(index)->getGroupName();}
+    inline int getChannelGroupsCount() const{return controlSurfaceJTB.size();}
+    inline QString getChannelGroupName(int index) const{return controlSurfaceJTB.at(index)->getGroupName();}
     void highlightChannelGroup(int index) const;
 
     void addChannelsGroup(QString name);
@@ -73,17 +73,25 @@ public:
     inline bool isRunningInMiniMode() const{return !fullViewMode;}
     inline bool isRunningInFullViewMode() const{return fullViewMode;}
 
+    //EZEE PRESETS NEED THAT
+    inline Controller::MainController* getMainController(){return mainController ;}
+    void loadPresetToTrack();//{initializeLocalInputChannels();}// finally i don't like that name ...
+    void resetGroupChannel(LocalTrackGroupView *group);// should load the defaultPreset.json ?
+
+
     bool isTransmiting(int channelID) const;
     void setTransmitingStatus(int channelID, bool xmitStatus);
 
+
 protected:
     Controller::MainController* mainController;
+
     virtual void initializePluginFinder();
     void restorePluginsList();
 
     void centerDialog(QWidget* dialog);
 
-    QList<LocalTrackGroupView*> localChannels;
+    QList<LocalTrackGroupView*> controlSurfaceJTB;
 
     virtual NinjamRoomWindow* createNinjamWindow(Login::RoomInfo, Controller::MainController*) = 0;
 

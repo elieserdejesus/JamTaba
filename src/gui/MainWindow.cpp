@@ -40,8 +40,11 @@
 #include "Utils.h"
 #include "audio/RoomStreamerNode.h"
 #include "UserNameDialog.h"
+
+
 #include "log/logging.h"
 #include <QShortcut>
+
 
 using namespace Audio;
 using namespace Persistence;
@@ -67,7 +70,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
 
 
-    setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
+    setWindowTitle("Jomtobo v" + QApplication::applicationVersion());
 
     initializeLoginService();
     //initializePluginFinder(); //called in derived classes
@@ -106,7 +109,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     ui.allRoomsContent->layout()->setContentsMargins(0,0,0,0);
     ui.allRoomsContent->layout()->setSpacing(24);
 
-    foreach (LocalTrackGroupView* channel, localChannels) {
+    foreach (LocalTrackGroupView* channel, controlSurfaceJTB) {
         channel->refreshInputSelectionNames();
     }
 
@@ -145,7 +148,7 @@ void MainWindow::initializePluginFinder(){
 
 //++++++++++++++++++++++++=
 void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly){
-    foreach (LocalTrackGroupView* channel, localChannels) {
+    foreach (LocalTrackGroupView* channel, controlSurfaceJTB) {
         //channel->togglePeakMeterOnlyMode();
         channel->setPeakMeterMode(showPeakMetersOnly);
     }
@@ -158,7 +161,7 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly){
 void MainWindow::recalculateLeftPanelWidth(){
     int min = ui.localTracksWidget->sizeHint().width() + 12;
     int max = min;
-    bool showingPeakMeterOnly = localChannels.first()->isShowingPeakMeterOnly();
+    bool showingPeakMeterOnly = controlSurfaceJTB.first()->isShowingPeakMeterOnly();
     Qt::ScrollBarPolicy scrollPolicy = Qt::ScrollBarAlwaysOff;
 
     //limit the local inputs widget in mini mode
@@ -175,14 +178,14 @@ void MainWindow::recalculateLeftPanelWidth(){
 }
 
 void MainWindow::on_localControlsCollapseButtonClicked(){
-    bool isShowingPeakMetersOnly = localChannels.first()->isShowingPeakMeterOnly();
+    bool isShowingPeakMetersOnly = controlSurfaceJTB.first()->isShowingPeakMeterOnly();
     showPeakMetersOnlyInLocalControls(!isShowingPeakMetersOnly);//toggle
     recalculateLeftPanelWidth();
 }
 //++++++++++++++++++++++++=
 Persistence::InputsSettings MainWindow::getInputsSettings() const{
     InputsSettings settings;
-    foreach (LocalTrackGroupView* trackGroupView, localChannels) {
+    foreach (LocalTrackGroupView* trackGroupView, controlSurfaceJTB) {
         trackGroupView->getTracks();
         Persistence::Channel channel(trackGroupView->getGroupName());
         foreach (LocalTrackView* trackView, trackGroupView->getTracks()) {
@@ -244,11 +247,11 @@ void MainWindow::on_RoomStreamerError(QString msg){
 //    QMenu menu;
 //    QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
 //    QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(on_addChannelClicked()));
-//    addChannelAction->setEnabled(localChannels.size() < 2);//at this moment users can't create more channels
-//    if(localChannels.size() > 1){
+//    addChannelAction->setEnabled(controlSurfaceJTB.size() < 2);//at this moment users can't create more channels
+//    if(controlSurfaceJTB.size() > 1){
 //        menu.addSeparator();
-//        for (int i = 2; i <= localChannels.size(); ++i) {
-//            QString channelName = localChannels.at(i-1)->getGroupName();
+//        for (int i = 2; i <= controlSurfaceJTB.size(); ++i) {
+//            QString channelName = controlSurfaceJTB.at(i-1)->getGroupName();
 //            QAction* action = menu.addAction(QIcon(":/images/less.png"), "Remove channel \"" + channelName + "\"");
 //            action->setData( i-1 );//use channel index as action data
 //        }
@@ -262,13 +265,14 @@ void MainWindow::on_RoomStreamerError(QString msg){
 //}
 
 void MainWindow::removeChannelsGroup(int channelIndex){
-    if(localChannels.size() > 1){//the first channel group can't be removed
-        if(channelIndex >= 0 && channelIndex < localChannels.size()){
-            LocalTrackGroupView* channel = localChannels.at(channelIndex);
+    if(controlSurfaceJTB.size() >1){//the first channel group can't be removed
+        if(channelIndex >= 0 && channelIndex < controlSurfaceJTB.size())
+        {
+            LocalTrackGroupView* channel = controlSurfaceJTB.at(channelIndex);
             ui.localTracksLayout->removeWidget(channel);
-            localChannels.removeAt(channelIndex);
+            controlSurfaceJTB.removeAt(channelIndex);
 
-            localChannels.first()->setToWide();
+            controlSurfaceJTB.first()->setToWide();
 
             channel->deleteLater();
 
@@ -280,13 +284,13 @@ void MainWindow::removeChannelsGroup(int channelIndex){
 }
 
 void MainWindow::highlightChannelGroup(int index) const{
-    if(index >= 0 && index < localChannels.size()){
-        Highligther::getInstance()->highlight(localChannels.at(index));
+    if(index >= 0 && index < controlSurfaceJTB.size()){
+        Highligther::getInstance()->highlight(controlSurfaceJTB.at(index));
     }
 }
 
 void MainWindow::addChannelsGroup(QString name){
-    int channelIndex = localChannels.size();
+    int channelIndex = controlSurfaceJTB.size();
     addLocalChannel( channelIndex, name, true);
     mainController->updateInputTracksRange();
     mainController->sendNewChannelsNames(getChannelsNames());
@@ -325,7 +329,7 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
     QObject::connect(localChannel, SIGNAL(trackAdded()), this, SLOT(on_localTrackAdded()));
     QObject::connect(localChannel, SIGNAL(trackRemoved()), this, SLOT(on_localTrackRemoved()));
 
-    localChannels.append( localChannel );
+    controlSurfaceJTB.append( localChannel );
 
     localChannel->setGroupName(channelName);
     ui.localTracksLayout->addWidget(localChannel);
@@ -334,7 +338,7 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
         LocalTrackView* localTrackView = new LocalTrackView(this->mainController, channelGroupIndex);
         localChannel->addTrackView( localTrackView );
 
-        if(localChannels.size() > 1){
+        if(controlSurfaceJTB.size() > 1){
             if(!mainController->isRunningAsVstPlugin()){
                 //in standalone the second channel is always initialized as noInput
                 localTrackView->setToNoInput();
@@ -345,8 +349,8 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
         }
     }
 
-    if(!fullViewMode && localChannels.count() > 1){
-        foreach (LocalTrackGroupView* trackGroup, localChannels) {
+    if(!fullViewMode && controlSurfaceJTB.count() > 1){
+        foreach (LocalTrackGroupView* trackGroup, controlSurfaceJTB) {
             trackGroup->setToNarrow();
         }
     }
@@ -392,12 +396,13 @@ bool MainWindow::isRunningAsVstPlugin() const{
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 void MainWindow::restorePluginsList(){
     qCInfo(jtGUI) << "Restoring plugins list...";
     Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
     int channelIndex = 0;
     foreach (Persistence::Channel channel, inputsSettings.channels) {
-        LocalTrackGroupView* channelView = localChannels.at(channelIndex);
+        LocalTrackGroupView* channelView = controlSurfaceJTB.at(channelIndex);
         if(channelView){
             int subChannelIndex = 0;
             QList<LocalTrackView*> tracks = channelView->getTracks();
@@ -431,6 +436,214 @@ void MainWindow::restorePluginsList(){
         channelIndex++;
     }
     qCInfo(jtGUI) << "Restoring plugins list done!";
+}
+
+//USED BY PRESETS
+void MainWindow::loadPresetToTrack()
+{
+
+//we gonna assign each group of the console surface
+
+ int groupSize=controlSurfaceJTB.size();
+ qCDebug(jtConfigurator) << "************PRESET LOADING ***********";
+
+ qCInfo(jtConfigurator) << "Initializing ControlSurface...";
+ qCInfo(jtConfigurator) << "Number of groups in controlSurface :"<<groupSize;
+
+ QList< LocalTrackView * > 	tracks;
+ Persistence::PresetsSettings preset = mainController->getSettings().getPresetSettings();
+ //now the preset's group count ;
+ int PRST_CH_COUNT=preset.channels.size();
+ qCInfo(jtConfigurator) << "Number of groups in Preset :"<<PRST_CH_COUNT;
+
+ //if there is more groups in the preset
+ if(groupSize<PRST_CH_COUNT)
+  {
+     int count=PRST_CH_COUNT-groupSize;
+     qCInfo(jtConfigurator) << "Creating :"<<count<<" group";
+
+     for(int i = 0 ; i < count ; i ++ )
+     {
+         addLocalChannel(0," new Group", true);groupSize++;
+         qCInfo(jtConfigurator) << "Group size is now :"<<groupSize<<" group";
+         //groupSize++;
+     }
+  }
+
+ else if(groupSize>PRST_CH_COUNT)
+ {
+     int count=groupSize-PRST_CH_COUNT;
+     qCInfo(jtConfigurator) << "removing :"<<count<<" group";
+
+     for(int i = 0 ; i < count ; i ++ )
+     {
+         removeChannelsGroup(count);
+         groupSize--;
+         qCInfo(jtConfigurator) << "Group size is now :"<<groupSize<<" group";
+
+
+     }
+
+ }
+
+ //LOOP inside the controlSurfaceJTB groups
+ for(int group=0;group<groupSize;group++)
+  {
+   //load the name of the group
+   qCInfo(jtConfigurator) << "......................................";
+   controlSurfaceJTB.at(group)->setGroupName(preset.channels.at(group).name);
+   //get the tracks of that group
+   tracks=controlSurfaceJTB.at(group)->getTracks();
+   int tracksCount=tracks.size();
+   qCInfo(jtConfigurator) << "Loading group :"<<group;
+   qCInfo(jtConfigurator) << "Number of tracks in group :"<<tracksCount;
+
+   //compute tracks to create ( if any ) in that group
+   int TRK_TO_CREATE=0;
+   int PRST_TRK_COUNT=preset.channels.at(group).subChannels.size();
+    qCInfo(jtConfigurator) << "Number of tracks in preset :"<<PRST_TRK_COUNT;
+
+    //ADD OR DELETE TRACKS
+   if(tracksCount<PRST_TRK_COUNT)//must create a track
+   {
+     TRK_TO_CREATE=PRST_TRK_COUNT-tracksCount;
+     qCInfo(jtConfigurator) << "Number of tracks to create : "<<TRK_TO_CREATE;
+
+     for(int i = 0 ; i < TRK_TO_CREATE ; i ++ )
+     {
+         LocalTrackView* subChannelView = new LocalTrackView( mainController, i+1
+                                                              , 0, BaseTrackView::intToBoostValue(0), 0, 0);
+         controlSurfaceJTB.at(group)->addTrackView(subChannelView);
+         qCInfo(jtConfigurator) << "SubTrack added in group : "<<group;
+
+         //tracksCount++;
+
+     }
+   }
+   else if(tracksCount>PRST_TRK_COUNT)//must delete a track
+   {
+     int TRK_TO_DEL=tracksCount-PRST_TRK_COUNT;
+     qCInfo(jtConfigurator) << "Number of tracks to delete : "<<TRK_TO_DEL;
+
+     for(int i = 0 ; i < TRK_TO_DEL ; i ++ )
+     {
+        controlSurfaceJTB.at(group)->removeTrackView(TRK_TO_DEL);
+         qCInfo(jtConfigurator) << "SubTrack removed in group : "<<group;
+
+         //tracksCount--;
+
+     }
+   }
+
+   //now the preset's SUB track count ;
+   //int PRST_SUB_COUNT=preset.tracks.at(index).subChannels.size();
+   //qCInfo(jtConfigurator) << "Number of Sub Tracks in group :"<<PRST_SUB_COUNT;
+
+
+tracks=controlSurfaceJTB.at(group)->getTracks();
+tracksCount=tracks.size();
+   //assign preset to indexed tracks
+   for(int index=0;index<tracksCount;index++)
+       {
+         //gain
+         qCInfo(jtConfigurator) << "<<<<<<<<<<<<<<<<<<<<";
+         float gain=preset.channels.at(group).subChannels.at(index).gain;
+         tracks.at(index)->getInputNode()->setGain(gain);
+         qCInfo(jtConfigurator) << "Track"<<index<<" gain : "<<gain<<" for"<<index;
+         //pan
+         float pan=preset.channels.at(group).subChannels.at(index).pan;
+         tracks.at(index)->getInputNode()->setPan(pan);
+         qCInfo(jtConfigurator) << "Track "<<index<<"Pan : "<<pan<<" for"<<index;
+         //boost
+         int boost=preset.channels.at(group).subChannels.at(index).boost;
+         BaseTrackView::BoostValue boostValue = BaseTrackView::intToBoostValue(boost);
+         tracks.at(index)->initializeBoostButtons(boostValue);
+         qCInfo(jtConfigurator) << "Boost "<<index<<"index : "<<boostValue<<" for"<<index;
+         //mute
+         bool muted=preset.channels.at(group).subChannels.at(index).muted;
+         tracks.at(index)->getInputNode()->setMuteStatus(muted);
+         qCInfo(jtConfigurator) << "Mute "<<index<<"state : "<<muted<<" for"<<index;
+
+         //solo
+         //bool solo=preset.channels.at(group).subChannels.at(index).;
+         //tracks.at(index)->getInputNode()->setMuteStatus(muted);
+         //qCInfo(jtConfigurator) << "Mute state : "<<muted<<" for"<<index;
+
+         //NEW FUNK getFxPanel() MADE FOR PRESETS
+         //first we remove plugins
+          tracks.at(index)->resetFXPanel();
+
+          //get plugins
+          //create the plugins list
+          QList<Persistence::Plugin> plugins=preset.channels.at(group).subChannels.at(index).plugins;
+          int plugCount=plugins.size();
+          for(int i=0;i<plugCount;i++)
+          {
+              QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugins.at(i).path);
+              Audio::PluginDescriptor descriptor(pluginName, "VST", plugins.at(i).path);
+              Audio::Plugin* pluginInstance = mainController->addPlugin(index, descriptor);
+              if(pluginInstance){
+                  try{
+                      pluginInstance->restoreFromSerializedData(plugins.at(i).data);
+                  }
+                  catch(...){
+                      qWarning() << "Exception restoring " << pluginInstance->getName();
+                  }
+
+                 tracks.at(index)->addPlugin(pluginInstance, plugins.at(i).bypassed);
+                 qCInfo(jtConfigurator) << "Plugin Added :"<<pluginInstance->getName()<<" in track : "<<index;
+
+              }
+          }
+          if(!mainController->isRunningAsVstPlugin())
+          {
+              Persistence::Subchannel subChannel=preset.channels.at(group).subChannels.at(index);
+              //using midi
+              if(subChannel.midiDevice >= 0)
+              {
+                  qCInfo(jtConfigurator) << "\t\tSubchannel using MIDI";
+                  //check if midiDevice index is valid
+                  if(subChannel.midiDevice < mainController->getMidiDriver()->getMaxInputDevices())
+                  {
+                      qCInfo(jtConfigurator) << "\t\tMidi device index : "<<subChannel.midiDevice;
+
+                      mainController->setInputTrackToMIDI(tracks.at(index)->getInputIndex(), subChannel.midiDevice, subChannel.midiChannel);
+                  }
+                  else
+                  {
+                      if(mainController->getMidiDriver()->hasInputDevices())
+                      {qCInfo(jtConfigurator) << "\t\tSubchannel using default Midi ";
+
+                          //use the first midi device and all channels
+                          mainController->setInputTrackToMIDI(tracks.at(index)->getInputIndex(), 0, -1);
+                      }
+                      else
+                      {
+                          qCInfo(jtConfigurator) << "\t\tSubchannel using "<<subChannel.midiDevice;
+
+                          mainController->setInputTrackToNoInput(tracks.at(index)->getInputIndex());
+                      }
+                  }
+              }
+              else if(subChannel.channelsCount <= 0){
+                  qCInfo(jtConfigurator) << "\t\tsetting Subchannel to no noinput";
+                  mainController->setInputTrackToNoInput(tracks.at(index)->getInputIndex());
+              }
+              else if(subChannel.channelsCount == 1){
+                  qCInfo(jtConfigurator) << "\t\tsetting Subchannel to mono input";
+                  mainController->setInputTrackToMono(tracks.at(index)->getInputIndex(), subChannel.firstInput);
+              }
+              else{
+                  qCInfo(jtConfigurator) << "\t\tsetting Subchannel to stereo input";
+                  mainController->setInputTrackToStereo(tracks.at(index)->getInputIndex(), subChannel.firstInput);
+              }
+          }
+        //if(tracksCount>PRST_CH_COUNT && index==PRST_CH_COUNT )break;
+
+       }
+
+ }
+ qCInfo(jtConfigurator) << "***********************************";
 }
 
 void MainWindow::initializeLocalInputChannels(){
@@ -606,9 +819,9 @@ bool MainWindow::jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2){
 
 void MainWindow::on_incompatibilityWithServerDetected(){
     hideBusyDialog();
-    QString text = "Your Jamtaba version is not compatible with previous versions! Please download the new <a href='http://www.jamtaba.com'>Jamtaba</a> version!";
-    QMessageBox::warning(this, "Compatibility error!", text );
-    close();
+    QString text = "Your Jomtobo version is compatible with previous versions!";
+    QMessageBox::warning(this, "Compatibility Hack (mwah ah ah!)", text );
+    //close();
 }
 
 void MainWindow::detachMainController(){
@@ -685,7 +898,7 @@ void MainWindow::on_stoppingRoomStream(Login::RoomInfo roomInfo){
 
 QStringList MainWindow::getChannelsNames() const{
     QStringList channelsNames;
-    foreach (LocalTrackGroupView* channel, localChannels) {
+    foreach (LocalTrackGroupView* channel, controlSurfaceJTB) {
         channelsNames.append(channel->getGroupName());
     }
     return channelsNames;
@@ -825,7 +1038,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection){
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::setInputTracksPreparingStatus(bool preparing){
-    foreach (LocalTrackGroupView* trackGroup, localChannels) {
+    foreach (LocalTrackGroupView* trackGroup, controlSurfaceJTB) {
         trackGroup->setPreparingStatus(preparing);
     }
 }
@@ -847,7 +1060,7 @@ void MainWindow::timerEvent(QTimerEvent *){
 //    }
 
     //update local input track peaks
-    foreach (TrackGroupView* channel, localChannels) {
+    foreach (TrackGroupView* channel, controlSurfaceJTB) {
         channel->updatePeaks();
     }
 
@@ -904,6 +1117,7 @@ QPointF MainWindow::computeLocation() const{
 
 void MainWindow::closeEvent(QCloseEvent *){
     if(mainController){
+
         mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation() );
     }
 }
@@ -916,10 +1130,12 @@ MainWindow::~MainWindow()
     setParent(nullptr);
     if(mainController){
         mainController->saveLastUserSettings(getInputsSettings());
+
     }
 
 
-    foreach (LocalTrackGroupView* groupView, this->localChannels ) {
+    foreach (LocalTrackGroupView* groupView, this->controlSurfaceJTB ) {
+
         groupView->detachMainControllerInSubchannels();
     }
     mainController = nullptr;
@@ -1068,7 +1284,7 @@ void MainWindow::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audio
 
     mainController->updateInputTracksRange();
 
-    foreach (LocalTrackGroupView* channel, localChannels) {
+    foreach (LocalTrackGroupView* channel, controlSurfaceJTB) {
         channel->refreshInputSelectionNames();
     }
 
@@ -1085,7 +1301,7 @@ void MainWindow::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audio
 
 //input selection changed by user or by system
 void MainWindow::refreshTrackInputSelection(int inputTrackIndex){
-    foreach (LocalTrackGroupView* channel, localChannels) {
+    foreach (LocalTrackGroupView* channel, controlSurfaceJTB) {
         channel->refreshInputSelectionName(inputTrackIndex);
     }
     //localTrackGroupView->refreshInputSelectionName();
@@ -1170,7 +1386,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
     //int leftPanelMargim = fullViewMode ? 6 : 3;
     //ui.leftPanel->setContentsMargins(leftPanelMargim, 3, leftPanelMargim, leftPanelMargim);
 
-    showPeakMetersOnlyInLocalControls(!fullViewMode || localChannels.first()->isShowingPeakMeterOnly());
+    showPeakMetersOnlyInLocalControls(!fullViewMode || controlSurfaceJTB.first()->isShowingPeakMeterOnly());
 
     ui.chatArea->setMinimumWidth(fullViewMode ? 280 : 180);
 
@@ -1189,8 +1405,8 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
     }
 
     //local tracks are narrowed in mini mode
-    if(!fullViewMode && localChannels.count() > 1){
-        foreach (LocalTrackGroupView* localTrackGroup, localChannels) {
+    if(!fullViewMode && controlSurfaceJTB.count() > 1){
+        foreach (LocalTrackGroupView* localTrackGroup, controlSurfaceJTB) {
             localTrackGroup->setToNarrow();
         }
     }
@@ -1237,6 +1453,59 @@ void MainWindow::on_actionFullscreenMode_triggered()
        mainController->setFullScreenView(true);}
 }
 
+
+//PRESETS STUFF
+void MainWindow::resetGroupChannel(LocalTrackGroupView *group)
+{
+    if(getChannelGroupsCount()<1)
+        return;
+    qCInfo(jtConfigurator) << "!!!!!!!!!!!!!!!!!!!!!!!!!!!";
+    qCInfo(jtConfigurator) << "Reseting local inputs...";
+    Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
+    QList<LocalTrackView*> trackViews = group->getTracks();
+    //all tracks in a group
+    for(int track=0;track<group->getTracksCount();track++)
+    {
+        //mute audio and gui
+        mainController->setTrackMute(track,false);
+        trackViews.at(track)->mute(false);
+
+        //solo audio and gui
+        mainController->setTrackSolo(track,false);
+        trackViews.at(track)->solo(false);
+
+        //reset audio and midi to none
+        trackViews.at(track)->setToNoInput();
+
+        qCInfo(jtConfigurator) << "\tInput reset on channel "<< trackViews.at(track)->getTrackID();
+
+        //NEW FUNK getFxPanel() MADE FOR PRESETS
+        //now we remove plugins
+         FxPanel *panel=trackViews.at(track)->getFxPanel();
+         if(panel)
+         {
+           int fxCount=panel->getItems().size();
+           if(fxCount>0)
+           {
+               for(int i=0;i<fxCount;i++)
+               {
+                   panel->removePlugin();
+               }
+           }
+         }
+         //volume now
+         trackViews.at(track)->getInputNode()->setGain(1.0f);
+         //pan now
+         trackViews.at(track)->getInputNode()->setPan(0.0f);
+         //boost
+         trackViews.at(track)->getInputNode()->setBoost(1.0f);
+
+
+     }
+
+        qCInfo(jtConfigurator) << "Reseting local inputs done!";
+}
+
 //++++++++++++++++++++++++
 void MainWindow::setTransmitingStatus(int channelID, bool xmitStatus){
     mainController->setTransmitingStatus(channelID, xmitStatus);
@@ -1247,3 +1516,4 @@ bool MainWindow::isTransmiting(int channelID) const{
 }
 
 //++++++++++++
+
