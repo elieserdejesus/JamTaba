@@ -18,7 +18,7 @@ void MainWindowStandalone::closeEvent(QCloseEvent * e){
     MainWindow::closeEvent(e);
     hide();//hide before stop main controller and disconnect from login server
 
-    foreach (LocalTrackGroupView* trackGroup, localChannels) {
+    foreach (LocalTrackGroupView* trackGroup, controlSurfaceJTB) {
         trackGroup->closePluginsWindows();
     }
 }

@@ -86,6 +86,7 @@ void FxPanelItem::setPlugin(Audio::Plugin* plugin){
 }
 
 void FxPanelItem::unsetPlugin(){
+    this->plugin->closeEditor();
     this->plugin = nullptr;
     this->label->setText("");
     this->bypassButton->setVisible(false);

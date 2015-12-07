@@ -7,7 +7,9 @@
 #include <QDebug>
 #include "midi/MidiDriver.h"
 #include <QMutexLocker>
+
 #include "audio/Resampler.h"
+
 
 using namespace Audio;
 
@@ -161,6 +163,8 @@ void AudioNode::setGain(float gainValue){
     this->gain = gainValue;
     emit gainChanged(this->gain);
 }
+
+
 
 void AudioNode::setMuteStatus(bool muteStatus){
     if(this->muted != muteStatus){

@@ -11,6 +11,8 @@
 #include <QMenu>
 #include <QToolButton>
 
+#include "../log/logging.h"
+
 const QString LocalTrackView::MIDI_ICON = ":/images/input_midi.png";
 const QString LocalTrackView::MONO_ICON = ":/images/input_mono.png";
 const QString LocalTrackView::STEREO_ICON = ":/images/input_stereo.png";
@@ -36,7 +38,8 @@ void LocalTrackView::closeAllPlugins(){
     inputNode->closeProcessorsWindows();//close vst editors
 }
 
-void LocalTrackView::init(int channelIndex, float initialGain, BaseTrackView::BoostValue boostValue, float initialPan, bool muted){
+void LocalTrackView::init(int channelIndex, float
+                          initialGain, BaseTrackView::BoostValue boostValue, float initialPan, bool muted){
     if(!mainController){
         qCritical() << "LocalTrackView::init() mainController is null!";
         return;
@@ -93,6 +96,40 @@ void LocalTrackView::init(int channelIndex, float initialGain, BaseTrackView::Bo
 
     peakMetersOnly = false;
 }
+
+//ADDED FOR PRESETS
+
+void  LocalTrackView::loadFXPanel()
+{
+    //todo
+}
+
+void  LocalTrackView::resetFXPanel()
+{
+   if(fxPanel)
+    {
+      int fxCount=fxPanel->getItems().size();
+      if(fxCount>0)
+      {
+          for(int i=0;i<fxCount;i++)
+          {
+              fxPanel->removePlugin();
+          }
+      }
+    }
+}
+
+void LocalTrackView::mute(bool b)
+{
+    getInputNode()->setMuteStatus(b);//audio only
+    ui->muteButton->setChecked(b);//gui only
+}
+void LocalTrackView::solo(bool b)
+{
+    getInputNode()->setSoloStatus(b);//audio only
+    ui->soloButton->setChecked(b);//gui only
+}
+
 
 void LocalTrackView::initializeBoostButtons(BoostValue boostValue){
     switch (boostValue) {
