@@ -2,7 +2,7 @@ VST_SDK_PATH = "$$PWD/../VST_SDK"
 
 TEMPLATE = lib
 
-VERSION = 1.0.0
+VERSION = 2.7.0
 
 # Define the preprocessor macro to get the application version in Jamtaba application.
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
