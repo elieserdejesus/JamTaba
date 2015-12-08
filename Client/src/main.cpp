@@ -13,7 +13,7 @@ int main(int argc, char* args[] ){
 
 
 
-    QApplication::setApplicationName("Jomtobo");
+    QApplication::setApplicationName("Jamtaba");
     QApplication::setApplicationVersion(APP_VERSION);
 
     //start the configurator
@@ -32,7 +32,7 @@ int main(int argc, char* args[] ){
 
     Controller::StandaloneMainController mainController(settings, (QApplication*)application);
     //..JOMTOBO CSS
-    mainController.configureStyleSheet("jomtobo.css");
+    mainController.configureStyleSheet("jamtaba.css");
     mainController.start();
     if(mainController.isUsingNullAudioDriver()){
         QMessageBox::about(nullptr, "Fatal error!", "Jamtaba can't detect any audio device in your machine!");
