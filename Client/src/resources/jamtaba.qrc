@@ -2,7 +2,6 @@
     <qresource prefix="/style">
         <file>jamtaba.css</file>
         <file>jamtaba_orange.css</file>
-        <file>jomtobo.css</file>
     </qresource>
     <qresource prefix="/images">
         <file>gradient.bmp</file>
