@@ -120,7 +120,6 @@ protected slots:
     //view mode menu
     void on_menuViewModeTriggered(QAction* action);
 
-
     //ninjam controller
     void ninjamTransmissionStarted();
     void ninjamPreparingToTransmit();

@@ -62,7 +62,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     pluginScanDialog(nullptr),
     ninjamWindow(nullptr),
     roomToJump(nullptr),
-    fullViewMode(true)
+    fullViewMode(true),
+    fullScreenViewMode(false)
     //lastPerformanceMonitorUpdate(0)
 {
     qCInfo(jtGUI) << "Creating MainWindow...";
@@ -712,6 +713,7 @@ void MainWindow::initializeLoginService(){
 }
 
 void MainWindow::initializeWindowState(){
+    this->fullScreenViewMode = mainController->getSettings().windowsWasFullScreenViewMode();
 
     setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
 
@@ -723,15 +725,17 @@ void MainWindow::initializeWindowState(){
         if(mainController->getSettings().windowsWasFullScreenViewMode()){
             this->setWindowState(Qt::WindowFullScreen);
         }
-        QPointF location = mainController->getSettings().getLastWindowLocation();
-        QDesktopWidget* desktop = QApplication::desktop();
-        int desktopWidth = desktop->width();
-        int desktopHeight = desktop->height();
-        int x = desktopWidth * location.x();
-        int y = desktopHeight * location.y();
-        this->move(x, y);
-        qCDebug(jtGUI)<< "Restoring window to position:" << x << ", " << y;
-        qCDebug(jtGUI)<< "Window size:" << width() << ", " << height();
+        else{//this else fix the cropped window when starting in full screen mode
+            QPointF location = mainController->getSettings().getLastWindowLocation();
+            QDesktopWidget* desktop = QApplication::desktop();
+            int desktopWidth = desktop->width();
+            int desktopHeight = desktop->height();
+            int x = desktopWidth * location.x();
+            int y = desktopHeight * location.y();
+            this->move(x, y);
+            qCDebug(jtGUI)<< "Restoring window to position:" << x << ", " << y;
+            qCDebug(jtGUI)<< "Window size:" << width() << ", " << height();
+        }
     }
 
 }
@@ -1442,15 +1446,10 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
 void MainWindow::on_actionFullscreenMode_triggered()
 {
-      if(!ui.actionFullscreenMode->isChecked())
-      {
-          this->setWindowState(Qt::WindowMaximized);
-          mainController->setFullScreenView(false);
+    fullScreenViewMode = !fullScreenViewMode;//toggle
+    setWindowState( fullScreenViewMode ? Qt::WindowFullScreen : Qt::WindowMaximized);
+    mainController->setFullScreenView(fullScreenViewMode);
 
-      }
-      else
-      {this->setWindowState(Qt::WindowFullScreen);
-       mainController->setFullScreenView(true);}
 }
 
 

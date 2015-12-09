@@ -187,7 +187,7 @@ void MetronomeSettings::write(QJsonObject &out){
 }
 //+++++++++++++++++++++++++++
 WindowSettings::WindowSettings()
-    : SettingsObject("window"), maximized(false), fullViewMode(true){
+    : SettingsObject("window"), maximized(false), fullViewMode(true), fullScreenViewMode(false){
 
 }
 
@@ -522,7 +522,9 @@ void Settings::setMetronomeSettings(float gain, float pan, bool muted){
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void Settings::setFullScreenView(bool v){ windowSettings.fullScreenViewMode=v;}
+void Settings::setFullScreenView(bool v){
+    windowSettings.fullScreenViewMode=v;
+}
 //+++++++++   Window Location  +++++++++++++++++++++++
 void Settings::setWindowSettings(bool windowIsMaximized, bool usingFullView, QPointF location){
     double x = (location.x() >= 0) ? location.x() : 0;
