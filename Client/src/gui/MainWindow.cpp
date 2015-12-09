@@ -821,7 +821,7 @@ void MainWindow::on_incompatibilityWithServerDetected(){
     hideBusyDialog();
     QString text = "Your Jamtaba version is not compatible with previous versions!";
     QMessageBox::warning(this, "Server : Compatibility problem", text );
-    //close();
+    close();
 }
 
 void MainWindow::detachMainController(){
