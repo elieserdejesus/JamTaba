@@ -263,16 +263,16 @@ void LoginService::handleJson(QString json){
         bool clientIsServerCompatible = root["clientCompatibility"].toBool();
         bool newVersionAvailable = root["newVersionAvailable"].toBool();
 
-        //DIRTY HACK TO FORCE THE CONNECTION FOR JOMTOBOs
-        //if(!clientIsServerCompatible){
-            //refreshTimer->stop();
-            //connected = false;
-          //  emit incompatibilityWithServerDetected();
-            //return;
-        //}
+        
+        if(!clientIsServerCompatible){
+            refreshTimer->stop();
+            connected = false;
+            emit incompatibilityWithServerDetected();
+            return;
+        }
 
         if(newVersionAvailable){
-            //emit newVersionAvailableForDownload();
+            emit newVersionAvailableForDownload();
         }
     }
 
