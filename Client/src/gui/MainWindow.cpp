@@ -819,8 +819,8 @@ bool MainWindow::jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2){
 
 void MainWindow::on_incompatibilityWithServerDetected(){
     hideBusyDialog();
-    QString text = "Your Jomtobo version is compatible with previous versions!";
-    QMessageBox::warning(this, "Compatibility Hack (mwah ah ah!)", text );
+    QString text = "Your Jamtaba version is not compatible with previous versions!";
+    QMessageBox::warning(this, "Server : Compatibility problem", text );
     //close();
 }
 
