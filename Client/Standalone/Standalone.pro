@@ -4,7 +4,7 @@
 
 QT       += core gui network widgets
 
-TARGET = Jomtobo
+TARGET = Jamtaba
 TEMPLATE = app
 
 HEADERS += \
