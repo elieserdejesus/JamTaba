@@ -20,13 +20,10 @@ JamRoomViewPanel::JamRoomViewPanel(Login::RoomInfo roomInfo, QWidget* parent, Co
 
 
 QString JamRoomViewPanel::buildRoomDescriptionString(Login::RoomInfo roomInfo){
-    if(roomInfo.isEmpty() || roomContainsBotsOnly(roomInfo)){
-        return "empty room";
-    }
     int botsCount =roomInfo.getUsers().count() - roomInfo.getNonBotUsersCount();
     int maxUsers = roomInfo.getMaxUsers() - botsCount;
     int users = roomInfo.getNonBotUsersCount();
-    QString roomDescription = (!roomInfo.isFull()) ? (QString::number(users) + "/" + QString::number(maxUsers) + " players ") : "crowded room";
+    QString roomDescription = QString::number(users) + "/" + QString::number(maxUsers) + " players ";
     if(roomInfo.getBpm() > 0){
         roomDescription += "  " + QString::number(roomInfo.getBpm()) + " BPM ";
     }
