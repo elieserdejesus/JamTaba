@@ -56,8 +56,8 @@ public:
 
     Persistence::InputsSettings getInputsSettings() const;
 
-    inline int getChannelGroupsCount() const{return controlSurfaceJTB.size();}
-    inline QString getChannelGroupName(int index) const{return controlSurfaceJTB.at(index)->getGroupName();}
+    inline int getChannelGroupsCount() const{return localGroupChannels.size();}
+    inline QString getChannelGroupName(int index) const{return localGroupChannels.at(index)->getGroupName();}
     void highlightChannelGroup(int index) const;
 
     void addChannelsGroup(QString name);
@@ -91,7 +91,7 @@ protected:
 
     void centerDialog(QWidget* dialog);
 
-    QList<LocalTrackGroupView*> controlSurfaceJTB;
+    QList<LocalTrackGroupView*> localGroupChannels;
 
     virtual NinjamRoomWindow* createNinjamWindow(Login::RoomInfo, Controller::MainController*) = 0;
 
