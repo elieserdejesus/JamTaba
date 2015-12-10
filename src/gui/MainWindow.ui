@@ -94,9 +94,6 @@
           </item>
           <item>
            <widget class="QPushButton" name="localControlsCollapseButton">
-            <property name="cursor">
-             <cursorShape>PointingHandCursor</cursorShape>
-            </property>
             <property name="toolTip">
              <string>collapse/expand your controls ...</string>
             </property>
@@ -121,8 +118,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>684</height>
+            <width>99</width>
+            <height>683</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="localTracksLayout">
@@ -219,8 +216,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>712</width>
-                <height>675</height>
+                <width>711</width>
+                <height>674</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -311,7 +308,7 @@
      <x>0</x>
      <y>0</y>
      <width>1160</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPreferences">
