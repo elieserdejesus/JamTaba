@@ -16,9 +16,6 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="cursor">
-   <cursorShape>PointingHandCursor</cursorShape>
-  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -40,9 +37,6 @@
    </property>
    <item>
     <widget class="QWidget" name="topPanel" native="true">
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <property name="spacing">
        <number>3</number>
@@ -79,9 +73,6 @@
        <horstretch>0</horstretch>
        <verstretch>1</verstretch>
       </sizepolicy>
-     </property>
-     <property name="cursor">
-      <cursorShape>OpenHandCursor</cursorShape>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout"/>
     </widget>

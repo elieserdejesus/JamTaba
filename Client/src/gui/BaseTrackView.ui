@@ -19,9 +19,6 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true"/>
-  </property>
   <layout class="QVBoxLayout" name="mainLayout">
    <property name="spacing">
     <number>3</number>
@@ -87,9 +84,6 @@
              <horstretch>1</horstretch>
              <verstretch>1</verstretch>
             </sizepolicy>
-           </property>
-           <property name="cursor">
-            <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="accessibleDescription">
             <string>This is the volume slider, Moove up to increase the volume or down to decrease it </string>
@@ -206,9 +200,6 @@
             </item>
             <item row="0" column="1" rowspan="2" colspan="2" alignment="Qt::AlignHCenter">
              <widget class="QDial" name="panSlider">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
               <property name="accessibleDescription">
                <string>This is the Pan knob</string>
               </property>
@@ -336,9 +327,6 @@
            <property name="enabled">
             <bool>true</bool>
            </property>
-           <property name="cursor">
-            <cursorShape>PointingHandCursor</cursorShape>
-           </property>
            <property name="toolTip">
             <string>mute</string>
            </property>
@@ -364,9 +352,6 @@
          </item>
          <item>
           <widget class="QPushButton" name="soloButton">
-           <property name="cursor">
-            <cursorShape>PointingHandCursor</cursorShape>
-           </property>
            <property name="toolTip">
             <string>solo</string>
            </property>
@@ -410,9 +395,6 @@
             </property>
             <item>
              <widget class="QPushButton" name="buttonBoostPlus12">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
               <property name="toolTip">
                <string>+12 db boost</string>
               </property>
@@ -429,9 +411,6 @@
             </item>
             <item>
              <widget class="QPushButton" name="buttonBoostZero">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
               <property name="toolTip">
                <string>no boost</string>
               </property>
@@ -448,9 +427,6 @@
             </item>
             <item>
              <widget class="QPushButton" name="buttonBoostMinus12">
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
               <property name="toolTip">
                <string>-12 db boost</string>
               </property>
