@@ -151,7 +151,7 @@ void LocalTrackGroupView::on_toolButtonClicked()
     //adding a menu action for each stored preset
     Configurator *cfg= Configurator::getInstance();
     QStringList presetsNames=cfg->getPresetFilesNames(false);
-    foreach(QString name,presetsNames )
+    foreach(QString name, presetsNames )
     {
         //presetsNames.append(name);
         QAction* presetAction = loadPresetsSubmenu->addAction(name);
@@ -159,12 +159,8 @@ void LocalTrackGroupView::on_toolButtonClicked()
         QObject::connect(loadPresetsSubmenu, SIGNAL(triggered(QAction*)), this, SLOT(on_LoadPresetClicked(QAction*)));
 
     }
+    loadPresetsSubmenu->setEnabled(!presetsNames.isEmpty());
 
-   /* foreach (QString presetName, presetsNames) {
-        QAction* presetAction = loadPresetsSubmenu->addAction(presetName);
-        presetAction->setData(presetName);//putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
-        QObject::connect(presetAction, SIGNAL(triggered(bool)), this, SLOT(on_LoadPresetClicked()));
-    }*/
     menu.addMenu(loadPresetsSubmenu);
 
     //SAVE
@@ -175,7 +171,7 @@ void LocalTrackGroupView::on_toolButtonClicked()
 
     //RESET - in case of panic
     QAction* reset =  menu.addAction(QIcon(":/images/gear.png"),"Reset Preset");
-    reset->setDisabled(false);// so we can merge to master without confusion for the user until it works
+    //reset->setDisabled(false);// so we can merge to master without confusion for the user until it works
     QObject::connect(reset, SIGNAL(triggered()), this, SLOT(on_ResetPresetClicked()));
 
     menu.addSeparator();
