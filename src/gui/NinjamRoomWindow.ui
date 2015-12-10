@@ -67,9 +67,6 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="cursor">
-         <cursorShape>OpenHandCursor</cursorShape>
-        </property>
         <property name="accessibleDescription">
          <string>This is the room where you are</string>
         </property>
@@ -83,9 +80,6 @@
       </item>
       <item>
        <widget class="QPushButton" name="licenceButton">
-        <property name="cursor">
-         <cursorShape>PointingHandCursor</cursorShape>
-        </property>
         <property name="toolTip">
          <string>read the server licence ...</string>
         </property>
