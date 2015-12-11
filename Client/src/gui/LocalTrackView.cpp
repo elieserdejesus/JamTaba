@@ -106,16 +106,9 @@ void  LocalTrackView::loadFXPanel()
 
 void  LocalTrackView::resetFXPanel()
 {
-   if(fxPanel)
+    if(fxPanel)
     {
-      int fxCount=fxPanel->getItems().size();
-      if(fxCount>0)
-      {
-          for(int i=0;i<fxCount;i++)
-          {
-              fxPanel->removePlugin();
-          }
-      }
+        fxPanel->removePlugins();
     }
 }
 

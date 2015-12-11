@@ -2,11 +2,13 @@
 //#include "ui_fxpanel.h"
 #include "FxPanelItem.h"
 #include "plugins/guis.h"
+#include "MainController.h"
 #include <QPainter>
 #include <QScrollArea>
 #include <QVBoxLayout>
 #include <QStyleOption>
 #include <QLayout>
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FxPanel::FxPanel(LocalTrackView *parent, Controller::MainController *mainController)
     :
@@ -41,12 +43,11 @@ FxPanel::FxPanel(LocalTrackView *parent, Controller::MainController *mainControl
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void FxPanel::removePlugin(){
+void FxPanel::removePlugins(){
     QList<FxPanelItem*> items = findChildren<FxPanelItem*>();
     for(FxPanelItem* item : items){
         if(item->containPlugin()){
             item->unsetPlugin();
-
             return;
         }
     }
