@@ -87,9 +87,12 @@ void FxPanelItem::setPlugin(Audio::Plugin* plugin){
 
 void FxPanelItem::unsetPlugin(){
     this->plugin->closeEditor();
-    this->plugin = nullptr;
     this->label->setText("");
     this->bypassButton->setVisible(false);
+
+    mainController->removePlugin(this->localTrackView->getInputIndex(), plugin);
+
+    this->plugin = nullptr;
 
     updateStyleSheet();
 }
@@ -172,16 +175,7 @@ void FxPanelItem::on_actionMenuTriggered(QAction* a){
             bypassButton->click();//simulate a click in the bypass button
         }
         else if(a->text() == "remove"){
-            Audio::Plugin* plugin = this->plugin;
-            unsetPlugin();//set this->plugin to nullptr
-
-//            if(plugin->hasEditorWindow()){
-//                Audio::PluginWindow* window = plugin->getEditor();
-//                if(window){
-//                    window->close();
-//                }
-//            }
-            mainController->removePlugin(this->localTrackView->getInputIndex(), plugin);
+            unsetPlugin();//set this->plugin to nullptr AND remove from mainController
         }
     }
 }
