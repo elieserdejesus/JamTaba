@@ -409,9 +409,10 @@ NinjamTrackView #peaksDbLabel{
 
 
 BaseTrackView[unlighted="true"] #peaksDbLabel,
-BaseTrackView[unlighted="true"] #muteButton,
-BaseTrackView[unlighted="true"] #soloButton{
+BaseTrackView[unlighted="true"] .QPushButton
+{
    border: none;
+   background-color: rgb(100, 100, 100);
 }
 
 BaseTrackView #muteButton{
@@ -1001,6 +1002,10 @@ LocalTrackView #inputPanel{
 
 BaseTrackView[unlighted="false"] #inputPanel{
     border: 1px outset rgb(80,80,80);
+}
+
+BaseTrackView[unlighted="true"] #panSlider{
+    background-color: rgb(70, 70,70);
 }
 
 LocalTrackView #inputPanel:hover{

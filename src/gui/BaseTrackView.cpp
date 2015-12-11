@@ -165,6 +165,15 @@ void BaseTrackView::setUnlightStatus(bool unlighted){
     style()->unpolish(ui->soloButton);
     style()->polish(ui->soloButton);
 
+    style()->unpolish(ui->buttonBoostMinus12);
+    style()->polish(ui->buttonBoostMinus12);
+
+    style()->unpolish(ui->buttonBoostPlus12);
+    style()->polish(ui->buttonBoostPlus12);
+
+    style()->unpolish(ui->buttonBoostZero);
+    style()->polish(ui->buttonBoostZero);
+
     update();
 }
 

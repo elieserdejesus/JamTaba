@@ -337,7 +337,7 @@ void NinjamController::stop(bool emitDisconnectedingSignal){
     QObject::disconnect(ninjamService, SIGNAL(userChannelCreated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelCreated(Ninjam::User, Ninjam::UserChannel)));
     QObject::disconnect(ninjamService, SIGNAL(userChannelRemoved(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelRemoved(Ninjam::User, Ninjam::UserChannel)));
     QObject::disconnect(ninjamService, SIGNAL(userChannelUpdated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelUpdated(Ninjam::User, Ninjam::UserChannel)));
-    QObject::disconnect(ninjamService, SIGNAL(audioIntervalDownloading(Ninjam::User,int,int)), this, SLOT(on_ninjamAudiointervalDownloading(Ninjam::User,int,int)));
+    QObject::disconnect(ninjamService, SIGNAL(audioIntervalDownloading(Ninjam::User,int,int)), this, SLOT(on_ninjamAudioIntervalDownloading(Ninjam::User,int,int)));
 
     QObject::disconnect(ninjamService, SIGNAL(chatMessageReceived(Ninjam::User,QString)), this, SIGNAL(chatMsgReceived(Ninjam::User,QString)));
 
@@ -401,7 +401,7 @@ void NinjamController::start(const Ninjam::Server& server, QMap<int, bool> chann
         QObject::connect(ninjamService, SIGNAL(userChannelCreated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelCreated(Ninjam::User, Ninjam::UserChannel)));
         QObject::connect(ninjamService, SIGNAL(userChannelRemoved(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelRemoved(Ninjam::User, Ninjam::UserChannel)));
         QObject::connect(ninjamService, SIGNAL(userChannelUpdated(Ninjam::User, Ninjam::UserChannel)), this, SLOT(on_ninjamUserChannelUpdated(Ninjam::User, Ninjam::UserChannel)));
-        QObject::connect(ninjamService, SIGNAL(audioIntervalDownloading(Ninjam::User,int,int)), this, SLOT(on_ninjamAudiointervalDownloading(Ninjam::User,int,int)));
+        QObject::connect(ninjamService, SIGNAL(audioIntervalDownloading(Ninjam::User,int,int)), this, SLOT(on_ninjamAudioIntervalDownloading(Ninjam::User,int,int)));
         QObject::connect(ninjamService, SIGNAL(userLeaveTheJam(Ninjam::User)), this, SLOT(on_ninjamUserLeave(Ninjam::User)));
         QObject::connect(ninjamService, SIGNAL(userEnterInTheJam(Ninjam::User)), this, SLOT(on_ninjamUserEnter(Ninjam::User)));
 
@@ -732,12 +732,11 @@ void NinjamController::setSampleRate(int newSampleRate){
 
 
 
-void NinjamController::on_ninjamAudiointervalDownloading(Ninjam::User user, int channelIndex, int downloadedBytes){
+void NinjamController::on_ninjamAudioIntervalDownloading(Ninjam::User user, int channelIndex, int downloadedBytes){
     Q_UNUSED(downloadedBytes);
     Ninjam::UserChannel channel = user.getChannel(channelIndex);
     QString channelKey = getUniqueKey(channel);
     QMutexLocker locker(&mutex);
-    //checkThread("on_ninjamAudiointervalDownloading();");
     if(trackNodes.contains(channelKey)){
         NinjamTrackNode* track = dynamic_cast<NinjamTrackNode*>( trackNodes[channelKey]);
         if(!track->isPlaying()){//track is not playing yet and receive the first interval bytes
