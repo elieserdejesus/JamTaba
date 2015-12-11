@@ -296,7 +296,7 @@ void NinjamRoomWindow::on_channelXmitChanged(long channelID, bool transmiting){
     qCDebug(jtNinjamGUI) << "channel xmit changed:" << channelID << " state:" << transmiting;
     BaseTrackView* trackView = NinjamTrackView::getTrackViewByID(channelID);
     if(trackView){
-        trackView->setEnabled(transmiting);
+        trackView->setUnlightStatus(!transmiting);
     }
 }
 
