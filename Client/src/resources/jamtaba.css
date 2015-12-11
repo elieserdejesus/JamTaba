@@ -448,14 +448,19 @@ BaseTrackView[unlighted="true"] QSlider::groove:vertical{
 
 
 QSlider::handle:horizontal {
-    background-image: url(':/images/fader_shadow_horizontal.png');
-    background-repeat: no-repeat;
-    background-color: none;
-    margin-top: -5px;
-    margin-bottom: -7px;
-    width: 16px;
-    border: none;
+background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+    stop: 0      rgb(210, 210, 210),
+    stop: 0.8    rgb(120, 120, 120),
+    stop: 1      rgba(0, 0, 0, 20));
+
+    margin-top: -6px;
+    margin-bottom: -6px;
+    width: 12px;
+    height: 12x;
+    border-radius: 6px;
+    border: 1px solid rgb(60, 60, 60);
 }
+
 
 QSlider::handle:horizontal:hover {
    background-image: url(':/images/fader_shadow_horizontal_hover.png');
@@ -515,6 +520,16 @@ BaseTrackView[unlighted="true"] PeakMeter{
 QMainWindow{
 background-color: #494949;
     /*background-image: url(':/images/metal_texture.jpg');*/
+}
+
+QMainWindow #bottomPanel{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+     stop: 0     #CBCBCB,
+     stop: 1.0   #989898);
+    min-height: 80px;
+
+    margin: 0px;
+    border: 1px solid black;
 }
 
 /* painéis principais */
