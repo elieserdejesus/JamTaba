@@ -713,8 +713,10 @@ void MainWindow::initializeLoginService(){
 }
 
 void MainWindow::initializeWindowState(){
-    this->fullScreenViewMode = mainController->getSettings().windowsWasFullScreenViewMode();
+    bool wasFullScreenInLastSession = mainController->getSettings().windowsWasFullScreenViewMode();
+    this->fullScreenViewMode = wasFullScreenInLastSession && !mainController->isRunningAsVstPlugin();
 
+    //set window mode: mini mode or full view mode
     setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
 
     if(mainController->getSettings().windowWasMaximized() && fullViewMode){
@@ -722,19 +724,21 @@ void MainWindow::initializeWindowState(){
         setWindowState(Qt::WindowMaximized);
     }
     else{
-        if(mainController->getSettings().windowsWasFullScreenViewMode()){
-            this->setWindowState(Qt::WindowFullScreen);
-        }
-        else{//this else fix the cropped window when starting in full screen mode
-            QPointF location = mainController->getSettings().getLastWindowLocation();
-            QDesktopWidget* desktop = QApplication::desktop();
-            int desktopWidth = desktop->width();
-            int desktopHeight = desktop->height();
-            int x = desktopWidth * location.x();
-            int y = desktopHeight * location.y();
-            this->move(x, y);
-            qCDebug(jtGUI)<< "Restoring window to position:" << x << ", " << y;
-            qCDebug(jtGUI)<< "Window size:" << width() << ", " << height();
+        if(!mainController->isRunningAsVstPlugin()){ //avoid set plugin to full screen or move the plugin window
+            if(mainController->getSettings().windowsWasFullScreenViewMode()){
+                this->setWindowState(Qt::WindowFullScreen);
+            }
+            else{//this else fix the cropped window when starting in full screen mode
+                QPointF location = mainController->getSettings().getLastWindowLocation();
+                QDesktopWidget* desktop = QApplication::desktop();
+                int desktopWidth = desktop->width();
+                int desktopHeight = desktop->height();
+                int x = desktopWidth * location.x();
+                int y = desktopHeight * location.y();
+                this->move(x, y);
+                qCDebug(jtGUI)<< "Restoring window to position:" << x << ", " << y;
+                qCDebug(jtGUI)<< "Window size:" << width() << ", " << height();
+            }
         }
     }
 
