@@ -146,7 +146,7 @@ private slots:
     void on_ninjamServerBpmChanged(short newBpm);
     void on_ninjamServerBpiChanged(short oldBpi, short newBpi);
     void on_ninjamAudiointervalCompleted(Ninjam::User user, int channelIndex, QByteArray encodedAudioData);
-    void on_ninjamAudiointervalDownloading(Ninjam::User user, int channelIndex, int downloadedBytes);
+    void on_ninjamAudioIntervalDownloading(Ninjam::User user, int channelIndex, int downloadedBytes);
     void on_ninjamUserChannelCreated(Ninjam::User user, Ninjam::UserChannel channel);
     void on_ninjamUserChannelRemoved(Ninjam::User user, Ninjam::UserChannel channel);
     void on_ninjamUserChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel);
