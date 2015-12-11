@@ -99,6 +99,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     QObject::connect(ui.actionReportBugs, SIGNAL(triggered(bool)), this, SLOT(on_reportBugMenuItemTriggered()));
     QObject::connect(ui.actionWiki, SIGNAL(triggered(bool)), this, SLOT(on_wikiMenuItemTriggered()));
     QObject::connect(ui.actionUsersManual, SIGNAL(triggered(bool)), this, SLOT(on_UsersManualMenuItemTriggered()));
+    QObject::connect(ui.actionCurrentVersion, SIGNAL(triggered(bool)), this, SLOT(on_currentVersionActionTriggered()));
     QObject::connect( ui.localControlsCollapseButton, SIGNAL(clicked()), this, SLOT(on_localControlsCollapseButtonClicked()));
     QObject::connect( mainController->getRoomStreamer(), SIGNAL(error(QString)), this, SLOT(on_RoomStreamerError(QString)));
 
@@ -1518,4 +1519,9 @@ bool MainWindow::isTransmiting(int channelID) const{
 }
 
 //++++++++++++
+
+void MainWindow::on_currentVersionActionTriggered(){
+
+    QMessageBox::about(this, "About Jamtaba", "Jamtaba version is " + QApplication::applicationVersion());
+}
 

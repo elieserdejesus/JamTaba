@@ -346,6 +346,8 @@
     <addaction name="actionWiki"/>
     <addaction name="actionUsersManual"/>
     <addaction name="actionReportBugs"/>
+    <addaction name="separator"/>
+    <addaction name="actionCurrentVersion"/>
    </widget>
    <widget class="QMenu" name="menuViewMode">
     <property name="cursor">
@@ -467,6 +469,11 @@
    </property>
    <property name="shortcut">
     <string>F11</string>
+   </property>
+  </action>
+  <action name="actionCurrentVersion">
+   <property name="text">
+    <string>Current Version ...</string>
    </property>
   </action>
  </widget>
