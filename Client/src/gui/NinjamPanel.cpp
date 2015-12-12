@@ -45,7 +45,16 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     QObject::connect(ui->panSlider, SIGNAL(valueChanged(int)), this, SIGNAL(panSliderChanged(int)));
     QObject::connect(ui->muteButton, SIGNAL(clicked(bool)), this, SIGNAL(muteButtonClicked()));
     QObject::connect(ui->soloButton, SIGNAL(clicked(bool)), this, SIGNAL(soloButtonClicked()));
+
+    ui->peakMeterLeft->setOrientation(PeakMeter::HORIZONTAL);
+    ui->peakMeterRight->setOrientation(PeakMeter::HORIZONTAL);
 }
+//++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamPanel::addMasterControls(QWidget *masterControlsPanel){
+    this->layout()->addWidget(masterControlsPanel);
+
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamPanel::createHostSyncButton(QString buttonText){
     hostSyncButton = new QPushButton(buttonText);

@@ -5,7 +5,6 @@
     </qresource>
     <qresource prefix="/images">
         <file>gradient.bmp</file>
-        <file>fader_shadow.png</file>
         <file>check.png</file>
         <file>check_hover.png</file>
         <file>check_checked.png</file>
@@ -25,11 +24,6 @@
         <file>gear-hover.png</file>
         <file>less.png</file>
         <file>more.png</file>
-        <file>fader_shadow_hover.png</file>
-        <file>fader_shadow_unlighted.png</file>
-        <file>fader_shadow_horizontal.png</file>
-        <file>fader_shadow_horizontal_hover.png</file>
-        <file>fader_shadow_horizontal_unlighted.png</file>
         <file>off.png</file>
         <file>mini arrow left.png</file>
         <file>mini arrow right.png</file>

@@ -990,11 +990,19 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
     ChatPanel* chatPanel = ninjamWindow->getChatPanel();
     ui.chatTabWidget->addTab(chatPanel, QIcon(":/images/ninja.png"), "chat " + roomInfo.getName());
 
+    //add the ninjam panel in main window (bottom panel)
+    qCDebug(jtGUI) << "adding ninjam panel...";
+    NinjamPanel* ninjamPanel = ninjamWindow->getNinjamPanel();
+    dynamic_cast<QHBoxLayout*>(ui.bottomPanel->layout())->insertWidget(0, ninjamPanel, 0, Qt::AlignHCenter);
+    ninjamPanel->addMasterControls(ui.masterControlsPanel);
+
+    //ui.bottomPanel->layout()->setAlignment(ui.masterControlsPanel, Qt::AlignHCenter);
+
+
     //show chat area
     ui.chatArea->setVisible(true);
 
     ui.leftPanel->adjustSize();
-    //ui.leftPanel->setMinimumWidth(500);
     qCDebug(jtGUI) << "MainWindow::enterInRoom() done!";
 
     QObject::connect(mainController->getNinjamController(), SIGNAL(preparedToTransmit()), this, SLOT(ninjamTransmissionStarted()));
@@ -1026,6 +1034,10 @@ void MainWindow::exitFromRoom(bool normalDisconnection){
         ui.chatTabWidget->widget(0)->deleteLater();
         ui.chatTabWidget->removeTab(0);
     }
+
+    //remove ninjam panel from main window
+    ui.bottomPanel->layout()->removeWidget(ninjamWindow->getNinjamPanel());
+    ui.bottomPanel->layout()->addWidget(ui.masterControlsPanel);
 
     ninjamWindow.reset();
 
@@ -1419,13 +1431,8 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
         }
     }
 
-//    dynamic_cast<QGridLayout*>(ui.centralWidget->layout())->setho
-//    ->setSpacing(fullViewMode ? 0 : 3);
-
     ui.actionFullView->setChecked(fullViewMode);
     ui.actionMiniView->setChecked(!fullViewMode);
-
-    //recalculateLeftPanelWidth();
 }
 //+++++++++++++++++++++++++++
 void MainWindow::on_localTrackAdded(){
@@ -1538,3 +1545,7 @@ void MainWindow::on_masterFaderMoved(int value){
     float newGain = (float)value/ui.masterFader->maximum();
     mainController->setMasterGain(newGain);
 }
+
+
+
+

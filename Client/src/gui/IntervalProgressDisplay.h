@@ -24,6 +24,10 @@ public:
     void setSliceNumberColor(QColor sliceNumberColor) ;
     inline QColor getSliceNumberColor() const{ return sliceNumberColor; }
     void setPaintMode(PaintMode mode);
+
+    QSize minimumSizeHint() const;
+    //QSize sizeHint() const;
+
 protected:
     virtual void paintEvent(QPaintEvent* e);
     virtual void resizeEvent(QResizeEvent * event);

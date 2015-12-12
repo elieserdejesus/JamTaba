@@ -26,7 +26,7 @@ signals:
     void soloButtonClicked();
     void hostSyncButtonClicked();
 public:
-    explicit NinjamPanel(QWidget *parent);
+    explicit NinjamPanel(QWidget *parent=0);
     ~NinjamPanel();
 
     void createHostSyncButton(QString buttonText);
@@ -53,6 +53,8 @@ public:
 
     int getIntervalShape() const;
     void setIntervalShape(int shape);
+
+    void addMasterControls(QWidget* masterControlsPanel);
 protected:
     void paintEvent(QPaintEvent *);
     bool eventFilter(QObject *source, QEvent *ev);

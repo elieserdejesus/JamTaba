@@ -529,6 +529,15 @@ PeakMeter#masterMeterL, PeakMeter#masterMeterR{
     margin: 0px;
 }
 
+QLabel#masterTitleLabel, QLabel#labelMetronomeIControls{
+    color: gray;
+}
+
+
+QLabel#labelMetronomeIControls{
+    margin-top: 6px;
+}
+
 BaseTrackView[unlighted="true"] PeakMeter{
     background-color: rgba(0, 0, 0, 15);
     /*border: none;*/
@@ -545,7 +554,7 @@ QMainWindow #bottomPanel{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
      stop: 0     #CBCBCB,
      stop: 1.0   #989898);
-    min-height: 60px;
+    min-height: 80px;
     margin-top: 6px;
     border-top: 1px solid black;
 
@@ -1152,53 +1161,52 @@ NinjamRoomWindow TrackGroupView #groupNameField {
     margin-top: 3px;
 }
 
-NinjamPanel{
-   /*
-     background-color: qlineargradient(x1:0, y1:0.55, x2:0, y2:0.99, stop:0 rgba(0,0, 0, 0), stop:0.8 rgba(0, 0, 0, 25), stop:1 rgba(0, 0, 0, 55));
-    border-radius: 2px;
-    border: none;
-    min-height: 100px;
-    border-bottom: 1px solid rgba(0, 0, 0, 50);
-*/
+
+NinjamPanel #ninjamControlsPanel{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop: 0     rgba(0, 0, 0, 10),
+    stop: 1.0   rgba(0, 0, 0, 30));
+
+    border-radius: 3px;
+    border: 1px inset rgb(120, 120, 120);
+    min-height: 130px;
 }
 
-
-
-NinjamPanel #intervalPanel{/* beats text */
-    color: rgb(80, 80, 80);
+NinjamPanel #intervalPanel{
+    color: rgb(238, 238, 238);/* beats text color */
     font-weight: normal;
     font-size: 11px;
-
-
-    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-        stop:0 rgba(255,255,255,0),
-        stop:0.3 rgba(255, 255, 255, 30),
-        stop:0.5 rgba(255, 255, 255, 80),
-        stop:0.7 rgba(255, 255, 255, 30),
-        stop:1 rgba(255,255,255,0));
-
+    background: transparent;
+    min-height: 120px;
 }
 
-NinjamPanel #metronomeControls, NinjamPanel #panelCombos{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgb(255,255,255),
-    stop:0.06 rgb(230, 230, 230)
-    stop:0.95 rgb(205, 205, 205),
-    stop:1 rgba(0,0,0,30));
+NinjamPanel #panelCombos QLabel{
+    color: black;
+}
 
-    border-radius: 2px;
-    border: none;
-    border-top: 1px solid rgba(0, 0, 0, 30);
-    border-left: 1px solid rgba(0, 0, 0, 30);
-    border-right: 1px solid rgba(0, 0, 0, 30);
+NinjamPanel #panelCombos QComboBox{
+    color: rgb(220, 220, 220);
+}
+
+NinjamPanel #panelCombos QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+NinjamPanel #panelCombos QComboBox::down-arrow:hover
+{
+    image:url(:/images/arrow-down-lighter.png);
+}
+NinjamPanel #panelCombos QComboBox::drop-down {
+    border: 0px;
+}
+
+
+NinjamPanel #metronomeControls, NinjamPanel #panelCombos{
+    background: transparent;
 }
 
 NinjamPanel #metronomeControls QSlider::groove:vertical{
     border: 1px inset rgb(140, 140, 140);
-}
-
-NinjamPanel #metronomeControls QSlider::handle:vertical{
-    /*margin-left: -9px;*/
 }
 
 NinjamPanel #soloButton, NinjamPanel #muteButton{
