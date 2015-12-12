@@ -25,7 +25,7 @@ UserChannel::UserChannel(const UserChannel &c)
       pan(c.pan),
       flags(c.flags)
 {
-
+    //qDebug() << userFullName;
 }
 
 UserChannel::~UserChannel()

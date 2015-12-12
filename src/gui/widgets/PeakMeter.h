@@ -2,18 +2,22 @@
 
 #include <QWidget>
 
-
 class PeakMeter : public QWidget
 {
     Q_OBJECT
 
 public:
+
+   enum PeakMeterOrientation{ VERTICAL, HORIZONTAL};
+
    explicit PeakMeter(QWidget *parent = 0);
    virtual ~PeakMeter(){}
    void setPeak(float) ;
    void setSolidColor(QColor color);
    void setPaintMaxPeakMarker(bool paintMaxPeak);
    void setDecayTime(quint32 decayTimeInMiliseconds);
+   void setOrientation(PeakMeterOrientation orientation);
+   QSize minimumSizeHint() const;
 protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent (QResizeEvent *);
@@ -38,6 +42,14 @@ private:
     QColor solidColor;//used when setSolidColor is called to disable gradient painting
 
     bool paintingMaxPeak;
+
+    PeakMeterOrientation orientation;
+
+    QLinearGradient createGradient();
+
+    static const QColor GRADIENT_FIRST_COLOR;
+    static const QColor GRADIENT_MIDDLE_COLOR;
+    static const QColor GRADIENT_LAST_COLOR;
 };
 
 

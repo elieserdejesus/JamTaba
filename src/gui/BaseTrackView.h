@@ -57,13 +57,14 @@ protected:
 
     Ui::BaseTrackView *ui;
     Controller::MainController* mainController;
+
     void paintEvent(QPaintEvent *);
     bool eventFilter(QObject *source, QEvent *ev);
+
     long trackID;
+
     bool activated;
-
     bool narrowed;
-
     bool drawDbValue;
 
     void setPeaks(float left, float right);

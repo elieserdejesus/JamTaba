@@ -18,8 +18,6 @@ class SamplesBuffer;
 //class MainOutputAudioNode;
 class LocalInputAudioNode;
 
-
-
 class AudioMixer
 {
 private:

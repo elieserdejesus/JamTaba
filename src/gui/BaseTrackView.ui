@@ -282,12 +282,6 @@
             </property>
             <item alignment="Qt::AlignLeft">
              <widget class="PeakMeter" name="peakMeterLeft" native="true">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="accessibleDescription">
                <string>This is the peak meter left </string>
               </property>
@@ -295,12 +289,6 @@
             </item>
             <item alignment="Qt::AlignRight">
              <widget class="PeakMeter" name="peakMeterRight" native="true">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="accessibleDescription">
                <string>This is the peak meter right </string>
               </property>
@@ -456,7 +444,7 @@
   <customwidget>
    <class>PeakMeter</class>
    <extends>QWidget</extends>
-   <header>peakmeter.h</header>
+   <header>PeakMeter.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

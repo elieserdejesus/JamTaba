@@ -283,8 +283,7 @@ void MainController::on_ninjamEncodedAudioAvailableToSend(QByteArray encodedAudi
 
 //++++++++++++++++++++++++++++++++++++++++++++
 MainController::MainController(Settings settings)
-    :
-      audioMixer(44100),
+    : audioMixer(44100),
       currentStreamingRoomID(-1000),
       mutex(QMutex::Recursive),
       started(false),
@@ -293,7 +292,8 @@ MainController::MainController(Settings settings)
       settings(settings),
       userNameChoosed(false),
       mainWindow(nullptr),
-      jamRecorder(new Recorder::ReaperProjectGenerator())
+      jamRecorder(new Recorder::ReaperProjectGenerator()),
+      masterGain(1)
 {
 
 }
@@ -609,18 +609,21 @@ void MainController::removeTrack(long trackID){
 
 void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
     MidiBuffer midiBuffer ( midiDriver ? midiDriver->getBuffer() : MidiBuffer(0));
-    int messages = midiBuffer.getMessagesCount();
-    for(int m=0; m < messages; m++){
-        Midi::MidiMessage msg = midiBuffer.getMessage(m);
-        if(msg.isControl()){
-            int inputTrackIndex = 0;//just for test for while, we need get this index from the mapping pair
-            char cc = msg.getData1();
-            char ccValue = msg.getData2();
-            qCDebug(jtMidi) << "Control Change received: " << QString::number(cc) << " -> " << QString::number(ccValue);
-            getInputTrack(inputTrackIndex)->setGain(ccValue/127.0);
-        }
-    }
+//    int messages = midiBuffer.getMessagesCount();
+//    for(int m=0; m < messages; m++){
+//        Midi::MidiMessage msg = midiBuffer.getMessage(m);
+//        if(msg.isControl()){
+//            int inputTrackIndex = 0;//just for test for while, we need get this index from the mapping pair
+//            char cc = msg.getData1();
+//            char ccValue = msg.getData2();
+//            qCDebug(jtMidi) << "Control Change received: " << QString::number(cc) << " -> " << QString::number(ccValue);
+//            getInputTrack(inputTrackIndex)->setGain(ccValue/127.0);
+//        }
+//    }
     audioMixer.process(in, out, sampleRate, midiBuffer);
+
+    out.applyGain(masterGain, 1);//using 1 as boost factor/multiplier (no boost)
+    masterPeak.update(out.computePeak());
 }
 
 
@@ -702,6 +705,10 @@ void MainController::setTrackGain(int trackID, float gain, bool blockSignals){
         node->setGain(Utils::linearGainToPower(gain));
         node->blockSignals(false);
     }
+}
+
+void MainController::setMasterGain(float newGain){
+    this->masterGain = Utils::linearGainToPower(newGain);
 }
 
 void MainController::setTrackMute(int trackID, bool muteStatus, bool blockSignals){
