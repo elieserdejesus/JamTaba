@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1160</width>
-    <height>373</height>
+    <height>382</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -115,7 +115,7 @@
                 <x>0</x>
                 <y>0</y>
                 <width>753</width>
-                <height>230</height>
+                <height>238</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -280,7 +280,7 @@
             <x>0</x>
             <y>0</y>
             <width>99</width>
-            <height>239</height>
+            <height>247</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="localTracksLayout">
@@ -318,23 +318,29 @@
        <string notr="true"/>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
        <property name="topMargin">
-        <number>12</number>
+        <number>6</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>9</number>
+        <number>0</number>
        </property>
-       <item>
+       <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
         <widget class="QWidget" name="masterControlsPanel" native="true">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="maximumSize">
           <size>
-           <width>200</width>
+           <width>150</width>
            <height>16777215</height>
           </size>
          </property>
@@ -356,12 +362,6 @@
           </property>
           <item>
            <widget class="QWidget" name="masterMetersPanel" native="true">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
             <property name="styleSheet">
              <string notr="true"/>
             </property>
@@ -445,6 +445,16 @@
               </widget>
              </item>
             </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="masterTitleLabel">
+            <property name="text">
+             <string>MASTER</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
            </widget>
           </item>
          </layout>

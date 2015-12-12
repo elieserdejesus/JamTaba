@@ -37,7 +37,9 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
     mainController(mainController),
     chatPanel(new ChatPanel(this, mainController->getBotNames() )),
     fullViewMode(true),
-    chordsPanel(nullptr)
+    chordsPanel(nullptr),
+    ninjamPanel(nullptr)
+
 {
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow construtor..";
     ui->setupUi(this);
@@ -61,26 +63,12 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
     QObject::connect(ninjamController, SIGNAL(userLeave(QString)), this, SLOT(on_userLeave(QString)));
     QObject::connect(ninjamController, SIGNAL(userEnter(QString)), this, SLOT(on_userEnter(QString)));
 
-    QObject::connect(ui->topPanel, SIGNAL(bpiComboActivated(QString)), this, SLOT(ninjamBpiComboChanged(QString)));
-    QObject::connect(ui->topPanel, SIGNAL(bpmComboActivated(QString)), this, SLOT(ninjamBpmComboChanged(QString)));
-    QObject::connect(ui->topPanel, SIGNAL(accentsComboChanged(int)), this, SLOT(ninjamAccentsComboChanged(int)));
+    this->ninjamPanel = createNinjamPanel();
 
     QString serverLicence = mainController->getNinjamService()->getCurrentServerLicence();
     ui->licenceButton->setVisible(!serverLicence.isEmpty());
 
     QObject::connect(chatPanel, SIGNAL(userSendingNewMessage(QString)), this, SLOT(userSendingNewChatMessage(QString)));
-
-    float initialMetronomeGain = mainController->getSettings().getMetronomeGain();
-    float initialMetronomePan = mainController->getSettings().getMetronomePan();
-    bool initialMetronomeMuteStatus = mainController->getSettings().getMetronomeMuteStatus();
-
-    ui->topPanel->setGainSliderValue(100*initialMetronomeGain);
-    ui->topPanel->setPanSliderValue(4 * initialMetronomePan);
-    ui->topPanel->setMuteButtonStatus(initialMetronomeMuteStatus);
-    ui->topPanel->setIntervalShape(mainController->getSettings().getIntervalProgressShape());
-
-    initializeMetronomeEvents();//signals and slots
-
     QObject::connect(chatPanel, SIGNAL(userConfirmingVoteToBpiChange(int)), this, SLOT(on_userConfirmingVoteToChangeBpi(int)));
     QObject::connect(chatPanel, SIGNAL(userConfirmingVoteToBpmChange(int)), this, SLOT(on_userConfirmingVoteToChangeBpm(int)));
     QObject::connect(chatPanel, SIGNAL(userConfirmingChordProgression(ChordProgression)), this, SLOT(on_userConfirmingChordProgression(ChordProgression)));
@@ -88,6 +76,31 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
     chatPanel->setPreferredTranslationLanguage(mainController->getSettings().getTranslation());
 
 }
+
+NinjamPanel* NinjamRoomWindow::createNinjamPanel(){
+    NinjamPanel* panel = new NinjamPanel();
+    float initialMetronomeGain = mainController->getSettings().getMetronomeGain();
+    float initialMetronomePan = mainController->getSettings().getMetronomePan();
+    bool initialMetronomeMuteStatus = mainController->getSettings().getMetronomeMuteStatus();
+
+    panel->setGainSliderValue(100 * initialMetronomeGain);
+    panel->setPanSliderValue(4 * initialMetronomePan);
+    panel->setMuteButtonStatus(initialMetronomeMuteStatus);
+    panel->setIntervalShape(mainController->getSettings().getIntervalProgressShape());
+
+    QObject::connect(panel, SIGNAL(bpiComboActivated(QString)), this, SLOT(ninjamBpiComboChanged(QString)));
+    QObject::connect(panel, SIGNAL(bpmComboActivated(QString)), this, SLOT(ninjamBpmComboChanged(QString)));
+    QObject::connect(panel, SIGNAL(accentsComboChanged(int)), this, SLOT(ninjamAccentsComboChanged(int)));
+
+    QObject::connect( panel, SIGNAL(gainSliderChanged(int)), this, SLOT(on_MetronomeFaderMoved(int)));
+    QObject::connect( panel, SIGNAL(panSliderChanged(int)), this, SLOT(on_MetronomePanSliderMoved(int)));
+    QObject::connect( panel, SIGNAL(muteButtonClicked()), this, SLOT(on_MetronomeMuteClicked()));
+    QObject::connect( panel, SIGNAL(soloButtonClicked()), this, SLOT(on_MetronomeSoloClicked()));
+
+
+    return panel;
+}
+
 //+++++++++=
 void NinjamRoomWindow::setFullViewStatus(bool fullView){
     if(fullView == this->fullViewMode){
@@ -146,27 +159,21 @@ void NinjamRoomWindow::updateGeoLocations(){
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamRoomWindow::initializeMetronomeEvents(){
-    QObject::connect( ui->topPanel, SIGNAL(gainSliderChanged(int)), this, SLOT(onFaderMoved(int)));
-    QObject::connect( ui->topPanel, SIGNAL(panSliderChanged(int)), this, SLOT(onPanSliderMoved(int)));
-    QObject::connect( ui->topPanel, SIGNAL(muteButtonClicked()), this, SLOT(onMuteClicked()));
-    QObject::connect( ui->topPanel, SIGNAL(soloButtonClicked()), this, SLOT(onSoloClicked()));
-}
 
-void NinjamRoomWindow::onPanSliderMoved(int value){
-    float sliderValue = value/(float)ui->topPanel->getPanSliderMaximumValue();
+void NinjamRoomWindow::on_MetronomePanSliderMoved(int value){
+    float sliderValue = value/(float)ninjamPanel->getPanSliderMaximumValue();
     mainController->setTrackPan(Controller::NinjamController::METRONOME_TRACK_ID, sliderValue);
 }
 
-void NinjamRoomWindow::onFaderMoved(int value){
+void NinjamRoomWindow::on_MetronomeFaderMoved(int value){
     mainController->setTrackGain(Controller::NinjamController::METRONOME_TRACK_ID, value/100.0);
 }
 
-void NinjamRoomWindow::onMuteClicked(){
+void NinjamRoomWindow::on_MetronomeMuteClicked(){
     mainController->setTrackMute(Controller::NinjamController::METRONOME_TRACK_ID, !mainController->trackIsMuted(Controller::NinjamController::METRONOME_TRACK_ID));
 }
 
-void NinjamRoomWindow::onSoloClicked(){
+void NinjamRoomWindow::on_MetronomeSoloClicked(){
     mainController->setTrackSolo(Controller::NinjamController::METRONOME_TRACK_ID, !mainController->trackIsSoloed(Controller::NinjamController::METRONOME_TRACK_ID));
 }
 
@@ -288,7 +295,7 @@ void NinjamRoomWindow::updatePeaks(){
         }
     }
     Audio::AudioPeak metronomePeak = mainController->getTrackPeak(Controller::NinjamController::METRONOME_TRACK_ID);
-    ui->topPanel->setMetronomePeaks(metronomePeak.getLeft(), metronomePeak.getRight());
+    ninjamPanel->setMetronomePeaks(metronomePeak.getLeft(), metronomePeak.getRight());
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -350,53 +357,6 @@ void NinjamRoomWindow::on_channelAdded(Ninjam::User user, Ninjam::UserChannel ch
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-void NinjamRoomWindow::ninjamAccentsComboChanged(int /*index*/){
-    //qDebug() << ui->topPanel->getAccentsCombo()->currentData();
-    int beatsPerAccent = ui->topPanel->getCurrentBeatsPerAccent();
-    mainController->getNinjamController()->setMetronomeBeatsPerAccent(beatsPerAccent);
-}
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamRoomWindow::ninjamBpiComboChanged(QString newText){
-    int currentBpi = mainController->getNinjamController()->getCurrentBpi();
-    int newBpi = newText.toInt();
-    if(newBpi == currentBpi){
-        return;
-    }
-    // I keep it commented elieser in case you change your opinion ... ezee
-    /*QMessageBox::StandardButton reply;
-    QString message = "Vote to change the BPI to " + QString::number(newBpi) + "?";
-    reply = QMessageBox::question(this, "Changing BPI ...", message,
-                                  QMessageBox::Yes|QMessageBox::No);
-    if (reply == QMessageBox::Yes) {
-        mainController->getNinjamController()->voteBpi(newBpi);
-    }
-    else{
-        ui->topPanel->setBpiComboText(QString::number(currentBpi));
-    }*/
-     mainController->getNinjamController()->voteBpi(newBpi);
-}
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamRoomWindow::ninjamBpmComboChanged(QString newText){
-    int currentBpm = mainController->getNinjamController()->getCurrentBpm();
-    int newBpm = newText.toInt();
-    if(newBpm == currentBpm){
-        return;
-    }
-    // I keep it commented elieser in case you change your opinion ... ezee
-    /*QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Changing BPM ...", "Vote to change the BPM to " + QString::number(newBpm) + "?",
-                                  QMessageBox::Yes|QMessageBox::No);
-    if (reply == QMessageBox::Yes) {
-        mainController->getNinjamController()->voteBpm(newBpm);
-    }
-    else{
-        ui->topPanel->setBpmComboText(QString::number(currentBpm));
-    }*/
-    mainController->getNinjamController()->voteBpm(newBpm);
-}
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::adjustTracksWidth(){
     if(!fullViewMode){//in mini view mode tracks are always narrowed
         return;
@@ -432,7 +392,13 @@ NinjamRoomWindow::~NinjamRoomWindow(){
         QObject::disconnect(ninjamController, SIGNAL(channelXmitChanged(long,bool)), this, SLOT(on_channelXmitChanged(long,bool)));
     }
 
-    mainController->storeIntervalProgressShape( ui->topPanel->getIntervalShape());
+    mainController->storeIntervalProgressShape( ninjamPanel->getIntervalShape());
+
+    if(ninjamPanel){
+        ninjamPanel->setParent(0);
+        ninjamPanel->deleteLater();
+        ninjamPanel = nullptr;
+    }
 
     delete ui;
 }
@@ -440,7 +406,7 @@ NinjamRoomWindow::~NinjamRoomWindow(){
 
 //ninjam controller events
 void NinjamRoomWindow::on_bpiChanged(int bpi){
-    ui->topPanel->setBpi(bpi);
+    ninjamPanel->setBpi(bpi);
     if(chordsPanel){
         bool bpiWasAccepted = chordsPanel->setBpi(bpi);
         if(!bpiWasAccepted){
@@ -450,11 +416,15 @@ void NinjamRoomWindow::on_bpiChanged(int bpi){
 }
 
 void NinjamRoomWindow::on_bpmChanged(int bpm){
-    ui->topPanel->setBpm(bpm);
+    if(ninjamPanel){
+        ninjamPanel->setBpm(bpm);
+    }
 }
 
 void NinjamRoomWindow::on_intervalBeatChanged(int beat){
-    ui->topPanel->setCurrentBeat(beat);
+    if(ninjamPanel){
+        ninjamPanel->setCurrentBeat(beat);
+    }
 
     if(chordsPanel){
         chordsPanel->setCurrentBeat(beat);
@@ -485,3 +455,31 @@ void NinjamRoomWindow::on_licenceButton_clicked()
     }
 
 }
+
+//----------
+void NinjamRoomWindow::ninjamAccentsComboChanged(int /*index*/){
+    int beatsPerAccent = ninjamPanel->getCurrentBeatsPerAccent();
+    mainController->getNinjamController()->setMetronomeBeatsPerAccent(beatsPerAccent);
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamRoomWindow::ninjamBpiComboChanged(QString newText){
+    int currentBpi = mainController->getNinjamController()->getCurrentBpi();
+    int newBpi = newText.toInt();
+    if(newBpi == currentBpi){
+        return;
+    }
+
+     mainController->getNinjamController()->voteBpi(newBpi);
+}
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamRoomWindow::ninjamBpmComboChanged(QString newText){
+    int currentBpm = mainController->getNinjamController()->getCurrentBpm();
+    int newBpm = newText.toInt();
+    if(newBpm == currentBpm){
+        return;
+    }
+
+    mainController->getNinjamController()->voteBpm(newBpm);
+}
+

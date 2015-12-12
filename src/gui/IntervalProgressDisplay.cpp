@@ -95,6 +95,7 @@ void IntervalProgressDisplay::setBeatsPerInterval(int beats) {
 void IntervalProgressDisplay::setPaintMode(PaintMode mode){
     if(mode != this->paintMode){
         this->paintMode = mode;
+        updateGeometry();
         repaint();
     }
 }
@@ -174,8 +175,8 @@ void IntervalProgressDisplay::drawBeatCircles(QPainter& p, int hRadius, int vRad
 
     double angle = -PI / 2.0;
 
-    const float FIRST_COLOR_POSITION = 0.0f;
-    const float SECOND_COLOR_POSITION = 0.99f;
+    const float FIRST_COLOR_POSITION = 0.5f;
+    const float SECOND_COLOR_POSITION = 0.7f;
 
     //float hRadius = width()/2;
     //float vRadius = height()/2;
@@ -185,25 +186,25 @@ void IntervalProgressDisplay::drawBeatCircles(QPainter& p, int hRadius, int vRad
         int x = centerX + (hRadius  * std::cos(angle));// - ovalSize /2;
         int y = (centerY + (vRadius * std::sin(angle))) + ovalSize/2;
 
-        QRadialGradient brush(x + ovalSize/2, y, ovalSize*2);
+        QRadialGradient brush(x - ovalSize/3, y - ovalSize/3, ovalSize*2);
         QPen pen(Qt::NoPen);
 
         //p->drawLine(0, centerY, width(), centerY);
 
         //beat not played yet
-        brush.setColorAt(FIRST_COLOR_POSITION, Qt::gray);
-        brush.setColorAt(SECOND_COLOR_POSITION, Qt::black);
+        //brush.setColorAt(FIRST_COLOR_POSITION, Qt::gray);
+        //brush.setColorAt(SECOND_COLOR_POSITION, Qt::black);
 
         bool isIntervalFirstBeat = i + offset == 0;
         bool isMeasureFirstBeat = (i + offset) % beatsPerAccent == 0;
         if (i + offset == currentBeat && (isIntervalFirstBeat || isMeasureFirstBeat)) {//first beats
             if( isIntervalFirstBeat || isShowingAccents() ){
-                brush.setColorAt(FIRST_COLOR_POSITION, QColor(255, 100, 100));//accent beat colors
-                brush.setColorAt(SECOND_COLOR_POSITION, Qt::red);
+                brush.setColorAt(FIRST_COLOR_POSITION, Qt::green);//accent beat colors
+                brush.setColorAt(SECOND_COLOR_POSITION, Qt::darkGreen);
             }
             else{
-                brush.setColorAt(FIRST_COLOR_POSITION, Qt::green); //playing beat highlight colors
-                brush.setColorAt(SECOND_COLOR_POSITION, Qt::darkGreen);
+                brush.setColorAt(0.1f, Qt::white ); //playing beat highlight colors
+                brush.setColorAt(0.8f, Qt::lightGray);
             }
             pen.setColor(Qt::darkGray);
             pen.setStyle(Qt::SolidLine);
@@ -211,24 +212,31 @@ void IntervalProgressDisplay::drawBeatCircles(QPainter& p, int hRadius, int vRad
         else{
             if((i + offset) % beatsPerAccent == 0 && (i+offset) > currentBeat){
                 if(isShowingAccents()){
-                    brush.setColorAt(FIRST_COLOR_POSITION, Qt::white); //accent marks
+                    brush.setColorAt(FIRST_COLOR_POSITION, Qt::lightGray); //accent marks
                     brush.setColorAt(SECOND_COLOR_POSITION, Qt::gray);
 
                     pen.setColor(Qt::gray);
                     pen.setStyle(Qt::SolidLine);
                 }
             }
-            else if ( (i + offset) <= currentBeat) {
-                if(i + offset < currentBeat){
-                    brush.setColorAt(FIRST_COLOR_POSITION, PLAYED_BEATS_FIRST_COLOR); //played beats
-                    brush.setColorAt(SECOND_COLOR_POSITION, PLAYED_BEATS_SECOND_COLOR);
-                }
-                else{//the current beat is highlighted
-                    brush.setColorAt(FIRST_COLOR_POSITION, Qt::green); //playing beat highlight colors
-                    brush.setColorAt(SECOND_COLOR_POSITION, Qt::darkGreen);
+            else{
+                if ( (i + offset) <= currentBeat) {
+                    if(i + offset < currentBeat){
+                        brush.setColorAt(FIRST_COLOR_POSITION, PLAYED_BEATS_FIRST_COLOR); //played beats
+                        brush.setColorAt(SECOND_COLOR_POSITION, PLAYED_BEATS_SECOND_COLOR);
+                    }
+                    else{//the current beat is highlighted
+                        brush.setColorAt(0.1f, Qt::white ); //playing beat highlight colors
+                        brush.setColorAt(0.8f, Qt::darkGray);
 
-                    pen.setColor(Qt::darkGreen);
-                    pen.setStyle(Qt::SolidLine);
+                        pen.setColor(Qt::darkGray);
+                        pen.setStyle(Qt::SolidLine);
+                    }
+                }
+                else{
+                    //non played yet
+                    brush.setColorAt(0.0f, Qt::darkGray);
+                    brush.setColorAt(0.8f, Qt::gray);
                 }
             }
         }
@@ -318,13 +326,27 @@ void IntervalProgressDisplay::drawPoints(QPainter* painter, int yPos, int startP
 
 }
 //+++++++++++++++++++++++++++++++++
-
-//++++++++++++++
-
 void IntervalProgressDisplay::initialize() {
     horizontalRadius = width()/2 - ovalSize*2;
     verticalRadius = height()/2 - ovalSize*2;
     centerX = width() / 2;
     centerY = height() / 2;
+}
+
+//++++++++++=
+QSize IntervalProgressDisplay::minimumSizeHint() const{
+    QSize size = QWidget::minimumSizeHint();
+    switch(paintMode){
+    case CIRCULAR:
+        size.setWidth(height());
+        break;
+    case ELLIPTICAL:
+        size.setWidth(height() * 2);
+        break;
+    case LINEAR:
+        size.setWidth(height() * 5);
+        break;
+    }
+    return size;
 }
 

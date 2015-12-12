@@ -9,6 +9,7 @@
 #include <QLoggingCategory>
 #include <QMessageBox>
 #include "chords/ChordsPanel.h"
+#include "NinjamPanel.h"
 
 class MainWindow;
 
@@ -34,10 +35,13 @@ public:
     ~NinjamRoomWindow();
     void updatePeaks();
     void updateGeoLocations();
+
+    //these two components are exposed to be showed in main window
     inline ChatPanel* getChatPanel() const{return chatPanel;}
+    inline NinjamPanel* getNinjamPanel() const{ return ninjamPanel; }
+
     void setFullViewStatus(bool fullView);
     void showChordsPanel(ChordProgression progression);
-
 protected:
     Ui::NinjamRoomWindow *ui;
     Controller::MainController* mainController;
@@ -46,8 +50,6 @@ private:
     QMap<QString, NinjamTrackGroupView*> trackGroups;
     ChatPanel* chatPanel;
     ChordsPanel* chordsPanel;
-
-    void initializeMetronomeEvents();
 
     void adjustTracksWidth();
 
@@ -58,17 +60,22 @@ private:
 
     void hideChordsPanel();
 
+    NinjamPanel* ninjamPanel;//panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
+
+    NinjamPanel* createNinjamPanel();
+
 private slots:
+
     //ninjam panel controls
     void ninjamBpiComboChanged(QString);
     void ninjamBpmComboChanged(QString);
     void ninjamAccentsComboChanged(int );
 
     //metronome events
-    void onPanSliderMoved(int value);
-    void onFaderMoved(int value);
-    void onMuteClicked();
-    void onSoloClicked();
+    void on_MetronomePanSliderMoved(int value);
+    void on_MetronomeFaderMoved(int value);
+    void on_MetronomeMuteClicked();
+    void on_MetronomeSoloClicked();
 
     //ninjam controller events
     void on_bpiChanged(int bpi);

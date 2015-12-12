@@ -107,17 +107,17 @@
        <number>24</number>
       </property>
       <property name="leftMargin">
-       <number>9</number>
+       <number>6</number>
       </property>
       <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
        <number>6</number>
       </property>
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <item>
-       <widget class="NinjamPanel" name="topPanel" native="true"/>
-      </item>
       <item>
        <widget class="QScrollArea" name="scrollArea">
         <property name="sizePolicy">
@@ -140,8 +140,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>727</width>
-           <height>385</height>
+           <width>733</width>
+           <height>419</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
@@ -166,14 +166,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>NinjamPanel</class>
-   <extends>QWidget</extends>
-   <header>NinjamPanel.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>
