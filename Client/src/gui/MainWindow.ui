@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1160</width>
-    <height>750</height>
+    <height>373</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,15 +23,18 @@
      <enum>QLayout::SetDefaultConstraint</enum>
     </property>
     <property name="leftMargin">
-     <number>3</number>
+     <number>0</number>
     </property>
     <property name="topMargin">
      <number>3</number>
     </property>
     <property name="rightMargin">
-     <number>3</number>
+     <number>0</number>
     </property>
     <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <property name="spacing">
      <number>3</number>
     </property>
     <item row="0" column="1">
@@ -86,6 +89,12 @@
            <property name="spacing">
             <number>0</number>
            </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
            <item>
             <widget class="QScrollArea" name="allRoomsScroll">
              <property name="styleSheet">
@@ -105,8 +114,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>723</width>
-                <height>603</height>
+                <width>753</width>
+                <height>230</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -168,7 +177,7 @@
         <number>0</number>
        </property>
        <property name="rightMargin">
-        <number>0</number>
+        <number>3</number>
        </property>
        <property name="bottomMargin">
         <number>0</number>
@@ -271,7 +280,7 @@
             <x>0</x>
             <y>0</y>
             <width>99</width>
-            <height>612</height>
+            <height>239</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="localTracksLayout">
@@ -299,15 +308,30 @@
     </item>
     <item row="1" column="0" colspan="3">
      <widget class="QWidget" name="bottomPanel" native="true">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>40</height>
-       </size>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="topMargin">
+        <number>12</number>
+       </property>
+       <property name="bottomMargin">
+        <number>9</number>
+       </property>
        <item>
         <widget class="QWidget" name="masterControlsPanel" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="maximumSize">
           <size>
            <width>200</width>
@@ -332,15 +356,18 @@
           </property>
           <item>
            <widget class="QWidget" name="masterMetersPanel" native="true">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>20</height>
-             </size>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_5">
              <property name="spacing">
-              <number>2</number>
+              <number>1</number>
              </property>
              <property name="leftMargin">
               <number>0</number>
@@ -393,6 +420,15 @@
              </item>
              <item>
               <widget class="QSlider" name="masterFader">
+               <property name="maximum">
+                <number>120</number>
+               </property>
+               <property name="singleStep">
+                <number>10</number>
+               </property>
+               <property name="value">
+                <number>100</number>
+               </property>
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>

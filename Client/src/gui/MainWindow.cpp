@@ -69,8 +69,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     qCInfo(jtGUI) << "Creating MainWindow...";
 	ui.setupUi(this);
 
-
-
     setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
 
     initializeLoginService();
@@ -89,6 +87,12 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 //    }
 
 //    QObject::connect(ui.menuThemes, SIGNAL(triggered(QAction*)), this, SLOT(on_newThemeSelected(QAction*)));
+
+
+    ui.masterMeterL->setOrientation(PeakMeter::HORIZONTAL);
+    ui.masterMeterR->setOrientation(PeakMeter::HORIZONTAL);
+    QObject::connect(ui.masterFader, SIGNAL(valueChanged(int)), this, SLOT(on_masterFaderMoved(int)));
+    ui.masterFader->installEventFilter(this);//handle double click in master fader
 
     timerID = startTimer(1000/50);
 
@@ -1058,15 +1062,6 @@ void MainWindow::timerEvent(QTimerEvent *){
         return;
     }
 
-//    static long lastBeatUpdate = QDateTime::currentMSecsSinceEpoch();
-//    static int beat = 0;
-//    long ellapsed = QDateTime::currentMSecsSinceEpoch() - lastBeatUpdate;
-//    if(ellapsed >= 500){
-//        lastBeatUpdate = QDateTime::currentMSecsSinceEpoch();
-//        beat = (beat + 1) % ui.circularProgress->getBeatsPerInterval();
-//        ui.circularProgress->setCurrentBeat(beat);
-//    }
-
     //update local input track peaks
     foreach (TrackGroupView* channel, localGroupChannels) {
         channel->updatePeaks();
@@ -1097,6 +1092,11 @@ void MainWindow::timerEvent(QTimerEvent *){
               roomView->addPeak(peak.getMax());
           }
     }
+
+    //update master peaks
+    Audio::AudioPeak masterPeak = mainController->getMasterPeak();
+    ui.masterMeterL->setPeak(masterPeak.getLeft());
+    ui.masterMeterR->setPeak(masterPeak.getRight());
 }
 
 //++++++++++++=
@@ -1419,7 +1419,8 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
         }
     }
 
-    ui.centralWidget->layout()->setSpacing(fullViewMode ? 12 : 3);
+//    dynamic_cast<QGridLayout*>(ui.centralWidget->layout())->setho
+//    ->setSpacing(fullViewMode ? 0 : 3);
 
     ui.actionFullView->setChecked(fullViewMode);
     ui.actionMiniView->setChecked(!fullViewMode);
@@ -1439,9 +1440,16 @@ void MainWindow::on_localTrackRemoved(){
 //++++++++++
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
 {
-    if (target == ui.localTracksWidget) {
-        if (event->type() == QEvent::Resize) {
-            recalculateLeftPanelWidth();
+    if (target == ui.localTracksWidget && event->type() == QEvent::Resize)
+    {
+        recalculateLeftPanelWidth();
+        return true;
+    }
+    else
+    {
+        if(target == ui.masterFader && event->type() == QEvent::MouseButtonDblClick)
+        {
+            ui.masterFader->setValue(100);
             return true;
         }
     }
@@ -1525,3 +1533,8 @@ void MainWindow::on_currentVersionActionTriggered(){
     QMessageBox::about(this, "About Jamtaba", "Jamtaba version is " + QApplication::applicationVersion());
 }
 
+//++++++++++++++++++
+void MainWindow::on_masterFaderMoved(int value){
+    float newGain = (float)value/ui.masterFader->maximum();
+    mainController->setMasterGain(newGain);
+}

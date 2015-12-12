@@ -160,6 +160,9 @@ protected slots:
     //room streamer
     void on_RoomStreamerError(QString msg);
 
+    //master fader
+    void on_masterFaderMoved(int);
+
 private slots:
     void on_actionFullscreenMode_triggered();
     void on_pluginFinderDialogCanceled();

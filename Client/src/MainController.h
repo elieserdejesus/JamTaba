@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QApplication>
-#include <memory>
 #include <QMutex>
 #include <QScopedPointer>
 #include "audio/core/AudioPeak.h"
@@ -130,6 +129,10 @@ public:
 
     Audio::AudioPeak getRoomStreamPeak();
     Audio::AudioPeak getTrackPeak(int trackID);
+    inline Audio::AudioPeak getMasterPeak() {return masterPeak;}
+
+    inline float getMasterGain() const{ return masterGain; }
+    void setMasterGain( float newGain );
 
     Audio::AudioNode* getTrackNode(long ID);
 
@@ -240,7 +243,7 @@ protected:
 
     //factory methods
     virtual Midi::MidiDriver* createMidiDriver() = 0;
-    virtual Audio::AudioDriver* createAudioDriver(const Persistence::Settings& settings) = 0;
+    virtual Audio::AudioDriver* createAudioDriver(const Persistence::Settings& settings) = 0;//TODO - Audio driver need just the audio settings to initialize, not the entire settings.
     virtual Vst::PluginFinder* createPluginFinder() = 0;
     virtual Controller::NinjamController* createNinjamController(MainController*) = 0;
 
@@ -278,6 +281,10 @@ private:
     bool userNameChoosed;
 
     Recorder::JamRecorder jamRecorder;
+
+    //master
+    float masterGain;
+    Audio::AudioPeak masterPeak;
 
 protected slots:
 
