@@ -37,7 +37,6 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
     mainController(mainController),
     chatPanel(new ChatPanel(this, mainController->getBotNames() )),
     fullViewMode(true),
-    chordsPanel(nullptr),
     ninjamPanel(nullptr)
 
 {
@@ -52,9 +51,6 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
 
     qCDebug(jtNinjamGUI) << "connecting signals in ninjamController...";
     Controller::NinjamController* ninjamController = mainController->getNinjamController();
-    QObject::connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(on_bpiChanged(int)));
-    QObject::connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(on_bpmChanged(int)));
-    QObject::connect(ninjamController, SIGNAL(intervalBeatChanged(int)), this, SLOT(on_intervalBeatChanged(int)));
     QObject::connect(ninjamController, SIGNAL(channelAdded(Ninjam::User,   Ninjam::UserChannel, long)), this, SLOT(on_channelAdded(  Ninjam::User, Ninjam::UserChannel, long)));
     QObject::connect(ninjamController, SIGNAL(channelRemoved(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(on_channelRemoved(Ninjam::User, Ninjam::UserChannel, long)));
     QObject::connect(ninjamController, SIGNAL(channelNameChanged(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(on_channelNameChanged(Ninjam::User, Ninjam::UserChannel, long)));
@@ -71,7 +67,6 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
     QObject::connect(chatPanel, SIGNAL(userSendingNewMessage(QString)), this, SLOT(userSendingNewChatMessage(QString)));
     QObject::connect(chatPanel, SIGNAL(userConfirmingVoteToBpiChange(int)), this, SLOT(on_userConfirmingVoteToChangeBpi(int)));
     QObject::connect(chatPanel, SIGNAL(userConfirmingVoteToBpmChange(int)), this, SLOT(on_userConfirmingVoteToChangeBpm(int)));
-    QObject::connect(chatPanel, SIGNAL(userConfirmingChordProgression(ChordProgression)), this, SLOT(on_userConfirmingChordProgression(ChordProgression)));
 
     chatPanel->setPreferredTranslationLanguage(mainController->getSettings().getTranslation());
 
@@ -125,31 +120,6 @@ void NinjamRoomWindow::setFullViewStatus(bool fullView){
     update();
 }
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamRoomWindow::showChordsPanel(ChordProgression progression){
-    if(!chordsPanel){
-        chordsPanel = new ChordsPanel(this);
-        QObject::connect(chordsPanel, SIGNAL(buttonSendChordsToChatClicked()), this, SLOT(on_buttonSendChordsToChatClicked()));
-    }
-    else{
-        chordsPanel->setVisible(true);
-    }
-    chordsPanel->setChords(progression);
-    ui->contentLayout->insertWidget(1, chordsPanel);
-}
-
-void NinjamRoomWindow::on_buttonSendChordsToChatClicked(){
-    if(chordsPanel){//just in case
-        ChordProgression chordProgression = chordsPanel->getChordProgression();
-        mainController->getNinjamController()->sendChatMessage(chordProgression.toString());
-    }
-}
-
-void NinjamRoomWindow::hideChordsPanel(){
-    if(chordsPanel){
-        chordsPanel->setVisible(false);
-    }
-}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::updateGeoLocations(){
@@ -274,18 +244,6 @@ void NinjamRoomWindow::on_userConfirmingVoteToChangeBpm(int newBpm){
     }
 }
 
-void NinjamRoomWindow::on_userConfirmingChordProgression(ChordProgression chordProgression){
-    int currentBpi = mainController->getNinjamController()->getCurrentBpi();
-    if(chordProgression.canBeUsed(currentBpi)){
-        bool needStrech = chordProgression.getBeatsPerInterval() != currentBpi;
-        showChordsPanel( needStrech ? chordProgression.getStretchedVersion(currentBpi) : chordProgression );
-    }
-    else{
-        int measures = chordProgression.getMeasures().size();
-        QString msg = "These chords (" + QString::number(measures) + " measures) can't be use in a " + QString::number(currentBpi) + " bpi interval!";
-        QMessageBox::warning(this, "Problem...", msg);
-    }
-}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::updatePeaks(){
@@ -382,9 +340,6 @@ NinjamRoomWindow::~NinjamRoomWindow(){
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow destructor";
     Controller::NinjamController* ninjamController = mainController->getNinjamController();
     if(ninjamController){
-        QObject::disconnect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(on_bpiChanged(int)));
-        QObject::disconnect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(on_bpmChanged(int)));
-        QObject::disconnect(ninjamController, SIGNAL(intervalBeatChanged(int)), this, SLOT(on_intervalBeatChanged(int)));
         QObject::disconnect(ninjamController, SIGNAL(channelAdded(Ninjam::User,   Ninjam::UserChannel, long)), this, SLOT(on_channelAdded(  Ninjam::User, Ninjam::UserChannel, long)));
         QObject::disconnect(ninjamController, SIGNAL(channelRemoved(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(on_channelRemoved(Ninjam::User, Ninjam::UserChannel, long)));
         QObject::disconnect(ninjamController, SIGNAL(channelNameChanged(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(on_channelNameChanged(Ninjam::User, Ninjam::UserChannel, long)));
@@ -404,32 +359,6 @@ NinjamRoomWindow::~NinjamRoomWindow(){
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-//ninjam controller events
-void NinjamRoomWindow::on_bpiChanged(int bpi){
-    ninjamPanel->setBpi(bpi);
-    if(chordsPanel){
-        bool bpiWasAccepted = chordsPanel->setBpi(bpi);
-        if(!bpiWasAccepted){
-            hideChordsPanel();
-        }
-    }
-}
-
-void NinjamRoomWindow::on_bpmChanged(int bpm){
-    if(ninjamPanel){
-        ninjamPanel->setBpm(bpm);
-    }
-}
-
-void NinjamRoomWindow::on_intervalBeatChanged(int beat){
-    if(ninjamPanel){
-        ninjamPanel->setCurrentBeat(beat);
-    }
-
-    if(chordsPanel){
-        chordsPanel->setCurrentBeat(beat);
-    }
-}
 
 void NinjamRoomWindow::on_licenceButton_clicked()
 {

@@ -27,7 +27,7 @@ void Chord::initialize(QString chordText, int beat){
     int lettersBegin = (isFlat() || isSharp()) ? 2 : 1;
     int limit = hasBassInversion() ? indexOfInversionBar : this->chordText.length();
     int endOfLetters = lettersBegin;
-    bool diminishedSymbol = chordText.at(endOfLetters) == QChar(0xc2b0) ;
+    bool diminishedSymbol = chordText.size() > endOfLetters &&  chordText.at(endOfLetters) == QChar(0xc2b0) ;
     while (endOfLetters < limit && !(chordText.at(endOfLetters).isDigit() || diminishedSymbol || chordText.at(endOfLetters) == '(')) {
         endOfLetters++;
         hasLettersAfterChordRoot = true;

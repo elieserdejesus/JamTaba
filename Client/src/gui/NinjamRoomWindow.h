@@ -8,7 +8,6 @@
 #include "ChatPanel.h"
 #include <QLoggingCategory>
 #include <QMessageBox>
-#include "chords/ChordsPanel.h"
 #include "NinjamPanel.h"
 
 class MainWindow;
@@ -41,7 +40,7 @@ public:
     inline NinjamPanel* getNinjamPanel() const{ return ninjamPanel; }
 
     void setFullViewStatus(bool fullView);
-    void showChordsPanel(ChordProgression progression);
+
 protected:
     Ui::NinjamRoomWindow *ui;
     Controller::MainController* mainController;
@@ -49,7 +48,7 @@ private:
 
     QMap<QString, NinjamTrackGroupView*> trackGroups;
     ChatPanel* chatPanel;
-    ChordsPanel* chordsPanel;
+
 
     void adjustTracksWidth();
 
@@ -57,8 +56,6 @@ private:
 
     void handleVoteMessage(Ninjam::User user, QString message);
     void handleChordProgressionMessage(Ninjam::User user, QString message);
-
-    void hideChordsPanel();
 
     NinjamPanel* ninjamPanel;//panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
 
@@ -78,9 +75,6 @@ private slots:
     void on_MetronomeSoloClicked();
 
     //ninjam controller events
-    void on_bpiChanged(int bpi);
-    void on_bpmChanged(int bpm);
-    void on_intervalBeatChanged(int beat);
     void on_channelAdded(  Ninjam::User user, Ninjam::UserChannel channel, long channelID );
     void on_channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
     void on_channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
@@ -96,10 +90,7 @@ private slots:
     //chat panel
     void on_userConfirmingVoteToChangeBpi(int newBpi);
     void on_userConfirmingVoteToChangeBpm(int newBpm);
-    void on_userConfirmingChordProgression(ChordProgression chordProgression);
 
-    //chords panel
-    void on_buttonSendChordsToChatClicked();
 };
 
 #endif // NINJAMROOMWINDOW_H

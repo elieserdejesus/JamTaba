@@ -10,6 +10,8 @@
 #include "../persistence/Settings.h"
 #include "../LocalTrackGroupView.h"
 #include "../performance/PerformanceMonitor.h"
+#include "ChordProgression.h"
+#include "chords/ChordsPanel.h"
 
 class PluginScanDialog;
 class NinjamRoomWindow;
@@ -163,6 +165,13 @@ protected slots:
     //master fader
     void on_masterFaderMoved(int);
 
+    //chords progression
+    void on_userConfirmingChordProgression(ChordProgression chordProgression);
+    void on_buttonSendChordsToChatClicked();
+    void on_bpiChanged(int bpi);
+    void on_bpmChanged(int bpm);
+    void on_intervalBeatChanged(int beat);
+
 private slots:
     void on_actionFullscreenMode_triggered();
     void on_pluginFinderDialogCanceled();
@@ -224,6 +233,10 @@ private:
     void recalculateLeftPanelWidth();
 
     void setInputTracksPreparingStatus(bool preparing);
+
+    ChordsPanel* chordsPanel;
+    void showChordsPanel(ChordProgression progression);
+    void hideChordsPanel();
 
     //PerformanceMonitor performanceMonitor;//cpu and memmory usage
     //qint64 lastPerformanceMonitorUpdate;
