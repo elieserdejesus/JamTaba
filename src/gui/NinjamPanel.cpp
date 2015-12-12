@@ -50,6 +50,13 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     ui->peakMeterRight->setOrientation(PeakMeter::HORIZONTAL);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamPanel::setFullViewStatus(bool fullView){
+    ui->horizontalLayout->setSpacing(fullView ? 6 : 2);
+    ui->intervalPanel->setMinimumHeight(fullView ? 120 : 90);
+    ui->intervalPanel->setMaximumWidth(fullView ? 32768 : 300 );
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamPanel::addMasterControls(QWidget *masterControlsPanel){
     this->layout()->addWidget(masterControlsPanel);
 

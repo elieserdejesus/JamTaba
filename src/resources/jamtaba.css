@@ -554,10 +554,8 @@ QMainWindow #bottomPanel{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
      stop: 0     #CBCBCB,
      stop: 1.0   #989898);
-    min-height: 80px;
-    margin-top: 6px;
+    min-height: 60px;
     border-top: 1px solid black;
-
 }
 
 /* main panels */
@@ -843,7 +841,9 @@ BaseTrackView[unlighted="true"] > QFrame#topSeparator, BaseTrackView[unlighted="
 }
 
 BaseTrackView[unlighted="true"]{
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(150, 150, 150), stop:1 rgb(50, 50, 50));
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(150, 150, 150),
+        stop:1 rgb(90, 90, 90));
 }
 
 
@@ -1007,8 +1007,8 @@ QLabel#labelPanR, QLabel#labelPanL{
 
 QDial{
     background: rgb(200, 200, 200);
-    max-width: 38px;
-    max-height: 38px;
+    max-width: 30px;
+    max-height: 30px;
 }
 
 
@@ -1169,7 +1169,7 @@ NinjamPanel #ninjamControlsPanel{
 
     border-radius: 3px;
     border: 1px inset rgb(120, 120, 120);
-    min-height: 130px;
+    /*min-height: 130px;*/
 }
 
 NinjamPanel #intervalPanel{
@@ -1177,7 +1177,7 @@ NinjamPanel #intervalPanel{
     font-weight: normal;
     font-size: 11px;
     background: transparent;
-    min-height: 120px;
+    /*min-height: 80px;*/
 }
 
 NinjamPanel #panelCombos QLabel{

@@ -55,6 +55,8 @@ public:
     void setIntervalShape(int shape);
 
     void addMasterControls(QWidget* masterControlsPanel);
+
+    void setFullViewStatus(bool fullView);
 protected:
     void paintEvent(QPaintEvent *);
     bool eventFilter(QObject *source, QEvent *ev);

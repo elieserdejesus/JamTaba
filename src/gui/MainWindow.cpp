@@ -63,7 +63,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     ninjamWindow(nullptr),
     roomToJump(nullptr),
     fullViewMode(true),
-    fullScreenViewMode(false)
+    fullScreenViewMode(false),
+    chordsPanel(nullptr)
     //lastPerformanceMonitorUpdate(0)
 {
     qCInfo(jtGUI) << "Creating MainWindow...";
@@ -989,15 +990,15 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
     qCDebug(jtGUI) << "adding ninjam chat panel...";
     ChatPanel* chatPanel = ninjamWindow->getChatPanel();
     ui.chatTabWidget->addTab(chatPanel, QIcon(":/images/ninja.png"), "chat " + roomInfo.getName());
+    QObject::connect(chatPanel, SIGNAL(userConfirmingChordProgression(ChordProgression)), this, SLOT(on_userConfirmingChordProgression(ChordProgression)));
 
     //add the ninjam panel in main window (bottom panel)
     qCDebug(jtGUI) << "adding ninjam panel...";
     NinjamPanel* ninjamPanel = ninjamWindow->getNinjamPanel();
-    dynamic_cast<QHBoxLayout*>(ui.bottomPanel->layout())->insertWidget(0, ninjamPanel, 0, Qt::AlignHCenter);
+    ui.bottomPanel->layout()->removeWidget(ui.masterControlsPanel);
+    dynamic_cast<QVBoxLayout*>(ui.bottomPanel->layout())->addWidget(ninjamPanel, 0, Qt::AlignHCenter );
     ninjamPanel->addMasterControls(ui.masterControlsPanel);
-
-    //ui.bottomPanel->layout()->setAlignment(ui.masterControlsPanel, Qt::AlignHCenter);
-
+    ninjamPanel->setFullViewStatus(fullViewMode);
 
     //show chat area
     ui.chatArea->setVisible(true);
@@ -1007,6 +1008,9 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
 
     QObject::connect(mainController->getNinjamController(), SIGNAL(preparedToTransmit()), this, SLOT(ninjamTransmissionStarted()));
     QObject::connect(mainController->getNinjamController(), SIGNAL(preparingTransmission()), this, SLOT(ninjamPreparingToTransmit()));
+    QObject::connect(mainController->getNinjamController(), SIGNAL(currentBpiChanged(int)), this, SLOT(on_bpiChanged(int)));
+    QObject::connect(mainController->getNinjamController(), SIGNAL(currentBpmChanged(int)), this, SLOT(on_bpmChanged(int)));
+    QObject::connect(mainController->getNinjamController(), SIGNAL(intervalBeatChanged(int)), this, SLOT(on_intervalBeatChanged(int)));
 }
 
 //+++++++++++++++ PREPARING TO XMIT +++++++++++
@@ -1037,7 +1041,8 @@ void MainWindow::exitFromRoom(bool normalDisconnection){
 
     //remove ninjam panel from main window
     ui.bottomPanel->layout()->removeWidget(ninjamWindow->getNinjamPanel());
-    ui.bottomPanel->layout()->addWidget(ui.masterControlsPanel);
+    dynamic_cast<QVBoxLayout*>( ui.bottomPanel->layout())->addWidget(ui.masterControlsPanel, 0, Qt::AlignHCenter);
+    hideChordsPanel();
 
     ninjamWindow.reset();
 
@@ -1433,6 +1438,18 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
 
     ui.actionFullView->setChecked(fullViewMode);
     ui.actionMiniView->setChecked(!fullViewMode);
+
+    int margim = fullViewMode ? 6 : 2;
+    ui.bottomPanelLayout->setContentsMargins(margim, margim, margim, margim);
+    ui.bottomPanelLayout->setSpacing(fullViewMode ? 6 : 2);
+    //ui.bottomPanel->setMinimumHeight(fullViewMode ? 130 : 130);
+
+    if(ninjamWindow){
+        NinjamPanel* ninjamPanel = ninjamWindow->getNinjamPanel();
+        if(ninjamPanel){
+            ninjamPanel->setFullViewStatus(fullViewMode);
+        }
+    }
 }
 //+++++++++++++++++++++++++++
 void MainWindow::on_localTrackAdded(){
@@ -1544,6 +1561,89 @@ void MainWindow::on_currentVersionActionTriggered(){
 void MainWindow::on_masterFaderMoved(int value){
     float newGain = (float)value/ui.masterFader->maximum();
     mainController->setMasterGain(newGain);
+}
+//++++++++++++++++++=
+void MainWindow::on_userConfirmingChordProgression(ChordProgression chordProgression){
+    int currentBpi = mainController->getNinjamController()->getCurrentBpi();
+    if(chordProgression.canBeUsed(currentBpi)){
+        bool needStrech = chordProgression.getBeatsPerInterval() != currentBpi;
+        showChordsPanel( needStrech ? chordProgression.getStretchedVersion(currentBpi) : chordProgression );
+    }
+    else{
+        int measures = chordProgression.getMeasures().size();
+        QString msg = "These chords (" + QString::number(measures) + " measures) can't be use in a " + QString::number(currentBpi) + " bpi interval!";
+        QMessageBox::warning(this, "Problem...", msg);
+    }
+}
+
+
+void MainWindow::showChordsPanel(ChordProgression progression){
+    if(!chordsPanel){
+        chordsPanel = new ChordsPanel(this);
+        QObject::connect(chordsPanel, SIGNAL(buttonSendChordsToChatClicked()), this, SLOT(on_buttonSendChordsToChatClicked()));
+    }
+    else{
+        chordsPanel->setVisible(true);
+    }
+    chordsPanel->setChords(progression);
+    //add the chord panel in top of bottom panel in main window
+    dynamic_cast<QVBoxLayout*>(ui.bottomPanel->layout())->insertWidget(0, chordsPanel);
+}
+
+void MainWindow::on_buttonSendChordsToChatClicked(){
+    if(chordsPanel){//just in case
+        ChordProgression chordProgression = chordsPanel->getChordProgression();
+        mainController->getNinjamController()->sendChatMessage(chordProgression.toString());
+    }
+}
+
+void MainWindow::hideChordsPanel(){
+    if(chordsPanel){
+        ui.bottomPanel->layout()->removeWidget(chordsPanel);
+        chordsPanel->setVisible(false);
+        chordsPanel->deleteLater();
+        chordsPanel = nullptr;
+    }
+}
+
+//++++++
+//ninjam controller events
+void MainWindow::on_bpiChanged(int bpi){
+    if(!ninjamWindow){
+        return;
+    }
+    NinjamPanel* ninjamPanel = ninjamWindow->getNinjamPanel();
+    if(!ninjamPanel){
+        return;
+    }
+
+    ninjamPanel->setBpi(bpi);
+    if(chordsPanel){
+        bool bpiWasAccepted = chordsPanel->setBpi(bpi);
+        if(!bpiWasAccepted){
+            hideChordsPanel();
+        }
+    }
+}
+
+void MainWindow::on_bpmChanged(int bpm){
+    NinjamPanel* ninjamPanel = ninjamWindow->getNinjamPanel();
+    if(!ninjamPanel){
+        return;
+    }
+    ninjamPanel->setBpm(bpm);
+}
+
+void MainWindow::on_intervalBeatChanged(int beat){
+    NinjamPanel* ninjamPanel = ninjamWindow->getNinjamPanel();
+    if(!ninjamPanel){
+        return;
+    }
+    ninjamPanel->setCurrentBeat(beat);
+
+    if(chordsPanel){
+        chordsPanel->setCurrentBeat(beat);
+    }
 }
 
 
