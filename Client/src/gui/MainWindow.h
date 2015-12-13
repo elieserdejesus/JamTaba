@@ -84,6 +84,7 @@ public:
     bool isTransmiting(int channelID) const;
     void setTransmitingStatus(int channelID, bool xmitStatus);
 
+    QStringList getChannelsNames() const;
 
 protected:
     Controller::MainController* mainController;
@@ -218,8 +219,6 @@ private:
     //void initializeMainControllerEvents();
     void initializeMainTabWidget();
     void initializeViewModeMenu();
-
-    QStringList getChannelsNames() const;
 
     LocalTrackGroupView* addLocalChannel(int channelGroupIndex, QString channelName, bool createFirstSubchannel);
 
