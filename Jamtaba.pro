@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 
-#SUBDIRS += VstScanner
+SUBDIRS += VstScanner
 
 SUBDIRS += Standalone
 

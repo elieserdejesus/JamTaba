@@ -255,8 +255,9 @@ void Configurator::exportIniFile()
         if(result)
         {
             qDebug(jtConfigurator) << "Ini file copied in :"<<FilePath ;
-            QFile loggingFile(FilePath);
-            loggingFile.setPermissions(QFile::WriteOther);//The file is writable by anyone.
+            //QFile loggingFile(FilePath);
+            //QFileDevice::Permissions p(QFile::ReadOther);
+            //loggingFile.setPermissions(p);//The file is writable by anyone.
         }
         else  qDebug(jtConfigurator) << "FAILED to copy Ini file in :"<<FilePath ;
     }

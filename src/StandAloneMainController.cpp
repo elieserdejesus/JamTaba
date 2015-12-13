@@ -56,7 +56,7 @@ void StandalonePluginFinder::on_processFinished(){
 
 void StandalonePluginFinder::on_processError(QProcess::ProcessError error){
 
-    qCritical() << "ERROR:" << error << scanProcess.errorString();
+    qCritical(jtStandalonePluginFinder) << "ERROR:" << error << scanProcess.errorString();
     on_processFinished();
 }
 
@@ -68,12 +68,15 @@ void StandalonePluginFinder::handleProcessError(QString lastScannedPlugin){
 
 QString StandalonePluginFinder::getVstScannerExecutablePath() const{
     //try the same jamtaba executable path first
-    QString scannerExeName = "VstScanner";//In the deploy version the VstScanner and Jamtaba2 executables are in the same folder.
+    QString scannerExePath = QApplication::applicationDirPath() + "/VstScanner";//In the deployed version the VstScanner and Jamtaba2 executables are in the same folder.
 #ifdef Q_OS_WIN
-    scannerExeName += ".exe";
+    scannerExePath += ".exe";
 #endif
-    if(QFile(scannerExeName).exists()){
-        return scannerExeName;
+    if(QFile(scannerExePath).exists()){
+        return scannerExePath;
+    }
+    else{
+        qWarning(jtStandalonePluginFinder) << "Scanner exe not founded in" << scannerExePath;
     }
 
     //In dev time the executable (Jamtaba2 and VstScanner) are in different folders...
@@ -83,7 +86,7 @@ QString StandalonePluginFinder::getVstScannerExecutablePath() const{
     return "/Users/elieser/Desktop/build-Jamtaba-Desktop_Qt_5_5_0_clang_64bit-Debug/VstScanner/VstScanner";
 #endif
     QString buildType = QLibraryInfo::isDebugBuild() ? "debug" : "release";
-    QString scannerExePath = appPath + "/../../VstScanner/"+ buildType +"/" + scannerExeName;
+    scannerExePath = appPath + "/../../VstScanner/"+ buildType +"/" + scannerExePath;
     if(QFile(scannerExePath).exists()){
         return scannerExePath;
     }
@@ -148,8 +151,8 @@ void StandalonePluginFinder::scan(QStringList blackList){
     QObject::connect( &scanProcess, SIGNAL(error(QProcess::ProcessError)), this, SLOT(on_processError(QProcess::ProcessError)));
     qCDebug(jtStandalonePluginFinder) << "Starting scan process...";
     //scanProcess.setProcessChannelMode(QProcess::ForwardedChannels);
-    scanProcess.start(getVstScannerExecutablePath(), parameters);
-    qCDebug(jtStandalonePluginFinder) << "Scan process started!";
+    scanProcess.start(scannerExePath, parameters);
+    qCDebug(jtStandalonePluginFinder) << "Scan process started with " << scannerExePath;
 }
 
 //++++++++++++++++++++++++++++++++++
