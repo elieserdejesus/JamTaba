@@ -10,7 +10,8 @@
 
 NinjamPanel::NinjamPanel(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::NinjamPanel)
+    ui(new Ui::NinjamPanel),
+    hostSyncButton(nullptr)
 {
     ui->setupUi(this);
 
@@ -52,7 +53,7 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
 //++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamPanel::setFullViewStatus(bool fullView){
     ui->horizontalLayout->setSpacing(fullView ? 6 : 2);
-    ui->intervalPanel->setMinimumHeight(fullView ? 120 : 90);
+    ui->intervalPanel->setMinimumHeight(fullView ? 120 : (hostSyncButton ? 110 : 90));
     ui->intervalPanel->setMaximumWidth(fullView ? 32768 : 300 );
 }
 
@@ -64,11 +65,13 @@ void NinjamPanel::addMasterControls(QWidget *masterControlsPanel){
 
 //++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamPanel::createHostSyncButton(QString buttonText){
-    hostSyncButton = new QPushButton(buttonText);
-    QGridLayout* layout = dynamic_cast<QGridLayout*>(ui->panelCombos->layout());
-    layout->addWidget(hostSyncButton, layout->rowCount(), 0, 1, 2);
+    if(!hostSyncButton){//just in case
+        hostSyncButton = new QPushButton(buttonText);
+        QGridLayout* layout = dynamic_cast<QGridLayout*>(ui->panelCombos->layout());
+        layout->addWidget(hostSyncButton, layout->rowCount(), 0, 1, 2);
 
-    QObject::connect(hostSyncButton, SIGNAL(clicked(bool)), this, SIGNAL(hostSyncButtonClicked()));
+        QObject::connect(hostSyncButton, SIGNAL(clicked(bool)), this, SIGNAL(hostSyncButtonClicked()));
+    }
 }
 
 void NinjamPanel::setHostSyncButtonAvailability(bool enabled){
@@ -262,33 +265,6 @@ void NinjamPanel::setBpm(int bpm){
     ui->comboBpm->setCurrentText(QString::number(bpm));
     ui->comboBpm->blockSignals(false);
 }
-
-//QComboBox* NinjamPanel::getBpiCombo() const{
-//    return ui->comboBpi;
-//}
-
-//QComboBox* NinjamPanel::getBpmCombo() const{
-//    return ui->comboBpm;
-//}
-
-//QComboBox* NinjamPanel::getAccentsCombo() const{
-//    return ui->comboBeatsPerAccent;
-//}
-
-//QAbstractSlider *NinjamPanel::getGainSlider() const{
-//    return ui->levelSlider;
-//}
-//QAbstractSlider* NinjamPanel::getPanSlider() const{
-//    return ui->panSlider;
-//}
-
-//QPushButton* NinjamPanel::getMuteButton() const{
-//    return ui->muteButton;
-//}
-
-//QPushButton* NinjamPanel::getSoloButton() const{
-//    return ui->soloButton;
-//}
 
 NinjamPanel::~NinjamPanel()
 {
