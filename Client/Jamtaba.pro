@@ -1,8 +1,8 @@
 TEMPLATE = subdirs
 
-#SUBDIRS += VstScanner
+SUBDIRS += VstScanner
 
-#SUBDIRS += Standalone
+SUBDIRS += Standalone
 
 SUBDIRS += VstPlugin  #VstPlugin need Qt static build
 
