@@ -286,8 +286,13 @@ void LocalTrackGroupView::on_removeChannelClicked(){
 //PRESETS
 void LocalTrackGroupView::on_LoadPresetClicked(QAction* a)
 {
-    mainFrame->getMainController()->loadPreset(a->data().toString());
+    Controller::MainController* mainController = mainFrame->getMainController();
+    mainController->loadPreset(a->data().toString());
     mainFrame->loadPresetToTrack();//that name is so good
+
+    //send the new channels to other musicians
+    mainController->sendNewChannelsNames(mainFrame->getChannelsNames());
+
 }
 
 
