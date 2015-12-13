@@ -1408,10 +1408,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
     int tabLayoutMargim = fullViewMode ? 9 : 0;
     ui.tabLayout->setContentsMargins(tabLayoutMargim, tabLayoutMargim, tabLayoutMargim, tabLayoutMargim);
 
-    //int leftPanelMargim = fullViewMode ? 6 : 3;
-    //ui.leftPanel->setContentsMargins(leftPanelMargim, 3, leftPanelMargim, leftPanelMargim);
-
-    showPeakMetersOnlyInLocalControls(!fullViewMode || localGroupChannels.first()->isShowingPeakMeterOnly());
+    showPeakMetersOnlyInLocalControls(!fullViewMode);
 
     ui.chatArea->setMinimumWidth(fullViewMode ? 280 : 180);
 
@@ -1430,9 +1427,12 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
     }
 
     //local tracks are narrowed in mini mode
-    if(!fullViewMode && localGroupChannels.count() > 1){
-        foreach (LocalTrackGroupView* localTrackGroup, localGroupChannels) {
+    foreach (LocalTrackGroupView* localTrackGroup, localGroupChannels) {
+        if(!fullViewMode){
             localTrackGroup->setToNarrow();
+        }
+        else{
+            localTrackGroup->setToWide();
         }
     }
 
