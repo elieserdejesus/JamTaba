@@ -430,20 +430,28 @@
          <property name="verticalSpacing">
           <number>0</number>
          </property>
-         <item row="0" column="3">
-          <widget class="QComboBox" name="comboBpi">
-           <property name="toolTip">
-            <string>Beats per interval</string>
-           </property>
+         <item row="3" column="1">
+          <widget class="QComboBox" name="comboShape">
            <property name="accessibleDescription">
-            <string>Change the BPI here</string>
-           </property>
-           <property name="editable">
-            <bool>true</bool>
+            <string>Change the shape here</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="2">
+         <item row="3" column="0">
+          <widget class="QLabel" name="labelShape">
+           <property name="text">
+            <string>Shape</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="comboBeatsPerAccent">
+           <property name="accessibleDescription">
+            <string>Change the accent here</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
           <widget class="QLabel" name="labelBPM">
            <property name="toolTip">
             <string>Beats per minute</string>
@@ -453,7 +461,7 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="2">
+         <item row="0" column="0">
           <widget class="QLabel" name="labelBPI">
            <property name="toolTip">
             <string>Beats per interval</string>
@@ -466,28 +474,27 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="3">
-          <widget class="QComboBox" name="comboBeatsPerAccent">
+         <item row="0" column="1">
+          <widget class="QComboBox" name="comboBpi">
+           <property name="toolTip">
+            <string>Beats per interval</string>
+           </property>
            <property name="accessibleDescription">
-            <string>Change the accent here</string>
+            <string>Change the BPI here</string>
+           </property>
+           <property name="editable">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
-         <item row="3" column="3">
-          <widget class="QComboBox" name="comboShape">
-           <property name="accessibleDescription">
-            <string>Change the shape here</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <widget class="QLabel" name="labelShape">
+         <item row="2" column="0">
+          <widget class="QLabel" name="labelAccent">
            <property name="text">
-            <string>Shape</string>
+            <string>Accent</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="3">
+         <item row="1" column="1">
           <widget class="QComboBox" name="comboBpm">
            <property name="toolTip">
             <string>Beats per minute</string>
@@ -503,13 +510,6 @@
            </property>
            <property name="maxVisibleItems">
             <number>40</number>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QLabel" name="labelAccent">
-           <property name="text">
-            <string>Accent</string>
            </property>
           </widget>
          </item>
