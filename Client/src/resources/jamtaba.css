@@ -449,7 +449,7 @@ BaseTrackView[unlighted="true"] QSlider::groove:vertical{
 
 QSlider::handle:horizontal {
     background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-        stop: 0      rgb(210, 210, 210),
+        stop: 0      rgb(230, 230, 230),
         stop: 0.8    rgb(120, 120, 120),
         stop: 1      rgba(0, 0, 0, 20));
 
@@ -473,7 +473,7 @@ QSlider::handle:horizontal:hover {
 
 QSlider::handle:vertical{
     background: qlineargradient(x1:0, y1:0.3, x2:0.7, y2:1,
-        stop: 0      rgb(210, 210, 210),
+        stop: 0      rgb(230, 230, 230),
         stop: 0.9    rgb(170, 170, 170),
         stop: 1      rgba(0, 0, 0, 20));
 
@@ -530,7 +530,7 @@ PeakMeter#masterMeterL, PeakMeter#masterMeterR{
 }
 
 QLabel#masterTitleLabel, QLabel#labelMetronomeIControls{
-    color: gray;
+    color: rgb(110, 110,110);
 }
 
 
