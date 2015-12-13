@@ -38,13 +38,11 @@ void LocalTrackView::closeAllPlugins(){
     inputNode->closeProcessorsWindows();//close vst editors
 }
 
-void LocalTrackView::init(int channelIndex, float
-                          initialGain, BaseTrackView::BoostValue boostValue, float initialPan, bool muted){
+void LocalTrackView::init(int channelIndex, float initialGain, BaseTrackView::BoostValue boostValue, float initialPan, bool muted){
     if(!mainController){
         qCritical() << "LocalTrackView::init() mainController is null!";
         return;
     }
-
 
     fxPanel = createFxPanel();
     ui->mainLayout->addSpacing(20);//add separator before effects panel
@@ -84,8 +82,6 @@ void LocalTrackView::init(int channelIndex, float
 
     this->inputNode->setGain(initialGain);
     this->inputNode->setPan(initialPan);
-    //ui->levelSlider->setValue( 100 * initialGain );
-    //ui->panSlider->setValue( initialPan * 4 );
     initializeBoostButtons(boostValue);
     if(muted){
         //ui->muteButton->click();

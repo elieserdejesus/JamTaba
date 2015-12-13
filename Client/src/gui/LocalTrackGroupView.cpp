@@ -60,6 +60,7 @@ QPushButton* LocalTrackGroupView::createXmitButton(){
     toolButton->setText("Transmit");
     toolButton->setToolTip("Enable/disable your audio transmission for others");
     toolButton->setAccessibleDescription(toolTip());
+    toolButton->setChecked(true);
     return toolButton;
 }
 
