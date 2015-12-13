@@ -17,10 +17,10 @@ const double IntervalProgressDisplay::PI = 3.14159265358979323846264338327950288
 //LINEAR PAINTING CONSTANTS
 const QColor IntervalProgressDisplay::LINEAR_SLICE_NUMBER_COLOR = QColor(120, 120, 120);
 const QColor IntervalProgressDisplay::LINEAR_BG_COLOR = QColor(230, 230, 230);
-const QColor IntervalProgressDisplay::LINEAR_BG_SECOND_COLOR = QColor(215, 215, 215);
+const QColor IntervalProgressDisplay::LINEAR_BG_SECOND_COLOR = QColor(160, 160, 160);
 const QColor IntervalProgressDisplay::LINEAR_BORDER_COLOR = QColor(200, 200, 200);
 const QColor IntervalProgressDisplay::LINEAR_TEXT_COLOR = QColor(180, 180, 180);// Color.LIGHT_GRAY;
-const QColor IntervalProgressDisplay::LINEAR_ACCENT_BORDER_COLOR = QColor(160, 160, 160);
+const QColor IntervalProgressDisplay::LINEAR_ACCENT_BORDER_COLOR = QColor(120, 120, 120);
 
 //const QFont IntervalProgressDisplay::SMALL_FONT = QFont("Verdana", 7);
 //const QFont IntervalProgressDisplay::BIG_FONT = QFont("Verdana", 10);
@@ -266,25 +266,24 @@ void IntervalProgressDisplay::drawBeatCircles(QPainter& p, int hRadius, int vRad
 }
 
 //+++++++++++++++++++++++++ LINEAR PAINTING +++++++++++
-void IntervalProgressDisplay::drawPoint(int x, int y, int size, QPainter* painter, int value, QBrush bgPaint, QColor border, bool small) {
+void IntervalProgressDisplay::drawPoint(int x, int y, int size, QPainter* painter, int value, QBrush bgPaint, QColor border, bool small, bool drawText) {
     painter->setBrush(bgPaint);
     painter->drawEllipse( QPoint(x, y), size/2, size/2);
 
     painter->setPen(QPen(border));
     painter->drawEllipse(QPoint(x, y), size/2, size/2);
 
-    QString valueString = QString::number(value);
-
-    painter->setFont(small ? SMALL_FONT : BIG_FONT);
-    int valueStringWidth = painter->fontMetrics().width(valueString);
-    //painter->setPen(QPen(textPaint));
-    int textX = (int)(x - valueStringWidth / 2.0) -1;
-    int textY = y + painter->fontMetrics().descent() + 2;
-    if(!small){
-        painter->setPen(Qt::black);
+    if(drawText){
+        QString valueString = QString::number(value);
+        painter->setFont(small ? SMALL_FONT : BIG_FONT);
+        int valueStringWidth = painter->fontMetrics().width(valueString);
+        int textX = (int)(x - valueStringWidth / 2.0) -1;
+        int textY = y + painter->fontMetrics().descent() + 2;
+        if(!small){
+            painter->setPen(Qt::black);
+        }
+        painter->drawText(textX, textY, valueString );
     }
-    painter->drawText(textX, textY, valueString );
-    //painter->drawText(QRect(textX, textY, size, size), Qt::AlignCenter, valueString );
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -304,11 +303,11 @@ void IntervalProgressDisplay::drawPoints(QPainter* painter, int yPos, int startP
 
     float xPos = initialXPos;
     //draw all backgrounds first
+    int size = (int) (LINEAR_PAINT_MODE_OVAL_SIZE * 0.5f);// (i < currentInterval) ? ((int) (OVAL_SIZE * 0.7)) : ((int) (OVAL_SIZE * 0.85));
     for (int i = startPoint; i < totalPoinstToDraw; i++) {
-        bool canDraw = xSpace >= LINEAR_PAINT_MODE_OVAL_SIZE || (i % 2 == 0);
+        bool canDraw = i >= currentBeat && (xSpace >= (LINEAR_PAINT_MODE_OVAL_SIZE * 0.5) || (i % 2 == 0));
         if (canDraw) {
             QColor border = LINEAR_BORDER_COLOR;// (isShowingAccents() && isMeasureFirstBeat) ? accentBorderColor : borderPaint;
-            int size = (int) (LINEAR_PAINT_MODE_OVAL_SIZE * 0.7f);// (i < currentInterval) ? ((int) (OVAL_SIZE * 0.7)) : ((int) (OVAL_SIZE * 0.85));
             QColor bg = (i < currentBeat) ? LINEAR_BG_COLOR : LINEAR_BG_SECOND_COLOR;
             drawPoint((int) xPos, yPos, size, painter, (i + 1), bg, border, true);
         }
@@ -318,10 +317,12 @@ void IntervalProgressDisplay::drawPoints(QPainter* painter, int yPos, int startP
     //draw accents
     if (isShowingAccents()) {
         xPos = initialXPos;
-        int size = (int)(LINEAR_PAINT_MODE_OVAL_SIZE * 0.9f);
+        int size = (int)(LINEAR_PAINT_MODE_OVAL_SIZE * 0.6f);
         for (int i = 0; i < totalPoinstToDraw; i += beatsPerAccent) {
-            QColor bg = (i < currentBeat) ? LINEAR_BG_COLOR : LINEAR_BG_SECOND_COLOR;
-            drawPoint((int) xPos, yPos, size, painter, (i + 1), bg, LINEAR_ACCENT_BORDER_COLOR, true);
+            if(i > currentBeat){
+                QColor bg = LINEAR_BG_SECOND_COLOR;
+                drawPoint((int) xPos, yPos, size, painter, (i + 1), bg, LINEAR_ACCENT_BORDER_COLOR, true);
+            }
             xPos += xSpace * beatsPerAccent;
         }
     }
@@ -330,7 +331,7 @@ void IntervalProgressDisplay::drawPoints(QPainter* painter, int yPos, int startP
     QRadialGradient bgRadial(xPos-5, yPos-5, LINEAR_PAINT_MODE_OVAL_SIZE*2);//, new float[]{0.1f, 0.8f},
     bgRadial.setColorAt(0.1f, Qt::white);
     bgRadial.setColorAt(0.8f, Qt::black);
-    drawPoint((int) xPos, yPos, LINEAR_PAINT_MODE_OVAL_SIZE, painter, (currentBeat + 1), bgRadial, Qt::darkGray, false);
+    drawPoint((int) xPos, yPos, LINEAR_PAINT_MODE_OVAL_SIZE, painter, (currentBeat + 1), bgRadial, Qt::darkGray, false, true);//draw the text in the current beat
 
 
 }

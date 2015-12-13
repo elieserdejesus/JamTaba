@@ -57,7 +57,7 @@ private:
     void drawBeatCircles(QPainter &p, int hRadius, int vRadius, int beatCircles, int startIterval) ;
 
     //linear painting
-    void drawPoint(int x, int y, int size, QPainter* g, int value, QBrush bgPaint, QColor border, bool small) ;
+    void drawPoint(int x, int y, int size, QPainter* g, int value, QBrush bgPaint, QColor border, bool small, bool drawText = false) ;
     void drawPoints(QPainter* painter, int yPos, int startPoint, int totalPoinstToDraw) ;
     float getHorizontalSpace(int totalPoinstToDraw, int initialXPos) const;
 
