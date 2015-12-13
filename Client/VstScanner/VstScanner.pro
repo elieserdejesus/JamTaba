@@ -2,7 +2,6 @@ QT += core widgets
 QT -= gui
 
 TARGET = VstScanner
-CONFIG += console
 CONFIG -= app_bundle #in MAC create just a binary, not a complete bundle
 
 DEFINES += VST_FORCE_DEPRECATED=0 #enable VST 2.3 features
@@ -31,7 +30,8 @@ win32{
 
     win32-msvc*{#all msvc compilers
         #windows XP support
-        QMAKE_LFLAGS_WINDOWS = /SUBSYSTEM:WINDOWS,5.01
+        QMAKE_LFLAGS_WINDOWS = /SUBSYSTEM:WINDOWS,5.01 /SUBSYSTEM:CONSOLE,5.01
+
 
         CONFIG(release, debug|release) {
             #ltcg - http://blogs.msdn.com/b/vcblog/archive/2009/02/24/quick-tips-on-using-whole-program-optimization.aspx
@@ -49,6 +49,7 @@ macx{
     message("VstScanner Mac build")
     #mac osx doc icon
     ICON = Jamtaba.icns
+    CONFIG += console  #in windows we need the /SUBSYSTEM:CONSOLE,5.01 to work in Win XP
 }
 
 INCLUDEPATH += ../../VST_SDK/pluginterfaces/vst2.x/ \
