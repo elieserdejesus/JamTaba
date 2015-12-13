@@ -62,8 +62,8 @@ public:
     virtual ~AudioNode();
 
     virtual void processReplacing(const SamplesBuffer& in, SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
-    virtual void setMuteStatus(bool muted);
-    void setSoloStatus(bool soloed);
+    virtual void setMute(bool muted);
+    void setSolo(bool soloed);
     inline bool isMuted() const {return muted;}
     inline bool isSoloed() const {return soloed;}
 
@@ -91,6 +91,8 @@ public:
     inline void deactivate(){activated = false;}
     inline void activate(){activated = true;}
     inline bool isActivated() const{return activated;}
+
+    virtual void reset();//reset pan, gain, boost, etc
 
 protected:
 
@@ -182,6 +184,7 @@ public:
 
     //overriding
     void addProcessor( AudioNodeProcessor* newProcessor);
+    void reset();
 private:
     int globalFirstInputIndex; //store the first input index selected globally by users in preferences menu
     ChannelRange audioInputRange;

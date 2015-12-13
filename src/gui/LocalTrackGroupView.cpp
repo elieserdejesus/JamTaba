@@ -2,14 +2,14 @@
 #include "LocalTrackView.h"
 #include "ui_TrackGroupView.h"
 
-#include "../MainController.h"
+#include "MainController.h"
 #include "Highligther.h"
-
 #include "MainWindow.h"
+#include "FxPanel.h"
+#include "log/logging.h"
 
 #include <QPushButton>
 #include <QMenu>
-#include <QMouseEvent> //for menu
 #include <QInputDialog>//for menu
 
 
@@ -27,7 +27,6 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
     QObject::connect(this->ui->groupNameField, SIGNAL(editingFinished()), this, SIGNAL(nameChanged()) );
     QObject::connect(xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
 
-    xmitButton->setChecked(true);
 }
 
 LocalTrackGroupView::~LocalTrackGroupView()
@@ -108,56 +107,48 @@ void LocalTrackGroupView::on_addChannelClicked(){
     mainFrame->addChannelsGroup("new channel");
 }
 
-//NOT WORKING
-bool LocalTrackGroupView::eventFilter(QObject *target, QEvent *event)
+void LocalTrackGroupView::resetTracksControls()
 {
-    bool val= QObject::eventFilter(target, event);
+    qCInfo(jtConfigurator) << "!!!!!!!!!!!!!!!!!!!!!!!!!!!";
+    qCInfo(jtConfigurator) << "Reseting local inputs...";
 
-    QMenu * menu = dynamic_cast<QMenu*>(target);
-    if(menu && event->type() == QEvent::MouseButtonPress)
+    Controller::MainController* mainController = mainFrame->getMainController();
+    QList<LocalTrackView*> views = getTracks();
+    //all tracks in this track group
+    foreach (LocalTrackView* track, views)
     {
-        QMouseEvent * ev = (QMouseEvent *)event;
-        if(ev)
+        qCInfo(jtConfigurator) << "\tInput reset on channel "<< track->getTrackID();
+        mainController->resetTrack(track->getTrackID());
+
+        //now we remove plugins
+        FxPanel *panel = track->getFxPanel();
+        if(panel)
         {
-            if(ev->button() == Qt::RightButton)
-            {
-              on_RemovePresetClicked();
-                ev->ignore();
-                return true; // yes we filter the event
-            }
+            panel->removePlugins();
         }
     }
-    return val;
-    /*qWarning() << event->type();
-    if (event->type() == QEvent::Leave) {
-        Highligther::getInstance()->stopHighlight();
-    }
-    return TrackGroupView::eventFilter(target, event);*/
+     qCInfo(jtConfigurator) << "Reseting local inputs done!";
 }
 
 void LocalTrackGroupView::on_toolButtonClicked()
 {
     QMenu menu;
 
-
-
     //PRESETS-----------------------------
 
     //LOAD - using a submenu to list stored presets
     QMenu* loadPresetsSubmenu = new QMenu("Load preset");
     loadPresetsSubmenu->setIcon(QIcon(":/images/preset-load.png"));
-    loadPresetsSubmenu->setDisabled(false);// so we can merge to master without confusion for the user until it works
     loadPresetsSubmenu->installEventFilter(this);// to deal with mouse buttons
+
     //adding a menu action for each stored preset
     Configurator *cfg= Configurator::getInstance();
     QStringList presetsNames=cfg->getPresetFilesNames(false);
     foreach(QString name, presetsNames )
     {
-        //presetsNames.append(name);
         QAction* presetAction = loadPresetsSubmenu->addAction(name);
         presetAction->setData(name);//putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
         QObject::connect(loadPresetsSubmenu, SIGNAL(triggered(QAction*)), this, SLOT(on_LoadPresetClicked(QAction*)));
-
     }
     loadPresetsSubmenu->setEnabled(!presetsNames.isEmpty());
 
@@ -165,21 +156,16 @@ void LocalTrackGroupView::on_toolButtonClicked()
 
     //SAVE
     QAction* addPresetActionSave = menu.addAction(QIcon(":/images/preset-save.png"), "Save preset");
-    addPresetActionSave->setDisabled(false);// so we can merge to master without confusion for the user until it works
     QObject::connect(addPresetActionSave, SIGNAL(triggered(bool)), this, SLOT(on_SavePresetClicked()));
 
-
     //RESET - in case of panic
-    QAction* reset =  menu.addAction(QIcon(":/images/gear.png"),"Reset Preset");
-    //reset->setDisabled(false);// so we can merge to master without confusion for the user until it works
+    QAction* reset =  menu.addAction(QIcon(":/images/gear.png"), "Reset Track Controls");
     QObject::connect(reset, SIGNAL(triggered()), this, SLOT(on_ResetPresetClicked()));
 
     menu.addSeparator();
 
 
-    //-------------------------------------
     //CHANNELS
-
     menu.addSeparator();
 
     QAction* addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
@@ -193,7 +179,7 @@ void LocalTrackGroupView::on_toolButtonClicked()
             action->setData( i-1 );//use channel index as action data
             QObject::connect(action, SIGNAL(triggered(bool)), this, SLOT(on_removeChannelClicked()));
             QObject::connect(action, SIGNAL(hovered()), this, SLOT(on_removeChannelHovered()));
-            action->installEventFilter(this);
+            //action->installEventFilter(this);
         }
     }
 
@@ -210,12 +196,9 @@ void LocalTrackGroupView::on_toolButtonClicked()
                 action->setData( i-1 );//use track view index as user data
                 QObject::connect(action, SIGNAL(triggered(bool)), this, SLOT(on_removeSubChannelClicked()));
                 QObject::connect(action, SIGNAL(hovered()), this, SLOT(on_removeSubchannelHovered()));
-                action->installEventFilter(this);
+                //action->installEventFilter(this);
             }
         }
-
-        //QObject::connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(on_RemoveSubChannelTriggered(QAction*)));
-        //QObject::connect(&menu, SIGNAL(hovered(QAction*)), this, SLOT(on_removeSubchannelHovered(QAction*)));
     }
 
     menu.move( mapToGlobal( toolButton->pos() + QPoint(toolButton->width(), 0) ));
@@ -299,13 +282,14 @@ void LocalTrackGroupView::on_LoadPresetClicked(QAction* a)
 void LocalTrackGroupView::on_SavePresetClicked()
 {
     bool ok;
-        QString text = QInputDialog::getText(this, tr("Save the preset ..."),
-                                             tr("Preset name:"), QLineEdit::Normal,
-                                             QDir::home().dirName(), &ok);
-        if (ok && !text.isEmpty())
-        {text.append(".json");
+    QString text = QInputDialog::getText(this, tr("Save the preset ..."),
+                                         tr("Preset name:"), QLineEdit::Normal,
+                                         QDir::home().dirName(), &ok);
+    if (ok && !text.isEmpty())
+    {
+        text.append(".json");
         mainFrame->getMainController()->savePresets(mainFrame->getInputsSettings(),text);
-        }
+    }
 
 }
 

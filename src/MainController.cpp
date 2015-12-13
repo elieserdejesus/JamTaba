@@ -698,6 +698,13 @@ void MainController::setTrackBoost(int trackID, float boostInDecibels){
     }
 }
 
+void MainController::resetTrack(int trackID){
+    Audio::AudioNode* node = tracksNodes[trackID];
+    if(node){
+        node->reset();
+    }
+}
+
 void MainController::setTrackGain(int trackID, float gain, bool blockSignals){
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
@@ -715,7 +722,7 @@ void MainController::setTrackMute(int trackID, bool muteStatus, bool blockSignal
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->blockSignals(blockSignals);
-        node->setMuteStatus(muteStatus);
+        node->setMute(muteStatus);
         node->blockSignals(false);//unblock signals by default
     }
 }
@@ -724,7 +731,7 @@ void MainController::setTrackSolo(int trackID, bool soloStatus, bool blockSignal
     Audio::AudioNode* node = tracksNodes[trackID];
     if(node){
         node->blockSignals(blockSignals);
-        node->setSoloStatus(soloStatus);
+        node->setSolo(soloStatus);
         node->blockSignals(false);
     }
 }
