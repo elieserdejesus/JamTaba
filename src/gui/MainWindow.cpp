@@ -989,7 +989,7 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
     //add the chat panel in main window
     qCDebug(jtGUI) << "adding ninjam chat panel...";
     ChatPanel* chatPanel = ninjamWindow->getChatPanel();
-    ui.chatTabWidget->addTab(chatPanel, QIcon(":/images/ninja.png"), "chat " + roomInfo.getName());
+    ui.chatTabWidget->addTab(chatPanel, "chat " + roomInfo.getName());
     QObject::connect(chatPanel, SIGNAL(userConfirmingChordProgression(ChordProgression)), this, SLOT(on_userConfirmingChordProgression(ChordProgression)));
 
     //add the ninjam panel in main window (bottom panel)

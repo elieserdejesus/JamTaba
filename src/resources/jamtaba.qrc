@@ -4,13 +4,10 @@
         <file>jamtaba_orange.css</file>
     </qresource>
     <qresource prefix="/images">
-        <file>gradient.bmp</file>
         <file>check.png</file>
         <file>check_hover.png</file>
         <file>check_checked.png</file>
         <file>on.png</file>
-        <file>metronome.png</file>
-        <file>ninja.png</file>
         <file>licence.png</file>
         <file>chat.png</file>
         <file>broom.png</file>
