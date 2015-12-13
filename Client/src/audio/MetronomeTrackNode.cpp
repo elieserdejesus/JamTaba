@@ -36,7 +36,7 @@ MetronomeTrackNode::MetronomeTrackNode(QString metronomeWaveFile, int localSampl
     firstIntervalBeatBuffer = createResampledBuffer(*clickSoundBuffer, localSampleRate, localSampleRate * 0.5);
     firstMeasureBeatBuffer = createResampledBuffer(*clickSoundBuffer, localSampleRate, localSampleRate * 0.75);
 
-    reset();
+    resetInterval();
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -56,10 +56,10 @@ void MetronomeTrackNode::setSamplesPerBeat(long samplesPerBeat){
         qCritical() << "samples per beat <= 0";
     }
     this->samplesPerBeat = samplesPerBeat;
-    reset();
+    resetInterval();
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MetronomeTrackNode::reset(){
+void MetronomeTrackNode::resetInterval(){
     beatPosition = intervalPosition = 0;
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

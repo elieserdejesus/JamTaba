@@ -89,7 +89,7 @@ void LocalTrackView::init(int channelIndex, float
     initializeBoostButtons(boostValue);
     if(muted){
         //ui->muteButton->click();
-        this->inputNode->setMuteStatus(muted);
+        this->inputNode->setMute(muted);
     }
 
     setUnlightStatus(false);
@@ -114,12 +114,12 @@ void  LocalTrackView::resetFXPanel()
 
 void LocalTrackView::mute(bool b)
 {
-    getInputNode()->setMuteStatus(b);//audio only
+    getInputNode()->setMute(b);//audio only
     ui->muteButton->setChecked(b);//gui only
 }
 void LocalTrackView::solo(bool b)
 {
-    getInputNode()->setSoloStatus(b);//audio only
+    getInputNode()->setSolo(b);//audio only
     ui->soloButton->setChecked(b);//gui only
 }
 

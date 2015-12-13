@@ -722,8 +722,8 @@ void NinjamController::setSampleRate(int newSampleRate){
     this->metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
     this->metronomeTrackNode->setGain( oldGain );
     this->metronomeTrackNode->setPan( oldPan );
-    this->metronomeTrackNode->setMuteStatus( oldMutedStatus );
-    this->metronomeTrackNode->setSoloStatus( oldSoloStatus );
+    this->metronomeTrackNode->setMute( oldMutedStatus );
+    this->metronomeTrackNode->setSolo( oldSoloStatus );
     this->metronomeTrackNode->setBeatsPerAccent(oldBeatsPerAccent);
     mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
 

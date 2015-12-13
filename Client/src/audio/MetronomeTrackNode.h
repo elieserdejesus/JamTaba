@@ -16,7 +16,7 @@ public:
     virtual void processReplacing(const SamplesBuffer&in, SamplesBuffer& out, int SampleRate, const Midi::MidiBuffer& midiBuffer);
     void setSamplesPerBeat(long samplesPerBeat);
     void setIntervalPosition(long intervalPosition);
-    void reset();
+    void resetInterval();
 
     void setBeatsPerAccent(int beatsPerAccent) ;//pass zero to turn off accents
 

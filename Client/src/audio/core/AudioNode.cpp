@@ -166,18 +166,26 @@ void AudioNode::setGain(float gainValue){
 
 
 
-void AudioNode::setMuteStatus(bool muteStatus){
+void AudioNode::setMute(bool muteStatus){
     if(this->muted != muteStatus){
         this->muted = muteStatus;
         emit muteChanged(muteStatus);
     }
 }
 
-void AudioNode::setSoloStatus(bool soloed){
+void AudioNode::setSolo(bool soloed){
     if(this->soloed != soloed){
         this->soloed = soloed;
         emit soloChanged(this->soloed);
     }
+}
+
+void AudioNode::reset(){
+    setGain(1.0);
+    setPan(0);
+    setBoost(1.0);
+    setMute(false);
+    setSolo(false);
 }
 
 void AudioNode::updateGains(){
@@ -416,3 +424,7 @@ void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffe
     AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer);
 }
 //++++++++++++=
+void LocalInputAudioNode::reset(){
+    AudioNode::reset();
+    setToNoInput();
+}

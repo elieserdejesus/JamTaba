@@ -126,6 +126,7 @@ public:
     void setTrackGain(int trackID, float gain, bool blockSignals=false);
     void setTrackBoost(int trackID, float boostInDecibels);
     void setTrackPan(int trackID, float pan, bool blockSignals=false);
+    void resetTrack(int trackID);//reset mute, solo, gain, pan, etc
 
     Audio::AudioPeak getRoomStreamPeak();
     Audio::AudioPeak getTrackPeak(int trackID);
