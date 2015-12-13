@@ -44,6 +44,7 @@ public:
 protected:
     Ui::NinjamRoomWindow *ui;
     Controller::MainController* mainController;
+    NinjamPanel* ninjamPanel;//panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
 private:
 
     QMap<QString, NinjamTrackGroupView*> trackGroups;
@@ -56,8 +57,6 @@ private:
 
     void handleVoteMessage(Ninjam::User user, QString message);
     void handleChordProgressionMessage(Ninjam::User user, QString message);
-
-    NinjamPanel* ninjamPanel;//panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
 
     NinjamPanel* createNinjamPanel();
 
