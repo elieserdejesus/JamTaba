@@ -342,7 +342,7 @@
           <item>
            <widget class="QLabel" name="masterTitleLabel">
             <property name="text">
-             <string>MASTER</string>
+             <string>master</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -643,15 +643,15 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>CustomTabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>CustomTabWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>PeakMeter</class>
    <extends>QWidget</extends>
    <header>PeakMeter.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CustomTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>CustomTabWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
