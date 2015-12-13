@@ -4,7 +4,7 @@ SUBDIRS += VstScanner
 
 SUBDIRS += Standalone
 
-#SUBDIRS += VstPlugin  #VstPlugin need Qt static build
+SUBDIRS += VstPlugin  #VstPlugin need Qt static build
 
 #SUBDIRS += ThemeEditor
 
