@@ -13,7 +13,8 @@ ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
     QWidget(parent),
     ui(new Ui::ChatPanel),
     botNames(botNames),
-    availableColors(createColors())
+    availableColors(createColors()),
+    autoTranslating(false)
 {
     ui->setupUi(this);
     ui->scrollContent->setLayout(new QVBoxLayout(ui->scrollContent));
@@ -41,10 +42,8 @@ bool ChatPanel::eventFilter(QObject *obj, QEvent *event){
 class NinjamVoteButton : public QPushButton{
 public:
     NinjamVoteButton(QString voteType,  int voteValue)
-        :QPushButton(
-             "Vote - change "+ voteType +" to " + QString::number(voteValue)
-             )
-        ,voteValue(voteValue), voteType(voteType)
+        :QPushButton("Vote - change "+ voteType +" to " + QString::number(voteValue)),
+        voteValue(voteValue), voteType(voteType)
     {
         setObjectName("voteButton");
     }
@@ -106,7 +105,7 @@ void ChatPanel::addChordProgressionConfirmationMessage(ChordProgression progress
     ui->scrollContent->layout()->setAlignment(chordProgressionButton, Qt::AlignRight);
     QObject::connect(chordProgressionButton, SIGNAL(clicked(bool)), this, SLOT(on_chordProgressionConfirmationButtonClicked()));
 }
-
+//+++++++++++++++++++++++++++++++
 void ChatPanel::on_chordProgressionConfirmationButtonClicked(){
     ChordProgressionConfirmationButton* chordProgressionButton = static_cast<ChordProgressionConfirmationButton*>(QObject::sender());
 
@@ -115,9 +114,6 @@ void ChatPanel::on_chordProgressionConfirmationButtonClicked(){
     chordProgressionButton->parentWidget()->layout()->removeWidget(chordProgressionButton);
     chordProgressionButton->deleteLater();
 }
-
-
-
 //+++++++++++++++
 void ChatPanel::on_verticalScrollBarRangeChanged(int min, int max){
     Q_UNUSED(min)
@@ -150,17 +146,14 @@ void ChatPanel::addMessage(QString userName, QString userMessage, bool showTrans
         delete panels.first();
     }
     ui->scrollContent->layout()->setAlignment(Qt::AlignTop);
+    ui->scrollContent->layout()->setAlignment(msgPanel, Qt::AlignTop);
 
-//    bool sameUserFromLastMessage = userName == lastUserName;
-//    if(!sameUserFromLastMessage && !(msgBackgroundColor == BOT_COLOR)){
-//        lastUserName = userName;
-//        lastAlign = (lastAlign == Qt::AlignLeft) ? Qt::AlignRight : Qt::AlignLeft;
-//    }
-//    if(msgBackgroundColor != BOT_COLOR){
-        ui->scrollContent->layout()->setAlignment(msgPanel,  Qt::AlignTop);
-//    }
+    if(autoTranslating){
+        msgPanel->translate();//request the translation
+    }
+
 }
-
+//+++++++++++++++++++++++++++++++++++=
 QList<QColor> ChatPanel::createColors(){
     QList<QColor> colors;
     const int totalColors = 8;
@@ -216,4 +209,9 @@ void ChatPanel::setPreferredTranslationLanguage(QString targetLanguage){
             msgPanel->setPrefferedTranslationLanguage(targetLanguage);
         }
     }
+}
+
+void ChatPanel::on_buttonAutoTranslate_clicked()
+{
+    this->autoTranslating = ui->buttonAutoTranslate->isChecked();
 }

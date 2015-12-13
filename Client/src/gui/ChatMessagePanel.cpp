@@ -5,6 +5,7 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QMetaMethod>
+#include "log/logging.h"
 
 ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
     QWidget(parent),
@@ -67,21 +68,24 @@ ChatMessagePanel::~ChatMessagePanel()
     delete ui;
 }
 
+void ChatMessagePanel::translate(){
+    QNetworkAccessManager* httpClient = new QNetworkAccessManager(this);
+    QString encodedText(QUrl::toPercentEncoding(originalText));
+    QString url = "http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl="+ preferredTargetTranslationLanguage +"&dt=t&q=" + encodedText;
+    QNetworkRequest req;
+    req.setUrl(QUrl(url));
+    req.setOriginatingObject(this);
+    req.setRawHeader( "User-Agent" , "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36" );
+    qCDebug(jtGUI) << "Translating:" << url;
+    QNetworkReply* reply = httpClient->get(req);
+    QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(on_networkReplyError(QNetworkReply::NetworkError)));
+    QObject::connect(httpClient, SIGNAL(finished(QNetworkReply*)), this, SLOT(on_networkReplyFinished(QNetworkReply*)));
+}
+
 void ChatMessagePanel::on_translateButton_clicked(){
     if(ui->translateButton->isChecked()){
         if(translatedText.isEmpty()){
-            QNetworkAccessManager* httpClient = new QNetworkAccessManager(this);
-            QString encodedText(QUrl::toPercentEncoding(originalText));
-            QString url = "http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl="+ preferredTargetTranslationLanguage +"&dt=t&q=" + encodedText;
-            QNetworkRequest req;
-            req.setUrl(QUrl(url));
-            req.setOriginatingObject(this);
-            req.setRawHeader( "User-Agent" , "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36" );
-            qDebug() << url;
-            QNetworkReply* reply = httpClient->get(req);
-            QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(on_networkReplyError(QNetworkReply::NetworkError)));
-
-            QObject::connect(httpClient, SIGNAL(finished(QNetworkReply*)), this, SLOT(on_networkReplyFinished(QNetworkReply*)));
+            translate();
         }
         else{
             ui->labelMessage->setText(translatedText);
@@ -117,6 +121,7 @@ void ChatMessagePanel::on_networkReplyFinished(QNetworkReply *reply){
 }
 
 void ChatMessagePanel::setTranslatedMessage(QString translatedMessage){
+    ui->translateButton->setChecked(true);
     this->translatedText = translatedMessage;
     this->ui->labelMessage->setText(translatedMessage);
 }

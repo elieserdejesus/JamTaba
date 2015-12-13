@@ -34,6 +34,8 @@ private slots:
 
     void on_voteButtonClicked();
     void on_chordProgressionConfirmationButtonClicked();
+    void on_buttonAutoTranslate_clicked();
+
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
 private:
@@ -53,6 +55,7 @@ private:
 
     void createVoteButton(QString voteType, int value);
 
+    bool autoTranslating;
 
 };
 
