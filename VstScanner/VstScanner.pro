@@ -30,7 +30,9 @@ macx{
 win32{
 
     win32-msvc*{#all msvc compilers
-        QMAKE_LFLAGS_WINDOWS = /SUBSYSTEM:WINDOWS,5.01  #windows XP support
+        #windows XP support
+        QMAKE_LFLAGS_WINDOWS = /SUBSYSTEM:WINDOWS,5.01
+
         CONFIG(release, debug|release) {
             #ltcg - http://blogs.msdn.com/b/vcblog/archive/2009/02/24/quick-tips-on-using-whole-program-optimization.aspx
             QMAKE_CXXFLAGS_RELEASE +=  -GL -Gy -Gw
@@ -39,7 +41,7 @@ win32{
     }
 
     LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32
-    #RC_FILE = Jamtaba2.rc #windows icon
+    RC_FILE = ../Jamtaba2.rc #windows icon
 }
 
 

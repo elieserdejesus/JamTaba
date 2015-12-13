@@ -117,7 +117,7 @@ win32{
     #performance monitor lib
     #QMAKE_CXXFLAGS += -DPSAPI_VERSION=1
 
-    RC_FILE = Jamtaba2.rc #windows icon
+    RC_FILE = ../Jamtaba2.rc #windows icon
 }
 
 
@@ -142,7 +142,7 @@ macx{
     LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudio -lminimp3  -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
 
     #mac osx doc icon
-    ICON = Jamtaba.icns
+    ICON = ../Jamtaba.icns
 }
 
 INCLUDEPATH += $$VST_SDK_PATH/pluginterfaces/vst2.x/
