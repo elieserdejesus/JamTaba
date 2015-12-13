@@ -23,16 +23,16 @@
      <enum>QLayout::SetDefaultConstraint</enum>
     </property>
     <property name="leftMargin">
-     <number>0</number>
+     <number>1</number>
     </property>
     <property name="topMargin">
      <number>3</number>
     </property>
     <property name="rightMargin">
-     <number>0</number>
+     <number>1</number>
     </property>
     <property name="bottomMargin">
-     <number>0</number>
+     <number>1</number>
     </property>
     <property name="spacing">
      <number>3</number>
@@ -114,8 +114,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>753</width>
-                <height>238</height>
+                <width>751</width>
+                <height>237</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -437,7 +437,7 @@
             <x>0</x>
             <y>0</y>
             <width>99</width>
-            <height>247</height>
+            <height>246</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="localTracksLayout">

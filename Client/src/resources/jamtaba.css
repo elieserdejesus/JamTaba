@@ -546,13 +546,13 @@ BaseTrackView[unlighted="true"] PeakMeter{
 /* ++++++++++++++++++++++++++++++++++++++++ */
 
 QMainWindow{
-background-color: #494949;
-    /*background-image: url(':/images/metal_texture.jpg');*/
+    background-color: #494949;
+    border: 1px solid rgb(70, 70, 70);
 }
 
 QMainWindow #bottomPanel{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-     stop: 0     #CBCBCB,
+     stop: 0     #EDEDED,
      stop: 1.0   #989898);
     min-height: 60px;
     border-top: 1px solid black;
