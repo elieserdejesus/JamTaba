@@ -1449,7 +1449,13 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
         if(ninjamPanel){
             ninjamPanel->setFullViewStatus(fullViewMode);
         }
+
+        ChatPanel* chatPanel = ninjamWindow->getChatPanel();
+        if(chatPanel){
+            chatPanel->updateMessagesGeometry();
+        }
     }
+
 }
 //+++++++++++++++++++++++++++
 void MainWindow::on_localTrackAdded(){

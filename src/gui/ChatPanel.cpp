@@ -128,6 +128,14 @@ void ChatPanel::on_chatTextEditionFinished(){
     }
 }
 
+void ChatPanel::updateMessagesGeometry(){
+    QList<ChatMessagePanel*> messages = ui->scrollContent->findChildren<ChatMessagePanel*>();
+    foreach (ChatMessagePanel* msg, messages) {
+        msg->setMaximumWidth(ui->scrollContent->width());
+        msg->updateGeometry();
+    }
+}
+
 void ChatPanel::addMessage(QString userName, QString userMessage, bool showTranslationButton){
     QColor msgBackgroundColor = getUserColor(userName);
     QColor textColor = (msgBackgroundColor == BOT_COLOR) ? QColor(50, 50, 50) : QColor(0, 0, 0);
