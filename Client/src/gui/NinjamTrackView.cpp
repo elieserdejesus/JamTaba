@@ -23,7 +23,6 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
 
     setUnlightStatus(true);//disabled/grayed until receive the first bytes. When the first bytes
     //are downloaded the 'on_channelXmitChanged' slot is executed and this track is enabled.
-
 }
 
 void NinjamTrackView::setChannelName(QString name){
