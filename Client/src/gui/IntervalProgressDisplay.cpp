@@ -8,8 +8,8 @@
 #include <QStyleOption>
 #include <cmath>
 
-QColor IntervalProgressDisplay::PLAYED_BEATS_FIRST_COLOR = QColor(200, 200, 200);
-QColor IntervalProgressDisplay::PLAYED_BEATS_SECOND_COLOR = QColor(180, 180, 180);
+QColor IntervalProgressDisplay::PLAYED_BEATS_FIRST_COLOR = QColor(0, 0, 0, 0);//played beats are transparent
+QColor IntervalProgressDisplay::PLAYED_BEATS_SECOND_COLOR = QColor(0, 0, 0, 0);
 QColor IntervalProgressDisplay::PATH_COLOR = QColor(0,0,0, 20);
 
 const double IntervalProgressDisplay::PI = 3.141592653589793238462643383279502884;
@@ -178,8 +178,8 @@ void IntervalProgressDisplay::drawBeatCircles(QPainter& p, int hRadius, int vRad
     const float FIRST_COLOR_POSITION = 0.5f;
     const float SECOND_COLOR_POSITION = 0.7f;
 
-    //float hRadius = width()/2;
-    //float vRadius = height()/2;
+    int currentBeatX, currentBeatY;
+    QBrush currentBeatBrush;
 
     for (int i = 0; i < beatCircles; i++) {
 
@@ -189,25 +189,21 @@ void IntervalProgressDisplay::drawBeatCircles(QPainter& p, int hRadius, int vRad
         QRadialGradient brush(x - ovalSize/3, y - ovalSize/3, ovalSize*2);
         QPen pen(Qt::NoPen);
 
-        //p->drawLine(0, centerY, width(), centerY);
-
-        //beat not played yet
-        //brush.setColorAt(FIRST_COLOR_POSITION, Qt::gray);
-        //brush.setColorAt(SECOND_COLOR_POSITION, Qt::black);
-
         bool isIntervalFirstBeat = i + offset == 0;
-        bool isMeasureFirstBeat = (i + offset) % beatsPerAccent == 0;
-        if (i + offset == currentBeat && (isIntervalFirstBeat || isMeasureFirstBeat)) {//first beats
+        bool isMeasureFirstBeat = isShowingAccents() && (i + offset) % beatsPerAccent == 0;
+        bool isCurrentBeat = i + offset == currentBeat;
+
+        if ( isCurrentBeat && (isIntervalFirstBeat || isMeasureFirstBeat)) {//first beats
             if( isIntervalFirstBeat || isShowingAccents() ){
                 brush.setColorAt(FIRST_COLOR_POSITION, Qt::green);//accent beat colors
                 brush.setColorAt(SECOND_COLOR_POSITION, Qt::darkGreen);
             }
-            else{
-                brush.setColorAt(0.1f, Qt::white ); //playing beat highlight colors
-                brush.setColorAt(0.8f, Qt::lightGray);
-            }
             pen.setColor(Qt::darkGray);
             pen.setStyle(Qt::SolidLine);
+
+            currentBeatX = x;
+            currentBeatY = y;
+            currentBeatBrush = brush;
         }
         else{
             if((i + offset) % beatsPerAccent == 0 && (i+offset) > currentBeat){
@@ -221,7 +217,7 @@ void IntervalProgressDisplay::drawBeatCircles(QPainter& p, int hRadius, int vRad
             }
             else{
                 if ( (i + offset) <= currentBeat) {
-                    if(i + offset < currentBeat){
+                    if(i + offset < currentBeat){//played beats
                         brush.setColorAt(FIRST_COLOR_POSITION, PLAYED_BEATS_FIRST_COLOR); //played beats
                         brush.setColorAt(SECOND_COLOR_POSITION, PLAYED_BEATS_SECOND_COLOR);
                     }
@@ -231,29 +227,42 @@ void IntervalProgressDisplay::drawBeatCircles(QPainter& p, int hRadius, int vRad
 
                         pen.setColor(Qt::darkGray);
                         pen.setStyle(Qt::SolidLine);
+
+                        currentBeatX = x;
+                        currentBeatY = y;
+                        currentBeatBrush = brush;
                     }
                 }
                 else{
                     //non played yet
                     brush.setColorAt(0.0f, Qt::darkGray);
-                    brush.setColorAt(0.8f, Qt::gray);
+                    brush.setColorAt(0.8f, Qt::darkGray);
                 }
             }
         }
 
-        p.setBrush(brush);
-        p.setPen( pen );
-        int size = (i + offset) == currentBeat ? ovalSize + 1 : ovalSize;
-        p.drawEllipse( QPoint(x, y), size, size);
 
-        if(offset > 0 && currentBeat < offset){//is drawing the first circles?
-            p.setBrush(QColor(255,255, 255, 200)); //the internal circles are drawed transparent
-            p.drawEllipse( QPoint(x, y), size, size);
+        if(!isCurrentBeat){ //the current beat is drawed
+            if( !(offset > 0 && currentBeat < offset)){//is drawing the external circles?
+                p.setBrush(brush);
+                p.setPen( pen );
+                p.drawEllipse( QPoint(x, y), ovalSize, ovalSize);
+            }
+            else{//drawing internal circles when bpi is > 32
+                p.setPen(pen);
+                p.setBrush(QColor(160, 160, 160)); //the internal circles are darker
+                p.drawEllipse( QPoint(x, y), ovalSize, ovalSize);
+            }
         }
 
         angle -= 2 * -PI / beatCircles;
-
     }
+
+    //draw the current beat in top of other circles
+    p.setBrush(currentBeatBrush);
+    QPen currentBeatPen(QColor(85, 85, 85), 1);
+    p.setPen(currentBeatPen);
+    p.drawEllipse( QPoint(currentBeatX, currentBeatY), ovalSize+1, ovalSize+1);
 }
 
 //+++++++++++++++++++++++++ LINEAR PAINTING +++++++++++
