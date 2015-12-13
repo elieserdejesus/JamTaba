@@ -22,6 +22,7 @@ public:
     void addBpiVoteConfirmationMessage(int newBpmValue);
     void addChordProgressionConfirmationMessage(ChordProgression progression);
     void setPreferredTranslationLanguage(QString targetLanguage);
+    void updateMessagesGeometry();//called when user switch from mini mode to full view
 signals:
     void userSendingNewMessage(QString msg);
     void userConfirmingVoteToBpiChange(int newBpi);
