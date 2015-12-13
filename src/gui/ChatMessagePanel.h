@@ -19,7 +19,7 @@ public:
     ChatMessagePanel(QWidget *parent, QString userName, QString msg, QColor userNameBackgroundColor, QColor msgBackgroundColor, QColor textColor, bool showTranslationButton);
     ~ChatMessagePanel();
     void setPrefferedTranslationLanguage(QString targetLanguage);
-
+    void translate();
 private slots:
     void on_translateButton_clicked();
     void on_networkReplyFinished(QNetworkReply*);

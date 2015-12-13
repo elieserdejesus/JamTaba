@@ -1244,16 +1244,21 @@ NinjamRoomWindow #topPanel{
 }
 
 /*Chat */
-ChatPanel > QPushButton#buttonClear{
-    font-size: 10px;
-    color: rgb(120, 120, 120);
-    height: 20px;
-    width: 17px;
+ChatPanel QPushButton#buttonAutoTranslate,
+ChatPanel  QPushButton#buttonClear{
+    max-height: 22px;
+    max-width: 14px;
+}
+
+ChatPanel  QPushButton#buttonClear{
     background-image: url(:/images/broom.png);
     background-repeat: no-repeat;
     background-position: center;
-    margin-left: 0px;
-    border: 1px outset rgb(130, 130, 130);
+}
+ChatPanel QPushButton#buttonAutoTranslate{
+    background-image: url(:/images/translate.png);
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 #chatText{
