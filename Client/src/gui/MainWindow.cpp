@@ -1428,7 +1428,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
 
     //local tracks are narrowed in mini mode
     foreach (LocalTrackGroupView* localTrackGroup, localGroupChannels) {
-        if(!fullViewMode){
+        if(!fullViewMode && (localTrackGroup->getTracksCount() > 1 || localGroupChannels.size() > 1 )){
             localTrackGroup->setToNarrow();
         }
         else{
