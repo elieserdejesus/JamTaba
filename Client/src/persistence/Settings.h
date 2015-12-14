@@ -147,7 +147,7 @@ public:
     QList<Channel> channels;
 };
 //+++++++++PRESETS+++++++++++++++
-class PresetsSettings  : public SettingsObject{
+class PresetsSettings  : public SettingsObject{ //TODO this is the same InputSettings? The member 'names' can be obtained from channels directly?
 public:
     PresetsSettings();
     void write(QJsonObject &out);
@@ -174,7 +174,7 @@ private:
     RecordingSettings recordingSettings;
     PrivateServerSettings privateServerSettings;
     QString lastUserName;//the last nick name choosed by user
-    QString translation;//the translation being used in tha chat
+    QString translation;//the translation being used in chat
     int ninjamIntervalProgressShape;//Circle, Ellipe or Line
     bool readFile(APPTYPE type, QList<SettingsObject *> sections);// io ops ...
     bool writeFile(APPTYPE type, QList<SettingsObject *> sections);// io ops ...
