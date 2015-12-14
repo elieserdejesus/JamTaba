@@ -78,14 +78,14 @@ private:
     void drawFaderDbValue(QPainter& p);
     //void drawFaderDbMarks(QPainter& p);
 
+protected slots:
+    virtual void onMuteClicked();
+    virtual void onSoloClicked();
+    virtual void onFaderMoved(int value);
+    virtual void onPanSliderMoved(int value);
+    virtual void onBoostButtonClicked();
 
 private slots:
-    void onMuteClicked();
-    void onSoloClicked();
-    void onFaderMoved(int value);
-    void onPanSliderMoved(int value);
-    void onBoostButtonClicked();
-
     //signals emitted by AudioNode class when user activate the controle with mouse, or with midi CCs, or using joystick, or using mind control :)
     void onAudioNodePanChanged(float newPanValue);
     void onAudioNodeGainChanged(float newGainValue);

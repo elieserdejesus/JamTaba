@@ -6,23 +6,41 @@
 #include <QLabel>
 #include <QDebug>
 #include <QStyle>
-#include "../MainController.h"
+#include "MainController.h"
+#include "Utils.h"
 
 //+++++++++++++++++++++++++
-NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, long trackID, QString channelName)
-    :BaseTrackView(mainController, trackID)
+NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, long trackID, QString channelName, Persistence::CacheEntry initialValues)
+    :BaseTrackView(mainController, trackID), cacheEntry(initialValues)
 {
     channelNameLabel = new QLabel();
     channelNameLabel->setObjectName("channelName");
     channelNameLabel->setText(channelName);
-    //channelNameLabel->setEnabled(true);
 
-    //channelNameLabel->setWordWrap(true);
     ui->mainLayout->insertSpacing(0, 12);
     ui->mainLayout->insertWidget(1, channelNameLabel);
 
     setUnlightStatus(true);//disabled/grayed until receive the first bytes. When the first bytes
     //are downloaded the 'on_channelXmitChanged' slot is executed and this track is enabled.
+
+    //remember last track values
+    ui->levelSlider->setValue(initialValues.getGain() * 100);
+    ui->panSlider->setValue(initialValues.getPan() * ui->panSlider->maximum());
+    if(initialValues.isMuted()){
+        ui->muteButton->click();
+    }
+    if(initialValues.getBoost() < 1){
+        ui->buttonBoostMinus12->click();
+    }
+    else{
+        if(initialValues.getBoost() > 1){
+            ui->buttonBoostPlus12->click();
+        }
+        else{
+            ui->buttonBoostZero->click();
+        }
+    }
+
 }
 
 void NinjamTrackView::setChannelName(QString name){
@@ -37,6 +55,31 @@ void NinjamTrackView::setChannelName(QString name){
     this->channelNameLabel->setToolTip(name);
 }
 
+//+++++++++++++++++++++
+
+void NinjamTrackView::onPanSliderMoved(int value){
+    BaseTrackView::onPanSliderMoved(value);
+    cacheEntry.setPan(mainController->getTrackNode(getTrackID())->getPan());
+    mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
+}
+
+void NinjamTrackView::onFaderMoved(int value){
+    BaseTrackView::onFaderMoved(value);
+    cacheEntry.setGain( value/100.0 );
+    mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
+}
+
+void NinjamTrackView::onMuteClicked(){
+    BaseTrackView::onMuteClicked();
+    cacheEntry.setMuted(mainController->getTrackNode(getTrackID())->isMuted());
+    mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
+}
+
+void NinjamTrackView::onBoostButtonClicked(){
+    BaseTrackView::onBoostButtonClicked();
+    cacheEntry.setBoost(mainController->getTrackNode(getTrackID())->getBoost());
+    mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
+}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamTrackGroupView::updateGeoLocation(){
@@ -46,8 +89,8 @@ void NinjamTrackGroupView::updateGeoLocation(){
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainController *mainController, long trackID, QString userName, QString channelName, QString userIP)
-    :TrackGroupView(parent), mainController(mainController), userIP(userIP)
+NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainController *mainController, long trackID, QString channelName, Persistence::CacheEntry initialValues)
+    :TrackGroupView(parent), mainController(mainController), userIP(initialValues.getUserIP())
 {
     setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred));
 
@@ -57,7 +100,7 @@ NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainCont
     ui->topPanel->setLayout(new QVBoxLayout());
     ui->topPanel->layout()->addWidget(ui->groupNameField);
 
-    setGroupName(userName);
+    setGroupName(initialValues.getUserName());
 
     //country flag label
     countryLabel = new QLabel();
@@ -69,7 +112,7 @@ NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainCont
     ui->topPanel->layout()->addWidget(countryLabel);
 
     //create the first subchannel by default
-    addTrackView(new NinjamTrackView(mainController, trackID, channelName));
+    addTrackView(new NinjamTrackView(mainController, trackID, channelName, initialValues));
 
     ui->groupNameField->setReadOnly(true);
 

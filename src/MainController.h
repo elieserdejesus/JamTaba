@@ -10,6 +10,7 @@
 #include "loginserver/LoginService.h"
 #include "audio/core/AudioDriver.h"
 #include "persistence/Settings.h"
+#include "persistence/UsersDataCache.h"
 
 #include "audio/samplesbufferrecorder.h"
 
@@ -25,6 +26,8 @@
 #include "ninjam/Service.h"
 
 #include <QScopedPointer>
+
+
 
 class MainWindow;
 
@@ -219,6 +222,9 @@ public:
 
     void cancelPluginFinder();
 
+    //to remembering ninjamers controls (pan, level, gain, boost)
+    inline Persistence::UsersDataCache* getUsersDataCache(){ return &usersDataCache; }
+
 protected:
 
     static QString LOG_CONFIG_FILE;
@@ -286,6 +292,9 @@ private:
     //master
     float masterGain;
     Audio::AudioPeak masterPeak;
+
+
+    Persistence::UsersDataCache usersDataCache;
 
 protected slots:
 

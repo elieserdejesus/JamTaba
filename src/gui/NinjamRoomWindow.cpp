@@ -2,33 +2,28 @@
 #include "ui_NinjamRoomWindow.h"
 #include "NinjamTrackView.h"
 
+#include "ninjam/User.h"
+#include "ninjam/Server.h"
+#include "audio/MetronomeTrackNode.h"
+#include "audio/core/AudioDriver.h"
+#include "NinjamController.h"
+#include "MainController.h"
+#include "ninjam/Service.h"
+#include "chords/ChordsPanel.h"
+#include "chords/ChordProgression.h"
+#include "NinjamPanel.h"
+#include "ChatPanel.h"
+#include "MainWindow.h"
+#include "log/logging.h"
+#include "persistence/UsersDataCache.h"
+
+#include <QMessageBox>
+#include <cassert>
 #include <QComboBox>
 #include <QDebug>
 #include <QDateTime>
 
-#include "ninjam/User.h"
-#include "ninjam/Server.h"
-
-#include "audio/MetronomeTrackNode.h"
-#include "audio/core/AudioDriver.h"
-
-#include "NinjamController.h"
-#include "MainController.h"
-#include "ninjam/Service.h"
-
-#include "chords/ChordsPanel.h"
-#include "chords/ChordProgression.h"
-
-#include <cassert>
-
-#include "NinjamPanel.h"
-#include "ChatPanel.h"
-
-#include "MainWindow.h"
-
-#include <QMessageBox>
-
-#include "log/logging.h"
+using namespace Persistence;
 
 //+++++++++++++++++++++++++
 NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo, Controller::MainController *mainController) :
@@ -297,11 +292,14 @@ void NinjamRoomWindow::on_channelNameChanged(Ninjam::User, Ninjam::UserChannel c
 
 void NinjamRoomWindow::on_channelAdded(Ninjam::User user, Ninjam::UserChannel channel, long channelID){
     qCDebug(jtNinjamGUI) << "channel added - creating channel view:" << user.getFullName() << " " << channel.getName();
+
+    //remembering user track controls (gain, mute, pan, boost)
+    UsersDataCache* cache = mainController->getUsersDataCache();
+    CacheEntry cacheEntry = cache->getUserCacheEntry(user.getIp(), user.getName(), (int)channel.getIndex());//a empty/default cacheEntry is returned if the user is not cached
+
     if(!trackGroups.contains(user.getFullName())){//first channel from this user?
-        QString userName = user.getName();
         QString channelName = channel.getName();
-        QString userIp = user.getIp();
-        NinjamTrackGroupView* trackView = new NinjamTrackGroupView(ui->tracksPanel, this->mainController, channelID, userName, channelName, userIp );
+        NinjamTrackGroupView* trackView = new NinjamTrackGroupView(ui->tracksPanel, this->mainController, channelID, channelName, cacheEntry );
         trackView->setNarrowStatus(!fullViewMode);
         ui->tracksPanel->layout()->addWidget(trackView);
         trackGroups.insert(user.getFullName(), trackView);
@@ -310,7 +308,7 @@ void NinjamRoomWindow::on_channelAdded(Ninjam::User user, Ninjam::UserChannel ch
     else{//the second, or third channel from same user, group with other channels
         NinjamTrackGroupView* trackView = trackGroups[user.getFullName()];
         if(trackView){
-            NinjamTrackView* ninjamTrackView = new NinjamTrackView(mainController, channelID, channel.getName());
+            NinjamTrackView* ninjamTrackView = new NinjamTrackView(mainController, channelID, channel.getName(), cacheEntry);
             trackView->addTrackView(ninjamTrackView);
             ninjamTrackView->setUnlightStatus(true);//disabled/grayed until receive the first bytes. When the first bytes
             //are downloaded the 'on_channelXmitChanged' slot is executed and this track is enabled.
@@ -374,7 +372,7 @@ void NinjamRoomWindow::on_licenceButton_clicked()
     msgBox->setAttribute( Qt::WA_DeleteOnClose );
 
 
-    //hack to set minimum width in QMEsageBox
+    //hack to set minimum width in QMessageBox
     QSpacerItem* horizontalSpacer = new QSpacerItem(500, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
     QGridLayout* layout = (QGridLayout*)msgBox->layout();
     layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
@@ -391,7 +389,8 @@ void NinjamRoomWindow::on_licenceButton_clicked()
 }
 
 //----------
-void NinjamRoomWindow::ninjamAccentsComboChanged(int /*index*/){
+void NinjamRoomWindow::ninjamAccentsComboChanged(int index){
+    Q_UNUSED(index)
     int beatsPerAccent = ninjamPanel->getCurrentBeatsPerAccent();
     mainController->getNinjamController()->setMetronomeBeatsPerAccent(beatsPerAccent);
 }
