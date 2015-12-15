@@ -196,12 +196,12 @@ void NinjamRoomWindow::handleChordProgressionMessage(Ninjam::User user, QString 
 
 void NinjamRoomWindow::handleVoteMessage(Ninjam::User user, QString message){
     //local user is voting?
-    static long long lastVoteCommand = 0;
+    static quint64 lastVoteCommand = 0;
     QString localUserFullName = mainController->getNinjamService()->getConnectedUserName();
     if (user.getFullName() == localUserFullName && message.toLower().contains("!vote")) {
         lastVoteCommand = QDateTime::currentMSecsSinceEpoch();
     }
-    long timeSinceLastVote = QDateTime::currentMSecsSinceEpoch() - lastVoteCommand;
+    quint64 timeSinceLastVote = QDateTime::currentMSecsSinceEpoch() - lastVoteCommand;
     if (timeSinceLastVote >= 1000) {
         QString commandType = (message.toLower().contains("bpm")) ? "BPM" : "BPI";
 
