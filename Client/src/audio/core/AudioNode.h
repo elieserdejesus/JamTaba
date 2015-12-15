@@ -90,7 +90,7 @@ public:
 
     inline void deactivate(){activated = false;}
     inline void activate(){activated = true;}
-    inline bool isActivated() const{return activated;}
+    virtual inline bool isActivated() const{return activated;}
 
     virtual void reset();//reset pan, gain, boost, etc
 
@@ -185,6 +185,10 @@ public:
     //overriding
     void addProcessor( AudioNodeProcessor* newProcessor);
     void reset();
+
+    //local input tracks are always activated, so is possible play offline while listening to a room.
+    //The other tracks (ninjam tracks) are deactivated when the 'room preview' is started.
+    inline bool isActivated() const{ return true; }
 private:
     int globalFirstInputIndex; //store the first input index selected globally by users in preferences menu
     ChannelRange audioInputRange;

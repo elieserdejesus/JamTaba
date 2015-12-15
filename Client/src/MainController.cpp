@@ -831,7 +831,7 @@ void MainController::playRoomStream(Login::RoomInfo roomInfo){
         currentStreamingRoomID = roomInfo.getID();
 
         //mute all tracks and unmute the room Streamer
-        setAllTracksActivation(true);
+        setAllTracksActivation(false);
         roomStreamer->activate();
     }
 }
