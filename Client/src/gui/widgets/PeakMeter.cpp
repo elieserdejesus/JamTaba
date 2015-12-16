@@ -1,4 +1,5 @@
 #include "PeakMeter.h"
+#include "Utils.h"
 #include <cmath>
 #include <QDebug>
 #include <QResizeEvent>
@@ -91,6 +92,7 @@ void PeakMeter::setPeak(float peak){
     update();
 }
 
+#include "Utils.h"
 void PeakMeter::paintEvent(QPaintEvent *){
     QPainter painter(this);
 
@@ -101,7 +103,7 @@ void PeakMeter::paintEvent(QPaintEvent *){
 
     //meter
     if(isEnabled()){
-        int value = currentPeak * ((orientation == VERTICAL) ? height() : width());
+        int value = Utils::poweredGainToLinear(currentPeak) * ((orientation == VERTICAL) ? height() : width());
         QRect rect;
         rect.setLeft(1);
         rect.setRight( orientation == VERTICAL ? width()-2 : value);
@@ -111,8 +113,9 @@ void PeakMeter::paintEvent(QPaintEvent *){
 
         //draw max peak marker
         if(maxPeak > 0 && paintingMaxPeak){
-            int peakY = orientation == VERTICAL ? (height() - maxPeak * height()) : 0;
-            int peakX = orientation == VERTICAL ? 0 : (maxPeak * width());
+            float linearPeak = Utils::poweredGainToLinear(maxPeak);
+            int peakY = orientation == VERTICAL ? (height() - linearPeak * height()) : 0;
+            int peakX = orientation == VERTICAL ? 0 : (linearPeak * width());
             int peakWidth = orientation == VERTICAL ? width() : 3;
             int peakHeight = orientation == VERTICAL ? 3 : height();
             painter.fillRect(peakX, peakY, peakWidth, peakHeight, MAX_PEAK_COLOR);
