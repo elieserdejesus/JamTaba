@@ -30,7 +30,7 @@ public:
     inline QList<UserChannel*> getChannels() const{return channels.values();}
     inline bool operator< (const User& other) const{ return getFullName() < other.getFullName(); }
 
-    inline UserChannel getChannel(int index) const{ return *(channels[index]);}
+    UserChannel getChannel(int index) const;
 
     inline QString getIp() const{ return ip;}
 

@@ -27,42 +27,23 @@ User::User(QString fullName)
    // qDebug() << "NinjamUser constructor " << fullName;
 }
 
-//User::User(const User &u)
-//    :
-//      fullName(u.fullName),
-//      name(u.name),
-//      ip(u.ip)
-
-//{
-
-//}
-
 User::~User(){
     //qDebug() << "Destrutor NinjamUser";
 }
 
-//User User::getUser(QString userFullName) {
-//    if (userFullName.isNull() || userFullName.trimmed().isEmpty()) {
-//        return nullptr;
-//    }
-//    if (users.contains(userFullName)) {//not constains user
-//        users.insert(userFullName, User(userFullName));
-//    }
-//    return users[userFullName];
-//}
 
 bool User::isBot() const {
     return Service::isBotName(getName());
 }
 
-//QSet<UserChannel> User::getChannels() const
-//{
-//    return QSet<UserChannel>::fromList( channels.values());
-//}
 
-//void User::addChannel(QString channelName, bool active, int channelIndex, short volume, quint8 pan, quint8 flags) {
-//    this->channels.insert(channelIndex, UserChannel(this->getFullName(), channelName, active, channelIndex, volume, pan, flags));
-//}
+UserChannel User::getChannel(int index) const{
+    //I see a rare bug when a invalid index is passed as argument
+    if(index > 0 && index < channels.size()){
+        return *(channels[index]);
+    }
+    return UserChannel();//return a invalid/empty channel
+}
 
 void User::addChannel(UserChannel c){
     //addChannel(c.getName(), c.isActive(), c.getIndex(), c.volume, c.pan, c.getFlags());
