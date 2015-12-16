@@ -92,7 +92,6 @@ void PeakMeter::setPeak(float peak){
     update();
 }
 
-#include "Utils.h"
 void PeakMeter::paintEvent(QPaintEvent *){
     QPainter painter(this);
 
