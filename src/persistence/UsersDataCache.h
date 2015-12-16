@@ -13,9 +13,8 @@ namespace Persistence {
 
 class CacheEntry{//cache entries are per channel, not per user.
 public:
-    CacheEntry(QString userIp, QString userName, int channelID, bool muted, float gain, float pan, float boost);
-    CacheEntry(QString userIp, QString userName, int channelID); //construct a entry using default values
-    CacheEntry(){}//default construcot just to use in QMap without pointers
+    CacheEntry(QString userIp, QString userName, int channelID, bool muted=false, float gain=1.0, float pan=0.0, float boost=1.0);
+    CacheEntry(){}//default constructor just to use in QMap without pointers
 
     inline bool isMuted() const{ return muted; }
     inline float getGain() const{ return gain; }

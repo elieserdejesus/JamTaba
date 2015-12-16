@@ -12,11 +12,6 @@ CacheEntry::CacheEntry(QString userIp, QString userName, int channelID, bool mut
 
 }
 
-CacheEntry::CacheEntry(QString userIp, QString userName, int channelID)
-    :userIp(userIp), userName(userName), channelID(channelID), muted(false), gain(1), pan(0), boost(1){
-
-}
-
 UsersDataCache::UsersDataCache()
     :CACHE_FILE_NAME("tracks_cache.bin")
 {
