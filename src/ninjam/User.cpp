@@ -39,7 +39,7 @@ bool User::isBot() const {
 
 UserChannel User::getChannel(int index) const{
     //I see a rare bug when a invalid index is passed as argument
-    if(index > 0 && index < channels.size()){
+    if(index >= 0 && index < channels.size()){
         return *(channels[index]);
     }
     return UserChannel();//return a invalid/empty channel
