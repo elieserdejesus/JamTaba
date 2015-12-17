@@ -63,12 +63,12 @@ void UsersDataCache::loadCacheEntriesFromFile(){
                             [5]Mute
                             [6]Boost     */
                     QString userIP = parts.at(0);
-                    QString userName = (parts.size() >= 1) ? parts.at(1) : "";
-                    int channelID = (parts.size() >= 2) ? parts.at(2).toInt() : 0;
-                    float gain = (parts.size() >= 3) ? parts.at(3).toFloat() : 1.0;//unity gain as default
-                    float pan = (parts.size() >= 4) ? parts.at(4).toFloat() : 0.0;//center as default
-                    bool mute = (parts.size() >= 5) ? (bool)(parts.at(5).toInt()) : false;//not muted as default
-                    float boost = (parts.size() >= 6) ? parts.at(6).toFloat() : 1.0;//unity gain/boost as default
+                    QString userName = parts.size() >= 1 ? parts.at(1) : "";
+                    int channelID = parts.size() >= 2 ? parts.at(2).toInt() : 0;
+                    float gain = parts.size() >= 3 ? parts.at(3).toFloat() : 1.0;//unity gain as default
+                    float pan = parts.size() >= 4 ? parts.at(4).toFloat() : 0.0;//center as default
+                    bool mute = parts.size() >= 5 ? (parts.at(5).toInt() > 0 ? true : false) : false;//not muted as default
+                    float boost = parts.size() >= 6 ? parts.at(6).toFloat() : 1.0;//unity gain/boost as default
                     QString userUniqueKey = getUserUniqueKey(userIP, userName, channelID);
                     cacheEntries.insert(userUniqueKey, CacheEntry(userIP, userName, channelID, mute, gain, pan, boost));
                 }
@@ -93,7 +93,7 @@ void UsersDataCache::writeCacheEntriesToFile(){
                    << entry.getChannelID() << ";"
                    << entry.getGain() << ";"
                    << entry.getPan() << ";"
-                   << (int)(entry.isMuted()) << ";"
+                   << (entry.isMuted() ? 1 : 0) << ";"
                    << entry.getBoost()
                    << endl;
         }
