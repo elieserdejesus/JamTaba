@@ -22,7 +22,9 @@ protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent (QResizeEvent *);
 private:
-    static const int LINES_MARGIN;
+
+    inline bool isVertical() const{ return orientation == VERTICAL; }
+
     QLinearGradient gradient;//used when meter is configured to fill using a gradient (default)
 
     float currentPeak;
@@ -32,11 +34,6 @@ private:
     qint64 lastUpdate;
 
     int decayTime;
-
-    static const int DEFAULT_DECAY_TIME = 800;
-    static const int MAX_PEAK_SHOW_TIME = 1500;
-    //static const QColor HORIZONTAL_LINES_COLOR;
-    static const QColor MAX_PEAK_COLOR;
 
     bool usingGradient;
     QColor solidColor;//used when setSolidColor is called to disable gradient painting
@@ -50,6 +47,14 @@ private:
     static const QColor GRADIENT_FIRST_COLOR;
     static const QColor GRADIENT_MIDDLE_COLOR;
     static const QColor GRADIENT_LAST_COLOR;
+
+    static const int LINES_MARGIN;
+    static const int MIN_SIZE;
+
+    static const int DEFAULT_DECAY_TIME;
+    static const int MAX_PEAK_SHOW_TIME;
+    static const QColor MAX_PEAK_COLOR;
+    static const int MAX_PEAK_MARKER_SIZE;
 };
 
 
