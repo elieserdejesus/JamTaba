@@ -1,12 +1,18 @@
 #include "BaseTrackView.h"
 #include "ui_BaseTrackView.h"
-#include "../MainController.h"
+#include "MainController.h"
 #include <QStyleOption>
 #include <QPainter>
 #include <QDebug>
-#include "../Utils.h"
+#include "Utils.h"
 
-QMap<long, BaseTrackView*> BaseTrackView::trackViews;//static map
+const QColor BaseTrackView::DB_TEXT_COLOR = QColor(0, 0, 0, 120);
+const int BaseTrackView::FADER_HEIGHT = 12;
+
+const int BaseTrackView::NARROW_WIDTH = 80;
+const int BaseTrackView::WIDE_WIDTH = 120;
+
+QMap<long, BaseTrackView*> BaseTrackView::trackViews;//static map to quick lookup the views
 
 BaseTrackView::BaseTrackView(Controller::MainController *mainController, long trackID) :
     ui(new Ui::BaseTrackView),
@@ -20,7 +26,6 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     QObject::connect(ui->muteButton, SIGNAL(clicked()), this, SLOT(onMuteClicked()));
     QObject::connect(ui->soloButton, SIGNAL(clicked()), this, SLOT(onSoloClicked()));
     QObject::connect(ui->levelSlider, SIGNAL(valueChanged(int)), this, SLOT(onFaderMoved(int)));
-    //QObject::connect(ui->panSlider, SIGNAL(sliderMoved(int)), this, SLOT(onPanSliderMoved(int)));
     QObject::connect(ui->panSlider, SIGNAL(valueChanged(int)), this, SLOT(onPanSliderMoved(int)));
     QObject::connect(ui->buttonBoostZero, SIGNAL(clicked(bool)), this, SLOT(onBoostButtonClicked()));
     QObject::connect(ui->buttonBoostMinus12, SIGNAL(clicked(bool)), this, SLOT(onBoostButtonClicked()));
@@ -53,17 +58,19 @@ void BaseTrackView::bindThisViewWithTrackNodeSignals(){
 }
 
 //++++++  signals emitted by Audio Node +++++++
-//The values are changed in the model, so the view (this class) need
-//react and update. This changes in the model can done in initialization (when
-//Jamtaba is opened the last gain, pan values are loaded) or by
-//a midi message for example. So we can't expect the values of gain, pan are
-//only change by user mouse interaction, the values can be changed using another
-//methods.
+/*
+    The values are changed in the model, so the view (this class) need
+react and update. This changes in the model can done in initialization (when
+Jamtaba is opened and the last gain, pan values, etc. are loaded) or by
+a midi message for example. So we can't expect the gain and pan values are
+changed only by user mouse interaction, these values can be changed using another
+methods (like midi messages).
+
+*/
 
 void BaseTrackView::onAudioNodeGainChanged(float newGainValue){
     ui->levelSlider->setValue(newGainValue * 100);
 }
-
 
 void BaseTrackView::onAudioNodePanChanged(float newPanValue){
     //pan range is[-4,4], zero is center
@@ -77,9 +84,7 @@ void BaseTrackView::onAudioNodeMuteChanged(bool newMuteStatus){
 void BaseTrackView::onAudioNodeSoloChanged(bool newSoloStatus){
     ui->soloButton->setChecked(newSoloStatus);
 }
-
 //+++++++++
-
 
 void BaseTrackView::onBoostButtonClicked(){
     float boostValue = 0;
@@ -107,7 +112,7 @@ void BaseTrackView::updateGuiElements(){
     //update the track peaks
     setPeaks( peak.getLeft(), peak.getRight());
 
-    //update the track processors. At moment the VST plugins gui are updated. Some plugins need this to run your animations (see Ez Drummer, for example);
+    //update the track processors. In this moment the VST plugins GUI are updated. Some plugins need this to run your animations (see Ez Drummer, for example);
     mainController->getTrackNode(getTrackID())->updateProcessorsGui();//call idle in VST plugins
 }
 
@@ -122,11 +127,10 @@ QSize BaseTrackView::minimumSizeHint() const{
     return sizeHint();
 }
 
-
 void BaseTrackView::setToNarrow(){
     if(!this->narrowed){
         this->narrowed = true;
-        ui->mainLayout->setContentsMargins(3,3,3,3);
+        ui->mainLayout->setContentsMargins(3, 3, 3, 3);
         updateGeometry();
     }
 }
@@ -134,13 +138,14 @@ void BaseTrackView::setToNarrow(){
 void BaseTrackView::setToWide(){
     if(narrowed){
         this->narrowed = false;
-        ui->mainLayout->setContentsMargins(3,3,3,3);
+        ui->mainLayout->setContentsMargins(3, 3, 3, 3);
         updateGeometry();
     }
 }
 
 void BaseTrackView::setUnlightStatus(bool unlighted){
     setProperty("unlighted", QVariant(unlighted));
+
     style()->unpolish(this);
     style()->polish(this);
 
@@ -186,7 +191,7 @@ BaseTrackView* BaseTrackView::getTrackViewByID(long trackID){
 
 void BaseTrackView::setPeaks(float left, float right){
     if(left < 0 || right < 0){
-        qWarning() << "picos menores que zero left:" << left << " right:" << right;
+        qWarning() << "Invalid peak values left:" << left << " right:" << right;
     }
     ui->peakMeterLeft->setPeak(left);
     ui->peakMeterRight->setPeak(right);
@@ -244,39 +249,24 @@ void BaseTrackView::paintEvent(QPaintEvent* ){
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 
-
-//    drawFaderDbMarks(p);
     if(drawDbValue){
         drawFaderDbValue(p);
     }
-
 }
 
-//void BaseTrackView::drawFaderDbMarks(QPainter &p){
-
-
-//    double poweredGain = Utils::linearGainToPower(ui->levelSlider->value()/100.0);
-
-//    QString text = QString::number(faderDb, 'f', 1);
-//    int textWidth = p.fontMetrics().width(text);
-//    int textX = ui->faderPanel->x() + ui->levelSlider->x() + ui->levelSlider->width()/2 - textWidth  - 14;
-//    int textY =  (1 - ((double)ui->levelSlider->value()/ui->levelSlider->maximum())) * (ui->levelSlider->height() - FADER_ICON_HEIGHT) + ui->faderPanel->y() + ui->levelSlider->y();
-
-//}
-
 void BaseTrackView::drawFaderDbValue(QPainter &p){
-    static QColor textColor(0,0,0, 70);
-    static int FADER_ICON_HEIGHT = 48;
+    p.setPen(DB_TEXT_COLOR);
 
-    p.setPen(textColor);
     double poweredGain = Utils::linearGainToPower(ui->levelSlider->value()/100.0);
-    double faderDb = 20 * std::log10(poweredGain);
+    double faderDb = Utils::linearToDb(poweredGain);
+
     QString text = QString::number(faderDb, 'f', 1);
     int textWidth = p.fontMetrics().width(text);
 
     int textX = ui->mainWidget->x() + ui->levelSlider->x() + ui->levelSlider->width()/2 - textWidth  - ((!narrowed) ? 14 : 11);
-    int textY =  (1 - ((double)ui->levelSlider->value()/ui->levelSlider->maximum())) * (ui->levelSlider->height() - FADER_ICON_HEIGHT) + ui->mainWidget->y() + ui->levelSlider->y();
+    float sliderPosition = (double)ui->levelSlider->value()/ui->levelSlider->maximum();
+    int offset = ui->mainWidget->y() + ui->levelSlider->y() + FADER_HEIGHT + p.fontMetrics().height();
+    int textY =  (1 - sliderPosition) * ui->levelSlider->height() + offset;
 
-    textY += FADER_ICON_HEIGHT/2;//icon height
     p.drawText(textX, textY, text);
 }
