@@ -101,7 +101,6 @@ void BaseTrackView::updateGuiElements(){
     Audio::AudioPeak peak = mainController->getTrackPeak(getTrackID());
     if(peak.getMax() > maxPeak.getMax()){
         maxPeak.update(peak);
-
         double db = Utils::linearToDb(maxPeak.getMax());
         ui->peaksDbLabel->setText(QString::number(db, 'f', 0));
     }
