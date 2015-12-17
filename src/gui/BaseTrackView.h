@@ -51,8 +51,8 @@ public:
 
     virtual void setUnlightStatus(bool unlighted);
 
-    static const int NARROW_WIDTH = 80;
-    static const int WIDE_WIDTH = 120;
+    static const int NARROW_WIDTH;
+    static const int WIDE_WIDTH;
 protected:
 
     Ui::BaseTrackView *ui;
@@ -76,7 +76,9 @@ private:
     Audio::AudioPeak maxPeak;
 
     void drawFaderDbValue(QPainter& p);
-    //void drawFaderDbMarks(QPainter& p);
+
+    static const QColor DB_TEXT_COLOR;
+    static const int FADER_HEIGHT;
 
 protected slots:
     virtual void onMuteClicked();
