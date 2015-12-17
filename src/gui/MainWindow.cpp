@@ -406,6 +406,10 @@ bool MainWindow::isRunningAsVstPlugin() const{
 
 void MainWindow::restorePluginsList(){
     qCInfo(jtGUI) << "Restoring plugins list...";
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents();
+
     Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
     int channelIndex = 0;
     foreach (Persistence::Channel channel, inputsSettings.channels) {
@@ -443,6 +447,8 @@ void MainWindow::restorePluginsList(){
         channelIndex++;
     }
     qCInfo(jtGUI) << "Restoring plugins list done!";
+
+    QApplication::restoreOverrideCursor();
 }
 
 //USED BY PRESETS
@@ -583,24 +589,31 @@ void MainWindow::loadPresetToTrack()
             //create the plugins list
             QList<Persistence::Plugin> plugins=preset.channels.at(group).subChannels.at(index).plugins;
             int plugCount=plugins.size();
-            for(int i=0;i<plugCount;i++)
-            {
-                QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugins.at(i).path);
-                Audio::PluginDescriptor descriptor(pluginName, "VST", plugins.at(i).path);
-                Audio::Plugin* pluginInstance = mainController->addPlugin(index, descriptor);
-                if(pluginInstance){
-                    try{
-                        pluginInstance->restoreFromSerializedData(plugins.at(i).data);
-                    }
-                    catch(...){
-                        qWarning() << "Exception restoring " << pluginInstance->getName();
-                    }
+            if(plugCount > 0){
+                QApplication::setOverrideCursor(Qt::WaitCursor);
+                QApplication::processEvents();
 
-                    tracks.at(index)->addPlugin(pluginInstance, plugins.at(i).bypassed);
-                    qCInfo(jtConfigurator) << "Plugin Added :"<<pluginInstance->getName()<<" in track : "<<index;
+                for(int i=0;i<plugCount;i++)
+                {
+                    QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugins.at(i).path);
+                    Audio::PluginDescriptor descriptor(pluginName, "VST", plugins.at(i).path);
+                    Audio::Plugin* pluginInstance = mainController->addPlugin(index, descriptor);
+                    if(pluginInstance){
+                        try{
+                            pluginInstance->restoreFromSerializedData(plugins.at(i).data);
+                        }
+                        catch(...){
+                            qWarning() << "Exception restoring " << pluginInstance->getName();
+                        }
 
+                        tracks.at(index)->addPlugin(pluginInstance, plugins.at(i).bypassed);
+                        qCInfo(jtConfigurator) << "Plugin Added :"<<pluginInstance->getName()<<" in track : "<<index;
+
+                    }
                 }
+                QApplication::restoreOverrideCursor();
             }
+
             if(!mainController->isRunningAsVstPlugin())
             {
                 Persistence::Subchannel subChannel=preset.channels.at(group).subChannels.at(index);

@@ -160,6 +160,10 @@ void FxPanelItem::on_contextMenu(QPoint p){
 }
 
 void FxPanelItem::on_fxMenuActionTriggered(QAction* action){
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents();//force the cursor change
+
     //add a new plugin
     Audio::PluginDescriptor descriptor = Audio::PluginDescriptor::fromString( action->data().toString());
     Audio::Plugin* plugin = mainController->addPlugin(this->localTrackView->getInputIndex(), descriptor);
@@ -167,6 +171,7 @@ void FxPanelItem::on_fxMenuActionTriggered(QAction* action){
         this->localTrackView->addPlugin(plugin);
         showPluginGui(plugin);
     }
+    QApplication::restoreOverrideCursor();
 }
 
 void FxPanelItem::on_actionMenuTriggered(QAction* a){
