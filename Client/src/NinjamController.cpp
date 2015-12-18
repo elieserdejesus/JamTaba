@@ -615,14 +615,15 @@ void NinjamController::on_ninjamAudiointervalCompleted(Ninjam::User user, int ch
         mainController->saveEncodedAudio(userName, channelIndex, encodedAudioData);
     }
 
-    //qDebug() << "audio available  Thread ID: " << QThread::currentThreadId();
     Ninjam::UserChannel channel = user.getChannel(channelIndex);
     QString channelKey = getUniqueKey(channel);
     QMutexLocker locker(&mutex);
-    //checkThread("on_ninjamAudiointervalCompleted();");
     if(trackNodes.contains(channelKey)){
         NinjamTrackNode* trackNode = trackNodes[channelKey];
-        trackNode->addVorbisEncodedInterval(encodedAudioData);
+        if(trackNode){
+            trackNode->addVorbisEncodedInterval(encodedAudioData);
+            emit channelAudioFullyDownloaded(trackNode->getID());
+        }
     }
     else{
         qWarning() << "o canal " << channelIndex << " do usuário " << user.getName() << " não foi encontrado no mapa!";
@@ -730,8 +731,6 @@ void NinjamController::setSampleRate(int newSampleRate){
     recreateEncoders();
 }
 
-
-
 void NinjamController::on_ninjamAudioIntervalDownloading(Ninjam::User user, int channelIndex, int downloadedBytes){
     Q_UNUSED(downloadedBytes);
     Ninjam::UserChannel channel = user.getChannel(channelIndex);
@@ -739,8 +738,11 @@ void NinjamController::on_ninjamAudioIntervalDownloading(Ninjam::User user, int 
     QMutexLocker locker(&mutex);
     if(trackNodes.contains(channelKey)){
         NinjamTrackNode* track = dynamic_cast<NinjamTrackNode*>( trackNodes[channelKey]);
-        if(!track->isPlaying()){//track is not playing yet and receive the first interval bytes
-            emit channelXmitChanged(track->getID(), true);
+        if(track){
+            if(!track->isPlaying()){//track is not playing yet and receive the first interval bytes
+                emit channelXmitChanged(track->getID(), true);
+            }
+            emit channelAudioChunkDownloaded(track->getID());
         }
     }
 }
