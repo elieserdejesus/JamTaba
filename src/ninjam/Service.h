@@ -4,8 +4,8 @@
 #include <memory>
 #include <QLoggingCategory>
 
-#include "../ninjam/User.h"
-#include "../ninjam/UserChannel.h"
+#include "ninjam/User.h"
+#include "ninjam/UserChannel.h"
 
 namespace Ninjam {
 
@@ -62,8 +62,6 @@ public:
 
     void voteToChangeBPM(int newBPM);
     void voteToChangeBPI(int newBPI);
-
-
 
     static inline QStringList getBotNamesList(){ return botNames; }
 

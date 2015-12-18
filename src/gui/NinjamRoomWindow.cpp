@@ -49,10 +49,15 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
     QObject::connect(ninjamController, SIGNAL(channelAdded(Ninjam::User,   Ninjam::UserChannel, long)), this, SLOT(on_channelAdded(  Ninjam::User, Ninjam::UserChannel, long)));
     QObject::connect(ninjamController, SIGNAL(channelRemoved(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(on_channelRemoved(Ninjam::User, Ninjam::UserChannel, long)));
     QObject::connect(ninjamController, SIGNAL(channelNameChanged(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(on_channelNameChanged(Ninjam::User, Ninjam::UserChannel, long)));
+    QObject::connect(ninjamController, SIGNAL(channelAudioChunkDownloaded(long)), this, SLOT(on_channelAudioChunkDownloaded(long)));
+    QObject::connect(ninjamController, SIGNAL(channelAudioFullyDownloaded(long)), this, SLOT(on_channelAudioFullyDownloaded(long)));
+    QObject::connect(ninjamController, SIGNAL(startingNewInterval()), this, SLOT(on_startingNewInterval()));
     QObject::connect(ninjamController, SIGNAL(chatMsgReceived(Ninjam::User,QString)), this, SLOT(on_chatMessageReceived(Ninjam::User,QString)));
     QObject::connect(ninjamController, SIGNAL(channelXmitChanged(long,bool)), this, SLOT(on_channelXmitChanged(long,bool)));
     QObject::connect(ninjamController, SIGNAL(userLeave(QString)), this, SLOT(on_userLeave(QString)));
     QObject::connect(ninjamController, SIGNAL(userEnter(QString)), this, SLOT(on_userEnter(QString)));
+    QObject::connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(on_bpiChanged()));
+    QObject::connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(on_bpmChanged()));
 
     this->ninjamPanel = createNinjamPanel();
 
@@ -239,7 +244,6 @@ void NinjamRoomWindow::on_userConfirmingVoteToChangeBpm(int newBpm){
     }
 }
 
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::updatePeaks(){
     foreach (NinjamTrackGroupView* view, trackGroups) {
@@ -252,6 +256,39 @@ void NinjamRoomWindow::updatePeaks(){
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamRoomWindow::on_bpiChanged(){
+    foreach (NinjamTrackGroupView* groupView, trackGroups) {
+        groupView->resetDownloadedIntervals();
+    }
+}
+
+void NinjamRoomWindow::on_bpmChanged(){
+    foreach (NinjamTrackGroupView* groupView, trackGroups) {
+        groupView->resetDownloadedIntervals();
+    }
+}
+
+void NinjamRoomWindow::on_startingNewInterval(){
+    foreach (NinjamTrackGroupView* groupView, trackGroups) {
+        groupView->popFullyDownloadedIntervals();
+    }
+}
+
+void NinjamRoomWindow::on_channelAudioFullyDownloaded(long trackID){
+    NinjamTrackView* trackView = dynamic_cast<NinjamTrackView*>(NinjamTrackView::getTrackViewByID(trackID));
+    if(trackView){
+        trackView->finishCurrentDownload();
+    }
+}
+
+void NinjamRoomWindow::on_channelAudioChunkDownloaded(long trackID){
+    NinjamTrackView* trackView = dynamic_cast<NinjamTrackView*>(NinjamTrackView::getTrackViewByID(trackID));
+    if(trackView){
+        trackView->incrementDownloadedChunks();
+    }
+}
+
+
 void NinjamRoomWindow::on_channelXmitChanged(long channelID, bool transmiting){
     qCDebug(jtNinjamGUI) << "channel xmit changed:" << channelID << " state:" << transmiting;
     BaseTrackView* trackView = NinjamTrackView::getTrackViewByID(channelID);
@@ -346,8 +383,11 @@ NinjamRoomWindow::~NinjamRoomWindow(){
         QObject::disconnect(ninjamController, SIGNAL(channelAdded(Ninjam::User,   Ninjam::UserChannel, long)), this, SLOT(on_channelAdded(  Ninjam::User, Ninjam::UserChannel, long)));
         QObject::disconnect(ninjamController, SIGNAL(channelRemoved(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(on_channelRemoved(Ninjam::User, Ninjam::UserChannel, long)));
         QObject::disconnect(ninjamController, SIGNAL(channelNameChanged(Ninjam::User, Ninjam::UserChannel, long)), this, SLOT(on_channelNameChanged(Ninjam::User, Ninjam::UserChannel, long)));
+        QObject::disconnect(ninjamController, SIGNAL(channelAudioChunkDownloaded(long)), this, SLOT(on_channelAudioChunkDownloaded(long)));
+        QObject::disconnect(ninjamController, SIGNAL(channelAudioFullyDownloaded(long)), this, SLOT(on_channelAudioFullyDownloaded(long)));
         QObject::disconnect(ninjamController, SIGNAL(chatMsgReceived(Ninjam::User,QString)), this, SLOT(on_chatMessageReceived(Ninjam::User,QString)));
         QObject::disconnect(ninjamController, SIGNAL(channelXmitChanged(long,bool)), this, SLOT(on_channelXmitChanged(long,bool)));
+        QObject::disconnect(ninjamController, SIGNAL(startingNewInterval()), this, SLOT(on_startingNewInterval()));
     }
 
     mainController->storeIntervalProgressShape( ninjamPanel->getIntervalShape());

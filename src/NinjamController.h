@@ -73,6 +73,8 @@ signals:
     void channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
     void channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
     void channelXmitChanged(long channelID, bool transmiting);
+    void channelAudioChunkDownloaded(long channelID);
+    void channelAudioFullyDownloaded(long channelID);
     void userLeave(QString userName);
     void userEnter(QString userName);
 
@@ -153,6 +155,7 @@ private slots:
     void on_ninjamUserLeave(Ninjam::User user);
     void on_ninjamUserEnter(Ninjam::User user);
     //void on_ninjamDisconnectedFromServer(Ninjam::Server server);
+
 };
 
 }

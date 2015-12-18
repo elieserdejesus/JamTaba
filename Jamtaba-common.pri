@@ -2,7 +2,7 @@ VST_SDK_PATH = "$$PWD/../VST_SDK"
 
 TEMPLATE = lib
 
-VERSION = 2.0.9
+VERSION = 2.0.10
 
 # Define the preprocessor macro to get the application version in Jamtaba application.
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
@@ -76,7 +76,8 @@ HEADERS += \
     $$PWD/src/gui/chords/ChordsPanel.h \
     $$PWD/src/gui/chords/ChordProgression.h \
     $$PWD/src/configurator.h \
-    $$PWD/src/persistence/UsersDataCache.h
+    $$PWD/src/persistence/UsersDataCache.h \
+    $$PWD/src/gui/widgets/IntervalChunksDisplay.h
 
 SOURCES += \
     ../src/audio/core/AudioDriver.cpp \
@@ -132,7 +133,8 @@ SOURCES += \
     $$PWD/src/gui/chords/ChordsPanel.cpp \
     $$PWD/src/gui/chords/ChordProgression.cpp \
     $$PWD/src/configurator.cpp \
-    $$PWD/src/persistence/UsersDataCache.cpp
+    $$PWD/src/persistence/UsersDataCache.cpp \
+    $$PWD/src/gui/widgets/IntervalChunksDisplay.cpp
 
 
 #multiplatform implementations

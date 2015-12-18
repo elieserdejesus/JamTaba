@@ -13,7 +13,7 @@ UserChannel::UserChannel(QString userFullName, QString channelName, bool active,
 UserChannel::UserChannel()
     : userFullName("invalid"), channelName("invalid"), active(false), index(-1), volume(0), pan(0), flags(0)
 {
-    qWarning() << "using default construtor to UserChannel";
+    //qWarning() << "using default construtor to UserChannel";
 }
 
 UserChannel::UserChannel(const UserChannel &c)
