@@ -20,6 +20,10 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
     ui->mainLayout->insertSpacing(0, 12);
     ui->mainLayout->insertWidget(1, channelNameLabel);
 
+    chunksDisplay = new IntervalChunksDisplay(this);
+    ui->mainLayout->addSpacing(6);
+    ui->mainLayout->addWidget(chunksDisplay);
+
     setUnlightStatus(true);//disabled/grayed until receive the first bytes. When the first bytes
     //are downloaded the 'on_channelXmitChanged' slot is executed and this track is enabled.
 
@@ -42,6 +46,25 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
     }
 
 }
+
+//+++++= interval chunks visual feedback ++++++=
+void NinjamTrackView::finishCurrentDownload(){
+    this->chunksDisplay->pushNewDownloadInStack();
+}
+
+void NinjamTrackView::removeFirstDownloadInStack(){
+    this->chunksDisplay->popDownloadFromStack();
+}
+
+void NinjamTrackView::incrementDownloadedChunks(){
+    this->chunksDisplay->incrementDownloadedChunks();
+}
+
+void NinjamTrackView::resetDownloadedChunks(){
+    this->chunksDisplay->reset();
+}
+
+//+++++++++++++++++++
 
 void NinjamTrackView::setChannelName(QString name){
     this->channelNameLabel->setText(name);
@@ -116,6 +139,18 @@ NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainCont
 
     ui->groupNameField->setReadOnly(true);
 
+}
+
+void NinjamTrackGroupView::popFullyDownloadedIntervals(){
+    foreach (BaseTrackView* trackView, trackViews) {
+        dynamic_cast<NinjamTrackView*>(trackView)->removeFirstDownloadInStack();
+    }
+}
+
+void NinjamTrackGroupView::resetDownloadedIntervals(){
+    foreach (BaseTrackView* trackView, trackViews) {
+        dynamic_cast<NinjamTrackView*>(trackView)->resetDownloadedChunks();
+    }
 }
 
 void NinjamTrackGroupView::setNarrowStatus(bool narrow){

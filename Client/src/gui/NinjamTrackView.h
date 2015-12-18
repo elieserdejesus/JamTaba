@@ -3,6 +3,7 @@
 
 #include "TrackGroupView.h"
 #include "BaseTrackView.h"
+#include "IntervalChunksDisplay.h"
 
 #include "persistence/UsersDataCache.h"
 
@@ -18,9 +19,16 @@ class NinjamTrackView : public BaseTrackView{
 public:
     NinjamTrackView(Controller::MainController* mainController, long trackID, QString channelName, Persistence::CacheEntry initialValues);
     void setChannelName(QString name);
+
+    //interval chunks visual feedback
+    void incrementDownloadedChunks();//called when a interval part (a chunk) is received
+    void finishCurrentDownload(); //called when the interval is fully downloaded
+    void removeFirstDownloadInStack();//called when the interval is started
+    void resetDownloadedChunks();
 private:
     QLabel* channelNameLabel;
     Persistence::CacheEntry cacheEntry;//used to remember the track controls values
+    IntervalChunksDisplay* chunksDisplay;//display downloaded interval chunks
 protected slots:
     //overriding the base class slots
     void onMuteClicked();
@@ -35,7 +43,10 @@ public:
     NinjamTrackGroupView(QWidget *parent, Controller::MainController *mainController, long trackID, QString channelName, Persistence::CacheEntry initialValues);
     ~NinjamTrackGroupView();
     void setNarrowStatus(bool narrow);
-     void updateGeoLocation();
+    void updateGeoLocation();
+
+    void popFullyDownloadedIntervals();
+    void resetDownloadedIntervals();
 
 private:
     Controller::MainController* mainController;
