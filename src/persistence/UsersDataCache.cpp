@@ -3,11 +3,53 @@
 #include <QDir>
 #include <QFile>
 #include <QStandardPaths>
+#include <QDataStream>
 
 using namespace Persistence;
 
+
+// well formed address is an acceptable.
+// no need to validate the number within 8 bits.
+QRegExp CacheEntry::ipPattern("(?:\\d{1,3}\\.){3}(\\d{1,3}|x)");
+
+QRegExp CacheEntry::namePattern("[a-zA-Z0-9_]{1,64}");
+
+
+QDataStream & operator<<(QDataStream &stream, const CacheEntry &entry)
+{
+    return stream
+        << entry.getUserIP()
+        << entry.getUserName()
+        << entry.getChannelID()
+        << entry.isMuted()
+        << entry.getGain()
+        << entry.getPan()
+        << entry.getBoost();
+}
+
+QDataStream & operator>>(QDataStream &stream, CacheEntry &entry)
+{
+    QString userIp, userName;
+    quint8 channelID;
+    bool muted;
+    float gain, pan, boost;
+
+    stream >> userIp >> userName >> channelID >> muted >> gain >> pan >> boost;
+
+    entry.setUserIP(userIp);
+    entry.setUserName(userName);
+    entry.setChannelID(channelID);
+    entry.setMuted(muted);
+    entry.setGain(gain);
+    entry.setPan(pan);
+    entry.setBoost(boost);
+
+    return stream;
+}
+
+
 //+++++++++++++++++++++++++++++++++++++++
-CacheEntry::CacheEntry(QString userIp, QString userName, int channelID, bool muted, float gain, float pan, float boost)
+CacheEntry::CacheEntry(QString userIp, QString userName, quint8 channelID, bool muted, float gain, float pan, float boost)
     :userIp(userIp), userName(userName), channelID(channelID), muted(muted), gain(gain), pan(pan), boost(boost){
 
 }
@@ -24,7 +66,7 @@ UsersDataCache::~UsersDataCache(){
     }
 }
 
-CacheEntry UsersDataCache::getUserCacheEntry(QString userIp, QString userName, int channelID){
+CacheEntry UsersDataCache::getUserCacheEntry(QString userIp, QString userName, quint8 channelID){
     QString userUniqueKey = getUserUniqueKey(userIp, userName, channelID);
     if(cacheEntries.contains(userUniqueKey)){
         return cacheEntries[userUniqueKey];
@@ -37,7 +79,7 @@ void UsersDataCache::updateUserCacheEntry(CacheEntry entry){
     cacheEntries.insert(userKey, entry);//replace the last value or insert
 }
 
-QString UsersDataCache::getUserUniqueKey(QString userIp, QString userName, int channelID){
+QString UsersDataCache::getUserUniqueKey(const QString& userIp, const QString& userName, quint8 channelID){
     //the unique key is just a string...
     return userIp + userName + QString::number(channelID);
 }
@@ -48,32 +90,8 @@ void UsersDataCache::loadCacheEntriesFromFile(){
     QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
     QFile cacheFile(cacheDir.absoluteFilePath(CACHE_FILE_NAME));
     if(cacheFile.open(QFile::ReadOnly)){
-        QTextStream inputStream(&cacheFile);
-        while(!inputStream.atEnd()){
-            QString line = inputStream.readLine();
-            if(!line.isNull() && !line.isEmpty()){
-                QStringList parts = line.split(";");
-                if(!parts.isEmpty()){
-                    /*  Fields order in cache file:
-                            [0]User IP
-                            [1]User Name
-                            [2]Channel ID
-                            [3]Gain
-                            [4]Pan
-                            [5]Mute
-                            [6]Boost     */
-                    QString userIP = parts.at(0);
-                    QString userName = (parts.size() >= 1) ? parts.at(1) : "";
-                    int channelID = (parts.size() >= 2) ? parts.at(2).toInt() : 0;
-                    float gain = (parts.size() >= 3) ? parts.at(3).toFloat() : 1.0;//unity gain as default
-                    float pan = (parts.size() >= 4) ? parts.at(4).toFloat() : 0.0;//center as default
-                    bool mute = (parts.size() >= 5) ? (bool)(parts.at(5).toInt()) : false;//not muted as default
-                    float boost = (parts.size() >= 6) ? parts.at(6).toFloat() : 1.0;//unity gain/boost as default
-                    QString userUniqueKey = getUserUniqueKey(userIP, userName, channelID);
-                    cacheEntries.insert(userUniqueKey, CacheEntry(userIP, userName, channelID, mute, gain, pan, boost));
-                }
-            }
-        }
+        QDataStream stream(&cacheFile);
+        stream >> cacheEntries;
     }
     qCDebug(jtCache) << "Tracks cache items loaded from file: " << cacheEntries.size();
 }
@@ -85,24 +103,13 @@ void UsersDataCache::writeCacheEntriesToFile(){
     QFile cacheFile(cacheDir.absoluteFilePath(CACHE_FILE_NAME));
     if(cacheFile.open(QFile::WriteOnly)){
         qCDebug(jtCache) << "Tracks cache file opened to write.";
-        QTextStream stream(&cacheFile);
-        foreach (const QString& userUniqueKey, cacheEntries.keys()) {
-            CacheEntry entry = cacheEntries[userUniqueKey];
-            stream << entry.getUserIP() << ";"
-                   << entry.getUserName() << ";"
-                   << entry.getChannelID() << ";"
-                   << entry.getGain() << ";"
-                   << entry.getPan() << ";"
-                   << (int)(entry.isMuted()) << ";"
-                   << entry.getBoost()
-                   << endl;
-        }
+        QDataStream stream(&cacheFile);
+        stream << cacheEntries;
         qCDebug(jtCache) << cacheEntries.size() << " items stored in tracks cache file!";
     }
     else{
        qCCritical(jtCache) << "Can't open the tracks cache file in" << QFileInfo(cacheFile).absoluteFilePath();
     }
-
 }
 
 //++++++++++++++++++
