@@ -6,18 +6,18 @@
 
 class TestCacheEntry: public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
 private slots:
-	void validUserIp_data();
-	void validUserIp();
-	void invalidUserIp_data();
-	void invalidUserIp();
+    void validUserIp_data();
+    void validUserIp();
+    void invalidUserIp_data();
+    void invalidUserIp();
 
-	void validUserName_data();
-	void validUserName();
-	void invalidUserName_data();
-	void invalidUserName();
+    void validUserName_data();
+    void validUserName();
+    void invalidUserName_data();
+    void invalidUserName();
 };
 
 void TestCacheEntry::validUserIp_data()
@@ -39,43 +39,43 @@ void TestCacheEntry::validUserIp()
 
 void TestCacheEntry::invalidUserIp_data()
 {
-	
+    
 }
 
 void TestCacheEntry::invalidUserIp()
 {
-	
+    
 }
 
 void TestCacheEntry::validUserName_data()
 {
-	
+    
 }
 
 void TestCacheEntry::validUserName()
 {
-	
+    
 }
 
 void TestCacheEntry::invalidUserName_data()
 {
-	
+    
 }
 
 void TestCacheEntry::invalidUserName()
 {
-	
+    
 }
 
 
 int main(int argc, char *argv[])
 {
-	int status = 0;
+    int status = 0;
 
-	{
-		TestCacheEntry test;
-		status |= QTest::qExec(&test, argc, argv);
-	}
+    {
+        TestCacheEntry test;
+        status |= QTest::qExec(&test, argc, argv);
+    }
 
     return status;
 }
