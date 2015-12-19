@@ -49,9 +49,65 @@ QDataStream & operator>>(QDataStream &stream, CacheEntry &entry)
 
 
 //+++++++++++++++++++++++++++++++++++++++
-CacheEntry::CacheEntry(QString userIp, QString userName, quint8 channelID, bool muted, float gain, float pan, float boost)
-    :userIp(userIp), userName(userName), channelID(channelID), muted(muted), gain(gain), pan(pan), boost(boost){
 
+CacheEntry::CacheEntry(const QString& userIp, const QString& userName, quint8 channelID)
+{
+    setUserIP(userIp);
+    setUserName(userName);
+    setChannelID(channelID);
+    setMuted(DEFAULT_MUTE);
+    setGain(DEFAULT_GAIN);
+    setPan(DEFAULT_PAN);
+    setBoost(DEFAULT_BOOST);
+}
+
+void CacheEntry::setUserIP(const QString& userIp)
+{
+    if (ipPattern.exactMatch(userIp)) {
+        this->userIp = userIp;
+    }
+    else {
+        qCDebug(jtCache) << "invalid ip address: " << userIp;
+    }
+}
+
+void CacheEntry::setUserName(const QString& userName)
+{
+    if (namePattern.exactMatch(userName)) {
+        this->userName = userName;
+    }
+    else {
+        qCDebug(jtCache) << "invalid name: " << userName;
+    }
+}
+
+void CacheEntry::setChannelID(quint8 channelID)
+{
+    this->channelID = channelID;
+}
+
+void CacheEntry::setMuted(bool muted)
+{
+    this->muted = muted;
+}
+
+void CacheEntry::setPan(float pan)
+{
+    this->pan = qBound(PAN_MIN, pan, PAN_MAX);
+
+    if (pan != this->pan) {
+        qCDebug(jtCache) << "pan " << pan << " was out of range";
+    }
+}
+
+void CacheEntry::setBoost(float boost)
+{
+    this->boost = boost;
+}
+
+void CacheEntry::setGain(float gain)
+{
+    this->gain = gain;
 }
 
 UsersDataCache::UsersDataCache()
