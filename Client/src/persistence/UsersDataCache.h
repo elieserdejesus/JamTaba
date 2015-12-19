@@ -13,10 +13,17 @@
 
 namespace Persistence {
 
+#define DEFAULT_MUTE false
+#define DEFAULT_GAIN 1.0f
+#define DEFAULT_PAN 0.0f
+#define DEFAULT_BOOST 1.0f
+#define PAN_MAX 4.0f
+#define PAN_MIN -4.0f
+
 class CacheEntry{//cache entries are per channel, not per user.
 public:
-    CacheEntry(QString userIp, QString userName, quint8 channelID, bool muted=false, float gain=1.0, float pan=0.0, float boost=1.0);
-    CacheEntry(){}//default constructor just to use in QMap without pointers
+    CacheEntry(const QString& userIp, const QString& userName, quint8 channelID);
+    CacheEntry(){}
 
     inline bool isMuted() const{ return muted; }
     inline float getGain() const{ return gain; }
@@ -26,13 +33,13 @@ public:
     inline QString getUserName() const{ return userName; }
     inline quint8 getChannelID() const{ return channelID; }
 
-    inline void setUserIP(QString userIp){ this->userIp = userIp; }
-    inline void setUserName(QString userName){ this->userName = userName; }
-    inline void setChannelID(quint8 channelID){ this->channelID = channelID; }
-    inline void setMuted(bool muted){ this->muted = muted; }
-    inline void setPan(float pan){ this->pan = pan; }
-    inline void setBoost(float boost) { this->boost = boost; }
-    inline void setGain(float gain){ this->gain = gain; }
+    inline void setUserIP(const QString& userIp);
+    inline void setUserName(const QString& userName);
+    inline void setChannelID(quint8 channelID);
+    inline void setMuted(bool muted);
+    inline void setPan(float pan);
+    inline void setBoost(float boost);
+    inline void setGain(float gain);
 
     static QRegExp ipPattern;
     static QRegExp namePattern;
