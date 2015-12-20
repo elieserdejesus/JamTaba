@@ -8,7 +8,7 @@
 #include <QPainter>
 
 const int PeakMeter::LINES_MARGIN = 3;
-const int PeakMeter::MIN_SIZE = 2;//2 pixels in width or height
+const int PeakMeter::MIN_SIZE = 1;
 
 const QColor PeakMeter::GRADIENT_FIRST_COLOR = Qt::red;
 const QColor PeakMeter::GRADIENT_MIDDLE_COLOR = QColor(0, 200, 0);
@@ -16,7 +16,7 @@ const QColor PeakMeter::GRADIENT_LAST_COLOR = QColor(Qt::darkGreen) ;
 const QColor PeakMeter::MAX_PEAK_COLOR = QColor(0, 0, 0, 80);
 
 const int PeakMeter::MAX_PEAK_MARKER_SIZE = 2;
-const int PeakMeter::DEFAULT_DECAY_TIME = 800;
+const int PeakMeter::DEFAULT_DECAY_TIME = 2000;
 const int PeakMeter::MAX_PEAK_SHOW_TIME = 1500;
 
 PeakMeter::PeakMeter(QWidget *)
