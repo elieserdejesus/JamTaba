@@ -33,13 +33,13 @@ public:
     inline QString getUserName() const{ return userName; }
     inline quint8 getChannelID() const{ return channelID; }
 
-    inline void setUserIP(const QString& userIp);
-    inline void setUserName(const QString& userName);
-    inline void setChannelID(quint8 channelID);
-    inline void setMuted(bool muted);
-    inline void setPan(float pan);
-    inline void setBoost(float boost);
-    inline void setGain(float gain);
+    void setUserIP(const QString& userIp);
+    void setUserName(const QString& userName);
+    void setChannelID(quint8 channelID);
+    void setMuted(bool muted);
+    void setPan(float pan);
+    void setBoost(float boost);
+    void setGain(float gain);
 
     static QRegExp ipPattern;
     static QRegExp namePattern;
