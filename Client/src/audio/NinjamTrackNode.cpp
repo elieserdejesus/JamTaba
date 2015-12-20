@@ -34,9 +34,7 @@ void NinjamTrackNode::discardIntervals(){
 
 bool NinjamTrackNode::startNewInterval(){
     QMutexLocker locker(&mutex);
-//    if(!isActivated()){
-//        return false;
-//    }
+
     if(!intervals.isEmpty()){
         decoder.setInput(intervals.front());
         intervals.removeFirst();

@@ -918,6 +918,13 @@ NinjamTrackView #soloButton, NinjamTrackView #muteButton{
    color: rgb(40,40,40);
 }
 
+NinjamTrackView #chunksDisplay{
+    background-color: rgba(255, 255, 255, 20);
+    border-radius: 1px;
+    border: none;
+    min-height: 4px;
+}
+
 QPushButton:hover#soloButton, QPushButton:hover#muteButton{
 /*background-color: rgba(255, 255, 255, 80);*/
 color: rgba(0, 0, 0, 200);

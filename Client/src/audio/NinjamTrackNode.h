@@ -12,8 +12,7 @@ namespace Audio{
     class StreamBuffer;
 }
 
-class NinjamTrackNode : public Audio::AudioNode
-{
+class NinjamTrackNode : public Audio::AudioNode{
 public:
     explicit NinjamTrackNode(int ID);
     virtual ~NinjamTrackNode();
@@ -30,7 +29,6 @@ private:
     bool playing;//playing one interval or waiting for more vorbis data to decode
     VorbisDecoder decoder;
     QList<QByteArray> intervals;
-    //QMutex mutex;
     int ID;
     SamplesBufferResampler resampler;
 
@@ -39,6 +37,7 @@ private:
     int getFramesToProcess(int targetSampleRate, int outFrameLenght);
 
     bool processingLastPartOfInterval;
+
 };
 
 #endif // NINJAMTRACKNODE_H

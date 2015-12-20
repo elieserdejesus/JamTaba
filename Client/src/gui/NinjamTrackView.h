@@ -23,8 +23,10 @@ public:
     //interval chunks visual feedback
     void incrementDownloadedChunks();//called when a interval part (a chunk) is received
     void finishCurrentDownload(); //called when the interval is fully downloaded
-    void removeFirstDownloadInStack();//called when the interval is started
-    void resetDownloadedChunks();
+    void setDownloadedChunksDisplayVisibility(bool visible);
+
+    void setUnlightStatus(bool status);
+
 private:
     QLabel* channelNameLabel;
     Persistence::CacheEntry cacheEntry;//used to remember the track controls values
@@ -44,9 +46,6 @@ public:
     ~NinjamTrackGroupView();
     void setNarrowStatus(bool narrow);
     void updateGeoLocation();
-
-    void popFullyDownloadedIntervals();
-    void resetDownloadedIntervals();
 
 private:
     Controller::MainController* mainController;

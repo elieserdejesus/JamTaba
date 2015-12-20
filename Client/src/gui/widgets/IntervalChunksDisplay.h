@@ -10,12 +10,8 @@ class IntervalChunksDisplay : public QWidget
 public:
     IntervalChunksDisplay(QWidget* parent);
 
-    QSize minimumSizeHint() const;
-    QSize sizeHint() const;
-
     void incrementDownloadedChunks();
-    void pushNewDownloadInStack();
-    void popDownloadFromStack();
+    void startNewInterval();
     void reset();
 protected:
     void paintEvent(QPaintEvent *);
@@ -23,10 +19,9 @@ protected:
 private:
     int downloadedChunks; //downloaded chunks in current interval
     int totalChunks; //total chunks in a interval
-    int stackedIntervals;
 
-    static const QColor DARK_COLOR;
-    static const QColor LIGHT_COLOR;
+    static const QColor PROGRESS_COLOR;
+
 };
 
 #endif // INTERVALCHUNKSDISPLAY_H
