@@ -3,15 +3,15 @@
 #include "FxPanel.h"
 #include "FxPanelItem.h"
 #include "plugins/guis.h"
-#include "../MainController.h"
-#include "../midi/MidiDriver.h"
-#include "../audio/core/AudioDriver.h"
-#include "../audio/core/AudioNode.h"
+#include "MainController.h"
+#include "midi/MidiDriver.h"
+#include "audio/core/AudioDriver.h"
+#include "audio/core/AudioNode.h"
 #include "Highligther.h"
 #include <QMenu>
 #include <QToolButton>
 
-#include "../log/logging.h"
+#include "log/logging.h"
 
 const QString LocalTrackView::MIDI_ICON = ":/images/input_midi.png";
 const QString LocalTrackView::MONO_ICON = ":/images/input_mono.png";
@@ -70,7 +70,7 @@ void LocalTrackView::init(int channelIndex, float initialGain, BaseTrackView::Bo
     midiPeakMeter = new PeakMeter();
 
     midiPeakMeter->setObjectName("midiPeakMeter");
-    midiPeakMeter->setSolidColor(Qt::red);
+    midiPeakMeter->setSolidColor(QColor(180, 0, 0));
     midiPeakMeter->setPaintMaxPeakMarker(false);
     midiPeakMeter->setDecayTime(500);//500 ms
     midiPeakMeter->setAccessibleDescription("This is the midi activity meter");
@@ -338,7 +338,8 @@ void LocalTrackView::on_monoInputMenuSelected(QAction *action){
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void LocalTrackView::setMidiPeakMeterVisibility(bool visible){
     if(visible){
-        ui->metersWidget->layout()->addWidget(midiPeakMeter);
+        //midi activiry meter is inserted between the 2 audio meters
+        dynamic_cast<QHBoxLayout*>(ui->metersWidget->layout())->insertWidget(1, midiPeakMeter);
     }
     else{
         ui->metersWidget->layout()->removeWidget(midiPeakMeter);

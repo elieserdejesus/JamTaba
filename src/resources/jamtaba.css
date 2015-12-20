@@ -1091,6 +1091,7 @@ LocalTrackView #midiPeakMeter{
     max-width: 1px;
     min-width: 1px;
     border-radius: 1px;
+    border: none;
 }
 /*+++++++++++++++++++++++++++++++++++++++++++++++*/
 
