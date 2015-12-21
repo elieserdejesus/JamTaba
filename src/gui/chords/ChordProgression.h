@@ -19,6 +19,7 @@ public:
     bool isSharp() const;
     bool isFlat() const;
     inline int getBeat() const{ return beat;}
+    inline void setBeat(int beat){ this->beat = beat;}
     Chord getTransposedVersion(int semitones) const;
     inline QString getChordText() const{return chordText;}
 private:
@@ -61,13 +62,16 @@ private:
 class ChordProgressionMeasure{
 public:
     ChordProgressionMeasure(int beatsInTheMeasure);
-    void addChord(Chord chord, int beat);
+    void addChord(Chord chord);
     QString toString() const;
     inline int getBeats() const{return beats;}
     const QList<Chord> getChords() const{return chords;}
+    inline bool isEmpty() const { return chords.isEmpty(); }
 private:
     int beats;
     QList<Chord> chords;
+
+    void updateChordsBeats();
 };
 
 //++++++++++++++++++++++++++++++++
