@@ -295,7 +295,7 @@ void NinjamRoomWindow::on_channelAdded(Ninjam::User user, Ninjam::UserChannel ch
 
     //remembering user track controls (gain, mute, pan, boost)
     UsersDataCache* cache = mainController->getUsersDataCache();
-    CacheEntry cacheEntry = cache->getUserCacheEntry(user.getIp(), user.getName(), (int)channel.getIndex());//a empty/default cacheEntry is returned if the user is not cached
+    CacheEntry cacheEntry = cache->getUserCacheEntry(user.getIp(), user.getName(), static_cast<quint8>(channel.getIndex()));//a empty/default cacheEntry is returned if the user is not cached
 
     if(!trackGroups.contains(user.getFullName())){//first channel from this user?
         QString channelName = channel.getName();
