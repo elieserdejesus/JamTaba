@@ -121,11 +121,37 @@ ChordProgressionMeasure::ChordProgressionMeasure(int beatsInTheMeasure)
 
 }
 
-void ChordProgressionMeasure::addChord(Chord chord, int beat){
-    if(beat < 0 || beat >= this->beats){
-        throw std::runtime_error("invalid beat ");
+void ChordProgressionMeasure::addChord(Chord chord){
+    chords.append(chord);
+    updateChordsBeats();
+}
+
+void ChordProgressionMeasure::updateChordsBeats(){
+    QList<Chord> newChordsList;
+    for (int c = 0; c < chords.size(); ++c) {
+        int newBeat = 0;
+        if(c > 0){//not the first chord?
+            if(c == 1){//secong chord?
+                if(chords.size() == 2){//just two chords in the measure
+                    newBeat = beats/2; //each chord occupied half measure
+                }
+                else if(chords.size() >= beats) {//example: 4 chords in the measure
+                    newBeat = 1;//put the chord in the 2nd beat
+                }
+            }
+            else if(c == 2){//3rd chord?
+                if(chords.size() == 3){//3 chords in the measure
+                    //the first chord occupies half measure, and the last 2 chords occupied the rest
+                    newBeat = beats - (beats/2 - beats/4);
+                }
+                else{//more than 3 chords in the measure
+                    newBeat = 2;//assume the 3rd beat
+                }
+            }
+        }
+        newChordsList.append(Chord(chords.at(c).getChordText(), newBeat));
     }
-    chords.insert(beat, chord);
+    chords = newChordsList;
 }
 
 QString ChordProgressionMeasure::toString() const{
@@ -162,14 +188,16 @@ ChordProgression ChordProgression::getStretchedVersion(int bpi) {
     if (!canBeUsed(bpi)) {
         throw std::runtime_error("This chord progression can't be used in current bpi ");
     }
-    int newbeatsPerMesure = bpi / measures.size();
+    int newbeatsPerMesure = bpi/measures.size();
+
+    float strechFactor = (float)bpi/getBeatsPerInterval();
 
     ChordProgression stretchedProgression;
     for (ChordProgressionMeasure originalMeasure : measures) {
         ChordProgressionMeasure newMeasure(newbeatsPerMesure);
         foreach (Chord chord , originalMeasure.getChords()) {
-            int newChordBeat = chord.getBeat() * newbeatsPerMesure;
-            newMeasure.addChord(Chord(chord.getChordText(), newChordBeat), newChordBeat);
+            int newChordBeat = chord.getBeat() * strechFactor;
+            newMeasure.addChord(Chord(chord.getChordText(), newChordBeat));
         }
         stretchedProgression.addMeasure(newMeasure);
     }
@@ -182,7 +210,7 @@ ChordProgression ChordProgression::getTransposedVersion(int semitones) {
     for (ChordProgressionMeasure originalMeasure : measures) {
         ChordProgressionMeasure newMeasure(originalMeasure.getBeats());
         foreach (Chord chord , originalMeasure.getChords()) {
-            newMeasure.addChord(chord.getTransposedVersion(semitones), chord.getBeat());
+            newMeasure.addChord(chord.getTransposedVersion(semitones));
         }
         newProgression.addMeasure(newMeasure);
     }
@@ -228,18 +256,16 @@ ChordProgression ChatChordsProgressionParser::parse(QString string){
         ChordProgression progression;
         QStringList measuresStrings = cleanedString.split(QRegularExpression( MEASURE_SEPARATORS_REGEX));
         QRegularExpression matcher(CHORD_REGEX);
+        int beatsPerMeasure = 4;//using 4 beats as default TODO: try guess a good value based in current ninjam server BPI
         for (QString measureString : measuresStrings) {
-            ChordProgressionMeasure measure(4);//use 4 beats as default
-            int chordsFoundedInTheMeasure = 0;
+            ChordProgressionMeasure measure(beatsPerMeasure);
             QRegularExpressionMatchIterator i = matcher.globalMatch(measureString);
             while (i.hasNext()) {
                 QRegularExpressionMatch match = i.next();
                 QString chordName = match.captured();
-
-                int chordBeat = chordsFoundedInTheMeasure++;
-                measure.addChord( Chord(chordName, chordBeat), chordBeat);
+                measure.addChord( Chord(chordName));
             }
-            if (chordsFoundedInTheMeasure > 0) {
+            if (!measure.isEmpty()) {
                 progression.addMeasure(measure);
             }
         }
