@@ -35,7 +35,8 @@ HEADERS += \
     Editor.h \
     MainControllerVST.h \
     NinjamRoomWindowVST.h \
-    MainWindowVST.h
+    MainWindowVST.h \
+    KeyboardHook.h
 
 
 SOURCES += \
@@ -62,6 +63,7 @@ SOURCES += \
     MainControllerVST.cpp \
     NinjamRoomWindowVST.cpp \
     MainWindowVST.cpp \
+    KeyboardHook.cpp
 
 
 

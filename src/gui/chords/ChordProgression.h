@@ -31,20 +31,12 @@ private:
     QString lastPart;//characters after Letters
 
     /*
-     Example: Cmaj7(9)/Bb
-     Root: C
-     Bass Invertion: Bb
-     Letters after root: maj
-     LastPart: 7(9)
+        Example: Cmaj7(9)/Bb
+        Root: C
+        Bass Invertion: Bb
+        Letters after root: maj
+        LastPart: 7(9)
      */
-
-    //voltar 0 soma 5
-    //voltar 1 soma 4 = size - volta
-    //voltar 2 soma 3
-    //voltar 3 soma 2
-    //voltar 4 soma 1
-    //voltar 5 soma 0
-    //0 1 2 3 4
 
     //used to transpose
     static const QString TABLE_SHARPS[12];// = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
