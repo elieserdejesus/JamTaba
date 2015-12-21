@@ -19,6 +19,10 @@ ChordsPanel::~ChordsPanel()
 
 void ChordsPanel::setChords(ChordProgression progression){
     ui->chordsWidget->clear();
+    this->chordProgression.clear();
+    if(progression.isEmpty()){//empty progression is returned when a incompatible bpi is choosed, for example.
+        return;
+    }
     QList<ChordProgressionMeasure> measures = progression.getMeasures();
     foreach (ChordProgressionMeasure measure, measures) {
         const QList<Chord> chords = measure.getChords();

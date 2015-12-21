@@ -186,11 +186,15 @@ void ChordProgression::addMeasure(ChordProgressionMeasure measure){
 
 ChordProgression ChordProgression::getStretchedVersion(int bpi) {
     if (!canBeUsed(bpi)) {
-        throw std::runtime_error("This chord progression can't be used in current bpi ");
+        return ChordProgression();//return a empty progression
     }
     int newbeatsPerMesure = bpi/measures.size();
 
-    float strechFactor = (float)bpi/getBeatsPerInterval();
+    int currentBpi = getBeatsPerInterval();
+    if(currentBpi <= 0){//avoiding division by zero when calculating stretchFactor
+        return ChordProgression(); //invalid bpi, returning empty progression
+    }
+    float strechFactor = static_cast<float>(bpi/currentBpi);
 
     ChordProgression stretchedProgression;
     for (ChordProgressionMeasure originalMeasure : measures) {

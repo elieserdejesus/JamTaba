@@ -82,7 +82,7 @@ public:
     ChordProgression();
     inline bool isEmpty() const{return measures.isEmpty();}
     void addMeasure(ChordProgressionMeasure measure);
-    const QList<ChordProgressionMeasure> getMeasures() const{return measures;}
+    const QList<ChordProgressionMeasure> getMeasures() const{ return measures; }
     QString toString() const;
     bool canBeUsed(int bpi) const;
     ChordProgression getStretchedVersion(int bpi);
