@@ -15,11 +15,15 @@ private slots:
     void validUserIp();
     void invalidUserIp_data();
     void invalidUserIp();
+    void setUserIP_data();
+    void setUserIP();
 
     void validUserName_data();
     void validUserName();
     void invalidUserName_data();
     void invalidUserName();
+    void setUserName_data();
+    void setUserName();
 
     void defaultValues();
 
@@ -74,6 +78,24 @@ void TestCacheEntry::invalidUserIp()
     QVERIFY(! CacheEntry::ipPattern.exactMatch(addr));
 }
 
+void TestCacheEntry::setUserIP_data()
+{
+    QTest::addColumn<QString>("addr");
+    QTest::addColumn<QString>("expect");
+    QTest::newRow("ok") << "127.0.0.x" << "127.0.0.x";
+    QTest::newRow("invalid") << "xxx" << "";
+}
+
+void TestCacheEntry::setUserIP()
+{
+    QFETCH(QString, addr);
+    QFETCH(QString, expect);
+
+    CacheEntry entry(addr, "anon", 0);
+    // NOTE: constructor call setUserIp
+    QCOMPARE(entry.getUserIP(), expect);
+}
+
 void TestCacheEntry::validUserName_data()
 {
     QTest::addColumn<QString>("name");
@@ -120,8 +142,8 @@ void TestCacheEntry::setPanGuard_data()
     QTest::newRow("default") << 0.0f << 0.0f;
     QTest::newRow("min") << -4.0f << -4.0f;
     QTest::newRow("max") << 4.0f << 4.0f;
-    QTest::newRow("out of min") << -4.1f << -4.0f;
-    QTest::newRow("out of max") << 4.1f << 4.0f;
+    QTest::newRow("lower value adjust to min") << -4.1f << -4.0f;
+    QTest::newRow("upper value adjust to max") << 4.1f << 4.0f;
 }
 
 void TestCacheEntry::setPanGuard()
