@@ -22,7 +22,6 @@ public:
     void close();
     void detachMainController();
     void deleteMainWindow();
-
 };
 
 
