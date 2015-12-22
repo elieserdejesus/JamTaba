@@ -51,6 +51,9 @@ using namespace Persistence;
 using namespace Controller;
 using namespace Ninjam;
 
+const QSize MainWindow::MINI_MODE_MIN_SIZE = QSize(800, 600);
+const QSize MainWindow::FULL_VIEW_MODE_MIN_SIZE = QSize(1180, 790);
+
 //const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200;//in miliseconds
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -68,6 +71,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     //lastPerformanceMonitorUpdate(0)
 {
     qCInfo(jtGUI) << "Creating MainWindow...";
+
 	ui.setupUi(this);
 
     setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
@@ -369,41 +373,6 @@ bool MainWindow::isRunningAsVstPlugin() const{
     return mainController->isRunningAsVstPlugin();
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-//PluginLoader::PluginLoader(Controller::MainController* mainController, Persistence::Plugin plugin, LocalTrackView* trackView)
-//    :plugin(plugin), trackView(trackView), mainController(mainController){
-
-//}
-
-//PluginLoader::~PluginLoader(){
-//    qWarning() << "destrutor Plugin Loader";
-//}
-
-//void PluginLoader::load(){
-//    qWarning() << "loading plugin";
-//    QObject::connect(&futureWatcher, SIGNAL(finished()), this, SLOT(on_futureWatcherFinished()));
-//    QFuture<Audio::Plugin*> result = QtConcurrent::run(this, &loadPlugin);
-//    futureWatcher.setFuture(result);
-//}
-
-//void PluginLoader::on_futureWatcherFinished(){
-//    qWarning() << "plugin loaded, adding in trackview";
-//    Audio::Plugin* pluginInstance = futureWatcher.future().result();
-//    trackView->addPlugin(pluginInstance, this->plugin.bypassed);
-//    deleteLater();
-//}
-
-//Audio::Plugin* PluginLoader::loadPlugin(){
-//    QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
-//    Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path );
-//    Audio::Plugin* pluginInstance = mainController->addPlugin(trackView->getInputIndex(), descriptor);// subChannelView->getInputIndex(), descriptor);
-//    pluginInstance->restoreFromSerializedData( plugin.data);
-//    return pluginInstance;
-//}
-
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 void MainWindow::restorePluginsList(){
     qCInfo(jtGUI) << "Restoring plugins list...";
 
@@ -436,9 +405,6 @@ void MainWindow::restorePluginsList(){
                             subChannelView->addPlugin(pluginInstance, plugin.bypassed);
                         }
                         QApplication::processEvents();
-
-                        //PluginLoader* loader = new PluginLoader(mainController, plugin, subChannelView);
-                        //loader->load();
                     }
                 }
                 subChannelIndex++;
@@ -731,20 +697,21 @@ void MainWindow::initializeLoginService(){
 }
 
 void MainWindow::initializeWindowState(){
+
     bool wasFullScreenInLastSession = mainController->getSettings().windowsWasFullScreenViewMode();
     this->fullScreenViewMode = wasFullScreenInLastSession && !mainController->isRunningAsVstPlugin();
 
     //set window mode: mini mode or full view mode
     setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
 
-    if(mainController->getSettings().windowWasMaximized() && fullViewMode){
+    if(mainController->getSettings().windowWasMaximized()){
         qCDebug(jtGUI)<< "setting window state to maximized";
-        setWindowState(Qt::WindowMaximized);
+        showMaximized();
     }
     else{
         if(!mainController->isRunningAsVstPlugin()){ //avoid set plugin to full screen or move the plugin window
             if(mainController->getSettings().windowsWasFullScreenViewMode()){
-                this->setWindowState(Qt::WindowFullScreen);
+                showFullScreen();
             }
             else{//this else fix the cropped window when starting in full screen mode
                 QPointF location = mainController->getSettings().getLastWindowLocation();
@@ -808,37 +775,6 @@ void MainWindow::centerBusyDialog(){
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//void MainFrame::on_removingPlugin(Audio::Plugin *plugin){
-//    PluginWindow* window = PluginWindow::getWindow(this, plugin);
-//    if(window){
-//        window->close();
-//    }
-//    mainController->removePlugin(plugin);
-
-//}
-
-//void MainFrame::on_editingPlugin(Audio::Plugin *plugin){
-//    showPluginGui(plugin);
-//}
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//PluginGui* MainFrame::createPluginView(Plugin::PluginDescriptor* d, Audio::Plugin* plugin){
-//    if(d->getGroup() == "Jamtaba"){
-//        if(d->getName() == "Delay"){
-//            return new DelayGui((Plugin::JamtabaDelay*)plugin);
-//        }
-//    }
-//    return nullptr;
-//}
-
-//++++++++++++++++++++
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//esses eventos deveriam ser tratados no controller
-
 bool MainWindow::jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2){
      return r1.getNonBotUsersCount() > r2.getNonBotUsersCount();
 }
@@ -858,7 +794,6 @@ void MainWindow::on_errorConnectingToServer(QString errorMsg){
     hideBusyDialog();
     QMessageBox::warning(this, "Error!", "Error connecting in Jamtaba server!\n" + errorMsg);
     close();
-
 }
 
 void MainWindow::on_newVersionAvailableForDownload(){
@@ -875,7 +810,7 @@ void MainWindow::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms){
     if(mainController->isPlayingInNinjamRoom()){
         this->ninjamWindow->updateGeoLocations();
         //update country flag and country names. This is necessary because the call to webservice used to get country codes and
-        //country names is not synchronous. So, if country code and name are not cached we receive these data in some seconds.
+        //country names is not synchronous. So, if country code and name are not cached we receive these data from the webservice after some seconds.
     }
 }
 
@@ -943,13 +878,6 @@ void MainWindow::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
     }
 
     if(!mainController->userNameWasChoosed()){
-//        bool ok;
-//        QString lastUserName = mainController->getUserName();
-//        QString newUserName = QInputDialog::getText(this, "", "Enter your user name:", QLineEdit::Normal, lastUserName , &ok, Qt::FramelessWindowHint);
-//        if (ok && !newUserName.isEmpty()){
-//           mainController->setUserName(newUserName);
-//           setWindowTitle("Jamtaba (" + mainController->getUserName() + ")");
-//        }
         QString lastUserName = mainController->getUserName();
         UserNameDialog dialog(this, lastUserName);
         if(isRunningAsVstPlugin()){
@@ -981,12 +909,9 @@ void MainWindow::on_enteringInRoom(Login::RoomInfo roomInfo, QString password){
         showBusyDialog("Connecting in " + roomInfo.getName() + " ...");
         mainController->enterInRoom(roomInfo, getChannelsNames(), password);
     }
-
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//estes eventos são disparados pelo controlador depois que já aconteceu a conexão com uma das salas
-
 void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
     qCDebug(jtGUI) << "hidding busy dialog...";
     hideBusyDialog();
@@ -1027,7 +952,7 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo){
 }
 
 //+++++++++++++++ PREPARING TO XMIT +++++++++++
-//this signal is received when ninjam controller is ready to transmit (after wait for 1 or 2 complete intervals).
+//this signal is received when ninjam controller is ready to transmit (after the 'preparing' intervals).
 void MainWindow::ninjamTransmissionStarted(){
     setInputTracksPreparingStatus(false);//tracks are prepared to transmit
 }
@@ -1130,20 +1055,23 @@ void MainWindow::timerEvent(QTimerEvent *){
 }
 
 //++++++++++++=
-void MainWindow::resizeEvent(QResizeEvent *){
+void MainWindow::resizeEvent(QResizeEvent *ev){
+    Q_UNUSED(ev)
     if(busyDialog.isVisible()){
         centerBusyDialog();
     }
 }
 
-void MainWindow::changeEvent(QEvent *ev){
-    if(ev->type() == QEvent::WindowStateChange && mainController){
-//        if(isMaximized() && !fullViewMode){
-//            setFullViewStatus(true);
-//        }
+void MainWindow::changeEvent(QEvent *ev)
+{
+    if(ev->type() == QEvent::WindowStateChange && mainController)
+    {
         mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation() );
+
+        //show only the peak meters if user is in mini mode and is not maximized or full screen
+        showPeakMetersOnlyInLocalControls( !fullViewMode && width() <= MINI_MODE_MIN_SIZE.width());
     }
-    ev->accept();
+    QMainWindow::changeEvent(ev);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QPointF MainWindow::computeLocation() const{
@@ -1155,7 +1083,6 @@ QPointF MainWindow::computeLocation() const{
 
 void MainWindow::closeEvent(QCloseEvent *){
     if(mainController){
-
         mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation() );
     }
 }
@@ -1171,9 +1098,7 @@ MainWindow::~MainWindow()
 
     }
 
-
     foreach (LocalTrackGroupView* groupView, this->localGroupChannels ) {
-
         groupView->detachMainControllerInSubchannels();
     }
     mainController = nullptr;
@@ -1183,21 +1108,6 @@ MainWindow::~MainWindow()
     qCDebug(jtGUI) << "MainWindow destructor finished.";
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//void MainFrame::on_freshDataReceivedFromLoginServer(const Login::LoginServiceParser &response){
-//    if(ui.allRoomsContent->layout() == 0){
-//        QLayout* layout = new QVBoxLayout(ui.allRoomsContent);
-//        layout->setSpacing(20);
-//        ui.allRoomsContent->setLayout(layout);
-//    }
-//    foreach (Model::AbstractJamRoom* room, response.getRooms()) {
-//        QWidget* widget = new JamRoomViewPanel(room, this->ui.allRoomsContent);
-//        ui.allRoomsContent->layout()->addWidget(widget);
-
-//    }
-//}
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 void MainWindow::on_privateServerConnectionAccepted(QString server, int serverPort, QString password){
 
     mainController->storePrivateServerSettings(server, serverPort, password);
@@ -1218,7 +1128,6 @@ void MainWindow::on_UsersManualMenuItemTriggered(){
     QDesktopServices::openUrl(QUrl("https://github.com/elieserdejesus/JamTaba/wiki/Jamtaba's-user-guide"));
 }
 
-
 void MainWindow::on_privateServerMenuItemTriggered(){
     Settings settings = mainController->getSettings();
     QString server = settings.getLastPrivateServer();
@@ -1231,7 +1140,6 @@ void MainWindow::on_privateServerMenuItemTriggered(){
     if(isRunningAsVstPlugin()){//dialogs need a workaround to appear in center of plugin screen
         centerDialog(privateServerDialog);
     }
-
 }
 
 void MainWindow::centerDialog(QWidget *dialog){
@@ -1303,10 +1211,6 @@ void MainWindow::on_preferencesClicked(QAction* action)
 }
 
 void MainWindow::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize){
-    //qCDebug(jtGUI) << "midi device: " << midiDeviceIndex << endl;
-    //bool midiDeviceChanged =  midiDeviceIndex
-
-
     Audio::AudioDriver* audioDriver = mainController->getAudioDriver();
 
 #ifdef Q_OS_WIN
@@ -1342,7 +1246,6 @@ void MainWindow::refreshTrackInputSelection(int inputTrackIndex){
     foreach (LocalTrackGroupView* channel, localGroupChannels) {
         channel->refreshInputSelectionName(inputTrackIndex);
     }
-    //localTrackGroupView->refreshInputSelectionName();
 }
 
 //plugin finder events
@@ -1379,7 +1282,6 @@ void MainWindow::onPluginFounded(QString name, QString group, QString path){
     Q_UNUSED(path);
     Q_UNUSED(group);
     if(pluginScanDialog){
-        //pluginScanDialog->setCurrentScaning(path);
         pluginScanDialog->addFoundedPlugin(name);
     }
 }
@@ -1397,31 +1299,33 @@ void MainWindow::initializeViewModeMenu(){
     QActionGroup* group = new QActionGroup(this);
     ui.actionFullView->setActionGroup(group);
     ui.actionMiniView->setActionGroup(group);
-
 }
-
 
 void MainWindow::on_menuViewModeTriggered(QAction *)
 {
     setFullViewStatus(ui.actionFullView->isChecked());
 }
 
-
-void MainWindow::setFullViewStatus(bool fullViewActivated){
+void MainWindow::setFullViewStatus(bool fullViewActivated)
+{
     this->fullViewMode = fullViewActivated;
     if(!fullViewActivated){//mini view
-        setMinimumSize(QSize(800, 600));
-        setMaximumSize(minimumSize());
+        setMinimumSize(MINI_MODE_MIN_SIZE);
     }
     else{//full view
-        setMinimumSize(QSize(1180, 790));
-        setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
+        setMinimumSize(FULL_VIEW_MODE_MIN_SIZE);
+    }
+    if(!isMaximized() && !isFullScreen()){
+        showNormal();
+        resize(minimumSize());
     }
 
     int tabLayoutMargim = fullViewMode ? 9 : 0;
     ui.tabLayout->setContentsMargins(tabLayoutMargim, tabLayoutMargim, tabLayoutMargim, tabLayoutMargim);
 
-    showPeakMetersOnlyInLocalControls(!fullViewMode);
+
+    //show only the peak meters if user is in mini mode and is not maximized or full screen
+    showPeakMetersOnlyInLocalControls(!fullViewMode && !isMaximized() && !isFullScreen());
 
     ui.chatArea->setMinimumWidth(fullViewMode ? 280 : 180);
 
@@ -1439,7 +1343,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated){
         }
     }
 
-    //local tracks are narrowed in mini mode
+    //local tracks are narrowed in mini mode if user is using more than 1 subchannel
     foreach (LocalTrackGroupView* localTrackGroup, localGroupChannels) {
         if(!fullViewMode && (localTrackGroup->getTracksCount() > 1 || localGroupChannels.size() > 1 )){
             localTrackGroup->setToNarrow();
@@ -1479,7 +1383,6 @@ void MainWindow::on_localTrackRemoved(){
     recalculateLeftPanelWidth();
 }
 
-
 //++++++++++
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
 {
@@ -1499,12 +1402,22 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
     return QMainWindow::eventFilter(target, event);
 }
 
+void MainWindow::setFullScreenStatus(bool fullScreen)
+{
+    fullScreenViewMode = fullScreen;
+    if(fullScreen){
+        showFullScreen();
+    }
+    else{
+        showNormal();
+    }
+    mainController->setFullScreenView(fullScreenViewMode);
+    ui.actionFullscreenMode->setChecked(fullScreen);
+}
+
 void MainWindow::on_actionFullscreenMode_triggered()
 {
-    fullScreenViewMode = !fullScreenViewMode;//toggle
-    setWindowState( fullScreenViewMode ? Qt::WindowFullScreen : Qt::WindowMaximized);
-    mainController->setFullScreenView(fullScreenViewMode);
-
+    setFullScreenStatus(!fullScreenViewMode);//toggle
 }
 
 
