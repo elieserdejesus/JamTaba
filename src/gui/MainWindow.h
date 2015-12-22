@@ -5,11 +5,11 @@
 #include <QFutureWatcher>
 #include "ui_MainWindow.h"
 #include "BusyDialog.h"
-#include "../ninjam/Server.h"
-#include "../loginserver/LoginService.h"
-#include "../persistence/Settings.h"
-#include "../LocalTrackGroupView.h"
-#include "../performance/PerformanceMonitor.h"
+#include "ninjam/Server.h"
+#include "loginserver/LoginService.h"
+#include "persistence/Settings.h"
+#include "LocalTrackGroupView.h"
+//#include "performance/PerformanceMonitor.h"
 #include "ChordProgression.h"
 #include "chords/ChordsPanel.h"
 
@@ -26,7 +26,6 @@ namespace Ui{
 
 namespace Login {
     class LoginServiceParser;
-    //class AbstractJamRoom;
 }
 
 namespace Audio {
@@ -224,6 +223,7 @@ private:
 
     bool fullViewMode;//full view or mini view mode?
     bool fullScreenViewMode;
+    void setFullScreenStatus(bool fullScreen);
 
     void refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms);
 
@@ -240,6 +240,9 @@ private:
     //PerformanceMonitor performanceMonitor;//cpu and memmory usage
     //qint64 lastPerformanceMonitorUpdate;
     //static const int PERFORMANCE_MONITOR_REFRESH_TIME;
+
+    static const QSize MINI_MODE_MIN_SIZE;
+    static const QSize FULL_VIEW_MODE_MIN_SIZE;
 
 };
 
