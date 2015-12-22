@@ -103,8 +103,8 @@ void MetronomeTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer
     }
     if(samplesToCopy > 0){
         internalInputBuffer.set(*samplesBuffer, clickSoundBufferOffset, samplesToCopy, internalOffset);
-        AudioNode::processReplacing(in, out, SampleRate, midiBuffer);
     }
+    AudioNode::processReplacing(in, out, SampleRate, midiBuffer);
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SamplesBuffer *MetronomeTrackNode::readWavFile(QString fileName, quint32 & sampleRate){
