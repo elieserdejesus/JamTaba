@@ -22,6 +22,7 @@ NinjamControllerVST::NinjamControllerVST(Controller::MainController* c)
 
 void NinjamControllerVST::waitForHostSync(){
     waitingForHostSync = true;
+    reset();
 }
 
 void NinjamControllerVST::syncWithHost(){

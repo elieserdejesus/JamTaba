@@ -102,6 +102,7 @@ private:
     bool running;
 
     long intervalPosition;
+    int lastBeat;
     long samplesInInterval;
 
     int currentBpi;

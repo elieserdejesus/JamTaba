@@ -71,7 +71,7 @@ private:
         Audio::SamplesBuffer inputBuffer;
         Audio::SamplesBuffer outputBuffer;
 
-        VstTimeInfo* timeInfo;// = getTimeInfo(VSTTimeInfo.VST_TIME_TRANSPORT_PLAYING | VSTTimeInfo.VST_TIME_TRANSPORT_CHANGED);
+        VstTimeInfo* timeInfo;
         bool hostWasPlayingInLastAudioCallBack;
 
         bool hostIsPlaying() const;
