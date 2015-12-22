@@ -56,14 +56,20 @@ JamtabaPlugin::JamtabaPlugin (audioMasterCallback audioMaster) :
 QString JamtabaPlugin::getHostName() {
     char tempChars[kVstMaxProductStrLen];
     getHostProductString(tempChars);
-    QString hostName(QString(tempChars).toLower());
-    if(hostName.startsWith("cakewalk") || hostName.startsWith("fx teleport")){
-        hostName = "Sonar";
+    QString lowerCaseHostName = QString::fromUtf8(tempChars).toLower();
+    if(lowerCaseHostName.startsWith("cakewalk") || lowerCaseHostName.startsWith("fx teleport")){
+        return "Sonar";
     }
-    if(hostName.contains("reaper")){
-        hostName = "Reaper";//in x64 machines reaper host name is Reaperb32 if you are running a 32 bits plugin
+    if(lowerCaseHostName.contains("reaper")){
+        return "Reaper";//in x64 machines reaper host name is Reaperb32 if you are running a 32 bits plugin
     }
-    return hostName;
+    if(lowerCaseHostName.contains("cubase")){//cubase return "cubase vst" as host name
+        return "Cubase";
+    }
+    if(lowerCaseHostName == "presonus vst2 host"){
+        return "Studio One";
+    }
+    return QString::fromUtf8(tempChars);//preserve original case
 }
 
 bool JamtabaPlugin::hostIsPlaying() const{
