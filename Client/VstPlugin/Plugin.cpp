@@ -186,7 +186,7 @@ bool JamtabaPlugin::getVendorString (char* text)
 {
     if(!text)
         return false;
-    vst_strncpy (text, "", kVstMaxVendorStrLen);
+    vst_strncpy (text, "Jamtaba", kVstMaxVendorStrLen);
     return true;
 }
 

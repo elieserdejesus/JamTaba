@@ -181,6 +181,7 @@ NinjamController::NinjamController(Controller::MainController* mainController)
     :mainController(mainController),
     metronomeTrackNode(createMetronomeTrackNode( mainController->getSampleRate())),
     intervalPosition(0),
+    lastBeat(0),
     samplesInInterval(0),
     currentBpi(0),
     currentBpm(0),
@@ -220,7 +221,7 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
 
     int totalSamplesToProcess = out.getFrameLenght();
     int samplesProcessed = 0;
-    static int lastBeat = 0;
+
     int offset = 0;
 
     do{
@@ -389,7 +390,7 @@ void NinjamController::start(const Ninjam::Server& server, QMap<int, bool> chann
         mainController->setTrackGain(METRONOME_TRACK_ID,mainController->getSettings().getMetronomeGain());
         mainController->setTrackPan(METRONOME_TRACK_ID,  mainController->getSettings().getMetronomePan());
 
-        this->intervalPosition  = 0;
+        this->intervalPosition  = lastBeat = 0;
 
 
         Ninjam::Service* ninjamService = mainController->getNinjamService();// Ninjam::Service::getInstance();
@@ -632,11 +633,10 @@ void NinjamController::on_ninjamAudiointervalCompleted(Ninjam::User user, int ch
 
 void NinjamController::reset(){
     QMutexLocker locker(&mutex);
-    //checkThread("on_audioDriverStopped();");
     foreach (NinjamTrackNode* trackNode, this->trackNodes.values()) {
         trackNode->discardIntervals();
     }
-    intervalPosition = 0;
+    intervalPosition = lastBeat = 0;
 }
 
 
