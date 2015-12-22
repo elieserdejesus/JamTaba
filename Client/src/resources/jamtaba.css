@@ -521,6 +521,7 @@ PeakMeter{
     border-radius: 1px;
     width: 3px;
     min-width: 3px;
+    min-height: 2px;
 }
 
 PeakMeter#masterMeterL, PeakMeter#masterMeterR{
