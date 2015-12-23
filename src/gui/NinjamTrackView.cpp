@@ -135,7 +135,14 @@ NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainCont
     ui->topPanel->layout()->removeWidget(ui->groupNameField);
     delete ui->topPanel->layout();
     ui->topPanel->setLayout(new QVBoxLayout());
-    ui->topPanel->layout()->addWidget(ui->groupNameField);
+    ui->topPanel->layout()->setContentsMargins(3, 6, 3, 3);
+
+    //replace the original QLineEdit with a MarqueeLabel
+
+    groupNameLabel = new MarqueeLabel();
+    delete ui->groupNameField;
+    groupNameLabel->setObjectName("groupNameField");
+    ui->topPanel->layout()->addWidget(groupNameLabel);
 
     setGroupName(initialValues.getUserName());
 
@@ -150,9 +157,10 @@ NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainCont
 
     //create the first subchannel by default
     addTrackView(new NinjamTrackView(mainController, trackID, channelName, initialValues));
+}
 
-    ui->groupNameField->setReadOnly(true);
-
+void NinjamTrackGroupView::setGroupName(QString groupName){
+    groupNameLabel->setText(groupName);
 }
 
 void NinjamTrackGroupView::setNarrowStatus(bool narrow){
@@ -166,6 +174,11 @@ void NinjamTrackGroupView::setNarrowStatus(bool narrow){
            trackView->setToNarrow();
         }
     }
+}
+
+void NinjamTrackGroupView::updateGuiElements(){
+    TrackGroupView::updateGuiElements();
+    groupNameLabel->updateMarquee();
 }
 
 NinjamTrackGroupView::~NinjamTrackGroupView()

@@ -4,49 +4,100 @@
 #include <QPainter>
 #include <QDebug>
 #include <QStyleOption>
-#include "MarqueeHelper.h"
+#include <QDateTime>
 
-class MarqueeLabel::MarqueeLabelHelper : public MarqueeHelper{
-public:
-    MarqueeLabelHelper(QWidget* widget)
-        :MarqueeHelper(widget){
-
-    }
-protected:
-    QString getTextFromWidget() const{
-        return dynamic_cast<QLabel*>(widget)->text();
-    }
-
-    void setWidgetTextAlignment(Qt::Alignment alignment){
-        dynamic_cast<QLabel*>(widget)->setAlignment(alignment);
-    }
-};
+const int MarqueeLabel::MARQUEE_SPEED = 20;//pixels per second
+const int MarqueeLabel::TIME_BETWEEN_ANIMATIONS = 10000;
 
 //+++++++++++++++++++++++++++++++++++++++++++++
 
 MarqueeLabel::MarqueeLabel(QWidget *parent)
-    :QLabel(parent), helper(new MarqueeLabelHelper(this) )
+    :QLabel(parent), textX(0), textY(0), textLength(0),
+      lastUpdate(0), animating(false), timeSinceLastAnimation(0), speedDecay(1)
 {
     setAttribute(Qt::WA_NoBackground);
+    lastUpdate = QDateTime::currentMSecsSinceEpoch();//avoid start a animation when the widget is created
 }
 
-void MarqueeLabel::setText(const QString & text){
-    QLabel::setText(text);
-    helper->reset();
+void MarqueeLabel::setText(const QString & newText){
+    //using the elided text when 'newText' is big
+    QLabel::setText(fontMetrics().elidedText(newText, Qt::ElideRight, width()));
+    originalText = newText;
+    reset();
+}
+
+void MarqueeLabel::resetAnimationProperties(){
+    animating = false;
+    timeSinceLastAnimation = 0;
+    lastUpdate = QDateTime::currentMSecsSinceEpoch();
+    speedDecay = 1;
+    textX = needAnimation() ? 0 : width()/2 -  fontMetrics().width(text())/2; //draw text in center if the text is small
+}
+
+void MarqueeLabel::reset(){
+    resetAnimationProperties();
+    textY = height() -  (height() - fontInfo().pointSize())/2;
+    textLength = fontMetrics().width(originalText + " ");//adding one blank space to easy read the text in the animation end
 }
 
 void MarqueeLabel::setFont(const QFont &font){
     QLabel::setFont(font);
-    helper->reset();
+    reset();
 }
 
+bool MarqueeLabel::needAnimation() const{
+    return textLength > width();
+}
 
 void MarqueeLabel::updateMarquee(){
-    helper->updateMarquee();
+    if(!needAnimation()){
+        return;
+    }
+    quint64 timeEllapsed = QDateTime::currentMSecsSinceEpoch() - lastUpdate;
+    if(!animating){
+        timeSinceLastAnimation += timeEllapsed;
+        if(timeSinceLastAnimation >= TIME_BETWEEN_ANIMATIONS){//time to start a new marquee animation?
+            reset();
+            animating = true;
+        }
+    }
+    else{//animating
+        int oldTextX = (int)textX; //using old C style casts here to avoid the too verbose static_cast<int>. In this specific context (simple float to int truncation) the old school casts are more readable.
+        textX -= (timeEllapsed/1000.0 * speedDecay) * MARQUEE_SPEED;
+
+        int totalShiftAmount = textLength - width();//how many pixels text is shifted?
+        if(totalShiftAmount > 0){//avoid zero as divider
+            float currentShift = std::abs(textX)/totalShiftAmount;
+            speedDecay = 1 - std::pow(currentShift, 3);//exponentially slowing down the animation in the end
+            if(speedDecay <= 0.005){//avoid endless animation when the speedDecay value is too small
+                textX -= 1;//forcing the animation end
+            }
+        }
+        else{
+            speedDecay = 1.0f;
+        }
+
+        if( (int)textX != oldTextX){//avoid repaint the widget if the text position don't change
+            if(textX + totalShiftAmount <= 0){//end of animation?
+                resetAnimationProperties();
+            }
+            update();
+        }
+    }
+
+    lastUpdate = QDateTime::currentMSecsSinceEpoch();
 }
+
+void MarqueeLabel::resizeEvent(QResizeEvent *ev){
+    Q_UNUSED(ev);
+    reset();
+    setText(originalText);//maybe the new size need elided text
+}
+
 
 void MarqueeLabel::paintEvent(QPaintEvent *evt)
 {
+    Q_UNUSED(evt);
     QPainter p(this);
 
     //qt code to allow stylesheet
@@ -54,13 +105,7 @@ void MarqueeLabel::paintEvent(QPaintEvent *evt)
     opt.init(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 
-    //if(!helper->isAnimating()){
-        QLabel::paintEvent(evt);
-//    }
-//    else{
-//        //animate the text
-//        p.setFont(font());
-//        p.setBrush(palette().text());//use the color defined in css file
-//        p.drawText(helper->getTextX(), helper->getTextY(), text());
-//    }
+    p.setFont(font());
+    p.setBrush(palette().text());//use the color defined in css file
+    p.drawText((int)textX, (int)textY, animating ? originalText : text() );//text() can be elided
 }
