@@ -1094,8 +1094,8 @@ MainWindow::~MainWindow()
     qCDebug(jtGUI) << "MainWindow destructor...";
     setParent(nullptr);
     if(mainController){
+        mainController->stop();
         mainController->saveLastUserSettings(getInputsSettings());
-
     }
 
     foreach (LocalTrackGroupView* groupView, this->localGroupChannels ) {
