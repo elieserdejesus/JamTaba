@@ -48,10 +48,12 @@ public:
     ~NinjamTrackGroupView();
     void setNarrowStatus(bool narrow);
     void updateGeoLocation();
-
+    void setGroupName(QString groupName);
+    void updateGuiElements();
 private:
     Controller::MainController* mainController;
     QLabel* countryLabel;
+    MarqueeLabel* groupNameLabel;
     QString userIP;
 };
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

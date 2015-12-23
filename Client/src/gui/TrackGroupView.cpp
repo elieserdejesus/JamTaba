@@ -17,9 +17,7 @@ TrackGroupView::TrackGroupView(QWidget *parent) :
 
     //disable blue border when QLineEdit has focus in mac
     ui->groupNameField->setAttribute(Qt::WA_MacShowFocusRect, 0);
-
 }
-
 
 bool TrackGroupView::isUnlighted() const{
     return property("unlighted").toBool();
@@ -44,7 +42,7 @@ void TrackGroupView::updateGuiElements(){
         trackView->updateGuiElements();
     }
 
-    ui->groupNameField->updateMarquee();
+    //ui->groupNameField->updateMarquee();
 }
 
 

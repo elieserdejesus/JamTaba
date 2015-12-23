@@ -963,7 +963,7 @@ TrackGroupView > #topPanel{
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
     stop:0 rgb(245, 245, 245),
     stop:0.06 rgb(240, 240, 240),
-    stop:1 rgb(150, 150, 150));
+    stop:1 rgb(180, 180, 180));
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
 }
@@ -977,6 +977,7 @@ TrackGroupView #groupNameField {
     margin-top: 10px;
     font-size: 11px;
     font-weight: normal;
+    /*qproperty-alignment: AlignCenter;*/
 }
 
 
@@ -1123,37 +1124,34 @@ NinjamRoomWindow #labelRoomName{
 }
 
 NinjamTrackView > #channelName{
-    border: 1px solid rgba(0, 0, 0, 25);
-    /*qproperty-alignment: AlignLeft;*/
-    background-color: rgba(0, 0, 0, 20);
+    border: none; /* 1px solid rgba(0, 0, 0, 7);*/
+    background-color: rgba(0, 0, 0, 6);
     border-radius: 2px;
     padding-top: 3px;
     padding-bottom: 3px;
     font-size: 10px;
-    color: rgb(80, 80, 80);
+    color: rgba(0, 0, 0, 160);
 }
 
-NinjamRoomWindow TrackGroupView #groupNameField{
+NinjamRoomWindow #groupNameField {
     border-radius: 2px;
-    background-color: rgba(255,255, 255, 120);
-    border-color: #C0C0C0;
+    background-color: rgba(255,255, 255, 15);
+    border: none;
     color: black;
-    /*qproperty-alignment: AlignCenter;*/
-
+    margin-bottom: 3px;
+    margin-top: 3px;
+    padding: 3px;
 }
 
 NinjamRoomWindow TrackGroupView #countryLabel{
-    color: #505858;
+    color: rgba(0, 0, 0, 180);
     qproperty-alignment: AlignCenter;
-    font-size: 11px;
+    font-size: 9px;
 }
 
 NinjamRoomWindow TrackGroupView{
-    border-left: 1px solid #BCBCBC;
-    border-top: 1px solid #D6D6D6;
-
-    border-right-color: #9B9B9B;
-    border-bottom-color: #9B9B9B;
+    border: 1px solid rgba(0, 0, 0, 80);
+    padding: 1px;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop:0      rgba(0, 0, 0, 0),
         stop:0.2    rgb(127,127,127)
@@ -1165,10 +1163,7 @@ NinjamRoomWindow TrackGroupView{
 }
 
 
-NinjamRoomWindow TrackGroupView #groupNameField {
-    margin-bottom: 3px;
-    margin-top: 3px;
-}
+
 
 
 NinjamPanel #ninjamControlsPanel{

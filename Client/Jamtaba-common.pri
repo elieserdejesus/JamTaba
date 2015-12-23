@@ -78,9 +78,7 @@ HEADERS += \
     $$PWD/src/configurator.h \
     $$PWD/src/persistence/UsersDataCache.h \
     $$PWD/src/gui/widgets/IntervalChunksDisplay.h \
-    $$PWD/src/gui/widgets/MarqueeLabel.h \
-    $$PWD/src/gui/widgets/MarqueeLineEdit.h \
-    $$PWD/src/gui/widgets/MarqueeHelper.h
+    $$PWD/src/gui/widgets/MarqueeLabel.h
 
 SOURCES += \
     ../src/audio/core/AudioDriver.cpp \
@@ -138,9 +136,7 @@ SOURCES += \
     $$PWD/src/configurator.cpp \
     $$PWD/src/persistence/UsersDataCache.cpp \
     $$PWD/src/gui/widgets/IntervalChunksDisplay.cpp \
-    $$PWD/src/gui/widgets/MarqueeLabel.cpp \
-    $$PWD/src/gui/widgets/MarqueeLineEdit.cpp \
-    $$PWD/src/gui/widgets/MarqueeHelper.cpp
+    $$PWD/src/gui/widgets/MarqueeLabel.cpp
 
 
 #multiplatform implementations
