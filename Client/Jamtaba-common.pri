@@ -77,7 +77,10 @@ HEADERS += \
     $$PWD/src/gui/chords/ChordProgression.h \
     $$PWD/src/configurator.h \
     $$PWD/src/persistence/UsersDataCache.h \
-    $$PWD/src/gui/widgets/IntervalChunksDisplay.h
+    $$PWD/src/gui/widgets/IntervalChunksDisplay.h \
+    $$PWD/src/gui/widgets/MarqueeLabel.h \
+    $$PWD/src/gui/widgets/MarqueeLineEdit.h \
+    $$PWD/src/gui/widgets/MarqueeHelper.h
 
 SOURCES += \
     ../src/audio/core/AudioDriver.cpp \
@@ -134,7 +137,10 @@ SOURCES += \
     $$PWD/src/gui/chords/ChordProgression.cpp \
     $$PWD/src/configurator.cpp \
     $$PWD/src/persistence/UsersDataCache.cpp \
-    $$PWD/src/gui/widgets/IntervalChunksDisplay.cpp
+    $$PWD/src/gui/widgets/IntervalChunksDisplay.cpp \
+    $$PWD/src/gui/widgets/MarqueeLabel.cpp \
+    $$PWD/src/gui/widgets/MarqueeLineEdit.cpp \
+    $$PWD/src/gui/widgets/MarqueeHelper.cpp
 
 
 #multiplatform implementations

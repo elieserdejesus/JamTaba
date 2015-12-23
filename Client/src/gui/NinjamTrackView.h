@@ -6,6 +6,7 @@
 #include "IntervalChunksDisplay.h"
 
 #include "persistence/UsersDataCache.h"
+#include "MarqueeLabel.h"
 
 namespace Controller{
     class MainController;
@@ -27,8 +28,9 @@ public:
 
     void setUnlightStatus(bool status);
 
+    void updateGuiElements();
 private:
-    QLabel* channelNameLabel;
+    MarqueeLabel* channelNameLabel;
     Persistence::CacheEntry cacheEntry;//used to remember the track controls values
     IntervalChunksDisplay* chunksDisplay;//display downloaded interval chunks
 protected slots:

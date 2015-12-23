@@ -246,7 +246,7 @@ void NinjamRoomWindow::on_userConfirmingVoteToChangeBpm(int newBpm){
 void NinjamRoomWindow::updatePeaks(){
     foreach (NinjamTrackGroupView* view, trackGroups) {
         if(view){
-            view->updatePeaks();
+            view->updateGuiElements();
         }
     }
     Audio::AudioPeak metronomePeak = mainController->getTrackPeak(Controller::NinjamController::METRONOME_TRACK_ID);

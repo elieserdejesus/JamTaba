@@ -1122,9 +1122,9 @@ NinjamRoomWindow #labelRoomName{
     margin-left: 32px;/* shift from right side to compensate licence button and appears in center */
 }
 
-NinjamTrackView > .QLabel#channelName{
+NinjamTrackView > #channelName{
     border: 1px solid rgba(0, 0, 0, 25);
-    /*qproperty-alignment: AlignCenter;*/
+    /*qproperty-alignment: AlignLeft;*/
     background-color: rgba(0, 0, 0, 20);
     border-radius: 2px;
     padding-top: 3px;
@@ -1138,7 +1138,7 @@ NinjamRoomWindow TrackGroupView #groupNameField{
     background-color: rgba(255,255, 255, 120);
     border-color: #C0C0C0;
     color: black;
-    qproperty-alignment: AlignCenter;
+    /*qproperty-alignment: AlignCenter;*/
 
 }
 

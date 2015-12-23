@@ -39,10 +39,12 @@ void TrackGroupView::setUnlightStatus(bool unlighted){
     update();
 }
 
-void TrackGroupView::updatePeaks(){
+void TrackGroupView::updateGuiElements(){
     foreach (BaseTrackView* trackView, trackViews) {
         trackView->updateGuiElements();
     }
+
+    ui->groupNameField->updateMarquee();
 }
 
 
