@@ -758,7 +758,7 @@ void MainWindow::showBusyDialog(){
 }
 
 void MainWindow::showBusyDialog(QString message){
-    busyDialog.setParent(this);
+    busyDialog.setParent( this );
     centerBusyDialog();
     busyDialog.show(message);
 }
@@ -767,16 +767,15 @@ void MainWindow::hideBusyDialog(){
     busyDialog.hide();
 }
 
-
 void MainWindow::centerBusyDialog(){
-    int newX = ui.contentPanel->width()/2 - busyDialog.width()/2;
-    int newY = ui.contentPanel->height()/2 - busyDialog.height()/2;
-    if(newX > 0){
-        busyDialog.move(newX + ui.contentPanel->x(), newY + ui.contentPanel->y());
+    if(!busyDialog.parentWidget()){
+        return;
     }
-    else{//first time ("loading rooms list message") the contentPanel.width is zero
-        busyDialog.move(this->width()/2 - busyDialog.width()/2, height()/2 - busyDialog.height()/2);
-    }
+    QSize parentSize = busyDialog.parentWidget()->size();
+    QSize busyDialogSize = busyDialog.size();
+    int newX = parentSize.width()/2 - busyDialogSize.width()/2;
+    int newY = parentSize.height()/2 - busyDialogSize.height()/2;
+    busyDialog.move(newX, newY);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 bool MainWindow::jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2){
