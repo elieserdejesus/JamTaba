@@ -304,8 +304,8 @@ void MainWindow::addChannelsGroup(QString name){
     int channelIndex = localGroupChannels.size();
     addLocalChannel( channelIndex, name, true);
     mainController->updateInputTracksRange();
-    mainController->sendNewChannelsNames(getChannelsNames());
     if(mainController->isPlayingInNinjamRoom()){
+        mainController->sendNewChannelsNames(getChannelsNames());
         mainController->getNinjamController()->scheduleEncoderChangeForChannel(channelIndex);//create an encoder for this channel in next interval
     }
     recalculateLeftPanelWidth();
@@ -339,6 +339,10 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
     QObject::connect(localChannel, SIGNAL(nameChanged()), this, SLOT(on_channelNameChanged()));
     QObject::connect(localChannel, SIGNAL(trackAdded()), this, SLOT(on_localTrackAdded()));
     QObject::connect(localChannel, SIGNAL(trackRemoved()), this, SLOT(on_localTrackRemoved()));
+
+    if(!localGroupChannels.isEmpty()){//the second channel?
+        localChannel->setPreparingStatus(localGroupChannels.at(0)->isPreparingToTransmit());
+    }
 
     localGroupChannels.append( localChannel );
 
