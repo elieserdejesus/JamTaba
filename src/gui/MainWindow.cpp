@@ -1019,7 +1019,7 @@ void MainWindow::timerEvent(QTimerEvent *){
 
     //update local input track peaks
     foreach (TrackGroupView* channel, localGroupChannels) {
-        channel->updatePeaks();
+        channel->updateGuiElements();
     }
 
     //update metronome peaks

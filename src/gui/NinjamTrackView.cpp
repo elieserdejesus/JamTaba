@@ -13,7 +13,7 @@
 NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, long trackID, QString channelName, Persistence::CacheEntry initialValues)
     :BaseTrackView(mainController, trackID), cacheEntry(initialValues)
 {
-    channelNameLabel = new QLabel();
+    channelNameLabel = new MarqueeLabel();
     channelNameLabel->setObjectName("channelName");
     channelNameLabel->setText(channelName);
 
@@ -47,6 +47,12 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
         }
     }
 
+}
+
+//+++++++++++++++
+void NinjamTrackView::updateGuiElements(){
+    BaseTrackView::updateGuiElements();
+    channelNameLabel->updateMarquee();
 }
 
 //+++++= interval chunks visual feedback ++++++=

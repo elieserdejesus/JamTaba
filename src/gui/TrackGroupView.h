@@ -28,7 +28,7 @@ public:
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
 
-    void updatePeaks();
+    void updateGuiElements();
 
     void refreshInputSelectionName(int inputTrackIndex);
     inline int getTracksCount() const{return trackViews.size();}
