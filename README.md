@@ -10,7 +10,7 @@ More information and User's manual are here : https://github.com/elieserdejesus/
 FOR DEVs : Doxygen doc is here -> http://makeitezeeah.esy.es/Jamtaba2/2.0.6/
 ***
 
-###Tools and dependencies###
+### Tools and dependencies
 JamTaba is builded using Qt. We are using Qt for many things: Gui, threads, sockets, json, http requests, file handling, etc. At moment Jamtaba is very coupled with Qt. This is a good thing if you like Qt, but can be terrible if you don't like. 
 
 Jamtaba is using some libraries: portaudio, rtmidi, minimp3, libvorbis and libogg. We are distributing pre compiled static libs for some platforms (Windows 32 and 64 bits and Mac OSX 64 bits). The linux port is in the TODO list, but we don't have nothing interesting enough yet.
@@ -20,9 +20,18 @@ The library portaudio was compiled in windows using only the ASIO flags. So, if 
 
 ***
 
-###Windows Development###
+### Coding Style for Jamtaba
+Jamtaba coding style is the same [Qt Coding Style](https://wiki.qt.io/Qt_Coding_Style). If you are using QtCreator as IDE you can use a plugin called **Beautifier** to format your code applying the Jamtaba coding style. This QtCreator plugin **MUST** be used with an external tool. Please [read](http://doc.qt.io/qtcreator/creator-beautifier.html) the details about how use this plugin and configure the external tool.
 
-##Steps to build Using MinGW##
+In Jamtaba we are using the external tool [Uncrustify](http://uncrustify.sourceforge.net/) combined with the Beautifier QtCreator plugin to format the code. You must configure QtCreator to use the *uncrustify config file* inside the Jamtaba project. In QtCretor go to **Tools -> Options -> Beautifier** and check the option **use file uncrustify.cfg defined in project files**.
+
+**obs:** The file **uncrustify.cfg** is just a copy of this [file](https://gist.github.com/trollixx/11204806).
+
+***
+
+### Windows Development
+
+## Steps to build Using MinGW
 
 1 - Download Qt OffLine Installer for Windows MinGW: http://www.qt.io/download-open-source/
  
@@ -59,12 +68,12 @@ Jamtaba source code dir in your hard disk
 
 ***
 
-##Build Using msvc##
+## Build Using msvc
 TODO
 
 ***
 
-##Working with Git -ToolTips-##
+## Working with Git (ToolTips)
 I use git in command line prompt.  
 My Git knowledge is limited, but it is enough to let us rock !
 
