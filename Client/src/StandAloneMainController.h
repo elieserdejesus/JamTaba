@@ -4,7 +4,9 @@
 #include "MainController.h"
 #include <QApplication>
 #include <QTcpSocket>
+#include <QProcess>
 #include "audio/vst/PluginFinder.h"
+#include "audio/vst/vsthost.h"
 
 class QCoreApplication;
 
@@ -25,7 +27,7 @@ class StandalonePluginFinder : public Vst::PluginFinder
 public:
     StandalonePluginFinder();
     ~StandalonePluginFinder();
-    void scan(QStringList blackList);
+    void scan(QStringList skipList);
     void cancel();
 private:
     Audio::PluginDescriptor getPluginDescriptor(QFileInfo f);
@@ -54,15 +56,15 @@ public:
     bool isRunningAsVstPlugin() const;
 
     void initializePluginsList(QStringList paths);
-    void scanPlugins();
+    void scanPlugins(bool scanOnlyNewPlugins = false);
 
-//    inline int exec(){ return application->exec(); }
     void quit();
 
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
     virtual void addDefaultPluginsScanPath();
     QStringList getSteinbergRecommendedPaths();
+    bool pluginsScanIsNeeded() const; //plugins cache is empty OR we have new plugins in scan folders?
 
     inline Vst::Host* getVstHost() const{return vstHost;}
 
@@ -95,6 +97,8 @@ private:
     //VST
     Vst::Host* vstHost;//static instance released inside Vst::Host using QSCopedPointer
     QApplication* application;
+
+    bool isVstPluginFile(QString file) const;
 };
 
 }

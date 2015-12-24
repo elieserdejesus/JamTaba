@@ -30,20 +30,24 @@ void MainWindowStandalone::showEvent(QShowEvent *ent){
     //QTimer::singleShot(50, this, &MainWindowStandalone::restorePluginsList);
 }
 
-void MainWindowStandalone::initializePluginFinder(){
+void MainWindowStandalone::initializePluginFinder()
+{
     MainWindow::initializePluginFinder();
 
-    QStringList vstPaths = mainController->getSettings().getVstPluginsPaths();
-    if(vstPaths.empty()){//no vsts in database cache, try scan
-        if(mainController->getSettings().getVstScanFolders().isEmpty()){
-            (dynamic_cast<Controller::StandaloneMainController*>(mainController))->addDefaultPluginsScanPath();
+    Controller::StandaloneMainController* controller = dynamic_cast<Controller::StandaloneMainController*>(mainController);
+    const Persistence::Settings settings = controller->getSettings();
+
+    controller->initializePluginsList(settings.getVstPluginsPaths());//load the cached plugins. The cache can be empty.
+
+    //checking for new plugins...
+    if (controller->pluginsScanIsNeeded() )//no vsts in database cache or new plugins detected in scan folders?
+    {
+        if (settings.getVstScanFolders().isEmpty())
+        {
+            controller->addDefaultPluginsScanPath();
         }
-        mainController->saveLastUserSettings(getInputsSettings());//save config file before scan
-        (dynamic_cast<Controller::StandaloneMainController*>(mainController))->scanPlugins();
-    }
-    else{//use vsts stored in settings file
-        (dynamic_cast<Controller::StandaloneMainController*>(mainController))->initializePluginsList(vstPaths);
-        onScanPluginsFinished(true);
+        controller->saveLastUserSettings(getInputsSettings());//save config file before scan
+        controller->scanPlugins(true);
     }
 }
 

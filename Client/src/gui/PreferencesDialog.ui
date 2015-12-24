@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="prefsTab">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
@@ -209,26 +209,8 @@
             </item>
             <item>
              <widget class="QPushButton" name="buttonControlPanel">
-              <property name="minimumSize">
-               <size>
-                <width>118</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>110</width>
-                <height>39</height>
-               </size>
-              </property>
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-image: url(:/images/asio.png);</string>
-              </property>
               <property name="text">
-               <string/>
+               <string>ASIO panel ...</string>
               </property>
              </widget>
             </item>
@@ -334,15 +316,21 @@
              </property>
              <item>
               <widget class="QPushButton" name="ButtonVst_Refresh">
+               <property name="toolTip">
+                <string>Scan only new plugins</string>
+               </property>
                <property name="text">
                 <string>Refresh</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="buttonClearVstCache">
+              <widget class="QPushButton" name="buttonClearVstAndScan">
+               <property name="toolTip">
+                <string>Clear plugins cache and scan all plugin folders</string>
+               </property>
                <property name="text">
-                <string>clear cache</string>
+                <string>Clear and Scan</string>
                </property>
               </widget>
              </item>

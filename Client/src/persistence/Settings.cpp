@@ -251,7 +251,11 @@ void VstSettings::read(QJsonObject in){
     if(in.contains("cachedPlugins")){
         QJsonArray cacheArray = in["cachedPlugins"].toArray();
         for (int x = 0; x < cacheArray.size(); ++x) {
-            cachedPlugins.append(cacheArray.at(x).toString());
+            QString pluginFile = cacheArray.at(x).toString();
+            if( QFile(pluginFile).exists() )//if a cached plugin is removed from the disk we need skip this file
+            {
+                cachedPlugins.append(pluginFile);
+            }
         }
     }
     blackedPlugins.clear();
@@ -506,7 +510,7 @@ QStringList Settings::getVstScanFolders() const {
     return vstSettings.foldersToScan;
 }
 
-QStringList Settings::getBlackBox() const {
+QStringList Settings::getBlackListedPlugins() const {
 
     return vstSettings.blackedPlugins;
 }

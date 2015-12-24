@@ -8,12 +8,7 @@ PluginFinder::PluginFinder()
 
 }
 
-void PluginFinder::clearScanFolders(){
+void PluginFinder::setFoldersToScan(QStringList folders){
     scanFolders.clear();
-}
-
-void PluginFinder::addFolderToScan(QString path){
-    if(!scanFolders.contains(path)){
-        scanFolders.append(path);
-    }
+    scanFolders.append(folders);
 }
