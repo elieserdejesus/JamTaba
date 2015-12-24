@@ -167,3 +167,6 @@ INCLUDEPATH += ../src/ \
                ../src/gui/chords \
 
 RESOURCES += ../src/resources/jamtaba.qrc
+
+DISTFILES += \
+    $$PWD/uncrustify.cfg
