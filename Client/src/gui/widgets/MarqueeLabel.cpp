@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QStyleOption>
 #include <QDateTime>
+#include <QtMath>
 
 const int MarqueeLabel::MARQUEE_SPEED = 20;//pixels per second
 const int MarqueeLabel::TIME_BETWEEN_ANIMATIONS = 10000;
@@ -62,22 +63,22 @@ void MarqueeLabel::updateMarquee(){
         }
     }
     else{//animating
-        int oldTextX = (int)textX; //using old C style casts here to avoid the too verbose static_cast<int>. In this specific context (simple float to int truncation) the old school casts are more readable.
-        textX -= (timeEllapsed/1000.0 * speedDecay) * MARQUEE_SPEED;
+        int oldTextX = qRound(textX);
+        textX -= (timeEllapsed/1000.0f * speedDecay) * MARQUEE_SPEED;
 
         int totalShiftAmount = textLength - width();//how many pixels text is shifted?
         if(totalShiftAmount > 0){//avoid zero as divider
-            float currentShift = std::abs(textX)/totalShiftAmount;
-            speedDecay = 1 - std::pow(currentShift, 3);//exponentially slowing down the animation in the end
-            if(speedDecay <= 0.005){//avoid endless animation when the speedDecay value is too small
-                textX -= 1;//forcing the animation end
+            float currentShift = qAbs(textX)/totalShiftAmount;
+            speedDecay = 1.0f - qPow(currentShift, 3);//exponentially slowing down the animation in the end
+            if(speedDecay <= 0.005f){//avoid endless animation when the speedDecay value is too small
+                textX -= 1.0f;//forcing the animation end
             }
         }
         else{
             speedDecay = 1.0f;
         }
 
-        if( (int)textX != oldTextX){//avoid repaint the widget if the text position don't change
+        if( qRound(textX) != oldTextX){//avoid repaint the widget if the text position don't change
             if(textX + totalShiftAmount <= 0){//end of animation?
                 resetAnimationProperties();
             }
@@ -107,5 +108,5 @@ void MarqueeLabel::paintEvent(QPaintEvent *evt)
 
     p.setFont(font());
     p.setBrush(palette().text());//use the color defined in css file
-    p.drawText((int)textX, (int)textY, animating ? originalText : text() );//text() can be elided
+    p.drawText( QPointF(textX, textY), animating ? originalText : text() );//text() can be elided
 }
