@@ -1,7 +1,6 @@
 #pragma once
-#include <QFileInfo>
-#include <QProcess>
-#include "audio/core/plugins.h"
+#include <QObject>
+#include <QStringList>
 
 namespace Audio {
     class PluginDescriptor;
@@ -9,19 +8,16 @@ namespace Audio {
 
 namespace Vst {
 
-class Host;
-
 class PluginFinder : public QObject
 {
     Q_OBJECT
 public:
     PluginFinder();
-    virtual void scan(QStringList blackList) = 0;
-    void addFolderToScan(QString path);
-    void clearScanFolders();
+    virtual void scan(QStringList skipList) = 0;
+    void setFoldersToScan(QStringList folders);
     virtual void cancel() = 0;
 protected:
-    QList<QString> scanFolders;
+    QStringList scanFolders;
 signals:
     void scanStarted();
     void scanFinished(bool finishedWithoutError);

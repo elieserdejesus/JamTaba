@@ -129,7 +129,7 @@ void PreferencesDialog::populateVstTab(){
     clearScanFolderWidgets();//remove all widgets before add the paths
     QStringList ScanFoldersList = mainController->getSettings().getVstScanFolders();
     QStringList VstList = mainController->getSettings().getVstPluginsPaths();
-    QStringList BlackVstList = mainController->getSettings().getBlackBox();
+    QStringList BlackVstList = mainController->getSettings().getBlackListedPlugins();
 
     //populate the paths
     foreach (QString scanFolder, ScanFoldersList) {
@@ -381,7 +381,7 @@ void PreferencesDialog::UpdateBlackBox(QString path, bool add)
             {
               ui->BlackBoxText->clear();
               mainController->removeBlackVst(str.indexOf(path));
-              QStringList list=mainController->getSettings().getBlackBox();
+              QStringList list=mainController->getSettings().getBlackListedPlugins();
                foreach(QString s,list)
                {
                  ui->BlackBoxText->appendPlainText(s);
@@ -410,39 +410,36 @@ void PreferencesDialog::addVstScanPath(QString path){
     mainController->addPluginsScanPath(path);
 }
 
-void PreferencesDialog::on_buttonClearVstCache_clicked()
+//clear the vst cache and run a complete scan
+void PreferencesDialog::on_buttonClearVstAndScan_clicked()
 {
-    mainController->clearPluginsCache();
-    ui->plainTextEdit->clear();
+    if(mainController && mainWindow)
+    {
+        //save the config file before start scanning
+        mainController->saveLastUserSettings(mainWindow->getInputsSettings());
+
+        //clear
+        mainController->clearPluginsCache();
+        ui->plainTextEdit->clear();
+
+        //scan
+        mainController->scanPlugins();
+    }
 }
-
-//void PreferencesDialog::on_buttonScanVSTs_clicked()
-//{
-//    if(mainController){
-//        if(mainWindow){//save the config file before start scanning
-//            mainController->saveLastUserSettings(mainWindow->getInputsSettings());
-//        }
-//        mainController->scanPlugins();
-//    }
-//}
-
 
 //REFRESH VST LIST
 void PreferencesDialog::on_ButtonVst_Refresh_clicked()
 {
-    if(mainController)
+    if(mainController && mainWindow)
     {
-        if(mainWindow)
-        {//save the config file before start scanning
-            mainController->saveLastUserSettings(mainWindow->getInputsSettings());
-        }
-        //clear the cache
-        mainController->clearPluginsCache();
-        //scan again
-        mainController->scanPlugins();
+        //save the config file before start scanning
+        mainController->saveLastUserSettings(mainWindow->getInputsSettings());
+
+        //scan only new plugins
+        mainController->scanPlugins(true);
     }
 
-    populateVstTab();
+    //populateVstTab();
 }
 
 // ADD A VST IN BLACKLIST

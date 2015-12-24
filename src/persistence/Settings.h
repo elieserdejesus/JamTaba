@@ -227,7 +227,7 @@ public:
     void addVstToBlackList(QString pluginPath);
     void RemVstFromBlackList(int index);
     QStringList getVstPluginsPaths() const;
-    QStringList getBlackBox()const ;
+    QStringList getBlackListedPlugins()const ;
     void clearVstCache();
     void clearBlackBox();
 

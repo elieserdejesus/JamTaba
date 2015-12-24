@@ -33,7 +33,7 @@ private slots:
 
     void on_buttonRemoveVstPathClicked();
 
-    void on_buttonClearVstCache_clicked();
+    void on_buttonClearVstAndScan_clicked();
 
     //void on_buttonScanVSTs_clicked();
 

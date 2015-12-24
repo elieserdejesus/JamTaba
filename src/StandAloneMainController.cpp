@@ -86,7 +86,7 @@ QString StandalonePluginFinder::getVstScannerExecutablePath() const{
     return "/Users/elieser/Desktop/build-Jamtaba-Desktop_Qt_5_5_0_clang_64bit-Debug/VstScanner/VstScanner";
 #endif
     QString buildType = QLibraryInfo::isDebugBuild() ? "debug" : "release";
-    scannerExePath = appPath + "/../../VstScanner/"+ buildType +"/" + scannerExePath;
+    scannerExePath = appPath + "/../../VstScanner/"+ buildType +"/VstScanner.exe";
     if(QFile(scannerExePath).exists()){
         return scannerExePath;
     }
@@ -130,7 +130,7 @@ QString StandalonePluginFinder::buildCommaSeparetedString(QStringList list) cons
 }
 
 
-void StandalonePluginFinder::scan(QStringList blackList){
+void StandalonePluginFinder::scan(QStringList skipList){
     if(scanProcess.isOpen()){
         qCWarning(jtStandalonePluginFinder) << "scan process is already open!";
         return;
@@ -145,12 +145,11 @@ void StandalonePluginFinder::scan(QStringList blackList){
     //execute the scanner in another process to avoid crash Jamtaba process
     QStringList parameters;
     parameters.append(buildCommaSeparetedString(scanFolders));
-    parameters.append(buildCommaSeparetedString(blackList));
+    parameters.append(buildCommaSeparetedString(skipList));
     QObject::connect( &scanProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(on_processStandardOutputReady()));
     QObject::connect( &scanProcess, SIGNAL(finished(int)), this, SLOT(on_processFinished()));
     QObject::connect( &scanProcess, SIGNAL(error(QProcess::ProcessError)), this, SLOT(on_processError(QProcess::ProcessError)));
     qCDebug(jtStandalonePluginFinder) << "Starting scan process...";
-    //scanProcess.setProcessChannelMode(QProcess::ForwardedChannels);
     scanProcess.start(scannerExePath, parameters);
     qCDebug(jtStandalonePluginFinder) << "Scan process started with " << scannerExePath;
 }
@@ -354,6 +353,49 @@ void StandaloneMainController::addDefaultPluginsScanPath(){
 }
 
 
+//we need scan plugins when plugins cache is empty OR we have new plugins in scan folders
+//This code is executed whem Jamtaba is started.
+bool StandaloneMainController::pluginsScanIsNeeded() const
+{
+    if (settings.getVstPluginsPaths().isEmpty())//cache is empty?
+    {
+        return true;
+    }
+
+    //checking for new plugins in scan folders
+    QStringList foldersToScan = settings.getVstScanFolders();
+
+    QStringList skipList(settings.getBlackListedPlugins());
+    skipList.append(settings.getVstPluginsPaths());
+
+    foreach (QString scanFolder, foldersToScan)
+    {
+        QDirIterator folderIterator(scanFolder, QDirIterator::Subdirectories);
+        while (folderIterator.hasNext())
+        {
+            folderIterator.next();//point to next file inside current folder
+            QString filePath = folderIterator.filePath();
+            if ( isVstPluginFile(filePath) && !skipList.contains(filePath) )
+            {
+                return true; //a new vst plugin was founded
+            }
+        }
+    }
+    return false;
+}
+
+bool StandaloneMainController::isVstPluginFile(QString filePath) const
+{
+#ifdef Q_OS_WIN
+    return QLibrary::isLibrary(filePath);
+#endif
+
+#ifdef Q_OS_MAC
+    QFileInfo file(filePath);
+    return file.isBundle() && file.absoluteFilePath().endsWith(".vst")
+#endif
+    return false; //just in case
+}
 
 void StandaloneMainController::initializePluginsList(QStringList paths){
     pluginsDescriptors.clear();
@@ -368,17 +410,21 @@ void StandaloneMainController::initializePluginsList(QStringList paths){
 
 
 
-void StandaloneMainController::scanPlugins(){
-    pluginsDescriptors.clear();
-    //ConfigStore::clearVstCache();
+void StandaloneMainController::scanPlugins(bool scanOnlyNewPlugins){
     if(pluginFinder){
-        pluginFinder->clearScanFolders();
-        QStringList foldersToScan = settings.getVstScanFolders();
-
-        foreach (QString folder, foldersToScan) {
-            pluginFinder->addFolderToScan(folder);
+        if(!scanOnlyNewPlugins){
+            pluginsDescriptors.clear();
         }
-        pluginFinder->scan(settings.getBlackBox());
+
+        pluginFinder->setFoldersToScan(settings.getVstScanFolders());
+
+        //The skipList contains the paths for black listed plugins by default.
+        //If the parameter 'scanOnlyNewPlugins' is 'true' the cached plugins are added in the skipList too.
+        QStringList skipList(settings.getBlackListedPlugins());
+        if(scanOnlyNewPlugins){
+            skipList.append(settings.getVstPluginsPaths());
+        }
+        pluginFinder->scan(skipList);
     }
 }
 

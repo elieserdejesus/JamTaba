@@ -210,7 +210,7 @@ public:
     void removePluginsScanPath(int index);
     void removeBlackVst(int index);
     void clearPluginsCache();
-    virtual void scanPlugins() = 0;
+    virtual void scanPlugins(bool scanOnlyNewPlugins = false) = 0;
 
     void finishUploads();//used to send the last part of ninjam intervals when audio is stopped.
 
