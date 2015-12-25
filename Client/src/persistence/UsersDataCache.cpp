@@ -7,6 +7,12 @@
 
 using namespace Persistence;
 
+const bool CacheEntry::DEFAULT_MUTED = false;
+const float CacheEntry::DEFAULT_GAIN = 1.0f;
+const float CacheEntry::DEFAULT_PAN = 0.0f;
+const float CacheEntry::DEFAULT_BOOST = 1.0f;
+const float CacheEntry::PAN_MAX = 4.0f;
+const float CacheEntry::PAN_MIN = -4.0f;
 
 // well formed address is an acceptable.
 // no need to validate the number within 8 bits.
@@ -55,7 +61,7 @@ CacheEntry::CacheEntry(const QString& userIp, const QString& userName, quint8 ch
     setUserIP(userIp);
     setUserName(userName);
     setChannelID(channelID);
-    setMuted(DEFAULT_MUTE);
+    setMuted(DEFAULT_MUTED);
     setGain(DEFAULT_GAIN);
     setPan(DEFAULT_PAN);
     setBoost(DEFAULT_BOOST);

@@ -13,12 +13,6 @@
 
 namespace Persistence {
 
-constexpr int DEFAULT_MUTE = false;
-constexpr float DEFAULT_GAIN = 1.0f;
-constexpr float DEFAULT_PAN = 0.0f;
-constexpr float DEFAULT_BOOST = 1.0f;
-constexpr float PAN_MAX = 4.0f;
-constexpr float PAN_MIN = -4.0f;
 
 class CacheEntry{//cache entries are per channel, not per user.
 public:
@@ -43,6 +37,13 @@ public:
 
     static QRegExp ipPattern;
     static QRegExp namePattern;
+
+    static const bool DEFAULT_MUTED;
+    static const float DEFAULT_GAIN;
+    static const float DEFAULT_PAN;
+    static const float DEFAULT_BOOST;
+    static const float PAN_MAX;
+    static const float PAN_MIN;
 private:
     QString userIp;
     QString userName;
