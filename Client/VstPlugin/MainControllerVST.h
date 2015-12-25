@@ -51,7 +51,7 @@ public:
     inline void exit(){}
 
     inline void addDefaultPluginsScanPath(){}
-    inline void scanPlugins(){}
+    inline void scanPlugins(bool scanOnlyNewPlugins){ Q_UNUSED(scanOnlyNewPlugins)}
 
     int getHostBpm() const;
 
