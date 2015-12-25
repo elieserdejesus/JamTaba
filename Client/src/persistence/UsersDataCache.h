@@ -13,12 +13,12 @@
 
 namespace Persistence {
 
-#define DEFAULT_MUTE false
-#define DEFAULT_GAIN 1.0f
-#define DEFAULT_PAN 0.0f
-#define DEFAULT_BOOST 1.0f
-#define PAN_MAX 4.0f
-#define PAN_MIN -4.0f
+constexpr int DEFAULT_MUTE = false;
+constexpr float DEFAULT_GAIN = 1.0f;
+constexpr float DEFAULT_PAN = 0.0f;
+constexpr float DEFAULT_BOOST = 1.0f;
+constexpr float PAN_MAX = 4.0f;
+constexpr float PAN_MIN = -4.0f;
 
 class CacheEntry{//cache entries are per channel, not per user.
 public:
@@ -60,7 +60,7 @@ class UsersDataCache
 public:
     UsersDataCache();
     ~UsersDataCache();
-    CacheEntry getUserCacheEntry(QString userIp, QString userName, quint8 channelID);//return default values for pan, gain and mute if user is not cached yet
+    CacheEntry getUserCacheEntry(const QString& userIp, const QString& userName, quint8 channelID);//return default values for pan, gain and mute if user is not cached yet
     void updateUserCacheEntry(CacheEntry entry);
 private:
     QMap<QString, CacheEntry> cacheEntries;

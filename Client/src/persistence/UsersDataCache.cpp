@@ -122,7 +122,7 @@ UsersDataCache::~UsersDataCache(){
     }
 }
 
-CacheEntry UsersDataCache::getUserCacheEntry(QString userIp, QString userName, quint8 channelID){
+CacheEntry UsersDataCache::getUserCacheEntry(const QString& userIp, const QString& userName, quint8 channelID){
     QString userUniqueKey = getUserUniqueKey(userIp, userName, channelID);
     if(cacheEntries.contains(userUniqueKey)){
         return cacheEntries[userUniqueKey];
