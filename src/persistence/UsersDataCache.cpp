@@ -7,12 +7,18 @@
 
 using namespace Persistence;
 
+
+const quint32 CacheEntryHeader::SIGNATURE = 0x4a544232; // "JTB2"
+const quint32 CacheEntryHeader::REVISION = 1;
+const quint32 CacheEntryHeader::SIZE = 12;
+
 const bool CacheEntry::DEFAULT_MUTED = false;
 const float CacheEntry::DEFAULT_GAIN = 1.0f;
 const float CacheEntry::DEFAULT_PAN = 0.0f;
 const float CacheEntry::DEFAULT_BOOST = 1.0f;
 const float CacheEntry::PAN_MAX = 4.0f;
 const float CacheEntry::PAN_MIN = -4.0f;
+
 
 // well formed address is an acceptable.
 // no need to validate the number within 8 bits.
@@ -153,8 +159,17 @@ void UsersDataCache::loadCacheEntriesFromFile(){
     QFile cacheFile(cacheDir.absoluteFilePath(CACHE_FILE_NAME));
     if(cacheFile.open(QFile::ReadOnly)){
         QDataStream stream(&cacheFile);
-        stream.skipRawData(12); // skip header
-        stream >> cacheEntries;
+
+        quint32 signature;
+        quint32 revision;
+        quint32 size;
+        stream >> signature >> revision >> size;
+
+        if (signature == CacheEntryHeader::SIGNATURE
+         && revision == CacheEntryHeader::REVISION
+         && size == CacheEntryHeader::SIZE) {
+            stream >> cacheEntries;
+        }
     }
     qCDebug(jtCache) << "Tracks cache items loaded from file: " << cacheEntries.size();
 }
@@ -168,11 +183,10 @@ void UsersDataCache::writeCacheEntriesToFile(){
         qCDebug(jtCache) << "Tracks cache file opened to write.";
         QDataStream stream(&cacheFile);
 
-        // TODO: move thise to header. this is a qucik dirty implementation
-        quint32 signature = 0x4a544232; // "JTB2"
-        quint32 revision = 1;
-        quint32 offset = 12; // sizeof(signature) + sizeof(revision) + sizeof(offset)
-        stream << signature << revision << offset;
+        quint32 signature = CacheEntryHeader::SIGNATURE;
+        quint32 revision = CacheEntryHeader::REVISION;
+        quint32 size = CacheEntryHeader::SIZE;
+        stream << signature << revision << size;
 
         stream << cacheEntries;
 
