@@ -392,7 +392,7 @@ bool StandaloneMainController::isVstPluginFile(QString filePath) const
 
 #ifdef Q_OS_MAC
     QFileInfo file(filePath);
-    return file.isBundle() && file.absoluteFilePath().endsWith(".vst")
+    return file.isBundle() && file.absoluteFilePath().endsWith(".vst");
 #endif
     return false; //just in case
 }
