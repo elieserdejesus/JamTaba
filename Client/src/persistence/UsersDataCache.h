@@ -14,6 +14,16 @@
 namespace Persistence {
 
 
+/**
+ * @brief The CacheEntryHeader struct
+ */
+struct CacheEntryHeader {
+    static const quint32 SIGNATURE;
+    static const quint32 REVISION;
+    static const quint32 SIZE;
+};
+
+
 class CacheEntry{//cache entries are per channel, not per user.
 public:
     CacheEntry(const QString& userIp, const QString& userName, quint8 channelID);
