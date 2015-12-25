@@ -147,6 +147,7 @@ void UsersDataCache::loadCacheEntriesFromFile(){
     QFile cacheFile(cacheDir.absoluteFilePath(CACHE_FILE_NAME));
     if(cacheFile.open(QFile::ReadOnly)){
         QDataStream stream(&cacheFile);
+        stream.skipRawData(12); // skip header
         stream >> cacheEntries;
     }
     qCDebug(jtCache) << "Tracks cache items loaded from file: " << cacheEntries.size();
@@ -160,7 +161,15 @@ void UsersDataCache::writeCacheEntriesToFile(){
     if(cacheFile.open(QFile::WriteOnly)){
         qCDebug(jtCache) << "Tracks cache file opened to write.";
         QDataStream stream(&cacheFile);
+
+        // TODO: move thise to header. this is a qucik dirty implementation
+        quint32 signature = 0x4a544232; // "JTB2"
+        quint32 revision = 1;
+        quint32 offset = 12; // sizeof(signature) + sizeof(revision) + sizeof(offset)
+        stream << signature << revision << offset;
+
         stream << cacheEntries;
+
         qCDebug(jtCache) << cacheEntries.size() << " items stored in tracks cache file!";
     }
     else{
