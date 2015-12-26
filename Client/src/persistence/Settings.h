@@ -8,7 +8,7 @@
 #include <QMap>
 #include <QStringList>
 #include <QFile>
-#include "configurator.h"
+#include "Configurator.h"
 
 namespace Persistence {
 class Settings;
