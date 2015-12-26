@@ -22,7 +22,7 @@
 #include <QThread>
 #include <QDebug>
 #include <cassert>
-#include "log/logging.h"
+#include "log/Logging.h"
 #include "VstLoader.h"
 
 using namespace Vst;

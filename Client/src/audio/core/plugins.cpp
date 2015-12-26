@@ -1,4 +1,4 @@
-#include "plugins.h"
+#include "Plugins.h"
 #include "AudioDriver.h"
 #include "midi/MidiDriver.h"
 #include "SamplesBuffer.h"

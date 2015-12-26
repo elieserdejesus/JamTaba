@@ -21,7 +21,7 @@
 #include <QDirIterator>
 #include <QSettings>
 #include <QtConcurrent/QtConcurrent>
-#include "log/logging.h"
+#include "log/Logging.h"
 #include "configurator.h"
 
 using namespace Controller;

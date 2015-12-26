@@ -15,7 +15,7 @@
 #include "NinjamPanel.h"
 #include "ChatPanel.h"
 #include "MainWindow.h"
-#include "log/logging.h"
+#include "log/Logging.h"
 #include "persistence/UsersDataCache.h"
 
 #include <QMessageBox>

@@ -10,7 +10,7 @@
 #include <QApplication>
 #include "../ninjam/Server.h"
 #include "../ninjam/Service.h"
-#include "../log/logging.h"
+#include "../log/Logging.h"
 
 using namespace Login;
 

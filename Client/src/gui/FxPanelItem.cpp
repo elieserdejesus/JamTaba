@@ -1,6 +1,6 @@
 #include "gui/FxPanelItem.h"
-#include "plugins/guis.h"
-#include "audio/core/plugins.h"
+#include "plugins/Guis.h"
+#include "audio/core/Plugins.h"
 #include "MainController.h"
 #include "gui/LocalTrackView.h"
 #include "audio/core/PluginDescriptor.h"

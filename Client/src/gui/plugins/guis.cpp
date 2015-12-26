@@ -1,4 +1,4 @@
-#include "guis.h"
+#include "Guis.h"
 #include <QGridLayout>
 #include <QSlider>
 #include <QLabel>
@@ -6,7 +6,7 @@
 #include <cmath>
 #include <QDebug>
 #include <QObject>
-#include "audio/core/plugins.h"
+#include "audio/core/Plugins.h"
 
 PluginGui::PluginGui(Audio::Plugin *plugin) :
     QWidget(0),

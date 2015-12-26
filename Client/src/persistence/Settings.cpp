@@ -9,7 +9,7 @@
 #include <QDir>
 #include <QList>
 #include <QSettings>
-#include "../log/logging.h"
+#include "../log/Logging.h"
 
 
 //extern Configurator *JTBConfig;

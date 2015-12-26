@@ -11,7 +11,7 @@
 #include <QDir>
 #include <QTextStream>
 #include <QTimer>
-#include "../log/logging.h"
+#include "../log/Logging.h"
 
 using namespace Geo;
 

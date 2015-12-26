@@ -8,7 +8,7 @@
 #include "audio/core/SamplesBuffer.h"
 #include <vorbis/vorbisfile.h>
 #include <QThread>
-#include "log/logging.h"
+#include "log/Logging.h"
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::VorbisDecoder()
     : internalBuffer(2, 4096),

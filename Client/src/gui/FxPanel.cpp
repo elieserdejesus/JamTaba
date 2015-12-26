@@ -1,6 +1,6 @@
 #include "FxPanel.h"
 #include "FxPanelItem.h"
-#include "plugins/guis.h"
+#include "plugins/Guis.h"
 #include "MainController.h"
 #include <QPainter>
 #include <QScrollArea>

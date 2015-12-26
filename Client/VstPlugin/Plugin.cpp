@@ -7,7 +7,7 @@
 #include <QStandardPaths>
 #include "MainControllerVST.h"
 #include "NinjamController.h"
-#include "log/logging.h"
+#include "log/Logging.h"
 #include "Editor.h"
 
 // anti troll scheme to avoid multiple connections in ninjam servers

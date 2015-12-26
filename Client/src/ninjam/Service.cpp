@@ -12,7 +12,7 @@
 #include <QThread>
 #include <cassert>
 
-#include "log/logging.h"
+#include "log/Logging.h"
 
 using namespace Ninjam;
 

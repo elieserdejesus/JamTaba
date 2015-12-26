@@ -1,4 +1,4 @@
-#include "logging.h"
+#include "Logging.h"
 
 Q_LOGGING_CATEGORY(jtCore,                  "jt.Core")
 Q_LOGGING_CATEGORY(jtLoginService,          "jt.LoginService")

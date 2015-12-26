@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QApplication>
 
-#include "log/logging.h"
+#include "log/Logging.h"
 
 QScopedPointer<Configurator> Configurator::instance(nullptr);
 

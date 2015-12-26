@@ -16,11 +16,11 @@
 #include <QDesktopServices>
 
 #include "PreferencesDialog.h"
-#include "jamroomviewpanel.h"
+#include "JamRoomViewPanel.h"
 #include "LocalTrackView.h"
-#include "plugins/guis.h"
+#include "plugins/Guis.h"
 #include "FxPanel.h"
-#include "pluginscandialog.h"
+#include "PluginScanDialog.h"
 #include "NinjamRoomWindow.h"
 #include "Highligther.h"
 #include "ChatPanel.h"
@@ -41,7 +41,7 @@
 #include "audio/RoomStreamerNode.h"
 #include "UserNameDialog.h"
 
-#include "log/logging.h"
+#include "log/Logging.h"
 #include <QShortcut>
 
 using namespace Audio;

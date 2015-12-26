@@ -2,7 +2,7 @@
 
 #include "Plugin.h"
 #include "MainWindowVST.h"
-#include "log/logging.h"
+#include "log/Logging.h"
 #include "KeyboardHook.h"
 #include <QTimer>
 

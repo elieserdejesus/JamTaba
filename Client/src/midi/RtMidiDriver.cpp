@@ -3,7 +3,7 @@
 
 using namespace Midi;
 
-#include "../log/logging.h"
+#include "../log/Logging.h"
 
 RtMidiDriver::RtMidiDriver(QList<bool> deviceStatuses){
     qCInfo(jtMidi) << "Initializing rtmidi...";

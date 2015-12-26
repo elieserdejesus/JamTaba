@@ -6,7 +6,7 @@
 #include "SamplesBuffer.h"
 #include "persistence/Settings.h"
 #include "MainController.h"
-#include "log/logging.h"
+#include "log/Logging.h"
 #include <QtGlobal>
 
 /*

@@ -1,10 +1,10 @@
 #include "AudioMixer.h"
 #include "AudioNode.h"
 #include <QDebug>
-#include "plugins.h"
+#include "Plugins.h"
 #include "midi/MidiDriver.h"
 #include <QMutexLocker>
-#include "log/logging.h"
+#include "log/Logging.h"
 
 using namespace Audio;
 
