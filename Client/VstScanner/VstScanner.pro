@@ -18,7 +18,7 @@ VPATH       += src
 HEADERS += audio/vst/VstHost.h
 HEADERS += VstPluginScanner.h
 
-SOURCES += vstScannerMain.cpp
+SOURCES += main.cpp
 SOURCES += audio/vst/VstHost.cpp
 SOURCES += audio/core/PluginDescriptor.cpp
 SOURCES += audio/vst/VstLoader.cpp
