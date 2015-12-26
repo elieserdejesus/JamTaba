@@ -1,7 +1,11 @@
 #ifndef VSTEDITOR_H
 #define VSTEDITOR_H
 
+#pragma warning(push)
+#pragma warning(disable: 4100) // Unreferenced formal parameter
 #include "aeffeditor.h"
+#pragma warning(pop)
+
 #include <QWinWidget>
 
 class JamtabaPlugin;

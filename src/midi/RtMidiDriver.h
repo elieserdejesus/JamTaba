@@ -2,7 +2,13 @@
 #define RTMIDIDRIVER_H
 
 #include "MidiDriver.h"
+
+#pragma warning(push)
+#pragma warning(disable: 4100) //Unreferenced formal parameter
+
 #include "RtMidi.h"
+
+#pragma warning(pop)
 
 namespace Midi {
 class RtMidiDriver : public MidiDriver

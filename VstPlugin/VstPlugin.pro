@@ -16,6 +16,9 @@ CONFIG += shared
 win32-msvc* {
     DEFINES += _CRT_SECURE_NO_WARNINGS
     #RC_FILE = vstdll.rc
+
+    #supressing warning about missing .pdb files
+    QMAKE_LFLAGS += /ignore:4099
 }
 
 INCLUDEPATH += ../src
