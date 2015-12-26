@@ -20,6 +20,12 @@ DEPENDPATH +=  ../libs/includes/ogg
 DEPENDPATH +=  ../libs/includes/vorbis
 DEPENDPATH +=  ../libs/includes/minimp3
 
+VPATH += src
+INCLUDEPATH += src
+
+HEADERS += MainWindowStandalone.h
+HEADERS += StandAloneMainController.h
+
 HEADERS += audio/core/PortAudioDriver.h
 HEADERS += recorder/JamRecorder.h
 HEADERS += recorder/ReaperProjectGenerator.h
@@ -36,13 +42,14 @@ HEADERS += persistence/Settings.h
 HEADERS += audio/vst/VstPlugin.h
 HEADERS += audio/vst/vsthost.h
 HEADERS += geo/WebIpToLocationResolver.h
-HEADERS += StandAloneMainController.h
-HEADERS += gui/MainWindowStandalone.h
 HEADERS += Libs/SingleApplication/singleapplication.h
 HEADERS += audio/core/PluginDescriptor.h
 HEADERS += audio/vst/VstLoader.h
 
 SOURCES += main.cpp
+SOURCES += StandAloneMainController.cpp
+SOURCES += MainWindowStandalone.cpp
+
 SOURCES += recorder/JamRecorder.cpp
 SOURCES += recorder/ReaperProjectGenerator.cpp
 SOURCES += loginserver/LoginService.cpp
@@ -60,8 +67,6 @@ SOURCES += persistence/Settings.cpp
 SOURCES += audio/vst/VstPlugin.cpp
 SOURCES += audio/vst/vsthost.cpp
 SOURCES += geo/WebIpToLocationResolver.cpp
-SOURCES += StandAloneMainController.cpp
-SOURCES += gui/MainWindowStandalone.cpp
 SOURCES += Libs/SingleApplication/singleapplication.cpp
 SOURCES += audio/core/PortAudioDriver.cpp
 SOURCES += audio/core/PluginDescriptor.cpp

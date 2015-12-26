@@ -1,7 +1,7 @@
 #include "MainWindowStandalone.h"
-#include "../StandAloneMainController.h"
-#include <QTimer>
+#include "StandAloneMainController.h"
 #include "NinjamRoomWindow.h"
+#include <QTimer>
 
 MainWindowStandalone::MainWindowStandalone(Controller::MainController* controller)
     :MainWindow(controller){
