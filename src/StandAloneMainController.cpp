@@ -22,7 +22,7 @@
 #include <QSettings>
 #include <QtConcurrent/QtConcurrent>
 #include "log/Logging.h"
-#include "configurator.h"
+#include "Configurator.h"
 
 using namespace Controller;
 

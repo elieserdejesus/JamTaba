@@ -29,7 +29,7 @@
 #include <QDir>
 
 #include "log/Logging.h"
-#include "configurator.h"
+#include "Configurator.h"
 
 using namespace Persistence;
 using namespace Midi;
