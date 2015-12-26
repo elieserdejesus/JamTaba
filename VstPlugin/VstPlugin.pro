@@ -19,9 +19,9 @@ win32-msvc* {
 }
 
 INCLUDEPATH += ../src
-INCLUDEPATH += $$PWD/../libs/includes/ogg
-INCLUDEPATH += $$PWD/../libs/includes/vorbis
-INCLUDEPATH += $$PWD/../libs/includes/minimp3
+INCLUDEPATH += ../libs/includes/ogg
+INCLUDEPATH += ../libs/includes/vorbis
+INCLUDEPATH += ../libs/includes/minimp3
 win32{
     INCLUDEPATH += "$$VST_SDK_PATH/"
     INCLUDEPATH += "$$VST_SDK_PATH/pluginterfaces/vst2.x/"
@@ -30,9 +30,9 @@ win32{
 
 VPATH       += ../src
 
-DEPENDPATH +=  $$PWD/../libs/includes/ogg
-DEPENDPATH +=  $$PWD/../libs/includes/vorbis
-DEPENDPATH +=  $$PWD/../libs/includes/minimp3
+DEPENDPATH +=  ../libs/includes/ogg
+DEPENDPATH +=  ../libs/includes/vorbis
+DEPENDPATH +=  ../libs/includes/minimp3
 
 HEADERS += recorder/JamRecorder.h
 HEADERS += recorder/ReaperProjectGenerator.h
