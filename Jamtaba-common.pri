@@ -21,6 +21,8 @@ macx{
 
 CONFIG += c++11
 
+PRECOMPILED_HEADER += PreCompiledHeaders.h
+
 HEADERS += audio/vst/PluginFinder.h
 HEADERS += audio/core/AudioDriver.h
 HEADERS += audio/core/AudioNode.h
