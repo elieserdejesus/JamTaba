@@ -67,6 +67,7 @@ SOURCES += MainControllerVST.cpp
 SOURCES += NinjamRoomWindowVST.cpp
 SOURCES += MainWindowVST.cpp
 SOURCES += KeyboardHook.cpp
+SOURCES += VstPreferencesDialog.cpp
 SOURCES += $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffectx.cpp
 SOURCES += $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffect.cpp
 SOURCES += recorder/JamRecorder.cpp
@@ -84,6 +85,7 @@ SOURCES += audio/vorbis/VorbisEncoder.cpp
 SOURCES += persistence/Settings.cpp
 SOURCES += geo/WebIpToLocationResolver.cpp
 SOURCES += audio/core/PluginDescriptor.cpp
+
 
 win32 {
     message("Windows VST build")

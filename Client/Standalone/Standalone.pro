@@ -72,12 +72,16 @@ SOURCES += audio/core/PortAudioDriver.cpp
 SOURCES += audio/core/PluginDescriptor.cpp
 SOURCES += audio/vst/VstLoader.cpp
 
+SOURCES += StandalonePreferencesDialog.cpp
+
 #conditional sources to different platforms
 win32{
     SOURCES += audio/core/WindowsPortAudioDriver.cpp
+    SOURCES += WindowsPreferencesDialog.cpp
 }
 macx{
     SOURCES += audio/core/MacPortAudioDriver.cpp
+    SOURCES += MacPreferencesDialog.cpp
 }
 
 win32{
