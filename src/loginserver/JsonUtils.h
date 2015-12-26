@@ -4,7 +4,6 @@
 #include <QJsonObject>
 
 namespace Login {
-
 class RealTimeRoom;
 class AbstractJamRoom;
 class NinjamRoom;
@@ -17,10 +16,9 @@ class JsonUtils
     static int getPortFromPeer(bool isPrivatePort, QJsonObject peerJson);
 public:
     static RealTimeRoom *realTimeRoomFromJson(QJsonObject json);
-    static NinjamRoom* ninjamServerFromJson(QJsonObject json);
-    static RealTimePeer* peerFromJson(QJsonObject peerObject);
+    static NinjamRoom *ninjamServerFromJson(QJsonObject json);
+    static RealTimePeer *peerFromJson(QJsonObject peerObject);
 };
-
 }
 
 #endif // JSONUTILS_H

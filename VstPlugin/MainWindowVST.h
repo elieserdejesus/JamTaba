@@ -8,9 +8,9 @@ class NinjamRoomWindow;
 class MainWindowVST : public MainWindow
 {
 public:
-    MainWindowVST(Controller::MainController* mainController);
+    MainWindowVST(Controller::MainController *mainController);
 protected:
-    NinjamRoomWindow* createNinjamWindow(Login::RoomInfo, Controller::MainController *);
+    NinjamRoomWindow *createNinjamWindow(Login::RoomInfo, Controller::MainController *);
     void setFullViewStatus(bool fullViewActivated);
 };
 

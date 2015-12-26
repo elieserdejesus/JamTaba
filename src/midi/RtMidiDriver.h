@@ -5,7 +5,6 @@
 #include "RtMidi.h"
 
 namespace Midi {
-
 class RtMidiDriver : public MidiDriver
 {
 public:
@@ -24,12 +23,7 @@ public:
     virtual void setInputDevicesStatus(QList<bool> statuses);
 
 private:
-
-    //int getDeviceIDFromGlobalIndex(int globalIndex);
-    QList<RtMidiIn*> midiStreams;
-
+    QList<RtMidiIn *> midiStreams;
 };
-
-
 }
 #endif // RTMIDIDRIVER_H

@@ -3,18 +3,22 @@
 #include <QPainter>
 
 QColor CustomTabWidget::RESOURCES_USAGE_BG_COLOR = QColor(0, 0, 0, 60);
-QColor CustomTabWidget::RESOURCES_USAGE_TEXT_COLOR = QColor(255,255, 255, 160);
+QColor CustomTabWidget::RESOURCES_USAGE_TEXT_COLOR = QColor(255, 255, 255, 160);
 
-CustomTabWidget::CustomTabWidget(QWidget *parent)
-    :QTabWidget(parent), cpuUsage(0), memoryUsage(0){
-
+CustomTabWidget::CustomTabWidget(QWidget *parent) :
+    QTabWidget(parent),
+    cpuUsage(0),
+    memoryUsage(0)
+{
 }
 
-void CustomTabWidget::setResourcesUsage(double cpuUsage, int memoryUsage){
+void CustomTabWidget::setResourcesUsage(double cpuUsage, int memoryUsage)
+{
     this->cpuUsage = cpuUsage;
     this->memoryUsage = memoryUsage;
     repaint();
 }
+
 /*
 void CustomTabWidget::paintEvent(QPaintEvent *e){
     QTabWidget::paintEvent(e);
@@ -41,5 +45,3 @@ void CustomTabWidget::paintEvent(QPaintEvent *e){
 
 }
 */
-
-

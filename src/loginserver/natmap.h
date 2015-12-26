@@ -1,21 +1,22 @@
 #ifndef NATMAP
 #define NATMAP
 
-//namespace Login {
+// namespace Login {
 
-
-class NatMap{
+class NatMap
+{
 public:
-    QString getPublicIp(){
+    QString getPublicIp()
+    {
         return "public ip";
     }
 
-    int getPublicPort(){
+    int getPublicPort()
+    {
         return 30000;
     }
 };
 
-//}
+// }
 
 #endif // NATMAP
-

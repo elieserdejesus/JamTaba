@@ -14,15 +14,13 @@ class MainWindow;
 
 class NinjamTrackGroupView;
 
-
 namespace Ui {
-    class NinjamRoomWindow;
-    //class ChatPanel;
+class NinjamRoomWindow;
 }
 
 namespace Controller {
-    class NinjamController;
-    class MainController;
+class NinjamController;
+class MainController;
 }
 
 class NinjamRoomWindow : public QWidget
@@ -30,26 +28,33 @@ class NinjamRoomWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo, Controller::MainController *mainController);
+    explicit NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
+                              Controller::MainController *mainController);
     ~NinjamRoomWindow();
     void updatePeaks();
     void updateGeoLocations();
 
-    //these two components are exposed to be showed in main window
-    inline ChatPanel* getChatPanel() const{return chatPanel;}
-    inline NinjamPanel* getNinjamPanel() const{ return ninjamPanel; }
+    // these two components are exposed to be showed in main window
+    inline ChatPanel *getChatPanel() const
+    {
+        return chatPanel;
+    }
+
+    inline NinjamPanel *getNinjamPanel() const
+    {
+        return ninjamPanel;
+    }
 
     void setFullViewStatus(bool fullView);
 
 protected:
     Ui::NinjamRoomWindow *ui;
-    Controller::MainController* mainController;
-    NinjamPanel* ninjamPanel;//panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
+    Controller::MainController *mainController;
+    NinjamPanel *ninjamPanel;// panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
 private:
 
-    QMap<QString, NinjamTrackGroupView*> trackGroups;
-    ChatPanel* chatPanel;
-
+    QMap<QString, NinjamTrackGroupView *> trackGroups;
+    ChatPanel *chatPanel;
 
     void adjustTracksWidth();
 
@@ -58,25 +63,25 @@ private:
     void handleVoteMessage(Ninjam::User user, QString message);
     void handleChordProgressionMessage(Ninjam::User user, QString message);
 
-    NinjamPanel* createNinjamPanel();
+    NinjamPanel *createNinjamPanel();
 
 private slots:
 
-    //ninjam panel controls
+    // ninjam panel controls
     void ninjamBpiComboChanged(QString);
     void ninjamBpmComboChanged(QString);
-    void ninjamAccentsComboChanged(int );
+    void ninjamAccentsComboChanged(int);
 
-    //metronome events
+    // metronome events
     void on_MetronomePanSliderMoved(int value);
     void on_MetronomeFaderMoved(int value);
     void on_MetronomeMuteClicked();
     void on_MetronomeSoloClicked();
 
-    //ninjam controller events
-    void on_channelAdded(  Ninjam::User user, Ninjam::UserChannel channel, long channelID );
-    void on_channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
-    void on_channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID );
+    // ninjam controller events
+    void on_channelAdded(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
+    void on_channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
+    void on_channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
     void on_remoteChannelXmitChanged(long channelID, bool transmiting);
     void on_channelAudioChunkDownloaded(long trackID);
     void on_channelAudioFullyDownloaded(long trackID);
@@ -88,10 +93,9 @@ private slots:
 
     void on_licenceButton_clicked();
 
-    //chat panel
+    // chat panel
     void on_userConfirmingVoteToChangeBpi(int newBpi);
     void on_userConfirmingVoteToChangeBpm(int newBpm);
-
 };
 
 #endif // NINJAMROOMWINDOW_H

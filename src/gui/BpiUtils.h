@@ -9,7 +9,6 @@ public:
     BpiUtils();
 
     static QList<int> getBpiDividers(int targetBpi);
-
 };
 
 #endif // BPIUTILS_H

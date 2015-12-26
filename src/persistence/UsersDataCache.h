@@ -1,7 +1,6 @@
 #ifndef USERSDATACACHE_H
 #define USERSDATACACHE_H
 
-
 #include <QString>
 #include <QMap>
 #include <QRegExp>
@@ -12,8 +11,6 @@
  */
 
 namespace Persistence {
-
-
 /**
  * @brief The CacheEntryHeader struct
  */
@@ -23,22 +20,51 @@ struct UsersDataCacheHeader {
     static const quint32 SIZE;
 };
 
-
-class CacheEntry{//cache entries are per channel, not per user.
+class CacheEntry // cache entries are per channel, not per user.
+{
 public:
-    CacheEntry(const QString& userIp, const QString& userName, quint8 channelID);
-    CacheEntry(){}
+    CacheEntry(const QString &userIp, const QString &userName, quint8 channelID);
+    CacheEntry()
+    {
+    }
 
-    inline bool isMuted() const{ return muted; }
-    inline float getGain() const{ return gain; }
-    inline float getPan() const{ return pan; }
-    inline float getBoost() const{ return boost; }
-    inline QString getUserIP() const{ return userIp; }
-    inline QString getUserName() const{ return userName; }
-    inline quint8 getChannelID() const{ return channelID; }
+    inline bool isMuted() const
+    {
+        return muted;
+    }
 
-    void setUserIP(const QString& userIp);
-    void setUserName(const QString& userName);
+    inline float getGain() const
+    {
+        return gain;
+    }
+
+    inline float getPan() const
+    {
+        return pan;
+    }
+
+    inline float getBoost() const
+    {
+        return boost;
+    }
+
+    inline QString getUserIP() const
+    {
+        return userIp;
+    }
+
+    inline QString getUserName() const
+    {
+        return userName;
+    }
+
+    inline quint8 getChannelID() const
+    {
+        return channelID;
+    }
+
+    void setUserIP(const QString &userIp);
+    void setUserName(const QString &userName);
     void setChannelID(quint8 channelID);
     void setMuted(bool muted);
     void setPan(float pan);
@@ -59,32 +85,33 @@ private:
     QString userName;
     quint8 channelID;
     bool muted;
-    float gain;//fader level
+    float gain;// fader level
     float pan;
     float boost;
 };
 
-
-//++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++
 class UsersDataCache
 {
 public:
     UsersDataCache();
     ~UsersDataCache();
-    CacheEntry getUserCacheEntry(const QString& userIp, const QString& userName, quint8 channelID);//return default values for pan, gain and mute if user is not cached yet
+
+    // return default values for pan, gain and mute if user is not cached yet
+    CacheEntry getUserCacheEntry(const QString &userIp, const QString &userName, quint8 channelID);
+
     void updateUserCacheEntry(CacheEntry entry);
 private:
     QMap<QString, CacheEntry> cacheEntries;
 
-    static QString getUserUniqueKey(const QString& userIp, const QString& userName, quint8 channelID);
+    static QString getUserUniqueKey(const QString &userIp, const QString &userName,
+                                    quint8 channelID);
 
     void loadCacheEntriesFromFile();
     void writeCacheEntriesToFile();
 
     const QString CACHE_FILE_NAME;
-
 };
-
-}//namespace
+}// namespace
 
 #endif // USERSDATACACHE_H

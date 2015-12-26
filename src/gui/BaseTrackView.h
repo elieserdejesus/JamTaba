@@ -4,14 +4,14 @@
 #include <QWidget>
 #include <QVariant>
 #include <QStyle>
-#include "../audio/core/AudioPeak.h"
+#include "audio/core/AudioPeak.h"
 
 namespace Ui {
-    class BaseTrackView;
+class BaseTrackView;
 }
 
 namespace Controller {
-    class MainController;
+class MainController;
 }
 
 class BaseTrackView : public QWidget
@@ -19,25 +19,28 @@ class BaseTrackView : public QWidget
     Q_OBJECT
 
 public:
-    BaseTrackView(Controller::MainController* mainController, long trackID);
+    BaseTrackView(Controller::MainController *mainController, long trackID);
     virtual ~BaseTrackView();
 
-    enum BoostValue{
+    enum BoostValue {
         ZERO, MINUS, PLUS
     };
 
-    static BoostValue intToBoostValue(int intValue){
-        if(intValue == 0){
+    static BoostValue intToBoostValue(int intValue)
+    {
+        if (intValue == 0)
             return BoostValue::ZERO;
-        }
-        if(intValue > 0){
+        if (intValue > 0)
             return BoostValue::PLUS;
-        }
         return BoostValue::MINUS;
     }
 
-    inline long getTrackID() const{return trackID;}
-    static BaseTrackView* getTrackViewByID(long trackID);
+    inline long getTrackID() const
+    {
+        return trackID;
+    }
+
+    static BaseTrackView *getTrackViewByID(long trackID);
 
     virtual void setToNarrow();
     virtual void setToWide();
@@ -47,7 +50,10 @@ public:
 
     virtual void updateGuiElements();
 
-    inline Controller::MainController* getMainController() const{return mainController;}
+    inline Controller::MainController *getMainController() const
+    {
+        return mainController;
+    }
 
     virtual void setUnlightStatus(bool unlighted);
 
@@ -56,7 +62,7 @@ public:
 protected:
 
     Ui::BaseTrackView *ui;
-    Controller::MainController* mainController;
+    Controller::MainController *mainController;
 
     void paintEvent(QPaintEvent *);
     bool eventFilter(QObject *source, QEvent *ev);
@@ -69,13 +75,13 @@ protected:
 
     void setPeaks(float left, float right);
 
-    //this is called in inherited classes [LocalTrackView, NinjamTrackView]
+    // this is called in inherited classes [LocalTrackView, NinjamTrackView]
     void bindThisViewWithTrackNodeSignals();
 private:
-    static QMap<long, BaseTrackView*> trackViews;
+    static QMap<long, BaseTrackView *> trackViews;
     Audio::AudioPeak maxPeak;
 
-    void drawFaderDbValue(QPainter& p);
+    void drawFaderDbValue(QPainter &p);
 
     static const QColor DB_TEXT_COLOR;
     static const int FADER_HEIGHT;
@@ -88,14 +94,11 @@ protected slots:
     virtual void onBoostButtonClicked();
 
 private slots:
-    //signals emitted by AudioNode class when user activate the controle with mouse, or with midi CCs, or using joystick, or using mind control :)
+    // signals emitted by AudioNode class when user activate the control with mouse, or midi CCs, or using joystick, etc.
     void onAudioNodePanChanged(float newPanValue);
     void onAudioNodeGainChanged(float newGainValue);
     void onAudioNodeMuteChanged(bool newMuteStatus);
     void onAudioNodeSoloChanged(bool newSoloStatus);
-
 };
-
-
 
 #endif // TRACKVIEW_H

@@ -7,34 +7,38 @@
 #include <QMap>
 #include <QStringList>
 #include <QFile>
-#include "../src/configurator.h"
+#include "configurator.h"
 
-namespace Persistence{
-
-//+++++++++++++++++++++++++++++++++++++++++++++++
-
+namespace Persistence {
 class Settings;
 
-class SettingsObject{//base class for the settings components
-
+class SettingsObject // base class for the settings components
+{
 protected:
     QString name;
 public:
     SettingsObject(QString name);
-    virtual void write(QJsonObject& out) = 0;
+    virtual void write(QJsonObject &out) = 0;
     virtual void read(QJsonObject in) = 0;
-    inline QString getName()const{return name;}
+    inline QString getName() const
+    {
+        return name;
+    }
+
 protected:
-    static int getValueFromJson(const QJsonObject& json, QString propertyName, int fallBackValue);
-    static float getValueFromJson(const QJsonObject& json, QString propertyName, float fallBackValue);
-    static QString getValueFromJson(const QJsonObject& json, QString propertyName, QString fallBackValue);
-    static bool getValueFromJson(const QJsonObject& json, QString propertyName, bool fallBackValue);
+    static int getValueFromJson(const QJsonObject &json, QString propertyName, int fallBackValue);
+    static float getValueFromJson(const QJsonObject &json, QString propertyName,
+                                  float fallBackValue);
+    static QString getValueFromJson(const QJsonObject &json, QString propertyName,
+                                    QString fallBackValue);
+    static bool getValueFromJson(const QJsonObject &json, QString propertyName, bool fallBackValue);
 };
-//+++++++++++++++++++++++++++++++++++++++++++
-class AudioSettings : public SettingsObject{
+// +++++++++++++++++++++++++++++++++++++++++++
+class AudioSettings : public SettingsObject
+{
 public:
     AudioSettings();
-    void write(QJsonObject& out);
+    void write(QJsonObject &out);
     void read(QJsonObject in);
     int sampleRate;
     int bufferSize;
@@ -44,62 +48,67 @@ public:
     int lastOut;
     int audioDevice;
 };
-
-class MidiSettings : public SettingsObject{
+// +++++++++++++++++++++++++++++++++++++
+class MidiSettings : public SettingsObject
+{
 public:
     MidiSettings();
-    void write(QJsonObject& out);
+    void write(QJsonObject &out);
     void read(QJsonObject in);
     QList<bool> inputDevicesStatus;
 };
 
-//+++++++++++++++++++++++++++++++++++
-class PrivateServerSettings : public SettingsObject{
+// +++++++++++++++++++++++++++++++++++
+class PrivateServerSettings : public SettingsObject
+{
 public:
     PrivateServerSettings();
-    void write(QJsonObject& out);
+    void write(QJsonObject &out);
     void read(QJsonObject in);
     QString server;
     int serverPort;
     QString password;
 };
 
-//+++++++++++++++++++++++++++++++++++
-class MetronomeSettings : public SettingsObject{
-
+// +++++++++++++++++++++++++++++++++++
+class MetronomeSettings : public SettingsObject
+{
 public:
     MetronomeSettings();
-    void write(QJsonObject& out);
+    void write(QJsonObject &out);
     void read(QJsonObject in);
     float pan;
     float gain;
     bool muted;
 };
 
-//+++++++++++++++++++++++++++++++++++++++++++++++
-class WindowSettings : public SettingsObject{
+// +++++++++++++++++++++++++++++++++++++++++++++++
+class WindowSettings : public SettingsObject
+{
 public:
     WindowSettings();
     QPointF location;
     bool maximized;
     bool fullViewMode;
     bool fullScreenViewMode;
-    void write(QJsonObject& out);
+    void write(QJsonObject &out);
     void read(QJsonObject in);
 };
 
-//+++++++++++++++++++++++++++++++++++++++++++
-class VstSettings : public SettingsObject{
+// +++++++++++++++++++++++++++++++++++++++++++
+class VstSettings : public SettingsObject
+{
 public:
     VstSettings();
-    void write(QJsonObject& out);
+    void write(QJsonObject &out);
     void read(QJsonObject in);
     QStringList cachedPlugins;
     QStringList foldersToScan;
-    QStringList blackedPlugins;//vst in blackbox....
+    QStringList blackedPlugins;// vst in blackbox....
 };
-//++++++++++++++++++++++++
-class RecordingSettings  : public SettingsObject{
+// ++++++++++++++++++++++++
+class RecordingSettings : public SettingsObject
+{
 public:
     RecordingSettings();
     void write(QJsonObject &out);
@@ -107,47 +116,51 @@ public:
     bool saveMultiTracksActivated;
     QString recordingPath;
 };
-
-
-
-class Plugin{
+// +++++++++++++++++++++++++++++++++
+class Plugin
+{
 public:
     Plugin(QString path, bool bypassed, QByteArray data);
     QString path;
     bool bypassed;
-    QByteArray data;//saved data to restore in next jam session
+    QByteArray data;// saved data to restore in next jam session
 };
-
-class Subchannel{
+// +++++++++++++++++++++++++++++++++
+class Subchannel
+{
 public:
-    Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel, float gain, int boost, float pan, bool muted, QList<Plugin> plugins);
+    Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel, float gain,
+               int boost, float pan, bool muted, QList<Plugin> plugins);
     int firstInput;
     int channelsCount;
     int midiDevice;
     int midiChannel;
     float gain;
-    int boost;//[-1, 0, +1]
+    int boost;// [-1, 0, +1]
     float pan;
     bool muted;
     QList<Plugin> plugins;
 };
-
-class Channel {
+// +++++++++++++++++++++++++++++++++
+class Channel
+{
 public:
     Channel(QString name);
     QString name;
     QList<Subchannel> subChannels;
 };
-
-class InputsSettings : public SettingsObject{
+// +++++++++++++++++++++++++++++++++
+class InputsSettings : public SettingsObject
+{
 public:
     InputsSettings();
-    void write(QJsonObject& out);
+    void write(QJsonObject &out);
     void read(QJsonObject in);
     QList<Channel> channels;
 };
-//+++++++++PRESETS+++++++++++++++
-class PresetsSettings  : public SettingsObject{ //TODO this is the same InputSettings? The member 'names' can be obtained from channels directly?
+// +++++++++PRESETS+++++++++++++++
+class PresetsSettings : public SettingsObject   // TODO this is the same InputSettings? The member 'names' can be obtained from channels directly?
+{
 public:
     PresetsSettings();
     void write(QJsonObject &out);
@@ -156,11 +169,9 @@ public:
     QStringList names;
 };
 
-//++++++++++++++++++++++++
-
-//++++++++++++++++++++++++
-class Settings {
-
+// ++++++++++++++++++++++++
+class Settings
+{
 private:
     QString fileDir;
     static QString fileName;
@@ -173,9 +184,9 @@ private:
     PresetsSettings presetSettings;
     RecordingSettings recordingSettings;
     PrivateServerSettings privateServerSettings;
-    QString lastUserName;//the last nick name choosed by user
-    QString translation;//the translation being used in chat
-    int ninjamIntervalProgressShape;//Circle, Ellipe or Line
+    QString lastUserName;// the last nick name choosed by user
+    QString translation;// the translation being used in chat
+    int ninjamIntervalProgressShape;// Circle, Ellipe or Line
     bool readFile(APPTYPE type, QList<SettingsObject *> sections);// io ops ...
     bool writeFile(APPTYPE type, QList<SettingsObject *> sections);// io ops ...
 
@@ -183,97 +194,196 @@ public:
     Settings();
     ~Settings();
 
-    inline InputsSettings getInputsSettings() const{return inputsSettings;}
+    inline InputsSettings getInputsSettings() const
+    {
+        return inputsSettings;
+    }
 
     void save(InputsSettings inputsSettings);
     void load();
 
-    //PRESETS
-    inline PresetsSettings getPresetSettings() const{return presetSettings;}
-    void savePresets(InputsSettings inputsSettings,QString name);
-    bool writePresetFile(QList<SettingsObject *> sections,QString name);// io ops ...
+    // PRESETS
+    inline PresetsSettings getPresetSettings() const
+    {
+        return presetSettings;
+    }
+
+    void savePresets(InputsSettings inputsSettings, QString name);
+    bool writePresetFile(QList<SettingsObject *> sections, QString name);// io ops ...
     void loadPreset(QString name);
     void DeletePreset(QString name);
     QStringList getPresetList();
-    bool readPresetFile(QList<Persistence::SettingsObject*> sections,QString name);// io ops ...
+    bool readPresetFile(QList<Persistence::SettingsObject *> sections, QString name);// io ops ...
 
+    inline int getLastSampleRate() const
+    {
+        return audioSettings.sampleRate;
+    }
 
-    inline int getLastSampleRate() const{return audioSettings.sampleRate;}
-    inline int getLastBufferSize() const{return audioSettings.bufferSize;}
+    inline int getLastBufferSize() const
+    {
+        return audioSettings.bufferSize;
+    }
 
-    //private server
-    inline QString getLastPrivateServer() const{return privateServerSettings.server;}
-    inline int getLastPrivateServerPort() const{return privateServerSettings.serverPort;}
-    inline QString getLastPrivateServerPassword() const{return privateServerSettings.password;}
+    // private server
+    inline QString getLastPrivateServer() const
+    {
+        return privateServerSettings.server;
+    }
+
+    inline int getLastPrivateServerPort() const
+    {
+        return privateServerSettings.serverPort;
+    }
+
+    inline QString getLastPrivateServerPassword() const
+    {
+        return privateServerSettings.password;
+    }
+
     void setPrivateServerData(QString server, int serverPort, QString password);
 
-    //recording settings
-    inline bool isSaveMultiTrackActivated() const{return recordingSettings.saveMultiTracksActivated;}
-    inline QString getRecordingPath() const{return recordingSettings.recordingPath;}
-    inline void setSaveMultiTrack(bool saveMultiTracks){recordingSettings.saveMultiTracksActivated = saveMultiTracks;}
-    inline void setRecordingPath(QString newPath) {recordingSettings.recordingPath = newPath;}
+    // recording settings
+    inline bool isSaveMultiTrackActivated() const
+    {
+        return recordingSettings.saveMultiTracksActivated;
+    }
 
-    //user name
-    inline QString getUserName() const{return lastUserName;}
+    inline QString getRecordingPath() const
+    {
+        return recordingSettings.recordingPath;
+    }
+
+    inline void setSaveMultiTrack(bool saveMultiTracks)
+    {
+        recordingSettings.saveMultiTracksActivated = saveMultiTracks;
+    }
+
+    inline void setRecordingPath(QString newPath)
+    {
+        recordingSettings.recordingPath = newPath;
+    }
+
+    // user name
+    inline QString getUserName() const
+    {
+        return lastUserName;
+    }
+
     void setUserName(QString newUserName);
     void storeLasUserName(QString userName);
-    void storeLastChannelName(int channelIndex, QString channelName) ;
+    void storeLastChannelName(int channelIndex, QString channelName);
 
-    void setIntervalProgressShape(int shape){this->ninjamIntervalProgressShape = shape;}
-    inline int getIntervalProgressShape() const{return this->ninjamIntervalProgressShape;}
+    void setIntervalProgressShape(int shape)
+    {
+        this->ninjamIntervalProgressShape = shape;
+    }
 
-    //VST
+    inline int getIntervalProgressShape() const
+    {
+        return this->ninjamIntervalProgressShape;
+    }
+
+    // VST
     void addVstPlugin(QString pluginPath);
     void addVstToBlackList(QString pluginPath);
     void RemVstFromBlackList(int index);
     QStringList getVstPluginsPaths() const;
-    QStringList getBlackListedPlugins()const ;
+    QStringList getBlackListedPlugins() const;
     void clearVstCache();
     void clearBlackBox();
 
-    //VST paths
+    // VST paths
     void addVstScanPath(QString path);
     void removeVstScanPath(int index);
-    QStringList getVstScanFolders() const ;
+    QStringList getVstScanFolders() const;
 
-
-    //++++++++++++++ Metronome ++++++++++
+    // ++++++++++++++ Metronome ++++++++++
     void setMetronomeSettings(float gain, float pan, bool muted);
-    inline float getMetronomeGain() const{return metronomeSettings.gain;}
-    inline float getMetronomePan() const{return metronomeSettings.pan;}
-    inline bool getMetronomeMuteStatus() const{return metronomeSettings.muted;}
+    inline float getMetronomeGain() const
+    {
+        return metronomeSettings.gain;
+    }
 
-    //+++++++++   Window  +++++++++++++++++++++++
-    inline QPointF getLastWindowLocation() const{return windowSettings.location;}
-    void setWindowSettings(bool windowIsMaximized, bool usingFullView, QPointF location) ;
-    inline bool windowWasMaximized() const{return windowSettings.maximized;}
-    inline bool windowsWasFullViewMode() const{return windowSettings.fullViewMode;}
-    inline bool windowsWasFullScreenViewMode() const{return windowSettings.fullScreenViewMode;}
+    inline float getMetronomePan() const
+    {
+        return metronomeSettings.pan;
+    }
+
+    inline bool getMetronomeMuteStatus() const
+    {
+        return metronomeSettings.muted;
+    }
+
+    // +++++++++   Window  +++++++++++++++++++++++
+    inline QPointF getLastWindowLocation() const
+    {
+        return windowSettings.location;
+    }
+
+    void setWindowSettings(bool windowIsMaximized, bool usingFullView, QPointF location);
+    inline bool windowWasMaximized() const
+    {
+        return windowSettings.maximized;
+    }
+
+    inline bool windowsWasFullViewMode() const
+    {
+        return windowSettings.fullViewMode;
+    }
+
+    inline bool windowsWasFullScreenViewMode() const
+    {
+        return windowSettings.fullScreenViewMode;
+    }
+
     void setFullScreenView(bool v);
-    //++++++++++++++++++++++++++++++++++++++++
-    void setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice, int sampleRate, int bufferSize) ;
+    // ++++++++++++++++++++++++++++++++++++++++
+    void setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice,
+                          int sampleRate, int bufferSize);
 
-    inline int getFirstGlobalAudioInput() const {return audioSettings.firstIn;}
-    inline int getLastGlobalAudioInput() const  {return audioSettings.lastIn;}
-    inline int getFirstGlobalAudioOutput() const{return audioSettings.firstOut;}
-    inline int getLastGlobalAudioOutput() const {return audioSettings.lastOut;}
-    inline int getLastAudioDevice() const       {return audioSettings.audioDevice;}
+    inline int getFirstGlobalAudioInput() const
+    {
+        return audioSettings.firstIn;
+    }
 
-    inline void setMidiSettings(QList<bool> inputDevicesStatus){ midiSettings.inputDevicesStatus = inputDevicesStatus; }
-    inline QList<bool> getMidiInputDevicesStatus() const{return midiSettings.inputDevicesStatus;}
+    inline int getLastGlobalAudioInput() const
+    {
+        return audioSettings.lastIn;
+    }
 
-    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    inline int getFirstGlobalAudioOutput() const
+    {
+        return audioSettings.firstOut;
+    }
+
+    inline int getLastGlobalAudioOutput() const
+    {
+        return audioSettings.lastOut;
+    }
+
+    inline int getLastAudioDevice() const
+    {
+        return audioSettings.audioDevice;
+    }
+
+    inline void setMidiSettings(QList<bool> inputDevicesStatus)
+    {
+        midiSettings.inputDevicesStatus = inputDevicesStatus;
+    }
+
+    inline QList<bool> getMidiInputDevicesStatus() const
+    {
+        return midiSettings.inputDevicesStatus;
+    }
+
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     QString getLastUserName() const;
 
-    //TRANSLATION
+    // TRANSLATION
     QString getTranslation() const;
     void setTranslation(QString translate);
 
     QString getLastChannelName(int channelIndex) const;
-
-
-
-    //void teste(QJsonObject& ob);
 };
-
 }

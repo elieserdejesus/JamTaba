@@ -8,7 +8,6 @@
 #include <QNetworkReply>
 
 namespace Geo {
-
 class WebIpToLocationResolver : public IpToLocationResolver
 {
     Q_OBJECT
@@ -22,10 +21,9 @@ private:
     const QString CACHE_FILE_NAME;
     void requestDataFromWebServer(QString ip);
 private slots:
-    void replyFinished(QNetworkReply*);
+    void replyFinished(QNetworkReply *);
     void replyError(QNetworkReply::NetworkError);
 };
-
 }
 
 #endif // FREEGEOIPTOLOCATIONRESOLVER_H

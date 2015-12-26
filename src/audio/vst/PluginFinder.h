@@ -3,11 +3,10 @@
 #include <QStringList>
 
 namespace Audio {
-    class PluginDescriptor;
+class PluginDescriptor;
 }
 
 namespace Vst {
-
 class PluginFinder : public QObject
 {
     Q_OBJECT
@@ -23,9 +22,6 @@ signals:
     void scanFinished(bool finishedWithoutError);
     void pluginScanStarted(QString path);
     void pluginScanFinished(QString name, QString group, QString path);
-    void badPluginDetected(QString pluginPath);//a plugin crash the scanner process
+    void badPluginDetected(QString pluginPath);// a plugin crash the scanner process
 };
-
-
 }
-

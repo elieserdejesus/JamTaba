@@ -12,7 +12,8 @@ class PrivateServerDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit PrivateServerDialog(QWidget *parent, QString lastServer, int lastServerPort, QString lastPassword);
+    explicit PrivateServerDialog(QWidget *parent, QString lastServer, int lastServerPort,
+                                 QString lastPassword);
     ~PrivateServerDialog();
     QString getServer() const;
     QString getPassword() const;

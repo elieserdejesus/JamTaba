@@ -157,4 +157,5 @@ FORMS += gui/chords/ChordsPanel.ui
 
 RESOURCES += resources/jamtaba.qrc
 
-DISTFILES += uncrustify.cfg #this is the file used by the Beautifier QtCreator plugin (using the Uncrustify tool)
+#this is the file used by the Beautifier QtCreator plugin (using the Uncrustify tool)
+DISTFILES += $$PWD/uncrustify.cfg

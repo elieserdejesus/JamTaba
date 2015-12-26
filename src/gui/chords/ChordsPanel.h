@@ -17,10 +17,22 @@ public:
     ~ChordsPanel();
     void setChords(ChordProgression progression);
     void setCurrentBeat(int beat);
-    bool setBpi(int bpi); //return true if the new bpi can be use with the currentChordProgression
-    inline bool hasValidProgression() const{return !chordProgression.isEmpty();}
-    inline int getCurrentBpi() const{ return chordProgression.getBeatsPerInterval();}
-    inline ChordProgression getChordProgression() const{return chordProgression;}
+    bool setBpi(int bpi); // return true if the new bpi can be use with the currentChordProgression
+    inline bool hasValidProgression() const
+    {
+        return !chordProgression.isEmpty();
+    }
+
+    inline int getCurrentBpi() const
+    {
+        return chordProgression.getBeatsPerInterval();
+    }
+
+    inline ChordProgression getChordProgression() const
+    {
+        return chordProgression;
+    }
+
 signals:
     void buttonSendChordsToChatClicked();
 

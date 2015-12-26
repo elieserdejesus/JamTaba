@@ -4,100 +4,109 @@
 #include "../VstPlugin/Plugin.h"
 #include "log/logging.h"
 #include "Editor.h"
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class AudioDriverVST : public Audio::NullAudioDriver{
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class AudioDriverVST : public Audio::NullAudioDriver
+{
 public:
-    AudioDriverVST()
-        :NullAudioDriver(){
-        globalInputRange = Audio::ChannelRange(0, 4);//4 inputs
-        globalOutputRange = Audio::ChannelRange(0,2);//2 outputs
-
+    AudioDriverVST() :
+        NullAudioDriver()
+    {
+        globalInputRange = Audio::ChannelRange(0, 4);// 4 inputs
+        globalOutputRange = Audio::ChannelRange(0, 2);// 2 outputs
     }
 };
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-NinjamControllerVST::NinjamControllerVST(Controller::MainController* c)
-    :NinjamController(c), waitingForHostSync(false){
-
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+NinjamControllerVST::NinjamControllerVST(Controller::MainController *c) :
+    NinjamController(c),
+    waitingForHostSync(false)
+{
 }
 
-void NinjamControllerVST::waitForHostSync(){
+void NinjamControllerVST::waitForHostSync()
+{
     waitingForHostSync = true;
     reset();
 }
 
-void NinjamControllerVST::syncWithHost(){
+void NinjamControllerVST::syncWithHost()
+{
     waitingForHostSync = false;
 }
 
-void NinjamControllerVST::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate){
-    if(waitingForHostSync){//skip the ninjam processing if is waiting for sync
+void NinjamControllerVST::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
+                                  int sampleRate)
+{
+    if (waitingForHostSync)// skip the ninjam processing if is waiting for sync
         return;
-    }
     NinjamController::process(in, out, sampleRate);
 }
 
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-MainControllerVST::MainControllerVST(Persistence::Settings settings, JamtabaPlugin *plugin)
-    :MainController(settings), plugin(plugin){
-
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+MainControllerVST::MainControllerVST(Persistence::Settings settings, JamtabaPlugin *plugin) :
+    MainController(settings),
+    plugin(plugin)
+{
     qCDebug(jtCore) << "Creating MainControllerVST instance!";
 }
 
-MainControllerVST::~MainControllerVST(){
-    if(mainWindow){
+MainControllerVST::~MainControllerVST()
+{
+    if (mainWindow)
         saveLastUserSettings(mainWindow->getInputsSettings());
-    }
 }
 
-void MainControllerVST::resizePluginEditor(int newWidth, int newHeight){
-    if(plugin){
-        VstEditor* editor = (VstEditor*)plugin->getEditor();
-        if(editor){
+void MainControllerVST::resizePluginEditor(int newWidth, int newHeight)
+{
+    if (plugin) {
+        VstEditor *editor = (VstEditor *)plugin->getEditor();
+        if (editor)
             editor->resize(newWidth, newHeight);
-        }
         plugin->sizeWindow(newWidth, newHeight);
     }
 }
 
-QString MainControllerVST::getUserEnvironmentString() const{
+QString MainControllerVST::getUserEnvironmentString() const
+{
     return MainController::getUserEnvironmentString() + " running in " + getHostName();
 }
 
-QString MainControllerVST::getHostName() const{
-    if(plugin){
+QString MainControllerVST::getHostName() const
+{
+    if (plugin)
         return plugin->getHostName();
-    }
     return "(Error getting host name)";
 }
 
-int MainControllerVST::getHostBpm() const{
-    if(plugin){
+int MainControllerVST::getHostBpm() const
+{
+    if (plugin)
         return plugin->getHostBpm();
-    }
     return -1;
 }
 
-void MainControllerVST::setSampleRate(int newSampleRate){
+void MainControllerVST::setSampleRate(int newSampleRate)
+{
     this->sampleRate = newSampleRate;
     MainController::setSampleRate(newSampleRate);
 }
 
-Audio::AudioDriver* MainControllerVST::createAudioDriver(const Persistence::Settings &){
+Audio::AudioDriver *MainControllerVST::createAudioDriver(const Persistence::Settings &)
+{
     return new AudioDriverVST();
 }
 
-Controller::NinjamController* MainControllerVST::createNinjamController(MainController *c){
+Controller::NinjamController *MainControllerVST::createNinjamController(MainController *c)
+{
     return new NinjamControllerVST(c);
 }
 
-Midi::MidiDriver* MainControllerVST::createMidiDriver(){
+Midi::MidiDriver *MainControllerVST::createMidiDriver()
+{
     return new Midi::NullMidiDriver();
 }
 
-void MainControllerVST::setCSS(QString css){
+void MainControllerVST::setCSS(QString css)
+{
     qCDebug(jtCore) << "setting CSS";
-    qApp->setStyleSheet(css);//qApp is a global variable created in dll main.
+    qApp->setStyleSheet(css);// qApp is a global variable created in dll main.
 }
-
-

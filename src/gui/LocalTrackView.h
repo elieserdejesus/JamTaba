@@ -18,18 +18,19 @@ class LocalInputAudioNode;
 }
 
 namespace Controller {
-    class MainController;
+class MainController;
 }
 
 class LocalTrackView : public BaseTrackView
 {
     Q_OBJECT
 public:
-    LocalTrackView(Controller::MainController* mainController, int channelIndex, float initialGain, BoostValue boostValue, float initialPan, bool muted);
-    LocalTrackView(Controller::MainController* mainController, int channelIndex);
+    LocalTrackView(Controller::MainController *mainController, int channelIndex, float initialGain,
+                   BoostValue boostValue, float initialPan, bool muted);
+    LocalTrackView(Controller::MainController *mainController, int channelIndex);
     ~LocalTrackView();
 
-    void addPlugin(Audio::Plugin* plugin, bool bypassed=false);
+    void addPlugin(Audio::Plugin *plugin, bool bypassed = false);
 
     void closeAllPlugins();
 
@@ -37,11 +38,14 @@ public:
 
     void detachMainController();
 
-    inline int getInputIndex() const{return getTrackID();}
+    inline int getInputIndex() const
+    {
+        return getTrackID();
+    }
 
     void setToNoInput();
-    Audio::LocalInputAudioNode* getInputNode() const;
-    QList<const Audio::Plugin*> getInsertedPlugins() const;
+    Audio::LocalInputAudioNode *getInputNode() const;
+    QList<const Audio::Plugin *> getInsertedPlugins() const;
 
     virtual void setUnlightStatus(bool unlighted);
 
@@ -50,10 +54,14 @@ public:
 
     QSize sizeHint() const;
 
-    void updateGuiElements();//overriding to show midi activity
+    void updateGuiElements();// overriding to show midi activity
 
-    //PRESETS NEED THAT TOO
-    inline FxPanel* getFxPanel(){return fxPanel;}
+    // PRESETS NEED THAT TOO
+    inline FxPanel *getFxPanel()
+    {
+        return fxPanel;
+    }
+
     void resetFXPanel();
     void loadFXPanel();
     void mute(bool b);
@@ -61,24 +69,23 @@ public:
     void initializeBoostButtons(BoostValue boostValue);
 
 private:
-    //int inputIndex;
-    FxPanel* fxPanel;
-    QSpacerItem* fxSpacer;
-    FxPanel* createFxPanel();
-    QWidget* createInputPanel();
-    QPushButton* createInputSelectionButton(QWidget* parent);
-    QLabel* createInputTypeIconLabel(QWidget *parent);
+    FxPanel *fxPanel;
+    QSpacerItem *fxSpacer;
+    FxPanel *createFxPanel();
+    QWidget *createInputPanel();
+    QPushButton *createInputSelectionButton(QWidget *parent);
+    QLabel *createInputTypeIconLabel(QWidget *parent);
 
-    QMenu* createMonoInputsMenu(QMenu* parentMenu);
-    QMenu* createStereoInputsMenu(QMenu* parentMenu);
-    QMenu* createMidiInputsMenu(QMenu* parentMenu);
+    QMenu *createMonoInputsMenu(QMenu *parentMenu);
+    QMenu *createStereoInputsMenu(QMenu *parentMenu);
+    QMenu *createMidiInputsMenu(QMenu *parentMenu);
 
-    QPushButton* inputSelectionButton;
-    QLabel* inputTypeIconLabel;
+    QPushButton *inputSelectionButton;
+    QLabel *inputTypeIconLabel;
 
-    QWidget* inputPanel;
+    QWidget *inputPanel;
 
-    PeakMeter* midiPeakMeter;//show midi activity
+    PeakMeter *midiPeakMeter;// show midi activity
 
     void setMidiPeakMeterVisibility(bool visible);
 
@@ -87,24 +94,22 @@ private:
     static const QString STEREO_ICON;
     static const QString NO_INPUT_ICON;
 
-    QString getInputChannelNameOnly(int inputIndex);//return the input channel name withou the number/index
+    QString getInputChannelNameOnly(int inputIndex);// return the input channel name withou the number/index
 
-    Audio::LocalInputAudioNode* inputNode;
+    Audio::LocalInputAudioNode *inputNode;
 
     bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;
 
-    void init(int channelIndex, float initialGain, BoostValue boostValue, float initialPan, bool muted);
+    void init(int channelIndex, float initialGain, BoostValue boostValue, float initialPan,
+              bool muted);
 
     bool peakMetersOnly;
 
-
-
 private slots:
-    void on_inputSelectionButtonClicked();//build and show de input selection menu
+    void on_inputSelectionButtonClicked();// build and show de input selection menu
 
-    void on_monoInputMenuSelected(QAction*);
-    void on_stereoInputMenuSelected(QAction*);
-    void on_MidiInputDeviceSelected(QAction*);
+    void on_monoInputMenuSelected(QAction *);
+    void on_stereoInputMenuSelected(QAction *);
+    void on_MidiInputDeviceSelected(QAction *);
     void on_noInputMenuSelected();
 };
-

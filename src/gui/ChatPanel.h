@@ -22,7 +22,7 @@ public:
     void addBpiVoteConfirmationMessage(int newBpmValue);
     void addChordProgressionConfirmationMessage(ChordProgression progression);
     void setPreferredTranslationLanguage(QString targetLanguage);
-    void updateMessagesGeometry();//called when user switch from mini mode to full view
+    void updateMessagesGeometry();// called when user switch from mini mode to full view
 signals:
     void userSendingNewMessage(QString msg);
     void userConfirmingVoteToBpiChange(int newBpi);
@@ -45,7 +45,7 @@ private:
     QColor getUserColor(QString userName);
     QStringList botNames;
     static const QColor BOT_COLOR;
-    QMap<QString, QColor> usersColorMap;//map user name to a color
+    QMap<QString, QColor> usersColorMap;// map user name to a color
     QList<QColor> availableColors;
 
     QList<QColor> createColors();
@@ -57,7 +57,6 @@ private:
     void createVoteButton(QString voteType, int value);
 
     bool autoTranslating;
-
 };
 
 #endif // CHATPANEL_H

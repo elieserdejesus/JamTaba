@@ -10,14 +10,13 @@ UserNameDialog::UserNameDialog(QWidget *parent, QString lastUserName) :
     ui->lineEdit->setText(lastUserName);
     QObject::connect(ui->lineEdit, SIGNAL(textEdited(QString)), this, SLOT(on_textEdited()));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-    //setWindowFlags(Qt::Popup);
 }
 
-void UserNameDialog::on_textEdited(){
-    QPushButton* button = ui->buttonBox->button(QDialogButtonBox::Ok);
-    if(button){
+void UserNameDialog::on_textEdited()
+{
+    QPushButton *button = ui->buttonBox->button(QDialogButtonBox::Ok);
+    if (button)
         button->setEnabled(!ui->lineEdit->text().isEmpty());
-    }
 }
 
 UserNameDialog::~UserNameDialog()
@@ -25,6 +24,7 @@ UserNameDialog::~UserNameDialog()
     delete ui;
 }
 
-QString UserNameDialog::getUserName() const{
+QString UserNameDialog::getUserName() const
+{
     return ui->lineEdit->text();
 }

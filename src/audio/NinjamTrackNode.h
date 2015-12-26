@@ -6,27 +6,39 @@
 #include "vorbis/VorbisDecoder.h"
 #include "SamplesBufferResampler.h"
 
-
-namespace Audio{
-    class SamplesBuffer;
-    class StreamBuffer;
+namespace Audio {
+class SamplesBuffer;
+class StreamBuffer;
 }
 
-class NinjamTrackNode : public Audio::AudioNode{
+class NinjamTrackNode : public Audio::AudioNode
+{
 public:
     explicit NinjamTrackNode(int ID);
     virtual ~NinjamTrackNode();
     void addVorbisEncodedInterval(QByteArray encodedBytes);
-    void processReplacing(const Audio::SamplesBuffer&in, Audio::SamplesBuffer& out, int sampleRate, const Midi::MidiBuffer &midiBuffer);
+    void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate,
+                          const Midi::MidiBuffer &midiBuffer);
     bool startNewInterval();
-    inline int getID() const{return ID;}
+    inline int getID() const
+    {
+        return ID;
+    }
 
     int getSampleRate() const;
-    inline bool isPlaying() const{return playing;}
+    inline bool isPlaying() const
+    {
+        return playing;
+    }
+
     void discardIntervals();
-    inline void setProcessingLastPartOfInterval(bool status){this->processingLastPartOfInterval = status;}
+    inline void setProcessingLastPartOfInterval(bool status)
+    {
+        this->processingLastPartOfInterval = status;
+    }
+
 private:
-    bool playing;//playing one interval or waiting for more vorbis data to decode
+    bool playing;// playing one interval or waiting for more vorbis data to decode
     VorbisDecoder decoder;
     QList<QByteArray> intervals;
     int ID;
@@ -37,7 +49,6 @@ private:
     int getFramesToProcess(int targetSampleRate, int outFrameLenght);
 
     bool processingLastPartOfInterval;
-
 };
 
 #endif // NINJAMTRACKNODE_H
