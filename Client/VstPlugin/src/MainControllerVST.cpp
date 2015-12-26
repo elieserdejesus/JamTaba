@@ -1,7 +1,7 @@
 #include "MainControllerVST.h"
 #include "midi/MidiDriver.h"
 #include "NinjamController.h"
-#include "../VstPlugin/Plugin.h"
+#include "Plugin.h"
 #include "log/Logging.h"
 #include "Editor.h"
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
