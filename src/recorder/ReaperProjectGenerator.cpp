@@ -1,6 +1,6 @@
 #include "ReaperProjectGenerator.h"
 #include <QUuid>
-#include "../log/logging.h"
+#include "../log/Logging.h"
 
 using namespace Recorder;
 

@@ -2,7 +2,7 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QtConcurrent/QtConcurrent>
-#include "../log/logging.h"
+#include "../log/Logging.h"
 
 using namespace Recorder;
 

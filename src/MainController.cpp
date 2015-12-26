@@ -28,7 +28,7 @@
 #include <QSettings>
 #include <QDir>
 
-#include "log/logging.h"
+#include "log/Logging.h"
 #include "configurator.h"
 
 using namespace Persistence;

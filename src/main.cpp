@@ -4,7 +4,7 @@
 #include "StandAloneMainController.h"
 #include "persistence/Settings.h"
 #include "gui/MainWindowStandalone.h"
-#include "log/logging.h"
+#include "log/Logging.h"
 #include "Libs/SingleApplication/singleapplication.h"
 #include "configurator.h"
 

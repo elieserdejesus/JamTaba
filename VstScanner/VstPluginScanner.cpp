@@ -5,7 +5,7 @@
 #include <QDirIterator>
 #include "audio/core/PluginDescriptor.h"
 #include "audio/vst/VstHost.h"
-#include "log/logging.h"
+#include "log/Logging.h"
 
 VstPluginScanner::VstPluginScanner() :
     QObject()

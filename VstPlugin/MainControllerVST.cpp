@@ -2,7 +2,7 @@
 #include "midi/MidiDriver.h"
 #include "NinjamController.h"
 #include "../VstPlugin/Plugin.h"
-#include "log/logging.h"
+#include "log/Logging.h"
 #include "Editor.h"
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class AudioDriverVST : public Audio::NullAudioDriver

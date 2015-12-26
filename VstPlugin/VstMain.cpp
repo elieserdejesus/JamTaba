@@ -1,7 +1,7 @@
 #include "Plugin.h"
 #include <QtGlobal>
 #include "MainControllerVST.h"
-#include "log/logging.h"
+#include "log/Logging.h"
 
 /**
     These two lines are necessary to load the Qt windows platform plugin statically. By default

@@ -1,6 +1,6 @@
 #include "IpToLocationResolver.h"
 
-#include "log/logging.h"
+#include "log/Logging.h"
 
 using namespace Geo;
 

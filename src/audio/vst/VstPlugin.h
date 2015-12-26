@@ -1,6 +1,6 @@
 #pragma once
 
-#include "audio/core/plugins.h"
+#include "audio/core/Plugins.h"
 #include "aeffectx.h"
 #include <QMap>
 #include <QLibrary>

@@ -2,7 +2,7 @@
 #include "ui_BaseTrackView.h"
 #include "FxPanel.h"
 #include "FxPanelItem.h"
-#include "plugins/guis.h"
+#include "plugins/Guis.h"
 #include "MainController.h"
 #include "midi/MidiDriver.h"
 #include "audio/core/AudioDriver.h"
@@ -11,7 +11,7 @@
 #include <QMenu>
 #include <QToolButton>
 
-#include "log/logging.h"
+#include "log/Logging.h"
 
 const QString LocalTrackView::MIDI_ICON = ":/images/input_midi.png";
 const QString LocalTrackView::MONO_ICON = ":/images/input_mono.png";

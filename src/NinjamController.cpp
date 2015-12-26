@@ -19,10 +19,10 @@
 #include <QDebug>
 #include <QThread>
 
-#include "audio/samplesbufferrecorder.h"
+#include "audio/SamplesBufferRecorder.h"
 #include "Utils.h"
 #include <QWaitCondition>
-#include "log/logging.h"
+#include "log/Logging.h"
 
 
 using namespace Controller;

@@ -1,6 +1,6 @@
 #include "NinjamPanel.h"
 #include "ui_NinjamPanel.h"
-#include "log/logging.h"
+#include "log/Logging.h"
 #include "BpiUtils.h"
 
 #include <QPainter>

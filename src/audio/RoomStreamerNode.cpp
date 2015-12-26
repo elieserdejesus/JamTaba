@@ -2,7 +2,7 @@
 #include "codec.h"
 #include "core/AudioDriver.h"
 #include "core/SamplesBuffer.h"
-#include "log/logging.h"
+#include "log/Logging.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>

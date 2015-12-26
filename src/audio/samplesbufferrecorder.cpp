@@ -1,4 +1,4 @@
-#include "samplesbufferrecorder.h"
+#include "SamplesBufferRecorder.h"
 
 #include <QDataStream>
 #include "core/SamplesBuffer.h"

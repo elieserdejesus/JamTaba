@@ -6,7 +6,7 @@
 #include <QApplication>
 #include <QMap>
 #include <cmath>
-#include "log/logging.h"
+#include "log/Logging.h"
 
 using namespace Vst;
 

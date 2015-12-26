@@ -6,7 +6,7 @@
 #include "Highligther.h"
 #include "MainWindow.h"
 #include "FxPanel.h"
-#include "log/logging.h"
+#include "log/Logging.h"
 
 #include <QPushButton>
 #include <QMenu>

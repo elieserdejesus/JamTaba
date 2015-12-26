@@ -12,11 +12,11 @@
 #include "persistence/Settings.h"
 #include "persistence/UsersDataCache.h"
 
-#include "audio/samplesbufferrecorder.h"
+#include "audio/SamplesBufferRecorder.h"
 
 #include "recorder/JamRecorder.h"
 
-#include "audio/core/plugins.h"
+#include "audio/core/Plugins.h"
 #include "audio/vst/PluginFinder.h"
 
 #include "audio/core/AudioMixer.h"

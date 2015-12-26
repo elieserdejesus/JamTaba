@@ -5,7 +5,7 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QMetaMethod>
-#include "log/logging.h"
+#include "log/Logging.h"
 
 ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
     QWidget(parent),
