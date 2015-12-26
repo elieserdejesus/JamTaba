@@ -81,6 +81,9 @@ private:
 
     // recording
     void populateRecordingTab();
+
+    void runPostInitialization();
+    /** This member function (initializeWidgetsVisibility) is implemented in a different way in Standalone for windows, Standalone for mac and in Vst Plugin. The correct implementation (.cpp) is included in the respective .pro file.    */
 };
 
 #endif
