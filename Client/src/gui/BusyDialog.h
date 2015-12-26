@@ -19,13 +19,13 @@ public:
     virtual void show();
 
 protected:
- void paintEvent(QPaintEvent* );
- void showEvent(QShowEvent* e);
- void hideEvent(QHideEvent* e);
+    void paintEvent(QPaintEvent *);
+    void showEvent(QShowEvent *e);
+    void hideEvent(QHideEvent *e);
 
 private:
     Ui::BusyDialog *ui;
-    static QRegion roundedRect(const QRect& rect, int round);
+    static QRegion roundedRect(const QRect &rect, int round);
 };
 
 #endif // BUSYDIALOG_H

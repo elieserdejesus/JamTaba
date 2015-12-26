@@ -13,7 +13,7 @@ protected:
     virtual void showEvent(QShowEvent *ent);
     void closeEvent(QCloseEvent *);
 
-    virtual NinjamRoomWindow* createNinjamWindow(Login::RoomInfo, Controller::MainController*);
+    virtual NinjamRoomWindow *createNinjamWindow(Login::RoomInfo, Controller::MainController *);
 
     virtual void initializePluginFinder();
 protected slots:

@@ -2,13 +2,10 @@
 
 #include <QWidget>
 
-/**
- * @author zeh
- */
-class WavePeakPanel : public QWidget{
-
+class WavePeakPanel : public QWidget
+{
 protected:
-    void resizeEvent( QResizeEvent * event );
+    void resizeEvent(QResizeEvent *event);
     void paintEvent(QPaintEvent *event);
 
 private:
@@ -17,20 +14,18 @@ private:
 
     std::vector<float> peaksArray;
 
-    uint maxPeaks;//change when widget resize
+    uint maxPeaks;// change when widget resize
 
     int computeMaxPeaks();
     void recreatePeaksArray();
 
-    void drawPeak(QPainter* g, int x, float peak, QColor color) ;
+    void drawPeak(QPainter *g, int x, float peak, QColor color);
 
 public:
-    explicit WavePeakPanel(QWidget *parent=0);
+    explicit WavePeakPanel(QWidget *parent = 0);
 
-    void addPeak(float peak) ;
+    void addPeak(float peak);
     void clearPeaks();
 
-    //QSize sizeHint() const;
     QSize minimumSizeHint() const;
-
 };

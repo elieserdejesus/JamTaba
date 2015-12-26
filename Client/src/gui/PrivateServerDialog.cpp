@@ -2,7 +2,8 @@
 #include "ui_PrivateServerDialog.h"
 #include <QDebug>
 
-PrivateServerDialog::PrivateServerDialog(QWidget *parent, QString lastServer, int lastServerPort, QString lastPassword) :
+PrivateServerDialog::PrivateServerDialog(QWidget *parent, QString lastServer, int lastServerPort,
+                                         QString lastPassword) :
     QDialog(parent),
     ui(new Ui::PrivateServerDialog)
 {
@@ -17,17 +18,20 @@ PrivateServerDialog::PrivateServerDialog(QWidget *parent, QString lastServer, in
     QObject::connect(ui->okButton, SIGNAL(clicked(bool)), this, SLOT(on_okButtonTriggered()));
 }
 
-void PrivateServerDialog::on_okButtonTriggered(){
+void PrivateServerDialog::on_okButtonTriggered()
+{
     accept();
-    emit connectionAccepted(ui->serverTextField->text(), ui->serverPortTextField->text().toInt(), ui->passwordTextField->text());
-
+    emit connectionAccepted(ui->serverTextField->text(),
+                            ui->serverPortTextField->text().toInt(), ui->passwordTextField->text());
 }
 
-QString PrivateServerDialog::getPassword() const{
+QString PrivateServerDialog::getPassword() const
+{
     return ui->passwordTextField->text();
 }
 
-QString PrivateServerDialog::getServer() const{
+QString PrivateServerDialog::getServer() const
+{
     return ui->serverTextField->text();
 }
 

@@ -5,25 +5,19 @@
 #include <QDebug>
 #include <QDialog>
 #include <QMutexLocker>
-#include "../../audio/vst/PluginFinder.h"
+#include "audio/vst/PluginFinder.h"
 
 using namespace Audio;
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Plugin::Plugin(QString name)
-    :name(name),  editorWindow(nullptr)
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Plugin::Plugin(QString name) :
+    name(name),
+    editorWindow(nullptr)
 {
-
 }
 
-//void Plugin::setEditor(PluginWindow *editorWindow){
-//    if(this->editorWindow){
-//        editorWindow->deleteLater();
-//    }
-//    this->editorWindow = editorWindow;
-//}
-
-void Plugin::closeEditor(){
+void Plugin::closeEditor()
+{
     if (editorWindow) {
         editorWindow->setVisible(false);
         editorWindow->deleteLater();
@@ -31,99 +25,101 @@ void Plugin::closeEditor(){
     }
 }
 
-void Plugin::editorDialogFinished(){
+void Plugin::editorDialogFinished()
+{
     closeEditor();
 }
 
-Plugin::~Plugin(){
+Plugin::~Plugin()
+{
     closeEditor();
 }
 
-
-//++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++
 const int JamtabaDelay::MAX_DELAY_IN_SECONDS = 3;
 
-JamtabaDelay::JamtabaDelay(int sampleRate)
-    : Plugin("Delay"), delayTimeInMs(0),
-
-      internalBuffer(new Audio::SamplesBuffer(2))//2 channels, 3 seconds delay
-
+JamtabaDelay::JamtabaDelay(int sampleRate) :
+    Plugin("Delay"),
+    delayTimeInMs(0),
+    internalBuffer(new Audio::SamplesBuffer(2))  // 2 channels, 3 seconds delay
 {
     internalIndex = 0;
-    feedbackGain = 0.3f;//feedback start in this gain
+    feedbackGain = 0.3f;// feedback start in this gain
     level = 1;
     setSampleRate(sampleRate);
 }
 
-QByteArray JamtabaDelay::getSerializedData() const{
+QByteArray JamtabaDelay::getSerializedData() const
+{
     return QByteArray();
 }
 
-void JamtabaDelay::restoreFromSerializedData(QByteArray data){
+void JamtabaDelay::restoreFromSerializedData(QByteArray data)
+{
     Q_UNUSED(data)
 }
 
-void JamtabaDelay::setSampleRate(int newSampleRate){
+void JamtabaDelay::setSampleRate(int newSampleRate)
+{
     this->sampleRate = newSampleRate;
-    delayTimeInSamples = this->sampleRate/2;//half second
+    delayTimeInSamples = this->sampleRate/2;// half second
     internalBuffer->setFrameLenght(delayTimeInSamples);
 }
 
-JamtabaDelay::~JamtabaDelay(){
+JamtabaDelay::~JamtabaDelay()
+{
     delete internalBuffer;
-    //delete mutex;
+    // delete mutex;
 }
 
-void JamtabaDelay::start(){
-//    if(sampleRate != this->sampleRate){
-//        setSampleRate(sampleRate);
-//    }
-    qCritical() << "preciso setar a sample rate";
+void JamtabaDelay::start()
+{
 }
 
-void JamtabaDelay::process(const Audio::SamplesBuffer &in, SamplesBuffer &out, const Midi::MidiBuffer &midiBuffer){
-
-      Q_UNUSED(midiBuffer)
-      Q_UNUSED(in)
-      Q_UNUSED(out)
-//    if(isBypassed()){
-//        return;
-//    }
-//    float bufferValue = 0, internalValue = 0;
-//    for (int s = 0; s < in.getFrameLenght(); ++s) {
-//        for (int c = 0; c < in.getChannels(); ++c) {
-//            bufferValue = in.get(c, s);
-//            internalValue = internalBuffer->get(c, internalIndex);
-//            in.add(c, s, internalValue * level);//copy the internal sample to out buffer
-//            internalBuffer->set(c, internalIndex, bufferValue + internalValue * feedbackGain  ); //acumulate the sample in internal buffer
-//        }
-//        internalIndex = (internalIndex + 1) % internalBuffer->getFrameLenght();
-//    }
+void JamtabaDelay::process(const Audio::SamplesBuffer &in, SamplesBuffer &out,
+                           const Midi::MidiBuffer &midiBuffer)
+{
+    Q_UNUSED(midiBuffer)
+    Q_UNUSED(in)
+    Q_UNUSED(out)
+// if(isBypassed()){
+// return;
+// }
+// float bufferValue = 0, internalValue = 0;
+// for (int s = 0; s < in.getFrameLenght(); ++s) {
+// for (int c = 0; c < in.getChannels(); ++c) {
+// bufferValue = in.get(c, s);
+// internalValue = internalBuffer->get(c, internalIndex);
+// in.add(c, s, internalValue * level);//copy the internal sample to out buffer
+// internalBuffer->set(c, internalIndex, bufferValue + internalValue * feedbackGain  ); //acumulate the sample in internal buffer
+// }
+// internalIndex = (internalIndex + 1) % internalBuffer->getFrameLenght();
+// }
 }
 
-void JamtabaDelay::setDelayTime(int delayTimeInMs){
-
-    if(delayTimeInMs > 0 ){
-        if(delayTimeInMs > MAX_DELAY_IN_SECONDS * sampleRate){
+void JamtabaDelay::setDelayTime(int delayTimeInMs)
+{
+    if (delayTimeInMs > 0) {
+        if (delayTimeInMs > MAX_DELAY_IN_SECONDS * sampleRate)
             delayTimeInMs = MAX_DELAY_IN_SECONDS * sampleRate;
-        }
         this->delayTimeInMs = delayTimeInMs;
         this->delayTimeInSamples = delayTimeInMs/1000.0 * sampleRate;
         this->internalBuffer->setFrameLenght(delayTimeInSamples);
     }
 }
 
-void JamtabaDelay::setFeedback(float feedback){
+void JamtabaDelay::setFeedback(float feedback)
+{
     this->feedbackGain = feedback;
 }
 
-void JamtabaDelay::setLevel(float level){
-    if(level >= 0){
+void JamtabaDelay::setLevel(float level)
+{
+    if (level >= 0)
         this->level = level;
-    }
 }
 
-void JamtabaDelay::openEditor(QPoint p){
-    //Q_UNUSED(w);
+void JamtabaDelay::openEditor(QPoint p)
+{
     Q_UNUSED(p);
 }

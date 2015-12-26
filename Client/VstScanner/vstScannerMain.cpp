@@ -6,4 +6,3 @@ int main(int argc, char *argv[])
     scanner.start(argc, argv);
     return 0;
 }
-

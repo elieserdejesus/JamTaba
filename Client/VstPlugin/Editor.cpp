@@ -6,17 +6,19 @@
 #include "KeyboardHook.h"
 #include <QTimer>
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++
-VstEditor::VstEditor(JamtabaPlugin *jamtaba)
-    :widget(NULL), jamtaba(jamtaba), mainWindow(nullptr)
+// ++++++++++++++++++++++++++++++++++++++++++++++++++
+VstEditor::VstEditor(JamtabaPlugin *jamtaba) :
+    widget(NULL),
+    jamtaba(jamtaba),
+    mainWindow(nullptr)
 {
 }
 
-void VstEditor::deleteMainWindow(){
-    if(mainWindow){
-        if(mainWindow->isVisible()){
+void VstEditor::deleteMainWindow()
+{
+    if (mainWindow) {
+        if (mainWindow->isVisible())
             QTimer::singleShot(0, mainWindow, &MainWindow::close);
-        }
         mainWindow->deleteLater();
         mainWindow = nullptr;
     }
@@ -29,38 +31,40 @@ VstEditor::~VstEditor()
     qCDebug(jtVstPlugin) << "VstEditor detructor done.";
 }
 
-void VstEditor::detachMainController(){
-    if(mainWindow){
-        //mainWindow->detachMainController();
+void VstEditor::detachMainController()
+{
+    if (mainWindow) {
+        // mainWindow->detachMainController();
     }
 }
 
-bool VstEditor::getRect (ERect** rect)
+bool VstEditor::getRect(ERect **rect)
 {
     *rect = &rectangle;
     return true;
 }
 
-void VstEditor::resize(int width, int height){
-    if(widget){
+void VstEditor::resize(int width, int height)
+{
+    if (widget)
         widget->resize(width, height);
-    }
-    if(mainWindow){
+    if (mainWindow)
         mainWindow->resize(width, height);
-    }
     rectangle.right = width;
     rectangle.bottom = height;
 
-    //clientResize( (HWND)systemWindow, width, height );
+    // clientResize( (HWND)systemWindow, width, height );
 }
 
-bool VstEditor::open(void* ptr){
+bool VstEditor::open(void *ptr)
+{
     qCDebug(jtVstPlugin) << "VstEditor::open()...";
-    if(!ptr )
+    if (!ptr)
         return false;
 
-    if(!jamtaba->isRunning()){
-        jamtaba->initialize();//initialize first time editor is opened. This avoid initialize jamtaba when the host is just scanning.
+    if (!jamtaba->isRunning()) {
+        // initialize first time editor is opened. This avoid initialize jamtaba when the host is just scanning.
+        jamtaba->initialize();
     }
 
     AEffEditor::open(ptr);
@@ -68,7 +72,7 @@ bool VstEditor::open(void* ptr){
     widget->setAutoFillBackground(false);
     KeyboardHook::installLowLevelKeyboardHook();
 
-    if(!mainWindow){
+    if (!mainWindow) {
         qCDebug(jtVstPlugin) << "Creating MainWindow...";
         mainWindow = new MainWindowVST(jamtaba->getController());
         jamtaba->getController()->setMainWindow(mainWindow);
@@ -79,31 +83,30 @@ bool VstEditor::open(void* ptr){
         qCDebug(jtVstPlugin) << "Creating MainWindow done.";
     }
     mainWindow->setParent(widget);
-    mainWindow->move( 0, 0 );
+    mainWindow->move(0, 0);
 
     rectangle.bottom = mainWindow->height();
     rectangle.right = mainWindow->width();
 
-    widget->move( 0, 0 );
-    widget->resize( rectangle.right, rectangle.bottom );
+    widget->move(0, 0);
+    widget->resize(rectangle.right, rectangle.bottom);
     widget->setMinimumSize(mainWindow->minimumSize());
 
     qCDebug(jtVstPlugin) << "Window Rect  width:" << rectangle.right - rectangle.left;
 
-    widget->setPalette( mainWindow->palette() );
+    widget->setPalette(mainWindow->palette());
 
     widget->show();
     qCDebug(jtVstPlugin) << "VstEditor::open() done.";
     return true;
- }
+}
 
-
-void VstEditor::close(){
+void VstEditor::close()
+{
     qCDebug(jtVstPlugin) << "VstEditor::close()...";
-    if(mainWindow){
+    if (mainWindow)
         mainWindow->setParent(nullptr);
-    }
-    if(widget){
+    if (widget) {
         delete widget;
         widget = nullptr;
         KeyboardHook::uninstallLowLevelKeyboardKook();

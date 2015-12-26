@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QStringList>
+
 class QComboBox;
 class QAbstractSlider;
 class QPushButton;
@@ -26,7 +27,7 @@ signals:
     void soloButtonClicked();
     void hostSyncButtonClicked();
 public:
-    explicit NinjamPanel(QWidget *parent=0);
+    explicit NinjamPanel(QWidget *parent = 0);
     ~NinjamPanel();
 
     void createHostSyncButton(QString buttonText);
@@ -36,7 +37,6 @@ public:
     void setGainSliderValue(int value);
 
     void setHostSyncButtonAvailability(bool enabled);// availability? We need a better work here :)
-
 
     void setBpiComboText(QString);
     void setBpmComboText(QString);
@@ -54,19 +54,19 @@ public:
     int getIntervalShape() const;
     void setIntervalShape(int shape);
 
-    void addMasterControls(QWidget* masterControlsPanel);
+    void addMasterControls(QWidget *masterControlsPanel);
 
     void setFullViewStatus(bool fullView);
 protected:
     void paintEvent(QPaintEvent *);
     bool eventFilter(QObject *source, QEvent *ev);
     Ui::NinjamPanel *ui;
-    QPushButton* hostSyncButton;//created only when running as vst plugin
+    QPushButton *hostSyncButton;// created only when running as vst plugin
 private:
     void buildShapeModel();
     void buildAccentsdModel(int bpi);
     QStringList getBpiDividers(int bpi);
-    static bool compareBpis(const QString& s1, const QString& s2);
+    static bool compareBpis(const QString &s1, const QString &s2);
     void selectClosestBeatsPerAccentInCombo(int currentBeatsPerAccent);
     void selectBeatsPerAccentInCombo(int beatsPerAccent);
 private slots:

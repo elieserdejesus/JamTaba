@@ -15,16 +15,18 @@ PluginScanDialog::~PluginScanDialog()
     delete ui;
 }
 
-void PluginScanDialog::cleanFoundPluginsList(){
+void PluginScanDialog::cleanFoundPluginsList()
+{
     ui->plainTextEdit->clear();
 }
 
-void PluginScanDialog::addFoundedPlugin(QString pluginName){
+void PluginScanDialog::addFoundedPlugin(QString pluginName)
+{
     ui->plainTextEdit->appendPlainText(pluginName);
 }
 
-void PluginScanDialog::setCurrentScaning(QString pluginPath){
-
+void PluginScanDialog::setCurrentScaning(QString pluginPath)
+{
     ui->labelPluginText->setText("scanning " + pluginPath);
     update();
 }

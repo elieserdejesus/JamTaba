@@ -8,7 +8,6 @@
 #include "ninjam/UserChannel.h"
 
 namespace Ninjam {
-
 class PublicServersParser;
 class Server;
 class MixedPublicServersParser;
@@ -31,39 +30,41 @@ class ClientMessage;
 
 class User;
 class UserChannel;
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class Service : public QObject{
-
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class Service : public QObject
+{
     Q_OBJECT
 
 public:
 
     explicit Service();
     ~Service();
-    //static Service* getInstance();
-    static bool isBotName(QString userName) ;
+    static bool isBotName(QString userName);
 
     void sendChatMessageToServer(QString message);
 
-    //audio interval upload
+    // audio interval upload
     void sendAudioIntervalPart(QByteArray GUID, QByteArray encodedAudioBuffer, bool isLastPart);
     void sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex);
-    //void stopTransmitting(char* GUID[], quint8 userChannel);
 
     void sendNewChannelsListToServer(QStringList channelsNames);
     void sendRemovedChannelIndex(int removedChannelIndex);
 
-    QString getConnectedUserName() ;
+    QString getConnectedUserName();
     QString getCurrentServerLicence() const;
-    float getIntervalPeriod() ;
+    float getIntervalPeriod();
 
-    void startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password = "");
+    void startServerConnection(QString serverIp, int serverPort, QString userName,
+                               QStringList channels, QString password = "");
     void disconnectFromServer(bool emitDisconnectedSignal);
 
     void voteToChangeBPM(int newBPM);
     void voteToChangeBPI(int newBPI);
 
-    static inline QStringList getBotNamesList(){ return botNames; }
+    static inline QStringList getBotNamesList()
+    {
+        return botNames;
+    }
 
 signals:
     void userChannelCreated(Ninjam::User user, Ninjam::UserChannel channel);
@@ -73,9 +74,9 @@ signals:
     void serverBpiChanged(short currentBpi, short lastBpi);
     void serverBpmChanged(short currentBpm);
     void audioIntervalCompleted(Ninjam::User user, int channelIndex, QByteArray encodedAudioData);
-    void audioIntervalDownloading(Ninjam::User, int channelIndex, int bytesDownloaded );
-    void disconnectedFromServer(const Ninjam::Server& server);
-    void connectedInServer(const Ninjam::Server& server);
+    void audioIntervalDownloading(Ninjam::User, int channelIndex, int bytesDownloaded);
+    void disconnectedFromServer(const Ninjam::Server &server);
+    void connectedInServer(const Ninjam::Server &server);
     void chatMessageReceived(Ninjam::User sender, QString message);
     void privateMessageReceived(Ninjam::User sender, QString message);
     void userEnterInTheJam(Ninjam::User newUser);
@@ -85,7 +86,7 @@ signals:
 private:
 
     static const long DEFAULT_KEEP_ALIVE_PERIOD = 3000;
-    static std::unique_ptr<PublicServersParser> publicServersParser;// = new MixedPublicServersParser();
+    static std::unique_ptr<PublicServersParser> publicServersParser; // TODO use QScopedPointer ?
 
     QTcpSocket socket;
     QByteArray byteArray;
@@ -93,44 +94,43 @@ private:
     static const QStringList botNames;
     static QStringList buildBotNamesList();
 
-    //GUID, AudioInterval
-    long lastSendTime;//time stamp of last send
+    // GUID, AudioInterval
+    long lastSendTime;// time stamp of last send
     long serverKeepAlivePeriod;
     QString serverLicence;
 
-    static std::unique_ptr<Service> serviceInstance;// = new NinjaMService();// new TestService();
+    static std::unique_ptr<Service> serviceInstance; // TODO use QScopedPointer?
 
-    QString newUserName;//name received from server when connected
+    QString newUserName;// name received from server when connected
 
     std::unique_ptr<Server> currentServer;
-    //bool running;// = false;
-    bool initialized;// = false;
+    bool initialized;
     QString userName;
     QString password;
-    QStringList channels;//channels names
+    QStringList channels;// channels names
 
-    void sendMessageToServer(ClientMessage* message) ;
+    void sendMessageToServer(ClientMessage *message);
     void handleUserChannels(QString userFullName, QList<UserChannel> channelsInTheServer);
     bool channelIsOutdate(const User &user, const UserChannel &serverChannel);
 
     void setBpm(quint16 newBpm);
     void setBpi(quint16 newBpi);
 
-    //+++++= message handlers ++++
-    void invokeMessageHandler(const ServerMessage& message) ;
-    void handle(const ServerAuthChallengeMessage& msg);
-    void handle(const ServerAuthReplyMessage& msg);
-    void handle(const ServerConfigChangeNotifyMessage& msg);
-    void handle(const UserInfoChangeNotifyMessage& msg);
-    void handle(const ServerChatMessage& msg);
-    void handle(const ServerKeepAliveMessage& msg);
-    void handle(const DownloadIntervalBegin& msg);
-    void handle(const DownloadIntervalWrite& msg);
-    //++++++++++++=
+    // +++++= message handlers ++++
+    void invokeMessageHandler(const ServerMessage &message);
+    void handle(const ServerAuthChallengeMessage &msg);
+    void handle(const ServerAuthReplyMessage &msg);
+    void handle(const ServerConfigChangeNotifyMessage &msg);
+    void handle(const UserInfoChangeNotifyMessage &msg);
+    void handle(const ServerChatMessage &msg);
+    void handle(const ServerKeepAliveMessage &msg);
+    void handle(const DownloadIntervalBegin &msg);
+    void handle(const DownloadIntervalWrite &msg);
+    // ++++++++++++=
 
     class Download;
-    //using GUID as key
-    QMap<QString, Download*> downloads;
+    // using GUID as key
+    QMap<QString, Download *> downloads;
 
     bool needSendKeepAlive() const;
 
@@ -141,6 +141,5 @@ private slots:
     void socketErrorSlot(QAbstractSocket::SocketError error);
     void socketDisconnectSlot();
     void socketConnectedSlot();
-
 };
-}//namespace
+}// namespace

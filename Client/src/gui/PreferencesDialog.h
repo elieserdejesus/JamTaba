@@ -2,20 +2,28 @@
 #include <QDialog>
 #include <QMap>
 
-namespace Audio {    class AudioDriver; }
-namespace Ui    {    class IODialog; }
-namespace Midi  {    class MidiDriver;  }
-namespace Controller{class MainController; }
+namespace Audio {
+class AudioDriver;
+}
+namespace Ui    {
+class IODialog;
+}
+namespace Midi  {
+class MidiDriver;
+}
+namespace Controller {
+class MainController;
+}
 
 class MainWindow;
 
-//++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++
 class PreferencesDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    PreferencesDialog(Controller::MainController* mainController, MainWindow* mainWindow);
+    PreferencesDialog(Controller::MainController *mainController, MainWindow *mainWindow);
     ~PreferencesDialog();
     void selectAudioTab();
     void selectMidiTab();
@@ -26,40 +34,28 @@ private slots:
     void on_comboFirstOutput_currentIndexChanged(int);
     void on_comboAudioDevice_activated(int index);
     void on_okButton_released();
-
     void on_prefsTab_currentChanged(int index);
-
     void on_buttonAddVstScanFolder_clicked();
-
     void on_buttonRemoveVstPathClicked();
-
     void on_buttonClearVstAndScan_clicked();
-
-    //void on_buttonScanVSTs_clicked();
-
     void on_browseRecPathButton_clicked();
-
     void on_recordingCheckBox_clicked();
-
     void on_pluginsScanFinished(bool);
-
     void on_ButtonVst_Refresh_clicked();
-
     void on_ButtonVST_AddToBlackList_clicked();
-
     void on_ButtonVST_RemFromBlkList_clicked();
-
     void on_buttonControlPanel_clicked();
-
 signals:
-    void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn, int lastIn, int firstOut, int lastOut, int sampleRate, int bufferSize);
+    void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn,
+                              int lastIn, int firstOut, int lastOut, int sampleRate,
+                              int bufferSize);
 
 private:
     Ui::IODialog *ui;
-    Controller::MainController* mainController;
-    MainWindow* mainWindow;
+    Controller::MainController *mainController;
+    MainWindow *mainWindow;
 
-    //AUDIO
+    // AUDIO
     void populateAsioDriverCombo();
     void populateFirstInputCombo();
     void populateLastInputCombo();
@@ -69,21 +65,18 @@ private:
     void populateBufferSizeCombo();
     void populateAudioTab();
 
-
-    //MIDI
+    // MIDI
     void populateMidiTab();
 
-    //VST
+    // VST
     void populateVstTab();
     void addVstScanPath(QString path);
     void createWidgetsToNewScanFolder(QString path);
     void UpdateVstList(QString path);
     void UpdateBlackBox(QString path, bool add);
     void clearScanFolderWidgets();
-    QList<QPushButton*> scanFoldersButtons;
+    QList<QPushButton *> scanFoldersButtons;
 
-    //recording
+    // recording
     void populateRecordingTab();
 };
-
-

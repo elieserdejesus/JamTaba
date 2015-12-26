@@ -4,12 +4,17 @@
 #include "MainController.h"
 #include "NinjamController.h"
 #include "audio/core/PluginDescriptor.h"
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-class NinjamControllerVST : public Controller::NinjamController{
+class NinjamControllerVST : public Controller::NinjamController
+{
 public:
-    explicit NinjamControllerVST(Controller::MainController* c);
-    inline bool isWaitingForHostSync() const{return waitingForHostSync;}
+    explicit NinjamControllerVST(Controller::MainController *c);
+    inline bool isWaitingForHostSync() const
+    {
+        return waitingForHostSync;
+    }
+
     void syncWithHost();
     void waitForHostSync();
     void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
@@ -17,41 +22,60 @@ public:
 private:
     bool waitingForHostSync;
 };
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class JamtabaPlugin;
 
-class MainControllerVST : public Controller::MainController{
+class MainControllerVST : public Controller::MainController
+{
 public:
-    MainControllerVST(Persistence::Settings settings, JamtabaPlugin* plugin);
+    MainControllerVST(Persistence::Settings settings, JamtabaPlugin *plugin);
     ~MainControllerVST();
 
-    inline bool isRunningAsVstPlugin() const{ return true;}
+    inline bool isRunningAsVstPlugin() const
+    {
+        return true;
+    }
 
     QString getUserEnvironmentString() const;
 
-    Audio::AudioDriver* createAudioDriver(const Persistence::Settings &settings);
+    Audio::AudioDriver *createAudioDriver(const Persistence::Settings &settings);
 
-    Controller::NinjamController* createNinjamController(MainController *c);
+    Controller::NinjamController *createNinjamController(MainController *c);
 
     void setCSS(QString css);
 
-    inline Vst::PluginFinder* createPluginFinder(){return nullptr;}
+    inline Vst::PluginFinder *createPluginFinder()
+    {
+        return nullptr;
+    }
 
-    inline Audio::Plugin* createPluginInstance(const Audio::PluginDescriptor &descriptor){
+    inline Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor)
+    {
         Q_UNUSED(descriptor);
-        return nullptr;//vst plugin can't load other plugins
+        return nullptr;// vst plugin can't load other plugins
     }
 
     void setSampleRate(int newSampleRate);
 
-    inline int getSampleRate() const{return sampleRate;}
+    inline int getSampleRate() const
+    {
+        return sampleRate;
+    }
 
-    Midi::MidiDriver* createMidiDriver();
+    Midi::MidiDriver *createMidiDriver();
 
-    inline void exit(){}
+    inline void exit()
+    {
+    }
 
-    inline void addDefaultPluginsScanPath(){}
-    inline void scanPlugins(bool scanOnlyNewPlugins){ Q_UNUSED(scanOnlyNewPlugins)}
+    inline void addDefaultPluginsScanPath()
+    {
+    }
+
+    inline void scanPlugins(bool scanOnlyNewPlugins)
+    {
+        Q_UNUSED(scanOnlyNewPlugins)
+    }
 
     int getHostBpm() const;
 
@@ -60,8 +84,7 @@ public:
     void resizePluginEditor(int newWidth, int newHeight);
 private:
     int sampleRate;
-    JamtabaPlugin* plugin;
+    JamtabaPlugin *plugin;
 };
-
 
 #endif // MAINCONTROLLERVST_H

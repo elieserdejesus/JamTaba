@@ -9,9 +9,7 @@
 
 class ChordLabel;
 
-/*
- * This class is used to show a sequence of ChordLabel instances organized in a gridLayout.
- */
+// This class is used to show a sequence of ChordLabel instances organized in a gridLayout.
 class ChordsWidget : public QWidget
 {
 public:
@@ -20,12 +18,11 @@ public:
     void setCurrentBeat(int beatToInsert);
     void clear();
 private:
-    QList<ChordLabel*> chordLabels;
-    QGridLayout* gridLayout;
+    QList<ChordLabel *> chordLabels;
+    QGridLayout *gridLayout;
     void resetGridLayout();
     int beatToInsert;
-    QMap<int, ChordLabel*> chordsMap; //mapping beats and chords
-
+    QMap<int, ChordLabel *> chordsMap; // mapping beats and chords
 };
 
 #endif // CHORDS_WIDGET_H

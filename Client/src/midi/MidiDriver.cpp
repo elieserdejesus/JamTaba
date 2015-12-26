@@ -1,111 +1,110 @@
 #include "MidiDriver.h"
-#include "../log/logging.h"
+#include "log/logging.h"
 
 using namespace Midi;
-//+++++++++++++++++++++++
-MidiMessage::MidiMessage(qint32 data, qint32 timestamp, int sourceDeviceIndex){
+// +++++++++++++++++++++++
+MidiMessage::MidiMessage(qint32 data, qint32 timestamp, int sourceDeviceIndex)
+{
     this->data = data;
     this->timestamp = timestamp;
     this->deviceIndex = sourceDeviceIndex;
 }
 
-MidiMessage::MidiMessage(){
+MidiMessage::MidiMessage()
+{
     this->data = this->timestamp = this->deviceIndex = -1;
 }
 
-
-MidiMessage::MidiMessage(const MidiMessage& other){
+MidiMessage::MidiMessage(const MidiMessage &other)
+{
     this->data = other.data;
     this->timestamp = other.timestamp;
     this->deviceIndex = other.deviceIndex;
 }
-//+++++++++++++++++++++++
 
-quint8 MidiMessage::getNoteVelocity() const{
-    if(!isNote()){
+// +++++++++++++++++++++++
+
+quint8 MidiMessage::getNoteVelocity() const
+{
+    if (!isNote())
         return 0;
-    }
     return getData2();
 }
 
-bool MidiMessage::isNote() const{
-    //0x90 to 0x9F where the low nibble is the MIDI channel.
+bool MidiMessage::isNote() const
+{
+    // 0x90 to 0x9F where the low nibble is the MIDI channel.
     int status = getStatus();
     return status >= 0x90 && status <= 0x9F;
 }
 
-//+++++++++++++++++++++++++++++++++++++
+// +++++++++++++++++++++++++++++++++++++
 
-MidiBuffer::MidiBuffer(int maxMessages)
-    : maxMessages(maxMessages),
-      messages(new MidiMessage[maxMessages]),
-      //writeIndex(0), readIndex(0),
-      messagesCount(0)
+MidiBuffer::MidiBuffer(int maxMessages) :
+    maxMessages(maxMessages),
+    messages(new MidiMessage[maxMessages]),
+    messagesCount(0)
 {
-
 }
-MidiBuffer::MidiBuffer(const MidiBuffer &other)
-    : maxMessages(other.maxMessages),
-      messages(new MidiMessage[other.maxMessages]),
-      //writeIndex(other.writeIndex), readIndex(other.readIndex),
-      messagesCount(other.messagesCount)
+
+MidiBuffer::MidiBuffer(const MidiBuffer &other) :
+    maxMessages(other.maxMessages),
+    messages(new MidiMessage[other.maxMessages]),
+    messagesCount(other.messagesCount)
 {
-    for (int m = 0; m < other.messagesCount; ++m) {
+    for (int m = 0; m < other.messagesCount; ++m)
         this->messages[m] = other.messages[m];
-    }
 }
 
-
-
-MidiBuffer::~MidiBuffer(){
+MidiBuffer::~MidiBuffer()
+{
     delete [] messages;
 }
 
-void MidiBuffer::addMessage(const MidiMessage &m){
-    if(messagesCount < maxMessages){
+void MidiBuffer::addMessage(const MidiMessage &m)
+{
+    if (messagesCount < maxMessages) {
         messages[messagesCount] = m;
         messagesCount++;
-    }
-    else{
+    } else {
         qCWarning(jtMidi) << "MidiBuffer full, discarding the message!";
     }
 }
 
-MidiMessage MidiBuffer::getMessage(int index) const{
-    if(index >= 0 && index < messagesCount){
+MidiMessage MidiBuffer::getMessage(int index) const
+{
+    if (index >= 0 && index < messagesCount)
         return messages[index];
-    }
     return MidiMessage();
 }
 
-//++++++++++++++++
+// ++++++++++++++++
 MidiDriver::MidiDriver()
 {
-
 }
 
 MidiDriver::~MidiDriver()
 {
-
 }
 
-int MidiDriver::getFirstGloballyEnableInputDevice() const{
+int MidiDriver::getFirstGloballyEnableInputDevice() const
+{
     int total = getMaxInputDevices();
     for (int i = 0; i < total; ++i) {
-        if(deviceIsGloballyEnabled(i)){
+        if (deviceIsGloballyEnabled(i))
             return i;
-        }
     }
     return -1;
 }
 
-void MidiDriver::setInputDevicesStatus(QList<bool> statuses){
+void MidiDriver::setInputDevicesStatus(QList<bool> statuses)
+{
     this->inputDevicesEnabledStatuses = statuses;
 }
 
-bool MidiDriver::deviceIsGloballyEnabled(int deviceIndex) const{
-    if(deviceIndex >= 0 && deviceIndex < inputDevicesEnabledStatuses.size()){
+bool MidiDriver::deviceIsGloballyEnabled(int deviceIndex) const
+{
+    if (deviceIndex >= 0 && deviceIndex < inputDevicesEnabledStatuses.size())
         return inputDevicesEnabledStatuses.at(deviceIndex);
-    }
     return false;
 }

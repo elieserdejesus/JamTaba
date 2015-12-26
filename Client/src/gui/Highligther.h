@@ -12,22 +12,22 @@ class Highligther : public QObject
 
 public:
 
-    static Highligther* getInstance();
+    static Highligther *getInstance();
 
-    void highlight(QWidget*);
+    void highlight(QWidget *);
     void stopHighlight();
 
 private slots:
     void on_timerStopped();
-    void on_objectDestroyed(QObject*);
+    void on_objectDestroyed(QObject *);
 
 private:
     Highligther();
     ~Highligther();
     QTimer timer;
-    QWidget* lastHighlightedWidget;
-    static Highligther* instance;
-    void setWidgetHighlightStatus(QWidget* w, bool highlighted);
+    QWidget *lastHighlightedWidget;
+    static Highligther *instance;
+    void setWidgetHighlightStatus(QWidget *w, bool highlighted);
     static const int HIGHLIGHT_TIME = 4000;
 };
 

@@ -14,9 +14,9 @@ public:
     void start(int argc, char *argv[]);
 private:
     QStringList foldersToScan;
-    QStringList blackList;
+    QStringList skipList; //contain blackListed and cached plugins
 
-    void initialize(int argc, char* argv[]);
+    void initialize(int argc, char *argv[]);
     void scan();
 
     Audio::PluginDescriptor getPluginDescriptor(QFileInfo pluginPath);
@@ -24,7 +24,6 @@ private:
     void writeToProcessOutput(QString);
 
     bool static isVstPluginFile(QString path);
-
 };
 
 #endif // VSTPLUGINSCANNER_H

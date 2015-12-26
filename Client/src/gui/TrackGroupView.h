@@ -2,7 +2,6 @@
 #define TRACKGROUPVIEW_H
 
 #include <QWidget>
-//#include "LocalTrackView.h"
 
 namespace Ui {
 class TrackGroupView;
@@ -21,8 +20,8 @@ public:
     virtual void setGroupName(QString groupName);
     QString getGroupName() const;
 
-    virtual void addTrackView(BaseTrackView* trackView);
-    void removeTrackView(BaseTrackView* trackView);
+    virtual void addTrackView(BaseTrackView *trackView);
+    void removeTrackView(BaseTrackView *trackView);
     void removeTrackView(int index);
 
     QSize minimumSizeHint() const;
@@ -31,15 +30,18 @@ public:
     void updateGuiElements();
 
     void refreshInputSelectionName(int inputTrackIndex);
-    inline int getTracksCount() const{return trackViews.size();}
+    inline int getTracksCount() const
+    {
+        return trackViews.size();
+    }
 
     void setUnlightStatus(bool unlighted);
     bool isUnlighted() const;
 
 protected:
-    void paintEvent(QPaintEvent* );
+    void paintEvent(QPaintEvent *);
 
-    QList<BaseTrackView*> trackViews;
+    QList<BaseTrackView *> trackViews;
 
     Ui::TrackGroupView *ui;
 };

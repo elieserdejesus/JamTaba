@@ -9,9 +9,11 @@
 #include "MainController.h"
 #include "Utils.h"
 
-//+++++++++++++++++++++++++
-NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, long trackID, QString channelName, Persistence::CacheEntry initialValues)
-    :BaseTrackView(mainController, trackID), cacheEntry(initialValues)
+// +++++++++++++++++++++++++
+NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, long trackID,
+                                 QString channelName, Persistence::CacheEntry initialValues) :
+    BaseTrackView(mainController, trackID),
+    cacheEntry(initialValues)
 {
     channelNameLabel = new MarqueeLabel();
     channelNameLabel->setObjectName("channelName");
@@ -25,119 +27,128 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
     ui->mainLayout->addSpacing(6);
     ui->mainLayout->addWidget(chunksDisplay);
 
+    setUnlightStatus(true);/** disabled/grayed until receive the first bytes. When the first bytes
+    // are downloaded the 'on_channelXmitChanged' slot is executed and this track is enabled.*/
 
-    setUnlightStatus(true);//disabled/grayed until receive the first bytes. When the first bytes
-    //are downloaded the 'on_channelXmitChanged' slot is executed and this track is enabled.
-
-    //remember last track values
+    // remember last track values
     ui->levelSlider->setValue(initialValues.getGain() * 100);
     ui->panSlider->setValue(initialValues.getPan() * ui->panSlider->maximum());
-    if(initialValues.isMuted()){
+    if (initialValues.isMuted())
         ui->muteButton->click();
-    }
-    if(initialValues.getBoost() < 1){
+    if (initialValues.getBoost() < 1) {
         ui->buttonBoostMinus12->click();
-    }
-    else{
-        if(initialValues.getBoost() > 1){
+    } else {
+        if (initialValues.getBoost() > 1)
             ui->buttonBoostPlus12->click();
-        }
-        else{
+        else
             ui->buttonBoostZero->click();
-        }
     }
-
 }
 
-//+++++++++++++++
-void NinjamTrackView::updateGuiElements(){
+// +++++++++++++++
+void NinjamTrackView::updateGuiElements()
+{
     BaseTrackView::updateGuiElements();
     channelNameLabel->updateMarquee();
 }
 
-//+++++= interval chunks visual feedback ++++++=
-void NinjamTrackView::setUnlightStatus(bool status){
+// +++++= interval chunks visual feedback ++++++=
+void NinjamTrackView::setUnlightStatus(bool status)
+{
     BaseTrackView::setUnlightStatus(status);
     chunksDisplay->setVisible(!status && chunksDisplay->isVisible());
 }
 
-void NinjamTrackView::finishCurrentDownload(){
-    if(chunksDisplay->isVisible()){
+void NinjamTrackView::finishCurrentDownload()
+{
+    if (chunksDisplay->isVisible())
         chunksDisplay->startNewInterval();
-    }
 }
 
-void NinjamTrackView::incrementDownloadedChunks(){
+void NinjamTrackView::incrementDownloadedChunks()
+{
     chunksDisplay->incrementDownloadedChunks();
 }
 
-void NinjamTrackView::setDownloadedChunksDisplayVisibility(bool visible){
-    if(chunksDisplay->isVisible() != visible){
+void NinjamTrackView::setDownloadedChunksDisplayVisibility(bool visible)
+{
+    if (chunksDisplay->isVisible() != visible) {
         chunksDisplay->reset();
         chunksDisplay->setVisible(visible);
     }
 }
 
-//+++++++++++++++++++
+// +++++++++++++++++++
 
-void NinjamTrackView::setChannelName(QString name){
+void NinjamTrackView::setChannelName(QString name)
+{
     this->channelNameLabel->setText(name);
     int nameWidth = this->channelNameLabel->fontMetrics().width(name);
-    if(nameWidth <= this->channelNameLabel->contentsRect().width()){
+    if (nameWidth <= this->channelNameLabel->contentsRect().width())
         this->channelNameLabel->setAlignment(Qt::AlignCenter);
-    }
-    else{
+    else
         this->channelNameLabel->setAlignment(Qt::AlignLeft);
-    }
     this->channelNameLabel->setToolTip(name);
 }
 
-//+++++++++++++++++++++
+// +++++++++++++++++++++
 
-void NinjamTrackView::onPanSliderMoved(int value){
+void NinjamTrackView::onPanSliderMoved(int value)
+{
     BaseTrackView::onPanSliderMoved(value);
     cacheEntry.setPan(mainController->getTrackNode(getTrackID())->getPan());
     mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
 }
 
-void NinjamTrackView::onFaderMoved(int value){
+void NinjamTrackView::onFaderMoved(int value)
+{
     BaseTrackView::onFaderMoved(value);
-    cacheEntry.setGain( value/100.0 );
+    cacheEntry.setGain(value/100.0);
     mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
 }
 
-void NinjamTrackView::onMuteClicked(){
+void NinjamTrackView::onMuteClicked()
+{
     BaseTrackView::onMuteClicked();
     cacheEntry.setMuted(mainController->getTrackNode(getTrackID())->isMuted());
     mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
 }
 
-void NinjamTrackView::onBoostButtonClicked(){
+void NinjamTrackView::onBoostButtonClicked()
+{
     BaseTrackView::onBoostButtonClicked();
     cacheEntry.setBoost(mainController->getTrackNode(getTrackID())->getBoost());
     mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
 }
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamTrackGroupView::updateGeoLocation(){
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamTrackGroupView::updateGeoLocation()
+{
     Geo::Location location = mainController->getGeoLocation(this->userIP);
-    countryLabel->setText("<img src=:/flags/flags/" + location.getCountryCode().toLower() +".png> <br>" + location.getCountryName());
+    countryLabel->setText(
+        "<img src=:/flags/flags/" + location.getCountryCode().toLower() +".png> <br>"
+        + location.getCountryName());
 }
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainController *mainController, long trackID, QString channelName, Persistence::CacheEntry initialValues)
-    :TrackGroupView(parent), mainController(mainController), userIP(initialValues.getUserIP())
+NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent,
+                                           Controller::MainController *mainController, long trackID,
+                                           QString channelName,
+                                           Persistence::CacheEntry initialValues) :
+    TrackGroupView(parent),
+    mainController(mainController),
+    userIP(initialValues.getUserIP())
 {
     setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred));
 
-    //change the top panel layout to vertical (original is horizontal)
+    // change the top panel layout to vertical (original is horizontal)
     ui->topPanel->layout()->removeWidget(ui->groupNameField);
     delete ui->topPanel->layout();
     ui->topPanel->setLayout(new QVBoxLayout());
     ui->topPanel->layout()->setContentsMargins(3, 6, 3, 3);
 
-    //replace the original QLineEdit with a MarqueeLabel
+    // replace the original QLineEdit with a MarqueeLabel
 
     groupNameLabel = new MarqueeLabel();
     delete ui->groupNameField;
@@ -146,43 +157,40 @@ NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent, Controller::MainCont
 
     setGroupName(initialValues.getUserName());
 
-    //country flag label
+    // country flag label
     countryLabel = new QLabel();
     countryLabel->setObjectName("countryLabel");
     countryLabel->setTextFormat(Qt::RichText);
     updateGeoLocation();
-    //countryLabel->setText("<img src=:/flags/flags/" + countryCode +".png> <br>" + countryName);
 
     ui->topPanel->layout()->addWidget(countryLabel);
 
-    //create the first subchannel by default
+    // create the first subchannel by default
     addTrackView(new NinjamTrackView(mainController, trackID, channelName, initialValues));
 }
 
-void NinjamTrackGroupView::setGroupName(QString groupName){
+void NinjamTrackGroupView::setGroupName(QString groupName)
+{
     groupNameLabel->setText(groupName);
 }
 
-void NinjamTrackGroupView::setNarrowStatus(bool narrow){
-    foreach (BaseTrackView* trackView, trackViews) {
+void NinjamTrackGroupView::setNarrowStatus(bool narrow)
+{
+    foreach (BaseTrackView *trackView, trackViews) {
         bool setToWide = !narrow && trackViews.size() <= 1;
-        if(setToWide){
-           trackView->setToWide();
-        }
-        else{
-
-           trackView->setToNarrow();
-        }
+        if (setToWide)
+            trackView->setToWide();
+        else
+            trackView->setToNarrow();
     }
 }
 
-void NinjamTrackGroupView::updateGuiElements(){
+void NinjamTrackGroupView::updateGuiElements()
+{
     TrackGroupView::updateGuiElements();
     groupNameLabel->updateMarquee();
 }
 
 NinjamTrackGroupView::~NinjamTrackGroupView()
 {
-
 }
-

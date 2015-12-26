@@ -3,38 +3,40 @@
 #include "core/AudioNode.h"
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
-#include <deque>
+// #include <deque>
 #include "SamplesBufferResampler.h"
 
 class QIODevice;
 
 namespace Audio {
-
 class Mp3Decoder;
 
-class AbstractMp3Streamer : public AudioNode{
-   Q_OBJECT//allow signal/slots
+class AbstractMp3Streamer : public AudioNode
+{
+    Q_OBJECT
 public:
-    explicit AbstractMp3Streamer(Audio::Mp3Decoder* decoder);
+    explicit AbstractMp3Streamer(Audio::Mp3Decoder *decoder);
     ~AbstractMp3Streamer();
-    virtual void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
+    virtual void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
+                                  int sampleRate, const Midi::MidiBuffer &midiBuffer);
     virtual void stopCurrentStream();
     virtual void setStreamPath(QString streamPath);
-    inline bool isStreaming() const{return streaming;}
+    inline bool isStreaming() const
+    {
+        return streaming;
+    }
+
     virtual int getSampleRate() const;
     virtual bool needResamplingFor(int targetSampleRate) const;
 signals:
     void error(QString errorMsg);
 private:
     static const int MAX_BYTES_PER_DECODING;
-    //circular buffer
 
 protected:
-    //Audio::FaderProcessor faderProcessor;//used to apply fade in in stream
-    //QMutex mutex;
-    Audio::Mp3Decoder* decoder;
+    Audio::Mp3Decoder *decoder;
 
-    QIODevice* device;
+    QIODevice *device;
     void decode(const unsigned int maxBytesToDecode);
     QByteArray bytesToDecode;
     virtual void initialize(QString streamPath);
@@ -44,54 +46,50 @@ protected:
 
     int getSamplesToRender(int targetSampleRate, int outLenght);
 };
-//+++++++++++++++++++++++++++++++++++++++++++++
-//+++++++++++++++++++++++++++++++++++++++++++++
-//+++++++++++++++++++++++++++++++++++++++++++++
+
+// +++++++++++++++++++++++++++++++++++++++++++++
 class NinjamRoomStreamerNode : public AbstractMp3Streamer
 {
-
-Q_OBJECT//allow signal/slots
+    Q_OBJECT
 
 public:
-    NinjamRoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds=3);
-    explicit NinjamRoomStreamerNode(int bufferTimeInSeconds=3);
+    NinjamRoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds = 3);
+    explicit NinjamRoomStreamerNode(int bufferTimeInSeconds = 3);
     ~NinjamRoomStreamerNode();
 
-    virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
+    virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
+                                  const Midi::MidiBuffer &midiBuffer);
     virtual bool needResamplingFor(int targetSampleRate) const;
 protected:
     void initialize(QString streamPath);
 private:
-    QNetworkAccessManager* httpClient;
-    //bool buffering;
-    int bufferTime;//in seconds
+    QNetworkAccessManager *httpClient;
+    int bufferTime;// in seconds
     bool buffering;
 
 private slots:
     void on_reply_error(QNetworkReply::NetworkError);
     void on_reply_read();
-    //void on_reply_finished();
 };
-//++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++
 class AudioFileStreamerNode : public AbstractMp3Streamer
 {
-    //Q_OBJECT//allow signal/slots
-
 protected:
     void initialize(QString streamPath);
 
 public:
     explicit AudioFileStreamerNode(QString file);
     ~AudioFileStreamerNode();
-    virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
-
+    virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
+                                  const Midi::MidiBuffer &midiBuffer);
 };
 
-//++++++++++++++++++++++
+// ++++++++++++++++++++++
 
-class TestStreamerNode : public AbstractMp3Streamer{
+class TestStreamerNode : public AbstractMp3Streamer
+{
 private:
-    OscillatorAudioNode* oscilator;
+    OscillatorAudioNode *oscilator;
     bool playing;
 protected:
     void initialize(QString streamPath);
@@ -100,8 +98,7 @@ public:
     ~TestStreamerNode();
     void stopCurrentStream();
     void setStreamPath(QString streamPath);
-    virtual void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate, const Midi::MidiBuffer& midiBuffer);
+    virtual void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
+                                  int sampleRate, const Midi::MidiBuffer &midiBuffer);
 };
-
-
-}//namespace end
+}// namespace end

@@ -4,16 +4,14 @@
 #include "JamRecorder.h"
 
 namespace Recorder {
-
-class ReaperProjectGenerator : public JamMetadataWriter {
+class ReaperProjectGenerator : public JamMetadataWriter
+{
 public:
     void write(Jam jam);
 
 private:
-    static QString buildTrackName(QString userName, quint8 channelIndex) ;
-
+    static QString buildTrackName(QString userName, quint8 channelIndex);
 };
-
 }
 
 #endif

@@ -12,19 +12,16 @@
 #include <QThread>
 #include <cassert>
 
-#include "../log/logging.h"
+#include "log/logging.h"
 
 using namespace Ninjam;
 
-//std::unique_ptr<Service> Service::serviceInstance;
-
 const QStringList Service::botNames = buildBotNamesList();
 
-//++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++
 
-//class Download;
-
-class Service::Download {
+class Service::Download
+{
 private:
     quint8 channelIndex;
     QString userFullName;
@@ -32,85 +29,100 @@ private:
     QByteArray vorbisData;
     static int instances;
 public:
-    Download(QString userFullName, quint8 channelIndex, QString GUID)
-        :channelIndex(channelIndex), userFullName(userFullName), GUID(GUID){
+    Download(QString userFullName, quint8 channelIndex, QString GUID) :
+        channelIndex(channelIndex),
+        userFullName(userFullName),
+        GUID(GUID)
+    {
         instances++;
         qCDebug(jtNinjamProtocol) << "Download constructor instances: " << instances;
     }
-    Download(){
+
+    Download()
+    {
         qCritical() << "using the default constructor!";
     }
 
-    ~Download(){
+    ~Download()
+    {
         instances--;
         qCDebug(jtNinjamProtocol) << "Download destructor instances: " << instances;
     }
 
-    inline void appendVorbisData(QByteArray data){ this->vorbisData.append(data); }
+    inline void appendVorbisData(QByteArray data)
+    {
+        this->vorbisData.append(data);
+    }
 
-    inline quint8 getChannelIndex() const{return channelIndex;}
-    inline QString getUserFullName() const{return userFullName;}
-    inline QString getGUI() const{return GUID;}
-    inline QByteArray getVorbisData() const{return vorbisData;}
+    inline quint8 getChannelIndex() const
+    {
+        return channelIndex;
+    }
 
+    inline QString getUserFullName() const
+    {
+        return userFullName;
+    }
+
+    inline QString getGUI() const
+    {
+        return GUID;
+    }
+
+    inline QByteArray getVorbisData() const
+    {
+        return vorbisData;
+    }
 };
 int Ninjam::Service::Download::instances = 0;
 
+// ++++++++++++++++++++++++++++++++++++++++
 
-//++++++++++++++++++++++++++++++++++++++++
-
-
-Service::Service()
-    :
-      lastSendTime(0),
-//      running(false),
-      initialized(false)
-
+Service::Service() :
+    lastSendTime(0),
+    initialized(false)
 {
     connect(&socket, SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
-    connect(&socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
+    connect(&socket, SIGNAL(error(QAbstractSocket::SocketError)), this,
+            SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
     connect(&socket, SIGNAL(disconnected()), this, SLOT(socketDisconnectSlot()));
     connect(&socket, SIGNAL(connected()), this, SLOT(socketConnectedSlot()));
 }
 
-Service::~Service(){
-    //qCDebug(ninjamService) << "NinjamService destructor";
+Service::~Service()
+{
     disconnect(&socket, SIGNAL(readyRead()), this, SLOT(socketReadSlot()));
-    disconnect(&socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
+    disconnect(&socket, SIGNAL(error(QAbstractSocket::SocketError)), this,
+               SLOT(socketErrorSlot(QAbstractSocket::SocketError)));
     disconnect(&socket, SIGNAL(disconnected()), this, SLOT(socketDisconnectSlot()));
     disconnect(&socket, SIGNAL(connected()), this, SLOT(socketConnectedSlot()));
 
-    if( socket.isValid() && socket.isOpen()){
+    if (socket.isValid() && socket.isOpen())
         socket.disconnectFromHost();
-    }
 }
 
-void Service::sendAudioIntervalPart(QByteArray GUID, QByteArray encodedAudioBuffer, bool isLastPart){
+void Service::sendAudioIntervalPart(QByteArray GUID, QByteArray encodedAudioBuffer, bool isLastPart)
+{
     qCDebug(jtNinjamProtocol) << "sending audio interval part";
-    if(!initialized){
+    if (!initialized)
         return;
-    }
     ClientIntervalUploadWrite msg(GUID, encodedAudioBuffer, isLastPart);
     sendMessageToServer(&msg);
 }
 
-void Service::sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex){
+void Service::sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex)
+{
     qCDebug(jtNinjamProtocol) << "sending audio interval begin";
-    if(!initialized){
+    if (!initialized)
         return;
-    }
     ClientUploadIntervalBegin msg(GUID, channelIndex, this->userName);
     sendMessageToServer(&msg);
 }
 
-//void Service::stopTransmitting(char* GUID[], quint8 userChannel){
-//    enqueueMessageToSend(new ClientUploadIntervalBegin(userChannel, newUserName));
-//}
-
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void Service::socketReadSlot(){
-    if(socket.bytesAvailable() < 5){
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void Service::socketReadSlot()
+{
+    if (socket.bytesAvailable() < 5) {
         qCDebug(jtNinjamProtocol) << "not have enough bytes to read message header (5 bytes)";
         return;
     }
@@ -122,22 +134,24 @@ void Service::socketReadSlot(){
 
     static quint8 messageTypeCode;
     static quint32 payloadLenght;
-    while (socket.bytesAvailable() >= 5){//consume all messages
-        if(!lastMessageWasIncomplete){
+    while (socket.bytesAvailable() >= 5) {// consume all messages
+        if (!lastMessageWasIncomplete) {
             stream >> messageTypeCode >> payloadLenght;
-            qCDebug(jtNinjamProtocol) << "reading message from socket msgType:" << messageTypeCode << " payloadLenght:" << payloadLenght;
+            qCDebug(jtNinjamProtocol) << "reading message from socket msgType:"
+                                      << messageTypeCode << " payloadLenght:" << payloadLenght;
         }
-        if (socket.bytesAvailable() >= (int)payloadLenght) {//message payload is available to read
+        if (socket.bytesAvailable() >= (int)payloadLenght) {// message payload is available to read
             lastMessageWasIncomplete = false;
-            const Ninjam::ServerMessage& message = ServerMessageParser::parse(static_cast<ServerMessageType>(messageTypeCode), stream, payloadLenght) ;
-            //qCDebug(jtNinjamProtocol) << message;
+            const Ninjam::ServerMessage &message
+                = ServerMessageParser::parse(static_cast<ServerMessageType>(messageTypeCode),
+                                             stream,
+                                             payloadLenght);
             invokeMessageHandler(message);
-            if(needSendKeepAlive()){
+            if (needSendKeepAlive()) {
                 ClientKeepAlive clientKeepAliveMessage;
-                sendMessageToServer((ClientMessage*)&clientKeepAliveMessage);
+                sendMessageToServer((ClientMessage *)&clientKeepAliveMessage);
             }
-        }
-        else{
+        } else {
             qCDebug(jtNinjamProtocol) << "incomplete message!";
             lastMessageWasIncomplete = true;
             break;
@@ -153,31 +167,26 @@ void Service::socketErrorSlot(QAbstractSocket::SocketError e)
     emit error(socket.errorString());
 }
 
-void Service::socketConnectedSlot(){
+void Service::socketConnectedSlot()
+{
     qCDebug(jtNinjamProtocol) << "socket connected on " << socket.peerName();
-
 }
 
-void Service::socketDisconnectSlot(){
+void Service::socketDisconnectSlot()
+{
     this->initialized = false;
     qCDebug(jtNinjamProtocol) << "socket disconnected from " << socket.peerName();
     emit disconnectedFromServer(*currentServer);
 }
 
-
-//Service* Service::getInstance() {
-//    if(!serviceInstance){
-//        serviceInstance = std::unique_ptr<Service>(new Service());
-//    }
-//    return serviceInstance.get();
-//}
-
-bool Service::isBotName(QString userName) {
+bool Service::isBotName(QString userName)
+{
     userName = userName.trimmed();
     return botNames.contains(userName);
 }
 
-QStringList Service::buildBotNamesList(){
+QStringList Service::buildBotNamesList()
+{
     QStringList names;
     names.append("Jambot");
     names.append("ninjamer.com");
@@ -190,216 +199,218 @@ QStringList Service::buildBotNamesList(){
     return names;
 }
 
-QString Service::getConnectedUserName() {
-    if (initialized) {
+QString Service::getConnectedUserName()
+{
+    if (initialized)
         return newUserName;
-    }
     qCritical() << "not initialized, newUserName is not available!";
     return "";
 }
 
-float Service::getIntervalPeriod() {
-    if (currentServer ) {
+float Service::getIntervalPeriod()
+{
+    if (currentServer)
         return (float)60000 / currentServer->getBpm() * currentServer->getBpi();
-    }
     return 0;
 }
 
-
-void Service::voteToChangeBPI(int newBPI){
+void Service::voteToChangeBPI(int newBPI)
+{
     QString text = "!vote bpi " + QString::number(newBPI);
     ChatMessage message(text);
     sendMessageToServer(&message);
 }
 
-void Service::voteToChangeBPM(int newBPM){
+void Service::voteToChangeBPM(int newBPM)
+{
     QString text = "!vote bpm " + QString::number(newBPM);
     ChatMessage message(text);
     sendMessageToServer(&message);
 }
 
-void Service::sendChatMessageToServer(QString message){
+void Service::sendChatMessageToServer(QString message)
+{
     ChatMessage msg(message);
     sendMessageToServer(&msg);
 }
 
-void Service::sendMessageToServer(ClientMessage *message){
-    //qCDebug(ninjamService) << *message;
+void Service::sendMessageToServer(ClientMessage *message)
+{
     QByteArray outBuffer;
     message->serializeTo(outBuffer);
 
     int totalDataToSend = outBuffer.size();
     int dataSended = 0;
     int bytesWrited = -1;
-    do{
-        bytesWrited =  socket.write(outBuffer.data() + dataSended, totalDataToSend - dataSended);
-        if(bytesWrited > 0){
+    do {
+        bytesWrited = socket.write(outBuffer.data() + dataSended, totalDataToSend - dataSended);
+        if (bytesWrited > 0)
             dataSended += bytesWrited;
-        }
-    }
-    while(dataSended < totalDataToSend && bytesWrited != -1);
+    } while (dataSended < totalDataToSend && bytesWrited != -1);
 
-    if(bytesWrited > 0){
+    if (bytesWrited > 0) {
         socket.flush();
         lastSendTime = QDateTime::currentMSecsSinceEpoch();
-    }
-    else{
+    } else {
         qCCritical(jtNinjamProtocol) << "Bytes not writed in socket!";
     }
 
-    if((int)message->getPayload() + 5 != outBuffer.size()){
-        qCWarning(jtNinjamProtocol()) << "(int)message->getPayload() + 5: " << ((int)message->getPayload() + 5) << "outbuffer.size():" << outBuffer.size();
+    if ((int)message->getPayload() + 5 != outBuffer.size()) {
+        qCWarning(jtNinjamProtocol()) << "(int)message->getPayload() + 5: "
+                                      << ((int)message->getPayload() + 5) << "outbuffer.size():"
+                                      << outBuffer.size();
     }
-
 }
 
-bool Service::needSendKeepAlive() const{
+bool Service::needSendKeepAlive() const
+{
     long ellapsedSeconds = (int)(QDateTime::currentMSecsSinceEpoch() - lastSendTime)/1000;
     return ellapsedSeconds >= serverKeepAlivePeriod;
 }
 
-void Service::handle(const UserInfoChangeNotifyMessage& msg) {
-    //QMap<NinjamUser*, QList<NinjamUserChannel*>> allUsersChannels = msg.getUsersChannels();
-    QSet<QString> users = QSet<QString>::fromList( msg.getUsersNames());
-    foreach (QString userFullName , users) {
+void Service::handle(const UserInfoChangeNotifyMessage &msg)
+{
+    QSet<QString> users = QSet<QString>::fromList(msg.getUsersNames());
+    foreach (QString userFullName, users) {
         if (!currentServer->containsUser(userFullName)) {
             User newUser(userFullName);
-            currentServer->addUser( newUser );
+            currentServer->addUser(newUser);
             emit userEnterInTheJam(newUser);
         }
         handleUserChannels(userFullName, msg.getUserChannels(userFullName));
     }
 
     ClientSetUserMask setUserMask(msg.getUsersNames());
-    sendMessageToServer( &setUserMask );//enable new users channels
+    sendMessageToServer(&setUserMask);  // enable new users channels
 }
 
-void Service::handle(const DownloadIntervalBegin& msg){
+void Service::handle(const DownloadIntervalBegin &msg)
+{
     if (!msg.downloadShouldBeStopped() && msg.isValidOggDownload()) {
         quint8 channelIndex = msg.getChannelIndex();
         QString userFullName = msg.getUserName();
         QString GUID = msg.getGUID();
         downloads.insert(GUID, new Download(userFullName, channelIndex, GUID));
     }
-
 }
 
-void Service::handle(const DownloadIntervalWrite& msg){
+void Service::handle(const DownloadIntervalWrite &msg)
+{
     if (downloads.contains(msg.getGUID())) {
-        Download* download = downloads[msg.getGUID()];
+        Download *download = downloads[msg.getGUID()];
         download->appendVorbisData(msg.getEncodedAudioData());
-        User* user = currentServer->getUser(download->getUserFullName());
+        User *user = currentServer->getUser(download->getUserFullName());
         if (msg.downloadIsComplete()) {
-            emit audioIntervalCompleted(*user, download->getChannelIndex(), download->getVorbisData());
+            emit audioIntervalCompleted(*user, download->getChannelIndex(),
+                                        download->getVorbisData());
             delete download;
             downloads.remove(msg.getGUID());
-        }
-        else{
-            emit audioIntervalDownloading(*user, download->getChannelIndex(), msg.getEncodedAudioData().size());
+        } else {
+            emit audioIntervalDownloading(*user,
+                                          download->getChannelIndex(),
+                                          msg.getEncodedAudioData().size());
         }
     } else {
         qCritical("GUID is not in map!");
     }
 }
 
-void Service::handle(const ServerKeepAliveMessage& /*msg*/){
+void Service::handle(const ServerKeepAliveMessage & /*msg*/)
+{
     ClientKeepAlive clientKeepAliveMessage;
-    sendMessageToServer((ClientMessage*)&clientKeepAliveMessage);
+    sendMessageToServer((ClientMessage *)&clientKeepAliveMessage);
 }
 
-void Service::handle(const ServerAuthChallengeMessage& msg){
-    ClientAuthUserMessage msgAuthUser(this->userName, msg.getChallenge(), msg.getProtocolVersion(), this->password);
+void Service::handle(const ServerAuthChallengeMessage &msg)
+{
+    ClientAuthUserMessage msgAuthUser(this->userName, msg.getChallenge(),
+                                      msg.getProtocolVersion(), this->password);
     sendMessageToServer(&msgAuthUser);
     this->serverLicence = msg.getLicenceAgreement();
     this->serverKeepAlivePeriod = msg.getServerKeepAlivePeriod();
 }
 
-void Service::sendNewChannelsListToServer(QStringList channelsNames){
+void Service::sendNewChannelsListToServer(QStringList channelsNames)
+{
     this->channels = channelsNames;
     ClientSetChannel setChannelMsg(this->channels);
     sendMessageToServer(&setChannelMsg);
 }
 
-void Service::sendRemovedChannelIndex(int removedChannelIndex){
-    assert( removedChannelIndex >= 0 && removedChannelIndex < channels.size() );
+void Service::sendRemovedChannelIndex(int removedChannelIndex)
+{
+    assert(removedChannelIndex >= 0 && removedChannelIndex < channels.size());
     channels.removeAt(removedChannelIndex);
     ClientSetChannel setChannelMsg(this->channels);
     sendMessageToServer(&setChannelMsg);
-
 }
 
-void Service::handle(const ServerAuthReplyMessage& msg){
-    if(msg.userIsAuthenticated()){
+void Service::handle(const ServerAuthReplyMessage &msg)
+{
+    if (msg.userIsAuthenticated()) {
         this->newUserName = msg.getNewUserName();
         ClientSetChannel setChannelMsg(this->channels);
         sendMessageToServer(&setChannelMsg);
         quint8 serverMaxChannels = msg.getMaxChannels();
         QString serverIp = socket.peerName();
         quint16 serverPort = socket.peerPort();
-        currentServer.reset( new Server(serverIp, serverPort, serverMaxChannels));
+        currentServer.reset(new Server(serverIp, serverPort, serverMaxChannels));
     }
-    //when user is not authenticated the socketErrorSlot is called and dispatch an error signal
-//    else{
-//        emit error(msg.getErrorMessage());
-//    }
+    // when user is not authenticated the socketErrorSlot is called and dispatch an error signal
 }
 
-void Service::startServerConnection(QString serverIp, int serverPort, QString userName, QStringList channels, QString password){
+void Service::startServerConnection(QString serverIp, int serverPort, QString userName,
+                                    QStringList channels, QString password)
+{
     initialized = lastMessageWasIncomplete = false;
     this->userName = userName;
     this->password = password;
     this->channels = channels;
 
-    if(socket.state() == QTcpSocket::UnconnectedState){//check state to avoid a bug if user try enter in a server using double click in the button
+    // check state to avoid a bug if user try enter in a server using double click in the button
+    if (socket.state() == QTcpSocket::UnconnectedState)
         socket.connectToHost(serverIp, serverPort);
-    }
 }
 
-void Service::disconnectFromServer(bool emitDisconnectedSignal){
+void Service::disconnectFromServer(bool emitDisconnectedSignal)
+{
     qCDebug(jtNinjamProtocol) << "disconnecting from " << socket.peerName();
-    if(socket.isOpen()){
-        if(!emitDisconnectedSignal){
-            socket.blockSignals(true); //avoid generate events when disconnecting/exiting
-        }
+    if (socket.isOpen()) {
+        if (!emitDisconnectedSignal)
+            socket.blockSignals(true); // avoid generate events when disconnecting/exiting
         socket.disconnectFromHost();
     }
 }
 
-void Service::setBpm(quint16 newBpm){
-    if (currentServer == nullptr) {
+void Service::setBpm(quint16 newBpm)
+{
+    if (currentServer == nullptr)
         throw ("currentServer == null");
-    }
-    if (currentServer->setBpm(newBpm) && initialized) {
-
+    if (currentServer->setBpm(newBpm) && initialized)
         emit serverBpmChanged(currentServer->getBpm());
-
-    }
 }
 
-void Service::setBpi(quint16 bpi) {
-    if (currentServer == nullptr) {
+void Service::setBpi(quint16 bpi)
+{
+    if (currentServer == nullptr)
         throw ("currentServer == null");
-    }
     quint16 lastBpi = currentServer->getBpi();
-    if (currentServer->setBpi(bpi) && initialized) {
+    if (currentServer->setBpi(bpi) && initialized)
         emit serverBpiChanged(currentServer->getBpi(), lastBpi);
-    }
 }
 
-//+++++++++++++ SERVER MESSAGE HANDLERS +++++++++++++=
-void Service::handleUserChannels(QString userFullName, QList<UserChannel> channelsInTheServer) {
-    //check for new channels
-    User* user = this->currentServer->getUser(userFullName);
-    //qWarning() << user->getName() << " canais:" << user->getChannels().size();
-    foreach (UserChannel c , channelsInTheServer) {
+// +++++++++++++ SERVER MESSAGE HANDLERS +++++++++++++=
+void Service::handleUserChannels(QString userFullName, QList<UserChannel> channelsInTheServer)
+{
+    // check for new channels
+    User *user = this->currentServer->getUser(userFullName);
+    foreach (UserChannel c, channelsInTheServer) {
         if (c.isActive()) {
             if (!user->hasChannel(c.getIndex())) {
                 user->addChannel(c);
                 emit userChannelCreated(*user, c);
-
-            } else {//check for channel updates
+            } else {// check for channel updates
                 if (user->hasChannels()) {
-                    //UserChannel userChannel = user->getChannel(c.getIndex());
                     if (channelIsOutdate(*user, c)) {
                         user->setChannelName(c.getIndex(), c.getName());
                         user->setChannelFlags(c.getIndex(), c.getFlags());
@@ -407,32 +418,30 @@ void Service::handleUserChannels(QString userFullName, QList<UserChannel> channe
                     }
                 }
             }
-        }
-        else{
+        } else {
             user->removeChannel(c.getIndex());
             emit userChannelRemoved(*user, c);
         }
     }
 }
 
-//verifica se o canal do usuario esta diferente do canal que veio do servidor
-bool Service::channelIsOutdate(const User& user, const UserChannel& serverChannel) {
-    if (user.getFullName() != serverChannel.getUserFullName()) {
+// verifica se o canal do usuario esta diferente do canal que veio do servidor
+bool Service::channelIsOutdate(const User &user, const UserChannel &serverChannel)
+{
+    if (user.getFullName() != serverChannel.getUserFullName())
         throw ("The user in channel is illegal!");
-    }
     UserChannel userChannel = user.getChannel(serverChannel.getIndex());
-    if (userChannel.getName() != serverChannel.getName()) {
+    if (userChannel.getName() != serverChannel.getName())
         return true;
-    }
-    if (userChannel.getFlags() != serverChannel.getFlags()) {
+    if (userChannel.getFlags() != serverChannel.getFlags())
         return true;
-    }
     return false;
 }
 
-//+++++++++++++ CHAT MESSAGES ++++++++++++++++++++++
+// +++++++++++++ CHAT MESSAGES ++++++++++++++++++++++
 
-void Service::handle(const ServerChatMessage& msg) {
+void Service::handle(const ServerChatMessage &msg)
+{
     switch (msg.getCommand()) {
     case ChatCommandType::JOIN:
         //
@@ -441,41 +450,32 @@ void Service::handle(const ServerChatMessage& msg) {
     {
         QString messageSender = msg.getArguments().at(0);
         QString messageText = msg.getArguments().at(1);
-
         emit chatMessageReceived(User(messageSender), messageText);
-
         break;
-
     }
     case ChatCommandType::PART:
     {
         QString userLeavingTheServer = msg.getArguments().at(0);
-
         emit userLeaveTheJam(User(userLeavingTheServer));
-
         break;
     }
     case ChatCommandType::PRIVMSG:
     {
         QString messageSender = msg.getArguments().at(0);
         QString messageText = msg.getArguments().at(1);
-
         emit privateMessageReceived(User(messageSender), messageText);
-
-
         break;
     }
     case ChatCommandType::TOPIC:
     {
-        //QString userName = msg.getArguments().at(0);
         QString topicText = msg.getArguments().at(1);
         if (!initialized) {
             initialized = true;
 
             currentServer->setTopic(topicText);
-            currentServer->setLicence(serverLicence);//server licence is received when the hand shake with server is started
 
-            //serverLicence.clear();
+            // server licence is received when the hand shake with server is started
+            currentServer->setLicence(serverLicence);
             emit connectedInServer(*currentServer);
             emit chatMessageReceived(Ninjam::User(currentServer->getHostName()), topicText);
         }
@@ -485,9 +485,7 @@ void Service::handle(const ServerChatMessage& msg) {
     {
         int users = msg.getArguments().at(0).toInt();
         int maxUsers = msg.getArguments().at(1).toInt();
-
         emit userCountMessageReceived(users, maxUsers);
-
         break;
     }
     default:
@@ -495,45 +493,42 @@ void Service::handle(const ServerChatMessage& msg) {
     }
 }
 
-
-void Service::handle(const ServerConfigChangeNotifyMessage& msg)
+void Service::handle(const ServerConfigChangeNotifyMessage &msg)
 {
     quint16 bpi = msg.getBpi();
     quint16 bpm = msg.getBpm();
-    if (bpi != currentServer->getBpi()) {
+    if (bpi != currentServer->getBpi())
         setBpi(bpi);
-    }
-    if (bpm != currentServer->getBpm()) {
+    if (bpm != currentServer->getBpm())
         setBpm(bpm);
-    }
 }
 
-void Service::invokeMessageHandler(const ServerMessage& message){
-    //qDebug() << message;
+void Service::invokeMessageHandler(const ServerMessage &message)
+{
     switch (message.getMessageType()) {
     case ServerMessageType::AUTH_CHALLENGE:
-        handle((ServerAuthChallengeMessage&)message);
+        handle((ServerAuthChallengeMessage &)message);
         break;
     case ServerMessageType::AUTH_REPLY:
-        handle((ServerAuthReplyMessage&)message);
+        handle((ServerAuthReplyMessage &)message);
         break;
     case ServerMessageType::SERVER_CONFIG_CHANGE_NOTIFY:
-        handle((ServerConfigChangeNotifyMessage&) message);
+        handle((ServerConfigChangeNotifyMessage &)message);
         break;
     case ServerMessageType::USER_INFO_CHANGE_NOTIFY:
-        handle((UserInfoChangeNotifyMessage&) message);
+        handle((UserInfoChangeNotifyMessage &)message);
         break;
     case ServerMessageType::CHAT_MESSAGE:
-        handle((ServerChatMessage&) message);
+        handle((ServerChatMessage &)message);
         break;
     case ServerMessageType::KEEP_ALIVE:
-        handle((ServerKeepAliveMessage&) message);
+        handle((ServerKeepAliveMessage &)message);
         break;
     case ServerMessageType::DOWNLOAD_INTERVAL_BEGIN:
-        handle((DownloadIntervalBegin&) message);
+        handle((DownloadIntervalBegin &)message);
         break;
     case ServerMessageType::DOWNLOAD_INTERVAL_WRITE:
-        handle((DownloadIntervalWrite&) message);
+        handle((DownloadIntervalWrite &)message);
         break;
 
     default:
@@ -541,6 +536,7 @@ void Service::invokeMessageHandler(const ServerMessage& message){
     }
 }
 
-QString Service::getCurrentServerLicence() const{
+QString Service::getCurrentServerLicence() const
+{
     return serverLicence;
 }
