@@ -2,81 +2,78 @@
     error( "Couldn't find the common.pri file!" )
 }
 
-QT       += core gui network widgets
+QT += core gui network widgets
 
 TARGET = Jamtaba2
 TEMPLATE = app
 
-HEADERS += \
-    ../src/audio/core/PortAudioDriver.h \
-    ../src/recorder/JamRecorder.h \
-    ../src/recorder/ReaperProjectGenerator.h \
-    ../src/ninjam/protocol/ServerMessageParser.h \
-    ../src/ninjam/protocol/ServerMessages.h \
-    ../src/ninjam/protocol/ClientMessages.h \
-    ../src/loginserver/natmap.h \
-    ../src/audio/codec.h \
-    ../src/midi/rtMidiDriver.h \
-    ../src/audio/Resampler.h \
-    ../src/audio/vorbis/VorbisDecoder.h \
-    ../src/audio/vorbis/VorbisEncoder.h \
-    ../src/persistence/Settings.h \
-    ../src/audio/vst/VstPlugin.h \
-    ../src/audio/vst/vsthost.h \
-    ../src/geo/WebIpToLocationResolver.h \
-    ../src/StandAloneMainController.h \
-    ../src/gui/MainWindowStandalone.h \
-    ../src/Libs/SingleApplication/singleapplication.h \
-    ../src/audio/core/PluginDescriptor.h \
-    ../src/audio/vst/VstLoader.h \
+INCLUDEPATH += $$PWD/../libs/includes/portaudio
+INCLUDEPATH += $$PWD/../libs/includes/rtmidi
+INCLUDEPATH += $$PWD/../libs/includes/ogg
+INCLUDEPATH += $$PWD/../libs/includes/vorbis
+INCLUDEPATH += $$PWD/../libs/includes/minimp3
+INCLUDEPATH += $$VST_SDK_PATH/pluginterfaces/vst2.x
 
-SOURCES += \
-    ../src/main.cpp \
-    ../src/recorder/JamRecorder.cpp \
-    ../src/recorder/ReaperProjectGenerator.cpp \
-    ../src/loginserver/LoginService.cpp \
-    ../src/loginserver/JsonUtils.cpp \
-    ../src/ninjam/protocol/ServerMessages.cpp \
-    ../src/ninjam/protocol/ClientMessages.cpp \
-    ../src/ninjam/protocol/ServerMessageParser.cpp \
-    ../src/ninjam/Server.cpp \
-    ../src/midi/rtMidiDriver.cpp \
-    ../src/audio/Resampler.cpp \
-    ../src/audio/vorbis/VorbisDecoder.cpp \
-    ../src/audio/samplesbufferrecorder.cpp \
-    ../src/audio/vorbis/VorbisEncoder.cpp \
-    ../src/persistence/Settings.cpp \
-    ../src/audio/vst/VstPlugin.cpp \
-    ../src/audio/vst/vsthost.cpp \
-    ../src/geo/WebIpToLocationResolver.cpp \
-    ../src/StandAloneMainController.cpp \
-    ../src/gui/MainWindowStandalone.cpp \
-    ../src/Libs/SingleApplication/singleapplication.cpp \
-    ../src/audio/core/PortAudioDriver.cpp \
-    ../src/audio/core/PluginDescriptor.cpp \
-    ../src/audio/vst/VstLoader.cpp \
+DEPENDPATH +=  $$PWD/../libs/includes/portaudio
+DEPENDPATH +=  $$PWD/../libs/includes/rtmidi
+DEPENDPATH +=  $$PWD/../libs/includes/ogg
+DEPENDPATH +=  $$PWD/../libs/includes/vorbis
+DEPENDPATH +=  $$PWD/../libs/includes/minimp3
+
+HEADERS += audio/core/PortAudioDriver.h
+HEADERS += recorder/JamRecorder.h
+HEADERS += recorder/ReaperProjectGenerator.h
+HEADERS += ninjam/protocol/ServerMessageParser.h
+HEADERS += ninjam/protocol/ServerMessages.h
+HEADERS += ninjam/protocol/ClientMessages.h
+HEADERS += loginserver/natmap.h
+HEADERS += audio/codec.h
+HEADERS += midi/rtMidiDriver.h
+HEADERS += audio/Resampler.h
+HEADERS += audio/vorbis/VorbisDecoder.h
+HEADERS += audio/vorbis/VorbisEncoder.h
+HEADERS += persistence/Settings.h
+HEADERS += audio/vst/VstPlugin.h
+HEADERS += audio/vst/vsthost.h
+HEADERS += geo/WebIpToLocationResolver.h
+HEADERS += StandAloneMainController.h
+HEADERS += gui/MainWindowStandalone.h
+HEADERS += Libs/SingleApplication/singleapplication.h
+HEADERS += audio/core/PluginDescriptor.h
+HEADERS += audio/vst/VstLoader.h
+
+SOURCES += main.cpp
+SOURCES += recorder/JamRecorder.cpp
+SOURCES += recorder/ReaperProjectGenerator.cpp
+SOURCES += loginserver/LoginService.cpp
+SOURCES += loginserver/JsonUtils.cpp
+SOURCES += ninjam/protocol/ServerMessages.cpp
+SOURCES += ninjam/protocol/ClientMessages.cpp
+SOURCES += ninjam/protocol/ServerMessageParser.cpp
+SOURCES += ninjam/Server.cpp
+SOURCES += midi/rtMidiDriver.cpp
+SOURCES += audio/Resampler.cpp
+SOURCES += audio/vorbis/VorbisDecoder.cpp
+SOURCES += audio/samplesbufferrecorder.cpp
+SOURCES += audio/vorbis/VorbisEncoder.cpp
+SOURCES += persistence/Settings.cpp
+SOURCES += audio/vst/VstPlugin.cpp
+SOURCES += audio/vst/vsthost.cpp
+SOURCES += geo/WebIpToLocationResolver.cpp
+SOURCES += StandAloneMainController.cpp
+SOURCES += gui/MainWindowStandalone.cpp
+SOURCES += Libs/SingleApplication/singleapplication.cpp
+SOURCES += audio/core/PortAudioDriver.cpp
+SOURCES += audio/core/PluginDescriptor.cpp
+SOURCES += audio/vst/VstLoader.cpp
 
 #conditional sources to different platforms
 win32{
-    SOURCES += ../src/audio/core/WindowsPortAudioDriver.cpp \
+    SOURCES += audio/core/WindowsPortAudioDriver.cpp
 }
 macx{
-    SOURCES += ../src/audio/core/MacPortAudioDriver.cpp \
+    SOURCES += audio/core/MacPortAudioDriver.cpp
 }
-
-INCLUDEPATH += $$PWD/../libs/includes/portaudio        \
-               $$PWD/../libs/includes/rtmidi           \
-               $$PWD/../libs/includes/ogg              \
-               $$PWD/../libs/includes/vorbis           \
-               $$PWD/../libs/includes/minimp3          \
-#               $$PWD/../src/Libs                       \
-
-DEPENDPATH +=  $$PWD/../libs/includes/portaudio        \
-               $$PWD/../libs/includes/rtmidi           \
-               $$PWD/../libs/includes/ogg              \
-               $$PWD/../libs/includes/vorbis           \
-               $$PWD/../libs/includes/minimp3          \
-#               $$PWD/../src/Libs                       \
 
 win32{
 
@@ -100,7 +97,6 @@ win32{
             QMAKE_CXXFLAGS_RELEASE +=  -GL -Gy -Gw
             QMAKE_LFLAGS_RELEASE += /LTCG
         }
-
     }
 
     win32-g++{#MinGW compiler
@@ -144,11 +140,3 @@ macx{
     #mac osx doc icon
     ICON = ../Jamtaba.icns
 }
-
-INCLUDEPATH += $$VST_SDK_PATH/pluginterfaces/vst2.x/
-
-#turn on debug info on release build, usefull sometimes
-#QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
-#QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
-
-

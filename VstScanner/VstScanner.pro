@@ -8,23 +8,21 @@ DEFINES += VST_FORCE_DEPRECATED=0 #enable VST 2.3 features
 
 TEMPLATE = app
 
-HEADERS += ../src/audio/vst/VstHost.h \
-    VstPluginScanner.h
+INCLUDEPATH += ../src
+INCLUDEPATH += ../../VST_SDK/pluginterfaces/vst2.x
+VPATH       += ../src
 
-SOURCES += \
-    vstScannerMain.cpp \
-    ../src/audio/vst/VstHost.cpp \
-    ../src/audio/core/PluginDescriptor.cpp \
-    ../src/audio/vst/VstLoader.cpp \
-    ../src/log/logging.cpp \
-    VstPluginScanner.cpp \
+HEADERS += audio/vst/VstHost.h
+HEADERS += VstPluginScanner.h
 
-win32{
-    SOURCES += WindowsVstPluginScanner.cpp
-}
-macx{
-   SOURCES += MacVstPluginScanner.cpp
-}
+SOURCES += vstScannerMain.cpp
+SOURCES += audio/vst/VstHost.cpp
+SOURCES += audio/core/PluginDescriptor.cpp
+SOURCES += audio/vst/VstLoader.cpp
+SOURCES += log/logging.cpp
+SOURCES += VstPluginScanner.cpp
+win32:SOURCES += WindowsVstPluginScanner.cpp
+macx:SOURCES += MacVstPluginScanner.cpp
 
 win32{
 
@@ -51,6 +49,3 @@ macx{
     ICON = Jamtaba.icns
     CONFIG += console  #in windows we need the /SUBSYSTEM:CONSOLE,5.01 to work in Win XP
 }
-
-INCLUDEPATH += ../../VST_SDK/pluginterfaces/vst2.x/ \
-               ../src/

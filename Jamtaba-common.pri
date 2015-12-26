@@ -4,6 +4,12 @@ TEMPLATE = lib
 
 VERSION = 2.0.10
 
+INCLUDEPATH += ../src
+INCLUDEPATH += ../src/gui
+INCLUDEPATH += ../src/gui/widgets
+INCLUDEPATH += ../src/gui/chords
+VPATH       += ../src
+
 # Define the preprocessor macro to get the application version in Jamtaba application.
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += VST_FORCE_DEPRECATED=0 #enable VST 2.3 features
@@ -15,158 +21,140 @@ macx{
 
 CONFIG += c++11
 
-HEADERS += \
-    ../src/audio/core/AudioDriver.h \
-    ../src/audio/core/AudioNode.h \
-    ../src/audio/core/AudioMixer.h \
-    #--------------------------------
-    ../src/gui/widgets/PeakMeter.h \
-    ../src/gui/widgets/WavePeakPanel.h \
-    #--------------------------------
-    ../src/loginserver/LoginService.h \
-    ../src/loginserver/JsonUtils.h \
-    #--------------------------------
-    ../src/MainController.h \
-    #--------------------------------
-    ../src/ninjam/User.h \
-    ../src/ninjam/Service.h \
-    ../src/ninjam/Server.h \
-    #--------------------------------
-    ../src/audio/RoomStreamerNode.h \
-    ../src/gui/LocalTrackView.h \
-    ../src/gui/jamroomviewpanel.h \
-    ../src/gui/FxPanel.h \
-    ../src/gui/FxPanelItem.h \
-    ../src/audio/core/plugins.h \
-    ../src/gui/plugins/guis.h \
-    ../src/midi/MidiDriver.h \
-    ../src/gui/pluginscandialog.h \
-    ../src/gui/PreferencesDialog.h \
-    ../src/gui/NinjamRoomWindow.h \
-    ../src/gui/BaseTrackView.h \
-    ../src/audio/NinjamTrackNode.h \
-    ../src/gui/NinjamTrackView.h \
-    ../src/audio/MetronomeTrackNode.h \
-    ../src/gui/NinjamPanel.h \
-    ../src/ninjam/UserChannel.h \
-    ../src/audio/core/SamplesBuffer.h \
-    ../src/gui/BusyDialog.h \
-    ../src/audio/core/AudioPeak.h \
-    ../src/geo/IpToLocationResolver.h \
-    ../src/gui/ChatPanel.h \
-    ../src/gui/ChatMessagePanel.h \
-    ../src/audio/SamplesBufferResampler.h \
-    ../src/audio/samplesbufferrecorder.h \
-    ../src/gui/Highligther.h \
-    ../src/Utils.h \
-    ../src/gui/TrackGroupView.h \
-    ../src/gui/LocalTrackGroupView.h \
-    ../src/NinjamController.h \
-    ../src/gui/IntervalProgressDisplay.h \
-    ../src/audio/vst/PluginFinder.h \
-    ../src/gui/PrivateServerDialog.h \
-    ../src/gui/UserNameDialog.h \
-    ../src/gui/MainWindow.h \
-    $$PWD/src/log/logging.h \
-    $$PWD/src/gui/widgets/CustomTabWidget.h \
-#    $$PWD/src/performance/PerformanceMonitor.h \
-    $$PWD/src/gui/chords/ChordLabel.h \
-    $$PWD/src/gui/BpiUtils.h \
-    $$PWD/src/gui/chords/ChordsWidget.h \
-    $$PWD/src/gui/chords/ChordsPanel.h \
-    $$PWD/src/gui/chords/ChordProgression.h \
-    $$PWD/src/configurator.h \
-    $$PWD/src/persistence/UsersDataCache.h \
-    $$PWD/src/gui/widgets/IntervalChunksDisplay.h \
-    $$PWD/src/gui/widgets/MarqueeLabel.h
+HEADERS += audio/vst/PluginFinder.h
+HEADERS += audio/core/AudioDriver.h
+HEADERS += audio/core/AudioNode.h
+HEADERS += audio/core/AudioMixer.h
+HEADERS += audio/core/SamplesBuffer.h
+HEADERS += audio/core/AudioPeak.h
+HEADERS += audio/core/plugins.h
+HEADERS += audio/RoomStreamerNode.h
+HEADERS += audio/NinjamTrackNode.h
+HEADERS += audio/MetronomeTrackNode.h
+HEADERS += audio/SamplesBufferResampler.h
+HEADERS += audio/samplesbufferrecorder.h
+HEADERS += loginserver/LoginService.h
+HEADERS += loginserver/JsonUtils.h
+HEADERS += MainController.h
+HEADERS += NinjamController.h
+HEADERS += ninjam/User.h
+HEADERS += ninjam/Service.h
+HEADERS += ninjam/Server.h
+HEADERS += midi/MidiDriver.h
+HEADERS += gui/plugins/guis.h
+HEADERS += gui/pluginscandialog.h
+HEADERS += gui/PreferencesDialog.h
+HEADERS += gui/NinjamRoomWindow.h
+HEADERS += gui/BaseTrackView.h
+HEADERS += gui/NinjamTrackView.h
+HEADERS += gui/NinjamPanel.h
+HEADERS += gui/BusyDialog.h
+HEADERS += gui/ChatPanel.h
+HEADERS += gui/ChatMessagePanel.h
+HEADERS += gui/Highligther.h
+HEADERS += gui/TrackGroupView.h
+HEADERS += gui/LocalTrackGroupView.h
+HEADERS += gui/IntervalProgressDisplay.h
+HEADERS += gui/PrivateServerDialog.h
+HEADERS += gui/UserNameDialog.h
+HEADERS += gui/MainWindow.h
+HEADERS += gui/widgets/CustomTabWidget.h
+HEADERS += gui/widgets/IntervalChunksDisplay.h
+HEADERS += gui/widgets/MarqueeLabel.h
+HEADERS += gui/widgets/PeakMeter.h
+HEADERS += gui/widgets/WavePeakPanel.h
+HEADERS += gui/BpiUtils.h
+HEADERS += gui/chords/ChordLabel.h
+HEADERS += gui/chords/ChordsWidget.h
+HEADERS += gui/chords/ChordsPanel.h
+HEADERS += gui/chords/ChordProgression.h
+HEADERS += gui/LocalTrackView.h
+HEADERS += gui/jamroomviewpanel.h
+HEADERS += gui/FxPanel.h
+HEADERS += gui/FxPanelItem.h
+HEADERS += ninjam/UserChannel.h
+HEADERS += geo/IpToLocationResolver.h
+HEADERS += Utils.h
+HEADERS += configurator.h
+HEADERS += persistence/UsersDataCache.h
+HEADERS += log/logging.h
+#HEADERS +=performance/PerformanceMonitor.h
 
-SOURCES += \
-    ../src/audio/core/AudioDriver.cpp \
-    ../src/audio/core/AudioNode.cpp \
-    ../src/audio/core/AudioMixer.cpp \
-    ../src/audio/RoomStreamerNode.cpp \
-#------------------------------------------------
-    ../src/gui/widgets/PeakMeter.cpp \
-    ../src/gui/widgets/WavePeakPanel.cpp \
-#------------------------------------------------
-    ../src/MainController.cpp \
-##------------------------------------------------
-    ../src/ninjam/Service.cpp \
-    ../src/ninjam/User.cpp \
-    ../src/gui/LocalTrackView.cpp \
-    ../src/gui/FxPanel.cpp \
-    ../src/gui/FxPanelItem.cpp \
-    ../src/audio/core/plugins.cpp \
-    ../src/audio/codec.cpp \
-    ../src/gui/plugins/guis.cpp \
-    ../src/gui/jamroomviewpanel.cpp \
-    ../src/audio/vst/PluginFinder.cpp \
-    ../src/midi/MidiDriver.cpp \
-    ../src/gui/PreferencesDialog.cpp \
-    ../src/gui/pluginscandialog.cpp \
-    ../src/gui/NinjamRoomWindow.cpp \
-    ../src/gui/BaseTrackView.cpp \
-    ../src/audio/NinjamTrackNode.cpp \
-    ../src/gui/NinjamTrackView.cpp \
-    ../src/audio/MetronomeTrackNode.cpp \
-    ../src/gui/NinjamPanel.cpp \
-    ../src/ninjam/UserChannel.cpp \
-    ../src/audio/core/SamplesBuffer.cpp \
-    ../src/audio/SamplesBufferResampler.cpp \
-    ../src/gui/BusyDialog.cpp \
-    ../src/audio/core/AudioPeak.cpp \
-    ../src/geo/IpToLocationResolver.cpp \
-    ../src/gui/ChatPanel.cpp \
-    ../src/gui/ChatMessagePanel.cpp \
-    ../src/gui/Highligther.cpp \
-    ../src/gui/TrackGroupView.cpp \
-    ../src/gui/LocalTrackGroupView.cpp \
-    ../src/NinjamController.cpp \
-    ../src/gui/IntervalProgressDisplay.cpp \
-    ../src/gui/PrivateServerDialog.cpp \
-    ../src/gui/UserNameDialog.cpp \
-    $$PWD/src/gui/MainWindow.cpp \
-    $$PWD/src/log/logging.cpp \
-    $$PWD/src/gui/widgets/CustomTabWidget.cpp \
-    $$PWD/src/gui/chords/ChordLabel.cpp \
-    $$PWD/src/gui/BpiUtils.cpp \
-    $$PWD/src/gui/chords/ChordsWidget.cpp \
-    $$PWD/src/gui/chords/ChordsPanel.cpp \
-    $$PWD/src/gui/chords/ChordProgression.cpp \
-    $$PWD/src/configurator.cpp \
-    $$PWD/src/persistence/UsersDataCache.cpp \
-    $$PWD/src/gui/widgets/IntervalChunksDisplay.cpp \
-    $$PWD/src/gui/widgets/MarqueeLabel.cpp
+SOURCES += audio/core/AudioDriver.cpp
+SOURCES += audio/core/AudioNode.cpp
+SOURCES += audio/core/AudioMixer.cpp
+SOURCES += audio/RoomStreamerNode.cpp
+SOURCES += gui/widgets/PeakMeter.cpp
+SOURCES += gui/widgets/WavePeakPanel.cpp
+SOURCES += MainController.cpp
+SOURCES += ninjam/Service.cpp
+SOURCES += ninjam/User.cpp
+SOURCES += gui/LocalTrackView.cpp
+SOURCES += gui/FxPanel.cpp
+SOURCES += gui/FxPanelItem.cpp
+SOURCES += audio/core/plugins.cpp
+SOURCES += audio/codec.cpp
+SOURCES += gui/plugins/guis.cpp
+SOURCES += gui/jamroomviewpanel.cpp
+SOURCES += audio/vst/PluginFinder.cpp
+SOURCES += midi/MidiDriver.cpp
+SOURCES += gui/PreferencesDialog.cpp
+SOURCES += gui/pluginscandialog.cpp
+SOURCES += gui/NinjamRoomWindow.cpp
+SOURCES += gui/BaseTrackView.cpp
+SOURCES += audio/NinjamTrackNode.cpp
+SOURCES += gui/NinjamTrackView.cpp
+SOURCES += audio/MetronomeTrackNode.cpp
+SOURCES += gui/NinjamPanel.cpp
+SOURCES += ninjam/UserChannel.cpp
+SOURCES += audio/core/SamplesBuffer.cpp
+SOURCES += audio/SamplesBufferResampler.cpp
+SOURCES += gui/BusyDialog.cpp
+SOURCES += audio/core/AudioPeak.cpp
+SOURCES += geo/IpToLocationResolver.cpp
+SOURCES += gui/ChatPanel.cpp
+SOURCES += gui/ChatMessagePanel.cpp
+SOURCES += gui/Highligther.cpp
+SOURCES += gui/TrackGroupView.cpp
+SOURCES += gui/LocalTrackGroupView.cpp
+SOURCES += NinjamController.cpp
+SOURCES += gui/IntervalProgressDisplay.cpp
+SOURCES += gui/PrivateServerDialog.cpp
+SOURCES += gui/UserNameDialog.cpp
+SOURCES += gui/MainWindow.cpp
+SOURCES += log/logging.cpp
+SOURCES += gui/widgets/CustomTabWidget.cpp
+SOURCES += gui/chords/ChordLabel.cpp
+SOURCES += gui/BpiUtils.cpp
+SOURCES += gui/chords/ChordsWidget.cpp
+SOURCES += gui/chords/ChordsPanel.cpp
+SOURCES += gui/chords/ChordProgression.cpp
+SOURCES += configurator.cpp
+SOURCES += persistence/UsersDataCache.cpp
+SOURCES += gui/widgets/IntervalChunksDisplay.cpp
+SOURCES += gui/widgets/MarqueeLabel.cpp
 
 
 #multiplatform implementations
 #win32:SOURCES += $$PWD/src/performance/WindowsPerformanceMonitor.cpp
 #macx:SOURCES += $$PWD/src/performance/MacPerformanceMonitor.cpp
 
-FORMS += \
-    ../src/gui/PreferencesDialog.ui \
-    ../src/gui/pluginscandialog.ui \
-    ../src/gui/NinjamRoomWindow.ui \
-    ../src/gui/BaseTrackView.ui \
-    ../src/gui/NinjamPanel.ui \
-    ../src/gui/BusyDialog.ui \
-    ../src/gui/ChatPanel.ui \
-    ../src/gui/ChatMessagePanel.ui \
-    ../src/gui/TrackGroupView.ui \
-    ../src/gui/jamroomviewpanel.ui \
-    ../src/gui/PrivateServerDialog.ui \
-    ../src/gui/UserNameDialog.ui \
-    $$PWD/src/gui/MainWindow.ui \
-    $$PWD/src/gui/PreferencesDialog.ui \
-    $$PWD/src/gui/chords/ChordsPanel.ui
+FORMS += gui/PreferencesDialog.ui
+FORMS += gui/pluginscandialog.ui
+FORMS += gui/NinjamRoomWindow.ui
+FORMS += gui/BaseTrackView.ui
+FORMS += gui/NinjamPanel.ui
+FORMS += gui/BusyDialog.ui
+FORMS += gui/ChatPanel.ui
+FORMS += gui/ChatMessagePanel.ui
+FORMS += gui/TrackGroupView.ui
+FORMS += gui/jamroomviewpanel.ui
+FORMS += gui/PrivateServerDialog.ui
+FORMS += gui/UserNameDialog.ui
+FORMS += gui/MainWindow.ui
+FORMS += gui/PreferencesDialog.ui
+FORMS += gui/chords/ChordsPanel.ui
 
+RESOURCES += resources/jamtaba.qrc
 
-INCLUDEPATH += ../src/ \
-               ../src/gui \
-               ../src/gui/widgets \
-               ../src/gui/chords \
-
-RESOURCES += ../src/resources/jamtaba.qrc
-
-DISTFILES += \
-    $$PWD/uncrustify.cfg
+DISTFILES += uncrustify.cfg #this is the file used by the Beautifier QtCreator plugin (using the Uncrustify tool)
