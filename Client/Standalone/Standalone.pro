@@ -78,6 +78,10 @@ macx{
 win32{
 
     win32-msvc*{#all msvc compilers
+
+        #supressing warning about missing .pdb files
+        QMAKE_LFLAGS += /ignore:4099
+
         !contains(QMAKE_TARGET.arch, x86_64) {
             message("msvc x86 build") ## Windows x86 (32bit) specific build here
             LIBS_PATH = "static/win32-msvc"

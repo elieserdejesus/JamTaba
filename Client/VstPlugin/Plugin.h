@@ -7,12 +7,12 @@
 #define DEFAULT_INPUTS 2
 #define DEFAULT_OUTPUTS 1
 
-#include "audioeffectx.h"
 #include <QLabel>
 #include <QSlider>
 #include "MainController.h"
 #include "gui/MainWindow.h"
 
+#include "audioeffectx.h"
 #include "aeffectx.h"
 
 AudioEffect *createEffectInstance(audioMasterCallback audioMaster);
