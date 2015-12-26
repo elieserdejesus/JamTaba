@@ -1,9 +1,10 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QDir>
+
 #include "StandAloneMainController.h"
+#include "MainWindowStandalone.h"
 #include "persistence/Settings.h"
-#include "gui/MainWindowStandalone.h"
 #include "log/Logging.h"
 #include "Libs/SingleApplication/singleapplication.h"
 #include "Configurator.h"
