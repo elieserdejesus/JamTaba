@@ -18,61 +18,68 @@ win32-msvc* {
     #RC_FILE = vstdll.rc
 }
 
-HEADERS += \
-    ../src/recorder/JamRecorder.h \
-    ../src/recorder/ReaperProjectGenerator.h \
-    ../src/ninjam/protocol/ServerMessageParser.h \
-    ../src/ninjam/protocol/ServerMessages.h \
-    ../src/ninjam/protocol/ClientMessages.h \
-    ../src/loginserver/natmap.h \
-    ../src/audio/codec.h \
-    ../src/audio/Resampler.h \
-    ../src/audio/vorbis/VorbisDecoder.h \
-    ../src/audio/vorbis/VorbisEncoder.h \
-    ../src/persistence/Settings.h \
-    ../src/geo/WebIpToLocationResolver.h \
-    Plugin.h \
-    Editor.h \
-    MainControllerVST.h \
-    NinjamRoomWindowVST.h \
-    MainWindowVST.h \
-    KeyboardHook.h
-
-
-SOURCES += \
-    $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffectx.cpp \
-    $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffect.cpp \
-    ../src/recorder/JamRecorder.cpp \
-    ../src/recorder/ReaperProjectGenerator.cpp \
-    ../src/loginserver/LoginService.cpp \
-    ../src/loginserver/JsonUtils.cpp \
-    ../src/ninjam/protocol/ServerMessages.cpp \
-    ../src/ninjam/protocol/ClientMessages.cpp \
-    ../src/ninjam/protocol/ServerMessageParser.cpp \
-    ../src/ninjam/Server.cpp \
-    ../src/audio/Resampler.cpp \
-    ../src/audio/vorbis/VorbisDecoder.cpp \
-    ../src/audio/samplesbufferrecorder.cpp \
-    ../src/audio/vorbis/VorbisEncoder.cpp \
-    ../src/persistence/Settings.cpp \
-    ../src/geo/WebIpToLocationResolver.cpp \
-    ../src/audio/core/PluginDescriptor.cpp \
-    VstMain.cpp \
-    Plugin.cpp \
-    Editor.cpp \
-    MainControllerVST.cpp \
-    NinjamRoomWindowVST.cpp \
-    MainWindowVST.cpp \
-    KeyboardHook.cpp
-
-
-
-win32 {
-    message("Windows VST build")
-
+INCLUDEPATH += ../src
+INCLUDEPATH += $$PWD/../libs/includes/ogg
+INCLUDEPATH += $$PWD/../libs/includes/vorbis
+INCLUDEPATH += $$PWD/../libs/includes/minimp3
+win32{
     INCLUDEPATH += "$$VST_SDK_PATH/"
     INCLUDEPATH += "$$VST_SDK_PATH/pluginterfaces/vst2.x/"
     INCLUDEPATH += "$$VST_SDK_PATH/public.sdk/source/vst2.x"
+}
+
+VPATH       += ../src
+
+DEPENDPATH +=  $$PWD/../libs/includes/ogg
+DEPENDPATH +=  $$PWD/../libs/includes/vorbis
+DEPENDPATH +=  $$PWD/../libs/includes/minimp3
+
+HEADERS += recorder/JamRecorder.h
+HEADERS += recorder/ReaperProjectGenerator.h
+HEADERS += ninjam/protocol/ServerMessageParser.h
+HEADERS += ninjam/protocol/ServerMessages.h
+HEADERS += ninjam/protocol/ClientMessages.h
+HEADERS += loginserver/natmap.h
+HEADERS += audio/codec.h
+HEADERS += audio/Resampler.h
+HEADERS += audio/vorbis/VorbisDecoder.h
+HEADERS += audio/vorbis/VorbisEncoder.h
+HEADERS += persistence/Settings.h
+HEADERS += geo/WebIpToLocationResolver.h
+HEADERS += Plugin.h
+HEADERS += Editor.h
+HEADERS += MainControllerVST.h
+HEADERS += NinjamRoomWindowVST.h
+HEADERS += MainWindowVST.h
+HEADERS += KeyboardHook.h
+
+SOURCES += $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffectx.cpp
+SOURCES += $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffect.cpp
+SOURCES += recorder/JamRecorder.cpp
+SOURCES += recorder/ReaperProjectGenerator.cpp
+SOURCES += loginserver/LoginService.cpp
+SOURCES += loginserver/JsonUtils.cpp
+SOURCES += ninjam/protocol/ServerMessages.cpp
+SOURCES += ninjam/protocol/ClientMessages.cpp
+SOURCES += ninjam/protocol/ServerMessageParser.cpp
+SOURCES += ninjam/Server.cpp
+SOURCES += audio/Resampler.cpp
+SOURCES += audio/vorbis/VorbisDecoder.cpp
+SOURCES += audio/samplesbufferrecorder.cpp
+SOURCES += audio/vorbis/VorbisEncoder.cpp
+SOURCES += persistence/Settings.cpp
+SOURCES += geo/WebIpToLocationResolver.cpp
+SOURCES += audio/core/PluginDescriptor.cpp
+SOURCES += VstMain.cpp
+SOURCES += Plugin.cpp
+SOURCES += Editor.cpp
+SOURCES += MainControllerVST.cpp
+SOURCES += NinjamRoomWindowVST.cpp
+SOURCES += MainWindowVST.cpp
+SOURCES += KeyboardHook.cpp
+
+win32 {
+    message("Windows VST build")
 
     LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32 #-lPsapi
     #performance monitor lib
@@ -104,19 +111,4 @@ win32 {
       QMAKE_CXXFLAGS_RELEASE +=  -GL
       QMAKE_LFLAGS_RELEASE += /LTCG
     }
-
 }
-
-
-INCLUDEPATH += $$PWD/../libs/includes/ogg              \
-               $$PWD/../libs/includes/vorbis           \
-               $$PWD/../libs/includes/minimp3          \
-#               $$PWD/../qtwinmigrate/src                  \
-
-DEPENDPATH +=  $$PWD/../libs/includes/ogg              \
-               $$PWD/../libs/includes/vorbis           \
-               $$PWD/../libs/includes/minimp3          \
-
-#turn on debug info on release build, usefull sometimes
-#QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
-#QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
