@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
 #include <QString>
 #include <QPointF>
@@ -387,3 +388,5 @@ public:
     QString getLastChannelName(int channelIndex) const;
 };
 }
+
+#endif

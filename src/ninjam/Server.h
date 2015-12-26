@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SERVER_H
+#define SERVER_H
 
 #include <QString>
 #include <QMap>
@@ -156,3 +157,5 @@ public:
 
 QDataStream &operator<<(QDataStream &out, const Ninjam::Server &server);
 }// namespace
+
+#endif

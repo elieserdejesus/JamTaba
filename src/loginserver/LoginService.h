@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LOGIN_SERVICE_H
+#define LOGIN_SERVICE_H
 
 #include <QObject>
 #include <QNetworkAccessManager>
@@ -173,4 +174,4 @@ private slots:
 };
 }
 
-// ++++++++++
+#endif

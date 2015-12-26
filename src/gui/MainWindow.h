@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MAIN_WINDOW_H
+#define MAIN_WINDOW_H
 
 #include <QtWidgets/QMainWindow>
 #include <QMessageBox>
@@ -258,3 +259,5 @@ private:
     static const QSize MINI_MODE_MIN_SIZE;
     static const QSize FULL_VIEW_MODE_MIN_SIZE;
 };
+
+#endif

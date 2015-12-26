@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WAVE_PEAK_PANEL_H
+#define WAVE_PEAK_PANEL_H
 
 #include <QWidget>
 
@@ -29,3 +30,5 @@ public:
 
     QSize minimumSizeHint() const;
 };
+
+#endif

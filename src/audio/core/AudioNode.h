@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AUDIO_NODE_H
+#define AUDIO_NODE_H
 
 #include <QSet>
 #include <QMutex>
@@ -345,3 +346,5 @@ private:
     Audio::OscillatorAudioNode osc;
 };
 }
+
+#endif

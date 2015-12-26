@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PEAK_METER_H
+#define PEAK_METER_H
 
 #include <QWidget>
 
@@ -64,3 +65,5 @@ private:
     static const QColor MAX_PEAK_COLOR;
     static const int MAX_PEAK_MARKER_SIZE;
 };
+
+#endif

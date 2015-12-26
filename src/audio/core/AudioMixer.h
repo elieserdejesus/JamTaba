@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AUDIO_MIXER_H
+#define AUDIO_MIXER_H
 
 #include <QList>
 #include <QMutex>
@@ -39,3 +40,5 @@ private:
 };
 // +++++++++++++++++++++++
 }
+
+#endif

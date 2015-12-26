@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LOCAL_TRACK_VIEW_H
+#define LOCAL_TRACK_VIEW_H
 
 #include "BaseTrackView.h"
 #include <QWidget>
@@ -113,3 +114,5 @@ private slots:
     void on_MidiInputDeviceSelected(QAction *);
     void on_noInputMenuSelected();
 };
+
+#endif

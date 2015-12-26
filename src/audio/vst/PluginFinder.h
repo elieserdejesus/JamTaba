@@ -1,4 +1,6 @@
-#pragma once
+#ifndef PLUGIN_FINDER_H
+#define PLUGIN_FINDER_H
+
 #include <QObject>
 #include <QStringList>
 
@@ -25,3 +27,5 @@ signals:
     void badPluginDetected(QString pluginPath);// a plugin crash the scanner process
 };
 }
+
+#endif

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef PLUGINS_H
+#define PLUGINS_H
+
 #include "AudioNode.h"
 
 class QDialog;
@@ -103,3 +105,5 @@ private:
     Audio::SamplesBuffer *internalBuffer;
 };
 }
+
+#endif

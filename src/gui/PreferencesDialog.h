@@ -1,4 +1,6 @@
-#pragma once
+#ifndef PREFERENCES_DIALOG_H
+#define PREFERENCES_DIALOG_H
+
 #include <QDialog>
 #include <QMap>
 
@@ -80,3 +82,5 @@ private:
     // recording
     void populateRecordingTab();
 };
+
+#endif
