@@ -7,18 +7,18 @@ QT += core gui network widgets
 TARGET = Jamtaba2
 TEMPLATE = app
 
-INCLUDEPATH += $$PWD/../libs/includes/portaudio
-INCLUDEPATH += $$PWD/../libs/includes/rtmidi
-INCLUDEPATH += $$PWD/../libs/includes/ogg
-INCLUDEPATH += $$PWD/../libs/includes/vorbis
-INCLUDEPATH += $$PWD/../libs/includes/minimp3
+INCLUDEPATH += ../libs/includes/portaudio
+INCLUDEPATH += ../libs/includes/rtmidi
+INCLUDEPATH += ../libs/includes/ogg
+INCLUDEPATH += ../libs/includes/vorbis
+INCLUDEPATH += ../libs/includes/minimp3
 INCLUDEPATH += $$VST_SDK_PATH/pluginterfaces/vst2.x
 
-DEPENDPATH +=  $$PWD/../libs/includes/portaudio
-DEPENDPATH +=  $$PWD/../libs/includes/rtmidi
-DEPENDPATH +=  $$PWD/../libs/includes/ogg
-DEPENDPATH +=  $$PWD/../libs/includes/vorbis
-DEPENDPATH +=  $$PWD/../libs/includes/minimp3
+DEPENDPATH +=  ../libs/includes/portaudio
+DEPENDPATH +=  ../libs/includes/rtmidi
+DEPENDPATH +=  ../libs/includes/ogg
+DEPENDPATH +=  ../libs/includes/vorbis
+DEPENDPATH +=  ../libs/includes/minimp3
 
 HEADERS += audio/core/PortAudioDriver.h
 HEADERS += recorder/JamRecorder.h
@@ -89,7 +89,7 @@ win32{
             LIBS_PATH = "static/win64-msvc"
         }
 
-        CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbis -logg
+        CONFIG(release, debug|release): LIBS += -L../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbis -logg
         else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lrtmidid -lvorbisfiled -lvorbisd -loggd
 
         CONFIG(release, debug|release) {
