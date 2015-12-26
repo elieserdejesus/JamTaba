@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PORT_AUDIO_DRIVER_H
+#define PORT_AUDIO_DRIVER_H
 
 #include "AudioDriver.h"
 #include "portaudio.h"
@@ -60,3 +61,5 @@ private:
                                        const PaStreamParameters &outputParameters);
 };
 }
+
+#endif

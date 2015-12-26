@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AUDIO_DRIVER_H
+#define AUDIO_DRIVER_H
 
 #include "SamplesBuffer.h"
 #include <QObject>
@@ -218,3 +219,5 @@ public:
     }
 };
 }
+
+#endif

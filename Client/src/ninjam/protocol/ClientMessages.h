@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CLIENT_MESSAGES_H
+#define CLIENT_MESSAGES_H
 
 #include <QByteArray>
 #include <QString>
@@ -147,3 +148,5 @@ public:
 
 QDebug operator<<(QDebug dbg, Ninjam::ClientMessage *message);
 }
+
+#endif

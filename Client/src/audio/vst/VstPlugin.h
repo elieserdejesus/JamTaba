@@ -1,4 +1,5 @@
-#pragma once
+#ifndef VST_PLUGIN_H
+#define VST_PLUGIN_H
 
 #include "audio/core/Plugins.h"
 #include "aeffectx.h"
@@ -79,3 +80,5 @@ private:
     static QMap<QString, QDialog *> editorsWindows;
 };
 }
+
+#endif

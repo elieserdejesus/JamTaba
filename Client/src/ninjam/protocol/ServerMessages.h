@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SERVER_MESSAGES_H
+#define SERVER_MESSAGES_H
+
 #include <QString>
 #include <QMap>
 #include <QStringList>
@@ -313,3 +315,5 @@ public:
 // ++++++++++++++++++++
 QDebug operator<<(QDebug dbg, const Ninjam::ServerMessage &c);
 }
+
+#endif

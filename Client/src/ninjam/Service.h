@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SERVICE_H
+#define SERVICE_H
 
 #include <QTcpSocket>
 #include <memory>
@@ -143,3 +144,5 @@ private slots:
     void socketConnectedSlot();
 };
 }// namespace
+
+#endif

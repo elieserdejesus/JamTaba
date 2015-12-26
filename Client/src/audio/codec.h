@@ -1,4 +1,5 @@
-#pragma once
+#ifndef JT_CODEC_H
+#define JT_CODEC_H
 
 extern "C" { // this give me a error in linux
     #include "minimp3.h"
@@ -42,3 +43,5 @@ private:
     QByteArray array;
 };
 }
+
+#endif

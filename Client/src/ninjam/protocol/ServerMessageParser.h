@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SERVER_MESSAGES_PARSER_H
+#define SERVER_MESSAGES_PARSER_H
 
 #include <QByteArray>
 #include "ServerMessages.h"
@@ -36,3 +37,5 @@ private:
                                                            quint32 payloadLenght);
 };
 }
+
+#endif

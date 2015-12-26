@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ROOM_STREAMER_NODE_H
+#define ROOM_STREAMER_NODE_H
 
 #include "core/AudioNode.h"
 #include <QNetworkReply>
@@ -102,3 +103,5 @@ public:
                                   int sampleRate, const Midi::MidiBuffer &midiBuffer);
 };
 }// namespace end
+
+#endif

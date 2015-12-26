@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MAIN_CONTROLLER_H
+#define MAIN_CONTROLLER_H
 
 #include <QApplication>
 #include <QMutex>
@@ -376,3 +377,5 @@ protected slots:
     }
 };
 }
+
+#endif

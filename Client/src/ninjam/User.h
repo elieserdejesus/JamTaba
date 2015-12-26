@@ -1,4 +1,5 @@
-#pragma once
+#ifndef USER_H
+#define USER_H
 
 #include "UserChannel.h"
 #include <QMap>
@@ -65,3 +66,5 @@ public:
 QDebug &operator<<(QDebug &out, const Ninjam::User &user);
 QDebug &operator<<(QDebug &out, const Ninjam::UserChannel &user);
 }
+
+#endif
