@@ -22,9 +22,12 @@ win32-msvc* {
 }
 
 INCLUDEPATH += ../src
+INCLUDEPATH += src
 INCLUDEPATH += ../libs/includes/ogg
 INCLUDEPATH += ../libs/includes/vorbis
 INCLUDEPATH += ../libs/includes/minimp3
+
+
 win32{
     INCLUDEPATH += "$$VST_SDK_PATH/"
     INCLUDEPATH += "$$VST_SDK_PATH/pluginterfaces/vst2.x/"
@@ -32,6 +35,7 @@ win32{
 }
 
 VPATH       += ../src
+VPATH       += src
 
 DEPENDPATH +=  ../libs/includes/ogg
 DEPENDPATH +=  ../libs/includes/vorbis
