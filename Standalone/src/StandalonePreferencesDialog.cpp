@@ -2,10 +2,7 @@
 #include "ui_PreferencesDialog.h"
 
 #include "audio/core/AudioDriver.h"
-// #include "midi/MidiDriver.h"
-// #include "persistence/Settings.h"
 #include "MainController.h"
-// #include "MainWindow.h"
 
 /**
  This file contains the common/shared implementation for the Jamtaba plataforms (Win, Mac and Linux) in Standalone. In the Vst Plugin some details are different and implemented in the file VstPreferencesDialog.cpp.
@@ -15,25 +12,22 @@ using namespace Audio;
 
 void PreferencesDialog::selectAudioTab()
 {
-    // if (!mainController->isRunningAsVstPlugin())
     ui->prefsTab->setCurrentWidget(ui->tabAudio);
 }
 
 void PreferencesDialog::selectMidiTab()
 {
-    // if (!mainController->isRunningAsVstPlugin())
     ui->prefsTab->setCurrentWidget(ui->tabMidi);
 }
 
 void PreferencesDialog::selectVstPluginsTab()
 {
-    // if (!mainController->isRunningAsVstPlugin())
     ui->prefsTab->setCurrentWidget(ui->tabVST);
 }
 
 void PreferencesDialog::populateMidiTab()
 {
-// if (mainController->isRunningAsVstPlugin())
+// if (mainController->isunningAsVstPlugin())
 // return;
 
     // clear
@@ -66,8 +60,6 @@ void PreferencesDialog::populateMidiTab()
 
 void PreferencesDialog::populateAudioTab()
 {
-// if (mainController->isRunningAsVstPlugin())
-// return;
     populateAsioDriverCombo();
     populateFirstInputCombo();
     populateFirstOutputCombo();
@@ -78,13 +70,13 @@ void PreferencesDialog::populateAudioTab()
 
 void PreferencesDialog::populateAsioDriverCombo()
 {
-    if (mainController->isRunningAsVstPlugin())
-        return;
     Audio::AudioDriver *audioDriver = mainController->getAudioDriver();
     int devices = audioDriver->getDevicesCount();
     ui->comboAudioDevice->clear();
-    for (int d = 0; d < devices; d++)
-        ui->comboAudioDevice->addItem(audioDriver->getAudioDeviceName(d), d);// using device index as userData in comboBox
+    for (int d = 0; d < devices; d++) {
+        // using device index as userData in comboBox
+        ui->comboAudioDevice->addItem(audioDriver->getAudioDeviceName(d), d);
+    }
     ui->comboAudioDevice->setCurrentIndex(audioDriver->getAudioDeviceIndex());
 }
 
