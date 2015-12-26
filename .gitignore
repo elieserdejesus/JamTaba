@@ -2,17 +2,12 @@
 # *~
 
 *.ogg
-Client/build/
-build/
-Client/*.pro.user
-Client/release
-deploy-win32/
-deploy-win64/
+*.exe
+*.user
 *.zip
 VST_SDK/*
-Client/installers/windows/*.exe
-.DS_Store
-Client/.DS_Store
+
+*.DS_Store
 
 Server/build/
 Server/dist
