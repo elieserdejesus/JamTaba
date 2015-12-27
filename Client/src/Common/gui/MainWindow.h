@@ -44,7 +44,6 @@ public:
 
     void refreshTrackInputSelection(int inputTrackIndex);
 
-    void enterInRoom(Login::RoomInfo roomInfo);
     void exitFromRoom(bool normalDisconnection);
 
     bool canCreateSubchannels() const;
@@ -74,6 +73,9 @@ public:
 
     QStringList getChannelsNames() const;
 
+public slots:
+    void enterInRoom(Login::RoomInfo roomInfo);
+
 protected:
     Controller::MainController *mainController;
     Ui::MainFrameClass ui;
@@ -100,79 +102,80 @@ protected:
     void stopCurrentRoomStream();
 
 protected slots:
-    void on_tabCloseRequest(int index);
-    void on_tabChanged(int index);
-
-    void on_localTrackAdded();
-    void on_localTrackRemoved();
-
-    // themes
-    // void on_newThemeSelected(QAction*);
+    void closeTab(int index);
+    void changeTab(int index);
 
     // main menu
-    void on_preferencesClicked(QAction *action);
-    void on_IOPreferencesChanged(QList<bool>, int audioDevice, int firstIn, int lastIn,
-                                 int firstOut, int lastOut, int sampleRate, int bufferSize);
-    void on_ninjamCommunityMenuItemTriggered();
-    void on_ninjamOfficialSiteMenuItemTriggered();
-    void on_privateServerMenuItemTriggered();
+    void openPreferencesDialog(QAction *action);
+    void setGlobalPreferences(QList<bool>, int audioDevice, int firstIn, int lastIn, int firstOut,
+                              int lastOut, int sampleRate, int bufferSize);
+
+    void showNinjamCommunityWebPage();
+    void showNinjamOfficialWebPage();
+
+    void showPrivateServerDialog();
 
     // view mode menu
-    void on_menuViewModeTriggered(QAction *action);
+    void changeViewMode(QAction *action);
 
     // ninjam controller
-    void ninjamTransmissionStarted();
-    void ninjamPreparingToTransmit();
+    void startTransmission();
+    void prepareTransmission();
 
     // help menu
-    void on_reportBugMenuItemTriggered();
-    void on_wikiMenuItemTriggered();
-    void on_UsersManualMenuItemTriggered();
+    void showJamtabaIssuesWebPage();
+    void showJamtabaWikiWebPage();
+    void showJamtabaUsersManual();
 
     // private server
-    void on_privateServerConnectionAccepted(QString server, int serverPort, QString password);
+    void connectInPrivateServer(QString server, int serverPort, QString password);
 
     // login service
-    void on_roomsListAvailable(QList<Login::RoomInfo> publicRooms);
-    void on_newVersionAvailableForDownload();
-    void on_incompatibilityWithServerDetected();
-    virtual void on_errorConnectingToServer(QString errorMsg);
+    void showNewVersionAvailableMessage();
+    void handleIncompatiblity();
+    virtual void handleServerConnectionError(QString errorMsg);
 
     // +++++  ROOM FEATURES ++++++++
-    void on_startingRoomStream(Login::RoomInfo roomInfo);
-    void on_stoppingRoomStream(Login::RoomInfo roomInfo);
-    void on_enteringInRoom(Login::RoomInfo roomInfo, QString password = "");
+    void playPublicRoomStream(Login::RoomInfo roomInfo);
+    void stopPublicRoomStream(Login::RoomInfo roomInfo);
 
     // plugin finder
-    void onScanPluginsStarted();
-    void onScanPluginsFinished(bool finishedWithoutError);
-    void onPluginFounded(QString name, QString group, QString path);
-    void onScanPluginsStarted(QString pluginPath);
-    void onBadPluginDetected(QString pluginPath);
+    void showPluginScanDialog();
+    void hidePluginScanDialog(bool finishedWithoutError);
+    void addFoundedPlugin(QString name, QString group, QString path);
+    void setCurrentScanningPlugin(QString pluginPath);
+    void addPluginToBlackList(QString pluginPath);
 
     // collapse local controls
-    void on_localControlsCollapseButtonClicked();
+    void toggleLocalInputsCollapseStatus();
 
     // channel name changed
-    void on_channelNameChanged();
+    void updateChannelsNames();
 
     // room streamer
-    void on_RoomStreamerError(QString msg);
+    void handlePublicRoomStreamError(QString msg);
 
     // master fader
-    void on_masterFaderMoved(int);
+    void setMasterFaderPosition(int);
 
     // chords progression
-    void on_userConfirmingChordProgression(ChordProgression chordProgression);
-    void on_buttonSendChordsToChatClicked();
-    void on_bpiChanged(int bpi);
-    void on_bpmChanged(int bpm);
-    void on_intervalBeatChanged(int beat);
+    void showChordProgression(ChordProgression chordProgression);
+    void sendCurrentChordProgressionToChat();
+
+    void updateBpi(int bpi);
+    void updateBpm(int bpm);
+    void updateCurrentIntervalBeat(int beat);
+
+    void tryEnterInRoom(Login::RoomInfo roomInfo, QString password = "");
 
 private slots:
-    void on_actionFullscreenMode_triggered();
-    void on_pluginFinderDialogCanceled();
-    void on_currentVersionActionTriggered();
+    void toggleFullScreen();
+    void closePluginScanDialog();
+    void showJamtabaCurrentVersion();
+
+    void updateLocalInputChannelsGeometry();
+
+    void refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms);
 
 private:
 
@@ -213,17 +216,13 @@ private:
     bool fullScreenViewMode;
     void setFullScreenStatus(bool fullScreen);
 
-    void refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms);
-
     void showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly);
-
-    void recalculateLeftPanelWidth();
 
     void setInputTracksPreparingStatus(bool preparing);
 
     ChordsPanel *chordsPanel;
-    void showChordsPanel(ChordProgression progression);
     void hideChordsPanel();
+    ChordsPanel *createChordsPanel();
 
     // PerformanceMonitor performanceMonitor;//cpu and memmory usage
     // qint64 lastPerformanceMonitorUpdate;

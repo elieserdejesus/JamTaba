@@ -48,6 +48,8 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
 
     qCDebug(jtNinjamGUI) << "connecting signals in ninjamController...";
     Controller::NinjamController *ninjamController = mainController->getNinjamController();
+    Q_ASSERT(ninjamController);
+
     QObject::connect(ninjamController, SIGNAL(channelAdded(Ninjam::User, Ninjam::UserChannel,
                                                            long)), this,
                      SLOT(on_channelAdded(Ninjam::User, Ninjam::UserChannel, long)));

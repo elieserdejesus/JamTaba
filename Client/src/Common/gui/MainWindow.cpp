@@ -78,45 +78,34 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeMainTabWidget();
     initializeViewModeMenu();
 
-// QDir stylesDir(":/style");
-// QStringList cssList = stylesDir.entryList(QStringList("*.css"));
-// foreach (QString css, cssList) {
-// QAction* action = ui.menuThemes->addAction(css);
-    // action->setData(css);
-    // action->setEnabled(false);
-    // action->setVisible(false);
-// }
-
-// QObject::connect(ui.menuThemes, SIGNAL(triggered(QAction*)), this, SLOT(on_newThemeSelected(QAction*)));
-
     ui.masterMeterL->setOrientation(PeakMeter::HORIZONTAL);
     ui.masterMeterR->setOrientation(PeakMeter::HORIZONTAL);
     QObject::connect(ui.masterFader, SIGNAL(valueChanged(int)), this,
-                     SLOT(on_masterFaderMoved(int)));
+                     SLOT(setMasterFaderPosition(int)));
     ui.masterFader->installEventFilter(this);// handle double click in master fader
 
     timerID = startTimer(1000/50);
 
     QObject::connect(ui.menuPreferences, SIGNAL(triggered(QAction *)), this,
-                     SLOT(on_preferencesClicked(QAction *)));
+                     SLOT(openPreferencesDialog(QAction *)));
     QObject::connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this,
-                     SLOT(on_ninjamCommunityMenuItemTriggered()));
+                     SLOT(showNinjamCommunityWebPage()));
     QObject::connect(ui.actionNinjam_Official_Site, SIGNAL(triggered(bool)), this,
-                     SLOT(on_ninjamOfficialSiteMenuItemTriggered()));
+                     SLOT(showNinjamOfficialWebPage()));
     QObject::connect(ui.actionPrivate_Server, SIGNAL(triggered(bool)), this,
-                     SLOT(on_privateServerMenuItemTriggered()));
+                     SLOT(showPrivateServerDialog()));
     QObject::connect(ui.actionReportBugs, SIGNAL(triggered(bool)), this,
-                     SLOT(on_reportBugMenuItemTriggered()));
+                     SLOT(showJamtabaIssuesWebPage()));
     QObject::connect(ui.actionWiki, SIGNAL(triggered(bool)), this,
-                     SLOT(on_wikiMenuItemTriggered()));
+                     SLOT(showJamtabaWikiWebPage()));
     QObject::connect(ui.actionUsersManual, SIGNAL(triggered(bool)), this,
-                     SLOT(on_UsersManualMenuItemTriggered()));
+                     SLOT(showJamtabaUsersManual()));
     QObject::connect(ui.actionCurrentVersion, SIGNAL(triggered(bool)), this,
-                     SLOT(on_currentVersionActionTriggered()));
+                     SLOT(showJamtabaCurrentVersion()));
     QObject::connect(ui.localControlsCollapseButton, SIGNAL(clicked()), this,
-                     SLOT(on_localControlsCollapseButtonClicked()));
+                     SLOT(toggleLocalInputsCollapseStatus()));
     QObject::connect(mainController->getRoomStreamer(), SIGNAL(error(QString)), this,
-                     SLOT(on_RoomStreamerError(QString)));
+                     SLOT(handlePublicRoomStreamError(QString)));
 
     initializeLocalInputChannels();
 
@@ -144,16 +133,16 @@ void MainWindow::initializePluginFinder()
 {
     Vst::PluginFinder *pluginFinder = mainController->getPluginFinder();
     if (pluginFinder) {
-        QObject::connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(onScanPluginsStarted()));
+        QObject::connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(showPluginScanDialog()));
         QObject::connect(pluginFinder, SIGNAL(scanFinished(bool)), this,
-                         SLOT(onScanPluginsFinished(bool)));
+                         SLOT(hidePluginScanDialog(bool)));
         QObject::connect(pluginFinder, SIGNAL(badPluginDetected(QString)), this,
-                         SLOT(onBadPluginDetected(QString)));
+                         SLOT(addPluginToBlackList(QString)));
         QObject::connect(pluginFinder, SIGNAL(pluginScanFinished(QString, QString,
                                                                  QString)), this,
-                         SLOT(onPluginFounded(QString, QString, QString)));
+                         SLOT(addFoundedPlugin(QString, QString, QString)));
         QObject::connect(pluginFinder, SIGNAL(pluginScanStarted(QString)), this,
-                         SLOT(onScanPluginsStarted(QString)));
+                         SLOT(setCurrentScanningPlugin(QString)));
     }
 }
 
@@ -173,10 +162,10 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
     ui.labelSectionTitle->setVisible(!showPeakMetersOnly);
 
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
-    recalculateLeftPanelWidth();
+    updateLocalInputChannelsGeometry();
 }
 
-void MainWindow::recalculateLeftPanelWidth()
+void MainWindow::updateLocalInputChannelsGeometry()
 {
     int min = ui.localTracksWidget->sizeHint().width() + 12;
     int max = min;
@@ -196,11 +185,11 @@ void MainWindow::recalculateLeftPanelWidth()
     ui.scrollArea->setHorizontalScrollBarPolicy(scrollPolicy);
 }
 
-void MainWindow::on_localControlsCollapseButtonClicked()
+void MainWindow::toggleLocalInputsCollapseStatus()
 {
     bool isShowingPeakMetersOnly = localGroupChannels.first()->isShowingPeakMeterOnly();
     showPeakMetersOnlyInLocalControls(!isShowingPeakMetersOnly);// toggle
-    recalculateLeftPanelWidth();
+    updateLocalInputChannelsGeometry();
 }
 
 // ++++++++++++++++++++++++=
@@ -261,7 +250,7 @@ void MainWindow::showMessageBox(QString title, QString text, QMessageBox::Icon i
     centerDialog(messageBox);
 }
 
-void MainWindow::on_RoomStreamerError(QString msg)
+void MainWindow::handlePublicRoomStreamError(QString msg)
 {
     stopCurrentRoomStream();
     showMessageBox("Error!", msg, QMessageBox::Critical);
@@ -284,7 +273,7 @@ void MainWindow::removeChannelsGroup(int channelIndex)
             mainController->sendRemovedChannelMessage(channelIndex);
             update();
         }
-        recalculateLeftPanelWidth();
+        updateLocalInputChannelsGeometry();
     }
 }
 
@@ -305,7 +294,7 @@ void MainWindow::addChannelsGroup(QString name)
         // create an encoder for this channel in next interval
         mainController->getNinjamController()->scheduleEncoderChangeForChannel(channelIndex);
     }
-    recalculateLeftPanelWidth();
+    updateLocalInputChannelsGeometry();
 }
 
 // ++++++++++++++++++++++++=
@@ -321,12 +310,12 @@ void MainWindow::initializeMainTabWidget()
         tabBar->hide();
     }
 
-    connect(ui.tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(on_tabCloseRequest(int)));
-    connect(ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(on_tabChanged(int)));
+    connect(ui.tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
+    connect(ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(changeTab(int)));
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++
-void MainWindow::on_channelNameChanged()
+void MainWindow::updateChannelsNames()
 {
     mainController->sendNewChannelsNames(getChannelsNames());
 }
@@ -336,9 +325,11 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
                                                  bool initializeAsNoInput)
 {
     LocalTrackGroupView *localChannel = new LocalTrackGroupView(channelGroupIndex, this);
-    QObject::connect(localChannel, SIGNAL(nameChanged()), this, SLOT(on_channelNameChanged()));
-    QObject::connect(localChannel, SIGNAL(trackAdded()), this, SLOT(on_localTrackAdded()));
-    QObject::connect(localChannel, SIGNAL(trackRemoved()), this, SLOT(on_localTrackRemoved()));
+    QObject::connect(localChannel, SIGNAL(nameChanged()), this, SLOT(updateChannelsNames()));
+    QObject::connect(localChannel, SIGNAL(trackAdded()), this,
+                     SLOT(updateLocalInputChannelsGeometry()));
+    QObject::connect(localChannel, SIGNAL(trackRemoved()), this,
+                     SLOT(updateLocalInputChannelsGeometry()));
 
     if (!localGroupChannels.isEmpty())// the second channel?
         localChannel->setPreparingStatus(localGroupChannels.at(0)->isPreparingToTransmit());
@@ -674,14 +665,18 @@ void MainWindow::initializeLocalInputChannels()
 void MainWindow::initializeLoginService()
 {
     Login::LoginService *loginService = this->mainController->getLoginService();
+
     connect(loginService, SIGNAL(roomsListAvailable(QList<Login::RoomInfo>)), this,
-            SLOT(on_roomsListAvailable(QList<Login::RoomInfo>)));
+            SLOT(refreshPublicRoomsList(QList<Login::RoomInfo>)));
+
     connect(loginService, SIGNAL(incompatibilityWithServerDetected()), this,
-            SLOT(on_incompatibilityWithServerDetected()));
+            SLOT(handleIncompatiblity()));
+
     connect(loginService, SIGNAL(newVersionAvailableForDownload()), this,
-            SLOT(on_newVersionAvailableForDownload()));
+            SLOT(showNewVersionAvailableMessage()));
+
     connect(loginService, SIGNAL(errorWhenConnectingToServer(QString)), this,
-            SLOT(on_errorConnectingToServer(QString)));
+            SLOT(handleServerConnectionError(QString)));
 }
 
 void MainWindow::initializeWindowState()
@@ -715,7 +710,7 @@ void MainWindow::initializeWindowState()
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainWindow::on_tabCloseRequest(int index)
+void MainWindow::closeTab(int index)
 {
     if (index > 0) {// the first tab is not closable
         showBusyDialog("disconnecting ...");
@@ -724,7 +719,7 @@ void MainWindow::on_tabCloseRequest(int index)
     }
 }
 
-void MainWindow::on_tabChanged(int index)
+void MainWindow::changeTab(int index)
 {
     if (index > 0) {// click in room tab?
         if (mainController->isPlayingInNinjamRoom() && mainController->isPlayingRoomStream())
@@ -767,7 +762,7 @@ bool MainWindow::jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2)
     return r1.getNonBotUsersCount() > r2.getNonBotUsersCount();
 }
 
-void MainWindow::on_incompatibilityWithServerDetected()
+void MainWindow::handleIncompatiblity()
 {
     hideBusyDialog();
     QString text = "Your Jamtaba version is not compatible with previous versions!";
@@ -780,14 +775,14 @@ void MainWindow::detachMainController()
     mainController = nullptr;
 }
 
-void MainWindow::on_errorConnectingToServer(QString errorMsg)
+void MainWindow::handleServerConnectionError(QString errorMsg)
 {
     hideBusyDialog();
     QMessageBox::warning(this, "Error!", "Error connecting in Jamtaba server!\n" + errorMsg);
     close();
 }
 
-void MainWindow::on_newVersionAvailableForDownload()
+void MainWindow::showNewVersionAvailableMessage()
 {
     hideBusyDialog();
     QString text
@@ -796,20 +791,13 @@ void MainWindow::on_newVersionAvailableForDownload()
     QMessageBox::information(this, "New Jamtaba version available!", text);
 }
 
-void MainWindow::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms)
-{
-    hideBusyDialog();
-
-    refreshPublicRoomsList(publicRooms);
-
-    if (mainController->isPlayingInNinjamRoom())
-        this->ninjamWindow->updateGeoLocations(); /** updating country flag and country names. This is necessary because the call to webservice used to get country codes and  country names is not synchronous. So, if country code and name are not cached we receive these data from the webservice after some seconds. */
-}
-
 void MainWindow::refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms)
 {
     if (!isVisible())
         return;
+
+    hideBusyDialog();
+
     qSort(publicRooms.begin(), publicRooms.end(), jamRoomLessThan);
     int index = 0;
     foreach (Login::RoomInfo roomInfo, publicRooms) {
@@ -825,22 +813,27 @@ void MainWindow::refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms)
                 roomViewPanels.insert(roomInfo.getID(), roomViewPanel);
                 connect(roomViewPanel, SIGNAL(startingListeningTheRoom(
                                                   Login::RoomInfo)), this,
-                        SLOT(on_startingRoomStream(Login::RoomInfo)));
+                        SLOT(playPublicRoomStream(Login::RoomInfo)));
                 connect(roomViewPanel, SIGNAL(finishingListeningTheRoom(
                                                   Login::RoomInfo)), this,
-                        SLOT(on_stoppingRoomStream(Login::RoomInfo)));
+                        SLOT(stopPublicRoomStream(Login::RoomInfo)));
                 connect(roomViewPanel, SIGNAL(enteringInTheRoom(Login::RoomInfo)), this,
-                        SLOT(on_enteringInRoom(Login::RoomInfo)));
+                        SLOT(tryEnterInRoom(Login::RoomInfo)));
             }
             ((QGridLayout *)ui.allRoomsContent->layout())->addWidget(roomViewPanel, rowIndex,
                                                                      collumnIndex);
             index++;
         }
     }
+
+    if (mainController->isPlayingInNinjamRoom())
+        this->ninjamWindow->updateGeoLocations();
+
+    /** updating country flag and country names after refresh the public rooms list. This is necessary because the call to webservice used to get country codes and  country names is not synchronous. So, if country code and name are not cached we receive these data from the webservice after some seconds.*/
 }
 
 // +++++++++++++++++++++++++++++++++++++
-void MainWindow::on_startingRoomStream(Login::RoomInfo roomInfo)
+void MainWindow::playPublicRoomStream(Login::RoomInfo roomInfo)
 {
     // clear all plots
     foreach (JamRoomViewPanel *viewPanel, this->roomViewPanels.values())
@@ -850,7 +843,7 @@ void MainWindow::on_startingRoomStream(Login::RoomInfo roomInfo)
         mainController->playRoomStream(roomInfo);
 }
 
-void MainWindow::on_stoppingRoomStream(Login::RoomInfo roomInfo)
+void MainWindow::stopPublicRoomStream(Login::RoomInfo roomInfo)
 {
     Q_UNUSED(roomInfo)
     stopCurrentRoomStream();
@@ -865,7 +858,7 @@ QStringList MainWindow::getChannelsNames() const
 }
 
 // user trying enter in a room
-void MainWindow::on_enteringInRoom(Login::RoomInfo roomInfo, QString password)
+void MainWindow::tryEnterInRoom(Login::RoomInfo roomInfo, QString password)
 {
     // stop room stream before enter in a room
     if (mainController->isPlayingRoomStream()) {
@@ -878,7 +871,6 @@ void MainWindow::on_enteringInRoom(Login::RoomInfo roomInfo, QString password)
     if (!mainController->userNameWasChoosed()) {
         QString lastUserName = mainController->getUserName();
         UserNameDialog dialog(this, lastUserName);
-        // if (isRunningAsVstPlugin())
         centerDialog(&dialog);
         if (dialog.exec() == QDialog::Accepted) {
             QString userName = dialog.getUserName().trimmed();
@@ -925,7 +917,7 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo)
     ui.chatTabWidget->addTab(chatPanel, "chat " + roomInfo.getName());
     QObject::connect(chatPanel, SIGNAL(userConfirmingChordProgression(
                                            ChordProgression)), this,
-                     SLOT(on_userConfirmingChordProgression(ChordProgression)));
+                     SLOT(showChordProgression(ChordProgression)));
 
     // add the ninjam panel in main window (bottom panel)
     qCDebug(jtGUI) << "adding ninjam panel...";
@@ -943,28 +935,28 @@ void MainWindow::enterInRoom(Login::RoomInfo roomInfo)
     qCDebug(jtGUI) << "MainWindow::enterInRoom() done!";
 
     QObject::connect(mainController->getNinjamController(), SIGNAL(
-                         preparedToTransmit()), this, SLOT(ninjamTransmissionStarted()));
+                         preparedToTransmit()), this, SLOT(startTransmission()));
     QObject::connect(mainController->getNinjamController(), SIGNAL(
-                         preparingTransmission()), this, SLOT(ninjamPreparingToTransmit()));
+                         preparingTransmission()), this, SLOT(prepareTransmission()));
     QObject::connect(mainController->getNinjamController(), SIGNAL(currentBpiChanged(
                                                                        int)), this,
-                     SLOT(on_bpiChanged(int)));
+                     SLOT(updateBpi(int)));
     QObject::connect(mainController->getNinjamController(), SIGNAL(currentBpmChanged(
                                                                        int)), this,
-                     SLOT(on_bpmChanged(int)));
+                     SLOT(updateBpm(int)));
     QObject::connect(mainController->getNinjamController(), SIGNAL(intervalBeatChanged(
                                                                        int)), this,
-                     SLOT(on_intervalBeatChanged(int)));
+                     SLOT(updateCurrentIntervalBeat(int)));
 }
 
 // +++++++++++++++ PREPARING TO XMIT +++++++++++
 // this signal is received when ninjam controller is ready to transmit (after the 'preparing' intervals).
-void MainWindow::ninjamTransmissionStarted()
+void MainWindow::startTransmission()
 {
     setInputTracksPreparingStatus(false);// tracks are prepared to transmit
 }
 
-void MainWindow::ninjamPreparingToTransmit()
+void MainWindow::prepareTransmission()
 {
     // tracks are waiting to start transmiting
     setInputTracksPreparingStatus(true);
@@ -1116,32 +1108,30 @@ MainWindow::~MainWindow()
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainWindow::on_privateServerConnectionAccepted(QString server, int serverPort,
-                                                    QString password)
+void MainWindow::connectInPrivateServer(QString server, int serverPort, QString password)
 {
     mainController->storePrivateServerSettings(server, serverPort, password);
-
     Login::RoomInfo roomInfo(server, serverPort, Login::RoomTYPE::NINJAM, 32, 32);
-    on_enteringInRoom(roomInfo, password);
+    tryEnterInRoom(roomInfo, password);
 }
 
-void MainWindow::on_reportBugMenuItemTriggered()
+void MainWindow::showJamtabaIssuesWebPage()
 {
     QDesktopServices::openUrl(QUrl("https://github.com/elieserdejesus/JamTaba/issues"));
 }
 
-void MainWindow::on_wikiMenuItemTriggered()
+void MainWindow::showJamtabaWikiWebPage()
 {
     QDesktopServices::openUrl(QUrl("https://github.com/elieserdejesus/JamTaba/wiki"));
 }
 
-void MainWindow::on_UsersManualMenuItemTriggered()
+void MainWindow::showJamtabaUsersManual()
 {
     QDesktopServices::openUrl(QUrl(
                                   "https://github.com/elieserdejesus/JamTaba/wiki/Jamtaba's-user-guide"));
 }
 
-void MainWindow::on_privateServerMenuItemTriggered()
+void MainWindow::showPrivateServerDialog()
 {
     Settings settings = mainController->getSettings();
     QString server = settings.getLastPrivateServer();
@@ -1151,7 +1141,7 @@ void MainWindow::on_privateServerMenuItemTriggered()
         = new PrivateServerDialog(this, server, port, password);
     QObject::connect(privateServerDialog, SIGNAL(connectionAccepted(QString, int,
                                                                     QString)), this,
-                     SLOT(on_privateServerConnectionAccepted(QString, int, QString)));
+                     SLOT(connectInPrivateServer(QString, int, QString)));
     privateServerDialog->show();
 
     // if (isRunningAsVstPlugin())// dialogs need a workaround to appear in center of plugin screen
@@ -1166,18 +1156,18 @@ void MainWindow::centerDialog(QWidget *dialog)
     dialog->move(x, y);
 }
 
-void MainWindow::on_ninjamCommunityMenuItemTriggered()
+void MainWindow::showNinjamCommunityWebPage()
 {
     QDesktopServices::openUrl(QUrl("http://www.ninbot.com"));
 }
 
-void MainWindow::on_ninjamOfficialSiteMenuItemTriggered()
+void MainWindow::showNinjamOfficialWebPage()
 {
     QDesktopServices::openUrl(QUrl("http://www.cockos.com/ninjam/"));
 }
 
 // preferences menu
-void MainWindow::on_preferencesClicked(QAction *action)
+void MainWindow::openPreferencesDialog(QAction *action)
 {
     int initialTab = PreferencesDialog::TAB_RECORDING;
     if (action == ui.actionAudioPreferences)
@@ -1190,9 +1180,9 @@ void MainWindow::on_preferencesClicked(QAction *action)
     showPreferencesDialog(initialTab);
 }
 
-void MainWindow::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audioDevice, int firstIn,
-                                         int lastIn, int firstOut, int lastOut, int sampleRate,
-                                         int bufferSize)
+void MainWindow::setGlobalPreferences(QList<bool> midiInputsStatus, int audioDevice, int firstIn,
+                                      int lastIn, int firstOut, int lastOut, int sampleRate,
+                                      int bufferSize)
 {
     Audio::AudioDriver *audioDriver = mainController->getAudioDriver();
 
@@ -1234,23 +1224,23 @@ void MainWindow::refreshTrackInputSelection(int inputTrackIndex)
 }
 
 // plugin finder events
-void MainWindow::onScanPluginsStarted()
+void MainWindow::showPluginScanDialog()
 {
     if (!pluginScanDialog) {
         pluginScanDialog.reset(new PluginScanDialog(this));
         QObject::connect(pluginScanDialog.data(), SIGNAL(rejected()), this,
-                         SLOT(on_pluginFinderDialogCanceled()));
+                         SLOT(closePluginScanDialog()));
     }
     pluginScanDialog->show();
 }
 
-void MainWindow::on_pluginFinderDialogCanceled()
+void MainWindow::closePluginScanDialog()
 {
     mainController->cancelPluginFinder();
     pluginScanDialog.reset();// reset to null pointer
 }
 
-void MainWindow::onScanPluginsFinished(bool finishedWithoutError)
+void MainWindow::hidePluginScanDialog(bool finishedWithoutError)
 {
     Q_UNUSED(finishedWithoutError);
     if (pluginScanDialog)
@@ -1258,17 +1248,18 @@ void MainWindow::onScanPluginsFinished(bool finishedWithoutError)
     pluginScanDialog.reset();
 }
 
-void MainWindow::onBadPluginDetected(QString pluginPath)
+void MainWindow::addPluginToBlackList(QString pluginPath)
 {
     QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(pluginPath);
-    QWidget *parent
-        = !pluginScanDialog.isNull() ? (QWidget *)pluginScanDialog.data() : (QWidget *)this;
-    QMessageBox::warning(parent, "Plugin Error!",
-                         pluginName + " can't be loaded and will be black listed!");
+    QWidget *parent = this;
+    if (pluginScanDialog)
+        parent = pluginScanDialog.data();
+    QString message = pluginName + " can't be loaded and will be black listed!";
+    QMessageBox::warning(parent, "Plugin Error!", message);
     mainController->addBlackVstToSettings(pluginPath);
 }
 
-void MainWindow::onPluginFounded(QString name, QString group, QString path)
+void MainWindow::addFoundedPlugin(QString name, QString group, QString path)
 {
     Q_UNUSED(path);
     Q_UNUSED(group);
@@ -1276,7 +1267,7 @@ void MainWindow::onPluginFounded(QString name, QString group, QString path)
         pluginScanDialog->addFoundedPlugin(name);
 }
 
-void MainWindow::onScanPluginsStarted(QString pluginPath)
+void MainWindow::setCurrentScanningPlugin(QString pluginPath)
 {
     if (pluginScanDialog)
         pluginScanDialog->setCurrentScaning(pluginPath);
@@ -1285,14 +1276,14 @@ void MainWindow::onScanPluginsStarted(QString pluginPath)
 void MainWindow::initializeViewModeMenu()
 {
     QObject::connect(ui.menuViewMode, SIGNAL(triggered(QAction *)), this,
-                     SLOT(on_menuViewModeTriggered(QAction *)));
+                     SLOT(changeViewMode(QAction *)));
 
     QActionGroup *group = new QActionGroup(this);
     ui.actionFullView->setActionGroup(group);
     ui.actionMiniView->setActionGroup(group);
 }
 
-void MainWindow::on_menuViewModeTriggered(QAction *)
+void MainWindow::changeViewMode(QAction *)
 {
     setFullViewStatus(ui.actionFullView->isChecked());
 }
@@ -1358,21 +1349,10 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
 }
 
 // +++++++++++++++++++++++++++
-void MainWindow::on_localTrackAdded()
-{
-    recalculateLeftPanelWidth();
-}
-
-void MainWindow::on_localTrackRemoved()
-{
-    recalculateLeftPanelWidth();
-}
-
-// ++++++++++
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
 {
     if (target == ui.localTracksWidget && event->type() == QEvent::Resize) {
-        recalculateLeftPanelWidth();
+        updateLocalInputChannelsGeometry();
         return true;
     } else {
         if (target == ui.masterFader && event->type() == QEvent::MouseButtonDblClick) {
@@ -1394,7 +1374,7 @@ void MainWindow::setFullScreenStatus(bool fullScreen)
     ui.actionFullscreenMode->setChecked(fullScreen);
 }
 
-void MainWindow::on_actionFullscreenMode_triggered()
+void MainWindow::toggleFullScreen()
 {
     setFullScreenStatus(!fullScreenViewMode);// toggle
 }
@@ -1418,53 +1398,56 @@ bool MainWindow::isTransmiting(int channelID) const
 
 // ++++++++++++
 
-void MainWindow::on_currentVersionActionTriggered()
+void MainWindow::showJamtabaCurrentVersion()
 {
     QMessageBox::about(this, "About Jamtaba",
                        "Jamtaba version is " + QApplication::applicationVersion());
 }
 
 // ++++++++++++++++++
-void MainWindow::on_masterFaderMoved(int value)
+void MainWindow::setMasterFaderPosition(int value)
 {
     float newGain = (float)value/ui.masterFader->maximum();
     mainController->setMasterGain(newGain);
 }
 
 // ++++++++++++++++++=
-void MainWindow::on_userConfirmingChordProgression(ChordProgression chordProgression)
+ChordsPanel *MainWindow::createChordsPanel()
+{
+    ChordsPanel *chordsPanel = new ChordsPanel();
+    QObject::connect(chordsPanel, SIGNAL(buttonSendChordsToChatClicked()), this,
+                     SLOT(on_buttonSendChordsToChatClicked()));
+    return chordsPanel;
+}
+
+void MainWindow::showChordProgression(ChordProgression progression)
 {
     int currentBpi = mainController->getNinjamController()->getCurrentBpi();
-    if (chordProgression.canBeUsed(currentBpi)) {
-        bool needStrech = chordProgression.getBeatsPerInterval() != currentBpi;
-        showChordsPanel(needStrech ? chordProgression.getStretchedVersion(
-                            currentBpi) : chordProgression);
+    if (progression.canBeUsed(currentBpi)) {
+        bool needStrech = progression.getBeatsPerInterval() != currentBpi;
+        if (needStrech)
+            progression = progression.getStretchedVersion(currentBpi);
+
+        if (!chordsPanel)
+            chordsPanel = createChordsPanel();
+        else
+            chordsPanel->setVisible(true);
+        chordsPanel->setChords(progression);
+
+        // add the chord panel in top of bottom panel in main window
+        dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->insertWidget(0, chordsPanel);
     } else {
-        int measures = chordProgression.getMeasures().size();
+        int measures = progression.getMeasures().size();
         QString msg = "These chords (" + QString::number(measures)
-                      + " measures) can't be use in a " + QString::number(currentBpi)
+                      + " measures) can't be used in a " + QString::number(currentBpi)
                       + " bpi interval!";
         QMessageBox::warning(this, "Problem...", msg);
     }
 }
 
-void MainWindow::showChordsPanel(ChordProgression progression)
+void MainWindow::sendCurrentChordProgressionToChat()
 {
-    if (!chordsPanel) {
-        chordsPanel = new ChordsPanel(this);
-        QObject::connect(chordsPanel, SIGNAL(buttonSendChordsToChatClicked()), this,
-                         SLOT(on_buttonSendChordsToChatClicked()));
-    } else {
-        chordsPanel->setVisible(true);
-    }
-    chordsPanel->setChords(progression);
-    // add the chord panel in top of bottom panel in main window
-    dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->insertWidget(0, chordsPanel);
-}
-
-void MainWindow::on_buttonSendChordsToChatClicked()
-{
-    if (chordsPanel) {// just in case
+    if (chordsPanel && mainController) {// just in case
         ChordProgression chordProgression = chordsPanel->getChordProgression();
         mainController->getNinjamController()->sendChatMessage(chordProgression.toString());
     }
@@ -1482,7 +1465,7 @@ void MainWindow::hideChordsPanel()
 
 // ++++++
 // ninjam controller events
-void MainWindow::on_bpiChanged(int bpi)
+void MainWindow::updateBpi(int bpi)
 {
     if (!ninjamWindow)
         return;
@@ -1498,7 +1481,7 @@ void MainWindow::on_bpiChanged(int bpi)
     }
 }
 
-void MainWindow::on_bpmChanged(int bpm)
+void MainWindow::updateBpm(int bpm)
 {
     NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
     if (!ninjamPanel)
@@ -1506,7 +1489,7 @@ void MainWindow::on_bpmChanged(int bpm)
     ninjamPanel->setBpm(bpm);
 }
 
-void MainWindow::on_intervalBeatChanged(int beat)
+void MainWindow::updateCurrentIntervalBeat(int beat)
 {
     NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
     if (!ninjamPanel)
