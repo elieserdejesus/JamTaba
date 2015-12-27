@@ -64,7 +64,7 @@ void MainWindowStandalone::showPreferencesDialog(int initialTab)
     connect(&dialog,
             SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int, int, int)),
             this,
-            SLOT(on_IOPreferencesChanged(QList<bool>, int, int, int, int, int, int, int)));
+            SLOT(setGlobalPreferences(QList<bool>, int, int, int, int, int, int, int)));
 
     int result = dialog.exec();
     if (result == QDialog::Rejected) {
@@ -97,8 +97,8 @@ void MainWindowStandalone::initializePluginFinder()
     }
 }
 
-void MainWindowStandalone::on_errorConnectingToServer(QString msg)
+void MainWindowStandalone::handleServerConnectionError(QString msg)
 {
-    MainWindow::on_errorConnectingToServer(msg);
+    MainWindow::handleServerConnectionError(msg);
     (dynamic_cast<Controller::StandaloneMainController *>(mainController))->quit();
 }

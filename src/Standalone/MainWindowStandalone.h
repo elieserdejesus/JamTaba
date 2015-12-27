@@ -21,7 +21,7 @@ protected:
     void showPreferencesDialog(int initialTab) override;
 
 protected slots:
-    void on_errorConnectingToServer(QString msg);
+    void handleServerConnectionError(QString msg);
 };
 
 #endif // MAINFRAMEVST_H
