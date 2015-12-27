@@ -52,25 +52,25 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
 
     QObject::connect(ninjamController, SIGNAL(channelAdded(Ninjam::User, Ninjam::UserChannel,
                                                            long)), this,
-                     SLOT(on_channelAdded(Ninjam::User, Ninjam::UserChannel, long)));
+                     SLOT(addChannel(Ninjam::User, Ninjam::UserChannel, long)));
     QObject::connect(ninjamController,
                      SIGNAL(channelRemoved(Ninjam::User, Ninjam::UserChannel, long)), this,
-                     SLOT(on_channelRemoved(Ninjam::User, Ninjam::UserChannel, long)));
+                     SLOT(removeChannel(Ninjam::User, Ninjam::UserChannel, long)));
     QObject::connect(ninjamController,
                      SIGNAL(channelNameChanged(Ninjam::User, Ninjam::UserChannel, long)), this,
-                     SLOT(on_channelNameChanged(Ninjam::User, Ninjam::UserChannel, long)));
+                     SLOT(changeChannelName(Ninjam::User, Ninjam::UserChannel, long)));
     QObject::connect(ninjamController, SIGNAL(channelAudioChunkDownloaded(long)), this,
-                     SLOT(on_channelAudioChunkDownloaded(long)));
+                     SLOT(updateIntervalDownloadingProgressBar(long)));
     QObject::connect(ninjamController, SIGNAL(channelAudioFullyDownloaded(long)), this,
-                     SLOT(on_channelAudioFullyDownloaded(long)));
+                     SLOT(hideIntervalDownloadingProgressBar(long)));
     QObject::connect(ninjamController, SIGNAL(chatMsgReceived(Ninjam::User, QString)), this,
-                     SLOT(on_chatMessageReceived(Ninjam::User, QString)));
+                     SLOT(addChatMessage(Ninjam::User, QString)));
     QObject::connect(ninjamController, SIGNAL(channelXmitChanged(long, bool)), this,
-                     SLOT(on_remoteChannelXmitChanged(long, bool)));
+                     SLOT(setChannelXmitStatus(long, bool)));
     QObject::connect(ninjamController, SIGNAL(userLeave(QString)), this,
-                     SLOT(on_userLeave(QString)));
+                     SLOT(handleUserLeaving(QString)));
     QObject::connect(ninjamController, SIGNAL(userEnter(QString)), this,
-                     SLOT(on_userEnter(QString)));
+                     SLOT(handleUserEntering(QString)));
 
     this->ninjamPanel = createNinjamPanel();
 
@@ -78,11 +78,11 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
     ui->licenceButton->setVisible(!serverLicence.isEmpty());
 
     QObject::connect(chatPanel, SIGNAL(userSendingNewMessage(QString)), this,
-                     SLOT(userSendingNewChatMessage(QString)));
+                     SLOT(sendNewChatMessage(QString)));
     QObject::connect(chatPanel, SIGNAL(userConfirmingVoteToBpiChange(int)), this,
-                     SLOT(on_userConfirmingVoteToChangeBpi(int)));
+                     SLOT(voteToChangeBpi(int)));
     QObject::connect(chatPanel, SIGNAL(userConfirmingVoteToBpmChange(int)), this,
-                     SLOT(on_userConfirmingVoteToChangeBpm(int)));
+                     SLOT(voteToChangeBpm(int)));
 
     chatPanel->setPreferredTranslationLanguage(mainController->getSettings().getTranslation());
 }
@@ -100,18 +100,18 @@ NinjamPanel *NinjamRoomWindow::createNinjamPanel()
     panel->setIntervalShape(mainController->getSettings().getIntervalProgressShape());
 
     QObject::connect(panel, SIGNAL(bpiComboActivated(QString)), this,
-                     SLOT(ninjamBpiComboChanged(QString)));
+                     SLOT(setNewBpi(QString)));
     QObject::connect(panel, SIGNAL(bpmComboActivated(QString)), this,
-                     SLOT(ninjamBpmComboChanged(QString)));
+                     SLOT(setNewBpm(QString)));
     QObject::connect(panel, SIGNAL(accentsComboChanged(int)), this,
-                     SLOT(ninjamAccentsComboChanged(int)));
+                     SLOT(setNewBeatsPerAccent(int)));
 
     QObject::connect(panel, SIGNAL(gainSliderChanged(int)), this,
-                     SLOT(on_MetronomeFaderMoved(int)));
+                     SLOT(setMetronomeFaderPosition(int)));
     QObject::connect(panel, SIGNAL(panSliderChanged(int)), this,
-                     SLOT(on_MetronomePanSliderMoved(int)));
-    QObject::connect(panel, SIGNAL(muteButtonClicked()), this, SLOT(on_MetronomeMuteClicked()));
-    QObject::connect(panel, SIGNAL(soloButtonClicked()), this, SLOT(on_MetronomeSoloClicked()));
+                     SLOT(setMetronomePanSliderPosition(int)));
+    QObject::connect(panel, SIGNAL(muteButtonClicked()), this, SLOT(toggleMetronomeMuteStatus()));
+    QObject::connect(panel, SIGNAL(soloButtonClicked()), this, SLOT(toggleMetronomeSoloStatus()));
 
     return panel;
 }
@@ -148,48 +148,48 @@ void NinjamRoomWindow::updateGeoLocations()
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-void NinjamRoomWindow::on_MetronomePanSliderMoved(int value)
+void NinjamRoomWindow::setMetronomePanSliderPosition(int value)
 {
     float sliderValue = value/(float)ninjamPanel->getPanSliderMaximumValue();
     mainController->setTrackPan(Controller::NinjamController::METRONOME_TRACK_ID, sliderValue);
 }
 
-void NinjamRoomWindow::on_MetronomeFaderMoved(int value)
+void NinjamRoomWindow::setMetronomeFaderPosition(int value)
 {
     mainController->setTrackGain(Controller::NinjamController::METRONOME_TRACK_ID, value/100.0);
 }
 
-void NinjamRoomWindow::on_MetronomeMuteClicked()
+void NinjamRoomWindow::toggleMetronomeMuteStatus()
 {
     mainController->setTrackMute(Controller::NinjamController::METRONOME_TRACK_ID, !mainController->trackIsMuted(
                                      Controller::NinjamController::METRONOME_TRACK_ID));
 }
 
-void NinjamRoomWindow::on_MetronomeSoloClicked()
+void NinjamRoomWindow::toggleMetronomeSoloStatus()
 {
     mainController->setTrackSolo(Controller::NinjamController::METRONOME_TRACK_ID, !mainController->trackIsSoloed(
                                      Controller::NinjamController::METRONOME_TRACK_ID));
 }
 
-void NinjamRoomWindow::userSendingNewChatMessage(QString msg)
+void NinjamRoomWindow::sendNewChatMessage(QString msg)
 {
     mainController->getNinjamController()->sendChatMessage(msg);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamRoomWindow::on_userLeave(QString userName)
+void NinjamRoomWindow::handleUserLeaving(QString userName)
 {
     if (chatPanel)
         chatPanel->addMessage("Jamtaba", userName + " leave the room.");
 }
 
-void NinjamRoomWindow::on_userEnter(QString userName)
+void NinjamRoomWindow::handleUserEntering(QString userName)
 {
     if (chatPanel)
         chatPanel->addMessage("Jamtaba", userName + " enter in room.");
 }
 
-void NinjamRoomWindow::on_chatMessageReceived(Ninjam::User user, QString message)
+void NinjamRoomWindow::addChatMessage(Ninjam::User user, QString message)
 {
     bool isVoteMessage = !message.isNull() && message.toLower().startsWith(
         "[voting system] leading candidate:");
@@ -249,7 +249,7 @@ void NinjamRoomWindow::handleVoteMessage(Ninjam::User user, QString message)
     }
 }
 
-void NinjamRoomWindow::on_userConfirmingVoteToChangeBpi(int newBpi)
+void NinjamRoomWindow::voteToChangeBpi(int newBpi)
 {
     if (mainController->isPlayingInNinjamRoom()) {
         Controller::NinjamController *controller = mainController->getNinjamController();
@@ -258,7 +258,7 @@ void NinjamRoomWindow::on_userConfirmingVoteToChangeBpi(int newBpi)
     }
 }
 
-void NinjamRoomWindow::on_userConfirmingVoteToChangeBpm(int newBpm)
+void NinjamRoomWindow::voteToChangeBpm(int newBpm)
 {
     if (mainController->isPlayingInNinjamRoom()) {
         Controller::NinjamController *controller = mainController->getNinjamController();
@@ -281,7 +281,7 @@ void NinjamRoomWindow::updatePeaks()
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-void NinjamRoomWindow::on_channelAudioFullyDownloaded(long trackID)
+void NinjamRoomWindow::hideIntervalDownloadingProgressBar(long trackID)
 {
     NinjamTrackView *trackView
         = dynamic_cast<NinjamTrackView *>(NinjamTrackView::getTrackViewByID(trackID));
@@ -289,7 +289,7 @@ void NinjamRoomWindow::on_channelAudioFullyDownloaded(long trackID)
         trackView->finishCurrentDownload();
 }
 
-void NinjamRoomWindow::on_channelAudioChunkDownloaded(long trackID)
+void NinjamRoomWindow::updateIntervalDownloadingProgressBar(long trackID)
 {
     NinjamTrackNode *node = dynamic_cast<NinjamTrackNode *>(mainController->getTrackNode(trackID));
     NinjamTrackView *trackView
@@ -302,7 +302,7 @@ void NinjamRoomWindow::on_channelAudioChunkDownloaded(long trackID)
     }
 }
 
-void NinjamRoomWindow::on_remoteChannelXmitChanged(long channelID, bool transmiting)
+void NinjamRoomWindow::setChannelXmitStatus(long channelID, bool transmiting)
 {
     qCDebug(jtNinjamGUI) << "channel xmit changed:" << channelID << " state:" << transmiting;
     NinjamTrackView *trackView
@@ -311,7 +311,7 @@ void NinjamRoomWindow::on_remoteChannelXmitChanged(long channelID, bool transmit
         trackView->setUnlightStatus(!transmiting);
 }
 
-void NinjamRoomWindow::on_channelRemoved(Ninjam::User user, Ninjam::UserChannel channel,
+void NinjamRoomWindow::removeChannel(Ninjam::User user, Ninjam::UserChannel channel,
                                          long channelID)
 {
     qCDebug(jtNinjamGUI) << "channel removed:" << channel.getName();
@@ -332,7 +332,7 @@ void NinjamRoomWindow::on_channelRemoved(Ninjam::User user, Ninjam::UserChannel 
     }
 }
 
-void NinjamRoomWindow::on_channelNameChanged(Ninjam::User, Ninjam::UserChannel channel,
+void NinjamRoomWindow::changeChannelName(Ninjam::User, Ninjam::UserChannel channel,
                                              long channelID)
 {
     qCDebug(jtNinjamGUI) << "channel name changed:" << channel.getName();
@@ -342,7 +342,7 @@ void NinjamRoomWindow::on_channelNameChanged(Ninjam::User, Ninjam::UserChannel c
         trackView->setChannelName(channel.getName());
 }
 
-void NinjamRoomWindow::on_channelAdded(Ninjam::User user, Ninjam::UserChannel channel,
+void NinjamRoomWindow::addChannel(Ninjam::User user, Ninjam::UserChannel channel,
                                        long channelID)
 {
     qCDebug(jtNinjamGUI) << "channel added - creating channel view:" << user.getFullName() << " "
@@ -407,23 +407,23 @@ NinjamRoomWindow::~NinjamRoomWindow()
     if (ninjamController) {
         QObject::disconnect(ninjamController,
                             SIGNAL(channelAdded(Ninjam::User, Ninjam::UserChannel, long)), this,
-                            SLOT(on_channelAdded(Ninjam::User, Ninjam::UserChannel, long)));
+                            SLOT(addChannel(Ninjam::User, Ninjam::UserChannel, long)));
         QObject::disconnect(ninjamController,
                             SIGNAL(channelRemoved(Ninjam::User, Ninjam::UserChannel, long)), this,
-                            SLOT(on_channelRemoved(Ninjam::User, Ninjam::UserChannel, long)));
+                            SLOT(removeChannel(Ninjam::User, Ninjam::UserChannel, long)));
         QObject::disconnect(ninjamController,
                             SIGNAL(channelNameChanged(Ninjam::User, Ninjam::UserChannel,
                                                       long)), this,
-                            SLOT(on_channelNameChanged(Ninjam::User, Ninjam::UserChannel, long)));
+                            SLOT(changeChannelName(Ninjam::User, Ninjam::UserChannel, long)));
         QObject::disconnect(ninjamController, SIGNAL(channelAudioChunkDownloaded(long)), this,
-                            SLOT(on_channelAudioChunkDownloaded(long)));
+                            SLOT(updateIntervalDownloadingProgressBar(long)));
         QObject::disconnect(ninjamController, SIGNAL(channelAudioFullyDownloaded(long)), this,
-                            SLOT(on_channelAudioFullyDownloaded(long)));
+                            SLOT(hideIntervalDownloadingProgressBar(long)));
         QObject::disconnect(ninjamController, SIGNAL(chatMsgReceived(Ninjam::User,
                                                                      QString)), this,
-                            SLOT(on_chatMessageReceived(Ninjam::User, QString)));
+                            SLOT(addChatMessage(Ninjam::User, QString)));
         QObject::disconnect(ninjamController, SIGNAL(channelXmitChanged(long, bool)), this,
-                            SLOT(on_remoteChannelXmitChanged(long, bool)));
+                            SLOT(setChannelXmitStatus(long, bool)));
     }
 
     mainController->storeIntervalProgressShape(ninjamPanel->getIntervalShape());
@@ -439,7 +439,7 @@ NinjamRoomWindow::~NinjamRoomWindow()
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-void NinjamRoomWindow::on_licenceButton_clicked()
+void NinjamRoomWindow::showServerLicence()
 {
     QString licence = mainController->getNinjamService()->getCurrentServerLicence();
     QMessageBox *msgBox = new QMessageBox(parentWidget());
@@ -461,7 +461,7 @@ void NinjamRoomWindow::on_licenceButton_clicked()
 }
 
 // ----------
-void NinjamRoomWindow::ninjamAccentsComboChanged(int index)
+void NinjamRoomWindow::setNewBeatsPerAccent(int index)
 {
     Q_UNUSED(index)
     int beatsPerAccent = ninjamPanel->getCurrentBeatsPerAccent();
@@ -469,7 +469,7 @@ void NinjamRoomWindow::ninjamAccentsComboChanged(int index)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamRoomWindow::ninjamBpiComboChanged(QString newText)
+void NinjamRoomWindow::setNewBpi(QString newText)
 {
     int currentBpi = mainController->getNinjamController()->getCurrentBpi();
     int newBpi = newText.toInt();
@@ -480,7 +480,7 @@ void NinjamRoomWindow::ninjamBpiComboChanged(QString newText)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamRoomWindow::ninjamBpmComboChanged(QString newText)
+void NinjamRoomWindow::setNewBpm(QString newText)
 {
     int currentBpm = mainController->getNinjamController()->getCurrentBpm();
     int newBpm = newText.toInt();

@@ -11,7 +11,6 @@
 #include "NinjamPanel.h"
 
 class MainWindow;
-
 class NinjamTrackGroupView;
 
 namespace Ui {
@@ -68,34 +67,34 @@ private:
 private slots:
 
     // ninjam panel controls
-    void ninjamBpiComboChanged(QString);
-    void ninjamBpmComboChanged(QString);
-    void ninjamAccentsComboChanged(int);
+    void setNewBpi(QString);
+    void setNewBpm(QString);
+    void setNewBeatsPerAccent(int);
 
     // metronome events
-    void on_MetronomePanSliderMoved(int value);
-    void on_MetronomeFaderMoved(int value);
-    void on_MetronomeMuteClicked();
-    void on_MetronomeSoloClicked();
+    void setMetronomePanSliderPosition(int value);
+    void setMetronomeFaderPosition(int value);
+    void toggleMetronomeMuteStatus();
+    void toggleMetronomeSoloStatus();
 
     // ninjam controller events
-    void on_channelAdded(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
-    void on_channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
-    void on_channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
-    void on_remoteChannelXmitChanged(long channelID, bool transmiting);
-    void on_channelAudioChunkDownloaded(long trackID);
-    void on_channelAudioFullyDownloaded(long trackID);
-    void on_chatMessageReceived(Ninjam::User, QString message);
-    void on_userLeave(QString userName);
-    void on_userEnter(QString userName);
+    void addChannel(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
+    void removeChannel(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
+    void changeChannelName(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
+    void setChannelXmitStatus(long channelID, bool transmiting);
+    void updateIntervalDownloadingProgressBar(long trackID);
+    void hideIntervalDownloadingProgressBar(long trackID);
+    void addChatMessage(Ninjam::User, QString message);
+    void handleUserLeaving(QString userName);
+    void handleUserEntering(QString userName);
 
-    void userSendingNewChatMessage(QString msg);
+    void sendNewChatMessage(QString msg);
 
-    void on_licenceButton_clicked();
+    void showServerLicence();
 
     // chat panel
-    void on_userConfirmingVoteToChangeBpi(int newBpi);
-    void on_userConfirmingVoteToChangeBpm(int newBpm);
+    void voteToChangeBpi(int newBpi);
+    void voteToChangeBpm(int newBpm);
 };
 
 #endif // NINJAMROOMWINDOW_H
