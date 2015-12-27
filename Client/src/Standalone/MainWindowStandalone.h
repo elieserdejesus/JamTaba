@@ -22,6 +22,9 @@ protected:
 
 protected slots:
     void handleServerConnectionError(QString msg);
+
+    void setGlobalPreferences(QList<bool>, int audioDevice, int firstIn, int lastIn, int firstOut,
+                              int lastOut, int sampleRate, int bufferSize);
 };
 
 #endif // MAINFRAMEVST_H

@@ -107,8 +107,6 @@ protected slots:
 
     // main menu
     void openPreferencesDialog(QAction *action);
-    void setGlobalPreferences(QList<bool>, int audioDevice, int firstIn, int lastIn, int firstOut,
-                              int lastOut, int sampleRate, int bufferSize);
 
     void showNinjamCommunityWebPage();
     void showNinjamOfficialWebPage();
