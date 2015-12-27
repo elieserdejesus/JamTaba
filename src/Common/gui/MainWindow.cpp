@@ -1144,7 +1144,6 @@ void MainWindow::showPrivateServerDialog()
                      SLOT(connectInPrivateServer(QString, int, QString)));
     centerDialog(privateServerDialog);
     privateServerDialog->show();
-
 }
 
 void MainWindow::centerDialog(QWidget *dialog)
@@ -1153,12 +1152,10 @@ void MainWindow::centerDialog(QWidget *dialog)
     QSize parentSize = dialog->parentWidget()->size();
     int x = globalPosition.x() + parentSize.width()/2 - dialog->width()/2;
     int y = globalPosition.y();
-    if(dialog->height() >= parentSize.height()/2){//big dialog like preferences panel
+    if (dialog->height() >= parentSize.height()/2)// big dialog like preferences panel
         y += parentSize.height()/2 - dialog->height()/2;
-    }
-    else{//small dialogs
+    else // small dialogs
         y += parentSize.height()/3;
-    }
 
     dialog->move(dialog->mapFromGlobal(QPoint(x, y)));
 }
@@ -1176,15 +1173,19 @@ void MainWindow::showNinjamOfficialWebPage()
 // preferences menu
 void MainWindow::openPreferencesDialog(QAction *action)
 {
-    int initialTab = PreferencesDialog::TAB_RECORDING;
-    if (action == ui.actionAudioPreferences)
-        initialTab = PreferencesDialog::TAB_AUDIO;
-    else if (action == ui.actionMidiPreferences)
-        initialTab = PreferencesDialog::TAB_MIDI;
-    else if (action == ui.actionVstPreferences)
-        initialTab = PreferencesDialog::TAB_VST;
+    if (action == ui.actionQuit) { //TODO put the Quit action in a better place. A 'Quit' entry in the 'Preferences' menu is not good.
+        close();
+    } else {
+        int initialTab = PreferencesDialog::TAB_RECORDING;
+        if (action == ui.actionAudioPreferences)
+            initialTab = PreferencesDialog::TAB_AUDIO;
+        else if (action == ui.actionMidiPreferences)
+            initialTab = PreferencesDialog::TAB_MIDI;
+        else if (action == ui.actionVstPreferences)
+            initialTab = PreferencesDialog::TAB_VST;
 
-    showPreferencesDialog(initialTab);
+        showPreferencesDialog(initialTab);
+    }
 }
 
 // input selection changed by user or by system
