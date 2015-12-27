@@ -154,7 +154,6 @@ FORMS += gui/JamRoomViewPanel.ui
 FORMS += gui/PrivateServerDialog.ui
 FORMS += gui/UserNameDialog.ui
 FORMS += gui/MainWindow.ui
-FORMS += gui/PreferencesDialog.ui
 FORMS += gui/chords/ChordsPanel.ui
 
 RESOURCES += resources/jamtaba.qrc
