@@ -30,9 +30,9 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     ui->comboBpm->setCompleter(0);// disabling completer
 
     QObject::connect(ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)), this,
-                     SLOT(comboAccentsChanged(int)));
+                     SLOT(updateAccentsStatus(int)));
     QObject::connect(ui->comboShape, SIGNAL(currentIndexChanged(int)), this,
-                     SLOT(comboShapeChanged(int)));
+                     SLOT(updateIntervalProgressShape(int)));
 
     buildShapeModel();
 
@@ -154,14 +154,14 @@ bool NinjamPanel::eventFilter(QObject *source, QEvent *ev)
 }
 
 // ++++++++++++++++++++++++++++++++++++
-void NinjamPanel::comboAccentsChanged(int index)
+void NinjamPanel::updateAccentsStatus(int index)
 {
     ui->intervalPanel->setShowAccents(index > 0);
     if (ui->intervalPanel->isShowingAccents())
         ui->intervalPanel->setBeatsPerAccent(ui->comboBeatsPerAccent->currentData().toInt());
 }
 
-void NinjamPanel::comboShapeChanged(int index)
+void NinjamPanel::updateIntervalProgressShape(int index)
 {
     Q_UNUSED(index);
     qCDebug(jtNinjamGUI) << index;
