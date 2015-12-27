@@ -306,29 +306,23 @@ QPushButton *LocalTrackView::createInputSelectionButton(QWidget *parent)
                                                QSizePolicy::MinimumExpanding));
 
     QObject::connect(fakeComboButton, SIGNAL(clicked()), this, SLOT(
-                         on_inputSelectionButtonClicked()));
+                         showInputSelectionMenu()));
 
     return fakeComboButton;
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void LocalTrackView::on_inputSelectionButtonClicked()
+void LocalTrackView::showInputSelectionMenu()
 {
     QMenu menu(this);
     menu.addMenu(createMonoInputsMenu(&menu));
     menu.addMenu(createStereoInputsMenu(&menu));
     menu.addMenu(createMidiInputsMenu(&menu));
     QAction *noInputAction = menu.addAction(QIcon(NO_INPUT_ICON), "no input");
-    QObject::connect(noInputAction, SIGNAL(triggered()), this, SLOT(on_noInputMenuSelected()));
+    QObject::connect(noInputAction, SIGNAL(triggered()), this, SLOT(setToNoInput()));
 
     menu.move(mapToGlobal(inputSelectionButton->parentWidget()->pos()));
     menu.exec();
-}
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void LocalTrackView::on_noInputMenuSelected()
-{
-    mainController->setInputTrackToNoInput(getTrackID());
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -352,21 +346,13 @@ QMenu *LocalTrackView::createMonoInputsMenu(QMenu *parent)
         QAction *action = monoInputsMenu->addAction(inputName);
         action->setData(index);  // using the channel index as action data
         action->setIcon(monoInputsMenu->icon());
-// action->setEnabled(mainController->audioMonoInputIsFreeToSelect(index) || index == thisTrackInputRange.getFirstChannel() || index == thisTrackInputRange.getLastChannel());
-// if(action->isEnabled()){//at least one action is enabled
-// canEnableMenu = true;
-// }
     }
-// monoInputsMenu->setEnabled(canEnableMenu);
-// if(!canEnableMenu){
-// monoInputsMenu->setTitle("Mono (all mono inputs are already in use)");
-// }
-    QObject::connect(monoInputsMenu, SIGNAL(triggered(QAction *)), this,
-                     SLOT(on_monoInputMenuSelected(QAction *)));
+
+    QObject::connect(monoInputsMenu, SIGNAL(triggered(QAction *)), this, SLOT(setToMono()));
     return monoInputsMenu;
 }
 
-void LocalTrackView::on_monoInputMenuSelected(QAction *action)
+void LocalTrackView::setToMono(QAction* action)
 {
     int selectedInputIndexInAudioDevice = action->data().toInt();
     mainController->setInputTrackToMono(getTrackID(), selectedInputIndexInAudioDevice);
@@ -406,15 +392,15 @@ QMenu *LocalTrackView::createStereoInputsMenu(QMenu *parent)
         }
     }
     stereoInputsMenu->setEnabled(globalInputs/2 >= 1);// at least one pair
-    if (!stereoInputsMenu->isEnabled())
-        stereoInputsMenu->setTitle(
-            stereoInputsMenu->title() + "  (not enough available inputs to make stereo)");
-    QObject::connect(stereoInputsMenu, SIGNAL(triggered(QAction *)), this,
-                     SLOT(on_stereoInputMenuSelected(QAction *)));
+    if (!stereoInputsMenu->isEnabled()) {
+        QString msg = stereoInputsMenu->title() + "  (not enough available inputs to make stereo)";
+        stereoInputsMenu->setTitle(msg);
+    }
+    QObject::connect(stereoInputsMenu, SIGNAL(triggered(QAction *)), this, SLOT(setToStereo()));
     return stereoInputsMenu;
 }
 
-void LocalTrackView::on_stereoInputMenuSelected(QAction *action)
+void LocalTrackView::setToStereo(QAction* action)
 {
     int firstInputIndexInAudioDevice = action->data().toInt();
     mainController->setInputTrackToStereo(getTrackID(), firstInputIndexInAudioDevice);
@@ -534,7 +520,7 @@ QMenu *LocalTrackView::createMidiInputsMenu(QMenu *parent)
             action->setData(d);// using midi device index as action data
             action->setIcon(midiInputsMenu->icon());
             QObject::connect(midiChannelsMenu, SIGNAL(triggered(QAction *)), this,
-                             SLOT(on_MidiInputDeviceSelected(QAction *)));
+                             SLOT(setToMidi(QAction *)));
         }
     }
     midiInputsMenu->setEnabled(globallyEnabledMidiDevices > 0);
@@ -546,7 +532,7 @@ QMenu *LocalTrackView::createMidiInputsMenu(QMenu *parent)
     return midiInputsMenu;
 }
 
-void LocalTrackView::on_MidiInputDeviceSelected(QAction *action)
+void LocalTrackView::setToMidi(QAction *action)
 {
     QString indexes = action->data().toString();
     if (!indexes.contains(":"))
@@ -591,7 +577,7 @@ LocalTrackView::~LocalTrackView()
 QList<const Audio::Plugin *> LocalTrackView::getInsertedPlugins() const
 {
     QList<const Audio::Plugin *> plugins;
-    if (fxPanel) {//can be nullptr in vst plugin
+    if (fxPanel) {// can be nullptr in vst plugin
         foreach (FxPanelItem *item, fxPanel->getItems()) {
             if (item->containPlugin())
                 plugins.append(item->getAudioPlugin());

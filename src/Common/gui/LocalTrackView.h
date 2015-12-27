@@ -47,7 +47,6 @@ public:
         return getTrackID();
     }
 
-    void setToNoInput();
     Audio::LocalInputAudioNode *getInputNode() const;
     QList<const Audio::Plugin *> getInsertedPlugins() const;
 
@@ -71,6 +70,9 @@ public:
     void mute(bool b);
     void solo(bool b);
     void initializeBoostButtons(BoostValue boostValue);
+
+public slots:
+    void setToNoInput();
 
 private:
     FxPanel *fxPanel;
@@ -109,15 +111,14 @@ private:
 
     bool peakMetersOnly;
 
-    void deleteWidget(QWidget* widget);
+    void deleteWidget(QWidget *widget);
 
 private slots:
-    void on_inputSelectionButtonClicked();// build and show de input selection menu
+    void showInputSelectionMenu();// build and show the input selection menu
 
-    void on_monoInputMenuSelected(QAction *);
-    void on_stereoInputMenuSelected(QAction *);
-    void on_MidiInputDeviceSelected(QAction *);
-    void on_noInputMenuSelected();
+    void setToMono(QAction *action);
+    void setToStereo(QAction *action);
+    void setToMidi(QAction *action);
 };
 
 #endif
