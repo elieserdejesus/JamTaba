@@ -10,12 +10,16 @@ public:
     MainWindowStandalone(Controller::MainController *controller);
 
 protected:
-    virtual void showEvent(QShowEvent *ent);
+    void showEvent(QShowEvent *ent) override;
+
     void closeEvent(QCloseEvent *);
 
-    virtual NinjamRoomWindow *createNinjamWindow(Login::RoomInfo, Controller::MainController *);
+    NinjamRoomWindow *createNinjamWindow(Login::RoomInfo, Controller::MainController *) override;
 
-    virtual void initializePluginFinder();
+    void initializePluginFinder() override;
+
+    void showPreferencesDialog(int initialTab) override;
+
 protected slots:
     void on_errorConnectingToServer(QString msg);
 };

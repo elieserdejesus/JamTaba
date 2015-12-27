@@ -2,88 +2,44 @@
 #define PREFERENCES_DIALOG_H
 
 #include <QDialog>
-#include <QMap>
+#include "MainWindow.h"
+#include "MainController.h"
 
-namespace Audio {
-class AudioDriver;
-}
-namespace Ui    {
+namespace Ui {
 class IODialog;
 }
-namespace Midi  {
-class MidiDriver;
-}
-namespace Controller {
-class MainController;
-}
 
-class MainWindow;
+// This class is the base class for StandalonePreferencesDialog and VstPreferencesDialog
 
-// ++++++++++++++++++++++++++++++++++
 class PreferencesDialog : public QDialog
 {
     Q_OBJECT
-
 public:
     PreferencesDialog(Controller::MainController *mainController, MainWindow *mainWindow);
-    ~PreferencesDialog();
-    void selectAudioTab();
-    void selectMidiTab();
-    void selectVstPluginsTab();
-    void selectRecordingTab();
-private slots:
-    void on_comboFirstInput_currentIndexChanged(int);
-    void on_comboFirstOutput_currentIndexChanged(int);
-    void on_comboAudioDevice_activated(int index);
-    void on_okButton_released();
-    void on_prefsTab_currentChanged(int index);
-    void on_buttonAddVstScanFolder_clicked();
-    void on_buttonRemoveVstPathClicked();
-    void on_buttonClearVstAndScan_clicked();
-    void on_browseRecPathButton_clicked();
-    void on_recordingCheckBox_clicked();
-    void on_pluginsScanFinished(bool);
-    void on_ButtonVst_Refresh_clicked();
-    void on_ButtonVST_AddToBlackList_clicked();
-    void on_ButtonVST_RemFromBlkList_clicked();
-    void on_buttonControlPanel_clicked();
-signals:
-    void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn,
-                              int lastIn, int firstOut, int lastOut, int sampleRate,
-                              int bufferSize);
+    virtual ~PreferencesDialog();
 
-private:
+    enum TAB {
+        TAB_AUDIO, TAB_MIDI, TAB_VST, TAB_RECORDING
+    };
+
+protected slots:
+    virtual void selectPreferencesTab(int index) = 0;
+
+private slots:
+    void selectRecordingPath();
+    void setMultiTrackRecordingStatus(bool recordingActivated);
+
+protected:
     Ui::IODialog *ui;
     Controller::MainController *mainController;
     MainWindow *mainWindow;
 
-    // AUDIO
-    void populateAsioDriverCombo();
-    void populateFirstInputCombo();
-    void populateLastInputCombo();
-    void populateFirstOutputCombo();
-    void populateLastOutputCombo();
-    void populateSampleRateCombo();
-    void populateBufferSizeCombo();
-    void populateAudioTab();
-
-    // MIDI
-    void populateMidiTab();
-
-    // VST
-    void populateVstTab();
-    void addVstScanPath(QString path);
-    void createWidgetsToNewScanFolder(QString path);
-    void UpdateVstList(QString path);
-    void UpdateBlackBox(QString path, bool add);
-    void clearScanFolderWidgets();
-    QList<QPushButton *> scanFoldersButtons;
-
     // recording
     void populateRecordingTab();
+    void selectRecordingTab();
 
-    void runPostInitialization();
-    /** This member function (initializeWidgetsVisibility) is implemented in a different way in Standalone for windows, Standalone for mac and in Vst Plugin. The correct implementation (.cpp) is included in the respective .pro file.    */
+    virtual void setupSignals();
+    virtual void populateAllTabs();
 };
 
 #endif

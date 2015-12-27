@@ -1,5 +1,6 @@
 #include "MainWindowStandalone.h"
 #include "StandAloneMainController.h"
+#include "StandalonePreferencesDialog.h"
 #include "NinjamRoomWindow.h"
 #include <QTimer>
 
@@ -16,16 +17,18 @@ NinjamRoomWindow *MainWindowStandalone::createNinjamWindow(Login::RoomInfo roomI
     return new NinjamRoomWindow(this, roomInfo, mainController);
 }
 
-
-//implementing the MainWindow methods
-bool MainWindow::canCreateSubchannels() const{
+// implementing the MainWindow methods
+bool MainWindow::canCreateSubchannels() const
+{
     return true;
 }
 
-bool MainWindow::canUseFullScreen() const{
+bool MainWindow::canUseFullScreen() const
+{
     return true;
 }
-//++++++++++++++++++++++++++++
+
+// ++++++++++++++++++++++++++++
 
 void MainWindowStandalone::closeEvent(QCloseEvent *e)
 {
@@ -43,6 +46,37 @@ void MainWindowStandalone::showEvent(QShowEvent *ent)
     // wait 50 ms before restore the plugins list to avoid freeze the GUI in hidden state while plugins are loading
     // QTimer::singleShot(50, this, &MainWindowStandalone::restorePluginsList);
 }
+
+// ++++++++++++++++++++++
+void MainWindowStandalone::showPreferencesDialog(int initialTab)
+{
+    stopCurrentRoomStream();
+
+    Midi::MidiDriver *midiDriver = mainController->getMidiDriver();
+    Audio::AudioDriver *audioDriver = mainController->getAudioDriver();
+    if (audioDriver)
+        audioDriver->stop();
+    if (midiDriver)
+        midiDriver->stop();
+
+    StandalonePreferencesDialog dialog(mainController, this, initialTab);
+
+    connect(&dialog,
+            SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int, int, int)),
+            this,
+            SLOT(on_IOPreferencesChanged(QList<bool>, int, int, int, int, int, int, int)));
+
+    int result = dialog.exec();
+    if (result == QDialog::Rejected) {
+        if (midiDriver)
+            midiDriver->start();// restart audio and midi drivers if user cancel the preferences menu
+        if (audioDriver)
+            audioDriver->start();
+    }
+    /** audio driver parameters are changed in on_IOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.*/
+}
+
+// ++++++++++++++++++++++
 
 void MainWindowStandalone::initializePluginFinder()
 {

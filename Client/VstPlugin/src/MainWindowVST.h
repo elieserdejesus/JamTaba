@@ -14,9 +14,10 @@ protected:
     NinjamRoomWindow *createNinjamWindow(Login::RoomInfo, Controller::MainController *);
     void setFullViewStatus(bool fullViewActivated);
 
-    // overriding
     LocalTrackGroupView *addLocalChannel(int channelGroupIndex, QString channelName,
-                                         bool createFirstSubchannel, bool initializeAsNoInput);
+                                         bool createFirstSubchannel, bool initializeAsNoInput) override;
+
+    void showPreferencesDialog(int initialTab) override;
 };
 
 #endif // MAINWINDOWVST_H

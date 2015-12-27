@@ -10,6 +10,8 @@
 #include "loginserver/LoginService.h"
 #include "persistence/Settings.h"
 #include "LocalTrackGroupView.h"
+#include "PreferencesDialog.h"
+
 // #include "performance/PerformanceMonitor.h"
 #include "ChordProgression.h"
 #include "chords/ChordsPanel.h"
@@ -105,6 +107,7 @@ public:
 
     QStringList getChannelsNames() const;
 
+
 protected:
     Controller::MainController *mainController;
     Ui::MainFrameClass ui;
@@ -123,7 +126,12 @@ protected:
     bool eventFilter(QObject *target, QEvent *event);
 
     virtual LocalTrackGroupView *addLocalChannel(int channelGroupIndex, QString channelName,
-                                         bool createFirstSubchannel, bool initializeAsNoInput);
+                                                 bool createFirstSubchannel,
+                                                 bool initializeAsNoInput);
+
+    virtual void showPreferencesDialog(int initialTab) = 0;
+
+    void stopCurrentRoomStream();
 
 protected slots:
     void on_tabCloseRequest(int index);
@@ -209,8 +217,6 @@ private:
     void hideBusyDialog();
     void centerBusyDialog();
 
-    void stopCurrentRoomStream();
-
     void showMessageBox(QString title, QString text, QMessageBox::Icon icon);
 
     int timerID;
@@ -236,7 +242,6 @@ private:
 
     void initializeMainTabWidget();
     void initializeViewModeMenu();
-
 
     bool fullViewMode;// full view or mini view mode?
     bool fullScreenViewMode;

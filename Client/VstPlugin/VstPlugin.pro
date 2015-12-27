@@ -59,6 +59,7 @@ HEADERS += MainControllerVST.h
 HEADERS += NinjamRoomWindowVST.h
 HEADERS += MainWindowVST.h
 HEADERS += KeyboardHook.h
+HEADERS += VstPreferencesDialog.h
 
 SOURCES += main.cpp
 SOURCES += Plugin.cpp

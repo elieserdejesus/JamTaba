@@ -133,6 +133,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     ui.localTracksWidget->installEventFilter(this);
 
+    QObject::connect(ui.actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
+
     showBusyDialog("Loading rooms list ...");
     qCInfo(jtGUI) << "MainWindow created!";
 }
@@ -658,7 +660,7 @@ void MainWindow::initializeLocalInputChannels()
             if (!canCreateSubchannels())
                 break;// avoid hacking in config file to create more subchannels in VST plugin.
         }
-        if(!canCreateSubchannels()){//running as vst plugin?
+        if (!canCreateSubchannels()) {// running as vst plugin?
             channelView->removeFxPanel();
             channelView->removeInputSelectionControls();
         }
@@ -806,9 +808,8 @@ void MainWindow::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms)
 
 void MainWindow::refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms)
 {
-    if(!isVisible()){
+    if (!isVisible())
         return;
-    }
     qSort(publicRooms.begin(), publicRooms.end(), jamRoomLessThan);
     int index = 0;
     foreach (Login::RoomInfo roomInfo, publicRooms) {
@@ -1178,44 +1179,15 @@ void MainWindow::on_ninjamOfficialSiteMenuItemTriggered()
 // preferences menu
 void MainWindow::on_preferencesClicked(QAction *action)
 {
-    if (action->objectName().contains("actionQuit")) {
-        this->close();
-        return;
-    }
+    int initialTab = PreferencesDialog::TAB_RECORDING;
+    if (action == ui.actionAudioPreferences)
+        initialTab = PreferencesDialog::TAB_AUDIO;
+    else if (action == ui.actionMidiPreferences)
+        initialTab = PreferencesDialog::TAB_MIDI;
+    else if (action == ui.actionVstPreferences)
+        initialTab = PreferencesDialog::TAB_VST;
 
-    Midi::MidiDriver *midiDriver = mainController->getMidiDriver();
-    AudioDriver *audioDriver = mainController->getAudioDriver();
-    if (audioDriver)
-        audioDriver->stop();
-    if (midiDriver)
-        midiDriver->stop();
-
-    stopCurrentRoomStream();
-
-    PreferencesDialog dialog(mainController, this);
-    //if (!mainController->isRunningAsVstPlugin()) {
-        if (action == ui.actionAudioPreferences)
-            dialog.selectAudioTab();
-        else if (action == ui.actionMidiPreferences)
-            dialog.selectMidiTab();
-        else if (action == ui.actionVstPreferences)
-            dialog.selectVstPluginsTab();
-        else
-            dialog.selectRecordingTab();
-//    } else {
-//        dialog.selectRecordingTab();
-//    }
-    connect(&dialog, SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int, int,
-                                                 int)), this,
-            SLOT(on_IOPreferencesChanged(QList<bool>, int, int, int, int, int, int, int)));
-    int result = dialog.exec();
-    if (result == QDialog::Rejected) {
-        if (midiDriver)
-            midiDriver->start();// restart audio and midi drivers if user cancel the preferences menu
-        if (audioDriver)
-            audioDriver->start();
-    }
-    /** audio driver parameters are changed in on_IOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.*/
+    showPreferencesDialog(initialTab);
 }
 
 void MainWindow::on_IOPreferencesChanged(QList<bool> midiInputsStatus, int audioDevice, int firstIn,

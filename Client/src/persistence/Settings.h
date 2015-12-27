@@ -296,7 +296,7 @@ public:
 
     // VST paths
     void addVstScanPath(QString path);
-    void removeVstScanPath(int index);
+    void removeVstScanPath(QString path);
     QStringList getVstScanFolders() const;
 
     // ++++++++++++++ Metronome ++++++++++
