@@ -73,26 +73,25 @@ private:
     QPushButton *createXmitButton();
 
 private slots:
-    void on_toolButtonClicked();
+    void showMenu();
 
-    void on_addSubChannelClicked();
-    void on_addChannelClicked();
+    void addSubChannel();
+    void addChannel();
 
-    void on_removeSubchannelHovered();
-    void on_removeChannelHovered();
+    void highlightHoveredSubchannel();
+    void highlightHoveredChannel();
 
-    void on_removeSubChannelClicked();
-    void on_removeChannelClicked();
+    void removeSubchannel();
+    void removeChannel();
 
     // PRESETS
-    void on_LoadPresetClicked(QAction *a);
-    void on_SavePresetClicked();
-    void on_ResetPresetClicked();
-    void on_presetMenuActionClicked();
-    void on_RemovePresetClicked();
+    void loadPreset(QAction *a);
+    void savePreset();
+    void resetPreset();
+    void deletePreset();
 
     // xmit
-    void on_xmitButtonClicked(bool checked);
+    void toggleTransmitingStatus(bool checked);
 };
 
 #endif // LOCALTRACKGROUPVIEW_H

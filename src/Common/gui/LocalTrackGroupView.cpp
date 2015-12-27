@@ -24,10 +24,10 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
     xmitButton = createXmitButton();
     this->layout()->addWidget(xmitButton);
 
-    QObject::connect(toolButton, SIGNAL(clicked()), this, SLOT(on_toolButtonClicked()));
+    QObject::connect(toolButton, SIGNAL(clicked()), this, SLOT(showMenu()));
     QObject::connect(this->ui->groupNameField, SIGNAL(editingFinished()), this, SIGNAL(
                          nameChanged()));
-    QObject::connect(xmitButton, SIGNAL(toggled(bool)), this, SLOT(on_xmitButtonClicked(bool)));
+    QObject::connect(xmitButton, SIGNAL(toggled(bool)), this, SLOT(toggleTransmitingStatus(bool)));
 }
 
 LocalTrackGroupView::~LocalTrackGroupView()
@@ -62,7 +62,7 @@ void LocalTrackGroupView::setPreparingStatus(bool preparing)
     style()->polish(xmitButton);
 }
 
-void LocalTrackGroupView::on_xmitButtonClicked(bool checked)
+void LocalTrackGroupView::toggleTransmitingStatus(bool checked)
 {
     if (!preparingToTransmit) {// users can't change xmit when is preparing
         setUnlightStatus(!checked);
@@ -123,7 +123,7 @@ void LocalTrackGroupView::refreshInputSelectionNames()
         trackView->refreshInputSelectionName();
 }
 
-void LocalTrackGroupView::on_addChannelClicked()
+void LocalTrackGroupView::addChannel()
 {
     mainFrame->addChannelsGroup("new channel");
 }
@@ -148,7 +148,7 @@ void LocalTrackGroupView::resetTracksControls()
     qCInfo(jtConfigurator) << "Reseting local inputs done!";
 }
 
-void LocalTrackGroupView::on_toolButtonClicked()
+void LocalTrackGroupView::showMenu()
 {
     QMenu menu;
 
@@ -167,7 +167,7 @@ void LocalTrackGroupView::on_toolButtonClicked()
         // putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
         presetAction->setData(name);
         QObject::connect(loadPresetsSubmenu, SIGNAL(triggered(QAction *)), this,
-                         SLOT(on_LoadPresetClicked(QAction *)));
+                         SLOT(loadPreset(QAction *)));
     }
     loadPresetsSubmenu->setEnabled(!presetsNames.isEmpty());
 
@@ -176,11 +176,11 @@ void LocalTrackGroupView::on_toolButtonClicked()
     // SAVE
     QAction *addPresetActionSave = menu.addAction(QIcon(":/images/preset-save.png"), "Save preset");
     QObject::connect(addPresetActionSave, SIGNAL(triggered(bool)), this, SLOT(
-                         on_SavePresetClicked()));
+                         savePreset()));
 
     // RESET - in case of panic
     QAction *reset = menu.addAction(QIcon(":/images/gear.png"), "Reset Track Controls");
-    QObject::connect(reset, SIGNAL(triggered()), this, SLOT(on_ResetPresetClicked()));
+    QObject::connect(reset, SIGNAL(triggered()), this, SLOT(resetPreset()));
 
     menu.addSeparator();
 
@@ -188,7 +188,7 @@ void LocalTrackGroupView::on_toolButtonClicked()
     menu.addSeparator();
 
     QAction *addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
-    QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(on_addChannelClicked()));
+    QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(addChannel()));
     addChannelAction->setEnabled(mainFrame->getChannelGroupsCount() < 2);// at this moment users can't create more channels
     if (mainFrame->getChannelGroupsCount() > 1) {
         // menu.addSeparator();
@@ -199,8 +199,8 @@ void LocalTrackGroupView::on_toolButtonClicked()
                                              "Remove channel \"" + channelName + "\"");
             action->setData(i-1);  // use channel index as action data
             QObject::connect(action, SIGNAL(triggered(bool)), this,
-                             SLOT(on_removeChannelClicked()));
-            QObject::connect(action, SIGNAL(hovered()), this, SLOT(on_removeChannelHovered()));
+                             SLOT(removeChannel()));
+            QObject::connect(action, SIGNAL(hovered()), this, SLOT(highlightHoveredChannel()));
             // action->installEventFilter(this);
         }
     }
@@ -210,7 +210,7 @@ void LocalTrackGroupView::on_toolButtonClicked()
     if (mainFrame->canCreateSubchannels()) {// subchannels are disabled in VST Plugin
         QAction *addSubchannelAction = menu.addAction(QIcon(":/images/more.png"), "Add subchannel");
         QObject::connect(addSubchannelAction, SIGNAL(triggered()), this,
-                         SLOT(on_addSubChannelClicked()));
+                         SLOT(addSubChannel()));
         addSubchannelAction->setEnabled(trackViews.size() < MAX_SUB_CHANNELS);
         if (trackViews.size() > 1) {
             // menu.addSeparator();
@@ -220,9 +220,9 @@ void LocalTrackGroupView::on_toolButtonClicked()
                                                  "Remove subchannel " + QString::number(i));
                 action->setData(i-1);  // use track view index as user data
                 QObject::connect(action, SIGNAL(triggered(bool)), this,
-                                 SLOT(on_removeSubChannelClicked()));
+                                 SLOT(removeSubchannel()));
                 QObject::connect(action, SIGNAL(hovered()), this,
-                                 SLOT(on_removeSubchannelHovered()));
+                                 SLOT(highlightHoveredSubchannel()));
                 // action->installEventFilter(this);
             }
         }
@@ -232,11 +232,10 @@ void LocalTrackGroupView::on_toolButtonClicked()
     menu.exec();
 }
 
-void LocalTrackGroupView::on_addSubChannelClicked()
+void LocalTrackGroupView::addSubChannel()
 {
     if (!trackViews.isEmpty()) {
-        LocalTrackView *trackView = new LocalTrackView(trackViews.at(
-                                                           0)->getMainController(),
+        LocalTrackView *trackView = new LocalTrackView(mainFrame->getMainController(),
                                                        getChannelIndex());
         addTrackView(trackView);
         trackView->getMainController()->setInputTrackToNoInput(trackView->getInputIndex());
@@ -265,21 +264,21 @@ void LocalTrackGroupView::setToNarrow()
         trackView->setToNarrow();
 }
 
-void LocalTrackGroupView::on_removeChannelHovered()
+void LocalTrackGroupView::highlightHoveredChannel()
 {
     int channelGroupIndex = 1;// just the second channel can be highlighted at moment
     if (channelGroupIndex >= 0 && channelGroupIndex < mainFrame->getChannelGroupsCount())
         mainFrame->highlightChannelGroup(channelGroupIndex);
 }
 
-void LocalTrackGroupView::on_removeSubchannelHovered()
+void LocalTrackGroupView::highlightHoveredSubchannel()
 {
     int subChannelIndex = 1;// just the second subchannel can be highlighted at moment
     if (subChannelIndex >= 0 && subChannelIndex < trackViews.size())
         Highligther::getInstance()->highlight(trackViews.at(subChannelIndex));
 }
 
-void LocalTrackGroupView::on_removeSubChannelClicked()
+void LocalTrackGroupView::removeSubchannel()
 {
     if (trackViews.size() > 1) {// can't remove the default/first subchannel
         removeTrackView(1);// always remove the second channel
@@ -293,23 +292,23 @@ void LocalTrackGroupView::detachMainControllerInSubchannels()
         (dynamic_cast<LocalTrackView *>(view))->detachMainController();
 }
 
-void LocalTrackGroupView::on_removeChannelClicked()
+void LocalTrackGroupView::removeChannel()
 {
     mainFrame->removeChannelsGroup(mainFrame->getChannelGroupsCount()-1);
 }
 
 // PRESETS
-void LocalTrackGroupView::on_LoadPresetClicked(QAction *a)
+void LocalTrackGroupView::loadPreset(QAction *a)
 {
     Controller::MainController *mainController = mainFrame->getMainController();
     mainController->loadPreset(a->data().toString());
     mainFrame->loadPresetToTrack();// that name is so good
 
     // send the new channels to other musicians
-    mainController->sendNewChannelsNames(mainFrame->getChannelsNames());
+    mainController->sendNewChannelsNames(mainFrame->getChannelsNames()); //TODO move this to MainController::loadPreset()
 }
 
-void LocalTrackGroupView::on_SavePresetClicked()
+void LocalTrackGroupView::savePreset()
 {
     bool ok;
     QString text = QInputDialog::getText(this, tr("Save the preset ..."),
@@ -321,13 +320,13 @@ void LocalTrackGroupView::on_SavePresetClicked()
     }
 }
 
-void LocalTrackGroupView::on_ResetPresetClicked()
+void LocalTrackGroupView::resetPreset()
 {
     // qCDebug(jtConfigurator) << "************ PRESET RESET ***********";
     mainFrame->resetGroupChannel(this);
 }
 
-void LocalTrackGroupView::on_RemovePresetClicked()
+void LocalTrackGroupView::deletePreset()
 {
     QStringList items = mainFrame->getMainController()->getPresetList();
     bool ok;
@@ -337,11 +336,6 @@ void LocalTrackGroupView::on_RemovePresetClicked()
     // delete the file
 
     mainFrame->getMainController()->deletePreset(item);
-}
-
-// FOR TESTS ACTUALLY
-void LocalTrackGroupView::on_presetMenuActionClicked()
-{
 }
 
 // +++++++++++++++++++++++++++++
