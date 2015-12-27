@@ -9,7 +9,3 @@ win32{
 }
 
 #SUBDIRS += ThemeEditor
-
-CONFIG += ordered
-
-
