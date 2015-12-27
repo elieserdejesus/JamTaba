@@ -1,6 +1,7 @@
 #include "MainWindowVST.h"
 #include "NinjamRoomWindowVST.h"
 #include "MainControllerVST.h"
+#include "VstPreferencesDialog.h"
 
 MainWindowVST::MainWindowVST(Controller::MainController *mainController) :
     MainWindow(mainController)
@@ -35,6 +36,7 @@ void MainWindowVST::setFullViewStatus(bool fullViewActivated)
     dynamic_cast<MainControllerVST *>(mainController)->resizePluginEditor(width(), height());
 }
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 LocalTrackGroupView *MainWindowVST::addLocalChannel(int channelGroupIndex, QString channelName,
                                                     bool createFirstSubchannel,
                                                     bool initializeAsNoInput)
@@ -50,4 +52,13 @@ LocalTrackGroupView *MainWindowVST::addLocalChannel(int channelGroupIndex, QStri
     newLocalChannel->removeInputSelectionControls(); // input selection (audio or midi) in Vst plugin
 
     return newLocalChannel;
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void MainWindowVST::showPreferencesDialog(int initialTab){
+    Q_UNUSED(initialTab)
+    VstPreferencesDialog dialog(mainController, this);
+    centerDialog(&dialog);
+    dialog.exec();
+
 }

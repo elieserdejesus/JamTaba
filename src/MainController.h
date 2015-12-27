@@ -55,6 +55,7 @@ class AudioListener;
 class NinjamController;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 class MainController : public QObject
 {
     Q_OBJECT
@@ -256,7 +257,7 @@ public:
     void addPluginsScanPath(QString path);
     void addBlackVstToSettings(QString path);
     virtual void addDefaultPluginsScanPath() = 0;// add vst path from registry
-    void removePluginsScanPath(int index);
+    void removePluginsScanPath(QString path);
     void removeBlackVst(int index);
     void clearPluginsCache();
     virtual void scanPlugins(bool scanOnlyNewPlugins = false) = 0;

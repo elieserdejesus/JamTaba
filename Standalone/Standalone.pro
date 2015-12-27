@@ -25,6 +25,7 @@ INCLUDEPATH += src
 
 HEADERS += MainWindowStandalone.h
 HEADERS += StandAloneMainController.h
+HEADERS += StandAlonePreferencesDialog.h
 
 HEADERS += audio/core/PortAudioDriver.h
 HEADERS += recorder/JamRecorder.h
@@ -49,6 +50,7 @@ HEADERS += audio/vst/VstLoader.h
 SOURCES += main.cpp
 SOURCES += StandAloneMainController.cpp
 SOURCES += MainWindowStandalone.cpp
+SOURCES += StandalonePreferencesDialog.cpp
 
 SOURCES += recorder/JamRecorder.cpp
 SOURCES += recorder/ReaperProjectGenerator.cpp
@@ -72,12 +74,9 @@ SOURCES += audio/core/PortAudioDriver.cpp
 SOURCES += audio/core/PluginDescriptor.cpp
 SOURCES += audio/vst/VstLoader.cpp
 
-SOURCES += StandalonePreferencesDialog.cpp
-
 #conditional sources to different platforms
 win32{
     SOURCES += audio/core/WindowsPortAudioDriver.cpp
-    SOURCES += WindowsPreferencesDialog.cpp
 }
 macx{
     SOURCES += audio/core/MacPortAudioDriver.cpp

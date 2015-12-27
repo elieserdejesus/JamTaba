@@ -287,7 +287,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
-           <widget class="QPlainTextEdit" name="plainTextEdit">
+           <widget class="QPlainTextEdit" name="vstListWidget">
             <property name="undoRedoEnabled">
              <bool>false</bool>
             </property>
@@ -352,7 +352,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPlainTextEdit" name="BlackBoxText">
+           <widget class="QPlainTextEdit" name="blackListWidget">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>

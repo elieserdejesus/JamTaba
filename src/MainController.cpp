@@ -1047,9 +1047,9 @@ void MainController::addPluginsScanPath(QString path)
     settings.addVstScanPath(path);
 }
 
-void MainController::removePluginsScanPath(int index)
+void MainController::removePluginsScanPath(QString path)
 {
-    settings.removeVstScanPath(index);
+    settings.removeVstScanPath(path);
 }
 
 void MainController::clearPluginsCache()
