@@ -1,48 +1,15 @@
 #ifndef MAIN_WINDOW_H
 #define MAIN_WINDOW_H
 
-#include <QtWidgets/QMainWindow>
-#include <QMessageBox>
-#include <QFutureWatcher>
 #include "ui_MainWindow.h"
 #include "BusyDialog.h"
-#include "ninjam/Server.h"
-#include "loginserver/LoginService.h"
-#include "persistence/Settings.h"
-#include "LocalTrackGroupView.h"
-#include "PreferencesDialog.h"
-
-// #include "performance/PerformanceMonitor.h"
-#include "ChordProgression.h"
 #include "chords/ChordsPanel.h"
-
-class PluginScanDialog;
-class NinjamRoomWindow;
-
-namespace Controller {
-class MainController;
-}
-namespace Ui {
-class MainFrameClass;
-class MainFrame;
-}
-
-namespace Login {
-class LoginServiceParser;
-}
-
-namespace Audio {
-class Plugin;
-class PluginDescriptor;
-}
-
-namespace Vst {
-class PluginDescriptor;
-}
-
-class JamRoomViewPanel;
-class PluginGui;
-class LocalTrackGroupView;
+#include "PluginScanDialog.h"
+#include "NinjamRoomWindow.h"
+#include "MainController.h"
+#include "JamRoomViewPanel.h"
+#include "LocalTrackGroupView.h"
+// #include "performance/PerformanceMonitor.h"
 
 class MainWindow : public QMainWindow
 {
@@ -106,7 +73,6 @@ public:
     void setTransmitingStatus(int channelID, bool xmitStatus);
 
     QStringList getChannelsNames() const;
-
 
 protected:
     Controller::MainController *mainController;
