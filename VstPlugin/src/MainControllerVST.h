@@ -44,6 +44,8 @@ public:
 
     void setCSS(QString css);
 
+    int addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode);
+
     inline Vst::PluginFinder *createPluginFinder()
     {
         return nullptr;

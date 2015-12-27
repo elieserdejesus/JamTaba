@@ -129,14 +129,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     foreach (LocalTrackGroupView *channel, localGroupChannels)
         channel->refreshInputSelectionNames();
 
-    if (mainController->isRunningAsVstPlugin()) {
-        this->ui.actionVstPreferences->setVisible(false);
-        this->ui.actionAudioPreferences->setVisible(false);
-        this->ui.actionMidiPreferences->setVisible(false);
-        this->ui.actionQuit->setVisible(false);
-        this->ui.actionFullscreenMode->setVisible(false);
-    }
-
     initializeWindowState();// window size, maximization ...
 
     ui.localTracksWidget->installEventFilter(this);
@@ -263,8 +255,8 @@ void MainWindow::showMessageBox(QString title, QString text, QMessageBox::Icon i
     messageBox->setIcon(icon);
     messageBox->setAttribute(Qt::WA_DeleteOnClose, true);
     messageBox->show();
-    if (isRunningAsVstPlugin())
-        centerDialog(messageBox);
+    // if (isRunningAsVstPlugin())
+    centerDialog(messageBox);
 }
 
 void MainWindow::on_RoomStreamerError(QString msg)
@@ -303,7 +295,7 @@ void MainWindow::highlightChannelGroup(int index) const
 void MainWindow::addChannelsGroup(QString name)
 {
     int channelIndex = localGroupChannels.size();
-    addLocalChannel(channelIndex, name, true);
+    addLocalChannel(channelIndex, name, true, true);// create the first subchannel AND initialize as no input
     mainController->updateInputTracksRange();
     if (mainController->isPlayingInNinjamRoom()) {
         mainController->sendNewChannelsNames(getChannelsNames());
@@ -338,7 +330,8 @@ void MainWindow::on_channelNameChanged()
 }
 
 LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString channelName,
-                                                 bool createFirstSubchannel)
+                                                 bool createFirstSubchannel,
+                                                 bool initializeAsNoInput)
 {
     LocalTrackGroupView *localChannel = new LocalTrackGroupView(channelGroupIndex, this);
     QObject::connect(localChannel, SIGNAL(nameChanged()), this, SLOT(on_channelNameChanged()));
@@ -359,7 +352,7 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
         localChannel->addTrackView(localTrackView);
 
         if (localGroupChannels.size() > 1) {
-            if (!mainController->isRunningAsVstPlugin()) {
+            if (initializeAsNoInput) {
                 // in standalone the second channel is always initialized as noInput
                 localTrackView->setToNoInput();
             }
@@ -377,12 +370,7 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-bool MainWindow::isRunningAsVstPlugin() const
-{
-    return mainController->isRunningAsVstPlugin();
-}
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::restorePluginsList()
 {
     qCInfo(jtGUI) << "Restoring plugins list...";
@@ -453,7 +441,7 @@ void MainWindow::loadPresetToTrack()
         qCInfo(jtConfigurator) << "Creating :"<<count<<" group";
 
         for (int i = 0; i < count; i++) {
-            addLocalChannel(0, " new Group", true);
+            addLocalChannel(0, " new Group", true, true);
             groupSize++;
             qCInfo(jtConfigurator) << "Group size is now :"<<groupSize<<" group";
             // groupSize++;
@@ -569,7 +557,7 @@ void MainWindow::loadPresetToTrack()
                 QApplication::restoreOverrideCursor();
             }
 
-            if (!mainController->isRunningAsVstPlugin()) {
+            if (canCreateSubchannels()) {
                 Persistence::Subchannel subChannel
                     = preset.channels.at(group).subChannels.at(index);
                 // using midi
@@ -625,7 +613,7 @@ void MainWindow::initializeLocalInputChannels()
     foreach (Persistence::Channel channel, inputsSettings.channels) {
         qCInfo(jtGUI) << "\tCreating channel "<< channel.name;
         LocalTrackGroupView *channelView = addLocalChannel(channelIndex, channel.name,
-                                                           channel.subChannels.isEmpty());
+                                                           channel.subChannels.isEmpty(), false);
         foreach (Persistence::Subchannel subChannel, channel.subChannels) {
             qCInfo(jtGUI) << "\t\tCreating sub-channel ";
             BaseTrackView::BoostValue boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
@@ -633,7 +621,7 @@ void MainWindow::initializeLocalInputChannels()
                                                                 subChannel.gain, boostValue,
                                                                 subChannel.pan, subChannel.muted);
             channelView->addTrackView(subChannelView);
-            if (!mainController->isRunningAsVstPlugin()) {
+            if (canCreateSubchannels()) {
                 if (subChannel.midiDevice >= 0) {// using midi
                     qCInfo(jtGUI) << "\t\tSubchannel using MIDI";
                     // check if midiDevice index is valid
@@ -667,13 +655,17 @@ void MainWindow::initializeLocalInputChannels()
                 mainController->setInputTrackToStereo(subChannelView->getInputIndex(),
                                                       0 + (channelIndex * 2));
             }
-            if (mainController->isRunningAsVstPlugin())
+            if (!canCreateSubchannels())
                 break;// avoid hacking in config file to create more subchannels in VST plugin.
+        }
+        if(!canCreateSubchannels()){//running as vst plugin?
+            channelView->removeFxPanel();
+            channelView->removeInputSelectionControls();
         }
         channelIndex++;
     }
     if (channelIndex == 0)// no channels in settings file or no settings file...
-        addLocalChannel(0, "your channel", true);
+        addLocalChannel(0, "your channel", true, true);// initialize to noInput
     qCInfo(jtGUI) << "Initializing local inputs done!";
 }
 
@@ -693,8 +685,7 @@ void MainWindow::initializeLoginService()
 void MainWindow::initializeWindowState()
 {
     bool wasFullScreenInLastSession = mainController->getSettings().windowsWasFullScreenViewMode();
-    this->fullScreenViewMode = wasFullScreenInLastSession
-                               && !mainController->isRunningAsVstPlugin();
+    this->fullScreenViewMode = wasFullScreenInLastSession && canUseFullScreen();
 
     // set window mode: mini mode or full view mode
     setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
@@ -703,7 +694,7 @@ void MainWindow::initializeWindowState()
         qCDebug(jtGUI)<< "setting window state to maximized";
         showMaximized();
     } else {
-        if (!mainController->isRunningAsVstPlugin()) { // avoid set plugin to full screen or move the plugin window
+        if (canUseFullScreen()) { // avoid set plugin to full screen or move the plugin window
             if (mainController->getSettings().windowsWasFullScreenViewMode()) {
                 showFullScreen();
             } else {// this else fix the cropped window when starting in full screen mode
@@ -815,6 +806,9 @@ void MainWindow::on_roomsListAvailable(QList<Login::RoomInfo> publicRooms)
 
 void MainWindow::refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms)
 {
+    if(!isVisible()){
+        return;
+    }
     qSort(publicRooms.begin(), publicRooms.end(), jamRoomLessThan);
     int index = 0;
     foreach (Login::RoomInfo roomInfo, publicRooms) {
@@ -883,8 +877,8 @@ void MainWindow::on_enteringInRoom(Login::RoomInfo roomInfo, QString password)
     if (!mainController->userNameWasChoosed()) {
         QString lastUserName = mainController->getUserName();
         UserNameDialog dialog(this, lastUserName);
-        if (isRunningAsVstPlugin())
-            centerDialog(&dialog);
+        // if (isRunningAsVstPlugin())
+        centerDialog(&dialog);
         if (dialog.exec() == QDialog::Accepted) {
             QString userName = dialog.getUserName().trimmed();
             if (!userName.isEmpty()) {
@@ -1159,8 +1153,8 @@ void MainWindow::on_privateServerMenuItemTriggered()
                      SLOT(on_privateServerConnectionAccepted(QString, int, QString)));
     privateServerDialog->show();
 
-    if (isRunningAsVstPlugin())// dialogs need a workaround to appear in center of plugin screen
-        centerDialog(privateServerDialog);
+    // if (isRunningAsVstPlugin())// dialogs need a workaround to appear in center of plugin screen
+    centerDialog(privateServerDialog);
 }
 
 void MainWindow::centerDialog(QWidget *dialog)
@@ -1184,13 +1178,11 @@ void MainWindow::on_ninjamOfficialSiteMenuItemTriggered()
 // preferences menu
 void MainWindow::on_preferencesClicked(QAction *action)
 {
-    // Use of action now !
-    if (!mainController->isRunningAsVstPlugin()) {
-        if (action->objectName().contains("actionQuit")) {
-            this->close();
-            return;
-        }
+    if (action->objectName().contains("actionQuit")) {
+        this->close();
+        return;
     }
+
     Midi::MidiDriver *midiDriver = mainController->getMidiDriver();
     AudioDriver *audioDriver = mainController->getAudioDriver();
     if (audioDriver)
@@ -1201,7 +1193,7 @@ void MainWindow::on_preferencesClicked(QAction *action)
     stopCurrentRoomStream();
 
     PreferencesDialog dialog(mainController, this);
-    if (!mainController->isRunningAsVstPlugin()) {
+    //if (!mainController->isRunningAsVstPlugin()) {
         if (action == ui.actionAudioPreferences)
             dialog.selectAudioTab();
         else if (action == ui.actionMidiPreferences)
@@ -1210,9 +1202,9 @@ void MainWindow::on_preferencesClicked(QAction *action)
             dialog.selectVstPluginsTab();
         else
             dialog.selectRecordingTab();
-    } else {
-        dialog.selectRecordingTab();
-    }
+//    } else {
+//        dialog.selectRecordingTab();
+//    }
     connect(&dialog, SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int, int,
                                                  int)), this,
             SLOT(on_IOPreferencesChanged(QList<bool>, int, int, int, int, int, int, int)));

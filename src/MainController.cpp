@@ -464,11 +464,6 @@ int MainController::addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode
     else
         trackGroups[trackGroupIndex]->addInput(inputTrackNode);
 
-    if (isRunningAsVstPlugin()) {// VST plugins always use audio as input
-        int firstChannelIndex = (inputTracks.size()-1) * 2;
-        inputTrackNode->setAudioInputSelection(firstChannelIndex, 2);
-    }
-
     return inputTrackID;
 }
 
@@ -1003,7 +998,7 @@ QString MainController::getUserEnvironmentString() const
     QString userMachineArch = QSysInfo::currentCpuArchitecture();
     QString jamtabaArch = QSysInfo::buildCpuArchitecture();
     QString version = QApplication::applicationVersion();
-    QString flavor = isRunningAsVstPlugin() ? "VST Plugin" : "Standalone";
+    QString flavor = getJamtabaFlavor();
     return "Jamtaba " + version + " " + flavor + " (" + jamtabaArch + ") running on " + systemName
            + " (" + userMachineArch + ")";
 }

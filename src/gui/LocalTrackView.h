@@ -39,6 +39,9 @@ public:
 
     void detachMainController();
 
+    void removeIputSelectionControls();
+    void removeFxPanel();
+
     inline int getInputIndex() const
     {
         return getTrackID();
@@ -105,6 +108,8 @@ private:
               bool muted);
 
     bool peakMetersOnly;
+
+    void deleteWidget(QWidget* widget);
 
 private slots:
     void on_inputSelectionButtonClicked();// build and show de input selection menu

@@ -4,7 +4,10 @@
 #include "Plugin.h"
 #include "log/Logging.h"
 #include "Editor.h"
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+using namespace Controller;
+
 class AudioDriverVST : public Audio::NullAudioDriver
 {
 public:
@@ -65,11 +68,29 @@ void MainControllerVST::resizePluginEditor(int newWidth, int newHeight)
     }
 }
 
+// +++++++++++++++++++++++++++++++++++++
+int MainControllerVST::addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode)
+{
+    int inputTrackID = MainController::addInputTrackNode(inputTrackNode);
+
+    // VST plugins always use audio as input
+    int firstChannelIndex = (inputTracks.size()-1) * 2;
+    inputTrackNode->setAudioInputSelection(firstChannelIndex, 2);
+    return inputTrackID;
+}
+
+// ++++++++++++++++++++++++++++++++++
+QString MainController::getJamtabaFlavor() const
+{
+    return "Vst Plugin";
+}
+
 QString MainControllerVST::getUserEnvironmentString() const
 {
     return MainController::getUserEnvironmentString() + " running in " + getHostName();
 }
 
+// +++++++++++++++++++++++++++++++++++++
 QString MainControllerVST::getHostName() const
 {
     if (plugin)

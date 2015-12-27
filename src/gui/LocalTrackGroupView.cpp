@@ -34,6 +34,22 @@ LocalTrackGroupView::~LocalTrackGroupView()
 {
 }
 
+void LocalTrackGroupView::removeFxPanel()
+{
+    foreach (BaseTrackView *trackView, trackViews) {
+        LocalTrackView *localTrackView = dynamic_cast<LocalTrackView *>(trackView);
+        localTrackView->removeFxPanel();
+    }
+}
+
+void LocalTrackGroupView::removeInputSelectionControls()
+{
+    foreach (BaseTrackView *trackView, trackViews) {
+        LocalTrackView *localTrackView = dynamic_cast<LocalTrackView *>(trackView);
+        localTrackView->removeIputSelectionControls();
+    }
+}
+
 void LocalTrackGroupView::setPreparingStatus(bool preparing)
 {
     this->preparingToTransmit = preparing;
@@ -148,7 +164,8 @@ void LocalTrackGroupView::on_toolButtonClicked()
     QStringList presetsNames = cfg->getPresetFilesNames(false);
     foreach (QString name, presetsNames) {
         QAction *presetAction = loadPresetsSubmenu->addAction(name);
-        presetAction->setData(name);// putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
+        // putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
+        presetAction->setData(name);
         QObject::connect(loadPresetsSubmenu, SIGNAL(triggered(QAction *)), this,
                          SLOT(on_LoadPresetClicked(QAction *)));
     }
@@ -190,7 +207,7 @@ void LocalTrackGroupView::on_toolButtonClicked()
 
     menu.addSeparator();
 
-    if (!mainFrame->isRunningAsVstPlugin()) {// subchannels are disabled in VST Plugin
+    if (mainFrame->canCreateSubchannels()) {// subchannels are disabled in VST Plugin
         QAction *addSubchannelAction = menu.addAction(QIcon(":/images/more.png"), "Add subchannel");
         QObject::connect(addSubchannelAction, SIGNAL(triggered()), this,
                          SLOT(on_addSubChannelClicked()));
