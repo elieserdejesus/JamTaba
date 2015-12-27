@@ -37,10 +37,10 @@ private:
     IntervalChunksDisplay *chunksDisplay;// display downloaded interval chunks
 protected slots:
     // overriding the base class slots
-    void onMuteClicked();
-    void onFaderMoved(int value);
-    void onPanSliderMoved(int value);
-    void onBoostButtonClicked();
+    void toggleMuteStatus();
+    void setGain(int value);
+    void setPan(int value);
+    void updateBoostValue();
 };
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class NinjamTrackGroupView : public TrackGroupView

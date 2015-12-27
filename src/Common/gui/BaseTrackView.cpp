@@ -23,16 +23,16 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     drawDbValue(true)
 {
     ui->setupUi(this);
-    QObject::connect(ui->muteButton, SIGNAL(clicked()), this, SLOT(onMuteClicked()));
-    QObject::connect(ui->soloButton, SIGNAL(clicked()), this, SLOT(onSoloClicked()));
-    QObject::connect(ui->levelSlider, SIGNAL(valueChanged(int)), this, SLOT(onFaderMoved(int)));
-    QObject::connect(ui->panSlider, SIGNAL(valueChanged(int)), this, SLOT(onPanSliderMoved(int)));
+    QObject::connect(ui->muteButton, SIGNAL(clicked()), this, SLOT(toggleMuteStatus()));
+    QObject::connect(ui->soloButton, SIGNAL(clicked()), this, SLOT(toggleSoloStatus()));
+    QObject::connect(ui->levelSlider, SIGNAL(valueChanged(int)), this, SLOT(setGain(int)));
+    QObject::connect(ui->panSlider, SIGNAL(valueChanged(int)), this, SLOT(setPan(int)));
     QObject::connect(ui->buttonBoostZero, SIGNAL(clicked(bool)), this,
-                     SLOT(onBoostButtonClicked()));
+                     SLOT(updateBoostValue()));
     QObject::connect(ui->buttonBoostMinus12, SIGNAL(clicked(bool)), this,
-                     SLOT(onBoostButtonClicked()));
+                     SLOT(updateBoostValue()));
     QObject::connect(ui->buttonBoostPlus12, SIGNAL(clicked(bool)), this, SLOT(
-                         onBoostButtonClicked()));
+                         updateBoostValue()));
 
     ui->panSlider->installEventFilter(this);
     ui->levelSlider->installEventFilter(this);
@@ -55,14 +55,14 @@ void BaseTrackView::bindThisViewWithTrackNodeSignals()
 {
     Audio::AudioNode *trackNode = mainController->getTrackNode(trackID);
     Q_ASSERT(trackNode);
-    QObject::connect(trackNode, SIGNAL(gainChanged(float)), this, SLOT(onAudioNodeGainChanged(
+    QObject::connect(trackNode, SIGNAL(gainChanged(float)), this, SLOT(setGainSliderPosition(
                                                                            float)));
     QObject::connect(trackNode, SIGNAL(panChanged(float)), this,
-                     SLOT(onAudioNodePanChanged(float)));
+                     SLOT(setPanKnobPosition(float)));
     QObject::connect(trackNode, SIGNAL(muteChanged(bool)), this,
-                     SLOT(onAudioNodeMuteChanged(bool)));
+                     SLOT(setMuteStatus(bool)));
     QObject::connect(trackNode, SIGNAL(soloChanged(bool)), this,
-                     SLOT(onAudioNodeSoloChanged(bool)));
+                     SLOT(setSoloStatus(bool)));
 }
 
 // ++++++  signals emitted by Audio Node +++++++
@@ -76,30 +76,30 @@ methods (like midi messages).
 
 */
 
-void BaseTrackView::onAudioNodeGainChanged(float newGainValue)
+void BaseTrackView::setGainSliderPosition(float newGainValue)
 {
     ui->levelSlider->setValue(newGainValue * 100);
 }
 
-void BaseTrackView::onAudioNodePanChanged(float newPanValue)
+void BaseTrackView::setPanKnobPosition(float newPanValue)
 {
     // pan range is[-4,4], zero is center
     ui->panSlider->setValue(newPanValue * 4);
 }
 
-void BaseTrackView::onAudioNodeMuteChanged(bool newMuteStatus)
+void BaseTrackView::setMuteStatus(bool newMuteStatus)
 {
     ui->muteButton->setChecked(newMuteStatus);
 }
 
-void BaseTrackView::onAudioNodeSoloChanged(bool newSoloStatus)
+void BaseTrackView::setSoloStatus(bool newSoloStatus)
 {
     ui->soloButton->setChecked(newSoloStatus);
 }
 
 // +++++++++
 
-void BaseTrackView::onBoostButtonClicked()
+void BaseTrackView::updateBoostValue()
 {
     float boostValue = 0;
     if (ui->buttonBoostMinus12->isChecked())
@@ -240,24 +240,24 @@ BaseTrackView::~BaseTrackView()
     trackViews.remove(this->getTrackID());// remove from static map
 }
 
-void BaseTrackView::onPanSliderMoved(int value)
+void BaseTrackView::setPan(int value)
 {
     float sliderValue = value/(float)ui->panSlider->maximum();
     mainController->setTrackPan(this->trackID, sliderValue, true);
 }
 
-void BaseTrackView::onFaderMoved(int value)
+void BaseTrackView::setGain(int value)
 {
     // signals are blocked [the third parameter] to avoid a loop in signal/slot scheme.
     mainController->setTrackGain(this->trackID, value/100.0, true);
 }
 
-void BaseTrackView::onMuteClicked()
+void BaseTrackView::toggleMuteStatus()
 {
     mainController->setTrackMute(this->trackID, !mainController->trackIsMuted(trackID), true);
 }
 
-void BaseTrackView::onSoloClicked()
+void BaseTrackView::toggleSoloStatus()
 {
     mainController->setTrackSolo(this->trackID, !mainController->trackIsSoloed(this->trackID),
                                  true);
