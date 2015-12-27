@@ -17,6 +17,7 @@ class NinjamPanel;
 class NinjamPanel : public QWidget
 {
     Q_OBJECT
+
 signals:
     void bpiComboActivated(QString);
     void bpmComboActivated(QString);
@@ -70,8 +71,8 @@ private:
     void selectClosestBeatsPerAccentInCombo(int currentBeatsPerAccent);
     void selectBeatsPerAccentInCombo(int beatsPerAccent);
 private slots:
-    void comboAccentsChanged(int index);
-    void comboShapeChanged(int index);
+    void updateAccentsStatus(int index);
+    void updateIntervalProgressShape(int index);
 };
 
 #endif // NINJAMPANEL_H
