@@ -73,7 +73,7 @@ public:
     void stop();
     void setFullScreenView(bool fullScreen);
 
-    virtual bool isRunningAsVstPlugin() const = 0;
+    QString getJamtabaFlavor() const; // return Standalone or VstPlugin
 
     inline void setMainWindow(MainWindow *mainWindow)
     {

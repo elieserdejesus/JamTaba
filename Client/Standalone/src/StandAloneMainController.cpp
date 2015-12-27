@@ -156,6 +156,12 @@ void StandalonePluginFinder::scan(QStringList skipList){
 
 //++++++++++++++++++++++++++++++++++
 
+QString MainController::getJamtabaFlavor() const{
+    return "Standalone";
+}
+
+//++++++++++++++++++++++++++++++++++
+
 void StandaloneMainController::on_ninjamBpmChanged(int newBpm){
     MainController::on_ninjamBpmChanged(newBpm);
     vstHost->setTempo(newBpm);

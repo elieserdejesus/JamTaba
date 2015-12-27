@@ -27,6 +27,9 @@ public:
         return index;
     }
 
+    void removeFxPanel();
+    void removeInputSelectionControls();
+
     virtual void setPeakMeterMode(bool peakMeterOnly);
     virtual void togglePeakMeterOnlyMode();
     bool isShowingPeakMeterOnly() const

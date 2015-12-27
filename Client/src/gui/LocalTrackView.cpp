@@ -46,6 +46,31 @@ void LocalTrackView::closeAllPlugins()
     inputNode->closeProcessorsWindows();// close vst editors
 }
 
+void LocalTrackView::removeFxPanel()
+{
+    deleteWidget(fxPanel);
+    fxPanel = nullptr;
+    fxSpacer->changeSize(0, 0);
+}
+
+void LocalTrackView::deleteWidget(QWidget *widget)
+{
+    if (widget) {
+        widget->setVisible(false);
+        widget->parentWidget()->layout()->removeWidget(widget);
+        widget->deleteLater();
+    }
+}
+
+void LocalTrackView::removeIputSelectionControls()
+{
+    deleteWidget(inputPanel);
+    inputPanel = nullptr;
+
+    deleteWidget(inputTypeIconLabel);
+    inputTypeIconLabel = nullptr;
+}
+
 void LocalTrackView::init(int channelIndex, float initialGain, BaseTrackView::BoostValue boostValue,
                           float initialPan, bool muted)
 {
@@ -68,13 +93,6 @@ void LocalTrackView::init(int channelIndex, float initialGain, BaseTrackView::Bo
     this->inputTypeIconLabel = createInputTypeIconLabel(this);
     ui->mainLayout->addWidget(inputTypeIconLabel);
     ui->mainLayout->setAlignment(this->inputTypeIconLabel, Qt::AlignCenter);
-
-    if (mainController->isRunningAsVstPlugin()) {
-        fxPanel->setVisible(false);
-        fxSpacer->changeSize(0, 0);
-        inputPanel->setVisible(false);
-        inputTypeIconLabel->setVisible(false);
-    }
 
     // create the peak meter to show midiactivity
     midiPeakMeter = new PeakMeter();
@@ -183,12 +201,12 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMi
         margins.setRight((peakMetersOnly || runningInMiniMode) ? 2 : 6);
         layout()->setContentsMargins(margins);
 
-        if (fxPanel) {
-            fxPanel->setVisible(!peakMetersOnly && !mainController->isRunningAsVstPlugin());
-            inputPanel->setVisible(!peakMetersOnly && !mainController->isRunningAsVstPlugin());
+        if (fxPanel) {// in vst plugin fxPanel is nullptr
+            fxPanel->setVisible(!peakMetersOnly);
+            inputPanel->setVisible(!peakMetersOnly);
 
             fxSpacer->changeSize(20,
-                                 peakMetersOnly || mainController->isRunningAsVstPlugin() ? 0 : 20, QSizePolicy::Minimum,
+                                 peakMetersOnly ? 0 : 20, QSizePolicy::Minimum,
                                  peakMetersOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
         }
         ui->soloButton->setVisible(!peakMetersOnly);
@@ -197,9 +215,8 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMi
         ui->levelSlider->parentWidget()->layout()->setAlignment(ui->levelSlider,
                                                                 peakMetersOnly ? Qt::AlignRight : Qt::AlignHCenter);
 
-        if (inputTypeIconLabel)
-            inputTypeIconLabel->setVisible(
-                !peakMetersOnly && !mainController->isRunningAsVstPlugin());
+        if (inputTypeIconLabel)// this will be nullptr in Vst plugin
+            inputTypeIconLabel->setVisible(!peakMetersOnly);
 
         this->drawDbValue = !peakMetersOnly;
 
@@ -574,9 +591,11 @@ LocalTrackView::~LocalTrackView()
 QList<const Audio::Plugin *> LocalTrackView::getInsertedPlugins() const
 {
     QList<const Audio::Plugin *> plugins;
-    foreach (FxPanelItem *item, fxPanel->getItems()) {
-        if (item->containPlugin())
-            plugins.append(item->getAudioPlugin());
+    if (fxPanel) {//can be nullptr in vst plugin
+        foreach (FxPanelItem *item, fxPanel->getItems()) {
+            if (item->containPlugin())
+                plugins.append(item->getAudioPlugin());
+        }
     }
     return plugins;
 }

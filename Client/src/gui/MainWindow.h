@@ -78,7 +78,8 @@ public:
     void enterInRoom(Login::RoomInfo roomInfo);
     void exitFromRoom(bool normalDisconnection);
 
-    bool isRunningAsVstPlugin() const;
+    bool canCreateSubchannels() const;
+    bool canUseFullScreen() const;
 
     inline bool isRunningInMiniMode() const
     {
@@ -106,6 +107,7 @@ public:
 
 protected:
     Controller::MainController *mainController;
+    Ui::MainFrameClass ui;
 
     virtual void initializePluginFinder();
     void restorePluginsList();
@@ -119,6 +121,9 @@ protected:
     virtual void setFullViewStatus(bool fullViewActivated);
 
     bool eventFilter(QObject *target, QEvent *event);
+
+    virtual LocalTrackGroupView *addLocalChannel(int channelGroupIndex, QString channelName,
+                                         bool createFirstSubchannel, bool initializeAsNoInput);
 
 protected slots:
     void on_tabCloseRequest(int index);
@@ -215,7 +220,6 @@ private:
     QMap<long long, JamRoomViewPanel *> roomViewPanels;
 
     QScopedPointer<PluginScanDialog> pluginScanDialog;
-    Ui::MainFrameClass ui;
 
     QScopedPointer<NinjamRoomWindow> ninjamWindow;
 
@@ -233,8 +237,6 @@ private:
     void initializeMainTabWidget();
     void initializeViewModeMenu();
 
-    LocalTrackGroupView *addLocalChannel(int channelGroupIndex, QString channelName,
-                                         bool createFirstSubchannel);
 
     bool fullViewMode;// full view or mini view mode?
     bool fullScreenViewMode;
