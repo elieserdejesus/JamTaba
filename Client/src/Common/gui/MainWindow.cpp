@@ -870,7 +870,7 @@ void MainWindow::tryEnterInRoom(Login::RoomInfo roomInfo, QString password)
 
     if (!mainController->userNameWasChoosed()) {
         QString lastUserName = mainController->getUserName();
-        UserNameDialog dialog(this, lastUserName);
+        UserNameDialog dialog(ui.centralWidget, lastUserName);
         centerDialog(&dialog);
         if (dialog.exec() == QDialog::Accepted) {
             QString userName = dialog.getUserName().trimmed();
@@ -1138,22 +1138,29 @@ void MainWindow::showPrivateServerDialog()
     QString password = settings.getLastPrivateServerPassword();
     int port = settings.getLastPrivateServerPort();
     PrivateServerDialog *privateServerDialog
-        = new PrivateServerDialog(this, server, port, password);
+        = new PrivateServerDialog(ui.centralWidget, server, port, password);
     QObject::connect(privateServerDialog, SIGNAL(connectionAccepted(QString, int,
                                                                     QString)), this,
                      SLOT(connectInPrivateServer(QString, int, QString)));
+    centerDialog(privateServerDialog);
     privateServerDialog->show();
 
-    // if (isRunningAsVstPlugin())// dialogs need a workaround to appear in center of plugin screen
-    centerDialog(privateServerDialog);
 }
 
 void MainWindow::centerDialog(QWidget *dialog)
 {
-    QPoint globalPosition = mapToGlobal(this->pos());
-    int x = globalPosition.x() + width()/2 - dialog->width()/2;
-    int y = globalPosition.y() + height()/2 - dialog->height()/2;
-    dialog->move(x, y);
+    QPoint globalPosition = mapToGlobal(dialog->parentWidget()->pos());
+    QSize parentSize = dialog->parentWidget()->size();
+    int x = globalPosition.x() + parentSize.width()/2 - dialog->width()/2;
+    int y = globalPosition.y();
+    if(dialog->height() >= parentSize.height()/2){//big dialog like preferences panel
+        y += parentSize.height()/2 - dialog->height()/2;
+    }
+    else{//small dialogs
+        y += parentSize.height()/3;
+    }
+
+    dialog->move(dialog->mapFromGlobal(QPoint(x, y)));
 }
 
 void MainWindow::showNinjamCommunityWebPage()
