@@ -93,30 +93,30 @@ void NinjamTrackView::setChannelName(QString name)
 
 // +++++++++++++++++++++
 
-void NinjamTrackView::onPanSliderMoved(int value)
+void NinjamTrackView::setPan(int value)
 {
-    BaseTrackView::onPanSliderMoved(value);
+    BaseTrackView::setPan(value);
     cacheEntry.setPan(mainController->getTrackNode(getTrackID())->getPan());
     mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
 }
 
-void NinjamTrackView::onFaderMoved(int value)
+void NinjamTrackView::setGain(int value)
 {
-    BaseTrackView::onFaderMoved(value);
+    BaseTrackView::setGain(value);
     cacheEntry.setGain(value/100.0);
     mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
 }
 
-void NinjamTrackView::onMuteClicked()
+void NinjamTrackView::toggleMuteStatus()
 {
-    BaseTrackView::onMuteClicked();
+    BaseTrackView::toggleMuteStatus();
     cacheEntry.setMuted(mainController->getTrackNode(getTrackID())->isMuted());
     mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
 }
 
-void NinjamTrackView::onBoostButtonClicked()
+void NinjamTrackView::updateBoostValue()
 {
-    BaseTrackView::onBoostButtonClicked();
+    BaseTrackView::updateBoostValue();
     cacheEntry.setBoost(mainController->getTrackNode(getTrackID())->getBoost());
     mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
 }

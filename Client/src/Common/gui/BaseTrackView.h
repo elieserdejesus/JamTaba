@@ -87,18 +87,18 @@ private:
     static const int FADER_HEIGHT;
 
 protected slots:
-    virtual void onMuteClicked();
-    virtual void onSoloClicked();
-    virtual void onFaderMoved(int value);
-    virtual void onPanSliderMoved(int value);
-    virtual void onBoostButtonClicked();
+    virtual void toggleMuteStatus();
+    virtual void toggleSoloStatus();
+    virtual void setGain(int value);
+    virtual void setPan(int value);
+    virtual void updateBoostValue();
 
 private slots:
     // signals emitted by AudioNode class when user activate the control with mouse, or midi CCs, or using joystick, etc.
-    void onAudioNodePanChanged(float newPanValue);
-    void onAudioNodeGainChanged(float newGainValue);
-    void onAudioNodeMuteChanged(bool newMuteStatus);
-    void onAudioNodeSoloChanged(bool newSoloStatus);
+    void setPanKnobPosition(float newPanValue);
+    void setGainSliderPosition(float newGainValue);
+    void setMuteStatus(bool newMuteStatus);
+    void setSoloStatus(bool newSoloStatus);
 };
 
 #endif // TRACKVIEW_H
