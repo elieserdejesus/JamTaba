@@ -452,12 +452,10 @@ void NinjamRoomWindow::on_licenceButton_clicked()
     layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
     msgBox->show();
 
-    if (mainController->isRunningAsVstPlugin()) {
-        QPoint basePosition = mapToGlobal(parentWidget()->pos());// parent widget is QTabWidget;
-        int x = basePosition.x() + parentWidget()->width()/2 - msgBox->width()/2;
-        int y = basePosition.y() + parentWidget()->height()/2 - msgBox->height()/2;
-        msgBox->move(x, y);
-    }
+    QPoint basePosition = mapToGlobal(parentWidget()->pos());    // parent widget is QTabWidget;
+    int x = basePosition.x() + parentWidget()->width()/2 - msgBox->width()/2;
+    int y = basePosition.y() + parentWidget()->height()/2 - msgBox->height()/2;
+    msgBox->move(x, y);
 }
 
 // ----------
