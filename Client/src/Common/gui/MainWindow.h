@@ -18,10 +18,10 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(Controller::MainController *mainController, QWidget *parent = 0);
     ~MainWindow();
-    virtual void closeEvent(QCloseEvent *);
-    virtual void changeEvent(QEvent *);
-    virtual void timerEvent(QTimerEvent *);
-    virtual void resizeEvent(QResizeEvent *);
+    void closeEvent(QCloseEvent *) override;
+    void changeEvent(QEvent *) override;
+    void timerEvent(QTimerEvent *) override;
+    void resizeEvent(QResizeEvent *) override;
 
     void detachMainController();
 
