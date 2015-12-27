@@ -15,8 +15,10 @@ public:
     explicit UserNameDialog(QWidget *parent, QString lastUserName);
     ~UserNameDialog();
     QString getUserName() const;
+
 private slots:
-    void on_textEdited();
+    void updateOkButtonAvailability();
+
 private:
     Ui::UserNameDialog *ui;
 };
