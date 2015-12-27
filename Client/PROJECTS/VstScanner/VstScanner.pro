@@ -8,12 +8,15 @@ DEFINES += VST_FORCE_DEPRECATED=0 #enable VST 2.3 features
 
 TEMPLATE = app
 
-INCLUDEPATH += src
-INCLUDEPATH += ../src
-INCLUDEPATH += ../../VST_SDK/pluginterfaces/vst2.x
+ROOT_PATH = "../.."
+SOURCE_PATH = "$$ROOT_PATH/src"
 
-VPATH       += ../src
-VPATH       += src
+INCLUDEPATH += $$SOURCE_PATH/Common
+INCLUDEPATH += $$SOURCE_PATH/VstScanner
+INCLUDEPATH += $$ROOT_PATH/../VST_SDK/pluginterfaces/vst2.x
+
+VPATH       += $$SOURCE_PATH/Common
+VPATH       += $$SOURCE_PATH/VstScanner
 
 HEADERS += audio/vst/VstHost.h
 HEADERS += VstPluginScanner.h

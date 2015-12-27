@@ -21,11 +21,12 @@ win32-msvc* {
     QMAKE_LFLAGS += /ignore:4099
 }
 
-INCLUDEPATH += ../src
-INCLUDEPATH += src
-INCLUDEPATH += ../libs/includes/ogg
-INCLUDEPATH += ../libs/includes/vorbis
-INCLUDEPATH += ../libs/includes/minimp3
+INCLUDEPATH += $$SOURCE_PATH/Common
+INCLUDEPATH += $$SOURCE_PATH/VstPlugin
+
+INCLUDEPATH += $$ROOT_PATH/libs/includes/ogg
+INCLUDEPATH += $$ROOT_PATH/libs/includes/vorbis
+INCLUDEPATH += $$ROOT_PATH/libs/includes/minimp3
 
 
 win32{
@@ -34,12 +35,12 @@ win32{
     INCLUDEPATH += "$$VST_SDK_PATH/public.sdk/source/vst2.x"
 }
 
-VPATH       += ../src
-VPATH       += src
+VPATH += $$SOURCE_PATH/Common
+VPATH += $$SOURCE_PATH/VstPlugin
 
-DEPENDPATH +=  ../libs/includes/ogg
-DEPENDPATH +=  ../libs/includes/vorbis
-DEPENDPATH +=  ../libs/includes/minimp3
+DEPENDPATH +=  $$ROOT_PATH/libs/includes/ogg
+DEPENDPATH +=  $$ROOT_PATH/libs/includes/vorbis
+DEPENDPATH +=  $$ROOT_PATH/libs/includes/minimp3
 
 HEADERS += recorder/JamRecorder.h
 HEADERS += recorder/ReaperProjectGenerator.h
@@ -113,8 +114,8 @@ win32 {
     CONFIG(debug, debug|release): LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindowsd #link windows platform statically
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lminimp3 -lvorbisfile -lvorbis -logg
-    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lminimp3d -lvorbisfiled -lvorbisd -loggd
+    CONFIG(release, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lminimp3 -lvorbisfile -lvorbis -logg
+    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lminimp3d -lvorbisfiled -lvorbisd -loggd
 
     CONFIG(release, debug|release) {
       #ltcg - http://blogs.msdn.com/b/vcblog/archive/2009/02/24/quick-tips-on-using-whole-program-optimization.aspx

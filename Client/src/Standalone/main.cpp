@@ -6,7 +6,7 @@
 #include "MainWindowStandalone.h"
 #include "persistence/Settings.h"
 #include "log/Logging.h"
-#include "Libs/SingleApplication/singleapplication.h"
+#include "SingleApplication/singleapplication.h"
 #include "Configurator.h"
 
 int main(int argc, char* args[] ){

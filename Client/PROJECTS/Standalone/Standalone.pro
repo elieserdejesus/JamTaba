@@ -7,21 +7,24 @@ QT += core gui network widgets
 TARGET = Jamtaba2
 TEMPLATE = app
 
-INCLUDEPATH += ../libs/includes/portaudio
-INCLUDEPATH += ../libs/includes/rtmidi
-INCLUDEPATH += ../libs/includes/ogg
-INCLUDEPATH += ../libs/includes/vorbis
-INCLUDEPATH += ../libs/includes/minimp3
+INCLUDEPATH += $$ROOT_PATH/libs/includes/portaudio
+INCLUDEPATH += $$ROOT_PATH/libs/includes/rtmidi
+INCLUDEPATH += $$ROOT_PATH/libs/includes/ogg
+INCLUDEPATH += $$ROOT_PATH/libs/includes/vorbis
+INCLUDEPATH += $$ROOT_PATH/libs/includes/minimp3
+
+INCLUDEPATH += $$SOURCE_PATH/Standalone
+INCLUDEPATH += $$SOURCE_PATH/Libs
 INCLUDEPATH += $$VST_SDK_PATH/pluginterfaces/vst2.x
 
-DEPENDPATH +=  ../libs/includes/portaudio
-DEPENDPATH +=  ../libs/includes/rtmidi
-DEPENDPATH +=  ../libs/includes/ogg
-DEPENDPATH +=  ../libs/includes/vorbis
-DEPENDPATH +=  ../libs/includes/minimp3
 
-VPATH += src
-INCLUDEPATH += src
+DEPENDPATH +=  $$ROOT_PATH/libs/includes/portaudio
+DEPENDPATH +=  $$ROOT_PATH/libs/includes/rtmidi
+DEPENDPATH +=  $$ROOT_PATH/libs/includes/ogg
+DEPENDPATH +=  $$ROOT_PATH/libs/includes/vorbis
+DEPENDPATH +=  $$ROOT_PATH/libs/includes/minimp3
+
+VPATH += $$SOURCE_PATH/Standalone
 
 HEADERS += MainWindowStandalone.h
 HEADERS += StandAloneMainController.h
@@ -101,8 +104,8 @@ win32{
             LIBS_PATH = "static/win64-msvc"
         }
 
-        CONFIG(release, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbis -logg
-        else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lrtmidid -lvorbisfiled -lvorbisd -loggd
+        CONFIG(release, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbis -logg
+        else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lportaudiod -lminimp3d -lrtmidid -lvorbisfiled -lvorbisd -loggd
 
         CONFIG(release, debug|release) {
             #ltcg - http://blogs.msdn.com/b/vcblog/archive/2009/02/24/quick-tips-on-using-whole-program-optimization.aspx
@@ -114,7 +117,7 @@ win32{
     win32-g++{#MinGW compiler
         message("MinGW x86 build")
         LIBS_PATH = "static/win32-mingw"
-        LIBS += -L$$PWD/../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
+        LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
 
         #supressing some MinGW annoying warnings
         QMAKE_CXXFLAGS_WARN_ON += -Wunused-variable
@@ -147,7 +150,7 @@ macx{
     LIBS += -framework CoreServices
     LIBS += -framework Carbon
 
-    LIBS += -L$$PWD/../libs/$$LIBS_PATH/ -lportaudio -lminimp3  -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
+    LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lportaudio -lminimp3  -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
 
     #mac osx doc icon
     ICON = ../Jamtaba.icns
