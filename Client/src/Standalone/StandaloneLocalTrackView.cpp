@@ -126,8 +126,7 @@ QList<const Audio::Plugin *> StandaloneLocalTrackView::getInsertedPlugins() cons
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FxPanel *StandaloneLocalTrackView::createFxPanel()
 {
-    FxPanel *panel = new FxPanel(this, mainController);
-    return panel;
+    return new FxPanel(this, controller);
 }
 
 void StandaloneLocalTrackView::setUnlightStatus(bool unlighted)

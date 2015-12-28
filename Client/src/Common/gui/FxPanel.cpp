@@ -1,17 +1,11 @@
 #include "FxPanel.h"
 #include "FxPanelItem.h"
-#include "plugins/Guis.h"
-#include "MainController.h"
 #include "StandaloneLocalTrackView.h"
 
-#include <QPainter>
-#include <QScrollArea>
-#include <QVBoxLayout>
-#include <QStyleOption>
-#include <QLayout>
+using namespace Controller;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-FxPanel::FxPanel(StandaloneLocalTrackView *parent, Controller::MainController *mainController) :
+FxPanel::FxPanel(StandaloneLocalTrackView *parent, StandaloneMainController *mainController) :
     QWidget(parent),
     controller(mainController),
     localTrackView(parent)

@@ -2,24 +2,17 @@
 #define FXPANEL_H
 
 #include <QWidget>
+#include "StandAloneMainController.h"
 
 class FxPanelItem;
 class StandaloneLocalTrackView;
-
-namespace Controller {
-class MainController;
-}
-
-namespace Audio {
-class Plugin;
-}
 
 class FxPanel : public QWidget
 {
     Q_OBJECT
 
 public:
-    FxPanel(StandaloneLocalTrackView *parent, Controller::MainController *mainController);
+    FxPanel(StandaloneLocalTrackView *parent, Controller::StandaloneMainController *mainController);
 
     virtual ~FxPanel();
 
@@ -39,9 +32,10 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *);
+
 private:
     QList<FxPanelItem *> items;
-    Controller::MainController *controller;
+    Controller::StandaloneMainController *controller; //storing a 'casted' controller for convenience
     StandaloneLocalTrackView *localTrackView;
 };
 
