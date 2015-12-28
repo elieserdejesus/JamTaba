@@ -180,7 +180,7 @@ QMenu *StandaloneLocalTrackView::createMonoInputsMenu(QMenu *parent)
         action->setIcon(monoInputsMenu->icon());
     }
 
-    QObject::connect(monoInputsMenu, SIGNAL(triggered(QAction *)), this, SLOT(setToMono()));
+    QObject::connect(monoInputsMenu, SIGNAL(triggered(QAction *)), this, SLOT(setToMono(QAction *)));
     return monoInputsMenu;
 }
 
@@ -221,7 +221,7 @@ QMenu *StandaloneLocalTrackView::createStereoInputsMenu(QMenu *parent)
         QString msg = stereoInputsMenu->title() + "  (not enough available inputs to make stereo)";
         stereoInputsMenu->setTitle(msg);
     }
-    QObject::connect(stereoInputsMenu, SIGNAL(triggered(QAction *)), this, SLOT(setToStereo()));
+    QObject::connect(stereoInputsMenu, SIGNAL(triggered(QAction *)), this, SLOT(setToStereo(QAction *)));
     return stereoInputsMenu;
 }
 
