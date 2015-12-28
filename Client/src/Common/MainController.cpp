@@ -132,14 +132,9 @@ void MainController::setSampleRate(int newSampleRate)
         ninjamController->setSampleRate(newSampleRate);
 }
 
-void MainController::on_audioDriverSampleRateChanged(int newSampleRate)
-{
-    setSampleRate(newSampleRate);
-}
-
-void MainController::on_audioDriverStarted()
-{
-}
+//void MainController::on_audioDriverStarted()
+//{
+//}
 
 void MainController::on_audioDriverStopped()
 {
@@ -157,7 +152,7 @@ void MainController::finishUploads()
                                             QByteArray(), true);
 }
 
-void MainController::on_errorInNinjamServer(QString error)
+void MainController::quitFromNinjamServer(QString error)
 {
     qCWarning(jtCore) << error;
     stopNinjamController();
@@ -165,7 +160,7 @@ void MainController::on_errorInNinjamServer(QString error)
         mainWindow->exitFromRoom(false);
 }
 
-void MainController::on_disconnectedFromNinjamServer(const Server &server)
+void MainController::disconnectFromNinjamServer(const Server &server)
 {
     Q_UNUSED(server);
     stopNinjamController();
@@ -175,7 +170,7 @@ void MainController::on_disconnectedFromNinjamServer(const Server &server)
         jamRecorder.stopRecording();
 }
 
-void MainController::on_connectedInNinjamServer(Ninjam::Server server)
+void MainController::connectedNinjamServer(Ninjam::Server server)
 {
     qCDebug(jtCore) << "connected in ninjam server";
     stopNinjamController();
@@ -183,15 +178,15 @@ void MainController::on_connectedInNinjamServer(Ninjam::Server server)
     this->ninjamController.reset(newNinjamController);
     QObject::connect(newNinjamController,
                      SIGNAL(encodedAudioAvailableToSend(QByteArray, quint8, bool, bool)),
-                     this, SLOT(on_ninjamEncodedAudioAvailableToSend(QByteArray, quint8, bool,
+                     this, SLOT(enqueueAudioDataToUpload(QByteArray, quint8, bool,
                                                                      bool)));
 
     QObject::connect(newNinjamController, SIGNAL(startingNewInterval()), this,
                      SLOT(on_newNinjamInterval()));
     QObject::connect(newNinjamController, SIGNAL(currentBpiChanged(int)), this,
-                     SLOT(on_ninjamBpiChanged(int)));
+                     SLOT(updateBpi(int)));
     QObject::connect(newNinjamController, SIGNAL(currentBpmChanged(int)), this,
-                     SLOT(on_ninjamBpmChanged(int)));
+                     SLOT(updateBpm(int)));
     QObject::connect(newNinjamController, SIGNAL(startProcessing(int)), this,
                      SLOT(on_ninjamStartProcessing(int)));
 
@@ -219,36 +214,38 @@ QMap<int, bool> MainController::getXmitChannelsFlags() const
     return xmitFlags;
 }
 
-void MainController::on_ninjamStartProcessing(int intervalPosition)
-{
-    Q_UNUSED(intervalPosition)
-}
+//void MainController::on_ninjamStartProcessing(int intervalPosition)
+//{
+//    Q_UNUSED(intervalPosition)
+//}
 
 void MainController::on_newNinjamInterval()
 {
+    //TODO move the jamRecorde to NinjamController?
+
     qCDebug(jtCore) << "MainController: on_newNinjamInterval";
     if (settings.isSaveMultiTrackActivated())
         jamRecorder.newInterval();
 }
 
-void MainController::on_ninjamBpiChanged(int newBpi)
+void MainController::updateBpi(int newBpi)
 {
     if (settings.isSaveMultiTrackActivated())
         jamRecorder.setBpi(newBpi);
 }
 
-void MainController::on_ninjamBpmChanged(int newBpm)
+void MainController::updateBpm(int newBpm)
 {
     if (settings.isSaveMultiTrackActivated())
         jamRecorder.setBpm(newBpm);
 }
 
-void MainController::on_ninjamEncodedAudioAvailableToSend(QByteArray encodedAudio,
+void MainController::enqueueAudioDataToUpload(QByteArray encodedAudio,
                                                           quint8 channelIndex, bool isFirstPart,
                                                           bool isLastPart)
 {
-    // audio thread fire this event. This thread (main/gui thread)
-    // write the encoded bytes in socket. We can't write in socket from audio thread.
+    /** The audio thread fire this event. This thread (main/gui thread) write the encoded bytes in socket.
+     *  We can't write in the socket from audio thread.*/
     if (isFirstPart) {
         if (intervalsToUpload.contains(channelIndex))
             delete intervalsToUpload[channelIndex];
@@ -747,11 +744,11 @@ void MainController::start()
         this->audioMixer.addNode(roomStreamer.data());
 
         QObject::connect(&ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), this,
-                         SLOT(on_connectedInNinjamServer(Ninjam::Server)));
+                         SLOT(connectedNinjamServer(Ninjam::Server)));
         QObject::connect(&ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this,
-                         SLOT(on_disconnectedFromNinjamServer(Ninjam::Server)));
+                         SLOT(disconnectFromNinjamServer(Ninjam::Server)));
         QObject::connect(&ninjamService, SIGNAL(error(QString)), this,
-                         SLOT(on_errorInNinjamServer(QString)));
+                         SLOT(quitFromNinjamServer(QString)));
 
         NatMap map;// not used yet,will be used in future to real time rooms
 

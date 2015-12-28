@@ -1298,3 +1298,9 @@ void MainWindow::updateCurrentIntervalBeat(int beat)
     if (chordsPanel)
         chordsPanel->setCurrentBeat(beat);
 }
+
+
+void MainController::on_ninjamStartProcessing(int intervalPosition){
+    Q_UNUSED(intervalPosition)
+    //--------
+}

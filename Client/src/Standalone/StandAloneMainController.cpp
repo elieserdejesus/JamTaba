@@ -244,21 +244,21 @@ void StandaloneMainController::setInputTrackToStereo(int localChannelIndex, int 
     }
 }
 
-void StandaloneMainController::on_ninjamBpmChanged(int newBpm)
+void StandaloneMainController::updateBpm(int newBpm)
 {
-    MainController::on_ninjamBpmChanged(newBpm);
+    MainController::updateBpm(newBpm);
     vstHost->setTempo(newBpm);
 }
 
-void StandaloneMainController::on_connectedInNinjamServer(Ninjam::Server server)
+void StandaloneMainController::connectedNinjamServer(Ninjam::Server server)
 {
-    MainController::on_connectedInNinjamServer(server);
+    MainController::connectedNinjamServer(server);
     vstHost->setTempo(server.getBpm());
 }
 
-void StandaloneMainController::on_audioDriverSampleRateChanged(int newSampleRate)
+void StandaloneMainController::setSampleRate(int newSampleRate)
 {
-    MainController::on_audioDriverSampleRateChanged(newSampleRate);
+    MainController::setSampleRate(newSampleRate);
     vstHost->setSampleRate(newSampleRate);
     foreach (Audio::LocalInputAudioNode *inputNode, inputTracks)
         inputNode->setProcessorsSampleRate(newSampleRate);
@@ -266,7 +266,7 @@ void StandaloneMainController::on_audioDriverSampleRateChanged(int newSampleRate
 
 void StandaloneMainController::on_audioDriverStarted()
 {
-    MainController::on_audioDriverStarted();
+    //MainController::on_audioDriverStarted();
 
     vstHost->setSampleRate(audioDriver->getSampleRate());
     vstHost->setBlockSize(audioDriver->getBufferSize());
@@ -318,11 +318,12 @@ void StandalonePluginFinder::cancel()
         scanProcess.terminate();
 }
 
-void StandaloneMainController::setMainWindow(MainWindow *mainWindow){
+void StandaloneMainController::setMainWindow(MainWindow *mainWindow)
+{
     MainController::setMainWindow(mainWindow);
 
-    //store a casted pointer to convenience when callen MainWindowStandalone specific functions
-    window = dynamic_cast<MainWindowStandalone*>(mainWindow);
+    // store a casted pointer to convenience when callen MainWindowStandalone specific functions
+    window = dynamic_cast<MainWindowStandalone *>(mainWindow);
 }
 
 Midi::MidiDriver *StandaloneMainController::createMidiDriver()
@@ -378,7 +379,7 @@ void StandaloneMainController::on_vstPluginRequestedWindowResize(QString pluginN
 
 void StandaloneMainController::start()
 {
-    //creating audio and midi driver before call the base class MainController::start()
+    // creating audio and midi driver before call the base class MainController::start()
 
     if (!midiDriver) {
         qCInfo(jtCore) << "Creating midi driver...";
@@ -397,9 +398,11 @@ void StandaloneMainController::start()
         }
         if (!driver)
             driver = new Audio::NullAudioDriver();
+
         audioDriver.reset(driver);
+
         QObject::connect(audioDriver.data(), SIGNAL(sampleRateChanged(int)), this,
-                         SLOT(on_audioDriverSampleRateChanged(int)));
+                         SLOT(setSampleRate(int)));
         QObject::connect(audioDriver.data(), SIGNAL(stopped()), this,
                          SLOT(on_audioDriverStopped()));
         QObject::connect(audioDriver.data(), SIGNAL(started()), this,
