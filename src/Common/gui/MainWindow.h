@@ -17,7 +17,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(Controller::MainController *mainController, QWidget *parent = 0);
-    ~MainWindow();
+    virtual ~MainWindow();
 
     virtual void initialize(); // this is overrided in inherited classes, never call virtual methods inside constructor
 

@@ -45,8 +45,9 @@ int main(int argc, char* args[] ){
     //window when a new instance had been started.
     QObject::connect(application, SIGNAL(showUp()), &mainWindow, SLOT(raise()));
 #endif
-    return application->exec();
-
+    int execResult = application->exec();
+    mainController.saveLastUserSettings(mainWindow.getInputsSettings());
+    return execResult;
  }
 
 //++++++++++++++++++++++++++++++++++

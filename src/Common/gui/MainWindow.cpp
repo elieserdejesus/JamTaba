@@ -848,7 +848,6 @@ MainWindow::~MainWindow()
     setParent(nullptr);
     if (mainController) {
         mainController->stop();
-        mainController->saveLastUserSettings(getInputsSettings());
     }
 
     foreach (LocalTrackGroupView *groupView, this->localGroupChannels)

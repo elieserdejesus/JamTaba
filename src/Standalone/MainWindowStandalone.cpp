@@ -21,7 +21,8 @@ MainWindowStandalone::MainWindowStandalone(StandaloneMainController *controller)
     QTimer::singleShot(50, this, &MainWindowStandalone::restorePluginsList);
 }
 
-LocalTrackGroupView* MainWindowStandalone::createLocalTrackGroupView(int channelGroupIndex){
+LocalTrackGroupView *MainWindowStandalone::createLocalTrackGroupView(int channelGroupIndex)
+{
     return new StandaloneLocalTrackGroupView(channelGroupIndex, this);
 }
 
@@ -48,26 +49,32 @@ QList<Persistence::Plugin> buildPersistentPluginList(QList<const Audio::Plugin *
 
 InputsSettings MainWindowStandalone::getInputsSettings() const
 {
-    // the base class is handling just the basic: gain, mute, pan , etc for each channel and subchannel
-    InputsSettings settings = MainWindow::getInputsSettings();
+    // the base class is returning just the basic: gain, mute, pan , etc for each channel and subchannel
+    InputsSettings baseSettings = MainWindow::getInputsSettings();
 
-    // adding the inserted plugins in each Persistence::SubChannel instance
-    foreach (Persistence::Channel channel, settings.channels) {
+    // recreate the settings including the plugins
+    InputsSettings settings;
+    foreach (Channel channel, baseSettings.channels) {
         StandaloneLocalTrackGroupView *trackGroupView = geTrackGroupViewByName(channel.name);
-        if (trackGroupView) {
-            int subChannelID = 0;
-            QList<LocalTrackView *> trackViews = trackGroupView->getTracks();
-            foreach (Persistence::Subchannel subChannel, channel.subChannels) {
-                StandaloneLocalTrackView *trackView
-                    = dynamic_cast<StandaloneLocalTrackView *>(trackViews.at(subChannelID));
-                if (trackView)
-                    subChannel.setPlugins(buildPersistentPluginList(trackView->getInsertedPlugins()));
-
-
-                subChannelID++;
-            }
+        if (!trackGroupView)
+            continue;
+        Channel newChannel = channel;
+        newChannel.subChannels.clear();
+        int subChannelID = 0;
+        QList<LocalTrackView *> trackViews = trackGroupView->getTracks();
+        foreach (Subchannel subchannel, channel.subChannels) {
+            Subchannel newSubChannel = subchannel;
+            StandaloneLocalTrackView *trackView
+                = dynamic_cast<StandaloneLocalTrackView *>(trackViews.at(subChannelID));
+            if (trackView)
+                newSubChannel.setPlugins(buildPersistentPluginList(trackView->getInsertedPlugins()));
+            subChannelID++;
+            newChannel.subChannels.append(newSubChannel);
         }
+        settings.channels.append(newChannel);
     }
+
+
     return settings;
 }
 

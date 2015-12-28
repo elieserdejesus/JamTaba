@@ -14,7 +14,7 @@ class LocalTrackGroupView : public TrackGroupView
 public:
     LocalTrackGroupView(int index, MainWindow *mainFrame);
 
-    ~LocalTrackGroupView();
+    virtual ~LocalTrackGroupView();
 
     QList<LocalTrackView *> getTracks() const;
 
