@@ -43,47 +43,11 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeLoginService();
     initializeMainTabWidget();
     initializeViewModeMenu();
-
-    ui.masterMeterL->setOrientation(PeakMeter::HORIZONTAL);
-    ui.masterMeterR->setOrientation(PeakMeter::HORIZONTAL);
-    QObject::connect(ui.masterFader, SIGNAL(valueChanged(int)), this,
-                     SLOT(setMasterFaderPosition(int)));
-    ui.masterFader->installEventFilter(this);// handle double click in master fader
-
-    timerID = startTimer(1000/50);
-
-    QObject::connect(ui.menuPreferences, SIGNAL(triggered(QAction *)), this,
-                     SLOT(openPreferencesDialog(QAction *)));
-    QObject::connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this,
-                     SLOT(showNinjamCommunityWebPage()));
-    QObject::connect(ui.actionNinjam_Official_Site, SIGNAL(triggered(bool)), this,
-                     SLOT(showNinjamOfficialWebPage()));
-    QObject::connect(ui.actionPrivate_Server, SIGNAL(triggered(bool)), this,
-                     SLOT(showPrivateServerDialog()));
-    QObject::connect(ui.actionReportBugs, SIGNAL(triggered(bool)), this,
-                     SLOT(showJamtabaIssuesWebPage()));
-    QObject::connect(ui.actionWiki, SIGNAL(triggered(bool)), this,
-                     SLOT(showJamtabaWikiWebPage()));
-    QObject::connect(ui.actionUsersManual, SIGNAL(triggered(bool)), this,
-                     SLOT(showJamtabaUsersManual()));
-    QObject::connect(ui.actionCurrentVersion, SIGNAL(triggered(bool)), this,
-                     SLOT(showJamtabaCurrentVersion()));
-    QObject::connect(ui.localControlsCollapseButton, SIGNAL(clicked()), this,
-                     SLOT(toggleLocalInputsCollapseStatus()));
-    QObject::connect(mainController->getRoomStreamer(), SIGNAL(error(QString)), this,
-                     SLOT(handlePublicRoomStreamError(QString)));
-
-    ui.chatArea->setVisible(false);// hide chat area until connect in a server to play
-
-    ui.allRoomsContent->setLayout(new QGridLayout());
-    ui.allRoomsContent->layout()->setContentsMargins(0, 0, 0, 0);
-    ui.allRoomsContent->layout()->setSpacing(24);
-
+    setupWidgets();
+    setupSignals();
     initializeWindowState();// window size, maximization ...
 
-    ui.localTracksWidget->installEventFilter(this);
-
-    QObject::connect(ui.actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
+    timerID = startTimer(1000/50);// timer used to animate audio peaks, midi activity, public room wave audio plot, etc.
 
     showBusyDialog("Loading rooms list ...");
     qCInfo(jtGUI) << "MainWindow created!";
@@ -1258,4 +1222,57 @@ void MainController::on_ninjamStartProcessing(int intervalPosition)
 {
     Q_UNUSED(intervalPosition)
     // --------
+}
+
+void MainWindow::setupWidgets()
+{
+    ui.masterMeterL->setOrientation(PeakMeter::HORIZONTAL);
+    ui.masterMeterR->setOrientation(PeakMeter::HORIZONTAL);
+    ui.masterFader->installEventFilter(this);// handle double click in master fader
+
+    ui.chatArea->setVisible(false);// hide chat area until connect in a server to play
+
+    ui.allRoomsContent->setLayout(new QGridLayout());
+    ui.allRoomsContent->layout()->setContentsMargins(0, 0, 0, 0);
+    ui.allRoomsContent->layout()->setSpacing(24);
+
+    ui.localTracksWidget->installEventFilter(this);
+}
+
+void MainWindow::setupSignals()
+{
+    QObject::connect(ui.menuPreferences, SIGNAL(triggered(QAction *)), this,
+                     SLOT(openPreferencesDialog(QAction *)));
+
+    QObject::connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this,
+                     SLOT(showNinjamCommunityWebPage()));
+
+    QObject::connect(ui.actionNinjam_Official_Site, SIGNAL(triggered(bool)), this,
+                     SLOT(showNinjamOfficialWebPage()));
+
+    QObject::connect(ui.actionPrivate_Server, SIGNAL(triggered(bool)), this,
+                     SLOT(showPrivateServerDialog()));
+
+    QObject::connect(ui.actionReportBugs, SIGNAL(triggered(bool)), this,
+                     SLOT(showJamtabaIssuesWebPage()));
+
+    QObject::connect(ui.actionWiki, SIGNAL(triggered(bool)), this,
+                     SLOT(showJamtabaWikiWebPage()));
+
+    QObject::connect(ui.actionUsersManual, SIGNAL(triggered(bool)), this,
+                     SLOT(showJamtabaUsersManual()));
+
+    QObject::connect(ui.actionCurrentVersion, SIGNAL(triggered(bool)), this,
+                     SLOT(showJamtabaCurrentVersion()));
+
+    QObject::connect(ui.localControlsCollapseButton, SIGNAL(clicked()), this,
+                     SLOT(toggleLocalInputsCollapseStatus()));
+
+    QObject::connect(mainController->getRoomStreamer(), SIGNAL(error(QString)), this,
+                     SLOT(handlePublicRoomStreamError(QString)));
+
+    QObject::connect(ui.masterFader, SIGNAL(valueChanged(int)), this,
+                     SLOT(setMasterFaderPosition(int)));
+
+    QObject::connect(ui.actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
 }
