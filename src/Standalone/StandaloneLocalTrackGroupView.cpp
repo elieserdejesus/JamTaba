@@ -31,6 +31,12 @@ void StandaloneLocalTrackGroupView::createSubChannelActions(QMenu &menu)
     }
 }
 
+//overrided factory method
+BaseTrackView* StandaloneLocalTrackGroupView::createTrackView(long trackID){
+    StandaloneMainController* controller = dynamic_cast<StandaloneMainController*>(mainFrame->getMainController());
+    return new StandaloneLocalTrackView( controller, trackID );
+}
+
 BaseTrackView *StandaloneLocalTrackGroupView::addTrackView(long trackID)
 {
     StandaloneLocalTrackView *newTrackView

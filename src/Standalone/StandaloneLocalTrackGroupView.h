@@ -9,12 +9,16 @@ class StandaloneLocalTrackGroupView : public LocalTrackGroupView
 {
 public:
     StandaloneLocalTrackGroupView(int index, MainWindowStandalone *mainWindow);
+
     BaseTrackView* addTrackView(long trackID) override;
+
     void refreshInputSelectionName(int inputTrackIndex);
+
     void refreshInputSelectionNames();
 
 protected:
     void populateMenu(QMenu &menu) override;
+    BaseTrackView* createTrackView(long trackID) override;
 
 private:
     void createSubChannelActions(QMenu &menu);

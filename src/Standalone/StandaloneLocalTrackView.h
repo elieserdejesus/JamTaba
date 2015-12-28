@@ -40,10 +40,6 @@ private slots:
     void setToStereo(QAction *action) ;
     void setToMidi(QAction *action) ;
 
-protected:
-    void init(int channelIndex, float initialGain, BoostValue boostValue, float initialPan,
-              bool muted) override;
-
 private:
 
     Controller::StandaloneMainController* controller;//a 'casted' pointer just to convenience

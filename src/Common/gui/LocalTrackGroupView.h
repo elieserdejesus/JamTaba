@@ -54,14 +54,14 @@ protected:
 
     static const int MAX_SUB_CHANNELS = 2;
 
+    MainWindow *mainFrame;
+
 private:
     QPushButton *toolButton;
     QPushButton *xmitButton;
     bool preparingToTransmit;
 
     int index;
-
-    MainWindow *mainFrame;
 
     bool peakMeterOnly;
 
