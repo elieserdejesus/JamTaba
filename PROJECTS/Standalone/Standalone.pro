@@ -83,7 +83,6 @@ win32{
 }
 macx{
     SOURCES += audio/core/MacPortAudioDriver.cpp
-    SOURCES += MacPreferencesDialog.cpp
 }
 
 win32{
