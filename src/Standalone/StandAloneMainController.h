@@ -51,6 +51,7 @@ namespace Controller {
 class StandaloneMainController : public MainController
 {
     Q_OBJECT
+
 public:
     StandaloneMainController(Persistence::Settings settings, QApplication *application);
     ~StandaloneMainController();
@@ -108,6 +109,9 @@ public:
 
     void setMainWindow(MainWindow *mainWindow) override;
 
+public slots:
+    void setSampleRate(int newSampleRate) override;
+
 protected:
     Midi::MidiDriver *createMidiDriver();
 
@@ -123,14 +127,14 @@ protected:
     Midi::MidiBuffer pullMidiBuffer() override;
 
 protected slots:
-    void on_ninjamBpmChanged(int newBpm);
-    void on_connectedInNinjamServer(Ninjam::Server server);
-    void on_audioDriverSampleRateChanged(int newSampleRate);
-    void on_audioDriverStarted();
-    void on_audioDriverStopped();
-    void on_newNinjamInterval();
-    void on_ninjamStartProcessing(int intervalPosition);
-    void on_VSTPluginFounded(QString name, QString group, QString path);
+    void updateBpm(int newBpm) override;
+    void connectedNinjamServer(Ninjam::Server server) override;
+    //void on_audioDriverSampleRateChanged(int newSampleRate) override;
+    void on_audioDriverStarted() override;
+    void on_audioDriverStopped() override;
+    void on_newNinjamInterval() override;
+    void on_ninjamStartProcessing(int intervalPosition) override;
+    void on_VSTPluginFounded(QString name, QString group, QString path) override;
 
 private slots:
     void on_vstPluginRequestedWindowResize(QString pluginName, int newWidht, int newHeight);

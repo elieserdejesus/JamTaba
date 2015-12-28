@@ -58,7 +58,7 @@ public:
     void savePresets(const Persistence::InputsSettings &inputsSettings, QString name);
     void deletePreset(QString name);
 
-    //main audio processing routine
+    // main audio processing routine
     virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
 
     void sendNewChannelsNames(QStringList channelsNames);
@@ -149,8 +149,6 @@ public:
 
     virtual int getSampleRate() const = 0;
 
-    virtual void setSampleRate(int newSampleRate);
-
     static QByteArray newGUID();
 
     inline const Persistence::Settings &getSettings() const
@@ -229,6 +227,9 @@ public:
         return &usersDataCache;
     }
 
+public slots:
+    virtual void setSampleRate(int newSampleRate);
+
 protected:
 
     static QString LOG_CONFIG_FILE;
@@ -262,7 +263,7 @@ protected:
 private:
     void setAllTracksActivation(bool activated);
 
-    //audio process is here too (see MainController::process)
+    // audio process is here too (see MainController::process)
     void doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
 
     QScopedPointer<Audio::AbstractMp3Streamer> roomStreamer;
@@ -296,20 +297,21 @@ private:
 protected slots:
 
     // ninjam
-    virtual void on_connectedInNinjamServer(Ninjam::Server server);
-    virtual void on_disconnectedFromNinjamServer(const Ninjam::Server &server);
-    virtual void on_errorInNinjamServer(QString error);
-    virtual void on_ninjamEncodedAudioAvailableToSend(QByteArray, quint8 channelIndex,
-                                                      bool isFirstPart, bool isLastPart);
-    virtual void on_ninjamBpiChanged(int newBpi);
-    virtual void on_ninjamBpmChanged(int newBpm);
+    virtual void connectedNinjamServer(Ninjam::Server server);
+    virtual void disconnectFromNinjamServer(const Ninjam::Server &server);
+    virtual void quitFromNinjamServer(QString error);
+    virtual void enqueueAudioDataToUpload(QByteArray, quint8 channelIndex,
+                                          bool isFirstPart, bool isLastPart);
+    virtual void updateBpi(int newBpi);
+    virtual void updateBpm(int newBpm);
+
+    // TODO move these slots to NinjamController
     virtual void on_newNinjamInterval();
-    virtual void on_ninjamStartProcessing(int intervalPosition);
+    virtual void on_ninjamStartProcessing(int intervalPosition) = 0;
 
     // audio driver
-    virtual void on_audioDriverSampleRateChanged(int newSampleRate);
-    virtual void on_audioDriverStarted();
-    virtual void on_audioDriverStopped();
+    virtual void on_audioDriverStarted() = 0;
+    virtual void on_audioDriverStopped();//TODO move to ninjaController
 
     virtual void on_VSTPluginFounded(QString name, QString group, QString path)
     {
