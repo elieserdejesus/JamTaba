@@ -106,13 +106,17 @@ public:
 
     void useNullAudioDriver();// use when the audio driver fails
 
-    void setMainWindow(MainWindow* mainWindow) override;
+    void setMainWindow(MainWindow *mainWindow) override;
 
 protected:
-    virtual Midi::MidiDriver *createMidiDriver();
-    virtual Audio::AudioDriver *createAudioDriver(const Persistence::Settings &settings);
-    virtual Vst::PluginFinder *createPluginFinder();
-    virtual Controller::NinjamController *createNinjamController(MainController *);
+    Midi::MidiDriver *createMidiDriver();
+
+    // TODO - Audio driver need just the audio settings to initialize, not the entire settings.
+    Audio::AudioDriver *createAudioDriver(const Persistence::Settings &settings);
+
+    Vst::PluginFinder *createPluginFinder() override; //TODO use pluginFinder just in Standalone
+
+    Controller::NinjamController *createNinjamController(MainController *) override;
 
     void setCSS(QString css);
 
@@ -143,8 +147,7 @@ private:
 
     bool inputIndexIsValid(int inputIndex);
 
-    MainWindowStandalone* window;
-
+    MainWindowStandalone *window;
 };
 }
 
