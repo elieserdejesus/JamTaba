@@ -18,6 +18,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(Controller::MainController *mainController, QWidget *parent = 0);
     ~MainWindow();
+
+    virtual void initialize(); //this is overrided in inherited classes, never call virtual methods inside constructor
+
     void closeEvent(QCloseEvent *) override;
     void changeEvent(QEvent *) override;
     void timerEvent(QTimerEvent *) override;
@@ -93,9 +96,13 @@ protected:
 
     bool eventFilter(QObject *target, QEvent *event);
 
-    virtual LocalTrackGroupView *addLocalChannel(int channelGroupIndex, QString channelName,
+    LocalTrackGroupView *addLocalChannel(int channelGroupIndex, QString channelName,
                                                  bool createFirstSubchannel,
                                                  bool initializeAsNoInput);
+
+
+    //this factory method overrided in derived classes to create more specific views
+    virtual LocalTrackGroupView* createLocalTrackGroupView(int channelGroupIndex);
 
     virtual void showPreferencesDialog(int initialTab) = 0;
 

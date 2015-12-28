@@ -35,8 +35,8 @@ int main(int argc, char* args[] ){
         QMessageBox::about(nullptr, "Fatal error!", "Jamtaba can't detect any audio device in your machine!");
     }
     MainWindowStandalone  mainWindow(&mainController);
-
     mainController.setMainWindow(&mainWindow);
+    //mainWindow.initialize();
 
     mainWindow.show();
 

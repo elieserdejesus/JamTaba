@@ -3,6 +3,7 @@
 #include "StandalonePreferencesDialog.h"
 #include "StandAloneMainController.h"
 #include "StandaloneLocalTrackView.h"
+#include "StandaloneLocalTrackGroupView.h"
 #include "NinjamRoomWindow.h"
 #include "LocalTrackView.h"
 #include "log/Logging.h"
@@ -18,6 +19,10 @@ MainWindowStandalone::MainWindowStandalone(StandaloneMainController *controller)
 {
     initializePluginFinder();
     QTimer::singleShot(50, this, &MainWindowStandalone::restorePluginsList);
+}
+
+LocalTrackGroupView* MainWindowStandalone::createLocalTrackGroupView(int channelGroupIndex){
+    return new StandaloneLocalTrackGroupView(channelGroupIndex, this);
 }
 
 StandaloneLocalTrackGroupView *MainWindowStandalone::geTrackGroupViewByName(QString trackGroupName)
@@ -66,9 +71,10 @@ InputsSettings MainWindowStandalone::getInputsSettings() const
     return settings;
 }
 
-void MainWindowStandalone::loadSubChannel(Subchannel subChannel, LocalTrackView *subChannelView){
-    //TODO perdi esse código. O nome do método não era esse, eu criei isso para carregar plugins
-    //somente no standalone
+void MainWindowStandalone::loadSubChannel(Subchannel subChannel, LocalTrackView *subChannelView)
+{
+    // TODO perdi esse código. O nome do método não era esse, eu criei isso para carregar plugins
+    // somente no standalone
 }
 
 NinjamRoomWindow *MainWindowStandalone::createNinjamWindow(Login::RoomInfo roomInfo,
@@ -355,7 +361,7 @@ void MainWindowStandalone::setGlobalPreferences(QList<bool> midiInputsStatus, in
     audioDriver->setProperties(sampleRate, bufferSize);
 #endif
     controller->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, sampleRate,
-                                    bufferSize, midiInputsStatus);
+                                bufferSize, midiInputsStatus);
 
     Midi::MidiDriver *midiDriver = controller->getMidiDriver();
     midiDriver->setInputDevicesStatus(midiInputsStatus);
@@ -377,16 +383,16 @@ void MainWindowStandalone::setGlobalPreferences(QList<bool> midiInputsStatus, in
     }
 }
 
-
 // input selection changed by user or by system
 void MainWindowStandalone::refreshTrackInputSelection(int inputTrackIndex)
 {
     foreach (LocalTrackGroupView *channel, localGroupChannels)
-        dynamic_cast<StandaloneLocalTrackGroupView*>(channel)->refreshInputSelectionName(inputTrackIndex);
+        dynamic_cast<StandaloneLocalTrackGroupView *>(channel)->refreshInputSelectionName(
+            inputTrackIndex);
 }
 
-
-void MainWindowStandalone::addChannelsGroup(QString groupName){
+void MainWindowStandalone::addChannelsGroup(QString groupName)
+{
     MainWindow::addChannelsGroup(groupName);
     controller->updateInputTracksRange();
 }

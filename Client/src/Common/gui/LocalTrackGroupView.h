@@ -2,18 +2,15 @@
 #define LOCALTRACKGROUPVIEW_H
 
 #include "TrackGroupView.h"
-#include "LocalTrackView.h"
 
-class QPushButton;
+class LocalTrackView;
 class MainWindow;
-
-namespace Ui {
-class LocalTrackGroupView;
-}
+class QPushButton;
 
 class LocalTrackGroupView : public TrackGroupView
 {
     Q_OBJECT
+
 public:
     LocalTrackGroupView(int index, MainWindow *mainFrame);
 
@@ -27,9 +24,6 @@ public:
     {
         return index;
     }
-
-    //void removeFxPanel();
-    //void removeInputSelectionControls();
 
     virtual void setPeakMeterMode(bool peakMeterOnly);
     virtual void togglePeakMeterOnlyMode();
@@ -56,26 +50,34 @@ protected:
 
     BaseTrackView *createTrackView(long trackID) override;
 
-signals:
-    void nameChanged();
-    void trackRemoved();
-    void trackAdded();
-    void presetLoaded();
-    void presetSaved();
+    virtual void populateMenu(QMenu &menu);
+
+    static const int MAX_SUB_CHANNELS = 2;
 
 private:
     QPushButton *toolButton;
     QPushButton *xmitButton;
     bool preparingToTransmit;
 
-    static const int MAX_SUB_CHANNELS = 2;
     int index;
+
     MainWindow *mainFrame;
 
     bool peakMeterOnly;
 
     QPushButton *createToolButton();
     QPushButton *createXmitButton();
+
+    QMenu* createPresetsSubMenu();
+    void createPresetsActions(QMenu &menu);
+    void createChannelsActions(QMenu &menu);
+
+signals:
+    void nameChanged();
+    void trackRemoved();
+    void trackAdded();
+    void presetLoaded();
+    void presetSaved();
 
 private slots:
     void showMenu();
@@ -89,13 +91,11 @@ private slots:
     void removeSubchannel();
     void removeChannel();
 
-    // PRESETS
     void loadPreset(QAction *a);
     void savePreset();
     void resetPreset();
     void deletePreset();
 
-    // xmit
     void toggleTransmitingStatus(bool checked);
 };
 

@@ -2,15 +2,9 @@
 #include "LocalTrackView.h"
 #include "ui_TrackGroupView.h"
 
-#include "MainController.h"
 #include "Highligther.h"
 #include "MainWindow.h"
-#include "FxPanel.h"
 #include "log/Logging.h"
-
-#include <QPushButton>
-#include <QMenu>
-#include <QInputDialog>
 
 LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame) :
     index(channelIndex),
@@ -42,7 +36,7 @@ void LocalTrackGroupView::setPreparingStatus(bool preparing)
         xmitButton->setText(preparing ? "Preparing" : "Transmiting");
 
     xmitButton->setProperty("preparing", QVariant(preparing));// change the button property to change stylesheet
-    style()->unpolish(xmitButton); // force the computation of the new stylesheet for "preparing" state in QPushButton
+    style()->unpolish(xmitButton); // force the updating in stylesheet for "preparing" state in QPushButton
     style()->polish(xmitButton);
 }
 
@@ -103,8 +97,7 @@ void LocalTrackGroupView::resetTracksControls()
 
     Controller::MainController *mainController = mainFrame->getMainController();
     QList<LocalTrackView *> views = getTracks();
-    // all tracks in this track group
-    foreach (LocalTrackView *track, views) {
+    foreach (LocalTrackView *track, views) {// all tracks in this track group
         qCInfo(jtConfigurator) << "\tInput reset on channel "<< track->getTrackID();
         mainController->resetTrack(track->getTrackID());
         track->reset();// remove plugins
@@ -112,45 +105,41 @@ void LocalTrackGroupView::resetTracksControls()
     qCInfo(jtConfigurator) << "Reseting local inputs done!";
 }
 
-void LocalTrackGroupView::showMenu()
+QMenu *LocalTrackGroupView::createPresetsSubMenu()
 {
-    QMenu menu;
-
-    // PRESETS-----------------------------
-
     // LOAD - using a submenu to list stored presets
-    QMenu *loadPresetsSubmenu = new QMenu("Load preset");
-    loadPresetsSubmenu->setIcon(QIcon(":/images/preset-load.png"));
-    loadPresetsSubmenu->installEventFilter(this);// to deal with mouse buttons
+    QMenu *presetsMenu = new QMenu("Load preset");
+    presetsMenu->setIcon(QIcon(":/images/preset-load.png"));
+    presetsMenu->installEventFilter(this);// to deal with mouse buttons
 
     // adding a menu action for each stored preset
     Configurator *cfg = Configurator::getInstance();
     QStringList presetsNames = cfg->getPresetFilesNames(false);
     foreach (QString name, presetsNames) {
-        QAction *presetAction = loadPresetsSubmenu->addAction(name);
+        QAction *presetAction = presetsMenu->addAction(name);
         // putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
         presetAction->setData(name);
-        QObject::connect(loadPresetsSubmenu, SIGNAL(triggered(QAction *)), this,
-                         SLOT(loadPreset(QAction *)));
+        QObject::connect(presetsMenu, SIGNAL(triggered(QAction *)), this, SLOT(loadPreset(
+                                                                                   QAction *)));
     }
-    loadPresetsSubmenu->setEnabled(!presetsNames.isEmpty());
+    presetsMenu->setEnabled(!presetsNames.isEmpty());
 
-    menu.addMenu(loadPresetsSubmenu);
+    return presetsMenu;
+}
 
-    // SAVE
+void LocalTrackGroupView::createPresetsActions(QMenu &menu){
+    menu.addMenu(createPresetsSubMenu());
+
+    // save preset
     QAction *addPresetActionSave = menu.addAction(QIcon(":/images/preset-save.png"), "Save preset");
-    QObject::connect(addPresetActionSave, SIGNAL(triggered(bool)), this, SLOT(
-                         savePreset()));
+    QObject::connect(addPresetActionSave, SIGNAL(triggered(bool)), this, SLOT(savePreset()));
 
     // RESET - in case of panic
     QAction *reset = menu.addAction(QIcon(":/images/gear.png"), "Reset Track Controls");
     QObject::connect(reset, SIGNAL(triggered()), this, SLOT(resetPreset()));
+}
 
-    menu.addSeparator();
-
-    // CHANNELS
-    menu.addSeparator();
-
+void LocalTrackGroupView::createChannelsActions(QMenu &menu){
     QAction *addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
     QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(addChannel()));
     addChannelAction->setEnabled(mainFrame->getChannelGroupsCount() < 2);// at this moment users can't create more channels
@@ -168,30 +157,19 @@ void LocalTrackGroupView::showMenu()
             // action->installEventFilter(this);
         }
     }
+}
 
+void LocalTrackGroupView::populateMenu(QMenu &menu){
+    createPresetsActions(menu);
     menu.addSeparator();
+    createChannelsActions(menu);
+    menu.addSeparator();
+}
 
-    if (mainFrame->canCreateSubchannels()) {// subchannels are disabled in VST Plugin
-        QAction *addSubchannelAction = menu.addAction(QIcon(":/images/more.png"), "Add subchannel");
-        QObject::connect(addSubchannelAction, SIGNAL(triggered()), this,
-                         SLOT(addSubChannel()));
-        addSubchannelAction->setEnabled(trackViews.size() < MAX_SUB_CHANNELS);
-        if (trackViews.size() > 1) {
-            // menu.addSeparator();
-            for (int i = 2; i <= trackViews.size(); ++i) {
-                QAction *action = menu.addAction(QIcon(
-                                                     ":/images/less.png"),
-                                                 "Remove subchannel " + QString::number(i));
-                action->setData(i-1);  // use track view index as user data
-                QObject::connect(action, SIGNAL(triggered(bool)), this,
-                                 SLOT(removeSubchannel()));
-                QObject::connect(action, SIGNAL(hovered()), this,
-                                 SLOT(highlightHoveredSubchannel()));
-                // action->installEventFilter(this);
-            }
-        }
-    }
-
+void LocalTrackGroupView::showMenu()
+{
+    QMenu menu;
+    populateMenu(menu);//populateMenu is overrided in Standalone to add subchannel actions
     menu.move(mapToGlobal(toolButton->pos() + QPoint(toolButton->width(), 0)));
     menu.exec();
 }
