@@ -143,7 +143,6 @@ SOURCES += gui/widgets/IntervalChunksDisplay.cpp
 SOURCES += gui/widgets/MarqueeLabel.cpp
 SOURCES += UploadIntervalData.cpp
 
-
 #multiplatform implementations
 #win32:SOURCES += $$PWD/src/performance/WindowsPerformanceMonitor.cpp
 #macx:SOURCES += $$PWD/src/performance/MacPerformanceMonitor.cpp
