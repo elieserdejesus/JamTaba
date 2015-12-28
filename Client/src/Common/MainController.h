@@ -4,54 +4,24 @@
 #include <QApplication>
 #include <QMutex>
 #include <QScopedPointer>
-#include "audio/core/AudioPeak.h"
 
 #include "geo/IpToLocationResolver.h"
-#include "ninjam/Server.h"
+#include "ninjam/Service.h"
 #include "loginserver/LoginService.h"
-#include "audio/core/AudioDriver.h"
 #include "persistence/Settings.h"
 #include "persistence/UsersDataCache.h"
-
-#include "audio/SamplesBufferRecorder.h"
-
 #include "recorder/JamRecorder.h"
-
+#include "audio/core/SamplesBuffer.h"
+#include "audio/core/AudioNode.h"
 #include "audio/core/Plugins.h"
 #include "audio/vst/PluginFinder.h"
-
 #include "audio/core/AudioMixer.h"
-#include "midi/MidiDriver.h"
 #include "audio/RoomStreamerNode.h"
-
-#include "ninjam/Service.h"
-
-#include <QScopedPointer>
-
-class MainWindow;
-
-namespace Audio {
-class SamplesBuffer;
-class AudioNode;
-class LocalInputAudioNode;
-}
-
-namespace Midi {
-class MidiBuffer;
-}
-
-namespace Login {
-class LoginService;
-class LoginServiceParser;
-class LoginServiceListener;
-}
-
-class JamtabaFactory;
+#include "midi/MidiDriver.h"
 
 class MainWindow;
 
 namespace Controller {
-class AudioListener;
 class NinjamController;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -60,7 +30,6 @@ class MainController : public QObject
 {
     Q_OBJECT
 
-    friend class Controller::AudioListener;
     friend class Controller::NinjamController;
 
 protected:
