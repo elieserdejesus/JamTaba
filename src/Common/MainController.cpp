@@ -501,7 +501,9 @@ MainController::~MainController()
 
 void MainController::saveLastUserSettings(const Persistence::InputsSettings &inputsSettings)
 {
-    settings.save(inputsSettings);
+    if(inputsSettings.isValid()){//avoid save empty settings
+        settings.save(inputsSettings);
+    }
 }
 
 // -------------------------      PRESETS   ----------------------------

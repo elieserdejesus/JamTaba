@@ -169,6 +169,11 @@ public:
     void write(QJsonObject &out);
     void read(QJsonObject in);
     QList<Channel> channels;
+
+    inline bool isValid() const
+    {
+        return !channels.isEmpty();
+    }
 };
 // +++++++++PRESETS+++++++++++++++
 class PresetsSettings : public SettingsObject   // TODO this is the same InputSettings? The member 'names' can be obtained from channels directly?
