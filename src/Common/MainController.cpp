@@ -13,6 +13,21 @@ using namespace Ninjam;
 using namespace Controller;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++
+MainController::MainController(Settings settings) :
+    audioMixer(44100),
+    currentStreamingRoomID(-1000),
+    mutex(QMutex::Recursive),
+    started(false),
+    ipToLocationResolver(new Geo::WebIpToLocationResolver()),
+    loginService(new Login::LoginService()),
+    settings(settings),
+    userNameChoosed(false),
+    mainWindow(nullptr),
+    jamRecorder(new Recorder::ReaperProjectGenerator()),
+    masterGain(1)
+{
+}
+
 void MainController::setSampleRate(int newSampleRate)
 {
     audioMixer.setSampleRate(newSampleRate);
@@ -25,8 +40,7 @@ void MainController::setSampleRate(int newSampleRate)
 void MainController::on_audioDriverStopped()
 {
     if (isPlayingInNinjamRoom()) {
-        // send the last interval part when audio driver is stopped
-        finishUploads();
+        finishUploads();// send the last interval part when audio driver is stopped
         ninjamController->reset();// discard downloaded intervals and reset interval position
     }
 }
@@ -65,7 +79,7 @@ void MainController::connectedNinjamServer(Ninjam::Server server)
     QObject::connect(newNinjamController,
                      SIGNAL(encodedAudioAvailableToSend(QByteArray, quint8, bool, bool)),
                      this, SLOT(enqueueAudioDataToUpload(QByteArray, quint8, bool,
-                                                                     bool)));
+                                                         bool)));
 
     QObject::connect(newNinjamController, SIGNAL(startingNewInterval()), this,
                      SLOT(on_newNinjamInterval()));
@@ -100,15 +114,9 @@ QMap<int, bool> MainController::getXmitChannelsFlags() const
     return xmitFlags;
 }
 
-//void MainController::on_ninjamStartProcessing(int intervalPosition)
-//{
-//    Q_UNUSED(intervalPosition)
-//}
-
 void MainController::on_newNinjamInterval()
 {
-    //TODO move the jamRecorde to NinjamController?
-
+    // TODO move the jamRecorder to NinjamController?
     qCDebug(jtCore) << "MainController: on_newNinjamInterval";
     if (settings.isSaveMultiTrackActivated())
         jamRecorder.newInterval();
@@ -126,9 +134,8 @@ void MainController::updateBpm(int newBpm)
         jamRecorder.setBpm(newBpm);
 }
 
-void MainController::enqueueAudioDataToUpload(QByteArray encodedAudio,
-                                                          quint8 channelIndex, bool isFirstPart,
-                                                          bool isLastPart)
+void MainController::enqueueAudioDataToUpload(QByteArray encodedAudio, quint8 channelIndex,
+                                              bool isFirstPart, bool isLastPart)
 {
     /** The audio thread fire this event. This thread (main/gui thread) write the encoded bytes in socket.
      *  We can't write in the socket from audio thread.*/
@@ -152,22 +159,6 @@ void MainController::enqueueAudioDataToUpload(QByteArray encodedAudio,
 
     if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom())
         jamRecorder.appendLocalUserAudio(encodedAudio, channelIndex, isFirstPart, isLastPart);
-}
-
-// ++++++++++++++++++++++++++++++++++++++++++++
-MainController::MainController(Settings settings) :
-    audioMixer(44100),
-    currentStreamingRoomID(-1000),
-    mutex(QMutex::Recursive),
-    started(false),
-    ipToLocationResolver(new Geo::WebIpToLocationResolver()),
-    loginService(new Login::LoginService()),
-    settings(settings),
-    userNameChoosed(false),
-    mainWindow(nullptr),
-    jamRecorder(new Recorder::ReaperProjectGenerator()),
-    masterGain(1)
-{
 }
 
 // ++++++++++++++++++++
@@ -215,8 +206,6 @@ void MainController::mixGroupedInputs(int groupIndex, Audio::SamplesBuffer &out)
     if (groupIndex >= 0 && groupIndex < trackGroups.size())
         trackGroups[groupIndex]->mixGroupedInputs(out);
 }
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 // ++++++++++++++++++++++++
 // this is called when a new ninjam interval is received and the 'record multi track' option is enabled
@@ -309,7 +298,6 @@ void MainController::storePrivateServerSettings(QString server, int serverPort, 
     settings.setPrivateServerData(server, serverPort, password);
 }
 
-// ---------------------------------
 void MainController::storeMetronomeSettings(float metronomeGain, float metronomePan,
                                             bool metronomeMuted)
 {
@@ -373,7 +361,6 @@ void MainController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffe
         if (ninjamController)
             ninjamController->process(in, out, sampleRate);
     }
-    // recorder->addSamples(out);
 }
 
 Audio::AudioPeak MainController::getTrackPeak(int trackID)
@@ -498,7 +485,7 @@ MainController::~MainController()
     stop();
     qCDebug(jtCore()) << "main controller stopped!";
 
-    qCDebug(jtCore()) << "clearing tracksNodes...";
+    qCDebug(jtCore()) << "cleaning tracksNodes...";
     tracksNodes.clear();
     foreach (Audio::LocalInputAudioNode *input, inputTracks)
         delete input;
@@ -507,7 +494,7 @@ MainController::~MainController()
     foreach (Audio::LocalInputGroup *group, trackGroups)
         delete group;
     trackGroups.clear();
-    qCDebug(jtCore()) << "clearing tracksNodes done!";
+    qCDebug(jtCore()) << "cleaning tracksNodes done!";
 
     qCDebug(jtCore) << "MainController destructor finished!";
 }
