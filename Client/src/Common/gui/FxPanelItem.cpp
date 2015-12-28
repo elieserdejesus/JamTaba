@@ -4,6 +4,8 @@
 #include "MainController.h"
 #include "gui/LocalTrackView.h"
 #include "audio/core/PluginDescriptor.h"
+#include "StandaloneLocalTrackView.h"
+
 #include <QDebug>
 #include <QPainter>
 #include <QStyleOption>
@@ -18,7 +20,7 @@
 
 const QString FxPanelItem::NEW_EFFECT_STRING = "new effect...";
 
-FxPanelItem::FxPanelItem(LocalTrackView *parent, Controller::MainController *mainController) :
+FxPanelItem::FxPanelItem(StandaloneLocalTrackView *parent, Controller::MainController *mainController) :
     QWidget(parent),
     plugin(nullptr),
     bypassButton(new QPushButton(this)),

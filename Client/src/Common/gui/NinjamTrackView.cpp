@@ -10,14 +10,12 @@
 #include "Utils.h"
 
 // +++++++++++++++++++++++++
-NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, long trackID,
-                                 QString channelName, Persistence::CacheEntry initialValues) :
-    BaseTrackView(mainController, trackID),
-    cacheEntry(initialValues)
+NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, long trackID) :
+    BaseTrackView(mainController, trackID)
 {
     channelNameLabel = new MarqueeLabel();
     channelNameLabel->setObjectName("channelName");
-    channelNameLabel->setText(channelName);
+    channelNameLabel->setText("");
 
     ui->mainLayout->insertSpacing(0, 12);
     ui->mainLayout->insertWidget(1, channelNameLabel);
@@ -29,6 +27,11 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
 
     setUnlightStatus(true);/** disabled/grayed until receive the first bytes. When the first bytes
     // are downloaded the 'on_channelXmitChanged' slot is executed and this track is enabled.*/
+
+}
+
+void NinjamTrackView::setInitialValues(Persistence::CacheEntry initialValues){
+    cacheEntry = initialValues;
 
     // remember last track values
     ui->levelSlider->setValue(initialValues.getGain() * 100);
@@ -166,7 +169,14 @@ NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent,
     ui->topPanel->layout()->addWidget(countryLabel);
 
     // create the first subchannel by default
-    addTrackView(new NinjamTrackView(mainController, trackID, channelName, initialValues));
+    NinjamTrackView* newTrackView = dynamic_cast<NinjamTrackView*>(addTrackView(trackID));
+    newTrackView->setChannelName(channelName);
+    newTrackView->setInitialValues(initialValues);
+}
+
+BaseTrackView *NinjamTrackGroupView::createTrackView(long trackID)
+{
+    return new NinjamTrackView(mainController, trackID);
 }
 
 void NinjamTrackGroupView::setGroupName(QString groupName)

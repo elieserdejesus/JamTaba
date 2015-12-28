@@ -117,51 +117,25 @@ private:
 };
 
 // +++++++++++++++++++++++++++++
-// nested class to store interval upload data
-class MainController::UploadIntervalData
+// +++++++++++++++++++++++++++++
+// +++++++++++++++++++++++++++++
+UploadIntervalData::UploadIntervalData() :
+    GUID(newGUID())
 {
-public:
-    UploadIntervalData() :
-        GUID(newGUID())
-    {
-    }
+}
 
-    inline QByteArray getGUID() const
-    {
-        return GUID;
-    }
+void UploadIntervalData::appendData(QByteArray encodedData)
+{
+    dataToUpload.append(encodedData);
+}
 
-    void appendData(QByteArray encodedData)
-    {
-        dataToUpload.append(encodedData);
-    }
-
-    inline int getTotalBytes() const
-    {
-        return dataToUpload.size();
-    }
-
-    inline QByteArray getStoredBytes() const
-    {
-        return dataToUpload;
-    }
-
-    inline void clear()
-    {
-        dataToUpload.clear();
-    }
-
-private:
-    static QByteArray newGUID()
-    {
-        QUuid uuid = QUuid::createUuid();
-        return uuid.toRfc4122();
-    }
-
-    const QByteArray GUID;
-    QByteArray dataToUpload;
-};
-
+QByteArray UploadIntervalData::newGUID()
+{
+    QUuid uuid = QUuid::createUuid();
+    return uuid.toRfc4122();
+}
+// +++++++++++++++++++++++++++++
+// +++++++++++++++++++++++++++++
 // ++++++++++++++++++++++++++++++++++++++++++++++
 void MainController::setSampleRate(int newSampleRate)
 {
@@ -292,12 +266,12 @@ void MainController::on_ninjamEncodedAudioAvailableToSend(QByteArray encodedAudi
     if (isFirstPart) {
         if (intervalsToUpload.contains(channelIndex))
             delete intervalsToUpload[channelIndex];
-        intervalsToUpload.insert(channelIndex, new MainController::UploadIntervalData());
+        intervalsToUpload.insert(channelIndex, new UploadIntervalData());
         ninjamService.sendAudioIntervalBegin(
             intervalsToUpload[channelIndex]->getGUID(), channelIndex);
     }
     if (intervalsToUpload[channelIndex]) {// just in case...
-        MainController::UploadIntervalData *upload = intervalsToUpload[channelIndex];
+        UploadIntervalData *upload = intervalsToUpload[channelIndex];
         upload->appendData(encodedAudio);
         bool canSend = upload->getTotalBytes() >= 4096 || isLastPart;
         if (canSend) {
@@ -374,53 +348,6 @@ void MainController::mixGroupedInputs(int groupIndex, Audio::SamplesBuffer &out)
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainController::updateInputTracksRange()
-{
-    Audio::ChannelRange globalInputRange = audioDriver->getSelectedInputs();
-
-    for (int trackIndex = 0; trackIndex < inputTracks.size(); ++trackIndex) {
-        Audio::LocalInputAudioNode *inputTrack = getInputTrack(trackIndex);
-
-        if (!inputTrack->isNoInput()) {
-            if (inputTrack->isAudio()) {// audio track
-                Audio::ChannelRange inputTrackRange = inputTrack->getAudioInputRange();
-                inputTrack->setGlobalFirstInputIndex(globalInputRange.getFirstChannel());
-
-                /** If global input range is reduced to 2 channels and user previous selected inputs 3+4 the input range need be corrected to avoid a beautiful crash :) */
-                if (globalInputRange.getChannels() < inputTrackRange.getChannels()) {
-                    if (globalInputRange.isMono())
-                        setInputTrackToMono(trackIndex, globalInputRange.getFirstChannel());
-                    else
-                        setInputTrackToNoInput(trackIndex);
-                }
-
-                // check if localInputRange is valid after the change in globalInputRange
-                int firstChannel = inputTrackRange.getFirstChannel();
-                int globalFirstChannel = globalInputRange.getFirstChannel();
-                if (firstChannel < globalFirstChannel
-                    || inputTrackRange.getLastChannel() > globalInputRange.getLastChannel()) {
-                    if (globalInputRange.isMono())
-                        setInputTrackToMono(trackIndex, globalInputRange.getFirstChannel());
-                    else if (globalInputRange.getChannels() >= 2)
-                        setInputTrackToStereo(trackIndex, globalInputRange.getFirstChannel());
-                }
-            } else {// midi track
-                int selectedDevice = inputTrack->getMidiDeviceIndex();
-                bool deviceIsValid = selectedDevice >= 0
-                                     && selectedDevice < midiDriver->getMaxInputDevices()
-                                     && midiDriver->deviceIsGloballyEnabled(selectedDevice);
-                if (!deviceIsValid) {
-                    // try another available midi input device
-                    int firstAvailableDevice = midiDriver->getFirstGloballyEnableInputDevice();
-                    if (firstAvailableDevice >= 0)
-                        setInputTrackToMIDI(trackIndex, firstAvailableDevice, -1);// select all channels
-                    else
-                        setInputTrackToNoInput(trackIndex);
-                }
-            }
-        }
-    }
-}
 
 // ++++++++++++++++++++++++
 // this is called when a new ninjam interval is received and the 'record multi track' option is enabled
@@ -473,83 +400,6 @@ Audio::LocalInputAudioNode *MainController::getInputTrack(int localInputIndex)
         return inputTracks.at(localInputIndex);
     qCritical() << "wrong input track index " << localInputIndex;
     return nullptr;
-}
-
-void MainController::setInputTrackToMono(int localChannelIndex, int inputIndexInAudioDevice)
-{
-    Audio::LocalInputAudioNode *inputTrack = getInputTrack(localChannelIndex);
-    if (inputTrack) {
-        if (!inputIndexIsValid(inputIndexInAudioDevice))  // use the first available channel?
-            inputIndexInAudioDevice = audioDriver->getSelectedInputs().getFirstChannel();
-
-        inputTrack->setAudioInputSelection(inputIndexInAudioDevice, 1);// mono
-        if (mainWindow)
-            mainWindow->refreshTrackInputSelection(localChannelIndex);
-        if (isPlayingInNinjamRoom()) {
-            if (ninjamController)// just in case
-                ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
-
-        }
-    }
-}
-
-bool MainController::inputIndexIsValid(int inputIndex)
-{
-    Audio::ChannelRange globalInputsRange = audioDriver->getSelectedInputs();
-    return inputIndex >= globalInputsRange.getFirstChannel()
-           && inputIndex <= globalInputsRange.getLastChannel();
-}
-
-void MainController::setInputTrackToStereo(int localChannelIndex, int firstInputIndex)
-{
-    Audio::LocalInputAudioNode *inputTrack = getInputTrack(localChannelIndex);
-    if (inputTrack) {
-        if (!inputIndexIsValid(firstInputIndex))
-            firstInputIndex = audioDriver->getSelectedInputs().getFirstChannel();// use the first available channel
-        inputTrack->setAudioInputSelection(firstInputIndex, 2);// stereo
-
-        if (mainWindow)
-            mainWindow->refreshTrackInputSelection(localChannelIndex);
-        if (isPlayingInNinjamRoom()) {
-            if (ninjamController)
-                ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
-
-        }
-    }
-}
-
-void MainController::setInputTrackToMIDI(int localChannelIndex, int midiDevice, int midiChannel)
-{
-    Audio::LocalInputAudioNode *inputTrack = getInputTrack(localChannelIndex);
-    if (inputTrack) {
-        inputTrack->setMidiInputSelection(midiDevice, midiChannel);
-        if (mainWindow)
-            mainWindow->refreshTrackInputSelection(localChannelIndex);
-        if (isPlayingInNinjamRoom()) {
-            if (ninjamController)
-                ninjamController->scheduleEncoderChangeForChannel(inputTrack->getGroupChannelIndex());
-
-        }
-    }
-}
-
-void MainController::setInputTrackToNoInput(int localChannelIndex)
-{
-    Audio::LocalInputAudioNode *inputTrack = getInputTrack(localChannelIndex);
-    if (inputTrack) {
-        inputTrack->setToNoInput();
-        if (mainWindow)
-            mainWindow->refreshTrackInputSelection(localChannelIndex);
-        if (isPlayingInNinjamRoom()) {// send the finish interval message
-            if (intervalsToUpload.contains(localChannelIndex)) {
-                ninjamService.sendAudioIntervalPart(
-                    intervalsToUpload[localChannelIndex]->getGUID(), QByteArray(), true);
-                if (ninjamController)
-                    ninjamController->scheduleEncoderChangeForChannel(
-                        inputTrack->getGroupChannelIndex());
-            }
-        }
-    }
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -635,19 +485,7 @@ void MainController::removeTrack(long trackID)
 void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
                                     int sampleRate)
 {
-    MidiBuffer midiBuffer(midiDriver ? midiDriver->getBuffer() : MidiBuffer(0));
-// int messages = midiBuffer.getMessagesCount();
-// for(int m=0; m < messages; m++){
-// Midi::MidiMessage msg = midiBuffer.getMessage(m);
-// if(msg.isControl()){
-// int inputTrackIndex = 0;//just for test for while, we need get this index from the mapping pair
-// char cc = msg.getData1();
-// char ccValue = msg.getData2();
-// qCDebug(jtMidi) << "Control Change received: " << QString::number(cc) << " -> " << QString::number(ccValue);
-// getInputTrack(inputTrackIndex)->setGain(ccValue/127.0);
-// }
-// }
-    audioMixer.process(in, out, sampleRate, midiBuffer);
+    audioMixer.process(in, out, sampleRate, pullMidiBuffer());
 
     out.applyGain(masterGain, 1.0f);// using 1 as boost factor/multiplier (no boost)
     masterPeak.update(out.computePeak());
@@ -912,43 +750,11 @@ void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStrin
     }
 }
 
-void MainController::useNullAudioDriver()
-{
-    qCWarning(jtCore) << "Audio driver can't be used, using NullAudioDriver!";
-    audioDriver.reset(new Audio::NullAudioDriver());
-}
-
 void MainController::start()
 {
     if (!started) {
         qCInfo(jtCore) << "Creating plugin finder...";
         pluginFinder.reset(createPluginFinder());
-
-        if (!midiDriver) {
-            qCInfo(jtCore) << "Creating midi driver...";
-            midiDriver.reset(createMidiDriver());
-        }
-        if (!audioDriver) {
-            qCInfo(jtCore) << "Creating audio driver...";
-            Audio::AudioDriver *driver = nullptr;
-            try{
-                driver = createAudioDriver(settings);
-            }
-            catch (const std::runtime_error &error) {
-                qCCritical(jtCore) << "Audio initialization fail: " << QString::fromUtf8(
-                    error.what());
-                QMessageBox::warning(mainWindow, "Audio Initialization Problem!", error.what());
-            }
-            if (!driver)
-                driver = new Audio::NullAudioDriver();
-            audioDriver.reset(driver);
-            QObject::connect(audioDriver.data(), SIGNAL(sampleRateChanged(int)), this,
-                             SLOT(on_audioDriverSampleRateChanged(int)));
-            QObject::connect(audioDriver.data(), SIGNAL(stopped()), this,
-                             SLOT(on_audioDriverStopped()));
-            QObject::connect(audioDriver.data(), SIGNAL(started()), this,
-                             SLOT(on_audioDriverStarted()));
-        }
 
         qCInfo(jtCore) << "Creating roomStreamer ...";
         roomStreamer.reset(new Audio::NinjamRoomStreamerNode()); // new Audio::AudioFileStreamerNode(":/teste.mp3");
@@ -960,14 +766,6 @@ void MainController::start()
                          SLOT(on_disconnectedFromNinjamServer(Ninjam::Server)));
         QObject::connect(&ninjamService, SIGNAL(error(QString)), this,
                          SLOT(on_errorInNinjamServer(QString)));
-
-        if (audioDriver) {
-            if (!audioDriver->canBeStarted())
-                useNullAudioDriver();
-            audioDriver->start();
-        }
-        if (midiDriver)
-            midiDriver->start();
 
         NatMap map;// not used yet,will be used in future to real time rooms
 
@@ -987,11 +785,6 @@ void MainController::start()
     }
 }
 
-bool MainController::isUsingNullAudioDriver() const
-{
-    return qobject_cast<Audio::NullAudioDriver *>(audioDriver.data()) != nullptr;
-}
-
 QString MainController::getUserEnvironmentString() const
 {
     QString systemName = QSysInfo::prettyProductName();
@@ -1008,12 +801,6 @@ void MainController::stop()
     if (started) {
         qCDebug(jtCore) << "Stopping MainController...";
         {
-            if (audioDriver)
-                this->audioDriver->release();
-            if (midiDriver)
-                this->midiDriver->release();
-            qCDebug(jtCore) << "audio and midi drivers released";
-
             if (ninjamController)
                 ninjamController->stop(false);// block disconnected signal
             started = false;
@@ -1022,11 +809,6 @@ void MainController::stop()
         qCDebug(jtCore) << "disconnecting from login server...";
         loginService.disconnectFromServer();
     }
-}
-
-Midi::MidiDriver *MainController::getMidiDriver() const
-{
-    return midiDriver.data();
 }
 
 // +++++++++++

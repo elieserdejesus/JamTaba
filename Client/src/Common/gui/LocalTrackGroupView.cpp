@@ -34,22 +34,6 @@ LocalTrackGroupView::~LocalTrackGroupView()
 {
 }
 
-void LocalTrackGroupView::removeFxPanel()
-{
-    foreach (BaseTrackView *trackView, trackViews) {
-        LocalTrackView *localTrackView = dynamic_cast<LocalTrackView *>(trackView);
-        localTrackView->removeFxPanel();
-    }
-}
-
-void LocalTrackGroupView::removeInputSelectionControls()
-{
-    foreach (BaseTrackView *trackView, trackViews) {
-        LocalTrackView *localTrackView = dynamic_cast<LocalTrackView *>(trackView);
-        localTrackView->removeIputSelectionControls();
-    }
-}
-
 void LocalTrackGroupView::setPreparingStatus(bool preparing)
 {
     this->preparingToTransmit = preparing;
@@ -107,22 +91,6 @@ void LocalTrackGroupView::closePluginsWindows()
         trackView->closeAllPlugins();
 }
 
-void LocalTrackGroupView::refreshInputSelectionName(int inputTrackIndex)
-{
-    QList<LocalTrackView *> tracks = getTracks();
-    foreach (LocalTrackView *trackView, tracks) {
-        if (trackView->getInputIndex() == inputTrackIndex)
-            trackView->refreshInputSelectionName();
-    }
-}
-
-void LocalTrackGroupView::refreshInputSelectionNames()
-{
-    QList<LocalTrackView *> tracks = getTracks();
-    foreach (LocalTrackView *trackView, tracks)
-        trackView->refreshInputSelectionName();
-}
-
 void LocalTrackGroupView::addChannel()
 {
     mainFrame->addChannelsGroup("new channel");
@@ -139,11 +107,7 @@ void LocalTrackGroupView::resetTracksControls()
     foreach (LocalTrackView *track, views) {
         qCInfo(jtConfigurator) << "\tInput reset on channel "<< track->getTrackID();
         mainController->resetTrack(track->getTrackID());
-
-        // now we remove plugins
-        FxPanel *panel = track->getFxPanel();
-        if (panel)
-            panel->removePlugins();
+        track->reset();// remove plugins
     }
     qCInfo(jtConfigurator) << "Reseting local inputs done!";
 }
@@ -234,22 +198,30 @@ void LocalTrackGroupView::showMenu()
 
 void LocalTrackGroupView::addSubChannel()
 {
-    if (!trackViews.isEmpty()) {
-        LocalTrackView *trackView = new LocalTrackView(mainFrame->getMainController(),
-                                                       getChannelIndex());
-        addTrackView(trackView);
-        trackView->getMainController()->setInputTrackToNoInput(trackView->getInputIndex());
-    }
+    if (!trackViews.isEmpty())
+        addTrackView(getChannelIndex());
 }
 
-void LocalTrackGroupView::addTrackView(BaseTrackView *trackView)
+// +++++++++++++++++++++++++++++++++++++++++++
+
+BaseTrackView *LocalTrackGroupView::addTrackView(long trackID)
 {
     if (trackViews.size() >= MAX_SUB_CHANNELS)
-        return;
-    TrackGroupView::addTrackView(trackView);
+        return nullptr;
+
+    BaseTrackView *newTrack = TrackGroupView::addTrackView(trackID);
+
     emit trackAdded();
+
+    return newTrack;
 }
 
+BaseTrackView *LocalTrackGroupView::createTrackView(long trackID)
+{
+    return new LocalTrackView(mainFrame->getMainController(), trackID);
+}
+
+// +++++++++++++++++++++++++++++++++++++++++++
 void LocalTrackGroupView::setToWide()
 {
     if (trackViews.count() <= 1) {// don't allow 2 wide subchannels
@@ -305,7 +277,7 @@ void LocalTrackGroupView::loadPreset(QAction *a)
     mainFrame->loadPresetToTrack();// that name is so good
 
     // send the new channels to other musicians
-    mainController->sendNewChannelsNames(mainFrame->getChannelsNames()); //TODO move this to MainController::loadPreset()
+    mainController->sendNewChannelsNames(mainFrame->getChannelsNames()); // TODO move this to MainController::loadPreset()
 }
 
 void LocalTrackGroupView::savePreset()

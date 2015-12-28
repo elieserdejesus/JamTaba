@@ -2,9 +2,9 @@
 #define FXPANEL_H
 
 #include <QWidget>
-#include "LocalTrackView.h"
 
 class FxPanelItem;
+class StandaloneLocalTrackView;
 
 namespace Controller {
 class MainController;
@@ -19,11 +19,15 @@ class FxPanel : public QWidget
     Q_OBJECT
 
 public:
-    FxPanel(LocalTrackView *parent, Controller::MainController *mainController);
-    ~FxPanel();
+    FxPanel(StandaloneLocalTrackView *parent, Controller::MainController *mainController);
+
+    virtual ~FxPanel();
+
     void addPlugin(Audio::Plugin *plugin);
+
     void removePlugins();
-    inline LocalTrackView *getLocalTrackView() const
+
+    inline StandaloneLocalTrackView *getLocalTrackView() const
     {
         return localTrackView;
     }
@@ -38,7 +42,7 @@ protected:
 private:
     QList<FxPanelItem *> items;
     Controller::MainController *controller;
-    LocalTrackView *localTrackView;
+    StandaloneLocalTrackView *localTrackView;
 };
 
 #endif // FXPANEL_H

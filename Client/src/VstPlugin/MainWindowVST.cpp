@@ -13,21 +13,34 @@ MainWindowVST::MainWindowVST(Controller::MainController *mainController) :
     this->ui.actionFullscreenMode->setVisible(false);
 }
 
+void MainWindowVST::initializeSubChannel(Persistence::Subchannel subChannel,
+                                         LocalTrackView *subChannelView)
+{
+    Q_UNUSED(subChannel);
+
+    //TODO in vst channel are always stereo?
+    //mainController->setInputTrackToStereo(subChannelView->getInputIndex(),
+      //                                    0 + (channelIndex * 2));
+}
+
 NinjamRoomWindow *MainWindowVST::createNinjamWindow(Login::RoomInfo roomInfo,
                                                     Controller::MainController *mainController)
 {
     return new NinjamRoomWindowVST(this, roomInfo, mainController);
 }
 
-//implementing the MainWindow methods
-bool MainWindow::canCreateSubchannels() const{
+// implementing the MainWindow methods
+bool MainWindow::canCreateSubchannels() const
+{
     return false;
 }
 
-bool MainWindow::canUseFullScreen() const{
+bool MainWindow::canUseFullScreen() const
+{
     return false;
 }
-//++++++++++++++++++++++++++++
+
+// ++++++++++++++++++++++++++++
 
 void MainWindowVST::setFullViewStatus(bool fullViewActivated)
 {
@@ -36,7 +49,7 @@ void MainWindowVST::setFullViewStatus(bool fullViewActivated)
     dynamic_cast<MainControllerVST *>(mainController)->resizePluginEditor(width(), height());
 }
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 LocalTrackGroupView *MainWindowVST::addLocalChannel(int channelGroupIndex, QString channelName,
                                                     bool createFirstSubchannel,
                                                     bool initializeAsNoInput)
@@ -54,11 +67,11 @@ LocalTrackGroupView *MainWindowVST::addLocalChannel(int channelGroupIndex, QStri
     return newLocalChannel;
 }
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainWindowVST::showPreferencesDialog(int initialTab){
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+void MainWindowVST::showPreferencesDialog(int initialTab)
+{
     Q_UNUSED(initialTab)
     VstPreferencesDialog dialog(mainController, this);
     centerDialog(&dialog);
     dialog.exec();
-
 }

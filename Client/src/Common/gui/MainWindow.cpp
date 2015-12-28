@@ -48,6 +48,7 @@ using namespace Audio;
 using namespace Persistence;
 using namespace Controller;
 using namespace Ninjam;
+using namespace Persistence;
 
 const QSize MainWindow::MINI_MODE_MIN_SIZE = QSize(800, 600);
 const QSize MainWindow::FULL_VIEW_MODE_MIN_SIZE = QSize(1180, 790);
@@ -115,8 +116,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     ui.allRoomsContent->layout()->setContentsMargins(0, 0, 0, 0);
     ui.allRoomsContent->layout()->setSpacing(24);
 
-    foreach (LocalTrackGroupView *channel, localGroupChannels)
-        channel->refreshInputSelectionNames();
+    //foreach (LocalTrackGroupView *channel, localGroupChannels)
+      //  channel->refreshInputSelectionNames();
 
     initializeWindowState();// window size, maximization ...
 
@@ -198,12 +199,12 @@ Persistence::InputsSettings MainWindow::getInputsSettings() const
     InputsSettings settings;
     foreach (LocalTrackGroupView *trackGroupView, localGroupChannels) {
         trackGroupView->getTracks();
-        Persistence::Channel channel(trackGroupView->getGroupName());
+        Channel channel(trackGroupView->getGroupName());
         foreach (LocalTrackView *trackView, trackGroupView->getTracks()) {
-            Audio::LocalInputAudioNode *inputNode = trackView->getInputNode();
-            Audio::ChannelRange inputNodeRange = inputNode->getAudioInputRange();
+            LocalInputAudioNode *inputNode = trackView->getInputNode();
+            ChannelRange inputNodeRange = inputNode->getAudioInputRange();
             int firstInput = inputNodeRange.getFirstChannel();
-            int channelsCount = inputNodeRange.getChannels();
+            int channels = inputNodeRange.getChannels();
             int midiDevice = inputNode->getMidiDeviceIndex();
             int midiChannel = inputNode->getMidiChannelIndex();
             float gain = Utils::poweredGainToLinear(inputNode->getGain());
@@ -211,15 +212,7 @@ Persistence::InputsSettings MainWindow::getInputsSettings() const
             float pan = inputNode->getPan();
             bool muted = inputNode->isMuted();
 
-            QList<const Audio::Plugin *> insertedPlugins = trackView->getInsertedPlugins();
-            QList<Persistence::Plugin> plugins;
-            foreach (const Audio::Plugin *p, insertedPlugins) {
-                QByteArray serializedData = p->getSerializedData();
-                plugins.append(Persistence::Plugin(p->getPath(), p->isBypassed(), serializedData));
-            }
-            Persistence::Subchannel sub(firstInput, channelsCount, midiDevice, midiChannel, gain,
-                                        boost, pan, muted, plugins);
-
+            Subchannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted);
             channel.subChannels.append(sub);
         }
         settings.channels.append(channel);
@@ -287,7 +280,7 @@ void MainWindow::addChannelsGroup(QString name)
 {
     int channelIndex = localGroupChannels.size();
     addLocalChannel(channelIndex, name, true, true);// create the first subchannel AND initialize as no input
-    mainController->updateInputTracksRange();
+
     if (mainController->isPlayingInNinjamRoom()) {
         mainController->sendNewChannelsNames(getChannelsNames());
 
@@ -340,18 +333,7 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
     ui.localTracksLayout->addWidget(localChannel);
 
     if (createFirstSubchannel) {
-        LocalTrackView *localTrackView
-            = new LocalTrackView(this->mainController, channelGroupIndex);
-        localChannel->addTrackView(localTrackView);
-
-        if (localGroupChannels.size() > 1) {
-            if (initializeAsNoInput) {
-                // in standalone the second channel is always initialized as noInput
-                localTrackView->setToNoInput();
-            }
-        } else {
-            localTrackView->refreshInputSelectionName();
-        }
+        localChannel->addTrackView(channelGroupIndex);
     }
 
     if (!fullViewMode && localGroupChannels.count() > 1) {
@@ -363,53 +345,6 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-void MainWindow::restorePluginsList()
-{
-    qCInfo(jtGUI) << "Restoring plugins list...";
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    QApplication::processEvents();
-
-    Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
-    int channelIndex = 0;
-    foreach (Persistence::Channel channel, inputsSettings.channels) {
-        LocalTrackGroupView *channelView = localGroupChannels.at(channelIndex);
-        if (channelView) {
-            int subChannelIndex = 0;
-            QList<LocalTrackView *> tracks = channelView->getTracks();
-            foreach (Persistence::Subchannel subChannel, channel.subChannels) {
-                LocalTrackView *subChannelView = tracks.at(subChannelIndex);
-                if (subChannelView) {
-                    // create the plugins list
-                    foreach (Persistence::Plugin plugin, subChannel.plugins) {
-                        QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(
-                            plugin.path);
-                        Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path);
-                        Audio::Plugin *pluginInstance = mainController->addPlugin(
-                            subChannelView->getInputIndex(), descriptor);
-                        if (pluginInstance) {
-                            try{
-                                pluginInstance->restoreFromSerializedData(plugin.data);
-                            }
-                            catch (...) {
-                                qWarning() << "Exception restoring " << pluginInstance->getName();
-                            }
-
-                            subChannelView->addPlugin(pluginInstance, plugin.bypassed);
-                        }
-                        QApplication::processEvents();
-                    }
-                }
-                subChannelIndex++;
-            }
-        }
-        channelIndex++;
-    }
-    qCInfo(jtGUI) << "Restoring plugins list done!";
-
-    QApplication::restoreOverrideCursor();
-}
 
 // USED BY PRESETS
 void MainWindow::loadPresetToTrack()
@@ -472,10 +407,7 @@ void MainWindow::loadPresetToTrack()
             qCInfo(jtConfigurator) << "Number of tracks to create : "<<TRK_TO_CREATE;
 
             for (int i = 0; i < TRK_TO_CREATE; i++) {
-                LocalTrackView *subChannelView = new LocalTrackView(mainController, i+1,
-                                                                    0, BaseTrackView::intToBoostValue(
-                                                                        0), 0, 0);
-                localGroupChannels.at(group)->addTrackView(subChannelView);
+                localGroupChannels.at(group)->addTrackView(i+1);
                 qCInfo(jtConfigurator) << "SubTrack added in group : "<<group;
 
                 // tracksCount++;
@@ -515,84 +447,6 @@ void MainWindow::loadPresetToTrack()
             bool muted = preset.channels.at(group).subChannels.at(index).muted;
             tracks.at(index)->getInputNode()->setMute(muted);
             qCInfo(jtConfigurator) << "Mute "<<index<<"state : "<<muted<<" for"<<index;
-
-            // NEW FUNK getFxPanel() MADE FOR PRESETS
-            // first we remove plugins
-            tracks.at(index)->resetFXPanel();
-
-            // get plugins
-            // create the plugins list
-            QList<Persistence::Plugin> plugins
-                = preset.channels.at(group).subChannels.at(index).plugins;
-            int plugCount = plugins.size();
-            if (plugCount > 0) {
-                QApplication::setOverrideCursor(Qt::WaitCursor);
-                QApplication::processEvents();
-
-                for (int i = 0; i < plugCount; i++) {
-                    QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugins.at(
-                                                                                            i).path);
-                    Audio::PluginDescriptor descriptor(pluginName, "VST", plugins.at(i).path);
-                    Audio::Plugin *pluginInstance = mainController->addPlugin(index, descriptor);
-                    if (pluginInstance) {
-                        try{
-                            pluginInstance->restoreFromSerializedData(plugins.at(i).data);
-                        }
-                        catch (...) {
-                            qWarning() << "Exception restoring " << pluginInstance->getName();
-                        }
-
-                        tracks.at(index)->addPlugin(pluginInstance, plugins.at(i).bypassed);
-                        qCInfo(jtConfigurator) << "Plugin Added :"<<pluginInstance->getName()
-                                               <<" in track : "<<index;
-                    }
-                }
-                QApplication::restoreOverrideCursor();
-            }
-
-            if (canCreateSubchannels()) {
-                Persistence::Subchannel subChannel
-                    = preset.channels.at(group).subChannels.at(index);
-                // using midi
-                if (subChannel.midiDevice >= 0) {
-                    qCInfo(jtConfigurator) << "\t\tSubchannel using MIDI";
-                    // check if midiDevice index is valid
-                    if (subChannel.midiDevice
-                        < mainController->getMidiDriver()->getMaxInputDevices()) {
-                        qCInfo(jtConfigurator) << "\t\tMidi device index : "<<subChannel.midiDevice;
-
-                        mainController->setInputTrackToMIDI(tracks.at(
-                                                                index)->getInputIndex(), subChannel.midiDevice,
-                                                            subChannel.midiChannel);
-                    } else {
-                        if (mainController->getMidiDriver()->hasInputDevices()) {
-                            qCInfo(jtConfigurator) << "\t\tSubchannel using default Midi ";
-
-                            // use the first midi device and all channels
-                            mainController->setInputTrackToMIDI(tracks.at(
-                                                                    index)->getInputIndex(), 0, -1);
-                        } else {
-                            qCInfo(jtConfigurator) << "\t\tSubchannel using "
-                                                   <<subChannel.midiDevice;
-
-                            mainController->setInputTrackToNoInput(tracks.at(index)->getInputIndex());
-                        }
-                    }
-                } else if (subChannel.channelsCount <= 0) {
-                    qCInfo(jtConfigurator) << "\t\tsetting Subchannel to no noinput";
-                    mainController->setInputTrackToNoInput(tracks.at(index)->getInputIndex());
-                } else if (subChannel.channelsCount == 1) {
-                    qCInfo(jtConfigurator) << "\t\tsetting Subchannel to mono input";
-                    mainController->setInputTrackToMono(tracks.at(
-                                                            index)->getInputIndex(),
-                                                        subChannel.firstInput);
-                } else {
-                    qCInfo(jtConfigurator) << "\t\tsetting Subchannel to stereo input";
-                    mainController->setInputTrackToStereo(tracks.at(
-                                                              index)->getInputIndex(),
-                                                          subChannel.firstInput);
-                }
-            }
         }
     }
     qCInfo(jtConfigurator) << "***********************************";
@@ -610,50 +464,16 @@ void MainWindow::initializeLocalInputChannels()
         foreach (Persistence::Subchannel subChannel, channel.subChannels) {
             qCInfo(jtGUI) << "\t\tCreating sub-channel ";
             BaseTrackView::BoostValue boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
-            LocalTrackView *subChannelView = new LocalTrackView(mainController, channelIndex,
-                                                                subChannel.gain, boostValue,
-                                                                subChannel.pan, subChannel.muted);
-            channelView->addTrackView(subChannelView);
+            LocalTrackView *subChannelView = dynamic_cast<LocalTrackView*>(channelView->addTrackView(channelIndex));
+            subChannelView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted);
             if (canCreateSubchannels()) {
-                if (subChannel.midiDevice >= 0) {// using midi
-                    qCInfo(jtGUI) << "\t\tSubchannel using MIDI";
-                    // check if midiDevice index is valid
-                    if (subChannel.midiDevice
-                        < mainController->getMidiDriver()->getMaxInputDevices()) {
-                        mainController->setInputTrackToMIDI(
-                            subChannelView->getInputIndex(), subChannel.midiDevice,
-                            subChannel.midiChannel);
-                    } else {
-                        if (mainController->getMidiDriver()->hasInputDevices()) {
-                            // use the first midi device and all channels
-                            mainController->setInputTrackToMIDI(
-                                subChannelView->getInputIndex(), 0, -1);
-                        } else {
-                            mainController->setInputTrackToNoInput(subChannelView->getInputIndex());
-                        }
-                    }
-                } else if (subChannel.channelsCount <= 0) {
-                    qCInfo(jtGUI) << "\t\tsetting Subchannel to no noinput";
-                    mainController->setInputTrackToNoInput(subChannelView->getInputIndex());
-                } else if (subChannel.channelsCount == 1) {
-                    qCInfo(jtGUI) << "\t\tsetting Subchannel to mono input";
-                    mainController->setInputTrackToMono(
-                        subChannelView->getInputIndex(), subChannel.firstInput);
-                } else {
-                    qCInfo(jtGUI) << "\t\tsetting Subchannel to stereo input";
-                    mainController->setInputTrackToStereo(
-                        subChannelView->getInputIndex(), subChannel.firstInput);
-                }
-            } else {// VST plugin always use stereo audio input
-                mainController->setInputTrackToStereo(subChannelView->getInputIndex(),
-                                                      0 + (channelIndex * 2));
+                //initializeSubChannel(subChannel, subChannelView);
+                //TODO need the code removed here
+                //Eu acho que esse if é totalmente desnecessáio, essa classe nunca vai criar subchannels?
             }
-            if (!canCreateSubchannels())
+            else{
                 break;// avoid hacking in config file to create more subchannels in VST plugin.
-        }
-        if (!canCreateSubchannels()) {// running as vst plugin?
-            channelView->removeFxPanel();
-            channelView->removeInputSelectionControls();
+            }
         }
         channelIndex++;
     }
@@ -1173,7 +993,7 @@ void MainWindow::showNinjamOfficialWebPage()
 // preferences menu
 void MainWindow::openPreferencesDialog(QAction *action)
 {
-    if (action == ui.actionQuit) { //TODO put the Quit action in a better place. A 'Quit' entry in the 'Preferences' menu is not good.
+    if (action == ui.actionQuit) { // TODO put the Quit action in a better place. A 'Quit' entry in the 'Preferences' menu is not good.
         close();
     } else {
         int initialTab = PreferencesDialog::TAB_RECORDING;
@@ -1188,12 +1008,6 @@ void MainWindow::openPreferencesDialog(QAction *action)
     }
 }
 
-// input selection changed by user or by system
-void MainWindow::refreshTrackInputSelection(int inputTrackIndex)
-{
-    foreach (LocalTrackGroupView *channel, localGroupChannels)
-        channel->refreshInputSelectionName(inputTrackIndex);
-}
 
 // plugin finder events
 void MainWindow::showPluginScanDialog()

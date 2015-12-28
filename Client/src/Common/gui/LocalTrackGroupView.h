@@ -2,8 +2,7 @@
 #define LOCALTRACKGROUPVIEW_H
 
 #include "TrackGroupView.h"
-
-class LocalTrackView;
+#include "LocalTrackView.h"
 
 class QPushButton;
 class MainWindow;
@@ -17,18 +16,20 @@ class LocalTrackGroupView : public TrackGroupView
     Q_OBJECT
 public:
     LocalTrackGroupView(int index, MainWindow *mainFrame);
+
     ~LocalTrackGroupView();
-    void refreshInputSelectionName(int inputTrackIndex);
-    void refreshInputSelectionNames();
+
     QList<LocalTrackView *> getTracks() const;
-    virtual void addTrackView(BaseTrackView *trackView);
+
+    BaseTrackView *addTrackView(long trackID) override;
+
     inline int getChannelIndex() const
     {
         return index;
     }
 
-    void removeFxPanel();
-    void removeInputSelectionControls();
+    //void removeFxPanel();
+    //void removeInputSelectionControls();
 
     virtual void setPeakMeterMode(bool peakMeterOnly);
     virtual void togglePeakMeterOnlyMode();
@@ -50,6 +51,10 @@ public:
     }
 
     void resetTracksControls();
+
+protected:
+
+    BaseTrackView *createTrackView(long trackID) override;
 
 signals:
     void nameChanged();

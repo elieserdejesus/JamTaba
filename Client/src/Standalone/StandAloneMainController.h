@@ -10,6 +10,8 @@
 
 class QCoreApplication;
 
+class MainWindowStandalone;
+
 namespace Midi {
 class MidiDriver;
 }
@@ -29,7 +31,9 @@ public:
     ~StandalonePluginFinder();
     void scan(QStringList skipList);
     void cancel();
+
 private:
+
     Audio::PluginDescriptor getPluginDescriptor(QFileInfo f);
     QString buildCommaSeparetedString(QStringList list) const;
     QProcess scanProcess;
@@ -58,6 +62,11 @@ public:
 
     void quit();
 
+    void start() override;
+    void stop() override;
+
+    void updateInputTracksRange();// called when input range or method (audio or midi) are changed in preferences
+
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
     virtual void addDefaultPluginsScanPath();
@@ -69,9 +78,35 @@ public:
         return vstHost;
     }
 
+    inline virtual int getSampleRate() const override
+    {
+        return audioDriver->getSampleRate();
+    }
+
+    inline Audio::AudioDriver *getAudioDriver() const
+    {
+        return audioDriver.data();
+    }
+
+    inline Midi::MidiDriver *getMidiDriver() const
+    {
+        return midiDriver.data();
+    }
+
     void stopNinjamController();
 
-    void start();
+    QString getJamtabaFlavor() const override;
+
+    void setInputTrackToMono(int localChannelIndex, int inputIndexInAudioDevice);
+    void setInputTrackToStereo(int localChannelIndex, int firstInputIndex);
+    void setInputTrackToMIDI(int localChannelIndex, int midiDevice, int midiChannel);// use -1 to select all channels
+    void setInputTrackToNoInput(int localChannelIndex);
+
+    bool isUsingNullAudioDriver() const;
+
+    void useNullAudioDriver();// use when the audio driver fails
+
+    void setMainWindow(MainWindow* mainWindow) override;
 
 protected:
     virtual Midi::MidiDriver *createMidiDriver();
@@ -80,6 +115,8 @@ protected:
     virtual Controller::NinjamController *createNinjamController(MainController *);
 
     void setCSS(QString css);
+
+    Midi::MidiBuffer pullMidiBuffer() override;
 
 protected slots:
     void on_ninjamBpmChanged(int newBpm);
@@ -99,7 +136,15 @@ private:
     Vst::Host *vstHost;// static instance released inside Vst::Host using QSCopedPointer
     QApplication *application;
 
+    QScopedPointer<Audio::AudioDriver> audioDriver;
+    QScopedPointer<Midi::MidiDriver> midiDriver;
+
     bool isVstPluginFile(QString file) const;
+
+    bool inputIndexIsValid(int inputIndex);
+
+    MainWindowStandalone* window;
+
 };
 }
 

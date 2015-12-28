@@ -72,6 +72,8 @@ private:
     class ScanFolderPanel;
 
     void clearWidgetLayout(QWidget* widget);
+
+    Audio::AudioDriver* getAudioDriver();
 };
 
 #endif
