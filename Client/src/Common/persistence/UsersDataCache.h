@@ -72,7 +72,6 @@ public:
     void setGain(float gain);
 
     static QRegExp ipPattern;
-    static QRegExp namePattern;
 
     static const bool DEFAULT_MUTED;
     static const float DEFAULT_GAIN;
