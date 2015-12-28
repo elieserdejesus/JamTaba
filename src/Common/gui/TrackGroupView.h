@@ -20,7 +20,8 @@ public:
     virtual void setGroupName(QString groupName);
     QString getGroupName() const;
 
-    virtual void addTrackView(BaseTrackView *trackView);
+    virtual BaseTrackView *addTrackView(long trackID);
+
     void removeTrackView(BaseTrackView *trackView);
     void removeTrackView(int index);
 
@@ -29,7 +30,7 @@ public:
 
     void updateGuiElements();
 
-    void refreshInputSelectionName(int inputTrackIndex);
+    //void refreshInputSelectionName(int inputTrackIndex);
     inline int getTracksCount() const
     {
         return trackViews.size();
@@ -44,6 +45,8 @@ protected:
     QList<BaseTrackView *> trackViews;
 
     Ui::TrackGroupView *ui;
+
+    virtual BaseTrackView *createTrackView(long trackID) = 0;
 };
 
 #endif // TRACKGROUPVIEW_H

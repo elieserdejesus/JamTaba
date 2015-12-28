@@ -131,7 +131,7 @@ class Subchannel
 {
 public:
     Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel, float gain,
-               int boost, float pan, bool muted, QList<Plugin> plugins);
+               int boost, float pan, bool muted);
     int firstInput;
     int channelsCount;
     int midiDevice;
@@ -140,6 +140,17 @@ public:
     int boost;// [-1, 0, +1]
     float pan;
     bool muted;
+
+    inline QList<Plugin> getPlugins() const
+    {
+        return plugins;
+    }
+
+    inline void setPlugins(QList<Plugin> newPlugins){
+        plugins = newPlugins;
+    }
+
+private:
     QList<Plugin> plugins;
 };
 // +++++++++++++++++++++++++++++++++

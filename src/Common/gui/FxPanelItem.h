@@ -2,7 +2,9 @@
 #define FXPANELITEM_H
 
 #include <QWidget>
-#include "LocalTrackView.h"
+//#include "StandaloneLocalTrackView.h"
+
+class StandaloneLocalTrackView;
 
 class QMenu;
 class QPushButton;
@@ -21,8 +23,8 @@ class FxPanelItem : public QWidget
     Q_OBJECT
 
 public:
-    FxPanelItem(LocalTrackView *parent, Controller::MainController *mainController);
-    ~FxPanelItem();
+    FxPanelItem(StandaloneLocalTrackView *parent, Controller::MainController *mainController);
+    virtual ~FxPanelItem();
     void setPlugin(Audio::Plugin *plugin);
     void unsetPlugin();
     inline bool containPlugin() const
@@ -38,16 +40,19 @@ public:
 
     Q_PROPERTY(bool bypassed READ pluginIsBypassed())// to use in stylesheet
     Q_PROPERTY(bool containPlugin READ containPlugin())// to use in stylesheet
+
 protected:
     void mousePressEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *);
     void enterEvent(QEvent *);
     void leaveEvent(QEvent *);
+
 private slots:
     void on_contextMenu(QPoint p);
     void on_buttonClicked();
     void on_actionMenuTriggered(QAction *a);
     void on_fxMenuActionTriggered(QAction *a);
+
 private:
     Audio::Plugin *plugin;
     QPushButton *bypassButton;
@@ -58,7 +63,7 @@ private:
 
     static const QString NEW_EFFECT_STRING;
 
-    LocalTrackView *localTrackView;
+    StandaloneLocalTrackView *localTrackView;
 
     void updateStyleSheet();
 };

@@ -25,7 +25,7 @@ public:
 
     void detachMainController();
 
-    Persistence::InputsSettings getInputsSettings() const;
+    virtual Persistence::InputsSettings getInputsSettings() const;
 
     inline int getChannelGroupsCount() const
     {
@@ -39,10 +39,10 @@ public:
 
     void highlightChannelGroup(int index) const;
 
-    void addChannelsGroup(QString name);
+    virtual void addChannelsGroup(QString name);
     void removeChannelsGroup(int channelGroupIndex);
 
-    void refreshTrackInputSelection(int inputTrackIndex);
+    //void refreshTrackInputSelection(int inputTrackIndex);
 
     void exitFromRoom(bool normalDisconnection);
 
@@ -65,7 +65,7 @@ public:
         return mainController;
     }
 
-    void loadPresetToTrack();
+    virtual void loadPresetToTrack();
     void resetGroupChannel(LocalTrackGroupView *group);// should load the defaultPreset.json ?
 
     bool isTransmiting(int channelID) const;
@@ -81,7 +81,7 @@ protected:
     Ui::MainFrameClass ui;
 
     virtual void initializePluginFinder();
-    void restorePluginsList();
+
 
     void centerDialog(QWidget *dialog);
 
@@ -100,6 +100,13 @@ protected:
     virtual void showPreferencesDialog(int initialTab) = 0;
 
     void stopCurrentRoomStream();
+
+
+    //virtual void loadPluginsList(QList<Persistence::Plugin> plugins, StandaloneLocalTrackView* trackView) = 0;
+
+    virtual void loadSubChannel(Persistence::Subchannel subChannel, LocalTrackView* subChannelView) = 0;
+
+    virtual void initializeSubChannel(Persistence::Subchannel subChannel, LocalTrackView* subChannelView) = 0; //TODO the code to loading channels (load preset) and to initialize local inputs is the same, but is almost duplicated at moment.
 
 protected slots:
     void closeTab(int index);
@@ -174,6 +181,7 @@ private slots:
     void updateLocalInputChannelsGeometry();
 
     void refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms);
+
 
 private:
 

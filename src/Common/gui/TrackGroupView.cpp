@@ -56,19 +56,21 @@ void TrackGroupView::paintEvent(QPaintEvent *)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void TrackGroupView::addTrackView(BaseTrackView *trackView)
+BaseTrackView *TrackGroupView::addTrackView(long trackID)
 {
+    BaseTrackView* newTrackView = createTrackView(trackID);//this is a factory method and is overrided in some places
     if (ui->tracksPanel->layout()) {
-        ui->tracksPanel->layout()->addWidget(trackView);
-        trackViews.append(trackView);
+        ui->tracksPanel->layout()->addWidget(newTrackView);
+        trackViews.append(newTrackView);
 
         if (trackViews.size() > 1) {
             foreach (BaseTrackView *trackView, trackViews)
                 trackView->setToNarrow();
             updateGeometry();
-            trackView->setUnlightStatus(isUnlighted());
+            newTrackView->setUnlightStatus(isUnlighted());
         }
     }
+    return newTrackView;
 }
 
 void TrackGroupView::setGroupName(QString groupName)

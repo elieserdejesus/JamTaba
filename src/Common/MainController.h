@@ -24,6 +24,39 @@ class MainWindow;
 namespace Controller {
 class NinjamController;
 
+// +++++++++++++++++++++++++++++
+class UploadIntervalData
+{
+public:
+    UploadIntervalData();
+
+    inline QByteArray getGUID() const
+    {
+        return GUID;
+    }
+
+    void appendData(QByteArray encodedData);
+    inline int getTotalBytes() const
+    {
+        return dataToUpload.size();
+    }
+
+    inline QByteArray getStoredBytes() const
+    {
+        return dataToUpload;
+    }
+
+    inline void clear()
+    {
+        dataToUpload.clear();
+    }
+
+private:
+    static QByteArray newGUID();
+    const QByteArray GUID;
+    QByteArray dataToUpload;
+};
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 class MainController : public QObject
@@ -39,13 +72,14 @@ public:
 
     virtual ~MainController();
 
-    void start();
-    void stop();
+    virtual void start();
+    virtual void stop();
+
     void setFullScreenView(bool fullScreen);
 
-    QString getJamtabaFlavor() const; // return Standalone or VstPlugin
+    virtual QString getJamtabaFlavor() const = 0; // return Standalone or VstPlugin
 
-    inline void setMainWindow(MainWindow *mainWindow)
+    inline virtual void setMainWindow(MainWindow *mainWindow)
     {
         this->mainWindow = mainWindow;
     }
@@ -82,12 +116,6 @@ public:
 
     void enterInRoom(Login::RoomInfo room, QStringList channelsNames, QString password = "");
 
-    inline Audio::AudioDriver *getAudioDriver() const
-    {
-        return audioDriver.data();
-    }
-
-    Midi::MidiDriver *getMidiDriver() const;
     Login::LoginService *getLoginService() const;
 
     inline Controller::NinjamController *getNinjamController() const
@@ -128,12 +156,7 @@ public:
 
     Audio::AudioNode *getTrackNode(long ID);
 
-    void updateInputTracksRange();// called when input range or method (audio or midi) are changed in preferences
-    void setInputTrackToMono(int localChannelIndex, int inputIndexInAudioDevice);
-    void setInputTrackToStereo(int localChannelIndex, int firstInputIndex);
 
-    void setInputTrackToMIDI(int localChannelIndex, int midiDevice, int midiChannel);// use -1 to select all channels
-    void setInputTrackToNoInput(int localChannelIndex);
 
     inline bool isStarted() const
     {
@@ -158,10 +181,7 @@ public:
 
     void mixGroupedInputs(int groupIndex, Audio::SamplesBuffer &out);
 
-    inline virtual int getSampleRate() const
-    {
-        return audioDriver->getSampleRate();
-    }
+    virtual int getSampleRate() const = 0;
 
     virtual void setSampleRate(int newSampleRate);
 
@@ -235,10 +255,6 @@ public:
 
     virtual QString getUserEnvironmentString() const;
 
-    bool isUsingNullAudioDriver() const;
-
-    void useNullAudioDriver();// use when the audio driver fails
-
     void cancelPluginFinder();
 
     // to remembering ninjamers controls (pan, level, gain, boost)
@@ -250,9 +266,6 @@ public:
 protected:
 
     static QString LOG_CONFIG_FILE;
-
-    QScopedPointer<Audio::AudioDriver> audioDriver;
-    QScopedPointer<Midi::MidiDriver> midiDriver;
 
     Login::LoginService loginService;
 
@@ -281,11 +294,14 @@ protected:
 
     virtual void setCSS(QString css) = 0;
 
+    virtual Midi::MidiBuffer pullMidiBuffer() = 0;
+
+    // map the input channel indexes to a GUID (used to upload audio to ninjam server)
+    QMap<int, UploadIntervalData *> intervalsToUpload;
+
 private:
     void setAllTracksActivation(bool activated);
     void doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
-
-    bool inputIndexIsValid(int inputIndex);
 
     QScopedPointer<Audio::AbstractMp3Streamer> roomStreamer;
     long long currentStreamingRoomID;
@@ -306,10 +322,7 @@ private:
                                   QString password = "");
 
     QScopedPointer<Geo::IpToLocationResolver> ipToLocationResolver;
-    class UploadIntervalData;
 
-    // map the input channel indexes to a GUID (used to upload audio to ninjam server)
-    QMap<int, UploadIntervalData *> intervalsToUpload;
 
     bool userNameChoosed;
 

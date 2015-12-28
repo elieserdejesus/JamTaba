@@ -59,7 +59,7 @@ public:
 
     void setSampleRate(int newSampleRate);
 
-    inline int getSampleRate() const
+    inline int getSampleRate() const override
     {
         return sampleRate;
     }

@@ -1,7 +1,7 @@
 #include "StandalonePreferencesDialog.h"
 
 #include "audio/core/AudioDriver.h"
-#include "MainController.h"
+#include "StandAloneMainController.h"
 #include "MainWindow.h"
 #include "QFileDialog"
 
@@ -10,6 +10,7 @@
  */
 
 using namespace Audio;
+using namespace Controller;
 
 // Internal class used to handle the VST scan folders widgets
 class StandalonePreferencesDialog::ScanFolderPanel : public QWidget
@@ -271,7 +272,7 @@ void StandalonePreferencesDialog::populateMidiTab()
 {
     clearWidgetLayout(ui->midiContentPanel);
 
-    Midi::MidiDriver *midiDriver = mainController->getMidiDriver();
+    Midi::MidiDriver *midiDriver = dynamic_cast<StandaloneMainController*>(mainController)->getMidiDriver();
     int maxInputDevices = midiDriver->getMaxInputDevices();
     if (maxInputDevices > 0) {
         QList<bool> midiInputsStatus = mainController->getSettings().getMidiInputDevicesStatus();
@@ -290,6 +291,10 @@ void StandalonePreferencesDialog::populateMidiTab()
     }
 }
 
+Audio::AudioDriver* StandalonePreferencesDialog::getAudioDriver(){
+    return dynamic_cast<StandaloneMainController*>(mainController)->getAudioDriver();
+}
+
 void StandalonePreferencesDialog::populateAudioTab()
 {
     populateAsioDriverCombo();
@@ -297,12 +302,13 @@ void StandalonePreferencesDialog::populateAudioTab()
     populateFirstOutputCombo();
     populateSampleRateCombo();
     populateBufferSizeCombo();
-    ui->buttonControlPanel->setVisible(mainController->getAudioDriver()->hasControlPanel());
+
+    ui->buttonControlPanel->setVisible(getAudioDriver()->hasControlPanel());
 }
 
 void StandalonePreferencesDialog::populateAsioDriverCombo()
 {
-    Audio::AudioDriver *audioDriver = mainController->getAudioDriver();
+    Audio::AudioDriver *audioDriver = getAudioDriver();
     int devices = audioDriver->getDevicesCount();
     ui->comboAudioDevice->clear();
     for (int d = 0; d < devices; d++) {
@@ -315,7 +321,7 @@ void StandalonePreferencesDialog::populateAsioDriverCombo()
 void StandalonePreferencesDialog::populateFirstInputCombo()
 {
     ui->comboFirstInput->clear();
-    Audio::AudioDriver *audioDriver = mainController->getAudioDriver();
+    Audio::AudioDriver *audioDriver = getAudioDriver();
     int maxInputs = audioDriver->getMaxInputs();
     for (int i = 0; i < maxInputs; i++)
         ui->comboFirstInput->addItem(audioDriver->getInputChannelName(i), i);
@@ -329,7 +335,7 @@ void StandalonePreferencesDialog::populateFirstInputCombo()
 void StandalonePreferencesDialog::populateLastInputCombo()
 {
     ui->comboLastInput->clear();
-    Audio::AudioDriver *audioDriver = mainController->getAudioDriver();
+    Audio::AudioDriver *audioDriver = getAudioDriver();
     int maxInputs = audioDriver->getMaxInputs();
     int currentFirstInput = ui->comboFirstInput->currentData().toInt();
     int items = 0;
@@ -348,7 +354,7 @@ void StandalonePreferencesDialog::populateLastInputCombo()
 void StandalonePreferencesDialog::populateFirstOutputCombo()
 {
     ui->comboFirstOutput->clear();
-    Audio::AudioDriver *audioDriver = mainController->getAudioDriver();
+    Audio::AudioDriver *audioDriver = getAudioDriver();
     int maxOuts = audioDriver->getMaxOutputs();
     for (int i = 0; i < maxOuts; i++)
         ui->comboFirstOutput->addItem(audioDriver->getOutputChannelName(i), i);
@@ -358,14 +364,14 @@ void StandalonePreferencesDialog::populateFirstOutputCombo()
 void StandalonePreferencesDialog::populateLastOutputCombo()
 {
     ui->comboLastOutput->clear();
-    int maxOuts = mainController->getAudioDriver()->getMaxOutputs();
+    int maxOuts = getAudioDriver()->getMaxOutputs();
     int currentFirstOut = ui->comboFirstOutput->currentData().toInt();
     if (currentFirstOut + 1 < maxOuts)
         currentFirstOut++;// to avoid 1 channel output
 
     int items = 0;
     const int MAX_ITEMS = 1;// std::min( maxOuts - currentFirstOut, 2);
-    Audio::AudioDriver *audioDriver = mainController->getAudioDriver();
+    Audio::AudioDriver *audioDriver = getAudioDriver();
     for (int i = currentFirstOut; items < MAX_ITEMS; i++, items++)
         ui->comboLastOutput->addItem(audioDriver->getOutputChannelName(i), i);
     int lastOutputIndex = audioDriver->getSelectedOutputs().getLastChannel();
@@ -379,7 +385,7 @@ void StandalonePreferencesDialog::populateSampleRateCombo()
 {
     ui->comboSampleRate->clear();
 
-    AudioDriver *audioDriver = mainController->getAudioDriver();
+    AudioDriver *audioDriver = getAudioDriver();
     QList<int> sampleRates = audioDriver->getValidSampleRates(audioDriver->getAudioDeviceIndex());
     foreach (int sampleRate, sampleRates)
         ui->comboSampleRate->addItem(QString::number(sampleRate), sampleRate);
@@ -391,7 +397,7 @@ void StandalonePreferencesDialog::populateSampleRateCombo()
 void StandalonePreferencesDialog::populateBufferSizeCombo()
 {
     ui->comboBufferSize->clear();
-    AudioDriver *audioDriver = mainController->getAudioDriver();
+    AudioDriver *audioDriver = getAudioDriver();
     QList<int> bufferSizes = audioDriver->getValidBufferSizes(audioDriver->getAudioDeviceIndex());
     foreach (int size, bufferSizes)
         ui->comboBufferSize->addItem(QString::number(size), size);
@@ -404,7 +410,7 @@ void StandalonePreferencesDialog::populateBufferSizeCombo()
 void StandalonePreferencesDialog::changeAudioDevice(int index)
 {
     int deviceIndex = ui->comboAudioDevice->itemData(index).toInt();
-    Audio::AudioDriver *audioDriver = mainController->getAudioDriver();
+    Audio::AudioDriver *audioDriver = getAudioDriver();
     audioDriver->setAudioDeviceIndex(deviceIndex);
 
     populateFirstInputCombo();
@@ -476,7 +482,7 @@ void StandalonePreferencesDialog::selectPreferencesTab(int index)
 
 void StandalonePreferencesDialog::openExternalAudioControlPanel()
 {
-    AudioDriver *audioDriver = mainController->getAudioDriver();
+    AudioDriver *audioDriver = getAudioDriver();
     if (audioDriver->hasControlPanel())// just in case
         audioDriver->openControlPanel((void *)mainWindow->winId());
 }

@@ -19,9 +19,9 @@ class NinjamTrackView : public BaseTrackView
 {
     Q_OBJECT
 public:
-    NinjamTrackView(Controller::MainController *mainController, long trackID, QString channelName,
-                    Persistence::CacheEntry initialValues);
+    NinjamTrackView(Controller::MainController *mainController, long trackID);
     void setChannelName(QString name);
+    void setInitialValues(Persistence::CacheEntry initialValues);
 
     // interval chunks visual feedback
     void incrementDownloadedChunks();// called when a interval part (a chunk) is received
@@ -31,6 +31,7 @@ public:
     void setUnlightStatus(bool status);
 
     void updateGuiElements();
+
 private:
     MarqueeLabel *channelNameLabel;
     Persistence::CacheEntry cacheEntry;// used to remember the track controls values
@@ -53,6 +54,10 @@ public:
     void updateGeoLocation();
     void setGroupName(QString groupName);
     void updateGuiElements();
+
+protected:
+    BaseTrackView* createTrackView(long trackID) override;
+
 private:
     Controller::MainController *mainController;
     QLabel *countryLabel;

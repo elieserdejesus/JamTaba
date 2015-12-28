@@ -27,8 +27,10 @@ DEPENDPATH +=  $$ROOT_PATH/libs/includes/minimp3
 VPATH += $$SOURCE_PATH/Standalone
 
 HEADERS += MainWindowStandalone.h
-HEADERS += StandAloneMainController.h
-HEADERS += StandAlonePreferencesDialog.h
+HEADERS += StandaloneMainController.h
+HEADERS += StandalonePreferencesDialog.h
+HEADERS += StandaloneLocalTrackView.h
+HEADERS += StandaloneLocalTrackGroupView.h
 
 HEADERS += audio/core/PortAudioDriver.h
 HEADERS += recorder/JamRecorder.h
@@ -51,9 +53,11 @@ HEADERS += audio/core/PluginDescriptor.h
 HEADERS += audio/vst/VstLoader.h
 
 SOURCES += main.cpp
-SOURCES += StandAloneMainController.cpp
+SOURCES += StandaloneMainController.cpp
 SOURCES += MainWindowStandalone.cpp
 SOURCES += StandalonePreferencesDialog.cpp
+SOURCES += StandaloneLocalTrackView.cpp
+SOURCES += StandaloneLocalTrackGroupView.cpp
 
 SOURCES += recorder/JamRecorder.cpp
 SOURCES += recorder/ReaperProjectGenerator.cpp

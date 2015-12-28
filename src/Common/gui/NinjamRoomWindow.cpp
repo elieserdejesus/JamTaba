@@ -366,11 +366,11 @@ void NinjamRoomWindow::addChannel(Ninjam::User user, Ninjam::UserChannel channel
         trackGroups.insert(user.getFullName(), trackView);
         adjustTracksWidth();
     } else {// the second, or third channel from same user, group with other channels
-        NinjamTrackGroupView *trackView = trackGroups[user.getFullName()];
-        if (trackView) {
-            NinjamTrackView *ninjamTrackView = new NinjamTrackView(mainController, channelID,
-                                                                   channel.getName(), cacheEntry);
-            trackView->addTrackView(ninjamTrackView);
+        NinjamTrackGroupView *trackGroup= trackGroups[user.getFullName()];
+        if (trackGroup) {
+            NinjamTrackView *ninjamTrackView = dynamic_cast<NinjamTrackView*>(trackGroup->addTrackView(channelID));
+            ninjamTrackView->setChannelName(channel.getName());
+            ninjamTrackView->setInitialValues(cacheEntry);
             ninjamTrackView->setUnlightStatus(true);/** disabled/grayed until receive the first bytes. When the first bytes
             are downloaded the 'on_channelXmitChanged' slot is executed and this track is enabled.*/
         }

@@ -312,7 +312,7 @@ void PresetsSettings::write(QJsonObject &out)
             subChannelObject["muted"] = sub.muted;
 
             QJsonArray pluginsArray;
-            foreach (Persistence::Plugin plugin, sub.plugins) {
+            foreach (Persistence::Plugin plugin, sub.getPlugins()) {
                 QJsonObject pluginObject;
                 pluginObject["path"] = plugin.path;
                 pluginObject["bypassed"] = plugin.bypassed;
@@ -369,8 +369,8 @@ void PresetsSettings::read(QJsonObject in)
                         }
                     }
                     Persistence::Subchannel subChannel(firstInput, channelsCount, midiDevice,
-                                                       midiChannel, gain, boost, pan, muted,
-                                                       plugins);
+                                                       midiChannel, gain, boost, pan, muted);
+                    subChannel.setPlugins(plugins); //TODO add a default parameter to plugins in SubChannel constructor
                     channel.subChannels.append(subChannel);
                 }
                 this->channels.append(channel);
@@ -393,7 +393,7 @@ Plugin::Plugin(QString path, bool bypassed, QByteArray data) :
 }
 
 Subchannel::Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel,
-                       float gain, int boost, float pan, bool muted, QList<Plugin> plugins) :
+                       float gain, int boost, float pan, bool muted) :
     firstInput(firstInput),
     channelsCount(channelsCount),
     midiDevice(midiDevice),
@@ -401,8 +401,7 @@ Subchannel::Subchannel(int firstInput, int channelsCount, int midiDevice, int mi
     gain(gain),
     boost(boost),
     pan(pan),
-    muted(muted),
-    plugins(plugins)
+    muted(muted)
 {
 }
 
@@ -430,7 +429,7 @@ void InputsSettings::write(QJsonObject &out)
             subChannelObject["muted"] = sub.muted;
 
             QJsonArray pluginsArray;
-            foreach (Persistence::Plugin plugin, sub.plugins) {
+            foreach (Persistence::Plugin plugin, sub.getPlugins()) {
                 QJsonObject pluginObject;
                 pluginObject["path"] = plugin.path;
                 pluginObject["bypassed"] = plugin.bypassed;
@@ -486,8 +485,8 @@ void InputsSettings::read(QJsonObject in)
                         }
                     }
                     Persistence::Subchannel subChannel(firstInput, channelsCount, midiDevice,
-                                                       midiChannel, gain, boost, pan, muted,
-                                                       plugins);
+                                                       midiChannel, gain, boost, pan, muted);
+                    subChannel.setPlugins(plugins);
                     channel.subChannels.append(subChannel);
                 }
                 this->channels.append(channel);
