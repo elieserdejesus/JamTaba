@@ -127,7 +127,8 @@ QMenu *LocalTrackGroupView::createPresetsSubMenu()
     return presetsMenu;
 }
 
-void LocalTrackGroupView::createPresetsActions(QMenu &menu){
+void LocalTrackGroupView::createPresetsActions(QMenu &menu)
+{
     menu.addMenu(createPresetsSubMenu());
 
     // save preset
@@ -139,7 +140,8 @@ void LocalTrackGroupView::createPresetsActions(QMenu &menu){
     QObject::connect(reset, SIGNAL(triggered()), this, SLOT(resetPreset()));
 }
 
-void LocalTrackGroupView::createChannelsActions(QMenu &menu){
+void LocalTrackGroupView::createChannelsActions(QMenu &menu)
+{
     QAction *addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
     QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(addChannel()));
     addChannelAction->setEnabled(mainFrame->getChannelGroupsCount() < 2);// at this moment users can't create more channels
@@ -147,19 +149,18 @@ void LocalTrackGroupView::createChannelsActions(QMenu &menu){
         // menu.addSeparator();
         for (int i = 2; i <= mainFrame->getChannelGroupsCount(); ++i) {
             QString channelName = mainFrame->getChannelGroupName(i-1);
-            QAction *action = menu.addAction(QIcon(
-                                                 ":/images/less.png"),
-                                             "Remove channel \"" + channelName + "\"");
+            QIcon icon(":/images/less.png");
+            QString text = "Remove channel \"" + channelName + "\"";
+            QAction *action = menu.addAction(icon, text);
             action->setData(i-1);  // use channel index as action data
-            QObject::connect(action, SIGNAL(triggered(bool)), this,
-                             SLOT(removeChannel()));
+            QObject::connect(action, SIGNAL(triggered(bool)), this, SLOT(removeChannel()));
             QObject::connect(action, SIGNAL(hovered()), this, SLOT(highlightHoveredChannel()));
-            // action->installEventFilter(this);
         }
     }
 }
 
-void LocalTrackGroupView::populateMenu(QMenu &menu){
+void LocalTrackGroupView::populateMenu(QMenu &menu)
+{
     createPresetsActions(menu);
     menu.addSeparator();
     createChannelsActions(menu);
@@ -169,7 +170,7 @@ void LocalTrackGroupView::populateMenu(QMenu &menu){
 void LocalTrackGroupView::showMenu()
 {
     QMenu menu;
-    populateMenu(menu);//populateMenu is overrided in Standalone to add subchannel actions
+    populateMenu(menu);// populateMenu is overrided in Standalone to add subchannel actions
     menu.move(mapToGlobal(toolButton->pos() + QPoint(toolButton->width(), 0)));
     menu.exec();
 }
@@ -272,8 +273,7 @@ void LocalTrackGroupView::savePreset()
 
 void LocalTrackGroupView::resetPreset()
 {
-    // qCDebug(jtConfigurator) << "************ PRESET RESET ***********";
-    mainFrame->resetGroupChannel(this);
+    resetTracksControls();
 }
 
 void LocalTrackGroupView::deletePreset()
@@ -294,10 +294,10 @@ void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
     if (this->peakMeterOnly != peakMeterOnly) {
         this->peakMeterOnly = peakMeterOnly;
         this->ui->topPanel->setVisible(!this->peakMeterOnly);
-        foreach (BaseTrackView *baseView, trackViews)
-            dynamic_cast<LocalTrackView *>(baseView)->setPeakMetersOnlyMode(peakMeterOnly,
-                                                                            mainFrame->isRunningInMiniMode());
-
+        foreach (BaseTrackView *baseView, trackViews) {
+            LocalTrackView *view = dynamic_cast<LocalTrackView *>(baseView);
+            view->setPeakMetersOnlyMode(peakMeterOnly, mainFrame->isRunningInMiniMode());
+        }
 
         xmitButton->setText(peakMeterOnly ? "X" : "Transmit");
         updateGeometry();
