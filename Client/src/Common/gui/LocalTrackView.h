@@ -30,6 +30,7 @@ public:
       //             BoostValue boostValue, float initialPan, bool muted);
     LocalTrackView(Controller::MainController *mainController, int channelIndex);
 
+
     void setInitialValues(float initialGain, BaseTrackView::BoostValue boostValue, float initialPan, bool muted);
 
     virtual ~LocalTrackView();
@@ -59,9 +60,6 @@ public:
     void initializeBoostButtons(BoostValue boostValue);
 
 protected:
-    virtual void init(int channelIndex, float initialGain, BoostValue boostValue, float initialPan,
-                      bool muted);
-
     Audio::LocalInputAudioNode *inputNode;
 
 private:

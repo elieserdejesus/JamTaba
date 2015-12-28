@@ -23,10 +23,24 @@
 // }
 
 LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex) :
-    BaseTrackView(mainController, 1),
+    BaseTrackView(mainController, 1), //TODO remove trackID (2nd parameter) from constructor?
     inputNode(nullptr)
 {
-    init(channelIndex, 1, BaseTrackView::BoostValue::ZERO, 0, false);// unit gain and pan in center, not muted
+    if (!mainController) {
+        qCritical() << "LocalTrackView::init() mainController is null!";
+        return;
+    }
+
+    // insert a input node in controller
+    inputNode = new Audio::LocalInputAudioNode(channelIndex);
+    trackID = mainController->addInputTrackNode(this->inputNode);
+    bindThisViewWithTrackNodeSignals();// now is secure bind this LocalTrackView with the respective TrackNode model
+
+    setInitialValues(1.0f, BaseTrackView::BoostValue::ZERO, 0.0f, false);
+
+    setUnlightStatus(false);
+
+    peakMetersOnly = false;
 }
 
 void LocalTrackView::setInitialValues(float initialGain, BaseTrackView::BoostValue boostValue,
@@ -47,26 +61,6 @@ void LocalTrackView::detachMainController()
 void LocalTrackView::closeAllPlugins()
 {
     inputNode->closeProcessorsWindows();// close vst editors
-}
-
-void LocalTrackView::init(int channelIndex, float initialGain, BaseTrackView::BoostValue boostValue,
-                          float initialPan, bool muted)
-{
-    if (!mainController) {
-        qCritical() << "LocalTrackView::init() mainController is null!";
-        return;
-    }
-
-    // insert a input node in controller
-    inputNode = new Audio::LocalInputAudioNode(channelIndex);
-    trackID = mainController->addInputTrackNode(this->inputNode);
-    bindThisViewWithTrackNodeSignals();// now is secure bind this LocalTrackView with the respective TrackNode model
-
-    setInitialValues(initialGain, boostValue, initialPan, muted);
-
-    setUnlightStatus(false);
-
-    peakMetersOnly = false;
 }
 
 void LocalTrackView::mute(bool b)
@@ -157,8 +151,6 @@ Audio::LocalInputAudioNode *LocalTrackView::getInputNode() const
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void LocalTrackView::reset()

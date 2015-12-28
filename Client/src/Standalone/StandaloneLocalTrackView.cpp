@@ -13,13 +13,6 @@ StandaloneLocalTrackView::StandaloneLocalTrackView(
     LocalTrackView(mainController, channelIndex),
     controller(mainController)
 {
-}
-
-void StandaloneLocalTrackView::init(int channelIndex, float initialGain, BoostValue boostValue,
-                                    float initialPan, bool muted)
-{
-    LocalTrackView::init(channelIndex, initialGain, boostValue, initialPan, muted);
-
     fxPanel = createFxPanel();
     ui->mainLayout->addSpacing(20);// add separator before effects panel
     ui->mainLayout->addWidget(fxPanel);
@@ -353,10 +346,12 @@ void StandaloneLocalTrackView::refreshInputSelectionName()
     }
 
     // set the input name
-    QString elidedName = inputSelectionButton->fontMetrics().elidedText(channelName, Qt::ElideRight,
-                                                                        inputSelectionButton->width()
-                                                                        - inputSelectionButton->iconSize().width());
-    inputSelectionButton->setText(elidedName);
+    if(inputSelectionButton){
+        QFontMetrics fontMetrics = inputSelectionButton->fontMetrics();
+        int elideWidth = inputSelectionButton->width() - inputSelectionButton->iconSize().width();
+        QString elidedName = fontMetrics.elidedText(channelName, Qt::ElideRight, elideWidth);
+        inputSelectionButton->setText(elidedName);
+    }
 
     // set the icon
     if (inputTypeIconLabel)
