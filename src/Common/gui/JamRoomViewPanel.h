@@ -22,8 +22,7 @@ class JamRoomViewPanel : public QWidget
     Q_OBJECT
 
 public:
-    JamRoomViewPanel(Login::RoomInfo roomInfo, QWidget *parent,
-                     Controller::MainController *mainController);
+    JamRoomViewPanel(Login::RoomInfo roomInfo, Controller::MainController *mainController);
     ~JamRoomViewPanel();
     void addPeak(float peak);
     void clearPeaks(bool resetListenButton);
