@@ -325,6 +325,43 @@ private:
     quint8 lastMidiActivity;// max velocity or control value
 };
 // ++++++++++++++++++++++++
+class LocalInputGroup
+{
+public:
+    LocalInputGroup(int groupIndex, Audio::LocalInputAudioNode *firstInput);
+    ~LocalInputGroup();
+
+    inline bool isEmpty() const
+    {
+        return groupedInputs.empty();
+    }
+
+    void addInput(Audio::LocalInputAudioNode *input);
+
+    inline int getIndex() const
+    {
+        return groupIndex;
+    }
+
+    void mixGroupedInputs(Audio::SamplesBuffer &out);
+
+    void removeInput(Audio::LocalInputAudioNode *input);
+
+    int getMaxInputChannelsForEncoding() const;
+
+    inline bool isTransmiting() const
+    {
+        return transmiting;
+    }
+
+    void setTransmitingStatus(bool transmiting);
+
+private:
+    int groupIndex;
+    QList<Audio::LocalInputAudioNode *> groupedInputs;
+    bool transmiting;
+};
+// ++++++++++++++++++++++++
 
 class LocalInputTestStreamer : public Audio::LocalInputAudioNode // used to send a sine wave and test the audio transmission
 {

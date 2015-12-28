@@ -17,6 +17,7 @@
 #include "audio/core/PluginDescriptor.h"
 #include "midi/MidiDriver.h"
 #include "UploadIntervalData.h"
+#include "audio/core/AudioNode.h" //including InputTrackGroup
 
 class MainWindow;
 
@@ -269,8 +270,7 @@ private:
     QScopedPointer<Audio::AbstractMp3Streamer> roomStreamer;
     long long currentStreamingRoomID;
 
-    class InputTrackGroup;
-    QMap<int, InputTrackGroup *> trackGroups;
+    QMap<int, Audio::LocalInputGroup *> trackGroups;
 
     QMap<int, bool> getXmitChannelsFlags() const;
 

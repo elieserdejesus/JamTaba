@@ -10,94 +10,8 @@
 using namespace Persistence;
 using namespace Midi;
 using namespace Ninjam;
-
-// ++++++++++++++++++++++++++++++
-
 using namespace Controller;
 
-// ++++++++++++++++++++++++++++
-// Nested class to group input tracks
-class MainController::InputTrackGroup
-{
-public:
-    InputTrackGroup(int groupIndex, Audio::LocalInputAudioNode *firstInput) :
-        groupIndex(groupIndex),
-        transmiting(true)
-    {
-        addInput(firstInput);
-    }
-
-    ~InputTrackGroup()
-    {
-        groupedInputs.clear();
-    }
-
-    inline bool isEmpty() const
-    {
-        return groupedInputs.empty();
-    }
-
-    void addInput(Audio::LocalInputAudioNode *input)
-    {
-        groupedInputs.append(input);
-    }
-
-    inline int getIndex() const
-    {
-        return groupIndex;
-    }
-
-    void mixGroupedInputs(Audio::SamplesBuffer &out)
-    {
-        foreach (Audio::LocalInputAudioNode *inputTrack, groupedInputs) {
-            if (!inputTrack->isMuted())
-                out.add(inputTrack->getLastBuffer());
-        }
-    }
-
-    void removeInput(Audio::LocalInputAudioNode *input)
-    {
-        if (!groupedInputs.removeOne(input))
-            qCritical() << "the input track was not removed!";
-    }
-
-    int getMaxInputChannelsForEncoding() const
-    {
-        if (groupedInputs.size() > 1)
-            return 2;// stereo encoding
-        if (!groupedInputs.isEmpty()) {
-            if (groupedInputs.first()->isMidi())
-                return 2;// just one midi track, use stereo encoding
-            if (groupedInputs.first()->isAudio())
-                return groupedInputs.first()->getAudioInputRange().getChannels();
-            if (groupedInputs.first()->isNoInput())
-                return 2;// allow channels using noInput but processing some vst looper in stereo
-        }
-        return 0;// no channels to encoding
-    }
-
-    inline bool isTransmiting() const
-    {
-        return transmiting;
-    }
-
-    void setTransmitingStatus(bool transmiting)
-    {
-        this->transmiting = transmiting;
-    }
-
-private:
-    int groupIndex;
-    QList<Audio::LocalInputAudioNode *> groupedInputs;
-    bool transmiting;
-};
-
-// +++++++++++++++++++++++++++++
-// +++++++++++++++++++++++++++++
-// +++++++++++++++++++++++++++++
-
-// +++++++++++++++++++++++++++++
-// +++++++++++++++++++++++++++++
 // ++++++++++++++++++++++++++++++++++++++++++++++
 void MainController::setSampleRate(int newSampleRate)
 {
@@ -107,10 +21,6 @@ void MainController::setSampleRate(int newSampleRate)
     if (isPlayingInNinjamRoom())
         ninjamController->setSampleRate(newSampleRate);
 }
-
-//void MainController::on_audioDriverStarted()
-//{
-//}
 
 void MainController::on_audioDriverStopped()
 {
@@ -185,7 +95,7 @@ void MainController::connectedNinjamServer(Ninjam::Server server)
 QMap<int, bool> MainController::getXmitChannelsFlags() const
 {
     QMap<int, bool> xmitFlags;
-    foreach (InputTrackGroup *inputGroup, trackGroups)
+    foreach (Audio::LocalInputGroup *inputGroup, trackGroups)
         xmitFlags.insert(inputGroup->getIndex(), inputGroup->isTransmiting());
     return xmitFlags;
 }
@@ -264,7 +174,7 @@ MainController::MainController(Settings settings) :
 int MainController::getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const
 {
     if (trackGroups.contains(trackGroupIndex)) {
-        InputTrackGroup *group = trackGroups[trackGroupIndex];
+        Audio::LocalInputGroup *group = trackGroups[trackGroupIndex];
         if (group)
             return group->getMaxInputChannelsForEncoding();
     }
@@ -346,7 +256,7 @@ int MainController::addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode
     int trackGroupIndex = inputTrackNode->getGroupChannelIndex();
     if (!trackGroups.contains(trackGroupIndex))
         trackGroups.insert(trackGroupIndex,
-                           new MainController::InputTrackGroup(trackGroupIndex, inputTrackNode));
+                           new Audio::LocalInputGroup(trackGroupIndex, inputTrackNode));
     else
         trackGroups[trackGroupIndex]->addInput(inputTrackNode);
 
@@ -594,7 +504,7 @@ MainController::~MainController()
         delete input;
     inputTracks.clear();
 
-    foreach (MainController::InputTrackGroup *group, trackGroups)
+    foreach (Audio::LocalInputGroup *group, trackGroups)
         delete group;
     trackGroups.clear();
     qCDebug(jtCore()) << "clearing tracksNodes done!";
