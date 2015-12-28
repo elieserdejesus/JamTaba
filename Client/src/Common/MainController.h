@@ -1,8 +1,6 @@
 #ifndef MAIN_CONTROLLER_H
 #define MAIN_CONTROLLER_H
 
-#include <QApplication>
-#include <QMutex>
 #include <QScopedPointer>
 
 #include "geo/IpToLocationResolver.h"
@@ -11,51 +9,19 @@
 #include "persistence/Settings.h"
 #include "persistence/UsersDataCache.h"
 #include "recorder/JamRecorder.h"
-#include "audio/core/SamplesBuffer.h"
 #include "audio/core/AudioNode.h"
 #include "audio/core/Plugins.h"
 #include "audio/vst/PluginFinder.h"
 #include "audio/core/AudioMixer.h"
 #include "audio/RoomStreamerNode.h"
+#include "audio/core/PluginDescriptor.h"
 #include "midi/MidiDriver.h"
+#include "UploadIntervalData.h"
 
 class MainWindow;
 
 namespace Controller {
 class NinjamController;
-
-// +++++++++++++++++++++++++++++
-class UploadIntervalData
-{
-public:
-    UploadIntervalData();
-
-    inline QByteArray getGUID() const
-    {
-        return GUID;
-    }
-
-    void appendData(QByteArray encodedData);
-    inline int getTotalBytes() const
-    {
-        return dataToUpload.size();
-    }
-
-    inline QByteArray getStoredBytes() const
-    {
-        return dataToUpload;
-    }
-
-    inline void clear()
-    {
-        dataToUpload.clear();
-    }
-
-private:
-    static QByteArray newGUID();
-    const QByteArray GUID;
-    QByteArray dataToUpload;
-};
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -86,11 +52,13 @@ public:
 
     void saveLastUserSettings(const Persistence::InputsSettings &inputsSettings);
 
-    // PRESETS
+    // presets
     void loadPreset(QString name);// one preset
     QStringList getPresetList();// all presets
     void savePresets(const Persistence::InputsSettings &inputsSettings, QString name);
     void deletePreset(QString name);
+
+    //main audio processing routine
     virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
 
     void sendNewChannelsNames(QStringList channelsNames);
@@ -155,8 +123,6 @@ public:
     void setMasterGain(float newGain);
 
     Audio::AudioNode *getTrackNode(long ID);
-
-
 
     inline bool isStarted() const
     {
@@ -280,14 +246,8 @@ protected:
     QList<Audio::LocalInputAudioNode *> inputTracks;
 
     QScopedPointer<Vst::PluginFinder> pluginFinder;
-
-    // factory methods
-    virtual Midi::MidiDriver *createMidiDriver() = 0;
-
-    // TODO - Audio driver need just the audio settings to initialize, not the entire settings.
-    virtual Audio::AudioDriver *createAudioDriver(const Persistence::Settings &settings) = 0;
-
     virtual Vst::PluginFinder *createPluginFinder() = 0;
+
     virtual Controller::NinjamController *createNinjamController(MainController *) = 0;
 
     MainWindow *mainWindow;
@@ -301,6 +261,8 @@ protected:
 
 private:
     void setAllTracksActivation(bool activated);
+
+    //audio process is here too (see MainController::process)
     void doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
 
     QScopedPointer<Audio::AbstractMp3Streamer> roomStreamer;
@@ -316,13 +278,10 @@ private:
 
     bool started;
 
-    // +++++++++++++++++++++++++
-
     void tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStringList channels,
                                   QString password = "");
 
     QScopedPointer<Geo::IpToLocationResolver> ipToLocationResolver;
-
 
     bool userNameChoosed;
 

@@ -85,6 +85,7 @@ HEADERS += Utils.h
 HEADERS += Configurator.h
 HEADERS += persistence/UsersDataCache.h
 HEADERS += log/Logging.h
+HEADERS += UploadIntervalData.h
 #HEADERS +=performance/PerformanceMonitor.h
 
 SOURCES += audio/core/AudioDriver.cpp
@@ -140,6 +141,7 @@ SOURCES += Configurator.cpp
 SOURCES += persistence/UsersDataCache.cpp
 SOURCES += gui/widgets/IntervalChunksDisplay.cpp
 SOURCES += gui/widgets/MarqueeLabel.cpp
+SOURCES += UploadIntervalData.cpp
 
 
 #multiplatform implementations
