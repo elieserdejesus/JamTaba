@@ -141,7 +141,7 @@ public:
     float pan;
     bool muted;
 
-    inline QList<Plugin> getPlugins() const
+    inline QList<Persistence::Plugin> getPlugins() const
     {
         return plugins;
     }
@@ -151,7 +151,7 @@ public:
     }
 
 private:
-    QList<Plugin> plugins;
+    QList<Persistence::Plugin> plugins;
 };
 // +++++++++++++++++++++++++++++++++
 class Channel
