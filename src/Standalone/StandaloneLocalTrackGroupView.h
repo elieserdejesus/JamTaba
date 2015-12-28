@@ -7,6 +7,8 @@ class MainWindowStandalone;
 
 class StandaloneLocalTrackGroupView : public LocalTrackGroupView
 {
+    Q_OBJECT
+
 public:
     StandaloneLocalTrackGroupView(int index, MainWindowStandalone *mainWindow);
 

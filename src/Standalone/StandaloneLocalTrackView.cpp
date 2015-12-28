@@ -74,8 +74,7 @@ QPushButton *StandaloneLocalTrackView::createInputSelectionButton(QWidget *paren
     fakeComboButton->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
                                                QSizePolicy::MinimumExpanding));
 
-    QObject::connect(fakeComboButton, SIGNAL(clicked()), this, SLOT(
-                         showInputSelectionMenu()));
+    QObject::connect(fakeComboButton, SIGNAL(clicked()), this, SLOT(showInputSelectionMenu()));
 
     return fakeComboButton;
 }
@@ -346,7 +345,7 @@ void StandaloneLocalTrackView::refreshInputSelectionName()
     }
 
     // set the input name
-    if(inputSelectionButton){
+    if (inputSelectionButton) {
         QFontMetrics fontMetrics = inputSelectionButton->fontMetrics();
         int elideWidth = inputSelectionButton->width() - inputSelectionButton->iconSize().width();
         QString elidedName = fontMetrics.elidedText(channelName, Qt::ElideRight, elideWidth);

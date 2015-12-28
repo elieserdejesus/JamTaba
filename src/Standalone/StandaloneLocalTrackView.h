@@ -7,6 +7,8 @@
 
 class StandaloneLocalTrackView : public LocalTrackView
 {
+    Q_OBJECT
+
 public:
 
     StandaloneLocalTrackView(Controller::StandaloneMainController* mainController, int channelID);
@@ -42,7 +44,7 @@ private slots:
 
 private:
 
-    Controller::StandaloneMainController* controller;//a 'casted' pointer just to convenience
+    Controller::StandaloneMainController* controller;//a 'casted' pointer just for convenience
 
     QMenu *createMonoInputsMenu(QMenu *parentMenu);
     QMenu *createStereoInputsMenu(QMenu *parentMenu);
@@ -76,8 +78,6 @@ private:
     {
         return dynamic_cast<Controller::StandaloneMainController *>(mainController)->getMidiDriver();
     }
-
-
 
     static const QString MIDI_ICON;
     static const QString MONO_ICON;
