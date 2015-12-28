@@ -1,48 +1,14 @@
 #include "MainWindow.h"
-
-#include <QCloseEvent>
-#include <QDebug>
-#include <QDesktopWidget>
-#include <QLayout>
-#include <QList>
-#include <QAction>
-#include <QMessageBox>
-#include <QInputDialog>
-#include <QSettings>
-#include <QDir>
-#include <QtConcurrent/QtConcurrent>
-#include <QFutureWatcher>
-#include <QFuture>
-#include <QDesktopServices>
-
 #include "PreferencesDialog.h"
-#include "JamRoomViewPanel.h"
 #include "LocalTrackView.h"
-#include "plugins/Guis.h"
-#include "FxPanel.h"
-#include "PluginScanDialog.h"
 #include "NinjamRoomWindow.h"
 #include "Highligther.h"
-#include "ChatPanel.h"
-#include "BusyDialog.h"
 #include "PrivateServerDialog.h"
-// #include "../performance/PerformanceMonitor.h"
-
 #include "NinjamController.h"
-#include "ninjam/Server.h"
-#include "persistence/Settings.h"
-#include "audio/core/AudioDriver.h"
-#include "audio/vst/PluginFinder.h"
-#include "audio/core/PluginDescriptor.h"
-#include "midi/MidiDriver.h"
-#include "MainController.h"
-#include "loginserver/LoginService.h"
 #include "Utils.h"
-#include "audio/RoomStreamerNode.h"
 #include "UserNameDialog.h"
-
 #include "log/Logging.h"
-#include <QShortcut>
+// #include "performance/PerformanceMonitor.h"
 
 using namespace Audio;
 using namespace Persistence;
@@ -113,9 +79,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     ui.allRoomsContent->layout()->setContentsMargins(0, 0, 0, 0);
     ui.allRoomsContent->layout()->setSpacing(24);
 
-    // foreach (LocalTrackGroupView *channel, localGroupChannels)
-    // channel->refreshInputSelectionNames();
-
     initializeWindowState();// window size, maximization ...
 
     ui.localTracksWidget->installEventFilter(this);
@@ -151,18 +114,10 @@ void MainWindow::initializePluginFinder()
 }
 
 // ++++++++++++++++++++++++=
-// void MainWindow::on_newThemeSelected(QAction *a){
-// QString css = a->data().toString();
-// mainController->configureStyleSheet(css);
-// }
-
-// ++++++++++++++++++++++++=
 void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
 {
-    foreach (LocalTrackGroupView *channel, localGroupChannels) {
-        // channel->togglePeakMeterOnlyMode();
+    foreach (LocalTrackGroupView *channel, localGroupChannels)
         channel->setPeakMeterMode(showPeakMetersOnly);
-    }
     ui.labelSectionTitle->setVisible(!showPeakMetersOnly);
 
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
@@ -245,7 +200,6 @@ void MainWindow::showMessageBox(QString title, QString text, QMessageBox::Icon i
     messageBox->setIcon(icon);
     messageBox->setAttribute(Qt::WA_DeleteOnClose, true);
     messageBox->show();
-    // if (isRunningAsVstPlugin())
     centerDialog(messageBox);
 }
 
@@ -285,7 +239,7 @@ void MainWindow::highlightChannelGroup(int index) const
 void MainWindow::addChannelsGroup(QString name)
 {
     int channelIndex = localGroupChannels.size();
-    addLocalChannel(channelIndex, name, true, true);// create the first subchannel AND initialize as no input
+    addLocalChannel(channelIndex, name, true);
 
     if (mainController->isPlayingInNinjamRoom()) {
         mainController->sendNewChannelsNames(getChannelsNames());
@@ -319,16 +273,15 @@ void MainWindow::updateChannelsNames()
     mainController->sendNewChannelsNames(getChannelsNames());
 }
 
-//This is a factory method and is overrided in derived classes to create more specific instances.
+// This is a factory method and is overrided in derived classes to create more specific instances.
 LocalTrackGroupView *MainWindow::createLocalTrackGroupView(int channelGroupIndex)
 {
     return new LocalTrackGroupView(channelGroupIndex, this);
 }
 
-//++++++++++++++++++=
+// ++++++++++++++++++=
 LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString channelName,
-                                                 bool createFirstSubchannel,
-                                                 bool initializeAsNoInput)
+                                                 bool createFirstSubchannel)
 {
     LocalTrackGroupView *localChannel = createLocalTrackGroupView(channelGroupIndex);
 
@@ -358,12 +311,9 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-// USED BY PRESETS
 void MainWindow::loadPresetToTrack()
 {
     // we gonna assign each group of the console surface
-
     int groupSize = localGroupChannels.size();
     qCDebug(jtConfigurator) << "************PRESET LOADING ***********";
 
@@ -372,23 +322,22 @@ void MainWindow::loadPresetToTrack()
 
     QList< LocalTrackView * > tracks;
     Persistence::PresetsSettings preset = mainController->getSettings().getPresetSettings();
-    // now the preset's group count ;
-    int PRST_CH_COUNT = preset.channels.size();
-    qCInfo(jtConfigurator) << "Number of groups in Preset :"<<PRST_CH_COUNT;
+
+    int presetsCount = preset.channels.size();
+    qCInfo(jtConfigurator) << "Number of groups in Preset :"<<presetsCount;
 
     // if there is more groups in the preset
-    if (groupSize < PRST_CH_COUNT) {
-        int count = PRST_CH_COUNT-groupSize;
+    if (groupSize < presetsCount) {
+        int count = presetsCount-groupSize;
         qCInfo(jtConfigurator) << "Creating :"<<count<<" group";
 
         for (int i = 0; i < count; i++) {
-            addLocalChannel(0, " new Group", true, true);
+            addLocalChannel(0, " new Group", true);
             groupSize++;
             qCInfo(jtConfigurator) << "Group size is now :"<<groupSize<<" group";
-            // groupSize++;
         }
-    } else if (groupSize > PRST_CH_COUNT) {
-        int count = groupSize-PRST_CH_COUNT;
+    } else if (groupSize > presetsCount) {
+        int count = groupSize-presetsCount;
         qCInfo(jtConfigurator) << "removing :"<<count<<" group";
 
         for (int i = 0; i < count; i++) {
@@ -398,64 +347,64 @@ void MainWindow::loadPresetToTrack()
         }
     }
 
-    // LOOP inside the controlSurfaceJTB groups
+    // LOOP inside the local channels
     for (int group = 0; group < groupSize; group++) {
-        // load the name of the group
         qCInfo(jtConfigurator) << "......................................";
+        // load the name of the group
         localGroupChannels.at(group)->setGroupName(preset.channels.at(group).name);
-        // get the tracks of that group
-        tracks = localGroupChannels.at(group)->getTracks();
-        int tracksCount = tracks.size();
+
+        tracks = localGroupChannels.at(group)->getTracks();// get the tracks of that group
+        int channelsCount = tracks.size();
         qCInfo(jtConfigurator) << "Loading group :"<<group;
-        qCInfo(jtConfigurator) << "Number of tracks in group :"<<tracksCount;
+        qCInfo(jtConfigurator) << "Number of tracks in group :"<<channelsCount;
 
         // compute tracks to create ( if any ) in that group
-        int TRK_TO_CREATE = 0;
-        int PRST_TRK_COUNT = preset.channels.at(group).subChannels.size();
-        qCInfo(jtConfigurator) << "Number of tracks in preset :"<<PRST_TRK_COUNT;
+        int channelsToCreate = 0;
+        int subChannelsCount = preset.channels.at(group).subChannels.size();
+        qCInfo(jtConfigurator) << "Number of tracks in preset :"<<subChannelsCount;
 
         // ADD OR DELETE TRACKS
-        if (tracksCount < PRST_TRK_COUNT) {// must create a track
-            TRK_TO_CREATE = PRST_TRK_COUNT-tracksCount;
-            qCInfo(jtConfigurator) << "Number of tracks to create : "<<TRK_TO_CREATE;
+        if (channelsCount < subChannelsCount) {// must create a track
+            channelsToCreate = subChannelsCount-channelsCount;
+            qCInfo(jtConfigurator) << "Number of tracks to create : "<<channelsToCreate;
 
-            for (int i = 0; i < TRK_TO_CREATE; i++) {
+            for (int i = 0; i < channelsToCreate; i++) {
                 localGroupChannels.at(group)->addTrackView(i+1);
                 qCInfo(jtConfigurator) << "SubTrack added in group : "<<group;
-
-                // tracksCount++;
             }
-        } else if (tracksCount > PRST_TRK_COUNT) {// must delete a track
-            int TRK_TO_DEL = tracksCount-PRST_TRK_COUNT;
-            qCInfo(jtConfigurator) << "Number of tracks to delete : "<<TRK_TO_DEL;
+        } else if (channelsCount > subChannelsCount) {// must delete a track
+            int channelsToDelete = channelsCount-subChannelsCount;
+            qCInfo(jtConfigurator) << "Number of tracks to delete : "<<channelsToDelete;
 
-            for (int i = 0; i < TRK_TO_DEL; i++) {
-                localGroupChannels.at(group)->removeTrackView(TRK_TO_DEL);
+            for (int i = 0; i < channelsToDelete; i++) {
+                localGroupChannels.at(group)->removeTrackView(channelsToDelete);
                 qCInfo(jtConfigurator) << "SubTrack removed in group : "<<group;
-
-                // tracksCount--;
             }
         }
 
         // now the preset's SUB track count ;
         tracks = localGroupChannels.at(group)->getTracks();
-        tracksCount = tracks.size();
+        channelsCount = tracks.size();
+
         // assign preset to indexed tracks
-        for (int index = 0; index < tracksCount; index++) {
+        for (int index = 0; index < channelsCount; index++) {
             // gain
             qCInfo(jtConfigurator) << "<<<<<<<<<<<<<<<<<<<<";
             float gain = preset.channels.at(group).subChannels.at(index).gain;
             tracks.at(index)->getInputNode()->setGain(gain);
             qCInfo(jtConfigurator) << "Track"<<index<<" gain : "<<gain<<" for"<<index;
+
             // pan
             float pan = preset.channels.at(group).subChannels.at(index).pan;
             tracks.at(index)->getInputNode()->setPan(pan);
             qCInfo(jtConfigurator) << "Track "<<index<<"Pan : "<<pan<<" for"<<index;
+
             // boost
             int boost = preset.channels.at(group).subChannels.at(index).boost;
             BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(boost);
             tracks.at(index)->initializeBoostButtons(boostValue);
             qCInfo(jtConfigurator) << "Boost "<<index<<"index : "<<boostValue<<" for"<<index;
+
             // mute
             bool muted = preset.channels.at(group).subChannels.at(index).muted;
             tracks.at(index)->getInputNode()->setMute(muted);
@@ -473,7 +422,7 @@ void MainWindow::initializeLocalInputChannels()
     foreach (Persistence::Channel channel, inputsSettings.channels) {
         qCInfo(jtGUI) << "\tCreating channel "<< channel.name;
         LocalTrackGroupView *channelView = addLocalChannel(channelIndex, channel.name,
-                                                           channel.subChannels.isEmpty(), false);
+                                                           channel.subChannels.isEmpty());
         foreach (Persistence::Subchannel subChannel, channel.subChannels) {
             qCInfo(jtGUI) << "\t\tCreating sub-channel ";
             BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
@@ -492,7 +441,7 @@ void MainWindow::initializeLocalInputChannels()
         channelIndex++;
     }
     if (channelIndex == 0)// no channels in settings file or no settings file...
-        addLocalChannel(0, "your channel", true, true);// initialize to noInput
+        addLocalChannel(0, "your channel", true);
     qCInfo(jtGUI) << "Initializing local inputs done!";
 }
 
@@ -625,6 +574,22 @@ void MainWindow::showNewVersionAvailableMessage()
     QMessageBox::information(this, "New Jamtaba version available!", text);
 }
 
+JamRoomViewPanel *MainWindow::createJamRoomViewPanel(Login::RoomInfo roomInfo)
+{
+    JamRoomViewPanel *newJamRoomView = new JamRoomViewPanel(roomInfo, mainController);
+
+    connect(newJamRoomView, SIGNAL(startingListeningTheRoom(Login::RoomInfo)), this,
+            SLOT(playPublicRoomStream(Login::RoomInfo)));
+
+    connect(newJamRoomView, SIGNAL(finishingListeningTheRoom(Login::RoomInfo)), this,
+            SLOT(stopPublicRoomStream(Login::RoomInfo)));
+
+    connect(newJamRoomView, SIGNAL(enteringInTheRoom(Login::RoomInfo)), this,
+            SLOT(tryEnterInRoom(Login::RoomInfo)));
+
+    return newJamRoomView;
+}
+
 void MainWindow::refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms)
 {
     if (!isVisible())
@@ -643,26 +608,17 @@ void MainWindow::refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms)
                 roomViewPanel->refresh(roomInfo);
                 ui.allRoomsContent->layout()->removeWidget(roomViewPanel); // the widget is removed but added again
             } else {
-                roomViewPanel = new JamRoomViewPanel(roomInfo, ui.allRoomsContent, mainController);
+                roomViewPanel = createJamRoomViewPanel(roomInfo);
                 roomViewPanels.insert(roomInfo.getID(), roomViewPanel);
-                connect(roomViewPanel, SIGNAL(startingListeningTheRoom(
-                                                  Login::RoomInfo)), this,
-                        SLOT(playPublicRoomStream(Login::RoomInfo)));
-                connect(roomViewPanel, SIGNAL(finishingListeningTheRoom(
-                                                  Login::RoomInfo)), this,
-                        SLOT(stopPublicRoomStream(Login::RoomInfo)));
-                connect(roomViewPanel, SIGNAL(enteringInTheRoom(Login::RoomInfo)), this,
-                        SLOT(tryEnterInRoom(Login::RoomInfo)));
             }
-            ((QGridLayout *)ui.allRoomsContent->layout())->addWidget(roomViewPanel, rowIndex,
-                                                                     collumnIndex);
+            QGridLayout *layout = dynamic_cast<QGridLayout *>(ui.allRoomsContent->layout());
+            layout->addWidget(roomViewPanel, rowIndex, collumnIndex);
             index++;
         }
     }
 
     if (mainController->isPlayingInNinjamRoom())
         this->ninjamWindow->updateGeoLocations();
-
     /** updating country flag and country names after refresh the public rooms list. This is necessary because the call to webservice used to get country codes and  country names is not synchronous. So, if country code and name are not cached we receive these data from the webservice after some seconds.*/
 }
 
@@ -702,6 +658,7 @@ void MainWindow::tryEnterInRoom(Login::RoomInfo roomInfo, QString password)
         mainController->stopRoomStream();
     }
 
+    // show the user name dialog
     if (!mainController->userNameWasChoosed()) {
         QString lastUserName = mainController->getUserName();
         UserNameDialog dialog(ui.centralWidget, lastUserName);
@@ -710,8 +667,8 @@ void MainWindow::tryEnterInRoom(Login::RoomInfo roomInfo, QString password)
             QString userName = dialog.getUserName().trimmed();
             if (!userName.isEmpty()) {
                 mainController->setUserName(userName);
-                setWindowTitle(
-                    "Jamtaba v" + QApplication::applicationVersion() + " (" + userName + ")");
+                QString version = QApplication::applicationVersion();
+                setWindowTitle("Jamtaba v" + version + " (" + userName + ")");
             } else {
                 QMessageBox::warning(this, "Warning!", "Empty name is not allowed!");
             }
@@ -921,8 +878,6 @@ void MainWindow::closeEvent(QCloseEvent *)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainWindow::~MainWindow()
 {
     qCDebug(jtGUI) << "MainWindow destructor...";
@@ -961,8 +916,8 @@ void MainWindow::showJamtabaWikiWebPage()
 
 void MainWindow::showJamtabaUsersManual()
 {
-    QDesktopServices::openUrl(QUrl(
-                                  "https://github.com/elieserdejesus/JamTaba/wiki/Jamtaba's-user-guide"));
+    QString url = "https://github.com/elieserdejesus/JamTaba/wiki/Jamtaba's-user-guide";
+    QDesktopServices::openUrl(QUrl(url));
 }
 
 void MainWindow::showPrivateServerDialog()
@@ -1134,7 +1089,6 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
     int margim = fullViewMode ? 6 : 2;
     ui.bottomPanelLayout->setContentsMargins(margim, margim, margim, margim);
     ui.bottomPanelLayout->setSpacing(fullViewMode ? 6 : 2);
-    // ui.bottomPanel->setMinimumHeight(fullViewMode ? 130 : 130);
 
     if (ninjamWindow) {
         NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
@@ -1199,8 +1153,9 @@ bool MainWindow::isTransmiting(int channelID) const
 
 void MainWindow::showJamtabaCurrentVersion()
 {
-    QMessageBox::about(this, "About Jamtaba",
-                       "Jamtaba version is " + QApplication::applicationVersion());
+    QString title = "About Jamtaba";
+    QString text = "Jamtaba version is " + QApplication::applicationVersion();
+    QMessageBox::about(this, title, text);
 }
 
 // ++++++++++++++++++
@@ -1299,8 +1254,8 @@ void MainWindow::updateCurrentIntervalBeat(int beat)
         chordsPanel->setCurrentBeat(beat);
 }
 
-
-void MainController::on_ninjamStartProcessing(int intervalPosition){
+void MainController::on_ninjamStartProcessing(int intervalPosition)
+{
     Q_UNUSED(intervalPosition)
-    //--------
+    // --------
 }

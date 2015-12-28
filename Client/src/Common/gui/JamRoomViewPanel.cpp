@@ -7,9 +7,9 @@
 #include <QPainter>
 #include <QDebug>
 
-JamRoomViewPanel::JamRoomViewPanel(Login::RoomInfo roomInfo, QWidget *parent,
+JamRoomViewPanel::JamRoomViewPanel(Login::RoomInfo roomInfo,
                                    Controller::MainController *mainController) :
-    QWidget(parent),
+    QWidget(nullptr),
     ui(new Ui::RoomViewPanel),
     mainController(mainController),
     roomInfo(roomInfo)

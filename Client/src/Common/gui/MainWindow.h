@@ -19,7 +19,7 @@ public:
     MainWindow(Controller::MainController *mainController, QWidget *parent = 0);
     ~MainWindow();
 
-    virtual void initialize(); //this is overrided in inherited classes, never call virtual methods inside constructor
+    virtual void initialize(); // this is overrided in inherited classes, never call virtual methods inside constructor
 
     void closeEvent(QCloseEvent *) override;
     void changeEvent(QEvent *) override;
@@ -45,8 +45,6 @@ public:
     virtual void addChannelsGroup(QString name);
     void removeChannelsGroup(int channelGroupIndex);
 
-    //void refreshTrackInputSelection(int inputTrackIndex);
-
     void exitFromRoom(bool normalDisconnection);
 
     bool canCreateSubchannels() const;
@@ -62,7 +60,6 @@ public:
         return fullViewMode;
     }
 
-    // EZEE PRESETS NEED THAT
     inline Controller::MainController *getMainController()
     {
         return mainController;
@@ -85,7 +82,6 @@ protected:
 
     virtual void initializePluginFinder();
 
-
     void centerDialog(QWidget *dialog);
 
     QList<LocalTrackGroupView *> localGroupChannels;
@@ -97,23 +93,21 @@ protected:
     bool eventFilter(QObject *target, QEvent *event);
 
     LocalTrackGroupView *addLocalChannel(int channelGroupIndex, QString channelName,
-                                                 bool createFirstSubchannel,
-                                                 bool initializeAsNoInput);
+                                         bool createFirstSubchannel);
 
-
-    //this factory method overrided in derived classes to create more specific views
-    virtual LocalTrackGroupView* createLocalTrackGroupView(int channelGroupIndex);
+    // this factory method is overrided in derived classes to create more specific views
+    virtual LocalTrackGroupView *createLocalTrackGroupView(int channelGroupIndex);
 
     virtual void showPreferencesDialog(int initialTab) = 0;
 
     void stopCurrentRoomStream();
 
+    virtual void loadSubChannel(Persistence::Subchannel subChannel,
+                                LocalTrackView *subChannelView) = 0;
 
-    //virtual void loadPluginsList(QList<Persistence::Plugin> plugins, StandaloneLocalTrackView* trackView) = 0;
-
-    virtual void loadSubChannel(Persistence::Subchannel subChannel, LocalTrackView* subChannelView) = 0;
-
-    virtual void initializeSubChannel(Persistence::Subchannel subChannel, LocalTrackView* subChannelView) = 0; //TODO the code to loading channels (load preset) and to initialize local inputs is the same, but is almost duplicated at moment.
+    virtual void initializeSubChannel(Persistence::Subchannel subChannel,
+                                      LocalTrackView *subChannelView) = 0;
+    // TODO the code to loading channels (load preset) and to initialize local inputs is the same, but is almost duplicated at moment.
 
 protected slots:
     void closeTab(int index);
@@ -189,7 +183,6 @@ private slots:
 
     void refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms);
 
-
 private:
 
     BusyDialog busyDialog;
@@ -236,6 +229,8 @@ private:
     ChordsPanel *chordsPanel;
     void hideChordsPanel();
     ChordsPanel *createChordsPanel();
+
+    JamRoomViewPanel* createJamRoomViewPanel(Login::RoomInfo roomInfo);
 
     // PerformanceMonitor performanceMonitor;//cpu and memmory usage
     // qint64 lastPerformanceMonitorUpdate;
