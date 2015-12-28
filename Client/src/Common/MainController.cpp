@@ -1,35 +1,11 @@
 #include "MainController.h"
 #include "recorder/ReaperProjectGenerator.h"
-#include "audio/core/AudioDriver.h"
-#include "midi/MidiDriver.h"
-#include "audio/core/AudioMixer.h"
-#include "audio/core/AudioNode.h"
-#include "audio/RoomStreamerNode.h"
-#include "persistence/Settings.h"
 #include "gui/MainWindow.h"
 #include "NinjamController.h"
 #include "geo/WebIpToLocationResolver.h"
-#include "audio/NinjamTrackNode.h"
 #include "Utils.h"
-#include "loginserver/LoginService.h"
 #include "loginserver/natmap.h"
-#include "ninjam/Service.h"
-#include "ninjam/Server.h"
-#include "audio/core/PluginDescriptor.h"
-
-#include <QDateTime>
-#include <QStandardPaths>
-#include <QTimer>
-#include <QFile>
-#include <QDebug>
-#include <QApplication>
-#include <QSysInfo>
-#include <QUuid>
-#include <QSettings>
-#include <QDir>
-
 #include "log/Logging.h"
-#include "Configurator.h"
 
 using namespace Persistence;
 using namespace Midi;
