@@ -18,13 +18,6 @@ private slots:
     void setUserIP_data();
     void setUserIP();
 
-    void validUserName_data();
-    void validUserName();
-    void invalidUserName_data();
-    void invalidUserName();
-    void setUserName_data();
-    void setUserName();
-
     void defaultValues();
 
     void setPanGuard_data();
@@ -94,32 +87,6 @@ void TestCacheEntry::setUserIP()
     CacheEntry entry(addr, "anon", 0);
     // NOTE: constructor call setUserIp
     QCOMPARE(entry.getUserIP(), expect);
-}
-
-void TestCacheEntry::validUserName_data()
-{
-    QTest::addColumn<QString>("name");
-    QTest::newRow("anon") << "anon";
-    QTest::newRow("underscore") << "_";
-}
-
-void TestCacheEntry::validUserName()
-{
-    QFETCH(QString, name);
-    QVERIFY(CacheEntry::namePattern.exactMatch(name));
-}
-
-void TestCacheEntry::invalidUserName_data()
-{
-    QTest::addColumn<QString>("name");
-    QTest::newRow("empty name") << "";
-    QTest::newRow("invalid letters") << "-";
-}
-
-void TestCacheEntry::invalidUserName()
-{
-    QFETCH(QString, name);
-    QVERIFY(! CacheEntry::namePattern.exactMatch(name));
 }
 
 void TestCacheEntry::defaultValues()

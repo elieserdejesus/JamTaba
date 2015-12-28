@@ -22,7 +22,6 @@ const float CacheEntry::PAN_MIN = -4.0f;
 // no need to validate the number within 8 bits.
 QRegExp CacheEntry::ipPattern("(?:\\d{1,3}\\.){3}(\\d{1,3}|x)");
 
-QRegExp CacheEntry::namePattern("[a-zA-Z0-9_]{1,64}");
 
 QDataStream &operator<<(QDataStream &stream, const CacheEntry &entry)
 {
@@ -78,10 +77,7 @@ void CacheEntry::setUserIP(const QString &userIp)
 
 void CacheEntry::setUserName(const QString &userName)
 {
-    if (namePattern.exactMatch(userName))
-        this->userName = userName;
-    else
-        qCDebug(jtCache) << "invalid name: " << userName;
+    this->userName = userName;
 }
 
 void CacheEntry::setChannelID(quint8 channelID)
