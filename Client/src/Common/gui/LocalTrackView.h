@@ -2,36 +2,19 @@
 #define LOCAL_TRACK_VIEW_H
 
 #include "BaseTrackView.h"
-#include <QWidget>
-#include <QTimer>
 #include "PeakMeter.h"
+#include "audio/core/AudioNode.h"
 
-class QMenu;
 class FxPanel;
-class QFrame;
-class QPushButton;
-class QLabel;
-class QSpacerItem;
-
-namespace Audio {
-class Plugin;
-class LocalInputAudioNode;
-}
-
-namespace Controller {
-class MainController;
-}
 
 class LocalTrackView : public BaseTrackView
 {
     Q_OBJECT
+
 public:
-    //LocalTrackView(Controller::MainController *mainController, int channelIndex, float initialGain,
-      //             BoostValue boostValue, float initialPan, bool muted);
     LocalTrackView(Controller::MainController *mainController, int channelIndex);
 
-
-    void setInitialValues(float initialGain, BaseTrackView::BoostValue boostValue, float initialPan, bool muted);
+    void setInitialValues(float initialGain, BaseTrackView::Boost boostValue, float initialPan, bool muted);
 
     virtual ~LocalTrackView();
 
@@ -57,7 +40,7 @@ public:
 
     void mute(bool b);
     void solo(bool b);
-    void initializeBoostButtons(BoostValue boostValue);
+    void initializeBoostButtons(Boost boostValue);
 
 protected:
     Audio::LocalInputAudioNode *inputNode;

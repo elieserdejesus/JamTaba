@@ -1,29 +1,10 @@
 #include "LocalTrackView.h"
 #include "ui_BaseTrackView.h"
-#include "FxPanel.h"
-#include "FxPanelItem.h"
-#include "plugins/Guis.h"
 #include "MainController.h"
-#include "midi/MidiDriver.h"
-#include "audio/core/AudioDriver.h"
-#include "audio/core/AudioNode.h"
-#include "Highligther.h"
-#include <QMenu>
-#include <QToolButton>
-
-#include "log/Logging.h"
-
-// LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex,
-// float initialGain, BaseTrackView::BoostValue boostValue,
-// float initialPan, bool muted) :
-// BaseTrackView(mainController, 1),
-// inputNode(nullptr)
-// {
-// init(channelIndex, initialGain, boostValue, initialPan, muted);
-// }
 
 LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex) :
-    BaseTrackView(mainController, 1), //TODO remove trackID (2nd parameter) from constructor?
+    BaseTrackView(mainController, 1),
+    // TODO remove trackID (2nd parameter) from constructor?
     inputNode(nullptr)
 {
     if (!mainController) {
@@ -36,14 +17,14 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
     trackID = mainController->addInputTrackNode(this->inputNode);
     bindThisViewWithTrackNodeSignals();// now is secure bind this LocalTrackView with the respective TrackNode model
 
-    setInitialValues(1.0f, BaseTrackView::BoostValue::ZERO, 0.0f, false);
+    setInitialValues(1.0f, BaseTrackView::Boost::ZERO, 0.0f, false);
 
     setUnlightStatus(false);
 
     peakMetersOnly = false;
 }
 
-void LocalTrackView::setInitialValues(float initialGain, BaseTrackView::BoostValue boostValue,
+void LocalTrackView::setInitialValues(float initialGain, BaseTrackView::Boost boostValue,
                                       float initialPan, bool muted)
 {
     inputNode->setGain(initialGain);
@@ -75,21 +56,19 @@ void LocalTrackView::solo(bool b)
     ui->soloButton->setChecked(b);// gui only
 }
 
-void LocalTrackView::initializeBoostButtons(BoostValue boostValue)
+void LocalTrackView::initializeBoostButtons(Boost boostValue)
 {
     switch (boostValue) {
-    case BoostValue::MINUS:
+    case Boost::MINUS:
         ui->buttonBoostMinus12->click();
         break;
-    case BoostValue::PLUS:
+    case Boost::PLUS:
         ui->buttonBoostPlus12->click();
         break;
     default:
         ui->buttonBoostZero->click();
     }
 }
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 QSize LocalTrackView::sizeHint() const
 {
@@ -108,8 +87,9 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMi
         ui->boostPanel->setVisible(!this->peakMetersOnly);
         ui->leftWidget->setVisible(!this->peakMetersOnly);
 
-        ui->panSpacer->changeSize(20, 20, QSizePolicy::Minimum,
-                                  this->peakMetersOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
+        QSizePolicy::Policy hPolicy = QSizePolicy::Minimum;
+        QSizePolicy::Policy vPolicy = this->peakMetersOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed;
+        ui->panSpacer->changeSize(20, 20, hPolicy, vPolicy);
 
         QMargins margins = layout()->contentsMargins();
         margins.setLeft((peakMetersOnly || runningInMiniMode) ? 2 : 6);
@@ -119,8 +99,8 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMi
         ui->soloButton->setVisible(!peakMetersOnly);
         ui->muteButton->setVisible(!peakMetersOnly);
         ui->peaksDbLabel->setVisible(!peakMetersOnly);
-        ui->levelSlider->parentWidget()->layout()->setAlignment(ui->levelSlider,
-                                                                peakMetersOnly ? Qt::AlignRight : Qt::AlignHCenter);
+        Qt::Alignment alignment = peakMetersOnly ? Qt::AlignRight : Qt::AlignHCenter;
+        ui->levelSlider->parentWidget()->layout()->setAlignment(ui->levelSlider, alignment);
 
         this->drawDbValue = !peakMetersOnly;
 
@@ -137,31 +117,24 @@ void LocalTrackView::togglePeakMetersOnlyMode(bool runninsInMiniMode)
     setPeakMetersOnlyMode(!peakMetersOnly, runninsInMiniMode);
 }
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void LocalTrackView::setUnlightStatus(bool unlighted)
 {
     BaseTrackView::setUnlightStatus(unlighted);
     update();
 }
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Audio::LocalInputAudioNode *LocalTrackView::getInputNode() const
 {
     return inputNode;
 }
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void LocalTrackView::reset()
 {
+    // -------
 }
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 LocalTrackView::~LocalTrackView()
 {
     if (mainController)
         mainController->removeInputTrackNode(getTrackID());
 }
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

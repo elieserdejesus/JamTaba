@@ -453,7 +453,7 @@ void MainWindow::loadPresetToTrack()
             qCInfo(jtConfigurator) << "Track "<<index<<"Pan : "<<pan<<" for"<<index;
             // boost
             int boost = preset.channels.at(group).subChannels.at(index).boost;
-            BaseTrackView::BoostValue boostValue = BaseTrackView::intToBoostValue(boost);
+            BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(boost);
             tracks.at(index)->initializeBoostButtons(boostValue);
             qCInfo(jtConfigurator) << "Boost "<<index<<"index : "<<boostValue<<" for"<<index;
             // mute
@@ -476,7 +476,7 @@ void MainWindow::initializeLocalInputChannels()
                                                            channel.subChannels.isEmpty(), false);
         foreach (Persistence::Subchannel subChannel, channel.subChannels) {
             qCInfo(jtGUI) << "\t\tCreating sub-channel ";
-            BaseTrackView::BoostValue boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
+            BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
             LocalTrackView *subChannelView
                 = dynamic_cast<LocalTrackView *>(channelView->addTrackView(channelIndex));
             subChannelView->setInitialValues(subChannel.gain, boostValue, subChannel.pan,
