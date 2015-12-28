@@ -34,13 +34,13 @@ public:
 public slots:
     void setToNoInput();
 
-
-private slots:
-    void showInputSelectionMenu();// build and show the input selection menu
-
+protected slots:
     void setToMono(QAction *action) ;
     void setToStereo(QAction *action) ;
     void setToMidi(QAction *action) ;
+
+private slots:
+    void showInputSelectionMenu();// build and show the input selection menu
 
 private:
 
