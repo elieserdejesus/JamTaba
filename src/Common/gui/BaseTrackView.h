@@ -22,17 +22,17 @@ public:
     BaseTrackView(Controller::MainController *mainController, long trackID);
     virtual ~BaseTrackView();
 
-    enum BoostValue {
+    enum Boost {
         ZERO, MINUS, PLUS
     };
 
-    static BoostValue intToBoostValue(int intValue)
+    static Boost intToBoostValue(int intValue)
     {
         if (intValue == 0)
-            return BoostValue::ZERO;
+            return Boost::ZERO;
         if (intValue > 0)
-            return BoostValue::PLUS;
-        return BoostValue::MINUS;
+            return Boost::PLUS;
+        return Boost::MINUS;
     }
 
     inline long getTrackID() const
