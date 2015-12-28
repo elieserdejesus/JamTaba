@@ -75,7 +75,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
 
     initializeLoginService();
-    // initializePluginFinder(); //called in derived classes
     initializeMainTabWidget();
     initializeViewModeMenu();
 
@@ -108,16 +107,14 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     QObject::connect(mainController->getRoomStreamer(), SIGNAL(error(QString)), this,
                      SLOT(handlePublicRoomStreamError(QString)));
 
-    initializeLocalInputChannels();
-
     ui.chatArea->setVisible(false);// hide chat area until connect in a server to play
 
     ui.allRoomsContent->setLayout(new QGridLayout());
     ui.allRoomsContent->layout()->setContentsMargins(0, 0, 0, 0);
     ui.allRoomsContent->layout()->setSpacing(24);
 
-    //foreach (LocalTrackGroupView *channel, localGroupChannels)
-      //  channel->refreshInputSelectionNames();
+    // foreach (LocalTrackGroupView *channel, localGroupChannels)
+    // channel->refreshInputSelectionNames();
 
     initializeWindowState();// window size, maximization ...
 
@@ -127,6 +124,12 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     showBusyDialog("Loading rooms list ...");
     qCInfo(jtGUI) << "MainWindow created!";
+}
+
+// ++++++++++++++++++++++++=
+void MainWindow::initialize()
+{
+    initializeLocalInputChannels();
 }
 
 // ++++++++++++++++++++++++=
@@ -168,6 +171,9 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
 
 void MainWindow::updateLocalInputChannelsGeometry()
 {
+    if (localGroupChannels.isEmpty())
+        return;
+
     int min = ui.localTracksWidget->sizeHint().width() + 12;
     int max = min;
     bool showingPeakMeterOnly = localGroupChannels.first()->isShowingPeakMeterOnly();
@@ -313,11 +319,19 @@ void MainWindow::updateChannelsNames()
     mainController->sendNewChannelsNames(getChannelsNames());
 }
 
+//This is a factory method and is overrided in derived classes to create more specific instances.
+LocalTrackGroupView *MainWindow::createLocalTrackGroupView(int channelGroupIndex)
+{
+    return new LocalTrackGroupView(channelGroupIndex, this);
+}
+
+//++++++++++++++++++=
 LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString channelName,
                                                  bool createFirstSubchannel,
                                                  bool initializeAsNoInput)
 {
-    LocalTrackGroupView *localChannel = new LocalTrackGroupView(channelGroupIndex, this);
+    LocalTrackGroupView *localChannel = createLocalTrackGroupView(channelGroupIndex);
+
     QObject::connect(localChannel, SIGNAL(nameChanged()), this, SLOT(updateChannelsNames()));
     QObject::connect(localChannel, SIGNAL(trackAdded()), this,
                      SLOT(updateLocalInputChannelsGeometry()));
@@ -332,9 +346,8 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
     localChannel->setGroupName(channelName);
     ui.localTracksLayout->addWidget(localChannel);
 
-    if (createFirstSubchannel) {
+    if (createFirstSubchannel)
         localChannel->addTrackView(channelGroupIndex);
-    }
 
     if (!fullViewMode && localGroupChannels.count() > 1) {
         foreach (LocalTrackGroupView *trackGroup, localGroupChannels)
@@ -464,14 +477,15 @@ void MainWindow::initializeLocalInputChannels()
         foreach (Persistence::Subchannel subChannel, channel.subChannels) {
             qCInfo(jtGUI) << "\t\tCreating sub-channel ";
             BaseTrackView::BoostValue boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
-            LocalTrackView *subChannelView = dynamic_cast<LocalTrackView*>(channelView->addTrackView(channelIndex));
-            subChannelView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted);
+            LocalTrackView *subChannelView
+                = dynamic_cast<LocalTrackView *>(channelView->addTrackView(channelIndex));
+            subChannelView->setInitialValues(subChannel.gain, boostValue, subChannel.pan,
+                                             subChannel.muted);
             if (canCreateSubchannels()) {
-                //initializeSubChannel(subChannel, subChannelView);
-                //TODO need the code removed here
-                //Eu acho que esse if é totalmente desnecessáio, essa classe nunca vai criar subchannels?
-            }
-            else{
+                // initializeSubChannel(subChannel, subChannelView);
+                // TODO need the code removed here
+                // Eu acho que esse if é totalmente desnecessáio, essa classe nunca vai criar subchannels?
+            } else {
                 break;// avoid hacking in config file to create more subchannels in VST plugin.
             }
         }
@@ -1007,7 +1021,6 @@ void MainWindow::openPreferencesDialog(QAction *action)
         showPreferencesDialog(initialTab);
     }
 }
-
 
 // plugin finder events
 void MainWindow::showPluginScanDialog()

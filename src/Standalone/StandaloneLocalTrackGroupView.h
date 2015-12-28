@@ -3,13 +3,21 @@
 
 #include "LocalTrackGroupView.h"
 
+class MainWindowStandalone;
+
 class StandaloneLocalTrackGroupView : public LocalTrackGroupView
 {
-
 public:
+    StandaloneLocalTrackGroupView(int index, MainWindowStandalone *mainWindow);
     BaseTrackView* addTrackView(long trackID) override;
     void refreshInputSelectionName(int inputTrackIndex);
     void refreshInputSelectionNames();
+
+protected:
+    void populateMenu(QMenu &menu) override;
+
+private:
+    void createSubChannelActions(QMenu &menu);
 
 };
 

@@ -35,6 +35,8 @@ protected:
     void loadSubChannel(Persistence::Subchannel subChannel, LocalTrackView* subChannelView) override;
     void initializeSubChannel(Persistence::Subchannel subChannel, LocalTrackView* subChannelView) override;
 
+    LocalTrackGroupView* createLocalTrackGroupView(int channelGroupIndex) override;
+
 protected slots:
     void handleServerConnectionError(QString msg);
 
