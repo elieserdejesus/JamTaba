@@ -54,6 +54,13 @@ StandalonePreferencesDialog::StandalonePreferencesDialog(Controller::MainControl
     setupSignals();
     populateAllTabs();
     selectPreferencesTab(initialTab);
+
+#ifdef Q_OS_MAC
+    ui->comboAudioDevice->setVisible(false);
+    ui->asioDriverLabel->setVisible(false);
+    ui->groupBoxInputs->setVisible(false);
+    ui->groupBoxOutputs->setVisible(false);
+#endif
 }
 
 void StandalonePreferencesDialog::populateAllTabs()
