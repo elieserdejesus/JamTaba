@@ -5,8 +5,8 @@ CONFIG += testcase
 TEMPLATE = app
 TARGET = persistence
 INCLUDEPATH += .
-INCLUDEPATH += ../../../src
-VPATH += ../../../src
+INCLUDEPATH += ../../../src/Common
+VPATH += ../../../src/Common
 
 # Input
 HEADERS += log/logging.h
