@@ -8,7 +8,7 @@
 #include "vst/PluginFinder.h"
 #include "audio/core/PluginDescriptor.h"
 #include "NinjamController.h"
-#include "MainWindowStandalone.h"
+#include "gui/StandaloneMainWindow.h"
 
 #include <QDialog>
 #include <QHostAddress>
@@ -254,7 +254,7 @@ void StandaloneMainController::setMainWindow(MainWindow *mainWindow)
     MainController::setMainWindow(mainWindow);
 
     // store a casted pointer to convenience when callen MainWindowStandalone specific functions
-    window = dynamic_cast<MainWindowStandalone *>(mainWindow);
+    window = dynamic_cast<StandaloneMainWindow *>(mainWindow);
 }
 
 Midi::MidiDriver *StandaloneMainController::createMidiDriver()

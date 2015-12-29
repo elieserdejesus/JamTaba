@@ -14,9 +14,9 @@ INCLUDEPATH += $$ROOT_PATH/libs/includes/vorbis
 INCLUDEPATH += $$ROOT_PATH/libs/includes/minimp3
 
 INCLUDEPATH += $$SOURCE_PATH/Standalone
+INCLUDEPATH += $$SOURCE_PATH/Standalone/gui
 INCLUDEPATH += $$SOURCE_PATH/Libs
 INCLUDEPATH += $$VST_SDK_PATH/pluginterfaces/vst2.x
-
 
 DEPENDPATH +=  $$ROOT_PATH/libs/includes/portaudio
 DEPENDPATH +=  $$ROOT_PATH/libs/includes/rtmidi
@@ -27,11 +27,13 @@ DEPENDPATH +=  $$ROOT_PATH/libs/includes/minimp3
 VPATH += $$SOURCE_PATH/Standalone
 
 HEADERS += StandaloneMainController.h
-HEADERS += gui/MainWindowStandalone.h
+HEADERS += gui/StandaloneMainWindow.h
 HEADERS += gui/StandalonePreferencesDialog.h
 HEADERS += gui/StandaloneLocalTrackView.h
 HEADERS += gui/StandaloneLocalTrackGroupView.h
 HEADERS += gui/ScanFolderPanel.h
+HEADERS += gui/FxPanel.h
+HEADERS += gui/FxPanelItem.h
 
 HEADERS += audio/core/PortAudioDriver.h
 HEADERS += recorder/JamRecorder.h
@@ -56,11 +58,13 @@ HEADERS += audio/core/PluginDescriptor.h
 
 SOURCES += main.cpp
 SOURCES += StandaloneMainController.cpp
-SOURCES += gui/MainWindowStandalone.cpp
+SOURCES += gui/StandaloneMainWindow.cpp
 SOURCES += gui/StandalonePreferencesDialog.cpp
 SOURCES += gui/StandaloneLocalTrackView.cpp
 SOURCES += gui/StandaloneLocalTrackGroupView.cpp
 SOURCES += gui/ScanFolderPanel.cpp
+SOURCES += gui/FxPanel.cpp
+SOURCES += gui/FxPanelItem.cpp
 
 SOURCES += recorder/JamRecorder.cpp
 SOURCES += recorder/ReaperProjectGenerator.cpp

@@ -3,14 +3,14 @@
 
 #include "LocalTrackGroupView.h"
 
-class MainWindowStandalone;
+class StandaloneMainWindow;
 
 class StandaloneLocalTrackGroupView : public LocalTrackGroupView
 {
     Q_OBJECT
 
 public:
-    StandaloneLocalTrackGroupView(int index, MainWindowStandalone *mainWindow);
+    StandaloneLocalTrackGroupView(int index, StandaloneMainWindow *mainWindow);
 
     BaseTrackView* addTrackView(long trackID) override;
 
