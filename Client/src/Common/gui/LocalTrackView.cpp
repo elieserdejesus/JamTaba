@@ -3,8 +3,7 @@
 #include "MainController.h"
 
 LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex) :
-    BaseTrackView(mainController, 1),
-    // TODO remove trackID (2nd parameter) from constructor?
+    BaseTrackView(mainController, channelIndex),
     inputNode(nullptr)
 {
     if (!mainController) {

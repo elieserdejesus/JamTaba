@@ -24,7 +24,8 @@ MainController::MainController(Settings settings) :
     userNameChoosed(false),
     mainWindow(nullptr),
     jamRecorder(new Recorder::ReaperProjectGenerator()),
-    masterGain(1)
+    masterGain(1),
+    lastInputTrackID(0)
 {
 }
 
@@ -221,7 +222,7 @@ void MainController::saveEncodedAudio(QString userName, quint8 channelIndex,
 void MainController::removeInputTrackNode(int inputTrackIndex)
 {
     QMutexLocker locker(&mutex);
-    if (inputTrackIndex >= 0 && inputTrackIndex < inputTracks.size()) {
+    if (inputTracks.contains(inputTrackIndex)) {
         // remove from group
         Audio::LocalInputAudioNode *inputTrack = inputTracks[inputTrackIndex];
         int trackGroupIndex = inputTrack->getGroupChannelIndex();
@@ -231,15 +232,15 @@ void MainController::removeInputTrackNode(int inputTrackIndex)
                 trackGroups.remove(trackGroupIndex);
         }
 
-        inputTracks.removeAt(inputTrackIndex);
+        inputTracks.remove(inputTrackIndex);
         removeTrack(inputTrackIndex);
     }
 }
 
 int MainController::addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode)
 {
-    inputTracks.append(inputTrackNode);
-    int inputTrackID = inputTracks.size() -1;
+    int inputTrackID = lastInputTrackID++;//input tracks are not created concurrently, no worries about thread safe in this track ID generation, I hope :)
+    inputTracks.insert(inputTrackID, inputTrackNode);
     addTrack(inputTrackID, inputTrackNode);
 
     int trackGroupIndex = inputTrackNode->getGroupChannelIndex();
@@ -254,8 +255,8 @@ int MainController::addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode
 
 Audio::LocalInputAudioNode *MainController::getInputTrack(int localInputIndex)
 {
-    if (localInputIndex >= 0 && localInputIndex < inputTracks.size())
-        return inputTracks.at(localInputIndex);
+    if (inputTracks.contains(localInputIndex))
+        return inputTracks[localInputIndex];
     qCritical() << "wrong input track index " << localInputIndex;
     return nullptr;
 }
@@ -522,11 +523,12 @@ void MainController::deletePreset(QString name)
     return settings.DeletePreset(name);
 }
 
-Persistence::Preset MainController::loadPreset(QString name){
+Persistence::Preset MainController::loadPreset(QString name)
+{
     return settings.readPresetFromFile(name);
 }
 
-//+++++++++++++++++++++++++++++++++++++++
+// +++++++++++++++++++++++++++++++++++++++
 
 void MainController::setFullScreenView(bool fullScreen)
 {
@@ -731,7 +733,9 @@ void MainController::removePlugin(int inputTrackIndex, Audio::Plugin *plugin)
     QMutexLocker locker(&mutex);
     QString pluginName = plugin->getName();
     try{
-        getInputTrack(inputTrackIndex)->removeProcessor(plugin);
+        Audio::AudioNode *trackNode = getInputTrack(inputTrackIndex);
+        if (trackNode)
+            trackNode->removeProcessor(plugin);
     }
     catch (...) {
         qCritical() << "Error removing plugin " << pluginName;
