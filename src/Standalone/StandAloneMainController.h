@@ -3,8 +3,6 @@
 
 #include "MainController.h"
 #include <QApplication>
-#include <QTcpSocket>
-#include <QProcess>
 #include "audio/vst/PluginFinder.h"
 #include "audio/vst/vsthost.h"
 #include "audio/core/Plugins.h"
