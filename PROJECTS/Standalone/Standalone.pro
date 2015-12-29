@@ -26,11 +26,11 @@ DEPENDPATH +=  $$ROOT_PATH/libs/includes/minimp3
 
 VPATH += $$SOURCE_PATH/Standalone
 
-HEADERS += MainWindowStandalone.h
 HEADERS += StandaloneMainController.h
-HEADERS += StandalonePreferencesDialog.h
-HEADERS += StandaloneLocalTrackView.h
-HEADERS += StandaloneLocalTrackGroupView.h
+HEADERS += gui/MainWindowStandalone.h
+HEADERS += gui/StandalonePreferencesDialog.h
+HEADERS += gui/StandaloneLocalTrackView.h
+HEADERS += gui/StandaloneLocalTrackGroupView.h
 HEADERS += gui/ScanFolderPanel.h
 
 HEADERS += audio/core/PortAudioDriver.h
@@ -56,10 +56,10 @@ HEADERS += audio/core/PluginDescriptor.h
 
 SOURCES += main.cpp
 SOURCES += StandaloneMainController.cpp
-SOURCES += MainWindowStandalone.cpp
-SOURCES += StandalonePreferencesDialog.cpp
-SOURCES += StandaloneLocalTrackView.cpp
-SOURCES += StandaloneLocalTrackGroupView.cpp
+SOURCES += gui/MainWindowStandalone.cpp
+SOURCES += gui/StandalonePreferencesDialog.cpp
+SOURCES += gui/StandaloneLocalTrackView.cpp
+SOURCES += gui/StandaloneLocalTrackGroupView.cpp
 SOURCES += gui/ScanFolderPanel.cpp
 
 SOURCES += recorder/JamRecorder.cpp
