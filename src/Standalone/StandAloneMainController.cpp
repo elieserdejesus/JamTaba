@@ -3,9 +3,9 @@
 #include "midi/RtMidiDriver.h"
 #include "audio/core/PortAudioDriver.h"
 
-#include "audio/vst/VstPlugin.h"
-#include "audio/vst/VstHost.h"
-#include "audio/vst/PluginFinder.h"
+#include "vst/VstPlugin.h"
+#include "vst/VstHost.h"
+#include "vst/PluginFinder.h"
 #include "audio/core/PluginDescriptor.h"
 #include "NinjamController.h"
 #include "MainWindowStandalone.h"

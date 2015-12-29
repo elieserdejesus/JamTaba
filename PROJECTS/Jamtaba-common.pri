@@ -28,7 +28,6 @@ CONFIG += c++11
 
 PRECOMPILED_HEADER += PreCompiledHeaders.h
 
-HEADERS += audio/vst/PluginFinder.h
 HEADERS += audio/core/AudioDriver.h
 HEADERS += audio/core/AudioNode.h
 HEADERS += audio/core/AudioMixer.h
@@ -104,7 +103,6 @@ SOURCES += audio/core/Plugins.cpp
 SOURCES += audio/codec.cpp
 SOURCES += gui/plugins/Guis.cpp
 SOURCES += gui/JamRoomViewPanel.cpp
-SOURCES += audio/vst/PluginFinder.cpp
 SOURCES += midi/MidiDriver.cpp
 SOURCES += gui/PreferencesDialog.cpp
 SOURCES += gui/PluginScanDialog.cpp
