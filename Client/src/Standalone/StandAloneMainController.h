@@ -20,35 +20,9 @@ class MidiDriver;
 
 namespace JamtabaVstPlugin {
 class VstHost;
-class StandalonePluginFinder;
 class PluginFinder;
 }
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++
-class StandalonePluginFinder : public Vst::PluginFinder
-{
-    Q_OBJECT
-public:
-    StandalonePluginFinder();
-    ~StandalonePluginFinder();
-
-    void scan(QStringList skipList);
-    void cancel();
-
-private:
-
-    Audio::PluginDescriptor getPluginDescriptor(QFileInfo f);
-    QString buildCommaSeparetedString(QStringList list) const;
-    QProcess scanProcess;
-    QString getVstScannerExecutablePath() const;
-    QString lastScannedPlugin;// used to recover the last plugin path when the scanner process crash
-    void handleProcessError(QString lastScannedPlugin);
-
-private slots:
-    void on_processStandardOutputReady();
-    void on_processFinished();
-    void on_processError(QProcess::ProcessError);
-};
 // ++++++++++++++++++++++++++++++++++++++++++
 
 namespace Controller {
