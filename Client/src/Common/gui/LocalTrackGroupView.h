@@ -91,7 +91,7 @@ private slots:
     void removeSubchannel();
     void removeChannel();
 
-    void loadPreset(QAction *a);
+    void loadPreset(QAction *action);
     void savePreset();
     void resetPreset();
     void deletePreset();

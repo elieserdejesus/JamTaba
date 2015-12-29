@@ -119,9 +119,8 @@ QMenu *LocalTrackGroupView::createPresetsSubMenu()
         QAction *presetAction = presetsMenu->addAction(name);
         // putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
         presetAction->setData(name);
-        QObject::connect(presetsMenu, SIGNAL(triggered(QAction *)), this, SLOT(loadPreset(
-                                                                                   QAction *)));
     }
+    QObject::connect(presetsMenu, SIGNAL(triggered(QAction *)), this, SLOT(loadPreset(QAction *)));
     presetsMenu->setEnabled(!presetsNames.isEmpty());
 
     return presetsMenu;
@@ -249,10 +248,10 @@ void LocalTrackGroupView::removeChannel()
 }
 
 // PRESETS
-void LocalTrackGroupView::loadPreset(QAction *a)
+void LocalTrackGroupView::loadPreset(QAction *action)
 {
     Controller::MainController *mainController = mainFrame->getMainController();
-    QString presetFileName = a->data().toString();
+    QString presetFileName = action->data().toString();
     Persistence::Preset preset = mainController->loadPreset(presetFileName);
     if(preset.isValid()){
         mainFrame->loadPresetToTrack(preset);

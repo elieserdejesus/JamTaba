@@ -329,6 +329,7 @@ void MainWindow::initializeLocalInputChannels(LocalInputTrackSettings inputsSett
     qCInfo(jtGUI) << "Initializing local inputs done!";
 
     QApplication::restoreOverrideCursor();
+    //updateLocalInputChannelsGeometry();
 }
 
 void MainWindow::initializeLoginService()
