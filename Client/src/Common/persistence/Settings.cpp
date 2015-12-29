@@ -287,99 +287,6 @@ void VstSettings::read(QJsonObject in)
 }
 
 // +++++++++++++++++++++++++++++++++++++++
-PresetsSettings::PresetsSettings() :
-    SettingsObject("PRESETS")
-{
-}
-
-// PRESET JSON WRITER
-void PresetsSettings::write(QJsonObject &out)
-{
-    QJsonArray channelsArray;
-    foreach (const Channel &track, channels) {
-        QJsonObject channelObject;
-        channelObject["name"] = track.name;
-        QJsonArray subchannelsArrays;
-        foreach (const Subchannel &sub, track.subChannels) {
-            QJsonObject subChannelObject;
-            subChannelObject["firstInput"] = sub.firstInput;
-            subChannelObject["channelsCount"] = sub.channelsCount;
-            subChannelObject["midiDevice"] = sub.midiDevice;
-            subChannelObject["midiChannel"] = sub.midiChannel;
-            subChannelObject["gain"] = sub.gain;
-            subChannelObject["boost"] = sub.boost;
-            subChannelObject["pan"] = sub.pan;
-            subChannelObject["muted"] = sub.muted;
-
-            QJsonArray pluginsArray;
-            foreach (Persistence::Plugin plugin, sub.getPlugins()) {
-                QJsonObject pluginObject;
-                pluginObject["path"] = plugin.path;
-                pluginObject["bypassed"] = plugin.bypassed;
-                pluginObject["data"] = QString(plugin.data.toBase64());
-                pluginsArray.append(pluginObject);
-            }
-            subChannelObject["plugins"] = pluginsArray;
-
-            subchannelsArrays.append(subChannelObject);
-        }
-        channelObject["subchannels"] = subchannelsArrays;
-        channelsArray.append(channelObject);
-    }
-    out["channels"] = channelsArray;
-}
-
-void PresetsSettings::read(QJsonObject in)
-{
-    // todooooo ....
-    if (in.contains("channels")) {
-        QJsonArray channelsArray = in["channels"].toArray();
-        for (int i = 0; i < channelsArray.size(); ++i) {
-            QJsonObject channelObject = channelsArray.at(i).toObject();
-            Persistence::Channel channel(getValueFromJson(channelObject, "name", QString("")));
-            if (channelObject.contains("subchannels")) {
-                QJsonArray subChannelsArray = channelObject["subchannels"].toArray();
-                for (int k = 0; k < subChannelsArray.size(); ++k) {
-                    QJsonObject subChannelObject = subChannelsArray.at(k).toObject();
-                    int firstInput = getValueFromJson(subChannelObject, "firstInput", 0);
-                    int channelsCount = getValueFromJson(subChannelObject, "channelsCount", 0);
-                    int midiDevice = getValueFromJson(subChannelObject, "midiDevice", -1);
-                    int midiChannel = getValueFromJson(subChannelObject, "midiChannel", -1);
-                    float gain = getValueFromJson(subChannelObject, "gain", (float)1);
-                    int boost = getValueFromJson(subChannelObject, "boost", (int)0);
-                    float pan = getValueFromJson(subChannelObject, "pan", (float)0);
-                    bool muted = getValueFromJson(subChannelObject, "muted", false);
-
-                    QList<Plugin> plugins;
-                    if (subChannelObject.contains("plugins")) {
-                        QJsonArray pluginsArray = subChannelObject["plugins"].toArray();
-                        for (int p = 0; p < pluginsArray.size(); ++p) {
-                            QJsonObject pluginObject = pluginsArray.at(p).toObject();
-                            QString pluginPath
-                                = getValueFromJson(pluginObject, "path", QString(""));
-                            bool bypassed = getValueFromJson(pluginObject, "bypassed", false);
-                            QString dataString
-                                = getValueFromJson(pluginObject, "data", QString(""));
-                            if (!pluginPath.isEmpty() && QFile(pluginPath).exists()) {
-                                QByteArray rawByteArray(dataString.toStdString().c_str());
-                                plugins.append(Persistence::Plugin(pluginPath, bypassed,
-                                                                   QByteArray::fromBase64(
-                                                                       rawByteArray)));
-                            }
-                        }
-                    }
-                    Persistence::Subchannel subChannel(firstInput, channelsCount, midiDevice,
-                                                       midiChannel, gain, boost, pan, muted);
-                    subChannel.setPlugins(plugins); //TODO add a default parameter to plugins in SubChannel constructor
-                    channel.subChannels.append(subChannel);
-                }
-                this->channels.append(channel);
-            }
-        }
-    }
-}
-
-// ++++++++++++++++++++++++++++++++++++++++++
 Channel::Channel(QString name) :
     name(name)
 {
@@ -405,12 +312,20 @@ Subchannel::Subchannel(int firstInput, int channelsCount, int midiDevice, int mi
 {
 }
 
-InputsSettings::InputsSettings() :
+LocalInputTrackSettings::LocalInputTrackSettings(bool createOneTrack) :
     SettingsObject("inputs")
 {
+    if(createOneTrack){
+        // create a default channel
+        Channel channel("my channel");
+        Subchannel subchannel(0, 2, -1, -1, 1.0f, 1.0f, 0.0f, false);
+        channel.subChannels.append(subchannel);
+        this->channels.append(channel);
+    }
+
 }
 
-void InputsSettings::write(QJsonObject &out)
+void LocalInputTrackSettings::write(QJsonObject &out)
 {
     QJsonArray channelsArray;
     foreach (const Channel &channel, channels) {
@@ -446,7 +361,7 @@ void InputsSettings::write(QJsonObject &out)
     out["channels"] = channelsArray;
 }
 
-void InputsSettings::read(QJsonObject in)
+void LocalInputTrackSettings::read(QJsonObject in)
 {
     if (in.contains("channels")) {
         QJsonArray channelsArray = in["channels"].toArray();
@@ -686,22 +601,17 @@ bool Settings::writeFile(APPTYPE type, QList<SettingsObject *> sections)// io op
 }
 
 // PRESETS
-bool Settings::writePresetFile(QList<SettingsObject *> sections, QString name)
+bool Settings::writePresetToFile(Preset preset)
 {
-    // Works with Configurator
-
-    QString absolutePath = Configurator::getInstance()->getPresetPath(name);
+    QString absolutePath = Configurator::getInstance()->getPresetPath(preset.name);
     QFile file(absolutePath);
     if (file.open(QIODevice::WriteOnly)) {
-        QJsonObject root;
-        root["presetName"] = name;
+        QJsonObject inputTracksJsonObject;
+        preset.inputTrackSettings.write(inputTracksJsonObject);// write the channels and subchannels in the json object
 
-        // write sections
-        foreach (SettingsObject *so, sections) {
-            QJsonObject sectionObject;
-            so->write(sectionObject);
-            root[so->getName()] = sectionObject;
-        }
+        QJsonObject root;
+        root[preset.name] = inputTracksJsonObject;
+
         QJsonDocument doc(root);
         file.write(doc.toJson());
         return true;
@@ -711,52 +621,31 @@ bool Settings::writePresetFile(QList<SettingsObject *> sections, QString name)
     return false;
 }
 
-bool Settings::readPresetFile(QList<Persistence::SettingsObject *> sections, QString name)
+// ++++++++++++++++++++++++++++++
+Preset::Preset(QString name, LocalInputTrackSettings inputSettings)
+    :name(name), inputTrackSettings(inputSettings){
+}
+
+// ++++++++++++++
+Preset Settings::readPresetFromFile(QString presetFileName)
 {
-    QString absolutePath = Configurator::getInstance()->getPresetPath(name);
-    // QFile file(absolutePath);
-    QFile f(absolutePath);
-    qInfo(jtConfigurator) << "JSON Location :"<<absolutePath;
-    if (f.open(QIODevice::ReadOnly)) {
-        qInfo(jtConfigurator) << "Reading PRESET from " << f.fileName();
-        QJsonDocument doc = QJsonDocument::fromJson(f.readAll());
+    QString absolutePath = Configurator::getInstance()->getPresetPath(presetFileName);
+    QFile presetFile(absolutePath);
+    if (presetFile.open(QIODevice::ReadOnly)) {
+        QJsonDocument doc = QJsonDocument::fromJson(presetFile.readAll());
         QJsonObject root = doc.object();
-
-        // read preset name , duno yet what it will serve ..
-        if (root.contains("presetName"))
-            QString presetName = root["presetName"].toString();
-
-
-        // read settings sections (Audio settings, Midi settings, ninjam settings, etc...)
-        foreach (SettingsObject *so, sections) {
-            so->read(root[so->getName()].toObject());
-            presetSettings.names.append(name);
+        QString presetName = "default";
+        if (!root.keys().isEmpty()){
+            presetName = root.keys().first();
+            Preset preset(presetName);
+            preset.inputTrackSettings.read(root[presetName].toObject());
+            return preset;
         }
-        return true;
     } else {
-        qWarning(jtConfigurator) << "Settings : Can't load PRESET file:" << f.errorString();
+        qWarning(jtConfigurator) << "Settings : Can't load PRESET file:"
+                                 << presetFile.errorString();
     }
-
-    return false;
-}
-
-// Using the new class presetSettings
-void Settings::loadPreset(QString name)
-{
-    presetSettings.channels.clear();// very important to avoid a stack...
-    QList<Persistence::SettingsObject *> sections;
-    sections.append(&presetSettings);
-
-    // NEW COOL CONFIGURATOR STUFF INSIDE
-    if (readPresetFile(sections, name))
-        qInfo(jtConfigurator) << "Settings : Presets loaded :" << name;
-    else
-        qInfo(jtConfigurator) << "Settings : Presets couldn't be loaded :" << name;
-}
-
-QStringList Settings::getPresetList()
-{
-    return Configurator::getInstance()->getPresetFilesNames(false);
+    return Preset();// returning an empty/invalid preset
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -782,7 +671,7 @@ Settings::Settings() :
     // qDebug() << "Settings in " << fileDir;
 }
 
-void Settings::save(Persistence::InputsSettings inputsSettings)
+void Settings::save(Persistence::LocalInputTrackSettings inputsSettings)
 {
     this->inputsSettings = inputsSettings;
     QList<Persistence::SettingsObject *> sections;
@@ -795,31 +684,7 @@ void Settings::save(Persistence::InputsSettings inputsSettings)
     sections.append(&recordingSettings);
     sections.append(&privateServerSettings);
 
-    // NEW COOL CONFIGURATOR STUFF
     writeFile(Configurator::getInstance()->getAppType(), sections);
-}
-
-// PRESETS TEST
-void Settings::savePresets(InputsSettings inputsSettings, QString name)
-{
-    // this->inputsSettings = inputsSettings;
-    this->presetSettings.channels = inputsSettings.channels;
-    this->presetSettings.names.append(name);
-    QList<Persistence::SettingsObject *> sections;
-    // sections.append(&audioSettings);
-    // sections.append(&midiSettings);
-    // sections.append(&windowSettings);
-    // sections.append(&metronomeSettings);
-    // sections.append(&vstSettings);
-    sections.append(&this->presetSettings);
-    // sections.append(&recordingSettings);
-    // sections.append(&privateServerSettings);
-
-    // NEW COOL CONFIGURATOR STUFF
-    if (writePresetFile(sections, name))
-        qInfo(jtConfigurator) << "Settings : Presets written :" << name;
-    else
-        qInfo(jtConfigurator) << "Settings : Presets couldn't be written :" << name;
 }
 
 void Settings::DeletePreset(QString name)

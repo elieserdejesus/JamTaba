@@ -56,7 +56,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 // ++++++++++++++++++++++++=
 void MainWindow::initialize()
 {
-    initializeLocalInputChannels();
+    // initialize using last track input settings
+    initializeLocalInputChannels(mainController->getSettings().getInputsSettings());
 }
 
 // ++++++++++++++++++++++++=
@@ -119,9 +120,9 @@ void MainWindow::toggleLocalInputsCollapseStatus()
 }
 
 // ++++++++++++++++++++++++=
-Persistence::InputsSettings MainWindow::getInputsSettings() const
+Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
 {
-    InputsSettings settings;
+    LocalInputTrackSettings settings;
     foreach (LocalTrackGroupView *trackGroupView, localGroupChannels) {
         trackGroupView->getTracks();
         Channel channel(trackGroupView->getGroupName());
@@ -275,138 +276,59 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainWindow::loadPresetToTrack()
+void MainWindow::loadPresetToTrack(Persistence::Preset preset)
 {
-    // we gonna assign each group of the console surface
-    int groupSize = localGroupChannels.size();
-    qCDebug(jtConfigurator) << "************PRESET LOADING ***********";
-
-    qCInfo(jtConfigurator) << "Initializing ControlSurface...";
-    qCInfo(jtConfigurator) << "Number of groups in controlSurface :"<<groupSize;
-
-    QList< LocalTrackView * > tracks;
-    Persistence::PresetsSettings preset = mainController->getSettings().getPresetSettings();
-
-    int presetsCount = preset.channels.size();
-    qCInfo(jtConfigurator) << "Number of groups in Preset :"<<presetsCount;
-
-    // if there is more groups in the preset
-    if (groupSize < presetsCount) {
-        int count = presetsCount-groupSize;
-        qCInfo(jtConfigurator) << "Creating :"<<count<<" group";
-
-        for (int i = 0; i < count; i++) {
-            addLocalChannel(0, " new Group", true);
-            groupSize++;
-            qCInfo(jtConfigurator) << "Group size is now :"<<groupSize<<" group";
-        }
-    } else if (groupSize > presetsCount) {
-        int count = groupSize-presetsCount;
-        qCInfo(jtConfigurator) << "removing :"<<count<<" group";
-
-        for (int i = 0; i < count; i++) {
-            removeChannelsGroup(count);
-            groupSize--;
-            qCInfo(jtConfigurator) << "Group size is now :"<<groupSize<<" group";
-        }
+    if (preset.isValid()) {
+        removeAllInputLocalTracks();
+        initializeLocalInputChannels(preset.inputTrackSettings);
     }
-
-    // LOOP inside the local channels
-    for (int group = 0; group < groupSize; group++) {
-        qCInfo(jtConfigurator) << "......................................";
-        // load the name of the group
-        localGroupChannels.at(group)->setGroupName(preset.channels.at(group).name);
-
-        tracks = localGroupChannels.at(group)->getTracks();// get the tracks of that group
-        int channelsCount = tracks.size();
-        qCInfo(jtConfigurator) << "Loading group :"<<group;
-        qCInfo(jtConfigurator) << "Number of tracks in group :"<<channelsCount;
-
-        // compute tracks to create ( if any ) in that group
-        int channelsToCreate = 0;
-        int subChannelsCount = preset.channels.at(group).subChannels.size();
-        qCInfo(jtConfigurator) << "Number of tracks in preset :"<<subChannelsCount;
-
-        // ADD OR DELETE TRACKS
-        if (channelsCount < subChannelsCount) {// must create a track
-            channelsToCreate = subChannelsCount-channelsCount;
-            qCInfo(jtConfigurator) << "Number of tracks to create : "<<channelsToCreate;
-
-            for (int i = 0; i < channelsToCreate; i++) {
-                localGroupChannels.at(group)->addTrackView(i+1);
-                qCInfo(jtConfigurator) << "SubTrack added in group : "<<group;
-            }
-        } else if (channelsCount > subChannelsCount) {// must delete a track
-            int channelsToDelete = channelsCount-subChannelsCount;
-            qCInfo(jtConfigurator) << "Number of tracks to delete : "<<channelsToDelete;
-
-            for (int i = 0; i < channelsToDelete; i++) {
-                localGroupChannels.at(group)->removeTrackView(channelsToDelete);
-                qCInfo(jtConfigurator) << "SubTrack removed in group : "<<group;
-            }
-        }
-
-        // now the preset's SUB track count ;
-        tracks = localGroupChannels.at(group)->getTracks();
-        channelsCount = tracks.size();
-
-        // assign preset to indexed tracks
-        for (int index = 0; index < channelsCount; index++) {
-            // gain
-            qCInfo(jtConfigurator) << "<<<<<<<<<<<<<<<<<<<<";
-            float gain = preset.channels.at(group).subChannels.at(index).gain;
-            tracks.at(index)->getInputNode()->setGain(gain);
-            qCInfo(jtConfigurator) << "Track"<<index<<" gain : "<<gain<<" for"<<index;
-
-            // pan
-            float pan = preset.channels.at(group).subChannels.at(index).pan;
-            tracks.at(index)->getInputNode()->setPan(pan);
-            qCInfo(jtConfigurator) << "Track "<<index<<"Pan : "<<pan<<" for"<<index;
-
-            // boost
-            int boost = preset.channels.at(group).subChannels.at(index).boost;
-            BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(boost);
-            tracks.at(index)->initializeBoostButtons(boostValue);
-            qCInfo(jtConfigurator) << "Boost "<<index<<"index : "<<boostValue<<" for"<<index;
-
-            // mute
-            bool muted = preset.channels.at(group).subChannels.at(index).muted;
-            tracks.at(index)->getInputNode()->setMute(muted);
-            qCInfo(jtConfigurator) << "Mute "<<index<<"state : "<<muted<<" for"<<index;
-        }
-    }
-    qCInfo(jtConfigurator) << "***********************************";
 }
 
-void MainWindow::initializeLocalInputChannels()
+void MainWindow::removeAllInputLocalTracks()
 {
+    foreach (LocalTrackGroupView *trackGroupView, localGroupChannels) {
+        ui.localTracksLayout->removeWidget(trackGroupView);
+        foreach (LocalTrackView *trackView, trackGroupView->getTracks())
+            mainController->removeInputTrackNode(trackView->getTrackID());
+        trackGroupView->deleteLater();
+    }
+    localGroupChannels.clear();
+}
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// this function is overrided in MainWindowStandalone to load input selections and plugins
+void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView,
+                                                Persistence::Subchannel subChannel)
+{
+    BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
+    localTrackView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted);
+}
+
+void MainWindow::initializeLocalInputChannels(LocalInputTrackSettings inputsSettings)
+{
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents();
+
     qCInfo(jtGUI) << "Initializing local inputs...";
-    Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
     int channelIndex = 0;
     foreach (Persistence::Channel channel, inputsSettings.channels) {
         qCInfo(jtGUI) << "\tCreating channel "<< channel.name;
+        bool createFirstSubChannel = channel.subChannels.isEmpty();
         LocalTrackGroupView *channelView = addLocalChannel(channelIndex, channel.name,
-                                                           channel.subChannels.isEmpty());
+                                                           createFirstSubChannel);
         foreach (Persistence::Subchannel subChannel, channel.subChannels) {
             qCInfo(jtGUI) << "\t\tCreating sub-channel ";
-            BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
             LocalTrackView *subChannelView
                 = dynamic_cast<LocalTrackView *>(channelView->addTrackView(channelIndex));
-            subChannelView->setInitialValues(subChannel.gain, boostValue, subChannel.pan,
-                                             subChannel.muted);
-            if (canCreateSubchannels()) {
-                // initializeSubChannel(subChannel, subChannelView);
-                // TODO need the code removed here
-                // Eu acho que esse if é totalmente desnecessáio, essa classe nunca vai criar subchannels?
-            } else {
-                break;// avoid hacking in config file to create more subchannels in VST plugin.
-            }
+            initializeLocalSubChannel(subChannelView, subChannel);
         }
         channelIndex++;
     }
     if (channelIndex == 0)// no channels in settings file or no settings file...
         addLocalChannel(0, "your channel", true);
     qCInfo(jtGUI) << "Initializing local inputs done!";
+
+    QApplication::restoreOverrideCursor();
 }
 
 void MainWindow::initializeLoginService()
@@ -846,9 +768,8 @@ MainWindow::~MainWindow()
 {
     qCDebug(jtGUI) << "MainWindow destructor...";
     setParent(nullptr);
-    if (mainController) {
+    if (mainController)
         mainController->stop();
-    }
 
     foreach (LocalTrackGroupView *groupView, this->localGroupChannels)
         groupView->detachMainControllerInSubchannels();

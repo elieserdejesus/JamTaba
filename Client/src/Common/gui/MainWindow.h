@@ -28,7 +28,7 @@ public:
 
     void detachMainController();
 
-    virtual Persistence::InputsSettings getInputsSettings() const;
+    virtual Persistence::LocalInputTrackSettings getInputsSettings() const;
 
     inline int getChannelGroupsCount() const
     {
@@ -65,7 +65,7 @@ public:
         return mainController;
     }
 
-    virtual void loadPresetToTrack();
+    virtual void loadPresetToTrack(Persistence::Preset preset);
     void resetGroupChannel(LocalTrackGroupView *group);// should load the defaultPreset.json ?
 
     bool isTransmiting(int channelID) const;
@@ -100,14 +100,9 @@ protected:
 
     virtual void showPreferencesDialog(int initialTab) = 0;
 
+    virtual void initializeLocalSubChannel(LocalTrackView *localTrackView, Persistence::Subchannel subChannel);
+
     void stopCurrentRoomStream();
-
-    virtual void loadSubChannel(Persistence::Subchannel subChannel,
-                                LocalTrackView *subChannelView) = 0;
-
-    virtual void initializeSubChannel(Persistence::Subchannel subChannel,
-                                      LocalTrackView *subChannelView) = 0;
-    // TODO the code to loading channels (load preset) and to initialize local inputs is the same, but is almost duplicated at moment.
 
 protected slots:
     void closeTab(int index);
@@ -213,7 +208,7 @@ private:
 
     void initializeWindowState();
     void initializeLoginService();
-    void initializeLocalInputChannels();
+    void initializeLocalInputChannels(Persistence::LocalInputTrackSettings localInputSettings);
 
     void initializeMainTabWidget();
     void initializeViewModeMenu();
@@ -234,6 +229,9 @@ private:
 
     void setupSignals();
     void setupWidgets();
+
+    void removeAllInputLocalTracks();
+    void recreatePresetTracks(Persistence::Preset preset);
 
     // PerformanceMonitor performanceMonitor;//cpu and memmory usage
     // qint64 lastPerformanceMonitorUpdate;

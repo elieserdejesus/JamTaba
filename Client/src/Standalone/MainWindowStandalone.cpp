@@ -18,7 +18,69 @@ MainWindowStandalone::MainWindowStandalone(StandaloneMainController *controller)
     controller(controller)
 {
     initializePluginFinder();
-    QTimer::singleShot(50, this, &MainWindowStandalone::restorePluginsList);
+}
+
+bool MainWindowStandalone::midiDeviceIsValid(int deviceIndex) const
+{
+    return deviceIndex < controller->getMidiDriver()->getMaxInputDevices();
+}
+
+// sanitize the input selection for each loaded subchannel
+void MainWindowStandalone::sanitizeSubchannelInputSelections(LocalTrackView *subChannelView,
+                                                             Subchannel subChannel)
+{
+    int trackID = subChannelView->getInputIndex();
+    if (subChannel.isMidi()) {
+        if (midiDeviceIsValid(subChannel.midiChannel)) {
+            controller->setInputTrackToMIDI(trackID, subChannel.midiDevice, subChannel.midiChannel);
+        } else {
+            if (controller->getMidiDriver()->hasInputDevices()) {
+                // use the first midi device and receiving from all channels
+                controller->setInputTrackToMIDI(trackID, 0, -1);
+            } else {
+                controller->setInputTrackToNoInput(trackID);
+            }
+        }
+    } else if (subChannel.isNoInput()) {
+        controller->setInputTrackToNoInput(trackID);
+    } else if (subChannel.isMono()) {
+        controller->setInputTrackToMono(trackID, subChannel.firstInput);
+    } else {
+        controller->setInputTrackToStereo(trackID, subChannel.firstInput);
+    }
+}
+
+void MainWindowStandalone::restoreLocalSubchannelPluginsList(StandaloneLocalTrackView *subChannelView,
+                                                             Subchannel subChannel)
+{
+    // create the plugins list
+    foreach (Persistence::Plugin plugin, subChannel.getPlugins()) {
+        QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
+        Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path);
+        Audio::Plugin *pluginInstance = mainController->addPlugin(subChannelView->getInputIndex(), descriptor);
+        if (pluginInstance) {
+            try{
+                pluginInstance->restoreFromSerializedData(plugin.data);
+            }
+            catch (...) {
+                qWarning() << "Exception restoring " << pluginInstance->getName();
+            }
+            subChannelView->addPlugin(pluginInstance, plugin.bypassed);
+        }
+        QApplication::processEvents();
+    }
+}
+
+void MainWindowStandalone::initializeLocalSubChannel(LocalTrackView *subChannelView,
+                                                     Subchannel subChannel)
+{
+    // load channels names, gain, pan, boost, mute
+    MainWindow::initializeLocalSubChannel(subChannelView, subChannel);
+
+    // check if the loaded input selections (midi, audio mono, audio stereo) are stil valid and fallback if not
+    sanitizeSubchannelInputSelections(subChannelView, subChannel);
+
+    restoreLocalSubchannelPluginsList( dynamic_cast<StandaloneLocalTrackView*>(subChannelView), subChannel);
 }
 
 LocalTrackGroupView *MainWindowStandalone::createLocalTrackGroupView(int channelGroupIndex)
@@ -47,13 +109,13 @@ QList<Persistence::Plugin> buildPersistentPluginList(QList<const Audio::Plugin *
     return persistentPlugins;
 }
 
-InputsSettings MainWindowStandalone::getInputsSettings() const
+LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
 {
     // the base class is returning just the basic: gain, mute, pan , etc for each channel and subchannel
-    InputsSettings baseSettings = MainWindow::getInputsSettings();
+    LocalInputTrackSettings baseSettings = MainWindow::getInputsSettings();
 
     // recreate the settings including the plugins
-    InputsSettings settings;
+    LocalInputTrackSettings settings;
     foreach (Channel channel, baseSettings.channels) {
         StandaloneLocalTrackGroupView *trackGroupView = geTrackGroupViewByName(channel.name);
         if (!trackGroupView)
@@ -68,20 +130,15 @@ InputsSettings MainWindowStandalone::getInputsSettings() const
                 = dynamic_cast<StandaloneLocalTrackView *>(trackViews.at(subChannelID));
             if (trackView)
                 newSubChannel.setPlugins(buildPersistentPluginList(trackView->getInsertedPlugins()));
+
+
             subChannelID++;
             newChannel.subChannels.append(newSubChannel);
         }
         settings.channels.append(newChannel);
     }
 
-
     return settings;
-}
-
-void MainWindowStandalone::loadSubChannel(Subchannel subChannel, LocalTrackView *subChannelView)
-{
-    // TODO perdi esse código. O nome do método não era esse, eu criei isso para carregar plugins
-    // somente no standalone
 }
 
 NinjamRoomWindow *MainWindowStandalone::createNinjamWindow(Login::RoomInfo roomInfo,
@@ -112,51 +169,7 @@ void MainWindowStandalone::closeEvent(QCloseEvent *e)
         trackGroup->closePluginsWindows();
 }
 
-void MainWindowStandalone::showEvent(QShowEvent *ent)
-{
-    Q_UNUSED(ent)
-// TODO restorePluginsList(bool fromSettings)
-    // wait 50 ms before restore the plugins list to avoid freeze the GUI in hidden state while plugins are loading
-    // QTimer::singleShot(50, this, &MainWindowStandalone::restorePluginsList);
-}
-
 // ++++++++++++++++++++++
-void MainWindowStandalone::initializeSubChannel(Persistence::Subchannel subChannel,
-                                                LocalTrackView *subChannelView)
-{
-    if (subChannel.midiDevice >= 0) {// using midi
-        qCInfo(jtGUI) << "\t\tSubchannel using MIDI";
-        Midi::MidiDriver *midiDriver = controller->getMidiDriver();
-        // check if midiDevice index is valid
-        if (subChannel.midiDevice < midiDriver->getMaxInputDevices()) {
-            controller->setInputTrackToMIDI(
-                subChannelView->getInputIndex(), subChannel.midiDevice,
-                subChannel.midiChannel);
-        } else {
-            if (midiDriver->hasInputDevices()) {
-                // use the first midi device and all channels
-                controller->setInputTrackToMIDI(
-                    subChannelView->getInputIndex(), 0, -1);
-            } else {
-                controller->setInputTrackToNoInput(subChannelView->getInputIndex());
-            }
-        }
-    } else if (subChannel.channelsCount <= 0) {
-        qCInfo(jtGUI) << "\t\tsetting Subchannel to no noinput";
-        controller->setInputTrackToNoInput(subChannelView->getInputIndex());
-    } else if (subChannel.channelsCount == 1) {
-        qCInfo(jtGUI) << "\t\tsetting Subchannel to mono input";
-        controller->setInputTrackToMono(
-            subChannelView->getInputIndex(), subChannel.firstInput);
-    } else {
-        qCInfo(jtGUI) << "\t\tsetting Subchannel to stereo input";
-        controller->setInputTrackToStereo(
-            subChannelView->getInputIndex(), subChannel.firstInput);
-    }
-}
-
-// ++++++++++++++++++++++
-
 void MainWindowStandalone::showPreferencesDialog(int initialTab)
 {
     stopCurrentRoomStream();
@@ -204,148 +217,6 @@ void MainWindowStandalone::initializePluginFinder()
         controller->saveLastUserSettings(getInputsSettings());// save config file before scan
         controller->scanPlugins(true);
     }
-}
-
-void MainWindowStandalone::loadPresetToTrack()
-{
-    MainWindow::loadPresetToTrack();
-
-    Persistence::PresetsSettings preset = mainController->getSettings().getPresetSettings();
-
-    for (int group = 0; group < localGroupChannels.size(); ++group) {
-        int tracksCount = localGroupChannels.at(group)->getTracksCount();
-        QList<LocalTrackView *> trackViews = localGroupChannels.at(group)->getTracks();
-        for (int index = 0; index < tracksCount; index++) {
-            StandaloneLocalTrackView *trackView
-                = dynamic_cast<StandaloneLocalTrackView *>(trackViews.at(index));
-            trackView->reset(); // first we remove plugins
-            // create the plugins list
-
-            Persistence::Subchannel subChannel = preset.channels.at(group).subChannels.at(index);
-
-            QList<Persistence::Plugin> plugins = subChannel.getPlugins();
-
-            // load plugins
-            int plugCount = plugins.size();
-            if (plugCount > 0) {
-                QApplication::setOverrideCursor(Qt::WaitCursor);
-                QApplication::processEvents();
-
-                for (int i = 0; i < plugCount; i++) {
-                    QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugins.at(
-                                                                                            i).path);
-                    Audio::PluginDescriptor descriptor(pluginName, "VST", plugins.at(i).path);
-                    Audio::Plugin *pluginInstance = mainController->addPlugin(
-                        trackView->getInputIndex(), descriptor);
-                    if (pluginInstance) {
-                        try{
-                            pluginInstance->restoreFromSerializedData(plugins.at(i).data);
-                        }
-                        catch (...) {
-                            qWarning() << "Exception restoring " << pluginInstance->getName();
-                        }
-
-                        trackView->addPlugin(pluginInstance, plugins.at(i).bypassed);
-                        qCInfo(jtConfigurator) << "Plugin Added :"<<pluginInstance->getName()
-                                               <<" in track : "<<trackView->getInputIndex();
-                    }
-                }
-                QApplication::restoreOverrideCursor();
-            }
-
-            if (canCreateSubchannels()) {
-                // load subchannel
-                StandaloneMainController *controller
-                    = dynamic_cast<StandaloneMainController *>(mainController);
-
-                // using midi
-                if (subChannel.midiDevice >= 0) {
-                    qCInfo(jtConfigurator) << "\t\tSubchannel using MIDI";
-                    Midi::MidiDriver *midiDriver = controller->getMidiDriver();
-                    // check if midiDevice index is valid
-                    if (subChannel.midiDevice < midiDriver->getMaxInputDevices()) {
-                        qCInfo(jtConfigurator) << "\t\tMidi device index : "<<subChannel.midiDevice;
-
-                        controller->setInputTrackToMIDI(
-                            trackView->getInputIndex(), subChannel.midiDevice,
-                            subChannel.midiChannel);
-                    } else {
-                        if (midiDriver->hasInputDevices()) {
-                            qCInfo(jtConfigurator) << "\t\tSubchannel using default Midi ";
-
-                            // use the first midi device and all channels
-                            controller->setInputTrackToMIDI(
-                                trackView->getInputIndex(), 0, -1);
-                        } else {
-                            qCInfo(jtConfigurator) << "\t\tSubchannel using "
-                                                   <<subChannel.midiDevice;
-
-                            controller->setInputTrackToNoInput(trackView->getInputIndex());
-                        }
-                    }
-                } else if (subChannel.channelsCount <= 0) {
-                    qCInfo(jtConfigurator) << "\t\tsetting Subchannel to no noinput";
-                    controller->setInputTrackToNoInput(trackView->getInputIndex());
-                } else if (subChannel.channelsCount == 1) {
-                    qCInfo(jtConfigurator) << "\t\tsetting Subchannel to mono input";
-                    controller->setInputTrackToMono(trackView->getInputIndex(),
-                                                    subChannel.firstInput);
-                } else {
-                    qCInfo(jtConfigurator) << "\t\tsetting Subchannel to stereo input";
-                    controller->setInputTrackToStereo(trackView->getInputIndex(),
-                                                      subChannel.firstInput);
-                }
-            }
-        }
-    }
-}
-
-void MainWindowStandalone::restorePluginsList()
-{
-    qCInfo(jtGUI) << "Restoring plugins list...";
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    QApplication::processEvents();
-
-    Persistence::InputsSettings inputsSettings = mainController->getSettings().getInputsSettings();
-    int channelIndex = 0;
-    foreach (Persistence::Channel channel, inputsSettings.channels) {
-        LocalTrackGroupView *channelView = localGroupChannels.at(channelIndex);
-        if (channelView) {
-            int subChannelIndex = 0;
-            QList<LocalTrackView *> tracks = channelView->getTracks();
-            foreach (Persistence::Subchannel subChannel, channel.subChannels) {
-                StandaloneLocalTrackView *subChannelView
-                    = dynamic_cast<StandaloneLocalTrackView *>(tracks.at(subChannelIndex));
-                if (subChannelView) {
-                    // create the plugins list
-                    foreach (Persistence::Plugin plugin, subChannel.getPlugins()) {
-                        QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(
-                            plugin.path);
-                        Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path);
-                        Audio::Plugin *pluginInstance = mainController->addPlugin(
-                            subChannelView->getInputIndex(), descriptor);
-                        if (pluginInstance) {
-                            try{
-                                pluginInstance->restoreFromSerializedData(plugin.data);
-                            }
-                            catch (...) {
-                                qWarning() << "Exception restoring " << pluginInstance->getName();
-                            }
-
-                            subChannelView->addPlugin(pluginInstance, plugin.bypassed);
-                        }
-                        QApplication::processEvents();
-                    }
-                }
-                subChannelIndex++;
-            }
-        }
-        channelIndex++;
-    }
-    qCInfo(jtGUI) << "Restoring plugins list done!";
-
-    QApplication::restoreOverrideCursor();
 }
 
 void MainWindowStandalone::handleServerConnectionError(QString msg)

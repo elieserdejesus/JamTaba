@@ -3,6 +3,7 @@
 
 #include "MainWindow.h"
 #include "StandaloneLocalTrackGroupView.h"
+#include "StandaloneLocalTrackView.h"
 #include "StandAloneMainController.h"
 
 using namespace Controller;
@@ -13,17 +14,13 @@ class MainWindowStandalone : public MainWindow
 public:
     MainWindowStandalone(StandaloneMainController *controller);
 
-    void loadPresetToTrack() override;
-
-    Persistence::InputsSettings getInputsSettings() const override;
+    Persistence::LocalInputTrackSettings getInputsSettings() const override;
 
     void addChannelsGroup(QString groupName) override;
 
     void refreshTrackInputSelection(int inputTrackIndex);
 
 protected:
-    void showEvent(QShowEvent *ent) override;
-
     void closeEvent(QCloseEvent *);
 
     NinjamRoomWindow *createNinjamWindow(Login::RoomInfo, MainController *) override;
@@ -32,10 +29,11 @@ protected:
 
     void showPreferencesDialog(int initialTab) override;
 
-    void loadSubChannel(Persistence::Subchannel subChannel, LocalTrackView* subChannelView) override;
-    void initializeSubChannel(Persistence::Subchannel subChannel, LocalTrackView* subChannelView) override;
+    LocalTrackGroupView *createLocalTrackGroupView(int channelGroupIndex) override;
 
-    LocalTrackGroupView* createLocalTrackGroupView(int channelGroupIndex) override;
+    void initializeLocalSubChannel(LocalTrackView *subChannelView, Persistence::Subchannel subChannel) override;
+
+    void restoreLocalSubchannelPluginsList(StandaloneLocalTrackView *subChannelView, Persistence::Subchannel subChannel);
 
 protected slots:
     void handleServerConnectionError(QString msg);
@@ -44,14 +42,13 @@ protected slots:
                               int lastOut, int sampleRate, int bufferSize);
 
 private:
+    StandaloneMainController *controller;
 
-    StandaloneMainController* controller;
+    StandaloneLocalTrackGroupView *geTrackGroupViewByName(QString trackGroupName) const;
 
-    void restorePluginsList();
+    bool midiDeviceIsValid(int deviceIndex) const;
 
-    StandaloneLocalTrackGroupView* geTrackGroupViewByName(QString trackGroupName) const;
-
-
+    void sanitizeSubchannelInputSelections(LocalTrackView *subChannelView, Persistence::Subchannel subChannel);
 };
 
 #endif // MAINFRAMEVST_H
