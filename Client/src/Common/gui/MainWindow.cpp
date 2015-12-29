@@ -94,7 +94,8 @@ void MainWindow::updateLocalInputChannelsGeometry()
     if (localGroupChannels.isEmpty())
         return;
 
-    int min = ui.localTracksWidget->sizeHint().width() + 12;
+    int sizeHintWidth = ui.localTracksWidget->sizeHint().width();
+    int min = sizeHintWidth + 12;
     int max = min;
     bool showingPeakMeterOnly = localGroupChannels.first()->isShowingPeakMeterOnly();
     Qt::ScrollBarPolicy scrollPolicy = Qt::ScrollBarAlwaysOff;
@@ -188,6 +189,7 @@ void MainWindow::removeChannelsGroup(int channelIndex)
 
             channel->deleteLater();
 
+            //TODO Refactoring: emit a signal 'localChannel removed' and catch this signal in NinjamController
             mainController->sendRemovedChannelMessage(channelIndex);
             update();
         }
@@ -251,10 +253,10 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
     LocalTrackGroupView *localChannel = createLocalTrackGroupView(channelGroupIndex);
 
     QObject::connect(localChannel, SIGNAL(nameChanged()), this, SLOT(updateChannelsNames()));
-    QObject::connect(localChannel, SIGNAL(trackAdded()), this,
-                     SLOT(updateLocalInputChannelsGeometry()));
-    QObject::connect(localChannel, SIGNAL(trackRemoved()), this,
-                     SLOT(updateLocalInputChannelsGeometry()));
+
+    QObject::connect(localChannel, SIGNAL(trackAdded()), this, SLOT(updateLocalInputChannelsGeometry()));
+
+    QObject::connect(localChannel, SIGNAL(trackRemoved()), this, SLOT(updateLocalInputChannelsGeometry()));
 
     if (!localGroupChannels.isEmpty())// the second channel?
         localChannel->setPreparingStatus(localGroupChannels.at(0)->isPreparingToTransmit());
@@ -272,6 +274,8 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
             trackGroup->setToNarrow();
     }
 
+    ui.localTracksWidget->updateGeometry();
+
     return localChannel;
 }
 
@@ -281,18 +285,18 @@ void MainWindow::loadPresetToTrack(Persistence::Preset preset)
     if (preset.isValid()) {
         removeAllInputLocalTracks();
         initializeLocalInputChannels(preset.inputTrackSettings);
+        QApplication::processEvents();
     }
 }
 
 void MainWindow::removeAllInputLocalTracks()
 {
-    foreach (LocalTrackGroupView *trackGroupView, localGroupChannels) {
-        ui.localTracksLayout->removeWidget(trackGroupView);
-        foreach (LocalTrackView *trackView, trackGroupView->getTracks())
-            mainController->removeInputTrackNode(trackView->getTrackID());
-        trackGroupView->deleteLater();
+    while(!localGroupChannels.isEmpty()){
+        LocalTrackGroupView* view = localGroupChannels.first();
+        ui.localTracksLayout->removeWidget(view);
+        view->deleteLater();
+        localGroupChannels.pop_front();
     }
-    localGroupChannels.clear();
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -329,7 +333,6 @@ void MainWindow::initializeLocalInputChannels(LocalInputTrackSettings inputsSett
     qCInfo(jtGUI) << "Initializing local inputs done!";
 
     QApplication::restoreOverrideCursor();
-    //updateLocalInputChannelsGeometry();
 }
 
 void MainWindow::initializeLoginService()
