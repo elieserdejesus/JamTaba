@@ -822,7 +822,7 @@ void MainWindow::showNinjamOfficialWebPage()
 // preferences menu
 void MainWindow::openPreferencesDialog(QAction *action)
 {
-    if (action == ui.actionQuit) { // TODO put the Quit action in a better place. A 'Quit' entry in the 'Preferences' menu is not good.
+    if (action == ui.actionQuit) { // TODO put the Quit action in a better place. A 'Quit' entry in the 'Preferences' menu is not good. A Quit action is not related with Preferences.
         close();
     } else {
         int initialTab = PreferencesDialog::TAB_RECORDING;

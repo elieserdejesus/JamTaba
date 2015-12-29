@@ -54,7 +54,7 @@ StandalonePreferencesDialog::StandalonePreferencesDialog(Controller::MainControl
 {
     setupSignals();
     populateAllTabs();
-    selectPreferencesTab(initialTab);
+    ui->prefsTab->setCurrentIndex(initialTab);
 
 #ifdef Q_OS_MAC
     ui->comboAudioDevice->setVisible(false);
