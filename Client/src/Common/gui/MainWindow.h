@@ -19,7 +19,7 @@ public:
     MainWindow(Controller::MainController *mainController, QWidget *parent = 0);
     virtual ~MainWindow();
 
-    virtual void initialize(); // this is overrided in inherited classes, never call virtual methods inside constructor
+    virtual void initialize(); // this is overrided in inherited classes
 
     void closeEvent(QCloseEvent *) override;
     void changeEvent(QEvent *) override;
@@ -46,9 +46,6 @@ public:
     void removeChannelsGroup(int channelGroupIndex);
 
     void exitFromRoom(bool normalDisconnection);
-
-    bool canCreateSubchannels() const;
-    bool canUseFullScreen() const;
 
     inline bool isRunningInMiniMode() const
     {
@@ -170,7 +167,7 @@ protected slots:
     void tryEnterInRoom(Login::RoomInfo roomInfo, QString password = "");
 
 private slots:
-    void toggleFullScreen();
+
     void closePluginScanDialog();
     void showJamtabaCurrentVersion();
 
@@ -206,16 +203,13 @@ private:
 
     static bool jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2);
 
-    void initializeWindowState();
     void initializeLoginService();
     void initializeLocalInputChannels(Persistence::LocalInputTrackSettings localInputSettings);
 
     void initializeMainTabWidget();
     void initializeViewModeMenu();
 
-    bool fullViewMode;// full view or mini view mode?
-    bool fullScreenViewMode;
-    void setFullScreenStatus(bool fullScreen);
+    bool fullViewMode;// full view or mini view mode? This is not the FullScreen mode, full screen is available only in Standalone.
 
     void showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly);
 
@@ -232,6 +226,8 @@ private:
 
     void removeAllInputLocalTracks();
     void recreatePresetTracks(Persistence::Preset preset);
+
+    void restoreWindowPosition();
 
     // PerformanceMonitor performanceMonitor;//cpu and memmory usage
     // qint64 lastPerformanceMonitorUpdate;

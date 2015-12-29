@@ -670,22 +670,5 @@
  <resources>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>actionFullscreenMode</sender>
-   <signal>triggered()</signal>
-   <receiver>MainFrameClass</receiver>
-   <slot>showFullScreen()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>579</x>
-     <y>374</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

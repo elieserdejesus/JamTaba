@@ -30,7 +30,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     ninjamWindow(nullptr),
     roomToJump(nullptr),
     fullViewMode(true),
-    fullScreenViewMode(false),
     chordsPanel(nullptr)
     // lastPerformanceMonitorUpdate(0)
 {
@@ -45,17 +44,20 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeViewModeMenu();
     setupWidgets();
     setupSignals();
-    initializeWindowState();// window size, maximization ...
 
-    timerID = startTimer(1000/50);// timer used to animate audio peaks, midi activity, public room wave audio plot, etc.
-
-    showBusyDialog("Loading rooms list ...");
     qCInfo(jtGUI) << "MainWindow created!";
 }
 
 // ++++++++++++++++++++++++=
 void MainWindow::initialize()
 {
+    timerID = startTimer(1000/50);// timer used to animate audio peaks, midi activity, public room wave audio plot, etc.
+
+    // set window mode: mini mode or full view mode
+    setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
+
+    showBusyDialog("Loading rooms list ...");
+
     // initialize using last track input settings
     initializeLocalInputChannels(mainController->getSettings().getInputsSettings());
 }
@@ -350,36 +352,6 @@ void MainWindow::initializeLoginService()
 
     connect(loginService, SIGNAL(errorWhenConnectingToServer(QString)), this,
             SLOT(handleServerConnectionError(QString)));
-}
-
-void MainWindow::initializeWindowState()
-{
-    bool wasFullScreenInLastSession = mainController->getSettings().windowsWasFullScreenViewMode();
-    this->fullScreenViewMode = wasFullScreenInLastSession && canUseFullScreen();
-
-    // set window mode: mini mode or full view mode
-    setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
-
-    if (mainController->getSettings().windowWasMaximized()) {
-        qCDebug(jtGUI)<< "setting window state to maximized";
-        showMaximized();
-    } else {
-        if (canUseFullScreen()) { // avoid set plugin to full screen or move the plugin window
-            if (mainController->getSettings().windowsWasFullScreenViewMode()) {
-                showFullScreen();
-            } else {// this else fix the cropped window when starting in full screen mode
-                QPointF location = mainController->getSettings().getLastWindowLocation();
-                QDesktopWidget *desktop = QApplication::desktop();
-                int desktopWidth = desktop->width();
-                int desktopHeight = desktop->height();
-                int x = desktopWidth * location.x();
-                int y = desktopHeight * location.y();
-                this->move(x, y);
-                qCDebug(jtGUI)<< "Restoring window to position:" << x << ", " << y;
-                qCDebug(jtGUI)<< "Window size:" << width() << ", " << height();
-            }
-        }
-    }
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -949,7 +921,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
     // show only the peak meters if user is in mini mode and is not maximized or full screen
     showPeakMetersOnlyInLocalControls(!fullViewMode && !isMaximized() && !isFullScreen());
 
-    ui.chatArea->setMinimumWidth(fullViewMode ? 280 : 180);
+    ui.chatArea->setMinimumWidth(fullViewMode ? 280 : 180); //TODO Refactoring: remove these 'Magic Numbers'
 
     // refresh the public rooms list
     if (!mainController->isPlayingInNinjamRoom()) {
@@ -1004,21 +976,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
     return QMainWindow::eventFilter(target, event);
 }
 
-void MainWindow::setFullScreenStatus(bool fullScreen)
-{
-    fullScreenViewMode = fullScreen;
-    if (fullScreen)
-        showFullScreen();
-    else
-        showNormal();
-    mainController->setFullScreenView(fullScreenViewMode);
-    ui.actionFullscreenMode->setChecked(fullScreen);
-}
 
-void MainWindow::toggleFullScreen()
-{
-    setFullScreenStatus(!fullScreenViewMode);// toggle
-}
 
 // PRESETS STUFF
 void MainWindow::resetGroupChannel(LocalTrackGroupView *group)
