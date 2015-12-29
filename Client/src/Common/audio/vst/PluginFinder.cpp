@@ -24,7 +24,7 @@ Audio::PluginDescriptor PluginFinder::getPluginDescriptor(QFileInfo f)
     return Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
 }
 
-void PluginFinder::on_processFinished()
+void PluginFinder::finishScan()
 {
     QProcess::ExitStatus exitStatus = scanProcess.exitStatus();
     scanProcess.close();
@@ -36,10 +36,10 @@ void PluginFinder::on_processFinished()
         handleProcessError(lastScanned);
 }
 
-void PluginFinder::on_processError(QProcess::ProcessError error)
+void PluginFinder::handleScanError(QProcess::ProcessError error)
 {
     qCritical(jtStandalonePluginFinder) << "ERROR:" << error << scanProcess.errorString();
-    on_processFinished();
+    finishScan();
 }
 
 void PluginFinder::handleProcessError(QString lastScannedPlugin)
@@ -75,7 +75,7 @@ QString PluginFinder::getVstScannerExecutablePath() const
     return "";
 }
 
-void PluginFinder::on_processStandardOutputReady()
+void PluginFinder::consumeOutputFromScanProcess()
 {
     QByteArray readedData = scanProcess.readAll();
     QTextStream stream(readedData, QIODevice::ReadOnly);
@@ -126,10 +126,10 @@ void PluginFinder::scan(QStringList skipList)
     parameters.append(buildCommaSeparetedString(scanFolders));
     parameters.append(buildCommaSeparetedString(skipList));
     QObject::connect(&scanProcess, SIGNAL(readyReadStandardOutput()), this,
-                     SLOT(on_processStandardOutputReady()));
-    QObject::connect(&scanProcess, SIGNAL(finished(int)), this, SLOT(on_processFinished()));
+                     SLOT(consumeOutputFromScanProcess()));
+    QObject::connect(&scanProcess, SIGNAL(finished(int)), this, SLOT(finishScan()));
     QObject::connect(&scanProcess, SIGNAL(error(QProcess::ProcessError)), this,
-                     SLOT(on_processError(QProcess::ProcessError)));
+                     SLOT(handleScanError(QProcess::ProcessError)));
     qCDebug(jtStandalonePluginFinder) << "Starting scan process...";
     scanProcess.start(scannerExePath, parameters);
     qCDebug(jtStandalonePluginFinder) << "Scan process started with " << scannerExePath;

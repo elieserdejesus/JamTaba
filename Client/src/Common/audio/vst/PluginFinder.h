@@ -2,7 +2,7 @@
 #define PLUGIN_FINDER_H
 
 #include <QObject>
-//#include <QStringList>
+#include <QProcess>
 
 namespace Audio {
 class PluginDescriptor;
@@ -29,10 +29,10 @@ private:
     QString getVstScannerExecutablePath() const;
     void handleProcessError(QString lastScannedPlugin);
 
-private slots: // TODO better names for these slots. Remove the "on_anything..."
-    void on_processStandardOutputReady();
-    void on_processFinished();
-    void on_processError(QProcess::ProcessError);
+private slots:
+    void consumeOutputFromScanProcess();
+    void finishScan();
+    void handleScanError(QProcess::ProcessError);
 
 signals:
     void scanStarted();
