@@ -32,8 +32,6 @@ public:
     StandaloneMainController(Persistence::Settings settings, QApplication *application);
     ~StandaloneMainController();
 
-    bool isRunningAsVstPlugin() const;
-
     void initializePluginsList(QStringList paths);
     void scanPlugins(bool scanOnlyNewPlugins = false);
     void addPluginsScanPath(QString path);
