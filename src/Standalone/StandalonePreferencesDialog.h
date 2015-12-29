@@ -72,8 +72,6 @@ private:
     void updateBlackBox(QString path, bool add);
     void clearScanFolderWidgets();
 
-    class ScanFolderPanel;
-
     void clearWidgetLayout(QWidget* widget);
 
     Audio::AudioDriver* getAudioDriver();
