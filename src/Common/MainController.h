@@ -245,7 +245,7 @@ protected:
 
     Persistence::Settings settings;
 
-    QList<Audio::LocalInputAudioNode *> inputTracks;
+    QMap<int, Audio::LocalInputAudioNode *> inputTracks;
 
     QScopedPointer<Vst::PluginFinder> pluginFinder;
     virtual Vst::PluginFinder *createPluginFinder() = 0;
@@ -294,6 +294,8 @@ private:
     Audio::AudioPeak masterPeak;
 
     Persistence::UsersDataCache usersDataCache;
+
+    int lastInputTrackID; //used to generate a unique key/ID for each input track
 
 protected slots:
 
