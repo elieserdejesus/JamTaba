@@ -9,11 +9,11 @@
 
 using namespace Controller;
 
-class MainWindowStandalone : public MainWindow
+class StandaloneMainWindow : public MainWindow
 {
     Q_OBJECT
 public:
-    MainWindowStandalone(StandaloneMainController *controller);
+    StandaloneMainWindow(StandaloneMainController *controller);
 
     Persistence::LocalInputTrackSettings getInputsSettings() const override;
 

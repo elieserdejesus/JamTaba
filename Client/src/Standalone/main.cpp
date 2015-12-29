@@ -3,7 +3,7 @@
 #include <QDir>
 
 #include "StandAloneMainController.h"
-#include "MainWindowStandalone.h"
+#include "gui/StandaloneMainWindow.h"
 #include "persistence/Settings.h"
 #include "log/Logging.h"
 #include "SingleApplication/singleapplication.h"
@@ -34,7 +34,7 @@ int main(int argc, char* args[] ){
     if(mainController.isUsingNullAudioDriver()){
         QMessageBox::about(nullptr, "Fatal error!", "Jamtaba can't detect any audio device in your machine!");
     }
-    MainWindowStandalone  mainWindow(&mainController);
+    StandaloneMainWindow  mainWindow(&mainController);
     mainController.setMainWindow(&mainWindow);
     mainWindow.initialize();
 

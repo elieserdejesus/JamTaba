@@ -10,7 +10,7 @@
 
 class QCoreApplication;
 
-class MainWindowStandalone;
+class StandaloneMainWindow;
 
 namespace Midi {
 class MidiDriver;
@@ -135,7 +135,7 @@ private:
 
     QList<Audio::PluginDescriptor> pluginsDescriptors;
 
-    MainWindowStandalone *window;
+    StandaloneMainWindow *window;
 
     bool isVstPluginFile(QString file) const;
 
