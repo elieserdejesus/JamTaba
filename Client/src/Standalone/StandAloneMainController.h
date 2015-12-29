@@ -3,8 +3,8 @@
 
 #include "MainController.h"
 #include <QApplication>
-#include "audio/vst/PluginFinder.h"
-#include "audio/vst/vsthost.h"
+#include "vst/PluginFinder.h"
+#include "vst/vsthost.h"
 #include "audio/core/Plugins.h"
 #include "audio/core/PluginDescriptor.h"
 

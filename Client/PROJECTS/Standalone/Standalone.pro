@@ -45,12 +45,13 @@ HEADERS += audio/Resampler.h
 HEADERS += audio/vorbis/VorbisDecoder.h
 HEADERS += audio/vorbis/VorbisEncoder.h
 HEADERS += persistence/Settings.h
-HEADERS += audio/vst/VstPlugin.h
-HEADERS += audio/vst/vsthost.h
+HEADERS += vst/VstPlugin.h
+HEADERS += vst/VstHost.h
+HEADERS += vst/VstLoader.h
+HEADERS += vst/PluginFinder.h
 HEADERS += geo/WebIpToLocationResolver.h
 HEADERS += Libs/SingleApplication/singleapplication.h
 HEADERS += audio/core/PluginDescriptor.h
-HEADERS += audio/vst/VstLoader.h
 
 SOURCES += main.cpp
 SOURCES += StandaloneMainController.cpp
@@ -73,13 +74,14 @@ SOURCES += audio/vorbis/VorbisDecoder.cpp
 SOURCES += audio/samplesbufferrecorder.cpp
 SOURCES += audio/vorbis/VorbisEncoder.cpp
 SOURCES += persistence/Settings.cpp
-SOURCES += audio/vst/VstPlugin.cpp
-SOURCES += audio/vst/vsthost.cpp
+SOURCES += vst/VstPlugin.cpp
+SOURCES += vst/VstHost.cpp
+SOURCES += vst/PluginFinder.cpp
+SOURCES += vst/VstLoader.cpp
 SOURCES += geo/WebIpToLocationResolver.cpp
 SOURCES += Libs/SingleApplication/singleapplication.cpp
 SOURCES += audio/core/PortAudioDriver.cpp
 SOURCES += audio/core/PluginDescriptor.cpp
-SOURCES += audio/vst/VstLoader.cpp
 
 #conditional sources to different platforms
 win32{
