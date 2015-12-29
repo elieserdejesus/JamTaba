@@ -51,13 +51,13 @@ public:
         this->mainWindow = mainWindow;
     }
 
-    void saveLastUserSettings(const Persistence::InputsSettings &inputsSettings);
+    void saveLastUserSettings(const Persistence::LocalInputTrackSettings &inputsSettings);
 
     // presets
-    void loadPreset(QString name);// one preset
-    QStringList getPresetList();// all presets
-    void savePresets(const Persistence::InputsSettings &inputsSettings, QString name);
-    void deletePreset(QString name);
+    Persistence::Preset loadPreset(QString name);// one preset
+    QStringList getPresetList();// return all presets names
+    void savePreset(Persistence::LocalInputTrackSettings inputsSettings, QString name);
+    void deletePreset(QString name); //not used yet
 
     // main audio processing routine
     virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
@@ -261,6 +261,8 @@ protected:
     // map the input channel indexes to a GUID (used to upload audio to ninjam server)
     QMap<int, UploadIntervalData *> intervalsToUpload;
 
+    QMutex mutex;
+
 private:
     void setAllTracksActivation(bool activated);
 
@@ -275,7 +277,6 @@ private:
     QMap<int, bool> getXmitChannelsFlags() const;
 
     QMap<long, Audio::AudioNode *> tracksNodes;
-    QMutex mutex;
 
     bool started;
 

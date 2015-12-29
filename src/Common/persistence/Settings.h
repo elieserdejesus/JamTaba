@@ -146,8 +146,29 @@ public:
         return plugins;
     }
 
-    inline void setPlugins(QList<Plugin> newPlugins){
+    inline void setPlugins(QList<Plugin> newPlugins)
+    {
         plugins = newPlugins;
+    }
+
+    inline bool isMidi() const
+    {
+        return midiDevice >= 0;
+    }
+
+    inline bool isNoInput() const
+    {
+        return channelsCount <= 0;
+    }
+
+    inline bool isMono() const
+    {
+        return channelsCount == 1;
+    }
+
+    inline bool isStereo() const
+    {
+        return channelsCount == 2;
     }
 
 private:
@@ -162,10 +183,10 @@ public:
     QList<Subchannel> subChannels;
 };
 // +++++++++++++++++++++++++++++++++
-class InputsSettings : public SettingsObject
+class LocalInputTrackSettings : public SettingsObject
 {
 public:
-    InputsSettings();
+    LocalInputTrackSettings(bool createOneTrack = false);
     void write(QJsonObject &out);
     void read(QJsonObject in);
     QList<Channel> channels;
@@ -176,14 +197,21 @@ public:
     }
 };
 // +++++++++PRESETS+++++++++++++++
-class PresetsSettings : public SettingsObject   // TODO this is the same InputSettings? The member 'names' can be obtained from channels directly?
+class Preset
 {
 public:
-    PresetsSettings();
+    Preset(QString name = "default",
+           LocalInputTrackSettings inputSettings = LocalInputTrackSettings());
     void write(QJsonObject &out);
     void read(QJsonObject in);
-    QList<Channel> channels;
-    QStringList names;
+
+    bool isValid() const
+    {
+        return inputTrackSettings.isValid();
+    }
+
+    LocalInputTrackSettings inputTrackSettings;
+    QString name;
 };
 
 // ++++++++++++++++++++++++
@@ -197,8 +225,8 @@ private:
     WindowSettings windowSettings;
     MetronomeSettings metronomeSettings;
     VstSettings vstSettings;
-    InputsSettings inputsSettings;
-    PresetsSettings presetSettings;
+    LocalInputTrackSettings inputsSettings;
+    // PresetsSettings presetSettings;
     RecordingSettings recordingSettings;
     PrivateServerSettings privateServerSettings;
     QString lastUserName;// the last nick name choosed by user
@@ -211,26 +239,18 @@ public:
     Settings();
     ~Settings();
 
-    inline InputsSettings getInputsSettings() const
+    inline LocalInputTrackSettings getInputsSettings() const
     {
         return inputsSettings;
     }
 
-    void save(InputsSettings inputsSettings);
+    void save(LocalInputTrackSettings inputsSettings);
     void load();
 
-    // PRESETS
-    inline PresetsSettings getPresetSettings() const
-    {
-        return presetSettings;
-    }
-
-    void savePresets(InputsSettings inputsSettings, QString name);
-    bool writePresetFile(QList<SettingsObject *> sections, QString name);// io ops ...
-    void loadPreset(QString name);
+    bool writePresetToFile(Preset preset);
     void DeletePreset(QString name);
     QStringList getPresetList();
-    bool readPresetFile(QList<Persistence::SettingsObject *> sections, QString name);// io ops ...
+    Preset readPresetFromFile(QString presetFileName);
 
     inline int getLastSampleRate() const
     {

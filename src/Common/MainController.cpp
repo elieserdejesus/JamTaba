@@ -370,7 +370,7 @@ Audio::AudioPeak MainController::getTrackPeak(int trackID)
     if (trackNode && !trackNode->isMuted())
         return trackNode->getLastPeak();
     if (!trackNode)
-        qWarning() << "trackNode not found! ID:" << trackID;
+        qWarning(jtGUI) << "trackNode not found! ID:" << trackID;
     return Audio::AudioPeak();
 }
 
@@ -499,34 +499,34 @@ MainController::~MainController()
     qCDebug(jtCore) << "MainController destructor finished!";
 }
 
-void MainController::saveLastUserSettings(const Persistence::InputsSettings &inputsSettings)
+void MainController::saveLastUserSettings(const Persistence::LocalInputTrackSettings &inputsSettings)
 {
-    if(inputsSettings.isValid()){//avoid save empty settings
+    if (inputsSettings.isValid())// avoid save empty settings
         settings.save(inputsSettings);
-    }
 }
 
 // -------------------------      PRESETS   ----------------------------
 
-void MainController::loadPreset(QString name)
-{
-    settings.loadPreset(name);
-}
-
 QStringList MainController::getPresetList()
 {
-    return settings.getPresetList();
+    return Configurator::getInstance()->getPresetFilesNames(false);
 }
 
-void MainController::savePresets(const Persistence::InputsSettings &inputsSettings, QString name)
+void MainController::savePreset(Persistence::LocalInputTrackSettings inputsSettings, QString name)
 {
-    settings.savePresets(inputsSettings, name);
+    settings.writePresetToFile(Persistence::Preset(name, inputsSettings));
 }
 
 void MainController::deletePreset(QString name)
 {
     return settings.DeletePreset(name);
 }
+
+Persistence::Preset MainController::loadPreset(QString name){
+    return settings.readPresetFromFile(name);
+}
+
+//+++++++++++++++++++++++++++++++++++++++
 
 void MainController::setFullScreenView(bool fullScreen)
 {

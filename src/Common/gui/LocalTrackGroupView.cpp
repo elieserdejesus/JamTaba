@@ -252,11 +252,14 @@ void LocalTrackGroupView::removeChannel()
 void LocalTrackGroupView::loadPreset(QAction *a)
 {
     Controller::MainController *mainController = mainFrame->getMainController();
-    mainController->loadPreset(a->data().toString());
-    mainFrame->loadPresetToTrack();// that name is so good
+    QString presetFileName = a->data().toString();
+    Persistence::Preset preset = mainController->loadPreset(presetFileName);
+    if(preset.isValid()){
+        mainFrame->loadPresetToTrack(preset);
 
-    // send the new channels to other musicians
-    mainController->sendNewChannelsNames(mainFrame->getChannelsNames()); // TODO move this to MainController::loadPreset()
+        // send the new channels to other musicians
+        mainController->sendNewChannelsNames(mainFrame->getChannelsNames());
+    }
 }
 
 void LocalTrackGroupView::savePreset()
@@ -267,7 +270,7 @@ void LocalTrackGroupView::savePreset()
                                          QDir::home().dirName(), &ok);
     if (ok && !text.isEmpty()) {
         text.append(".json");
-        mainFrame->getMainController()->savePresets(mainFrame->getInputsSettings(), text);
+        mainFrame->getMainController()->savePreset(mainFrame->getInputsSettings(), text);
     }
 }
 
