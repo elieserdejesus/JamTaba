@@ -7,6 +7,8 @@
 #include <QProcess>
 #include "audio/vst/PluginFinder.h"
 #include "audio/vst/vsthost.h"
+#include "audio/core/Plugins.h"
+#include "audio/core/PluginDescriptor.h"
 
 class QCoreApplication;
 
@@ -78,8 +80,6 @@ public:
 
     void updateInputTracksRange();// called when input range or method (audio or midi) are changed in preferences
 
-    Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
-
     inline Vst::Host *getVstHost() const
     {
         return vstHost;
@@ -122,6 +122,10 @@ public:
         return pluginFinder.data();
     }
 
+    void removePlugin(int inputTrackIndex, Audio::Plugin *plugin);
+    QList<Audio::PluginDescriptor> getPluginsDescriptors();
+    Audio::Plugin *addPlugin(int inputTrackIndex, const Audio::PluginDescriptor &descriptor);
+
 public slots:
     void setSampleRate(int newSampleRate) override;
 
@@ -157,14 +161,23 @@ private:
     QScopedPointer<Audio::AudioDriver> audioDriver;
     QScopedPointer<Midi::MidiDriver> midiDriver;
 
+    QList<Audio::PluginDescriptor> pluginsDescriptors;
+
+    MainWindowStandalone *window;
+
     bool isVstPluginFile(QString file) const;
 
     bool inputIndexIsValid(int inputIndex);
 
-    MainWindowStandalone *window;
-
     QScopedPointer<Vst::PluginFinder> pluginFinder;
+
     Vst::PluginFinder *createPluginFinder();
+
+    // used to sort plugins list
+    static bool pluginDescriptorLessThan(const Audio::PluginDescriptor &d1,
+                                         const Audio::PluginDescriptor &d2);
+
+    Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
 };
 }

@@ -184,8 +184,7 @@ void MainWindowStandalone::restoreLocalSubchannelPluginsList(
     foreach (Persistence::Plugin plugin, subChannel.getPlugins()) {
         QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
         Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path);
-        Audio::Plugin *pluginInstance = mainController->addPlugin(
-            subChannelView->getInputIndex(), descriptor);
+        Audio::Plugin *pluginInstance = controller->addPlugin(subChannelView->getInputIndex(), descriptor);
         if (pluginInstance) {
             try{
                 pluginInstance->restoreFromSerializedData(plugin.data);

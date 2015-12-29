@@ -2,7 +2,6 @@
 #define FXPANELITEM_H
 
 #include <QWidget>
-//#include "StandaloneLocalTrackView.h"
 
 class StandaloneLocalTrackView;
 
@@ -15,7 +14,7 @@ class Plugin;
 }
 
 namespace Controller {
-class MainController;
+class StandaloneMainController;
 }
 
 class FxPanelItem : public QWidget
@@ -23,7 +22,7 @@ class FxPanelItem : public QWidget
     Q_OBJECT
 
 public:
-    FxPanelItem(StandaloneLocalTrackView *parent, Controller::MainController *mainController);
+    FxPanelItem(StandaloneLocalTrackView *parent, Controller::StandaloneMainController *mainController);
     virtual ~FxPanelItem();
     void setPlugin(Audio::Plugin *plugin);
     void unsetPlugin();
@@ -57,7 +56,7 @@ private:
     Audio::Plugin *plugin;
     QPushButton *bypassButton;
     QLabel *label;
-    Controller::MainController *mainController;// used to ask about plugins
+    Controller::StandaloneMainController *mainController;// used to ask about plugins
 
     void showPluginGui(Audio::Plugin *plugin);
 
