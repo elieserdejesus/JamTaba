@@ -239,11 +239,6 @@ void StandaloneMainController::on_VSTPluginFounded(QString name, QString group, 
 
 // ++++++++++++++++++++++++++++++++++++++++++
 
-bool StandaloneMainController::isRunningAsVstPlugin() const
-{
-    return false;
-}
-
 Vst::PluginFinder *StandaloneMainController::createPluginFinder()
 {
     return new Vst::PluginFinder();
