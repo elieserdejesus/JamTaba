@@ -613,9 +613,6 @@ void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStrin
 void MainController::start()
 {
     if (!started) {
-        qCInfo(jtCore) << "Creating plugin finder...";
-        pluginFinder.reset(createPluginFinder());
-
         qCInfo(jtCore) << "Creating roomStreamer ...";
         roomStreamer.reset(new Audio::NinjamRoomStreamerNode()); // new Audio::AudioFileStreamerNode(":/teste.mp3");
         this->audioMixer.addNode(roomStreamer.data());
@@ -672,43 +669,13 @@ void MainController::stop()
 }
 
 // +++++++++++
-void MainController::cancelPluginFinder()
-{
-    if (pluginFinder)
-        pluginFinder->cancel();
-}
-
 bool MainController::pluginDescriptorLessThan(const Audio::PluginDescriptor &d1,
                                               const Audio::PluginDescriptor &d2)
 {
     return d1.getName().localeAwareCompare(d2.getName()) < 0;
 }
 
-void MainController::addPluginsScanPath(QString path)
-{
-    settings.addVstScanPath(path);
-}
 
-void MainController::removePluginsScanPath(QString path)
-{
-    settings.removeVstScanPath(path);
-}
-
-void MainController::clearPluginsCache()
-{
-    settings.clearVstCache();
-}
-
-// VST BlackList ...
-void MainController::addBlackVstToSettings(QString path)
-{
-    settings.addVstToBlackList(path);
-}
-
-void MainController::removeBlackVst(int index)
-{
-    settings.RemVstFromBlackList(index);
-}
 
 QList<Audio::PluginDescriptor> MainController::getPluginsDescriptors()
 {

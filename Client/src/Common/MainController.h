@@ -11,7 +11,6 @@
 #include "recorder/JamRecorder.h"
 #include "audio/core/AudioNode.h"
 #include "audio/core/Plugins.h"
-#include "audio/vst/PluginFinder.h"
 #include "audio/core/AudioMixer.h"
 #include "audio/RoomStreamerNode.h"
 #include "audio/core/PluginDescriptor.h"
@@ -203,24 +202,9 @@ public:
 
     void configureStyleSheet(QString cssFile);
 
-    Vst::PluginFinder *getPluginFinder() const
-    {
-        return pluginFinder.data();
-    }
-
-    void addPluginsScanPath(QString path);
-    void addBlackVstToSettings(QString path);
-    virtual void addDefaultPluginsScanPath() = 0;// add vst path from registry
-    void removePluginsScanPath(QString path);
-    void removeBlackVst(int index);
-    void clearPluginsCache();
-    virtual void scanPlugins(bool scanOnlyNewPlugins = false) = 0;
-
     void finishUploads();// used to send the last part of ninjam intervals when audio is stopped.
 
     virtual QString getUserEnvironmentString() const;
-
-    void cancelPluginFinder();
 
     // to remembering ninjamers controls (pan, level, gain, boost)
     inline Persistence::UsersDataCache *getUsersDataCache() // TODO hide this from callers. Create a function in mainController to update the CacheEntries, so MainController is used as a Façade.
@@ -246,9 +230,6 @@ protected:
     Persistence::Settings settings;
 
     QMap<int, Audio::LocalInputAudioNode *> inputTracks;
-
-    QScopedPointer<Vst::PluginFinder> pluginFinder;
-    virtual Vst::PluginFinder *createPluginFinder() = 0;
 
     virtual Controller::NinjamController *createNinjamController(MainController *) = 0;
 
@@ -316,12 +297,6 @@ protected slots:
     virtual void on_audioDriverStarted() = 0;
     virtual void on_audioDriverStopped();//TODO move to ninjaController
 
-    virtual void on_VSTPluginFounded(QString name, QString group, QString path)
-    {
-        Q_UNUSED(name)
-        Q_UNUSED(group)
-        Q_UNUSED(path)
-    }
 };
 }
 

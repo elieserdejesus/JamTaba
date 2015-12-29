@@ -5,6 +5,7 @@
 #include "StandaloneLocalTrackGroupView.h"
 #include "StandaloneLocalTrackView.h"
 #include "StandAloneMainController.h"
+#include "PluginScanDialog.h"
 
 using namespace Controller;
 
@@ -27,8 +28,6 @@ protected:
 
     NinjamRoomWindow *createNinjamWindow(Login::RoomInfo, MainController *) override;
 
-    void initializePluginFinder() override;
-
     void showPreferencesDialog(int initialTab) override;
 
     LocalTrackGroupView *createLocalTrackGroupView(int channelGroupIndex) override;
@@ -43,11 +42,20 @@ protected slots: //TODO change to private slots?
     void setGlobalPreferences(QList<bool>, int audioDevice, int firstIn, int lastIn, int firstOut,
                               int lastOut, int sampleRate, int bufferSize);
 
+    // plugin finder
+    void showPluginScanDialog();
+    void hidePluginScanDialog(bool finishedWithoutError);
+    void addFoundedPlugin(QString name, QString group, QString path);
+    void setCurrentScanningPlugin(QString pluginPath);
+    void addPluginToBlackList(QString pluginPath);
+
 private slots:
     void toggleFullScreen();
+    void closePluginScanDialog();
 
 private:
     StandaloneMainController *controller;
+    QScopedPointer<PluginScanDialog> pluginScanDialog;
 
     StandaloneLocalTrackGroupView *geTrackGroupViewByName(QString trackGroupName) const;
 
@@ -64,6 +72,9 @@ private:
     void setupShortcuts();
 
     void restoreWindowPosition();
+
+    void initializePluginFinder();
+
 };
 
 #endif // MAINFRAMEVST_H

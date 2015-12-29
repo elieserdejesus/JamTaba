@@ -184,6 +184,33 @@ void StandaloneMainController::setInputTrackToMono(int localChannelIndex,
     }
 }
 
+
+void StandaloneMainController::addPluginsScanPath(QString path)
+{
+    settings.addVstScanPath(path);
+}
+
+void StandaloneMainController::removePluginsScanPath(QString path)
+{
+    settings.removeVstScanPath(path);
+}
+
+void StandaloneMainController::clearPluginsCache()
+{
+    settings.clearVstCache();
+}
+
+// VST BlackList ...
+void StandaloneMainController::addBlackVstToSettings(QString path)
+{
+    settings.addVstToBlackList(path);
+}
+
+void StandaloneMainController::removeBlackVst(int index)
+{
+    settings.RemVstFromBlackList(index);
+}
+
 bool StandaloneMainController::inputIndexIsValid(int inputIndex)
 {
     Audio::ChannelRange globalInputsRange = audioDriver->getSelectedInputs();
@@ -379,7 +406,7 @@ void StandaloneMainController::on_vstPluginRequestedWindowResize(QString pluginN
 
 void StandaloneMainController::start()
 {
-    // creating audio and midi driver before call the base class MainController::start()
+    // creating audio and midi driver before call start() in base class (MainController::start())
 
     if (!midiDriver) {
         qCInfo(jtCore) << "Creating midi driver...";
@@ -401,14 +428,12 @@ void StandaloneMainController::start()
 
         audioDriver.reset(driver);
 
-        QObject::connect(audioDriver.data(), SIGNAL(sampleRateChanged(int)), this,
-                         SLOT(setSampleRate(int)));
-        QObject::connect(audioDriver.data(), SIGNAL(stopped()), this,
-                         SLOT(on_audioDriverStopped()));
-        QObject::connect(audioDriver.data(), SIGNAL(started()), this,
-                         SLOT(on_audioDriverStarted()));
+        QObject::connect(audioDriver.data(), SIGNAL(sampleRateChanged(int)), this, SLOT(setSampleRate(int)));
+        QObject::connect(audioDriver.data(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
+        QObject::connect(audioDriver.data(), SIGNAL(started()), this, SLOT(on_audioDriverStarted()));
     }
 
+    //calling the base class
     MainController::start();
 
     if (audioDriver) {
@@ -419,6 +444,10 @@ void StandaloneMainController::start()
     if (midiDriver)
         midiDriver->start();
 
+
+    qCInfo(jtCore) << "Creating plugin finder...";
+    pluginFinder.reset(createPluginFinder());
+
     QObject::connect(pluginFinder.data(), SIGNAL(pluginScanFinished(QString, QString,
                                                                     QString)), this,
                      SLOT(on_VSTPluginFounded(QString, QString, QString)));
@@ -428,6 +457,13 @@ void StandaloneMainController::start()
         vstHost->setBlockSize(audioDriver->getBufferSize());
     }
 }
+
+void StandaloneMainController::cancelPluginFinder()
+{
+    if (pluginFinder)
+        pluginFinder->cancel();
+}
+
 
 void StandaloneMainController::setCSS(QString css)
 {

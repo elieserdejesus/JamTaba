@@ -26,7 +26,6 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     QMainWindow(parent),
     busyDialog(0),
     mainController(mainController),
-    pluginScanDialog(nullptr),
     ninjamWindow(nullptr),
     roomToJump(nullptr),
     fullViewMode(true),
@@ -60,24 +59,6 @@ void MainWindow::initialize()
 
     // initialize using last track input settings
     initializeLocalInputChannels(mainController->getSettings().getInputsSettings());
-}
-
-// ++++++++++++++++++++++++=
-void MainWindow::initializePluginFinder()
-{
-    Vst::PluginFinder *pluginFinder = mainController->getPluginFinder();
-    if (pluginFinder) {
-        QObject::connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(showPluginScanDialog()));
-        QObject::connect(pluginFinder, SIGNAL(scanFinished(bool)), this,
-                         SLOT(hidePluginScanDialog(bool)));
-        QObject::connect(pluginFinder, SIGNAL(badPluginDetected(QString)), this,
-                         SLOT(addPluginToBlackList(QString)));
-        QObject::connect(pluginFinder, SIGNAL(pluginScanFinished(QString, QString,
-                                                                 QString)), this,
-                         SLOT(addFoundedPlugin(QString, QString, QString)));
-        QObject::connect(pluginFinder, SIGNAL(pluginScanStarted(QString)), this,
-                         SLOT(setCurrentScanningPlugin(QString)));
-    }
 }
 
 // ++++++++++++++++++++++++=
@@ -835,56 +816,6 @@ void MainWindow::openPreferencesDialog(QAction *action)
 
         showPreferencesDialog(initialTab);
     }
-}
-
-// plugin finder events
-void MainWindow::showPluginScanDialog()
-{
-    if (!pluginScanDialog) {
-        pluginScanDialog.reset(new PluginScanDialog(this));
-        QObject::connect(pluginScanDialog.data(), SIGNAL(rejected()), this,
-                         SLOT(closePluginScanDialog()));
-    }
-    pluginScanDialog->show();
-}
-
-void MainWindow::closePluginScanDialog()
-{
-    mainController->cancelPluginFinder();
-    pluginScanDialog.reset();// reset to null pointer
-}
-
-void MainWindow::hidePluginScanDialog(bool finishedWithoutError)
-{
-    Q_UNUSED(finishedWithoutError);
-    if (pluginScanDialog)
-        pluginScanDialog->close();
-    pluginScanDialog.reset();
-}
-
-void MainWindow::addPluginToBlackList(QString pluginPath)
-{
-    QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(pluginPath);
-    QWidget *parent = this;
-    if (pluginScanDialog)
-        parent = pluginScanDialog.data();
-    QString message = pluginName + " can't be loaded and will be black listed!";
-    QMessageBox::warning(parent, "Plugin Error!", message);
-    mainController->addBlackVstToSettings(pluginPath);
-}
-
-void MainWindow::addFoundedPlugin(QString name, QString group, QString path)
-{
-    Q_UNUSED(path);
-    Q_UNUSED(group);
-    if (pluginScanDialog)
-        pluginScanDialog->addFoundedPlugin(name);
-}
-
-void MainWindow::setCurrentScanningPlugin(QString pluginPath)
-{
-    if (pluginScanDialog)
-        pluginScanDialog->setCurrentScaning(pluginPath);
 }
 
 void MainWindow::initializeViewModeMenu()

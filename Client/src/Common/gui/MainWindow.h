@@ -4,7 +4,6 @@
 #include "ui_MainWindow.h"
 #include "BusyDialog.h"
 #include "chords/ChordsPanel.h"
-#include "PluginScanDialog.h"
 #include "NinjamRoomWindow.h"
 #include "MainController.h"
 #include "JamRoomViewPanel.h"
@@ -77,8 +76,6 @@ protected:
     Controller::MainController *mainController;
     Ui::MainFrameClass ui;
 
-    virtual void initializePluginFinder();
-
     void centerDialog(QWidget *dialog);
 
     QList<LocalTrackGroupView *> localGroupChannels;
@@ -137,13 +134,6 @@ protected slots:
     void playPublicRoomStream(Login::RoomInfo roomInfo);
     void stopPublicRoomStream(Login::RoomInfo roomInfo);
 
-    // plugin finder
-    void showPluginScanDialog();
-    void hidePluginScanDialog(bool finishedWithoutError);
-    void addFoundedPlugin(QString name, QString group, QString path);
-    void setCurrentScanningPlugin(QString pluginPath);
-    void addPluginToBlackList(QString pluginPath);
-
     // collapse local controls
     void toggleLocalInputsCollapseStatus();
 
@@ -168,7 +158,6 @@ protected slots:
 
 private slots:
 
-    void closePluginScanDialog();
     void showJamtabaCurrentVersion();
 
     void updateLocalInputChannelsGeometry();
@@ -191,8 +180,6 @@ private:
     QPointF computeLocation() const;
 
     QMap<long long, JamRoomViewPanel *> roomViewPanels;
-
-    QScopedPointer<PluginScanDialog> pluginScanDialog;
 
     QScopedPointer<NinjamRoomWindow> ninjamWindow;
 
