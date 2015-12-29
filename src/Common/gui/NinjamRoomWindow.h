@@ -64,6 +64,9 @@ private:
 
     NinjamPanel *createNinjamPanel();
 
+    void setupSignals(Controller::NinjamController *ninjamController);
+    void disconnectFromNinjamControllerSignals(Controller::NinjamController *ninjamController);
+
 private slots:
 
     // ninjam panel controls
