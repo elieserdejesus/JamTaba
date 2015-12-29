@@ -61,6 +61,8 @@ private:
 
     void setupSignals();
 
+    void setupShortcuts();
+
     void restoreWindowPosition();
 };
 
