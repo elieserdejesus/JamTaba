@@ -48,9 +48,11 @@ private:
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 
-StandalonePreferencesDialog::StandalonePreferencesDialog(Controller::MainController *mainController,
+StandalonePreferencesDialog::StandalonePreferencesDialog(Controller::StandaloneMainController *mainController,
                                                          MainWindow *mainWindow, int initialTab) :
-    PreferencesDialog(mainController, mainWindow)
+    PreferencesDialog(mainController, mainWindow),
+    controller(mainController)
+
 {
     setupSignals();
     populateAllTabs();
@@ -78,14 +80,11 @@ void StandalonePreferencesDialog::setupSignals()
 
     connect(ui->comboAudioDevice, SIGNAL(activated(int)), this, SLOT(changeAudioDevice(int)));
 
-    connect(ui->comboFirstInput, SIGNAL(currentIndexChanged(int)), this,
-            SLOT(populateLastInputCombo()));
+    connect(ui->comboFirstInput, SIGNAL(currentIndexChanged(int)), this, SLOT(populateLastInputCombo()));
 
-    connect(ui->comboFirstOutput, SIGNAL(currentIndexChanged(int)), this,
-            SLOT(populateLastOutputCombo()));
+    connect(ui->comboFirstOutput, SIGNAL(currentIndexChanged(int)), this, SLOT(populateLastOutputCombo()));
 
-    connect(ui->buttonControlPanel, SIGNAL(clicked(bool)), this,
-            SLOT(openExternalAudioControlPanel()));
+    connect(ui->buttonControlPanel, SIGNAL(clicked(bool)), this, SLOT(openExternalAudioControlPanel()));
 
     connect(ui->buttonAddVstScanFolder, SIGNAL(clicked(bool)), this, SLOT(addVstScanFolder()));
 
@@ -93,14 +92,11 @@ void StandalonePreferencesDialog::setupSignals()
 
     connect(ui->ButtonVst_Refresh, SIGNAL(clicked(bool)), this, SLOT(scanNewPlugins()));
 
-    connect(ui->ButtonVST_AddToBlackList, SIGNAL(clicked(bool)), this,
-            SLOT(addBlackListedPlugins()));
+    connect(ui->ButtonVST_AddToBlackList, SIGNAL(clicked(bool)), this, SLOT(addBlackListedPlugins()));
 
-    connect(ui->ButtonVST_RemFromBlkList, SIGNAL(clicked(bool)), this,
-            SLOT(removeBlackListedPlugins()));
+    connect(ui->ButtonVST_RemFromBlkList, SIGNAL(clicked(bool)), this, SLOT(removeBlackListedPlugins()));
 
-    connect(mainController->getPluginFinder(), SIGNAL(scanFinished(bool)), this,
-            SLOT(populateVstTab()));
+    connect(controller->getPluginFinder(), SIGNAL(scanFinished(bool)), this, SLOT(populateVstTab()));
 }
 
 void StandalonePreferencesDialog::addVstScanFolder()
@@ -137,7 +133,7 @@ void StandalonePreferencesDialog::removeVstscanFolder()
         }
     }
     if (panelToDelete) {
-        mainController->removePluginsScanPath(panelToDelete->getScanFolder());
+        controller->removePluginsScanPath(panelToDelete->getScanFolder());
         ui->panelScanFolders->layout()->removeWidget(panelToDelete);
         panelToDelete->deleteLater();
     }
@@ -156,7 +152,7 @@ void StandalonePreferencesDialog::updateBlackBox(QString path, bool add)
         QString str = ui->blackListWidget->toPlainText();
         if (str.contains(path)) {
             ui->blackListWidget->clear();
-            mainController->removeBlackVst(str.indexOf(path));
+            controller->removeBlackVst(str.indexOf(path));
             QStringList list = mainController->getSettings().getBlackListedPlugins();
             foreach (QString s, list)
                 ui->blackListWidget->appendPlainText(s);
@@ -174,35 +170,37 @@ void StandalonePreferencesDialog::createWidgetsToNewFolder(QString path)
 void StandalonePreferencesDialog::addVstFolderToScan(QString folder)
 {
     createWidgetsToNewFolder(folder);
-    mainController->addPluginsScanPath(folder);
+    controller->addPluginsScanPath(folder);
 }
 
 // clear the vst cache and run a complete scan
 void StandalonePreferencesDialog::scansFully()
 {
-    if (mainController && mainWindow) {
-        // save the config file before start scanning
-        mainController->saveLastUserSettings(mainWindow->getInputsSettings());
+    Q_ASSERT(controller);
+    Q_ASSERT(mainWindow);
 
-        // clear
-        mainController->clearPluginsCache();
-        ui->vstListWidget->clear();
+    // save the config file before start scanning
+    controller->saveLastUserSettings(mainWindow->getInputsSettings());
 
-        // scan
-        mainController->scanPlugins();
-    }
+    // clear
+    controller->clearPluginsCache();
+    ui->vstListWidget->clear();
+
+    // scan
+    controller->scanPlugins();
 }
 
 // Refresh vsts scanning only the new plugins
 void StandalonePreferencesDialog::scanNewPlugins()
 {
-    if (mainController && mainWindow) {
-        // save the config file before start scanning
-        mainController->saveLastUserSettings(mainWindow->getInputsSettings());
+    Q_ASSERT(controller);
+    Q_ASSERT(mainWindow);
 
-        // scan only new plugins
-        mainController->scanPlugins(true);
-    }
+    // save the config file before start scanning
+    controller->saveLastUserSettings(mainWindow->getInputsSettings());
+
+    // scan only new plugins
+    controller->scanPlugins(true);
 }
 
 // ADD A VST IN BLACKLIST
@@ -210,7 +208,7 @@ void StandalonePreferencesDialog::addBlackListedPlugins()
 {
     QFileDialog vstDialog(this, "Add Vst(s) to BlackBox ...");
     vstDialog.setNameFilter("Dll(*.dll)");// TODO in mac the extension is .vst
-    QStringList foldersToScan = mainController->getSettings().getVstScanFolders();
+    QStringList foldersToScan = controller->getSettings().getVstScanFolders();
     if (!foldersToScan.isEmpty())
         vstDialog.setDirectory(foldersToScan.first());
     vstDialog.setAcceptMode(QFileDialog::AcceptOpen);
@@ -220,7 +218,7 @@ void StandalonePreferencesDialog::addBlackListedPlugins()
         QStringList vstNames = vstDialog.selectedFiles();
         foreach (QString string, vstNames) {
             updateBlackBox(string, true);// add to
-            mainController->addBlackVstToSettings(string);
+            controller->addBlackVstToSettings(string);
         }
     }
 }
@@ -229,7 +227,7 @@ void StandalonePreferencesDialog::removeBlackListedPlugins()
 {
     QFileDialog vstDialog(this, "Remove Vst(s) from Black List ...");
     vstDialog.setNameFilter("Dll(*.dll)");// TODO mac extension is .vst
-    QStringList foldersToScan = mainController->getSettings().getVstScanFolders();
+    QStringList foldersToScan = controller->getSettings().getVstScanFolders();
     if (!foldersToScan.isEmpty())
         vstDialog.setDirectory(foldersToScan.first());
     vstDialog.setAcceptMode(QFileDialog::AcceptOpen);
@@ -238,7 +236,7 @@ void StandalonePreferencesDialog::removeBlackListedPlugins()
         QStringList vstNames = vstDialog.selectedFiles();
         foreach (QString string, vstNames) {
             updateBlackBox(string, false);// Remove from
-            mainController->removeBlackVst(0);// index
+            controller->removeBlackVst(0);// index
         }
     }
 }

@@ -3,15 +3,15 @@
 
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
-
 #include "MainWindow.h"
+#include "StandaloneMainController.h"
 
 class StandalonePreferencesDialog : public PreferencesDialog
 {
     Q_OBJECT
 
 public:
-    StandalonePreferencesDialog(Controller::MainController *mainController, MainWindow *mainWindow,
+    StandalonePreferencesDialog(Controller::StandaloneMainController *mainController, MainWindow *mainWindow,
                                 int initialTab);
 
 public slots:
@@ -49,6 +49,9 @@ protected:
     void populateAllTabs() override;
 
 private:
+
+    Controller::StandaloneMainController* controller;
+
     void selectAudioTab();
     void selectMidiTab();
     void selectVstPluginsTab();

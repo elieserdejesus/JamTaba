@@ -29,6 +29,7 @@ class StandalonePluginFinder : public Vst::PluginFinder
 public:
     StandalonePluginFinder();
     ~StandalonePluginFinder();
+
     void scan(QStringList skipList);
     void cancel();
 
@@ -40,6 +41,7 @@ private:
     QString getVstScannerExecutablePath() const;
     QString lastScannedPlugin;// used to recover the last plugin path when the scanner process crash
     void handleProcessError(QString lastScannedPlugin);
+
 private slots:
     void on_processStandardOutputReady();
     void on_processFinished();
@@ -60,6 +62,14 @@ public:
 
     void initializePluginsList(QStringList paths);
     void scanPlugins(bool scanOnlyNewPlugins = false);
+    void addPluginsScanPath(QString path);
+    void addBlackVstToSettings(QString path);
+    void addDefaultPluginsScanPath();// add vst path from registry
+    void removePluginsScanPath(QString path);
+    void removeBlackVst(int index);
+    void clearPluginsCache();
+    QStringList getSteinbergRecommendedPaths();
+    bool pluginsScanIsNeeded() const; // plugins cache is empty OR we have new plugins in scan folders?
 
     void quit();
 
@@ -69,10 +79,6 @@ public:
     void updateInputTracksRange();// called when input range or method (audio or midi) are changed in preferences
 
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
-
-    virtual void addDefaultPluginsScanPath();
-    QStringList getSteinbergRecommendedPaths();
-    bool pluginsScanIsNeeded() const; // plugins cache is empty OR we have new plugins in scan folders?
 
     inline Vst::Host *getVstHost() const
     {
@@ -109,6 +115,13 @@ public:
 
     void setMainWindow(MainWindow *mainWindow) override;
 
+    void cancelPluginFinder();
+
+    inline Vst::PluginFinder *getPluginFinder() const
+    {
+        return pluginFinder.data();
+    }
+
 public slots:
     void setSampleRate(int newSampleRate) override;
 
@@ -117,8 +130,6 @@ protected:
 
     // TODO - Audio driver need just the audio settings to initialize, not the entire settings.
     Audio::AudioDriver *createAudioDriver(const Persistence::Settings &settings);
-
-    Vst::PluginFinder *createPluginFinder() override; //TODO use pluginFinder just in Standalone
 
     Controller::NinjamController *createNinjamController(MainController *) override;
 
@@ -129,12 +140,11 @@ protected:
 protected slots:
     void updateBpm(int newBpm) override;
     void connectedNinjamServer(Ninjam::Server server) override;
-    //void on_audioDriverSampleRateChanged(int newSampleRate) override;
     void on_audioDriverStarted() override;
     void on_audioDriverStopped() override;
     void on_newNinjamInterval() override;
     void on_ninjamStartProcessing(int intervalPosition) override;
-    void on_VSTPluginFounded(QString name, QString group, QString path) override;
+    void on_VSTPluginFounded(QString name, QString group, QString path);
 
 private slots:
     void on_vstPluginRequestedWindowResize(QString pluginName, int newWidht, int newHeight);
@@ -152,6 +162,10 @@ private:
     bool inputIndexIsValid(int inputIndex);
 
     MainWindowStandalone *window;
+
+    QScopedPointer<Vst::PluginFinder> pluginFinder;
+    Vst::PluginFinder *createPluginFinder();
+
 };
 }
 

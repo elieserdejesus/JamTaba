@@ -15,16 +15,17 @@
 using namespace Persistence;
 using namespace Controller;
 
-MainWindowStandalone::MainWindowStandalone(StandaloneMainController *controller) :
-    MainWindow(controller),
-    controller(controller),
-    fullScreenViewMode(false)
+MainWindowStandalone::MainWindowStandalone(StandaloneMainController *mainController) :
+    MainWindow(mainController),
+    controller(mainController),
+    fullScreenViewMode(false),
+    pluginScanDialog(nullptr)
 {
-    initializePluginFinder();
-
     setupSignals();
 
     setupShortcuts();
+
+    initializePluginFinder();
 }
 
 void MainWindowStandalone::setupShortcuts(){
@@ -40,6 +41,14 @@ void MainWindowStandalone::setupShortcuts(){
 void MainWindowStandalone::setupSignals()
 {
     connect(ui.actionFullscreenMode, SIGNAL(triggered(bool)), this, SLOT(toggleFullScreen()));
+
+    Vst::PluginFinder *pluginFinder = controller->getPluginFinder();
+    Q_ASSERT(pluginFinder);
+    connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(showPluginScanDialog()));
+    connect(pluginFinder, SIGNAL(scanFinished(bool)), this, SLOT(hidePluginScanDialog(bool)));
+    connect(pluginFinder, SIGNAL(badPluginDetected(QString)), this, SLOT(addPluginToBlackList(QString)));
+    connect(pluginFinder, SIGNAL(pluginScanFinished(QString, QString, QString)), this, SLOT(addFoundedPlugin(QString, QString, QString)));
+    connect(pluginFinder, SIGNAL(pluginScanStarted(QString)), this, SLOT(setCurrentScanningPlugin(QString)));
 }
 
 void MainWindowStandalone::initialize()
@@ -70,6 +79,56 @@ void MainWindowStandalone::restoreWindowPosition()
     this->move(x, y);
     qCDebug(jtGUI)<< "Restoring window to position:" << x << ", " << y;
     qCDebug(jtGUI)<< "Window size:" << width() << ", " << height();
+}
+
+// plugin finder events
+void MainWindowStandalone::showPluginScanDialog()
+{
+    if (!pluginScanDialog) {
+        pluginScanDialog.reset(new PluginScanDialog(this));
+        QObject::connect(pluginScanDialog.data(), SIGNAL(rejected()), this,
+                         SLOT(closePluginScanDialog()));
+    }
+    pluginScanDialog->show();
+}
+
+void MainWindowStandalone::closePluginScanDialog()
+{
+    controller->cancelPluginFinder();
+    pluginScanDialog.reset();// reset to null pointer
+}
+
+void MainWindowStandalone::hidePluginScanDialog(bool finishedWithoutError)
+{
+    Q_UNUSED(finishedWithoutError);
+    if (pluginScanDialog)
+        pluginScanDialog->close();
+    pluginScanDialog.reset();
+}
+
+void MainWindowStandalone::addPluginToBlackList(QString pluginPath)
+{
+    QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(pluginPath);
+    QWidget *parent = this;
+    if (pluginScanDialog)
+        parent = pluginScanDialog.data();
+    QString message = pluginName + " can't be loaded and will be black listed!";
+    QMessageBox::warning(parent, "Plugin Error!", message);
+    controller->addBlackVstToSettings(pluginPath);
+}
+
+void MainWindowStandalone::addFoundedPlugin(QString name, QString group, QString path)
+{
+    Q_UNUSED(path);
+    Q_UNUSED(group);
+    if (pluginScanDialog)
+        pluginScanDialog->addFoundedPlugin(name);
+}
+
+void MainWindowStandalone::setCurrentScanningPlugin(QString pluginPath)
+{
+    if (pluginScanDialog)
+        pluginScanDialog->setCurrentScaning(pluginPath);
 }
 
 bool MainWindowStandalone::midiDeviceIsValid(int deviceIndex) const
@@ -228,7 +287,7 @@ void MainWindowStandalone::closeEvent(QCloseEvent *e)
         trackGroup->closePluginsWindows();
 }
 
-// ++++++++++++++++++++++
+//+++++++++++++++++++=+
 void MainWindowStandalone::showPreferencesDialog(int initialTab)
 {
     stopCurrentRoomStream();
@@ -240,7 +299,7 @@ void MainWindowStandalone::showPreferencesDialog(int initialTab)
     if (midiDriver)
         midiDriver->stop();
 
-    StandalonePreferencesDialog dialog(mainController, this, initialTab);
+    StandalonePreferencesDialog dialog(controller, this, initialTab);
 
     connect(&dialog,
             SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int, int, int)),
@@ -261,10 +320,6 @@ void MainWindowStandalone::showPreferencesDialog(int initialTab)
 
 void MainWindowStandalone::initializePluginFinder()
 {
-    MainWindow::initializePluginFinder();
-
-    StandaloneMainController *controller
-        = dynamic_cast<StandaloneMainController *>(mainController);
     const Persistence::Settings settings = controller->getSettings();
 
     controller->initializePluginsList(settings.getVstPluginsPaths());// load the cached plugins. The cache can be empty.

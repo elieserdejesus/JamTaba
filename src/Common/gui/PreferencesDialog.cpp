@@ -29,8 +29,7 @@ void PreferencesDialog::setupSignals()
     // the 'accept' slot is overrided in inherited classes (StandalonePreferencesDialog and VstPreferencesDialog)
     connect(ui->okButton, SIGNAL(clicked(bool)), this, SLOT(accept()));
     connect(ui->prefsTab, SIGNAL(currentChanged(int)), this, SLOT(selectPreferencesTab(int)));
-    connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this,
-            SLOT(setMultiTrackRecordingStatus(bool)));
+    connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this, SLOT(setMultiTrackRecordingStatus(bool)));
     connect(ui->browseRecPathButton, SIGNAL(clicked(bool)), this, SLOT(selectRecordingPath()));
 }
 
