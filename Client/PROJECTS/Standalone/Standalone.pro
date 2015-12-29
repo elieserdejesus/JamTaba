@@ -31,6 +31,7 @@ HEADERS += StandaloneMainController.h
 HEADERS += StandalonePreferencesDialog.h
 HEADERS += StandaloneLocalTrackView.h
 HEADERS += StandaloneLocalTrackGroupView.h
+HEADERS += gui/ScanFolderPanel.h
 
 HEADERS += audio/core/PortAudioDriver.h
 HEADERS += recorder/JamRecorder.h
@@ -59,6 +60,7 @@ SOURCES += MainWindowStandalone.cpp
 SOURCES += StandalonePreferencesDialog.cpp
 SOURCES += StandaloneLocalTrackView.cpp
 SOURCES += StandaloneLocalTrackGroupView.cpp
+SOURCES += gui/ScanFolderPanel.cpp
 
 SOURCES += recorder/JamRecorder.cpp
 SOURCES += recorder/ReaperProjectGenerator.cpp

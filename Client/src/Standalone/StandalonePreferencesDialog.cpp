@@ -3,6 +3,7 @@
 #include "audio/core/AudioDriver.h"
 #include "StandAloneMainController.h"
 #include "MainWindow.h"
+#include "gui/ScanFolderPanel.h"
 #include "QFileDialog"
 
 /**
@@ -11,40 +12,6 @@
 
 using namespace Audio;
 using namespace Controller;
-
-// Internal class used to handle the VST scan folders widgets
-class StandalonePreferencesDialog::ScanFolderPanel : public QWidget
-{
-public:
-    ScanFolderPanel(QString folder) :
-        QWidget(0),
-        removeButton(nullptr),
-        scanFolder(folder)
-    {
-        removeButton = new QPushButton(QIcon(":/images/less.png"), "");
-        removeButton->setToolTip("Remove this folder from scanning");
-
-        QHBoxLayout *layout = new QHBoxLayout();
-        this->setLayout(layout);
-        layout->setContentsMargins(0, 0, 0, 0);
-        layout->addWidget(removeButton);
-        layout->addWidget(new QLabel(scanFolder, this), 1.0);
-    }
-
-    QPushButton *getRemoveButton() const
-    {
-        return removeButton;
-    }
-
-    QString getScanFolder() const
-    {
-        return scanFolder;
-    }
-
-private:
-    QPushButton *removeButton;
-    QString scanFolder;
-};
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 
