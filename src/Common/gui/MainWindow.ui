@@ -541,41 +541,24 @@
    <addaction name="menuNinjam"/>
    <addaction name="menuHelp"/>
   </widget>
-  <action name="actionTest">
-   <property name="text">
-    <string>test</string>
-   </property>
-  </action>
   <action name="actionAudioPreferences">
    <property name="text">
     <string>Audio ...</string>
-   </property>
-   <property name="shortcut">
-    <string>F5</string>
    </property>
   </action>
   <action name="actionMidiPreferences">
    <property name="text">
     <string>Midi ...</string>
    </property>
-   <property name="shortcut">
-    <string>F6</string>
-   </property>
   </action>
   <action name="actionVstPreferences">
    <property name="text">
     <string>VST Plugins ...</string>
    </property>
-   <property name="shortcut">
-    <string>F7</string>
-   </property>
   </action>
   <action name="actionRecording">
    <property name="text">
     <string>Recording ...</string>
-   </property>
-   <property name="shortcut">
-    <string>F8</string>
    </property>
   </action>
   <action name="actionPrivate_Server">
@@ -607,9 +590,6 @@
    <property name="text">
     <string>Users Manual ...</string>
    </property>
-   <property name="shortcut">
-    <string>F1</string>
-   </property>
   </action>
   <action name="actionFullView">
    <property name="checkable">
@@ -631,9 +611,6 @@
    <property name="text">
     <string>Quit...</string>
    </property>
-   <property name="shortcut">
-    <string>Esc</string>
-   </property>
   </action>
   <action name="actionFullscreenMode">
    <property name="checkable">
@@ -641,9 +618,6 @@
    </property>
    <property name="text">
     <string>FullscreenMode</string>
-   </property>
-   <property name="shortcut">
-    <string>F11</string>
    </property>
   </action>
   <action name="actionCurrentVersion">

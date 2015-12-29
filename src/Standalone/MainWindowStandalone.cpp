@@ -8,7 +8,9 @@
 #include "LocalTrackView.h"
 #include "log/Logging.h"
 #include "audio/core/PluginDescriptor.h"
+
 #include <QTimer>
+#include <QShortcut>
 
 using namespace Persistence;
 using namespace Controller;
@@ -21,6 +23,18 @@ MainWindowStandalone::MainWindowStandalone(StandaloneMainController *controller)
     initializePluginFinder();
 
     setupSignals();
+
+    setupShortcuts();
+}
+
+void MainWindowStandalone::setupShortcuts(){
+    ui.actionAudioPreferences->setShortcut(QKeySequence(Qt::Key_F5));
+    ui.actionMidiPreferences->setShortcut(QKeySequence(Qt::Key_F6));
+    ui.actionVstPreferences->setShortcut(QKeySequence(Qt::Key_F7));
+    ui.actionRecording->setShortcut(QKeySequence(Qt::Key_F8));
+    ui.actionUsersManual->setShortcut(QKeySequence(Qt::Key_F1));
+    ui.actionQuit->setShortcut(QKeySequence(Qt::Key_Escape));
+    ui.actionFullscreenMode->setShortcut(QKeySequence(Qt::Key_F11));
 }
 
 void MainWindowStandalone::setupSignals()
