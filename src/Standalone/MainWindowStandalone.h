@@ -20,6 +20,8 @@ public:
 
     void refreshTrackInputSelection(int inputTrackIndex);
 
+    void initialize() override;
+
 protected:
     void closeEvent(QCloseEvent *);
 
@@ -35,11 +37,14 @@ protected:
 
     void restoreLocalSubchannelPluginsList(StandaloneLocalTrackView *subChannelView, Persistence::Subchannel subChannel);
 
-protected slots:
+protected slots: //TODO change to private slots?
     void handleServerConnectionError(QString msg);
 
     void setGlobalPreferences(QList<bool>, int audioDevice, int firstIn, int lastIn, int firstOut,
                               int lastOut, int sampleRate, int bufferSize);
+
+private slots:
+    void toggleFullScreen();
 
 private:
     StandaloneMainController *controller;
@@ -49,6 +54,14 @@ private:
     bool midiDeviceIsValid(int deviceIndex) const;
 
     void sanitizeSubchannelInputSelections(LocalTrackView *subChannelView, Persistence::Subchannel subChannel);
+
+    bool fullScreenViewMode;
+
+    void setFullScreenStatus(bool fullScreen);
+
+    void setupSignals();
+
+    void restoreWindowPosition();
 };
 
 #endif // MAINFRAMEVST_H

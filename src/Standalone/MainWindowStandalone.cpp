@@ -15,14 +15,68 @@ using namespace Controller;
 
 MainWindowStandalone::MainWindowStandalone(StandaloneMainController *controller) :
     MainWindow(controller),
-    controller(controller)
+    controller(controller),
+    fullScreenViewMode(false)
 {
     initializePluginFinder();
+
+    setupSignals();
+}
+
+void MainWindowStandalone::setupSignals()
+{
+    connect(ui.actionFullscreenMode, SIGNAL(triggered(bool)), this, SLOT(toggleFullScreen()));
+}
+
+void MainWindowStandalone::initialize()
+{
+    MainWindow::initialize();
+
+    Persistence::Settings settings = mainController->getSettings();
+    if (settings.windowsWasFullScreenViewMode()) {
+        setFullScreenStatus(true);
+    } else {// not full screen. Is maximized or normal?
+        if (mainController->getSettings().windowWasMaximized()) {
+            qCDebug(jtGUI)<< "setting window state to maximized";
+            showMaximized();
+        } else {
+            restoreWindowPosition();
+        }
+    }
+}
+
+void MainWindowStandalone::restoreWindowPosition()
+{
+    QPointF location = mainController->getSettings().getLastWindowLocation();
+    QDesktopWidget *desktop = QApplication::desktop();
+    int desktopWidth = desktop->width();
+    int desktopHeight = desktop->height();
+    int x = desktopWidth * location.x();
+    int y = desktopHeight * location.y();
+    this->move(x, y);
+    qCDebug(jtGUI)<< "Restoring window to position:" << x << ", " << y;
+    qCDebug(jtGUI)<< "Window size:" << width() << ", " << height();
 }
 
 bool MainWindowStandalone::midiDeviceIsValid(int deviceIndex) const
 {
     return deviceIndex < controller->getMidiDriver()->getMaxInputDevices();
+}
+
+void MainWindowStandalone::setFullScreenStatus(bool fullScreen)
+{
+    fullScreenViewMode = fullScreen;
+    if (fullScreen)
+        showFullScreen();
+    else
+        showNormal();
+    mainController->setFullScreenView(fullScreenViewMode);
+    ui.actionFullscreenMode->setChecked(fullScreen);
+}
+
+void MainWindowStandalone::toggleFullScreen()
+{
+    setFullScreenStatus(!fullScreenViewMode);// toggle
 }
 
 // sanitize the input selection for each loaded subchannel
@@ -50,14 +104,15 @@ void MainWindowStandalone::sanitizeSubchannelInputSelections(LocalTrackView *sub
     }
 }
 
-void MainWindowStandalone::restoreLocalSubchannelPluginsList(StandaloneLocalTrackView *subChannelView,
-                                                             Subchannel subChannel)
+void MainWindowStandalone::restoreLocalSubchannelPluginsList(
+    StandaloneLocalTrackView *subChannelView, Subchannel subChannel)
 {
     // create the plugins list
     foreach (Persistence::Plugin plugin, subChannel.getPlugins()) {
         QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
         Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path);
-        Audio::Plugin *pluginInstance = mainController->addPlugin(subChannelView->getInputIndex(), descriptor);
+        Audio::Plugin *pluginInstance = mainController->addPlugin(
+            subChannelView->getInputIndex(), descriptor);
         if (pluginInstance) {
             try{
                 pluginInstance->restoreFromSerializedData(plugin.data);
@@ -80,7 +135,8 @@ void MainWindowStandalone::initializeLocalSubChannel(LocalTrackView *subChannelV
     // check if the loaded input selections (midi, audio mono, audio stereo) are stil valid and fallback if not
     sanitizeSubchannelInputSelections(subChannelView, subChannel);
 
-    restoreLocalSubchannelPluginsList( dynamic_cast<StandaloneLocalTrackView*>(subChannelView), subChannel);
+    restoreLocalSubchannelPluginsList(dynamic_cast<StandaloneLocalTrackView *>(subChannelView),
+                                      subChannel);
 }
 
 LocalTrackGroupView *MainWindowStandalone::createLocalTrackGroupView(int channelGroupIndex)
@@ -145,17 +201,6 @@ NinjamRoomWindow *MainWindowStandalone::createNinjamWindow(Login::RoomInfo roomI
                                                            MainController *mainController)
 {
     return new NinjamRoomWindow(this, roomInfo, mainController);
-}
-
-// implementing the MainWindow methods
-bool MainWindow::canCreateSubchannels() const
-{
-    return true;
-}
-
-bool MainWindow::canUseFullScreen() const
-{
-    return true;
 }
 
 // ++++++++++++++++++++++++++++
