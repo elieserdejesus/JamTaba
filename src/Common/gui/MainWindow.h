@@ -186,8 +186,6 @@ private:
     QScopedPointer<Login::RoomInfo> roomToJump;// store the next room reference when jumping from on room to another
     QString passwordToJump;
 
-    void showPluginGui(Audio::Plugin *plugin);
-
     static bool jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2);
 
     void initializeLoginService();

@@ -10,10 +10,8 @@
 #include "persistence/UsersDataCache.h"
 #include "recorder/JamRecorder.h"
 #include "audio/core/AudioNode.h"
-#include "audio/core/Plugins.h"
 #include "audio/core/AudioMixer.h"
 #include "audio/RoomStreamerNode.h"
-#include "audio/core/PluginDescriptor.h"
 #include "midi/MidiDriver.h"
 #include "UploadIntervalData.h"
 #include "audio/core/AudioNode.h" //including InputTrackGroup
@@ -188,17 +186,6 @@ public:
 
     // used to recreate audio encoder with enough channels
     int getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const;
-
-    QList<Audio::PluginDescriptor> pluginsDescriptors;
-
-    // used to sort plugins list
-    static bool pluginDescriptorLessThan(const Audio::PluginDescriptor &d1,
-                                         const Audio::PluginDescriptor &d2);
-
-    virtual Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor) = 0;
-    QList<Audio::PluginDescriptor> getPluginsDescriptors();
-    Audio::Plugin *addPlugin(int inputTrackIndex, const Audio::PluginDescriptor &descriptor);
-    void removePlugin(int inputTrackIndex, Audio::Plugin *plugin);
 
     void configureStyleSheet(QString cssFile);
 

@@ -185,6 +185,45 @@ void StandaloneMainController::setInputTrackToMono(int localChannelIndex,
 }
 
 
+bool StandaloneMainController::pluginDescriptorLessThan(const Audio::PluginDescriptor &d1,
+                                              const Audio::PluginDescriptor &d2)
+{
+    return d1.getName().localeAwareCompare(d2.getName()) < 0;
+}
+
+
+QList<Audio::PluginDescriptor> StandaloneMainController::getPluginsDescriptors()
+{
+    qSort(pluginsDescriptors.begin(), pluginsDescriptors.end(), pluginDescriptorLessThan);
+    return pluginsDescriptors;
+}
+
+Audio::Plugin *StandaloneMainController::addPlugin(int inputTrackIndex,
+                                         const Audio::PluginDescriptor &descriptor)
+{
+    Audio::Plugin *plugin = createPluginInstance(descriptor);
+    if (plugin) {
+        plugin->start();
+        QMutexLocker locker(&mutex);
+        getInputTrack(inputTrackIndex)->addProcessor(plugin);
+    }
+    return plugin;
+}
+
+void StandaloneMainController::removePlugin(int inputTrackIndex, Audio::Plugin *plugin)
+{
+    QMutexLocker locker(&mutex);
+    QString pluginName = plugin->getName();
+    try{
+        Audio::AudioNode *trackNode = getInputTrack(inputTrackIndex);
+        if (trackNode)
+            trackNode->removeProcessor(plugin);
+    }
+    catch (...) {
+        qCritical() << "Error removing plugin " << pluginName;
+    }
+}
+
 void StandaloneMainController::addPluginsScanPath(QString path)
 {
     settings.addVstScanPath(path);

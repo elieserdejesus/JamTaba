@@ -20,7 +20,7 @@
 
 const QString FxPanelItem::NEW_EFFECT_STRING = "new effect...";
 
-FxPanelItem::FxPanelItem(StandaloneLocalTrackView *parent, Controller::MainController *mainController) :
+FxPanelItem::FxPanelItem(StandaloneLocalTrackView *parent, Controller::StandaloneMainController *mainController) :
     QWidget(parent),
     plugin(nullptr),
     bypassButton(new QPushButton(this)),
@@ -161,8 +161,7 @@ void FxPanelItem::on_fxMenuActionTriggered(QAction *action)
     // add a new plugin
     Audio::PluginDescriptor descriptor = Audio::PluginDescriptor::fromString(
         action->data().toString());
-    Audio::Plugin *plugin = mainController->addPlugin(
-        this->localTrackView->getInputIndex(), descriptor);
+    Audio::Plugin *plugin = mainController->addPlugin(this->localTrackView->getInputIndex(), descriptor);
     if (plugin) {
         this->localTrackView->addPlugin(plugin);
         showPluginGui(plugin);
