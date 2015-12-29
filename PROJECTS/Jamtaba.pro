@@ -9,3 +9,6 @@ win32{
 }
 
 #SUBDIRS += ThemeEditor
+
+RESOURCES += \
+    ../src/Common/resources/jamtaba.qrc
