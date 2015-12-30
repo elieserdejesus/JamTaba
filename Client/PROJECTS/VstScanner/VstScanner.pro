@@ -18,13 +18,13 @@ INCLUDEPATH += $$ROOT_PATH/../VST_SDK/pluginterfaces/vst2.x
 VPATH       += $$SOURCE_PATH/Common
 VPATH       += $$SOURCE_PATH/VstScanner
 
-HEADERS += audio/vst/VstHost.h
+HEADERS += vst/VstHost.h
 HEADERS += VstPluginScanner.h
 
 SOURCES += main.cpp
-SOURCES += audio/vst/VstHost.cpp
+SOURCES += vst/VstHost.cpp
+SOURCES += vst/VstLoader.cpp
 SOURCES += audio/core/PluginDescriptor.cpp
-SOURCES += audio/vst/VstLoader.cpp
 SOURCES += log/logging.cpp
 SOURCES += VstPluginScanner.cpp
 win32:SOURCES += WindowsVstPluginScanner.cpp

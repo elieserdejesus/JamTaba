@@ -1,6 +1,7 @@
 #include "VstPlugin.h"
 #include "aeffectx.h"
-#include "VstHost.h"
+#include "vst/VstHost.h"
+#include "vst/VstLoader.h"
 #include <QMap>
 #include <QApplication>
 #include <QDialog>
@@ -23,7 +24,6 @@
 #include <QDebug>
 #include <cassert>
 #include "log/Logging.h"
-#include "VstLoader.h"
 
 using namespace Vst;
 

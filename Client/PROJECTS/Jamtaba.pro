@@ -2,10 +2,10 @@ TEMPLATE = subdirs
 
 SUBDIRS += VstScanner
 
-#SUBDIRS += Standalone
+SUBDIRS += Standalone
 
 win32{
-#    SUBDIRS += VstPlugin  #VstPlugin need Qt static build
+    SUBDIRS += VstPlugin  #VstPlugin need Qt static build
 }
 
 #SUBDIRS += ThemeEditor
