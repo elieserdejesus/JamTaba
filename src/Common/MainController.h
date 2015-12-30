@@ -189,6 +189,7 @@ public:
 
     void configureStyleSheet(QString cssFile);
 
+    //TODO: move this code to NinjamController.
     void finishUploads();// used to send the last part of ninjam intervals when audio is stopped.
 
     virtual QString getUserEnvironmentString() const;
@@ -280,9 +281,6 @@ protected slots:
 
     // TODO move this slot to NinjamController
     virtual void on_newNinjamInterval();
-
-    // audio driver
-    virtual void on_audioDriverStopped();//TODO move to ninjaController
 
 };
 }

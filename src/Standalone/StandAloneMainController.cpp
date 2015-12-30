@@ -213,7 +213,6 @@ void StandaloneMainController::on_audioDriverStarted()
 
 void StandaloneMainController::on_audioDriverStopped()
 {
-    MainController::on_audioDriverStopped();
     foreach (Audio::LocalInputAudioNode *inputTrack, inputTracks)
         inputTrack->suspendProcessors();// suspend plugins
 }

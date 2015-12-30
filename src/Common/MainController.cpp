@@ -38,14 +38,6 @@ void MainController::setSampleRate(int newSampleRate)
         ninjamController->setSampleRate(newSampleRate);
 }
 
-void MainController::on_audioDriverStopped()
-{
-    if (isPlayingInNinjamRoom()) {
-        finishUploads();// send the last interval part when audio driver is stopped
-        ninjamController->reset();// discard downloaded intervals and reset interval position
-    }
-}
-
 void MainController::finishUploads()
 {
     foreach (int channelIndex, intervalsToUpload.keys())
