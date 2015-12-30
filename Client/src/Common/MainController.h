@@ -51,7 +51,7 @@ public:
     void saveLastUserSettings(const Persistence::LocalInputTrackSettings &inputsSettings);
 
     // presets
-    Persistence::Preset loadPreset(QString name);// one preset
+    virtual Persistence::Preset loadPreset(QString name);// one preset
     QStringList getPresetList();// return all presets names
     void savePreset(Persistence::LocalInputTrackSettings inputsSettings, QString name);
     void deletePreset(QString name); //not used yet

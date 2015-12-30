@@ -187,8 +187,9 @@ class LocalInputTrackSettings : public SettingsObject
 {
 public:
     LocalInputTrackSettings(bool createOneTrack = false);
-    void write(QJsonObject &out);
-    void read(QJsonObject in);
+    void write(QJsonObject &out) override;
+    void read(QJsonObject in) override;
+    void read(QJsonObject in, bool allowMultiSubchannels);
     QList<Channel> channels;
 
     inline bool isValid() const
@@ -248,9 +249,9 @@ public:
     void load();
 
     bool writePresetToFile(Preset preset);
-    void DeletePreset(QString name);
+    void deletePreset(QString name);
     QStringList getPresetList();
-    Preset readPresetFromFile(QString presetFileName);
+    Preset readPresetFromFile(QString presetFileName, bool allowMultiSubchannels = true);
 
     inline int getLastSampleRate() const
     {
