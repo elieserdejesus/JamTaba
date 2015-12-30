@@ -46,7 +46,7 @@ public:
 
     void setCSS(QString css);
 
-    int addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode);
+    int addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode) override;
 
     void setSampleRate(int newSampleRate);
 

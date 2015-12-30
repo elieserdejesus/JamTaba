@@ -130,7 +130,7 @@ public:
     Geo::Location getGeoLocation(QString ip);
 
     Audio::LocalInputAudioNode *getInputTrack(int localInputIndex);
-    int addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode);
+    virtual int addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode);
     void removeInputTrackNode(int inputTrackIndex);
 
     inline int getInputTracksCount() const
