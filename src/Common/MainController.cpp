@@ -510,12 +510,12 @@ void MainController::savePreset(Persistence::LocalInputTrackSettings inputsSetti
 
 void MainController::deletePreset(QString name)
 {
-    return settings.DeletePreset(name);
+    return settings.deletePreset(name);
 }
 
 Persistence::Preset MainController::loadPreset(QString name)
 {
-    return settings.readPresetFromFile(name);
+    return settings.readPresetFromFile(name);//allow multi subchannels by default
 }
 
 // +++++++++++++++++++++++++++++++++++++++

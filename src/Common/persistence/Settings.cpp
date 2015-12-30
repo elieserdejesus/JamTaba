@@ -315,14 +315,13 @@ Subchannel::Subchannel(int firstInput, int channelsCount, int midiDevice, int mi
 LocalInputTrackSettings::LocalInputTrackSettings(bool createOneTrack) :
     SettingsObject("inputs")
 {
-    if(createOneTrack){
+    if (createOneTrack) {
         // create a default channel
         Channel channel("my channel");
         Subchannel subchannel(0, 2, -1, -1, 1.0f, 1.0f, 0.0f, false);
         channel.subChannels.append(subchannel);
         this->channels.append(channel);
     }
-
 }
 
 void LocalInputTrackSettings::write(QJsonObject &out)
@@ -361,7 +360,7 @@ void LocalInputTrackSettings::write(QJsonObject &out)
     out["channels"] = channelsArray;
 }
 
-void LocalInputTrackSettings::read(QJsonObject in)
+void LocalInputTrackSettings::read(QJsonObject in, bool allowMultiSubchannels)
 {
     if (in.contains("channels")) {
         QJsonArray channelsArray = in["channels"].toArray();
@@ -370,7 +369,8 @@ void LocalInputTrackSettings::read(QJsonObject in)
             Persistence::Channel channel(getValueFromJson(channelObject, "name", QString("")));
             if (channelObject.contains("subchannels")) {
                 QJsonArray subChannelsArray = channelObject["subchannels"].toArray();
-                for (int k = 0; k < subChannelsArray.size(); ++k) {
+                int subChannelsLimit = allowMultiSubchannels ? subChannelsArray.size() : 1;
+                for (int k = 0; k < subChannelsLimit; ++k) {
                     QJsonObject subChannelObject = subChannelsArray.at(k).toObject();
                     int firstInput = getValueFromJson(subChannelObject, "firstInput", 0);
                     int channelsCount = getValueFromJson(subChannelObject, "channelsCount", 0);
@@ -408,6 +408,11 @@ void LocalInputTrackSettings::read(QJsonObject in)
             }
         }
     }
+}
+
+void LocalInputTrackSettings::read(QJsonObject in)
+{
+    read(in, true);//allowing multi subchannel by default
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++
@@ -622,12 +627,14 @@ bool Settings::writePresetToFile(Preset preset)
 }
 
 // ++++++++++++++++++++++++++++++
-Preset::Preset(QString name, LocalInputTrackSettings inputSettings)
-    :name(name), inputTrackSettings(inputSettings){
+Preset::Preset(QString name, LocalInputTrackSettings inputSettings) :
+    name(name),
+    inputTrackSettings(inputSettings)
+{
 }
 
 // ++++++++++++++
-Preset Settings::readPresetFromFile(QString presetFileName)
+Preset Settings::readPresetFromFile(QString presetFileName, bool allowMultiSubchannels)
 {
     QString absolutePath = Configurator::getInstance()->getPresetPath(presetFileName);
     QFile presetFile(absolutePath);
@@ -635,10 +642,10 @@ Preset Settings::readPresetFromFile(QString presetFileName)
         QJsonDocument doc = QJsonDocument::fromJson(presetFile.readAll());
         QJsonObject root = doc.object();
         QString presetName = "default";
-        if (!root.keys().isEmpty()){
+        if (!root.keys().isEmpty()) {
             presetName = root.keys().first();
             Preset preset(presetName);
-            preset.inputTrackSettings.read(root[presetName].toObject());
+            preset.inputTrackSettings.read(root[presetName].toObject(), allowMultiSubchannels);
             return preset;
         }
     } else {
@@ -687,7 +694,7 @@ void Settings::save(Persistence::LocalInputTrackSettings inputsSettings)
     writeFile(Configurator::getInstance()->getAppType(), sections);
 }
 
-void Settings::DeletePreset(QString name)
+void Settings::deletePreset(QString name)
 {
     Configurator::getInstance()->deletePreset(name);
 }

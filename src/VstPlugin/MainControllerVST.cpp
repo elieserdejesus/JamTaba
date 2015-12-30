@@ -9,16 +9,6 @@
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 using namespace Controller;
 
-//class AudioDriverVST : public Audio::NullAudioDriver
-//{
-//public:
-//    AudioDriverVST() :
-//        NullAudioDriver()
-//    {
-//        globalInputRange = Audio::ChannelRange(0, 4);// 4 inputs
-//        globalOutputRange = Audio::ChannelRange(0, 2);// 2 outputs
-//    }
-//};
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NinjamControllerVST::NinjamControllerVST(MainControllerVST *c) :
     NinjamController(c),
@@ -57,6 +47,11 @@ MainControllerVST::~MainControllerVST()
 {
     if (mainWindow)
         saveLastUserSettings(mainWindow->getInputsSettings());
+}
+
+Persistence::Preset MainControllerVST::loadPreset(QString name)
+{
+    return settings.readPresetFromFile(name, false);//don't allow multi subchannels in vst plugin and avoid hacking in json file to create subchannels in VSt plugin.
 }
 
 void MainControllerVST::resizePluginEditor(int newWidth, int newHeight)

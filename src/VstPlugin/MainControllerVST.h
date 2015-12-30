@@ -67,6 +67,8 @@ public:
 
     void resizePluginEditor(int newWidth, int newHeight);
 
+    Persistence::Preset loadPreset(QString name) override;
+
 protected:
     inline Midi::MidiBuffer pullMidiBuffer() override
     {
