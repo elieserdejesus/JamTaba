@@ -6,10 +6,12 @@
 #include "audio/core/PluginDescriptor.h"
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+class MainControllerVST;
+
 class NinjamControllerVST : public Controller::NinjamController
 {
 public:
-    explicit NinjamControllerVST(Controller::MainController *c);
+    explicit NinjamControllerVST(MainControllerVST *c);
     inline bool isWaitingForHostSync() const
     {
         return waitingForHostSync;
@@ -31,31 +33,20 @@ public:
     MainControllerVST(Persistence::Settings settings, JamtabaPlugin *plugin);
     ~MainControllerVST();
 
-    inline bool isRunningAsVstPlugin() const
+    inline QString getJamtabaFlavor() const override
     {
-        return true;
+        return "Vst Plugin";
     }
 
     QString getUserEnvironmentString() const;
 
     Audio::AudioDriver *createAudioDriver(const Persistence::Settings &settings);
 
-    Controller::NinjamController *createNinjamController(MainController *c);
+    Controller::NinjamController *createNinjamController() override;
 
     void setCSS(QString css);
 
     int addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode);
-
-    inline Vst::PluginFinder *createPluginFinder()
-    {
-        return nullptr;
-    }
-
-    inline Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor)
-    {
-        Q_UNUSED(descriptor);
-        return nullptr;// vst plugin can't load other plugins
-    }
 
     void setSampleRate(int newSampleRate);
 
@@ -66,17 +57,8 @@ public:
 
     Midi::MidiDriver *createMidiDriver();
 
-    inline void exit()
+    inline void exit() //TODO remove this ??
     {
-    }
-
-    inline void addDefaultPluginsScanPath()
-    {
-    }
-
-    inline void scanPlugins(bool scanOnlyNewPlugins)
-    {
-        Q_UNUSED(scanOnlyNewPlugins)
     }
 
     int getHostBpm() const;
@@ -84,6 +66,12 @@ public:
     QString getHostName() const;
 
     void resizePluginEditor(int newWidth, int newHeight);
+
+protected:
+    inline Midi::MidiBuffer pullMidiBuffer() override
+    {
+        return Midi::MidiBuffer(0);
+    }
 private:
     int sampleRate;
     JamtabaPlugin *plugin;

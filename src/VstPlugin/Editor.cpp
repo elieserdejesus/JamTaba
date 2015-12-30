@@ -76,6 +76,7 @@ bool VstEditor::open(void *ptr)
         qCDebug(jtVstPlugin) << "Creating MainWindow...";
         mainWindow = new MainWindowVST(jamtaba->getController());
         jamtaba->getController()->setMainWindow(mainWindow);
+        mainWindow->initialize();
         rectangle.left = 0;
         rectangle.top = 0;
         rectangle.right = mainWindow->width();

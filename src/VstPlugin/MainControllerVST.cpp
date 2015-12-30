@@ -1,6 +1,7 @@
 #include "MainControllerVST.h"
 #include "midi/MidiDriver.h"
 #include "NinjamController.h"
+#include "MainWindow.h"
 #include "Plugin.h"
 #include "log/Logging.h"
 #include "Editor.h"
@@ -8,18 +9,18 @@
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 using namespace Controller;
 
-class AudioDriverVST : public Audio::NullAudioDriver
-{
-public:
-    AudioDriverVST() :
-        NullAudioDriver()
-    {
-        globalInputRange = Audio::ChannelRange(0, 4);// 4 inputs
-        globalOutputRange = Audio::ChannelRange(0, 2);// 2 outputs
-    }
-};
+//class AudioDriverVST : public Audio::NullAudioDriver
+//{
+//public:
+//    AudioDriverVST() :
+//        NullAudioDriver()
+//    {
+//        globalInputRange = Audio::ChannelRange(0, 4);// 4 inputs
+//        globalOutputRange = Audio::ChannelRange(0, 2);// 2 outputs
+//    }
+//};
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-NinjamControllerVST::NinjamControllerVST(Controller::MainController *c) :
+NinjamControllerVST::NinjamControllerVST(MainControllerVST *c) :
     NinjamController(c),
     waitingForHostSync(false)
 {
@@ -111,14 +112,9 @@ void MainControllerVST::setSampleRate(int newSampleRate)
     MainController::setSampleRate(newSampleRate);
 }
 
-Audio::AudioDriver *MainControllerVST::createAudioDriver(const Persistence::Settings &)
+Controller::NinjamController *MainControllerVST::createNinjamController()
 {
-    return new AudioDriverVST();
-}
-
-Controller::NinjamController *MainControllerVST::createNinjamController(MainController *c)
-{
-    return new NinjamControllerVST(c);
+    return new NinjamControllerVST(this);
 }
 
 Midi::MidiDriver *MainControllerVST::createMidiDriver()

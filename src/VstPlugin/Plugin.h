@@ -7,10 +7,7 @@
 #define DEFAULT_INPUTS 2
 #define DEFAULT_OUTPUTS 1
 
-#include <QLabel>
-#include <QSlider>
-#include "MainController.h"
-#include "gui/MainWindow.h"
+#include "MainControllerVST.h"
 
 #include "audioeffectx.h"
 #include "aeffectx.h"
@@ -18,7 +15,6 @@
 AudioEffect *createEffectInstance(audioMasterCallback audioMaster);
 
 // ++++++++++++++++++++++++++++++++
-class JamtabaPlugin;
 
 class JamtabaPlugin : public AudioEffectX
 {
@@ -31,7 +27,6 @@ public:
         return running;
     }
 
-    bool isRunningAsVstPlugin() const;
     void initialize();    // called first time editor is opened
     VstInt32 canDo(char *text);
     void processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames);
@@ -64,7 +59,7 @@ public:
         return kPlugCategEffect;
     }
 
-    inline Controller::MainController *getController()
+    inline MainControllerVST *getController()
     {
         return controller.data();
     }
@@ -77,7 +72,7 @@ protected:
     VstEvents *listEvnts;
 
 private:
-    QScopedPointer<Controller::MainController> controller;
+    QScopedPointer<MainControllerVST> controller;
     bool running;
     Audio::SamplesBuffer inputBuffer;
     Audio::SamplesBuffer outputBuffer;
