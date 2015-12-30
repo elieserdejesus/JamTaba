@@ -5,8 +5,8 @@
 #include <QLibrary>
 #include <QDataStream>
 #include <QDebug>
-#include "audio/vst/VstHost.h"
-#include "audio/vst/VstLoader.h"
+#include "vst/VstHost.h"
+#include "vst/VstLoader.h"
 
 class WindowsDllArchChecker
 {

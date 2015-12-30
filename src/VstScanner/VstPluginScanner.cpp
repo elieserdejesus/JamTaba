@@ -1,10 +1,9 @@
 #include "VstPluginScanner.h"
-#include <exception>
 #include <iostream>
 #include <QDataStream>
 #include <QDirIterator>
 #include "audio/core/PluginDescriptor.h"
-#include "audio/vst/VstHost.h"
+#include "vst/VstHost.h"
 #include "log/Logging.h"
 
 VstPluginScanner::VstPluginScanner() :
