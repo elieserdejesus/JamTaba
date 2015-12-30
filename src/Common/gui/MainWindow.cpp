@@ -94,6 +94,12 @@ void MainWindow::updateLocalInputChannelsGeometry()
     ui.leftPanel->setMaximumWidth(max);
     ui.leftPanel->setMinimumWidth(min);
     ui.scrollArea->setHorizontalScrollBarPolicy(scrollPolicy);
+
+    if (!fullViewMode && localGroupChannels.count() > 1) {
+        foreach (LocalTrackGroupView *trackGroup, localGroupChannels){
+            trackGroup->setToNarrow();
+        }
+    }
 }
 
 void MainWindow::toggleLocalInputsCollapseStatus()
@@ -251,11 +257,6 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
 
     if (createFirstSubchannel)
         localChannel->addTrackView(channelGroupIndex);
-
-    if (!fullViewMode && localGroupChannels.count() > 1) {
-        foreach (LocalTrackGroupView *trackGroup, localGroupChannels)
-            trackGroup->setToNarrow();
-    }
 
     ui.localTracksWidget->updateGeometry();
 
