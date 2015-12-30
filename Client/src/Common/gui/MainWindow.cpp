@@ -84,7 +84,7 @@ void MainWindow::updateLocalInputChannelsGeometry()
     Qt::ScrollBarPolicy scrollPolicy = Qt::ScrollBarAlwaysOff;
 
     // limit the local inputs widget in mini mode
-    if (!showingPeakMeterOnly && !fullViewMode) {
+    if (!showingPeakMeterOnly && isRunningInMiniMode()) {
         max = 180;
         if (min > max) {
             min = max;
@@ -95,7 +95,7 @@ void MainWindow::updateLocalInputChannelsGeometry()
     ui.leftPanel->setMinimumWidth(min);
     ui.scrollArea->setHorizontalScrollBarPolicy(scrollPolicy);
 
-    if (!fullViewMode && localGroupChannels.count() > 1) {
+    if (isRunningInMiniMode() && localGroupChannels.count() > 1) {
         foreach (LocalTrackGroupView *trackGroup, localGroupChannels){
             trackGroup->setToNarrow();
         }
@@ -701,7 +701,7 @@ void MainWindow::changeEvent(QEvent *ev)
         mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation());
 
         // show only the peak meters if user is in mini mode and is not maximized or full screen
-        showPeakMetersOnlyInLocalControls(!fullViewMode && width() <= MINI_MODE_MIN_SIZE.width());
+        showPeakMetersOnlyInLocalControls(isRunningInMiniMode() && width() <= MINI_MODE_MIN_SIZE.width());
     }
     QMainWindow::changeEvent(ev);
 }
@@ -837,7 +837,7 @@ void MainWindow::changeViewMode(QAction *)
 void MainWindow::setFullViewStatus(bool fullViewActivated)
 {
     this->fullViewMode = fullViewActivated;
-    if (!fullViewActivated)// mini view
+    if (isRunningInMiniMode())
         setMinimumSize(MINI_MODE_MIN_SIZE);
     else // full view
         setMinimumSize(FULL_VIEW_MODE_MIN_SIZE);
@@ -846,14 +846,14 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
         resize(minimumSize());
     }
 
-    int tabLayoutMargim = fullViewMode ? 9 : 0;
+    int tabLayoutMargim = isRunningInFullViewMode() ? 9 : 0;
     ui.tabLayout->setContentsMargins(tabLayoutMargim, tabLayoutMargim, tabLayoutMargim,
                                      tabLayoutMargim);
 
     // show only the peak meters if user is in mini mode and is not maximized or full screen
-    showPeakMetersOnlyInLocalControls(!fullViewMode && !isMaximized() && !isFullScreen());
+    showPeakMetersOnlyInLocalControls(isRunningInMiniMode() && !isMaximized() && !isFullScreen());
 
-    ui.chatArea->setMinimumWidth(fullViewMode ? 280 : 180); //TODO Refactoring: remove these 'Magic Numbers'
+    ui.chatArea->setMinimumWidth(isRunningInFullViewMode() ? 280 : 180); //TODO Refactoring: remove these 'Magic Numbers'
 
     // refresh the public rooms list
     if (!mainController->isPlayingInNinjamRoom()) {
@@ -863,29 +863,28 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
         refreshPublicRoomsList(roomInfos);
     } else {
         if (ninjamWindow)
-            ninjamWindow->setFullViewStatus(fullViewMode);
+            ninjamWindow->setFullViewStatus(isRunningInFullViewMode());
     }
 
     // local tracks are narrowed in mini mode if user is using more than 1 subchannel
     foreach (LocalTrackGroupView *localTrackGroup, localGroupChannels) {
-        if (!fullViewMode
-            && (localTrackGroup->getTracksCount() > 1 || localGroupChannels.size() > 1))
+        if (isRunningInMiniMode() && (localTrackGroup->getTracksCount() > 1 || localGroupChannels.size() > 1))
             localTrackGroup->setToNarrow();
         else
             localTrackGroup->setToWide();
     }
 
-    ui.actionFullView->setChecked(fullViewMode);
-    ui.actionMiniView->setChecked(!fullViewMode);
+    ui.actionFullView->setChecked(isRunningInFullViewMode());
+    ui.actionMiniView->setChecked(isRunningInMiniMode());
 
-    int margim = fullViewMode ? 6 : 2;
+    int margim = isRunningInFullViewMode() ? 6 : 2;
     ui.bottomPanelLayout->setContentsMargins(margim, margim, margim, margim);
-    ui.bottomPanelLayout->setSpacing(fullViewMode ? 6 : 2);
+    ui.bottomPanelLayout->setSpacing(isRunningInFullViewMode() ? 6 : 2);
 
     if (ninjamWindow) {
         NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
         if (ninjamPanel)
-            ninjamPanel->setFullViewStatus(fullViewMode);
+            ninjamPanel->setFullViewStatus(isRunningInFullViewMode());
 
         ChatPanel *chatPanel = ninjamWindow->getChatPanel();
         if (chatPanel)
