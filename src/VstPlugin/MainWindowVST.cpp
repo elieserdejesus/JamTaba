@@ -18,7 +18,7 @@ MainWindowVST::MainWindowVST(Controller::MainController *mainController) :
 NinjamRoomWindow *MainWindowVST::createNinjamWindow(Login::RoomInfo roomInfo,
                                                     Controller::MainController *mainController)
 {
-    return new NinjamRoomWindowVST(this, roomInfo, mainController);
+    return new NinjamRoomWindowVST(this, roomInfo, dynamic_cast<MainControllerVST*>(mainController));
 }
 
 void MainWindowVST::removeAllInputLocalTracks(){

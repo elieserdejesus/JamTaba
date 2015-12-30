@@ -6,7 +6,7 @@
 #include <QHBoxLayout>
 #include <QStandardPaths>
 #include "MainControllerVST.h"
-#include "NinjamController.h"
+#include "NinjamControllerVST.h"
 #include "log/Logging.h"
 #include "Editor.h"
 
@@ -205,8 +205,7 @@ void JamtabaPlugin::processReplacing(float **inputs, float **outputs, VstInt32 s
         // ask timeInfo to VST host
         timeInfo = getTimeInfo(kVstTransportPlaying | kVstTransportChanged | kVstTempoValid);
         if (transportStartDetectedInHost()) {// user pressing play/start in host?
-            NinjamControllerVST *ninjamController
-                = dynamic_cast<NinjamControllerVST *>(controller->getNinjamController());
+            NinjamControllerVST *ninjamController = dynamic_cast<NinjamControllerVST *>(controller->getNinjamController());
             if (ninjamController->isWaitingForHostSync())
                 ninjamController->syncWithHost();
         }
