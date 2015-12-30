@@ -1,6 +1,6 @@
-#include "StandaloneLocalTrackGroupView.h"
-#include "StandaloneLocalTrackView.h"
-#include "StandaloneMainWindow.h"
+#include "LocalTrackGroupViewStandalone.h"
+#include "LocalTrackViewStandalone.h"
+#include "MainWindowStandalone.h"
 
 StandaloneLocalTrackGroupView::StandaloneLocalTrackGroupView(int index,
                                                              StandaloneMainWindow *mainWindow) :

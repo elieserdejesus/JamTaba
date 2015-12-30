@@ -3,7 +3,7 @@
 
 #include "LocalTrackView.h"
 #include "audio/core/AudioDriver.h"
-#include "StandAloneMainController.h"
+#include "MainControllerStandalone.h"
 
 class StandaloneLocalTrackView : public LocalTrackView
 {

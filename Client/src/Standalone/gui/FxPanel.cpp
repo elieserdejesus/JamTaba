@@ -1,6 +1,6 @@
 #include "FxPanel.h"
 #include "FxPanelItem.h"
-#include "StandaloneLocalTrackView.h"
+#include "LocalTrackViewStandalone.h"
 
 using namespace Controller;
 

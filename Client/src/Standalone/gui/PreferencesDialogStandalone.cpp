@@ -1,7 +1,7 @@
-#include "StandalonePreferencesDialog.h"
+#include "PreferencesDialogStandalone.h"
 
 #include "audio/core/AudioDriver.h"
-#include "StandAloneMainController.h"
+#include "MainControllerStandalone.h"
 #include "MainWindow.h"
 #include "gui/ScanFolderPanel.h"
 #include "QFileDialog"

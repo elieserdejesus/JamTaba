@@ -139,7 +139,7 @@ void JamtabaPlugin::close()
     if (editor) {
         if (editor->isOpen())
             editor->close();
-        ((VstEditor *)editor)->deleteMainWindow();
+        dynamic_cast<VstEditor *>(editor)->deleteMainWindow();
     }
 
     running = false;

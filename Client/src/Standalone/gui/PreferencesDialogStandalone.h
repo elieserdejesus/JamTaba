@@ -4,7 +4,7 @@
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
 #include "MainWindow.h"
-#include "StandaloneMainController.h"
+#include "MainControllerStandalone.h"
 
 class StandalonePreferencesDialog : public PreferencesDialog
 {

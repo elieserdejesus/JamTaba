@@ -26,11 +26,11 @@ DEPENDPATH +=  $$ROOT_PATH/libs/includes/minimp3
 
 VPATH += $$SOURCE_PATH/Standalone
 
-HEADERS += StandaloneMainController.h
-HEADERS += gui/StandaloneMainWindow.h
-HEADERS += gui/StandalonePreferencesDialog.h
-HEADERS += gui/StandaloneLocalTrackView.h
-HEADERS += gui/StandaloneLocalTrackGroupView.h
+HEADERS += MainControllerStandalone.h
+HEADERS += gui/MainWindowStandalone.h
+HEADERS += gui/PreferencesDialogStandalone.h
+HEADERS += gui/LocalTrackViewStandalone.h
+HEADERS += gui/LocalTrackGroupViewStandalone.h
 HEADERS += gui/ScanFolderPanel.h
 HEADERS += gui/FxPanel.h
 HEADERS += gui/FxPanelItem.h
@@ -57,11 +57,11 @@ HEADERS += Libs/SingleApplication/singleapplication.h
 HEADERS += audio/core/PluginDescriptor.h
 
 SOURCES += main.cpp
-SOURCES += StandaloneMainController.cpp
-SOURCES += gui/StandaloneMainWindow.cpp
-SOURCES += gui/StandalonePreferencesDialog.cpp
-SOURCES += gui/StandaloneLocalTrackView.cpp
-SOURCES += gui/StandaloneLocalTrackGroupView.cpp
+SOURCES += MainControllerStandalone.cpp
+SOURCES += gui/MainWindowStandalone.cpp
+SOURCES += gui/PreferencesDialogStandalone.cpp
+SOURCES += gui/LocalTrackViewStandalone.cpp
+SOURCES += gui/LocalTrackGroupViewStandalone.cpp
 SOURCES += gui/ScanFolderPanel.cpp
 SOURCES += gui/FxPanel.cpp
 SOURCES += gui/FxPanelItem.cpp
