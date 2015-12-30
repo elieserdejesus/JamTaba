@@ -11,7 +11,7 @@
 #include "audio/NinjamTrackNode.h"
 #include "persistence/Settings.h"
 #include "audio/MetronomeTrackNode.h"
-#include "vst/vsthost.h"
+//#include "vst/vsthost.h"
 
 #include <cmath>
 #include <cassert>

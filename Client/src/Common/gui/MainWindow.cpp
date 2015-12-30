@@ -1031,12 +1031,6 @@ void MainWindow::updateCurrentIntervalBeat(int beat)
         chordsPanel->setCurrentBeat(beat);
 }
 
-void MainController::on_ninjamStartProcessing(int intervalPosition)
-{
-    Q_UNUSED(intervalPosition)
-    // --------
-}
-
 void MainWindow::setupWidgets()
 {
     ui.masterMeterL->setOrientation(PeakMeter::HORIZONTAL);

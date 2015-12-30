@@ -30,7 +30,7 @@ VST_EXPORT AEffect *VSTPluginMain(audioMasterCallback audioMaster)
     if (!effect)
         return 0;
 
-    // Return the VST AEffect structur
+    // Return the VST AEffect structure
     return effect->getAeffect();
 }
 } // extern "C"
@@ -51,8 +51,8 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD dwReason, LPVOID /*lpvReserved*/)
 
         // start the configurator
         Configurator *configurator = Configurator::getInstance();
-        if (!configurator->setUp(APPTYPE::plugin)) qCWarning(jtConfigurator)
-                << "JTBConfig->setUp() FAILED !";
+        if (!configurator->setUp(APPTYPE::plugin))
+            qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";
 
         ownApplication = QMfcApp::pluginInstance(hInst);
     }

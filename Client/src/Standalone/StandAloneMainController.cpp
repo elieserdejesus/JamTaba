@@ -203,7 +203,6 @@ void StandaloneMainController::setSampleRate(int newSampleRate)
 
 void StandaloneMainController::on_audioDriverStarted()
 {
-    //MainController::on_audioDriverStarted();
 
     vstHost->setSampleRate(audioDriver->getSampleRate());
     vstHost->setBlockSize(audioDriver->getBufferSize());
@@ -225,10 +224,15 @@ void StandaloneMainController::on_newNinjamInterval()
     vstHost->setPlayingFlag(true);
 }
 
+void StandaloneMainController::setupNinjamControllerSignals(){
+    MainController::setupNinjamControllerSignals();
+
+    connect(ninjamController.data(), SIGNAL(startProcessing(int)), this, SLOT(on_ninjamStartProcessing(int)));
+}
+
 void StandaloneMainController::on_ninjamStartProcessing(int intervalPosition)
 {
-    MainController::on_ninjamStartProcessing(intervalPosition);
-    vstHost->update(intervalPosition);// update the vst host time line.
+    vstHost->update(intervalPosition);// update the vst host time line in every audio callback.
 }
 
 void StandaloneMainController::on_VSTPluginFounded(QString name, QString group, QString path)
@@ -259,9 +263,9 @@ Midi::MidiDriver *StandaloneMainController::createMidiDriver()
     // return new Midi::NullMidiDriver();
 }
 
-Controller::NinjamController *StandaloneMainController::createNinjamController(MainController *c)
+Controller::NinjamController *StandaloneMainController::createNinjamController()
 {
-    return new NinjamController(c);
+    return new NinjamController(this);
 }
 
 Audio::AudioDriver *StandaloneMainController::createAudioDriver(

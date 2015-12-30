@@ -105,19 +105,25 @@ protected:
     // TODO - Audio driver need just the audio settings to initialize, not the entire settings.
     Audio::AudioDriver *createAudioDriver(const Persistence::Settings &settings);
 
-    Controller::NinjamController *createNinjamController(MainController *) override;
+    Controller::NinjamController *createNinjamController() override;
 
     void setCSS(QString css);
 
     Midi::MidiBuffer pullMidiBuffer() override;
 
+    void setupNinjamControllerSignals() override;
+
 protected slots:
     void updateBpm(int newBpm) override;
     void connectedNinjamServer(Ninjam::Server server) override;
-    void on_audioDriverStarted() override;
+
     void on_audioDriverStopped() override;
     void on_newNinjamInterval() override;
-    void on_ninjamStartProcessing(int intervalPosition) override;
+
+    //TODO these 2 slots can be private slosts
+    void on_audioDriverStarted();
+    void on_ninjamStartProcessing(int intervalPosition) ;
+
     void on_VSTPluginFounded(QString name, QString group, QString path);
 
 private slots:

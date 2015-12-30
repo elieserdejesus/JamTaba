@@ -5,7 +5,6 @@
 #include <QDebug>
 #include <QDialog>
 #include <QMutexLocker>
-#include "vst/PluginFinder.h"
 
 using namespace Audio;
 

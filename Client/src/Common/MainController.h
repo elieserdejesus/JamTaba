@@ -218,7 +218,7 @@ protected:
 
     QMap<int, Audio::LocalInputAudioNode *> inputTracks;
 
-    virtual Controller::NinjamController *createNinjamController(MainController *) = 0;
+    virtual Controller::NinjamController *createNinjamController() = 0;
 
     MainWindow *mainWindow;
 
@@ -230,6 +230,8 @@ protected:
     QMap<int, UploadIntervalData *> intervalsToUpload;
 
     QMutex mutex;
+
+    virtual void setupNinjamControllerSignals();
 
 private:
     void setAllTracksActivation(bool activated);
@@ -276,12 +278,10 @@ protected slots:
     virtual void updateBpi(int newBpi);
     virtual void updateBpm(int newBpm);
 
-    // TODO move these slots to NinjamController
+    // TODO move this slot to NinjamController
     virtual void on_newNinjamInterval();
-    virtual void on_ninjamStartProcessing(int intervalPosition) = 0;
 
     // audio driver
-    virtual void on_audioDriverStarted() = 0;
     virtual void on_audioDriverStopped();//TODO move to ninjaController
 
 };

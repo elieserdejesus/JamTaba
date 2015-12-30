@@ -71,25 +71,23 @@ void MainController::disconnectFromNinjamServer(const Server &server)
         jamRecorder.stopRecording();
 }
 
+void MainController::setupNinjamControllerSignals(){
+    Q_ASSERT(ninjamController.data());
+    connect(ninjamController.data(), SIGNAL(encodedAudioAvailableToSend(QByteArray, quint8, bool, bool)), this, SLOT(enqueueAudioDataToUpload(QByteArray, quint8, bool, bool)));
+    connect(ninjamController.data(), SIGNAL(startingNewInterval()), this, SLOT(on_newNinjamInterval()));
+    connect(ninjamController.data(), SIGNAL(currentBpiChanged(int)), this, SLOT(updateBpi(int)));
+    connect(ninjamController.data(), SIGNAL(currentBpmChanged(int)), this, SLOT(updateBpm(int)));
+}
+
 void MainController::connectedNinjamServer(Ninjam::Server server)
 {
     qCDebug(jtCore) << "connected in ninjam server";
     stopNinjamController();
-    Controller::NinjamController *newNinjamController = createNinjamController(this);// new
-    this->ninjamController.reset(newNinjamController);
-    QObject::connect(newNinjamController,
-                     SIGNAL(encodedAudioAvailableToSend(QByteArray, quint8, bool, bool)),
-                     this, SLOT(enqueueAudioDataToUpload(QByteArray, quint8, bool,
-                                                         bool)));
+    Controller::NinjamController *newNinjamController = createNinjamController();// new
+    ninjamController.reset(newNinjamController);
 
-    QObject::connect(newNinjamController, SIGNAL(startingNewInterval()), this,
-                     SLOT(on_newNinjamInterval()));
-    QObject::connect(newNinjamController, SIGNAL(currentBpiChanged(int)), this,
-                     SLOT(updateBpi(int)));
-    QObject::connect(newNinjamController, SIGNAL(currentBpmChanged(int)), this,
-                     SLOT(updateBpm(int)));
-    QObject::connect(newNinjamController, SIGNAL(startProcessing(int)), this,
-                     SLOT(on_ninjamStartProcessing(int)));
+    setupNinjamControllerSignals();
+
 
     if (mainWindow) {
         mainWindow->enterInRoom(Login::RoomInfo(server.getHostName(), server.getPort(),
