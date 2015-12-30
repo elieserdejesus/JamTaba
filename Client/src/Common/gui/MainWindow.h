@@ -98,6 +98,8 @@ protected:
 
     void stopCurrentRoomStream();
 
+    virtual void removeAllInputLocalTracks();
+
 protected slots:
     void closeTab(int index);
     void changeTab(int index);
@@ -209,7 +211,6 @@ private:
     void setupSignals();
     void setupWidgets();
 
-    void removeAllInputLocalTracks();
     void recreatePresetTracks(Persistence::Preset preset);
 
     void restoreWindowPosition();

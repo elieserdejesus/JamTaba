@@ -16,6 +16,13 @@ protected:
 
     void showPreferencesDialog(int initialTab) override;
 
+    void initializeLocalSubChannel(LocalTrackView *subChannelView, Persistence::Subchannel subChannel) override;
+
+    void removeAllInputLocalTracks() override;
+
+private:
+    bool firstChannelIsInitialized;
+
 };
 
 #endif // MAINWINDOWVST_H
