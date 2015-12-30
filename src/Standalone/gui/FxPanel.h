@@ -2,7 +2,7 @@
 #define FXPANEL_H
 
 #include <QWidget>
-#include "StandAloneMainController.h"
+#include "MainControllerStandalone.h"
 
 class FxPanelItem;
 class StandaloneLocalTrackView;

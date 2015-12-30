@@ -1,4 +1,4 @@
-#include "StandAloneMainController.h"
+#include "MainControllerStandalone.h"
 
 #include "midi/RtMidiDriver.h"
 #include "audio/core/PortAudioDriver.h"
@@ -8,7 +8,7 @@
 #include "vst/PluginFinder.h"
 #include "audio/core/PluginDescriptor.h"
 #include "NinjamController.h"
-#include "gui/StandaloneMainWindow.h"
+#include "gui/MainWindowStandalone.h"
 
 #include <QDialog>
 #include <QHostAddress>

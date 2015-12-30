@@ -2,9 +2,9 @@
 #define MAINFRAMEVST_H
 
 #include "MainWindow.h"
-#include "StandaloneLocalTrackGroupView.h"
-#include "StandaloneLocalTrackView.h"
-#include "StandAloneMainController.h"
+#include "LocalTrackGroupViewStandalone.h"
+#include "LocalTrackViewStandalone.h"
+#include "MainControllerStandalone.h"
 #include "PluginScanDialog.h"
 
 using namespace Controller;

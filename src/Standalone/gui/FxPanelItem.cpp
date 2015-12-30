@@ -4,7 +4,7 @@
 #include "MainController.h"
 #include "LocalTrackView.h"
 #include "audio/core/PluginDescriptor.h"
-#include "StandaloneLocalTrackView.h"
+#include "LocalTrackViewStandalone.h"
 
 #include <QDebug>
 #include <QPainter>

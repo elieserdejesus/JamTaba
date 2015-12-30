@@ -1,4 +1,4 @@
-#include "StandaloneLocalTrackView.h"
+#include "LocalTrackViewStandalone.h"
 #include "ui_BaseTrackView.h"
 #include "FxPanel.h"
 #include "FxPanelItem.h"

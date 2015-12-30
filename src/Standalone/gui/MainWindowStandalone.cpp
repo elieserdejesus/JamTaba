@@ -1,5 +1,5 @@
-#include "StandaloneMainWindow.h"
-#include "StandalonePreferencesDialog.h"
+#include "MainWindowStandalone.h"
+#include "PreferencesDialogStandalone.h"
 #include "NinjamRoomWindow.h"
 #include "LocalTrackView.h"
 #include "log/Logging.h"
