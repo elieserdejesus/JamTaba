@@ -39,8 +39,8 @@ class AudioSettings : public SettingsObject
 {
 public:
     AudioSettings();
-    void write(QJsonObject &out);
-    void read(QJsonObject in);
+    void write(QJsonObject &out) override;
+    void read(QJsonObject in) override;
     int sampleRate;
     int bufferSize;
     int firstIn;
@@ -54,8 +54,8 @@ class MidiSettings : public SettingsObject
 {
 public:
     MidiSettings();
-    void write(QJsonObject &out);
-    void read(QJsonObject in);
+    void write(QJsonObject &out) override;
+    void read(QJsonObject in) override;
     QList<bool> inputDevicesStatus;
 };
 
@@ -64,8 +64,8 @@ class PrivateServerSettings : public SettingsObject
 {
 public:
     PrivateServerSettings();
-    void write(QJsonObject &out);
-    void read(QJsonObject in);
+    void write(QJsonObject &out) override;
+    void read(QJsonObject in) override;
     QString server;
     int serverPort;
     QString password;
@@ -76,8 +76,8 @@ class MetronomeSettings : public SettingsObject
 {
 public:
     MetronomeSettings();
-    void write(QJsonObject &out);
-    void read(QJsonObject in);
+    void write(QJsonObject &out) override;
+    void read(QJsonObject in) override;
     float pan;
     float gain;
     bool muted;
@@ -92,8 +92,8 @@ public:
     bool maximized;
     bool fullViewMode;
     bool fullScreenViewMode;
-    void write(QJsonObject &out);
-    void read(QJsonObject in);
+    void write(QJsonObject &out) override;
+    void read(QJsonObject in) override;
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++
@@ -101,8 +101,8 @@ class VstSettings : public SettingsObject
 {
 public:
     VstSettings();
-    void write(QJsonObject &out);
-    void read(QJsonObject in);
+    void write(QJsonObject &out) override;
+    void read(QJsonObject in) override;
     QStringList cachedPlugins;
     QStringList foldersToScan;
     QStringList blackedPlugins;// vst in blackbox....
@@ -112,8 +112,8 @@ class RecordingSettings : public SettingsObject
 {
 public:
     RecordingSettings();
-    void write(QJsonObject &out);
-    void read(QJsonObject in);
+    void write(QJsonObject &out) override;
+    void read(QJsonObject in) override;
     bool saveMultiTracksActivated;
     QString recordingPath;
 };
