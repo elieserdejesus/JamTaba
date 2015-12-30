@@ -1,10 +1,11 @@
 #include "NinjamRoomWindowVST.h"
 #include "ui_NinjamRoomWindow.h"
 #include "MainControllerVST.h"
+#include "NinjamControllerVST.h"
 
 // +++++++++++++++++++++++++++++++++++++++++++++
 NinjamRoomWindowVST::NinjamRoomWindowVST(MainWindow *parent, Login::RoomInfo roomInfo,
-                                         Controller::MainController *mainController) :
+                                         MainControllerVST *mainController) :
     NinjamRoomWindow(parent, roomInfo, mainController)
 {
     QString hostName = dynamic_cast<MainControllerVST *>(mainController)->getHostName();
@@ -23,7 +24,9 @@ void NinjamRoomWindowVST::ninjamHostSyncButtonClicked()
     QString hostName = dynamic_cast<MainControllerVST *>(mainController)->getHostName();
     if (canSync) {
         // stop ninjam streams and wait until user press play/start in host
-        dynamic_cast<NinjamControllerVST *>(controller->getNinjamController())->waitForHostSync();
+        NinjamControllerVST* ninjamController = dynamic_cast<NinjamControllerVST *>(controller->getNinjamController());
+        Q_ASSERT(ninjamController);
+        ninjamController->waitForHostSync();
         if (ninjamPanel) {
             ninjamPanel->setCurrentBeat(0);
             showMessageBox("Synchronizing...",

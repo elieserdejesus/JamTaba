@@ -6,25 +6,6 @@
 #include "audio/core/PluginDescriptor.h"
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-class MainControllerVST;
-
-class NinjamControllerVST : public Controller::NinjamController
-{
-public:
-    explicit NinjamControllerVST(MainControllerVST *c);
-    inline bool isWaitingForHostSync() const
-    {
-        return waitingForHostSync;
-    }
-
-    void syncWithHost();
-    void waitForHostSync();
-    void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
-
-private:
-    bool waitingForHostSync;
-};
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class JamtabaPlugin;
 
 class MainControllerVST : public Controller::MainController
