@@ -135,7 +135,7 @@ ChatCommandType ServerChatMessage::commandTypeFromString(QString string)
 
 void ServerChatMessage::printDebug(QDebug dbg) const
 {
-    dbg << "RECEIVE ServerChatMessage{ command=" << (std::uint8_t)commandType << " arguments="
+    dbg << "RECEIVE ServerChatMessage{ command=" << static_cast<quint8>(commandType) << " arguments="
         << arguments << "}" << endl;
 }
 

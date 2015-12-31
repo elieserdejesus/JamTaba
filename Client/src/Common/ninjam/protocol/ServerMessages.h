@@ -4,14 +4,14 @@
 #include <QString>
 #include <QMap>
 #include <QStringList>
-#include <cstdint>
+#include <QtGlobal>
 
 /**
  * All details about ninjam protocol are based on the Stefanha documentation work in wahjam.
  */
 
 namespace Ninjam {
-enum class ServerMessageType : std::uint8_t {
+enum class ServerMessageType : quint8 {
     AUTH_CHALLENGE = 0x00,
     AUTH_REPLY = 0x01,
     SERVER_CONFIG_CHANGE_NOTIFY = 0x02,
@@ -180,7 +180,7 @@ private:
         USERCOUNT <users> <maxusers> -- server status
     */
 
-enum class  ChatCommandType : std::uint8_t { //TODO use quint8
+enum class  ChatCommandType : quint8 { //TODO use quint8
     MSG = 0, PRIVMSG, TOPIC, JOIN, PART, USERCOUNT
     //TODO remove this 0 value. Is uncessary, right?
 };

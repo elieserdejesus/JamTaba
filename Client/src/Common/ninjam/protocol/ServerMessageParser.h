@@ -3,13 +3,11 @@
 
 #include <QByteArray>
 #include "ServerMessages.h"
-#include <cstdint>
 
 class QDataStream;
 
 namespace Ninjam {
 class ServerMessage;
-enum class ServerMessageType : std::uint8_t;
 
 class ServerMessageParser
 {
