@@ -115,7 +115,7 @@ protected:
 
 protected slots:
     void updateBpm(int newBpm) override;
-    void connectedNinjamServer(Ninjam::Server server) override;
+    void connectedNinjamServer(const Ninjam::Server &server) override;
 
 
     void on_newNinjamInterval() override;

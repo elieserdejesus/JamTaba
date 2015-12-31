@@ -3,6 +3,7 @@
 
 #include "MainController.h"
 #include "ninjam/User.h"
+#include "ninjam/UserChannel.h"
 
 #include <QPainter>
 #include <QDebug>

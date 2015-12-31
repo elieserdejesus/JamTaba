@@ -1,42 +1,29 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <QString>
 #include <QMap>
+
+class QString;
 
 namespace Ninjam {
 class User;
+class UserChannel;
 
 class Server
 {
-public:
-    static const int MIN_BPM = 40;
-    static const int MAX_BPM = 400;
-    static const int MAX_BPI = 64;
-    static const int MIN_BPI = 3;
 
-private:
-    int port;
-    QString host;
-    int maxUsers;
-    short bpm;
-    short bpi;
-    bool activeServer;
-    QString streamUrl;
-    QString topic;
-    QString licence;
-    QMap<QString, User *> users;
-    bool containBot;
-    int maxChannels;
 public:
-    Server(QString host, int port, int maxChannels);
-    Server(QString host, int port, int maxChannels, int maxUsers);
+    Server(const QString &host, quint16 port, quint8 maxChannels, quint8 maxUsers = 0);
 
     ~Server();
 
-    User *getUser(QString userFullName) const;
+    void addUserChannel(const UserChannel &newChannel);
+    void removeUserChannel(const UserChannel &channel);
+    void updateUserChannel(const UserChannel &serverChannel);
 
-    inline void setStreamUrl(QString streamUrl)
+    User getUser(const QString &userFullName) const;
+
+    inline void setStreamUrl(const QString &streamUrl)
     {
         this->streamUrl = streamUrl;
     }
@@ -92,39 +79,34 @@ public:
         this->activeServer = active;
     }
 
-    inline bool containsBot() const
-    {
-        return containBot;
-    }
-
     bool containsUser(const User &user) const;
-    bool containsUser(QString userFullName) const;
+    bool containsUser(const QString &userFullName) const;
 
-    void addUser(User user);
+    void addUser(const User &user);
 
-    inline short getBpi() const
+    inline quint16 getBpi() const
     {
         return bpi;
     }
 
-    inline short getBpm() const
+    inline quint16 getBpm() const
     {
         return bpm;
     }
 
-    inline int getMaxUsers() const
+    inline quint8 getMaxUsers() const
     {
         return maxUsers;
     }
 
-    QList<User *> getUsers() const;
+    QList<User> getUsers() const;
 
     inline bool isActive() const
     {
         return activeServer;
     }
 
-    inline int getPort() const
+    inline quint16 getPort() const
     {
         return port;
     }
@@ -134,28 +116,41 @@ public:
         return host;
     }
 
-    bool containsBotOnly() const;
-
     QString getUniqueName() const;
 
-    bool setBpm(short bpm);
+    bool setBpm(quint16 bpm);
 
-    bool setBpi(short bpi);
-
-    void refreshUserList(QSet<QString> onlineUsers);
+    bool setBpi(quint16 bpi);
 
     inline QString getTopic() const
     {
         return topic;
     }
 
-    inline void setTopic(QString topicText)
+    inline void setTopic(const QString &topicText)
     {
         this->topic = topicText;
     }
+
+private:
+    quint16 port;
+    QString host;
+    quint8 maxUsers;
+    quint16 bpm;
+    quint16 bpi;
+    bool activeServer;
+    QString streamUrl;
+    QString topic;
+    QString licence;
+    QMap<QString, User> users;
+    quint8 maxChannels;
+
+    static const int MIN_BPM = 40;
+    static const int MAX_BPM = 400;
+    static const int MAX_BPI = 64;
+    static const int MIN_BPI = 3;
 };
 
-QDataStream &operator<<(QDataStream &out, const Ninjam::Server &server);
 }// namespace
 
 #endif

@@ -187,7 +187,7 @@ void StandaloneMainController::updateBpm(int newBpm)
     vstHost->setTempo(newBpm);
 }
 
-void StandaloneMainController::connectedNinjamServer(Ninjam::Server server)
+void StandaloneMainController::connectedNinjamServer(const Ninjam::Server &server)
 {
     MainController::connectedNinjamServer(server);
     vstHost->setTempo(server.getBpm());

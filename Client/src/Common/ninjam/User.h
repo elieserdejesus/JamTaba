@@ -1,24 +1,18 @@
 #ifndef USER_H
 #define USER_H
 
-#include "UserChannel.h"
 #include <QMap>
+#include "UserChannel.h"
 
 namespace Ninjam {
+
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class User
 {
-private:
-    QString fullName;
-    QString name;
-    QString ip;
-    QMap<int, UserChannel *> channels;
 
 public:
-    explicit User(QString fullName);
+    explicit User(const QString &fullName = "");
     virtual ~User();
-
-    bool isBot() const;
 
     inline bool hasChannels() const
     {
@@ -30,7 +24,7 @@ public:
         return this->channels.contains(channelIndex);
     }
 
-    inline QList<UserChannel *> getChannels() const
+    inline QList<UserChannel> getChannels() const
     {
         return channels.values();
     }
@@ -40,7 +34,7 @@ public:
         return getFullName() < other.getFullName();
     }
 
-    UserChannel getChannel(int index) const;
+    UserChannel getChannel(quint8 index) const;
 
     inline QString getIp() const
     {
@@ -57,14 +51,25 @@ public:
         return fullName;
     }
 
-    void addChannel(UserChannel channel);
-    void removeChannel(int channelIndex);
-    void setChannelName(int channelIndex, QString name);
-    void setChannelFlags(int channelIndex, int flags);
+    void updateChannelName(quint8 channelIndex, const QString &newName);
+
+    void addChannel(const UserChannel &channel);
+    void removeChannel(quint8 channelIndex);
+
+    inline int getChannelsCount() const
+    {
+        return channels.size();
+    }
+
+private:
+    QString fullName;
+    QString name;
+    QString ip;
+    QMap<int, UserChannel> channels;
 };
 
 QDebug &operator<<(QDebug &out, const Ninjam::User &user);
-QDebug &operator<<(QDebug &out, const Ninjam::UserChannel &user);
+
 }
 
 #endif
