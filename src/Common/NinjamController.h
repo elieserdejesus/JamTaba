@@ -81,19 +81,18 @@ signals:
     void intervalBeatChanged(int intervalBeat);
     void startingNewInterval();
     void startProcessing(int intervalPosition);
-    void channelAdded(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
-    void channelRemoved(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
-    void channelNameChanged(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
+    void channelAdded(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
+    void channelRemoved(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
+    void channelNameChanged(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
     void channelXmitChanged(long channelID, bool transmiting);
     void channelAudioChunkDownloaded(long channelID);
     void channelAudioFullyDownloaded(long channelID);
-    void userLeave(QString userName);
-    void userEnter(QString userName);
+    void userLeave(const QString &userName);
+    void userEnter(const QString &userName);
 
-    void chatMsgReceived(Ninjam::User user, QString message);
+    void chatMsgReceived(const Ninjam::User &user, const QString &message );
 
-    void encodedAudioAvailableToSend(QByteArray encodedAudio, quint8 channelIndex, bool isFirstPart,
-                                     bool isLastPart);
+    void encodedAudioAvailableToSend(const QByteArray &encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart);
 
     void preparingTransmission();// waiting for start transmission
     void preparedToTransmit(); // this signal is emmited one time, when Jamtaba is ready to transmit (after wait some complete itervals)
@@ -156,19 +155,19 @@ private:
     int waitingIntervals;
     static const int TOTAL_PREPARED_INTERVALS = 2;// how many intervals Jamtaba will wait to start trasmiting?
 
+    bool userIsBot(const QString userName) const;
+
 private slots:
     // ninjam events
-    void on_ninjamServerBpmChanged(short newBpm);
-    void on_ninjamServerBpiChanged(short oldBpi, short newBpi);
-    void on_ninjamAudiointervalCompleted(Ninjam::User user, int channelIndex,
-                                         QByteArray encodedAudioData);
-    void on_ninjamAudioIntervalDownloading(Ninjam::User user, int channelIndex,
-                                           int downloadedBytes);
-    void on_ninjamUserChannelCreated(Ninjam::User user, Ninjam::UserChannel channel);
-    void on_ninjamUserChannelRemoved(Ninjam::User user, Ninjam::UserChannel channel);
-    void on_ninjamUserChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel);
-    void on_ninjamUserLeave(Ninjam::User user);
-    void on_ninjamUserEnter(Ninjam::User user);
+    void on_ninjamServerBpmChanged(quint16 newBpm);
+    void on_ninjamServerBpiChanged(quint16 oldBpi, quint16 newBpi);
+    void on_ninjamAudiointervalCompleted(const Ninjam::User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
+    void on_ninjamAudioIntervalDownloading(const Ninjam::User &user, quint8 channelIndex, int downloadedBytes);
+    void on_ninjamUserChannelCreated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void on_ninjamUserChannelRemoved(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void on_ninjamUserChannelUpdated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void on_ninjamUserExited(const Ninjam::User &user);
+    void on_ninjamUserEntered(const Ninjam::User &user);
 };
 }
 #endif // NINJAMJAMROOMCONTROLLER_H

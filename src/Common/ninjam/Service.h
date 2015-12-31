@@ -1,22 +1,26 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
+#include <QtGlobal>
+#include <QScopedPointer>
+#include <QObject>
 #include <QTcpSocket>
-#include <memory>
-#include <QLoggingCategory>
+#include "log/Logging.h"
+//#include "ServerMessageProcessor.h"
 
-#include "ninjam/User.h"
-#include "ninjam/UserChannel.h"
+class QTcpSocket;
+class QByteArray;
+class QDataStream;
+class QString;
+class QObject;
+class QStringList;
 
 namespace Ninjam {
-class PublicServersParser;
 class Server;
-class MixedPublicServersParser;
-
-class ServerMessageParser;
-class ServerMessageParserFactory;
-
+class ClientMessage;
+class Service;
 class ServerMessage;
+class ServerMessagesHandler;
 class ServerKeepAliveMessage;
 class ServerAuthChallengeMessage;
 class ServerAuthReplyMessage;
@@ -26,41 +30,41 @@ class ServerKeepAliveMessage;
 class ServerChatMessage;
 class DownloadIntervalBegin;
 class DownloadIntervalWrite;
-
-class ClientMessage;
-
 class User;
 class UserChannel;
+
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Service : public QObject
 {
     Q_OBJECT
 
+    friend class ServerMessagesHandler;
+
 public:
 
     explicit Service();
     ~Service();
-    static bool isBotName(QString userName);
+    static bool isBotName(const QString &userName);
 
-    void sendChatMessageToServer(QString message);
+    void sendChatMessageToServer(const QString &message);
 
     // audio interval upload
-    void sendAudioIntervalPart(QByteArray GUID, QByteArray encodedAudioBuffer, bool isLastPart);
-    void sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex);
+    void sendAudioIntervalPart(const QByteArray &GUID, const QByteArray &encodedAudioBuffer, bool isLastPart);
+    void sendAudioIntervalBegin(const QByteArray &GUID, quint8 channelIndex);
 
-    void sendNewChannelsListToServer(QStringList channelsNames);
+    void sendNewChannelsListToServer(const QStringList &channelsNames);
     void sendRemovedChannelIndex(int removedChannelIndex);
 
-    QString getConnectedUserName();
+    QString getConnectedUserName() const;
     QString getCurrentServerLicence() const;
-    float getIntervalPeriod();
+    float getIntervalPeriod() const;
 
-    void startServerConnection(QString serverIp, int serverPort, QString userName,
-                               QStringList channels, QString password = "");
+    void startServerConnection(const QString &serverIp, int serverPort, const QString &userName,
+                               const QStringList &channels, const QString &password = "");
     void disconnectFromServer(bool emitDisconnectedSignal);
 
-    void voteToChangeBPM(int newBPM);
-    void voteToChangeBPI(int newBPI);
+    void voteToChangeBPM(quint16 newBPM);
+    void voteToChangeBPI(quint16 newBPI);
 
     static inline QStringList getBotNamesList()
     {
@@ -68,81 +72,81 @@ public:
     }
 
 signals:
-    void userChannelCreated(Ninjam::User user, Ninjam::UserChannel channel);
-    void userChannelRemoved(Ninjam::User user, Ninjam::UserChannel channel);
-    void userChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel);
-    void userCountMessageReceived(int users, int maxUsers);
-    void serverBpiChanged(short currentBpi, short lastBpi);
-    void serverBpmChanged(short currentBpm);
-    void audioIntervalCompleted(Ninjam::User user, int channelIndex, QByteArray encodedAudioData);
-    void audioIntervalDownloading(Ninjam::User, int channelIndex, int bytesDownloaded);
+    void userChannelCreated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void userChannelRemoved(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void userChannelUpdated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void userCountMessageReceived(quint32 users, quint32 maxUsers);
+    void serverBpiChanged(quint16 currentBpi, quint16 lastBpi);
+    void serverBpmChanged(quint16 currentBpm);
+    void audioIntervalCompleted(const Ninjam::User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
+    void audioIntervalDownloading(const Ninjam::User &user, quint8 channelIndex, int bytesDownloaded);
     void disconnectedFromServer(const Ninjam::Server &server);
     void connectedInServer(const Ninjam::Server &server);
-    void chatMessageReceived(Ninjam::User sender, QString message);
-    void privateMessageReceived(Ninjam::User sender, QString message);
-    void userEnterInTheJam(Ninjam::User newUser);
-    void userLeaveTheJam(Ninjam::User user);
-    void error(QString msg);
+    void chatMessageReceived(const Ninjam::User &sender, const QString &message);
+    void privateMessageReceived(const Ninjam::User &sender, const QString &message); //TODO this works? I never see a private message in my life :)
+    void userEntered(const Ninjam::User &newUser);
+    void userExited(const Ninjam::User &user);
+    void error(const QString &msg);
+
+protected:
+    virtual QTcpSocket *createSocket();
+
+    // +++++= message handlers.
+    virtual void process(const ServerAuthChallengeMessage &msg);
+    virtual void process(const ServerAuthReplyMessage &msg);
+    virtual void process(const ServerConfigChangeNotifyMessage &msg);
+    virtual void process(const UserInfoChangeNotifyMessage &msg);
+    virtual void process(const ServerChatMessage &msg);
+    virtual void process(const ServerKeepAliveMessage &msg);
+    virtual void process(const DownloadIntervalBegin &msg);
+    virtual void process(const DownloadIntervalWrite &msg);
+    // ++++++++++++=
+
+private slots:
+    void handleAllReceivedMessages();
+    void handleSocketError(QAbstractSocket::SocketError error);
+    void handleSocketDisconnection();
+    void handleSocketConnection();
 
 private:
+    QScopedPointer<ServerMessagesHandler> messagesHandler;
 
     static const long DEFAULT_KEEP_ALIVE_PERIOD = 3000;
-    static std::unique_ptr<PublicServersParser> publicServersParser; // TODO use QScopedPointer ?
 
-    QTcpSocket socket;
-    QByteArray byteArray;
+    QTcpSocket* socket;
 
     static const QStringList botNames;
     static QStringList buildBotNamesList();
 
-    // GUID, AudioInterval
     long lastSendTime;// time stamp of last send
     long serverKeepAlivePeriod;
     QString serverLicence;
 
-    static std::unique_ptr<Service> serviceInstance; // TODO use QScopedPointer?
+    QScopedPointer<Server> currentServer;
 
-    QString newUserName;// name received from server when connected
-
-    std::unique_ptr<Server> currentServer;
     bool initialized;
     QString userName;
     QString password;
     QStringList channels;// channels names
 
-    void sendMessageToServer(ClientMessage *message);
-    void handleUserChannels(QString userFullName, QList<UserChannel> channelsInTheServer);
+    void sendMessageToServer(const ClientMessage &message);
+    void handleUserChannels(const User &remoteUser);
     bool channelIsOutdate(const User &user, const UserChannel &serverChannel);
 
     void setBpm(quint16 newBpm);
     void setBpi(quint16 newBpi);
 
-    // +++++= message handlers ++++
-    void invokeMessageHandler(const ServerMessage &message);
-    void handle(const ServerAuthChallengeMessage &msg);
-    void handle(const ServerAuthReplyMessage &msg);
-    void handle(const ServerConfigChangeNotifyMessage &msg);
-    void handle(const UserInfoChangeNotifyMessage &msg);
-    void handle(const ServerChatMessage &msg);
-    void handle(const ServerKeepAliveMessage &msg);
-    void handle(const DownloadIntervalBegin &msg);
-    void handle(const DownloadIntervalWrite &msg);
-    // ++++++++++++=
-
-    class Download;
-    // using GUID as key
-    QMap<QString, Download *> downloads;
+    class Download; //using a nested class here. This class is for internal purpouses only.
+    QMap<QByteArray, Download> downloads;// using GUID as key
 
     bool needSendKeepAlive() const;
 
-    bool lastMessageWasIncomplete;
+    void clear();
 
-private slots:
-    void socketReadSlot();
-    void socketErrorSlot(QAbstractSocket::SocketError error);
-    void socketDisconnectSlot();
-    void socketConnectedSlot();
+    void setupSocketSignals();
+
 };
+
 }// namespace
 
 #endif

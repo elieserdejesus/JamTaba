@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>wireshark data/ninbot 4 players connected.data</file>
+        <file>wireshark data/full server.data</file>
+    </qresource>
+</RCC>

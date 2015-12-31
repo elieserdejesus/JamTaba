@@ -1,13 +1,13 @@
 #include "User.h"
-#include "Service.h"
+#include "UserChannel.h"
 #include <QDebug>
-#include <memory>
 #include <QRegularExpression>
+#include "log/Logging.h"
 
 using namespace Ninjam;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-User::User(QString fullName) :
+User::User(const QString &fullName) :
     fullName(fullName)
 {
     QStringList fullNameParts = fullName.split("@");
@@ -25,39 +25,32 @@ User::~User()
 {
 }
 
-bool User::isBot() const
-{
-    return Service::isBotName(getName());
-}
-
-UserChannel User::getChannel(int index) const
+UserChannel User::getChannel(quint8 index) const
 {
     if (channels.contains(index))
-        return *(channels[index]);
+        return channels[index];
+
+    qCCritical(jtNinjamCore) << "invalid channel index (" << QString::number(index) << "), returning an empty channel!";
     return UserChannel();// return a invalid/empty channel
 }
 
-void User::addChannel(UserChannel c)
+void User::addChannel(const UserChannel &channel)
 {
-    channels.insert(c.getIndex(), new UserChannel(c));
+    channels.insert(channel.getIndex(), UserChannel(channel));
 }
 
-void User::removeChannel(int channelIndex)
+void User::updateChannelName(quint8 channelIndex, const QString &newName){
+    if(channels.contains(channelIndex))
+        channels[channelIndex].setName(newName);
+    else
+        qCCritical(jtNinjamCore) << "invalid channel index (" << QString::number(channelIndex) << "), can't update the channel!";
+}
+
+void User::removeChannel(quint8 channelIndex)
 {
     this->channels.remove(channelIndex);
 }
 
-void User::setChannelName(int channelIndex, QString name)
-{
-    if (channels.contains(channelIndex))
-        channels[channelIndex]->setName(name);
-}
-
-void User::setChannelFlags(int channelIndex, int flags)
-{
-    if (channels.contains(channelIndex))
-        channels[channelIndex]->setFlags(flags);
-}
 
 QDebug &Ninjam::operator<<(QDebug &out, const User &user)
 {
@@ -73,17 +66,5 @@ QDebug &Ninjam::operator<<(QDebug &out, const User &user)
     if (!user.hasChannels())
         out << "\tNo channels!\n";
     out << "--------------\n";
-    return out;
-}
-
-QDebug &Ninjam::operator<<(QDebug &out, const UserChannel &ch)
-{
-    out << "UserChannel{"
-        << "name="
-        << ch.getName()
-        << ", active="
-        << ch.isActive()
-        << ", index="
-        << ch.getIndex() << '}';
     return out;
 }

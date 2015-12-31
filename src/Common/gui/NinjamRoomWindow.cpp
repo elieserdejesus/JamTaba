@@ -2,8 +2,9 @@
 #include "ui_NinjamRoomWindow.h"
 #include "NinjamTrackView.h"
 
-#include "ninjam/User.h"
 #include "ninjam/Server.h"
+#include "ninjam/User.h"
+#include "ninjam/UserChannel.h"
 #include "audio/MetronomeTrackNode.h"
 #include "audio/core/AudioDriver.h"
 #include "audio/NinjamTrackNode.h"

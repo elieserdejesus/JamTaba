@@ -65,13 +65,13 @@ void MainController::disconnectFromNinjamServer(const Server &server)
 
 void MainController::setupNinjamControllerSignals(){
     Q_ASSERT(ninjamController.data());
-    connect(ninjamController.data(), SIGNAL(encodedAudioAvailableToSend(QByteArray, quint8, bool, bool)), this, SLOT(enqueueAudioDataToUpload(QByteArray, quint8, bool, bool)));
+    connect(ninjamController.data(), SIGNAL(encodedAudioAvailableToSend(const QByteArray &, quint8, bool, bool)), this, SLOT(enqueueAudioDataToUpload(const QByteArray &, quint8, bool, bool)));
     connect(ninjamController.data(), SIGNAL(startingNewInterval()), this, SLOT(on_newNinjamInterval()));
     connect(ninjamController.data(), SIGNAL(currentBpiChanged(int)), this, SLOT(updateBpi(int)));
     connect(ninjamController.data(), SIGNAL(currentBpmChanged(int)), this, SLOT(updateBpm(int)));
 }
 
-void MainController::connectedNinjamServer(Ninjam::Server server)
+void MainController::connectedNinjamServer(const Ninjam::Server &server)
 {
     qCDebug(jtCore) << "connected in ninjam server";
     stopNinjamController();
@@ -125,7 +125,7 @@ void MainController::updateBpm(int newBpm)
         jamRecorder.setBpm(newBpm);
 }
 
-void MainController::enqueueAudioDataToUpload(QByteArray encodedAudio, quint8 channelIndex,
+void MainController::enqueueAudioDataToUpload(const QByteArray &encodedAudio, quint8 channelIndex,
                                               bool isFirstPart, bool isLastPart)
 {
     /** The audio thread fire this event. This thread (main/gui thread) write the encoded bytes in socket.
@@ -607,10 +607,10 @@ void MainController::start()
         roomStreamer.reset(new Audio::NinjamRoomStreamerNode()); // new Audio::AudioFileStreamerNode(":/teste.mp3");
         this->audioMixer.addNode(roomStreamer.data());
 
-        QObject::connect(&ninjamService, SIGNAL(connectedInServer(Ninjam::Server)), this,
-                         SLOT(connectedNinjamServer(Ninjam::Server)));
-        QObject::connect(&ninjamService, SIGNAL(disconnectedFromServer(Ninjam::Server)), this,
-                         SLOT(disconnectFromNinjamServer(Ninjam::Server)));
+        QObject::connect(&ninjamService, SIGNAL(connectedInServer(const Ninjam::Server &)), this,
+                         SLOT(connectedNinjamServer(const Ninjam::Server &)));
+        QObject::connect(&ninjamService, SIGNAL(disconnectedFromServer(const Ninjam::Server &)), this,
+                         SLOT(disconnectFromNinjamServer(const Ninjam::Server &)));
         QObject::connect(&ninjamService, SIGNAL(error(QString)), this,
                          SLOT(quitFromNinjamServer(QString)));
 

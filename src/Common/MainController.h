@@ -271,10 +271,10 @@ private:
 protected slots:
 
     // ninjam
-    virtual void connectedNinjamServer(Ninjam::Server server);
+    virtual void connectedNinjamServer(const Ninjam::Server &server);
     virtual void disconnectFromNinjamServer(const Ninjam::Server &server);
     virtual void quitFromNinjamServer(QString error);
-    virtual void enqueueAudioDataToUpload(QByteArray, quint8 channelIndex,
+    virtual void enqueueAudioDataToUpload(const QByteArray &, quint8 channelIndex,
                                           bool isFirstPart, bool isLastPart);
     virtual void updateBpi(int newBpi);
     virtual void updateBpm(int newBpm);

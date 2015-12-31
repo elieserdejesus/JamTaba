@@ -4,8 +4,8 @@
 
 using namespace Ninjam;
 
-UserChannel::UserChannel(QString userFullName, QString channelName, bool active, int channelIndex,
-                         short volume, quint8 pan, quint8 flags) :
+UserChannel::UserChannel(const QString &userFullName, const QString &channelName, quint8 channelIndex, bool active,
+                         quint16 volume, quint8 pan, quint8 flags) :
     userFullName(userFullName),
     channelName(channelName),
     active(active),
@@ -40,4 +40,16 @@ UserChannel::UserChannel(const UserChannel &c) :
 
 UserChannel::~UserChannel()
 {
+}
+
+QDebug &Ninjam::operator<<(QDebug &out, const UserChannel &ch)
+{
+    out << "UserChannel{"
+        << "name="
+        << ch.getName()
+        << ", active="
+        << ch.isActive()
+        << ", index="
+        << ch.getIndex() << '}';
+    return out;
 }
