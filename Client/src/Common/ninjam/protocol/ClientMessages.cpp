@@ -1,12 +1,9 @@
 #include "ClientMessages.h"
-#include "../User.h"
+#include "ninjam/User.h"
 #include <QCryptographicHash>
 #include <QIODevice>
-#include <cassert>
 #include <QDebug>
 #include <QDataStream>
-//#include <QUuid>
-//++++++++++++++
 
 using namespace Ninjam;
 

@@ -1,7 +1,7 @@
 #include "User.h"
+#include "UserChannel.h"
 #include "Service.h"
 #include <QDebug>
-#include <memory>
 #include <QRegularExpression>
 
 using namespace Ninjam;

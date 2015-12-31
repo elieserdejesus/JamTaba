@@ -1,21 +1,17 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
-#include <QTcpSocket>
-#include <memory>
-#include <QLoggingCategory>
-
-#include "ninjam/User.h"
-#include "ninjam/UserChannel.h"
+class QTcpSocket;
+class QByteArray;
+class QDataStream;
+class QString;
+class QObject;
 
 namespace Ninjam {
 class PublicServersParser;
 class Server;
-class MixedPublicServersParser;
-
-class ServerMessageParser;
-class ServerMessageParserFactory;
-
+class ClientMessage;
+class Service;
 class ServerMessage;
 class ServerKeepAliveMessage;
 class ServerAuthChallengeMessage;
@@ -26,11 +22,14 @@ class ServerKeepAliveMessage;
 class ServerChatMessage;
 class DownloadIntervalBegin;
 class DownloadIntervalWrite;
-
-class ClientMessage;
-
 class User;
 class UserChannel;
+
+struct MessageHeader{
+    quint8 messageTypeCode;
+    quint32 payload;
+};
+
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Service : public QObject
 {
@@ -48,7 +47,7 @@ public:
     void sendAudioIntervalPart(QByteArray GUID, QByteArray encodedAudioBuffer, bool isLastPart);
     void sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex);
 
-    void sendNewChannelsListToServer(QStringList channelsNames);
+    void sendNewChannelsListToServer(const QStringList &channelsNames);
     void sendRemovedChannelIndex(int removedChannelIndex);
 
     QString getConnectedUserName();
@@ -68,43 +67,73 @@ public:
     }
 
 signals:
-    void userChannelCreated(Ninjam::User user, Ninjam::UserChannel channel);
-    void userChannelRemoved(Ninjam::User user, Ninjam::UserChannel channel);
-    void userChannelUpdated(Ninjam::User user, Ninjam::UserChannel channel);
+    void userChannelCreated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void userChannelRemoved(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void userChannelUpdated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
     void userCountMessageReceived(int users, int maxUsers);
     void serverBpiChanged(short currentBpi, short lastBpi);
     void serverBpmChanged(short currentBpm);
-    void audioIntervalCompleted(Ninjam::User user, int channelIndex, QByteArray encodedAudioData);
-    void audioIntervalDownloading(Ninjam::User, int channelIndex, int bytesDownloaded);
+    void audioIntervalCompleted(const Ninjam::User &user, int channelIndex, const QByteArray &encodedAudioData);
+    void audioIntervalDownloading(const Ninjam::User &, int channelIndex, int bytesDownloaded);
     void disconnectedFromServer(const Ninjam::Server &server);
     void connectedInServer(const Ninjam::Server &server);
-    void chatMessageReceived(Ninjam::User sender, QString message);
-    void privateMessageReceived(Ninjam::User sender, QString message);
-    void userEnterInTheJam(Ninjam::User newUser);
-    void userLeaveTheJam(Ninjam::User user);
-    void error(QString msg);
+    void chatMessageReceived(const Ninjam::User &sender, const QString &message);
+    void privateMessageReceived(const Ninjam::User &sender, const QString &message); //TODO this works? I never see a private message in my life :)
+    void userEntered(const Ninjam::User &newUser);
+    void userExited(const Ninjam::User &user);
+    void error(const QString &msg);
+
+private slots:
+    void handleAllReceivedMessages();
+    void handleSocketError(QAbstractSocket::SocketError error);
+    void handleSocketDisconnection();
+    void handleSocketConnection();
 
 private:
+
+    // +++++= message handlers.
+    void process(const ServerAuthChallengeMessage &msg);
+    void process(const ServerAuthReplyMessage &msg);
+    void process(const ServerConfigChangeNotifyMessage &msg);
+    void process(const UserInfoChangeNotifyMessage &msg);
+    void process(const ServerChatMessage &msg);
+    void process(const ServerKeepAliveMessage &msg);
+    void process(const DownloadIntervalBegin &msg);
+    void process(const DownloadIntervalWrite &msg);
+    // ++++++++++++=
+
+    MessageHeader* extractMessageHeader(QDataStream &stream);
+
+    template<class MessageClazz> //MessageClazz will be 'translated' to some class derived from ServerMessage
+    bool handleMessage(QDataStream &stream, quint32 payload){
+        bool allMessageDataIsAvailable = socket.bytesAvailable() >= payload;
+        if (allMessageDataIsAvailable) {
+            MessageClazz message(payload);
+            stream >> message;
+            process(message);//calling overload versions of 'process'
+            return true; //the message was handled
+        }
+        return false;//the message was not handled
+    }
+
+    bool executeMessageHandler(MessageHeader *header, QDataStream &stream);
+
+    QScopedPointer<MessageHeader> currentHeader;//the last messageHeader readed from socket
 
     static const long DEFAULT_KEEP_ALIVE_PERIOD = 3000;
     static std::unique_ptr<PublicServersParser> publicServersParser; // TODO use QScopedPointer ?
 
     QTcpSocket socket;
-    QByteArray byteArray;
 
     static const QStringList botNames;
     static QStringList buildBotNamesList();
 
-    // GUID, AudioInterval
     long lastSendTime;// time stamp of last send
     long serverKeepAlivePeriod;
     QString serverLicence;
 
-    static std::unique_ptr<Service> serviceInstance; // TODO use QScopedPointer?
+    QScopedPointer<Server> currentServer;
 
-    QString newUserName;// name received from server when connected
-
-    std::unique_ptr<Server> currentServer;
     bool initialized;
     QString userName;
     QString password;
@@ -117,32 +146,16 @@ private:
     void setBpm(quint16 newBpm);
     void setBpi(quint16 newBpi);
 
-    // +++++= message handlers ++++
-    void invokeMessageHandler(const ServerMessage &message);
-    void handle(const ServerAuthChallengeMessage &msg);
-    void handle(const ServerAuthReplyMessage &msg);
-    void handle(const ServerConfigChangeNotifyMessage &msg);
-    void handle(const UserInfoChangeNotifyMessage &msg);
-    void handle(const ServerChatMessage &msg);
-    void handle(const ServerKeepAliveMessage &msg);
-    void handle(const DownloadIntervalBegin &msg);
-    void handle(const DownloadIntervalWrite &msg);
-    // ++++++++++++=
-
-    class Download;
-    // using GUID as key
-    QMap<QString, Download> downloads;
+    class Download; //using a nested class here. This class is for internal purpouses only.
+    QMap<QString, Download> downloads;// using GUID as key
 
     bool needSendKeepAlive() const;
 
-    bool lastMessageWasIncomplete;
-
-private slots:
-    void socketReadSlot();
-    void socketErrorSlot(QAbstractSocket::SocketError error);
-    void socketDisconnectSlot();
-    void socketConnectedSlot();
+    void clear();
 };
+
+QDataStream &operator >>(QDataStream &stream, MessageHeader &header);
+
 }// namespace
 
 #endif

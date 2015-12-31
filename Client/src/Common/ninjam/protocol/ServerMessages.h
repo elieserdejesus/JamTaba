@@ -1,41 +1,53 @@
 #ifndef SERVER_MESSAGES_H
 #define SERVER_MESSAGES_H
 
-#include <QString>
 #include <QMap>
-#include <QStringList>
-#include <QtGlobal>
+class QStringList;
+class QtGlobal;
 
 /**
  * All details about ninjam protocol are based on the Stefanha documentation work in wahjam.
  */
 
 namespace Ninjam {
+
+
+QString extractString(QDataStream &stream); //ninjam strings are NUL(\0) terminated
+
 enum class ServerMessageType : quint8 {
-    AUTH_CHALLENGE = 0x00,
-    AUTH_REPLY = 0x01,
-    SERVER_CONFIG_CHANGE_NOTIFY = 0x02,
-    USER_INFO_CHANGE_NOTIFY = 0x03,
-    DOWNLOAD_INTERVAL_BEGIN = 0x04,
-    DOWNLOAD_INTERVAL_WRITE = 0x05,
-    KEEP_ALIVE = 0xfd,// server requesting a keepalive
-    CHAT_MESSAGE = 0xc0
+    AUTH_CHALLENGE = 0x00, //received after connect in server
+    AUTH_REPLY = 0x01, //received after respond to auth challenge
+    SERVER_CONFIG_CHANGE_NOTIFY = 0x02, //received when BPI or BPM change
+    USER_INFO_CHANGE_NOTIFY = 0x03,//received when user add/remove channels or rename a channel
+    DOWNLOAD_INTERVAL_BEGIN = 0x04, //received when server is notifiyng about the start of a new audio interval stream
+    DOWNLOAD_INTERVAL_WRITE = 0x05, //received for every audio interval chunk. We receive a lot of these messages while jamming.
+    KEEP_ALIVE = 0xfd,// server requesting a keepalive. If Jamtaba not respond the server will disconnect.
+    CHAT_MESSAGE = 0xc0 //received when users are sending chat messages
 };
 
 class ServerMessage
 {
+
 public:
-    explicit ServerMessage(ServerMessageType messageType);
+    explicit ServerMessage(ServerMessageType messageType, quint32 payload);
     virtual ~ServerMessage();
+
     virtual void printDebug(QDebug dbg) const = 0;
+
     inline ServerMessageType getMessageType() const
     {
         return messageType;
     }
 
+    virtual void readFrom(QDataStream& stream) = 0;
+
+protected:
+    quint32 payload;
+
 private:
     const ServerMessageType messageType;
 };
+
 // ++++++++++++++++++++++++++++++++++
 
 class ServerAuthChallengeMessage : public ServerMessage
@@ -46,8 +58,7 @@ class ServerAuthChallengeMessage : public ServerMessage
     int protocolVersion;// The Protocol Version field should contain 0x00020000.
 
 public:
-    ServerAuthChallengeMessage(int serverKeepAlivePeriod, quint8 challenge[],
-                               QString licenceAgreement, int protocolVersion);
+    ServerAuthChallengeMessage(quint32 payload);
 
     inline QByteArray getChallenge() const
     {
@@ -75,6 +86,9 @@ public:
     }
 
     virtual void printDebug(QDebug dbg) const;
+
+    void readFrom(QDataStream &stream) override;
+
 };
 // ++++++++++++++++++++++++++++++++
 class ServerAuthReplyMessage : public ServerMessage
@@ -85,8 +99,12 @@ private:
     quint8 maxChannels;
 
 public:
-    ServerAuthReplyMessage(quint8 flag, quint8 maxChannels, QString responseMessage);
+    ServerAuthReplyMessage(quint32 payload);
+
     virtual void printDebug(QDebug debug) const;
+
+    void readFrom(QDataStream &stream) override;
+
     inline QString getErrorMessage() const
     {
         return message;
@@ -115,6 +133,7 @@ class ServerKeepAliveMessage : public ServerMessage
 public:
     ServerKeepAliveMessage();
     virtual void printDebug(QDebug dbg) const;
+    void readFrom(QDataStream &stream) override;
 };
 // ++++++++++++++++++++++++=
 class ServerConfigChangeNotifyMessage : public ServerMessage
@@ -124,7 +143,10 @@ private:
     quint16 bpi;
 
 public:
-    ServerConfigChangeNotifyMessage(quint16 bpm, quint16 bpi);
+    ServerConfigChangeNotifyMessage(quint32 payload);
+
+    void readFrom(QDataStream &stream) override;
+
     inline quint16 getBpi() const
     {
         return bpi;
@@ -143,8 +165,10 @@ class UserChannel;
 class UserInfoChangeNotifyMessage : public ServerMessage
 {
 public:
-    UserInfoChangeNotifyMessage(QMap<QString, QList<UserChannel>> allUsersChannels = QMap<QString, QList<UserChannel>>());
+    UserInfoChangeNotifyMessage(quint32 payload);
     ~UserInfoChangeNotifyMessage();
+
+    void readFrom(QDataStream &stream) override;
 
     inline QList<QString> getUsersNames() const
     {
@@ -160,6 +184,7 @@ public:
 
 private:
     QMap<QString, QList<UserChannel> > usersChannels;
+
 };
 // ++++++++++++=
 
@@ -188,7 +213,9 @@ enum class  ChatCommandType : quint8 { //TODO use quint8
 class ServerChatMessage : public ServerMessage
 {
 public:
-    ServerChatMessage(QString command, QStringList arguments);
+    ServerChatMessage(quint32 payload);
+
+    void readFrom(QDataStream &stream) override;
 
     inline QList<QString> getArguments() const
     {
@@ -206,6 +233,7 @@ private:
 
     virtual void printDebug(QDebug dbg) const;
     ChatCommandType commandTypeFromString(QString string);
+
 };
 // ++++++++++++++++
 // ++++++++++++++++
@@ -226,8 +254,9 @@ class DownloadIntervalBegin : public ServerMessage
 {
 
 public:
-    DownloadIntervalBegin(quint32 estimatedSize, quint8 channelIndex, QString userName, quint8 fourCC[],
-                          QByteArray GUID);
+    DownloadIntervalBegin(quint32 payload);
+
+    void readFrom(QDataStream &stream) override;
 
     inline quint8  getChannelIndex() const
     {
@@ -273,6 +302,7 @@ private:
     quint8 channelIndex;
     QString userName;
     bool isValidOgg;
+
 };
 // ++++++++++++++++++
 /*
@@ -286,7 +316,9 @@ class DownloadIntervalWrite : public ServerMessage
 {
 
 public:
-    DownloadIntervalWrite(QByteArray GUID, quint8 flags, QByteArray encodedAudioData);
+    DownloadIntervalWrite(quint32 payload);
+
+    void readFrom(QDataStream &stream) override;
 
     virtual void printDebug(QDebug dbg) const;
 
@@ -309,6 +341,7 @@ private:
     QByteArray GUID;
     quint8 flags;
     QByteArray encodedAudioData;
+
 };
 
 // ++++++++++++++++++++

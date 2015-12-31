@@ -1,24 +1,7 @@
 #include "Server.h"
 #include "User.h"
-#include <QDebug>
-#include <QDataStream>
 
 using namespace Ninjam;
-
-//QMap<QString, std::shared_ptr<Server>> Server::servers;
-
-Server::Server(QString host, int port, int maxChannels)
-    :port(port), host(host),
-      maxUsers(0), bpm(120), bpi(16),
-      activeServer(true),
-      streamUrl(""),
-      topic(""),
-      containBot(false),
-      maxChannels(maxChannels)
-{
-
-    //qDebug() << "criou server " << host <<":" << port;
-}
 
 Server::Server(QString host, int port, int maxChannels, int maxUsers)
     :port(port), host(host),
@@ -30,16 +13,11 @@ Server::Server(QString host, int port, int maxChannels, int maxUsers)
       maxChannels(maxChannels)
 {
 
-    //qDebug() << "criou server " << host <<":" << port;
 }
 
 Server::~Server(){
-    //qDeleteAll(users);
-}
 
-//QString Server::getUniqueName(QString host, int port) {
-//    return host + ":" + QString::number(port);
-//}
+}
 
 bool Server::containsUser(QString userFullName) const{
     return users.contains(userFullName);

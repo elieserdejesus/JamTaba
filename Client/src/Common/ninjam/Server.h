@@ -9,28 +9,9 @@ class User;
 
 class Server
 {
-public:
-    static const int MIN_BPM = 40;
-    static const int MAX_BPM = 400;
-    static const int MAX_BPI = 64;
-    static const int MIN_BPI = 3;
 
-private:
-    int port;
-    QString host;
-    int maxUsers;
-    short bpm;
-    short bpi;
-    bool activeServer;
-    QString streamUrl;
-    QString topic;
-    QString licence;
-    QMap<QString, User *> users;
-    bool containBot;
-    int maxChannels;
 public:
-    Server(QString host, int port, int maxChannels);
-    Server(QString host, int port, int maxChannels, int maxUsers);
+    Server(QString host, int port, int maxChannels, int maxUsers = 0);
 
     ~Server();
 
@@ -153,6 +134,25 @@ public:
     {
         this->topic = topicText;
     }
+
+private:
+    int port;
+    QString host;
+    int maxUsers;
+    short bpm;
+    short bpi;
+    bool activeServer;
+    QString streamUrl;
+    QString topic;
+    QString licence;
+    QMap<QString, User *> users;
+    bool containBot;
+    int maxChannels;
+
+    static const int MIN_BPM = 40;
+    static const int MAX_BPM = 400;
+    static const int MAX_BPI = 64;
+    static const int MIN_BPI = 3;
 };
 
 QDataStream &operator<<(QDataStream &out, const Ninjam::Server &server);

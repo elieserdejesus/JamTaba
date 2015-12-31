@@ -1,10 +1,12 @@
 #ifndef USER_H
 #define USER_H
 
-#include "UserChannel.h"
 #include <QMap>
 
 namespace Ninjam {
+
+class UserChannel;
+
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class User
 {
