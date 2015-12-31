@@ -76,7 +76,7 @@ ClientAuthUserMessage::ClientAuthUserMessage(QString userName, QByteArray challe
     this->payload = 29 + this->userName.size();
 }
 
-void ClientAuthUserMessage::serializeTo(QByteArray& buffer) {
+void ClientAuthUserMessage::serializeTo(QByteArray& buffer) const {
     QDataStream stream(&buffer, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
     stream << msgType << payload;
@@ -113,7 +113,7 @@ ClientSetChannel::ClientSetChannel(QString channelNameToRemove)
 }
 
 
-void ClientSetChannel::serializeTo(QByteArray &buffer){
+void ClientSetChannel::serializeTo(QByteArray &buffer) const{
     QDataStream stream(&buffer, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
     //payload = 0;
@@ -139,7 +139,7 @@ ClientKeepAlive::ClientKeepAlive()
 
 }
 
-void ClientKeepAlive::serializeTo(QByteArray &buffer){
+void ClientKeepAlive::serializeTo(QByteArray &buffer) const{
     //just the header bytes, no payload
     QDataStream stream(&buffer, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
@@ -160,7 +160,7 @@ ClientSetUserMask::ClientSetUserMask(QList<QString> users)
     }
 }
 
-void ClientSetUserMask::serializeTo(QByteArray &buffer)
+void ClientSetUserMask::serializeTo(QByteArray &buffer) const
 {
     QDataStream stream(&buffer, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
@@ -186,7 +186,7 @@ ChatMessage::ChatMessage(QString text)
     payload = text.toUtf8().size() + 1 + command.length() + 1;
 }
 
-void ChatMessage::serializeTo(QByteArray &buffer){
+void ChatMessage::serializeTo(QByteArray &buffer) const{
     QDataStream stream(&buffer, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
     stream << msgType;
@@ -215,7 +215,7 @@ ClientUploadIntervalBegin::ClientUploadIntervalBegin(QByteArray GUID, quint8 cha
 	fourCC[3] = 'v';
 }
 
-void ClientUploadIntervalBegin::serializeTo(QByteArray &buffer){
+void ClientUploadIntervalBegin::serializeTo(QByteArray &buffer) const{
     QDataStream stream(&buffer, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
     //quint32 payload = 16 + 4 + 4 + 1 + userName.size();
@@ -246,7 +246,7 @@ ClientIntervalUploadWrite::ClientIntervalUploadWrite(QByteArray GUID, QByteArray
 
 }
 
-void ClientIntervalUploadWrite::serializeTo(QByteArray &buffer){
+void ClientIntervalUploadWrite::serializeTo(QByteArray &buffer) const{
     QDataStream stream(&buffer, QIODevice::WriteOnly);
     stream.setByteOrder(QDataStream::LittleEndian);
     stream << msgType;

@@ -110,7 +110,7 @@ private:
     QString password;
     QStringList channels;// channels names
 
-    void sendMessageToServer(ClientMessage *message);
+    void sendMessageToServer(const ClientMessage &message);
     void handleUserChannels(QString userFullName, QList<UserChannel> channelsInTheServer);
     bool channelIsOutdate(const User &user, const UserChannel &serverChannel);
 
@@ -131,7 +131,7 @@ private:
 
     class Download;
     // using GUID as key
-    QMap<QString, Download *> downloads;
+    QMap<QString, Download> downloads;
 
     bool needSendKeepAlive() const;
 

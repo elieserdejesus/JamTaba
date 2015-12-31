@@ -1,7 +1,6 @@
 #include "Service.h"
 #include "Server.h"
 #include "User.h"
-#include "protocol/ServerMessageParser.h"
 #include "protocol/ServerMessages.h"
 #include "protocol/ClientMessages.h"
 #include <algorithm>
@@ -106,8 +105,7 @@ void Service::sendAudioIntervalPart(QByteArray GUID, QByteArray encodedAudioBuff
     qCDebug(jtNinjamProtocol) << "sending audio interval part";
     if (!initialized)
         return;
-    ClientIntervalUploadWrite msg(GUID, encodedAudioBuffer, isLastPart);
-    sendMessageToServer(&msg);
+    sendMessageToServer(ClientIntervalUploadWrite(GUID, encodedAudioBuffer, isLastPart));
 }
 
 void Service::sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex)
@@ -115,8 +113,41 @@ void Service::sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex)
     qCDebug(jtNinjamProtocol) << "sending audio interval begin";
     if (!initialized)
         return;
-    ClientUploadIntervalBegin msg(GUID, channelIndex, this->userName);
-    sendMessageToServer(&msg);
+    sendMessageToServer(ClientUploadIntervalBegin(GUID, channelIndex, this->userName));
+}
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ServerMessage *Service::createServerMessage(quint8 messageTypeCode, quint32 payload)
+{
+    ServerMessageType messageType = static_cast<ServerMessageType>(messageTypeCode);
+    switch (messageType) {
+    case ServerMessageType::AUTH_CHALLENGE:
+        return new ServerAuthChallengeMessage(payload);
+
+    case ServerMessageType::AUTH_REPLY:
+        return new ServerAuthReplyMessage(payload);
+
+    case ServerMessageType::USER_INFO_CHANGE_NOTIFY:
+        return new UserInfoChangeNotifyMessage(payload);
+
+    case ServerMessageType::SERVER_CONFIG_CHANGE_NOTIFY:
+        return new ServerConfigChangeNotifyMessage(payload);
+
+    case ServerMessageType::CHAT_MESSAGE:
+        return new ServerChatMessage(payload);
+
+    case ServerMessageType::KEEP_ALIVE:
+        return new ServerKeepAliveMessage();
+
+    case ServerMessageType::DOWNLOAD_INTERVAL_BEGIN:
+        return new DownloadIntervalBegin(payload);
+
+    case ServerMessageType::DOWNLOAD_INTERVAL_WRITE:
+        return new DownloadIntervalWrite(payload);
+    }
+    qCritical() << "Error creating a ServerMessage instance for the type " << messageTypeCode
+                << " payload: " << payload;
+    return nullptr;
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -133,28 +164,26 @@ void Service::socketReadSlot()
     stream.setByteOrder(QDataStream::LittleEndian);
 
     static quint8 messageTypeCode;
-    static quint32 payloadLenght;
-    while (socket.bytesAvailable() >= 5) {// consume all messages
-        if (!lastMessageWasIncomplete) {
-            stream >> messageTypeCode >> payloadLenght;
-            qCDebug(jtNinjamProtocol) << "reading message from socket msgType:"
-                                      << messageTypeCode << " payloadLenght:" << payloadLenght;
+    static quint32 payload;
+    while (socket.bytesAvailable() >= 5) {// this loop consume all messages. Every ninjam message contains a 5 bytes header.
+        if (!lastMessageWasIncomplete)
+            stream >> messageTypeCode >> payload;
         }
-        if (socket.bytesAvailable() >= (int)payloadLenght) {// message payload is available to read
+        if (socket.bytesAvailable() >= (int)payload) {// message payload is available to read
             lastMessageWasIncomplete = false;
-            const Ninjam::ServerMessage &message
-                = ServerMessageParser::parse(static_cast<ServerMessageType>(messageTypeCode),
-                                             stream,
-                                             payloadLenght);
-            invokeMessageHandler(message);
-            if (needSendKeepAlive()) {
-                ClientKeepAlive clientKeepAliveMessage;
-                sendMessageToServer((ClientMessage *)&clientKeepAliveMessage);
+
+            ServerMessage *message = createServerMessage(messageTypeCode, payload);
+            if (message) {
+                message->readFrom(stream);
+                invokeMessageHandler(message);
+                delete message;
             }
+            if (needSendKeepAlive())
+                sendMessageToServer(ClientKeepAlive());
         } else {
             qCDebug(jtNinjamProtocol) << "incomplete message!";
             lastMessageWasIncomplete = true;
-            break;
+            break;// skip and wait until receive more bytes
         }
     }
 }
@@ -217,27 +246,24 @@ float Service::getIntervalPeriod()
 void Service::voteToChangeBPI(int newBPI)
 {
     QString text = "!vote bpi " + QString::number(newBPI);
-    ChatMessage message(text);
-    sendMessageToServer(&message);
+    sendMessageToServer(ChatMessage(text));
 }
 
 void Service::voteToChangeBPM(int newBPM)
 {
     QString text = "!vote bpm " + QString::number(newBPM);
-    ChatMessage message(text);
-    sendMessageToServer(&message);
+    sendMessageToServer(ChatMessage(text));
 }
 
 void Service::sendChatMessageToServer(QString message)
 {
-    ChatMessage msg(message);
-    sendMessageToServer(&msg);
+    sendMessageToServer(ChatMessage(message));
 }
 
-void Service::sendMessageToServer(ClientMessage *message)
+void Service::sendMessageToServer(const ClientMessage &message)
 {
     QByteArray outBuffer;
-    message->serializeTo(outBuffer);
+    message.serializeTo(outBuffer);
 
     int totalDataToSend = outBuffer.size();
     int dataSended = 0;
@@ -255,11 +281,7 @@ void Service::sendMessageToServer(ClientMessage *message)
         qCCritical(jtNinjamProtocol) << "Bytes not writed in socket!";
     }
 
-    if ((int)message->getPayload() + 5 != outBuffer.size()) {
-        qCWarning(jtNinjamProtocol()) << "(int)message->getPayload() + 5: "
-                                      << ((int)message->getPayload() + 5) << "outbuffer.size():"
-                                      << outBuffer.size();
-    }
+    Q_ASSERT(message.getPayload() + 5 == outBuffer.size());
 }
 
 bool Service::needSendKeepAlive() const
@@ -280,8 +302,8 @@ void Service::handle(const UserInfoChangeNotifyMessage &msg)
         handleUserChannels(userFullName, msg.getUserChannels(userFullName));
     }
 
-    ClientSetUserMask setUserMask(msg.getUsersNames());
-    sendMessageToServer(&setUserMask);  // enable new users channels
+    // enable new users channels
+    sendMessageToServer(ClientSetUserMask(msg.getUsersNames()));
 }
 
 void Service::handle(const DownloadIntervalBegin &msg)
@@ -290,25 +312,21 @@ void Service::handle(const DownloadIntervalBegin &msg)
         quint8 channelIndex = msg.getChannelIndex();
         QString userFullName = msg.getUserName();
         QString GUID = msg.getGUID();
-        downloads.insert(GUID, new Download(userFullName, channelIndex, GUID));
+        downloads.insert(GUID, Download(userFullName, channelIndex, GUID));
     }
 }
 
 void Service::handle(const DownloadIntervalWrite &msg)
 {
     if (downloads.contains(msg.getGUID())) {
-        Download *download = downloads[msg.getGUID()];
-        download->appendVorbisData(msg.getEncodedAudioData());
-        User *user = currentServer->getUser(download->getUserFullName());
+        Download &download = downloads[msg.getGUID()];
+        download.appendVorbisData(msg.getEncodedAudioData());
+        User *user = currentServer->getUser(download.getUserFullName());
         if (msg.downloadIsComplete()) {
-            emit audioIntervalCompleted(*user, download->getChannelIndex(),
-                                        download->getVorbisData());
-            delete download;
+            emit audioIntervalCompleted(*user, download.getChannelIndex(), download.getVorbisData());
             downloads.remove(msg.getGUID());
         } else {
-            emit audioIntervalDownloading(*user,
-                                          download->getChannelIndex(),
-                                          msg.getEncodedAudioData().size());
+            emit audioIntervalDownloading(*user, download.getChannelIndex(), msg.getEncodedAudioData().size());
         }
     } else {
         qCritical("GUID is not in map!");
@@ -317,40 +335,36 @@ void Service::handle(const DownloadIntervalWrite &msg)
 
 void Service::handle(const ServerKeepAliveMessage & /*msg*/)
 {
-    ClientKeepAlive clientKeepAliveMessage;
-    sendMessageToServer((ClientMessage *)&clientKeepAliveMessage);
+    sendMessageToServer(ClientKeepAlive());
 }
 
 void Service::handle(const ServerAuthChallengeMessage &msg)
 {
-    ClientAuthUserMessage msgAuthUser(this->userName, msg.getChallenge(),
-                                      msg.getProtocolVersion(), this->password);
-    sendMessageToServer(&msgAuthUser);
-    this->serverLicence = msg.getLicenceAgreement();
-    this->serverKeepAlivePeriod = msg.getServerKeepAlivePeriod();
+    ClientAuthUserMessage msgAuthUser(userName, msg.getChallenge(),
+                                      msg.getProtocolVersion(), password);
+    sendMessageToServer(msgAuthUser);
+    serverLicence = msg.getLicenceAgreement();
+    serverKeepAlivePeriod = msg.getServerKeepAlivePeriod();
 }
 
 void Service::sendNewChannelsListToServer(QStringList channelsNames)
 {
     this->channels = channelsNames;
-    ClientSetChannel setChannelMsg(this->channels);
-    sendMessageToServer(&setChannelMsg);
+    sendMessageToServer(ClientSetChannel(channels));
 }
 
 void Service::sendRemovedChannelIndex(int removedChannelIndex)
 {
     assert(removedChannelIndex >= 0 && removedChannelIndex < channels.size());
     channels.removeAt(removedChannelIndex);
-    ClientSetChannel setChannelMsg(this->channels);
-    sendMessageToServer(&setChannelMsg);
+    sendMessageToServer(ClientSetChannel(channels));
 }
 
 void Service::handle(const ServerAuthReplyMessage &msg)
 {
     if (msg.userIsAuthenticated()) {
         this->newUserName = msg.getNewUserName();
-        ClientSetChannel setChannelMsg(this->channels);
-        sendMessageToServer(&setChannelMsg);
+        sendMessageToServer(ClientSetChannel(channels));
         quint8 serverMaxChannels = msg.getMaxChannels();
         QString serverIp = socket.peerName();
         quint16 serverPort = socket.peerPort();
@@ -503,32 +517,32 @@ void Service::handle(const ServerConfigChangeNotifyMessage &msg)
         setBpm(bpm);
 }
 
-void Service::invokeMessageHandler(const ServerMessage &message)
+void Service::invokeMessageHandler(ServerMessage *message)
 {
-    switch (message.getMessageType()) {
+    switch (message->getMessageType()) {
     case ServerMessageType::AUTH_CHALLENGE:
-        handle((ServerAuthChallengeMessage &)message);
+        handle((ServerAuthChallengeMessage &)*message);
         break;
     case ServerMessageType::AUTH_REPLY:
-        handle((ServerAuthReplyMessage &)message);
+        handle((ServerAuthReplyMessage &)*message);
         break;
     case ServerMessageType::SERVER_CONFIG_CHANGE_NOTIFY:
-        handle((ServerConfigChangeNotifyMessage &)message);
+        handle((ServerConfigChangeNotifyMessage &)*message);
         break;
     case ServerMessageType::USER_INFO_CHANGE_NOTIFY:
-        handle((UserInfoChangeNotifyMessage &)message);
+        handle((UserInfoChangeNotifyMessage &)*message);
         break;
     case ServerMessageType::CHAT_MESSAGE:
-        handle((ServerChatMessage &)message);
+        handle((ServerChatMessage &)*message);
         break;
     case ServerMessageType::KEEP_ALIVE:
-        handle((ServerKeepAliveMessage &)message);
+        handle((ServerKeepAliveMessage &)*message);
         break;
     case ServerMessageType::DOWNLOAD_INTERVAL_BEGIN:
-        handle((DownloadIntervalBegin &)message);
+        handle((DownloadIntervalBegin &)*message);
         break;
     case ServerMessageType::DOWNLOAD_INTERVAL_WRITE:
-        handle((DownloadIntervalWrite &)message);
+        handle((DownloadIntervalWrite &)*message);
         break;
 
     default:

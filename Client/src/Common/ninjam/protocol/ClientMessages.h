@@ -17,7 +17,7 @@ public:
     {
     }
 
-    virtual void serializeTo(QByteArray &buffer) = 0;
+    virtual void serializeTo(QByteArray &buffer) const = 0;
     void virtual printDebug(QDebug dbg) const = 0;
 
     inline quint8 getMsgType() const
@@ -50,14 +50,14 @@ private:
 public:
     ClientAuthUserMessage(QString userName, QByteArray challenge, quint32 protocolVersion,
                           QString password);
-    void serializeTo(QByteArray &buffer);
+    void serializeTo(QByteArray &buffer) const override;
     void virtual printDebug(QDebug dbg) const;
 };
 // +++++++++++++++++++++++++++++++++++++++=
 class ClientSetChannel : public ClientMessage
 {
 public:
-    virtual void serializeTo(QByteArray &stream);
+    virtual void serializeTo(QByteArray &stream) const override;
     virtual void printDebug(QDebug dbg) const;
     ClientSetChannel(QStringList channels);
     ClientSetChannel(QString channelNameToRemove);
@@ -72,7 +72,7 @@ class ClientKeepAlive : public ClientMessage
 {
 public:
     ClientKeepAlive();
-    virtual void serializeTo(QByteArray &stream);
+    virtual void serializeTo(QByteArray &stream) const override;
     virtual void printDebug(QDebug dbg) const;
 };
 // ++++++++++++++++++++++++++++++
@@ -84,7 +84,7 @@ private:
     static const quint32 FLAG = 0xFFFFFFFF;
 public:
     explicit ClientSetUserMask(QList<QString> users);
-    virtual void serializeTo(QByteArray &stream);
+    virtual void serializeTo(QByteArray &stream) const override;
     virtual void printDebug(QDebug dbg) const;
 };
 
@@ -93,7 +93,7 @@ class ChatMessage : public ClientMessage
 {
 public:
     explicit ChatMessage(QString text);
-    virtual void serializeTo(QByteArray &stream);
+    virtual void serializeTo(QByteArray &stream) const override;
     virtual void printDebug(QDebug dbg) const;
 private:
     QString text;
@@ -122,7 +122,7 @@ public:
 
     static QByteArray newGUID();
 
-    virtual void serializeTo(QByteArray &stream);
+    virtual void serializeTo(QByteArray &stream) const override;
     virtual void printDebug(QDebug dbg) const;
 
     inline QByteArray getGUID() const
@@ -140,13 +140,14 @@ private:
     bool isLastPart;
 public:
     ClientIntervalUploadWrite(QByteArray GUID, QByteArray encodedAudioBuffer, bool isLastPart);
-    virtual void serializeTo(QByteArray &buffer);
+    virtual void serializeTo(QByteArray &buffer) const override;
     virtual void printDebug(QDebug dbg) const;
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 QDebug operator<<(QDebug dbg, Ninjam::ClientMessage *message);
+
 }
 
 #endif
