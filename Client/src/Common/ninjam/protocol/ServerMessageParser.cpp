@@ -1,8 +1,9 @@
 #include "ServerMessageParser.h"
 #include "ServerMessages.h"
-#include "../User.h"
+#include "ninjam/User.h"
+
 #include <QDataStream>
-#include <QSharedPointer>
+
 #include <QDebug>
 
 using namespace Ninjam;
@@ -58,9 +59,7 @@ const ServerMessage& ServerMessageParser::parseAuthChallenge(QDataStream &stream
     if (serverHasLicenceAgreement) {
         licenceAgreement = ServerMessageParser::extractString(stream);
     }
-    static ServerAuthChallengeMessage msg;
-    msg.set(serverKeepAlivePeriod, challenge, licenceAgreement, protocolVersion);
-    return msg;
+    return ServerAuthChallengeMessage(serverKeepAlivePeriod, challenge, licenceAgreement, protocolVersion);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++
 const ServerMessage& ServerMessageParser::parseAuthReply(QDataStream &stream, quint32 /*payloadLenght*/)
@@ -70,11 +69,8 @@ const ServerMessage& ServerMessageParser::parseAuthReply(QDataStream &stream, qu
     stream >> flag;
 
     QString serverMessage = ServerMessageParser::extractString(stream);
-    //acho que o extractString não movimenta o cursos interno do stream, por isso não está lendo o maxChannels corretamente
-    stream >> maxChannels;
-    static ServerAuthReplyMessage msg;
-    msg.set(flag, maxChannels, serverMessage);
-    return msg;
+    stream >> maxChannels;//TODO problem reading max channels?
+    return ServerAuthReplyMessage(flag, maxChannels, serverMessage);
 }
 //++++++++++++++++++++++++++++++++++++++=
 const ServerMessage& ServerMessageParser::parseServerConfigChangeNotify(QDataStream &stream, quint32 /*payloadLenght*/){
@@ -82,18 +78,14 @@ const ServerMessage& ServerMessageParser::parseServerConfigChangeNotify(QDataStr
     quint16 bpi;
     stream >> bpm;
     stream >> bpi;
-    static ServerConfigChangeNotifyMessage msg;
-    msg.set(bpm, bpi);
-    return msg;
+    return ServerConfigChangeNotifyMessage(bpm, bpi);
 }
 
 
 const ServerMessage& ServerMessageParser::parseUserInfoChangeNotify(QDataStream &stream, quint32 payloadLenght)
 {
-    static UserInfoChangeNotifyMessage msg;
     if (payloadLenght <= 0) {//no users
-        msg.set(QMap<QString, QList<UserChannel>>());//empy user list
-        return  msg;
+        return UserInfoChangeNotifyMessage();//empy user list;
     }
     QMap<QString, QList<UserChannel>> allUsersChannels;
     unsigned int bytesConsumed = 0;
@@ -113,9 +105,7 @@ const ServerMessage& ServerMessageParser::parseUserInfoChangeNotify(QDataStream 
         //qDebug() << userFullName << "active:" << active << "volume:" << volume << "pan:" << pan << "flags: "<< flags;
         userChannels.append(UserChannel(userFullName, channelName, (bool)active, channelIndex, volume, pan, flags));
     }
-
-    msg.set(allUsersChannels);
-    return msg;
+    return UserInfoChangeNotifyMessage(allUsersChannels);
 }
 
 //+++++++++++++++++++
@@ -166,9 +156,7 @@ const ServerMessage& ServerMessageParser::parseChatMessage(QDataStream &stream, 
         parsedArgs++;
     }
 
-    static ServerChatMessage msg;
-    msg.set(command, arguments);
-    return msg;
+    return ServerChatMessage(command, arguments);
 }
 
 //+++++++++++++++++++++++++++=
@@ -202,9 +190,7 @@ const ServerMessage& ServerMessageParser::parseDownloadIntervalBegin(QDataStream
     stream >> channelIndex;
     QString userName = ServerMessageParser::extractString(stream);
 
-    static DownloadIntervalBegin msg;
-    msg.set(estimatedSize, channelIndex, userName, fourCC, GUID);
-    return msg;
+    return DownloadIntervalBegin(estimatedSize, channelIndex, userName, fourCC, GUID);
 }
 
 
@@ -226,8 +212,6 @@ const ServerMessage &ServerMessageParser::parseDownloadIntervalWrite(QDataStream
     if(bytesReaded <= 0){
         qWarning() << "ERRO na leitura do audio codificado! "  << bytesReaded;
     }
-    static DownloadIntervalWrite msg;
-    msg.set(GUID, flags, encodedData);
-    return msg;
+    return DownloadIntervalWrite(GUID, flags, encodedData);
 }
 //++++++++++++++++++++++++++++++++++++++

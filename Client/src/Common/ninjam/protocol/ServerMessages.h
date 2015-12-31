@@ -46,9 +46,9 @@ class ServerAuthChallengeMessage : public ServerMessage
     int protocolVersion;// The Protocol Version field should contain 0x00020000.
 
 public:
-    ServerAuthChallengeMessage();
-    void set(int serverKeepAlivePeriod, quint8 challenge[], QString licenceAgreement,
-             int protocolVersion);
+    ServerAuthChallengeMessage(int serverKeepAlivePeriod, quint8 challenge[],
+                               QString licenceAgreement, int protocolVersion);
+
     inline QByteArray getChallenge() const
     {
         return QByteArray((const char *)challenge);
@@ -85,8 +85,7 @@ private:
     quint8 maxChannels;
 
 public:
-    ServerAuthReplyMessage();
-    void set(quint8 flag, quint8 maxChannels, QString responseMessage);
+    ServerAuthReplyMessage(quint8 flag, quint8 maxChannels, QString responseMessage);
     virtual void printDebug(QDebug debug) const;
     inline QString getErrorMessage() const
     {
@@ -125,8 +124,7 @@ private:
     quint16 bpi;
 
 public:
-    ServerConfigChangeNotifyMessage();
-    void set(quint16 bpm, quint16 bpi);
+    ServerConfigChangeNotifyMessage(quint16 bpm, quint16 bpi);
     inline quint16 getBpi() const
     {
         return bpi;
@@ -144,13 +142,9 @@ class UserChannel;
 
 class UserInfoChangeNotifyMessage : public ServerMessage
 {
-private:
-    QMap<QString, QList<UserChannel> > usersChannels;
-
 public:
+    UserInfoChangeNotifyMessage(QMap<QString, QList<UserChannel>> allUsersChannels = QMap<QString, QList<UserChannel>>());
     ~UserInfoChangeNotifyMessage();
-    UserInfoChangeNotifyMessage();
-    void set(QMap<QString, QList<UserChannel> > allUsersChannels);
 
     inline QList<QString> getUsersNames() const
     {
@@ -163,6 +157,9 @@ public:
     }
 
     virtual void printDebug(QDebug dbg) const;
+
+private:
+    QMap<QString, QList<UserChannel> > usersChannels;
 };
 // ++++++++++++=
 
@@ -183,21 +180,15 @@ public:
         USERCOUNT <users> <maxusers> -- server status
     */
 
-enum class  ChatCommandType : std::uint8_t {
+enum class  ChatCommandType : std::uint8_t { //TODO use quint8
     MSG = 0, PRIVMSG, TOPIC, JOIN, PART, USERCOUNT
+    //TODO remove this 0 value. Is uncessary, right?
 };
 
 class ServerChatMessage : public ServerMessage
 {
-private:
-    ChatCommandType commandType;
-    QStringList arguments;
-
-    virtual void printDebug(QDebug dbg) const;
-    ChatCommandType commandTypeFromString(QString string);
 public:
-    ServerChatMessage();
-    void set(QString command, QStringList arguments);
+    ServerChatMessage(QString command, QStringList arguments);
 
     inline QList<QString> getArguments() const
     {
@@ -208,6 +199,13 @@ public:
     {
         return commandType;
     }
+
+private:
+    ChatCommandType commandType;
+    QStringList arguments;
+
+    virtual void printDebug(QDebug dbg) const;
+    ChatCommandType commandTypeFromString(QString string);
 };
 // ++++++++++++++++
 // ++++++++++++++++
@@ -226,18 +224,10 @@ If the FourCC field contains "OGGv" then this is a valid Ogg Vorbis encoded down
 */
 class DownloadIntervalBegin : public ServerMessage
 {
-private:
-    QByteArray GUID;
-    quint32 estimatedSize;
-    quint8 fourCC[4];// = new byte[4];
-    quint8 channelIndex;
-    QString userName;
-    bool isValidOgg;
 
 public:
-    DownloadIntervalBegin();
-    void set(quint32 estimatedSize, quint8 channelIndex, QString userName, quint8 fourCC[],
-             QByteArray GUID);
+    DownloadIntervalBegin(quint32 estimatedSize, quint8 channelIndex, QString userName, quint8 fourCC[],
+                          QByteArray GUID);
 
     inline quint8  getChannelIndex() const
     {
@@ -275,6 +265,14 @@ public:
     {
         return fourCC[0] == 0 && fourCC[3] == 0;
     }
+
+private:
+    QByteArray GUID;
+    quint32 estimatedSize;
+    quint8 fourCC[4];// = new byte[4];
+    quint8 channelIndex;
+    QString userName;
+    bool isValidOgg;
 };
 // ++++++++++++++++++
 /*
@@ -286,15 +284,11 @@ public:
   */
 class DownloadIntervalWrite : public ServerMessage
 {
-private:
-    QByteArray GUID;
-    quint8 flags;
-    QByteArray encodedAudioData;
 
 public:
+    DownloadIntervalWrite(QByteArray GUID, quint8 flags, QByteArray encodedAudioData);
+
     virtual void printDebug(QDebug dbg) const;
-    DownloadIntervalWrite();
-    void set(QByteArray GUID, quint8 flags, QByteArray encodedAudioData);
 
     inline QString getGUID() const
     {
@@ -310,6 +304,11 @@ public:
     {
         return flags == 1;
     }
+
+private:
+    QByteArray GUID;
+    quint8 flags;
+    QByteArray encodedAudioData;
 };
 
 // ++++++++++++++++++++
