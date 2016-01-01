@@ -133,7 +133,6 @@ public:
 
     static QByteArray createGUID();
 
-
     inline QByteArray getGUID() const
     {
         return GUID;
@@ -153,6 +152,7 @@ private:
 // ++++++++++++++++++++++++++++++++++++++++++++++++=
 class ClientIntervalUploadWrite : public ClientMessage
 {
+
 public:
     ClientIntervalUploadWrite(const QByteArray &GUID, const QByteArray &encodedAudioBuffer,
                               bool isLastPart);

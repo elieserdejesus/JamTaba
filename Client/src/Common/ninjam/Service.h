@@ -39,13 +39,13 @@ public:
 
     explicit Service();
     ~Service();
-    static bool isBotName(QString userName);
+    static bool isBotName(const QString &userName);
 
-    void sendChatMessageToServer(QString message);
+    void sendChatMessageToServer(const QString &message);
 
     // audio interval upload
-    void sendAudioIntervalPart(QByteArray GUID, QByteArray encodedAudioBuffer, bool isLastPart);
-    void sendAudioIntervalBegin(QByteArray GUID, quint8 channelIndex);
+    void sendAudioIntervalPart(const QByteArray &GUID, const QByteArray &encodedAudioBuffer, bool isLastPart);
+    void sendAudioIntervalBegin(const QByteArray &GUID, quint8 channelIndex);
 
     void sendNewChannelsListToServer(const QStringList &channelsNames);
     void sendRemovedChannelIndex(int removedChannelIndex);
@@ -54,8 +54,8 @@ public:
     QString getCurrentServerLicence() const;
     float getIntervalPeriod();
 
-    void startServerConnection(QString serverIp, int serverPort, QString userName,
-                               QStringList channels, QString password = "");
+    void startServerConnection(const QString &serverIp, int serverPort, const QString &userName,
+                               const QStringList &channels, const QString &password = "");
     void disconnectFromServer(bool emitDisconnectedSignal);
 
     void voteToChangeBPM(int newBPM);
@@ -140,7 +140,7 @@ private:
     QStringList channels;// channels names
 
     void sendMessageToServer(const ClientMessage &message);
-    void handleUserChannels(QString userFullName, QList<UserChannel> channelsInTheServer);
+    void handleUserChannels(const QString &userFullName, const QList<UserChannel> &channelsInTheServer);
     bool channelIsOutdate(const User &user, const UserChannel &serverChannel);
 
     void setBpm(quint16 newBpm);

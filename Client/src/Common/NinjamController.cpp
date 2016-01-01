@@ -402,8 +402,8 @@ void NinjamController::start(const Ninjam::Server& server, QMap<int, bool> chann
         QObject::connect(ninjamService, SIGNAL(userChannelRemoved(const Ninjam::User &, const Ninjam::UserChannel &)), this, SLOT(on_ninjamUserChannelRemoved(const Ninjam::User &, const Ninjam::UserChannel &)));
         QObject::connect(ninjamService, SIGNAL(userChannelUpdated(const Ninjam::User &, const Ninjam::UserChannel &)), this, SLOT(on_ninjamUserChannelUpdated(const Ninjam::User &, const Ninjam::UserChannel &)));
         QObject::connect(ninjamService, SIGNAL(audioIntervalDownloading(const Ninjam::User &,int,int)), this, SLOT(on_ninjamAudioIntervalDownloading(const Ninjam::User &,int,int)));
-        QObject::connect(ninjamService, SIGNAL(userExited(const Ninjam::User &)), this, SLOT(on_ninjamUserExited(const Ninjam::User &)));
-        QObject::connect(ninjamService, SIGNAL(userEntered(const Ninjam::User &)), this, SLOT(on_ninjamUserEntered(const Ninjam::User &)));
+        QObject::connect(ninjamService, SIGNAL(userLeaveTheJam(const Ninjam::User &)), this, SLOT(on_ninjamUserLeave(const Ninjam::User &)));
+        QObject::connect(ninjamService, SIGNAL(userEnterInTheJam(const Ninjam::User &)), this, SLOT(on_ninjamUserEnter(const Ninjam::User &)));
 
         QObject::connect(ninjamService, SIGNAL(chatMessageReceived(Ninjam::User,QString)), this, SIGNAL(chatMsgReceived(Ninjam::User,QString)));
 
@@ -557,11 +557,11 @@ long NinjamController::computeTotalSamplesInInterval(){
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //ninjam slots
-void NinjamController::on_ninjamUserEntered(const Ninjam::User &user){
+void NinjamController::on_ninjamUserEnter(const Ninjam::User &user){
     emit userEnter(user.getName());
 }
 
-void NinjamController::on_ninjamUserExited(const Ninjam::User &user){
+void NinjamController::on_ninjamUserLeave(const Ninjam::User &user){
      foreach (Ninjam::UserChannel* channel, user.getChannels()) {
         removeTrack(user, *channel);
      }
@@ -579,6 +579,7 @@ void NinjamController::on_ninjamUserChannelRemoved(const Ninjam::User &user, con
 void NinjamController::on_ninjamUserChannelUpdated(const Ninjam::User &user, const Ninjam::UserChannel &channel){
     QString uniqueKey = getUniqueKey(channel);
     QMutexLocker locker(&mutex);
+    //checkThread("on_ninjamUserChannelUpdated();");
     if(trackNodes.contains(uniqueKey)){
         NinjamTrackNode* trackNode = trackNodes[uniqueKey];
         emit channelNameChanged(user, channel, trackNode->getID());

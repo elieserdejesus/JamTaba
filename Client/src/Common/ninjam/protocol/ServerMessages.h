@@ -32,7 +32,7 @@ public:
     explicit ServerMessage(ServerMessageType messageType, quint32 payload);
     virtual ~ServerMessage();
 
-    virtual void printDebug(QDebug dbg) const = 0;
+    virtual void printDebug(QDebug &dbg) const = 0;
 
     inline ServerMessageType getMessageType() const
     {
@@ -85,7 +85,7 @@ public:
         return licenceAgreement;
     }
 
-    virtual void printDebug(QDebug dbg) const;
+    virtual void printDebug(QDebug &dbg) const;
 
     void readFrom(QDataStream &stream) override;
 
@@ -101,7 +101,7 @@ private:
 public:
     ServerAuthReplyMessage(quint32 payload);
 
-    virtual void printDebug(QDebug debug) const;
+    virtual void printDebug(QDebug &debug) const;
 
     void readFrom(QDataStream &stream) override;
 
@@ -132,7 +132,7 @@ class ServerKeepAliveMessage : public ServerMessage
 {
 public:
     ServerKeepAliveMessage();
-    virtual void printDebug(QDebug dbg) const;
+    virtual void printDebug(QDebug &dbg) const;
     void readFrom(QDataStream &stream) override;
 };
 // ++++++++++++++++++++++++=
@@ -152,7 +152,7 @@ public:
         return bpi;
     }
 
-    virtual void printDebug(QDebug dbg) const;
+    virtual void printDebug(QDebug &dbg) const;
     inline quint16 getBpm() const
     {
         return bpm;
@@ -175,12 +175,12 @@ public:
         return usersChannels.keys();
     }
 
-    QList<UserChannel> getUserChannels(QString userFullName) const
+    QList<UserChannel> getUserChannels(const QString &userFullName) const
     {
         return usersChannels[userFullName];
     }
 
-    virtual void printDebug(QDebug dbg) const;
+    virtual void printDebug(QDebug &dbg) const;
 
 private:
     QMap<QString, QList<UserChannel> > usersChannels;
@@ -205,7 +205,7 @@ private:
         USERCOUNT <users> <maxusers> -- server status
     */
 
-enum class  ChatCommandType : quint8 { //TODO use quint8
+enum class  ChatCommandType : quint8 {
     MSG = 0, PRIVMSG, TOPIC, JOIN, PART, USERCOUNT
     //TODO remove this 0 value. Is uncessary, right?
 };
@@ -231,8 +231,8 @@ private:
     ChatCommandType commandType;
     QStringList arguments;
 
-    virtual void printDebug(QDebug dbg) const;
-    ChatCommandType commandTypeFromString(QString string);
+    virtual void printDebug(QDebug &dbg) const;
+    ChatCommandType commandTypeFromString(const QString &string);
 
 };
 // ++++++++++++++++
@@ -273,7 +273,7 @@ public:
         return GUID;
     }
 
-    virtual void printDebug(QDebug dbg) const;
+    virtual void printDebug(QDebug &dbg) const;
 
     inline QString getUserName() const
     {
@@ -320,7 +320,7 @@ public:
 
     void readFrom(QDataStream &stream) override;
 
-    virtual void printDebug(QDebug dbg) const;
+    virtual void printDebug(QDebug &dbg) const;
 
     inline QString getGUID() const
     {

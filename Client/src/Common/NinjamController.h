@@ -164,8 +164,8 @@ private slots:
     void on_ninjamUserChannelCreated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
     void on_ninjamUserChannelRemoved(const Ninjam::User &user, const Ninjam::UserChannel &channel);
     void on_ninjamUserChannelUpdated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
-    void on_ninjamUserExited(const Ninjam::User &user);
-    void on_ninjamUserEntered(const Ninjam::User &user);
+    void on_ninjamUserLeave(const Ninjam::User &user);
+    void on_ninjamUserEnter(const Ninjam::User &user);
 };
 }
 #endif // NINJAMJAMROOMCONTROLLER_H

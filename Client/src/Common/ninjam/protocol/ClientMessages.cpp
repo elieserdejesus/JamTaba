@@ -12,11 +12,11 @@ ClientMessage::ClientMessage(quint8 msgCode, quint32 payload)
 
 }
 
-void ClientMessage::serializeString(const QString &str, QDataStream &stream){
+void ClientMessage::serializeString(const QString &string, QDataStream &stream){
     //serializeByteArray(QByteArray(str.toStdString().c_str()), stream);
 
     //serializeByteArray(str.toUtf8(), stream);
-    QByteArray dataArray = str.toUtf8();
+    QByteArray dataArray = string.toUtf8();
     stream.writeRawData(dataArray.data(), dataArray.size());
 
     stream << quint8('\0'); // NUL TERMINATED
@@ -47,7 +47,7 @@ void ClientMessage::serializeByteArray(const QByteArray &array, QDataStream &str
     //message lenght = 20 bytes password hash + user name lengh + 4 bytes client capabilites + 4 bytes client version
 */
 
-ClientAuthUserMessage::ClientAuthUserMessage(QString userName, QByteArray challenge, quint32 protocolVersion, QString password)
+ClientAuthUserMessage::ClientAuthUserMessage(const QString &userName, const QByteArray &challenge, quint32 protocolVersion, const QString &password)
     : ClientMessage(0x80, 0),
       userName(userName),
       clientCapabilites(1),
@@ -83,12 +83,12 @@ void ClientAuthUserMessage::serializeTo(QByteArray& buffer) const {
     stream << protocolVersion;
 }
 //+++++++++++++++++++++++++++++++++++++++++++
-void ClientAuthUserMessage::printDebug(QDebug dbg) const
+void ClientAuthUserMessage::printDebug(QDebug &dbg) const
 {
     dbg << "SEND ClientAuthUserMessage{  userName:" << userName << " challenge:" << challenge <<"}" << endl;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-ClientSetChannel::ClientSetChannel(QStringList channels)
+ClientSetChannel::ClientSetChannel(const QStringList &channels)
     : ClientMessage(0x82, 0), volume(0), pan(0), flags(0)
 {
     payload = 2;
@@ -99,7 +99,7 @@ ClientSetChannel::ClientSetChannel(QStringList channels)
 }
 
 
-ClientSetChannel::ClientSetChannel(QString channelNameToRemove)
+ClientSetChannel::ClientSetChannel(const QString &channelNameToRemove)
     : ClientMessage(0x82, 0), volume(0), pan(0), flags(1)//to remove
 {
     payload = 2;
@@ -125,7 +125,7 @@ void ClientSetChannel::serializeTo(QByteArray &buffer) const{
     }
 }
 
-void ClientSetChannel::printDebug(QDebug dbg) const{
+void ClientSetChannel::printDebug(QDebug &dbg) const{
     dbg << "SEND ClientSetChannel{ payloadLenght=" << payload << " channelName=" << channelNames << '}' << endl;
 }
 
@@ -143,11 +143,11 @@ void ClientKeepAlive::serializeTo(QByteArray &buffer) const{
     stream << msgType << payload;
 }
 
-void ClientKeepAlive::printDebug(QDebug dbg) const{
+void ClientKeepAlive::printDebug(QDebug &dbg) const{
     dbg << "SEND {Client KeepAlive}" << endl;
 }
 //+++++++++++++++++
-ClientSetUserMask::ClientSetUserMask(QList<QString> users)
+ClientSetUserMask::ClientSetUserMask(const QList<QString> &users)
     :ClientMessage(0x81, 0)
 {
     payload = 4 * users.size();//4 bytes (int) flag
@@ -170,14 +170,14 @@ void ClientSetUserMask::serializeTo(QByteArray &buffer) const
     }
 }
 
-void ClientSetUserMask::printDebug(QDebug dbg) const
+void ClientSetUserMask::printDebug(QDebug &dbg) const
 {
     dbg << "SEND ClientSetUserMask{ userNames=" << usersFullNames << " flag=" << FLAG << '}';
 }
 
 //+++++++++++++++++++++++++++++
 
-ChatMessage::ChatMessage(QString text)
+ChatMessage::ChatMessage(const QString &text)
     : ClientMessage(0xc0, 0), text(text), command("MSG")
 {
     payload = text.toUtf8().size() + 1 + command.length() + 1;
@@ -192,13 +192,13 @@ void ChatMessage::serializeTo(QByteArray &buffer) const{
     ClientMessage::serializeString(text, stream);
 }
 
-void ChatMessage::printDebug(QDebug dbg) const{
+void ChatMessage::printDebug(QDebug &dbg) const{
     dbg << "SEND ChatMessage{ payload: " << payload << " " << "command=" << command << " text=" << text << '}';
 }
 
 //+++++++++++++++++++++++++
 
-ClientUploadIntervalBegin::ClientUploadIntervalBegin(QByteArray GUID, quint8 channelIndex, QString userName)
+ClientUploadIntervalBegin::ClientUploadIntervalBegin(const QByteArray &GUID, quint8 channelIndex, const QString &userName)
     :ClientMessage( 0x83, 16 + 4 + 4 + 1 + userName.size()),
       GUID(GUID),
       estimatedSize(0),
@@ -229,12 +229,12 @@ void ClientUploadIntervalBegin::serializeTo(QByteArray &buffer) const{
     }
 }
 
-void ClientUploadIntervalBegin::printDebug(QDebug dbg) const{
+void ClientUploadIntervalBegin::printDebug(QDebug &dbg) const{
     dbg << "SEND ClientUploadIntervalBegin{ GUID "  << QString(GUID) << " fourCC" << QString(fourCC) << "channelIndex: " << channelIndex << "userName:" << userName << "}";
 }
 
 //+++++++++++++++++++++
-ClientIntervalUploadWrite::ClientIntervalUploadWrite(QByteArray GUID, QByteArray encodedAudioBuffer, bool isLastPart)
+ClientIntervalUploadWrite::ClientIntervalUploadWrite(const QByteArray &GUID, const QByteArray &encodedAudioBuffer, bool isLastPart)
     :ClientMessage(0x84, 16 + 1 + encodedAudioBuffer.size()),
     GUID(GUID),
       encodedAudioBuffer(encodedAudioBuffer),
@@ -258,7 +258,7 @@ void ClientIntervalUploadWrite::serializeTo(QByteArray &buffer) const{
 }
 
 
- void ClientIntervalUploadWrite::printDebug(QDebug dbg) const{
+ void ClientIntervalUploadWrite::printDebug(QDebug &dbg) const{
     dbg << "SEND ClientIntervalUploadWrite{" << "GUID=" << QString(GUID) << ", encodedAudioBuffer= " << payload << " bytes, isLastPart=" << isLastPart << '}';
 }
 
