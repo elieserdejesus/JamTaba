@@ -264,9 +264,9 @@ void ClientIntervalUploadWrite::serializeTo(QByteArray &buffer) const{
 
 
 //+++++++++++++++++++++++++++
-QDebug Ninjam::operator<<(QDebug dbg, ClientMessage* message)
+QDebug Ninjam::operator<<(QDebug &dbg, const ClientMessage &message)
 {
-    message->printDebug(dbg);
+    message.printDebug(dbg);
     return dbg;
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
