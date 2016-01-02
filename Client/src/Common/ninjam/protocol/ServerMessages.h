@@ -62,7 +62,7 @@ public:
 
     inline QByteArray getChallenge() const
     {
-        return QByteArray((const char *)challenge);
+        return QByteArray(reinterpret_cast<const char *>(challenge));
     }
 
     inline int getProtocolVersion() const
@@ -85,7 +85,7 @@ public:
         return licenceAgreement;
     }
 
-    virtual void printDebug(QDebug &dbg) const;
+    void printDebug(QDebug &dbg) const override;
 
     void readFrom(QDataStream &stream) override;
 
@@ -101,7 +101,7 @@ private:
 public:
     ServerAuthReplyMessage(quint32 payload);
 
-    virtual void printDebug(QDebug &debug) const;
+    void printDebug(QDebug &debug) const override;
 
     void readFrom(QDataStream &stream) override;
 
@@ -132,7 +132,7 @@ class ServerKeepAliveMessage : public ServerMessage
 {
 public:
     ServerKeepAliveMessage();
-    virtual void printDebug(QDebug &dbg) const;
+    void printDebug(QDebug &dbg) const override;
     void readFrom(QDataStream &stream) override;
 };
 // ++++++++++++++++++++++++=
@@ -152,7 +152,7 @@ public:
         return bpi;
     }
 
-    virtual void printDebug(QDebug &dbg) const;
+    void printDebug(QDebug &dbg) const override;
     inline quint16 getBpm() const
     {
         return bpm;
@@ -180,7 +180,7 @@ public:
         return usersChannels[userFullName];
     }
 
-    virtual void printDebug(QDebug &dbg) const;
+    void printDebug(QDebug &dbg) const override;
 
 private:
     QMap<QString, QList<UserChannel> > usersChannels;
@@ -231,7 +231,7 @@ private:
     ChatCommandType commandType;
     QStringList arguments;
 
-    virtual void printDebug(QDebug &dbg) const;
+    void printDebug(QDebug &dbg) const override;
     ChatCommandType commandTypeFromString(const QString &string);
 
 };
@@ -273,7 +273,7 @@ public:
         return GUID;
     }
 
-    virtual void printDebug(QDebug &dbg) const;
+    void printDebug(QDebug &dbg) const override;
 
     inline QString getUserName() const
     {
@@ -320,7 +320,7 @@ public:
 
     void readFrom(QDataStream &stream) override;
 
-    virtual void printDebug(QDebug &dbg) const;
+    void printDebug(QDebug &dbg) const override;
 
     inline QString getGUID() const
     {
