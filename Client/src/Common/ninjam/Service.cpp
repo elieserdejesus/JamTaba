@@ -288,7 +288,7 @@ QStringList Service::buildBotNamesList()
 QString Service::getConnectedUserName()
 {
     if (initialized)
-        return userName;
+        return newUserName;
     qCritical() << "not initialized, newUserName is not available!";
     return "";
 }
