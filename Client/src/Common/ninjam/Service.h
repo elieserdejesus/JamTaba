@@ -1,15 +1,13 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
-#include <QTcpSocket>
-#include <memory>
-#include <QLoggingCategory>
-
-#include "ninjam/User.h"
-#include "ninjam/UserChannel.h"
+class QTcpSocket;
+class QByteArray;
+class QDataStream;
+class QString;
+class QObject;
 
 namespace Ninjam {
-class PublicServersParser;
 class Server;
 class ClientMessage;
 class Service;
@@ -35,8 +33,6 @@ struct MessageHeader{
 class Service : public QObject
 {
     Q_OBJECT
-
-    friend class ServerMessageVisitor;
 
 public:
 
@@ -86,12 +82,6 @@ signals:
     void userExited(const Ninjam::User &user);
     void error(const QString &msg);
 
-private slots:
-    void handleAllReceivedMessages();
-    void handleSocketError(QAbstractSocket::SocketError error);
-    void handleSocketDisconnection();
-    void handleSocketConnection();
-
 private:
 
     // +++++= message handlers.
@@ -105,8 +95,7 @@ private:
     void process(const DownloadIntervalWrite &msg);
     // ++++++++++++=
 
-    ServerMessage *createServerMessage(const MessageHeader &header);
-    ServerMessage *extractServerMessageFromSocket();
+    MessageHeader* extractMessageHeader(QDataStream &stream);
 
     template<class MessageClazz> //MessageClazz will be 'translated' to some class derived from ServerMessage
     bool handleMessage(QDataStream &stream, quint32 payload){
@@ -125,7 +114,6 @@ private:
     QScopedPointer<MessageHeader> currentHeader;//the last messageHeader readed from socket
 
     static const long DEFAULT_KEEP_ALIVE_PERIOD = 3000;
-    static std::unique_ptr<PublicServersParser> publicServersParser; // TODO use QScopedPointer ?
 
     QTcpSocket socket;
 
@@ -155,11 +143,13 @@ private:
 
     bool needSendKeepAlive() const;
 
+    void clear();
+
 private slots:
-    void socketReadSlot();
-    void socketErrorSlot(QAbstractSocket::SocketError error);
-    void socketDisconnectSlot();
-    void socketConnectedSlot();
+    void handleAllReceivedMessages();
+    void handleSocketError(QAbstractSocket::SocketError error);
+    void handleSocketDisconnection();
+    void handleSocketConnection();
 };
 
 QDataStream &operator >>(QDataStream &stream, MessageHeader &header);

@@ -1,6 +1,7 @@
 #include "Service.h"
 #include "Server.h"
 #include "User.h"
+#include "UserChannel.h"
 #include "protocol/ServerMessages.h"
 #include "protocol/ClientMessages.h"
 #include "log/Logging.h"
@@ -119,8 +120,7 @@ public:
 
 Service::Service() :
     lastSendTime(0),
-    initialized(false),
-    messageVisitor(this)
+    initialized(false)
 {
     connect(&socket, SIGNAL(readyRead()), this, SLOT(handleAllReceivedMessages()));
     connect(&socket, SIGNAL(error(QAbstractSocket::SocketError)), this,
@@ -157,45 +157,40 @@ void Service::sendAudioIntervalBegin(const QByteArray &GUID, quint8 channelIndex
         return;
     sendMessageToServer(ClientUploadIntervalBegin(GUID, channelIndex, this->userName));
 }
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-ServerMessage *Service::createServerMessage(const MessageHeader &header)
-{
-    ServerMessageType messageType = static_cast<ServerMessageType>(header.messageTypeCode);
-    switch (messageType) {
-    case ServerMessageType::AUTH_CHALLENGE:
-        return new ServerAuthChallengeMessage(header.payload);
-
-    case ServerMessageType::AUTH_REPLY:
-        return new ServerAuthReplyMessage(header.payload);
-
-    case ServerMessageType::USER_INFO_CHANGE_NOTIFY:
-        return new UserInfoChangeNotifyMessage(header.payload);
-
-    case ServerMessageType::SERVER_CONFIG_CHANGE_NOTIFY:
-        return new ServerConfigChangeNotifyMessage(header.payload);
-
-    case ServerMessageType::CHAT_MESSAGE:
-        return new ServerChatMessage(header.payload);
-
-    case ServerMessageType::KEEP_ALIVE:
-        return new ServerKeepAliveMessage();
-
-    case ServerMessageType::DOWNLOAD_INTERVAL_BEGIN:
-        return new DownloadIntervalBegin(header.payload);
-
-    case ServerMessageType::DOWNLOAD_INTERVAL_WRITE:
-        return new DownloadIntervalWrite(header.payload);
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+MessageHeader* Service::extractMessageHeader(QDataStream &stream){
+    if (socket.bytesAvailable() < 5) {
+        qCDebug(jtNinjamProtocol) << "have not enough bytes to read message header (5 bytes)";
+        return nullptr;
     }
-    qCritical() << "Error creating a ServerMessage instance for the type " << QString::number(
-        header.messageTypeCode)
-                << " payload: " << QString::number(header.payload);
-    return nullptr;
+    MessageHeader* header = new MessageHeader();
+    stream >> header;
+    return header;
 }
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+bool Service::executeMessageHandler(MessageHeader *header, QDataStream &stream)
+{
+    if(!header){
+        return false;
+    }
 
-ServerMessage *Service::extractServerMessageFromSocket()
+    switch (header->messageTypeCode) {
+    case ServerMessageType::AUTH_CHALLENGE: return handleMessage<ServerAuthChallengeMessage>(stream, header->payload);
+    case ServerMessageType::AUTH_REPLY: return handleMessage<ServerAuthReplyMessage>(stream, header->payload);
+    case ServerMessageType::SERVER_CONFIG_CHANGE_NOTIFY: return handleMessage<ServerConfigChangeNotifyMessage>(stream, header->payload);
+    case ServerMessageType::USER_INFO_CHANGE_NOTIFY: return handleMessage<UserInfoChangeNotifyMessage>(stream, header->payload);
+    case ServerMessageType::KEEP_ALIVE: return handleMessage<ServerKeepAliveMessage>(stream, header->payload);
+    case ServerMessageType::CHAT_MESSAGE: return handleMessage<ServerChatMessage>(stream, header->payload);
+    case ServerMessageType::DOWNLOAD_INTERVAL_BEGIN: return handleMessage<DownloadIntervalBegin>(stream, header->payload);
+    case ServerMessageType::DOWNLOAD_INTERVAL_WRITE: return handleMessage<DownloadIntervalWrite>(stream, header->payload);
+    default:
+        qCritical() << "Can't handle the message code " << QString::number(header->messageTypeCode);
+    }
+    return false;
+}
+
+//this slot is invoke when socket receive new data
+void Service::handleAllReceivedMessages()
 {
     if (socket.bytesAvailable() < 5) {
         qCDebug(jtNinjamProtocol) << "not have enough bytes to read message header (5 bytes)";
@@ -207,41 +202,35 @@ ServerMessage *Service::extractServerMessageFromSocket()
     QDataStream stream(&socket);
     stream.setByteOrder(QDataStream::LittleEndian);
 
-    if (!messageHeader) {
-        messageHeader.reset(new MessageHeader());
-        stream >> (*messageHeader);
-    }
-    if (socket.bytesAvailable() >= messageHeader->payload) {// message payload is available to read
-        ServerMessage *message = createServerMessage(*messageHeader);
-        messageHeader.reset();
-        if (message) {
-            stream >> message;
-            return message;
+    while(socket.bytesAvailable() >= 5){//consume all messages. Every ninjam message contains a 5 bytes header.
+        if(!currentHeader){
+            currentHeader.reset(extractMessageHeader(stream));
+        }
+
+        if(!currentHeader)//just to avoid the possibility of a null header
+            return;
+
+        bool successfullyProcessed = executeMessageHandler(currentHeader.data(), stream);
+        if(successfullyProcessed){
+            currentHeader.reset(); //a new header will be readed from socket in the next loop iteration
+        }else{
+            break;// an incomplete message was founded, break and wait until receive more bytes. The currentHeader will be used in the next iteration.
         }
     }
     return nullptr;
 }
 
-void Service::handleAllReceivedMessages()
-{
-    while (socket.bytesAvailable() >= 5) {// this loop consume all messages. Every ninjam message contains a 5 bytes header.
-        ServerMessage *message = extractServerMessageFromSocket();
-        if (message) {
-            message->accept(&messageVisitor);
-            delete message;
-            if (needSendKeepAlive())
-                sendMessageToServer(ClientKeepAlive());
-        } else {
-            break;// wait until receive more bytes
-        }
-    }
+void Service::clear(){
+    initialized = false;
+    currentHeader.reset();
+    currentServer.reset();
 }
 
 void Service::handleSocketError(QAbstractSocket::SocketError e)
 {
     Q_UNUSED(e);
     qCWarning(jtNinjamProtocol) << QString(socket.errorString());
-    currentServer.reset(nullptr);
+    clear();
     emit error(socket.errorString());
 }
 
@@ -252,9 +241,9 @@ void Service::handleSocketConnection()
 
 void Service::handleSocketDisconnection()
 {
-    this->initialized = false;
     qCDebug(jtNinjamProtocol) << "socket disconnected from " << socket.peerName();
     emit disconnectedFromServer(*currentServer);
+    clear();
 }
 
 bool Service::isBotName(const QString &userName)
@@ -338,7 +327,7 @@ bool Service::needSendKeepAlive() const
     return ellapsedSeconds >= serverKeepAlivePeriod;
 }
 
-void Service::handle(const UserInfoChangeNotifyMessage &msg)
+void Service::process(const UserInfoChangeNotifyMessage &msg)
 {
     QSet<QString> users = QSet<QString>::fromList(msg.getUsersNames());
     foreach (QString userFullName, users) {
@@ -354,7 +343,7 @@ void Service::handle(const UserInfoChangeNotifyMessage &msg)
     sendMessageToServer(ClientSetUserMask(msg.getUsersNames()));
 }
 
-void Service::handle(const DownloadIntervalBegin &msg)
+void Service::process(const DownloadIntervalBegin &msg)
 {
     if (!msg.downloadShouldBeStopped() && msg.isValidOggDownload()) {
         quint8 channelIndex = msg.getChannelIndex();
@@ -364,7 +353,7 @@ void Service::handle(const DownloadIntervalBegin &msg)
     }
 }
 
-void Service::handle(const DownloadIntervalWrite &msg)
+void Service::process(const DownloadIntervalWrite &msg)
 {
     if (downloads.contains(msg.getGUID())) {
         Download &download = downloads[msg.getGUID()];
@@ -384,12 +373,12 @@ void Service::handle(const DownloadIntervalWrite &msg)
     }
 }
 
-void Service::processKeepAlive(const ServerKeepAliveMessage &)
+void Service::process(const ServerKeepAliveMessage &)
 {
     sendMessageToServer(ClientKeepAlive());
 }
 
-void Service::handle(const ServerAuthChallengeMessage &msg)
+void Service::process(const ServerAuthChallengeMessage &msg)
 {
     ClientAuthUserMessage msgAuthUser(userName, msg.getChallenge(),
                                       msg.getProtocolVersion(), password);
@@ -411,7 +400,7 @@ void Service::sendRemovedChannelIndex(int removedChannelIndex)
     sendMessageToServer(ClientSetChannel(channels));
 }
 
-void Service::handle(const ServerAuthReplyMessage &msg)
+void Service::process(const ServerAuthReplyMessage &msg)
 {
     if (msg.userIsAuthenticated()) {
         userName = msg.getNewUserName(); // replace the user name with the (possible) new name generated by the ninjam server
@@ -428,7 +417,9 @@ void Service::startServerConnection(const QString &serverIp, int serverPort,
                                     const QString &userName, const QStringList &channels,
                                     const QString &password)
 {
-    initialized = false;
+
+    clear();//reset some internal state
+
     this->userName = userName;
     this->password = password;
     this->channels = channels;
@@ -505,7 +496,7 @@ bool Service::channelIsOutdate(const User &user, const UserChannel &serverChanne
 
 // +++++++++++++ CHAT MESSAGES ++++++++++++++++++++++
 
-void Service::handle(const ServerChatMessage &msg)
+void Service::process(const ServerChatMessage &msg)
 {
     switch (msg.getCommand()) {
     case ChatCommandType::JOIN:
@@ -537,10 +528,9 @@ void Service::handle(const ServerChatMessage &msg)
         if (!initialized) {
             initialized = true;
 
-            currentServer->setTopic(topicText);
-
             // server licence is received when the hand shake with server is started
             currentServer->setLicence(serverLicence);
+            currentServer->setTopic(topicText);
             emit connectedInServer(*currentServer);
             emit chatMessageReceived(Ninjam::User(currentServer->getHostName()), topicText);
         }
@@ -568,40 +558,13 @@ void Service::handle(const ServerConfigChangeNotifyMessage &msg)
         setBpm(bpm);
 }
 
-void Service::invokeMessageHandler(ServerMessage *message)
-{
-    switch (message->getMessageType()) {
-    case ServerMessageType::AUTH_CHALLENGE:
-        handle((ServerAuthChallengeMessage &)*message);
-        break;
-    case ServerMessageType::AUTH_REPLY:
-        handle((ServerAuthReplyMessage &)*message);
-        break;
-    case ServerMessageType::SERVER_CONFIG_CHANGE_NOTIFY:
-        handle((ServerConfigChangeNotifyMessage &)*message);
-        break;
-    case ServerMessageType::USER_INFO_CHANGE_NOTIFY:
-        handle((UserInfoChangeNotifyMessage &)*message);
-        break;
-    case ServerMessageType::CHAT_MESSAGE:
-        handle((ServerChatMessage &)*message);
-        break;
-    case ServerMessageType::KEEP_ALIVE:
-        handle((ServerKeepAliveMessage &)*message);
-        break;
-    case ServerMessageType::DOWNLOAD_INTERVAL_BEGIN:
-        handle((DownloadIntervalBegin &)*message);
-        break;
-    case ServerMessageType::DOWNLOAD_INTERVAL_WRITE:
-        handle((DownloadIntervalWrite &)*message);
-        break;
-
-    default:
-        qCCritical(jtNinjamProtocol) << "receive a not implemented yet message!";
-    }
-}
-
 QString Service::getCurrentServerLicence() const
 {
     return serverLicence;
+}
+
+QDataStream &Ninjam::operator >>(QDataStream &stream, MessageHeader &header)
+{
+    stream >> header.messageTypeCode >> header.payload;
+    return stream;
 }

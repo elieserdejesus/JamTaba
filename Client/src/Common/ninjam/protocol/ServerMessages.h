@@ -44,8 +44,6 @@ public:
 
     virtual void readFrom(QDataStream& stream) = 0;
 
-    virtual void accept(ServerMessageVisitor *visitor) = 0;
-
 protected:
     quint32 payload;
 
@@ -64,8 +62,6 @@ class ServerAuthChallengeMessage : public ServerMessage
 
 public:
     ServerAuthChallengeMessage(quint32 payload);
-
-    void accept(ServerMessageVisitor *visitor) override;
 
     inline QByteArray getChallenge() const
     {
@@ -112,8 +108,6 @@ public:
 
     void readFrom(QDataStream &stream) override;
 
-    void accept(ServerMessageVisitor *visitor) override;
-
     inline QString getErrorMessage() const
     {
         return message;
@@ -140,10 +134,9 @@ public:
 class ServerKeepAliveMessage : public ServerMessage
 {
 public:
-    ServerKeepAliveMessage();
+    ServerKeepAliveMessage(quint32 payload);
     void printDebug(QDebug &dbg) const override;
     void readFrom(QDataStream &stream) override;
-    void accept(ServerMessageVisitor *visitor) override;
 };
 // ++++++++++++++++++++++++=
 class ServerConfigChangeNotifyMessage : public ServerMessage
@@ -156,7 +149,6 @@ public:
     ServerConfigChangeNotifyMessage(quint32 payload);
 
     void readFrom(QDataStream &stream) override;
-    void accept(ServerMessageVisitor *visitor) override;
 
     inline quint16 getBpi() const
     {
@@ -180,7 +172,6 @@ public:
     ~UserInfoChangeNotifyMessage();
 
     void readFrom(QDataStream &stream) override;
-    void accept(ServerMessageVisitor *visitor) override;
 
     inline QList<QString> getUsersNames() const
     {
@@ -228,7 +219,6 @@ public:
     ServerChatMessage(quint32 payload);
 
     void readFrom(QDataStream &stream) override;
-    void accept(ServerMessageVisitor *visitor) override;
 
     inline QList<QString> getArguments() const
     {
@@ -270,7 +260,6 @@ public:
     DownloadIntervalBegin(quint32 payload);
 
     void readFrom(QDataStream &stream) override;
-    void accept(ServerMessageVisitor *visitor) override;
 
     inline quint8  getChannelIndex() const
     {
@@ -333,7 +322,6 @@ public:
     DownloadIntervalWrite(quint32 payload);
 
     void readFrom(QDataStream &stream) override;
-    void accept(ServerMessageVisitor *visitor) override;
 
     void printDebug(QDebug &dbg) const override;
 
@@ -362,7 +350,7 @@ private:
 // ++++++++++++++++++++
 QDebug operator<<(QDebug dbg, const Ninjam::ServerMessage &message);
 
-QDataStream &operator >>(QDataStream &stream, ServerMessage *message);
+QDataStream &operator >>(QDataStream &stream, ServerMessage &message);
 
 }
 

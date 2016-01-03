@@ -1,6 +1,7 @@
 #include "ServerMessages.h"
 #include <QDebug>
-#include "ninjam/User.h"
+#include "ninjam/UserChannel.h"
+#include "ninjam/Service.h"
 
 using namespace Ninjam;
 
