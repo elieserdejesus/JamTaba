@@ -1,7 +1,6 @@
 #include "Service.h"
 #include "Server.h"
 #include "User.h"
-#include "UserChannel.h"
 #include "protocol/ServerMessages.h"
 #include "protocol/ClientMessages.h"
 #include "log/Logging.h"
@@ -602,8 +601,7 @@ void Service::invokeMessageHandler(ServerMessage *message)
     }
 }
 
-QDataStream &Ninjam::operator >>(QDataStream &stream, MessageHeader &header)
+QString Service::getCurrentServerLicence() const
 {
-    stream >> header.messageTypeCode >> header.payload;
-    return stream;
+    return serverLicence;
 }

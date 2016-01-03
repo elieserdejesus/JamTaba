@@ -105,10 +105,8 @@ private:
     void process(const DownloadIntervalWrite &msg);
     // ++++++++++++=
 
-    struct MessageHeader{
-        quint8 messageTypeCode;
-        quint32 payload;
-    };
+    ServerMessage *createServerMessage(const MessageHeader &header);
+    ServerMessage *extractServerMessageFromSocket();
 
     template<class MessageClazz> //MessageClazz will be 'translated' to some class derived from ServerMessage
     bool handleMessage(QDataStream &stream, quint32 payload){
