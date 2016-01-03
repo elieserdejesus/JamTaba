@@ -1,8 +1,9 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <QString>
 #include <QMap>
+
+class QString;
 
 namespace Ninjam {
 class User;

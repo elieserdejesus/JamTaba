@@ -82,6 +82,12 @@ signals:
     void userExited(const Ninjam::User &user);
     void error(const QString &msg);
 
+private slots:
+    void handleAllReceivedMessages();
+    void handleSocketError(QAbstractSocket::SocketError error);
+    void handleSocketDisconnection();
+    void handleSocketConnection();
+
 private:
 
     // +++++= message handlers.
@@ -144,12 +150,6 @@ private:
     bool needSendKeepAlive() const;
 
     void clear();
-
-private slots:
-    void handleAllReceivedMessages();
-    void handleSocketError(QAbstractSocket::SocketError error);
-    void handleSocketDisconnection();
-    void handleSocketConnection();
 };
 
 QDataStream &operator >>(QDataStream &stream, MessageHeader &header);

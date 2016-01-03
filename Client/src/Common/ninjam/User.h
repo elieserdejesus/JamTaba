@@ -10,11 +10,6 @@ class UserChannel;
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class User
 {
-private:
-    QString fullName;
-    QString name;
-    QString ip;
-    QMap<int, UserChannel *> channels;
 
 public:
     explicit User(const QString &fullName);
@@ -63,6 +58,12 @@ public:
     void removeChannel(int channelIndex);
     void setChannelName(int channelIndex, const QString &name);
     void setChannelFlags(int channelIndex, int flags);
+
+private:
+    QString fullName;
+    QString name;
+    QString ip;
+    QMap<int, UserChannel *> channels;
 };
 
 QDebug &operator<<(QDebug &out, const Ninjam::User &user);
