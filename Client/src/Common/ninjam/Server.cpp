@@ -96,7 +96,7 @@ bool Server::setBpi(short bpi) {
 void Server::refreshUserList(const QSet<QString> &onlineUsers) {
     QList<QString> toRemove;
 
-    foreach (QString onlineUserName , onlineUsers) {
+    foreach (const QString &onlineUserName , onlineUsers) {
         addUser(User(onlineUserName));
     }
 
@@ -107,7 +107,7 @@ void Server::refreshUserList(const QSet<QString> &onlineUsers) {
         }
     }
 
-    foreach (QString fullName , toRemove) {
+    foreach (const QString &fullName , toRemove) {
         users.remove(fullName);
     }
 

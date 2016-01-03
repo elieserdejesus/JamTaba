@@ -155,7 +155,7 @@ ClientSetUserMask::ClientSetUserMask(const QList<QString> &users)
     :ClientMessage(0x81, 0)
 {
     payload = 4 * users.size();//4 bytes (int) flag
-    foreach (QString userFullName , users) {
+    foreach (const QString &userFullName , users) {
         usersFullNames.append(userFullName);
         payload += userFullName.size() + 1;
     }
@@ -168,7 +168,7 @@ void ClientSetUserMask::serializeTo(QByteArray &buffer) const
     stream << msgType;
     stream << payload;
     //++++++++++++  END HEADER ++++++++++++
-    foreach (QString userName , usersFullNames) {
+    foreach (const QString &userName , usersFullNames) {
         ClientMessage::serializeString(userName, stream);
         stream << FLAG;
     }

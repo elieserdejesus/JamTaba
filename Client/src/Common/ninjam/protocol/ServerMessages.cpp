@@ -186,7 +186,7 @@ UserInfoChangeNotifyMessage::~UserInfoChangeNotifyMessage()
 void UserInfoChangeNotifyMessage::printDebug(QDebug &dbg) const
 {
     dbg << "UserInfoChangeNotify{\n";
-    for (QString userFullName : usersChannels.keys())
+    for (const QString &userFullName : usersChannels.keys())
         dbg << "\t" << userFullName << "\n";
     dbg << "}";
 }

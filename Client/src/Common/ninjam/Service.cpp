@@ -332,7 +332,7 @@ bool Service::needSendKeepAlive() const
 void Service::process(const UserInfoChangeNotifyMessage &msg)
 {
     QSet<QString> users = QSet<QString>::fromList(msg.getUsersNames());
-    foreach (QString userFullName, users) {
+    foreach (const QString &userFullName, users) {
         if (!currentServer->containsUser(userFullName)) {
             User newUser(userFullName);
             currentServer->addUser(newUser);
@@ -462,7 +462,7 @@ void Service::handleUserChannels(const QString &userFullName,
 {
     // check for new channels
     User *user = this->currentServer->getUser(userFullName);
-    foreach (UserChannel c, channelsInTheServer) {
+    foreach (const UserChannel &c, channelsInTheServer) {
         if (c.isActive()) {
             if (!user->hasChannel(c.getIndex())) {
                 user->addChannel(c);
