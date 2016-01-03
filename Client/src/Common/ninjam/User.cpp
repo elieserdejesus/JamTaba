@@ -33,13 +33,19 @@ bool User::isBot() const
 UserChannel User::getChannel(int index) const
 {
     if (channels.contains(index))
-        return *(channels[index]);
+        return channels[index];
     return UserChannel();// return a invalid/empty channel
 }
 
-void User::addChannel(const UserChannel &c)
+void User::addChannel(const UserChannel &channel)
 {
-    channels.insert(c.getIndex(), new UserChannel(c));
+    channels.insert(channel.getIndex(), UserChannel(channel));
+}
+
+void User::updateChannelName(int channelIndex, const QString &newName){
+    if(channels.contains(channelIndex)){
+        channels[channelIndex].setName(newName);
+    }
 }
 
 void User::removeChannel(int channelIndex)
@@ -47,17 +53,6 @@ void User::removeChannel(int channelIndex)
     this->channels.remove(channelIndex);
 }
 
-void User::setChannelName(int channelIndex, const QString &name)
-{
-    if (channels.contains(channelIndex))
-        channels[channelIndex]->setName(name);
-}
-
-void User::setChannelFlags(int channelIndex, int flags)
-{
-    if (channels.contains(channelIndex))
-        channels[channelIndex]->setFlags(flags);
-}
 
 QDebug &Ninjam::operator<<(QDebug &out, const User &user)
 {

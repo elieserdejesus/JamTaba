@@ -2,17 +2,16 @@
 #define USER_H
 
 #include <QMap>
+#include "UserChannel.h"
 
 namespace Ninjam {
-
-class UserChannel;
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class User
 {
 
 public:
-    explicit User(const QString &fullName);
+    explicit User(const QString &fullName = "");
     virtual ~User();
 
     bool isBot() const;
@@ -27,7 +26,7 @@ public:
         return this->channels.contains(channelIndex);
     }
 
-    inline QList<UserChannel *> getChannels() const
+    inline QList<UserChannel> getChannels() const
     {
         return channels.values();
     }
@@ -54,16 +53,16 @@ public:
         return fullName;
     }
 
+    void updateChannelName(int channelIndex, const QString &newName);
+
     void addChannel(const UserChannel &channel);
     void removeChannel(int channelIndex);
-    void setChannelName(int channelIndex, const QString &name);
-    void setChannelFlags(int channelIndex, int flags);
 
 private:
     QString fullName;
     QString name;
     QString ip;
-    QMap<int, UserChannel *> channels;
+    QMap<int, UserChannel> channels;
 };
 
 QDebug &operator<<(QDebug &out, const Ninjam::User &user);

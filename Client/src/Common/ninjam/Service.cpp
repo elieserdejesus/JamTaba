@@ -244,7 +244,9 @@ void Service::handleSocketConnection()
 void Service::handleSocketDisconnection()
 {
     qCDebug(jtNinjamProtocol) << "socket disconnected from " << socket.peerName();
-    emit disconnectedFromServer(*currentServer);
+    if(currentServer){
+        emit disconnectedFromServer(*currentServer);
+    }
     clear();
 }
 
@@ -360,15 +362,12 @@ void Service::process(const DownloadIntervalWrite &msg)
     if (downloads.contains(msg.getGUID())) {
         Download &download = downloads[msg.getGUID()];
         download.appendVorbisData(msg.getEncodedAudioData());
-        User *user = currentServer->getUser(download.getUserFullName());
+        User user = currentServer->getUser(download.getUserFullName());
         if (msg.downloadIsComplete()) {
-            emit audioIntervalCompleted(*user, download.getChannelIndex(),
-                                        download.getVorbisData());
+            emit audioIntervalCompleted(user, download.getChannelIndex(), download.getVorbisData());
             downloads.remove(msg.getGUID());
         } else {
-            emit audioIntervalDownloading(*user,
-                                          download.getChannelIndex(),
-                                          msg.getEncodedAudioData().size());
+            emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedAudioData().size());
         }
     } else {
         qCritical("GUID is not in map!");
@@ -461,24 +460,23 @@ void Service::handleUserChannels(const QString &userFullName,
                                  const QList<UserChannel> &channelsInTheServer)
 {
     // check for new channels
-    User *user = this->currentServer->getUser(userFullName);
-    foreach (const UserChannel &c, channelsInTheServer) {
-        if (c.isActive()) {
-            if (!user->hasChannel(c.getIndex())) {
-                user->addChannel(c);
-                emit userChannelCreated(*user, c);
+    User user = currentServer->getUser(userFullName);
+    foreach (const UserChannel &serverChannel, channelsInTheServer) {
+        if (serverChannel.isActive()) {
+            if (!user.hasChannel(serverChannel.getIndex())) {
+                currentServer->addUserChannel(userFullName, serverChannel);
+                emit userChannelCreated(user, serverChannel);
             } else {// check for channel updates
-                if (user->hasChannels()) {
-                    if (channelIsOutdate(*user, c)) {
-                        user->setChannelName(c.getIndex(), c.getName());
-                        user->setChannelFlags(c.getIndex(), c.getFlags());
-                        emit userChannelUpdated(*user, user->getChannel(c.getIndex()));
+                if (user.hasChannels()) {
+                    if (channelIsOutdate(user, serverChannel)) {
+                        currentServer->updateUserChannel(userFullName, serverChannel);
+                        emit userChannelUpdated(user, serverChannel);
                     }
                 }
             }
         } else {
-            user->removeChannel(c.getIndex());
-            emit userChannelRemoved(*user, c);
+            currentServer->removeUserChannel(userFullName, serverChannel.getIndex());
+            emit userChannelRemoved(user, serverChannel);
         }
     }
 }
@@ -486,12 +484,11 @@ void Service::handleUserChannels(const QString &userFullName,
 // check if the local stored channel and the server channel are different
 bool Service::channelIsOutdate(const User &user, const UserChannel &serverChannel)
 {
-    if (user.getFullName() != serverChannel.getUserFullName()) {
-        UserChannel userChannel = user.getChannel(serverChannel.getIndex());
-        if (userChannel.getName() != serverChannel.getName())
-            return true;
-        if (userChannel.getFlags() != serverChannel.getFlags())
-            return true;
+    if (user.getFullName() == serverChannel.getUserFullName()) {
+        if(user.hasChannel(serverChannel.getIndex())){
+            UserChannel userChannel = user.getChannel(serverChannel.getIndex());
+            return userChannel.getName() != serverChannel.getName();
+        }
     }
     return false;
 }

@@ -7,6 +7,7 @@ class QString;
 
 namespace Ninjam {
 class User;
+class UserChannel;
 
 class Server
 {
@@ -16,7 +17,11 @@ public:
 
     ~Server();
 
-    User *getUser(const QString &userFullName) const;
+    void addUserChannel(const QString &userFullName, const UserChannel& newChannel);
+    void removeUserChannel(const QString &userFullName, int channelIndex);
+    void updateUserChannel(const QString &userFullName, const UserChannel& serverChannel);
+
+    User getUser(const QString &userFullName) const;
 
     inline void setStreamUrl(const QString &streamUrl)
     {
@@ -99,7 +104,7 @@ public:
         return maxUsers;
     }
 
-    QList<User *> getUsers() const;
+    QList<User> getUsers() const;
 
     inline bool isActive() const
     {
@@ -146,7 +151,7 @@ private:
     QString streamUrl;
     QString topic;
     QString licence;
-    QMap<QString, User *> users;
+    QMap<QString, User> users;
     bool containBot;
     int maxChannels;
 

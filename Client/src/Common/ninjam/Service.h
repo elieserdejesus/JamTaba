@@ -69,11 +69,11 @@ signals:
     void userChannelCreated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
     void userChannelRemoved(const Ninjam::User &user, const Ninjam::UserChannel &channel);
     void userChannelUpdated(const Ninjam::User &user, const Ninjam::UserChannel &channel);
-    void userCountMessageReceived(int users, int maxUsers);
-    void serverBpiChanged(short currentBpi, short lastBpi);
-    void serverBpmChanged(short currentBpm);
-    void audioIntervalCompleted(const Ninjam::User &user, int channelIndex, const QByteArray &encodedAudioData);
-    void audioIntervalDownloading(const Ninjam::User &, int channelIndex, int bytesDownloaded);
+    void userCountMessageReceived(quint32 users, quint32 maxUsers);
+    void serverBpiChanged(quint16 currentBpi, quint16 lastBpi);
+    void serverBpmChanged(quint16 currentBpm);
+    void audioIntervalCompleted(const Ninjam::User &user, quint8 channelIndex, const QByteArray &encodedAudioData);
+    void audioIntervalDownloading(const Ninjam::User &user, quint8 channelIndex, int bytesDownloaded);
     void disconnectedFromServer(const Ninjam::Server &server);
     void connectedInServer(const Ninjam::Server &server);
     void chatMessageReceived(const Ninjam::User &sender, const QString &message);
@@ -145,7 +145,7 @@ private:
     void setBpi(quint16 newBpi);
 
     class Download; //using a nested class here. This class is for internal purpouses only.
-    QMap<QString, Download> downloads;// using GUID as key
+    QMap<QByteArray, Download> downloads;// using GUID as key
 
     bool needSendKeepAlive() const;
 
