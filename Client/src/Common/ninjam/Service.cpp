@@ -302,7 +302,7 @@ void Service::sendChatMessageToServer(const QString &message)
 void Service::sendMessageToServer(const ClientMessage &message)
 {
     QByteArray outBuffer;
-    message.serializeTo(outBuffer);
+    outBuffer << message;
 
     int totalDataToSend = outBuffer.size();
     int dataSended = 0;

@@ -12,6 +12,10 @@ ClientMessage::ClientMessage(quint8 msgCode, quint32 payload)
 
 }
 
+ClientMessage::~ClientMessage()
+{
+}
+
 void ClientMessage::serializeString(const QString &string, QDataStream &stream){
     //serializeByteArray(QByteArray(str.toStdString().c_str()), stream);
 
@@ -269,4 +273,11 @@ QDebug& Ninjam::operator<<(QDebug &dbg, const ClientMessage &message)
     message.printDebug(dbg);
     return dbg;
 }
+
+QByteArray &Ninjam::operator <<(QByteArray &byteArray, const ClientMessage &message)
+{
+    message.serializeTo(byteArray);
+    return byteArray;
+}
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
