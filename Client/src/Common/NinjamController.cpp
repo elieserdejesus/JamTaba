@@ -13,7 +13,6 @@
 #include "persistence/Settings.h"
 #include "audio/MetronomeTrackNode.h"
 
-
 #include <cmath>
 #include <cassert>
 #include <QMutexLocker>
@@ -24,7 +23,6 @@
 #include "Utils.h"
 #include <QWaitCondition>
 #include "log/Logging.h"
-
 
 using namespace Controller;
 

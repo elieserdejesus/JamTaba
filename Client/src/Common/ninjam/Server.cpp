@@ -4,7 +4,7 @@
 
 using namespace Ninjam;
 
-Server::Server(const QString &host, int port, int maxChannels, int maxUsers) :
+Server::Server(const QString &host, quint16 port, quint8 maxChannels, quint8 maxUsers) :
     port(port),
     host(host),
     maxUsers(maxUsers),
@@ -94,7 +94,7 @@ QString Server::getUniqueName() const
     return host + ":" + QString::number(port);
 }
 
-bool Server::setBpm(short bpm)
+bool Server::setBpm(quint16 bpm)
 {
     if (bpm == this->bpm)
         return false;
@@ -106,7 +106,7 @@ bool Server::setBpm(short bpm)
     return false;
 }
 
-bool Server::setBpi(short bpi)
+bool Server::setBpi(quint16 bpi)
 {
     if (bpi == this->bpi)
         return false;

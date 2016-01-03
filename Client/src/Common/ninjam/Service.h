@@ -150,6 +150,7 @@ private:
     bool needSendKeepAlive() const;
 
     void clear();
+
 };
 
 QDataStream &operator >>(QDataStream &stream, MessageHeader &header);

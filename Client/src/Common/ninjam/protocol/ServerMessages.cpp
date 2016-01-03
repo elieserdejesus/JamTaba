@@ -58,8 +58,9 @@ ServerAuthChallengeMessage::ServerAuthChallengeMessage(quint32 payload) :
 
 void ServerAuthChallengeMessage::readFrom(QDataStream &stream)
 {
-    for (int i = 0; i < 8; ++i)
-        stream >> challenge[i];
+    challenge.reserve(8);
+    stream.readRawData(challenge.data(), challenge.capacity());
+
     quint32 serverCapabilities;
     stream >> serverCapabilities;
 

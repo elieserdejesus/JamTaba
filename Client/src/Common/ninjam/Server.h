@@ -13,7 +13,7 @@ class Server
 {
 
 public:
-    Server(const QString &host, int port, int maxChannels, int maxUsers = 0);
+    Server(const QString &host, quint16 port, quint8 maxChannels, quint8 maxUsers = 0);
 
     ~Server();
 
@@ -89,17 +89,17 @@ public:
 
     void addUser(const User &user);
 
-    inline short getBpi() const
+    inline quint16 getBpi() const
     {
         return bpi;
     }
 
-    inline short getBpm() const
+    inline quint16 getBpm() const
     {
         return bpm;
     }
 
-    inline int getMaxUsers() const
+    inline quint8 getMaxUsers() const
     {
         return maxUsers;
     }
@@ -111,7 +111,7 @@ public:
         return activeServer;
     }
 
-    inline int getPort() const
+    inline quint16 getPort() const
     {
         return port;
     }
@@ -125,9 +125,9 @@ public:
 
     QString getUniqueName() const;
 
-    bool setBpm(short bpm);
+    bool setBpm(quint16 bpm);
 
-    bool setBpi(short bpi);
+    bool setBpi(quint16 bpi);
 
     void refreshUserList(const QSet<QString> &onlineUsers);
 
@@ -142,18 +142,18 @@ public:
     }
 
 private:
-    int port;
+    quint16 port;
     QString host;
-    int maxUsers;
-    short bpm;
-    short bpi;
+    quint8 maxUsers;
+    quint16 bpm;
+    quint16 bpi;
     bool activeServer;
     QString streamUrl;
     QString topic;
     QString licence;
     QMap<QString, User> users;
     bool containBot;
-    int maxChannels;
+    quint8 maxChannels;
 
     static const int MIN_BPM = 40;
     static const int MAX_BPM = 400;

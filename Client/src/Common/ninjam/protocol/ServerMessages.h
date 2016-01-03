@@ -57,10 +57,6 @@ private:
 
 class ServerAuthChallengeMessage : public ServerMessage
 {
-    QByteArray challenge;
-    QString licenceAgreement;
-    int serverKeepAlivePeriod;
-    int protocolVersion;// The Protocol Version field should contain 0x00020000.
 
 public:
     ServerAuthChallengeMessage(quint32 payload);
@@ -91,7 +87,12 @@ public:
     }
 
 private:
+    QByteArray challenge;
+    QString licenceAgreement;
+    int serverKeepAlivePeriod;
+    int protocolVersion;// The Protocol Version field should contain 0x00020000.
     void printDebug(QDebug &dbg) const override;
+
     void readFrom(QDataStream &stream) override;
 
 };
@@ -125,6 +126,10 @@ public:
     }
 
 private:
+    quint8 flag;
+    QString message;
+    quint8 maxChannels;
+
     void printDebug(QDebug &debug) const override;
     void readFrom(QDataStream &stream) override;
 };
