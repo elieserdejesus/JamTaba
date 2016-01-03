@@ -66,13 +66,9 @@ fully downloaded) we need emit a signal, and in this moment we need the user nam
 */
 class Service::Download
 {
-private:
-    quint8 channelIndex;
-    QString userFullName;
-    QString GUID;
-    QByteArray vorbisData;
+
 public:
-    Download(QString userFullName, quint8 channelIndex, QString GUID) :
+    Download(const QString &userFullName, quint8 channelIndex, const QByteArray &GUID) :
         channelIndex(channelIndex),
         userFullName(userFullName),
         GUID(GUID)
@@ -80,9 +76,9 @@ public:
         qCDebug(jtNinjamProtocol) << "Download constructor ";
     }
 
-    Download()
+    Download()//this constructor is necessary to use Download in a QMap without pointers
     {
-        qCritical() << "using the default constructor!";
+
     }
 
     ~Download()
@@ -105,7 +101,7 @@ public:
         return userFullName;
     }
 
-    inline QString getGUI() const
+    inline QByteArray getGUI() const
     {
         return GUID;
     }
@@ -114,6 +110,12 @@ public:
     {
         return vorbisData;
     }
+
+private:
+    quint8 channelIndex;
+    QString userFullName;
+    QByteArray GUID; //Global Unique ID
+    QByteArray vorbisData;
 };
 
 // ++++++++++++++++++++++++++++++++++++++++
@@ -348,7 +350,7 @@ void Service::process(const DownloadIntervalBegin &msg)
     if (!msg.downloadShouldBeStopped() && msg.isValidOggDownload()) {
         quint8 channelIndex = msg.getChannelIndex();
         QString userFullName = msg.getUserName();
-        QString GUID = msg.getGUID();
+        QByteArray GUID = msg.getGUID();
         downloads.insert(GUID, Download(userFullName, channelIndex, GUID));
     }
 }
@@ -387,7 +389,7 @@ void Service::process(const ServerAuthChallengeMessage &msg)
     serverKeepAlivePeriod = msg.getServerKeepAlivePeriod();
 }
 
-void Service::sendNewChannelsListToServer(QStringList channelsNames)
+void Service::sendNewChannelsListToServer(const QStringList &channelsNames)
 {
     this->channels = channelsNames;
     sendMessageToServer(ClientSetChannel(channels));
@@ -538,8 +540,8 @@ void Service::process(const ServerChatMessage &msg)
     }
     case ChatCommandType::USERCOUNT:
     {
-        int users = msg.getArguments().at(0).toInt();
-        int maxUsers = msg.getArguments().at(1).toInt();
+        quint32 users = msg.getArguments().at(0).toInt();
+        quint32 maxUsers = msg.getArguments().at(1).toInt();
         emit userCountMessageReceived(users, maxUsers);
         break;
     }

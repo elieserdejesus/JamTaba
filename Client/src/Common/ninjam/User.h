@@ -17,7 +17,7 @@ private:
     QMap<int, UserChannel *> channels;
 
 public:
-    explicit User(QString fullName);
+    explicit User(const QString &fullName);
     virtual ~User();
 
     bool isBot() const;
@@ -59,9 +59,9 @@ public:
         return fullName;
     }
 
-    void addChannel(UserChannel channel);
+    void addChannel(const UserChannel &channel);
     void removeChannel(int channelIndex);
-    void setChannelName(int channelIndex, QString name);
+    void setChannelName(int channelIndex, const QString &name);
     void setChannelFlags(int channelIndex, int flags);
 };
 

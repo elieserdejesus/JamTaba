@@ -3,7 +3,7 @@
 
 using namespace Ninjam;
 
-Server::Server(QString host, int port, int maxChannels, int maxUsers)
+Server::Server(const QString &host, int port, int maxChannels, int maxUsers)
     :port(port), host(host),
       maxUsers(maxUsers), bpm(120), bpi(16),
       activeServer(true),
@@ -19,7 +19,7 @@ Server::~Server(){
 
 }
 
-bool Server::containsUser(QString userFullName) const{
+bool Server::containsUser(const QString &userFullName) const{
     return users.contains(userFullName);
 }
 
@@ -37,7 +37,7 @@ bool Server::containsUser(const User &user) const{
 //    return servers[key].get();
 //}
 
-void Server::addUser(User user) {
+void Server::addUser(const User &user) {
     if (!users.contains(user.getFullName())) {
         users.insert(user.getFullName(), new User(user.getFullName()));
         if (user.isBot()) {
@@ -46,7 +46,7 @@ void Server::addUser(User user) {
     }
 }
 
-User *Server::getUser(QString userFullName) const{
+User *Server::getUser(const QString &userFullName) const{
     if(users.contains(userFullName)){
         return users[userFullName];
     }
@@ -93,7 +93,7 @@ bool Server::setBpi(short bpi) {
     return false;
 }
 
-void Server::refreshUserList(QSet<QString> onlineUsers) {
+void Server::refreshUserList(const QSet<QString> &onlineUsers) {
     QList<QString> toRemove;
 
     foreach (QString onlineUserName , onlineUsers) {

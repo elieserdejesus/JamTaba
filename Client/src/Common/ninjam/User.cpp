@@ -7,7 +7,7 @@
 using namespace Ninjam;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-User::User(QString fullName) :
+User::User(const QString &fullName) :
     fullName(fullName)
 {
     QStringList fullNameParts = fullName.split("@");
@@ -37,7 +37,7 @@ UserChannel User::getChannel(int index) const
     return UserChannel();// return a invalid/empty channel
 }
 
-void User::addChannel(UserChannel c)
+void User::addChannel(const UserChannel &c)
 {
     channels.insert(c.getIndex(), new UserChannel(c));
 }
@@ -47,7 +47,7 @@ void User::removeChannel(int channelIndex)
     this->channels.remove(channelIndex);
 }
 
-void User::setChannelName(int channelIndex, QString name)
+void User::setChannelName(int channelIndex, const QString &name)
 {
     if (channels.contains(channelIndex))
         channels[channelIndex]->setName(name);

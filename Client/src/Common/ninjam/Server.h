@@ -11,13 +11,13 @@ class Server
 {
 
 public:
-    Server(QString host, int port, int maxChannels, int maxUsers = 0);
+    Server(const QString &host, int port, int maxChannels, int maxUsers = 0);
 
     ~Server();
 
-    User *getUser(QString userFullName) const;
+    User *getUser(const QString &userFullName) const;
 
-    inline void setStreamUrl(QString streamUrl)
+    inline void setStreamUrl(const QString &streamUrl)
     {
         this->streamUrl = streamUrl;
     }
@@ -79,9 +79,9 @@ public:
     }
 
     bool containsUser(const User &user) const;
-    bool containsUser(QString userFullName) const;
+    bool containsUser(const QString &userFullName) const;
 
-    void addUser(User user);
+    void addUser(const User &user);
 
     inline short getBpi() const
     {
@@ -123,14 +123,14 @@ public:
 
     bool setBpi(short bpi);
 
-    void refreshUserList(QSet<QString> onlineUsers);
+    void refreshUserList(const QSet<QString> &onlineUsers);
 
     inline QString getTopic() const
     {
         return topic;
     }
 
-    inline void setTopic(QString topicText)
+    inline void setTopic(const QString &topicText)
     {
         this->topic = topicText;
     }
