@@ -1,11 +1,12 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
-class QTcpSocket;
-class QByteArray;
-class QDataStream;
-class QString;
-class QObject;
+#include <QTcpSocket>
+#include <memory>
+#include <QLoggingCategory>
+
+#include "ninjam/User.h"
+#include "ninjam/UserChannel.h"
 
 namespace Ninjam {
 class PublicServersParser;
@@ -34,6 +35,8 @@ struct MessageHeader{
 class Service : public QObject
 {
     Q_OBJECT
+
+    friend class ServerMessageVisitor;
 
 public:
 
@@ -102,7 +105,10 @@ private:
     void process(const DownloadIntervalWrite &msg);
     // ++++++++++++=
 
-    MessageHeader* extractMessageHeader(QDataStream &stream);
+    struct MessageHeader{
+        quint8 messageTypeCode;
+        quint32 payload;
+    };
 
     template<class MessageClazz> //MessageClazz will be 'translated' to some class derived from ServerMessage
     bool handleMessage(QDataStream &stream, quint32 payload){
@@ -151,7 +157,11 @@ private:
 
     bool needSendKeepAlive() const;
 
-    void clear();
+private slots:
+    void socketReadSlot();
+    void socketErrorSlot(QAbstractSocket::SocketError error);
+    void socketDisconnectSlot();
+    void socketConnectedSlot();
 };
 
 QDataStream &operator >>(QDataStream &stream, MessageHeader &header);

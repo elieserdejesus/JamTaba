@@ -4,15 +4,8 @@
 #include "UserChannel.h"
 #include "protocol/ServerMessages.h"
 #include "protocol/ClientMessages.h"
-#include <algorithm>
-#include <QHostAddress>
-#include <QDateTime>
-#include <QDataStream>
-
-#include <QThread>
-#include <cassert>
-
 #include "log/Logging.h"
+#include <QDataStream>
 
 using namespace Ninjam;
 
@@ -78,7 +71,6 @@ private:
     QString userFullName;
     QString GUID;
     QByteArray vorbisData;
-    static int instances;
 public:
     Download(QString userFullName, quint8 channelIndex, QString GUID) :
         channelIndex(channelIndex),
@@ -288,7 +280,7 @@ QStringList Service::buildBotNamesList()
 QString Service::getConnectedUserName()
 {
     if (initialized)
-        return newUserName;
+        return userName;
     qCritical() << "not initialized, newUserName is not available!";
     return "";
 }
@@ -610,7 +602,8 @@ void Service::invokeMessageHandler(ServerMessage *message)
     }
 }
 
-QString Service::getCurrentServerLicence() const
+QDataStream &Ninjam::operator >>(QDataStream &stream, MessageHeader &header)
 {
-    return serverLicence;
+    stream >> header.messageTypeCode >> header.payload;
+    return stream;
 }
