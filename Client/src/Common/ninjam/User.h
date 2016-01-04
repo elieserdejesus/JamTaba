@@ -14,8 +14,6 @@ public:
     explicit User(const QString &fullName = "");
     virtual ~User();
 
-    bool isBot() const;
-
     inline bool hasChannels() const
     {
         return !channels.isEmpty();
@@ -36,7 +34,7 @@ public:
         return getFullName() < other.getFullName();
     }
 
-    UserChannel getChannel(int index) const;
+    UserChannel getChannel(quint8 index) const;
 
     inline QString getIp() const
     {
@@ -53,10 +51,15 @@ public:
         return fullName;
     }
 
-    void updateChannelName(int channelIndex, const QString &newName);
+    void updateChannelName(quint8 channelIndex, const QString &newName);
 
     void addChannel(const UserChannel &channel);
-    void removeChannel(int channelIndex);
+    void removeChannel(quint8 channelIndex);
+
+    inline int getChannelsCount() const
+    {
+        return channels.size();
+    }
 
 private:
     QString fullName;

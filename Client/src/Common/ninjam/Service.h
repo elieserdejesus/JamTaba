@@ -3,6 +3,10 @@
 
 #include <QtGlobal>
 #include <QScopedPointer>
+#include <QObject>
+#include <QTcpSocket>
+#include "log/Logging.h"
+//#include "ServerMessageProcessor.h"
 
 class QTcpSocket;
 class QByteArray;
@@ -16,6 +20,7 @@ class Server;
 class ClientMessage;
 class Service;
 class ServerMessage;
+class ServerMessagesHandler;
 class ServerKeepAliveMessage;
 class ServerAuthChallengeMessage;
 class ServerAuthReplyMessage;
@@ -28,15 +33,12 @@ class DownloadIntervalWrite;
 class User;
 class UserChannel;
 
-struct MessageHeader{
-    quint8 messageTypeCode;
-    quint32 payload;
-};
-
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Service : public QObject
 {
     Q_OBJECT
+
+    friend class ServerMessagesHandler;
 
 public:
 
@@ -86,6 +88,20 @@ signals:
     void userExited(const Ninjam::User &user);
     void error(const QString &msg);
 
+protected:
+    virtual QTcpSocket *createSocket();
+
+    // +++++= message handlers.
+    virtual void process(const ServerAuthChallengeMessage &msg);
+    virtual void process(const ServerAuthReplyMessage &msg);
+    virtual void process(const ServerConfigChangeNotifyMessage &msg);
+    virtual void process(const UserInfoChangeNotifyMessage &msg);
+    virtual void process(const ServerChatMessage &msg);
+    virtual void process(const ServerKeepAliveMessage &msg);
+    virtual void process(const DownloadIntervalBegin &msg);
+    virtual void process(const DownloadIntervalWrite &msg);
+    // ++++++++++++=
+
 private slots:
     void handleAllReceivedMessages();
     void handleSocketError(QAbstractSocket::SocketError error);
@@ -93,39 +109,11 @@ private slots:
     void handleSocketConnection();
 
 private:
-
-    // +++++= message handlers.
-    void process(const ServerAuthChallengeMessage &msg);
-    void process(const ServerAuthReplyMessage &msg);
-    void process(const ServerConfigChangeNotifyMessage &msg);
-    void process(const UserInfoChangeNotifyMessage &msg);
-    void process(const ServerChatMessage &msg);
-    void process(const ServerKeepAliveMessage &msg);
-    void process(const DownloadIntervalBegin &msg);
-    void process(const DownloadIntervalWrite &msg);
-    // ++++++++++++=
-
-    MessageHeader* extractMessageHeader(QDataStream &stream);
-
-    template<class MessageClazz> //MessageClazz will be 'translated' to some class derived from ServerMessage
-    bool handleMessage(QDataStream &stream, quint32 payload){
-        bool allMessageDataIsAvailable = socket.bytesAvailable() >= payload;
-        if (allMessageDataIsAvailable) {
-            MessageClazz message(payload);
-            stream >> message;
-            process(message);//calling overload versions of 'process'
-            return true; //the message was handled
-        }
-        return false;//the message was not handled
-    }
-
-    bool executeMessageHandler(MessageHeader *header, QDataStream &stream);
-
-    QScopedPointer<MessageHeader> currentHeader;//the last messageHeader readed from socket
+    QScopedPointer<ServerMessagesHandler> messagesHandler;
 
     static const long DEFAULT_KEEP_ALIVE_PERIOD = 3000;
 
-    QTcpSocket socket;
+    QTcpSocket* socket;
 
     static const QStringList botNames;
     static QStringList buildBotNamesList();
@@ -142,7 +130,7 @@ private:
     QStringList channels;// channels names
 
     void sendMessageToServer(const ClientMessage &message);
-    void handleUserChannels(const QString &userFullName, const QList<UserChannel> &channelsInTheServer);
+    void handleUserChannels(const User &remoteUser);
     bool channelIsOutdate(const User &user, const UserChannel &serverChannel);
 
     void setBpm(quint16 newBpm);
@@ -155,9 +143,9 @@ private:
 
     void clear();
 
-};
+    void setupSocketSignals();
 
-QDataStream &operator >>(QDataStream &stream, MessageHeader *header);
+};
 
 }// namespace
 

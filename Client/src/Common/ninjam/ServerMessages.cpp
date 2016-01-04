@@ -1,6 +1,8 @@
 #include "ServerMessages.h"
 #include <QDebug>
+#include <QDataStream>
 #include "ninjam/UserChannel.h"
+#include "ninjam/User.h"
 #include "ninjam/Service.h"
 
 using namespace Ninjam;
@@ -71,7 +73,7 @@ void ServerAuthChallengeMessage::readFrom(QDataStream &stream)
     serverKeepAlivePeriod = static_cast<quint8>(serverCapabilities >> 8);
 
     stream >> protocolVersion;
-    Q_ASSERT(protocolVersion == 0x00020000);
+    //Q_ASSERT(protocolVersion == 0x00020000);
 
     if (serverHasLicenceAgreement)
         licenceAgreement = Ninjam::extractString(stream);
@@ -98,7 +100,7 @@ void ServerAuthReplyMessage::readFrom(QDataStream &stream)
 {
     stream >> flag;
     message = Ninjam::extractString(stream);
-    stream >> maxChannels;// TODO problem reading max channels?
+    stream >> maxChannels;
 }
 
 void ServerAuthReplyMessage::printDebug(QDebug &debug) const
@@ -168,14 +170,16 @@ void UserInfoChangeNotifyMessage::readFrom(QDataStream &stream)
         stream >> active >> channelIndex >> volume >> pan >> flags;
         bytesConsumed += 6;
         QString userFullName = Ninjam::extractString(stream);
+        if(!users.contains(userFullName)){
+            users.insert(userFullName, User(userFullName));
+        }
+        User &user = users[userFullName];
         bytesConsumed += userFullName.size() + 1;
         QString channelName = Ninjam::extractString(stream);
         bytesConsumed += channelName.size() + 1;
-        // qDebug() << userFullName << "active:" << active << "volume:" << volume << "pan:" << pan << "flags: "<< flags;
         bool channelIsActive = active > 0 ? true : false;
-        this->usersChannels[userFullName].append(UserChannel(userFullName, channelName,
-                                                             channelIsActive, channelIndex, volume,
-                                                             pan, flags));
+        user.addChannel(UserChannel(userFullName, channelName, channelIndex, channelIsActive,
+                                    volume, pan, flags));
     }
 }
 
@@ -187,8 +191,13 @@ UserInfoChangeNotifyMessage::~UserInfoChangeNotifyMessage()
 void UserInfoChangeNotifyMessage::printDebug(QDebug &dbg) const
 {
     dbg << "UserInfoChangeNotify{\n";
-    for (const QString &userFullName : usersChannels.keys())
-        dbg << "\t" << userFullName << "\n";
+    foreach (const User &user, users.values()){
+        dbg << "\t" << user.getFullName() << "\n";
+        foreach (const UserChannel &channel, user.getChannels()) {
+            dbg << "\t\t" << channel.getName() << "\n";;
+        }
+        dbg << "\n";
+    }
     dbg << "}";
 }
 

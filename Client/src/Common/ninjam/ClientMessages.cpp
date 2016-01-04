@@ -258,7 +258,7 @@ void ClientIntervalUploadWrite::serializeTo(QByteArray &buffer) const{
     stream << intervalCompleted;
     stream.writeRawData( encodedAudioBuffer.data(), encodedAudioBuffer.size() );
 
-    assert(buffer.size() == (int)(payload + 5));
+    Q_ASSERT(buffer.size() == (int)(payload + 5));
 }
 
 

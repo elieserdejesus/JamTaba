@@ -2,11 +2,10 @@
 #define CLIENT_MESSAGES_H
 
 #include <QtGlobal>
-
-class QByteArray;
-class QString;
-class QStringList;
-class QDebug;
+#include <QByteArray>
+#include <QString>
+#include <QStringList>
+#include <QDebug>
 
 namespace Ninjam {
 class User;

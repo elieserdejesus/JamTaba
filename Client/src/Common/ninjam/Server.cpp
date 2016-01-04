@@ -1,6 +1,8 @@
 #include "Server.h"
 #include "User.h"
 #include "UserChannel.h"
+#include "log/Logging.h"
+#include <QSet>
 
 using namespace Ninjam;
 
@@ -13,7 +15,6 @@ Server::Server(const QString &host, quint16 port, quint8 maxChannels, quint8 max
     activeServer(true),
     streamUrl(""),
     topic(""),
-    containBot(false),
     maxChannels(maxChannels)
 {
 }
@@ -36,29 +37,36 @@ void Server::addUser(const User &user)
 {
     if (!users.contains(user.getFullName())) {
         users.insert(user.getFullName(), User(user.getFullName()));
-        if (user.isBot())
-            containBot = true;
     }
 }
 
-void Server::updateUserChannel(const QString &userFullName, const UserChannel &serverChannel)
+void Server::updateUserChannel(const UserChannel &serverChannel)
 {
+    QString userFullName = serverChannel.getUserFullName();
     if(users.contains(userFullName)){
         users[userFullName].updateChannelName(serverChannel.getIndex(), serverChannel.getName());
     }
 }
 
-void Server::removeUserChannel(const QString &userFullName, int channelIndex)
+void Server::removeUserChannel(const UserChannel &channel)
 {
+    QString userFullName = channel.getUserFullName();
     if(users.contains(userFullName)){
-        users[userFullName].removeChannel(channelIndex);
+        users[userFullName].removeChannel(channel.getIndex());
     }
 }
 
-void Server::addUserChannel(const QString &userFullName, const UserChannel &newChannel)
+void Server::addUserChannel(const UserChannel &newChannel)
 {
+    QString userFullName = newChannel.getUserFullName();
     if(users.contains(userFullName)){
-        users[userFullName].addChannel(newChannel);
+        int userChannelsCount = users[userFullName].getChannelsCount();
+        if(userChannelsCount < maxChannels)
+            users[userFullName].addChannel(newChannel);
+        else
+            qCCritical(jtNinjamCore) << "Can't add more channels for " << userFullName << "(using" <<
+                                        QString::number(userChannelsCount) << " channels). The server maxChannels is " <<
+                                        QString::number(maxChannels);
     }
 }
 
@@ -72,13 +80,6 @@ User Server::getUser(const QString &userFullName) const
 QList<User> Server::getUsers() const
 {
     return users.values();
-}
-
-bool Server::containsBotOnly() const
-{
-    if (users.size() == 1 && containBot)
-        return true;
-    return false;
 }
 
 QString Server::getUniqueName() const
@@ -109,22 +110,3 @@ bool Server::setBpi(quint16 bpi)
     }
     return false;
 }
-
-void Server::refreshUserList(const QSet<QString> &onlineUsers)
-{
-    QList<QString> toRemove;
-
-    foreach (const QString &onlineUserName, onlineUsers)
-        addUser(User(onlineUserName));
-
-    QList<User> currentUsers = users.values();
-    foreach (const User &user, currentUsers) {
-        if (!onlineUsers.contains(user.getFullName()))
-            toRemove.append(user.getFullName());
-    }
-
-    foreach (const QString &fullName, toRemove)
-        users.remove(fullName);
-
-}
-

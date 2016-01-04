@@ -2,16 +2,16 @@
 #define USERCHANNEL_H
 
 #include <QtGlobal>
+#include <QString>
 
-class QString;
 
 namespace Ninjam {
 class UserChannel
 {
 
 public:
-    UserChannel(const QString &userFullName, const QString &channelName, bool active,
-                quint8 channelIndex, quint16 volume, quint8 pan, quint8 flags);
+    UserChannel(const QString &userFullName, const QString &channelName, quint8 channelIndex,
+                bool active=true, quint16 volume=0, quint8 pan=0, quint8 flags=0);
     UserChannel();
     UserChannel(const UserChannel &c);
     ~UserChannel();
@@ -26,7 +26,7 @@ public:
         return active && flags == 0;
     }
 
-    inline int getIndex() const
+    inline quint8 getIndex() const
     {
         return index;
     }

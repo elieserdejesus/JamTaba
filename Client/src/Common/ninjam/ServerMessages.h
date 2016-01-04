@@ -2,6 +2,8 @@
 #define SERVER_MESSAGES_H
 
 #include <QMap>
+#include "User.h"
+
 class QStringList;
 class QtGlobal;
 
@@ -66,12 +68,12 @@ public:
         return challenge;
     }
 
-    inline int getProtocolVersion() const
+    inline quint32 getProtocolVersion() const
     {
         return protocolVersion;
     }
 
-    inline int getServerKeepAlivePeriod() const
+    inline quint32 getServerKeepAlivePeriod() const
     {
         return serverKeepAlivePeriod;
     }
@@ -89,8 +91,8 @@ public:
 private:
     QByteArray challenge;
     QString licenceAgreement;
-    int serverKeepAlivePeriod;
-    int protocolVersion;// The Protocol Version field should contain 0x00020000.
+    quint32 serverKeepAlivePeriod;
+    quint32 protocolVersion;// The Protocol Version field should contain 0x00020000.
     void printDebug(QDebug &dbg) const override;
 
     void readFrom(QDataStream &stream) override;
@@ -111,7 +113,7 @@ public:
     inline QString getNewUserName() const
     {
         if (!userIsAuthenticated())
-            qCritical("user is note authenticated!");
+            qCritical("user is not authenticated!");
         return message;
     }
 
@@ -177,18 +179,13 @@ public:
     UserInfoChangeNotifyMessage(quint32 payload);
     ~UserInfoChangeNotifyMessage();
 
-    inline QList<QString> getUsersNames() const
+    inline QList<User> getUsers() const
     {
-        return usersChannels.keys();
-    }
-
-    QList<UserChannel> getUserChannels(const QString &userFullName) const
-    {
-        return usersChannels[userFullName];
+        return users.values();
     }
 
 private:
-    QMap<QString, QList<UserChannel> > usersChannels;
+    QMap<QString, User> users;
 
     void readFrom(QDataStream &stream) override;
     void printDebug(QDebug &dbg) const override;
@@ -222,7 +219,7 @@ class ServerChatMessage : public ServerMessage
 public:
     ServerChatMessage(quint32 payload);
 
-    inline QList<QString> getArguments() const
+    inline QStringList getArguments() const
     {
         return arguments;
     }
@@ -232,14 +229,14 @@ public:
         return commandType;
     }
 
+    static ChatCommandType commandTypeFromString(const QString &string);
+
 private:
     ChatCommandType commandType;
     QStringList arguments;
 
     void printDebug(QDebug &dbg) const override;
     void readFrom(QDataStream &stream) override;
-    ChatCommandType commandTypeFromString(const QString &string);
-
 };
 // ++++++++++++++++
 // ++++++++++++++++
@@ -347,7 +344,7 @@ private:
 };
 
 // ++++++++++++++++++++
-QDebug operator<<(QDebug dbg, const Ninjam::ServerMessage &message);
+QDebug& operator<<(QDebug& dbg, const Ninjam::ServerMessage &message);
 
 QDataStream &operator >>(QDataStream &stream, ServerMessage &message);
 

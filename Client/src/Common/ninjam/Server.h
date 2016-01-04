@@ -17,9 +17,9 @@ public:
 
     ~Server();
 
-    void addUserChannel(const QString &userFullName, const UserChannel& newChannel);
-    void removeUserChannel(const QString &userFullName, int channelIndex);
-    void updateUserChannel(const QString &userFullName, const UserChannel& serverChannel);
+    void addUserChannel(const UserChannel &newChannel);
+    void removeUserChannel(const UserChannel &channel);
+    void updateUserChannel(const UserChannel &serverChannel);
 
     User getUser(const QString &userFullName) const;
 
@@ -79,11 +79,6 @@ public:
         this->activeServer = active;
     }
 
-    inline bool containsBot() const
-    {
-        return containBot;
-    }
-
     bool containsUser(const User &user) const;
     bool containsUser(const QString &userFullName) const;
 
@@ -121,15 +116,11 @@ public:
         return host;
     }
 
-    bool containsBotOnly() const;
-
     QString getUniqueName() const;
 
     bool setBpm(quint16 bpm);
 
     bool setBpi(quint16 bpi);
-
-    void refreshUserList(const QSet<QString> &onlineUsers);
 
     inline QString getTopic() const
     {
@@ -152,7 +143,6 @@ private:
     QString topic;
     QString licence;
     QMap<QString, User> users;
-    bool containBot;
     quint8 maxChannels;
 
     static const int MIN_BPM = 40;

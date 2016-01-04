@@ -1,8 +1,8 @@
 #include "User.h"
 #include "UserChannel.h"
-#include "Service.h"
 #include <QDebug>
 #include <QRegularExpression>
+#include "log/Logging.h"
 
 using namespace Ninjam;
 
@@ -25,15 +25,12 @@ User::~User()
 {
 }
 
-bool User::isBot() const
-{
-    return Service::isBotName(getName());
-}
-
-UserChannel User::getChannel(int index) const
+UserChannel User::getChannel(quint8 index) const
 {
     if (channels.contains(index))
         return channels[index];
+
+    qCCritical(jtNinjamCore) << "invalid channel index (" << QString::number(index) << "), returning an empty channel!";
     return UserChannel();// return a invalid/empty channel
 }
 
@@ -42,13 +39,14 @@ void User::addChannel(const UserChannel &channel)
     channels.insert(channel.getIndex(), UserChannel(channel));
 }
 
-void User::updateChannelName(int channelIndex, const QString &newName){
-    if(channels.contains(channelIndex)){
+void User::updateChannelName(quint8 channelIndex, const QString &newName){
+    if(channels.contains(channelIndex))
         channels[channelIndex].setName(newName);
-    }
+    else
+        qCCritical(jtNinjamCore) << "invalid channel index (" << QString::number(channelIndex) << "), can't update the channel!";
 }
 
-void User::removeChannel(int channelIndex)
+void User::removeChannel(quint8 channelIndex)
 {
     this->channels.remove(channelIndex);
 }

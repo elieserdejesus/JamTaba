@@ -155,6 +155,8 @@ private:
     int waitingIntervals;
     static const int TOTAL_PREPARED_INTERVALS = 2;// how many intervals Jamtaba will wait to start trasmiting?
 
+    bool userIsBot(const QString userName) const;
+
 private slots:
     // ninjam events
     void on_ninjamServerBpmChanged(quint16 newBpm);

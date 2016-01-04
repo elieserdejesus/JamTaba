@@ -432,8 +432,16 @@ QString NinjamController::getUniqueKey(Ninjam::UserChannel channel){
     return channel.getUserFullName() + QString::number(channel.getIndex());
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+bool NinjamController::userIsBot(const QString userName) const
+{
+    if(mainController){
+        return mainController->getBotNames().contains(userName);
+    }
+    return false;
+}
+
 void NinjamController::addTrack(Ninjam::User user, Ninjam::UserChannel channel){
-    if(user.isBot()){
+    if(userIsBot(user.getName())){
         return;
     }
     NinjamTrackNode* trackNode = new NinjamTrackNode(generateNewTrackID());

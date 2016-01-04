@@ -4,7 +4,7 @@
 
 using namespace Ninjam;
 
-UserChannel::UserChannel(const QString &userFullName, const QString &channelName, bool active, quint8 channelIndex,
+UserChannel::UserChannel(const QString &userFullName, const QString &channelName, quint8 channelIndex, bool active,
                          quint16 volume, quint8 pan, quint8 flags) :
     userFullName(userFullName),
     channelName(channelName),
