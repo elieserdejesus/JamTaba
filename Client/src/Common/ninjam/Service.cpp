@@ -2,8 +2,8 @@
 #include "Server.h"
 #include "User.h"
 #include "UserChannel.h"
-#include "protocol/ServerMessages.h"
-#include "protocol/ClientMessages.h"
+#include "ServerMessages.h"
+#include "ClientMessages.h"
 #include "log/Logging.h"
 #include <QDataStream>
 #include <QTcpSocket>
