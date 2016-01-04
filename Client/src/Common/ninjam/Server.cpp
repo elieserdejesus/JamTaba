@@ -128,14 +128,3 @@ void Server::refreshUserList(const QSet<QString> &onlineUsers)
 
 }
 
-QDataStream &Ninjam::operator<<(QDataStream &out, const Server &server)
-{
-    out << "NinjamServer{" << "port="  <<  server.getPort()  <<  ", host="
-        <<  server.getHostName() <<  ", stream="  <<  server.getStreamUrl()
-        <<" maxUsers="  <<  server.getMaxUsers() <<  ", bpm="
-        <<  server.getBpm()  <<  ", bpi="  <<  server.getBpi()
-        <<  ", isActive="  <<  server.isActive() <<  "}\n";
-    for (const User &user : server.getUsers())
-        out << "\t" << user.getName()  << "\n";
-    return out;
-}

@@ -161,7 +161,6 @@ private:
     static const int MIN_BPI = 3;
 };
 
-QDataStream &operator<<(QDataStream &out, const Ninjam::Server &server);
 }// namespace
 
 #endif
