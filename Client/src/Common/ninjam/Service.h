@@ -1,11 +1,15 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
+#include <QtGlobal>
+#include <QScopedPointer>
+
 class QTcpSocket;
 class QByteArray;
 class QDataStream;
 class QString;
 class QObject;
+class QStringList;
 
 namespace Ninjam {
 class Server;
@@ -49,16 +53,16 @@ public:
     void sendNewChannelsListToServer(const QStringList &channelsNames);
     void sendRemovedChannelIndex(int removedChannelIndex);
 
-    QString getConnectedUserName();
+    QString getConnectedUserName() const;
     QString getCurrentServerLicence() const;
-    float getIntervalPeriod();
+    float getIntervalPeriod() const;
 
     void startServerConnection(const QString &serverIp, int serverPort, const QString &userName,
                                const QStringList &channels, const QString &password = "");
     void disconnectFromServer(bool emitDisconnectedSignal);
 
-    void voteToChangeBPM(int newBPM);
-    void voteToChangeBPI(int newBPI);
+    void voteToChangeBPM(quint16 newBPM);
+    void voteToChangeBPI(quint16 newBPI);
 
     static inline QStringList getBotNamesList()
     {
@@ -153,7 +157,7 @@ private:
 
 };
 
-QDataStream &operator >>(QDataStream &stream, MessageHeader &header);
+QDataStream &operator >>(QDataStream &stream, MessageHeader *header);
 
 }// namespace
 

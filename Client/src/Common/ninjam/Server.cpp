@@ -32,14 +32,6 @@ bool Server::containsUser(const User &user) const
     return containsUser(user.getFullName());
 }
 
-// Server* Server::getServer(QString host, int port) {
-// QString key = getUniqueName(host, port);
-// if (!servers.contains(key)) {
-// servers.insert(key, std::shared_ptr<Server>(new Server(host, port)));
-// }
-// return servers[key].get();
-// }
-
 void Server::addUser(const User &user)
 {
     if (!users.contains(user.getFullName())) {

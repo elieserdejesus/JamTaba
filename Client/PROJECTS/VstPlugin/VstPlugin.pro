@@ -44,7 +44,6 @@ DEPENDPATH +=  $$ROOT_PATH/libs/includes/minimp3
 
 HEADERS += recorder/JamRecorder.h
 HEADERS += recorder/ReaperProjectGenerator.h
-HEADERS += ninjam/protocol/ServerMessageParser.h
 HEADERS += ninjam/protocol/ServerMessages.h
 HEADERS += ninjam/protocol/ClientMessages.h
 HEADERS += loginserver/natmap.h
@@ -80,7 +79,6 @@ SOURCES += loginserver/LoginService.cpp
 SOURCES += loginserver/JsonUtils.cpp
 SOURCES += ninjam/protocol/ServerMessages.cpp
 SOURCES += ninjam/protocol/ClientMessages.cpp
-SOURCES += ninjam/protocol/ServerMessageParser.cpp
 SOURCES += ninjam/Server.cpp
 SOURCES += audio/Resampler.cpp
 SOURCES += audio/vorbis/VorbisDecoder.cpp

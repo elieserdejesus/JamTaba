@@ -6,57 +6,11 @@
 #include "protocol/ClientMessages.h"
 #include "log/Logging.h"
 #include <QDataStream>
+#include <QTcpSocket>
 
 using namespace Ninjam;
 
 const QStringList Service::botNames = buildBotNamesList();
-
-// ++++++++++++++++++++++++++++
-
-ServerMessageVisitor::ServerMessageVisitor(Service *service) :
-    service(service)
-{
-}
-
-void ServerMessageVisitor::visitAuthChallenge(const ServerAuthChallengeMessage &msg)
-{
-    service->processAuthChallenge(msg);
-}
-
-void ServerMessageVisitor::visitAuthReply(const ServerAuthReplyMessage &msg)
-{
-    service->processAuthReply(msg);
-}
-
-void ServerMessageVisitor::visitChatMessage(const ServerChatMessage &msg)
-{
-    service->processChatMessage(msg);
-}
-
-void ServerMessageVisitor::visitConfigChangeNotify(const ServerConfigChangeNotifyMessage &msg)
-{
-    service->processConfigChangeNotify(msg);
-}
-
-void ServerMessageVisitor::visitDownloadIntervalBegin(const DownloadIntervalBegin &msg)
-{
-    service->processDownloadIntervalBegin(msg);
-}
-
-void ServerMessageVisitor::visitDownloadIntervalWrite(const DownloadIntervalWrite &msg)
-{
-    service->processDownloadIntervalWrite(msg);
-}
-
-void ServerMessageVisitor::visitKeepAlive(const ServerKeepAliveMessage &msg)
-{
-    service->processKeepAlive(msg);
-}
-
-void ServerMessageVisitor::visitUserInfoChangeNotify(const UserInfoChangeNotifyMessage &msg)
-{
-    service->processUserInfoChangeNotify(msg);
-}
 
 // ++++++++++++++++++++++++++++
 /**
@@ -86,7 +40,7 @@ public:
 
     }
 
-    inline void appendVorbisData(QByteArray data)
+    inline void appendVorbisData(const QByteArray &data)
     {
         this->vorbisData.append(data);
     }
@@ -194,13 +148,6 @@ bool Service::executeMessageHandler(MessageHeader *header, QDataStream &stream)
 //this slot is invoke when socket receive new data
 void Service::handleAllReceivedMessages()
 {
-    if (socket.bytesAvailable() < 5) {
-        qCDebug(jtNinjamProtocol) << "not have enough bytes to read message header (5 bytes)";
-        return nullptr;
-    }
-
-    qCDebug(jtNinjamProtocol) << "socket read slot";
-
     QDataStream stream(&socket);
     stream.setByteOrder(QDataStream::LittleEndian);
 
@@ -219,7 +166,6 @@ void Service::handleAllReceivedMessages()
             break;// an incomplete message was founded, break and wait until receive more bytes. The currentHeader will be used in the next iteration.
         }
     }
-    return nullptr;
 }
 
 void Service::clear(){
@@ -269,7 +215,7 @@ QStringList Service::buildBotNamesList()
     return names;
 }
 
-QString Service::getConnectedUserName()
+QString Service::getConnectedUserName() const
 {
     if (initialized)
         return userName;
@@ -277,20 +223,20 @@ QString Service::getConnectedUserName()
     return "";
 }
 
-float Service::getIntervalPeriod()
+float Service::getIntervalPeriod() const
 {
     if (currentServer)
         return 60000.0f / currentServer->getBpm() * currentServer->getBpi();
     return 0.0f;
 }
 
-void Service::voteToChangeBPI(int newBPI)
+void Service::voteToChangeBPI(quint16 newBPI)
 {
     QString text = "!vote bpi " + QString::number(newBPI);
     sendMessageToServer(ChatMessage(text));
 }
 
-void Service::voteToChangeBPM(int newBPM)
+void Service::voteToChangeBPM(quint16 newBPM)
 {
     QString text = "!vote bpm " + QString::number(newBPM);
     sendMessageToServer(ChatMessage(text));
@@ -547,7 +493,7 @@ void Service::process(const ServerChatMessage &msg)
     }
 }
 
-void Service::handle(const ServerConfigChangeNotifyMessage &msg)
+void Service::process(const ServerConfigChangeNotifyMessage &msg)
 {
     quint16 bpi = msg.getBpi();
     quint16 bpm = msg.getBpm();
@@ -562,8 +508,9 @@ QString Service::getCurrentServerLicence() const
     return serverLicence;
 }
 
-QDataStream &Ninjam::operator >>(QDataStream &stream, MessageHeader &header)
+QDataStream &Ninjam::operator >>(QDataStream &stream, MessageHeader *header)
 {
-    stream >> header.messageTypeCode >> header.payload;
+    if(header)
+        stream >> header->messageTypeCode >> header->payload;
     return stream;
 }
