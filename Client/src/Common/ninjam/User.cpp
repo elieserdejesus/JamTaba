@@ -70,15 +70,3 @@ QDebug &Ninjam::operator<<(QDebug &out, const User &user)
     out << "--------------\n";
     return out;
 }
-
-QDebug &Ninjam::operator<<(QDebug &out, const UserChannel &ch)
-{
-    out << "UserChannel{"
-        << "name="
-        << ch.getName()
-        << ", active="
-        << ch.isActive()
-        << ", index="
-        << ch.getIndex() << '}';
-    return out;
-}

@@ -41,3 +41,15 @@ UserChannel::UserChannel(const UserChannel &c) :
 UserChannel::~UserChannel()
 {
 }
+
+QDebug &Ninjam::operator<<(QDebug &out, const UserChannel &ch)
+{
+    out << "UserChannel{"
+        << "name="
+        << ch.getName()
+        << ", active="
+        << ch.isActive()
+        << ", index="
+        << ch.getIndex() << '}';
+    return out;
+}

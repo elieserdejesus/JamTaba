@@ -46,16 +46,6 @@ public:
         this->channelName = name;
     }
 
-    inline quint8 getFlags() const
-    {
-        return flags;
-    }
-
-    inline void setFlags(quint8 flags)
-    {
-        this->flags = flags;
-    }
-
 private:
     QString userFullName;
     QString channelName;
@@ -63,8 +53,11 @@ private:
     quint8 index;
     quint16 volume;// (dB gain, 0=0dB, 10=1dB, -30=-3dB, etc)
     quint8 pan;// Pan [-128, 127]
-    quint8 flags;
+    quint8 flags;//received from server, but not used
 };
+
+QDebug &operator<<(QDebug &out, const Ninjam::UserChannel &user);
+
 }// namespace
 
 #endif // USERCHANNEL_H
