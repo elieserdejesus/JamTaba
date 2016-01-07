@@ -12,4 +12,4 @@ In Jamtaba we are using the external tool [Uncrustify](http://uncrustify.sourcef
 ***
 
 ### Testing
-At moment you are encouraged (bot not obligated) to write Unit Tests for your contribution. See the **Client/tests** folder for some Unit test examples.
+See the **Client/tests** folder for some test examples. These tests are using the QtTest framework. This is an easy to use test tool for Qt applications and no additional setup/installing is required. A very good resource to learn how write these tests is the Qt official [Test Tutorial](http://doc.qt.io/qt-5/qtest-tutorial.html)
