@@ -9,11 +9,11 @@
 
 using namespace Controller;
 
-class StandaloneMainWindow : public MainWindow
+class MainWindowStandalone : public MainWindow
 {
     Q_OBJECT
 public:
-    StandaloneMainWindow(StandaloneMainController *controller);
+    MainWindowStandalone(MainControllerStandalone *controller);
 
     Persistence::LocalInputTrackSettings getInputsSettings() const override;
 
@@ -23,6 +23,11 @@ public:
 
     void initialize() override;
 
+    MainControllerStandalone * getMainController() override
+    {
+        return controller;
+    }
+
 protected:
     void closeEvent(QCloseEvent *);
 
@@ -30,11 +35,11 @@ protected:
 
     void showPreferencesDialog(int initialTab) override;
 
-    LocalTrackGroupView *createLocalTrackGroupView(int channelGroupIndex) override;
+    LocalTrackGroupViewStandalone *createLocalTrackGroupView(int channelGroupIndex) override;
 
     void initializeLocalSubChannel(LocalTrackView *subChannelView, Persistence::Subchannel subChannel) override;
 
-    void restoreLocalSubchannelPluginsList(StandaloneLocalTrackView *subChannelView, Persistence::Subchannel subChannel);
+    void restoreLocalSubchannelPluginsList(LocalTrackViewStandalone *subChannelView, Persistence::Subchannel subChannel);
 
 protected slots: //TODO change to private slots?
     void handleServerConnectionError(QString msg);
@@ -55,10 +60,10 @@ private slots:
     void closePluginScanDialog();
 
 private:
-    StandaloneMainController *controller;
+    MainControllerStandalone *controller;
     QScopedPointer<PluginScanDialog> pluginScanDialog;
 
-    StandaloneLocalTrackGroupView *geTrackGroupViewByName(QString trackGroupName) const;
+    LocalTrackGroupViewStandalone *geTrackGroupViewByName(QString trackGroupName) const;
 
     bool midiDeviceIsValid(int deviceIndex) const;
 

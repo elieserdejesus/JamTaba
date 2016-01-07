@@ -84,7 +84,7 @@ public:
 
     Login::LoginService *getLoginService() const;
 
-    inline Controller::NinjamController *getNinjamController() const
+    virtual inline Controller::NinjamController *getNinjamController() const
     {
         return ninjamController.data();
     }

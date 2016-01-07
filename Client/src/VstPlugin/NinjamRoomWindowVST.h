@@ -16,6 +16,7 @@ private slots:
 
 private:
     void showMessageBox(QString title, QString msg);
+    MainControllerVST *controller;
 };
 
 #endif // NINJAMROOMWINDOWVST_H

@@ -55,8 +55,13 @@ public:
     void setGroupName(QString groupName);
     void updateGuiElements();
 
+    inline NinjamTrackView *addTrackView(long trackID) override
+    {
+        return dynamic_cast<NinjamTrackView *>(TrackGroupView::addTrackView(trackID));
+    }
+
 protected:
-    BaseTrackView* createTrackView(long trackID) override;
+    NinjamTrackView *createTrackView(long trackID) override;
 
 private:
     Controller::MainController *mainController;

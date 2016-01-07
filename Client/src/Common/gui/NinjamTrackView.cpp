@@ -169,12 +169,12 @@ NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent,
     ui->topPanel->layout()->addWidget(countryLabel);
 
     // create the first subchannel by default
-    NinjamTrackView* newTrackView = dynamic_cast<NinjamTrackView*>(addTrackView(trackID));
+    NinjamTrackView* newTrackView = addTrackView(trackID);
     newTrackView->setChannelName(channelName);
     newTrackView->setInitialValues(initialValues);
 }
 
-BaseTrackView *NinjamTrackGroupView::createTrackView(long trackID)
+NinjamTrackView *NinjamTrackGroupView::createTrackView(long trackID)
 {
     return new NinjamTrackView(mainController, trackID);
 }
