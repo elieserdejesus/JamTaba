@@ -5,14 +5,14 @@
 #include "MainControllerStandalone.h"
 
 class FxPanelItem;
-class StandaloneLocalTrackView;
+class LocalTrackViewStandalone;
 
 class FxPanel : public QWidget
 {
     Q_OBJECT
 
 public:
-    FxPanel(StandaloneLocalTrackView *parent, Controller::StandaloneMainController *mainController);
+    FxPanel(LocalTrackViewStandalone *parent, Controller::MainControllerStandalone *mainController);
 
     virtual ~FxPanel();
 
@@ -20,7 +20,7 @@ public:
 
     void removePlugins();
 
-    inline StandaloneLocalTrackView *getLocalTrackView() const
+    inline LocalTrackViewStandalone *getLocalTrackView() const
     {
         return localTrackView;
     }
@@ -35,8 +35,8 @@ protected:
 
 private:
     QList<FxPanelItem *> items;
-    Controller::StandaloneMainController *controller; //storing a 'casted' controller for convenience
-    StandaloneLocalTrackView *localTrackView;
+    Controller::MainControllerStandalone *controller; //storing a 'casted' controller for convenience
+    LocalTrackViewStandalone *localTrackView;
 };
 
 #endif // FXPANEL_H

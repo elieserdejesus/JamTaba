@@ -2,17 +2,18 @@
 #define STANDALONE_LOCAL_TRACKGROUP_VIEW_H
 
 #include "LocalTrackGroupView.h"
+#include "LocalTrackViewStandalone.h"
 
-class StandaloneMainWindow;
+class MainWindowStandalone;
 
-class StandaloneLocalTrackGroupView : public LocalTrackGroupView
+class LocalTrackGroupViewStandalone : public LocalTrackGroupView
 {
     Q_OBJECT
 
 public:
-    StandaloneLocalTrackGroupView(int index, StandaloneMainWindow *mainWindow);
+    LocalTrackGroupViewStandalone(int index, MainWindowStandalone *mainWindow);
 
-    BaseTrackView* addTrackView(long trackID) override;
+    LocalTrackViewStandalone* addTrackView(long trackID) override;
 
     void refreshInputSelectionName(int inputTrackIndex);
 
@@ -20,7 +21,7 @@ public:
 
 protected:
     void populateMenu(QMenu &menu) override;
-    BaseTrackView* createTrackView(long trackID) override;
+    LocalTrackViewStandalone *createTrackView(long trackID) override;
 
 private:
     void createSubChannelActions(QMenu &menu);

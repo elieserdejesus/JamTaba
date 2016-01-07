@@ -5,13 +5,13 @@
 #include "audio/core/AudioDriver.h"
 #include "MainControllerStandalone.h"
 
-class StandaloneLocalTrackView : public LocalTrackView
+class LocalTrackViewStandalone : public LocalTrackView
 {
     Q_OBJECT
 
 public:
 
-    StandaloneLocalTrackView(Controller::StandaloneMainController* mainController, int channelID);
+    LocalTrackViewStandalone(Controller::MainControllerStandalone* mainController, int channelID);
 
     void setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode) override;
     void setUnlightStatus(bool unlighted) override;
@@ -44,7 +44,7 @@ private slots:
 
 private:
 
-    Controller::StandaloneMainController* controller;//a 'casted' pointer just for convenience
+    Controller::MainControllerStandalone* controller;//a 'casted' pointer just for convenience
 
     QMenu *createMonoInputsMenu(QMenu *parentMenu);
     QMenu *createStereoInputsMenu(QMenu *parentMenu);
@@ -66,18 +66,6 @@ private:
     void setMidiPeakMeterVisibility(bool visible);
 
     QString getInputChannelNameOnly(int inputIndex);// return the input channel name without the number/index
-
-
-
-    inline Audio::AudioDriver *getAudioDriver() const
-    {
-        return dynamic_cast<Controller::StandaloneMainController *>(mainController)->getAudioDriver();
-    }
-
-    inline Midi::MidiDriver *getMidiDriver() const
-    {
-        return dynamic_cast<Controller::StandaloneMainController *>(mainController)->getMidiDriver();
-    }
 
     static const QString MIDI_ICON;
     static const QString MONO_ICON;

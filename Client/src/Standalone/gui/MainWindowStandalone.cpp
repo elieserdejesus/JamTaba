@@ -10,7 +10,7 @@
 using namespace Persistence;
 using namespace Controller;
 
-StandaloneMainWindow::StandaloneMainWindow(StandaloneMainController *mainController) :
+MainWindowStandalone::MainWindowStandalone(MainControllerStandalone *mainController) :
     MainWindow(mainController),
     controller(mainController),
     fullScreenViewMode(false),
@@ -23,7 +23,7 @@ StandaloneMainWindow::StandaloneMainWindow(StandaloneMainController *mainControl
     initializePluginFinder();
 }
 
-void StandaloneMainWindow::setupShortcuts(){
+void MainWindowStandalone::setupShortcuts(){
     ui.actionAudioPreferences->setShortcut(QKeySequence(Qt::Key_F5));
     ui.actionMidiPreferences->setShortcut(QKeySequence(Qt::Key_F6));
     ui.actionVstPreferences->setShortcut(QKeySequence(Qt::Key_F7));
@@ -33,7 +33,7 @@ void StandaloneMainWindow::setupShortcuts(){
     ui.actionFullscreenMode->setShortcut(QKeySequence(Qt::Key_F11));
 }
 
-void StandaloneMainWindow::setupSignals()
+void MainWindowStandalone::setupSignals()
 {
     connect(ui.actionFullscreenMode, SIGNAL(triggered(bool)), this, SLOT(toggleFullScreen()));
 
@@ -46,7 +46,7 @@ void StandaloneMainWindow::setupSignals()
     connect(pluginFinder, SIGNAL(pluginScanStarted(QString)), this, SLOT(setCurrentScanningPlugin(QString)));
 }
 
-void StandaloneMainWindow::initialize()
+void MainWindowStandalone::initialize()
 {
     MainWindow::initialize();
 
@@ -63,7 +63,7 @@ void StandaloneMainWindow::initialize()
     }
 }
 
-void StandaloneMainWindow::restoreWindowPosition()
+void MainWindowStandalone::restoreWindowPosition()
 {
     QPointF location = mainController->getSettings().getLastWindowLocation();
     QDesktopWidget *desktop = QApplication::desktop();
@@ -77,7 +77,7 @@ void StandaloneMainWindow::restoreWindowPosition()
 }
 
 // plugin finder events
-void StandaloneMainWindow::showPluginScanDialog()
+void MainWindowStandalone::showPluginScanDialog()
 {
     if (!pluginScanDialog) {
         pluginScanDialog.reset(new PluginScanDialog(this));
@@ -87,13 +87,13 @@ void StandaloneMainWindow::showPluginScanDialog()
     pluginScanDialog->show();
 }
 
-void StandaloneMainWindow::closePluginScanDialog()
+void MainWindowStandalone::closePluginScanDialog()
 {
     controller->cancelPluginFinder();
     pluginScanDialog.reset();// reset to null pointer
 }
 
-void StandaloneMainWindow::hidePluginScanDialog(bool finishedWithoutError)
+void MainWindowStandalone::hidePluginScanDialog(bool finishedWithoutError)
 {
     Q_UNUSED(finishedWithoutError);
     if (pluginScanDialog)
@@ -101,7 +101,7 @@ void StandaloneMainWindow::hidePluginScanDialog(bool finishedWithoutError)
     pluginScanDialog.reset();
 }
 
-void StandaloneMainWindow::addPluginToBlackList(QString pluginPath)
+void MainWindowStandalone::addPluginToBlackList(QString pluginPath)
 {
     QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(pluginPath);
     QWidget *parent = this;
@@ -112,7 +112,7 @@ void StandaloneMainWindow::addPluginToBlackList(QString pluginPath)
     controller->addBlackVstToSettings(pluginPath);
 }
 
-void StandaloneMainWindow::addFoundedPlugin(QString name, QString group, QString path)
+void MainWindowStandalone::addFoundedPlugin(QString name, QString group, QString path)
 {
     Q_UNUSED(path);
     Q_UNUSED(group);
@@ -120,18 +120,18 @@ void StandaloneMainWindow::addFoundedPlugin(QString name, QString group, QString
         pluginScanDialog->addFoundedPlugin(name);
 }
 
-void StandaloneMainWindow::setCurrentScanningPlugin(QString pluginPath)
+void MainWindowStandalone::setCurrentScanningPlugin(QString pluginPath)
 {
     if (pluginScanDialog)
         pluginScanDialog->setCurrentScaning(pluginPath);
 }
 
-bool StandaloneMainWindow::midiDeviceIsValid(int deviceIndex) const
+bool MainWindowStandalone::midiDeviceIsValid(int deviceIndex) const
 {
     return deviceIndex < controller->getMidiDriver()->getMaxInputDevices();
 }
 
-void StandaloneMainWindow::setFullScreenStatus(bool fullScreen)
+void MainWindowStandalone::setFullScreenStatus(bool fullScreen)
 {
     fullScreenViewMode = fullScreen;
     if (fullScreen)
@@ -142,13 +142,13 @@ void StandaloneMainWindow::setFullScreenStatus(bool fullScreen)
     ui.actionFullscreenMode->setChecked(fullScreen);
 }
 
-void StandaloneMainWindow::toggleFullScreen()
+void MainWindowStandalone::toggleFullScreen()
 {
     setFullScreenStatus(!fullScreenViewMode);// toggle
 }
 
 // sanitize the input selection for each loaded subchannel
-void StandaloneMainWindow::sanitizeSubchannelInputSelections(LocalTrackView *subChannelView,
+void MainWindowStandalone::sanitizeSubchannelInputSelections(LocalTrackView *subChannelView,
                                                              Subchannel subChannel)
 {
     int trackID = subChannelView->getInputIndex();
@@ -172,8 +172,8 @@ void StandaloneMainWindow::sanitizeSubchannelInputSelections(LocalTrackView *sub
     }
 }
 
-void StandaloneMainWindow::restoreLocalSubchannelPluginsList(
-    StandaloneLocalTrackView *subChannelView, Subchannel subChannel)
+void MainWindowStandalone::restoreLocalSubchannelPluginsList(
+    LocalTrackViewStandalone *subChannelView, Subchannel subChannel)
 {
     // create the plugins list
     foreach (Persistence::Plugin plugin, subChannel.getPlugins()) {
@@ -193,7 +193,7 @@ void StandaloneMainWindow::restoreLocalSubchannelPluginsList(
     }
 }
 
-void StandaloneMainWindow::initializeLocalSubChannel(LocalTrackView *subChannelView,
+void MainWindowStandalone::initializeLocalSubChannel(LocalTrackView *subChannelView,
                                                      Subchannel subChannel)
 {
     // load channels names, gain, pan, boost, mute
@@ -202,21 +202,21 @@ void StandaloneMainWindow::initializeLocalSubChannel(LocalTrackView *subChannelV
     // check if the loaded input selections (midi, audio mono, audio stereo) are stil valid and fallback if not
     sanitizeSubchannelInputSelections(subChannelView, subChannel);
 
-    restoreLocalSubchannelPluginsList(dynamic_cast<StandaloneLocalTrackView *>(subChannelView),
+    restoreLocalSubchannelPluginsList(dynamic_cast<LocalTrackViewStandalone *>(subChannelView),
                                       subChannel);
 }
 
-LocalTrackGroupView *StandaloneMainWindow::createLocalTrackGroupView(int channelGroupIndex)
+LocalTrackGroupViewStandalone *MainWindowStandalone::createLocalTrackGroupView(int channelGroupIndex)
 {
-    return new StandaloneLocalTrackGroupView(channelGroupIndex, this);
+    return new LocalTrackGroupViewStandalone(channelGroupIndex, this);
 }
 
-StandaloneLocalTrackGroupView *StandaloneMainWindow::geTrackGroupViewByName(QString trackGroupName)
+LocalTrackGroupViewStandalone *MainWindowStandalone::geTrackGroupViewByName(QString trackGroupName)
 const
 {
     foreach (LocalTrackGroupView *trackGroupView, localGroupChannels) {
         if (trackGroupView->getGroupName() == trackGroupName)
-            return dynamic_cast<StandaloneLocalTrackGroupView *>(trackGroupView);
+            return dynamic_cast<LocalTrackGroupViewStandalone *>(trackGroupView);
     }
     return nullptr;
 }
@@ -232,7 +232,7 @@ QList<Persistence::Plugin> buildPersistentPluginList(QList<const Audio::Plugin *
     return persistentPlugins;
 }
 
-LocalInputTrackSettings StandaloneMainWindow::getInputsSettings() const
+LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
 {
     // the base class is returning just the basic: gain, mute, pan , etc for each channel and subchannel
     LocalInputTrackSettings baseSettings = MainWindow::getInputsSettings();
@@ -240,7 +240,7 @@ LocalInputTrackSettings StandaloneMainWindow::getInputsSettings() const
     // recreate the settings including the plugins
     LocalInputTrackSettings settings;
     foreach (Channel channel, baseSettings.channels) {
-        StandaloneLocalTrackGroupView *trackGroupView = geTrackGroupViewByName(channel.name);
+        LocalTrackGroupViewStandalone *trackGroupView = geTrackGroupViewByName(channel.name);
         if (!trackGroupView)
             continue;
         Channel newChannel = channel;
@@ -249,8 +249,8 @@ LocalInputTrackSettings StandaloneMainWindow::getInputsSettings() const
         QList<LocalTrackView *> trackViews = trackGroupView->getTracks();
         foreach (Subchannel subchannel, channel.subChannels) {
             Subchannel newSubChannel = subchannel;
-            StandaloneLocalTrackView *trackView
-                = dynamic_cast<StandaloneLocalTrackView *>(trackViews.at(subChannelID));
+            LocalTrackViewStandalone *trackView
+                = dynamic_cast<LocalTrackViewStandalone *>(trackViews.at(subChannelID));
             if (trackView)
                 newSubChannel.setPlugins(buildPersistentPluginList(trackView->getInsertedPlugins()));
 
@@ -264,7 +264,7 @@ LocalInputTrackSettings StandaloneMainWindow::getInputsSettings() const
     return settings;
 }
 
-NinjamRoomWindow *StandaloneMainWindow::createNinjamWindow(Login::RoomInfo roomInfo,
+NinjamRoomWindow *MainWindowStandalone::createNinjamWindow(Login::RoomInfo roomInfo,
                                                            MainController *mainController)
 {
     return new NinjamRoomWindow(this, roomInfo, mainController);
@@ -272,7 +272,7 @@ NinjamRoomWindow *StandaloneMainWindow::createNinjamWindow(Login::RoomInfo roomI
 
 // ++++++++++++++++++++++++++++
 
-void StandaloneMainWindow::closeEvent(QCloseEvent *e)
+void MainWindowStandalone::closeEvent(QCloseEvent *e)
 {
     MainWindow::closeEvent(e);
     hide();// hide before stop main controller and disconnect from login server
@@ -282,7 +282,7 @@ void StandaloneMainWindow::closeEvent(QCloseEvent *e)
 }
 
 //+++++++++++++++++++=+
-void StandaloneMainWindow::showPreferencesDialog(int initialTab)
+void MainWindowStandalone::showPreferencesDialog(int initialTab)
 {
     stopCurrentRoomStream();
 
@@ -312,7 +312,7 @@ void StandaloneMainWindow::showPreferencesDialog(int initialTab)
 
 // ++++++++++++++++++++++
 
-void StandaloneMainWindow::initializePluginFinder()
+void MainWindowStandalone::initializePluginFinder()
 {
     const Persistence::Settings settings = controller->getSettings();
 
@@ -327,13 +327,13 @@ void StandaloneMainWindow::initializePluginFinder()
     }
 }
 
-void StandaloneMainWindow::handleServerConnectionError(QString msg)
+void MainWindowStandalone::handleServerConnectionError(QString msg)
 {
     MainWindow::handleServerConnectionError(msg);
-    (dynamic_cast<StandaloneMainController *>(mainController))->quit();
+    (dynamic_cast<MainControllerStandalone *>(mainController))->quit();
 }
 
-void StandaloneMainWindow::setGlobalPreferences(QList<bool> midiInputsStatus, int audioDevice,
+void MainWindowStandalone::setGlobalPreferences(QList<bool> midiInputsStatus, int audioDevice,
                                                 int firstIn, int lastIn, int firstOut, int lastOut,
                                                 int sampleRate, int bufferSize)
 {
@@ -355,7 +355,7 @@ void StandaloneMainWindow::setGlobalPreferences(QList<bool> midiInputsStatus, in
     controller->updateInputTracksRange();
 
     foreach (LocalTrackGroupView *channel, localGroupChannels)
-        dynamic_cast<StandaloneLocalTrackGroupView *>(channel)->refreshInputSelectionNames();
+        dynamic_cast<LocalTrackGroupViewStandalone *>(channel)->refreshInputSelectionNames();
 
     midiDriver->start();
     try{
@@ -370,14 +370,14 @@ void StandaloneMainWindow::setGlobalPreferences(QList<bool> midiInputsStatus, in
 }
 
 // input selection changed by user or by system
-void StandaloneMainWindow::refreshTrackInputSelection(int inputTrackIndex)
+void MainWindowStandalone::refreshTrackInputSelection(int inputTrackIndex)
 {
     foreach (LocalTrackGroupView *channel, localGroupChannels)
-        dynamic_cast<StandaloneLocalTrackGroupView *>(channel)->refreshInputSelectionName(
+        dynamic_cast<LocalTrackGroupViewStandalone *>(channel)->refreshInputSelectionName(
             inputTrackIndex);
 }
 
-void StandaloneMainWindow::addChannelsGroup(QString groupName)
+void MainWindowStandalone::addChannelsGroup(QString groupName)
 {
     MainWindow::addChannelsGroup(groupName);
     controller->updateInputTracksRange();

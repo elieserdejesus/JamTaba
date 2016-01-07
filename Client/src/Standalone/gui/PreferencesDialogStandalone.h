@@ -11,7 +11,7 @@ class StandalonePreferencesDialog : public PreferencesDialog
     Q_OBJECT
 
 public:
-    StandalonePreferencesDialog(Controller::StandaloneMainController *mainController, MainWindow *mainWindow,
+    StandalonePreferencesDialog(Controller::MainControllerStandalone *mainController, MainWindow *mainWindow,
                                 int initialTab);
 
 public slots:
@@ -50,7 +50,7 @@ protected:
 
 private:
 
-    Controller::StandaloneMainController* controller;
+    Controller::MainControllerStandalone* controller;
 
     void selectAudioTab();
     void selectMidiTab();

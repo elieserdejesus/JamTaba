@@ -6,9 +6,10 @@
 // +++++++++++++++++++++++++++++++++++++++++++++
 NinjamRoomWindowVST::NinjamRoomWindowVST(MainWindow *parent, Login::RoomInfo roomInfo,
                                          MainControllerVST *mainController) :
-    NinjamRoomWindow(parent, roomInfo, mainController)
+    NinjamRoomWindow(parent, roomInfo, mainController),
+    controller(mainController)
 {
-    QString hostName = dynamic_cast<MainControllerVST *>(mainController)->getHostName();
+    QString hostName = mainController->getHostName();
     if (ninjamPanel) {
         ninjamPanel->createHostSyncButton("Sync with " + hostName);
         QObject::connect(ninjamPanel, SIGNAL(hostSyncButtonClicked()), this,
@@ -18,13 +19,12 @@ NinjamRoomWindowVST::NinjamRoomWindowVST(MainWindow *parent, Login::RoomInfo roo
 
 void NinjamRoomWindowVST::ninjamHostSyncButtonClicked()
 {
-    MainControllerVST *controller = dynamic_cast<MainControllerVST *>(mainController);
     int ninjamBpm = controller->getNinjamController()->getCurrentBpm();
     bool canSync = controller->getHostBpm() == ninjamBpm;
-    QString hostName = dynamic_cast<MainControllerVST *>(mainController)->getHostName();
+    QString hostName = controller->getHostName();
     if (canSync) {
         // stop ninjam streams and wait until user press play/start in host
-        NinjamControllerVST* ninjamController = dynamic_cast<NinjamControllerVST *>(controller->getNinjamController());
+        NinjamControllerVST* ninjamController = controller->getNinjamController();
         Q_ASSERT(ninjamController);
         ninjamController->waitForHostSync();
         if (ninjamPanel) {

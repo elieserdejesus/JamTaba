@@ -3,13 +3,13 @@
 #include "FxPanel.h"
 #include "FxPanelItem.h"
 
-const QString StandaloneLocalTrackView::MIDI_ICON = ":/images/input_midi.png";
-const QString StandaloneLocalTrackView::MONO_ICON = ":/images/input_mono.png";
-const QString StandaloneLocalTrackView::STEREO_ICON = ":/images/input_stereo.png";
-const QString StandaloneLocalTrackView::NO_INPUT_ICON = ":/images/input_no.png";
+const QString LocalTrackViewStandalone::MIDI_ICON = ":/images/input_midi.png";
+const QString LocalTrackViewStandalone::MONO_ICON = ":/images/input_mono.png";
+const QString LocalTrackViewStandalone::STEREO_ICON = ":/images/input_stereo.png";
+const QString LocalTrackViewStandalone::NO_INPUT_ICON = ":/images/input_no.png";
 
-StandaloneLocalTrackView::StandaloneLocalTrackView(
-    Controller::StandaloneMainController *mainController, int channelIndex) :
+LocalTrackViewStandalone::LocalTrackViewStandalone(
+    Controller::MainControllerStandalone *mainController, int channelIndex) :
     LocalTrackView(mainController, channelIndex),
     controller(mainController)
 {
@@ -37,7 +37,7 @@ StandaloneLocalTrackView::StandaloneLocalTrackView(
     midiPeakMeter->setAccessibleDescription("This is the midi activity meter");
 }
 
-void StandaloneLocalTrackView::updateGuiElements()
+void LocalTrackViewStandalone::updateGuiElements()
 {
     LocalTrackView::updateGuiElements();
 
@@ -50,13 +50,13 @@ void StandaloneLocalTrackView::updateGuiElements()
         midiPeakMeter->update();
 }
 
-void StandaloneLocalTrackView::reset()
+void LocalTrackViewStandalone::reset()
 {
     if (fxPanel)
         fxPanel->removePlugins();
 }
 
-QLabel *StandaloneLocalTrackView::createInputTypeIconLabel(QWidget *parent)
+QLabel *LocalTrackViewStandalone::createInputTypeIconLabel(QWidget *parent)
 {
     QLabel *label = new QLabel(parent);
     label->setObjectName("inputSelectionIcon");
@@ -65,7 +65,7 @@ QLabel *StandaloneLocalTrackView::createInputTypeIconLabel(QWidget *parent)
     return label;
 }
 
-QPushButton *StandaloneLocalTrackView::createInputSelectionButton(QWidget *parent)
+QPushButton *LocalTrackViewStandalone::createInputSelectionButton(QWidget *parent)
 {
     QPushButton *fakeComboButton = new QPushButton(parent);
     fakeComboButton->setObjectName("inputSelectionButton");
@@ -79,7 +79,7 @@ QPushButton *StandaloneLocalTrackView::createInputSelectionButton(QWidget *paren
     return fakeComboButton;
 }
 
-QWidget *StandaloneLocalTrackView::createInputPanel()
+QWidget *LocalTrackViewStandalone::createInputPanel()
 {
     QWidget *inputPanel = new QWidget(this);
     inputPanel->setObjectName("inputPanel");
@@ -93,7 +93,7 @@ QWidget *StandaloneLocalTrackView::createInputPanel()
     return inputPanel;
 }
 
-void StandaloneLocalTrackView::addPlugin(Audio::Plugin *plugin, bool bypassed)
+void LocalTrackViewStandalone::addPlugin(Audio::Plugin *plugin, bool bypassed)
 {
     if (fxPanel) {
         plugin->setBypass(bypassed);
@@ -103,7 +103,7 @@ void StandaloneLocalTrackView::addPlugin(Audio::Plugin *plugin, bool bypassed)
     }
 }
 
-QList<const Audio::Plugin *> StandaloneLocalTrackView::getInsertedPlugins() const
+QList<const Audio::Plugin *> LocalTrackViewStandalone::getInsertedPlugins() const
 {
     QList<const Audio::Plugin *> plugins;
     if (fxPanel) {// can be nullptr in vst plugin
@@ -116,12 +116,12 @@ QList<const Audio::Plugin *> StandaloneLocalTrackView::getInsertedPlugins() cons
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-FxPanel *StandaloneLocalTrackView::createFxPanel()
+FxPanel *LocalTrackViewStandalone::createFxPanel()
 {
     return new FxPanel(this, controller);
 }
 
-void StandaloneLocalTrackView::setUnlightStatus(bool unlighted)
+void LocalTrackViewStandalone::setUnlightStatus(bool unlighted)
 {
     LocalTrackView::setUnlightStatus(unlighted);
 
@@ -142,7 +142,7 @@ void StandaloneLocalTrackView::setUnlightStatus(bool unlighted)
     }
 }
 
-void StandaloneLocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode)
+void LocalTrackViewStandalone::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode)
 {
     LocalTrackView::setPeakMetersOnlyMode(peakMetersOnly, runningInMiniMode);
 
@@ -159,11 +159,11 @@ void StandaloneLocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool r
         inputTypeIconLabel->setVisible(!peakMetersOnly);
 }
 
-QMenu *StandaloneLocalTrackView::createMonoInputsMenu(QMenu *parent)
+QMenu *LocalTrackViewStandalone::createMonoInputsMenu(QMenu *parent)
 {
     QMenu *monoInputsMenu = new QMenu("Mono", parent);
     monoInputsMenu->setIcon(QIcon(MONO_ICON));
-    Audio::AudioDriver *audioDriver = getAudioDriver();
+    Audio::AudioDriver *audioDriver = controller->getAudioDriver();
     Audio::ChannelRange globalInputsRange = audioDriver->getSelectedInputs();
     int globalInputs = globalInputsRange.getChannels();
     int firstGlobalInputIndex = globalInputsRange.getFirstChannel();
@@ -184,7 +184,7 @@ QMenu *StandaloneLocalTrackView::createMonoInputsMenu(QMenu *parent)
     return monoInputsMenu;
 }
 
-void StandaloneLocalTrackView::showInputSelectionMenu()
+void LocalTrackViewStandalone::showInputSelectionMenu()
 {
     QMenu menu(this);
     menu.addMenu(createMonoInputsMenu(&menu));
@@ -197,11 +197,11 @@ void StandaloneLocalTrackView::showInputSelectionMenu()
     menu.exec();
 }
 
-QMenu *StandaloneLocalTrackView::createStereoInputsMenu(QMenu *parent)
+QMenu *LocalTrackViewStandalone::createStereoInputsMenu(QMenu *parent)
 {
     QMenu *stereoInputsMenu = new QMenu("Stereo", parent);
     stereoInputsMenu->setIcon(QIcon(STEREO_ICON));
-    Audio::AudioDriver *audioDriver = getAudioDriver();
+    Audio::AudioDriver *audioDriver = controller->getAudioDriver();
     Audio::ChannelRange globalInputRange = audioDriver->getSelectedInputs();
     int globalInputs = globalInputRange.getChannels();
     QString deviceName(audioDriver->getAudioDeviceName(audioDriver->getAudioDeviceIndex()));
@@ -225,9 +225,9 @@ QMenu *StandaloneLocalTrackView::createStereoInputsMenu(QMenu *parent)
     return stereoInputsMenu;
 }
 
-QString StandaloneLocalTrackView::getInputChannelNameOnly(int inputIndex)
+QString LocalTrackViewStandalone::getInputChannelNameOnly(int inputIndex)
 {
-    Audio::AudioDriver *audioDriver = getAudioDriver();
+    Audio::AudioDriver *audioDriver = controller->getAudioDriver();
     QString fullName(audioDriver->getInputChannelName(inputIndex));
     if (fullName.isEmpty())// mac return empy channel names if user don't rename the channels
         fullName = audioDriver->getAudioDeviceName();
@@ -237,11 +237,11 @@ QString StandaloneLocalTrackView::getInputChannelNameOnly(int inputIndex)
     return fullName;
 }
 
-QMenu *StandaloneLocalTrackView::createMidiInputsMenu(QMenu *parent)
+QMenu *LocalTrackViewStandalone::createMidiInputsMenu(QMenu *parent)
 {
     QMenu *midiInputsMenu = new QMenu("MIDI", parent);
     midiInputsMenu->setIcon(QIcon(MIDI_ICON));
-    Midi::MidiDriver *midiDriver = getMidiDriver();
+    Midi::MidiDriver *midiDriver = controller->getMidiDriver();
     int totalMidiDevices = midiDriver->getMaxInputDevices();
     int globallyEnabledMidiDevices = 0;
     for (int d = 0; d < totalMidiDevices; ++d) {
@@ -269,7 +269,7 @@ QMenu *StandaloneLocalTrackView::createMidiInputsMenu(QMenu *parent)
                     && getInputNode()->getMidiDeviceIndex() == d);
             }
 
-            QString deviceName = getMidiDriver()->getInputDeviceName(d);
+            QString deviceName = controller->getMidiDriver()->getInputDeviceName(d);
             QAction *action = midiInputsMenu->addAction(deviceName);
             action->setMenu(midiChannelsMenu);
             action->setData(d);// using midi device index as action data
@@ -287,7 +287,7 @@ QMenu *StandaloneLocalTrackView::createMidiInputsMenu(QMenu *parent)
     return midiInputsMenu;
 }
 
-void StandaloneLocalTrackView::setToNoInput()
+void LocalTrackViewStandalone::setToNoInput()
 {
     if (inputNode) {
         inputNode->setToNoInput();
@@ -297,7 +297,7 @@ void StandaloneLocalTrackView::setToNoInput()
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-void StandaloneLocalTrackView::refreshInputSelectionName()
+void LocalTrackViewStandalone::refreshInputSelectionName()
 {
     Audio::LocalInputAudioNode *inputTrack = controller->getInputTrack(getTrackID());
     QString channelName;
@@ -311,7 +311,7 @@ void StandaloneLocalTrackView::refreshInputSelectionName()
             channelName = indexes + getInputChannelNameOnly(firstInputIndex);
             iconFile = STEREO_ICON;
         } else if (inputTrack->isMono()) {
-            Audio::AudioDriver *audioDriver = getAudioDriver();
+            Audio::AudioDriver *audioDriver = controller->getAudioDriver();
             int index = inputRange.getFirstChannel();
             QString name = QString(audioDriver->getInputChannelName(index));
             channelName = QString(QString::number(index+1) + " - ");
@@ -327,7 +327,7 @@ void StandaloneLocalTrackView::refreshInputSelectionName()
         }
     } else {
         if (inputTrack->isMidi()) {
-            Midi::MidiDriver *midiDriver = getMidiDriver();
+            Midi::MidiDriver *midiDriver = controller->getMidiDriver();
             int selectedDeviceIndex = inputTrack->getMidiDeviceIndex();
             if (selectedDeviceIndex < midiDriver->getMaxInputDevices()
                 && midiDriver->deviceIsGloballyEnabled(selectedDeviceIndex)) {
@@ -363,7 +363,7 @@ void StandaloneLocalTrackView::refreshInputSelectionName()
     update();
 }
 
-void StandaloneLocalTrackView::setMidiPeakMeterVisibility(bool visible)
+void LocalTrackViewStandalone::setMidiPeakMeterVisibility(bool visible)
 {
     if (visible) {
         // midi activity meter is inserted between the 2 audio meters
@@ -374,21 +374,21 @@ void StandaloneLocalTrackView::setMidiPeakMeterVisibility(bool visible)
     update();
 }
 
-void StandaloneLocalTrackView::setToMono(QAction *action)
+void LocalTrackViewStandalone::setToMono(QAction *action)
 {
     int selectedInputIndexInAudioDevice = action->data().toInt();
     controller->setInputTrackToMono(getTrackID(), selectedInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
 }
 
-void StandaloneLocalTrackView::setToStereo(QAction *action)
+void LocalTrackViewStandalone::setToStereo(QAction *action)
 {
     int firstInputIndexInAudioDevice = action->data().toInt();
     controller->setInputTrackToStereo(getTrackID(), firstInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
 }
 
-void StandaloneLocalTrackView::setToMidi(QAction *action)
+void LocalTrackViewStandalone::setToMidi(QAction *action)
 {
     QString indexes = action->data().toString();
     if (!indexes.contains(":"))
