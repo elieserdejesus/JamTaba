@@ -5,7 +5,7 @@
 using namespace Controller;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-FxPanel::FxPanel(StandaloneLocalTrackView *parent, StandaloneMainController *mainController) :
+FxPanel::FxPanel(LocalTrackViewStandalone *parent, MainControllerStandalone *mainController) :
     QWidget(parent),
     controller(mainController),
     localTrackView(parent)

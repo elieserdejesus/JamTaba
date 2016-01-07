@@ -56,7 +56,7 @@ public:
         return fullViewMode;
     }
 
-    inline Controller::MainController *getMainController()
+    virtual inline Controller::MainController *getMainController()
     {
         return mainController;
     }

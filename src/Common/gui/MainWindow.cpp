@@ -306,8 +306,7 @@ void MainWindow::initializeLocalInputChannels(LocalInputTrackSettings inputsSett
                                                            createFirstSubChannel);
         foreach (Persistence::Subchannel subChannel, channel.subChannels) {
             qCInfo(jtGUI) << "\t\tCreating sub-channel ";
-            LocalTrackView *subChannelView
-                = dynamic_cast<LocalTrackView *>(channelView->addTrackView(channelIndex));
+            LocalTrackView *subChannelView = channelView->addTrackView(channelIndex);
             initializeLocalSubChannel(subChannelView, subChannel);
         }
         channelIndex++;

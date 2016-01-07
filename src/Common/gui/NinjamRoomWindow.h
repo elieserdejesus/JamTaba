@@ -12,6 +12,7 @@
 
 class MainWindow;
 class NinjamTrackGroupView;
+class NinjamTrackView;
 
 namespace Ui {
 class NinjamRoomWindow;
@@ -66,6 +67,8 @@ private:
 
     void setupSignals(Controller::NinjamController *ninjamController);
     void disconnectFromNinjamControllerSignals(Controller::NinjamController *ninjamController);
+
+    NinjamTrackView *getTrackViewByID(long trackID);
 
 private slots:
 

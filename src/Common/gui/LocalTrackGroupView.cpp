@@ -182,7 +182,7 @@ void LocalTrackGroupView::addSubChannel()
 
 // +++++++++++++++++++++++++++++++++++++++++++
 
-BaseTrackView *LocalTrackGroupView::addTrackView(long trackID)
+LocalTrackView *LocalTrackGroupView::addTrackView(long trackID)
 {
     if (trackViews.size() >= MAX_SUB_CHANNELS)
         return nullptr;
@@ -191,10 +191,10 @@ BaseTrackView *LocalTrackGroupView::addTrackView(long trackID)
 
     emit trackAdded();
 
-    return newTrack;
+    return dynamic_cast<LocalTrackView *>(newTrack);
 }
 
-BaseTrackView *LocalTrackGroupView::createTrackView(long trackID)
+LocalTrackView *LocalTrackGroupView::createTrackView(long trackID)
 {
     return new LocalTrackView(mainFrame->getMainController(), trackID);
 }

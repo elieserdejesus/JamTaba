@@ -2,8 +2,8 @@
 #define LOCALTRACKGROUPVIEW_H
 
 #include "TrackGroupView.h"
+#include "LocalTrackView.h"
 
-class LocalTrackView;
 class MainWindow;
 class QPushButton;
 
@@ -18,7 +18,7 @@ public:
 
     QList<LocalTrackView *> getTracks() const;
 
-    BaseTrackView *addTrackView(long trackID) override;
+    LocalTrackView *addTrackView(long trackID) override;
 
     inline int getChannelIndex() const
     {
@@ -48,7 +48,7 @@ public:
 
 protected:
 
-    BaseTrackView *createTrackView(long trackID) override;
+    LocalTrackView *createTrackView(long trackID) override;
 
     virtual void populateMenu(QMenu &menu);
 

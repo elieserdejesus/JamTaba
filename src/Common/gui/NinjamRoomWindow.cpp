@@ -253,8 +253,7 @@ void NinjamRoomWindow::updatePeaks()
 
 void NinjamRoomWindow::hideIntervalDownloadingProgressBar(long trackID)
 {
-    NinjamTrackView *trackView
-        = dynamic_cast<NinjamTrackView *>(NinjamTrackView::getTrackViewByID(trackID));
+    NinjamTrackView *trackView = getTrackViewByID(trackID);
     if (trackView)
         trackView->finishCurrentDownload();
 }
@@ -262,8 +261,7 @@ void NinjamRoomWindow::hideIntervalDownloadingProgressBar(long trackID)
 void NinjamRoomWindow::updateIntervalDownloadingProgressBar(long trackID)
 {
     NinjamTrackNode *node = dynamic_cast<NinjamTrackNode *>(mainController->getTrackNode(trackID));
-    NinjamTrackView *trackView
-        = dynamic_cast<NinjamTrackView *>(NinjamTrackView::getTrackViewByID(trackID));
+    NinjamTrackView *trackView = getTrackViewByID(trackID);
     if (node && trackView) {
         bool waitingToPlayTheFirstInterval = !node->isPlaying();
         if (waitingToPlayTheFirstInterval)
@@ -275,8 +273,7 @@ void NinjamRoomWindow::updateIntervalDownloadingProgressBar(long trackID)
 void NinjamRoomWindow::setChannelXmitStatus(long channelID, bool transmiting)
 {
     qCDebug(jtNinjamGUI) << "channel xmit changed:" << channelID << " state:" << transmiting;
-    NinjamTrackView *trackView
-        = dynamic_cast<NinjamTrackView *>(NinjamTrackView::getTrackViewByID(channelID));
+    NinjamTrackView *trackView = getTrackViewByID(channelID);
     if (trackView)
         trackView->setUnlightStatus(!transmiting);
 }
@@ -301,11 +298,15 @@ void NinjamRoomWindow::removeChannel(Ninjam::User user, Ninjam::UserChannel chan
     }
 }
 
+NinjamTrackView *NinjamRoomWindow::getTrackViewByID(long trackID)
+{
+    return dynamic_cast<NinjamTrackView *>(NinjamTrackView::getTrackViewByID(trackID));
+}
+
 void NinjamRoomWindow::changeChannelName(Ninjam::User, Ninjam::UserChannel channel, long channelID)
 {
     qCDebug(jtNinjamGUI) << "channel name changed:" << channel.getName();
-    NinjamTrackView *trackView
-        = dynamic_cast<NinjamTrackView *>(NinjamTrackView::getTrackViewByID(channelID));
+    NinjamTrackView *trackView = getTrackViewByID(channelID);
     if (trackView)
         trackView->setChannelName(channel.getName());
 }

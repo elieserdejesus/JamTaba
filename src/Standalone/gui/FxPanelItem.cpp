@@ -20,7 +20,7 @@
 
 const QString FxPanelItem::NEW_EFFECT_STRING = "new effect...";
 
-FxPanelItem::FxPanelItem(StandaloneLocalTrackView *parent, Controller::StandaloneMainController *mainController) :
+FxPanelItem::FxPanelItem(LocalTrackViewStandalone *parent, Controller::MainControllerStandalone *mainController) :
     QWidget(parent),
     plugin(nullptr),
     bypassButton(new QPushButton(this)),

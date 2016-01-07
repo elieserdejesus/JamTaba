@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-class StandaloneLocalTrackView;
+class LocalTrackViewStandalone;
 
 class QMenu;
 class QPushButton;
@@ -14,7 +14,7 @@ class Plugin;
 }
 
 namespace Controller {
-class StandaloneMainController;
+class MainControllerStandalone;
 }
 
 class FxPanelItem : public QWidget
@@ -22,7 +22,7 @@ class FxPanelItem : public QWidget
     Q_OBJECT
 
 public:
-    FxPanelItem(StandaloneLocalTrackView *parent, Controller::StandaloneMainController *mainController);
+    FxPanelItem(LocalTrackViewStandalone *parent, Controller::MainControllerStandalone *mainController);
     virtual ~FxPanelItem();
     void setPlugin(Audio::Plugin *plugin);
     void unsetPlugin();
@@ -56,13 +56,13 @@ private:
     Audio::Plugin *plugin;
     QPushButton *bypassButton;
     QLabel *label;
-    Controller::StandaloneMainController *mainController;// used to ask about plugins
+    Controller::MainControllerStandalone *mainController;// used to ask about plugins
 
     void showPluginGui(Audio::Plugin *plugin);
 
     static const QString NEW_EFFECT_STRING;
 
-    StandaloneLocalTrackView *localTrackView;
+    LocalTrackViewStandalone *localTrackView;
 
     void updateStyleSheet();
 };
