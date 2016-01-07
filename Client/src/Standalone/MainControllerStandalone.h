@@ -10,7 +10,7 @@
 
 class QCoreApplication;
 
-class StandaloneMainWindow;
+class MainWindowStandalone;
 
 namespace Midi {
 class MidiDriver;
@@ -24,13 +24,13 @@ class PluginFinder;
 // ++++++++++++++++++++++++++++++++++++++++++
 
 namespace Controller {
-class StandaloneMainController : public MainController
+class MainControllerStandalone : public MainController
 {
     Q_OBJECT
 
 public:
-    StandaloneMainController(Persistence::Settings settings, QApplication *application);
-    ~StandaloneMainController();
+    MainControllerStandalone(Persistence::Settings settings, QApplication *application);
+    ~MainControllerStandalone();
 
     void initializePluginsList(QStringList paths);
     void scanPlugins(bool scanOnlyNewPlugins = false);
@@ -140,7 +140,7 @@ private:
 
     QList<Audio::PluginDescriptor> pluginsDescriptors;
 
-    StandaloneMainWindow *window;
+    MainWindowStandalone *window;
 
     bool isVstPluginFile(QString file) const;
 

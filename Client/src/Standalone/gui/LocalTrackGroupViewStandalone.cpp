@@ -2,19 +2,19 @@
 #include "LocalTrackViewStandalone.h"
 #include "MainWindowStandalone.h"
 
-StandaloneLocalTrackGroupView::StandaloneLocalTrackGroupView(int index,
-                                                             StandaloneMainWindow *mainWindow) :
+LocalTrackGroupViewStandalone::LocalTrackGroupViewStandalone(int index,
+                                                             MainWindowStandalone *mainWindow) :
     LocalTrackGroupView(index, mainWindow)
 {
 }
 
-void StandaloneLocalTrackGroupView::populateMenu(QMenu &menu)
+void LocalTrackGroupViewStandalone::populateMenu(QMenu &menu)
 {
     LocalTrackGroupView::populateMenu(menu);
     createSubChannelActions(menu);
 }
 
-void StandaloneLocalTrackGroupView::createSubChannelActions(QMenu &menu)
+void LocalTrackGroupViewStandalone::createSubChannelActions(QMenu &menu)
 {
     QAction *addSubchannelAction = menu.addAction(QIcon(":/images/more.png"), "Add subchannel");
     QObject::connect(addSubchannelAction, SIGNAL(triggered()), this, SLOT(addSubChannel()));
@@ -32,15 +32,15 @@ void StandaloneLocalTrackGroupView::createSubChannelActions(QMenu &menu)
 }
 
 //overrided factory method
-BaseTrackView* StandaloneLocalTrackGroupView::createTrackView(long trackID){
-    StandaloneMainController* controller = dynamic_cast<StandaloneMainController*>(mainFrame->getMainController());
-    return new StandaloneLocalTrackView( controller, trackID );
+LocalTrackViewStandalone* LocalTrackGroupViewStandalone::createTrackView(long trackID){
+    MainControllerStandalone* controller = dynamic_cast<MainWindowStandalone *>(mainFrame)->getMainController();
+    return new LocalTrackViewStandalone( controller, trackID );
 }
 
-BaseTrackView *StandaloneLocalTrackGroupView::addTrackView(long trackID)
+LocalTrackViewStandalone *LocalTrackGroupViewStandalone::addTrackView(long trackID)
 {
-    StandaloneLocalTrackView *newTrackView
-        = dynamic_cast<StandaloneLocalTrackView *>(LocalTrackGroupView::addTrackView(trackID));
+    LocalTrackViewStandalone *newTrackView
+        = dynamic_cast<LocalTrackViewStandalone *>(LocalTrackGroupView::addTrackView(trackID));
     if (newTrackView) {
         if (getTracksCount() > 1)
             newTrackView->setToNoInput();
@@ -50,18 +50,18 @@ BaseTrackView *StandaloneLocalTrackGroupView::addTrackView(long trackID)
     return newTrackView;
 }
 
-void StandaloneLocalTrackGroupView::refreshInputSelectionName(int inputTrackIndex)
+void LocalTrackGroupViewStandalone::refreshInputSelectionName(int inputTrackIndex)
 {
     QList<LocalTrackView *> tracks = getTracks();
     foreach (LocalTrackView *trackView, tracks) {
         if (trackView->getInputIndex() == inputTrackIndex)
-            dynamic_cast<StandaloneLocalTrackView *>(trackView)->refreshInputSelectionName();
+            dynamic_cast<LocalTrackViewStandalone *>(trackView)->refreshInputSelectionName();
     }
 }
 
-void StandaloneLocalTrackGroupView::refreshInputSelectionNames()
+void LocalTrackGroupViewStandalone::refreshInputSelectionNames()
 {
     QList<LocalTrackView *> tracks = getTracks();
     foreach (LocalTrackView *trackView, tracks)
-        dynamic_cast<StandaloneLocalTrackView *>(trackView)->refreshInputSelectionName();
+        dynamic_cast<LocalTrackViewStandalone *>(trackView)->refreshInputSelectionName();
 }

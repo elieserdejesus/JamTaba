@@ -4,7 +4,7 @@
 #include "VstPreferencesDialog.h"
 #include "LocalTrackView.h"
 
-MainWindowVST::MainWindowVST(Controller::MainController *mainController) :
+MainWindowVST::MainWindowVST(MainControllerVST *mainController) :
     MainWindow(mainController),
     firstChannelIsInitialized(false)
 {
@@ -15,10 +15,10 @@ MainWindowVST::MainWindowVST(Controller::MainController *mainController) :
     this->ui.actionFullscreenMode->setVisible(false);
 }
 
-NinjamRoomWindow *MainWindowVST::createNinjamWindow(Login::RoomInfo roomInfo,
+NinjamRoomWindowVST *MainWindowVST::createNinjamWindow(Login::RoomInfo roomInfo,
                                                     Controller::MainController *mainController)
 {
-    return new NinjamRoomWindowVST(this, roomInfo, dynamic_cast<MainControllerVST*>(mainController));
+    return new NinjamRoomWindowVST(this, roomInfo, dynamic_cast<MainControllerVST *>(mainController));
 }
 
 void MainWindowVST::removeAllInputLocalTracks(){
@@ -47,8 +47,9 @@ void MainWindowVST::initializeLocalSubChannel(LocalTrackView *subChannelView, Pe
 void MainWindowVST::setFullViewStatus(bool fullViewActivated)
 {
     MainWindow::setFullViewStatus(fullViewActivated);
-    mainController->storeWindowSettings(isMaximized(), fullViewActivated, QPointF());
-    dynamic_cast<MainControllerVST *>(mainController)->resizePluginEditor(width(), height());
+    MainControllerVST *controller = getMainController();
+    controller->storeWindowSettings(isMaximized(), fullViewActivated, QPointF());
+    controller->resizePluginEditor(width(), height());
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

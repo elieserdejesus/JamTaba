@@ -15,7 +15,7 @@ using namespace Controller;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 
-StandalonePreferencesDialog::StandalonePreferencesDialog(Controller::StandaloneMainController *mainController,
+StandalonePreferencesDialog::StandalonePreferencesDialog(Controller::MainControllerStandalone *mainController,
                                                          MainWindow *mainWindow, int initialTab) :
     PreferencesDialog(mainController, mainWindow),
     controller(mainController)
@@ -236,11 +236,10 @@ void StandalonePreferencesDialog::clearWidgetLayout(QWidget *widget)
 void StandalonePreferencesDialog::populateMidiTab()
 {
     clearWidgetLayout(ui->midiContentPanel);
-
-    Midi::MidiDriver *midiDriver = dynamic_cast<StandaloneMainController*>(mainController)->getMidiDriver();
+    Midi::MidiDriver *midiDriver = controller->getMidiDriver();
     int maxInputDevices = midiDriver->getMaxInputDevices();
     if (maxInputDevices > 0) {
-        QList<bool> midiInputsStatus = mainController->getSettings().getMidiInputDevicesStatus();
+        QList<bool> midiInputsStatus = controller->getSettings().getMidiInputDevicesStatus();
         for (int i = 0; i < maxInputDevices; ++i) {
             QCheckBox *checkBox = new QCheckBox(midiDriver->getInputDeviceName(i));
             ui->midiContentPanel->layout()->addWidget(checkBox);
@@ -257,7 +256,7 @@ void StandalonePreferencesDialog::populateMidiTab()
 }
 
 Audio::AudioDriver* StandalonePreferencesDialog::getAudioDriver(){
-    return dynamic_cast<StandaloneMainController*>(mainController)->getAudioDriver();
+    return dynamic_cast<MainControllerStandalone*>(mainController)->getAudioDriver();
 }
 
 void StandalonePreferencesDialog::populateAudioTab()

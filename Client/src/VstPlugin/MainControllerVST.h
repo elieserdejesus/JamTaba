@@ -4,6 +4,7 @@
 #include "MainController.h"
 #include "NinjamController.h"
 #include "audio/core/PluginDescriptor.h"
+#include "NinjamControllerVST.h"
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 class JamtabaPlugin;
@@ -24,6 +25,11 @@ public:
     Audio::AudioDriver *createAudioDriver(const Persistence::Settings &settings);
 
     Controller::NinjamController *createNinjamController() override;
+
+    inline NinjamControllerVST *getNinjamController() const override
+    {
+        return dynamic_cast<NinjamControllerVST *>(ninjamController.data());
+    }
 
     void setCSS(QString css);
 

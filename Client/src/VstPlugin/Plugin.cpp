@@ -205,7 +205,7 @@ void JamtabaPlugin::processReplacing(float **inputs, float **outputs, VstInt32 s
         // ask timeInfo to VST host
         timeInfo = getTimeInfo(kVstTransportPlaying | kVstTransportChanged | kVstTempoValid);
         if (transportStartDetectedInHost()) {// user pressing play/start in host?
-            NinjamControllerVST *ninjamController = dynamic_cast<NinjamControllerVST *>(controller->getNinjamController());
+            NinjamControllerVST *ninjamController = controller->getNinjamController();
             if (ninjamController->isWaitingForHostSync())
                 ninjamController->syncWithHost();
         }
