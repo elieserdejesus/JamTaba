@@ -353,7 +353,7 @@ NinjamController::~NinjamController(){
 
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamController::start(const Ninjam::Server& server, QMap<int, bool> channelsXmitFlags){
+void NinjamController::start(const Ninjam::Server& server, const QMap<int, bool> &channelsXmitFlags){
     qCDebug(jtNinjamCore) << "starting ninjam controller...";
     QMutexLocker locker(&mutex);
 
@@ -418,7 +418,7 @@ void NinjamController::start(const Ninjam::Server& server, QMap<int, bool> chann
     qCDebug(jtNinjamCore) << "ninjam controller started!";
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamController::sendChatMessage(QString msg){
+void NinjamController::sendChatMessage(const QString &msg){
     mainController->getNinjamService()->sendChatMessageToServer(msg);
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -428,7 +428,7 @@ long NinjamController::generateNewTrackID(){
     return TRACK_IDS++;
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-QString NinjamController::getUniqueKey(Ninjam::UserChannel channel){
+QString NinjamController::getUniqueKey(const Ninjam::UserChannel &channel){
     return channel.getUserFullName() + QString::number(channel.getIndex());
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -440,7 +440,7 @@ bool NinjamController::userIsBot(const QString userName) const
     return false;
 }
 
-void NinjamController::addTrack(Ninjam::User user, Ninjam::UserChannel channel){
+void NinjamController::addTrack(const Ninjam::User &user, const Ninjam::UserChannel &channel){
     if(userIsBot(user.getName())){
         return;
     }
@@ -465,7 +465,7 @@ void NinjamController::addTrack(Ninjam::User user, Ninjam::UserChannel channel){
     }
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamController::removeTrack(Ninjam::User user, Ninjam::UserChannel channel){
+void NinjamController::removeTrack(const Ninjam::User &user, const Ninjam::UserChannel &channel){
     bool channelDeleted = false;
     long ID;
     {

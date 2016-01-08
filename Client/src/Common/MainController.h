@@ -30,7 +30,7 @@ class MainController : public QObject
     friend class Controller::NinjamController;
 
 protected:
-    MainController(Persistence::Settings settings);
+    MainController(const Persistence::Settings &settings);
 
 public:
 
@@ -51,21 +51,21 @@ public:
     void saveLastUserSettings(const Persistence::LocalInputTrackSettings &inputsSettings);
 
     // presets
-    virtual Persistence::Preset loadPreset(QString name);// one preset
+    virtual Persistence::Preset loadPreset(const QString &name);// one preset
     QStringList getPresetList();// return all presets names
-    void savePreset(Persistence::LocalInputTrackSettings inputsSettings, QString name);
-    void deletePreset(QString name); //not used yet
+    void savePreset(const Persistence::LocalInputTrackSettings &inputsSettings, const QString &name);
+    void deletePreset(const QString &name); //not used yet
 
     // main audio processing routine
     virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
 
-    void sendNewChannelsNames(QStringList channelsNames);
+    void sendNewChannelsNames(const QStringList &channelsNames);
     void sendRemovedChannelMessage(int removedChannelIndex);
 
     bool addTrack(long trackID, Audio::AudioNode *trackNode);
     void removeTrack(long trackID);
 
-    void playRoomStream(Login::RoomInfo roomInfo);
+    void playRoomStream(const Login::RoomInfo &roomInfo);
     bool isPlayingRoomStream() const;
 
     bool isPlayingInNinjamRoom() const;
@@ -80,7 +80,7 @@ public:
         return currentStreamingRoomID;
     }
 
-    void enterInRoom(Login::RoomInfo room, QStringList channelsNames, QString password = "");
+    void enterInRoom(const Login::RoomInfo &room, const QStringList &channelsNames, const QString &password = "");
 
     Login::LoginService *getLoginService() const;
 
@@ -127,7 +127,7 @@ public:
         return started;
     }
 
-    Geo::Location getGeoLocation(QString ip);
+    Geo::Location getGeoLocation(const QString &ip);
 
     Audio::LocalInputAudioNode *getInputTrack(int localInputIndex);
     virtual int addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode);
@@ -160,24 +160,24 @@ public:
 
     void storeWindowSettings(bool maximized, bool usingFullViewMode, QPointF location);
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice,
-                         int sampleRate, int bufferSize, QList<bool> midiInputStatus);
-    void storeRecordingPath(QString newPath);
+                         int sampleRate, int bufferSize, const QList<bool> &midiInputStatus);
+    void storeRecordingPath(const QString &newPath);
     void storeRecordingMultiTracksStatus(bool savingMultiTracks);
     inline bool isRecordingMultiTracksActivated() const
     {
         return settings.isSaveMultiTrackActivated();
     }
 
-    void storePrivateServerSettings(QString server, int serverPort, QString password);
+    void storePrivateServerSettings(const QString &server, int serverPort, const QString &password);
 
-    void saveEncodedAudio(QString userName, quint8 channelIndex, QByteArray encodedAudio);
+    void saveEncodedAudio(const QString &userName, quint8 channelIndex, const QByteArray &encodedAudio);
 
     inline Audio::AbstractMp3Streamer *getRoomStreamer() const
     {
         return roomStreamer.data();
     }
 
-    void setUserName(QString newUserName);
+    void setUserName(const QString &newUserName);
     QString getUserName() const;
     inline bool userNameWasChoosed() const
     {
@@ -187,7 +187,7 @@ public:
     // used to recreate audio encoder with enough channels
     int getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const;
 
-    void configureStyleSheet(QString cssFile);
+    void configureStyleSheet(const QString &cssFile);
 
     //TODO: move this code to NinjamController.
     void finishUploads();// used to send the last part of ninjam intervals when audio is stopped.
@@ -223,7 +223,7 @@ protected:
 
     MainWindow *mainWindow;
 
-    virtual void setCSS(QString css) = 0;
+    virtual void setCSS(const QString &css) = 0;
 
     virtual Midi::MidiBuffer pullMidiBuffer() = 0;
 
@@ -251,8 +251,8 @@ private:
 
     bool started;
 
-    void tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStringList channels,
-                                  QString password = "");
+    void tryConnectInNinjamServer(const Login::RoomInfo &ninjamRoom, const QStringList &channels,
+                                  const QString &password = "");
 
     QScopedPointer<Geo::IpToLocationResolver> ipToLocationResolver;
 
@@ -273,7 +273,7 @@ protected slots:
     // ninjam
     virtual void connectedNinjamServer(const Ninjam::Server &server);
     virtual void disconnectFromNinjamServer(const Ninjam::Server &server);
-    virtual void quitFromNinjamServer(QString error);
+    virtual void quitFromNinjamServer(const QString &error);
     virtual void enqueueAudioDataToUpload(const QByteArray &, quint8 channelIndex,
                                           bool isFirstPart, bool isLastPart);
     virtual void updateBpi(int newBpi);

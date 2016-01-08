@@ -107,7 +107,7 @@ protected:
 
     Controller::NinjamController *createNinjamController() override;
 
-    void setCSS(QString css);
+    void setCSS(const QString &css) override;
 
     Midi::MidiBuffer pullMidiBuffer() override;
 

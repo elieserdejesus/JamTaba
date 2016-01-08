@@ -45,7 +45,7 @@ bool NinjamTrackNode::startNewInterval()
     return playing;
 }
 
-void NinjamTrackNode::addVorbisEncodedInterval(QByteArray vorbisData)
+void NinjamTrackNode::addVorbisEncodedInterval(const QByteArray &vorbisData)
 {
     QMutexLocker locker(&mutex);
     intervals.append(vorbisData);// enqueue a new interval

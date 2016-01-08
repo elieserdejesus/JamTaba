@@ -127,9 +127,9 @@ void StandalonePreferencesDialog::updateBlackBox(QString path, bool add)
         if (str.contains(path)) {
             ui->blackListWidget->clear();
             controller->removeBlackVst(str.indexOf(path));
-            QStringList list = mainController->getSettings().getBlackListedPlugins();
-            foreach (QString s, list)
-                ui->blackListWidget->appendPlainText(s);
+            QStringList badPlugins = mainController->getSettings().getBlackListedPlugins();
+            foreach (const QString &badPlugin, badPlugins)
+                ui->blackListWidget->appendPlainText(badPlugin);
         }
     }
 }
@@ -190,7 +190,7 @@ void StandalonePreferencesDialog::addBlackListedPlugins()
 
     if (vstDialog.exec()) {
         QStringList vstNames = vstDialog.selectedFiles();
-        foreach (QString string, vstNames) {
+        foreach (const QString &string, vstNames) {
             updateBlackBox(string, true);// add to
             controller->addBlackVstToSettings(string);
         }
@@ -208,7 +208,7 @@ void StandalonePreferencesDialog::removeBlackListedPlugins()
     vstDialog.setFileMode(QFileDialog::ExistingFiles);
     if (vstDialog.exec()) {
         QStringList vstNames = vstDialog.selectedFiles();
-        foreach (QString string, vstNames) {
+        foreach (const QString &string, vstNames) {
             updateBlackBox(string, false);// Remove from
             controller->removeBlackVst(0);// index
         }
@@ -415,17 +415,17 @@ void StandalonePreferencesDialog::populateVstTab()
     QStringList blackVstList = mainController->getSettings().getBlackListedPlugins();
 
     // populate the paths
-    foreach (QString scanFolder, scanFoldersList)
+    foreach (const QString &scanFolder, scanFoldersList)
         createWidgetsToNewFolder(scanFolder);
 
     // populate the VST list
     ui->vstListWidget->clear();
-    foreach (QString path, vstList)
+    foreach (const QString &path, vstList)
         updateVstList(path);
 
     // populate the BlackBox
     ui->blackListWidget->clear();
-    foreach (QString path, blackVstList)
+    foreach (const QString &path, blackVstList)
         updateBlackBox(path, true);// add vst
 }
 

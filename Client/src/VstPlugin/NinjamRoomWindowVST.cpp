@@ -4,7 +4,7 @@
 #include "NinjamControllerVST.h"
 
 // +++++++++++++++++++++++++++++++++++++++++++++
-NinjamRoomWindowVST::NinjamRoomWindowVST(MainWindow *parent, Login::RoomInfo roomInfo,
+NinjamRoomWindowVST::NinjamRoomWindowVST(MainWindow *parent, const Login::RoomInfo &roomInfo,
                                          MainControllerVST *mainController) :
     NinjamRoomWindow(parent, roomInfo, mainController),
     controller(mainController)
@@ -38,7 +38,7 @@ void NinjamRoomWindowVST::ninjamHostSyncButtonClicked()
     }
 }
 
-void NinjamRoomWindowVST::showMessageBox(QString title, QString msg)
+void NinjamRoomWindowVST::showMessageBox(const QString &title, const QString &msg)
 {
     QMessageBox *msgBox = new QMessageBox(this);
     msgBox->setWindowTitle(title);

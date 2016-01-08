@@ -37,7 +37,7 @@ public:
         return initialized;
     }
 
-    void setInput(QByteArray vorbisData);
+    void setInput(const QByteArray &vorbisData);
     void reset();
     inline int getTotalDecodedSamples() const
     {

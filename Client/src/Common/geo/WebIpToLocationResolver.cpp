@@ -82,7 +82,7 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply){
     reply->deleteLater();
 }
 
-void WebIpToLocationResolver::requestDataFromWebServer(QString ip){
+void WebIpToLocationResolver::requestDataFromWebServer(const QString &ip){
     qCDebug(jtIpToLocation) << "requesting ip " << ip ;
     QNetworkRequest request;
     // http://www.telize.com/geoip/ - The REST API is no longer free
@@ -101,7 +101,7 @@ void WebIpToLocationResolver::replyError(QNetworkReply::NetworkError e){
     qCCritical(jtIpToLocation) << "Reply error! " << e;
 }
 
-Geo::Location WebIpToLocationResolver::resolve(QString ip){
+Geo::Location WebIpToLocationResolver::resolve(const QString &ip){
     if(locationCache.contains(ip)){
         qCDebug(jtIpToLocation) << "cache hit for " << ip;
         return locationCache[ip];

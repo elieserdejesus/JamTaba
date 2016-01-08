@@ -12,7 +12,7 @@ class JamtabaPlugin;
 class MainControllerVST : public Controller::MainController
 {
 public:
-    MainControllerVST(Persistence::Settings settings, JamtabaPlugin *plugin);
+    MainControllerVST(const Persistence::Settings &settings, JamtabaPlugin *plugin);
     ~MainControllerVST();
 
     inline QString getJamtabaFlavor() const override
@@ -31,7 +31,7 @@ public:
         return dynamic_cast<NinjamControllerVST *>(ninjamController.data());
     }
 
-    void setCSS(QString css);
+    void setCSS(const QString &css) override;
 
     int addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode) override;
 
@@ -54,7 +54,7 @@ public:
 
     void resizePluginEditor(int newWidth, int newHeight);
 
-    Persistence::Preset loadPreset(QString name) override;
+    Persistence::Preset loadPreset(const QString &name) override;
 
 protected:
     inline Midi::MidiBuffer pullMidiBuffer() override

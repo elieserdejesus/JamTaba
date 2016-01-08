@@ -101,7 +101,7 @@ void MainWindowStandalone::hidePluginScanDialog(bool finishedWithoutError)
     pluginScanDialog.reset();
 }
 
-void MainWindowStandalone::addPluginToBlackList(QString pluginPath)
+void MainWindowStandalone::addPluginToBlackList(const QString &pluginPath)
 {
     QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(pluginPath);
     QWidget *parent = this;
@@ -112,7 +112,7 @@ void MainWindowStandalone::addPluginToBlackList(QString pluginPath)
     controller->addBlackVstToSettings(pluginPath);
 }
 
-void MainWindowStandalone::addFoundedPlugin(QString name, QString group, QString path)
+void MainWindowStandalone::addFoundedPlugin(const QString &name, const QString &group, const QString &path)
 {
     Q_UNUSED(path);
     Q_UNUSED(group);
@@ -120,7 +120,7 @@ void MainWindowStandalone::addFoundedPlugin(QString name, QString group, QString
         pluginScanDialog->addFoundedPlugin(name);
 }
 
-void MainWindowStandalone::setCurrentScanningPlugin(QString pluginPath)
+void MainWindowStandalone::setCurrentScanningPlugin(const QString &pluginPath)
 {
     if (pluginScanDialog)
         pluginScanDialog->setCurrentScaning(pluginPath);
@@ -149,7 +149,7 @@ void MainWindowStandalone::toggleFullScreen()
 
 // sanitize the input selection for each loaded subchannel
 void MainWindowStandalone::sanitizeSubchannelInputSelections(LocalTrackView *subChannelView,
-                                                             Subchannel subChannel)
+                                                             const Subchannel &subChannel)
 {
     int trackID = subChannelView->getInputIndex();
     if (subChannel.isMidi()) {
@@ -172,11 +172,10 @@ void MainWindowStandalone::sanitizeSubchannelInputSelections(LocalTrackView *sub
     }
 }
 
-void MainWindowStandalone::restoreLocalSubchannelPluginsList(
-    LocalTrackViewStandalone *subChannelView, Subchannel subChannel)
+void MainWindowStandalone::restoreLocalSubchannelPluginsList(LocalTrackViewStandalone *subChannelView, const Subchannel &subChannel)
 {
     // create the plugins list
-    foreach (Persistence::Plugin plugin, subChannel.getPlugins()) {
+    foreach (const Persistence::Plugin &plugin, subChannel.getPlugins()) {
         QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
         Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path);
         Audio::Plugin *pluginInstance = controller->addPlugin(subChannelView->getInputIndex(), descriptor);
@@ -212,7 +211,7 @@ LocalTrackGroupViewStandalone *MainWindowStandalone::createLocalTrackGroupView(i
 }
 
 
-LocalTrackGroupViewStandalone *MainWindowStandalone::geTrackGroupViewByName(QString trackGroupName)
+LocalTrackGroupViewStandalone *MainWindowStandalone::geTrackGroupViewByName(const QString &trackGroupName)
 const
 {
     foreach (LocalTrackGroupViewStandalone *trackGroupView, getLocalChannels<LocalTrackGroupViewStandalone *>()) {
@@ -240,7 +239,7 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
 
     // recreate the settings including the plugins
     LocalInputTrackSettings settings;
-    foreach (Channel channel, baseSettings.channels) {
+    foreach (const Channel &channel, baseSettings.channels) {
         LocalTrackGroupViewStandalone *trackGroupView = geTrackGroupViewByName(channel.name);
         if (!trackGroupView)
             continue;
@@ -328,13 +327,13 @@ void MainWindowStandalone::initializePluginFinder()
     }
 }
 
-void MainWindowStandalone::handleServerConnectionError(QString msg)
+void MainWindowStandalone::handleServerConnectionError(const QString &msg)
 {
     MainWindow::handleServerConnectionError(msg);
     controller->quit();
 }
 
-void MainWindowStandalone::setGlobalPreferences(QList<bool> midiInputsStatus, int audioDevice,
+void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsStatus, int audioDevice,
                                                 int firstIn, int lastIn, int firstOut, int lastOut,
                                                 int sampleRate, int bufferSize)
 {

@@ -8,9 +8,8 @@ namespace Geo {
 class Location
 {
 public:
-    Location(QString countryName, QString countryCode, QString city, double latitude,
-             double longitude);
-    explicit Location(QString countryName, QString countryCode);
+    Location(const QString &countryName, const QString &countryCode, const QString &city = "UNKNOWN", double latitude = -200,
+             double longitude = -200);
     Location();
 
     inline double getLatitude() const
@@ -50,14 +49,14 @@ private:
 class IpToLocationResolver : public QObject
 {
 public:
-    virtual Location resolve(QString ip) = 0;
+    virtual Location resolve(const QString &ip) = 0;
     virtual ~IpToLocationResolver();
 };
 
 class NullIpToLocationResolver : public IpToLocationResolver
 {
 public:
-    Location resolve(QString ip);
+    Location resolve(const QString &ip) override;
 };
 }
 

@@ -13,7 +13,7 @@ using namespace Ninjam;
 using namespace Controller;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++
-MainController::MainController(Settings settings) :
+MainController::MainController(const Settings &settings) :
     audioMixer(44100),
     currentStreamingRoomID(-1000),
     mutex(QMutex::Recursive),
@@ -45,7 +45,7 @@ void MainController::finishUploads()
                                             QByteArray(), true);
 }
 
-void MainController::quitFromNinjamServer(QString error)
+void MainController::quitFromNinjamServer(const QString &error)
 {
     qCWarning(jtCore) << error;
     stopNinjamController();
@@ -164,7 +164,7 @@ int MainController::getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) 
 }
 
 // ++++++++++++++++++++
-void MainController::setUserName(QString newUserName)
+void MainController::setUserName(const QString &newUserName)
 {
     if (!newUserName.isEmpty()) {
         settings.setUserName(newUserName);
@@ -186,7 +186,7 @@ QStringList MainController::getBotNames() const
     return Ninjam::Service::getBotNamesList();
 }
 
-Geo::Location MainController::getGeoLocation(QString ip)
+Geo::Location MainController::getGeoLocation(const QString &ip)
 {
     return ipToLocationResolver->resolve(ip);
 }
@@ -200,8 +200,8 @@ void MainController::mixGroupedInputs(int groupIndex, Audio::SamplesBuffer &out)
 
 // ++++++++++++++++++++++++
 // this is called when a new ninjam interval is received and the 'record multi track' option is enabled
-void MainController::saveEncodedAudio(QString userName, quint8 channelIndex,
-                                      QByteArray encodedAudio)
+void MainController::saveEncodedAudio(const QString &userName, quint8 channelIndex,
+                                      const QByteArray &encodedAudio)
 {
     if (settings.isSaveMultiTrackActivated())// just in case
         jamRecorder.addRemoteUserAudio(userName, encodedAudio, channelIndex);
@@ -276,7 +276,7 @@ void MainController::storeRecordingMultiTracksStatus(bool savingMultiTracks)
     settings.setSaveMultiTrack(savingMultiTracks);
 }
 
-void MainController::storeRecordingPath(QString newPath)
+void MainController::storeRecordingPath(const QString &newPath)
 {
     settings.setRecordingPath(newPath);
     if (settings.isSaveMultiTrackActivated())
@@ -284,7 +284,7 @@ void MainController::storeRecordingPath(QString newPath)
 }
 
 // ---------------------------------
-void MainController::storePrivateServerSettings(QString server, int serverPort, QString password)
+void MainController::storePrivateServerSettings(const QString &server, int serverPort, const QString &password)
 {
     settings.setPrivateServerData(server, serverPort, password);
 }
@@ -307,7 +307,7 @@ void MainController::storeWindowSettings(bool maximized, bool usingFullViewMode,
 
 void MainController::storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut,
                                      int audioDevice, int sampleRate, int bufferSize,
-                                     QList<bool> midiInputsStatus)
+                                     const QList<bool> &midiInputsStatus)
 {
     settings.setAudioSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, sampleRate,
                               bufferSize);
@@ -503,17 +503,17 @@ QStringList MainController::getPresetList()
     return Configurator::getInstance()->getPresetFilesNames(false);
 }
 
-void MainController::savePreset(Persistence::LocalInputTrackSettings inputsSettings, QString name)
+void MainController::savePreset(const LocalInputTrackSettings &inputsSettings, const QString &name)
 {
     settings.writePresetToFile(Persistence::Preset(name, inputsSettings));
 }
 
-void MainController::deletePreset(QString name)
+void MainController::deletePreset(const QString &name)
 {
     return settings.deletePreset(name);
 }
 
-Persistence::Preset MainController::loadPreset(QString name)
+Persistence::Preset MainController::loadPreset(const QString &name)
 {
     return settings.readPresetFromFile(name);//allow multi subchannels by default
 }
@@ -535,7 +535,7 @@ void MainController::setAllTracksActivation(bool activated)
     }
 }
 
-void MainController::playRoomStream(Login::RoomInfo roomInfo)
+void MainController::playRoomStream(const Login::RoomInfo &roomInfo)
 {
     if (roomInfo.hasStream()) {
         roomStreamer->setStreamPath(roomInfo.getStreamUrl());
@@ -561,7 +561,7 @@ bool MainController::isPlayingRoomStream() const
     return roomStreamer->isStreaming();
 }
 
-void MainController::enterInRoom(Login::RoomInfo room, QStringList channelsNames, QString password)
+void MainController::enterInRoom(const Login::RoomInfo &room, const QStringList &channelsNames, const QString &password)
 {
     qCDebug(jtCore) << "EnterInRoom slot";
     if (isPlayingRoomStream())
@@ -571,7 +571,7 @@ void MainController::enterInRoom(Login::RoomInfo room, QStringList channelsNames
         tryConnectInNinjamServer(room, channelsNames, password);
 }
 
-void MainController::sendNewChannelsNames(QStringList channelsNames)
+void MainController::sendNewChannelsNames(const QStringList &channelsNames)
 {
     if (isPlayingInNinjamRoom())
         ninjamService.sendNewChannelsListToServer(channelsNames);
@@ -583,8 +583,8 @@ void MainController::sendRemovedChannelMessage(int removedChannelIndex)
         ninjamService.sendRemovedChannelIndex(removedChannelIndex);
 }
 
-void MainController::tryConnectInNinjamServer(Login::RoomInfo ninjamRoom, QStringList channelsNames,
-                                              QString password)
+void MainController::tryConnectInNinjamServer(const Login::RoomInfo &ninjamRoom, const QStringList &channelsNames,
+                                              const QString &password)
 {
     qCDebug(jtCore) << "connecting...";
     if (userNameWasChoosed()) {// just in case :)
@@ -660,7 +660,7 @@ void MainController::stop()
 
 // +++++++++++
 
-void MainController::configureStyleSheet(QString cssFile)
+void MainController::configureStyleSheet(const QString &cssFile)
 {
     QFile styleFile(":/style/" + cssFile);
     if (!styleFile.open(QFile::ReadOnly)) {

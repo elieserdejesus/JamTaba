@@ -124,7 +124,7 @@ QStringList Configurator::getPresetFilesNames(bool fullpath)
     QDir dir = getPresetsDir();
     qInfo(jtConfigurator) << "Looking in Presets dir : "<<dir.absolutePath();
     int count = 0;// how many preset files
-    foreach (QFileInfo item, dir.entryInfoList()) {
+    foreach (const QFileInfo &item, dir.entryInfoList()) {
         if (item.isFile()) {
             if (fullpath)
                 filesPaths.append(item.absoluteFilePath());
@@ -275,7 +275,7 @@ QString Configurator::getIniFilePath() const
 }
 
 // Retrieve the path for Settings class
-QString Configurator::getPresetPath(QString JsonFile)
+QString Configurator::getPresetPath(const QString &JsonFile)
 {
     QString path("");
     // FIRST CHECK THE DIR
@@ -289,7 +289,7 @@ QString Configurator::getPresetPath(QString JsonFile)
     // USE CONFIGURATOR FOR FILES STUFF
     path = presetDir.absoluteFilePath(JsonFile);
     QStringList list = getPresetFilesNames(true);
-    foreach (QString item, list) {
+    foreach (const QString &item, list) {
         if (item.contains(path)) {
             qDebug(jtConfigurator) << "Path to required preset is :" << path;
             return path;
@@ -300,7 +300,7 @@ QString Configurator::getPresetPath(QString JsonFile)
     return path;
 }
 
-void Configurator::deletePreset(QString name)
+void Configurator::deletePreset(const QString &name)
 {
     QString presetPath = getPresetPath(name);
     if (presetPath.isEmpty())

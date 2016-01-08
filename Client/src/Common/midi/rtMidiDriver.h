@@ -14,7 +14,7 @@ namespace Midi {
 class RtMidiDriver : public MidiDriver
 {
 public:
-    RtMidiDriver(QList<bool> deviceStatuses);
+    RtMidiDriver(QList<bool> &deviceStatuses);
     ~RtMidiDriver();
 
     virtual void start();
@@ -26,7 +26,7 @@ public:
     virtual QString getInputDeviceName(int index) const;
     virtual MidiBuffer getBuffer();
 
-    virtual void setInputDevicesStatus(QList<bool> statuses);
+    virtual void setInputDevicesStatus(const QList<bool> &statuses);
 
 private:
     QList<RtMidiIn *> midiStreams;

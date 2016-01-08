@@ -9,7 +9,7 @@
 using namespace Audio;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Plugin::Plugin(QString name) :
+Plugin::Plugin(const QString &name) :
     name(name),
     editorWindow(nullptr)
 {
@@ -53,7 +53,7 @@ QByteArray JamtabaDelay::getSerializedData() const
     return QByteArray();
 }
 
-void JamtabaDelay::restoreFromSerializedData(QByteArray data)
+void JamtabaDelay::restoreFromSerializedData(const QByteArray &data)
 {
     Q_UNUSED(data)
 }
@@ -118,7 +118,7 @@ void JamtabaDelay::setLevel(float level)
         this->level = level;
 }
 
-void JamtabaDelay::openEditor(QPoint p)
+void JamtabaDelay::openEditor(const QPoint &p)
 {
     Q_UNUSED(p);
 }

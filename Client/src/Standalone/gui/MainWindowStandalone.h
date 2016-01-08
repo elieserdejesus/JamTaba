@@ -39,20 +39,20 @@ protected:
 
     void initializeLocalSubChannel(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel) override;
 
-    void restoreLocalSubchannelPluginsList(LocalTrackViewStandalone *subChannelView, Persistence::Subchannel subChannel);
+    void restoreLocalSubchannelPluginsList(LocalTrackViewStandalone *subChannelView, const Persistence::Subchannel &subChannel);
 
 protected slots: //TODO change to private slots?
-    void handleServerConnectionError(QString msg);
+    void handleServerConnectionError(const QString &msg);
 
-    void setGlobalPreferences(QList<bool>, int audioDevice, int firstIn, int lastIn, int firstOut,
+    void setGlobalPreferences(const QList<bool> &, int audioDevice, int firstIn, int lastIn, int firstOut,
                               int lastOut, int sampleRate, int bufferSize);
 
     // plugin finder
     void showPluginScanDialog();
     void hidePluginScanDialog(bool finishedWithoutError);
-    void addFoundedPlugin(QString name, QString group, QString path);
-    void setCurrentScanningPlugin(QString pluginPath);
-    void addPluginToBlackList(QString pluginPath);
+    void addFoundedPlugin(const QString &name, const QString &group, const QString &path);
+    void setCurrentScanningPlugin(const QString &pluginPath);
+    void addPluginToBlackList(const QString &pluginPath);
 
 private slots:
     void toggleFullScreen();
@@ -63,11 +63,11 @@ private:
     MainControllerStandalone *controller;
     QScopedPointer<PluginScanDialog> pluginScanDialog;
 
-    LocalTrackGroupViewStandalone *geTrackGroupViewByName(QString trackGroupName) const;
+    LocalTrackGroupViewStandalone *geTrackGroupViewByName(const QString &trackGroupName) const;
 
     bool midiDeviceIsValid(int deviceIndex) const;
 
-    void sanitizeSubchannelInputSelections(LocalTrackView *subChannelView, Persistence::Subchannel subChannel);
+    void sanitizeSubchannelInputSelections(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel);
 
     bool fullScreenViewMode;
 

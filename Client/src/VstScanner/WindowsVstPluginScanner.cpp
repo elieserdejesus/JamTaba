@@ -50,7 +50,7 @@ private:
     }
 };
 // +++++++++++++++++++++++++++++++++++
-Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(QFileInfo f)
+Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(const QFileInfo &f)
 {
     try{
         bool archIsValid = true;
@@ -80,7 +80,7 @@ Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(QFileInfo f)
     return Audio::PluginDescriptor();// invalid descriptor
 }
 
-bool VstPluginScanner::isVstPluginFile(QString path)
+bool VstPluginScanner::isVstPluginFile(const QString &path)
 {
     QFileInfo file(path);
     return file.isFile() && QLibrary::isLibrary(path);

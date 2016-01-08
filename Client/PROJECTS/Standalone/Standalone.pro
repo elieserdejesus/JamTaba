@@ -35,21 +35,12 @@ HEADERS += gui/ScanFolderPanel.h
 HEADERS += gui/FxPanel.h
 HEADERS += gui/FxPanelItem.h
 
-HEADERS += audio/core/PortAudioDriver.h
-HEADERS += recorder/JamRecorder.h
-HEADERS += recorder/ReaperProjectGenerator.h
-HEADERS += loginserver/natmap.h
-HEADERS += audio/codec.h
+HEADERS += audio/PortAudioDriver.h
 HEADERS += midi/rtMidiDriver.h
-HEADERS += audio/Resampler.h
-HEADERS += audio/vorbis/VorbisDecoder.h
-HEADERS += audio/vorbis/VorbisEncoder.h
-HEADERS += persistence/Settings.h
 HEADERS += vst/VstPlugin.h
 HEADERS += vst/VstHost.h
 HEADERS += vst/VstLoader.h
 HEADERS += vst/PluginFinder.h
-HEADERS += geo/WebIpToLocationResolver.h
 HEADERS += Libs/SingleApplication/singleapplication.h
 HEADERS += audio/core/PluginDescriptor.h
 
@@ -62,33 +53,21 @@ SOURCES += gui/LocalTrackGroupViewStandalone.cpp
 SOURCES += gui/ScanFolderPanel.cpp
 SOURCES += gui/FxPanel.cpp
 SOURCES += gui/FxPanelItem.cpp
-
-SOURCES += recorder/JamRecorder.cpp
-SOURCES += recorder/ReaperProjectGenerator.cpp
-SOURCES += loginserver/LoginService.cpp
-SOURCES += loginserver/JsonUtils.cpp
-SOURCES += ninjam/Server.cpp
 SOURCES += midi/rtMidiDriver.cpp
-SOURCES += audio/Resampler.cpp
-SOURCES += audio/vorbis/VorbisDecoder.cpp
-SOURCES += audio/samplesbufferrecorder.cpp
-SOURCES += audio/vorbis/VorbisEncoder.cpp
-SOURCES += persistence/Settings.cpp
 SOURCES += vst/VstPlugin.cpp
 SOURCES += vst/VstHost.cpp
 SOURCES += vst/PluginFinder.cpp
 SOURCES += vst/VstLoader.cpp
-SOURCES += geo/WebIpToLocationResolver.cpp
 SOURCES += Libs/SingleApplication/singleapplication.cpp
-SOURCES += audio/core/PortAudioDriver.cpp
+SOURCES += audio/PortAudioDriver.cpp
 SOURCES += audio/core/PluginDescriptor.cpp
 
 #conditional sources to different platforms
 win32{
-    SOURCES += audio/core/WindowsPortAudioDriver.cpp
+    SOURCES += audio/WindowsPortAudioDriver.cpp
 }
 macx{
-    SOURCES += audio/core/MacPortAudioDriver.cpp
+    SOURCES += audio/MacPortAudioDriver.cpp
 }
 
 win32{
