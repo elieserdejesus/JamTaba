@@ -15,7 +15,7 @@ MainWindowVST::MainWindowVST(MainControllerVST *mainController) :
     this->ui.actionFullscreenMode->setVisible(false);
 }
 
-NinjamRoomWindowVST *MainWindowVST::createNinjamWindow(Login::RoomInfo roomInfo,
+NinjamRoomWindowVST *MainWindowVST::createNinjamWindow(const Login::RoomInfo &roomInfo,
                                                     Controller::MainController *mainController)
 {
     return new NinjamRoomWindowVST(this, roomInfo, dynamic_cast<MainControllerVST *>(mainController));
@@ -27,7 +27,7 @@ void MainWindowVST::removeAllInputLocalTracks(){
     firstChannelIsInitialized = false;//prepare for the next local input tracks initialization (loading presets)
 }
 
-void MainWindowVST::initializeLocalSubChannel(LocalTrackView *subChannelView, Persistence::Subchannel subChannel){
+void MainWindowVST::initializeLocalSubChannel(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel){
 
     // load channels names, gain, pan, boost, mute
     MainWindow::initializeLocalSubChannel(subChannelView, subChannel);
