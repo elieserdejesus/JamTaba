@@ -734,7 +734,7 @@ void NinjamController::on_ninjamAudioIntervalDownloading(const Ninjam::User &use
     QString channelKey = getUniqueKey(channel);
     QMutexLocker locker(&mutex);
     if(trackNodes.contains(channelKey)){
-        NinjamTrackNode* track = dynamic_cast<NinjamTrackNode*>( trackNodes[channelKey]);
+        NinjamTrackNode* track = trackNodes[channelKey];
         if(track){
             if(!track->isPlaying()){//track is not playing yet and receive the first interval bytes
                 emit channelXmitChanged(track->getID(), true);
