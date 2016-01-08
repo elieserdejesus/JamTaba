@@ -51,7 +51,8 @@ bool ChordsPanel::setBpi(int newBpi)
     return false;
 }
 
-int ChordsPanel::getEstimatedChordDuration(const Chord &chord, const ChordProgressionMeasure &measure) const
+int ChordsPanel::getEstimatedChordDuration(const Chord &chord,
+                                           const ChordProgressionMeasure &measure) const
 {
     int chordsInMeasure = measure.getChords().size();
     if (chordsInMeasure <= 2)// only one or two chords in the measure?
