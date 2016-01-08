@@ -1,6 +1,7 @@
 #include "NinjamRoomWindow.h"
 #include "ui_NinjamRoomWindow.h"
 #include "NinjamTrackView.h"
+#include "NinjamTrackGroupView.h"
 
 #include "ninjam/Server.h"
 #include "ninjam/User.h"

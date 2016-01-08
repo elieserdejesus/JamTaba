@@ -4,7 +4,6 @@
 #include "TrackGroupView.h"
 #include "BaseTrackView.h"
 #include "IntervalChunksDisplay.h"
-
 #include "persistence/UsersDataCache.h"
 #include "MarqueeLabel.h"
 
@@ -14,7 +13,6 @@ class MainController;
 
 class QLabel;
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class NinjamTrackView : public BaseTrackView
 {
     Q_OBJECT
@@ -43,31 +41,5 @@ protected slots:
     void setPan(int value);
     void updateBoostValue();
 };
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class NinjamTrackGroupView : public TrackGroupView
-{
-public:
-    NinjamTrackGroupView(QWidget *parent, Controller::MainController *mainController, long trackID,
-                         QString channelName, Persistence::CacheEntry initialValues);
-    ~NinjamTrackGroupView();
-    void setNarrowStatus(bool narrow);
-    void updateGeoLocation();
-    void setGroupName(const QString &groupName);
-    void updateGuiElements();
 
-    inline NinjamTrackView *addTrackView(long trackID) override
-    {
-        return dynamic_cast<NinjamTrackView *>(TrackGroupView::addTrackView(trackID));
-    }
-
-protected:
-    NinjamTrackView *createTrackView(long trackID) override;
-
-private:
-    Controller::MainController *mainController;
-    QLabel *countryLabel;
-    MarqueeLabel *groupNameLabel;
-    QString userIP;
-};
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #endif // NINJAMTRACKVIEW_H
