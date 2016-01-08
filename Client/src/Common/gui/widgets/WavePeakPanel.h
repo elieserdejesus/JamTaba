@@ -20,7 +20,7 @@ private:
     int computeMaxPeaks();
     void recreatePeaksArray();
 
-    void drawPeak(QPainter *g, int x, float peak, QColor color);
+    void drawPeak(QPainter *g, int x, float peak, const QColor &color);
 
 public:
     explicit WavePeakPanel(QWidget *parent = 0);

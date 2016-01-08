@@ -6,7 +6,7 @@
 class CustomTabWidget : public QTabWidget
 {
 public:
-    CustomTabWidget(QWidget *parent);
+    explicit CustomTabWidget(QWidget *parent);
     void setResourcesUsage(double cpuUsage, int memoryUsage);// cpu usage in percentage, memoryUsage in megabytes
 private:
     static QColor RESOURCES_USAGE_BG_COLOR;

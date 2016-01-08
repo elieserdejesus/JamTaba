@@ -15,7 +15,7 @@ public:
     explicit BusyDialog(QWidget *parent = 0);
     ~BusyDialog();
 
-    void show(QString message);
+    void show(const QString &message);
     virtual void show();
 
 protected:

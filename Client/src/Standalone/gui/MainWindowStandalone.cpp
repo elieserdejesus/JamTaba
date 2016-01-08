@@ -194,7 +194,7 @@ void MainWindowStandalone::restoreLocalSubchannelPluginsList(
 }
 
 void MainWindowStandalone::initializeLocalSubChannel(LocalTrackView *subChannelView,
-                                                     Subchannel subChannel)
+                                                     const Subchannel &subChannel)
 {
     // load channels names, gain, pan, boost, mute
     MainWindow::initializeLocalSubChannel(subChannelView, subChannel);
@@ -264,7 +264,7 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
     return settings;
 }
 
-NinjamRoomWindow *MainWindowStandalone::createNinjamWindow(Login::RoomInfo roomInfo,
+NinjamRoomWindow *MainWindowStandalone::createNinjamWindow(const Login::RoomInfo &roomInfo,
                                                            MainController *mainController)
 {
     return new NinjamRoomWindow(this, roomInfo, mainController);
@@ -293,7 +293,8 @@ void MainWindowStandalone::showPreferencesDialog(int initialTab)
     if (midiDriver)
         midiDriver->stop();
 
-    StandalonePreferencesDialog dialog(controller, this, initialTab);
+    StandalonePreferencesDialog dialog(controller, this);
+    dialog.initialize(initialTab);
 
     connect(&dialog,
             SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int, int, int)),
@@ -377,7 +378,7 @@ void MainWindowStandalone::refreshTrackInputSelection(int inputTrackIndex)
             inputTrackIndex);
 }
 
-void MainWindowStandalone::addChannelsGroup(QString groupName)
+void MainWindowStandalone::addChannelsGroup(const QString &groupName)
 {
     MainWindow::addChannelsGroup(groupName);
     controller->updateInputTracksRange();

@@ -13,13 +13,13 @@ class PrivateServerDialog : public QDialog
 
 public:
     explicit PrivateServerDialog(QWidget *parent, QString lastServer, int lastServerPort,
-                                 QString lastPassword);
+                                 const QString &lastPassword);
     ~PrivateServerDialog();
     QString getServer() const;
     QString getPassword() const;
     int getServerPort() const;
 signals:
-    void connectionAccepted(QString server, int serverPort, QString password);
+    void connectionAccepted(const QString &server, int serverPort, const QString &password);
 private slots:
     void on_okButtonTriggered();
 private:

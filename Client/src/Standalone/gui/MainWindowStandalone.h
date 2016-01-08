@@ -17,7 +17,7 @@ public:
 
     Persistence::LocalInputTrackSettings getInputsSettings() const override;
 
-    void addChannelsGroup(QString groupName) override;
+    void addChannelsGroup(const QString &groupName) override;
 
     void refreshTrackInputSelection(int inputTrackIndex);
 
@@ -31,13 +31,13 @@ public:
 protected:
     void closeEvent(QCloseEvent *);
 
-    NinjamRoomWindow *createNinjamWindow(Login::RoomInfo, MainController *) override;
+    NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &, MainController *) override;
 
     void showPreferencesDialog(int initialTab) override;
 
     LocalTrackGroupViewStandalone *createLocalTrackGroupView(int channelGroupIndex) override;
 
-    void initializeLocalSubChannel(LocalTrackView *subChannelView, Persistence::Subchannel subChannel) override;
+    void initializeLocalSubChannel(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel) override;
 
     void restoreLocalSubchannelPluginsList(LocalTrackViewStandalone *subChannelView, Persistence::Subchannel subChannel);
 

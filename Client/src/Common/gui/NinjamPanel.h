@@ -19,8 +19,8 @@ class NinjamPanel : public QWidget
     Q_OBJECT
 
 signals:
-    void bpiComboActivated(QString);
-    void bpmComboActivated(QString);
+    void bpiComboActivated(const QString &);
+    void bpmComboActivated(const QString &);
     void accentsComboChanged(int index);
     void gainSliderChanged(int value);
     void panSliderChanged(int value);
@@ -31,7 +31,7 @@ public:
     explicit NinjamPanel(QWidget *parent = 0);
     ~NinjamPanel();
 
-    void createHostSyncButton(QString buttonText);
+    void createHostSyncButton(const QString &buttonText);
 
     void setMuteButtonStatus(bool checked);
     void setPanSliderValue(int value);
@@ -39,8 +39,8 @@ public:
 
     void setHostSyncButtonAvailability(bool enabled);// availability? We need a better work here :)
 
-    void setBpiComboText(QString);
-    void setBpmComboText(QString);
+    void setBpiComboText(const QString &);
+    void setBpmComboText(const QString &);
 
     int getPanSliderMaximumValue() const;
     int getGainSliderMaximumValue() const;

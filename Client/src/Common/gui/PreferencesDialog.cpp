@@ -19,7 +19,10 @@ PreferencesDialog::PreferencesDialog(Controller::MainController *mainController,
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     ui->comboLastOutput->setEnabled(false);
+}
 
+void PreferencesDialog::initialize()
+{
     setupSignals();
     populateAllTabs();
 }

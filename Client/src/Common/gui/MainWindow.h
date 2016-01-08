@@ -41,7 +41,7 @@ public:
 
     void highlightChannelGroup(int index) const;
 
-    virtual void addChannelsGroup(QString name);
+    virtual void addChannelsGroup(const QString &name);
     void removeChannelsGroup(int channelGroupIndex);
 
     void exitFromRoom(bool normalDisconnection);
@@ -61,7 +61,7 @@ public:
         return mainController;
     }
 
-    virtual void loadPresetToTrack(Persistence::Preset preset);
+    virtual void loadPresetToTrack(const Persistence::Preset &preset);
     void resetGroupChannel(LocalTrackGroupView *group);// should load the defaultPreset.json ?
 
     bool isTransmiting(int channelID) const;
@@ -70,7 +70,7 @@ public:
     QStringList getChannelsNames() const;
 
 public slots:
-    void enterInRoom(Login::RoomInfo roomInfo);
+    void enterInRoom(const Login::RoomInfo &roomInfo);
 
 protected:
     Controller::MainController *mainController;
@@ -80,13 +80,13 @@ protected:
 
     QList<LocalTrackGroupView *> localGroupChannels;
 
-    virtual NinjamRoomWindow *createNinjamWindow(Login::RoomInfo, Controller::MainController *) = 0;
+    virtual NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &, Controller::MainController *) = 0;
 
     virtual void setFullViewStatus(bool fullViewActivated);
 
     bool eventFilter(QObject *target, QEvent *event);
 
-    LocalTrackGroupView *addLocalChannel(int channelGroupIndex, QString channelName,
+    LocalTrackGroupView *addLocalChannel(int channelGroupIndex, const QString &channelName,
                                          bool createFirstSubchannel);
 
     // this factory method is overrided in derived classes to create more specific views
@@ -94,7 +94,7 @@ protected:
 
     virtual void showPreferencesDialog(int initialTab) = 0;
 
-    virtual void initializeLocalSubChannel(LocalTrackView *localTrackView, Persistence::Subchannel subChannel);
+    virtual void initializeLocalSubChannel(LocalTrackView *localTrackView, const Persistence::Subchannel &subChannel);
 
     void stopCurrentRoomStream();
 
@@ -125,16 +125,16 @@ protected slots:
     void showJamtabaUsersManual();
 
     // private server
-    void connectInPrivateServer(QString server, int serverPort, QString password);
+    void connectInPrivateServer(const QString &server, int serverPort, const QString &password);
 
     // login service
     void showNewVersionAvailableMessage();
     void handleIncompatiblity();
-    virtual void handleServerConnectionError(QString errorMsg);
+    virtual void handleServerConnectionError(const QString &errorMsg);
 
     // +++++  ROOM FEATURES ++++++++
-    void playPublicRoomStream(Login::RoomInfo roomInfo);
-    void stopPublicRoomStream(Login::RoomInfo roomInfo);
+    void playPublicRoomStream(const Login::RoomInfo &roomInfo);
+    void stopPublicRoomStream(const Login::RoomInfo &roomInfo);
 
     // collapse local controls
     void toggleLocalInputsCollapseStatus();
@@ -143,20 +143,20 @@ protected slots:
     void updateChannelsNames();
 
     // room streamer
-    void handlePublicRoomStreamError(QString msg);
+    void handlePublicRoomStreamError(const QString &msg);
 
     // master fader
     void setMasterFaderPosition(int);
 
     // chords progression
-    void showChordProgression(ChordProgression chordProgression);
+    void showChordProgression(const ChordProgression &chordProgression);
     void sendCurrentChordProgressionToChat();
 
     void updateBpi(int bpi);
     void updateBpm(int bpm);
     void updateCurrentIntervalBeat(int beat);
 
-    void tryEnterInRoom(Login::RoomInfo roomInfo, QString password = "");
+    void tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &password = "");
 
 private slots:
 
@@ -164,18 +164,18 @@ private slots:
 
     void updateLocalInputChannelsGeometry();
 
-    void refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms);
+    void refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms);
 
 private:
 
     BusyDialog busyDialog;
 
-    void showBusyDialog(QString message);
+    void showBusyDialog(const QString &message);
     void showBusyDialog();
     void hideBusyDialog();
     void centerBusyDialog();
 
-    void showMessageBox(QString title, QString text, QMessageBox::Icon icon);
+    void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
 
     int timerID;
 
@@ -188,10 +188,10 @@ private:
     QScopedPointer<Login::RoomInfo> roomToJump;// store the next room reference when jumping from on room to another
     QString passwordToJump;
 
-    static bool jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2);
+    static bool jamRoomLessThan(const Login::RoomInfo &r1, const Login::RoomInfo &r2);
 
     void initializeLoginService();
-    void initializeLocalInputChannels(Persistence::LocalInputTrackSettings localInputSettings);
+    void initializeLocalInputChannels(const Persistence::LocalInputTrackSettings &localInputSettings);
 
     void initializeMainTabWidget();
     void initializeViewModeMenu();
@@ -206,12 +206,10 @@ private:
     void hideChordsPanel();
     ChordsPanel *createChordsPanel();
 
-    JamRoomViewPanel* createJamRoomViewPanel(Login::RoomInfo roomInfo);
+    JamRoomViewPanel* createJamRoomViewPanel(const Login::RoomInfo &roomInfo);
 
     void setupSignals();
     void setupWidgets();
-
-    void recreatePresetTracks(Persistence::Preset preset);
 
     void restoreWindowPosition();
 

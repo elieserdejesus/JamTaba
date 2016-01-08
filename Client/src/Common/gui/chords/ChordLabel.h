@@ -8,12 +8,12 @@ class ChordLabel : public QLabel
 {
     Q_OBJECT
 public:
-    ChordLabel(Chord chord);
+    explicit ChordLabel(const Chord &chord);
     ~ChordLabel();
     void setAsCurrentChord();
 private:
     Chord chord;
-    static QString chordToHtmlText(Chord chord);
+    static QString chordToHtmlText(const Chord &chord);
 
     static ChordLabel *currentChordLabel;
 

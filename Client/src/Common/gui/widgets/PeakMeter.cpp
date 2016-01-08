@@ -59,7 +59,7 @@ QLinearGradient PeakMeter::createGradient()
 {
     int x1 = isVertical() ? 0 : width()-1;
     int y1 = 0;
-    int x2 = isVertical() ? 0 : 0;
+    int x2 = 0;
     int y2 = isVertical() ? height()-1 : 0;
     QLinearGradient linearGradient(x1, y1, x2, y2);
     linearGradient.setColorAt(0, GRADIENT_FIRST_COLOR);
@@ -80,7 +80,7 @@ void PeakMeter::setPaintMaxPeakMarker(bool paintMaxPeak)
     update();
 }
 
-void PeakMeter::setSolidColor(QColor color)
+void PeakMeter::setSolidColor(const QColor &color)
 {
     this->usingGradient = false;
     this->solidColor = color;

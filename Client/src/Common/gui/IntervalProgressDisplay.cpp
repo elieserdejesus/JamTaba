@@ -99,7 +99,7 @@ void IntervalProgressDisplay::setPaintMode(PaintMode mode)
 }
 
 // ++++++++++++++++++++++++++  ELLIPSE PAINTING ++++++++++++++++++++++++++++++++++++++
-void IntervalProgressDisplay::paintCircular(QPainter &p, QColor textColor)
+void IntervalProgressDisplay::paintCircular(QPainter &p, const QColor &textColor)
 {
     int radius = std::min(horizontalRadius, verticalRadius);
     paintElliptical(p, textColor, radius, radius);
@@ -114,7 +114,7 @@ void IntervalProgressDisplay::paintEllipticalPath(QPainter &p, int hRadius, int 
     p.drawEllipse(QPoint(width()/2, height()/2 + 2), hRadius, vRadius);
 }
 
-void IntervalProgressDisplay::paintElliptical(QPainter &p, QColor textColor, int hRadius,
+void IntervalProgressDisplay::paintElliptical(QPainter &p, const QColor &textColor, int hRadius,
                                               int vRadius)
 {
     if (beats <= 32) {
@@ -167,7 +167,7 @@ void IntervalProgressDisplay::paintEvent(QPaintEvent *e)
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-void IntervalProgressDisplay::setSliceNumberColor(QColor sliceNumberColor)
+void IntervalProgressDisplay::setSliceNumberColor(const QColor &sliceNumberColor)
 {
     this->sliceNumberColor = sliceNumberColor;
     update();
@@ -265,7 +265,7 @@ void IntervalProgressDisplay::drawBeatCircles(QPainter &p, int hRadius, int vRad
 
 // +++++++++++++++++++++++++ LINEAR PAINTING +++++++++++
 void IntervalProgressDisplay::drawPoint(int x, int y, int size, QPainter *painter, int value,
-                                        QBrush bgPaint, QColor border, bool small, bool drawText)
+                                        const QBrush &bgPaint, const QColor &border, bool small, bool drawText)
 {
     painter->setBrush(bgPaint);
     painter->drawEllipse(QPoint(x, y), size/2, size/2);

@@ -12,7 +12,7 @@ class UserNameDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit UserNameDialog(QWidget *parent, QString lastUserName);
+    explicit UserNameDialog(QWidget *parent, const QString &lastUserName);
     ~UserNameDialog();
     QString getUserName() const;
 

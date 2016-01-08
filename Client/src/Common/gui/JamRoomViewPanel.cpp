@@ -8,7 +8,7 @@
 #include <QPainter>
 #include <QDebug>
 
-JamRoomViewPanel::JamRoomViewPanel(Login::RoomInfo roomInfo,
+JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo,
                                    Controller::MainController *mainController) :
     QWidget(nullptr),
     ui(new Ui::RoomViewPanel),
@@ -20,7 +20,7 @@ JamRoomViewPanel::JamRoomViewPanel(Login::RoomInfo roomInfo,
     ui->wavePeakPanel->setEnabled(false);// is enable when user click in listen button
 }
 
-QString JamRoomViewPanel::buildRoomDescriptionString(Login::RoomInfo roomInfo)
+QString JamRoomViewPanel::buildRoomDescriptionString(const Login::RoomInfo &roomInfo)
 {
     int botsCount = roomInfo.getUsers().count() - roomInfo.getNonBotUsersCount();
     int maxUsers = roomInfo.getMaxUsers() - botsCount;
@@ -34,7 +34,7 @@ QString JamRoomViewPanel::buildRoomDescriptionString(Login::RoomInfo roomInfo)
     return roomDescription;
 }
 
-void JamRoomViewPanel::refresh(Login::RoomInfo roomInfo)
+void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
 {
     this->roomInfo = roomInfo;
 
@@ -49,7 +49,7 @@ void JamRoomViewPanel::refresh(Login::RoomInfo roomInfo)
 
     QList<Login::UserInfo> userInfos = roomInfo.getUsers();
     qSort(userInfos.begin(), userInfos.end(), userInfoLessThan);
-    foreach (Login::UserInfo user, userInfos) {
+    foreach (const Login::UserInfo &user, userInfos) {
         if (!userIsBot(user)) {
             QLabel *label = new QLabel(ui->usersPanel);
             label->setTextFormat(Qt::RichText);
@@ -83,7 +83,7 @@ void JamRoomViewPanel::refresh(Login::RoomInfo roomInfo)
     ui->buttonEnter->setEnabled(!roomInfo.isFull());
 }
 
-bool JamRoomViewPanel::userInfoLessThan(Login::UserInfo u1, Login::UserInfo u2)
+bool JamRoomViewPanel::userInfoLessThan(const Login::UserInfo &u1, const Login::UserInfo &u2)
 {
     return u1.getName() < u2.getName();
 }
@@ -102,22 +102,22 @@ void JamRoomViewPanel::paintEvent(QPaintEvent *e)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-bool JamRoomViewPanel::userIsBot(Login::UserInfo userInfo)
+bool JamRoomViewPanel::userIsBot(const Login::UserInfo &userInfo)
 {
     return mainController->getBotNames().contains(userInfo.getName());
 }
 
-bool JamRoomViewPanel::roomContainsBotsOnly(Login::RoomInfo roomInfo)
+bool JamRoomViewPanel::roomContainsBotsOnly(const Login::RoomInfo &roomInfo)
 {
     QStringList botsNames = mainController->getBotNames();
-    foreach (Login::UserInfo user, roomInfo.getUsers()) {
+    foreach (const Login::UserInfo &user, roomInfo.getUsers()) {
         if (!botsNames.contains(user.getName()))
             return false;
     }
     return true;
 }
 
-void JamRoomViewPanel::initialize(Login::RoomInfo roomInfo)
+void JamRoomViewPanel::initialize(const Login::RoomInfo &roomInfo)
 {
     QString roomName = roomInfo.getName();
     if (roomInfo.getType() == Login::RoomTYPE::NINJAM)

@@ -2,7 +2,7 @@
 #include "ui_UserNameDialog.h"
 #include <QPushButton>
 
-UserNameDialog::UserNameDialog(QWidget *parent, QString lastUserName) :
+UserNameDialog::UserNameDialog(QWidget *parent, const QString &lastUserName) :
     QDialog(parent),
     ui(new Ui::UserNameDialog)
 {
