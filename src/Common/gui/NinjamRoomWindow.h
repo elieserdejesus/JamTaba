@@ -28,7 +28,7 @@ class NinjamRoomWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
+    explicit NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &roomInfo,
                               Controller::MainController *mainController);
     ~NinjamRoomWindow();
     void updatePeaks();
@@ -60,8 +60,8 @@ private:
 
     bool fullViewMode;
 
-    void handleVoteMessage(Ninjam::User user, QString message);
-    void handleChordProgressionMessage(Ninjam::User user, QString message);
+    void handleVoteMessage(const Ninjam::User &user, const QString &message);
+    void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);
 
     NinjamPanel *createNinjamPanel();
 
@@ -73,8 +73,8 @@ private:
 private slots:
 
     // ninjam panel controls
-    void setNewBpi(QString);
-    void setNewBpm(QString);
+    void setNewBpi(const QString &);
+    void setNewBpm(const QString &);
     void setNewBeatsPerAccent(int);
 
     // metronome events
@@ -84,17 +84,17 @@ private slots:
     void toggleMetronomeSoloStatus();
 
     // ninjam controller events
-    void addChannel(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
-    void removeChannel(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
-    void changeChannelName(Ninjam::User user, Ninjam::UserChannel channel, long channelID);
+    void addChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
+    void removeChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
+    void changeChannelName(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);
     void setChannelXmitStatus(long channelID, bool transmiting);
     void updateIntervalDownloadingProgressBar(long trackID);
     void hideIntervalDownloadingProgressBar(long trackID);
-    void addChatMessage(Ninjam::User, QString message);
-    void handleUserLeaving(QString userName);
-    void handleUserEntering(QString userName);
+    void addChatMessage(const Ninjam::User &, const QString &message);
+    void handleUserLeaving(const QString &userName);
+    void handleUserEntering(const QString &userName);
 
-    void sendNewChatMessage(QString msg);
+    void sendNewChatMessage(const QString &msg);
 
     void showServerLicence();
 

@@ -15,19 +15,19 @@ class ChatPanel : public QWidget
     Q_OBJECT
 
 public:
-    ChatPanel(QWidget *parent, QStringList botNames);
+    ChatPanel(QWidget *parent, const QStringList &botNames);
     virtual ~ChatPanel();
-    void addMessage(QString userName, QString userMessage, bool showTranslationButton = true);
+    void addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton = true);
     void addBpmVoteConfirmationMessage(int newBpmValue);
     void addBpiVoteConfirmationMessage(int newBpmValue);
-    void addChordProgressionConfirmationMessage(ChordProgression progression);
-    void setPreferredTranslationLanguage(QString targetLanguage);
+    void addChordProgressionConfirmationMessage(const ChordProgression &progression);
+    void setPreferredTranslationLanguage(const QString &targetLanguage);
     void updateMessagesGeometry();// called when user switch from mini mode to full view
 signals:
-    void userSendingNewMessage(QString msg);
+    void userSendingNewMessage(const QString &msg);
     void userConfirmingVoteToBpiChange(int newBpi);
     void userConfirmingVoteToBpmChange(int newBpm);
-    void userConfirmingChordProgression(ChordProgression chordProgression);
+    void userConfirmingChordProgression(const ChordProgression &chordProgression);
 private slots:
     void on_chatTextEditionFinished();
     void on_verticalScrollBarRangeChanged(int min, int max);
@@ -42,7 +42,7 @@ protected:
 private:
 
     Ui::ChatPanel *ui;
-    QColor getUserColor(QString userName);
+    QColor getUserColor(const QString &userName);
     QStringList botNames;
     static const QColor BOT_COLOR;
     QMap<QString, QColor> usersColorMap;// map user name to a color
@@ -54,7 +54,7 @@ private:
 
     QString preferredTargetTranslationLanguage;
 
-    void createVoteButton(QString voteType, int value);
+    void createVoteButton(const QString &voteType, int value);
 
     bool autoTranslating;
 };

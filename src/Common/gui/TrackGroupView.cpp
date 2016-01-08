@@ -73,7 +73,7 @@ BaseTrackView *TrackGroupView::addTrackView(long trackID)
     return newTrackView;
 }
 
-void TrackGroupView::setGroupName(QString groupName)
+void TrackGroupView::setGroupName(const QString &groupName)
 {
     ui->groupNameField->setText(groupName);
 }

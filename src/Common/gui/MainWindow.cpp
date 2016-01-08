@@ -147,7 +147,7 @@ void MainWindow::stopCurrentRoomStream()
     mainController->stopRoomStream();
 }
 
-void MainWindow::showMessageBox(QString title, QString text, QMessageBox::Icon icon)
+void MainWindow::showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon)
 {
     QMessageBox *messageBox = new QMessageBox(this);
     messageBox->setWindowTitle(title);
@@ -158,7 +158,7 @@ void MainWindow::showMessageBox(QString title, QString text, QMessageBox::Icon i
     centerDialog(messageBox);
 }
 
-void MainWindow::handlePublicRoomStreamError(QString msg)
+void MainWindow::handlePublicRoomStreamError(const QString &msg)
 {
     stopCurrentRoomStream();
     showMessageBox("Error!", msg, QMessageBox::Critical);
@@ -192,7 +192,7 @@ void MainWindow::highlightChannelGroup(int index) const
         Highligther::getInstance()->highlight(localGroupChannels.at(index));
 }
 
-void MainWindow::addChannelsGroup(QString name)
+void MainWindow::addChannelsGroup(const QString &name)
 {
     int channelIndex = localGroupChannels.size();
     addLocalChannel(channelIndex, name, true);
@@ -236,7 +236,7 @@ LocalTrackGroupView *MainWindow::createLocalTrackGroupView(int channelGroupIndex
 }
 
 // ++++++++++++++++++=
-LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString channelName,
+LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QString &channelName,
                                                  bool createFirstSubchannel)
 {
     LocalTrackGroupView *localChannel = createLocalTrackGroupView(channelGroupIndex);
@@ -264,7 +264,7 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, QString 
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainWindow::loadPresetToTrack(Persistence::Preset preset)
+void MainWindow::loadPresetToTrack(const Preset &preset)
 {
     if (preset.isValid()) {
         removeAllInputLocalTracks();
@@ -286,25 +286,25 @@ void MainWindow::removeAllInputLocalTracks()
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // this function is overrided in MainWindowStandalone to load input selections and plugins
 void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView,
-                                                Persistence::Subchannel subChannel)
+                                                const Subchannel &subChannel)
 {
     BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
     localTrackView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted);
 }
 
-void MainWindow::initializeLocalInputChannels(LocalInputTrackSettings inputsSettings)
+void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inputsSettings)
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
     QApplication::processEvents();
 
     qCInfo(jtGUI) << "Initializing local inputs...";
     int channelIndex = 0;
-    foreach (Persistence::Channel channel, inputsSettings.channels) {
+    foreach (const Persistence::Channel &channel, inputsSettings.channels) {
         qCInfo(jtGUI) << "\tCreating channel "<< channel.name;
         bool createFirstSubChannel = channel.subChannels.isEmpty();
         LocalTrackGroupView *channelView = addLocalChannel(channelIndex, channel.name,
                                                            createFirstSubChannel);
-        foreach (Persistence::Subchannel subChannel, channel.subChannels) {
+        foreach (const Persistence::Subchannel &subChannel, channel.subChannels) {
             qCInfo(jtGUI) << "\t\tCreating sub-channel ";
             LocalTrackView *subChannelView = channelView->addTrackView(channelIndex);
             initializeLocalSubChannel(subChannelView, subChannel);
@@ -323,7 +323,7 @@ void MainWindow::initializeLoginService()
     Login::LoginService *loginService = this->mainController->getLoginService();
 
     connect(loginService, SIGNAL(roomsListAvailable(QList<Login::RoomInfo>)), this,
-            SLOT(refreshPublicRoomsList(QList<Login::RoomInfo>)));
+            SLOT(refreshPublicRoomsList(const QList<Login::RoomInfo> &)));
 
     connect(loginService, SIGNAL(incompatibilityWithServerDetected()), this,
             SLOT(handleIncompatiblity()));
@@ -359,7 +359,7 @@ void MainWindow::showBusyDialog()
     showBusyDialog("");
 }
 
-void MainWindow::showBusyDialog(QString message)
+void MainWindow::showBusyDialog(const QString &message)
 {
     busyDialog.setParent(this);
     centerBusyDialog();
@@ -383,7 +383,7 @@ void MainWindow::centerBusyDialog()
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-bool MainWindow::jamRoomLessThan(Login::RoomInfo r1, Login::RoomInfo r2)
+bool MainWindow::jamRoomLessThan(const Login::RoomInfo &r1, const Login::RoomInfo &r2)
 {
     return r1.getNonBotUsersCount() > r2.getNonBotUsersCount();
 }
@@ -401,7 +401,7 @@ void MainWindow::detachMainController()
     mainController = nullptr;
 }
 
-void MainWindow::handleServerConnectionError(QString errorMsg)
+void MainWindow::handleServerConnectionError(const QString &errorMsg)
 {
     hideBusyDialog();
     QMessageBox::warning(this, "Error!", "Error connecting in Jamtaba server!\n" + errorMsg);
@@ -417,7 +417,7 @@ void MainWindow::showNewVersionAvailableMessage()
     QMessageBox::information(this, "New Jamtaba version available!", text);
 }
 
-JamRoomViewPanel *MainWindow::createJamRoomViewPanel(Login::RoomInfo roomInfo)
+JamRoomViewPanel *MainWindow::createJamRoomViewPanel(const Login::RoomInfo &roomInfo)
 {
     JamRoomViewPanel *newJamRoomView = new JamRoomViewPanel(roomInfo, mainController);
 
@@ -433,16 +433,18 @@ JamRoomViewPanel *MainWindow::createJamRoomViewPanel(Login::RoomInfo roomInfo)
     return newJamRoomView;
 }
 
-void MainWindow::refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms)
+void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms)
 {
     if (!isVisible())
         return;
 
     hideBusyDialog();
 
-    qSort(publicRooms.begin(), publicRooms.end(), jamRoomLessThan);
+    QList<Login::RoomInfo> sortedRooms(publicRooms);
+    qSort(sortedRooms.begin(), sortedRooms.end(), jamRoomLessThan);
+
     int index = 0;
-    foreach (Login::RoomInfo roomInfo, publicRooms) {
+    foreach (const Login::RoomInfo &roomInfo, sortedRooms) {
         if (roomInfo.getType() == Login::RoomTYPE::NINJAM) {// skipping other rooms at moment
             int rowIndex = fullViewMode ? (index / 2) : (index);
             int collumnIndex = fullViewMode ? (index % 2) : 0;// use one collumn if user choosing mini view mode
@@ -466,7 +468,7 @@ void MainWindow::refreshPublicRoomsList(QList<Login::RoomInfo> publicRooms)
 }
 
 // +++++++++++++++++++++++++++++++++++++
-void MainWindow::playPublicRoomStream(Login::RoomInfo roomInfo)
+void MainWindow::playPublicRoomStream(const Login::RoomInfo &roomInfo)
 {
     // clear all plots
     foreach (JamRoomViewPanel *viewPanel, this->roomViewPanels.values())
@@ -476,7 +478,7 @@ void MainWindow::playPublicRoomStream(Login::RoomInfo roomInfo)
         mainController->playRoomStream(roomInfo);
 }
 
-void MainWindow::stopPublicRoomStream(Login::RoomInfo roomInfo)
+void MainWindow::stopPublicRoomStream(const Login::RoomInfo &roomInfo)
 {
     Q_UNUSED(roomInfo)
     stopCurrentRoomStream();
@@ -491,7 +493,7 @@ QStringList MainWindow::getChannelsNames() const
 }
 
 // user trying enter in a room
-void MainWindow::tryEnterInRoom(Login::RoomInfo roomInfo, QString password)
+void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &password)
 {
     // stop room stream before enter in a room
     if (mainController->isPlayingRoomStream()) {
@@ -533,7 +535,7 @@ void MainWindow::tryEnterInRoom(Login::RoomInfo roomInfo, QString password)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainWindow::enterInRoom(Login::RoomInfo roomInfo)
+void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
 {
     qCDebug(jtGUI) << "hidding busy dialog...";
     hideBusyDialog();
@@ -738,7 +740,7 @@ MainWindow::~MainWindow()
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainWindow::connectInPrivateServer(QString server, int serverPort, QString password)
+void MainWindow::connectInPrivateServer(const QString &server, int serverPort, const QString &password)
 {
     mainController->storePrivateServerSettings(server, serverPort, password);
     Login::RoomInfo roomInfo(server, serverPort, Login::RoomTYPE::NINJAM, 32, 32);
@@ -946,23 +948,23 @@ ChordsPanel *MainWindow::createChordsPanel()
 {
     ChordsPanel *chordsPanel = new ChordsPanel();
     QObject::connect(chordsPanel, SIGNAL(buttonSendChordsToChatClicked()), this,
-                     SLOT(on_buttonSendChordsToChatClicked()));
+                     SLOT(sendCurrentChordProgressionToChat()));
     return chordsPanel;
 }
 
-void MainWindow::showChordProgression(ChordProgression progression)
+void MainWindow::showChordProgression(const ChordProgression &progression)
 {
     int currentBpi = mainController->getNinjamController()->getCurrentBpi();
     if (progression.canBeUsed(currentBpi)) {
-        bool needStrech = progression.getBeatsPerInterval() != currentBpi;
-        if (needStrech)
-            progression = progression.getStretchedVersion(currentBpi);
-
         if (!chordsPanel)
             chordsPanel = createChordsPanel();
         else
             chordsPanel->setVisible(true);
-        chordsPanel->setChords(progression);
+        bool needStrech = progression.getBeatsPerInterval() != currentBpi;
+        if(needStrech)
+            chordsPanel->setChords(progression.getStretchedVersion(currentBpi));
+        else
+            chordsPanel->setChords(progression);
 
         // add the chord panel in top of bottom panel in main window
         dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->insertWidget(0, chordsPanel);

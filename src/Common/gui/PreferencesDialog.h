@@ -18,6 +18,8 @@ public:
     PreferencesDialog(Controller::MainController *mainController, MainWindow *mainWindow);
     virtual ~PreferencesDialog();
 
+    void initialize();
+
     enum TAB {
         TAB_AUDIO, TAB_MIDI, TAB_VST, TAB_RECORDING
     };

@@ -20,16 +20,16 @@ ChordsPanel::~ChordsPanel()
     delete ui;
 }
 
-void ChordsPanel::setChords(ChordProgression progression)
+void ChordsPanel::setChords(const ChordProgression &progression)
 {
     ui->chordsWidget->clear();
     this->chordProgression.clear();
     if (progression.isEmpty())// empty progression is returned when a incompatible bpi is choosed, for example.
         return;
     QList<ChordProgressionMeasure> measures = progression.getMeasures();
-    foreach (ChordProgressionMeasure measure, measures) {
+    foreach (const ChordProgressionMeasure &measure, measures) {
         const QList<Chord> chords = measure.getChords();
-        foreach (Chord chord, chords)
+        foreach (const Chord &chord, chords)
             ui->chordsWidget->addChord(chord, getEstimatedChordDuration(chord, measure));
     }
     this->chordProgression = progression;
@@ -51,7 +51,8 @@ bool ChordsPanel::setBpi(int newBpi)
     return false;
 }
 
-int ChordsPanel::getEstimatedChordDuration(Chord chord, ChordProgressionMeasure measure) const
+int ChordsPanel::getEstimatedChordDuration(const Chord &chord,
+                                           const ChordProgressionMeasure &measure) const
 {
     int chordsInMeasure = measure.getChords().size();
     if (chordsInMeasure <= 2)// only one or two chords in the measure?

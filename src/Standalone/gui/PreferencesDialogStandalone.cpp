@@ -15,22 +15,23 @@ using namespace Controller;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 
-StandalonePreferencesDialog::StandalonePreferencesDialog(Controller::MainControllerStandalone *mainController,
-                                                         MainWindow *mainWindow, int initialTab) :
+StandalonePreferencesDialog::StandalonePreferencesDialog(
+    Controller::MainControllerStandalone *mainController, MainWindow *mainWindow) :
     PreferencesDialog(mainController, mainWindow),
     controller(mainController)
-
 {
-    setupSignals();
-    populateAllTabs();
-    ui->prefsTab->setCurrentIndex(initialTab);
-
 #ifdef Q_OS_MAC
     ui->comboAudioDevice->setVisible(false);
     ui->asioDriverLabel->setVisible(false);
     ui->groupBoxInputs->setVisible(false);
     ui->groupBoxOutputs->setVisible(false);
 #endif
+}
+
+void StandalonePreferencesDialog::initialize(int initialTab)
+{
+    PreferencesDialog::initialize();
+    ui->prefsTab->setCurrentIndex(initialTab);
 }
 
 void StandalonePreferencesDialog::populateAllTabs()
@@ -47,11 +48,14 @@ void StandalonePreferencesDialog::setupSignals()
 
     connect(ui->comboAudioDevice, SIGNAL(activated(int)), this, SLOT(changeAudioDevice(int)));
 
-    connect(ui->comboFirstInput, SIGNAL(currentIndexChanged(int)), this, SLOT(populateLastInputCombo()));
+    connect(ui->comboFirstInput, SIGNAL(currentIndexChanged(int)), this,
+            SLOT(populateLastInputCombo()));
 
-    connect(ui->comboFirstOutput, SIGNAL(currentIndexChanged(int)), this, SLOT(populateLastOutputCombo()));
+    connect(ui->comboFirstOutput, SIGNAL(currentIndexChanged(int)), this,
+            SLOT(populateLastOutputCombo()));
 
-    connect(ui->buttonControlPanel, SIGNAL(clicked(bool)), this, SLOT(openExternalAudioControlPanel()));
+    connect(ui->buttonControlPanel, SIGNAL(clicked(bool)), this,
+            SLOT(openExternalAudioControlPanel()));
 
     connect(ui->buttonAddVstScanFolder, SIGNAL(clicked(bool)), this, SLOT(addVstScanFolder()));
 
@@ -59,11 +63,14 @@ void StandalonePreferencesDialog::setupSignals()
 
     connect(ui->ButtonVst_Refresh, SIGNAL(clicked(bool)), this, SLOT(scanNewPlugins()));
 
-    connect(ui->ButtonVST_AddToBlackList, SIGNAL(clicked(bool)), this, SLOT(addBlackListedPlugins()));
+    connect(ui->ButtonVST_AddToBlackList, SIGNAL(clicked(bool)), this,
+            SLOT(addBlackListedPlugins()));
 
-    connect(ui->ButtonVST_RemFromBlkList, SIGNAL(clicked(bool)), this, SLOT(removeBlackListedPlugins()));
+    connect(ui->ButtonVST_RemFromBlkList, SIGNAL(clicked(bool)), this,
+            SLOT(removeBlackListedPlugins()));
 
-    connect(controller->getPluginFinder(), SIGNAL(scanFinished(bool)), this, SLOT(populateVstTab()));
+    connect(controller->getPluginFinder(), SIGNAL(scanFinished(bool)), this,
+            SLOT(populateVstTab()));
 }
 
 void StandalonePreferencesDialog::addVstScanFolder()
@@ -255,8 +262,9 @@ void StandalonePreferencesDialog::populateMidiTab()
     }
 }
 
-Audio::AudioDriver* StandalonePreferencesDialog::getAudioDriver(){
-    return dynamic_cast<MainControllerStandalone*>(mainController)->getAudioDriver();
+Audio::AudioDriver *StandalonePreferencesDialog::getAudioDriver()
+{
+    return dynamic_cast<MainControllerStandalone *>(mainController)->getAudioDriver();
 }
 
 void StandalonePreferencesDialog::populateAudioTab()

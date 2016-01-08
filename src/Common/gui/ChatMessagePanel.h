@@ -15,10 +15,10 @@ class ChatMessagePanel : public QWidget
 
 public:
     explicit ChatMessagePanel(QWidget *parent);
-    ChatMessagePanel(QWidget *parent, QString userName, QString msg, QColor userNameBackgroundColor,
-                     QColor msgBackgroundColor, QColor textColor, bool showTranslationButton);
+    ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg, const QColor &userNameBackgroundColor,
+                     const QColor &msgBackgroundColor, const QColor &textColor, bool showTranslationButton);
     ~ChatMessagePanel();
-    void setPrefferedTranslationLanguage(QString targetLanguage);
+    void setPrefferedTranslationLanguage(const QString &targetLanguage);
     void translate();
 private slots:
     void on_translateButton_clicked();
@@ -30,15 +30,15 @@ private:
     QString translatedText;
     Ui::ChatMessagePanel *ui;
     QString preferredTargetTranslationLanguage;
-    static QString colorToCSS(QColor);
-    static QString replaceLinksInString(QString str);
+    static QString colorToCSS(const QColor &);
+    static QString replaceLinksInString(const QString &string);
 
-    static QString buildCssString(QColor bgColor, QColor textColor);
+    static QString buildCssString(const QColor &bgColor, const QColor &textColor);
 
-    void initialize(QString userName, QString msg, QColor userNameBackgroundColor,
-                    QColor msgBackgroundColor, QColor textColor, bool showTranslationButton);
+    void initialize(const QString &userName, const QString &msg, const QColor &userNameBackgroundColor,
+                    const QColor &msgBackgroundColor, const QColor &textColor, bool showTranslationButton);
 
-    void setTranslatedMessage(QString translatedMessage);
+    void setTranslatedMessage(const QString &translatedMessage);
 };
 
 #endif // CHATMESSAGEPANEL_H

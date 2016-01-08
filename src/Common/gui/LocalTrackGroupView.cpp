@@ -115,7 +115,7 @@ QMenu *LocalTrackGroupView::createPresetsSubMenu()
     // adding a menu action for each stored preset
     Configurator *cfg = Configurator::getInstance();
     QStringList presetsNames = cfg->getPresetFilesNames(false);
-    foreach (QString name, presetsNames) {
+    foreach (const QString &name, presetsNames) {
         QAction *presetAction = presetsMenu->addAction(name);
         // putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
         presetAction->setData(name);

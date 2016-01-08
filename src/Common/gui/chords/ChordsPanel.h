@@ -15,7 +15,7 @@ class ChordsPanel : public QWidget
 public:
     explicit ChordsPanel(QWidget *parent = 0);
     ~ChordsPanel();
-    void setChords(ChordProgression progression);
+    void setChords(const ChordProgression &progression);
     void setCurrentBeat(int beat);
     bool setBpi(int bpi); // return true if the new bpi can be use with the currentChordProgression
     inline bool hasValidProgression() const
@@ -44,7 +44,7 @@ private slots:
 private:
     Ui::ChordsPanel *ui;
     ChordProgression chordProgression;
-    int getEstimatedChordDuration(Chord chord, ChordProgressionMeasure measure) const;
+    int getEstimatedChordDuration(const Chord &chord, const ChordProgressionMeasure &measure) const;
 };
 
 #endif // QCHORDPANEL_H

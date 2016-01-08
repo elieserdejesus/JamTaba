@@ -69,7 +69,7 @@ void WavePeakPanel::paintEvent(QPaintEvent *event)
     }
 }
 
-void WavePeakPanel::drawPeak(QPainter *g, int x, float peak, QColor color)
+void WavePeakPanel::drawPeak(QPainter *g, int x, float peak, const QColor &color)
 {
     int peakHeight = (int)(height() * peak);
     if (peakHeight == 0)
