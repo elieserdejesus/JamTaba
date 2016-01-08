@@ -52,16 +52,14 @@ LocalTrackViewStandalone *LocalTrackGroupViewStandalone::addTrackView(long track
 
 void LocalTrackGroupViewStandalone::refreshInputSelectionName(int inputTrackIndex)
 {
-    QList<LocalTrackView *> tracks = getTracks();
-    foreach (LocalTrackView *trackView, tracks) {
+    foreach (LocalTrackViewStandalone *trackView, getTracks<LocalTrackViewStandalone *>()) {
         if (trackView->getInputIndex() == inputTrackIndex)
-            dynamic_cast<LocalTrackViewStandalone *>(trackView)->refreshInputSelectionName();
+            trackView->refreshInputSelectionName();
     }
 }
 
 void LocalTrackGroupViewStandalone::refreshInputSelectionNames()
 {
-    QList<LocalTrackView *> tracks = getTracks();
-    foreach (LocalTrackView *trackView, tracks)
-        dynamic_cast<LocalTrackViewStandalone *>(trackView)->refreshInputSelectionName();
+    foreach (LocalTrackViewStandalone *trackView, getTracks<LocalTrackViewStandalone *>())
+        trackView->refreshInputSelectionName();
 }

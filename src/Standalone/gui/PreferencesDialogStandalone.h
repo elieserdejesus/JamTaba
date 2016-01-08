@@ -74,7 +74,6 @@ private:
 
     void clearWidgetLayout(QWidget* widget);
 
-    Audio::AudioDriver* getAudioDriver();
 };
 
 #endif

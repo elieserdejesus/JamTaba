@@ -75,10 +75,9 @@ public slots:
 protected:
     Controller::MainController *mainController;
     Ui::MainFrameClass ui;
+    QList<LocalTrackGroupView *> localGroupChannels;
 
     void centerDialog(QWidget *dialog);
-
-    QList<LocalTrackGroupView *> localGroupChannels;
 
     virtual NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &, Controller::MainController *) = 0;
 
@@ -99,6 +98,16 @@ protected:
     void stopCurrentRoomStream();
 
     virtual void removeAllInputLocalTracks();
+
+    template<class T>
+    QList<T> getLocalChannels() const
+    {
+        QList<T> localChannels;
+        foreach (LocalTrackGroupView * trackGroupView, localGroupChannels) {
+            localChannels.append( dynamic_cast<T>(trackGroupView));
+        }
+        return localChannels;
+    }
 
 protected slots:
     void closeTab(int index);
