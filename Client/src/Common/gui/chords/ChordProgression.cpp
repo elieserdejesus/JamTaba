@@ -41,7 +41,7 @@ ChordProgression ChordProgression::getStretchedVersion(int bpi) const
     ChordProgression stretchedProgression;
     for (ChordProgressionMeasure originalMeasure : measures) {
         ChordProgressionMeasure newMeasure(newbeatsPerMesure);
-        foreach (Chord chord, originalMeasure.getChords()) {
+        foreach (const Chord &chord, originalMeasure.getChords()) {
             int newChordBeat = chord.getBeat() * strechFactor;
             newMeasure.addChord(Chord(chord.getChordText(), newChordBeat));
         }
@@ -56,7 +56,7 @@ ChordProgression ChordProgression::getTransposedVersion(int semitones) const
     ChordProgression newProgression;
     for (ChordProgressionMeasure originalMeasure : measures) {
         ChordProgressionMeasure newMeasure(originalMeasure.getBeats());
-        foreach (Chord chord, originalMeasure.getChords())
+        foreach (const Chord &chord, originalMeasure.getChords())
             newMeasure.addChord(chord.getTransposedVersion(semitones));
         newProgression.addMeasure(newMeasure);
     }
@@ -74,7 +74,7 @@ int ChordProgression::getBeatsPerInterval() const
 QString ChordProgression::toString() const
 {
     QString string;
-    foreach (ChordProgressionMeasure measure, measures)
+    foreach (const ChordProgressionMeasure &measure, measures)
         string += measure.toString();
     return string;
 }

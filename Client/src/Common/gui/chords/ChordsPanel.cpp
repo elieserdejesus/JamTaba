@@ -27,9 +27,9 @@ void ChordsPanel::setChords(const ChordProgression &progression)
     if (progression.isEmpty())// empty progression is returned when a incompatible bpi is choosed, for example.
         return;
     QList<ChordProgressionMeasure> measures = progression.getMeasures();
-    foreach (ChordProgressionMeasure measure, measures) {
+    foreach (const ChordProgressionMeasure &measure, measures) {
         const QList<Chord> chords = measure.getChords();
-        foreach (Chord chord, chords)
+        foreach (const Chord &chord, chords)
             ui->chordsWidget->addChord(chord, getEstimatedChordDuration(chord, measure));
     }
     this->chordProgression = progression;

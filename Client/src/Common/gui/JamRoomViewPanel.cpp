@@ -49,7 +49,7 @@ void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
 
     QList<Login::UserInfo> userInfos = roomInfo.getUsers();
     qSort(userInfos.begin(), userInfos.end(), userInfoLessThan);
-    foreach (Login::UserInfo user, userInfos) {
+    foreach (const Login::UserInfo &user, userInfos) {
         if (!userIsBot(user)) {
             QLabel *label = new QLabel(ui->usersPanel);
             label->setTextFormat(Qt::RichText);
@@ -110,7 +110,7 @@ bool JamRoomViewPanel::userIsBot(const Login::UserInfo &userInfo)
 bool JamRoomViewPanel::roomContainsBotsOnly(const Login::RoomInfo &roomInfo)
 {
     QStringList botsNames = mainController->getBotNames();
-    foreach (Login::UserInfo user, roomInfo.getUsers()) {
+    foreach (const Login::UserInfo &user, roomInfo.getUsers()) {
         if (!botsNames.contains(user.getName()))
             return false;
     }

@@ -299,12 +299,12 @@ void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inp
 
     qCInfo(jtGUI) << "Initializing local inputs...";
     int channelIndex = 0;
-    foreach (Persistence::Channel channel, inputsSettings.channels) {
+    foreach (const Persistence::Channel &channel, inputsSettings.channels) {
         qCInfo(jtGUI) << "\tCreating channel "<< channel.name;
         bool createFirstSubChannel = channel.subChannels.isEmpty();
         LocalTrackGroupView *channelView = addLocalChannel(channelIndex, channel.name,
                                                            createFirstSubChannel);
-        foreach (Persistence::Subchannel subChannel, channel.subChannels) {
+        foreach (const Persistence::Subchannel &subChannel, channel.subChannels) {
             qCInfo(jtGUI) << "\t\tCreating sub-channel ";
             LocalTrackView *subChannelView = channelView->addTrackView(channelIndex);
             initializeLocalSubChannel(subChannelView, subChannel);
@@ -444,7 +444,7 @@ void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRoom
     qSort(sortedRooms.begin(), sortedRooms.end(), jamRoomLessThan);
 
     int index = 0;
-    foreach (Login::RoomInfo roomInfo, sortedRooms) {
+    foreach (const Login::RoomInfo &roomInfo, sortedRooms) {
         if (roomInfo.getType() == Login::RoomTYPE::NINJAM) {// skipping other rooms at moment
             int rowIndex = fullViewMode ? (index / 2) : (index);
             int collumnIndex = fullViewMode ? (index % 2) : 0;// use one collumn if user choosing mini view mode
