@@ -211,12 +211,13 @@ LocalTrackGroupViewStandalone *MainWindowStandalone::createLocalTrackGroupView(i
     return new LocalTrackGroupViewStandalone(channelGroupIndex, this);
 }
 
+
 LocalTrackGroupViewStandalone *MainWindowStandalone::geTrackGroupViewByName(QString trackGroupName)
 const
 {
-    foreach (LocalTrackGroupView *trackGroupView, localGroupChannels) {
+    foreach (LocalTrackGroupViewStandalone *trackGroupView, getLocalChannels<LocalTrackGroupViewStandalone *>()) {
         if (trackGroupView->getGroupName() == trackGroupName)
-            return dynamic_cast<LocalTrackGroupViewStandalone *>(trackGroupView);
+            return trackGroupView;
     }
     return nullptr;
 }
@@ -246,11 +247,10 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
         Channel newChannel = channel;
         newChannel.subChannels.clear();
         int subChannelID = 0;
-        QList<LocalTrackView *> trackViews = trackGroupView->getTracks();
+        QList<LocalTrackViewStandalone *> trackViews = trackGroupView->getTracks<LocalTrackViewStandalone *>();
         foreach (Subchannel subchannel, channel.subChannels) {
             Subchannel newSubChannel = subchannel;
-            LocalTrackViewStandalone *trackView
-                = dynamic_cast<LocalTrackViewStandalone *>(trackViews.at(subChannelID));
+            LocalTrackViewStandalone *trackView = trackViews.at(subChannelID);
             if (trackView)
                 newSubChannel.setPlugins(buildPersistentPluginList(trackView->getInsertedPlugins()));
 
@@ -331,7 +331,7 @@ void MainWindowStandalone::initializePluginFinder()
 void MainWindowStandalone::handleServerConnectionError(QString msg)
 {
     MainWindow::handleServerConnectionError(msg);
-    (dynamic_cast<MainControllerStandalone *>(mainController))->quit();
+    controller->quit();
 }
 
 void MainWindowStandalone::setGlobalPreferences(QList<bool> midiInputsStatus, int audioDevice,
@@ -355,8 +355,8 @@ void MainWindowStandalone::setGlobalPreferences(QList<bool> midiInputsStatus, in
 
     controller->updateInputTracksRange();
 
-    foreach (LocalTrackGroupView *channel, localGroupChannels)
-        dynamic_cast<LocalTrackGroupViewStandalone *>(channel)->refreshInputSelectionNames();
+    foreach (LocalTrackGroupViewStandalone *channel, getLocalChannels<LocalTrackGroupViewStandalone *>())
+        channel->refreshInputSelectionNames();
 
     midiDriver->start();
     try{
@@ -373,9 +373,8 @@ void MainWindowStandalone::setGlobalPreferences(QList<bool> midiInputsStatus, in
 // input selection changed by user or by system
 void MainWindowStandalone::refreshTrackInputSelection(int inputTrackIndex)
 {
-    foreach (LocalTrackGroupView *channel, localGroupChannels)
-        dynamic_cast<LocalTrackGroupViewStandalone *>(channel)->refreshInputSelectionName(
-            inputTrackIndex);
+    foreach (LocalTrackGroupViewStandalone *channel, getLocalChannels<LocalTrackGroupViewStandalone *>())
+        channel->refreshInputSelectionName(inputTrackIndex);
 }
 
 void MainWindowStandalone::addChannelsGroup(const QString &groupName)

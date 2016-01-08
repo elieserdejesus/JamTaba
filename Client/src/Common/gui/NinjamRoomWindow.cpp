@@ -338,8 +338,7 @@ void NinjamRoomWindow::addChannel(const Ninjam::User &user, const Ninjam::UserCh
     } else {// the second, or third channel from same user, group with other channels
         NinjamTrackGroupView *trackGroup = trackGroups[user.getFullName()];
         if (trackGroup) {
-            NinjamTrackView *ninjamTrackView
-                = dynamic_cast<NinjamTrackView *>(trackGroup->addTrackView(channelID));
+            NinjamTrackView *ninjamTrackView = trackGroup->addTrackView(channelID);
             ninjamTrackView->setChannelName(channel.getName());
             ninjamTrackView->setInitialValues(cacheEntry);
             ninjamTrackView->setUnlightStatus(true);/** disabled/grayed until receive the first bytes. When the first bytes

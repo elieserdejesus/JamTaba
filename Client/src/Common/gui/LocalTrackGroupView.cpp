@@ -70,14 +70,6 @@ QPushButton *LocalTrackGroupView::createToolButton()
     return toolButton;
 }
 
-QList<LocalTrackView *> LocalTrackGroupView::getTracks() const
-{
-    QList<LocalTrackView *> tracks;
-    foreach (BaseTrackView *baseView, trackViews)
-        tracks.append(dynamic_cast<LocalTrackView *>(baseView));
-    return tracks;
-}
-
 void LocalTrackGroupView::closePluginsWindows()
 {
     QList<LocalTrackView *> trackViews = getTracks();
@@ -238,8 +230,8 @@ void LocalTrackGroupView::removeSubchannel()
 
 void LocalTrackGroupView::detachMainControllerInSubchannels()
 {
-    foreach (BaseTrackView *view, trackViews)
-        (dynamic_cast<LocalTrackView *>(view))->detachMainController();
+    foreach (LocalTrackView *view, getTracks<LocalTrackView *>())
+        view->detachMainController();
 }
 
 void LocalTrackGroupView::removeChannel()
@@ -296,8 +288,7 @@ void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
     if (this->peakMeterOnly != peakMeterOnly) {
         this->peakMeterOnly = peakMeterOnly;
         this->ui->topPanel->setVisible(!this->peakMeterOnly);
-        foreach (BaseTrackView *baseView, trackViews) {
-            LocalTrackView *view = dynamic_cast<LocalTrackView *>(baseView);
+        foreach (LocalTrackView *view, getTracks<LocalTrackView *>()) {
             view->setPeakMetersOnlyMode(peakMeterOnly, mainFrame->isRunningInMiniMode());
         }
 
