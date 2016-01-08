@@ -9,7 +9,7 @@
 
 const QColor ChatPanel::BOT_COLOR(120, 120, 120);
 
-ChatPanel::ChatPanel(QWidget *parent, QStringList botNames) :
+ChatPanel::ChatPanel(QWidget *parent, const QStringList &botNames) :
     QWidget(parent),
     ui(new Ui::ChatPanel),
     botNames(botNames),
@@ -72,7 +72,7 @@ private:
     QString voteType;
 };
 
-void ChatPanel::createVoteButton(QString voteType, int value)
+void ChatPanel::createVoteButton(const QString &voteType, int value)
 {
     QPushButton *voteButton = new NinjamVoteButton(voteType, value);
     voteButton->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
@@ -123,7 +123,7 @@ private:
     ChordProgression progression;
 };
 
-void ChatPanel::addChordProgressionConfirmationMessage(ChordProgression progression)
+void ChatPanel::addChordProgressionConfirmationMessage(const ChordProgression &progression)
 {
     QString buttonText = "Use/load the chords above";
     QPushButton *chordProgressionButton = new ChordProgressionConfirmationButton(buttonText,
@@ -173,7 +173,7 @@ void ChatPanel::updateMessagesGeometry()
     }
 }
 
-void ChatPanel::addMessage(QString userName, QString userMessage, bool showTranslationButton)
+void ChatPanel::addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton)
 {
     QColor msgBackgroundColor = getUserColor(userName);
     QColor textColor = (msgBackgroundColor == BOT_COLOR) ? QColor(50, 50, 50) : QColor(0, 0, 0);
@@ -216,7 +216,7 @@ QList<QColor> ChatPanel::createColors()
     return colors;
 }
 
-QColor ChatPanel::getUserColor(QString userName)
+QColor ChatPanel::getUserColor(const QString &userName)
 {
     if (botNames.contains(userName) || userName.isNull() || userName.isEmpty()
         || userName == "Jamtaba")
@@ -254,7 +254,7 @@ void ChatPanel::on_buttonClear_clicked()
     }
 }
 
-void ChatPanel::setPreferredTranslationLanguage(QString targetLanguage)
+void ChatPanel::setPreferredTranslationLanguage(const QString &targetLanguage)
 {
     if (targetLanguage != this->preferredTargetTranslationLanguage) {
         this->preferredTargetTranslationLanguage = targetLanguage;

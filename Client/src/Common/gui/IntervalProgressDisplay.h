@@ -36,7 +36,7 @@ public:
     }
 
     void setBeatsPerInterval(int beats);
-    void setSliceNumberColor(QColor sliceNumberColor);
+    void setSliceNumberColor(const QColor &sliceNumberColor);
     inline QColor getSliceNumberColor() const
     {
         return sliceNumberColor;
@@ -68,13 +68,13 @@ private:
     PaintMode paintMode;
 
     // ellipse and circle painting
-    void paintElliptical(QPainter &p, QColor textColor, int hRadius, int vRadius);
+    void paintElliptical(QPainter &p, const QColor &textColor, int hRadius, int vRadius);
     void paintEllipticalPath(QPainter &p, int hRadius, int vRadius);
-    void paintCircular(QPainter &p, QColor textColor);
+    void paintCircular(QPainter &p, const QColor &textColor);
     void drawBeatCircles(QPainter &p, int hRadius, int vRadius, int beatCircles, int startIterval);
 
     // linear painting
-    void drawPoint(int x, int y, int size, QPainter *g, int value, QBrush bgPaint, QColor border,
+    void drawPoint(int x, int y, int size, QPainter *g, int value, const QBrush &bgPaint, const QColor &border,
                    bool small, bool drawText = false);
     void drawPoints(QPainter *painter, int yPos, int startPoint, int totalPoinstToDraw);
     float getHorizontalSpace(int totalPoinstToDraw, int initialXPos) const;

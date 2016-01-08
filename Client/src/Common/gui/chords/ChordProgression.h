@@ -21,8 +21,8 @@ public:
 
     QString toString() const;
     bool canBeUsed(int bpi) const;
-    ChordProgression getStretchedVersion(int bpi);
-    ChordProgression getTransposedVersion(int semitones);
+    ChordProgression getStretchedVersion(int bpi) const;
+    ChordProgression getTransposedVersion(int semitones) const;
     int getBeatsPerInterval() const;
     void clear();
 

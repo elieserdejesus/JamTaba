@@ -20,8 +20,8 @@ class NinjamTrackView : public BaseTrackView
     Q_OBJECT
 public:
     NinjamTrackView(Controller::MainController *mainController, long trackID);
-    void setChannelName(QString name);
-    void setInitialValues(Persistence::CacheEntry initialValues);
+    void setChannelName(const QString &name);
+    void setInitialValues(const Persistence::CacheEntry &initialValues);
 
     // interval chunks visual feedback
     void incrementDownloadedChunks();// called when a interval part (a chunk) is received
@@ -52,7 +52,7 @@ public:
     ~NinjamTrackGroupView();
     void setNarrowStatus(bool narrow);
     void updateGeoLocation();
-    void setGroupName(QString groupName);
+    void setGroupName(const QString &groupName);
     void updateGuiElements();
 
     inline NinjamTrackView *addTrackView(long trackID) override

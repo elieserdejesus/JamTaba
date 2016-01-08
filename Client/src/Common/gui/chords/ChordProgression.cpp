@@ -27,7 +27,7 @@ void ChordProgression::addMeasure(const ChordProgressionMeasure &measure)
     measures.append(measure);
 }
 
-ChordProgression ChordProgression::getStretchedVersion(int bpi)
+ChordProgression ChordProgression::getStretchedVersion(int bpi) const
 {
     if (!canBeUsed(bpi))
         return ChordProgression();// return a empty progression
@@ -51,7 +51,7 @@ ChordProgression ChordProgression::getStretchedVersion(int bpi)
     return stretchedProgression;
 }
 
-ChordProgression ChordProgression::getTransposedVersion(int semitones)
+ChordProgression ChordProgression::getTransposedVersion(int semitones) const
 {
     ChordProgression newProgression;
     for (ChordProgressionMeasure originalMeasure : measures) {

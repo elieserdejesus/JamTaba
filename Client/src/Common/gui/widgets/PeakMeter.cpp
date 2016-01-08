@@ -80,7 +80,7 @@ void PeakMeter::setPaintMaxPeakMarker(bool paintMaxPeak)
     update();
 }
 
-void PeakMeter::setSolidColor(QColor color)
+void PeakMeter::setSolidColor(const QColor &color)
 {
     this->usingGradient = false;
     this->solidColor = color;

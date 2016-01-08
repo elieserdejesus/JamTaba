@@ -70,7 +70,7 @@ void NinjamPanel::addMasterControls(QWidget *masterControlsPanel)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamPanel::createHostSyncButton(QString buttonText)
+void NinjamPanel::createHostSyncButton(const QString &buttonText)
 {
     if (!hostSyncButton) {// just in case
         hostSyncButton = new QPushButton(buttonText);
@@ -88,14 +88,14 @@ void NinjamPanel::setHostSyncButtonAvailability(bool enabled)
         hostSyncButton->setEnabled(enabled);
 }
 
-void NinjamPanel::setBpiComboText(QString text)
+void NinjamPanel::setBpiComboText(const QString &text)
 {
     ui->comboBpi->blockSignals(true);
     ui->comboBpi->setCurrentText(text);
     ui->comboBpi->blockSignals(false);
 }
 
-void NinjamPanel::setBpmComboText(QString text)
+void NinjamPanel::setBpmComboText(const QString &text)
 {
     ui->comboBpm->blockSignals(true);
     ui->comboBpm->setCurrentText(text);

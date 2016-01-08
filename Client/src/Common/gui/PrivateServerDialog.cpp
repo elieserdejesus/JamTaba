@@ -3,7 +3,7 @@
 #include <QDebug>
 
 PrivateServerDialog::PrivateServerDialog(QWidget *parent, QString lastServer, int lastServerPort,
-                                         QString lastPassword) :
+                                         const QString &lastPassword) :
     QDialog(parent),
     ui(new Ui::PrivateServerDialog)
 {

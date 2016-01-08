@@ -14,9 +14,9 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
     ui->setupUi(this);
 }
 
-ChatMessagePanel::ChatMessagePanel(QWidget *parent, QString userName, QString msg,
-                                   QColor userNameBackgroundColor, QColor msgBackgroundColor,
-                                   QColor textColor, bool showTranslationButton) :
+ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg,
+                                   const QColor &userNameBackgroundColor, const QColor &msgBackgroundColor,
+                                   const QColor &textColor, bool showTranslationButton) :
     QWidget(parent),
     ui(new Ui::ChatMessagePanel)
 {
@@ -25,8 +25,8 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent, QString userName, QString ms
                showTranslationButton);
 }
 
-void ChatMessagePanel::initialize(QString userName, QString msg, QColor userNameBackgroundColor,
-                                  QColor msgBackgroundColor, QColor textColor,
+void ChatMessagePanel::initialize(const QString &userName, const QString &msg, const QColor &userNameBackgroundColor,
+                                  const QColor &msgBackgroundColor, const QColor &textColor,
                                   bool showTranslationButton)
 {
     if (!userName.isEmpty() && !userName.isNull()) {
@@ -36,10 +36,11 @@ void ChatMessagePanel::initialize(QString userName, QString msg, QColor userName
         ui->labelUserName->setVisible(false);
     }
 
-    msg = msg.replace(QRegExp("<.+?>"), "");// scape html tags
-    msg = msg.replace("\n", "<br/>");
-    msg = replaceLinksInString(msg);
-    ui->labelMessage->setText(msg);
+    QString newMessage(msg);
+    newMessage = newMessage.replace(QRegExp("<.+?>"), "");// scape html tags
+    newMessage = newMessage.replace("\n", "<br/>");
+    newMessage = replaceLinksInString(newMessage);
+    ui->labelMessage->setText(newMessage);
     ui->labelMessage->setStyleSheet(buildCssString(msgBackgroundColor, textColor));
 
     if (showTranslationButton)
@@ -50,20 +51,20 @@ void ChatMessagePanel::initialize(QString userName, QString msg, QColor userName
     this->originalText = msg;
 }
 
-QString ChatMessagePanel::buildCssString(QColor bgColor, QColor textColor)
+QString ChatMessagePanel::buildCssString(const QColor &bgColor, const QColor &textColor)
 {
     QString css = "background-color: " + colorToCSS(bgColor) + ";";
     css += "color: " + colorToCSS(textColor) + ";";
     return css;
 }
 
-QString ChatMessagePanel::replaceLinksInString(QString str)
+QString ChatMessagePanel::replaceLinksInString(const QString &string)
 {
     QString regex = "((?:https?|ftp|www)://\\S+)";
-    return str.replace(QRegExp(regex), "<a href=\"\\1\">\\1</a>");
+    return QString(string).replace(QRegExp(regex), "<a href=\"\\1\">\\1</a>");
 }
 
-QString ChatMessagePanel::colorToCSS(QColor color)
+QString ChatMessagePanel::colorToCSS(const QColor &color)
 {
     return "rgb(" + QString::number(color.red()) + ", " + QString::number(color.green()) + ", "
            + QString::number(color.blue()) + ")";
@@ -105,7 +106,7 @@ void ChatMessagePanel::on_translateButton_clicked()
     }
 }
 
-void ChatMessagePanel::setPrefferedTranslationLanguage(QString targetLanguage)
+void ChatMessagePanel::setPrefferedTranslationLanguage(const QString &targetLanguage)
 {
     this->preferredTargetTranslationLanguage = targetLanguage;
 }
@@ -132,7 +133,7 @@ void ChatMessagePanel::on_networkReplyFinished(QNetworkReply *reply)
     reply->deleteLater();
 }
 
-void ChatMessagePanel::setTranslatedMessage(QString translatedMessage)
+void ChatMessagePanel::setTranslatedMessage(const QString &translatedMessage)
 {
     ui->translateButton->setChecked(true);
     this->translatedText = translatedMessage;

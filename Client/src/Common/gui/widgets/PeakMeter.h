@@ -19,7 +19,7 @@ public:
     }
 
     void setPeak(float);
-    void setSolidColor(QColor color);
+    void setSolidColor(const QColor &color);
     void setPaintMaxPeakMarker(bool paintMaxPeak);
     void setDecayTime(quint32 decayTimeInMiliseconds);
     void setOrientation(PeakMeterOrientation orientation);

@@ -20,12 +20,12 @@ void PluginScanDialog::cleanFoundPluginsList()
     ui->plainTextEdit->clear();
 }
 
-void PluginScanDialog::addFoundedPlugin(QString pluginName)
+void PluginScanDialog::addFoundedPlugin(const QString &pluginName)
 {
     ui->plainTextEdit->appendPlainText(pluginName);
 }
 
-void PluginScanDialog::setCurrentScaning(QString pluginPath)
+void PluginScanDialog::setCurrentScaning(const QString &pluginPath)
 {
     ui->labelPluginText->setText("scanning " + pluginPath);
     update();

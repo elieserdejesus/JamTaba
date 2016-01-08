@@ -14,9 +14,9 @@ class PluginScanDialog : public QDialog
 public:
     explicit PluginScanDialog(QWidget *parent = 0);
     ~PluginScanDialog();
-    void setCurrentScaning(QString pluginPath);
+    void setCurrentScaning(const QString &pluginPath);
     void cleanFoundPluginsList();
-    void addFoundedPlugin(QString pluginName);
+    void addFoundedPlugin(const QString &pluginName);
 private:
     Ui::PluginScanDialog *ui;
 };

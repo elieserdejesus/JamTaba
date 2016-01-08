@@ -30,7 +30,7 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
 
 }
 
-void NinjamTrackView::setInitialValues(Persistence::CacheEntry initialValues){
+void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialValues){
     cacheEntry = initialValues;
 
     // remember last track values
@@ -83,7 +83,7 @@ void NinjamTrackView::setDownloadedChunksDisplayVisibility(bool visible)
 
 // +++++++++++++++++++
 
-void NinjamTrackView::setChannelName(QString name)
+void NinjamTrackView::setChannelName(const QString &name)
 {
     this->channelNameLabel->setText(name);
     int nameWidth = this->channelNameLabel->fontMetrics().width(name);
@@ -179,7 +179,7 @@ NinjamTrackView *NinjamTrackGroupView::createTrackView(long trackID)
     return new NinjamTrackView(mainController, trackID);
 }
 
-void NinjamTrackGroupView::setGroupName(QString groupName)
+void NinjamTrackGroupView::setGroupName(const QString &groupName)
 {
     groupNameLabel->setText(groupName);
 }

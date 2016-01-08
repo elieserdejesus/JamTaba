@@ -17,7 +17,7 @@ BusyDialog::BusyDialog(QWidget *parent) :
     ui->labelGif->setMovie(movie);
 }
 
-void BusyDialog::show(QString message)
+void BusyDialog::show(const QString &message)
 {
     ui->labelText->setText(message);
     QDialog::show();
