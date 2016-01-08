@@ -13,9 +13,7 @@ VorbisEncoder::VorbisEncoder()
 }
 
 VorbisEncoder::VorbisEncoder(int channels, int sampleRate):
-    //finishIntervalRequested(false),
     initialized(false)
-    //endOfStream(false)
 {
     init(channels, sampleRate);
 }
@@ -32,8 +30,6 @@ void VorbisEncoder::init(int channels, int sampleRate){
 
     streamID = 0;
     isFirstEncoding = true;
-
-    //encodeFirstVorbisHeaders();
 
     totalEncoded = 0;
 }

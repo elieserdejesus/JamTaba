@@ -21,18 +21,18 @@ public:
     explicit VstPlugin(Vst::Host *host);
     ~VstPlugin();
 
-    virtual void process(const Audio::SamplesBuffer &vstInputArray, Audio::SamplesBuffer &outBuffer,
-                         const Midi::MidiBuffer &midiBuffer);
-    virtual void openEditor(QPoint centerOfScreen);
-    virtual void closeEditor();
+    void process(const Audio::SamplesBuffer &vstInputArray, Audio::SamplesBuffer &outBuffer,
+                         const Midi::MidiBuffer &midiBuffer) override;
+    void openEditor(const QPoint &centerOfScreen) override;
+    void closeEditor() override;
     bool load(QString path);
     inline QString getPath() const
     {
         return path;
     }
 
-    virtual QByteArray getSerializedData() const;
-    virtual void restoreFromSerializedData(QByteArray dataToRestore);
+    QByteArray getSerializedData() const override;
+    void restoreFromSerializedData(const QByteArray &dataToRestore) override;
     void start();
     void updateGui();
     void setSampleRate(int newSampleRate);

@@ -39,7 +39,7 @@ protected:
                                          void *ptr, float opt);
 
 signals:
-    void pluginRequestingWindowResize(QString pluginName, int newWidth, int newHeight);
+    void pluginRequestingWindowResize(const QString &pluginName, int newWidth, int newHeight);
 
 private:
     VstTimeInfo vstTimeInfo;

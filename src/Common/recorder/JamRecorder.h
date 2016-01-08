@@ -9,7 +9,7 @@ namespace Recorder {
 class JamAudioFile
 {
 public:
-    JamAudioFile(QString path, uint intervalIndex);
+    JamAudioFile(const QString &path, uint intervalIndex);
     JamAudioFile();// default construtor to use this class in QMap and QList without pointers
     inline uint getIntervalIndex() const
     {
@@ -29,9 +29,9 @@ private:
 class JamTrack
 {
 public:
-    JamTrack(QString userName, quint8 channelIndex);
+    JamTrack(const QString &userName, quint8 channelIndex);
     JamTrack();// default construtor to use this class in QMap and QList without pointers
-    void addAudioFile(QString path, int intervalIndex);
+    void addAudioFile(const QString &path, int intervalIndex);
     inline QString getUserName() const
     {
         return userName;
@@ -56,12 +56,12 @@ private:
 class Jam
 {
 public:
-    Jam(int bpm, int bpi, int sampleRate, QString jamName, QString baseDir);
+    Jam(int bpm, int bpi, int sampleRate, const QString &jamName, const QString &baseDir);
 
-    double getIntervalsLenght();
+    double getIntervalsLenght() const;
 
     // called when a new file is writed in disk
-    void addAudioFile(QString userName, quint8 channelIndex, QString filePath, int intervalIndex);
+    void addAudioFile(const QString &userName, quint8 channelIndex, const QString &filePath, int intervalIndex);
     QString getAudioAbsolutePath() const
     {
         return audioPath;
@@ -103,7 +103,7 @@ private:
 class JamMetadataWriter
 {
 public:
-    virtual void write(Jam metadata) = 0;
+    virtual void write(const Jam &metadata) = 0;
 };
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class LocalNinjamInterval
@@ -118,7 +118,7 @@ public:
     {
     }
 
-    void appendEncodedAudio(QByteArray data)
+    void appendEncodedAudio(const QByteArray &data)
     {
         encodedAudio.append(data);
     }
@@ -148,13 +148,13 @@ class JamRecorder
 {
 public:
     JamRecorder(JamMetadataWriter *jamMetadataWritter);
-    void appendLocalUserAudio(QByteArray encodedaudio, quint8 channelIndex,
+    void appendLocalUserAudio(const QByteArray &encodedaudio, quint8 channelIndex,
                               bool isFirstPartOfInterval, bool isLastPastOfInterval);
-    void addRemoteUserAudio(QString userName, QByteArray encodedAudio, quint8 channelIndex);
-    void startRecording(QString localUser, QDir recordBasePath, int bpm, int bpi, int sampleRate);
+    void addRemoteUserAudio(const QString &userName, const QByteArray &encodedAudio, quint8 channelIndex);
+    void startRecording(const QString &localUser, const QDir &recordBasePath, int bpm, int bpi, int sampleRate);
 
     // these methods start a new recording
-    void setRecordPath(QDir recordBasePath);
+    void setRecordPath(const QDir &recordBasePath);
     void setBpm(int newBpm);
     void setBpi(int newBpi);
     void setSampleRate(int newSampleRate);
@@ -174,8 +174,8 @@ private:
     QMap<quint8, LocalNinjamInterval> localUserIntervals;// use channel index as key and store encoded bytes. When a full interval is stored the encoded bytes are store in a ogg file.
 
     QString getNewJamName();
-    void writeEncodedFile(const QByteArray &encodedData, QString path);
-    static QString buildAudioFileName(QString userName, quint8 channelIndex, int currentInterval);
+    void writeEncodedFile(const QByteArray &encodedData, const QString &path);
+    static QString buildAudioFileName(const QString &userName, quint8 channelIndex, int currentInterval);
     void writeProjectFile();
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++

@@ -28,7 +28,6 @@ INCLUDEPATH += $$ROOT_PATH/libs/includes/ogg
 INCLUDEPATH += $$ROOT_PATH/libs/includes/vorbis
 INCLUDEPATH += $$ROOT_PATH/libs/includes/minimp3
 
-
 win32{
     INCLUDEPATH += "$$VST_SDK_PATH/"
     INCLUDEPATH += "$$VST_SDK_PATH/pluginterfaces/vst2.x/"
@@ -42,15 +41,6 @@ DEPENDPATH +=  $$ROOT_PATH/libs/includes/ogg
 DEPENDPATH +=  $$ROOT_PATH/libs/includes/vorbis
 DEPENDPATH +=  $$ROOT_PATH/libs/includes/minimp3
 
-HEADERS += recorder/JamRecorder.h
-HEADERS += recorder/ReaperProjectGenerator.h
-HEADERS += loginserver/natmap.h
-HEADERS += audio/codec.h
-HEADERS += audio/Resampler.h
-HEADERS += audio/vorbis/VorbisDecoder.h
-HEADERS += audio/vorbis/VorbisEncoder.h
-HEADERS += persistence/Settings.h
-HEADERS += geo/WebIpToLocationResolver.h
 HEADERS += Plugin.h
 HEADERS += Editor.h
 HEADERS += MainControllerVST.h
@@ -71,18 +61,8 @@ SOURCES += KeyboardHook.cpp
 SOURCES += VstPreferencesDialog.cpp
 SOURCES += $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffectx.cpp
 SOURCES += $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffect.cpp
-SOURCES += recorder/JamRecorder.cpp
-SOURCES += recorder/ReaperProjectGenerator.cpp
-SOURCES += loginserver/LoginService.cpp
-SOURCES += loginserver/JsonUtils.cpp
-SOURCES += ninjam/Server.cpp
-SOURCES += audio/Resampler.cpp
-SOURCES += audio/vorbis/VorbisDecoder.cpp
-SOURCES += audio/samplesbufferrecorder.cpp
-SOURCES += audio/vorbis/VorbisEncoder.cpp
-SOURCES += persistence/Settings.cpp
-SOURCES += geo/WebIpToLocationResolver.cpp
-SOURCES += audio/core/PluginDescriptor.cpp
+#SOURCES += audio/samplesbufferrecorder.cpp
+#SOURCES += audio/core/PluginDescriptor.cpp
 
 
 win32 {

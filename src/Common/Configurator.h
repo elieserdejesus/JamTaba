@@ -82,8 +82,8 @@ public:
 
     // Presets now ....
     QDir getPresetsDir() const;
-    QString getPresetPath(QString JsonFile);// used by Settings
+    QString getPresetPath(const QString &JsonFile);// used by Settings
     QStringList getPresetFilesNames(bool fullpath);// all the files names in a folder
-    void deletePreset(QString name);
+    void deletePreset(const QString &name);
 };
 #endif // CONFIGURATOR_H

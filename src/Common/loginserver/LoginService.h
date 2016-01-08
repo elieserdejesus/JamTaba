@@ -13,7 +13,7 @@ namespace Login {
 class UserInfo
 {
 public:
-    UserInfo(long long id, QString name, QString ip);
+    UserInfo(long long id, const QString &name, const QString &ip);
 
     inline QString getIp() const
     {
@@ -38,10 +38,10 @@ enum class RoomTYPE {
 class RoomInfo
 {
 public:
-    RoomInfo(long long id, QString roomName, int roomPort, RoomTYPE roomType, int maxUsers,
-             QList<UserInfo> users, int maxChannels, int bpi, int bpm, QString streamUrl = "");
+    RoomInfo(long long id, const QString &roomName, int roomPort, RoomTYPE roomType, int maxUsers,
+             const QList<UserInfo> &users, int maxChannels, int bpi, int bpm, const QString &streamUrl = "");
 
-    RoomInfo(QString roomName, int roomPort, RoomTYPE roomType, int maxUsers, int maxChannels = 0);
+    RoomInfo(const QString &roomName, int roomPort, RoomTYPE roomType, int maxUsers, int maxChannels = 0);
 
     ~RoomInfo()
     {
@@ -130,9 +130,9 @@ class LoginService : public QObject
 public:
 
     explicit LoginService(QObject *parent = 0);
-    ~LoginService();
-    virtual void connectInServer(QString userName, int instrumentID, QString channelName,
-                                 const NatMap &localPeerMap, QString version, QString environment,
+    virtual ~LoginService();
+    virtual void connectInServer(const QString &userName, int instrumentID, const QString &channelName,
+                                 const NatMap &localPeerMap, const QString &version, const QString &environment,
                                  int sampleRate);
     virtual void disconnectFromServer();
     inline bool isConnected() const
@@ -141,10 +141,10 @@ public:
     }
 
 signals:
-    void roomsListAvailable(QList<Login::RoomInfo> publicRooms);
+    void roomsListAvailable(const QList<Login::RoomInfo> &publicRooms);
     void incompatibilityWithServerDetected();
     void newVersionAvailableForDownload();
-    void errorWhenConnectingToServer(QString error);
+    void errorWhenConnectingToServer(const QString &error);
 private:
 
     enum Command {
@@ -156,9 +156,9 @@ private:
     QNetworkReply *sendCommandToServer(const QUrlQuery &, bool synchronous = false);
     static const QString SERVER;
     bool connected;
-    void handleJson(QString json);
+    void handleJson(const QString &json);
 
-    RoomInfo buildRoomInfoFromJson(QJsonObject json);
+    RoomInfo buildRoomInfoFromJson(const QJsonObject &json);
 
     static const int REFRESH_PERIOD = 30000;
     QTimer *refreshTimer;

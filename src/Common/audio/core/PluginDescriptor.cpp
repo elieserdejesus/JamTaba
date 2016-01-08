@@ -11,13 +11,7 @@ PluginDescriptor::PluginDescriptor()
 
 }
 
-PluginDescriptor::PluginDescriptor(QString name, QString group)
-    :name(name), group(group), path("")
-{
-
-}
-
-PluginDescriptor::PluginDescriptor(QString name, QString group, QString path)
+PluginDescriptor::PluginDescriptor(const QString &name, const QString &group, const QString &path)
     :name(name), group(group), path(path)
 {
 
@@ -31,12 +25,12 @@ QString PluginDescriptor::toString() const{
     return name + ";" + group + ";" + path;
 }
 
-PluginDescriptor PluginDescriptor::fromString(QString str){
+PluginDescriptor PluginDescriptor::fromString(const QString &str){
     QStringList parts = str.split(";");
     return PluginDescriptor(parts.at(0), parts.at(1), parts.at(2));
 }
 
-QString PluginDescriptor::getPluginNameFromPath(QString path){
+QString PluginDescriptor::getPluginNameFromPath(const QString &path){
     QString name = QFile(path).fileName();
     int indexOfDirSeparator = name.lastIndexOf("/");
     if(indexOfDirSeparator >= 0){

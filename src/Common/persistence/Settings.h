@@ -18,29 +18,29 @@ class SettingsObject // base class for the settings components
 protected:
     QString name;
 public:
-    SettingsObject(QString name);
-    virtual void write(QJsonObject &out) = 0;
-    virtual void read(QJsonObject in) = 0;
+    SettingsObject(const QString &name);
+    virtual void write(QJsonObject &out) const = 0;
+    virtual void read(const QJsonObject &in) = 0;
     inline QString getName() const
     {
         return name;
     }
 
 protected:
-    static int getValueFromJson(const QJsonObject &json, QString propertyName, int fallBackValue);
-    static float getValueFromJson(const QJsonObject &json, QString propertyName,
+    static int getValueFromJson(const QJsonObject &json, const QString &propertyName, int fallBackValue);
+    static float getValueFromJson(const QJsonObject &json, const QString &propertyName,
                                   float fallBackValue);
-    static QString getValueFromJson(const QJsonObject &json, QString propertyName,
+    static QString getValueFromJson(const QJsonObject &json, const QString &propertyName,
                                     QString fallBackValue);
-    static bool getValueFromJson(const QJsonObject &json, QString propertyName, bool fallBackValue);
+    static bool getValueFromJson(const QJsonObject &json, const QString &propertyName, bool fallBackValue);
 };
 // +++++++++++++++++++++++++++++++++++++++++++
 class AudioSettings : public SettingsObject
 {
 public:
     AudioSettings();
-    void write(QJsonObject &out) override;
-    void read(QJsonObject in) override;
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
     int sampleRate;
     int bufferSize;
     int firstIn;
@@ -54,8 +54,8 @@ class MidiSettings : public SettingsObject
 {
 public:
     MidiSettings();
-    void write(QJsonObject &out) override;
-    void read(QJsonObject in) override;
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
     QList<bool> inputDevicesStatus;
 };
 
@@ -64,8 +64,8 @@ class PrivateServerSettings : public SettingsObject
 {
 public:
     PrivateServerSettings();
-    void write(QJsonObject &out) override;
-    void read(QJsonObject in) override;
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
     QString server;
     int serverPort;
     QString password;
@@ -76,8 +76,8 @@ class MetronomeSettings : public SettingsObject
 {
 public:
     MetronomeSettings();
-    void write(QJsonObject &out) override;
-    void read(QJsonObject in) override;
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
     float pan;
     float gain;
     bool muted;
@@ -92,8 +92,8 @@ public:
     bool maximized;
     bool fullViewMode;
     bool fullScreenViewMode;
-    void write(QJsonObject &out) override;
-    void read(QJsonObject in) override;
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++
@@ -101,8 +101,8 @@ class VstSettings : public SettingsObject
 {
 public:
     VstSettings();
-    void write(QJsonObject &out) override;
-    void read(QJsonObject in) override;
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
     QStringList cachedPlugins;
     QStringList foldersToScan;
     QStringList blackedPlugins;// vst in blackbox....
@@ -112,8 +112,8 @@ class RecordingSettings : public SettingsObject
 {
 public:
     RecordingSettings();
-    void write(QJsonObject &out) override;
-    void read(QJsonObject in) override;
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
     bool saveMultiTracksActivated;
     QString recordingPath;
 };
@@ -121,7 +121,7 @@ public:
 class Plugin
 {
 public:
-    Plugin(QString path, bool bypassed, QByteArray data);
+    Plugin(const QString &path, bool bypassed, const QByteArray &data);
     QString path;
     bool bypassed;
     QByteArray data;// saved data to restore in next jam session
@@ -146,7 +146,7 @@ public:
         return plugins;
     }
 
-    inline void setPlugins(QList<Plugin> newPlugins)
+    inline void setPlugins(const QList<Plugin> &newPlugins)
     {
         plugins = newPlugins;
     }
@@ -178,7 +178,7 @@ private:
 class Channel
 {
 public:
-    Channel(QString name);
+    Channel(const QString &name);
     QString name;
     QList<Subchannel> subChannels;
 };
@@ -187,9 +187,9 @@ class LocalInputTrackSettings : public SettingsObject
 {
 public:
     LocalInputTrackSettings(bool createOneTrack = false);
-    void write(QJsonObject &out) override;
-    void read(QJsonObject in) override;
-    void read(QJsonObject in, bool allowMultiSubchannels);
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
+    void read(const QJsonObject &in, bool allowMultiSubchannels);
     QList<Channel> channels;
 
     inline bool isValid() const
@@ -201,10 +201,10 @@ public:
 class Preset
 {
 public:
-    Preset(QString name = "default",
-           LocalInputTrackSettings inputSettings = LocalInputTrackSettings());
-    void write(QJsonObject &out);
-    void read(QJsonObject in);
+    Preset(const QString &name = "default",
+           const LocalInputTrackSettings &inputSettings = LocalInputTrackSettings());
+    void write(QJsonObject &out) const;
+    void read(const QJsonObject &in);
 
     bool isValid() const
     {
@@ -227,14 +227,13 @@ private:
     MetronomeSettings metronomeSettings;
     VstSettings vstSettings;
     LocalInputTrackSettings inputsSettings;
-    // PresetsSettings presetSettings;
     RecordingSettings recordingSettings;
     PrivateServerSettings privateServerSettings;
     QString lastUserName;// the last nick name choosed by user
     QString translation;// the translation being used in chat
     int ninjamIntervalProgressShape;// Circle, Ellipe or Line
-    bool readFile(APPTYPE type, QList<SettingsObject *> sections);// io ops ...
-    bool writeFile(APPTYPE type, QList<SettingsObject *> sections);// io ops ...
+    bool readFile(APPTYPE type, const QList<SettingsObject *> &sections);// io ops ...
+    bool writeFile(APPTYPE type, const QList<SettingsObject *> &sections);// io ops ...
 
 public:
     Settings();
@@ -245,13 +244,13 @@ public:
         return inputsSettings;
     }
 
-    void save(LocalInputTrackSettings inputsSettings);
+    void save(const LocalInputTrackSettings &inputsSettings);
     void load();
 
-    bool writePresetToFile(Preset preset);
-    void deletePreset(QString name);
+    bool writePresetToFile(const Preset &preset);
+    void deletePreset(const QString &name);
     QStringList getPresetList();
-    Preset readPresetFromFile(QString presetFileName, bool allowMultiSubchannels = true);
+    Preset readPresetFromFile(const QString &presetFileName, bool allowMultiSubchannels = true);
 
     inline int getLastSampleRate() const
     {
@@ -279,7 +278,7 @@ public:
         return privateServerSettings.password;
     }
 
-    void setPrivateServerData(QString server, int serverPort, QString password);
+    void setPrivateServerData(const QString &server, int serverPort, const QString &password);
 
     // recording settings
     inline bool isSaveMultiTrackActivated() const
@@ -297,7 +296,7 @@ public:
         recordingSettings.saveMultiTracksActivated = saveMultiTracks;
     }
 
-    inline void setRecordingPath(QString newPath)
+    inline void setRecordingPath(const QString &newPath)
     {
         recordingSettings.recordingPath = newPath;
     }
@@ -308,9 +307,9 @@ public:
         return lastUserName;
     }
 
-    void setUserName(QString newUserName);
-    void storeLasUserName(QString userName);
-    void storeLastChannelName(int channelIndex, QString channelName);
+    void setUserName(const QString &newUserName);
+    void storeLasUserName(const QString &userName);
+    void storeLastChannelName(int channelIndex, const QString &channelName);
 
     void setIntervalProgressShape(int shape)
     {
@@ -323,8 +322,8 @@ public:
     }
 
     // VST
-    void addVstPlugin(QString pluginPath);
-    void addVstToBlackList(QString pluginPath);
+    void addVstPlugin(const QString &pluginPath);
+    void addVstToBlackList(const QString &pluginPath);
     void RemVstFromBlackList(int index);
     QStringList getVstPluginsPaths() const;
     QStringList getBlackListedPlugins() const;
@@ -332,8 +331,8 @@ public:
     void clearBlackBox();
 
     // VST paths
-    void addVstScanPath(QString path);
-    void removeVstScanPath(QString path);
+    void addVstScanPath(const QString &path);
+    void removeVstScanPath(const QString &path);
     QStringList getVstScanFolders() const;
 
     // ++++++++++++++ Metronome ++++++++++
@@ -405,7 +404,7 @@ public:
         return audioSettings.audioDevice;
     }
 
-    inline void setMidiSettings(QList<bool> inputDevicesStatus)
+    inline void setMidiSettings(const QList<bool> &inputDevicesStatus)
     {
         midiSettings.inputDevicesStatus = inputDevicesStatus;
     }
@@ -420,7 +419,7 @@ public:
 
     // TRANSLATION
     QString getTranslation() const;
-    void setTranslation(QString translate);
+    void setTranslation(const QString &translate);
 
     QString getLastChannelName(int channelIndex) const;
 };

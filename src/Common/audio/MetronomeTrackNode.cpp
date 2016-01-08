@@ -27,7 +27,7 @@ SamplesBuffer *createResampledBuffer(const SamplesBuffer &buffer, int originalSa
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-MetronomeTrackNode::MetronomeTrackNode(QString metronomeWaveFile, int localSampleRate) :
+MetronomeTrackNode::MetronomeTrackNode(const QString &metronomeWaveFile, int localSampleRate) :
     samplesPerBeat(0),
     intervalPosition(0),
     beatPosition(0),
@@ -130,7 +130,7 @@ void MetronomeTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-SamplesBuffer *MetronomeTrackNode::readWavFile(QString fileName, quint32 &sampleRate)
+SamplesBuffer *MetronomeTrackNode::readWavFile(const QString &fileName, quint32 &sampleRate)
 {
     // Open wave file
     QFile wavFile(fileName);

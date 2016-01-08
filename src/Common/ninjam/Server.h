@@ -59,7 +59,7 @@ public:
         return users.size() == maxUsers;
     }
 
-    inline void setLicence(QString licenceText)
+    inline void setLicence(const QString &licenceText)
     {
         this->licence = licenceText;
     }

@@ -1,7 +1,7 @@
 #include "MainControllerStandalone.h"
 
 #include "midi/RtMidiDriver.h"
-#include "audio/core/PortAudioDriver.h"
+#include "audio/PortAudioDriver.h"
 
 #include "vst/VstPlugin.h"
 #include "vst/VstHost.h"
@@ -367,7 +367,7 @@ void MainControllerStandalone::cancelPluginFinder()
 }
 
 
-void MainControllerStandalone::setCSS(QString css)
+void MainControllerStandalone::setCSS(const QString &css)
 {
     application->setStyleSheet(css);
 }
@@ -433,7 +433,7 @@ void MainControllerStandalone::addDefaultPluginsScanPath()
     else
         vstPaths.append(getSteinbergRecommendedPaths());
 
-    foreach (QString vstPath, vstPaths) {
+    foreach (const QString &vstPath, vstPaths) {
         if (!vstPath.isEmpty() && QDir(vstPath).exists())
             addPluginsScanPath(vstPath);
     }
@@ -453,7 +453,7 @@ bool MainControllerStandalone::pluginsScanIsNeeded() const
     QStringList skipList(settings.getBlackListedPlugins());
     skipList.append(settings.getVstPluginsPaths());
 
-    foreach (QString scanFolder, foldersToScan) {
+    foreach (const QString &scanFolder, foldersToScan) {
         QDirIterator folderIterator(scanFolder, QDirIterator::Subdirectories);
         while (folderIterator.hasNext())
         {
@@ -482,7 +482,7 @@ bool MainControllerStandalone::isVstPluginFile(QString filePath) const
 void MainControllerStandalone::initializePluginsList(QStringList paths)
 {
     pluginsDescriptors.clear();
-    foreach (QString path, paths) {
+    foreach (const QString &path, paths) {
         QFile file(path);
         if (file.exists()) {
             QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(path);

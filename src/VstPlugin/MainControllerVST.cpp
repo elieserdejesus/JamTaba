@@ -9,7 +9,7 @@
 using namespace Controller;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-MainControllerVST::MainControllerVST(Persistence::Settings settings, JamtabaPlugin *plugin) :
+MainControllerVST::MainControllerVST(const Persistence::Settings &settings, JamtabaPlugin *plugin) :
     MainController(settings),
     plugin(plugin)
 {
@@ -22,7 +22,7 @@ MainControllerVST::~MainControllerVST()
         saveLastUserSettings(mainWindow->getInputsSettings());
 }
 
-Persistence::Preset MainControllerVST::loadPreset(QString name)
+Persistence::Preset MainControllerVST::loadPreset(const QString &name)
 {
     return settings.readPresetFromFile(name, false);//don't allow multi subchannels in vst plugin and avoid hacking in json file to create subchannels in VSt plugin.
 }
@@ -90,7 +90,7 @@ Midi::MidiDriver *MainControllerVST::createMidiDriver()
     return new Midi::NullMidiDriver();
 }
 
-void MainControllerVST::setCSS(QString css)
+void MainControllerVST::setCSS(const QString &css)
 {
     qCDebug(jtCore) << "setting CSS";
     qApp->setStyleSheet(css);// qApp is a global variable created in dll main.

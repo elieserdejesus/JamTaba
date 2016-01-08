@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include "portaudio.h"
-#include "SamplesBuffer.h"
+#include "audio/core/SamplesBuffer.h"
 #include "persistence/Settings.h"
 #include "MainController.h"
 #include "log/Logging.h"

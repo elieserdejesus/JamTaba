@@ -20,7 +20,7 @@ class Plugin : public Audio::AudioNodeProcessor
 {
     Q_OBJECT
 public:
-    explicit Plugin(QString name);
+    explicit Plugin(const QString &name);
     virtual inline QString getName() const
     {
         return name;
@@ -33,7 +33,7 @@ public:
     virtual void start() = 0;
     virtual QString getPath() const = 0;
     virtual QByteArray getSerializedData() const = 0;
-    virtual void restoreFromSerializedData(QByteArray data) = 0;
+    virtual void restoreFromSerializedData(const QByteArray &data) = 0;
 protected:
     QString name;
 
@@ -70,8 +70,8 @@ public:
         return level;
     }
 
-    virtual void openEditor(QPoint centerOfScreen);
-    virtual void updateGui()
+    void openEditor(const QPoint &centerOfScreen) override;
+    void updateGui() override
     {
     }
 
@@ -81,8 +81,8 @@ public:
         return "";
     }
 
-    virtual QByteArray getSerializedData() const;
-    virtual void restoreFromSerializedData(QByteArray data);
+    QByteArray getSerializedData() const override;
+    void restoreFromSerializedData(const QByteArray &data) override;
 
     void suspend()
     {

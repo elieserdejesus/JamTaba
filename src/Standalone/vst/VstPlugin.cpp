@@ -97,11 +97,11 @@ QByteArray VstPlugin::getSerializedData() const{
     return QByteArray();//empty byte array
 }
 
-void VstPlugin::restoreFromSerializedData(QByteArray dataToRestore){
+void VstPlugin::restoreFromSerializedData(const QByteArray &dataToRestore){
     if(!dataToRestore.isEmpty()){
         qCInfo(jtVstPlugin) << "\t\trestoring plugin data to" << getName();
-        char* data = dataToRestore.data();
-        effect->dispatcher(effect, effSetChunk, false, dataToRestore.size(), data, 0 );
+        const char* data = dataToRestore.data();
+        effect->dispatcher(effect, effSetChunk, false, dataToRestore.size(), (void*)data, 0 );
         qCInfo(jtVstPlugin) << "\t\trestore finished for" << getName();
     }
 }
@@ -309,7 +309,7 @@ void VstPlugin::closeEditor(){
     VstPlugin::editorsWindows.remove(getName());//remove the plugin editor reference from map
 }
 
-void VstPlugin::openEditor(QPoint centerOfScreen){
+void VstPlugin::openEditor(const QPoint &centerOfScreen){
     if(!effect ){
         return;
     }
