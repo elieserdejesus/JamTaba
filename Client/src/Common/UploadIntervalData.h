@@ -13,7 +13,7 @@ public:
         return GUID;
     }
 
-    void appendData(QByteArray encodedData);
+    void appendData(const QByteArray &encodedData);
 
     inline int getTotalBytes() const
     {

@@ -21,7 +21,7 @@ public:
     virtual void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
                                   int sampleRate, const Midi::MidiBuffer &midiBuffer);
     virtual void stopCurrentStream();
-    virtual void setStreamPath(QString streamPath);
+    virtual void setStreamPath(const QString &streamPath);
     inline bool isStreaming() const
     {
         return streaming;
@@ -30,7 +30,7 @@ public:
     virtual int getSampleRate() const;
     virtual bool needResamplingFor(int targetSampleRate) const;
 signals:
-    void error(QString errorMsg);
+    void error(const QString &errorMsg);
 private:
     static const int MAX_BYTES_PER_DECODING;
 
@@ -40,7 +40,7 @@ protected:
     QIODevice *device;
     void decode(const unsigned int maxBytesToDecode);
     QByteArray bytesToDecode;
-    virtual void initialize(QString streamPath);
+    virtual void initialize(const QString &streamPath);
     bool streaming;
     SamplesBuffer bufferedSamples;
     SamplesBufferResampler resampler;
@@ -54,7 +54,7 @@ class NinjamRoomStreamerNode : public AbstractMp3Streamer
     Q_OBJECT
 
 public:
-    NinjamRoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds = 3);
+    NinjamRoomStreamerNode(const QUrl &streamPath, int bufferTimeInSeconds = 3);
     explicit NinjamRoomStreamerNode(int bufferTimeInSeconds = 3);
     ~NinjamRoomStreamerNode();
 
@@ -62,7 +62,7 @@ public:
                                   const Midi::MidiBuffer &midiBuffer);
     virtual bool needResamplingFor(int targetSampleRate) const;
 protected:
-    void initialize(QString streamPath);
+    void initialize(const QString &streamPath);
 private:
     QNetworkAccessManager *httpClient;
     int bufferTime;// in seconds
@@ -76,10 +76,10 @@ private slots:
 class AudioFileStreamerNode : public AbstractMp3Streamer
 {
 protected:
-    void initialize(QString streamPath);
+    void initialize(const QString &streamPath);
 
 public:
-    explicit AudioFileStreamerNode(QString file);
+    explicit AudioFileStreamerNode(const QString &file);
     ~AudioFileStreamerNode();
     virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
                                   const Midi::MidiBuffer &midiBuffer);
@@ -93,12 +93,12 @@ private:
     OscillatorAudioNode *oscilator;
     bool playing;
 protected:
-    void initialize(QString streamPath);
+    void initialize(const QString &streamPath);
 public:
     TestStreamerNode(int sampleRate);
     ~TestStreamerNode();
     void stopCurrentStream();
-    void setStreamPath(QString streamPath);
+    void setStreamPath(const QString &streamPath);
     virtual void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
                                   int sampleRate, const Midi::MidiBuffer &midiBuffer);
 };

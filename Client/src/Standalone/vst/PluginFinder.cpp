@@ -12,13 +12,13 @@ PluginFinder::~PluginFinder()
 {
 }
 
-void PluginFinder::setFoldersToScan(QStringList folders)
+void PluginFinder::setFoldersToScan(const QStringList &folders)
 {
     scanFolders.clear();
     scanFolders.append(folders);
 }
 
-Audio::PluginDescriptor PluginFinder::getPluginDescriptor(QFileInfo f)
+Audio::PluginDescriptor PluginFinder::getPluginDescriptor(const QFileInfo &f)
 {
     QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
     return Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
@@ -42,7 +42,7 @@ void PluginFinder::handleScanError(QProcess::ProcessError error)
     finishScan();
 }
 
-void PluginFinder::handleProcessError(QString lastScannedPlugin)
+void PluginFinder::handleProcessError(const QString &lastScannedPlugin)
 {
     if (!lastScannedPlugin.isEmpty())
         emit badPluginDetected(lastScannedPlugin);
@@ -98,7 +98,7 @@ void PluginFinder::consumeOutputFromScanProcess()
     }
 }
 
-QString PluginFinder::buildCommaSeparetedString(QStringList list) const
+QString PluginFinder::buildCommaSeparetedString(const QStringList &list) const
 {
     QString folderString;
     for (int c = 0; c < list.size(); ++c) {
@@ -109,7 +109,7 @@ QString PluginFinder::buildCommaSeparetedString(QStringList list) const
     return folderString;
 }
 
-void PluginFinder::scan(QStringList skipList)
+void PluginFinder::scan(const QStringList &skipList)
 {
     if (scanProcess.isOpen()) {
         qCWarning(jtStandalonePluginFinder) << "scan process is already open!";

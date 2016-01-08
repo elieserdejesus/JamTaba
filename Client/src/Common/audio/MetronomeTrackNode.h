@@ -9,7 +9,7 @@ class SamplesBuffer;
 class MetronomeTrackNode : public Audio::AudioNode
 {
 public:
-    MetronomeTrackNode(QString metronomeWaveFile, int localSampleRate);
+    MetronomeTrackNode(const QString &metronomeWaveFile, int localSampleRate);
 
     ~MetronomeTrackNode();
     virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int SampleRate,
@@ -47,7 +47,7 @@ private:
     int beatsPerAccent;
 
     quint32 waveFileSampleRate;// metronome wav file sample rate
-    SamplesBuffer *readWavFile(QString fileName, quint32 &sampleRate);
+    SamplesBuffer *readWavFile(const QString &fileName, quint32 &sampleRate);
     SamplesBuffer *getBuffer(int beat);// return the correct buffer to play in each beat
 };
 }

@@ -23,12 +23,12 @@ QString Settings::fileName = "Jamtaba.json";
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-SettingsObject::SettingsObject(QString name) :
+SettingsObject::SettingsObject(const QString &name) :
     name(name)
 {
 }
 
-int SettingsObject::getValueFromJson(const QJsonObject &json, QString propertyName,
+int SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
                                      int fallBackValue)
 {
     if (json.contains(propertyName))
@@ -36,7 +36,7 @@ int SettingsObject::getValueFromJson(const QJsonObject &json, QString propertyNa
     return fallBackValue;
 }
 
-bool SettingsObject::getValueFromJson(const QJsonObject &json, QString propertyName,
+bool SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
                                       bool fallBackValue)
 {
     if (json.contains(propertyName))
@@ -44,7 +44,7 @@ bool SettingsObject::getValueFromJson(const QJsonObject &json, QString propertyN
     return fallBackValue;
 }
 
-QString SettingsObject::getValueFromJson(const QJsonObject &json, QString propertyName,
+QString SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
                                          QString fallBackValue)
 {
     if (json.contains(propertyName))
@@ -52,7 +52,7 @@ QString SettingsObject::getValueFromJson(const QJsonObject &json, QString proper
     return fallBackValue;
 }
 
-float SettingsObject::getValueFromJson(const QJsonObject &json, QString propertyName,
+float SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
                                        float fallBackValue)
 {
     if (json.contains(propertyName))
@@ -69,21 +69,21 @@ PrivateServerSettings::PrivateServerSettings() :
 {
 }
 
-void PrivateServerSettings::write(QJsonObject &out)
+void PrivateServerSettings::write(QJsonObject &out) const
 {
     out["server"] = server;
     out["password"] = password;
     out["port"] = serverPort;
 }
 
-void PrivateServerSettings::read(QJsonObject in)
+void PrivateServerSettings::read(const QJsonObject &in)
 {
     server = getValueFromJson(in, "server", QString("localhost"));
     password = getValueFromJson(in, "password", QString(""));
     serverPort = getValueFromJson(in, "port", 2049);
 }
 
-void Settings::setPrivateServerData(QString server, int serverPort, QString password)
+void Settings::setPrivateServerData(const QString &server, int serverPort, const QString &password)
 {
     privateServerSettings.server = server;
     privateServerSettings.serverPort = serverPort;
@@ -98,7 +98,7 @@ AudioSettings::AudioSettings() :
 {
 }
 
-void AudioSettings::read(QJsonObject in)
+void AudioSettings::read(const QJsonObject &in)
 {
     sampleRate = getValueFromJson(in, "sampleRate", 44100);
     bufferSize = getValueFromJson(in, "bufferSize", 128);
@@ -109,7 +109,7 @@ void AudioSettings::read(QJsonObject in)
     audioDevice = getValueFromJson(in, "audioDevice", -1);
 }
 
-void AudioSettings::write(QJsonObject &out)
+void AudioSettings::write(QJsonObject &out) const
 {
     out["sampleRate"] = sampleRate;
     out["bufferSize"] = bufferSize;
@@ -126,7 +126,7 @@ MidiSettings::MidiSettings() :
 {
 }
 
-void MidiSettings::write(QJsonObject &out)
+void MidiSettings::write(QJsonObject &out) const
 {
     QJsonArray midiArray;
     foreach (bool state, inputDevicesStatus)
@@ -134,7 +134,7 @@ void MidiSettings::write(QJsonObject &out)
     out["inputsState"] = midiArray;
 }
 
-void MidiSettings::read(QJsonObject in)
+void MidiSettings::read(const QJsonObject &in)
 {
     inputDevicesStatus.clear();
     if (in.contains("inputsState")) {
@@ -152,13 +152,13 @@ RecordingSettings::RecordingSettings() :
 {
 }
 
-void RecordingSettings::write(QJsonObject &out)
+void RecordingSettings::write(QJsonObject &out) const
 {
     out["recordingPath"] = recordingPath;
     out["recordActivated"] = saveMultiTracksActivated;
 }
 
-void RecordingSettings::read(QJsonObject in)
+void RecordingSettings::read(const QJsonObject &in)
 {
     bool useDefaultRecordingPath = false;
     if (in.contains("recordingPath")) {
@@ -189,14 +189,14 @@ MetronomeSettings::MetronomeSettings() :
 {
 }
 
-void MetronomeSettings::read(QJsonObject in)
+void MetronomeSettings::read(const QJsonObject &in)
 {
     pan = getValueFromJson(in, "pan", (float)0);
     gain = getValueFromJson(in, "gain", (float)1);
     muted = getValueFromJson(in, "muted", false);
 }
 
-void MetronomeSettings::write(QJsonObject &out)
+void MetronomeSettings::write(QJsonObject &out) const
 {
     out["pan"] = pan;
     out["gain"] = gain;
@@ -212,7 +212,7 @@ WindowSettings::WindowSettings() :
 {
 }
 
-void WindowSettings::read(QJsonObject in)
+void WindowSettings::read(const QJsonObject &in)
 {
     maximized = getValueFromJson(in, "maximized", false);// not maximized as default
     fullViewMode = getValueFromJson(in, "fullView", true);// use full view mode as default
@@ -224,7 +224,7 @@ void WindowSettings::read(QJsonObject in)
     }
 }
 
-void WindowSettings::write(QJsonObject &out)
+void WindowSettings::write(QJsonObject &out) const
 {
     out["maximized"] = maximized;
     out["fullView"] = fullViewMode;
@@ -242,25 +242,25 @@ VstSettings::VstSettings() :
 }
 
 // VST JSON WRITER
-void VstSettings::write(QJsonObject &out)
+void VstSettings::write(QJsonObject &out) const
 {
     QJsonArray scanPathsArray;
-    foreach (QString scanPath, foldersToScan)
+    foreach (const QString &scanPath, foldersToScan)
         scanPathsArray.append(scanPath);
     out["scanPaths"] = scanPathsArray;
 
     QJsonArray cacheArray;
-    foreach (QString pluginPath, cachedPlugins)
+    foreach (const QString &pluginPath, cachedPlugins)
         cacheArray.append(pluginPath);
     out["cachedPlugins"] = cacheArray;
 
     QJsonArray BlackedArray;
-    foreach (QString blackVst, blackedPlugins)
+    foreach (const QString &blackVst, blackedPlugins)
         BlackedArray.append(blackVst);
     out["BlackListPlugins"] = BlackedArray;
 }
 
-void VstSettings::read(QJsonObject in)
+void VstSettings::read(const QJsonObject &in)
 {
     foldersToScan.clear();
     if (in.contains("scanPaths")) {
@@ -287,12 +287,12 @@ void VstSettings::read(QJsonObject in)
 }
 
 // +++++++++++++++++++++++++++++++++++++++
-Channel::Channel(QString name) :
+Channel::Channel(const QString &name) :
     name(name)
 {
 }
 
-Plugin::Plugin(QString path, bool bypassed, QByteArray data) :
+Plugin::Plugin(const QString &path, bool bypassed, const QByteArray &data) :
     path(path),
     bypassed(bypassed),
     data(data)
@@ -324,7 +324,7 @@ LocalInputTrackSettings::LocalInputTrackSettings(bool createOneTrack) :
     }
 }
 
-void LocalInputTrackSettings::write(QJsonObject &out)
+void LocalInputTrackSettings::write(QJsonObject &out) const
 {
     QJsonArray channelsArray;
     foreach (const Channel &channel, channels) {
@@ -343,7 +343,7 @@ void LocalInputTrackSettings::write(QJsonObject &out)
             subChannelObject["muted"] = sub.muted;
 
             QJsonArray pluginsArray;
-            foreach (Persistence::Plugin plugin, sub.getPlugins()) {
+            foreach (const Persistence::Plugin &plugin, sub.getPlugins()) {
                 QJsonObject pluginObject;
                 pluginObject["path"] = plugin.path;
                 pluginObject["bypassed"] = plugin.bypassed;
@@ -360,7 +360,7 @@ void LocalInputTrackSettings::write(QJsonObject &out)
     out["channels"] = channelsArray;
 }
 
-void LocalInputTrackSettings::read(QJsonObject in, bool allowMultiSubchannels)
+void LocalInputTrackSettings::read(const QJsonObject &in, bool allowMultiSubchannels)
 {
     if (in.contains("channels")) {
         QJsonArray channelsArray = in["channels"].toArray();
@@ -410,29 +410,29 @@ void LocalInputTrackSettings::read(QJsonObject in, bool allowMultiSubchannels)
     }
 }
 
-void LocalInputTrackSettings::read(QJsonObject in)
+void LocalInputTrackSettings::read(const QJsonObject &in)
 {
     read(in, true);//allowing multi subchannel by default
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++
-void Settings::setUserName(QString newUserName)
+void Settings::setUserName(const QString &newUserName)
 {
     this->lastUserName = newUserName;
 }
 
-void Settings::setTranslation(QString translate)
+void Settings::setTranslation(const QString &translate)
 {
     this->translation = translate;
 }
 
-void Settings::addVstPlugin(QString pluginPath)
+void Settings::addVstPlugin(const QString &pluginPath)
 {
     if (!vstSettings.cachedPlugins.contains(pluginPath))
         vstSettings.cachedPlugins.append(pluginPath);
 }
 
-void Settings::addVstToBlackList(QString pluginPath)
+void Settings::addVstToBlackList(const QString &pluginPath)
 {
     if (!vstSettings.blackedPlugins.contains(pluginPath))
         vstSettings.blackedPlugins.append(pluginPath);
@@ -460,12 +460,12 @@ void Settings::clearBlackBox()
 }
 
 // VST paths to scan
-void Settings::addVstScanPath(QString path)
+void Settings::addVstScanPath(const QString &path)
 {
     vstSettings.foldersToScan.append(path);
 }
 
-void Settings::removeVstScanPath(QString path)
+void Settings::removeVstScanPath(const QString &path)
 {
     vstSettings.foldersToScan.removeOne(path);
 }
@@ -524,7 +524,7 @@ void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastO
 }
 
 // io ops ...
-bool Settings::readFile(APPTYPE type, QList<Persistence::SettingsObject *> sections)
+bool Settings::readFile(APPTYPE type, const QList<SettingsObject *> &sections)
 {
     if (type == plugin)
         fileDir = Configurator::getInstance()->getPluginDirPath();
@@ -571,7 +571,7 @@ bool Settings::readFile(APPTYPE type, QList<Persistence::SettingsObject *> secti
     return false;
 }
 
-bool Settings::writeFile(APPTYPE type, QList<SettingsObject *> sections)// io ops ...
+bool Settings::writeFile(APPTYPE type, const QList<SettingsObject *> &sections)// io ops ...
 {
     // Works with JTBConfig
     if (type == plugin)
@@ -606,7 +606,7 @@ bool Settings::writeFile(APPTYPE type, QList<SettingsObject *> sections)// io op
 }
 
 // PRESETS
-bool Settings::writePresetToFile(Preset preset)
+bool Settings::writePresetToFile(const Preset &preset)
 {
     QString absolutePath = Configurator::getInstance()->getPresetPath(preset.name);
     QFile file(absolutePath);
@@ -627,14 +627,14 @@ bool Settings::writePresetToFile(Preset preset)
 }
 
 // ++++++++++++++++++++++++++++++
-Preset::Preset(QString name, LocalInputTrackSettings inputSettings) :
+Preset::Preset(const QString &name, const LocalInputTrackSettings &inputSettings) :
     name(name),
     inputTrackSettings(inputSettings)
 {
 }
 
 // ++++++++++++++
-Preset Settings::readPresetFromFile(QString presetFileName, bool allowMultiSubchannels)
+Preset Settings::readPresetFromFile(const QString &presetFileName, bool allowMultiSubchannels)
 {
     QString absolutePath = Configurator::getInstance()->getPresetPath(presetFileName);
     QFile presetFile(absolutePath);
@@ -678,7 +678,7 @@ Settings::Settings() :
     // qDebug() << "Settings in " << fileDir;
 }
 
-void Settings::save(Persistence::LocalInputTrackSettings inputsSettings)
+void Settings::save(const LocalInputTrackSettings &inputsSettings)
 {
     this->inputsSettings = inputsSettings;
     QList<Persistence::SettingsObject *> sections;
@@ -694,7 +694,7 @@ void Settings::save(Persistence::LocalInputTrackSettings inputsSettings)
     writeFile(Configurator::getInstance()->getAppType(), sections);
 }
 
-void Settings::deletePreset(QString name)
+void Settings::deletePreset(const QString &name)
 {
     Configurator::getInstance()->deletePreset(name);
 }
@@ -718,7 +718,7 @@ QString Settings::getTranslation() const
     return translation;
 }
 
-void Settings::storeLasUserName(QString userName)
+void Settings::storeLasUserName(const QString &userName)
 {
     Q_UNUSED(userName)
     // QJsonObject object = instance->rootObject["User"].toObject();

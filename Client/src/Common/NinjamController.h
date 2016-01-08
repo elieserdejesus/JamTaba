@@ -29,7 +29,7 @@ public:
     explicit NinjamController(Controller::MainController *mainController);
     virtual ~NinjamController();
     virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
-    void start(const Ninjam::Server &server, QMap<int, bool> channelsXmitFlags);
+    void start(const Ninjam::Server &server, const QMap<int, bool> &channelsXmitFlags);
     void stop(bool emitDisconnectedingSignal);
     bool inline isRunning() const
     {
@@ -52,7 +52,7 @@ public:
 
     void setBpm(int newBpm);
 
-    void sendChatMessage(QString msg);
+    void sendChatMessage(const QString &msg);
 
     static const long METRONOME_TRACK_ID = 123456789; // just a number :)
 
@@ -102,10 +102,10 @@ private:
 
     QMap<QString, NinjamTrackNode *> trackNodes;// the other users channels
 
-    static QString getUniqueKey(Ninjam::UserChannel channel);
+    static QString getUniqueKey(const Ninjam::UserChannel &channel);
 
-    void addTrack(Ninjam::User user, Ninjam::UserChannel channel);
-    void removeTrack(Ninjam::User, Ninjam::UserChannel channel);
+    void addTrack(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+    void removeTrack(const Ninjam::User &user, const Ninjam::UserChannel &channel);
 
     bool running;
 

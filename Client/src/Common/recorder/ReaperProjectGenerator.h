@@ -7,10 +7,10 @@ namespace Recorder {
 class ReaperProjectGenerator : public JamMetadataWriter
 {
 public:
-    void write(Jam jam);
+    void write(const Jam &jam) override;
 
 private:
-    static QString buildTrackName(QString userName, quint8 channelIndex);
+    static QString buildTrackName(const QString &userName, quint8 channelIndex);
 };
 }
 

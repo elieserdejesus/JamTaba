@@ -97,7 +97,7 @@ void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in,
     out.add(internalOutputBuffer);
 }
 
-void AbstractMp3Streamer::initialize(QString streamPath)
+void AbstractMp3Streamer::initialize(const QString &streamPath)
 {
     streaming = !streamPath.isNull() && !streamPath.isEmpty();
 }
@@ -143,14 +143,14 @@ void AbstractMp3Streamer::decode(const unsigned int maxBytesToDecode)
     }
 }
 
-void AbstractMp3Streamer::setStreamPath(QString streamPath)
+void AbstractMp3Streamer::setStreamPath(const QString &streamPath)
 {
     stopCurrentStream();
     initialize(streamPath);
 }
 
 // +++++++++++++++++++++++++++++++++++++++
-NinjamRoomStreamerNode::NinjamRoomStreamerNode(QUrl streamPath, int bufferTimeInSeconds) :
+NinjamRoomStreamerNode::NinjamRoomStreamerNode(const QUrl &streamPath, int bufferTimeInSeconds) :
     AbstractMp3Streamer(new Mp3DecoderMiniMp3()),
     httpClient(nullptr),
     bufferTime(bufferTimeInSeconds),
@@ -175,7 +175,7 @@ bool NinjamRoomStreamerNode::needResamplingFor(int targetSampleRate) const
     return AbstractMp3Streamer::needResamplingFor(targetSampleRate);
 }
 
-void NinjamRoomStreamerNode::initialize(QString streamPath)
+void NinjamRoomStreamerNode::initialize(const QString &streamPath)
 {
     AbstractMp3Streamer::initialize(streamPath);
     buffering = true;
@@ -246,13 +246,13 @@ void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBu
 }
 
 // ++++++++++++++++++
-AudioFileStreamerNode::AudioFileStreamerNode(QString file) :
+AudioFileStreamerNode::AudioFileStreamerNode(const QString &file) :
     AbstractMp3Streamer(new Mp3DecoderMiniMp3())
 {
     setStreamPath(file);
 }
 
-void AudioFileStreamerNode::initialize(QString streamPath)
+void AudioFileStreamerNode::initialize(const QString &streamPath)
 {
     AbstractMp3Streamer::initialize(streamPath);
     QFile *f = new QFile(streamPath);
@@ -289,7 +289,7 @@ TestStreamerNode::~TestStreamerNode()
     delete oscilator;
 }
 
-void TestStreamerNode::initialize(QString streamPath)
+void TestStreamerNode::initialize(const QString &streamPath)
 {
     AbstractMp3Streamer::initialize(streamPath);
 }
@@ -302,7 +302,7 @@ void TestStreamerNode::processReplacing(const Audio::SamplesBuffer &in, Audio::S
     lastPeak.update(out.computePeak());
 }
 
-void TestStreamerNode::setStreamPath(QString streamPath)
+void TestStreamerNode::setStreamPath(const QString &streamPath)
 {
     Q_UNUSED(streamPath);
     playing = true;

@@ -11,8 +11,7 @@ private:
     QString group;
     QString path;
 public:
-    PluginDescriptor(QString name, QString group);
-    PluginDescriptor(QString name, QString group, QString path);
+    PluginDescriptor(const QString &name, const QString &group, const QString &path = "");
     PluginDescriptor();
     virtual ~PluginDescriptor();
     inline QString getName() const
@@ -45,10 +44,10 @@ public:
         return group.toLower() == "jamtaba";
     }
 
-    static QString getPluginNameFromPath(QString path);
+    static QString getPluginNameFromPath(const QString &path);
 
     QString toString() const;
-    static PluginDescriptor fromString(QString);
+    static PluginDescriptor fromString(const QString &);
 };
 }
 

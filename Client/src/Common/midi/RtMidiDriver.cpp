@@ -3,9 +3,9 @@
 
 using namespace Midi;
 
-#include "../log/Logging.h"
+#include "log/Logging.h"
 
-RtMidiDriver::RtMidiDriver(QList<bool> deviceStatuses){
+RtMidiDriver::RtMidiDriver(QList<bool> &deviceStatuses){
     qCInfo(jtMidi) << "Initializing rtmidi...";
     int maxInputDevices = getMaxInputDevices();
     qCDebug(jtMidi) << "MIDI DEVICES FOUND idx:" << maxInputDevices;
@@ -20,7 +20,7 @@ RtMidiDriver::RtMidiDriver(QList<bool> deviceStatuses){
 
 }
 
-void RtMidiDriver::setInputDevicesStatus(QList<bool> statuses){
+void RtMidiDriver::setInputDevicesStatus(const QList<bool> &statuses){
     MidiDriver::setInputDevicesStatus(statuses);
 
     release();

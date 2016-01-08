@@ -5,7 +5,7 @@
 using namespace Recorder;
 
 
-void ReaperProjectGenerator::write(Jam jam){
+void ReaperProjectGenerator::write(const Jam &jam){
     QString stringBuffer("");
     stringBuffer.append("<REAPER_PROJECT 0.1 \"4.731\" 1416709867").append("\n");
     stringBuffer.append("  RECORD_PATH \"audio\" \"\"").append("\n");
@@ -60,6 +60,6 @@ void ReaperProjectGenerator::write(Jam jam){
 }
 
 
-QString ReaperProjectGenerator::buildTrackName(QString userName, quint8 channelIndex) {
+QString ReaperProjectGenerator::buildTrackName(const QString &userName, quint8 channelIndex) {
     return userName + " (Channel " + QString::number(channelIndex+1) + ")";
 }

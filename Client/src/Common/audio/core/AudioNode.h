@@ -25,7 +25,7 @@ public:
     virtual void suspend() = 0;
     virtual void resume() = 0;
     virtual void updateGui() = 0;
-    virtual void openEditor(QPoint centerOfScreen) = 0;
+    virtual void openEditor(const QPoint &centerOfScreen) = 0;
     virtual void closeEditor() = 0;
     virtual void setSampleRate(int newSampleRate)
     {
@@ -59,15 +59,15 @@ private:
     int processedSamples;
 public:
     FaderProcessor(float startGain, float endGain, int samplesToFade);
-    virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
-                         const Midi::MidiBuffer &midiBuffer);
+    void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
+                         const Midi::MidiBuffer &midiBuffer) override;
     bool finished();
     void reset();
-    void resume()
+    void resume() override
     {
     }
 
-    void suspend()
+    void suspend() override
     {
     }
 };
@@ -192,8 +192,8 @@ class OscillatorAudioNode : public AudioNode
 {
 public:
     OscillatorAudioNode(float frequency, int sampleRate);
-    virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                                  const Midi::MidiBuffer &midiBuffer);
+    void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
+                                  const Midi::MidiBuffer &midiBuffer) override;
     virtual int getSampleRate() const
     {
         return sampleRate;
@@ -212,8 +212,8 @@ class LocalInputAudioNode : public AudioNode
 public:
     LocalInputAudioNode(int parentChannelIndex, bool isMono = true);
     ~LocalInputAudioNode();
-    virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                                  const Midi::MidiBuffer &midiBuffer);
+    void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
+                                  const Midi::MidiBuffer &midiBuffer) override;
     virtual int getSampleRate() const
     {
         return 0;
@@ -292,13 +292,13 @@ public:
     }
 
     // overriding
-    void addProcessor(AudioNodeProcessor *newProcessor);
+    void addProcessor(AudioNodeProcessor *newProcessor) override;
 
     void reset();
 
     // local input tracks are always activated, so is possible play offline while listening to a room.
     // The other tracks (ninjam tracks) are deactivated when the 'room preview' is started.
-    inline bool isActivated() const
+    inline bool isActivated() const override
     {
         return true;
     }
@@ -374,7 +374,7 @@ public:
     }
 
     void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate,
-                          const Midi::MidiBuffer &midiBuffer)
+                          const Midi::MidiBuffer &midiBuffer) override
     {
         osc.processReplacing(in, out, sampleRate, midiBuffer);// copy sine samples to out and simulate an input, just to test audio transmission
     }

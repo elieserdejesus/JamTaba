@@ -28,7 +28,7 @@ void VstPluginScanner::scan()
     }
 
     writeToProcessOutput("JT-Scanner-Starting");
-    foreach (QString scanFolder, foldersToScan) {
+    foreach (const QString &scanFolder, foldersToScan) {
         QDirIterator folderIterator(scanFolder, QDirIterator::Subdirectories);
         while (folderIterator.hasNext()) {
             folderIterator.next();// point to next file inside current folder
@@ -47,7 +47,7 @@ void VstPluginScanner::scan()
     writeToProcessOutput("JT-Scanner-Finished");
 }
 
-void VstPluginScanner::writeToProcessOutput(QString string)
+void VstPluginScanner::writeToProcessOutput(const QString &string)
 {
     // using '\n' here because std::endl don't work well when reading the output from QProcess
     std::cout << '\n' << string.toStdString() << '\n';
