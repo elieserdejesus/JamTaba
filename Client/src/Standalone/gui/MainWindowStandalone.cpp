@@ -331,7 +331,7 @@ void MainWindowStandalone::initializePluginFinder()
 void MainWindowStandalone::handleServerConnectionError(QString msg)
 {
     MainWindow::handleServerConnectionError(msg);
-    (dynamic_cast<MainControllerStandalone *>(mainController))->quit();
+    controller->quit();
 }
 
 void MainWindowStandalone::setGlobalPreferences(QList<bool> midiInputsStatus, int audioDevice,
