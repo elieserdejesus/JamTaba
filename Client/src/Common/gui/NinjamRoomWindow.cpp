@@ -13,6 +13,7 @@
 #include "ninjam/Service.h"
 #include "chords/ChordsPanel.h"
 #include "chords/ChordProgression.h"
+#include "chords/ChatChordsProgressionParser.h"
 #include "NinjamPanel.h"
 #include "ChatPanel.h"
 #include "MainWindow.h"
@@ -28,7 +29,7 @@
 using namespace Persistence;
 
 // +++++++++++++++++++++++++
-NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, Login::RoomInfo roomInfo,
+NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &roomInfo,
                                    Controller::MainController *mainController) :
     QWidget(parent),
     ui(new Ui::NinjamRoomWindow),
@@ -141,25 +142,25 @@ void NinjamRoomWindow::toggleMetronomeSoloStatus()
                                      Controller::NinjamController::METRONOME_TRACK_ID));
 }
 
-void NinjamRoomWindow::sendNewChatMessage(QString msg)
+void NinjamRoomWindow::sendNewChatMessage(const QString &msg)
 {
     mainController->getNinjamController()->sendChatMessage(msg);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamRoomWindow::handleUserLeaving(QString userName)
+void NinjamRoomWindow::handleUserLeaving(const QString &userName)
 {
     if (chatPanel)
         chatPanel->addMessage("Jamtaba", userName + " leave the room.");
 }
 
-void NinjamRoomWindow::handleUserEntering(QString userName)
+void NinjamRoomWindow::handleUserEntering(const QString &userName)
 {
     if (chatPanel)
         chatPanel->addMessage("Jamtaba", userName + " enter in room.");
 }
 
-void NinjamRoomWindow::addChatMessage(Ninjam::User user, QString message)
+void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &message)
 {
     bool isVoteMessage = !message.isNull() && message.toLower().startsWith(
         "[voting system] leading candidate:");
@@ -181,7 +182,7 @@ void NinjamRoomWindow::addChatMessage(Ninjam::User user, QString message)
         handleChordProgressionMessage(user, message);
 }
 
-void NinjamRoomWindow::handleChordProgressionMessage(Ninjam::User user, QString message)
+void NinjamRoomWindow::handleChordProgressionMessage(const Ninjam::User &user, const QString &message)
 {
     Q_UNUSED(user)
     ChatChordsProgressionParser parser;
@@ -194,7 +195,7 @@ void NinjamRoomWindow::handleChordProgressionMessage(Ninjam::User user, QString 
     }
 }
 
-void NinjamRoomWindow::handleVoteMessage(Ninjam::User user, QString message)
+void NinjamRoomWindow::handleVoteMessage(const Ninjam::User &user, const QString &message)
 {
     // local user is voting?
     static quint64 lastVoteCommand = 0;
@@ -278,7 +279,7 @@ void NinjamRoomWindow::setChannelXmitStatus(long channelID, bool transmiting)
         trackView->setUnlightStatus(!transmiting);
 }
 
-void NinjamRoomWindow::removeChannel(Ninjam::User user, Ninjam::UserChannel channel, long channelID)
+void NinjamRoomWindow::removeChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID)
 {
     qCDebug(jtNinjamGUI) << "channel removed:" << channel.getName();
     Q_UNUSED(channel);
@@ -303,7 +304,7 @@ NinjamTrackView *NinjamRoomWindow::getTrackViewByID(long trackID)
     return dynamic_cast<NinjamTrackView *>(NinjamTrackView::getTrackViewByID(trackID));
 }
 
-void NinjamRoomWindow::changeChannelName(Ninjam::User, Ninjam::UserChannel channel, long channelID)
+void NinjamRoomWindow::changeChannelName(const Ninjam::User &, const Ninjam::UserChannel &channel, long channelID)
 {
     qCDebug(jtNinjamGUI) << "channel name changed:" << channel.getName();
     NinjamTrackView *trackView = getTrackViewByID(channelID);
@@ -311,7 +312,7 @@ void NinjamRoomWindow::changeChannelName(Ninjam::User, Ninjam::UserChannel chann
         trackView->setChannelName(channel.getName());
 }
 
-void NinjamRoomWindow::addChannel(Ninjam::User user, Ninjam::UserChannel channel, long channelID)
+void NinjamRoomWindow::addChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID)
 {
     qCDebug(jtNinjamGUI) << "channel added - creating channel view:" << user.getFullName() << " "
                          << channel.getName();
@@ -439,7 +440,7 @@ void NinjamRoomWindow::setNewBeatsPerAccent(int index)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamRoomWindow::setNewBpi(QString newText)
+void NinjamRoomWindow::setNewBpi(const QString &newText)
 {
     int currentBpi = mainController->getNinjamController()->getCurrentBpi();
     int newBpi = newText.toInt();
@@ -450,7 +451,7 @@ void NinjamRoomWindow::setNewBpi(QString newText)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamRoomWindow::setNewBpm(QString newText)
+void NinjamRoomWindow::setNewBpm(const QString &newText)
 {
     int currentBpm = mainController->getNinjamController()->getCurrentBpm();
     int newBpm = newText.toInt();

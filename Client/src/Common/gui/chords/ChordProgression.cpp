@@ -10,17 +10,7 @@ const QString Chord::TABLE_FLATS[]
     = {"C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"};
 // ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Chord::Chord(QString chordName)
-{
-    initialize(chordName, 0);
-}
-
-Chord::Chord(QString chordText, int beat)
-{
-    initialize(chordText, beat);
-}
-
-void Chord::initialize(QString chordText, int beat)
+Chord::Chord(const QString &chordText, int beat)
 {
     this->chordText = chordText.trimmed();
     this->beat = beat;
@@ -81,7 +71,7 @@ Chord Chord::getTransposedVersion(int semitones) const
     return Chord(newChordText, getBeat());
 }
 
-QString Chord::getTransposedRoot(QString rootKey, int semitones)
+QString Chord::getTransposedRoot(const QString &rootKey, int semitones)
 {
     QString newRootKey = "";
     int entryIndex = 0;
@@ -97,7 +87,7 @@ QString Chord::getTransposedRoot(QString rootKey, int semitones)
     return newRootKey;
 }
 
-const QString *Chord::getTable(QString chordName, int semitones)
+const QString *Chord::getTable(const QString &chordName, int semitones)
 {
     bool isSharp = chordName.length() > 1 && chordName.at(1) == '#';
     bool isFlat = chordName.length() > 1 && chordName.at(1) == 'b';
@@ -123,7 +113,7 @@ ChordProgressionMeasure::ChordProgressionMeasure(int beatsInTheMeasure) :
 {
 }
 
-void ChordProgressionMeasure::addChord(Chord chord)
+void ChordProgressionMeasure::addChord(const Chord &chord)
 {
     chords.append(chord);
     updateChordsBeats();
@@ -178,7 +168,7 @@ bool ChordProgression::canBeUsed(int bpi) const
     return false;
 }
 
-void ChordProgression::addMeasure(ChordProgressionMeasure measure)
+void ChordProgression::addMeasure(const ChordProgressionMeasure &measure)
 {
     measures.append(measure);
 }
@@ -246,7 +236,7 @@ const QString ChatChordsProgressionParser::CHORD_REGEX
 
 const QString ChatChordsProgressionParser::MEASURE_SEPARATORS_REGEX = "\\||!|I|l|L";
 
-bool ChatChordsProgressionParser::containsProgression(QString string)
+bool ChatChordsProgressionParser::containsProgression(const QString &string)
 {
     QRegularExpression regex(
         "^([" + MEASURE_SEPARATORS_REGEX + "][ ]{0,2}" + CHORD_REGEX + "{1,4}){1,}");
@@ -255,7 +245,7 @@ bool ChatChordsProgressionParser::containsProgression(QString string)
     return match.hasMatch();
 }
 
-ChordProgression ChatChordsProgressionParser::parse(QString string)
+ChordProgression ChatChordsProgressionParser::parse(const QString &string)
 {
     // remove the chord separator in the end of string. Some users type this last separator
     QString cleanedString = getSanitizedString(string);
@@ -282,7 +272,7 @@ ChordProgression ChatChordsProgressionParser::parse(QString string)
     return ChordProgression();// empty progression
 }
 
-QString ChatChordsProgressionParser::getSanitizedString(QString string)
+QString ChatChordsProgressionParser::getSanitizedString(const QString &string)
 {
     // check if user type a measure separator or blank space in the end of string
     int index = string.size() - 1;

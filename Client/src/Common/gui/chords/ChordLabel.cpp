@@ -8,7 +8,7 @@ ChordLabel *ChordLabel::currentChordLabel = nullptr;
 
 // ++++++++++++++++++++++++++++++++++++++++++++=
 
-ChordLabel::ChordLabel(Chord chord) :
+ChordLabel::ChordLabel(const Chord &chord) :
     chord(chord)
 {
     setText(chordToHtmlText(chord));
@@ -42,7 +42,7 @@ void ChordLabel::setStyleSheetPropertyStatus(bool status)
     style()->polish(this);
 }
 
-QString ChordLabel::chordToHtmlText(Chord chord)
+QString ChordLabel::chordToHtmlText(const Chord &chord)
 {
     QString finalString = "<strong>" + chord.getRootKey().left(1).toUpper();// the first chord letter
     if (chord.isFlat() || chord.isSharp()) {

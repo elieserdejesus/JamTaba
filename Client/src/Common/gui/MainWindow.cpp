@@ -946,7 +946,7 @@ ChordsPanel *MainWindow::createChordsPanel()
 {
     ChordsPanel *chordsPanel = new ChordsPanel();
     QObject::connect(chordsPanel, SIGNAL(buttonSendChordsToChatClicked()), this,
-                     SLOT(on_buttonSendChordsToChatClicked()));
+                     SLOT(sendCurrentChordProgressionToChat()));
     return chordsPanel;
 }
 

@@ -8,9 +8,8 @@ class Chord
 {
     friend bool operator==(const Chord &c1, const Chord &c2);
 public:
-    Chord(QString chordText);
 
-    Chord(QString chordText, int beat);
+    Chord(const QString &chordText, int beat = 0);
 
     inline bool hasLastPart() const
     {
@@ -84,11 +83,10 @@ private:
     static const QString TABLE_SHARPS[12];// = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
     static const QString TABLE_FLATS[12];// = {"C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"};
 
-    static const QString *getTable(QString chordText, int semitones);
+    static const QString *getTable(const QString &chordText, int semitones);
 
-    static QString getTransposedRoot(QString rootKey, int semitones);
+    static QString getTransposedRoot(const QString &rootKey, int semitones);
 
-    void initialize(QString chordText, int beat);
 };
 
 // +++++++++++++++++++++++++++++++++++++++
@@ -96,7 +94,7 @@ class ChordProgressionMeasure
 {
 public:
     ChordProgressionMeasure(int beatsInTheMeasure);
-    void addChord(Chord chord);
+    void addChord(const Chord &chord);
     QString toString() const;
     inline int getBeats() const
     {
@@ -131,7 +129,7 @@ public:
         return measures.isEmpty();
     }
 
-    void addMeasure(ChordProgressionMeasure measure);
+    void addMeasure(const ChordProgressionMeasure &measure);
     const QList<ChordProgressionMeasure> getMeasures() const
     {
         return measures;
@@ -151,18 +149,18 @@ private:
 class ChordsProgressionParser
 {
 public:
-    virtual ChordProgression parse(QString string) = 0;
-    virtual bool containsProgression(QString string) = 0;
+    virtual ChordProgression parse(const QString &string) = 0;
+    virtual bool containsProgression(const QString &string) = 0;
 };
 
 // parse chord progression received as chat message
 class ChatChordsProgressionParser : public ChordsProgressionParser
 {
 public:
-    ChordProgression parse(QString string);
-    bool containsProgression(QString string);
+    ChordProgression parse(const QString &string) override;
+    bool containsProgression(const QString &string) override;
 private:
-    QString getSanitizedString(QString string);
+    QString getSanitizedString(const QString &string);
 
     static const QString CHORD_REGEX;
     static const QString MEASURE_SEPARATORS_REGEX;

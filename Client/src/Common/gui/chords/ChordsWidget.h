@@ -14,7 +14,7 @@ class ChordsWidget : public QWidget
 {
 public:
     ChordsWidget(QWidget *parent);
-    void addChord(Chord chord, int durationInBeats);
+    void addChord(const Chord &chord, int durationInBeats);
     void setCurrentBeat(int beatToInsert);
     void clear();
 private:

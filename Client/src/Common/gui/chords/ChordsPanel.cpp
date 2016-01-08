@@ -20,7 +20,7 @@ ChordsPanel::~ChordsPanel()
     delete ui;
 }
 
-void ChordsPanel::setChords(ChordProgression progression)
+void ChordsPanel::setChords(const ChordProgression &progression)
 {
     ui->chordsWidget->clear();
     this->chordProgression.clear();
@@ -51,7 +51,7 @@ bool ChordsPanel::setBpi(int newBpi)
     return false;
 }
 
-int ChordsPanel::getEstimatedChordDuration(Chord chord, ChordProgressionMeasure measure) const
+int ChordsPanel::getEstimatedChordDuration(const Chord &chord, const ChordProgressionMeasure &measure) const
 {
     int chordsInMeasure = measure.getChords().size();
     if (chordsInMeasure <= 2)// only one or two chords in the measure?
