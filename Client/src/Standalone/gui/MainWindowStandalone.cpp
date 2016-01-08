@@ -293,7 +293,8 @@ void MainWindowStandalone::showPreferencesDialog(int initialTab)
     if (midiDriver)
         midiDriver->stop();
 
-    StandalonePreferencesDialog dialog(controller, this, initialTab);
+    StandalonePreferencesDialog dialog(controller, this);
+    dialog.initialize(initialTab);
 
     connect(&dialog,
             SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int, int, int)),

@@ -11,8 +11,8 @@ class StandalonePreferencesDialog : public PreferencesDialog
     Q_OBJECT
 
 public:
-    StandalonePreferencesDialog(Controller::MainControllerStandalone *mainController, MainWindow *mainWindow,
-                                int initialTab);
+    StandalonePreferencesDialog(Controller::MainControllerStandalone *mainController, MainWindow *mainWindow);
+    void initialize(int initialTab);
 
 public slots:
     void accept() override;

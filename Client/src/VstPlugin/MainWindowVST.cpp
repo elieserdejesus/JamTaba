@@ -57,6 +57,7 @@ void MainWindowVST::showPreferencesDialog(int initialTab)
 {
     Q_UNUSED(initialTab)
     VstPreferencesDialog dialog(mainController, this);
+    dialog.initialize();
     centerDialog(&dialog);
     dialog.exec();
 }
