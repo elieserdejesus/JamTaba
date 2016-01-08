@@ -8,7 +8,7 @@
 class ChordProgressionMeasure
 {
 public:
-    ChordProgressionMeasure(int beatsInTheMeasure);
+    explicit ChordProgressionMeasure(int beatsInTheMeasure);
     void addChord(const Chord &chord);
     QString toString() const;
     inline int getBeats() const

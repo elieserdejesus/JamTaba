@@ -15,7 +15,7 @@ public:
     enum PaintMode {
         CIRCULAR, ELLIPTICAL, LINEAR
     };
-    IntervalProgressDisplay(QWidget *parent);
+    explicit IntervalProgressDisplay(QWidget *parent);
     ~IntervalProgressDisplay();
     inline bool isShowingAccents() const
     {

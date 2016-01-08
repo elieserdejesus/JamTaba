@@ -8,7 +8,7 @@ class QPaintEvent;
 class IntervalChunksDisplay : public QWidget
 {
 public:
-    IntervalChunksDisplay(QWidget *parent);
+    explicit IntervalChunksDisplay(QWidget *parent);
 
     void incrementDownloadedChunks();
     void startNewInterval();

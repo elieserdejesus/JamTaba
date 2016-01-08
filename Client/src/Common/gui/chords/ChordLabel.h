@@ -8,7 +8,7 @@ class ChordLabel : public QLabel
 {
     Q_OBJECT
 public:
-    ChordLabel(const Chord &chord);
+    explicit ChordLabel(const Chord &chord);
     ~ChordLabel();
     void setAsCurrentChord();
 private:

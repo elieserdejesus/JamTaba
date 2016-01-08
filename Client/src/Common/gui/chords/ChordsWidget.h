@@ -13,7 +13,7 @@ class ChordLabel;
 class ChordsWidget : public QWidget
 {
 public:
-    ChordsWidget(QWidget *parent);
+    explicit ChordsWidget(QWidget *parent);
     void addChord(const Chord &chord, int durationInBeats);
     void setCurrentBeat(int beatToInsert);
     void clear();
