@@ -44,7 +44,7 @@ public:
     virtual void addChannelsGroup(const QString &name);
     void removeChannelsGroup(int channelGroupIndex);
 
-    void exitFromRoom(bool normalDisconnection);
+    void exitFromRoom(bool normalDisconnection, QString disconnectionMessage = "");
 
     inline bool isRunningInMiniMode() const
     {

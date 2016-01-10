@@ -148,13 +148,12 @@ void MainWindow::stopCurrentRoomStream()
 
 void MainWindow::showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon)
 {
-    QMessageBox *messageBox = new QMessageBox(this);
+    QMessageBox *messageBox = new QMessageBox(nullptr);
     messageBox->setWindowTitle(title);
     messageBox->setText(text);
     messageBox->setIcon(icon);
     messageBox->setAttribute(Qt::WA_DeleteOnClose, true);
     messageBox->show();
-    centerDialog(messageBox);
 }
 
 void MainWindow::handlePublicRoomStreamError(const QString &msg)
@@ -598,7 +597,7 @@ void MainWindow::prepareTransmission()
 }
 
 // +++++++++++++++++++++++++++++
-void MainWindow::exitFromRoom(bool normalDisconnection)
+void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMessage)
 {
     hideBusyDialog();
 
@@ -628,7 +627,10 @@ void MainWindow::exitFromRoom(bool normalDisconnection)
     setInputTracksPreparingStatus(false);/** reset the prepating status when user leave the room. This is specially necessary if user enter in a room and leave before the track is prepared to transmit.*/
 
     if (!normalDisconnection) {
-        showMessageBox("Error", "Disconnected from ninjam server", QMessageBox::Warning);
+        if(!disconnectionMessage.isEmpty())
+            showMessageBox("Error", disconnectionMessage, QMessageBox::Warning);
+        else
+            showMessageBox("Error", "Disconnected from ninjam server", QMessageBox::Warning);
     } else {
         if (roomToJump) {// waiting the disconnection to connect in a new room?
             showBusyDialog("Connecting in " + roomToJump->getName());
