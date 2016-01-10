@@ -94,11 +94,11 @@ public:
     virtual int getMaxInputs() const = 0;// return max inputs for an audio device. My fast track ultra (8 channels) return 8, etc.
     virtual int getMaxOutputs() const = 0;
 
-    virtual const char *getInputChannelName(unsigned const int index) const = 0;
-    virtual const char *getOutputChannelName(unsigned const int index) const = 0;
+    virtual QString getInputChannelName(unsigned const int index) const = 0;
+    virtual QString getOutputChannelName(unsigned const int index) const = 0;
 
-    virtual const char *getAudioDeviceName(int index) const = 0;
-    inline const char *getAudioDeviceName() const
+    virtual QString getAudioDeviceName(int index) const = 0;
+    inline QString getAudioDeviceName() const
     {
         return getAudioDeviceName(audioDeviceIndex);
     }
@@ -176,17 +176,17 @@ public:
         return 2;
     }
 
-    inline const char *getInputChannelName(const unsigned int) const
+    inline QString getInputChannelName(const unsigned int) const
     {
         return "Silence";
     }
 
-    inline const char *getOutputChannelName(const unsigned int) const
+    inline QString getOutputChannelName(const unsigned int) const
     {
         return "Silence";
     }
 
-    inline const char *getAudioDeviceName(int) const
+    inline QString getAudioDeviceName(int) const
     {
         return "NullAudioDriver";
     }
