@@ -2,46 +2,44 @@
 #include "pa_mac_core.h"
 #include "../log/Logging.h"
 
-namespace Audio{
-
-
-PortAudioDriver::PortAudioDriver(Controller::MainController* mainController,
-                                 int deviceIndex, int firstInIndex,
-                                 int lastInIndex, int firstOutIndex,
-                                 int lastOutIndex, int sampleRate, int bufferSize )
-    :AudioDriver(mainController){
-
-    //initialize portaudio using default devices, mono input and try estereo output if possible
+namespace Audio {
+PortAudioDriver::PortAudioDriver(Controller::MainController *mainController, int deviceIndex,
+                                 int firstInIndex, int lastInIndex, int firstOutIndex,
+                                 int lastOutIndex, int sampleRate, int bufferSize) :
+    AudioDriver(mainController)
+{
+    // initialize portaudio using default devices, mono input and try estereo output if possible
     PaError error = Pa_Initialize();
-    if (error != paNoError){
+    if (error == paNoError) {
+        audioDeviceIndex = Pa_GetDefaultOutputDevice();
+        globalInputRange = ChannelRange(0, getMaxInputs());
+        globalOutputRange = ChannelRange(0, 2);// 2 channels for output
+
+        int maxOutputs = getMaxOutputs();
+        if (maxOutputs > 1)
+            globalOutputRange.setToStereo();
+        if(!initPortAudio(sampleRate, bufferSize)){
+            qCCritical(jtAudio) << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
+            audioDeviceIndex = paNoDevice;
+        }
+    } else {
         qCCritical(jtAudio) << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
-        throw std::runtime_error(Pa_GetErrorText(error));
+        audioDeviceIndex = paNoDevice;
     }
-
-    this->audioDeviceIndex = Pa_GetDefaultOutputDevice();
-    this->globalInputRange = ChannelRange(0, getMaxInputs());
-    this->globalOutputRange = ChannelRange(0, 2);//2 channels for output
-
-    int maxOutputs = getMaxOutputs();
-    if(maxOutputs > 1){
-        globalOutputRange.setToStereo();
-    }
-    initPortAudio(sampleRate, bufferSize);
 }
 
-
-QList<int> PortAudioDriver::getValidBufferSizes(int deviceIndex) const{
+QList<int> PortAudioDriver::getValidBufferSizes(int deviceIndex) const
+{
     QList<int> buffersSize;
     long maxBufferSize;
     long minBufferSize;
     PaError result = PaMacCore_GetBufferSizeRange(deviceIndex, &minBufferSize, &maxBufferSize);
-    if(result != paNoError){
+    if (result != paNoError) {
         buffersSize.append(256);
-        return buffersSize;//return 256 as the only possible value
+        return buffersSize;// return 256 as the only possible value
     }
-    for (long size = minBufferSize; size <= maxBufferSize; size *= 2) {
+    for (long size = minBufferSize; size <= maxBufferSize; size *= 2)
         buffersSize.append(size);
-    }
     return buffersSize;
 }
 
@@ -55,31 +53,36 @@ const char *PortAudioDriver::getInputChannelName(const unsigned int index) const
     return PaMacCore_GetChannelName(audioDeviceIndex, index, true);
 }
 
-void PortAudioDriver::configureHostSpecificInputParameters(PaStreamParameters& inputParameters){
-    //qCDebug(portaudio) << "using MAC scpecific stream infos for inputs";
-    //PaMacCoreStreamInfo streamInfo;
-    //PaMacCore_SetupStreamInfo(&streamInfo, paMacCorePro);
-    //inputParams.hostApiSpecificStreamInfo  = &streamInfo;
+void PortAudioDriver::configureHostSpecificInputParameters(PaStreamParameters &inputParameters)
+{
+    // qCDebug(portaudio) << "using MAC scpecific stream infos for inputs";
+    // PaMacCoreStreamInfo streamInfo;
+    // PaMacCore_SetupStreamInfo(&streamInfo, paMacCorePro);
+    // inputParams.hostApiSpecificStreamInfo  = &streamInfo;
 }
 
-void PortAudioDriver::configureHostSpecificOutputParameters(PaStreamParameters& outputParameters){
-    //qCDebug(portaudio) << "using MAC scpecific stream infos for output";
-    //PaMacCoreStreamInfo outStreamInfo;
-    //PaMacCore_SetupStreamInfo(&outStreamInfo, paMacCorePro);
-    //outputParams.hostApiSpecificStreamInfo = &outStreamInfo;
+void PortAudioDriver::configureHostSpecificOutputParameters(PaStreamParameters &outputParameters)
+{
+    // qCDebug(portaudio) << "using MAC scpecific stream infos for output";
+    // PaMacCoreStreamInfo outStreamInfo;
+    // PaMacCore_SetupStreamInfo(&outStreamInfo, paMacCorePro);
+    // outputParams.hostApiSpecificStreamInfo = &outStreamInfo;
 }
 
-void PortAudioDriver::releaseHostSpecificParameters(const PaStreamParameters &inputParameters, const PaStreamParameters &outputParameters){
+void PortAudioDriver::releaseHostSpecificParameters(const PaStreamParameters &inputParameters,
+                                                    const PaStreamParameters &outputParameters)
+{
     Q_UNUSED(inputParameters)
     Q_UNUSED(outputParameters)
 }
 
-bool PortAudioDriver::hasControlPanel() const{
+bool PortAudioDriver::hasControlPanel() const
+{
     return false;
 }
 
-void PortAudioDriver::openControlPanel(void *mainWindowHandle){
+void PortAudioDriver::openControlPanel(void *mainWindowHandle)
+{
     Q_UNUSED(mainWindowHandle)
 }
-
-}//namespace
+}// namespace

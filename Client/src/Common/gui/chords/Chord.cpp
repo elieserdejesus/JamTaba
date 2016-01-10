@@ -75,13 +75,15 @@ QString Chord::getTransposedRoot(const QString &rootKey, int semitones)
     const QString *table = getTable(rootKey, semitones);
     while (entryIndex < 12 && !(rootKey == table[entryIndex]))
         entryIndex++;
-    if (entryIndex >= 12)
-        throw std::runtime_error("rootKey not founded in upTable: " + rootKey.toStdString());
-    if (semitones > 0)
-        newRootKey = table[(entryIndex + semitones) % 12];
-    else
-        newRootKey = table[(entryIndex + 12 + semitones) % 12];
-    return newRootKey;
+    if (entryIndex < 12){//valid index?
+        if (semitones > 0)
+            newRootKey = table[(entryIndex + semitones) % 12];
+        else
+            newRootKey = table[(entryIndex + 12 + semitones) % 12];
+        return newRootKey;
+    }
+    qCritical() << "rootKey not founded in upTable: " << rootKey;
+    return rootKey;// fallback to the original rootKey
 }
 
 const QString *Chord::getTable(const QString &chordName, int semitones)

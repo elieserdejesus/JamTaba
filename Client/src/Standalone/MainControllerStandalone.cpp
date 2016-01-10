@@ -330,6 +330,7 @@ void MainControllerStandalone::start()
 
         audioDriver.reset(driver);
 
+
         QObject::connect(audioDriver.data(), SIGNAL(sampleRateChanged(int)), this, SLOT(setSampleRate(int)));
         QObject::connect(audioDriver.data(), SIGNAL(stopped()), this, SLOT(on_audioDriverStopped()));
         QObject::connect(audioDriver.data(), SIGNAL(started()), this, SLOT(on_audioDriverStarted()));

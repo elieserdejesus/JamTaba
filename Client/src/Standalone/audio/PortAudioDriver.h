@@ -13,33 +13,33 @@ public:
                     int lastOutputIndex, int sampleRate, int bufferSize);
     virtual ~PortAudioDriver();
 
-    virtual void start();
-    virtual void stop();
-    virtual void release();
+    bool start() override;
+    void stop() override;
+    void release() override;
 
-    virtual QList<int> getValidSampleRates(int deviceIndex) const;
-    virtual QList<int> getValidBufferSizes(int deviceIndex) const;
+    QList<int> getValidSampleRates(int deviceIndex) const override;
+    QList<int> getValidBufferSizes(int deviceIndex) const override;
 
-    virtual int getMaxInputs() const;
-    virtual int getMaxOutputs() const;
+    int getMaxInputs() const override;
+    int getMaxOutputs() const override;
 
-    virtual const char *getInputChannelName(unsigned const int index) const;
-    virtual const char *getOutputChannelName(unsigned const int index) const;
+    const char *getInputChannelName(unsigned const int index) const override;
+    const char *getOutputChannelName(unsigned const int index) const override;
 
-    virtual const char *getAudioDeviceName(int index) const;
+    const char *getAudioDeviceName(int index) const override;
     inline int getAudioDeviceIndex() const
     {
         return audioDeviceIndex;
     }
 
-    virtual void setAudioDeviceIndex(int index);
+    void setAudioDeviceIndex(int index) override;
 
-    virtual int getDevicesCount() const;
+    int getDevicesCount() const override;
 
-    virtual bool canBeStarted() const;
+    bool canBeStarted() const override;
 
-    virtual bool hasControlPanel() const;
-    virtual void openControlPanel(void *mainWindowHandle);
+    bool hasControlPanel() const override;
+    void openControlPanel(void *mainWindowHandle) override;
 
     // portaudio callback function
     friend int portaudioCallBack(const void *inputBuffer, void *outputBuffer,
@@ -48,7 +48,7 @@ public:
                                  PaStreamCallbackFlags statusFlags, void *userData);
 
 private:
-    void initPortAudio(int sampleRate, int bufferSize);
+    bool initPortAudio(int sampleRate, int bufferSize);
     PaStream *paStream;
     void translatePortAudioCallBack(const void *in, void *out, unsigned long framesPerBuffer);
 

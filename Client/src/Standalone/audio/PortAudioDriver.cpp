@@ -20,13 +20,13 @@ bool PortAudioDriver::canBeStarted() const{
     return audioDeviceIndex != paNoDevice;
 }
 
-void PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
+bool PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
 {
     qCInfo(jtAudio) << "initializing portaudio...";
     PaError error = Pa_Initialize();
     if (error != paNoError){
         qCCritical(jtAudio) << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
-        throw std::runtime_error(Pa_GetErrorText(error));
+        return false;
     }
     paStream = nullptr;// inputBuffer = outputBuffer = NULL;
 
@@ -78,6 +78,7 @@ void PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
             this->bufferSize = validBufferSizes.last();//use the max supported buffer size
         }
     }
+    return true;
 }
 
 PortAudioDriver::~PortAudioDriver()
@@ -137,10 +138,10 @@ int portaudioCallBack(const void *inputBuffer, void *outputBuffer,
 }
 
 
-void PortAudioDriver::start(){
+bool PortAudioDriver::start(){
 
     if(audioDeviceIndex == paNoDevice){
-        return;
+        return false;
     }
 
     stop();
@@ -190,7 +191,7 @@ void PortAudioDriver::start(){
         const char* errorMsg = Pa_GetErrorText(error);
         qCCritical(jtAudio) << "Error message: " << QString::fromUtf8(errorMsg);
         releaseHostSpecificParameters(inputParams, outputParams);
-        throw std::runtime_error(std::string(errorMsg));
+        return false;
     }
 
     paStream = NULL;
@@ -201,19 +202,21 @@ void PortAudioDriver::start(){
                           paNoFlag, portaudioCallBack, (void*)this);//I'm passing this to portaudio, so I can run methods inside the callback function
     if (error != paNoError){
         releaseHostSpecificParameters(inputParams, outputParams);
-        throw std::runtime_error(std::string(Pa_GetErrorText(error)));
+        return false;
     }
     if(paStream != NULL){
         error = Pa_StartStream(paStream);
         if (error != paNoError){
             releaseHostSpecificParameters(inputParams, outputParams);
-            throw std::runtime_error(Pa_GetErrorText(error));
+            return false;
         }
     }
     qCInfo(jtAudio) << "portaudio driver started ok!";
     emit started();
 
     releaseHostSpecificParameters(inputParams, outputParams);
+
+    return true;
 }
 
 QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const{
@@ -249,7 +252,6 @@ void PortAudioDriver::stop(){
             PaError error = Pa_CloseStream(paStream);
             if(error != paNoError){
                 qCCritical(jtAudio) << "error closing portaudio stream: " << Pa_GetErrorText(error);
-                throw std::runtime_error(std::string(Pa_GetErrorText(error)));
             }
             emit stopped(); //fireDriverStopped();
         }
