@@ -286,7 +286,7 @@ void PortAudioDriver::setAudioDeviceIndex(PaDeviceIndex index)
     this->audioDeviceIndex = index;
 }
 
-const char *PortAudioDriver::getAudioDeviceName(int index) const
+QString PortAudioDriver::getAudioDeviceName(int index) const
 {
     return Pa_GetDeviceInfo(index)->name;
 }

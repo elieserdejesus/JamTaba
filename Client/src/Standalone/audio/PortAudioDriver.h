@@ -23,10 +23,10 @@ public:
     int getMaxInputs() const override;
     int getMaxOutputs() const override;
 
-    const char *getInputChannelName(unsigned const int index) const override;
-    const char *getOutputChannelName(unsigned const int index) const override;
+    QString getInputChannelName(unsigned const int index) const override;
+    QString getOutputChannelName(unsigned const int index) const override;
 
-    const char *getAudioDeviceName(int index) const override;
+    QString getAudioDeviceName(int index) const override;
     inline int getAudioDeviceIndex() const
     {
         return audioDeviceIndex;

@@ -79,17 +79,28 @@ QList<int> PortAudioDriver::getValidBufferSizes(int deviceIndex) const{
     return bufferSizes;
 }
 
-const char *PortAudioDriver::getInputChannelName(const unsigned int index) const{
-    const char *channelName = new char[30];
+QString PortAudioDriver::getInputChannelName(const unsigned int index) const{
+    /**
+    From PaAsio_GetInputChannelName documentation: Retrieve a pointer to a string containing the name of the specified input channel. The string is valid until Pa_Terminate is called.
+    The string will be no longer than 32 characters including the null terminator.
+    */
+
+    const char *channelName = nullptr;
     PaAsio_GetInputChannelName(audioDeviceIndex, index, &channelName);
-    return channelName;
+    if(channelName){
+        return QString(channelName);
+    }
+    return "Error";
 }
 
-const char *PortAudioDriver::getOutputChannelName(const unsigned int index) const
+QString PortAudioDriver::getOutputChannelName(const unsigned int index) const
 {
-    const char *channelName = new char[30];
+    const char *channelName = nullptr;
     PaAsio_GetOutputChannelName(audioDeviceIndex, index, &channelName);
-    return channelName;
+    if(channelName){
+        return QString(channelName);
+    }
+    return "Error";
 }
 
 bool PortAudioDriver::hasControlPanel() const{
