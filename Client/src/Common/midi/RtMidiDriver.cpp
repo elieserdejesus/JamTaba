@@ -5,17 +5,18 @@ using namespace Midi;
 
 #include "log/Logging.h"
 
-RtMidiDriver::RtMidiDriver(QList<bool> &deviceStatuses){
+RtMidiDriver::RtMidiDriver(const QList<bool> &deviceStatuses){
     qCInfo(jtMidi) << "Initializing rtmidi...";
+    QList<bool> statuses(deviceStatuses);
     int maxInputDevices = getMaxInputDevices();
     qCDebug(jtMidi) << "MIDI DEVICES FOUND idx:" << maxInputDevices;
-    if(deviceStatuses.size() < maxInputDevices){
-        int itemsToAdd = maxInputDevices - deviceStatuses.size();
+    if(statuses.size() < maxInputDevices){
+        int itemsToAdd = maxInputDevices - statuses.size();
         for (int i = 0; i < itemsToAdd; ++i) {
-            deviceStatuses.append(true);
+            statuses.append(true);
         }
     }
-    setInputDevicesStatus(deviceStatuses);
+    setInputDevicesStatus(statuses);
     qCInfo(jtMidi) << "rtmidi initialized!";
 
 }

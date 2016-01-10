@@ -37,7 +37,6 @@ protected:
         if (allMessageDataIsAvailable) {
             MessageClazz message(payload);
             stream >> message;
-            qCDebug(jtNinjamProtocol) << message;
             if (service)
                 service->process(message);// calling overload versions of 'process'
             return true; // the message was handled

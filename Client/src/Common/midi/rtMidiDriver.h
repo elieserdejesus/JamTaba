@@ -14,7 +14,7 @@ namespace Midi {
 class RtMidiDriver : public MidiDriver
 {
 public:
-    RtMidiDriver(QList<bool> &deviceStatuses);
+    RtMidiDriver(const QList<bool> &deviceStatuses);
     ~RtMidiDriver();
 
     virtual void start();

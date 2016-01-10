@@ -2,10 +2,10 @@
 #define SERVER_MESSAGES_H
 
 #include <QMap>
+#include <QtGlobal>
 #include "User.h"
 
 class QStringList;
-class QtGlobal;
 
 /**
  * All details about ninjam protocol are based on the Stefanha documentation work in wahjam.
@@ -344,7 +344,6 @@ private:
 };
 
 // ++++++++++++++++++++
-QDebug& operator<<(QDebug& dbg, const Ninjam::ServerMessage &message);
 
 QDataStream &operator >>(QDataStream &stream, ServerMessage &message);
 
