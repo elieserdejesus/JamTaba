@@ -15,6 +15,7 @@ void ServerMessagesHandler::initialize(QIODevice *device)
     this->device = device;
     stream.setDevice(device);
     stream.setByteOrder(QDataStream::LittleEndian);
+    currentHeader.reset(nullptr);
 }
 
 void ServerMessagesHandler::handleAllMessages()

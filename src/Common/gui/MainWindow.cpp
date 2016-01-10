@@ -614,7 +614,8 @@ void MainWindow::exitFromRoom(bool normalDisconnection)
     }
 
     // remove ninjam panel from main window
-    ui.bottomPanel->layout()->removeWidget(ninjamWindow->getNinjamPanel());
+    if(ninjamWindow)
+        ui.bottomPanel->layout()->removeWidget(ninjamWindow->getNinjamPanel());
     dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->addWidget(ui.masterControlsPanel, 0,
                                                                      Qt::AlignHCenter);
     hideChordsPanel();
@@ -1014,6 +1015,9 @@ void MainWindow::updateBpi(int bpi)
 
 void MainWindow::updateBpm(int bpm)
 {
+    if(!ninjamWindow)
+        return;
+
     NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
     if (!ninjamPanel)
         return;
@@ -1022,6 +1026,8 @@ void MainWindow::updateBpm(int bpm)
 
 void MainWindow::updateCurrentIntervalBeat(int beat)
 {
+    if(!ninjamWindow)
+        return;
     NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
     if (!ninjamPanel)
         return;
