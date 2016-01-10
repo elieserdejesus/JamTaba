@@ -50,7 +50,7 @@ void MainController::quitFromNinjamServer(const QString &error)
     qCWarning(jtCore) << error;
     stopNinjamController();
     if (mainWindow)
-        mainWindow->exitFromRoom(false);
+        mainWindow->exitFromRoom(false, error);
 }
 
 void MainController::disconnectFromNinjamServer(const Server &server)
