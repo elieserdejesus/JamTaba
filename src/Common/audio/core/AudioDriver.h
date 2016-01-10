@@ -65,7 +65,7 @@ public:
     virtual void setProperties(int sampleRate, int bufferSize);// used in mac
 
     virtual void stop() = 0;
-    virtual void start() = 0;
+    virtual bool start() = 0;
     virtual void release() = 0;
 
     inline ChannelRange getSelectedInputs() const
@@ -143,12 +143,13 @@ public:
     {
     }
 
-    inline void stop()
+    inline void stop() override
     {
     }
 
-    inline void start()
+    inline bool start() override
     {
+        return true;
     }
 
     inline void release()

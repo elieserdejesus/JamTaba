@@ -358,11 +358,8 @@ void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsSta
         channel->refreshInputSelectionNames();
 
     midiDriver->start();
-    try{
-        audioDriver->start();
-    }
-    catch (const std::runtime_error &error) {
-        qCritical() << "Error starting audio device: " << QString::fromUtf8(error.what());
+    if(!audioDriver->start()){
+        qCritical() << "Error starting audio device";
         QMessageBox::warning(this, "Audio error!",
                              "The audio device can't be started! Please check your audio device and try restart Jamtaba!");
         controller->useNullAudioDriver();

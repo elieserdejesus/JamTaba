@@ -4,13 +4,15 @@
 
 namespace Audio{
 
-PortAudioDriver::PortAudioDriver(Controller::MainController* mainController, int audioDeviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize )
+PortAudioDriver::PortAudioDriver(Controller::MainController* mainController, int deviceIndex, int firstInputIndex, int lastInputIndex, int firstOutputIndex, int lastOutputIndex, int sampleRate, int bufferSize )
     :AudioDriver(mainController)
 {
-    this->globalInputRange = ChannelRange(firstInputIndex, (lastInputIndex - firstInputIndex) + 1);
-    this->globalOutputRange = ChannelRange(firstOutputIndex, (lastOutputIndex - firstOutputIndex) + 1);
-    this->audioDeviceIndex = audioDeviceIndex;
-    initPortAudio(sampleRate, bufferSize);
+    globalInputRange = ChannelRange(firstInputIndex, (lastInputIndex - firstInputIndex) + 1);
+    globalOutputRange = ChannelRange(firstOutputIndex, (lastOutputIndex - firstOutputIndex) + 1);
+    audioDeviceIndex = deviceIndex;
+    if(!initPortAudio(sampleRate, bufferSize)){
+        audioDeviceIndex = paNoDevice;
+    }
 }
 
 void PortAudioDriver::configureHostSpecificInputParameters(PaStreamParameters& inputParams){
