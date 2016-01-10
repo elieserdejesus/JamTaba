@@ -52,7 +52,8 @@ bool ServerMessagesHandler::executeMessageHandler(MessageHeader *header)
     if (!header)
         return false;
 
-    switch (header->messageTypeCode) {
+    ServerMessageType type = static_cast<ServerMessageType>(header->messageTypeCode);
+    switch (type) {
     case ServerMessageType::AUTH_CHALLENGE:
         return handleMessage<ServerAuthChallengeMessage>(header->payload);
     case ServerMessageType::AUTH_REPLY:

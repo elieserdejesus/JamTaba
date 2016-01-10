@@ -336,12 +336,6 @@ void DownloadIntervalWrite::readFrom(QDataStream &stream)
 
 // ++++++++++++++++++
 
-QDebug &Ninjam::operator<<(QDebug &dbg, const ServerMessage &message)
-{
-    message.printDebug(dbg);
-    return dbg;
-}
-
 QDataStream& Ninjam::operator >>(QDataStream &stream, ServerMessage &message)
 {
     message.readFrom(stream);

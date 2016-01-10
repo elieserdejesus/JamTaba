@@ -2,7 +2,7 @@ VST_SDK_PATH = "$$PWD/../../VST_SDK"
 
 TEMPLATE = lib
 
-VERSION = 2.0.10
+VERSION = 2.0.11
 
 ROOT_PATH = "../.."
 SOURCE_PATH = "$$ROOT_PATH/src"

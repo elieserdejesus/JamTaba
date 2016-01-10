@@ -72,7 +72,7 @@ QPushButton *LocalTrackGroupView::createToolButton()
 
 void LocalTrackGroupView::closePluginsWindows()
 {
-    QList<LocalTrackView *> trackViews = getTracks();
+    QList<LocalTrackView *> trackViews = getTracks<LocalTrackView *>();
     foreach (LocalTrackView *trackView, trackViews)
         trackView->closeAllPlugins();
 }
@@ -88,7 +88,7 @@ void LocalTrackGroupView::resetTracksControls()
     qCInfo(jtConfigurator) << "Reseting local inputs...";
 
     Controller::MainController *mainController = mainFrame->getMainController();
-    QList<LocalTrackView *> views = getTracks();
+    QList<LocalTrackView *> views = getTracks<LocalTrackView *>();
     foreach (LocalTrackView *track, views) {// all tracks in this track group
         qCInfo(jtConfigurator) << "\tInput reset on channel "<< track->getTrackID();
         mainController->resetTrack(track->getTrackID());

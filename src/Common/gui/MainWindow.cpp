@@ -114,9 +114,8 @@ Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
 {
     LocalInputTrackSettings settings;
     foreach (LocalTrackGroupView *trackGroupView, localGroupChannels) {
-        trackGroupView->getTracks();
         Channel channel(trackGroupView->getGroupName());
-        foreach (LocalTrackView *trackView, trackGroupView->getTracks()) {
+        foreach (LocalTrackView *trackView, trackGroupView->getTracks<LocalTrackView *>()) {
             LocalInputAudioNode *inputNode = trackView->getInputNode();
             ChannelRange inputNodeRange = inputNode->getAudioInputRange();
             int firstInput = inputNodeRange.getFirstChannel();

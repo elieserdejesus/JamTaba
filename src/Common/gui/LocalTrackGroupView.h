@@ -16,10 +16,10 @@ public:
 
     virtual ~LocalTrackGroupView();
 
-    inline QList<LocalTrackView *> LocalTrackGroupView::getTracks() const
-    {
-        return getTracks<LocalTrackView *>();
-    }
+//    inline QList<LocalTrackView *> LocalTrackGroupView::getTracks() const
+//    {
+//        return getTracks<LocalTrackView *>();
+//    }
 
     //is not possible return a covariant container, so I'm using template to return a container of a more specific (derived) type
     template<class T>
