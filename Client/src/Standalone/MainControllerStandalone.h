@@ -32,12 +32,12 @@ public:
     MainControllerStandalone(Persistence::Settings settings, QApplication *application);
     ~MainControllerStandalone();
 
-    void initializePluginsList(QStringList paths);
+    void initializePluginsList(const QStringList &paths);
     void scanPlugins(bool scanOnlyNewPlugins = false);
-    void addPluginsScanPath(QString path);
-    void addBlackVstToSettings(QString path);
+    void addPluginsScanPath(const QString &path);
+    void addBlackVstToSettings(const QString &path);
     void addDefaultPluginsScanPath();// add vst path from registry
-    void removePluginsScanPath(QString path);
+    void removePluginsScanPath(const QString &path);
     void removeBlackVst(int index);
     void clearPluginsCache();
     QStringList getSteinbergRecommendedPaths();
@@ -141,8 +141,6 @@ private:
     QList<Audio::PluginDescriptor> pluginsDescriptors;
 
     MainWindowStandalone *window;
-
-    bool isVstPluginFile(QString file) const;
 
     bool inputIndexIsValid(int inputIndex);
 

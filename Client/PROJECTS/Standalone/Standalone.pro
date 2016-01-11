@@ -65,9 +65,11 @@ SOURCES += audio/core/PluginDescriptor.cpp
 #conditional sources to different platforms
 win32{
     SOURCES += audio/WindowsPortAudioDriver.cpp
+    SOURCES += vst/WindowsVstPluginChecker.cpp
 }
 macx{
     SOURCES += audio/MacPortAudioDriver.cpp
+    SOURCES += vst/MacVstPluginChecker.cpp
 }
 
 win32{
