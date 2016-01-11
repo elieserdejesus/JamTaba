@@ -553,8 +553,10 @@ void MainControllerStandalone::updateInputTracksRange()
 {
     Audio::ChannelRange globalInputRange = audioDriver->getSelectedInputs();
 
-    for (int trackIndex = 0; trackIndex < inputTracks.size(); ++trackIndex) {
+    foreach(int trackIndex, inputTracks.keys()) {
         Audio::LocalInputAudioNode *inputTrack = getInputTrack(trackIndex);
+        if(!inputTrack)
+            continue;
 
         if (!inputTrack->isNoInput()) {
             if (inputTrack->isAudio()) {// audio track
