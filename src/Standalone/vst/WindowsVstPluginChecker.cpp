@@ -30,7 +30,7 @@ bool Vst::PluginChecker::isValidPluginFile(const QString &pluginPath)
 #ifdef _WIN64
     return ExecutableFormatChecker::is64Bits(pluginPath);
 #else
-    return WindowsDllArchChecker::is32Bits(pluginPath);
+    return ExecutableFormatChecker::is32Bits(pluginPath);
 #endif
 
     return false;
