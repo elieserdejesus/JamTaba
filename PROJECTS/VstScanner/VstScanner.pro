@@ -27,8 +27,11 @@ SOURCES += vst/VstLoader.cpp
 SOURCES += audio/core/PluginDescriptor.cpp
 SOURCES += log/logging.cpp
 SOURCES += VstPluginScanner.cpp
-win32:SOURCES += WindowsVstPluginScanner.cpp
-macx:SOURCES += MacVstPluginScanner.cpp
+
+#including the correct implementation for VstPluginChecker
+INCLUDEPATH += $$SOURCE_PATH/Standalone/vst #to allow a simple '#include "VstPluginChecker.h"' in the code
+win32:SOURCES += $$SOURCE_PATH/Standalone/vst/WindowsVstPluginChecker.cpp
+macx:SOURCES  += $$SOURCE_PATH/Standalone/vst/MacVstPluginChecker.cpp
 
 win32{
 

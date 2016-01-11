@@ -8,6 +8,7 @@
 #include "vst/PluginFinder.h"
 #include "audio/core/PluginDescriptor.h"
 #include "NinjamController.h"
+#include "vst/VstPluginChecker.h"
 #include "gui/MainWindowStandalone.h"
 
 #include <QDialog>
@@ -95,12 +96,12 @@ void MainControllerStandalone::removePlugin(int inputTrackIndex, Audio::Plugin *
     }
 }
 
-void MainControllerStandalone::addPluginsScanPath(QString path)
+void MainControllerStandalone::addPluginsScanPath(const QString &path)
 {
     settings.addVstScanPath(path);
 }
 
-void MainControllerStandalone::removePluginsScanPath(QString path)
+void MainControllerStandalone::removePluginsScanPath(const QString &path)
 {
     settings.removeVstScanPath(path);
 }
@@ -111,7 +112,7 @@ void MainControllerStandalone::clearPluginsCache()
 }
 
 // VST BlackList ...
-void MainControllerStandalone::addBlackVstToSettings(QString path)
+void MainControllerStandalone::addBlackVstToSettings(const QString &path)
 {
     settings.addVstToBlackList(path);
 }
@@ -460,27 +461,14 @@ bool MainControllerStandalone::pluginsScanIsNeeded() const
         {
             folderIterator.next();// point to next file inside current folder
             QString filePath = folderIterator.filePath();
-            if (isVstPluginFile(filePath) && !skipList.contains(filePath))
+            if (!skipList.contains(filePath) && Vst::PluginChecker::isValidPluginFile(filePath))
                 return true; // a new vst plugin was founded
         }
     }
     return false;
 }
 
-bool MainControllerStandalone::isVstPluginFile(QString filePath) const
-{
-#ifdef Q_OS_WIN
-    return QLibrary::isLibrary(filePath);
-#endif
-
-#ifdef Q_OS_MAC
-    QFileInfo file(filePath);
-    return file.isBundle() && file.absoluteFilePath().endsWith(".vst");
-#endif
-    return false; // just in case
-}
-
-void MainControllerStandalone::initializePluginsList(QStringList paths)
+void MainControllerStandalone::initializePluginsList(const QStringList &paths)
 {
     pluginsDescriptors.clear();
     foreach (const QString &path, paths) {

@@ -19,11 +19,10 @@ private:
     void initialize(int argc, char *argv[]);
     void scan();
 
-    Audio::PluginDescriptor getPluginDescriptor(const QFileInfo &pluginPath);
+    Audio::PluginDescriptor getPluginDescriptor(const QFileInfo &pluginFile);
+
     QProcess process;
     void writeToProcessOutput(const QString &);
-
-    bool static isVstPluginFile(const QString &path);
 };
 
 #endif // VSTPLUGINSCANNER_H

@@ -2,9 +2,12 @@
 #include <iostream>
 #include <QDataStream>
 #include <QDirIterator>
+#include <QLibrary>
 #include "audio/core/PluginDescriptor.h"
 #include "vst/VstHost.h"
+#include "vst/VstLoader.h"
 #include "log/Logging.h"
+#include "VstPluginChecker.h"
 
 VstPluginScanner::VstPluginScanner() :
     QObject()
@@ -32,19 +35,38 @@ void VstPluginScanner::scan()
         QDirIterator folderIterator(scanFolder, QDirIterator::Subdirectories);
         while (folderIterator.hasNext()) {
             folderIterator.next();// point to next file inside current folder
-            if (isVstPluginFile(folderIterator.filePath())) {
-                QFileInfo pluginFileInfo(folderIterator.filePath());
-                if (!skipList.contains(pluginFileInfo.absoluteFilePath())) {
-                    writeToProcessOutput("JT-Scanner-Scanning: "
-                                         + pluginFileInfo.absoluteFilePath());
-                    const Audio::PluginDescriptor &descriptor = getPluginDescriptor(pluginFileInfo);
-                    if (descriptor.isValid())
-                        writeToProcessOutput("JT-Scanner-Scan-Finished: " + descriptor.getPath());
-                }
+            QFileInfo pluginFileInfo(folderIterator.filePath());
+            if (!skipList.contains(pluginFileInfo.absoluteFilePath())) {
+                writeToProcessOutput("JT-Scanner-Scanning: "+ pluginFileInfo.absoluteFilePath());
+                const Audio::PluginDescriptor &descriptor = getPluginDescriptor(pluginFileInfo);
+                if (descriptor.isValid())
+                    writeToProcessOutput("JT-Scanner-Scan-Finished: " + descriptor.getPath());
             }
         }
     }
     writeToProcessOutput("JT-Scanner-Finished");
+}
+
+Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(const QFileInfo &pluginFile)
+{
+    try{
+        //PluginChecker is implemented in WindowsVstPluginChecker and MacVstPluginChecker files. Only the correct file is include in VstScanner.pro
+        if (!Vst::PluginChecker::isValidPluginFile(pluginFile.absoluteFilePath()))
+            return Audio::PluginDescriptor();// invalid descriptor
+
+        AEffect *effect = Vst::VstLoader::load(pluginFile.absoluteFilePath(), Vst::Host::getInstance());
+        if (effect) {
+            QString name = Audio::PluginDescriptor::getPluginNameFromPath(pluginFile.absoluteFilePath());
+            Vst::VstLoader::unload(effect);// delete the AEffect instance
+            QLibrary lib(pluginFile.absoluteFilePath());
+            lib.unload();// try unload the shared lib
+            return Audio::PluginDescriptor(name, "VST", pluginFile.absoluteFilePath());
+        }
+    }
+    catch (...) {
+        qCritical() << "Error loading " << pluginFile.absoluteFilePath();
+    }
+    return Audio::PluginDescriptor();// invalid descriptor
 }
 
 void VstPluginScanner::writeToProcessOutput(const QString &string)
