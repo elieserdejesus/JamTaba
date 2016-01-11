@@ -252,10 +252,9 @@ void StandalonePreferencesDialog::populateMidiTab()
             if(!midiDeviceName.isEmpty()){
                 QCheckBox *checkBox = new QCheckBox(midiDeviceName);
                 ui->midiContentPanel->layout()->addWidget(checkBox);
-                if(i < midiInputsStatus.size()){
-                    bool checkedStatus =  midiInputsStatus.at(i) || i > midiInputsStatus.size()-1;
-                    checkBox->setChecked(midiInputsStatus.isEmpty() || checkedStatus);
-                }
+                bool deviceIsSelected = i < midiInputsStatus.size() && midiInputsStatus.at(i);
+                bool isNewDevice = i >= midiInputsStatus.size();
+                checkBox->setChecked(midiInputsStatus.isEmpty() || deviceIsSelected || isNewDevice);
             }
         }
         QSpacerItem *spacer = new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding);
