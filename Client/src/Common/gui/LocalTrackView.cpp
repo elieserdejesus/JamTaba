@@ -129,7 +129,7 @@ Audio::LocalInputAudioNode *LocalTrackView::getInputNode() const
 
 void LocalTrackView::reset()
 {
-    // -------
+    mainController->resetTrack(getTrackID());
 }
 
 LocalTrackView::~LocalTrackView()

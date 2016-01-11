@@ -16,11 +16,6 @@ public:
 
     virtual ~LocalTrackGroupView();
 
-//    inline QList<LocalTrackView *> LocalTrackGroupView::getTracks() const
-//    {
-//        return getTracks<LocalTrackView *>();
-//    }
-
     //is not possible return a covariant container, so I'm using template to return a container of a more specific (derived) type
     template<class T>
     QList<T> getTracks() const
@@ -59,7 +54,7 @@ public:
         return preparingToTransmit;
     }
 
-    void resetTracksControls();
+    void resetTracks();
 
 protected:
 
@@ -108,7 +103,7 @@ private slots:
 
     void loadPreset(QAction *action);
     void savePreset();
-    void resetPreset();
+    void resetLocalTracks();
     void deletePreset();
 
     void toggleTransmitingStatus(bool checked);
