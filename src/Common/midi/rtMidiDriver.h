@@ -17,19 +17,18 @@ public:
     RtMidiDriver(const QList<bool> &deviceStatuses);
     ~RtMidiDriver();
 
-    virtual void start();
-    virtual void stop();
-    virtual void release();
+    void start(const QList<bool> &deviceStatuses) override;
+    void stop() override;
+    void release() override;
 
-    virtual bool hasInputDevices() const;
-    virtual int getMaxInputDevices() const;
-    virtual QString getInputDeviceName(int index) const;
-    virtual MidiBuffer getBuffer();
-
-    virtual void setInputDevicesStatus(const QList<bool> &statuses);
+    bool hasInputDevices() const override;
+    int getMaxInputDevices() const override;
+    QString getInputDeviceName(int index) const override;
+    MidiBuffer getBuffer() override;
 
 private:
     QList<RtMidiIn *> midiStreams;
+    void setInputDevicesStatus(const QList<bool> &statuses);
 };
 }
 #endif // RTMIDIDRIVER_H

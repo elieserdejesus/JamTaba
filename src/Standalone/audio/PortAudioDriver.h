@@ -14,7 +14,7 @@ public:
     virtual ~PortAudioDriver();
 
     bool start() override;
-    void stop() override;
+    void stop(bool refreshDevicesList = false) override;
     void release() override;
 
     QList<int> getValidSampleRates(int deviceIndex) const override;

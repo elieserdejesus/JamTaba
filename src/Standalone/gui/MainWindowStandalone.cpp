@@ -289,7 +289,7 @@ void MainWindowStandalone::showPreferencesDialog(int initialTab)
     Midi::MidiDriver *midiDriver = controller->getMidiDriver();
     Audio::AudioDriver *audioDriver = controller->getAudioDriver();
     if (audioDriver)
-        audioDriver->stop();
+        audioDriver->stop(true);//asking audio driver to refresh the devices list
     if (midiDriver)
         midiDriver->stop();
 
@@ -304,7 +304,7 @@ void MainWindowStandalone::showPreferencesDialog(int initialTab)
     int result = dialog.exec();
     if (result == QDialog::Rejected) {
         if (midiDriver)
-            midiDriver->start();// restart audio and midi drivers if user cancel the preferences menu
+            midiDriver->start(controller->getSettings().getMidiInputDevicesStatus());// restart audio and midi drivers if user cancel the preferences menu
         if (audioDriver)
             audioDriver->start();
     }
@@ -358,7 +358,7 @@ void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsSta
     foreach (LocalTrackGroupViewStandalone *channel, getLocalChannels<LocalTrackGroupViewStandalone *>())
         channel->refreshInputSelectionNames();
 
-    midiDriver->start();
+    midiDriver->start(midiInputsStatus);
     if(!audioDriver->start()){
         qCritical() << "Error starting audio device";
         QMessageBox::warning(this, "Audio error!",

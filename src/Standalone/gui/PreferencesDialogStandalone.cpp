@@ -248,10 +248,15 @@ void StandalonePreferencesDialog::populateMidiTab()
     if (maxInputDevices > 0) {
         QList<bool> midiInputsStatus = controller->getSettings().getMidiInputDevicesStatus();
         for (int i = 0; i < maxInputDevices; ++i) {
-            QCheckBox *checkBox = new QCheckBox(midiDriver->getInputDeviceName(i));
-            ui->midiContentPanel->layout()->addWidget(checkBox);
-            bool checkedStatus = midiInputsStatus.at(i) || i > midiInputsStatus.size()-1;
-            checkBox->setChecked(midiInputsStatus.isEmpty() || checkedStatus);
+            QString midiDeviceName = midiDriver->getInputDeviceName(i);
+            if(!midiDeviceName.isEmpty()){
+                QCheckBox *checkBox = new QCheckBox(midiDeviceName);
+                ui->midiContentPanel->layout()->addWidget(checkBox);
+                if(i < midiInputsStatus.size()){
+                    bool checkedStatus =  midiInputsStatus.at(i) || i > midiInputsStatus.size()-1;
+                    checkBox->setChecked(midiInputsStatus.isEmpty() || checkedStatus);
+                }
+            }
         }
         QSpacerItem *spacer = new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding);
         ui->midiContentPanel->layout()->addItem(spacer);
