@@ -349,6 +349,9 @@ void MainWindow::changeTab(int index)
         if (mainController->isPlayingInNinjamRoom() && mainController->isPlayingRoomStream())
             stopCurrentRoomStream();
     }
+    else{//click in the public rooms tab?
+        updatePublicRoomsListLayout();
+    }
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -431,6 +434,19 @@ JamRoomViewPanel *MainWindow::createJamRoomViewPanel(const Login::RoomInfo &room
     return newJamRoomView;
 }
 
+bool MainWindow::canUseTwoColumnLayout() const
+{
+    if(isFullScreen() || isMaximized())
+        return true;
+
+    if(mainController->isPlayingInNinjamRoom())
+        return false;
+    else
+        return fullViewMode;//if is in mini mode (!fullViewMode) we are using just 1 collumn layout
+
+    return true;
+}
+
 void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms)
 {
     if (!isVisible())
@@ -444,8 +460,9 @@ void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRoom
     int index = 0;
     foreach (const Login::RoomInfo &roomInfo, sortedRooms) {
         if (roomInfo.getType() == Login::RoomTYPE::NINJAM) {// skipping other rooms at moment
-            int rowIndex = fullViewMode ? (index / 2) : (index);
-            int collumnIndex = fullViewMode ? (index % 2) : 0;// use one collumn if user choosing mini view mode
+            bool twoCollumns = canUseTwoColumnLayout();
+            int rowIndex = twoCollumns ? (index / 2) : (index);
+            int collumnIndex = twoCollumns ? (index % 2) : 0;
             JamRoomViewPanel *roomViewPanel = roomViewPanels[roomInfo.getID()];
             if (roomViewPanel) {
                 roomViewPanel->refresh(roomInfo);
@@ -705,6 +722,7 @@ void MainWindow::changeEvent(QEvent *ev)
 
         // show only the peak meters if user is in mini mode and is not maximized or full screen
         showPeakMetersOnlyInLocalControls(isRunningInMiniMode() && width() <= MINI_MODE_MIN_SIZE.width());
+        updatePublicRoomsListLayout();
     }
     QMainWindow::changeEvent(ev);
 }
@@ -837,6 +855,14 @@ void MainWindow::changeViewMode(QAction *)
     setFullViewStatus(ui.actionFullView->isChecked());
 }
 
+void MainWindow::updatePublicRoomsListLayout()
+{
+    QList<Login::RoomInfo> roomInfos;
+    foreach (JamRoomViewPanel *roomView, roomViewPanels)
+        roomInfos.append(roomView->getRoomInfo());
+    refreshPublicRoomsList(roomInfos);
+}
+
 void MainWindow::setFullViewStatus(bool fullViewActivated)
 {
     this->fullViewMode = fullViewActivated;
@@ -860,10 +886,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
 
     // refresh the public rooms list
     if (!mainController->isPlayingInNinjamRoom()) {
-        QList<Login::RoomInfo> roomInfos;
-        foreach (JamRoomViewPanel *roomView, roomViewPanels)
-            roomInfos.append(roomView->getRoomInfo());
-        refreshPublicRoomsList(roomInfos);
+        updatePublicRoomsListLayout();
     } else {
         if (ninjamWindow)
             ninjamWindow->setFullViewStatus(isRunningInFullViewMode());

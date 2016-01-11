@@ -109,6 +109,10 @@ protected:
         return localChannels;
     }
 
+    void updatePublicRoomsListLayout();
+
+    bool canUseTwoColumnLayout() const;
+
 protected slots:
     void closeTab(int index);
     void changeTab(int index);

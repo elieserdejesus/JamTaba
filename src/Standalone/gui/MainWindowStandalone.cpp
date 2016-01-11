@@ -140,6 +140,7 @@ void MainWindowStandalone::setFullScreenStatus(bool fullScreen)
         showNormal();
     mainController->setFullScreenView(fullScreenViewMode);
     ui.actionFullscreenMode->setChecked(fullScreen);
+    updatePublicRoomsListLayout();
 }
 
 void MainWindowStandalone::toggleFullScreen()
