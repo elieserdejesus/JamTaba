@@ -346,7 +346,7 @@ void MainControllerStandalone::start()
         audioDriver->start();
     }
     if (midiDriver)
-        midiDriver->start();
+        midiDriver->start(settings.getMidiInputDevicesStatus());
 
 
     qCInfo(jtCore) << "Creating plugin finder...";

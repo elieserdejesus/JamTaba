@@ -244,8 +244,7 @@ QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const{
     return validSRs;
 }
 
-void PortAudioDriver::stop(){
-    //QMutexLocker(&mutex);
+void PortAudioDriver::stop(bool refreshDevicesList){
     if (paStream != NULL){
         if (!Pa_IsStreamStopped(paStream)){
             qCDebug(jtAudio) << "closing portaudio stream";
@@ -253,8 +252,12 @@ void PortAudioDriver::stop(){
             if(error != paNoError){
                 qCCritical(jtAudio) << "error closing portaudio stream: " << Pa_GetErrorText(error);
             }
-            emit stopped(); //fireDriverStopped();
+            emit stopped();
         }
+    }
+    if(refreshDevicesList){
+        Pa_Terminate(); //terminate and reinitialize to refresh portaudio internal devices list
+        Pa_Initialize();
     }
 }
 

@@ -64,7 +64,7 @@ public:
                                int lastOut, int sampleRate, int bufferSize);
     virtual void setProperties(int sampleRate, int bufferSize);// used in mac
 
-    virtual void stop() = 0;
+    virtual void stop(bool refreshDevicesList = false) = 0;
     virtual bool start() = 0;
     virtual void release() = 0;
 
@@ -143,7 +143,7 @@ public:
     {
     }
 
-    inline void stop() override
+    inline void stop(bool ) override
     {
     }
 
