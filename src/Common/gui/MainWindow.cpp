@@ -910,12 +910,11 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
     return QMainWindow::eventFilter(target, event);
 }
 
-
-
-// PRESETS STUFF
-void MainWindow::resetGroupChannel(LocalTrackGroupView *group)
+void MainWindow::resetLocalChannels()
 {
-    group->resetTracksControls();
+    foreach (LocalTrackGroupView *localChannel, localGroupChannels) {
+        localChannel->resetTracks();
+    }
 }
 
 // ++++++++++++++++++++++++

@@ -52,6 +52,7 @@ void LocalTrackViewStandalone::updateGuiElements()
 
 void LocalTrackViewStandalone::reset()
 {
+    LocalTrackView::reset();
     if (fxPanel)
         fxPanel->removePlugins();
 }

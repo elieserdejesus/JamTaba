@@ -82,19 +82,10 @@ void LocalTrackGroupView::addChannel()
     mainFrame->addChannelsGroup("new channel");
 }
 
-void LocalTrackGroupView::resetTracksControls()
+void LocalTrackGroupView::resetTracks()
 {
-    qCInfo(jtConfigurator) << "!!!!!!!!!!!!!!!!!!!!!!!!!!!";
-    qCInfo(jtConfigurator) << "Reseting local inputs...";
-
-    Controller::MainController *mainController = mainFrame->getMainController();
-    QList<LocalTrackView *> views = getTracks<LocalTrackView *>();
-    foreach (LocalTrackView *track, views) {// all tracks in this track group
-        qCInfo(jtConfigurator) << "\tInput reset on channel "<< track->getTrackID();
-        mainController->resetTrack(track->getTrackID());
-        track->reset();// remove plugins
-    }
-    qCInfo(jtConfigurator) << "Reseting local inputs done!";
+    foreach (LocalTrackView *track, getTracks<LocalTrackView *>())
+        track->reset();
 }
 
 QMenu *LocalTrackGroupView::createPresetsSubMenu()
@@ -128,7 +119,7 @@ void LocalTrackGroupView::createPresetsActions(QMenu &menu)
 
     // RESET - in case of panic
     QAction *reset = menu.addAction(QIcon(":/images/gear.png"), "Reset Track Controls");
-    QObject::connect(reset, SIGNAL(triggered()), this, SLOT(resetPreset()));
+    QObject::connect(reset, SIGNAL(triggered()), this, SLOT(resetLocalTracks()));
 }
 
 void LocalTrackGroupView::createChannelsActions(QMenu &menu)
@@ -265,9 +256,9 @@ void LocalTrackGroupView::savePreset()
     }
 }
 
-void LocalTrackGroupView::resetPreset()
+void LocalTrackGroupView::resetLocalTracks()
 {
-    resetTracksControls();
+    mainFrame->resetLocalChannels();//reset all local channels and subchannels
 }
 
 void LocalTrackGroupView::deletePreset()

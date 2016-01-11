@@ -62,7 +62,7 @@ public:
     }
 
     virtual void loadPresetToTrack(const Persistence::Preset &preset);
-    void resetGroupChannel(LocalTrackGroupView *group);// should load the defaultPreset.json ?
+    void resetLocalChannels();
 
     bool isTransmiting(int channelID) const;
     void setTransmitingStatus(int channelID, bool xmitStatus);
