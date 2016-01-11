@@ -26,10 +26,8 @@ void FxPanel::removePlugins()
 {
     QList<FxPanelItem *> items = findChildren<FxPanelItem *>();
     for (FxPanelItem *item : items) {
-        if (item->containPlugin()) {
+        if (item->containPlugin())
             item->unsetPlugin();
-            return;
-        }
     }
 }
 
