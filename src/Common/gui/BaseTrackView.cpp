@@ -79,6 +79,7 @@ methods (like midi messages).
 void BaseTrackView::setGainSliderPosition(float newGainValue)
 {
     ui->levelSlider->setValue(newGainValue * 100);
+    update(); //repaint to update the Db value
 }
 
 void BaseTrackView::setPanKnobPosition(float newPanValue)
