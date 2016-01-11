@@ -59,6 +59,11 @@ void NinjamTrackView::setUnlightStatus(bool status)
 {
     BaseTrackView::setUnlightStatus(status);
     chunksDisplay->setVisible(!status && chunksDisplay->isVisible());
+
+    if(status){//remote user stop xmiting and the track is greyed/unlighted?
+        Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
+        trackNode->resetLastPeak(); //reset the internal node last peak to avoid getting the last peak calculated when the remote user was transmiting.
+    }
 }
 
 void NinjamTrackView::finishCurrentDownload()

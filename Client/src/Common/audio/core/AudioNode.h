@@ -127,6 +127,8 @@ public:
 
     AudioPeak getLastPeak() const;
 
+    void resetLastPeak();
+
     inline void deactivate()
     {
         activated = false;

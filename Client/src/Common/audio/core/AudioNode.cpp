@@ -139,6 +139,11 @@ Audio::AudioPeak AudioNode::getLastPeak() const
     return this->lastPeak;
 }
 
+void AudioNode::resetLastPeak()
+{
+    lastPeak.zero();
+}
+
 void AudioNode::setPan(float pan)
 {
     if (pan < -1)
