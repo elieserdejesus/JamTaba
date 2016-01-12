@@ -1334,9 +1334,12 @@ ChordLabel{
     stop:0 rgba(0,0,0, 5),
     stop:1 rgba(0,0,0, 10));
 
-    color: gray;
+    font-size: 13px;
 
-    padding: 6px;
+    color: gray;
+    border: 1px solid rgba(0, 0, 0, 30);
+
+    padding: 2px;
     padding-left: 3px;
     padding-right: 3px;
 
@@ -1350,7 +1353,7 @@ ChordLabel[current="true"]{
 
     color: black;
 
-    border: 1px solid rgb(180, 180, 180);
+    border: 1px solid #008F1f;
 }
 
 

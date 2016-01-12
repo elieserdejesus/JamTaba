@@ -179,6 +179,7 @@ private slots:
 
     void refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms);
 
+    void hideChordsPanel();
 private:
 
     BusyDialog busyDialog;
@@ -216,7 +217,7 @@ private:
     void setInputTracksPreparingStatus(bool preparing);
 
     ChordsPanel *chordsPanel;
-    void hideChordsPanel();
+
     ChordsPanel *createChordsPanel();
 
     JamRoomViewPanel* createJamRoomViewPanel(const Login::RoomInfo &roomInfo);

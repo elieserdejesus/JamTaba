@@ -4,7 +4,8 @@
 ChordsWidget::ChordsWidget(QWidget *parent) :
     QWidget(parent),
     gridLayout(new QGridLayout()),
-    beatToInsert(0)
+    beatToInsert(0),
+    currentChordLabel(nullptr)
 {
     resetGridLayout();
 }
@@ -17,7 +18,7 @@ void ChordsWidget::clear()
         delete chordLabel;
     }
     chordsMap.clear();
-
+    currentChordLabel = nullptr;
     resetGridLayout();
 }
 
@@ -34,7 +35,7 @@ void ChordsWidget::resetGridLayout()
 void ChordsWidget::addChord(const Chord &chord, int durationInBeats)
 {
     const int ROW = 0;
-    ChordLabel *chordLabel = new ChordLabel(chord);
+    ChordLabel *chordLabel = new ChordLabel(chord, durationInBeats);
     gridLayout->addWidget(chordLabel, ROW, beatToInsert);
 
     gridLayout->setColumnStretch(beatToInsert, durationInBeats);
@@ -46,6 +47,12 @@ void ChordsWidget::addChord(const Chord &chord, int durationInBeats)
 
 void ChordsWidget::setCurrentBeat(int beat)
 {
-    if (chordsMap[beat])
-        chordsMap[beat]->setAsCurrentChord();
+    if (chordsMap[beat]){
+        currentChordLabel = chordsMap[beat]->setAsCurrentChord();
+    }
+    else{
+        if(currentChordLabel){
+            currentChordLabel->incrementIntervalBeat();
+        }
+    }
 }

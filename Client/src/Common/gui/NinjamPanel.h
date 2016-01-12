@@ -58,6 +58,8 @@ public:
     void addMasterControls(QWidget *masterControlsPanel);
 
     void setFullViewStatus(bool fullView);
+
+    void setLowContrastPaintInIntervalPanel(bool useLowContrastColors);
 protected:
     void paintEvent(QPaintEvent *);
     bool eventFilter(QObject *source, QEvent *ev);

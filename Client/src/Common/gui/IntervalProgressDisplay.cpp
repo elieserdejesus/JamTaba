@@ -12,6 +12,9 @@ QColor IntervalProgressDisplay::PLAYED_BEATS_FIRST_COLOR = QColor(0, 0, 0, 0);//
 QColor IntervalProgressDisplay::PLAYED_BEATS_SECOND_COLOR = QColor(0, 0, 0, 0);
 QColor IntervalProgressDisplay::PATH_COLOR = QColor(0, 0, 0, 20);
 
+const int IntervalProgressDisplay::MARGIN = 2;
+const int IntervalProgressDisplay::PREFERRED_OVAL_SIZE = 6;
+
 const double IntervalProgressDisplay::PI = 3.141592653589793238462643383279502884;
 
 // LINEAR PAINTING CONSTANTS
@@ -30,7 +33,11 @@ IntervalProgressDisplay::IntervalProgressDisplay(QWidget *parent) :
     BIG_FONT("Verdana, 10"),
     ovalSize(PREFERRED_OVAL_SIZE),
     paintMode(PaintMode::LINEAR),
-    showAccents(false)
+    showAccents(false),
+    currentBeat(0),
+    sliceNumberColor(Qt::gray),
+    usingLowContrastColors(false),
+    highlightColor(Qt::white)
 {
     setAttribute(Qt::WA_NoBackground);
 
@@ -44,6 +51,13 @@ IntervalProgressDisplay::IntervalProgressDisplay(QWidget *parent) :
 IntervalProgressDisplay::~IntervalProgressDisplay()
 {
     // delete comboBoxPaintMode;
+}
+
+void IntervalProgressDisplay::setPaintUsingLowContrastColors(bool useLowContrastColors)
+{
+    usingLowContrastColors = useLowContrastColors;
+    highlightColor = usingLowContrastColors ? Qt::lightGray : Qt::white;
+    repaint();
 }
 
 void IntervalProgressDisplay::resizeEvent(QResizeEvent *event)
@@ -142,7 +156,7 @@ void IntervalProgressDisplay::paintEvent(QPaintEvent *e)
     QPainter p(this);
     p.setRenderHint(QPainter::Antialiasing, true);
 
-    QColor textColor(palette().color(QPalette::WindowText));
+    QColor textColor(Qt::black);
 
     QStyleOption opt;
     opt.init(this); // allow style sheet
@@ -157,7 +171,7 @@ void IntervalProgressDisplay::paintEvent(QPaintEvent *e)
         paintCircular(p, textColor);
         break;
     case LINEAR:
-        drawPoints(&p, height() / 2, 0, this->beats);
+        drawHorizontalPoints(&p, height() / 2, 0, this->beats);
         break;
     default:
         paintElliptical(p, textColor, horizontalRadius, verticalRadius);
@@ -223,7 +237,7 @@ void IntervalProgressDisplay::drawBeatCircles(QPainter &p, int hRadius, int vRad
                         brush.setColorAt(FIRST_COLOR_POSITION, PLAYED_BEATS_FIRST_COLOR); // played beats
                         brush.setColorAt(SECOND_COLOR_POSITION, PLAYED_BEATS_SECOND_COLOR);
                     } else {// the current beat is highlighted
-                        brush.setColorAt(0.1f, Qt::white);  // playing beat highlight colors
+                        brush.setColorAt(0.1f, highlightColor);  // playing beat highlight colors
                         brush.setColorAt(0.8f, Qt::darkGray);
 
                         pen.setColor(Qt::darkGray);
@@ -292,14 +306,14 @@ float IntervalProgressDisplay::getHorizontalSpace(int totalPoinstToDraw, int ini
     return (float)(width() - initialXPos - LINEAR_PAINT_MODE_OVAL_SIZE/2) / (totalPoinstToDraw - 1);
 }
 
-void IntervalProgressDisplay::drawPoints(QPainter *painter, int yPos, int startPoint,
+void IntervalProgressDisplay::drawHorizontalPoints(QPainter *painter, int yPos, int startPoint,
                                          int totalPoinstToDraw)
 {
     int initialXPos = 0 + LINEAR_PAINT_MODE_OVAL_SIZE / 2 + 1;
     float xSpace = getHorizontalSpace(totalPoinstToDraw, initialXPos+1);
 
     // draw the background line
-    painter->setPen(QPen(LINEAR_BORDER_COLOR, 1));
+    painter->setPen(QPen(LINEAR_BORDER_COLOR, 0.9f));
     painter->drawLine(initialXPos + 1, yPos, (int)(initialXPos + (totalPoinstToDraw - 1) * xSpace),
                       yPos);
 
@@ -333,7 +347,7 @@ void IntervalProgressDisplay::drawPoints(QPainter *painter, int yPos, int startP
     // draw current beat
     xPos = initialXPos + (currentBeat * xSpace);
     QRadialGradient bgRadial(xPos-5, yPos-5, LINEAR_PAINT_MODE_OVAL_SIZE*2);
-    bgRadial.setColorAt(0.1f, Qt::white);
+    bgRadial.setColorAt(0.1f, highlightColor);
     bgRadial.setColorAt(0.8f, Qt::black);
     drawPoint((int)xPos, yPos, LINEAR_PAINT_MODE_OVAL_SIZE, painter, (currentBeat + 1), bgRadial,
               Qt::darkGray, false, true);

@@ -34,12 +34,15 @@ public:
     }
 
 signals:
-    void buttonSendChordsToChatClicked();
+    void sendingChordsToChat();
+    void chordsDiscarded();
+
+public slots:
+    void discardChords();
 
 private slots:
     void on_buttonTransposeUp_clicked();
     void on_buttonTransposeDown_clicked();
-    void on_buttonDiscardChordsClicked();
 
 private:
     Ui::ChordsPanel *ui;

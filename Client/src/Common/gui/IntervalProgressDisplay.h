@@ -46,9 +46,11 @@ public:
 
     QSize minimumSizeHint() const;
 
+    void setPaintUsingLowContrastColors(bool state);
+
 protected:
-    virtual void paintEvent(QPaintEvent *e);
-    virtual void resizeEvent(QResizeEvent *event);
+    void paintEvent(QPaintEvent *e) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 private:
 
@@ -67,6 +69,8 @@ private:
 
     PaintMode paintMode;
 
+    QColor highlightColor;
+
     // ellipse and circle painting
     void paintElliptical(QPainter &p, const QColor &textColor, int hRadius, int vRadius);
     void paintEllipticalPath(QPainter &p, int hRadius, int vRadius);
@@ -76,7 +80,7 @@ private:
     // linear painting
     void drawPoint(int x, int y, int size, QPainter *g, int value, const QBrush &bgPaint, const QColor &border,
                    bool small, bool drawText = false);
-    void drawPoints(QPainter *painter, int yPos, int startPoint, int totalPoinstToDraw);
+    void drawHorizontalPoints(QPainter *painter, int yPos, int startPoint, int totalPoinstToDraw);
     float getHorizontalSpace(int totalPoinstToDraw, int initialXPos) const;
 
     const QFont SMALL_FONT;
@@ -84,23 +88,25 @@ private:
 
     void initialize();
 
-    static const int MARGIN = 2;
-    static const int PREFERRED_OVAL_SIZE = 6;
-    int ovalSize = PREFERRED_OVAL_SIZE;
+    static const int MARGIN;
+    static const int PREFERRED_OVAL_SIZE;
+    int ovalSize;
 
-    int currentBeat = 0;
-    int beats = 16;
+    int currentBeat;
+    int beats;
 
     int horizontalRadius;
     int verticalRadius;
     int centerX;
     int centerY;
 
-    QColor sliceNumberColor = Qt::gray;
+    QColor sliceNumberColor;
 
     int beatsPerAccent;
 
     bool showAccents;
+
+    bool usingLowContrastColors;//used to paint with low contrast when using chord progressions
 
     static const double PI;
 };
