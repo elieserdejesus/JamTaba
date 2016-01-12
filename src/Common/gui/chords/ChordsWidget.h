@@ -19,6 +19,7 @@ public:
     void clear();
 private:
     QList<ChordLabel *> chordLabels;
+    ChordLabel *currentChordLabel;
     QGridLayout *gridLayout;
     void resetGridLayout();
     int beatToInsert;

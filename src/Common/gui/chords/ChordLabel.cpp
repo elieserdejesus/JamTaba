@@ -5,11 +5,14 @@
 #include <QPainter>
 
 ChordLabel *ChordLabel::currentChordLabel = nullptr;
+const QColor ChordLabel::BEAT_PROGRESS_COLOR = QColor(0, 255, 0, 35); //transparent green
 
 // ++++++++++++++++++++++++++++++++++++++++++++=
 
-ChordLabel::ChordLabel(const Chord &chord) :
-    chord(chord)
+ChordLabel::ChordLabel(const Chord &chord, int chordBeats) :
+    chord(chord),
+    currentBeat(0),
+    beatsCount(chordBeats)//how many beats per chord?
 {
     setText(chordToHtmlText(chord));
     setStyleSheetPropertyStatus(false);
@@ -21,16 +24,43 @@ ChordLabel::~ChordLabel()
         ChordLabel::currentChordLabel = nullptr;
 }
 
-void ChordLabel::setAsCurrentChord()
+void ChordLabel::paintEvent(QPaintEvent *ev)
+{
+    QLabel::paintEvent(ev);
+    if(beatsCount > 0 && currentBeat > 0){
+        QPainter painter(this);
+        int position = currentBeat * width()/beatsCount;
+        //fill the green rectangle, the beat progress indicator
+        painter.fillRect(1, 1, position, height()-2, BEAT_PROGRESS_COLOR);
+
+        //draw a two pixel line to highlight the end of above rectangle
+        painter.fillRect(position-2, 1, 2, height()-2, BEAT_PROGRESS_COLOR);
+    }
+}
+
+void ChordLabel::incrementIntervalBeat()
+{
+    if(currentBeat < beatsCount){
+        currentBeat++;
+        repaint();
+    }
+}
+
+ChordLabel *ChordLabel::setAsCurrentChord()
 {
     if (currentChordLabel)
         currentChordLabel->unsetAsCurrentChord();
     currentChordLabel = this;
+    incrementIntervalBeat();
     setStyleSheetPropertyStatus(true);
+    return this;
 }
 
 void ChordLabel::unsetAsCurrentChord()
 {
+    if(ChordLabel::currentChordLabel)
+        ChordLabel::currentChordLabel->currentBeat = 0;
+
     ChordLabel::currentChordLabel = nullptr;
     setStyleSheetPropertyStatus(false);
 }

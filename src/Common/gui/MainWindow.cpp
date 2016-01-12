@@ -971,8 +971,9 @@ void MainWindow::setMasterFaderPosition(int value)
 ChordsPanel *MainWindow::createChordsPanel()
 {
     ChordsPanel *chordsPanel = new ChordsPanel();
-    QObject::connect(chordsPanel, SIGNAL(buttonSendChordsToChatClicked()), this,
+    connect(chordsPanel, SIGNAL(sendingChordsToChat()), this,
                      SLOT(sendCurrentChordProgressionToChat()));
+    connect(chordsPanel, SIGNAL(chordsDiscarded()), this, SLOT(hideChordsPanel()));
     return chordsPanel;
 }
 
@@ -992,6 +993,8 @@ void MainWindow::showChordProgression(const ChordProgression &progression)
 
         // add the chord panel in top of bottom panel in main window
         dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->insertWidget(0, chordsPanel);
+        if(ninjamWindow)
+            ninjamWindow->getNinjamPanel()->setLowContrastPaintInIntervalPanel(true);
     } else {
         int measures = progression.getMeasures().size();
         QString msg = "These chords (" + QString::number(measures)
@@ -1016,6 +1019,10 @@ void MainWindow::hideChordsPanel()
         chordsPanel->setVisible(false);
         chordsPanel->deleteLater();
         chordsPanel = nullptr;
+    }
+
+    if(ninjamWindow){
+        ninjamWindow->getNinjamPanel()->setLowContrastPaintInIntervalPanel(false);
     }
 }
 

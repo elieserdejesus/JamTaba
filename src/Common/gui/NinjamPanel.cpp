@@ -54,7 +54,11 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     ui->peakMeterLeft->setOrientation(PeakMeter::HORIZONTAL);
     ui->peakMeterRight->setOrientation(PeakMeter::HORIZONTAL);
 }
-
+// ++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamPanel::setLowContrastPaintInIntervalPanel(bool useLowContrastColors)
+{
+    ui->intervalPanel->setPaintUsingLowContrastColors(useLowContrastColors);
+}
 // ++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamPanel::setFullViewStatus(bool fullView)
 {
