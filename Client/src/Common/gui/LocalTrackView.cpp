@@ -84,7 +84,8 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMi
     if (this->peakMetersOnly != peakMetersOnly) {
         this->peakMetersOnly = peakMetersOnly;
         ui->boostPanel->setVisible(!this->peakMetersOnly);
-        ui->leftWidget->setVisible(!this->peakMetersOnly);
+        ui->levelSlider->setVisible(!this->peakMetersOnly);
+        ui->panPanel->setVisible(!this->peakMetersOnly);
 
         QSizePolicy::Policy hPolicy = QSizePolicy::Minimum;
         QSizePolicy::Policy vPolicy = this->peakMetersOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed;
