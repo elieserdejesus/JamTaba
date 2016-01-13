@@ -226,8 +226,11 @@ bool BaseTrackView::eventFilter(QObject *source, QEvent *ev)
     }
     // --------------
     if (ev->type() == QEvent::MouseButtonDblClick) {
-        if (source == ui->levelSlider) {
-            ui->levelSlider->setValue(100);
+        if (source == ui->levelSlider || source == ui->panSlider) {
+            if(source == ui->levelSlider)
+                ui->levelSlider->setValue(100); //set level fader to unit gain
+            else
+                ui->panSlider->setValue(0);//set pan slider to center
             update();
         }
 
@@ -292,8 +295,7 @@ void BaseTrackView::drawFaderDbValue(QPainter &p)
     int textX = ui->mainWidget->x() + ui->levelSlider->x() + ui->levelSlider->width()/2
                 - textWidth  - ((!narrowed) ? 14 : 11);
     float sliderPosition = (double)ui->levelSlider->value()/ui->levelSlider->maximum();
-    int offset = ui->mainWidget->y() + ui->levelSlider->y() + FADER_HEIGHT
-                 + p.fontMetrics().height();
+    int offset = ui->mainWidget->y() + FADER_HEIGHT + p.fontMetrics().height();
     int textY = (1 - sliderPosition) * ui->levelSlider->height() + offset;
 
     p.drawText(textX, textY, text);

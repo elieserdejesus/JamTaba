@@ -384,10 +384,6 @@ QSlider::groove:horizontal{
     border: 1px inset rgb(140, 140, 140);
 }
 
-BaseTrackView[unlighted="true"] QSlider::groove:horizontal{
-    background-color: rgb(0,0,0,60);
-    border: 1px inset rgb(70, 70, 70);
-}
 
 BaseTrackView[unlighted="true"] QSlider::add-page:vertical{
     background: rgb(255,255,255, 50);
@@ -462,6 +458,35 @@ QSlider::handle:horizontal {
     border: 1px outset rgb(80, 80, 80);
 }
 
+/* PAN SLIDER ---------------- */
+QSlider#panSlider{
+    margin-left: 3px;
+    margin-right: 3px;
+}
+QSlider#panSlider::handle{
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+        stop: 0      rgb(230, 230, 230),
+        stop: 0.8    rgb(180, 180, 180));
+
+    border: 1px outset rgb(100, 100, 100);
+
+}
+
+QSlider#panSlider::handle:hover{
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+        stop: 0      rgb(180, 180, 180),
+        stop: 0.8    rgb(230, 230, 230));
+
+    border: 1px outset rgb(70, 70, 70);
+
+}
+
+BaseTrackView[unlighted="true"] QSlider#panSlider::groove{
+    border: 1px solid rgba(0, 0, 0, 30);
+}
+
+
+/*------------------------------ */
 
 QSlider::handle:horizontal:hover {
     background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
@@ -490,13 +515,6 @@ background: qlineargradient(x1:0, y1:0.3, x2:0.7, y2:1,
     stop: 0      rgb(240, 240, 240),
     stop: 0.9    rgb(200, 200, 200),
     stop: 1      rgba(0, 0, 0, 20));
-}
-
-BaseTrackView[unlighted="true"] QSlider::handle:vertical{
-    /*background-image: url(':/images/fader_shadow_unlighted.png');*/
-}
-BaseTrackView[unlighted="true"] QSlider::handle:horizontal{
-    /*background-image: url(':/images/fader_shadow_horizontal_unlighted.png');*/
 }
 
 
@@ -1008,18 +1026,10 @@ LocalTrackGroupView   #toolButton:hover{
 }
 /* ++++++++++++++++++++++++++++++++++ */
 
-/*BaseTrackView .QLabel#labelPanR, BaseTrackView .QLabel#labelPanL{*/
 QLabel#labelPanR, QLabel#labelPanL{
-    color: rgba(0, 0, 0, 60);
+    color: rgba(0, 0, 0, 80);
     font-size: 9px;
 }
-
-QDial{
-    background: rgb(200, 200, 200);
-    max-width: 30px;
-    max-height: 30px;
-}
-
 
 BaseTrackView > .QFrame#topSeparator{
 background-color: rgb(210, 210, 210);
@@ -1054,10 +1064,6 @@ LocalTrackView #inputPanel{
 
 BaseTrackView[unlighted="false"] #inputPanel{
     border: 1px outset rgb(80,80,80);
-}
-
-BaseTrackView[unlighted="true"] #panSlider{
-    background-color: rgb(70, 70,70);
 }
 
 LocalTrackView #inputPanel:hover{
