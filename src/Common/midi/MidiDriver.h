@@ -99,35 +99,35 @@ protected:
 
 class NullMidiDriver : public MidiDriver
 {
-    inline virtual void start()
+    inline virtual void start(const QList<bool> &deviceStatuses) override
     {
     }
 
-    inline virtual void stop()
+    inline virtual void stop() override
     {
     }
 
-    inline virtual void release()
+    inline virtual void release() override
     {
     }
 
-    inline virtual bool hasInputDevices() const
+    inline virtual bool hasInputDevices() const override
     {
         return false;
     }
 
-    inline virtual int getMaxInputDevices() const
+    inline virtual int getMaxInputDevices() const override
     {
         return 0;
     }
 
-    inline virtual QString getInputDeviceName(int index) const
+    inline virtual QString getInputDeviceName(int index) const override
     {
         Q_UNUSED(index);
         return "";
     }
 
-    inline virtual MidiBuffer getBuffer()
+    inline virtual MidiBuffer getBuffer() override
     {
         return MidiBuffer(0);
     }
