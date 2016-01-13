@@ -52,13 +52,13 @@ void MainWindow::initialize()
 {
     timerID = startTimer(1000/50);// timer used to animate audio peaks, midi activity, public room wave audio plot, etc.
 
-    // set window mode: mini mode or full view mode
-    setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
-
     showBusyDialog("Loading rooms list ...");
 
     // initialize using last track input settings
     initializeLocalInputChannels(mainController->getSettings().getInputsSettings());
+
+    // set window mode: mini mode or full view mode
+    setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
 }
 
 // ++++++++++++++++++++++++=
@@ -106,7 +106,6 @@ void MainWindow::toggleLocalInputsCollapseStatus()
 {
     bool isShowingPeakMetersOnly = localGroupChannels.first()->isShowingPeakMeterOnly();
     showPeakMetersOnlyInLocalControls(!isShowingPeakMetersOnly);// toggle
-    updateLocalInputChannelsGeometry();
 }
 
 // ++++++++++++++++++++++++=
