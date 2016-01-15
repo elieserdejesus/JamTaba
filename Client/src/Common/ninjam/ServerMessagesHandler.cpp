@@ -9,6 +9,11 @@ ServerMessagesHandler::ServerMessagesHandler(Service *service) :
 {
 }
 
+ServerMessagesHandler::~ServerMessagesHandler()
+{
+
+}
+
 void ServerMessagesHandler::initialize(QIODevice *device)
 {
     Q_ASSERT(device);

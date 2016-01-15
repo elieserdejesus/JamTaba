@@ -97,7 +97,7 @@ int MidiDriver::getFirstGloballyEnableInputDevice() const
     return -1;
 }
 
-void MidiDriver::setInputDevicesStatus(QList<bool> statuses)
+void MidiDriver::setInputDevicesStatus(const QList<bool> &statuses)
 {
     this->inputDevicesEnabledStatuses = statuses;
 }

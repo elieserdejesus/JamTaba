@@ -18,6 +18,7 @@ class ServerMessagesHandler
 {
 public:
     explicit ServerMessagesHandler(Service *service);
+    virtual ~ServerMessagesHandler();
     void initialize(QIODevice *device);
     virtual void handleAllMessages();
 

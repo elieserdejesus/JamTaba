@@ -241,7 +241,7 @@ void Service::sendMessageToServer(const ClientMessage &message)
         qCCritical(jtNinjamProtocol) << "Bytes not writed in socket!";
     }
 
-    Q_ASSERT(message.getPayload() + 5 == outBuffer.size());
+    Q_ASSERT(message.getPayload() + 5 == (uint)outBuffer.size());
 }
 
 bool Service::needSendKeepAlive() const

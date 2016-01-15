@@ -86,7 +86,7 @@ void RtMidiDriver::release(){
     midiStreams.clear();
 }
 
-QString RtMidiDriver::getInputDeviceName(int index) const{
+QString RtMidiDriver::getInputDeviceName(uint index) const{
     RtMidiIn rtMidi;
     if(index < rtMidi.getPortCount())
         return QString::fromStdString(rtMidi.getPortName(index));
