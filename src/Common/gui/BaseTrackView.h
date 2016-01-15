@@ -2,13 +2,18 @@
 #define TRACKVIEW_H
 
 #include <QWidget>
-#include <QVariant>
-#include <QStyle>
 #include "audio/core/AudioPeak.h"
 
-namespace Ui {
-class BaseTrackView;
-}
+class PeakMeter;
+class QLabel;
+class QPushButton;
+class QGroupBox;
+class QSpacerItem;
+class QSlider;
+class QVBoxLayout;
+class QHBoxLayout;
+class QBoxLayout;
+class QGridLayout;
 
 namespace Controller {
 class MainController;
@@ -57,11 +62,12 @@ public:
 
     virtual void setUnlightStatus(bool unlighted);
 
+    static void setLayoutWidgetsVisibility(QLayout *layout, bool visible);
+
     static const int NARROW_WIDTH;
     static const int WIDE_WIDTH;
 protected:
 
-    Ui::BaseTrackView *ui;
     Controller::MainController *mainController;
 
     void paintEvent(QPaintEvent *);
@@ -77,6 +83,49 @@ protected:
 
     // this is called in inherited classes [LocalTrackView, NinjamTrackView]
     void bindThisViewWithTrackNodeSignals();
+
+    void createLayoutStructure();
+
+    virtual void refreshStyleSheet();
+
+    virtual QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const;
+
+    //meters
+    PeakMeter *peakMeterLeft;
+    PeakMeter *peakMeterRight;
+    QBoxLayout *metersLayout;// used to group the two meter bars
+    QLabel *peaksDbLabel;
+    QBoxLayout *meterWidgetsLayout;// used to group meters bars and the max peaks Db label
+
+    //level slider
+    QSlider *levelSlider;
+    QBoxLayout *levelSliderLayout;// used to group the level slider and the two 'speaker' icons
+
+    // pan slider
+    QSlider *panSlider;
+    QLabel *labelPanL;
+    QLabel *labelPanR;
+    QHBoxLayout *panWidgetsLayout;
+
+    // mute solo
+    QPushButton *muteButton;
+    QPushButton *soloButton;
+    QBoxLayout *muteSoloLayout;
+
+    // boost
+    QPushButton *buttonBoostPlus12;
+    QPushButton *buttonBoostZero;
+    QPushButton *buttonBoostMinus12;
+    QBoxLayout *boostWidgetsLayout;
+
+    // main layout buildind blocks
+    QGridLayout *mainLayout;
+    QBoxLayout *secondaryChildsLayout; // right side widgets in vertical layout, bottom widgets (2nd row) in horizontal layout
+    QBoxLayout *primaryChildsLayout; // left side widgets in vertical layout, top widgets (2nd row) in horizontal layout
+
+    virtual void setupVerticalLayout();
+
+    static const int FADER_HEIGHT;
 private:
     static QMap<long, BaseTrackView *> trackViews;
     Audio::AudioPeak maxPeak;
@@ -84,7 +133,6 @@ private:
     void drawFaderDbValue(QPainter &p);
 
     static const QColor DB_TEXT_COLOR;
-    static const int FADER_HEIGHT;
 
 protected slots:
     virtual void toggleMuteStatus();

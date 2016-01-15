@@ -80,6 +80,16 @@ public:
         return currentStreamingRoomID;
     }
 
+    inline Qt::Orientation getLastTracksLayoutOrientation() const
+    {
+        return settings.getLastTracksLayoutOrientation();
+    }
+
+    inline void storeTracksLayoutOrientation(Qt::Orientation newOrietation)
+    {
+        settings.storeTracksLayoutOrientation(newOrietation);
+    }
+
     void enterInRoom(const Login::RoomInfo &room, const QStringList &channelsNames, const QString &password = "");
 
     Login::LoginService *getLoginService() const;

@@ -30,10 +30,25 @@ public:
 
     void updateGuiElements();
 
+    QSize sizeHint() const override;
+
+    void setOrientation(Qt::Orientation orientation);
+
+protected:
+    void refreshStyleSheet() override;
+    QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const override;
+
+    void setupVerticalLayout() override;
+
 private:
     MarqueeLabel *channelNameLabel;
     Persistence::CacheEntry cacheEntry;// used to remember the track controls values
     IntervalChunksDisplay *chunksDisplay;// display downloaded interval chunks
+
+    Qt::Orientation orientation;
+
+    void setupHorizontalLayout();
+
 protected slots:
     // overriding the base class slots
     void toggleMuteStatus();

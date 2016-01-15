@@ -230,8 +230,9 @@ private:
     RecordingSettings recordingSettings;
     PrivateServerSettings privateServerSettings;
     QString lastUserName;// the last nick name choosed by user
-    QString translation;// the translation being used in chat
+    QString translation;// the translation language (en, fr, jp, pt, etc.) being used in chat
     int ninjamIntervalProgressShape;// Circle, Ellipe or Line
+    Qt::Orientation tracksLayoutOrientation; //horizontal or vertical
     bool readFile(APPTYPE type, const QList<SettingsObject *> &sections);// io ops ...
     bool writeFile(APPTYPE type, const QList<SettingsObject *> &sections);// io ops ...
 
@@ -246,6 +247,16 @@ public:
 
     void save(const LocalInputTrackSettings &inputsSettings);
     void load();
+
+    inline Qt::Orientation getLastTracksLayoutOrientation() const
+    {
+        return tracksLayoutOrientation;
+    }
+
+    inline void storeTracksLayoutOrientation(Qt::Orientation newOrientation)
+    {
+        tracksLayoutOrientation = newOrientation;
+    }
 
     bool writePresetToFile(const Preset &preset);
     void deletePreset(const QString &name);

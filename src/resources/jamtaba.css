@@ -80,54 +80,115 @@ FxPanel{
     max-height: 80px;
     border-radius: 2px;
 }
-BaseTrackView[unlighted="false"] FxPanel{
-   /*border:  1px inset rgb(100, 100, 100);*/
-}
 
-BaseTrackView #boostPanel{
-    border: none;
-    padding: 0px;
-}
-
-BaseTrackView #boostPanel QPushButton {
+#buttonBoostMinus12, #buttonBoostPlus12, #buttonBoostZero {
    margin: 0;
+   border: 0px;
+   font-size: 8px;
+   border-radius: 0px;
    padding: 0px;
    padding-top: 2px;
    padding-bottom: 2px;
-   border: 0px;
-   /*background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-       stop:0 rgba(255, 255, 255, 200),
-       stop:0.2 rgba(255, 255, 255, 120),
-       stop:0.7 rgba(255, 255, 255, 120),
-       stop:1 rgba(255,255, 255, 30));*/
-   /*background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                              stop: 0 #f6f7fa, stop: 1 #aaabae);*/
-   font-size: 8px;
+}
+
+QPushButton#buttonBoostMinus12:checked,
+QPushButton#buttonBoostPlus12:checked,
+QPushButton#buttonBoostZero:checked {
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0 rgba(255, 255, 255, 160),
+        stop:0.2 rgba(255, 255, 255, 120),
+        stop:0.7 rgba(255, 255, 255, 120),
+        stop:1 rgba(255,255, 255, 30));
+}
+
+BaseTrackView QPushButton#buttonBoostMinus12{
    border-radius: 0px;
-}
-
-BaseTrackView #boostPanel QPushButton:checked {
-background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
-    stop:0 rgba(255, 255, 255, 160),
-    stop:0.2 rgba(255, 255, 255, 120),
-    stop:0.7 rgba(255, 255, 255, 120),
-    stop:1 rgba(255,255, 255, 30));
-}
-
-BaseTrackView #boostPanel QPushButton#buttonBoostMinus12{
-
    border-bottom-left-radius: 3px;
    border-bottom-right-radius: 3px;
    border-top: 1px solid rgba(0, 0, 0, 10);
 }
 
-BaseTrackView #boostPanel QPushButton#buttonBoostPlus12{
+BaseTrackView QPushButton#buttonBoostPlus12{
+   border-radius: 0px;
    border-top-left-radius: 3px;
    border-top-right-radius: 3px;
    border-bottom: 1px solid rgba(0, 0, 0, 10);
-   margin-top: 6px;
+   margin: 0px;
 }
 
+NinjamTrackView[horizontal="true"] #buttonBoostMinus12,
+NinjamTrackView[horizontal="true"] #buttonBoostPlus12,
+NinjamTrackView[horizontal="true"] #buttonBoostZero {
+    padding: 1px;
+    border: 1px solid rgba(0, 0, 0, 30);
+}
+
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12{
+   border-radius: 0px;
+   border-bottom-right-radius: 3px;
+   border-top-right-radius: 3px;
+   border-left: 1px solid rgba(0, 0, 0, 10);
+   margin: 0px;
+}
+
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12{
+    border-radius: 0px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-right: 1px solid rgba(0, 0, 0, 10);
+    margin: 0px;
+}
+
+NinjamTrackView[horizontal="true"] #buttonBoostZero{
+    min-width: 12px;
+}
+
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12:checked,
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:checked,
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:checked {
+    margin-top: -1px;
+    background-color: rgba(0, 0, 0, 30);
+}
+
+NinjamTrackView[horizontal="true"]{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(200, 200, 200),
+        stop:0.01 rgb(240, 240, 240),
+        stop:1 rgb(170, 170, 170)
+    );
+}
+
+NinjamRoomWindow QToolButton{
+    border: 1px solid rgba(0, 0, 0, 20);
+    background-color: rgba(0, 0, 0, 8);
+    min-height: 20px;
+    min-width: 24px;
+    padding: 0px;
+}
+
+NinjamRoomWindow QToolButton:hover{
+    border: 1px solid rgba(0, 0, 0, 50);
+    background-color: rgba(255, 255, 255, 50);
+}
+
+NinjamRoomWindow QToolButton:checked{
+    background-color: rgba(0, 0, 0, 30);
+    border: 1px solid rgba(0, 0, 0, 40);
+}
+
+NinjamRoomWindow QToolButton#buttonVerticalLayout{
+    border-radius: 0px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    margin-right: 0px;
+}
+NinjamRoomWindow QToolButton#buttonHorizontalLayout{
+    border-radius: 0px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    margin-left: 0px;
+    margin-right: 12px;
+}
 
 
 FxPanelItem{
@@ -398,6 +459,7 @@ BaseTrackView #peaksDbLabel{
     qproperty-alignment: AlignCenter;
     color: rgba(0,0,0, 120);
     padding: 1px;
+    min-width: 15px;
 }
 NinjamTrackView #peaksDbLabel{
     border: 1px solid rgba(0, 0, 0, 8);
@@ -411,24 +473,12 @@ BaseTrackView[unlighted="true"] .QPushButton
    background-color: rgb(100, 100, 100);
 }
 
-BaseTrackView #muteButton{
-    margin-top: 6px;
-}
-
 BaseTrackView #peaksDbLabel:hover{
     background-color: rgba(255,255,255, 30);
     color: black;
 }
 
 
-/*
-QSlider::add-page:vertical{
-    background: rgb(255,255,255, 120);
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-    margin: 4px;
-}
-*/
 QSlider::groove:vertical {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
             stop: 0     rgb(201, 201, 201),
@@ -486,6 +536,7 @@ BaseTrackView[unlighted="true"] QSlider#panSlider::groove{
 }
 
 
+
 /*------------------------------ */
 
 QSlider::handle:horizontal:hover {
@@ -530,15 +581,12 @@ NinjamPanel QSlider::groove:horizontal{
 }
 
 
-/*+++++++++++++++++++++++++ */
-
 /* +++++++++++++++++++++++++++++++++++++++++++ */
 PeakMeter{
     background-color: rgba(0, 0, 0, 10);
     border: 1px inset rgba(0, 0, 0, 15);
     border-radius: 1px;
-    width: 3px;
-    min-width: 3px;
+    min-width: 2px;
     min-height: 2px;
 }
 
@@ -866,28 +914,6 @@ BaseTrackView[unlighted="true"]{
 }
 
 
-/*
-BaseTrackView #peaksPanel{
-    background-color: rgba(0, 0, 0, 100);
-    padding: 2px;
-    border-radius: 2px;
-    border: none;
-}
-*/
-
-
-/*  BUTTONS */
-
-/*
-QPushButton#soloButton, QPushButton#muteButton {
-    border-radius: 2px;
-    border: 1px solid gray;
-    color: rgba(0, 0, 0, 80);
-    padding: 3px 6px 3px 6px;
-    font-size: 8px;
-}
-*/
-
 QPushButton{
     border-radius: 2px;
     border: 1px outset gray;
@@ -935,6 +961,12 @@ QPushButton#soloButton, QPushButton#muteButton{
 NinjamTrackView #soloButton, NinjamTrackView #muteButton{
    border-color: rgb(95,95,95);
    color: rgb(40,40,40);
+}
+
+NinjamTrackView[horizontal="true"] #soloButton,
+NinjamTrackView[horizontal="true"] #muteButton{
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 NinjamTrackView #chunksDisplay{
@@ -986,16 +1018,20 @@ TrackGroupView > #topPanel{
     border-top-right-radius: 2px;
 }
 
+NinjamTrackGroupView[horizontal="true"] #topPanel{
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
 TrackGroupView[unlighted="true"] > #topPanel  {
    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(180, 180, 180), stop:1 rgb(70, 70, 70));
 }
 
 TrackGroupView #groupNameField {
-    margin-bottom: 10px;
-    margin-top: 10px;
+    margin-bottom: 0px;
+    margin-top: 0px;
     font-size: 11px;
     font-weight: normal;
-    /*qproperty-alignment: AlignCenter;*/
 }
 
 
@@ -1027,7 +1063,7 @@ LocalTrackGroupView   #toolButton:hover{
 /* ++++++++++++++++++++++++++++++++++ */
 
 QLabel#labelPanR, QLabel#labelPanL{
-    color: rgba(0, 0, 0, 80);
+    color: rgba(0, 0, 0, 160);
     font-size: 9px;
 }
 
@@ -1044,7 +1080,7 @@ LocalTrackView, NinjamTrackView{
     border: none;
 }
 
-LocalTrackView[faderOnly="true"]{
+LocalTrackView[peakMetersOnly="true"]{
     background: none;
 
 }
@@ -1137,7 +1173,9 @@ NinjamTrackView > #channelName{
     padding-bottom: 3px;
     font-size: 10px;
     color: rgba(0, 0, 0, 160);
+    max-width: 150px;
 }
+
 
 NinjamRoomWindow #groupNameField {
     border-radius: 2px;
@@ -1248,6 +1286,7 @@ NinjamRoomWindow #content{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.01, stop:0 rgba(0, 0, 0, 25), stop:1 rgba(0, 0, 0, 0));
     border-top: 1px solid rgba(0, 0, 0, 10);
 }
+
 
 NinjamRoomWindow #topPanel{
     max-height: 120px;
