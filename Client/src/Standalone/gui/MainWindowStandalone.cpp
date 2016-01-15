@@ -6,6 +6,7 @@
 #include "audio/core/PluginDescriptor.h"
 
 #include <QTimer>
+#include <QDesktopWidget>
 
 using namespace Persistence;
 using namespace Controller;

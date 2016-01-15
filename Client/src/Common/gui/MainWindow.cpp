@@ -8,6 +8,9 @@
 #include "Utils.h"
 #include "UserNameDialog.h"
 #include "log/Logging.h"
+
+#include <QDesktopWidget>
+#include <QDesktopServices>
 // #include "performance/PerformanceMonitor.h"
 
 using namespace Audio;

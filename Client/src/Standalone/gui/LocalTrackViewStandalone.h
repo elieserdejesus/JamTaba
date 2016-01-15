@@ -5,6 +5,11 @@
 #include "audio/core/AudioDriver.h"
 #include "MainControllerStandalone.h"
 
+#include <QMenu>
+#include <QPushButton>
+#include <QLabel>
+#include <QSpacerItem>
+
 class LocalTrackViewStandalone : public LocalTrackView
 {
     Q_OBJECT

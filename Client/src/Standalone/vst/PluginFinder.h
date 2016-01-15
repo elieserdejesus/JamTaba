@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QProcess>
+#include <QFileInfo>
 
 namespace Audio {
 class PluginDescriptor;

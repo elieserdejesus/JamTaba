@@ -2,6 +2,7 @@
 
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QLabel>
 
 ScanFolderPanel::ScanFolderPanel(QString folder) :
     QWidget(nullptr),
