@@ -2,6 +2,9 @@
 #include "audio/core/PluginDescriptor.h"
 #include "log/Logging.h"
 
+#include <QApplication>
+#include <QLibraryInfo>
+
 using namespace Vst;
 
 PluginFinder::PluginFinder()
@@ -65,7 +68,7 @@ QString PluginFinder::getVstScannerExecutablePath() const
     QString appPath = QCoreApplication::applicationDirPath();
 #ifdef Q_OS_MAC
     return
-        "/Users/elieser/Desktop/build-Jamtaba-Desktop_Qt_5_5_0_clang_64bit-Debug/VstScanner/VstScanner";
+        "/Users/elieser/Desktop/Debug/VstScanner/VstScanner";
 #endif
     QString buildType = QLibraryInfo::isDebugBuild() ? "debug" : "release";
     scannerExePath = appPath + "/../../VstScanner/"+ buildType +"/VstScanner.exe";

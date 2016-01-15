@@ -2,6 +2,10 @@
 #include "FxPanelItem.h"
 #include "LocalTrackViewStandalone.h"
 
+#include <QVBoxLayout>
+#include <QStyleOption>
+#include <QPainter>
+
 using namespace Controller;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
