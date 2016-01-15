@@ -85,12 +85,12 @@ public:
 
     virtual int getMaxInputDevices() const = 0;
 
-    virtual QString getInputDeviceName(int index) const = 0;
+    virtual QString getInputDeviceName(uint index) const = 0;
     virtual MidiBuffer getBuffer() = 0;
 
     virtual bool deviceIsGloballyEnabled(int deviceIndex) const;
     int getFirstGloballyEnableInputDevice() const;
-    virtual void setInputDevicesStatus(QList<bool> statuses);
+    virtual void setInputDevicesStatus(const QList<bool> &statuses);
 
 protected:
     QList<bool> inputDevicesEnabledStatuses;// store the globally enabled midi input devices
@@ -101,6 +101,7 @@ class NullMidiDriver : public MidiDriver
 {
     inline virtual void start(const QList<bool> &deviceStatuses) override
     {
+        Q_UNUSED(deviceStatuses)
     }
 
     inline virtual void stop() override
@@ -121,7 +122,7 @@ class NullMidiDriver : public MidiDriver
         return 0;
     }
 
-    inline virtual QString getInputDeviceName(int index) const override
+    inline virtual QString getInputDeviceName(uint index) const override
     {
         Q_UNUSED(index);
         return "";

@@ -121,6 +121,10 @@ win32{
 macx{
     message("Mac build")
 
+    #supressing some warnings
+    QMAKE_CXXFLAGS_WARN_ON += -Wunused-variable
+    QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
+
     macx-clang-32 {
         message("i386 build") ## mac 32bit specific build here
         LIBS_PATH = "static/mac32"

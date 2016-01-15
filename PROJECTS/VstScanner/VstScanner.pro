@@ -3,7 +3,7 @@ QT -= gui
 
 TARGET = VstScanner
 CONFIG -= app_bundle #in MAC create just a binary, not a complete bundle
-
+CONFIG += c++11
 DEFINES += VST_FORCE_DEPRECATED=0 #enable VST 2.3 features
 
 TEMPLATE = app
@@ -54,6 +54,9 @@ win32{
 
 macx{
     message("VstScanner Mac build")
+
+    QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
+
     #mac osx doc icon
     ICON = Jamtaba.icns
     CONFIG += console  #in windows we need the /SUBSYSTEM:CONSOLE,5.01 to work in Win XP

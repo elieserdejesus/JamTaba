@@ -8,6 +8,12 @@ PortAudioDriver::PortAudioDriver(Controller::MainController *mainController, int
                                  int lastOutIndex, int sampleRate, int bufferSize) :
     AudioDriver(mainController)
 {
+
+    Q_UNUSED(firstInIndex)
+    Q_UNUSED(firstOutIndex)
+    Q_UNUSED(lastInIndex)
+    Q_UNUSED(lastOutIndex)
+    Q_UNUSED(deviceIndex)
     // initialize portaudio using default devices, mono input and try estereo output if possible
     PaError error = Pa_Initialize();
     if (error == paNoError) {
@@ -55,6 +61,7 @@ QString PortAudioDriver::getInputChannelName(const unsigned int index) const
 
 void PortAudioDriver::configureHostSpecificInputParameters(PaStreamParameters &inputParameters)
 {
+    Q_UNUSED(inputParameters)
     // qCDebug(portaudio) << "using MAC scpecific stream infos for inputs";
     // PaMacCoreStreamInfo streamInfo;
     // PaMacCore_SetupStreamInfo(&streamInfo, paMacCorePro);
@@ -63,6 +70,7 @@ void PortAudioDriver::configureHostSpecificInputParameters(PaStreamParameters &i
 
 void PortAudioDriver::configureHostSpecificOutputParameters(PaStreamParameters &outputParameters)
 {
+    Q_UNUSED(outputParameters)
     // qCDebug(portaudio) << "using MAC scpecific stream infos for output";
     // PaMacCoreStreamInfo outStreamInfo;
     // PaMacCore_SetupStreamInfo(&outStreamInfo, paMacCorePro);
