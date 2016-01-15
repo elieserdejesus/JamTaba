@@ -2,7 +2,6 @@
 #define NINJAMTRACKGROUPVIEW_H
 
 #include "TrackGroupView.h"
-#include "ui_TrackGroupView.h"
 #include <QLabel>
 #include "MarqueeLabel.h"
 #include "NinjamTrackView.h"
@@ -17,6 +16,7 @@ class CacheEntry;
 
 class NinjamTrackGroupView : public TrackGroupView
 {
+    Q_OBJECT
 public:
     NinjamTrackGroupView(QWidget *parent, Controller::MainController *mainController, long trackID,
                          QString channelName, Persistence::CacheEntry initialValues);
@@ -26,10 +26,11 @@ public:
     void setGroupName(const QString &groupName);
     void updateGuiElements();
 
-    inline NinjamTrackView *addTrackView(long trackID) override
-    {
-        return dynamic_cast<NinjamTrackView *>(TrackGroupView::addTrackView(trackID));
-    }
+    NinjamTrackView *addTrackView(long trackID) override;
+
+    void setOrientation(Qt::Orientation orientation);
+
+    QSize sizeHint() const override;
 
 protected:
     NinjamTrackView *createTrackView(long trackID) override;
@@ -39,6 +40,10 @@ private:
     QLabel *countryLabel;
     MarqueeLabel *groupNameLabel;
     QString userIP;
+    Qt::Orientation orientation;
+
+    void setupHorizontalLayout();
+    void setupVerticalLayout();
 };
 
 #endif // NINJAMTRACKGROUPVIEW_H

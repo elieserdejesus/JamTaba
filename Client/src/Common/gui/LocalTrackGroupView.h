@@ -16,18 +16,6 @@ public:
 
     virtual ~LocalTrackGroupView();
 
-    //is not possible return a covariant container, so I'm using template to return a container of a more specific (derived) type
-    template<class T>
-    QList<T> getTracks() const
-    {
-        QList<T> castedTracks;
-        foreach (BaseTrackView *trackView, trackViews) {
-            castedTracks.append(dynamic_cast<T>(trackView));
-        }
-        return castedTracks;
-    }
-
-
     LocalTrackView *addTrackView(long trackID) override;
 
     inline int getChannelIndex() const

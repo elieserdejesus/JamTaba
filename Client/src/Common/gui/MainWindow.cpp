@@ -21,6 +21,7 @@ using namespace Persistence;
 
 const QSize MainWindow::MINI_MODE_MIN_SIZE = QSize(800, 600);
 const QSize MainWindow::FULL_VIEW_MODE_MIN_SIZE = QSize(1180, 790);
+const int MainWindow::MINI_MODE_MAX_LOCAL_TRACKS_WIDTH = 182;
 
 // const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200;//in miliseconds
 
@@ -80,22 +81,21 @@ void MainWindow::updateLocalInputChannelsGeometry()
     if (localGroupChannels.isEmpty())
         return;
 
-    int sizeHintWidth = ui.localTracksWidget->sizeHint().width();
-    int min = sizeHintWidth + 12;
-    int max = min;
+    int minWidth = ui.localTracksWidget->sizeHint().width();
+    minWidth += 12;
+    int maxWidth = minWidth;
     bool showingPeakMeterOnly = localGroupChannels.first()->isShowingPeakMeterOnly();
     Qt::ScrollBarPolicy scrollPolicy = Qt::ScrollBarAlwaysOff;
 
     // limit the local inputs widget in mini mode
     if (!showingPeakMeterOnly && isRunningInMiniMode()) {
-        max = 180;
-        if (min > max) {
-            min = max;
+        if (minWidth > MINI_MODE_MAX_LOCAL_TRACKS_WIDTH) {
+            minWidth = maxWidth = MINI_MODE_MAX_LOCAL_TRACKS_WIDTH;
             scrollPolicy = Qt::ScrollBarAlwaysOn;
         }
     }
-    ui.leftPanel->setMaximumWidth(max);
-    ui.leftPanel->setMinimumWidth(min);
+    ui.leftPanel->setMaximumWidth(maxWidth);
+    ui.leftPanel->setMinimumWidth(minWidth);
     ui.scrollArea->setHorizontalScrollBarPolicy(scrollPolicy);
 
     if (isRunningInMiniMode() && localGroupChannels.count() > 1) {
@@ -1072,8 +1072,8 @@ void MainWindow::updateCurrentIntervalBeat(int beat)
 
 void MainWindow::setupWidgets()
 {
-    ui.masterMeterL->setOrientation(PeakMeter::HORIZONTAL);
-    ui.masterMeterR->setOrientation(PeakMeter::HORIZONTAL);
+    ui.masterMeterL->setOrientation(Qt::Horizontal);
+    ui.masterMeterR->setOrientation(Qt::Horizontal);
     ui.masterFader->installEventFilter(this);// handle double click in master fader
 
     ui.chatArea->setVisible(false);// hide chat area until connect in a server to play

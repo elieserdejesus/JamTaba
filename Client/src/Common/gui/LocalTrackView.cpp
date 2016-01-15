@@ -1,6 +1,6 @@
 #include "LocalTrackView.h"
-#include "ui_BaseTrackView.h"
 #include "MainController.h"
+#include <QLayout>
 
 LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex) :
     BaseTrackView(mainController, channelIndex),
@@ -46,35 +46,33 @@ void LocalTrackView::closeAllPlugins()
 void LocalTrackView::mute(bool b)
 {
     getInputNode()->setMute(b);// audio only
-    ui->muteButton->setChecked(b);// gui only
+    muteButton->setChecked(b);// gui only
 }
 
 void LocalTrackView::solo(bool b)
 {
     getInputNode()->setSolo(b);// audio only
-    ui->soloButton->setChecked(b);// gui only
+    soloButton->setChecked(b);// gui only
 }
 
 void LocalTrackView::initializeBoostButtons(Boost boostValue)
 {
     switch (boostValue) {
     case Boost::MINUS:
-        ui->buttonBoostMinus12->click();
+        buttonBoostMinus12->click();
         break;
     case Boost::PLUS:
-        ui->buttonBoostPlus12->click();
+        buttonBoostPlus12->click();
         break;
     default:
-        ui->buttonBoostZero->click();
+        buttonBoostZero->click();
     }
 }
 
 QSize LocalTrackView::sizeHint() const
 {
     if (peakMetersOnly) {
-        int width = ui->mainWidget->sizeHint().width() + layout()->contentsMargins().left()
-                    + layout()->contentsMargins().right();
-        return QSize(width, height());
+        return QSize(16, height());
     }
     return BaseTrackView::sizeHint();
 }
@@ -83,30 +81,28 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMi
 {
     if (this->peakMetersOnly != peakMetersOnly) {
         this->peakMetersOnly = peakMetersOnly;
-        ui->boostPanel->setVisible(!this->peakMetersOnly);
-        ui->levelSlider->setVisible(!this->peakMetersOnly);
-        ui->panPanel->setVisible(!this->peakMetersOnly);
 
-        QSizePolicy::Policy hPolicy = QSizePolicy::Minimum;
-        QSizePolicy::Policy vPolicy = this->peakMetersOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed;
-        ui->panSpacer->changeSize(20, 20, hPolicy, vPolicy);
+        BaseTrackView::setLayoutWidgetsVisibility(secondaryChildsLayout, !this->peakMetersOnly);
+        BaseTrackView::setLayoutWidgetsVisibility(primaryChildsLayout, !this->peakMetersOnly);
+        peakMeterLeft->setVisible(true);//peak meters are always visible
+        peakMeterRight->setVisible(true);
 
         QMargins margins = layout()->contentsMargins();
         margins.setLeft((peakMetersOnly || runningInMiniMode) ? 2 : 6);
         margins.setRight((peakMetersOnly || runningInMiniMode) ? 2 : 6);
         layout()->setContentsMargins(margins);
 
-        ui->soloButton->setVisible(!peakMetersOnly);
-        ui->muteButton->setVisible(!peakMetersOnly);
-        ui->peaksDbLabel->setVisible(!peakMetersOnly);
+        soloButton->setVisible(!peakMetersOnly);
+        muteButton->setVisible(!peakMetersOnly);
+        peaksDbLabel->setVisible(!peakMetersOnly);
         Qt::Alignment alignment = peakMetersOnly ? Qt::AlignRight : Qt::AlignHCenter;
-        ui->levelSlider->parentWidget()->layout()->setAlignment(ui->levelSlider, alignment);
+        levelSlider->parentWidget()->layout()->setAlignment(levelSlider, alignment);
 
         this->drawDbValue = !peakMetersOnly;
 
         updateGeometry();
 
-        setProperty("faderOnly", QVariant(peakMetersOnly));
+        setProperty("peakMetersOnly", QVariant(peakMetersOnly));
         style()->unpolish(this);
         style()->polish(this);
     }

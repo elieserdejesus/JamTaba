@@ -1,7 +1,5 @@
 #include "LocalTrackGroupView.h"
 #include "LocalTrackView.h"
-#include "ui_TrackGroupView.h"
-
 #include "Highligther.h"
 #include "MainWindow.h"
 #include "log/Logging.h"
@@ -14,13 +12,13 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
     preparingToTransmit(false)
 {
     toolButton = createToolButton();
-    this->ui->topPanel->layout()->addWidget(toolButton);
+    topPanel->layout()->addWidget(toolButton);
 
     xmitButton = createXmitButton();
-    this->layout()->addWidget(xmitButton);
+    layout()->addWidget(xmitButton);
 
     QObject::connect(toolButton, SIGNAL(clicked()), this, SLOT(showMenu()));
-    QObject::connect(this->ui->groupNameField, SIGNAL(editingFinished()), this, SIGNAL(
+    QObject::connect(groupNameField, SIGNAL(editingFinished()), this, SIGNAL(
                          nameChanged()));
     QObject::connect(xmitButton, SIGNAL(toggled(bool)), this, SLOT(toggleTransmitingStatus(bool)));
 }
@@ -279,7 +277,7 @@ void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
 {
     if (this->peakMeterOnly != peakMeterOnly) {
         this->peakMeterOnly = peakMeterOnly;
-        this->ui->topPanel->setVisible(!this->peakMeterOnly);
+        topPanel->setVisible(!this->peakMeterOnly);
         foreach (LocalTrackView *view, getTracks<LocalTrackView *>()) {
             view->setPeakMetersOnlyMode(peakMeterOnly, mainFrame->isRunningInMiniMode());
         }

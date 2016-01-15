@@ -231,8 +231,11 @@ private:
     // qint64 lastPerformanceMonitorUpdate;
     // static const int PERFORMANCE_MONITOR_REFRESH_TIME;
 
+    // TODO:group these 2 related constants?
     static const QSize MINI_MODE_MIN_SIZE;
     static const QSize FULL_VIEW_MODE_MIN_SIZE;
+
+    static const int MINI_MODE_MAX_LOCAL_TRACKS_WIDTH;
 };
 
 #endif

@@ -9,10 +9,6 @@ class PeakMeter : public QWidget
 
 public:
 
-    enum PeakMeterOrientation {
-        VERTICAL, HORIZONTAL
-    };
-
     explicit PeakMeter(QWidget *parent = 0);
     virtual ~PeakMeter()
     {
@@ -22,8 +18,9 @@ public:
     void setSolidColor(const QColor &color);
     void setPaintMaxPeakMarker(bool paintMaxPeak);
     void setDecayTime(quint32 decayTimeInMiliseconds);
-    void setOrientation(PeakMeterOrientation orientation);
-    QSize minimumSizeHint() const;
+    void setOrientation(Qt::Orientation orientation);
+    QSize minimumSizeHint() const override;
+
 protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *);
@@ -31,7 +28,7 @@ private:
 
     inline bool isVertical() const
     {
-        return orientation == VERTICAL;
+        return orientation == Qt::Vertical;
     }
 
     QLinearGradient gradient;// used when meter is configured to fill using a gradient (default)
@@ -49,7 +46,7 @@ private:
 
     bool paintingMaxPeak;
 
-    PeakMeterOrientation orientation;
+    Qt::Orientation orientation;
 
     QLinearGradient createGradient();
 

@@ -13,6 +13,7 @@
 class MainWindow;
 class NinjamTrackGroupView;
 class NinjamTrackView;
+class QToolButton;
 
 namespace Ui {
 class NinjamRoomWindow;
@@ -47,6 +48,8 @@ public:
 
     void setFullViewStatus(bool fullView);
 
+    void setTracksOrientation(Qt::Orientation orientation);
+
 protected:
     Ui::NinjamRoomWindow *ui;
     Controller::MainController *mainController;
@@ -69,6 +72,12 @@ private:
     void disconnectFromNinjamControllerSignals(Controller::NinjamController *ninjamController);
 
     NinjamTrackView *getTrackViewByID(long trackID);
+
+    Qt::Orientation tracksOrientation;
+
+    void createLayoutDirectionButtons(Qt::Orientation initialOrientation);
+    QToolButton *horizontalLayoutButton;
+    QToolButton *verticalLayoutButton;
 
 private slots:
 
@@ -101,6 +110,8 @@ private slots:
     // chat panel
     void voteToChangeBpi(int newBpi);
     void voteToChangeBpm(int newBpm);
+
+    void toggleTracksLayoutOrientation(QAbstractButton *buttonClicked);
 };
 
 #endif // NINJAMROOMWINDOW_H

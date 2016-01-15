@@ -1,7 +1,7 @@
 #include "LocalTrackViewStandalone.h"
-#include "ui_BaseTrackView.h"
 #include "FxPanel.h"
 #include "FxPanelItem.h"
+#include <QGridLayout>
 
 const QString LocalTrackViewStandalone::MIDI_ICON = ":/images/input_midi.png";
 const QString LocalTrackViewStandalone::MONO_ICON = ":/images/input_mono.png";
@@ -14,19 +14,19 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
     controller(mainController)
 {
     fxPanel = createFxPanel();
-    ui->mainLayout->addSpacing(20);// add separator before effects panel
-    ui->mainLayout->addWidget(fxPanel);
+    //mainLayout->addSpacing(20);// add separator before effects panel
+    mainLayout->addWidget(fxPanel, mainLayout->rowCount(), 0, 1, 2);
 
     // create input panel in the bottom
     this->inputPanel = createInputPanel();
-    fxSpacer = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Fixed);
-    ui->mainLayout->addSpacerItem(fxSpacer);
+    //fxSpacer = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Fixed);
+    //mainLayout->addSpacerItem(fxSpacer);
 
-    ui->mainLayout->addWidget(inputPanel);
+    mainLayout->addWidget(inputPanel, mainLayout->rowCount(), 0, 1, 2);
 
     this->inputTypeIconLabel = createInputTypeIconLabel(this);
-    ui->mainLayout->addWidget(inputTypeIconLabel);
-    ui->mainLayout->setAlignment(this->inputTypeIconLabel, Qt::AlignCenter);
+    mainLayout->addWidget(inputTypeIconLabel, mainLayout->rowCount(), 0, 1, 2);
+    mainLayout->setAlignment(this->inputTypeIconLabel, Qt::AlignCenter);
 
     // create the peak meter to show midiactivity
     midiPeakMeter = new PeakMeter();
@@ -87,7 +87,7 @@ QWidget *LocalTrackViewStandalone::createInputPanel()
     inputPanel->setLayout(new QHBoxLayout(inputPanel));
     inputPanel->layout()->setContentsMargins(0, 0, 0, 0);
     inputPanel->layout()->setSpacing(0);
-    inputPanel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
+    inputPanel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
 
     this->inputSelectionButton = createInputSelectionButton(inputPanel);
     inputPanel->layout()->addWidget(inputSelectionButton);// button in right
@@ -150,10 +150,6 @@ void LocalTrackViewStandalone::setPeakMetersOnlyMode(bool peakMetersOnly, bool r
     if (fxPanel) {// in vst plugin fxPanel is nullptr
         fxPanel->setVisible(!peakMetersOnly);
         inputPanel->setVisible(!peakMetersOnly);
-
-        fxSpacer->changeSize(20,
-                             peakMetersOnly ? 0 : 20, QSizePolicy::Minimum,
-                             peakMetersOnly ? QSizePolicy::Ignored : QSizePolicy::Fixed);
     }
 
     if (inputTypeIconLabel)// this will be nullptr in Vst plugin
@@ -368,9 +364,9 @@ void LocalTrackViewStandalone::setMidiPeakMeterVisibility(bool visible)
 {
     if (visible) {
         // midi activity meter is inserted between the 2 audio meters
-        dynamic_cast<QHBoxLayout *>(ui->metersWidget->layout())->insertWidget(1, midiPeakMeter);
+        metersLayout->insertWidget(1, midiPeakMeter);
     } else {
-        ui->metersWidget->layout()->removeWidget(midiPeakMeter);
+        metersLayout->removeWidget(midiPeakMeter);
     }
     update();
 }

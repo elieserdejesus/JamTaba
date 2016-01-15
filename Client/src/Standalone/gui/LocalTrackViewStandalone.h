@@ -64,7 +64,6 @@ private:
     QLabel *inputTypeIconLabel;
     QWidget *inputPanel;
     FxPanel *fxPanel;
-    QSpacerItem *fxSpacer;
 
     PeakMeter *midiPeakMeter;// show midi activity
 

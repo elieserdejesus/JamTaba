@@ -51,8 +51,8 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     QObject::connect(ui->muteButton, SIGNAL(clicked(bool)), this, SIGNAL(muteButtonClicked()));
     QObject::connect(ui->soloButton, SIGNAL(clicked(bool)), this, SIGNAL(soloButtonClicked()));
 
-    ui->peakMeterLeft->setOrientation(PeakMeter::HORIZONTAL);
-    ui->peakMeterRight->setOrientation(PeakMeter::HORIZONTAL);
+    ui->peakMeterLeft->setOrientation(Qt::Horizontal);
+    ui->peakMeterRight->setOrientation(Qt::Horizontal);
 }
 // ++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamPanel::setLowContrastPaintInIntervalPanel(bool useLowContrastColors)

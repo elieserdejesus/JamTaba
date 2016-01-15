@@ -9,9 +9,7 @@
 #include <QDir>
 #include <QList>
 #include <QSettings>
-#include "../log/Logging.h"
-
-// extern Configurator *JTBConfig;
+#include "log/Logging.h"
 
 using namespace Persistence;
 
@@ -534,30 +532,32 @@ bool Settings::readFile(APPTYPE type, const QList<SettingsObject *> &sections)
     QDir dir(fileDir);// homepath
 
     QString absolutePath = dir.absoluteFilePath(fileName);
-    // QFile file(absolutePath);
     QFile f(absolutePath);
-    // qInfo(jtConfigurator) << "JSON Location :"<<absolutePath;
     if (f.open(QIODevice::ReadOnly)) {
         qInfo(jtConfigurator) << "Reading settings from " << f.fileName();
         QJsonDocument doc = QJsonDocument::fromJson(f.readAll());
         QJsonObject root = doc.object();
 
-        // read user name
-        if (root.contains("userName"))
+        if (root.contains("userName"))// read user name
             this->lastUserName = root["userName"].toString();
-        // read Translation
-        if (root.contains("translation"))
-            this->translation = root["translation"].toString();
-        if (this->translation.isEmpty()) {
-            QLocale userLocale;
-            this->translation = userLocale.bcp47Name().left(2);
-        }
 
-        // read intervall progress shape
-        if (root.contains("intervalProgressShape"))
-            this->ninjamIntervalProgressShape = root["intervalProgressShape"].toInt();
+        if (root.contains("translation"))// read Translation
+            this->translation = root["translation"].toString();
+        if (this->translation.isEmpty())
+            this->translation = QLocale().bcp47Name().left(2);
+
+        if (root.contains("intervalProgressShape"))// read intervall progress shape
+            this->ninjamIntervalProgressShape = root["intervalProgressShape"].toInt(0);//zero as default value
         else
             this->ninjamIntervalProgressShape = 0;
+
+        if(root.contains("tracksLayoutOrientation")){
+            int value = root["tracksLayoutOrientation"].toInt(2);//2 is the Qt::Vertical value
+            this->tracksLayoutOrientation = value == 2 ? Qt::Vertical : Qt::Horizontal;
+        }
+        else{
+            this->tracksLayoutOrientation = Qt::Vertical;
+        }
 
         // read settings sections (Audio settings, Midi settings, ninjam settings, etc...)
         foreach (SettingsObject *so, sections)
@@ -583,14 +583,14 @@ bool Settings::writeFile(APPTYPE type, const QList<SettingsObject *> &sections)/
     QFile file(absolutePath);
     if (file.open(QIODevice::WriteOnly)) {
         QJsonObject root;
-        // write user name
-        root["userName"] = this->lastUserName;
-        // write translate locale
-        root["translation"] = this->translation;
 
+        //writing global settings
+        root["userName"] = this->lastUserName;// write user name
+        root["translation"] = this->translation;// write translate locale
         root["intervalProgressShape"] = this->ninjamIntervalProgressShape;
+        root["tracksLayoutOrientation"] = this->tracksLayoutOrientation;
 
-        // write sections
+        // write settings sections
         foreach (SettingsObject *so, sections) {
             QJsonObject sectionObject;
             so->write(sectionObject);
@@ -673,21 +673,22 @@ void Settings::load()
 }
 
 Settings::Settings() :
-    fileDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation))
+    fileDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)),
+    tracksLayoutOrientation(Qt::Vertical)
 {
     // qDebug() << "Settings in " << fileDir;
 }
 
-void Settings::save(const LocalInputTrackSettings &inputsSettings)
+void Settings::save(const LocalInputTrackSettings &localInputsSettings)
 {
-    this->inputsSettings = inputsSettings;
+    this->inputsSettings = localInputsSettings;
     QList<Persistence::SettingsObject *> sections;
     sections.append(&audioSettings);
     sections.append(&midiSettings);
     sections.append(&windowSettings);
     sections.append(&metronomeSettings);
     sections.append(&vstSettings);
-    sections.append(&this->inputsSettings);
+    sections.append(&inputsSettings);
     sections.append(&recordingSettings);
     sections.append(&privateServerSettings);
 

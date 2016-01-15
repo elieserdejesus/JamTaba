@@ -26,6 +26,8 @@
 #include <QComboBox>
 #include <QDebug>
 #include <QDateTime>
+#include <QToolButton>
+#include <QButtonGroup>
 
 using namespace Persistence;
 
@@ -37,7 +39,8 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
     mainController(mainController),
     chatPanel(new ChatPanel(this, mainController->getBotNames())),
     fullViewMode(true),
-    ninjamPanel(nullptr)
+    ninjamPanel(nullptr),
+    tracksOrientation(Qt::Vertical)
 {
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow construtor..";
     ui->setupUi(this);
@@ -56,7 +59,56 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
 
     chatPanel->setPreferredTranslationLanguage(mainController->getSettings().getTranslation());
 
+    Qt::Orientation lastTracksLayoutOrientation = mainController->getLastTracksLayoutOrientation();
+    createLayoutDirectionButtons(lastTracksLayoutOrientation);
+
     setupSignals(mainController->getNinjamController());
+
+    //remember the last tracks layout orientation
+    setTracksOrientation(lastTracksLayoutOrientation);
+}
+
+void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrientation)
+{
+    QHBoxLayout *topLayout = qobject_cast<QHBoxLayout *>(ui->topWidget->layout());
+    if(topLayout){
+        horizontalLayoutButton = new QToolButton();
+        horizontalLayoutButton->setIcon(QIcon(":/images/horizontal_layout.png"));
+        horizontalLayoutButton->setObjectName("buttonHorizontalLayout");
+        horizontalLayoutButton->setCheckable(true);
+        horizontalLayoutButton->setToolTip("Set tracks layout to horizontal");
+
+        verticalLayoutButton = new QToolButton();
+        verticalLayoutButton->setIcon(QIcon(":/images/vertical_layout.png"));
+        verticalLayoutButton->setObjectName("buttonVerticalLayout");
+        verticalLayoutButton->setCheckable(true);
+        verticalLayoutButton->setToolTip("Set tracks layout to vertical");
+
+        if(initialOrientation == Qt::Vertical)
+            verticalLayoutButton->setChecked(true);
+        else
+            horizontalLayoutButton->setChecked(true);
+
+        QHBoxLayout *buttonsLayout = new QHBoxLayout();
+        buttonsLayout->setSpacing(0);
+        buttonsLayout->setContentsMargins(0, 0, 0, 0);
+        buttonsLayout->addWidget(verticalLayoutButton);
+        buttonsLayout->addWidget(horizontalLayoutButton);
+
+        QButtonGroup *buttonGroup = new QButtonGroup();
+        buttonGroup->addButton(verticalLayoutButton);
+        buttonGroup->addButton(horizontalLayoutButton);
+
+        int licenceButtonIndex = topLayout->indexOf(ui->licenceButton);
+        topLayout->insertLayout(licenceButtonIndex, buttonsLayout);
+
+        connect( buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(toggleTracksLayoutOrientation(QAbstractButton*)));
+    }
+}
+
+void NinjamRoomWindow::toggleTracksLayoutOrientation(QAbstractButton* buttonClicked)
+{
+    setTracksOrientation(buttonClicked == this->verticalLayoutButton ? Qt::Vertical : Qt::Horizontal);
 }
 
 NinjamPanel *NinjamRoomWindow::createNinjamPanel()
@@ -331,6 +383,7 @@ void NinjamRoomWindow::addChannel(const Ninjam::User &user, const Ninjam::UserCh
         NinjamTrackGroupView *trackView = new NinjamTrackGroupView(ui->tracksPanel,
                                                                    this->mainController, channelID,
                                                                    channelName, cacheEntry);
+        trackView->setOrientation(tracksOrientation);
         trackView->setNarrowStatus(!fullViewMode);
         ui->tracksPanel->layout()->addWidget(trackView);
         trackGroups.insert(user.getFullName(), trackView);
@@ -490,4 +543,32 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
     connect(chatPanel, SIGNAL(userConfirmingVoteToBpmChange(int)), this, SLOT(voteToChangeBpm(int)));
 
     connect(ui->licenceButton, SIGNAL(clicked(bool)), this, SLOT(showServerLicence()));
+
+}
+
+void NinjamRoomWindow::setTracksOrientation(Qt::Orientation newOrientation)
+{
+    if(newOrientation == tracksOrientation)
+        return;
+
+    tracksOrientation = newOrientation;
+    foreach (NinjamTrackGroupView *group, trackGroups) {
+        group->setOrientation(newOrientation);
+    }
+
+    QBoxLayout *tracksLayout = qobject_cast<QBoxLayout *>(ui->tracksPanel->layout());
+    if(tracksLayout){
+        if(newOrientation == Qt::Horizontal){
+            tracksLayout->setDirection(QBoxLayout::TopToBottom);
+            tracksLayout->setAlignment(Qt::AlignTop);
+        }
+        else{
+            tracksLayout->setDirection(QBoxLayout::LeftToRight);
+            tracksLayout->setAlignment(Qt::AlignLeft);
+        }
+    }
+
+    updateGeometry();
+
+    mainController->storeTracksLayoutOrientation(newOrientation);
 }
