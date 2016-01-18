@@ -1,9 +1,10 @@
 #ifndef LOGHANDLER
 #define LOGHANDLER
 
+#include <QString>
 #include <QMessageLogContext>
 #include <QLoggingCategory>
-#include <QString>
+
 
 // good reading about Qt logging: https://blog.qt.io/blog/2014/03/11/qt-weekly-1-categorized-logging/
 Q_DECLARE_LOGGING_CATEGORY(jtCore)
