@@ -1,6 +1,10 @@
 #include "LocalTrackView.h"
 #include "MainController.h"
 #include <QLayout>
+#include <QPushButton>
+#include <QLabel>
+#include <QSlider>
+#include <QStyle>
 
 LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex) :
     BaseTrackView(mainController, channelIndex),

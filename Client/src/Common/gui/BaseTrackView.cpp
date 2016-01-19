@@ -5,13 +5,13 @@
 #include <QDebug>
 #include "Utils.h"
 #include "PeakMeter.h"
-#include <QGroupBox>
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QPushButton>
 #include <QButtonGroup>
+#include <QEvent>
 
 const QColor BaseTrackView::DB_TEXT_COLOR = QColor(0, 0, 0, 120);
 const int BaseTrackView::FADER_HEIGHT = 12;

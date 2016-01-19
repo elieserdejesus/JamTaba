@@ -2,6 +2,7 @@
 #include "FxPanel.h"
 #include "FxPanelItem.h"
 #include <QGridLayout>
+#include <QStyle>
 
 const QString LocalTrackViewStandalone::MIDI_ICON = ":/images/input_midi.png";
 const QString LocalTrackViewStandalone::MONO_ICON = ":/images/input_mono.png";
