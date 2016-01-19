@@ -23,7 +23,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=true
 OutputDir=.
 OutputBaseFilename={#InstallerFileName}
-SetupIconFile=E:\Jamtaba2\jamtaba2\Client\Jamtaba2.ico
+SetupIconFile=..\..\PROJECTS\Jamtaba2.ico
 Compression=lzma
 SolidCompression=true
 ShowLanguageDialog=no
@@ -56,7 +56,7 @@ Source: {#MsvcRedistributablesPath}\{#Redistributable}; DestDir: {tmp}; Flags: d
 Source: {#BuildDir}\Standalone\release\Jamtaba2.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: {#BuildDir}\VstScanner\release\VstScanner.exe; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: {#BuildDir}\VstPlugin\release\JamtabaVST2.dll; DestDir: {code:GetVST2Dir}; Flags: ignoreversion replacesameversion
-Source: ..\..\Jamtaba2.ico; DestDir: {app}; Flags: ignoreversion
+Source: ..\..\PROJECTS\Jamtaba2.ico; DestDir: {app}; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{#MyAppName}; Filename: {app}\{#MyAppExeName}; IconFilename: {app}\Jamtaba2.ico; IconIndex: 0
@@ -178,8 +178,5 @@ procedure CurUninstallStepChanged (CurUninstallStep: TUninstallStep);
        end;
    end;
 end;
-
-
-
 
 
