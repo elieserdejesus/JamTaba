@@ -1,5 +1,5 @@
 #include "PluginScanDialog.h"
-#include "ui_pluginscandialog.h"
+#include "ui_PluginScanDialog.h"
 
 PluginScanDialog::PluginScanDialog(QWidget *parent) :
     QDialog(parent),
