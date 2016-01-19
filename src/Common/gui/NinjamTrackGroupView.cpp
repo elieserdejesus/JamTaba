@@ -12,11 +12,10 @@ void NinjamTrackGroupView::updateGeoLocation()
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent,
-                                           Controller::MainController *mainController, long trackID,
-                                           QString channelName,
-                                           Persistence::CacheEntry initialValues) :
-    TrackGroupView(parent),
+NinjamTrackGroupView::NinjamTrackGroupView(Controller::MainController *mainController, long trackID,
+                                           const QString &channelName, const QColor &userColor,
+                                           const Persistence::CacheEntry &initialValues) :
+    TrackGroupView(nullptr),
     mainController(mainController),
     userIP(initialValues.getUserIP()),
     orientation(Qt::Vertical)
@@ -52,6 +51,21 @@ NinjamTrackGroupView::NinjamTrackGroupView(QWidget *parent,
     NinjamTrackView *newTrackView = addTrackView(trackID);
     newTrackView->setChannelName(channelName);
     newTrackView->setInitialValues(initialValues);
+
+    QString styleSheet = "background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, ";
+    styleSheet += "stop: 0 rgba(0, 0, 0, 0), ";
+    styleSheet += "stop: 0.35 " + userColor.name() + ", ";
+    styleSheet += "stop: 0.65" + userColor.name() + ", ";
+    styleSheet += "stop: 1 rgba(0, 0, 0, 0));";
+    groupNameLabel->setStyleSheet(styleSheet);
+}
+
+QString NinjamTrackGroupView::getRgbaColorString(const QColor &color, int alpha)
+{
+    int red = color.red();
+    int green = color.green();
+    int blue = color.blue();
+    return "rgba(" + QString::number(red) + "," + QString::number(green) + "," + QString::number(blue) + "," + QString::number(alpha) + ")";
 }
 
 void NinjamTrackGroupView::setOrientation(Qt::Orientation newOrientation)

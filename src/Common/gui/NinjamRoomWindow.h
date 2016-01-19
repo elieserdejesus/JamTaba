@@ -9,6 +9,7 @@
 #include "ChatPanel.h"
 #include <QMessageBox>
 #include "NinjamPanel.h"
+#include "UsersColorsPool.h"
 
 class MainWindow;
 class NinjamTrackGroupView;
@@ -78,6 +79,8 @@ private:
     void createLayoutDirectionButtons(Qt::Orientation initialOrientation);
     QToolButton *horizontalLayoutButton;
     QToolButton *verticalLayoutButton;
+
+    UsersColorsPool usersColorsPool;
 
 private slots:
 

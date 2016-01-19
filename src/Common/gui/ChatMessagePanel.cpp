@@ -53,8 +53,8 @@ void ChatMessagePanel::initialize(const QString &userName, const QString &msg, c
 
 QString ChatMessagePanel::buildCssString(const QColor &bgColor, const QColor &textColor)
 {
-    QString css = "background-color: " + colorToCSS(bgColor) + ";";
-    css += "color: " + colorToCSS(textColor) + ";";
+    QString css = "background-color: " + bgColor.name() + ";";
+    css += "color: " + textColor.name() + ";";
     return css;
 }
 
@@ -62,12 +62,6 @@ QString ChatMessagePanel::replaceLinksInString(const QString &string)
 {
     QString regex = "((?:https?|ftp|www)://\\S+)";
     return QString(string).replace(QRegExp(regex), "<a href=\"\\1\">\\1</a>");
-}
-
-QString ChatMessagePanel::colorToCSS(const QColor &color)
-{
-    return "rgb(" + QString::number(color.red()) + ", " + QString::number(color.green()) + ", "
-           + QString::number(color.blue()) + ")";
 }
 
 ChatMessagePanel::~ChatMessagePanel()

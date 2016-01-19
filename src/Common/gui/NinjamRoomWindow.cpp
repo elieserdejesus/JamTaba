@@ -37,7 +37,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
     QWidget(parent),
     ui(new Ui::NinjamRoomWindow),
     mainController(mainController),
-    chatPanel(new ChatPanel(this, mainController->getBotNames())),
+    chatPanel(new ChatPanel(mainController->getBotNames(), &usersColorsPool)),
     fullViewMode(true),
     ninjamPanel(nullptr),
     tracksOrientation(Qt::Vertical)
@@ -205,6 +205,8 @@ void NinjamRoomWindow::handleUserLeaving(const QString &userName)
 {
     if (chatPanel)
         chatPanel->addMessage("Jamtaba", userName + " leave the room.");
+
+    usersColorsPool.giveBack(userName); // reuse the color mapped to this 'leaving' user
 }
 
 void NinjamRoomWindow::handleUserEntering(const QString &userName)
@@ -380,9 +382,9 @@ void NinjamRoomWindow::addChannel(const Ninjam::User &user, const Ninjam::UserCh
 
     if (!trackGroups.contains(user.getFullName())) {// first channel from this user?
         QString channelName = channel.getName();
-        NinjamTrackGroupView *trackView = new NinjamTrackGroupView(ui->tracksPanel,
-                                                                   this->mainController, channelID,
-                                                                   channelName, cacheEntry);
+        QColor userColor = usersColorsPool.get(user.getName());// the user channel and your chat messages are painted with same color
+        NinjamTrackGroupView *trackView = new NinjamTrackGroupView(mainController, channelID,
+                                                                   channelName, userColor, cacheEntry);
         trackView->setOrientation(tracksOrientation);
         trackView->setNarrowStatus(!fullViewMode);
         ui->tracksPanel->layout()->addWidget(trackView);
