@@ -4,7 +4,7 @@
 #include "MainController.h"
 #include <QApplication>
 #include "vst/PluginFinder.h"
-#include "vst/vsthost.h"
+#include "vst/VstHost.h"
 #include "audio/core/Plugins.h"
 #include "audio/core/PluginDescriptor.h"
 
