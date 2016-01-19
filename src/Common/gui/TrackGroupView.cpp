@@ -1,6 +1,9 @@
 #include "TrackGroupView.h"
 #include "BaseTrackView.h"
 #include <QPainter>
+#include <QStyle>
+#include <QStyleOption>
+#include <QEvent>
 #include <QDebug>
 
 TrackGroupView::TrackGroupView(QWidget *parent) :
