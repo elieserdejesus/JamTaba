@@ -5,6 +5,7 @@
 #include <QMap>
 #include <QList>
 #include "chords/ChordProgression.h"
+#include "UsersColorsPool.h"
 
 namespace Ui {
 class ChatPanel;
@@ -15,7 +16,7 @@ class ChatPanel : public QWidget
     Q_OBJECT
 
 public:
-    ChatPanel(QWidget *parent, const QStringList &botNames);
+    ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool);
     virtual ~ChatPanel();
     void addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton = true);
     void addBpmVoteConfirmationMessage(int newBpmValue);
@@ -45,10 +46,6 @@ private:
     QColor getUserColor(const QString &userName);
     QStringList botNames;
     static const QColor BOT_COLOR;
-    QMap<QString, QColor> usersColorMap;// map user name to a color
-    QList<QColor> availableColors;
-
-    QList<QColor> createColors();
 
     static const int MAX_MESSAGES = 50;
 
@@ -57,6 +54,8 @@ private:
     void createVoteButton(const QString &voteType, int value);
 
     bool autoTranslating;
+
+    UsersColorsPool *colorsPool;
 };
 
 #endif // CHATPANEL_H

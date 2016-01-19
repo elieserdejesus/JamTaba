@@ -30,7 +30,6 @@ private:
     QString translatedText;
     Ui::ChatMessagePanel *ui;
     QString preferredTargetTranslationLanguage;
-    static QString colorToCSS(const QColor &);
     static QString replaceLinksInString(const QString &string);
 
     static QString buildCssString(const QColor &bgColor, const QColor &textColor);

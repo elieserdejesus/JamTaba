@@ -18,8 +18,8 @@ class NinjamTrackGroupView : public TrackGroupView
 {
     Q_OBJECT
 public:
-    NinjamTrackGroupView(QWidget *parent, Controller::MainController *mainController, long trackID,
-                         QString channelName, Persistence::CacheEntry initialValues);
+    NinjamTrackGroupView(Controller::MainController *mainController, long trackID,
+                         const QString &channelName, const QColor &userColor, const Persistence::CacheEntry &initialValues);
     ~NinjamTrackGroupView();
     void setNarrowStatus(bool narrow);
     void updateGeoLocation();
@@ -44,6 +44,8 @@ private:
 
     void setupHorizontalLayout();
     void setupVerticalLayout();
+
+    QString getRgbaColorString(const QColor &color, int alpha);
 };
 
 #endif // NINJAMTRACKGROUPVIEW_H

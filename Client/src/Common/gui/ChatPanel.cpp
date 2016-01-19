@@ -9,12 +9,12 @@
 
 const QColor ChatPanel::BOT_COLOR(120, 120, 120);
 
-ChatPanel::ChatPanel(QWidget *parent, const QStringList &botNames) :
-    QWidget(parent),
+ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool) :
+    QWidget(nullptr),
     ui(new Ui::ChatPanel),
     botNames(botNames),
-    availableColors(createColors()),
-    autoTranslating(false)
+    autoTranslating(false),
+    colorsPool(colorsPool)
 {
     ui->setupUi(this);
     ui->scrollContent->setLayout(new QVBoxLayout(ui->scrollContent));
@@ -203,33 +203,14 @@ void ChatPanel::addMessage(const QString &userName, const QString &userMessage, 
 }
 
 // +++++++++++++++++++++++++++++++++++=
-QList<QColor> ChatPanel::createColors()
-{
-    QList<QColor> colors;
-    const int totalColors = 8;
-    for (int x = 0; x < totalColors; ++x) {
-        QColor color;
-        qreal h = (qreal)x/totalColors;
-        color.setHsvF(h, 0.25, 0.95);
-        colors.append(color);
-    }
-    return colors;
-}
-
 QColor ChatPanel::getUserColor(const QString &userName)
 {
     if (botNames.contains(userName) || userName.isNull() || userName.isEmpty()
         || userName == "Jamtaba")
         return BOT_COLOR;
 
-    QColor color;
-    if (!usersColorMap.contains(userName)) {
-        color = availableColors.at(0);
-        availableColors.removeFirst();// remove do início
-        availableColors.append(color);// e coloca no fim, caso tenha muitos usuários a cor será usada novamente
-        usersColorMap.insert(userName, color);
-    }
-    return usersColorMap[userName];
+    Q_ASSERT(colorsPool);
+    return  colorsPool->get(userName);
 }
 
 ChatPanel::~ChatPanel()
