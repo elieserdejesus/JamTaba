@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1160</width>
-    <height>382</height>
+    <height>443</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -115,7 +115,7 @@
                 <x>0</x>
                 <y>0</y>
                 <width>751</width>
-                <height>237</height>
+                <height>297</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -222,124 +222,31 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item alignment="Qt::AlignHCenter">
-        <widget class="QWidget" name="masterControlsPanel" native="true">
+       <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+        <widget class="QFrame" name="masterControlsPanel">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="maximumSize">
           <size>
-           <width>150</width>
+           <width>160</width>
            <height>16777215</height>
           </size>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_4">
+         <layout class="QVBoxLayout" name="masterControlsLayout" stretch="0,0,0">
           <property name="spacing">
-           <number>3</number>
-          </property>
-          <property name="leftMargin">
            <number>0</number>
           </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QWidget" name="masterMetersPanel" native="true">
-            <property name="styleSheet">
-             <string notr="true"/>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_5">
-             <property name="spacing">
-              <number>1</number>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="PeakMeter" name="masterMeterR" native="true"/>
-             </item>
-             <item>
-              <widget class="PeakMeter" name="masterMeterL" native="true"/>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QWidget" name="masterFaderPanel" native="true">
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
-             <property name="spacing">
-              <number>3</number>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="speakerIconLeft">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="pixmap">
-                <pixmap resource="../../resources/jamtaba.qrc">:/images/level low.png</pixmap>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSlider" name="masterFader">
-               <property name="maximum">
-                <number>120</number>
-               </property>
-               <property name="singleStep">
-                <number>10</number>
-               </property>
-               <property name="value">
-                <number>100</number>
-               </property>
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="speakerIconRight">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="pixmap">
-                <pixmap resource="../../resources/jamtaba.qrc">:/images/level high.png</pixmap>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
+          <item alignment="Qt::AlignBottom">
            <widget class="QLabel" name="masterTitleLabel">
             <property name="text">
              <string>master</string>
@@ -348,6 +255,65 @@
              <set>Qt::AlignCenter</set>
             </property>
            </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="masterFaderLayout">
+            <item>
+             <widget class="QLabel" name="speakerIconLeft">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../resources/jamtaba.qrc">:/images/level low.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSlider" name="masterFader">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximum">
+               <number>120</number>
+              </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="value">
+               <number>100</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="speakerIconRight">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../../resources/jamtaba.qrc">:/images/level high.png</pixmap>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="masterMetersLayout">
+            <property name="spacing">
+             <number>2</number>
+            </property>
+            <item>
+             <widget class="PeakMeter" name="masterMeterL" native="true"/>
+            </item>
+            <item>
+             <widget class="PeakMeter" name="masterMeterR" native="true"/>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -443,7 +409,7 @@
             <x>0</x>
             <y>0</y>
             <width>16</width>
-            <height>246</height>
+            <height>306</height>
            </rect>
           </property>
           <property name="sizePolicy">
