@@ -212,17 +212,6 @@ LocalTrackGroupViewStandalone *MainWindowStandalone::createLocalTrackGroupView(i
     return new LocalTrackGroupViewStandalone(channelGroupIndex, this);
 }
 
-
-LocalTrackGroupViewStandalone *MainWindowStandalone::geTrackGroupViewByName(const QString &trackGroupName)
-const
-{
-    foreach (LocalTrackGroupViewStandalone *trackGroupView, getLocalChannels<LocalTrackGroupViewStandalone *>()) {
-        if (trackGroupView->getGroupName() == trackGroupName)
-            return trackGroupView;
-    }
-    return nullptr;
-}
-
 QList<Persistence::Plugin> buildPersistentPluginList(QList<const Audio::Plugin *> trackPlugins)
 {
     QList<Persistence::Plugin> persistentPlugins;
@@ -241,8 +230,12 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
 
     // recreate the settings including the plugins
     LocalInputTrackSettings settings;
+    QList<LocalTrackGroupViewStandalone *> groups = getLocalChannels<LocalTrackGroupViewStandalone *>();
+    Q_ASSERT(groups.size() == baseSettings.channels.size());
+
+    int channelID = 0;
     foreach (const Channel &channel, baseSettings.channels) {
-        LocalTrackGroupViewStandalone *trackGroupView = geTrackGroupViewByName(channel.name);
+        LocalTrackGroupViewStandalone *trackGroupView = groups.at(channelID++);
         if (!trackGroupView)
             continue;
         Channel newChannel = channel;
