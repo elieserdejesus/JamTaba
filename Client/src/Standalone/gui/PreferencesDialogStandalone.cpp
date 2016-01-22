@@ -154,6 +154,7 @@ void StandalonePreferencesDialog::createWidgetsToNewFolder(QString path)
     ScanFolderPanel *panel = new ScanFolderPanel(path);
     connect(panel->getRemoveButton(), SIGNAL(clicked(bool)), this, SLOT(removeVstscanFolder()));
     ui->panelScanFolders->layout()->addWidget(panel);
+    ui->panelScanFolders->layout()->setAlignment(panel, Qt::AlignTop);
 }
 
 void StandalonePreferencesDialog::clearVstList()

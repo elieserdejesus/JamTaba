@@ -12,8 +12,7 @@ PreferencesDialog #buttonAddVstScanFolder{
     background-image: url(:/images/more.png);
     background-position: center center;
     background-repeat: none;
-    height: 32px;
-    margin-right: 24px;
+    margin-right: 12px;
 }
 
 PreferencesDialog #blackListWidget{
@@ -25,6 +24,17 @@ PreferencesDialog #plainTextEdit{
     background: transparent;
 }
 
+PreferencesDialog QGroupBox,
+PreferencesDialog #sampleRateLabel,
+PreferencesDialog #bufferSizeLabel {
+    font-weight: bold;
+}
+
+PreferencesDialog QGroupBox{
+    padding-left: 16px;
+    padding-top: 12px;
+    border: none;
+}
 
 #voteButton{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -1247,7 +1257,6 @@ NinjamPanel #panelCombos QComboBox::down-arrow:hover
 NinjamPanel #panelCombos QComboBox::drop-down {
     border: 0px;
 }
-
 
 NinjamPanel #metronomeControls, NinjamPanel #panelCombos{
     background: transparent;
