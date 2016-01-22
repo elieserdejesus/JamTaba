@@ -61,18 +61,6 @@ AudioDriver::~AudioDriver()
     qCDebug(jtAudio) << "AudioDriver destructor.";
 }
 
-void AudioDriver::setProperties()
-{
-    stop();
-
-    this->bufferSize = bufferSize;
-
-    if (this->sampleRate != sampleRate) {
-        this->sampleRate = sampleRate;
-        emit sampleRateChanged(this->sampleRate);
-    }
-}
-
 void AudioDriver::setProperties(int audioDeviceIndex, int firstIn, int lastIn, int firstOut,
                                 int lastOut)
 {

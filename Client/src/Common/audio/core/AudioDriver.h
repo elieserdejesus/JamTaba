@@ -62,7 +62,6 @@ public:
     virtual ~AudioDriver();
     virtual void setProperties(int audioDeviceIndex, int firstIn, int lastIn, int firstOut,
                                int lastOut);
-    virtual void setProperties();// used in mac
 
     virtual void setSampleRate(int newSampleRate);
     virtual void setBufferSize(int newBufferSize);
@@ -146,7 +145,7 @@ public:
     {
     }
 
-    inline void stop(bool ) override
+    inline void stop(bool) override
     {
     }
 
