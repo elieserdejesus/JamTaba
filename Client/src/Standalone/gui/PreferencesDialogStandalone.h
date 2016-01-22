@@ -51,6 +51,7 @@ protected:
 private:
 
     Controller::MainControllerStandalone* controller;
+    MainWindow *mainWindow;
 
     void selectAudioTab();
     void selectMidiTab();

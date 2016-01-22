@@ -2,7 +2,7 @@
 #define PREFERENCES_DIALOG_H
 
 #include <QDialog>
-#include "MainWindow.h"
+#include "persistence/Settings.h"
 
 namespace Ui {
 class IODialog;
@@ -14,7 +14,7 @@ class PreferencesDialog : public QDialog
 {
     Q_OBJECT
 public:
-    PreferencesDialog(MainWindow *mainWindow);
+    PreferencesDialog(QWidget *parent);
     virtual ~PreferencesDialog();
 
     virtual void initialize(int initialTab, const Persistence::RecordingSettings &recordingSettings);
@@ -35,7 +35,6 @@ private slots:
 
 protected:
     Ui::IODialog *ui;
-    MainWindow *mainWindow;
 
     // recording
     void populateRecordingTab();

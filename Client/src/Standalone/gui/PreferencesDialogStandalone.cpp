@@ -18,7 +18,8 @@ using namespace Controller;
 StandalonePreferencesDialog::StandalonePreferencesDialog(
     Controller::MainControllerStandalone *mainController, MainWindow *mainWindow) :
     PreferencesDialog(mainWindow),
-    controller(mainController)
+    controller(mainController),
+    mainWindow(mainWindow)
 {
 #ifdef Q_OS_MAC
     ui->comboAudioDevice->setVisible(false);

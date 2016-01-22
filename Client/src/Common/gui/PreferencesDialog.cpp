@@ -5,12 +5,9 @@
 #include <QFileDialog>
 #include "persistence/Settings.h"
 
-using namespace Audio;
-
-PreferencesDialog::PreferencesDialog(MainWindow *mainWindow) :
-    QDialog(mainWindow),
-    ui(new Ui::IODialog),
-    mainWindow(mainWindow)
+PreferencesDialog::PreferencesDialog(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::IODialog)
 {
     ui->setupUi(this);
     setModal(true);
