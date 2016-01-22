@@ -169,8 +169,7 @@ public:
     void storeIntervalProgressShape(int shape);
 
     void storeWindowSettings(bool maximized, bool usingFullViewMode, QPointF location);
-    void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice,
-                         int sampleRate, int bufferSize, const QList<bool> &midiInputStatus);
+    void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice, const QList<bool> &midiInputStatus);
     void storeRecordingPath(const QString &newPath);
     void storeRecordingMultiTracksStatus(bool savingMultiTracks);
     inline bool isRecordingMultiTracksActivated() const

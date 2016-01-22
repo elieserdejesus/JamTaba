@@ -2,8 +2,7 @@
 #define PREFERENCES_DIALOG_H
 
 #include <QDialog>
-#include "MainWindow.h"
-#include "MainController.h"
+#include "persistence/Settings.h"
 
 namespace Ui {
 class IODialog;
@@ -15,26 +14,27 @@ class PreferencesDialog : public QDialog
 {
     Q_OBJECT
 public:
-    PreferencesDialog(Controller::MainController *mainController, MainWindow *mainWindow);
+    PreferencesDialog(QWidget *parent);
     virtual ~PreferencesDialog();
 
-    void initialize();
+    virtual void initialize(int initialTab, const Persistence::Settings &settings);
 
     enum TAB {
         TAB_AUDIO, TAB_MIDI, TAB_VST, TAB_RECORDING
     };
 
+signals:
+    void recordingPathSelected(const QString &newRecordingPath);
+    void multiTrackRecordingStatusChanged(bool recording);
+
 protected slots:
-    virtual void selectPreferencesTab(int index) = 0;
+    virtual void selectTab(int index) = 0;
 
 private slots:
     void selectRecordingPath();
-    void setMultiTrackRecordingStatus(bool recordingActivated);
 
 protected:
     Ui::IODialog *ui;
-    Controller::MainController *mainController;
-    MainWindow *mainWindow;
 
     // recording
     void populateRecordingTab();
@@ -42,6 +42,9 @@ protected:
 
     virtual void setupSignals();
     virtual void populateAllTabs();
+
+    Persistence::Settings settings;
+
 };
 
 #endif

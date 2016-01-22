@@ -36,6 +36,7 @@ void MainController::setSampleRate(int newSampleRate)
         jamRecorder.setSampleRate(newSampleRate);
     if (isPlayingInNinjamRoom())
         ninjamController->setSampleRate(newSampleRate);
+    settings.setSampleRate(newSampleRate);
 }
 
 void MainController::finishUploads()
@@ -306,11 +307,9 @@ void MainController::storeWindowSettings(bool maximized, bool usingFullViewMode,
 }
 
 void MainController::storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut,
-                                     int audioDevice, int sampleRate, int bufferSize,
-                                     const QList<bool> &midiInputsStatus)
+                                     int audioDevice, const QList<bool> &midiInputsStatus)
 {
-    settings.setAudioSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, sampleRate,
-                              bufferSize);
+    settings.setAudioSettings(firstIn, lastIn, firstOut, lastOut, audioDevice);
     settings.setMidiSettings(midiInputsStatus);
 }
 
