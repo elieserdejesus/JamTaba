@@ -3,14 +3,21 @@
 
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
-#include "MainControllerStandalone.h"
+
+namespace Audio {
+class AudioDriver;
+}
+
+namespace Midi {
+class MidiDriver;
+}
 
 class StandalonePreferencesDialog : public PreferencesDialog
 {
     Q_OBJECT
 
 public:
-    StandalonePreferencesDialog(Controller::MainControllerStandalone *mainController, QWidget *parent, bool showAudioControlPanelButton);
+    StandalonePreferencesDialog(QWidget *parent, bool showAudioControlPanelButton, Audio::AudioDriver *audioDriver, Midi::MidiDriver *midiDriver);
     void initialize(int initialTab, const Persistence::Settings &settings) override;
 
 public slots:
@@ -61,25 +68,26 @@ protected:
 
 private:
 
-    Controller::MainControllerStandalone* controller;
+    Audio::AudioDriver *audioDriver;
+    Midi::MidiDriver *midiDriver;
 
     void selectAudioTab();
     void selectMidiTab();
     void selectVstPluginsTab();
 
-    void populateAsioDriverCombo(Audio::AudioDriver *audioDriver);
+    void populateAsioDriverCombo();
     void populateFirstInputCombo();
     void populateFirstOutputCombo();
 
     void populateSampleRateCombo();
     void populateBufferSizeCombo();
-    void populateAudioTab(Audio::AudioDriver *audioDriver);
+    void populateAudioTab();
 
     void populateMidiTab();
 
     void createWidgetsToNewFolder(QString path);
     void updateVstList(QString path);
-    void updateBlackBox(QString path, bool add);
+    void updateBlackBox();
     void clearScanFolderWidgets();
 
     void clearWidgetLayout(QWidget* widget);

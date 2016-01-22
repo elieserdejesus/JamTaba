@@ -297,35 +297,44 @@ PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
     midiDriver->stop();
 
     bool showAudioControlPanelButton = controller->getAudioDriver()->hasControlPanel();
-    StandalonePreferencesDialog *dialog = new StandalonePreferencesDialog(controller, this, showAudioControlPanelButton);
+    StandalonePreferencesDialog *dialog = new StandalonePreferencesDialog(this,
+                                                                          showAudioControlPanelButton,
+                                                                          controller->getAudioDriver(),
+                                                                          controller->getMidiDriver());
 
     // setup signals related with recording
     MainWindow::setupPreferencesDialogSignals(dialog);
 
     // setup standalone specific signals
     connect(dialog,
-            SIGNAL(ioPreferencesChanged(QList<bool>,int,int,int,int,int)),
+            SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int)),
             this,
-            SLOT(setGlobalPreferences(QList<bool>,int,int,int,int,int)));
+            SLOT(setGlobalPreferences(QList<bool>, int, int, int, int, int)));
 
     connect(dialog, SIGNAL(rejected()), this, SLOT(restartAudioAndMidi()));
 
     connect(dialog, SIGNAL(sampleRateChanged(int)), controller, SLOT(setSampleRate(int)));
     connect(dialog, SIGNAL(bufferSizeChanged(int)), controller, SLOT(setBufferSize(int)));
 
-    connect(controller->getPluginFinder(), SIGNAL(scanFinished(bool)), dialog, SLOT(populateVstTab()));
+    connect(controller->getPluginFinder(), SIGNAL(scanFinished(bool)), dialog, SLOT(
+                populateVstTab()));
     connect(controller->getPluginFinder(), SIGNAL(scanStarted()), dialog, SLOT(clearVstList()));
 
-    connect(dialog, SIGNAL(vstScanDirRemoved(const QString &)), controller, SLOT(removePluginsScanPath(const QString &)));
-    connect(dialog, SIGNAL(vstScanDirAdded(const QString &)), controller, SLOT(addPluginsScanPath(const QString &)));
+    connect(dialog, SIGNAL(vstScanDirRemoved(const QString &)), controller,
+            SLOT(removePluginsScanPath(const QString &)));
+    connect(dialog, SIGNAL(vstScanDirAdded(const QString &)), controller,
+            SLOT(addPluginsScanPath(const QString &)));
 
-    connect(dialog, SIGNAL(vstPluginAddedInBlackList(const QString &)), controller, SLOT(addBlackVstToSettings(const QString &)));
-    connect(dialog, SIGNAL(vstPluginRemovedFromBlackList(const QString &)), controller, SLOT(removeBlackVstFromSettings(const QString &)));
+    connect(dialog, SIGNAL(vstPluginAddedInBlackList(const QString &)), controller,
+            SLOT(addBlackVstToSettings(const QString &)));
+    connect(dialog, SIGNAL(vstPluginRemovedFromBlackList(const QString &)), controller,
+            SLOT(removeBlackVstFromSettings(const QString &)));
 
     connect(dialog, SIGNAL(startingFullPluginsScan()), controller, SLOT(scanAllPlugins()));
     connect(dialog, SIGNAL(startingOnlyNewPluginsScan()), controller, SLOT(scanOnlyNewPlugins()));
 
-    connect(dialog, SIGNAL(openingExternalAudioControlPanel()), controller, SLOT(openExternalAudioControlPanel()));
+    connect(dialog, SIGNAL(openingExternalAudioControlPanel()), controller,
+            SLOT(openExternalAudioControlPanel()));
 
     return dialog;
 }
