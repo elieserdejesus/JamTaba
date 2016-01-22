@@ -18,6 +18,8 @@ public slots:
 
     void populateVstTab();
 
+    void clearVstList();
+
 signals:
     void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn,
                               int lastIn, int firstOut, int lastOut);
@@ -31,12 +33,12 @@ signals:
     void vstPluginAddedInBlackList(const QString &pluginPath);
     void vstPluginRemovedFromBlackList(const QString &pluginPath);
 
+    void startingFullPluginsScan();
+    void startingOnlyNewPluginsScan();
+
 private slots:
     void addBlackListedPlugins();
     void removeBlackListedPlugins();
-
-    void scansFully();
-    void scanNewPlugins();
 
     void openExternalAudioControlPanel();// asio control panel in windows
 

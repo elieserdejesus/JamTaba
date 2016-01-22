@@ -313,12 +313,16 @@ PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
     connect(dialog, SIGNAL(bufferSizeChanged(int)), controller, SLOT(setBufferSize(int)));
 
     connect(controller->getPluginFinder(), SIGNAL(scanFinished(bool)), dialog, SLOT(populateVstTab()));
+    connect(controller->getPluginFinder(), SIGNAL(scanStarted()), dialog, SLOT(clearVstList()));
 
     connect(dialog, SIGNAL(vstScanDirRemoved(const QString &)), controller, SLOT(removePluginsScanPath(const QString &)));
     connect(dialog, SIGNAL(vstScanDirAdded(const QString &)), controller, SLOT(addPluginsScanPath(const QString &)));
 
     connect(dialog, SIGNAL(vstPluginAddedInBlackList(const QString &)), controller, SLOT(addBlackVstToSettings(const QString &)));
     connect(dialog, SIGNAL(vstPluginRemovedFromBlackList(const QString &)), controller, SLOT(removeBlackVstFromSettings(const QString &)));
+
+    connect(dialog, SIGNAL(startingFullPluginsScan()), controller, SLOT(scanAllPlugins()));
+    connect(dialog, SIGNAL(startingOnlyNewPluginsScan()), controller, SLOT(scanOnlyNewPlugins()));
 
     return dialog;
 }
@@ -348,8 +352,7 @@ void MainWindowStandalone::initializePluginFinder()
     if (controller->pluginsScanIsNeeded()) {// no vsts in database cache or new plugins detected in scan folders?
         if (settings.getVstScanFolders().isEmpty())
             controller->addDefaultPluginsScanPath();
-        controller->saveLastUserSettings(getInputsSettings());// save config file before scan
-        controller->scanPlugins(true);
+        controller->scanOnlyNewPlugins();
     }
 }
 

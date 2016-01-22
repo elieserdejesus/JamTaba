@@ -74,9 +74,9 @@ void StandalonePreferencesDialog::setupSignals()
 
     connect(ui->buttonAddVstScanFolder, SIGNAL(clicked(bool)), this, SLOT(addVstScanFolder()));
 
-    connect(ui->buttonClearVstAndScan, SIGNAL(clicked(bool)), this, SLOT(scansFully()));
+    connect(ui->buttonClearVstAndScan, SIGNAL(clicked(bool)), this, SIGNAL(startingFullPluginsScan()));
 
-    connect(ui->ButtonVst_Refresh, SIGNAL(clicked(bool)), this, SLOT(scanNewPlugins()));
+    connect(ui->ButtonVst_Refresh, SIGNAL(clicked(bool)), this, SIGNAL(startingOnlyNewPluginsScan()));
 
     connect(ui->ButtonVST_AddToBlackList, SIGNAL(clicked(bool)), this,
             SLOT(addBlackListedPlugins()));
@@ -142,7 +142,6 @@ void StandalonePreferencesDialog::updateBlackBox(QString path, bool add)
         QString str = ui->blackListWidget->toPlainText();
         if (str.contains(path)) {
             ui->blackListWidget->clear();
-            //controller->removeBlackVstFromSettings(str.indexOf(path));
             QStringList badPlugins = controller->getSettings().getBlackListedPlugins();
             foreach (const QString &badPlugin, badPlugins)
                 ui->blackListWidget->appendPlainText(badPlugin);
@@ -157,32 +156,9 @@ void StandalonePreferencesDialog::createWidgetsToNewFolder(QString path)
     ui->panelScanFolders->layout()->addWidget(panel);
 }
 
-// clear the vst cache and run a complete scan
-void StandalonePreferencesDialog::scansFully()
+void StandalonePreferencesDialog::clearVstList()
 {
-    Q_ASSERT(controller);
-
-    // save the config file before start scanning
-    controller->saveLastUserSettings(settings.getInputsSettings());
-
-    // clear
-    controller->clearPluginsCache();
     ui->vstListWidget->clear();
-
-    // scan
-    controller->scanPlugins();
-}
-
-// Refresh vsts scanning only the new plugins
-void StandalonePreferencesDialog::scanNewPlugins()
-{
-    Q_ASSERT(controller);
-
-    // save the config file before start scanning
-    controller->saveLastUserSettings(settings.getInputsSettings());
-
-    // scan only new plugins
-    controller->scanPlugins(true);
 }
 
 // open a dialog to add a vst in the blacklist
@@ -198,8 +174,8 @@ void StandalonePreferencesDialog::addBlackListedPlugins()
     if (vstDialog.exec()) {
         QStringList vstNames = vstDialog.selectedFiles();
         foreach (const QString &string, vstNames) {
-            updateBlackBox(string, true);// add to
             emit vstPluginAddedInBlackList(string);
+            updateBlackBox(string, true);// add to
         }
     }
 }

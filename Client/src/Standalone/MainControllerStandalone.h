@@ -33,7 +33,6 @@ public:
     ~MainControllerStandalone();
 
     void initializePluginsList(const QStringList &paths);
-    void scanPlugins(bool scanOnlyNewPlugins = false);
 
     void addDefaultPluginsScanPath();// add vst path from registry
 
@@ -104,6 +103,9 @@ public slots:
     void addBlackVstToSettings(const QString &path);
     void removeBlackVstFromSettings(const QString &pluginPath);
 
+    void scanAllPlugins();
+    void scanOnlyNewPlugins();
+
 protected:
     Midi::MidiDriver *createMidiDriver();
 
@@ -158,6 +160,8 @@ private:
                                          const Audio::PluginDescriptor &d2);
 
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
+
+    void scanPlugins(bool scanOnlyNewPlugins);
 
 };
 }

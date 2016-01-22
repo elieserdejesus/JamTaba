@@ -482,6 +482,19 @@ void MainControllerStandalone::initializePluginsList(const QStringList &paths)
     }
 }
 
+void MainControllerStandalone::scanAllPlugins()
+{
+    saveLastUserSettings(settings.getInputsSettings());// save the config file before start scanning
+    clearPluginsCache();
+    scanPlugins(false);
+}
+
+void MainControllerStandalone::scanOnlyNewPlugins()
+{
+    saveLastUserSettings(settings.getInputsSettings());// save the config file before start scanning
+    scanPlugins(true);
+}
+
 void MainControllerStandalone::scanPlugins(bool scanOnlyNewPlugins)
 {
     if (pluginFinder) {
