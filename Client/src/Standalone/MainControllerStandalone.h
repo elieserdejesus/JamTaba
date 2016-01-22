@@ -34,10 +34,10 @@ public:
 
     void initializePluginsList(const QStringList &paths);
     void scanPlugins(bool scanOnlyNewPlugins = false);
-    void addPluginsScanPath(const QString &path);
+
     void addBlackVstToSettings(const QString &path);
     void addDefaultPluginsScanPath();// add vst path from registry
-    void removePluginsScanPath(const QString &path);
+
     void removeBlackVst(int index);
     void clearPluginsCache();
     QStringList getSteinbergRecommendedPaths();
@@ -99,6 +99,9 @@ public:
 public slots:
     void setSampleRate(int newSampleRate) override;
     void setBufferSize(int newBufferSize);
+
+    void removePluginsScanPath(const QString &path);
+    void addPluginsScanPath(const QString &path);
 
 protected:
     Midi::MidiDriver *createMidiDriver();

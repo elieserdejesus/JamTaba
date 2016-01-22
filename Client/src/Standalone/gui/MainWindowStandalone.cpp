@@ -314,6 +314,9 @@ PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
 
     connect(controller->getPluginFinder(), SIGNAL(scanFinished(bool)), dialog, SLOT(populateVstTab()));
 
+    connect(dialog, SIGNAL(vstScanDirRemoved(const QString &)), controller, SLOT(removePluginsScanPath(const QString &)));
+    connect(dialog, SIGNAL(vstScanDirAdded(const QString &)), controller, SLOT(addPluginsScanPath(const QString &)));
+
     return dialog;
 }
 

@@ -93,7 +93,9 @@ void StandalonePreferencesDialog::addVstScanFolder()
     fileDialog.setFileMode(QFileDialog::DirectoryOnly);
     if (fileDialog.exec()) {
         QDir dir = fileDialog.directory();
-        addVstFolderToScan(dir.absolutePath());
+        QString newFolder = dir.absolutePath();
+        createWidgetsToNewFolder(newFolder);
+        emit vstScanDirAdded(newFolder);
     }
 }
 
@@ -120,9 +122,10 @@ void StandalonePreferencesDialog::removeVstscanFolder()
         }
     }
     if (panelToDelete) {
-        controller->removePluginsScanPath(panelToDelete->getScanFolder());
         ui->panelScanFolders->layout()->removeWidget(panelToDelete);
+        emit vstScanDirRemoved(panelToDelete->getScanFolder());
         panelToDelete->deleteLater();
+
     }
 }
 
@@ -152,12 +155,6 @@ void StandalonePreferencesDialog::createWidgetsToNewFolder(QString path)
     ScanFolderPanel *panel = new ScanFolderPanel(path);
     connect(panel->getRemoveButton(), SIGNAL(clicked(bool)), this, SLOT(removeVstscanFolder()));
     ui->panelScanFolders->layout()->addWidget(panel);
-}
-
-void StandalonePreferencesDialog::addVstFolderToScan(QString folder)
-{
-    createWidgetsToNewFolder(folder);
-    controller->addPluginsScanPath(folder);
 }
 
 // clear the vst cache and run a complete scan

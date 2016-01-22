@@ -25,6 +25,9 @@ signals:
     void sampleRateChanged(int newSampleRate);
     void bufferSizeChanged(int newBufferSize);
 
+    void vstScanDirRemoved(const QString &scanDir);
+    void vstScanDirAdded(const QString &newDir);
+
 private slots:
     void addBlackListedPlugins();
     void removeBlackListedPlugins();
@@ -54,7 +57,7 @@ protected:
 
 private:
 
-    //Controller::MainControllerStandalone* controller;
+    Controller::MainControllerStandalone* controller;
 
     void selectAudioTab();
     void selectMidiTab();
@@ -70,7 +73,6 @@ private:
 
     void populateMidiTab();
 
-    void addVstFolderToScan(QString folder);
     void createWidgetsToNewFolder(QString path);
     void updateVstList(QString path);
     void updateBlackBox(QString path, bool add);
