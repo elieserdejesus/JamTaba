@@ -16,6 +16,8 @@ public:
 public slots:
     void accept() override;
 
+    void populateVstTab();
+
 signals:
     void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn,
                               int lastIn, int firstOut, int lastOut);
@@ -40,8 +42,6 @@ private slots:
 
     void changeAudioDevice(int index);
 
-    void populateVstTab();
-
     void notifySampleRateChanged();
     void notifyBufferSizeChanged();
 
@@ -54,7 +54,7 @@ protected:
 
 private:
 
-    Controller::MainControllerStandalone* controller;
+    //Controller::MainControllerStandalone* controller;
 
     void selectAudioTab();
     void selectMidiTab();

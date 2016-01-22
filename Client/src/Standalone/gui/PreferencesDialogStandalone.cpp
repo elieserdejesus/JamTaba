@@ -84,8 +84,6 @@ void StandalonePreferencesDialog::setupSignals()
     connect(ui->ButtonVST_RemFromBlkList, SIGNAL(clicked(bool)), this,
             SLOT(removeBlackListedPlugins()));
 
-    connect(controller->getPluginFinder(), SIGNAL(scanFinished(bool)), this,
-            SLOT(populateVstTab()));
 }
 
 void StandalonePreferencesDialog::addVstScanFolder()

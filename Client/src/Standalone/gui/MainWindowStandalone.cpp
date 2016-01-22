@@ -312,6 +312,8 @@ PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
     connect(dialog, SIGNAL(sampleRateChanged(int)), controller, SLOT(setSampleRate(int)));
     connect(dialog, SIGNAL(bufferSizeChanged(int)), controller, SLOT(setBufferSize(int)));
 
+    connect(controller->getPluginFinder(), SIGNAL(scanFinished(bool)), dialog, SLOT(populateVstTab()));
+
     return dialog;
 }
 
