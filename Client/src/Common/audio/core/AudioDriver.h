@@ -60,9 +60,10 @@ signals:
 public:
     explicit AudioDriver(Controller::MainController *mainController);
     virtual ~AudioDriver();
-    virtual void setProperties(int audioDeviceIndex, int firstIn, int lastIn, int firstOut,
-                               int lastOut, int sampleRate, int bufferSize);
-    virtual void setProperties(int sampleRate, int bufferSize);// used in mac
+    virtual void setProperties(int firstIn, int lastIn, int firstOut, int lastOut);
+
+    virtual void setSampleRate(int newSampleRate);
+    virtual void setBufferSize(int newBufferSize);
 
     virtual void stop(bool refreshDevicesList = false) = 0;
     virtual bool start() = 0;
@@ -143,7 +144,7 @@ public:
     {
     }
 
-    inline void stop(bool ) override
+    inline void stop(bool) override
     {
     }
 

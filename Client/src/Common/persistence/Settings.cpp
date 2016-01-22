@@ -436,9 +436,9 @@ void Settings::addVstToBlackList(const QString &pluginPath)
         vstSettings.blackedPlugins.append(pluginPath);
 }
 
-void Settings::RemVstFromBlackList(int index)
+void Settings::removeVstFromBlackList(const QString &pluginPath)
 {
-    vstSettings.blackedPlugins.removeAt(index);
+    vstSettings.blackedPlugins.removeOne(pluginPath);
 }
 
 QStringList Settings::getVstPluginsPaths() const
@@ -509,16 +509,23 @@ void Settings::setWindowSettings(bool windowIsMaximized, bool usingFullView, QPo
 }
 
 // ++++++++++++++++++++++++++++++++++++++++
-void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice,
-                                int sampleRate, int bufferSize)
+void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice)
 {
-    audioSettings.bufferSize = bufferSize;
-    audioSettings.sampleRate = sampleRate;
     audioSettings.firstIn = firstIn;
     audioSettings.firstOut = firstOut;
     audioSettings.lastIn = lastIn;
     audioSettings.lastOut = lastOut;
     audioSettings.audioDevice = audioDevice;
+}
+
+void Settings::setSampleRate(int newSampleRate)
+{
+    audioSettings.sampleRate = newSampleRate;
+}
+
+void Settings::setBufferSize(int bufferSize)
+{
+    audioSettings.bufferSize = bufferSize;
 }
 
 // io ops ...

@@ -21,12 +21,11 @@ protected:
     NinjamRoomWindowVST *createNinjamWindow(const Login::RoomInfo &, Controller::MainController *) override;
     void setFullViewStatus(bool fullViewActivated);
 
-    void showPreferencesDialog(int initialTab) override;
-
     void initializeLocalSubChannel(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel) override;
 
     void removeAllInputLocalTracks() override;
 
+    PreferencesDialog * createPreferencesDialog() override;
 private:
     bool firstChannelIsInitialized;
 

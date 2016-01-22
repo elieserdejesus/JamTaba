@@ -3,26 +3,23 @@
 
 #include <QDebug>
 #include <QFileDialog>
+#include "persistence/Settings.h"
 
-using namespace Audio;
-using namespace Controller;
-
-PreferencesDialog::PreferencesDialog(Controller::MainController *mainController,
-                                     MainWindow *mainWindow) :
-    QDialog(mainWindow),
-    ui(new Ui::IODialog),
-    mainController(mainController),
-    mainWindow(mainWindow)
+PreferencesDialog::PreferencesDialog(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::IODialog)
 {
     ui->setupUi(this);
     setModal(true);
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint & Qt::WA_DeleteOnClose);
 
     ui->comboLastOutput->setEnabled(false);
 }
 
-void PreferencesDialog::initialize()
+void PreferencesDialog::initialize(int initialTab, const Persistence::Settings &settings)
 {
+    Q_UNUSED(initialTab);
+    this->settings = settings;
     setupSignals();
     populateAllTabs();
 }
@@ -31,12 +28,14 @@ void PreferencesDialog::setupSignals()
 {
     // the 'accept' slot is overrided in inherited classes (StandalonePreferencesDialog and VstPreferencesDialog)
     connect(ui->okButton, SIGNAL(clicked(bool)), this, SLOT(accept()));
-    connect(ui->prefsTab, SIGNAL(currentChanged(int)), this, SLOT(selectPreferencesTab(int)));
-    connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this, SLOT(setMultiTrackRecordingStatus(bool)));
+    connect(ui->prefsTab, SIGNAL(currentChanged(int)), this, SLOT(selectTab(int)));
+    connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this,
+            SIGNAL(multiTrackRecordingStatusChanged(bool)));
     connect(ui->browseRecPathButton, SIGNAL(clicked(bool)), this, SLOT(selectRecordingPath()));
 }
 
-void PreferencesDialog::populateAllTabs(){
+void PreferencesDialog::populateAllTabs()
+{
     populateRecordingTab();
 }
 
@@ -47,10 +46,9 @@ void PreferencesDialog::selectRecordingTab()
 
 void PreferencesDialog::populateRecordingTab()
 {
-    QString recordingPath = mainController->getSettings().getRecordingPath();
-    QDir recordDir(recordingPath);
-    bool isSaveMultiTrackActivated = mainController->getSettings().isSaveMultiTrackActivated();
-    ui->recordingCheckBox->setChecked(isSaveMultiTrackActivated);
+    Persistence::RecordingSettings recordingSettings = settings.getRecordingSettings();
+    QDir recordDir(recordingSettings.recordingPath);
+    ui->recordingCheckBox->setChecked(recordingSettings.saveMultiTracksActivated);
     ui->recordPathLineEdit->setText(recordDir.absolutePath());
 }
 
@@ -59,7 +57,6 @@ PreferencesDialog::~PreferencesDialog()
     delete ui;
 }
 
-// Recording TAB controls --------------------
 void PreferencesDialog::selectRecordingPath()
 {
     QFileDialog fileDialog(this, "Choosing recording path ...");
@@ -67,12 +64,8 @@ void PreferencesDialog::selectRecordingPath()
     fileDialog.setFileMode(QFileDialog::DirectoryOnly);
     if (fileDialog.exec()) {
         QDir dir = fileDialog.directory();
-        mainController->storeRecordingPath(dir.absolutePath());
-        ui->recordPathLineEdit->setText(dir.absolutePath());
+        QString newRecordingPath = dir.absolutePath();
+        ui->recordPathLineEdit->setText(newRecordingPath);
+        emit recordingPathSelected(newRecordingPath);
     }
-}
-
-void PreferencesDialog::setMultiTrackRecordingStatus(bool recordingActivated)
-{
-    mainController->storeRecordingMultiTracksStatus(recordingActivated);
 }

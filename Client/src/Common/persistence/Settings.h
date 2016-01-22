@@ -297,6 +297,11 @@ public:
         return recordingSettings.saveMultiTracksActivated;
     }
 
+    inline RecordingSettings getRecordingSettings() const
+    {
+        return recordingSettings;
+    }
+
     inline QString getRecordingPath() const
     {
         return recordingSettings.recordingPath;
@@ -335,7 +340,7 @@ public:
     // VST
     void addVstPlugin(const QString &pluginPath);
     void addVstToBlackList(const QString &pluginPath);
-    void RemVstFromBlackList(int index);
+    void removeVstFromBlackList(const QString &pluginPath);
     QStringList getVstPluginsPaths() const;
     QStringList getBlackListedPlugins() const;
     void clearVstCache();
@@ -387,8 +392,10 @@ public:
 
     void setFullScreenView(bool v);
     // ++++++++++++++++++++++++++++++++++++++++
-    void setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice,
-                          int sampleRate, int bufferSize);
+    void setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice);
+
+    void setSampleRate(int newSampleRate);
+    void setBufferSize(int bufferSize);
 
     inline int getFirstGlobalAudioInput() const
     {

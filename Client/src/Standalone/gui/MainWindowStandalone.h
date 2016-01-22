@@ -33,19 +33,19 @@ protected:
 
     NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &, MainController *) override;
 
-    void showPreferencesDialog(int initialTab) override;
-
     LocalTrackGroupViewStandalone *createLocalTrackGroupView(int channelGroupIndex) override;
 
     void initializeLocalSubChannel(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel) override;
 
     void restoreLocalSubchannelPluginsList(LocalTrackViewStandalone *subChannelView, const Persistence::Subchannel &subChannel);
 
+    PreferencesDialog *createPreferencesDialog() override;
+
 protected slots: //TODO change to private slots?
     void handleServerConnectionError(const QString &msg);
 
     void setGlobalPreferences(const QList<bool> &, int audioDevice, int firstIn, int lastIn, int firstOut,
-                              int lastOut, int sampleRate, int bufferSize);
+                              int lastOut);
 
     // plugin finder
     void showPluginScanDialog();
@@ -58,6 +58,8 @@ private slots:
     void toggleFullScreen();
 
     void closePluginScanDialog();
+
+    void restartAudioAndMidi();
 
 private:
     MainControllerStandalone *controller;

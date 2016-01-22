@@ -4,6 +4,7 @@
 #include "MainWindow.h"
 #include "log/Logging.h"
 #include <QInputDialog>
+#include "MainController.h"
 
 LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame) :
     index(channelIndex),

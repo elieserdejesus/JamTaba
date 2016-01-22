@@ -117,9 +117,9 @@ void MainControllerStandalone::addBlackVstToSettings(const QString &path)
     settings.addVstToBlackList(path);
 }
 
-void MainControllerStandalone::removeBlackVst(int index)
+void MainControllerStandalone::removeBlackVstFromSettings(const QString &pluginPath)
 {
-    settings.RemVstFromBlackList(index);
+    settings.removeVstFromBlackList(pluginPath);
 }
 
 bool MainControllerStandalone::inputIndexIsValid(int inputIndex)
@@ -202,12 +202,14 @@ void MainControllerStandalone::setSampleRate(int newSampleRate)
         inputNode->setProcessorsSampleRate(newSampleRate);
 }
 
+void MainControllerStandalone::setBufferSize(int newBufferSize)
+{
+    vstHost->setBlockSize(newBufferSize);
+    settings.setBufferSize(newBufferSize);
+}
+
 void MainControllerStandalone::on_audioDriverStarted()
 {
-
-    vstHost->setSampleRate(audioDriver->getSampleRate());
-    vstHost->setBlockSize(audioDriver->getBufferSize());
-
     foreach (Audio::LocalInputAudioNode *inputTrack, inputTracks)
         inputTrack->resumeProcessors();
 }
@@ -480,6 +482,19 @@ void MainControllerStandalone::initializePluginsList(const QStringList &paths)
     }
 }
 
+void MainControllerStandalone::scanAllPlugins()
+{
+    saveLastUserSettings(settings.getInputsSettings());// save the config file before start scanning
+    clearPluginsCache();
+    scanPlugins(false);
+}
+
+void MainControllerStandalone::scanOnlyNewPlugins()
+{
+    saveLastUserSettings(settings.getInputsSettings());// save the config file before start scanning
+    scanPlugins(true);
+}
+
 void MainControllerStandalone::scanPlugins(bool scanOnlyNewPlugins)
 {
     if (pluginFinder) {
@@ -496,6 +511,13 @@ void MainControllerStandalone::scanPlugins(bool scanOnlyNewPlugins)
         pluginFinder->scan(skipList);
     }
 }
+
+void MainControllerStandalone::openExternalAudioControlPanel()
+{
+    if (audioDriver->hasControlPanel())// just in case
+        audioDriver->openControlPanel((void *)mainWindow->winId());
+}
+
 
 void MainControllerStandalone::stopNinjamController()
 {

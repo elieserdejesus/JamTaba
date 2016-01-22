@@ -33,12 +33,9 @@ public:
     ~MainControllerStandalone();
 
     void initializePluginsList(const QStringList &paths);
-    void scanPlugins(bool scanOnlyNewPlugins = false);
-    void addPluginsScanPath(const QString &path);
-    void addBlackVstToSettings(const QString &path);
+
     void addDefaultPluginsScanPath();// add vst path from registry
-    void removePluginsScanPath(const QString &path);
-    void removeBlackVst(int index);
+
     void clearPluginsCache();
     QStringList getSteinbergRecommendedPaths();
     bool pluginsScanIsNeeded() const; // plugins cache is empty OR we have new plugins in scan folders?
@@ -98,6 +95,18 @@ public:
 
 public slots:
     void setSampleRate(int newSampleRate) override;
+    void setBufferSize(int newBufferSize);
+
+    void removePluginsScanPath(const QString &path);
+    void addPluginsScanPath(const QString &path);
+
+    void addBlackVstToSettings(const QString &path);
+    void removeBlackVstFromSettings(const QString &pluginPath);
+
+    void scanAllPlugins();
+    void scanOnlyNewPlugins();
+
+    void openExternalAudioControlPanel();
 
 protected:
     Midi::MidiDriver *createMidiDriver();
@@ -153,6 +162,8 @@ private:
                                          const Audio::PluginDescriptor &d2);
 
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
+
+    void scanPlugins(bool scanOnlyNewPlugins);
 
 };
 }

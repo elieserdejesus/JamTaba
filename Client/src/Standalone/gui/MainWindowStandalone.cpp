@@ -24,7 +24,8 @@ MainWindowStandalone::MainWindowStandalone(MainControllerStandalone *mainControl
     initializePluginFinder();
 }
 
-void MainWindowStandalone::setupShortcuts(){
+void MainWindowStandalone::setupShortcuts()
+{
     ui.actionAudioPreferences->setShortcut(QKeySequence(Qt::Key_F5));
     ui.actionMidiPreferences->setShortcut(QKeySequence(Qt::Key_F6));
     ui.actionVstPreferences->setShortcut(QKeySequence(Qt::Key_F7));
@@ -42,9 +43,12 @@ void MainWindowStandalone::setupSignals()
     Q_ASSERT(pluginFinder);
     connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(showPluginScanDialog()));
     connect(pluginFinder, SIGNAL(scanFinished(bool)), this, SLOT(hidePluginScanDialog(bool)));
-    connect(pluginFinder, SIGNAL(badPluginDetected(QString)), this, SLOT(addPluginToBlackList(QString)));
-    connect(pluginFinder, SIGNAL(pluginScanFinished(QString, QString, QString)), this, SLOT(addFoundedPlugin(QString, QString, QString)));
-    connect(pluginFinder, SIGNAL(pluginScanStarted(QString)), this, SLOT(setCurrentScanningPlugin(QString)));
+    connect(pluginFinder, SIGNAL(badPluginDetected(QString)), this,
+            SLOT(addPluginToBlackList(QString)));
+    connect(pluginFinder, SIGNAL(pluginScanFinished(QString, QString, QString)), this,
+            SLOT(addFoundedPlugin(QString, QString, QString)));
+    connect(pluginFinder, SIGNAL(pluginScanStarted(QString)), this,
+            SLOT(setCurrentScanningPlugin(QString)));
 }
 
 void MainWindowStandalone::initialize()
@@ -113,7 +117,8 @@ void MainWindowStandalone::addPluginToBlackList(const QString &pluginPath)
     controller->addBlackVstToSettings(pluginPath);
 }
 
-void MainWindowStandalone::addFoundedPlugin(const QString &name, const QString &group, const QString &path)
+void MainWindowStandalone::addFoundedPlugin(const QString &name, const QString &group,
+                                            const QString &path)
 {
     Q_UNUSED(path);
     Q_UNUSED(group);
@@ -174,13 +179,15 @@ void MainWindowStandalone::sanitizeSubchannelInputSelections(LocalTrackView *sub
     }
 }
 
-void MainWindowStandalone::restoreLocalSubchannelPluginsList(LocalTrackViewStandalone *subChannelView, const Subchannel &subChannel)
+void MainWindowStandalone::restoreLocalSubchannelPluginsList(
+    LocalTrackViewStandalone *subChannelView, const Subchannel &subChannel)
 {
     // create the plugins list
     foreach (const Persistence::Plugin &plugin, subChannel.getPlugins()) {
         QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
         Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path);
-        Audio::Plugin *pluginInstance = controller->addPlugin(subChannelView->getInputIndex(), descriptor);
+        Audio::Plugin *pluginInstance = controller->addPlugin(
+            subChannelView->getInputIndex(), descriptor);
         if (pluginInstance) {
             try{
                 pluginInstance->restoreFromSerializedData(plugin.data);
@@ -230,7 +237,8 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
 
     // recreate the settings including the plugins
     LocalInputTrackSettings settings;
-    QList<LocalTrackGroupViewStandalone *> groups = getLocalChannels<LocalTrackGroupViewStandalone *>();
+    QList<LocalTrackGroupViewStandalone *> groups
+        = getLocalChannels<LocalTrackGroupViewStandalone *>();
     Q_ASSERT(groups.size() == baseSettings.channels.size());
 
     int channelID = 0;
@@ -241,7 +249,8 @@ LocalInputTrackSettings MainWindowStandalone::getInputsSettings() const
         Channel newChannel = channel;
         newChannel.subChannels.clear();
         int subChannelID = 0;
-        QList<LocalTrackViewStandalone *> trackViews = trackGroupView->getTracks<LocalTrackViewStandalone *>();
+        QList<LocalTrackViewStandalone *> trackViews
+            = trackGroupView->getTracks<LocalTrackViewStandalone *>();
         foreach (Subchannel subchannel, channel.subChannels) {
             Subchannel newSubChannel = subchannel;
             LocalTrackViewStandalone *trackView = trackViews.at(subChannelID);
@@ -275,34 +284,72 @@ void MainWindowStandalone::closeEvent(QCloseEvent *e)
         trackGroup->closePluginsWindows();
 }
 
-//+++++++++++++++++++=+
-void MainWindowStandalone::showPreferencesDialog(int initialTab)
+PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
 {
-    stopCurrentRoomStream();
-
+    // stop midi and audio before show the preferences dialog
     Midi::MidiDriver *midiDriver = controller->getMidiDriver();
     Audio::AudioDriver *audioDriver = controller->getAudioDriver();
-    if (audioDriver)
-        audioDriver->stop(true);//asking audio driver to refresh the devices list
-    if (midiDriver)
-        midiDriver->stop();
 
-    StandalonePreferencesDialog dialog(controller, this);
-    dialog.initialize(initialTab);
+    Q_ASSERT(midiDriver);
+    Q_ASSERT(audioDriver);
 
-    connect(&dialog,
-            SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int, int, int)),
+    audioDriver->stop(true);    // asking audio driver to refresh the devices list
+    midiDriver->stop();
+
+    bool showAudioControlPanelButton = controller->getAudioDriver()->hasControlPanel();
+    StandalonePreferencesDialog *dialog = new StandalonePreferencesDialog(this,
+                                                                          showAudioControlPanelButton,
+                                                                          controller->getAudioDriver(),
+                                                                          controller->getMidiDriver());
+
+    // setup signals related with recording
+    MainWindow::setupPreferencesDialogSignals(dialog);
+
+    // setup standalone specific signals
+    connect(dialog,
+            SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int)),
             this,
-            SLOT(setGlobalPreferences(QList<bool>, int, int, int, int, int, int, int)));
+            SLOT(setGlobalPreferences(QList<bool>, int, int, int, int, int)));
 
-    int result = dialog.exec();
-    if (result == QDialog::Rejected) {
-        if (midiDriver)
-            midiDriver->start(controller->getSettings().getMidiInputDevicesStatus());// restart audio and midi drivers if user cancel the preferences menu
-        if (audioDriver)
-            audioDriver->start();
-    }
-    /** audio driver parameters are changed in on_IOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.*/
+    connect(dialog, SIGNAL(rejected()), this, SLOT(restartAudioAndMidi()));
+
+    connect(dialog, SIGNAL(sampleRateChanged(int)), controller, SLOT(setSampleRate(int)));
+    connect(dialog, SIGNAL(bufferSizeChanged(int)), controller, SLOT(setBufferSize(int)));
+
+    connect(controller->getPluginFinder(), SIGNAL(scanFinished(bool)), dialog, SLOT(
+                populateVstTab()));
+    connect(controller->getPluginFinder(), SIGNAL(scanStarted()), dialog, SLOT(clearVstList()));
+
+    connect(dialog, SIGNAL(vstScanDirRemoved(const QString &)), controller,
+            SLOT(removePluginsScanPath(const QString &)));
+    connect(dialog, SIGNAL(vstScanDirAdded(const QString &)), controller,
+            SLOT(addPluginsScanPath(const QString &)));
+
+    connect(dialog, SIGNAL(vstPluginAddedInBlackList(const QString &)), controller,
+            SLOT(addBlackVstToSettings(const QString &)));
+    connect(dialog, SIGNAL(vstPluginRemovedFromBlackList(const QString &)), controller,
+            SLOT(removeBlackVstFromSettings(const QString &)));
+
+    connect(dialog, SIGNAL(startingFullPluginsScan()), controller, SLOT(scanAllPlugins()));
+    connect(dialog, SIGNAL(startingOnlyNewPluginsScan()), controller, SLOT(scanOnlyNewPlugins()));
+
+    connect(dialog, SIGNAL(openingExternalAudioControlPanel()), controller,
+            SLOT(openExternalAudioControlPanel()));
+
+    return dialog;
+}
+
+void MainWindowStandalone::restartAudioAndMidi()
+{
+    // restart audio and midi drivers when user is cancelling the preferences dialog
+    Midi::MidiDriver *midiDriver = controller->getMidiDriver();
+    Audio::AudioDriver *audioDriver = controller->getAudioDriver();
+
+    Q_ASSERT(midiDriver);
+    Q_ASSERT(audioDriver);
+
+    midiDriver->start(controller->getSettings().getMidiInputDevicesStatus());
+    audioDriver->start();
 }
 
 // ++++++++++++++++++++++
@@ -317,8 +364,7 @@ void MainWindowStandalone::initializePluginFinder()
     if (controller->pluginsScanIsNeeded()) {// no vsts in database cache or new plugins detected in scan folders?
         if (settings.getVstScanFolders().isEmpty())
             controller->addDefaultPluginsScanPath();
-        controller->saveLastUserSettings(getInputsSettings());// save config file before scan
-        controller->scanPlugins(true);
+        controller->scanOnlyNewPlugins();
     }
 }
 
@@ -328,32 +374,26 @@ void MainWindowStandalone::handleServerConnectionError(const QString &msg)
     controller->quit();
 }
 
-void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsStatus, int audioDevice,
-                                                int firstIn, int lastIn, int firstOut, int lastOut,
-                                                int sampleRate, int bufferSize)
+void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsStatus,
+                                                int audioDevice, int firstIn, int lastIn,
+                                                int firstOut, int lastOut)
 {
     Audio::AudioDriver *audioDriver = controller->getAudioDriver();
 
-#ifdef Q_OS_WIN
-    audioDriver->setProperties(audioDevice, firstIn, lastIn, firstOut, lastOut, sampleRate,
-                               bufferSize);
-#endif
-#ifdef Q_OS_MACX
-    audioDriver->setProperties(sampleRate, bufferSize);
-#endif
-    controller->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, sampleRate,
-                                bufferSize, midiInputsStatus);
+    audioDriver->setProperties(firstIn, lastIn, firstOut, lastOut);
+    controller->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, midiInputsStatus);
 
     Midi::MidiDriver *midiDriver = controller->getMidiDriver();
     midiDriver->setInputDevicesStatus(midiInputsStatus);
 
     controller->updateInputTracksRange();
 
-    foreach (LocalTrackGroupViewStandalone *channel, getLocalChannels<LocalTrackGroupViewStandalone *>())
+    foreach (LocalTrackGroupViewStandalone *channel,
+             getLocalChannels<LocalTrackGroupViewStandalone *>())
         channel->refreshInputSelectionNames();
 
     midiDriver->start(midiInputsStatus);
-    if(!audioDriver->start()){
+    if (!audioDriver->start()) {
         qCritical() << "Error starting audio device";
         QMessageBox::warning(this, "Audio error!",
                              "The audio device can't be started! Please check your audio device and try restart Jamtaba!");
@@ -364,7 +404,8 @@ void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsSta
 // input selection changed by user or by system
 void MainWindowStandalone::refreshTrackInputSelection(int inputTrackIndex)
 {
-    foreach (LocalTrackGroupViewStandalone *channel, getLocalChannels<LocalTrackGroupViewStandalone *>())
+    foreach (LocalTrackGroupViewStandalone *channel,
+             getLocalChannels<LocalTrackGroupViewStandalone *>())
         channel->refreshInputSelectionName(inputTrackIndex);
 }
 

@@ -2,13 +2,27 @@
 #define MAIN_WINDOW_H
 
 #include "ui_MainWindow.h"
+#include <QMainWindow>
 #include "BusyDialog.h"
-#include "chords/ChordsPanel.h"
-#include "NinjamRoomWindow.h"
-#include "MainController.h"
-#include "JamRoomViewPanel.h"
+#include "persistence/Settings.h"
 #include "LocalTrackGroupView.h"
+
 // #include "performance/PerformanceMonitor.h"
+
+class PreferencesDialog;
+class LocalTrackView;
+class NinjamRoomWindow;
+class JamRoomViewPanel;
+class ChordProgression;
+class ChordsPanel;
+
+namespace Login {
+class RoomInfo;
+}
+
+namespace Controller {
+class MainController;
+}
 
 class MainWindow : public QMainWindow
 {
@@ -79,7 +93,8 @@ protected:
 
     void centerDialog(QWidget *dialog);
 
-    virtual NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &, Controller::MainController *) = 0;
+    virtual NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &,
+                                                 Controller::MainController *) = 0;
 
     virtual void setFullViewStatus(bool fullViewActivated);
 
@@ -91,9 +106,8 @@ protected:
     // this factory method is overrided in derived classes to create more specific views
     virtual LocalTrackGroupView *createLocalTrackGroupView(int channelGroupIndex);
 
-    virtual void showPreferencesDialog(int initialTab) = 0;
-
-    virtual void initializeLocalSubChannel(LocalTrackView *localTrackView, const Persistence::Subchannel &subChannel);
+    virtual void initializeLocalSubChannel(LocalTrackView *localTrackView,
+                                           const Persistence::Subchannel &subChannel);
 
     void stopCurrentRoomStream();
 
@@ -103,15 +117,18 @@ protected:
     QList<T> getLocalChannels() const
     {
         QList<T> localChannels;
-        foreach (LocalTrackGroupView * trackGroupView, localGroupChannels) {
-            localChannels.append( dynamic_cast<T>(trackGroupView));
-        }
+        foreach (LocalTrackGroupView *trackGroupView, localGroupChannels)
+            localChannels.append(dynamic_cast<T>(trackGroupView));
         return localChannels;
     }
 
     void updatePublicRoomsListLayout();
 
     bool canUseTwoColumnLayout() const;
+
+    virtual PreferencesDialog *createPreferencesDialog() = 0;
+
+    virtual void setupPreferencesDialogSignals(PreferencesDialog *dialog);
 
 protected slots:
     void closeTab(int index);
@@ -180,6 +197,10 @@ private slots:
     void refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms);
 
     void hideChordsPanel();
+
+    //preferences dialog (these are just the common slots between Standalone and VST, the other slots are in MainWindowStandalone class)
+    void setMultiTrackRecordingStatus(bool recording);
+    void setRecordingPath(const QString &newRecordingPath);
 private:
 
     BusyDialog busyDialog;
@@ -220,7 +241,7 @@ private:
 
     ChordsPanel *createChordsPanel();
 
-    JamRoomViewPanel* createJamRoomViewPanel(const Login::RoomInfo &roomInfo);
+    JamRoomViewPanel *createJamRoomViewPanel(const Login::RoomInfo &roomInfo);
 
     void setupSignals();
     void setupWidgets();
