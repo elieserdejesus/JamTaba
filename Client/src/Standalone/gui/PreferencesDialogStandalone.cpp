@@ -26,6 +26,15 @@ StandalonePreferencesDialog::StandalonePreferencesDialog(Controller::MainControl
     ui->groupBoxInputs->setVisible(false);
     ui->groupBoxOutputs->setVisible(false);
 #endif
+
+    connect( ui->comboSampleRate, SIGNAL(activated(int)), this, SLOT(notifySampleRateChanged()));
+}
+
+
+void StandalonePreferencesDialog::notifySampleRateChanged()
+{
+    int newSampleRate = ui->comboSampleRate->currentData().toInt();
+    emit sampleRateChanged(newSampleRate);
 }
 
 void StandalonePreferencesDialog::initialize(int initialTab, const Persistence::Settings &settings)
@@ -361,6 +370,7 @@ void StandalonePreferencesDialog::populateSampleRateCombo()
 
     ui->comboSampleRate->setCurrentText(QString::number(audioDriver->getSampleRate()));
     ui->comboSampleRate->setEnabled(!sampleRates.isEmpty());
+
 }
 
 void StandalonePreferencesDialog::populateBufferSizeCombo()

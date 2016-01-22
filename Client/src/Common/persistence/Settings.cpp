@@ -509,16 +509,20 @@ void Settings::setWindowSettings(bool windowIsMaximized, bool usingFullView, QPo
 }
 
 // ++++++++++++++++++++++++++++++++++++++++
-void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice,
-                                int sampleRate, int bufferSize)
+void Settings::setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice, int bufferSize)
 {
     audioSettings.bufferSize = bufferSize;
-    audioSettings.sampleRate = sampleRate;
+    //audioSettings.sampleRate = sampleRate;
     audioSettings.firstIn = firstIn;
     audioSettings.firstOut = firstOut;
     audioSettings.lastIn = lastIn;
     audioSettings.lastOut = lastOut;
     audioSettings.audioDevice = audioDevice;
+}
+
+void Settings::setSampleRate(int newSampleRate)
+{
+    audioSettings.sampleRate = newSampleRate;
 }
 
 // io ops ...

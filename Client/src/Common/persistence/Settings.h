@@ -392,8 +392,9 @@ public:
 
     void setFullScreenView(bool v);
     // ++++++++++++++++++++++++++++++++++++++++
-    void setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice,
-                          int sampleRate, int bufferSize);
+    void setAudioSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice, int bufferSize);
+
+    void setSampleRate(int newSampleRate);
 
     inline int getFirstGlobalAudioInput() const
     {

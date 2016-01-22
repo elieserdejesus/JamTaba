@@ -21,6 +21,8 @@ signals:
                               int lastIn, int firstOut, int lastOut, int sampleRate,
                               int bufferSize);
 
+    void sampleRateChanged(int newSampleRate);
+
 private slots:
     void addBlackListedPlugins();
     void removeBlackListedPlugins();
@@ -39,6 +41,8 @@ private slots:
     void changeAudioDevice(int index);
 
     void populateVstTab();
+
+    void notifySampleRateChanged();
 
 protected slots:
     void selectTab(int index) override;

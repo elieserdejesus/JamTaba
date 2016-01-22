@@ -309,7 +309,14 @@ PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
 
     connect(dialog, SIGNAL(rejected()), this, SLOT(restartAudioAndMidi()));
 
+    connect(dialog, SIGNAL(sampleRateChanged(int)), this, SLOT(setSampleRate(int)));
+
     return dialog;
+}
+
+void MainWindowStandalone::setSampleRate(int newSampleRate)
+{
+    controller->setSampleRate(newSampleRate);
 }
 
 void MainWindowStandalone::restartAudioAndMidi()
@@ -350,20 +357,18 @@ void MainWindowStandalone::handleServerConnectionError(const QString &msg)
 
 void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsStatus,
                                                 int audioDevice, int firstIn, int lastIn,
-                                                int firstOut, int lastOut, int sampleRate,
+                                                int firstOut, int lastOut,
                                                 int bufferSize)
 {
     Audio::AudioDriver *audioDriver = controller->getAudioDriver();
 
 #ifdef Q_OS_WIN
-    audioDriver->setProperties(audioDevice, firstIn, lastIn, firstOut, lastOut, sampleRate,
-                               bufferSize);
+    audioDriver->setProperties(audioDevice, firstIn, lastIn, firstOut, lastOut, bufferSize);
 #endif
 #ifdef Q_OS_MACX
-    audioDriver->setProperties(sampleRate, bufferSize);
+    audioDriver->setProperties(bufferSize);
 #endif
-    controller->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, sampleRate,
-                                bufferSize, midiInputsStatus);
+    controller->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, bufferSize, midiInputsStatus);
 
     Midi::MidiDriver *midiDriver = controller->getMidiDriver();
     midiDriver->setInputDevicesStatus(midiInputsStatus);

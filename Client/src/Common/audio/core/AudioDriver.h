@@ -61,8 +61,10 @@ public:
     explicit AudioDriver(Controller::MainController *mainController);
     virtual ~AudioDriver();
     virtual void setProperties(int audioDeviceIndex, int firstIn, int lastIn, int firstOut,
-                               int lastOut, int sampleRate, int bufferSize);
-    virtual void setProperties(int sampleRate, int bufferSize);// used in mac
+                               int lastOut, int bufferSize);
+    virtual void setProperties(int bufferSize);// used in mac
+
+    virtual void setSampleRate(int newSampleRate);
 
     virtual void stop(bool refreshDevicesList = false) = 0;
     virtual bool start() = 0;
