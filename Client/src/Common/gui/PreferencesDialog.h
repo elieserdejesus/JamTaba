@@ -3,7 +3,6 @@
 
 #include <QDialog>
 #include "MainWindow.h"
-#include "MainController.h"
 
 namespace Ui {
 class IODialog;
@@ -15,25 +14,27 @@ class PreferencesDialog : public QDialog
 {
     Q_OBJECT
 public:
-    PreferencesDialog(Controller::MainController *mainController, MainWindow *mainWindow);
+    PreferencesDialog(MainWindow *mainWindow);
     virtual ~PreferencesDialog();
 
-    void initialize();
+    virtual void initialize(int initialTab, const Persistence::RecordingSettings &recordingSettings);
 
     enum TAB {
         TAB_AUDIO, TAB_MIDI, TAB_VST, TAB_RECORDING
     };
 
+signals:
+    void recordingPathSelected(const QString &newRecordingPath);
+    void multiTrackRecordingStatusChanged(bool recording);
+
 protected slots:
-    virtual void selectPreferencesTab(int index) = 0;
+    virtual void selectTab(int index) = 0;
 
 private slots:
     void selectRecordingPath();
-    void setMultiTrackRecordingStatus(bool recordingActivated);
 
 protected:
     Ui::IODialog *ui;
-    Controller::MainController *mainController;
     MainWindow *mainWindow;
 
     // recording
@@ -42,6 +43,9 @@ protected:
 
     virtual void setupSignals();
     virtual void populateAllTabs();
+
+    Persistence::RecordingSettings recordingSettings;
+
 };
 
 #endif

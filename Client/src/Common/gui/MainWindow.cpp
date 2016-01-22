@@ -8,9 +8,12 @@
 #include "Utils.h"
 #include "UserNameDialog.h"
 #include "log/Logging.h"
+#include "JamRoomViewPanel.h"
+#include "ChordsPanel.h"
 
 #include <QDesktopWidget>
 #include <QDesktopServices>
+#include "MainController.h"
 // #include "performance/PerformanceMonitor.h"
 
 using namespace Audio;
@@ -99,9 +102,8 @@ void MainWindow::updateLocalInputChannelsGeometry()
     ui.scrollArea->setHorizontalScrollBarPolicy(scrollPolicy);
 
     if (isRunningInMiniMode() && localGroupChannels.count() > 1) {
-        foreach (LocalTrackGroupView *trackGroup, localGroupChannels){
+        foreach (LocalTrackGroupView *trackGroup, localGroupChannels)
             trackGroup->setToNarrow();
-        }
     }
 }
 
@@ -178,7 +180,7 @@ void MainWindow::removeChannelsGroup(int channelIndex)
 
             channel->deleteLater();
 
-            //TODO Refactoring: emit a signal 'localChannel removed' and catch this signal in NinjamController
+            // TODO Refactoring: emit a signal 'localChannel removed' and catch this signal in NinjamController
             mainController->sendRemovedChannelMessage(channelIndex);
             update();
         }
@@ -243,9 +245,11 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QS
 
     QObject::connect(localChannel, SIGNAL(nameChanged()), this, SLOT(updateChannelsNames()));
 
-    QObject::connect(localChannel, SIGNAL(trackAdded()), this, SLOT(updateLocalInputChannelsGeometry()));
+    QObject::connect(localChannel, SIGNAL(trackAdded()), this,
+                     SLOT(updateLocalInputChannelsGeometry()));
 
-    QObject::connect(localChannel, SIGNAL(trackRemoved()), this, SLOT(updateLocalInputChannelsGeometry()));
+    QObject::connect(localChannel, SIGNAL(trackRemoved()), this,
+                     SLOT(updateLocalInputChannelsGeometry()));
 
     if (!localGroupChannels.isEmpty())// the second channel?
         localChannel->setPreparingStatus(localGroupChannels.at(0)->isPreparingToTransmit());
@@ -275,8 +279,8 @@ void MainWindow::loadPresetToTrack(const Preset &preset)
 
 void MainWindow::removeAllInputLocalTracks()
 {
-    while(!localGroupChannels.isEmpty()){
-        LocalTrackGroupView* view = localGroupChannels.first();
+    while (!localGroupChannels.isEmpty()) {
+        LocalTrackGroupView *view = localGroupChannels.first();
         ui.localTracksLayout->removeWidget(view);
         view->deleteLater();
         localGroupChannels.pop_front();
@@ -286,7 +290,7 @@ void MainWindow::removeAllInputLocalTracks()
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // this function is overrided in MainWindowStandalone to load input selections and plugins
 void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView,
-                                                const Subchannel &subChannel)
+                                           const Subchannel &subChannel)
 {
     BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
     localTrackView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted);
@@ -350,8 +354,7 @@ void MainWindow::changeTab(int index)
     if (index > 0) {// click in room tab?
         if (mainController->isPlayingInNinjamRoom() && mainController->isPlayingRoomStream())
             stopCurrentRoomStream();
-    }
-    else{//click in the public rooms tab?
+    } else {// click in the public rooms tab?
         updatePublicRoomsListLayout();
     }
 }
@@ -438,13 +441,13 @@ JamRoomViewPanel *MainWindow::createJamRoomViewPanel(const Login::RoomInfo &room
 
 bool MainWindow::canUseTwoColumnLayout() const
 {
-    if(isFullScreen() || isMaximized())
+    if (isFullScreen() || isMaximized())
         return true;
 
-    if(mainController->isPlayingInNinjamRoom())
+    if (mainController->isPlayingInNinjamRoom())
         return false;
     else
-        return fullViewMode;//if is in mini mode (!fullViewMode) we are using just 1 collumn layout
+        return fullViewMode;// if is in mini mode (!fullViewMode) we are using just 1 collumn layout
 
     return true;
 }
@@ -632,7 +635,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     }
 
     // remove ninjam panel from main window
-    if(ninjamWindow)
+    if (ninjamWindow)
         ui.bottomPanel->layout()->removeWidget(ninjamWindow->getNinjamPanel());
     dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->addWidget(ui.masterControlsPanel, 0,
                                                                      Qt::AlignHCenter);
@@ -646,7 +649,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     setInputTracksPreparingStatus(false);/** reset the prepating status when user leave the room. This is specially necessary if user enter in a room and leave before the track is prepared to transmit.*/
 
     if (!normalDisconnection) {
-        if(!disconnectionMessage.isEmpty())
+        if (!disconnectionMessage.isEmpty())
             showMessageBox("Error", disconnectionMessage, QMessageBox::Warning);
         else
             showMessageBox("Error", "Disconnected from ninjam server", QMessageBox::Warning);
@@ -723,7 +726,8 @@ void MainWindow::changeEvent(QEvent *ev)
         mainController->storeWindowSettings(isMaximized(), fullViewMode, computeLocation());
 
         // show only the peak meters if user is in mini mode and is not maximized or full screen
-        showPeakMetersOnlyInLocalControls(isRunningInMiniMode() && width() <= MINI_MODE_MIN_SIZE.width());
+        showPeakMetersOnlyInLocalControls(
+            isRunningInMiniMode() && width() <= MINI_MODE_MIN_SIZE.width());
         updatePublicRoomsListLayout();
     }
     QMainWindow::changeEvent(ev);
@@ -762,7 +766,8 @@ MainWindow::~MainWindow()
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainWindow::connectInPrivateServer(const QString &server, int serverPort, const QString &password)
+void MainWindow::connectInPrivateServer(const QString &server, int serverPort,
+                                        const QString &password)
 {
     mainController->storePrivateServerSettings(server, serverPort, password);
     Login::RoomInfo roomInfo(server, serverPort, Login::RoomTYPE::NINJAM, 32, 32);
@@ -838,9 +843,35 @@ void MainWindow::openPreferencesDialog(QAction *action)
         else if (action == ui.actionVstPreferences)
             initialTab = PreferencesDialog::TAB_VST;
 
-        showPreferencesDialog(initialTab);
+        stopCurrentRoomStream();
+
+        PreferencesDialog *dialog = createPreferencesDialog();// factory method, overrided in derived classes MainWindowStandalone and MainWindowVST
+        Persistence::Settings settings = mainController->getSettings();
+        dialog->initialize(initialTab, settings.getRecordingSettings());// initializing here to avoid call virtual methods inside PreferencesDialog constructor
+        dialog->show();
     }
 }
+
+//+++++++++++++++++++++++++
+void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
+{
+    Q_ASSERT(dialog);
+
+    connect(dialog, SIGNAL(multiTrackRecordingStatusChanged(bool)), this, SLOT(setMultiTrackRecordingStatus(bool)));
+    connect(dialog, SIGNAL(recordingPathSelected(const QString &)), this, SLOT(setRecordingPath(const QString &)));
+}
+
+void MainWindow::setRecordingPath(const QString &newRecordingPath)
+{
+    mainController->storeRecordingPath(newRecordingPath);
+}
+
+void MainWindow::setMultiTrackRecordingStatus(bool recording)
+{
+    mainController->storeRecordingMultiTracksStatus(recording);
+}
+
+//++++++++++++++++++++++
 
 void MainWindow::initializeViewModeMenu()
 {
@@ -884,7 +915,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
     // show only the peak meters if user is in mini mode and is not maximized or full screen
     showPeakMetersOnlyInLocalControls(isRunningInMiniMode() && !isMaximized() && !isFullScreen());
 
-    ui.chatArea->setMinimumWidth(isRunningInFullViewMode() ? 280 : 180); //TODO Refactoring: remove these 'Magic Numbers'
+    ui.chatArea->setMinimumWidth(isRunningInFullViewMode() ? 280 : 180); // TODO Refactoring: remove these 'Magic Numbers'
 
     // refresh the public rooms list
     if (!mainController->isPlayingInNinjamRoom()) {
@@ -896,7 +927,8 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
 
     // local tracks are narrowed in mini mode if user is using more than 1 subchannel
     foreach (LocalTrackGroupView *localTrackGroup, localGroupChannels) {
-        if (isRunningInMiniMode() && (localTrackGroup->getTracksCount() > 1 || localGroupChannels.size() > 1))
+        if (isRunningInMiniMode()
+            && (localTrackGroup->getTracksCount() > 1 || localGroupChannels.size() > 1))
             localTrackGroup->setToNarrow();
         else
             localTrackGroup->setToWide();
@@ -937,9 +969,8 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
 void MainWindow::resetLocalChannels()
 {
-    foreach (LocalTrackGroupView *localChannel, localGroupChannels) {
+    foreach (LocalTrackGroupView *localChannel, localGroupChannels)
         localChannel->resetTracks();
-    }
 }
 
 // ++++++++++++++++++++++++
@@ -974,7 +1005,7 @@ ChordsPanel *MainWindow::createChordsPanel()
 {
     ChordsPanel *chordsPanel = new ChordsPanel();
     connect(chordsPanel, SIGNAL(sendingChordsToChat()), this,
-                     SLOT(sendCurrentChordProgressionToChat()));
+            SLOT(sendCurrentChordProgressionToChat()));
     connect(chordsPanel, SIGNAL(chordsDiscarded()), this, SLOT(hideChordsPanel()));
     return chordsPanel;
 }
@@ -988,14 +1019,14 @@ void MainWindow::showChordProgression(const ChordProgression &progression)
         else
             chordsPanel->setVisible(true);
         bool needStrech = progression.getBeatsPerInterval() != currentBpi;
-        if(needStrech)
+        if (needStrech)
             chordsPanel->setChords(progression.getStretchedVersion(currentBpi));
         else
             chordsPanel->setChords(progression);
 
         // add the chord panel in top of bottom panel in main window
         dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->insertWidget(0, chordsPanel);
-        if(ninjamWindow)
+        if (ninjamWindow)
             ninjamWindow->getNinjamPanel()->setLowContrastPaintInIntervalPanel(true);
     } else {
         int measures = progression.getMeasures().size();
@@ -1023,9 +1054,8 @@ void MainWindow::hideChordsPanel()
         chordsPanel = nullptr;
     }
 
-    if(ninjamWindow){
+    if (ninjamWindow)
         ninjamWindow->getNinjamPanel()->setLowContrastPaintInIntervalPanel(false);
-    }
 }
 
 // ++++++
@@ -1048,7 +1078,7 @@ void MainWindow::updateBpi(int bpi)
 
 void MainWindow::updateBpm(int bpm)
 {
-    if(!ninjamWindow)
+    if (!ninjamWindow)
         return;
 
     NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
@@ -1059,7 +1089,7 @@ void MainWindow::updateBpm(int bpm)
 
 void MainWindow::updateCurrentIntervalBeat(int beat)
 {
-    if(!ninjamWindow)
+    if (!ninjamWindow)
         return;
     NinjamPanel *ninjamPanel = ninjamWindow->getNinjamPanel();
     if (!ninjamPanel)

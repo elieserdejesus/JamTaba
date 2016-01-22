@@ -12,7 +12,7 @@ class StandalonePreferencesDialog : public PreferencesDialog
 
 public:
     StandalonePreferencesDialog(Controller::MainControllerStandalone *mainController, MainWindow *mainWindow);
-    void initialize(int initialTab);
+    void initialize(int initialTab, const Persistence::RecordingSettings &recordingSettings) override;
 
 public slots:
     void accept() override;
@@ -42,7 +42,7 @@ private slots:
     void populateVstTab();
 
 protected slots:
-    void selectPreferencesTab(int index) override;
+    void selectTab(int index) override;
 
 protected:
     void setupSignals() override;

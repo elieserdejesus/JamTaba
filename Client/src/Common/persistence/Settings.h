@@ -297,6 +297,11 @@ public:
         return recordingSettings.saveMultiTracksActivated;
     }
 
+    inline RecordingSettings getRecordingSettings() const
+    {
+        return recordingSettings;
+    }
+
     inline QString getRecordingPath() const
     {
         return recordingSettings.recordingPath;

@@ -276,33 +276,39 @@ void MainWindowStandalone::closeEvent(QCloseEvent *e)
 }
 
 //+++++++++++++++++++=+
-void MainWindowStandalone::showPreferencesDialog(int initialTab)
+//void MainWindowStandalone::showPreferencesDialog(int initialTab)
+//{
+
+//    Midi::MidiDriver *midiDriver = controller->getMidiDriver();
+//    Audio::AudioDriver *audioDriver = controller->getAudioDriver();
+//    if (audioDriver)
+//        audioDriver->stop(true);//asking audio driver to refresh the devices list
+//    if (midiDriver)
+//        midiDriver->stop();
+
+//    StandalonePreferencesDialog dialog(controller, this);
+//    dialog.initialize(initialTab);
+
+//    connect(&dialog,
+//            SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int, int, int)),
+//            this,
+//            SLOT(setGlobalPreferences(QList<bool>, int, int, int, int, int, int, int)));
+
+//    int result = dialog.exec();
+//    if (result == QDialog::Rejected) {
+//        if (midiDriver)
+//            midiDriver->start(controller->getSettings().getMidiInputDevicesStatus());// restart audio and midi drivers if user cancel the preferences menu
+//        if (audioDriver)
+//            audioDriver->start();
+//    }
+//    /** audio driver parameters are changed in on_IOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.*/
+//}
+
+PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
 {
-    stopCurrentRoomStream();
-
-    Midi::MidiDriver *midiDriver = controller->getMidiDriver();
-    Audio::AudioDriver *audioDriver = controller->getAudioDriver();
-    if (audioDriver)
-        audioDriver->stop(true);//asking audio driver to refresh the devices list
-    if (midiDriver)
-        midiDriver->stop();
-
-    StandalonePreferencesDialog dialog(controller, this);
-    dialog.initialize(initialTab);
-
-    connect(&dialog,
-            SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int, int, int)),
-            this,
-            SLOT(setGlobalPreferences(QList<bool>, int, int, int, int, int, int, int)));
-
-    int result = dialog.exec();
-    if (result == QDialog::Rejected) {
-        if (midiDriver)
-            midiDriver->start(controller->getSettings().getMidiInputDevicesStatus());// restart audio and midi drivers if user cancel the preferences menu
-        if (audioDriver)
-            audioDriver->start();
-    }
-    /** audio driver parameters are changed in on_IOPropertiesChanged. This slot is always invoked when AudioIODialog is closed.*/
+    PreferencesDialog * dialog = new StandalonePreferencesDialog(controller, this);
+    setupPreferencesDialogSignals(dialog);
+    return dialog;
 }
 
 // ++++++++++++++++++++++

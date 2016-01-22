@@ -1,8 +1,7 @@
 #include "VstPreferencesDialog.h"
 
-VstPreferencesDialog::VstPreferencesDialog(Controller::MainController *mainController,
-                                           MainWindow *mainWindow) :
-    PreferencesDialog(mainController, mainWindow)
+VstPreferencesDialog::VstPreferencesDialog(MainWindow *mainWindow) :
+    PreferencesDialog(mainWindow)
 {
     // in Vst plugin some preferences are not available
     // remove the first 3 tabs (audio, midi and VSTs)
@@ -11,7 +10,7 @@ VstPreferencesDialog::VstPreferencesDialog(Controller::MainController *mainContr
     ui->prefsTab->removeTab(0);
 }
 
-void VstPreferencesDialog::selectPreferencesTab(int index)
+void VstPreferencesDialog::selectTab(int index)
 {
     Q_UNUSED(index)
     populateRecordingTab();//only the recording tab is available in VST plugin

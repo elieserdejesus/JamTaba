@@ -10,10 +10,10 @@ class VstPreferencesDialog : public PreferencesDialog
     Q_OBJECT
 
 public:
-    VstPreferencesDialog(Controller::MainController *mainController, MainWindow *mainWindow);
+    VstPreferencesDialog(MainWindow *mainWindow);
 
 protected slots:
-    void selectPreferencesTab(int index) override;
+    void selectTab(int index) override;
 
 protected:
     void populateAllTabs() override;

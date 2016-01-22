@@ -17,7 +17,7 @@ using namespace Controller;
 
 StandalonePreferencesDialog::StandalonePreferencesDialog(
     Controller::MainControllerStandalone *mainController, MainWindow *mainWindow) :
-    PreferencesDialog(mainController, mainWindow),
+    PreferencesDialog(mainWindow),
     controller(mainController)
 {
 #ifdef Q_OS_MAC
@@ -28,9 +28,9 @@ StandalonePreferencesDialog::StandalonePreferencesDialog(
 #endif
 }
 
-void StandalonePreferencesDialog::initialize(int initialTab)
+void StandalonePreferencesDialog::initialize(int initialTab, const Persistence::RecordingSettings &recordingSettings)
 {
-    PreferencesDialog::initialize();
+    PreferencesDialog::initialize(initialTab, recordingSettings);
     ui->prefsTab->setCurrentIndex(initialTab);
 }
 
@@ -127,7 +127,7 @@ void StandalonePreferencesDialog::updateBlackBox(QString path, bool add)
         if (str.contains(path)) {
             ui->blackListWidget->clear();
             controller->removeBlackVst(str.indexOf(path));
-            QStringList badPlugins = mainController->getSettings().getBlackListedPlugins();
+            QStringList badPlugins = controller->getSettings().getBlackListedPlugins();
             foreach (const QString &badPlugin, badPlugins)
                 ui->blackListWidget->appendPlainText(badPlugin);
         }
@@ -414,9 +414,9 @@ void StandalonePreferencesDialog::accept()
 void StandalonePreferencesDialog::populateVstTab()
 {
     clearScanFolderWidgets();// remove all widgets before add the paths
-    QStringList scanFoldersList = mainController->getSettings().getVstScanFolders();
-    QStringList vstList = mainController->getSettings().getVstPluginsPaths();
-    QStringList blackVstList = mainController->getSettings().getBlackListedPlugins();
+    QStringList scanFoldersList = controller->getSettings().getVstScanFolders();
+    QStringList vstList = controller->getSettings().getVstPluginsPaths();
+    QStringList blackVstList = controller->getSettings().getBlackListedPlugins();
 
     // populate the paths
     foreach (const QString &scanFolder, scanFoldersList)
@@ -433,7 +433,7 @@ void StandalonePreferencesDialog::populateVstTab()
         updateBlackBox(path, true);// add vst
 }
 
-void StandalonePreferencesDialog::selectPreferencesTab(int index)
+void StandalonePreferencesDialog::selectTab(int index)
 {
     switch (index) {
     case 0:

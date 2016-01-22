@@ -52,12 +52,10 @@ void MainWindowVST::setFullViewStatus(bool fullViewActivated)
     controller->resizePluginEditor(width(), height());
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainWindowVST::showPreferencesDialog(int initialTab)
+
+PreferencesDialog *MainWindowVST::createPreferencesDialog()
 {
-    Q_UNUSED(initialTab)
-    VstPreferencesDialog dialog(mainController, this);
-    dialog.initialize();
-    centerDialog(&dialog);
-    dialog.exec();
+    PreferencesDialog * dialog = new VstPreferencesDialog(this);
+    setupPreferencesDialogSignals(dialog);
+    return dialog;
 }
