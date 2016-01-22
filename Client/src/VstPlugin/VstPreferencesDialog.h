@@ -3,14 +3,13 @@
 
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
-#include "MainWindow.h"
 
 class VstPreferencesDialog : public PreferencesDialog
 {
     Q_OBJECT
 
 public:
-    VstPreferencesDialog(MainWindow *mainWindow);
+    VstPreferencesDialog(QWidget *parent);
 
 protected slots:
     void selectTab(int index) override;

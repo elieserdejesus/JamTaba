@@ -1,7 +1,7 @@
 #include "VstPreferencesDialog.h"
 
-VstPreferencesDialog::VstPreferencesDialog(MainWindow *mainWindow) :
-    PreferencesDialog(mainWindow)
+VstPreferencesDialog::VstPreferencesDialog(QWidget *parent) :
+    PreferencesDialog(parent)
 {
     // in Vst plugin some preferences are not available
     // remove the first 3 tabs (audio, midi and VSTs)
