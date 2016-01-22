@@ -325,6 +325,8 @@ PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
     connect(dialog, SIGNAL(startingFullPluginsScan()), controller, SLOT(scanAllPlugins()));
     connect(dialog, SIGNAL(startingOnlyNewPluginsScan()), controller, SLOT(scanOnlyNewPlugins()));
 
+    connect(dialog, SIGNAL(openingExternalAudioControlPanel()), controller, SLOT(openExternalAudioControlPanel()));
+
     return dialog;
 }
 

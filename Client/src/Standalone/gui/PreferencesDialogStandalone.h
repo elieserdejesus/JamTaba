@@ -35,12 +35,11 @@ signals:
 
     void startingFullPluginsScan();
     void startingOnlyNewPluginsScan();
+    void openingExternalAudioControlPanel(); // asio control panel in windows
 
 private slots:
     void addBlackListedPlugins();
     void removeBlackListedPlugins();
-
-    void openExternalAudioControlPanel();// asio control panel in windows
 
     void addVstScanFolder();
     void removeVstscanFolder();
@@ -68,13 +67,13 @@ private:
     void selectMidiTab();
     void selectVstPluginsTab();
 
-    void populateAsioDriverCombo();
+    void populateAsioDriverCombo(Audio::AudioDriver *audioDriver);
     void populateFirstInputCombo();
     void populateFirstOutputCombo();
 
     void populateSampleRateCombo();
     void populateBufferSizeCombo();
-    void populateAudioTab();
+    void populateAudioTab(Audio::AudioDriver *audioDriver);
 
     void populateMidiTab();
 

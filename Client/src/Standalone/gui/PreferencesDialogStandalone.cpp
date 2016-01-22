@@ -52,7 +52,7 @@ void StandalonePreferencesDialog::initialize(int initialTab, const Persistence::
 
 void StandalonePreferencesDialog::populateAllTabs()
 {
-    populateAudioTab();
+    populateAudioTab(controller->getAudioDriver());
     populateMidiTab();
     populateVstTab();
     populateRecordingTab();
@@ -70,8 +70,7 @@ void StandalonePreferencesDialog::setupSignals()
     connect(ui->comboFirstOutput, SIGNAL(currentIndexChanged(int)), this,
             SLOT(populateLastOutputCombo()));
 
-    connect(ui->buttonControlPanel, SIGNAL(clicked(bool)), this,
-            SLOT(openExternalAudioControlPanel()));
+    connect(ui->buttonControlPanel, SIGNAL(clicked(bool)), this, SIGNAL(openingExternalAudioControlPanel()));
 
     connect(ui->buttonAddVstScanFolder, SIGNAL(clicked(bool)), this, SLOT(addVstScanFolder()));
 
@@ -250,9 +249,9 @@ void StandalonePreferencesDialog::populateMidiTab()
     }
 }
 
-void StandalonePreferencesDialog::populateAudioTab()
+void StandalonePreferencesDialog::populateAudioTab(Audio::AudioDriver *audioDriver)
 {
-    populateAsioDriverCombo();
+    populateAsioDriverCombo(audioDriver);
     populateFirstInputCombo();
     populateFirstOutputCombo();
     populateSampleRateCombo();
@@ -261,9 +260,8 @@ void StandalonePreferencesDialog::populateAudioTab()
     ui->buttonControlPanel->setVisible(showAudioDriverControlPanelButton);
 }
 
-void StandalonePreferencesDialog::populateAsioDriverCombo()
+void StandalonePreferencesDialog::populateAsioDriverCombo(Audio::AudioDriver *audioDriver)
 {
-    Audio::AudioDriver *audioDriver = controller->getAudioDriver();
     int devices = audioDriver->getDevicesCount();
     ui->comboAudioDevice->clear();
     for (int d = 0; d < devices; d++) {
@@ -419,7 +417,7 @@ void StandalonePreferencesDialog::selectTab(int index)
 {
     switch (index) {
     case 0:
-        populateAudioTab();
+        populateAudioTab(controller->getAudioDriver());
         break;
     case 1:
         populateMidiTab();
@@ -433,9 +431,3 @@ void StandalonePreferencesDialog::selectTab(int index)
     }
 }
 
-void StandalonePreferencesDialog::openExternalAudioControlPanel()
-{
-    AudioDriver *audioDriver = controller->getAudioDriver();
-    if (audioDriver->hasControlPanel())// just in case
-        audioDriver->openControlPanel((void *)parentWidget()->winId());
-}

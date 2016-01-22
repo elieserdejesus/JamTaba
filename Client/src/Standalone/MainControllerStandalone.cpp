@@ -512,6 +512,13 @@ void MainControllerStandalone::scanPlugins(bool scanOnlyNewPlugins)
     }
 }
 
+void MainControllerStandalone::openExternalAudioControlPanel()
+{
+    if (audioDriver->hasControlPanel())// just in case
+        audioDriver->openControlPanel((void *)mainWindow->winId());
+}
+
+
 void MainControllerStandalone::stopNinjamController()
 {
     MainController::stopNinjamController();

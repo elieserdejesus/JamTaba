@@ -106,6 +106,8 @@ public slots:
     void scanAllPlugins();
     void scanOnlyNewPlugins();
 
+    void openExternalAudioControlPanel();
+
 protected:
     Midi::MidiDriver *createMidiDriver();
 
