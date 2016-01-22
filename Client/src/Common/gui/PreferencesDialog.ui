@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="prefsTab">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
@@ -315,7 +315,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QPushButton" name="ButtonVst_Refresh">
+              <widget class="QPushButton" name="buttonVstRefresh">
                <property name="toolTip">
                 <string>Scan only new plugins</string>
                </property>
@@ -335,14 +335,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="ButtonVST_AddToBlackList">
+              <widget class="QPushButton" name="buttonAddVstToBlackList">
                <property name="text">
                 <string>Add to black List</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="ButtonVST_RemFromBlkList">
+              <widget class="QPushButton" name="buttonRemoveVstFromBlackList">
                <property name="text">
                 <string>Remove from blackList</string>
                </property>

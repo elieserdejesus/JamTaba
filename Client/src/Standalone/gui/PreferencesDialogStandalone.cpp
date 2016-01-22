@@ -76,12 +76,12 @@ void StandalonePreferencesDialog::setupSignals()
 
     connect(ui->buttonClearVstAndScan, SIGNAL(clicked(bool)), this, SIGNAL(startingFullPluginsScan()));
 
-    connect(ui->ButtonVst_Refresh, SIGNAL(clicked(bool)), this, SIGNAL(startingOnlyNewPluginsScan()));
+    connect(ui->buttonVstRefresh, SIGNAL(clicked(bool)), this, SIGNAL(startingOnlyNewPluginsScan()));
 
-    connect(ui->ButtonVST_AddToBlackList, SIGNAL(clicked(bool)), this,
+    connect(ui->buttonAddVstToBlackList, SIGNAL(clicked(bool)), this,
             SLOT(addBlackListedPlugins()));
 
-    connect(ui->ButtonVST_RemFromBlkList, SIGNAL(clicked(bool)), this,
+    connect(ui->buttonRemoveVstFromBlackList, SIGNAL(clicked(bool)), this,
             SLOT(removeBlackListedPlugins()));
 
 }
