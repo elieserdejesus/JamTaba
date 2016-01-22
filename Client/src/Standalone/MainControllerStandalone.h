@@ -98,6 +98,7 @@ public:
 
 public slots:
     void setSampleRate(int newSampleRate) override;
+    void setBufferSize(int newBufferSize);
 
 protected:
     Midi::MidiDriver *createMidiDriver();

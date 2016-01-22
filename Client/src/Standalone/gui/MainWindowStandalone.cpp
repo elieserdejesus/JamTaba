@@ -303,20 +303,16 @@ PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
 
     // setup standalone specific signals
     connect(dialog,
-            SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int, int, int)),
+            SIGNAL(ioPreferencesChanged(QList<bool>,int,int,int,int,int)),
             this,
-            SLOT(setGlobalPreferences(QList<bool>, int, int, int, int, int, int, int)));
+            SLOT(setGlobalPreferences(QList<bool>,int,int,int,int,int)));
 
     connect(dialog, SIGNAL(rejected()), this, SLOT(restartAudioAndMidi()));
 
-    connect(dialog, SIGNAL(sampleRateChanged(int)), this, SLOT(setSampleRate(int)));
+    connect(dialog, SIGNAL(sampleRateChanged(int)), controller, SLOT(setSampleRate(int)));
+    connect(dialog, SIGNAL(bufferSizeChanged(int)), controller, SLOT(setBufferSize(int)));
 
     return dialog;
-}
-
-void MainWindowStandalone::setSampleRate(int newSampleRate)
-{
-    controller->setSampleRate(newSampleRate);
 }
 
 void MainWindowStandalone::restartAudioAndMidi()
@@ -357,18 +353,17 @@ void MainWindowStandalone::handleServerConnectionError(const QString &msg)
 
 void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsStatus,
                                                 int audioDevice, int firstIn, int lastIn,
-                                                int firstOut, int lastOut,
-                                                int bufferSize)
+                                                int firstOut, int lastOut)
 {
     Audio::AudioDriver *audioDriver = controller->getAudioDriver();
 
 #ifdef Q_OS_WIN
-    audioDriver->setProperties(audioDevice, firstIn, lastIn, firstOut, lastOut, bufferSize);
+    audioDriver->setProperties(audioDevice, firstIn, lastIn, firstOut, lastOut);
 #endif
 #ifdef Q_OS_MACX
-    audioDriver->setProperties(bufferSize);
+    audioDriver->setProperties();
 #endif
-    controller->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, bufferSize, midiInputsStatus);
+    controller->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, midiInputsStatus);
 
     Midi::MidiDriver *midiDriver = controller->getMidiDriver();
     midiDriver->setInputDevicesStatus(midiInputsStatus);

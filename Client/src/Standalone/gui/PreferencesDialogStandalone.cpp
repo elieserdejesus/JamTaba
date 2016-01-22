@@ -27,9 +27,15 @@ StandalonePreferencesDialog::StandalonePreferencesDialog(Controller::MainControl
     ui->groupBoxOutputs->setVisible(false);
 #endif
 
-    connect( ui->comboSampleRate, SIGNAL(activated(int)), this, SLOT(notifySampleRateChanged()));
+    connect(ui->comboSampleRate, SIGNAL(activated(int)), this, SLOT(notifySampleRateChanged()));
+    connect(ui->comboBufferSize, SIGNAL(activated(int)), this, SLOT(notifyBufferSizeChanged()));
 }
 
+void StandalonePreferencesDialog::notifyBufferSizeChanged()
+{
+    int newBufferSize = ui->comboBufferSize->currentData().toInt();
+    emit bufferSizeChanged(newBufferSize);
+}
 
 void StandalonePreferencesDialog::notifySampleRateChanged()
 {
@@ -404,8 +410,6 @@ void StandalonePreferencesDialog::accept()
     int lastIn = ui->comboLastInput->currentData().toInt();
     int firstOut = ui->comboFirstOutput->currentData().toInt();
     int lastOut = ui->comboLastOutput->currentData().toInt();
-    int sampleRate = ui->comboSampleRate->currentText().toInt();
-    int bufferSize = ui->comboBufferSize->currentText().toInt();
 
     // build midi inputs devices status
     QList<bool> midiInputsStatus;
@@ -415,8 +419,7 @@ void StandalonePreferencesDialog::accept()
 
     QDialog::accept();
 
-    emit ioPreferencesChanged(midiInputsStatus, selectedAudioDevice, firstIn, lastIn, firstOut,
-                              lastOut, sampleRate, bufferSize);
+    emit ioPreferencesChanged(midiInputsStatus, selectedAudioDevice, firstIn, lastIn, firstOut, lastOut);
 }
 
 void StandalonePreferencesDialog::populateVstTab()

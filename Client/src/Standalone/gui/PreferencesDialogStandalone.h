@@ -18,10 +18,10 @@ public slots:
 
 signals:
     void ioPreferencesChanged(QList<bool> midiInputsStatus, int selectedAudioDevice, int firstIn,
-                              int lastIn, int firstOut, int lastOut, int sampleRate,
-                              int bufferSize);
+                              int lastIn, int firstOut, int lastOut);
 
     void sampleRateChanged(int newSampleRate);
+    void bufferSizeChanged(int newBufferSize);
 
 private slots:
     void addBlackListedPlugins();
@@ -43,6 +43,7 @@ private slots:
     void populateVstTab();
 
     void notifySampleRateChanged();
+    void notifyBufferSizeChanged();
 
 protected slots:
     void selectTab(int index) override;
