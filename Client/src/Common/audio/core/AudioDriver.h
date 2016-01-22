@@ -60,8 +60,7 @@ signals:
 public:
     explicit AudioDriver(Controller::MainController *mainController);
     virtual ~AudioDriver();
-    virtual void setProperties(int audioDeviceIndex, int firstIn, int lastIn, int firstOut,
-                               int lastOut);
+    virtual void setProperties(int firstIn, int lastIn, int firstOut, int lastOut);
 
     virtual void setSampleRate(int newSampleRate);
     virtual void setBufferSize(int newBufferSize);

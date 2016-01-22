@@ -380,8 +380,7 @@ void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsSta
 {
     Audio::AudioDriver *audioDriver = controller->getAudioDriver();
 
-    audioDriver->setProperties(audioDevice, firstIn, lastIn, firstOut, lastOut);
-
+    audioDriver->setProperties(firstIn, lastIn, firstOut, lastOut);
     controller->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioDevice, midiInputsStatus);
 
     Midi::MidiDriver *midiDriver = controller->getMidiDriver();

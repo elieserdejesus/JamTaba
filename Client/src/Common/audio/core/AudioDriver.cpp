@@ -61,11 +61,9 @@ AudioDriver::~AudioDriver()
     qCDebug(jtAudio) << "AudioDriver destructor.";
 }
 
-void AudioDriver::setProperties(int audioDeviceIndex, int firstIn, int lastIn, int firstOut,
-                                int lastOut)
+void AudioDriver::setProperties(int firstIn, int lastIn, int firstOut, int lastOut)
 {
     stop();
-    this->audioDeviceIndex = audioDeviceIndex;
     this->globalInputRange = ChannelRange(firstIn, (lastIn - firstIn) + 1);
     this->globalOutputRange = ChannelRange(firstOut, (lastOut - firstOut) + 1);
 }

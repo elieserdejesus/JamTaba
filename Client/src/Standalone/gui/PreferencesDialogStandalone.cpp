@@ -266,8 +266,7 @@ void StandalonePreferencesDialog::populateAsioDriverCombo()
     int devices = audioDriver->getDevicesCount();
     ui->comboAudioDevice->clear();
     for (int d = 0; d < devices; d++) {
-        // using device index as userData in comboBox
-        ui->comboAudioDevice->addItem(audioDriver->getAudioDeviceName(d), d);
+        ui->comboAudioDevice->addItem(audioDriver->getAudioDeviceName(d), d);// using device index as userData in comboBox
     }
     ui->comboAudioDevice->setCurrentIndex(audioDriver->getAudioDeviceIndex());
 }
