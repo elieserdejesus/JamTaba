@@ -17,7 +17,7 @@ public:
     PreferencesDialog(QWidget *parent);
     virtual ~PreferencesDialog();
 
-    virtual void initialize(int initialTab, const Persistence::RecordingSettings &recordingSettings);
+    virtual void initialize(int initialTab, const Persistence::Settings &settings);
 
     enum TAB {
         TAB_AUDIO, TAB_MIDI, TAB_VST, TAB_RECORDING
@@ -43,7 +43,7 @@ protected:
     virtual void setupSignals();
     virtual void populateAllTabs();
 
-    Persistence::RecordingSettings recordingSettings;
+    Persistence::Settings settings;
 
 };
 

@@ -2,9 +2,9 @@
 
 #include "audio/core/AudioDriver.h"
 #include "MainControllerStandalone.h"
-#include "MainWindow.h"
 #include "gui/ScanFolderPanel.h"
 #include "QFileDialog"
+#include "persistence/Settings.h"
 
 /**
  This file contains the common/shared implementation for the Jamtaba plataforms (Win, Mac and Linux) in Standalone. In the Vst Plugin some details are different and implemented in the file VstPreferencesDialog.cpp.
@@ -15,12 +15,11 @@ using namespace Controller;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 
-StandalonePreferencesDialog::StandalonePreferencesDialog(
-    Controller::MainControllerStandalone *mainController, MainWindow *mainWindow) :
-    PreferencesDialog(mainWindow),
-    controller(mainController),
-    mainWindow(mainWindow)
+StandalonePreferencesDialog::StandalonePreferencesDialog(Controller::MainControllerStandalone *mainController, QWidget *parent) :
+    PreferencesDialog(parent),
+    controller(mainController)
 {
+
 #ifdef Q_OS_MAC
     ui->comboAudioDevice->setVisible(false);
     ui->asioDriverLabel->setVisible(false);
@@ -29,9 +28,9 @@ StandalonePreferencesDialog::StandalonePreferencesDialog(
 #endif
 }
 
-void StandalonePreferencesDialog::initialize(int initialTab, const Persistence::RecordingSettings &recordingSettings)
+void StandalonePreferencesDialog::initialize(int initialTab, const Persistence::Settings &settings)
 {
-    PreferencesDialog::initialize(initialTab, recordingSettings);
+    PreferencesDialog::initialize(initialTab, settings);
     ui->prefsTab->setCurrentIndex(initialTab);
 }
 
@@ -152,10 +151,9 @@ void StandalonePreferencesDialog::addVstFolderToScan(QString folder)
 void StandalonePreferencesDialog::scansFully()
 {
     Q_ASSERT(controller);
-    Q_ASSERT(mainWindow);
 
     // save the config file before start scanning
-    controller->saveLastUserSettings(mainWindow->getInputsSettings());
+    controller->saveLastUserSettings(settings.getInputsSettings());
 
     // clear
     controller->clearPluginsCache();
@@ -169,10 +167,9 @@ void StandalonePreferencesDialog::scansFully()
 void StandalonePreferencesDialog::scanNewPlugins()
 {
     Q_ASSERT(controller);
-    Q_ASSERT(mainWindow);
 
     // save the config file before start scanning
-    controller->saveLastUserSettings(mainWindow->getInputsSettings());
+    controller->saveLastUserSettings(settings.getInputsSettings());
 
     // scan only new plugins
     controller->scanPlugins(true);
@@ -456,5 +453,5 @@ void StandalonePreferencesDialog::openExternalAudioControlPanel()
 {
     AudioDriver *audioDriver = controller->getAudioDriver();
     if (audioDriver->hasControlPanel())// just in case
-        audioDriver->openControlPanel((void *)mainWindow->winId());
+        audioDriver->openControlPanel((void *)parentWidget()->winId());
 }

@@ -16,10 +16,10 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     ui->comboLastOutput->setEnabled(false);
 }
 
-void PreferencesDialog::initialize(int initialTab, const Persistence::RecordingSettings &recordingSettings)
+void PreferencesDialog::initialize(int initialTab, const Persistence::Settings &settings)
 {
     Q_UNUSED(initialTab);
-    this->recordingSettings = recordingSettings;
+    this->settings = settings;
     setupSignals();
     populateAllTabs();
 }
@@ -46,6 +46,7 @@ void PreferencesDialog::selectRecordingTab()
 
 void PreferencesDialog::populateRecordingTab()
 {
+    Persistence::RecordingSettings recordingSettings = settings.getRecordingSettings();
     QDir recordDir(recordingSettings.recordingPath);
     ui->recordingCheckBox->setChecked(recordingSettings.saveMultiTracksActivated);
     ui->recordPathLineEdit->setText(recordDir.absolutePath());

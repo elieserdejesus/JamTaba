@@ -3,7 +3,6 @@
 
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
-#include "MainWindow.h"
 #include "MainControllerStandalone.h"
 
 class StandalonePreferencesDialog : public PreferencesDialog
@@ -11,8 +10,8 @@ class StandalonePreferencesDialog : public PreferencesDialog
     Q_OBJECT
 
 public:
-    StandalonePreferencesDialog(Controller::MainControllerStandalone *mainController, MainWindow *mainWindow);
-    void initialize(int initialTab, const Persistence::RecordingSettings &recordingSettings) override;
+    StandalonePreferencesDialog(Controller::MainControllerStandalone *mainController, QWidget *parent);
+    void initialize(int initialTab, const Persistence::Settings &settings) override;
 
 public slots:
     void accept() override;
@@ -51,7 +50,6 @@ protected:
 private:
 
     Controller::MainControllerStandalone* controller;
-    MainWindow *mainWindow;
 
     void selectAudioTab();
     void selectMidiTab();
