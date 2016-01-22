@@ -59,6 +59,8 @@ private slots:
 
     void closePluginScanDialog();
 
+    void restartAudioAndMidi();
+
 private:
     MainControllerStandalone *controller;
     QScopedPointer<PluginScanDialog> pluginScanDialog;
