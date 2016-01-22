@@ -344,6 +344,16 @@
           <item>
            <layout class="QHBoxLayout" name="buttonsLayout">
             <item>
+             <widget class="QPushButton" name="buttonVstRefresh">
+              <property name="toolTip">
+               <string>Scan only new plugins</string>
+              </property>
+              <property name="text">
+               <string>Refresh</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="buttonClearVstAndScan">
               <property name="toolTip">
                <string>Clear plugins cache and scan all plugin folders</string>
@@ -364,16 +374,6 @@
              <widget class="QPushButton" name="buttonRemoveVstFromBlackList">
               <property name="text">
                <string>Remove from blackList</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="buttonVstRefresh">
-              <property name="toolTip">
-               <string>Scan only new plugins</string>
-              </property>
-              <property name="text">
-               <string>Refresh</string>
               </property>
              </widget>
             </item>
