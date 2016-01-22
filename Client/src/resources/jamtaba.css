@@ -16,7 +16,7 @@ PreferencesDialog #buttonAddVstScanFolder{
     margin-right: 24px;
 }
 
-PreferencesDialog #BlackBoxText{
+PreferencesDialog #blackListWidget{
     background-color: black;
     color: orange;
 }
