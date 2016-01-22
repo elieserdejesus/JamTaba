@@ -15,9 +15,10 @@ using namespace Controller;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 
-StandalonePreferencesDialog::StandalonePreferencesDialog(Controller::MainControllerStandalone *mainController, QWidget *parent) :
+StandalonePreferencesDialog::StandalonePreferencesDialog(Controller::MainControllerStandalone *mainController, QWidget *parent, bool showAudioControlPanelButton) :
     PreferencesDialog(parent),
-    controller(mainController)
+    controller(mainController),
+    showAudioDriverControlPanelButton(showAudioControlPanelButton)
 {
 
 #ifdef Q_OS_MAC
@@ -257,7 +258,7 @@ void StandalonePreferencesDialog::populateAudioTab()
     populateSampleRateCombo();
     populateBufferSizeCombo();
 
-    ui->buttonControlPanel->setVisible(controller->getAudioDriver()->hasControlPanel());
+    ui->buttonControlPanel->setVisible(showAudioDriverControlPanelButton);
 }
 
 void StandalonePreferencesDialog::populateAsioDriverCombo()

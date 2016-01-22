@@ -10,7 +10,7 @@ class StandalonePreferencesDialog : public PreferencesDialog
     Q_OBJECT
 
 public:
-    StandalonePreferencesDialog(Controller::MainControllerStandalone *mainController, QWidget *parent);
+    StandalonePreferencesDialog(Controller::MainControllerStandalone *mainController, QWidget *parent, bool showAudioControlPanelButton);
     void initialize(int initialTab, const Persistence::Settings &settings) override;
 
 public slots:
@@ -84,6 +84,8 @@ private:
     void clearScanFolderWidgets();
 
     void clearWidgetLayout(QWidget* widget);
+
+    bool showAudioDriverControlPanelButton;
 
 };
 

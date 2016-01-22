@@ -296,7 +296,8 @@ PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
     audioDriver->stop(true);    // asking audio driver to refresh the devices list
     midiDriver->stop();
 
-    StandalonePreferencesDialog *dialog = new StandalonePreferencesDialog(controller, this);
+    bool showAudioControlPanelButton = controller->getAudioDriver()->hasControlPanel();
+    StandalonePreferencesDialog *dialog = new StandalonePreferencesDialog(controller, this, showAudioControlPanelButton);
 
     // setup signals related with recording
     MainWindow::setupPreferencesDialogSignals(dialog);
