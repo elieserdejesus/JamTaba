@@ -436,9 +436,9 @@ void Settings::addVstToBlackList(const QString &pluginPath)
         vstSettings.blackedPlugins.append(pluginPath);
 }
 
-void Settings::RemVstFromBlackList(int index)
+void Settings::removeVstFromBlackList(const QString &pluginPath)
 {
-    vstSettings.blackedPlugins.removeAt(index);
+    vstSettings.blackedPlugins.removeOne(pluginPath);
 }
 
 QStringList Settings::getVstPluginsPaths() const

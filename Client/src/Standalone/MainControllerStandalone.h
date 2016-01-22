@@ -35,10 +35,8 @@ public:
     void initializePluginsList(const QStringList &paths);
     void scanPlugins(bool scanOnlyNewPlugins = false);
 
-    void addBlackVstToSettings(const QString &path);
     void addDefaultPluginsScanPath();// add vst path from registry
 
-    void removeBlackVst(int index);
     void clearPluginsCache();
     QStringList getSteinbergRecommendedPaths();
     bool pluginsScanIsNeeded() const; // plugins cache is empty OR we have new plugins in scan folders?
@@ -102,6 +100,9 @@ public slots:
 
     void removePluginsScanPath(const QString &path);
     void addPluginsScanPath(const QString &path);
+
+    void addBlackVstToSettings(const QString &path);
+    void removeBlackVstFromSettings(const QString &pluginPath);
 
 protected:
     Midi::MidiDriver *createMidiDriver();

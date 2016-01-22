@@ -340,7 +340,7 @@ public:
     // VST
     void addVstPlugin(const QString &pluginPath);
     void addVstToBlackList(const QString &pluginPath);
-    void RemVstFromBlackList(int index);
+    void removeVstFromBlackList(const QString &pluginPath);
     QStringList getVstPluginsPaths() const;
     QStringList getBlackListedPlugins() const;
     void clearVstCache();

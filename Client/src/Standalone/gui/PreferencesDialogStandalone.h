@@ -28,6 +28,9 @@ signals:
     void vstScanDirRemoved(const QString &scanDir);
     void vstScanDirAdded(const QString &newDir);
 
+    void vstPluginAddedInBlackList(const QString &pluginPath);
+    void vstPluginRemovedFromBlackList(const QString &pluginPath);
+
 private slots:
     void addBlackListedPlugins();
     void removeBlackListedPlugins();

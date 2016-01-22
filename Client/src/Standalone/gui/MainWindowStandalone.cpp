@@ -317,6 +317,9 @@ PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
     connect(dialog, SIGNAL(vstScanDirRemoved(const QString &)), controller, SLOT(removePluginsScanPath(const QString &)));
     connect(dialog, SIGNAL(vstScanDirAdded(const QString &)), controller, SLOT(addPluginsScanPath(const QString &)));
 
+    connect(dialog, SIGNAL(vstPluginAddedInBlackList(const QString &)), controller, SLOT(addBlackVstToSettings(const QString &)));
+    connect(dialog, SIGNAL(vstPluginRemovedFromBlackList(const QString &)), controller, SLOT(removeBlackVstFromSettings(const QString &)));
+
     return dialog;
 }
 

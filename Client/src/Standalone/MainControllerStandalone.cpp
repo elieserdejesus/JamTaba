@@ -117,9 +117,9 @@ void MainControllerStandalone::addBlackVstToSettings(const QString &path)
     settings.addVstToBlackList(path);
 }
 
-void MainControllerStandalone::removeBlackVst(int index)
+void MainControllerStandalone::removeBlackVstFromSettings(const QString &pluginPath)
 {
-    settings.RemVstFromBlackList(index);
+    settings.removeVstFromBlackList(pluginPath);
 }
 
 bool MainControllerStandalone::inputIndexIsValid(int inputIndex)

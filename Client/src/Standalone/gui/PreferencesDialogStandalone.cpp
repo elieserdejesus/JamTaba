@@ -142,7 +142,7 @@ void StandalonePreferencesDialog::updateBlackBox(QString path, bool add)
         QString str = ui->blackListWidget->toPlainText();
         if (str.contains(path)) {
             ui->blackListWidget->clear();
-            controller->removeBlackVst(str.indexOf(path));
+            //controller->removeBlackVstFromSettings(str.indexOf(path));
             QStringList badPlugins = controller->getSettings().getBlackListedPlugins();
             foreach (const QString &badPlugin, badPlugins)
                 ui->blackListWidget->appendPlainText(badPlugin);
@@ -185,14 +185,13 @@ void StandalonePreferencesDialog::scanNewPlugins()
     controller->scanPlugins(true);
 }
 
-// ADD A VST IN BLACKLIST
+// open a dialog to add a vst in the blacklist
 void StandalonePreferencesDialog::addBlackListedPlugins()
 {
-    QFileDialog vstDialog(this, "Add Vst(s) to BlackBox ...");
+    QFileDialog vstDialog(this, "Add Vst(s) to Black list ...");
     vstDialog.setNameFilter("Dll(*.dll)");// TODO in mac the extension is .vst
-    QStringList foldersToScan = controller->getSettings().getVstScanFolders();
-    if (!foldersToScan.isEmpty())
-        vstDialog.setDirectory(foldersToScan.first());
+    if (!settings.getVstScanFolders().isEmpty())
+        vstDialog.setDirectory(settings.getVstScanFolders().first());
     vstDialog.setAcceptMode(QFileDialog::AcceptOpen);
     vstDialog.setFileMode(QFileDialog::ExistingFiles);
 
@@ -200,7 +199,7 @@ void StandalonePreferencesDialog::addBlackListedPlugins()
         QStringList vstNames = vstDialog.selectedFiles();
         foreach (const QString &string, vstNames) {
             updateBlackBox(string, true);// add to
-            controller->addBlackVstToSettings(string);
+            emit vstPluginAddedInBlackList(string);
         }
     }
 }
@@ -209,7 +208,7 @@ void StandalonePreferencesDialog::removeBlackListedPlugins()
 {
     QFileDialog vstDialog(this, "Remove Vst(s) from Black List ...");
     vstDialog.setNameFilter("Dll(*.dll)");// TODO mac extension is .vst
-    QStringList foldersToScan = controller->getSettings().getVstScanFolders();
+    QStringList foldersToScan = settings.getVstScanFolders();
     if (!foldersToScan.isEmpty())
         vstDialog.setDirectory(foldersToScan.first());
     vstDialog.setAcceptMode(QFileDialog::AcceptOpen);
@@ -217,8 +216,8 @@ void StandalonePreferencesDialog::removeBlackListedPlugins()
     if (vstDialog.exec()) {
         QStringList vstNames = vstDialog.selectedFiles();
         foreach (const QString &string, vstNames) {
+            emit vstPluginRemovedFromBlackList(string);
             updateBlackBox(string, false);// Remove from
-            controller->removeBlackVst(0);// index
         }
     }
 }
