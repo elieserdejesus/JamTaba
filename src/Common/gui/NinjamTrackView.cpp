@@ -131,7 +131,7 @@ void NinjamTrackView::setupHorizontalLayout()
     mainLayout->addLayout(secondaryChildsLayout, 1, 0, 1, 2);
     mainLayout->addWidget(chunksDisplay, 1, 0, 1, 2); // append chunks display in bottom overlapping the other widgets
 
-    mainLayout->setContentsMargins(3, 3, 3, 3);
+    mainLayout->setContentsMargins(6, 3, 6, 3);
     mainLayout->setVerticalSpacing(6);
 
     primaryChildsLayout->setDirection(QBoxLayout::RightToLeft);

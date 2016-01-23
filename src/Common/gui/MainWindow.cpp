@@ -907,7 +907,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
         resize(minimumSize());
     }
 
-    int tabLayoutMargim = isRunningInFullViewMode() ? 9 : 0;
+    int tabLayoutMargim = isRunningInFullViewMode() ? 9 : 5;
     ui.tabLayout->setContentsMargins(tabLayoutMargim, tabLayoutMargim, tabLayoutMargim,
                                      tabLayoutMargim);
 
