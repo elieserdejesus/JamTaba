@@ -26,6 +26,11 @@ SettingsObject::SettingsObject(const QString &name) :
 {
 }
 
+SettingsObject::~SettingsObject()
+{
+
+}
+
 int SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
                                      int fallBackValue)
 {
