@@ -176,7 +176,7 @@ protected slots:
     void handlePublicRoomStreamError(const QString &msg);
 
     // master fader
-    void setMasterFaderPosition(int);
+    void setMasterGain(int faderPosition);
 
     // chords progression
     void showChordProgression(const ChordProgression &chordProgression);
@@ -230,6 +230,8 @@ private:
 
     void initializeMainTabWidget();
     void initializeViewModeMenu();
+
+    void initializeMasterFader();
 
     bool fullViewMode;// full view or mini view mode? This is not the FullScreen mode, full screen is available only in Standalone.
 

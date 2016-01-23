@@ -233,6 +233,7 @@ private:
     QString lastUserName;// the last nick name choosed by user
     QString translation;// the translation language (en, fr, jp, pt, etc.) being used in chat
     int ninjamIntervalProgressShape;// Circle, Ellipe or Line
+    float masterFaderGain;// last master fader gain
     Qt::Orientation tracksLayoutOrientation; //horizontal or vertical
     bool readFile(APPTYPE type, const QList<SettingsObject *> &sections);// io ops ...
     bool writeFile(APPTYPE type, const QList<SettingsObject *> &sections);// io ops ...
@@ -248,6 +249,16 @@ public:
 
     void save(const LocalInputTrackSettings &inputsSettings);
     void load();
+
+    inline float getLastMasterGain() const
+    {
+        return masterFaderGain;
+    }
+
+    inline void storeMasterGain(float newMasterFaderGain)
+    {
+        masterFaderGain = newMasterFaderGain;
+    }
 
     inline Qt::Orientation getLastTracksLayoutOrientation() const
     {

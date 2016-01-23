@@ -491,8 +491,10 @@ MainController::~MainController()
 
 void MainController::saveLastUserSettings(const Persistence::LocalInputTrackSettings &inputsSettings)
 {
-    if (inputsSettings.isValid())// avoid save empty settings
+    if (inputsSettings.isValid()){// avoid save empty settings
+        settings.storeMasterGain(Utils::poweredGainToLinear(getMasterGain()));
         settings.save(inputsSettings);
+    }
 }
 
 // -------------------------      PRESETS   ----------------------------
