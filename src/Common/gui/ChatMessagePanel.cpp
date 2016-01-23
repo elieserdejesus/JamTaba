@@ -15,8 +15,9 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
 }
 
 ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg,
-                                   const QColor &userNameBackgroundColor, const QColor &msgBackgroundColor,
-                                   const QColor &textColor, bool showTranslationButton) :
+                                   const QColor &userNameBackgroundColor,
+                                   const QColor &msgBackgroundColor, const QColor &textColor,
+                                   bool showTranslationButton) :
     QWidget(parent),
     ui(new Ui::ChatMessagePanel)
 {
@@ -25,7 +26,8 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, con
                showTranslationButton);
 }
 
-void ChatMessagePanel::initialize(const QString &userName, const QString &msg, const QColor &userNameBackgroundColor,
+void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
+                                  const QColor &userNameBackgroundColor,
                                   const QColor &msgBackgroundColor, const QColor &textColor,
                                   bool showTranslationButton)
 {
@@ -71,6 +73,8 @@ ChatMessagePanel::~ChatMessagePanel()
 
 void ChatMessagePanel::translate()
 {
+    emit startingTranslation();
+
     QNetworkAccessManager *httpClient = new QNetworkAccessManager(this);
     QString encodedText(QUrl::toPercentEncoding(originalText));
     QString url = "http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl="
@@ -80,12 +84,18 @@ void ChatMessagePanel::translate()
     req.setOriginatingObject(this);
     req.setRawHeader("User-Agent",
                      "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36");
+
     qCDebug(jtGUI) << "Translating:" << url;
+
     QNetworkReply *reply = httpClient->get(req);
+
     QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this,
                      SLOT(on_networkReplyError(QNetworkReply::NetworkError)));
+
     QObject::connect(httpClient, SIGNAL(finished(QNetworkReply *)), this,
                      SLOT(on_networkReplyFinished(QNetworkReply *)));
+
+    ui->labelMessage->setText("...");// translating ...
 }
 
 void ChatMessagePanel::on_translateButton_clicked()
@@ -107,24 +117,30 @@ void ChatMessagePanel::setPrefferedTranslationLanguage(const QString &targetLang
 
 void ChatMessagePanel::on_networkReplyError(QNetworkReply::NetworkError)
 {
-    QString errorString = ((QNetworkReply *)QObject::sender())->errorString();
+    QString errorString = (qobject_cast<QNetworkReply *>(QObject::sender()))->errorString();
     qCritical() << "Translation error:" << errorString;
+
+    emit translationFinished();
+
+    ui->labelMessage->setText(originalText);// restore the original text
 }
 
 void ChatMessagePanel::on_networkReplyFinished(QNetworkReply *reply)
 {
     QString data(reply->readAll());
     ChatMessagePanel *messagePanel
-        = static_cast<ChatMessagePanel *>(reply->request().originatingObject());
+        = qobject_cast<ChatMessagePanel *>(reply->request().originatingObject());
     int startSlash = data.indexOf(QRegExp("\""));
     int endSlash = data.indexOf(QRegExp("\""), startSlash + 1);
-    QString translated = data.mid(startSlash+1, endSlash - startSlash - 1);
-    if (translated.isEmpty())
-        translated = "translation error!";
-    messagePanel->setTranslatedMessage(translated);
+    QString translatedText = data.mid(startSlash+1, endSlash - startSlash - 1);
+    if (translatedText.isEmpty())
+        translatedText = "translation error!";
+    messagePanel->setTranslatedMessage(translatedText);
 
     reply->manager()->deleteLater();
     reply->deleteLater();
+
+    emit translationFinished();
 }
 
 void ChatMessagePanel::setTranslatedMessage(const QString &translatedMessage)

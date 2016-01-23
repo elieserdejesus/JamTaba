@@ -20,6 +20,11 @@ public:
     ~ChatMessagePanel();
     void setPrefferedTranslationLanguage(const QString &targetLanguage);
     void translate();
+
+signals:
+    void startingTranslation();
+    void translationFinished();
+
 private slots:
     void on_translateButton_clicked();
     void on_networkReplyFinished(QNetworkReply *);

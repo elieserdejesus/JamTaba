@@ -173,6 +173,20 @@ void ChatPanel::updateMessagesGeometry()
     }
 }
 
+void ChatPanel::showTranslationProgressFeedback()
+{
+    if(!autoTranslating){
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+        QApplication::processEvents();
+    }
+}
+
+void ChatPanel::hideTranslationProgressFeedback()
+{
+    if(!autoTranslating)
+        QApplication::restoreOverrideCursor();
+}
+
 void ChatPanel::addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton)
 {
     QColor msgBackgroundColor = getUserColor(userName);
@@ -185,6 +199,10 @@ void ChatPanel::addMessage(const QString &userName, const QString &userMessage, 
     ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, userName, userMessage,
                                                       userNameBackgroundColor, msgBackgroundColor,
                                                       textColor, showTranslationButton);
+
+    connect(msgPanel, SIGNAL(startingTranslation()), this, SLOT(showTranslationProgressFeedback()));
+    connect(msgPanel, SIGNAL(translationFinished()), this, SLOT(hideTranslationProgressFeedback()));
+
     msgPanel->setPrefferedTranslationLanguage(this->preferredTargetTranslationLanguage);
     msgPanel->setMaximumWidth(ui->scrollContent->width());
     ui->scrollContent->layout()->addWidget(msgPanel);

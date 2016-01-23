@@ -38,10 +38,13 @@ private slots:
     void on_chordProgressionConfirmationButtonClicked();
     void on_buttonAutoTranslate_clicked();
 
+    void showTranslationProgressFeedback();
+    void hideTranslationProgressFeedback();
+
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
-private:
 
+private:
     Ui::ChatPanel *ui;
     QColor getUserColor(const QString &userName);
     QStringList botNames;
