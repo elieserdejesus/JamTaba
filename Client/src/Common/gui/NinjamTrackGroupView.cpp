@@ -60,6 +60,13 @@ NinjamTrackGroupView::NinjamTrackGroupView(Controller::MainController *mainContr
     groupNameLabel->setStyleSheet(styleSheet);
 }
 
+void NinjamTrackGroupView::setEstimatedChunksPerInterval(int estimatedChunks)
+{
+    foreach (NinjamTrackView * track, getTracks<NinjamTrackView *>()) {
+        track->setEstimatedChunksPerInterval(estimatedChunks);
+    }
+}
+
 QString NinjamTrackGroupView::getRgbaColorString(const QColor &color, int alpha)
 {
     int red = color.red();

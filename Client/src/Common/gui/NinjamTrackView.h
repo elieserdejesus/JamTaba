@@ -24,9 +24,9 @@ public:
     // interval chunks visual feedback
     void incrementDownloadedChunks();// called when a interval part (a chunk) is received
     void finishCurrentDownload(); // called when the interval is fully downloaded
-    void setDownloadedChunksDisplayVisibility(bool visible);
+    void setEstimatedChunksPerInterval(int estimatedChunks);// how many download chunks per interval?
 
-    void setUnlightStatus(bool status);
+    void setUnlightStatus(bool unlighted);
 
     void updateGuiElements();
 
@@ -48,6 +48,9 @@ private:
     Qt::Orientation orientation;
 
     void setupHorizontalLayout();
+
+    bool downloadingFirstInterval;
+    void setDownloadedChunksDisplayVisibility(bool visible);
 
 protected slots:
     // overriding the base class slots

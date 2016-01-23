@@ -1,26 +1,23 @@
 #ifndef INTERVALCHUNKSDISPLAY_H
 #define INTERVALCHUNKSDISPLAY_H
 
-#include <QWidget>
+#include <QProgressBar>
 
 class QPaintEvent;
 
-class IntervalChunksDisplay : public QWidget
+class IntervalChunksDisplay : public QProgressBar
 {
 public:
     explicit IntervalChunksDisplay(QWidget *parent);
 
     void incrementDownloadedChunks();
-    void startNewInterval();
+    void finish();
     void reset();
-protected:
-    void paintEvent(QPaintEvent *);
+    void setEstimatedTotalChunks(int estimatedChunks);
 
 private:
     int downloadedChunks; // downloaded chunks in current interval
     int totalChunks; // total chunks in a interval
-
-    static const QColor PROGRESS_COLOR;
 };
 
 #endif // INTERVALCHUNKSDISPLAY_H
