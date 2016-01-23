@@ -550,6 +550,11 @@ bool Settings::readFile(APPTYPE type, const QList<SettingsObject *> &sections)
         QJsonDocument doc = QJsonDocument::fromJson(f.readAll());
         QJsonObject root = doc.object();
 
+        if (root.contains("masterGain"))// read last master gain
+            this->masterFaderGain = root["masterGain"].toDouble();
+        else
+            this->masterFaderGain = 1;//unit gain as default
+
         if (root.contains("userName"))// read user name
             this->lastUserName = root["userName"].toString();
 
@@ -601,6 +606,7 @@ bool Settings::writeFile(APPTYPE type, const QList<SettingsObject *> &sections)/
         root["translation"] = this->translation;// write translate locale
         root["intervalProgressShape"] = this->ninjamIntervalProgressShape;
         root["tracksLayoutOrientation"] = this->tracksLayoutOrientation;
+        root["masterGain"] = this->masterFaderGain;
 
         // write settings sections
         foreach (SettingsObject *so, sections) {

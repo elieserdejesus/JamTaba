@@ -48,6 +48,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeLoginService();
     initializeMainTabWidget();
     initializeViewModeMenu();
+    initializeMasterFader();
     setupWidgets();
     setupSignals();
 
@@ -993,9 +994,9 @@ void MainWindow::showJamtabaCurrentVersion()
 }
 
 // ++++++++++++++++++
-void MainWindow::setMasterFaderPosition(int value)
+void MainWindow::setMasterGain(int faderPosition)
 {
-    float newGain = (float)value/ui.masterFader->maximum();
+    float newGain = faderPosition/100.0;
     mainController->setMasterGain(newGain);
 }
 
@@ -1147,7 +1148,13 @@ void MainWindow::setupSignals()
                      SLOT(handlePublicRoomStreamError(QString)));
 
     QObject::connect(ui.masterFader, SIGNAL(valueChanged(int)), this,
-                     SLOT(setMasterFaderPosition(int)));
+                     SLOT(setMasterGain(int)));
 
     QObject::connect(ui.actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
+}
+
+void MainWindow::initializeMasterFader()
+{
+    float lastMasterGain = mainController->getSettings().getLastMasterGain();
+    ui.masterFader->setValue( lastMasterGain * 100 );
 }
