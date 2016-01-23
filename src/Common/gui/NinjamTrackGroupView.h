@@ -25,6 +25,7 @@ public:
     void updateGeoLocation();
     void setGroupName(const QString &groupName);
     void updateGuiElements();
+    void setEstimatedChunksPerInterval(int estimatedChunks);
 
     NinjamTrackView *addTrackView(long trackID) override;
 

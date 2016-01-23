@@ -975,11 +975,12 @@ NinjamTrackView[horizontal="true"] #muteButton{
     padding-bottom: 0px;
 }
 
-NinjamTrackView #chunksDisplay{
+NinjamTrackView QProgressBar{ /* chunks display */
     background-color: rgba(255, 255, 255, 20);
-    border-radius: 1px;
+    border-radius: 2px;
     border: none;
-    min-height: 4px;
+    min-height: 2px;
+    max-height: 3px;
 }
 
 QPushButton:hover#soloButton, QPushButton:hover#muteButton{

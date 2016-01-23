@@ -15,7 +15,8 @@
 // +++++++++++++++++++++++++
 NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, long trackID) :
     BaseTrackView(mainController, trackID),
-    orientation(Qt::Vertical)
+    orientation(Qt::Vertical),
+    downloadingFirstInterval(true)
 {
     channelNameLabel = new MarqueeLabel();
     channelNameLabel->setObjectName("channelName");
@@ -23,7 +24,6 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
     channelNameLabel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
 
     chunksDisplay = new IntervalChunksDisplay(this);
-    chunksDisplay->setObjectName("chunksDisplay");
     chunksDisplay->setVisible(false);
 
     setupVerticalLayout();
@@ -64,15 +64,17 @@ void NinjamTrackView::updateGuiElements()
     channelNameLabel->updateMarquee();
 }
 
-void NinjamTrackView::setUnlightStatus(bool status)
+void NinjamTrackView::setUnlightStatus(bool unlighted)
 {
-    BaseTrackView::setUnlightStatus(status);
-    chunksDisplay->setVisible(!status && chunksDisplay->isVisible());
+    BaseTrackView::setUnlightStatus(unlighted);
 
-    if (status) {// remote user stop xmiting and the track is greyed/unlighted?
+    if (unlighted) {// remote user stop xmiting and the track is greyed/unlighted?
         Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
         if (trackNode)
             trackNode->resetLastPeak(); // reset the internal node last peak to avoid getting the last peak calculated when the remote user was transmiting.
+
+        downloadingFirstInterval = true; //waiting for the first interval
+        chunksDisplay->reset();
     }
 }
 
@@ -168,25 +170,36 @@ QPoint NinjamTrackView::getDbValuePosition(const QString &dbValueText,
 
 void NinjamTrackView::finishCurrentDownload()
 {
-    if (chunksDisplay->isVisible())
-        chunksDisplay->startNewInterval();
+     if(downloadingFirstInterval){
+        chunksDisplay->finish();
+        downloadingFirstInterval = false;
+        setDownloadedChunksDisplayVisibility(false);
+     }
 }
 
 void NinjamTrackView::incrementDownloadedChunks()
 {
-    chunksDisplay->incrementDownloadedChunks();
+    if(downloadingFirstInterval){
+        chunksDisplay->incrementDownloadedChunks();
+        if(!chunksDisplay->isVisible())
+            setDownloadedChunksDisplayVisibility(true);
+    }
+}
+
+void NinjamTrackView::setEstimatedChunksPerInterval(int estimatedChunks)
+{
+    chunksDisplay->setEstimatedTotalChunks(estimatedChunks);
 }
 
 void NinjamTrackView::setDownloadedChunksDisplayVisibility(bool visible)
 {
-    if (chunksDisplay->isVisible() != visible) {
-        chunksDisplay->reset();
-        chunksDisplay->setVisible(visible);
-        if(orientation == Qt::Horizontal)
-            BaseTrackView::setLayoutWidgetsVisibility(secondaryChildsLayout, !visible);
-        else
-            BaseTrackView::setLayoutWidgetsVisibility(secondaryChildsLayout, true);//secondary widgets are always visible in vertical layout
-    }
+    chunksDisplay->reset();
+    chunksDisplay->setVisible(visible);
+    if(orientation == Qt::Horizontal)
+        BaseTrackView::setLayoutWidgetsVisibility(secondaryChildsLayout, !visible);
+    else
+        BaseTrackView::setLayoutWidgetsVisibility(secondaryChildsLayout, true);//secondary widgets are always visible in vertical layout
+
 }
 
 void NinjamTrackView::setChannelName(const QString &name)

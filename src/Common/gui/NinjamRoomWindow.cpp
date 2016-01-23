@@ -322,7 +322,6 @@ void NinjamRoomWindow::updateIntervalDownloadingProgressBar(long trackID)
         bool waitingToPlayTheFirstInterval = !node->isPlaying();
         if (waitingToPlayTheFirstInterval)
             trackView->incrementDownloadedChunks();
-        trackView->setDownloadedChunksDisplayVisibility(waitingToPlayTheFirstInterval);
     }
 }
 
@@ -389,6 +388,7 @@ void NinjamRoomWindow::addChannel(const Ninjam::User &user, const Ninjam::UserCh
         trackView->setNarrowStatus(!fullViewMode);
         ui->tracksPanel->layout()->addWidget(trackView);
         trackGroups.insert(user.getFullName(), trackView);
+        trackView->setEstimatedChunksPerInterval(calculateEstimatedChunksPerInterval());
         adjustTracksWidth();
     } else {// the second, or third channel from same user, group with other channels
         NinjamTrackGroupView *trackGroup = trackGroups[user.getFullName()];
@@ -396,13 +396,31 @@ void NinjamRoomWindow::addChannel(const Ninjam::User &user, const Ninjam::UserCh
             NinjamTrackView *ninjamTrackView = trackGroup->addTrackView(channelID);
             ninjamTrackView->setChannelName(channel.getName());
             ninjamTrackView->setInitialValues(cacheEntry);
+            ninjamTrackView->setEstimatedChunksPerInterval(calculateEstimatedChunksPerInterval());
             ninjamTrackView->setUnlightStatus(true);/** disabled/grayed until receive the first bytes. When the first bytes
             are downloaded the 'on_channelXmitChanged' slot is executed and this track is enabled.*/
         }
     }
     qCDebug(jtNinjamGUI) << "channel view created";
 }
-
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+int NinjamRoomWindow::calculateEstimatedChunksPerInterval() const
+{
+    Controller::NinjamController *ninjamController = mainController->getNinjamController();
+    if(ninjamController){
+        int bpi = ninjamController->getCurrentBpi();
+        int bpm = ninjamController->getCurrentBpm();
+        if(bpm > 0){
+            return (60000/bpm * bpi) / 320;
+            /** 320 is just a 'almost magical empyrical (non exact)' value estimated observing how many chunks are downloaded from a remote stereo audio stream (48 KHz).
+                To compute exactly how many chunks per interval we need some infos like: remote sample rate, remote is mono or stereo, bpm, bpi, and the
+                quality used in the remove encoder (more quality need more bytes, and more chunks). Some of these infos are very trick to obtain, so
+                I'm just using a 'good enough guess' approach. Feel free to improve!
+            */
+        }
+    }
+    return 0;
+}
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamRoomWindow::adjustTracksWidth()
 {
@@ -538,6 +556,9 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
 
     connect(ninjamController, SIGNAL(userEnter(QString)), this, SLOT(handleUserEntering(QString)));
 
+    connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(setEstimatatedChunksPerIntervalInAllTracks()));
+    connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(setEstimatatedChunksPerIntervalInAllTracks()));
+
     connect(chatPanel, SIGNAL(userSendingNewMessage(QString)), this, SLOT(sendNewChatMessage(QString)));
 
     connect(chatPanel, SIGNAL(userConfirmingVoteToBpiChange(int)), this, SLOT(voteToChangeBpi(int)));
@@ -546,6 +567,14 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
 
     connect(ui->licenceButton, SIGNAL(clicked(bool)), this, SLOT(showServerLicence()));
 
+}
+
+void NinjamRoomWindow::setEstimatatedChunksPerIntervalInAllTracks()
+{
+    int estimatedChunksPerInterval = calculateEstimatedChunksPerInterval();
+    foreach (NinjamTrackGroupView *trackGroup, trackGroups.values()) {
+        trackGroup->setEstimatedChunksPerInterval(estimatedChunksPerInterval);
+    }
 }
 
 void NinjamRoomWindow::setTracksOrientation(Qt::Orientation newOrientation)

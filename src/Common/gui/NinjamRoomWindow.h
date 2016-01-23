@@ -82,6 +82,7 @@ private:
 
     UsersColorsPool usersColorsPool;
 
+    int calculateEstimatedChunksPerInterval() const;
 private slots:
 
     // ninjam panel controls
@@ -115,6 +116,8 @@ private slots:
     void voteToChangeBpm(int newBpm);
 
     void toggleTracksLayoutOrientation(QAbstractButton *buttonClicked);
+
+    void setEstimatatedChunksPerIntervalInAllTracks();
 };
 
 #endif // NINJAMROOMWINDOW_H
