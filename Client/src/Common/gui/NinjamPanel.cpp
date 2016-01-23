@@ -3,7 +3,6 @@
 #include "log/Logging.h"
 #include "BpiUtils.h"
 
-#include <QPainter>
 #include <QDebug>
 #include <QtAlgorithms>
 #include <QtMath>
@@ -300,11 +299,3 @@ NinjamPanel::~NinjamPanel()
     delete ui;
 }
 
-// little to allow stylesheet in custom widget
-void NinjamPanel::paintEvent(QPaintEvent *)
-{
-    QStyleOption opt;
-    opt.init(this);
-    QPainter p(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-}

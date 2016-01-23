@@ -813,7 +813,7 @@ JamRoomViewPanel{
     border: 1px solid rgba(0, 0, 0, 60);
 
     border-radius: 2px;
-    padding: 1px;
+    padding: 0px;
 }
 
 JamRoomViewPanel #panelTop{
@@ -1201,7 +1201,6 @@ NinjamRoomWindow TrackGroupView #countryLabel{
 
 NinjamRoomWindow TrackGroupView{
     border: 1px solid rgba(0, 0, 0, 80);
-    padding: 1px;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop:0      rgba(0, 0, 0, 0),
         stop:0.2    rgb(127,127,127)

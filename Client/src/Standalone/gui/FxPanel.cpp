@@ -3,7 +3,6 @@
 #include "LocalTrackViewStandalone.h"
 
 #include <QVBoxLayout>
-#include <QStyleOption>
 #include <QPainter>
 
 using namespace Controller;
@@ -53,14 +52,4 @@ FxPanel::~FxPanel()
     // delete ui;
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void FxPanel::paintEvent(QPaintEvent *)
-{
-    // default code to use stylesheets
-    QStyleOption opt;
-    opt.init(this);
-    QPainter p(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-}
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

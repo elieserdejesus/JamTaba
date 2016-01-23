@@ -30,9 +30,6 @@ public:
         return items;
     }
 
-protected:
-    void paintEvent(QPaintEvent *);
-
 private:
     QList<FxPanelItem *> items;
     Controller::MainControllerStandalone *controller; //storing a 'casted' controller for convenience

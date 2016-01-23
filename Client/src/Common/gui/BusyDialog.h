@@ -19,7 +19,6 @@ public:
     virtual void show();
 
 protected:
-    void paintEvent(QPaintEvent *);
     void showEvent(QShowEvent *e);
     void hideEvent(QHideEvent *e);
 

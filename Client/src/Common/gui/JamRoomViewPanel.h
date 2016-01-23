@@ -1,7 +1,7 @@
 #ifndef JAMROOMVIEWPANEL_H
 #define JAMROOMVIEWPANEL_H
 
-#include <QWidget>
+#include <QFrame>
 #include "ninjam/Server.h"
 #include "loginserver/LoginService.h"
 
@@ -17,7 +17,7 @@ namespace Controller {
 class MainController;
 }
 
-class JamRoomViewPanel : public QWidget
+class JamRoomViewPanel : public QFrame
 {
     Q_OBJECT
 
@@ -33,15 +33,15 @@ public:
         return roomInfo;
     }
 
-protected:
-    void paintEvent(QPaintEvent *e);
 signals:
     void startingListeningTheRoom(const Login::RoomInfo &roomInfo);
     void finishingListeningTheRoom(const Login::RoomInfo &roomInfo);
     void enteringInTheRoom(const Login::RoomInfo &roomInfo);
+
 private slots:
     void on_buttonListen_clicked();
     void on_buttonEnter_clicked();
+
 private:
     Ui::RoomViewPanel *ui;
     Controller::MainController *mainController;

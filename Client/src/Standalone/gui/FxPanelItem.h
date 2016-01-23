@@ -1,7 +1,7 @@
 #ifndef FXPANELITEM_H
 #define FXPANELITEM_H
 
-#include <QWidget>
+#include <QFrame>
 
 class LocalTrackViewStandalone;
 
@@ -17,7 +17,7 @@ namespace Controller {
 class MainControllerStandalone;
 }
 
-class FxPanelItem : public QWidget
+class FxPanelItem : public QFrame
 {
     Q_OBJECT
 
@@ -42,7 +42,6 @@ public:
 
 protected:
     void mousePressEvent(QMouseEvent *event);
-    void paintEvent(QPaintEvent *);
     void enterEvent(QEvent *);
     void leaveEvent(QEvent *);
 

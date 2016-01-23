@@ -7,8 +7,6 @@
 #include "LocalTrackViewStandalone.h"
 
 #include <QDebug>
-#include <QPainter>
-#include <QStyleOption>
 #include <QPushButton>
 #include <QLabel>
 #include <QHBoxLayout>
@@ -21,7 +19,7 @@
 const QString FxPanelItem::NEW_EFFECT_STRING = "new effect...";
 
 FxPanelItem::FxPanelItem(LocalTrackViewStandalone *parent, Controller::MainControllerStandalone *mainController) :
-    QWidget(parent),
+    QFrame(parent),
     plugin(nullptr),
     bypassButton(new QPushButton(this)),
     label(new QLabel()),
@@ -89,15 +87,6 @@ void FxPanelItem::unsetPlugin()
     this->plugin = nullptr;
 
     updateStyleSheet();
-}
-
-void FxPanelItem::paintEvent(QPaintEvent *ev)
-{
-    Q_UNUSED(ev);
-    QStyleOption opt;
-    opt.init(this);
-    QPainter p(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 void FxPanelItem::mousePressEvent(QMouseEvent *event)
