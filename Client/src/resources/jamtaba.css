@@ -809,12 +809,8 @@ BusyDialog > QLabel{
 
 
 JamRoomViewPanel{
-    background-color: none;/*#EAEAEA;*/
-    border: 1px solid rgb(180,180,180);
-    /*border-bottom: 1px solid rgb(167, 167, 167);
-    border-right: 1px solid rgb(180,180,180);*/
-    border-left-color: #C6C6C6;
-    border-top-color:#C6C6C6;
+    background-color: none;
+    border: 1px solid rgba(0, 0, 0, 60);
 
     border-radius: 2px;
     padding: 1px;
@@ -1240,10 +1236,6 @@ NinjamPanel #intervalPanel{
 
 NinjamPanel #panelCombos QLabel{
     color: black;
-}
-
-NinjamPanel #panelCombos QComboBox{
-    color: rgb(220, 220, 220);
 }
 
 NinjamPanel #panelCombos QComboBox::down-arrow
