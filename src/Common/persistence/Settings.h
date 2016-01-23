@@ -19,6 +19,7 @@ protected:
     QString name;
 public:
     SettingsObject(const QString &name);
+    virtual ~SettingsObject();
     virtual void write(QJsonObject &out) const = 0;
     virtual void read(const QJsonObject &in) = 0;
     inline QString getName() const
