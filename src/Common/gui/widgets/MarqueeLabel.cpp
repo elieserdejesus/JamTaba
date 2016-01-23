@@ -3,7 +3,6 @@
 #include <QPaintEvent>
 #include <QPainter>
 #include <QDebug>
-#include <QStyleOption>
 #include <QDateTime>
 #include <QtMath>
 
@@ -107,11 +106,6 @@ void MarqueeLabel::paintEvent(QPaintEvent *evt)
 {
     Q_UNUSED(evt);
     QPainter p(this);
-
-    // qt code to allow stylesheet
-    QStyleOption opt;
-    opt.init(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 
     p.setFont(font());
     p.setBrush(palette().text());// use the color defined in css file

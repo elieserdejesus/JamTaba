@@ -1,7 +1,7 @@
 #ifndef TRACKGROUPVIEW_H
 #define TRACKGROUPVIEW_H
 
-#include <QWidget>
+#include <QFrame>
 #include <QLineEdit>
 #include <QBoxLayout>
 
@@ -12,7 +12,7 @@ class TrackGroupView;
 class BaseTrackView;
 class QMenu;
 
-class TrackGroupView : public QWidget
+class TrackGroupView : public QFrame
 {
     Q_OBJECT
 
@@ -52,7 +52,7 @@ public:
     }
 
 protected:
-    void paintEvent(QPaintEvent *);
+    //void paintEvent(QPaintEvent *);
 
     QList<BaseTrackView *> trackViews;
 

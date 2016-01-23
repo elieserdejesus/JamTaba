@@ -7,7 +7,7 @@
 #include <QDebug>
 
 TrackGroupView::TrackGroupView(QWidget *parent) :
-    QWidget(parent)
+    QFrame(parent)
 {
     setupUI();
 }
@@ -19,7 +19,7 @@ void TrackGroupView::setupUI()
 
     mainLayout = new QVBoxLayout(this);
     mainLayout->setSpacing(0);
-    mainLayout->setContentsMargins(1, 1, 1, 1);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
 
     topPanel = new QWidget(this);
     topPanel->setObjectName(QStringLiteral("topPanel"));
@@ -76,14 +76,14 @@ TrackGroupView::~TrackGroupView()
     //delete ui;
 }
 
-// little to allow stylesheet in custom widget
-void TrackGroupView::paintEvent(QPaintEvent *)
-{
-    QStyleOption opt;
-    opt.init(this);
-    QPainter p(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-}
+//// little to allow stylesheet in custom widget
+//void TrackGroupView::paintEvent(QPaintEvent *)
+//{
+//    QStyleOption opt;
+//    opt.init(this);
+//    QPainter p(this);
+//    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+//}
 
 BaseTrackView *TrackGroupView::addTrackView(long trackID)
 {

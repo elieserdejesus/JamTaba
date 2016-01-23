@@ -1,9 +1,9 @@
 #ifndef PEAK_METER_H
 #define PEAK_METER_H
 
-#include <QWidget>
+#include <QFrame>
 
-class PeakMeter : public QWidget
+class PeakMeter : public QFrame
 {
     Q_OBJECT
 

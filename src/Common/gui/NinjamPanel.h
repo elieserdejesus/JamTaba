@@ -61,7 +61,6 @@ public:
 
     void setLowContrastPaintInIntervalPanel(bool useLowContrastColors);
 protected:
-    void paintEvent(QPaintEvent *);
     bool eventFilter(QObject *source, QEvent *ev);
     Ui::NinjamPanel *ui;
     QPushButton *hostSyncButton;// created only when running as vst plugin

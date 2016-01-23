@@ -1,6 +1,5 @@
 #include "BusyDialog.h"
 #include "ui_BusyDialog.h"
-#include <QPainter>
 #include <QMovie>
 
 BusyDialog::BusyDialog(QWidget *parent) :
@@ -70,13 +69,4 @@ QRegion BusyDialog::roundedRect(const QRect &rect, int round)
 BusyDialog::~BusyDialog()
 {
     delete ui;
-}
-
-// little to allow stylesheet in custom widget
-void BusyDialog::paintEvent(QPaintEvent *)
-{
-    QStyleOption opt;
-    opt.init(this);
-    QPainter p(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }

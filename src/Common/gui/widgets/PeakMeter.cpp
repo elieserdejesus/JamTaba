@@ -1,9 +1,7 @@
 #include "PeakMeter.h"
 #include "Utils.h"
-#include <cmath>
 #include <QDebug>
 #include <QResizeEvent>
-#include <QStyleOption>
 #include <QDateTime>
 #include <QPainter>
 
@@ -106,9 +104,9 @@ void PeakMeter::paintEvent(QPaintEvent *)
     QPainter painter(this);
 
     // to allow stylesheets
-    QStyleOption opt;
-    opt.init(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
+    //QStyleOption opt;
+    //opt.init(this);
+    //style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
 
     // meter
     if (isEnabled()) {

@@ -5,8 +5,6 @@
 #include <QPainter>
 #include <QFontMetrics>
 #include <QDebug>
-#include <QStyleOption>
-#include <cmath>
 
 QColor IntervalProgressDisplay::PLAYED_BEATS_FIRST_COLOR = QColor(0, 0, 0, 0);// played beats are transparent
 QColor IntervalProgressDisplay::PLAYED_BEATS_SECOND_COLOR = QColor(0, 0, 0, 0);
@@ -157,10 +155,6 @@ void IntervalProgressDisplay::paintEvent(QPaintEvent *e)
     p.setRenderHint(QPainter::Antialiasing, true);
 
     QColor textColor(Qt::black);
-
-    QStyleOption opt;
-    opt.init(this); // allow style sheet
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 
     switch (paintMode) {
     case ELLIPTICAL:

@@ -5,12 +5,11 @@
 #include "ninjam/User.h"
 #include "ninjam/UserChannel.h"
 
-#include <QPainter>
 #include <QDebug>
 
 JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo,
                                    Controller::MainController *mainController) :
-    QWidget(nullptr),
+    QFrame(nullptr),
     ui(new Ui::RoomViewPanel),
     mainController(mainController),
     roomInfo(roomInfo)
@@ -91,15 +90,6 @@ bool JamRoomViewPanel::userInfoLessThan(const Login::UserInfo &u1, const Login::
 void JamRoomViewPanel::addPeak(float peak)
 {
     ui->wavePeakPanel->addPeak(peak);
-}
-
-void JamRoomViewPanel::paintEvent(QPaintEvent *e)
-{
-    Q_UNUSED(e)
-    QStyleOption opt;
-    opt.init(this);
-    QPainter p(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 bool JamRoomViewPanel::userIsBot(const Login::UserInfo &userInfo)
