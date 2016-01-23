@@ -132,8 +132,10 @@ void Service::sendAudioIntervalBegin(const QByteArray &GUID, quint8 channelIndex
 //this slot is invoked when socket receive new data
 void Service::handleAllReceivedMessages()
 {
-    Q_ASSERT(socket);
     messagesHandler->handleAllMessages();
+    if(needSendKeepAlive()){
+        sendMessageToServer(ClientKeepAlive());
+    }
 }
 
 void Service::clear(){
