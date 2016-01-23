@@ -52,6 +52,7 @@ void RtMidiDriver::start(const QList<bool> &deviceStatuses){
                 if(!stream->isPortOpen()){
                     try{
                         qCInfo(jtMidi) << "Starting MIDI in " << QString::fromStdString(stream->getPortName(deviceIndex));
+                        stream->ignoreTypes();// ignoring sysex, miditime and midi sense messages
                         stream->openPort(deviceIndex);
                     }
                     catch(RtMidiError e){
