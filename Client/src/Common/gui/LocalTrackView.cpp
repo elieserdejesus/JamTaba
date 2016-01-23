@@ -10,10 +10,7 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
     BaseTrackView(mainController, channelIndex),
     inputNode(nullptr)
 {
-    if (!mainController) {
-        qCritical() << "LocalTrackView::init() mainController is null!";
-        return;
-    }
+    Q_ASSERT(mainController);
 
     // insert a input node in controller
     inputNode = new Audio::LocalInputAudioNode(channelIndex);
@@ -88,6 +85,17 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMi
 
         BaseTrackView::setLayoutWidgetsVisibility(secondaryChildsLayout, !this->peakMetersOnly);
         BaseTrackView::setLayoutWidgetsVisibility(primaryChildsLayout, !this->peakMetersOnly);
+
+        if(peakMetersOnly){//add the peak meters directly in main layout, so these meters are horizontally centered
+            mainLayout->addWidget(peakMeterLeft, 0, 0);
+            mainLayout->addWidget(peakMeterRight, 0, 1);
+        }
+        else{// put the meter in the original layout
+            metersLayout->addWidget(peakMeterLeft);
+            metersLayout->addWidget(peakMeterRight);
+        }
+        mainLayout->setHorizontalSpacing( peakMetersOnly ? 0 : 6 );
+
         peakMeterLeft->setVisible(true);//peak meters are always visible
         peakMeterRight->setVisible(true);
 
