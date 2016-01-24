@@ -22,7 +22,7 @@ void IntervalChunksDisplay::setEstimatedTotalChunks(int estimatedChunks)
 void IntervalChunksDisplay::incrementDownloadedChunks()
 {
     downloadedChunks++;
-    if(downloadedChunks > downloadedChunks)
+    if(downloadedChunks > totalChunks)
         setMaximum(downloadedChunks + 1);
     setValue(downloadedChunks);
 }

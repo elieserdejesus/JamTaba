@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QFontMetrics>
 #include <QDebug>
+#include <cmath>
 
 QColor IntervalProgressDisplay::PLAYED_BEATS_FIRST_COLOR = QColor(0, 0, 0, 0);// played beats are transparent
 QColor IntervalProgressDisplay::PLAYED_BEATS_SECOND_COLOR = QColor(0, 0, 0, 0);
