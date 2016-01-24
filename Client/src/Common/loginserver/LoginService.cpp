@@ -203,6 +203,7 @@ QNetworkReply *LoginService::sendCommandToServer(const QUrlQuery &query, bool sy
     QUrl url(SERVER);
     QByteArray postData(query.toString(QUrl::EncodeUnicode).toStdString().c_str());
     QNetworkRequest request(url);
+    request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork);// disable cache
     request.setHeader(QNetworkRequest::ContentTypeHeader,
                       QStringLiteral("application/x-www-form-urlencoded; charset=utf-8"));
     pendingReply = httpClient.post(request, postData);
