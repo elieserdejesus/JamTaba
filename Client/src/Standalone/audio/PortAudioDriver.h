@@ -59,6 +59,10 @@ private:
 
     void releaseHostSpecificParameters(const PaStreamParameters &inputParameters,
                                        const PaStreamParameters &outputParameters);
+
+    void ensureInputRangeIsValid();
+    void ensureOutputRangeIsValid();
+
 };
 }
 
