@@ -23,10 +23,15 @@ NinjamTrackNode::~NinjamTrackNode()
 {
 }
 
-void NinjamTrackNode::discardIntervals()
+void NinjamTrackNode::discardIntervals(bool keepMostRecentInterval)
 {
     QMutexLocker locker(&mutex);
-    intervals.clear();
+    if (!keepMostRecentInterval) {
+        intervals.clear();
+    } else {
+        while(intervals.size() > 1)//keep the first downloaded interval
+            intervals.removeFirst();
+    }
     qDebug() << "intervals discarded";
 }
 

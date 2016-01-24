@@ -628,10 +628,10 @@ void NinjamController::on_ninjamAudiointervalCompleted(const Ninjam::User &user,
     }
 }
 
-void NinjamController::reset(){
+void NinjamController::reset(bool keepRecentIntervals){
     QMutexLocker locker(&mutex);
-    foreach (NinjamTrackNode* trackNode, this->trackNodes.values()) {
-        trackNode->discardIntervals();
+    foreach (NinjamTrackNode* trackNode, trackNodes.values()) {
+        trackNode->discardIntervals(keepRecentIntervals);
     }
     intervalPosition = lastBeat = 0;
 }
@@ -702,7 +702,7 @@ void NinjamController::setSampleRate(int newSampleRate){
         return;
     }
 
-    reset();//discard downloaded intervals
+    reset(false);//discard all downloaded intervals
 
     this->samplesInInterval = computeTotalSamplesInInterval();
 
