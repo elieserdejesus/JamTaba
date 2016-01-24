@@ -12,7 +12,7 @@ public:
     NinjamRoomWindowVST(MainWindow *parent, const Login::RoomInfo &roomInfo, MainControllerVST *mainController);
 
 private slots:
-    void ninjamHostSyncButtonClicked();
+    void setHostSyncState(bool syncWithHost);
 
 private:
     void showMessageBox(const QString &title, const QString &msg);

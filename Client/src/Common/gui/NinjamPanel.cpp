@@ -53,11 +53,13 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     ui->peakMeterLeft->setOrientation(Qt::Horizontal);
     ui->peakMeterRight->setOrientation(Qt::Horizontal);
 }
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamPanel::setLowContrastPaintInIntervalPanel(bool useLowContrastColors)
 {
     ui->intervalPanel->setPaintUsingLowContrastColors(useLowContrastColors);
 }
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++
 void NinjamPanel::setFullViewStatus(bool fullView)
 {
@@ -73,22 +75,23 @@ void NinjamPanel::addMasterControls(QWidget *masterControlsPanel)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++
+//TODO this function and the hostSyncButton are used only in VST plugin. Create a NinjamPanelVST inheriting from NinjamPanel
 void NinjamPanel::createHostSyncButton(const QString &buttonText)
 {
     if (!hostSyncButton) {// just in case
         hostSyncButton = new QPushButton(buttonText);
+        hostSyncButton->setCheckable(true);
         QGridLayout *layout = dynamic_cast<QGridLayout *>(ui->panelCombos->layout());
         layout->addWidget(hostSyncButton, layout->rowCount(), 0, 1, 2);
 
-        QObject::connect(hostSyncButton, SIGNAL(clicked(bool)), this, SIGNAL(
-                             hostSyncButtonClicked()));
+        connect(hostSyncButton, SIGNAL(clicked(bool)), this, SIGNAL(hostSyncStateChanged(bool)));
     }
 }
 
-void NinjamPanel::setHostSyncButtonAvailability(bool enabled)
+void NinjamPanel::uncheckHostSyncButton()
 {
-    if (hostSyncButton)
-        hostSyncButton->setEnabled(enabled);
+    if(hostSyncButton)
+        hostSyncButton->setChecked(false);
 }
 
 void NinjamPanel::setBpiComboText(const QString &text)
@@ -298,4 +301,3 @@ NinjamPanel::~NinjamPanel()
 {
     delete ui;
 }
-

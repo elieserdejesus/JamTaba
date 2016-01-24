@@ -207,7 +207,7 @@ void JamtabaPlugin::processReplacing(float **inputs, float **outputs, VstInt32 s
         if (transportStartDetectedInHost()) {// user pressing play/start in host?
             NinjamControllerVST *ninjamController = controller->getNinjamController();
             if (ninjamController->isWaitingForHostSync())
-                ninjamController->syncWithHost();
+                ninjamController->startSynchronizedWithHost();
         }
     }
 
@@ -241,7 +241,7 @@ void JamtabaPlugin::suspend()
 {
     qCDebug(jtVstPlugin) << "JamtabaPLugin::suspend()";
     if (controller && controller->isPlayingInNinjamRoom()) {
-        controller->getNinjamController()->reset();// discard downloaded intervals
+        controller->getNinjamController()->reset(true);// discard downloaded intervals but keep the most recent
         controller->finishUploads();// send the last part of ninjam intervals
     }
 }

@@ -18,26 +18,16 @@ class NinjamPanel : public QWidget
 {
     Q_OBJECT
 
-signals:
-    void bpiComboActivated(const QString &);
-    void bpmComboActivated(const QString &);
-    void accentsComboChanged(int index);
-    void gainSliderChanged(int value);
-    void panSliderChanged(int value);
-    void muteButtonClicked();
-    void soloButtonClicked();
-    void hostSyncButtonClicked();
 public:
     explicit NinjamPanel(QWidget *parent = 0);
     ~NinjamPanel();
 
     void createHostSyncButton(const QString &buttonText);
+    void uncheckHostSyncButton();//used to uncheck the button when the sync with host fail (different BPMs)
 
     void setMuteButtonStatus(bool checked);
     void setPanSliderValue(int value);
     void setGainSliderValue(int value);
-
-    void setHostSyncButtonAvailability(bool enabled);// availability? We need a better work here :)
 
     void setBpiComboText(const QString &);
     void setBpmComboText(const QString &);
@@ -60,6 +50,17 @@ public:
     void setFullViewStatus(bool fullView);
 
     void setLowContrastPaintInIntervalPanel(bool useLowContrastColors);
+
+signals:
+    void bpiComboActivated(const QString &);
+    void bpmComboActivated(const QString &);
+    void accentsComboChanged(int index);
+    void gainSliderChanged(int value);
+    void panSliderChanged(int value);
+    void muteButtonClicked();
+    void soloButtonClicked();
+    void hostSyncStateChanged(bool syncWithHost);
+
 protected:
     bool eventFilter(QObject *source, QEvent *ev);
     Ui::NinjamPanel *ui;

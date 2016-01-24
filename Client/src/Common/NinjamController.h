@@ -68,7 +68,7 @@ public:
 
     void setSampleRate(int newSampleRate);
 
-    void reset();// discard downloaded intervals and reset intervalPosition
+    void reset(bool keepRecentIntervals);// discard downloaded intervals and reset intervalPosition
 
     inline bool isPreparedForTransmit() const
     {

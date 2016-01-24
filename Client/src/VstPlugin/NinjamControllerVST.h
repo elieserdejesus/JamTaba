@@ -15,8 +15,9 @@ public:
         return waitingForHostSync;
     }
 
-    void syncWithHost();
-    void waitForHostSync();
+    void startSynchronizedWithHost();
+    void stopAndWaitForHostSync();
+    void disableHostSync();
 
     void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
 

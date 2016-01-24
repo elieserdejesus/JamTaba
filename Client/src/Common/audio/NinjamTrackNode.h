@@ -31,7 +31,7 @@ public:
         return playing;
     }
 
-    void discardIntervals();
+    void discardIntervals(bool keepMostRecentInterval);
     inline void setProcessingLastPartOfInterval(bool status)
     {
         this->processingLastPartOfInterval = status;

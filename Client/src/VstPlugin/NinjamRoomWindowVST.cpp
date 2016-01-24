@@ -12,29 +12,31 @@ NinjamRoomWindowVST::NinjamRoomWindowVST(MainWindow *parent, const Login::RoomIn
     QString hostName = mainController->getHostName();
     if (ninjamPanel) {
         ninjamPanel->createHostSyncButton("Sync with " + hostName);
-        QObject::connect(ninjamPanel, SIGNAL(hostSyncButtonClicked()), this,
-                         SLOT(ninjamHostSyncButtonClicked()));
+        QObject::connect(ninjamPanel, SIGNAL(hostSyncStateChanged(bool)), this,
+                         SLOT(setHostSyncState(bool)));
     }
 }
 
-void NinjamRoomWindowVST::ninjamHostSyncButtonClicked()
+// activate/deactivate sync with host
+void NinjamRoomWindowVST::setHostSyncState(bool syncWithHost)
 {
-    int ninjamBpm = controller->getNinjamController()->getCurrentBpm();
-    bool canSync = controller->getHostBpm() == ninjamBpm;
-    QString hostName = controller->getHostName();
-    if (canSync) {
-        // stop ninjam streams and wait until user press play/start in host
-        NinjamControllerVST* ninjamController = controller->getNinjamController();
-        Q_ASSERT(ninjamController);
-        ninjamController->waitForHostSync();
-        if (ninjamPanel) {
+    Q_ASSERT(ninjamPanel);
+    NinjamControllerVST *ninjamController = controller->getNinjamController();
+    if (syncWithHost) {
+        int ninjamBpm = ninjamController->getCurrentBpm();
+        int hostBpm = controller->getHostBpm();
+        QString hostName = controller->getHostName();
+        if (hostBpm == ninjamBpm) {
+            ninjamController->stopAndWaitForHostSync();// stop ninjam streams and wait until user press play/start in host
             ninjamPanel->setCurrentBeat(0);
-            showMessageBox("Synchronizing...",
-                           "Press play/start in " + hostName + " to sync with Jamtaba!");
+            showMessageBox("Synchronizing...", "Press play/start in " + hostName + " to sync with Jamtaba!");
+        } else {
+            QString message = "Change " + hostName + " BPM to " + QString::number(ninjamBpm) + " and try sync again!";
+            showMessageBox("Trying to sync ...", message);
+            ninjamPanel->uncheckHostSyncButton();//the button is unchecked, so user can try again
         }
     } else {
-        showMessageBox("Trying to sync ...", "Change " + hostName + " BPM to " + QString::number(
-                           ninjamBpm) + " and try sync again!");
+        ninjamController->disableHostSync();
     }
 }
 
