@@ -27,7 +27,7 @@ StandalonePreferencesDialog::StandalonePreferencesDialog(QWidget *parent,
 {
 #ifdef Q_OS_MAC
     ui->comboAudioDevice->setVisible(false);
-    ui->asioDriverLabel->setVisible(false);
+    ui->audioDeviceGroupBox->setVisible(false);
     ui->groupBoxInputs->setVisible(false);
     ui->groupBoxOutputs->setVisible(false);
 #endif

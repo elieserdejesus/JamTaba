@@ -3,6 +3,7 @@
 
 #include "ui_MainWindow.h"
 #include <QMainWindow>
+#include <QMessageBox>
 #include "BusyDialog.h"
 #include "persistence/Settings.h"
 #include "LocalTrackGroupView.h"

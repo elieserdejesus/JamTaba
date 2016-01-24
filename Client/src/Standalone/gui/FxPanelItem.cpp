@@ -15,6 +15,7 @@
 #include <QMouseEvent>
 #include <QMenu>
 #include <QDesktopWidget>
+#include <QStyle>
 
 const QString FxPanelItem::NEW_EFFECT_STRING = "new effect...";
 

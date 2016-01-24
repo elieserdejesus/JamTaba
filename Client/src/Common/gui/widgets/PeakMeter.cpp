@@ -4,6 +4,7 @@
 #include <QResizeEvent>
 #include <QDateTime>
 #include <QPainter>
+#include <QStyle>
 
 const int PeakMeter::LINES_MARGIN = 3;
 const int PeakMeter::MIN_SIZE = 1;
