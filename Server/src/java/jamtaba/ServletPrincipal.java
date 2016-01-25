@@ -40,9 +40,9 @@ public class ServletPrincipal extends HttpServlet {
         ObjectifyService.register(Peer.class);
         ObjectifyService.register(RealtimeRoom.class);
         ObjectifyService.register(Version.class);
-        
+
         DbUtils.tryCreateCurrenVersion();//create current version objet in data store if necessary
-        
+
         //+++++++++ CREATE THE STATIC (created by the system) ROOMS
         Collection<RealtimeRoom> rooms = DbUtils.loadRooms();
         if (rooms.isEmpty()) {
@@ -62,6 +62,7 @@ public class ServletPrincipal extends HttpServlet {
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException {
+
         Command command = CommandFactory.getCommand(req);
         try {
             configureResponse(resp);
@@ -71,7 +72,7 @@ public class ServletPrincipal extends HttpServlet {
             if (command.requiredDataIsAvailable(req)) {
                 command.execute(req, resp);
 
-                if(!(command instanceof DisconnectFromServer)){
+                if (!(command instanceof DisconnectFromServer)) {
                     //build the response
                     Collection<RealtimeRoom> jamRooms = DbUtils.loadRooms();
                     Collection<NinjamServer> ninjamServers = NinjamServers.getServers(ipToCountryResolver);
@@ -80,8 +81,8 @@ public class ServletPrincipal extends HttpServlet {
                     resp.getWriter().print(VsJsonUtils.getJsonToResponse(jamRooms, ninjamServers, connectedPeer));
                 }
             }
-        } catch (Exception e) {
-            throw new RuntimeException("Error executing " + command.getClass().getName(), e);
+        } catch (Throwable e) {
+            LOGGER.log(Level.SEVERE, null, e);
         }
     }
 
@@ -130,5 +131,4 @@ public class ServletPrincipal extends HttpServlet {
 //            throw new ServletException(e);
 //        }
 //    }
-
 }

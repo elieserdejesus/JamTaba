@@ -19,11 +19,10 @@ public class VsJsonUtils {
 //        //json.put("room", jamRoomToJSONObject(connectedRoom));
 //        return json.toString();// toJSONString();
 //    }
-
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
     public static String getJsonToResponse(Collection<RealtimeRoom> realtimeRooms, Collection<NinjamServer> ninjamServers, Peer connectedPeer) throws JSONException {
         JSONObject json = new JSONObject();
-        
+
         JSONArray jamRoomsArray = new JSONArray();
         for (RealtimeRoom jamRoom : realtimeRooms) {
             jamRoomsArray.put(jamRoomToJSONObject(jamRoom));
@@ -32,28 +31,34 @@ public class VsJsonUtils {
             jamRoomsArray.put(ninjamServerToJSONObject(ninjamServer));
         }
         json.put("rooms", jamRoomsArray);
-        
+
         if (connectedPeer != null) {
             json.put("peer", peerAsJSONObject(connectedPeer));
         }
-        
-        json.put("clientCompatibility", clientVersionIsCompatible(connectedPeer) );
+
+        json.put("clientCompatibility", clientVersionIsCompatible(connectedPeer));
         json.put("newVersionAvailable", newVersionIsAvailable(connectedPeer));
         return json.toString();
     }
 
-    private static boolean newVersionIsAvailable(Peer connectedPeer){
+    private static boolean newVersionIsAvailable(Peer connectedPeer) {
+        if (connectedPeer == null) {
+            return false;
+        }
         Version clientVersion = Version.fromString(connectedPeer.getVersion());
         Version serverVersion = DbUtils.getCurrentVersion();
         return serverVersion.isNewer(clientVersion);
     }
-    
-    private static boolean clientVersionIsCompatible(Peer connectedPeer){
+
+    private static boolean clientVersionIsCompatible(Peer connectedPeer) {
+        if (connectedPeer == null) {
+            return false;
+        }
         Version clientVersion = Version.fromString(connectedPeer.getVersion());
         Version serverVersion = DbUtils.getCurrentVersion();
         return clientVersion.isCompatibleWith(serverVersion);
     }
-    
+
     public static String getJsonToResponse(List<RealtimeRoom> jamRooms, Collection<NinjamServer> ninjamServers) throws JSONException {
         return getJsonToResponse(jamRooms, ninjamServers, null);
     }
@@ -74,7 +79,6 @@ public class VsJsonUtils {
 //        json.put("rooms", realTimeRoomsToJsonArray(jamRooms));
 //        return json.toString();
 //    }
-
     public static String getJsonToJamRoom(RealtimeRoom jamRoom) throws JSONException {
         JSONObject room = new JSONObject();
         room.put("room", jamRoomToJSONObject(jamRoom));
@@ -127,7 +131,7 @@ public class VsJsonUtils {
         serverObject.put("users", usersArray);
         return serverObject;
     }
-    
+
     private static JSONObject jamRoomToJSONObject(RealtimeRoom jamRoom) throws JSONException {
         return jamRoomToJSONObject(jamRoom, true);
     }

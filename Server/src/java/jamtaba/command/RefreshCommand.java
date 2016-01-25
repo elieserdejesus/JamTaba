@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import jamtaba.Peer;
 import jamtaba.RequestUtils;
+import java.util.logging.Level;
 
 /**
  *
@@ -28,7 +29,13 @@ public class RefreshCommand extends AbstractCommand {
     }
 
     public boolean requiredDataIsAvailable(HttpServletRequest req) {
-        return RequestUtils.peerIsConnected(req);
+        boolean peerIsConnected = RequestUtils.peerIsConnected(req);
+        if (peerIsConnected) {
+            LOGGER.log(Level.INFO, "Starting RefreshCommand for peerID:{0}", req.getSession().getAttribute(RequestUtils.CONNECTED_PEER_ID));
+        } else {
+            LOGGER.log(Level.SEVERE, "Starting RefreshCommand, but user is not connected! ");
+        }
+        return peerIsConnected;
     }
 
 }

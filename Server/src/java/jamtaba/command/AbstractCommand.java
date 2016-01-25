@@ -1,6 +1,5 @@
 package jamtaba.command;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,9 +17,9 @@ import jamtaba.RequestUtils;
 public abstract class AbstractCommand implements Command {
 
     private final Set entitiesToSave = new HashSet();
-    
-    private static final Logger LOGGEr = Logger.getLogger(AbstractCommand.class.getName());
-   
+
+    private static final Logger LOGGER = Logger.getLogger(AbstractCommand.class.getName());
+
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
         try {
             Peer peer = getConnectedPeer(req);
@@ -42,14 +41,6 @@ public abstract class AbstractCommand implements Command {
         }
     }
 
-    /**
-     *
-     * @param req
-     * @param connectedPeer
-     * @param rooms
-     * @return A iterable of objects to persist
-     * @throws ServletException
-     */
     protected abstract void doCommandAction(HttpServletRequest req, Peer connectedPeer) throws ServletException;
 
     protected void removeConnectedPeerFromCurrentRoom(Peer connectedPeer) {
@@ -80,18 +71,16 @@ public abstract class AbstractCommand implements Command {
         return entitiesToSave;
     }
 
-    public static Peer getConnectedPeer(HttpServletRequest req) throws IOException {
+    public static Peer getConnectedPeer(HttpServletRequest req) {
         Peer peer;
         if (!RequestUtils.peerIsConnected(req)) {
             peer = RequestUtils.buildPeerFromRequest(req);
-//            if (peer.getId() == null) {
-//                DbUtils.save(peer);
-//            }
+            LOGGER.log(Level.CONFIG, "Peer {0} not connected, creating peer", peer.getUserName());
         } else {
-            
             peer = RequestUtils.getPeerFromSession(req);
-            if(peer == null){
-                LOGGEr.log(Level.SEVERE, "O peer criado a partir da sessão estava nulo! ID do peer na sessão: {0}", req.getSession(false).getAttribute(RequestUtils.CONNECTED_PEER_ID));
+            if (peer == null) {
+                boolean peerIDInTheSession = req.getSession().getAttribute(RequestUtils.CONNECTED_PEER_ID) != null;
+                LOGGER.log(Level.SEVERE, "The peer is null. Peer ID is in the session:{0} PeerID:{1}", new Object[]{peerIDInTheSession, req.getSession().getAttribute(RequestUtils.CONNECTED_PEER_ID)});
             }
         }
         return peer;

@@ -1,9 +1,6 @@
-
 package jamtaba.ninjam;
 
-import jamtaba.ninjam.public_servers.ServersParser;
 import jamtaba.ip2c.IpToCountryResolver;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -14,27 +11,32 @@ import java.util.logging.Logger;
  * @author elieser
  */
 public class NinjamServers {
+
+    private static final Logger LOGGER = Logger.getLogger(NinjamServers.class.getName());
     
-    private static final int UPDATE_PERIOD = 10000;//10 seconds
+    private static final int UPDATE_PERIOD = 30000;//30 seconds
     private static Collection<NinjamServer> servers = new ArrayList<NinjamServer>();
-    private static long lastUpdate=  0;
-    
-    public static Collection<NinjamServer> getServers(IpToCountryResolver ipToCountryResolver){
-        if(needUpdate()){
-           try{
-            servers = ServersParser.getPublicServers(ipToCountryResolver);
-           }
-           catch(IOException ex){
-               Logger.getLogger(NinjamServers.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-           }
+    private static long lastUpdate = 0;
+
+    public static Collection<NinjamServer> getServers(IpToCountryResolver ipToCountryResolver) {
+        if (needUpdate()) {
+            try {
+                CockosWebSiteParser serversParser = new CockosWebSiteParser(ipToCountryResolver);
+                LOGGER.log(Level.INFO, "updating the public servers list...");
+                servers = serversParser.getPublicServers();
+                lastUpdate = System.currentTimeMillis();
+            } catch (Exception ex) {
+                LOGGER.log(Level.SEVERE, null, ex);
+            }
         }
-        lastUpdate = System.currentTimeMillis();
+        else{
+            LOGGER.log(Level.INFO, "Returning the cached servers list!");
+        }
         return servers;
     }
-    
-    private static boolean needUpdate(){
-        return System.currentTimeMillis() - lastUpdate > UPDATE_PERIOD;
+
+    private static boolean needUpdate() {
+        return System.currentTimeMillis() - lastUpdate >= UPDATE_PERIOD;
     }
-    
-    
+
 }
