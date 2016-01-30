@@ -455,7 +455,7 @@ bool MainWindow::canUseTwoColumnLayout() const
 
 void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms)
 {
-    if (!isVisible())
+    if (!isVisible() || publicRooms.isEmpty())
         return;
 
     hideBusyDialog();
