@@ -76,7 +76,7 @@ public:
         return mainController;
     }
 
-    virtual void loadPresetToTrack(const Persistence::Preset &preset);
+    virtual void loadPreset(const Persistence::Preset &preset);
     void resetLocalChannels();
 
     bool isTransmiting(int channelID) const;
