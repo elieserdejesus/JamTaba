@@ -147,8 +147,8 @@ void MainWindow::stopCurrentRoomStream()
         long long roomID = mainController->getCurrentStreamingRoomID();
         if (roomViewPanels[roomID])
             roomViewPanels[roomID]->clearPeaks(true);
+        mainController->stopRoomStream();
     }
-    mainController->stopRoomStream();
 }
 
 void MainWindow::showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon)
@@ -472,6 +472,11 @@ void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRoom
             JamRoomViewPanel *roomViewPanel = roomViewPanels[roomInfo.getID()];
             if (roomViewPanel) {
                 roomViewPanel->refresh(roomInfo);
+                //check if is playing a public room stream but this room is empty now
+                if( mainController->isPlayingRoomStream() ){
+                    if(roomInfo.isEmpty() && mainController->getCurrentStreamingRoomID() == roomInfo.getID())
+                        stopCurrentRoomStream();
+                }
                 ui.allRoomsContent->layout()->removeWidget(roomViewPanel); // the widget is removed but added again
             } else {
                 roomViewPanel = createJamRoomViewPanel(roomInfo);
