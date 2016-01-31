@@ -1156,5 +1156,7 @@ void MainWindow::setupSignals()
 void MainWindow::initializeMasterFader()
 {
     float lastMasterGain = mainController->getSettings().getLastMasterGain();
-    ui.masterFader->setValue( lastMasterGain * 100 );
+    int faderPosition = lastMasterGain * 100;
+    ui.masterFader->setValue(faderPosition);
+    setMasterGain(faderPosition);
 }
