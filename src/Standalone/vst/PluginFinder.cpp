@@ -54,27 +54,14 @@ void PluginFinder::handleProcessError(const QString &lastScannedPlugin)
 QString PluginFinder::getVstScannerExecutablePath() const
 {
     // try the same jamtaba executable path first
-    QString scannerExePath = QApplication::applicationDirPath() + "/VstScanner";// In the deployed version the VstScanner and Jamtaba2 executables are in the same folder.
+    QString scannerExePath = QApplication::applicationDirPath() + "/VstScanner";// In the deployed and debug version the VstScanner and Jamtaba2 executables are in the same folder.
 #ifdef Q_OS_WIN
     scannerExePath += ".exe";
 #endif
     if (QFile(scannerExePath).exists())
         return scannerExePath;
     else
-        qWarning(jtStandalonePluginFinder) << "Scanner exe not founded in" << scannerExePath;
-
-    // In dev time the executable (Jamtaba2 and VstScanner) are in different folders...
-    // We need a more elegant way to solve this at dev time. At moment I'm a very dirst approach to return the executable path in MacOsx, and just a little less dirty solution in windows.
-    QString appPath = QCoreApplication::applicationDirPath();
-#ifdef Q_OS_MAC
-    return
-        "/Users/elieser/Desktop/Debug/VstScanner/VstScanner";
-#endif
-    QString buildType = QLibraryInfo::isDebugBuild() ? "debug" : "release";
-    scannerExePath = appPath + "/../../VstScanner/"+ buildType +"/VstScanner.exe";
-    if (QFile(scannerExePath).exists())
-        return scannerExePath;
-    qCCritical(jtStandalonePluginFinder) << "Vst scanner exeutable not found in" << scannerExePath;
+        qCritical() << "Scanner executable not founded in" << scannerExePath;
     return "";
 }
 

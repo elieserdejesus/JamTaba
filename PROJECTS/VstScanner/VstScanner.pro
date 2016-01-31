@@ -6,6 +6,12 @@ CONFIG -= app_bundle #in MAC create just a binary, not a complete bundle
 CONFIG += c++11
 DEFINES += VST_FORCE_DEPRECATED=0 #enable VST 2.3 features
 
+#when debugging the VstScanner executable is generated in the Standalone folder
+CONFIG(debug, debug|release){
+    message("Generating VstScanner executable in Standalone folder")
+    DESTDIR = $$OUT_PWD/../Standalone/debug
+}
+
 TEMPLATE = app
 
 ROOT_PATH = "../.."
