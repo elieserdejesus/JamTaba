@@ -49,6 +49,7 @@ private:
     void initialize(const Login::RoomInfo &roomInfo);
     bool roomContainsBotsOnly(const Login::RoomInfo &roomInfo);
     bool userIsBot(const Login::UserInfo &userInfo);
+    void updateButtonListen();
 
     static bool userInfoLessThan(const Login::UserInfo &u1, const Login::UserInfo &u2);
     QString buildRoomDescriptionString(const Login::RoomInfo &roomInfo);

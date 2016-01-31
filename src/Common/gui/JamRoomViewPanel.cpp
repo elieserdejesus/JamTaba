@@ -71,7 +71,8 @@ void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
         }
     }
 
-    ui->buttonListen->setEnabled(roomInfo.hasStream() && !roomInfo.isEmpty());
+    updateButtonListen();
+
     if (!roomInfo.hasStream()) {
         ui->buttonListen->setIcon(QIcon(":/images/warning.png"));
         ui->buttonListen->setToolTip("The audio stream of this room is not available at moment!");
@@ -80,6 +81,13 @@ void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
         ui->buttonListen->setToolTip("");// clean the tooltip
     }
     ui->buttonEnter->setEnabled(!roomInfo.isFull());
+}
+
+void JamRoomViewPanel::updateButtonListen()
+{
+    ui->buttonListen->setEnabled(roomInfo.hasStream() && !roomInfo.isEmpty());
+    style()->unpolish(ui->buttonListen);
+    style()->polish(ui->buttonListen);
 }
 
 bool JamRoomViewPanel::userInfoLessThan(const Login::UserInfo &u1, const Login::UserInfo &u2)
@@ -126,6 +134,8 @@ void JamRoomViewPanel::clearPeaks(bool resetListenButton)
     ui->wavePeakPanel->clearPeaks();
     if (resetListenButton)
         ui->buttonListen->setChecked(false);
+
+    updateButtonListen();
 }
 
 void JamRoomViewPanel::on_buttonListen_clicked()
