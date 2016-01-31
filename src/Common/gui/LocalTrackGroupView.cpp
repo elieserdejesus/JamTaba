@@ -237,7 +237,7 @@ void LocalTrackGroupView::loadPreset(QAction *action)
     QString presetFileName = action->data().toString();
     Persistence::Preset preset = mainController->loadPreset(presetFileName);
     if (preset.isValid()) {
-        mainFrame->loadPresetToTrack(preset);
+        mainFrame->loadPreset(preset);
 
         // send the new channels to other musicians
         mainController->sendNewChannelsNames(mainFrame->getChannelsNames());

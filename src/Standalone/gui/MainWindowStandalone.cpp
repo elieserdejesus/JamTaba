@@ -160,7 +160,7 @@ void MainWindowStandalone::sanitizeSubchannelInputSelections(LocalTrackView *sub
 {
     int trackID = subChannelView->getInputIndex();
     if (subChannel.isMidi()) {
-        if (midiDeviceIsValid(subChannel.midiChannel)) {
+        if (midiDeviceIsValid(subChannel.midiDevice)) {
             controller->setInputTrackToMIDI(trackID, subChannel.midiDevice, subChannel.midiChannel);
         } else {
             if (controller->getMidiDriver()->hasInputDevices()) {

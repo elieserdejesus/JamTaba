@@ -269,7 +269,7 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QS
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void MainWindow::loadPresetToTrack(const Preset &preset)
+void MainWindow::loadPreset(const Preset &preset)
 {
     if (preset.isValid()) {
         removeAllInputLocalTracks();
