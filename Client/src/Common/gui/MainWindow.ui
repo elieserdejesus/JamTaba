@@ -115,7 +115,7 @@
                 <x>0</x>
                 <y>0</y>
                 <width>751</width>
-                <height>304</height>
+                <height>301</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -271,7 +271,7 @@
             <item>
              <widget class="QSlider" name="masterFader">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+               <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -409,7 +409,7 @@
             <x>0</x>
             <y>0</y>
             <width>16</width>
-            <height>313</height>
+            <height>310</height>
            </rect>
           </property>
           <property name="sizePolicy">
