@@ -235,12 +235,24 @@ private:
     int ninjamIntervalProgressShape;// Circle, Ellipe or Line
     float masterFaderGain;// last master fader gain
     Qt::Orientation tracksLayoutOrientation; //horizontal or vertical
+    bool usingNarrowedTracks; //narrow or wide tracks?
+
     bool readFile(APPTYPE type, const QList<SettingsObject *> &sections);// io ops ...
     bool writeFile(APPTYPE type, const QList<SettingsObject *> &sections);// io ops ...
 
 public:
     Settings();
     ~Settings();
+
+    inline void storeTracksSize(bool narrowedTracks)
+    {
+        usingNarrowedTracks = narrowedTracks;
+    }
+
+    inline bool isUsingNarrowedTracks() const
+    {
+        return usingNarrowedTracks;
+    }
 
     inline LocalInputTrackSettings getInputsSettings() const
     {

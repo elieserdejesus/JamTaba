@@ -197,7 +197,19 @@ NinjamRoomWindow QToolButton#buttonHorizontalLayout{
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
     margin-left: 0px;
-    margin-right: 12px;
+}
+
+NinjamRoomWindow QToolButton#wide{
+    border-radius: 0px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    margin: 0px;
+}
+NinjamRoomWindow QToolButton#narrow{
+    border-radius: 0px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    margin-left: 0px;
 }
 
 
@@ -1157,7 +1169,6 @@ NinjamRoomWindow #licenceButton{
     background-repeat: none;
     min-height: 20px;
     min-width: 28px;
-    margin-right: 12px;
 }
 
 NinjamRoomWindow #licenceButton:hover{
@@ -1169,7 +1180,6 @@ NinjamRoomWindow #licenceButton:hover{
 NinjamRoomWindow #labelRoomName{
     font-size: 11px;
     font-weight: bold;
-    margin-left: 32px;/* shift from right side to compensate licence button and appears in center */
 }
 
 NinjamTrackView > #channelName{

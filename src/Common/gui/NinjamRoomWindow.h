@@ -51,6 +51,13 @@ public:
 
     void setTracksOrientation(Qt::Orientation orientation);
 
+    enum TracksSize
+    {
+        NARROW, WIDE
+    };
+
+    void setTracksSize(TracksSize size);
+
 protected:
     Ui::NinjamRoomWindow *ui;
     Controller::MainController *mainController;
@@ -59,8 +66,6 @@ private:
 
     QMap<QString, NinjamTrackGroupView *> trackGroups;
     ChatPanel *chatPanel;
-
-    void adjustTracksWidth();
 
     bool fullViewMode;
 
@@ -75,14 +80,21 @@ private:
     NinjamTrackView *getTrackViewByID(long trackID);
 
     Qt::Orientation tracksOrientation;
+    TracksSize tracksSize;
 
     void createLayoutDirectionButtons(Qt::Orientation initialOrientation);
     QToolButton *horizontalLayoutButton;
     QToolButton *verticalLayoutButton;
 
+    void createTracksSizeButtons(TracksSize lastTracksSize);
+    QToolButton *narrowButton;
+    QToolButton *wideButton;
+
     UsersColorsPool usersColorsPool;
 
     int calculateEstimatedChunksPerInterval() const;
+
+    void updateTracksSizeButtons();// enable or disable tracks size buttons
 private slots:
 
     // ninjam panel controls
@@ -115,7 +127,9 @@ private slots:
     void voteToChangeBpi(int newBpi);
     void voteToChangeBpm(int newBpm);
 
-    void toggleTracksLayoutOrientation(QAbstractButton *buttonClicked);
+    void toggleTracksLayoutOrientation(QAbstractButton *buttonClicked); // horizontal or vertical
+    void toggleTracksSize(QAbstractButton *buttonClicked);// narrow or wide
+
 
     void setEstimatatedChunksPerIntervalInAllTracks();
 };
