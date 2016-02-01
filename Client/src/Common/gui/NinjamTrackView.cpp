@@ -12,6 +12,8 @@
 #include "MainController.h"
 #include "Utils.h"
 
+const int NinjamTrackView::WIDE_HEIGHT = 70; //height used in horizontal layout for wide tracks
+
 // +++++++++++++++++++++++++
 NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, long trackID) :
     BaseTrackView(mainController, trackID),
@@ -80,8 +82,12 @@ void NinjamTrackView::setUnlightStatus(bool unlighted)
 
 QSize NinjamTrackView::sizeHint() const
 {
-    if (orientation == Qt::Horizontal)
-        return QWidget::sizeHint();
+    if (orientation == Qt::Horizontal) {
+        if (narrowed)
+            return QWidget::sizeHint();
+        else
+            return QSize(width(), WIDE_HEIGHT);
+    }
     return BaseTrackView::sizeHint();
 }
 

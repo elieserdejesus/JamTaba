@@ -39,6 +39,8 @@
         <file>level low.png</file>
         <file>horizontal_layout.png</file>
         <file>vertical_layout.png</file>
+        <file>narrow.png</file>
+        <file>wide.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

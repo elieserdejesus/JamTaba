@@ -106,7 +106,7 @@ void NinjamTrackGroupView::setupHorizontalLayout()
 {
     tracksLayout->setDirection(QHBoxLayout::TopToBottom);
     mainLayout->setDirection(QHBoxLayout::LeftToRight);
-    setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
+    setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum));
 }
 
 void NinjamTrackGroupView::setupVerticalLayout()
@@ -131,13 +131,12 @@ QSize NinjamTrackGroupView::sizeHint() const
     if(orientation == Qt::Vertical )
         return TrackGroupView::sizeHint();
 
-    if(trackViews.size() > 1){
-        int height = 0;
-        foreach (BaseTrackView *trackView, trackViews)
-            height += trackView->minimumSizeHint().height();
-        return QSize(1, height);
-    }
-    return QSize(1, 54);
+    //using horizontal layout
+    int height = 0;
+    foreach (BaseTrackView *trackView, trackViews)
+        height += trackView->minimumSizeHint().height();
+
+    return QSize(1, qMax(height, 54));
 }
 
 NinjamTrackView *NinjamTrackGroupView::addTrackView(long trackID)

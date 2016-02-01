@@ -28,7 +28,6 @@ SettingsObject::SettingsObject(const QString &name) :
 
 SettingsObject::~SettingsObject()
 {
-
 }
 
 int SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
@@ -415,7 +414,7 @@ void LocalInputTrackSettings::read(const QJsonObject &in, bool allowMultiSubchan
 
 void LocalInputTrackSettings::read(const QJsonObject &in)
 {
-    read(in, true);//allowing multi subchannel by default
+    read(in, true);// allowing multi subchannel by default
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++
@@ -553,7 +552,7 @@ bool Settings::readFile(APPTYPE type, const QList<SettingsObject *> &sections)
         if (root.contains("masterGain"))// read last master gain
             this->masterFaderGain = root["masterGain"].toDouble();
         else
-            this->masterFaderGain = 1;//unit gain as default
+            this->masterFaderGain = 1;// unit gain as default
 
         if (root.contains("userName"))// read user name
             this->lastUserName = root["userName"].toString();
@@ -564,17 +563,21 @@ bool Settings::readFile(APPTYPE type, const QList<SettingsObject *> &sections)
             this->translation = QLocale().bcp47Name().left(2);
 
         if (root.contains("intervalProgressShape"))// read intervall progress shape
-            this->ninjamIntervalProgressShape = root["intervalProgressShape"].toInt(0);//zero as default value
+            this->ninjamIntervalProgressShape = root["intervalProgressShape"].toInt(0);// zero as default value
         else
             this->ninjamIntervalProgressShape = 0;
 
-        if(root.contains("tracksLayoutOrientation")){
-            int value = root["tracksLayoutOrientation"].toInt(2);//2 is the Qt::Vertical value
+        if (root.contains("tracksLayoutOrientation")) {
+            int value = root["tracksLayoutOrientation"].toInt(2);// 2 is the Qt::Vertical value
             this->tracksLayoutOrientation = value == 2 ? Qt::Vertical : Qt::Horizontal;
-        }
-        else{
+        } else {
             this->tracksLayoutOrientation = Qt::Vertical;
         }
+
+        if (root.contains("usingNarrowTracks"))
+            this->usingNarrowedTracks = root["usingNarrowTracks"].toBool(false);
+        else
+            this->usingNarrowedTracks = false;
 
         // read settings sections (Audio settings, Midi settings, ninjam settings, etc...)
         foreach (SettingsObject *so, sections)
@@ -601,12 +604,13 @@ bool Settings::writeFile(APPTYPE type, const QList<SettingsObject *> &sections)/
     if (file.open(QIODevice::WriteOnly)) {
         QJsonObject root;
 
-        //writing global settings
-        root["userName"] = this->lastUserName;// write user name
-        root["translation"] = this->translation;// write translate locale
-        root["intervalProgressShape"] = this->ninjamIntervalProgressShape;
-        root["tracksLayoutOrientation"] = this->tracksLayoutOrientation;
-        root["masterGain"] = this->masterFaderGain;
+        // writing global settings
+        root["userName"] = lastUserName;// write user name
+        root["translation"] = translation;// write translate locale
+        root["intervalProgressShape"] = ninjamIntervalProgressShape;
+        root["tracksLayoutOrientation"] = tracksLayoutOrientation;
+        root["usingNarrowTracks"] = usingNarrowedTracks;
+        root["masterGain"] = masterFaderGain;
 
         // write settings sections
         foreach (SettingsObject *so, sections) {

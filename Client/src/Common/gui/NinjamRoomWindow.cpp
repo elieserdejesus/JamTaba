@@ -40,7 +40,8 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
     chatPanel(new ChatPanel(mainController->getBotNames(), &usersColorsPool)),
     fullViewMode(true),
     ninjamPanel(nullptr),
-    tracksOrientation(Qt::Vertical)
+    tracksOrientation(Qt::Vertical),
+    tracksSize(TracksSize::WIDE)
 {
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow construtor..";
     ui->setupUi(this);
@@ -62,53 +63,98 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
     Qt::Orientation lastTracksLayoutOrientation = mainController->getLastTracksLayoutOrientation();
     createLayoutDirectionButtons(lastTracksLayoutOrientation);
 
+    TracksSize lastTracksSize = mainController->isUsingNarrowedTracks() ? TracksSize::NARROW : TracksSize::WIDE;
+    createTracksSizeButtons(lastTracksSize);
+
     setupSignals(mainController->getNinjamController());
 
-    //remember the last tracks layout orientation
+    //remember the last tracks layout orientation and size (narrow or wide)
     setTracksOrientation(lastTracksLayoutOrientation);
+    setTracksSize(lastTracksSize);
 }
 
 void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrientation)
 {
-    QHBoxLayout *topLayout = qobject_cast<QHBoxLayout *>(ui->topWidget->layout());
-    if(topLayout){
-        horizontalLayoutButton = new QToolButton();
-        horizontalLayoutButton->setIcon(QIcon(":/images/horizontal_layout.png"));
-        horizontalLayoutButton->setObjectName("buttonHorizontalLayout");
-        horizontalLayoutButton->setCheckable(true);
-        horizontalLayoutButton->setToolTip("Set tracks layout to horizontal");
+    horizontalLayoutButton = new QToolButton();
+    horizontalLayoutButton->setIcon(QIcon(":/images/horizontal_layout.png"));
+    horizontalLayoutButton->setObjectName("buttonHorizontalLayout");
+    horizontalLayoutButton->setCheckable(true);
+    horizontalLayoutButton->setToolTip("Set tracks layout to horizontal");
 
-        verticalLayoutButton = new QToolButton();
-        verticalLayoutButton->setIcon(QIcon(":/images/vertical_layout.png"));
-        verticalLayoutButton->setObjectName("buttonVerticalLayout");
-        verticalLayoutButton->setCheckable(true);
-        verticalLayoutButton->setToolTip("Set tracks layout to vertical");
+    verticalLayoutButton = new QToolButton();
+    verticalLayoutButton->setIcon(QIcon(":/images/vertical_layout.png"));
+    verticalLayoutButton->setObjectName("buttonVerticalLayout");
+    verticalLayoutButton->setCheckable(true);
+    verticalLayoutButton->setToolTip("Set tracks layout to vertical");
 
-        if(initialOrientation == Qt::Vertical)
-            verticalLayoutButton->setChecked(true);
-        else
-            horizontalLayoutButton->setChecked(true);
+    if(initialOrientation == Qt::Vertical)
+        verticalLayoutButton->setChecked(true);
+    else
+        horizontalLayoutButton->setChecked(true);
 
-        QHBoxLayout *buttonsLayout = new QHBoxLayout();
-        buttonsLayout->setSpacing(0);
-        buttonsLayout->setContentsMargins(0, 0, 0, 0);
-        buttonsLayout->addWidget(verticalLayoutButton);
-        buttonsLayout->addWidget(horizontalLayoutButton);
+    QHBoxLayout *buttonsLayout = new QHBoxLayout();
+    buttonsLayout->setSpacing(0);
+    buttonsLayout->setContentsMargins(0, 0, 0, 0);
+    buttonsLayout->addWidget(verticalLayoutButton);
+    buttonsLayout->addWidget(horizontalLayoutButton);
 
-        QButtonGroup *buttonGroup = new QButtonGroup();
-        buttonGroup->addButton(verticalLayoutButton);
-        buttonGroup->addButton(horizontalLayoutButton);
+    QButtonGroup *buttonGroup = new QButtonGroup();
+    buttonGroup->addButton(verticalLayoutButton);
+    buttonGroup->addButton(horizontalLayoutButton);
 
-        int licenceButtonIndex = topLayout->indexOf(ui->licenceButton);
-        topLayout->insertLayout(licenceButtonIndex, buttonsLayout);
+    int licenceButtonIndex = ui->topLayout->indexOf(ui->licenceButton);
+    ui->topLayout->insertLayout(licenceButtonIndex, buttonsLayout);
 
-        connect( buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(toggleTracksLayoutOrientation(QAbstractButton*)));
-    }
+    connect( buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(toggleTracksLayoutOrientation(QAbstractButton*)));
+}
+
+void NinjamRoomWindow::createTracksSizeButtons(TracksSize initialTracksSize)
+{
+    wideButton = new QToolButton();
+    wideButton->setIcon(QIcon(":/images/wide.png"));
+    wideButton->setObjectName("wide");
+    wideButton->setCheckable(true);
+    wideButton->setToolTip("Wide tracks");
+
+    narrowButton = new QToolButton();
+    narrowButton->setIcon(QIcon(":/images/narrow.png"));
+    narrowButton->setObjectName("narrow");
+    narrowButton->setCheckable(true);
+    narrowButton->setToolTip("Narrow tracks");
+
+    QHBoxLayout *buttonsLayout = new QHBoxLayout();
+    buttonsLayout->setSpacing(0);
+    buttonsLayout->setContentsMargins(0, 0, 0, 0);
+    buttonsLayout->addWidget(wideButton);
+    buttonsLayout->addWidget(narrowButton);
+
+    QButtonGroup *buttonGroup = new QButtonGroup();
+    buttonGroup->addButton(wideButton);
+    buttonGroup->addButton(narrowButton);
+
+    if(initialTracksSize == TracksSize::NARROW)
+        narrowButton->setChecked(true);
+    else
+        wideButton->setChecked(true);
+
+    int licenceButtonIndex = ui->topLayout->indexOf(ui->licenceButton);
+    ui->topLayout->insertLayout(licenceButtonIndex, buttonsLayout);
+
+    connect( buttonGroup, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(toggleTracksSize(QAbstractButton*)));
+
+
 }
 
 void NinjamRoomWindow::toggleTracksLayoutOrientation(QAbstractButton* buttonClicked)
 {
-    setTracksOrientation(buttonClicked == this->verticalLayoutButton ? Qt::Vertical : Qt::Horizontal);
+    Qt::Orientation newOrientation = buttonClicked == this->verticalLayoutButton ? Qt::Vertical : Qt::Horizontal;
+    setTracksOrientation(newOrientation);
+}
+
+void NinjamRoomWindow::toggleTracksSize(QAbstractButton *buttonClicked)
+{
+    TracksSize newTracksSize = buttonClicked == narrowButton ? TracksSize::NARROW : TracksSize::WIDE;
+    setTracksSize(newTracksSize);
 }
 
 NinjamPanel *NinjamRoomWindow::createNinjamPanel()
@@ -157,8 +203,8 @@ void NinjamRoomWindow::setFullViewStatus(bool fullView)
 
     ui->tracksPanel->layout()->setSpacing(fullView ? 6 : 3);
 
-    foreach (NinjamTrackGroupView *trackGroup, trackGroups.values())
-        trackGroup->setNarrowStatus(!fullView);
+    //TracksSize newTracksSize = fullView ? TracksSize::WIDE : TracksSize::NARROW;
+    //setTracksSize(newTracksSize);
 
     update();
 }
@@ -349,8 +395,9 @@ void NinjamRoomWindow::removeChannel(const Ninjam::User &user, const Ninjam::Use
             if (trackView)
                 group->removeTrackView(trackView);
         }
-        adjustTracksWidth();
     }
+
+    updateTracksSizeButtons();
 }
 
 NinjamTrackView *NinjamRoomWindow::getTrackViewByID(long trackID)
@@ -385,11 +432,10 @@ void NinjamRoomWindow::addChannel(const Ninjam::User &user, const Ninjam::UserCh
         NinjamTrackGroupView *trackView = new NinjamTrackGroupView(mainController, channelID,
                                                                    channelName, userColor, cacheEntry);
         trackView->setOrientation(tracksOrientation);
-        trackView->setNarrowStatus(!fullViewMode);
+        trackView->setNarrowStatus(tracksSize == TracksSize::NARROW);
         ui->tracksPanel->layout()->addWidget(trackView);
         trackGroups.insert(user.getFullName(), trackView);
         trackView->setEstimatedChunksPerInterval(calculateEstimatedChunksPerInterval());
-        adjustTracksWidth();
     } else {// the second, or third channel from same user, group with other channels
         NinjamTrackGroupView *trackGroup = trackGroups[user.getFullName()];
         if (trackGroup) {
@@ -402,6 +448,8 @@ void NinjamRoomWindow::addChannel(const Ninjam::User &user, const Ninjam::UserCh
         }
     }
     qCDebug(jtNinjamGUI) << "channel view created";
+
+    updateTracksSizeButtons();
 }
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 int NinjamRoomWindow::calculateEstimatedChunksPerInterval() const
@@ -420,26 +468,6 @@ int NinjamRoomWindow::calculateEstimatedChunksPerInterval() const
         }
     }
     return 0;
-}
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamRoomWindow::adjustTracksWidth()
-{
-    if (!fullViewMode)// in mini view mode tracks are always narrowed
-        return;
-
-    int availableWidth = ui->scrollArea->width();
-
-    // can use wide to all tracks?
-    int wideWidth = 0;
-    foreach (NinjamTrackGroupView *trackGroup, trackGroups) {
-        int subTracks = trackGroup->getTracksCount();
-        wideWidth
-            += (subTracks
-                > 1) ? BaseTrackView::WIDE_WIDTH : BaseTrackView::NARROW_WIDTH * subTracks;
-    }
-    bool canUseWideTracks = wideWidth <= availableWidth;
-    foreach (NinjamTrackGroupView *trackGroup, trackGroups)
-        trackGroup->setNarrowStatus(!canUseWideTracks);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -577,6 +605,23 @@ void NinjamRoomWindow::setEstimatatedChunksPerIntervalInAllTracks()
     }
 }
 
+void NinjamRoomWindow::setTracksSize(TracksSize newTracksSize)
+{
+    if (newTracksSize == tracksSize)
+        return;
+
+    tracksSize = newTracksSize;
+
+    bool usingNarrowedTracks = tracksSize == TracksSize::NARROW;
+    foreach (NinjamTrackGroupView *trackGroupView, trackGroups) {
+        trackGroupView->setNarrowStatus(usingNarrowedTracks);
+    }
+
+    mainController->storeTracksSize(usingNarrowedTracks);
+
+    updateGeometry();
+}
+
 void NinjamRoomWindow::setTracksOrientation(Qt::Orientation newOrientation)
 {
     if(newOrientation == tracksOrientation)
@@ -602,4 +647,19 @@ void NinjamRoomWindow::setTracksOrientation(Qt::Orientation newOrientation)
     updateGeometry();
 
     mainController->storeTracksLayoutOrientation(newOrientation);
+}
+
+void NinjamRoomWindow::updateTracksSizeButtons()
+{
+    //tracks size buttons are disabled if all users are using 2 tracks
+    bool enableButtons = false;
+    foreach (NinjamTrackGroupView *trackGroup, trackGroups) {
+        if (trackGroup->getTracksCount() < 2){
+            enableButtons = true;
+            break;
+        }
+    }
+
+    narrowButton->setEnabled(enableButtons);
+    wideButton->setEnabled(enableButtons);
 }

@@ -52,6 +52,8 @@ private:
     bool downloadingFirstInterval;
     void setDownloadedChunksDisplayVisibility(bool visible);
 
+    static const int WIDE_HEIGHT;
+
 protected slots:
     // overriding the base class slots
     void toggleMuteStatus();

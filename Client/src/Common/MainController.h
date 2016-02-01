@@ -90,6 +90,16 @@ public:
         settings.storeTracksLayoutOrientation(newOrietation);
     }
 
+    inline void storeTracksSize(bool usingNarrowedTracks)
+    {
+        settings.storeTracksSize(usingNarrowedTracks);
+    }
+
+    inline bool isUsingNarrowedTracks() const
+    {
+        return settings.isUsingNarrowedTracks();
+    }
+
     void enterInRoom(const Login::RoomInfo &room, const QStringList &channelsNames, const QString &password = "");
 
     Login::LoginService *getLoginService() const;
