@@ -19,7 +19,7 @@ import java.util.logging.Level;
  */
 public class RefreshCommand extends AbstractCommand {
 
-    public static final int MAX_TIME_WITHOUT_UPDATES = 1 * 60 * 1000;//depois de 1 minuto sem se comunicar com o servidor o peer é considerado desconectado
+    public static final int MAX_TIME_WITHOUT_UPDATES = 30 * 60 * 1000;//depois de 30 minutos sem se comunicar com o servidor o peer é considerado desconectado
 
     private static final Logger LOGGER = Logger.getLogger(RefreshCommand.class.getName());
 

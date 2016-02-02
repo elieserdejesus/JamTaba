@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 import jamtaba.command.RefreshCommand;
+import java.util.logging.Level;
 
 /**
  * @author zeh
@@ -37,6 +38,7 @@ public class DbUtils {
             if (!roomPeers.isEmpty()) {
                 for (Peer peer : roomPeers) {
                     if (peer.getTimeSinceLastUpdate() >= RefreshCommand.MAX_TIME_WITHOUT_UPDATES) {
+                        LOGGER.log(Level.WARNING, "Deleting inactive peer {0}  TimeSinceLastUpdate: {1}", new Object[]{peer.getId(), peer.getTimeSinceLastUpdate()});
                         toDelete.add(peer);
                         roomsToSave.add(room);
                         room.removePeer(peer.getId());
@@ -58,18 +60,18 @@ public class DbUtils {
         return ofy().load().key(key).now();
     }
 
-    public static void tryCreateCurrenVersion(){
+    public static void tryCreateCurrenVersion() {
         Version v = getCurrentVersion();
-        if(v == null || v.getMajorVersion() < 2){
+        if (v == null || v.getMajorVersion() < 2) {
             DbUtils.save(Version.fromString("2.0.2"));
         }
     }
-    
-    public static Version getCurrentVersion(){
+
+    public static Version getCurrentVersion() {
         Key<Version> key = Key.create(Version.class, 1);
         return ofy().load().key(key).now();
     }
-    
+
     static void createWaitingRoom(RealtimeRoom waitintRoom) {
         ofy().save().entity(waitintRoom).now();
     }
