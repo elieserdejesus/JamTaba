@@ -213,9 +213,6 @@ void VstPlugin::unload(){
             effect = nullptr;
         }
     }
-    if( pluginLib.isLoaded()){
-        pluginLib.unload();
-    }
 }
 
 void VstPlugin::fillVstEventsList(const Midi::MidiBuffer &midiBuffer){
@@ -272,7 +269,6 @@ void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &ou
 
     VstInt32 sampleFrames = outBuffer.getFrameLenght();
     if(effect->flags & effFlagsCanReplacing){
-        QMutexLocker locker(&editorMutex);
         effect->processReplacing(effect, vstInputArray, vstOutputArray, sampleFrames);
     }
     //after a lot of tests I realize VSTs are processing input samples and
@@ -299,7 +295,6 @@ void VstPlugin::setBypass(bool state){
 
 void VstPlugin::closeEditor(){
     qCDebug(jtVstPlugin) << "Closing " << getName() << " editor. Thread:" << QThread::currentThreadId();
-    QMutexLocker locker(&editorMutex);
     if(effect && editorWindow){
         effect->dispatcher(effect, effEditClose, 0, 0, NULL, 0);
     }
@@ -317,8 +312,6 @@ void VstPlugin::openEditor(const QPoint &centerOfScreen){
     if(!(effect->flags & effFlagsHasEditor)){
         return;
     }
-
-    QMutexLocker locker(&editorMutex);
 
     if(editorWindow && editorWindow->isVisible()){
         editorWindow->raise();

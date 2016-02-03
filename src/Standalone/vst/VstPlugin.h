@@ -49,7 +49,6 @@ private:
     AEffect *effect;
     Audio::SamplesBuffer *internalOutputBuffer;
     Audio::SamplesBuffer *internalInputBuffer;
-    QLibrary pluginLib;
     Vst::Host *host;
     bool wantMidi;
     QString path;
@@ -58,8 +57,6 @@ private:
     bool turnedOn;
 
     bool loaded;
-
-    QMutex editorMutex;
 
     float **vstOutputArray;
     float **vstInputArray;
