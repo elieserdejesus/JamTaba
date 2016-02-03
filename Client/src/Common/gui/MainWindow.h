@@ -202,6 +202,8 @@ private slots:
     //preferences dialog (these are just the common slots between Standalone and VST, the other slots are in MainWindowStandalone class)
     void setMultiTrackRecordingStatus(bool recording);
     void setRecordingPath(const QString &newRecordingPath);
+
+    void initializeLocalInputChannels();
 private:
 
     BusyDialog busyDialog;

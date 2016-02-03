@@ -62,8 +62,8 @@ void MainWindow::initialize()
 
     showBusyDialog("Loading rooms list ...");
 
-    // initialize using last track input settings
-    initializeLocalInputChannels(mainController->getSettings().getInputsSettings());
+    // initialize using last track input settings (using QTimer::singleShot to initialize the tracks (and load the plugins) after Jamtaba is opened).
+    QTimer::singleShot(1, this, SLOT(initializeLocalInputChannels()));
 
     // set window mode: mini mode or full view mode
     setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
@@ -297,6 +297,11 @@ void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView,
     localTrackView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted);
 }
 
+void MainWindow::initializeLocalInputChannels()
+{
+    initializeLocalInputChannels(mainController->getSettings().getInputsSettings());
+}
+
 void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inputsSettings)
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -385,7 +390,7 @@ void MainWindow::centerBusyDialog()
     QSize parentSize = busyDialog.parentWidget()->size();
     QSize busyDialogSize = busyDialog.size();
     int newX = parentSize.width()/2 - busyDialogSize.width()/2;
-    int newY = parentSize.height()/2 - busyDialogSize.height()/2;
+    int newY = parentSize.height()/2;// - busyDialogSize.height()/2;
     busyDialog.move(newX, newY);
 }
 
