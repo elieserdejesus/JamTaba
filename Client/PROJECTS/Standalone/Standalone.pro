@@ -98,16 +98,11 @@ win32{
             QMAKE_CXXFLAGS_RELEASE +=  -GL -Gy -Gw
             QMAKE_LFLAGS_RELEASE += /LTCG
         }
-    }
 
-    win32-g++{#MinGW compiler
-        message("MinGW x86 build")
-        LIBS_PATH = "static/win32-mingw"
-        LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
-
-        #supressing some MinGW annoying warnings
-        QMAKE_CXXFLAGS_WARN_ON += -Wunused-variable
-        QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
+        win32-g++{#MinGW compiler
+            message("MinGW x86 build")
+            LIBS_PATH = "static/win32-mingw"
+        }
     }
 
     LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32 #-lPsapi
@@ -117,13 +112,12 @@ win32{
     RC_FILE = ../Jamtaba2.rc #windows icon
 }
 
-
 macx{
     message("Mac build")
 
     #supressing some warnings
-    QMAKE_CXXFLAGS_WARN_ON += -Wunused-variable
-    QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
+    #QMAKE_CXXFLAGS_WARN_ON += -Wunused-variable
+    #QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
 
     macx-clang-32 {
         message("i386 build") ## mac 32bit specific build here
@@ -140,8 +134,18 @@ macx{
     LIBS += -framework CoreServices
     LIBS += -framework Carbon
 
-    LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lportaudio -lminimp3  -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
-
     #mac osx doc icon
     ICON = ../Jamtaba.icns
+}
+
+linux{
+    LIBS_PATH = "static/linux64"
+}
+
+!*-msvc*{ #non microsoft compilers
+    #supressing some g++ annoying warnings
+    QMAKE_CXXFLAGS_WARN_ON += -Wunused-variable
+    QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
+
+    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
 }
