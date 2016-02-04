@@ -1,5 +1,6 @@
 #include "PortAudioDriver.h"
 #include "../log/Logging.h"
+#include "pa_linux_alsa.h"
 
 namespace Audio {
 
