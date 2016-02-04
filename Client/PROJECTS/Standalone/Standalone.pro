@@ -71,6 +71,10 @@ macx{
     SOURCES += audio/MacPortAudioDriver.cpp
     SOURCES += vst/MacVstPluginChecker.cpp
 }
+linux{
+    SOURCES += audio/LinuxPortAudioDriver.cpp
+    SOURCES += vst/LinuxVstPluginChecker.cpp
+}
 
 win32{
 
@@ -126,7 +130,7 @@ macx{
         message("x86_64 build") ## mac 64bit specific build here
         LIBS_PATH = "static/mac64"
     }
-
+    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
     LIBS += -framework CoreAudio
     LIBS += -framework CoreMidi
     LIBS += -framework AudioToolbox
@@ -140,12 +144,14 @@ macx{
 
 linux{
     LIBS_PATH = "static/linux64"
+    DEFINES += __LINUX_ALSA__
+
+    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
+    LIBS += -lasound
 }
 
 !*-msvc*{ #non microsoft compilers
     #supressing some g++ annoying warnings
     QMAKE_CXXFLAGS_WARN_ON += -Wunused-variable
     QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
-
-    LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
 }
