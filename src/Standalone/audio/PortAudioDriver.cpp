@@ -53,11 +53,13 @@ bool PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
     this->bufferSize = bufferSize;
     if(audioDeviceIndex != paNoDevice){
         QList<int> validBufferSizes = getValidBufferSizes(audioDeviceIndex);
-        if(this->bufferSize < validBufferSizes.first()){
-            this->bufferSize = validBufferSizes.first();//use the minimum supported buffer size
-        }
-        if(this->bufferSize > validBufferSizes.last()){
-            this->bufferSize = validBufferSizes.last();//use the max supported buffer size
+        if (!validBufferSizes.isEmpty()) {
+            if(this->bufferSize < validBufferSizes.first()){
+                this->bufferSize = validBufferSizes.first();//use the minimum supported buffer size
+            }
+            if(this->bufferSize > validBufferSizes.last()){
+                this->bufferSize = validBufferSizes.last();//use the max supported buffer size
+            }
         }
     }
     return true;
@@ -235,6 +237,7 @@ bool PortAudioDriver::start(){
         return false;
     }
     if(paStream != NULL){
+        preInitializePortAudioStream(paStream);
         error = Pa_StartStream(paStream);
         if (error != paNoError){
             releaseHostSpecificParameters(inputParams, outputParams);

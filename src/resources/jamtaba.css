@@ -1,6 +1,7 @@
 *{
     font-family: "Verdana";
     font-size: 11px;
+    outline: none; /* Removing rect border in selected tabs (Linux workaround) */
 }
 
 /* Remove the focus rect. The annoying focus appears only in VSt plugin*/
