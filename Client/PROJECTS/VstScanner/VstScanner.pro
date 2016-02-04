@@ -6,6 +6,10 @@ CONFIG -= app_bundle #in MAC create just a binary, not a complete bundle
 CONFIG += c++11
 DEFINES += VST_FORCE_DEPRECATED=0 #enable VST 2.3 features
 
+linux{
+    DEFINES += __cdecl=""
+}
+
 #when debugging the VstScanner executable is generated in the Standalone folder
 CONFIG(debug, debug|release){
     message("Generating VstScanner executable in Standalone folder")
@@ -38,6 +42,7 @@ SOURCES += VstPluginScanner.cpp
 INCLUDEPATH += $$SOURCE_PATH/Standalone/vst #to allow a simple '#include "VstPluginChecker.h"' in the code
 win32:SOURCES += $$SOURCE_PATH/Standalone/vst/WindowsVstPluginChecker.cpp
 macx:SOURCES  += $$SOURCE_PATH/Standalone/vst/MacVstPluginChecker.cpp
+linux:SOURCES += $$SOURCE_PATH/Standalone/vst/LinuxVstPluginChecker.cpp
 
 win32{
 
