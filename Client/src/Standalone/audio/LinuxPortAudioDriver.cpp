@@ -1,8 +1,9 @@
 #include "PortAudioDriver.h"
-#include "pa_mac_core.h"
 #include "../log/Logging.h"
+#include "pa_linux_alsa.h"
 
 namespace Audio {
+
 PortAudioDriver::PortAudioDriver(Controller::MainController *mainController, int deviceIndex,
                                  int firstInIndex, int lastInIndex, int firstOutIndex,
                                  int lastOutIndex, int sampleRate, int bufferSize) :
@@ -14,10 +15,11 @@ PortAudioDriver::PortAudioDriver(Controller::MainController *mainController, int
     Q_UNUSED(lastInIndex)
     Q_UNUSED(lastOutIndex)
     Q_UNUSED(deviceIndex)
-    // initialize portaudio using default devices, mono input and try estereo output if possible
+
+    // initialize portaudio using default devices
     PaError error = Pa_Initialize();
     if (error == paNoError) {
-        audioDeviceIndex = Pa_GetDefaultOutputDevice();
+        audioDeviceIndex = deviceIndex;// Pa_GetDefaultOutputDevice();
         globalInputRange = ChannelRange(0, getMaxInputs());
         globalOutputRange = ChannelRange(0, 2);// 2 channels for output
 
@@ -34,47 +36,52 @@ PortAudioDriver::PortAudioDriver(Controller::MainController *mainController, int
     }
 }
 
+void PortAudioDriver::preInitializePortAudioStream(PaStream *stream)
+{
+    qCDebug(jtAudio) << "Enablind Realtime Scheduling in ALSA";
+    PaAlsa_EnableRealtimeScheduling(stream, 1);// enable realtime scheduling in ALSA
+
+}
+
 QList<int> PortAudioDriver::getValidBufferSizes(int deviceIndex) const
 {
-    QList<int> buffersSize;
-    long maxBufferSize;
-    long minBufferSize;
-    PaError result = PaMacCore_GetBufferSizeRange(deviceIndex, &minBufferSize, &maxBufferSize);
-    if (result != paNoError) {
-        buffersSize.append(256);
-        return buffersSize;// return 256 as the only possible value
+    Q_UNUSED(deviceIndex);
+
+    int value = 32;
+    QList<int> bufferSizes;
+    while (value <= 4096) {
+        bufferSizes.append(value);
+        value *= 2;
     }
-    for (long size = minBufferSize; size <= maxBufferSize; size *= 2)
-        buffersSize.append(size);
-    return buffersSize;
+    return bufferSizes;
 }
 
 QString PortAudioDriver::getOutputChannelName(const unsigned int index) const
 {
-    return QString(PaMacCore_GetChannelName(audioDeviceIndex, index, false));
+    const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(audioDeviceIndex);
+    if (index < (uint)deviceInfo->maxOutputChannels)
+        return "Out " + QString::number(index + 1);
+    return "error";
 }
 
 QString PortAudioDriver::getInputChannelName(const unsigned int index) const
 {
-    return QString(PaMacCore_GetChannelName(audioDeviceIndex, index, true));
+    const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(audioDeviceIndex);
+    if (index < (uint)deviceInfo->maxInputChannels)
+        return "In " + QString::number(index + 1);
+    return "error";
 }
 
 void PortAudioDriver::configureHostSpecificInputParameters(PaStreamParameters &inputParameters)
 {
     Q_UNUSED(inputParameters)
-    // qCDebug(portaudio) << "using MAC scpecific stream infos for inputs";
-    // PaMacCoreStreamInfo streamInfo;
-    // PaMacCore_SetupStreamInfo(&streamInfo, paMacCorePro);
-    // inputParams.hostApiSpecificStreamInfo  = &streamInfo;
+
 }
 
 void PortAudioDriver::configureHostSpecificOutputParameters(PaStreamParameters &outputParameters)
 {
     Q_UNUSED(outputParameters)
-    // qCDebug(portaudio) << "using MAC scpecific stream infos for output";
-    // PaMacCoreStreamInfo outStreamInfo;
-    // PaMacCore_SetupStreamInfo(&outStreamInfo, paMacCorePro);
-    // outputParams.hostApiSpecificStreamInfo = &outStreamInfo;
+
 }
 
 void PortAudioDriver::releaseHostSpecificParameters(const PaStreamParameters &inputParameters,
@@ -93,11 +100,4 @@ void PortAudioDriver::openControlPanel(void *mainWindowHandle)
 {
     Q_UNUSED(mainWindowHandle)
 }
-
-void PortAudioDriver::preInitializePortAudioStream(PaStream *stream)
-{
-    Q_UNUSED(stream)
-}
-
-
 }// namespace

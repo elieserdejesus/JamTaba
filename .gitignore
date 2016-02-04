@@ -3,7 +3,6 @@
 *.slo
 *.lo
 *.o
-*.a
 *.la
 *.lai
 *.so
@@ -17,6 +16,7 @@
 VST_SDK/*
 
 *.DS_Store
+*~
 
 # Qt-es
 
