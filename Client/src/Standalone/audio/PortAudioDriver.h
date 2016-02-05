@@ -63,6 +63,8 @@ private:
     void ensureInputRangeIsValid();
     void ensureOutputRangeIsValid();
 
+    void preInitializePortAudioStream(PaStream *stream);
+
 };
 }
 

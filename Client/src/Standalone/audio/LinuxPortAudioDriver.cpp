@@ -15,7 +15,10 @@ PortAudioDriver::PortAudioDriver(Controller::MainController *mainController, int
     Q_UNUSED(lastInIndex)
     Q_UNUSED(lastOutIndex)
     Q_UNUSED(deviceIndex)
-    // initialize portaudio using default devices, mono input and try estereo output if possible
+
+    bufferSize = paFramesPerBufferUnspecified;
+
+    // initialize portaudio using default devices
     PaError error = Pa_Initialize();
     if (error == paNoError) {
         audioDeviceIndex = Pa_GetDefaultOutputDevice();
@@ -35,21 +38,32 @@ PortAudioDriver::PortAudioDriver(Controller::MainController *mainController, int
     }
 }
 
+void PortAudioDriver::preInitializePortAudioStream(PaStream *stream)
+{
+    qCDebug(jtAudio) << "Enablind Realtime Scheduling in ALSA";
+    PaAlsa_EnableRealtimeScheduling(stream, 1);// enable realtime scheduling in ALSA
+}
+
 QList<int> PortAudioDriver::getValidBufferSizes(int deviceIndex) const
 {
-    QList<int> buffersSize;
-    buffersSize.append(256);
-    return buffersSize;
+    Q_UNUSED(deviceIndex)
+    return QList<int>();
 }
 
 QString PortAudioDriver::getOutputChannelName(const unsigned int index) const
 {
-    return "not implemented";
+    const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(audioDeviceIndex);
+    if (index < (uint)deviceInfo->maxOutputChannels)
+        return "Out " + QString::number(index + 1);
+    return "error";
 }
 
 QString PortAudioDriver::getInputChannelName(const unsigned int index) const
 {
-    return "not implemented";
+    const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(audioDeviceIndex);
+    if (index < (uint)deviceInfo->maxInputChannels)
+        return "In " + QString::number(index + 1);
+    return "error";
 }
 
 void PortAudioDriver::configureHostSpecificInputParameters(PaStreamParameters &inputParameters)

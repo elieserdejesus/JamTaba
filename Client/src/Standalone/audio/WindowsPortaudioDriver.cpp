@@ -113,4 +113,9 @@ void PortAudioDriver::openControlPanel(void* mainWindowHandle){
     }
 }
 
+void PortAudioDriver::preInitializePortAudioStream(PaStream *stream)
+{
+    Q_UNUSED(stream)
+}
+
 }//namespace
