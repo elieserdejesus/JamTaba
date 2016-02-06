@@ -16,10 +16,10 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     ui->setupUi(this);
 
     // initialize combos
-    for (int bpm = 40; bpm <= 400; bpm += 10)
+    for (int bpm = 40; bpm <= 200; bpm += 5)
         ui->comboBpm->addItem(QString::number(bpm), bpm);
-    int bpis[] = {8, 16, 32, 48, 64};
-    for (int i = 0; i < 4; ++i)
+    int bpis[] = {8, 12, 16, 24, 32, 48, 64};
+    for (int i = 0; i < 7; ++i)
         ui->comboBpi->addItem(QString::number(bpis[i]), bpis[i]);
 
     ui->comboBpm->setValidator(new QIntValidator(40, 400, ui->comboBpm));
