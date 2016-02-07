@@ -7,13 +7,13 @@ CONFIG += c++11
 DEFINES += VST_FORCE_DEPRECATED=0 #enable VST 2.3 features
 
 linux{
-    DEFINES += __cdecl=""
+    DEFINES += __cdecl="" #avoid tons of errors in VST_SDK in linux
 }
 
 #when debugging the VstScanner executable is generated in the Standalone folder
 CONFIG(debug, debug|release){
-    message("Generating VstScanner executable in Standalone folder")
     DESTDIR = $$OUT_PWD/../Standalone/debug
+    message("Generating VstScanner executable in" $$DESTDIR)
 }
 
 TEMPLATE = app

@@ -15,5 +15,5 @@ bool Vst::PluginChecker::isValidPluginFile(const QString &pluginPath)
     if(QFileInfo(pluginPath).fileName().contains("Jamtaba"))//avoid Jamtaba standalone loading Jamtaba plugin. This is just a basic check, when the VSt plugin is loaded the real (compiled) name of the plugin is checked again.
         return false;
 
-   return false;
+   return true;
 }
