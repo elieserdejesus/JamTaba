@@ -421,6 +421,14 @@ QStringList MainControllerStandalone::getSteinbergRecommendedPaths()
     vstPaths.append("/Library/Audio/Plug-Ins/VST");
     vstPaths.append("~/Library/Audio/Plug-Ins/VST");
 #endif
+
+#ifdef Q_OS_LINUX
+    //Steinberg VST 2.4 docs are saying nothing about default paths for VST plugins in Linux. But I see these paths
+    //in a Linux plugin documentation...
+    vstPaths.append("~/.vst/");
+    vstPaths.append("/user/lib/vst");
+#endif
+
     return vstPaths;
 }
 
