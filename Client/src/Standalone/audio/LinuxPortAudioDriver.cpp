@@ -16,8 +16,6 @@ PortAudioDriver::PortAudioDriver(Controller::MainController *mainController, int
     Q_UNUSED(lastOutIndex)
     Q_UNUSED(deviceIndex)
 
-    bufferSize = paFramesPerBufferUnspecified;
-
     // initialize portaudio using default devices
     PaError error = Pa_Initialize();
     if (error == paNoError) {
@@ -42,12 +40,20 @@ void PortAudioDriver::preInitializePortAudioStream(PaStream *stream)
 {
     qCDebug(jtAudio) << "Enablind Realtime Scheduling in ALSA";
     PaAlsa_EnableRealtimeScheduling(stream, 1);// enable realtime scheduling in ALSA
+
 }
 
 QList<int> PortAudioDriver::getValidBufferSizes(int deviceIndex) const
 {
-    Q_UNUSED(deviceIndex)
-    return QList<int>();
+    Q_UNUSED(deviceIndex);
+
+    int value = 32;
+    QList<int> bufferSizes;
+    while (value <= 4096) {
+        bufferSizes.append(value);
+        value *= 2;
+    }
+    return bufferSizes;
 }
 
 QString PortAudioDriver::getOutputChannelName(const unsigned int index) const
