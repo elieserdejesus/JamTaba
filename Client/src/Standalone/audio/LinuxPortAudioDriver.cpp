@@ -19,7 +19,7 @@ PortAudioDriver::PortAudioDriver(Controller::MainController *mainController, int
     // initialize portaudio using default devices
     PaError error = Pa_Initialize();
     if (error == paNoError) {
-        audioDeviceIndex = Pa_GetDefaultOutputDevice();
+        audioDeviceIndex = deviceIndex;// Pa_GetDefaultOutputDevice();
         globalInputRange = ChannelRange(0, getMaxInputs());
         globalOutputRange = ChannelRange(0, 2);// 2 channels for output
 
