@@ -22,7 +22,7 @@ echo "Creating makefile ..."
 $qmakeDir/qmake -config release $projectsDir/Jamtaba.pro 
 
 echo "Compiling..."
-#make -j 4
+make -j 4
 
 if [ ! -d "packageFiles" ]; then
 	echo "Creating the dir packageFiles"
