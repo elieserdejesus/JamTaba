@@ -36,6 +36,7 @@ cp $scriptDir/installer_script.sh packageFiles/
 cp $scriptDir/uninstaller.sh packageFiles/
 cp $scriptDir/Jamtaba2.png packageFiles/Jamtaba2.png
 
-chmod 755 packageFiles/installer_script.sh 
+chmod +x packageFiles/installer_script.sh 
 
 makeself.sh packageFiles ~/Desktop/Jamtaba2_Installer.run "Jamtaba 2 Installer" ./installer_script.sh
+chmod +x ~/Desktop/Jamtaba2_Installer.run
