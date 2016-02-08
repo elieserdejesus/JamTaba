@@ -9,7 +9,13 @@ USING MinGW
 ./configure -release -opensource -confirm-license -static -no-sql-psql -no-sql-mysql -no-sql-odbc -no-sql-tds -no-sql-oci -no-sql-db2 -no-sql-sqlite -no-sql-sqlite2 -no-sql-ibase -no-audio-backend -no-cups -no-nis -no-dbus -nomake examples -nomake tests -platform win32-g++
 
 
+Linux (tested in Ubuntu)
+--------------------------------------------------
+Install  libfontconfig1-dev to avoid bad fonts. After install the fontconfig package check if fontconfig is available in qt configure script results.
 
+./configure -debug-and-release -qt-xcb -fontconfig -opensource -confirm-license -static -no-sql-psql -no-sql-mysql -no-sql-odbc -no-sql-tds -no-sql-oci -no-sql-db2 -no-sql-sqlite -no-sql-sqlite2 -no-sql-ibase -no-audio-backend -no-cups -no-nis -no-dbus -nomake examples -nomake tests
+
+-----------------------------------------------------------------
 
 PAra compilar eu baixei somente os pacotes qt e qtbase.
 

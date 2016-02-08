@@ -1,0 +1,7 @@
+1 - To install makeself on Linux download the latest version in http://stephanepeter.com/makeself
+
+2 - Change the permissions and execute the downloaded .run file.
+
+3 - The .run file will extract itself inside your /home folder. Copy all the shell scripts (.sh files) to your /usr/bin folder.
+
+4 - Done! Now is possible run the makeself.sh script in the Terminal to create the installer.
