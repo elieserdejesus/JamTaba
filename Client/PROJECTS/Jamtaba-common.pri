@@ -18,7 +18,10 @@ VPATH       += $$SOURCE_PATH
 # Define the preprocessor macro to get the application version in Jamtaba application.
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += VST_FORCE_DEPRECATED=0#enable VST 2.3 features
-DEFINES += __cdecl=""
+
+linux{ #avoid erros in VST SDK when compiling in Linux
+    DEFINES += __cdecl=""
+}
 
 macx{
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.7 -stdlib=libc++
