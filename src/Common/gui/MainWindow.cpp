@@ -857,7 +857,7 @@ void MainWindow::openPreferencesDialog(QAction *action)
         stopCurrentRoomStream();
 
         PreferencesDialog *dialog = createPreferencesDialog();// factory method, overrided in derived classes MainWindowStandalone and MainWindowVST
-        dialog->initialize(initialTab, mainController->getSettings());// initializing here to avoid call virtual methods inside PreferencesDialog constructor
+        dialog->initialize(initialTab, &mainController->getSettings());// initializing here to avoid call virtual methods inside PreferencesDialog constructor
         dialog->show();
     }
 }

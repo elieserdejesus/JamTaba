@@ -18,7 +18,7 @@ class StandalonePreferencesDialog : public PreferencesDialog
 
 public:
     StandalonePreferencesDialog(QWidget *parent, bool showAudioControlPanelButton, Audio::AudioDriver *audioDriver, Midi::MidiDriver *midiDriver);
-    void initialize(int initialTab, const Persistence::Settings &settings) override;
+    void initialize(int initialTab, const Persistence::Settings *settings) override;
 
 public slots:
     void accept() override;

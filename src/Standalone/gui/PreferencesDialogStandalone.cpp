@@ -48,7 +48,7 @@ void StandalonePreferencesDialog::notifySampleRateChanged()
     emit sampleRateChanged(newSampleRate);
 }
 
-void StandalonePreferencesDialog::initialize(int initialTab, const Persistence::Settings &settings)
+void StandalonePreferencesDialog::initialize(int initialTab, const Persistence::Settings *settings)
 {
     PreferencesDialog::initialize(initialTab, settings);
     ui->prefsTab->setCurrentIndex(initialTab);
@@ -144,7 +144,7 @@ void StandalonePreferencesDialog::updateVstList(QString path)
 void StandalonePreferencesDialog::updateBlackBox()
 {
     ui->blackListWidget->clear();
-    QStringList badPlugins = settings.getBlackListedPlugins();
+    QStringList badPlugins = settings->getBlackListedPlugins();
     foreach (const QString &badPlugin, badPlugins)
         ui->blackListWidget->appendPlainText(badPlugin);
 }
@@ -167,8 +167,8 @@ void StandalonePreferencesDialog::addBlackListedPlugins()
 {
     QFileDialog vstDialog(this, "Add Vst(s) to Black list ...");
     vstDialog.setNameFilter("Dll(*.dll)");// TODO in mac the extension is .vst
-    if (!settings.getVstScanFolders().isEmpty())
-        vstDialog.setDirectory(settings.getVstScanFolders().first());
+    if (!settings->getVstScanFolders().isEmpty())
+        vstDialog.setDirectory(settings->getVstScanFolders().first());
     vstDialog.setAcceptMode(QFileDialog::AcceptOpen);
     vstDialog.setFileMode(QFileDialog::ExistingFiles);
 
@@ -176,7 +176,6 @@ void StandalonePreferencesDialog::addBlackListedPlugins()
         QStringList vstNames = vstDialog.selectedFiles();
         foreach (const QString &string, vstNames) {
             emit vstPluginAddedInBlackList(string);
-            settings.addVstToBlackList(string);// add in internal settings instance to update the black box correctly
             updateBlackBox();
         }
     }
@@ -186,7 +185,7 @@ void StandalonePreferencesDialog::removeBlackListedPlugins()
 {
     QFileDialog vstDialog(this, "Remove Vst(s) from Black List ...");
     vstDialog.setNameFilter("Dll(*.dll)");// TODO mac extension is .vst
-    QStringList foldersToScan = settings.getVstScanFolders();
+    QStringList foldersToScan = settings->getVstScanFolders();
     if (!foldersToScan.isEmpty())
         vstDialog.setDirectory(foldersToScan.first());
     vstDialog.setAcceptMode(QFileDialog::AcceptOpen);
@@ -195,7 +194,6 @@ void StandalonePreferencesDialog::removeBlackListedPlugins()
         QStringList vstNames = vstDialog.selectedFiles();
         foreach (const QString &string, vstNames) {
             emit vstPluginRemovedFromBlackList(string);
-            settings.removeVstFromBlackList(string);// remove from internal settings instance to update the black box correctly
             updateBlackBox();
         }
     }
@@ -231,7 +229,7 @@ void StandalonePreferencesDialog::populateMidiTab()
     clearWidgetLayout(ui->midiContentPanel);
     int maxInputDevices = midiDriver->getMaxInputDevices();
     if (maxInputDevices > 0) {
-        QList<bool> midiInputsStatus = settings.getMidiInputDevicesStatus();
+        QList<bool> midiInputsStatus = settings->getMidiInputDevicesStatus();
         for (int i = 0; i < maxInputDevices; ++i) {
             QString midiDeviceName = midiDriver->getInputDeviceName(i);
             if (!midiDeviceName.isEmpty()) {
@@ -390,12 +388,12 @@ void StandalonePreferencesDialog::populateVstTab()
     clearScanFolderWidgets();// remove all widgets before add the paths
 
     // populate the paths
-    foreach (const QString &scanFolder, settings.getVstScanFolders())
+    foreach (const QString &scanFolder, settings->getVstScanFolders())
         createWidgetsToNewFolder(scanFolder);
 
     // populate the VST list
     ui->vstListWidget->clear();
-    foreach (const QString &path, settings.getVstPluginsPaths())
+    foreach (const QString &path, settings->getVstPluginsPaths())
         updateVstList(path);
 
     updateBlackBox();
