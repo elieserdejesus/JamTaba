@@ -696,7 +696,7 @@ void Settings::load()
 
 Settings::Settings() :
     fileDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)),
-    tracksLayoutOrientation(Qt::Vertical)
+    tracksLayoutOrientation(Qt::Vertical), masterFaderGain(1.0)
 {
     // qDebug() << "Settings in " << fileDir;
 }
