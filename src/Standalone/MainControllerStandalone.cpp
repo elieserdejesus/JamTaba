@@ -198,6 +198,7 @@ void MainControllerStandalone::setSampleRate(int newSampleRate)
 {
     MainController::setSampleRate(newSampleRate);
     vstHost->setSampleRate(newSampleRate);
+    audioDriver->setSampleRate(newSampleRate);
     foreach (Audio::LocalInputAudioNode *inputNode, inputTracks)
         inputNode->setProcessorsSampleRate(newSampleRate);
 }
@@ -205,6 +206,7 @@ void MainControllerStandalone::setSampleRate(int newSampleRate)
 void MainControllerStandalone::setBufferSize(int newBufferSize)
 {
     vstHost->setBlockSize(newBufferSize);
+    audioDriver->setBufferSize(newBufferSize);
     settings.setBufferSize(newBufferSize);
 }
 
