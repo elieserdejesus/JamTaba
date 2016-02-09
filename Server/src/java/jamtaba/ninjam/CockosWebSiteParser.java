@@ -59,6 +59,10 @@ public class CockosWebSiteParser {
                     String serverStreamUrl = getServerStreamUrl(serverName, serverPort);
                     NinjamServer server = new NinjamServer(serverName, serverPort, serverMaxUsers, bpm, bpi, serverStreamUrl);
                     String usersListRawString = rawServerData.substring(usersCountMatcher.end()).replaceAll("</?[uU][lL]>", "");
+
+                    //fix #259 - First user name appears blank when server is full
+                    usersListRawString = usersListRawString.replace("<font color=\"#ff0000\"> -- FULL --</font>", "");
+                    
                     List<NinjamUser> users = parseUsersList(usersListRawString);
                     for (NinjamUser user : users) {
                         server.addUser(user);
@@ -93,8 +97,8 @@ public class CockosWebSiteParser {
     }
 
     private List<NinjamUser> parseUsersList(String usersListRawString) {
-        String usersStrings[] = usersListRawString.split("<BR>");
-        List<NinjamUser> users = new ArrayList<NinjamUser>();
+        String usersStrings[] = usersListRawString.trim().split("<BR>");
+        List<NinjamUser> users = new ArrayList<>();
         for (String userString : usersStrings) {
             if (!userString.isEmpty()) {
                 users.add(parseUser(userString));
@@ -115,14 +119,15 @@ public class CockosWebSiteParser {
     }
 
     private String getUrlContent(URL url) throws Exception {
+        //InputStream in = getClass().getResourceAsStream("fullserver.html");
         InputStream in = url.openStream();
         StringBuilder sb = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        String read;
-        while ((read = br.readLine()) != null) {
-            sb.append(read);
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+            String read;
+            while ((read = br.readLine()) != null) {
+                sb.append(read);
+            }
         }
-        br.close();
         return sb.toString();
     }
 
