@@ -29,7 +29,7 @@ public:
     explicit NinjamController(Controller::MainController *mainController);
     virtual ~NinjamController();
     virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
-    void start(const Ninjam::Server &server, const QMap<int, bool> &channelsXmitFlags);
+    void start(const Ninjam::Server &server);
     void stop(bool emitDisconnectedingSignal);
     bool inline isRunning() const
     {
@@ -64,7 +64,7 @@ public:
     void scheduleEncoderChangeForChannel(int channelIndex);
     void removeEncoder(int groupChannelIndex);
 
-    void setTransmitStatus(int channelID, bool transmiting);
+    void scheduleXmitChange(int channelID, bool transmiting);// schedule the change for the next interval
 
     void setSampleRate(int newSampleRate);
 
@@ -139,12 +139,13 @@ private:
     void handleNewInterval();
     void recreateEncoderForChannel(int channelIndex);
 
+    void setXmitStatus(int channelID, bool transmiting);
+
     // ++++++++++++++++++++ nested classes to handle scheduled events +++++++++++++++++
     class SchedulableEvent;// the interface for all events
     class BpiChangeEvent;
     class BpmChangeEvent;
     class InputChannelChangedEvent;// user change the channel input selection from mono to stereo or vice-versa, or user added a new channel, both cases requires a new encoder in next interval
-    class XmitChangedEvent;
     QList<SchedulableEvent *> scheduledEvents;
 
     class EncodingThread;

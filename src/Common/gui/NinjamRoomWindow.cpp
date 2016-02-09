@@ -98,7 +98,7 @@ void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrien
     buttonsLayout->addWidget(verticalLayoutButton);
     buttonsLayout->addWidget(horizontalLayoutButton);
 
-    QButtonGroup *buttonGroup = new QButtonGroup();
+    QButtonGroup *buttonGroup = new QButtonGroup(this);
     buttonGroup->addButton(verticalLayoutButton);
     buttonGroup->addButton(horizontalLayoutButton);
 
@@ -128,7 +128,7 @@ void NinjamRoomWindow::createTracksSizeButtons(TracksSize initialTracksSize)
     buttonsLayout->addWidget(wideButton);
     buttonsLayout->addWidget(narrowButton);
 
-    QButtonGroup *buttonGroup = new QButtonGroup();
+    QButtonGroup *buttonGroup = new QButtonGroup(this);
     buttonGroup->addButton(wideButton);
     buttonGroup->addButton(narrowButton);
 

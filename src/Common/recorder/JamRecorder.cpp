@@ -94,6 +94,10 @@ JamRecorder::JamRecorder(JamMetadataWriter* jamMetadataWritter)
     //this->recordingActivated = true;//just to test
 }
 
+JamRecorder::~JamRecorder()
+{
+    delete jamMetadataWritter;
+}
 
 void JamRecorder::appendLocalUserAudio(const QByteArray &encodedaudio, quint8 channelIndex, bool isFirstPartOfInterval, bool isLastPastOfInterval){
     if(!running){

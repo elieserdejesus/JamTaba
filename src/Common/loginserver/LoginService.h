@@ -151,7 +151,7 @@ private:
         CONNECT, DISCONNECT, REFRESH_ROOMS_LIST
     };
 
-    QNetworkAccessManager httpClient;
+    QNetworkAccessManager *httpClient;
     QNetworkReply *pendingReply;
     QNetworkReply *sendCommandToServer(const QUrlQuery &, bool synchronous = false);
     static const QString SERVER;

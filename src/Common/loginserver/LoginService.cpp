@@ -127,10 +127,11 @@ public:
 
 LoginService::LoginService(QObject *parent) :
     QObject(parent),
+    httpClient(new QNetworkAccessManager(this)),
     pendingReply(nullptr),
-    connected(false)
+    connected(false),
+    refreshTimer(new QTimer(this))
 {
-    refreshTimer = new QTimer(this);
     QObject::connect(refreshTimer, SIGNAL(timeout()), this, SLOT(refreshTimerSlot()));
     // QObject::connect(&httpClient, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), this, SLOT(sslErrorsSlot(QNetworkReply*,QList<QSslError>)));
 }
@@ -141,7 +142,6 @@ LoginService::~LoginService()
     qCDebug(jtLoginService) << "LoginService Destructor";
     if (pendingReply)
         pendingReply->deleteLater();
-
 }
 
 void LoginService::connectInServer(const QString &userName, int instrumentID,
@@ -206,7 +206,7 @@ QNetworkReply *LoginService::sendCommandToServer(const QUrlQuery &query, bool sy
     request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork);// disable cache
     request.setHeader(QNetworkRequest::ContentTypeHeader,
                       QStringLiteral("application/x-www-form-urlencoded; charset=utf-8"));
-    pendingReply = httpClient.post(request, postData);
+    pendingReply = httpClient->post(request, postData);
     if (synchronous && pendingReply) {
         QEventLoop loop;
         connect(pendingReply, SIGNAL(finished()), &loop, SLOT(quit()));

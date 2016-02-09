@@ -34,6 +34,7 @@ IntervalProgressDisplay::IntervalProgressDisplay(QWidget *parent) :
     paintMode(PaintMode::LINEAR),
     showAccents(false),
     currentBeat(0),
+    beatsPerAccent(0),
     sliceNumberColor(Qt::gray),
     usingLowContrastColors(false),
     highlightColor(Qt::white)

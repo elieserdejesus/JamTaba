@@ -12,12 +12,22 @@ const int Mp3DecoderMiniMp3::AUDIO_SAMPLES_BUFFER_MAX_SIZE = 4096 * 2;
 const int Mp3DecoderMiniMp3::INTERNAL_SHORT_BUFFER_SIZE = MP3_MAX_SAMPLES_PER_FRAME *8 * 2;
 
 Mp3DecoderMiniMp3::Mp3DecoderMiniMp3() :
-    mp3Decoder(mp3_create()),
-    buffer(nullptr)
+    mp3Decoder(nullptr),
+    buffer(nullptr),
+    NULL_BUFFER(nullptr)
 {
+    mp3Decoder = mp3_create();
     internalShortBuffer = new signed short[INTERNAL_SHORT_BUFFER_SIZE];// recommend by the minimp3 author
     reset();
     NULL_BUFFER = new Audio::SamplesBuffer(1);
+}
+
+Mp3DecoderMiniMp3::~Mp3DecoderMiniMp3()
+{
+    delete [] internalShortBuffer;
+    delete buffer;
+    delete NULL_BUFFER;
+    //mp3_done(&mp3Decoder);
 }
 
 void Mp3DecoderMiniMp3::reset()
@@ -76,8 +86,4 @@ const SamplesBuffer *Mp3DecoderMiniMp3::decode(char *inputBuffer, int inputBuffe
     return buffer;
 }
 
-Mp3DecoderMiniMp3::~Mp3DecoderMiniMp3()
-{
-    delete [] internalShortBuffer;
-    delete buffer;
-}
+
