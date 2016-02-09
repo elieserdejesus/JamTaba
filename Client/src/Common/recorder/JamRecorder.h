@@ -148,6 +148,7 @@ class JamRecorder
 {
 public:
     JamRecorder(JamMetadataWriter *jamMetadataWritter);
+    virtual ~JamRecorder();
     void appendLocalUserAudio(const QByteArray &encodedaudio, quint8 channelIndex,
                               bool isFirstPartOfInterval, bool isLastPastOfInterval);
     void addRemoteUserAudio(const QString &userName, const QByteArray &encodedAudio, quint8 channelIndex);

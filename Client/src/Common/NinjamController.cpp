@@ -71,7 +71,7 @@ protected:
             EncodingChunk* chunk = chunksToEncode.first();
             chunksToEncode.removeFirst();
             mutex.unlock();
-			if (chunk){
+            if (chunk){
                 QByteArray encodedBytes( controller->encode(chunk->buffer, chunk->channelIndex));
                 if (chunk->lastPart){
                     encodedBytes.append( controller->encodeLastPartOfInterval(chunk->channelIndex));
@@ -80,8 +80,8 @@ protected:
                 if(!encodedBytes.isEmpty()){
                     emit controller->encodedAudioAvailableToSend(encodedBytes, chunk->channelIndex, chunk->firstPart, chunk->lastPart);
                 }
-				delete chunk;
-			}
+                delete chunk;
+            }
 
         }
         qCDebug(jtNinjamCore) << "Encoding thread stopped!";
@@ -159,22 +159,6 @@ class NinjamController::InputChannelChangedEvent : public SchedulableEvent{
     private:
         int channelIndex;
 };
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class NinjamController::XmitChangedEvent : public SchedulableEvent{
-public:
-    XmitChangedEvent(NinjamController* controller, int channelID, bool transmiting)
-        : SchedulableEvent(controller), transmiting(transmiting), channelID(channelID) {
-
-    }
-    void process(){
-        controller->setTransmitStatus(channelID, transmiting);
-    }
-
-private:
-    bool transmiting;
-    int channelID;
-};
-
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 NinjamController::NinjamController(Controller::MainController* mainController)
     :mainController(mainController),
@@ -326,6 +310,11 @@ void NinjamController::stop(bool emitDisconnectedingSignal){
     }
     encoders.clear();
 
+    //delete possible non consumed events
+    foreach (SchedulableEvent *e, scheduledEvents)
+        delete e;
+    scheduledEvents.clear();
+
     qCDebug(jtNinjamCore) << "NinjamController destructor - disconnecting...";
 
     Ninjam::Service* ninjamService = mainController->getNinjamService();// Ninjam::Service::getInstance();
@@ -351,19 +340,20 @@ NinjamController::~NinjamController(){
         stop(false);
     }
 
+    //delete possible non consumed events
+    foreach (SchedulableEvent *e, scheduledEvents) {
+        delete e;
+    }
+
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamController::start(const Ninjam::Server& server, const QMap<int, bool> &channelsXmitFlags){
+void NinjamController::start(const Ninjam::Server& server){
     qCDebug(jtNinjamCore) << "starting ninjam controller...";
     QMutexLocker locker(&mutex);
 
     //schedule an update in internal attributes
     scheduledEvents.append(new BpiChangeEvent(this, server.getBpi()));
     scheduledEvents.append(new BpmChangeEvent(this, server.getBpm()));
-    foreach (int channelID, channelsXmitFlags.keys()) {
-        bool channelIsTransmiting = channelsXmitFlags[channelID];
-        scheduledEvents.append(new XmitChangedEvent(this, channelID, channelIsTransmiting));
-    }
     preparedForTransmit = false; //the xmit start after the first interval is received
     emit preparingTransmission();
 
@@ -547,9 +537,7 @@ void NinjamController::processScheduledChanges(){
         event->process();
         delete event;
     }
-
     scheduledEvents.clear();
-
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 long NinjamController::getSamplesPerBeat(){
@@ -634,11 +622,6 @@ void NinjamController::reset(bool keepRecentIntervals){
         trackNode->discardIntervals(keepRecentIntervals);
     }
     intervalPosition = lastBeat = 0;
-}
-
-
-void NinjamController::setTransmitStatus(int channelID, bool transmiting){
-    scheduledEvents.append(new XmitChangedEvent(this, channelID, transmiting));
 }
 
 void NinjamController::scheduleEncoderChangeForChannel(int channelIndex){

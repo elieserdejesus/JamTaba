@@ -277,7 +277,9 @@ void OscillatorAudioNode::processReplacing(const Audio::SamplesBuffer &in,
 LocalInputAudioNode::LocalInputAudioNode(int parentChannelIndex, bool isMono) :
     globalFirstInputIndex(0),
     channelIndex(parentChannelIndex),
-    lastMidiActivity(0)
+    lastMidiActivity(0),
+    midiChannelIndex(-1),
+    midiDeviceIndex(-1)
 {
     Q_UNUSED(isMono)
     setToNoInput();

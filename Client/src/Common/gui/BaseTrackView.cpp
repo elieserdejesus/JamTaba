@@ -188,7 +188,7 @@ void BaseTrackView::createLayoutStructure()
     buttonBoostMinus12->setCheckable(true);
     buttonBoostMinus12->setText("-12");
 
-    QButtonGroup *buttonGroup = new QButtonGroup();
+    QButtonGroup *buttonGroup = new QButtonGroup(this);
     buttonGroup->addButton(buttonBoostMinus12);
     buttonGroup->addButton(buttonBoostPlus12);
     buttonGroup->addButton(buttonBoostZero);

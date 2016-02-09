@@ -19,7 +19,7 @@ MainController::MainController(const Settings &settings) :
     mutex(QMutex::Recursive),
     started(false),
     ipToLocationResolver(new Geo::WebIpToLocationResolver()),
-    loginService(new Login::LoginService()),
+    loginService(new Login::LoginService(this)),
     settings(settings),
     userNameChoosed(false),
     mainWindow(nullptr),
@@ -91,7 +91,7 @@ void MainController::connectedNinjamServer(const Ninjam::Server &server)
     }
     qCDebug(jtCore) << "starting ninjamController...";
 
-    newNinjamController->start(server, getXmitChannelsFlags());
+    newNinjamController->start(server);
 
     if (settings.isSaveMultiTrackActivated())
         jamRecorder.startRecording(getUserName(), QDir(settings.getRecordingPath()),
@@ -129,14 +129,13 @@ void MainController::updateBpm(int newBpm)
 void MainController::enqueueAudioDataToUpload(const QByteArray &encodedAudio, quint8 channelIndex,
                                               bool isFirstPart, bool isLastPart)
 {
-    /** The audio thread fire this event. This thread (main/gui thread) write the encoded bytes in socket.
-     *  We can't write in the socket from audio thread.*/
+    /** The audio thread is firing this event. This thread (main/gui thread) write the encoded bytes in socket.
+        We can't write in the socket from audio thread.*/
     if (isFirstPart) {
         if (intervalsToUpload.contains(channelIndex))
             delete intervalsToUpload[channelIndex];
         intervalsToUpload.insert(channelIndex, new UploadIntervalData());
-        ninjamService.sendAudioIntervalBegin(
-            intervalsToUpload[channelIndex]->getGUID(), channelIndex);
+        ninjamService.sendAudioIntervalBegin(intervalsToUpload[channelIndex]->getGUID(), channelIndex);
     }
     if (intervalsToUpload[channelIndex]) {// just in case...
         UploadIntervalData *upload = intervalsToUpload[channelIndex];
@@ -373,11 +372,8 @@ Audio::AudioPeak MainController::getRoomStreamPeak()
 void MainController::setTransmitingStatus(int channelID, bool transmiting)
 {
     if (trackGroups.contains(channelID)) {
-        if (trackGroups[channelID]->isTransmiting() != transmiting) {
+        if (trackGroups[channelID]->isTransmiting() != transmiting)
             trackGroups[channelID]->setTransmitingStatus(transmiting);
-            if (isPlayingInNinjamRoom())
-                ninjamController->setTransmitStatus(channelID, transmiting);
-        }
     }
 }
 
@@ -691,4 +687,8 @@ void MainController::stopNinjamController()
     QMutexLocker locker(&mutex);
     if (ninjamController && ninjamController->isRunning())
         ninjamController->stop(true);
+
+    foreach (UploadIntervalData *uploadInterval, intervalsToUpload)
+        delete uploadInterval;
+    intervalsToUpload.clear();
 }

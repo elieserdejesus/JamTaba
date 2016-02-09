@@ -25,7 +25,8 @@ PeakMeter::PeakMeter(QWidget *) :
     usingGradient(true),
     paintingMaxPeak(true),
     decayTime(DEFAULT_DECAY_TIME),
-    orientation(Qt::Vertical)
+    orientation(Qt::Vertical),
+    lastMaxPeakTime(0)
 {
     gradient = createGradient();
     setAttribute(Qt::WA_NoBackground);
