@@ -85,7 +85,6 @@ void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in,
         internalOutputBuffer.set(internalInputBuffer);
     }
 
-    qCDebug(jtNinjamRoomStreamer) << "discarding " << samplesToRender << " samples";
     bufferedSamples.discardFirstSamples(samplesToRender);// keep non rendered samples for next audio callback
 
     if (internalOutputBuffer.getFrameLenght() < out.getFrameLenght())
@@ -137,9 +136,6 @@ void AbstractMp3Streamer::decode(const unsigned int maxBytesToDecode)
         }
 
         bytesToDecode = bytesToDecode.right(bytesToDecode.size() - bytesProcessed);
-        if (bytesToDecode.isEmpty())
-            qCDebug(jtNinjamRoomStreamer) << bytesProcessed << " decoded  bytesToDecode: "
-                                          << bytesToDecode.size();
     }
 }
 
@@ -150,22 +146,15 @@ void AbstractMp3Streamer::setStreamPath(const QString &streamPath)
 }
 
 // +++++++++++++++++++++++++++++++++++++++
-NinjamRoomStreamerNode::NinjamRoomStreamerNode(const QUrl &streamPath, int bufferTimeInSeconds) :
+
+const int NinjamRoomStreamerNode::BUFFER_SIZE = 120000;
+
+NinjamRoomStreamerNode::NinjamRoomStreamerNode(const QUrl &streamPath) :
     AbstractMp3Streamer(new Mp3DecoderMiniMp3()),
     httpClient(nullptr),
-    bufferTime(bufferTimeInSeconds),
     buffering(false)
 {
     setStreamPath(streamPath.toString());
-}
-
-NinjamRoomStreamerNode::NinjamRoomStreamerNode(int bufferTimeInSeconds) :
-    AbstractMp3Streamer(new Mp3DecoderMiniMp3()),
-    httpClient(nullptr),
-    bufferTime(bufferTimeInSeconds),
-    buffering(false)
-{
-    setStreamPath("");
 }
 
 bool NinjamRoomStreamerNode::needResamplingFor(int targetSampleRate) const
@@ -210,8 +199,10 @@ void NinjamRoomStreamerNode::on_reply_read()
     if (device->isOpen() && device->isReadable()) {
         QMutexLocker locker(&mutex);
         bytesToDecode.append(device->readAll());
-        qCDebug(jtNinjamRoomStreamer) << "bytes downloaded  bytesToDecode:"<<bytesToDecode.size()
+        if (buffering) {
+            qCDebug(jtNinjamRoomStreamer) << "bytes downloaded  bytesToDecode:"<<bytesToDecode.size()
                                       << " bufferedSamples: " << bufferedSamples.getFrameLenght();
+        }
     } else {
         qCCritical(jtNinjamRoomStreamer) << "problem in device!";
     }
@@ -219,7 +210,6 @@ void NinjamRoomStreamerNode::on_reply_read()
 
 NinjamRoomStreamerNode::~NinjamRoomStreamerNode()
 {
-    qCDebug(jtNinjamRoomStreamer) << "RoomStreamerNode destructor!";
 }
 
 void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
@@ -227,7 +217,7 @@ void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBu
 {
     Q_UNUSED(in)
     QMutexLocker locker(&mutex);
-    if (buffering && bytesToDecode.size() >= 120000)
+    if (buffering && bytesToDecode.size() >= BUFFER_SIZE)
         buffering = false;
     if (!buffering && bytesToDecode.isEmpty())
         buffering = true;
@@ -243,6 +233,16 @@ void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBu
     }
     if (!bufferedSamples.isEmpty())
         AbstractMp3Streamer::processReplacing(in, out, sampleRate, midiBuffer);
+}
+
+int NinjamRoomStreamerNode::getBufferingPercentage() const
+{
+    if (buffering)
+        return bytesToDecode.size()/(float)BUFFER_SIZE * 100;
+
+    if (!streaming)
+        return 0;
+    return 100;//if not buffering and is streaming, the buffer is completed (100%)
 }
 
 // ++++++++++++++++++

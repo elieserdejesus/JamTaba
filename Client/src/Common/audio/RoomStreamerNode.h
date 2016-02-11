@@ -29,6 +29,10 @@ public:
 
     virtual int getSampleRate() const;
     virtual bool needResamplingFor(int targetSampleRate) const;
+
+    virtual bool isBuffering() const  = 0;
+    virtual int getBufferingPercentage() const = 0;
+
 signals:
     void error(const QString &errorMsg);
 private:
@@ -54,19 +58,24 @@ class NinjamRoomStreamerNode : public AbstractMp3Streamer
     Q_OBJECT
 
 public:
-    NinjamRoomStreamerNode(const QUrl &streamPath, int bufferTimeInSeconds = 3);
-    explicit NinjamRoomStreamerNode(int bufferTimeInSeconds = 3);
+    NinjamRoomStreamerNode(const QUrl &streamPath = QUrl(""));
     ~NinjamRoomStreamerNode();
 
     virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
                                   const Midi::MidiBuffer &midiBuffer);
     virtual bool needResamplingFor(int targetSampleRate) const;
+
+    inline bool isBuffering() const override { return buffering; }
+
+    int getBufferingPercentage() const override;
+
 protected:
     void initialize(const QString &streamPath);
 private:
     QNetworkAccessManager *httpClient;
-    int bufferTime;// in seconds
     bool buffering;
+
+    static const int BUFFER_SIZE;
 
 private slots:
     void on_reply_error(QNetworkReply::NetworkError);

@@ -146,7 +146,7 @@ void MainWindow::stopCurrentRoomStream()
     if (mainController->isPlayingRoomStream()) {
         long long roomID = mainController->getCurrentStreamingRoomID();
         if (roomViewPanels[roomID])
-            roomViewPanels[roomID]->clearPeaks(true);
+            roomViewPanels[roomID]->clear(true);
         mainController->stopRoomStream();
     }
 }
@@ -503,7 +503,7 @@ void MainWindow::playPublicRoomStream(const Login::RoomInfo &roomInfo)
 {
     // clear all plots
     foreach (JamRoomViewPanel *viewPanel, this->roomViewPanels.values())
-        viewPanel->clearPeaks(roomInfo.getID() != viewPanel->getRoomInfo().getID());
+        viewPanel->clear(roomInfo.getID() != viewPanel->getRoomInfo().getID());
 
     if (roomInfo.hasStream())// just in case...
         mainController->playRoomStream(roomInfo);
@@ -530,7 +530,7 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
     if (mainController->isPlayingRoomStream()) {
         long long roomID = mainController->getCurrentStreamingRoomID();
         if (roomViewPanels[roomID])
-            roomViewPanels[roomID]->clearPeaks(true);
+            roomViewPanels[roomID]->clear(true);
         mainController->stopRoomStream();
     }
 
@@ -712,8 +712,16 @@ void MainWindow::timerEvent(QTimerEvent *)
         long long roomID = mainController->getCurrentStreamingRoomID();
         JamRoomViewPanel *roomView = roomViewPanels[roomID];
         if (roomView) {
-            Audio::AudioPeak peak = mainController->getRoomStreamPeak();
-            roomView->addPeak(peak.getMax());
+            bool buffering = mainController->getRoomStreamer()->isBuffering();
+            roomView->setShowBufferingState(buffering);
+            if (!buffering) {
+                Audio::AudioPeak peak = mainController->getRoomStreamPeak();
+                roomView->addPeak(peak.getMax());
+            }
+            else{
+                int percentage = mainController->getRoomStreamer()->getBufferingPercentage();
+                roomView->setBufferingPercentage(percentage);
+            }
         }
     }
 

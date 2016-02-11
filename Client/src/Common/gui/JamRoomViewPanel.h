@@ -25,8 +25,11 @@ public:
     JamRoomViewPanel(const Login::RoomInfo &roomInfo, Controller::MainController *mainController);
     ~JamRoomViewPanel();
     void addPeak(float peak);
-    void clearPeaks(bool resetListenButton);
+    void clear(bool resetListenButton);
     void refresh(const Login::RoomInfo &roomInfo);
+
+    void setShowBufferingState(bool showBuffering);
+    void setBufferingPercentage(int percentage);
 
     inline Login::RoomInfo getRoomInfo() const
     {

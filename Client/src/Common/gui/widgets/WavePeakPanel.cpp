@@ -9,10 +9,29 @@ const int WavePeakPanel::peaksPad = 0;
 
 WavePeakPanel::WavePeakPanel(QWidget *parent) :
     QWidget(parent),
-    maxPeaks(0)
+    maxPeaks(0),
+    showingBuffering(false),
+    bufferingPercentage(0)
 {
     setAutoFillBackground(false);
     recreatePeaksArray();
+}
+
+void WavePeakPanel::setBufferingPercentage(uint percentage)
+{
+    if (percentage > 100)
+        percentage = 100;
+    bufferingPercentage = percentage;
+    update();
+}
+
+void WavePeakPanel::setShowBuffering(bool showBuffering)
+{
+    if (showBuffering != showingBuffering) {
+        showingBuffering = showBuffering;
+        bufferingPercentage = 0;
+        clearPeaks();
+    }
 }
 
 void WavePeakPanel::recreatePeaksArray()
@@ -48,6 +67,11 @@ QSize WavePeakPanel::minimumSizeHint()  const
 
 void WavePeakPanel::addPeak(float peak)
 {
+    if(showingBuffering) {
+        qCritical() << "Adding peak while is buffering!";
+        return;
+    }
+
     if (peaksArray.size() >= maxPeaks)
         peaksArray.clear();
     peaksArray.push_back(peak);
@@ -59,12 +83,32 @@ void WavePeakPanel::paintEvent(QPaintEvent *event)
     Q_UNUSED(event)
     if (isVisible()) {
         QPainter painter(this);
-        size_t size = peaksArray.size();
-        for (uint i = 0; i < size; i++) {
-            float alpha = ((float)(i+1)/(size));
-            QColor color(90, 90, 90, std::pow(alpha, 2) * 255);
-            int xPos = i * (peaksRectWidth + peaksPad);
-            drawPeak(&painter, xPos, peaksArray[i], color);
+        painter.setRenderHint(QPainter::Antialiasing);
+
+        if (!showingBuffering) {
+            size_t size = peaksArray.size();
+            for (uint i = 0; i < size; i++) {
+                float alpha = ((float)(i+1)/(size));
+                QColor color(90, 90, 90, std::pow(alpha, 2) * 255);
+                int xPos = i * (peaksRectWidth + peaksPad);
+                drawPeak(&painter, xPos, peaksArray[i], color);
+            }
+        }
+        else{ //showing buffering
+            QPen pen;
+            pen.setWidth(3);
+            pen.setColor(Qt::gray);
+            painter.setPen(pen);
+
+            float progress = bufferingPercentage/100.0;
+            //QRectF rectangle(10.0, 20.0, 80.0, 80.0);
+            int rectSize = qMin(height(), width()) * 0.7;// 70% of width or height
+            QRectF rectangle(width()/2 - rectSize/2, height()/2 - rectSize/2, rectSize, rectSize);
+            //to understand these magic numbers, look drawArc method in Qt doc
+            int startAngle = 0;
+            int spanAngle = -progress * 360 * 16;
+            painter.drawArc(rectangle, startAngle, spanAngle);
+            painter.drawText(rectangle, Qt::AlignCenter, QString::number(bufferingPercentage)+"%");
         }
     }
 }
