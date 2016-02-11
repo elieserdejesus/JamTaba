@@ -233,7 +233,7 @@ void SamplesBuffer::setFrameLenght(unsigned int newFrameLenght)
     if (newFrameLenght == frameLenght)
         return;
 
-    if (newFrameLenght > 0) {
+    if (newFrameLenght > frameLenght) {
         for (unsigned int c = 0; c < channels; ++c)
             samples[c].resize(newFrameLenght);
     }

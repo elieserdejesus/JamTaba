@@ -100,6 +100,16 @@ void JamRoomViewPanel::addPeak(float peak)
     ui->wavePeakPanel->addPeak(peak);
 }
 
+void JamRoomViewPanel::setShowBufferingState(bool showBuffering)
+{
+    ui->wavePeakPanel->setShowBuffering(showBuffering);
+}
+
+void JamRoomViewPanel::setBufferingPercentage(int percentage)
+{
+    ui->wavePeakPanel->setBufferingPercentage(percentage);
+}
+
 bool JamRoomViewPanel::userIsBot(const Login::UserInfo &userInfo)
 {
     return mainController->getBotNames().contains(userInfo.getName());
@@ -129,12 +139,12 @@ JamRoomViewPanel::~JamRoomViewPanel()
     delete ui;
 }
 
-void JamRoomViewPanel::clearPeaks(bool resetListenButton)
+void JamRoomViewPanel::clear(bool resetListenButton)
 {
     ui->wavePeakPanel->clearPeaks();
+    ui->wavePeakPanel->setShowBuffering(false);
     if (resetListenButton)
         ui->buttonListen->setChecked(false);
-
     updateButtonListen();
 }
 

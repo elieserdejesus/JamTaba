@@ -35,6 +35,10 @@ void Mp3DecoderMiniMp3::reset()
     array.clear();
     for (int i = 0; i < INTERNAL_SHORT_BUFFER_SIZE; ++i)
         internalShortBuffer[i] = 0;
+    if (buffer) {
+        delete buffer;
+        buffer = nullptr;
+    }
 }
 
 int Mp3DecoderMiniMp3::getSampleRate() const
