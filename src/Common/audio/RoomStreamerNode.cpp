@@ -147,7 +147,7 @@ void AbstractMp3Streamer::setStreamPath(const QString &streamPath)
 
 // +++++++++++++++++++++++++++++++++++++++
 
-const int NinjamRoomStreamerNode::BUFFER_SIZE = 120000;
+const int NinjamRoomStreamerNode::BUFFER_SIZE = 128000;
 
 NinjamRoomStreamerNode::NinjamRoomStreamerNode(const QUrl &streamPath) :
     AbstractMp3Streamer(new Mp3DecoderMiniMp3()),
@@ -227,7 +227,8 @@ void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBu
     while (bufferedSamples.getFrameLenght() < samplesToRender) {// need decoding?
         decode(256);
         if (bytesToDecode.isEmpty()) {// no more bytes to decode
-            qCritical() << "BREAK";
+            qCritical() << "no more bytes to decode and not enough buffered samples. Buffering ...";
+            buffering = true;
             break;
         }
     }
