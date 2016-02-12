@@ -3,27 +3,31 @@
 #include <QApplication>
 #include <QKeyEvent>
 #include <QLineEdit>
+#include <QComboBox>
 #include <QDebug>
 
 HHOOK KeyboardHook::globalKeyboardHook = nullptr;
 
 /**
-    This is a callback function to hook VST host key pressing. In general VST hosts are using some Keys as
-HotKeys. So, the host code get the key pressing event activate the host HotKey and don't send the key pressing
-to Jamtaba.
-    So, I'm hooking the global key pressing, and IF A JAMTABA QLineEdit WIDGET is FOCUSED passing the
-key[press/release] message to this widget and not passing the same message to VST host.
-
+    This is a callback function to hook VST host key pressing. In general VST hosts are
+using some Keys as HotKeys. So, the host code is hooking the 'key pressing' events and don't
+sending these events to Jamtaba.
+    I'm hooking the global key pressing (before the host), and IF A JAMTABA QLineEdit or a
+QComboBox is FOCUSED, passing the key[press/release] message to the focused widget (and not
+passing the same event to VST host).
+    The QLineEdits are: local channels names and chat text. The QComboBoxes are the ninjam
+BPI and BPM combos.
 */
+
 LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lParam)
 {
     if (nCode == HC_ACTION) {
         QWidget *focusWidget = QApplication::focusWidget();
 
         // qobject_cast return NULL when the cast fail.
-        bool widgetIsQLineEditInstance = qobject_cast<QLineEdit *>(focusWidget);
+        bool widgetIsFocusable = qobject_cast<QLineEdit *>(focusWidget) || qobject_cast<QComboBox *>(focusWidget);
 
-        if (widgetIsQLineEditInstance) {
+        if (widgetIsFocusable) {
             QKeyEvent *ev = nullptr;
             QKeyEvent::Type eventType
                 = (wParam == WM_KEYDOWN) ? QKeyEvent::KeyPress : QKeyEvent::KeyRelease;
