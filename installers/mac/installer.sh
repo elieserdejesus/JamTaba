@@ -1,19 +1,27 @@
+set -e
+
+mkdir -p ~/Desktop/Release
+
+cd ~/Desktop/Release
+
+echo “Compiling …”
+
+"/Users/elieser/Qt5.5.0/5.5/clang_64/bin/qmake" ~/Desktop/JamTaba/Client/PROJECTS/Jamtaba.pro -r -spec macx-clang CONFIG+=x86_64
+
+/usr/bin/make -s -j 4
+
+
 ~/Qt5.5.0/5.5/clang_64/bin/macdeployqt ~/Desktop/Release/Standalone/Jamtaba2.app -verbose=2
 
-cp template.dmg Installer.dmg
+#copy the VstScanner inside Jamtaba2.app
+cp ~/Desktop/Release/VstScanner/VstScanner ~/Desktop/Release/Standalone/Jamtaba2.app/Contents/MacOS/	
 
-hdiutil attach Installer.dmg
+# node-appdmg search the files considering .json relative paths. Putting the .app file in the node-appdmg .json folder
 
-sleep 1
+cp -R ~/Desktop/Release/Standalone/Jamtaba2.app ~/Desktop/JamTaba/Client/installers/mac/
 
-cp -r ~/Desktop/Release/Standalone/Jamtaba2.app /Volumes/Jamtaba_2_Installer/
-cp -r ~/Desktop/Release/VstScanner/VstScanner /Volumes/Jamtaba_2_Installer/Jamtaba2.app/Contents/MacOS
-
-
-hdiutil detach /Volumes/Jamtaba_2_Installer
+appdmg /Users/elieser/Desktop/JamTaba/Client/installers/mac/node-appdmg.json ~/Desktop/Jamtaba_2_Installer.dmg
 
 
-hdiutil convert ./Installer.dmg -quiet -format UDZO -imagekey zlib-level=9 -o ~/Desktop/Jamtaba_2_Installer.dmg
-
-rm Installer.dmg
-
+#removing the .app
+rm -rf ~/Desktop/JamTaba/Client/installers/mac/Jamtaba2.app

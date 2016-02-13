@@ -1,0 +1,19 @@
+{
+
+  "title": "Jamtaba 2 Installer",
+
+  "icon": "mountedimage.icns",
+
+  "background": "background.png",
+
+  "icon-size": 128,
+
+
+  "contents": [
+
+    { "x": 480, "y": 180, "type": "link", "path": "/Applications" },
+    { "x": 1, "y": 180, "type": "file", "path": "Jamtaba2.app" }
+
+  ]
+
+}
