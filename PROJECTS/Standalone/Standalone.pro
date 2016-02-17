@@ -102,11 +102,13 @@ win32{
             QMAKE_CXXFLAGS_RELEASE +=  -GL -Gy -Gw
             QMAKE_LFLAGS_RELEASE += /LTCG
         }
+    }
 
-        win32-g++{#MinGW compiler
-            message("MinGW x86 build")
-            LIBS_PATH = "static/win32-mingw"
-        }
+    win32-g++{#MinGW compiler
+       message("MinGW x86 build")
+       LIBS_PATH = "static/win32-mingw"
+
+       LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
     }
 
     LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32 #-lPsapi
