@@ -1,40 +1,49 @@
 
-![ezgif com-gif-maker 1](https://cloud.githubusercontent.com/assets/1283808/11020730/0d9e58ba-8629-11e5-8e55-b8cd89b568c0.gif)
-
 **Jamtaba 2** is a software to play online music jam sessions. At moment you can use Jamtaba to play with musicians around the world using [ninjam ](http://www.cockos.com/ninjam/) servers.
 
-Jamtaba is a standalone software and a VST plugin. Using the standalone version you can use your audio and midi devices and use VST plugins inside Jamtaba (Jamtaba standalone is a VST host). Using the VST plugin you can use Jamtaba in your preferred DAW and send your audio tracks to Jamtaba, and Jamtaba will stream these audio tracks to ninjam servers. Off course Jamtaba will receive and play the other musicians audio streams, so you can play with others and have some fun playing online!
+![Jamtaba](http://jamtaba-music-web-site.appspot.com/img/Jamtaba_2_jamming.png)
 
-At moment Jamtaba standalone works for Windows (32 and 64 bits) and Mac OSX (10.7+). The VST plugin is available only for windows (32 and 64 bits).
+Jamtaba is a **standalone** software and a **VST plugin** (windows only at moment). Using the standalone version you can use your audio and midi devices and use VST plugins inside Jamtaba (Jamtaba standalone is a VST host). Using the VST plugin you can use Jamtaba in your preferred DAW and send your audio tracks to Jamtaba, and Jamtaba will stream these audio tracks to ninjam servers. Off course Jamtaba will receive and play the other musicians audio streams, so you can play with others and have some fun playing online!
+
+At moment Jamtaba standalone works for Windows (32 and 64 bits) and Mac OSX (10.7+) and Linux. The VST plugin is available only for windows (32 and 64 bits).
 More information and User's manual are here : https://github.com/elieserdejesus/JamTaba/wiki      
-FOR DEVs : Doxygen doc is here -> http://makeitezeeah.esy.es/Jamtaba2/2.0.6/
 ***
 
-### Tools and dependencies
-JamTaba is builded using Qt. We are using Qt for many things: Gui, threads, sockets, json, http requests, file handling, etc. At moment Jamtaba is very coupled with Qt. This is a good thing if you like Qt, but can be terrible if you don't like. 
+## Tools and dependencies
+JamTaba is builded using **Qt framework**. We are using Qt for GUI, threads, sockets, json, http requests, file handling, etc. 
 
-Jamtaba is using some libraries: portaudio, rtmidi, minimp3, libvorbis and libogg. We are distributing pre compiled static libs for some platforms (Windows 32 and 64 bits and Mac OSX 64 bits). The linux port is in the TODO list, but we don't have nothing interesting enough yet.
+Jamtaba is using some libraries: [portaudio](http://www.portaudio.com/), [rtmidi](https://www.music.mcgill.ca/~gary/rtmidi/), [minimp3](http://keyj.emphy.de/minimp3/), [libvorbis and libogg](http://www.vorbis.com/). We are distributing **pre compiled static libs** just for convenience (see more details in the next sections), but feel free to compile the libs yourself!
 
-IMPORTANT FOR WINDOWS :
-The library portaudio was compiled in windows using only the ASIO flags. So, if you don't have any ASIO driver installed JamTaba will emit an error message in initialization and fallback to an NullAudioDriver, and no sound will be produced.
+####IMPORTANT FOR WINDOWS if you will use the pre compiled libs (recommended):
+The library **portaudio** was **pre compiled** in windows using **only the ASIO flags**. So, if you don't have any **ASIO driver** installed JamTaba will emit an error message in initialization and fallback to an NullAudioDriver, and no sound will be produced. If you have no ASIO devices please install [Asio4ALL](http://www.asio4all.com/).
 
+##Downloading Pre Compiled Libs
+- To avoid store big binay files in the GitHub repository the [pre compiled libs](https://dl.dropboxusercontent.com/u/23791949/jamtaba/jamtaba2/JamTaba-static-libs.zip) are stored in my personal dropbox account. Please download this file!
+- After download the **zip** file with the **pre compiled static libraries** please unpack this file inside a folder **libs** (create this folder). The folders layout will be:
+```
+[Jamtaba source code folder in your hard disk]
+	|_ installers
+	|_ libs	  
+		|_ includes
+		|_ static
+	|_ PROJECTS
+	|_ src
+    |_ tests
+```
 ***
 
-### Windows Development
+## Compiling JamTaba Standalone
 
-## Steps to build Using MinGW
-
-1 - Download Qt OffLine Installer for Windows MinGW: http://www.qt.io/download-open-source/
- 
-2 - Download VST SDK: http://www.steinberg.net/en/company/developers.html
-
-3 - Unpack the download VST SDK content inside a "VST_SDK" folder (you need create this folder) in Jamtaba source code path. After this you have something like that:
-```	
-Jamtaba source code dir in your hard disk
-	|_ Client
-	|_ Icons
-	|_ Server
-	|_ VST_SDK 
+- Download and install [Qt](http://www.qt.io/download-open-source/). The Qt installer will install the **Qt Framework** and the **QtCreator**, the Qt IDE.
+- Download [VST SDK](http://www.steinberg.net/en/company/developers.html)
+- Unpack the VST SDK content inside a **VST_SDK** folder (you need create this folder) in Jamtaba source code path. After this you have something like that:
+```
+[Jamtaba source code folder in your hard disk]
+	|_ PROJECTS
+	|_ installers
+	|_ src
+    |_ tests
+	|_ VST_SDK       <- create this folder
 		|_ base
 		|_ bin
 		|_ doc
@@ -44,47 +53,13 @@ Jamtaba source code dir in your hard disk
 		|_ vstgui4
 		|_ index.html
 ```
-4 - Run Qt installer and check the options below: 
-	Qt -> Qt 5.5 -> MinGW 4.9.2 32 bit
-	Qt -> Tools -> MinGW 4.9.2
-	This will install Qt compiled with MinGW and install MinGW tools (compiler, debugger, etc) in [Qt install folder]/Tools. 
+- The **QtCreator projects** are in the folder **PROJECTS**. Try open the **Standalone.pro** in QtCreator to compile **JamTaba Standalone**. 
 
-5 - Open QtCreator (the Qt IDE). QtCreator is located in[Qt install folder]/Tools/QtCreator.exe. If you select Tools->MinGW in setp 3 QtCreator is configured to use MinGW, this is the easy way!
-
-6 - Open the Jamtaba.pro file in QtCreator (use the button "Open Project in QtCreator start screen).
-
-7 - [Optional Step]: In QtCreator click in "Projects" in left side to open the "Build Settings" page. In "Build Steps" section expand you will see "qmake" and "Make" details. Open "Make" details (click in the combo in right side). Now you see a text field for "Make arguments". Put "-j 4" in this text field, where "4" is the number of cores in your processor. This will speed up the compilation using all your processor cores.
-
-8 - Have fun! This is the most important step!
+- Compile the project in QtCreator (the green button in left side)!
 
 ***
 
-## Build Using msvc
-TODO
-
-***
-
-## Working with Git (ToolTips)
-I use git in command line prompt.  
-My Git knowledge is limited, but it is enough to let us rock !
-
-Let' me share the 2 things I know about Git, maybe this can usefull for you too:
-
-**When I will work in something new (bug or issue):**
-```
-git checkout -b "branchName"  //this create a new branch with  the specified name
-```
-**When I've finished the work with the branch "branchName":**
-```
-git add .  				  //to add all changes (don't forget the dot in the command!)
-git commit -m "my cool commit message"    //to commit/confirm all changes
-```
-
-**Now I go back to the master and merge master with the branch:**
-```
-git checkout master    //backing to master branch
-git merge branchName   //master is merged with the "branchName" branch
-
-git push               //to send the files for the remote repository
-```
-You are done !
+##Compiling JamTaba Vst Plugin
+- To compile JamTaba **Vst Plugin** you need run all steps described in the section **Compiling Jamtaba Standalone**, except the 2 last steps.
+- In the last steps you need open the file **VstPlugin.pro** in **QtCreator**. If you try to compile this project you will got some errors, because the Vst Plugin can't be compiled using **official Qt releases** downloaded in Qt official site. These Qt releases are compiled/using shared libraries. You need a **static compiled Qt** to compile the Vst Plugin, and you need compile this special Qt version for your self. Check the [Qt docs](http://doc.qt.io/qt-5/build-sources.html) to see how compile Qt in a "static flavor". 
+- Inside the folder **PROJECTS/VstPlugin** you have a file **Qt static compile flags.txt** with some flags to configure Qt before compile and reduce the size of Qt static libs. These flags will speed up the compilation process too. In my machine (a common laptop with 4 cores) the compilation process lasted 15 minutes using these flags. 
