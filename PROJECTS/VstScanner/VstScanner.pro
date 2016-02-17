@@ -19,11 +19,11 @@ CONFIG(debug, debug|release){
 TEMPLATE = app
 
 ROOT_PATH = "../.."
-SOURCE_PATH = "$$ROOT_PATH/src"
+SOURCE_PATH = $$ROOT_PATH/src
 
 INCLUDEPATH += $$SOURCE_PATH/Common
 INCLUDEPATH += $$SOURCE_PATH/VstScanner
-INCLUDEPATH += $$ROOT_PATH/../VST_SDK/pluginterfaces/vst2.x
+INCLUDEPATH += $$ROOT_PATH/VST_SDK/pluginterfaces/vst2.x
 
 VPATH       += $$SOURCE_PATH/Common
 VPATH       += $$SOURCE_PATH/VstScanner
