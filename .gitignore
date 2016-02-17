@@ -13,7 +13,6 @@
 *.exe
 *.user
 *.zip
-VST_SDK/*
 
 *.DS_Store
 *~
@@ -42,9 +41,8 @@ Makefile*
 *.qmlproject.user.*
 
 
-# Jamtaba server
+# Jamtaba 
 
-Server/build/
-Server/dist
-Server/nbproject/private
+libs/
+VST_SDK/
 
