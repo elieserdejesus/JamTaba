@@ -3,6 +3,22 @@
 #include <QDebug>
 #include "gui/chords/ChatChordsProgressionParser.h"
 
+void TestChatChordsProgressionParser::upperCaseText()
+{
+    //testing if upper case letters are recognized as chords
+    QFETCH(QString, chatMessage);
+    ChatChordsProgressionParser parser;
+    QVERIFY(!parser.containsProgression(chatMessage));
+}
+
+void TestChatChordsProgressionParser::upperCaseText_data()
+{
+
+    QTest::addColumn<QString>("chatMessage");
+
+    QTest::newRow("UPPER CASE TEXT (Testing false positive)") << QString("LETS TAKE A SHIT");
+}
+
 void TestChatChordsProgressionParser::measuresCount()
 {
     QFETCH(QString, chatMessage);
@@ -37,6 +53,6 @@ void TestChatChordsProgressionParser::measureSeparators_data()
     QTest::newRow("Measure separator !") << QString("! C ! F ! G 7 ! F");
     QTest::newRow("Measure separator I") << QString("I C I F I G 7 I F");
     QTest::newRow("Measure separator l") << QString("l C l F l G 7 l F");
-    QTest::newRow("Measure separator L") << QString("L C L F L G 7 L F");
-    QTest::newRow("Mixed measure separators") << QString("L C ! F I G 7 l F");
+    //QTest::newRow("Measure separator L") << QString("L C L F L G 7 L F"); //removed to avoid the problem in issue #263
+    QTest::newRow("Mixed measure separators") << QString("|C ! F I G 7 l F");
 }

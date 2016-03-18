@@ -6,7 +6,7 @@
 const QString ChatChordsProgressionParser::CHORD_REGEX
     = "([A-G][b#]?([ a-z0-9º()#\\+\\-]{1,8})?(/[A-G][b#]?[ ]{0,3})?)";
 
-const QString ChatChordsProgressionParser::MEASURE_SEPARATORS_REGEX = "\\||!|I|l|L";
+const QString ChatChordsProgressionParser::MEASURE_SEPARATORS_REGEX = "\\||!|I|l";
 
 bool ChatChordsProgressionParser::containsProgression(const QString &string)
 {

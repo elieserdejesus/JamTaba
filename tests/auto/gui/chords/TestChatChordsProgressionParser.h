@@ -13,6 +13,9 @@ private slots:
 
     void measuresCount();
     void measuresCount_data();
+
+    void upperCaseText(); //test some invalid text containing upper case chords letters (issue #263)
+    void upperCaseText_data();
 };
 
 #endif // TESTCHATCHORDSPROGRESSIONPARSER_H
