@@ -12,15 +12,9 @@ public:
     ~LocalInputNode();
     void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
                                   const Midi::MidiBuffer &midiBuffer) override;
-    virtual int getSampleRate() const
-    {
-        return 0;
-    }
+    virtual int getSampleRate() const;
 
-    inline int getChannels() const
-    {
-        return audioInputRange.getChannels();
-    }
+    int getChannels() const;
 
     bool isMono() const;
 
@@ -38,68 +32,37 @@ public:
 
     void setToNoInput();
 
-    inline int getMidiDeviceIndex() const
-    {
-        return midiDeviceIndex;
-    }
+    int getMidiDeviceIndex() const;
 
-    inline int getMidiChannelIndex() const
-    {
-        return midiChannelIndex;
-    }
+    int getMidiChannelIndex() const;
 
     bool isReceivingAllMidiChannels() const;
 
-    inline ChannelRange getAudioInputRange() const
-    {
-        return audioInputRange;
-    }
+    ChannelRange getAudioInputRange() const;
 
-    inline void setGlobalFirstInputIndex(int firstInputIndex)
-    {
-        this->globalFirstInputIndex = firstInputIndex;
-    }
+    void setGlobalFirstInputIndex(int firstInputIndex);
 
-    inline int getGroupChannelIndex() const
-    {
-        return channelIndex;
-    }
+    int getGroupChannelIndex() const;
 
-    const Audio::SamplesBuffer &getLastBuffer() const
-    {
-        return internalOutputBuffer;
-    }
+    const Audio::SamplesBuffer &getLastBuffer() const;
 
     void setProcessorsSampleRate(int newSampleRate);
 
     void closeProcessorsWindows();
 
-    inline bool hasMidiActivity() const
-    {
-        return lastMidiActivity > 0;
-    }
+    bool hasMidiActivity() const;
 
-    quint8 getMidiActivityValue() const
-    {
-        return lastMidiActivity;
-    }
+    quint8 getMidiActivityValue() const;
 
-    inline void resetMidiActivity()
-    {
-        lastMidiActivity = 0;
-    }
+    void resetMidiActivity();
 
-    // overriding
     void addProcessor(AudioNodeProcessor *newProcessor) override;
 
     void reset();
 
-    // local input tracks are always activated, so is possible play offline while listening to a room.
-    // The other tracks (ninjam tracks) are deactivated when the 'room preview' is started.
-    inline bool isActivated() const override
-    {
-        return true;
-    }
+    /** local input tracks are always activated, so is possible play offline while listening to a room.
+     The other tracks (ninjam tracks) are deactivated when the 'room preview' is started. */
+    bool isActivated() const override;
 
 private:
     int globalFirstInputIndex; // store the first input index selected globally by users in preferences menu
@@ -122,6 +85,67 @@ private:
 
     quint8 lastMidiActivity;// max velocity or control value
 };
+
+
+inline int LocalInputNode::getSampleRate() const
+{
+    return 0;
+}
+
+inline int LocalInputNode::getChannels() const
+{
+    return audioInputRange.getChannels();
+}
+
+inline int LocalInputNode::getMidiDeviceIndex() const
+{
+    return midiDeviceIndex;
+}
+
+inline int LocalInputNode::getMidiChannelIndex() const
+{
+    return midiChannelIndex;
+}
+
+inline ChannelRange LocalInputNode::getAudioInputRange() const
+{
+    return audioInputRange;
+}
+
+inline void LocalInputNode::setGlobalFirstInputIndex(int firstInputIndex)
+{
+    this->globalFirstInputIndex = firstInputIndex;
+}
+
+inline int LocalInputNode::getGroupChannelIndex() const
+{
+    return channelIndex;
+}
+
+inline const Audio::SamplesBuffer &LocalInputNode::getLastBuffer() const
+{
+    return internalOutputBuffer;
+}
+
+inline bool LocalInputNode::hasMidiActivity() const
+{
+    return lastMidiActivity > 0;
+}
+
+inline quint8 LocalInputNode::getMidiActivityValue() const
+{
+    return lastMidiActivity;
+}
+
+inline void LocalInputNode::resetMidiActivity()
+{
+    lastMidiActivity = 0;
+}
+
+inline bool LocalInputNode::isActivated() const
+{
+    return true;
+}
 
 }//namespace
 
