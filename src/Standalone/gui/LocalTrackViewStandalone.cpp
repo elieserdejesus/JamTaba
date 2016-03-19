@@ -1,4 +1,5 @@
 #include "LocalTrackViewStandalone.h"
+#include "audio/core/LocalInputNode.h"
 #include "FxPanel.h"
 #include "FxPanelItem.h"
 #include <QGridLayout>

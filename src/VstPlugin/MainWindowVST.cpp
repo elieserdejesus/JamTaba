@@ -3,6 +3,7 @@
 #include "MainControllerVST.h"
 #include "VstPreferencesDialog.h"
 #include "LocalTrackView.h"
+#include "audio/core/LocalInputNode.h"
 
 MainWindowVST::MainWindowVST(MainControllerVST *mainController) :
     MainWindow(mainController),

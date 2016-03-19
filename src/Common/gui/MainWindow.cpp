@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include "PreferencesDialog.h"
 #include "LocalTrackView.h"
+#include "audio/core/LocalInputNode.h"
 #include "NinjamRoomWindow.h"
 #include "Highligther.h"
 #include "PrivateServerDialog.h"

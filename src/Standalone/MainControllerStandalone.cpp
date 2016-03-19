@@ -2,7 +2,7 @@
 
 #include "midi/RtMidiDriver.h"
 #include "audio/PortAudioDriver.h"
-
+#include "audio/core/LocalInputNode.h"
 #include "vst/VstPlugin.h"
 #include "vst/VstHost.h"
 #include "vst/PluginFinder.h"

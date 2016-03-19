@@ -7,6 +7,7 @@
 #include "loginserver/natmap.h"
 #include "log/Logging.h"
 #include "audio/core/AudioNode.h"
+#include "audio/core/LocalInputNode.h"
 
 using namespace Persistence;
 using namespace Midi;

@@ -1,6 +1,7 @@
 #include "MainControllerVST.h"
 #include "NinjamControllerVST.h"
 #include "midi/MidiDriver.h"
+#include "audio/core/LocalInputNode.h"
 #include "MainWindow.h"
 #include "Plugin.h"
 #include "log/Logging.h"

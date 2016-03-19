@@ -3,9 +3,13 @@
 
 #include "BaseTrackView.h"
 #include "PeakMeter.h"
-#include "audio/core/AudioNode.h"
+//#include "audio/core/AudioNode.h"
 
 class FxPanel;
+
+namespace Audio {
+class LocalInputNode;
+}
 
 class LocalTrackView : public BaseTrackView
 {

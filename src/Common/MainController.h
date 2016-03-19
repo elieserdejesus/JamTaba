@@ -14,7 +14,7 @@
 #include "audio/RoomStreamerNode.h"
 #include "midi/MidiDriver.h"
 #include "UploadIntervalData.h"
-#include "audio/core/AudioNode.h" //including InputTrackGroup
+#include "audio/core/LocalInputGroup.h"
 
 class MainWindow;
 

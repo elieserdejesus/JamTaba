@@ -1,5 +1,6 @@
 #include "LocalTrackView.h"
 #include "MainController.h"
+#include "audio/core/LocalInputNode.h"
 #include <QLayout>
 #include <QPushButton>
 #include <QLabel>
