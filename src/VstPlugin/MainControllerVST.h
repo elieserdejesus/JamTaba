@@ -33,7 +33,7 @@ public:
 
     void setCSS(const QString &css) override;
 
-    int addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode) override;
+    int addInputTrackNode(Audio::LocalInputNode *inputTrackNode) override;
 
     void setSampleRate(int newSampleRate);
 

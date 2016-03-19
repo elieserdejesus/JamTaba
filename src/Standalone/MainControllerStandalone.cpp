@@ -38,7 +38,7 @@ QString MainControllerStandalone::getJamtabaFlavor() const
 void MainControllerStandalone::setInputTrackToMono(int localChannelIndex,
                                                    int inputIndexInAudioDevice)
 {
-    Audio::LocalInputAudioNode *inputTrack = getInputTrack(localChannelIndex);
+    Audio::LocalInputNode *inputTrack = getInputTrack(localChannelIndex);
     if (inputTrack) {
         if (!inputIndexIsValid(inputIndexInAudioDevice))  // use the first available channel?
             inputIndexInAudioDevice = audioDriver->getSelectedInputs().getFirstChannel();
@@ -132,7 +132,7 @@ bool MainControllerStandalone::inputIndexIsValid(int inputIndex)
 void MainControllerStandalone::setInputTrackToMIDI(int localChannelIndex, int midiDevice,
                                                    int midiChannel)
 {
-    Audio::LocalInputAudioNode *inputTrack = getInputTrack(localChannelIndex);
+    Audio::LocalInputNode *inputTrack = getInputTrack(localChannelIndex);
     if (inputTrack) {
         inputTrack->setMidiInputSelection(midiDevice, midiChannel);
         if (window)
@@ -147,7 +147,7 @@ void MainControllerStandalone::setInputTrackToMIDI(int localChannelIndex, int mi
 
 void MainControllerStandalone::setInputTrackToNoInput(int localChannelIndex)
 {
-    Audio::LocalInputAudioNode *inputTrack = getInputTrack(localChannelIndex);
+    Audio::LocalInputNode *inputTrack = getInputTrack(localChannelIndex);
     if (inputTrack) {
         inputTrack->setToNoInput();
         if (window)
@@ -166,7 +166,7 @@ void MainControllerStandalone::setInputTrackToNoInput(int localChannelIndex)
 
 void MainControllerStandalone::setInputTrackToStereo(int localChannelIndex, int firstInputIndex)
 {
-    Audio::LocalInputAudioNode *inputTrack = getInputTrack(localChannelIndex);
+    Audio::LocalInputNode *inputTrack = getInputTrack(localChannelIndex);
     if (inputTrack) {
         if (!inputIndexIsValid(firstInputIndex))
             firstInputIndex = audioDriver->getSelectedInputs().getFirstChannel();// use the first available channel
@@ -199,7 +199,7 @@ void MainControllerStandalone::setSampleRate(int newSampleRate)
     MainController::setSampleRate(newSampleRate);
     vstHost->setSampleRate(newSampleRate);
     audioDriver->setSampleRate(newSampleRate);
-    foreach (Audio::LocalInputAudioNode *inputNode, inputTracks)
+    foreach (Audio::LocalInputNode *inputNode, inputTracks)
         inputNode->setProcessorsSampleRate(newSampleRate);
 }
 
@@ -212,13 +212,13 @@ void MainControllerStandalone::setBufferSize(int newBufferSize)
 
 void MainControllerStandalone::on_audioDriverStarted()
 {
-    foreach (Audio::LocalInputAudioNode *inputTrack, inputTracks)
+    foreach (Audio::LocalInputNode *inputTrack, inputTracks)
         inputTrack->resumeProcessors();
 }
 
 void MainControllerStandalone::on_audioDriverStopped()
 {
-    foreach (Audio::LocalInputAudioNode *inputTrack, inputTracks)
+    foreach (Audio::LocalInputNode *inputTrack, inputTracks)
         inputTrack->suspendProcessors();// suspend plugins
 }
 
@@ -586,7 +586,7 @@ void MainControllerStandalone::updateInputTracksRange()
     Audio::ChannelRange globalInputRange = audioDriver->getSelectedInputs();
 
     foreach(int trackIndex, inputTracks.keys()) {
-        Audio::LocalInputAudioNode *inputTrack = getInputTrack(trackIndex);
+        Audio::LocalInputNode *inputTrack = getInputTrack(trackIndex);
         if(!inputTrack)
             continue;
 

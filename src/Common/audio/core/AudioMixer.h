@@ -14,7 +14,7 @@ class MidiBuffer;
 namespace Audio {
 class AudioNode;
 class SamplesBuffer;
-class LocalInputAudioNode;
+class LocalInputNode;
 
 class AudioMixer
 {

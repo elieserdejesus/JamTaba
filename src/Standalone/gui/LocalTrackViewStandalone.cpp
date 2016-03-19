@@ -326,7 +326,7 @@ void LocalTrackViewStandalone::setToNoInput()
 
 void LocalTrackViewStandalone::refreshInputSelectionName()
 {
-    Audio::LocalInputAudioNode *inputTrack = controller->getInputTrack(getTrackID());
+    Audio::LocalInputNode *inputTrack = controller->getInputTrack(getTrackID());
     QString channelName;
     QString iconFile;
     if (inputTrack->isAudio()) {// using audio as input method

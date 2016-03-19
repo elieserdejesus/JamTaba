@@ -38,7 +38,7 @@ void MainControllerVST::resizePluginEditor(int newWidth, int newHeight)
 }
 
 // +++++++++++++++++++++++++++++++++++++
-int MainControllerVST::addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode)
+int MainControllerVST::addInputTrackNode(Audio::LocalInputNode *inputTrackNode)
 {
     int inputTrackID = MainController::addInputTrackNode(inputTrackNode);
 

@@ -13,7 +13,7 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
     Q_ASSERT(mainController);
 
     // insert a input node in controller
-    inputNode = new Audio::LocalInputAudioNode(channelIndex);
+    inputNode = new Audio::LocalInputNode(channelIndex);
     trackID = mainController->addInputTrackNode(this->inputNode);
     bindThisViewWithTrackNodeSignals();// now is secure bind this LocalTrackView with the respective TrackNode model
 
@@ -131,7 +131,7 @@ void LocalTrackView::setUnlightStatus(bool unlighted)
     update();
 }
 
-Audio::LocalInputAudioNode *LocalTrackView::getInputNode() const
+Audio::LocalInputNode *LocalTrackView::getInputNode() const
 {
     return inputNode;
 }

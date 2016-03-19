@@ -27,7 +27,7 @@ public:
         return getTrackID();
     }
 
-    Audio::LocalInputAudioNode *getInputNode() const;
+    Audio::LocalInputNode *getInputNode() const;
 
     virtual void setUnlightStatus(bool unlighted);
 
@@ -43,7 +43,7 @@ public:
     void initializeBoostButtons(Boost boostValue);
 
 protected:
-    Audio::LocalInputAudioNode *inputNode;
+    Audio::LocalInputNode *inputNode;
 
 private:
     bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;

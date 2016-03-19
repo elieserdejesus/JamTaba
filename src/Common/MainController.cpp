@@ -214,7 +214,7 @@ void MainController::removeInputTrackNode(int inputTrackIndex)
     QMutexLocker locker(&mutex);
     if (inputTracks.contains(inputTrackIndex)) {
         // remove from group
-        Audio::LocalInputAudioNode *inputTrack = inputTracks[inputTrackIndex];
+        Audio::LocalInputNode *inputTrack = inputTracks[inputTrackIndex];
         int trackGroupIndex = inputTrack->getGroupChannelIndex();
         if (trackGroups.contains(trackGroupIndex)) {
             trackGroups[trackGroupIndex]->removeInput(inputTrack);
@@ -227,7 +227,7 @@ void MainController::removeInputTrackNode(int inputTrackIndex)
     }
 }
 
-int MainController::addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode)
+int MainController::addInputTrackNode(Audio::LocalInputNode *inputTrackNode)
 {
     int inputTrackID = lastInputTrackID++;//input tracks are not created concurrently, no worries about thread safe in this track ID generation, I hope :)
     inputTracks.insert(inputTrackID, inputTrackNode);
@@ -243,7 +243,7 @@ int MainController::addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode
     return inputTrackID;
 }
 
-Audio::LocalInputAudioNode *MainController::getInputTrack(int localInputIndex)
+Audio::LocalInputNode *MainController::getInputTrack(int localInputIndex)
 {
     if (inputTracks.contains(localInputIndex))
         return inputTracks[localInputIndex];
@@ -473,7 +473,7 @@ MainController::~MainController()
 
     qCDebug(jtCore()) << "cleaning tracksNodes...";
     tracksNodes.clear();
-    foreach (Audio::LocalInputAudioNode *input, inputTracks)
+    foreach (Audio::LocalInputNode *input, inputTracks)
         delete input;
     inputTracks.clear();
 
