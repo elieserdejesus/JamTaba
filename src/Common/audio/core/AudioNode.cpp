@@ -1,6 +1,7 @@
 #include "AudioNode.h"
 #include "AudioDriver.h"
 #include "SamplesBuffer.h"
+#include "AudioNodeProcessor.h"
 #include "AudioPeak.h"
 #include <cmath>
 #include <cassert>
@@ -15,53 +16,7 @@ using namespace Audio;
 const double AudioNode::ROOT_2_OVER_2 = 1.414213562373095 *0.5;
 const double AudioNode::PI_OVER_2 = 3.141592653589793238463 * 0.5;
 
-// +++++++++++++++++
-
-AudioNodeProcessor::AudioNodeProcessor() :
-    bypassed(false)
-{
-}
-
-void AudioNodeProcessor::setBypass(bool state)
-{
-    if (state != bypassed)
-        bypassed = state;
-}
-
 // +++++++++++++++
-
-FaderProcessor::FaderProcessor(float startGain, float endGain, int samplesToFade) :
-    currentGain(startGain),
-    startGain(startGain),
-    gainStep((endGain-startGain)/samplesToFade),
-    totalSamplesToProcess(samplesToFade),
-    processedSamples(0)
-{
-}
-
-void FaderProcessor::reset()
-{
-    processedSamples = 0;
-    currentGain = startGain;
-}
-
-void FaderProcessor::process(const Audio::SamplesBuffer &in, SamplesBuffer &out,
-                             const Midi::MidiBuffer &midiBuffer)
-{
-    Q_UNUSED(midiBuffer);
-    if (finished())
-        return;
-    out.set(in);// copy in to out
-    float finalGain = currentGain + (gainStep * out.getFrameLenght());
-    out.fade(currentGain, finalGain);
-    currentGain = finalGain + gainStep;
-    processedSamples += out.getFrameLenght();
-}
-
-bool FaderProcessor::finished()
-{
-    return processedSamples >= totalSamplesToProcess;
-}
 
 void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
                                  const Midi::MidiBuffer &midiBuffer)
@@ -274,7 +229,7 @@ void OscillatorAudioNode::processReplacing(const Audio::SamplesBuffer &in,
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++
-LocalInputAudioNode::LocalInputAudioNode(int parentChannelIndex, bool isMono) :
+LocalInputNode::LocalInputNode(int parentChannelIndex, bool isMono) :
     globalFirstInputIndex(0),
     channelIndex(parentChannelIndex),
     lastMidiActivity(0),
@@ -285,48 +240,48 @@ LocalInputAudioNode::LocalInputAudioNode(int parentChannelIndex, bool isMono) :
     setToNoInput();
 }
 
-LocalInputAudioNode::~LocalInputAudioNode()
+LocalInputNode::~LocalInputNode()
 {
 }
 
-bool LocalInputAudioNode::isMono() const
+bool LocalInputNode::isMono() const
 {
     return isAudio() && audioInputRange.isMono();
 }
 
-bool LocalInputAudioNode::isStereo() const
+bool LocalInputNode::isStereo() const
 {
     return isAudio() && audioInputRange.getChannels() == 2;
 }
 
-bool LocalInputAudioNode::isNoInput() const
+bool LocalInputNode::isNoInput() const
 {
     return inputMode == DISABLED;
 }
 
-bool LocalInputAudioNode::isMidi() const
+bool LocalInputNode::isMidi() const
 {
     return inputMode == MIDI;// && midiDeviceIndex >= 0;
 }
 
-bool LocalInputAudioNode::isAudio() const
+bool LocalInputNode::isAudio() const
 {
     return inputMode == AUDIO;
 }
 
-void LocalInputAudioNode::setProcessorsSampleRate(int newSampleRate)
+void LocalInputNode::setProcessorsSampleRate(int newSampleRate)
 {
     foreach (Audio::AudioNodeProcessor *p, processors)
         p->setSampleRate(newSampleRate);
 }
 
-void LocalInputAudioNode::closeProcessorsWindows()
+void LocalInputNode::closeProcessorsWindows()
 {
     foreach (Audio::AudioNodeProcessor *p, processors)
         p->closeEditor();
 }
 
-void LocalInputAudioNode::addProcessor(AudioNodeProcessor *newProcessor)
+void LocalInputNode::addProcessor(AudioNodeProcessor *newProcessor)
 {
     AudioNode::addProcessor(newProcessor);
 
@@ -337,7 +292,7 @@ void LocalInputAudioNode::addProcessor(AudioNodeProcessor *newProcessor)
     }
 }
 
-void LocalInputAudioNode::setAudioInputSelection(int firstChannelIndex, int channelCount)
+void LocalInputNode::setAudioInputSelection(int firstChannelIndex, int channelCount)
 {
     audioInputRange = ChannelRange(firstChannelIndex, channelCount);
     if (audioInputRange.isMono())
@@ -349,14 +304,14 @@ void LocalInputAudioNode::setAudioInputSelection(int firstChannelIndex, int chan
     inputMode = AUDIO;
 }
 
-void LocalInputAudioNode::setToNoInput()
+void LocalInputNode::setToNoInput()
 {
     audioInputRange = ChannelRange(-1, 0);// disable audio input
     midiDeviceIndex = -1;// disable midi input
     inputMode = DISABLED;
 }
 
-void LocalInputAudioNode::setMidiInputSelection(int midiDeviceIndex, int midiChannelIndex)
+void LocalInputNode::setMidiInputSelection(int midiDeviceIndex, int midiChannelIndex)
 {
     audioInputRange = ChannelRange(-1, 0);// disable audio input
     this->midiDeviceIndex = midiDeviceIndex;
@@ -364,14 +319,14 @@ void LocalInputAudioNode::setMidiInputSelection(int midiDeviceIndex, int midiCha
     inputMode = MIDI;
 }
 
-bool LocalInputAudioNode::isReceivingAllMidiChannels() const
+bool LocalInputNode::isReceivingAllMidiChannels() const
 {
     if (inputMode == MIDI)
         return midiChannelIndex < 0 || midiChannelIndex > 16;
     return false;
 }
 
-void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
+void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
                                            int sampleRate, const Midi::MidiBuffer &midiBuffer)
 {
     Q_UNUSED(sampleRate);
@@ -421,7 +376,7 @@ void LocalInputAudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffe
 }
 
 // ++++++++++++=
-void LocalInputAudioNode::reset()
+void LocalInputNode::reset()
 {
     AudioNode::reset();
     setToNoInput();
@@ -429,7 +384,7 @@ void LocalInputAudioNode::reset()
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++
-LocalInputGroup::LocalInputGroup(int groupIndex, Audio::LocalInputAudioNode *firstInput) :
+LocalInputGroup::LocalInputGroup(int groupIndex, Audio::LocalInputNode *firstInput) :
     groupIndex(groupIndex),
     transmiting(true)
 {
@@ -441,20 +396,20 @@ LocalInputGroup::~LocalInputGroup()
     groupedInputs.clear();
 }
 
-void LocalInputGroup::addInput(Audio::LocalInputAudioNode *input)
+void LocalInputGroup::addInput(Audio::LocalInputNode *input)
 {
     groupedInputs.append(input);
 }
 
 void LocalInputGroup::mixGroupedInputs(Audio::SamplesBuffer &out)
 {
-    foreach (Audio::LocalInputAudioNode *inputTrack, groupedInputs) {
+    foreach (Audio::LocalInputNode *inputTrack, groupedInputs) {
         if (!inputTrack->isMuted())
             out.add(inputTrack->getLastBuffer());
     }
 }
 
-void LocalInputGroup::removeInput(Audio::LocalInputAudioNode *input)
+void LocalInputGroup::removeInput(Audio::LocalInputNode *input)
 {
     if (!groupedInputs.removeOne(input))
         qCritical() << "the input track was not removed!";

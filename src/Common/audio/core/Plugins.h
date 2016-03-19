@@ -1,7 +1,8 @@
 #ifndef PLUGINS_H
 #define PLUGINS_H
 
-#include "AudioNode.h"
+//#include "AudioNode.h"
+#include "AudioNodeProcessor.h"
 
 class QDialog;
 

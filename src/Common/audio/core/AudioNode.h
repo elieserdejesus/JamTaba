@@ -12,66 +12,8 @@ class MidiBuffer;
 }
 
 namespace Audio {
-class AudioNodeProcessor : public QObject  // TODO - this inheritance is really necessary?
-{
-public:
-    AudioNodeProcessor();
-    virtual ~AudioNodeProcessor()
-    {
-    }
 
-    virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
-                         const Midi::MidiBuffer &midiBuffer) = 0;
-    virtual void suspend() = 0;
-    virtual void resume() = 0;
-    virtual void updateGui() = 0;
-    virtual void openEditor(const QPoint &centerOfScreen) = 0;
-    virtual void closeEditor() = 0;
-    virtual void setSampleRate(int newSampleRate)
-    {
-        Q_UNUSED(newSampleRate);
-    }
-
-    virtual void setBypass(bool state);
-    bool isBypassed() const
-    {
-        return bypassed;
-    }
-
-    virtual bool isVirtualInstrument() const
-    {
-        return false;
-    }
-
-protected:
-    bool bypassed;
-};
-
-// ++++++++++++++++++++++++++++++++++++++++++++
-// this class is used to apply fade in and fade outs
-class FaderProcessor : public AudioNodeProcessor
-{
-private:
-    float currentGain;
-    float startGain;
-    float gainStep;
-    int totalSamplesToProcess;
-    int processedSamples;
-public:
-    FaderProcessor(float startGain, float endGain, int samplesToFade);
-    void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
-                         const Midi::MidiBuffer &midiBuffer) override;
-    bool finished();
-    void reset();
-    void resume() override
-    {
-    }
-
-    void suspend() override
-    {
-    }
-};
-// ++++++++++++++++++++++++++++++++++++++++++++
+class AudioNodeProcessor;
 
 class AudioNode : public QObject
 {
@@ -206,14 +148,14 @@ private:
     const float phaseIncrement;
     int sampleRate;
 };
-// +++++++++++++++++
 
 // ++++++++++++++++++
-class LocalInputAudioNode : public AudioNode
+
+class LocalInputNode : public AudioNode
 {
 public:
-    LocalInputAudioNode(int parentChannelIndex, bool isMono = true);
-    ~LocalInputAudioNode();
+    LocalInputNode(int parentChannelIndex, bool isMono = true);
+    ~LocalInputNode();
     void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
                                   const Midi::MidiBuffer &midiBuffer) override;
     virtual int getSampleRate() const
@@ -330,7 +272,7 @@ private:
 class LocalInputGroup
 {
 public:
-    LocalInputGroup(int groupIndex, Audio::LocalInputAudioNode *firstInput);
+    LocalInputGroup(int groupIndex, Audio::LocalInputNode *firstInput);
     ~LocalInputGroup();
 
     inline bool isEmpty() const
@@ -338,7 +280,7 @@ public:
         return groupedInputs.empty();
     }
 
-    void addInput(Audio::LocalInputAudioNode *input);
+    void addInput(Audio::LocalInputNode *input);
 
     inline int getIndex() const
     {
@@ -347,7 +289,7 @@ public:
 
     void mixGroupedInputs(Audio::SamplesBuffer &out);
 
-    void removeInput(Audio::LocalInputAudioNode *input);
+    void removeInput(Audio::LocalInputNode *input);
 
     int getMaxInputChannelsForEncoding() const;
 
@@ -360,16 +302,16 @@ public:
 
 private:
     int groupIndex;
-    QList<Audio::LocalInputAudioNode *> groupedInputs;
+    QList<Audio::LocalInputNode *> groupedInputs;
     bool transmiting;
 };
 // ++++++++++++++++++++++++
 
-class LocalInputTestStreamer : public Audio::LocalInputAudioNode // used to send a sine wave and test the audio transmission
+class LocalInputTestStreamer : public Audio::LocalInputNode // used to send a sine wave and test the audio transmission
 {
 public:
     LocalInputTestStreamer(float frequency, int sampleRate) :
-        LocalInputAudioNode(0),
+        LocalInputNode(0),
         osc(frequency, sampleRate)
     {
         osc.setGain(0.5);
