@@ -4,6 +4,7 @@
 #include "LocalTrackView.h"
 #include "audio/core/AudioDriver.h"
 #include "MainControllerStandalone.h"
+#include "MidiToolsDialog.h"
 
 #include <QMenu>
 #include <QPushButton>
@@ -46,7 +47,8 @@ protected slots:
 
 private slots:
     void showInputSelectionMenu();// build and show the input selection menu
-
+    void openMidiToolsDialog();
+    void clearMidiToolsDialog();
 private:
 
     Controller::MainControllerStandalone* controller;//a 'casted' pointer just for convenience
@@ -54,6 +56,7 @@ private:
     QMenu *createMonoInputsMenu(QMenu *parentMenu);
     QMenu *createStereoInputsMenu(QMenu *parentMenu);
     QMenu *createMidiInputsMenu(QMenu *parentMenu);
+    QPushButton *createMidiToolsButton();
 
     QWidget *createInputPanel();
     QPushButton *createInputSelectionButton(QWidget *parent);
@@ -70,6 +73,8 @@ private:
     void setMidiPeakMeterVisibility(bool visible);
 
     QString getInputChannelNameOnly(int inputIndex);// return the input channel name without the number/index
+
+    MidiToolsDialog *midiToolsDialog;
 
     static const QString MIDI_ICON;
     static const QString MONO_ICON;

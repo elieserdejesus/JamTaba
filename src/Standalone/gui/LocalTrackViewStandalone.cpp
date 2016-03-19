@@ -12,7 +12,8 @@ const QString LocalTrackViewStandalone::NO_INPUT_ICON = ":/images/input_no.png";
 LocalTrackViewStandalone::LocalTrackViewStandalone(
     Controller::MainControllerStandalone *mainController, int channelIndex) :
     LocalTrackView(mainController, channelIndex),
-    controller(mainController)
+    controller(mainController),
+    midiToolsDialog(nullptr)
 {
     fxPanel = createFxPanel();
     //mainLayout->addSpacing(20);// add separator before effects panel
@@ -20,10 +21,11 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
 
     // create input panel in the bottom
     this->inputPanel = createInputPanel();
-    //fxSpacer = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Fixed);
-    //mainLayout->addSpacerItem(fxSpacer);
 
     mainLayout->addWidget(inputPanel, mainLayout->rowCount(), 0, 1, 2);
+
+    QPushButton *midiToolsButton = createMidiToolsButton();
+    mainLayout->addWidget(midiToolsButton, mainLayout->rowCount(), 0, 1, 2);
 
     this->inputTypeIconLabel = createInputTypeIconLabel(this);
     mainLayout->addWidget(inputTypeIconLabel, mainLayout->rowCount(), 0, 1, 2);
@@ -92,7 +94,34 @@ QWidget *LocalTrackViewStandalone::createInputPanel()
 
     this->inputSelectionButton = createInputSelectionButton(inputPanel);
     inputPanel->layout()->addWidget(inputSelectionButton);// button in right
+
     return inputPanel;
+}
+
+QPushButton *LocalTrackViewStandalone::createMidiToolsButton()
+{
+    QPushButton * button = new QPushButton();
+    button->setObjectName("midiToolsButton");
+    button->setText("MIDI Tools");
+    connect(button, SIGNAL(clicked(bool)), this, SLOT(openMidiToolsDialog()));
+    return button;
+}
+
+void LocalTrackViewStandalone::openMidiToolsDialog()
+{
+    if (!midiToolsDialog) {
+        qCDebug(jtGUI) << "Creating a new MidiToolsDialog!";
+        midiToolsDialog = new MidiToolsDialog(this);
+        connect(midiToolsDialog, SIGNAL(dialogClosed()), this, SLOT(clearMidiToolsDialog()));
+    }
+    midiToolsDialog->show();
+    midiToolsDialog->raise();
+}
+
+void LocalTrackViewStandalone::clearMidiToolsDialog()
+{
+    midiToolsDialog = nullptr;
+    qCDebug(jtGUI) << "MidiToolsDialog pointer cleared!";
 }
 
 void LocalTrackViewStandalone::addPlugin(Audio::Plugin *plugin, bool bypassed)

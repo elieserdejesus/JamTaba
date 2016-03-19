@@ -34,6 +34,7 @@ HEADERS += gui/LocalTrackGroupViewStandalone.h
 HEADERS += gui/ScanFolderPanel.h
 HEADERS += gui/FxPanel.h
 HEADERS += gui/FxPanelItem.h
+HEADERS += gui/MidiToolsDialog.h
 
 HEADERS += audio/PortAudioDriver.h
 HEADERS += midi/RtMidiDriver.h
@@ -53,6 +54,7 @@ SOURCES += gui/LocalTrackGroupViewStandalone.cpp
 SOURCES += gui/ScanFolderPanel.cpp
 SOURCES += gui/FxPanel.cpp
 SOURCES += gui/FxPanelItem.cpp
+SOURCES += gui/MidiToolsDialog.cpp
 SOURCES += midi/RtMidiDriver.cpp
 SOURCES += vst/VstPlugin.cpp
 SOURCES += vst/VstHost.cpp
@@ -61,6 +63,8 @@ SOURCES += vst/VstLoader.cpp
 SOURCES += Libs/SingleApplication/singleapplication.cpp
 SOURCES += audio/PortAudioDriver.cpp
 SOURCES += audio/core/PluginDescriptor.cpp
+
+FORMS += gui/MidiToolsDialog.ui
 
 #conditional sources to different platforms
 win32{

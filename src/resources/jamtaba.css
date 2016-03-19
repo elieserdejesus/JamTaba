@@ -26,12 +26,14 @@ PreferencesDialog #plainTextEdit{
 }
 
 PreferencesDialog QGroupBox,
+MidiToolsDialog QGroupBox,
 PreferencesDialog #sampleRateLabel,
 PreferencesDialog #bufferSizeLabel {
     font-weight: bold;
 }
 
-PreferencesDialog QGroupBox{
+PreferencesDialog QGroupBox,
+MidiToolsDialog QGroupBox{
     padding-left: 16px;
     padding-top: 12px;
     border: none;
@@ -1113,6 +1115,10 @@ LocalTrackView #inputPanel{
     stop:1 rgba(0, 0, 0, 90));
     border-radius: 2px;
     border: none;
+}
+
+LocalTrackView #midiToolsButton{
+    font-size: 10px;
 }
 
 BaseTrackView[unlighted="false"] #inputPanel{
