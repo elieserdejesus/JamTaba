@@ -202,33 +202,3 @@ void AudioNode::resumeProcessors()
     foreach (AudioNodeProcessor *processor, processors)
         processor->resume();
 }
-
-// +++++++++++++++++++++++++++++++++++++++
-OscillatorAudioNode::OscillatorAudioNode(float frequency, int sampleRate) :
-    phase(0),
-    phaseIncrement(2 * 3.1415 / sampleRate * frequency),
-    sampleRate(sampleRate)
-{
-}
-
-void OscillatorAudioNode::processReplacing(const Audio::SamplesBuffer &in,
-                                           Audio::SamplesBuffer &out, int sampleRate,
-                                           const Midi::MidiBuffer &midiBuffer)
-{
-    Q_UNUSED(in)
-    Q_UNUSED(sampleRate)
-    Q_UNUSED(midiBuffer)
-    int frames = out.getFrameLenght();
-    int outChannels = out.getChannels();
-    for (int i = 0; i < frames; ++i) {
-        float sample = sin(this->phase) * getGain();
-        for (int c = 0; c < outChannels; ++c)
-            out.set(c, i + 0, sample);
-        this->phase += phaseIncrement;
-    }
-}
-
-// ++++++++++++++++++++++++++++++++++++++++++++++
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++

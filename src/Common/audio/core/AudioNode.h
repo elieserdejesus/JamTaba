@@ -131,24 +131,6 @@ signals:
     void soloChanged(bool soloStatus);
 };
 
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class OscillatorAudioNode : public AudioNode
-{
-public:
-    OscillatorAudioNode(float frequency, int sampleRate);
-    void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                                  const Midi::MidiBuffer &midiBuffer) override;
-    virtual int getSampleRate() const
-    {
-        return sampleRate;
-    }
-
-private:
-    float phase;
-    const float phaseIncrement;
-    int sampleRate;
-};
-
-}
+}//namespace
 
 #endif

@@ -95,22 +95,6 @@ public:
 };
 
 // ++++++++++++++++++++++
-
-class TestStreamerNode : public AbstractMp3Streamer
-{
-private:
-    OscillatorAudioNode *oscilator;
-    bool playing;
-protected:
-    void initialize(const QString &streamPath);
-public:
-    TestStreamerNode(int sampleRate);
-    ~TestStreamerNode();
-    void stopCurrentStream();
-    void setStreamPath(const QString &streamPath);
-    virtual void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
-                                  int sampleRate, const Midi::MidiBuffer &midiBuffer);
-};
 }// namespace end
 
 #endif
