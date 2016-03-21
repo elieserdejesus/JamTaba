@@ -9,7 +9,9 @@ LocalInputNode::LocalInputNode(int parentChannelIndex, bool isMono) :
     channelIndex(parentChannelIndex),
     lastMidiActivity(0),
     midiChannelIndex(-1),
-    midiDeviceIndex(-1)
+    midiDeviceIndex(-1),
+    midiLowerNote(0),
+    midiHigherNote(255)
 {
     Q_UNUSED(isMono)
     setToNoInput();
@@ -163,9 +165,15 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
 
 bool LocalInputNode::canAcceptMidiMessage(const Midi::MidiMessage &message) const
 {
-    return message.getDeviceIndex() == midiDeviceIndex
-                            && (isReceivingAllMidiChannels()
-                                || message.getChannel() == midiChannelIndex);
+    bool canAcceptTheDevice = message.getDeviceIndex() == midiDeviceIndex;
+    bool canAcceptTheChannel = isReceivingAllMidiChannels() || message.getChannel() == midiChannelIndex;
+
+    if (message.isNote()) {
+        int midiNote = message.getData1();
+        bool canAccpetTheRange = midiNote >= midiLowerNote && midiNote <= midiHigherNote;
+        canAcceptTheDevice && canAcceptTheChannel && canAccpetTheRange;
+    }
+    return canAcceptTheDevice && canAcceptTheChannel;
 }
 
 // ++++++++++++=
