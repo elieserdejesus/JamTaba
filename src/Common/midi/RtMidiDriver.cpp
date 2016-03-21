@@ -1,6 +1,8 @@
 ﻿#include "RtMidiDriver.h"
 #include "RtMidi.h"
 
+#include "MidiMessage.h"
+
 using namespace Midi;
 
 #include "log/Logging.h"
@@ -94,8 +96,8 @@ QString RtMidiDriver::getInputDeviceName(uint index) const{
     return "";
 }
 
-MidiBuffer RtMidiDriver::getBuffer(){
-    MidiBuffer buffer(32);//max 32 midi messages
+MidiMessageBuffer RtMidiDriver::getBuffer(){
+    MidiMessageBuffer buffer(32);//max 32 midi messages
     int deviceIndex = 0;
     foreach (RtMidiIn* stream, midiStreams) {
         while(true){
@@ -116,7 +118,7 @@ MidiBuffer RtMidiDriver::getBuffer(){
                 //qDebug(midi) << "data 1:" << message.at(1);
                 //qDebug(midi) << "data 2:" << message.at(2) << endl;
 
-                buffer.addMessage(MidiMessage(msgData, qint32(stamp), deviceIndex));
+                buffer.addMessage(Midi::MidiMessage(msgData, qint32(stamp), deviceIndex));
 
                 //            qDebug(midi) << "msgData:" << msgData;
                 //            qDebug(midi) << "Status:" << ((msgData) & 0xFF);

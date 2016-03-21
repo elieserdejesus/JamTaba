@@ -1,53 +1,20 @@
 #include "MidiDriver.h"
 #include "log/Logging.h"
+#include "MidiMessage.h"
 
 using namespace Midi;
 // +++++++++++++++++++++++
-MidiMessage::MidiMessage(qint32 data, qint32 timestamp, int sourceDeviceIndex)
-{
-    this->data = data;
-    this->timestamp = timestamp;
-    this->deviceIndex = sourceDeviceIndex;
-}
-
-MidiMessage::MidiMessage()
-{
-    this->data = this->timestamp = this->deviceIndex = -1;
-}
-
-MidiMessage::MidiMessage(const MidiMessage &other)
-{
-    this->data = other.data;
-    this->timestamp = other.timestamp;
-    this->deviceIndex = other.deviceIndex;
-}
-
-// +++++++++++++++++++++++
-
-quint8 MidiMessage::getNoteVelocity() const
-{
-    if (!isNote())
-        return 0;
-    return getData2();
-}
-
-bool MidiMessage::isNote() const
-{
-    // 0x90 to 0x9F where the low nibble is the MIDI channel.
-    int status = getStatus();
-    return status >= 0x90 && status <= 0x9F;
-}
 
 // +++++++++++++++++++++++++++++++++++++
 
-MidiBuffer::MidiBuffer(int maxMessages) :
+MidiMessageBuffer::MidiMessageBuffer(int maxMessages) :
     maxMessages(maxMessages),
     messages(new MidiMessage[maxMessages]),
     messagesCount(0)
 {
 }
 
-MidiBuffer::MidiBuffer(const MidiBuffer &other) :
+MidiMessageBuffer::MidiMessageBuffer(const MidiMessageBuffer &other) :
     maxMessages(other.maxMessages),
     messages(new MidiMessage[other.maxMessages]),
     messagesCount(other.messagesCount)
@@ -56,12 +23,12 @@ MidiBuffer::MidiBuffer(const MidiBuffer &other) :
         this->messages[m] = other.messages[m];
 }
 
-MidiBuffer::~MidiBuffer()
+MidiMessageBuffer::~MidiMessageBuffer()
 {
     delete [] messages;
 }
 
-void MidiBuffer::addMessage(const MidiMessage &m)
+void MidiMessageBuffer::addMessage(const MidiMessage &m)
 {
     if (messagesCount < maxMessages) {
         messages[messagesCount] = m;
@@ -71,7 +38,7 @@ void MidiBuffer::addMessage(const MidiMessage &m)
     }
 }
 
-MidiMessage MidiBuffer::getMessage(int index) const
+MidiMessage MidiMessageBuffer::getMessage(int index) const
 {
     if (index >= 0 && index < messagesCount)
         return messages[index];
