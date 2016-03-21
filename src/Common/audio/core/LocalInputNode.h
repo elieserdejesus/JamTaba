@@ -40,8 +40,6 @@ public:
 
     ChannelRange getAudioInputRange() const;
 
-    void setGlobalFirstInputIndex(int firstInputIndex);
-
     int getGroupChannelIndex() const;
 
     const Audio::SamplesBuffer &getLastBuffer() const;
@@ -65,7 +63,7 @@ public:
     bool isActivated() const override;
 
 private:
-    int globalFirstInputIndex; // store the first input index selected globally by users in preferences menu
+    //int globalFirstInputIndex; // store the first input index selected globally by users in preferences menu
 
     ChannelRange audioInputRange;
     // store user selected input range. For example, user can choose just the
@@ -110,11 +108,6 @@ inline int LocalInputNode::getMidiChannelIndex() const
 inline ChannelRange LocalInputNode::getAudioInputRange() const
 {
     return audioInputRange;
-}
-
-inline void LocalInputNode::setGlobalFirstInputIndex(int firstInputIndex)
-{
-    this->globalFirstInputIndex = firstInputIndex;
 }
 
 inline int LocalInputNode::getGroupChannelIndex() const

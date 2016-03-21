@@ -276,7 +276,7 @@ void StandalonePreferencesDialog::populateFirstInputCombo()
     int maxInputs = audioDriver->getMaxInputs();
     for (int i = 0; i < maxInputs; i++)
         ui->comboFirstInput->addItem(audioDriver->getInputChannelName(i), i);
-    int firstInputIndex = audioDriver->getSelectedInputs().getFirstChannel();
+    int firstInputIndex = audioDriver->getFirstSelectedInput();
     if (firstInputIndex < maxInputs)
         ui->comboFirstInput->setCurrentIndex(firstInputIndex);
     else
@@ -293,12 +293,12 @@ void StandalonePreferencesDialog::populateLastInputCombo()
     for (int i = currentFirstInput; items < MAX_ITEMS; i++, items++)
         ui->comboLastInput->addItem(audioDriver->getInputChannelName(i), i);
 
-    ChannelRange inputsRange = audioDriver->getSelectedInputs();
-    int lastInputIndex = inputsRange.getLastChannel();
+    int lastInputIndex = audioDriver->getFirstSelectedInput() + (audioDriver->getInputsCount() - 1);
     if (lastInputIndex < ui->comboLastInput->count())
-        ui->comboLastInput->setCurrentIndex(lastInputIndex);
+        ui->comboLastInput->setCurrentIndex(audioDriver->getInputsCount() - 1);
     else
         ui->comboLastInput->setCurrentIndex(ui->comboLastInput->count()-1);
+
 }
 
 void StandalonePreferencesDialog::populateFirstOutputCombo()
@@ -307,7 +307,7 @@ void StandalonePreferencesDialog::populateFirstOutputCombo()
     int maxOuts = audioDriver->getMaxOutputs();
     for (int i = 0; i < maxOuts; i++)
         ui->comboFirstOutput->addItem(audioDriver->getOutputChannelName(i), i);
-    ui->comboFirstOutput->setCurrentIndex(audioDriver->getSelectedOutputs().getFirstChannel());
+    ui->comboFirstOutput->setCurrentIndex(audioDriver->getFirstSelectedOutput());
 }
 
 void StandalonePreferencesDialog::populateLastOutputCombo()
@@ -322,7 +322,7 @@ void StandalonePreferencesDialog::populateLastOutputCombo()
     const int MAX_ITEMS = 1;// std::min( maxOuts - currentFirstOut, 2);
     for (int i = currentFirstOut; items < MAX_ITEMS; i++, items++)
         ui->comboLastOutput->addItem(audioDriver->getOutputChannelName(i), i);
-    int lastOutputIndex = audioDriver->getSelectedOutputs().getLastChannel();
+    int lastOutputIndex = audioDriver->getFirstSelectedOutput() + audioDriver->getOutputsCount();
     int index = ui->comboLastOutput->findData(lastOutputIndex);
     ui->comboLastOutput->setCurrentIndex(index >= 0 ? index : 0);
 

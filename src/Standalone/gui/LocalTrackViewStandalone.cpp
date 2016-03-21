@@ -192,19 +192,17 @@ QMenu *LocalTrackViewStandalone::createMonoInputsMenu(QMenu *parent)
     QMenu *monoInputsMenu = new QMenu("Mono", parent);
     monoInputsMenu->setIcon(QIcon(MONO_ICON));
     Audio::AudioDriver *audioDriver = controller->getAudioDriver();
-    Audio::ChannelRange globalInputsRange = audioDriver->getSelectedInputs();
-    int globalInputs = globalInputsRange.getChannels();
-    int firstGlobalInputIndex = globalInputsRange.getFirstChannel();
+    int globalInputs = audioDriver->getInputsCount();
     QString deviceName(audioDriver->getAudioDeviceName(audioDriver->getAudioDeviceIndex()));
 
     for (int i = 0; i < globalInputs; ++i) {
-        int index = firstGlobalInputIndex + i;
+        int index = audioDriver->getFirstSelectedInput() + i;
         QString channelName = QString(audioDriver->getInputChannelName(index)).trimmed();
         if (channelName.isNull() || channelName.isEmpty())
-            channelName = QString::number(i+1)  + " "+ audioDriver->getAudioDeviceName();
+            channelName = QString::number(index+1)  + " "+ audioDriver->getAudioDeviceName();
         QString inputName = channelName + "  (" + deviceName + ")";
         QAction *action = monoInputsMenu->addAction(inputName);
-        action->setData(index);  // using the channel index as action data
+        action->setData(i);  // using the channel index as action data
         action->setIcon(monoInputsMenu->icon());
     }
 
@@ -230,17 +228,15 @@ QMenu *LocalTrackViewStandalone::createStereoInputsMenu(QMenu *parent)
     QMenu *stereoInputsMenu = new QMenu("Stereo", parent);
     stereoInputsMenu->setIcon(QIcon(STEREO_ICON));
     Audio::AudioDriver *audioDriver = controller->getAudioDriver();
-    Audio::ChannelRange globalInputRange = audioDriver->getSelectedInputs();
-    int globalInputs = globalInputRange.getChannels();
+    int globalInputs = audioDriver->getInputsCount();
     QString deviceName(audioDriver->getAudioDeviceName(audioDriver->getAudioDeviceIndex()));
     for (int i = 0; i < globalInputs; i += 2) {
         if (i + 1 < globalInputs) {// we can make a channel pair using (i) and (i+1)?
-            int index = globalInputRange.getFirstChannel() + i;
-            QString firstName = getInputChannelNameOnly(index);
-            QString indexes = QString::number(index+1) + " + " + QString::number(index+2);
+            QString firstName = getInputChannelNameOnly(i);
+            QString indexes = QString::number(i+1) + " + " + QString::number(i+2);
             QString inputName = firstName + " [" + indexes +  "]  (" + deviceName + ")";
             QAction *action = stereoInputsMenu->addAction(inputName);
-            action->setData(index);// use the first input pair index as action data
+            action->setData(i);// use the first input pair index as action data
             action->setIcon(stereoInputsMenu->icon());
         }
     }
@@ -333,14 +329,14 @@ void LocalTrackViewStandalone::refreshInputSelectionName()
     if (inputTrack->isAudio()) {// using audio as input method
         Audio::ChannelRange inputRange = inputTrack->getAudioInputRange();
         if (inputTrack->isStereo()) {
-            int firstInputIndex = inputRange.getFirstChannel();
+            int firstInputIndex = inputRange.getFirstChannel() + controller->getAudioDriver()->getFirstSelectedInput();
             QString indexes = "(" + QString::number(firstInputIndex+1) + "+" + QString::number(
                 firstInputIndex+2) + ") ";
             channelName = indexes + getInputChannelNameOnly(firstInputIndex);
             iconFile = STEREO_ICON;
         } else if (inputTrack->isMono()) {
             Audio::AudioDriver *audioDriver = controller->getAudioDriver();
-            int index = inputRange.getFirstChannel();
+            int index = inputRange.getFirstChannel() + controller->getAudioDriver()->getFirstSelectedInput();
             QString name = QString(audioDriver->getInputChannelName(index));
             channelName = QString(QString::number(index+1) + " - ");
             if (!name.isNull() && !name.isEmpty())

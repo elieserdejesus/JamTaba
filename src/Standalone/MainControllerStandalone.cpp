@@ -41,9 +41,16 @@ void MainControllerStandalone::setInputTrackToMono(int localChannelIndex,
     Audio::LocalInputNode *inputTrack = getInputTrack(localChannelIndex);
     if (inputTrack) {
         if (!inputIndexIsValid(inputIndexInAudioDevice))  // use the first available channel?
-            inputIndexInAudioDevice = audioDriver->getSelectedInputs().getFirstChannel();
+            inputIndexInAudioDevice = 0;
 
-        inputTrack->setAudioInputSelection(inputIndexInAudioDevice, 1);// mono
+        int availableInputs = audioDriver->getInputsCount();
+        if (availableInputs > 0) {
+            inputTrack->setAudioInputSelection(inputIndexInAudioDevice, 1);// mono
+        }
+        else{
+            inputTrack->setToNoInput();
+        }
+
         if (window) {
             window->refreshTrackInputSelection(
                 localChannelIndex);
@@ -124,9 +131,7 @@ void MainControllerStandalone::removeBlackVstFromSettings(const QString &pluginP
 
 bool MainControllerStandalone::inputIndexIsValid(int inputIndex)
 {
-    Audio::ChannelRange globalInputsRange = audioDriver->getSelectedInputs();
-    return inputIndex >= globalInputsRange.getFirstChannel()
-           && inputIndex <= globalInputsRange.getLastChannel();
+    return inputIndex >= 0 && inputIndex <= audioDriver->getInputsCount();
 }
 
 void MainControllerStandalone::setInputTrackToMIDI(int localChannelIndex, int midiDevice,
@@ -169,8 +174,17 @@ void MainControllerStandalone::setInputTrackToStereo(int localChannelIndex, int 
     Audio::LocalInputNode *inputTrack = getInputTrack(localChannelIndex);
     if (inputTrack) {
         if (!inputIndexIsValid(firstInputIndex))
-            firstInputIndex = audioDriver->getSelectedInputs().getFirstChannel();// use the first available channel
-        inputTrack->setAudioInputSelection(firstInputIndex, 2);// stereo
+            firstInputIndex = 0;//use the first channel
+        int availableInputChannels = audioDriver->getInputsCount();
+        if (availableInputChannels > 0) {//we have input channels?
+            if (availableInputChannels >= 2) //can really use stereo?
+                inputTrack->setAudioInputSelection(firstInputIndex, 2);// stereo
+            else
+                inputTrack->setAudioInputSelection(firstInputIndex, 1);//mono
+        }
+        else{
+            inputTrack->setToNoInput();
+        }
 
         if (window)
             window->refreshTrackInputSelection(localChannelIndex);
@@ -583,8 +597,6 @@ void MainControllerStandalone::useNullAudioDriver()
 
 void MainControllerStandalone::updateInputTracksRange()
 {
-    Audio::ChannelRange globalInputRange = audioDriver->getSelectedInputs();
-
     foreach(int trackIndex, inputTracks.keys()) {
         Audio::LocalInputNode *inputTrack = getInputTrack(trackIndex);
         if(!inputTrack)
@@ -593,26 +605,23 @@ void MainControllerStandalone::updateInputTracksRange()
         if (!inputTrack->isNoInput()) {
             if (inputTrack->isAudio()) {// audio track
                 Audio::ChannelRange inputTrackRange = inputTrack->getAudioInputRange();
-                inputTrack->setGlobalFirstInputIndex(globalInputRange.getFirstChannel());
 
                 /** If global input range is reduced to 2 channels and user previous selected inputs 3+4 the input range need be corrected to avoid a beautiful crash :) */
-                if (globalInputRange.getChannels() < inputTrackRange.getChannels()) {
-                    if (globalInputRange.isMono())
-                        setInputTrackToMono(trackIndex, globalInputRange.getFirstChannel());
-                    else
+                int globalInputs = audioDriver->getInputsCount();
+                if (inputTrackRange.getFirstChannel() >= globalInputs) {
+                    if (globalInputs >= inputTrackRange.getChannels()) {//we have enough channels?
+                        if (inputTrackRange.isMono()) {
+                            setInputTrackToMono(trackIndex, 0);
+                        }
+                        else{
+                            setInputTrackToStereo(trackIndex, 0);
+                        }
+                    }
+                    else{
                         setInputTrackToNoInput(trackIndex);
+                    }
                 }
 
-                // check if localInputRange is valid after the change in globalInputRange
-                int firstChannel = inputTrackRange.getFirstChannel();
-                int globalFirstChannel = globalInputRange.getFirstChannel();
-                if (firstChannel < globalFirstChannel
-                    || inputTrackRange.getLastChannel() > globalInputRange.getLastChannel()) {
-                    if (globalInputRange.isMono())
-                        setInputTrackToMono(trackIndex, globalInputRange.getFirstChannel());
-                    else if (globalInputRange.getChannels() >= 2)
-                        setInputTrackToStereo(trackIndex, globalInputRange.getFirstChannel());
-                }
             } else {// midi track
                 int selectedDevice = inputTrack->getMidiDeviceIndex();
                 bool deviceIsValid = selectedDevice >= 0

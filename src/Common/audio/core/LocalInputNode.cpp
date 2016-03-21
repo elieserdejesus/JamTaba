@@ -5,7 +5,6 @@
 using namespace Audio;
 
 LocalInputNode::LocalInputNode(int parentChannelIndex, bool isMono) :
-    globalFirstInputIndex(0),
     channelIndex(parentChannelIndex),
     lastMidiActivity(0),
     midiChannelIndex(-1),
@@ -124,8 +123,7 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
         if (isAudio()) {// using audio input
             if (audioInputRange.isEmpty())
                 return;
-            int inChannelOffset = audioInputRange.getFirstChannel() - globalFirstInputIndex;
-            internalInputBuffer.set(in, inChannelOffset, audioInputRange.getChannels());
+            internalInputBuffer.set(in, audioInputRange.getFirstChannel(), audioInputRange.getChannels());
         } else if (isMidi()) {// just in case
             int total = midiBuffer.getMessagesCount();
             if (total > 0) {
