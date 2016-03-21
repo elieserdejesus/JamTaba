@@ -4,10 +4,9 @@
 
 #include "LocalTrackViewStandalone.h"
 
-MidiToolsDialog::MidiToolsDialog(LocalTrackViewStandalone *trackView) :
+MidiToolsDialog::MidiToolsDialog(const QString &lowerNote, const QString &higherNote) :
     QDialog(nullptr),
-    ui(new Ui::MidiToolsDialog),
-    trackView(trackView)
+    ui(new Ui::MidiToolsDialog)
 {
     ui->setupUi(this);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint & Qt::WA_DeleteOnClose);
@@ -19,11 +18,27 @@ MidiToolsDialog::MidiToolsDialog(LocalTrackViewStandalone *trackView) :
 
     ui->textFieldHigherNote->setValidator(validator);
     ui->textFieldLowerNote->setValidator(validator);
+
+    connect(ui->textFieldHigherNote, SIGNAL(editingFinished()), this, SLOT(higherNoteEditionFinished()));
+    connect(ui->textFieldLowerNote, SIGNAL(editingFinished()), this, SLOT(lowerNoteEditionFinished()));
+
+    ui->textFieldHigherNote->setText(higherNote);
+    ui->textFieldLowerNote->setText(lowerNote);
 }
 
 MidiToolsDialog::~MidiToolsDialog()
 {
     delete ui;
+}
+
+void MidiToolsDialog::lowerNoteEditionFinished()
+{
+    emit lowerNoteChanged(ui->textFieldLowerNote->text());
+}
+
+void MidiToolsDialog::higherNoteEditionFinished()
+{
+    emit higherNoteChanged(ui->textFieldHigherNote->text());
 }
 
 void MidiToolsDialog::closeEvent(QCloseEvent *event)

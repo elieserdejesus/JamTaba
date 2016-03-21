@@ -49,6 +49,9 @@ private slots:
     void showInputSelectionMenu();// build and show the input selection menu
     void openMidiToolsDialog();
     void clearMidiToolsDialog();
+
+    void setMidiLowerNote(const QString &lowerNote);
+    void setMidiHigherNote(const QString &higherNote);
 private:
 
     Controller::MainControllerStandalone* controller;//a 'casted' pointer just for convenience
@@ -73,6 +76,9 @@ private:
     void setMidiPeakMeterVisibility(bool visible);
 
     QString getInputChannelNameOnly(int inputIndex);// return the input channel name without the number/index
+
+    quint8 getMidiNoteNumber(const QString &midiNote) const;
+    QString getMidiNoteText(quint8 midiNoteNumber) const;
 
     MidiToolsDialog *midiToolsDialog;
 

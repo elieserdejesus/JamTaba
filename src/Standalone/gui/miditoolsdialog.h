@@ -8,25 +8,27 @@ namespace Ui {
 class MidiToolsDialog;
 }
 
-class LocalTrackViewStandalone;
-
 class MidiToolsDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit MidiToolsDialog(LocalTrackViewStandalone *trackView);
+    explicit MidiToolsDialog(const QString &lowerNote, const QString &higherNote);
     ~MidiToolsDialog();
 
 signals:
     void dialogClosed();
-
+    void lowerNoteChanged(const QString &newLowerNote);
+    void higherNoteChanged(const QString &newHigherNote);
 protected:
     void closeEvent(QCloseEvent *event);
 
+private slots:
+    void lowerNoteEditionFinished();
+    void higherNoteEditionFinished();
+
 private:
     Ui::MidiToolsDialog *ui;
-    LocalTrackViewStandalone *trackView;
 };
 
 #endif // MIDITOOLSDIALOG_H

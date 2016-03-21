@@ -11,7 +11,7 @@ LocalInputNode::LocalInputNode(int parentChannelIndex, bool isMono) :
     midiChannelIndex(-1),
     midiDeviceIndex(-1),
     midiLowerNote(0),
-    midiHigherNote(255)
+    midiHigherNote(127)
 {
     Q_UNUSED(isMono)
     setToNoInput();
@@ -98,6 +98,8 @@ void LocalInputNode::setMidiInputSelection(int midiDeviceIndex, int midiChannelI
 
 void LocalInputNode::setMidiHigherNote(quint8 newHigherNote)
 {
+    if (newHigherNote > 127)
+        newHigherNote = 127;
     midiHigherNote = newHigherNote;
     if (midiHigherNote < midiLowerNote)
         midiLowerNote = midiHigherNote;
@@ -105,6 +107,9 @@ void LocalInputNode::setMidiHigherNote(quint8 newHigherNote)
 
 void LocalInputNode::setMidiLowerNote(quint8 newLowerNote)
 {
+    if (newLowerNote > 127)
+        newLowerNote = 127;
+
     midiLowerNote = newLowerNote;
     if (midiLowerNote > midiHigherNote)
         midiHigherNote = midiLowerNote;
