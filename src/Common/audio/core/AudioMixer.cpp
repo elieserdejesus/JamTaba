@@ -38,7 +38,7 @@ AudioMixer::~AudioMixer()
 }
 
 void AudioMixer::process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                         const Midi::MidiBuffer &midiBuffer, bool attenuateAfterSumming)
+                         const Midi::MidiMessageBuffer &midiBuffer, bool attenuateAfterSumming)
 {
     static int soloedBuffersInLastProcess = 0;
     // --------------------------------------

@@ -19,7 +19,7 @@ const double AudioNode::PI_OVER_2 = 3.141592653589793238463 * 0.5;
 // +++++++++++++++
 
 void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                                 const Midi::MidiBuffer &midiBuffer)
+                                 const Midi::MidiMessageBuffer &midiBuffer)
 {
     Q_UNUSED(in);
 

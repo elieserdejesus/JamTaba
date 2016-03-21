@@ -244,7 +244,7 @@ protected:
 
     virtual void setCSS(const QString &css) = 0;
 
-    virtual Midi::MidiBuffer pullMidiBuffer() = 0;
+    virtual Midi::MidiMessageBuffer pullMidiBuffer() = 0;
 
     // map the input channel indexes to a GUID (used to upload audio to ninjam server)
     QMap<int, UploadIntervalData *> intervalsToUpload;

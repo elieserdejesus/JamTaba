@@ -557,9 +557,9 @@ void MainControllerStandalone::quit()
     application->quit();
 }
 
-Midi::MidiBuffer MainControllerStandalone::pullMidiBuffer()
+Midi::MidiMessageBuffer MainControllerStandalone::pullMidiBuffer()
 {
-    Midi::MidiBuffer midiBuffer(midiDriver ? midiDriver->getBuffer() : Midi::MidiBuffer(0));
+    Midi::MidiMessageBuffer midiBuffer(midiDriver ? midiDriver->getBuffer() : Midi::MidiMessageBuffer(0));
 // int messages = midiBuffer.getMessagesCount();
 // for(int m=0; m < messages; m++){
 // Midi::MidiMessage msg = midiBuffer.getMessage(m);

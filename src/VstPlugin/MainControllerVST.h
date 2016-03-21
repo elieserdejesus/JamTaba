@@ -57,9 +57,9 @@ public:
     Persistence::Preset loadPreset(const QString &name) override;
 
 protected:
-    inline Midi::MidiBuffer pullMidiBuffer() override
+    inline Midi::MidiMessageBuffer pullMidiBuffer() override
     {
-        return Midi::MidiBuffer(0);
+        return Midi::MidiMessageBuffer(0);
     }
 private:
     int sampleRate;

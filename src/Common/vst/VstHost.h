@@ -6,7 +6,7 @@
 #include <QObject>
 
 namespace Midi {
-class MidiBuffer;
+class MidiMessageBuffer;
 }
 
 namespace Vst {

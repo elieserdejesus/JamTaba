@@ -14,7 +14,8 @@
 #include <QDebug>
 #include "audio/core/AudioDriver.h"
 #include "audio/core/SamplesBuffer.h"
-#include "midi/MidiDriver.h"
+#include "midi/MidiMessage.h"
+#include "midi/MidiMessageBuffer.h"
 #include <QLibrary>
 #include <string>
 #include <locale>
@@ -215,7 +216,7 @@ void VstPlugin::unload(){
     }
 }
 
-void VstPlugin::fillVstEventsList(const Midi::MidiBuffer &midiBuffer){
+void VstPlugin::fillVstEventsList(const Midi::MidiMessageBuffer &midiBuffer){
     int midiMessages = qMin( midiBuffer.getMessagesCount(), MAX_MIDI_EVENTS);
     this->vstMidiEvents.numEvents = midiMessages;
     for (int m = 0; m < midiMessages; ++m) {
@@ -234,7 +235,7 @@ void VstPlugin::fillVstEventsList(const Midi::MidiBuffer &midiBuffer){
     }
 }
 
-void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, const Midi::MidiBuffer& midiBuffer){
+void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, const Midi::MidiMessageBuffer& midiBuffer){
 
     Q_UNUSED(in)
     //qCDebug(vst) << "processing ...";

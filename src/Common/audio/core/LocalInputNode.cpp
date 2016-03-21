@@ -1,6 +1,7 @@
 #include "LocalInputNode.h"
 #include "audio/core/AudioNodeProcessor.h"
-#include "midi/MidiDriver.h"
+#include "midi/MidiMessageBuffer.h"
+#include "midi/MidiMessage.h"
 
 using namespace Audio;
 
@@ -93,6 +94,20 @@ void LocalInputNode::setMidiInputSelection(int midiDeviceIndex, int midiChannelI
     inputMode = MIDI;
 }
 
+void LocalInputNode::setMidiHigherNote(quint8 newHigherNote)
+{
+    midiHigherNote = newHigherNote;
+    if (midiHigherNote < midiLowerNote)
+        midiLowerNote = midiHigherNote;
+}
+
+void LocalInputNode::setMidiLowerNote(quint8 newLowerNote)
+{
+    midiLowerNote = newLowerNote;
+    if (midiLowerNote > midiHigherNote)
+        midiHigherNote = midiLowerNote;
+}
+
 bool LocalInputNode::isReceivingAllMidiChannels() const
 {
     if (inputMode == MIDI)
@@ -101,7 +116,7 @@ bool LocalInputNode::isReceivingAllMidiChannels() const
 }
 
 void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
-                                           int sampleRate, const Midi::MidiBuffer &midiBuffer)
+                                           int sampleRate, const Midi::MidiMessageBuffer &midiBuffer)
 {
     Q_UNUSED(sampleRate);
 
@@ -113,7 +128,7 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
      * Other LocalInputAudioNode instances will read other channels from input SamplesBuffer.
      */
 
-    Midi::MidiBuffer filteredMidiBuffer(midiBuffer.getMessagesCount());
+    Midi::MidiMessageBuffer filteredMidiBuffer(midiBuffer.getMessagesCount());
     internalInputBuffer.setFrameLenght(out.getFrameLenght());
     internalOutputBuffer.setFrameLenght(out.getFrameLenght());
     internalInputBuffer.zero();
@@ -129,9 +144,7 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
             if (total > 0) {
                 for (int m = 0; m < total; ++m) {
                     Midi::MidiMessage message = midiBuffer.getMessage(m);
-                    if (message.getDeviceIndex() == midiDeviceIndex
-                        && (isReceivingAllMidiChannels()
-                            || message.getChannel() == midiChannelIndex)) {
+                    if (canAcceptMidiMessage(message)) {
                         filteredMidiBuffer.addMessage(message);
 
                         // save the midi activity peak value for notes or controls
@@ -146,6 +159,13 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
         }
     }
     AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer);
+}
+
+bool LocalInputNode::canAcceptMidiMessage(const Midi::MidiMessage &message) const
+{
+    return message.getDeviceIndex() == midiDeviceIndex
+                            && (isReceivingAllMidiChannels()
+                                || message.getChannel() == midiChannelIndex);
 }
 
 // ++++++++++++=

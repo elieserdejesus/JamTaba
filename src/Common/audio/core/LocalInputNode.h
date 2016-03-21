@@ -3,6 +3,10 @@
 
 #include "AudioNode.h"
 
+namespace Midi {
+    class MidiMessage;
+}
+
 namespace Audio {
 
 class LocalInputNode : public AudioNode
@@ -11,7 +15,7 @@ public:
     LocalInputNode(int parentChannelIndex, bool isMono = true);
     ~LocalInputNode();
     void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                                  const Midi::MidiBuffer &midiBuffer) override;
+                                  const Midi::MidiMessageBuffer &midiBuffer) override;
     virtual int getSampleRate() const;
 
     int getChannels() const;
@@ -54,6 +58,14 @@ public:
 
     void resetMidiActivity();
 
+    void setMidiLowerNote(quint8 newLowerNote);
+
+    void setMidiHigherNote(quint8 newHigherNote);
+
+    quint8 getMidiLowerNote() const;
+
+    quint8 getMidiHigherNote() const;
+
     void addProcessor(AudioNodeProcessor *newProcessor) override;
 
     void reset();
@@ -72,6 +84,9 @@ private:
 
     int midiDeviceIndex; // setted when user choose MIDI as input method
     int midiChannelIndex;
+    quint8 lastMidiActivity;// max velocity or control value
+    quint8 midiLowerNote;
+    quint8 midiHigherNote;
 
     int channelIndex; // the group index (a group contain N LocalInputAudioNode instances)
 
@@ -81,9 +96,19 @@ private:
 
     InputMode inputMode = DISABLED;
 
-    quint8 lastMidiActivity;// max velocity or control value
+    bool canAcceptMidiMessage(const Midi::MidiMessage &msg) const;
+
 };
 
+inline quint8 LocalInputNode::getMidiHigherNote() const
+{
+    return midiHigherNote;
+}
+
+inline quint8 LocalInputNode::getMidiLowerNote() const
+{
+    return midiLowerNote;
+}
 
 inline int LocalInputNode::getSampleRate() const
 {

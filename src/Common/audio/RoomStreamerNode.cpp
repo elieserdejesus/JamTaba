@@ -61,7 +61,7 @@ int AbstractMp3Streamer::getSamplesToRender(int targetSampleRate, int outLenght)
 
 void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in,
                                            Audio::SamplesBuffer &out, int targetSampleRate,
-                                           const Midi::MidiBuffer &)
+                                           const Midi::MidiMessageBuffer &)
 {
     Q_UNUSED(in);
 
@@ -213,7 +213,7 @@ NinjamRoomStreamerNode::~NinjamRoomStreamerNode()
 }
 
 void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
-                                              int sampleRate, const Midi::MidiBuffer &midiBuffer)
+                                              int sampleRate, const Midi::MidiMessageBuffer &midiBuffer)
 {
     Q_UNUSED(in)
     QMutexLocker locker(&mutex);
@@ -268,7 +268,7 @@ AudioFileStreamerNode::~AudioFileStreamerNode()
 }
 
 void AudioFileStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
-                                             int sampleRate, const Midi::MidiBuffer &midiBuffer)
+                                             int sampleRate, const Midi::MidiMessageBuffer &midiBuffer)
 {
     while (bufferedSamples.getFrameLenght() < out.getFrameLenght())
         decode(1024 + 1024);

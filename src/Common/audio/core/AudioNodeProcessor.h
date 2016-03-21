@@ -4,7 +4,7 @@
 #include <QObject>
 
 namespace Midi {
-class MidiBuffer;
+class MidiMessageBuffer;
 }
 
 namespace Audio {
@@ -20,7 +20,7 @@ public:
     }
 
     virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
-                         const Midi::MidiBuffer &midiBuffer) = 0;
+                         const Midi::MidiMessageBuffer &midiBuffer) = 0;
     virtual void suspend() = 0;
     virtual void resume() = 0;
     virtual void updateGui() = 0;

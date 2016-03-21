@@ -8,7 +8,7 @@
 #include <QDebug>
 
 namespace Midi   {
-class MidiBuffer;
+class MidiMessageBuffer;
 }
 
 namespace Audio {
@@ -23,7 +23,7 @@ public:
     virtual ~AudioNode();
 
     virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                                  const Midi::MidiBuffer &midiBuffer);
+                                  const Midi::MidiMessageBuffer &midiBuffer);
     virtual void setMute(bool muted);
     void setSolo(bool soloed);
     inline bool isMuted() const

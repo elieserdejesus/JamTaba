@@ -118,7 +118,7 @@ protected:
 
     void setCSS(const QString &css) override;
 
-    Midi::MidiBuffer pullMidiBuffer() override;
+    Midi::MidiMessageBuffer pullMidiBuffer() override;
 
     void setupNinjamControllerSignals() override;
 
