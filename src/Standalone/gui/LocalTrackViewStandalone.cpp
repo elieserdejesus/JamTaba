@@ -4,6 +4,7 @@
 #include "FxPanelItem.h"
 #include <QGridLayout>
 #include <QStyle>
+#include <QDesktopWidget>
 
 const QString LocalTrackViewStandalone::MIDI_ICON = ":/images/input_midi.png";
 const QString LocalTrackViewStandalone::MONO_ICON = ":/images/input_mono.png";
@@ -120,6 +121,16 @@ void LocalTrackViewStandalone::openMidiToolsDialog()
         connect(midiToolsDialog, &MidiToolsDialog::lowerNoteChanged, this, &LocalTrackViewStandalone::setMidiLowerNote);
         connect(midiToolsDialog, &MidiToolsDialog::higherNoteChanged, this, &LocalTrackViewStandalone::setMidiHigherNote);
     }
+
+    QRect desktopRect = QApplication::desktop()->availableGeometry();
+
+    QPoint point = mapToGlobal(QPoint(x() + width(), inputPanel->y()));
+
+    if (point.y() + midiToolsDialog->height() > desktopRect.height()) {
+        point.setY( desktopRect.height() - (midiToolsDialog->height() + 35)); //align in bottom with 35 pixels in margim
+    }
+
+    midiToolsDialog->move(point);
     midiToolsDialog->show();
     midiToolsDialog->raise();
 }
