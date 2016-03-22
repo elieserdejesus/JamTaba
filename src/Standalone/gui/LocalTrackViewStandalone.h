@@ -66,6 +66,7 @@ private:
     QLabel *createInputTypeIconLabel(QWidget *parent);
     FxPanel *createFxPanel();
 
+    QPushButton *midiToolsButton;
     QPushButton *inputSelectionButton;
     QLabel *inputTypeIconLabel;
     QWidget *inputPanel;

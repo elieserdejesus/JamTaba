@@ -26,8 +26,9 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
 
     mainLayout->addWidget(inputPanel, mainLayout->rowCount(), 0, 1, 2);
 
-    QPushButton *midiToolsButton = createMidiToolsButton();
+    midiToolsButton = createMidiToolsButton();
     mainLayout->addWidget(midiToolsButton, mainLayout->rowCount(), 0, 1, 2);
+    midiToolsButton->setVisible(getInputNode()->isMidi());
 
     this->inputTypeIconLabel = createInputTypeIconLabel(this);
     mainLayout->addWidget(inputTypeIconLabel, mainLayout->rowCount(), 0, 1, 2);
@@ -395,6 +396,7 @@ void LocalTrackViewStandalone::setToNoInput()
 {
     if (inputNode) {
         inputNode->setToNoInput();
+        midiToolsButton->setVisible(false);
         refreshInputSelectionName();
     }
 }
@@ -483,6 +485,7 @@ void LocalTrackViewStandalone::setToMono(QAction *action)
     int selectedInputIndexInAudioDevice = action->data().toInt();
     controller->setInputTrackToMono(getTrackID(), selectedInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
+    midiToolsButton->setVisible(false);
 }
 
 void LocalTrackViewStandalone::setToStereo(QAction *action)
@@ -490,6 +493,7 @@ void LocalTrackViewStandalone::setToStereo(QAction *action)
     int firstInputIndexInAudioDevice = action->data().toInt();
     controller->setInputTrackToStereo(getTrackID(), firstInputIndexInAudioDevice);
     setMidiPeakMeterVisibility(false);
+    midiToolsButton->setVisible(false);
 }
 
 void LocalTrackViewStandalone::setToMidi(QAction *action)
@@ -506,4 +510,6 @@ void LocalTrackViewStandalone::setToMidi(QAction *action)
     int midiDeviceIndex = midiDeviceString.toInt();
 
     controller->setInputTrackToMIDI(getTrackID(), midiDeviceIndex, midiChannel);
+
+    midiToolsButton->setVisible(true);
 }
