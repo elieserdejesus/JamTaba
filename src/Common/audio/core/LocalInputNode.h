@@ -62,6 +62,10 @@ public:
 
     void setMidiHigherNote(quint8 newHigherNote);
 
+    void setTranspose(qint8 transpose);
+
+    qint8 getTranspose() const;
+
     quint8 getMidiLowerNote() const;
 
     quint8 getMidiHigherNote() const;
@@ -87,6 +91,7 @@ private:
     quint8 lastMidiActivity;// max velocity or control value
     quint8 midiLowerNote;
     quint8 midiHigherNote;
+    qint8 transpose;
 
     int channelIndex; // the group index (a group contain N LocalInputAudioNode instances)
 
@@ -99,6 +104,11 @@ private:
     bool canAcceptMidiMessage(const Midi::MidiMessage &msg) const;
 
 };
+
+inline qint8 LocalInputNode::getTranspose() const
+{
+    return transpose;
+}
 
 inline quint8 LocalInputNode::getMidiHigherNote() const
 {

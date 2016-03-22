@@ -1,5 +1,7 @@
 #include "MidiMessage.h"
 
+#include <QDebug>
+
 using namespace Midi;
 
 MidiMessage::MidiMessage(qint32 data, qint32 timestamp, int sourceDeviceIndex)
@@ -22,6 +24,17 @@ MidiMessage::MidiMessage(const MidiMessage &other)
 }
 
 // +++++++++++++++++++++++
+
+void MidiMessage::transpose(qint8 semitones)
+{
+    if (!isNote()) {
+        return;
+    }
+    quint32 newValue = data + (semitones << 8);
+    if ( newValue >= 0 && ((newValue >> 8) & 0xFF) <= 127 ){
+        data = newValue;
+    }
+}
 
 quint8 MidiMessage::getNoteVelocity() const
 {

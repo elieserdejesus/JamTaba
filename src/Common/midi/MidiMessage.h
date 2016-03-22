@@ -1,6 +1,8 @@
 #ifndef _MIDI_MESSAGE_
 #define _MIDI_MESSAGE_
 
+#include <QtGlobal>
+
 namespace Midi {
 
 class MidiMessage
@@ -16,6 +18,8 @@ public:
     }
 
     bool isNote() const;
+
+    void transpose(qint8 semitones);
 
     quint8 getNoteVelocity() const;
 
