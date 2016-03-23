@@ -41,6 +41,17 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
     midiPeakMeter->setPaintMaxPeakMarker(false);
     midiPeakMeter->setDecayTime(500);// 500 ms
     midiPeakMeter->setAccessibleDescription("This is the midi activity meter");
+
+    Audio::LocalInputNode *inputNode = getInputNode();
+    connect(inputNode, &Audio::LocalInputNode::midiNoteLearned, this, &LocalTrackViewStandalone::useLearnedMidiNote);
+}
+
+void LocalTrackViewStandalone::useLearnedMidiNote(quint8 midiNote)
+{
+    if (midiToolsDialog && midiToolsDialog->isVisible()) {
+        QString midiNoteName = getMidiNoteText(midiNote);
+        midiToolsDialog->setLearnedMidiNote(midiNoteName);
+    }
 }
 
 void LocalTrackViewStandalone::updateGuiElements()
@@ -118,10 +129,11 @@ void LocalTrackViewStandalone::openMidiToolsDialog()
         QString higherNote = getMidiNoteText(inputNode->getMidiHigherNote());
         QString lowerNote = getMidiNoteText(inputNode->getMidiLowerNote());
         midiToolsDialog = new MidiToolsDialog(lowerNote, higherNote);
-        connect(midiToolsDialog, &MidiToolsDialog::dialogClosed, this, &LocalTrackViewStandalone::clearMidiToolsDialog);
+        connect(midiToolsDialog, &MidiToolsDialog::dialogClosed, this, &LocalTrackViewStandalone::onMidiToolsDialogClosed);
         connect(midiToolsDialog, &MidiToolsDialog::lowerNoteChanged, this, &LocalTrackViewStandalone::setMidiLowerNote);
         connect(midiToolsDialog, &MidiToolsDialog::higherNoteChanged, this, &LocalTrackViewStandalone::setMidiHigherNote);
         connect(midiToolsDialog, &MidiToolsDialog::transposeChanged, this, &LocalTrackViewStandalone::setTranspose);
+        connect(midiToolsDialog, &MidiToolsDialog::learnMidiNoteClicked, this, &LocalTrackViewStandalone::toggleMidiNoteLearn);
     }
 
     QRect desktopRect = QApplication::desktop()->availableGeometry();
@@ -135,6 +147,30 @@ void LocalTrackViewStandalone::openMidiToolsDialog()
     midiToolsDialog->move(point);
     midiToolsDialog->show();
     midiToolsDialog->raise();
+}
+
+void LocalTrackViewStandalone::toggleMidiNoteLearn(bool buttonClicked)
+{
+    if (buttonClicked)
+        startMidiNoteLearn();
+    else
+        stopMidiNoteLearn();
+}
+
+void LocalTrackViewStandalone::startMidiNoteLearn()
+{
+    Audio::LocalInputNode *inputNode = getInputNode();
+    if (inputNode) {
+        inputNode->startMidiNoteLearn();
+    }
+}
+
+void LocalTrackViewStandalone::stopMidiNoteLearn()
+{
+    Audio::LocalInputNode *inputNode = getInputNode();
+    if (inputNode) {
+        inputNode->stopMidiNoteLearn();
+    }
 }
 
 void LocalTrackViewStandalone::setTranspose(qint8 transposeValue)
@@ -215,9 +251,10 @@ quint8 LocalTrackViewStandalone::getMidiNoteNumber(const QString &midiNote) cons
      return noteNumber;
 }
 
-void LocalTrackViewStandalone::clearMidiToolsDialog()
+void LocalTrackViewStandalone::onMidiToolsDialogClosed()
 {
     midiToolsDialog = nullptr;
+    stopMidiNoteLearn();
     qCDebug(jtGUI) << "MidiToolsDialog pointer cleared!";
 }
 

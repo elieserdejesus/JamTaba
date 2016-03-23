@@ -12,7 +12,8 @@ LocalInputNode::LocalInputNode(int parentChannelIndex, bool isMono) :
     midiDeviceIndex(-1),
     midiLowerNote(0),
     midiHigherNote(127),
-    transpose(0)
+    transpose(0),
+    learningMidiNote(false)
 {
     Q_UNUSED(isMono)
     setToNoInput();
@@ -187,13 +188,27 @@ bool LocalInputNode::canAcceptMidiMessage(const Midi::MidiMessage &message) cons
 
     if (message.isNote()) {
         int midiNote = message.getData1();
-
-        bool canAccpetTheRange = midiNote >= midiLowerNote && midiNote <= midiHigherNote;
-        return canAcceptTheDevice && canAcceptTheChannel && canAccpetTheRange;
+        if (!learningMidiNote) {//check midi range if not learning
+            bool canAccpetTheRange = midiNote >= midiLowerNote && midiNote <= midiHigherNote;
+            return canAcceptTheDevice && canAcceptTheChannel && canAccpetTheRange;
+        }
+        else{ //is learning midi notes
+            emit midiNoteLearned((quint8)midiNote);
+            return false; //when learning all messages are bypassed
+        }
     }
     return canAcceptTheDevice && canAcceptTheChannel;
 }
 
+void LocalInputNode::startMidiNoteLearn()
+{
+    this->learningMidiNote = true;
+}
+
+void LocalInputNode::stopMidiNoteLearn()
+{
+    this->learningMidiNote = false;
+}
 // ++++++++++++=
 void LocalInputNode::reset()
 {

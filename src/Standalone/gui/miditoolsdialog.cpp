@@ -21,9 +21,11 @@ MidiToolsDialog::MidiToolsDialog(const QString &lowerNote, const QString &higher
 
     connect(ui->textFieldHigherNote, SIGNAL(editingFinished()), this, SLOT(higherNoteEditionFinished()));
     connect(ui->textFieldLowerNote, SIGNAL(editingFinished()), this, SLOT(lowerNoteEditionFinished()));
+    connect(ui->buttonLearnLowerNote, SIGNAL(toggled(bool)), this, SLOT(learnLowerMidiNoteToggled(bool)));
+    connect(ui->buttonLearnHigherNote, SIGNAL(toggled(bool)), this, SLOT(learnHigherMidiNoteToggled(bool)));
 
-    ui->textFieldHigherNote->setText(higherNote);
     ui->textFieldLowerNote->setText(lowerNote);
+    ui->textFieldHigherNote->setText(higherNote);
 
     ui->spinBoxTranspose->setMaximum(24);
     ui->spinBoxTranspose->setMinimum(-24);
@@ -33,6 +35,34 @@ MidiToolsDialog::MidiToolsDialog(const QString &lowerNote, const QString &higher
 MidiToolsDialog::~MidiToolsDialog()
 {
     delete ui;
+}
+
+void MidiToolsDialog::learnLowerMidiNoteToggled(bool buttonChecked)
+{
+    if (buttonChecked){
+        ui->buttonLearnHigherNote->setChecked(false);
+    }
+    emit learnMidiNoteClicked(buttonChecked);
+}
+
+void MidiToolsDialog::learnHigherMidiNoteToggled(bool buttonChecked)
+{
+    if (buttonChecked){
+        ui->buttonLearnLowerNote->setChecked(false);
+    }
+    emit learnMidiNoteClicked(buttonChecked);
+}
+
+void MidiToolsDialog::setLearnedMidiNote(const QString &learnedNote)
+{
+    if (ui->buttonLearnHigherNote->isChecked()) {
+        ui->textFieldHigherNote->setText(learnedNote);
+        emit higherNoteChanged(learnedNote);
+    }
+    else{
+        ui->textFieldLowerNote->setText(learnedNote);
+        emit lowerNoteChanged(learnedNote);
+    }
 }
 
 void MidiToolsDialog::transposeValueChanged(int transposeValue)

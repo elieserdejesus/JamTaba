@@ -48,11 +48,15 @@ protected slots:
 private slots:
     void showInputSelectionMenu();// build and show the input selection menu
     void openMidiToolsDialog();
-    void clearMidiToolsDialog();
+    void onMidiToolsDialogClosed();
 
     void setMidiLowerNote(const QString &lowerNote);
     void setMidiHigherNote(const QString &higherNote);
     void setTranspose(qint8 transposeValue);
+
+    void toggleMidiNoteLearn(bool);
+
+    void useLearnedMidiNote(quint8 midiNote);
 private:
 
     Controller::MainControllerStandalone* controller;//a 'casted' pointer just for convenience
@@ -81,6 +85,9 @@ private:
 
     quint8 getMidiNoteNumber(const QString &midiNote) const;
     QString getMidiNoteText(quint8 midiNoteNumber) const;
+
+    void startMidiNoteLearn();
+    void stopMidiNoteLearn();
 
     MidiToolsDialog *midiToolsDialog;
 

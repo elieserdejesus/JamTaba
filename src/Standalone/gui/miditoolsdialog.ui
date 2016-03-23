@@ -95,6 +95,12 @@
           <property name="text">
            <string>learn</string>
           </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="autoDefault">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
        </layout>
@@ -134,7 +140,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="buttonLearnLowerNote_2">
+         <widget class="QPushButton" name="buttonLearnHigherNote">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -143,6 +149,12 @@
           </property>
           <property name="text">
            <string>learn</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="autoDefault">
+           <bool>false</bool>
           </property>
          </widget>
         </item>

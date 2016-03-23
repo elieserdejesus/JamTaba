@@ -15,13 +15,14 @@ class MidiToolsDialog : public QDialog
 public:
     explicit MidiToolsDialog(const QString &lowerNote, const QString &higherNote);
     ~MidiToolsDialog();
-
+    void setLearnedMidiNote(const QString &learnedNote);
 signals:
     void dialogClosed();
     void lowerNoteChanged(const QString &newLowerNote);
     void higherNoteChanged(const QString &newHigherNote);
 
     void transposeChanged(qint8 newTranspose);
+    void learnMidiNoteClicked(bool); //this signal is fired when the 2 learn buttons are clicked
 protected:
     void closeEvent(QCloseEvent *event);
 
@@ -30,6 +31,8 @@ private slots:
     void higherNoteEditionFinished();
     void transposeValueChanged(int);
 
+    void learnLowerMidiNoteToggled(bool);
+    void learnHigherMidiNoteToggled(bool);
 private:
     Ui::MidiToolsDialog *ui;
 };

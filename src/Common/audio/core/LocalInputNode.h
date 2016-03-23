@@ -11,6 +11,8 @@ namespace Audio {
 
 class LocalInputNode : public AudioNode
 {
+    Q_OBJECT
+
 public:
     LocalInputNode(int parentChannelIndex, bool isMono = true);
     ~LocalInputNode();
@@ -70,6 +72,10 @@ public:
 
     quint8 getMidiHigherNote() const;
 
+    void startMidiNoteLearn();
+    void stopMidiNoteLearn();
+    bool isLearningMidiNote() const;
+
     void addProcessor(AudioNodeProcessor *newProcessor) override;
 
     void reset();
@@ -77,6 +83,9 @@ public:
     /** local input tracks are always activated, so is possible play offline while listening to a room.
      The other tracks (ninjam tracks) are deactivated when the 'room preview' is started. */
     bool isActivated() const override;
+
+signals:
+    void midiNoteLearned(quint8 midiNote) const;
 
 private:
     //int globalFirstInputIndex; // store the first input index selected globally by users in preferences menu
@@ -92,6 +101,7 @@ private:
     quint8 midiLowerNote;
     quint8 midiHigherNote;
     qint8 transpose;
+    bool learningMidiNote; //is waiting to learn a midi note?
 
     int channelIndex; // the group index (a group contain N LocalInputAudioNode instances)
 
@@ -104,6 +114,11 @@ private:
     bool canAcceptMidiMessage(const Midi::MidiMessage &msg) const;
 
 };
+
+inline bool LocalInputNode::isLearningMidiNote() const
+{
+    return learningMidiNote;
+}
 
 inline qint8 LocalInputNode::getTranspose() const
 {

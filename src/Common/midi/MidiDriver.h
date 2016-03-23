@@ -32,7 +32,6 @@ public:
 
 protected:
     QList<bool> inputDevicesEnabledStatuses;// store the globally enabled midi input devices
-
 };
 
 class NullMidiDriver : public MidiDriver
