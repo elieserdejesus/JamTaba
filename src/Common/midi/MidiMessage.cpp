@@ -45,7 +45,9 @@ quint8 MidiMessage::getNoteVelocity() const
 
 bool MidiMessage::isNote() const
 {
-    // 0x90 to 0x9F where the low nibble is the MIDI channel.
+    //0x80 = Note Off
+    //0x90 = Note On
+    // 0x80 to 0x9F where the low nibble is the MIDI channel.
     int status = getStatus();
-    return status >= 0x90 && status <= 0x9F;
+    return status >= 0x80 && status <= 0x9F;
 }

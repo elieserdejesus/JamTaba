@@ -11,7 +11,8 @@ LocalInputNode::LocalInputNode(int parentChannelIndex, bool isMono) :
     midiChannelIndex(-1),
     midiDeviceIndex(-1),
     midiLowerNote(0),
-    midiHigherNote(127)
+    midiHigherNote(127),
+    transpose(0)
 {
     Q_UNUSED(isMono)
     setToNoInput();
@@ -153,8 +154,8 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
                     Midi::MidiMessage message = midiBuffer.getMessage(m);
                     if (canAcceptMidiMessage(message)) {
 
-                        //if (message.isNote() && transpose != 0)
-                            //message.transpose(transpose);
+                        if (message.isNote() && transpose != 0)
+                            message.transpose(transpose);
 
                         filteredMidiBuffer.addMessage(message);
 
