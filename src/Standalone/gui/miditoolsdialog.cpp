@@ -27,12 +27,17 @@ MidiToolsDialog::MidiToolsDialog(const QString &lowerNote, const QString &higher
 
     ui->spinBoxTranspose->setMaximum(24);
     ui->spinBoxTranspose->setMinimum(-24);
-    connect(ui->spinBoxTranspose, SIGNAL(valueChanged(int)), SIGNAL(transposeChanged(qint8)));
+    connect(ui->spinBoxTranspose, SIGNAL(valueChanged(int)), SLOT(transposeValueChanged(int)));
 }
 
 MidiToolsDialog::~MidiToolsDialog()
 {
     delete ui;
+}
+
+void MidiToolsDialog::transposeValueChanged(int transposeValue)
+{
+    emit transposeChanged((qint8)transposeValue);
 }
 
 void MidiToolsDialog::lowerNoteEditionFinished()

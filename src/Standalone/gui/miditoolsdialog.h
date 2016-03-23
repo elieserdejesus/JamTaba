@@ -21,13 +21,14 @@ signals:
     void lowerNoteChanged(const QString &newLowerNote);
     void higherNoteChanged(const QString &newHigherNote);
 
-    void transposeChanged(const qint8 newTranspose);
+    void transposeChanged(qint8 newTranspose);
 protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
     void lowerNoteEditionFinished();
     void higherNoteEditionFinished();
+    void transposeValueChanged(int);
 
 private:
     Ui::MidiToolsDialog *ui;

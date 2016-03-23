@@ -153,8 +153,8 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
                     Midi::MidiMessage message = midiBuffer.getMessage(m);
                     if (canAcceptMidiMessage(message)) {
 
-                        if (message.isNote() && transpose != 0)
-                            message.transpose(transpose);
+                        //if (message.isNote() && transpose != 0)
+                            //message.transpose(transpose);
 
                         filteredMidiBuffer.addMessage(message);
 
@@ -186,8 +186,9 @@ bool LocalInputNode::canAcceptMidiMessage(const Midi::MidiMessage &message) cons
 
     if (message.isNote()) {
         int midiNote = message.getData1();
+
         bool canAccpetTheRange = midiNote >= midiLowerNote && midiNote <= midiHigherNote;
-        canAcceptTheDevice && canAcceptTheChannel && canAccpetTheRange;
+        return canAcceptTheDevice && canAcceptTheChannel && canAccpetTheRange;
     }
     return canAcceptTheDevice && canAcceptTheChannel;
 }
