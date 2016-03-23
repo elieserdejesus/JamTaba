@@ -24,6 +24,10 @@ MidiToolsDialog::MidiToolsDialog(const QString &lowerNote, const QString &higher
 
     ui->textFieldHigherNote->setText(higherNote);
     ui->textFieldLowerNote->setText(lowerNote);
+
+    ui->spinBoxTranspose->setMaximum(24);
+    ui->spinBoxTranspose->setMinimum(-24);
+    connect(ui->spinBoxTranspose, SIGNAL(valueChanged(int)), SIGNAL(transposeChanged(qint8)));
 }
 
 MidiToolsDialog::~MidiToolsDialog()

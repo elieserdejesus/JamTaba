@@ -121,6 +121,7 @@ void LocalTrackViewStandalone::openMidiToolsDialog()
         connect(midiToolsDialog, &MidiToolsDialog::dialogClosed, this, &LocalTrackViewStandalone::clearMidiToolsDialog);
         connect(midiToolsDialog, &MidiToolsDialog::lowerNoteChanged, this, &LocalTrackViewStandalone::setMidiLowerNote);
         connect(midiToolsDialog, &MidiToolsDialog::higherNoteChanged, this, &LocalTrackViewStandalone::setMidiHigherNote);
+        connect(midiToolsDialog, &MidiToolsDialog::transposeChanged, this, &LocalTrackViewStandalone::setTranspose);
     }
 
     QRect desktopRect = QApplication::desktop()->availableGeometry();
@@ -136,16 +137,30 @@ void LocalTrackViewStandalone::openMidiToolsDialog()
     midiToolsDialog->raise();
 }
 
+void LocalTrackViewStandalone::setTranspose(qint8 transposeValue)
+{
+     Audio::LocalInputNode *inputNode = getInputNode();
+     if (inputNode) {
+         inputNode->setTranspose(transposeValue);
+     }
+}
+
 void LocalTrackViewStandalone::setMidiHigherNote(const QString &higherNote)
 {
-    quint8 noteNumber = getMidiNoteNumber(higherNote);
-    getInputNode()->setMidiHigherNote(noteNumber);
+    Audio::LocalInputNode *inputNode = getInputNode();
+    if (inputNode) {
+        quint8 noteNumber = getMidiNoteNumber(higherNote);
+        inputNode->setMidiHigherNote(noteNumber);
+    }
 }
 
 void LocalTrackViewStandalone::setMidiLowerNote(const QString &lowerNote)
 {
-    quint8 noteNumber = getMidiNoteNumber(lowerNote);
-    getInputNode()->setMidiLowerNote(noteNumber);
+    Audio::LocalInputNode *inputNode = getInputNode();
+    if (inputNode) {
+        quint8 noteNumber = getMidiNoteNumber(lowerNote);
+        inputNode->setMidiLowerNote(noteNumber);
+    }
 }
 
 QString LocalTrackViewStandalone::getMidiNoteText(quint8 midiNoteNumber) const
@@ -359,9 +374,10 @@ QMenu *LocalTrackViewStandalone::createMidiInputsMenu(QMenu *parent)
             allChannelsAction->setData(QString(QString::number(d) + ":" + QString::number(-1)));// use -1 to all channels
             allChannelsAction->setActionGroup(actionGroup);
             allChannelsAction->setCheckable(true);
+            Audio::LocalInputNode *inputNode = getInputNode();
             allChannelsAction->setChecked(
-                getInputNode()->isMidi() && getInputNode()->getMidiDeviceIndex() == d
-                && getInputNode()->isReceivingAllMidiChannels());
+                inputNode->isMidi() && inputNode->getMidiDeviceIndex() == d
+                && inputNode->isReceivingAllMidiChannels());
 
             midiChannelsMenu->addSeparator();
             for (int c = 0; c < 16; ++c) {
@@ -370,8 +386,8 @@ QMenu *LocalTrackViewStandalone::createMidiInputsMenu(QMenu *parent)
                 a->setActionGroup(actionGroup);
                 a->setCheckable(true);
                 a->setChecked(
-                    getInputNode()->isMidi() && getInputNode()->getMidiChannelIndex() == c
-                    && getInputNode()->getMidiDeviceIndex() == d);
+                    inputNode->isMidi() && inputNode->getMidiChannelIndex() == c
+                    && inputNode->getMidiDeviceIndex() == d);
             }
 
             QString deviceName = controller->getMidiDriver()->getInputDeviceName(d);

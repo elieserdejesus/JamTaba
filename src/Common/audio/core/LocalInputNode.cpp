@@ -152,6 +152,10 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
                 for (int m = 0; m < total; ++m) {
                     Midi::MidiMessage message = midiBuffer.getMessage(m);
                     if (canAcceptMidiMessage(message)) {
+
+                        if (message.isNote() && transpose != 0)
+                            message.transpose(transpose);
+
                         filteredMidiBuffer.addMessage(message);
 
                         // save the midi activity peak value for notes or controls
@@ -166,6 +170,13 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
         }
     }
     AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer);
+}
+
+void LocalInputNode::setTranspose(qint8 transpose)
+{
+    if ( qAbs(transpose) <= 24) {
+        this->transpose = transpose;
+    }
 }
 
 bool LocalInputNode::canAcceptMidiMessage(const Midi::MidiMessage &message) const

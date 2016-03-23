@@ -20,6 +20,8 @@ signals:
     void dialogClosed();
     void lowerNoteChanged(const QString &newLowerNote);
     void higherNoteChanged(const QString &newHigherNote);
+
+    void transposeChanged(const qint8 newTranspose);
 protected:
     void closeEvent(QCloseEvent *event);
 

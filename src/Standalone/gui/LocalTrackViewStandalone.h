@@ -52,6 +52,7 @@ private slots:
 
     void setMidiLowerNote(const QString &lowerNote);
     void setMidiHigherNote(const QString &higherNote);
+    void setTranspose(qint8 transposeValue);
 private:
 
     Controller::MainControllerStandalone* controller;//a 'casted' pointer just for convenience
