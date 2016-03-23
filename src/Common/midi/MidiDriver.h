@@ -32,7 +32,7 @@ public:
 
 protected:
     QList<bool> inputDevicesEnabledStatuses;// store the globally enabled midi input devices
-    int selectedChannel;// -1 to use all channels
+
 };
 
 class NullMidiDriver : public MidiDriver

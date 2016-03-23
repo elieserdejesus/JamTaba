@@ -144,5 +144,5 @@ int RtMidiDriver::getMaxInputDevices() const{
 }
 
 RtMidiDriver::~RtMidiDriver(){
-    release();
+    //release();
 }
