@@ -3,9 +3,13 @@
 
 #include "BaseTrackView.h"
 #include "PeakMeter.h"
-#include "audio/core/AudioNode.h"
+//#include "audio/core/AudioNode.h"
 
 class FxPanel;
+
+namespace Audio {
+class LocalInputNode;
+}
 
 class LocalTrackView : public BaseTrackView
 {
@@ -27,7 +31,7 @@ public:
         return getTrackID();
     }
 
-    Audio::LocalInputAudioNode *getInputNode() const;
+    Audio::LocalInputNode *getInputNode() const;
 
     virtual void setUnlightStatus(bool unlighted);
 
@@ -43,7 +47,7 @@ public:
     void initializeBoostButtons(Boost boostValue);
 
 protected:
-    Audio::LocalInputAudioNode *inputNode;
+    Audio::LocalInputNode *inputNode;
 
 private:
     bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;

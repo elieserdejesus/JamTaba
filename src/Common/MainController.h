@@ -14,7 +14,7 @@
 #include "audio/RoomStreamerNode.h"
 #include "midi/MidiDriver.h"
 #include "UploadIntervalData.h"
-#include "audio/core/AudioNode.h" //including InputTrackGroup
+#include "audio/core/LocalInputGroup.h"
 
 class MainWindow;
 
@@ -149,8 +149,8 @@ public:
 
     Geo::Location getGeoLocation(const QString &ip);
 
-    Audio::LocalInputAudioNode *getInputTrack(int localInputIndex);
-    virtual int addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode);
+    Audio::LocalInputNode *getInputTrack(int localInputIndex);
+    virtual int addInputTrackNode(Audio::LocalInputNode *inputTrackNode);
     void removeInputTrackNode(int inputTrackIndex);
 
     inline int getInputTracksCount() const
@@ -236,7 +236,7 @@ protected:
 
     Persistence::Settings settings;
 
-    QMap<int, Audio::LocalInputAudioNode *> inputTracks;
+    QMap<int, Audio::LocalInputNode *> inputTracks;
 
     virtual Controller::NinjamController *createNinjamController() = 0;
 
@@ -244,7 +244,7 @@ protected:
 
     virtual void setCSS(const QString &css) = 0;
 
-    virtual Midi::MidiBuffer pullMidiBuffer() = 0;
+    virtual Midi::MidiMessageBuffer pullMidiBuffer() = 0;
 
     // map the input channel indexes to a GUID (used to upload audio to ninjam server)
     QMap<int, UploadIntervalData *> intervalsToUpload;

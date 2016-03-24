@@ -1,7 +1,8 @@
 #ifndef PLUGINS_H
 #define PLUGINS_H
 
-#include "AudioNode.h"
+//#include "AudioNode.h"
+#include "AudioNodeProcessor.h"
 
 class QDialog;
 
@@ -50,7 +51,7 @@ public:
     explicit JamtabaDelay(int sampleRate);
     ~JamtabaDelay();
     virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
-                         const Midi::MidiBuffer &midiBuffer);
+                         const Midi::MidiMessageBuffer &midiBuffer);
     void setDelayTime(int delayTimeInMs);
     void setFeedback(float feedback);
     void setLevel(float level);

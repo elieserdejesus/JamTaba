@@ -103,7 +103,7 @@ SamplesBuffer *MetronomeTrackNode::getBuffer(int beat)
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MetronomeTrackNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
-                                          int SampleRate, const Midi::MidiBuffer &midiBuffer)
+                                          int SampleRate, const Midi::MidiMessageBuffer &midiBuffer)
 {
     if (samplesPerBeat <= 0)
         return;

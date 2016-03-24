@@ -69,14 +69,24 @@ public:
     virtual bool start() = 0;
     virtual void release() = 0;
 
-    inline ChannelRange getSelectedInputs() const
+    inline int getInputsCount() const
     {
-        return globalInputRange;
+        return globalInputRange.getChannels();
     }
 
-    inline ChannelRange getSelectedOutputs() const
+    inline int getOutputsCount() const
     {
-        return globalOutputRange;
+        return globalOutputRange.getChannels();
+    }
+
+    inline int getFirstSelectedInput() const
+    {
+        return globalInputRange.getFirstChannel();
+    }
+
+    inline int getFirstSelectedOutput() const
+    {
+        return globalOutputRange.getFirstChannel();
     }
 
     virtual inline int getSampleRate() const

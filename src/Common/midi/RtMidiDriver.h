@@ -20,7 +20,7 @@ public:
     bool hasInputDevices() const override;
     int getMaxInputDevices() const override;
     QString getInputDeviceName(uint index) const override;
-    MidiBuffer getBuffer() override;
+    MidiMessageBuffer getBuffer() override;
 
 private:
     QList<RtMidiIn *> midiStreams;

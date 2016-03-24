@@ -19,7 +19,7 @@ public:
     explicit AbstractMp3Streamer(Audio::Mp3Decoder *decoder);
     ~AbstractMp3Streamer();
     virtual void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
-                                  int sampleRate, const Midi::MidiBuffer &midiBuffer);
+                                  int sampleRate, const Midi::MidiMessageBuffer &midiBuffer);
     virtual void stopCurrentStream();
     virtual void setStreamPath(const QString &streamPath);
     inline bool isStreaming() const
@@ -62,7 +62,7 @@ public:
     ~NinjamRoomStreamerNode();
 
     virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                                  const Midi::MidiBuffer &midiBuffer);
+                                  const Midi::MidiMessageBuffer &midiBuffer);
     virtual bool needResamplingFor(int targetSampleRate) const;
 
     inline bool isBuffering() const override { return buffering; }
@@ -91,26 +91,10 @@ public:
     explicit AudioFileStreamerNode(const QString &file);
     ~AudioFileStreamerNode();
     virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                                  const Midi::MidiBuffer &midiBuffer);
+                                  const Midi::MidiMessageBuffer &midiBuffer);
 };
 
 // ++++++++++++++++++++++
-
-class TestStreamerNode : public AbstractMp3Streamer
-{
-private:
-    OscillatorAudioNode *oscilator;
-    bool playing;
-protected:
-    void initialize(const QString &streamPath);
-public:
-    TestStreamerNode(int sampleRate);
-    ~TestStreamerNode();
-    void stopCurrentStream();
-    void setStreamPath(const QString &streamPath);
-    virtual void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
-                                  int sampleRate, const Midi::MidiBuffer &midiBuffer);
-};
 }// namespace end
 
 #endif

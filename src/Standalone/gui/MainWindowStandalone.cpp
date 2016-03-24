@@ -160,12 +160,16 @@ void MainWindowStandalone::sanitizeSubchannelInputSelections(LocalTrackView *sub
 {
     int trackID = subChannelView->getInputIndex();
     if (subChannel.isMidi()) {
+        qint8 transpose = subChannel.transpose;
+        quint8 lowerNote = subChannel.lowerMidiNote;
+        quint8 higherNote = subChannel.higherMidiNote;
+
         if (midiDeviceIsValid(subChannel.midiDevice)) {
-            controller->setInputTrackToMIDI(trackID, subChannel.midiDevice, subChannel.midiChannel);
+            controller->setInputTrackToMIDI(trackID, subChannel.midiDevice, subChannel.midiChannel, transpose, lowerNote, higherNote);
         } else {
             if (controller->getMidiDriver()->hasInputDevices()) {
                 // use the first midi device and receiving from all channels
-                controller->setInputTrackToMIDI(trackID, 0, -1);
+                controller->setInputTrackToMIDI(trackID, 0, -1, transpose, lowerNote, higherNote);
             } else {
                 controller->setInputTrackToNoInput(trackID);
             }

@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include "PreferencesDialog.h"
 #include "LocalTrackView.h"
+#include "audio/core/LocalInputNode.h"
 #include "NinjamRoomWindow.h"
 #include "Highligther.h"
 #include "PrivateServerDialog.h"
@@ -121,7 +122,7 @@ Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
     foreach (LocalTrackGroupView *trackGroupView, localGroupChannels) {
         Channel channel(trackGroupView->getGroupName());
         foreach (LocalTrackView *trackView, trackGroupView->getTracks<LocalTrackView *>()) {
-            LocalInputAudioNode *inputNode = trackView->getInputNode();
+            LocalInputNode *inputNode = trackView->getInputNode();
             ChannelRange inputNodeRange = inputNode->getAudioInputRange();
             int firstInput = inputNodeRange.getFirstChannel();
             int channels = inputNodeRange.getChannels();
@@ -131,8 +132,11 @@ Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
             float boost = Utils::linearToDb(inputNode->getBoost());
             float pan = inputNode->getPan();
             bool muted = inputNode->isMuted();
+            qint8 transpose = inputNode->getTranspose();
+            quint8 lowerNote = inputNode->getMidiLowerNote();
+            quint8 higherNote = inputNode->getMidiHigherNote();
 
-            Subchannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted);
+            Subchannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted, transpose, lowerNote, higherNote);
             channel.subChannels.append(sub);
         }
         settings.channels.append(channel);

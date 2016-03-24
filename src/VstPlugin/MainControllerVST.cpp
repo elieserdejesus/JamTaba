@@ -1,6 +1,7 @@
 #include "MainControllerVST.h"
 #include "NinjamControllerVST.h"
 #include "midi/MidiDriver.h"
+#include "audio/core/LocalInputNode.h"
 #include "MainWindow.h"
 #include "Plugin.h"
 #include "log/Logging.h"
@@ -38,7 +39,7 @@ void MainControllerVST::resizePluginEditor(int newWidth, int newHeight)
 }
 
 // +++++++++++++++++++++++++++++++++++++
-int MainControllerVST::addInputTrackNode(Audio::LocalInputAudioNode *inputTrackNode)
+int MainControllerVST::addInputTrackNode(Audio::LocalInputNode *inputTrackNode)
 {
     int inputTrackID = MainController::addInputTrackNode(inputTrackNode);
 

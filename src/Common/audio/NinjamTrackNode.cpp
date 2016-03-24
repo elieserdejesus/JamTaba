@@ -65,7 +65,7 @@ int NinjamTrackNode::getFramesToProcess(int targetSampleRate, int outFrameLenght
 }
 
 void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
-                                       int sampleRate, const Midi::MidiBuffer &midiBuffer)
+                                       int sampleRate, const Midi::MidiMessageBuffer &midiBuffer)
 {
     if (!playing)
         return;

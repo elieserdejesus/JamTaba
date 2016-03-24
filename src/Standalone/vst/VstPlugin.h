@@ -22,7 +22,7 @@ public:
     ~VstPlugin();
 
     void process(const Audio::SamplesBuffer &vstInputArray, Audio::SamplesBuffer &outBuffer,
-                         const Midi::MidiBuffer &midiBuffer) override;
+                         const Midi::MidiMessageBuffer &midiBuffer) override;
     void openEditor(const QPoint &centerOfScreen) override;
     void closeEditor() override;
     bool load(QString path);
@@ -62,7 +62,7 @@ private:
     float **vstInputArray;
 
     // VstEvents* vstEvents;
-    void fillVstEventsList(const Midi::MidiBuffer &midiBuffer);
+    void fillVstEventsList(const Midi::MidiMessageBuffer &midiBuffer);
 
     template<int N>
     struct VSTEventBlock

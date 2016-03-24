@@ -8,13 +8,13 @@
 #include "audio/SamplesBufferResampler.h"
 
 namespace Midi {
-class MidiBuffer;
+class MidiMessageBuffer;
 }
 
 namespace Audio {
 class AudioNode;
 class SamplesBuffer;
-class LocalInputAudioNode;
+class LocalInputNode;
 
 class AudioMixer
 {
@@ -24,7 +24,7 @@ public:
     AudioMixer(int sampleRate);
     ~AudioMixer();
     void process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                 const Midi::MidiBuffer &midiBuffer, bool attenuateAfterSumming = false);
+                 const Midi::MidiMessageBuffer &midiBuffer, bool attenuateAfterSumming = false);
     void addNode(AudioNode *node);
     void removeNode(AudioNode *node);
 
