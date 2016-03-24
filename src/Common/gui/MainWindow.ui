@@ -115,7 +115,7 @@
                 <x>0</x>
                 <y>0</y>
                 <width>751</width>
-                <height>304</height>
+                <height>301</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -409,7 +409,7 @@
             <x>0</x>
             <y>0</y>
             <width>16</width>
-            <height>313</height>
+            <height>310</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -463,6 +463,7 @@
     <addaction name="actionMidiPreferences"/>
     <addaction name="actionVstPreferences"/>
     <addaction name="actionRecording"/>
+    <addaction name="actionMetronome"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -591,6 +592,11 @@
     <string>Current Version ...</string>
    </property>
   </action>
+  <action name="actionMetronome">
+   <property name="text">
+    <string>Metronome ...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -608,6 +614,7 @@
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>

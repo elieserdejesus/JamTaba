@@ -865,6 +865,8 @@ void MainWindow::openPreferencesDialog(QAction *action)
             initialTab = PreferencesDialog::TAB_MIDI;
         else if (action == ui.actionVstPreferences)
             initialTab = PreferencesDialog::TAB_VST;
+        else if (action == ui.actionMetronome)
+            initialTab = PreferencesDialog::TAB_METRONOME;
 
         stopCurrentRoomStream();
 

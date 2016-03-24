@@ -30,6 +30,7 @@ void MainWindowStandalone::setupShortcuts()
     ui.actionMidiPreferences->setShortcut(QKeySequence(Qt::Key_F6));
     ui.actionVstPreferences->setShortcut(QKeySequence(Qt::Key_F7));
     ui.actionRecording->setShortcut(QKeySequence(Qt::Key_F8));
+    ui.actionMetronome->setShortcut(QKeySequence(Qt::Key_F9));
     ui.actionUsersManual->setShortcut(QKeySequence(Qt::Key_F1));
     ui.actionQuit->setShortcut(QKeySequence(Qt::Key_Escape));
     ui.actionFullscreenMode->setShortcut(QKeySequence(Qt::Key_F11));

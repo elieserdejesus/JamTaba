@@ -20,7 +20,7 @@ public:
     virtual void initialize(int initialTab, const Persistence::Settings *settings);
 
     enum TAB {
-        TAB_AUDIO, TAB_MIDI, TAB_VST, TAB_RECORDING
+        TAB_AUDIO, TAB_MIDI, TAB_VST, TAB_RECORDING, TAB_METRONOME
     };
 
 signals:
