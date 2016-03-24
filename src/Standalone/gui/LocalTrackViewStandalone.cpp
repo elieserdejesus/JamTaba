@@ -28,7 +28,6 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
 
     midiToolsButton = createMidiToolsButton();
     mainLayout->addWidget(midiToolsButton, mainLayout->rowCount(), 0, 1, 2);
-    midiToolsButton->setVisible(getInputNode()->isMidi());
 
     this->inputTypeIconLabel = createInputTypeIconLabel(this);
     mainLayout->addWidget(inputTypeIconLabel, mainLayout->rowCount(), 0, 1, 2);
@@ -128,7 +127,8 @@ void LocalTrackViewStandalone::openMidiToolsDialog()
         Audio::LocalInputNode *inputNode = getInputNode();
         QString higherNote = getMidiNoteText(inputNode->getMidiHigherNote());
         QString lowerNote = getMidiNoteText(inputNode->getMidiLowerNote());
-        midiToolsDialog = new MidiToolsDialog(lowerNote, higherNote);
+        qint8 transpose = inputNode->getTranspose();
+        midiToolsDialog = new MidiToolsDialog(lowerNote, higherNote, transpose);
         connect(midiToolsDialog, &MidiToolsDialog::dialogClosed, this, &LocalTrackViewStandalone::onMidiToolsDialogClosed);
         connect(midiToolsDialog, &MidiToolsDialog::lowerNoteChanged, this, &LocalTrackViewStandalone::setMidiLowerNote);
         connect(midiToolsDialog, &MidiToolsDialog::higherNoteChanged, this, &LocalTrackViewStandalone::setMidiHigherNote);
@@ -449,7 +449,6 @@ void LocalTrackViewStandalone::setToNoInput()
 {
     if (inputNode) {
         inputNode->setToNoInput();
-        midiToolsButton->setVisible(false);
         refreshInputSelectionName();
     }
 }

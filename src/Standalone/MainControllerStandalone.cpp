@@ -135,11 +135,15 @@ bool MainControllerStandalone::inputIndexIsValid(int inputIndex)
 }
 
 void MainControllerStandalone::setInputTrackToMIDI(int localChannelIndex, int midiDevice,
-                                                   int midiChannel)
+                                                   int midiChannel, qint8 transpose,
+                                                   quint8 lowerNote, quint8 higherNote)
 {
     Audio::LocalInputNode *inputTrack = getInputTrack(localChannelIndex);
     if (inputTrack) {
         inputTrack->setMidiInputSelection(midiDevice, midiChannel);
+        inputTrack->setTranspose(transpose);
+        inputTrack->setMidiHigherNote(higherNote);
+        inputTrack->setMidiLowerNote(lowerNote);
         if (window)
             window->refreshTrackInputSelection(localChannelIndex);
         if (isPlayingInNinjamRoom()) {

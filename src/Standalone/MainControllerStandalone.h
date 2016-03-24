@@ -73,7 +73,7 @@ public:
 
     void setInputTrackToMono(int localChannelIndex, int inputIndexInAudioDevice);
     void setInputTrackToStereo(int localChannelIndex, int firstInputIndex);
-    void setInputTrackToMIDI(int localChannelIndex, int midiDevice, int midiChannel);// use -1 to select all channels
+    void setInputTrackToMIDI(int localChannelIndex, int midiDevice, int midiChannel, qint8 transpose=0, quint8 lowerNote=0, quint8 higherNote=127);// use -1 to select all channels
     void setInputTrackToNoInput(int localChannelIndex);
 
     bool isUsingNullAudioDriver() const;

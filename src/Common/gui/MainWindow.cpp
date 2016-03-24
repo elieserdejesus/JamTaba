@@ -132,8 +132,11 @@ Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
             float boost = Utils::linearToDb(inputNode->getBoost());
             float pan = inputNode->getPan();
             bool muted = inputNode->isMuted();
+            qint8 transpose = inputNode->getTranspose();
+            quint8 lowerNote = inputNode->getMidiLowerNote();
+            quint8 higherNote = inputNode->getMidiHigherNote();
 
-            Subchannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted);
+            Subchannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted, transpose, lowerNote, higherNote);
             channel.subChannels.append(sub);
         }
         settings.channels.append(channel);

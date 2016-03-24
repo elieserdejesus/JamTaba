@@ -4,7 +4,7 @@
 
 #include "LocalTrackViewStandalone.h"
 
-MidiToolsDialog::MidiToolsDialog(const QString &lowerNote, const QString &higherNote) :
+MidiToolsDialog::MidiToolsDialog(const QString &lowerNote, const QString &higherNote, qint8 transpose) :
     QDialog(nullptr),
     ui(new Ui::MidiToolsDialog)
 {
@@ -18,6 +18,7 @@ MidiToolsDialog::MidiToolsDialog(const QString &lowerNote, const QString &higher
 
     ui->textFieldHigherNote->setValidator(validator);
     ui->textFieldLowerNote->setValidator(validator);
+    ui->spinBoxTranspose->setValue(transpose);
 
     connect(ui->textFieldHigherNote, SIGNAL(editingFinished()), this, SLOT(higherNoteEditionFinished()));
     connect(ui->textFieldLowerNote, SIGNAL(editingFinished()), this, SLOT(lowerNoteEditionFinished()));

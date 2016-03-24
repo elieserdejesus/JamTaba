@@ -13,7 +13,7 @@ class MidiToolsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit MidiToolsDialog(const QString &lowerNote, const QString &higherNote);
+    explicit MidiToolsDialog(const QString &lowerNote, const QString &higherNote, qint8 transpose);
     ~MidiToolsDialog();
     void setLearnedMidiNote(const QString &learnedNote);
 signals:
