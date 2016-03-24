@@ -67,7 +67,10 @@ MidiToolsDialog QGroupBox{
 }
 */
 
-QMessageBox, QInputDialog, PluginScanDialog{
+QMessageBox,
+QInputDialog,
+PluginScanDialog,
+MidiToolsDialog{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop:0 rgb(250, 250, 250),
         stop:1 rgba(180, 180, 180));
@@ -940,7 +943,7 @@ QPushButton{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop:0 white,
         stop:0.2 rgba(255, 255, 255, 180),
-        stop:0.7 rgba(255, 255, 255, 180),
+        stop:0.85 rgba(255, 255, 255, 180),
         stop:1 rgba(255,255, 255, 40));
     color: rgb(60, 60, 60);
 }
