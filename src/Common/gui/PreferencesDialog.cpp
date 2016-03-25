@@ -87,6 +87,7 @@ void PreferencesDialog::selectPrimaryBeatAudioFile()
     QString dir = ".";
     QString filePath = QFileDialog::getOpenFileName(this, caption, dir, filter);
     if (!filePath.isNull()) {
+        ui->textFieldPrimaryBeat->setText(filePath);
         emit metronomePrimaryBeatAudioFileSelected(filePath);
     }
 }
@@ -98,6 +99,7 @@ void PreferencesDialog::selectSecondaryBeatAudioFile()
     QString dir = ".";
     QString filePath = QFileDialog::getOpenFileName(this, caption, dir, filter);
     if (!filePath.isNull()) {
+        ui->textFieldSecondaryBeat->setText(filePath);
         emit metronomeSecondaryBeatAudioFileSelected(filePath);
     }
 }

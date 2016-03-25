@@ -387,7 +387,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-pa
     border-radius: 2px;
     padding: 2px;
     background: rgb(0, 0, 0, 40);
-    color: rgb(0, 0, 0);
+    color: rgb(0, 0, 0, 50);
     border: none;
 }
 
