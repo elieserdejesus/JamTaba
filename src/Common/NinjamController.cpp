@@ -12,12 +12,15 @@
 #include "audio/NinjamTrackNode.h"
 #include "persistence/Settings.h"
 #include "audio/MetronomeTrackNode.h"
+#include "audio/file/FileReaderFactory.h"
+#include "audio/file/FileReader.h"
 
 #include <cmath>
 #include <cassert>
 #include <QMutexLocker>
 #include <QDebug>
 #include <QThread>
+#include <QFileInfo>
 
 #include "audio/SamplesBufferRecorder.h"
 #include "Utils.h"
@@ -273,7 +276,12 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Audio::MetronomeTrackNode* NinjamController::createMetronomeTrackNode(int sampleRate){
-    return new Audio::MetronomeTrackNode(":/click.wav", sampleRate);
+    QString audioFile = ":/click.wav";
+    std::unique_ptr<Audio::FileReader> reader = Audio::FileReaderFactory::createFileReader(audioFile);
+    Audio::SamplesBuffer buffer(2);
+    quint32 audioFileSampleRate;
+    reader->read(audioFile, buffer, audioFileSampleRate);
+    return new Audio::MetronomeTrackNode(buffer, buffer);
 }
 
 //+++++++++++++++
@@ -285,15 +293,17 @@ void NinjamController::stop(bool emitDisconnectedingSignal){
         //store metronome settings
         Audio::AudioNode* metronomeTrack = mainController->getTrackNode(METRONOME_TRACK_ID);
         if(metronomeTrack){
-            //  std::pow( metronomeTrack->getGain(), 1.0/4);//4th root - save the metronome gain in linear
-            float correctedGain = Utils::poweredGainToLinear(metronomeTrack->getGain());
-            mainController->storeMetronomeSettings(correctedGain, metronomeTrack->getPan(), metronomeTrack->isMuted());
+            float metronomeGain = Utils::poweredGainToLinear(metronomeTrack->getGain());
+            float metronomePan = metronomeTrack->getPan();
+            bool metronomeIsMuted = metronomeTrack->isMuted();
+
+            mainController->storeMetronomeSettings(metronomeGain, metronomePan, metronomeIsMuted);
             mainController->removeTrack(METRONOME_TRACK_ID);//remove metronome
         }
+
         //clear all tracks
         foreach(NinjamTrackNode* trackNode, trackNodes.values()){
             mainController->removeTrack(trackNode->getID());
-            //trackNode->deactivate();
         }
         trackNodes.clear();
     }

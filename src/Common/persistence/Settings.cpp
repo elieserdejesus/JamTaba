@@ -196,6 +196,9 @@ void MetronomeSettings::read(const QJsonObject &in)
     pan = getValueFromJson(in, "pan", (float)0);
     gain = getValueFromJson(in, "gain", (float)1);
     muted = getValueFromJson(in, "muted", false);
+    usingCustomSounds = getValueFromJson(in, "customSounds", false);
+    primaryBeatAudioFile = getValueFromJson(in, "primaryBeatAudioFile", QString(""));
+    secondaryBeatAudioFile = getValueFromJson(in, "secondaryBeatAudioFile", QString(""));
 }
 
 void MetronomeSettings::write(QJsonObject &out) const
@@ -203,6 +206,9 @@ void MetronomeSettings::write(QJsonObject &out) const
     out["pan"] = pan;
     out["gain"] = gain;
     out["muted"] = muted;
+    out["customSounds"] = usingCustomSounds;
+    out["primaryBeatAudioFile"] = primaryBeatAudioFile;
+    out["secondaryBeatAudioFile"] = secondaryBeatAudioFile;
 }
 
 // +++++++++++++++++++++++++++
@@ -503,6 +509,9 @@ void Settings::setMetronomeSettings(float gain, float pan, bool muted)
     metronomeSettings.pan = pan;
     metronomeSettings.gain = gain;
     metronomeSettings.muted = muted;
+    metronomeSettings.usingCustomSounds = false;
+    metronomeSettings.primaryBeatAudioFile = "";
+    metronomeSettings.secondaryBeatAudioFile = "";
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

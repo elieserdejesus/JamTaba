@@ -9,7 +9,7 @@ class SamplesBuffer;
 class MetronomeTrackNode : public Audio::AudioNode
 {
 public:
-    MetronomeTrackNode(const QString &metronomeWaveFile, int localSampleRate);
+    MetronomeTrackNode(const Audio::SamplesBuffer &firstBeatSamples, const Audio::SamplesBuffer &secondaryBeatSamples);
 
     ~MetronomeTrackNode();
     virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int SampleRate,
@@ -20,25 +20,16 @@ public:
 
     void setBeatsPerAccent(int beatsPerAccent); // pass zero to turn off accents
 
-    inline bool isPlayingAccents() const
-    {
-        return beatsPerAccent > 0;
-    }
+    bool isPlayingAccents() const;
 
-    virtual int getSampleRate() const
-    {
-        return waveFileSampleRate;
-    }
+    int getBeatsPerAccent() const;
 
-    inline int getBeatsPerAccent() const
-    {
-        return beatsPerAccent;
-    }
+    void setPrimaryBeatSamples(const Audio::SamplesBuffer &firstBeatSamples);
+    void setSecondaryBeatSamples(const Audio::SamplesBuffer &secondaryBeatSamples);
 
 private:
-    SamplesBuffer *clickSoundBuffer;
-    SamplesBuffer *firstIntervalBeatBuffer;
-    SamplesBuffer *firstMeasureBeatBuffer;
+    SamplesBuffer secondaryBeatBuffer;
+    SamplesBuffer firstBeatBuffer;
 
     long samplesPerBeat;
     long intervalPosition;
@@ -48,8 +39,19 @@ private:
 
     quint32 waveFileSampleRate;// metronome wav file sample rate
     SamplesBuffer *readWavFile(const QString &fileName, quint32 &sampleRate);
-    SamplesBuffer *getBuffer(int beat);// return the correct buffer to play in each beat
+    SamplesBuffer *getSamplesBuffer(int beat);// return the correct buffer to play in each beat
 };
+
+inline bool MetronomeTrackNode::isPlayingAccents() const
+{
+    return beatsPerAccent > 0;
 }
+
+inline int MetronomeTrackNode::getBeatsPerAccent() const
+{
+    return beatsPerAccent;
+}
+
+}//namespace
 
 #endif // METRONOMETRACKNODE_H

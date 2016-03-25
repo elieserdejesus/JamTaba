@@ -34,7 +34,7 @@ CONFIG += c++11
 
 PRECOMPILED_HEADER += PreCompiledHeaders.h
 
-HEADERS += midi/MidiDriver.h
+HEADERS += midi/MidiDriver.h \
 HEADERS += midi/MidiMessage.h
 HEADERS += midi/MidiMessageBuffer.h
 HEADERS += audio/core/AudioDriver.h
@@ -55,6 +55,9 @@ HEADERS += audio/SamplesBufferResampler.h
 HEADERS += audio/SamplesBufferRecorder.h
 HEADERS += audio/codec.h
 HEADERS += audio/Resampler.h
+HEADERS += audio/file/FileReader.h
+HEADERS += audio/file/FileReaderFactory.h
+HEADERS += audio/file/WaveFileReader.h
 HEADERS += recorder/JamRecorder.h
 HEADERS += recorder/ReaperProjectGenerator.h
 HEADERS += loginserver/LoginService.h
@@ -135,6 +138,8 @@ SOURCES += audio/vorbis/VorbisDecoder.cpp
 SOURCES += audio/vorbis/VorbisEncoder.cpp
 SOURCES += audio/core/AudioPeak.cpp
 SOURCES += audio/Resampler.cpp
+SOURCES += audio/file/FileReaderFactory.cpp
+SOURCES += audio/file/WaveFileReader.cpp
 SOURCES += recorder/JamRecorder.cpp
 SOURCES += recorder/ReaperProjectGenerator.cpp
 SOURCES += ninjam/Server.cpp

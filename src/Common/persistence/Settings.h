@@ -82,6 +82,9 @@ public:
     float pan;
     float gain;
     bool muted;
+    bool usingCustomSounds;
+    QString primaryBeatAudioFile;
+    QString secondaryBeatAudioFile;
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++++++

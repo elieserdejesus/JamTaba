@@ -291,9 +291,9 @@ void MainController::storePrivateServerSettings(const QString &server, int serve
     settings.setPrivateServerData(server, serverPort, password);
 }
 
-void MainController::storeMetronomeSettings(float metronomeGain, float metronomePan,
-                                            bool metronomeMuted)
+void MainController::storeMetronomeSettings(float metronomeGain, float metronomePan, bool metronomeMuted)
 {
+
     settings.setMetronomeSettings(metronomeGain, metronomePan, metronomeMuted);
 }
 
