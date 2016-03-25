@@ -1,24 +1,8 @@
 #include "MetronomeTrackNode.h"
 #include "audio/core/AudioDriver.h"
 #include "audio/core/SamplesBuffer.h"
-#include "audio/SamplesBufferResampler.h"
-#include "Resampler.h"
 
 using namespace Audio;
-
-SamplesBuffer *createResampledBuffer(const SamplesBuffer &buffer, int originalSampleRate,
-                                     int finalSampleRate)
-{
-    int finalSize = (double)finalSampleRate/originalSampleRate * buffer.getFrameLenght();
-    int channels = buffer.getChannels();
-    SamplesBuffer *newBuffer = new SamplesBuffer(channels, finalSize);
-    for (int c = 0; c < channels; ++c) {
-        ResamplerTest resampler;
-        resampler.process(buffer.getSamplesArray(c),
-                          buffer.getFrameLenght(), newBuffer->getSamplesArray(c), finalSize);
-    }
-    return newBuffer;
-}
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MetronomeTrackNode::MetronomeTrackNode(const SamplesBuffer &firstBeatSamples, const SamplesBuffer &secondaryBeatSamples) :
@@ -48,23 +32,6 @@ void MetronomeTrackNode::setSecondaryBeatSamples(const SamplesBuffer &secondaryB
 {
     secondaryBeatBuffer.set(secondaryBeatSamples);
 }
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//void MetronomeTrackNode::createDefaultMetronomeSounds()
-//{
-//    secondaryBeatBuffer = readWavFile(metronomeWaveFile, this->waveFileSampleRate);// the last param value will be changed by readWavFile method
-//    if (waveFileSampleRate != (uint)localSampleRate) {
-//        SamplesBuffer *temp = secondaryBeatBuffer;
-//        secondaryBeatBuffer = createResampledBuffer(*secondaryBeatBuffer, waveFileSampleRate,
-//                                                 localSampleRate);
-//        delete temp;
-//    }
-
-//    firstBeatBuffer = createResampledBuffer(*secondaryBeatBuffer, localSampleRate,
-//                                                    localSampleRate * 0.5);
-//    firstMeasureBeatBuffer = createResampledBuffer(*secondaryBeatBuffer, localSampleRate,
-//                                                   localSampleRate * 0.75);
-//}
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MetronomeTrackNode::setBeatsPerAccent(int beatsPerAccent)

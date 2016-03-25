@@ -14,6 +14,8 @@
 #include "audio/MetronomeTrackNode.h"
 #include "audio/file/FileReaderFactory.h"
 #include "audio/file/FileReader.h"
+#include "MetronomeUtils.h"
+#include "audio/Resampler.h"
 
 #include <cmath>
 #include <cassert>
@@ -276,12 +278,10 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Audio::MetronomeTrackNode* NinjamController::createMetronomeTrackNode(int sampleRate){
-    QString audioFile = ":/click.wav";
-    std::unique_ptr<Audio::FileReader> reader = Audio::FileReaderFactory::createFileReader(audioFile);
-    Audio::SamplesBuffer buffer(2);
-    quint32 audioFileSampleRate;
-    reader->read(audioFile, buffer, audioFileSampleRate);
-    return new Audio::MetronomeTrackNode(buffer, buffer);
+    Audio::SamplesBuffer firstBeatBuffer(2);
+    Audio::SamplesBuffer secondaryBeatBuffer(2);
+    MetronomeUtils::createDefaultSounds(firstBeatBuffer, secondaryBeatBuffer, sampleRate);
+    return new Audio::MetronomeTrackNode(firstBeatBuffer, secondaryBeatBuffer);
 }
 
 //+++++++++++++++

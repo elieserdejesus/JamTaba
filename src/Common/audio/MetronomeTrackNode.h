@@ -37,8 +37,6 @@ private:
     int currentBeat;
     int beatsPerAccent;
 
-    quint32 waveFileSampleRate;// metronome wav file sample rate
-    SamplesBuffer *readWavFile(const QString &fileName, quint32 &sampleRate);
     SamplesBuffer *getSamplesBuffer(int beat);// return the correct buffer to play in each beat
 };
 
