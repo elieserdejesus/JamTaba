@@ -14,6 +14,25 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint & Qt::WA_DeleteOnClose);
 
     ui->comboLastOutput->setEnabled(false);
+
+    connect(ui->groupBoxCustomSounds, SIGNAL(toggled(bool)), this, SLOT(refreshCustomMetronomeControlsStyleSheet()));
+
+    ui->groupBoxCustomSounds->setChecked(false);
+}
+
+void PreferencesDialog::refreshCustomMetronomeControlsStyleSheet()
+{
+    style()->unpolish(ui->groupBoxCustomSounds);
+    style()->unpolish(ui->textFieldPrimaryBeat);
+    style()->unpolish(ui->textFieldSecondaryBeat);
+    style()->unpolish(ui->browsePrimaryBeatButton);
+    style()->unpolish(ui->browseSecondaryBeatButton);
+
+    style()->polish(ui->groupBoxCustomSounds);
+    style()->polish(ui->textFieldPrimaryBeat);
+    style()->polish(ui->textFieldSecondaryBeat);
+    style()->polish(ui->browsePrimaryBeatButton);
+    style()->polish(ui->browseSecondaryBeatButton);
 }
 
 void PreferencesDialog::initialize(int initialTab, const Persistence::Settings *settings)
@@ -32,6 +51,9 @@ void PreferencesDialog::setupSignals()
     connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this,
             SIGNAL(multiTrackRecordingStatusChanged(bool)));
     connect(ui->browseRecPathButton, SIGNAL(clicked(bool)), this, SLOT(selectRecordingPath()));
+
+    connect(ui->browsePrimaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(selectPrimaryBeatAudioFile()));
+    connect(ui->browseSecondaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(selectSecondaryBeatAudioFile()));
 }
 
 void PreferencesDialog::populateAllTabs()
@@ -56,6 +78,28 @@ void PreferencesDialog::populateRecordingTab()
 PreferencesDialog::~PreferencesDialog()
 {
     delete ui;
+}
+
+void PreferencesDialog::selectPrimaryBeatAudioFile()
+{
+    QString caption = "Choosing Primary beat audio file...";
+    QString filter = "Audio Files (*.wav)";
+    QString dir = ".";
+    QString filePath = QFileDialog::getOpenFileName(this, caption, dir, filter);
+    if (!filePath.isNull()) {
+        emit metronomePrimaryBeatAudioFileSelected(filePath);
+    }
+}
+
+void PreferencesDialog::selectSecondaryBeatAudioFile()
+{
+    QString caption = "Choosing Secondary beat audio file...";
+    QString filter = "Audio Files (*.wav)";
+    QString dir = ".";
+    QString filePath = QFileDialog::getOpenFileName(this, caption, dir, filter);
+    if (!filePath.isNull()) {
+        emit metronomeSecondaryBeatAudioFileSelected(filePath);
+    }
 }
 
 void PreferencesDialog::selectRecordingPath()

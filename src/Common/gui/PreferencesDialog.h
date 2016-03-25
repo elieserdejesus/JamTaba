@@ -25,6 +25,8 @@ public:
 
 signals:
     void recordingPathSelected(const QString &newRecordingPath);
+    void metronomePrimaryBeatAudioFileSelected(const QString &filePath);
+    void metronomeSecondaryBeatAudioFileSelected(const QString &filePath);
     void multiTrackRecordingStatusChanged(bool recording);
 
 protected slots:
@@ -32,6 +34,12 @@ protected slots:
 
 private slots:
     void selectRecordingPath();
+    void selectPrimaryBeatAudioFile();
+    void selectSecondaryBeatAudioFile();
+
+    void refreshCustomMetronomeControlsStyleSheet();
+private:
+    QString selectAudioFile(QString caption, QString initialDir);
 
 protected:
     Ui::IODialog *ui;

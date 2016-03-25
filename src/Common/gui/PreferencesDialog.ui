@@ -580,11 +580,14 @@
          <property name="title">
           <string>Custom Metronome Sounds</string>
          </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
          <property name="checkable">
           <bool>true</bool>
          </property>
          <property name="checked">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_8">
           <item>
@@ -602,9 +605,15 @@
                <widget class="QLineEdit" name="textFieldPrimaryBeat"/>
               </item>
               <item>
-               <widget class="QPushButton" name="buttonBrowsePrimaryBeat">
+               <widget class="QPushButton" name="browsePrimaryBeatButton">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
                 <property name="text">
                  <string>Browse ...</string>
+                </property>
+                <property name="autoDefault">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
@@ -623,9 +632,12 @@
                <widget class="QLineEdit" name="textFieldSecondaryBeat"/>
               </item>
               <item>
-               <widget class="QPushButton" name="buttonBrowseSecondaryBeat">
+               <widget class="QPushButton" name="browseSecondaryBeatButton">
                 <property name="text">
                  <string>Browse ...</string>
+                </property>
+                <property name="autoDefault">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
