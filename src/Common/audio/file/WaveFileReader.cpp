@@ -168,9 +168,6 @@ void WaveFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuff
         for (int c = 0; c < channels; ++c) {
             float sample = sampleExtractor->nextSample();
             outBuffer.set(c, s, sample);
-            if (s < 10){
-                qDebug() << (s+1) << " " << sample;
-            }
         }
     }
 }

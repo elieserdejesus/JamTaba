@@ -472,7 +472,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>375</width>
+               <width>98</width>
                <height>45</height>
               </rect>
              </property>
@@ -646,6 +646,16 @@
            </layout>
           </item>
          </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Please use 16 bit audio files for metronome sounds!</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
         </widget>
        </item>
        <item>
