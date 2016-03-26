@@ -187,7 +187,10 @@ MetronomeSettings::MetronomeSettings() :
     SettingsObject("metronome"),
     pan(0),
     gain(1),
-    muted(false)
+    muted(false),
+    usingCustomSounds(false),
+    primaryBeatAudioFile(""),
+    secondaryBeatAudioFile("")
 {
 }
 
@@ -509,9 +512,27 @@ void Settings::setMetronomeSettings(float gain, float pan, bool muted)
     metronomeSettings.pan = pan;
     metronomeSettings.gain = gain;
     metronomeSettings.muted = muted;
-    metronomeSettings.usingCustomSounds = false;
-    metronomeSettings.primaryBeatAudioFile = "";
-    metronomeSettings.secondaryBeatAudioFile = "";
+}
+
+void Settings::setUsingCustomMetronomeSounds(bool usingCustomSounds)
+{
+    metronomeSettings.usingCustomSounds = usingCustomSounds;
+}
+
+void Settings::setMetronomeFirstBeatAudioFile(const QString &filePath)
+{
+    if (QFileInfo(filePath).exists())
+        metronomeSettings.primaryBeatAudioFile = filePath;
+    else
+        metronomeSettings.primaryBeatAudioFile = "";
+}
+
+void Settings::setMetronomeSecondaryBeatAudioFile(const QString &filePath)
+{
+    if (QFileInfo(filePath).exists())
+        metronomeSettings.secondaryBeatAudioFile = filePath;
+    else
+        metronomeSettings.secondaryBeatAudioFile = "";
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

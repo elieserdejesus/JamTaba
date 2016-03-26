@@ -27,19 +27,24 @@ signals:
     void recordingPathSelected(const QString &newRecordingPath);
     void metronomePrimaryBeatAudioFileSelected(const QString &filePath);
     void metronomeSecondaryBeatAudioFileSelected(const QString &filePath);
+    void usingMetronomeCustomSoundsStatusChanged(bool usingCustomSounds);
     void multiTrackRecordingStatusChanged(bool recording);
 
 protected slots:
     virtual void selectTab(int index) = 0;
 
 private slots:
-    void selectRecordingPath();
-    void selectPrimaryBeatAudioFile();
-    void selectSecondaryBeatAudioFile();
+    void openRecordingPathBrowser();
+    void openPrimaryBeatAudioFileBrowser();
+    void openSecondaryBeatAudioFileBrowser();
 
-    void refreshCustomMetronomeControlsStyleSheet();
+    void emitFirstBeatAudioFileChanged();
+    void emitSecondaryBeatAudioFileChanged();
+
+    void toggleMetronomeCustomSounds(bool status);
 private:
     QString selectAudioFile(QString caption, QString initialDir);
+    void refreshMetronomeControlsStyleSheet();
 
 protected:
     Ui::IODialog *ui;
@@ -47,6 +52,9 @@ protected:
     // recording
     void populateRecordingTab();
     void selectRecordingTab();
+
+    //metronome
+    void populateMetronomeTab();
 
     virtual void setupSignals();
     virtual void populateAllTabs();

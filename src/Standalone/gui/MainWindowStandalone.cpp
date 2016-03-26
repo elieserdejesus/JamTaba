@@ -307,14 +307,12 @@ PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
                                                                           controller->getAudioDriver(),
                                                                           controller->getMidiDriver());
 
-    // setup signals related with recording
+    // setup signals related with recording and metronome preferences
     MainWindow::setupPreferencesDialogSignals(dialog);
 
     // setup standalone specific signals
-    connect(dialog,
-            SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int)),
-            this,
-            SLOT(setGlobalPreferences(QList<bool>, int, int, int, int, int)));
+    connect(dialog, SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int)),
+            this, SLOT(setGlobalPreferences(QList<bool>, int, int, int, int, int)));
 
     connect(dialog, SIGNAL(rejected()), this, SLOT(restartAudioAndMidi()));
 

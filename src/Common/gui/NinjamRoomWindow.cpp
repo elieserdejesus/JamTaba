@@ -36,6 +36,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
                                    Controller::MainController *mainController) :
     QWidget(parent),
     ui(new Ui::NinjamRoomWindow),
+    mainWindow(parent),
     mainController(mainController),
     chatPanel(new ChatPanel(mainController->getBotNames(), &usersColorsPool)),
     fullViewMode(true),
@@ -169,21 +170,29 @@ NinjamPanel *NinjamRoomWindow::createNinjamPanel()
     panel->setMuteButtonStatus(initialMetronomeMuteStatus);
     panel->setIntervalShape(mainController->getSettings().getIntervalProgressShape());
 
-    QObject::connect(panel, SIGNAL(bpiComboActivated(QString)), this,
+    connect(panel, SIGNAL(bpiComboActivated(QString)), this,
                      SLOT(setNewBpi(QString)));
-    QObject::connect(panel, SIGNAL(bpmComboActivated(QString)), this,
+    connect(panel, SIGNAL(bpmComboActivated(QString)), this,
                      SLOT(setNewBpm(QString)));
-    QObject::connect(panel, SIGNAL(accentsComboChanged(int)), this,
+    connect(panel, SIGNAL(accentsComboChanged(int)), this,
                      SLOT(setNewBeatsPerAccent(int)));
 
-    QObject::connect(panel, SIGNAL(gainSliderChanged(int)), this,
+    connect(panel, SIGNAL(gainSliderChanged(int)), this,
                      SLOT(setMetronomeFaderPosition(int)));
-    QObject::connect(panel, SIGNAL(panSliderChanged(int)), this,
+    connect(panel, SIGNAL(panSliderChanged(int)), this,
                      SLOT(setMetronomePanSliderPosition(int)));
-    QObject::connect(panel, SIGNAL(muteButtonClicked()), this, SLOT(toggleMetronomeMuteStatus()));
-    QObject::connect(panel, SIGNAL(soloButtonClicked()), this, SLOT(toggleMetronomeSoloStatus()));
+    connect(panel, SIGNAL(muteButtonClicked()), this, SLOT(toggleMetronomeMuteStatus()));
+    connect(panel, SIGNAL(soloButtonClicked()), this, SLOT(toggleMetronomeSoloStatus()));
+    connect(panel, SIGNAL(preferencesButtonClicked()), this, SLOT(showMetronomePreferences()));
 
     return panel;
+}
+
+void NinjamRoomWindow::showMetronomePreferences()
+{
+    Q_ASSERT(mainWindow);
+
+    mainWindow->showMetronomePreferencesDialog();
 }
 
 // +++++++++=

@@ -28,9 +28,9 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     ui->comboBpi->setCompleter(0);// disabling completer
     ui->comboBpm->setCompleter(0);// disabling completer
 
-    QObject::connect(ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)), this,
+    connect(ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)), this,
                      SLOT(updateAccentsStatus(int)));
-    QObject::connect(ui->comboShape, SIGNAL(currentIndexChanged(int)), this,
+    connect(ui->comboShape, SIGNAL(currentIndexChanged(int)), this,
                      SLOT(updateIntervalProgressShape(int)));
 
     buildShapeModel();
@@ -38,17 +38,18 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     ui->levelSlider->installEventFilter(this);
     ui->panSlider->installEventFilter(this);
 
-    QObject::connect(ui->comboBpi, SIGNAL(activated(QString)), this,
+    connect(ui->comboBpi, SIGNAL(activated(QString)), this,
                      SIGNAL(bpiComboActivated(QString)));
-    QObject::connect(ui->comboBpm, SIGNAL(activated(QString)), this,
+    connect(ui->comboBpm, SIGNAL(activated(QString)), this,
                      SIGNAL(bpmComboActivated(QString)));
-    QObject::connect(ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)),
+    connect(ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)),
                      SIGNAL(accentsComboChanged(int)));
-    QObject::connect(ui->levelSlider, SIGNAL(valueChanged(int)), this, SIGNAL(gainSliderChanged(
+    connect(ui->levelSlider, SIGNAL(valueChanged(int)), this, SIGNAL(gainSliderChanged(
                                                                                   int)));
-    QObject::connect(ui->panSlider, SIGNAL(valueChanged(int)), this, SIGNAL(panSliderChanged(int)));
-    QObject::connect(ui->muteButton, SIGNAL(clicked(bool)), this, SIGNAL(muteButtonClicked()));
-    QObject::connect(ui->soloButton, SIGNAL(clicked(bool)), this, SIGNAL(soloButtonClicked()));
+    connect(ui->panSlider, SIGNAL(valueChanged(int)), this, SIGNAL(panSliderChanged(int)));
+    connect(ui->muteButton, SIGNAL(clicked(bool)), this, SIGNAL(muteButtonClicked()));
+    connect(ui->soloButton, SIGNAL(clicked(bool)), this, SIGNAL(soloButtonClicked()));
+    connect(ui->preferencesButton, SIGNAL(clicked(bool)), this, SIGNAL(preferencesButtonClicked()));
 
     ui->peakMeterLeft->setOrientation(Qt::Horizontal);
     ui->peakMeterRight->setOrientation(Qt::Horizontal);

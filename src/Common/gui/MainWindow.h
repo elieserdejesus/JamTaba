@@ -35,11 +35,6 @@ public:
 
     virtual void initialize(); // this is overrided in inherited classes
 
-    void closeEvent(QCloseEvent *) override;
-    void changeEvent(QEvent *) override;
-    void timerEvent(QTimerEvent *) override;
-    void resizeEvent(QResizeEvent *) override;
-
     void detachMainController();
 
     virtual Persistence::LocalInputTrackSettings getInputsSettings() const;
@@ -83,6 +78,8 @@ public:
     void setTransmitingStatus(int channelID, bool xmitStatus);
 
     QStringList getChannelsNames() const;
+
+    void showMetronomePreferencesDialog();
 
 public slots:
     void enterInRoom(const Login::RoomInfo &roomInfo);
@@ -130,6 +127,11 @@ protected:
     virtual PreferencesDialog *createPreferencesDialog() = 0;
 
     virtual void setupPreferencesDialogSignals(PreferencesDialog *dialog);
+
+    void closeEvent(QCloseEvent *) override;
+    void changeEvent(QEvent *) override;
+    void timerEvent(QTimerEvent *) override;
+    void resizeEvent(QResizeEvent *) override;
 
 protected slots:
     void closeTab(int index);
@@ -202,6 +204,9 @@ private slots:
     //preferences dialog (these are just the common slots between Standalone and VST, the other slots are in MainWindowStandalone class)
     void setMultiTrackRecordingStatus(bool recording);
     void setRecordingPath(const QString &newRecordingPath);
+    void setUsingCustomMetronomeSoundsStatus(bool usingCustomSounds);
+    void setMetronomeFirstBeatAudioFile(const QString &firstBeatFile);
+    void setMetronomeSecondaryBeatAudioFile(const QString &secondaryBeatFile);
 
     void initializeLocalInputChannels();
 private:

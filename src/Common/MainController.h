@@ -189,6 +189,23 @@ public:
 
     void storePrivateServerSettings(const QString &server, int serverPort, const QString &password);
 
+    inline bool isUsingCustomMetronomeSounds() const
+    {
+        return settings.isUsingCustomMetronomeSounds();
+    }
+
+    void setUsingCustomMetronomeSounds(bool usingCustomSounds);
+    void setMetronomeFirstBeatFile(const QString &firstBeatFile);
+    void setMetronomeSecondaryBeatFile(const QString &secondaryBeatFile);
+
+    inline QString getMetronomeFirstBeatFile() const{
+        return settings.getMetronomeFirstBeatFile();
+    }
+
+    inline QString getMetronomeSecondaryBeatFile() const{
+        return settings.getMetronomeSecondaryBeatFile();
+    }
+
     void saveEncodedAudio(const QString &userName, quint8 channelIndex, const QByteArray &encodedAudio);
 
     inline Audio::AbstractMp3Streamer *getRoomStreamer() const
@@ -286,6 +303,9 @@ private:
     Persistence::UsersDataCache usersDataCache;
 
     int lastInputTrackID; //used to generate a unique key/ID for each input track
+
+
+    void recreateMetronome();
 
 protected slots:
 

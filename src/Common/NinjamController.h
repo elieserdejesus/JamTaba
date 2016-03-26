@@ -75,6 +75,8 @@ public:
         return preparedForTransmit;
     }
 
+    void recreateMetronome(int newSampleRate);
+
 signals:
     void currentBpiChanged(int newBpi);
     void currentBpmChanged(int newBpm);
@@ -96,6 +98,7 @@ signals:
 
     void preparingTransmission();// waiting for start transmission
     void preparedToTransmit(); // this signal is emmited one time, when Jamtaba is ready to transmit (after wait some complete itervals)
+
 private:
     Controller::MainController *mainController;
     Audio::MetronomeTrackNode *metronomeTrackNode;
@@ -131,7 +134,7 @@ private:
 
     static long generateNewTrackID();
 
-    static Audio::MetronomeTrackNode *createMetronomeTrackNode(int sampleRate);
+    Audio::MetronomeTrackNode *createMetronomeTrackNode(int sampleRate);
 
     QMap<int, VorbisEncoder *> encoders;
     VorbisEncoder *getEncoder(quint8 channelIndex);

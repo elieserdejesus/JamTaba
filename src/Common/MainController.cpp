@@ -297,6 +297,32 @@ void MainController::storeMetronomeSettings(float metronomeGain, float metronome
     settings.setMetronomeSettings(metronomeGain, metronomePan, metronomeMuted);
 }
 
+void MainController::setUsingCustomMetronomeSounds(bool usingCustomSounds)
+{
+    settings.setUsingCustomMetronomeSounds(usingCustomSounds);
+    recreateMetronome();
+}
+
+void MainController::setMetronomeFirstBeatFile(const QString &firstBeatFile)
+{
+    settings.setMetronomeFirstBeatAudioFile(firstBeatFile);
+    recreateMetronome();
+}
+
+void MainController::setMetronomeSecondaryBeatFile(const QString &secondaryBeatFile)
+{
+    settings.setMetronomeSecondaryBeatAudioFile(secondaryBeatFile);
+    recreateMetronome();
+}
+
+
+void MainController::recreateMetronome()
+{
+    if (isPlayingInNinjamRoom()) {
+        ninjamController->recreateMetronome(getSampleRate());
+    }
+}
+
 void MainController::storeIntervalProgressShape(int shape)
 {
     settings.setIntervalProgressShape(shape);
