@@ -289,6 +289,10 @@ Audio::MetronomeTrackNode* NinjamController::createMetronomeTrackNode(int sample
         QString secondaryBeatAudioFile = mainController->getMetronomeSecondaryBeatFile();
         MetronomeUtils::createCustomSounds(firstBeatAudioFile, secondaryBeatAudioFile, firstBeatBuffer, secondaryBeatBuffer, sampleRate);
     }
+
+    MetronomeUtils::removeSilenceInBufferStart(firstBeatBuffer);
+    MetronomeUtils::removeSilenceInBufferStart(secondaryBeatBuffer);
+
     return new Audio::MetronomeTrackNode(firstBeatBuffer, secondaryBeatBuffer);
 }
 

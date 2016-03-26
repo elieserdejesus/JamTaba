@@ -51,30 +51,11 @@ class SampleExtractor24Bits : public SampleExtractor
 
         float nextSample() override
         {
-            qint8 byte1, byte2, byte3;
-            *stream >> byte1;
-            *stream >> byte2;
-            *stream >> byte3;
-            qint32 sampleValue = (qint32)((byte1 & 0xFF) | (byte2 << 8) | (byte3 << 16));
+
+            char buffer[3];
+            stream->readRawData(buffer, 3);
+            qint32 sampleValue = (qint32)((buffer[0] & 0xFF) | (buffer[1] << 8) | (buffer[2] << 16));
             return sampleValue / 8388607.0; // 8388607 = max value in 24 bits
-        }
-};
-
-class SampleExtractor32Bits : public SampleExtractor
-{
-    public:
-
-        SampleExtractor32Bits(QDataStream *stream)
-            :SampleExtractor(stream)
-        {
-            qDebug() << "Creating a SampleExtrator for 32 bits audio";
-        }
-
-        float nextSample() override
-        {
-            qint32 sampleValue;
-            *stream >> sampleValue;
-            return sampleValue / 2147483648.0;
         }
 };
 
@@ -117,8 +98,8 @@ public:
         switch (bitsPerSample/8) {
             case 1: return std::make_unique<SampleExtractor8Bits>(stream);
             case 2: return std::make_unique<SampleExtractor16Bits>(stream);
-            case 3: return std::make_unique<SampleExtractor24Bits>(stream);
-            case 4: return std::make_unique<SampleExtractor32Bits>(stream);
+            //case 3: return std::make_unique<SampleExtractor24Bits>(stream);
+            //case 4: return std::make_unique<SampleExtractor32Bits>(stream);
         }
         qCritical() << "Can't create a SampleExtractor to handle " << bitsPerSample << " bits per sample!";
         return std::make_unique<NullSampleExtractor>();
@@ -185,7 +166,11 @@ void WaveFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuff
     std::unique_ptr<SampleExtractor> sampleExtractor = SampleExtractorFactory::createExtractor(&stream, bitsPerSample);
     for (int s = 0; s < samples; ++s) {
         for (int c = 0; c < channels; ++c) {
-            outBuffer.set(c, s, sampleExtractor->nextSample());
+            float sample = sampleExtractor->nextSample();
+            outBuffer.set(c, s, sample);
+            if (s < 10){
+                qDebug() << (s+1) << " " << sample;
+            }
         }
     }
 }

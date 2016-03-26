@@ -35,6 +35,28 @@ void MetronomeUtils::createCustomSounds(const QString &firstBeatAudioFile, const
     }
 }
 
+void MetronomeUtils::removeSilenceInBufferStart(Audio::SamplesBuffer &buffer)
+{
+    int audioStartingIndex = 0;
+    int frames = buffer.getFrameLenght();
+    float sampleMix = 0;
+    int channels = buffer.getChannels();
+    while(audioStartingIndex < frames){
+        sampleMix = 0;
+        for (int c = 0; c < channels; ++c) {
+            sampleMix += buffer.get(c, audioStartingIndex);
+        }
+        if (sampleMix != 0) //the first sample was found
+            break;
+        audioStartingIndex++;
+    }
+
+    if (audioStartingIndex > 0){
+        buffer.discardFirstSamples(audioStartingIndex);
+        qDebug() << "Discarding " << audioStartingIndex << " samples";
+    }
+}
+
 void MetronomeUtils::createBuffer(const QString &audioFilePath, Audio::SamplesBuffer &outBuffer, quint32 localSampleRate)
 {
     std::unique_ptr<Audio::FileReader> reader = Audio::FileReaderFactory::createFileReader(audioFilePath);
