@@ -59,6 +59,7 @@ signals:
     void panSliderChanged(int value);
     void muteButtonClicked();
     void soloButtonClicked();
+    void preferencesButtonClicked();
     void hostSyncStateChanged(bool syncWithHost);
 
 protected:

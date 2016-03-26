@@ -12,7 +12,7 @@ public:
     const Audio::SamplesBuffer &resample(const Audio::SamplesBuffer &in, int desiredOutLenght);
 private:
     Audio::SamplesBuffer outBuffer;
-    ResamplerTest resamplers[2];
+    SimpleResampler resamplers[2];
 };
 
 #endif // SAMPLESBUFFERRESAMPLER_H

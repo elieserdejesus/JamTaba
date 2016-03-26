@@ -63,7 +63,7 @@ protected:
     Controller::MainController *mainController;
     NinjamPanel *ninjamPanel;// panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
 private:
-
+    MainWindow *mainWindow;
     QMap<QString, NinjamTrackGroupView *> trackGroups;
     ChatPanel *chatPanel;
 
@@ -95,6 +95,7 @@ private:
     int calculateEstimatedChunksPerInterval() const;
 
     void updateTracksSizeButtons();// enable or disable tracks size buttons
+
 private slots:
 
     // ninjam panel controls
@@ -107,6 +108,7 @@ private slots:
     void setMetronomeFaderPosition(int value);
     void toggleMetronomeMuteStatus();
     void toggleMetronomeSoloStatus();
+    void showMetronomePreferences();
 
     // ninjam controller events
     void addChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID);

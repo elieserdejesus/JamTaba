@@ -56,10 +56,10 @@ void StandalonePreferencesDialog::initialize(int initialTab, const Persistence::
 
 void StandalonePreferencesDialog::populateAllTabs()
 {
+    PreferencesDialog::populateAllTabs();//populate recording and metronome tabs
     populateAudioTab();
     populateMidiTab();
     populateVstTab();
-    populateRecordingTab();
 }
 
 void StandalonePreferencesDialog::setupSignals()

@@ -12,12 +12,17 @@
 #include "audio/NinjamTrackNode.h"
 #include "persistence/Settings.h"
 #include "audio/MetronomeTrackNode.h"
+#include "audio/file/FileReaderFactory.h"
+#include "audio/file/FileReader.h"
+#include "MetronomeUtils.h"
+#include "audio/Resampler.h"
 
 #include <cmath>
 #include <cassert>
 #include <QMutexLocker>
 #include <QDebug>
 #include <QThread>
+#include <QFileInfo>
 
 #include "audio/SamplesBufferRecorder.h"
 #include "Utils.h"
@@ -271,9 +276,46 @@ void NinjamController::process(const Audio::SamplesBuffer &in, Audio::SamplesBuf
     }
     while( samplesProcessed < totalSamplesToProcess);
 }
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+//++++++++++++++
 Audio::MetronomeTrackNode* NinjamController::createMetronomeTrackNode(int sampleRate){
-    return new Audio::MetronomeTrackNode(":/click.wav", sampleRate);
+    Audio::SamplesBuffer firstBeatBuffer(2);
+    Audio::SamplesBuffer secondaryBeatBuffer(2);
+    if (!(mainController->isUsingCustomMetronomeSounds())){
+        MetronomeUtils::createDefaultSounds(firstBeatBuffer, secondaryBeatBuffer, sampleRate);
+    }
+    else{
+        QString firstBeatAudioFile = mainController->getMetronomeFirstBeatFile();
+        QString secondaryBeatAudioFile = mainController->getMetronomeSecondaryBeatFile();
+        MetronomeUtils::createCustomSounds(firstBeatAudioFile, secondaryBeatAudioFile, firstBeatBuffer, secondaryBeatBuffer, sampleRate);
+    }
+
+    MetronomeUtils::removeSilenceInBufferStart(firstBeatBuffer);
+    MetronomeUtils::removeSilenceInBufferStart(secondaryBeatBuffer);
+
+    return new Audio::MetronomeTrackNode(firstBeatBuffer, secondaryBeatBuffer);
+}
+
+void NinjamController::recreateMetronome(int newSampleRate)
+{
+    //remove the old metronome
+    float oldGain = metronomeTrackNode->getGain();
+    float oldPan = metronomeTrackNode->getPan();
+    bool oldMutedStatus = metronomeTrackNode->isMuted();
+    bool oldSoloStatus = metronomeTrackNode->isSoloed();
+    int oldBeatsPerAccent = metronomeTrackNode->getBeatsPerAccent();
+
+    mainController->removeTrack(METRONOME_TRACK_ID);
+
+    //recreate metronome using the new sample rate
+    this->metronomeTrackNode = createMetronomeTrackNode(newSampleRate);
+    this->metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
+    this->metronomeTrackNode->setGain( oldGain );
+    this->metronomeTrackNode->setPan( oldPan );
+    this->metronomeTrackNode->setMute( oldMutedStatus );
+    this->metronomeTrackNode->setSolo( oldSoloStatus );
+    this->metronomeTrackNode->setBeatsPerAccent(oldBeatsPerAccent);
+    mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
 }
 
 //+++++++++++++++
@@ -285,15 +327,17 @@ void NinjamController::stop(bool emitDisconnectedingSignal){
         //store metronome settings
         Audio::AudioNode* metronomeTrack = mainController->getTrackNode(METRONOME_TRACK_ID);
         if(metronomeTrack){
-            //  std::pow( metronomeTrack->getGain(), 1.0/4);//4th root - save the metronome gain in linear
-            float correctedGain = Utils::poweredGainToLinear(metronomeTrack->getGain());
-            mainController->storeMetronomeSettings(correctedGain, metronomeTrack->getPan(), metronomeTrack->isMuted());
+            float metronomeGain = Utils::poweredGainToLinear(metronomeTrack->getGain());
+            float metronomePan = metronomeTrack->getPan();
+            bool metronomeIsMuted = metronomeTrack->isMuted();
+
+            mainController->storeMetronomeSettings(metronomeGain, metronomePan, metronomeIsMuted);
             mainController->removeTrack(METRONOME_TRACK_ID);//remove metronome
         }
+
         //clear all tracks
         foreach(NinjamTrackNode* trackNode, trackNodes.values()){
             mainController->removeTrack(trackNode->getID());
-            //trackNode->deactivate();
         }
         trackNodes.clear();
     }
@@ -689,24 +733,7 @@ void NinjamController::setSampleRate(int newSampleRate){
 
     this->samplesInInterval = computeTotalSamplesInInterval();
 
-    //remove the old metronome
-    float oldGain = metronomeTrackNode->getGain();
-    float oldPan = metronomeTrackNode->getPan();
-    bool oldMutedStatus = metronomeTrackNode->isMuted();
-    bool oldSoloStatus = metronomeTrackNode->isSoloed();
-    int oldBeatsPerAccent = metronomeTrackNode->getBeatsPerAccent();
-
-    mainController->removeTrack(METRONOME_TRACK_ID);
-
-    //recreate metronome using the new sample rate
-    this->metronomeTrackNode = createMetronomeTrackNode(newSampleRate);
-    this->metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
-    this->metronomeTrackNode->setGain( oldGain );
-    this->metronomeTrackNode->setPan( oldPan );
-    this->metronomeTrackNode->setMute( oldMutedStatus );
-    this->metronomeTrackNode->setSolo( oldSoloStatus );
-    this->metronomeTrackNode->setBeatsPerAccent(oldBeatsPerAccent);
-    mainController->addTrack(METRONOME_TRACK_ID, this->metronomeTrackNode);
+    recreateMetronome(newSampleRate);
 
     recreateEncoders();
 }

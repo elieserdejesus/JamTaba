@@ -3,11 +3,11 @@
 #include <QDebug>
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-ResamplerTest::ResamplerTest(){
+SimpleResampler::SimpleResampler(){
 
 }
 
-void ResamplerTest::process(const float *in, int inLength, float *out, int outLenght){
+void SimpleResampler::process(const float *in, int inLength, float *out, int outLenght){
     double step = (double)inLength/(double)outLenght;
     double frac = 0;
     int cursor = 0;

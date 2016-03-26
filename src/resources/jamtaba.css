@@ -386,9 +386,9 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-pa
 .QLineEdit[enabled="false"]{
     border-radius: 2px;
     padding: 2px;
-    background: rgb(100, 100, 100, 90);
-    color: rgb(0, 0, 0);
-    border: 1px solid red;
+    background: rgb(0, 0, 0, 40);
+    color: rgb(0, 0, 0, 50);
+    border: none;
 }
 
 /*
@@ -970,7 +970,7 @@ QPushButton[enabled="false"]{
     border-color: rgba(0, 0, 0, 40);
 }
 
-QPushButton#soloButton, QPushButton#muteButton{
+QPushButton#soloButton, QPushButton#muteButton, QPushButton#preferencesButton{
     font-size: 9px;
     border-color: rgb(110,110,110);
     padding: 2px;
@@ -1277,6 +1277,16 @@ NinjamPanel #metronomeControls QSlider::groove:vertical{
 
 NinjamPanel #soloButton, NinjamPanel #muteButton{
     border: 1px solid rgba(0, 0, 0, 60);
+}
+
+NinjamPanel #preferencesButton
+{
+    background-image: url(':/images/gear-hover.png');
+    background-repeat: none;
+    background-position: center center;
+    padding-left: 0px;
+    padding-right: 0px;
+    max-width: 20px;
 }
 
 NinjamPanel QLabel{

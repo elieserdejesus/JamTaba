@@ -187,7 +187,10 @@ MetronomeSettings::MetronomeSettings() :
     SettingsObject("metronome"),
     pan(0),
     gain(1),
-    muted(false)
+    muted(false),
+    usingCustomSounds(false),
+    primaryBeatAudioFile(""),
+    secondaryBeatAudioFile("")
 {
 }
 
@@ -196,6 +199,9 @@ void MetronomeSettings::read(const QJsonObject &in)
     pan = getValueFromJson(in, "pan", (float)0);
     gain = getValueFromJson(in, "gain", (float)1);
     muted = getValueFromJson(in, "muted", false);
+    usingCustomSounds = getValueFromJson(in, "customSounds", false);
+    primaryBeatAudioFile = getValueFromJson(in, "primaryBeatAudioFile", QString(""));
+    secondaryBeatAudioFile = getValueFromJson(in, "secondaryBeatAudioFile", QString(""));
 }
 
 void MetronomeSettings::write(QJsonObject &out) const
@@ -203,6 +209,9 @@ void MetronomeSettings::write(QJsonObject &out) const
     out["pan"] = pan;
     out["gain"] = gain;
     out["muted"] = muted;
+    out["customSounds"] = usingCustomSounds;
+    out["primaryBeatAudioFile"] = primaryBeatAudioFile;
+    out["secondaryBeatAudioFile"] = secondaryBeatAudioFile;
 }
 
 // +++++++++++++++++++++++++++
@@ -503,6 +512,27 @@ void Settings::setMetronomeSettings(float gain, float pan, bool muted)
     metronomeSettings.pan = pan;
     metronomeSettings.gain = gain;
     metronomeSettings.muted = muted;
+}
+
+void Settings::setUsingCustomMetronomeSounds(bool usingCustomSounds)
+{
+    metronomeSettings.usingCustomSounds = usingCustomSounds;
+}
+
+void Settings::setMetronomeFirstBeatAudioFile(const QString &filePath)
+{
+    if (QFileInfo(filePath).exists())
+        metronomeSettings.primaryBeatAudioFile = filePath;
+    else
+        metronomeSettings.primaryBeatAudioFile = "";
+}
+
+void Settings::setMetronomeSecondaryBeatAudioFile(const QString &filePath)
+{
+    if (QFileInfo(filePath).exists())
+        metronomeSettings.secondaryBeatAudioFile = filePath;
+    else
+        metronomeSettings.secondaryBeatAudioFile = "";
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

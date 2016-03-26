@@ -291,10 +291,36 @@ void MainController::storePrivateServerSettings(const QString &server, int serve
     settings.setPrivateServerData(server, serverPort, password);
 }
 
-void MainController::storeMetronomeSettings(float metronomeGain, float metronomePan,
-                                            bool metronomeMuted)
+void MainController::storeMetronomeSettings(float metronomeGain, float metronomePan, bool metronomeMuted)
 {
+
     settings.setMetronomeSettings(metronomeGain, metronomePan, metronomeMuted);
+}
+
+void MainController::setUsingCustomMetronomeSounds(bool usingCustomSounds)
+{
+    settings.setUsingCustomMetronomeSounds(usingCustomSounds);
+    recreateMetronome();
+}
+
+void MainController::setMetronomeFirstBeatFile(const QString &firstBeatFile)
+{
+    settings.setMetronomeFirstBeatAudioFile(firstBeatFile);
+    recreateMetronome();
+}
+
+void MainController::setMetronomeSecondaryBeatFile(const QString &secondaryBeatFile)
+{
+    settings.setMetronomeSecondaryBeatAudioFile(secondaryBeatFile);
+    recreateMetronome();
+}
+
+
+void MainController::recreateMetronome()
+{
+    if (isPlayingInNinjamRoom()) {
+        ninjamController->recreateMetronome(getSampleRate());
+    }
 }
 
 void MainController::storeIntervalProgressShape(int shape)

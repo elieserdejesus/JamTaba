@@ -620,6 +620,13 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
                      SLOT(updateCurrentIntervalBeat(int)));
 }
 
+
+void MainWindow::showMetronomePreferencesDialog()
+{
+    openPreferencesDialog(ui.actionMetronome);
+}
+
+
 // +++++++++++++++ PREPARING TO XMIT +++++++++++
 // this signal is received when ninjam controller is ready to transmit (after the 'preparing' intervals).
 void MainWindow::startTransmission()
@@ -865,6 +872,8 @@ void MainWindow::openPreferencesDialog(QAction *action)
             initialTab = PreferencesDialog::TAB_MIDI;
         else if (action == ui.actionVstPreferences)
             initialTab = PreferencesDialog::TAB_VST;
+        else if (action == ui.actionMetronome)
+            initialTab = PreferencesDialog::TAB_METRONOME;
 
         stopCurrentRoomStream();
 
@@ -881,6 +890,26 @@ void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
 
     connect(dialog, SIGNAL(multiTrackRecordingStatusChanged(bool)), this, SLOT(setMultiTrackRecordingStatus(bool)));
     connect(dialog, SIGNAL(recordingPathSelected(const QString &)), this, SLOT(setRecordingPath(const QString &)));
+
+    connect(dialog, SIGNAL(usingMetronomeCustomSoundsStatusChanged(bool)), this, SLOT(setUsingCustomMetronomeSoundsStatus(bool)));
+    connect(dialog, SIGNAL(metronomePrimaryBeatAudioFileSelected(QString)), this, SLOT(setMetronomeFirstBeatAudioFile(QString)));
+    connect(dialog, SIGNAL(metronomeSecondaryBeatAudioFileSelected(QString)), this, SLOT(setMetronomeSecondaryBeatAudioFile(QString)));
+
+}
+
+void MainWindow::setUsingCustomMetronomeSoundsStatus(bool usingCustomSounds)
+{
+    mainController->setUsingCustomMetronomeSounds(usingCustomSounds);
+}
+
+void MainWindow::setMetronomeFirstBeatAudioFile(const QString &firstBeatFile)
+{
+    mainController->setMetronomeFirstBeatFile(firstBeatFile);
+}
+
+void MainWindow::setMetronomeSecondaryBeatAudioFile(const QString &secondaryBeatFile)
+{
+    mainController->setMetronomeSecondaryBeatFile(secondaryBeatFile);
 }
 
 void MainWindow::setRecordingPath(const QString &newRecordingPath)
