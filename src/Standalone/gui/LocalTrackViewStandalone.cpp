@@ -115,7 +115,9 @@ QPushButton *LocalTrackViewStandalone::createMidiToolsButton()
 {
     QPushButton * button = new QPushButton();
     button->setObjectName("midiToolsButton");
-    button->setText("MIDI Tools");
+    button->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
+    button->setText("MIDI tools");
+    button->setVisible(false);
     connect(button, SIGNAL(clicked(bool)), this, SLOT(openMidiToolsDialog()));
     return button;
 }
@@ -501,7 +503,6 @@ void LocalTrackViewStandalone::refreshInputSelectionName()
             iconFile = NO_INPUT_ICON;
         }
     }
-    midiToolsButton->setVisible(inputTrack->isMidi());
 
     // set the input name
     if (inputSelectionButton) {
@@ -513,9 +514,12 @@ void LocalTrackViewStandalone::refreshInputSelectionName()
 
     // set the icon
     if (inputTypeIconLabel)
-        this->inputTypeIconLabel->setStyleSheet("background-image: url(" + iconFile + ");");
+       inputTypeIconLabel->setStyleSheet("background-image: url(" + iconFile + ");");
 
     setMidiPeakMeterVisibility(inputNode->isMidi());
+
+    midiToolsButton->setVisible(inputTrack->isMidi());
+    inputTypeIconLabel->setVisible(!inputTrack->isMidi());
 
     updateGeometry();
 

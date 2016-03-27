@@ -1120,10 +1120,6 @@ LocalTrackView #inputPanel{
     border: none;
 }
 
-LocalTrackView #midiToolsButton{
-    font-size: 10px;
-}
-
 BaseTrackView[unlighted="false"] #inputPanel{
     border: 1px outset rgb(80,80,80);
 }
@@ -1133,14 +1129,28 @@ LocalTrackView #inputPanel:hover{
 }
 
 LocalTrackView #inputSelectionIcon{
-    border: none;
+    border: 1px solid rgba(0, 0, 0, 0);
     margin: 0px;
     padding: 0px;
     max-width: 22px;
     min-width: 22px;
-    min-height: 22px;
     background-position: center;
     background-repeat: none;
+}
+
+LocalTrackView #midiToolsButton{
+    font-size: 10px;
+    /*background-image: url(':/images/input_midi.png');*/
+    background-repeat: none;
+    background-position: center left;
+    padding: 0px;
+}
+
+LocalTrackView #inputSelectionIcon,
+LocalTrackView #midiToolsButton
+{
+    min-height: 14px;
+    max-height: 14px;
 }
 
 LocalTrackView #inputSelectionButton{
