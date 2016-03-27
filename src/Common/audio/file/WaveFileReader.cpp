@@ -96,13 +96,13 @@ public:
     static std::unique_ptr<SampleExtractor> createExtractor(QDataStream *stream, quint8 bitsPerSample)
     {
         switch (bitsPerSample/8) {
-            case 1: return std::make_unique<SampleExtractor8Bits>(stream);
-            case 2: return std::make_unique<SampleExtractor16Bits>(stream);
+            case 1: return std::unique_ptr<SampleExtractor8Bits>(new SampleExtractor8Bits(stream));
+            case 2: return std::unique_ptr<SampleExtractor16Bits>(new SampleExtractor16Bits(stream));
             //case 3: return std::make_unique<SampleExtractor24Bits>(stream);
             //case 4: return std::make_unique<SampleExtractor32Bits>(stream);
         }
         qCritical() << "Can't create a SampleExtractor to handle " << bitsPerSample << " bits per sample!";
-        return std::make_unique<NullSampleExtractor>();
+        return std::unique_ptr<NullSampleExtractor>(new NullSampleExtractor());
     }
 };
 

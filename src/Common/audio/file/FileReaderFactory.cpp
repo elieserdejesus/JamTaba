@@ -19,7 +19,7 @@ std::unique_ptr<FileReader> FileReaderFactory::createFileReader(const QString &f
 {
     QString fileSuffix = QFileInfo(filePath).suffix();
     if (fileSuffix == "wav") {
-        return std::make_unique<Audio::WaveFileReader>();
+        return std::unique_ptr<Audio::WaveFileReader>(new WaveFileReader());
     }
-    return std::make_unique<NullFileReader>();
+    return std::unique_ptr<NullFileReader>(new NullFileReader());
 }
