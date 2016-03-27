@@ -167,7 +167,7 @@ void IntervalProgressDisplay::paintEvent(QPaintEvent *e)
         paintCircular(p, textColor);
         break;
     case LINEAR:
-        drawHorizontalPoints(&p, height() / 2, 0, this->beats);
+        drawHorizontalPoints(p, height() / 2, 0, this->beats);
         break;
     default:
         paintElliptical(p, textColor, horizontalRadius, verticalRadius);
@@ -274,24 +274,24 @@ void IntervalProgressDisplay::drawBeatCircles(QPainter &p, int hRadius, int vRad
 }
 
 // +++++++++++++++++++++++++ LINEAR PAINTING +++++++++++
-void IntervalProgressDisplay::drawPoint(int x, int y, int size, QPainter *painter, int value,
+void IntervalProgressDisplay::drawPoint(int x, int y, int size, QPainter &painter, int value,
                                         const QBrush &bgPaint, const QColor &border, bool small, bool drawText)
 {
-    painter->setBrush(bgPaint);
-    painter->drawEllipse(QPoint(x, y), size/2, size/2);
+    painter.setBrush(bgPaint);
+    painter.drawEllipse(QPoint(x, y), size/2, size/2);
 
-    painter->setPen(QPen(border));
-    painter->drawEllipse(QPoint(x, y), size/2, size/2);
+    painter.setPen(QPen(border));
+    painter.drawEllipse(QPoint(x, y), size/2, size/2);
 
     if (drawText) {
         QString valueString = QString::number(value);
-        painter->setFont(small ? SMALL_FONT : BIG_FONT);
-        int valueStringWidth = painter->fontMetrics().width(valueString);
+        painter.setFont(small ? SMALL_FONT : BIG_FONT);
+        int valueStringWidth = painter.fontMetrics().width(valueString);
         int textX = (int)(x - valueStringWidth / 2.0) -1;
-        int textY = y + painter->fontMetrics().descent() + 2;
+        int textY = y + painter.fontMetrics().descent() + 2;
         if (!small)
-            painter->setPen(Qt::black);
-        painter->drawText(textX, textY, valueString);
+            painter.setPen(Qt::black);
+        painter.drawText(textX, textY, valueString);
     }
 }
 
@@ -302,15 +302,15 @@ float IntervalProgressDisplay::getHorizontalSpace(int totalPoinstToDraw, int ini
     return (float)(width() - initialXPos - LINEAR_PAINT_MODE_OVAL_SIZE/2) / (totalPoinstToDraw - 1);
 }
 
-void IntervalProgressDisplay::drawHorizontalPoints(QPainter *painter, int yPos, int startPoint,
+void IntervalProgressDisplay::drawHorizontalPoints(QPainter &painter, int yPos, int startPoint,
                                          int totalPoinstToDraw)
 {
     int initialXPos = 0 + LINEAR_PAINT_MODE_OVAL_SIZE / 2 + 1;
     float xSpace = getHorizontalSpace(totalPoinstToDraw, initialXPos+1);
 
     // draw the background line
-    painter->setPen(QPen(LINEAR_BORDER_COLOR, 0.9f));
-    painter->drawLine(initialXPos + 1, yPos, (int)(initialXPos + (totalPoinstToDraw - 1) * xSpace),
+    painter.setPen(QPen(LINEAR_BORDER_COLOR, 0.9f));
+    painter.drawLine(initialXPos + 1, yPos, (int)(initialXPos + (totalPoinstToDraw - 1) * xSpace),
                       yPos);
 
     float xPos = initialXPos;
