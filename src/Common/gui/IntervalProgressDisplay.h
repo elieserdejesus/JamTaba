@@ -1,14 +1,14 @@
 #ifndef CIRCULAR_PROGRESS_DISPLAY
 #define CIRCULAR_PROGRESS_DISPLAY
 
-#include <QWidget>
+#include <QFrame>
 
 class QResizeEvent;
 class QPaintEvent;
 class QPainter;
 class QComboBox;
 
-class IntervalProgressDisplay : public QWidget
+class IntervalProgressDisplay : public QFrame
 {
     Q_OBJECT
 public:
@@ -36,11 +36,6 @@ public:
     }
 
     void setBeatsPerInterval(int beats);
-    void setSliceNumberColor(const QColor &sliceNumberColor);
-    inline QColor getSliceNumberColor() const
-    {
-        return sliceNumberColor;
-    }
 
     void setPaintMode(PaintMode mode);
 
@@ -50,7 +45,6 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *e) override;
-    void resizeEvent(QResizeEvent *event) override;
 
 private:
 
@@ -72,35 +66,32 @@ private:
     QColor highlightColor;
 
     // ellipse and circle painting
-    void paintElliptical(QPainter &p, const QColor &textColor, int hRadius, int vRadius);
-    void paintEllipticalPath(QPainter &p, int hRadius, int vRadius);
-    void paintCircular(QPainter &p, const QColor &textColor);
-    void drawBeatCircles(QPainter &p, int hRadius, int vRadius, int beatCircles, int startIterval);
+    void paintElliptical(QPainter &p, const QColor &textColor, const QRectF &rect);
+    void paintEllipticalPath(QPainter &p, const QRectF &rect, int beats);
+    void drawBeatCircles(QPainter &p, const QRectF &rect, int beatCircles, int offset, bool drawPath);
+
+    QBrush getBrush(int beat, int beatOffset);
+    QPen getPen(int beat, int beatOffset);
+    qreal getOvalSize(int beat, int beatOffset);
 
     // linear painting
-    void drawPoint(int x, int y, int size, QPainter &g, int value, const QBrush &bgPaint, const QColor &border,
+    void drawPoint(qreal x, qreal y, qreal size, QPainter &g, int value, const QBrush &bgPaint, const QColor &border,
                    bool small, bool drawText = false);
-    void drawHorizontalPoints(QPainter &painter, int yPos, int startPoint, int totalPoinstToDraw);
-    float getHorizontalSpace(int totalPoinstToDraw, int initialXPos) const;
+    void drawHorizontalPoints(QPainter &painter, qreal yPos, int startPoint, int totalPoinstToDraw);
+    qreal getHorizontalSpace(int totalPoinstToDraw, int initialXPos) const;
 
     const QFont SMALL_FONT;
     const QFont BIG_FONT;
 
-    void initialize();
-
-    static const int MARGIN;
-    static const int PREFERRED_OVAL_SIZE;
-    int ovalSize;
+    static const qreal MARGIN;
+    static const qreal PREFERRED_OVAL_SIZE;
+    qreal ovalSize;
 
     int currentBeat;
     int beats;
 
-    int horizontalRadius;
-    int verticalRadius;
-    int centerX;
-    int centerY;
-
-    QColor sliceNumberColor;
+    static const QColor BEAT_NUMBER_COLOR;
+    static const QColor TRANSPARENT_BRUSH_COLOR;
 
     int beatsPerAccent;
 
