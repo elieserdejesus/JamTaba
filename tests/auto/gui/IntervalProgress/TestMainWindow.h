@@ -6,7 +6,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QComboBox>
-#include "gui/IntervalProgressDisplay.h"
+#include "gui/intervalProgress/IntervalProgressDisplay.h"
 
 class TestMainWindow : public QFrame
 {

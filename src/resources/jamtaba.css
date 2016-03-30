@@ -1254,10 +1254,11 @@ NinjamPanel #ninjamControlsPanel{
 }
 
 NinjamPanel #intervalPanel{
-    color: rgb(238, 238, 238);/* beats text color */
+    color: rgb(238, 238, 238);
     font-weight: normal;
     font-size: 11px;
-    background: transparent;
+    background: none;
+    margin: 0px;
     /*min-height: 80px;*/
 }
 

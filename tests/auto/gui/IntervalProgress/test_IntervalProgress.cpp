@@ -1,6 +1,6 @@
 #include <QApplication>
 
-#include "gui/IntervalProgressDisplay.h"
+#include "gui/intervalProgress/IntervalProgressDisplay.h"
 #include "TestMainWindow.h"
 #include <QFile>
 #include <QDebug>
