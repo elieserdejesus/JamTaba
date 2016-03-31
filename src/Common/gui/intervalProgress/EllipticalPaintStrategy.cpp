@@ -1,19 +1,21 @@
 #include "IntervalProgressDisplay.h"
 #include <QPen>
 #include <QPainter>
+#include <QDebug>
 
 QRectF IntervalProgressDisplay::EllipticalPaintStrategy::createContextRect(const PaintContext &context) const
 {
     qreal margin = CIRCLE_MAX_SIZE + 4;
-    qreal left = margin;
-    qreal top = margin;
     qreal w = qMin(context.height * 3, context.width) - margin * 2;
     qreal h = context.height - margin * 2;
+    qreal left = (context.width - w)/2; //draw in center horizontally
+    qreal top = (context.height - h)/2;
     return QRectF(left, top, w, h);
 }
 
 void IntervalProgressDisplay::EllipticalPaintStrategy::paint(QPainter &p, const PaintContext &context, const PaintColors &colors)
 {
+
     QRectF rect = createContextRect(context);
 
     if (context.beatsPerInterval <= 32) {
@@ -50,11 +52,12 @@ void IntervalProgressDisplay::EllipticalPaintStrategy::paintEllipticalPath(QPain
     p.setBrush(Qt::BrushStyle::NoBrush);
     //p.drawEllipse(rect);
 
-    double degreesPerSlice = 360 / beatsToDraw;
+    double degreesPerSlice = 360.0 / beatsToDraw;
     int beatIndex = currentBeat < beatsToDraw ? currentBeat : (currentBeat - (beatsToDraw - 1));
-    int startAngle = -(degreesPerSlice * beatIndex - 90) * 16;
-    int spanAngle =  -(degreesPerSlice * (beatsToDraw - beatIndex)) * 16;
+    qreal startAngle = -(degreesPerSlice * beatIndex - 90) * 16;
+    qreal spanAngle = -(degreesPerSlice * (beatsToDraw - beatIndex)) * 16;
     p.drawArc(rect, startAngle, spanAngle);
+    //p.drawPie(rect, startAngle, spanAngle);
 }
 
 QBrush IntervalProgressDisplay::EllipticalPaintStrategy::getBrush(int beat, int beatOffset, const PaintContext &context, const PaintColors &colors) const
@@ -129,32 +132,27 @@ void IntervalProgressDisplay::EllipticalPaintStrategy::drawCircles(QPainter &p, 
         paintEllipticalPath(p, rect, colors, context.currentBeat, beatsToDraw);
     }
 
-    //p.drawRect(rect);
-
-    double angle = -PI / 2.0;
+    qreal angleIncrement = (2 * -PI) / beatsToDraw;
+    double angle = -PI/2 + angleIncrement;
     qreal hRadius = rect.width()/2;
     qreal vRadius = rect.height()/2;
     qreal centerX = rect.center().x();
     qreal centerY = rect.center().y();
 
-    //p.drawLine(centerX, 0, centerX, height());
-    //p.drawLine(0, centerY, width(), centerY);
-
-    for (int beat = beatsToDraw; beat >= 0; --beat) {
-        qreal x = centerX + ((hRadius) * std::cos(angle));
-        qreal y = centerY + ((vRadius) * std::sin(angle));
-
-        QPen pen = getPen(beat, beatsToDrawOffset, context);
-        QBrush brush = getBrush(beat, beatsToDrawOffset, context, colors);
+    for (int beat = beatsToDraw-1; beat >= 0; --beat) {
 
         // draw the current beat
         if (beat + beatsToDrawOffset >= context.currentBeat) {
+            qreal x = centerX + ((hRadius) * std::cos(angle));
+            qreal y = centerY + ((vRadius) * std::sin(angle));
+            QPen pen = getPen(beat, beatsToDrawOffset, context);
+            QBrush brush = getBrush(beat, beatsToDrawOffset, context, colors);
             p.setBrush(brush);
             p.setPen(pen);
             qreal size = getCircleSize(beat, beatsToDrawOffset, context);
             p.drawEllipse(QPointF(x, y), size, size);
         }
 
-        angle += 2 * -PI / beatsToDraw;
+        angle += angleIncrement;
     }
 }

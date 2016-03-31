@@ -18,7 +18,6 @@ public:
 
 protected:
     void timerEvent(QTimerEvent *);
-
 private:
     int refreshTimerID;
     IntervalProgressDisplay *progressDisplay;

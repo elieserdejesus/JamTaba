@@ -7,10 +7,10 @@ QRectF IntervalProgressDisplay::CircularPaintStrategy::createContextRect(const P
     qreal left = margin;
     qreal top = margin;
     if (context.height < context.width){
-        left += (context.width - size)/2; //draw in center horizontally
+        left = (context.width - size)/2; //draw in center horizontally
     }
     else{
-        top += (context.height - size)/2; //draw in center vertically
+        top = (context.height - size)/2; //draw in center vertically
     }
     return QRectF(left, top, size, size);
 }

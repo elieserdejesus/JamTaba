@@ -1,14 +1,15 @@
 #include "TestMainWindow.h"
 #include "gui/intervalProgress/IntervalProgressDisplay.h"
 #include <QPushButton>
+#include <QDebug>
 
     TestMainWindow::TestMainWindow()
         :QFrame(),
         currentBeat(0)
     {
-        refreshTimerID = startTimer(500);
+        refreshTimerID = startTimer(400);
 
-        setMinimumSize(180, 180);
+        setMinimumSize(500, 500);
 
         progressDisplay = new IntervalProgressDisplay(this);
         progressDisplay->setBeatsPerAccent(4);
@@ -35,9 +36,9 @@
         connect(combo, SIGNAL(currentIndexChanged(QString)), this, SLOT(setShape(QString)));
         connect(accentsButton, SIGNAL(toggled(bool)), this, SLOT(toggleAccents(bool)));
 
-        progressDisplay->setBeatsPerInterval(8);
-        currentBeat = progressDisplay->getBeatsPerInterval()/2 - 1;
-        combo->setCurrentIndex(1);
+        progressDisplay->setBeatsPerInterval(32);
+        currentBeat = 0;//progressDisplay->getBeatsPerInterval()/2 - 1;
+        combo->setCurrentIndex(2);
     }
 
     TestMainWindow::~TestMainWindow()
