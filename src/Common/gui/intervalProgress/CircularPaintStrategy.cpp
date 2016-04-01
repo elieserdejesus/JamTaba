@@ -1,8 +1,7 @@
 #include "IntervalProgressDisplay.h"
 
-QRectF IntervalProgressDisplay::CircularPaintStrategy::createContextRect(const PaintContext &context) const
+QRectF IntervalProgressDisplay::CircularPaintStrategy::createContextRect(const PaintContext &context, qreal margin) const
 {
-    qreal margin = CIRCLE_MAX_SIZE + 4;
     qreal size = qMin(context.width, context.height) - margin * 2;
     qreal left = margin;
     qreal top = margin;

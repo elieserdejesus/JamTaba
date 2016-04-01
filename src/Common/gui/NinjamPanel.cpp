@@ -222,6 +222,7 @@ void NinjamPanel::buildShapeModel()
     ui->comboShape->addItem("Circle", IntervalProgressDisplay::PaintMode::CIRCULAR);
     ui->comboShape->addItem("Ellipse", IntervalProgressDisplay::PaintMode::ELLIPTICAL);
     ui->comboShape->addItem("Line", IntervalProgressDisplay::PaintMode::LINEAR);
+    ui->comboShape->addItem("Pie", IntervalProgressDisplay::PaintMode::PIE);
 }
 
 void NinjamPanel::buildAccentsdModel(int bpi)

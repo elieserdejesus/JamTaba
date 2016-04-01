@@ -13,6 +13,7 @@ SOURCES += gui/intervalProgress/IntervalProgressDisplay.cpp
 SOURCES += gui/intervalProgress/LinearPaintStrategy.cpp
 SOURCES += gui/intervalProgress/EllipticalPaintStrategy.cpp
 SOURCES += gui/intervalProgress/CircularPaintStrategy.cpp
+SOURCES += gui/intervalProgress/PiePaintStrategy.cpp
 SOURCES += TestMainWindow.cpp
 
 SOURCES += test_IntervalProgress.cpp

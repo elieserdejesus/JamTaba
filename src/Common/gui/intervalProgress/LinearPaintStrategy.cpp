@@ -4,18 +4,19 @@
 #include <QFont>
 #include <QDebug>
 
-const qreal IntervalProgressDisplay::LinearPaintStrategy::CIRCLES_SIZE = 25;
-const QColor IntervalProgressDisplay::LinearPaintStrategy::CIRCLES_BORDER_COLOR = QColor(200, 200, 200);
+const QColor IntervalProgressDisplay::LinearPaintStrategy::CIRCLES_BORDER_COLOR = QColor(0, 0, 0, 30);
 
 IntervalProgressDisplay::LinearPaintStrategy::LinearPaintStrategy()
-    :FONT("Verdana, 10")
 {
 }
 
 void IntervalProgressDisplay::LinearPaintStrategy::paint(QPainter &p, const PaintContext &context, const PaintColors &colors)
 {
-    qreal initialXPos = 0 + CIRCLES_SIZE / 2 + 1;
-    qreal xSpace = getHorizontalSpace(context.width, context.beatsPerInterval, initialXPos+1);
+
+    font.setPointSizeF(context.fontSize);
+
+    qreal initialXPos = context.elementsSize / 2 + 1;
+    qreal xSpace = getHorizontalSpace(context.width, context.elementsSize, context.beatsPerInterval, initialXPos+1);
     qreal yPos = context.height/2;
 
     // draw the background line
@@ -24,12 +25,10 @@ void IntervalProgressDisplay::LinearPaintStrategy::paint(QPainter &p, const Pain
 
     qreal xPos = initialXPos;
     // draw all backgrounds first
-    int size = (int)(CIRCLES_SIZE * 0.5f);
+    int size = (int)(context.elementsSize * 0.5f);
     for (int i = 0; i < context.beatsPerInterval; i++) {
-        bool canDraw = i >= context.currentBeat
-                       && (xSpace >= (CIRCLES_SIZE * 0.5) || (i % 2 == 0));
+        bool canDraw = i >= context.currentBeat && (xSpace >= (context.elementsSize * 0.5) || (i % 2 == 0));
         if (canDraw) {
-
             drawPoint(xPos, yPos, size, p, (i + 1), colors.secondaryBeat, CIRCLES_BORDER_COLOR, true);
         }
         xPos += xSpace;
@@ -38,7 +37,7 @@ void IntervalProgressDisplay::LinearPaintStrategy::paint(QPainter &p, const Pain
     // draw accents
     if (context.showingAccents) {
         xPos = initialXPos;
-        qreal size = CIRCLES_SIZE * 0.6f;
+        qreal size = context.elementsSize * 0.6f;
         for (int i = 0; i < context.beatsPerInterval; i += context.beatsPerAccent) {
             if (i > context.currentBeat) {
                 drawPoint(xPos, yPos, size, p, (i + 1), colors.accentBeat, CIRCLES_BORDER_COLOR, true);
@@ -54,12 +53,12 @@ void IntervalProgressDisplay::LinearPaintStrategy::paint(QPainter &p, const Pain
     if (isIntervalFirstBeat || (context.showingAccents && isMeasureFirstBeat )) {
         bgPaint = QColor(Qt::green);
     }
-    drawPoint(xPos, yPos, CIRCLES_SIZE, p, (context.currentBeat + 1), bgPaint, Qt::darkGray, false);
+    drawPoint(xPos, yPos, context.elementsSize, p, (context.currentBeat + 1), bgPaint, Qt::darkGray, false);
 }
 
-qreal IntervalProgressDisplay::LinearPaintStrategy::getHorizontalSpace(int width, int totalPoinstToDraw, int initialXPos) const
+qreal IntervalProgressDisplay::LinearPaintStrategy::getHorizontalSpace(int width, qreal elementsSize, int totalPoinstToDraw, int initialXPos) const
 {
-    return (float)(width - initialXPos - CIRCLES_SIZE/2) / (totalPoinstToDraw - 1);
+    return (qreal)(width - initialXPos - elementsSize/2) / (totalPoinstToDraw - 1);
 }
 
 void IntervalProgressDisplay::LinearPaintStrategy::drawPoint(qreal x, qreal y, qreal size, QPainter &painter, int value,
@@ -74,7 +73,7 @@ void IntervalProgressDisplay::LinearPaintStrategy::drawPoint(qreal x, qreal y, q
     bool drawText = !small;
     if (drawText) {
         QString valueString = QString::number(value);
-        painter.setFont(FONT);
+        painter.setFont(font);
         qreal valueStringWidth = painter.fontMetrics().width(valueString);
         qreal textX = (x - valueStringWidth / 2.0);
         qreal textY = y + painter.fontMetrics().descent() + 2;

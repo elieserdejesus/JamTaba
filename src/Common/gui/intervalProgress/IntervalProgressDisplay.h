@@ -14,7 +14,7 @@ class IntervalProgressDisplay : public QFrame
     Q_OBJECT
 public:
     enum PaintMode {
-        CIRCULAR, ELLIPTICAL, LINEAR
+        CIRCULAR, ELLIPTICAL, LINEAR, PIE
     };
 
     explicit IntervalProgressDisplay(QWidget *parent);
@@ -58,8 +58,10 @@ private:
         int currentBeat;
         bool showingAccents;
         int beatsPerAccent;
+        qreal elementsSize;//size of circle, pies, etc
+        qreal fontSize;
 
-        PaintContext(int width, int height, int beatsPerInterval, int currentBeat, bool showingAccents, int beatsPerAccent);
+        PaintContext(int width, int height, int beatsPerInterval, int currentBeat, bool showingAccents, int beatsPerAccent, qreal elementsSize, qreal fontSize);
     };
 
     struct PaintColors
@@ -78,8 +80,12 @@ private:
     class PaintStrategy
     {
     public:
+        PaintStrategy();
+        virtual ~PaintStrategy();
         virtual void paint(QPainter &p, const PaintContext &context, const PaintColors &colors) = 0;
-        virtual ~PaintStrategy(){}
+
+    protected:
+        QFont font;
     };
 
     QScopedPointer<PaintStrategy> paintStrategy;
@@ -90,10 +96,8 @@ private:
         LinearPaintStrategy();
         void paint(QPainter &p, const PaintContext &context, const PaintColors &colors) override;
     private:
-        qreal getHorizontalSpace(int width, int totalPoinstToDraw, int initialXPos) const;
+        qreal getHorizontalSpace(int width, qreal elementsSize, int totalPoinstToDraw, int initialXPos) const;
         void drawPoint(qreal x, qreal y, qreal size, QPainter &painter, int value, const QBrush &bgPaint, const QColor &border, bool small);
-        const QFont FONT;
-        static const qreal CIRCLES_SIZE;
         static const QColor CIRCLES_BORDER_COLOR;
     };
 
@@ -103,25 +107,35 @@ private:
         void paint(QPainter &p, const PaintContext &context, const PaintColors &colors) override;
 
     protected:
-        virtual QRectF createContextRect(const PaintContext& context) const;
-        const qreal CIRCLE_MAX_SIZE = 7.0;
-
-    private:
-        void paintEllipticalPath(QPainter &p, const QRectF &rect, const PaintColors &colors, int currentBeat, int beatsPerInterval);
-        void drawCircles(QPainter &p, const QRectF &rect, const PaintContext &context, const PaintColors &colors, int beatsToDraw, int beatsToDrawOffset, bool drawPath);
-
+        virtual QRectF createContextRect(const PaintContext& context, qreal margin) const;
         QBrush getBrush(int beat, int beatOffset, const PaintContext &context, const PaintColors &colors) const;
         QPen getPen(int beat, int beatOffset, const PaintContext &context) const;
         qreal getCircleSize(int beat, int beatOffset, const PaintContext &context) const;
+        void drawCurrentBeatValue(QPainter &p, const QRectF &rect, const PaintContext &context, const PaintColors &colors);
+    private:
+        void paintEllipticalPath(QPainter &p, const QRectF &rect, const PaintColors &colors, int currentBeat, int beatsPerInterval);
+        void drawCircles(QPainter &p, const QRectF &rect, const PaintContext &context, const PaintColors &colors, int beatsToDraw, int beatsToDrawOffset, bool drawPath);
     };
 
     class CircularPaintStrategy : public EllipticalPaintStrategy
     {
     protected:
-        virtual QRectF createContextRect(const PaintContext& context) const override;
+        virtual QRectF createContextRect(const PaintContext& context, qreal margin) const override;
+    };
+
+    class PiePaintStrategy : public CircularPaintStrategy
+    {
+    public:
+        void paint(QPainter &p, const PaintContext &context, const PaintColors &colors) override;
+
+    private:
+        void drawPies(QPainter &p, const QRectF &rect, const PaintContext &context, const PaintColors &colors, int beatsToDraw, int beatsToDrawOffset, qreal piesHeight);
+        QPainterPath getClipPath(const QRectF &rect, qreal piesHeight) const;
     };
 
     PaintStrategy *createPaintStrategy(PaintMode paintMode) const;
+    qreal getElementsSize(PaintMode paintMode) const;
+    qreal getFontSize(PaintMode paintMode) const;
 
     PaintMode paintMode;
 

@@ -9,9 +9,19 @@ const double IntervalProgressDisplay::PI = 3.14159265358979323846264338327950288
 const QColor IntervalProgressDisplay::CURRENT_ACCENT_COLOR = Qt::green;
 const QColor IntervalProgressDisplay::ACCENT_COLOR = QColor(240, 240, 240);
 const QColor IntervalProgressDisplay::SECONDARY_BEATS_COLOR = Qt::gray;
-const QColor IntervalProgressDisplay::DISABLED_BEATS_COLOR = QColor(0, 0, 0, 30);
+const QColor IntervalProgressDisplay::DISABLED_BEATS_COLOR = QColor(0, 0, 0, 15);
 const QColor IntervalProgressDisplay::TEXT_COLOR = Qt::black;
 
+IntervalProgressDisplay::PaintStrategy::PaintStrategy()
+    :font("Verdana")
+{
+
+}
+
+IntervalProgressDisplay::PaintStrategy::~PaintStrategy()
+{
+
+}
 // ++++++++++++++++++++++++++++++++++++++++++++++++++
 IntervalProgressDisplay::IntervalProgressDisplay(QWidget *parent) :
     QFrame(parent),
@@ -88,6 +98,7 @@ IntervalProgressDisplay::PaintStrategy *IntervalProgressDisplay::createPaintStra
     case PaintMode::LINEAR:     return new LinearPaintStrategy();
     case PaintMode::ELLIPTICAL: return new EllipticalPaintStrategy();
     case PaintMode::CIRCULAR:   return new CircularPaintStrategy();
+    case PaintMode::PIE:        return new PiePaintStrategy();
     }
     qCritical() << "Can't create a paint strategy to " << paintMode;
     return nullptr;
@@ -100,11 +111,46 @@ void IntervalProgressDisplay::paintEvent(QPaintEvent *e)
     if (paintStrategy) {
         QPainter p(this);
         p.setRenderHint(QPainter::Antialiasing, true);
-        PaintContext paintContext(width(), height(), beatsPerInterval, currentBeat, isShowingAccents(), beatsPerAccent);
-        QColor CURRENT_BEAT_COLOR = usingLowContrastColors ? Qt::lightGray : Qt::white;
-        PaintColors paintColors(CURRENT_BEAT_COLOR, SECONDARY_BEATS_COLOR, ACCENT_COLOR, CURRENT_ACCENT_COLOR, DISABLED_BEATS_COLOR, TEXT_COLOR);
+        qreal elementsSize = getElementsSize(paintMode);
+        qreal fontSize = getFontSize(paintMode);
+        PaintContext paintContext(width(), height(), beatsPerInterval, currentBeat, isShowingAccents(), beatsPerAccent, elementsSize, fontSize);
+        QColor currentBeatColor = usingLowContrastColors ? Qt::lightGray : Qt::white;
+        PaintColors paintColors(currentBeatColor, SECONDARY_BEATS_COLOR, ACCENT_COLOR, CURRENT_ACCENT_COLOR, DISABLED_BEATS_COLOR, TEXT_COLOR);
         paintStrategy->paint(p, paintContext, paintColors);
     }
+}
+
+qreal IntervalProgressDisplay::getFontSize(PaintMode paintMode) const
+{
+    qreal baseFontSize = 8.0;
+    int size;
+    switch (paintMode) {
+        case PaintMode::LINEAR:     return qMax(baseFontSize, width() * 0.015);
+        case PaintMode::CIRCULAR:
+        case PaintMode::ELLIPTICAL:
+        case PaintMode::PIE:        size = qMin(width(), height()); break;
+    }
+    return qMax(baseFontSize, size * 0.03);
+}
+
+
+qreal IntervalProgressDisplay::getElementsSize(PaintMode paintMode) const
+{
+    switch (paintMode) {
+    case PaintMode::LINEAR: return qMax(width() * 0.035, 22.5);
+    case PaintMode::CIRCULAR:
+    case PaintMode::ELLIPTICAL:
+    {
+        int minSize = qMin(width(), height());
+        return qMax(minSize * 0.035, 7.0);
+    }
+    case PaintMode::PIE:
+    {
+        int minSize = qMin(width(), height());
+        return qMax(minSize * 0.1, 8.0);
+    }
+    }
+    return 0;
 }
 
 QSize IntervalProgressDisplay::minimumSizeHint() const
@@ -112,6 +158,7 @@ QSize IntervalProgressDisplay::minimumSizeHint() const
     QSize size = QWidget::minimumSizeHint();
     switch (paintMode) {
     case CIRCULAR:
+    case PIE:
         size.setWidth(height());
         break;
     case ELLIPTICAL:
@@ -125,13 +172,15 @@ QSize IntervalProgressDisplay::minimumSizeHint() const
 }
 
 IntervalProgressDisplay::PaintContext::PaintContext(int width, int height, int beatsPerInterval, int currentBeat,
-                                                    bool drawAccents, int beatsPerAccent)
+                                                    bool drawAccents, int beatsPerAccent, qreal elementsSize, qreal fontSize)
     : width(width),
       height(height),
       beatsPerInterval(beatsPerInterval),
       currentBeat(currentBeat),
       showingAccents(drawAccents),
-      beatsPerAccent(beatsPerAccent)
+      beatsPerAccent(beatsPerAccent),
+      elementsSize(elementsSize),
+      fontSize(fontSize)
 {
 
 }

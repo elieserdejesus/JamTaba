@@ -3,9 +3,8 @@
 #include <QPainter>
 #include <QDebug>
 
-QRectF IntervalProgressDisplay::EllipticalPaintStrategy::createContextRect(const PaintContext &context) const
+QRectF IntervalProgressDisplay::EllipticalPaintStrategy::createContextRect(const PaintContext &context, qreal margin) const
 {
-    qreal margin = CIRCLE_MAX_SIZE + 4;
     qreal w = qMin(context.height * 3, context.width) - margin * 2;
     qreal h = context.height - margin * 2;
     qreal left = (context.width - w)/2; //draw in center horizontally
@@ -15,8 +14,8 @@ QRectF IntervalProgressDisplay::EllipticalPaintStrategy::createContextRect(const
 
 void IntervalProgressDisplay::EllipticalPaintStrategy::paint(QPainter &p, const PaintContext &context, const PaintColors &colors)
 {
-
-    QRectF rect = createContextRect(context);
+    qreal margin = context.elementsSize + 4;
+    QRectF rect = createContextRect(context, margin);
 
     if (context.beatsPerInterval <= 32) {
         drawCircles(p, rect, context, colors, context.beatsPerInterval, 0, true);// draw a ellipse
@@ -25,8 +24,8 @@ void IntervalProgressDisplay::EllipticalPaintStrategy::paint(QPainter &p, const 
         int elementsInNestedEllipse = context.beatsPerInterval - elementsInOuterEllipse;
 
         //draw the internal circles first, so external circles will appear in top
-        int margin = CIRCLE_MAX_SIZE * 2;
-        QMargins margins(margin, margin, margin, margin);
+        qreal margin = context.elementsSize;
+        QMarginsF margins(margin, margin, margin, margin);
         bool drawPath = context.currentBeat >= elementsInOuterEllipse;
         drawCircles(p, rect.marginsRemoved(margins), context, colors, elementsInNestedEllipse, elementsInOuterEllipse, drawPath);
 
@@ -36,8 +35,15 @@ void IntervalProgressDisplay::EllipticalPaintStrategy::paint(QPainter &p, const 
         }
     }
 
+    drawCurrentBeatValue(p, rect, context, colors);
+}
+
+void IntervalProgressDisplay::EllipticalPaintStrategy::drawCurrentBeatValue(QPainter &p, const QRectF &rect, const PaintContext &context, const PaintColors &colors)
+{
     // draw current beat text in center
     p.setPen(colors.textColor);
+    font.setPointSizeF(context.fontSize);
+    p.setFont(font);
     QString numberString(QString::number(context.currentBeat + 1) + " / " + QString::number(context.beatsPerInterval));
 
     int strWidth =  p.fontMetrics().width(numberString);
@@ -47,17 +53,17 @@ void IntervalProgressDisplay::EllipticalPaintStrategy::paint(QPainter &p, const 
 void IntervalProgressDisplay::EllipticalPaintStrategy::paintEllipticalPath(QPainter &p, const QRectF &rect, const PaintColors &colors, int currentBeat, int beatsToDraw)
 {
     QPen pen(Qt::SolidLine);
-    pen.setColor(colors.secondaryBeat);
+    pen.setColor(colors.disabledBeats);
+    pen.setWidthF(3);
     p.setPen(pen);
     p.setBrush(Qt::BrushStyle::NoBrush);
     //p.drawEllipse(rect);
 
     double degreesPerSlice = 360.0 / beatsToDraw;
-    int beatIndex = currentBeat < beatsToDraw ? currentBeat : (currentBeat - (beatsToDraw - 1));
+    int beatIndex = currentBeat < beatsToDraw ? currentBeat : (currentBeat - beatsToDraw);
     qreal startAngle = -(degreesPerSlice * beatIndex - 90) * 16;
     qreal spanAngle = -(degreesPerSlice * (beatsToDraw - beatIndex)) * 16;
     p.drawArc(rect, startAngle, spanAngle);
-    //p.drawPie(rect, startAngle, spanAngle);
 }
 
 QBrush IntervalProgressDisplay::EllipticalPaintStrategy::getBrush(int beat, int beatOffset, const PaintContext &context, const PaintColors &colors) const
@@ -91,15 +97,15 @@ qreal IntervalProgressDisplay::EllipticalPaintStrategy::getCircleSize(int beat, 
     bool isCurrentBeat = beat + beatOffset == context.currentBeat;
     if (isCurrentBeat)
     {
-        return CIRCLE_MAX_SIZE;
+        return context.elementsSize;
     }
     else{
         bool isMeasureFirstBeat = (beat + beatOffset) % context.beatsPerAccent == 0;
         if (context.showingAccents && isMeasureFirstBeat){
-            return CIRCLE_MAX_SIZE - 1;
+            return context.elementsSize - 1;
         }
     }
-    return CIRCLE_MAX_SIZE - 2;
+    return context.elementsSize - 2;
 }
 
 QPen IntervalProgressDisplay::EllipticalPaintStrategy::getPen(int beat, int beatOffset, const PaintContext &context) const
@@ -140,19 +146,15 @@ void IntervalProgressDisplay::EllipticalPaintStrategy::drawCircles(QPainter &p, 
     qreal centerY = rect.center().y();
 
     for (int beat = beatsToDraw-1; beat >= 0; --beat) {
-
         // draw the current beat
         if (beat + beatsToDrawOffset >= context.currentBeat) {
             qreal x = centerX + ((hRadius) * std::cos(angle));
             qreal y = centerY + ((vRadius) * std::sin(angle));
-            QPen pen = getPen(beat, beatsToDrawOffset, context);
-            QBrush brush = getBrush(beat, beatsToDrawOffset, context, colors);
-            p.setBrush(brush);
-            p.setPen(pen);
+            p.setBrush(getBrush(beat, beatsToDrawOffset, context, colors));
+            p.setPen(getPen(beat, beatsToDrawOffset, context));
             qreal size = getCircleSize(beat, beatsToDrawOffset, context);
             p.drawEllipse(QPointF(x, y), size, size);
         }
-
         angle += angleIncrement;
     }
 }

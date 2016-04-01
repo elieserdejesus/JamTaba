@@ -9,7 +9,7 @@
     {
         refreshTimerID = startTimer(400);
 
-        setMinimumSize(500, 500);
+        setMinimumSize(600, 150);
 
         progressDisplay = new IntervalProgressDisplay(this);
         progressDisplay->setBeatsPerAccent(4);
@@ -23,6 +23,7 @@
         combo->addItem("Line");
         combo->addItem("Circle");
         combo->addItem("Ellipse");
+        combo->addItem("Pie");
 
         QPushButton *accentsButton = new QPushButton("Accents");
         accentsButton->setCheckable(true);
@@ -36,9 +37,10 @@
         connect(combo, SIGNAL(currentIndexChanged(QString)), this, SLOT(setShape(QString)));
         connect(accentsButton, SIGNAL(toggled(bool)), this, SLOT(toggleAccents(bool)));
 
-        progressDisplay->setBeatsPerInterval(32);
+        progressDisplay->setBeatsPerInterval(64);
         currentBeat = 0;//progressDisplay->getBeatsPerInterval()/2 - 1;
-        combo->setCurrentIndex(2);
+        //progressDisplay->setCurrentBeat(currentBeat);
+        combo->setCurrentIndex(0);
     }
 
     TestMainWindow::~TestMainWindow()
@@ -65,6 +67,9 @@
         }
         else if ("Line" == shape) {
             progressDisplay->setPaintMode(IntervalProgressDisplay::LINEAR);
+        }
+        else if("Pie" == shape){
+            progressDisplay->setPaintMode(IntervalProgressDisplay::PIE);
         }
         else{
             progressDisplay->setPaintMode(IntervalProgressDisplay::ELLIPTICAL);

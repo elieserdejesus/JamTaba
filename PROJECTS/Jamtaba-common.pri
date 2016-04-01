@@ -173,6 +173,7 @@ SOURCES += gui/intervalProgress/IntervalProgressDisplay.cpp
 SOURCES += gui/intervalProgress/LinearPaintStrategy.cpp
 SOURCES += gui/intervalProgress/EllipticalPaintStrategy.cpp
 SOURCES += gui/intervalProgress/CircularPaintStrategy.cpp
+SOURCES += gui/intervalProgress/PiePaintStrategy.cpp
 SOURCES += gui/PrivateServerDialog.cpp
 SOURCES += gui/UserNameDialog.cpp
 SOURCES += gui/MainWindow.cpp
