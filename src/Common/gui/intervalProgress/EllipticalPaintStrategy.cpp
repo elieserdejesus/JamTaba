@@ -24,7 +24,7 @@ void IntervalProgressDisplay::EllipticalPaintStrategy::paint(QPainter &p, const 
         int elementsInNestedEllipse = context.beatsPerInterval - elementsInOuterEllipse;
 
         //draw the internal circles first, so external circles will appear in top
-        qreal margin = context.elementsSize;
+        qreal margin = context.elementsSize * 1.8;
         QMarginsF margins(margin, margin, margin, margin);
         bool drawPath = context.currentBeat >= elementsInOuterEllipse;
         drawCircles(p, rect.marginsRemoved(margins), context, colors, elementsInNestedEllipse, elementsInOuterEllipse, drawPath);

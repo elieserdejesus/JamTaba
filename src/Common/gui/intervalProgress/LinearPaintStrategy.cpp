@@ -15,9 +15,9 @@ void IntervalProgressDisplay::LinearPaintStrategy::paint(QPainter &p, const Pain
 
     font.setPointSizeF(context.fontSize);
 
-    qreal initialXPos = context.elementsSize / 2 + 1;
+    qreal initialXPos = context.elementsSize / 2.0 + 1;
     qreal xSpace = getHorizontalSpace(context.width, context.elementsSize, context.beatsPerInterval, initialXPos+1);
-    qreal yPos = context.height/2;
+    qreal yPos = context.height/2.0;
 
     // draw the background line
     p.setPen(QPen(CIRCLES_BORDER_COLOR, 0.9f));
@@ -74,11 +74,11 @@ void IntervalProgressDisplay::LinearPaintStrategy::drawPoint(qreal x, qreal y, q
     if (drawText) {
         QString valueString = QString::number(value);
         painter.setFont(font);
-        qreal valueStringWidth = painter.fontMetrics().width(valueString);
-        qreal textX = (x - valueStringWidth / 2.0);
-        qreal textY = y + painter.fontMetrics().descent() + 2;
-        if (!small)
-            painter.setPen(Qt::black);
+        QFontMetrics fontMetrics = painter.fontMetrics();
+        QRect boundingRect = fontMetrics.tightBoundingRect(valueString);
+        qreal textX = x - fontMetrics.width(valueString)/2.0;
+        qreal textY = y + boundingRect.height()/2.0;
+        painter.setPen(Qt::black);
         painter.drawText(QPointF(textX, textY), valueString);
     }
 }

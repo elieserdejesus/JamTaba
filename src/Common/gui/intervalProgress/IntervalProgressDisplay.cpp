@@ -15,7 +15,7 @@ const QColor IntervalProgressDisplay::TEXT_COLOR = Qt::black;
 IntervalProgressDisplay::PaintStrategy::PaintStrategy()
     :font("Verdana")
 {
-
+    font.setStretch(QFont::SemiCondensed);
 }
 
 IntervalProgressDisplay::PaintStrategy::~PaintStrategy()
@@ -130,7 +130,7 @@ qreal IntervalProgressDisplay::getFontSize(PaintMode paintMode) const
         case PaintMode::ELLIPTICAL:
         case PaintMode::PIE:        size = qMin(width(), height()); break;
     }
-    return qMax(baseFontSize, size * 0.03);
+    return qMax(baseFontSize, size * 0.05);
 }
 
 
