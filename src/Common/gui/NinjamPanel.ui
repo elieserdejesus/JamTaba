@@ -481,7 +481,7 @@
   <customwidget>
    <class>IntervalProgressDisplay</class>
    <extends>QWidget</extends>
-   <header>IntervalProgressDisplay.h</header>
+   <header>intervalProgress/IntervalProgressDisplay.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

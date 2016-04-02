@@ -171,9 +171,9 @@ void NinjamPanel::updateAccentsStatus(int index)
 void NinjamPanel::updateIntervalProgressShape(int index)
 {
     Q_UNUSED(index);
-    qCDebug(jtNinjamGUI) << index;
-    ui->intervalPanel->setPaintMode(
-        (IntervalProgressDisplay::PaintMode)ui->comboShape->currentData().toInt());
+    int selectedShape = ui->comboShape->currentData().toInt();
+    ui->intervalPanel->setPaintMode((IntervalProgressDisplay::PaintMode)selectedShape);
+    emit intervalShapeChanged(selectedShape);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++
@@ -210,7 +210,8 @@ void NinjamPanel::setIntervalShape(int shape)
     case IntervalProgressDisplay::PaintMode::LINEAR:
         index = 2;
         break;
-    default:
+    case IntervalProgressDisplay::PaintMode::PIE:
+        index = 3;
         break;
     }
     ui->comboShape->setCurrentIndex(index);
@@ -222,6 +223,7 @@ void NinjamPanel::buildShapeModel()
     ui->comboShape->addItem("Circle", IntervalProgressDisplay::PaintMode::CIRCULAR);
     ui->comboShape->addItem("Ellipse", IntervalProgressDisplay::PaintMode::ELLIPTICAL);
     ui->comboShape->addItem("Line", IntervalProgressDisplay::PaintMode::LINEAR);
+    ui->comboShape->addItem("Pie", IntervalProgressDisplay::PaintMode::PIE);
 }
 
 void NinjamPanel::buildAccentsdModel(int bpi)

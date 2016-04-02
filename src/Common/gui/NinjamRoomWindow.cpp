@@ -507,8 +507,6 @@ NinjamRoomWindow::~NinjamRoomWindow()
         disconnectFromNinjamControllerSignals(ninjamController);
     }
 
-    mainController->storeIntervalProgressShape(ninjamPanel->getIntervalShape());
-
     if (ninjamPanel) {
         ninjamPanel->setParent(0);
         ninjamPanel->deleteLater();
@@ -604,6 +602,13 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
 
     connect(ui->licenceButton, SIGNAL(clicked(bool)), this, SLOT(showServerLicence()));
 
+    connect(ninjamPanel, SIGNAL(intervalShapeChanged(int)), this, SLOT(setNewIntervalShape(int)));
+
+}
+
+void NinjamRoomWindow::setNewIntervalShape(int newShape)
+{
+    mainController->storeIntervalProgressShape(newShape);
 }
 
 void NinjamRoomWindow::setEstimatatedChunksPerIntervalInAllTracks()
