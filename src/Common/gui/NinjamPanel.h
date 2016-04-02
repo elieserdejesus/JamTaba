@@ -61,6 +61,7 @@ signals:
     void soloButtonClicked();
     void preferencesButtonClicked();
     void hostSyncStateChanged(bool syncWithHost);
+    void intervalShapeChanged(int newShape);
 
 protected:
     bool eventFilter(QObject *source, QEvent *ev);

@@ -102,6 +102,7 @@ private slots:
     void setNewBpi(const QString &);
     void setNewBpm(const QString &);
     void setNewBeatsPerAccent(int);
+    void setNewIntervalShape(int);
 
     // metronome events
     void setMetronomePanSliderPosition(int value);
