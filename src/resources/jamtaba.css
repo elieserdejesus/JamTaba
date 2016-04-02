@@ -1290,14 +1290,32 @@ NinjamPanel #soloButton, NinjamPanel #muteButton{
     border: 1px solid rgba(0, 0, 0, 60);
 }
 
-NinjamPanel #preferencesButton
+NinjamPanel #preferencesButton,
+NinjamPanel #floatingWindowButton
 {
-    background-image: url(':/images/gear-hover.png');
     background-repeat: none;
     background-position: center center;
     padding-left: 0px;
     padding-right: 0px;
+}
+
+NinjamPanel #preferencesButton,
+NinjamPanel #floatingWindowButton,
+NinjamPanel #soloButton,
+NinjamPanel #muteButton{
     max-width: 20px;
+    max-height: 16px;
+    min-height: 16px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+NinjamPanel #preferencesButton{
+   background-image: url(':/images/gear-hover.png');
+}
+
+NinjamPanel #floatingWindowButton{
+    background-image: url(':/images/windows.png');
 }
 
 NinjamPanel QLabel{

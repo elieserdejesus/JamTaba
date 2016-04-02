@@ -231,6 +231,9 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="toolTip">
+             <string>Solo metronome</string>
+            </property>
             <property name="accessibleDescription">
              <string>Button to soloing the metronome</string>
             </property>
@@ -256,6 +259,9 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="toolTip">
+             <string>mute metronome</string>
+            </property>
             <property name="accessibleDescription">
              <string>Button to mute the metronome</string>
             </property>
@@ -274,6 +280,25 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>open metronome preferences</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="floatingWindowButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>open a metronome floating window</string>
             </property>
             <property name="text">
              <string/>
