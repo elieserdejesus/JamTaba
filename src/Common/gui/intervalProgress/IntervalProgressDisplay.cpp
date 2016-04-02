@@ -7,7 +7,7 @@
 const double IntervalProgressDisplay::PI = 3.141592653589793238462643383279502884;
 
 const QColor IntervalProgressDisplay::CURRENT_ACCENT_COLOR = Qt::green;
-const QColor IntervalProgressDisplay::ACCENT_COLOR = QColor(240, 240, 240);
+const QColor IntervalProgressDisplay::ACCENT_COLOR = QColor(255, 255, 255, 120);
 const QColor IntervalProgressDisplay::SECONDARY_BEATS_COLOR = Qt::gray;
 const QColor IntervalProgressDisplay::DISABLED_BEATS_COLOR = QColor(0, 0, 0, 15);
 const QColor IntervalProgressDisplay::TEXT_COLOR = Qt::black;
