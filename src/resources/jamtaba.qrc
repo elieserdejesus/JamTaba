@@ -41,6 +41,7 @@
         <file>vertical_layout.png</file>
         <file>narrow.png</file>
         <file>wide.png</file>
+        <file>windows.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

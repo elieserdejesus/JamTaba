@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QStringList>
+#include "intervalProgress/IntervalProgressWindow.h"
 
 class QComboBox;
 class QAbstractSlider;
@@ -67,6 +68,7 @@ protected:
     bool eventFilter(QObject *source, QEvent *ev);
     Ui::NinjamPanel *ui;
     QPushButton *hostSyncButton;// created only when running as vst plugin
+    IntervalProgressWindow *metronomeFloatingWindow;
 private:
     void buildShapeModel();
     void buildAccentsdModel(int bpi);
@@ -74,9 +76,13 @@ private:
     static bool compareBpis(const QString &s1, const QString &s2);
     void selectClosestBeatsPerAccentInCombo(int currentBeatsPerAccent);
     void selectBeatsPerAccentInCombo(int beatsPerAccent);
+    void setupSignals();
+
 private slots:
     void updateAccentsStatus(int index);
     void updateIntervalProgressShape(int index);
+    void toggleMetronomeFloatingWindowVisibility(bool showFloatingWindow);
+    void deleteFloatWindow();
 };
 
 #endif // NINJAMPANEL_H

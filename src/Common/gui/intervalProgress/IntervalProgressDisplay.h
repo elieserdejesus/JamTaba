@@ -13,7 +13,7 @@ class IntervalProgressDisplay : public QFrame
 {
     Q_OBJECT
 public:
-    enum PaintMode {
+    enum PaintShape {
         CIRCULAR, ELLIPTICAL, LINEAR, PIE
     };
 
@@ -39,7 +39,8 @@ public:
 
     void setBeatsPerInterval(int beatsPerInterval);
 
-    void setPaintMode(PaintMode mode);
+    void setPaintMode(PaintShape mode);
+    inline PaintShape getPaintMode() const{ return paintMode; }
 
     QSize minimumSizeHint() const;
 
@@ -47,7 +48,7 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *e) override;
-
+    void resizeEvent(QResizeEvent *) override;
 private:
 
     struct PaintContext
@@ -133,11 +134,13 @@ private:
         QPainterPath getClipPath(const QRectF &rect, qreal piesHeight) const;
     };
 
-    PaintStrategy *createPaintStrategy(PaintMode paintMode) const;
-    qreal getElementsSize(PaintMode paintMode) const;
-    qreal getFontSize(PaintMode paintMode) const;
+    PaintStrategy *createPaintStrategy(PaintShape paintMode) const;
+    qreal getElementsSize(PaintShape paintMode) const;
+    qreal getFontSize(PaintShape paintMode) const;
 
-    PaintMode paintMode;
+    PaintShape paintMode;
+
+    QSize baseSize;
 
     int currentBeat;
     int beatsPerInterval;

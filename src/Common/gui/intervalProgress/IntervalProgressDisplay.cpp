@@ -7,7 +7,7 @@
 const double IntervalProgressDisplay::PI = 3.141592653589793238462643383279502884;
 
 const QColor IntervalProgressDisplay::CURRENT_ACCENT_COLOR = Qt::green;
-const QColor IntervalProgressDisplay::ACCENT_COLOR = QColor(255, 255, 255, 120);
+const QColor IntervalProgressDisplay::ACCENT_COLOR = QColor(225, 225, 225);
 const QColor IntervalProgressDisplay::SECONDARY_BEATS_COLOR = Qt::gray;
 const QColor IntervalProgressDisplay::DISABLED_BEATS_COLOR = QColor(0, 0, 0, 15);
 const QColor IntervalProgressDisplay::TEXT_COLOR = Qt::black;
@@ -25,7 +25,7 @@ IntervalProgressDisplay::PaintStrategy::~PaintStrategy()
 // ++++++++++++++++++++++++++++++++++++++++++++++++++
 IntervalProgressDisplay::IntervalProgressDisplay(QWidget *parent) :
     QFrame(parent),
-    paintMode(PaintMode::LINEAR),
+    paintMode(PaintShape::LINEAR),
     showAccents(false),
     currentBeat(0),
     beatsPerAccent(0),
@@ -82,7 +82,7 @@ void IntervalProgressDisplay::setBeatsPerInterval(int beats)
     }
 }
 
-void IntervalProgressDisplay::setPaintMode(PaintMode mode)
+void IntervalProgressDisplay::setPaintMode(PaintShape mode)
 {
     if (mode != this->paintMode) {
         this->paintMode = mode;
@@ -92,13 +92,13 @@ void IntervalProgressDisplay::setPaintMode(PaintMode mode)
     }
 }
 
-IntervalProgressDisplay::PaintStrategy *IntervalProgressDisplay::createPaintStrategy(PaintMode paintMode) const
+IntervalProgressDisplay::PaintStrategy *IntervalProgressDisplay::createPaintStrategy(PaintShape paintMode) const
 {
     switch (paintMode) {
-    case PaintMode::LINEAR:     return new LinearPaintStrategy();
-    case PaintMode::ELLIPTICAL: return new EllipticalPaintStrategy();
-    case PaintMode::CIRCULAR:   return new CircularPaintStrategy();
-    case PaintMode::PIE:        return new PiePaintStrategy();
+    case PaintShape::LINEAR:     return new LinearPaintStrategy();
+    case PaintShape::ELLIPTICAL: return new EllipticalPaintStrategy();
+    case PaintShape::CIRCULAR:   return new CircularPaintStrategy();
+    case PaintShape::PIE:        return new PiePaintStrategy();
     }
     qCritical() << "Can't create a paint strategy to " << paintMode;
     return nullptr;
@@ -120,31 +120,31 @@ void IntervalProgressDisplay::paintEvent(QPaintEvent *e)
     }
 }
 
-qreal IntervalProgressDisplay::getFontSize(PaintMode paintMode) const
+qreal IntervalProgressDisplay::getFontSize(PaintShape paintMode) const
 {
     qreal baseFontSize = 8.0;
     int size;
     switch (paintMode) {
-        case PaintMode::LINEAR:     return qMax(baseFontSize, width() * 0.015);
-        case PaintMode::CIRCULAR:
-        case PaintMode::ELLIPTICAL:
-        case PaintMode::PIE:        size = qMin(width(), height()); break;
+        case PaintShape::LINEAR:     return qMax(baseFontSize, width() * 0.015);
+        case PaintShape::CIRCULAR:
+        case PaintShape::ELLIPTICAL:
+        case PaintShape::PIE:        size = qMin(width(), height()); break;
     }
     return qMax(baseFontSize, size * 0.05);
 }
 
 
-qreal IntervalProgressDisplay::getElementsSize(PaintMode paintMode) const
+qreal IntervalProgressDisplay::getElementsSize(PaintShape paintMode) const
 {
     switch (paintMode) {
-    case PaintMode::LINEAR: return qMax(width() * 0.035, 22.5);
-    case PaintMode::CIRCULAR:
-    case PaintMode::ELLIPTICAL:
+    case PaintShape::LINEAR: return qMax(width() * 0.04, 22.5);
+    case PaintShape::CIRCULAR:
+    case PaintShape::ELLIPTICAL:
     {
         int minSize = qMin(width(), height());
         return qMax(minSize * 0.035, 7.0);
     }
-    case PaintMode::PIE:
+    case PaintShape::PIE:
     {
         int minSize = qMin(width(), height());
         return qMax(minSize * 0.1, 8.0);
@@ -153,19 +153,27 @@ qreal IntervalProgressDisplay::getElementsSize(PaintMode paintMode) const
     return 0;
 }
 
+void IntervalProgressDisplay::resizeEvent(QResizeEvent *e)
+{
+    if (baseSize.isEmpty()){
+        baseSize = e->size();
+    }
+}
+
 QSize IntervalProgressDisplay::minimumSizeHint() const
 {
     QSize size = QWidget::minimumSizeHint();
+    int h = baseSize.height() > 0 ? baseSize.height() : height();
     switch (paintMode) {
     case CIRCULAR:
     case PIE:
-        size.setWidth(height());
+        size.setWidth(h);
         break;
     case ELLIPTICAL:
-        size.setWidth(height() * 2);
+        size.setWidth(h * 2);
         break;
     case LINEAR:
-        size.setWidth(height() * 5);
+        size.setWidth(h * 5);
         break;
     }
     return size;
