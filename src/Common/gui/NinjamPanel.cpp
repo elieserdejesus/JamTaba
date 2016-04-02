@@ -2,6 +2,7 @@
 #include "ui_NinjamPanel.h"
 #include "log/Logging.h"
 #include "BpiUtils.h"
+#include "intervalProgress/IntervalProgressWindow.h"
 
 #include <QDebug>
 #include <QtAlgorithms>
@@ -11,7 +12,8 @@
 NinjamPanel::NinjamPanel(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::NinjamPanel),
-    hostSyncButton(nullptr)
+    hostSyncButton(nullptr),
+    metronomeFloatingWindow(nullptr)
 {
     ui->setupUi(this);
 
@@ -28,22 +30,25 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     ui->comboBpi->setCompleter(0);// disabling completer
     ui->comboBpm->setCompleter(0);// disabling completer
 
-    connect(ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)), this,
-                     SLOT(updateAccentsStatus(int)));
-    connect(ui->comboShape, SIGNAL(currentIndexChanged(int)), this,
-                     SLOT(updateIntervalProgressShape(int)));
-
     buildShapeModel();
 
     ui->levelSlider->installEventFilter(this);
     ui->panSlider->installEventFilter(this);
 
-    connect(ui->comboBpi, SIGNAL(activated(QString)), this,
-                     SIGNAL(bpiComboActivated(QString)));
-    connect(ui->comboBpm, SIGNAL(activated(QString)), this,
-                     SIGNAL(bpmComboActivated(QString)));
-    connect(ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)),
-                     SIGNAL(accentsComboChanged(int)));
+    ui->peakMeterLeft->setOrientation(Qt::Horizontal);
+    ui->peakMeterRight->setOrientation(Qt::Horizontal);
+
+    setupSignals();
+}
+
+void NinjamPanel::setupSignals()
+{
+    connect(ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAccentsStatus(int)));
+    connect(ui->comboShape, SIGNAL(currentIndexChanged(int)), this, SLOT(updateIntervalProgressShape(int)));
+
+    connect(ui->comboBpi, SIGNAL(activated(QString)), this, SIGNAL(bpiComboActivated(QString)));
+    connect(ui->comboBpm, SIGNAL(activated(QString)), this, SIGNAL(bpmComboActivated(QString)));
+    connect(ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)), SIGNAL(accentsComboChanged(int)));
     connect(ui->levelSlider, SIGNAL(valueChanged(int)), this, SIGNAL(gainSliderChanged(
                                                                                   int)));
     connect(ui->panSlider, SIGNAL(valueChanged(int)), this, SIGNAL(panSliderChanged(int)));
@@ -51,8 +56,38 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     connect(ui->soloButton, SIGNAL(clicked(bool)), this, SIGNAL(soloButtonClicked()));
     connect(ui->preferencesButton, SIGNAL(clicked(bool)), this, SIGNAL(preferencesButtonClicked()));
 
-    ui->peakMeterLeft->setOrientation(Qt::Horizontal);
-    ui->peakMeterRight->setOrientation(Qt::Horizontal);
+    connect(ui->floatingWindowButton, SIGNAL(toggled(bool)), this, SLOT(toggleMetronomeFloatingWindowVisibility(bool)));
+}
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++
+void NinjamPanel::toggleMetronomeFloatingWindowVisibility(bool showFloatingWindow)
+{
+    if (showFloatingWindow){
+        if (!metronomeFloatingWindow) {
+            IntervalProgressDisplay::PaintShape paintMode = ui->intervalPanel->getPaintMode();
+            int beatsPerInterval = ui->intervalPanel->getBeatsPerInterval();
+            int beatsPerAccent = ui->intervalPanel->getBeatsPerAccent();
+            bool showingAccents = ui->intervalPanel->isShowingAccents();
+            metronomeFloatingWindow = new IntervalProgressWindow(this, paintMode, beatsPerInterval, beatsPerAccent, showingAccents);
+            connect(metronomeFloatingWindow, SIGNAL(windowClosed()), this, SLOT(deleteFloatWindow()));
+        }
+        metronomeFloatingWindow->setVisible(true);
+        metronomeFloatingWindow->raise();
+    }
+    else{
+        if (metronomeFloatingWindow) {
+            metronomeFloatingWindow->setVisible(false);
+            deleteFloatWindow();
+        }
+    }
+    ui->floatingWindowButton->setChecked(showFloatingWindow);
+}
+
+void NinjamPanel::deleteFloatWindow()
+{
+    metronomeFloatingWindow->deleteLater();
+    metronomeFloatingWindow = nullptr;
+    ui->floatingWindowButton->setChecked(false);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++
@@ -163,16 +198,29 @@ bool NinjamPanel::eventFilter(QObject *source, QEvent *ev)
 // ++++++++++++++++++++++++++++++++++++
 void NinjamPanel::updateAccentsStatus(int index)
 {
-    ui->intervalPanel->setShowAccents(index > 0);
-    if (ui->intervalPanel->isShowingAccents())
-        ui->intervalPanel->setBeatsPerAccent(ui->comboBeatsPerAccent->currentData().toInt());
+    bool showingAccents = index > 0;
+    ui->intervalPanel->setShowAccents(showingAccents);
+    if (metronomeFloatingWindow) {
+        metronomeFloatingWindow->setShowAccents(showingAccents);
+    }
+
+    if (showingAccents){
+        int beatsPerAccent = ui->comboBeatsPerAccent->currentData().toInt();
+        ui->intervalPanel->setBeatsPerAccent(beatsPerAccent);
+        if (metronomeFloatingWindow) {
+            metronomeFloatingWindow->setBeatsPerAccent(beatsPerAccent);
+        }
+    }
 }
 
 void NinjamPanel::updateIntervalProgressShape(int index)
 {
     Q_UNUSED(index);
-    int selectedShape = ui->comboShape->currentData().toInt();
-    ui->intervalPanel->setPaintMode((IntervalProgressDisplay::PaintMode)selectedShape);
+    IntervalProgressDisplay::PaintShape selectedShape = (IntervalProgressDisplay::PaintShape)ui->comboShape->currentData().toInt();
+    ui->intervalPanel->setPaintMode(selectedShape);
+    if (metronomeFloatingWindow) {
+        metronomeFloatingWindow->setIntervalProgressShape(selectedShape);
+    }
     emit intervalShapeChanged(selectedShape);
 }
 
@@ -200,17 +248,17 @@ int NinjamPanel::getIntervalShape() const
 void NinjamPanel::setIntervalShape(int shape)
 {
     int index = 0;
-    switch ((IntervalProgressDisplay::PaintMode)shape) {
-    case IntervalProgressDisplay::PaintMode::CIRCULAR:
+    switch ((IntervalProgressDisplay::PaintShape)shape) {
+    case IntervalProgressDisplay::PaintShape::CIRCULAR:
         index = 0;
         break;
-    case IntervalProgressDisplay::PaintMode::ELLIPTICAL:
+    case IntervalProgressDisplay::PaintShape::ELLIPTICAL:
         index = 1;
         break;
-    case IntervalProgressDisplay::PaintMode::LINEAR:
+    case IntervalProgressDisplay::PaintShape::LINEAR:
         index = 2;
         break;
-    case IntervalProgressDisplay::PaintMode::PIE:
+    case IntervalProgressDisplay::PaintShape::PIE:
         index = 3;
         break;
     }
@@ -220,10 +268,10 @@ void NinjamPanel::setIntervalShape(int shape)
 void NinjamPanel::buildShapeModel()
 {
     ui->comboShape->clear();
-    ui->comboShape->addItem("Circle", IntervalProgressDisplay::PaintMode::CIRCULAR);
-    ui->comboShape->addItem("Ellipse", IntervalProgressDisplay::PaintMode::ELLIPTICAL);
-    ui->comboShape->addItem("Line", IntervalProgressDisplay::PaintMode::LINEAR);
-    ui->comboShape->addItem("Pie", IntervalProgressDisplay::PaintMode::PIE);
+    ui->comboShape->addItem("Circle", IntervalProgressDisplay::PaintShape::CIRCULAR);
+    ui->comboShape->addItem("Ellipse", IntervalProgressDisplay::PaintShape::ELLIPTICAL);
+    ui->comboShape->addItem("Line", IntervalProgressDisplay::PaintShape::LINEAR);
+    ui->comboShape->addItem("Pie", IntervalProgressDisplay::PaintShape::PIE);
 }
 
 void NinjamPanel::buildAccentsdModel(int bpi)
@@ -241,6 +289,9 @@ void NinjamPanel::buildAccentsdModel(int bpi)
 void NinjamPanel::setCurrentBeat(int currentBeat)
 {
     ui->intervalPanel->setCurrentBeat(currentBeat);
+    if (metronomeFloatingWindow) {
+        metronomeFloatingWindow->setCurrentBeat(currentBeat);
+    }
 }
 
 void NinjamPanel::selectClosestBeatsPerAccentInCombo(int currentBeatsPerAccent)
@@ -278,6 +329,9 @@ void NinjamPanel::setBpi(int bpi)
     ui->comboBpi->setCurrentText(QString::number(bpi));
     ui->comboBpi->blockSignals(false);
     ui->intervalPanel->setBeatsPerInterval(bpi);
+    if (metronomeFloatingWindow) {
+        metronomeFloatingWindow->setBeatsPerInterval(bpi);
+    }
     bool showingAccents = ui->intervalPanel->isShowingAccents();
     buildAccentsdModel(bpi);
     if (showingAccents) {
@@ -290,6 +344,9 @@ void NinjamPanel::setBpi(int bpi)
     } else {
         ui->comboBeatsPerAccent->setCurrentIndex(0);// off
         ui->intervalPanel->setShowAccents(false);
+        if (metronomeFloatingWindow) {
+            metronomeFloatingWindow->setShowAccents(false);
+        }
     }
 }
 
