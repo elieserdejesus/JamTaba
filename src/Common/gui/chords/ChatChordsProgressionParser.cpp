@@ -11,7 +11,7 @@ const QString ChatChordsProgressionParser::MEASURE_SEPARATORS_REGEX = "\\||!|I|l
 bool ChatChordsProgressionParser::containsProgression(const QString &string)
 {
     QRegularExpression regex(
-        "^([" + MEASURE_SEPARATORS_REGEX + "][ ]{0,2}" + CHORD_REGEX + "{1,4}){1,}");
+        "^([" + MEASURE_SEPARATORS_REGEX + "][ ]{0,2}" + CHORD_REGEX + "{1,4}){2,}");
     QString cleanedString = getSanitizedString(string);
     QRegularExpressionMatch match = regex.match(cleanedString);
     return match.hasMatch();
