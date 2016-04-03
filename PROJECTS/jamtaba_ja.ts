@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ja_JP">
+<context>
+    <name>BusyDialog</name>
+    <message>
+        <location filename="../src/Common/gui/BusyDialog.ui" line="17"/>
+        <source>Dialog</source>
+        <translation>ダイアログ</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/BusyDialog.ui" line="23"/>
+        <source>This is the busy dialog window</source>
+        <translation>待機中</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/BusyDialog.ui" line="51"/>
+        <source>TextLabel</source>
+        <translation>テキストラベル</translation>
+    </message>
+</context>
+<context>
+    <name>ChatMessagePanel</name>
+    <message>
+        <location filename="../src/Common/gui/ChatMessagePanel.ui" line="20"/>
+        <source>Form</source>
+        <translation>フォーム</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/ChatMessagePanel.ui" line="83"/>
+        <source>user name</source>
+        <translation>ユーザ名</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/ChatMessagePanel.ui" line="102"/>
+        <source>translate ...</source>
+        <translation>翻訳...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/ChatMessagePanel.ui" line="105"/>
+        <source>T</source>
+        <translation>翻訳</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/ChatMessagePanel.ui" line="124"/>
+        <source>big chat message with many lines to test the behavior</source>
+        <translation>チャットメッセージ</translation>
+    </message>
+</context>
+<context>
+    <name>ChatPanel</name>
+    <message>
+        <location filename="../src/Common/gui/ChatPanel.ui" line="14"/>
+        <source>Form</source>
+        <translation>フォーム</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/ChatPanel.ui" line="35"/>
+        <source>Type your text to sent on the chat here</source>
+        <translation>ここに発言を入力</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/ChatPanel.ui" line="48"/>
+        <source>This is the chat scroll area</source>
+        <translation>チャットメッセージ表示エリア</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/ChatPanel.ui" line="77"/>
+        <source>clear the messages ...</source>
+        <translation>メッセージを消去...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/ChatPanel.ui" line="80"/>
+        <source>Press that button to clear your message</source>
+        <translation>メッセージ送信</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/ChatPanel.ui" line="93"/>
+        <source>Auto translate</source>
+        <translation>自動翻訳</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/ChatPanel.ui" line="96"/>
+        <source>Turn on/off the auto translation for chat messages</source>
+        <translation>自動翻訳のon/off切り替え</translation>
+    </message>
+</context>
+<context>
+    <name>ChordsPanel</name>
+    <message>
+        <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="14"/>
+        <source>Form</source>
+        <translation>フォーム</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="64"/>
+        <source>send the chords to chat...</source>
+        <translation>コード進行をチャットへ送信...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="67"/>
+        <source>send the chords to chat</source>
+        <translation>コード進行をチャットへ送信</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="83"/>
+        <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="86"/>
+        <source>discard chord progression</source>
+        <translation>コード進行を取り消す</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="102"/>
+        <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="105"/>
+        <source>transpose up</source>
+        <translation>移調(上)</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="108"/>
+        <source>#</source>
+        <translation>♯</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="121"/>
+        <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="124"/>
+        <source>transpose down</source>
+        <translation>移調(下)</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="127"/>
+        <source>b</source>
+        <translation>♭</translation>
+    </message>
+</context>
+<context>
+    <name>IODialog</name>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="14"/>
+        <source>Preferences ...</source>
+        <translation>設定...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="24"/>
+        <source>Audio</source>
+        <translation>オーディオ</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="39"/>
+        <source>Audio Device</source>
+        <translation>オーディオデバイス</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="79"/>
+        <source>Inputs</source>
+        <translation>入力</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="90"/>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="129"/>
+        <source>First</source>
+        <translation>開始</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="100"/>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="139"/>
+        <source>Last</source>
+        <translation>末尾</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="121"/>
+        <source>Outpus</source>
+        <translation>出力</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="165"/>
+        <source>Sample rate</source>
+        <translation>サンプリングレート</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="210"/>
+        <source>Buffer size</source>
+        <translation>バッファーサイズ
+</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="255"/>
+        <source>ASIO panel ...</source>
+        <translation>ASIOパネル...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="265"/>
+        <source>MIDI</source>
+        <translation>MIDI</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="277"/>
+        <source>Enable/disable your midi input devices:</source>
+        <translation>MIDIデバイスの有効/無効化:</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="322"/>
+        <source>VST</source>
+        <translation>VST</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="328"/>
+        <source>Vst(i)s loaded</source>
+        <translation>読み込まれたVST(i)s</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="349"/>
+        <source>Scan only new plugins</source>
+        <translation>新しいプラグインのみを走査</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="352"/>
+        <source>Refresh</source>
+        <translation>リフレッシュ</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="359"/>
+        <source>Clear plugins cache and scan all plugin folders</source>
+        <translation>プラグインのキャッシュを消去</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="362"/>
+        <source>Clear and Scan</source>
+        <translation>再走査</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="369"/>
+        <source>Add to black List</source>
+        <translation>ブラックリストへ追加</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="376"/>
+        <source>Remove from blackList</source>
+        <translation>ブラックリストから除去</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="419"/>
+        <source>Plugin Paths:</source>
+        <translation>プラグインの場所:</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="446"/>
+        <source>Add a new folder to scan ...</source>
+        <translation>プラグインの場所を追加...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="518"/>
+        <source>Recording</source>
+        <translation>録音</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="534"/>
+        <source>Record path:</source>
+        <translation>録音の保存場所:</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="541"/>
+        <source>Save multi tracks </source>
+        <translation>マルチトラックで保存</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="548"/>
+        <source>browse ...</source>
+        <translation>ブラウズ...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="569"/>
+        <source>Metronome</source>
+        <translation>メトロノーム</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="581"/>
+        <source>Custom Metronome Sounds</source>
+        <translation>メトロノーム音の変更</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="600"/>
+        <source>Primary Beat:</source>
+        <translatorcomment>アクセント音</translatorcomment>
+        <translation>プライマリビート:</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="613"/>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="637"/>
+        <source>Browse ...</source>
+        <translation>ブラウズ...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="627"/>
+        <source>Secondary Beat:</source>
+        <translatorcomment>通常のクリック音</translatorcomment>
+        <translation>セカンダリビート:</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="654"/>
+        <source>Please use 16 bit audio files for metronome sounds!</source>
+        <translation>16ビットのオーディオファイルを選択してください!</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PreferencesDialog.ui" line="708"/>
+        <source>ok</source>
+        <translatorcomment>設定を保存</translatorcomment>
+        <translation>保存</translation>
+    </message>
+</context>
+<context>
+    <name>LocalTrackGroupView</name>
+    <message>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="250"/>
+        <source>Save the preset ...</source>
+        <translation>プリセットを保存...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="251"/>
+        <source>Preset name:</source>
+        <translation>プリセット名:</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="268"/>
+        <source>Remove preset</source>
+        <translation>プリセットを削除</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="269"/>
+        <source>Preset:</source>
+        <translation>プリセット:</translation>
+    </message>
+</context>
+<context>
+    <name>MainFrameClass</name>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="86"/>
+        <source>Rooms to play</source>
+        <translation>部屋</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="252"/>
+        <source>master</source>
+        <translation>マスター音量</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="375"/>
+        <source>Your controls</source>
+        <translation>あなたのコントロール</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="382"/>
+        <source>collapse/expand your controls ...</source>
+        <translation>コントロールを折りたたむ/展開...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="460"/>
+        <source>Preferences</source>
+        <translation>設定</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="475"/>
+        <source>Ninjam</source>
+        <translation>ニンジャム</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="486"/>
+        <source>Help</source>
+        <translation>ヘルプ</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="499"/>
+        <source>View Mode</source>
+        <translation>表示モード</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="513"/>
+        <source>Audio ...</source>
+        <translation>オーディオ...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="518"/>
+        <source>Midi ...</source>
+        <translation>Midi...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="523"/>
+        <source>VST Plugins ...</source>
+        <translation>VSTプラグイン...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="528"/>
+        <source>Recording ...</source>
+        <translation>録音...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="533"/>
+        <source>Private Server ...</source>
+        <translation>プライベートサーバへ接続...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="538"/>
+        <source>Ninjam community (Ninbot) ...</source>
+        <translation>ニンジャムコミュニティ(ninbot)...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="543"/>
+        <source>Ninjam Official Site ...</source>
+        <translation>Ninjam公式サイト...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="548"/>
+        <source>Report bugs or suggest improvements ...</source>
+        <translation>バグ報告/改善を提案...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="553"/>
+        <source>Wiki ...</source>
+        <translation>Wiki...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="558"/>
+        <source>Users Manual ...</source>
+        <translation>ユーザマニュアル...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="566"/>
+        <source>Full View</source>
+        <translation>全画面表示</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="574"/>
+        <source>Mini View</source>
+        <translation>最小表示</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="579"/>
+        <source>Quit...</source>
+        <translation>終了...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="587"/>
+        <source>FullscreenMode</source>
+        <translation>フルスクリーンモード</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="592"/>
+        <source>Current Version ...</source>
+        <translation>現在のバージョン...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="597"/>
+        <source>Metronome ...</source>
+        <translation>メトロノーム...</translation>
+    </message>
+</context>
+<context>
+    <name>MidiToolsDialog</name>
+    <message>
+        <location filename="../src/Standalone/gui/MidiToolsDialog.ui" line="20"/>
+        <source>Dialog</source>
+        <translation>ダイアログ</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/MidiToolsDialog.ui" line="47"/>
+        <source>Key Range:</source>
+        <translation>キー範囲:</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/MidiToolsDialog.ui" line="55"/>
+        <source>Lower note:</source>
+        <translation>Lower note:</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/MidiToolsDialog.ui" line="96"/>
+        <location filename="../src/Standalone/gui/MidiToolsDialog.ui" line="151"/>
+        <source>learn</source>
+        <translation>lean</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/MidiToolsDialog.ui" line="113"/>
+        <source>Higher note:</source>
+        <translation>Higher note:</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/MidiToolsDialog.ui" line="175"/>
+        <source>Transpose:</source>
+        <translation>移調:</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/MidiToolsDialog.ui" line="183"/>
+        <source>Semitones:</source>
+        <translation>セミトーン:</translation>
+    </message>
+</context>
+<context>
+    <name>NinjamPanel</name>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="20"/>
+        <source>Form</source>
+        <translation>フォーム</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="56"/>
+        <source>metronome</source>
+        <translation>メトロノー</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="104"/>
+        <source>Slider to change the BPM of the metronome</source>
+        <translation>BPM変更のスライダ</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="143"/>
+        <source>L</source>
+        <translation>L</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="178"/>
+        <source>R</source>
+        <translation>R</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="235"/>
+        <source>Solo metronome</source>
+        <translation>Soloメトロノーム</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="238"/>
+        <source>Button to soloing the metronome</source>
+        <translation>メトロノームをソロで鳴らすボタン</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="263"/>
+        <source>mute metronome</source>
+        <translation>ミュートメトロノーム</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="266"/>
+        <source>Button to mute the metronome</source>
+        <translation>メトロノームをミュートするボタン</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="285"/>
+        <source>open metronome preferences</source>
+        <translation>メトロノーム設定を開く</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="301"/>
+        <source>open a metronome floating window</source>
+        <translation>メトロノームのウィンドウを開く</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="385"/>
+        <source>Change the shape here</source>
+        <translation>形状の変更</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="392"/>
+        <source>Shape</source>
+        <translation>形状</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="399"/>
+        <source>Change the accent here</source>
+        <translation>アクセントを変更</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="406"/>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="449"/>
+        <source>Beats per minute</source>
+        <translation>Beat Per Minute (テンポ)</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="409"/>
+        <source>BPM</source>
+        <translation>BPM</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="416"/>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="429"/>
+        <source>Beats per interval</source>
+        <translation>Beats Per Interval (同期の長さ)</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="419"/>
+        <source>BPI</source>
+        <translation>BPI</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="432"/>
+        <source>Change the BPI here</source>
+        <translation>BPIを変更</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="442"/>
+        <source>Accent</source>
+        <translation>アクセント</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamPanel.ui" line="452"/>
+        <source>Change the BPM here</source>
+        <translation>BPMの変更</translation>
+    </message>
+</context>
+<context>
+    <name>NinjamRoomWindow</name>
+    <message>
+        <location filename="../src/Common/gui/NinjamRoomWindow.ui" line="20"/>
+        <source>Form</source>
+        <translation>フォーム</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamRoomWindow.ui" line="23"/>
+        <source>you are in the ninjam room window</source>
+        <translation>ニンジャム部屋のウィンドウ</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamRoomWindow.ui" line="64"/>
+        <source>This is the room where you are</source>
+        <translation>入室中の部屋</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/NinjamRoomWindow.ui" line="74"/>
+        <source>read the server licence ...</source>
+        <translation>サーバーのライセンスを読む...</translation>
+    </message>
+</context>
+<context>
+    <name>PluginScanDialog</name>
+    <message>
+        <location filename="../src/Common/gui/PluginScanDialog.ui" line="23"/>
+        <source>[Jamtaba] Scanning plugins ...</source>
+        <translation>[Jamtaba] プラグインの操作...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PluginScanDialog.ui" line="26"/>
+        <source>This is the plugin scanning dialog box</source>
+        <translation>プラグイン走査のダイアログ</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PluginScanDialog.ui" line="41"/>
+        <source>scanning plugins...</source>
+        <translation>プラグイン走査中...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PluginScanDialog.ui" line="48"/>
+        <source>Founded plugins:</source>
+        <translation>見つかったプラグイン:</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PluginScanDialog.ui" line="57"/>
+        <source>This is the plugin founded list box</source>
+        <translation>見つかったプラグインのリスト</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PluginScanDialog.ui" line="78"/>
+        <source>No plugins founded!</source>
+        <translation>プラグインは見つかりませんでした!</translation>
+    </message>
+</context>
+<context>
+    <name>PrivateServerDialog</name>
+    <message>
+        <location filename="../src/Common/gui/PrivateServerDialog.ui" line="17"/>
+        <source>Connecting in private Ninjam server ...</source>
+        <translation>プライベート ニンジャム サーバへ接続中...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PrivateServerDialog.ui" line="20"/>
+        <source>This the private server dialog</source>
+        <translation>プライベート サーバ ダイアログ</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PrivateServerDialog.ui" line="32"/>
+        <source>Server:</source>
+        <translatorcomment>ホスト名/IPアドレス</translatorcomment>
+        <translation>サーバ:</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PrivateServerDialog.ui" line="39"/>
+        <source>type here the name of the server to join</source>
+        <translation>参加するサーバ名を入力</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PrivateServerDialog.ui" line="42"/>
+        <source>localhost</source>
+        <translation>localhost</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PrivateServerDialog.ui" line="49"/>
+        <location filename="../src/Common/gui/PrivateServerDialog.ui" line="59"/>
+        <source>leave blank to connect as annonymous</source>
+        <translation>匿名で接続するには無記入で</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PrivateServerDialog.ui" line="52"/>
+        <source>Password:</source>
+        <translation>パスワード:</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PrivateServerDialog.ui" line="62"/>
+        <source>type here the password</source>
+        <translation>パスワードを入力</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PrivateServerDialog.ui" line="69"/>
+        <source>Port:</source>
+        <translation>ポート:</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PrivateServerDialog.ui" line="76"/>
+        <source>type here the port to use</source>
+        <translation>利用するポート番号を入力</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PrivateServerDialog.ui" line="79"/>
+        <source>2049</source>
+        <translation>2049</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PrivateServerDialog.ui" line="105"/>
+        <source>Press this button if you are ok</source>
+        <translation>準備ができればOKを押す</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/PrivateServerDialog.ui" line="108"/>
+        <source>OK</source>
+        <translation>接続</translation>
+    </message>
+</context>
+<context>
+    <name>RoomViewPanel</name>
+    <message>
+        <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="20"/>
+        <source>Form</source>
+        <translation>フォーム</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="71"/>
+        <source>This is the server name</source>
+        <translation>サーバ名</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="74"/>
+        <source>Name</source>
+        <translation>名前</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="93"/>
+        <source>This is the status of this room</source>
+        <translation>部屋の状態</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="99"/>
+        <source>testee</source>
+        <translatorcomment>不明</translatorcomment>
+        <translation>testee</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="112"/>
+        <source>Click that button to listen that room</source>
+        <translation>視聴する</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="115"/>
+        <source>listen</source>
+        <translation>視聴</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="134"/>
+        <source>Click that button to enter in this room</source>
+        <translation>入室ボタン</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="137"/>
+        <source>enter</source>
+        <translation>入室</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="183"/>
+        <source>That panel shows the musicians actually in that room</source>
+        <translation>参加中のミュージシャン</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="206"/>
+        <source>That zone displays the waveform actually played</source>
+        <translation>波形表示</translation>
+    </message>
+</context>
+<context>
+    <name>UserNameDialog</name>
+    <message>
+        <location filename="../src/Common/gui/UserNameDialog.ui" line="27"/>
+        <source>Login ...</source>
+        <translation>ログイン...</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/UserNameDialog.ui" line="30"/>
+        <source>This is the user name dialog box</source>
+        <translation>ユーザ名</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/UserNameDialog.ui" line="54"/>
+        <source> User name:</source>
+        <translation>ユーザ名:</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/UserNameDialog.ui" line="64"/>
+        <source>Type your user name here</source>
+        <translation>あなたの名前を入力してください</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/UserNameDialog.ui" line="71"/>
+        <source>Press this button if you are ok</source>
+        <translation>準備が出来ればOKをクリック</translation>
+    </message>
+</context>
+</TS>
