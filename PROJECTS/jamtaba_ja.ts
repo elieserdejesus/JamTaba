@@ -2,6 +2,33 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ja_JP">
 <context>
+    <name>BaseTrackView</name>
+    <message>
+        <location filename="../src/Common/gui/BaseTrackView.cpp" line="93"/>
+        <source>L</source>
+        <translatorcomment>Left(左)  Left  表示スペースの都合上、省略文字を利用</translatorcomment>
+        <translation>L</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/BaseTrackView.cpp" line="98"/>
+        <source>R</source>
+        <translatorcomment>Right(右)  表示スペースの都合上、省略文字を利用</translatorcomment>
+        <translation>R</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/BaseTrackView.cpp" line="155"/>
+        <source>M</source>
+        <translatorcomment>Mute  表示スペースの都合上、省略文字を利用</translatorcomment>
+        <translation>M</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/BaseTrackView.cpp" line="161"/>
+        <source>S</source>
+        <translatorcomment>Solo  表示スペースの都合上、省略文字を利用</translatorcomment>
+        <translation>S</translation>
+    </message>
+</context>
+<context>
     <name>BusyDialog</name>
     <message>
         <location filename="../src/Common/gui/BusyDialog.ui" line="17"/>
@@ -85,7 +112,7 @@
         <translation>自動翻訳のon/off切り替え</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/ChatPanel.cpp" line="133"/>
+        <location filename="../src/Common/gui/ChatPanel.cpp" line="83"/>
         <source>Use/load the chords above</source>
         <translation>下のコードを読み込み利用する</translation>
     </message>
@@ -134,6 +161,49 @@
         <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="127"/>
         <source>b</source>
         <translation>♭</translation>
+    </message>
+</context>
+<context>
+    <name>DelayGui</name>
+    <message>
+        <location filename="../src/Common/gui/plugins/Guis.cpp" line="40"/>
+        <source>Delay Time (ms):</source>
+        <translation>ディレイタイム(ms):</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/plugins/Guis.cpp" line="49"/>
+        <source>Feedback (db):</source>
+        <translation>フィードバック(db):</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/plugins/Guis.cpp" line="59"/>
+        <source>Level:</source>
+        <translation>レベル:</translation>
+    </message>
+</context>
+<context>
+    <name>FxPanelItem</name>
+    <message>
+        <location filename="../src/Standalone/gui/FxPanelItem.cpp" line="106"/>
+        <source>new effect...</source>
+        <translation>エフェクトを追加...</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/FxPanelItem.cpp" line="129"/>
+        <source>No plugin found! Check the &apos;Preferences -&gt; Vst plugins&apos; menu.</source>
+        <translation>プラグインが検出されませんでした! 設定メニューのVSTプラグインを見直してください.</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/FxPanelItem.cpp" line="137"/>
+        <location filename="../src/Standalone/gui/FxPanelItem.cpp" line="163"/>
+        <source>bypass</source>
+        <translation>bypass</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/FxPanelItem.cpp" line="138"/>
+        <location filename="../src/Standalone/gui/FxPanelItem.cpp" line="165"/>
+        <source>remove</source>
+        <translation>remove</translation>
     </message>
 </context>
 <context>
@@ -386,6 +456,11 @@
         <translation>新規チャンネル|</translation>
     </message>
     <message>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="94"/>
+        <source>Load preset</source>
+        <translation>プリセットを読み込む</translation>
+    </message>
+    <message>
         <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="117"/>
         <source>Save preset</source>
         <translation>プリセットの保存</translation>
@@ -408,7 +483,91 @@
     <message>
         <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="286"/>
         <source>X</source>
+        <translatorcomment>トランスミット</translatorcomment>
         <translation>X</translation>
+    </message>
+</context>
+<context>
+    <name>LocalTrackGroupViewStandalone</name>
+    <message>
+        <location filename="../src/Standalone/gui/LocalTrackGroupViewStandalone.cpp" line="19"/>
+        <source>Add subchannel</source>
+        <translation>サブチャンネルを追加</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/LocalTrackGroupViewStandalone.cpp" line="25"/>
+        <source>Remove subchannel %1</source>
+        <translation>サブチャンネル%1を取り消し</translation>
+    </message>
+</context>
+<context>
+    <name>LocalTrackViewStandalone</name>
+    <message>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="89"/>
+        <source>inputs ...</source>
+        <translation>入力...</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="90"/>
+        <source>Choose input channels ...</source>
+        <translation>入力チャンネルを選択...</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="119"/>
+        <source>MIDI tools</source>
+        <translation>MIDIツール</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="327"/>
+        <source>Mono</source>
+        <translation>モノラル</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="338"/>
+        <source>  (%1)</source>
+        <translation>  (%1)</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="354"/>
+        <source>no input</source>
+        <translation>未入力</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="363"/>
+        <source>Stereo</source>
+        <translation>ステレオ</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="380"/>
+        <source>%1  (not enough available inputs to make stereo)</source>
+        <translation>%1  (ステレオ化に十分なチャンネル数がありません)</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="401"/>
+        <source>MIDI</source>
+        <translation>MIDI</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="412"/>
+        <source>All channels</source>
+        <translation>すべてのチャンネル</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="423"/>
+        <source>Channel %1</source>
+        <translation>チャンネル %1</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="444"/>
+        <source>%1  (no MIDI devices detected or enabled in &apos;Preferences&apos; menu&apos;)</source>
+        <translation>%1 (MIDIデバイスが検出されていないか、設定メニューで有効になっていません)</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="484"/>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="497"/>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="501"/>
+        <source>No input</source>
+        <translation>未入力</translation>
     </message>
 </context>
 <context>
@@ -652,6 +811,29 @@
     </message>
 </context>
 <context>
+    <name>MainWindowStandalone</name>
+    <message>
+        <location filename="../src/Standalone/gui/MainWindowStandalone.cpp" line="117"/>
+        <source> can&apos;t be loaded and will be black listed!</source>
+        <translation>ロードに失敗したのでブラックリストへ登録します!</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/MainWindowStandalone.cpp" line="118"/>
+        <source>Plugin Error!</source>
+        <translation>プラグイン エラー!</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/MainWindowStandalone.cpp" line="402"/>
+        <source>Audio error!</source>
+        <translation>オーディオ エラー!</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/MainWindowStandalone.cpp" line="403"/>
+        <source>The audio device can&apos;t be started! Please check your audio device and try restart Jamtaba!</source>
+        <translation>オーディオデバイスが開始できません!設定を見直し、Jamtabaを再起動してください!</translation>
+    </message>
+</context>
+<context>
     <name>MidiToolsDialog</name>
     <message>
         <location filename="../src/Standalone/gui/MidiToolsDialog.ui" line="20"/>
@@ -688,6 +870,11 @@
         <location filename="../src/Standalone/gui/MidiToolsDialog.ui" line="183"/>
         <source>Semitones:</source>
         <translation>セミトーン:</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/MidiToolsDialog.cpp" line="14"/>
+        <source>Midi Tools</source>
+        <translation>MIDIツール</translation>
     </message>
 </context>
 <context>
@@ -894,7 +1081,7 @@
 <context>
     <name>NinjamVoteButton</name>
     <message>
-        <location filename="../src/Common/gui/ChatPanel.cpp" line="54"/>
+        <location filename="../src/Common/gui/ChatPanel.h" line="75"/>
         <source>Vote - change %1 to %2 </source>
         <translation>%1から%2への変更に投票</translation>
     </message>
@@ -1088,6 +1275,43 @@
         <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="206"/>
         <source>That zone displays the waveform actually played</source>
         <translation>波形表示</translation>
+    </message>
+</context>
+<context>
+    <name>ScanFolderPanel</name>
+    <message>
+        <location filename="../src/Standalone/gui/ScanFolderPanel.cpp" line="16"/>
+        <source>Remove this folder from scanning</source>
+        <translation>この場所の走査を取り消す</translation>
+    </message>
+</context>
+<context>
+    <name>StandalonePreferencesDialog</name>
+    <message>
+        <location filename="../src/Standalone/gui/PreferencesDialogStandalone.cpp" line="97"/>
+        <source>Adding VST path ...</source>
+        <translation>追加するVSTの場所...</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/PreferencesDialogStandalone.cpp" line="168"/>
+        <source>Add Vst(s) to Black list ...</source>
+        <translation>VSTをブラックリストへ追加...</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/PreferencesDialogStandalone.cpp" line="169"/>
+        <location filename="../src/Standalone/gui/PreferencesDialogStandalone.cpp" line="187"/>
+        <source>Dll(*.dll)</source>
+        <translation>Dllファイル(*.dll)</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/PreferencesDialogStandalone.cpp" line="186"/>
+        <source>Remove Vst(s) from Black List ...</source>
+        <translation>VSTをブラックリストから解除...</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/PreferencesDialogStandalone.cpp" line="246"/>
+        <source>No midi input device detected!</source>
+        <translation>MIDIデバイスが検出されませんでした!</translation>
     </message>
 </context>
 <context>

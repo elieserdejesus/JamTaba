@@ -94,7 +94,7 @@ void StandalonePreferencesDialog::setupSignals()
 
 void StandalonePreferencesDialog::addVstScanFolder()
 {
-    QFileDialog fileDialog(this, "Adding VST path ...");
+    QFileDialog fileDialog(this, tr("Adding VST path ..."));
     fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
     fileDialog.setFileMode(QFileDialog::DirectoryOnly);
     if (fileDialog.exec()) {
@@ -165,8 +165,8 @@ void StandalonePreferencesDialog::clearVstList()
 // open a dialog to add a vst in the blacklist
 void StandalonePreferencesDialog::addBlackListedPlugins()
 {
-    QFileDialog vstDialog(this, "Add Vst(s) to Black list ...");
-    vstDialog.setNameFilter("Dll(*.dll)");// TODO in mac the extension is .vst
+    QFileDialog vstDialog(this, tr("Add Vst(s) to Black list ..."));
+    vstDialog.setNameFilter(tr("Dll(*.dll)"));// TODO in mac the extension is .vst
     if (!settings->getVstScanFolders().isEmpty())
         vstDialog.setDirectory(settings->getVstScanFolders().first());
     vstDialog.setAcceptMode(QFileDialog::AcceptOpen);
@@ -183,8 +183,8 @@ void StandalonePreferencesDialog::addBlackListedPlugins()
 
 void StandalonePreferencesDialog::removeBlackListedPlugins()
 {
-    QFileDialog vstDialog(this, "Remove Vst(s) from Black List ...");
-    vstDialog.setNameFilter("Dll(*.dll)");// TODO mac extension is .vst
+    QFileDialog vstDialog(this, tr("Remove Vst(s) from Black List ..."));
+    vstDialog.setNameFilter(tr("Dll(*.dll)"));// TODO mac extension is .vst
     QStringList foldersToScan = settings->getVstScanFolders();
     if (!foldersToScan.isEmpty())
         vstDialog.setDirectory(foldersToScan.first());
@@ -243,7 +243,7 @@ void StandalonePreferencesDialog::populateMidiTab()
         QSpacerItem *spacer = new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding);
         ui->midiContentPanel->layout()->addItem(spacer);
     } else {// no devices detected
-        QLabel *label = new QLabel("No midi input device detected!");
+        QLabel *label = new QLabel(tr("No midi input device detected!"));
         ui->midiContentPanel->layout()->addWidget(label);
         ui->midiContentPanel->layout()->setAlignment(label, Qt::AlignCenter);
     }
