@@ -11,7 +11,7 @@ MidiToolsDialog::MidiToolsDialog(const QString &lowerNote, const QString &higher
     ui->setupUi(this);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint & Qt::WA_DeleteOnClose);
     setModal(true);
-    setWindowTitle("Midi Tools");
+    setWindowTitle(tr("Midi Tools"));
 
     QRegularExpression regex("^[A-G][#b]?[0-8]");
     QRegularExpressionValidator *validator = new QRegularExpressionValidator(regex);

@@ -16,13 +16,13 @@ void LocalTrackGroupViewStandalone::populateMenu(QMenu &menu)
 
 void LocalTrackGroupViewStandalone::createSubChannelActions(QMenu &menu)
 {
-    QAction *addSubchannelAction = menu.addAction(QIcon(":/images/more.png"), "Add subchannel");
+    QAction *addSubchannelAction = menu.addAction(QIcon(":/images/more.png"), tr("Add subchannel"));
     QObject::connect(addSubchannelAction, SIGNAL(triggered()), this, SLOT(addSubChannel()));
     addSubchannelAction->setEnabled(trackViews.size() < MAX_SUB_CHANNELS);
     if (trackViews.size() > 1) {
         for (int i = 2; i <= trackViews.size(); ++i) {
             QIcon icon(":/images/less.png");
-            QString text = "Remove subchannel " + QString::number(i);
+            QString text = tr("Remove subchannel %1").arg(QString::number(i));
             QAction *action = menu.addAction(icon, text);
             action->setData(i-1); // using track view index as user data
             QObject::connect(action, SIGNAL(triggered(bool)), this, SLOT(removeSubchannel()));

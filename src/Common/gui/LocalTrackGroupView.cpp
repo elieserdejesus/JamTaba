@@ -91,7 +91,7 @@ void LocalTrackGroupView::resetTracks()
 QMenu *LocalTrackGroupView::createPresetsSubMenu()
 {
     // LOAD - using a submenu to list stored presets
-    QMenu *presetsMenu = new QMenu("Load preset");
+    QMenu *presetsMenu = new QMenu(tr("Load preset"));
     presetsMenu->setIcon(QIcon(":/images/preset-load.png"));
     presetsMenu->installEventFilter(this);// to deal with mouse buttons
 

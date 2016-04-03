@@ -17,8 +17,6 @@
 #include <QDesktopWidget>
 #include <QStyle>
 
-const QString FxPanelItem::NEW_EFFECT_STRING = "new effect...";
-
 FxPanelItem::FxPanelItem(LocalTrackViewStandalone *parent, Controller::MainControllerStandalone *mainController) :
     QFrame(parent),
     plugin(nullptr),
@@ -105,7 +103,7 @@ void FxPanelItem::mousePressEvent(QMouseEvent *event)
 void FxPanelItem::enterEvent(QEvent *)
 {
     if (!containPlugin())
-        label->setText(FxPanelItem::NEW_EFFECT_STRING);
+        label->setText(tr("new effect..."));
 }
 
 void FxPanelItem::leaveEvent(QEvent *)
@@ -128,7 +126,7 @@ void FxPanelItem::on_contextMenu(QPoint p)
             QObject::connect(&menu, SIGNAL(triggered(QAction *)), this,
                              SLOT(on_fxMenuActionTriggered(QAction *)));
         } else {// no plugin found
-            menu.addAction("No plugin found! Check the 'Preferences -> Vst plugins' menu.");
+            menu.addAction(tr("No plugin found! Check the 'Preferences -> Vst plugins' menu."));
         }
         menu.move(mapToGlobal(p));
         menu.exec();
@@ -136,8 +134,8 @@ void FxPanelItem::on_contextMenu(QPoint p)
         QMenu menu(this);
         menu.connect(&menu, SIGNAL(triggered(QAction *)), this,
                      SLOT(on_actionMenuTriggered(QAction *)));
-        menu.addAction("bypass");
-        menu.addAction("remove");
+        menu.addAction(tr("bypass"));
+        menu.addAction(tr("remove"));
         menu.move(mapToGlobal(p));
         menu.exec();
     }
@@ -162,9 +160,9 @@ void FxPanelItem::on_fxMenuActionTriggered(QAction *action)
 void FxPanelItem::on_actionMenuTriggered(QAction *a)
 {
     if (containPlugin()) {
-        if (a->text() == "bypass")
+        if (a->text() == tr("bypass"))
             bypassButton->click();// simulate a click in the bypass button
-        else if (a->text() == "remove")
+        else if (a->text() == tr("remove"))
             unsetPlugin();// set this->plugin to nullptr AND remove from mainController
     }
 }
