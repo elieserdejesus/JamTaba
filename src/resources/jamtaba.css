@@ -1242,8 +1242,8 @@ NinjamRoomWindow TrackGroupView{
 
 IntervalProgressWindow{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop: 0.5     rgb(230, 230, 230),
-    stop: 1.0   rgba(190, 190, 190));
+    stop: 0.8     rgb(210, 210, 210),
+    stop: 1.0   rgba(160, 160, 160));
 }
 
 
