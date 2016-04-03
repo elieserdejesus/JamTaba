@@ -41,36 +41,7 @@ bool ChatPanel::eventFilter(QObject *obj, QEvent *event)
 }
 
 // ++++++++++++++++++++++++++++++++
-class NinjamVoteButton : public QPushButton
-{
-public:
-    NinjamVoteButton(QString voteType, int voteValue) :
-        QPushButton("Vote - change "+ voteType +" to " + QString::number(voteValue)),
-        voteValue(voteValue),
-        voteType(voteType)
-    {
-        setObjectName("voteButton");
-    }
 
-    inline int getVoteValue() const
-    {
-        return voteValue;
-    }
-
-    inline bool isBpiVote() const
-    {
-        return voteType == "BPI";
-    }
-
-    inline bool isBpmVote() const
-    {
-        return voteType == "BPM";
-    }
-
-private:
-    int voteValue;
-    QString voteType;
-};
 
 void ChatPanel::createVoteButton(const QString &voteType, int value)
 {
@@ -105,27 +76,11 @@ void ChatPanel::on_voteButtonClicked()
 
 // ++++++++++++++++++++++++++++++++++
 
-class ChordProgressionConfirmationButton : public QPushButton
-{
-public:
-    ChordProgressionConfirmationButton(QString text, ChordProgression progression) :
-        QPushButton(text),
-        progression(progression)
-    {
-    }
 
-    inline ChordProgression getChordProgression() const
-    {
-        return progression;
-    }
-
-private:
-    ChordProgression progression;
-};
 
 void ChatPanel::addChordProgressionConfirmationMessage(const ChordProgression &progression)
 {
-    QString buttonText = "Use/load the chords above";
+    QString buttonText = tr("Use/load the chords above");
     QPushButton *chordProgressionButton = new ChordProgressionConfirmationButton(buttonText,
                                                                                  progression);
     chordProgressionButton->setSizePolicy(QSizePolicy(QSizePolicy::Maximum,

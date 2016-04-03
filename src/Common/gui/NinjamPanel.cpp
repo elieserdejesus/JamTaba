@@ -269,20 +269,20 @@ void NinjamPanel::setIntervalShape(int shape)
 void NinjamPanel::buildShapeModel()
 {
     ui->comboShape->clear();
-    ui->comboShape->addItem("Circle", IntervalProgressDisplay::PaintShape::CIRCULAR);
-    ui->comboShape->addItem("Ellipse", IntervalProgressDisplay::PaintShape::ELLIPTICAL);
-    ui->comboShape->addItem("Line", IntervalProgressDisplay::PaintShape::LINEAR);
-    ui->comboShape->addItem("Pie", IntervalProgressDisplay::PaintShape::PIE);
+    ui->comboShape->addItem(tr("Circle"), IntervalProgressDisplay::PaintShape::CIRCULAR);
+    ui->comboShape->addItem(tr("Ellipse"), IntervalProgressDisplay::PaintShape::ELLIPTICAL);
+    ui->comboShape->addItem(tr("Line"), IntervalProgressDisplay::PaintShape::LINEAR);
+    ui->comboShape->addItem(tr("Pie"), IntervalProgressDisplay::PaintShape::PIE);
 }
 
 void NinjamPanel::buildAccentsdModel(int bpi)
 {
     ui->comboBeatsPerAccent->clear();
-    ui->comboBeatsPerAccent->addItem("off", 0);
+    ui->comboBeatsPerAccent->addItem(tr("off"), 0);
     QStringList bpiDividers = getBpiDividers(bpi);
     for (int d = 0; d < bpiDividers.size(); ++d) {
         QString divider = bpiDividers.at(d);
-        ui->comboBeatsPerAccent->addItem(divider + " beats", divider.toInt());
+        ui->comboBeatsPerAccent->addItem(tr("%1 beats %2").arg(divider).arg(divider.toInt()));
     }
 }
 

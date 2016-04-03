@@ -33,7 +33,7 @@ void LocalTrackGroupView::setPreparingStatus(bool preparing)
     this->preparingToTransmit = preparing;
     xmitButton->setEnabled(!preparing);
     if (!isShowingPeakMeterOnly())
-        xmitButton->setText(preparing ? "Preparing" : "Transmiting");
+        xmitButton->setText(preparing ? tr("Preparing") : tr("Transmiting"));
 
     xmitButton->setProperty("preparing", QVariant(preparing));// change the button property to change stylesheet
     style()->unpolish(xmitButton); // force the updating in stylesheet for "preparing" state in QPushButton
@@ -53,8 +53,8 @@ QPushButton *LocalTrackGroupView::createXmitButton()
     QPushButton *toolButton = new QPushButton();
     toolButton->setObjectName("xmitButton");
     toolButton->setCheckable(true);
-    toolButton->setText("Transmit");
-    toolButton->setToolTip("Enable/disable your audio transmission for others");
+    toolButton->setText(tr("Transmit"));
+    toolButton->setToolTip(tr("Enable/disable your audio transmission for others"));
     toolButton->setAccessibleDescription(toolTip());
     toolButton->setChecked(true);
     return toolButton;
@@ -65,7 +65,7 @@ QPushButton *LocalTrackGroupView::createToolButton()
     QPushButton *toolButton = new QPushButton();
     toolButton->setObjectName("toolButton");
     toolButton->setText("");
-    toolButton->setToolTip("Add or remove channels...");
+    toolButton->setToolTip(tr("Add or remove channels..."));
     toolButton->setAccessibleDescription(toolTip());
     return toolButton;
 }
@@ -79,7 +79,7 @@ void LocalTrackGroupView::closePluginsWindows()
 
 void LocalTrackGroupView::addChannel()
 {
-    mainFrame->addChannelsGroup("new channel");
+    mainFrame->addChannelsGroup(tr("new channel"));
 }
 
 void LocalTrackGroupView::resetTracks()
@@ -114,17 +114,17 @@ void LocalTrackGroupView::createPresetsActions(QMenu &menu)
     menu.addMenu(createPresetsSubMenu());
 
     // save preset
-    QAction *addPresetActionSave = menu.addAction(QIcon(":/images/preset-save.png"), "Save preset");
+    QAction *addPresetActionSave = menu.addAction(QIcon(":/images/preset-save.png"), tr("Save preset"));
     QObject::connect(addPresetActionSave, SIGNAL(triggered(bool)), this, SLOT(savePreset()));
 
     // RESET - in case of panic
-    QAction *reset = menu.addAction(QIcon(":/images/gear.png"), "Reset Track Controls");
+    QAction *reset = menu.addAction(QIcon(":/images/gear.png"), tr("Reset Track Controls"));
     QObject::connect(reset, SIGNAL(triggered()), this, SLOT(resetLocalTracks()));
 }
 
 void LocalTrackGroupView::createChannelsActions(QMenu &menu)
 {
-    QAction *addChannelAction = menu.addAction(QIcon(":/images/more.png"), "Add channel");
+    QAction *addChannelAction = menu.addAction(QIcon(":/images/more.png"), tr("Add channel"));
     QObject::connect(addChannelAction, SIGNAL(triggered()), this, SLOT(addChannel()));
     addChannelAction->setEnabled(mainFrame->getChannelGroupsCount() < 2);// at this moment users can't create more channels
     if (mainFrame->getChannelGroupsCount() > 1) {
@@ -132,7 +132,7 @@ void LocalTrackGroupView::createChannelsActions(QMenu &menu)
         for (int i = 2; i <= mainFrame->getChannelGroupsCount(); ++i) {
             QString channelName = mainFrame->getChannelGroupName(i-1);
             QIcon icon(":/images/less.png");
-            QString text = "Remove channel \"" + channelName + "\"";
+            QString text = tr("Remove channel \"%1\"").arg(channelName);
             QAction *action = menu.addAction(icon, text);
             action->setData(i-1);  // use channel index as action data
             QObject::connect(action, SIGNAL(triggered(bool)), this, SLOT(removeChannel()));
@@ -283,7 +283,7 @@ void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
             view->setPeakMetersOnlyMode(peakMeterOnly, mainFrame->isRunningInMiniMode());
         }
 
-        xmitButton->setText(peakMeterOnly ? "X" : "Transmit");
+        xmitButton->setText(peakMeterOnly ? tr("X") : tr("Transmit"));
         updateGeometry();
         adjustSize();
     }

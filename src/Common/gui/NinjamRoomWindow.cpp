@@ -80,13 +80,13 @@ void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrien
     horizontalLayoutButton->setIcon(QIcon(":/images/horizontal_layout.png"));
     horizontalLayoutButton->setObjectName("buttonHorizontalLayout");
     horizontalLayoutButton->setCheckable(true);
-    horizontalLayoutButton->setToolTip("Set tracks layout to horizontal");
+    horizontalLayoutButton->setToolTip(tr("Set tracks layout to horizontal"));
 
     verticalLayoutButton = new QToolButton();
     verticalLayoutButton->setIcon(QIcon(":/images/vertical_layout.png"));
     verticalLayoutButton->setObjectName("buttonVerticalLayout");
     verticalLayoutButton->setCheckable(true);
-    verticalLayoutButton->setToolTip("Set tracks layout to vertical");
+    verticalLayoutButton->setToolTip(tr("Set tracks layout to vertical"));
 
     if(initialOrientation == Qt::Vertical)
         verticalLayoutButton->setChecked(true);
@@ -115,13 +115,13 @@ void NinjamRoomWindow::createTracksSizeButtons(TracksSize initialTracksSize)
     wideButton->setIcon(QIcon(":/images/wide.png"));
     wideButton->setObjectName("wide");
     wideButton->setCheckable(true);
-    wideButton->setToolTip("Wide tracks");
+    wideButton->setToolTip(tr("Wide tracks"));
 
     narrowButton = new QToolButton();
     narrowButton->setIcon(QIcon(":/images/narrow.png"));
     narrowButton->setObjectName("narrow");
     narrowButton->setCheckable(true);
-    narrowButton->setToolTip("Narrow tracks");
+    narrowButton->setToolTip(tr("Narrow tracks"));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     buttonsLayout->setSpacing(0);
@@ -259,7 +259,7 @@ void NinjamRoomWindow::sendNewChatMessage(const QString &msg)
 void NinjamRoomWindow::handleUserLeaving(const QString &userName)
 {
     if (chatPanel)
-        chatPanel->addMessage("Jamtaba", userName + " leave the room.");
+        chatPanel->addMessage(tr("Jamtaba"), tr(" leave the room.").arg(userName));
 
     usersColorsPool.giveBack(userName); // reuse the color mapped to this 'leaving' user
 }
@@ -267,7 +267,7 @@ void NinjamRoomWindow::handleUserLeaving(const QString &userName)
 void NinjamRoomWindow::handleUserEntering(const QString &userName)
 {
     if (chatPanel)
-        chatPanel->addMessage("Jamtaba", userName + " enter in room.");
+        chatPanel->addMessage(tr("Jamtaba"), tr(" enter in room.").arg(userName));
 }
 
 void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &message)

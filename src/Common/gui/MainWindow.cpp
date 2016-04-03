@@ -44,7 +44,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     ui.setupUi(this);
 
-    setWindowTitle("Jamtaba v" + QApplication::applicationVersion());
+    setWindowTitle(tr("Jamtaba v%1").arg(QApplication::applicationVersion()));
 
     initializeLoginService();
     initializeMainTabWidget();
@@ -61,7 +61,7 @@ void MainWindow::initialize()
 {
     timerID = startTimer(1000/50);// timer used to animate audio peaks, midi activity, public room wave audio plot, etc.
 
-    showBusyDialog("Loading rooms list ...");
+    showBusyDialog(tr("Loading rooms list ..."));
 
     // initialize using last track input settings (using QTimer::singleShot to initialize the tracks (and load the plugins) after Jamtaba is opened).
     QTimer::singleShot(1, this, SLOT(initializeLocalInputChannels()));
@@ -168,7 +168,7 @@ void MainWindow::showMessageBox(const QString &title, const QString &text, QMess
 void MainWindow::handlePublicRoomStreamError(const QString &msg)
 {
     stopCurrentRoomStream();
-    showMessageBox("Error!", msg, QMessageBox::Critical);
+    showMessageBox(tr("Error!"), msg, QMessageBox::Critical);
 }
 
 // ++++++++++++++++++++++++=
@@ -326,7 +326,7 @@ void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inp
         channelIndex++;
     }
     if (channelIndex == 0)// no channels in settings file or no settings file...
-        addLocalChannel(0, "your channel", true);
+        addLocalChannel(0, tr("your channel"), true);
     qCInfo(jtGUI) << "Initializing local inputs done!";
 
     QApplication::restoreOverrideCursor();
@@ -353,7 +353,7 @@ void MainWindow::initializeLoginService()
 void MainWindow::closeTab(int index)
 {
     if (index > 0) {// the first tab is not closable
-        showBusyDialog("disconnecting ...");
+        showBusyDialog(tr("disconnecting ..."));
         if (mainController->getNinjamController()->isRunning())
             mainController->stopNinjamController();
     }
@@ -407,8 +407,8 @@ bool MainWindow::jamRoomLessThan(const Login::RoomInfo &r1, const Login::RoomInf
 void MainWindow::handleIncompatiblity()
 {
     hideBusyDialog();
-    QString text = "Your Jamtaba version is not compatible with previous versions!";
-    QMessageBox::warning(this, "Server : Compatibility problem", text);
+    QString text = tr("Your Jamtaba version is not compatible with previous versions!");
+    QMessageBox::warning(this, tr("Server : Compatibility problem"), text);
     close();
 }
 
@@ -420,7 +420,7 @@ void MainWindow::detachMainController()
 void MainWindow::handleServerConnectionError(const QString &errorMsg)
 {
     hideBusyDialog();
-    QMessageBox::warning(this, "Error!", "Error connecting in Jamtaba server!\n" + errorMsg);
+    QMessageBox::warning(this, tr("Error!"), tr("Error connecting in Jamtaba server!\n") + errorMsg);
     close();
 }
 
@@ -429,8 +429,8 @@ void MainWindow::showNewVersionAvailableMessage()
     hideBusyDialog();
     QString text
         =
-            "A new Jamtaba version is available for download! Please use the <a href='http://www.jamtaba.com'>new version</a>!";
-    QMessageBox::information(this, "New Jamtaba version available!", text);
+            tr("A new Jamtaba version is available for download! Please use the <a href='http://www.jamtaba.com'>new version</a>!");
+    QMessageBox::information(this, tr("New Jamtaba version available!"), text);
 }
 
 JamRoomViewPanel *MainWindow::createJamRoomViewPanel(const Login::RoomInfo &roomInfo)
@@ -548,9 +548,9 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
             if (!userName.isEmpty()) {
                 mainController->setUserName(userName);
                 QString version = QApplication::applicationVersion();
-                setWindowTitle("Jamtaba v" + version + " (" + userName + ")");
+                setWindowTitle(tr("Jamtaba v%1 (%2)").arg(version).arg(userName));
             } else {
-                QMessageBox::warning(this, "Warning!", "Empty name is not allowed!");
+                QMessageBox::warning(this, tr("Warning!"), tr("Empty name is not allowed!"));
             }
         } else {
             qWarning() << "name dialog canceled";
@@ -564,7 +564,7 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
 
         mainController->stopNinjamController();// disconnect from current ninjam server
     } else if (mainController->userNameWasChoosed()) {
-        showBusyDialog("Connecting in " + roomInfo.getName() + " ...");
+        showBusyDialog(tr("Connecting in %1 ... ").arg(roomInfo.getName()));
         mainController->enterInRoom(roomInfo, getChannelsNames(), password);
     }
 }
@@ -585,7 +585,7 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     // add the chat panel in main window
     qCDebug(jtGUI) << "adding ninjam chat panel...";
     ChatPanel *chatPanel = ninjamWindow->getChatPanel();
-    ui.chatTabWidget->addTab(chatPanel, "chat " + roomInfo.getName());
+    ui.chatTabWidget->addTab(chatPanel, tr("chat %1").arg(roomInfo.getName()));
     QObject::connect(chatPanel, SIGNAL(userConfirmingChordProgression(
                                            ChordProgression)), this,
                      SLOT(showChordProgression(ChordProgression)));
@@ -672,12 +672,12 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
 
     if (!normalDisconnection) {
         if (!disconnectionMessage.isEmpty())
-            showMessageBox("Error", disconnectionMessage, QMessageBox::Warning);
+            showMessageBox(tr("Error"), disconnectionMessage, QMessageBox::Warning);
         else
-            showMessageBox("Error", "Disconnected from ninjam server", QMessageBox::Warning);
+            showMessageBox(tr("Error"), tr("Disconnected from ninjam server"), QMessageBox::Warning);
     } else {
         if (roomToJump) {// waiting the disconnection to connect in a new room?
-            showBusyDialog("Connecting in " + roomToJump->getName());
+            showBusyDialog(tr("Connecting in %1").arg(roomToJump->getName()));
             mainController->enterInRoom(*roomToJump, getChannelsNames(),
                                         (passwordToJump.isNull()
                                          || passwordToJump.isEmpty()) ? "" : passwordToJump);
@@ -1039,8 +1039,8 @@ bool MainWindow::isTransmiting(int channelID) const
 
 void MainWindow::showJamtabaCurrentVersion()
 {
-    QString title = "About Jamtaba";
-    QString text = "Jamtaba version is " + QApplication::applicationVersion();
+    QString title = tr("About Jamtaba");
+    QString text = tr("Jamtaba version is %1").arg(QApplication::applicationVersion());
     QMessageBox::about(this, title, text);
 }
 
@@ -1081,10 +1081,10 @@ void MainWindow::showChordProgression(const ChordProgression &progression)
             ninjamWindow->getNinjamPanel()->setLowContrastPaintInIntervalPanel(true);
     } else {
         int measures = progression.getMeasures().size();
-        QString msg = "These chords (" + QString::number(measures)
-                      + " measures) can't be used in a " + QString::number(currentBpi)
-                      + " bpi interval!";
-        QMessageBox::warning(this, "Problem...", msg);
+        QString msg = tr("These chords (%1 measures) can't be used in a %2 bpi interval!")
+                .arg(QString::number(measures))
+                .arg(QString::number(currentBpi));
+        QMessageBox::warning(this, tr("Problem..."), msg);
     }
 }
 
