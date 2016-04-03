@@ -28,6 +28,10 @@ int main(int argc, char* args[] ){
     QApplication* application = new QApplication(argc, args);
 #endif
 
+    QTranslator translator;
+    translator.load("jamtaba_ja");
+    application->installTranslator(&translator);
+
     Controller::MainControllerStandalone mainController(settings, (QApplication*)application);
     mainController.configureStyleSheet("jamtaba.css");
     mainController.start();

@@ -4,6 +4,8 @@ SUBDIRS += VstScanner
 
 SUBDIRS += Standalone
 
+TRANSLATIONS += jamtaba_ja.ts
+
 win32{
     SUBDIRS += VstPlugin  #VstPlugin need Qt static build
 }
