@@ -61,4 +61,59 @@ private:
     UsersColorsPool *colorsPool;
 };
 
+class NinjamVoteButton : public QPushButton
+{
+    Q_OBJECT
+
+public:
+    NinjamVoteButton(QString voteType, int voteValue) :
+        voteValue(voteValue),
+        voteType(voteType)
+    {
+        setObjectName("voteButton");
+
+        QString label = tr("Vote - change %1 to %2 ").arg(voteType).arg(QString::number(voteValue));
+        setText(label);
+    }
+
+    inline int getVoteValue() const
+    {
+        return voteValue;
+    }
+
+    inline bool isBpiVote() const
+    {
+        return voteType == "BPI";
+    }
+
+    inline bool isBpmVote() const
+    {
+        return voteType == "BPM";
+    }
+
+private:
+    int voteValue;
+    QString voteType;
+};
+
+class ChordProgressionConfirmationButton : public QPushButton
+{
+    Q_OBJECT
+
+public:
+    ChordProgressionConfirmationButton(QString text, ChordProgression progression) :
+        QPushButton(text),
+        progression(progression)
+    {
+    }
+
+    inline ChordProgression getChordProgression() const
+    {
+        return progression;
+    }
+
+private:
+    ChordProgression progression;
+};
+
 #endif // CHATPANEL_H

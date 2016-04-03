@@ -24,8 +24,10 @@ QString JamRoomViewPanel::buildRoomDescriptionString(const Login::RoomInfo &room
     int botsCount = roomInfo.getUsers().count() - roomInfo.getNonBotUsersCount();
     int maxUsers = roomInfo.getMaxUsers() - botsCount;
     int users = roomInfo.getNonBotUsersCount();
-    QString roomDescription = QString::number(users) + "/" + QString::number(maxUsers)
-                              + " players ";
+    QString roomDescription = tr("%1 / %2 players ").arg(
+                QString::number(users),
+                QString::number(maxUsers));
+
     if (roomInfo.getBpm() > 0)
         roomDescription += "  " + QString::number(roomInfo.getBpm()) + " BPM ";
     if (roomInfo.getType() == Login::RoomTYPE::NINJAM && roomInfo.getBpi() > 0)
@@ -75,7 +77,7 @@ void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
 
     if (!roomInfo.hasStream()) {
         ui->buttonListen->setIcon(QIcon(":/images/warning.png"));
-        ui->buttonListen->setToolTip("The audio stream of this room is not available at moment!");
+        ui->buttonListen->setToolTip(tr("The audio stream of this room is not available at moment!"));
     } else {
         ui->buttonListen->setIcon(QIcon());// remove the icon
         ui->buttonListen->setToolTip("");// clean the tooltip

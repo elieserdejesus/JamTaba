@@ -27,6 +27,6 @@ void PluginScanDialog::addFoundedPlugin(const QString &pluginName)
 
 void PluginScanDialog::setCurrentScaning(const QString &pluginPath)
 {
-    ui->labelPluginText->setText("scanning " + pluginPath);
+    ui->labelPluginText->setText(tr("scanning %1").arg(pluginPath));
     update();
 }

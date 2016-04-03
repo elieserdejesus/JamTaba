@@ -110,8 +110,8 @@ PreferencesDialog::~PreferencesDialog()
 
 void PreferencesDialog::openPrimaryBeatAudioFileBrowser()
 {
-    QString caption = "Choosing Primary beat audio file...";
-    QString filter = "Audio Files (*.wav)";
+    QString caption = tr("Choosing Primary beat audio file...");
+    QString filter = tr("Audio Files (*.wav)");
     QString dir = ".";
     QString filePath = QFileDialog::getOpenFileName(this, caption, dir, filter);
     if (!filePath.isNull()) {
@@ -122,8 +122,8 @@ void PreferencesDialog::openPrimaryBeatAudioFileBrowser()
 
 void PreferencesDialog::openSecondaryBeatAudioFileBrowser()
 {
-    QString caption = "Choosing Secondary beat audio file...";
-    QString filter = "Audio Files (*.wav)";
+    QString caption = tr("Choosing Secondary beat audio file...");
+    QString filter = tr("Audio Files (*.wav)");
     QString dir = ".";
     QString filePath = QFileDialog::getOpenFileName(this, caption, dir, filter);
     if (!filePath.isNull()) {
@@ -134,7 +134,7 @@ void PreferencesDialog::openSecondaryBeatAudioFileBrowser()
 
 void PreferencesDialog::openRecordingPathBrowser()
 {
-    QFileDialog fileDialog(this, "Choosing recording path ...");
+    QFileDialog fileDialog(this, tr("Choosing recording path ..."));
     fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
     fileDialog.setFileMode(QFileDialog::DirectoryOnly);
     if (fileDialog.exec()) {
