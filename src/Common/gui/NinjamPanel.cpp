@@ -263,6 +263,7 @@ void NinjamPanel::setIntervalShape(int shape)
         break;
     }
     ui->comboShape->setCurrentIndex(index);
+    updateIntervalProgressShape(index);
 }
 
 void NinjamPanel::buildShapeModel()
