@@ -16,10 +16,12 @@ void TestChatChordsProgressionParser::upperCaseText_data()
 
     QTest::addColumn<QString>("chatMessage");
 
-    QTest::newRow("UPPER CASE TEXT (Testing false positive)") << QString("LETS TAKE A SHIT");
+    QTest::newRow("Testing issue #275") << QString("I AM TIRED ...");
+    QTest::newRow("Testing issue #263") << QString("LETS TAKE A SHIT");
+
 }
 
-void TestChatChordsProgressionParser::measuresCount()
+void TestChatChordsProgressionParser::validMeasuresCount()
 {
     QFETCH(QString, chatMessage);
     QFETCH(int, expectedMeasuresCount);
@@ -28,15 +30,32 @@ void TestChatChordsProgressionParser::measuresCount()
     QCOMPARE(progression.getMeasures().size(), expectedMeasuresCount);
 }
 
-void TestChatChordsProgressionParser::measuresCount_data()
+void TestChatChordsProgressionParser::validMeasuresCount_data()
 {
     QTest::addColumn<QString>("chatMessage");
     QTest::addColumn<int>("expectedMeasuresCount");
 
     QTest::newRow("4 measures") << QString("|C|F||G|F") << 4;
-    QTest::newRow("1 measure") << QString("|C") << 1;
+    //QTest::newRow("1 measure") << QString("|C") << 1;
     QTest::newRow("0 measure - invalid progression") << QString("it's not a valid progression") << 0;
     QTest::newRow("16 measures") << QString("|C |Fmaj7 |G7 |Gº |Am7 |Am7/G |F#m7(b5) |Fmaj9 |C |Fmaj7 |G7 |Gº |Am7 |Am7/G |F#m7(b5) |Fmaj9") << 16;
+}
+
+void TestChatChordsProgressionParser::invalidMeasuresCount()
+{
+    QFETCH(QString, chatMessage);
+    ChatChordsProgressionParser parser;
+    QVERIFY(!parser.containsProgression(chatMessage));
+}
+
+void TestChatChordsProgressionParser::invalidMeasuresCount_data()
+{
+    QTest::addColumn<QString>("chatMessage");
+
+    QTest::newRow("1 measure") << QString("|C");
+    QTest::newRow("1 measure and some text") << QString("|Camon");
+    QTest::newRow("1 measure and some text II") << QString("I Am testing...");
+    QTest::newRow("0 measure") << QString("it's not a valid progression");
 }
 
 void TestChatChordsProgressionParser::measureSeparators()
