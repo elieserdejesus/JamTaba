@@ -29,8 +29,9 @@ int main(int argc, char* args[] ){
 #endif
 
     QTranslator translator;
-    translator.load(":/messages");
-    application->installTranslator(&translator);
+    if (translator.load(":/messages")) {
+        application->installTranslator(&translator);
+    }
 
     Controller::MainControllerStandalone mainController(settings, (QApplication*)application);
     mainController.configureStyleSheet("jamtaba.css");
