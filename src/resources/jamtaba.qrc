@@ -301,5 +301,6 @@
         <file>click.wav</file>
         <file>loading.gif</file>
         <file>logging.ini</file>
+        <file>click.ogg</file>
     </qresource>
 </RCC>

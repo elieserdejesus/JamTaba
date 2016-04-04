@@ -7,7 +7,7 @@
 #include <QString>
 #include <QFileInfo>
 
-const QString MetronomeUtils::DEFAULT_METRONOME_AUDIO_FILE(":/click.wav");
+const QString MetronomeUtils::DEFAULT_METRONOME_AUDIO_FILE(":/click.ogg");
 
 void MetronomeUtils::createDefaultSounds(Audio::SamplesBuffer &firstBeatBuffer, Audio::SamplesBuffer &secondaryBeatBuffer, quint32 localSampleRate)
 {

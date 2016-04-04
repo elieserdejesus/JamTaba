@@ -2,6 +2,7 @@
 
 #include <QFileInfo>
 #include "WaveFileReader.h"
+#include "OggFileReader.h"
 
 using namespace Audio;
 
@@ -20,6 +21,9 @@ std::unique_ptr<FileReader> FileReaderFactory::createFileReader(const QString &f
     QString fileSuffix = QFileInfo(filePath).suffix();
     if (fileSuffix == "wav") {
         return std::unique_ptr<Audio::WaveFileReader>(new WaveFileReader());
+    }
+    else if (fileSuffix == "ogg") {
+        return std::unique_ptr<Audio::OggFileReader>(new OggFileReader());
     }
     return std::unique_ptr<NullFileReader>(new NullFileReader());
 }
