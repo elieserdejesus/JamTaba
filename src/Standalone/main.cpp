@@ -29,7 +29,7 @@ int main(int argc, char* args[] ){
 #endif
 
     QTranslator translator;
-    translator.load("jamtaba_ja");
+    translator.load(":/messages");
     application->installTranslator(&translator);
 
     Controller::MainControllerStandalone mainController(settings, (QApplication*)application);
