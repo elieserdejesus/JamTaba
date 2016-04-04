@@ -6,7 +6,7 @@
     <message>
         <location filename="../src/Common/gui/BaseTrackView.cpp" line="93"/>
         <source>L</source>
-        <translatorcomment>Left(左)  Left  表示スペースの都合上、省略文字を利用</translatorcomment>
+        <translatorcomment>Left(左)  表示スペースの都合上、省略文字を利用</translatorcomment>
         <translation>L</translation>
     </message>
     <message>
@@ -66,6 +66,7 @@
     <message>
         <location filename="../src/Common/gui/ChatMessagePanel.ui" line="105"/>
         <source>T</source>
+        <translatorcomment>表示スペースの都合上、省略文字を利用</translatorcomment>
         <translation>翻訳</translation>
     </message>
     <message>
@@ -114,7 +115,7 @@
     <message>
         <location filename="../src/Common/gui/ChatPanel.cpp" line="83"/>
         <source>Use/load the chords above</source>
-        <translation>下のコードを読み込み利用する</translation>
+        <translation>上記のコードを読み込み利用する</translation>
     </message>
 </context>
 <context>
@@ -149,6 +150,7 @@
     <message>
         <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="108"/>
         <source>#</source>
+        <translatorcomment>ユニコード文字のMUSIC SHARPを利用(NUMBER SIGNとは区別)</translatorcomment>
         <translation>♯</translation>
     </message>
     <message>
@@ -160,6 +162,7 @@
     <message>
         <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="127"/>
         <source>b</source>
+        <translatorcomment>ユニコード文字のMUSIC FLATを利用(アルファベットの&quot;b&quot;とは区別)</translatorcomment>
         <translation>♭</translation>
     </message>
 </context>
