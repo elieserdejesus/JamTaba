@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QMainWindow>
+#include <QLocale>
 #include <QDir>
 
 #include "MainControllerStandalone.h"
@@ -29,7 +30,8 @@ int main(int argc, char* args[] ){
 #endif
 
     QTranslator translator;
-    if (translator.load(":/messages")) {
+    if (translator.load(QLocale::system().name()) ||
+        translator.load(":/messages")) {
         application->installTranslator(&translator);
     }
 
