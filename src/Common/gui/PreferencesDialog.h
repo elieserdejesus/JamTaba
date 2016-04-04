@@ -45,7 +45,7 @@ private slots:
 private:
     QString selectAudioFile(QString caption, QString initialDir);
     void refreshMetronomeControlsStyleSheet();
-
+    QString openAudioFileBrowser(const QString caption);
 protected:
     Ui::IODialog *ui;
 

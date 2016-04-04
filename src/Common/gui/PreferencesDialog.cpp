@@ -132,6 +132,13 @@ void PreferencesDialog::openSecondaryBeatAudioFileBrowser()
     }
 }
 
+QString PreferencesDialog::openAudioFileBrowser(const QString caption)
+{
+    QString filter = "Audio Files (*.wav, *.ogg)";
+    QString dir = ".";
+    return QFileDialog::getOpenFileName(this, caption, dir, filter);
+}
+
 void PreferencesDialog::openRecordingPathBrowser()
 {
     QFileDialog fileDialog(this, tr("Choosing recording path ..."));
