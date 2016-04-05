@@ -83,8 +83,9 @@ public:
     float gain;
     bool muted;
     bool usingCustomSounds;
-    QString primaryBeatAudioFile;
-    QString secondaryBeatAudioFile;
+    QString customPrimaryBeatAudioFile;
+    QString customSecondaryBeatAudioFile;
+    QString builtInMetronomeAlias;
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++++++
@@ -250,6 +251,9 @@ public:
     Settings();
     ~Settings();
 
+    void setBuiltInMetronome(const QString &metronomeAlias);
+    inline QString getBuiltInMetronome() const { return metronomeSettings.builtInMetronomeAlias; }
+
     inline bool isUsingCustomMetronomeSounds() const
     {
         return metronomeSettings.usingCustomSounds;
@@ -257,12 +261,12 @@ public:
 
     inline QString getMetronomeFirstBeatFile() const
     {
-        return metronomeSettings.primaryBeatAudioFile;
+        return metronomeSettings.customPrimaryBeatAudioFile;
     }
 
     inline QString getMetronomeSecondaryBeatFile() const
     {
-        return metronomeSettings.secondaryBeatAudioFile;
+        return metronomeSettings.customSecondaryBeatAudioFile;
     }
 
     inline void storeTracksSize(bool narrowedTracks)
@@ -400,7 +404,7 @@ public:
     void setMetronomeSettings(float gain, float pan, bool muted);
     void setMetronomeFirstBeatAudioFile(const QString &filePath);
     void setMetronomeSecondaryBeatAudioFile(const QString &filePath);
-    void setUsingCustomMetronomeSounds(bool usingCustomSounds);
+
     inline float getMetronomeGain() const
     {
         return metronomeSettings.gain;

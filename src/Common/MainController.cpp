@@ -297,9 +297,9 @@ void MainController::storeMetronomeSettings(float metronomeGain, float metronome
     settings.setMetronomeSettings(metronomeGain, metronomePan, metronomeMuted);
 }
 
-void MainController::setUsingCustomMetronomeSounds(bool usingCustomSounds)
+void MainController::setBuiltInMetronome(const QString &metronomeAlias)
 {
-    settings.setUsingCustomMetronomeSounds(usingCustomSounds);
+    settings.setBuiltInMetronome(metronomeAlias);
     recreateMetronome();
 }
 

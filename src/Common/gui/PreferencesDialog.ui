@@ -472,7 +472,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>358</width>
+               <width>16</width>
                <height>45</height>
               </rect>
              </property>
@@ -579,7 +579,7 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QComboBox" name="comboMetronomePairs"/>
+           <widget class="QComboBox" name="comboBuiltInMetronomes"/>
           </item>
          </layout>
         </widget>

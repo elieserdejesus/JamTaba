@@ -63,6 +63,7 @@ void PreferencesDialog::setupSignals()
 
     connect(ui->textFieldPrimaryBeat, SIGNAL(editingFinished()), this, SLOT(emitFirstBeatAudioFileChanged()));
     connect(ui->textFieldSecondaryBeat, SIGNAL(editingFinished()), this, SLOT(emitSecondaryBeatAudioFileChanged()));
+    connect(ui->comboBuiltInMetronomes, SIGNAL(activated(QString)), this, SIGNAL(builtInMetronomeSelected(QString)));
 }
 
 void PreferencesDialog::emitFirstBeatAudioFileChanged()
@@ -96,9 +97,14 @@ void PreferencesDialog::populateMetronomeTab()
 
     //combo embedded metronome sounds
     QList<QString> metronomeAliases = Audio::MetronomeUtils::getBuiltInMetronomeAliases();
-    ui->comboMetronomePairs->clear();
+    ui->comboBuiltInMetronomes->clear();
     foreach (QString alias, metronomeAliases) {
-        ui->comboMetronomePairs->addItem(alias, alias);
+        ui->comboBuiltInMetronomes->addItem(alias, alias);
+    }
+
+    //using built-in metronome?
+    if (!settings->isUsingCustomMetronomeSounds()){
+        ui->comboBuiltInMetronomes->setCurrentText(settings->getBuiltInMetronome());
     }
 }
 

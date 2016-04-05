@@ -194,7 +194,7 @@ public:
         return settings.isUsingCustomMetronomeSounds();
     }
 
-    void setUsingCustomMetronomeSounds(bool usingCustomSounds);
+    void setBuiltInMetronome(const QString &metronomeAlias);
     void setMetronomeFirstBeatFile(const QString &firstBeatFile);
     void setMetronomeSecondaryBeatFile(const QString &secondaryBeatFile);
 

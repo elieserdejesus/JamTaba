@@ -205,6 +205,7 @@ private slots:
     void setMultiTrackRecordingStatus(bool recording);
     void setRecordingPath(const QString &newRecordingPath);
     void setUsingCustomMetronomeSoundsStatus(bool usingCustomSounds);
+    void setBuiltInMetronome(const QString &metronomeAlias);
     void setMetronomeFirstBeatAudioFile(const QString &firstBeatFile);
     void setMetronomeSecondaryBeatAudioFile(const QString &secondaryBeatFile);
 

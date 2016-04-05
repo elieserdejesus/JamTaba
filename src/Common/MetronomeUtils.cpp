@@ -40,11 +40,6 @@ QList<QString> MetronomeUtils::getBuiltInMetronomeAliases()
     return aliases;
 }
 
-void MetronomeUtils::createDefaultSounds(SamplesBuffer &firstBeat, SamplesBuffer &secondaryBeat, quint32 localSampleRate)
-{
-    createBuiltInSounds(DEFAULT_BUILT_IN_METRONOME_ALIAS, firstBeat, secondaryBeat, localSampleRate);
-}
-
 void MetronomeUtils::createBuiltInSounds(const QString &alias, Audio::SamplesBuffer &firstBeatBuffer, Audio::SamplesBuffer &secondaryBeatBuffer, quint32 localSampleRate)
 {
     QString firstBeatFile = buildMetronomeFileNameFromAlias(alias, true);
@@ -72,7 +67,7 @@ void MetronomeUtils::createCustomSounds(const QString &firstBeatAudioFile, const
         }
     }
     else{//use the default metronome
-        createDefaultSounds(firstBeatBuffer, secondaryBeatBuffer, localSampleRate);
+        createBuiltInSounds(DEFAULT_BUILT_IN_METRONOME_ALIAS, firstBeatBuffer, secondaryBeatBuffer, localSampleRate);
     }
 }
 

@@ -890,16 +890,21 @@ void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
 
     connect(dialog, SIGNAL(multiTrackRecordingStatusChanged(bool)), this, SLOT(setMultiTrackRecordingStatus(bool)));
     connect(dialog, SIGNAL(recordingPathSelected(const QString &)), this, SLOT(setRecordingPath(const QString &)));
-
+    connect(dialog, SIGNAL(builtInMetronomeSelected(QString)), this, SLOT(setBuiltInMetronome(QString)));
     connect(dialog, SIGNAL(usingMetronomeCustomSoundsStatusChanged(bool)), this, SLOT(setUsingCustomMetronomeSoundsStatus(bool)));
     connect(dialog, SIGNAL(metronomePrimaryBeatAudioFileSelected(QString)), this, SLOT(setMetronomeFirstBeatAudioFile(QString)));
     connect(dialog, SIGNAL(metronomeSecondaryBeatAudioFileSelected(QString)), this, SLOT(setMetronomeSecondaryBeatAudioFile(QString)));
 
 }
 
+void MainWindow::setBuiltInMetronome(const QString &metronomeAlias)
+{
+    mainController->setBuiltInMetronome(metronomeAlias);
+}
+
 void MainWindow::setUsingCustomMetronomeSoundsStatus(bool usingCustomSounds)
 {
-    mainController->setUsingCustomMetronomeSounds(usingCustomSounds);
+    //mainController->setUsingCustomMetronomeSounds(usingCustomSounds);
 }
 
 void MainWindow::setMetronomeFirstBeatAudioFile(const QString &firstBeatFile)

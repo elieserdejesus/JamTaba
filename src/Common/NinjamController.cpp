@@ -282,7 +282,8 @@ Audio::MetronomeTrackNode* NinjamController::createMetronomeTrackNode(int sample
     Audio::SamplesBuffer firstBeatBuffer(2);
     Audio::SamplesBuffer secondaryBeatBuffer(2);
     if (!(mainController->isUsingCustomMetronomeSounds())){
-        Audio::MetronomeUtils::createDefaultSounds(firstBeatBuffer, secondaryBeatBuffer, sampleRate);
+        QString builtInMetronomeAlias = mainController->getSettings().getBuiltInMetronome();
+        Audio::MetronomeUtils::createBuiltInSounds(builtInMetronomeAlias, firstBeatBuffer, secondaryBeatBuffer, sampleRate);
     }
     else{
         QString firstBeatAudioFile = mainController->getMetronomeFirstBeatFile();

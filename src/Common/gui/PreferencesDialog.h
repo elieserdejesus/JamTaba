@@ -28,6 +28,7 @@ signals:
     void metronomePrimaryBeatAudioFileSelected(const QString &filePath);
     void metronomeSecondaryBeatAudioFileSelected(const QString &filePath);
     void usingMetronomeCustomSoundsStatusChanged(bool usingCustomSounds);
+    void builtInMetronomeSelected(const QString &metronomeAlias);
     void multiTrackRecordingStatusChanged(bool recording);
 
 protected slots:
