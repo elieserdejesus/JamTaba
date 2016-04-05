@@ -14,22 +14,14 @@ using namespace Audio;
 const QString MetronomeUtils::DEFAULT_BUILT_IN_METRONOME_ALIAS("Default");
 const QString MetronomeUtils::DEFAULT_BUILT_IN_METRONOME_DIR(":/metronome");
 
-MetronomeFilesPair::MetronomeFilesPair(const QString &primaryBeatFile, const QString &secondaryBeatFile, const QString &alias)
-    : primaryBeatFile(primaryBeatFile),
-      secondaryBeatFile(secondaryBeatFile),
-      alias(alias)
-{
-
-}
-
-QList<MetronomeFilesPair> MetronomeUtils::getBuiltInMetronomeFiles()
+QList<QString> MetronomeUtils::getBuiltInMetronomeAliases()
 {
     QDir metronomeDir(DEFAULT_BUILT_IN_METRONOME_DIR);
     if (!metronomeDir.exists()) {
         qCritical() << "Metronome folder doesn't exist in resources file!";
     }
 
-    QList<MetronomeFilesPair> metronomeFiles;
+    QList<QString> aliases;
     QFileInfoList fileInfos = metronomeDir.entryInfoList();
     foreach (QFileInfo fileInfo, fileInfos) {
        QString fileNameComplete = fileInfo.fileName();
@@ -41,11 +33,11 @@ QList<MetronomeFilesPair> MetronomeUtils::getBuiltInMetronomeFiles()
           QString secondFileName = buildMetronomeFileNameFromAlias(alias, false);
           QFileInfo secondFile = QFileInfo(fileInfo.dir(), secondFileName);
           if (secondFile.exists()) {
-            metronomeFiles.append(MetronomeFilesPair(fileInfo.absoluteFilePath(), secondFile.absoluteFilePath(), alias));
+            aliases.append(alias);
           }
        }
     }
-    return metronomeFiles;
+    return aliases;
 }
 
 void MetronomeUtils::createDefaultSounds(SamplesBuffer &firstBeat, SamplesBuffer &secondaryBeat, quint32 localSampleRate)

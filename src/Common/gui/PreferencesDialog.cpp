@@ -95,10 +95,10 @@ void PreferencesDialog::populateMetronomeTab()
     ui->textFieldSecondaryBeat->setText(settings->getMetronomeSecondaryBeatFile());
 
     //combo embedded metronome sounds
-    QList<Audio::MetronomeFilesPair> metronomeFiles = Audio::MetronomeUtils::getBuiltInMetronomeFiles();
+    QList<QString> metronomeAliases = Audio::MetronomeUtils::getBuiltInMetronomeAliases();
     ui->comboMetronomePairs->clear();
-    foreach (Audio::MetronomeFilesPair pair, metronomeFiles) {
-        ui->comboMetronomePairs->addItem(pair.alias, pair.alias);
+    foreach (QString alias, metronomeAliases) {
+        ui->comboMetronomePairs->addItem(alias, alias);
     }
 }
 

@@ -10,15 +10,6 @@ namespace Audio {
 
 class SamplesBuffer;
 
-struct MetronomeFilesPair
-{
-    QString primaryBeatFile;
-    QString secondaryBeatFile;
-    QString alias;
-
-    MetronomeFilesPair(const QString &primaryBeatFile, const QString &secondaryBeatFile, const QString &alias);
-};
-
 class MetronomeUtils
 {
 
@@ -29,7 +20,7 @@ public:
 
     static void removeSilenceInBufferStart(Audio::SamplesBuffer &buffer);
 
-    static QList<MetronomeFilesPair> getBuiltInMetronomeFiles();
+    static QList<QString> getBuiltInMetronomeAliases();
 private:
     static void createBuffer(const QString &audioFilePath, Audio::SamplesBuffer &outBuffer, quint32 localSampleRate);
     static void createResampledBuffer(const Audio::SamplesBuffer &buffer, Audio::SamplesBuffer &outBuffer, int originalSampleRate,
