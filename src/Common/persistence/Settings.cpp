@@ -189,8 +189,8 @@ MetronomeSettings::MetronomeSettings() :
     gain(1),
     muted(false),
     usingCustomSounds(false),
-    primaryBeatAudioFile(""),
-    secondaryBeatAudioFile("")
+    customPrimaryBeatAudioFile(""),
+    customSecondaryBeatAudioFile("")
 {
 }
 
@@ -199,9 +199,10 @@ void MetronomeSettings::read(const QJsonObject &in)
     pan = getValueFromJson(in, "pan", (float)0);
     gain = getValueFromJson(in, "gain", (float)1);
     muted = getValueFromJson(in, "muted", false);
-    usingCustomSounds = getValueFromJson(in, "customSounds", false);
-    primaryBeatAudioFile = getValueFromJson(in, "primaryBeatAudioFile", QString(""));
-    secondaryBeatAudioFile = getValueFromJson(in, "secondaryBeatAudioFile", QString(""));
+    usingCustomSounds = getValueFromJson(in, "usingCustomSounds", false);
+    customPrimaryBeatAudioFile = getValueFromJson(in, "customPrimaryBeatAudioFile", QString(""));
+    customSecondaryBeatAudioFile = getValueFromJson(in, "customSecondaryBeatAudioFile", QString(""));
+    builtInMetronomeAlias = getValueFromJson(in, "builtInMetronome", QString("Default"));
 }
 
 void MetronomeSettings::write(QJsonObject &out) const
@@ -209,9 +210,10 @@ void MetronomeSettings::write(QJsonObject &out) const
     out["pan"] = pan;
     out["gain"] = gain;
     out["muted"] = muted;
-    out["customSounds"] = usingCustomSounds;
-    out["primaryBeatAudioFile"] = primaryBeatAudioFile;
-    out["secondaryBeatAudioFile"] = secondaryBeatAudioFile;
+    out["usingCustomSounds"] = usingCustomSounds;
+    out["customPrimaryBeatAudioFile"] = customPrimaryBeatAudioFile;
+    out["customSecondaryBeatAudioFile"] = customSecondaryBeatAudioFile;
+    out["builtInMetronome"] = builtInMetronomeAlias;
 }
 
 // +++++++++++++++++++++++++++
@@ -514,25 +516,24 @@ void Settings::setMetronomeSettings(float gain, float pan, bool muted)
     metronomeSettings.muted = muted;
 }
 
-void Settings::setUsingCustomMetronomeSounds(bool usingCustomSounds)
+void Settings::setBuiltInMetronome(const QString &metronomeAlias)
 {
-    metronomeSettings.usingCustomSounds = usingCustomSounds;
+    metronomeSettings.builtInMetronomeAlias = metronomeAlias;
+    metronomeSettings.usingCustomSounds = false;
 }
 
-void Settings::setMetronomeFirstBeatAudioFile(const QString &filePath)
+void Settings::setCustomMetronome(const QString &primaryBeatAudioFile, const QString &secondaryBeatAudioFile)
 {
-    if (QFileInfo(filePath).exists())
-        metronomeSettings.primaryBeatAudioFile = filePath;
-    else
-        metronomeSettings.primaryBeatAudioFile = "";
-}
-
-void Settings::setMetronomeSecondaryBeatAudioFile(const QString &filePath)
-{
-    if (QFileInfo(filePath).exists())
-        metronomeSettings.secondaryBeatAudioFile = filePath;
-    else
-        metronomeSettings.secondaryBeatAudioFile = "";
+    if (QFileInfo(primaryBeatAudioFile).exists() && QFileInfo(secondaryBeatAudioFile).exists()){
+        metronomeSettings.customPrimaryBeatAudioFile = primaryBeatAudioFile;
+        metronomeSettings.customSecondaryBeatAudioFile = secondaryBeatAudioFile;
+        metronomeSettings.usingCustomSounds = true;
+    }
+    else{
+        metronomeSettings.customPrimaryBeatAudioFile = "";
+        metronomeSettings.customSecondaryBeatAudioFile = "";
+        metronomeSettings.usingCustomSounds = false;
+    }
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -9,7 +9,7 @@
 *.dll
 *.dylib
 
-*.ogg
+*.wav
 *.exe
 *.user
 *.zip

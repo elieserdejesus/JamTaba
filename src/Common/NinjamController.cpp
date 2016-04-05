@@ -282,16 +282,17 @@ Audio::MetronomeTrackNode* NinjamController::createMetronomeTrackNode(int sample
     Audio::SamplesBuffer firstBeatBuffer(2);
     Audio::SamplesBuffer secondaryBeatBuffer(2);
     if (!(mainController->isUsingCustomMetronomeSounds())){
-        MetronomeUtils::createDefaultSounds(firstBeatBuffer, secondaryBeatBuffer, sampleRate);
+        QString builtInMetronomeAlias = mainController->getSettings().getBuiltInMetronome();
+        Audio::MetronomeUtils::createBuiltInSounds(builtInMetronomeAlias, firstBeatBuffer, secondaryBeatBuffer, sampleRate);
     }
     else{
         QString firstBeatAudioFile = mainController->getMetronomeFirstBeatFile();
         QString secondaryBeatAudioFile = mainController->getMetronomeSecondaryBeatFile();
-        MetronomeUtils::createCustomSounds(firstBeatAudioFile, secondaryBeatAudioFile, firstBeatBuffer, secondaryBeatBuffer, sampleRate);
+        Audio::MetronomeUtils::createCustomSounds(firstBeatAudioFile, secondaryBeatAudioFile, firstBeatBuffer, secondaryBeatBuffer, sampleRate);
     }
 
-    MetronomeUtils::removeSilenceInBufferStart(firstBeatBuffer);
-    MetronomeUtils::removeSilenceInBufferStart(secondaryBeatBuffer);
+    Audio::MetronomeUtils::removeSilenceInBufferStart(firstBeatBuffer);
+    Audio::MetronomeUtils::removeSilenceInBufferStart(secondaryBeatBuffer);
 
     return new Audio::MetronomeTrackNode(firstBeatBuffer, secondaryBeatBuffer);
 }

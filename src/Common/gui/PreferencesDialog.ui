@@ -472,7 +472,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>98</width>
+               <width>375</width>
                <height>45</height>
               </rect>
              </property>
@@ -569,8 +569,26 @@
        <string>Metronome</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="spacing">
+        <number>32</number>
+       </property>
+       <item>
+        <widget class="QGroupBox" name="groupBoxBuiltInMetronomes">
+         <property name="title">
+          <string>Built-in metronomes:</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QComboBox" name="comboBuiltInMetronomes"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
        <item alignment="Qt::AlignTop">
-        <widget class="QGroupBox" name="groupBoxCustomSounds">
+        <widget class="QGroupBox" name="groupBoxCustomMetronome">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -589,73 +607,67 @@
          <property name="checked">
           <bool>true</bool>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_8">
-          <item>
-           <layout class="QVBoxLayout" name="layoutCustomSounds">
-            <item>
-             <layout class="QHBoxLayout" name="layoutPrimaryBeat">
-              <item>
-               <widget class="QLabel" name="labelPrimaryBeat">
-                <property name="text">
-                 <string>Primary Beat:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="textFieldPrimaryBeat"/>
-              </item>
-              <item>
-               <widget class="QPushButton" name="browsePrimaryBeatButton">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="text">
-                 <string>Browse ...</string>
-                </property>
-                <property name="autoDefault">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="layoutSecondaryBeat">
-              <item>
-               <widget class="QLabel" name="labelSecondaryBeat">
-                <property name="text">
-                 <string>Secondary Beat:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="textFieldSecondaryBeat"/>
-              </item>
-              <item>
-               <widget class="QPushButton" name="browseSecondaryBeatButton">
-                <property name="text">
-                 <string>Browse ...</string>
-                </property>
-                <property name="autoDefault">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="textFieldPrimaryBeat"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelPrimaryBeat">
+            <property name="text">
+             <string>Primary Beat:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="labelSecondaryBeat">
+            <property name="text">
+             <string>Secondary Beat:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="browsePrimaryBeatButton">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Browse ...</string>
+            </property>
+            <property name="autoDefault">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="textFieldSecondaryBeat"/>
+          </item>
+          <item row="3" column="2">
+           <widget class="QPushButton" name="browseSecondaryBeatButton">
+            <property name="text">
+             <string>Browse ...</string>
+            </property>
+            <property name="autoDefault">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0" colspan="3">
+           <widget class="QLabel" name="label16BitWarning">
+            <property name="text">
+             <string>Use 16 bit audio files!</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
           </item>
          </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Please use 16 bit audio files for metronome sounds!</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
         </widget>
        </item>
        <item>

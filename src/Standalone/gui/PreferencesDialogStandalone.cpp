@@ -377,7 +377,7 @@ void StandalonePreferencesDialog::accept()
     foreach (QCheckBox *check, boxes)
         midiInputsStatus.append(check->isChecked());
 
-    QDialog::accept();
+    PreferencesDialog::accept();
 
     emit ioPreferencesChanged(midiInputsStatus, selectedAudioDevice, firstIn, lastIn, firstOut,
                               lastOut);

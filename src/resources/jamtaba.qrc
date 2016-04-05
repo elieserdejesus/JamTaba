@@ -298,8 +298,17 @@
         <file>flags/zw.png</file>
     </qresource>
     <qresource prefix="/">
-        <file>click.wav</file>
         <file>loading.gif</file>
         <file>logging.ini</file>
+        <file>metronome/Custom Click_1st.ogg</file>
+        <file>metronome/Custom Click_2nd.ogg</file>
+        <file>metronome/Finger Snap_1st.ogg</file>
+        <file>metronome/Finger Snap_2nd.ogg</file>
+        <file>metronome/Ninjam Click_1st.ogg</file>
+        <file>metronome/Ninjam Click_2nd.ogg</file>
+        <file>metronome/Tic Toc_1st.ogg</file>
+        <file>metronome/Tic Toc_2nd.ogg</file>
+        <file>metronome/Default_1st.ogg</file>
+        <file>metronome/Default_2nd.ogg</file>
     </qresource>
 </RCC>

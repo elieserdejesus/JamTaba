@@ -6,17 +6,53 @@
 #include "audio/Resampler.h"
 #include <QString>
 #include <QFileInfo>
+#include <QFile>
+#include <QDir>
 
-const QString MetronomeUtils::DEFAULT_METRONOME_AUDIO_FILE(":/click.wav");
+using namespace Audio;
 
-void MetronomeUtils::createDefaultSounds(Audio::SamplesBuffer &firstBeatBuffer, Audio::SamplesBuffer &secondaryBeatBuffer, quint32 localSampleRate)
+const QString MetronomeUtils::DEFAULT_BUILT_IN_METRONOME_ALIAS("Default");
+const QString MetronomeUtils::DEFAULT_BUILT_IN_METRONOME_DIR(":/metronome");
+
+QList<QString> MetronomeUtils::getBuiltInMetronomeAliases()
 {
-    createBuffer(DEFAULT_METRONOME_AUDIO_FILE, secondaryBeatBuffer, localSampleRate);
+    QDir metronomeDir(DEFAULT_BUILT_IN_METRONOME_DIR);
+    if (!metronomeDir.exists()) {
+        qCritical() << "Metronome folder doesn't exist in resources file!";
+    }
 
-    //create a resampled version of original buffer to make a high pitch sound for the first beat
-    createResampledBuffer(secondaryBeatBuffer, firstBeatBuffer, localSampleRate, localSampleRate * 0.5);
+    QList<QString> aliases;
+    QFileInfoList fileInfos = metronomeDir.entryInfoList();
+    foreach (QFileInfo fileInfo, fileInfos) {
+       QString fileNameComplete = fileInfo.fileName();
+       int indexOf1st =  fileNameComplete.indexOf("_1st");
+       if (indexOf1st >= 0) {
+          QString alias = fileNameComplete.left(indexOf1st);
+
+          //check if the 2nd file exists
+          QString secondFileName = buildMetronomeFileNameFromAlias(alias, false);
+          QFileInfo secondFile = QFileInfo(fileInfo.dir(), secondFileName);
+          if (secondFile.exists()) {
+            aliases.append(alias);
+          }
+       }
+    }
+    return aliases;
 }
 
+void MetronomeUtils::createBuiltInSounds(const QString &alias, Audio::SamplesBuffer &firstBeatBuffer, Audio::SamplesBuffer &secondaryBeatBuffer, quint32 localSampleRate)
+{
+    QString firstBeatFile = buildMetronomeFileNameFromAlias(alias, true);
+    QString secondBeatFile = buildMetronomeFileNameFromAlias(alias, false);
+    QDir builtInMetronomeDir(DEFAULT_BUILT_IN_METRONOME_DIR);
+    createBuffer(QFileInfo(builtInMetronomeDir, firstBeatFile).absoluteFilePath(), firstBeatBuffer, localSampleRate);
+    createBuffer(QFileInfo(builtInMetronomeDir, secondBeatFile).absoluteFilePath(), secondaryBeatBuffer, localSampleRate);
+}
+
+QString MetronomeUtils::buildMetronomeFileNameFromAlias(const QString &alias, bool isFirstBeat)
+{
+    return alias + ((isFirstBeat) ? "_1st" : "_2nd") + ".ogg";
+}
 
 void MetronomeUtils::createCustomSounds(const QString &firstBeatAudioFile, const QString &secondaryBeatAudioFile,
                                         Audio::SamplesBuffer &firstBeatBuffer, Audio::SamplesBuffer &secondaryBeatBuffer, quint32 localSampleRate)
@@ -27,11 +63,11 @@ void MetronomeUtils::createCustomSounds(const QString &firstBeatAudioFile, const
             createBuffer(secondaryBeatAudioFile, secondaryBeatBuffer, localSampleRate);
         }
         else{//using the default click sound if the secondary beat audio file is not setted
-            createBuffer(DEFAULT_METRONOME_AUDIO_FILE, secondaryBeatBuffer, localSampleRate);
+            createBuffer(DEFAULT_BUILT_IN_METRONOME_ALIAS, secondaryBeatBuffer, localSampleRate);
         }
     }
     else{//use the default metronome
-        MetronomeUtils::createDefaultSounds(firstBeatBuffer, secondaryBeatBuffer, localSampleRate);
+        createBuiltInSounds(DEFAULT_BUILT_IN_METRONOME_ALIAS, firstBeatBuffer, secondaryBeatBuffer, localSampleRate);
     }
 }
 
@@ -39,14 +75,15 @@ void MetronomeUtils::removeSilenceInBufferStart(Audio::SamplesBuffer &buffer)
 {
     int audioStartingIndex = 0;
     int frames = buffer.getFrameLenght();
-    float sampleMix = 0;
+    float sampleMix = 0.0f;
+    float threshold = 0.2f;
     int channels = buffer.getChannels();
     while(audioStartingIndex < frames){
-        sampleMix = 0;
+        sampleMix = 0.0f;
         for (int c = 0; c < channels; ++c) {
             sampleMix += buffer.get(c, audioStartingIndex);
         }
-        if (sampleMix != 0) //the first sample was found
+        if (qAbs(sampleMix) >= threshold) //the first sample was found
             break;
         audioStartingIndex++;
     }
@@ -59,6 +96,8 @@ void MetronomeUtils::removeSilenceInBufferStart(Audio::SamplesBuffer &buffer)
 
 void MetronomeUtils::createBuffer(const QString &audioFilePath, Audio::SamplesBuffer &outBuffer, quint32 localSampleRate)
 {
+    qDebug() << "Creating audio buffer to file " << audioFilePath;
+
     std::unique_ptr<Audio::FileReader> reader = Audio::FileReaderFactory::createFileReader(audioFilePath);
     quint32 audioFileSampleRate; //will be changed inside reader->read
     Audio::SamplesBuffer originalBuffer(1);//assuming mono for while
