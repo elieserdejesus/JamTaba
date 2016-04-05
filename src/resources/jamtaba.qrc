@@ -300,14 +300,14 @@
     <qresource prefix="/">
         <file>loading.gif</file>
         <file>logging.ini</file>
-        <file>metronome/CustomClick_1st.ogg</file>
-        <file>metronome/CustomClick_2nd.ogg</file>
-        <file>metronome/FingerSnap_1st.ogg</file>
-        <file>metronome/FingerSnap_2nd.ogg</file>
-        <file>metronome/NinjamClick_1st.ogg</file>
-        <file>metronome/NinjamClick_2nd.ogg</file>
-        <file>metronome/TicToc_1st.ogg</file>
-        <file>metronome/TicToc_2nd.ogg</file>
+        <file>metronome/Custom Click_1st.ogg</file>
+        <file>metronome/Custom Click_2nd.ogg</file>
+        <file>metronome/Finger Snap_1st.ogg</file>
+        <file>metronome/Finger Snap_2nd.ogg</file>
+        <file>metronome/Ninjam Click_1st.ogg</file>
+        <file>metronome/Ninjam Click_2nd.ogg</file>
+        <file>metronome/Tic Toc_1st.ogg</file>
+        <file>metronome/Tic Toc_2nd.ogg</file>
         <file>metronome/Default_1st.ogg</file>
         <file>metronome/Default_2nd.ogg</file>
     </qresource>
