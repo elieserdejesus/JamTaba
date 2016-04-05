@@ -35,7 +35,12 @@ private:
     static void createResampledBuffer(const Audio::SamplesBuffer &buffer, Audio::SamplesBuffer &outBuffer, int originalSampleRate,
                                          int finalSampleRate);
 
-    static const QString DEFAULT_METRONOME_AUDIO_FILE;
+    static void createBuiltInSounds(const QString &alias, Audio::SamplesBuffer &firstBeat, Audio::SamplesBuffer &secondaryBeat, quint32 localSampleRate);
+
+    static QString buildMetronomeFileNameFromAlias(const QString &alias, bool isFirstBeat);
+
+    static const QString DEFAULT_BUILT_IN_METRONOME_ALIAS;
+    static const QString DEFAULT_BUILT_IN_METRONOME_DIR;
 };
 
 }//namespace

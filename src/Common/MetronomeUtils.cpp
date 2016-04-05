@@ -11,7 +11,8 @@
 
 using namespace Audio;
 
-const QString MetronomeUtils::DEFAULT_METRONOME_AUDIO_FILE(":/metronome/default.ogg");
+const QString MetronomeUtils::DEFAULT_BUILT_IN_METRONOME_ALIAS("Default");
+const QString MetronomeUtils::DEFAULT_BUILT_IN_METRONOME_DIR(":/metronome");
 
 MetronomeFilesPair::MetronomeFilesPair(const QString &primaryBeatFile, const QString &secondaryBeatFile, const QString &alias)
     : primaryBeatFile(primaryBeatFile),
@@ -23,40 +24,48 @@ MetronomeFilesPair::MetronomeFilesPair(const QString &primaryBeatFile, const QSt
 
 QList<MetronomeFilesPair> MetronomeUtils::getBuiltInMetronomeFiles()
 {
-    QDir metronomeDir(":/metronome");
+    QDir metronomeDir(DEFAULT_BUILT_IN_METRONOME_DIR);
     if (!metronomeDir.exists()) {
-        qCritical() << "Metronome folder doesn't exist!";
+        qCritical() << "Metronome folder doesn't exist in resources file!";
     }
 
     QList<MetronomeFilesPair> metronomeFiles;
     QFileInfoList fileInfos = metronomeDir.entryInfoList();
     foreach (QFileInfo fileInfo, fileInfos) {
-        if (fileInfo.exists()) {
-            QString fileNameComplete = fileInfo.fileName();
-            int indexOf1st =  fileNameComplete.indexOf("_1st");
-            if (indexOf1st >= 0) {
-                QString alias = fileNameComplete.left(indexOf1st);
+       QString fileNameComplete = fileInfo.fileName();
+       int indexOf1st =  fileNameComplete.indexOf("_1st");
+       if (indexOf1st >= 0) {
+          QString alias = fileNameComplete.left(indexOf1st);
 
-                //check if the 2nd file exists
-                QString secondFileName = alias + "_2nd." + fileInfo.suffix();
-                QFileInfo secondFile = QFileInfo(fileInfo.dir(), secondFileName);
-                if (secondFile.exists()) {
-                    metronomeFiles.append(MetronomeFilesPair(fileInfo.path(), secondFile.path(), alias));
-                }
-            }
-        }
+          //check if the 2nd file exists
+          QString secondFileName = buildMetronomeFileNameFromAlias(alias, false);
+          QFileInfo secondFile = QFileInfo(fileInfo.dir(), secondFileName);
+          if (secondFile.exists()) {
+            metronomeFiles.append(MetronomeFilesPair(fileInfo.absoluteFilePath(), secondFile.absoluteFilePath(), alias));
+          }
+       }
     }
     return metronomeFiles;
 }
 
-void MetronomeUtils::createDefaultSounds(Audio::SamplesBuffer &firstBeatBuffer, Audio::SamplesBuffer &secondaryBeatBuffer, quint32 localSampleRate)
+void MetronomeUtils::createDefaultSounds(SamplesBuffer &firstBeat, SamplesBuffer &secondaryBeat, quint32 localSampleRate)
 {
-    createBuffer(DEFAULT_METRONOME_AUDIO_FILE, secondaryBeatBuffer, localSampleRate);
-
-    //create a resampled version of original buffer to make a high pitch sound for the first beat
-    createResampledBuffer(secondaryBeatBuffer, firstBeatBuffer, localSampleRate, localSampleRate * 0.5);
+    createBuiltInSounds(DEFAULT_BUILT_IN_METRONOME_ALIAS, firstBeat, secondaryBeat, localSampleRate);
 }
 
+void MetronomeUtils::createBuiltInSounds(const QString &alias, Audio::SamplesBuffer &firstBeatBuffer, Audio::SamplesBuffer &secondaryBeatBuffer, quint32 localSampleRate)
+{
+    QString firstBeatFile = buildMetronomeFileNameFromAlias(alias, true);
+    QString secondBeatFile = buildMetronomeFileNameFromAlias(alias, false);
+    QDir builtInMetronomeDir(DEFAULT_BUILT_IN_METRONOME_DIR);
+    createBuffer(QFileInfo(builtInMetronomeDir, firstBeatFile).absoluteFilePath(), firstBeatBuffer, localSampleRate);
+    createBuffer(QFileInfo(builtInMetronomeDir, secondBeatFile).absoluteFilePath(), secondaryBeatBuffer, localSampleRate);
+}
+
+QString MetronomeUtils::buildMetronomeFileNameFromAlias(const QString &alias, bool isFirstBeat)
+{
+    return alias + ((isFirstBeat) ? "_1st" : "_2nd") + ".ogg";
+}
 
 void MetronomeUtils::createCustomSounds(const QString &firstBeatAudioFile, const QString &secondaryBeatAudioFile,
                                         Audio::SamplesBuffer &firstBeatBuffer, Audio::SamplesBuffer &secondaryBeatBuffer, quint32 localSampleRate)
@@ -67,11 +76,11 @@ void MetronomeUtils::createCustomSounds(const QString &firstBeatAudioFile, const
             createBuffer(secondaryBeatAudioFile, secondaryBeatBuffer, localSampleRate);
         }
         else{//using the default click sound if the secondary beat audio file is not setted
-            createBuffer(DEFAULT_METRONOME_AUDIO_FILE, secondaryBeatBuffer, localSampleRate);
+            createBuffer(DEFAULT_BUILT_IN_METRONOME_ALIAS, secondaryBeatBuffer, localSampleRate);
         }
     }
     else{//use the default metronome
-        MetronomeUtils::createDefaultSounds(firstBeatBuffer, secondaryBeatBuffer, localSampleRate);
+        createDefaultSounds(firstBeatBuffer, secondaryBeatBuffer, localSampleRate);
     }
 }
 
@@ -99,6 +108,8 @@ void MetronomeUtils::removeSilenceInBufferStart(Audio::SamplesBuffer &buffer)
 
 void MetronomeUtils::createBuffer(const QString &audioFilePath, Audio::SamplesBuffer &outBuffer, quint32 localSampleRate)
 {
+    qDebug() << "Creating audio buffer to file " << audioFilePath;
+
     std::unique_ptr<Audio::FileReader> reader = Audio::FileReaderFactory::createFileReader(audioFilePath);
     quint32 audioFileSampleRate; //will be changed inside reader->read
     Audio::SamplesBuffer originalBuffer(1);//assuming mono for while

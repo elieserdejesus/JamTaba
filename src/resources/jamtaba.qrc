@@ -300,7 +300,6 @@
     <qresource prefix="/">
         <file>loading.gif</file>
         <file>logging.ini</file>
-        <file>metronome/default.ogg</file>
         <file>metronome/CustomClick_1st.ogg</file>
         <file>metronome/CustomClick_2nd.ogg</file>
         <file>metronome/FingerSnap_1st.ogg</file>
@@ -309,5 +308,7 @@
         <file>metronome/NinjamClick_2nd.ogg</file>
         <file>metronome/TicToc_1st.ogg</file>
         <file>metronome/TicToc_2nd.ogg</file>
+        <file>metronome/Default_1st.ogg</file>
+        <file>metronome/Default_2nd.ogg</file>
     </qresource>
 </RCC>
