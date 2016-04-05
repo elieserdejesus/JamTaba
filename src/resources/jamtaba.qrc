@@ -3,8 +3,8 @@
         <file>jamtaba.css</file>
         <file>jamtaba_orange.css</file>
     </qresource>
-    <qresource>
-        <file alias="messages.qm" lang="ja_JP">../../translations/ja_JP.qm</file>
+    <qresource prefix="/tr">
+        <file alias="ja_JP.pm">../../translations/ja_JP.qm</file>
     </qresource>
     <qresource prefix="/images">
         <file>check.png</file>

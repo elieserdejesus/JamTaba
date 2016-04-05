@@ -30,8 +30,8 @@ int main(int argc, char* args[] ){
 #endif
 
     QTranslator translator;
-    if (translator.load(QLocale::system().name()) ||
-        translator.load(":/messages")) {
+    QString localeName = QLocale::system().name();
+    if (translator.load(localeName) || translator.load(":/tr/" + localeName)) {
         application->installTranslator(&translator);
     }
 
