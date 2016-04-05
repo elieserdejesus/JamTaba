@@ -25,11 +25,12 @@ public:
 
 signals:
     void recordingPathSelected(const QString &newRecordingPath);
-    void metronomePrimaryBeatAudioFileSelected(const QString &filePath);
-    void metronomeSecondaryBeatAudioFileSelected(const QString &filePath);
-    void usingMetronomeCustomSoundsStatusChanged(bool usingCustomSounds);
+    void customMetronomeSelected(const QString &primaryBeatAudioFile, const QString &secondaryBeatAudioFile);
     void builtInMetronomeSelected(const QString &metronomeAlias);
     void multiTrackRecordingStatusChanged(bool recording);
+
+public slots:
+    void accept() override;
 
 protected slots:
     virtual void selectTab(int index) = 0;
@@ -39,10 +40,11 @@ private slots:
     void openPrimaryBeatAudioFileBrowser();
     void openSecondaryBeatAudioFileBrowser();
 
-    void emitFirstBeatAudioFileChanged();
-    void emitSecondaryBeatAudioFileChanged();
+    //void emitFirstBeatAudioFileChanged();
+    //void emitSecondaryBeatAudioFileChanged();
 
-    void toggleMetronomeCustomSounds(bool status);
+    void toggleCustomMetronomeSounds(bool usingCustomMetronome);
+    void toggleBuiltInMetronomeSounds(bool usingBuiltInMetronome);
 private:
     QString selectAudioFile(QString caption, QString initialDir);
     void refreshMetronomeControlsStyleSheet();

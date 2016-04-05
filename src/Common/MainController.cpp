@@ -303,18 +303,11 @@ void MainController::setBuiltInMetronome(const QString &metronomeAlias)
     recreateMetronome();
 }
 
-void MainController::setMetronomeFirstBeatFile(const QString &firstBeatFile)
+void MainController::setCustomMetronome(const QString &primaryBeatFile, const QString &secondaryBeatFile)
 {
-    settings.setMetronomeFirstBeatAudioFile(firstBeatFile);
+    settings.setCustomMetronome(primaryBeatFile, secondaryBeatFile);
     recreateMetronome();
 }
-
-void MainController::setMetronomeSecondaryBeatFile(const QString &secondaryBeatFile)
-{
-    settings.setMetronomeSecondaryBeatAudioFile(secondaryBeatFile);
-    recreateMetronome();
-}
-
 
 void MainController::recreateMetronome()
 {

@@ -522,27 +522,17 @@ void Settings::setBuiltInMetronome(const QString &metronomeAlias)
     metronomeSettings.usingCustomSounds = false;
 }
 
-
-void Settings::setMetronomeFirstBeatAudioFile(const QString &filePath)
+void Settings::setCustomMetronome(const QString &primaryBeatAudioFile, const QString &secondaryBeatAudioFile)
 {
-    if (QFileInfo(filePath).exists()){
-        metronomeSettings.customPrimaryBeatAudioFile = filePath;
+    if (QFileInfo(primaryBeatAudioFile).exists() && QFileInfo(secondaryBeatAudioFile).exists()){
+        metronomeSettings.customPrimaryBeatAudioFile = primaryBeatAudioFile;
+        metronomeSettings.customSecondaryBeatAudioFile = secondaryBeatAudioFile;
         metronomeSettings.usingCustomSounds = true;
     }
     else{
         metronomeSettings.customPrimaryBeatAudioFile = "";
-        metronomeSettings.usingCustomSounds = false;
-    }
-}
-
-void Settings::setMetronomeSecondaryBeatAudioFile(const QString &filePath)
-{
-    if (QFileInfo(filePath).exists()){
-        metronomeSettings.customSecondaryBeatAudioFile = filePath;
-        metronomeSettings.usingCustomSounds = true;
-    }
-    else{
         metronomeSettings.customSecondaryBeatAudioFile = "";
+        metronomeSettings.usingCustomSounds = false;
     }
 }
 

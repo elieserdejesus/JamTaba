@@ -254,6 +254,8 @@ public:
     void setBuiltInMetronome(const QString &metronomeAlias);
     inline QString getBuiltInMetronome() const { return metronomeSettings.builtInMetronomeAlias; }
 
+    void setCustomMetronome(const QString &primaryBeatAudioFile, const QString &secondaryBeatAudioFile);
+
     inline bool isUsingCustomMetronomeSounds() const
     {
         return metronomeSettings.usingCustomSounds;
@@ -402,8 +404,6 @@ public:
 
     // ++++++++++++++ Metronome ++++++++++
     void setMetronomeSettings(float gain, float pan, bool muted);
-    void setMetronomeFirstBeatAudioFile(const QString &filePath);
-    void setMetronomeSecondaryBeatAudioFile(const QString &filePath);
 
     inline float getMetronomeGain() const
     {

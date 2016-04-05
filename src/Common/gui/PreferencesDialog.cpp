@@ -15,25 +15,31 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint & Qt::WA_DeleteOnClose);
 
     ui->comboLastOutput->setEnabled(false);
-
-    ui->groupBoxCustomSounds->setChecked(false);
 }
 
-void PreferencesDialog::toggleMetronomeCustomSounds(bool status)
+void PreferencesDialog::toggleBuiltInMetronomeSounds(bool usingBuiltInMetronome)
 {
+    ui->groupBoxCustomMetronome->setChecked(!usingBuiltInMetronome);
     refreshMetronomeControlsStyleSheet();
-    emit usingMetronomeCustomSoundsStatusChanged(status);
+}
+
+void PreferencesDialog::toggleCustomMetronomeSounds(bool usingCustomMetronome)
+{
+    ui->groupBoxBuiltInMetronomes->setChecked(!usingCustomMetronome);
+    refreshMetronomeControlsStyleSheet();
 }
 
 void PreferencesDialog::refreshMetronomeControlsStyleSheet()
 {
-    style()->unpolish(ui->groupBoxCustomSounds);
+    style()->unpolish(ui->groupBoxCustomMetronome);
+    style()->unpolish(ui->groupBoxBuiltInMetronomes);
     style()->unpolish(ui->textFieldPrimaryBeat);
     style()->unpolish(ui->textFieldSecondaryBeat);
     style()->unpolish(ui->browsePrimaryBeatButton);
     style()->unpolish(ui->browseSecondaryBeatButton);
 
-    style()->polish(ui->groupBoxCustomSounds);
+    style()->polish(ui->groupBoxCustomMetronome);
+    style()->polish(ui->groupBoxBuiltInMetronomes);
     style()->polish(ui->textFieldPrimaryBeat);
     style()->polish(ui->textFieldSecondaryBeat);
     style()->polish(ui->browsePrimaryBeatButton);
@@ -57,23 +63,21 @@ void PreferencesDialog::setupSignals()
             SIGNAL(multiTrackRecordingStatusChanged(bool)));
     connect(ui->browseRecPathButton, SIGNAL(clicked(bool)), this, SLOT(openRecordingPathBrowser()));
 
-    connect(ui->groupBoxCustomSounds, SIGNAL(toggled(bool)), this, SLOT(toggleMetronomeCustomSounds(bool)));
+    connect(ui->groupBoxCustomMetronome, SIGNAL(toggled(bool)), this, SLOT(toggleCustomMetronomeSounds(bool)));
+    connect(ui->groupBoxBuiltInMetronomes, SIGNAL(toggled(bool)), this, SLOT(toggleBuiltInMetronomeSounds(bool)));
     connect(ui->browsePrimaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(openPrimaryBeatAudioFileBrowser()));
     connect(ui->browseSecondaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(openSecondaryBeatAudioFileBrowser()));
-
-    connect(ui->textFieldPrimaryBeat, SIGNAL(editingFinished()), this, SLOT(emitFirstBeatAudioFileChanged()));
-    connect(ui->textFieldSecondaryBeat, SIGNAL(editingFinished()), this, SLOT(emitSecondaryBeatAudioFileChanged()));
-    connect(ui->comboBuiltInMetronomes, SIGNAL(activated(QString)), this, SIGNAL(builtInMetronomeSelected(QString)));
 }
 
-void PreferencesDialog::emitFirstBeatAudioFileChanged()
+void PreferencesDialog::accept()
 {
-    emit metronomePrimaryBeatAudioFileSelected(ui->textFieldPrimaryBeat->text());
-}
-
-void PreferencesDialog::emitSecondaryBeatAudioFileChanged()
-{
-    emit metronomeSecondaryBeatAudioFileSelected(ui->textFieldSecondaryBeat->text());
+    if (ui->groupBoxBuiltInMetronomes->isChecked()) {
+        emit builtInMetronomeSelected(ui->comboBuiltInMetronomes->currentText());
+    }
+    else{
+        emit customMetronomeSelected(ui->textFieldPrimaryBeat->text(), ui->textFieldSecondaryBeat->text());
+    }
+    QDialog::accept();
 }
 
 void PreferencesDialog::populateAllTabs()
@@ -91,7 +95,9 @@ void PreferencesDialog::populateMetronomeTab()
 {
     Q_ASSERT(settings);
 
-    ui->groupBoxCustomSounds->setChecked(settings->isUsingCustomMetronomeSounds());
+    bool usingCustomMetronomeSounds = settings->isUsingCustomMetronomeSounds();
+    ui->groupBoxCustomMetronome->setChecked(usingCustomMetronomeSounds);
+    ui->groupBoxBuiltInMetronomes->setChecked(!usingCustomMetronomeSounds);
     ui->textFieldPrimaryBeat->setText(settings->getMetronomeFirstBeatFile());
     ui->textFieldSecondaryBeat->setText(settings->getMetronomeSecondaryBeatFile());
 
@@ -130,7 +136,6 @@ void PreferencesDialog::openPrimaryBeatAudioFileBrowser()
     QString filePath = QFileDialog::getOpenFileName(this, caption, dir, filter);
     if (!filePath.isNull()) {
         ui->textFieldPrimaryBeat->setText(filePath);
-        emit metronomePrimaryBeatAudioFileSelected(filePath);
     }
 }
 
@@ -142,7 +147,6 @@ void PreferencesDialog::openSecondaryBeatAudioFileBrowser()
     QString filePath = QFileDialog::getOpenFileName(this, caption, dir, filter);
     if (!filePath.isNull()) {
         ui->textFieldSecondaryBeat->setText(filePath);
-        emit metronomeSecondaryBeatAudioFileSelected(filePath);
     }
 }
 

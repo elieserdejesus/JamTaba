@@ -195,8 +195,7 @@ public:
     }
 
     void setBuiltInMetronome(const QString &metronomeAlias);
-    void setMetronomeFirstBeatFile(const QString &firstBeatFile);
-    void setMetronomeSecondaryBeatFile(const QString &secondaryBeatFile);
+    void setCustomMetronome(const QString &primaryBeatFile, const QString &secondaryBeatFile);
 
     inline QString getMetronomeFirstBeatFile() const{
         return settings.getMetronomeFirstBeatFile();
