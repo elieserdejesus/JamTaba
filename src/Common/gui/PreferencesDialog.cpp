@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include "persistence/Settings.h"
+#include "MetronomeUtils.h"
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
     QDialog(parent),
@@ -92,6 +93,13 @@ void PreferencesDialog::populateMetronomeTab()
     ui->groupBoxCustomSounds->setChecked(settings->isUsingCustomMetronomeSounds());
     ui->textFieldPrimaryBeat->setText(settings->getMetronomeFirstBeatFile());
     ui->textFieldSecondaryBeat->setText(settings->getMetronomeSecondaryBeatFile());
+
+    //combo embedded metronome sounds
+    QList<Audio::MetronomeFilesPair> metronomeFiles = Audio::MetronomeUtils::getBuiltInMetronomeFiles();
+    ui->comboMetronomePairs->clear();
+    foreach (Audio::MetronomeFilesPair pair, metronomeFiles) {
+        ui->comboMetronomePairs->addItem(pair.alias, pair.alias);
+    }
 }
 
 void PreferencesDialog::populateRecordingTab()

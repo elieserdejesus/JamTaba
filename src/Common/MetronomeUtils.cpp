@@ -6,8 +6,48 @@
 #include "audio/Resampler.h"
 #include <QString>
 #include <QFileInfo>
+#include <QFile>
+#include <QDir>
+
+using namespace Audio;
 
 const QString MetronomeUtils::DEFAULT_METRONOME_AUDIO_FILE(":/metronome/default.ogg");
+
+MetronomeFilesPair::MetronomeFilesPair(const QString &primaryBeatFile, const QString &secondaryBeatFile, const QString &alias)
+    : primaryBeatFile(primaryBeatFile),
+      secondaryBeatFile(secondaryBeatFile),
+      alias(alias)
+{
+
+}
+
+QList<MetronomeFilesPair> MetronomeUtils::getBuiltInMetronomeFiles()
+{
+    QDir metronomeDir(":/metronome");
+    if (!metronomeDir.exists()) {
+        qCritical() << "Metronome folder doesn't exist!";
+    }
+
+    QList<MetronomeFilesPair> metronomeFiles;
+    QFileInfoList fileInfos = metronomeDir.entryInfoList();
+    foreach (QFileInfo fileInfo, fileInfos) {
+        if (fileInfo.exists()) {
+            QString fileNameComplete = fileInfo.fileName();
+            int indexOf1st =  fileNameComplete.indexOf("_1st");
+            if (indexOf1st >= 0) {
+                QString alias = fileNameComplete.left(indexOf1st);
+
+                //check if the 2nd file exists
+                QString secondFileName = alias + "_2nd." + fileInfo.suffix();
+                QFileInfo secondFile = QFileInfo(fileInfo.dir(), secondFileName);
+                if (secondFile.exists()) {
+                    metronomeFiles.append(MetronomeFilesPair(fileInfo.path(), secondFile.path(), alias));
+                }
+            }
+        }
+    }
+    return metronomeFiles;
+}
 
 void MetronomeUtils::createDefaultSounds(Audio::SamplesBuffer &firstBeatBuffer, Audio::SamplesBuffer &secondaryBeatBuffer, quint32 localSampleRate)
 {
