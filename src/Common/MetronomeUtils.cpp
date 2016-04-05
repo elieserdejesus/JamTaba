@@ -75,14 +75,15 @@ void MetronomeUtils::removeSilenceInBufferStart(Audio::SamplesBuffer &buffer)
 {
     int audioStartingIndex = 0;
     int frames = buffer.getFrameLenght();
-    float sampleMix = 0;
+    float sampleMix = 0.0f;
+    float threshold = 0.2f;
     int channels = buffer.getChannels();
     while(audioStartingIndex < frames){
-        sampleMix = 0;
+        sampleMix = 0.0f;
         for (int c = 0; c < channels; ++c) {
             sampleMix += buffer.get(c, audioStartingIndex);
         }
-        if (sampleMix != 0) //the first sample was found
+        if (qAbs(sampleMix) >= threshold) //the first sample was found
             break;
         audioStartingIndex++;
     }
