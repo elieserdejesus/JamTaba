@@ -4,6 +4,8 @@ SUBDIRS += VstScanner
 
 SUBDIRS += Standalone
 
+include(../translations/translations.pri)
+
 win32{
     SUBDIRS += VstPlugin  #VstPlugin need Qt static build
 }

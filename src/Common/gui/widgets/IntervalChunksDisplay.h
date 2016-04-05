@@ -7,6 +7,8 @@ class QPaintEvent;
 
 class IntervalChunksDisplay : public QProgressBar
 {
+    Q_OBJECT
+
 public:
     explicit IntervalChunksDisplay(QWidget *parent);
 

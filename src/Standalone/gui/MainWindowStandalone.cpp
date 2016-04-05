@@ -114,8 +114,8 @@ void MainWindowStandalone::addPluginToBlackList(const QString &pluginPath)
     QWidget *parent = this;
     if (pluginScanDialog)
         parent = pluginScanDialog.data();
-    QString message = pluginName + " can't be loaded and will be black listed!";
-    QMessageBox::warning(parent, "Plugin Error!", message);
+    QString message = tr(" can't be loaded and will be black listed!").arg(pluginName);
+    QMessageBox::warning(parent, tr("Plugin Error!"), message);
     controller->addBlackVstToSettings(pluginPath);
 }
 
@@ -399,8 +399,8 @@ void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsSta
     midiDriver->start(midiInputsStatus);
     if (!audioDriver->start()) {
         qCritical() << "Error starting audio device";
-        QMessageBox::warning(this, "Audio error!",
-                             "The audio device can't be started! Please check your audio device and try restart Jamtaba!");
+        QMessageBox::warning(this, tr("Audio error!"),
+                             tr("The audio device can't be started! Please check your audio device and try restart Jamtaba!"));
         controller->useNullAudioDriver();
     }
 }

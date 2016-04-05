@@ -13,7 +13,7 @@ ScanFolderPanel::ScanFolderPanel(QString folder) :
     setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
 
     removeButton = new QPushButton(QIcon(":/images/less.png"), "");
-    removeButton->setToolTip("Remove this folder from scanning");
+    removeButton->setToolTip(tr("Remove this folder from scanning"));
     removeButton->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Fixed));
 
     QHBoxLayout *layout = new QHBoxLayout();

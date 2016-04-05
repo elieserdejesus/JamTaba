@@ -90,12 +90,12 @@ void BaseTrackView::createLayoutStructure()
     panWidgetsLayout->setSpacing(0);
     panWidgetsLayout->setContentsMargins(0, 0, 0, 0);
 
-    labelPanL = new QLabel("L");
+    labelPanL = new QLabel(tr("L"));
     labelPanL->setObjectName(QStringLiteral("labelPanL"));
     labelPanL->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
     labelPanL->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
-    labelPanR = new QLabel("R");
+    labelPanR = new QLabel(tr("R"));
     labelPanR->setObjectName(QStringLiteral("labelPanR"));
     labelPanR->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
     labelPanR->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
@@ -152,13 +152,13 @@ void BaseTrackView::createLayoutStructure()
     meterWidgetsLayout->addLayout(metersLayout, 1);
     meterWidgetsLayout->addWidget(peaksDbLabel);
 
-    muteButton = new QPushButton("M");
+    muteButton = new QPushButton(tr("M"));
     muteButton->setObjectName(QStringLiteral("muteButton"));
     muteButton->setEnabled(true);
     muteButton->setLayoutDirection(Qt::LeftToRight);
     muteButton->setCheckable(true);
 
-    soloButton = new QPushButton("S");
+    soloButton = new QPushButton(tr("S"));
     soloButton->setObjectName(QStringLiteral("soloButton"));
     soloButton->setLayoutDirection(Qt::LeftToRight);
     soloButton->setCheckable(true);

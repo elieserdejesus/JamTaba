@@ -86,8 +86,8 @@ QPushButton *LocalTrackViewStandalone::createInputSelectionButton(QWidget *paren
 {
     QPushButton *fakeComboButton = new QPushButton(parent);
     fakeComboButton->setObjectName("inputSelectionButton");
-    fakeComboButton->setText("inputs ...");
-    fakeComboButton->setToolTip("Choose input channels ...");
+    fakeComboButton->setText(tr("inputs ..."));
+    fakeComboButton->setToolTip(tr("Choose input channels ..."));
     fakeComboButton->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
                                                QSizePolicy::MinimumExpanding));
 
@@ -116,7 +116,7 @@ QPushButton *LocalTrackViewStandalone::createMidiToolsButton()
     QPushButton * button = new QPushButton();
     button->setObjectName("midiToolsButton");
     button->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
-    button->setText("MIDI tools");
+    button->setText(tr("MIDI tools"));
     button->setVisible(false);
     connect(button, SIGNAL(clicked(bool)), this, SLOT(openMidiToolsDialog()));
     return button;
@@ -324,7 +324,7 @@ void LocalTrackViewStandalone::setPeakMetersOnlyMode(bool peakMetersOnly, bool r
 
 QMenu *LocalTrackViewStandalone::createMonoInputsMenu(QMenu *parent)
 {
-    QMenu *monoInputsMenu = new QMenu("Mono", parent);
+    QMenu *monoInputsMenu = new QMenu(tr("Mono"), parent);
     monoInputsMenu->setIcon(QIcon(MONO_ICON));
     Audio::AudioDriver *audioDriver = controller->getAudioDriver();
     int globalInputs = audioDriver->getInputsCount();
@@ -335,7 +335,7 @@ QMenu *LocalTrackViewStandalone::createMonoInputsMenu(QMenu *parent)
         QString channelName = QString(audioDriver->getInputChannelName(index)).trimmed();
         if (channelName.isNull() || channelName.isEmpty())
             channelName = QString::number(index+1)  + " "+ audioDriver->getAudioDeviceName();
-        QString inputName = channelName + "  (" + deviceName + ")";
+        QString inputName = tr("  (%1)").arg(channelName).arg(deviceName);
         QAction *action = monoInputsMenu->addAction(inputName);
         action->setData(i);  // using the channel index as action data
         action->setIcon(monoInputsMenu->icon());
@@ -351,7 +351,7 @@ void LocalTrackViewStandalone::showInputSelectionMenu()
     menu.addMenu(createMonoInputsMenu(&menu));
     menu.addMenu(createStereoInputsMenu(&menu));
     menu.addMenu(createMidiInputsMenu(&menu));
-    QAction *noInputAction = menu.addAction(QIcon(NO_INPUT_ICON), "no input");
+    QAction *noInputAction = menu.addAction(QIcon(NO_INPUT_ICON), tr("no input"));
     QObject::connect(noInputAction, SIGNAL(triggered()), this, SLOT(setToNoInput()));
 
     menu.move(mapToGlobal(inputSelectionButton->parentWidget()->pos()));
@@ -360,7 +360,7 @@ void LocalTrackViewStandalone::showInputSelectionMenu()
 
 QMenu *LocalTrackViewStandalone::createStereoInputsMenu(QMenu *parent)
 {
-    QMenu *stereoInputsMenu = new QMenu("Stereo", parent);
+    QMenu *stereoInputsMenu = new QMenu(tr("Stereo"), parent);
     stereoInputsMenu->setIcon(QIcon(STEREO_ICON));
     Audio::AudioDriver *audioDriver = controller->getAudioDriver();
     int globalInputs = audioDriver->getInputsCount();
@@ -377,7 +377,7 @@ QMenu *LocalTrackViewStandalone::createStereoInputsMenu(QMenu *parent)
     }
     stereoInputsMenu->setEnabled(globalInputs/2 >= 1);// at least one pair
     if (!stereoInputsMenu->isEnabled()) {
-        QString msg = stereoInputsMenu->title() + "  (not enough available inputs to make stereo)";
+        QString msg = tr("%1  (not enough available inputs to make stereo)").arg(stereoInputsMenu->title());
         stereoInputsMenu->setTitle(msg);
     }
     QObject::connect(stereoInputsMenu, SIGNAL(triggered(QAction *)), this, SLOT(setToStereo(QAction *)));
@@ -398,7 +398,7 @@ QString LocalTrackViewStandalone::getInputChannelNameOnly(int inputIndex)
 
 QMenu *LocalTrackViewStandalone::createMidiInputsMenu(QMenu *parent)
 {
-    QMenu *midiInputsMenu = new QMenu("MIDI", parent);
+    QMenu *midiInputsMenu = new QMenu(tr("MIDI"), parent);
     midiInputsMenu->setIcon(QIcon(MIDI_ICON));
     Midi::MidiDriver *midiDriver = controller->getMidiDriver();
     int totalMidiDevices = midiDriver->getMaxInputDevices();
@@ -409,7 +409,7 @@ QMenu *LocalTrackViewStandalone::createMidiInputsMenu(QMenu *parent)
             QMenu *midiChannelsMenu = new QMenu(midiInputsMenu);
             QActionGroup *actionGroup = new QActionGroup(midiChannelsMenu);
 
-            QAction *allChannelsAction = midiChannelsMenu->addAction("All channels");
+            QAction *allChannelsAction = midiChannelsMenu->addAction(tr("All channels"));
             allChannelsAction->setData(QString(QString::number(d) + ":" + QString::number(-1)));// use -1 to all channels
             allChannelsAction->setActionGroup(actionGroup);
             allChannelsAction->setCheckable(true);
@@ -420,7 +420,7 @@ QMenu *LocalTrackViewStandalone::createMidiInputsMenu(QMenu *parent)
 
             midiChannelsMenu->addSeparator();
             for (int c = 0; c < 16; ++c) {
-                QAction *a = midiChannelsMenu->addAction("Channel " + QString::number(c+1));
+                QAction *a = midiChannelsMenu->addAction(tr("Channel %1").arg(QString::number(c+1)));
                 a->setData(QString(QString::number(d) + ":" + QString::number(c)));// use device:channel_index as data
                 a->setActionGroup(actionGroup);
                 a->setCheckable(true);
@@ -441,8 +441,7 @@ QMenu *LocalTrackViewStandalone::createMidiInputsMenu(QMenu *parent)
     midiInputsMenu->setEnabled(globallyEnabledMidiDevices > 0);
     if (!midiInputsMenu->isEnabled()) {
         midiInputsMenu->setTitle(
-            midiInputsMenu->title()
-            + "  (no MIDI devices detected or enabled in 'Preferences' menu')");
+            tr("%1  (no MIDI devices detected or enabled in 'Preferences' menu')").arg(midiInputsMenu->title()));
     }
     return midiInputsMenu;
 }
@@ -482,7 +481,7 @@ void LocalTrackViewStandalone::refreshInputSelectionName()
 
             iconFile = MONO_ICON;
         } else {// range is empty = no audio input
-            channelName = "No input";
+            channelName = tr("No input");
             iconFile = NO_INPUT_ICON;
         }
     } else {
@@ -495,11 +494,11 @@ void LocalTrackViewStandalone::refreshInputSelectionName()
                 iconFile = MIDI_ICON;
             } else {// midi device index invalid
                 inputTrack->setToNoInput();
-                channelName = "No input";
+                channelName = tr("No input");
                 iconFile = NO_INPUT_ICON;
             }
         } else {
-            channelName = "No input";
+            channelName = tr("No input");
             iconFile = NO_INPUT_ICON;
         }
     }
