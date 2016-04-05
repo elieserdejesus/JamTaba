@@ -27,8 +27,8 @@ NOTE: `(locale)` is a place-holder, replace to your actual locale.
 
 This is an initial task, need only once per 1 translation.
 
-1. add `TRANSLATIONS + $PWD/(locale).ts` to `translations/translations.pri`
-2. add `<file alias="messages.qm" lang="(locale)">../../translations/(locale).qm</file>` to `./src/resources/jamtaba.qrc`
+1. add `TRANSLATIONS += $$PWD/(locale).ts` to `translations/translations.pri`
+2. add `<file alias="(locale).qm">../../translations/(locale).qm</file>` to `./src/resources/jamtaba.qrc`
 
 ### 2. Update translation
 
