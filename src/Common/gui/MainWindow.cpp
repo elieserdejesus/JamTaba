@@ -51,10 +51,20 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeViewModeMenu();
     initializeMasterFader();
     initializeLanguageMenu();
+    initializeTranslator();
     setupWidgets();
     setupSignals();
 
     qCInfo(jtGUI) << "MainWindow created!";
+}
+
+void MainWindow::initializeTranslator()
+{
+    QString localeName = QLocale::system().name();
+    if (translator.load(localeName) || translator.load(":/tr/" + localeName)) {
+        QApplication::instance()->installTranslator(&translator);
+        ui.retranslateUi(this);
+    }
 }
 
 // ++++++++++++++++++++++++=
@@ -64,10 +74,11 @@ void MainWindow::initializeLanguageMenu()
     QDir translationsDir(":/tr");
     if (translationsDir.exists()) {
         QStringList locales = translationsDir.entryList();
-        foreach (const QString &translationLocale, locales) {
-            QLocale loc(translationLocale);
+        foreach (const QString &translationFile, locales) {
+            QLocale loc(translationFile);
             QString actionText = loc.nativeLanguageName() + " (" + loc.nativeCountryName() + ")";
-            ui.menuLanguage->addAction(actionText);
+            QAction *action = ui.menuLanguage->addAction(actionText);
+            action->setData(translationFile); //using the locale (pt_BR, jp_JP) as data
         }
     }
     else{
@@ -1180,40 +1191,51 @@ void MainWindow::setupWidgets()
 
 void MainWindow::setupSignals()
 {
-    QObject::connect(ui.menuPreferences, SIGNAL(triggered(QAction *)), this,
+    connect(ui.menuPreferences, SIGNAL(triggered(QAction *)), this,
                      SLOT(openPreferencesDialog(QAction *)));
 
-    QObject::connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this,
+    connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this,
                      SLOT(showNinjamCommunityWebPage()));
 
-    QObject::connect(ui.actionNinjam_Official_Site, SIGNAL(triggered(bool)), this,
+    connect(ui.actionNinjam_Official_Site, SIGNAL(triggered(bool)), this,
                      SLOT(showNinjamOfficialWebPage()));
 
-    QObject::connect(ui.actionPrivate_Server, SIGNAL(triggered(bool)), this,
+    connect(ui.actionPrivate_Server, SIGNAL(triggered(bool)), this,
                      SLOT(showPrivateServerDialog()));
 
-    QObject::connect(ui.actionReportBugs, SIGNAL(triggered(bool)), this,
+    connect(ui.actionReportBugs, SIGNAL(triggered(bool)), this,
                      SLOT(showJamtabaIssuesWebPage()));
 
-    QObject::connect(ui.actionWiki, SIGNAL(triggered(bool)), this,
+    connect(ui.actionWiki, SIGNAL(triggered(bool)), this,
                      SLOT(showJamtabaWikiWebPage()));
 
-    QObject::connect(ui.actionUsersManual, SIGNAL(triggered(bool)), this,
+    connect(ui.actionUsersManual, SIGNAL(triggered(bool)), this,
                      SLOT(showJamtabaUsersManual()));
 
-    QObject::connect(ui.actionCurrentVersion, SIGNAL(triggered(bool)), this,
+    connect(ui.actionCurrentVersion, SIGNAL(triggered(bool)), this,
                      SLOT(showJamtabaCurrentVersion()));
 
-    QObject::connect(ui.localControlsCollapseButton, SIGNAL(clicked()), this,
+    connect(ui.localControlsCollapseButton, SIGNAL(clicked()), this,
                      SLOT(toggleLocalInputsCollapseStatus()));
 
-    QObject::connect(mainController->getRoomStreamer(), SIGNAL(error(QString)), this,
+    connect(mainController->getRoomStreamer(), SIGNAL(error(QString)), this,
                      SLOT(handlePublicRoomStreamError(QString)));
 
-    QObject::connect(ui.masterFader, SIGNAL(valueChanged(int)), this,
+    connect(ui.masterFader, SIGNAL(valueChanged(int)), this,
                      SLOT(setMasterGain(int)));
 
-    QObject::connect(ui.actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
+    connect(ui.actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
+
+    connect(ui.menuLanguage, SIGNAL(triggered(QAction*)), this, SLOT(setLanguage(QAction*)));
+
+}
+
+void MainWindow::setLanguage(QAction *languageMenuAction)
+{
+    QString localeFile = languageMenuAction->data().toString();
+    if (translator.load(localeFile, ":/tr")) {
+        ui.retranslateUi(this);
+    }
 }
 
 void MainWindow::initializeMasterFader()

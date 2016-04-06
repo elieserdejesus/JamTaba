@@ -7,6 +7,7 @@
 #include "BusyDialog.h"
 #include "persistence/Settings.h"
 #include "LocalTrackGroupView.h"
+#include <QTranslator>
 
 // #include "performance/PerformanceMonitor.h"
 
@@ -209,10 +210,12 @@ private slots:
 
     void initializeLocalInputChannels();
 
-    void initializeLanguageMenu();
+    void setLanguage(QAction * languageMenuAction);
+
 private:
 
     BusyDialog busyDialog;
+    QTranslator translator;
 
     void showBusyDialog(const QString &message);
     void showBusyDialog();
@@ -241,6 +244,9 @@ private:
     void initializeViewModeMenu();
 
     void initializeMasterFader();
+
+    void initializeLanguageMenu();
+    void initializeTranslator();
 
     bool fullViewMode;// full view or mini view mode? This is not the FullScreen mode, full screen is available only in Standalone.
 
