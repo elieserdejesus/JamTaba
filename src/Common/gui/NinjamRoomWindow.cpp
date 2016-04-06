@@ -259,7 +259,7 @@ void NinjamRoomWindow::sendNewChatMessage(const QString &msg)
 void NinjamRoomWindow::handleUserLeaving(const QString &userName)
 {
     if (chatPanel)
-        chatPanel->addMessage(tr("Jamtaba"), tr(" leave the room.").arg(userName));
+        chatPanel->addMessage("JamTaba", tr("%1 leave the room.").arg(userName));
 
     usersColorsPool.giveBack(userName); // reuse the color mapped to this 'leaving' user
 }
@@ -267,7 +267,7 @@ void NinjamRoomWindow::handleUserLeaving(const QString &userName)
 void NinjamRoomWindow::handleUserEntering(const QString &userName)
 {
     if (chatPanel)
-        chatPanel->addMessage(tr("Jamtaba"), tr(" enter in room.").arg(userName));
+        chatPanel->addMessage("JamTaba", tr("%1 enter in room.").arg(userName));
 }
 
 void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &message)

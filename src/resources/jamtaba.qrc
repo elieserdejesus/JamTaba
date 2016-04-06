@@ -4,7 +4,8 @@
         <file>jamtaba_orange.css</file>
     </qresource>
     <qresource prefix="/tr">
-        <file alias="ja_JP.pm">../../translations/ja_JP.qm</file>
+        <file alias="ja_JP.qm">../../translations/ja_JP.qm</file>
+        <file alias="pt_BR.qm">../../translations/pt_BR.qm</file>
         <file alias="es_CL.qm">../../translations/es_CL.qm</file>
     </qresource>
     <qresource prefix="/images">

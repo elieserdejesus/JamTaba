@@ -335,7 +335,7 @@ QMenu *LocalTrackViewStandalone::createMonoInputsMenu(QMenu *parent)
         QString channelName = QString(audioDriver->getInputChannelName(index)).trimmed();
         if (channelName.isNull() || channelName.isEmpty())
             channelName = QString::number(index+1)  + " "+ audioDriver->getAudioDeviceName();
-        QString inputName = tr("  (%1)").arg(channelName).arg(deviceName);
+        QString inputName = channelName + "  (" + deviceName + ")";
         QAction *action = monoInputsMenu->addAction(inputName);
         action->setData(i);  // using the channel index as action data
         action->setIcon(monoInputsMenu->icon());
