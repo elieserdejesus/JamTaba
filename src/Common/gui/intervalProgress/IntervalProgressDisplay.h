@@ -116,6 +116,7 @@ private:
     private:
         void paintEllipticalPath(QPainter &p, const QRectF &rect, const PaintColors &colors, int currentBeat, int beatsPerInterval);
         void drawCircles(QPainter &p, const QRectF &rect, const PaintContext &context, const PaintColors &colors, int beatsToDraw, int beatsToDrawOffset, bool drawPath);
+        bool isMeasureFirstBeat(int beat, int beatOffset, const PaintContext &context) const;
     };
 
     class CircularPaintStrategy : public EllipticalPaintStrategy

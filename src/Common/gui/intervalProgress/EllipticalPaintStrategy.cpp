@@ -69,12 +69,10 @@ void IntervalProgressDisplay::EllipticalPaintStrategy::paintEllipticalPath(QPain
 QBrush IntervalProgressDisplay::EllipticalPaintStrategy::getBrush(int beat, int beatOffset, const PaintContext &context, const PaintColors &colors) const
 {
     bool isIntervalFirstBeat = beat + beatOffset == 0;
-    bool isMeasureFirstBeat = (beat + beatOffset) % context.beatsPerAccent == 0;
     bool isCurrentBeat = beat + beatOffset == context.currentBeat;
 
-    if (isCurrentBeat)
-    {
-        if (isIntervalFirstBeat || (context.showingAccents && isMeasureFirstBeat))
+    if (isCurrentBeat){
+        if (isIntervalFirstBeat || (context.showingAccents && isMeasureFirstBeat(beat, beatOffset, context)))
             return QBrush(colors.currentAccentBeat);//green
         else
             return QBrush(colors.currentBeat);//white
@@ -84,7 +82,7 @@ QBrush IntervalProgressDisplay::EllipticalPaintStrategy::getBrush(int beat, int 
             return QBrush(colors.disabledBeats);//transparent gray
         }
 
-        if (context.showingAccents && isMeasureFirstBeat) {
+        if (context.showingAccents && isMeasureFirstBeat(beat, beatOffset, context)) {
             return QBrush(colors.accentBeat);
         }
     }
@@ -100,8 +98,7 @@ qreal IntervalProgressDisplay::EllipticalPaintStrategy::getCircleSize(int beat, 
         return context.elementsSize;
     }
     else{
-        bool isMeasureFirstBeat = (beat + beatOffset) % context.beatsPerAccent == 0;
-        if (context.showingAccents && isMeasureFirstBeat){
+        if (context.showingAccents && isMeasureFirstBeat(beat, beatOffset, context)){
             return context.elementsSize - 1;
         }
     }
@@ -111,11 +108,10 @@ qreal IntervalProgressDisplay::EllipticalPaintStrategy::getCircleSize(int beat, 
 QPen IntervalProgressDisplay::EllipticalPaintStrategy::getPen(int beat, int beatOffset, const PaintContext &context) const
 {
     bool isIntervalFirstBeat = beat + beatOffset == 0;
-    bool isMeasureFirstBeat = (beat + beatOffset) % context.beatsPerAccent == 0;
     bool isCurrentBeat = beat + beatOffset == context.currentBeat;
 
     if (isCurrentBeat) {
-        if (isIntervalFirstBeat || (context.showingAccents && isMeasureFirstBeat))
+        if (isIntervalFirstBeat || (context.showingAccents && isMeasureFirstBeat(beat, beatOffset, context)))
             return QPen(Qt::darkGreen, Qt::SolidLine); //accent and first beat
         else
             return QPen(Qt::darkGray, Qt::SolidLine);//highlight the current, but non accented beat
@@ -125,11 +121,18 @@ QPen IntervalProgressDisplay::EllipticalPaintStrategy::getPen(int beat, int beat
             return QPen(Qt::NoPen);
         }
 
-        if (context.showingAccents && isMeasureFirstBeat) { //mark the accents
+        if (context.showingAccents && isMeasureFirstBeat(beat, beatOffset, context)) { //mark the accents
             return QPen(Qt::darkGreen, Qt::SolidLine);
         }
     }
     return QPen(Qt::darkGray, Qt::SolidLine);
+}
+
+bool IntervalProgressDisplay::EllipticalPaintStrategy::isMeasureFirstBeat(int beat, int beatOffset, const PaintContext &context) const
+{
+    if (context.beatsPerAccent > 0) //avoid divide by zero in % operation
+        return (beat + beatOffset) % context.beatsPerAccent == 0;
+    return false;
 }
 
 void IntervalProgressDisplay::EllipticalPaintStrategy::drawCircles(QPainter &p, const QRectF &rect, const PaintContext &context, const PaintColors &colors, int beatsToDraw, int beatsToDrawOffset, bool drawPath)
