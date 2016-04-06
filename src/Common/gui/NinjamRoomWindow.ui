@@ -16,9 +16,6 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
   <property name="accessibleDescription">
    <string>you are in the ninjam room window</string>
   </property>
