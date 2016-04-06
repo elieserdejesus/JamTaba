@@ -50,10 +50,29 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeMainTabWidget();
     initializeViewModeMenu();
     initializeMasterFader();
+    initializeLanguageMenu();
     setupWidgets();
     setupSignals();
 
     qCInfo(jtGUI) << "MainWindow created!";
+}
+
+// ++++++++++++++++++++++++=
+void MainWindow::initializeLanguageMenu()
+{
+    //create a menu action for each translation resource
+    QDir translationsDir(":/tr");
+    if (translationsDir.exists()) {
+        QStringList locales = translationsDir.entryList();
+        foreach (const QString &translationLocale, locales) {
+            QLocale loc(translationLocale);
+            QString actionText = loc.nativeLanguageName() + " (" + loc.nativeCountryName() + ")";
+            ui.menuLanguage->addAction(actionText);
+        }
+    }
+    else{
+        qCritical() << "translations dir not exist! Can't create the Language menu!";
+    }
 }
 
 // ++++++++++++++++++++++++=

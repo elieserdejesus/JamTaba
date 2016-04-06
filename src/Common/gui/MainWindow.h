@@ -208,6 +208,8 @@ private slots:
     void setCustomMetronome(const QString &primaryBeatFile, const QString &secondaryBeatFile);
 
     void initializeLocalInputChannels();
+
+    void initializeLanguageMenu();
 private:
 
     BusyDialog busyDialog;
