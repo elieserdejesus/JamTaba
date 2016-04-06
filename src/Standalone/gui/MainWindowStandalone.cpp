@@ -114,7 +114,7 @@ void MainWindowStandalone::addPluginToBlackList(const QString &pluginPath)
     QWidget *parent = this;
     if (pluginScanDialog)
         parent = pluginScanDialog.data();
-    QString message = tr(" can't be loaded and will be black listed!").arg(pluginName);
+    QString message = tr("%1 can't be loaded and will be black listed!").arg(pluginName);
     QMessageBox::warning(parent, tr("Plugin Error!"), message);
     controller->addBlackVstToSettings(pluginPath);
 }

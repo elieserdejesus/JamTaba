@@ -584,7 +584,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>FullscreenMode</string>
+    <string>Full Screen</string>
    </property>
   </action>
   <action name="actionCurrentVersion">
@@ -614,7 +614,6 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../resources/jamtaba.qrc"/>
   <include location="../../resources/jamtaba.qrc"/>
  </resources>
  <connections/>

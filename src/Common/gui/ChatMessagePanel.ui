@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true"/>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -80,7 +80,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>user name</string>
+         <string notr="true">user name</string>
         </property>
         <property name="scaledContents">
          <bool>false</bool>
@@ -121,7 +121,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>big chat message with many lines to test the behavior</string>
+      <string notr="true">big chat message with many lines to test the behavior</string>
      </property>
      <property name="textFormat">
       <enum>Qt::RichText</enum>

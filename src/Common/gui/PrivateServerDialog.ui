@@ -39,7 +39,7 @@
          <string>type here the name of the server to join</string>
         </property>
         <property name="text">
-         <string>localhost</string>
+         <string notr="true">localhost</string>
         </property>
        </widget>
       </item>
@@ -61,6 +61,9 @@
         <property name="accessibleDescription">
          <string>type here the password</string>
         </property>
+        <property name="text">
+         <string notr="true"/>
+        </property>
        </widget>
       </item>
       <item row="1" column="0">
@@ -76,7 +79,7 @@
          <string>type here the port to use</string>
         </property>
         <property name="text">
-         <string>2049</string>
+         <string notr="true">2049</string>
         </property>
        </widget>
       </item>
