@@ -5,6 +5,7 @@
     </qresource>
     <qresource prefix="/tr">
         <file alias="ja_JP.pm">../../translations/ja_JP.qm</file>
+        <file alias="es_CL.qm">../../translations/es_CL.qm</file>
     </qresource>
     <qresource prefix="/images">
         <file>check.png</file>
