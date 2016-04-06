@@ -44,7 +44,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     ui.setupUi(this);
 
-    setWindowTitle(tr("Jamtaba v%1").arg(QApplication::applicationVersion()));
+    setWindowTitle("JamTaba " + QApplication::applicationVersion());
 
     initializeLoginService();
     initializeMainTabWidget();
@@ -548,7 +548,8 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
             if (!userName.isEmpty()) {
                 mainController->setUserName(userName);
                 QString version = QApplication::applicationVersion();
-                setWindowTitle(tr("Jamtaba v%1 (%2)").arg(version).arg(userName));
+                QString windowTitle = "JamTaba " + version + " (" + userName + ")";
+                setWindowTitle(windowTitle);
             } else {
                 QMessageBox::warning(this, tr("Warning!"), tr("Empty name is not allowed!"));
             }

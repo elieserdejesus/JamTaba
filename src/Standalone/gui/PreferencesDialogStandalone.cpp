@@ -166,7 +166,7 @@ void StandalonePreferencesDialog::clearVstList()
 void StandalonePreferencesDialog::addBlackListedPlugins()
 {
     QFileDialog vstDialog(this, tr("Add Vst(s) to Black list ..."));
-    vstDialog.setNameFilter(tr("Dll(*.dll)"));// TODO in mac the extension is .vst
+    vstDialog.setNameFilter("Dll(*.dll)");// TODO in mac the extension is .vst
     if (!settings->getVstScanFolders().isEmpty())
         vstDialog.setDirectory(settings->getVstScanFolders().first());
     vstDialog.setAcceptMode(QFileDialog::AcceptOpen);
@@ -184,7 +184,7 @@ void StandalonePreferencesDialog::addBlackListedPlugins()
 void StandalonePreferencesDialog::removeBlackListedPlugins()
 {
     QFileDialog vstDialog(this, tr("Remove Vst(s) from Black List ..."));
-    vstDialog.setNameFilter(tr("Dll(*.dll)"));// TODO mac extension is .vst
+    vstDialog.setNameFilter("Dll(*.dll)");// TODO mac extension is .vst
     QStringList foldersToScan = settings->getVstScanFolders();
     if (!foldersToScan.isEmpty())
         vstDialog.setDirectory(foldersToScan.first());

@@ -16,9 +16,6 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>0</number>
@@ -65,13 +62,13 @@
          </sizepolicy>
         </property>
         <property name="accessibleName">
-         <string/>
+         <string notr="true"/>
         </property>
         <property name="accessibleDescription">
          <string>This is the server name</string>
         </property>
         <property name="text">
-         <string>Name</string>
+         <string notr="true">server name</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -96,7 +93,7 @@
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="text">
-         <string>testee</string>
+         <string notr="true">5 musicians</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

@@ -20,7 +20,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>[Jamtaba] Scanning plugins ...</string>
+   <string>[JamTaba] Scanning plugins ...</string>
   </property>
   <property name="accessibleDescription">
    <string>This is the plugin scanning dialog box</string>

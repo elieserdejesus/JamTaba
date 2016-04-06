@@ -282,7 +282,7 @@ void NinjamPanel::buildAccentsdModel(int bpi)
     QStringList bpiDividers = getBpiDividers(bpi);
     for (int d = 0; d < bpiDividers.size(); ++d) {
         QString divider = bpiDividers.at(d);
-        ui->comboBeatsPerAccent->addItem(tr("%1 beats %2").arg(divider).arg(divider.toInt()));
+        ui->comboBeatsPerAccent->addItem(tr("%1 beats").arg(divider.toInt()));
     }
 }
 
