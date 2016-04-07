@@ -64,6 +64,8 @@ protected:
     Ui::NinjamRoomWindow *ui;
     Controller::MainController *mainController;
     NinjamPanel *ninjamPanel;// panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
+
+    void changeEvent(QEvent *) override;
 private:
     MainWindow *mainWindow;
     QMap<QString, NinjamTrackGroupView *> trackGroups;
@@ -99,6 +101,8 @@ private:
     int calculateEstimatedChunksPerInterval() const;
 
     void updateTracksSizeButtons();// enable or disable tracks size buttons
+
+    void retranslate();
 
 private slots:
 
