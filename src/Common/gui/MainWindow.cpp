@@ -70,6 +70,11 @@ void MainWindow::initializeTranslator()
 // ++++++++++++++++++++++++=
 void MainWindow::initializeLanguageMenu()
 {
+    //create the default/english menu entry
+    QAction* defaultLanguageAction = ui.menuLanguage->addAction("English");
+    defaultLanguageAction->setData("en");
+
+
     //create a menu action for each translation resource
     QDir translationsDir(":/tr");
     if (translationsDir.exists()) {
@@ -791,6 +796,9 @@ void MainWindow::changeEvent(QEvent *ev)
             isRunningInMiniMode() && width() <= MINI_MODE_MIN_SIZE.width());
         updatePublicRoomsListLayout();
     }
+    else if (ev->type() == QEvent::LanguageChange) {
+        ui.retranslateUi(this);
+    }
     QMainWindow::changeEvent(ev);
 }
 
@@ -1232,7 +1240,9 @@ void MainWindow::setupSignals()
 
 void MainWindow::setLanguage(QAction *languageMenuAction)
 {
+
     QString localeFile = languageMenuAction->data().toString();
+
     if (translator.load(localeFile, ":/tr")) {
         ui.retranslateUi(this);
     }

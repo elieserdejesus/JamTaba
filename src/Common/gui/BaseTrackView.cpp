@@ -505,4 +505,5 @@ void BaseTrackView::changeEvent(QEvent *e)
     if (e->type() == QEvent::LanguageChange) {
         translateUI();
     }
+    QWidget::changeEvent(e);
 }

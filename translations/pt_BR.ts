@@ -4,24 +4,24 @@
 <context>
     <name>BaseTrackView</name>
     <message>
-        <location filename="../src/Common/gui/BaseTrackView.cpp" line="93"/>
+        <location filename="../src/Common/gui/BaseTrackView.cpp" line="223"/>
         <source>L</source>
         <translatorcomment>Abreviação para  &quot;Esquerda&quot;</translatorcomment>
         <translation>E</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/BaseTrackView.cpp" line="98"/>
+        <location filename="../src/Common/gui/BaseTrackView.cpp" line="224"/>
         <source>R</source>
         <translatorcomment>Abreviação para &quot;Direita&quot;</translatorcomment>
         <translation>D</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/BaseTrackView.cpp" line="155"/>
+        <location filename="../src/Common/gui/BaseTrackView.cpp" line="226"/>
         <source>M</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/BaseTrackView.cpp" line="161"/>
+        <location filename="../src/Common/gui/BaseTrackView.cpp" line="227"/>
         <source>S</source>
         <translation></translation>
     </message>
@@ -567,82 +567,87 @@
         <translation>Exibição</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="513"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="508"/>
+        <source>Language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="519"/>
         <source>Audio ...</source>
         <translation>Audio ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="518"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="524"/>
         <source>Midi ...</source>
         <translation>Midi ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="523"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="529"/>
         <source>VST Plugins ...</source>
         <translation>Plugins VST ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="528"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="534"/>
         <source>Recording ...</source>
         <translation>Gravação ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="533"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="539"/>
         <source>Private Server ...</source>
         <translation>Servidor particular ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="538"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="544"/>
         <source>Ninjam community (Ninbot) ...</source>
         <translation>Comunidade Ninjam (Ninbot) ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="543"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="549"/>
         <source>Ninjam Official Site ...</source>
         <translation>Site oficial do Ninjam ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="548"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="554"/>
         <source>Report bugs or suggest improvements ...</source>
         <translation>Relatar um problema ou sugerir sugestões ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="553"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="559"/>
         <source>Wiki ...</source>
         <translation>Wiki ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="558"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="564"/>
         <source>Users Manual ...</source>
         <translation>Manual do usuário ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="566"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="572"/>
         <source>Full View</source>
         <translation>Visão grande</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="574"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="580"/>
         <source>Mini View</source>
         <translation>Visão pequena</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="579"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="585"/>
         <source>Quit...</source>
         <translation>Sair ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="587"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="593"/>
         <source>Full Screen</source>
         <translation>Tela cheia</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="592"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="598"/>
         <source>Current Version ...</source>
         <translation>Versão atual ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="597"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="603"/>
         <source>Metronome ...</source>
         <translation>Metronomo ...</translation>
     </message>
@@ -650,105 +655,105 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="64"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="99"/>
         <source>Loading rooms list ...</source>
         <translation>Carregando a lista de salas ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="171"/>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="423"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="206"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="458"/>
         <source>Error!</source>
         <translation>Erro!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="329"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="364"/>
         <source>your channel</source>
         <translation>seu canal</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="356"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="391"/>
         <source>disconnecting ...</source>
         <translation>desconectando ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="410"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="445"/>
         <source>Your Jamtaba version is not compatible with previous versions!</source>
         <translation>Sua versão do Jamtaba não é compatível com as versões anteriores!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="411"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="446"/>
         <source>Server : Compatibility problem</source>
         <translation>Problema de compatibilidade com o servidor</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="423"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="458"/>
         <source>Error connecting in Jamtaba server!
 </source>
         <translation>Erro conectando no servidor do Jamtaba!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="432"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="467"/>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
         <translation>Uma nova versão do Jamtaba está disponível para download! Por favor use a &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;nova versão&lt;/a&gt;!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="433"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="468"/>
         <source>New Jamtaba version available!</source>
         <translation>Nova versão do Jamtaba disponível!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="554"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="589"/>
         <source>Warning!</source>
         <translation>Aviso!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="554"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="589"/>
         <source>Empty name is not allowed!</source>
         <translation>Nome em branco não é permitido!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="568"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="603"/>
         <source>Connecting in %1 ... </source>
         <translation>Conectando em %1 ... </translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="589"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="624"/>
         <source>chat %1</source>
         <translation>Bate-papo %1</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="676"/>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="678"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="711"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="713"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="678"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="713"/>
         <source>Disconnected from ninjam server</source>
         <translation>Desconectado do servidor Ninjam</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="681"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="716"/>
         <source>Connecting in %1</source>
         <translation>Conectando em %1</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="1035"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="1070"/>
         <source>About Jamtaba</source>
         <translation>Sobre o JamTaba</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="1036"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="1071"/>
         <source>Jamtaba version is %1</source>
         <translation>A versão atual do JamTaba é %1</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="1077"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="1112"/>
         <source>These chords (%1 measures) can&apos;t be used in a %2 bpi interval!</source>
         <translation>Estes acordes (%1 compassos) não podem ser usados em um intervalo de %2 BPI!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="1080"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="1115"/>
         <source>Problem...</source>
         <translation>Problema ...</translation>
     </message>

@@ -1,25 +1,25 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="es_CL" sourcelanguage="en_US">
+<TS version="2.1" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
-        <location filename="../src/Common/gui/BaseTrackView.cpp" line="93"/>
+        <location filename="../src/Common/gui/BaseTrackView.cpp" line="223"/>
         <source>L</source>
         <translation>I</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/BaseTrackView.cpp" line="98"/>
+        <location filename="../src/Common/gui/BaseTrackView.cpp" line="224"/>
         <source>R</source>
         <translation>D</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/BaseTrackView.cpp" line="155"/>
+        <location filename="../src/Common/gui/BaseTrackView.cpp" line="226"/>
         <source>M</source>
         <translation>M</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/BaseTrackView.cpp" line="161"/>
+        <location filename="../src/Common/gui/BaseTrackView.cpp" line="227"/>
         <source>S</source>
         <translation>S</translation>
     </message>
@@ -27,9 +27,13 @@
 <context>
     <name>BusyDialog</name>
     <message>
+        <source>Dialog</source>
+        <translation type="vanished">Diálogo</translation>
+    </message>
+    <message>
         <location filename="../src/Common/gui/BusyDialog.ui" line="23"/>
         <source>This is the busy dialog window</source>
-        <translation>Ésta es la ventana de diálogo ocupado</translation>
+        <translation>Ésta es la ventana del diálogo ocupado</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/BusyDialog.ui" line="51"/>
@@ -40,6 +44,14 @@
 <context>
     <name>ChatMessagePanel</name>
     <message>
+        <source>Form</source>
+        <translation type="vanished">Estructura</translation>
+    </message>
+    <message>
+        <source>user name</source>
+        <translation type="vanished">nombre de usuario</translation>
+    </message>
+    <message>
         <location filename="../src/Common/gui/ChatMessagePanel.ui" line="102"/>
         <source>translate ...</source>
         <translation>traducir ...</translation>
@@ -49,9 +61,17 @@
         <source>T</source>
         <translation>T</translation>
     </message>
+    <message>
+        <source>big chat message with many lines to test the behavior</source>
+        <translation type="vanished">Mensaje de chat grande con muchas líneas para probar el comportamiento</translation>
+    </message>
 </context>
 <context>
     <name>ChatPanel</name>
+    <message>
+        <source>Form</source>
+        <translation type="vanished">Estructura</translation>
+    </message>
     <message>
         <location filename="../src/Common/gui/ChatPanel.ui" line="35"/>
         <source>Type your text to sent on the chat here</source>
@@ -60,7 +80,7 @@
     <message>
         <location filename="../src/Common/gui/ChatPanel.ui" line="48"/>
         <source>This is the chat scroll area</source>
-        <translation>Éste es el área de desplazamiento del chat</translation>
+        <translation>Ésta es el área de desplazamiento del chat</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/ChatPanel.ui" line="77"/>
@@ -70,7 +90,7 @@
     <message>
         <location filename="../src/Common/gui/ChatPanel.ui" line="80"/>
         <source>Press that button to clear your message</source>
-        <translation>Presiona el botón para borrar el mensaje</translation>
+        <translation>Presiona el botón para borrar el  mensaje</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/ChatPanel.ui" line="93"/>
@@ -91,14 +111,18 @@
 <context>
     <name>ChordsPanel</name>
     <message>
+        <source>Form</source>
+        <translation type="vanished">Estructura</translation>
+    </message>
+    <message>
         <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="64"/>
         <source>send the chords to chat...</source>
-        <translation>envíar los acordes al chat...</translation>
+        <translation>Envíar los acordes al chat...</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="67"/>
         <source>send the chords to chat</source>
-        <translation>envíar los acordes al chat</translation>
+        <translation>Envía los acordes al chat</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="83"/>
@@ -110,13 +134,21 @@
         <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="102"/>
         <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="105"/>
         <source>transpose up</source>
-        <translation>Transponer hacia arriba</translation>
+        <translation>Transposición hacia arriba</translation>
+    </message>
+    <message>
+        <source>#</source>
+        <translation type="vanished">#</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="121"/>
         <location filename="../src/Common/gui/chords/ChordsPanel.ui" line="124"/>
         <source>transpose down</source>
-        <translation>Transponer hacia abajo</translation>
+        <translation>Transposición hacia abajo</translation>
+    </message>
+    <message>
+        <source>b</source>
+        <translation type="vanished">b</translation>
     </message>
 </context>
 <context>
@@ -153,7 +185,7 @@
         <location filename="../src/Standalone/gui/FxPanelItem.cpp" line="137"/>
         <location filename="../src/Standalone/gui/FxPanelItem.cpp" line="163"/>
         <source>bypass</source>
-        <translation>activar/desactivar</translation>
+        <translation>desactivar</translation>
     </message>
     <message>
         <location filename="../src/Standalone/gui/FxPanelItem.cpp" line="138"/>
@@ -479,6 +511,10 @@
         <translation>Monofónico</translation>
     </message>
     <message>
+        <source>  (%1)</source>
+        <translation type="vanished">  (%1)</translation>
+    </message>
+    <message>
         <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="354"/>
         <source>no input</source>
         <translation>sin entrada</translation>
@@ -564,77 +600,86 @@
         <translation>Modo de Visualización</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="513"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="508"/>
+        <source>Language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="519"/>
         <source>Audio ...</source>
         <translation>Sonido ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="518"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="524"/>
         <source>Midi ...</source>
         <translation>Midi ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="523"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="529"/>
         <source>VST Plugins ...</source>
         <translation>Plug-ins VST ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="528"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="534"/>
         <source>Recording ...</source>
         <translation>Grabación ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="533"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="539"/>
         <source>Private Server ...</source>
         <translation>Servidor Privado ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="538"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="544"/>
         <source>Ninjam community (Ninbot) ...</source>
         <translation>Comunidad Ninjam (Ninbot.com) ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="543"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="549"/>
         <source>Ninjam Official Site ...</source>
         <translation>Sitio Oficial de Ninjam ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="548"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="554"/>
         <source>Report bugs or suggest improvements ...</source>
         <translation>Reportar problemas o sugerir mejoras ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="553"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="559"/>
         <source>Wiki ...</source>
         <translation>Wiki ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="558"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="564"/>
         <source>Users Manual ...</source>
         <translation>Manual de Usuario ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="566"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="572"/>
         <source>Full View</source>
         <translation>Vista Completa</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="574"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="580"/>
         <source>Mini View</source>
         <translation>Vista minimizada</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="579"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="585"/>
         <source>Quit...</source>
         <translation>Salir...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="587"/>
+        <location filename="../src/Common/gui/MainWindow.ui" line="593"/>
         <source>Full Screen</source>
-        <translation>Pantalla Completa</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.ui" line="592"/>
+        <source>FullscreenMode</source>
+        <translation type="vanished">Modo Pantalla Completa</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.ui" line="598"/>
         <source>Current Version ...</source>
         <translation>Versión Actual ...</translation>
     </message>
@@ -647,106 +692,114 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="64"/>
+        <source>Jamtaba v%1</source>
+        <translation type="vanished">Jamtaba v%1</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="99"/>
         <source>Loading rooms list ...</source>
         <translation>Cargando la lista de salas ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="171"/>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="423"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="206"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="458"/>
         <source>Error!</source>
         <translation>¡Error!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="329"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="364"/>
         <source>your channel</source>
         <translation>Tu Canal</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="356"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="391"/>
         <source>disconnecting ...</source>
         <translation>desconectando ...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="410"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="445"/>
         <source>Your Jamtaba version is not compatible with previous versions!</source>
         <translation>¡Tu versión de Jamtaba no es compatible con versiones previas!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="411"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="446"/>
         <source>Server : Compatibility problem</source>
         <translation>Servidor : Problema de compatibilidad</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="423"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="458"/>
         <source>Error connecting in Jamtaba server!
 </source>
         <translation>¡Error al conectar con el servidor de Jamtaba!
 </translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="432"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="467"/>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
         <translation>¡Una nueva versión de Jamtaba está disponible para descarga! ¡Por favor usa la &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;nueva version&lt;/a&gt;!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="433"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="468"/>
         <source>New Jamtaba version available!</source>
         <translation>¡Nueva versión de Jamtaba Disponible!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="554"/>
+        <source>Jamtaba v%1 (%2)</source>
+        <translation type="vanished">Jamtaba v%1 (%2)</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="589"/>
         <source>Warning!</source>
         <translation>¡Atención!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="554"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="589"/>
         <source>Empty name is not allowed!</source>
         <translation>¡No está permitido dejar el nombre en blanco!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="568"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="603"/>
         <source>Connecting in %1 ... </source>
         <translation>Conectando con %1 ... </translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="589"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="624"/>
         <source>chat %1</source>
         <translation>chat %1</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="676"/>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="678"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="711"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="713"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="678"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="713"/>
         <source>Disconnected from ninjam server</source>
         <translation>Desconectado del servidor de ninjam</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="681"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="716"/>
         <source>Connecting in %1</source>
         <translation>Conectando con %1</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="1035"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="1070"/>
         <source>About Jamtaba</source>
         <translation>Acerca de Jamtaba</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="1036"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="1071"/>
         <source>Jamtaba version is %1</source>
         <translation>La versión de Jamtaba es %1</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="1077"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="1112"/>
         <source>These chords (%1 measures) can&apos;t be used in a %2 bpi interval!</source>
         <translation>¡Estos acordes (%1 medidas) no pueden ser utilizados en un intervalo de %2 bpi!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="1080"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="1115"/>
         <source>Problem...</source>
         <translation>Problema...</translation>
     </message>
@@ -754,9 +807,13 @@
 <context>
     <name>MainWindowStandalone</name>
     <message>
+        <source> can&apos;t be loaded and will be black listed!</source>
+        <translation type="vanished">¡no puede ser cargado y será puesto en Lista negra!</translation>
+    </message>
+    <message>
         <location filename="../src/Standalone/gui/MainWindowStandalone.cpp" line="117"/>
         <source>%1 can&apos;t be loaded and will be black listed!</source>
-        <translation>¡%1 no puede ser cargado y será enviado a la Lista negra!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Standalone/gui/MainWindowStandalone.cpp" line="118"/>
@@ -778,8 +835,13 @@
     <name>MidiToolsDialog</name>
     <message>
         <location filename="../src/Standalone/gui/MidiToolsDialog.ui" line="20"/>
+        <source>Dialog</source>
+        <translation type="vanished">Diálogo</translation>
+    </message>
+    <message>
+        <location filename="../src/Standalone/gui/MidiToolsDialog.ui" line="20"/>
         <source>MIDI Tools</source>
-        <translation>Herramientas MIDI</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Standalone/gui/MidiToolsDialog.ui" line="47"/>
@@ -812,9 +874,17 @@
         <source>Semitones:</source>
         <translation>Semitonos:</translation>
     </message>
+    <message>
+        <source>Midi Tools</source>
+        <translation type="vanished">Herramientas MiDi</translation>
+    </message>
 </context>
 <context>
     <name>NinjamPanel</name>
+    <message>
+        <source>Form</source>
+        <translation type="vanished">Estructura</translation>
+    </message>
     <message>
         <location filename="../src/Common/gui/NinjamPanel.ui" line="56"/>
         <source>metronome</source>
@@ -945,11 +1015,20 @@
     <message>
         <location filename="../src/Common/gui/NinjamPanel.cpp" line="285"/>
         <source>%1 beats</source>
-        <translation>beats %1</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 beats %2</source>
+        <translation type="vanished">%1 beats %2</translation>
     </message>
 </context>
 <context>
     <name>NinjamRoomWindow</name>
+    <message>
+        <location filename="../src/Common/gui/NinjamRoomWindow.ui" line="20"/>
+        <source>Form</source>
+        <translation type="vanished">Estructura</translation>
+    </message>
     <message>
         <location filename="../src/Common/gui/NinjamRoomWindow.ui" line="20"/>
         <source>you are in the ninjam room window</source>
@@ -988,12 +1067,24 @@
     <message>
         <location filename="../src/Common/gui/NinjamRoomWindow.cpp" line="262"/>
         <source>%1 leave the room.</source>
-        <translation>%1 se retira de la sala.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Common/gui/NinjamRoomWindow.cpp" line="270"/>
         <source>%1 enter in room.</source>
-        <translation>%1 entra a la sala.</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Jamtaba</source>
+        <translation type="vanished">Jamtaba</translation>
+    </message>
+    <message>
+        <source> leave the room.</source>
+        <translation type="vanished">se retira de la sala.</translation>
+    </message>
+    <message>
+        <source> enter in room.</source>
+        <translation type="vanished">entra a la sala.</translation>
     </message>
 </context>
 <context>
@@ -1007,9 +1098,13 @@
 <context>
     <name>PluginScanDialog</name>
     <message>
+        <source>[Jamtaba] Scanning plugins ...</source>
+        <translation type="vanished">[Jamtaba] Buscando Plug-ins ...</translation>
+    </message>
+    <message>
         <location filename="../src/Common/gui/PluginScanDialog.ui" line="23"/>
         <source>[JamTaba] Scanning plugins ...</source>
-        <translation>[JamTaba] Buscando plug-ins ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Common/gui/PluginScanDialog.ui" line="26"/>
@@ -1050,10 +1145,14 @@
         <translation>Escoger el archivo para el Sonido Primario...</translation>
     </message>
     <message>
+        <source>Audio Files (*.wav)</source>
+        <translation type="vanished">Archivos de Sonido (*.wav)</translation>
+    </message>
+    <message>
         <location filename="../src/Common/gui/PreferencesDialog.cpp" line="134"/>
         <location filename="../src/Common/gui/PreferencesDialog.cpp" line="145"/>
         <source>Audio Files (*.wav, *.ogg)</source>
-        <translation>Archivos de Sonido (*.wav, *.ogg)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/Common/gui/PreferencesDialog.cpp" line="144"/>
@@ -1089,6 +1188,10 @@
         <translation>escribe aquí el nombre del servidor al que te deseas conectar</translation>
     </message>
     <message>
+        <source>localhost</source>
+        <translation type="vanished">localhost</translation>
+    </message>
+    <message>
         <location filename="../src/Common/gui/PrivateServerDialog.ui" line="49"/>
         <location filename="../src/Common/gui/PrivateServerDialog.ui" line="59"/>
         <source>leave blank to connect as annonymous</source>
@@ -1115,6 +1218,10 @@
         <translation>escribe aquí el puerto a usar</translation>
     </message>
     <message>
+        <source>2049</source>
+        <translation type="vanished">2049</translation>
+    </message>
+    <message>
         <location filename="../src/Common/gui/PrivateServerDialog.ui" line="108"/>
         <source>Press this button if you are ok</source>
         <translation>Presiona este botón si deseas aceptar</translation>
@@ -1128,14 +1235,26 @@
 <context>
     <name>RoomViewPanel</name>
     <message>
+        <source>Form</source>
+        <translation type="vanished">Estructura</translation>
+    </message>
+    <message>
         <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="68"/>
         <source>This is the server name</source>
         <translation>Éste es el nombre del servidor</translation>
     </message>
     <message>
+        <source>Name</source>
+        <translation type="vanished">Nombre</translation>
+    </message>
+    <message>
         <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="90"/>
         <source>This is the status of this room</source>
         <translation>Éste es el estado de esta sala</translation>
+    </message>
+    <message>
+        <source>testee</source>
+        <translation type="vanished">testee</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/JamRoomViewPanel.ui" line="109"/>
@@ -1187,6 +1306,10 @@
         <location filename="../src/Standalone/gui/PreferencesDialogStandalone.cpp" line="168"/>
         <source>Add Vst(s) to Black list ...</source>
         <translation>Agregar Vst(s) a la lista negra ...</translation>
+    </message>
+    <message>
+        <source>Dll(*.dll)</source>
+        <translation type="vanished">Dll(*.dll)</translation>
     </message>
     <message>
         <location filename="../src/Standalone/gui/PreferencesDialogStandalone.cpp" line="186"/>
