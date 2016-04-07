@@ -352,12 +352,27 @@
 <context>
     <name>JamRoomViewPanel</name>
     <message>
-        <location filename="../src/Common/gui/JamRoomViewPanel.cpp" line="27"/>
+        <location filename="../src/Common/gui/JamRoomViewPanel.cpp" line="33"/>
+        <source>enter</source>
+        <translation>entrar</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/JamRoomViewPanel.cpp" line="34"/>
+        <source>listen</source>
+        <translation>ouvir</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/JamRoomViewPanel.cpp" line="44"/>
         <source>%1 / %2 players </source>
         <translation>%1 / %2 músicos</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/JamRoomViewPanel.cpp" line="80"/>
+        <location filename="../src/Common/gui/JamRoomViewPanel.cpp" line="84"/>
+        <source>%1  location is not available at moment!</source>
+        <translation>A localização de %1 não está disponível no momento!</translation>
+    </message>
+    <message>
+        <location filename="../src/Common/gui/JamRoomViewPanel.cpp" line="105"/>
         <source>The audio stream of this room is not available at moment!</source>
         <translation>O stream de áudio desta sala não está disponível no momento!</translation>
     </message>
@@ -365,83 +380,81 @@
 <context>
     <name>LocalTrackGroupView</name>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="36"/>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="46"/>
         <source>Preparing</source>
         <translation>Preparando</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="36"/>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="46"/>
         <source>Transmiting</source>
         <translation>Transmitindo</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="56"/>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="286"/>
         <source>Transmit</source>
-        <translation>Transmite</translation>
+        <translation type="vanished">Transmite</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="57"/>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="33"/>
         <source>Enable/disable your audio transmission for others</source>
         <translation>Ativa/desativa a transmissão do seu áudio para outros músicos</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="68"/>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="36"/>
         <source>Add or remove channels...</source>
         <translation>Adiciona ou remove canais...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="82"/>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="101"/>
         <source>new channel</source>
         <translation>novo canal</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="94"/>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="113"/>
         <source>Load preset</source>
         <translation>Carrega um preset</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="117"/>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="136"/>
         <source>Save preset</source>
         <translation>Salva o preset</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="121"/>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="140"/>
         <source>Reset Track Controls</source>
         <translation>Resta os controles do canal</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="127"/>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="146"/>
         <source>Add channel</source>
         <translation>Adiciona um canal</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="135"/>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="154"/>
         <source>Remove channel &quot;%1&quot;</source>
         <translation>Remove o canal  &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="250"/>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="269"/>
         <source>Save the preset ...</source>
         <translation>Salva o preset...</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="251"/>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="270"/>
         <source>Preset name:</source>
         <translation>Nome do preset:</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="268"/>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="287"/>
         <source>Remove preset</source>
         <translation>Remove o preset</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="269"/>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="288"/>
         <source>Preset:</source>
         <translation>Preset:</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="286"/>
+        <location filename="../src/Common/gui/LocalTrackGroupView.cpp" line="43"/>
         <source>X</source>
         <translation></translation>
     </message>
@@ -462,64 +475,63 @@
 <context>
     <name>LocalTrackViewStandalone</name>
     <message>
-        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="89"/>
         <source>inputs ...</source>
-        <translation>entradas ...</translation>
+        <translation type="vanished">entradas ...</translation>
     </message>
     <message>
-        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="90"/>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="54"/>
         <source>Choose input channels ...</source>
         <translation>Selecione os cansis de entrada...</translation>
     </message>
     <message>
-        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="119"/>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="56"/>
         <source>MIDI tools</source>
         <translation>Ferramentas MIDI</translation>
     </message>
     <message>
-        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="327"/>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="337"/>
         <source>Mono</source>
         <translation>Mono</translation>
     </message>
     <message>
-        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="354"/>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="364"/>
         <source>no input</source>
         <translation>Sem entrada</translation>
     </message>
     <message>
-        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="363"/>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="373"/>
         <source>Stereo</source>
         <translation>Estéreo</translation>
     </message>
     <message>
-        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="380"/>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="390"/>
         <source>%1  (not enough available inputs to make stereo)</source>
         <translation>%1  (não há entradas suficientes para um canal estéreo)</translation>
     </message>
     <message>
-        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="401"/>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="411"/>
         <source>MIDI</source>
         <translation>MIDI</translation>
     </message>
     <message>
-        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="412"/>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="422"/>
         <source>All channels</source>
         <translation>Todos os canais</translation>
     </message>
     <message>
-        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="423"/>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="433"/>
         <source>Channel %1</source>
         <translation>Canal %1</translation>
     </message>
     <message>
-        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="444"/>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="454"/>
         <source>%1  (no MIDI devices detected or enabled in &apos;Preferences&apos; menu&apos;)</source>
         <translation>%1  (nenhum dispositivo foi detectado ou habilitado no menu &apos;Preferências&apos;&apos;)</translation>
     </message>
     <message>
-        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="484"/>
-        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="497"/>
-        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="501"/>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="494"/>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="507"/>
+        <location filename="../src/Standalone/gui/LocalTrackViewStandalone.cpp" line="511"/>
         <source>No input</source>
         <translation>Sem entrada</translation>
     </message>
@@ -569,7 +581,7 @@
     <message>
         <location filename="../src/Common/gui/MainWindow.ui" line="508"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Idioma</translation>
     </message>
     <message>
         <location filename="../src/Common/gui/MainWindow.ui" line="519"/>
@@ -738,22 +750,22 @@
         <translation>Conectando em %1</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="1070"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="1073"/>
         <source>About Jamtaba</source>
         <translation>Sobre o JamTaba</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="1071"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="1074"/>
         <source>Jamtaba version is %1</source>
         <translation>A versão atual do JamTaba é %1</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="1112"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="1115"/>
         <source>These chords (%1 measures) can&apos;t be used in a %2 bpi interval!</source>
         <translation>Estes acordes (%1 compassos) não podem ser usados em um intervalo de %2 BPI!</translation>
     </message>
     <message>
-        <location filename="../src/Common/gui/MainWindow.cpp" line="1115"/>
+        <location filename="../src/Common/gui/MainWindow.cpp" line="1118"/>
         <source>Problem...</source>
         <translation>Problema ...</translation>
     </message>
