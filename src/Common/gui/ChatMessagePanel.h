@@ -25,6 +25,10 @@ signals:
     void startingTranslation();
     void translationFinished();
 
+
+protected:
+    void changeEvent(QEvent *) override;
+
 private slots:
     void on_translateButton_clicked();
     void on_networkReplyFinished(QNetworkReply *);

@@ -43,7 +43,7 @@ private slots:
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
-    void changeEvent(QEvent *);
+    void changeEvent(QEvent *) override;
 
 private:
     Ui::ChatPanel *ui;

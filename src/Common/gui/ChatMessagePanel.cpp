@@ -26,6 +26,15 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, con
                showTranslationButton);
 }
 
+void ChatMessagePanel::changeEvent(QEvent *e)
+{
+    if (e->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+
+    }
+    QWidget::changeEvent(e);
+}
+
 void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
                                   const QColor &userNameBackgroundColor,
                                   const QColor &msgBackgroundColor, const QColor &textColor,
