@@ -1250,6 +1250,9 @@ void MainWindow::setLanguage(QAction *languageMenuAction)
     if (translator.load(locale, ":/tr")) {
         ui.retranslateUi(this);
         mainController->setTranslationLanguage(locale);
+        if (mainController->isPlayingInNinjamRoom()) {
+            ninjamWindow->getChatPanel()->setPreferredTranslationLanguage(locale);
+        }
     }
 }
 

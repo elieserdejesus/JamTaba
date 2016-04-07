@@ -163,7 +163,7 @@ void ChatPanel::addMessage(const QString &userName, const QString &userMessage, 
     connect(msgPanel, SIGNAL(startingTranslation()), this, SLOT(showTranslationProgressFeedback()));
     connect(msgPanel, SIGNAL(translationFinished()), this, SLOT(hideTranslationProgressFeedback()));
 
-    msgPanel->setPrefferedTranslationLanguage(this->preferredTargetTranslationLanguage);
+    msgPanel->setPrefferedTranslationLanguage(this->autoTranslationLanguage);
     msgPanel->setMaximumWidth(ui->scrollContent->width());
     ui->scrollContent->layout()->addWidget(msgPanel);
     if (ui->scrollContent->layout()->count() > MAX_MESSAGES) {
@@ -215,11 +215,16 @@ void ChatPanel::on_buttonClear_clicked()
 
 void ChatPanel::setPreferredTranslationLanguage(const QString &targetLanguage)
 {
-    if (targetLanguage != this->preferredTargetTranslationLanguage) {
-        this->preferredTargetTranslationLanguage = targetLanguage;
+    QString languageCode = targetLanguage.toLower();
+    if (languageCode.size() > 2) {
+        languageCode = targetLanguage.left(2); //using just the 2 first letters in lower case
+    }
+    if (languageCode != autoTranslationLanguage) {
+        autoTranslationLanguage = languageCode;
         QList<ChatMessagePanel *> panels = ui->scrollContent->findChildren<ChatMessagePanel *>();
-        foreach (ChatMessagePanel *msgPanel, panels)
-            msgPanel->setPrefferedTranslationLanguage(targetLanguage);
+        foreach (ChatMessagePanel *msgPanel, panels) {
+            msgPanel->setPrefferedTranslationLanguage(languageCode);
+        }
     }
 }
 
