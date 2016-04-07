@@ -60,11 +60,27 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
 void MainWindow::initializeTranslator()
 {
+    //always install the translator
+    QApplication::instance()->installTranslator(&translator);
+
+    //remember the last selected language
     QString localeName = mainController->getSettings().getTranslation();
-    if (translator.load(localeName) || translator.load(":/tr/" + localeName)) {
-        QApplication::instance()->installTranslator(&translator);
-        ui.retranslateUi(this);
+    loadTranslationFile(localeName);
+}
+
+void MainWindow::setLanguage(QAction *languageMenuAction)
+{
+    QString locale = languageMenuAction->data().toString();
+    loadTranslationFile(locale);
+    mainController->setTranslationLanguage(locale);
+    if (mainController->isPlayingInNinjamRoom()) {
+        ninjamWindow->getChatPanel()->setPreferredTranslationLanguage(locale);
     }
+}
+
+void MainWindow::loadTranslationFile(const QString &locale)
+{
+    translator.load(locale, ":/tr");
 }
 
 // ++++++++++++++++++++++++=
@@ -1241,18 +1257,6 @@ void MainWindow::setupSignals()
 
     connect(ui.menuLanguage, SIGNAL(triggered(QAction*)), this, SLOT(setLanguage(QAction*)));
 
-}
-
-void MainWindow::setLanguage(QAction *languageMenuAction)
-{
-
-    QString locale = languageMenuAction->data().toString();
-    translator.load(locale, ":/tr");
-    ui.retranslateUi(this);
-    mainController->setTranslationLanguage(locale);
-    if (mainController->isPlayingInNinjamRoom()) {
-        ninjamWindow->getChatPanel()->setPreferredTranslationLanguage(locale);
-    }
 }
 
 void MainWindow::initializeMasterFader()
