@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="es_CL" sourcelanguage="en_US">
+<TS version="2.0" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -23,12 +23,8 @@
 <context>
     <name>BusyDialog</name>
     <message>
-        <source>Dialog</source>
-        <translation type="vanished">Diálogo</translation>
-    </message>
-    <message>
         <source>This is the busy dialog window</source>
-        <translation>Ésta es la ventana del diálogo ocupado</translation>
+        <translation>Ésta es la ventana de diálogo ocupado</translation>
     </message>
     <message>
         <source>TextLabel</source>
@@ -38,14 +34,6 @@
 <context>
     <name>ChatMessagePanel</name>
     <message>
-        <source>Form</source>
-        <translation type="vanished">Estructura</translation>
-    </message>
-    <message>
-        <source>user name</source>
-        <translation type="vanished">nombre de usuario</translation>
-    </message>
-    <message>
         <source>translate ...</source>
         <translation>traducir ...</translation>
     </message>
@@ -53,24 +41,16 @@
         <source>T</source>
         <translation>T</translation>
     </message>
-    <message>
-        <source>big chat message with many lines to test the behavior</source>
-        <translation type="vanished">Mensaje de chat grande con muchas líneas para probar el comportamiento</translation>
-    </message>
 </context>
 <context>
     <name>ChatPanel</name>
-    <message>
-        <source>Form</source>
-        <translation type="vanished">Estructura</translation>
-    </message>
     <message>
         <source>Type your text to sent on the chat here</source>
         <translation>Escribe aquí el texto que será enviado a través del chat</translation>
     </message>
     <message>
         <source>This is the chat scroll area</source>
-        <translation>Ésta es el área de desplazamiento del chat</translation>
+        <translation>Éste es el área de desplazamiento del chat</translation>
     </message>
     <message>
         <source>clear the messages ...</source>
@@ -78,7 +58,7 @@
     </message>
     <message>
         <source>Press that button to clear your message</source>
-        <translation>Presiona el botón para borrar el  mensaje</translation>
+        <translation>Presiona el botón para borrar el mensaje</translation>
     </message>
     <message>
         <source>Auto translate</source>
@@ -96,16 +76,12 @@
 <context>
     <name>ChordsPanel</name>
     <message>
-        <source>Form</source>
-        <translation type="vanished">Estructura</translation>
-    </message>
-    <message>
         <source>send the chords to chat...</source>
-        <translation>Envíar los acordes al chat...</translation>
+        <translation>envía los acordes al chat...</translation>
     </message>
     <message>
         <source>send the chords to chat</source>
-        <translation>Envía los acordes al chat</translation>
+        <translation>envía los acordes al chat</translation>
     </message>
     <message>
         <source>discard chord progression</source>
@@ -113,19 +89,11 @@
     </message>
     <message>
         <source>transpose up</source>
-        <translation>Transposición hacia arriba</translation>
-    </message>
-    <message>
-        <source>#</source>
-        <translation type="vanished">#</translation>
+        <translation>Transponer hacia arriba</translation>
     </message>
     <message>
         <source>transpose down</source>
-        <translation>Transposición hacia abajo</translation>
-    </message>
-    <message>
-        <source>b</source>
-        <translation type="vanished">b</translation>
+        <translation>Transponer hacia abajo</translation>
     </message>
 </context>
 <context>
@@ -155,7 +123,7 @@
     </message>
     <message>
         <source>bypass</source>
-        <translation>desactivar</translation>
+        <translation>activar/desactivar</translation>
     </message>
     <message>
         <source>remove</source>
@@ -320,15 +288,15 @@
     </message>
     <message>
         <source>enter</source>
-        <translation type="unfinished">entrar</translation>
+        <translation>entrar</translation>
     </message>
     <message>
         <source>listen</source>
-        <translation type="unfinished">escuchar</translation>
+        <translation>escuchar</translation>
     </message>
     <message>
         <source>%1  location is not available at moment!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡La ubicación %1  lno está disponible en este momento!</translation>
     </message>
 </context>
 <context>
@@ -340,10 +308,6 @@
     <message>
         <source>Transmiting</source>
         <translation>Transmitiendo</translation>
-    </message>
-    <message>
-        <source>Transmit</source>
-        <translation type="vanished">Transmitir</translation>
     </message>
     <message>
         <source>Enable/disable your audio transmission for others</source>
@@ -412,10 +376,6 @@
 <context>
     <name>LocalTrackViewStandalone</name>
     <message>
-        <source>inputs ...</source>
-        <translation type="vanished">entradas ...</translation>
-    </message>
-    <message>
         <source>Choose input channels ...</source>
         <translation>Escoge los canales de entrda ...</translation>
     </message>
@@ -426,10 +386,6 @@
     <message>
         <source>Mono</source>
         <translation>Monofónico</translation>
-    </message>
-    <message>
-        <source>  (%1)</source>
-        <translation type="vanished">  (%1)</translation>
     </message>
     <message>
         <source>no input</source>
@@ -500,7 +456,7 @@
     </message>
     <message>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Lenguage</translation>
     </message>
     <message>
         <source>Audio ...</source>
@@ -556,11 +512,7 @@
     </message>
     <message>
         <source>Full Screen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>FullscreenMode</source>
-        <translation type="vanished">Modo Pantalla Completa</translation>
+        <translation>Pantalla Completa</translation>
     </message>
     <message>
         <source>Current Version ...</source>
@@ -573,10 +525,6 @@
 </context>
 <context>
     <name>MainWindow</name>
-    <message>
-        <source>Jamtaba v%1</source>
-        <translation type="vanished">Jamtaba v%1</translation>
-    </message>
     <message>
         <source>Loading rooms list ...</source>
         <translation>Cargando la lista de salas ...</translation>
@@ -614,10 +562,6 @@
     <message>
         <source>New Jamtaba version available!</source>
         <translation>¡Nueva versión de Jamtaba Disponible!</translation>
-    </message>
-    <message>
-        <source>Jamtaba v%1 (%2)</source>
-        <translation type="vanished">Jamtaba v%1 (%2)</translation>
     </message>
     <message>
         <source>Warning!</source>
@@ -667,12 +611,8 @@
 <context>
     <name>MainWindowStandalone</name>
     <message>
-        <source> can&apos;t be loaded and will be black listed!</source>
-        <translation type="vanished">¡no puede ser cargado y será puesto en Lista negra!</translation>
-    </message>
-    <message>
         <source>%1 can&apos;t be loaded and will be black listed!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡%1 no puede ser cargado y será enviado a la Lista negra!</translation>
     </message>
     <message>
         <source>Plugin Error!</source>
@@ -690,12 +630,8 @@
 <context>
     <name>MidiToolsDialog</name>
     <message>
-        <source>Dialog</source>
-        <translation type="vanished">Diálogo</translation>
-    </message>
-    <message>
         <source>MIDI Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>Herramientas MIDI</translation>
     </message>
     <message>
         <source>Key Range:</source>
@@ -721,17 +657,9 @@
         <source>Semitones:</source>
         <translation>Semitonos:</translation>
     </message>
-    <message>
-        <source>Midi Tools</source>
-        <translation type="vanished">Herramientas MiDi</translation>
-    </message>
 </context>
 <context>
     <name>NinjamPanel</name>
-    <message>
-        <source>Form</source>
-        <translation type="vanished">Estructura</translation>
-    </message>
     <message>
         <source>metronome</source>
         <translation>metrónomo</translation>
@@ -834,19 +762,11 @@
     </message>
     <message>
         <source>%1 beats</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 beats %2</source>
-        <translation type="vanished">%1 beats %2</translation>
+        <translation>%1 beats</translation>
     </message>
 </context>
 <context>
     <name>NinjamRoomWindow</name>
-    <message>
-        <source>Form</source>
-        <translation type="vanished">Estructura</translation>
-    </message>
     <message>
         <source>you are in the ninjam room window</source>
         <translation>Tú estás en la ventana del la sala de ninjam</translation>
@@ -877,23 +797,11 @@
     </message>
     <message>
         <source>%1 leave the room.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 se retira de la sala.</translation>
     </message>
     <message>
         <source>%1 enter in room.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Jamtaba</source>
-        <translation type="vanished">Jamtaba</translation>
-    </message>
-    <message>
-        <source> leave the room.</source>
-        <translation type="vanished">se retira de la sala.</translation>
-    </message>
-    <message>
-        <source> enter in room.</source>
-        <translation type="vanished">entra a la sala.</translation>
+        <translation>%1 entra a la sala.</translation>
     </message>
 </context>
 <context>
@@ -906,12 +814,8 @@
 <context>
     <name>PluginScanDialog</name>
     <message>
-        <source>[Jamtaba] Scanning plugins ...</source>
-        <translation type="vanished">[Jamtaba] Buscando Plug-ins ...</translation>
-    </message>
-    <message>
         <source>[JamTaba] Scanning plugins ...</source>
-        <translation type="unfinished"></translation>
+        <translation>[JamTaba] Buscando plug-ins ...</translation>
     </message>
     <message>
         <source>This is the plugin scanning dialog box</source>
@@ -945,12 +849,8 @@
         <translation>Escoger el archivo para el Sonido Primario...</translation>
     </message>
     <message>
-        <source>Audio Files (*.wav)</source>
-        <translation type="vanished">Archivos de Sonido (*.wav)</translation>
-    </message>
-    <message>
         <source>Audio Files (*.wav, *.ogg)</source>
-        <translation type="unfinished"></translation>
+        <translation>Archivos de Sonido (*.wav, *.ogg)</translation>
     </message>
     <message>
         <source>Choosing Secondary beat audio file...</source>
@@ -980,10 +880,6 @@
         <translation>escribe aquí el nombre del servidor al que te deseas conectar</translation>
     </message>
     <message>
-        <source>localhost</source>
-        <translation type="vanished">localhost</translation>
-    </message>
-    <message>
         <source>leave blank to connect as annonymous</source>
         <translation>Deja en blanco si quieres conectarte anónomamente</translation>
     </message>
@@ -1004,10 +900,6 @@
         <translation>escribe aquí el puerto a usar</translation>
     </message>
     <message>
-        <source>2049</source>
-        <translation type="vanished">2049</translation>
-    </message>
-    <message>
         <source>Press this button if you are ok</source>
         <translation>Presiona este botón si deseas aceptar</translation>
     </message>
@@ -1019,24 +911,12 @@
 <context>
     <name>RoomViewPanel</name>
     <message>
-        <source>Form</source>
-        <translation type="vanished">Estructura</translation>
-    </message>
-    <message>
         <source>This is the server name</source>
         <translation>Éste es el nombre del servidor</translation>
     </message>
     <message>
-        <source>Name</source>
-        <translation type="vanished">Nombre</translation>
-    </message>
-    <message>
         <source>This is the status of this room</source>
         <translation>Éste es el estado de esta sala</translation>
-    </message>
-    <message>
-        <source>testee</source>
-        <translation type="vanished">testee</translation>
     </message>
     <message>
         <source>Click that button to listen that room</source>
@@ -1079,10 +959,6 @@
     <message>
         <source>Add Vst(s) to Black list ...</source>
         <translation>Agregar Vst(s) a la lista negra ...</translation>
-    </message>
-    <message>
-        <source>Dll(*.dll)</source>
-        <translation type="vanished">Dll(*.dll)</translation>
     </message>
     <message>
         <source>Remove Vst(s) from Black List ...</source>
