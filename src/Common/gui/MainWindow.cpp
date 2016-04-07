@@ -60,7 +60,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
 void MainWindow::initializeTranslator()
 {
-    QString localeName = QLocale::system().name();
+    QString localeName = mainController->getSettings().getTranslation();
     if (translator.load(localeName) || translator.load(":/tr/" + localeName)) {
         QApplication::instance()->installTranslator(&translator);
         ui.retranslateUi(this);
@@ -1246,10 +1246,10 @@ void MainWindow::setupSignals()
 void MainWindow::setLanguage(QAction *languageMenuAction)
 {
 
-    QString localeFile = languageMenuAction->data().toString();
-
-    if (translator.load(localeFile, ":/tr")) {
+    QString locale = languageMenuAction->data().toString();
+    if (translator.load(locale, ":/tr")) {
         ui.retranslateUi(this);
+        mainController->setTranslationLanguage(locale);
     }
 }
 

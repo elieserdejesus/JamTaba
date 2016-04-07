@@ -194,6 +194,8 @@ public:
         return settings.isUsingCustomMetronomeSounds();
     }
 
+    void setTranslationLanguage(const QString &languageCode);
+
     void setBuiltInMetronome(const QString &metronomeAlias);
     void setCustomMetronome(const QString &primaryBeatFile, const QString &secondaryBeatFile);
 
