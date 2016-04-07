@@ -93,7 +93,7 @@
          <enum>QFrame::NoFrame</enum>
         </property>
         <property name="text">
-         <string notr="true">5 musicians</string>
+         <string notr="true">5/7 musicians  120 BPM  16 BPI</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
