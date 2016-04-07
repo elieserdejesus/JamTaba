@@ -70,18 +70,13 @@ void MainWindow::initializeTranslator()
 // ++++++++++++++++++++++++=
 void MainWindow::initializeLanguageMenu()
 {
-    //create the default/english menu entry
-    QAction* defaultLanguageAction = ui.menuLanguage->addAction("English");
-    defaultLanguageAction->setData("en");
-
-
     //create a menu action for each translation resource
     QDir translationsDir(":/tr");
     if (translationsDir.exists()) {
         QStringList locales = translationsDir.entryList();
         foreach (const QString &translationFile, locales) {
             QLocale loc(translationFile);
-            QString actionText = loc.nativeLanguageName() + " (" + loc.nativeCountryName() + ")";
+            QString actionText = loc.nativeLanguageName();
             QAction *action = ui.menuLanguage->addAction(actionText);
             action->setData(translationFile); //using the locale (pt_BR, jp_JP) as data
         }
