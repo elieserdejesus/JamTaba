@@ -41,6 +41,29 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     setupSignals();
 }
 
+void NinjamPanel::changeEvent(QEvent *e)
+{
+    if (e->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+
+        //rebuild the accents and shape combos to show translated strings. The signals are blocked to avoid reset the combos and loose the user selections.
+        QSignalBlocker comboShapeBlocker(ui->comboShape);
+        QSignalBlocker comboAccentsBlocker(ui->comboBeatsPerAccent);
+
+        //save the current indexes before rebuild the combos
+        int currentShape = ui->comboShape->currentIndex();
+        int currentAccent = ui->comboBeatsPerAccent->currentIndex();
+
+        buildAccentsdModel(ui->intervalPanel->getBeatsPerInterval());
+        buildShapeModel();
+
+        //restore the selected indexes
+        ui->comboShape->setCurrentIndex(currentShape);
+        ui->comboBeatsPerAccent->setCurrentIndex(currentAccent);
+    }
+    QWidget::changeEvent(e);
+}
+
 void NinjamPanel::setupSignals()
 {
     connect(ui->comboBeatsPerAccent, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAccentsStatus(int)));
