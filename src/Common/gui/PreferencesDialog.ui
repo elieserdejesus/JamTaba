@@ -118,7 +118,7 @@
           </sizepolicy>
          </property>
          <property name="title">
-          <string>Outpus</string>
+          <string>Outputs</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
