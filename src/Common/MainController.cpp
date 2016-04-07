@@ -713,3 +713,8 @@ void MainController::stopNinjamController()
         delete uploadInterval;
     intervalsToUpload.clear();
 }
+
+void MainController::setTranslationLanguage(const QString &languageCode)
+{
+    settings.setTranslation(languageCode);
+}

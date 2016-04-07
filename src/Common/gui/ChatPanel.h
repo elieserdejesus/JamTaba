@@ -43,6 +43,7 @@ private slots:
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
+    void changeEvent(QEvent *) override;
 
 private:
     Ui::ChatPanel *ui;
@@ -52,7 +53,7 @@ private:
 
     static const int MAX_MESSAGES = 50;
 
-    QString preferredTargetTranslationLanguage;
+    QString autoTranslationLanguage;
 
     void createVoteButton(const QString &voteType, int value);
 

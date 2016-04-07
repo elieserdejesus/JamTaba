@@ -58,16 +58,22 @@ public:
 
     void setTracksSize(TracksSize size);
 
+    inline QString getRoomName() const { return roomName; }
+
 protected:
     Ui::NinjamRoomWindow *ui;
     Controller::MainController *mainController;
     NinjamPanel *ninjamPanel;// panel to show interval progress, ninjam BPM/BPI controls, metronome controls, etc
+
+    void changeEvent(QEvent *) override;
 private:
     MainWindow *mainWindow;
     QMap<QString, NinjamTrackGroupView *> trackGroups;
     ChatPanel *chatPanel;
 
     bool fullViewMode;
+
+    QString roomName;
 
     void handleVoteMessage(const Ninjam::User &user, const QString &message);
     void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);
@@ -95,6 +101,8 @@ private:
     int calculateEstimatedChunksPerInterval() const;
 
     void updateTracksSizeButtons();// enable or disable tracks size buttons
+
+    void retranslate();
 
 private slots:
 

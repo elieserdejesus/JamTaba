@@ -7,6 +7,7 @@
 #include "BusyDialog.h"
 #include "persistence/Settings.h"
 #include "LocalTrackGroupView.h"
+#include <QTranslator>
 
 // #include "performance/PerformanceMonitor.h"
 
@@ -208,9 +209,13 @@ private slots:
     void setCustomMetronome(const QString &primaryBeatFile, const QString &secondaryBeatFile);
 
     void initializeLocalInputChannels();
+
+    void setLanguage(QAction * languageMenuAction);
+
 private:
 
     BusyDialog busyDialog;
+    QTranslator translator;
 
     void showBusyDialog(const QString &message);
     void showBusyDialog();
@@ -240,6 +245,9 @@ private:
 
     void initializeMasterFader();
 
+    void initializeLanguageMenu();
+    void initializeTranslator();
+
     bool fullViewMode;// full view or mini view mode? This is not the FullScreen mode, full screen is available only in Standalone.
 
     void showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly);
@@ -256,6 +264,8 @@ private:
     void setupWidgets();
 
     void restoreWindowPosition();
+
+    void updateChatTabTitle(const QString &roomName);
 
     // PerformanceMonitor performanceMonitor;//cpu and memmory usage
     // qint64 lastPerformanceMonitorUpdate;

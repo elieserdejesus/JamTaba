@@ -90,12 +90,12 @@ void BaseTrackView::createLayoutStructure()
     panWidgetsLayout->setSpacing(0);
     panWidgetsLayout->setContentsMargins(0, 0, 0, 0);
 
-    labelPanL = new QLabel(tr("L"));
+    labelPanL = new QLabel();
     labelPanL->setObjectName(QStringLiteral("labelPanL"));
     labelPanL->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
     labelPanL->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
-    labelPanR = new QLabel(tr("R"));
+    labelPanR = new QLabel();
     labelPanR->setObjectName(QStringLiteral("labelPanR"));
     labelPanR->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
     labelPanR->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
@@ -152,13 +152,13 @@ void BaseTrackView::createLayoutStructure()
     meterWidgetsLayout->addLayout(metersLayout, 1);
     meterWidgetsLayout->addWidget(peaksDbLabel);
 
-    muteButton = new QPushButton(tr("M"));
+    muteButton = new QPushButton();
     muteButton->setObjectName(QStringLiteral("muteButton"));
     muteButton->setEnabled(true);
     muteButton->setLayoutDirection(Qt::LeftToRight);
     muteButton->setCheckable(true);
 
-    soloButton = new QPushButton(tr("S"));
+    soloButton = new QPushButton();
     soloButton->setObjectName(QStringLiteral("soloButton"));
     soloButton->setLayoutDirection(Qt::LeftToRight);
     soloButton->setCheckable(true);
@@ -214,6 +214,17 @@ void BaseTrackView::createLayoutStructure()
 
     mainLayout->addLayout(primaryChildsLayout, 0, 0);
     mainLayout->addLayout(secondaryChildsLayout, 0, 1);
+
+    translateUI();
+}
+
+void BaseTrackView::translateUI()
+{
+    labelPanL->setText(tr("L"));
+    labelPanR->setText(tr("R"));
+
+    muteButton->setText(tr("M"));
+    soloButton->setText(tr("S"));
 }
 
 void BaseTrackView::bindThisViewWithTrackNodeSignals()
@@ -487,4 +498,12 @@ void BaseTrackView::setLayoutWidgetsVisibility(QLayout *layout, bool visible)
                 widget->setVisible(visible);
         }
     }
+}
+
+void BaseTrackView::changeEvent(QEvent *e)
+{
+    if (e->type() == QEvent::LanguageChange) {
+        translateUI();
+    }
+    QWidget::changeEvent(e);
 }

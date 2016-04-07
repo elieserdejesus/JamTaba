@@ -447,9 +447,14 @@ void Settings::setUserName(const QString &newUserName)
     this->lastUserName = newUserName;
 }
 
-void Settings::setTranslation(const QString &translate)
+void Settings::setTranslation(const QString &localeName)
 {
-    this->translation = translate;
+    QString name = localeName;
+    if (name.contains(".")){
+        name = name.left(name.indexOf("."));
+    }
+    translation = name;
+    qDebug() << "Setting translation to" << translation;
 }
 
 void Settings::addVstPlugin(const QString &pluginPath)

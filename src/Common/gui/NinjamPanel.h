@@ -66,6 +66,8 @@ signals:
 
 protected:
     bool eventFilter(QObject *source, QEvent *ev);
+    void changeEvent(QEvent *) override;
+
     Ui::NinjamPanel *ui;
     QPushButton *hostSyncButton;// created only when running as vst plugin
     IntervalProgressWindow *metronomeFloatingWindow;

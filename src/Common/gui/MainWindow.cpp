@@ -50,10 +50,40 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeMainTabWidget();
     initializeViewModeMenu();
     initializeMasterFader();
+    initializeLanguageMenu();
+    initializeTranslator();
     setupWidgets();
     setupSignals();
 
     qCInfo(jtGUI) << "MainWindow created!";
+}
+
+void MainWindow::initializeTranslator()
+{
+    QString localeName = mainController->getSettings().getTranslation();
+    if (translator.load(localeName) || translator.load(":/tr/" + localeName)) {
+        QApplication::instance()->installTranslator(&translator);
+        ui.retranslateUi(this);
+    }
+}
+
+// ++++++++++++++++++++++++=
+void MainWindow::initializeLanguageMenu()
+{
+    //create a menu action for each translation resource
+    QDir translationsDir(":/tr");
+    if (translationsDir.exists()) {
+        QStringList locales = translationsDir.entryList();
+        foreach (const QString &translationFile, locales) {
+            QLocale loc(translationFile);
+            QString actionText = loc.nativeLanguageName();
+            QAction *action = ui.menuLanguage->addAction(actionText);
+            action->setData(translationFile); //using the locale (pt_BR, jp_JP) as data
+        }
+    }
+    else{
+        qCritical() << "translations dir not exist! Can't create the Language menu!";
+    }
 }
 
 // ++++++++++++++++++++++++=
@@ -586,7 +616,9 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     // add the chat panel in main window
     qCDebug(jtGUI) << "adding ninjam chat panel...";
     ChatPanel *chatPanel = ninjamWindow->getChatPanel();
-    ui.chatTabWidget->addTab(chatPanel, tr("chat %1").arg(roomInfo.getName()));
+    ui.chatTabWidget->addTab(chatPanel, "");
+    updateChatTabTitle(roomInfo.getName());//set and translate the chat tab title
+
     QObject::connect(chatPanel, SIGNAL(userConfirmingChordProgression(
                                            ChordProgression)), this,
                      SLOT(showChordProgression(ChordProgression)));
@@ -621,6 +653,11 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
                      SLOT(updateCurrentIntervalBeat(int)));
 }
 
+void MainWindow::updateChatTabTitle(const QString &roomName)
+{
+    int chatTabIndex = 0; //assuming chat is the first tab
+    ui.chatTabWidget->setTabText(chatTabIndex, tr("chat %1").arg(roomName));
+}
 
 void MainWindow::showMetronomePreferencesDialog()
 {
@@ -760,6 +797,12 @@ void MainWindow::changeEvent(QEvent *ev)
         showPeakMetersOnlyInLocalControls(
             isRunningInMiniMode() && width() <= MINI_MODE_MIN_SIZE.width());
         updatePublicRoomsListLayout();
+    }
+    else if (ev->type() == QEvent::LanguageChange) {
+        ui.retranslateUi(this);
+        if (ninjamWindow) {
+            updateChatTabTitle(ninjamWindow.data()->getRoomName()); //translate the chat tab title
+        }
     }
     QMainWindow::changeEvent(ev);
 }
@@ -1161,40 +1204,55 @@ void MainWindow::setupWidgets()
 
 void MainWindow::setupSignals()
 {
-    QObject::connect(ui.menuPreferences, SIGNAL(triggered(QAction *)), this,
+    connect(ui.menuPreferences, SIGNAL(triggered(QAction *)), this,
                      SLOT(openPreferencesDialog(QAction *)));
 
-    QObject::connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this,
+    connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this,
                      SLOT(showNinjamCommunityWebPage()));
 
-    QObject::connect(ui.actionNinjam_Official_Site, SIGNAL(triggered(bool)), this,
+    connect(ui.actionNinjam_Official_Site, SIGNAL(triggered(bool)), this,
                      SLOT(showNinjamOfficialWebPage()));
 
-    QObject::connect(ui.actionPrivate_Server, SIGNAL(triggered(bool)), this,
+    connect(ui.actionPrivate_Server, SIGNAL(triggered(bool)), this,
                      SLOT(showPrivateServerDialog()));
 
-    QObject::connect(ui.actionReportBugs, SIGNAL(triggered(bool)), this,
+    connect(ui.actionReportBugs, SIGNAL(triggered(bool)), this,
                      SLOT(showJamtabaIssuesWebPage()));
 
-    QObject::connect(ui.actionWiki, SIGNAL(triggered(bool)), this,
+    connect(ui.actionWiki, SIGNAL(triggered(bool)), this,
                      SLOT(showJamtabaWikiWebPage()));
 
-    QObject::connect(ui.actionUsersManual, SIGNAL(triggered(bool)), this,
+    connect(ui.actionUsersManual, SIGNAL(triggered(bool)), this,
                      SLOT(showJamtabaUsersManual()));
 
-    QObject::connect(ui.actionCurrentVersion, SIGNAL(triggered(bool)), this,
+    connect(ui.actionCurrentVersion, SIGNAL(triggered(bool)), this,
                      SLOT(showJamtabaCurrentVersion()));
 
-    QObject::connect(ui.localControlsCollapseButton, SIGNAL(clicked()), this,
+    connect(ui.localControlsCollapseButton, SIGNAL(clicked()), this,
                      SLOT(toggleLocalInputsCollapseStatus()));
 
-    QObject::connect(mainController->getRoomStreamer(), SIGNAL(error(QString)), this,
+    connect(mainController->getRoomStreamer(), SIGNAL(error(QString)), this,
                      SLOT(handlePublicRoomStreamError(QString)));
 
-    QObject::connect(ui.masterFader, SIGNAL(valueChanged(int)), this,
+    connect(ui.masterFader, SIGNAL(valueChanged(int)), this,
                      SLOT(setMasterGain(int)));
 
-    QObject::connect(ui.actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
+    connect(ui.actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
+
+    connect(ui.menuLanguage, SIGNAL(triggered(QAction*)), this, SLOT(setLanguage(QAction*)));
+
+}
+
+void MainWindow::setLanguage(QAction *languageMenuAction)
+{
+
+    QString locale = languageMenuAction->data().toString();
+    translator.load(locale, ":/tr");
+    ui.retranslateUi(this);
+    mainController->setTranslationLanguage(locale);
+    if (mainController->isPlayingInNinjamRoom()) {
+        ninjamWindow->getChatPanel()->setPreferredTranslationLanguage(locale);
+    }
 }
 
 void MainWindow::initializeMasterFader()

@@ -503,9 +503,15 @@
     <addaction name="separator"/>
     <addaction name="actionFullscreenMode"/>
    </widget>
+   <widget class="QMenu" name="menuLanguage">
+    <property name="title">
+     <string>Language</string>
+    </property>
+   </widget>
    <addaction name="menuPreferences"/>
    <addaction name="menuViewMode"/>
    <addaction name="menuNinjam"/>
+   <addaction name="menuLanguage"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionAudioPreferences">

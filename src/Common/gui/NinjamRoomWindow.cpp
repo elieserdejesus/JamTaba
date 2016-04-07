@@ -42,7 +42,8 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
     fullViewMode(true),
     ninjamPanel(nullptr),
     tracksOrientation(Qt::Vertical),
-    tracksSize(TracksSize::WIDE)
+    tracksSize(TracksSize::WIDE),
+    roomName(roomInfo.getName())
 {
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow construtor..";
     ui->setupUi(this);
@@ -72,21 +73,40 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
     //remember the last tracks layout orientation and size (narrow or wide)
     setTracksOrientation(lastTracksLayoutOrientation);
     setTracksSize(lastTracksSize);
+
+    retranslate();
+}
+
+void NinjamRoomWindow::changeEvent(QEvent *e)
+{
+    if (e->type() == QEvent::LanguageChange) {
+        retranslate();
+    }
+    QWidget::changeEvent(e);
+}
+
+void NinjamRoomWindow::retranslate()
+{
+    ui->retranslateUi(this); //translate the fixed elements created in Qt ui designer
+
+    //translate other elements
+    horizontalLayoutButton->setToolTip(tr("Set tracks layout to horizontal"));
+    verticalLayoutButton->setToolTip(tr("Set tracks layout to vertical"));
+    wideButton->setToolTip(tr("Wide tracks"));
+    narrowButton->setToolTip(tr("Narrow tracks"));
 }
 
 void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrientation)
 {
     horizontalLayoutButton = new QToolButton();
     horizontalLayoutButton->setIcon(QIcon(":/images/horizontal_layout.png"));
-    horizontalLayoutButton->setObjectName("buttonHorizontalLayout");
+    horizontalLayoutButton->setObjectName(QStringLiteral("buttonHorizontalLayout"));
     horizontalLayoutButton->setCheckable(true);
-    horizontalLayoutButton->setToolTip(tr("Set tracks layout to horizontal"));
 
     verticalLayoutButton = new QToolButton();
     verticalLayoutButton->setIcon(QIcon(":/images/vertical_layout.png"));
-    verticalLayoutButton->setObjectName("buttonVerticalLayout");
+    verticalLayoutButton->setObjectName(QStringLiteral("buttonVerticalLayout"));
     verticalLayoutButton->setCheckable(true);
-    verticalLayoutButton->setToolTip(tr("Set tracks layout to vertical"));
 
     if(initialOrientation == Qt::Vertical)
         verticalLayoutButton->setChecked(true);
@@ -113,15 +133,13 @@ void NinjamRoomWindow::createTracksSizeButtons(TracksSize initialTracksSize)
 {
     wideButton = new QToolButton();
     wideButton->setIcon(QIcon(":/images/wide.png"));
-    wideButton->setObjectName("wide");
+    wideButton->setObjectName(QStringLiteral("wide"));
     wideButton->setCheckable(true);
-    wideButton->setToolTip(tr("Wide tracks"));
 
     narrowButton = new QToolButton();
     narrowButton->setIcon(QIcon(":/images/narrow.png"));
-    narrowButton->setObjectName("narrow");
+    narrowButton->setObjectName(QStringLiteral("narrow"));
     narrowButton->setCheckable(true);
-    narrowButton->setToolTip(tr("Narrow tracks"));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout();
     buttonsLayout->setSpacing(0);
@@ -212,9 +230,6 @@ void NinjamRoomWindow::setFullViewStatus(bool fullView)
 
     ui->tracksPanel->layout()->setSpacing(fullView ? 6 : 3);
 
-    //TracksSize newTracksSize = fullView ? TracksSize::WIDE : TracksSize::NARROW;
-    //setTracksSize(newTracksSize);
-
     update();
 }
 
@@ -275,7 +290,7 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
     bool isVoteMessage = !message.isNull() && message.toLower().startsWith(
         "[voting system] leading candidate:");
     bool isChordProgressionMessage = false;
-    try{
+    try{ //TODO - remove this try catch?
         ChatChordsProgressionParser chordsParser;
         isChordProgressionMessage = chordsParser.containsProgression(message);
     }

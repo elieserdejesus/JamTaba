@@ -48,6 +48,8 @@ protected:
 
     LocalTrackView *createTrackView(long trackID) override;
 
+    void translateUi() override;
+
     virtual void populateMenu(QMenu &menu);
 
     static const int MAX_SUB_CHANNELS = 2;
@@ -69,6 +71,8 @@ private:
     QMenu* createPresetsSubMenu();
     void createPresetsActions(QMenu &menu);
     void createChannelsActions(QMenu &menu);
+
+    void updateXmitButtonText();
 
 signals:
     void nameChanged();

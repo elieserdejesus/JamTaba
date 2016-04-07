@@ -17,6 +17,9 @@
 *.DS_Store
 *~
 
+# Qt-Linguist
+*.qm
+
 # Qt-es
 
 /.qmake.cache

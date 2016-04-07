@@ -53,6 +53,9 @@ public:
 
 protected:
     //void paintEvent(QPaintEvent *);
+    void changeEvent(QEvent *) override;
+
+    virtual void translateUi();
 
     QList<BaseTrackView *> trackViews;
 

@@ -1,275 +1,268 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="br_FR">
+<TS version="2.1">
 <context>
     <name>BaseTrackView</name>
     <message>
         <source>L</source>
-        <translatorcomment>Abreviação para  &quot;Esquerda&quot;</translatorcomment>
-        <translation>E</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>R</source>
-        <translatorcomment>Abreviação para &quot;Direita&quot;</translatorcomment>
-        <translation>D</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>M</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>S</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>BusyDialog</name>
     <message>
         <source>This is the busy dialog window</source>
-        <translation>Esta é a janela de carregamento</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>TextLabel</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ChatMessagePanel</name>
     <message>
         <source>translate ...</source>
-        <translation>traduzir...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>T</source>
-        <translatorcomment>Abreviação para &quot;Traduzir&quot;</translatorcomment>
-        <translation>T</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ChatPanel</name>
     <message>
         <source>Type your text to sent on the chat here</source>
-        <translation>Digite o texto que será enviado</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>This is the chat scroll area</source>
-        <translation>Esta é a área de rolagem do chat</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>clear the messages ...</source>
-        <translation>Limpa todas as mensagens ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Press that button to clear your message</source>
-        <translation>Pressione este botão para apagar as mensagens</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Auto translate</source>
-        <translation>Tradução Automática</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Turn on/off the auto translation for chat messages</source>
-        <translation>Liga/desliga a tradução automática para o chat</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Use/load the chords above</source>
-        <translation>Usa/carrega os acordes acima</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ChordsPanel</name>
     <message>
         <source>send the chords to chat...</source>
-        <translation>Envia os acordes para o chat...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>send the chords to chat</source>
-        <translation>Envia os acordes para o chat</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>discard chord progression</source>
-        <translation>Descarta os acordes</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>transpose up</source>
-        <translation>Aumenta meio tom</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>transpose down</source>
-        <translation>Diminui meio tom</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>DelayGui</name>
     <message>
         <source>Delay Time (ms):</source>
-        <translation>Tempo entre repetições (ms):</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Feedback (db):</source>
-        <translation>Realimentação (db):</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Level:</source>
-        <translation>Volume:</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>FxPanelItem</name>
     <message>
         <source>new effect...</source>
-        <translation>novo efeito...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>No plugin found! Check the &apos;Preferences -&gt; Vst plugins&apos; menu.</source>
-        <translation>Nenhum plugin encontrado! Verifique o menu &apos;Preferências -&gt; Vst Plugins&apos;.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>bypass</source>
-        <translation>Desativa</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>remove</source>
-        <translation>remove</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>IODialog</name>
     <message>
         <source>Preferences ...</source>
-        <translation>Preferências ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Audio</source>
-        <translation>Audio</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Audio Device</source>
-        <translation>Dispositivo de áudio</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Inputs</source>
-        <translation>Entradas</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>First</source>
-        <translation>Primeira</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Last</source>
-        <translation>Última</translation>
-    </message>
-    <message>
-        <source>Outpus</source>
-        <translation type="vanished">Saídas</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Sample rate</source>
-        <translation>Taxa de amostragem</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Buffer size</source>
-        <translation>Tamanho do buffer</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>ASIO panel ...</source>
-        <translation>Painel ASIO ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>MIDI</source>
-        <translation>MIDI</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Enable/disable your midi input devices:</source>
-        <translation>Ativa/desativa os seus dispositivos MIDI:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>VST</source>
-        <translation>VST</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Vst(i)s loaded</source>
-        <translation>VST(i)s carregados</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Scan only new plugins</source>
-        <translation>Escaneia somente plugins novos</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Refresh</source>
-        <translation>Atualiza</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Clear plugins cache and scan all plugin folders</source>
-        <translation>Limpa a cache de plugins e escaneia todas as pastas de plugins</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Clear and Scan</source>
-        <translation>Limpa e Escaneia</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Add to black List</source>
-        <translation>Adiciona na de excluídos</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Remove from blackList</source>
-        <translation>Remove da lista de excluídos</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Plugin Paths:</source>
-        <translation>Diretórios dos plugins:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Add a new folder to scan ...</source>
-        <translation>Adiciona um novo diretório para escanear ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Recording</source>
-        <translation>Gravando</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Record path:</source>
-        <translation>Diretório das gravações:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Save multi tracks </source>
-        <translation>Salvar canais separadas</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>browse ...</source>
-        <translation>procurar ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Metronome</source>
-        <translation>Metronomo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Built-in metronomes:</source>
-        <translation>Metronomo padrão:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Custom Metronome Sounds</source>
-        <translation>Metronomo personalizado</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Primary Beat:</source>
-        <translation>Batida principal:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Secondary Beat:</source>
-        <translation>Batida secundária:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Browse ...</source>
-        <translation>Procurar...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Use 16 bit audio files!</source>
-        <translation>Utilize arquivos de áudio de 16 bits!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>ok</source>
-        <translation>Ok</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Outputs</source>
@@ -280,738 +273,722 @@
     <name>IntervalChunksDisplay</name>
     <message>
         <source>Downloaded intervals</source>
-        <translation>Intervalos baixados</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>JamRoomViewPanel</name>
     <message>
-        <source>enter</source>
-        <translation>entrar</translation>
-    </message>
-    <message>
-        <source>listen</source>
-        <translation>ouvir</translation>
-    </message>
-    <message>
         <source>%1 / %2 players </source>
-        <translation>%1 / %2 músicos</translation>
-    </message>
-    <message>
-        <source>%1  location is not available at moment!</source>
-        <translation>A localização de %1 não está disponível no momento!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>The audio stream of this room is not available at moment!</source>
-        <translation>O stream de áudio desta sala não está disponível no momento!</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>enter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>listen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1  location is not available at moment!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>LocalTrackGroupView</name>
     <message>
         <source>Preparing</source>
-        <translation>Preparando</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Transmiting</source>
-        <translation>Transmitindo</translation>
-    </message>
-    <message>
-        <source>Transmit</source>
-        <translation type="vanished">Transmite</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Enable/disable your audio transmission for others</source>
-        <translation>Ativa/desativa a transmissão do seu áudio para outros músicos</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Add or remove channels...</source>
-        <translation>Adiciona ou remove canais...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>new channel</source>
-        <translation>novo canal</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Load preset</source>
-        <translation>Carrega um preset</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Save preset</source>
-        <translation>Salva o preset</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Reset Track Controls</source>
-        <translation>Resta os controles do canal</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Add channel</source>
-        <translation>Adiciona um canal</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Remove channel &quot;%1&quot;</source>
-        <translation>Remove o canal  &quot;%1&quot;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Save the preset ...</source>
-        <translation>Salva o preset...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Preset name:</source>
-        <translation>Nome do preset:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Remove preset</source>
-        <translation>Remove o preset</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Preset:</source>
-        <translation>Preset:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>X</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>LocalTrackGroupViewStandalone</name>
     <message>
         <source>Add subchannel</source>
-        <translation>Adiciona subcanal</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Remove subchannel %1</source>
-        <translation>Remove o subcanal %1</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>LocalTrackViewStandalone</name>
     <message>
-        <source>inputs ...</source>
-        <translation type="vanished">entradas ...</translation>
-    </message>
-    <message>
         <source>Choose input channels ...</source>
-        <translation>Selecione os cansis de entrada...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>MIDI tools</source>
-        <translation>Ferramentas MIDI</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Mono</source>
-        <translation>Mono</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>no input</source>
-        <translation>Sem entrada</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation>Estéreo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>%1  (not enough available inputs to make stereo)</source>
-        <translation>%1  (não há entradas suficientes para um canal estéreo)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>MIDI</source>
-        <translation>MIDI</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>All channels</source>
-        <translation>Todos os canais</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Channel %1</source>
-        <translation>Canal %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>%1  (no MIDI devices detected or enabled in &apos;Preferences&apos; menu&apos;)</source>
-        <translation>%1  (nenhum dispositivo foi detectado ou habilitado no menu &apos;Preferências&apos;&apos;)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>No input</source>
-        <translation>Sem entrada</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainFrameClass</name>
     <message>
         <source>Rooms to play</source>
-        <translation>Salas para tocar</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>master</source>
-        <translation>geral</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Your controls</source>
-        <translation>Seus controles</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>collapse/expand your controls ...</source>
-        <translation>Contrai/expande seus controls ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation>Preferências</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ninjam</source>
-        <translation>Ninjam</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Ajuda</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>View Mode</source>
-        <translation>Exibição</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Language</source>
-        <translation>Idioma</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Audio ...</source>
-        <translation>Audio ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Midi ...</source>
-        <translation>Midi ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>VST Plugins ...</source>
-        <translation>Plugins VST ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Recording ...</source>
-        <translation>Gravação ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Private Server ...</source>
-        <translation>Servidor particular ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ninjam community (Ninbot) ...</source>
-        <translation>Comunidade Ninjam (Ninbot) ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ninjam Official Site ...</source>
-        <translation>Site oficial do Ninjam ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Report bugs or suggest improvements ...</source>
-        <translation>Relatar um problema ou sugerir sugestões ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Wiki ...</source>
-        <translation>Wiki ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Users Manual ...</source>
-        <translation>Manual do usuário ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Full View</source>
-        <translation>Visão grande</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Mini View</source>
-        <translation>Visão pequena</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Quit...</source>
-        <translation>Sair ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Full Screen</source>
-        <translation>Tela cheia</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Current Version ...</source>
-        <translation>Versão atual ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Metronome ...</source>
-        <translation>Metronomo ...</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>Loading rooms list ...</source>
-        <translation>Carregando a lista de salas ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Error!</source>
-        <translation>Erro!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>your channel</source>
-        <translation>seu canal</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>disconnecting ...</source>
-        <translation>desconectando ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Your Jamtaba version is not compatible with previous versions!</source>
-        <translation>Sua versão do Jamtaba não é compatível com as versões anteriores!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Server : Compatibility problem</source>
-        <translation>Problema de compatibilidade com o servidor</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Error connecting in Jamtaba server!
 </source>
-        <translation>Erro conectando no servidor do Jamtaba!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
-        <translation>Uma nova versão do Jamtaba está disponível para download! Por favor use a &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;nova versão&lt;/a&gt;!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>New Jamtaba version available!</source>
-        <translation>Nova versão do Jamtaba disponível!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Warning!</source>
-        <translation>Aviso!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Empty name is not allowed!</source>
-        <translation>Nome em branco não é permitido!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Connecting in %1 ... </source>
-        <translation>Conectando em %1 ... </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>chat %1</source>
-        <translation>Bate-papo %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Error</source>
-        <translation>Erro</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Disconnected from ninjam server</source>
-        <translation>Desconectado do servidor Ninjam</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Connecting in %1</source>
-        <translation>Conectando em %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>About Jamtaba</source>
-        <translation>Sobre o JamTaba</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Jamtaba version is %1</source>
-        <translation>A versão atual do JamTaba é %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>These chords (%1 measures) can&apos;t be used in a %2 bpi interval!</source>
-        <translation>Estes acordes (%1 compassos) não podem ser usados em um intervalo de %2 BPI!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Problem...</source>
-        <translation>Problema ...</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindowStandalone</name>
     <message>
         <source>%1 can&apos;t be loaded and will be black listed!</source>
-        <translation>%1 não pôde ser carregado e será adicionado na lista de plugins excluídos!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Plugin Error!</source>
-        <translation>Erro no plugin!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Audio error!</source>
-        <translation>Erro de áudio!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>The audio device can&apos;t be started! Please check your audio device and try restart Jamtaba!</source>
-        <translation>O dispositivo de áudio não pôde ser iniciado! Por favor verifique seu dispositivo e tente reiniciar o JamTaba!</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MidiToolsDialog</name>
     <message>
         <source>MIDI Tools</source>
-        <translation>Ferramentas MIDI</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Key Range:</source>
-        <translation>Região das teclas:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Lower note:</source>
-        <translation>Nota mais grave:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>learn</source>
-        <translation>aprender</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Higher note:</source>
-        <translation>Nota mais aguda:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Transpose:</source>
-        <translation>Transposição:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Semitones:</source>
-        <translation>Semitons:</translation>
-    </message>
-    <message>
-        <source>Midi Tools</source>
-        <translation type="vanished">Ferramentas MIDI</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>NinjamPanel</name>
     <message>
         <source>metronome</source>
-        <translation>metronomo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Slider to change the BPM of the metronome</source>
-        <translation>Controle para alterar o andamento do metronomo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>L</source>
-        <translation>E</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>R</source>
-        <translation>D</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Solo metronome</source>
-        <translation>Metronomo em SOLO</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Button to soloing the metronome</source>
-        <translation>Botão para &apos;solar&apos; o metronomo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>mute metronome</source>
-        <translation>Silencia o metronomo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Button to mute the metronome</source>
-        <translation>Botão para silenciar o metronomo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>open metronome preferences</source>
-        <translation>Abre as preferências do metronomo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>open a metronome floating window</source>
-        <translation>Abre uma janela fulutuante para o metronomo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Change the shape here</source>
-        <translation>Mude a forma  aqui</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Shape</source>
-        <translation>Forma</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Change the accent here</source>
-        <translation>Mude a acentuação aqui</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Beats per minute</source>
-        <translation>Batidas por minuto (BPM)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>BPM</source>
-        <translation>BPM</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Beats per interval</source>
-        <translation>Batidas por Intervalo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>BPI</source>
-        <translation>BPI</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Change the BPI here</source>
-        <translation>Mude o BPI aqui</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Accent</source>
-        <translation>Acentuação</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Change the BPM here</source>
-        <translation>Mude o BPM aqui</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Circle</source>
-        <translation>Círculo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ellipse</source>
-        <translation>Oval</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Line</source>
-        <translation>Linha</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Pie</source>
-        <translation>Torta</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>off</source>
-        <translation>Desligado</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>%1 beats</source>
-        <translation>%1 batidas</translation>
-    </message>
-    <message>
-        <source>%1 beats %2</source>
-        <translation type="vanished">%1 batidas %2</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>NinjamRoomWindow</name>
     <message>
         <source>you are in the ninjam room window</source>
-        <translation>Você está na Janela Ninjam</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>This is the room where you are</source>
-        <translation>Esta é a janela onde você está</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>read the server licence ...</source>
-        <translation>Ler a licença do servidor ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Set tracks layout to horizontal</source>
-        <translation>Mudar o layout das pistas para horizontal</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Set tracks layout to vertical</source>
-        <translation>Mudar o layour das pistas para vertical</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Wide tracks</source>
-        <translation>Pistas largas</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Narrow tracks</source>
-        <translation>Pistas estreitas</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>%1 leave the room.</source>
-        <translation>%1 saiu da sala.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>%1 enter in room.</source>
-        <translation>%1 entrou na sala.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>NinjamVoteButton</name>
     <message>
         <source>Vote - change %1 to %2 </source>
-        <translation>Votação - mudar %1 para %2</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>PluginScanDialog</name>
     <message>
         <source>[JamTaba] Scanning plugins ...</source>
-        <translation>[JamTaba] Escaneando plugins ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>This is the plugin scanning dialog box</source>
-        <translation>Este é o diálogo de escaneamento de plugins</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>scanning plugins...</source>
-        <translation>Escanendo plugins ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Founded plugins:</source>
-        <translation>Plugins encontrados:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>This is the plugin founded list box</source>
-        <translation>Este é a lista de plugins encontrados</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>No plugins founded!</source>
-        <translation>Nenhum plugin foi encontrado!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>scanning %1</source>
-        <translation>escaneando %1</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>PreferencesDialog</name>
     <message>
         <source>Choosing Primary beat audio file...</source>
-        <translation>Escolhendo o arquivo da batida principal ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Audio Files (*.wav, *.ogg)</source>
-        <translation>Arquivos de áudio (*.wav, *.ogg)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Choosing Secondary beat audio file...</source>
-        <translation>Escolhendo o arquivo da batida secundária ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Choosing recording path ...</source>
-        <translation>Escolhendo o diretório das gravações ...</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>PrivateServerDialog</name>
     <message>
         <source>Connecting in private Ninjam server ...</source>
-        <translation>Conectando em um servidor Ninjam particular ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>This the private server dialog</source>
-        <translation>Este é a tela do servidor privado</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Server:</source>
-        <translation>Servidor:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>type here the name of the server to join</source>
-        <translation>digite o nome do servidor</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>leave blank to connect as annonymous</source>
-        <translation>Deixe em branco para conectar como anônimo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Password:</source>
-        <translation>Senha:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>type here the password</source>
-        <translation>Digite a senha agui</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Port:</source>
-        <translation>Porta:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>type here the port to use</source>
-        <translation>Digite a porta aqui</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Press this button if you are ok</source>
-        <translation>Pressione este botão quando estiver tudo preenchido</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>RoomViewPanel</name>
     <message>
         <source>This is the server name</source>
-        <translation>Este é o nome do servidor</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>This is the status of this room</source>
-        <translation>Este é o status da sala</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Click that button to listen that room</source>
-        <translation>Clique neste botão para ouvir esta sala</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>listen</source>
-        <translation>ouvir</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Click that button to enter in this room</source>
-        <translation>Clique neste botão para entrar na sala</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>enter</source>
-        <translation>entrar</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>That panel shows the musicians actually in that room</source>
-        <translation>Este painél mostra os músicos que estão na sala</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>That zone displays the waveform actually played</source>
-        <translation>Esta região mostra a forma de onda do som que está acontecendo na sala</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ScanFolderPanel</name>
     <message>
         <source>Remove this folder from scanning</source>
-        <translation>Remove este diretório do escaneamento</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>StandalonePreferencesDialog</name>
     <message>
         <source>Adding VST path ...</source>
-        <translation>Adicionando um diretório para os VSTs ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Add Vst(s) to Black list ...</source>
-        <translation>Adiciona VSTs  para a lista de excluídos ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Remove Vst(s) from Black List ...</source>
-        <translation>Remove VSTs da lista de excluídos ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>No midi input device detected!</source>
-        <translation>Nenhum dispositivo de MIDI foi detectado!</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>UserNameDialog</name>
     <message>
         <source>Login ...</source>
-        <translation>Login ...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>This is the user name dialog box</source>
-        <translation>Este é o diálogo do nome de usuário</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source> User name:</source>
-        <translation>Nome de usuário:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Type your user name here</source>
-        <translation>Digite seu nome de usuário aqui</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Press this button if you are ok</source>
-        <translation>Pressione este botão quando estiver ok</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

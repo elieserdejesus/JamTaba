@@ -1,6 +1,5 @@
 #include <QApplication>
 #include <QMainWindow>
-#include <QLocale>
 #include <QDir>
 
 #include "MainControllerStandalone.h"
@@ -28,12 +27,6 @@ int main(int argc, char* args[] ){
 #else
     QApplication* application = new QApplication(argc, args);
 #endif
-
-    QTranslator translator;
-    QString localeName = QLocale::system().name();
-    if (translator.load(localeName) || translator.load(":/tr/" + localeName)) {
-        application->installTranslator(&translator);
-    }
 
     Controller::MainControllerStandalone mainController(settings, (QApplication*)application);
     mainController.configureStyleSheet("jamtaba.css");

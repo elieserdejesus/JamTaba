@@ -39,6 +39,21 @@ void TrackGroupView::setupUI()
 
     mainLayout->addWidget(topPanel);
     mainLayout->addLayout(tracksLayout, 1);
+
+    translateUi();
+}
+
+void TrackGroupView::changeEvent(QEvent *e)
+{
+    if (e->type() == QEvent::LanguageChange) {
+        translateUi();
+    }
+    QFrame::changeEvent(e);
+}
+
+void TrackGroupView::translateUi()
+{
+    //overrided in subclasses
 }
 
 bool TrackGroupView::isUnlighted() const
@@ -73,17 +88,9 @@ void TrackGroupView::updateGuiElements()
 
 TrackGroupView::~TrackGroupView()
 {
-    //delete ui;
+
 }
 
-//// little to allow stylesheet in custom widget
-//void TrackGroupView::paintEvent(QPaintEvent *)
-//{
-//    QStyleOption opt;
-//    opt.init(this);
-//    QPainter p(this);
-//    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-//}
 
 BaseTrackView *TrackGroupView::addTrackView(long trackID)
 {

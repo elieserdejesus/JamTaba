@@ -61,7 +61,7 @@
         <string>This is the room where you are</string>
        </property>
        <property name="text">
-        <string notr="true">TextLabel</string>
+        <string notr="true">ninbot.com</string>
        </property>
       </widget>
      </item>

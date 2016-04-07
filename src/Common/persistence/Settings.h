@@ -489,7 +489,7 @@ public:
 
     // TRANSLATION
     QString getTranslation() const;
-    void setTranslation(const QString &translate);
+    void setTranslation(const QString &localeName);
 
     QString getLastChannelName(int channelIndex) const;
 };
