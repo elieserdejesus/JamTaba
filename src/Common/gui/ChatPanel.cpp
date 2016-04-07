@@ -33,15 +33,20 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool) :
     ui->chatText->setAttribute(Qt::WA_MacShowFocusRect, 0);
 }
 
+void ChatPanel::changeEvent(QEvent *e)
+{
+    if (e->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+    }
+    QWidget::changeEvent(e);
+}
+
 bool ChatPanel::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == ui->chatText && event->type() == QEvent::MouseButtonPress)
         ui->chatText->setFocus();
     return QWidget::eventFilter(obj, event);
 }
-
-// ++++++++++++++++++++++++++++++++
-
 
 void ChatPanel::createVoteButton(const QString &voteType, int value)
 {
