@@ -22,6 +22,29 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
     QObject::connect(groupNameField, SIGNAL(editingFinished()), this, SIGNAL(
                          nameChanged()));
     QObject::connect(xmitButton, SIGNAL(toggled(bool)), this, SLOT(toggleTransmitingStatus(bool)));
+
+    translateUi();
+}
+
+void LocalTrackGroupView::translateUi()
+{
+    updateXmitButtonText();
+
+    xmitButton->setToolTip(tr("Enable/disable your audio transmission for others"));
+    xmitButton->setAccessibleDescription(toolButton->toolTip());
+
+    toolButton->setToolTip(tr("Add or remove channels..."));
+    toolButton->setAccessibleDescription(toolButton->toolTip());
+}
+
+void LocalTrackGroupView::updateXmitButtonText()
+{
+    if (peakMeterOnly) {
+        xmitButton->setText(tr("X"));
+    }
+    else{
+        xmitButton->setText(isPreparingToTransmit() ? tr("Preparing") : tr("Transmiting"));
+    }
 }
 
 LocalTrackGroupView::~LocalTrackGroupView()
@@ -33,7 +56,7 @@ void LocalTrackGroupView::setPreparingStatus(bool preparing)
     this->preparingToTransmit = preparing;
     xmitButton->setEnabled(!preparing);
     if (!isShowingPeakMeterOnly())
-        xmitButton->setText(preparing ? tr("Preparing") : tr("Transmiting"));
+        updateXmitButtonText();
 
     xmitButton->setProperty("preparing", QVariant(preparing));// change the button property to change stylesheet
     style()->unpolish(xmitButton); // force the updating in stylesheet for "preparing" state in QPushButton
@@ -51,11 +74,8 @@ void LocalTrackGroupView::toggleTransmitingStatus(bool checked)
 QPushButton *LocalTrackGroupView::createXmitButton()
 {
     QPushButton *toolButton = new QPushButton();
-    toolButton->setObjectName("xmitButton");
+    toolButton->setObjectName(QStringLiteral("xmitButton"));
     toolButton->setCheckable(true);
-    toolButton->setText(tr("Transmit"));
-    toolButton->setToolTip(tr("Enable/disable your audio transmission for others"));
-    toolButton->setAccessibleDescription(toolTip());
     toolButton->setChecked(true);
     return toolButton;
 }
@@ -63,10 +83,9 @@ QPushButton *LocalTrackGroupView::createXmitButton()
 QPushButton *LocalTrackGroupView::createToolButton()
 {
     QPushButton *toolButton = new QPushButton();
-    toolButton->setObjectName("toolButton");
-    toolButton->setText("");
-    toolButton->setToolTip(tr("Add or remove channels..."));
-    toolButton->setAccessibleDescription(toolTip());
+    toolButton->setObjectName(QStringLiteral("toolButton"));
+    toolButton->setText(QStringLiteral(""));
+
     return toolButton;
 }
 
@@ -283,7 +302,7 @@ void LocalTrackGroupView::setPeakMeterMode(bool peakMeterOnly)
             view->setPeakMetersOnlyMode(peakMeterOnly, mainFrame->isRunningInMiniMode());
         }
 
-        xmitButton->setText(peakMeterOnly ? tr("X") : tr("Transmit"));
+        updateXmitButtonText();
         updateGeometry();
         adjustSize();
     }

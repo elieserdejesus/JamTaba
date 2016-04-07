@@ -41,6 +41,9 @@ signals:
     void finishingListeningTheRoom(const Login::RoomInfo &roomInfo);
     void enteringInTheRoom(const Login::RoomInfo &roomInfo);
 
+protected:
+    void changeEvent(QEvent *) override;
+
 private slots:
     void on_buttonListen_clicked();
     void on_buttonEnter_clicked();
@@ -55,7 +58,9 @@ private:
     void updateButtonListen();
 
     static bool userInfoLessThan(const Login::UserInfo &u1, const Login::UserInfo &u2);
-    QString buildRoomDescriptionString(const Login::RoomInfo &roomInfo);
+    QString buildRoomDescriptionString();
+
+    void translateUi();
 };
 
 #endif // JAMROOMVIEWPANEL_H

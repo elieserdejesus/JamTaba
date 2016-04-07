@@ -45,6 +45,9 @@ protected slots:
     void setToStereo(QAction *action) ;
     void setToMidi(QAction *action) ;
 
+protected:
+    void translateUI() override;
+
 private slots:
     void showInputSelectionMenu();// build and show the input selection menu
     void openMidiToolsDialog();

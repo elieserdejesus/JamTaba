@@ -18,7 +18,7 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
     midiToolsDialog(nullptr)
 {
     fxPanel = createFxPanel();
-    //mainLayout->addSpacing(20);// add separator before effects panel
+
     mainLayout->addWidget(fxPanel, mainLayout->rowCount(), 0, 1, 2);
 
     // create input panel in the bottom
@@ -35,7 +35,7 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
 
     // create the peak meter to show midiactivity
     midiPeakMeter = new PeakMeter();
-    midiPeakMeter->setObjectName("midiPeakMeter");
+    midiPeakMeter->setObjectName(QStringLiteral("midiPeakMeter"));
     midiPeakMeter->setSolidColor(QColor(180, 0, 0));
     midiPeakMeter->setPaintMaxPeakMarker(false);
     midiPeakMeter->setDecayTime(500);// 500 ms
@@ -43,6 +43,19 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
 
     Audio::LocalInputNode *inputNode = getInputNode();
     connect(inputNode, &Audio::LocalInputNode::midiNoteLearned, this, &LocalTrackViewStandalone::useLearnedMidiNote);
+
+    translateUI();
+}
+
+void LocalTrackViewStandalone::translateUI()
+{
+    LocalTrackView::translateUI();
+
+    inputSelectionButton->setToolTip(tr("Choose input channels ..."));
+
+    midiToolsButton->setText(tr("MIDI tools"));
+
+    refreshInputSelectionName();
 }
 
 void LocalTrackViewStandalone::useLearnedMidiNote(quint8 midiNote)
@@ -76,7 +89,7 @@ void LocalTrackViewStandalone::reset()
 QLabel *LocalTrackViewStandalone::createInputTypeIconLabel(QWidget *parent)
 {
     QLabel *label = new QLabel(parent);
-    label->setObjectName("inputSelectionIcon");
+    label->setObjectName(QStringLiteral("inputSelectionIcon"));
     label->setTextFormat(Qt::RichText);
     label->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding));
     return label;
@@ -85,9 +98,7 @@ QLabel *LocalTrackViewStandalone::createInputTypeIconLabel(QWidget *parent)
 QPushButton *LocalTrackViewStandalone::createInputSelectionButton(QWidget *parent)
 {
     QPushButton *fakeComboButton = new QPushButton(parent);
-    fakeComboButton->setObjectName("inputSelectionButton");
-    fakeComboButton->setText(tr("inputs ..."));
-    fakeComboButton->setToolTip(tr("Choose input channels ..."));
+    fakeComboButton->setObjectName(QStringLiteral("inputSelectionButton"));
     fakeComboButton->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,
                                                QSizePolicy::MinimumExpanding));
 
@@ -99,7 +110,7 @@ QPushButton *LocalTrackViewStandalone::createInputSelectionButton(QWidget *paren
 QWidget *LocalTrackViewStandalone::createInputPanel()
 {
     QWidget *inputPanel = new QWidget(this);
-    inputPanel->setObjectName("inputPanel");
+    inputPanel->setObjectName(QStringLiteral("inputPanel"));
     inputPanel->setLayout(new QHBoxLayout(inputPanel));
     inputPanel->layout()->setContentsMargins(0, 0, 0, 0);
     inputPanel->layout()->setSpacing(0);
@@ -114,9 +125,8 @@ QWidget *LocalTrackViewStandalone::createInputPanel()
 QPushButton *LocalTrackViewStandalone::createMidiToolsButton()
 {
     QPushButton * button = new QPushButton();
-    button->setObjectName("midiToolsButton");
+    button->setObjectName(QStringLiteral("midiToolsButton"));
     button->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
-    button->setText(tr("MIDI tools"));
     button->setVisible(false);
     connect(button, SIGNAL(clicked(bool)), this, SLOT(openMidiToolsDialog()));
     return button;
@@ -206,18 +216,18 @@ QString LocalTrackViewStandalone::getMidiNoteText(quint8 midiNoteNumber) const
     int octave = midiNoteNumber/12;
     QString noteName = "";
     switch (midiNoteNumber % 12) {
-        case 0: noteName = "C"; break;
-        case 1: noteName = "C#"; break;
-        case 2: noteName = "D"; break;
-        case 3: noteName = "D#"; break;
-        case 4: noteName = "E"; break;
-        case 5: noteName = "F"; break;
-        case 6: noteName = "F#"; break;
-        case 7: noteName = "G"; break;
-        case 8: noteName = "G#"; break;
-        case 9: noteName = "A"; break;
-        case 10: noteName = "A#"; break;
-        case 11: noteName = "B"; break;
+        case 0: noteName = QStringLiteral("C"); break;
+        case 1: noteName = QStringLiteral("C#"); break;
+        case 2: noteName = QStringLiteral("D"); break;
+        case 3: noteName = QStringLiteral("D#"); break;
+        case 4: noteName = QStringLiteral("E"); break;
+        case 5: noteName = QStringLiteral("F"); break;
+        case 6: noteName = QStringLiteral("F#"); break;
+        case 7: noteName = QStringLiteral("G"); break;
+        case 8: noteName = QStringLiteral("G#"); break;
+        case 9: noteName = QStringLiteral("A"); break;
+        case 10: noteName = QStringLiteral("A#"); break;
+        case 11: noteName = QStringLiteral("B"); break;
     }
     return noteName + QString::number(octave);
 }

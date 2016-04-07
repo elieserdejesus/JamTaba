@@ -19,7 +19,24 @@ JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo,
     ui->wavePeakPanel->setEnabled(false);// is enable when user click in listen button
 }
 
-QString JamRoomViewPanel::buildRoomDescriptionString(const Login::RoomInfo &roomInfo)
+void JamRoomViewPanel::changeEvent(QEvent *e)
+{
+    if (e->type() == QEvent::LanguageChange){
+        translateUi();
+    }
+    QFrame::changeEvent(e);
+}
+
+void JamRoomViewPanel::translateUi()
+{
+    ui->labelRoomStatus->setText(buildRoomDescriptionString());
+    ui->buttonEnter->setText(tr("enter"));
+    ui->buttonListen->setText(tr("listen"));
+
+    updateButtonListen();
+}
+
+QString JamRoomViewPanel::buildRoomDescriptionString()
 {
     int botsCount = roomInfo.getUsers().count() - roomInfo.getNonBotUsersCount();
     int maxUsers = roomInfo.getMaxUsers() - botsCount;
@@ -39,7 +56,7 @@ void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
 {
     this->roomInfo = roomInfo;
 
-    ui->labelRoomStatus->setText(buildRoomDescriptionString(roomInfo));
+    ui->labelRoomStatus->setText(buildRoomDescriptionString());
 
     // remove all users labels from layout
     QList<QLabel *> allUserLabels = ui->usersPanel->findChildren<QLabel *>();
@@ -64,7 +81,8 @@ void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
                 label->setToolTip("");
             } else {
                 imageString = "<img src=:/images/warning.png> ";
-                label->setToolTip(user.getName() + " location is not available at moment!");
+                QString toolTip = tr("%1  location is not available at moment!").arg(user.getName());
+                label->setToolTip(toolTip);
             }
             label->setText(imageString + userString);
 
@@ -75,6 +93,13 @@ void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
 
     updateButtonListen();
 
+    ui->buttonEnter->setEnabled(!roomInfo.isFull());
+}
+
+void JamRoomViewPanel::updateButtonListen()
+{
+    ui->buttonListen->setEnabled(roomInfo.hasStream() && !roomInfo.isEmpty());
+
     if (!roomInfo.hasStream()) {
         ui->buttonListen->setIcon(QIcon(":/images/warning.png"));
         ui->buttonListen->setToolTip(tr("The audio stream of this room is not available at moment!"));
@@ -82,12 +107,7 @@ void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
         ui->buttonListen->setIcon(QIcon());// remove the icon
         ui->buttonListen->setToolTip("");// clean the tooltip
     }
-    ui->buttonEnter->setEnabled(!roomInfo.isFull());
-}
 
-void JamRoomViewPanel::updateButtonListen()
-{
-    ui->buttonListen->setEnabled(roomInfo.hasStream() && !roomInfo.isEmpty());
     style()->unpolish(ui->buttonListen);
     style()->polish(ui->buttonListen);
 }
