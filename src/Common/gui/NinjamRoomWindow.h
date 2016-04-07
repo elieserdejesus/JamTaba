@@ -58,6 +58,8 @@ public:
 
     void setTracksSize(TracksSize size);
 
+    inline QString getRoomName() const { return roomName; }
+
 protected:
     Ui::NinjamRoomWindow *ui;
     Controller::MainController *mainController;
@@ -68,6 +70,8 @@ private:
     ChatPanel *chatPanel;
 
     bool fullViewMode;
+
+    QString roomName;
 
     void handleVoteMessage(const Ninjam::User &user, const QString &message);
     void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);

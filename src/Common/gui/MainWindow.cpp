@@ -621,7 +621,9 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     // add the chat panel in main window
     qCDebug(jtGUI) << "adding ninjam chat panel...";
     ChatPanel *chatPanel = ninjamWindow->getChatPanel();
-    ui.chatTabWidget->addTab(chatPanel, tr("chat %1").arg(roomInfo.getName()));
+    ui.chatTabWidget->addTab(chatPanel, "");
+    updateChatTabTitle(roomInfo.getName());//set and translate the chat tab title
+
     QObject::connect(chatPanel, SIGNAL(userConfirmingChordProgression(
                                            ChordProgression)), this,
                      SLOT(showChordProgression(ChordProgression)));
@@ -656,6 +658,11 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
                      SLOT(updateCurrentIntervalBeat(int)));
 }
 
+void MainWindow::updateChatTabTitle(const QString &roomName)
+{
+    int chatTabIndex = 0; //assuming chat is the first tab
+    ui.chatTabWidget->setTabText(chatTabIndex, tr("chat %1").arg(roomName));
+}
 
 void MainWindow::showMetronomePreferencesDialog()
 {
@@ -798,6 +805,9 @@ void MainWindow::changeEvent(QEvent *ev)
     }
     else if (ev->type() == QEvent::LanguageChange) {
         ui.retranslateUi(this);
+        if (ninjamWindow) {
+            updateChatTabTitle(ninjamWindow.data()->getRoomName()); //translate the chat tab title
+        }
     }
     QMainWindow::changeEvent(ev);
 }

@@ -42,7 +42,8 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
     fullViewMode(true),
     ninjamPanel(nullptr),
     tracksOrientation(Qt::Vertical),
-    tracksSize(TracksSize::WIDE)
+    tracksSize(TracksSize::WIDE),
+    roomName(roomInfo.getName())
 {
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow construtor..";
     ui->setupUi(this);
