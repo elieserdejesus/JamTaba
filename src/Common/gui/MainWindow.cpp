@@ -1247,12 +1247,11 @@ void MainWindow::setLanguage(QAction *languageMenuAction)
 {
 
     QString locale = languageMenuAction->data().toString();
-    if (translator.load(locale, ":/tr")) {
-        ui.retranslateUi(this);
-        mainController->setTranslationLanguage(locale);
-        if (mainController->isPlayingInNinjamRoom()) {
-            ninjamWindow->getChatPanel()->setPreferredTranslationLanguage(locale);
-        }
+    translator.load(locale, ":/tr");
+    ui.retranslateUi(this);
+    mainController->setTranslationLanguage(locale);
+    if (mainController->isPlayingInNinjamRoom()) {
+        ninjamWindow->getChatPanel()->setPreferredTranslationLanguage(locale);
     }
 }
 
