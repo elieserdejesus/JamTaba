@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="prefsTab">
      <property name="currentIndex">
-      <number>4</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
@@ -118,7 +118,7 @@
           </sizepolicy>
          </property>
          <property name="title">
-          <string>Outpus</string>
+          <string>Outputs</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
