@@ -22,6 +22,8 @@
 #include "persistence/UsersDataCache.h"
 
 #include <QMessageBox>
+#include <QRegExp>
+#include <QLocale>
 #include <cassert>
 #include <QComboBox>
 #include <QDebug>
@@ -536,9 +538,16 @@ NinjamRoomWindow::~NinjamRoomWindow()
 
 void NinjamRoomWindow::showServerLicence()
 {
+    static QRegExp ccLink("(http://creativecommons.org/licenses/\\S+/)");
+    static QRegExp brPattern("(\\r\\n|\\r|\\n)");
+    QString locale = QLocale::system().name();
+    QString anchorTag = QStringLiteral("<a href=\"\\1deed.%1\">\\1</a>").arg(locale);
+
     QString licence = mainController->getNinjamService()->getCurrentServerLicence();
     QMessageBox *msgBox = new QMessageBox(parentWidget());
-    msgBox->setText(licence);
+
+    msgBox->setTextFormat(Qt::RichText);
+    msgBox->setText(licence.replace(brPattern, "<br>").replace(ccLink, anchorTag));
     msgBox->setWindowTitle(ui->labelRoomName->text());
     msgBox->setAttribute(Qt::WA_DeleteOnClose);
 
