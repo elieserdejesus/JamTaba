@@ -248,6 +248,8 @@ private:
     void initializeLanguageMenu();
     void initializeTranslator();
 
+    void updateUserNameLabel();
+
     bool fullViewMode;// full view or mini view mode? This is not the FullScreen mode, full screen is available only in Standalone.
 
     void showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly);
