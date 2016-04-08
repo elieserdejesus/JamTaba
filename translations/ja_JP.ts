@@ -27,10 +27,6 @@
 <context>
     <name>BusyDialog</name>
     <message>
-        <source>Dialog</source>
-        <translation type="vanished">ダイアログ</translation>
-    </message>
-    <message>
         <source>This is the busy dialog window</source>
         <translation>待機中</translation>
     </message>
@@ -42,14 +38,6 @@
 <context>
     <name>ChatMessagePanel</name>
     <message>
-        <source>Form</source>
-        <translation type="vanished">フォーム</translation>
-    </message>
-    <message>
-        <source>user name</source>
-        <translation type="vanished">ユーザ名</translation>
-    </message>
-    <message>
         <source>translate ...</source>
         <translation>翻訳...</translation>
     </message>
@@ -58,17 +46,9 @@
         <translatorcomment>表示スペースの都合上、省略文字を利用</translatorcomment>
         <translation>翻訳</translation>
     </message>
-    <message>
-        <source>big chat message with many lines to test the behavior</source>
-        <translation type="vanished">チャットメッセージ</translation>
-    </message>
 </context>
 <context>
     <name>ChatPanel</name>
-    <message>
-        <source>Form</source>
-        <translation type="vanished">フォーム</translation>
-    </message>
     <message>
         <source>Type your text to sent on the chat here</source>
         <translation>ここに発言を入力</translation>
@@ -101,10 +81,6 @@
 <context>
     <name>ChordsPanel</name>
     <message>
-        <source>Form</source>
-        <translation type="vanished">フォーム</translation>
-    </message>
-    <message>
         <source>send the chords to chat...</source>
         <translation>コード進行をチャットへ送信...</translation>
     </message>
@@ -121,18 +97,8 @@
         <translation>移調(上)</translation>
     </message>
     <message>
-        <source>#</source>
-        <translatorcomment>ユニコード文字のMUSIC SHARPを利用(NUMBER SIGNとは区別)</translatorcomment>
-        <translation type="vanished">♯</translation>
-    </message>
-    <message>
         <source>transpose down</source>
         <translation>移調(下)</translation>
-    </message>
-    <message>
-        <source>b</source>
-        <translatorcomment>ユニコード文字のMUSIC FLATを利用(アルファベットの&quot;b&quot;とは区別)</translatorcomment>
-        <translation type="vanished">♭</translation>
     </message>
 </context>
 <context>
@@ -194,10 +160,6 @@
     <message>
         <source>Last</source>
         <translation>末尾</translation>
-    </message>
-    <message>
-        <source>Outpus</source>
-        <translation type="vanished">出力</translation>
     </message>
     <message>
         <source>Sample rate</source>
@@ -282,7 +244,7 @@
     </message>
     <message>
         <source>Built-in metronomes:</source>
-        <translation type="unfinished"></translation>
+        <translation>組込のメトロノーム:</translation>
     </message>
     <message>
         <source>Custom Metronome Sounds</source>
@@ -299,16 +261,12 @@
     </message>
     <message>
         <source>Use 16 bit audio files!</source>
-        <translation type="unfinished"></translation>
+        <translation>16ビットのオーディオファイルを選択してください!</translation>
     </message>
     <message>
         <source>Secondary Beat:</source>
         <translatorcomment>通常のクリック音</translatorcomment>
         <translation>セカンダリビート:</translation>
-    </message>
-    <message>
-        <source>Please use 16 bit audio files for metronome sounds!</source>
-        <translation type="vanished">16ビットのオーディオファイルを選択してください!</translation>
     </message>
     <message>
         <source>ok</source>
@@ -317,7 +275,7 @@
     </message>
     <message>
         <source>Outputs</source>
-        <translation type="unfinished"></translation>
+        <translation>出力</translation>
     </message>
 </context>
 <context>
@@ -339,15 +297,15 @@
     </message>
     <message>
         <source>enter</source>
-        <translation type="unfinished">入室</translation>
+        <translation>入室</translation>
     </message>
     <message>
         <source>listen</source>
-        <translation type="unfinished">視聴</translation>
+        <translation>視聴</translation>
     </message>
     <message>
         <source>%1  location is not available at moment!</source>
-        <translation type="unfinished"></translation>
+        <translation>地域 %1 は得られませんでした!</translation>
     </message>
 </context>
 <context>
@@ -375,10 +333,6 @@
     <message>
         <source>Transmiting</source>
         <translation>送信中</translation>
-    </message>
-    <message>
-        <source>Transmit</source>
-        <translation type="vanished">送信</translation>
     </message>
     <message>
         <source>Enable/disable your audio transmission for others</source>
@@ -432,10 +386,6 @@
 <context>
     <name>LocalTrackViewStandalone</name>
     <message>
-        <source>inputs ...</source>
-        <translation type="vanished">入力...</translation>
-    </message>
-    <message>
         <source>Choose input channels ...</source>
         <translation>入力チャンネルを選択...</translation>
     </message>
@@ -446,10 +396,6 @@
     <message>
         <source>Mono</source>
         <translation>モノラル</translation>
-    </message>
-    <message>
-        <source>  (%1)</source>
-        <translation type="vanished">  (%1)</translation>
     </message>
     <message>
         <source>no input</source>
@@ -520,7 +466,7 @@
     </message>
     <message>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>言語</translation>
     </message>
     <message>
         <source>Audio ...</source>
@@ -576,11 +522,7 @@
     </message>
     <message>
         <source>Full Screen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>FullscreenMode</source>
-        <translation type="vanished">フルスクリーンモード</translation>
+        <translation>フルスクリーン</translation>
     </message>
     <message>
         <source>Current Version ...</source>
@@ -632,10 +574,6 @@
         <translation>新しいバージョンのJamtabaがあります!</translation>
     </message>
     <message>
-        <source>Jamtaba v%1 (%2)</source>
-        <translation type="vanished">Jamtaba v%1 (%2)</translation>
-    </message>
-    <message>
         <source>Warning!</source>
         <translation>警告!</translation>
     </message>
@@ -683,12 +621,8 @@
 <context>
     <name>MainWindowStandalone</name>
     <message>
-        <source> can&apos;t be loaded and will be black listed!</source>
-        <translation type="vanished">ロードに失敗したのでブラックリストへ登録します!</translation>
-    </message>
-    <message>
         <source>%1 can&apos;t be loaded and will be black listed!</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 は読込に失敗したので、ブラックリストへ入りました!</translation>
     </message>
     <message>
         <source>Plugin Error!</source>
@@ -706,12 +640,8 @@
 <context>
     <name>MidiToolsDialog</name>
     <message>
-        <source>Dialog</source>
-        <translation type="vanished">ダイアログ</translation>
-    </message>
-    <message>
         <source>MIDI Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>MIDI ツール</translation>
     </message>
     <message>
         <source>Key Range:</source>
@@ -737,17 +667,9 @@
         <source>Semitones:</source>
         <translation>セミトーン:</translation>
     </message>
-    <message>
-        <source>Midi Tools</source>
-        <translation type="vanished">MIDIツール</translation>
-    </message>
 </context>
 <context>
     <name>NinjamPanel</name>
-    <message>
-        <source>Form</source>
-        <translation type="vanished">フォーム</translation>
-    </message>
     <message>
         <source>metronome</source>
         <translation>メトロノー</translation>
@@ -850,19 +772,11 @@
     </message>
     <message>
         <source>%1 beats</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 beats %2</source>
-        <translation type="vanished">%1 beats %2</translation>
+        <translation>%1 ビート</translation>
     </message>
 </context>
 <context>
     <name>NinjamRoomWindow</name>
-    <message>
-        <source>Form</source>
-        <translation type="vanished">フォーム</translation>
-    </message>
     <message>
         <source>you are in the ninjam room window</source>
         <translation>ニンジャム部屋のウィンドウ</translation>
@@ -895,23 +809,11 @@
     </message>
     <message>
         <source>%1 leave the room.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 が退室しました.</translation>
     </message>
     <message>
         <source>%1 enter in room.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Jamtaba</source>
-        <translation type="vanished">Jamtaba</translation>
-    </message>
-    <message>
-        <source> leave the room.</source>
-        <translation type="vanished">退室.</translation>
-    </message>
-    <message>
-        <source> enter in room.</source>
-        <translation type="vanished">入室.</translation>
+        <translation>%1 が入室しました.</translation>
     </message>
 </context>
 <context>
@@ -924,12 +826,8 @@
 <context>
     <name>PluginScanDialog</name>
     <message>
-        <source>[Jamtaba] Scanning plugins ...</source>
-        <translation type="vanished">[Jamtaba] プラグインの操作...</translation>
-    </message>
-    <message>
         <source>[JamTaba] Scanning plugins ...</source>
-        <translation type="unfinished"></translation>
+        <translation>[JamTaba] プラグイン走査中...</translation>
     </message>
     <message>
         <source>This is the plugin scanning dialog box</source>
@@ -963,12 +861,8 @@
         <translation>プライマリービートのオーディオファイルを選択...</translation>
     </message>
     <message>
-        <source>Audio Files (*.wav)</source>
-        <translation type="vanished">オーディオファイル(*.wav)</translation>
-    </message>
-    <message>
         <source>Audio Files (*.wav, *.ogg)</source>
-        <translation type="unfinished"></translation>
+        <translation>オーディオファイル (*.wav, *.ogg)</translation>
     </message>
     <message>
         <source>Choosing Secondary beat audio file...</source>
@@ -999,10 +893,6 @@
         <translation>参加するサーバ名を入力</translation>
     </message>
     <message>
-        <source>localhost</source>
-        <translation type="vanished">localhost</translation>
-    </message>
-    <message>
         <source>leave blank to connect as annonymous</source>
         <translation>匿名で接続するには無記入で</translation>
     </message>
@@ -1023,10 +913,6 @@
         <translation>利用するポート番号を入力</translation>
     </message>
     <message>
-        <source>2049</source>
-        <translation type="vanished">2049</translation>
-    </message>
-    <message>
         <source>Press this button if you are ok</source>
         <translation>準備ができればOKを押す</translation>
     </message>
@@ -1038,25 +924,12 @@
 <context>
     <name>RoomViewPanel</name>
     <message>
-        <source>Form</source>
-        <translation type="vanished">フォーム</translation>
-    </message>
-    <message>
         <source>This is the server name</source>
         <translation>サーバ名</translation>
     </message>
     <message>
-        <source>Name</source>
-        <translation type="vanished">名前</translation>
-    </message>
-    <message>
         <source>This is the status of this room</source>
         <translation>部屋の状態</translation>
-    </message>
-    <message>
-        <source>testee</source>
-        <translatorcomment>不明</translatorcomment>
-        <translation type="vanished">testee</translation>
     </message>
     <message>
         <source>Click that button to listen that room</source>
@@ -1099,10 +972,6 @@
     <message>
         <source>Add Vst(s) to Black list ...</source>
         <translation>VSTをブラックリストへ追加...</translation>
-    </message>
-    <message>
-        <source>Dll(*.dll)</source>
-        <translation type="vanished">Dllファイル(*.dll)</translation>
     </message>
     <message>
         <source>Remove Vst(s) from Black List ...</source>
