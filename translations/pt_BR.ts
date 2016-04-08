@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="br_FR">
+<TS version="2.0" language="pt_BR" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -160,10 +160,6 @@
         <translation>Última</translation>
     </message>
     <message>
-        <source>Outpus</source>
-        <translation type="vanished">Saídas</translation>
-    </message>
-    <message>
         <source>Sample rate</source>
         <translation>Taxa de amostragem</translation>
     </message>
@@ -273,7 +269,7 @@
     </message>
     <message>
         <source>Outputs</source>
-        <translation type="unfinished"></translation>
+        <translation>Saídas</translation>
     </message>
 </context>
 <context>
@@ -315,10 +311,6 @@
     <message>
         <source>Transmiting</source>
         <translation>Transmitindo</translation>
-    </message>
-    <message>
-        <source>Transmit</source>
-        <translation type="vanished">Transmite</translation>
     </message>
     <message>
         <source>Enable/disable your audio transmission for others</source>
@@ -386,10 +378,6 @@
 </context>
 <context>
     <name>LocalTrackViewStandalone</name>
-    <message>
-        <source>inputs ...</source>
-        <translation type="vanished">entradas ...</translation>
-    </message>
     <message>
         <source>Choose input channels ...</source>
         <translation>Selecione os cansis de entrada...</translation>
@@ -671,10 +659,6 @@
         <source>Semitones:</source>
         <translation>Semitons:</translation>
     </message>
-    <message>
-        <source>Midi Tools</source>
-        <translation type="vanished">Ferramentas MIDI</translation>
-    </message>
 </context>
 <context>
     <name>NinjamPanel</name>
@@ -781,10 +765,6 @@
     <message>
         <source>%1 beats</source>
         <translation>%1 batidas</translation>
-    </message>
-    <message>
-        <source>%1 beats %2</source>
-        <translation type="vanished">%1 batidas %2</translation>
     </message>
 </context>
 <context>
