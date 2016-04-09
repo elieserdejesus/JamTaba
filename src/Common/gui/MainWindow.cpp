@@ -627,6 +627,8 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
 
     //lock the user name field, user name can't be changed when jamming
     ui.labelSectionTitle->setReadOnly(true);
+    if (ui.labelSectionTitle->hasFocus())
+        ui.labelSectionTitle->clearFocus();
 
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
     ninjamWindow.reset(createNinjamWindow(roomInfo, mainController));
