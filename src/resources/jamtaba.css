@@ -677,12 +677,18 @@ QMainWindow #bottomPanel{
 }
 
 
-/* títulos dos painéis principais */
-.QWidget#leftPanel .QLabel#labelSectionTitle, .QWidget#contentPanel > .QLabel{
-/*font-size: 11px;*/
+/* Main panels title */
+/*.QLineEdit#labelSectionTitle, */
+.QWidget#contentPanel > .QLabel{
+    color: rgb(190, 190, 190);
+    qproperty-alignment: AlignCenter;
+}
 
-color: rgb(190, 190, 190);
-qproperty-alignment: AlignCenter;
+.QLineEdit#labelSectionTitle:read-only
+{
+    background-image: url(':/images/lock.png');
+    background-repeat: none;
+    background-position: right center;
 }
 
 /* define os separadores horizontais abaixo dos títulos as seções principais   */
