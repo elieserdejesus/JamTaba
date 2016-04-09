@@ -94,6 +94,7 @@ void NinjamRoomWindow::retranslate()
     verticalLayoutButton->setToolTip(tr("Set tracks layout to vertical"));
     wideButton->setToolTip(tr("Wide tracks"));
     narrowButton->setToolTip(tr("Narrow tracks"));
+    ui->labelUserName->setText(tr("connected as %1").arg(mainController->getUserName()));
 }
 
 void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrientation)
