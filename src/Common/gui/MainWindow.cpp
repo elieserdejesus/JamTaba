@@ -1303,6 +1303,14 @@ void MainWindow::setupSignals()
 
     connect(ui.menuLanguage, SIGNAL(triggered(QAction*)), this, SLOT(setLanguage(QAction*)));
 
+    connect(ui.userNameLineEdit, SIGNAL(editingFinished()), this, SLOT(updateUserName()));
+}
+
+void MainWindow::updateUserName()
+{
+    QString newUserName = ui.userNameLineEdit->text();
+    qDebug() << "Setting user name to:" << newUserName;
+    mainController->setUserName(newUserName);
 }
 
 void MainWindow::initializeMasterFader()
