@@ -1244,6 +1244,10 @@ void MainWindow::setupWidgets()
     ui.localTracksWidget->installEventFilter(this);
 
     ui.userNameLineEdit->installEventFilter(this);
+    QString lastUserName = mainController->getUserName();
+    if (!lastUserName.isEmpty()) {
+        ui.userNameLineEdit->setText(lastUserName);
+    }
 }
 
 void MainWindow::setupSignals()
