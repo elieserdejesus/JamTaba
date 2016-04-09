@@ -622,7 +622,6 @@ QString MainWindow::getGuessedUserName() const
 {
     //guess user name using homePath
     QString homePath = QDir::homePath();
-    qDebug() << "Separator:" << QDir::separator();
     int separatorIndex = homePath.lastIndexOf(QRegularExpression("[/\\\\]")); //QDir::separator() as parameter for 'lastIndexOf' not work in my windows 10
     if (separatorIndex >= 0) {
         return homePath.right(homePath.size() - (separatorIndex+1));
