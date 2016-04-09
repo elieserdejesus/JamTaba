@@ -1075,11 +1075,10 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
 {
     if (event->type() == QEvent::Resize) {
-        if (target == ui.localTracksWidget)
+        if (target == ui.localTracksWidget) {
             updateLocalInputChannelsGeometry();
-        else if (target == ui.userNameLineEdit)
-            updateUserNameLabel();
-        return true;
+            return true;
+        }
     } else {
         if (target == ui.masterFader && event->type() == QEvent::MouseButtonDblClick) {
             ui.masterFader->setValue(100);
@@ -1087,18 +1086,6 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
         }
     }
     return QMainWindow::eventFilter(target, event);
-}
-
-void MainWindow::updateUserNameLabel()
-{
-    Qt::Alignment alignment = Qt::AlignCenter;
-    QFontMetrics fontMetrics = ui.userNameLineEdit->fontMetrics();
-    int maxWidth = ui.userNameLineEdit->sizeHint().width();
-    int textWidth = fontMetrics.width(ui.userNameLineEdit->text());
-    if (textWidth > maxWidth) {
-        alignment = Qt::AlignVCenter | Qt::AlignLeft;
-    }
-    ui.userNameLineEdit->setAlignment(alignment);
 }
 
 void MainWindow::resetLocalChannels()
@@ -1247,11 +1234,6 @@ void MainWindow::setupWidgets()
     ui.allRoomsContent->layout()->setSpacing(24);
 
     ui.localTracksWidget->installEventFilter(this);
-
-    ui.userNameLineEdit->installEventFilter(this);
-    QString userNamePattern("[a-zA-Z0-9_-]{2,}"); //allowing lower and upper case letters, numbers, _ and - symbols, at least 2 characters.
-    QRegularExpressionValidator *validator = new QRegularExpressionValidator(QRegularExpression(userNamePattern), this);
-    ui.userNameLineEdit->setValidator(validator);
 
     QString lastUserName = mainController->getUserName();
     if (!lastUserName.isEmpty()) {
