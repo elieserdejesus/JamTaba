@@ -371,6 +371,12 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="placeholderText">
+             <string>type your name</string>
+            </property>
            </widget>
           </item>
           <item>
