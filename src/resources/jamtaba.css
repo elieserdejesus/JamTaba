@@ -683,7 +683,7 @@ QMainWindow #bottomPanel{
     qproperty-alignment: AlignCenter;
 }
 
-.QLineEdit#labelSectionTitle:read-only
+.QLineEdit#userNameLineEdit:read-only
 {
     background-image: url(':/images/lock.png');
     background-repeat: none;
