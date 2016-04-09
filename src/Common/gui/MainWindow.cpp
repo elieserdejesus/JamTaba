@@ -593,11 +593,6 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
             if (!userName.isEmpty()) {
                 mainController->setUserName(userName);
                 ui.userNameLineEdit->setText(userName); //show the user name in top of local tracks
-
-                //change the window title to include user name
-                QString version = QApplication::applicationVersion();
-                QString windowTitle = "JamTaba " + version + " (" + userName + ")";
-                setWindowTitle(windowTitle);
             } else {
                 QMessageBox::warning(this, tr("Warning!"), tr("Empty name is not allowed!"));
             }
