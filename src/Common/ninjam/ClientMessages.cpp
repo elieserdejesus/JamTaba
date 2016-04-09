@@ -98,7 +98,7 @@ ClientSetChannel::ClientSetChannel(const QStringList &channels)
     payload = 2;
     channelNames.append(channels);
     for (int i = 0; i < channelNames.size(); i++) {
-        payload += (channelNames[i].size() + 1) + 2 + 1 + 1;//NUL + volume(short) + pan(byte) + flags(byte)
+        payload += (channelNames[i].toUtf8().size() + 1) + 2 + 1 + 1;//NUL + volume(short) + pan(byte) + flags(byte)
     }
 }
 
@@ -109,7 +109,7 @@ ClientSetChannel::ClientSetChannel(const QString &channelNameToRemove)
     payload = 2;
     channelNames.append(channelNameToRemove);
     for (int i = 0; i < channelNames.size(); i++) {
-        payload += (channelNames[i].size() + 1) + 2 + 1 + 1;//NUL + volume(short) + pan(byte) + flags(byte)
+        payload += (channelNames[i].toUtf8().size() + 1) + 2 + 1 + 1;//NUL + volume(short) + pan(byte) + flags(byte)
     }
 }
 
