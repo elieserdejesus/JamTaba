@@ -678,7 +678,6 @@ QMainWindow #bottomPanel{
 
 
 /* Main panels title */
-/*.QLineEdit#labelSectionTitle, */
 .QWidget#contentPanel > .QLabel{
     color: rgb(190, 190, 190);
     qproperty-alignment: AlignCenter;
@@ -689,6 +688,7 @@ QMainWindow #bottomPanel{
     background-image: url(':/images/lock.png');
     background-repeat: none;
     background-position: right center;
+    color: gray;
 }
 
 /* define os separadores horizontais abaixo dos títulos as seções principais   */
