@@ -214,6 +214,8 @@ private slots:
 
     void updateUserName();
 
+    void doWindowInitialization();
+
 private:
 
     BusyDialog busyDialog;
