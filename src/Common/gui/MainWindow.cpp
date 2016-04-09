@@ -1254,9 +1254,6 @@ void MainWindow::setupWidgets()
     ui.localTracksWidget->installEventFilter(this);
 
     ui.userNameLineEdit->installEventFilter(this);
-    QString userNamePattern("[a-zA-Z0-9_-]{2,}"); //allowing lower and upper case letters, numbers, _ and - symbols, at least 2 characters.
-    QRegularExpressionValidator *validator = new QRegularExpressionValidator(QRegularExpression(userNamePattern), this);
-    ui.userNameLineEdit->setValidator(validator);
 
     QString lastUserName = mainController->getUserName();
     if (!lastUserName.isEmpty()) {
