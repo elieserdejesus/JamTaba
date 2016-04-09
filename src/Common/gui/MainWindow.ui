@@ -114,7 +114,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>681</width>
+                <width>687</width>
                 <height>301</height>
                </rect>
               </property>
@@ -351,6 +351,9 @@
           </sizepolicy>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="spacing">
+           <number>0</number>
+          </property>
           <property name="leftMargin">
            <number>0</number>
           </property>

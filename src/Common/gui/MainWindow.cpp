@@ -110,7 +110,15 @@ void MainWindow::initialize()
     showBusyDialog(tr("Loading rooms list ..."));
 
     // initialize using last track input settings (using QTimer::singleShot to initialize the tracks (and load the plugins) after Jamtaba is opened).
-    QTimer::singleShot(1, this, SLOT(initializeLocalInputChannels()));
+    QTimer::singleShot(1, this, SLOT(doWindowInitialization()));
+}
+
+void MainWindow::doWindowInitialization()
+{
+    //these two tasks need be executed in sequence because setFullStatus will change the local tracks layout,
+    //and these tracks need be created first.
+
+    initializeLocalInputChannels(); //create the local tracks, load plugins, etc.
 
     // set window mode: mini mode or full view mode
     setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
@@ -119,12 +127,14 @@ void MainWindow::initialize()
 // ++++++++++++++++++++++++=
 void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
 {
-    foreach (LocalTrackGroupView *channel, localGroupChannels)
+    foreach (LocalTrackGroupView *channel, localGroupChannels) {
         channel->setPeakMeterMode(showPeakMetersOnly);
-    ui.userNameLineEdit->setVisible(!showPeakMetersOnly);
+    }
 
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
     updateLocalInputChannelsGeometry();
+
+    ui.userNameLineEdit->setVisible(!showPeakMetersOnly);
 }
 
 void MainWindow::updateLocalInputChannelsGeometry()
