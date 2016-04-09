@@ -119,12 +119,14 @@ void MainWindow::initialize()
 // ++++++++++++++++++++++++=
 void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
 {
-    foreach (LocalTrackGroupView *channel, localGroupChannels)
+    foreach (LocalTrackGroupView *channel, localGroupChannels) {
         channel->setPeakMeterMode(showPeakMetersOnly);
-    ui.userNameLineEdit->setVisible(!showPeakMetersOnly);
+    }
 
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
     updateLocalInputChannelsGeometry();
+
+    ui.userNameLineEdit->setVisible(!showPeakMetersOnly);
 }
 
 void MainWindow::updateLocalInputChannelsGeometry()
