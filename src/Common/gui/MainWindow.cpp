@@ -121,7 +121,7 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
 {
     foreach (LocalTrackGroupView *channel, localGroupChannels)
         channel->setPeakMeterMode(showPeakMetersOnly);
-    ui.labelSectionTitle->setVisible(!showPeakMetersOnly);
+    ui.userNameLineEdit->setVisible(!showPeakMetersOnly);
 
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
     updateLocalInputChannelsGeometry();
@@ -593,7 +593,7 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
             QString userName = dialog.getUserName().trimmed();
             if (!userName.isEmpty()) {
                 mainController->setUserName(userName);
-                ui.labelSectionTitle->setText(userName); //show the user name in top of local tracks
+                ui.userNameLineEdit->setText(userName); //show the user name in top of local tracks
 
                 //change the window title to include user name
                 QString version = QApplication::applicationVersion();
@@ -626,9 +626,9 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     hideBusyDialog();
 
     //lock the user name field, user name can't be changed when jamming
-    ui.labelSectionTitle->setReadOnly(true);
-    if (ui.labelSectionTitle->hasFocus())
-        ui.labelSectionTitle->clearFocus();
+    ui.userNameLineEdit->setReadOnly(true);
+    if (ui.userNameLineEdit->hasFocus())
+        ui.userNameLineEdit->clearFocus();
 
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
     ninjamWindow.reset(createNinjamWindow(roomInfo, mainController));
@@ -708,7 +708,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     hideBusyDialog();
 
     //unlock the user name field
-    ui.labelSectionTitle->setReadOnly(false);
+    ui.userNameLineEdit->setReadOnly(false);
 
     // remove the jam room tab (the last tab)
     if (ui.tabWidget->count() > 1) {
@@ -1072,7 +1072,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
     if (event->type() == QEvent::Resize) {
         if (target == ui.localTracksWidget)
             updateLocalInputChannelsGeometry();
-        else if (target == ui.labelSectionTitle)
+        else if (target == ui.userNameLineEdit)
             updateUserNameLabel();
         return true;
     } else {
@@ -1087,13 +1087,13 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 void MainWindow::updateUserNameLabel()
 {
     Qt::Alignment alignment = Qt::AlignCenter;
-    QFontMetrics fontMetrics = ui.labelSectionTitle->fontMetrics();
-    int maxWidth = ui.labelSectionTitle->sizeHint().width();
-    int textWidth = fontMetrics.width(ui.labelSectionTitle->text());
+    QFontMetrics fontMetrics = ui.userNameLineEdit->fontMetrics();
+    int maxWidth = ui.userNameLineEdit->sizeHint().width();
+    int textWidth = fontMetrics.width(ui.userNameLineEdit->text());
     if (textWidth > maxWidth) {
         alignment = Qt::AlignVCenter | Qt::AlignLeft;
     }
-    ui.labelSectionTitle->setAlignment(alignment);
+    ui.userNameLineEdit->setAlignment(alignment);
 }
 
 void MainWindow::resetLocalChannels()
@@ -1243,7 +1243,7 @@ void MainWindow::setupWidgets()
 
     ui.localTracksWidget->installEventFilter(this);
 
-    ui.labelSectionTitle->installEventFilter(this);
+    ui.userNameLineEdit->installEventFilter(this);
 }
 
 void MainWindow::setupSignals()
