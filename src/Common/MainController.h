@@ -215,10 +215,12 @@ public:
     }
 
     void setUserName(const QString &newUserName);
+
     QString getUserName() const;
+
     inline bool userNameWasChoosed() const
     {
-        return userNameChoosed;
+        return !settings.getUserName().isEmpty();
     }
 
     // used to recreate audio encoder with enough channels
@@ -292,8 +294,6 @@ private:
                                   const QString &password = "");
 
     QScopedPointer<Geo::IpToLocationResolver> ipToLocationResolver;
-
-    bool userNameChoosed;
 
     Recorder::JamRecorder jamRecorder;
 

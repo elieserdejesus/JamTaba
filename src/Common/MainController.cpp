@@ -23,7 +23,6 @@ MainController::MainController(const Settings &settings) :
     ipToLocationResolver(new Geo::WebIpToLocationResolver()),
     loginService(new Login::LoginService(this)),
     settings(settings),
-    userNameChoosed(false),
     mainWindow(nullptr),
     jamRecorder(new Recorder::ReaperProjectGenerator()),
     masterGain(1),
@@ -170,7 +169,6 @@ void MainController::setUserName(const QString &newUserName)
 {
     if (!newUserName.isEmpty()) {
         settings.setUserName(newUserName);
-        userNameChoosed = true;
     } else {
         qCritical() << "empty userNAme";
     }
