@@ -625,6 +625,9 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     qCDebug(jtGUI) << "hidding busy dialog...";
     hideBusyDialog();
 
+    //lock the user name field, user name can't be changed when jamming
+    ui.labelSectionTitle->setReadOnly(true);
+
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
     ninjamWindow.reset(createNinjamWindow(roomInfo, mainController));
     QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
@@ -701,6 +704,9 @@ void MainWindow::prepareTransmission()
 void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMessage)
 {
     hideBusyDialog();
+
+    //unlock the user name field
+    ui.labelSectionTitle->setReadOnly(false);
 
     // remove the jam room tab (the last tab)
     if (ui.tabWidget->count() > 1) {
