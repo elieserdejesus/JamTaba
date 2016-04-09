@@ -18,6 +18,10 @@ public:
 protected:
     void focusInEvent(QFocusEvent *e) override;
     void focusOutEvent(QFocusEvent *e) override;
+    void resizeEvent(QResizeEvent *e) override;
+
+private slots:
+    void updateTextAlignment();
 
 private:
     QString lastValidUserName;
