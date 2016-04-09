@@ -212,6 +212,8 @@ private slots:
 
     void setLanguage(QAction * languageMenuAction);
 
+    void updateUserName();
+
 private:
 
     BusyDialog busyDialog;
