@@ -364,7 +364,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QLineEdit" name="labelSectionTitle">
+           <widget class="QLineEdit" name="userNameLineEdit">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>1</horstretch>
