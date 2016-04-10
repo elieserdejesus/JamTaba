@@ -4,9 +4,11 @@
 UserNameLineEdit::UserNameLineEdit(QWidget *parent)
     :QLineEdit(parent)
 {
-    static QString userNamePattern("[a-zA-Z0-9 _-]{2,}"); //allowing lower and upper case letters, numbers, blank space, _ and - symbols, at least 2 characters.
+    static QString userNamePattern("[a-zA-Z0-9_-]{1,16}"); //allowing lower and upper case letters, numbers, _ and - symbols, at least 1 character and max 16 characters.
     QRegularExpressionValidator *validator = new QRegularExpressionValidator(QRegularExpression(userNamePattern), this);
     setValidator(validator);
+
+    setMaxLength(16); //this maxLength need be changed if we decide support non ASCII user names
 
     connect(this, SIGNAL(editingFinished()), this, SLOT(updateTextAlignment()));
 }

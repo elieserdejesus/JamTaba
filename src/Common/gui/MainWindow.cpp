@@ -596,7 +596,7 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
 
     // show the user name dialog
     if (!mainController->userNameWasChoosed()) {
-        UserNameDialog dialog(ui.centralWidget, getGuessedUserName());
+        UserNameDialog dialog(ui.centralWidget, MainController::getSuggestedUserName());
         centerDialog(&dialog);
         if (dialog.exec() == QDialog::Accepted) {
             QString userName = dialog.getUserName().trimmed();
@@ -621,17 +621,6 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
         showBusyDialog(tr("Connecting in %1 ... ").arg(roomInfo.getName()));
         mainController->enterInRoom(roomInfo, getChannelsNames(), password);
     }
-}
-
-QString MainWindow::getGuessedUserName() const
-{
-    //guess user name using homePath
-    QString homePath = QDir::homePath();
-    int separatorIndex = homePath.lastIndexOf(QRegularExpression("[/\\\\]")); //QDir::separator() as parameter for 'lastIndexOf' not work in my windows 10
-    if (separatorIndex >= 0) {
-        return homePath.right(homePath.size() - (separatorIndex+1));
-    }
-    return homePath;
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

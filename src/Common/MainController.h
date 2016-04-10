@@ -239,6 +239,8 @@ public:
         return &usersDataCache;
     }
 
+    static QString getSuggestedUserName();
+
 public slots:
     virtual void setSampleRate(int newSampleRate);
 
