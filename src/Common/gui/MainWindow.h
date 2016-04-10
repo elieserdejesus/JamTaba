@@ -254,8 +254,6 @@ private:
 
     void updateUserNameLabel();
 
-    QString getGuessedUserName() const;
-
     bool fullViewMode;// full view or mini view mode? This is not the FullScreen mode, full screen is available only in Standalone.
 
     void showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly);

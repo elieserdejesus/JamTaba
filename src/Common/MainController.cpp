@@ -716,3 +716,21 @@ void MainController::setTranslationLanguage(const QString &languageCode)
 {
     settings.setTranslation(languageCode);
 }
+
+QString MainController::getSuggestedUserName()
+{
+    //try get user name in home path. If is empty try the environment variables.
+
+    QString userName = QDir::home().dirName();
+    if (!userName.isEmpty())
+        return userName;
+
+    userName = qgetenv("USER"); // for MAc or Linux
+    if (userName.isEmpty())
+        userName = qgetenv("USERNAME"); // for windows
+
+    if (!userName.isEmpty())
+        return userName;
+
+    return ""; //returning empty name as suggestion
+}
