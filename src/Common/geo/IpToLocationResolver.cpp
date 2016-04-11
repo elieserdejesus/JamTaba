@@ -35,8 +35,9 @@ IpToLocationResolver::~IpToLocationResolver()
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++
-Location NullIpToLocationResolver::resolve(const QString &ip)
+Location NullIpToLocationResolver::resolve(const QString &ip, const QString &languageCode)
 {
     Q_UNUSED(ip)
+    Q_UNUSED(languageCode)
     return Geo::Location();
 }
