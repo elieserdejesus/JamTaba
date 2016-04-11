@@ -195,6 +195,7 @@ public:
     }
 
     void setTranslationLanguage(const QString &languageCode);
+    inline QString getTranslationLanguage() const { return settings.getTranslation(); }
 
     void setBuiltInMetronome(const QString &metronomeAlias);
     void setCustomMetronome(const QString &primaryBeatFile, const QString &secondaryBeatFile);

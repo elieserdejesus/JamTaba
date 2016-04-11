@@ -49,14 +49,14 @@ private:
 class IpToLocationResolver : public QObject
 {
 public:
-    virtual Location resolve(const QString &ip) = 0;
+    virtual Location resolve(const QString &ip, const QString &languageCode) = 0;
     virtual ~IpToLocationResolver();
 };
 
 class NullIpToLocationResolver : public IpToLocationResolver
 {
 public:
-    Location resolve(const QString &ip) override;
+    Location resolve(const QString &ip, const QString &languageCode) override;
 };
 }
 

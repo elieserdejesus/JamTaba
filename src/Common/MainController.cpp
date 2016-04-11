@@ -190,7 +190,7 @@ QStringList MainController::getBotNames() const
 
 Geo::Location MainController::getGeoLocation(const QString &ip)
 {
-    return ipToLocationResolver->resolve(ip);
+    return ipToLocationResolver->resolve(ip, getTranslationLanguage());
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++

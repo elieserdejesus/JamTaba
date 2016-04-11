@@ -11,17 +11,20 @@
 #include <QDir>
 #include <QTextStream>
 #include <QTimer>
-#include "../log/Logging.h"
+#include "log/Logging.h"
 
 using namespace Geo;
 
+const QString WebIpToLocationResolver::COUNTRY_CODES_FILE = "country_codes_cache.bin";
+const QString WebIpToLocationResolver::COUNTRY_NAMES_FILE_PREFIX = "country_names_cache"; //the language code will be concatenated
+
 WebIpToLocationResolver::WebIpToLocationResolver()
-    :CACHE_FILE_NAME("cache.bin"){
+{
     QObject::connect(&httpClient, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
 
     //load cache content from file
     QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
-    QFile cacheFile(cacheDir.absoluteFilePath(CACHE_FILE_NAME));
+    QFile cacheFile(cacheDir.absoluteFilePath(COUNTRY_CODES_FILE));
     if(cacheFile.open(QFile::ReadOnly)){
         QTextStream inputStream(&cacheFile);
         while(!inputStream.atEnd()){
@@ -44,7 +47,7 @@ WebIpToLocationResolver::~WebIpToLocationResolver(){
     qCDebug(jtIpToLocation) << "Saving cache file";
     //save cache content into file
     QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
-    QFile cacheFile(cacheDir.absoluteFilePath(CACHE_FILE_NAME));
+    QFile cacheFile(cacheDir.absoluteFilePath(COUNTRY_CODES_FILE));
     if(cacheFile.open(QFile::WriteOnly)){
         QTextStream stream(&cacheFile);
         foreach (const QString& ip, locationCache.keys()) {
@@ -101,7 +104,7 @@ void WebIpToLocationResolver::replyError(QNetworkReply::NetworkError e){
     qCCritical(jtIpToLocation) << "Reply error! " << e;
 }
 
-Geo::Location WebIpToLocationResolver::resolve(const QString &ip){
+Geo::Location WebIpToLocationResolver::resolve(const QString &ip, const QString &languageCode){
     if(locationCache.contains(ip)){
         qCDebug(jtIpToLocation) << "cache hit for " << ip;
         return locationCache[ip];

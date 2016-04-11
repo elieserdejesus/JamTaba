@@ -14,12 +14,15 @@ class WebIpToLocationResolver : public IpToLocationResolver
 public:
     WebIpToLocationResolver();
     ~WebIpToLocationResolver();
-    Geo::Location resolve(const QString &ip) override;
+    Geo::Location resolve(const QString &ip, const QString &languageCode) override;
 private:
     QMap<QString, Geo::Location> locationCache;
     QNetworkAccessManager httpClient;
-    const QString CACHE_FILE_NAME;
+
     void requestDataFromWebServer(const QString &ip);
+
+    static const QString COUNTRY_CODES_FILE;
+    static const QString COUNTRY_NAMES_FILE_PREFIX;
 private slots:
     void replyFinished(QNetworkReply *);
     void replyError(QNetworkReply::NetworkError);
