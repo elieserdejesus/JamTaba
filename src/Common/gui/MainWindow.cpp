@@ -630,9 +630,7 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     hideBusyDialog();
 
     //lock the user name field, user name can't be changed when jamming
-    ui.userNameLineEdit->setReadOnly(true);
-    if (ui.userNameLineEdit->hasFocus())
-        ui.userNameLineEdit->clearFocus();
+    setUserNameReadOnlyStatus(true);
 
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
     ninjamWindow.reset(createNinjamWindow(roomInfo, mainController));
@@ -681,6 +679,17 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
                      SLOT(updateCurrentIntervalBeat(int)));
 }
 
+void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
+{
+    ui.userNameLineEdit->setReadOnly(readOnly);
+    QString toolTip = readOnly ? tr("Your name cannot be edited while jamming!") : "";
+    ui.userNameLineEdit->setToolTip(toolTip);
+    if (readOnly) {
+        if (ui.userNameLineEdit->hasFocus())
+            ui.userNameLineEdit->clearFocus();
+    }
+}
+
 void MainWindow::updateChatTabTitle(const QString &roomName)
 {
     int chatTabIndex = 0; //assuming chat is the first tab
@@ -712,7 +721,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     hideBusyDialog();
 
     //unlock the user name field
-    ui.userNameLineEdit->setReadOnly(false);
+    setUserNameReadOnlyStatus(false);
 
     // remove the jam room tab (the last tab)
     if (ui.tabWidget->count() > 1) {
