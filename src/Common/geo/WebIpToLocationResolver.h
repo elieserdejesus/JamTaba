@@ -21,7 +21,7 @@ private:
     QMap<QString, QString> countryNamesCache;// country code => translated country name
     QNetworkAccessManager httpClient;
 
-    void requestDataFromWebServer(const QString &ip);
+    void requestDataFromWebService(const QString &ip);
 
     //loading
     void loadCountryCodesFromFile();

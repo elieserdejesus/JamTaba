@@ -76,6 +76,7 @@ void MainWindow::setLanguage(QAction *languageMenuAction)
     updatePublicRoomsListLayout();
     if (mainController->isPlayingInNinjamRoom()) {
         ninjamWindow->getChatPanel()->setPreferredTranslationLanguage(locale);
+        ninjamWindow->updateGeoLocations();
     }
 }
 
