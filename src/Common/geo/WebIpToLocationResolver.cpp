@@ -91,7 +91,7 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply){
 }
 
 // At moment the current api is geoip.nekudo.com. Another option is https://freegeoip.net/json/
-void WebIpToLocationResolver::requestDataFromWebServer(const QString &ip){
+void WebIpToLocationResolver::requestDataFromWebService(const QString &ip){
     qCDebug(jtIpToLocation) << "requesting ip " << ip ;
 
     QNetworkRequest request;
@@ -110,11 +110,21 @@ void WebIpToLocationResolver::replyError(QNetworkReply::NetworkError e){
     qCCritical(jtIpToLocation) << "Reply error! " << e;
 }
 
+QString WebIpToLocationResolver::sanitizeLanguageCode(const QString &languageCode)
+{
+    if (languageCode.size() > 2)
+        return languageCode.toLower().left(2);
+
+    return languageCode;
+}
+
 Geo::Location WebIpToLocationResolver::resolve(const QString &ip, const QString &languageCode){
 
     //check for language changes
-    if (languageCode != currentLanguage) {
-        currentLanguage = languageCode;
+    QString code = sanitizeLanguageCode(languageCode);
+    if (code != currentLanguage) {
+        saveCountryNamesToFile(); //save cached country names before change the language
+        currentLanguage = code;
         loadCountryNamesFromFile(currentLanguage); //update the country names QMap
     }
 
@@ -128,7 +138,7 @@ Geo::Location WebIpToLocationResolver::resolve(const QString &ip, const QString 
     }
 
     if (!ip.isEmpty()) {
-        requestDataFromWebServer(ip);
+        requestDataFromWebService(ip);
     }
     return Location();//empty location, the next request for same ip probabily return from cache
 }
@@ -148,6 +158,7 @@ void WebIpToLocationResolver::loadCountryNamesFromFile(const QString &languageCo
     {
         qCritical() << "Can't open the file " << fileName;
     }
+    qDebug() << countryNamesCache.size() << " items in countryNamesCache Map after load from " << languageCode;
 }
 
 void WebIpToLocationResolver::loadCountryCodesFromFile()
@@ -160,10 +171,10 @@ void WebIpToLocationResolver::loadCountryCodesFromFile()
 
 bool WebIpToLocationResolver::populateQMapFromFile(const QString &fileName, QMap<QString, QString> &map)
 {
+    map.clear();
     QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
     QFile cacheFile(cacheDir.absoluteFilePath(fileName));
     if(cacheFile.open(QFile::ReadOnly)){
-        map.clear();
         QDataStream fileStream(&cacheFile);
         fileStream >> map;
         return true;

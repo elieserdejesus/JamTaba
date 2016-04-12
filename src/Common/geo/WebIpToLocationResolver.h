@@ -34,6 +34,7 @@ private:
     bool saveMapToFile(const QString &fileName, const QMap<QString, QString> &map);
 
     static QString buildFileNameFromLanguage(const QString &languageCode);
+    static QString sanitizeLanguageCode(const QString &languageCode);
 
     QString currentLanguage;
 
