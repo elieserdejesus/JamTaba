@@ -82,6 +82,8 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply){
         countryCodesCache.insert(ip, countryCode);
         countryNamesCache.insert(countryCode, countryName);
         qCDebug(jtIpToLocation) << "Data received IP:" << ip << " Lang:" << language << " country code:" << countryCode << " country name:" << countryName;
+
+        emit ipResolved(ip);
     }
     else{
         qCDebug(jtIpToLocation) << "error requesting " << ip << ". Returning an empty location!";

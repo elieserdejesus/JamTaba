@@ -47,6 +47,9 @@ private:
     void setupVerticalLayout();
 
     QString getRgbaColorString(const QColor &color, int alpha);
+
+private slots:
+    void updateGeoLocation(const QString &resolvedIp);
 };
 
 #endif // NINJAMTRACKGROUPVIEW_H

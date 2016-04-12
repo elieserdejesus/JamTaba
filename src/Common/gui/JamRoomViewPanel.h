@@ -2,11 +2,16 @@
 #define JAMROOMVIEWPANEL_H
 
 #include <QFrame>
+#include <QLabel>
 #include "ninjam/Server.h"
 #include "loginserver/LoginService.h"
 
 namespace Ui {
 class RoomViewPanel;
+}
+
+namespace Geo {
+class Location;
 }
 
 namespace Login {
@@ -47,7 +52,7 @@ protected:
 private slots:
     void on_buttonListen_clicked();
     void on_buttonEnter_clicked();
-
+    void updateUserLocation(const QString &userIP);
 private:
     Ui::RoomViewPanel *ui;
     Controller::MainController *mainController;

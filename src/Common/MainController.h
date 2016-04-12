@@ -240,7 +240,10 @@ public:
         return &usersDataCache;
     }
 
-    static QString getSuggestedUserName();
+     static QString getSuggestedUserName();
+
+signals:
+    void ipResolved(const QString &ip);
 
 public slots:
     virtual void setSampleRate(int newSampleRate);

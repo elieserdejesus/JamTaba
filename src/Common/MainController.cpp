@@ -28,6 +28,7 @@ MainController::MainController(const Settings &settings) :
     masterGain(1),
     lastInputTrackID(0)
 {
+    connect(ipToLocationResolver.data(), SIGNAL(ipResolved(const QString &)), this, SIGNAL(ipResolved(const QString &)));
 }
 
 void MainController::setSampleRate(int newSampleRate)
