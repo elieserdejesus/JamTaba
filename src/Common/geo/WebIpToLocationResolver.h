@@ -28,6 +28,10 @@ private:
     void loadCountryNamesFromFile(const QString &languageCode);
     bool populateQMapFromFile(const QString &fileName, QMap<QString, QString> &map);
 
+    bool needLoadTheOldCache();
+    void loadOldCacheContent(); //these functions are used to handle the old 'cache.bin' content used until the version 2.0.13. This will be deleted in future.
+    void deleteOldCacheFile();
+
     //saving
     void saveCountryCodesToFile();
     void saveCountryNamesToFile();
