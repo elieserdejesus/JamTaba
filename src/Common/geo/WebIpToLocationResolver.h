@@ -6,6 +6,7 @@
 #include <QLoggingCategory>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QFile>
 
 namespace Geo {
 class WebIpToLocationResolver : public IpToLocationResolver
@@ -16,13 +17,29 @@ public:
     ~WebIpToLocationResolver();
     Geo::Location resolve(const QString &ip, const QString &languageCode) override;
 private:
-    QMap<QString, Geo::Location> locationCache;
+    QMap<QString, QString> countryCodesCache; // IP -> country code (2 upper case letters)
+    QMap<QString, QString> countryNamesCache;// country code => translated country name
     QNetworkAccessManager httpClient;
 
     void requestDataFromWebServer(const QString &ip);
 
+    //loading
+    void loadCountryCodesFromFile();
+    void loadCountryNamesFromFile(const QString &languageCode);
+    bool populateQMapFromFile(const QString &fileName, QMap<QString, QString> &map);
+
+    //saving
+    void saveCountryCodesToFile();
+    void saveCountryNamesToFile();
+    bool saveMapToFile(const QString &fileName, const QMap<QString, QString> &map);
+
+    static QString buildFileNameFromLanguage(const QString &languageCode);
+
+    QString currentLanguage;
+
     static const QString COUNTRY_CODES_FILE;
     static const QString COUNTRY_NAMES_FILE_PREFIX;
+
 private slots:
     void replyFinished(QNetworkReply *);
     void replyError(QNetworkReply::NetworkError);
