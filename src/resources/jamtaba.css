@@ -683,11 +683,16 @@ QMainWindow #bottomPanel{
     qproperty-alignment: AlignCenter;
 }
 
-#userNameLineEdit:read-only
+#userNameLineEdit
 {
-    background-image: url(':/images/lock.png');
+    background-image: url(':/images/pencil.png');
     background-repeat: none;
     background-position: right center;
+}
+
+#userNameLineEdit:read-only
+{
+    background-image: url(':/images/pencil-read-only.png');
     color: gray;
 }
 
