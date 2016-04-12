@@ -25,8 +25,14 @@ WebIpToLocationResolver::WebIpToLocationResolver(const QDir &cacheDir)
 {
     QObject::connect(&httpClient, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
 
-    loadCountryCodesFromFile();
-    loadCountryNamesFromFile(currentLanguage); //loading the english country names by default
+    if (!needLoadTheOldCache()) {
+        loadCountryCodesFromFile();
+        loadCountryNamesFromFile(currentLanguage); //loading the english country names by default
+    }
+    else{
+        loadOldCacheContent();
+        //deleteOldCacheFile(); //just commenting to avoid erase files when testing
+    }
 }
 
 WebIpToLocationResolver::~WebIpToLocationResolver()
@@ -183,4 +189,40 @@ bool WebIpToLocationResolver::populateQMapFromFile(const QString &fileName, QMap
         return true;
     }
     return false;
+}
+
+void WebIpToLocationResolver::loadOldCacheContent()
+{
+    //load cache content from the old 'cache.bin' file. This code will be delete in future versions
+    QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+    QFile cacheFile(cacheDir.absoluteFilePath("cache.bin"));
+    if(cacheFile.open(QFile::ReadOnly)){
+        QTextStream inputStream(&cacheFile);
+        while(!inputStream.atEnd()){
+            QString line = inputStream.readLine();
+            if(!line.isNull() && !line.isEmpty()){
+                QStringList parts = line.split(";");
+                if(!parts.isEmpty()){
+                    QString ip = parts.at(0);
+                    QString countryName = (parts.size() >= 1) ? parts.at(1) : "";
+                    QString countryCode = (parts.size() >= 2) ? parts.at(2) : "";
+                    countryCodesCache.insert(ip, countryCode);
+                    countryNamesCache.insert(countryCode, countryName);
+                }
+            }
+        }
+    }
+}
+
+void WebIpToLocationResolver::deleteOldCacheFile()
+{
+    QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+    QFile cacheFile(cacheDir.absoluteFilePath("cache.bin"));
+    cacheFile.remove();
+}
+
+bool WebIpToLocationResolver::needLoadTheOldCache()
+{
+    QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+    return QFile(cacheDir.absoluteFilePath("cache.bin")).exists();
 }

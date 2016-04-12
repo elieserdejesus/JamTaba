@@ -108,8 +108,9 @@ void CacheEntry::setGain(float gain)
     this->gain = gain;
 }
 
-UsersDataCache::UsersDataCache() :
-    CACHE_FILE_NAME("tracks_cache.bin")
+UsersDataCache::UsersDataCache(const QDir &cacheDir)
+    :CACHE_FILE_NAME("tracks_cache.bin"),
+     cacheDir(cacheDir)
 {
     loadCacheEntriesFromFile();
 }
@@ -146,7 +147,6 @@ QString UsersDataCache::getUserUniqueKey(const QString &userIp, const QString &u
 void UsersDataCache::loadCacheEntriesFromFile()
 {
     // load tracks cache content from file
-    QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
     QFile cacheFile(cacheDir.absoluteFilePath(CACHE_FILE_NAME));
     if (cacheFile.open(QFile::ReadOnly)) {
         QDataStream stream(&cacheFile);
@@ -168,7 +168,6 @@ void UsersDataCache::writeCacheEntriesToFile()
 {
     qCDebug(jtCache) << "Saving cache file";
     // save cache content into file
-    QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
     QFile cacheFile(cacheDir.absoluteFilePath(CACHE_FILE_NAME));
     if (cacheFile.open(QFile::WriteOnly)) {
         qCDebug(jtCache) << "Tracks cache file opened to write.";

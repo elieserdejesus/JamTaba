@@ -26,7 +26,8 @@ MainController::MainController(const Settings &settings) :
     mainWindow(nullptr),
     jamRecorder(new Recorder::ReaperProjectGenerator()),
     masterGain(1),
-    lastInputTrackID(0)
+    lastInputTrackID(0),
+    usersDataCache(Configurator::getInstance()->getCacheDir())
 {
 
     QDir cacheDir = Configurator::getInstance()->getCacheDir();
