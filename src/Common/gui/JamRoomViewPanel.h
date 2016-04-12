@@ -52,7 +52,7 @@ protected:
 private slots:
     void on_buttonListen_clicked();
     void on_buttonEnter_clicked();
-
+    void updateUserLocation(const QString &userIP);
 private:
     Ui::RoomViewPanel *ui;
     Controller::MainController *mainController;

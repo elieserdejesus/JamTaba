@@ -4,14 +4,24 @@
 
 PlayerLabel::PlayerLabel(QWidget* parent, const Login::UserInfo &userInfo, const Geo::Location &location)
     : QLabel(parent),
-      userIP(userInfo.getIp())
+      userInfo(userInfo)
 {
     setTextFormat(Qt::RichText);
+    updateText(location);
+}
+
+void PlayerLabel::updateText(const Geo::Location &location)
+{
     QString imgHTML = getImgTag(location);
     QString countryNameHTML = getCountryNameTag(location);
     QString userName = userInfo.getName();
 
     setText(imgHTML + userName + countryNameHTML);
+}
+
+void PlayerLabel::setLocation(const Geo::Location &newLocation)
+{
+    updateText(newLocation);
 }
 
 QString PlayerLabel::getCountryNameTag(const Geo::Location &location)

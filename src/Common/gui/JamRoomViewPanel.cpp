@@ -17,6 +17,20 @@ JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo,
     ui->setupUi(this);
     initialize(roomInfo);
     ui->wavePeakPanel->setEnabled(false);// is enable when user click in listen button
+
+    connect(mainController, SIGNAL(ipResolved(const QString &)), this, SLOT(updateUserLocation(const QString &)));
+}
+
+void JamRoomViewPanel::updateUserLocation(const QString &userIP)
+{
+    QList<PlayerLabel *> playerLabels = ui->usersPanel->findChildren<PlayerLabel *>();
+    foreach (PlayerLabel *label, playerLabels) {
+        if (label->getUserIP() == userIP) {
+            Geo::Location userLocation = mainController->getGeoLocation(userIP);
+            label->setLocation(userLocation);
+            break;
+        }
+    }
 }
 
 void JamRoomViewPanel::changeEvent(QEvent *e)
