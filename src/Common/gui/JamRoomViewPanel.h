@@ -2,11 +2,16 @@
 #define JAMROOMVIEWPANEL_H
 
 #include <QFrame>
+#include <QLabel>
 #include "ninjam/Server.h"
 #include "loginserver/LoginService.h"
 
 namespace Ui {
 class RoomViewPanel;
+}
+
+namespace Geo {
+class Location;
 }
 
 namespace Login {

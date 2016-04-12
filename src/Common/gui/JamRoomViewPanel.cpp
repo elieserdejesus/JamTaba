@@ -4,7 +4,7 @@
 #include "MainController.h"
 #include "ninjam/User.h"
 #include "ninjam/UserChannel.h"
-
+#include "PlayerLabel.h"
 #include <QDebug>
 
 JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo,
@@ -69,23 +69,8 @@ void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
     qSort(userInfos.begin(), userInfos.end(), userInfoLessThan);
     foreach (const Login::UserInfo &user, userInfos) {
         if (!userIsBot(user)) {
-            QLabel *label = new QLabel(ui->usersPanel);
-            label->setTextFormat(Qt::RichText);
             Geo::Location userLocation = mainController->getGeoLocation(user.getIp());
-            QString userString = user.getName();
-            QString imageString = "";
-            if (!userLocation.isUnknown()) {
-                userString += " <i>(" + userLocation.getCountryName() + ")</i>";
-                QString countryCode = userLocation.getCountryCode().toLower();
-                imageString = "<img src=:/flags/flags/" + countryCode +".png> ";
-                label->setToolTip("");
-            } else {
-                imageString = "<img src=:/images/warning.png> ";
-                QString toolTip = tr("%1  location is not available at moment!").arg(user.getName());
-                label->setToolTip(toolTip);
-            }
-            label->setText(imageString + userString);
-
+            QLabel *label = new PlayerLabel(ui->usersPanel, user, userLocation);
             ui->usersPanel->layout()->addWidget(label);
             ui->usersPanel->layout()->setAlignment(Qt::AlignTop);
         }
