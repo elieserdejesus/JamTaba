@@ -238,11 +238,13 @@ public:
         return &usersDataCache;
     }
 
+signals:
+    void ipResolved(const QString &ip);
+
 public slots:
     virtual void setSampleRate(int newSampleRate);
 
 protected:
-
     static QString LOG_CONFIG_FILE;
 
     Login::LoginService loginService;
