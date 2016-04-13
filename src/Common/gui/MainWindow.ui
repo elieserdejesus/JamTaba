@@ -114,7 +114,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>751</width>
+                <width>687</width>
                 <height>301</height>
                </rect>
               </property>
@@ -351,6 +351,9 @@
           </sizepolicy>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="spacing">
+           <number>0</number>
+          </property>
           <property name="leftMargin">
            <number>0</number>
           </property>
@@ -364,7 +367,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QLabel" name="labelSectionTitle">
+           <widget class="UserNameLineEdit" name="userNameLineEdit">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>1</horstretch>
@@ -372,7 +375,10 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Your controls</string>
+             <string notr="true"/>
+            </property>
+            <property name="placeholderText">
+             <string>type your name</string>
             </property>
            </widget>
           </item>
@@ -617,6 +623,11 @@
    <extends>QTabWidget</extends>
    <header>CustomTabWidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>UserNameLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>UserNameLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources>

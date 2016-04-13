@@ -380,7 +380,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-pa
 
 /* common widgets */
 
-.QLineEdit{
+QLineEdit{
     border-radius: 3px;
     padding: 2px;
     background: #C5C5C5;
@@ -389,7 +389,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-pa
 }
 
 
-.QLineEdit[enabled="false"]{
+QLineEdit[enabled="false"]{
     border-radius: 2px;
     padding: 2px;
     background: rgb(0, 0, 0, 40);
@@ -677,12 +677,23 @@ QMainWindow #bottomPanel{
 }
 
 
-/* títulos dos painéis principais */
-.QWidget#leftPanel .QLabel#labelSectionTitle, .QWidget#contentPanel > .QLabel{
-/*font-size: 11px;*/
+/* Main panels title */
+.QWidget#contentPanel > .QLabel{
+    color: rgb(190, 190, 190);
+    qproperty-alignment: AlignCenter;
+}
 
-color: rgb(190, 190, 190);
-qproperty-alignment: AlignCenter;
+#userNameLineEdit
+{
+    background-image: url(':/images/pencil.png');
+    background-repeat: none;
+    background-position: right center;
+}
+
+#userNameLineEdit:read-only
+{
+    background-image: url(':/images/pencil-read-only.png');
+    color: gray;
 }
 
 /* define os separadores horizontais abaixo dos títulos as seções principais   */
