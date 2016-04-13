@@ -48,6 +48,8 @@
         <file>narrow.png</file>
         <file>wide.png</file>
         <file>windows.png</file>
+        <file>pencil.png</file>
+        <file>pencil-read-only.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

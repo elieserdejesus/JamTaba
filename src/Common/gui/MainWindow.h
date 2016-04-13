@@ -212,6 +212,10 @@ private slots:
 
     void setLanguage(QAction * languageMenuAction);
 
+    void updateUserName();
+
+    void doWindowInitialization();
+
 private:
 
     BusyDialog busyDialog;
@@ -248,6 +252,8 @@ private:
     void initializeLanguageMenu();
     void initializeTranslator();
 
+    void updateUserNameLabel();
+
     bool fullViewMode;// full view or mini view mode? This is not the FullScreen mode, full screen is available only in Standalone.
 
     void showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly);
@@ -268,6 +274,8 @@ private:
     void updateChatTabTitle(const QString &roomName);
 
     void loadTranslationFile(const QString &locale);
+
+    void setUserNameReadOnlyStatus(bool readOnly);
 
     // PerformanceMonitor performanceMonitor;//cpu and memmory usage
     // qint64 lastPerformanceMonitorUpdate;
