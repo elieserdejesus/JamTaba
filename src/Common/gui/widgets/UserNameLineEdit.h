@@ -19,12 +19,15 @@ protected:
     void focusInEvent(QFocusEvent *e) override;
     void focusOutEvent(QFocusEvent *e) override;
     void resizeEvent(QResizeEvent *e) override;
+    void keyPressEvent(QKeyEvent *e) override;
+    void keyReleaseEvent(QKeyEvent *e) override;
 
 private slots:
     void updateTextAlignment();
 
 private:
     QString lastValidUserName;
+    QKeyEvent *getModifiedEvent(QKeyEvent *e);
 
 };
 
