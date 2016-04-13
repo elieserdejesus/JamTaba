@@ -682,7 +682,7 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
 void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
 {
     ui.userNameLineEdit->setReadOnly(readOnly);
-    QString toolTip = readOnly ? tr("Your name cannot be edited while jamming!") : "";
+    QString toolTip = readOnly ? tr("Your name cannot be edited while jamming!") : tr("Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.");
     ui.userNameLineEdit->setToolTip(toolTip);
     if (readOnly) {
         if (ui.userNameLineEdit->hasFocus())
