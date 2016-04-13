@@ -862,9 +862,9 @@ JamRoomViewPanel #labelName{
     font-weight: bold;
 }
 
-JamRoomViewPanel  #labelRoomStatus, JamRoomViewPanel  #labelRoomType{
+JamRoomViewPanel #labelRoomStatus, JamRoomViewPanel  #labelRoomType{
     font-size: 9px;
-    color: rgb(90, 90, 90);
+    color: rgb(140, 140, 140);
 }
 JamRoomViewPanel  #labelRoomType{
     margin-right: 3px;
