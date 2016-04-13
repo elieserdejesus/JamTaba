@@ -547,7 +547,10 @@ void NinjamRoomWindow::showServerLicence()
     QMessageBox *msgBox = new QMessageBox(parentWidget());
 
     msgBox->setTextFormat(Qt::RichText);
-    msgBox->setText(licence.replace(brPattern, "<br>").replace(ccLink, anchorTag));
+    msgBox->setText(licence
+              .replace("<", "&lt;")
+              .replace(brPattern, "<br>")
+              .replace(ccLink, anchorTag));
     msgBox->setWindowTitle(ui->labelRoomName->text());
     msgBox->setAttribute(Qt::WA_DeleteOnClose);
 
