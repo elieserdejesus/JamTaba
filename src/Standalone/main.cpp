@@ -16,7 +16,7 @@ int main(int argc, char* args[] ){
 
     //start the configurator
     Configurator* configurator = Configurator::getInstance();
-    if(!configurator->setUp(standalone)) qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
+    if(!configurator->setUp(STANDALONE)) qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !" ;
 
     Persistence::Settings settings;
     settings.load();

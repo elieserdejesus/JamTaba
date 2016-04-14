@@ -20,7 +20,7 @@ MainController::MainController(const Settings &settings) :
     currentStreamingRoomID(-1000),
     mutex(QMutex::Recursive),
     started(false),
-    ipToLocationResolver(new Geo::WebIpToLocationResolver()),
+    ipToLocationResolver(nullptr),
     loginService(new Login::LoginService(this)),
     settings(settings),
     mainWindow(nullptr),
@@ -28,6 +28,10 @@ MainController::MainController(const Settings &settings) :
     masterGain(1),
     lastInputTrackID(0)
 {
+
+    QDir cacheDir = Configurator::getInstance()->getCacheDir();
+    ipToLocationResolver.reset( new Geo::WebIpToLocationResolver(cacheDir));
+
     connect(ipToLocationResolver.data(), SIGNAL(ipResolved(const QString &)), this, SIGNAL(ipResolved(const QString &)));
 }
 

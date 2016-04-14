@@ -19,8 +19,9 @@ using namespace Geo;
 const QString WebIpToLocationResolver::COUNTRY_CODES_FILE = "country_codes_cache.bin";
 const QString WebIpToLocationResolver::COUNTRY_NAMES_FILE_PREFIX = "country_names_cache"; //the language code will be concatenated
 
-WebIpToLocationResolver::WebIpToLocationResolver()
-    :currentLanguage("en") //using english as default language
+WebIpToLocationResolver::WebIpToLocationResolver(const QDir &cacheDir)
+    :currentLanguage("en"), //using english as default language
+     cacheDir(cacheDir)
 {
     QObject::connect(&httpClient, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
 
@@ -56,7 +57,6 @@ bool WebIpToLocationResolver::saveMapToFile(const QString &fileName, const QMap<
     if (map.isEmpty())
         return true;
 
-    QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
     QFile cacheFile(cacheDir.absoluteFilePath(fileName));
     if(cacheFile.open(QFile::WriteOnly)){
         QDataStream stream(&cacheFile);
@@ -114,6 +114,9 @@ void WebIpToLocationResolver::replyError(QNetworkReply::NetworkError e){
 
 QString WebIpToLocationResolver::sanitizeLanguageCode(const QString &languageCode)
 {
+    if (languageCode.isEmpty())
+        return "en";
+
     if (languageCode.size() > 2)
         return languageCode.toLower().left(2);
 
@@ -160,7 +163,6 @@ void WebIpToLocationResolver::loadCountryNamesFromFile(const QString &languageCo
     {
         qCritical() << "Can't open the file " << fileName;
     }
-    qDebug() << countryNamesCache.size() << " items in countryNamesCache Map after load from " << languageCode;
 }
 
 void WebIpToLocationResolver::loadCountryCodesFromFile()
@@ -174,7 +176,6 @@ void WebIpToLocationResolver::loadCountryCodesFromFile()
 bool WebIpToLocationResolver::populateQMapFromFile(const QString &fileName, QMap<QString, QString> &map)
 {
     map.clear();
-    QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
     QFile cacheFile(cacheDir.absoluteFilePath(fileName));
     if(cacheFile.open(QFile::ReadOnly)){
         QDataStream fileStream(&cacheFile);

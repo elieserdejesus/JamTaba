@@ -16,7 +16,7 @@ public:
 
     virtual ~FxPanel();
 
-    void addPlugin(Audio::Plugin *plugin);
+    void addPlugin(Audio::Plugin *PLUGIN);
 
     void removePlugins();
 

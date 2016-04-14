@@ -581,21 +581,15 @@ void Settings::setBufferSize(int bufferSize)
     audioSettings.bufferSize = bufferSize;
 }
 
-// io ops ...
-bool Settings::readFile(APPTYPE type, const QList<SettingsObject *> &sections)
+bool Settings::readFile(const QList<SettingsObject *> &sections)
 {
-    if (type == plugin)
-        fileDir = Configurator::getInstance()->getPluginDirPath();
-    else
-        fileDir = Configurator::getInstance()->getHomeDirPath();
+    QDir configFileDir = Configurator::getInstance()->getLogConfigFileDir();
+    QString absolutePath = configFileDir.absoluteFilePath(fileName);
+    QFile configFile(absolutePath);
 
-    QDir dir(fileDir);// homepath
-
-    QString absolutePath = dir.absoluteFilePath(fileName);
-    QFile f(absolutePath);
-    if (f.open(QIODevice::ReadOnly)) {
-        qInfo(jtConfigurator) << "Reading settings from " << f.fileName();
-        QJsonDocument doc = QJsonDocument::fromJson(f.readAll());
+    if (configFile.open(QIODevice::ReadOnly)) {
+        qInfo(jtConfigurator) << "Reading settings from " << configFile.fileName();
+        QJsonDocument doc = QJsonDocument::fromJson(configFile.readAll());
         QJsonObject root = doc.object();
 
         if (root.contains("masterGain"))// read last master gain
@@ -634,22 +628,16 @@ bool Settings::readFile(APPTYPE type, const QList<SettingsObject *> &sections)
         return true;
     } else {
         qWarning(jtConfigurator) << "Settings : Can't load Jamtaba 2 config file:"
-                                 << f.errorString();
+                                 << configFile.errorString();
     }
 
     return false;
 }
 
-bool Settings::writeFile(APPTYPE type, const QList<SettingsObject *> &sections)// io ops ...
+bool Settings::writeFile(const QList<SettingsObject *> &sections)// io ops ...
 {
-    // Works with JTBConfig
-    if (type == plugin)
-        fileDir = Configurator::getInstance()->getPluginDirPath();
-    QDir dir(fileDir);// homepath
-    dir.mkpath(fileDir);
-    // qWarning(jtConfigurator) << "SETTINGS WRITE JSON IN:" <<fileDir;
-    QString absolutePath = dir.absoluteFilePath(fileName);
-    QFile file(absolutePath);
+    QDir configFileDir = Configurator::getInstance()->getLogConfigFileDir();
+    QFile file(configFileDir.absoluteFilePath(fileName));
     if (file.open(QIODevice::WriteOnly)) {
         QJsonObject root;
 
@@ -739,13 +727,13 @@ void Settings::load()
     sections.append(&recordingSettings);
     sections.append(&privateServerSettings);
 
-    // NEW COOL CONFIGURATOR STUFF
-    readFile(Configurator::getInstance()->getAppType(), sections);
+    readFile(sections);
 }
 
 Settings::Settings() :
-    fileDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)),
-    tracksLayoutOrientation(Qt::Vertical), masterFaderGain(1.0)
+    tracksLayoutOrientation(Qt::Vertical),
+    masterFaderGain(1.0),
+    translation("en") //english as default language
 {
     // qDebug() << "Settings in " << fileDir;
 }
@@ -763,7 +751,7 @@ void Settings::save(const LocalInputTrackSettings &localInputsSettings)
     sections.append(&recordingSettings);
     sections.append(&privateServerSettings);
 
-    writeFile(Configurator::getInstance()->getAppType(), sections);
+    writeFile(sections);
 }
 
 void Settings::deletePreset(const QString &name)
