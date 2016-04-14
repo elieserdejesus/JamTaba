@@ -120,6 +120,9 @@ void WebIpToLocationResolver::replyError(QNetworkReply::NetworkError e){
 
 QString WebIpToLocationResolver::sanitizeLanguageCode(const QString &languageCode)
 {
+    if (languageCode.isEmpty())
+        return "en";
+
     if (languageCode.size() > 2)
         return languageCode.toLower().left(2);
 
