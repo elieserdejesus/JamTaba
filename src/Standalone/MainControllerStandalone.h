@@ -89,7 +89,7 @@ public:
         return pluginFinder.data();
     }
 
-    void removePlugin(int inputTrackIndex, Audio::Plugin *plugin);
+    void removePlugin(int inputTrackIndex, Audio::Plugin *PLUGIN);
     QList<Audio::PluginDescriptor> getPluginsDescriptors();
     Audio::Plugin *addPlugin(int inputTrackIndex, const Audio::PluginDescriptor &descriptor);
 

@@ -7,13 +7,14 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QFile>
+#include <QDir>
 
 namespace Geo {
 class WebIpToLocationResolver : public IpToLocationResolver
 {
     Q_OBJECT
 public:
-    WebIpToLocationResolver();
+    WebIpToLocationResolver(const QDir &cacheDir);
     ~WebIpToLocationResolver();
     Geo::Location resolve(const QString &ip, const QString &languageCode) override;
 private:
@@ -41,6 +42,8 @@ private:
     static QString sanitizeLanguageCode(const QString &languageCode);
 
     QString currentLanguage;
+
+    QDir cacheDir;
 
     static const QString COUNTRY_CODES_FILE;
     static const QString COUNTRY_NAMES_FILE_PREFIX;

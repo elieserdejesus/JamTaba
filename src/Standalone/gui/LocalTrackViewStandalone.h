@@ -31,7 +31,7 @@ public:
 
     void reset() override;
 
-    void addPlugin(Audio::Plugin *plugin, bool bypassed = false);
+    void addPlugin(Audio::Plugin *PLUGIN, bool bypassed = false);
 
     QList<const Audio::Plugin *> getInsertedPlugins() const;
 

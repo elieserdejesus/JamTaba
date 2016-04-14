@@ -7,8 +7,8 @@
 #include <QDir>
 #include <QScopedPointer>
 
-enum APPTYPE {
-    standalone, plugin
+enum AppType {
+    STANDALONE, PLUGIN
 };
 
 // ! Configurator class for Jamtaba !
@@ -17,29 +17,7 @@ enum APPTYPE {
 // ! file ( Jamtaba.Json )
 class Configurator
 {
-private:
 
-    static const QString VST_PLUGIN_FOLDER_NAME;
-    static const QString STANDALONE_PRESET_FOLDER_NAME;
-    static const QString PLUGIN_PRESET_FOLDER_NAME;
-
-    QString IniFilename;// !contains the name of the Ini file
-    APPTYPE AppType; // ! Contains the type of configuration used : standalone or plugin
-    QString HomePath;// ! The full path of the root directory in QString format
-    QString Pluginpath;// ! The full path of the plugin directory in QString format
-    QDir buildDirPaths(); // ! Used to create the paths of the folder's tree
-    void createTree();
-
-    static void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
-
-    // private constructor
-    Configurator();// !Default constructor
-    static QScopedPointer<Configurator> instance;// using a QScopedPointer to auto delete and avoid leak
-
-    bool logFileCreated;
-
-    void exportIniFile();
-    void setupIni();
 public:
     static Configurator *getInstance();
     ~Configurator();
@@ -54,36 +32,58 @@ public:
         logFileCreated = true;
     }
 
-    bool setUp(APPTYPE Type);
-    QString getIniFilePath() const;
-    bool treeExists() const;    // check if Jamtaba 2 folder exists in application data
-    bool pluginDirExists() const;
-    bool presetsDirExists() const;
-    inline QDir getHomeDir() const
-    {
-        return QDir(getHomeDirPath());
-    }
+    bool setUp(AppType appType);
 
-    QDir getPluginDir() const;
-    inline QString getHomeDirPath() const
-    {
-        return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    }
+    bool folderTreeExists() const;    // check if Jamtaba 2 folder exists in application data
 
-    inline QString getPluginDirPath() const
-    {
-        return getPluginDir().path();
-    }
+    inline QDir getPluginDir() const { return pluginDir; }
 
-    inline APPTYPE getAppType() const
-    {
-        return AppType;
-    }
+    inline QDir getCacheDir() const { return cacheDir; }
 
-    // Presets now ....
     QDir getPresetsDir() const;
+
+    QDir getLogConfigFileDir() const;
+
+    QDir getLogDir() const;
+
+    inline AppType getAppType() const
+    {
+        return appType;
+    }
+
+    // Presets
     QString getPresetPath(const QString &JsonFile);// used by Settings
     QStringList getPresetFilesNames(bool fullpath);// all the files names in a folder
     void deletePreset(const QString &name);
+
+private:
+    static const QString VST_PLUGIN_FOLDER_NAME;
+    static const QString PRESETS_FOLDER_NAME;
+    static const QString CACHE_FOLDER_NAME;
+    static const QString LOG_CONFIG_FILE_NAME;
+
+    bool presetsDirExists() const;
+
+    QString logConfigFileName;// the name of the json config file
+    AppType appType; // type of configuration used : standalone or plugin
+
+    QDir pluginDir; // vst plugin directory
+    QDir cacheDir;
+    QDir presetsDir; //standalone presets
+    QDir pluginPresetsDir; //plugin presets
+    QDir baseDir;
+
+    void createFoldersTree();
+
+    static void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
+
+    Configurator(); // private constructor for Singleton
+    static QScopedPointer<Configurator> instance;// using a QScopedPointer to auto delete and avoid leak
+
+    bool logFileCreated;
+
+    void exportLogIniFile();
+    void setupLogConfigFile();
+
 };
 #endif // CONFIGURATOR_H
