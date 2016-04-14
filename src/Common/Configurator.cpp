@@ -7,7 +7,6 @@
 
 QScopedPointer<Configurator> Configurator::instance(nullptr);
 
-const QString Configurator::VST_PLUGIN_FOLDER_NAME = "PluginVst";
 const QString Configurator::PRESETS_FOLDER_NAME = "Presets";
 const QString Configurator::CACHE_FOLDER_NAME = "Cache";
 const QString Configurator::LOG_CONFIG_FILE_NAME = "logging.ini";
@@ -49,7 +48,7 @@ void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context,
     QTextStream(stdout) << stringMsg;
 
     Configurator *configurator = Configurator::getInstance();
-    QDir logDir = configurator->getLogDir();
+    QDir logDir = configurator->getBaseDir();
     QString path = logDir.absoluteFilePath("log.txt");
 
     QFile outFile(path);
@@ -69,23 +68,11 @@ void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context,
         abort();
 }
 
-QDir Configurator::getLogDir() const
-{
-    if (appType == AppType::STANDALONE)
-        return baseDir;
-
-    return pluginDir;
-}
-
 Configurator::Configurator() :
     logConfigFileName(LOG_CONFIG_FILE_NAME),
     logFileCreated(false)
 {
-    baseDir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-    cacheDir = QDir(baseDir.absoluteFilePath(CACHE_FOLDER_NAME));
-    pluginDir = QDir(baseDir.absoluteFilePath(VST_PLUGIN_FOLDER_NAME));
-    pluginPresetsDir = QDir(pluginDir.absoluteFilePath(PRESETS_FOLDER_NAME));
-    presetsDir = QDir(baseDir.absoluteFilePath(PRESETS_FOLDER_NAME));
+
 }
 
 // -------------------------------------------------------------------------------
@@ -96,38 +83,29 @@ Configurator *Configurator::getInstance()
     return instance.data();
 }
 
-QDir Configurator::getPresetsDir() const
-{
-    if (appType == AppType::PLUGIN)
-        return pluginPresetsDir;
-
-    return presetsDir;
-}
-
 QStringList Configurator::getPresetFilesNames(bool fullpath)
 {
+    QDir::SortFlags sort = QDir::Name;
+    QDir::Filters filters = QDir::Files | QDir::Readable;
+    QStringList nameFilters("*.json");
+
+    QFileInfoList fileInfos = presetsDir.entryInfoList(nameFilters, filters, sort);
+
     QStringList filesPaths;
-    QDir dir = getPresetsDir();
-    qInfo(jtConfigurator) << "Looking in Presets dir : "<<dir.absolutePath();
-    int count = 0;// how many preset files
-    foreach (const QFileInfo &item, dir.entryInfoList()) {
+    foreach (const QFileInfo &item, fileInfos) {
         if (item.isFile()) {
             if (fullpath)
                 filesPaths.append(item.absoluteFilePath());
             else
                 filesPaths.append(item.fileName());
-            qDebug(jtConfigurator) << "File Found: " << item.absoluteFilePath();
         }
     }
-    count = filesPaths.size();
-    qInfo(jtConfigurator) << "Presets found : "<<count;
     return filesPaths;
 }
 
-// --------------------------------------------------------------------------------------------
-bool Configurator::setUp(AppType appType)
+bool Configurator::setUp()
 {
-    this->appType = appType;// plugin or standalone
+    initializeDirs(); // directories initialization is different in Standalone and VstPlugin. Check the files ConfiguratorStandalone.cpp and VstPlugin.cpp
 
     if (!folderTreeExists())
         createFoldersTree();
@@ -139,7 +117,7 @@ bool Configurator::setUp(AppType appType)
 
 void Configurator::setupLogConfigFile()
 {
-    QString logConfigFilePath = getLogConfigFileDir().absoluteFilePath(logConfigFileName);
+    QString logConfigFilePath = baseDir.absoluteFilePath(logConfigFileName);
     if (!logConfigFilePath.isEmpty()) {
         qputenv("QT_LOGGING_CONF", QByteArray(logConfigFilePath.toUtf8()));
         qInstallMessageHandler(&Configurator::LogHandler);
@@ -150,38 +128,25 @@ void Configurator::createFoldersTree()
 {
     qWarning(jtConfigurator) << " Creating folders tree...";
 
-    if (!pluginDir.exists()) {
-        pluginDir.mkpath(".");
-        qCDebug(jtConfigurator) << "Plugin dir created in " << pluginDir;
+    if (!baseDir.exists()) {
+        baseDir.mkpath(".");
+        qCDebug(jtConfigurator) << "Base dir created in " << baseDir.absolutePath();
     }
 
     if (!cacheDir.exists()) {
         cacheDir.mkpath(".");
-        qCDebug(jtConfigurator) << "Cache dir created in " << cacheDir;
+        qCDebug(jtConfigurator) << "Cache dir created in " << cacheDir.absolutePath();
     }
 
     if (!presetsDir.exists()) {
         presetsDir.mkpath(".");
-        qCDebug(jtConfigurator) << "Standalone presets dir created in " << presetsDir;
+        qCDebug(jtConfigurator) << "Standalone presets dir created in " << presetsDir.absolutePath();
     }
-
-    if (!pluginPresetsDir.exists()) {
-        pluginPresetsDir.mkpath(".");
-        qCDebug(jtConfigurator) << "Plugin presets dir created in " << pluginPresetsDir;
-    }
-}
-
-bool Configurator::presetsDirExists() const
-{
-    if (appType == STANDALONE)
-        return presetsDir.exists();
-
-    return pluginPresetsDir.exists();
 }
 
 bool Configurator::folderTreeExists() const
 {
-    if (!pluginDir.exists() || !presetsDirExists() || !cacheDir.exists()) {
+    if (!presetsDir.exists() || !cacheDir.exists()) {
         qWarning(jtConfigurator) << "FOLDER'S TREE don't exist !";
         return false;
     }
@@ -191,7 +156,7 @@ bool Configurator::folderTreeExists() const
 // copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
 void Configurator::exportLogIniFile()
 {
-    QString logConfigFilePath = getLogConfigFileDir().absoluteFilePath(logConfigFileName);
+    QString logConfigFilePath = baseDir.absoluteFilePath(logConfigFileName);
     if (!QFile(logConfigFilePath).exists()) {
         qDebug(jtConfigurator) << "Log Ini file don't exist in' :"<<logConfigFilePath;
 
@@ -204,28 +169,14 @@ void Configurator::exportLogIniFile()
     }
 }
 
-QDir Configurator::getLogConfigFileDir() const
+QString Configurator::getPresetPath(const QString &jsonFile)
 {
-    if (appType == AppType::PLUGIN)
-        return pluginDir;
-    else
-        return baseDir;
-}
-
-// Retrieve the path for Settings class
-QString Configurator::getPresetPath(const QString &JsonFile)
-{
-    QString path("");
-    // FIRST CHECK THE DIR
-    if (!presetsDirExists()) {
+    if (!presetsDir.exists()) {
         qDebug(jtConfigurator) << "Can't load preset file , preset dir inexistent !";
-        return path; // Settings MUST CHECK THAT
+        return "";
     }
 
-    QDir presetDir = getPresetsDir();
-    // SEARCH IN THE DIR
-    // USE CONFIGURATOR FOR FILES STUFF
-    path = presetDir.absoluteFilePath(JsonFile);
+    QString path = presetsDir.absoluteFilePath(jsonFile);
     QStringList list = getPresetFilesNames(true);
     foreach (const QString &item, list) {
         if (item.contains(path)) {
@@ -245,7 +196,7 @@ void Configurator::deletePreset(const QString &name)
         return;
     {
         qInfo(jtConfigurator) << "!!! Preset to delete Path is " << presetPath;
-        if (getPresetsDir().remove(presetPath))
+        if (presetsDir.remove(presetPath))
             qInfo(jtConfigurator) << "!!! Preset deleted ! ";
         else
             qInfo(jtConfigurator) << "!!! Could not delete Preset ! ";

@@ -47,6 +47,7 @@ HEADERS += audio/core/PluginDescriptor.h
 
 SOURCES += main.cpp
 SOURCES += MainControllerStandalone.cpp
+SOURCES += ConfiguratorStandalone.cpp
 SOURCES += gui/MainWindowStandalone.cpp
 SOURCES += gui/PreferencesDialogStandalone.cpp
 SOURCES += gui/LocalTrackViewStandalone.cpp

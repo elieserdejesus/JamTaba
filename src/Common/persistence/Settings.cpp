@@ -583,7 +583,7 @@ void Settings::setBufferSize(int bufferSize)
 
 bool Settings::readFile(const QList<SettingsObject *> &sections)
 {
-    QDir configFileDir = Configurator::getInstance()->getLogConfigFileDir();
+    QDir configFileDir = Configurator::getInstance()->getBaseDir();
     QString absolutePath = configFileDir.absoluteFilePath(fileName);
     QFile configFile(absolutePath);
 
@@ -636,7 +636,7 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
 
 bool Settings::writeFile(const QList<SettingsObject *> &sections)// io ops ...
 {
-    QDir configFileDir = Configurator::getInstance()->getLogConfigFileDir();
+    QDir configFileDir = Configurator::getInstance()->getBaseDir();
     QFile file(configFileDir.absoluteFilePath(fileName));
     if (file.open(QIODevice::WriteOnly)) {
         QJsonObject root;
