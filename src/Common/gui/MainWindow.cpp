@@ -112,7 +112,15 @@ void MainWindow::initialize()
     showBusyDialog(tr("Loading rooms list ..."));
 
     // initialize using last track input settings (using QTimer::singleShot to initialize the tracks (and load the plugins) after Jamtaba is opened).
-    QTimer::singleShot(1, this, SLOT(initializeLocalInputChannels()));
+    QTimer::singleShot(1, this, SLOT(doWindowInitialization()));
+}
+
+void MainWindow::doWindowInitialization()
+{
+    //these two tasks need be executed in sequence because setFullStatus will change the local tracks layout,
+    //and these tracks need be created first.
+
+    initializeLocalInputChannels(); //create the local tracks, load plugins, etc.
 
     // set window mode: mini mode or full view mode
     setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
@@ -121,12 +129,14 @@ void MainWindow::initialize()
 // ++++++++++++++++++++++++=
 void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
 {
-    foreach (LocalTrackGroupView *channel, localGroupChannels)
+    foreach (LocalTrackGroupView *channel, localGroupChannels) {
         channel->setPeakMeterMode(showPeakMetersOnly);
-    ui.labelSectionTitle->setVisible(!showPeakMetersOnly);
+    }
 
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
     updateLocalInputChannelsGeometry();
+
+    ui.userNameLineEdit->setVisible(!showPeakMetersOnly);
 }
 
 void MainWindow::updateLocalInputChannelsGeometry()
@@ -588,19 +598,13 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
 
     // show the user name dialog
     if (!mainController->userNameWasChoosed()) {
-        QString lastUserName = mainController->getUserName();
-        UserNameDialog dialog(ui.centralWidget, lastUserName);
+        UserNameDialog dialog(ui.centralWidget, MainController::getSuggestedUserName());
         centerDialog(&dialog);
         if (dialog.exec() == QDialog::Accepted) {
             QString userName = dialog.getUserName().trimmed();
             if (!userName.isEmpty()) {
                 mainController->setUserName(userName);
-                ui.labelSectionTitle->setText(userName); //show the user name in top of local tracks
-
-                //change the window title to include user name
-                QString version = QApplication::applicationVersion();
-                QString windowTitle = "JamTaba " + version + " (" + userName + ")";
-                setWindowTitle(windowTitle);
+                ui.userNameLineEdit->setText(userName); //show the user name in top of local tracks
             } else {
                 QMessageBox::warning(this, tr("Warning!"), tr("Empty name is not allowed!"));
             }
@@ -626,6 +630,9 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
 {
     qCDebug(jtGUI) << "hidding busy dialog...";
     hideBusyDialog();
+
+    //lock the user name field, user name can't be changed when jamming
+    setUserNameReadOnlyStatus(true);
 
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
     ninjamWindow.reset(createNinjamWindow(roomInfo, mainController));
@@ -674,6 +681,17 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
                      SLOT(updateCurrentIntervalBeat(int)));
 }
 
+void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
+{
+    ui.userNameLineEdit->setReadOnly(readOnly);
+    QString toolTip = readOnly ? tr("Your name cannot be edited while jamming!") : tr("Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.");
+    ui.userNameLineEdit->setToolTip(toolTip);
+    if (readOnly) {
+        if (ui.userNameLineEdit->hasFocus())
+            ui.userNameLineEdit->clearFocus();
+    }
+}
+
 void MainWindow::updateChatTabTitle(const QString &roomName)
 {
     int chatTabIndex = 0; //assuming chat is the first tab
@@ -703,6 +721,9 @@ void MainWindow::prepareTransmission()
 void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMessage)
 {
     hideBusyDialog();
+
+    //unlock the user name field
+    setUserNameReadOnlyStatus(false);
 
     // remove the jam room tab (the last tab)
     if (ui.tabWidget->count() > 1) {
@@ -1064,11 +1085,10 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
 {
     if (event->type() == QEvent::Resize) {
-        if (target == ui.localTracksWidget)
+        if (target == ui.localTracksWidget) {
             updateLocalInputChannelsGeometry();
-        else if (target == ui.labelSectionTitle)
-            updateUserNameLabel();
-        return true;
+            return true;
+        }
     } else {
         if (target == ui.masterFader && event->type() == QEvent::MouseButtonDblClick) {
             ui.masterFader->setValue(100);
@@ -1076,18 +1096,6 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
         }
     }
     return QMainWindow::eventFilter(target, event);
-}
-
-void MainWindow::updateUserNameLabel()
-{
-    Qt::Alignment alignment = Qt::AlignCenter;
-    QFontMetrics fontMetrics = ui.labelSectionTitle->fontMetrics();
-    int maxWidth = ui.labelSectionTitle->sizeHint().width();
-    int textWidth = fontMetrics.width(ui.labelSectionTitle->text());
-    if (textWidth > maxWidth) {
-        alignment = Qt::AlignVCenter | Qt::AlignLeft;
-    }
-    ui.labelSectionTitle->setAlignment(alignment);
 }
 
 void MainWindow::resetLocalChannels()
@@ -1237,7 +1245,10 @@ void MainWindow::setupWidgets()
 
     ui.localTracksWidget->installEventFilter(this);
 
-    ui.labelSectionTitle->installEventFilter(this);
+    QString lastUserName = mainController->getUserName();
+    if (!lastUserName.isEmpty()) {
+        ui.userNameLineEdit->setText(lastUserName);
+    }
 }
 
 void MainWindow::setupSignals()
@@ -1279,6 +1290,14 @@ void MainWindow::setupSignals()
 
     connect(ui.menuLanguage, SIGNAL(triggered(QAction*)), this, SLOT(setLanguage(QAction*)));
 
+    connect(ui.userNameLineEdit, SIGNAL(editingFinished()), this, SLOT(updateUserName()));
+}
+
+void MainWindow::updateUserName()
+{
+    QString newUserName = ui.userNameLineEdit->text();
+    qDebug() << "Setting user name to:" << newUserName;
+    mainController->setUserName(newUserName);
 }
 
 void MainWindow::initializeMasterFader()

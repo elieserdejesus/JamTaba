@@ -212,6 +212,10 @@ private slots:
 
     void setLanguage(QAction * languageMenuAction);
 
+    void updateUserName();
+
+    void doWindowInitialization();
+
 private:
 
     BusyDialog busyDialog;
@@ -270,6 +274,8 @@ private:
     void updateChatTabTitle(const QString &roomName);
 
     void loadTranslationFile(const QString &locale);
+
+    void setUserNameReadOnlyStatus(bool readOnly);
 
     // PerformanceMonitor performanceMonitor;//cpu and memmory usage
     // qint64 lastPerformanceMonitorUpdate;

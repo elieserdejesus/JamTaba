@@ -23,7 +23,6 @@ MainController::MainController(const Settings &settings) :
     ipToLocationResolver(nullptr),
     loginService(new Login::LoginService(this)),
     settings(settings),
-    userNameChoosed(false),
     mainWindow(nullptr),
     jamRecorder(new Recorder::ReaperProjectGenerator()),
     masterGain(1),
@@ -175,7 +174,6 @@ void MainController::setUserName(const QString &newUserName)
 {
     if (!newUserName.isEmpty()) {
         settings.setUserName(newUserName);
-        userNameChoosed = true;
     } else {
         qCritical() << "empty userNAme";
     }
@@ -722,4 +720,22 @@ void MainController::stopNinjamController()
 void MainController::setTranslationLanguage(const QString &languageCode)
 {
     settings.setTranslation(languageCode);
+}
+
+QString MainController::getSuggestedUserName()
+{
+    //try get user name in home path. If is empty try the environment variables.
+
+    QString userName = QDir::home().dirName();
+    if (!userName.isEmpty())
+        return userName;
+
+    userName = qgetenv("USER"); // for MAc or Linux
+    if (userName.isEmpty())
+        userName = qgetenv("USERNAME"); // for windows
+
+    if (!userName.isEmpty())
+        return userName;
+
+    return ""; //returning empty name as suggestion
 }
