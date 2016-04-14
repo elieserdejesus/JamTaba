@@ -4,6 +4,7 @@
 #include <QString>
 #include <QMap>
 #include <QRegExp>
+#include <QDir>
 
 /***
   This class is used to store/remember the users level, pan, mute and boost. When a user enter in the jam
@@ -93,7 +94,7 @@ private:
 class UsersDataCache
 {
 public:
-    UsersDataCache();
+    UsersDataCache(const QDir &cacheDir);
     ~UsersDataCache();
 
     // return default values for pan, gain and mute if user is not cached yet
@@ -102,6 +103,8 @@ public:
     void updateUserCacheEntry(CacheEntry entry);
 private:
     QMap<QString, CacheEntry> cacheEntries;
+
+    QDir cacheDir;
 
     static QString getUserUniqueKey(const QString &userIp, const QString &userName,
                                     quint8 channelID);
