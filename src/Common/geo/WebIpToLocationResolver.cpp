@@ -29,8 +29,9 @@ WebIpToLocationResolver::WebIpToLocationResolver(const QDir &cacheDir)
 {
     QObject::connect(&httpClient, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
 
+    loadCountryCodesFromFile();
+
     if (!needLoadTheOldCache()) {
-        loadCountryCodesFromFile();
         loadCountryNamesFromFile(currentLanguage); //loading the english country names by default
     }
     else{
