@@ -1,6 +1,7 @@
 #include "IpToLocationResolver.h"
 
 #include "log/Logging.h"
+#include <QRegularExpression>
 
 using namespace Geo;
 
@@ -20,12 +21,19 @@ bool Location::isUnknown() const
 
 Location::Location(const QString &country, const QString &countryCode, const QString &city, double latitude,
                    double longitude) :
-    countryName(country),
-    countryCode(countryCode),
-    city(city),
+    countryName(sanitize(country)),
+    countryCode(sanitize(countryCode)),
+    city(sanitize(city)),
     latitude(latitude),
     longitude(longitude)
 {
+}
+
+QString Location::sanitize(const QString &inputString)
+{
+    static QString htmlTagsPattern("<.+>");
+    static QRegularExpression regex(htmlTagsPattern);
+    return QString(inputString).replace(regex, QStringLiteral(""));
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -35,8 +43,9 @@ IpToLocationResolver::~IpToLocationResolver()
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++
-Location NullIpToLocationResolver::resolve(const QString &ip)
+Location NullIpToLocationResolver::resolve(const QString &ip, const QString &languageCode)
 {
     Q_UNUSED(ip)
+    Q_UNUSED(languageCode)
     return Geo::Location();
 }

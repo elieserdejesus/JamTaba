@@ -1,15 +1,9 @@
 #ifndef CONFIGURATOR_H
 #define CONFIGURATOR_H
 
-#include <QObject>
 #include <QString>
-#include <QStandardPaths>
 #include <QDir>
 #include <QScopedPointer>
-
-enum APPTYPE {
-    standalone, plugin
-};
 
 // ! Configurator class for Jamtaba !
 // ! Easy to use , it is intended to create the folders tree in the user local folder.
@@ -17,73 +11,74 @@ enum APPTYPE {
 // ! file ( Jamtaba.Json )
 class Configurator
 {
-private:
 
-    static const QString VST_PLUGIN_FOLDER_NAME;
-    static const QString STANDALONE_PRESET_FOLDER_NAME;
-    static const QString PLUGIN_PRESET_FOLDER_NAME;
-
-    QString IniFilename;// !contains the name of the Ini file
-    APPTYPE AppType; // ! Contains the type of configuration used : standalone or plugin
-    QString HomePath;// ! The full path of the root directory in QString format
-    QString Pluginpath;// ! The full path of the plugin directory in QString format
-    QDir buildDirPaths(); // ! Used to create the paths of the folder's tree
-    void createTree();
-
-    static void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
-
-    // private constructor
-    Configurator();// !Default constructor
-    static QScopedPointer<Configurator> instance;// using a QScopedPointer to auto delete and avoid leak
-
-    bool logFileCreated;
-
-    void exportIniFile();
-    void setupIni();
 public:
     static Configurator *getInstance();
+
     ~Configurator();
 
-    inline bool logFileIsCreated() const
-    {
-        return logFileCreated;
-    }
+    bool logFileIsCreated() const;
+    void setFileCreatedFlag();
 
-    inline void setFileCreatedFlag()
-    {
-        logFileCreated = true;
-    }
+    bool setUp();
 
-    bool setUp(APPTYPE Type);
-    QString getIniFilePath() const;
-    bool treeExists() const;    // check if Jamtaba 2 folder exists in application data
-    bool pluginDirExists() const;
-    bool presetsDirExists() const;
-    inline QDir getHomeDir() const
-    {
-        return QDir(getHomeDirPath());
-    }
+    bool folderTreeExists() const; // check if Jamtaba 2 folder exists in application data
 
-    QDir getPluginDir() const;
-    inline QString getHomeDirPath() const
-    {
-        return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    }
-
-    inline QString getPluginDirPath() const
-    {
-        return getPluginDir().path();
-    }
-
-    inline APPTYPE getAppType() const
-    {
-        return AppType;
-    }
-
-    // Presets now ....
+    QDir getCacheDir() const;
     QDir getPresetsDir() const;
+    QDir getBaseDir() const;
+
+    // Presets
     QString getPresetPath(const QString &JsonFile);// used by Settings
     QStringList getPresetFilesNames(bool fullpath);// all the files names in a folder
     void deletePreset(const QString &name);
+
+private:
+    static const QString PRESETS_FOLDER_NAME;
+    static const QString CACHE_FOLDER_NAME;
+    static const QString LOG_CONFIG_FILE_NAME;
+
+    QString logConfigFileName;// the name of the json config file
+
+    QDir cacheDir;
+    QDir presetsDir;
+    QDir baseDir;
+
+    bool logFileCreated;
+
+    static QScopedPointer<Configurator> instance;// using a QScopedPointer to auto delete the singleton instance and avoid leak
+
+    Configurator(); // private constructor for Singleton
+
+    void createFoldersTree();
+    void initializeDirs(); //this function is implemented in ConfiguratorStandalone.cpp and in ConfiguratorVST.cpp. Only the correct .cpp file is included in .pro files.
+    void exportLogIniFile();
+    void setupLogConfigFile();
+
+    static void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 };
+
+
+inline bool Configurator::logFileIsCreated() const
+{
+    return logFileCreated;
+}
+
+inline void Configurator::setFileCreatedFlag()
+{
+    logFileCreated = true;
+}
+
+inline QDir Configurator::getCacheDir() const {
+    return cacheDir;
+}
+
+inline QDir Configurator::getPresetsDir() const{
+    return presetsDir;
+}
+
+inline QDir Configurator::getBaseDir() const {
+    return baseDir;
+}
+
 #endif // CONFIGURATOR_H

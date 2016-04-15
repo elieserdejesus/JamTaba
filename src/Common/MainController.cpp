@@ -20,14 +20,20 @@ MainController::MainController(const Settings &settings) :
     currentStreamingRoomID(-1000),
     mutex(QMutex::Recursive),
     started(false),
-    ipToLocationResolver(new Geo::WebIpToLocationResolver()),
+    ipToLocationResolver(nullptr),
     loginService(new Login::LoginService(this)),
     settings(settings),
     mainWindow(nullptr),
     jamRecorder(new Recorder::ReaperProjectGenerator()),
     masterGain(1),
-    lastInputTrackID(0)
+    lastInputTrackID(0),
+    usersDataCache(Configurator::getInstance()->getCacheDir())
 {
+
+    QDir cacheDir = Configurator::getInstance()->getCacheDir();
+    ipToLocationResolver.reset( new Geo::WebIpToLocationResolver(cacheDir));
+
+    connect(ipToLocationResolver.data(), SIGNAL(ipResolved(const QString &)), this, SIGNAL(ipResolved(const QString &)));
 }
 
 void MainController::setSampleRate(int newSampleRate)
@@ -188,7 +194,7 @@ QStringList MainController::getBotNames() const
 
 Geo::Location MainController::getGeoLocation(const QString &ip)
 {
-    return ipToLocationResolver->resolve(ip);
+    return ipToLocationResolver->resolve(ip, getTranslationLanguage());
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++

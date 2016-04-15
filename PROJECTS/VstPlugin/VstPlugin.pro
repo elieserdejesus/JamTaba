@@ -54,6 +54,7 @@ SOURCES += main.cpp
 SOURCES += Plugin.cpp
 SOURCES += Editor.cpp
 SOURCES += MainControllerVST.cpp
+SOURCES += ConfiguratorVST.cpp
 SOURCES += NinjamRoomWindowVST.cpp
 SOURCES += NinjamControllerVST.cpp
 SOURCES += MainWindowVST.cpp

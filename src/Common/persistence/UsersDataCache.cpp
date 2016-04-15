@@ -4,12 +4,12 @@
 #include <QFile>
 #include <QStandardPaths>
 #include <QDataStream>
+#include "Configurator.h"
+#include "CacheHeader.h"
 
 using namespace Persistence;
 
-const quint32 UsersDataCacheHeader::SIGNATURE = 0x4a544232; // "JTB2"
 const quint32 UsersDataCacheHeader::REVISION = 1;
-const quint32 UsersDataCacheHeader::SIZE = 12;
 
 const bool CacheEntry::DEFAULT_MUTED = false;
 const float CacheEntry::DEFAULT_GAIN = 1.0f;
@@ -108,9 +108,21 @@ void CacheEntry::setGain(float gain)
     this->gain = gain;
 }
 
-UsersDataCache::UsersDataCache() :
-    CACHE_FILE_NAME("tracks_cache.bin")
+UsersDataCache::UsersDataCache(const QDir &cacheDir)
+    :CACHE_FILE_NAME("tracks_cache.bin"),
+     cacheDir(cacheDir)
 {
+    //check if the tracks_cache_bin file is in the old dir and copy the file to the 'cache' dir.
+    //This piece of code will be deleted in future versions.
+    QDir baseDir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    QFile oldCacheFile(baseDir.absoluteFilePath(CACHE_FILE_NAME));
+    if (oldCacheFile.exists()) {
+        if (oldCacheFile.rename(cacheDir.absoluteFilePath(CACHE_FILE_NAME)))
+            qDebug() << CACHE_FILE_NAME << " copyed to the new cache folder!";
+        else
+            qDebug() << "Error when copying " << CACHE_FILE_NAME << " to the new cache folder!";
+    }
+
     loadCacheEntriesFromFile();
 }
 
@@ -146,38 +158,33 @@ QString UsersDataCache::getUserUniqueKey(const QString &userIp, const QString &u
 void UsersDataCache::loadCacheEntriesFromFile()
 {
     // load tracks cache content from file
-    QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
     QFile cacheFile(cacheDir.absoluteFilePath(CACHE_FILE_NAME));
     if (cacheFile.open(QFile::ReadOnly)) {
         QDataStream stream(&cacheFile);
 
-        quint32 signature;
-        quint32 revision;
-        quint32 size;
-        stream >> signature >> revision >> size;
-
-        if (signature == UsersDataCacheHeader::SIGNATURE
-            && revision == UsersDataCacheHeader::REVISION
-            && size == UsersDataCacheHeader::SIZE)
+        CacheHeader cacheHeader;
+        stream >> cacheHeader;
+        quint32 expectedHeaderRevision = UsersDataCacheHeader::REVISION;
+        if (cacheHeader.isValid(expectedHeaderRevision))
             stream >> cacheEntries;
+        else
+            qCritical() << "Invalid cache header when loading users data cache.";
+
+        qCDebug(jtCache) << "Tracks cache items loaded from file: " << cacheEntries.size();
     }
-    qCDebug(jtCache) << "Tracks cache items loaded from file: " << cacheEntries.size();
 }
 
 void UsersDataCache::writeCacheEntriesToFile()
 {
     qCDebug(jtCache) << "Saving cache file";
-    // save cache content into file
-    QDir cacheDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+
     QFile cacheFile(cacheDir.absoluteFilePath(CACHE_FILE_NAME));
     if (cacheFile.open(QFile::WriteOnly)) {
         qCDebug(jtCache) << "Tracks cache file opened to write.";
         QDataStream stream(&cacheFile);
 
-        quint32 signature = UsersDataCacheHeader::SIGNATURE;
-        quint32 revision = UsersDataCacheHeader::REVISION;
-        quint32 size = UsersDataCacheHeader::SIZE;
-        stream << signature << revision << size;
+        CacheHeader cacheHeader(UsersDataCacheHeader::REVISION);
+        stream << cacheHeader;
 
         stream << cacheEntries;
 

@@ -44,19 +44,26 @@ private:
     QString city;
     double latitude;
     double longitude;
+
+    static QString sanitize(const QString &inputString);
 };
 
 class IpToLocationResolver : public QObject
 {
+    Q_OBJECT
+
 public:
-    virtual Location resolve(const QString &ip) = 0;
+    virtual Location resolve(const QString &ip, const QString &languageCode) = 0;
     virtual ~IpToLocationResolver();
+
+signals:
+    void ipResolved(const QString &ip);
 };
 
 class NullIpToLocationResolver : public IpToLocationResolver
 {
 public:
-    Location resolve(const QString &ip) override;
+    Location resolve(const QString &ip, const QString &languageCode) override;
 };
 }
 

@@ -51,7 +51,7 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD dwReason, LPVOID /*lpvReserved*/)
 
         // start the configurator
         Configurator *configurator = Configurator::getInstance();
-        if (!configurator->setUp(APPTYPE::plugin))
+        if (!configurator->setUp())
             qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";
 
         ownApplication = QMfcApp::pluginInstance(hInst);

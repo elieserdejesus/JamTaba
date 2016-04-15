@@ -227,7 +227,6 @@ public:
 class Settings
 {
 private:
-    QString fileDir;
     static QString fileName;
     AudioSettings audioSettings;
     MidiSettings midiSettings;
@@ -244,8 +243,8 @@ private:
     Qt::Orientation tracksLayoutOrientation; //horizontal or vertical
     bool usingNarrowedTracks; //narrow or wide tracks?
 
-    bool readFile(APPTYPE type, const QList<SettingsObject *> &sections);// io ops ...
-    bool writeFile(APPTYPE type, const QList<SettingsObject *> &sections);// io ops ...
+    bool readFile(const QList<SettingsObject *> &sections);
+    bool writeFile(const QList<SettingsObject *> &sections);
 
 public:
     Settings();

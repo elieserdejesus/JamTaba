@@ -2,12 +2,20 @@
 #include "geo/IpToLocationResolver.h"
 #include "MainController.h"
 
+void NinjamTrackGroupView::updateGeoLocation(const QString &ip)
+{
+    if (ip != this->userIP)
+        return;
+
+    Geo::Location location = mainController->getGeoLocation(ip);
+    QString countryCode = location.getCountryCode().toLower();
+    QString flagImageHTML = "<img src=:/flags/flags/" + countryCode +".png>";
+    countryLabel->setText(flagImageHTML + "<br>" + location.getCountryName());
+}
+
 void NinjamTrackGroupView::updateGeoLocation()
 {
-    Geo::Location location = mainController->getGeoLocation(this->userIP);
-    countryLabel->setText(
-        "<img src=:/flags/flags/" + location.getCountryCode().toLower() +".png> <br>"
-        + location.getCountryName());
+    updateGeoLocation(this->userIP);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -58,6 +66,8 @@ NinjamTrackGroupView::NinjamTrackGroupView(Controller::MainController *mainContr
     styleSheet += "stop: 0.65" + userColor.name() + ", ";
     styleSheet += "stop: 1 rgba(0, 0, 0, 0));";
     groupNameLabel->setStyleSheet(styleSheet);
+
+    connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 }
 
 void NinjamTrackGroupView::setEstimatedChunksPerInterval(int estimatedChunks)

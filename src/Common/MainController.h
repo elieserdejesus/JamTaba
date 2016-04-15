@@ -195,6 +195,7 @@ public:
     }
 
     void setTranslationLanguage(const QString &languageCode);
+    inline QString getTranslationLanguage() const { return settings.getTranslation(); }
 
     void setBuiltInMetronome(const QString &metronomeAlias);
     void setCustomMetronome(const QString &primaryBeatFile, const QString &secondaryBeatFile);
@@ -239,7 +240,10 @@ public:
         return &usersDataCache;
     }
 
-    static QString getSuggestedUserName();
+     static QString getSuggestedUserName();
+
+signals:
+    void ipResolved(const QString &ip);
 
 public slots:
     virtual void setSampleRate(int newSampleRate);
