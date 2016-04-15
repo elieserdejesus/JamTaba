@@ -258,7 +258,7 @@
     </message>
     <message>
         <source>Browse ...</source>
-        <translation>Seleccionar carpeta ...</translation>
+        <translation>Seleccionar archivo ...</translation>
     </message>
     <message>
         <source>Use 16 bit audio files!</source>
@@ -294,10 +294,6 @@
         <source>listen</source>
         <translation>escuchar</translation>
     </message>
-    <message>
-        <source>%1  location is not available at moment!</source>
-        <translation>¡La ubicación %1  lno está disponible en este momento!</translation>
-    </message>
 </context>
 <context>
     <name>LocalTrackGroupView</name>
@@ -331,7 +327,7 @@
     </message>
     <message>
         <source>Reset Track Controls</source>
-        <translation>Reiniciar los controles de la  pista</translation>
+        <translation>Reiniciar la  pista</translation>
     </message>
     <message>
         <source>Add channel</source>
@@ -431,10 +427,6 @@
         <translation>volúmen general</translation>
     </message>
     <message>
-        <source>Your controls</source>
-        <translation>Tus controles</translation>
-    </message>
-    <message>
         <source>collapse/expand your controls ...</source>
         <translation>ocultar/mostrar tus controles ...</translation>
     </message>
@@ -522,6 +514,10 @@
         <source>Metronome ...</source>
         <translation>Metrónomo ...</translation>
     </message>
+    <message>
+        <source>type your name</source>
+        <translation>tu nombre aquí</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -606,6 +602,14 @@
     <message>
         <source>Problem...</source>
         <translation>Problema...</translation>
+    </message>
+    <message>
+        <source>Your name cannot be edited while jamming!</source>
+        <translation>¡Tu nombre de usuario no puede ser cambiado si estás conectado a un servidor!</translation>
+    </message>
+    <message>
+        <source>Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.</source>
+        <translation>¡Solo son aceptadas letras, guiones, números y guiones bajos! Los espacios se reemplazarán por guiones bajos.</translation>
     </message>
 </context>
 <context>
@@ -803,12 +807,27 @@
         <source>%1 enter in room.</source>
         <translation>%1 entra a la sala.</translation>
     </message>
+    <message>
+        <source>(connected as &lt;user_name&gt;)</source>
+        <translation>(conectado como &lt;user_name&gt;)</translation>
+    </message>
+    <message>
+        <source>connected as %1</source>
+        <translation>conectado como %1</translation>
+    </message>
 </context>
 <context>
     <name>NinjamVoteButton</name>
     <message>
         <source>Vote - change %1 to %2 </source>
         <translation>Votar - cambiar %1 a %2 </translation>
+    </message>
+</context>
+<context>
+    <name>PlayerLabel</name>
+    <message>
+        <source>%1  location is not available at moment!</source>
+        <translation>¡La ubicación %1  lno está disponible en este momento!</translation>
     </message>
 </context>
 <context>
