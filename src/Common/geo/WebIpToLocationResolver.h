@@ -10,6 +10,7 @@
 #include <QDir>
 
 namespace Geo {
+
 class WebIpToLocationResolver : public IpToLocationResolver
 {
     Q_OBJECT
@@ -27,7 +28,7 @@ private:
     //loading
     void loadCountryCodesFromFile();
     void loadCountryNamesFromFile(const QString &languageCode);
-    bool populateQMapFromFile(const QString &fileName, QMap<QString, QString> &map);
+    bool populateQMapFromFile(const QString &fileName, QMap<QString, QString> &map, quint32 expectedCacheHeaderRevision);
 
     bool needLoadTheOldCache();
     void loadOldCacheContent(); //these functions are used to handle the old 'cache.bin' content used until the version 2.0.13. This will be deleted in future.
@@ -36,7 +37,7 @@ private:
     //saving
     void saveCountryCodesToFile();
     void saveCountryNamesToFile();
-    bool saveMapToFile(const QString &fileName, const QMap<QString, QString> &map);
+    bool saveMapToFile(const QString &fileName, const QMap<QString, QString> &map, quint32 cacheHeaderRevision);
 
     static QString buildFileNameFromLanguage(const QString &languageCode);
     static QString sanitizeLanguageCode(const QString &languageCode);
@@ -47,6 +48,9 @@ private:
 
     static const QString COUNTRY_CODES_FILE;
     static const QString COUNTRY_NAMES_FILE_PREFIX;
+
+    static const quint32 COUNTRY_CODES_CACHE_REVISION;
+    static const quint32 COUNTRY_NAMES_CACHE_REVISION;
 
 private slots:
     void replyFinished(QNetworkReply *);

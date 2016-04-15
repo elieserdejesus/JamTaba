@@ -44,6 +44,8 @@ private:
     QString city;
     double latitude;
     double longitude;
+
+    static QString sanitize(const QString &inputString);
 };
 
 class IpToLocationResolver : public QObject
