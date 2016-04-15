@@ -117,6 +117,7 @@ HEADERS += Utils.h
 HEADERS += Configurator.h
 HEADERS += persistence/Settings.h
 HEADERS += persistence/UsersDataCache.h
+HEADERS += persistence/CacheHeader.h
 HEADERS += log/Logging.h
 HEADERS += UploadIntervalData.h
 #HEADERS +=performance/PerformanceMonitor.h
@@ -204,6 +205,7 @@ SOURCES += loginserver/LoginService.cpp
 SOURCES += Configurator.cpp
 SOURCES += persistence/UsersDataCache.cpp
 SOURCES += persistence/Settings.cpp
+SOURCES += persistence/CacheHeader.cpp
 SOURCES += UploadIntervalData.cpp
 
 #multiplatform implementations

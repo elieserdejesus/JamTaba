@@ -16,9 +16,7 @@ namespace Persistence {
  * @brief The CacheEntryHeader struct
  */
 struct UsersDataCacheHeader {
-    static const quint32 SIGNATURE;
     static const quint32 REVISION;
-    static const quint32 SIZE;
 };
 
 class CacheEntry // cache entries are per channel, not per user.

@@ -13,11 +13,15 @@
 #include <QDataStream>
 #include <QTimer>
 #include "log/Logging.h"
+#include "persistence/CacheHeader.h"
 
 using namespace Geo;
 
 const QString WebIpToLocationResolver::COUNTRY_CODES_FILE = "country_codes_cache.bin";
 const QString WebIpToLocationResolver::COUNTRY_NAMES_FILE_PREFIX = "country_names_cache"; //the language code will be concatenated
+
+const quint32 WebIpToLocationResolver::COUNTRY_NAMES_CACHE_REVISION = 1;
+const quint32 WebIpToLocationResolver::COUNTRY_CODES_CACHE_REVISION = 1;
 
 WebIpToLocationResolver::WebIpToLocationResolver(const QDir &cacheDir)
     :currentLanguage("en"), //using english as default language
@@ -44,7 +48,8 @@ WebIpToLocationResolver::~WebIpToLocationResolver()
 void WebIpToLocationResolver::saveCountryNamesToFile()
 {
     QString filename = buildFileNameFromLanguage(currentLanguage);
-    if (saveMapToFile(filename, countryNamesCache))
+    quint32 cacheRevision = COUNTRY_NAMES_CACHE_REVISION;
+    if (saveMapToFile(filename, countryNamesCache, cacheRevision))
         qCDebug(jtIpToLocation) << countryNamesCache.size() << " country names stored in " << filename;
     else
         qCritical() << "Can't save country names in the file " << filename;
@@ -52,13 +57,14 @@ void WebIpToLocationResolver::saveCountryNamesToFile()
 
 void WebIpToLocationResolver::saveCountryCodesToFile()
 {
-    if (saveMapToFile(COUNTRY_CODES_FILE, countryCodesCache))
+    quint32 cacheRevision = COUNTRY_CODES_CACHE_REVISION;
+    if (saveMapToFile(COUNTRY_CODES_FILE, countryCodesCache, cacheRevision))
         qCDebug(jtIpToLocation) << countryCodesCache.size() << " country codes stored in " << COUNTRY_CODES_FILE;
     else
         qCritical() << "Can't save country codes in the file " << COUNTRY_CODES_FILE;
 }
 
-bool WebIpToLocationResolver::saveMapToFile(const QString &fileName, const QMap<QString, QString> &map)
+bool WebIpToLocationResolver::saveMapToFile(const QString &fileName, const QMap<QString, QString> &map, quint32 cacheHeaderRevision)
 {
     if (map.isEmpty())
         return true;
@@ -66,6 +72,8 @@ bool WebIpToLocationResolver::saveMapToFile(const QString &fileName, const QMap<
     QFile cacheFile(cacheDir.absoluteFilePath(fileName));
     if(cacheFile.open(QFile::WriteOnly)){
         QDataStream stream(&cacheFile);
+        CacheHeader cacheHeader(cacheHeaderRevision);
+        stream << cacheHeader;
         stream << map;
         return true;
     }
@@ -162,7 +170,8 @@ QString WebIpToLocationResolver::buildFileNameFromLanguage(const QString &langua
 void WebIpToLocationResolver::loadCountryNamesFromFile(const QString &languageCode)
 {
     QString fileName = buildFileNameFromLanguage(languageCode);
-    if (populateQMapFromFile(fileName, countryNamesCache)){
+    quint32 expectedCacheHeaderRevision = COUNTRY_NAMES_CACHE_REVISION;
+    if (populateQMapFromFile(fileName, countryNamesCache, expectedCacheHeaderRevision)){
         qCDebug(jtIpToLocation) << countryNamesCache.size() << " cached country names loaded, translated to " << languageCode;
     }
     else
@@ -173,20 +182,28 @@ void WebIpToLocationResolver::loadCountryNamesFromFile(const QString &languageCo
 
 void WebIpToLocationResolver::loadCountryCodesFromFile()
 {
-    if (populateQMapFromFile(COUNTRY_CODES_FILE, countryCodesCache))
+    quint32 expectedCacheHeaderRevision = COUNTRY_CODES_CACHE_REVISION;
+    if (populateQMapFromFile(COUNTRY_CODES_FILE, countryCodesCache, expectedCacheHeaderRevision))
         qCDebug(jtIpToLocation) << countryCodesCache.size() << " cached country codes loaded from file!";
     else
         qCritical() << "Can't open the file " << COUNTRY_CODES_FILE;
 }
 
-bool WebIpToLocationResolver::populateQMapFromFile(const QString &fileName, QMap<QString, QString> &map)
+bool WebIpToLocationResolver::populateQMapFromFile(const QString &fileName, QMap<QString, QString> &map, quint32 expectedCacheHeaderRevision)
 {
     map.clear();
     QFile cacheFile(cacheDir.absoluteFilePath(fileName));
     if(cacheFile.open(QFile::ReadOnly)){
-        QDataStream fileStream(&cacheFile);
-        fileStream >> map;
-        return true;
+        QDataStream stream(&cacheFile);
+        CacheHeader cacheHeader;
+        stream >> cacheHeader;
+        if (cacheHeader.isValid(expectedCacheHeaderRevision)) {
+            stream >> map;
+            return true;
+        }
+        else{
+            qCritical() << "Cache header is not valid in " << fileName;
+        }
     }
     return false;
 }

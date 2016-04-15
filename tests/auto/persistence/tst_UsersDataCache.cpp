@@ -3,8 +3,20 @@
 #include <QString>
 #include <QtTest/QtTest>
 #include "persistence/UsersDataCache.h"
+#include "persistence/CacheHeader.h"
 
 using namespace Persistence;
+
+class TestCacheHeader: public QObject
+{
+    Q_OBJECT
+
+private slots:
+    void validRevision();
+    void validRevision_data();
+    void invalidRevision();
+    void invalidRevision_data();
+};
 
 class TestCacheEntry: public QObject
 {
@@ -24,7 +36,6 @@ private slots:
     void setPanGuard();
 };
 
-
 // NOTE: UsersDataCache class was not able to test without side effect
 // because destructor write to storage directly.
 class TestUsersDataCache: public QObject
@@ -33,6 +44,52 @@ class TestUsersDataCache: public QObject
 private slots:
 };
 
+void TestCacheHeader::invalidRevision()
+{
+    QFETCH(quint32, expectedRevision);
+    CacheHeader cacheHeader; //the default value for revision in constructor is 0
+    QByteArray byteArray;
+    {
+        QDataStream stream(&byteArray, QIODevice::WriteOnly);
+        stream << cacheHeader; //store header data in stream
+    }
+
+    QDataStream stream(&byteArray, QIODevice::ReadOnly);
+
+    stream >> cacheHeader;
+
+    QVERIFY(!cacheHeader.isValid(expectedRevision));
+}
+
+void TestCacheHeader::invalidRevision_data()
+{
+    QTest::addColumn<quint32>("expectedRevision");
+    QTest::newRow("Invalid revision") << (quint32)2;
+}
+
+void TestCacheHeader::validRevision()
+{
+    QFETCH(quint32, expectedRevision);
+    CacheHeader cacheHeader(expectedRevision);
+    QByteArray byteArray;
+    {
+        QDataStream stream(&byteArray, QIODevice::WriteOnly);
+        stream << cacheHeader; //store header data in stream
+    }
+
+    QDataStream stream(&byteArray, QIODevice::ReadOnly);
+
+    stream >> cacheHeader; //read from stream and check if revision is correctly readed
+
+    QVERIFY(cacheHeader.isValid(expectedRevision));
+}
+
+void TestCacheHeader::validRevision_data()
+{
+    QTest::addColumn<quint32>("expectedRevision");
+    QTest::newRow("Revision 1") << (quint32)1;
+    QTest::newRow("Revision 3") << (quint32)3;
+}
 
 void TestCacheEntry::validUserIp_data()
 {
@@ -134,6 +191,11 @@ int main(int argc, char *argv[])
 
     {
         TestUsersDataCache test;
+        status |= QTest::qExec(&test, argc, argv);
+    }
+
+    {
+        TestCacheHeader test;
         status |= QTest::qExec(&test, argc, argv);
     }
 
