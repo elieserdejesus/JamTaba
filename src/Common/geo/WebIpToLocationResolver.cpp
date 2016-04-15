@@ -89,15 +89,29 @@ void WebIpToLocationResolver::replyFinished(QNetworkReply *reply){
 
     if(reply->error() == QNetworkReply::NoError ){
         QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
-        QJsonObject root = doc.object();
-        QJsonObject countryObject = root["country"].toObject();
-        QString countryName = countryObject["name"].toString();
-        QString countryCode = countryObject["code"].toString();
-        countryCodesCache.insert(ip, countryCode);
-        countryNamesCache.insert(countryCode, countryName);
-        qCDebug(jtIpToLocation) << "Data received IP:" << ip << " Lang:" << language << " country code:" << countryCode << " country name:" << countryName;
+        if (doc.isEmpty() || !doc.isObject()) {
+            qCritical() << "Json document is empty or is not an json object!";
+            return;
+        }
 
-        emit ipResolved(ip);
+        QJsonObject root = doc.object();
+        if (!root.contains("country")) {
+            qCritical() << "The root json object not contains 'country'";
+            return;
+        }
+        QJsonObject countryObject = root["country"].toObject();
+        if (countryObject.contains("name") && countryObject.contains("code")) {
+            QString countryName = countryObject["name"].toString();
+            QString countryCode = countryObject["code"].toString();
+            countryCodesCache.insert(ip, countryCode);
+            countryNamesCache.insert(countryCode, countryName);
+            qCDebug(jtIpToLocation) << "Data received IP:" << ip << " Lang:" << language << " country code:" << countryCode << " country name:" << countryName;
+
+            emit ipResolved(ip);
+        }
+        else{
+            qCritical() << "The country json object not contains 'name' or 'code'";
+        }
     }
     else{
         qCDebug(jtIpToLocation) << "error requesting " << ip << ". Returning an empty location!";
