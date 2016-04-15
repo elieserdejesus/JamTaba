@@ -45,7 +45,7 @@ private:
     double latitude;
     double longitude;
 
-    static QString Location::sanitize(const QString &inputString);
+    static QString sanitize(const QString &inputString);
 };
 
 class IpToLocationResolver : public QObject
