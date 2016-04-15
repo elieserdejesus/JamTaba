@@ -245,6 +245,9 @@ public:
 signals:
     void ipResolved(const QString &ip);
 
+signals:
+    void ipResolved(const QString &ip);
+
 public slots:
     virtual void setSampleRate(int newSampleRate);
 
