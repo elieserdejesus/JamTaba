@@ -305,8 +305,8 @@
     <qresource prefix="/">
         <file>loading.gif</file>
         <file>logging.ini</file>
-        <file>metronome/Custom_1st.ogg</file>
-        <file>metronome/Custom_2nd.ogg</file>
+        <file>metronome/Clave_1st.ogg</file>
+        <file>metronome/Clave_2nd.ogg</file>
         <file>metronome/Snap_1st.ogg</file>
         <file>metronome/Snap_2nd.ogg</file>
         <file>metronome/Ninjam_1st.ogg</file>
