@@ -36,7 +36,7 @@ WebIpToLocationResolver::WebIpToLocationResolver(const QDir &cacheDir)
     }
     else{
         loadOldCacheContent();
-        //deleteOldCacheFile(); //just commenting to avoid erase files when testing
+        deleteOldCacheFile();
     }
 }
 
