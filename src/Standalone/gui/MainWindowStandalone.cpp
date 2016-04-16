@@ -53,9 +53,9 @@ void MainWindowStandalone::setupSignals()
             SLOT(setCurrentScanningPlugin(QString)));
 }
 
-void MainWindowStandalone::initialize()
+void MainWindowStandalone::doWindowInitialization()
 {
-    MainWindow::initialize();
+    MainWindow::doWindowInitialization();
 
     Persistence::Settings settings = mainController->getSettings();
     if (settings.windowsWasFullScreenViewMode()) {

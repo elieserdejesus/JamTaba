@@ -21,8 +21,6 @@ public:
 
     void refreshTrackInputSelection(int inputTrackIndex);
 
-    void initialize() override;
-
     MainControllerStandalone * getMainController() override
     {
         return controller;
@@ -53,6 +51,8 @@ protected slots: //TODO change to private slots?
     void addFoundedPlugin(const QString &name, const QString &group, const QString &path);
     void setCurrentScanningPlugin(const QString &pluginPath);
     void addPluginToBlackList(const QString &pluginPath);
+
+    void doWindowInitialization() override;
 
 private slots:
     void toggleFullScreen();
