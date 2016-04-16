@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="en" sourcelanguage="en">
+<TS version="2.1" language="en" sourcelanguage="en">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -294,10 +294,6 @@
         <source>listen</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>%1  location is not available at moment!</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>LocalTrackGroupView</name>
@@ -431,10 +427,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Your controls</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>collapse/expand your controls ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -522,6 +514,10 @@
         <source>Metronome ...</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>type your name</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -604,6 +600,14 @@
     </message>
     <message>
         <source>Problem...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your name cannot be edited while jamming!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -802,11 +806,26 @@
         <source>%1 enter in room.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>(connected as &lt;user_name&gt;)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>connected as %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NinjamVoteButton</name>
     <message>
         <source>Vote - change %1 to %2 </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PlayerLabel</name>
+    <message>
+        <source>%1  location is not available at moment!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="pt_BR" sourcelanguage="en_US">
+<TS version="2.1" language="pt_BR" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -294,10 +294,6 @@
         <translation>%1 / %2 músicos</translation>
     </message>
     <message>
-        <source>%1  location is not available at moment!</source>
-        <translation>A localização de %1 não está disponível no momento!</translation>
-    </message>
-    <message>
         <source>The audio stream of this room is not available at moment!</source>
         <translation>O stream de áudio desta sala não está disponível no momento!</translation>
     </message>
@@ -434,10 +430,6 @@
         <translation>geral</translation>
     </message>
     <message>
-        <source>Your controls</source>
-        <translation>Seus controles</translation>
-    </message>
-    <message>
         <source>collapse/expand your controls ...</source>
         <translation>Contrai/expande seus controls ...</translation>
     </message>
@@ -525,6 +517,10 @@
         <source>Metronome ...</source>
         <translation>Metronomo ...</translation>
     </message>
+    <message>
+        <source>type your name</source>
+        <translation>digite seu nome</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -608,6 +604,14 @@
     <message>
         <source>Problem...</source>
         <translation>Problema ...</translation>
+    </message>
+    <message>
+        <source>Your name cannot be edited while jamming!</source>
+        <translation>Seu nome não pode ser modificado enquanto você está tocando em uma sala!</translation>
+    </message>
+    <message>
+        <source>Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.</source>
+        <translation>Somente letras, números, hífen e underline são permitidos!</translation>
     </message>
 </context>
 <context>
@@ -805,12 +809,27 @@
         <source>%1 enter in room.</source>
         <translation>%1 entrou na sala.</translation>
     </message>
+    <message>
+        <source>(connected as &lt;user_name&gt;)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>connected as %1</source>
+        <translation>conectado como %1</translation>
+    </message>
 </context>
 <context>
     <name>NinjamVoteButton</name>
     <message>
         <source>Vote - change %1 to %2 </source>
         <translation>Votação - mudar %1 para %2</translation>
+    </message>
+</context>
+<context>
+    <name>PlayerLabel</name>
+    <message>
+        <source>%1  location is not available at moment!</source>
+        <translation>A localização de %1 não está disponível no momento!</translation>
     </message>
 </context>
 <context>
