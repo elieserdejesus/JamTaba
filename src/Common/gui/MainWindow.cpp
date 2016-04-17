@@ -137,6 +137,7 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
     updateLocalInputChannelsGeometry();
 
     ui.userNameLineEdit->setVisible(!showPeakMetersOnly);
+    ui.labelYourControls->setVisible(!showPeakMetersOnly);
 }
 
 void MainWindow::updateLocalInputChannelsGeometry()

@@ -630,6 +630,11 @@ PeakMeter#masterMeterL, PeakMeter#masterMeterR{
     margin: 0px;
 }
 
+QLabel#labelYourControls
+{
+    color: rgb(190, 190, 190);
+}
+
 QLabel#masterTitleLabel, QLabel#labelMetronomeIControls{
     color: rgb(110, 110,110);
 }

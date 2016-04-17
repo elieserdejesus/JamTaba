@@ -114,7 +114,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>687</width>
+                <width>719</width>
                 <height>301</height>
                </rect>
               </property>
@@ -343,59 +343,49 @@
         <number>6</number>
        </property>
        <item>
-        <widget class="QWidget" name="topWidget" native="true">
+        <layout class="QHBoxLayout" name="topLayout">
+         <item>
+          <widget class="QLabel" name="labelYourControls">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>1</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Your Controls</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="localControlsCollapseButton">
+           <property name="toolTip">
+            <string>collapse/expand your controls ...</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="UserNameLineEdit" name="userNameLineEdit">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
-           <horstretch>0</horstretch>
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>1</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="UserNameLineEdit" name="userNameLineEdit">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>1</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="placeholderText">
-             <string>type your name</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="localControlsCollapseButton">
-            <property name="toolTip">
-             <string>collapse/expand your controls ...</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <property name="text">
+          <string notr="true"/>
+         </property>
+         <property name="placeholderText">
+          <string>type your name</string>
+         </property>
         </widget>
        </item>
        <item>
@@ -415,7 +405,7 @@
             <x>0</x>
             <y>0</y>
             <width>16</width>
-            <height>310</height>
+            <height>282</height>
            </rect>
           </property>
           <property name="sizePolicy">
