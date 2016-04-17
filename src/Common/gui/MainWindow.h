@@ -34,7 +34,7 @@ public:
     MainWindow(Controller::MainController *mainController, QWidget *parent = 0);
     virtual ~MainWindow();
 
-    virtual void initialize(); // this is overrided in inherited classes
+    void initialize();
 
     void detachMainController();
 
@@ -214,7 +214,8 @@ private slots:
 
     void updateUserName();
 
-    void doWindowInitialization();
+protected slots:
+        virtual void doWindowInitialization();
 
 private:
 
