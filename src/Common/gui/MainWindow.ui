@@ -114,7 +114,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>687</width>
+                <width>706</width>
                 <height>301</height>
                </rect>
               </property>
@@ -343,14 +343,41 @@
         <number>6</number>
        </property>
        <item>
-        <widget class="QWidget" name="topWidget" native="true">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QHBoxLayout" name="topLayout">
+         <item>
+          <widget class="QLabel" name="labelYourControls">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>1</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Your Controls</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="localControlsCollapseButton">
+           <property name="toolTip">
+            <string>collapse/expand your controls ...</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QWidget" name="userNamePanel" native="true">
+         <layout class="QHBoxLayout" name="horizontalLayout">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -383,15 +410,12 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="localControlsCollapseButton">
-            <property name="toolTip">
-             <string>collapse/expand your controls ...</string>
-            </property>
+           <widget class="QLabel" name="labelUserNameIcon">
             <property name="text">
-             <string/>
+             <string notr="true"/>
             </property>
-            <property name="checkable">
-             <bool>true</bool>
+            <property name="pixmap">
+             <pixmap resource="../../resources/jamtaba.qrc">:/images/pencil.png</pixmap>
             </property>
            </widget>
           </item>
@@ -415,7 +439,7 @@
             <x>0</x>
             <y>0</y>
             <width>16</width>
-            <height>310</height>
+            <height>282</height>
            </rect>
           </property>
           <property name="sizePolicy">
