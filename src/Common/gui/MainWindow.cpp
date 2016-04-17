@@ -136,7 +136,7 @@ void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
     updateLocalInputChannelsGeometry();
 
-    ui.userNameLineEdit->setVisible(!showPeakMetersOnly);
+    ui.userNamePanel->setVisible(!showPeakMetersOnly);
     ui.labelYourControls->setVisible(!showPeakMetersOnly);
 }
 
@@ -685,8 +685,14 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
 void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
 {
     ui.userNameLineEdit->setReadOnly(readOnly);
+
+    QString icon = !readOnly ? "pencil.png" : "pencil-read-only.png";
+    ui.labelUserNameIcon->setPixmap(QPixmap(":/images/" + icon));
+
     QString toolTip = readOnly ? tr("Your name cannot be edited while jamming!") : tr("Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.");
     ui.userNameLineEdit->setToolTip(toolTip);
+    ui.labelUserNameIcon->setToolTip(toolTip);
+
     if (readOnly) {
         if (ui.userNameLineEdit->hasFocus())
             ui.userNameLineEdit->clearFocus();

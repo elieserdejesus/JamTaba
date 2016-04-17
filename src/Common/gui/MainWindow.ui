@@ -114,7 +114,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>719</width>
+                <width>706</width>
                 <height>301</height>
                </rect>
               </property>
@@ -373,19 +373,50 @@
         </layout>
        </item>
        <item>
-        <widget class="UserNameLineEdit" name="userNameLineEdit">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>1</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string notr="true"/>
-         </property>
-         <property name="placeholderText">
-          <string>type your name</string>
-         </property>
+        <widget class="QWidget" name="userNamePanel" native="true">
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="UserNameLineEdit" name="userNameLineEdit">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>1</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="placeholderText">
+             <string>type your name</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelUserNameIcon">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../resources/jamtaba.qrc">:/images/pencil.png</pixmap>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>

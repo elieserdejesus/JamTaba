@@ -380,10 +380,11 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-pa
 
 /* common widgets */
 
-QLineEdit{
+QLineEdit,
+#userNamePanel{
     border-radius: 3px;
     padding: 2px;
-    background: #C5C5C5;
+    background-color: #C5C5C5;
     color: black;
     border: 1px solid #B2B2B2;
 }
@@ -690,14 +691,12 @@ QMainWindow #bottomPanel{
 
 #userNameLineEdit
 {
-    background-image: url(':/images/pencil.png');
-    background-repeat: none;
-    background-position: right center;
+    background-color: transparent;
+    border: none;
 }
 
 #userNameLineEdit:read-only
 {
-    background-image: url(':/images/pencil-read-only.png');
     color: gray;
 }
 
