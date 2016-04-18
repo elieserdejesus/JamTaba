@@ -686,7 +686,7 @@ void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
 {
     ui.userNameLineEdit->setReadOnly(readOnly);
 
-    QString icon = !readOnly ? "pencil.png" : "pencil-read-only.png";
+    QString icon = readOnly ? QStringLiteral("pencil-read-only.png") : QStringLiteral("pencil.png");
     ui.labelUserNameIcon->setPixmap(QPixmap(":/images/" + icon));
 
     QString toolTip = readOnly ? tr("Your name cannot be edited while jamming!") : tr("Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.");
