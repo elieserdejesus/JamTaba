@@ -149,22 +149,19 @@ void ChatPanel::hideTranslationProgressFeedback()
 
 void ChatPanel::addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton)
 {
-    QColor msgBackgroundColor = getUserColor(userName);
-    QColor textColor = (msgBackgroundColor == BOT_COLOR) ? QColor(50, 50, 50) : QColor(0, 0, 0);
-    QColor userNameBackgroundColor = msgBackgroundColor;
-    if (msgBackgroundColor != BOT_COLOR)
-        userNameBackgroundColor.setHsvF(msgBackgroundColor.hueF(),
-                                        msgBackgroundColor.saturationF(),
-                                        msgBackgroundColor.valueF() - 0.2);
+    QColor backgroundColor = getUserColor(userName);
+    QColor textColor = (backgroundColor == BOT_COLOR) ? QColor(50, 50, 50) : QColor(0, 0, 0);
+    QColor userNameBackgroundColor = backgroundColor;
+
     ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, userName, userMessage,
-                                                      userNameBackgroundColor, msgBackgroundColor,
+                                                      userNameBackgroundColor, backgroundColor,
                                                       textColor, showTranslationButton);
 
     connect(msgPanel, SIGNAL(startingTranslation()), this, SLOT(showTranslationProgressFeedback()));
     connect(msgPanel, SIGNAL(translationFinished()), this, SLOT(hideTranslationProgressFeedback()));
 
     msgPanel->setPrefferedTranslationLanguage(this->autoTranslationLanguage);
-    msgPanel->setMaximumWidth(ui->scrollContent->width());
+    //msgPanel->setMaximumWidth(ui->scrollContent->width());
     ui->scrollContent->layout()->addWidget(msgPanel);
     if (ui->scrollContent->layout()->count() > MAX_MESSAGES) {
         // remove the first widget
@@ -183,8 +180,8 @@ void ChatPanel::addMessage(const QString &userName, const QString &userMessage, 
 // +++++++++++++++++++++++++++++++++++=
 QColor ChatPanel::getUserColor(const QString &userName)
 {
-    if (botNames.contains(userName) || userName.isNull() || userName.isEmpty()
-        || userName == "Jamtaba")
+    if (botNames.contains(userName, Qt::CaseInsensitive) || userName.isEmpty()
+        || userName.toLower() == "jamtaba")
         return BOT_COLOR;
 
     Q_ASSERT(colorsPool);

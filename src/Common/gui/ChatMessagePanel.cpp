@@ -41,7 +41,7 @@ void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
                                   bool showTranslationButton)
 {
     if (!userName.isEmpty() && !userName.isNull()) {
-        ui->labelUserName->setText(userName);
+        ui->labelUserName->setText(userName + ":");
         ui->labelUserName->setStyleSheet(buildCssString(userNameBackgroundColor, textColor));
     } else {
         ui->labelUserName->setVisible(false);
