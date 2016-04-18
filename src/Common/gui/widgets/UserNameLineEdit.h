@@ -23,11 +23,14 @@ protected:
     void keyReleaseEvent(QKeyEvent *e) override;
 
 private slots:
-    void updateTextAlignment();
+    void updateText();
 
 private:
     QString lastValidUserName;
     QKeyEvent *getModifiedEvent(QKeyEvent *e);
+
+    void updateTextAlignment();
+    void sanitizeBlankSpaces();
 
 };
 

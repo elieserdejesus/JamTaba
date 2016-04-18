@@ -11,7 +11,7 @@ UserNameLineEdit::UserNameLineEdit(QWidget *parent)
 
     setMaxLength(16); //this maxLength need be changed if we decide support non ASCII user names
 
-    connect(this, SIGNAL(editingFinished()), this, SLOT(updateTextAlignment()));
+    connect(this, SIGNAL(editingFinished()), this, SLOT(updateText()));
 }
 
 void UserNameLineEdit::keyPressEvent(QKeyEvent *e)
@@ -32,6 +32,18 @@ QKeyEvent *UserNameLineEdit::getModifiedEvent(QKeyEvent *e)
     //replace spacebar with '_'
     e->accept();
     return new QKeyEvent(e->type(), Qt::Key_Underscore, e->modifiers(), "_");
+}
+
+void UserNameLineEdit::updateText()
+{
+    sanitizeBlankSpaces();
+    updateTextAlignment();
+}
+
+void UserNameLineEdit::sanitizeBlankSpaces()
+{
+    QString currentText = text();
+    setText( currentText.replace(" ", "_") );
 }
 
 void UserNameLineEdit::focusInEvent(QFocusEvent *e)
