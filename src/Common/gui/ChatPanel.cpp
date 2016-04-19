@@ -150,9 +150,9 @@ void ChatPanel::hideTranslationProgressFeedback()
 void ChatPanel::addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton)
 {
     QColor backgroundColor = getUserColor(userName);
-    QColor textColor = (backgroundColor == BOT_COLOR) ? QColor(50, 50, 50) : QColor(0, 0, 0);
+    bool isBot = backgroundColor == BOT_COLOR;
+    QColor textColor = isBot ? QColor(50, 50, 50) : QColor(0, 0, 0);
     QColor userNameBackgroundColor = backgroundColor;
-
     ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, userName, userMessage,
                                                       userNameBackgroundColor, backgroundColor,
                                                       textColor, showTranslationButton);

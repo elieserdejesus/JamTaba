@@ -123,6 +123,19 @@
      </item>
     </layout>
    </item>
+   <item alignment="Qt::AlignRight">
+    <widget class="QLabel" name="labelTimeStamp">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string notr="true">08:14:53</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>
