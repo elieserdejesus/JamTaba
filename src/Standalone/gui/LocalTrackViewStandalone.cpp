@@ -323,13 +323,15 @@ void LocalTrackViewStandalone::setPeakMetersOnlyMode(bool peakMetersOnly, bool r
 {
     LocalTrackView::setPeakMetersOnlyMode(peakMetersOnly, runningInMiniMode);
 
-    if (fxPanel) {// in vst plugin fxPanel is nullptr
-        fxPanel->setVisible(!peakMetersOnly);
-        inputPanel->setVisible(!peakMetersOnly);
-    }
+    Q_ASSERT(fxPanel);
+    fxPanel->setVisible(!peakMetersOnly);
+    inputPanel->setVisible(!peakMetersOnly);
 
-    if (inputTypeIconLabel)// this will be nullptr in Vst plugin
-        inputTypeIconLabel->setVisible(!peakMetersOnly);
+    Q_ASSERT(inputTypeIconLabel);
+    inputTypeIconLabel->setVisible(!peakMetersOnly);
+
+    Q_ASSERT(midiToolsButton);
+    midiToolsButton->setVisible(!peakMetersOnly);
 }
 
 QMenu *LocalTrackViewStandalone::createMonoInputsMenu(QMenu *parent)
