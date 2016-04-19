@@ -6,6 +6,7 @@
 #include <QNetworkRequest>
 #include <QMetaMethod>
 #include "log/Logging.h"
+#include <QTime>
 
 ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
     QWidget(parent),
@@ -41,7 +42,7 @@ void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
                                   bool showTranslationButton)
 {
     if (!userName.isEmpty() && !userName.isNull()) {
-        ui->labelUserName->setText(userName);
+        ui->labelUserName->setText(userName + ":");
         ui->labelUserName->setStyleSheet(buildCssString(userNameBackgroundColor, textColor));
     } else {
         ui->labelUserName->setVisible(false);
@@ -52,7 +53,9 @@ void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
     newMessage = newMessage.replace("\n", "<br/>");
     newMessage = replaceLinksInString(newMessage);
     ui->labelMessage->setText(newMessage);
-    ui->labelMessage->setStyleSheet(buildCssString(msgBackgroundColor, textColor));
+    ui->labelTimeStamp->setText(QTime::currentTime().toString("hh:mm:ss"));
+
+    ui->messageContent->setStyleSheet(buildCssString(msgBackgroundColor, textColor));
 
     if (showTranslationButton)
         ui->translateButton->setStyleSheet(buildCssString(userNameBackgroundColor, textColor));
