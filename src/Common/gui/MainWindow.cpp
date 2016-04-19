@@ -641,7 +641,7 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     qCDebug(jtGUI) << "adding ninjam chat panel...";
     ChatPanel *chatPanel = ninjamWindow->getChatPanel();
     ui.chatTabWidget->addTab(chatPanel, "");
-    updateChatTabTitle(roomInfo.getName());//set and translate the chat tab title
+    updateChatTabTitle();//set and translate the chat tab title
 
     QObject::connect(chatPanel, SIGNAL(userConfirmingChordProgression(
                                            ChordProgression)), this,
@@ -688,10 +688,10 @@ void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
     }
 }
 
-void MainWindow::updateChatTabTitle(const QString &roomName)
+void MainWindow::updateChatTabTitle()
 {
     int chatTabIndex = 0; //assuming chat is the first tab
-    ui.chatTabWidget->setTabText(chatTabIndex, tr("chat %1").arg(roomName));
+    ui.chatTabWidget->setTabText(chatTabIndex, tr("Chat"));
 }
 
 void MainWindow::showMetronomePreferencesDialog()
@@ -839,7 +839,7 @@ void MainWindow::changeEvent(QEvent *ev)
     else if (ev->type() == QEvent::LanguageChange) {
         ui.retranslateUi(this);
         if (ninjamWindow) {
-            updateChatTabTitle(ninjamWindow.data()->getRoomName()); //translate the chat tab title
+            updateChatTabTitle(); //translate the chat tab title
         }
     }
     QMainWindow::changeEvent(ev);
