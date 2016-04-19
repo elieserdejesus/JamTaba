@@ -272,7 +272,7 @@ private:
 
     void restoreWindowPosition();
 
-    void updateChatTabTitle(const QString &roomName);
+    void updateChatTabTitle();
 
     void loadTranslationFile(const QString &locale);
 
