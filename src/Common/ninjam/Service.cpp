@@ -184,6 +184,7 @@ QStringList Service::buildBotNamesList()
     names.append("mutantlab.com");
     names.append("LiveStream");
     names.append("localhost");
+    names.append("ninjamers.servebeer.com");
     return names;
 }
 
