@@ -55,7 +55,8 @@ void MainWindowStandalone::setupSignals()
 
 void MainWindowStandalone::doWindowInitialization()
 {
-    MainWindow::doWindowInitialization();
+    // set window mode: mini mode or full view mode
+    setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
 
     Persistence::Settings settings = mainController->getSettings();
     if (settings.windowsWasFullScreenViewMode()) {
@@ -68,6 +69,9 @@ void MainWindowStandalone::doWindowInitialization()
             restoreWindowPosition();
         }
     }
+
+    //create the local tracks, load plugins, etc.
+    QTimer::singleShot(1, this, SLOT(initializeLocalInputChannels()));
 }
 
 void MainWindowStandalone::restoreWindowPosition()

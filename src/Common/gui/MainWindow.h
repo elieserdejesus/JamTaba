@@ -134,6 +134,8 @@ protected:
     void timerEvent(QTimerEvent *) override;
     void resizeEvent(QResizeEvent *) override;
 
+    virtual void doWindowInitialization();
+
 protected slots:
     void closeTab(int index);
     void changeTab(int index);
@@ -192,6 +194,8 @@ protected slots:
 
     void tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &password = "");
 
+    void initializeLocalInputChannels();
+
 private slots:
 
     void showJamtabaCurrentVersion();
@@ -208,14 +212,9 @@ private slots:
     void setBuiltInMetronome(const QString &metronomeAlias);
     void setCustomMetronome(const QString &primaryBeatFile, const QString &secondaryBeatFile);
 
-    void initializeLocalInputChannels();
-
     void setLanguage(QAction * languageMenuAction);
 
     void updateUserName();
-
-protected slots:
-        virtual void doWindowInitialization();
 
 private:
 
