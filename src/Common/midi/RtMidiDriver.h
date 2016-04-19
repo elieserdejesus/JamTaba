@@ -25,6 +25,8 @@ public:
 private:
     QList<RtMidiIn *> midiStreams;
 
+    void consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, MidiMessageBuffer &outBuffer);
+
 };
 }
 #endif // RTMIDIDRIVER_H

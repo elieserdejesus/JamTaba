@@ -96,39 +96,32 @@ QString RtMidiDriver::getInputDeviceName(uint index) const{
     return "";
 }
 
+void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, MidiMessageBuffer &outBuffer)
+{
+    std::vector<unsigned char> messageBytes;
+    do{
+        messageBytes.clear();
+        double messageTimeStamp = stream->getMessage(&messageBytes);
+        if (messageBytes.size() == 3) { // Jamtaba is handling only the 3 bytes commond midi messages. Uncommon midi messages will be ignored.
+            int msgData = 0;
+            msgData |= messageBytes.at(0);
+            msgData |= messageBytes.at(1) << 8;
+            msgData |= messageBytes.at(2) << 16;
+            outBuffer.addMessage(Midi::MidiMessage(msgData, qint32(messageTimeStamp), deviceIndex));
+        }
+        else{
+            if (!messageBytes.empty())
+                qWarning() << "A midi message containing " << messageBytes.size() << " bytes was received!";
+        }
+    }
+    while(!messageBytes.empty());
+}
+
 MidiMessageBuffer RtMidiDriver::getBuffer(){
-    MidiMessageBuffer buffer(32);//max 32 midi messages
+    MidiMessageBuffer buffer(64);//max 64 midi messages in each audio callback
     int deviceIndex = 0;
     foreach (RtMidiIn* stream, midiStreams) {
-        while(true){
-            std::vector<unsigned char> message;
-            double stamp = stream->getMessage(&message);
-            if(!message.empty() && message.size() <= 3){
-                int msgData = 0;
-                msgData |= message.at(0);
-                if(message.size() == 3){
-                    msgData |= message.at(1) << 8;
-                    msgData |= message.at(2) << 16;
-                }else{
-                    msgData = 0;
-                    qCWarning(jtMidi) << "We receive a not common midi message with just" << message.size() << "bytes";
-                }
-                //qDebug(midi) << "original msgData:";
-                //qDebug(midi) << "Status:" << message.at(0);
-                //qDebug(midi) << "data 1:" << message.at(1);
-                //qDebug(midi) << "data 2:" << message.at(2) << endl;
-
-                buffer.addMessage(Midi::MidiMessage(msgData, qint32(stamp), deviceIndex));
-
-                //            qDebug(midi) << "msgData:" << msgData;
-                //            qDebug(midi) << "Status:" << ((msgData) & 0xFF);
-                //            qDebug(midi) << "data 1:" << (((msgData) >> 8) & 0xFF);
-                //            qDebug(midi) << "data 2:" << (((msgData) >> 16) & 0xFF);
-            }
-            else{
-                break;
-            }
-        }
+        consumeMessagesFromStream(stream, deviceIndex, buffer);
         deviceIndex++;
     }
     return buffer;
