@@ -54,7 +54,8 @@ void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
     newMessage = replaceLinksInString(newMessage);
     ui->labelMessage->setText(newMessage);
     ui->labelTimeStamp->setText(QTime::currentTime().toString("hh:mm:ss"));
-    ui->labelMessage->setStyleSheet(buildCssString(msgBackgroundColor, textColor));
+
+    ui->messageContent->setStyleSheet(buildCssString(msgBackgroundColor, textColor));
 
     if (showTranslationButton)
         ui->translateButton->setStyleSheet(buildCssString(userNameBackgroundColor, textColor));

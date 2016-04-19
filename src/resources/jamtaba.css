@@ -1389,15 +1389,21 @@ ChatPanel QPushButton#buttonAutoTranslate{
 }
 
 ChatMessagePanel #labelUserName,
-ChatMessagePanel #labelMessage
+ChatMessagePanel #messageContent
 {
     border: 1px solid rgb(0, 0, 0, 80);
     border-radius: 2px;
 }
 
+ChatMessagePanel #labelMessage
+{
+    margin: 1px;
+}
+
 ChatMessagePanel #labelTimeStamp{
     font-size: 9px;
     font-style: italic;
+    margin: 2px;
 }
 
 ChatMessagePanel #labelUserName{
@@ -1408,10 +1414,7 @@ ChatMessagePanel #labelUserName{
     font-weight: bold;
 }
 
-ChatMessagePanel #labelMessage{
-    padding: 2px;
-    padding-top: 0px;
-
+ChatMessagePanel #messageContent{
     border-top-right-radius: 0px;
     border-top-left-radius: 0px;
     border-top: none;
