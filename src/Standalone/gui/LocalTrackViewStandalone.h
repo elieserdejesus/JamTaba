@@ -92,6 +92,8 @@ private:
     void startMidiNoteLearn();
     void stopMidiNoteLearn();
 
+    bool canShowMidiToolsButton();
+
     MidiToolsDialog *midiToolsDialog;
 
     static const QString MIDI_ICON;

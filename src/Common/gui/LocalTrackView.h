@@ -38,6 +38,8 @@ public:
     virtual void setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode);
     void togglePeakMetersOnlyMode(bool runninsInMiniMode);
 
+    inline bool isShowingPeakMetersOnly() const { return peakMetersOnly; }
+
     QSize sizeHint() const;
 
     virtual void reset();
