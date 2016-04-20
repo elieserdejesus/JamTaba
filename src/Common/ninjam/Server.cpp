@@ -1,4 +1,5 @@
 #include "Server.h"
+#include "ServerMessages.h"
 #include "User.h"
 #include "UserChannel.h"
 #include "log/Logging.h"

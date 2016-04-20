@@ -3,7 +3,7 @@
 
 QT += testlib core network
 QT -= gui
-CONFIG += testcase
+CONFIG += testcase c++11
 TEMPLATE = app
 TARGET = testNinjam
 INCLUDEPATH += .
