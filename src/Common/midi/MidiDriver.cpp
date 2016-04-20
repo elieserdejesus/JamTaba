@@ -34,7 +34,7 @@ void MidiMessageBuffer::addMessage(const MidiMessage &m)
         messages[messagesCount] = m;
         messagesCount++;
     } else {
-        qCWarning(jtMidi) << "MidiBuffer full, discarding the message!";
+        qWarning() << "MidiBuffer full, discarding the message!";
     }
 }
 
