@@ -8,6 +8,7 @@
         <file alias="ja_JP.qm">../../translations/ja_JP.qm</file>
         <file alias="pt_BR.qm">../../translations/pt_BR.qm</file>
         <file alias="es_CL.qm">../../translations/es_CL.qm</file>
+        <file alias="fr_FR.qm">../../translations/fr_FR.qm</file>
     </qresource>
     <qresource prefix="/images">
         <file>check.png</file>
