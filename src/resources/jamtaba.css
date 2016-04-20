@@ -1103,6 +1103,14 @@ LocalTrackGroupView  #toolButton {
 LocalTrackGroupView   #toolButton:hover{
     background-image: url(':/images/gear-hover.png');
 }
+
+LocalTrackGroupView #groupNameField
+{
+    font-size: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin: 0px;
+}
 /* ++++++++++++++++++++++++++++++++++ */
 
 QLabel#labelPanR, QLabel#labelPanL{

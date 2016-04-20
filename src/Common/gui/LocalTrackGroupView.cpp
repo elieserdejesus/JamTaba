@@ -23,6 +23,8 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
                          nameChanged()));
     QObject::connect(xmitButton, SIGNAL(toggled(bool)), this, SLOT(toggleTransmitingStatus(bool)));
 
+    groupNameField->setAlignment(Qt::AlignHCenter);
+
     translateUi();
 }
 
@@ -35,6 +37,8 @@ void LocalTrackGroupView::translateUi()
 
     toolButton->setToolTip(tr("Add or remove channels..."));
     toolButton->setAccessibleDescription(toolButton->toolTip());
+
+    groupNameField->setPlaceholderText(tr("channel name"));
 }
 
 void LocalTrackGroupView::updateXmitButtonText()

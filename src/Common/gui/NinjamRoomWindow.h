@@ -102,7 +102,7 @@ private:
 
     void updateTracksSizeButtons();// enable or disable tracks size buttons
 
-    void retranslate();
+    void translate();
 
 private slots:
 

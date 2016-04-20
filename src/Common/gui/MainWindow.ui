@@ -404,8 +404,11 @@
             <property name="text">
              <string notr="true"/>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
             <property name="placeholderText">
-             <string>type your name</string>
+             <string>user name here</string>
             </property>
            </widget>
           </item>

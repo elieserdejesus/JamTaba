@@ -58,7 +58,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>You are connected as &lt;user_name&gt;</string>
+        <string>Connected as &lt;user_name&gt;</string>
        </property>
       </widget>
      </item>

@@ -73,18 +73,18 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
     setTracksOrientation(lastTracksLayoutOrientation);
     setTracksSize(lastTracksSize);
 
-    retranslate();
+    translate();
 }
 
 void NinjamRoomWindow::changeEvent(QEvent *e)
 {
     if (e->type() == QEvent::LanguageChange) {
-        retranslate();
+        translate();
     }
     QWidget::changeEvent(e);
 }
 
-void NinjamRoomWindow::retranslate()
+void NinjamRoomWindow::translate()
 {
     ui->retranslateUi(this); //translate the fixed elements created in Qt ui designer
 
@@ -93,7 +93,7 @@ void NinjamRoomWindow::retranslate()
     verticalLayoutButton->setToolTip(tr("Set tracks layout to vertical"));
     wideButton->setToolTip(tr("Wide tracks"));
     narrowButton->setToolTip(tr("Narrow tracks"));
-    ui->labelUserName->setText(tr("You are connected as %1").arg(mainController->getUserName()));
+    ui->labelUserName->setText(tr("Connected as %1").arg(mainController->getUserName()));
 }
 
 void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrientation)
@@ -224,7 +224,7 @@ void NinjamRoomWindow::setFullViewStatus(bool fullView)
     ui->contentLayout->setSpacing(fullView ? 24 : 6);
 
     // main layout
-    int topMargim = fullView ? 9 : 0;
+    int topMargim = fullView ? 9 : 7;
     int bottomMargim = fullView ? 9 : 3;
     layout()->setContentsMargins(0, topMargim, 0, bottomMargim);
 
