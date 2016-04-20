@@ -25,7 +25,6 @@ signals:
     void startingTranslation();
     void translationFinished();
 
-
 protected:
     void changeEvent(QEvent *) override;
 
@@ -39,6 +38,7 @@ private:
     QString translatedText;
     Ui::ChatMessagePanel *ui;
     QString preferredTargetTranslationLanguage;
+
     static QString replaceLinksInString(const QString &string);
 
     static QString buildCssString(const QColor &bgColor, const QColor &textColor);
@@ -47,6 +47,7 @@ private:
                     const QColor &msgBackgroundColor, const QColor &textColor, bool showTranslationButton);
 
     void setTranslatedMessage(const QString &translatedMessage);
+
 };
 
 #endif // CHATMESSAGEPANEL_H

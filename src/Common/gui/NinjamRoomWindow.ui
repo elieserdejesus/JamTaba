@@ -50,22 +50,6 @@
       <number>6</number>
      </property>
      <item>
-      <widget class="QLabel" name="labelRoomName">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="accessibleDescription">
-        <string>This is the room where you are</string>
-       </property>
-       <property name="text">
-        <string notr="true">ninbot.com</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QLabel" name="labelUserName">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -74,7 +58,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>(connected as &lt;user_name&gt;)</string>
+        <string>You are connected as &lt;user_name&gt;</string>
        </property>
       </widget>
      </item>

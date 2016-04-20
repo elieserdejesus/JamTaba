@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QMap>
+#include <QPushButton>
 #include <QList>
 #include "chords/ChordProgression.h"
 #include "UsersColorsPool.h"

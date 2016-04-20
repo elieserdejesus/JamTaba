@@ -52,9 +52,6 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
 
     ui->licenceButton->setIcon(QIcon(QPixmap(":/images/licence.png")));
 
-    QString labelText = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
-    ui->labelRoomName->setText(labelText);
-
     ui->tracksPanel->layout()->setAlignment(Qt::AlignLeft);// tracks are left aligned
 
     this->ninjamPanel = createNinjamPanel();
@@ -96,7 +93,7 @@ void NinjamRoomWindow::retranslate()
     verticalLayoutButton->setToolTip(tr("Set tracks layout to vertical"));
     wideButton->setToolTip(tr("Wide tracks"));
     narrowButton->setToolTip(tr("Narrow tracks"));
-    ui->labelUserName->setText(tr("connected as %1").arg(mainController->getUserName()));
+    ui->labelUserName->setText(tr("You are connected as %1").arg(mainController->getUserName()));
 }
 
 void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrientation)
@@ -551,7 +548,7 @@ void NinjamRoomWindow::showServerLicence()
               .replace("<", "&lt;")
               .replace(brPattern, "<br>")
               .replace(ccLink, anchorTag));
-    msgBox->setWindowTitle(ui->labelRoomName->text());
+    msgBox->setWindowTitle(tr("Server Licence"));
     msgBox->setAttribute(Qt::WA_DeleteOnClose);
 
     // hack to set minimum width in QMessageBox
