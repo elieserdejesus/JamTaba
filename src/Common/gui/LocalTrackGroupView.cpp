@@ -102,7 +102,7 @@ void LocalTrackGroupView::closePluginsWindows()
 
 void LocalTrackGroupView::addChannel()
 {
-    mainFrame->addChannelsGroup(tr("new channel"));
+    mainFrame->addChannelsGroup("");
 }
 
 void LocalTrackGroupView::resetTracks()
