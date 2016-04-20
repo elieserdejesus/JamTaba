@@ -119,6 +119,8 @@ void JamtabaPlugin::initialize()
             controller->configureStyleSheet("jamtaba.css");
             controller->setSampleRate(getSampleRate());
             controller->start();
+            controller->connectInJamtabaServer();
+
             qCDebug(jtVstPlugin)<< "Controller started!";
             running = true;
             qCDebug(jtVstPlugin) << "Plugin initialize() done";
