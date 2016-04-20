@@ -636,22 +636,24 @@ void MainController::start()
         QObject::connect(&ninjamService, SIGNAL(error(QString)), this,
                          SLOT(quitFromNinjamServer(QString)));
 
-        NatMap map;// not used yet,will be used in future to real time rooms
-
-        // connect with login server and receive a list of public rooms to play
-        QString userEnvironment = getUserEnvironmentString();
-        QString version = QApplication::applicationVersion();// applicationVersion();
-        QString userName = settings.getUserName();
-        if (userName.isEmpty())
-            userName = "No name!";
-
-        qCInfo(jtCore) << "Connecting in Jamtaba server...";
-        loginService.connectInServer(userName, 0, "", map, version, userEnvironment,
-                                     getSampleRate());
-
-        qInfo() << "Starting " + userEnvironment;
+        qInfo() << "Starting " + getUserEnvironmentString();
         started = true;
     }
+}
+
+void MainController::connectInJamtabaServer()
+{
+    // connect with login server and receive (after some seconds) a list of public rooms to play
+
+    NatMap map;// not used yet,will be used in future to real time rooms
+    QString userEnvironment = getUserEnvironmentString();
+    QString version = QApplication::applicationVersion();// applicationVersion();
+    QString userName = settings.getUserName();
+    if (userName.isEmpty())
+        userName = "No name!";
+
+    qCInfo(jtCore) << "Connecting in Jamtaba server...";
+    loginService.connectInServer(userName, 0, "", map, version, userEnvironment, getSampleRate());
 }
 
 QString MainController::getUserEnvironmentString() const

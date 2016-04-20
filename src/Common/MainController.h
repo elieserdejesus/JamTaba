@@ -104,6 +104,8 @@ public:
 
     Login::LoginService *getLoginService() const;
 
+    void connectInJamtabaServer();
+
     virtual inline Controller::NinjamController *getNinjamController() const
     {
         return ninjamController.data();
