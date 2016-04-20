@@ -75,7 +75,7 @@ void UserNameLineEdit::resizeEvent(QResizeEvent *e)
 void UserNameLineEdit::updateTextAlignment()
 {
     Qt::Alignment alignment = Qt::AlignCenter;
-    int maxWidth = sizeHint().width();
+    int maxWidth = size().width();
     int textWidth = fontMetrics().width(text());
     if (textWidth > maxWidth) {
         alignment = Qt::AlignLeft | Qt::AlignVCenter;
