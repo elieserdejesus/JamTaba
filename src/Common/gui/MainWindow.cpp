@@ -519,7 +519,7 @@ bool MainWindow::canUseTwoColumnLayout() const
 
 void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRooms)
 {
-    if (!isVisible() || publicRooms.isEmpty())
+    if (publicRooms.isEmpty() || mainController->isPlayingInNinjamRoom())
         return;
 
     hideBusyDialog();

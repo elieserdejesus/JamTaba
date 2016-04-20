@@ -38,8 +38,9 @@ int main(int argc, char* args[] ){
     MainWindowStandalone mainWindow(&mainController);
     mainController.setMainWindow(&mainWindow);
     mainWindow.initialize();
-
     mainWindow.show();
+
+    mainController.connectInJamtabaServer();
 
 #ifdef Q_OS_WIN
     //The SingleApplication class implements a showUp() signal. You can bind to that signal to raise your application's
