@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="en" sourcelanguage="en">
+<TS version="2.1" language="en" sourcelanguage="en">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -406,6 +406,10 @@
     <message>
         <source>%1  (no MIDI devices detected or enabled in &apos;Preferences&apos; menu&apos;)</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>no input</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

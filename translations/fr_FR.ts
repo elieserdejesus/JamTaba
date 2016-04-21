@@ -407,6 +407,10 @@
         <source>%1  (no MIDI devices detected or enabled in &apos;Preferences&apos; menu&apos;)</source>
         <translation>%1 (pas de materiel midi detecté ou autorisé voir dans Preferences)</translation>
     </message>
+    <message>
+        <source>no input</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainFrameClass</name>
