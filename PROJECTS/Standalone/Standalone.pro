@@ -150,7 +150,13 @@ macx{
 }
 
 linux{
-    LIBS_PATH = "static/linux64"
+    linux*64{
+        LIBS_PATH = "static/linux64"
+    }
+    linux*32{
+        LIBS_PATH = "static/linux32"
+    }
+
     DEFINES += __LINUX_ALSA__
 
     LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
