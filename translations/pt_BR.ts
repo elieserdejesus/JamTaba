@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pt_BR" sourcelanguage="en_US">
+<TS version="2.0" language="pt_BR" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -358,7 +358,7 @@
     </message>
     <message>
         <source>channel name</source>
-        <translation type="unfinished"></translation>
+        <translation>nome do canal</translation>
     </message>
 </context>
 <context>
@@ -511,11 +511,11 @@
     </message>
     <message>
         <source>Your Controls</source>
-        <translation type="unfinished"></translation>
+        <translation>Seus Controles</translation>
     </message>
     <message>
         <source>user name here</source>
-        <translation type="unfinished"></translation>
+        <translation>seu nome aqui</translation>
     </message>
 </context>
 <context>
@@ -599,11 +599,11 @@
     </message>
     <message>
         <source>Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.</source>
-        <translation>Somente letras, números, hífen e underline são permitidos!</translation>
+        <translation>Somente letras, números, hífen e underline são permitidos.</translation>
     </message>
     <message>
         <source>Chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Bate-papo</translation>
     </message>
 </context>
 <context>
@@ -799,15 +799,15 @@
     </message>
     <message>
         <source>Connected as &lt;user_name&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Conecado como &lt;user_name&gt;</translation>
     </message>
     <message>
         <source>Connected as %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Conectado como %1</translation>
     </message>
     <message>
         <source>Server Licence</source>
-        <translation type="unfinished"></translation>
+        <translation>Licença do servidor</translation>
     </message>
 </context>
 <context>
