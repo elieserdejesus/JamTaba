@@ -93,6 +93,7 @@ private:
     void stopMidiNoteLearn();
 
     bool canShowMidiToolsButton();
+    bool canShowInputTypeIcon();
 
     MidiToolsDialog *midiToolsDialog;
 

@@ -328,7 +328,7 @@ void LocalTrackViewStandalone::setPeakMetersOnlyMode(bool peakMetersOnly, bool r
     inputPanel->setVisible(!peakMetersOnly);
 
     Q_ASSERT(inputTypeIconLabel);
-    inputTypeIconLabel->setVisible(!peakMetersOnly);
+    inputTypeIconLabel->setVisible(canShowInputTypeIcon());
 
     Q_ASSERT(midiToolsButton);
     midiToolsButton->setVisible(canShowMidiToolsButton());
@@ -530,11 +530,16 @@ void LocalTrackViewStandalone::refreshInputSelectionName()
     setMidiPeakMeterVisibility(inputNode->isMidi());
 
     midiToolsButton->setVisible( canShowMidiToolsButton() );
-    inputTypeIconLabel->setVisible(!inputTrack->isMidi());
+    inputTypeIconLabel->setVisible(canShowInputTypeIcon());
 
     updateGeometry();
 
     update();
+}
+
+bool LocalTrackViewStandalone::canShowInputTypeIcon()
+{
+    return !inputNode->isMidi() && !isShowingPeakMetersOnly();
 }
 
 bool LocalTrackViewStandalone::canShowMidiToolsButton()
