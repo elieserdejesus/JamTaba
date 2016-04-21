@@ -355,11 +355,7 @@
     </message>
     <message>
         <source>channel name</source>
-<<<<<<< HEAD
-        <translation type="unfinished"></translation>
-=======
         <translation>nombre canal</translation>
->>>>>>> 427f9ca... translate-es_CL
     </message>
 </context>
 <context>
@@ -385,11 +381,7 @@
     </message>
     <message>
         <source>Mono</source>
-<<<<<<< HEAD
-        <translation>Monofónico</translation>
-=======
         <translation>Mono</translation>
->>>>>>> 427f9ca... translate-es_CL
     </message>
     <message>
         <source>Stereo</source>
@@ -417,11 +409,7 @@
     </message>
     <message>
         <source>no input</source>
-<<<<<<< HEAD
-        <translation type="unfinished"></translation>
-=======
         <translation>sin entrada</translation>
->>>>>>> 427f9ca... translate-es_CL
     </message>
 </context>
 <context>
@@ -524,19 +512,11 @@
     </message>
     <message>
         <source>Your Controls</source>
-<<<<<<< HEAD
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>user name here</source>
-        <translation type="unfinished"></translation>
-=======
         <translation>Tus Controles</translation>
     </message>
     <message>
         <source>user name here</source>
         <translation>nombre usuario</translation>
->>>>>>> 427f9ca... translate-es_CL
     </message>
 </context>
 <context>
@@ -625,11 +605,7 @@
     </message>
     <message>
         <source>Chat</source>
-<<<<<<< HEAD
-        <translation type="unfinished"></translation>
-=======
         <translation>Chat</translation>
->>>>>>> 427f9ca... translate-es_CL
     </message>
 </context>
 <context>
@@ -825,17 +801,6 @@
     </message>
     <message>
         <source>Connected as &lt;user_name&gt;</source>
-<<<<<<< HEAD
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Connected as %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Server Licence</source>
-        <translation type="unfinished"></translation>
-=======
         <translation>Conectado como &lt;user_name&gt;</translation>
     </message>
     <message>
@@ -845,7 +810,6 @@
     <message>
         <source>Server Licence</source>
         <translation>Licencia Servidor</translation>
->>>>>>> 427f9ca... translate-es_CL
     </message>
 </context>
 <context>
