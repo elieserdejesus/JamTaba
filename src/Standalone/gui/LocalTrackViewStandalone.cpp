@@ -10,7 +10,6 @@ const QString LocalTrackViewStandalone::MIDI_ICON = ":/images/input_midi.png";
 const QString LocalTrackViewStandalone::MONO_ICON = ":/images/input_mono.png";
 const QString LocalTrackViewStandalone::STEREO_ICON = ":/images/input_stereo.png";
 const QString LocalTrackViewStandalone::NO_INPUT_ICON = ":/images/input_no.png";
-const char* LocalTrackViewStandalone::NO_INPUT_TEXT = "No input";
 
 LocalTrackViewStandalone::LocalTrackViewStandalone(
     Controller::MainControllerStandalone *mainController, int channelIndex) :
@@ -366,7 +365,7 @@ void LocalTrackViewStandalone::showInputSelectionMenu()
     menu.addMenu(createMonoInputsMenu(&menu));
     menu.addMenu(createStereoInputsMenu(&menu));
     menu.addMenu(createMidiInputsMenu(&menu));
-    QAction *noInputAction = menu.addAction(QIcon(NO_INPUT_ICON), tr(NO_INPUT_TEXT));
+    QAction *noInputAction = menu.addAction(QIcon(NO_INPUT_ICON), tr("no input"));
     QObject::connect(noInputAction, SIGNAL(triggered()), this, SLOT(setToNoInput()));
 
     menu.move(mapToGlobal(inputSelectionButton->parentWidget()->pos()));
@@ -552,7 +551,7 @@ QString LocalTrackViewStandalone::getAudioInputText()
     }
 
     // range is empty = no audio input
-    return tr(NO_INPUT_TEXT);
+    return tr("no input");
 }
 
 QString LocalTrackViewStandalone::getMidiInputText()
@@ -564,7 +563,7 @@ QString LocalTrackViewStandalone::getMidiInputText()
         return midiDriver->getInputDeviceName(selectedDeviceIndex);
     } // midi device index invalid
 
-    return tr(NO_INPUT_TEXT);
+    return tr("no input");
 }
 
 QString LocalTrackViewStandalone::getInputText()
@@ -577,7 +576,7 @@ QString LocalTrackViewStandalone::getInputText()
         return getMidiInputText();
     }
 
-    return tr(NO_INPUT_TEXT);
+    return tr("no input");
 }
 
 void LocalTrackViewStandalone::updateInputText()

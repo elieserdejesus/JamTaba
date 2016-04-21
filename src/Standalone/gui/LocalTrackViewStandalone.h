@@ -112,7 +112,6 @@ private:
     static const QString MONO_ICON;
     static const QString STEREO_ICON;
     static const QString NO_INPUT_ICON;
-    static const char* NO_INPUT_TEXT;
 };
 
 #endif
