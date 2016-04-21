@@ -381,7 +381,7 @@ void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inp
         channelIndex++;
     }
     if (channelIndex == 0)// no channels in settings file or no settings file...
-        addLocalChannel(0, tr("your channel"), true);
+        addLocalChannel(0, "", true);
     qCInfo(jtGUI) << "Initializing local inputs done!";
 
     QApplication::restoreOverrideCursor();
