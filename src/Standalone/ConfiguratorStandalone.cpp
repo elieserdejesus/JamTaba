@@ -1,4 +1,5 @@
 #include "Configurator.h"
+#include <QStandardPaths>
 
 void Configurator::initializeDirs()
 {

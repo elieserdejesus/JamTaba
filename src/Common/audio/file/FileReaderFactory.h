@@ -2,6 +2,7 @@
 #define AUDIOFILEREADERFACTORY_H
 
 #include <memory>
+#include <QString>
 
 namespace Audio {
 

@@ -8,6 +8,7 @@
 #include <QFileInfo>
 #include <QFile>
 #include <QDir>
+#include <QDebug>
 
 using namespace Audio;
 

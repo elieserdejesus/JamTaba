@@ -1,6 +1,8 @@
 #ifndef _LOCAL_INPUT_GROUP_H_
 #define _LOCAL_INPUT_GROUP_H_
 
+#include <QList>
+
 namespace Audio {
 
 class LocalInputNode;

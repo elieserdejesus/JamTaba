@@ -2,6 +2,7 @@
 #define AUDIOFILEREADER_H
 
 #include "audio/core/SamplesBuffer.h"
+#include <QString>
 
 namespace Audio {
 

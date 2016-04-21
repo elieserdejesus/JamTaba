@@ -3,6 +3,7 @@
 
 #include <QFrame>
 #include <QCloseEvent>
+#include <QDialog>
 #include "IntervalProgressDisplay.h"
 
 class IntervalProgressWindow : public QDialog

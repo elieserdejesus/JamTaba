@@ -1,5 +1,5 @@
 #include "MidiToolsDialog.h"
-#include "ui_miditoolsdialog.h"
+#include "ui_MidiToolsDialog.h"
 #include <QRegularExpressionValidator>
 
 #include "LocalTrackViewStandalone.h"
