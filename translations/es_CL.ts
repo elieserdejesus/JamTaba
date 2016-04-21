@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="es_CL" sourcelanguage="en_US">
+<TS version="2.1" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -314,10 +314,6 @@
         <translation>Agregar o eliminar canales...</translation>
     </message>
     <message>
-        <source>new channel</source>
-        <translation>canal adicional</translation>
-    </message>
-    <message>
         <source>Load preset</source>
         <translation>Cargar programa</translation>
     </message>
@@ -357,6 +353,10 @@
         <source>X</source>
         <translation>X</translation>
     </message>
+    <message>
+        <source>channel name</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LocalTrackGroupViewStandalone</name>
@@ -384,10 +384,6 @@
         <translation>Monofónico</translation>
     </message>
     <message>
-        <source>no input</source>
-        <translation>sin entrada</translation>
-    </message>
-    <message>
         <source>Stereo</source>
         <translation>Stereo</translation>
     </message>
@@ -410,10 +406,6 @@
     <message>
         <source>%1  (no MIDI devices detected or enabled in &apos;Preferences&apos; menu&apos;)</source>
         <translation>%1  (no se detectaron dispositivos MIDI o no están activados en el menú &apos;Preferencias&apos;)</translation>
-    </message>
-    <message>
-        <source>No input</source>
-        <translation>Sin entrada</translation>
     </message>
 </context>
 <context>
@@ -515,8 +507,12 @@
         <translation>Metrónomo ...</translation>
     </message>
     <message>
-        <source>type your name</source>
-        <translation>tu nombre aquí</translation>
+        <source>Your Controls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>user name here</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -528,10 +524,6 @@
     <message>
         <source>Error!</source>
         <translation>¡Error!</translation>
-    </message>
-    <message>
-        <source>your channel</source>
-        <translation>Tu Canal</translation>
     </message>
     <message>
         <source>disconnecting ...</source>
@@ -572,10 +564,6 @@
         <translation>Conectando con %1 ... </translation>
     </message>
     <message>
-        <source>chat %1</source>
-        <translation>chat %1</translation>
-    </message>
-    <message>
         <source>Error</source>
         <translation>Error</translation>
     </message>
@@ -610,6 +598,10 @@
     <message>
         <source>Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.</source>
         <translation>¡Solo son aceptadas letras, guiones, números y guiones bajos! Los espacios se reemplazarán por guiones bajos.</translation>
+    </message>
+    <message>
+        <source>Chat</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -776,10 +768,6 @@
         <translation>Tú estás en la ventana del la sala de ninjam</translation>
     </message>
     <message>
-        <source>This is the room where you are</source>
-        <translation>Ésta es la sala dónde te escuentras ahora</translation>
-    </message>
-    <message>
         <source>read the server licence ...</source>
         <translation>leer la licencia correspondiente a este servidor ...</translation>
     </message>
@@ -808,12 +796,16 @@
         <translation>%1 entra a la sala.</translation>
     </message>
     <message>
-        <source>(connected as &lt;user_name&gt;)</source>
-        <translation>(conectado como &lt;user_name&gt;)</translation>
+        <source>Connected as &lt;user_name&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>connected as %1</source>
-        <translation>conectado como %1</translation>
+        <source>Connected as %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Server Licence</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

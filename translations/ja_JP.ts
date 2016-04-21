@@ -303,10 +303,6 @@
         <source>listen</source>
         <translation>視聴</translation>
     </message>
-    <message>
-        <source>%1  location is not available at moment!</source>
-        <translation>地域 %1 は得られませんでした!</translation>
-    </message>
 </context>
 <context>
     <name>LocalTrackGroupView</name>
@@ -343,10 +339,6 @@
         <translation>チャンネルの追加/削除...</translation>
     </message>
     <message>
-        <source>new channel</source>
-        <translation>新規チャンネル|</translation>
-    </message>
-    <message>
         <source>Load preset</source>
         <translation>プリセットを読み込む</translation>
     </message>
@@ -370,6 +362,10 @@
         <source>X</source>
         <translatorcomment>トランスミット</translatorcomment>
         <translation>X</translation>
+    </message>
+    <message>
+        <source>channel name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -398,10 +394,6 @@
         <translation>モノラル</translation>
     </message>
     <message>
-        <source>no input</source>
-        <translation>未入力</translation>
-    </message>
-    <message>
         <source>Stereo</source>
         <translation>ステレオ</translation>
     </message>
@@ -425,10 +417,6 @@
         <source>%1  (no MIDI devices detected or enabled in &apos;Preferences&apos; menu&apos;)</source>
         <translation>%1 (MIDIデバイスが検出されていないか、設定メニューで有効になっていません)</translation>
     </message>
-    <message>
-        <source>No input</source>
-        <translation>未入力</translation>
-    </message>
 </context>
 <context>
     <name>MainFrameClass</name>
@@ -439,10 +427,6 @@
     <message>
         <source>master</source>
         <translation>マスター音量</translation>
-    </message>
-    <message>
-        <source>Your controls</source>
-        <translation>あなたのコントロール</translation>
     </message>
     <message>
         <source>collapse/expand your controls ...</source>
@@ -532,6 +516,14 @@
         <source>Metronome ...</source>
         <translation>メトロノーム...</translation>
     </message>
+    <message>
+        <source>Your Controls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>user name here</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -542,10 +534,6 @@
     <message>
         <source>Error!</source>
         <translation>エラー!</translation>
-    </message>
-    <message>
-        <source>your channel</source>
-        <translation>あなたのチャンネル|</translation>
     </message>
     <message>
         <source>disconnecting ...</source>
@@ -586,10 +574,6 @@
         <translation>%1へ接続中...</translation>
     </message>
     <message>
-        <source>chat %1</source>
-        <translation>チャット%1</translation>
-    </message>
-    <message>
         <source>Error</source>
         <translation>エラー</translation>
     </message>
@@ -616,6 +600,18 @@
     <message>
         <source>Problem...</source>
         <translation>問題...</translation>
+    </message>
+    <message>
+        <source>Your name cannot be edited while jamming!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chat</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -782,10 +778,6 @@
         <translation>ニンジャム部屋のウィンドウ</translation>
     </message>
     <message>
-        <source>This is the room where you are</source>
-        <translation>入室中の部屋</translation>
-    </message>
-    <message>
         <source>read the server licence ...</source>
         <translation>サーバーのライセンスを読む...</translation>
     </message>
@@ -815,12 +807,31 @@
         <source>%1 enter in room.</source>
         <translation>%1 が入室しました.</translation>
     </message>
+    <message>
+        <source>Connected as &lt;user_name&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connected as %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Server Licence</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NinjamVoteButton</name>
     <message>
         <source>Vote - change %1 to %2 </source>
         <translation>%1から%2への変更に投票</translation>
+    </message>
+</context>
+<context>
+    <name>PlayerLabel</name>
+    <message>
+        <source>%1  location is not available at moment!</source>
+        <translation type="unfinished">地域 %1 は得られませんでした!</translation>
     </message>
 </context>
 <context>

@@ -314,10 +314,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>new channel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Load preset</source>
         <translation type="unfinished"></translation>
     </message>
@@ -357,6 +353,10 @@
         <source>X</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>channel name</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LocalTrackGroupViewStandalone</name>
@@ -384,10 +384,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>no input</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Stereo</source>
         <translation type="unfinished"></translation>
     </message>
@@ -409,10 +405,6 @@
     </message>
     <message>
         <source>%1  (no MIDI devices detected or enabled in &apos;Preferences&apos; menu&apos;)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No input</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -515,7 +507,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>type your name</source>
+        <source>Your Controls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>user name here</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -527,10 +523,6 @@
     </message>
     <message>
         <source>Error!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>your channel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -571,10 +563,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>chat %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -608,6 +596,10 @@
     </message>
     <message>
         <source>Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chat</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -775,10 +767,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>This is the room where you are</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>read the server licence ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -807,11 +795,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>(connected as &lt;user_name&gt;)</source>
+        <source>Connected as &lt;user_name&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>connected as %1</source>
+        <source>Connected as %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Server Licence</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
