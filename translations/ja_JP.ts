@@ -365,7 +365,7 @@
     </message>
     <message>
         <source>channel name</source>
-        <translation type="unfinished"></translation>
+        <translation>チャンネル名</translation>
     </message>
 </context>
 <context>
@@ -419,7 +419,7 @@
     </message>
     <message>
         <source>no input</source>
-        <translation type="unfinished"></translation>
+        <translation>入力がありません</translation>
     </message>
 </context>
 <context>
@@ -522,11 +522,11 @@
     </message>
     <message>
         <source>Your Controls</source>
-        <translation type="unfinished"></translation>
+        <translation>コントロール</translation>
     </message>
     <message>
         <source>user name here</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザ名を入力</translation>
     </message>
 </context>
 <context>
@@ -607,15 +607,16 @@
     </message>
     <message>
         <source>Your name cannot be edited while jamming!</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>意訳</translatorcomment>
+        <translation>部屋内では名前変更ができません!</translation>
     </message>
     <message>
         <source>Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.</source>
-        <translation type="unfinished"></translation>
+        <translation>英文字・数字・ハイフン・アンダースコアのみ。空白はアンダースコアへ置換されます。</translation>
     </message>
     <message>
         <source>Chat</source>
-        <translation type="unfinished"></translation>
+        <translation>チャット</translation>
     </message>
 </context>
 <context>
@@ -813,15 +814,15 @@
     </message>
     <message>
         <source>Connected as &lt;user_name&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;user_name&gt;として接続</translation>
     </message>
     <message>
         <source>Connected as %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1として接続</translation>
     </message>
     <message>
         <source>Server Licence</source>
-        <translation type="unfinished"></translation>
+        <translation>サーバ規約</translation>
     </message>
 </context>
 <context>
@@ -835,7 +836,8 @@
     <name>PlayerLabel</name>
     <message>
         <source>%1  location is not available at moment!</source>
-        <translation type="unfinished">地域 %1 は得られませんでした!</translation>
+        <translatorcomment>地域 %1 の情報は得られませんでした!</translatorcomment>
+        <translation>地域 %1 は得られませんでした!</translation>
     </message>
 </context>
 <context>
