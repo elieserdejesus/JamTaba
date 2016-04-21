@@ -54,11 +54,11 @@
     </message>
     <message>
         <source>clear the messages ...</source>
-        <translation>eliminar los mensajes ...</translation>
+        <translation>borrar los mensajes ...</translation>
     </message>
     <message>
         <source>Press that button to clear your message</source>
-        <translation>Presiona el botón para borrar el mensaje</translation>
+        <translation>Presiona este botón para borrar el mensaje</translation>
     </message>
     <message>
         <source>Auto translate</source>
@@ -119,7 +119,7 @@
     </message>
     <message>
         <source>No plugin found! Check the &apos;Preferences -&gt; Vst plugins&apos; menu.</source>
-        <translation>¡No se encontró ningún Plug-in! Revisa el menú Preferencias -&gt; Plug-ins VST.</translation>
+        <translation>¡No se encontraron Plugins! Revisa el menú Preferencias -&gt; Plugins VST.</translation>
     </message>
     <message>
         <source>bypass</source>
@@ -190,7 +190,7 @@
     </message>
     <message>
         <source>Scan only new plugins</source>
-        <translation>Buscar sólo plug-ins nuevos</translation>
+        <translation>Buscar sólo plugins nuevos</translation>
     </message>
     <message>
         <source>Refresh</source>
@@ -198,7 +198,7 @@
     </message>
     <message>
         <source>Clear plugins cache and scan all plugin folders</source>
-        <translation>Limpiar el caché y buscar plug-ins en todas las carpetas</translation>
+        <translation>Limpiar el caché y buscar plugins en todas las carpetas</translation>
     </message>
     <message>
         <source>Clear and Scan</source>
@@ -214,7 +214,7 @@
     </message>
     <message>
         <source>Plugin Paths:</source>
-        <translation>Carpetas de Plug-ins:</translation>
+        <translation>Carpetas de Plugins:</translation>
     </message>
     <message>
         <source>Add a new folder to scan ...</source>
@@ -284,7 +284,7 @@
     </message>
     <message>
         <source>The audio stream of this room is not available at moment!</source>
-        <translation>¡La transmisión del sonido de esta sala no está disponible!</translation>
+        <translation>¡El sonido de esta sala no está disponible!</translation>
     </message>
     <message>
         <source>enter</source>
@@ -327,11 +327,11 @@
     </message>
     <message>
         <source>Add channel</source>
-        <translation>Agregar canal adicional</translation>
+        <translation>Agregar un canal</translation>
     </message>
     <message>
         <source>Remove channel &quot;%1&quot;</source>
-        <translation>Eliminar canal &quot;%1&quot;</translation>
+        <translation>Eliminar el canal &quot;%1&quot;</translation>
     </message>
     <message>
         <source>Save the preset ...</source>
@@ -355,18 +355,22 @@
     </message>
     <message>
         <source>channel name</source>
+<<<<<<< HEAD
         <translation type="unfinished"></translation>
+=======
+        <translation>nombre canal</translation>
+>>>>>>> 427f9ca... translate-es_CL
     </message>
 </context>
 <context>
     <name>LocalTrackGroupViewStandalone</name>
     <message>
         <source>Add subchannel</source>
-        <translation>Agregar canal subyacente</translation>
+        <translation>Agregar un subcanal</translation>
     </message>
     <message>
         <source>Remove subchannel %1</source>
-        <translation>Eliminar canal subyacente %1</translation>
+        <translation>Eliminar el subcanal %1</translation>
     </message>
 </context>
 <context>
@@ -381,7 +385,11 @@
     </message>
     <message>
         <source>Mono</source>
+<<<<<<< HEAD
         <translation>Monofónico</translation>
+=======
+        <translation>Mono</translation>
+>>>>>>> 427f9ca... translate-es_CL
     </message>
     <message>
         <source>Stereo</source>
@@ -409,7 +417,11 @@
     </message>
     <message>
         <source>no input</source>
+<<<<<<< HEAD
         <translation type="unfinished"></translation>
+=======
+        <translation>sin entrada</translation>
+>>>>>>> 427f9ca... translate-es_CL
     </message>
 </context>
 <context>
@@ -440,7 +452,7 @@
     </message>
     <message>
         <source>View Mode</source>
-        <translation>Modo de Visualización</translation>
+        <translation>Visualización</translation>
     </message>
     <message>
         <source>Language</source>
@@ -456,7 +468,7 @@
     </message>
     <message>
         <source>VST Plugins ...</source>
-        <translation>Plug-ins VST ...</translation>
+        <translation>Plugins VST ...</translation>
     </message>
     <message>
         <source>Recording ...</source>
@@ -492,7 +504,7 @@
     </message>
     <message>
         <source>Mini View</source>
-        <translation>Vista minimizada</translation>
+        <translation>Vista Mínima</translation>
     </message>
     <message>
         <source>Quit...</source>
@@ -512,11 +524,19 @@
     </message>
     <message>
         <source>Your Controls</source>
+<<<<<<< HEAD
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>user name here</source>
         <translation type="unfinished"></translation>
+=======
+        <translation>Tus Controles</translation>
+    </message>
+    <message>
+        <source>user name here</source>
+        <translation>nombre usuario</translation>
+>>>>>>> 427f9ca... translate-es_CL
     </message>
 </context>
 <context>
@@ -605,7 +625,11 @@
     </message>
     <message>
         <source>Chat</source>
+<<<<<<< HEAD
         <translation type="unfinished"></translation>
+=======
+        <translation>Chat</translation>
+>>>>>>> 427f9ca... translate-es_CL
     </message>
 </context>
 <context>
@@ -678,11 +702,11 @@
     </message>
     <message>
         <source>Solo metronome</source>
-        <translation>Escuchar el metrónomo solamente</translation>
+        <translation>Escuchar solo el metrónomo</translation>
     </message>
     <message>
         <source>Button to soloing the metronome</source>
-        <translation>Botón para escuchar el metrónomo solamente</translation>
+        <translation>Botón para escuchar solo el metrónomo</translation>
     </message>
     <message>
         <source>mute metronome</source>
@@ -714,7 +738,7 @@
     </message>
     <message>
         <source>Beats per minute</source>
-        <translation>Beats po minuto</translation>
+        <translation>Beats por minuto</translation>
     </message>
     <message>
         <source>BPM</source>
@@ -754,7 +778,7 @@
     </message>
     <message>
         <source>Pie</source>
-        <translation>Pastel</translation>
+        <translation>Torta</translation>
     </message>
     <message>
         <source>off</source>
@@ -801,6 +825,7 @@
     </message>
     <message>
         <source>Connected as &lt;user_name&gt;</source>
+<<<<<<< HEAD
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -810,6 +835,17 @@
     <message>
         <source>Server Licence</source>
         <translation type="unfinished"></translation>
+=======
+        <translation>Conectado como &lt;user_name&gt;</translation>
+    </message>
+    <message>
+        <source>Connected as %1</source>
+        <translation>Conectado como %1</translation>
+    </message>
+    <message>
+        <source>Server Licence</source>
+        <translation>Licencia Servidor</translation>
+>>>>>>> 427f9ca... translate-es_CL
     </message>
 </context>
 <context>
@@ -830,7 +866,7 @@
     <name>PluginScanDialog</name>
     <message>
         <source>[JamTaba] Scanning plugins ...</source>
-        <translation>[JamTaba] Buscando plug-ins ...</translation>
+        <translation>[JamTaba] Buscando plugins ...</translation>
     </message>
     <message>
         <source>This is the plugin scanning dialog box</source>
@@ -838,15 +874,15 @@
     </message>
     <message>
         <source>scanning plugins...</source>
-        <translation>buscando plug-ins...</translation>
+        <translation>buscando plugins...</translation>
     </message>
     <message>
         <source>Founded plugins:</source>
-        <translation>Plug-ins encontrados:</translation>
+        <translation>Plugins encontrados:</translation>
     </message>
     <message>
         <source>This is the plugin founded list box</source>
-        <translation>Éste es el recuadro referente a la lista de plug-ins encontrados</translation>
+        <translation>Éste es el recuadro referente a la lista de plugins encontrados</translation>
     </message>
     <message>
         <source>No plugins founded!</source>
