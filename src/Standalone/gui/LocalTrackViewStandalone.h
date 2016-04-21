@@ -48,6 +48,8 @@ protected slots:
 protected:
     void translateUI() override;
 
+    bool eventFilter(QObject *target, QEvent *event) override;
+
 private slots:
     void showInputSelectionMenu();// build and show the input selection menu
     void openMidiToolsDialog();
@@ -93,6 +95,16 @@ private:
     void stopMidiNoteLearn();
 
     bool canShowMidiToolsButton();
+    bool canShowInputTypeIcon();
+
+    void updateInputText();
+    void updateInputIcon();
+
+    QString getInputText();
+    QString getAudioInputText();
+    QString getMidiInputText();
+    QString getInputTypeIconFile();
+    bool canUseMidiDeviceIndex(int midiDeviceIndex) const;
 
     MidiToolsDialog *midiToolsDialog;
 
@@ -100,6 +112,7 @@ private:
     static const QString MONO_ICON;
     static const QString STEREO_ICON;
     static const QString NO_INPUT_ICON;
+    static const char* NO_INPUT_TEXT;
 };
 
 #endif
