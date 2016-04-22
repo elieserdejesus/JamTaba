@@ -318,10 +318,6 @@
         <translation>Transmission</translation>
     </message>
     <message>
-        <source>new channel</source>
-        <translation>nouveau canal</translation>
-    </message>
-    <message>
         <source>Load preset</source>
         <translation>Charger le preset</translation>
     </message>
@@ -357,6 +353,10 @@
         <source>Preset:</source>
         <translation>Preset:</translation>
     </message>
+    <message>
+        <source>channel name</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LocalTrackGroupViewStandalone</name>
@@ -384,10 +384,6 @@
         <translation>Mono</translation>
     </message>
     <message>
-        <source>no input</source>
-        <translation>pas d&apos;entree</translation>
-    </message>
-    <message>
         <source>Stereo</source>
         <translation>Stereo</translation>
     </message>
@@ -412,8 +408,8 @@
         <translation>%1 (pas de materiel midi detecté ou autorisé voir dans Preferences)</translation>
     </message>
     <message>
-        <source>No input</source>
-        <translation>Pas d&apos;entree</translation>
+        <source>no input</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -425,10 +421,6 @@
     <message>
         <source>master</source>
         <translation>master</translation>
-    </message>
-    <message>
-        <source>type your name</source>
-        <translation>Ecrire votre nom</translation>
     </message>
     <message>
         <source>collapse/expand your controls ...</source>
@@ -522,6 +514,10 @@
         <source>Your Controls</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>user name here</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -532,10 +528,6 @@
     <message>
         <source>Error!</source>
         <translation>Erreur!</translation>
-    </message>
-    <message>
-        <source>your channel</source>
-        <translation>Votre canal</translation>
     </message>
     <message>
         <source>disconnecting ...</source>
@@ -807,15 +799,15 @@
         <translation>%1 entre dans le salon.</translation>
     </message>
     <message>
-        <source>You are connected as &lt;user_name&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>You are connected as %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Server Licence</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connected as &lt;user_name&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connected as %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

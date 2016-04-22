@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pt_BR" sourcelanguage="en_US">
+<TS version="2.0" language="pt_BR" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -317,10 +317,6 @@
         <translation>Adiciona ou remove canais...</translation>
     </message>
     <message>
-        <source>new channel</source>
-        <translation>novo canal</translation>
-    </message>
-    <message>
         <source>Load preset</source>
         <translation>Carrega um preset</translation>
     </message>
@@ -360,6 +356,10 @@
         <source>X</source>
         <translation></translation>
     </message>
+    <message>
+        <source>channel name</source>
+        <translation>nome do canal</translation>
+    </message>
 </context>
 <context>
     <name>LocalTrackGroupViewStandalone</name>
@@ -387,10 +387,6 @@
         <translation>Mono</translation>
     </message>
     <message>
-        <source>no input</source>
-        <translation>Sem entrada</translation>
-    </message>
-    <message>
         <source>Stereo</source>
         <translation>Estéreo</translation>
     </message>
@@ -415,8 +411,8 @@
         <translation>%1  (nenhum dispositivo foi detectado ou habilitado no menu &apos;Preferências&apos;&apos;)</translation>
     </message>
     <message>
-        <source>No input</source>
-        <translation>Sem entrada</translation>
+        <source>no input</source>
+        <translation>sem entrada</translation>
     </message>
 </context>
 <context>
@@ -518,8 +514,12 @@
         <translation>Metronomo ...</translation>
     </message>
     <message>
-        <source>type your name</source>
-        <translation>digite seu nome</translation>
+        <source>Your Controls</source>
+        <translation>Seus Controles</translation>
+    </message>
+    <message>
+        <source>user name here</source>
+        <translation>seu nome aqui</translation>
     </message>
 </context>
 <context>
@@ -531,10 +531,6 @@
     <message>
         <source>Error!</source>
         <translation>Erro!</translation>
-    </message>
-    <message>
-        <source>your channel</source>
-        <translation>seu canal</translation>
     </message>
     <message>
         <source>disconnecting ...</source>
@@ -574,10 +570,6 @@
         <translation>Conectando em %1 ... </translation>
     </message>
     <message>
-        <source>chat %1</source>
-        <translation>Bate-papo %1</translation>
-    </message>
-    <message>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
@@ -611,7 +603,11 @@
     </message>
     <message>
         <source>Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.</source>
-        <translation>Somente letras, números, hífen e underline são permitidos!</translation>
+        <translation>Somente letras, números, hífen e underline são permitidos.</translation>
+    </message>
+    <message>
+        <source>Chat</source>
+        <translation>Bate-papo</translation>
     </message>
 </context>
 <context>
@@ -778,10 +774,6 @@
         <translation>Você está na Janela Ninjam</translation>
     </message>
     <message>
-        <source>This is the room where you are</source>
-        <translation>Esta é a janela onde você está</translation>
-    </message>
-    <message>
         <source>read the server licence ...</source>
         <translation>Ler a licença do servidor ...</translation>
     </message>
@@ -810,12 +802,16 @@
         <translation>%1 entrou na sala.</translation>
     </message>
     <message>
-        <source>(connected as &lt;user_name&gt;)</source>
-        <translation></translation>
+        <source>Connected as &lt;user_name&gt;</source>
+        <translation>Conecado como &lt;user_name&gt;</translation>
     </message>
     <message>
-        <source>connected as %1</source>
-        <translation>conectado como %1</translation>
+        <source>Connected as %1</source>
+        <translation>Conectado como %1</translation>
+    </message>
+    <message>
+        <source>Server Licence</source>
+        <translation>Licença do servidor</translation>
     </message>
 </context>
 <context>
