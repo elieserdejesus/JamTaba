@@ -327,7 +327,7 @@
         <translation>準備中</translation>
     </message>
     <message>
-        <source>Transmiting</source>
+        <source>Transmitting</source>
         <translation>送信中</translation>
     </message>
     <message>

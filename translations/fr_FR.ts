@@ -314,7 +314,7 @@
         <translation>En preparation</translation>
     </message>
     <message>
-        <source>Transmiting</source>
+        <source>Transmitting</source>
         <translation>Transmission</translation>
     </message>
     <message>

@@ -302,7 +302,7 @@
         <translation>Preparando</translation>
     </message>
     <message>
-        <source>Transmiting</source>
+        <source>Transmitting</source>
         <translation>Transmitiendo</translation>
     </message>
     <message>

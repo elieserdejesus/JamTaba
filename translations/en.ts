@@ -302,7 +302,7 @@
         <translation></translation>
     </message>
     <message>
-        <source>Transmiting</source>
+        <source>Transmitting</source>
         <translation></translation>
     </message>
     <message>
