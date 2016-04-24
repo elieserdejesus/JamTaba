@@ -196,6 +196,8 @@ protected slots:
 
     void initializeLocalInputChannels();
 
+    QSize getSanitizedMinimumWindowSize(const QSize &prefferedMinimumWindowSize) const;
+
 private slots:
 
     void showJamtabaCurrentVersion();

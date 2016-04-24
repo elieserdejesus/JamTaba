@@ -61,7 +61,7 @@ void MainWindowStandalone::doWindowInitialization()
     if (settings.windowsWasFullScreenViewMode()) {
         setFullScreenStatus(true);
     } else {// not full screen. Is maximized or normal?
-        if (mainController->getSettings().windowWasMaximized()) {
+        if (settings.windowWasMaximized()) {
             qCDebug(jtGUI)<< "setting window state to maximized";
             showMaximized();
         } else {
@@ -149,6 +149,11 @@ void MainWindowStandalone::setFullScreenStatus(bool fullScreen)
         showNormal();
     mainController->setFullScreenView(fullScreenViewMode);
     ui.actionFullscreenMode->setChecked(fullScreen);
+
+    QApplication::processEvents(); //process the window resize pending events before call setFullViewStatus and resize the JTB window
+
+    setFullViewStatus(isRunningInFullViewMode()); //update the window size
+
     updatePublicRoomsListLayout();
 }
 

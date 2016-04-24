@@ -37,6 +37,7 @@ int main(int argc, char* args[] ){
     }
     MainWindowStandalone mainWindow(&mainController);
     mainController.setMainWindow(&mainWindow);
+
     mainWindow.initialize();
     mainWindow.show();
 
