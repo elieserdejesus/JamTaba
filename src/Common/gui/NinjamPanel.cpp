@@ -108,9 +108,11 @@ void NinjamPanel::toggleMetronomeFloatingWindowVisibility(bool showFloatingWindo
 
 void NinjamPanel::deleteFloatWindow()
 {
-    metronomeFloatingWindow->deleteLater();
-    metronomeFloatingWindow = nullptr;
-    ui->floatingWindowButton->setChecked(false);
+    if (metronomeFloatingWindow) {
+        metronomeFloatingWindow->deleteLater();
+        metronomeFloatingWindow = nullptr;
+        ui->floatingWindowButton->setChecked(false);
+    }
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++

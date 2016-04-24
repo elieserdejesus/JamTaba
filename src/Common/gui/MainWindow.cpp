@@ -283,7 +283,7 @@ void MainWindow::initializeMainTabWidget()
     }
 
     connect(ui.tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
-    connect(ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(changeTab(int)));
+    connect(ui.tabWidget, SIGNAL(tabBarClicked(int)), this, SLOT(changeTab(int)));
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++
