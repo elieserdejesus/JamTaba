@@ -14,6 +14,7 @@
 
 #include <QDesktopWidget>
 #include <QDesktopServices>
+#include <QRect>
 #include "MainController.h"
 // #include "performance/PerformanceMonitor.h"
 
@@ -1037,13 +1038,13 @@ QSize MainWindow::getSanitizedMinimumWindowSize(const QSize &prefferedMinimumWin
     //minimum size is less then desktop size the fullScreen is buggy because we are forcing an
     //impossible minimum size (the minimum size is too large). This code is ensuring the minimum
     //window size is a valid window size.
-
     QDesktopWidget desktop;
-    bool fullScreen = isFullScreen() || mainController->getSettings().windowsWasFullScreenViewMode();
-    QRect screenGeometry = fullScreen ? desktop.screenGeometry() : desktop.availableGeometry();
-    static const int MARGIN = 5;
-    int minimumWidth = qMin(prefferedMinimumWindowSize.width(), screenGeometry.width() - screenGeometry.left() - MARGIN) ;
-    int minimumHeight = qMin(prefferedMinimumWindowSize.height(), screenGeometry.height() - screenGeometry.top() - MARGIN);
+
+    QSize screenSize = desktop.availableGeometry().size();
+
+    int topBarHeight = frameGeometry().height() - geometry().height(); //geometry is the 'window client area', frameGeometry contain the window title bar area. http://doc.qt.io/qt-4.8/application-windows.html#window-geometry
+    int minimumWidth = qMin(prefferedMinimumWindowSize.width(), screenSize.width()) ;
+    int minimumHeight = qMin(prefferedMinimumWindowSize.height(), screenSize.height() - topBarHeight) ;
     return QSize(minimumWidth, minimumHeight);
 }
 
