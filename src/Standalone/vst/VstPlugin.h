@@ -6,7 +6,7 @@
 #include <QMap>
 #include <QLibrary>
 
-#define MAX_MIDI_EVENTS 40 // in my tests playing piano I can genenerate just 3 messages per block (256 samples) at maximum
+#define MAX_MIDI_EVENTS 64 // in my tests playing piano I can genenerate just 3 messages per block (256 samples) at maximum
 
 namespace Vst {
 class Host;

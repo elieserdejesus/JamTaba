@@ -221,7 +221,6 @@ void VstPlugin::fillVstEventsList(const Midi::MidiMessageBuffer &midiBuffer){
     this->vstMidiEvents.numEvents = midiMessages;
     for (int m = 0; m < midiMessages; ++m) {
         Midi::MidiMessage message = midiBuffer.getMessage(m);
-        qCDebug(jtVstPlugin) << getName() << "Midi message: channel " << message.getChannel();
         VstMidiEvent* vstEvent = (VstMidiEvent*)vstMidiEvents.events[m];
         vstEvent->type = kVstMidiType;
         vstEvent->byteSize = sizeof(vstEvent);
