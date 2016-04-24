@@ -150,12 +150,12 @@ macx{
 }
 
 linux{
-    linux*64{
+    contains(QMAKE_HOST.arch, x86_64) {
         LIBS_PATH = "static/linux64"
-    }
-    linux*32{
+    } else {
         LIBS_PATH = "static/linux32"
     }
+    message($$LIBS_PATH)
 
     DEFINES += __LINUX_ALSA__
 
