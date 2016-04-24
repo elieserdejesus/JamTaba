@@ -46,7 +46,7 @@ void PreferencesDialog::refreshMetronomeControlsStyleSheet()
     style()->polish(ui->browseSecondaryBeatButton);
 }
 
-void PreferencesDialog::initialize(int initialTab, const Persistence::Settings *settings)
+void PreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings)
 {
     Q_UNUSED(initialTab);
     this->settings = settings;

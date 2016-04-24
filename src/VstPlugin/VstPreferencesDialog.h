@@ -10,6 +10,7 @@ class VstPreferencesDialog : public PreferencesDialog
 
 public:
     VstPreferencesDialog(QWidget *parent);
+    void initialize(PreferencesTab initialTab, const Persistence::Settings *settings) override;
 
 protected slots:
     void selectTab(int index) override;

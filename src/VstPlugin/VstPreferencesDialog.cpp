@@ -10,12 +10,22 @@ VstPreferencesDialog::VstPreferencesDialog(QWidget *parent) :
     ui->prefsTab->removeTab(0);
 }
 
+void VstPreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings)
+{
+    PreferencesDialog::initialize(initialTab, settings);
+    int tabIndex = initialTab == PreferencesTab::TAB_RECORDING ? 0 : 1;
+    ui->prefsTab->setCurrentIndex(tabIndex);
+}
+
 void VstPreferencesDialog::selectTab(int index)
 {
-    Q_UNUSED(index)
-    populateRecordingTab();//only the recording tab is available in VST plugin
+    if (index == 0) //only the recording and metronome tabs are available in VST plugin
+        populateRecordingTab();
+    else
+        populateMetronomeTab();
 }
 
 void VstPreferencesDialog::populateAllTabs(){
-    populateRecordingTab(); //only the recording tab is available in VST plugin
+    populateRecordingTab();
+    populateMetronomeTab();
 }

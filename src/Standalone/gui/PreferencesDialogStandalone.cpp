@@ -48,10 +48,11 @@ void StandalonePreferencesDialog::notifySampleRateChanged()
     emit sampleRateChanged(newSampleRate);
 }
 
-void StandalonePreferencesDialog::initialize(int initialTab, const Persistence::Settings *settings)
+void StandalonePreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings)
 {
     PreferencesDialog::initialize(initialTab, settings);
-    ui->prefsTab->setCurrentIndex(initialTab);
+    int tabIndex = static_cast<int>(initialTab);
+    ui->prefsTab->setCurrentIndex(tabIndex);
 }
 
 void StandalonePreferencesDialog::populateAllTabs()

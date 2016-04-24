@@ -17,11 +17,11 @@ public:
     PreferencesDialog(QWidget *parent);
     virtual ~PreferencesDialog();
 
-    virtual void initialize(int initialTab, const Persistence::Settings *settings);
-
-    enum TAB {
+    enum PreferencesTab {
         TAB_AUDIO, TAB_MIDI, TAB_VST, TAB_RECORDING, TAB_METRONOME
     };
+
+    virtual void initialize(PreferencesTab initialTab, const Persistence::Settings *settings);
 
 signals:
     void recordingPathSelected(const QString &newRecordingPath);
