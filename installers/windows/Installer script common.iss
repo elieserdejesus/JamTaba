@@ -4,7 +4,7 @@
 #define MyAppURL "http://www.jamtaba.com"
 #define MyAppExeName "Jamtaba2.exe"
 
-#define MsvcRedistributablesPath "../../../../"
+#define MsvcRedistributablesPath "../../../"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
