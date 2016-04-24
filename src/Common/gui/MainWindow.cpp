@@ -1042,9 +1042,13 @@ QSize MainWindow::getSanitizedMinimumWindowSize(const QSize &prefferedMinimumWin
 
     QSize screenSize = desktop.availableGeometry().size();
 
-    int topBarHeight = frameGeometry().height() - geometry().height(); //geometry is the 'window client area', frameGeometry contain the window title bar area. http://doc.qt.io/qt-4.8/application-windows.html#window-geometry
+    static int topBarHeight = 0;
+    if (topBarHeight == 0) //when the window is fullscreen the topBarHeight is zero (no title window).
+        topBarHeight = frameGeometry().height() - geometry().height(); //geometry is the 'window client area', frameGeometry contain the window title bar area. http://doc.qt.io/qt-4.8/application-windows.html#window-geometry
+
     int minimumWidth = qMin(prefferedMinimumWindowSize.width(), screenSize.width()) ;
     int minimumHeight = qMin(prefferedMinimumWindowSize.height(), screenSize.height() - topBarHeight) ;
+
     return QSize(minimumWidth, minimumHeight);
 }
 
