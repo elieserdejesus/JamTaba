@@ -53,6 +53,9 @@ echo "Creating makefile ..."
 #-spec linux-g++-32
 $qmakeDir/qmake -config release $projectsDir/Jamtaba.pro 
 
+echo "generating translation (.qm) files..."
+lrelease $projectsDir/Jamtaba.pro
+
 echo "Compiling..."
 make -s -j 4
 
