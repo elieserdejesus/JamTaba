@@ -1029,13 +1029,32 @@ void MainWindow::updatePublicRoomsListLayout()
     refreshPublicRoomsList(roomInfos);
 }
 
+
+QSize MainWindow::getSanitizedMinimumWindowSize(const QSize &prefferedMinimumWindowSize) const
+{
+
+    //fixing #343. If MainWindow::showFullScreen() is called after a setMinimumSize(), and the current
+    //minimum size is less then desktop size the fullScreen is buggy because we are forcing an
+    //impossible minimum size (the minimum size is too large). This code is ensuring the minimum
+    //window size is a valid window size.
+
+    QDesktopWidget desktop;
+    bool fullScreen = isFullScreen() || mainController->getSettings().windowsWasFullScreenViewMode();
+    QRect screenGeometry = fullScreen ? desktop.screenGeometry() : desktop.availableGeometry();
+    static const int MARGIN = 5;
+    int minimumWidth = qMin(prefferedMinimumWindowSize.width(), screenGeometry.width() - screenGeometry.left() - MARGIN) ;
+    int minimumHeight = qMin(prefferedMinimumWindowSize.height(), screenGeometry.height() - screenGeometry.top() - MARGIN);
+    return QSize(minimumWidth, minimumHeight);
+}
+
 void MainWindow::setFullViewStatus(bool fullViewActivated)
 {
     this->fullViewMode = fullViewActivated;
     if (isRunningInMiniMode())
-        setMinimumSize(MINI_MODE_MIN_SIZE);
+        setMinimumSize(getSanitizedMinimumWindowSize(MINI_MODE_MIN_SIZE));
     else // full view
-        setMinimumSize(FULL_VIEW_MODE_MIN_SIZE);
+        setMinimumSize(getSanitizedMinimumWindowSize(FULL_VIEW_MODE_MIN_SIZE));
+
     if (!isMaximized() && !isFullScreen()) {
         showNormal();
         resize(minimumSize());
