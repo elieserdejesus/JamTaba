@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>249</width>
-    <height>231</height>
+    <height>372</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -47,6 +47,9 @@
      <property name="accessibleDescription">
       <string>This is the chat scroll area</string>
      </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAsNeeded</enum>
+     </property>
      <property name="horizontalScrollBarPolicy">
       <enum>Qt::ScrollBarAsNeeded</enum>
      </property>
@@ -59,7 +62,7 @@
         <x>0</x>
         <y>0</y>
         <width>235</width>
-        <height>188</height>
+        <height>329</height>
        </rect>
       </property>
       <property name="minimumSize">

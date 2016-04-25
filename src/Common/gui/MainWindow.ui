@@ -23,19 +23,19 @@
      <enum>QLayout::SetDefaultConstraint</enum>
     </property>
     <property name="leftMargin">
-     <number>1</number>
+     <number>6</number>
     </property>
     <property name="topMargin">
-     <number>3</number>
+     <number>6</number>
     </property>
     <property name="rightMargin">
-     <number>1</number>
+     <number>6</number>
     </property>
     <property name="bottomMargin">
-     <number>1</number>
+     <number>6</number>
     </property>
     <property name="spacing">
-     <number>3</number>
+     <number>6</number>
     </property>
     <item row="0" column="1">
      <widget class="QWidget" name="contentPanel" native="true">
@@ -114,8 +114,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>706</width>
-                <height>301</height>
+                <width>690</width>
+                <height>290</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -177,7 +177,7 @@
         <number>0</number>
        </property>
        <property name="rightMargin">
-        <number>3</number>
+        <number>0</number>
        </property>
        <property name="bottomMargin">
         <number>0</number>
@@ -376,7 +376,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QWidget" name="userNamePanel" native="true">
+        <widget class="QFrame" name="userNamePanel">
          <layout class="QHBoxLayout" name="horizontalLayout">
           <property name="spacing">
            <number>0</number>
@@ -442,7 +442,7 @@
             <x>0</x>
             <y>0</y>
             <width>16</width>
-            <height>282</height>
+            <height>271</height>
            </rect>
           </property>
           <property name="sizePolicy">
