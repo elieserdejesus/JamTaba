@@ -24,7 +24,7 @@
     <name>BusyDialog</name>
     <message>
         <source>This is the busy dialog window</source>
-        <translation>Fenetre de dialogue active</translation>
+        <translation>Fenêtre de dialogue active</translation>
     </message>
     <message>
         <source>TextLabel</source>
@@ -46,11 +46,11 @@
     <name>ChatPanel</name>
     <message>
         <source>Type your text to sent on the chat here</source>
-        <translation>Ecriredans la boite de chat ici</translation>
+        <translation>Ecrire dans la boite de chat ici</translation>
     </message>
     <message>
         <source>This is the chat scroll area</source>
-        <translation>Partie Scroll du chat</translation>
+        <translation>&quot;Scroll&quot; du chat</translation>
     </message>
     <message>
         <source>clear the messages ...</source>
@@ -58,7 +58,7 @@
     </message>
     <message>
         <source>Press that button to clear your message</source>
-        <translation>Presser ce bouton pour effacer les messages</translation>
+        <translation>Cliquer ce bouton pour effacer votre message</translation>
     </message>
     <message>
         <source>Auto translate</source>
@@ -66,11 +66,11 @@
     </message>
     <message>
         <source>Turn on/off the auto translation for chat messages</source>
-        <translation>Passer On/off la traduction automatique</translation>
+        <translation>Passer On/off la traduction automatique du chat</translation>
     </message>
     <message>
         <source>Use/load the chords above</source>
-        <translation>Utiliser Charger ces accords </translation>
+        <translation>Utiliser/Charger ces accords </translation>
     </message>
 </context>
 <context>
@@ -89,11 +89,11 @@
     </message>
     <message>
         <source>transpose up</source>
-        <translation>transposer un demi ton au dessus</translation>
+        <translation>transposer un demi-ton au dessus</translation>
     </message>
     <message>
         <source>transpose down</source>
-        <translation>transposer un demi ton en dessous</translation>
+        <translation>transposer un demi-ton en dessous</translation>
     </message>
 </context>
 <context>
@@ -134,7 +134,7 @@
     <name>IODialog</name>
     <message>
         <source>Preferences ...</source>
-        <translation>Preferences...</translation>
+        <translation>Préferences...</translation>
     </message>
     <message>
         <source>Audio</source>
@@ -186,7 +186,7 @@
     </message>
     <message>
         <source>Vst(i)s loaded</source>
-        <translation>Vst(i) chargé(s)</translation>
+        <translation>Vst(i) chargés</translation>
     </message>
     <message>
         <source>Scan only new plugins</source>
@@ -218,7 +218,7 @@
     </message>
     <message>
         <source>Add a new folder to scan ...</source>
-        <translation>Ajouter un nouveau dossier a scanner ...</translation>
+        <translation>Ajouter un nouveau dossier à scanner ...</translation>
     </message>
     <message>
         <source>Recording</source>
@@ -226,11 +226,11 @@
     </message>
     <message>
         <source>Record path:</source>
-        <translation>Chemin dossier enregistrements:</translation>
+        <translation>Chemin du dossier des enregistrements:</translation>
     </message>
     <message>
         <source>Save multi tracks </source>
-        <translation>Sauvegarder multi tracks</translation>
+        <translation>Sauvegarder multipistes</translation>
     </message>
     <message>
         <source>browse ...</source>
@@ -238,23 +238,23 @@
     </message>
     <message>
         <source>Metronome</source>
-        <translation>Metronome</translation>
+        <translation>Métronome</translation>
     </message>
     <message>
         <source>Built-in metronomes:</source>
-        <translation>Metronomes inclus :</translation>
+        <translation>Métronomes inclus :</translation>
     </message>
     <message>
         <source>Custom Metronome Sounds</source>
-        <translation>Sons personnels de metronome</translation>
+        <translation>Sons personnels de métronome</translation>
     </message>
     <message>
         <source>Primary Beat:</source>
-        <translation>Battement de mesure:</translation>
+        <translation>Son des temps principaux de mesure:</translation>
     </message>
     <message>
         <source>Secondary Beat:</source>
-        <translation>Battement de temps :</translation>
+        <translation>Son des temps secondaires:</translation>
     </message>
     <message>
         <source>Browse ...</source>
@@ -299,7 +299,7 @@
     <name>LocalTrackGroupView</name>
     <message>
         <source>Enable/disable your audio transmission for others</source>
-        <translation>Autoriser/bloquer la tranmission audio pour les autres</translation>
+        <translation>Autoriser/bloquer la tranmission audio vers les autres</translation>
     </message>
     <message>
         <source>Add or remove channels...</source>
@@ -311,7 +311,7 @@
     </message>
     <message>
         <source>Preparing</source>
-        <translation>En preparation</translation>
+        <translation>En préparation</translation>
     </message>
     <message>
         <source>Transmitting</source>
@@ -327,7 +327,7 @@
     </message>
     <message>
         <source>Reset Track Controls</source>
-        <translation>Reinitialiser le preset</translation>
+        <translation>Réinitialiser le preset</translation>
     </message>
     <message>
         <source>Add channel</source>
@@ -355,14 +355,14 @@
     </message>
     <message>
         <source>channel name</source>
-        <translation type="unfinished"></translation>
+        <translation>nom du canal</translation>
     </message>
 </context>
 <context>
     <name>LocalTrackGroupViewStandalone</name>
     <message>
         <source>Add subchannel</source>
-        <translation>Ajouter un sous canal </translation>
+        <translation>Ajouter un sous-canal </translation>
     </message>
     <message>
         <source>Remove subchannel %1</source>
@@ -373,7 +373,7 @@
     <name>LocalTrackViewStandalone</name>
     <message>
         <source>Choose input channels ...</source>
-        <translation>Choisir les canaux d&apos;entrees ...</translation>
+        <translation>Choisir les canaux d&apos;entrées ...</translation>
     </message>
     <message>
         <source>MIDI tools</source>
@@ -405,18 +405,18 @@
     </message>
     <message>
         <source>%1  (no MIDI devices detected or enabled in &apos;Preferences&apos; menu&apos;)</source>
-        <translation>%1 (pas de materiel midi detecté ou autorisé voir dans Preferences)</translation>
+        <translation>%1 (pas de matériel midi detecté ou autorisé , voir dans Préferences)</translation>
     </message>
     <message>
         <source>no input</source>
-        <translation type="unfinished"></translation>
+        <translation>pas d&apos;entrée</translation>
     </message>
 </context>
 <context>
     <name>MainFrameClass</name>
     <message>
         <source>Rooms to play</source>
-        <translation>Salons de musique ou jouer</translation>
+        <translation>Salons de musique où jouer</translation>
     </message>
     <message>
         <source>master</source>
@@ -424,11 +424,11 @@
     </message>
     <message>
         <source>collapse/expand your controls ...</source>
-        <translation>Reduire/etendre ces controles ...</translation>
+        <translation>Réduire/étendre vos contrôles ...</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation>Preferences</translation>
+        <translation>Préferences</translation>
     </message>
     <message>
         <source>Ninjam</source>
@@ -440,15 +440,15 @@
     </message>
     <message>
         <source>View Mode</source>
-        <translation>Mode de visualisation</translation>
+        <translation>Vue</translation>
     </message>
     <message>
         <source>Language</source>
-        <translation>Language</translation>
+        <translation>Langues</translation>
     </message>
     <message>
         <source>Audio ...</source>
-        <translation>Audio...</translation>
+        <translation>Audio ...</translation>
     </message>
     <message>
         <source>Midi ...</source>
@@ -476,7 +476,7 @@
     </message>
     <message>
         <source>Report bugs or suggest improvements ...</source>
-        <translation>Signaler bugs et suggestions d ameliorations ...</translation>
+        <translation>Signaler bugs et suggestions d&apos;améliorations ...</translation>
     </message>
     <message>
         <source>Wiki ...</source>
@@ -508,15 +508,15 @@
     </message>
     <message>
         <source>Metronome ...</source>
-        <translation>Metronome...</translation>
+        <translation>Métronome...</translation>
     </message>
     <message>
         <source>Your Controls</source>
-        <translation type="unfinished"></translation>
+        <translation>Vos contrôles</translation>
     </message>
     <message>
         <source>user name here</source>
-        <translation type="unfinished"></translation>
+        <translation>nom d&apos;utilisateur</translation>
     </message>
 </context>
 <context>
@@ -548,7 +548,7 @@
     </message>
     <message>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
-        <translation>Nouvelle version de Jamtaba est disponible! Svp utiliser &lt;/a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</translation>
+        <translation>Une.nouvelle version de Jamtaba est disponible! Svp utiliser &lt;/a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</translation>
     </message>
     <message>
         <source>New Jamtaba version available!</source>
@@ -604,14 +604,14 @@
     </message>
     <message>
         <source>Chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Chat</translation>
     </message>
 </context>
 <context>
     <name>MainWindowStandalone</name>
     <message>
         <source>%1 can&apos;t be loaded and will be black listed!</source>
-        <translation>%1 ne peut etre charge et sera place dans la liste noire!</translation>
+        <translation>%1 ne peut être chargé et sera placé dans la liste noire!</translation>
     </message>
     <message>
         <source>Plugin Error!</source>
@@ -623,7 +623,7 @@
     </message>
     <message>
         <source>The audio device can&apos;t be started! Please check your audio device and try restart Jamtaba!</source>
-        <translation>Cette carte son ne peut demarrer!Svp verifier votre carte audio et reessayer Jamtaba!</translation>
+        <translation>Cette carte son ne peut démarrer!Svp vérifier votre interface audio et redémarrer Jamtaba!</translation>
     </message>
 </context>
 <context>
@@ -638,7 +638,7 @@
     </message>
     <message>
         <source>Lower note:</source>
-        <translation>Note basse:</translation>
+        <translation>Note la plus basse:</translation>
     </message>
     <message>
         <source>learn</source>
@@ -646,7 +646,7 @@
     </message>
     <message>
         <source>Higher note:</source>
-        <translation>Note haute:</translation>
+        <translation>Note la plus haute:</translation>
     </message>
     <message>
         <source>Transpose:</source>
@@ -654,18 +654,18 @@
     </message>
     <message>
         <source>Semitones:</source>
-        <translation>Demi tons:</translation>
+        <translation>Demi-tons:</translation>
     </message>
 </context>
 <context>
     <name>NinjamPanel</name>
     <message>
         <source>metronome</source>
-        <translation>metronome</translation>
+        <translation>métronome</translation>
     </message>
     <message>
         <source>Slider to change the BPM of the metronome</source>
-        <translation>Slider pour changer le BPM du metronome</translation>
+        <translation>&quot;Slider&quot; pour changer le BPM du métronome</translation>
     </message>
     <message>
         <source>L</source>
@@ -677,11 +677,11 @@
     </message>
     <message>
         <source>Solo metronome</source>
-        <translation>Metronome solo</translation>
+        <translation>Métronome solo</translation>
     </message>
     <message>
         <source>Button to soloing the metronome</source>
-        <translation>Boutton pour metronome solo</translation>
+        <translation>Bouton pour métronome solo</translation>
     </message>
     <message>
         <source>mute metronome</source>
@@ -689,15 +689,15 @@
     </message>
     <message>
         <source>Button to mute the metronome</source>
-        <translation>Bouton pour muter le metronome</translation>
+        <translation>Bouton pour muter le métronome</translation>
     </message>
     <message>
         <source>open metronome preferences</source>
-        <translation>ouvrir les preferences du metronome</translation>
+        <translation>ouvrir les préferences du métronome</translation>
     </message>
     <message>
         <source>open a metronome floating window</source>
-        <translation>ouvrir le metronome en fenetre flottante</translation>
+        <translation>ouvrir le métronome en fenêtre flottante</translation>
     </message>
     <message>
         <source>Change the shape here</source>
@@ -768,7 +768,7 @@
     <name>NinjamRoomWindow</name>
     <message>
         <source>you are in the ninjam room window</source>
-        <translation>Vous etes dans lans la fenetre salon de Ninjam</translation>
+        <translation>Vous êtes dans lans la fenêtre &quot;salon de Ninjam&quot;</translation>
     </message>
     <message>
         <source>read the server licence ...</source>
@@ -788,7 +788,7 @@
     </message>
     <message>
         <source>Narrow tracks</source>
-        <translation>Pistes etroites</translation>
+        <translation>Pistes étroites</translation>
     </message>
     <message>
         <source>%1 leave the room.</source>
@@ -796,19 +796,19 @@
     </message>
     <message>
         <source>%1 enter in room.</source>
-        <translation>%1 entre dans le salon.</translation>
+        <translation>%1 entrer dans le salon.</translation>
     </message>
     <message>
         <source>Server Licence</source>
-        <translation type="unfinished"></translation>
+        <translation>Licence serveur</translation>
     </message>
     <message>
         <source>Connected as &lt;user_name&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Connecté en tant que &lt;user_name&gt;</translation>
     </message>
     <message>
         <source>Connected as %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Connecté avec comme pseudo %1</translation>
     </message>
 </context>
 <context>
@@ -829,7 +829,7 @@
     <name>PluginScanDialog</name>
     <message>
         <source>[JamTaba] Scanning plugins ...</source>
-        <translation>[JamTaba] Scanne les plugins ...</translation>
+        <translation>[JamTaba] Scan des plugins en cours ...</translation>
     </message>
     <message>
         <source>This is the plugin scanning dialog box</source>
@@ -883,7 +883,7 @@
     </message>
     <message>
         <source>This the private server dialog</source>
-        <translation>Boite de dialogue serveur prive</translation>
+        <translation>Boite de dialogue serveur privé</translation>
     </message>
     <message>
         <source>Server:</source>
@@ -891,7 +891,7 @@
     </message>
     <message>
         <source>type here the name of the server to join</source>
-        <translation>ecrire ici le nom du serveur choisi</translation>
+        <translation>écrire ici le nom du serveur choisi</translation>
     </message>
     <message>
         <source>leave blank to connect as annonymous</source>
@@ -903,7 +903,7 @@
     </message>
     <message>
         <source>type here the password</source>
-        <translation>ecrire ici le mot de passe</translation>
+        <translation>écrire ici le mot de passe</translation>
     </message>
     <message>
         <source>Port:</source>
@@ -911,11 +911,11 @@
     </message>
     <message>
         <source>type here the port to use</source>
-        <translation>taper ici le port a utiliser</translation>
+        <translation>écrire ici le port à utiliser</translation>
     </message>
     <message>
         <source>Press this button if you are ok</source>
-        <translation>Appuyer sur ce bouton si vous etes d accord</translation>
+        <translation>Cliquer sur ce bouton si vous êtes d&apos;accord</translation>
     </message>
     <message>
         <source>OK</source>
@@ -930,15 +930,15 @@
     </message>
     <message>
         <source>Click that button to listen that room</source>
-        <translation>Cliquer ce bouton pour ecouter dans ce salon</translation>
+        <translation>Cliquer ce bouton pour écouter ce salon</translation>
     </message>
     <message>
         <source>listen</source>
-        <translation>ecouter</translation>
+        <translation>écouter</translation>
     </message>
     <message>
         <source>Click that button to enter in this room</source>
-        <translation>cliquer ce tbouron pour entrer dans ce salon</translation>
+        <translation>cliquer ce bouton pour entrer dans ce salon</translation>
     </message>
     <message>
         <source>enter</source>
@@ -946,7 +946,7 @@
     </message>
     <message>
         <source>That panel shows the musicians actually in that room</source>
-        <translation>Ce panneau montres les musiciens presents dans ce salon</translation>
+        <translation>Ce panneau montre les musiciens présents dans ce salon</translation>
     </message>
     <message>
         <source>That zone displays the waveform actually played</source>
@@ -1003,7 +1003,7 @@
     </message>
     <message>
         <source>Press this button if you are ok</source>
-        <translation>Cliquer ce bouton si vous etes d accord</translation>
+        <translation>Cliquer ce bouton si vous êtes d&apos;accord</translation>
     </message>
 </context>
 </TS>
