@@ -30,8 +30,6 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     ui->comboBpi->setCompleter(0);// disabling completer
     ui->comboBpm->setCompleter(0);// disabling completer
 
-    buildShapeModel();
-
     ui->levelSlider->installEventFilter(this);
     ui->panSlider->installEventFilter(this);
 
@@ -39,27 +37,45 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     ui->peakMeterRight->setOrientation(Qt::Horizontal);
 
     setupSignals();
+
+    translate();
+}
+
+void NinjamPanel::translate()
+{
+    ui->retranslateUi(this);
+
+    //rebuild the accents and shape combos to show translated strings. The signals are blocked to avoid reset the combos and loose the user selections.
+    QSignalBlocker comboShapeBlocker(ui->comboShape);
+    QSignalBlocker comboAccentsBlocker(ui->comboBeatsPerAccent);
+
+    //save the current indexes before rebuild the combos
+    int currentShape = ui->comboShape->currentIndex();
+    int currentAccent = ui->comboBeatsPerAccent->currentIndex();
+
+    buildAccentsdModel(ui->intervalPanel->getBeatsPerInterval());
+    buildShapeModel();
+
+    //restore the selected indexes
+    ui->comboShape->setCurrentIndex(currentShape);
+    ui->comboBeatsPerAccent->setCurrentIndex(currentAccent);
+
+    //compute the max width string in combo and set the combobox list items width to match
+    int items = ui->comboShape->count();
+    QFontMetrics fontMetrics = ui->comboShape->fontMetrics();
+    int maxComboItemWidth = 0;
+    for (int i = 0; i < items; ++i) {
+        int itemTextWidth = fontMetrics.width(ui->comboShape->itemText(i));
+        if (itemTextWidth > maxComboItemWidth)
+            maxComboItemWidth = itemTextWidth;
+    }
+    ui->comboShape->view()->setMinimumWidth(qMax(ui->comboShape->width(), maxComboItemWidth + 20));
 }
 
 void NinjamPanel::changeEvent(QEvent *e)
 {
     if (e->type() == QEvent::LanguageChange) {
-        ui->retranslateUi(this);
-
-        //rebuild the accents and shape combos to show translated strings. The signals are blocked to avoid reset the combos and loose the user selections.
-        QSignalBlocker comboShapeBlocker(ui->comboShape);
-        QSignalBlocker comboAccentsBlocker(ui->comboBeatsPerAccent);
-
-        //save the current indexes before rebuild the combos
-        int currentShape = ui->comboShape->currentIndex();
-        int currentAccent = ui->comboBeatsPerAccent->currentIndex();
-
-        buildAccentsdModel(ui->intervalPanel->getBeatsPerInterval());
-        buildShapeModel();
-
-        //restore the selected indexes
-        ui->comboShape->setCurrentIndex(currentShape);
-        ui->comboBeatsPerAccent->setCurrentIndex(currentAccent);
+        translate();
     }
     QWidget::changeEvent(e);
 }

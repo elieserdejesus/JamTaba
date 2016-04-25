@@ -384,6 +384,9 @@
            <property name="accessibleDescription">
             <string>Change the shape here</string>
            </property>
+           <property name="sizeAdjustPolicy">
+            <enum>QComboBox::AdjustToContents</enum>
+           </property>
           </widget>
          </item>
          <item row="3" column="0">
@@ -397,6 +400,9 @@
           <widget class="QComboBox" name="comboBeatsPerAccent">
            <property name="accessibleDescription">
             <string>Change the accent here</string>
+           </property>
+           <property name="sizeAdjustPolicy">
+            <enum>QComboBox::AdjustToContents</enum>
            </property>
           </widget>
          </item>

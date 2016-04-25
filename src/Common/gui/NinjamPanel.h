@@ -79,6 +79,7 @@ private:
     void selectClosestBeatsPerAccentInCombo(int currentBeatsPerAccent);
     void selectBeatsPerAccentInCombo(int beatsPerAccent);
     void setupSignals();
+    void translate();
 
 private slots:
     void updateAccentsStatus(int index);
