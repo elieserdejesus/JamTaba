@@ -7,7 +7,7 @@
 #include <QKeyEvent>
 #include <QWidget>
 
-const QColor ChatPanel::BOT_COLOR(120, 120, 120);
+const QColor ChatPanel::BOT_COLOR(180, 180, 180);
 
 ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool) :
     QWidget(nullptr),
@@ -18,7 +18,7 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool) :
 {
     ui->setupUi(this);
     ui->scrollContent->setLayout(new QVBoxLayout(ui->scrollContent));
-    ui->scrollContent->layout()->setContentsMargins(0, 0, 0, 0);
+    ui->scrollContent->layout()->setContentsMargins(0, 0, 3, 0);
 
     QObject::connect(ui->chatText, SIGNAL(returnPressed()), this,
                      SLOT(on_chatTextEditionFinished()));
@@ -149,11 +149,12 @@ void ChatPanel::hideTranslationProgressFeedback()
 
 void ChatPanel::addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton)
 {
-    QColor backgroundColor = getUserColor(userName);
+    QString name = !userName.isEmpty() ? userName : "JamTaba";
+    QColor backgroundColor = getUserColor(name);
     bool isBot = backgroundColor == BOT_COLOR;
     QColor textColor = isBot ? QColor(50, 50, 50) : QColor(0, 0, 0);
     QColor userNameBackgroundColor = backgroundColor;
-    ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, userName, userMessage,
+    ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, name, userMessage,
                                                       userNameBackgroundColor, backgroundColor,
                                                       textColor, showTranslationButton);
 

@@ -1067,9 +1067,11 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
         resize(minimumSize());
     }
 
-    int tabLayoutMargim = isRunningInFullViewMode() ? 9 : 5;
+    int tabLayoutMargim = isRunningInFullViewMode() ? 24 : 6;
     ui.tabLayout->setContentsMargins(tabLayoutMargim, tabLayoutMargim, tabLayoutMargim,
                                      tabLayoutMargim);
+    ui.allRoomsContent->layout()->setSpacing(tabLayoutMargim);
+
 
     // show only the peak meters if user is in mini mode and is not maximized or full screen
     showPeakMetersOnlyInLocalControls(isRunningInMiniMode() && !isMaximized() && !isFullScreen());
@@ -1267,11 +1269,10 @@ void MainWindow::setupWidgets()
     ui.masterMeterR->setOrientation(Qt::Horizontal);
     ui.masterFader->installEventFilter(this);// handle double click in master fader
 
-    ui.chatArea->setVisible(false);// hide chat area until connect in a server to play
+    ui.chatArea->hide();// hide chat area until connect in a server to play
 
     ui.allRoomsContent->setLayout(new QGridLayout());
     ui.allRoomsContent->layout()->setContentsMargins(0, 0, 0, 0);
-    ui.allRoomsContent->layout()->setSpacing(24);
 
     ui.localTracksWidget->installEventFilter(this);
 
