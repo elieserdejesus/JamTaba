@@ -6,7 +6,11 @@ cd ~/Desktop/Release
 
 echo “Compiling …”
 
-"/Users/elieser/Qt5.5.0/5.5/clang_64/bin/qmake" ~/Desktop/JamTaba/Client/PROJECTS/Jamtaba.pro -r -spec macx-clang CONFIG+=x86_64
+"/Users/elieser/Qt5.5.0/5.5/clang_64/bin/qmake" ~/Desktop/JamTaba/PROJECTS/Jamtaba.pro -r -spec macx-clang CONFIG+=x86_64
+
+#compile the translations file
+~/Qt5.5.0/5.5/clang_64/bin/lrelease ~/Desktop/JamTaba/PROJECTS/Jamtaba.pro
+
 
 /usr/bin/make -s -j 4
 
@@ -18,10 +22,10 @@ cp ~/Desktop/Release/VstScanner/VstScanner ~/Desktop/Release/Standalone/Jamtaba2
 
 # node-appdmg search the files considering .json relative paths. Putting the .app file in the node-appdmg .json folder
 
-cp -R ~/Desktop/Release/Standalone/Jamtaba2.app ~/Desktop/JamTaba/Client/installers/mac/
+cp -R ~/Desktop/Release/Standalone/Jamtaba2.app ~/Desktop/JamTaba/installers/mac/
 
-appdmg /Users/elieser/Desktop/JamTaba/Client/installers/mac/node-appdmg.json ~/Desktop/Jamtaba_2_Installer.dmg
+appdmg /Users/elieser/Desktop/JamTaba/installers/mac/node-appdmg.json ~/Desktop/Jamtaba_2_Installer.dmg
 
 
 #removing the .app
-rm -rf ~/Desktop/JamTaba/Client/installers/mac/Jamtaba2.app
+rm -rf ~/Desktop/JamTaba/installers/mac/Jamtaba2.app
