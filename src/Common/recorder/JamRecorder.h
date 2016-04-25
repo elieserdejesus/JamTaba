@@ -104,6 +104,7 @@ class JamMetadataWriter
 {
 public:
     virtual void write(const Jam &metadata) = 0;
+    virtual ~JamMetadataWriter(){}
 };
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class LocalNinjamInterval

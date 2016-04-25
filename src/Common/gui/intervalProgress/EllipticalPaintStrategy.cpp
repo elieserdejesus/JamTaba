@@ -2,6 +2,7 @@
 #include <QPen>
 #include <QPainter>
 #include <QDebug>
+#include <cmath>
 
 QRectF IntervalProgressDisplay::EllipticalPaintStrategy::createContextRect(const PaintContext &context, qreal margin) const
 {

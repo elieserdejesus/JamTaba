@@ -31,7 +31,7 @@ void MidiMessage::transpose(qint8 semitones)
         return;
     }
     quint32 newValue = data + (semitones << 8);
-    if ( newValue >= 0 && ((newValue >> 8) & 0xFF) <= 127 ){
+    if ( ((newValue >> 8) & 0xFF) <= 127 ){
         data = newValue;
     }
 }
