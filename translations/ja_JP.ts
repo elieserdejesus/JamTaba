@@ -44,7 +44,7 @@
     <message>
         <source>T</source>
         <translatorcomment>表示スペースの都合上、省略文字を利用</translatorcomment>
-        <translation>翻訳</translation>
+        <translation>T</translation>
     </message>
 </context>
 <context>
