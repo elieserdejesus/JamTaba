@@ -662,7 +662,7 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     ninjamPanel->setFullViewStatus(fullViewMode);
 
     // show chat area
-    ui.chatTabWidget->setVisible(true);
+    setChatVisibility(true);
 
     ui.leftPanel->adjustSize();
     qCDebug(jtGUI) << "MainWindow::enterInRoom() done!";
@@ -752,8 +752,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
 
     ninjamWindow.reset();
 
-    // hide chat area
-    ui.chatTabWidget->hide();
+    setChatVisibility(false);
 
     setInputTracksPreparingStatus(false);/** reset the prepating status when user leave the room. This is specially necessary if user enter in a room and leave before the track is prepared to transmit.*/
 
@@ -772,6 +771,15 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
             passwordToJump = "";
         }
     }
+}
+
+void MainWindow::setChatVisibility(bool chatVisible)
+{
+    ui.chatTabWidget->setVisible(chatVisible);
+
+    //adjust bottom panel colspan
+    int colSpan = chatVisible ? 3 : 2;
+    ui.gridLayout->addWidget(ui.bottomPanel, 1, 0, 1, colSpan);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1269,10 +1277,13 @@ void MainWindow::setupWidgets()
     ui.masterMeterR->setOrientation(Qt::Horizontal);
     ui.masterFader->installEventFilter(this);// handle double click in master fader
 
-    ui.chatTabWidget->hide();// hide chat area until connect in a server to play
+    setChatVisibility(false);// hide chat area until connect in a server to play
+
+    if (ui.allRoomsContent->layout())
+        delete ui.allRoomsContent->layout();
 
     ui.allRoomsContent->setLayout(new QGridLayout());
-    ui.allRoomsContent->layout()->setContentsMargins(0, 0, 0, 0);
+    ui.allRoomsContent->layout()->setContentsMargins(0, 0, 3, 0); //3 pixels in right margin to separate public rooms panels from vertical scroll bar.
 
     ui.localTracksWidget->installEventFilter(this);
 
