@@ -279,6 +279,8 @@ private:
 
     void setUserNameReadOnlyStatus(bool readOnly);
 
+    void setChatVisibility(bool chatVisible);
+
     // PerformanceMonitor performanceMonitor;//cpu and memmory usage
     // qint64 lastPerformanceMonitorUpdate;
     // static const int PERFORMANCE_MONITOR_REFRESH_TIME;
