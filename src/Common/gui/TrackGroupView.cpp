@@ -68,9 +68,6 @@ void TrackGroupView::refreshStyleSheet()
 
     style()->unpolish(topPanel);
     style()->polish(topPanel);
-
-    style()->unpolish(groupNameField);
-    style()->polish(groupNameField);
 }
 
 void TrackGroupView::setUnlightStatus(bool unlighted)

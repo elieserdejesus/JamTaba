@@ -46,11 +46,14 @@
        </sizepolicy>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="spacing">
+        <number>6</number>
+       </property>
        <property name="leftMargin">
         <number>6</number>
        </property>
        <property name="topMargin">
-        <number>3</number>
+        <number>6</number>
        </property>
        <property name="rightMargin">
         <number>6</number>
@@ -158,7 +161,7 @@
             <x>0</x>
             <y>0</y>
             <width>16</width>
-            <height>271</height>
+            <height>268</height>
            </rect>
           </property>
           <property name="sizePolicy">
