@@ -58,14 +58,6 @@ QInputDialog{
     min-width: 400px;
 }
 
-/*
-QInputDialog QPushButton{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(80,80,80), stop:0.02 rgb(150, 150, 150), stop:0.7 rgba(160, 160, 160), stop:1 rgb(90,90,90));
-    border-color: rgb(60, 60, 60);
-    color: rgb(45,45,45);
-}
-*/
-
 FxPanel{
     border: none;
     background-color: none; /* rgba(0, 0, 0, 20);*/
@@ -148,11 +140,9 @@ NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:checked {
 }
 
 NinjamTrackView[horizontal="true"]{
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop:0 rgb(200, 200, 200),
-        stop:0.01 rgb(240, 240, 240),
-        stop:1 rgb(170, 170, 170)
-    );
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 rgb(240, 240, 240),
+        stop:1 rgb(200, 200, 200));
 }
 
 NinjamRoomWindow QToolButton{
@@ -381,23 +371,11 @@ QSlider::groove:vertical{
     border: none;
 }
 
-/*
-NinjamRoomWindow TrackGroupView BaseTrackView QSlider::groove:vertical{
-
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-            stop: 0     rgba(0, 0, 0, 50),
-            stop: 1.0   rgba(0, 0, 0, 30)
-            );
-
-}
-*/
-
 QSlider::groove:horizontal{
     background-color: rgba(0, 0, 0, 50);
     height: 1px;
     border: none;
 }
-
 
 BaseTrackView #peaksDbLabel{
 
@@ -412,7 +390,6 @@ BaseTrackView #peaksDbLabel{
 NinjamTrackView #peaksDbLabel{
     border: 1px solid rgba(0, 0, 0, 8);
 }
-
 
 BaseTrackView[unlighted="true"] #peaksDbLabel,
 BaseTrackView[unlighted="true"] .QPushButton
@@ -810,6 +787,11 @@ NinjamTrackView #soloButton, NinjamTrackView #muteButton{
    color: rgb(40,40,40);
 }
 
+NinjamTrackView[unlighted="true"]
+{
+    background: rgba(0, 0, 0, 20);
+}
+
 NinjamTrackView[horizontal="true"] #soloButton,
 NinjamTrackView[horizontal="true"] #muteButton{
     padding-top: 0px;
@@ -879,7 +861,7 @@ TrackGroupView #groupNameField {
 TrackGroupView[unlighted="true"] #groupNameField
 {
     background: rgba(255, 255, 255, 20);
-    border-style: none;
+    border: none;
 }
 
 
@@ -1044,20 +1026,15 @@ NinjamRoomWindow #groupNameField {
     padding: 3px;
 }
 
+NinjamRoomWindow TrackGroupView
+{
+    border: 1px solid rgb(160, 160, 160);
+}
+
 NinjamRoomWindow TrackGroupView #countryLabel{
     color: rgba(0, 0, 0, 180);
     qproperty-alignment: AlignCenter;
     font-size: 9px;
-}
-
-
-NinjamRoomWindow TrackGroupView{
-    border: 1px solid rgba(0, 0, 0, 35);
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop:0      rgba(0, 0, 0, 0),
-        stop:0.2    rgb(127,127,127)
-        stop:1      rgb(127,127,127)
-    );
 }
 
 IntervalProgressWindow{
