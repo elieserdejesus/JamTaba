@@ -276,16 +276,16 @@ void MainWindow::initializeMainTabWidget()
 {
     // the rooms list tab bar is not closable
     QWidget *tabBar = nullptr;
-    tabBar = ui.tabWidget->tabBar()->tabButton(0, QTabBar::RightSide);// try get the tabBar in right side (Windows)
+    tabBar = ui.contentTabWidget->tabBar()->tabButton(0, QTabBar::RightSide);// try get the tabBar in right side (Windows)
     if (!tabBar)// try get the tabBar in left side (MAC OSX)
-        tabBar = ui.tabWidget->tabBar()->tabButton(0, QTabBar::LeftSide);
+        tabBar = ui.contentTabWidget->tabBar()->tabButton(0, QTabBar::LeftSide);
     if (tabBar) {
         tabBar->resize(0, 0);
         tabBar->hide();
     }
 
-    connect(ui.tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
-    connect(ui.tabWidget, SIGNAL(tabBarClicked(int)), this, SLOT(changeTab(int)));
+    connect(ui.contentTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
+    connect(ui.contentTabWidget, SIGNAL(tabBarClicked(int)), this, SLOT(changeTab(int)));
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++
@@ -639,8 +639,8 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     ninjamWindow.reset(createNinjamWindow(roomInfo, mainController));
     QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
     ninjamWindow->setFullViewStatus(this->fullViewMode);
-    int index = ui.tabWidget->addTab(ninjamWindow.data(), tabName);
-    ui.tabWidget->setCurrentIndex(index);
+    int index = ui.contentTabWidget->addTab(ninjamWindow.data(), tabName);
+    ui.contentTabWidget->setCurrentIndex(index);
 
     // add the chat panel in main window
     qCDebug(jtGUI) << "adding ninjam chat panel...";
@@ -662,7 +662,7 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     ninjamPanel->setFullViewStatus(fullViewMode);
 
     // show chat area
-    ui.chatArea->setVisible(true);
+    ui.chatTabWidget->setVisible(true);
 
     ui.leftPanel->adjustSize();
     qCDebug(jtGUI) << "MainWindow::enterInRoom() done!";
@@ -733,9 +733,9 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     setUserNameReadOnlyStatus(false);
 
     // remove the jam room tab (the last tab)
-    if (ui.tabWidget->count() > 1) {
-        ui.tabWidget->widget(1)->deleteLater();// delete the room window
-        ui.tabWidget->removeTab(1);
+    if (ui.contentTabWidget->count() > 1) {
+        ui.contentTabWidget->widget(1)->deleteLater();// delete the room window
+        ui.contentTabWidget->removeTab(1);
     }
 
     if (ui.chatTabWidget->count() > 0) {
@@ -753,7 +753,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     ninjamWindow.reset();
 
     // hide chat area
-    ui.chatArea->setVisible(false);
+    ui.chatTabWidget->hide();
 
     setInputTracksPreparingStatus(false);/** reset the prepating status when user leave the room. This is specially necessary if user enter in a room and leave before the track is prepared to transmit.*/
 
@@ -1076,7 +1076,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
     // show only the peak meters if user is in mini mode and is not maximized or full screen
     showPeakMetersOnlyInLocalControls(isRunningInMiniMode() && !isMaximized() && !isFullScreen());
 
-    ui.chatArea->setMinimumWidth(isRunningInFullViewMode() ? 280 : 180); // TODO Refactoring: remove these 'Magic Numbers'
+    ui.chatTabWidget->setMinimumWidth(isRunningInFullViewMode() ? 280 : 180); // TODO Refactoring: remove these 'Magic Numbers'
 
     // refresh the public rooms list
     if (!mainController->isPlayingInNinjamRoom()) {
@@ -1269,7 +1269,7 @@ void MainWindow::setupWidgets()
     ui.masterMeterR->setOrientation(Qt::Horizontal);
     ui.masterFader->installEventFilter(this);// handle double click in master fader
 
-    ui.chatArea->hide();// hide chat area until connect in a server to play
+    ui.chatTabWidget->hide();// hide chat area until connect in a server to play
 
     ui.allRoomsContent->setLayout(new QGridLayout());
     ui.allRoomsContent->layout()->setContentsMargins(0, 0, 0, 0);

@@ -544,12 +544,6 @@ QMainWindow #bottomPanel{
    background-color: rgb(132, 132, 132);
 }
 
-/* Main panels title */
-.QWidget#contentPanel > .QLabel{
-    color: rgb(190, 190, 190);
-    qproperty-alignment: AlignCenter;
-}
-
 #userNameLineEdit
 {
     background-color: transparent;
@@ -588,26 +582,20 @@ QPushButton#localControlsCollapseButton::hover:checked{
 }
 /* ------------------------------ */
 
-.QWidget#contentPanel{
-    background: transparent;
-    border: none;
-}
-
-
-#contentPanel .QTabWidget:pane{
+#contentTabWidget:pane{
     background-color: rgb(200, 200, 200);
 }
 
-#contentPanel .QTabWidget:pane,
-#chatArea .QTabWidget:pane
+#contentTabWidget:pane,
+#chatTabWidget:pane
 {
     border: none;
     padding: 0px;
 }
 
 
-#chatArea QTabWidget:pane,
-#chatArea QTabBar::tab
+#chatTabWidget:pane,
+#chatTabWidget QTabBar::tab
 {
     background-color: rgb(160, 160, 160);
     color: rgb(210, 210, 210);
