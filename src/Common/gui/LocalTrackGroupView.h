@@ -52,6 +52,8 @@ protected:
 
     virtual void populateMenu(QMenu &menu);
 
+    void refreshStyleSheet() override;
+
     static const int MAX_SUB_CHANNELS = 2;
 
     MainWindow *mainFrame;

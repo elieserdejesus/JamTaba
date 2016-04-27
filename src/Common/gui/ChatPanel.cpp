@@ -18,7 +18,7 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool) :
 {
     ui->setupUi(this);
     ui->scrollContent->setLayout(new QVBoxLayout(ui->scrollContent));
-    ui->scrollContent->layout()->setContentsMargins(0, 0, 3, 0);
+    ui->scrollContent->layout()->setContentsMargins(0, 0, 0, 0);
 
     QObject::connect(ui->chatText, SIGNAL(returnPressed()), this,
                      SLOT(on_chatTextEditionFinished()));

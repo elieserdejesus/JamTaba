@@ -70,6 +70,12 @@
      </item>
      <item>
       <widget class="QPushButton" name="licenceButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="toolTip">
         <string>read the server licence ...</string>
        </property>
@@ -110,6 +116,9 @@
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="spacing">
+        <number>2</number>
+       </property>
        <property name="leftMargin">
         <number>6</number>
        </property>

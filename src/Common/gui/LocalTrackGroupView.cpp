@@ -28,6 +28,14 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
     translateUi();
 }
 
+void LocalTrackGroupView::refreshStyleSheet()
+{
+    TrackGroupView::refreshStyleSheet();
+
+    style()->unpolish(groupNameField);
+    style()->polish(groupNameField);
+}
+
 void LocalTrackGroupView::translateUi()
 {
     updateXmitButtonText();

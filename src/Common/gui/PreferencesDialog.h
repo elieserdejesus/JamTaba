@@ -5,7 +5,7 @@
 #include "persistence/Settings.h"
 
 namespace Ui {
-class IODialog;
+class PreferencesDialog;
 }
 
 // This class is the base class for StandalonePreferencesDialog and VstPreferencesDialog
@@ -50,7 +50,7 @@ private:
     void refreshMetronomeControlsStyleSheet();
     QString openAudioFileBrowser(const QString caption);
 protected:
-    Ui::IODialog *ui;
+    Ui::PreferencesDialog *ui;
 
     // recording
     void populateRecordingTab();

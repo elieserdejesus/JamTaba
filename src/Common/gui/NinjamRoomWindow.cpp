@@ -220,11 +220,6 @@ void NinjamRoomWindow::setFullViewStatus(bool fullView)
         return;
 
     fullViewMode = fullView;
-
-    QLayout *tracksLayout = ui->tracksPanel->layout();
-    Q_ASSERT(tracksLayout);
-    tracksLayout->setSpacing(fullView ? 6 : 3); //space between remote tracks
-    tracksLayout->update();
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
