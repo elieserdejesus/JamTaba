@@ -95,6 +95,11 @@ QInputDialog QPushButton{
     color: rgb(45,45,45);
 }
 
+QPushButton:disabled
+{
+    background-color: rgba(0, 0, 0, 20);
+    color: rgba(0, 0, 0, 60)
+}
 
 FxPanel{
     border: none;

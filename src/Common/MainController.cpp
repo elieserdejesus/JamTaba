@@ -173,11 +173,7 @@ int MainController::getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) 
 // ++++++++++++++++++++
 void MainController::setUserName(const QString &newUserName)
 {
-    if (!newUserName.isEmpty()) {
-        settings.setUserName(newUserName);
-    } else {
-        qCritical() << "empty userNAme";
-    }
+    settings.setUserName(newUserName);
 }
 
 QString MainController::getUserName() const
