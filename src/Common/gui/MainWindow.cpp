@@ -89,6 +89,14 @@ void MainWindow::loadTranslationFile(const QString &locale)
 // ++++++++++++++++++++++++=
 void MainWindow::initializeLanguageMenu()
 {
+
+    QMap<QString, QString> translators;
+    translators.insert("pt", "Elieser");
+    translators.insert("de", "Magnus and Martin");
+    translators.insert("ja", "Tea");
+    translators.insert("es", "Jon");
+    translators.insert("fr", "Doublebass");
+
     //create a menu action for each translation resource
     QDir translationsDir(":/tr");
     if (translationsDir.exists()) {
@@ -96,8 +104,12 @@ void MainWindow::initializeLanguageMenu()
         foreach (const QString &translationFile, locales) {
             QLocale loc(translationFile);
             QString actionText = loc.nativeLanguageName();
+            QString languageCode = translationFile.left(2);
+            if (translators.contains(languageCode)) {
+                actionText += "   (" + translators[languageCode] + ")";
+            }
             QAction *action = ui.menuLanguage->addAction(actionText);
-            action->setData(translationFile); //using the locale (pt_BR, jp_JP) as data
+            action->setData(translationFile); //using the locale (pt_BR, ja_JP) as data
         }
     }
     else{
