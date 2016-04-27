@@ -16,8 +16,6 @@ public:
     UserNameLineEdit(QWidget *parent=0);
 
 protected:
-    void focusInEvent(QFocusEvent *e) override;
-    void focusOutEvent(QFocusEvent *e) override;
     void resizeEvent(QResizeEvent *e) override;
     void keyPressEvent(QKeyEvent *e) override;
     void keyReleaseEvent(QKeyEvent *e) override;
