@@ -621,6 +621,9 @@ void MainController::tryConnectInNinjamServer(const Login::RoomInfo &ninjamRoom,
 void MainController::start()
 {
     if (!started) {
+
+        setTheme(settings.getTheme());
+
         qCInfo(jtCore) << "Creating roomStreamer ...";
         roomStreamer.reset(new Audio::NinjamRoomStreamerNode()); // new Audio::AudioFileStreamerNode(":/teste.mp3");
         this->audioMixer.addNode(roomStreamer.data());
@@ -680,15 +683,15 @@ void MainController::stop()
 
 // +++++++++++
 
-void MainController::configureStyleSheet(const QString &cssFile)
+bool MainController::setTheme(const QString &themeName)
 {
-    QFile styleFile(":/style/" + cssFile);
-    if (!styleFile.open(QFile::ReadOnly)) {
-        qCritical("não carregou estilo!");
-    } else {
-        // Apply the loaded stylesheet
+    QFile styleFile(":/style/" + themeName + ".css");
+    if (styleFile.open(QFile::ReadOnly)) {
         setCSS(styleFile.readAll());
+        settings.setTheme(themeName);
+        return true;
     }
+    return false;
 }
 
 Login::LoginService *MainController::getLoginService() const

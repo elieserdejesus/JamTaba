@@ -605,6 +605,11 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
         if (this->translation.isEmpty())
             this->translation = QLocale().bcp47Name().left(2);
 
+        if (root.contains("theme"))
+            this->theme = root["theme"].toString();
+        if (this->theme.isEmpty())
+            this->theme = "Flat";//using flat as the new default theme
+
         if (root.contains("intervalProgressShape"))// read intervall progress shape
             this->ninjamIntervalProgressShape = root["intervalProgressShape"].toInt(0);// zero as default value
         else
@@ -644,6 +649,7 @@ bool Settings::writeFile(const QList<SettingsObject *> &sections)// io ops ...
         // writing global settings
         root["userName"] = lastUserName;// write user name
         root["translation"] = translation;// write translate locale
+        root["theme"] = theme;
         root["intervalProgressShape"] = ninjamIntervalProgressShape;
         root["tracksLayoutOrientation"] = tracksLayoutOrientation;
         root["usingNarrowTracks"] = usingNarrowedTracks;
@@ -761,6 +767,11 @@ void Settings::deletePreset(const QString &name)
 
 Settings::~Settings()
 {
+}
+
+void Settings::setTheme(const QString theme)
+{
+    this->theme = theme;
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

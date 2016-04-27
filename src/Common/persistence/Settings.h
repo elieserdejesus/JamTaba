@@ -236,8 +236,10 @@ private:
     LocalInputTrackSettings inputsSettings;
     RecordingSettings recordingSettings;
     PrivateServerSettings privateServerSettings;
+
     QString lastUserName;// the last nick name choosed by user
     QString translation;// the translation language (en, fr, jp, pt, etc.) being used in chat
+    QString theme; //the style sheet used
     int ninjamIntervalProgressShape;// Circle, Ellipe or Line
     float masterFaderGain;// last master fader gain
     Qt::Orientation tracksLayoutOrientation; //horizontal or vertical
@@ -264,6 +266,10 @@ public:
     {
         return metronomeSettings.customPrimaryBeatAudioFile;
     }
+
+    void setTheme(const QString theme);
+
+    inline QString getTheme() const { return theme; }
 
     inline QString getMetronomeSecondaryBeatFile() const
     {
