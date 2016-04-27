@@ -1075,7 +1075,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
         resize(minimumSize());
     }
 
-    int tabLayoutMargim = isRunningInFullViewMode() ? 24 : 6;
+    int tabLayoutMargim = isRunningInFullViewMode() ? 6 : 6;
     ui.tabLayout->setContentsMargins(tabLayoutMargim, tabLayoutMargim, tabLayoutMargim,
                                      tabLayoutMargim);
     ui.allRoomsContent->layout()->setSpacing(tabLayoutMargim);
@@ -1283,7 +1283,7 @@ void MainWindow::setupWidgets()
         delete ui.allRoomsContent->layout();
 
     ui.allRoomsContent->setLayout(new QGridLayout());
-    ui.allRoomsContent->layout()->setContentsMargins(0, 0, 3, 0); //3 pixels in right margin to separate public rooms panels from vertical scroll bar.
+    ui.allRoomsContent->layout()->setContentsMargins(0, 0, 0, 0);
 
     ui.localTracksWidget->installEventFilter(this);
 

@@ -8,7 +8,7 @@
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::IODialog)
+    ui(new Ui::PreferencesDialog)
 {
     ui->setupUi(this);
     setModal(true);
