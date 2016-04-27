@@ -5,7 +5,7 @@
 UserNameLineEdit::UserNameLineEdit(QWidget *parent)
     :QLineEdit(parent)
 {
-    static QString userNamePattern("[a-zA-Z0-9 _-]{1,16}"); //allowing lower and upper case letters, numbers, _ and - symbols, blank space, at least 1 character and max 16 characters.
+    static QString userNamePattern("[a-zA-Z0-9 _-]{0,16}"); //allowing lower and upper case letters, numbers, _ and - symbols, blank space, at least 1 character and max 16 characters.
     QRegularExpressionValidator *validator = new QRegularExpressionValidator(QRegularExpression(userNamePattern), this);
     setValidator(validator);
 
@@ -44,26 +44,6 @@ void UserNameLineEdit::sanitizeBlankSpaces()
 {
     QString currentText = text();
     setText( currentText.replace(" ", "_") );
-}
-
-void UserNameLineEdit::focusInEvent(QFocusEvent *e)
-{
-    lastValidUserName = text();
-    QLineEdit::focusInEvent(e);
-}
-
-void UserNameLineEdit::focusOutEvent(QFocusEvent *e)
-{
-    Q_UNUSED(e)
-
-    //if the user name is invalid use the last valid user name
-    QString currentName = text();
-    int pos;
-    if (validator()->validate(currentName, pos) != QValidator::Acceptable) {
-        setText(lastValidUserName);
-    }
-    lastValidUserName = text();
-    QLineEdit::focusOutEvent(e);
 }
 
 void UserNameLineEdit::resizeEvent(QResizeEvent *e)
