@@ -9,7 +9,7 @@
 #include <QTime>
 
 ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
-    QWidget(parent),
+    QFrame(parent),
     ui(new Ui::ChatMessagePanel)
 {
     ui->setupUi(this);
@@ -19,7 +19,7 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, con
                                    const QColor &userNameBackgroundColor,
                                    const QColor &msgBackgroundColor, const QColor &textColor,
                                    bool showTranslationButton) :
-    QWidget(parent),
+    QFrame(parent),
     ui(new Ui::ChatMessagePanel)
 {
     ui->setupUi(this);
@@ -43,26 +43,29 @@ void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
 {
     if (!userName.isEmpty() && !userName.isNull()) {
         ui->labelUserName->setText(userName + ":");
-        ui->labelUserName->setStyleSheet(buildCssString(userNameBackgroundColor, textColor));
     } else {
         ui->labelUserName->setVisible(false);
     }
 
+    setStyleSheet(buildCssString(msgBackgroundColor, textColor));
+
+    setMessageLabelText(msg);
+
+    ui->labelTimeStamp->setText(QTime::currentTime().toString("hh:mm:ss"));
+
+    ui->translateButton->setVisible(showTranslationButton);
+
+    this->originalText = msg;
+}
+
+void ChatMessagePanel::setMessageLabelText(const QString &msg)
+{
     QString newMessage(msg);
     newMessage = newMessage.replace(QRegExp("<.+?>"), "");// scape html tags
     newMessage = newMessage.replace("\n", "<br/>");
     newMessage = replaceLinksInString(newMessage);
+
     ui->labelMessage->setText(newMessage);
-    ui->labelTimeStamp->setText(QTime::currentTime().toString("hh:mm:ss"));
-
-    ui->messageContent->setStyleSheet(buildCssString(msgBackgroundColor, textColor));
-
-    if (showTranslationButton)
-        ui->translateButton->setStyleSheet(buildCssString(userNameBackgroundColor, textColor));
-    else
-        ui->translateButton->setVisible(false);
-
-    this->originalText = msg;
 }
 
 QString ChatMessagePanel::buildCssString(const QColor &bgColor, const QColor &textColor)
@@ -107,7 +110,7 @@ void ChatMessagePanel::translate()
     QObject::connect(httpClient, SIGNAL(finished(QNetworkReply *)), this,
                      SLOT(on_networkReplyFinished(QNetworkReply *)));
 
-    ui->labelMessage->setText("...");// translating ...
+    ui->labelMessage->setText("..."); //translating
 }
 
 void ChatMessagePanel::on_translateButton_clicked()
@@ -115,10 +118,11 @@ void ChatMessagePanel::on_translateButton_clicked()
     if (ui->translateButton->isChecked()) {
         if (translatedText.isEmpty())
             translate();
-        else
-            ui->labelMessage->setText(translatedText);
+        else{
+            setMessageLabelText(translatedText);
+        }
     } else {
-        ui->labelMessage->setText(originalText);
+        setMessageLabelText(originalText);
     }
 }
 
@@ -134,7 +138,7 @@ void ChatMessagePanel::on_networkReplyError(QNetworkReply::NetworkError)
 
     emit translationFinished();
 
-    ui->labelMessage->setText(originalText);// restore the original text
+    setMessageLabelText(originalText); // restore the original text
 }
 
 void ChatMessagePanel::on_networkReplyFinished(QNetworkReply *reply)
@@ -158,6 +162,6 @@ void ChatMessagePanel::on_networkReplyFinished(QNetworkReply *reply)
 void ChatMessagePanel::setTranslatedMessage(const QString &translatedMessage)
 {
     ui->translateButton->setChecked(true);
-    this->translatedText = translatedMessage;
-    this->ui->labelMessage->setText(translatedMessage);
+    translatedText = translatedMessage;
+    setMessageLabelText(translatedMessage);
 }

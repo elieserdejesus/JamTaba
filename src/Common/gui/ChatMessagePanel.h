@@ -1,7 +1,7 @@
 #ifndef CHATMESSAGEPANEL_H
 #define CHATMESSAGEPANEL_H
 
-#include <QWidget>
+#include <QFrame>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
@@ -9,7 +9,7 @@ namespace Ui {
 class ChatMessagePanel;
 }
 
-class ChatMessagePanel : public QWidget
+class ChatMessagePanel : public QFrame
 {
     Q_OBJECT
 
@@ -47,6 +47,8 @@ private:
                     const QColor &msgBackgroundColor, const QColor &textColor, bool showTranslationButton);
 
     void setTranslatedMessage(const QString &translatedMessage);
+
+    void setMessageLabelText(const QString &msg);
 
 };
 
