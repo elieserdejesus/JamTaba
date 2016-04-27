@@ -24,7 +24,6 @@ private slots:
     void updateText();
 
 private:
-    QString lastValidUserName;
     QKeyEvent *getModifiedEvent(QKeyEvent *e);
 
     void updateTextAlignment();
