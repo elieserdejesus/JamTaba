@@ -162,7 +162,6 @@ void ChatPanel::addMessage(const QString &userName, const QString &userMessage, 
     connect(msgPanel, SIGNAL(translationFinished()), this, SLOT(hideTranslationProgressFeedback()));
 
     msgPanel->setPrefferedTranslationLanguage(this->autoTranslationLanguage);
-    //msgPanel->setMaximumWidth(ui->scrollContent->width());
     ui->scrollContent->layout()->addWidget(msgPanel);
     if (ui->scrollContent->layout()->count() > MAX_MESSAGES) {
         // remove the first widget

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="Flat.css">../../../../src/resources/Flat.css</file>
+    </qresource>
+</RCC>
