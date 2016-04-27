@@ -49,10 +49,11 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     initializeLoginService();
     initializeMainTabWidget();
-    initializeViewModeMenu();
+    initializeViewMenu();
     initializeMasterFader();
     initializeLanguageMenu();
     initializeTranslator();
+    initializeThemeMenu();
     setupWidgets();
     setupSignals();
 
@@ -78,6 +79,31 @@ void MainWindow::setLanguage(QAction *languageMenuAction)
     if (mainController->isPlayingInNinjamRoom()) {
         ninjamWindow->getChatPanel()->setPreferredTranslationLanguage(locale);
         ninjamWindow->updateGeoLocations();
+    }
+}
+
+void MainWindow::changeTheme(QAction *action)
+{
+    QString theme = action->data().toString();
+    mainController->setTheme(theme);
+}
+
+void MainWindow::initializeThemeMenu()
+{
+    connect(ui.menuTheme, &QMenu::triggered, this, &MainWindow::changeTheme);
+
+    //create a menu action for each .css resource
+    QDir themesDir(":/style");
+    if (themesDir.exists()) {
+        QStringList themeFiles = themesDir.entryList(QStringList("*.css"));
+        foreach (const QString &themeFile, themeFiles) {
+            QString theme = QFileInfo(themeFile).baseName();
+            QAction *action = ui.menuTheme->addAction(theme);
+            action->setData(theme);
+        }
+    }
+    else{
+        qCritical() << "Themes dir not exist! Can't create the Themes menu!";
     }
 }
 
@@ -1027,7 +1053,7 @@ void MainWindow::setMultiTrackRecordingStatus(bool recording)
 
 //++++++++++++++++++++++
 
-void MainWindow::initializeViewModeMenu()
+void MainWindow::initializeViewMenu()
 {
     QObject::connect(ui.menuViewMode, SIGNAL(triggered(QAction *)), this,
                      SLOT(changeViewMode(QAction *)));
@@ -1037,9 +1063,19 @@ void MainWindow::initializeViewModeMenu()
     ui.actionMiniView->setActionGroup(group);
 }
 
-void MainWindow::changeViewMode(QAction *)
+void MainWindow::changeViewMode(QAction *action)
 {
-    setFullViewStatus(ui.actionFullView->isChecked());
+    QString actionData = action->data().toString();
+    if (actionData.isEmpty()) { //the actions mini view, full view and full screen have no data
+        setFullViewStatus(ui.actionFullView->isChecked());
+    }
+    else{
+        QFileInfo themeFile(actionData);
+        QString theme = themeFile.baseName();
+        bool themeInstalled = mainController->setTheme(theme);
+        if (!themeInstalled)
+            QMessageBox::critical(this, tr("Error"), tr("The theme %1 was not installed!").arg(theme), QMessageBox::Cancel, QMessageBox::Ok);
+    }
 }
 
 void MainWindow::updatePublicRoomsListLayout()

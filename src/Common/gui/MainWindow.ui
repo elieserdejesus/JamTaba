@@ -472,10 +472,16 @@
      <string>Language</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuTheme">
+    <property name="title">
+     <string>Theme</string>
+    </property>
+   </widget>
    <addaction name="menuPreferences"/>
    <addaction name="menuViewMode"/>
    <addaction name="menuNinjam"/>
    <addaction name="menuLanguage"/>
+   <addaction name="menuTheme"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionAudioPreferences">

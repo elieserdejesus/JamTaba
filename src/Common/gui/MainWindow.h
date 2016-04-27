@@ -218,6 +218,8 @@ private slots:
 
     void updateUserName();
 
+    void changeTheme(QAction *action);
+
 private:
 
     BusyDialog busyDialog;
@@ -247,9 +249,11 @@ private:
     void initializeLocalInputChannels(const Persistence::LocalInputTrackSettings &localInputSettings);
 
     void initializeMainTabWidget();
-    void initializeViewModeMenu();
+    void initializeViewMenu();
 
     void initializeMasterFader();
+
+    void initializeThemeMenu();
 
     void initializeLanguageMenu();
     void initializeTranslator();
