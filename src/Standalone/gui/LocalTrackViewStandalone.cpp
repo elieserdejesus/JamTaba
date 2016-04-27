@@ -55,7 +55,7 @@ void LocalTrackViewStandalone::translateUI()
 
     inputSelectionButton->setToolTip(tr("Choose input channels ..."));
 
-    midiToolsButton->setText(tr("MIDI tools"));
+    midiToolsButton->setText(tr("Tools"));
 
     refreshInputSelectionName();
 }

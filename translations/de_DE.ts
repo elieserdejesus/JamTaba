@@ -376,8 +376,8 @@
         <translation>Wähle eingabe kanäle ...</translation>
     </message>
     <message>
-        <source>MIDI tools</source>
-        <translation>midi werkzeuge</translation>
+        <source>Tools</source>
+        <translation>Werkzeuge</translation>
     </message>
     <message>
         <source>Mono</source>

@@ -386,8 +386,8 @@
         <translation>入力チャンネルを選択...</translation>
     </message>
     <message>
-        <source>MIDI tools</source>
-        <translation>MIDIツール</translation>
+        <source>Tools</source>
+        <translation>ツール</translation>
     </message>
     <message>
         <source>Mono</source>

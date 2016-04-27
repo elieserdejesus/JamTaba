@@ -376,7 +376,7 @@
         <translation></translation>
     </message>
     <message>
-        <source>MIDI tools</source>
+        <source>Tools</source>
         <translation></translation>
     </message>
     <message>

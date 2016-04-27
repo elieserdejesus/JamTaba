@@ -379,8 +379,8 @@
         <translation>Selecione os cansis de entrada...</translation>
     </message>
     <message>
-        <source>MIDI tools</source>
-        <translation>Ferramentas MIDI</translation>
+        <source>Tools</source>
+        <translation>Ferramentas</translation>
     </message>
     <message>
         <source>Mono</source>
