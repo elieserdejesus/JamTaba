@@ -427,15 +427,8 @@ BaseTrackView[unlighted="true"] PeakMeter{
 /* ++++++++++++++++++++++++++++++++++++++++ */
 
 QMainWindow{
-    background-color: #F7F7F7;
-}
-
-/* painéis principais */
-#leftPanel, #contentPanel{
-/*
-border: 1px solid rgb(55, 55, 55);
-    border-radius: 3px;
-    */
+    /*background-color: rgb(253, 227, 167);*/
+    background-color: rgb(244, 179, 80);
 }
 
 
@@ -488,25 +481,29 @@ QPushButton#localControlsCollapseButton::hover:checked{
     border: none;
 }
 
-#contentPanel .QTabWidget:pane, #leftPanel{
-    background-color: #EDE3D7;
-    border: none;/* 1px solid #EFEEC2;*/
+#contentTabWidget:pane,
+#leftPanel{
+    border: none;
     border-radius: 1px;
     padding: 0px;
 }
 
-#chatArea .QTabWidget:pane{
-    /* background-color: rgba(255, 255, 255, 80); */
+#contentTabWidget:pane
+{
+    background-color: rgb(253, 227, 167);
+
+}
+
+#leftPanel{
+    background-color: orange;
+}
+
+#chatTabWidget:pane{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop: 0     rgba(255, 255, 255, 80),
         stop: 0.85   rgba(255, 255, 255, 90),
         stop: 1.0   rgba(255, 255, 255, 140));
 }
-
- .QTabWidget::tab-bar {
-     left: 10px; /* move to the right by 5px */
-
- }
 
 /* Style the tab using the tab sub-control. Note that
 it reads QTabBar _not_ QTabWidget */
@@ -527,9 +524,6 @@ it reads QTabBar _not_ QTabWidget */
     background-color: #EEEDC1;
  }
 
- .QTabBar::tab:selected {
-
- }
 
  .QTabBar::tab:!selected {
     margin-top: 3px; /* make non-selected tabs look smaller */
@@ -582,23 +576,21 @@ BusyDialog > QLabel{
 
 
 JamRoomViewPanel{
-    background-color: #FFC575;
-    border: none; /* 1px solid #FFC435;*/
-    border-bottom: 1px solid black;/*#E5E5E5;*/
+    background-color: #FFC259;
+    border: none;
     border-radius: 1px;
     padding: 0px;
 }
 
-JamRoomViewPanel #labelName{
-    color: rgb(127, 77, 26);
-}
-
 JamRoomViewPanel #content{
-    background-color: #F9F9F9;
-    border: 1px solid #E2DAD0;
+    background-color: rgb(255, 255, 234);
     border-top: none;
     margin: 0px;
+}
 
+
+JamRoomViewPanel #labelName{
+    color: rgb(127, 77, 26);
 }
 
 JamRoomViewPanel #labelName{
