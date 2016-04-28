@@ -60,18 +60,6 @@ PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false]
 
 }
 
-/*
-#recButton{
-    min-height: 32px;
-
-}
-#recButton:checked{
-    background-image: url(':/images/rec on.png');
-}
-#recButton:!checked{
-    background-image: url(':/images/rec on.png');
-}
-*/
 
 QMessageBox,
 QInputDialog,
@@ -108,7 +96,10 @@ FxPanel{
     border-radius: 2px;
 }
 
-#buttonBoostMinus12, #buttonBoostPlus12, #buttonBoostZero {
+#buttonBoostMinus12,
+#buttonBoostPlus12,
+#buttonBoostZero
+{
    margin: 0;
    border: 0px;
    font-size: 8px;
@@ -257,11 +248,6 @@ FxPanelItem > QLabel{
     color: #D3D3D3;
     margin: 0px;
 }
-/* Não funcionou
-FxPanelItem[bypassed] > QLabel{
-    color: red;
-}
-*/
 
 FxPanelItem:hover{
     background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgba(0, 0, 0, 50), stop:1 rgba(0, 0, 0, 70));
@@ -279,13 +265,12 @@ FxPanelItem > QPushButton{
 
 FxPanelItem > QPushButton:hover{
     border: 1px solid rgba(0, 0, 0);
-    /*background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgba(0, 0, 0, 150), stop:1 rgb(0, 0, 0, 80));*/
 }
 
 FxPanelItem > QPushButton:checked{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
 }
-/*----------------------*/
+
 
 PluginScanDialog{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -302,7 +287,6 @@ PluginScanDialog #labelPluginText{
     font-weight: bold;
 }
 
-/*----------------------*/
 QScrollBar:vertical, QScrollBar:horizontal {
     border: 1px solid rgba(0, 0, 0, 45);
     background-color: rgba(0, 0, 0, 40);
@@ -381,9 +365,6 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-pa
   background: none;
 }
 
-/* ---------- */
-
-/* common widgets */
 
 QLineEdit,
 #userNamePanel{
@@ -671,15 +652,9 @@ QMainWindow #bottomPanel{
 }
 
 /* main panels */
-#leftPanel, #contentPanel{
-    /*background: url(:/images/gradient.bmp) repeat-x;*/
-    /*background-color: rgb(39, 39, 39);*/
-    /*background-color: red;*/
-    border: 1px solid rgb(55, 55, 55);
-    border-radius: 2px;
-}
-
 #leftPanel{
+   border: 1px solid rgb(55, 55, 55);
+   border-radius: 2px;
    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop: 0     rgba(0, 0, 0, 10),
         stop: 1.0   rgba(0,0,0, 20));
@@ -689,7 +664,7 @@ QMainWindow #bottomPanel{
 
 
 /* Main panels title */
-.QWidget#contentPanel > .QLabel{
+#contentTabWidgetPanel > .QLabel{
     color: rgb(190, 190, 190);
     qproperty-alignment: AlignCenter;
 }
@@ -705,14 +680,6 @@ QMainWindow #bottomPanel{
     color: gray;
 }
 
-/* define os separadores horizontais abaixo dos títulos as seções principais   */
-.QWidget#leftPanel > .QFrame{
-background-color: rgb(47, 47, 47);
-}
-
-.QWidget#contentPanel > .QFrame{
-background-color: rgb(100, 100, 100);
-}
 
 QPushButton#localControlsCollapseButton{
     border: none;
@@ -741,26 +708,20 @@ QPushButton#localControlsCollapseButton::hover:checked{
 }
 /* ------------------------------ */
 
-.QWidget#contentPanel{
-    background: transparent;
-    border: none;
-}
 
-#contentPanel .QTabWidget:pane{
-    /*background-color: #BCBCBC;*/
+#contentTabWidget:pane{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
             stop: 0     #dedede,
             stop: 1.0   #bcbcbc);
 }
 
-#contentPanel .QTabWidget:pane, #chatArea .QTabWidget:pane{
+#contentTabWidget:pane, #chatTabWidget:pane{
     border: 1px solid rgba(0, 0, 0, 60);
     border-radius: 2px;
     padding: 0px;
 }
 
-#chatArea .QTabWidget:pane{
-    /* background-color: rgba(255, 255, 255, 80); */
+#chatTabWidget:pane{
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop: 0     rgba(255, 255, 255, 80),
         stop: 0.85   rgba(255, 255, 255, 90),
@@ -1405,11 +1366,11 @@ ChatPanel QPushButton#buttonAutoTranslate{
     border: 1px solid #919191;
 }
 
-ChatMessagePanel #labelUserName,
-ChatMessagePanel #messageContent
+ChatMessagePanel
 {
     border: 1px solid rgb(0, 0, 0, 80);
     border-radius: 2px;
+    padding: 3px;
 }
 
 ChatMessagePanel #labelMessage
@@ -1424,17 +1385,9 @@ ChatMessagePanel #labelTimeStamp{
 }
 
 ChatMessagePanel #labelUserName{
-    border-bottom: none;
-    border-bottom-right-radius: 0px;
 
     font-size: 10px;
     font-weight: bold;
-}
-
-ChatMessagePanel #messageContent{
-    border-top-right-radius: 0px;
-    border-top-left-radius: 0px;
-    border-top: none;
 }
 
 ChatMessagePanel #translateButton{
@@ -1444,10 +1397,7 @@ ChatMessagePanel #translateButton{
     min-height: 6px;
     padding: 2px;
     border: 1px solid rgb(0, 0, 0, 80);
-    border-right: none;
     border-radius: 2px;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
     margin-top: 1px;
     margin-bottom: 1px;
     font-size: 8px;
