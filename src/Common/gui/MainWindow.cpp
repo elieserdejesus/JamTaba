@@ -95,8 +95,9 @@ void MainWindow::initializeLanguageMenu()
         QStringList locales = translationsDir.entryList();
         foreach (const QString &translationFile, locales) {
             QLocale loc(translationFile);
-            QString actionText = loc.nativeLanguageName();
-            QAction *action = ui.menuLanguage->addAction(actionText);
+            QString nativeLanguageName = loc.nativeLanguageName();
+            QString englishLanguageName = QLocale::languageToString(loc.language());
+            QAction *action = ui.menuLanguage->addAction(nativeLanguageName + " (" + englishLanguageName + ")");
             action->setData(translationFile); //using the locale (pt_BR, ja_JP) as data
         }
     }
