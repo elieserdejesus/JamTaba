@@ -2,6 +2,7 @@
     <qresource prefix="/style">
         <file>Flat.css</file>
         <file>Rounded.css</file>
+        <!--file>Orange.css</file-->
     </qresource>
     <qresource prefix="/tr">
         <file alias="en.qm">../../translations/en.qm</file>
