@@ -541,6 +541,7 @@ QMainWindow{
 QMainWindow #bottomPanel{
     background: rgb(224, 224, 224);
     min-height: 60px;
+    border-top: 1px solid rgb(191, 191, 191);
 }
 
 #leftPanel{
@@ -614,6 +615,7 @@ QTabBar::tab
     padding-left: 10px;
     padding-right: 10px;
     font-size: 11px;
+    color: black;
  }
 
 QTabBar::tab:selected,
@@ -1046,7 +1048,7 @@ NinjamRoomWindow #groupNameField {
 
 NinjamRoomWindow TrackGroupView
 {
-    border: 1px solid rgb(160, 160, 160);
+    border: 1px solid rgb(130, 130, 130);
 }
 
 NinjamRoomWindow TrackGroupView #countryLabel{
