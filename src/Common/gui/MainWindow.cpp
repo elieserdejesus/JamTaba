@@ -6,7 +6,8 @@
 #include "Highligther.h"
 #include "PrivateServerDialog.h"
 #include "NinjamController.h"
-#include "Utils.h"
+#include "Utils.h" //TODO refactoring to AudioUtils.h and use namespace
+#include "GuiUtils.h"
 #include "UserNameDialog.h"
 #include "log/Logging.h"
 #include "JamRoomViewPanel.h"
@@ -89,26 +90,15 @@ void MainWindow::loadTranslationFile(const QString &locale)
 // ++++++++++++++++++++++++=
 void MainWindow::initializeLanguageMenu()
 {
-
-    QMap<QString, QString> translators;
-    translators.insert("pt", "Elieser");
-    translators.insert("de", "Magnus and Martin");
-    translators.insert("ja", "Tea");
-    translators.insert("es", "Jon");
-    translators.insert("fr", "Doublebass");
-
     //create a menu action for each translation resource
     QDir translationsDir(":/tr");
     if (translationsDir.exists()) {
         QStringList locales = translationsDir.entryList();
         foreach (const QString &translationFile, locales) {
             QLocale loc(translationFile);
-            QString actionText = loc.nativeLanguageName();
-            QString languageCode = translationFile.left(2);
-            if (translators.contains(languageCode)) {
-                actionText += "   (" + translators[languageCode] + ")";
-            }
-            QAction *action = ui.menuLanguage->addAction(actionText);
+            QString nativeLanguageName = Gui::capitalize(loc.nativeLanguageName());
+            QString englishLanguageName = Gui::capitalize(QLocale::languageToString(loc.language())); // QLocale::languageToString is returning capitalized String, but just to be shure (Qt can change in future) I'm using capitalize here too.
+            QAction *action = ui.menuLanguage->addAction(nativeLanguageName + " (" + englishLanguageName + ")");
             action->setData(translationFile); //using the locale (pt_BR, ja_JP) as data
         }
     }
