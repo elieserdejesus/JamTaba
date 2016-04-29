@@ -6,7 +6,7 @@
 #include "Highligther.h"
 #include "PrivateServerDialog.h"
 #include "NinjamController.h"
-#include "Utils.h" //TODO refactoring to AudioUtils.h and use namespace
+#include "Utils.h" // TODO refactoring to AudioUtils.h and use namespace
 #include "GuiUtils.h"
 #include "UserNameDialog.h"
 #include "log/Logging.h"
@@ -63,10 +63,10 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
 void MainWindow::initializeTranslator()
 {
-    //always install the translator
+    // always install the translator
     QApplication::instance()->installTranslator(&translator);
 
-    //remember the last selected language
+    // remember the last selected language
     QString localeName = mainController->getSettings().getTranslation();
     loadTranslationFile(localeName);
 }
@@ -93,7 +93,7 @@ void MainWindow::initializeThemeMenu()
 {
     connect(ui.menuTheme, &QMenu::triggered, this, &MainWindow::changeTheme);
 
-    //create a menu action for each .css resource
+    // create a menu action for each .css resource
     QDir themesDir(":/style");
     if (themesDir.exists()) {
         QStringList themeFiles = themesDir.entryList(QStringList("*.css"));
@@ -102,8 +102,7 @@ void MainWindow::initializeThemeMenu()
             QAction *action = ui.menuTheme->addAction(theme);
             action->setData(theme);
         }
-    }
-    else{
+    } else {
         qCritical() << "Themes dir not exist! Can't create the Themes menu!";
     }
 }
@@ -116,19 +115,20 @@ void MainWindow::loadTranslationFile(const QString &locale)
 // ++++++++++++++++++++++++=
 void MainWindow::initializeLanguageMenu()
 {
-    //create a menu action for each translation resource
+    // create a menu action for each translation resource
     QDir translationsDir(":/tr");
     if (translationsDir.exists()) {
         QStringList locales = translationsDir.entryList();
         foreach (const QString &translationFile, locales) {
             QLocale loc(translationFile);
             QString nativeLanguageName = Gui::capitalize(loc.nativeLanguageName());
-            QString englishLanguageName = Gui::capitalize(QLocale::languageToString(loc.language())); // QLocale::languageToString is returning capitalized String, but just to be shure (Qt can change in future) I'm using capitalize here too.
-            QAction *action = ui.menuLanguage->addAction(nativeLanguageName + " (" + englishLanguageName + ")");
-            action->setData(translationFile); //using the locale (pt_BR, ja_JP) as data
+            QString englishLanguageName
+                = Gui::capitalize(QLocale::languageToString(loc.language()));                         // QLocale::languageToString is returning capitalized String, but just to be shure (Qt can change in future) I'm using capitalize here too.
+            QAction *action = ui.menuLanguage->addAction(
+                nativeLanguageName + " (" + englishLanguageName + ")");
+            action->setData(translationFile); // using the locale (pt_BR, ja_JP) as data
         }
-    }
-    else{
+    } else {
         qCritical() << "translations dir not exist! Can't create the Language menu!";
     }
 }
@@ -145,7 +145,7 @@ void MainWindow::initialize()
 
 void MainWindow::doWindowInitialization()
 {
-    initializeLocalInputChannels(); //create the local tracks, load plugins, etc.
+    initializeLocalInputChannels(); // create the local tracks, load plugins, etc.
 
     // set window mode: mini mode or full view mode
     setFullViewStatus(mainController->getSettings().windowsWasFullViewMode());
@@ -154,9 +154,8 @@ void MainWindow::doWindowInitialization()
 // ++++++++++++++++++++++++=
 void MainWindow::showPeakMetersOnlyInLocalControls(bool showPeakMetersOnly)
 {
-    foreach (LocalTrackGroupView *channel, localGroupChannels) {
+    foreach (LocalTrackGroupView *channel, localGroupChannels)
         channel->setPeakMeterMode(showPeakMetersOnly);
-    }
 
     ui.localControlsCollapseButton->setChecked(showPeakMetersOnly);
     updateLocalInputChannelsGeometry();
@@ -220,7 +219,8 @@ Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
             quint8 lowerNote = inputNode->getMidiLowerNote();
             quint8 higherNote = inputNode->getMidiHigherNote();
 
-            Subchannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted, transpose, lowerNote, higherNote);
+            Subchannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted,
+                           transpose, lowerNote, higherNote);
             channel.subChannels.append(sub);
         }
         settings.channels.append(channel);
@@ -410,7 +410,7 @@ void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inp
         channelIndex++;
     }
     if (channelIndex == 0)// no channels in settings file or no settings file...
-        addLocalChannel(0, "", true); //create a channel using an empty name
+        addLocalChannel(0, "", true); // create a channel using an empty name
 
     qCInfo(jtGUI) << "Initializing local inputs done!";
 
@@ -505,7 +505,8 @@ void MainWindow::detachMainController()
 void MainWindow::handleServerConnectionError(const QString &errorMsg)
 {
     hideBusyDialog();
-    QMessageBox::warning(this, tr("Error!"), tr("Error connecting in Jamtaba server!\n") + errorMsg);
+    QMessageBox::warning(this, tr("Error!"),
+                         tr("Error connecting in Jamtaba server!\n") + errorMsg);
     close();
 }
 
@@ -514,7 +515,8 @@ void MainWindow::showNewVersionAvailableMessage()
     hideBusyDialog();
     QString text
         =
-            tr("A new Jamtaba version is available for download! Please use the <a href='http://www.jamtaba.com'>new version</a>!");
+            tr(
+                "A new Jamtaba version is available for download! Please use the <a href='http://www.jamtaba.com'>new version</a>!");
     QMessageBox::information(this, tr("New Jamtaba version available!"), text);
 }
 
@@ -566,9 +568,10 @@ void MainWindow::refreshPublicRoomsList(const QList<Login::RoomInfo> &publicRoom
             JamRoomViewPanel *roomViewPanel = roomViewPanels[roomInfo.getID()];
             if (roomViewPanel) {
                 roomViewPanel->refresh(roomInfo);
-                //check if is playing a public room stream but this room is empty now
-                if( mainController->isPlayingRoomStream() ){
-                    if(roomInfo.isEmpty() && mainController->getCurrentStreamingRoomID() == roomInfo.getID())
+                // check if is playing a public room stream but this room is empty now
+                if (mainController->isPlayingRoomStream()) {
+                    if (roomInfo.isEmpty()
+                        && mainController->getCurrentStreamingRoomID() == roomInfo.getID())
                         stopCurrentRoomStream();
                 }
                 ui.allRoomsContent->layout()->removeWidget(roomViewPanel); // the widget is removed but added again
@@ -631,7 +634,7 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
             QString userName = dialog.getUserName().trimmed();
             if (!userName.isEmpty()) {
                 mainController->setUserName(userName);
-                ui.userNameLineEdit->setText(userName); //show the user name in top of local tracks
+                ui.userNameLineEdit->setText(userName); // show the user name in top of local tracks
             } else {
                 QMessageBox::warning(this, tr("Warning!"), tr("Empty name is not allowed!"));
             }
@@ -658,7 +661,7 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     qCDebug(jtGUI) << "hidding busy dialog...";
     hideBusyDialog();
 
-    //lock the user name field, user name can't be changed when jamming
+    // lock the user name field, user name can't be changed when jamming
     setUserNameReadOnlyStatus(true);
 
     qCDebug(jtGUI) << "creating NinjamRoomWindow...";
@@ -672,7 +675,7 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     qCDebug(jtGUI) << "adding ninjam chat panel...";
     ChatPanel *chatPanel = ninjamWindow->getChatPanel();
     ui.chatTabWidget->addTab(chatPanel, "");
-    updateChatTabTitle();//set and translate the chat tab title
+    updateChatTabTitle();// set and translate the chat tab title
 
     QObject::connect(chatPanel, SIGNAL(userConfirmingChordProgression(
                                            ChordProgression)), this,
@@ -715,7 +718,8 @@ void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
     QString icon = readOnly ? QStringLiteral("pencil-read-only.png") : QStringLiteral("pencil.png");
     ui.labelUserNameIcon->setPixmap(QPixmap(":/images/" + icon));
 
-    QString toolTip = readOnly ? tr("Your name cannot be edited while jamming!") : tr("Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.");
+    QString toolTip = readOnly ? tr("Your name cannot be edited while jamming!") : tr(
+        "Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.");
     ui.userNameLineEdit->setToolTip(toolTip);
     ui.labelUserNameIcon->setToolTip(toolTip);
 
@@ -727,7 +731,7 @@ void MainWindow::setUserNameReadOnlyStatus(bool readOnly)
 
 void MainWindow::updateChatTabTitle()
 {
-    int chatTabIndex = 0; //assuming chat is the first tab
+    int chatTabIndex = 0; // assuming chat is the first tab
     ui.chatTabWidget->setTabText(chatTabIndex, tr("Chat"));
 }
 
@@ -735,7 +739,6 @@ void MainWindow::showMetronomePreferencesDialog()
 {
     openPreferencesDialog(ui.actionMetronome);
 }
-
 
 // +++++++++++++++ PREPARING TO XMIT +++++++++++
 // this signal is received when ninjam controller is ready to transmit (after the 'preparing' intervals).
@@ -755,7 +758,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
 {
     hideBusyDialog();
 
-    //unlock the user name field
+    // unlock the user name field
     setUserNameReadOnlyStatus(false);
 
     // remove the jam room tab (the last tab)
@@ -786,7 +789,8 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
         if (!disconnectionMessage.isEmpty())
             showMessageBox(tr("Error"), disconnectionMessage, QMessageBox::Warning);
         else
-            showMessageBox(tr("Error"), tr("Disconnected from ninjam server"), QMessageBox::Warning);
+            showMessageBox(tr("Error"), tr("Disconnected from ninjam server"),
+                           QMessageBox::Warning);
     } else {
         if (roomToJump) {// waiting the disconnection to connect in a new room?
             showBusyDialog(tr("Connecting in %1").arg(roomToJump->getName()));
@@ -803,7 +807,7 @@ void MainWindow::setChatVisibility(bool chatVisible)
 {
     ui.chatTabWidget->setVisible(chatVisible);
 
-    //adjust bottom panel colspan
+    // adjust bottom panel colspan
     int colSpan = chatVisible ? 3 : 2;
     ui.gridLayout->addWidget(ui.bottomPanel, 1, 0, 1, colSpan);
 }
@@ -849,8 +853,7 @@ void MainWindow::timerEvent(QTimerEvent *)
             if (!buffering) {
                 Audio::AudioPeak peak = mainController->getRoomStreamPeak();
                 roomView->addPeak(peak.getMax());
-            }
-            else{
+            } else {
                 int percentage = mainController->getRoomStreamer()->getBufferingPercentage();
                 roomView->setBufferingPercentage(percentage);
             }
@@ -880,12 +883,10 @@ void MainWindow::changeEvent(QEvent *ev)
         showPeakMetersOnlyInLocalControls(
             isRunningInMiniMode() && width() <= MINI_MODE_MIN_SIZE.width());
         updatePublicRoomsListLayout();
-    }
-    else if (ev->type() == QEvent::LanguageChange) {
+    } else if (ev->type() == QEvent::LanguageChange) {
         ui.retranslateUi(this);
-        if (ninjamWindow) {
-            updateChatTabTitle(); //translate the chat tab title
-        }
+        if (ninjamWindow)
+            updateChatTabTitle(); // translate the chat tab title
     }
     QMainWindow::changeEvent(ev);
 }
@@ -933,18 +934,31 @@ void MainWindow::connectInPrivateServer(const QString &server, int serverPort,
 
 void MainWindow::showJamtabaIssuesWebPage()
 {
-    QDesktopServices::openUrl(QUrl("https://github.com/elieserdejesus/JamTaba/issues"));
+    openUrlInUserBrowser("https://github.com/elieserdejesus/JamTaba/issues");
 }
 
 void MainWindow::showJamtabaWikiWebPage()
 {
-    QDesktopServices::openUrl(QUrl("https://github.com/elieserdejesus/JamTaba/wiki"));
+    openUrlInUserBrowser("https://github.com/elieserdejesus/JamTaba/wiki");
 }
 
 void MainWindow::showJamtabaUsersManual()
 {
     QString url = "https://github.com/elieserdejesus/JamTaba/wiki/Jamtaba's-user-guide";
-    QDesktopServices::openUrl(QUrl(url));
+    openUrlInUserBrowser(url);
+}
+
+void MainWindow::showJamtabaTranslators()
+{
+    QString url = "www.jamtaba.com/#translators";
+    openUrlInUserBrowser(url);
+}
+
+void MainWindow::openUrlInUserBrowser(const QString &url)
+{
+    if (!QDesktopServices::openUrl(QUrl(url))) {
+        QMessageBox::warning(this, tr("Error"), tr("Can't open the link!"), QMessageBox::Cancel, QMessageBox::Ok );
+    }
 }
 
 void MainWindow::showPrivateServerDialog()
@@ -1010,15 +1024,19 @@ void MainWindow::openPreferencesDialog(QAction *action)
     }
 }
 
-//+++++++++++++++++++++++++
+// +++++++++++++++++++++++++
 void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
 {
     Q_ASSERT(dialog);
 
-    connect(dialog, SIGNAL(multiTrackRecordingStatusChanged(bool)), this, SLOT(setMultiTrackRecordingStatus(bool)));
-    connect(dialog, SIGNAL(recordingPathSelected(const QString &)), this, SLOT(setRecordingPath(const QString &)));
-    connect(dialog, SIGNAL(builtInMetronomeSelected(QString)), this, SLOT(setBuiltInMetronome(QString)));
-    connect(dialog, SIGNAL(customMetronomeSelected(QString,QString)), this, SLOT(setCustomMetronome(QString,QString)));
+    connect(dialog, SIGNAL(multiTrackRecordingStatusChanged(bool)), this,
+            SLOT(setMultiTrackRecordingStatus(bool)));
+    connect(dialog, SIGNAL(recordingPathSelected(const QString &)), this,
+            SLOT(setRecordingPath(const QString &)));
+    connect(dialog, SIGNAL(builtInMetronomeSelected(QString)), this,
+            SLOT(setBuiltInMetronome(QString)));
+    connect(dialog, SIGNAL(customMetronomeSelected(QString, QString)), this,
+            SLOT(setCustomMetronome(QString, QString)));
 }
 
 void MainWindow::setBuiltInMetronome(const QString &metronomeAlias)
@@ -1026,7 +1044,8 @@ void MainWindow::setBuiltInMetronome(const QString &metronomeAlias)
     mainController->setBuiltInMetronome(metronomeAlias);
 }
 
-void MainWindow::setCustomMetronome(const QString &primaryBeatFile, const QString &secondaryBeatFile)
+void MainWindow::setCustomMetronome(const QString &primaryBeatFile,
+                                    const QString &secondaryBeatFile)
 {
     mainController->setCustomMetronome(primaryBeatFile, secondaryBeatFile);
 }
@@ -1041,7 +1060,7 @@ void MainWindow::setMultiTrackRecordingStatus(bool recording)
     mainController->storeRecordingMultiTracksStatus(recording);
 }
 
-//++++++++++++++++++++++
+// ++++++++++++++++++++++
 
 void MainWindow::initializeViewMenu()
 {
@@ -1056,15 +1075,15 @@ void MainWindow::initializeViewMenu()
 void MainWindow::changeViewMode(QAction *action)
 {
     QString actionData = action->data().toString();
-    if (actionData.isEmpty()) { //the actions mini view, full view and full screen have no data
+    if (actionData.isEmpty()) { // the actions mini view, full view and full screen have no data
         setFullViewStatus(ui.actionFullView->isChecked());
-    }
-    else{
+    } else {
         QFileInfo themeFile(actionData);
         QString theme = themeFile.baseName();
         bool themeInstalled = mainController->setTheme(theme);
         if (!themeInstalled)
-            QMessageBox::critical(this, tr("Error"), tr("The theme %1 was not installed!").arg(theme), QMessageBox::Cancel, QMessageBox::Ok);
+            QMessageBox::critical(this, tr("Error"), tr("The theme %1 was not installed!").arg(
+                                      theme), QMessageBox::Cancel, QMessageBox::Ok);
     }
 }
 
@@ -1076,24 +1095,23 @@ void MainWindow::updatePublicRoomsListLayout()
     refreshPublicRoomsList(roomInfos);
 }
 
-
 QSize MainWindow::getSanitizedMinimumWindowSize(const QSize &prefferedMinimumWindowSize) const
 {
-
-    //fixing #343. If MainWindow::showFullScreen() is called after a setMinimumSize(), and the current
-    //minimum size is less then desktop size the fullScreen is buggy because we are forcing an
-    //impossible minimum size (the minimum size is too large). This code is ensuring the minimum
-    //window size is a valid window size.
+    // fixing #343. If MainWindow::showFullScreen() is called after a setMinimumSize(), and the current
+    // minimum size is less then desktop size the fullScreen is buggy because we are forcing an
+    // impossible minimum size (the minimum size is too large). This code is ensuring the minimum
+    // window size is a valid window size.
     QDesktopWidget desktop;
 
     QSize screenSize = desktop.availableGeometry().size();
 
     static int topBarHeight = 0;
-    if (topBarHeight == 0) //when the window is fullscreen the topBarHeight is zero (no title window).
-        topBarHeight = frameGeometry().height() - geometry().height(); //geometry is the 'window client area', frameGeometry contain the window title bar area. http://doc.qt.io/qt-4.8/application-windows.html#window-geometry
+    if (topBarHeight == 0) // when the window is fullscreen the topBarHeight is zero (no title window).
+        topBarHeight = frameGeometry().height() - geometry().height(); // geometry is the 'window client area', frameGeometry contain the window title bar area. http://doc.qt.io/qt-4.8/application-windows.html#window-geometry
 
-    int minimumWidth = qMin(prefferedMinimumWindowSize.width(), screenSize.width()) ;
-    int minimumHeight = qMin(prefferedMinimumWindowSize.height(), screenSize.height() - topBarHeight) ;
+    int minimumWidth = qMin(prefferedMinimumWindowSize.width(), screenSize.width());
+    int minimumHeight
+        = qMin(prefferedMinimumWindowSize.height(), screenSize.height() - topBarHeight);
 
     return QSize(minimumWidth, minimumHeight);
 }
@@ -1115,7 +1133,6 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
     ui.tabLayout->setContentsMargins(tabLayoutMargim, tabLayoutMargim, tabLayoutMargim,
                                      tabLayoutMargim);
     ui.allRoomsContent->layout()->setSpacing(tabLayoutMargim);
-
 
     // show only the peak meters if user is in mini mode and is not maximized or full screen
     showPeakMetersOnlyInLocalControls(isRunningInMiniMode() && !isMaximized() && !isFullScreen());
@@ -1238,8 +1255,8 @@ void MainWindow::showChordProgression(const ChordProgression &progression)
     } else {
         int measures = progression.getMeasures().size();
         QString msg = tr("These chords (%1 measures) can't be used in a %2 bpi interval!")
-                .arg(QString::number(measures))
-                .arg(QString::number(currentBpi));
+                      .arg(QString::number(measures))
+                      .arg(QString::number(currentBpi));
         QMessageBox::warning(this, tr("Problem..."), msg);
     }
 }
@@ -1324,49 +1341,50 @@ void MainWindow::setupWidgets()
     ui.localTracksWidget->installEventFilter(this);
 
     QString lastUserName = mainController->getUserName();
-    if (!lastUserName.isEmpty()) {
+    if (!lastUserName.isEmpty())
         ui.userNameLineEdit->setText(lastUserName);
-    }
 }
 
 void MainWindow::setupSignals()
 {
     connect(ui.menuPreferences, SIGNAL(triggered(QAction *)), this,
-                     SLOT(openPreferencesDialog(QAction *)));
+            SLOT(openPreferencesDialog(QAction *)));
 
     connect(ui.actionNinjam_community_forum, SIGNAL(triggered(bool)), this,
-                     SLOT(showNinjamCommunityWebPage()));
+            SLOT(showNinjamCommunityWebPage()));
 
     connect(ui.actionNinjam_Official_Site, SIGNAL(triggered(bool)), this,
-                     SLOT(showNinjamOfficialWebPage()));
+            SLOT(showNinjamOfficialWebPage()));
 
     connect(ui.actionPrivate_Server, SIGNAL(triggered(bool)), this,
-                     SLOT(showPrivateServerDialog()));
+            SLOT(showPrivateServerDialog()));
 
     connect(ui.actionReportBugs, SIGNAL(triggered(bool)), this,
-                     SLOT(showJamtabaIssuesWebPage()));
+            SLOT(showJamtabaIssuesWebPage()));
 
     connect(ui.actionWiki, SIGNAL(triggered(bool)), this,
-                     SLOT(showJamtabaWikiWebPage()));
+            SLOT(showJamtabaWikiWebPage()));
 
     connect(ui.actionUsersManual, SIGNAL(triggered(bool)), this,
-                     SLOT(showJamtabaUsersManual()));
+            SLOT(showJamtabaUsersManual()));
+
+    connect(ui.actionTranslators, SIGNAL(triggered(bool)), this, SLOT(showJamtabaTranslators()));
 
     connect(ui.actionCurrentVersion, SIGNAL(triggered(bool)), this,
-                     SLOT(showJamtabaCurrentVersion()));
+            SLOT(showJamtabaCurrentVersion()));
 
     connect(ui.localControlsCollapseButton, SIGNAL(clicked()), this,
-                     SLOT(toggleLocalInputsCollapseStatus()));
+            SLOT(toggleLocalInputsCollapseStatus()));
 
     connect(mainController->getRoomStreamer(), SIGNAL(error(QString)), this,
-                     SLOT(handlePublicRoomStreamError(QString)));
+            SLOT(handlePublicRoomStreamError(QString)));
 
     connect(ui.masterFader, SIGNAL(valueChanged(int)), this,
-                     SLOT(setMasterGain(int)));
+            SLOT(setMasterGain(int)));
 
     connect(ui.actionQuit, SIGNAL(triggered(bool)), this, SLOT(close()));
 
-    connect(ui.menuLanguage, SIGNAL(triggered(QAction*)), this, SLOT(setLanguage(QAction*)));
+    connect(ui.menuLanguage, SIGNAL(triggered(QAction *)), this, SLOT(setLanguage(QAction *)));
 
     connect(ui.userNameLineEdit, SIGNAL(editingFinished()), this, SLOT(updateUserName()));
 }
