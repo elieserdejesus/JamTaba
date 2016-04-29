@@ -1,0 +1,1251 @@
+*{
+    font-family: "Verdana";
+    font-size: 11px;
+    outline: none; /* Removing rect border in selected tabs (Linux workaround) */
+}
+
+/* Remove the focus rect. The annoying focus appears only in VSt plugin*/
+QPushButton:focus {
+    outline: none;
+}
+
+PreferencesDialog #buttonAddVstScanFolder{
+    background-image: url(:/images/more.png);
+    background-position: center center;
+    background-repeat: none;
+    margin-right: 12px;
+}
+
+PreferencesDialog #blackListWidget{
+    background-color: black;
+    color: orange;
+}
+
+PreferencesDialog #plainTextEdit{
+    background: transparent;
+}
+
+PreferencesDialog QGroupBox,
+MidiToolsDialog QGroupBox,
+PreferencesDialog #sampleRateLabel,
+PreferencesDialog #bufferSizeLabel {
+    font-weight: bold;
+}
+
+PreferencesDialog QGroupBox,
+MidiToolsDialog QGroupBox{
+    padding-left: 16px;
+    padding-top: 12px;
+    border: none;
+}
+
+PreferencesDialog QGroupBox#groupBoxBuiltInMetronomes[checked=false],
+PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false]
+{
+    color: gray;
+}
+
+
+
+QMessageBox,
+QInputDialog,
+PluginScanDialog,
+MidiToolsDialog{
+    background-color: rgb(220, 220, 220);
+    border: 1px outset gray;
+    padding: 32px;
+}
+
+QInputDialog{
+    min-width: 400px;
+}
+
+FxPanel{
+    border: none;
+    background-color: none; /* rgba(0, 0, 0, 20);*/
+    max-height: 80px;
+}
+
+#buttonBoostMinus12,
+#buttonBoostPlus12,
+#buttonBoostZero
+{
+   margin: 0px;
+   font-size: 8px;
+   padding: 1px;
+   padding-top: 3px;
+   padding-bottom: 3px;
+   border-radius: 1px;
+}
+
+#buttonBoostMinus12:checked,
+#buttonBoostPlus12:checked,
+#buttonBoostZero:checked
+{
+    background-color: rgb(200, 200, 200);
+    color: rgba(0, 0, 0, 160);
+    border-radius: 0px;
+}
+
+#buttonBoostZero:checked
+{
+    border-bottom: none;
+    border-top: none;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 60);
+}
+
+BaseTrackView[unlighted="true"] #buttonBoostMinus12,
+BaseTrackView[unlighted="true"] #buttonBoostZero,
+BaseTrackView[unlighted="true"] #buttonBoostPlus12,
+BaseTrackView[unlighted="true"] #soloButton,
+BaseTrackView[unlighted="true"] #muteButton
+{
+    background-color: rgba(0, 0, 0, 30);
+    border: none;
+}
+
+/*
+BaseTrackView QPushButton#buttonBoostMinus12{
+
+   border-top: 1px solid rgba(0, 0, 0, 10);
+}
+
+BaseTrackView QPushButton#buttonBoostPlus12{
+
+   border-bottom: 1px solid rgba(0, 0, 0, 10);
+   margin: 0px;
+}
+*/
+
+NinjamTrackView[horizontal="true"] #buttonBoostMinus12,
+NinjamTrackView[horizontal="true"] #buttonBoostPlus12,
+NinjamTrackView[horizontal="true"] #buttonBoostZero {
+    padding: 1px;
+    border: 1px solid rgba(0, 0, 0, 30);
+}
+
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12{
+
+   border-left: 1px solid rgba(0, 0, 0, 10);
+   margin: 0px;
+}
+
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12{
+
+    border-right: 1px solid rgba(0, 0, 0, 10);
+    margin: 0px;
+}
+
+NinjamTrackView[horizontal="true"] #buttonBoostZero{
+    min-width: 12px;
+}
+
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12:checked,
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:checked,
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:checked {
+    margin-top: -1px;
+    background-color: rgba(0, 0, 0, 30);
+}
+
+NinjamTrackView[horizontal="true"]{
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 rgb(240, 240, 240),
+        stop:1 rgb(200, 200, 200));
+}
+
+NinjamRoomWindow #licenceButton{
+    background-image: url(':/images/licence.png');
+    background-position: center center;
+    background-repeat: none;
+    max-height: 20px;
+    width: 28px;
+}
+
+NinjamRoomWindow QToolButton:hover,
+NinjamRoomWindow #licenceButton:hover{
+    border: 1px solid rgba(0, 0, 0, 50);
+    background-color: rgba(255, 255, 255, 80);
+}
+
+NinjamRoomWindow QToolButton,
+NinjamRoomWindow #licenceButton
+{
+    border: 1px solid rgb(150, 150, 150);
+    background-color: rgba(255, 255, 255, 10);
+}
+
+NinjamRoomWindow QToolButton{
+    height: 20px;
+    min-width: 28px;
+    padding: 0px;
+}
+
+NinjamRoomWindow QToolButton:checked{
+    background-color: rgba(255, 255, 255, 60);
+    border: 1px solid rgb(130, 130, 130);
+}
+
+NinjamRoomWindow QToolButton#buttonVerticalLayout{
+
+    margin-right: 0px;
+}
+NinjamRoomWindow QToolButton#buttonHorizontalLayout{
+
+    margin-left: 0px;
+}
+
+NinjamRoomWindow QToolButton#wide{
+    margin: 0px;
+}
+
+NinjamRoomWindow QToolButton#wide:!checked{
+    border-right-color: none;
+}
+
+NinjamRoomWindow QToolButton#narrow:!checked{
+    border-left-color: none;
+}
+
+NinjamRoomWindow QToolButton#buttonVerticalLayout:!checked{
+    border-right-color: none;
+}
+NinjamRoomWindow QToolButton#buttonHorizontalLayout:!checked{
+    border-left-color: none;
+}
+
+NinjamRoomWindow QToolButton#narrow{
+
+    margin-left: 0px;
+}
+
+
+FxPanelItem{
+    background-color: rgba(0, 0, 0, 55);
+    background-position: center right;
+    background-repeat: none;
+    max-height: 14px;
+    width: 100%;
+    border: none;
+}
+
+BaseTrackView[unlighted="false"] FxPanelItem{
+    border: 1px outset rgb(100, 100, 100);
+}
+
+FxPanelItem[containPlugin="false"]{
+    background-image: url(':/images/arrow-down-lighter.png');
+}
+FxPanelItem[containPlugin="true"]{
+    background-image: none;
+}
+
+FxPanelItem > QLabel{
+    qproperty-alignment: AlignLeft;
+    font-size: 10px;
+    color: #D3D3D3;
+    margin: 0px;
+}
+
+FxPanelItem:hover{
+    background-color: rgba(0, 0, 0, 60);
+}
+
+FxPanelItem > QPushButton{
+     max-width: 10px;
+     max-height: 10px;
+     margin: 0px;
+     padding: 0px;
+     border: 1px solid rgb(0, 120, 0);
+     background-color: rgba(0, 0, 0, 120);
+}
+
+FxPanelItem > QPushButton:hover{
+    border: 1px solid rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 60);
+}
+
+FxPanelItem > QPushButton:checked{
+    background-color: rgb(0, 210, 0);
+}
+
+FxPanelItem > QPushButton:checked:hover{
+    background-color: rgb(0, 225, 0);
+}
+/*----------------------*/
+
+PluginScanDialog{
+    background-color: rgb(250, 250, 250);
+}
+
+
+PluginScanDialog QPlainTextEdit{
+    background: transparent;
+}
+
+PluginScanDialog #labelPluginText{
+    font-weight: bold;
+}
+
+/*----------------------*/
+QScrollBar:vertical,
+QScrollBar:horizontal {
+    border: none;
+    background-color: rgba(0, 0, 0, 40);
+    margin: 0px;
+}
+
+QScrollBar:vertical{
+    width: 14px;
+    margin-left: 6px;
+}
+
+QScrollBar:horizontal{
+    height: 14px;
+    margin-top: 6px;
+}
+
+QScrollBar::handle:vertical,
+QScrollBar::handle:horizontal
+{
+  border: 1px solid rgba(0, 0, 0, 45);
+  background-color: rgba(255, 255, 255, 140);
+  margin: 0px;
+}
+
+
+QScrollBar::handle:horizontal:hover,
+QScrollBar::handle:vertical:hover
+{
+    background-color: rgba(255, 255, 255, 200);
+}
+
+QScrollBar::handle:vertical
+{
+  max-height: 20px;
+  height: 20px;
+}
+
+QScrollBar::handle:horizontal
+{
+  max-width: 20px;
+  width: 20px;
+}
+
+QScrollBar::add-line:vertical {
+  border: none;
+  height: 10px;
+  subcontrol-position: bottom;
+  subcontrol-origin: margin;
+}
+QScrollBar::add-line:horizontal {
+  border: none;
+  width: 10px;
+  subcontrol-position: left;
+  subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:vertical {
+  border: none;
+  height: 10px;
+  subcontrol-position: top;
+  subcontrol-origin: margin;
+}
+QScrollBar::sub-line:horizontal {
+  border: none;
+  width: 10px;
+  subcontrol-position: right;
+  subcontrol-origin: margin;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+  background: none;
+}
+
+QLineEdit,
+#userNamePanel{
+    padding: 2px;
+    color: black;
+    border-radius: 1px;
+    border: 1px solid;
+}
+
+#userNamePanel
+{
+    background-color: rgb(250, 250, 250);
+    border-color: rgb(95, 95, 95);
+    padding: 1px;
+}
+
+QLineEdit
+{
+    background-color: rgb(254, 254, 254);
+    border-color: rgba(0, 0, 0, 45);
+    color: rgb(80, 80, 80);
+}
+
+QLineEdit:focus,
+QLineEdit#groupNameField:focus
+{
+    border-color: rgba(0, 0, 0, 90);
+    background-color: white;
+    color: black;
+}
+
+
+/*  SLIDER ++++++++++++++++++++++++++++++++ */
+
+QSlider::groove:vertical{
+    border: none;
+}
+
+QSlider::groove:horizontal{
+    background-color: rgba(0, 0, 0, 50);
+    height: 2px;
+    border: none;
+}
+
+BaseTrackView #peaksDbLabel{
+
+    border: 1px solid rgba(0, 0, 0, 8);
+    background-color: rgba(0, 0, 0, 6);
+    font-size: 8px;
+    qproperty-alignment: AlignCenter;
+    color: rgba(0, 0, 0, 120);
+    padding: 1px;
+    min-width: 15px;
+}
+NinjamTrackView #peaksDbLabel{
+    border: 1px solid rgba(0, 0, 0, 8);
+}
+
+BaseTrackView[unlighted="true"] #peaksDbLabel
+{
+   border: none;
+   background-color: rgba(0, 0, 0, 10);
+}
+
+BaseTrackView #peaksDbLabel:hover{
+    background-color: rgba(255,255,255, 30);
+    color: black;
+}
+
+
+QSlider::groove:vertical {
+    background-color: rgba(0, 0, 0, 50);
+    width: 2px;
+}
+
+QSlider::handle:horizontal {
+    margin-top: -8px;
+    margin-bottom: -7px;
+    padding: 0px;
+    width: 8px;
+    height: 15px;
+}
+
+/* PAN SLIDER ---------------- */
+#panSlider
+{
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+#panSlider::handle
+{
+    width: 7px;
+}
+
+BaseTrackView[unlighted="true"] #panSlider::handle,
+BaseTrackView[unlighted="true"] QSlider::handle:vertical
+{
+    background: rgb(180, 180, 180);
+}
+
+QSlider::handle
+{
+    background: rgb(245, 245, 245);
+    border: 1px outset rgb(120, 120, 120);
+    border-radius: 2px;
+}
+
+QSlider::handle:hover
+{
+    background: rgb(250, 250, 250);
+    border: 1px outset rgb(90, 90, 90);
+}
+
+QSlider::handle:vertical{
+    margin-left: -9px;
+    margin-right: -9px;
+    padding: 0px;
+    height: 9px;
+    width: 24px;
+}
+
+
+NinjamPanel QSlider::groove:vertical{
+    width: 5px;
+    margin: 0px;
+
+    background: rgba(0, 0, 0, 40);
+}
+
+NinjamPanel QSlider::groove:horizontal{
+    background-color: rgba(0,0, 0, 40);
+}
+
+
+/* +++++++++++++++++++++++++++++++++++++++++++ */
+PeakMeter{
+    background-color: rgba(0, 0, 0, 6);
+    border: none;
+    min-width: 4px;
+    min-height: 4px;
+}
+
+PeakMeter#masterMeterL, PeakMeter#masterMeterR{
+    max-height: 4px;
+    height: 4px;
+    margin: 0px;
+}
+
+#labelYourControls
+{
+    color: rgb(200, 200, 200);
+}
+
+#masterTitleLabel,
+#labelMetronomeIControls
+{
+    color: rgb(60, 60, 60);
+}
+
+
+QLabel#labelMetronomeIControls{
+    margin-top: 6px;
+}
+
+BaseTrackView[unlighted="true"] PeakMeter{
+    background-color: rgba(0, 0, 0, 15);
+    /*border: none;*/
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++ */
+
+QMainWindow{
+    background-color: rgb(200, 200, 200);
+    border: 1px solid rgb(90, 90, 90);
+}
+
+QMainWindow #bottomPanel{
+    background: rgb(224, 224, 224);
+    min-height: 60px;
+    border-top: 1px solid rgb(191, 191, 191);
+}
+
+#leftPanel{
+   background-color: rgb(120, 120, 120);
+}
+
+#userNameLineEdit
+{
+    background-color: transparent;
+    border: none;
+}
+
+#userNameLineEdit:read-only
+{
+    color: gray;
+}
+
+QPushButton#localControlsCollapseButton{
+    border: none;
+
+    background: none;
+    max-width: 6px;
+    width: 6px;
+    background-repeat: none;
+    background-position: right center;
+}
+
+QPushButton#localControlsCollapseButton:!checked{
+   background-image: url(:/images/mini arrow left.png);
+}
+
+QPushButton#localControlsCollapseButton::hover:!checked{
+   background-image: url(:/images/mini arrow left hover.png);
+}
+
+QPushButton#localControlsCollapseButton:checked{
+   background-image: url(:/images/mini arrow right.png);
+   background-position: center center;
+}
+QPushButton#localControlsCollapseButton::hover:checked{
+   background-image: url(:/images/mini arrow right hover.png);
+}
+/* ------------------------------ */
+
+#contentTabWidget:pane
+{
+    background-color: rgb(180, 180, 180);
+}
+
+#contentTabWidget:pane,
+#chatTabWidget:pane
+{
+    border: none;
+    padding: 0px;
+}
+
+
+#chatTabWidget:pane,
+#chatTabWidget QTabBar::tab
+{
+    background-color: rgb(160, 160, 160);
+    color: rgb(210, 210, 210);
+}
+
+QTabBar::tab
+{
+    background-color: rgb(200, 200, 200);
+    border: none;
+    min-width: 8ex;
+    padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 11px;
+    color: black;
+ }
+
+QTabBar::tab:selected,
+QTabBar::tab:hover
+{
+    background-color: rgb(180, 180, 180)
+}
+
+QTabBar::tab:!selected
+{
+    margin-top: 3px; /* make non-selected tabs look smaller */
+    color: rgb(90, 90, 90);
+}
+
+/*++++++++++++++++++++*/
+
+.QMainWindow .QGroupBox::title {
+subcontrol-origin: margin;
+subcontrol-position: top center; /* position at the top center */
+padding: 10 3px;
+color: rgb(190, 190, 190);
+border-bottom-style: groove;
+border-bottom-color: darkgray;
+border-width: 3px;
+}
+
+QScrollArea{
+border: none;
+background: transparent;
+}
+
+QPlainTextEdit{
+    border: none;
+}
+
+QScrollArea > QWidget > QWidget{/*the content panel - QSCroll contém um QWidget privado que já é uma view port,além disso eu usei o meu próprio widget*/
+background: transparent;
+}
+
+BusyDialog{
+    border: 1px solid rgba(0, 0, 0, 30);
+    padding: 0px;
+    margin: 0px;
+    background-color: rgb(220, 220, 220);
+}
+BusyDialog #labelGif{
+    border: none;
+    background-color: rgba(0, 0, 0, 10);
+    border-radius: 32px;/*simulate a circle as background */
+    max-width: 64px;
+    max-height: 64px;
+    qproperty-alignment: AlignCenter;
+    text-align: center;
+}
+
+BusyDialog > QLabel
+{
+    font-weight: bold;
+}
+
+JamRoomViewPanel
+{
+    background-color: rgb(225, 225, 225);
+    border: 1px solid rgb(180, 180, 180);
+    border-top: none;
+    border-left: none;
+}
+
+JamRoomViewPanel #content
+{
+    background: rgb(253, 253, 253);
+}
+
+JamRoomViewPanel #labelName
+{
+    font-weight: bold;
+}
+
+JamRoomViewPanel #labelRoomStatus,
+JamRoomViewPanel  #labelRoomType
+{
+    font-size: 9px;
+    color: rgb(140, 140, 140);
+}
+JamRoomViewPanel  #labelRoomType{
+    margin-right: 3px;
+    margin-bottom: -3px;
+}
+
+/*+++++++++++++++++++++++++++++++*/
+
+#xmitButton
+{
+    border-width: 1px;
+    font-size: 11px;
+    padding: 0px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    color: black;
+    min-height: 15px;
+    min-width: 10px;
+    margin-top: 3px;
+}
+
+#xmitButton:checked
+{
+    background-color: rgb(0, 195, 0);
+    border-color: rgb(100, 100, 100);
+    border-style: inset;
+    color: rgba(0,40, 0);
+}
+
+#xmitButton[preparing="true"]
+{
+    background-color: rgb(255, 255, 0);
+}
+
+#xmitButton:!checked
+{
+    background-color: rgb(255, 0, 0);
+    border-style: outset;
+    border-color: rgba(0, 0, 0, 30);
+    color: black;
+}
+
+#xmitButton:hover
+{
+    background-color: rgb(0, 215, 0);
+}
+
+#xmitButton:hover:!checked
+{
+    background-color: rgb(255, 40, 40);
+    border-color: rgba(0, 0, 0, 90);
+
+}
+
+/*  Track view +++++++++++++++++++++++++++++++++++++++++++++++ */
+
+BaseTrackView
+{
+
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(240, 240, 240),
+        stop:1 rgb(160, 160, 160));
+
+    border: 1px solid rgb(61, 61, 61);
+    font-size: 8px; /*db value */
+}
+
+BaseTrackView[unlighted="true"],
+TrackGroupView[unlighted="true"] > #topPanel
+{
+    background: rgba(255, 255, 255, 40);
+}
+
+QPushButton
+{
+    border: 1px outset gray;
+    padding: 3px 6px 3px 6px;
+    font-size: 11px;
+    background-color: rgb(250, 250, 250);
+    color: rgb(60, 60, 60);
+}
+
+QPushButton:checked{
+    border-style: inset;
+    background-color: rgb(180, 180, 180);
+    color: rgb(0,0,0);
+}
+
+QPushButton:hover{
+    background-color: white;
+    color: black;
+    border: 1px solid rgb(120, 120, 120);
+}
+
+QPushButton[enabled="false"]{
+    background: none;
+    color: rgba(0, 0, 0, 30);
+    border-color: rgba(0, 0, 0, 40);
+}
+
+QPushButton#soloButton,
+QPushButton#muteButton
+{
+    font-size: 9px;
+    border-color: rgb(110,110,110);
+    padding: 2px;
+    color: rgb(50,50,50);
+}
+
+#buttonBoostMinus12,
+#buttonBoostPlus12,
+#buttonBoostZero,
+#soloButton,
+#muteButton
+{
+    background: rgb(235, 235, 235);
+}
+
+NinjamTrackView #soloButton,
+NinjamTrackView #muteButton{
+   border-color: rgb(95,95,95);
+   color: rgb(40,40,40);
+
+}
+
+NinjamTrackView[unlighted="true"]
+{
+    background: rgba(0, 0, 0, 20);
+}
+
+NinjamTrackView[horizontal="true"] #soloButton,
+NinjamTrackView[horizontal="true"] #muteButton{
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+NinjamTrackView QProgressBar{ /* chunks display */
+    background-color: rgba(255, 255, 255, 20);
+
+    border: none;
+    min-height: 2px;
+    max-height: 3px;
+}
+
+/*
+QPushButton:hover#soloButton,
+QPushButton:hover#muteButton{
+    color: rgba(0, 0, 0, 200);
+}
+*/
+
+QPushButton:checked#soloButton{
+    background-color: rgb(90, 255, 62);
+    color: black;
+}
+
+QPushButton:hover:checked#soloButton {
+    background-color: rgb(110, 255, 80);
+    border-color: rgb(45, 45, 45);
+}
+
+QPushButton:checked#muteButton {
+    background-color: rgb(255, 0, 0);
+    color: white;
+
+}
+
+QPushButton:hover:checked#muteButton {
+    background-color: rgb(255, 40, 40);
+    color: lightgray;
+    border-color: rgb(45, 45, 45);
+}
+
+/* TRACK GROUPs */
+
+TrackGroupView {
+    border: none;
+    background-color: none;
+}
+
+TrackGroupView > #topPanel{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(253, 253, 253),
+    stop:1 rgb(240, 240, 240));
+
+    border-top-left-radius: 1px;
+    border-top-right-radius: 1px;
+}
+
+TrackGroupView #groupNameField {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 11px;
+    font-weight: normal;
+}
+
+TrackGroupView[unlighted="true"] #groupNameField
+{
+    background: rgba(255, 255, 255, 20);
+    border: none;
+}
+
+
+/* LOCAL TRACK GROUP */
+LocalTrackGroupView{
+    border: none;
+}
+
+LocalTrackGroupView[highlighted="true"] {
+    border: 1px solid white;
+
+}
+
+LocalTrackGroupView  #toolButton {
+    background-color: none;
+    background-image: url(':/images/gear.png');
+    background-repeat: none;
+    background-position: center center;
+    border: none;
+    padding: 0px;
+    margin: 0px;
+    width: 14px;
+    height: 14px;
+}
+
+LocalTrackGroupView   #toolButton:hover{
+    background-image: url(':/images/gear-hover.png');
+}
+
+LocalTrackGroupView #groupNameField
+{
+    font-size: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin: 0px;
+}
+/* ++++++++++++++++++++++++++++++++++ */
+
+QLabel#labelPanR,
+QLabel#labelPanL
+{
+    color: rgba(0, 0, 0, 80);
+    font-size: 9px;
+}
+
+
+/*+++++++++++++++++++++++++++++++++++++++++++++++*/
+LocalTrackView, NinjamTrackView{
+    border: none;
+}
+
+LocalTrackView[peakMetersOnly="true"]{
+    background: none;
+
+}
+
+LocalTrackView[highlighted="true"]{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(255, 255, 255),
+    stop:1 rgb(170, 170, 170));
+}
+
+LocalTrackView #inputPanel{
+    padding: 2px;
+    background-color: rgba(0, 0, 0, 60);
+    border: none;
+}
+
+BaseTrackView[unlighted="false"] #inputPanel{
+    border: 1px outset rgb(80,80,80);
+}
+
+LocalTrackView #inputPanel:hover{
+    background-color: rgba(0, 0, 0, 30);
+}
+
+LocalTrackView #inputSelectionIcon{
+    border: 1px solid rgba(0, 0, 0, 0);
+    margin: 0px;
+    padding: 0px;
+    max-width: 22px;
+    min-width: 22px;
+    background-position: center;
+    background-repeat: none;
+}
+
+LocalTrackView #midiToolsButton{
+    font-size: 10px;
+    /*background-image: url(':/images/input_midi.png');*/
+    background-repeat: none;
+    background-position: center left;
+    padding: 0px;
+}
+
+LocalTrackView #inputSelectionIcon,
+LocalTrackView #midiToolsButton
+{
+    min-height: 14px;
+    max-height: 14px;
+}
+
+LocalTrackView #inputSelectionButton{
+    background-color: none;
+    background-image: url(':/images/arrow-down.png');
+    background-repeat: none;
+    background-position: center right;
+    border: none;
+    color: rgba(255,255, 255, 160);
+    font-size: 9px;
+    text-align: left;
+    margin: 0px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+LocalTrackView #midiPeakMeter{
+    max-width: 1px;
+    min-width: 1px;
+
+    border: none;
+}
+/*+++++++++++++++++++++++++++++++++++++++++++++++*/
+
+/* NINJAM */
+
+NinjamTrackView > #channelName{
+    border: none; /* 1px solid rgba(0, 0, 0, 7);*/
+    background-color: rgba(0, 0, 0, 6);
+
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-size: 10px;
+    color: rgba(0, 0, 0, 160);
+    max-width: 130px;
+}
+
+
+NinjamRoomWindow #groupNameField {
+
+    background-color: rgba(255,255, 255, 15);
+    border: none;
+    color: black;
+    margin-bottom: 3px;
+    margin-top: 3px;
+    padding: 3px;
+}
+
+NinjamRoomWindow TrackGroupView
+{
+    border: 1px solid rgb(130, 130, 130);
+}
+
+NinjamRoomWindow TrackGroupView #countryLabel{
+    color: rgba(0, 0, 0, 180);
+    qproperty-alignment: AlignCenter;
+    font-size: 9px;
+}
+
+IntervalProgressWindow{
+    background-color: rgb(220, 220, 220);
+}
+
+NinjamPanel #ninjamControlsPanel{
+    background-color: rgba(0, 0, 0, 20);
+    border: 1px solid rgb(190, 190, 190);
+}
+
+NinjamPanel #intervalPanel{
+    color: rgb(238, 238, 238);
+    font-weight: normal;
+    font-size: 11px;
+    background: none;
+    margin: 0px;
+    /*min-height: 80px;*/
+}
+
+NinjamPanel #panelCombos QLabel{
+    color: black;
+}
+
+NinjamPanel #panelCombos QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+NinjamPanel #panelCombos QComboBox::down-arrow:hover
+{
+    image:url(:/images/arrow-down-lighter.png);
+}
+NinjamPanel #panelCombos QComboBox::drop-down {
+    border: 0px;
+}
+
+NinjamPanel #metronomeControls, NinjamPanel #panelCombos{
+    background: transparent;
+}
+
+NinjamPanel #metronomeControls QSlider::groove:vertical{
+    border: 1px inset rgb(140, 140, 140);
+}
+
+
+NinjamPanel #preferencesButton,
+NinjamPanel #floatingWindowButton
+{
+    background-repeat: none;
+    background-position: center center;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+NinjamPanel #preferencesButton,
+NinjamPanel #floatingWindowButton,
+NinjamPanel #soloButton,
+NinjamPanel #muteButton{
+    max-width: 20px;
+    max-height: 16px;
+    min-height: 16px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+NinjamPanel #soloButton,
+NinjamPanel #muteButton{
+    background-color: white;
+}
+
+NinjamPanel #preferencesButton{
+   background-image: url(':/images/gear-hover.png');
+}
+
+NinjamPanel #floatingWindowButton{
+    background-image: url(':/images/windows.png');
+}
+
+NinjamPanel QLabel{
+    color: rgba(0, 0, 0, 150); /* metrono pan (L & R) labels, BPI and BPM labels */
+    font-size: 11px;
+}
+
+NinjamPanel QComboBox{
+    background-color: rgba(0, 0, 0, 30);
+    background-position: center right;
+    background-repeat: none;
+    font-size: 11px;
+    color: rgb(50, 50, 50);
+
+    border: 1px solid rgba(0, 0, 0, 40);
+    padding: 0px 5px 0px 5px;
+}
+
+NinjamPanel QComboBox::down-arrow {
+    image: url(':/images/arrow-down.png');
+}
+
+NinjamRoomWindow #topPanel{
+    max-height: 120px;
+}
+
+/*Chat */
+ChatPanel QPushButton#buttonAutoTranslate,
+ChatPanel  QPushButton#buttonClear{
+    max-height: 22px;
+    max-width: 14px;
+}
+
+ChatPanel  QPushButton#buttonClear{
+    background-image: url(:/images/broom.png);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+ChatPanel QPushButton#buttonAutoTranslate{
+    background-image: url(:/images/translate.png);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+ChatPanel .QLineEdit
+{
+    border-color: rgba(0, 0, 0, 80);
+    background-color: rgb(250, 250, 250);
+}
+
+ChatPanel .QLineEdit:focus
+{
+    border-color: rgba(0, 0, 0, 160);
+    background-color: white;
+}
+
+ChatMessagePanel{
+    border: 1px solid rgb(140, 140, 140);
+    padding: 3px;
+}
+
+ChatMessagePanel #labelTimeStamp{
+    font-size: 9px;
+    font-style: italic;
+}
+
+ChatMessagePanel #labelUserName{
+    font-size: 10px;
+    font-weight: bold;
+    padding: 0px;
+    margin-bottom: 1px;
+}
+
+ChatMessagePanel #translateButton{
+    height: 6px;
+    min-height: 6px;
+    padding: 2px;
+    border: 1px solid rgba(0, 0, 0, 70);
+    font-size: 8px;
+}
+
+ChatMessagePanel QPushButton:hover#translateButton{
+    border-color: black;
+    font-weight: bold;
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+ChordsPanel #buttonSendToChat, ChordsPanel #buttonDiscardChords{
+    background-repeat: no-repeat;
+    background-position: center;
+    max-width: 18px;
+    width: 18px;
+    padding: 2px;
+}
+ChordsPanel #buttonSendToChat{
+    background-image: url(':/images/chat_small.png');
+}
+ChordsPanel #buttonDiscardChords{
+    background-image: url(':/images/discard.png');
+}
+
+ChordLabel{
+    background-color: rgba(0,0,0, 7);
+    font-size: 13px;
+    color: rgb(90, 90, 90);
+    border: 1px solid rgba(0, 0, 0, 30);
+    padding: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+ChordLabel[current="true"]{
+    background-color: rgba(255,255,255, 220);
+    color: black;
+    border: 1px solid #008F1f;
+}
+

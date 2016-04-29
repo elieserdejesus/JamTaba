@@ -30,7 +30,6 @@ int main(int argc, char* args[] ){
 #endif
 
     Controller::MainControllerStandalone mainController(settings, (QApplication*)application);
-    mainController.configureStyleSheet("jamtaba.css");
     mainController.start();
     if(mainController.isUsingNullAudioDriver()){
         QMessageBox::about(nullptr, "Fatal error!", "Jamtaba can't detect any audio device in your machine!");

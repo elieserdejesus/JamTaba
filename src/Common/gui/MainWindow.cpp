@@ -50,10 +50,11 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     initializeLoginService();
     initializeMainTabWidget();
-    initializeViewModeMenu();
+    initializeViewMenu();
     initializeMasterFader();
     initializeLanguageMenu();
     initializeTranslator();
+    initializeThemeMenu();
     setupWidgets();
     setupSignals();
 
@@ -79,6 +80,31 @@ void MainWindow::setLanguage(QAction *languageMenuAction)
     if (mainController->isPlayingInNinjamRoom()) {
         ninjamWindow->getChatPanel()->setPreferredTranslationLanguage(locale);
         ninjamWindow->updateGeoLocations();
+    }
+}
+
+void MainWindow::changeTheme(QAction *action)
+{
+    QString theme = action->data().toString();
+    mainController->setTheme(theme);
+}
+
+void MainWindow::initializeThemeMenu()
+{
+    connect(ui.menuTheme, &QMenu::triggered, this, &MainWindow::changeTheme);
+
+    //create a menu action for each .css resource
+    QDir themesDir(":/style");
+    if (themesDir.exists()) {
+        QStringList themeFiles = themesDir.entryList(QStringList("*.css"));
+        foreach (const QString &themeFile, themeFiles) {
+            QString theme = QFileInfo(themeFile).baseName();
+            QAction *action = ui.menuTheme->addAction(theme);
+            action->setData(theme);
+        }
+    }
+    else{
+        qCritical() << "Themes dir not exist! Can't create the Themes menu!";
     }
 }
 
@@ -276,16 +302,16 @@ void MainWindow::initializeMainTabWidget()
 {
     // the rooms list tab bar is not closable
     QWidget *tabBar = nullptr;
-    tabBar = ui.tabWidget->tabBar()->tabButton(0, QTabBar::RightSide);// try get the tabBar in right side (Windows)
+    tabBar = ui.contentTabWidget->tabBar()->tabButton(0, QTabBar::RightSide);// try get the tabBar in right side (Windows)
     if (!tabBar)// try get the tabBar in left side (MAC OSX)
-        tabBar = ui.tabWidget->tabBar()->tabButton(0, QTabBar::LeftSide);
+        tabBar = ui.contentTabWidget->tabBar()->tabButton(0, QTabBar::LeftSide);
     if (tabBar) {
         tabBar->resize(0, 0);
         tabBar->hide();
     }
 
-    connect(ui.tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
-    connect(ui.tabWidget, SIGNAL(tabBarClicked(int)), this, SLOT(changeTab(int)));
+    connect(ui.contentTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
+    connect(ui.contentTabWidget, SIGNAL(tabBarClicked(int)), this, SLOT(changeTab(int)));
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++
@@ -639,8 +665,8 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     ninjamWindow.reset(createNinjamWindow(roomInfo, mainController));
     QString tabName = roomInfo.getName() + " (" + QString::number(roomInfo.getPort()) + ")";
     ninjamWindow->setFullViewStatus(this->fullViewMode);
-    int index = ui.tabWidget->addTab(ninjamWindow.data(), tabName);
-    ui.tabWidget->setCurrentIndex(index);
+    int index = ui.contentTabWidget->addTab(ninjamWindow.data(), tabName);
+    ui.contentTabWidget->setCurrentIndex(index);
 
     // add the chat panel in main window
     qCDebug(jtGUI) << "adding ninjam chat panel...";
@@ -662,7 +688,7 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
     ninjamPanel->setFullViewStatus(fullViewMode);
 
     // show chat area
-    ui.chatArea->setVisible(true);
+    setChatVisibility(true);
 
     ui.leftPanel->adjustSize();
     qCDebug(jtGUI) << "MainWindow::enterInRoom() done!";
@@ -733,9 +759,9 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
     setUserNameReadOnlyStatus(false);
 
     // remove the jam room tab (the last tab)
-    if (ui.tabWidget->count() > 1) {
-        ui.tabWidget->widget(1)->deleteLater();// delete the room window
-        ui.tabWidget->removeTab(1);
+    if (ui.contentTabWidget->count() > 1) {
+        ui.contentTabWidget->widget(1)->deleteLater();// delete the room window
+        ui.contentTabWidget->removeTab(1);
     }
 
     if (ui.chatTabWidget->count() > 0) {
@@ -752,8 +778,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
 
     ninjamWindow.reset();
 
-    // hide chat area
-    ui.chatArea->setVisible(false);
+    setChatVisibility(false);
 
     setInputTracksPreparingStatus(false);/** reset the prepating status when user leave the room. This is specially necessary if user enter in a room and leave before the track is prepared to transmit.*/
 
@@ -772,6 +797,15 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
             passwordToJump = "";
         }
     }
+}
+
+void MainWindow::setChatVisibility(bool chatVisible)
+{
+    ui.chatTabWidget->setVisible(chatVisible);
+
+    //adjust bottom panel colspan
+    int colSpan = chatVisible ? 3 : 2;
+    ui.gridLayout->addWidget(ui.bottomPanel, 1, 0, 1, colSpan);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1009,7 +1043,7 @@ void MainWindow::setMultiTrackRecordingStatus(bool recording)
 
 //++++++++++++++++++++++
 
-void MainWindow::initializeViewModeMenu()
+void MainWindow::initializeViewMenu()
 {
     QObject::connect(ui.menuViewMode, SIGNAL(triggered(QAction *)), this,
                      SLOT(changeViewMode(QAction *)));
@@ -1019,9 +1053,19 @@ void MainWindow::initializeViewModeMenu()
     ui.actionMiniView->setActionGroup(group);
 }
 
-void MainWindow::changeViewMode(QAction *)
+void MainWindow::changeViewMode(QAction *action)
 {
-    setFullViewStatus(ui.actionFullView->isChecked());
+    QString actionData = action->data().toString();
+    if (actionData.isEmpty()) { //the actions mini view, full view and full screen have no data
+        setFullViewStatus(ui.actionFullView->isChecked());
+    }
+    else{
+        QFileInfo themeFile(actionData);
+        QString theme = themeFile.baseName();
+        bool themeInstalled = mainController->setTheme(theme);
+        if (!themeInstalled)
+            QMessageBox::critical(this, tr("Error"), tr("The theme %1 was not installed!").arg(theme), QMessageBox::Cancel, QMessageBox::Ok);
+    }
 }
 
 void MainWindow::updatePublicRoomsListLayout()
@@ -1067,14 +1111,16 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
         resize(minimumSize());
     }
 
-    int tabLayoutMargim = isRunningInFullViewMode() ? 9 : 5;
+    int tabLayoutMargim = isRunningInFullViewMode() ? 6 : 6;
     ui.tabLayout->setContentsMargins(tabLayoutMargim, tabLayoutMargim, tabLayoutMargim,
                                      tabLayoutMargim);
+    ui.allRoomsContent->layout()->setSpacing(tabLayoutMargim);
+
 
     // show only the peak meters if user is in mini mode and is not maximized or full screen
     showPeakMetersOnlyInLocalControls(isRunningInMiniMode() && !isMaximized() && !isFullScreen());
 
-    ui.chatArea->setMinimumWidth(isRunningInFullViewMode() ? 280 : 180); // TODO Refactoring: remove these 'Magic Numbers'
+    ui.chatTabWidget->setMinimumWidth(isRunningInFullViewMode() ? 280 : 180); // TODO Refactoring: remove these 'Magic Numbers'
 
     // refresh the public rooms list
     if (!mainController->isPlayingInNinjamRoom()) {
@@ -1267,11 +1313,13 @@ void MainWindow::setupWidgets()
     ui.masterMeterR->setOrientation(Qt::Horizontal);
     ui.masterFader->installEventFilter(this);// handle double click in master fader
 
-    ui.chatArea->setVisible(false);// hide chat area until connect in a server to play
+    setChatVisibility(false);// hide chat area until connect in a server to play
+
+    if (ui.allRoomsContent->layout())
+        delete ui.allRoomsContent->layout();
 
     ui.allRoomsContent->setLayout(new QGridLayout());
     ui.allRoomsContent->layout()->setContentsMargins(0, 0, 0, 0);
-    ui.allRoomsContent->layout()->setSpacing(24);
 
     ui.localTracksWidget->installEventFilter(this);
 

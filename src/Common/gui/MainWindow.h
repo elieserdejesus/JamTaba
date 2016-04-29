@@ -218,6 +218,8 @@ private slots:
 
     void updateUserName();
 
+    void changeTheme(QAction *action);
+
 private:
 
     BusyDialog busyDialog;
@@ -247,9 +249,11 @@ private:
     void initializeLocalInputChannels(const Persistence::LocalInputTrackSettings &localInputSettings);
 
     void initializeMainTabWidget();
-    void initializeViewModeMenu();
+    void initializeViewMenu();
 
     void initializeMasterFader();
+
+    void initializeThemeMenu();
 
     void initializeLanguageMenu();
     void initializeTranslator();
@@ -278,6 +282,8 @@ private:
     void loadTranslationFile(const QString &locale);
 
     void setUserNameReadOnlyStatus(bool readOnly);
+
+    void setChatVisibility(bool chatVisible);
 
     // PerformanceMonitor performanceMonitor;//cpu and memmory usage
     // qint64 lastPerformanceMonitorUpdate;

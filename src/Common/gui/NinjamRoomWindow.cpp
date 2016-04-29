@@ -216,21 +216,10 @@ void NinjamRoomWindow::showMetronomePreferences()
 // +++++++++=
 void NinjamRoomWindow::setFullViewStatus(bool fullView)
 {
-    if (fullView == this->fullViewMode)
+    if (fullView == fullViewMode)
         return;
-    this->fullViewMode = fullView;
-    int contentMargin = fullView ? 9 : 3;
-    ui->contentLayout->setContentsMargins(contentMargin, 6, contentMargin, 0);
-    ui->contentLayout->setSpacing(fullView ? 24 : 6);
 
-    // main layout
-    int topMargim = fullView ? 9 : 7;
-    int bottomMargim = fullView ? 9 : 3;
-    layout()->setContentsMargins(0, topMargim, 0, bottomMargim);
-
-    ui->tracksPanel->layout()->setSpacing(fullView ? 6 : 3);
-
-    update();
+    fullViewMode = fullView;
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

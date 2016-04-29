@@ -62,6 +62,8 @@ public:
     void sendNewChannelsNames(const QStringList &channelsNames);
     void sendRemovedChannelMessage(int removedChannelIndex);
 
+    inline QString getTheme() const { return settings.getTheme(); }
+
     bool addTrack(long trackID, Audio::AudioNode *trackNode);
     void removeTrack(long trackID);
 
@@ -229,7 +231,7 @@ public:
     // used to recreate audio encoder with enough channels
     int getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) const;
 
-    void configureStyleSheet(const QString &cssFile);
+    bool setTheme(const QString &themeName);
 
     //TODO: move this code to NinjamController.
     void finishUploads();// used to send the last part of ninjam intervals when audio is stopped.
@@ -270,8 +272,6 @@ protected:
 
     MainWindow *mainWindow;
 
-    virtual void setCSS(const QString &css) = 0;
-
     virtual Midi::MidiMessageBuffer pullMidiBuffer() = 0;
 
     // map the input channel indexes to a GUID (used to upload audio to ninjam server)
@@ -280,6 +280,8 @@ protected:
     QMutex mutex;
 
     virtual void setupNinjamControllerSignals();
+
+    virtual void setCSS(const QString &css) = 0;
 
 private:
     void setAllTracksActivation(bool activated);

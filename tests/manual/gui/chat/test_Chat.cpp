@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QFile styleSheet(":/jamtaba.css");
+    QFile styleSheet(":/Flat.css");
     if (styleSheet.open(QIODevice::ReadOnly))
         app.setStyleSheet(styleSheet.readAll());
 
@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
     QStringList botNames("ninjamers.servebeer.com");
 
     ChatPanel chatPanel(botNames, &colorsPool);
+    chatPanel.setObjectName(QStringLiteral("ChatPanel"));
 
     chatPanel.addMessage("UserName", "message", true);
     chatPanel.addMessage("A_big_user_name_", "message", true);
@@ -25,8 +26,8 @@ int main(int argc, char *argv[])
     chatPanel.addMessage("ninjamers.servebeer.com", "Welcome!", true);
 
     chatPanel.show();
-    chatPanel.setMinimumHeight(400);
-    chatPanel.setMaximumWidth(180); //forcing the mini mode width
+    chatPanel.setMinimumHeight(600);
+    chatPanel.setMaximumWidth(200); //forcing the mini mode width
 
     return app.exec();
 }

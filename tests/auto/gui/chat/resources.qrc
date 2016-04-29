@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="jamtaba.css">../../../../src/resources/jamtaba.css</file>
-    </qresource>
-</RCC>
