@@ -6,7 +6,8 @@
 #include "Highligther.h"
 #include "PrivateServerDialog.h"
 #include "NinjamController.h"
-#include "Utils.h"
+#include "Utils.h" //TODO refactoring to AudioUtils.h and use namespace
+#include "GuiUtils.h"
 #include "UserNameDialog.h"
 #include "log/Logging.h"
 #include "JamRoomViewPanel.h"
@@ -95,8 +96,8 @@ void MainWindow::initializeLanguageMenu()
         QStringList locales = translationsDir.entryList();
         foreach (const QString &translationFile, locales) {
             QLocale loc(translationFile);
-            QString nativeLanguageName = capitalize(loc.nativeLanguageName());
-            QString englishLanguageName = capitalize(QLocale::languageToString(loc.language())); // QLocale::languageToString is returning capitalized String, but just to be shure (Qt can change in future) I'm using capitalize here too.
+            QString nativeLanguageName = Gui::capitalize(loc.nativeLanguageName());
+            QString englishLanguageName = Gui::capitalize(QLocale::languageToString(loc.language())); // QLocale::languageToString is returning capitalized String, but just to be shure (Qt can change in future) I'm using capitalize here too.
             QAction *action = ui.menuLanguage->addAction(nativeLanguageName + " (" + englishLanguageName + ")");
             action->setData(translationFile); //using the locale (pt_BR, ja_JP) as data
         }
@@ -104,11 +105,6 @@ void MainWindow::initializeLanguageMenu()
     else{
         qCritical() << "translations dir not exist! Can't create the Language menu!";
     }
-}
-
-QString MainWindow::capitalize(const QString &string)
-{
-    return string.left(1).toUpper() + string.mid(1);
 }
 
 // ++++++++++++++++++++++++=
