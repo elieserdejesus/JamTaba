@@ -75,5 +75,13 @@ cp $qtDir/plugins/platforms/libqxcb.so packageFiles/platforms
 
 chmod +x packageFiles/installer_script.sh 
 
-makeself.sh packageFiles ~/Desktop/Jamtaba2_Installer.run "Jamtaba 2 Installer" ./installer_script.sh
-chmod +x ~/Desktop/Jamtaba2_Installer.run
+
+#the installer file name will change in differen arch (32 or 64 bits)
+installerPrefix="Jamtaba2_Installer"
+arch=$(getconf LONG_BIT)
+installerSuffix=".run"
+
+installerName=$installerPrefix"_"$arch"bits"$installerSuffix
+
+makeself.sh packageFiles ~/Desktop/$installerName "Jamtaba 2 Installer" ./installer_script.sh
+chmod +x ~/Desktop/$installerName
