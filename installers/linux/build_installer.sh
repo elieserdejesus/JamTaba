@@ -49,11 +49,8 @@ make -s -j 4
 echo "Compilation finished!"
 
 if [ ! -d "packageFiles" ]; then
-	echo "Creating the dir packageFiles"
-	mkdir packageFiles
-	cd packageFiles
-	mkdir platforms
-	cd ..
+	echo "Creating the dirs packageFiles/platforms"
+	mkdir -p 'packageFiles/platforms'
 fi
 
 echo "Copying jamtaba files to 'packageFiles' dir"

@@ -8,16 +8,13 @@ install -d -m 0777 $destDir
 
 echo "Installing Jamtaba 2 in " $destDir
 
-#copy the files to $destDir and erase the original permission
-cp Jamtaba2 $destDir
-cp VstScanner $destDir
+#copy all files preserving attributes
+cp -rp . $destDir
 
 #copy the .desktop file to Desktop and Applications folder
 cp Jamtaba2.desktop ~/Desktop/
 cp Jamtaba2.desktop /usr/share/applications/
 
-#copy the uninstaller script
-cp uninstaller.sh $destDir
 
 #copy the icon
 cp Jamtaba2.png /usr/share/pixmaps/
