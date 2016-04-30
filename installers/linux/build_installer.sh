@@ -39,7 +39,7 @@ cd $destDir
 
 echo "Creating makefile ..."
 #-spec linux-g++-32
-$qtDir/bin/qmake -config release $projectsDir/Jamtaba.pro 
+qmake -config release $projectsDir/Jamtaba.pro 
 
 echo "generating translation (.qm) files..."
 lrelease $projectsDir/Jamtaba.pro
