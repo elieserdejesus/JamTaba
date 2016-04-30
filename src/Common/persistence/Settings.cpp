@@ -739,7 +739,8 @@ void Settings::load()
 Settings::Settings() :
     tracksLayoutOrientation(Qt::Vertical),
     masterFaderGain(1.0),
-    translation("en") //english as default language
+    translation("en"), //english as default language
+    theme("Flat") //flat as default theme
 {
     // qDebug() << "Settings in " << fileDir;
 }
