@@ -454,6 +454,8 @@
     <addaction name="actionReportBugs"/>
     <addaction name="separator"/>
     <addaction name="actionCurrentVersion"/>
+    <addaction name="separator"/>
+    <addaction name="actionTranslators"/>
    </widget>
    <widget class="QMenu" name="menuViewMode">
     <property name="cursor">
@@ -571,6 +573,11 @@
   <action name="actionMetronome">
    <property name="text">
     <string>Metronome ...</string>
+   </property>
+  </action>
+  <action name="actionTranslators">
+   <property name="text">
+    <string>Translators ...</string>
    </property>
   </action>
  </widget>

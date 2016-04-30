@@ -159,6 +159,7 @@ protected slots:
     void showJamtabaIssuesWebPage();
     void showJamtabaWikiWebPage();
     void showJamtabaUsersManual();
+    void showJamtabaTranslators();
 
     // private server
     void connectInPrivateServer(const QString &server, int serverPort, const QString &password);
@@ -284,6 +285,8 @@ private:
     void setUserNameReadOnlyStatus(bool readOnly);
 
     void setChatVisibility(bool chatVisible);
+
+    void openUrlInUserBrowser(const QString &url);
 
     // PerformanceMonitor performanceMonitor;//cpu and memmory usage
     // qint64 lastPerformanceMonitorUpdate;
