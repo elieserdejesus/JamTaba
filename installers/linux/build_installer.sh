@@ -58,6 +58,7 @@ cp Standalone/Jamtaba2 packageFiles/
 cp VstScanner/VstScanner packageFiles/
 cp $scriptDir/Jamtaba2.desktop packageFiles/
 cp $scriptDir/installer_script.sh packageFiles/
+cp $scriptDir/Jamtaba2.sh packageFiles/
 cp $scriptDir/uninstaller.sh packageFiles/
 cp $scriptDir/Jamtaba2.png packageFiles/Jamtaba2.png
 echo "Done!"
@@ -67,6 +68,11 @@ cp $qtDir/lib/libQt5Widgets.so.5 packageFiles/
 cp $qtDir/lib/libQt5Gui.so.5 packageFiles/ 
 cp $qtDir/lib/libQt5Core.so.5 packageFiles/
 cp $qtDir/lib/libQt5Network.so.5 packageFiles/
+cp $qtDir/lib/libQt5DBus.so.5 packageFiles/
+cp $qtDir/lib/libQt5XcbQpa.so.5 packageFiles/
+cp $qtDir/lib/libicui18n.so.54 packageFiles/
+cp $qtDir/lib/libicuuc.so.54 packageFiles/
+cp $qtDir/lib/libicudata.so.54 packageFiles/
 cp $qtDir/plugins/platforms/libqxcb.so packageFiles/platforms
 
 
