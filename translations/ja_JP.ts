@@ -5,22 +5,22 @@
     <name>BaseTrackView</name>
     <message>
         <source>L</source>
-        <translatorcomment>Left(左)  表示スペースの都合上、省略文字を利用</translatorcomment>
+        <translatorcomment>Left(左)  表示スペースの都合上, 省略文字を利用</translatorcomment>
         <translation>L</translation>
     </message>
     <message>
         <source>R</source>
-        <translatorcomment>Right(右)  表示スペースの都合上、省略文字を利用</translatorcomment>
+        <translatorcomment>Right(右)  表示スペースの都合上, 省略文字を利用</translatorcomment>
         <translation>R</translation>
     </message>
     <message>
         <source>M</source>
-        <translatorcomment>Mute  表示スペースの都合上、省略文字を利用</translatorcomment>
+        <translatorcomment>Mute  表示スペースの都合上, 省略文字を利用</translatorcomment>
         <translation>M</translation>
     </message>
     <message>
         <source>S</source>
-        <translatorcomment>Solo  表示スペースの都合上、省略文字を利用</translatorcomment>
+        <translatorcomment>Solo  表示スペースの都合上, 省略文字を利用</translatorcomment>
         <translation>S</translation>
     </message>
 </context>
@@ -43,7 +43,7 @@
     </message>
     <message>
         <source>T</source>
-        <translatorcomment>表示スペースの都合上、省略文字を利用</translatorcomment>
+        <translatorcomment>表示スペースの都合上, 省略文字を利用</translatorcomment>
         <translation>T</translation>
     </message>
 </context>
@@ -167,7 +167,7 @@
     </message>
     <message>
         <source>Buffer size</source>
-        <translation>バッファーサイズ
+        <translation>バッファサイズ
 </translation>
     </message>
     <message>
@@ -293,7 +293,7 @@
     </message>
     <message>
         <source>The audio stream of this room is not available at moment!</source>
-        <translation>この部屋のオーディオは視聴できません!</translation>
+        <translation>この部屋のオーディオは試聴できません!</translation>
     </message>
     <message>
         <source>enter</source>
@@ -301,7 +301,7 @@
     </message>
     <message>
         <source>listen</source>
-        <translation>視聴</translation>
+        <translation>試聴</translation>
     </message>
 </context>
 <context>
@@ -415,7 +415,7 @@
     </message>
     <message>
         <source>%1  (no MIDI devices detected or enabled in &apos;Preferences&apos; menu&apos;)</source>
-        <translation>%1 (MIDIデバイスが検出されていないか、設定メニューで有効になっていません)</translation>
+        <translation>%1 (MIDIデバイスが検出されていないか, 設定メニューで有効になっていません)</translation>
     </message>
     <message>
         <source>no input</source>
@@ -426,7 +426,7 @@
     <name>MainFrameClass</name>
     <message>
         <source>Rooms to play</source>
-        <translation>部屋</translation>
+        <translation>ロビー</translation>
     </message>
     <message>
         <source>master</source>
@@ -442,7 +442,7 @@
     </message>
     <message>
         <source>Ninjam</source>
-        <translation>ニンジャム</translation>
+        <translation>Ninjam</translation>
     </message>
     <message>
         <source>Help</source>
@@ -478,7 +478,7 @@
     </message>
     <message>
         <source>Ninjam community (Ninbot) ...</source>
-        <translation>ニンジャムコミュニティ(ninbot)...</translation>
+        <translation>Ninjamコミュニティ(ninbot)...</translation>
     </message>
     <message>
         <source>Ninjam Official Site ...</source>
@@ -583,7 +583,7 @@
     </message>
     <message>
         <source>Disconnected from ninjam server</source>
-        <translation>ニンジャムサーバから切断</translation>
+        <translation>Ninjamサーバから切断</translation>
     </message>
     <message>
         <source>Connecting in %1</source>
@@ -599,7 +599,7 @@
     </message>
     <message>
         <source>These chords (%1 measures) can&apos;t be used in a %2 bpi interval!</source>
-        <translation>%1小節のコード進行は、現在の%2 BPIの設定では使えません!</translation>
+        <translation>%1小節のコード進行は, 現在の%2 BPIの設定では使えません!</translation>
     </message>
     <message>
         <source>Problem...</source>
@@ -612,7 +612,7 @@
     </message>
     <message>
         <source>Only Letters, numbers, hyphen and underscore allowed! Spaces will be replaced by an underscore.</source>
-        <translation>英文字・数字・ハイフン・アンダースコアのみ。空白はアンダースコアへ置換されます。</translation>
+        <translation>英文字・数字・ハイフン・アンダースコアのみ. 空白はアンダースコアへ置換されます.</translation>
     </message>
     <message>
         <source>Chat</source>
@@ -623,7 +623,7 @@
     <name>MainWindowStandalone</name>
     <message>
         <source>%1 can&apos;t be loaded and will be black listed!</source>
-        <translation>%1 は読込に失敗したので、ブラックリストへ入りました!</translation>
+        <translation>%1 は読込に失敗したので, ブラックリストへ入りました!</translation>
     </message>
     <message>
         <source>Plugin Error!</source>
@@ -635,7 +635,7 @@
     </message>
     <message>
         <source>The audio device can&apos;t be started! Please check your audio device and try restart Jamtaba!</source>
-        <translation>オーディオデバイスが開始できません!設定を見直し、Jamtabaを再起動してください!</translation>
+        <translation>オーディオデバイスが開始できません!設定を見直し, Jamtabaを再起動してください!</translation>
     </message>
 </context>
 <context>
@@ -673,7 +673,7 @@
     <name>NinjamPanel</name>
     <message>
         <source>metronome</source>
-        <translation>メトロノー</translation>
+        <translation>メトロノーム</translation>
     </message>
     <message>
         <source>Slider to change the BPM of the metronome</source>
@@ -697,7 +697,7 @@
     </message>
     <message>
         <source>mute metronome</source>
-        <translation>ミュートメトロノーム</translation>
+        <translation>メトロノームをミュート</translation>
     </message>
     <message>
         <source>Button to mute the metronome</source>
@@ -780,11 +780,11 @@
     <name>NinjamRoomWindow</name>
     <message>
         <source>you are in the ninjam room window</source>
-        <translation>ニンジャム部屋のウィンドウ</translation>
+        <translation>Ninjam部屋のウィンドウ</translation>
     </message>
     <message>
         <source>read the server licence ...</source>
-        <translation>サーバーのライセンスを読む...</translation>
+        <translation>サーバのライセンスを読む...</translation>
     </message>
     <message>
         <source>Set tracks layout to horizontal</source>
@@ -822,7 +822,7 @@
     </message>
     <message>
         <source>Server Licence</source>
-        <translation>サーバ規約</translation>
+        <translation>サーバ ライセンス</translation>
     </message>
 </context>
 <context>
@@ -894,7 +894,7 @@
     <name>PrivateServerDialog</name>
     <message>
         <source>Connecting in private Ninjam server ...</source>
-        <translation>プライベート ニンジャム サーバへ接続中...</translation>
+        <translation>プライベート Ninjam サーバへ接続中...</translation>
     </message>
     <message>
         <source>This the private server dialog</source>
@@ -950,11 +950,11 @@
     </message>
     <message>
         <source>Click that button to listen that room</source>
-        <translation>視聴する</translation>
+        <translation>試聴する</translation>
     </message>
     <message>
         <source>listen</source>
-        <translation>視聴</translation>
+        <translation>試聴</translation>
     </message>
     <message>
         <source>Click that button to enter in this room</source>
