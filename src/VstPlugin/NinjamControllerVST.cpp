@@ -20,10 +20,15 @@ void NinjamControllerVST::disableHostSync()
     waitingForHostSync = false;
 }
 
-void NinjamControllerVST::startSynchronizedWithHost()
+void NinjamControllerVST::startSynchronizedWithHost(qint32 startPosition)
 {
-    if (waitingForHostSync)
+    if (waitingForHostSync){
         waitingForHostSync = false;
+        if (startPosition >= 0)
+            intervalPosition = startPosition % samplesInInterval;
+        else
+            intervalPosition = samplesInInterval - qAbs(startPosition % samplesInInterval);
+    }
 }
 
 void NinjamControllerVST::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,

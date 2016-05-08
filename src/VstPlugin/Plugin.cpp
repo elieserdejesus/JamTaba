@@ -207,8 +207,23 @@ void JamtabaPlugin::processReplacing(float **inputs, float **outputs, VstInt32 s
         timeInfo = getTimeInfo(kVstTransportPlaying | kVstTransportChanged | kVstTempoValid);
         if (transportStartDetectedInHost()) {// user pressing play/start in host?
             NinjamControllerVST *ninjamController = controller->getNinjamController();
-            if (ninjamController->isWaitingForHostSync())
-                ninjamController->startSynchronizedWithHost();
+            if (ninjamController->isWaitingForHostSync()) {
+                qint32 startPosition = 0;
+                double samplesPerBeat = (60.0 * timeInfo->sampleRate)/timeInfo->tempo;
+                if (timeInfo->ppqPos > 0){ //when host start button is pressed (and the cursor is aligned in project start) ppqPos is positive in Reaper, but negative in  Cubase
+                    double cursorPosInMeasure = timeInfo->ppqPos - timeInfo->barStartPos;
+                    if (cursorPosInMeasure > 0.00000001) { //the 'cursor' in the vst host is not aligned in the measure start. Whe need shift the interval start a little bit.
+                        //comparing with 0.00000001 because when the 'cursor' is in 5th beat Reaper is returning barStartPos = 4.9999999 and ppqPos = 5
+                        double samplesUntilNextMeasure = (timeInfo->timeSigNumerator - cursorPosInMeasure) * samplesPerBeat;
+                        startPosition = -samplesUntilNextMeasure; //shift the start position to compensate the 'cursor' position
+                    }
+                }
+                else{ //host is returning negative values for timeInfo structure when start button is pressed
+                    startPosition = timeInfo->ppqPos * samplesPerBeat; //wil generate a negative value
+                }
+
+                ninjamController->startSynchronizedWithHost(startPosition);
+            }
         }
     }
 

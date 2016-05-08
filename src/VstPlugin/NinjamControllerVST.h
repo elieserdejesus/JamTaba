@@ -15,7 +15,7 @@ public:
         return waitingForHostSync;
     }
 
-    void startSynchronizedWithHost();
+    void startSynchronizedWithHost(qint32 startPosition);
     void stopAndWaitForHostSync();
     void disableHostSync();
 
