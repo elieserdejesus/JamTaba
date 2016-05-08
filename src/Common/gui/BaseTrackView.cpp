@@ -193,9 +193,11 @@ void BaseTrackView::createLayoutStructure()
     buttonGroup->addButton(buttonBoostPlus12);
     buttonGroup->addButton(buttonBoostZero);
 
-    boostWidgetsLayout->addWidget(buttonBoostPlus12);
-    boostWidgetsLayout->addWidget(buttonBoostZero);
     boostWidgetsLayout->addWidget(buttonBoostMinus12);
+    boostWidgetsLayout->addWidget(buttonBoostZero);    
+    boostWidgetsLayout->addWidget(buttonBoostPlus12);
+
+
 
     primaryChildsLayout = new QVBoxLayout();
     primaryChildsLayout->setSpacing(12);
