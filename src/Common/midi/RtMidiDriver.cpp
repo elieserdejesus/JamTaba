@@ -28,8 +28,11 @@ void RtMidiDriver::setInputDevicesStatus(const QList<bool> &statuses){
 
     int midiDevicesCount = getMaxInputDevices();
     QList<bool> validStatuses;
-    for (int i = 0; i < midiDevicesCount && i < statuses.size(); ++i) {
-        validStatuses.append(statuses.at(i));
+    for (int i = 0; i < midiDevicesCount; ++i) {
+        if (i < statuses.count())
+            validStatuses.append(statuses.at(i));
+        else
+            validStatuses.append(true); //new connected devices are enabled by default
     }
 
     MidiDriver::setInputDevicesStatus(validStatuses);
