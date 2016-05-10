@@ -165,6 +165,7 @@ private:
 
     void scanPlugins(bool scanOnlyNewPlugins);
 
+
 };
 }
 
