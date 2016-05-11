@@ -8,7 +8,6 @@
 #include <QMap>
 #include <cmath>
 #include "log/Logging.h"
-#include "vst/VstPlugin.h"
 
 using namespace Vst;
 
@@ -200,10 +199,9 @@ long VSTCALLBACK Host::hostCallback(AEffect *effect, long opcode, long index, lo
             for (int i = 0; i < vstEvents->numEvents; ++i) {
                 if (vstEvents->events[i]->type == kVstMidiType) {
                     VstMidiEvent *vstMidiEvent = (VstMidiEvent *)vstEvents->events[i];
-                    VstPlugin *vstPlugin = reinterpret_cast<VstPlugin *>(effect->resvd1); // resvd1 is storing the VstPlugin instance pointer
-                    if (vstPlugin) {
-                        Midi::MidiMessage msg = Midi::MidiMessage::fromArray(vstMidiEvent->midiData,
-                                                                             vstPlugin->getPluginID());
+                    VstIntPtr pluginID = effect->resvd1; // resvd1 is storing the VstPlugin ID. This ID is setted in VstPlugin::load()
+                    if (pluginID) {
+                        Midi::MidiMessage msg = Midi::MidiMessage::fromArray(vstMidiEvent->midiData, pluginID);
                         hostInstance->receivedMidiMessages.append(msg);
                     }
                 }

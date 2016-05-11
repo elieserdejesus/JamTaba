@@ -78,8 +78,7 @@ bool VstPlugin::load(QString path){
     loaded = true;
 
     static quint32 ID_GENERATOR = VstPlugin::FIRST_PLUGIN_ID;
-    this->ID = ID_GENERATOR++; //every plugin instance has an different ID.
-    this->effect->resvd1 = reinterpret_cast<VstIntPtr>(this);// store the pointer in reserved
+    effect->resvd1 = ID_GENERATOR++; //every plugin instance has an different ID stored in the reserved atribute.
     return true;
 }
 
@@ -225,7 +224,7 @@ void VstPlugin::fillVstEventsList(const Midi::MidiMessageBuffer &midiBuffer){
     this->vstMidiEvents.numEvents = midiMessages;
     for (int m = 0; m < midiMessages; ++m) {
         Midi::MidiMessage message = midiBuffer.getMessage(m);
-        bool messageGeneratedByThisPlugin = message.getSourceID() >= VstPlugin::FIRST_PLUGIN_ID && message.getSourceID() == ID;
+        bool messageGeneratedByThisPlugin = message.getSourceID() >= VstPlugin::FIRST_PLUGIN_ID && message.getSourceID() == getPluginID();
         if (!messageGeneratedByThisPlugin ) { //avoid send the message to the message creator
             VstMidiEvent* vstEvent = (VstMidiEvent*)vstMidiEvents.events[m];
             vstEvent->type = kVstMidiType;

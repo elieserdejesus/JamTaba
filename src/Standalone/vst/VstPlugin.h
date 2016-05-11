@@ -51,7 +51,7 @@ public:
 
     bool isVirtualInstrument() const;
 
-    inline quint32 getPluginID() const { return ID; }
+    inline quint32 getPluginID() const { return effect->resvd1; }
 
     static const qint32 FIRST_PLUGIN_ID;
 
@@ -68,7 +68,6 @@ private:
     Vst::Host *host;
     bool wantMidi;
     QString path;
-    quint32 ID; //every plugin instance has a different ID. This is used to identify plugins when receiving VstMidiEvents
 
     bool started;
     bool turnedOn;
