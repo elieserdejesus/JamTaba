@@ -99,6 +99,10 @@ signals:
     void preparingTransmission();// waiting for start transmission
     void preparedToTransmit(); // this signal is emmited one time, when Jamtaba is ready to transmit (after wait some complete itervals)
 
+protected:
+    long intervalPosition;
+    long samplesInInterval;
+
 private:
     Controller::MainController *mainController;
     Audio::MetronomeTrackNode *metronomeTrackNode;
@@ -111,10 +115,7 @@ private:
     void removeTrack(const Ninjam::User &user, const Ninjam::UserChannel &channel);
 
     bool running;
-
-    long intervalPosition;
     int lastBeat;
-    long samplesInInterval;
 
     int currentBpi;
     int currentBpm;

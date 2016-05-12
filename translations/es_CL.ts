@@ -385,7 +385,7 @@
     </message>
     <message>
         <source>Stereo</source>
-        <translation>Stereo</translation>
+        <translation>Estéreo</translation>
     </message>
     <message>
         <source>%1  (not enough available inputs to make stereo)</source>
@@ -444,7 +444,7 @@
     </message>
     <message>
         <source>Language</source>
-        <translation>Lenguage</translation>
+        <translation>Lenguaje</translation>
     </message>
     <message>
         <source>Audio ...</source>

@@ -88,6 +88,8 @@ private:
     }
 
     static bool instanceIsInitialized;
+
+    qint32 getStartPositionForHostSync() const;
 };
 
 #endif // VST_H

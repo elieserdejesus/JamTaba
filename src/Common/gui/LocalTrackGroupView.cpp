@@ -130,9 +130,8 @@ QMenu *LocalTrackGroupView::createPresetsSubMenu()
     Configurator *cfg = Configurator::getInstance();
     QStringList presetsNames = cfg->getPresetFilesNames(false);
     foreach (const QString &name, presetsNames) {
-        QAction *presetAction = presetsMenu->addAction(name);
-        // putting the preset name in the Action instance we can get this preset name inside event handler 'on_presetMenuActionClicked'
-        presetAction->setData(name);
+        QAction *presetAction = presetsMenu->addAction(QString(name).replace(".json", "")); //strip the file extension from preset name
+        presetAction->setData(name);// putting the preset name in the Action instance we can get this preset name inside slot 'loadPreset'
     }
     QObject::connect(presetsMenu, SIGNAL(triggered(QAction *)), this, SLOT(loadPreset(QAction *)));
     presetsMenu->setEnabled(!presetsNames.isEmpty());
