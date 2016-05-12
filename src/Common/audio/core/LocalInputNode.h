@@ -82,7 +82,7 @@ public:
     void stopMidiNoteLearn();
     bool isLearningMidiNote() const;
 
-    void addProcessor(AudioNodeProcessor *newProcessor) override;
+    void addProcessor(AudioNodeProcessor *newProcessor, quint32 slotIndex) override;
 
     void reset();
 

@@ -52,22 +52,26 @@ bool LocalInputNode::isAudio() const
 
 void LocalInputNode::setProcessorsSampleRate(int newSampleRate)
 {
-    foreach (Audio::AudioNodeProcessor *p, processors)
-        p->setSampleRate(newSampleRate);
+    for (int i = 0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        if (processors[i])
+            processors[i]->setSampleRate(newSampleRate);
+    }
 }
 
 void LocalInputNode::closeProcessorsWindows()
 {
-    foreach (Audio::AudioNodeProcessor *p, processors)
-        p->closeEditor();
+    for (int i = 0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        if (processors[i])
+            processors[i]->closeEditor();
+    }
 }
 
-void LocalInputNode::addProcessor(AudioNodeProcessor *newProcessor)
+void LocalInputNode::addProcessor(AudioNodeProcessor *newProcessor, quint32 slotIndex)
 {
-    AudioNode::addProcessor(newProcessor);
+    AudioNode::addProcessor(newProcessor, slotIndex);
 
     // if newProcessor is the first added processor and is a virtual instrument (VSTi) change the input selection to midi
-    if (processors.size() == 1 && newProcessor->isVirtualInstrument()) {
+    if (slotIndex == 0 && newProcessor->isVirtualInstrument()) {
         if (!isMidi())
             setMidiInputSelection(0, -1);// select the first midi device, all channels (-1)
     }

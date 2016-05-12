@@ -78,14 +78,14 @@ QList<Audio::PluginDescriptor> MainControllerStandalone::getPluginsDescriptors()
     return pluginsDescriptors;
 }
 
-Audio::Plugin *MainControllerStandalone::addPlugin(int inputTrackIndex,
+Audio::Plugin *MainControllerStandalone::addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex,
                                          const Audio::PluginDescriptor &descriptor)
 {
     Audio::Plugin *plugin = createPluginInstance(descriptor);
     if (plugin) {
         plugin->start();
         QMutexLocker locker(&mutex);
-        getInputTrack(inputTrackIndex)->addProcessor(plugin);
+        getInputTrack(inputTrackIndex)->addProcessor(plugin, pluginSlotIndex);
     }
     return plugin;
 }

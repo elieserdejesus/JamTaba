@@ -46,7 +46,7 @@ public:
     virtual bool connect(AudioNode &other);
     virtual bool disconnect(AudioNode &otherNode);
 
-    virtual void addProcessor(AudioNodeProcessor *newProcessor);
+    virtual void addProcessor(AudioNodeProcessor *newProcessor, quint32 slotIndex);
     void removeProcessor(AudioNodeProcessor *processor);
     void suspendProcessors();
     void resumeProcessors();
@@ -95,12 +95,13 @@ public:
 
     virtual void reset();// reset pan, gain, boost, etc
 
+    static const quint8 MAX_PROCESSORS_PER_TRACK = 4;
 protected:
 
     int getInputResamplingLength(int sourceSampleRate, int targetSampleRate, int outFrameLenght);
 
     QSet<AudioNode *> connections;
-    QList<AudioNodeProcessor *> processors;
+    AudioNodeProcessor *processors[MAX_PROCESSORS_PER_TRACK];
     SamplesBuffer internalInputBuffer;
     SamplesBuffer internalOutputBuffer;
 

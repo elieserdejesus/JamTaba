@@ -38,23 +38,24 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
 
     internalOutputBuffer.set(internalInputBuffer);// if we have no plugins insert the input samples are just copied  to output buffer.
 
-    if (!processors.isEmpty()) {
-        static SamplesBuffer tempInputBuffer(2);
 
-        QList<Midi::MidiMessage> midiMessages = midiBuffer.toList();
+    static SamplesBuffer tempInputBuffer(2);
 
-        // process inserted plugins
-        foreach (AudioNodeProcessor *processor, processors) {
-            if (!processor->isBypassed()) {
-                tempInputBuffer.setFrameLenght(internalOutputBuffer.getFrameLenght());
-                tempInputBuffer.set(internalOutputBuffer);
-                midiMessages.append(pullMidiMessagesGeneratedByPlugins());
-                processor->process(tempInputBuffer, internalOutputBuffer, midiMessages);
-                if (processor->isVirtualInstrument())
-                    midiMessages.clear(); //assuming only VSTi will consume the midi messages
-            }
+    QList<Midi::MidiMessage> midiMessages = midiBuffer.toList();
+
+    // process inserted plugins
+    for (int i=0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        AudioNodeProcessor *processor = processors[i];
+        if (processor && !processor->isBypassed()) {
+            tempInputBuffer.setFrameLenght(internalOutputBuffer.getFrameLenght());
+            tempInputBuffer.set(internalOutputBuffer);
+            midiMessages.append(pullMidiMessagesGeneratedByPlugins());
+            processor->process(tempInputBuffer, internalOutputBuffer, midiMessages);
+            if (processor->isVirtualInstrument())
+                midiMessages.clear(); //assuming only VSTi will consume the midi messages
         }
     }
+
 
     internalOutputBuffer.applyGain(gain, leftGain, rightGain, boost);
 
@@ -77,6 +78,8 @@ AudioNode::AudioNode() :
     rightGain(1.0),
     resamplingCorrection(0)
 {
+    for(int i=0; i < MAX_PROCESSORS_PER_TRACK; ++i)
+        processors[i] = nullptr;
 }
 
 QList<Midi::MidiMessage> AudioNode::pullMidiMessagesGeneratedByPlugins() const
@@ -161,9 +164,12 @@ void AudioNode::updateGains()
 
 AudioNode::~AudioNode()
 {
-    foreach (AudioNodeProcessor *processor, processors)
-        delete processor;
-    processors.clear();
+    for (int i = 0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        if (processors[i]){
+            delete processors[i];
+            processors[i] = nullptr;
+        }
+    }
 }
 
 bool AudioNode::connect(AudioNode &other)
@@ -180,36 +186,47 @@ bool AudioNode::disconnect(AudioNode &otherNode)
     return true;
 }
 
-void AudioNode::addProcessor(AudioNodeProcessor *newProcessor)
+void AudioNode::addProcessor(AudioNodeProcessor *newProcessor, quint32 slotIndex)
 {
     assert(newProcessor);
-    processors.append(newProcessor);
+    assert(slotIndex < MAX_PROCESSORS_PER_TRACK);
+    processors[slotIndex] = newProcessor;
 }
 
 void AudioNode::removeProcessor(AudioNodeProcessor *processor)
 {
     assert(processor);
     processor->suspend();
-    processors.removeOne(processor);
-
+    for (int i = 0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        if (processors[i] == processor){
+            processors[i] = nullptr;
+            break;
+        }
+    }
     delete processor;
 }
 
 void AudioNode::suspendProcessors()
 {
-    foreach (AudioNodeProcessor *processor, processors)
-        processor->suspend();
+    for (int i = 0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        if (processors[i])
+            processors[i]->suspend();
+    }
 }
 
 void AudioNode::updateProcessorsGui()
 {
     QMutexLocker locker(&mutex);
-    foreach (AudioNodeProcessor *processor, processors)
-        processor->updateGui();
+    for (int i = 0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        if (processors[i])
+            processors[i]->updateGui();
+    }
 }
 
 void AudioNode::resumeProcessors()
 {
-    foreach (AudioNodeProcessor *processor, processors)
-        processor->resume();
+    for (int i = 0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        if (processors[i])
+            processors[i]->resume();
+    }
 }

@@ -91,7 +91,7 @@ public:
 
     void removePlugin(int inputTrackIndex, Audio::Plugin *PLUGIN);
     QList<Audio::PluginDescriptor> getPluginsDescriptors();
-    Audio::Plugin *addPlugin(int inputTrackIndex, const Audio::PluginDescriptor &descriptor);
+    Audio::Plugin *addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex, const Audio::PluginDescriptor &descriptor);
 
     Midi::MidiMessageBuffer pullMidiMessagesFromPlugins() override;
 

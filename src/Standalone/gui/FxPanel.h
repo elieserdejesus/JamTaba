@@ -16,7 +16,9 @@ public:
 
     virtual ~FxPanel();
 
-    void addPlugin(Audio::Plugin *PLUGIN);
+    void addPlugin(Audio::Plugin *plugin, quint32 pluginSlotIndex);
+
+    qint32 getPluginFreeSlotIndex() const; // return -1 if no free slots are available
 
     void removePlugins();
 
