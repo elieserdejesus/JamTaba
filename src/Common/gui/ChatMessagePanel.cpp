@@ -1,5 +1,6 @@
 #include "ChatMessagePanel.h"
 #include "ui_ChatMessagePanel.h"
+#include "gui/EmojiUtil.h"
 #include <QDebug>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -64,6 +65,7 @@ void ChatMessagePanel::setMessageLabelText(const QString &msg)
     newMessage = newMessage.replace(QRegExp("<.+?>"), "");// scape html tags
     newMessage = newMessage.replace("\n", "<br/>");
     newMessage = replaceLinksInString(newMessage);
+    newMessage = EmojiUtil::emojify(newMessage);
 
     ui->labelMessage->setText(newMessage);
 }
