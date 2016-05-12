@@ -1,5 +1,5 @@
 QT += core gui widgets network
-CONFIG += testcase
+CONFIG += testcase c++11
 TEMPLATE = app
 TARGET = testChat
 INCLUDEPATH += .
@@ -23,3 +23,4 @@ FORMS += gui/ChatMessagePanel.ui
 FORMS += gui/ChatPanel.ui
 
 RESOURCES += resources.qrc
+RESOURCES += ../../../../src/resources/emoji/emoji.qrc
