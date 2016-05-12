@@ -40,12 +40,18 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
 
     if (!processors.isEmpty()) {
         static SamplesBuffer tempInputBuffer(2);
+
+        QList<Midi::MidiMessage> midiMessages = midiBuffer.toList();
+
         // process inserted plugins
         foreach (AudioNodeProcessor *processor, processors) {
             if (!processor->isBypassed()) {
                 tempInputBuffer.setFrameLenght(internalOutputBuffer.getFrameLenght());
                 tempInputBuffer.set(internalOutputBuffer);
-                processor->process(tempInputBuffer, internalOutputBuffer, midiBuffer);
+                midiMessages.append(pullMidiMessagesGeneratedByPlugins());
+                processor->process(tempInputBuffer, internalOutputBuffer, midiMessages);
+                if (processor->isVirtualInstrument())
+                    midiMessages.clear(); //assuming only VSTi will consume the midi messages
             }
         }
     }
@@ -71,6 +77,11 @@ AudioNode::AudioNode() :
     rightGain(1.0),
     resamplingCorrection(0)
 {
+}
+
+QList<Midi::MidiMessage> AudioNode::pullMidiMessagesGeneratedByPlugins() const
+{
+    return QList<Midi::MidiMessage>(); // returning empty list by default, is overrided in LocalInputNode
 }
 
 int AudioNode::getInputResamplingLength(int sourceSampleRate, int targetSampleRate,

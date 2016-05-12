@@ -30,8 +30,6 @@ using namespace Vst;
 
 QMap<QString, QDialog*> VstPlugin::editorsWindows;
 
-const qint32 VstPlugin::FIRST_PLUGIN_ID = 264;
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 VstPlugin::VstPlugin(Vst::Host* host)
     :   Audio::Plugin("name"),
@@ -77,8 +75,6 @@ bool VstPlugin::load(QString path){
 
     loaded = true;
 
-    static quint32 ID_GENERATOR = VstPlugin::FIRST_PLUGIN_ID;
-    effect->resvd1 = ID_GENERATOR++; //every plugin instance has an different ID stored in the reserved atribute.
     return true;
 }
 
@@ -219,27 +215,24 @@ void VstPlugin::unload(){
     }
 }
 
-void VstPlugin::fillVstEventsList(const Midi::MidiMessageBuffer &midiBuffer){
-    int midiMessages = qMin( midiBuffer.getMessagesCount(), MAX_MIDI_EVENTS);
+void VstPlugin::fillVstEventsList(const QList<Midi::MidiMessage> &midiBuffer){
+    int midiMessages = qMin( midiBuffer.count(), MAX_MIDI_EVENTS);
     this->vstMidiEvents.numEvents = midiMessages;
     for (int m = 0; m < midiMessages; ++m) {
-        Midi::MidiMessage message = midiBuffer.getMessage(m);
-        bool messageGeneratedByThisPlugin = message.getSourceID() >= VstPlugin::FIRST_PLUGIN_ID && message.getSourceID() == getPluginID();
-        if (!messageGeneratedByThisPlugin ) { //avoid send the message to the message creator
-            VstMidiEvent* vstEvent = (VstMidiEvent*)vstMidiEvents.events[m];
-            vstEvent->type = kVstMidiType;
-            vstEvent->byteSize = sizeof(vstEvent);
-            vstEvent->deltaFrames = vstEvent->reserved1 = vstEvent->reserved2 = 0;
-            vstEvent->midiData[0] = message.getStatus();
-            vstEvent->midiData[1] = message.getData1();
-            vstEvent->midiData[2] = message.getData2();
-            vstEvent->midiData[3] = 0;
-            vstEvent->flags = kVstMidiEventIsRealtime;
-        }
+        Midi::MidiMessage message = midiBuffer.at(m);
+        VstMidiEvent* vstEvent = (VstMidiEvent*)vstMidiEvents.events[m];
+        vstEvent->type = kVstMidiType;
+        vstEvent->byteSize = sizeof(vstEvent);
+        vstEvent->deltaFrames = vstEvent->reserved1 = vstEvent->reserved2 = 0;
+        vstEvent->midiData[0] = message.getStatus();
+        vstEvent->midiData[1] = message.getData1();
+        vstEvent->midiData[2] = message.getData2();
+        vstEvent->midiData[3] = 0;
+        vstEvent->flags = kVstMidiEventIsRealtime;
     }
 }
 
-void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, const Midi::MidiMessageBuffer& midiBuffer){
+void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, const QList<Midi::MidiMessage> &midiBuffer){
 
     Q_UNUSED(in)
     if( isBypassed() || !effect || !loaded || !started){

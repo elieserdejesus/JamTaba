@@ -14,7 +14,7 @@ public:
     MidiMessage(const MidiMessage &other);
 
     static MidiMessage fromVector(std::vector<unsigned char> vector, qint32 sourceID);
-    static MidiMessage fromArray(const char array[4], qint32 sourceID);
+    static MidiMessage fromArray(const char array[4], qint32 sourceID=-1);
 
     int getChannel() const;
 
@@ -36,7 +36,7 @@ public:
 
 private:
     qint32 data;
-    int sourceID; //the id of the midi message 'creator'. Can be the ID of a midi device or the ID of a vst plugin.
+    int sourceID; //the id of the midi device generating the message.
 };
 
 inline int MidiMessage::getChannel() const

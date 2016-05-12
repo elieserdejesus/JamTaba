@@ -5,7 +5,9 @@
 #include <QMutex>
 #include "SamplesBuffer.h"
 #include "AudioDriver.h"
+#include "midi/MidiMessage.h"
 #include <QDebug>
+#include <QList>
 
 namespace Midi   {
 class MidiMessageBuffer;
@@ -24,8 +26,13 @@ public:
 
     virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
                                   const Midi::MidiMessageBuffer &midiBuffer);
+
+    virtual QList<Midi::MidiMessage> pullMidiMessagesGeneratedByPlugins() const;
+
     virtual void setMute(bool muted);
+
     void setSolo(bool soloed);
+
     inline bool isMuted() const
     {
         return muted;

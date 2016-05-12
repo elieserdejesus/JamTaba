@@ -23,7 +23,7 @@ public:
     ~VstPlugin();
 
     void process(const Audio::SamplesBuffer &vstInputArray, Audio::SamplesBuffer &outBuffer,
-                         const Midi::MidiMessageBuffer &midiBuffer) override;
+                         const QList<Midi::MidiMessage> &midiBuffer) override;
     void openEditor(const QPoint &centerOfScreen) override;
 
     void closeEditor() override;
@@ -53,8 +53,6 @@ public:
 
     inline quint32 getPluginID() const { return effect->resvd1; }
 
-    static const qint32 FIRST_PLUGIN_ID;
-
 protected:
     void unload();
 
@@ -78,7 +76,7 @@ private:
     float **vstInputArray;
 
     // VstEvents* vstEvents;
-    void fillVstEventsList(const Midi::MidiMessageBuffer &midiBuffer);
+    void fillVstEventsList(const QList<Midi::MidiMessage> &midiBuffer);
 
     template<int N>
     struct VSTEventBlock

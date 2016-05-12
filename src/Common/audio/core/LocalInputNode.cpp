@@ -2,11 +2,11 @@
 #include "audio/core/AudioNodeProcessor.h"
 #include "midi/MidiMessageBuffer.h"
 #include "midi/MidiMessage.h"
-#include "vst/VstPlugin.h"
+#include "MainController.h"
 
 using namespace Audio;
 
-LocalInputNode::LocalInputNode(int parentChannelIndex, bool isMono) :
+LocalInputNode::LocalInputNode(Controller::MainController *mainController, int parentChannelIndex, bool isMono) :
     channelIndex(parentChannelIndex),
     lastMidiActivity(0),
     midiChannelIndex(-1),
@@ -14,7 +14,8 @@ LocalInputNode::LocalInputNode(int parentChannelIndex, bool isMono) :
     midiLowerNote(0),
     midiHigherNote(127),
     transpose(0),
-    learningMidiNote(false)
+    learningMidiNote(false),
+    mainController(mainController)
 {
     Q_UNUSED(isMono)
     setToNoInput();
@@ -182,7 +183,6 @@ void LocalInputNode::setTranspose(qint8 transpose)
 
 bool LocalInputNode::canAcceptMidiMessage(const Midi::MidiMessage &message) const
 {
-    bool isVstMidiEvent = message.getSourceID() >= Vst::VstPlugin::FIRST_PLUGIN_ID;
     bool canAcceptDevice = message.getSourceID() == midiDeviceIndex;
     bool canAcceptChannel = isReceivingAllMidiChannels() || message.getChannel() == midiChannelIndex;
     bool canAcceptRange = true;
@@ -193,12 +193,16 @@ bool LocalInputNode::canAcceptMidiMessage(const Midi::MidiMessage &message) cons
             canAcceptRange = midiNote >= midiLowerNote && midiNote <= midiHigherNote;
         }
         else{ //is learning midi notes
-            if (!isVstMidiEvent) //avoid learn by vst generated midi events
-                emit midiNoteLearned((quint8)midiNote);
+            emit midiNoteLearned((quint8)midiNote);
             return false; //when learning all messages are bypassed
         }
     }
-    return (canAcceptDevice && canAcceptChannel && canAcceptRange) || isVstMidiEvent ;
+    return (canAcceptDevice && canAcceptChannel && canAcceptRange);
+}
+
+QList<Midi::MidiMessage> LocalInputNode::pullMidiMessagesGeneratedByPlugins() const
+{
+    return mainController->pullMidiMessagesFromPlugins().toList();
 }
 
 void LocalInputNode::startMidiNoteLearn()

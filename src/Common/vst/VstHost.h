@@ -28,8 +28,7 @@ public:
         return blockSize;
     }
 
-    QList<Midi::MidiMessage> getReceivedMidiMessages() const;
-    void clearReceivedMidiMessages();
+    QList<Midi::MidiMessage> pullReceivedMidiMessages();
 
     void setSampleRate(int sampleRate);
     void setBlockSize(int blockSize);

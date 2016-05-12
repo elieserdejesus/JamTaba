@@ -54,14 +54,11 @@ void Host::setPlayingFlag(bool playing)
         clearVstTimeInfoFlags();
 }
 
-QList<Midi::MidiMessage> Host::getReceivedMidiMessages() const
+QList<Midi::MidiMessage> Host::pullReceivedMidiMessages()
 {
-    return receivedMidiMessages;
-}
-
-void Host::clearReceivedMidiMessages()
-{
+    QList<Midi::MidiMessage> messages(receivedMidiMessages);
     receivedMidiMessages.clear();
+    return messages;
 }
 
 void Host::update(int intervalPosition)
@@ -199,11 +196,8 @@ long VSTCALLBACK Host::hostCallback(AEffect *effect, long opcode, long index, lo
             for (int i = 0; i < vstEvents->numEvents; ++i) {
                 if (vstEvents->events[i]->type == kVstMidiType) {
                     VstMidiEvent *vstMidiEvent = (VstMidiEvent *)vstEvents->events[i];
-                    VstIntPtr pluginID = effect->resvd1; // resvd1 is storing the VstPlugin ID. This ID is setted in VstPlugin::load()
-                    if (pluginID) {
-                        Midi::MidiMessage msg = Midi::MidiMessage::fromArray(vstMidiEvent->midiData, pluginID);
-                        hostInstance->receivedMidiMessages.append(msg);
-                    }
+                    Midi::MidiMessage msg = Midi::MidiMessage::fromArray(vstMidiEvent->midiData);
+                    hostInstance->receivedMidiMessages.append(msg);
                 }
             }
         }
