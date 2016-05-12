@@ -44,6 +44,8 @@ void Host::clearVstTimeInfoFlags()
     vstTimeInfo.smpteFrameRate = 1;
     vstTimeInfo.samplesToNextClock = 0;
     vstTimeInfo.flags = 0;
+    vstTimeInfo.flags |= kVstTempoValid;
+    vstTimeInfo.flags |= kVstTimeSigValid;
 }
 
 void Host::setPlayingFlag(bool playing)
