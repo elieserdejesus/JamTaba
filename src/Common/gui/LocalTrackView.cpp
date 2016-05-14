@@ -177,3 +177,11 @@ void LocalTrackView::refreshStyleSheet()
     style()->unpolish(buttonStereoInversion); // this is necessary to change the stereo inversion button colors when the transmit button is clicled
     style()->polish(buttonStereoInversion);
 }
+
+void LocalTrackView::setPeaks(float left, float right)
+{
+    if (!inputNode->isStereoInverted())
+        BaseTrackView::setPeaks(left, right);
+    else
+        BaseTrackView::setPeaks(right, left); // inverting peaks
+}

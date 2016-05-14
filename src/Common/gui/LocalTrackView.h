@@ -54,6 +54,8 @@ protected:
 
     void refreshStyleSheet() override;
 
+    void setPeaks(float left, float right) override;
+
 private:
 
     QPushButton *createStereoInversionButton();
