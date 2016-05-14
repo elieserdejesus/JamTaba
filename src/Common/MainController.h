@@ -188,12 +188,17 @@ public:
 
     void storeWindowSettings(bool maximized, bool usingFullViewMode, QPointF location);
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice, const QList<bool> &midiInputStatus);
-    void storeRecordingPath(const QString &newPath);
+
     void storeRecordingMultiTracksStatus(bool savingMultiTracks);
     inline bool isRecordingMultiTracksActivated() const
     {
         return settings.isSaveMultiTrackActivated();
     }
+    void storeJamRecorderStatus(QString writerId, bool status);
+    inline bool isJamRecorderActivated(QString writerId) {
+        settings.isJamRecorderActivated(writerId);
+    }
+    void storeRecordingPath(const QString &newPath);
 
     void storePrivateServerSettings(const QString &server, int serverPort, const QString &password);
 
@@ -256,6 +261,14 @@ public:
 
     static QString getSuggestedUserName();
 
+    QMap<QString, QString> getJamRecoders() {
+        QMap<QString, QString> jamRecoderMap = QMap<QString, QString>();
+        foreach(Recorder::JamRecorder * jamRecorder, jamRecorders) {
+            jamRecoderMap[jamRecorder->getWriterId()] = jamRecorder->getWriterName();
+        }
+        return jamRecoderMap;
+    }
+
 signals:
     void ipResolved(const QString &ip);
 
@@ -315,7 +328,15 @@ private:
 
     QScopedPointer<Geo::IpToLocationResolver> ipToLocationResolver;
 
-    Recorder::JamRecorder jamRecorder;
+    QList<Recorder::JamRecorder *> jamRecorders;
+
+    inline QList<Recorder::JamRecorder *> getActiveRecorders() const {
+        QList<Recorder::JamRecorder *> activeRecorders;
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+            if (settings.isJamRecorderActivated(jamRecorder->getWriterId()))
+                activeRecorders.append(jamRecorder);
+        return activeRecorders;
+    }
 
     // master
     float masterGain;

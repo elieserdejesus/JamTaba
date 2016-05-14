@@ -48,9 +48,9 @@ void StandalonePreferencesDialog::notifySampleRateChanged()
     emit sampleRateChanged(newSampleRate);
 }
 
-void StandalonePreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings)
+void StandalonePreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> *jamRecorders)
 {
-    PreferencesDialog::initialize(initialTab, settings);
+    PreferencesDialog::initialize(initialTab, settings, jamRecorders);
     int tabIndex = static_cast<int>(initialTab);
     ui->prefsTab->setCurrentIndex(tabIndex);
 }

@@ -29,13 +29,24 @@ JamTrack::JamTrack()//default construtor to use this class in QMap and QList wit
 void JamTrack::addAudioFile(const QString &path, int intervalIndex){
     audioFiles.append( JamAudioFile(path, intervalIndex));
 }
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+JamInterval::JamInterval(const int intervalIndex, const int bpm, const int bpi, const QString &path, const QString &userName, const quint8 channelIndex)
+    :intervalIndex(intervalIndex), bpm(bpm), bpi(bpi), path(path), userName(userName), channelIndex(channelIndex){
+}
+
+JamInterval::JamInterval()
+    :intervalIndex(0), bpm(-1), bpi(-1), path(""), userName(""), channelIndex(0){
+}
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Jam::Jam(int bpm, int bpi, int sampleRate, const QString &jamName, const QString &baseDir)
     : bpm(bpm), bpi(bpi), name(jamName), sampleRate(sampleRate), baseDir(baseDir) {
 
     QDir jamDir(QDir(baseDir).absoluteFilePath(jamName));
-    jamDir.mkpath("audio");
-    this->audioPath = jamDir.absoluteFilePath("audio");
+    jamDir.mkpath("Reaper/audio");
+    this->rppAudioPath = jamDir.absoluteFilePath("Reaper/audio");
+    jamDir.mkpath("Reaper/clipsort");
+    this->clipsortPath = jamDir.absoluteFilePath("Reaper/clipsort");
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++
@@ -48,12 +59,17 @@ QList<JamTrack> Jam::getJamTracks() const{
     return tracks;
 }
 
-double Jam::getIntervalsLenght() const{
-    return 60.0/bpm * (double)bpi;
+QList<JamInterval> Jam::getJamIntervals() const{
+    QList<JamInterval> intervals;
+    foreach (const int intervalIndex, jamIntervals.keys()) {
+        intervals.append(jamIntervals[intervalIndex]);
+    }
+    return intervals;
 }
 
 //called when a new file is writed in disk
 void Jam::addAudioFile(const QString &userName, quint8 channelIndex, const QString &filePath, int intervalIndex){
+
     if(!jamTracks.contains(userName)){
         jamTracks.insert(userName, QMap<quint8, JamTrack>());
     }
@@ -61,6 +77,12 @@ void Jam::addAudioFile(const QString &userName, quint8 channelIndex, const QStri
         jamTracks[userName].insert(channelIndex, JamTrack(userName, channelIndex));
     }
     jamTracks[userName][channelIndex].addAudioFile(filePath, intervalIndex);
+
+    if(!jamIntervals.contains(intervalIndex)){
+        jamIntervals.insert(intervalIndex, QList<JamInterval>());
+    }
+    jamIntervals[intervalIndex].insert(intervalIndex, JamInterval(intervalIndex, getBpm(), getBpi(), filePath, userName, channelIndex));
+
     qCDebug(jtJamRecorder) << "adding a file in jam interval:" <<intervalIndex << " path:" << filePath;
 }
 
@@ -90,13 +112,14 @@ QString JamRecorder::buildAudioFileName(const QString &userName, quint8 channelI
 
 JamRecorder::JamRecorder(JamMetadataWriter* jamMetadataWritter)
     : jam(nullptr), jamMetadataWritter(jamMetadataWritter), globalIntervalIndex(0), running(false){
-
     //this->recordingActivated = true;//just to test
+    qCDebug(jtJamRecorder) << "Creating JamRecorder!";
 }
 
 JamRecorder::~JamRecorder()
 {
     delete jamMetadataWritter;
+    qCDebug(jtJamRecorder) << "Deleting JamRecorder!";
 }
 
 void JamRecorder::appendLocalUserAudio(const QByteArray &encodedaudio, quint8 channelIndex, bool isFirstPartOfInterval, bool isLastPastOfInterval){
@@ -112,7 +135,7 @@ void JamRecorder::appendLocalUserAudio(const QByteArray &encodedaudio, quint8 ch
     localUserIntervals[channelIndex].appendEncodedAudio(encodedaudio);
     if(isLastPastOfInterval){
         QString audioFileName = buildAudioFileName(localUserName, channelIndex, localUserIntervals[channelIndex].getIntervalIndex());
-        QString audioFilePath = QDir(jam->getAudioAbsolutePath()).absoluteFilePath(audioFileName);
+        QString audioFilePath = QDir(jam->getRPPAudioAbsolutePath()).absoluteFilePath(audioFileName);
         QByteArray encodedData(localUserIntervals[channelIndex].getEncodedData());
         QtConcurrent::run(this, &JamRecorder::writeEncodedFile, encodedData, audioFilePath);
         //writeEncodedFile(localUserIntervals[channelIndex].getEncodedData(), audioFilePath);
@@ -128,7 +151,7 @@ void JamRecorder::addRemoteUserAudio(const QString &userName, const QByteArray &
     }
     int intervalIndex = globalIntervalIndex;
     QString audioFileName = buildAudioFileName(userName, channelIndex, intervalIndex);
-    QString audioFilePath = QDir(jam->getAudioAbsolutePath()).absoluteFilePath(audioFileName);
+    QString audioFilePath = QDir(jam->getRPPAudioAbsolutePath()).absoluteFilePath(audioFileName);
     QtConcurrent::run(this, &JamRecorder::writeEncodedFile, encodedAudio, audioFilePath);
     jam->addAudioFile(userName, channelIndex, audioFilePath, intervalIndex);
 }

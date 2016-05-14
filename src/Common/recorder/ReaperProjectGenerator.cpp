@@ -47,7 +47,7 @@ void ReaperProjectGenerator::write(const Jam &jam){
     stringBuffer.append(">");//close the root tag
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //save
-    QDir jamDir = QDir(jam.getAudioAbsolutePath());
+    QDir jamDir = QDir(jam.getRPPAudioAbsolutePath());
     jamDir.cdUp();
     QFile projectFile(jamDir.absoluteFilePath("Reaper project.rpp"));
     if(!projectFile.open(QFile::WriteOnly)){

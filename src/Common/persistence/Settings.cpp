@@ -8,6 +8,7 @@
 
 #include <QDir>
 #include <QList>
+#include <QStringList>
 #include <QSettings>
 #include "log/Logging.h"
 
@@ -59,6 +60,20 @@ float SettingsObject::getValueFromJson(const QJsonObject &json, const QString &p
 {
     if (json.contains(propertyName))
         return (float)(json[propertyName].toDouble());
+    return fallBackValue;
+}
+
+QJsonArray SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
+                                           QJsonArray fallBackValue){
+    if (json.contains(propertyName))
+        return json[propertyName].toArray();
+    return fallBackValue;
+}
+
+QJsonObject SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
+                                           QJsonObject fallBackValue){
+    if (json.contains(propertyName))
+        return json[propertyName].toObject();
     return fallBackValue;
 }
 
@@ -150,14 +165,23 @@ void MidiSettings::read(const QJsonObject &in)
 RecordingSettings::RecordingSettings() :
     SettingsObject("recording"),
     saveMultiTracksActivated(false),
+    jamRecorderActivated(QMap<QString, bool>()),
     recordingPath("")
 {
+	// TODO: populate jamRecorderActivated with {jamRecorderId, false} pairs for each known jamRecorder
 }
 
 void RecordingSettings::write(QJsonObject &out) const
 {
     out["recordingPath"] = recordingPath;
     out["recordActivated"] = saveMultiTracksActivated;
+    QJsonObject jamRecorders = QJsonObject();
+    foreach(QString key, jamRecorderActivated.keys()){
+        QJsonObject jamRecorder = QJsonObject();
+        jamRecorder["activated"] = jamRecorderActivated[key];
+        jamRecorders[key] = jamRecorder;
+    }
+    out["jamRecorders"] = jamRecorders;
 }
 
 void RecordingSettings::read(const QJsonObject &in)
@@ -180,6 +204,12 @@ void RecordingSettings::read(const QJsonObject &in)
         recordingPath = QDir(documentsDir).absoluteFilePath("Jamtaba");
     }
     saveMultiTracksActivated = getValueFromJson(in, "recordActivated", false);
+
+    QJsonObject jamRecorders = getValueFromJson(in, "jamRecorders", QJsonObject());
+    foreach(QString key, jamRecorders.keys()) {
+        QJsonObject jamRecorder = jamRecorders[key].toObject();
+        jamRecorderActivated[key] = getValueFromJson(jamRecorder, "activated", false);
+    }
 }
 
 // +++++++++++++++++++++++++++++
