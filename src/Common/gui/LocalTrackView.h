@@ -3,7 +3,7 @@
 
 #include "BaseTrackView.h"
 #include "PeakMeter.h"
-//#include "audio/core/AudioNode.h"
+#include <QPushButton>
 
 class FxPanel;
 
@@ -51,7 +51,13 @@ public:
 protected:
     Audio::LocalInputNode *inputNode;
 
+    void refreshStyleSheet() override;
+
 private:
+    QPushButton *buttonStereoInversion;
+
+    static QPushButton *createStereoInversionButton();
+
     bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;
     bool peakMetersOnly;
     void deleteWidget(QWidget *widget);

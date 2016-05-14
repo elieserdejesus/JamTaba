@@ -9,7 +9,9 @@
 
 LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex) :
     BaseTrackView(mainController, channelIndex),
-    inputNode(nullptr)
+    inputNode(nullptr),
+    peakMetersOnly(false),
+    buttonStereoInversion(createStereoInversionButton())
 {
     Q_ASSERT(mainController);
 
@@ -22,7 +24,7 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
 
     setUnlightStatus(false);
 
-    peakMetersOnly = false;
+    secondaryChildsLayout->addWidget(buttonStereoInversion);
 }
 
 void LocalTrackView::setInitialValues(float initialGain, BaseTrackView::Boost boostValue,
@@ -146,4 +148,22 @@ LocalTrackView::~LocalTrackView()
 {
     if (mainController)
         mainController->removeInputTrackNode(getTrackID());
+}
+
+
+QPushButton *LocalTrackView::createStereoInversionButton()
+{
+    QPushButton *button = new QPushButton();
+    button->setObjectName(QStringLiteral("buttonStereoInversion"));
+    button->setToolTip(tr("Invert stereo"));
+    button->setCheckable(true);
+    return button;
+}
+
+void LocalTrackView::refreshStyleSheet()
+{
+    BaseTrackView::refreshStyleSheet();
+
+    style()->unpolish(buttonStereoInversion); // this is necessary to change the stereo inversion button colors when the transmit button is clicled
+    style()->polish(buttonStereoInversion);
 }
