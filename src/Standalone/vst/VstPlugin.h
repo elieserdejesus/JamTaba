@@ -49,7 +49,9 @@ public:
 
     static QDialog *getPluginEditorWindow(QString pluginName);
 
-    bool isVirtualInstrument() const;
+    bool isVirtualInstrument() const override;
+
+    bool canGenerateMidiMessages() const override;
 
     inline quint32 getPluginID() const { return effect->resvd1; }
 

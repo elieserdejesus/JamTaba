@@ -35,8 +35,12 @@ public:
         return bypassed;
     }
 
-    virtual bool isVirtualInstrument() const
+    inline virtual bool isVirtualInstrument() const
     {
+        return false;
+    }
+
+    inline virtual bool canGenerateMidiMessages() const{
         return false;
     }
 

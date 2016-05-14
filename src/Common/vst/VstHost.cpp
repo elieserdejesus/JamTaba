@@ -216,6 +216,7 @@ long VSTCALLBACK Host::hostCallback(AEffect *effect, long opcode, long index, lo
         if ((!strcmp(str, "sendVstEvents"))
             || (!strcmp(str, "sendVstMidiEvent"))
             || (!strcmp(str, "receiveVstMidiEvent"))
+            || (!strcmp(str, "receiveVstEvents"))
             || (!strcmp(str, "sizeWindow"))
             || (!strcmp(str, "sendVstMidiEventFlagIsRealtime"))
             || (!strcmp(str, "sendVstTimeInfo"))

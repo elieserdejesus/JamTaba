@@ -48,11 +48,15 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
         AudioNodeProcessor *processor = processors[i];
         if (processor && !processor->isBypassed()) {
             tempInputBuffer.setFrameLenght(internalOutputBuffer.getFrameLenght());
-            tempInputBuffer.set(internalOutputBuffer);
-            midiMessages.append(pullMidiMessagesGeneratedByPlugins());
+            tempInputBuffer.set(internalOutputBuffer); //the output from previous plugin is used as input to the next plugin in the chain
+
             processor->process(tempInputBuffer, internalOutputBuffer, midiMessages);
-            if (processor->isVirtualInstrument())
-                midiMessages.clear(); //assuming only VSTi will consume the midi messages
+
+            // some plugins are blocking the midi messages. If a VSTi can't generate messages the previous messages list will be sended for the next plugin in the chain. The messages list is cleared only when the plugin can generate midi messages.
+            if (processor->isVirtualInstrument() && processor->canGenerateMidiMessages())
+                midiMessages.clear(); // only the fresh messages will be passed by the next plugin in the chain
+
+            midiMessages.append(pullMidiMessagesGeneratedByPlugins());
         }
     }
 

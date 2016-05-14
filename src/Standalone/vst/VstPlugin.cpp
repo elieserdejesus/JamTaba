@@ -78,6 +78,12 @@ bool VstPlugin::load(QString path){
     return true;
 }
 
+bool VstPlugin::canGenerateMidiMessages() const{
+    //long canSendVstEvents = effect->dispatcher(effect, effCanDo, 0, 0, (void*)"sendVstEvents", 0);
+    long returnValue = effect->dispatcher(effect, effCanDo, 0, 0, (void*)"sendVstMidiEvent", 0);
+    return returnValue >= 0;
+}
+
 bool VstPlugin::isVirtualInstrument() const{
     if(!effect){
         return false;
