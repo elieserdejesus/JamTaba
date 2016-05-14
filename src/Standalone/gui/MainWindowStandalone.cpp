@@ -198,18 +198,21 @@ void MainWindowStandalone::restoreLocalSubchannelPluginsList(
     foreach (const Persistence::Plugin &plugin, subChannel.getPlugins()) {
         QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
         Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path);
-        Audio::Plugin *pluginInstance = controller->addPlugin(
-            subChannelView->getInputIndex(), descriptor);
-        if (pluginInstance) {
-            try{
-                pluginInstance->restoreFromSerializedData(plugin.data);
+        quint32 inputTrackIndex = subChannelView->getInputIndex();
+        qint32 pluginSlotIndex = subChannelView->getPluginFreeSlotIndex();
+        if (pluginSlotIndex >= 0) {
+            Audio::Plugin *pluginInstance = controller->addPlugin(inputTrackIndex, pluginSlotIndex, descriptor);
+            if (pluginInstance) {
+                try{
+                    pluginInstance->restoreFromSerializedData(plugin.data);
+                }
+                catch (...) {
+                    qWarning() << "Exception restoring " << pluginInstance->getName();
+                }
+                subChannelView->addPlugin(pluginInstance, pluginSlotIndex, plugin.bypassed);
             }
-            catch (...) {
-                qWarning() << "Exception restoring " << pluginInstance->getName();
-            }
-            subChannelView->addPlugin(pluginInstance, plugin.bypassed);
+            QApplication::processEvents();
         }
-        QApplication::processEvents();
     }
 }
 

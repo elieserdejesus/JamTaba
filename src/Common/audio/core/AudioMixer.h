@@ -11,6 +11,10 @@ namespace Midi {
 class MidiMessageBuffer;
 }
 
+namespace Controller {
+    class MainController;
+}
+
 namespace Audio {
 class AudioNode;
 class SamplesBuffer;
@@ -23,8 +27,7 @@ private:
 public:
     AudioMixer(int sampleRate);
     ~AudioMixer();
-    void process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
-                 const Midi::MidiMessageBuffer &midiBuffer, bool attenuateAfterSumming = false);
+    void process(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiMessageBuffer &midiBuffer, bool attenuateAfterSumming = false);
     void addNode(AudioNode *node);
     void removeNode(AudioNode *node);
 
@@ -37,6 +40,7 @@ private:
     QList<AudioNode *> nodes;
     int sampleRate;
     QMap<AudioNode *, SamplesBufferResampler *> resamplers;
+    Controller::MainController *mainController;
 };
 // +++++++++++++++++++++++
 }

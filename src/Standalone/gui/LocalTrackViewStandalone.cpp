@@ -272,14 +272,19 @@ void LocalTrackViewStandalone::onMidiToolsDialogClosed()
     qCDebug(jtGUI) << "MidiToolsDialog pointer cleared!";
 }
 
-void LocalTrackViewStandalone::addPlugin(Audio::Plugin *plugin, bool bypassed)
+void LocalTrackViewStandalone::addPlugin(Audio::Plugin *plugin, quint32 slotIndex, bool bypassed)
 {
     if (fxPanel) {
         plugin->setBypass(bypassed);
-        this->fxPanel->addPlugin(plugin);
-        this->refreshInputSelectionName();// refresh input type combo box, if the added plugins is a virtual instrument Jamtaba will try auto change the input type to midi
+        fxPanel->addPlugin(plugin, slotIndex);
+        refreshInputSelectionName();// refresh input type combo box, if the added plugins is a virtual instrument Jamtaba will try auto change the input type to midi
         update();
     }
+}
+
+qint32 LocalTrackViewStandalone::getPluginFreeSlotIndex() const
+{
+    return fxPanel->getPluginFreeSlotIndex();
 }
 
 QList<const Audio::Plugin *> LocalTrackViewStandalone::getInsertedPlugins() const

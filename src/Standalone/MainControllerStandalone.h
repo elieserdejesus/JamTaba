@@ -91,7 +91,9 @@ public:
 
     void removePlugin(int inputTrackIndex, Audio::Plugin *PLUGIN);
     QList<Audio::PluginDescriptor> getPluginsDescriptors();
-    Audio::Plugin *addPlugin(int inputTrackIndex, const Audio::PluginDescriptor &descriptor);
+    Audio::Plugin *addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex, const Audio::PluginDescriptor &descriptor);
+
+    Midi::MidiMessageBuffer pullMidiMessagesFromPlugins() override;
 
 public slots:
     void setSampleRate(int newSampleRate) override;
@@ -118,9 +120,9 @@ protected:
 
     void setCSS(const QString &css) override;
 
-    Midi::MidiMessageBuffer pullMidiBuffer() override;
-
     void setupNinjamControllerSignals() override;
+
+    Midi::MidiMessageBuffer pullMidiMessagesFromDevices() override;
 
 protected slots:
     void updateBpm(int newBpm) override;
@@ -164,6 +166,7 @@ private:
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
     void scanPlugins(bool scanOnlyNewPlugins);
+
 
 };
 }

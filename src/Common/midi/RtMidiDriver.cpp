@@ -104,13 +104,9 @@ void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, 
     std::vector<unsigned char> messageBytes;
     do{
         messageBytes.clear();
-        double messageTimeStamp = stream->getMessage(&messageBytes);
+        stream->getMessage(&messageBytes);
         if (messageBytes.size() == 3) { // Jamtaba is handling only the 3 bytes commond midi messages. Uncommon midi messages will be ignored.
-            int msgData = 0;
-            msgData |= messageBytes.at(0);
-            msgData |= messageBytes.at(1) << 8;
-            msgData |= messageBytes.at(2) << 16;
-            outBuffer.addMessage(Midi::MidiMessage(msgData, qint32(messageTimeStamp), deviceIndex));
+            outBuffer.addMessage(Midi::MidiMessage::fromVector(messageBytes, deviceIndex));
         }
         else{
             if (!messageBytes.empty())

@@ -2,10 +2,8 @@
 #define _AUDIO_NODE_PROCESSOR_H_
 
 #include <QObject>
+#include "midi/MidiMessage.h"
 
-namespace Midi {
-class MidiMessageBuffer;
-}
 
 namespace Audio {
 
@@ -20,7 +18,7 @@ public:
     }
 
     virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
-                         const Midi::MidiMessageBuffer &midiBuffer) = 0;
+                         const QList<Midi::MidiMessage> &midiMessages) = 0;
     virtual void suspend() = 0;
     virtual void resume() = 0;
     virtual void updateGui() = 0;
@@ -37,8 +35,12 @@ public:
         return bypassed;
     }
 
-    virtual bool isVirtualInstrument() const
+    inline virtual bool isVirtualInstrument() const
     {
+        return false;
+    }
+
+    inline virtual bool canGenerateMidiMessages() const{
         return false;
     }
 

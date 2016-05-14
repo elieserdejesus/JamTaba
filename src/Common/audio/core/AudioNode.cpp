@@ -38,17 +38,28 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
 
     internalOutputBuffer.set(internalInputBuffer);// if we have no plugins insert the input samples are just copied  to output buffer.
 
-    if (!processors.isEmpty()) {
-        static SamplesBuffer tempInputBuffer(2);
-        // process inserted plugins
-        foreach (AudioNodeProcessor *processor, processors) {
-            if (!processor->isBypassed()) {
-                tempInputBuffer.setFrameLenght(internalOutputBuffer.getFrameLenght());
-                tempInputBuffer.set(internalOutputBuffer);
-                processor->process(tempInputBuffer, internalOutputBuffer, midiBuffer);
-            }
+
+    static SamplesBuffer tempInputBuffer(2);
+
+    QList<Midi::MidiMessage> midiMessages = midiBuffer.toList();
+
+    // process inserted plugins
+    for (int i=0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        AudioNodeProcessor *processor = processors[i];
+        if (processor && !processor->isBypassed()) {
+            tempInputBuffer.setFrameLenght(internalOutputBuffer.getFrameLenght());
+            tempInputBuffer.set(internalOutputBuffer); //the output from previous plugin is used as input to the next plugin in the chain
+
+            processor->process(tempInputBuffer, internalOutputBuffer, midiMessages);
+
+            // some plugins are blocking the midi messages. If a VSTi can't generate messages the previous messages list will be sended for the next plugin in the chain. The messages list is cleared only when the plugin can generate midi messages.
+            if (processor->isVirtualInstrument() && processor->canGenerateMidiMessages())
+                midiMessages.clear(); // only the fresh messages will be passed by the next plugin in the chain
+
+            midiMessages.append(pullMidiMessagesGeneratedByPlugins());
         }
     }
+
 
     internalOutputBuffer.applyGain(gain, leftGain, rightGain, boost);
 
@@ -71,6 +82,13 @@ AudioNode::AudioNode() :
     rightGain(1.0),
     resamplingCorrection(0)
 {
+    for(int i=0; i < MAX_PROCESSORS_PER_TRACK; ++i)
+        processors[i] = nullptr;
+}
+
+QList<Midi::MidiMessage> AudioNode::pullMidiMessagesGeneratedByPlugins() const
+{
+    return QList<Midi::MidiMessage>(); // returning empty list by default, is overrided in LocalInputNode
 }
 
 int AudioNode::getInputResamplingLength(int sourceSampleRate, int targetSampleRate,
@@ -150,9 +168,12 @@ void AudioNode::updateGains()
 
 AudioNode::~AudioNode()
 {
-    foreach (AudioNodeProcessor *processor, processors)
-        delete processor;
-    processors.clear();
+    for (int i = 0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        if (processors[i]){
+            delete processors[i];
+            processors[i] = nullptr;
+        }
+    }
 }
 
 bool AudioNode::connect(AudioNode &other)
@@ -169,36 +190,47 @@ bool AudioNode::disconnect(AudioNode &otherNode)
     return true;
 }
 
-void AudioNode::addProcessor(AudioNodeProcessor *newProcessor)
+void AudioNode::addProcessor(AudioNodeProcessor *newProcessor, quint32 slotIndex)
 {
     assert(newProcessor);
-    processors.append(newProcessor);
+    assert(slotIndex < MAX_PROCESSORS_PER_TRACK);
+    processors[slotIndex] = newProcessor;
 }
 
 void AudioNode::removeProcessor(AudioNodeProcessor *processor)
 {
     assert(processor);
     processor->suspend();
-    processors.removeOne(processor);
-
+    for (int i = 0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        if (processors[i] == processor){
+            processors[i] = nullptr;
+            break;
+        }
+    }
     delete processor;
 }
 
 void AudioNode::suspendProcessors()
 {
-    foreach (AudioNodeProcessor *processor, processors)
-        processor->suspend();
+    for (int i = 0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        if (processors[i])
+            processors[i]->suspend();
+    }
 }
 
 void AudioNode::updateProcessorsGui()
 {
     QMutexLocker locker(&mutex);
-    foreach (AudioNodeProcessor *processor, processors)
-        processor->updateGui();
+    for (int i = 0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        if (processors[i])
+            processors[i]->updateGui();
+    }
 }
 
 void AudioNode::resumeProcessors()
 {
-    foreach (AudioNodeProcessor *processor, processors)
-        processor->resume();
+    for (int i = 0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        if (processors[i])
+            processors[i]->resume();
+    }
 }

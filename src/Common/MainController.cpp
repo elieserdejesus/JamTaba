@@ -352,7 +352,7 @@ void MainController::removeTrack(long trackID)
 void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
                                     int sampleRate)
 {
-    audioMixer.process(in, out, sampleRate, pullMidiBuffer());
+    audioMixer.process(in, out, sampleRate, pullMidiMessagesFromDevices());
 
     out.applyGain(masterGain, 1.0f);// using 1 as boost factor/multiplier (no boost)
     masterPeak.update(out.computePeak());
