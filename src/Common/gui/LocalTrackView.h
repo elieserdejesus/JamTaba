@@ -50,11 +50,11 @@ public:
 
 protected:
     Audio::LocalInputNode *inputNode;
+    QPushButton *buttonStereoInversion;
 
     void refreshStyleSheet() override;
 
 private:
-    QPushButton *buttonStereoInversion;
 
     static QPushButton *createStereoInversionButton();
 

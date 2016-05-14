@@ -534,6 +534,9 @@ void LocalTrackViewStandalone::refreshInputSelectionName()
     midiToolsButton->setVisible( canShowMidiToolsButton() );
     inputTypeIconLabel->setVisible(canShowInputTypeIcon());
 
+    buttonStereoInversion->setEnabled(inputNode->isStereo() || inputNode->isMidi());
+
+    refreshStyleSheet();
     updateGeometry();
     update();
 }

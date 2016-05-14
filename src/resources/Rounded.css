@@ -1462,10 +1462,10 @@ QPushButton#buttonStereoInversion
     background-color: rgb(235, 235, 235);
 }
 
-LocalTrackView[unlighted="true"] #buttonStereoInversion
+LocalTrackView[unlighted="true"] #buttonStereoInversion,
+QPushButton#buttonStereoInversion[enabled="false"]
 {
     background-color: rgba(0, 0, 0, 30);
-    border: none;
 }
 
 QPushButton#buttonStereoInversion:!checked
