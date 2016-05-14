@@ -157,7 +157,13 @@ QPushButton *LocalTrackView::createStereoInversionButton()
     button->setObjectName(QStringLiteral("buttonStereoInversion"));
     button->setToolTip(tr("Invert stereo"));
     button->setCheckable(true);
+    connect(button, SIGNAL(clicked(bool)), this, SLOT(invertStereo()));
     return button;
+}
+
+void LocalTrackView::invertStereo()
+{
+    mainController->invertTrackStereo(getInputIndex());
 }
 
 void LocalTrackView::refreshStyleSheet()

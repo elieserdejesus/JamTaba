@@ -481,6 +481,13 @@ bool MainController::trackIsSoloed(int trackID) const
     return false;
 }
 
+void MainController::invertTrackStereo(int trackID)
+{
+    Audio::LocalInputNode *inputTrackNode = inputTracks[trackID];
+    if (inputTrackNode)
+        inputTrackNode->invertStereo();
+}
+
 // +++++++++++++++++++++++++++++++++
 
 MainController::~MainController()

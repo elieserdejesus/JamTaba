@@ -56,11 +56,15 @@ protected:
 
 private:
 
-    static QPushButton *createStereoInversionButton();
+    QPushButton *createStereoInversionButton();
 
     bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;
     bool peakMetersOnly;
     void deleteWidget(QWidget *widget);
+
+private slots:
+    void invertStereo();
+
 };
 
 #endif

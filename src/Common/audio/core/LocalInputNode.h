@@ -36,6 +36,8 @@ public:
 
     bool isAudio() const;
 
+    void invertStereo();
+
     void setAudioInputSelection(int firstChannelIndex, int channelCount);
 
     void setMidiInputSelection(int midiDeviceIndex, int midiChannelIndex);
@@ -110,6 +112,8 @@ private:
     bool learningMidiNote; //is waiting to learn a midi note?
 
     int channelIndex; // the group index (a group contain N LocalInputAudioNode instances)
+
+    bool stereoInverted;
 
     Controller::MainController *mainController;
 

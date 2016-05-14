@@ -15,7 +15,8 @@ LocalInputNode::LocalInputNode(Controller::MainController *mainController, int p
     midiHigherNote(127),
     transpose(0),
     learningMidiNote(false),
-    mainController(mainController)
+    mainController(mainController),
+    stereoInverted(false)
 {
     Q_UNUSED(isMono)
     setToNoInput();
@@ -175,7 +176,19 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
             }
         }
     }
+
     AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer);
+
+    if (stereoInverted)
+        out.invertStereo();
+}
+
+void LocalInputNode::invertStereo()
+{
+    if (isMono())
+        return;
+
+    stereoInverted = !stereoInverted;
 }
 
 void LocalInputNode::setTranspose(qint8 transpose)
