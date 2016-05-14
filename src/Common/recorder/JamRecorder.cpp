@@ -48,12 +48,17 @@ QList<JamTrack> Jam::getJamTracks() const{
     return tracks;
 }
 
-double Jam::getIntervalsLenght() const{
-    return 60.0/bpm * (double)bpi;
+QList<JamInterval> Jam::getJamIntervals() const{
+    QList<JamInterval> intervals;
+    foreach (const int intervalIndex, jamIntervals.keys()) {
+        intervals.append(jamIntervals[intervalIndex]);
+    }
+    return intervals;
 }
 
 //called when a new file is writed in disk
 void Jam::addAudioFile(const QString &userName, quint8 channelIndex, const QString &filePath, int intervalIndex){
+
     if(!jamTracks.contains(userName)){
         jamTracks.insert(userName, QMap<quint8, JamTrack>());
     }
@@ -61,6 +66,12 @@ void Jam::addAudioFile(const QString &userName, quint8 channelIndex, const QStri
         jamTracks[userName].insert(channelIndex, JamTrack(userName, channelIndex));
     }
     jamTracks[userName][channelIndex].addAudioFile(filePath, intervalIndex);
+
+    if(!jamIntervals.contains(intervalIndex)){
+        jamIntervals.insert(intervalIndex, QList<JamInterval>());
+    }
+    jamIntervals[intervalIndex].insert(JamInterval(intervalIndex, getBpm(), getBpi(), filePath, userName, channelIndex));
+
     qCDebug(jtJamRecorder) << "adding a file in jam interval:" <<intervalIndex << " path:" << filePath;
 }
 

@@ -52,17 +52,52 @@ private:
     quint8 channelIndex;
     QList<JamAudioFile> audioFiles;
 };
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class JamInterval
+{
+public:
+    JamInterval(const int intervalIndex, const int bpm, const int bpi, const QString &path, const QString &userName, const quint8 channelIndex);
+    JamInterval();
+
+    inline int getIntervalIndex() const
+    {
+        return intervalIndex;
+    }
+
+    inline int getBpm() const
+    {
+        return bpm;
+    }
+
+    inline int getBpi() const
+    {
+        return bpi;
+    }
+
+    inline QString getPath() const
+    {
+        return path;
+    }
+
+    inline QString getUserName() const
+    {
+        return userName;
+    }
+
+    inline quint8 getChannelIndex() const
+    {
+        return channelIndex;
+    }
+
+}
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Jam
 {
 public:
     Jam(int bpm, int bpi, int sampleRate, const QString &jamName, const QString &baseDir);
 
-    double getIntervalsLenght() const;
-
-    // called when a new file is writed in disk
-    void addAudioFile(const QString &userName, quint8 channelIndex, const QString &filePath, int intervalIndex);
-    QString getAudioAbsolutePath() const
+    inline QString getAudioAbsolutePath() const
     {
         return audioPath;
     }
@@ -87,7 +122,17 @@ public:
         return baseDir;
     }
 
+    inline double getIntervalsLenght() const
+    {
+        return 60.0/bpm * (double)bpi;
+    }
+
+    // called when a new file is writed in disk
+    void addAudioFile(const QString &userName, const quint8 channelIndex, const QString &filePath, const int intervalIndex);
+
     QList<JamTrack> getJamTracks() const;
+
+    QList<JamInterval> getJamIntervals() const;
 private:
     int bpm;
     int bpi;
@@ -98,6 +143,9 @@ private:
 
     // the first map key is userName. The second map key is channelIndex
     QMap<QString, QMap<quint8, JamTrack> > jamTracks;
+
+    // the map key is intervalIndex.
+    QMap<int, QList<JamInterval> > jamIntervals;
 };
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class JamMetadataWriter
