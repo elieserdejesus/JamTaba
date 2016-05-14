@@ -215,11 +215,12 @@ Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
             float boost = Utils::linearToDb(inputNode->getBoost());
             float pan = inputNode->getPan();
             bool muted = inputNode->isMuted();
+            bool stereoInverted = inputNode->isStereoInverted();
             qint8 transpose = inputNode->getTranspose();
             quint8 lowerNote = inputNode->getMidiLowerNote();
             quint8 higherNote = inputNode->getMidiHigherNote();
 
-            Subchannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted,
+            Subchannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted, stereoInverted,
                            transpose, lowerNote, higherNote);
             channel.subChannels.append(sub);
         }
@@ -382,7 +383,7 @@ void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView,
                                            const Subchannel &subChannel)
 {
     BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
-    localTrackView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted);
+    localTrackView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted, subChannel.stereoInverted);
 }
 
 void MainWindow::initializeLocalInputChannels()

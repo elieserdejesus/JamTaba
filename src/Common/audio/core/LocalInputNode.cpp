@@ -183,12 +183,17 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
         out.invertStereo();
 }
 
-void LocalInputNode::invertStereo()
+void LocalInputNode::setStereoInversion(bool stereoInverted)
 {
     if (isMono())
         return;
 
-    stereoInverted = !stereoInverted;
+    this->stereoInverted = stereoInverted;
+}
+
+bool LocalInputNode::isStereoInverted() const
+{
+    return !isMono() && stereoInverted;
 }
 
 void LocalInputNode::setTranspose(qint8 transpose)

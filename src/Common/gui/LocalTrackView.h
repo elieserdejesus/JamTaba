@@ -18,7 +18,7 @@ class LocalTrackView : public BaseTrackView
 public:
     LocalTrackView(Controller::MainController *mainController, int channelIndex);
 
-    void setInitialValues(float initialGain, BaseTrackView::Boost boostValue, float initialPan, bool muted);
+    void setInitialValues(float initialGain, BaseTrackView::Boost boostValue, float initialPan, bool muted, bool stereoInverted);
 
     virtual ~LocalTrackView();
 
@@ -63,7 +63,7 @@ private:
     void deleteWidget(QWidget *widget);
 
 private slots:
-    void invertStereo();
+    void setStereoInversion(bool stereoInverted);
 
 };
 

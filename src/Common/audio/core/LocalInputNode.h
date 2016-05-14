@@ -36,7 +36,9 @@ public:
 
     bool isAudio() const;
 
-    void invertStereo();
+    void setStereoInversion(bool stereoInverted);
+
+    bool isStereoInverted() const;
 
     void setAudioInputSelection(int firstChannelIndex, int channelCount);
 

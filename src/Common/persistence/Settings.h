@@ -136,7 +136,7 @@ class Subchannel
 {
 public:
     Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel, float gain,
-               int boost, float pan, bool muted, qint8 transpose, quint8 lowerMidiNote, quint8 higherMidiNote);
+               int boost, float pan, bool muted, bool stereoInverted, qint8 transpose, quint8 lowerMidiNote, quint8 higherMidiNote);
     int firstInput;
     int channelsCount;
     int midiDevice;
@@ -145,6 +145,7 @@ public:
     int boost;// [-1, 0, +1]
     float pan;
     bool muted;
+    bool stereoInverted;
     qint8 transpose; //midi transpose
     quint8 lowerMidiNote; //midi rey range
     quint8 higherMidiNote;
@@ -177,6 +178,11 @@ public:
     inline bool isStereo() const
     {
         return channelsCount == 2;
+    }
+
+    inline bool isStereoInverted() const
+    {
+        return stereoInverted;
     }
 
 private:
