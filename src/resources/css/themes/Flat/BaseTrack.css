@@ -1,3 +1,9 @@
+/* Stylesheet for BaseTrack - Flat theme */
+
+
+/* Track buttons
+--------------------------------*/
+
 #soloButton,
 #muteButton
 {
@@ -16,65 +22,6 @@
     background: rgb(235, 235, 235);
 }
 
-QPushButton:checked#soloButton{
-    background-color: rgb(90, 255, 62);
-    color: black;
-}
-
-QPushButton:hover:checked#soloButton {
-    background-color: rgb(110, 255, 80);
-    border-color: rgb(45, 45, 45);
-}
-
-QPushButton:checked#muteButton {
-    background-color: rgb(255, 0, 0);
-    color: white;
-
-}
-
-QPushButton:hover:checked#muteButton {
-    background-color: rgb(255, 40, 40);
-    color: lightgray;
-    border-color: rgb(45, 45, 45);
-}
-
-BaseTrackView #peaksDbLabel{
-    border: 1px solid rgba(0, 0, 0, 8);
-    background-color: rgba(0, 0, 0, 6);
-}
-
-BaseTrackView[unlighted="true"] #peaksDbLabel
-{
-   border: none;
-   background-color: rgba(0, 0, 0, 10);
-}
-
-BaseTrackView[unlighted="true"] #panSlider::handle,
-BaseTrackView[unlighted="true"] QSlider::handle:vertical
-{
-    background: rgb(180, 180, 180);
-}
-
-BaseTrackView
-{
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop:0 rgb(240, 240, 240),
-        stop:1 rgb(160, 160, 160));
-
-    border: none; /*1px solid rgb(61, 61, 61);*/
-    font-size: 8px;
-}
-
-BaseTrackView[unlighted="true"],
-TrackGroupView[unlighted="true"] > #topPanel
-{
-    background: rgba(255, 255, 255, 40);
-}
-
-#panSlider::handle
-{
-    width: 7px;
-}
 
 #buttonBoostMinus12,
 #buttonBoostPlus12,
@@ -95,6 +42,7 @@ TrackGroupView[unlighted="true"] > #topPanel
     border-radius: 0px;
 }
 
+/* button colors when the track is NOT xmiting */
 BaseTrackView[unlighted="true"] #buttonBoostMinus12,
 BaseTrackView[unlighted="true"] #buttonBoostZero,
 BaseTrackView[unlighted="true"] #buttonBoostPlus12,
@@ -113,26 +61,96 @@ BaseTrackView[unlighted="true"] #muteButton
     border-color: rgba(0, 0, 0, 60);
 }
 
+#soloButton:checked
+{
+    background-color: rgb(90, 255, 62);
+    color: black;
+}
+
+#soloButton:hover:checked
+{
+    background-color: rgb(110, 255, 80);
+    border-color: rgb(45, 45, 45);
+}
+
+#muteButton:checked
+{
+    background-color: rgb(255, 0, 0);
+    color: white;
+
+}
+
+#muteButton:hover:checked
+{
+    background-color: rgb(255, 40, 40);
+    color: lightgray;
+    border-color: rgb(45, 45, 45);
+}
+
+
+/* Small Label used to show max peak below peak meters
+-------------------------------------------------------*/
+BaseTrackView #peaksDbLabel
+{
+    border: 1px solid rgba(0, 0, 0, 8);
+    background-color: rgba(0, 0, 0, 6);
+}
+
+BaseTrackView[unlighted="true"] #peaksDbLabel
+{
+   border: none;
+   background-color: rgba(0, 0, 0, 10);
+}
+
+
+BaseTrackView
+{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(240, 240, 240),
+        stop:1 rgb(160, 160, 160));
+
+    border: none; /*1px solid rgb(61, 61, 61);*/
+    font-size: 8px;
+}
 
 
 
-PeakMeter{
+/* Setting colors when the track is 'not transmiting'
+-----------------------------------------------------*/
+BaseTrackView[unlighted="true"] #panSlider::handle,         /* pan slider handle */
+BaseTrackView[unlighted="true"] QSlider::handle:vertical    /* track fader handle */
+{
+    background: rgb(180, 180, 180);
+}
+
+BaseTrackView[unlighted="true"],                            /* the track */
+TrackGroupView[unlighted="true"] > #topPanel                /* the track group top panel: used to show user name */
+{
+    background: rgba(255, 255, 255, 40);
+}
+/* -----------------------------------------*/
+
+
+#panSlider::handle
+{
+    width: 7px;
+}
+
+
+PeakMeter
+{
     background-color: rgba(0, 0, 0, 6);
     border: none;
     min-width: 4px;
     min-height: 4px;
 }
 
-PeakMeter#masterMeterL,
-PeakMeter#masterMeterR{
-    max-height: 4px;
-    height: 4px;
-    margin: 0px;
-}
 
+/* TrackGroup - used as container for subchannels
+---------------------------------------------------*/
 
-
-TrackGroupView > #topPanel{
+TrackGroupView #topPanel                                /* topPanel is used to show channel name */
+{
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
     stop:0 rgb(253, 253, 253),
     stop:1 rgb(240, 240, 240));
@@ -141,16 +159,16 @@ TrackGroupView > #topPanel{
     border-top-right-radius: 1px;
 }
 
-TrackGroupView #groupNameField {
+TrackGroupView #groupNameField                          /* the text field used to input channel name */
+{
     margin-bottom: 0px;
     margin-top: 0px;
     font-size: 11px;
     font-weight: normal;
 }
 
-TrackGroupView[unlighted="true"] #groupNameField
+TrackGroupView[unlighted="true"] #groupNameField        /* channel name text field when not xmiting */
 {
     background: rgba(255, 255, 255, 20);
     border: none;
 }
-

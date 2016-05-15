@@ -1,33 +1,42 @@
+/* General stylesheet for Flat theme
+-------------------------------------*/
+
+/* Button ----------------------*/
 QPushButton
 {
     background-color: rgb(250, 250, 250);
 }
 
-QPushButton:checked{
+QPushButton:checked
+{
     background-color: rgb(180, 180, 180);
 }
 
-QPushButton:hover{
+QPushButton:hover
+{
     background-color: white;
     color: black;
     border: 1px solid rgb(120, 120, 120);
 }
 
 
-
+/* Scroll bars ----------------------*/
 QScrollBar:vertical,
-QScrollBar:horizontal {
+QScrollBar:horizontal
+{
     border: none;
     background-color: rgba(0, 0, 0, 40);
     margin: 0px;
 }
 
-QScrollBar:vertical{
+QScrollBar:vertical
+{
     width: 14px;
     margin-left: 6px;
 }
 
-QScrollBar:horizontal{
+QScrollBar:horizontal
+{
     height: 14px;
     margin-top: 6px;
 }
@@ -39,7 +48,6 @@ QScrollBar::handle:horizontal
   background-color: rgba(255, 255, 255, 140);
   margin: 0px;
 }
-
 
 QScrollBar::handle:horizontal:hover,
 QScrollBar::handle:vertical:hover
@@ -59,26 +67,32 @@ QScrollBar::handle:horizontal
   width: 20px;
 }
 
-QScrollBar::add-line:vertical {
+QScrollBar::add-line:vertical
+{
   border: none;
   height: 10px;
   subcontrol-position: bottom;
   subcontrol-origin: margin;
 }
-QScrollBar::add-line:horizontal {
+
+QScrollBar::add-line:horizontal
+{
   border: none;
   width: 10px;
   subcontrol-position: left;
   subcontrol-origin: margin;
 }
 
-QScrollBar::sub-line:vertical {
+QScrollBar::sub-line:vertical
+{
   border: none;
   height: 10px;
   subcontrol-position: top;
   subcontrol-origin: margin;
 }
-QScrollBar::sub-line:horizontal {
+
+QScrollBar::sub-line:horizontal
+{
   border: none;
   width: 10px;
   subcontrol-position: right;
@@ -88,12 +102,15 @@ QScrollBar::sub-line:horizontal {
 QScrollBar::add-page:vertical,
 QScrollBar::sub-page:vertical,
 QScrollBar::add-page:horizontal,
-QScrollBar::sub-page:horizontal {
+QScrollBar::sub-page:horizontal
+{
   background: none;
 }
 
 
 
+/* Text fields (QLineEdit class) used in user name, channel name, etc.
+-----------------------------------------------------------------------*/
 QLineEdit
 {
     background-color: rgb(254, 254, 254);
@@ -111,18 +128,21 @@ QLineEdit#groupNameField:focus
 
 
 
-/*  SLIDER ++++++++++++++++++++++++++++++++ */
+/*  SLIDERs ++++++++++++++++++++++++++++++++ */
 
-QSlider::groove:vertical{
+QSlider::groove:vertical
+{
     border: none;
 }
 
-QSlider::groove:horizontal{
+QSlider::groove:horizontal
+{
     background-color: rgba(0, 0, 0, 50);
     height: 2px;
     border: none;
 }
-QSlider::groove:vertical {
+QSlider::groove:vertical
+{
     background-color: rgba(0, 0, 0, 50);
     width: 2px;
 }
@@ -140,14 +160,18 @@ QSlider::handle:hover
     background: rgb(250, 250, 250);
     border: 1px outset rgb(90, 90, 90);
 }
-QSlider::handle:horizontal {
+
+QSlider::handle:horizontal
+{
     margin-top: -8px;
     margin-bottom: -7px;
     padding: 0px;
     width: 8px;
     height: 15px;
 }
-QSlider::handle:vertical{
+
+QSlider::handle:vertical
+{
     margin-left: -9px;
     margin-right: -9px;
     padding: 0px;
@@ -158,7 +182,7 @@ QSlider::handle:vertical{
 
 
 
-
+/* TabBar ----------------------*/
 QTabBar::tab
 {
     background-color: rgb(200, 200, 200);

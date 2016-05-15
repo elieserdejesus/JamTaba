@@ -1,30 +1,42 @@
+/*
+    Chat stylesheet for Flat theme
+*/
 
-ChatPanel .QLineEdit#chatText
-{
+
+/* ChatPanel is the widget used to layout all chat controls (messages in a
+scroll area, the text input field, but clear and auto translate buttons).
+----------------------------------------------*/
+
+ChatPanel #chatText
+{                                           /* text input field used to send chat messages */
     border-color: rgba(0, 0, 0, 80);
     background-color: rgb(250, 250, 250);
 }
 
-ChatPanel .QLineEdit:focus
+ChatPanel #chatText:focus                   /* text input field focused */
 {
     border-color: rgba(0, 0, 0, 160);
     background-color: white;
 }
 
+
+
+/* ChatMessagePanel is the widget used to show ONE chat message
+----------------------------------------------------------------*/
 ChatMessagePanel
 {
     border: 1px solid rgb(140, 140, 140);
 }
 
-ChatMessagePanel #labelUserName
+ChatMessagePanel #labelUserName             /* The name of chat message author */
 {
     padding: 0px;
     margin-bottom: 1px;
 }
 
-
-ChatMessagePanel QPushButton:hover#translateButton
+ChatMessagePanel #translateButton:hover     /* hover effect in chat message translate (T) button */
 {
     border-color: black;
+    font-weight: bold;
 }
 

@@ -1,22 +1,24 @@
+/* Dialogs in Flat theme
+-------------------------------------*/
 
-PluginScanDialog{
+PluginScanDialog
+{
     background-color: rgb(250, 250, 250);
 }
 
 
-PluginScanDialog QPlainTextEdit{
+PluginScanDialog QPlainTextEdit
+{
     background: transparent;
 }
 
-PluginScanDialog #labelPluginText{
+PluginScanDialog #labelPluginText
+{
     font-weight: bold;
 }
 
-
-
-
-
-BusyDialog{
+BusyDialog
+{
     border: 1px solid rgba(0, 0, 0, 30);
     padding: 0px;
     margin: 0px;
