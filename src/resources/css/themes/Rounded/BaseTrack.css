@@ -62,7 +62,7 @@ BaseTrackView{
         stop:0.01 rgb(240, 240, 240),
         stop:1 rgb(110, 110, 110)
     );
-   border: 1px solid rgb(61,61,61);
+   border: none; /* 1px solid rgb(61,61,61);*/
    border-radius: 0px;
    border-bottom-left-radius: 2px;
    border-bottom-right-radius: 2px;

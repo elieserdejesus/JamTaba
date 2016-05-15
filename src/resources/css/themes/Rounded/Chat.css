@@ -15,7 +15,7 @@
 
 }
 
-ChatPanel .QLineEdit##chatText{
+ChatPanel .QLineEdit#chatText{
     border: 1px solid #919191;
 }
 
