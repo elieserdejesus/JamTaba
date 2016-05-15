@@ -1,0 +1,50 @@
+QMessageBox,
+QInputDialog,
+PluginScanDialog,
+MidiToolsDialog{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(250, 250, 250),
+        stop:1 rgba(180, 180, 180));
+    border-radius: 2px;
+}
+
+
+
+QInputDialog QPushButton{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(80,80,80), stop:0.02 rgb(150, 150, 150), stop:0.7 rgba(160, 160, 160), stop:1 rgb(90,90,90));
+    border-color: rgb(60, 60, 60);
+    color: rgb(45,45,45);
+}
+
+
+
+
+
+PluginScanDialog{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(250, 250, 250),
+        stop:1 rgb(220, 220, 220));
+}
+
+
+PluginScanDialog QPlainTextEdit{
+    background: transparent;
+}
+
+PluginScanDialog #labelPluginText{
+    font-weight: bold;
+}
+
+
+
+BusyDialog{
+    border: 1px solid rgba(0, 0, 0, 30);
+    padding: 0px;
+    margin: 0px;
+    border-radius: 3px;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgb(255, 255, 255),
+            stop:0.1 rgb(240, 240, 240)
+            stop:0.9 rgba(200, 200, 200),
+            stop:1 rgba(180, 180, 180));
+}

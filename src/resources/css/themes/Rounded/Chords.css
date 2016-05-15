@@ -1,0 +1,15 @@
+
+ChordLabel{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgba(0,0,0, 5),
+    stop:1 rgba(0,0,0, 10));
+
+    color: gray;
+    border-radius: 2px;
+}
+
+ChordLabel[current="true"]{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgba(255,255,255, 220),
+    stop:1 rgba(255,255,255, 180));
+}

@@ -22,7 +22,15 @@
         <file>css/themes/Flat/Chords.css</file>
     </qresource>
     <qresource prefix="/style/themes/Rounded">
-        <file>css/themes/Rounded/Rounded.css</file>
+        <file>css/themes/Rounded/BaseTrack.css</file>
+        <file>css/themes/Rounded/Chat.css</file>
+        <file>css/themes/Rounded/Chords.css</file>
+        <file>css/themes/Rounded/Dialogs.css</file>
+        <file>css/themes/Rounded/General.css</file>
+        <file>css/themes/Rounded/LocalTrack.css</file>
+        <file>css/themes/Rounded/MainWindow.css</file>
+        <file>css/themes/Rounded/NinjamWindow.css</file>
+        <file>css/themes/Rounded/PublicRooms.css</file>
     </qresource>
     <qresource prefix="/tr">
         <file alias="en.qm">../../translations/en.qm</file>

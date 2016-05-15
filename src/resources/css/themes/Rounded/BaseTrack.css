@@ -1,0 +1,179 @@
+/* overriding LocalTrack.css */
+
+QPushButton#soloButton,
+QPushButton#muteButton,
+QPushButton#preferencesButton
+{
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+QPushButton:hover#soloButton,
+QPushButton:hover#muteButton{
+    color: rgba(0, 0, 0, 200);
+}
+
+QPushButton:checked#soloButton{
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
+color: black;
+}
+
+QPushButton:hover:checked#soloButton {
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(110, 255, 82), stop:1 rgb(30, 195, 30));
+color: gray;
+}
+
+QPushButton:checked#muteButton {
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
+color: lightgray;
+}
+
+QPushButton:hover:checked#muteButton {
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 110, 122), stop:1 rgb(120, 0, 0));
+color: white;
+}
+
+
+/* overriding BaseTrack.css */
+#buttonBoostMinus12,
+#buttonBoostPlus12,
+#buttonBoostZero
+{
+   padding: 0px;
+   padding-top: 2px;
+   padding-bottom: 2px;
+   border: 0px;
+   border-radius: 0px;
+}
+
+QPushButton#buttonBoostMinus12:checked,
+QPushButton#buttonBoostPlus12:checked,
+QPushButton#buttonBoostZero:checked {
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0 rgba(255, 255, 255, 160),
+        stop:0.2 rgba(255, 255, 255, 120),
+        stop:0.7 rgba(255, 255, 255, 120),
+        stop:1 rgba(255,255, 255, 30));
+}
+
+BaseTrackView{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(200, 200, 200),
+        stop:0.01 rgb(240, 240, 240),
+        stop:1 rgb(110, 110, 110)
+    );
+   border: 1px solid rgb(61,61,61);
+   border-radius: 0px;
+   border-bottom-left-radius: 2px;
+   border-bottom-right-radius: 2px;
+   font-size: 8px; /*db value */
+}
+
+BaseTrackView[unlighted="true"] > QFrame#topSeparator, BaseTrackView[unlighted="true"] > QFrame#panSectionSeparator{
+    background-color: rgba(0, 0, 0, 5);
+}
+
+BaseTrackView[unlighted="true"]{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(150, 150, 150),
+        stop:1 rgb(90, 90, 90));
+}
+
+BaseTrackView QPushButton#buttonBoostMinus12{
+   border-radius: 0px;
+   border-bottom-left-radius: 3px;
+   border-bottom-right-radius: 3px;
+   border-top: 1px solid rgba(0, 0, 0, 10);
+}
+
+BaseTrackView QPushButton#buttonBoostPlus12{
+   border-radius: 0px;
+   border-top-left-radius: 3px;
+   border-top-right-radius: 3px;
+   border-bottom: 1px solid rgba(0, 0, 0, 10);
+   margin: 0px;
+}
+
+
+
+
+/* PAN SLIDER ---------------- */
+#panSlider::handle{
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+        stop: 0      rgb(230, 230, 230),
+        stop: 0.8    rgb(180, 180, 180));
+
+    border: 1px outset rgb(100, 100, 100);
+
+}
+
+#panSlider::handle:hover{
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+        stop: 0      rgb(180, 180, 180),
+        stop: 0.8    rgb(230, 230, 230));
+
+    border: 1px outset rgb(70, 70, 70);
+
+}
+
+BaseTrackView[unlighted="true"] QSlider#panSlider::groove{
+    border: 1px solid rgba(0, 0, 0, 30);
+}
+
+
+
+BaseTrackView[unlighted="true"] QSlider::add-page:vertical{
+    background: rgb(255,255,255, 50);
+
+}
+
+BaseTrackView #peaksDbLabel{
+    border-radius: 1px;
+    border: 1px solid rgba(0, 0, 0, 25);
+    background-color: rgba(0, 0, 0, 15);
+}
+
+
+BaseTrackView[unlighted="true"] #peaksDbLabel,
+BaseTrackView[unlighted="true"] .QPushButton
+{
+   border: none;
+   background-color: rgb(100, 100, 100);
+}
+
+
+BaseTrackView[unlighted="true"] QSlider::groove:vertical{
+    background-color: rgba(0, 0, 0, 40);
+    border-color: rgba(0, 0, 0, 15);
+}
+
+
+
+TrackGroupView {
+    border-radius: 2px;
+}
+
+TrackGroupView > #topPanel{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(245, 245, 245),
+    stop:0.06 rgb(240, 240, 240),
+    stop:1 rgb(180, 180, 180));
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+
+TrackGroupView[unlighted="true"] > #topPanel  {
+   background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(180, 180, 180), stop:1 rgb(70, 70, 70));
+}
+
+TrackGroupView #groupNameField {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 11px;
+    font-weight: normal;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++++++ */
+
+
