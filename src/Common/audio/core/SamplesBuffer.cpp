@@ -40,6 +40,14 @@ SamplesBuffer::~SamplesBuffer()
 {
 }
 
+void SamplesBuffer::invertStereo()
+{
+    if (channels != 2)
+        return; //trying invert a non stereo buffer
+
+    std::iter_swap(samples.begin(), samples.begin() + 1); // swap first and second channels
+}
+
 void SamplesBuffer::discardFirstSamples(unsigned int samplesToDiscard)
 {
     int toDiscard = std::min(frameLenght, samplesToDiscard);

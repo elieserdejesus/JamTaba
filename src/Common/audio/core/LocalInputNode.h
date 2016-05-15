@@ -36,6 +36,10 @@ public:
 
     bool isAudio() const;
 
+    void setStereoInversion(bool stereoInverted);
+
+    bool isStereoInverted() const;
+
     void setAudioInputSelection(int firstChannelIndex, int channelCount);
 
     void setMidiInputSelection(int midiDeviceIndex, int midiChannelIndex);
@@ -93,6 +97,9 @@ public:
 signals:
     void midiNoteLearned(quint8 midiNote) const;
 
+protected:
+    void preFaderProcess(Audio::SamplesBuffer &out) override;
+
 private:
     //int globalFirstInputIndex; // store the first input index selected globally by users in preferences menu
 
@@ -110,6 +117,8 @@ private:
     bool learningMidiNote; //is waiting to learn a midi note?
 
     int channelIndex; // the group index (a group contain N LocalInputAudioNode instances)
+
+    bool stereoInverted;
 
     Controller::MainController *mainController;
 

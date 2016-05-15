@@ -3,7 +3,7 @@
 
 #include "BaseTrackView.h"
 #include "PeakMeter.h"
-//#include "audio/core/AudioNode.h"
+#include <QPushButton>
 
 class FxPanel;
 
@@ -18,7 +18,7 @@ class LocalTrackView : public BaseTrackView
 public:
     LocalTrackView(Controller::MainController *mainController, int channelIndex);
 
-    void setInitialValues(float initialGain, BaseTrackView::Boost boostValue, float initialPan, bool muted);
+    void setInitialValues(float initialGain, BaseTrackView::Boost boostValue, float initialPan, bool muted, bool stereoInverted);
 
     virtual ~LocalTrackView();
 
@@ -50,11 +50,21 @@ public:
 
 protected:
     Audio::LocalInputNode *inputNode;
+    QPushButton *buttonStereoInversion;
+
+    void refreshStyleSheet() override;
 
 private:
+
+    QPushButton *createStereoInversionButton();
+
     bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;
     bool peakMetersOnly;
     void deleteWidget(QWidget *widget);
+
+private slots:
+    void setStereoInversion(bool stereoInverted);
+
 };
 
 #endif

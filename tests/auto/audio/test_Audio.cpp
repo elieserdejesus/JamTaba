@@ -10,10 +10,18 @@ class TestSamplesBuffer: public QObject
     Q_OBJECT
 
 private slots:
+    void invertStereo();
+    void invertStereo_data();
+
+    void revertStereo(); // invert stereo, invert again and check if is the same
+    void revertStereo_data();
+
     void append();
     void append_data();
+
     void discard();
     void discard_data();
+
     void set_data();
     void set();
 
@@ -83,6 +91,81 @@ void TestSamplesBuffer::setFrameLenghtIsPreservingSamples_data()
 
     QTest::newRow("Samples are preserved after Shrunk and Grow")
             << "1,2,3" << 1 << 3 << "1" << "1,2,3";
+}
+
+
+void TestSamplesBuffer::revertStereo()
+{
+    QFETCH(QString, leftSamples); //coma separated sample values
+    QFETCH(QString, rightSamples);
+
+    SamplesBuffer leftBuffer = createBuffer(leftSamples);
+    SamplesBuffer rightBuffer = createBuffer(rightSamples);
+
+    QCOMPARE(leftBuffer.getFrameLenght(), rightBuffer.getFrameLenght()); //checking size
+
+    int size = leftBuffer.getFrameLenght();
+    SamplesBuffer stereoBuffer(2);// 2 channels
+    stereoBuffer.setFrameLenght(leftBuffer.getFrameLenght());
+    for (int sample = 0; sample < size; ++sample) {
+        stereoBuffer.set(0, sample, leftBuffer.get(0, sample));
+        stereoBuffer.set(1, sample, rightBuffer.get(0, sample));
+    }
+
+    stereoBuffer.invertStereo();
+    stereoBuffer.invertStereo(); //revert
+
+    for (int sample = 0; sample < size; ++sample) {
+        QCOMPARE(stereoBuffer.get(0, sample), leftBuffer.get(0, sample)); // compare left channel from stereoBuffer with leftBuffer (mono buffer)
+        QCOMPARE(stereoBuffer.get(1, sample), rightBuffer.get(0, sample)); // compare right channel from stereoBuffer with rightBuffer (mono buffer)
+    }
+
+}
+
+void TestSamplesBuffer::revertStereo_data()
+{
+    QTest::addColumn<QString>("leftSamples");
+    QTest::addColumn<QString>("rightSamples");
+
+    QTest::newRow("One sample LR reversion") << "1" << "-1";
+    QTest::newRow("3 samples LR reversion") << "1,2,3" << "4,5,6";
+}
+
+
+void TestSamplesBuffer::invertStereo()
+{
+    QFETCH(QString, leftSamples); //coma separated sample values
+    QFETCH(QString, rightSamples);
+
+    SamplesBuffer leftBuffer = createBuffer(leftSamples);
+    SamplesBuffer rightBuffer = createBuffer(rightSamples);
+
+    QCOMPARE(leftBuffer.getFrameLenght(), rightBuffer.getFrameLenght()); //checking size
+
+    int size = leftBuffer.getFrameLenght();
+    SamplesBuffer stereoBuffer(2);// 2 channels
+    stereoBuffer.setFrameLenght(leftBuffer.getFrameLenght());
+    for (int sample = 0; sample < size; ++sample) {
+        stereoBuffer.set(0, sample, leftBuffer.get(0, sample));
+        stereoBuffer.set(1, sample, rightBuffer.get(0, sample));
+    }
+
+    stereoBuffer.invertStereo();
+
+    for (int sample = 0; sample < size; ++sample) {
+        QCOMPARE(stereoBuffer.get(0, sample), rightBuffer.get(0, sample)); // compare left channel from stereoBuffer with rightBuffer (mono buffer)
+        QCOMPARE(stereoBuffer.get(1, sample), leftBuffer.get(0, sample)); // compare right channel from stereoBuffer with leftBuffer (mono buffer)
+    }
+
+}
+
+void TestSamplesBuffer::invertStereo_data()
+{
+    QTest::addColumn<QString>("leftSamples");
+    QTest::addColumn<QString>("rightSamples");
+
+    QTest::newRow("One sample LR inversion") << "1" << "-1";
+    QTest::newRow("3 samples LR inversion") << "1,2,3" << "4,5,6";
 }
 
 void TestSamplesBuffer::setFrameLenght()

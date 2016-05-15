@@ -2,7 +2,6 @@
     <qresource prefix="/style">
         <file>Flat.css</file>
         <file>Rounded.css</file>
-        <!--file>Orange.css</file-->
     </qresource>
     <qresource prefix="/tr">
         <file alias="en.qm">../../translations/en.qm</file>
@@ -13,6 +12,8 @@
         <file alias="de_DE.qm">../../translations/de_DE.qm</file>
     </qresource>
     <qresource prefix="/images">
+        <file>stereo_inverted.png</file>
+        <file>stereo_normal.png</file>
         <file>check.png</file>
         <file>check_hover.png</file>
         <file>check_checked.png</file>

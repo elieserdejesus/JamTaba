@@ -9,7 +9,9 @@
 
 LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex) :
     BaseTrackView(mainController, channelIndex),
-    inputNode(nullptr)
+    inputNode(nullptr),
+    peakMetersOnly(false),
+    buttonStereoInversion(createStereoInversionButton())
 {
     Q_ASSERT(mainController);
 
@@ -18,21 +20,24 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
     trackID = mainController->addInputTrackNode(this->inputNode);
     bindThisViewWithTrackNodeSignals();// now is secure bind this LocalTrackView with the respective TrackNode model
 
-    setInitialValues(1.0f, BaseTrackView::Boost::ZERO, 0.0f, false);
+    setInitialValues(1.0f, BaseTrackView::Boost::ZERO, 0.0f, false, false);
 
     setUnlightStatus(false);
 
-    peakMetersOnly = false;
+    secondaryChildsLayout->addWidget(buttonStereoInversion);
+
 }
 
 void LocalTrackView::setInitialValues(float initialGain, BaseTrackView::Boost boostValue,
-                                      float initialPan, bool muted)
+                                      float initialPan, bool muted, bool stereoInverted)
 {
     inputNode->setGain(initialGain);
     inputNode->setPan(initialPan);
     initializeBoostButtons(boostValue);
     if (muted)
         inputNode->setMute(muted);
+
+    setStereoInversion(stereoInverted);
 }
 
 void LocalTrackView::detachMainController()
@@ -146,4 +151,29 @@ LocalTrackView::~LocalTrackView()
 {
     if (mainController)
         mainController->removeInputTrackNode(getTrackID());
+}
+
+
+QPushButton *LocalTrackView::createStereoInversionButton()
+{
+    QPushButton *button = new QPushButton();
+    button->setObjectName(QStringLiteral("buttonStereoInversion"));
+    button->setToolTip(tr("Invert stereo"));
+    button->setCheckable(true);
+    connect(button, SIGNAL(clicked(bool)), this, SLOT(setStereoInversion(bool)));
+    return button;
+}
+
+void LocalTrackView::setStereoInversion(bool stereoInverted)
+{
+    mainController->setTrackStereoInversion(getInputIndex(), stereoInverted);
+    buttonStereoInversion->setChecked(stereoInverted);
+}
+
+void LocalTrackView::refreshStyleSheet()
+{
+    BaseTrackView::refreshStyleSheet();
+
+    style()->unpolish(buttonStereoInversion); // this is necessary to change the stereo inversion button colors when the transmit button is clicled
+    style()->polish(buttonStereoInversion);
 }
