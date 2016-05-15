@@ -1,0 +1,52 @@
+/* Chat */
+
+#voteButton{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgba(255,255,255, 240),
+    stop:1 rgba(255,255,255, 100));
+
+    border: 1px outset rgb(45,45,45);
+}
+
+#voteButton:hover{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgba(255,255,255, 200),
+        stop:1 rgba(255,255,255, 50));
+
+}
+
+ChatPanel .QLineEdit#chatText{
+    border: 1px solid #919191;
+}
+
+ChatMessagePanel
+{
+    border: 1px solid rgb(0, 0, 0, 80);
+    border-radius: 2px;
+}
+
+ChatMessagePanel #labelTimeStamp{
+    margin: 2px;
+}
+
+
+
+ChatMessagePanel #translateButton{
+    border: 1px solid rgb(0, 0, 0, 80);
+    border-radius: 2px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+
+    max-width: 8px;
+    max-height: 6px;
+}
+
+ChatMessagePanel QPushButton:hover#translateButton{
+    border-color: rgb(200, 200, 200);
+    border-style: outset;
+}
+
+ChatMessagePanel #labelMessage
+{
+    margin: 1px;
+}

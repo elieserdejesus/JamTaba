@@ -1,0 +1,103 @@
+
+
+#labelYourControls
+{
+    color: rgb(190, 190, 190);
+}
+
+#masterTitleLabel,
+#labelMetronomeIControls
+{
+    color: rgb(110, 110,110);
+}
+
+
+
+
+
+/* ++++++++++++++++++++++++++++++++++++++++ */
+
+QMainWindow{
+    background-color: #494949;
+    border: 1px solid rgb(70, 70, 70);
+}
+
+QMainWindow #bottomPanel{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+     stop: 0     #EDEDED,
+     stop: 1.0   #989898);
+    border-top: 1px solid black;
+}
+
+/* main panels */
+#leftPanel{
+   border: 1px solid rgb(55, 55, 55);
+   border-radius: 2px;
+   background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0     rgba(0, 0, 0, 10),
+        stop: 1.0   rgba(0,0,0, 20));
+
+    border: 1px solid #353535;
+}
+
+
+/* Main panels title */
+#contentTabWidgetPanel > .QLabel{
+    color: rgb(190, 190, 190);
+    qproperty-alignment: AlignCenter;
+}
+
+#userNameLineEdit
+{
+    background-color: transparent;
+    border: none;
+}
+
+#userNameLineEdit:read-only
+{
+    color: gray;
+}
+
+
+/* ------------------------------ */
+
+
+#contentTabWidget:pane{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop: 0     #dedede,
+            stop: 1.0   #bcbcbc);
+}
+
+#contentTabWidget:pane,
+#chatTabWidget:pane{
+    border: 1px solid rgba(0, 0, 0, 60);
+    border-radius: 2px;
+    padding: 0px;
+}
+
+#chatTabWidget:pane{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0     rgba(255, 255, 255, 80),
+        stop: 0.85   rgba(255, 255, 255, 90),
+        stop: 1.0   rgba(255, 255, 255, 140));
+}
+
+
+PeakMeter#masterMeterL,
+PeakMeter#masterMeterR{
+    max-height: 2px;
+    height: 2px;
+    margin: 0px;
+}
+
+
+/* TODO this piece can be removed? */
+.QMainWindow .QGroupBox::title {
+subcontrol-origin: margin;
+subcontrol-position: top center; /* position at the top center */
+padding: 10 3px;
+color: rgb(190, 190, 190);
+border-bottom-style: groove;
+border-bottom-color: darkgray;
+border-width: 3px;
+}

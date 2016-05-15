@@ -1,0 +1,121 @@
+
+NinjamTrackView[horizontal="true"] #buttonBoostMinus12,
+NinjamTrackView[horizontal="true"] #buttonBoostPlus12,
+NinjamTrackView[horizontal="true"] #buttonBoostZero {
+    padding: 1px;
+    border: 1px solid rgba(0, 0, 0, 30);
+}
+
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12{
+
+   border-left: 1px solid rgba(0, 0, 0, 10);
+   margin: 0px;
+}
+
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12{
+
+    border-right: 1px solid rgba(0, 0, 0, 10);
+    margin: 0px;
+}
+
+NinjamTrackView[horizontal="true"] #buttonBoostZero{
+    min-width: 12px;
+}
+
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12:checked,
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:checked,
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:checked {
+    margin-top: -1px;
+    background-color: rgba(0, 0, 0, 30);
+}
+
+NinjamTrackView[horizontal="true"]{
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 rgb(240, 240, 240),
+        stop:1 rgb(200, 200, 200));
+}
+
+/* overriding NinjamWindow.css */
+NinjamRoomWindow #licenceButton{
+    max-height: 20px;
+    width: 28px;
+}
+
+NinjamRoomWindow QToolButton:hover,
+NinjamRoomWindow #licenceButton:hover{
+    border: 1px solid rgba(0, 0, 0, 50);
+    background-color: rgba(255, 255, 255, 80);
+}
+
+NinjamRoomWindow QToolButton,
+NinjamRoomWindow #licenceButton
+{
+    border: 1px solid rgb(150, 150, 150);
+    background-color: rgba(255, 255, 255, 10);
+}
+
+NinjamRoomWindow QToolButton{
+    height: 20px;
+    min-width: 28px;
+    padding: 0px;
+}
+
+NinjamRoomWindow QToolButton:checked{
+    background-color: rgba(255, 255, 255, 60);
+    border: 1px solid rgb(130, 130, 130);
+}
+
+
+NinjamRoomWindow QToolButton#buttonVerticalLayout:!checked{
+    border-right-color: none;
+}
+NinjamRoomWindow QToolButton#buttonHorizontalLayout:!checked{
+    border-left-color: none;
+}
+
+
+NinjamTrackView[unlighted="true"]
+{
+    background: rgba(0, 0, 0, 20);
+}
+
+
+
+NinjamTrackView > #channelName{
+    border: none; /* 1px solid rgba(0, 0, 0, 7);*/
+    background-color: rgba(0, 0, 0, 6);
+
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-size: 10px;
+    color: rgba(0, 0, 0, 160);
+    max-width: 130px;
+}
+
+NinjamRoomWindow TrackGroupView
+{
+    border: 1px solid rgb(130, 130, 130);
+}
+
+
+
+NinjamPanel #ninjamControlsPanel{
+    background-color: rgba(0, 0, 0, 20);
+    border: 1px solid rgb(190, 190, 190);
+}
+
+NinjamPanel #soloButton,
+NinjamPanel #muteButton{
+    background-color: white;
+}
+
+NinjamPanel QComboBox{
+    background-color: rgba(0, 0, 0, 30);
+}
+
+
+
+/** The floating window showing the metronome/interval progress */
+IntervalProgressWindow{
+    background-color: rgb(220, 220, 220);
+}

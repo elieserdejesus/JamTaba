@@ -1,0 +1,78 @@
+#userNamePanel
+{
+    background-color: rgb(250, 250, 250);
+    border-color: rgb(95, 95, 95);
+    padding: 1px;
+}
+
+#labelYourControls
+{
+    color: rgb(200, 200, 200);
+}
+
+#masterTitleLabel,
+#labelMetronomeIControls
+{
+    color: rgb(60, 60, 60);
+}
+
+
+QMainWindow{
+    background-color: rgb(200, 200, 200);
+    border: 1px solid rgb(90, 90, 90);
+}
+
+QMainWindow #bottomPanel{
+    background: rgb(224, 224, 224);
+    border-top: 1px solid rgb(191, 191, 191);
+}
+
+#leftPanel{
+   background-color: rgb(120, 120, 120);
+}
+
+#userNameLineEdit
+{
+    background-color: transparent;
+    border: none;
+}
+
+#userNameLineEdit:read-only
+{
+    color: gray;
+}
+
+/* ------------------------------ */
+
+#contentTabWidget:pane
+{
+    background-color: rgb(180, 180, 180);
+}
+
+#contentTabWidget:pane,
+#chatTabWidget:pane
+{
+    border: none;
+    padding: 0px;
+}
+
+
+#chatTabWidget:pane,
+#chatTabWidget QTabBar::tab
+{
+    background-color: rgb(160, 160, 160);
+    color: rgb(210, 210, 210);
+}
+
+
+
+/* TODO this piece can be removed? */
+.QMainWindow .QGroupBox::title {
+subcontrol-origin: margin;
+subcontrol-position: top center; /* position at the top center */
+padding: 10 3px;
+color: rgb(190, 190, 190);
+border-bottom-style: groove;
+border-bottom-color: darkgray;
+border-width: 3px;
+}
