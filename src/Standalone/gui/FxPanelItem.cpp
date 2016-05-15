@@ -147,12 +147,15 @@ void FxPanelItem::on_fxMenuActionTriggered(QAction *action)
     QApplication::processEvents();// force the cursor change
 
     // add a new plugin
-    Audio::PluginDescriptor descriptor = Audio::PluginDescriptor::fromString(
-        action->data().toString());
-    Audio::Plugin *plugin = mainController->addPlugin(this->localTrackView->getInputIndex(), descriptor);
-    if (plugin) {
-        this->localTrackView->addPlugin(plugin);
-        showPluginGui(plugin);
+    Audio::PluginDescriptor descriptor = Audio::PluginDescriptor::fromString(action->data().toString());
+    qint32 pluginSlotIndex = localTrackView->getPluginFreeSlotIndex();
+    if (pluginSlotIndex >= 0) { //valid plugin slot (-1 will be returned when no free plugin slots are available)
+        quint32 trackIndex = localTrackView->getInputIndex();
+        Audio::Plugin *plugin = mainController->addPlugin(trackIndex, pluginSlotIndex, descriptor);
+        if (plugin) {
+            localTrackView->addPlugin(plugin, pluginSlotIndex);
+            showPluginGui(plugin);
+        }
     }
     QApplication::restoreOverrideCursor();
 }

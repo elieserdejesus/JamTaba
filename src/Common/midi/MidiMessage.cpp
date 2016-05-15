@@ -4,23 +4,42 @@
 
 using namespace Midi;
 
-MidiMessage::MidiMessage(qint32 data, qint32 timestamp, int sourceDeviceIndex)
+MidiMessage::MidiMessage(qint32 data, int sourceID)
+    : data(data),
+      sourceID(sourceID)
 {
-    this->data = data;
-    this->timestamp = timestamp;
-    this->deviceIndex = sourceDeviceIndex;
+
 }
 
+
 MidiMessage::MidiMessage()
+    :data(-1),
+     sourceID(-1)
 {
-    this->data = this->timestamp = this->deviceIndex = -1;
+
 }
 
 MidiMessage::MidiMessage(const MidiMessage &other)
+    : data(other.data),
+      sourceID(other.sourceID)
 {
-    this->data = other.data;
-    this->timestamp = other.timestamp;
-    this->deviceIndex = other.deviceIndex;
+
+}
+
+MidiMessage MidiMessage::fromVector(std::vector<unsigned char> vector, qint32 deviceIndex)
+{
+    int msgData = 0;
+    msgData |= vector.at(0);
+    msgData |= vector.at(1) << 8;
+    msgData |= vector.at(2) << 16;
+    return Midi::MidiMessage(msgData, deviceIndex);
+}
+
+MidiMessage MidiMessage::fromArray(const char array[4], qint32 deviceIndex)
+{
+    std::vector<unsigned char> vector;
+    vector.assign(array, array + 4);
+    return fromVector(vector, deviceIndex);
 }
 
 // +++++++++++++++++++++++

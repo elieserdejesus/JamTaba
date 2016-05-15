@@ -7,6 +7,10 @@ namespace Midi {
     class MidiMessage;
 }
 
+namespace Controller {
+class MainController;
+}
+
 namespace Audio {
 
 class LocalInputNode : public AudioNode
@@ -14,7 +18,7 @@ class LocalInputNode : public AudioNode
     Q_OBJECT
 
 public:
-    LocalInputNode(int parentChannelIndex, bool isMono = true);
+    LocalInputNode(Controller::MainController *mainController, int parentChannelIndex, bool isMono = true);
     ~LocalInputNode();
     void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
                                   const Midi::MidiMessageBuffer &midiBuffer) override;
@@ -43,6 +47,8 @@ public:
     int getMidiChannelIndex() const;
 
     bool isReceivingAllMidiChannels() const;
+
+    QList<Midi::MidiMessage> pullMidiMessagesGeneratedByPlugins() const override;
 
     ChannelRange getAudioInputRange() const;
 
@@ -76,7 +82,7 @@ public:
     void stopMidiNoteLearn();
     bool isLearningMidiNote() const;
 
-    void addProcessor(AudioNodeProcessor *newProcessor) override;
+    void addProcessor(AudioNodeProcessor *newProcessor, quint32 slotIndex) override;
 
     void reset();
 
@@ -104,6 +110,8 @@ private:
     bool learningMidiNote; //is waiting to learn a midi note?
 
     int channelIndex; // the group index (a group contain N LocalInputAudioNode instances)
+
+    Controller::MainController *mainController;
 
     enum InputMode {
         AUDIO, MIDI, DISABLED

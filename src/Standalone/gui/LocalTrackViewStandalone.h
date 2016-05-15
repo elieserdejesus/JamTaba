@@ -29,9 +29,11 @@ public:
         return fxPanel;
     }
 
+    qint32 getPluginFreeSlotIndex() const;
+
     void reset() override;
 
-    void addPlugin(Audio::Plugin *PLUGIN, bool bypassed = false);
+    void addPlugin(Audio::Plugin *plugin, quint32 slotIndex, bool bypassed = false);
 
     QList<const Audio::Plugin *> getInsertedPlugins() const;
 

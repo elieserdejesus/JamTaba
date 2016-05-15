@@ -56,10 +56,17 @@ public:
 
     Persistence::Preset loadPreset(const QString &name) override;
 
-protected:
-    inline Midi::MidiMessageBuffer pullMidiBuffer() override
+    inline Midi::MidiMessageBuffer pullMidiMessagesFromPlugins() override
     {
-        return Midi::MidiMessageBuffer(0);
+        static Midi::MidiMessageBuffer emptyBuffer(0);
+        return emptyBuffer;
+    }
+
+protected:
+    inline Midi::MidiMessageBuffer pullMidiMessagesFromDevices() override
+    {
+        static Midi::MidiMessageBuffer emptyBuffer(0);
+        return emptyBuffer;
     }
 private:
     int sampleRate;

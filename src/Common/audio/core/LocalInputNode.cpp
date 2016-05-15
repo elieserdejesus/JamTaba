@@ -2,10 +2,11 @@
 #include "audio/core/AudioNodeProcessor.h"
 #include "midi/MidiMessageBuffer.h"
 #include "midi/MidiMessage.h"
+#include "MainController.h"
 
 using namespace Audio;
 
-LocalInputNode::LocalInputNode(int parentChannelIndex, bool isMono) :
+LocalInputNode::LocalInputNode(Controller::MainController *mainController, int parentChannelIndex, bool isMono) :
     channelIndex(parentChannelIndex),
     lastMidiActivity(0),
     midiChannelIndex(-1),
@@ -13,7 +14,8 @@ LocalInputNode::LocalInputNode(int parentChannelIndex, bool isMono) :
     midiLowerNote(0),
     midiHigherNote(127),
     transpose(0),
-    learningMidiNote(false)
+    learningMidiNote(false),
+    mainController(mainController)
 {
     Q_UNUSED(isMono)
     setToNoInput();
@@ -50,22 +52,26 @@ bool LocalInputNode::isAudio() const
 
 void LocalInputNode::setProcessorsSampleRate(int newSampleRate)
 {
-    foreach (Audio::AudioNodeProcessor *p, processors)
-        p->setSampleRate(newSampleRate);
+    for (int i = 0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        if (processors[i])
+            processors[i]->setSampleRate(newSampleRate);
+    }
 }
 
 void LocalInputNode::closeProcessorsWindows()
 {
-    foreach (Audio::AudioNodeProcessor *p, processors)
-        p->closeEditor();
+    for (int i = 0; i < MAX_PROCESSORS_PER_TRACK; ++i) {
+        if (processors[i])
+            processors[i]->closeEditor();
+    }
 }
 
-void LocalInputNode::addProcessor(AudioNodeProcessor *newProcessor)
+void LocalInputNode::addProcessor(AudioNodeProcessor *newProcessor, quint32 slotIndex)
 {
-    AudioNode::addProcessor(newProcessor);
+    AudioNode::addProcessor(newProcessor, slotIndex);
 
     // if newProcessor is the first added processor and is a virtual instrument (VSTi) change the input selection to midi
-    if (processors.size() == 1 && newProcessor->isVirtualInstrument()) {
+    if (slotIndex == 0 && newProcessor->isVirtualInstrument()) {
         if (!isMidi())
             setMidiInputSelection(0, -1);// select the first midi device, all channels (-1)
     }
@@ -149,23 +155,21 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
                 return;
             internalInputBuffer.set(in, audioInputRange.getFirstChannel(), audioInputRange.getChannels());
         } else if (isMidi()) {// just in case
-            int total = midiBuffer.getMessagesCount();
-            if (total > 0) {
-                for (int m = 0; m < total; ++m) {
-                    Midi::MidiMessage message = midiBuffer.getMessage(m);
-                    if (canAcceptMidiMessage(message)) {
+            int messagesCount = midiBuffer.getMessagesCount();
+            for (int m = 0; m < messagesCount; ++m) {
+                Midi::MidiMessage message = midiBuffer.getMessage(m);
+                if (canAcceptMidiMessage(message)) {
 
-                        if (message.isNote() && transpose != 0)
-                            message.transpose(transpose);
+                    if (message.isNote() && transpose != 0)
+                        message.transpose(transpose);
 
-                        filteredMidiBuffer.addMessage(message);
+                    filteredMidiBuffer.addMessage(message);
 
-                        // save the midi activity peak value for notes or controls
-                        if (message.isNote() || message.isControl()) {
-                            quint8 activityValue = message.getData2();
-                            if (activityValue > lastMidiActivity)
-                                lastMidiActivity = activityValue;
-                        }
+                    // save the midi activity peak value for notes or controls
+                    if (message.isNote() || message.isControl()) {
+                        quint8 activityValue = message.getData2();
+                        if (activityValue > lastMidiActivity)
+                            lastMidiActivity = activityValue;
                     }
                 }
             }
@@ -183,21 +187,26 @@ void LocalInputNode::setTranspose(qint8 transpose)
 
 bool LocalInputNode::canAcceptMidiMessage(const Midi::MidiMessage &message) const
 {
-    bool canAcceptTheDevice = message.getDeviceIndex() == midiDeviceIndex;
-    bool canAcceptTheChannel = isReceivingAllMidiChannels() || message.getChannel() == midiChannelIndex;
+    bool canAcceptDevice = message.getSourceID() == midiDeviceIndex;
+    bool canAcceptChannel = isReceivingAllMidiChannels() || message.getChannel() == midiChannelIndex;
+    bool canAcceptRange = true;
 
     if (message.isNote()) {
         int midiNote = message.getData1();
         if (!learningMidiNote) {//check midi range if not learning
-            bool canAccpetTheRange = midiNote >= midiLowerNote && midiNote <= midiHigherNote;
-            return canAcceptTheDevice && canAcceptTheChannel && canAccpetTheRange;
+            canAcceptRange = midiNote >= midiLowerNote && midiNote <= midiHigherNote;
         }
         else{ //is learning midi notes
             emit midiNoteLearned((quint8)midiNote);
             return false; //when learning all messages are bypassed
         }
     }
-    return canAcceptTheDevice && canAcceptTheChannel;
+    return (canAcceptDevice && canAcceptChannel && canAcceptRange);
+}
+
+QList<Midi::MidiMessage> LocalInputNode::pullMidiMessagesGeneratedByPlugins() const
+{
+    return mainController->pullMidiMessagesFromPlugins().toList();
 }
 
 void LocalInputNode::startMidiNoteLearn()

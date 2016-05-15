@@ -8,9 +8,10 @@
 
 #define MAX_MIDI_EVENTS 64 // in my tests playing piano I can genenerate just 3 messages per block (256 samples) at maximum
 
+struct VstEvents;
+
 namespace Vst {
 class Host;
-class VstEvents;
 
 // Plugin's entry point
 typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
@@ -22,23 +23,38 @@ public:
     ~VstPlugin();
 
     void process(const Audio::SamplesBuffer &vstInputArray, Audio::SamplesBuffer &outBuffer,
-                         const Midi::MidiMessageBuffer &midiBuffer) override;
+                         const QList<Midi::MidiMessage> &midiBuffer) override;
     void openEditor(const QPoint &centerOfScreen) override;
+
     void closeEditor() override;
+
     bool load(QString path);
+
     inline QString getPath() const
     {
         return path;
     }
 
     QByteArray getSerializedData() const override;
+
     void restoreFromSerializedData(const QByteArray &dataToRestore) override;
+
     void start();
+
     void updateGui();
+
     void setSampleRate(int newSampleRate);
+
     void setBypass(bool state);
+
     static QDialog *getPluginEditorWindow(QString pluginName);
-    bool isVirtualInstrument() const;
+
+    bool isVirtualInstrument() const override;
+
+    bool canGenerateMidiMessages() const override;
+
+    inline quint32 getPluginID() const { return effect->resvd1; }
+
 protected:
     void unload();
 
@@ -62,7 +78,7 @@ private:
     float **vstInputArray;
 
     // VstEvents* vstEvents;
-    void fillVstEventsList(const Midi::MidiMessageBuffer &midiBuffer);
+    void fillVstEventsList(const QList<Midi::MidiMessage> &midiBuffer);
 
     template<int N>
     struct VSTEventBlock
@@ -75,6 +91,7 @@ private:
     VSTEventBlock<MAX_MIDI_EVENTS> vstMidiEvents;
 
     static QMap<QString, QDialog *> editorsWindows;
+
 };
 }
 

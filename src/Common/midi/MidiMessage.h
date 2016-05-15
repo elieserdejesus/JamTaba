@@ -2,20 +2,21 @@
 #define _MIDI_MESSAGE_
 
 #include <QtGlobal>
+#include <vector>
 
 namespace Midi {
 
 class MidiMessage
 {
 public:
-    MidiMessage(qint32 data, qint32 timestamp, int sourceDeviceIndex);
+    MidiMessage(qint32 data, int sourceID);
     MidiMessage();
     MidiMessage(const MidiMessage &other);
 
-    inline int getChannel() const
-    {
-        return data & 0x0000000F;
-    }
+    static MidiMessage fromVector(std::vector<unsigned char> vector, qint32 sourceID);
+    static MidiMessage fromArray(const char array[4], qint32 sourceID=-1);
+
+    int getChannel() const;
 
     bool isNote() const;
 
@@ -23,36 +24,50 @@ public:
 
     quint8 getNoteVelocity() const;
 
-    inline int getDeviceIndex() const
-    {
-        return deviceIndex;
-    }
+    int getSourceID() const;
 
-    inline int getStatus() const
-    {
-        return data & 0xFF;
-    }
+    int getStatus() const;
 
-    inline int getData1() const
-    {
-        return (data >> 8) & 0xFF;
-    }
+    int getData1() const;
 
-    inline int getData2() const
-    {
-        return (data >> 16) & 0xFF;
-    }
+    int getData2() const;
 
-    inline bool isControl() const
-    {
-        return getStatus() == 0xB0;
-    }
+    bool isControl() const;
 
 private:
     qint32 data;
-    qint32 timestamp;
-    int deviceIndex;
+    int sourceID; //the id of the midi device generating the message.
 };
+
+inline int MidiMessage::getChannel() const
+{
+    return data & 0x0000000F;
+}
+
+inline int MidiMessage::getSourceID() const
+{
+    return sourceID;
+}
+
+inline int MidiMessage::getStatus() const
+{
+    return data & 0xFF;
+}
+
+inline int MidiMessage::getData1() const
+{
+    return (data >> 8) & 0xFF;
+}
+
+inline int MidiMessage::getData2() const
+{
+    return (data >> 16) & 0xFF;
+}
+
+inline bool MidiMessage::isControl() const
+{
+    return getStatus() == 0xB0;
+}
 
 }//namespace
 

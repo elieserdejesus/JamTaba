@@ -1,6 +1,7 @@
 #include "MainControllerStandalone.h"
 
 #include "midi/RtMidiDriver.h"
+#include "midi/MidiMessage.h"
 #include "audio/PortAudioDriver.h"
 #include "audio/core/LocalInputNode.h"
 #include "vst/VstPlugin.h"
@@ -77,14 +78,14 @@ QList<Audio::PluginDescriptor> MainControllerStandalone::getPluginsDescriptors()
     return pluginsDescriptors;
 }
 
-Audio::Plugin *MainControllerStandalone::addPlugin(int inputTrackIndex,
+Audio::Plugin *MainControllerStandalone::addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex,
                                          const Audio::PluginDescriptor &descriptor)
 {
     Audio::Plugin *plugin = createPluginInstance(descriptor);
     if (plugin) {
         plugin->start();
         QMutexLocker locker(&mutex);
-        getInputTrack(inputTrackIndex)->addProcessor(plugin);
+        getInputTrack(inputTrackIndex)->addProcessor(plugin, pluginSlotIndex);
     }
     return plugin;
 }
@@ -561,21 +562,23 @@ void MainControllerStandalone::quit()
     application->quit();
 }
 
-Midi::MidiMessageBuffer MainControllerStandalone::pullMidiBuffer()
+Midi::MidiMessageBuffer MainControllerStandalone::pullMidiMessagesFromPlugins()
 {
-    Midi::MidiMessageBuffer midiBuffer(midiDriver ? midiDriver->getBuffer() : Midi::MidiMessageBuffer(0));
-// int messages = midiBuffer.getMessagesCount();
-// for(int m=0; m < messages; m++){
-// Midi::MidiMessage msg = midiBuffer.getMessage(m);
-// if(msg.isControl()){
-// int inputTrackIndex = 0;//just for test for while, we need get this index from the mapping pair
-// char cc = msg.getData1();
-// char ccValue = msg.getData2();
-// qCDebug(jtMidi) << "Control Change received: " << QString::number(cc) << " -> " << QString::number(ccValue);
-// getInputTrack(inputTrackIndex)->setGain(ccValue/127.0);
-// }
-// }
+    // return midi messages created by vst plugins, not by midi controllers.
+    QList<Midi::MidiMessage> receivedMidiMessages = Vst::Host::getInstance()->pullReceivedMidiMessages();
+    Midi::MidiMessageBuffer midiBuffer(receivedMidiMessages.count());
+    foreach (const Midi::MidiMessage &vstMidiMessage, receivedMidiMessages) {
+        midiBuffer.addMessage(vstMidiMessage);
+    }
     return midiBuffer;
+}
+
+Midi::MidiMessageBuffer MainControllerStandalone::pullMidiMessagesFromDevices()
+{
+    if (!midiDriver)
+        return Midi::MidiMessageBuffer(0);
+
+    return Midi::MidiMessageBuffer(midiDriver->getBuffer());
 }
 
 bool MainControllerStandalone::isUsingNullAudioDriver() const

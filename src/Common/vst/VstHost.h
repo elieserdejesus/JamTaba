@@ -4,12 +4,10 @@
 #include "aeffectx.h"
 #include <QScopedPointer>
 #include <QObject>
-
-namespace Midi {
-class MidiMessageBuffer;
-}
+#include "midi/MidiMessage.h"
 
 namespace Vst {
+
 class VstPlugin;
 class VstLoader;
 
@@ -22,12 +20,15 @@ class Host : public QObject
 
 public:
     static Host *getInstance();
+
     ~Host();
     int getSampleRate() const;
     inline int getBufferSize() const
     {
         return blockSize;
     }
+
+    QList<Midi::MidiMessage> pullReceivedMidiMessages();
 
     void setSampleRate(int sampleRate);
     void setBlockSize(int blockSize);
@@ -43,6 +44,7 @@ signals:
 
 private:
     VstTimeInfo vstTimeInfo;
+    QList<Midi::MidiMessage> receivedMidiMessages;
 
     int blockSize;
 
