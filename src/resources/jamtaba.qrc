@@ -1,7 +1,36 @@
 <RCC>
-    <qresource prefix="/style">
-        <file>Flat.css</file>
-        <file>Rounded.css</file>
+    <qresource prefix="/style/common">
+        <file alias="General.css">css/common/General.css</file>
+        <file alias="Dialogs.css">css/common/Dialogs.css</file>
+        <file alias="BaseTrack.css">css/common/BaseTrack.css</file>
+        <file alias="LocalTrack.css">css/common/LocalTrack.css</file>
+        <file alias="Chat.css">css/common/Chat.css</file>
+        <file alias="NinjamWindow.css">css/common/NinjamWindow.css</file>
+        <file alias="MainWindow.css">css/common/MainWindow.css</file>
+        <file alias="Chords.css">css/common/Chords.css</file>
+        <file alias="PublicRooms.css">css/common/PublicRooms.css</file>
+    </qresource>
+    <qresource prefix="/style/themes/Flat">
+        <file alias="BaseTrack.css">css/themes/Flat/BaseTrack.css</file>
+        <file alias="NinjamWindow.css">css/themes/Flat/NinjamWindow.css</file>
+        <file alias="LocalTrack.css">css/themes/Flat/LocalTrack.css</file>
+        <file alias="Dialogs.css">css/themes/Flat/Dialogs.css</file>
+        <file alias="General.css">css/themes/Flat/General.css</file>
+        <file alias="MainWindow.css">css/themes/Flat/MainWindow.css</file>
+        <file alias="PublicRooms.css">css/themes/Flat/PublicRooms.css</file>
+        <file alias="Chat.css">css/themes/Flat/Chat.css</file>
+        <file alias="Chords.css">css/themes/Flat/Chords.css</file>
+    </qresource>
+    <qresource prefix="/style/themes/Rounded">
+        <file alias="BaseTrack.css">css/themes/Rounded/BaseTrack.css</file>
+        <file alias="Chat.css">css/themes/Rounded/Chat.css</file>
+        <file alias="Chords.css">css/themes/Rounded/Chords.css</file>
+        <file alias="Dialogs.css">css/themes/Rounded/Dialogs.css</file>
+        <file alias="General.css">css/themes/Rounded/General.css</file>
+        <file alias="LocalTrack.css">css/themes/Rounded/LocalTrack.css</file>
+        <file alias="MainWindow.css">css/themes/Rounded/MainWindow.css</file>
+        <file alias="NinjamWindow.css">css/themes/Rounded/NinjamWindow.css</file>
+        <file alias="PublicRooms.css">css/themes/Rounded/PublicRooms.css</file>
     </qresource>
     <qresource prefix="/tr">
         <file alias="en.qm">../../translations/en.qm</file>

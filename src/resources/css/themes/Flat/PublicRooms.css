@@ -1,0 +1,14 @@
+/* JamRoomViewPanel is the widget used to show ONE public room/server */
+
+JamRoomViewPanel
+{
+    background-color: rgb(225, 225, 225);
+    border: 1px solid rgb(180, 180, 180);
+    border-top: none;
+    border-left: none;
+}
+
+JamRoomViewPanel #content                   /* where the user names and wave form are showed */
+{
+    background: rgb(253, 253, 253);
+}

@@ -17,6 +17,7 @@
 #include <QDesktopServices>
 #include <QRect>
 #include "MainController.h"
+#include "ThemeLoader.h"
 // #include "performance/PerformanceMonitor.h"
 
 using namespace Audio;
@@ -93,17 +94,13 @@ void MainWindow::initializeThemeMenu()
 {
     connect(ui.menuTheme, &QMenu::triggered, this, &MainWindow::changeTheme);
 
-    // create a menu action for each .css resource
-    QDir themesDir(":/style");
-    if (themesDir.exists()) {
-        QStringList themeFiles = themesDir.entryList(QStringList("*.css"));
-        foreach (const QString &themeFile, themeFiles) {
-            QString theme = QFileInfo(themeFile).baseName();
-            QAction *action = ui.menuTheme->addAction(theme);
-            action->setData(theme);
-        }
-    } else {
-        qCritical() << "Themes dir not exist! Can't create the Themes menu!";
+    // create a menu action for each theme
+
+    QStringList themeFiles = Theme::Loader::getAvailableThemes(":/style/themes");
+    foreach (const QString &themeFile, themeFiles) {
+        QString theme = QFileInfo(themeFile).baseName();
+        QAction *action = ui.menuTheme->addAction(theme);
+        action->setData(theme);
     }
 }
 
