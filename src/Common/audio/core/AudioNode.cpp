@@ -60,6 +60,7 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
         }
     }
 
+    preFaderProcess(internalOutputBuffer); //call overrided preFaderProcess in subclasses to allow some preFader process.
 
     internalOutputBuffer.applyGain(gain, leftGain, rightGain, boost);
 

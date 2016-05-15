@@ -58,6 +58,8 @@ public:
     void setToMono();
     void setToStereo();
 
+    void invertStereo();
+
     Audio::AudioPeak computePeak() const;
 
     inline void add(const SamplesBuffer &buffer)

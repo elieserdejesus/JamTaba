@@ -15,7 +15,8 @@ LocalInputNode::LocalInputNode(Controller::MainController *mainController, int p
     midiHigherNote(127),
     transpose(0),
     learningMidiNote(false),
-    mainController(mainController)
+    mainController(mainController),
+    stereoInverted(false)
 {
     Q_UNUSED(isMono)
     setToNoInput();
@@ -175,7 +176,27 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
             }
         }
     }
+
     AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer);
+}
+
+void LocalInputNode::preFaderProcess(SamplesBuffer &out) // this function is called by the base class AudioNode when processing audio. It's the TemplateMethod design pattern idea.
+{
+    if (stereoInverted)
+        out.invertStereo();
+}
+
+void LocalInputNode::setStereoInversion(bool stereoInverted)
+{
+    if (isMono())
+        return;
+
+    this->stereoInverted = stereoInverted;
+}
+
+bool LocalInputNode::isStereoInverted() const
+{
+    return !isMono() && stereoInverted;
 }
 
 void LocalInputNode::setTranspose(qint8 transpose)

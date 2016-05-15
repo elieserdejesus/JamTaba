@@ -534,6 +534,9 @@ void LocalTrackViewStandalone::refreshInputSelectionName()
     midiToolsButton->setVisible( canShowMidiToolsButton() );
     inputTypeIconLabel->setVisible(canShowInputTypeIcon());
 
+    buttonStereoInversion->setEnabled(!inputNode->isMono()); //stereo, midi or no-input can be stereo inverted. Sometimes we are using 'no-input' but using some VSTi generating loops, for example. These VSTi will generate stereo output and can be inverted.
+
+    refreshStyleSheet();
     updateGeometry();
     update();
 }
