@@ -61,8 +61,8 @@ BaseTrackView
         stop:0 rgb(240, 240, 240),
         stop:1 rgb(160, 160, 160));
 
-    border: 1px solid rgb(61, 61, 61);
-    font-size: 8px; /*db value */
+    border: none; /*1px solid rgb(61, 61, 61);*/
+    font-size: 8px;
 }
 
 BaseTrackView[unlighted="true"],
@@ -115,7 +115,7 @@ BaseTrackView[unlighted="true"] #muteButton
 
 
 
-/* +++++++++++++++++++++++++++++++++++++++++++ */
+
 PeakMeter{
     background-color: rgba(0, 0, 0, 6);
     border: none;
@@ -153,3 +153,4 @@ TrackGroupView[unlighted="true"] #groupNameField
     background: rgba(255, 255, 255, 20);
     border: none;
 }
+

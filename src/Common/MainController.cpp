@@ -8,6 +8,7 @@
 #include "log/Logging.h"
 #include "audio/core/AudioNode.h"
 #include "audio/core/LocalInputNode.h"
+#include "ThemeLoader.h"
 
 using namespace Persistence;
 using namespace Midi;
@@ -685,9 +686,10 @@ void MainController::stop()
 
 bool MainController::setTheme(const QString &themeName)
 {
-    QFile styleFile(":/style/" + themeName + ".css");
-    if (styleFile.open(QFile::ReadOnly)) {
-        setCSS(styleFile.readAll());
+    QString themeDir(":/style/themes");
+    QString themeCSS = Theme::Loader::loadCSS(themeDir, themeName);
+    if (!themeCSS.isEmpty()) {
+        setCSS(themeCSS);
         settings.setTheme(themeName);
         return true;
     }
