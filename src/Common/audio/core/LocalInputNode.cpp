@@ -178,7 +178,10 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
     }
 
     AudioNode::processReplacing(in, out, sampleRate, filteredMidiBuffer);
+}
 
+void LocalInputNode::preFaderProcess(SamplesBuffer &out) // this function is called by the base class AudioNode when processing audio. It's the TemplateMethod design pattern idea.
+{
     if (stereoInverted)
         out.invertStereo();
 }

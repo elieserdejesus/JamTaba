@@ -98,6 +98,8 @@ public:
     static const quint8 MAX_PROCESSORS_PER_TRACK = 4;
 protected:
 
+    inline virtual void preFaderProcess(Audio::SamplesBuffer &out){ Q_UNUSED(out) } // called after process all input and plugins, and just before compute gain, pan and boost.
+
     int getInputResamplingLength(int sourceSampleRate, int targetSampleRate, int outFrameLenght);
 
     QSet<AudioNode *> connections;

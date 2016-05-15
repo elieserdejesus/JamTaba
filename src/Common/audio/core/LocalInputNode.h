@@ -97,6 +97,9 @@ public:
 signals:
     void midiNoteLearned(quint8 midiNote) const;
 
+protected:
+    void preFaderProcess(Audio::SamplesBuffer &out) override;
+
 private:
     //int globalFirstInputIndex; // store the first input index selected globally by users in preferences menu
 
