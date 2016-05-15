@@ -5,6 +5,17 @@
 
 using namespace Theme;
 
+QStringList Loader::getAvailableThemes(QString themesDir)
+{
+    QDir baseDir(themesDir);
+    if (!baseDir.exists()) {
+        qCritical() << "themesDir directory not exists! (" << baseDir.absolutePath() << ")";
+        return QStringList();
+    }
+
+    return baseDir.entryList(QDir::Dirs);
+}
+
 QString Loader::loadCSS(QString themeDir, QString themeName)
 {
     //first load the common CSS shared by all themes

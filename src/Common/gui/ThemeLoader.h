@@ -9,6 +9,7 @@ class Loader {
 
 public:
     static QString loadCSS(QString themeDir, QString themeName);
+    static QStringList getAvailableThemes(QString themesDir);
 
 private:
     static QStringList getThemeSectionNames();
