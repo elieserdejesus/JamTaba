@@ -46,7 +46,11 @@ BaseTrackView[unlighted="true"] PeakMeter{
     /*border: none;*/
 }
 
+
+
 TrackGroupView {
     border: none;
     background-color: none;
 }
+
+

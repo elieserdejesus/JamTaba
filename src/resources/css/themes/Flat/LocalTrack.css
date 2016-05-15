@@ -1,0 +1,107 @@
+
+FxPanelItem{
+    background-color: rgba(0, 0, 0, 55);
+    background-position: center right;
+    background-repeat: none;
+    max-height: 14px;
+    width: 100%;
+    border: none;
+}
+
+BaseTrackView[unlighted="false"] FxPanelItem{
+    border: 1px outset rgb(100, 100, 100);
+}
+
+FxPanelItem[containPlugin="false"]{
+    background-image: url(':/images/arrow-down-lighter.png');
+}
+FxPanelItem[containPlugin="true"]{
+    background-image: none;
+}
+
+FxPanelItem > QLabel{
+    qproperty-alignment: AlignLeft;
+    font-size: 10px;
+    color: #D3D3D3;
+    margin: 0px;
+}
+
+FxPanelItem:hover{
+    background-color: rgba(0, 0, 0, 60);
+}
+
+FxPanelItem > QPushButton{
+     max-width: 10px;
+     max-height: 10px;
+     margin: 0px;
+     padding: 0px;
+     border: 1px solid rgb(0, 120, 0);
+     background-color: rgba(0, 0, 0, 120);
+}
+
+FxPanelItem > QPushButton:hover{
+    border: 1px solid rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 60);
+}
+
+FxPanelItem > QPushButton:checked{
+    background-color: rgb(0, 210, 0);
+}
+
+FxPanelItem > QPushButton:checked:hover{
+    background-color: rgb(0, 225, 0);
+}
+
+
+
+
+#xmitButton
+{
+    margin-top: 3px;
+}
+
+#xmitButton:checked
+{
+    background-color: rgb(0, 195, 0);
+    border-color: rgb(100, 100, 100);
+}
+
+#xmitButton[preparing="true"]
+{
+    background-color: rgb(255, 255, 0);
+}
+
+#xmitButton:!checked
+{
+    background-color: rgb(255, 0, 0);
+    border-color: rgba(0, 0, 0, 30);
+    color: black;
+}
+
+#xmitButton:hover
+{
+    background-color: rgb(0, 215, 0);
+}
+
+#xmitButton:hover:!checked
+{
+    background-color: rgb(255, 40, 40);
+    border-color: rgba(0, 0, 0, 90);
+
+}
+
+
+
+LocalTrackView[highlighted="true"]{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(255, 255, 255),
+    stop:1 rgb(170, 170, 170));
+}
+
+LocalTrackView #inputPanel{
+    background-color: rgba(0, 0, 0, 60);
+}
+
+LocalTrackView #inputPanel:hover{
+    background-color: rgba(0, 0, 0, 30);
+}

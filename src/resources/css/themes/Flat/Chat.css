@@ -1,0 +1,26 @@
+
+ChatPanel .QLineEdit##chatText
+{
+    border-color: rgba(0, 0, 0, 80);
+    background-color: rgb(250, 250, 250);
+}
+
+ChatPanel .QLineEdit:focus
+{
+    border-color: rgba(0, 0, 0, 160);
+    background-color: white;
+}
+
+ChatMessagePanel{
+    border: 1px solid rgb(140, 140, 140);
+}
+
+ChatMessagePanel #labelUserName{
+    padding: 0px;
+    margin-bottom: 1px;
+}
+
+
+ChatMessagePanel QPushButton:hover#translateButton{
+    border-color: black;
+}

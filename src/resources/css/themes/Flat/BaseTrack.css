@@ -1,0 +1,155 @@
+#soloButton,
+#muteButton
+{
+    font-size: 9px;
+    border-color: rgb(110,110,110);
+    padding: 2px;
+    color: rgb(50,50,50);
+}
+
+#buttonBoostMinus12,
+#buttonBoostPlus12,
+#buttonBoostZero,
+#soloButton,
+#muteButton
+{
+    background: rgb(235, 235, 235);
+}
+
+QPushButton:checked#soloButton{
+    background-color: rgb(90, 255, 62);
+    color: black;
+}
+
+QPushButton:hover:checked#soloButton {
+    background-color: rgb(110, 255, 80);
+    border-color: rgb(45, 45, 45);
+}
+
+QPushButton:checked#muteButton {
+    background-color: rgb(255, 0, 0);
+    color: white;
+
+}
+
+QPushButton:hover:checked#muteButton {
+    background-color: rgb(255, 40, 40);
+    color: lightgray;
+    border-color: rgb(45, 45, 45);
+}
+
+BaseTrackView #peaksDbLabel{
+    border: 1px solid rgba(0, 0, 0, 8);
+    background-color: rgba(0, 0, 0, 6);
+}
+
+BaseTrackView[unlighted="true"] #peaksDbLabel
+{
+   border: none;
+   background-color: rgba(0, 0, 0, 10);
+}
+
+BaseTrackView[unlighted="true"] #panSlider::handle,
+BaseTrackView[unlighted="true"] QSlider::handle:vertical
+{
+    background: rgb(180, 180, 180);
+}
+
+BaseTrackView
+{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(240, 240, 240),
+        stop:1 rgb(160, 160, 160));
+
+    border: 1px solid rgb(61, 61, 61);
+    font-size: 8px; /*db value */
+}
+
+BaseTrackView[unlighted="true"],
+TrackGroupView[unlighted="true"] > #topPanel
+{
+    background: rgba(255, 255, 255, 40);
+}
+
+#panSlider::handle
+{
+    width: 7px;
+}
+
+#buttonBoostMinus12,
+#buttonBoostPlus12,
+#buttonBoostZero
+{
+   padding: 1px;
+   padding-top: 3px;
+   padding-bottom: 3px;
+   border-radius: 1px;
+}
+
+#buttonBoostMinus12:checked,
+#buttonBoostPlus12:checked,
+#buttonBoostZero:checked
+{
+    background-color: rgb(200, 200, 200);
+    color: rgba(0, 0, 0, 160);
+    border-radius: 0px;
+}
+
+BaseTrackView[unlighted="true"] #buttonBoostMinus12,
+BaseTrackView[unlighted="true"] #buttonBoostZero,
+BaseTrackView[unlighted="true"] #buttonBoostPlus12,
+BaseTrackView[unlighted="true"] #soloButton,
+BaseTrackView[unlighted="true"] #muteButton
+{
+    background-color: rgba(0, 0, 0, 30);
+    border: none;
+}
+
+#buttonBoostZero:checked
+{
+    border-bottom: none;
+    border-top: none;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 60);
+}
+
+
+
+/* +++++++++++++++++++++++++++++++++++++++++++ */
+PeakMeter{
+    background-color: rgba(0, 0, 0, 6);
+    border: none;
+    min-width: 4px;
+    min-height: 4px;
+}
+
+PeakMeter#masterMeterL,
+PeakMeter#masterMeterR{
+    max-height: 4px;
+    height: 4px;
+    margin: 0px;
+}
+
+
+
+TrackGroupView > #topPanel{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(253, 253, 253),
+    stop:1 rgb(240, 240, 240));
+
+    border-top-left-radius: 1px;
+    border-top-right-radius: 1px;
+}
+
+TrackGroupView #groupNameField {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 11px;
+    font-weight: normal;
+}
+
+TrackGroupView[unlighted="true"] #groupNameField
+{
+    background: rgba(255, 255, 255, 20);
+    border: none;
+}
