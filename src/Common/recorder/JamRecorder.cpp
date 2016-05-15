@@ -70,7 +70,7 @@ void Jam::addAudioFile(const QString &userName, quint8 channelIndex, const QStri
     if(!jamIntervals.contains(intervalIndex)){
         jamIntervals.insert(intervalIndex, QList<JamInterval>());
     }
-    jamIntervals[intervalIndex].insert(JamInterval(intervalIndex, getBpm(), getBpi(), filePath, userName, channelIndex));
+    jamIntervals[intervalIndex].append(JamInterval(intervalIndex, getBpm(), getBpi(), filePath, userName, channelIndex));
 
     qCDebug(jtJamRecorder) << "adding a file in jam interval:" <<intervalIndex << " path:" << filePath;
 }
