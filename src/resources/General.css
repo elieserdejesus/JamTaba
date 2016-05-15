@@ -1,0 +1,59 @@
+*{
+    font-family: "Verdana";
+    font-size: 11px;
+    outline: none; /* Removing rect border in selected tabs (Linux workaround) */
+}
+
+/* Remove the focus rect. The annoying focus appears only in VSt plugin*/
+QPushButton:focus {
+    outline: none;
+}
+
+QPushButton
+{
+    border: 1px outset gray;
+    padding: 3px 6px 3px 6px;
+    font-size: 11px;
+    color: rgb(60, 60, 60);
+}
+
+QPushButton:checked{
+    border-style: inset;
+    color: rgb(0,0,0);
+}
+
+QPushButton[enabled="false"]{
+    background: none;
+    color: rgba(0, 0, 0, 30);
+    border-color: rgba(0, 0, 0, 40);
+}
+
+QScrollBar:vertical{
+    width: 12px;
+}
+
+QScrollBar:horizontal{
+    height: 12px;
+}
+
+QLineEdit,
+#userNamePanel{
+    padding: 2px;
+    color: black;
+    border-radius: 1px;
+    border: 1px solid;
+}
+
+QScrollArea{
+    border: none;
+    background: transparent;
+}
+
+QPlainTextEdit{
+    border: none;
+}
+
+
+QScrollArea > QWidget > QWidget{/*the content panel - QSCroll contém um QWidget privado que já é uma view port,além disso eu usei o meu próprio widget*/
+background: transparent;
+}

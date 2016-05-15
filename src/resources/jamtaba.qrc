@@ -1,8 +1,18 @@
 <RCC>
-    <qresource prefix="/style">
+    <qresource prefix="/style/common">
+        <file>Dialogs.css</file>
+        <file>General.css</file>
+        <file>BaseTrack.css</file>
+        <file>LocalTrack.css</file>
+        <file>Chat.css</file>
+        <file>NinjamWindow.css</file>
+        <file>MainWindow.css</file>
+        <file>Chords.css</file>
+        <file>PublicRooms.css</file>
+    </qresource>
+    <qresource prefix="/style/themes">
         <file>Flat.css</file>
         <file>Rounded.css</file>
-        <!--file>Orange.css</file-->
     </qresource>
     <qresource prefix="/tr">
         <file alias="en.qm">../../translations/en.qm</file>

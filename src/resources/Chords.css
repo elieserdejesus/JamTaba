@@ -1,0 +1,26 @@
+ChordsPanel #buttonSendToChat, ChordsPanel #buttonDiscardChords{
+    background-repeat: no-repeat;
+    background-position: center;
+    max-width: 18px;
+    width: 18px;
+    padding: 2px;
+}
+ChordsPanel #buttonSendToChat{
+    background-image: url(':/images/chat_small.png');
+}
+ChordsPanel #buttonDiscardChords{
+    background-image: url(':/images/discard.png');
+}
+
+ChordLabel{
+    font-size: 13px;
+    border: 1px solid rgba(0, 0, 0, 30);
+    padding: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+ChordLabel[current="true"]{
+    color: black;
+    border: 1px solid #008F1f;
+}

@@ -1,0 +1,179 @@
+NinjamRoomWindow #licenceButton
+{
+    background-image: url(':/images/licence.png');
+    background-position: center center;
+    background-repeat: none;
+}
+
+NinjamRoomWindow QToolButton#buttonVerticalLayout{
+    margin-right: 0px;
+}
+
+NinjamRoomWindow QToolButton#buttonHorizontalLayout{
+    margin-left: 0px;
+}
+
+NinjamRoomWindow QToolButton#wide{
+    margin: 0px;
+}
+
+NinjamRoomWindow QToolButton#wide:!checked{
+    border-right-color: none;
+}
+
+
+NinjamRoomWindow QToolButton#narrow:!checked{
+    border-left-color: none;
+}
+
+NinjamRoomWindow QToolButton#narrow{
+    margin-left: 0px;
+}
+
+
+/** TODO: move to NinjamTrack.css? **/
+NinjamRoomWindow #groupNameField
+{
+    background-color: rgba(255,255, 255, 15);
+    border: none;
+    color: black;
+    margin-bottom: 3px;
+    margin-top: 3px;
+    padding: 3px;
+}
+
+NinjamRoomWindow TrackGroupView #countryLabel{
+    color: rgba(0, 0, 0, 180);
+    qproperty-alignment: AlignCenter;
+    font-size: 9px;
+}
+
+
+/* --------- NinjamPanel --------- */
+NinjamPanel #intervalPanel{
+    color: rgb(238, 238, 238);
+    font-weight: normal;
+    font-size: 11px;
+    background: none;
+    margin: 0px;
+}
+
+NinjamPanel #panelCombos QLabel{
+    color: black;
+}
+
+
+NinjamPanel #panelCombos QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+NinjamPanel #panelCombos QComboBox::down-arrow:hover
+{
+    image:url(:/images/arrow-down-lighter.png);
+}
+NinjamPanel #panelCombos QComboBox::drop-down {
+    border: 0px;
+}
+
+NinjamPanel #metronomeControls, NinjamPanel #panelCombos{
+    background: transparent;
+}
+
+NinjamPanel #metronomeControls QSlider::groove:vertical{
+    border: 1px inset rgb(140, 140, 140);
+}
+
+NinjamPanel #preferencesButton,
+NinjamPanel #floatingWindowButton
+{
+    background-repeat: none;
+    background-position: center center;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+NinjamPanel #preferencesButton,
+NinjamPanel #floatingWindowButton,
+NinjamPanel #soloButton,
+NinjamPanel #muteButton{
+    max-width: 20px;
+    max-height: 16px;
+    min-height: 16px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+NinjamPanel #preferencesButton{
+   background-image: url(':/images/gear-hover.png');
+}
+
+NinjamPanel #floatingWindowButton{
+    background-image: url(':/images/windows.png');
+}
+
+NinjamPanel QLabel{
+    color: rgba(0, 0, 0, 150); /* metrono pan (L & R) labels, BPI and BPM labels */
+    font-size: 11px;
+}
+
+NinjamPanel QComboBox{
+    background-position: center right;
+    background-repeat: none;
+    font-size: 11px;
+    color: rgb(50, 50, 50);
+    border: 1px solid rgba(0, 0, 0, 40);
+    padding: 0px 5px 0px 5px;
+    border-radius: 2px;
+}
+
+NinjamPanel QComboBox::down-arrow {
+    image: url(':/images/arrow-down.png');
+}
+
+NinjamPanel QSlider::groove:vertical{
+    width: 5px;
+    margin: 0px;
+
+    background: rgba(0, 0, 0, 40);
+}
+
+NinjamPanel QSlider::groove:horizontal{
+    background-color: rgba(0,0, 0, 40);
+}
+
+
+NinjamRoomWindow #topPanel{
+    max-height: 120px;
+}
+
+NinjamTrackView #soloButton,
+NinjamTrackView #muteButton{
+   border-color: rgb(95,95,95);
+   color: rgb(40,40,40);
+}
+
+NinjamTrackView #peaksDbLabel{
+    border: 1px solid rgba(0, 0, 0, 8);
+}
+
+
+NinjamTrackView QProgressBar{ /* chunks display */
+    background-color: rgba(255, 255, 255, 20);
+
+    border: none;
+    min-height: 2px;
+    max-height: 3px;
+}
+
+NinjamTrackView[horizontal="true"] #soloButton,
+NinjamTrackView[horizontal="true"] #muteButton{
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+
+
+#labelMetronomeIControls{
+    margin-top: 6px;
+}
+

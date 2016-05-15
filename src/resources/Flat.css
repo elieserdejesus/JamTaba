@@ -1,77 +1,8 @@
-*{
-    font-family: "Verdana";
-    font-size: 11px;
-    outline: none; /* Removing rect border in selected tabs (Linux workaround) */
-}
-
-/* Remove the focus rect. The annoying focus appears only in VSt plugin*/
-QPushButton:focus {
-    outline: none;
-}
-
-PreferencesDialog #buttonAddVstScanFolder{
-    background-image: url(:/images/more.png);
-    background-position: center center;
-    background-repeat: none;
-    margin-right: 12px;
-}
-
-PreferencesDialog #blackListWidget{
-    background-color: black;
-    color: orange;
-}
-
-PreferencesDialog #plainTextEdit{
-    background: transparent;
-}
-
-PreferencesDialog QGroupBox,
-MidiToolsDialog QGroupBox,
-PreferencesDialog #sampleRateLabel,
-PreferencesDialog #bufferSizeLabel {
-    font-weight: bold;
-}
-
-PreferencesDialog QGroupBox,
-MidiToolsDialog QGroupBox{
-    padding-left: 16px;
-    padding-top: 12px;
-    border: none;
-}
-
-PreferencesDialog QGroupBox#groupBoxBuiltInMetronomes[checked=false],
-PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false]
-{
-    color: gray;
-}
-
-
-
-QMessageBox,
-QInputDialog,
-PluginScanDialog,
-MidiToolsDialog{
-    background-color: rgb(220, 220, 220);
-    border: 1px outset gray;
-    padding: 32px;
-}
-
-QInputDialog{
-    min-width: 400px;
-}
-
-FxPanel{
-    border: none;
-    background-color: none; /* rgba(0, 0, 0, 20);*/
-    max-height: 80px;
-}
-
+/* overriding BaseTrack.css */
 #buttonBoostMinus12,
 #buttonBoostPlus12,
 #buttonBoostZero
 {
-   margin: 0px;
-   font-size: 8px;
    padding: 1px;
    padding-top: 3px;
    padding-bottom: 3px;
@@ -87,14 +18,6 @@ FxPanel{
     border-radius: 0px;
 }
 
-#buttonBoostZero:checked
-{
-    border-bottom: none;
-    border-top: none;
-    border-style: solid;
-    border-color: rgba(0, 0, 0, 60);
-}
-
 BaseTrackView[unlighted="true"] #buttonBoostMinus12,
 BaseTrackView[unlighted="true"] #buttonBoostZero,
 BaseTrackView[unlighted="true"] #buttonBoostPlus12,
@@ -105,18 +28,13 @@ BaseTrackView[unlighted="true"] #muteButton
     border: none;
 }
 
-/*
-BaseTrackView QPushButton#buttonBoostMinus12{
-
-   border-top: 1px solid rgba(0, 0, 0, 10);
+#buttonBoostZero:checked
+{
+    border-bottom: none;
+    border-top: none;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 60);
 }
-
-BaseTrackView QPushButton#buttonBoostPlus12{
-
-   border-bottom: 1px solid rgba(0, 0, 0, 10);
-   margin: 0px;
-}
-*/
 
 NinjamTrackView[horizontal="true"] #buttonBoostMinus12,
 NinjamTrackView[horizontal="true"] #buttonBoostPlus12,
@@ -154,10 +72,8 @@ NinjamTrackView[horizontal="true"]{
         stop:1 rgb(200, 200, 200));
 }
 
+/* overriding NinjamWindow.css */
 NinjamRoomWindow #licenceButton{
-    background-image: url(':/images/licence.png');
-    background-position: center center;
-    background-repeat: none;
     max-height: 20px;
     width: 28px;
 }
@@ -186,37 +102,12 @@ NinjamRoomWindow QToolButton:checked{
     border: 1px solid rgb(130, 130, 130);
 }
 
-NinjamRoomWindow QToolButton#buttonVerticalLayout{
-
-    margin-right: 0px;
-}
-NinjamRoomWindow QToolButton#buttonHorizontalLayout{
-
-    margin-left: 0px;
-}
-
-NinjamRoomWindow QToolButton#wide{
-    margin: 0px;
-}
-
-NinjamRoomWindow QToolButton#wide:!checked{
-    border-right-color: none;
-}
-
-NinjamRoomWindow QToolButton#narrow:!checked{
-    border-left-color: none;
-}
 
 NinjamRoomWindow QToolButton#buttonVerticalLayout:!checked{
     border-right-color: none;
 }
 NinjamRoomWindow QToolButton#buttonHorizontalLayout:!checked{
     border-left-color: none;
-}
-
-NinjamRoomWindow QToolButton#narrow{
-
-    margin-left: 0px;
 }
 
 
@@ -358,17 +249,13 @@ QScrollBar::sub-line:horizontal {
   subcontrol-origin: margin;
 }
 
-QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical, QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical,
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal {
   background: none;
 }
 
-QLineEdit,
-#userNamePanel{
-    padding: 2px;
-    color: black;
-    border-radius: 1px;
-    border: 1px solid;
-}
 
 #userNamePanel
 {
@@ -406,30 +293,17 @@ QSlider::groove:horizontal{
 }
 
 BaseTrackView #peaksDbLabel{
-
     border: 1px solid rgba(0, 0, 0, 8);
     background-color: rgba(0, 0, 0, 6);
-    font-size: 8px;
-    qproperty-alignment: AlignCenter;
-    color: rgba(0, 0, 0, 120);
-    padding: 1px;
-    min-width: 15px;
 }
-NinjamTrackView #peaksDbLabel{
-    border: 1px solid rgba(0, 0, 0, 8);
-}
+
+
 
 BaseTrackView[unlighted="true"] #peaksDbLabel
 {
    border: none;
    background-color: rgba(0, 0, 0, 10);
 }
-
-BaseTrackView #peaksDbLabel:hover{
-    background-color: rgba(255,255,255, 30);
-    color: black;
-}
-
 
 QSlider::groove:vertical {
     background-color: rgba(0, 0, 0, 50);
@@ -445,12 +319,6 @@ QSlider::handle:horizontal {
 }
 
 /* PAN SLIDER ---------------- */
-#panSlider
-{
-    margin-left: 3px;
-    margin-right: 3px;
-}
-
 #panSlider::handle
 {
     width: 7px;
@@ -484,16 +352,7 @@ QSlider::handle:vertical{
 }
 
 
-NinjamPanel QSlider::groove:vertical{
-    width: 5px;
-    margin: 0px;
 
-    background: rgba(0, 0, 0, 40);
-}
-
-NinjamPanel QSlider::groove:horizontal{
-    background-color: rgba(0,0, 0, 40);
-}
 
 
 /* +++++++++++++++++++++++++++++++++++++++++++ */
@@ -504,7 +363,8 @@ PeakMeter{
     min-height: 4px;
 }
 
-PeakMeter#masterMeterL, PeakMeter#masterMeterR{
+PeakMeter#masterMeterL,
+PeakMeter#masterMeterR{
     max-height: 4px;
     height: 4px;
     margin: 0px;
@@ -522,14 +382,6 @@ PeakMeter#masterMeterL, PeakMeter#masterMeterR{
 }
 
 
-QLabel#labelMetronomeIControls{
-    margin-top: 6px;
-}
-
-BaseTrackView[unlighted="true"] PeakMeter{
-    background-color: rgba(0, 0, 0, 15);
-    /*border: none;*/
-}
 
 /* ++++++++++++++++++++++++++++++++++++++++ */
 
@@ -540,7 +392,6 @@ QMainWindow{
 
 QMainWindow #bottomPanel{
     background: rgb(224, 224, 224);
-    min-height: 60px;
     border-top: 1px solid rgb(191, 191, 191);
 }
 
@@ -559,31 +410,6 @@ QMainWindow #bottomPanel{
     color: gray;
 }
 
-QPushButton#localControlsCollapseButton{
-    border: none;
-
-    background: none;
-    max-width: 6px;
-    width: 6px;
-    background-repeat: none;
-    background-position: right center;
-}
-
-QPushButton#localControlsCollapseButton:!checked{
-   background-image: url(:/images/mini arrow left.png);
-}
-
-QPushButton#localControlsCollapseButton::hover:!checked{
-   background-image: url(:/images/mini arrow left hover.png);
-}
-
-QPushButton#localControlsCollapseButton:checked{
-   background-image: url(:/images/mini arrow right.png);
-   background-position: center center;
-}
-QPushButton#localControlsCollapseButton::hover:checked{
-   background-image: url(:/images/mini arrow right hover.png);
-}
 /* ------------------------------ */
 
 #contentTabWidget:pane
@@ -609,14 +435,7 @@ QPushButton#localControlsCollapseButton::hover:checked{
 QTabBar::tab
 {
     background-color: rgb(200, 200, 200);
-    border: none;
-    min-width: 8ex;
-    padding: 3px;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 11px;
-    color: black;
- }
+}
 
 QTabBar::tab:selected,
 QTabBar::tab:hover
@@ -632,6 +451,7 @@ QTabBar::tab:!selected
 
 /*++++++++++++++++++++*/
 
+/* TODO this piece can be removed? */
 .QMainWindow .QGroupBox::title {
 subcontrol-origin: margin;
 subcontrol-position: top center; /* position at the top center */
@@ -642,18 +462,7 @@ border-bottom-color: darkgray;
 border-width: 3px;
 }
 
-QScrollArea{
-border: none;
-background: transparent;
-}
 
-QPlainTextEdit{
-    border: none;
-}
-
-QScrollArea > QWidget > QWidget{/*the content panel - QSCroll contém um QWidget privado que já é uma view port,além disso eu usei o meu próprio widget*/
-background: transparent;
-}
 
 BusyDialog{
     border: 1px solid rgba(0, 0, 0, 30);
@@ -661,20 +470,8 @@ BusyDialog{
     margin: 0px;
     background-color: rgb(220, 220, 220);
 }
-BusyDialog #labelGif{
-    border: none;
-    background-color: rgba(0, 0, 0, 10);
-    border-radius: 32px;/*simulate a circle as background */
-    max-width: 64px;
-    max-height: 64px;
-    qproperty-alignment: AlignCenter;
-    text-align: center;
-}
 
-BusyDialog > QLabel
-{
-    font-weight: bold;
-}
+
 
 JamRoomViewPanel
 {
@@ -689,34 +486,10 @@ JamRoomViewPanel #content
     background: rgb(253, 253, 253);
 }
 
-JamRoomViewPanel #labelName
-{
-    font-weight: bold;
-}
-
-JamRoomViewPanel #labelRoomStatus,
-JamRoomViewPanel  #labelRoomType
-{
-    font-size: 9px;
-    color: rgb(140, 140, 140);
-}
-JamRoomViewPanel  #labelRoomType{
-    margin-right: 3px;
-    margin-bottom: -3px;
-}
-
 /*+++++++++++++++++++++++++++++++*/
 
 #xmitButton
 {
-    border-width: 1px;
-    font-size: 11px;
-    padding: 0px;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    color: black;
-    min-height: 15px;
-    min-width: 10px;
     margin-top: 3px;
 }
 
@@ -724,8 +497,6 @@ JamRoomViewPanel  #labelRoomType{
 {
     background-color: rgb(0, 195, 0);
     border-color: rgb(100, 100, 100);
-    border-style: inset;
-    color: rgba(0,40, 0);
 }
 
 #xmitButton[preparing="true"]
@@ -736,7 +507,6 @@ JamRoomViewPanel  #labelRoomType{
 #xmitButton:!checked
 {
     background-color: rgb(255, 0, 0);
-    border-style: outset;
     border-color: rgba(0, 0, 0, 30);
     color: black;
 }
@@ -774,17 +544,11 @@ TrackGroupView[unlighted="true"] > #topPanel
 
 QPushButton
 {
-    border: 1px outset gray;
-    padding: 3px 6px 3px 6px;
-    font-size: 11px;
     background-color: rgb(250, 250, 250);
-    color: rgb(60, 60, 60);
 }
 
 QPushButton:checked{
-    border-style: inset;
     background-color: rgb(180, 180, 180);
-    color: rgb(0,0,0);
 }
 
 QPushButton:hover{
@@ -793,14 +557,10 @@ QPushButton:hover{
     border: 1px solid rgb(120, 120, 120);
 }
 
-QPushButton[enabled="false"]{
-    background: none;
-    color: rgba(0, 0, 0, 30);
-    border-color: rgba(0, 0, 0, 40);
-}
 
-QPushButton#soloButton,
-QPushButton#muteButton
+
+#soloButton,
+#muteButton
 {
     font-size: 9px;
     border-color: rgb(110,110,110);
@@ -817,38 +577,12 @@ QPushButton#muteButton
     background: rgb(235, 235, 235);
 }
 
-NinjamTrackView #soloButton,
-NinjamTrackView #muteButton{
-   border-color: rgb(95,95,95);
-   color: rgb(40,40,40);
-
-}
-
 NinjamTrackView[unlighted="true"]
 {
     background: rgba(0, 0, 0, 20);
 }
 
-NinjamTrackView[horizontal="true"] #soloButton,
-NinjamTrackView[horizontal="true"] #muteButton{
-    padding-top: 0px;
-    padding-bottom: 0px;
-}
 
-NinjamTrackView QProgressBar{ /* chunks display */
-    background-color: rgba(255, 255, 255, 20);
-
-    border: none;
-    min-height: 2px;
-    max-height: 3px;
-}
-
-/*
-QPushButton:hover#soloButton,
-QPushButton:hover#muteButton{
-    color: rgba(0, 0, 0, 200);
-}
-*/
 
 QPushButton:checked#soloButton{
     background-color: rgb(90, 255, 62);
@@ -874,11 +608,6 @@ QPushButton:hover:checked#muteButton {
 
 /* TRACK GROUPs */
 
-TrackGroupView {
-    border: none;
-    background-color: none;
-}
-
 TrackGroupView > #topPanel{
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
     stop:0 rgb(253, 253, 253),
@@ -902,58 +631,7 @@ TrackGroupView[unlighted="true"] #groupNameField
 }
 
 
-/* LOCAL TRACK GROUP */
-LocalTrackGroupView{
-    border: none;
-}
-
-LocalTrackGroupView[highlighted="true"] {
-    border: 1px solid white;
-
-}
-
-LocalTrackGroupView  #toolButton {
-    background-color: none;
-    background-image: url(':/images/gear.png');
-    background-repeat: none;
-    background-position: center center;
-    border: none;
-    padding: 0px;
-    margin: 0px;
-    width: 14px;
-    height: 14px;
-}
-
-LocalTrackGroupView   #toolButton:hover{
-    background-image: url(':/images/gear-hover.png');
-}
-
-LocalTrackGroupView #groupNameField
-{
-    font-size: 10px;
-    padding-left: 0px;
-    padding-right: 0px;
-    margin: 0px;
-}
-/* ++++++++++++++++++++++++++++++++++ */
-
-QLabel#labelPanR,
-QLabel#labelPanL
-{
-    color: rgba(0, 0, 0, 80);
-    font-size: 9px;
-}
-
-
 /*+++++++++++++++++++++++++++++++++++++++++++++++*/
-LocalTrackView, NinjamTrackView{
-    border: none;
-}
-
-LocalTrackView[peakMetersOnly="true"]{
-    background: none;
-
-}
 
 LocalTrackView[highlighted="true"]{
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -962,64 +640,14 @@ LocalTrackView[highlighted="true"]{
 }
 
 LocalTrackView #inputPanel{
-    padding: 2px;
     background-color: rgba(0, 0, 0, 60);
-    border: none;
-}
-
-BaseTrackView[unlighted="false"] #inputPanel{
-    border: 1px outset rgb(80,80,80);
 }
 
 LocalTrackView #inputPanel:hover{
     background-color: rgba(0, 0, 0, 30);
 }
 
-LocalTrackView #inputSelectionIcon{
-    border: 1px solid rgba(0, 0, 0, 0);
-    margin: 0px;
-    padding: 0px;
-    max-width: 22px;
-    min-width: 22px;
-    background-position: center;
-    background-repeat: none;
-}
 
-LocalTrackView #midiToolsButton{
-    font-size: 10px;
-    /*background-image: url(':/images/input_midi.png');*/
-    background-repeat: none;
-    background-position: center left;
-    padding: 0px;
-}
-
-LocalTrackView #inputSelectionIcon,
-LocalTrackView #midiToolsButton
-{
-    min-height: 14px;
-    max-height: 14px;
-}
-
-LocalTrackView #inputSelectionButton{
-    background-color: none;
-    background-image: url(':/images/arrow-down.png');
-    background-repeat: none;
-    background-position: center right;
-    border: none;
-    color: rgba(255,255, 255, 160);
-    font-size: 9px;
-    text-align: left;
-    margin: 0px;
-    padding-left: 2px;
-    padding-right: 2px;
-}
-
-LocalTrackView #midiPeakMeter{
-    max-width: 1px;
-    min-width: 1px;
-
-    border: none;
-}
 /*+++++++++++++++++++++++++++++++++++++++++++++++*/
 
 /* NINJAM */
@@ -1035,28 +663,12 @@ NinjamTrackView > #channelName{
     max-width: 130px;
 }
 
-
-NinjamRoomWindow #groupNameField {
-
-    background-color: rgba(255,255, 255, 15);
-    border: none;
-    color: black;
-    margin-bottom: 3px;
-    margin-top: 3px;
-    padding: 3px;
-}
-
 NinjamRoomWindow TrackGroupView
 {
     border: 1px solid rgb(130, 130, 130);
 }
 
-NinjamRoomWindow TrackGroupView #countryLabel{
-    color: rgba(0, 0, 0, 180);
-    qproperty-alignment: AlignCenter;
-    font-size: 9px;
-}
-
+/** The floating window showing the metronome/interval progress */
 IntervalProgressWindow{
     background-color: rgb(220, 220, 220);
 }
@@ -1066,116 +678,18 @@ NinjamPanel #ninjamControlsPanel{
     border: 1px solid rgb(190, 190, 190);
 }
 
-NinjamPanel #intervalPanel{
-    color: rgb(238, 238, 238);
-    font-weight: normal;
-    font-size: 11px;
-    background: none;
-    margin: 0px;
-    /*min-height: 80px;*/
-}
-
-NinjamPanel #panelCombos QLabel{
-    color: black;
-}
-
-NinjamPanel #panelCombos QComboBox::down-arrow
-{
-    image:url(:/images/arrow-down.png);
-}
-NinjamPanel #panelCombos QComboBox::down-arrow:hover
-{
-    image:url(:/images/arrow-down-lighter.png);
-}
-NinjamPanel #panelCombos QComboBox::drop-down {
-    border: 0px;
-}
-
-NinjamPanel #metronomeControls, NinjamPanel #panelCombos{
-    background: transparent;
-}
-
-NinjamPanel #metronomeControls QSlider::groove:vertical{
-    border: 1px inset rgb(140, 140, 140);
-}
-
-
-NinjamPanel #preferencesButton,
-NinjamPanel #floatingWindowButton
-{
-    background-repeat: none;
-    background-position: center center;
-    padding-left: 0px;
-    padding-right: 0px;
-}
-
-NinjamPanel #preferencesButton,
-NinjamPanel #floatingWindowButton,
-NinjamPanel #soloButton,
-NinjamPanel #muteButton{
-    max-width: 20px;
-    max-height: 16px;
-    min-height: 16px;
-    padding-top: 1px;
-    padding-bottom: 1px;
-}
-
 NinjamPanel #soloButton,
 NinjamPanel #muteButton{
     background-color: white;
 }
 
-NinjamPanel #preferencesButton{
-   background-image: url(':/images/gear-hover.png');
-}
-
-NinjamPanel #floatingWindowButton{
-    background-image: url(':/images/windows.png');
-}
-
-NinjamPanel QLabel{
-    color: rgba(0, 0, 0, 150); /* metrono pan (L & R) labels, BPI and BPM labels */
-    font-size: 11px;
-}
-
 NinjamPanel QComboBox{
     background-color: rgba(0, 0, 0, 30);
-    background-position: center right;
-    background-repeat: none;
-    font-size: 11px;
-    color: rgb(50, 50, 50);
-
-    border: 1px solid rgba(0, 0, 0, 40);
-    padding: 0px 5px 0px 5px;
-}
-
-NinjamPanel QComboBox::down-arrow {
-    image: url(':/images/arrow-down.png');
-}
-
-NinjamRoomWindow #topPanel{
-    max-height: 120px;
 }
 
 /*Chat */
-ChatPanel QPushButton#buttonAutoTranslate,
-ChatPanel  QPushButton#buttonClear{
-    max-height: 22px;
-    max-width: 14px;
-}
 
-ChatPanel  QPushButton#buttonClear{
-    background-image: url(:/images/broom.png);
-    background-repeat: no-repeat;
-    background-position: center;
-}
-ChatPanel QPushButton#buttonAutoTranslate{
-    background-image: url(:/images/translate.png);
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-ChatPanel .QLineEdit
+ChatPanel .QLineEdit##chatText
 {
     border-color: rgba(0, 0, 0, 80);
     background-color: rgb(250, 250, 250);
@@ -1189,63 +703,26 @@ ChatPanel .QLineEdit:focus
 
 ChatMessagePanel{
     border: 1px solid rgb(140, 140, 140);
-    padding: 3px;
-}
-
-ChatMessagePanel #labelTimeStamp{
-    font-size: 9px;
-    font-style: italic;
 }
 
 ChatMessagePanel #labelUserName{
-    font-size: 10px;
-    font-weight: bold;
     padding: 0px;
     margin-bottom: 1px;
 }
 
-ChatMessagePanel #translateButton{
-    height: 6px;
-    min-height: 6px;
-    padding: 2px;
-    border: 1px solid rgba(0, 0, 0, 70);
-    font-size: 8px;
-}
 
 ChatMessagePanel QPushButton:hover#translateButton{
     border-color: black;
-    font-weight: bold;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-ChordsPanel #buttonSendToChat, ChordsPanel #buttonDiscardChords{
-    background-repeat: no-repeat;
-    background-position: center;
-    max-width: 18px;
-    width: 18px;
-    padding: 2px;
-}
-ChordsPanel #buttonSendToChat{
-    background-image: url(':/images/chat_small.png');
-}
-ChordsPanel #buttonDiscardChords{
-    background-image: url(':/images/discard.png');
-}
-
 ChordLabel{
     background-color: rgba(0,0,0, 7);
-    font-size: 13px;
     color: rgb(90, 90, 90);
-    border: 1px solid rgba(0, 0, 0, 30);
-    padding: 2px;
-    padding-left: 3px;
-    padding-right: 3px;
 }
 
 ChordLabel[current="true"]{
     background-color: rgba(255,255,255, 220);
-    color: black;
-    border: 1px solid #008F1f;
 }
 

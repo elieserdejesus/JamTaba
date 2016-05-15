@@ -1,0 +1,130 @@
+FxPanel{
+    border: none;
+    background-color: none; /* rgba(0, 0, 0, 20);*/
+    max-height: 80px;
+}
+
+LocalTrackView, NinjamTrackView{
+    border: none;
+}
+
+LocalTrackView[peakMetersOnly="true"]{
+    background: none;
+
+}
+
+LocalTrackView #inputPanel{
+    padding: 2px;
+    border: none;
+}
+
+BaseTrackView[unlighted="false"] #inputPanel{
+    border: 1px outset rgb(80,80,80);
+}
+
+LocalTrackView #inputSelectionIcon{
+    border: 1px solid rgba(0, 0, 0, 0);
+    margin: 0px;
+    padding: 0px;
+    max-width: 22px;
+    min-width: 22px;
+    background-position: center;
+    background-repeat: none;
+}
+
+LocalTrackView #midiToolsButton{
+    font-size: 10px;
+    background-repeat: none;
+    background-position: center left;
+    padding: 0px;
+}
+
+LocalTrackView #inputSelectionIcon,
+LocalTrackView #midiToolsButton
+{
+    min-height: 14px;
+    max-height: 14px;
+}
+
+LocalTrackView #inputSelectionButton{
+    background-color: none;
+    background-image: url(':/images/arrow-down.png');
+    background-repeat: none;
+    background-position: center right;
+    border: none;
+    color: rgba(255,255, 255, 160);
+    font-size: 9px;
+    text-align: left;
+    margin: 0px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+LocalTrackView #midiPeakMeter{
+    max-width: 1px;
+    min-width: 1px;
+
+    border: none;
+}
+
+
+
+#xmitButton
+{
+    border-width: 1px;
+    font-size: 11px;
+    padding: 0px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    color: black;
+    min-height: 15px;
+    min-width: 10px;
+}
+
+#xmitButton:checked
+{
+    border-style: inset;
+    color: rgba(0,40, 0);
+}
+
+#xmitButton:!checked
+{
+    border-style: outset;
+}
+
+
+/* LOCAL TRACK GROUP */
+LocalTrackGroupView{
+    border: none;
+}
+
+LocalTrackGroupView[highlighted="true"] {
+    border: 1px solid white;
+
+}
+
+LocalTrackGroupView  #toolButton {
+    background-color: none;
+    background-image: url(':/images/gear.png');
+    background-repeat: none;
+    background-position: center center;
+    border: none;
+    padding: 0px;
+    margin: 0px;
+    width: 14px;
+    height: 14px;
+}
+
+LocalTrackGroupView   #toolButton:hover{
+    background-image: url(':/images/gear-hover.png');
+}
+
+LocalTrackGroupView #groupNameField
+{
+    font-size: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin: 0px;
+}
+
+

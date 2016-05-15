@@ -1,0 +1,40 @@
+QMainWindow #bottomPanel{
+    min-height: 60px;
+}
+
+#localControlsCollapseButton{
+    border: none;
+
+    background: none;
+    max-width: 6px;
+    width: 6px;
+    background-repeat: none;
+    background-position: right center;
+}
+
+QPushButton#localControlsCollapseButton:!checked{
+   background-image: url(:/images/mini arrow left.png);
+}
+
+QPushButton#localControlsCollapseButton::hover:!checked{
+   background-image: url(:/images/mini arrow left hover.png);
+}
+
+QPushButton#localControlsCollapseButton:checked{
+   background-image: url(:/images/mini arrow right.png);
+   background-position: center center;
+}
+QPushButton#localControlsCollapseButton::hover:checked{
+   background-image: url(:/images/mini arrow right hover.png);
+}
+
+QTabBar::tab
+{
+    border: none;
+    min-width: 8ex;
+    padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 11px;
+    color: black;
+ }

@@ -1,0 +1,68 @@
+
+PreferencesDialog #buttonAddVstScanFolder{
+    background-image: url(:/images/more.png);
+    background-position: center center;
+    background-repeat: none;
+    margin-right: 12px;
+}
+
+PreferencesDialog #blackListWidget{
+    background-color: black;
+    color: orange;
+}
+
+PreferencesDialog #plainTextEdit{
+    background: transparent;
+}
+
+PreferencesDialog QGroupBox,
+MidiToolsDialog QGroupBox,
+PreferencesDialog #sampleRateLabel,
+PreferencesDialog #bufferSizeLabel {
+    font-weight: bold;
+}
+
+PreferencesDialog QGroupBox,
+MidiToolsDialog QGroupBox{
+    padding-left: 16px;
+    padding-top: 12px;
+    border: none;
+}
+
+PreferencesDialog QGroupBox#groupBoxBuiltInMetronomes[checked=false],
+PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false]
+{
+    color: gray;
+}
+
+QMessageBox,
+QInputDialog,
+PluginScanDialog,
+MidiToolsDialog{
+    background-color: rgb(220, 220, 220);
+    border: 1px outset gray;
+    padding: 32px;
+}
+
+QInputDialog{
+    min-width: 400px;
+}
+
+
+
+
+BusyDialog #labelGif{
+    border: none;
+    background-color: rgba(0, 0, 0, 10);
+    border-radius: 32px;/*simulate a circle as background */
+    max-width: 64px;
+    max-height: 64px;
+    qproperty-alignment: AlignCenter;
+    text-align: center;
+}
+
+BusyDialog > QLabel
+{
+    font-weight: bold;
+}
+

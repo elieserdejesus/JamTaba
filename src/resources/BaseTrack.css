@@ -1,0 +1,52 @@
+#buttonBoostMinus12,
+#buttonBoostPlus12,
+#buttonBoostZero
+{
+   margin: 0px;
+   font-size: 8px;
+}
+
+#soloButton,
+#muteButton
+{
+    font-size: 9px;
+    border-color: rgb(110,110,110);
+    padding: 2px;
+    color: rgb(50,50,50);
+}
+
+BaseTrackView #peaksDbLabel{
+    font-size: 8px;
+    qproperty-alignment: AlignCenter;
+    color: rgba(0, 0, 0, 120);
+    padding: 1px;
+    min-width: 15px;
+}
+
+
+BaseTrackView #peaksDbLabel:hover{
+    background-color: rgba(255,255,255, 30);
+    color: black;
+}
+
+#panSlider
+{
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+#labelPanR,
+#labelPanL{
+    color: rgba(0, 0, 0, 160);
+    font-size: 9px;
+}
+
+BaseTrackView[unlighted="true"] PeakMeter{
+    background-color: rgba(0, 0, 0, 15);
+    /*border: none;*/
+}
+
+TrackGroupView {
+    border: none;
+    background-color: none;
+}
