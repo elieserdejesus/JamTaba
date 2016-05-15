@@ -66,14 +66,14 @@ QStringList Loader::getThemeSectionNames()
 {
     QStringList themeSections;
     themeSections << "General.css"
+                  << "MainWindow.css"
+                  << "Dialogs.css"
+                  << "PublicRooms.css"
                   << "BaseTrack.css"
                   << "LocalTrack.css"
-                  << "Chat.css"
-                  << "Chords.css"
-                  << "Dialogs.css"
-                  << "MainWindow.css"
                   << "NinjamWindow.css"
-                  << "PublicRooms.css";
+                  << "Chat.css"
+                  << "Chords.css";
 
     return themeSections;
 }

@@ -1,42 +1,56 @@
-ChatPanel QPushButton#buttonAutoTranslate,
-ChatPanel  QPushButton#buttonClear{
+/*
+    This file contain common stylesheet to chat widgets: chat messages, chat panel, etc.
+*/
+
+
+/* Buttons used to auto translate and clear all chat messages
+--------------------------------------------------------------*/
+#buttonAutoTranslate,
+#buttonClear
+{
     max-height: 22px;
     max-width: 14px;
 }
 
-ChatPanel  QPushButton#buttonClear{
+#buttonClear
+{
     background-image: url(:/images/broom.png);
     background-repeat: no-repeat;
     background-position: center;
 }
-ChatPanel QPushButton#buttonAutoTranslate{
+
+#buttonAutoTranslate
+{
     background-image: url(:/images/translate.png);
     background-repeat: no-repeat;
     background-position: center;
 }
 
-ChatMessagePanel{
+
+/* Stylesheet used in chat messages widget (ChatMessagePanel).
+------------------------------------------ */
+ChatMessagePanel
+{
     padding: 3px;
 }
 
-ChatMessagePanel #labelTimeStamp{
+ChatMessagePanel #labelTimeStamp /* chat message timestamp */
+{
     font-size: 9px;
     font-style: italic;
 }
 
-ChatMessagePanel #labelUserName{
+ChatMessagePanel #labelUserName /* chat message author */
+{
     font-size: 10px;
     font-weight: bold;
 }
 
-ChatMessagePanel #translateButton{
+ChatMessagePanel #translateButton /* the small T (translate) button in right side of chat messages */
+{
     height: 6px;
     min-height: 6px;
     padding: 2px;
     font-size: 8px;
     border: 1px solid rgba(0, 0, 0, 70);
-}
-
-ChatMessagePanel QPushButton:hover#translateButton{
-    font-weight: bold;
 }

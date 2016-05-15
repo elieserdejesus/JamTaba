@@ -1,12 +1,19 @@
+/*
+    This file contains common stylesheet used in public rooms list
 
-JamRoomViewPanel #labelName
+*/
+
+
+/* JamRoomViewPanel is the widget used to show a public room
+--------------------------------------------------------------*/
+
+JamRoomViewPanel #labelName             /* the server name (ninbot.com, ninjamer.com, etc) */
 {
     font-weight: bold;
 }
 
-
-JamRoomViewPanel #labelRoomStatus,
-JamRoomViewPanel  #labelRoomType
+JamRoomViewPanel #labelRoomStatus,      /* the label used to show number of connected users, bpm and bpi */
+JamRoomViewPanel  #labelRoomType        /* ninjam or realtime room? Only ninjam at moment. */
 {
     font-size: 9px;
     color: rgb(140, 140, 140);

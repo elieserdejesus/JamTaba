@@ -1,28 +1,34 @@
-FxPanel{
+/*
+    This file contains stylesheet related to local/user tracks. Many details about the tracks are defined in BaseTrack.css file.
+*/
+
+
+/* LocalTrackView is widget used to show the user tracks/subchannels.
+----------------------------------------------------------------------*/
+
+LocalTrackView
+{
     border: none;
-    background-color: none; /* rgba(0, 0, 0, 20);*/
-    max-height: 80px;
 }
 
-LocalTrackView, NinjamTrackView{
-    border: none;
-}
-
-LocalTrackView[peakMetersOnly="true"]{
+LocalTrackView[peakMetersOnly="true"]           /* collapsed track */
+{
     background: none;
-
 }
 
-LocalTrackView #inputPanel{
+LocalTrackView #inputPanel                      /* the widget used to show the input selection (no input, midi, mono or stereo) */
+{
     padding: 2px;
     border: none;
 }
 
-BaseTrackView[unlighted="false"] #inputPanel{
+LocalTrackView[unlighted="false"] #inputPanel    /* input panel color when user is transmiting */
+{
     border: 1px outset rgb(80,80,80);
 }
 
-LocalTrackView #inputSelectionIcon{
+LocalTrackView #inputSelectionIcon              /* Icon used to show no-input, mono or stereo input */
+{
     border: 1px solid rgba(0, 0, 0, 0);
     margin: 0px;
     padding: 0px;
@@ -32,21 +38,8 @@ LocalTrackView #inputSelectionIcon{
     background-repeat: none;
 }
 
-LocalTrackView #midiToolsButton{
-    font-size: 10px;
-    background-repeat: none;
-    background-position: center left;
-    padding: 0px;
-}
-
-LocalTrackView #inputSelectionIcon,
-LocalTrackView #midiToolsButton
+LocalTrackView #inputSelectionButton            /* Button used to open the input selection menu */
 {
-    min-height: 14px;
-    max-height: 14px;
-}
-
-LocalTrackView #inputSelectionButton{
     background-color: none;
     background-image: url(':/images/arrow-down.png');
     background-repeat: none;
@@ -60,16 +53,31 @@ LocalTrackView #inputSelectionButton{
     padding-right: 2px;
 }
 
-LocalTrackView #midiPeakMeter{
+LocalTrackView #midiToolsButton                 /* The button used to open MidiToolsDialog */
+{
+    font-size: 10px;
+    background-repeat: none;
+    background-position: center left;
+    padding: 0px;
+}
+
+LocalTrackView #inputSelectionIcon,
+LocalTrackView #midiToolsButton
+{
+    min-height: 14px;                           /* using same height for these items to keep the vertical align (#267) */
+    max-height: 14px;
+}
+
+LocalTrackView #midiPeakMeter                   /* The thin line/meter used to show the midi activity. */
+{
     max-width: 1px;
     min-width: 1px;
-
     border: none;
 }
 
-
-
-#xmitButton
+ /* The transmiting (xmit) button.
+ ----------------------------------*/
+#xmitButton:!checked                            /* default state (not checked) is 'not transmiting */
 {
     border-width: 1px;
     font-size: 11px;
@@ -79,31 +87,32 @@ LocalTrackView #midiPeakMeter{
     color: black;
     min-height: 15px;
     min-width: 10px;
-}
-
-#xmitButton:checked
-{
-    border-style: inset;
-    color: rgba(0,40, 0);
-}
-
-#xmitButton:!checked
-{
     border-style: outset;
 }
 
+#xmitButton:checked                             /* when the button is checked we are 'Transmiting' */
+{
+    border-style: inset;
+    color: rgb(0, 40, 0);
+}
 
-/* LOCAL TRACK GROUP */
-LocalTrackGroupView{
+
+
+/* LocalTrackGroup (used as container to group tracks/subchannels)
+-----------------------------------*/
+
+LocalTrackGroupView
+{
     border: none;
 }
 
-LocalTrackGroupView[highlighted="true"] {
+LocalTrackGroupView[highlighted="true"]         /* when navigating in local track menu (clicking in wheel icon) the tracks are highlighted */
+{
     border: 1px solid white;
-
 }
 
-LocalTrackGroupView  #toolButton {
+LocalTrackGroupView  #toolButton                /* The wheel/gear button used to open the channels/subchannels menu (create/remove channels and subchannels). */
+{
     background-color: none;
     background-image: url(':/images/gear.png');
     background-repeat: none;
@@ -115,16 +124,15 @@ LocalTrackGroupView  #toolButton {
     height: 14px;
 }
 
-LocalTrackGroupView   #toolButton:hover{
+LocalTrackGroupView   #toolButton:hover
+{
     background-image: url(':/images/gear-hover.png');
 }
 
-LocalTrackGroupView #groupNameField
+LocalTrackGroupView #groupNameField             /* The channel name for local tracks and the user name for ninjam tracks */
 {
     font-size: 10px;
     padding-left: 0px;
     padding-right: 0px;
     margin: 0px;
 }
-
-

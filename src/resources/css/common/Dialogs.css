@@ -1,29 +1,37 @@
+/*
+    This file contain common stylesheet to Dialogs.
+*/
 
-PreferencesDialog #buttonAddVstScanFolder{
+PreferencesDialog #buttonAddVstScanFolder
+{
     background-image: url(:/images/more.png);
     background-position: center center;
     background-repeat: none;
     margin-right: 12px;
 }
 
-PreferencesDialog #blackListWidget{
+PreferencesDialog #blackListWidget
+{
     background-color: black;
     color: orange;
 }
 
-PreferencesDialog #plainTextEdit{
+PreferencesDialog #plainTextEdit
+{
     background: transparent;
 }
 
 PreferencesDialog QGroupBox,
 MidiToolsDialog QGroupBox,
 PreferencesDialog #sampleRateLabel,
-PreferencesDialog #bufferSizeLabel {
+PreferencesDialog #bufferSizeLabel
+{
     font-weight: bold;
 }
 
 PreferencesDialog QGroupBox,
-MidiToolsDialog QGroupBox{
+MidiToolsDialog QGroupBox
+{
     padding-left: 16px;
     padding-top: 12px;
     border: none;
@@ -38,31 +46,31 @@ PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false]
 QMessageBox,
 QInputDialog,
 PluginScanDialog,
-MidiToolsDialog{
+MidiToolsDialog
+{
     background-color: rgb(220, 220, 220);
     border: 1px outset gray;
     padding: 32px;
 }
 
-QInputDialog{
+QInputDialog
+{
     min-width: 400px;
 }
 
 
-
-
-BusyDialog #labelGif{
+BusyDialog #labelGif
+{
     border: none;
     background-color: rgba(0, 0, 0, 10);
-    border-radius: 32px;/*simulate a circle as background */
+    border-radius: 32px; /* simulate a circle as background */
     max-width: 64px;
     max-height: 64px;
     qproperty-alignment: AlignCenter;
     text-align: center;
 }
 
-BusyDialog > QLabel
+BusyDialog > QLabel /* the text appearing in Busy dialog, like "connecting in ninbot.com" */
 {
     font-weight: bold;
 }
-

@@ -1,33 +1,49 @@
-QMainWindow #bottomPanel{
+/*
+    Stylesheet code for the Main window.
+*/
+
+
+#bottomPanel                                    /* the widget in bottom, used to show master controls and NinjamPanel when connected in a ninjam server */
+{
     min-height: 60px;
 }
 
-#localControlsCollapseButton{
-    border: none;
 
+
+/* The small arrow used to collapse the local tracks
+------------------------------------------------------*/
+
+MainWindow #localControlsCollapseButton                    /* not collapsed */
+{
+    border: none;
     background: none;
     max-width: 6px;
     width: 6px;
     background-repeat: none;
     background-position: right center;
+    background-image: url(:/images/mini arrow left.png);
 }
 
-QPushButton#localControlsCollapseButton:!checked{
-   background-image: url(:/images/mini arrow left.png);
-}
-
-QPushButton#localControlsCollapseButton::hover:!checked{
+MainWindow #localControlsCollapseButton::hover             /* hover effect when not collapsed */
+{
    background-image: url(:/images/mini arrow left hover.png);
 }
 
-QPushButton#localControlsCollapseButton:checked{
+MainWindow #localControlsCollapseButton:checked            /* collapsed (arrow pointing to right side) */
+{
    background-image: url(:/images/mini arrow right.png);
    background-position: center center;
 }
-QPushButton#localControlsCollapseButton::hover:checked{
+
+MainWindow #localControlsCollapseButton::hover:checked     /* hover effect when collapsed */
+{
    background-image: url(:/images/mini arrow right hover.png);
 }
 
+
+
+/* The tabBar used in center/content area
+------------------------------------------------------*/
 QTabBar::tab
 {
     border: none;

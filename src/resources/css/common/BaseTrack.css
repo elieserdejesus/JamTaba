@@ -1,3 +1,10 @@
+/*
+    This file contain common stylesheet to all tracks: local tracks, ninjam tracks and track groups.
+*/
+
+
+/* Basic boost (-12, 0, +12) buttons stylesheet:
+--------------------------------------*/
 #buttonBoostMinus12,
 #buttonBoostPlus12,
 #buttonBoostZero
@@ -15,20 +22,25 @@
     color: rgb(50,50,50);
 }
 
-BaseTrackView #peaksDbLabel{
+
+/* The small label used to show the max peak below peak meters
+--------------------------------------------------------------*/
+
+BaseTrackView #peaksDbLabel
+{
     font-size: 8px;
     qproperty-alignment: AlignCenter;
     color: rgba(0, 0, 0, 120);
     padding: 1px;
     min-width: 15px;
 }
-
-
 BaseTrackView #peaksDbLabel:hover{
     background-color: rgba(255,255,255, 30);
     color: black;
 }
 
+/* Pan slider and LR labels
+----------------------------*/
 #panSlider
 {
     margin-left: 3px;
@@ -41,12 +53,21 @@ BaseTrackView #peaksDbLabel:hover{
     font-size: 9px;
 }
 
+
+/*
+Peak meter color when the tracks are "disabled". For local tracks this color is
+used when xmit is off, and for remote tracks (ninjam tracks) this color is used when
+user is not transmiting.
+-----------------------------------------------------------------------------------*/
+
 BaseTrackView[unlighted="true"] PeakMeter{
     background-color: rgba(0, 0, 0, 15);
-    /*border: none;*/
 }
 
 
+
+/* TrackGroupView is the 'container' for tracks/subchannels in local tracks or ninjam tracks.
+----------------------------------------------------------------------------------------------*/
 
 TrackGroupView {
     border: none;
