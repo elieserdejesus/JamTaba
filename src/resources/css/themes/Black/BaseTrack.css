@@ -1,4 +1,4 @@
-/* Stylesheet for BaseTrack - Flat theme */
+/* Stylesheet for BaseTrack - Black theme */
 
 
 /* Track buttons
@@ -161,6 +161,7 @@ TrackGroupView #topPanel                                /* topPanel is used to s
 
 TrackGroupView #groupNameField                          /* the text field used to input channel name */
 {
+    color: white;
     margin-bottom: 0px;
     margin-top: 0px;
     font-size: 11px;
@@ -171,6 +172,7 @@ TrackGroupView #groupNameField                          /* the text field used t
 
 TrackGroupView[unlighted="true"] #groupNameField        /* channel name text field when not xmiting */
 {
+    color: black;
     background: rgba(255, 255, 255, 20);
     border: none;
 }
