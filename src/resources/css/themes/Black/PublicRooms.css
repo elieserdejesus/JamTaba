@@ -2,13 +2,29 @@
 
 JamRoomViewPanel
 {
-    background-color: rgb(40, 40, 40);
-    border: 1px solid rgb(250, 250, 250);
-    border-top: none;
-    border-left: none;
+    background-color: black;
+    border: 1px solid white;
+    border-top: 1px solid white;
+    border-left: 1px solid white;
+    border-bottom: 1px solid white;
 }
 
 JamRoomViewPanel #content                   /* where the user names and wave form are showed */
 {
-    background: rgb(30, 30, 30);
+    background: rgb(20, 20, 20);
 }
+
+JamRoomViewPanel #labelName             /* the server name (ninbot.com, ninjamer.com, etc) */
+{
+    color: white;
+    font-weight: bold;
+}
+
+JamRoomViewPanel .PlayerLabel
+{
+    color: white;
+}
+
+
+
+
