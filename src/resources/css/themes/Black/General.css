@@ -197,7 +197,7 @@ QTabBar::tab:hover
 
 QTabBar::tab:!selected
 {
-    color: white;
     margin-top: 3px; /* make non-selected tabs look smaller */
-    color: rgb(20, 20, 20);
+    color: white;
+    background-color: black
 }
