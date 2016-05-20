@@ -113,7 +113,7 @@ QScrollBar::sub-page:horizontal
 -----------------------------------------------------------------------*/
 QLineEdit
 {
-    background-color: rgb(254, 254, 254);
+    background-color: rgb(140, 140, 140);
     border-color: rgba(0, 0, 0, 45);
     color: rgb(80, 80, 80);
 }
@@ -150,8 +150,8 @@ QSlider::groove:vertical
 
 QSlider::handle
 {
-    background: rgb(245, 245, 245);
-    border: 1px outset rgb(120, 120, 120);
+    background: rgb(80, 80, 80);
+    border: 1px outset rgb(80, 80, 80);
     border-radius: 2px;
 }
 
@@ -191,13 +191,13 @@ QTabBar::tab
 QTabBar::tab:selected,
 QTabBar::tab:hover
 {
-    color: white;
+    color: rgb(140, 140,140);
     background-color: rgb(20, 20, 20)
 }
 
 QTabBar::tab:!selected
 {
     margin-top: 3px; /* make non-selected tabs look smaller */
-    color: white;
+    color: rgb(140, 140,140);
     background-color: black
 }

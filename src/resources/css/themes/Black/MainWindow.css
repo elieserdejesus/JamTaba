@@ -7,13 +7,13 @@
 
 #labelYourControls
 {
-    color: white;
+    color: rgb(85, 85, 85);
 }
 
 #masterTitleLabel,
 #labelMetronomeIControls
 {
-    color: white;
+    color: rgb(85, 85, 85);
 }
 
 #masterMeterL,
@@ -42,14 +42,17 @@
 
 QMainWindow
 {
-    background-color: white;
+    background-color: rgb(80, 80, 80);
     border: 1px solid rgb(100, 100, 100);
 }
 
 #bottomPanel
 {
     background: rgb(20, 20, 20);
-    border-top: 1px solid rgb(191, 191, 191);
+    border-top: 1px solid Black;
+    border-left: 1px solid Black;
+    border-right: 1px solid Black;
+    border-bottom: 1px solid Black;
 }
 
 #leftPanel
