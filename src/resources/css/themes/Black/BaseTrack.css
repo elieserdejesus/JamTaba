@@ -19,7 +19,7 @@
 #soloButton,
 #muteButton
 {
-    background: rgb(235, 235, 235);
+    background: rgb(140, 140, 140);
 }
 
 
@@ -37,9 +37,18 @@
 #buttonBoostPlus12:checked,
 #buttonBoostZero:checked
 {
-    background-color: rgb(200, 200, 200);
+    background-color: rgb(140, 140, 140);
     color: rgba(0, 0, 0, 160);
     border-radius: 0px;
+}
+
+QPushButton#buttonStereoInversion
+{
+    background-repeat: none;
+    background-position: center center;
+    max-width: 8px;
+    max-height: 12px;
+    background-color: rgb(140, 140, 140);
 }
 
 /* button colors when the track is NOT xmiting */
@@ -76,7 +85,7 @@ BaseTrackView[unlighted="true"] #muteButton
 #muteButton:checked
 {
     background-color: rgb(255, 0, 0);
-    color: white;
+    color: rgb(140, 140, 140);
 
 }
 
