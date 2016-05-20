@@ -1,13 +1,13 @@
 #userNamePanel
 {
-    background-color: black;
-    border-color: white;
+    background-color: rgb(20, 20, 20);
+    border-color: black;
     padding: 1px;
 }
 
 #labelYourControls
 {
-    color: rgb(85, 85, 85);
+    color: rgb(140, 140, 140);
 }
 
 #masterTitleLabel,
@@ -26,14 +26,14 @@
 
 #userNameLineEdit
 {
-    color: White;
+    color: rgb(140, 140, 140);
     background-color: transparent;
     border: none;
 }
 
 #userNameLineEdit:read-only
 {
-    color: White;
+    color: rgb(85, 85, 85);
 }
 
 /* ------------------------------ */
