@@ -3,7 +3,7 @@
 
 PluginScanDialog
 {
-    background-color: rgb(250, 250, 250);
+    background-color: rgb(80, 80, 80);
 }
 
 
@@ -19,8 +19,8 @@ PluginScanDialog #labelPluginText
 
 BusyDialog
 {
-    border: 1px solid rgba(0, 0, 0, 30);
+    border: 1px solid black;
     padding: 0px;
     margin: 0px;
-    background-color: rgb(220, 220, 220);
+    background-color: rgb(80, 80, 80);
 }

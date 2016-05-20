@@ -164,8 +164,8 @@ QSlider::handle
 
 QSlider::handle:hover
 {
-    background: rgb(250, 250, 250);
-    border: 1px outset rgb(90, 90, 90);
+    background: rgb(140, 140, 140);
+    border: 1px outset rgb(80, 80, 80);
 }
 
 QSlider::handle:horizontal
