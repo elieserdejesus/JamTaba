@@ -22,5 +22,7 @@ BusyDialog
     border: 1px solid black;
     padding: 0px;
     margin: 0px;
-    background-color: rgb(80, 80, 80);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(20, 20, 20),
+    stop:1 rgb(80, 80, 80));
 }
