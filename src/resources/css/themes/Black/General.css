@@ -52,14 +52,14 @@ QScrollBar::handle:vertical,
 QScrollBar::handle:horizontal
 {
   border: 1px solid rgba(0, 0, 0, 45);
-  background-color: rgba(255, 255, 255, 140);
+  background-color: rgb(80, 80, 80);
   margin: 0px;
 }
 
 QScrollBar::handle:horizontal:hover,
 QScrollBar::handle:vertical:hover
 {
-    background-color: rgba(255, 255, 255, 200);
+    background-color: rgb(140, 140, 140);
 }
 
 QScrollBar::handle:vertical
