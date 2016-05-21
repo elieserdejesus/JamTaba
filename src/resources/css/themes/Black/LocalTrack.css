@@ -17,11 +17,6 @@ BaseTrackView[unlighted="false"] FxPanelItem            /* slot border when the 
     border: 1px outset rgb(100, 100, 100);
 }
 
-BaseTrackView FxPanelItem            /* slot border when the track is xmiting */
-{
-    border: 1px outset rgb(80, 80, 80);
-}
-
 FxPanelItem[containPlugin="false"]                      /* empty slot */
 {
     background-image: url(':/images/arrow-down-lighter.png');
@@ -106,6 +101,7 @@ LocalTrackView #inputPanel:hover
 {
     background-color: rgb(140, 140, 140);
     border-color: rgb(20, 20, 20);
+    color: black;
 }
 
 #xmitButton[preparing="true"]
@@ -116,7 +112,7 @@ LocalTrackView #inputPanel:hover
 #xmitButton:!checked
 {
     background-color: rgb(80, 80, 80);
-    border-color: rgb(140, 140, 140, 140);
+    border-color: rgb(140, 140, 140);
     color: black;
 }
 
