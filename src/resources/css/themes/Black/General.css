@@ -180,14 +180,14 @@ QSlider::handle:vertical
 
 QSlider::handle:horizontal:hover
 {
-    background: rgb(120, 120, 120);
+    background: rgb(140, 140, 140);
     border: 1px outset rgb(80, 80, 80);
 }
 
 QSlider::handle:vertical:hover
 {
     background: rgb(180, 180, 180);
-    border: 1px outset rgb(140, 140, 140);
+    border: 1px outset rgb(80, 80, 80);
 }
 
 
