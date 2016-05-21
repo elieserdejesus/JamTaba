@@ -129,8 +129,8 @@ QLineEdit:focus,
 QLineEdit#groupNameField:focus
 {
     border-color: rgba(0, 0, 0, 90);
-    background-color: rgb(30, 30, 30);
-    color: rgb(140, 140, 140);
+    background-color: rgb(35, 35, 35);
+    color: rgb(80, 80, 80);
 }
 
 
