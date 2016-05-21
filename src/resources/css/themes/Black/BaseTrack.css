@@ -129,7 +129,7 @@ BaseTrackView
 BaseTrackView[unlighted="true"] #panSlider::handle,         /* pan slider handle */
 BaseTrackView[unlighted="true"] QSlider::handle:vertical    /* track fader handle */
 {
-    background: rgb(180, 180, 180);
+    background: rgb(40, 40, 40);
 }
 
 BaseTrackView[unlighted="true"],                            /* the track */

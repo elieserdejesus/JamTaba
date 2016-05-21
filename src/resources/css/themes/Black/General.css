@@ -154,22 +154,17 @@ QSlider::groove:vertical
     width: 2px;
 }
 
-
-QSlider::handle
-{
-    background: rgb(80, 80, 80);
-    border: 1px outset rgb(80, 80, 80);
-    border-radius: 2px;
-}
-
 QSlider::handle:hover
 {
-    background: rgb(140, 140, 140);
-    border: 1px outset rgb(80, 80, 80);
+    background: rgb(80, 80, 80);
+    border: 1px outset rgb(40, 40, 80);
 }
 
 QSlider::handle:horizontal
 {
+    background: rgb(80, 80, 80);
+    border: 1px outset rgb(80, 80, 80);
+    border-radius: 2px;
     margin-top: -8px;
     margin-bottom: -7px;
     padding: 0px;
@@ -179,6 +174,9 @@ QSlider::handle:horizontal
 
 QSlider::handle:vertical
 {
+    background: rgb(140, 140, 140);
+    border: 1px outset rgb(120, 120, 120);
+    border-radius: 2px;
     margin-left: -9px;
     margin-right: -9px;
     padding: 0px;
