@@ -77,6 +77,8 @@ public:
 
     void recreateMetronome(int newSampleRate);
 
+    void blockUserInChat(const Ninjam::User &user);
+
 signals:
     void currentBpiChanged(int newBpi);
     void currentBpmChanged(int newBpm);
@@ -103,16 +105,24 @@ protected:
     long intervalPosition;
     long samplesInInterval;
 
+private slots:
+    void handleReceivedChatMessage(const Ninjam::User &user, const QString &message);
+
 private:
     Controller::MainController *mainController;
     Audio::MetronomeTrackNode *metronomeTrackNode;
 
     QMap<QString, NinjamTrackNode *> trackNodes;// the other users channels
 
-    static QString getUniqueKey(const Ninjam::UserChannel &channel);
+    static QString getUniqueKeyForChannel(const Ninjam::UserChannel &channel);
+    static QString getUniqueKeyForUser(const Ninjam::User& user);
 
     void addTrack(const Ninjam::User &user, const Ninjam::UserChannel &channel);
     void removeTrack(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+
+    bool userIsBlockedInChat(const Ninjam::User &user) const;
+
+    QList<QString> chatBlockedUsers;
 
     bool running;
     int lastBeat;
