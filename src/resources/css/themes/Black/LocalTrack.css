@@ -17,6 +17,11 @@ BaseTrackView[unlighted="false"] FxPanelItem            /* slot border when the 
     border: 1px outset rgb(100, 100, 100);
 }
 
+BaseTrackView FxPanelItem            /* slot border when the track is xmiting */
+{
+    border: 1px outset rgb(80, 80, 80);
+}
+
 FxPanelItem[containPlugin="false"]                      /* empty slot */
 {
     background-image: url(':/images/arrow-down-lighter.png');

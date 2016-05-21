@@ -48,9 +48,9 @@ QMainWindow
 
 #bottomPanel
 {
-    background: qlineargradient(x1:1, y1:0, x2:0, y2:0,
-    stop:0 rgb(50, 50, 50),
-    stop:1 rgb(10, 10, 10));
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(10, 10, 10),
+    stop:1 rgb(50, 50, 50));
     border-top: 1px solid Black;
     border-left: 1px solid Black;
     border-right: 1px solid Black;
