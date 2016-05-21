@@ -154,12 +154,6 @@ QSlider::groove:vertical
     width: 2px;
 }
 
-QSlider::handle:hover
-{
-    background: rgb(80, 80, 80);
-    border: 1px outset rgb(40, 40, 80);
-}
-
 QSlider::handle:horizontal
 {
     background: rgb(80, 80, 80);
@@ -184,6 +178,17 @@ QSlider::handle:vertical
     width: 24px;
 }
 
+QSlider::handle:horizontal:hover
+{
+    background: rgb(120, 120, 120);
+    border: 1px outset rgb(80, 80, 80);
+}
+
+QSlider::handle:vertical:hover
+{
+    background: rgb(180, 180, 180);
+    border: 1px outset rgb(140, 140, 140);
+}
 
 
 
