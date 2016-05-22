@@ -41,6 +41,7 @@ private:
     Controller::MainController *mainController;
     QLabel *countryLabel;
     MarqueeLabel *groupNameLabel;
+    QLabel *chatBlockIconLabel;
     QString userIP;
     Qt::Orientation orientation;
 

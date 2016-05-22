@@ -27,8 +27,16 @@ NinjamTrackGroupView::NinjamTrackGroupView(Controller::MainController *mainContr
     groupNameLabel = new MarqueeLabel();
     groupNameLabel->setObjectName("groupNameField");
     groupNameLabel->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum));
-    topPanelLayout->addWidget(groupNameLabel);
-    topPanelLayout->setAlignment(groupNameLabel, Qt::AlignBottom);
+
+    QHBoxLayout *groupNameLayout = new QHBoxLayout();
+    groupNameLayout->addWidget(groupNameLabel, 1);
+    chatBlockIconLabel = new QLabel(this);
+    chatBlockIconLabel->setPixmap(QPixmap(":/images/chat_blocked.png"));
+    chatBlockIconLabel->setVisible(false);
+
+    groupNameLayout->addWidget(chatBlockIconLabel);
+    topPanelLayout->addLayout(groupNameLayout);
+    topPanelLayout->setAlignment(groupNameLayout, Qt::AlignBottom);
 
     setGroupName(initialValues.getUserName());
 
@@ -76,12 +84,14 @@ void NinjamTrackGroupView::blockChatMessages()
 {
     QString userNameToBlock = getGroupName();
     mainController->blockUserInChat(userNameToBlock);
+    chatBlockIconLabel->setVisible(true);
 }
 
 void NinjamTrackGroupView::unblockChatMessages()
 {
     QString userNameToUnblock = getGroupName();
     mainController->unblockUserInChat(userNameToUnblock);
+    chatBlockIconLabel->setVisible(false);
 }
 
 void NinjamTrackGroupView::updateGeoLocation(const QString &ip)
