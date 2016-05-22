@@ -19,7 +19,7 @@ PluginScanDialog #labelPluginText
 
 BusyDialog
 {
-    border: 1px solid rgb(140, 140, 140);
+    border: 1px solid rgb(40, 40, 40);
     padding: 0px;
     margin: 0px;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
