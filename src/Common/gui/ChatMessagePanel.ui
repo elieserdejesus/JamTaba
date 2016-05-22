@@ -44,6 +44,16 @@
       <number>3</number>
      </property>
      <item>
+      <widget class="QPushButton" name="blockButton">
+       <property name="toolTip">
+        <string>block chat messages from this user</string>
+       </property>
+       <property name="text">
+        <string>B</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLabel" name="labelUserName">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -78,16 +88,6 @@
        </property>
        <property name="checkable">
         <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="blockButton">
-       <property name="toolTip">
-        <string>block chat messages from this user</string>
-       </property>
-       <property name="text">
-        <string>B</string>
        </property>
       </widget>
      </item>
