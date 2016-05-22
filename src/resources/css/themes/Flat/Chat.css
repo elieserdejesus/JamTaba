@@ -34,7 +34,8 @@ ChatMessagePanel #labelUserName             /* The name of chat message author *
     margin-bottom: 1px;
 }
 
-ChatMessagePanel #translateButton:hover     /* hover effect in chat message translate (T) button */
+ChatMessagePanel #translateButton:hover,   /* hover effect in chat message translate (T) button */
+ChatMessagePanel #blockButton:hover
 {
     border-color: black;
     font-weight: bold;
