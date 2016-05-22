@@ -165,6 +165,9 @@ class NinjamController::InputChannelChangedEvent : public SchedulableEvent{
         int channelIndex;
 };
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ QList<QString> NinjamController::chatBlockedUsers;
+
 NinjamController::NinjamController(Controller::MainController* mainController)
     :mainController(mainController),
     metronomeTrackNode(createMetronomeTrackNode( mainController->getSampleRate())),
@@ -455,10 +458,12 @@ void NinjamController::start(const Ninjam::Server& server){
 
 void NinjamController::blockUserInChat(const Ninjam::User &user)
 {
-    chatBlockedUsers.append(getUniqueKeyForUser(user));
+    QString uniqueKey = getUniqueKeyForUser(user);
+    if (!chatBlockedUsers.contains(uniqueKey))
+        chatBlockedUsers.append(uniqueKey);
 }
 
-bool NinjamController::userIsBlockedInChat(const Ninjam::User &user) const
+bool NinjamController::userIsBlockedInChat(const Ninjam::User &user)
 {
     QString uniqueKey = getUniqueKeyForUser(user);
     return chatBlockedUsers.contains(uniqueKey);

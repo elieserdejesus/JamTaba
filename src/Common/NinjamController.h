@@ -77,7 +77,7 @@ public:
 
     void recreateMetronome(int newSampleRate);
 
-    void blockUserInChat(const Ninjam::User &user);
+    static void blockUserInChat(const Ninjam::User &user);
 
 signals:
     void currentBpiChanged(int newBpi);
@@ -120,9 +120,9 @@ private:
     void addTrack(const Ninjam::User &user, const Ninjam::UserChannel &channel);
     void removeTrack(const Ninjam::User &user, const Ninjam::UserChannel &channel);
 
-    bool userIsBlockedInChat(const Ninjam::User &user) const;
+    static bool userIsBlockedInChat(const Ninjam::User &user);
 
-    QList<QString> chatBlockedUsers;
+    static QList<QString> chatBlockedUsers; // using static to keep the blocked users list until Jamtaba is closed.
 
     bool running;
     int lastBeat;
