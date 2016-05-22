@@ -77,10 +77,10 @@ public:
 
     void recreateMetronome(int newSampleRate);
 
-    static void blockUserInChat(const Ninjam::User &user);
+    void blockUserInChat(const Ninjam::User &user);
     void blockUserInChat(const QString &userNameToBlock);
 
-    static void unblockUserInChat(const Ninjam::User &user);
+    void unblockUserInChat(const Ninjam::User &user);
     void unblockUserInChat(const QString &userNameToBlock);
 
     bool userIsBot(const QString userName) const;
@@ -105,6 +105,9 @@ signals:
     void chatMsgReceived(const Ninjam::User &user, const QString &message );
 
     void encodedAudioAvailableToSend(const QByteArray &encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart);
+
+    void userBlockedInChat(const QString &userName);
+    void userUnblockedInChat(const QString &userName);
 
     void preparingTransmission();// waiting for start transmission
     void preparedToTransmit(); // this signal is emmited one time, when Jamtaba is ready to transmit (after wait some complete itervals)

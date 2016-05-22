@@ -613,6 +613,9 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
     connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(setEstimatatedChunksPerIntervalInAllTracks()));
     connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(setEstimatatedChunksPerIntervalInAllTracks()));
 
+    connect(ninjamController, &Controller::NinjamController::userBlockedInChat, this, &NinjamRoomWindow::showFeedbackAboutBlockedUserInChat);
+    connect(ninjamController, &Controller::NinjamController::userUnblockedInChat, this, &NinjamRoomWindow::showFeedbackAboutUnblockedUserInChat);
+
     connect(chatPanel, SIGNAL(userSendingNewMessage(QString)), this, SLOT(sendNewChatMessage(QString)));
 
     connect(chatPanel, SIGNAL(userConfirmingVoteToBpiChange(int)), this, SLOT(voteToChangeBpi(int)));
@@ -627,17 +630,27 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
 
 }
 
-void NinjamRoomWindow::blockUserInChat(const QString &userNameToBlock)
+void NinjamRoomWindow::showFeedbackAboutBlockedUserInChat(const QString &userName)
 {
     if (chatPanel) {
-        chatPanel->removeMessagesFrom(userNameToBlock);
-        Controller::NinjamController *ninjamController = mainController->getNinjamController();
-        Ninjam::User user = ninjamController->getUserByName(userNameToBlock);
-        if (user.getName() == userNameToBlock) {
-            ninjamController->blockUserInChat(user);
-            chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is blocked in the chat").arg(userNameToBlock));
-        }
+        chatPanel->removeMessagesFrom(userName);
+        chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is blocked in the chat").arg(userName));
     }
+}
+
+void NinjamRoomWindow::showFeedbackAboutUnblockedUserInChat(const QString &userName)
+{
+    if (chatPanel) {
+        chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is unblocked in the chat").arg(userName));
+    }
+}
+
+void NinjamRoomWindow::blockUserInChat(const QString &userNameToBlock)
+{
+    Controller::NinjamController *ninjamController = mainController->getNinjamController();
+    Ninjam::User user = ninjamController->getUserByName(userNameToBlock);
+    if (user.getName() == userNameToBlock)
+        ninjamController->blockUserInChat(user);
 }
 
 void NinjamRoomWindow::setNewIntervalShape(int newShape)

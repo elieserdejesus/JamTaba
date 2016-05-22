@@ -471,8 +471,10 @@ void NinjamController::start(const Ninjam::Server& server){
 void NinjamController::blockUserInChat(const Ninjam::User &user)
 {
     QString uniqueKey = getUniqueKeyForUser(user);
-    if (!chatBlockedUsers.contains(uniqueKey))
+    if (!chatBlockedUsers.contains(uniqueKey)) {
         chatBlockedUsers.append(uniqueKey);
+        emit userBlockedInChat(user.getName());
+    }
 }
 
 void NinjamController::blockUserInChat(const QString &userNameToBlock)
@@ -483,7 +485,8 @@ void NinjamController::blockUserInChat(const QString &userNameToBlock)
 void NinjamController::unblockUserInChat(const Ninjam::User &user)
 {
     QString uniqueKey = getUniqueKeyForUser(user);
-    chatBlockedUsers.removeOne(uniqueKey);
+    if (chatBlockedUsers.removeOne(uniqueKey))
+        emit userUnblockedInChat(user.getName());
 }
 
 void NinjamController::unblockUserInChat(const QString &userNameToBlock)
