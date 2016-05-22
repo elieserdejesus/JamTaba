@@ -66,7 +66,13 @@ NinjamTrackGroupView::NinjamTrackGroupView(Controller::MainController *mainContr
     //context menu
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &NinjamTrackGroupView::customContextMenuRequested, this, &NinjamTrackGroupView::showContextMenu);
+
+    //reacting to chat block/unblock events
+    Controller::NinjamController *ninjamController = mainController->getNinjamController();
+    connect(ninjamController, SIGNAL(userBlockedInChat(QString)), chatBlockIconLabel, SLOT(show()));
+    connect(ninjamController, SIGNAL(userUnblockedInChat(QString)), chatBlockIconLabel, SLOT(hide()));
 }
+
 
 void NinjamTrackGroupView::showContextMenu(const QPoint &pos)
 {
@@ -84,14 +90,12 @@ void NinjamTrackGroupView::blockChatMessages()
 {
     QString userNameToBlock = getGroupName();
     mainController->blockUserInChat(userNameToBlock);
-    chatBlockIconLabel->setVisible(true);
 }
 
 void NinjamTrackGroupView::unblockChatMessages()
 {
     QString userNameToUnblock = getGroupName();
     mainController->unblockUserInChat(userNameToUnblock);
-    chatBlockIconLabel->setVisible(false);
 }
 
 void NinjamTrackGroupView::updateGeoLocation(const QString &ip)
