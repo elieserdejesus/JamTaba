@@ -168,8 +168,8 @@ QSlider::handle:horizontal
 
 QSlider::handle:vertical
 {
-    background: rgb(140, 140, 140);
-    border: 1px outset rgb(120, 120, 120);
+    background: rgb(125, 125, 125);
+    border: 1px outset rgb(100, 100, 100);
     border-radius: 2px;
     margin-left: -9px;
     margin-right: -9px;
@@ -180,7 +180,7 @@ QSlider::handle:vertical
 
 QSlider::handle:horizontal:hover
 {
-    background: rgb(140, 140, 140);
+    background: rgb(150, 150, 150);
     border: 1px outset rgb(80, 80, 80);
 }
 
