@@ -288,7 +288,10 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
     }
 
     bool showTranslationButton = !isChordProgressionMessage;
-    chatPanel->addMessage(user.getName(), message, showTranslationButton);
+    bool userIsBot = mainController->getNinjamController()->userIsBot(user.getName());
+    bool currentUserIsPostingTheChatMessage = user.getName() == mainController->getUserName();
+    bool showBlockButton = !userIsBot && !currentUserIsPostingTheChatMessage; // avoid the block button for bot and current user messages. Is not a good idea allow user to block yourself :)
+    chatPanel->addMessage(user.getName(), message, showTranslationButton, showBlockButton);
 
     if (isVoteMessage)
         handleVoteMessage(user, message);

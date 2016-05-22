@@ -79,6 +79,8 @@ public:
 
     static void blockUserInChat(const Ninjam::User &user);
 
+    bool userIsBot(const QString userName) const;
+
 signals:
     void currentBpiChanged(int newBpi);
     void currentBpmChanged(int newBpm);
@@ -169,8 +171,6 @@ private:
     bool preparedForTransmit;
     int waitingIntervals;
     static const int TOTAL_PREPARED_INTERVALS = 2;// how many intervals Jamtaba will wait to start trasmiting?
-
-    bool userIsBot(const QString userName) const;
 
 private slots:
     // ninjam events

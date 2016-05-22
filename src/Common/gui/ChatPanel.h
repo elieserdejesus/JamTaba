@@ -19,7 +19,7 @@ class ChatPanel : public QWidget
 public:
     ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool);
     virtual ~ChatPanel();
-    void addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton = true);
+    void addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton = true, bool showBlockButton = false);
     void addBpmVoteConfirmationMessage(int newBpmValue);
     void addBpiVoteConfirmationMessage(int newBpmValue);
     void addChordProgressionConfirmationMessage(const ChordProgression &progression);

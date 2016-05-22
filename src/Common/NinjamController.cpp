@@ -166,7 +166,7 @@ class NinjamController::InputChannelChangedEvent : public SchedulableEvent{
 };
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
- QList<QString> NinjamController::chatBlockedUsers;
+QList<QString> NinjamController::chatBlockedUsers; // initializing the static member
 
 NinjamController::NinjamController(Controller::MainController* mainController)
     :mainController(mainController),

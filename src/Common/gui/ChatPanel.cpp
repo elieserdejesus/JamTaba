@@ -148,7 +148,7 @@ void ChatPanel::hideTranslationProgressFeedback()
         QApplication::restoreOverrideCursor();
 }
 
-void ChatPanel::addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton)
+void ChatPanel::addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton, bool showBlockButton)
 {
     QString name = !userName.isEmpty() ? userName : "JamTaba";
     QColor backgroundColor = getUserColor(name);
@@ -156,7 +156,7 @@ void ChatPanel::addMessage(const QString &userName, const QString &userMessage, 
     QColor textColor = isBot ? QColor(50, 50, 50) : QColor(0, 0, 0);
     QColor userNameBackgroundColor = backgroundColor;
     ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, name, userMessage,
-                                                      userNameBackgroundColor, textColor, showTranslationButton);
+                                                      userNameBackgroundColor, textColor, showTranslationButton, showBlockButton);
 
     connect(msgPanel, SIGNAL(startingTranslation()), this, SLOT(showTranslationProgressFeedback()));
     connect(msgPanel, SIGNAL(translationFinished()), this, SLOT(hideTranslationProgressFeedback()));

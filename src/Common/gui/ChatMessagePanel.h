@@ -15,7 +15,7 @@ class ChatMessagePanel : public QFrame
 
 public:
     explicit ChatMessagePanel(QWidget *parent);
-    ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg, const QColor &userNameBackgroundColor, const QColor &textColor, bool showTranslationButton);
+    ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg, const QColor &userNameBackgroundColor, const QColor &textColor, bool showTranslationButton, bool showBlockButton);
     ~ChatMessagePanel();
     void setPrefferedTranslationLanguage(const QString &targetLanguage);
     void translate();
@@ -47,7 +47,7 @@ private:
     static QString buildCssString(const QColor &bgColor, const QColor &textColor);
 
     void initialize(const QString &userName, const QString &msg,
-                    const QColor &msgBackgroundColor, const QColor &textColor, bool showTranslationButton);
+                    const QColor &msgBackgroundColor, const QColor &textColor, bool showTranslationButton, bool showBlockButton);
 
     void setTranslatedMessage(const QString &translatedMessage);
 
