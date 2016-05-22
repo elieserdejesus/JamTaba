@@ -106,13 +106,13 @@ LocalTrackView #inputPanel:hover
 
 #xmitButton[preparing="true"]
 {
-    background-color: rgb(255, 255, 0);
+    background-color: rgb(128, 128, 0);
 }
 
 #xmitButton:!checked
 {
-    background-color: rgb(80, 80, 80);
-    border-color: rgb(20, 20, 20);
+    background-color: rgb(60, 60, 60);
+    border-color: rgb(60, 60, 60);
     color: black;
 }
 
