@@ -72,28 +72,29 @@ BaseTrackView[unlighted="true"] #muteButton
 
 #soloButton:checked
 {
-    background-color: rgb(90, 255, 62);
-    color: black;
+    background-color: rgb(80, 80, 80);
+    color: rgb(140, 140, 140);
+    border-color: rgb(40, 80, 40);
 }
 
 #soloButton:hover:checked
 {
-    background-color: rgb(110, 255, 80);
-    border-color: rgb(45, 45, 45);
+    background-color: rgb(40, 40, 40);
+    border-color: rgb(40, 80, 40);
 }
 
 #muteButton:checked
 {
-    background-color: rgb(255, 0, 0);
+    background-color: rgb(40, 40, 40);
     color: rgb(140, 140, 140);
-
+    border-color: rgb(80, 40, 40);
 }
 
 #muteButton:hover:checked
 {
-    background-color: rgb(255, 40, 40);
-    color: lightgray;
-    border-color: rgb(45, 45, 45);
+    background-color: rgb(20, 20, 20);
+    color: rgb(140, 140, 140);
+    border-color: rgb(80, 40, 40);
 }
 
 
