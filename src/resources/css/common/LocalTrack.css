@@ -77,6 +77,12 @@ LocalTrackView #midiPeakMeter                   /* The thin line/meter used to s
 
  /* The transmiting (xmit) button.
  ----------------------------------*/
+#xmitButton
+{
+    padding-left: 0px; /* using ZERO padding in left and right to fix #387 */
+    padding-right: 0px;
+}
+
 #xmitButton:!checked                            /* default state (not checked) is 'not transmiting */
 {
     border-width: 1px;
