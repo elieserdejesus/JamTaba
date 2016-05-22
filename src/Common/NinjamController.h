@@ -83,9 +83,11 @@ public:
     void unblockUserInChat(const Ninjam::User &user);
     void unblockUserInChat(const QString &userNameToBlock);
 
+    bool userIsBlockedInChat(const QString &userName) const;
+
     bool userIsBot(const QString userName) const;
 
-    Ninjam::User getUserByName(const QString &userName);
+    Ninjam::User getUserByName(const QString &userName) const;
 
 signals:
     void currentBpiChanged(int newBpi);

@@ -187,7 +187,7 @@ NinjamController::NinjamController(Controller::MainController* mainController)
 }
 
 
-Ninjam::User NinjamController::getUserByName(const QString &userName)
+Ninjam::User NinjamController::getUserByName(const QString &userName) const
 {
     Ninjam::Server *server = mainController->getNinjamService()->getCurrentServer();
     QList<Ninjam::User> users = server->getUsers();
@@ -498,6 +498,11 @@ bool NinjamController::userIsBlockedInChat(const Ninjam::User &user)
 {
     QString uniqueKey = getUniqueKeyForUser(user);
     return chatBlockedUsers.contains(uniqueKey);
+}
+
+bool NinjamController::userIsBlockedInChat(const QString &userName) const
+{
+    return userIsBlockedInChat(getUserByName(userName));
 }
 
 void NinjamController::handleReceivedChatMessage(const Ninjam::User &user, const QString &message)

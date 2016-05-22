@@ -632,17 +632,15 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
 
 void NinjamRoomWindow::showFeedbackAboutBlockedUserInChat(const QString &userName)
 {
-    if (chatPanel) {
+    if (chatPanel)
         chatPanel->removeMessagesFrom(userName);
         chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is blocked in the chat").arg(userName));
-    }
 }
 
 void NinjamRoomWindow::showFeedbackAboutUnblockedUserInChat(const QString &userName)
 {
-    if (chatPanel) {
+    if (chatPanel)
         chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is unblocked in the chat").arg(userName));
-    }
 }
 
 void NinjamRoomWindow::blockUserInChat(const QString &userNameToBlock)

@@ -1,6 +1,7 @@
 #include "NinjamTrackGroupView.h"
 #include "geo/IpToLocationResolver.h"
 #include "MainController.h"
+#include "NinjamController.h"
 #include <QMenu>
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -62,9 +63,12 @@ NinjamTrackGroupView::NinjamTrackGroupView(Controller::MainController *mainContr
 void NinjamTrackGroupView::showContextMenu(const QPoint &pos)
 {
     QMenu contextMenu(this);
-    QString musicianName = getGroupName();
-    contextMenu.addAction(tr("Block %1 in chat").arg(musicianName), this, SLOT(blockChatMessages()));
-    contextMenu.addAction(tr("Unblock %1 in chat").arg(musicianName), this, SLOT(unblockChatMessages()));
+    QString userName = getGroupName();
+    bool userIsBlockedInChat = mainController->getNinjamController()->userIsBlockedInChat(userName);
+    QAction *blockAction = contextMenu.addAction(tr("Block %1 in chat").arg(userName), this, SLOT(blockChatMessages()));
+    QAction *unblockAction = contextMenu.addAction(tr("Unblock %1 in chat").arg(userName), this, SLOT(unblockChatMessages()));
+    blockAction->setEnabled(!userIsBlockedInChat);
+    unblockAction->setEnabled(userIsBlockedInChat);
     contextMenu.exec(mapToGlobal(pos));
 }
 
