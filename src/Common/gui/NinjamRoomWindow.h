@@ -104,6 +104,8 @@ private:
 
     void translate();
 
+    static const QString JAMTABA_CHAT_BOT_NAME;
+
 private slots:
 
     // ninjam panel controls
@@ -137,6 +139,9 @@ private slots:
     // chat panel
     void voteToChangeBpi(int newBpi);
     void voteToChangeBpm(int newBpm);
+    void blockUserInChat(const QString &userNameToBlock);
+    void showFeedbackAboutBlockedUserInChat(const QString &userName);
+    void showFeedbackAboutUnblockedUserInChat(const QString &userName);
 
     void toggleTracksLayoutOrientation(QAbstractButton *buttonClicked); // horizontal or vertical
     void toggleTracksSize(QAbstractButton *buttonClicked);// narrow or wide

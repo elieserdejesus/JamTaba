@@ -31,6 +31,7 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool) :
 
     // disable blue border when QLineEdit has focus in mac
     ui->chatText->setAttribute(Qt::WA_MacShowFocusRect, 0);
+
 }
 
 void ChatPanel::changeEvent(QEvent *e)
@@ -147,7 +148,7 @@ void ChatPanel::hideTranslationProgressFeedback()
         QApplication::restoreOverrideCursor();
 }
 
-void ChatPanel::addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton)
+void ChatPanel::addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton, bool showBlockButton)
 {
     QString name = !userName.isEmpty() ? userName : "JamTaba";
     QColor backgroundColor = getUserColor(name);
@@ -155,11 +156,12 @@ void ChatPanel::addMessage(const QString &userName, const QString &userMessage, 
     QColor textColor = isBot ? QColor(50, 50, 50) : QColor(0, 0, 0);
     QColor userNameBackgroundColor = backgroundColor;
     ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, name, userMessage,
-                                                      userNameBackgroundColor, backgroundColor,
-                                                      textColor, showTranslationButton);
+                                                      userNameBackgroundColor, textColor, showTranslationButton, showBlockButton);
 
     connect(msgPanel, SIGNAL(startingTranslation()), this, SLOT(showTranslationProgressFeedback()));
     connect(msgPanel, SIGNAL(translationFinished()), this, SLOT(hideTranslationProgressFeedback()));
+
+    connect(msgPanel, &ChatMessagePanel::blockingUser, this, &ChatPanel::userBlockingChatMessagesFrom);
 
     msgPanel->setPrefferedTranslationLanguage(this->autoTranslationLanguage);
     ui->scrollContent->layout()->addWidget(msgPanel);
@@ -191,6 +193,18 @@ QColor ChatPanel::getUserColor(const QString &userName)
 ChatPanel::~ChatPanel()
 {
     delete ui;
+}
+
+void ChatPanel::removeMessagesFrom(const QString &userName)
+{
+    // remove message panels from user 'userName'
+    QList<ChatMessagePanel *> panels = ui->scrollContent->findChildren<ChatMessagePanel *>();
+    foreach (ChatMessagePanel *msgPanel, panels) {
+        if (msgPanel->getUserName() == userName ) {
+            ui->scrollContent->layout()->removeWidget(msgPanel);
+            msgPanel->deleteLater();
+        }
+    }
 }
 
 void ChatPanel::on_buttonClear_clicked()

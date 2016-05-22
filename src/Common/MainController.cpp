@@ -37,6 +37,19 @@ MainController::MainController(const Settings &settings) :
     connect(ipToLocationResolver.data(), SIGNAL(ipResolved(const QString &)), this, SIGNAL(ipResolved(const QString &)));
 }
 
+void MainController::blockUserInChat(const QString &userNameToBlock)
+{
+    if (isPlayingInNinjamRoom()){
+        ninjamController->blockUserInChat(userNameToBlock);
+    }
+}
+
+void MainController::unblockUserInChat(const QString &userNameToUnblock){
+    if (isPlayingInNinjamRoom()){
+        ninjamController->unblockUserInChat(userNameToUnblock);
+    }
+}
+
 void MainController::setSampleRate(int newSampleRate)
 {
     audioMixer.setSampleRate(newSampleRate);

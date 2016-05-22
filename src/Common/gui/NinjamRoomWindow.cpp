@@ -33,6 +33,8 @@
 
 using namespace Persistence;
 
+const QString NinjamRoomWindow::JAMTABA_CHAT_BOT_NAME("JamTaba");
+
 // +++++++++++++++++++++++++
 NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &roomInfo,
                                    Controller::MainController *mainController) :
@@ -263,7 +265,7 @@ void NinjamRoomWindow::sendNewChatMessage(const QString &msg)
 void NinjamRoomWindow::handleUserLeaving(const QString &userName)
 {
     if (chatPanel)
-        chatPanel->addMessage("JamTaba", tr("%1 leave the room.").arg(userName));
+        chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 leave the room.").arg(userName));
 
     usersColorsPool.giveBack(userName); // reuse the color mapped to this 'leaving' user
 }
@@ -271,7 +273,7 @@ void NinjamRoomWindow::handleUserLeaving(const QString &userName)
 void NinjamRoomWindow::handleUserEntering(const QString &userName)
 {
     if (chatPanel)
-        chatPanel->addMessage("JamTaba", tr("%1 enter in room.").arg(userName));
+        chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 enter in room.").arg(userName));
 }
 
 void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &message)
@@ -288,7 +290,10 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
     }
 
     bool showTranslationButton = !isChordProgressionMessage;
-    chatPanel->addMessage(user.getName(), message, showTranslationButton);
+    bool userIsBot = mainController->getNinjamController()->userIsBot(user.getName());
+    bool currentUserIsPostingTheChatMessage = user.getName() == mainController->getUserName();
+    bool showBlockButton = !userIsBot && !currentUserIsPostingTheChatMessage; // avoid the block button for bot and current user messages. Is not a good idea allow user to block yourself :)
+    chatPanel->addMessage(user.getName(), message, showTranslationButton, showBlockButton);
 
     if (isVoteMessage)
         handleVoteMessage(user, message);
@@ -608,16 +613,42 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
     connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(setEstimatatedChunksPerIntervalInAllTracks()));
     connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(setEstimatatedChunksPerIntervalInAllTracks()));
 
+    connect(ninjamController, &Controller::NinjamController::userBlockedInChat, this, &NinjamRoomWindow::showFeedbackAboutBlockedUserInChat);
+    connect(ninjamController, &Controller::NinjamController::userUnblockedInChat, this, &NinjamRoomWindow::showFeedbackAboutUnblockedUserInChat);
+
     connect(chatPanel, SIGNAL(userSendingNewMessage(QString)), this, SLOT(sendNewChatMessage(QString)));
 
     connect(chatPanel, SIGNAL(userConfirmingVoteToBpiChange(int)), this, SLOT(voteToChangeBpi(int)));
 
     connect(chatPanel, SIGNAL(userConfirmingVoteToBpmChange(int)), this, SLOT(voteToChangeBpm(int)));
 
+    connect(chatPanel, SIGNAL(userBlockingChatMessagesFrom(QString)), this, SLOT(blockUserInChat(QString)));
+
     connect(ui->licenceButton, SIGNAL(clicked(bool)), this, SLOT(showServerLicence()));
 
     connect(ninjamPanel, SIGNAL(intervalShapeChanged(int)), this, SLOT(setNewIntervalShape(int)));
 
+}
+
+void NinjamRoomWindow::showFeedbackAboutBlockedUserInChat(const QString &userName)
+{
+    if (chatPanel)
+        chatPanel->removeMessagesFrom(userName);
+        chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is blocked in the chat").arg(userName));
+}
+
+void NinjamRoomWindow::showFeedbackAboutUnblockedUserInChat(const QString &userName)
+{
+    if (chatPanel)
+        chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is unblocked in the chat").arg(userName));
+}
+
+void NinjamRoomWindow::blockUserInChat(const QString &userNameToBlock)
+{
+    Controller::NinjamController *ninjamController = mainController->getNinjamController();
+    Ninjam::User user = ninjamController->getUserByName(userNameToBlock);
+    if (user.getName() == userNameToBlock)
+        ninjamController->blockUserInChat(user);
 }
 
 void NinjamRoomWindow::setNewIntervalShape(int newShape)

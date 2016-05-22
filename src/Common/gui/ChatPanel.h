@@ -19,17 +19,19 @@ class ChatPanel : public QWidget
 public:
     ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool);
     virtual ~ChatPanel();
-    void addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton = true);
+    void addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton = true, bool showBlockButton = false);
     void addBpmVoteConfirmationMessage(int newBpmValue);
     void addBpiVoteConfirmationMessage(int newBpmValue);
     void addChordProgressionConfirmationMessage(const ChordProgression &progression);
     void setPreferredTranslationLanguage(const QString &targetLanguage);
     void updateMessagesGeometry();// called when user switch from mini mode to full view
+    void removeMessagesFrom(const QString &userName);
 signals:
     void userSendingNewMessage(const QString &msg);
     void userConfirmingVoteToBpiChange(int newBpi);
     void userConfirmingVoteToBpmChange(int newBpm);
     void userConfirmingChordProgression(const ChordProgression &chordProgression);
+    void userBlockingChatMessagesFrom(const QString &blockedUserName);
 private slots:
     void on_chatTextEditionFinished();
     void on_verticalScrollBarRangeChanged(int min, int max);
