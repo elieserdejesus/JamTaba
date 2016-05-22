@@ -104,6 +104,8 @@ private:
 
     void translate();
 
+    static const QString JAMTABA_CHAT_BOT_NAME;
+
 private slots:
 
     // ninjam panel controls

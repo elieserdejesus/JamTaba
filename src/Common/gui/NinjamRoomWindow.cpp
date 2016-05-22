@@ -33,6 +33,8 @@
 
 using namespace Persistence;
 
+const QString NinjamRoomWindow::JAMTABA_CHAT_BOT_NAME("JamTaba");
+
 // +++++++++++++++++++++++++
 NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &roomInfo,
                                    Controller::MainController *mainController) :
@@ -263,7 +265,7 @@ void NinjamRoomWindow::sendNewChatMessage(const QString &msg)
 void NinjamRoomWindow::handleUserLeaving(const QString &userName)
 {
     if (chatPanel)
-        chatPanel->addMessage("JamTaba", tr("%1 leave the room.").arg(userName));
+        chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 leave the room.").arg(userName));
 
     usersColorsPool.giveBack(userName); // reuse the color mapped to this 'leaving' user
 }
@@ -271,7 +273,7 @@ void NinjamRoomWindow::handleUserLeaving(const QString &userName)
 void NinjamRoomWindow::handleUserEntering(const QString &userName)
 {
     if (chatPanel)
-        chatPanel->addMessage("JamTaba", tr("%1 enter in room.").arg(userName));
+        chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 enter in room.").arg(userName));
 }
 
 void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &message)
@@ -633,8 +635,10 @@ void NinjamRoomWindow::blockUserInChat(const QString &userNameToBlock)
         QList<Ninjam::User> users = server->getUsers();
         foreach (const Ninjam::User &user, users) {
             if (user.getName() == userNameToBlock) {
-                Controller::NinjamController *controller = mainController->getNinjamController();
-                controller->blockUserInChat(user);
+                Controller::NinjamController *ninjamController = mainController->getNinjamController();
+                ninjamController->blockUserInChat(user);
+                if (chatPanel)
+                    chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is blocked in the chat").arg(userNameToBlock));
                 break;
             }
         }
