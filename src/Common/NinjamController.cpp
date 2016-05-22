@@ -186,6 +186,18 @@ NinjamController::NinjamController(Controller::MainController* mainController)
 
 }
 
+
+Ninjam::User NinjamController::getUserByName(const QString &userName)
+{
+    Ninjam::Server *server = mainController->getNinjamService()->getCurrentServer();
+    QList<Ninjam::User> users = server->getUsers();
+    foreach (const Ninjam::User &user, users) {
+        if (user.getName() == userName)
+            return user;
+    }
+    return Ninjam::User();
+}
+
 //++++++++++++++++++++++++++
 void NinjamController::setBpm(int newBpm){
     currentBpm = newBpm;
@@ -461,6 +473,22 @@ void NinjamController::blockUserInChat(const Ninjam::User &user)
     QString uniqueKey = getUniqueKeyForUser(user);
     if (!chatBlockedUsers.contains(uniqueKey))
         chatBlockedUsers.append(uniqueKey);
+}
+
+void NinjamController::blockUserInChat(const QString &userNameToBlock)
+{
+    blockUserInChat(getUserByName(userNameToBlock));
+}
+
+void NinjamController::unblockUserInChat(const Ninjam::User &user)
+{
+    QString uniqueKey = getUniqueKeyForUser(user);
+    chatBlockedUsers.removeOne(uniqueKey);
+}
+
+void NinjamController::unblockUserInChat(const QString &userNameToBlock)
+{
+    unblockUserInChat(getUserByName(userNameToBlock));
 }
 
 bool NinjamController::userIsBlockedInChat(const Ninjam::User &user)

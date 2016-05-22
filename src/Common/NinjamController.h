@@ -78,8 +78,14 @@ public:
     void recreateMetronome(int newSampleRate);
 
     static void blockUserInChat(const Ninjam::User &user);
+    void blockUserInChat(const QString &userNameToBlock);
+
+    static void unblockUserInChat(const Ninjam::User &user);
+    void unblockUserInChat(const QString &userNameToBlock);
 
     bool userIsBot(const QString userName) const;
+
+    Ninjam::User getUserByName(const QString &userName);
 
 signals:
     void currentBpiChanged(int newBpi);

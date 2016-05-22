@@ -24,6 +24,7 @@ public:
     void setNarrowStatus(bool narrow);
     void updateGeoLocation();
     void setGroupName(const QString &groupName);
+    QString getGroupName() const override;
     void updateGuiElements();
     void setEstimatedChunksPerInterval(int estimatedChunks);
 
@@ -50,6 +51,9 @@ private:
 
 private slots:
     void updateGeoLocation(const QString &resolvedIp);
+    void showContextMenu(const QPoint &pos);
+    void blockChatMessages();
+    void unblockChatMessages();
 };
 
 #endif // NINJAMTRACKGROUPVIEW_H

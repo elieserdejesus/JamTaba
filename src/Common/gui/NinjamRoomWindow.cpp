@@ -631,16 +631,11 @@ void NinjamRoomWindow::blockUserInChat(const QString &userNameToBlock)
 {
     if (chatPanel) {
         chatPanel->removeMessagesFrom(userNameToBlock);
-        Ninjam::Server *server = mainController->getNinjamService()->getCurrentServer();
-        QList<Ninjam::User> users = server->getUsers();
-        foreach (const Ninjam::User &user, users) {
-            if (user.getName() == userNameToBlock) {
-                Controller::NinjamController *ninjamController = mainController->getNinjamController();
-                ninjamController->blockUserInChat(user);
-                if (chatPanel)
-                    chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is blocked in the chat").arg(userNameToBlock));
-                break;
-            }
+        Controller::NinjamController *ninjamController = mainController->getNinjamController();
+        Ninjam::User user = ninjamController->getUserByName(userNameToBlock);
+        if (user.getName() == userNameToBlock) {
+            ninjamController->blockUserInChat(user);
+            chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is blocked in the chat").arg(userNameToBlock));
         }
     }
 }

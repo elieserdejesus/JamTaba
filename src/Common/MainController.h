@@ -248,6 +248,9 @@ public:
         return &usersDataCache;
     }
 
+    void blockUserInChat(const QString &userNameToBlock);
+    void unblockUserInChat(const QString &userNameToUnblock);
+
     static QString getSuggestedUserName();
 
 signals:

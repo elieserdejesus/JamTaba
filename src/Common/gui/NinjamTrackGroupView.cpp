@@ -1,22 +1,7 @@
 #include "NinjamTrackGroupView.h"
 #include "geo/IpToLocationResolver.h"
 #include "MainController.h"
-
-void NinjamTrackGroupView::updateGeoLocation(const QString &ip)
-{
-    if (ip != this->userIP)
-        return;
-
-    Geo::Location location = mainController->getGeoLocation(ip);
-    QString countryCode = location.getCountryCode().toLower();
-    QString flagImageHTML = "<img src=:/flags/flags/" + countryCode +".png>";
-    countryLabel->setText(flagImageHTML + "<br>" + location.getCountryName());
-}
-
-void NinjamTrackGroupView::updateGeoLocation()
-{
-    updateGeoLocation(this->userIP);
-}
+#include <QMenu>
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -68,6 +53,47 @@ NinjamTrackGroupView::NinjamTrackGroupView(Controller::MainController *mainContr
     groupNameLabel->setStyleSheet(styleSheet);
 
     connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
+
+    //context menu
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, &NinjamTrackGroupView::customContextMenuRequested, this, &NinjamTrackGroupView::showContextMenu);
+}
+
+void NinjamTrackGroupView::showContextMenu(const QPoint &pos)
+{
+    QMenu contextMenu(this);
+    QString musicianName = getGroupName();
+    contextMenu.addAction(tr("Block %1 in chat").arg(musicianName), this, SLOT(blockChatMessages()));
+    contextMenu.addAction(tr("Unblock %1 in chat").arg(musicianName), this, SLOT(unblockChatMessages()));
+    contextMenu.exec(mapToGlobal(pos));
+}
+
+void NinjamTrackGroupView::blockChatMessages()
+{
+    QString userNameToBlock = getGroupName();
+    mainController->blockUserInChat(userNameToBlock);
+}
+
+void NinjamTrackGroupView::unblockChatMessages()
+{
+    QString userNameToUnblock = getGroupName();
+    mainController->unblockUserInChat(userNameToUnblock);
+}
+
+void NinjamTrackGroupView::updateGeoLocation(const QString &ip)
+{
+    if (ip != this->userIP)
+        return;
+
+    Geo::Location location = mainController->getGeoLocation(ip);
+    QString countryCode = location.getCountryCode().toLower();
+    QString flagImageHTML = "<img src=:/flags/flags/" + countryCode +".png>";
+    countryLabel->setText(flagImageHTML + "<br>" + location.getCountryName());
+}
+
+void NinjamTrackGroupView::updateGeoLocation()
+{
+    updateGeoLocation(this->userIP);
 }
 
 void NinjamTrackGroupView::setEstimatedChunksPerInterval(int estimatedChunks)
@@ -134,6 +160,11 @@ NinjamTrackView *NinjamTrackGroupView::createTrackView(long trackID)
 void NinjamTrackGroupView::setGroupName(const QString &groupName)
 {
     groupNameLabel->setText(groupName);
+}
+
+QString NinjamTrackGroupView::getGroupName() const
+{
+    return groupNameLabel->text();
 }
 
 QSize NinjamTrackGroupView::sizeHint() const

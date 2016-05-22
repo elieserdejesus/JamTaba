@@ -20,7 +20,7 @@ public:
     explicit TrackGroupView(QWidget *parent = 0);
     ~TrackGroupView();
     virtual void setGroupName(const QString &groupName);
-    QString getGroupName() const;
+    virtual QString getGroupName() const;
 
     virtual BaseTrackView *addTrackView(long trackID);
 
