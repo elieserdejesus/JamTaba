@@ -25,11 +25,13 @@ public:
     void addChordProgressionConfirmationMessage(const ChordProgression &progression);
     void setPreferredTranslationLanguage(const QString &targetLanguage);
     void updateMessagesGeometry();// called when user switch from mini mode to full view
+    void removeMessagesFrom(const QString &userName);
 signals:
     void userSendingNewMessage(const QString &msg);
     void userConfirmingVoteToBpiChange(int newBpi);
     void userConfirmingVoteToBpmChange(int newBpm);
     void userConfirmingChordProgression(const ChordProgression &chordProgression);
+    void userBlockingChatMessagesFrom(const QString &blockedUserName);
 private slots:
     void on_chatTextEditionFinished();
     void on_verticalScrollBarRangeChanged(int min, int max);

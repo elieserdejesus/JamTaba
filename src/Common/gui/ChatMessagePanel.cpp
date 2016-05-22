@@ -17,14 +17,16 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
 
 ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg,
                                    const QColor &userNameBackgroundColor,
-                                   const QColor &msgBackgroundColor, const QColor &textColor,
+                                   const QColor &textColor,
                                    bool showTranslationButton) :
     QFrame(parent),
-    ui(new Ui::ChatMessagePanel)
+    ui(new Ui::ChatMessagePanel),
+    userName(userName)
 {
     ui->setupUi(this);
-    initialize(userName, msg, userNameBackgroundColor, msgBackgroundColor, textColor,
-               showTranslationButton);
+    initialize(userName, msg, userNameBackgroundColor, textColor, showTranslationButton);
+    connect(ui->blockButton, SIGNAL(clicked(bool)), this, SLOT(fireBlockingUserSignal()));
+
 }
 
 void ChatMessagePanel::changeEvent(QEvent *e)
@@ -37,7 +39,6 @@ void ChatMessagePanel::changeEvent(QEvent *e)
 }
 
 void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
-                                  const QColor &userNameBackgroundColor,
                                   const QColor &msgBackgroundColor, const QColor &textColor,
                                   bool showTranslationButton)
 {
@@ -124,6 +125,11 @@ void ChatMessagePanel::on_translateButton_clicked()
     } else {
         setMessageLabelText(originalText);
     }
+}
+
+void ChatMessagePanel::fireBlockingUserSignal()
+{
+    emit blockingUser(userName);
 }
 
 void ChatMessagePanel::setPrefferedTranslationLanguage(const QString &targetLanguage)

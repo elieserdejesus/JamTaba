@@ -614,10 +614,28 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
 
     connect(chatPanel, SIGNAL(userConfirmingVoteToBpmChange(int)), this, SLOT(voteToChangeBpm(int)));
 
+    connect(chatPanel, SIGNAL(userBlockingChatMessagesFrom(QString)), this, SLOT(blockUserInChat(QString)));
+
     connect(ui->licenceButton, SIGNAL(clicked(bool)), this, SLOT(showServerLicence()));
 
     connect(ninjamPanel, SIGNAL(intervalShapeChanged(int)), this, SLOT(setNewIntervalShape(int)));
 
+}
+
+void NinjamRoomWindow::blockUserInChat(const QString &userNameToBlock)
+{
+    if (chatPanel) {
+        chatPanel->removeMessagesFrom(userNameToBlock);
+        Ninjam::Server *server = mainController->getNinjamService()->getCurrentServer();
+        QList<Ninjam::User> users = server->getUsers();
+        foreach (const Ninjam::User &user, users) {
+            if (user.getName() == userNameToBlock) {
+                Controller::NinjamController *controller = mainController->getNinjamController();
+                controller->blockUserInChat(user);
+                break;
+            }
+        }
+    }
 }
 
 void NinjamRoomWindow::setNewIntervalShape(int newShape)
