@@ -146,5 +146,10 @@ IntervalProgressWindow                      /* The floating window showing the m
 
 #panelCombos QLabel             /* The labels in left side of comboboxes (bpi, bpm, accents and shape) */
 {
-    color: rgb(80, 80, 80);
+    color: rgb(180, 180, 180);
+}
+
+#panelCombos QComboBox
+{
+    color: rgb(140, 140, 140);
 }
