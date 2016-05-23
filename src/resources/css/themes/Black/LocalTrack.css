@@ -150,7 +150,7 @@ LocalTrackView #midiToolsButton:hover                 /* The button used to open
 
 #xmitButton[preparing="true"]
 {
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(128, 128, 20), stop:1 rgb(80, 80, 0));
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 20), stop:1 rgb(80, 80, 0));
 }
 
 #xmitButton:!checked
