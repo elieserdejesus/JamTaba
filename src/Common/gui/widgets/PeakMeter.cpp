@@ -114,10 +114,10 @@ void PeakMeter::paintEvent(QPaintEvent *)
         bool isVerticalMeter = isVertical();
         int value = Utils::poweredGainToLinear(currentPeak)
                     * (isVerticalMeter ? height() : width());
-        QRect rect(1,
-                   isVerticalMeter ? height() - value : 0,
-                   isVerticalMeter ? width()-2 : value,
-                   height());
+        QRect rect(isVerticalMeter ? 1 : 0,                 //x
+                   isVerticalMeter ? height() - value : 1,  //y
+                   isVerticalMeter ? width()-2 : value,     //width
+                   height() - (isVerticalMeter ? 0 : 2));                               //height
         painter.fillRect(rect, usingGradient ? gradient : QBrush(solidColor));
 
         // draw max peak marker

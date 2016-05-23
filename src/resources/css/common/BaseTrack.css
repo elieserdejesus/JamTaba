@@ -80,6 +80,11 @@ BaseTrackView #peaksDbLabel:hover{
     font-size: 9px;
 }
 
+PeakMeter
+{
+    min-width: 4px;
+    min-height: 4px;
+}
 
 /*
 Peak meter color when the tracks are "disabled". For local tracks this color is

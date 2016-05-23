@@ -19,7 +19,7 @@ NinjamTrackGroupView::NinjamTrackGroupView(Controller::MainController *mainContr
     // change the top panel layout to vertical (original is horizontal)
     topPanelLayout->setDirection(QHBoxLayout::TopToBottom);
     topPanelLayout->setContentsMargins(1, 1, 1, 1);
-    topPanelLayout->setSpacing(0);
+    topPanelLayout->setSpacing(3);
 
     // replace the original QLineEdit with a MarqueeLabel
     topPanelLayout->removeWidget(groupNameField);
