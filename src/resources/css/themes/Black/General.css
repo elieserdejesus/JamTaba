@@ -4,6 +4,7 @@
 /* Button ----------------------*/
 QPushButton
 {
+    color: rgb(20, 20, 20);
     background-color: rgb(140, 140, 140);
     border: 1px solid black;
 }
@@ -11,12 +12,12 @@ QPushButton
 QPushButton:checked
 {
     background-color: rgb(80, 80, 80);
+    color: rgb(140, 140, 140);
 }
 
 QPushButton:hover
 {
-    background-color: rgb(20, 20, 20);
-    color: rgb(140, 140, 140);
+    color: rgb(180, 180, 180);
     border: 1px solid black;
 }
 
