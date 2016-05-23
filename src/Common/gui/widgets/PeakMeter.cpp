@@ -91,6 +91,10 @@ void PeakMeter::setPeak(float peak)
 {
     if (peak < 0)
         peak = 0;
+
+    if (peak > 1)
+        peak = 1;
+
     if (peak > this->currentPeak) {
         this->currentPeak = peak;
         if (peak > maxPeak) {
@@ -105,11 +109,6 @@ void PeakMeter::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
 
-    // to allow stylesheets
-    //QStyleOption opt;
-    //opt.init(this);
-    //style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
-
     // meter
     if (isEnabled()) {
         bool isVerticalMeter = isVertical();
@@ -118,7 +117,7 @@ void PeakMeter::paintEvent(QPaintEvent *)
         QRect rect(1,
                    isVerticalMeter ? height() - value : 0,
                    isVerticalMeter ? width()-2 : value,
-                   height()-1);
+                   height());
         painter.fillRect(rect, usingGradient ? gradient : QBrush(solidColor));
 
         // draw max peak marker
