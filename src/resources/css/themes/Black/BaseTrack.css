@@ -8,7 +8,7 @@
 #muteButton
 {
     font-size: 9px;
-    border-color: rgb(20,20,20);
+    border-color: rgb(20 ,20 ,20);
     padding: 2px;
     color: rgb(50,50,50);
 }
@@ -37,9 +37,10 @@
 #buttonBoostPlus12:checked,
 #buttonBoostZero:checked
 {
-    background-color: rgb(140, 140, 140);
+    background-color: rgb(120, 120, 120);
     color: rgba(0, 0, 0, 160);
     border-radius: 0px;
+    border-color: rgb(40, 40, 40);
 }
 
 QPushButton#buttonStereoInversion
@@ -68,7 +69,7 @@ BaseTrackView[unlighted="true"] #buttonStereoInversion
     border-bottom: none;
     border-top: none;
     border-style: solid;
-    border-color: rgba(0, 0, 0, 60);
+    border-color: rgb(20, 20, 20);
 }
 
 #soloButton:checked
@@ -160,7 +161,7 @@ BaseTrackView #panSlider::handle
 
 BaseTrackView #panSlider::handle:hover
 {
-    background-color: rgb(200, 200, 200);
+    background-color: rgb(180, 180, 180);
     border: rgb(200, 200, 200);
     width: 7px;
 }
