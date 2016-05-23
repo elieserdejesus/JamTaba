@@ -28,11 +28,11 @@ FxPanelItem[containPlugin="true"]                       /* non empty slot */
     background-image: none;
 }
 
-FxPanelItem  QLabel                                     /* plugin name label */
+FxPanelItem QLabel                                     /* plugin name label */
 {
+    color: rgb(140, 140, 140);
     qproperty-alignment: AlignLeft;
     font-size: 10px;
-    color: #D3D3D3;
     margin: 0px;
 }
 
