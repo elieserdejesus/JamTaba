@@ -143,30 +143,30 @@ LocalTrackView #midiToolsButton:hover                 /* The button used to open
 
 #xmitButton:checked
 {
-    background-color: rgb(0, 128, 0);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(20, 128, 20), stop:1 rgb(0, 80, 0));
     border-color: rgb(20, 20, 20);
     color: rgb(20, 20, 20);
 }
 
 #xmitButton[preparing="true"]
 {
-    background-color: rgb(128, 128, 0);
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(128, 128, 20), stop:1 rgb(80, 80, 0));
 }
 
 #xmitButton:!checked
 {
-    background-color: rgb(128, 0, 0);
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(128, 20, 20), stop:1 rgb(80, 0, 0));
     border-color: rgb(128, 0, 0);
     color: rgb(140, 140, 140);
 }
 
 #xmitButton:hover
 {
-    background-color: rgb(0, 180, 0);
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(20, 180, 20), stop:1 rgb(0, 80, 0));
 }
 
 #xmitButton:hover:!checked
 {
-    background-color: rgb(180, 0, 0);
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 20, 20), stop:1 rgb(80, 0, 0));
     border-color: rgba(0, 0, 0, 90);
 }
