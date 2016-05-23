@@ -110,6 +110,7 @@ BaseTrackView[unlighted="true"] #buttonStereoInversion
 -------------------------------------------------------*/
 BaseTrackView #peaksDbLabel
 {
+    color: rgb(140, 140, 140);
     border: 1px solid rgba(0, 0, 0, 8);
     background-color: rgba(0, 0, 0, 6);
 }
@@ -152,7 +153,7 @@ TrackGroupView[unlighted="true"] > #topPanel                /* the track group t
 
 BaseTrackView #panSlider::handle
 {
-    background-color: rgb(150, 150, 150);
+    background-color: rgb(140, 140, 140);
     border: rgb(150, 150, 150);
     width: 7px;
 }
