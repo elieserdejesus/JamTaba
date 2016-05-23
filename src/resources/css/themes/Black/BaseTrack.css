@@ -163,9 +163,13 @@ BaseTrackView #panSlider::handle:hover
 {
     background-color: rgb(180, 180, 180);
     border: rgb(200, 200, 200);
-    width: 7px;
 }
 
+BaseTrackView #levelSlider::handle:hover
+{
+    background-color: rgb(180, 180, 180);
+    border: rgb(200, 200, 200);
+}
 
 PeakMeter
 {

@@ -36,6 +36,11 @@ FxPanelItem QLabel                                     /* plugin name label */
     margin: 0px;
 }
 
+FxPanelItem QLabel:hover
+{
+    color: rgb(180, 180, 180);
+}
+
 FxPanelItem:hover                                       /* slot hover effect */
 {
     background-color: rgba(0, 0, 0, 60);
