@@ -2,7 +2,7 @@
 
 JamRoomViewPanel
 {
-    background-color: rgb(40, 40, 40);
+    background-color: rgb(35, 35, 35);
     border: 1px solid black;
     border-top: 1px solid black;
     border-left: 1px solid black;
@@ -12,7 +12,7 @@ JamRoomViewPanel
 JamRoomViewPanel #content                   /* where the user names and wave form are showed */
 {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgb(60, 60, 60),
+    stop:0 rgb(70, 70, 70),
     stop:1 rgb(20, 20, 20));
 }
 
