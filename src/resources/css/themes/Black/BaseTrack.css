@@ -37,7 +37,7 @@
 #buttonBoostPlus12:checked,
 #buttonBoostZero:checked
 {
-    background-color: rgb(120, 120, 120);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(80, 80, 80));
     color: rgba(0, 0, 0, 160);
     border-radius: 0px;
     border-color: rgb(40, 40, 40);
@@ -57,6 +57,11 @@ QPushButton#buttonStereoInversion:hover
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
 }
 
+ QPushButton#buttonStereoInversion:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(80, 80, 80));
+}
+
 /* button colors when the track is NOT xmiting */
 BaseTrackView[unlighted="true"] #buttonBoostMinus12,
 BaseTrackView[unlighted="true"] #buttonBoostZero,
@@ -69,7 +74,7 @@ BaseTrackView[unlighted="true"] #buttonStereoInversion
     border: none;
 }
 
-#buttonBoostZero:checked
+#buttonBoostZero:buttonStereoInversion
 {
     border-bottom: none;
     border-top: none;
@@ -92,7 +97,7 @@ BaseTrackView[unlighted="true"] #buttonStereoInversion
 #soloButton:hover
 {
         background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
-    color: rgb(140, 140, 140);
+    color: rgb(80, 80, 80);
 }
 
 #muteButton:checked
@@ -110,7 +115,7 @@ BaseTrackView[unlighted="true"] #buttonStereoInversion
 #muteButton:hover
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
-    color: rgb(140, 140, 140);
+    color: rgb(80, 80, 80);
 }
 /* Small Label used to show max peak below peak meters
 -------------------------------------------------------*/
