@@ -84,6 +84,8 @@ public:
 
     void addUser(const User &user);
 
+    void removeUser(const QString &fullUserName);
+
     inline quint16 getBpi() const
     {
         return bpi;
