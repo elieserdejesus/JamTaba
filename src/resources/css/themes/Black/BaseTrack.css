@@ -43,6 +43,26 @@
     border-color: rgb(40, 40, 40);
 }
 
+#buttonBoostMinus12:hover,
+#buttonBoostPlus12:hover,
+#buttonBoostZero:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
+    color: rgb(80, 80, 80);
+    border-radius: 0px;
+    border-color: rgb(40, 40, 40);
+}
+
+#buttonBoostMinus12:hover:checked,
+#buttonBoostPlus12:hover:checked,
+#buttonBoostZero:hover:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(120, 120, 120));
+    color: rgb(80, 80, 80);
+    border-radius: 0px;
+    border-color: rgb(40, 40, 40)
+}
+
 QPushButton#buttonStereoInversion
 {
     background-repeat: none;
