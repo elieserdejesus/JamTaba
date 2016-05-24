@@ -98,6 +98,25 @@ NinjamTrackView[unlighted="true"]           /* user is not xmiting */
     background: rgba(0, 0, 0, 20);
 }
 
+NinjamTrackGroupView #groupNameField                          /* the text field used to input channel name */
+{
+    color: black;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 11px;
+    font-weight: normal;
+    border: rgb(80, 80, 80);
+    background-color: rgb(35, 35, 35);
+}
+
+NinjamTrackGroupView[unlighted="true"] #groupNameField        /* channel name text field when not xmiting */
+{
+    color: black;
+    background: rgba(255, 255, 255, 20);
+    border: none;
+}
+
+
 NinjamTrackView  #channelName               /* channel name for ninjamers */
 {
     border: none;
