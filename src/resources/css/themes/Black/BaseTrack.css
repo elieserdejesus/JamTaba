@@ -74,14 +74,14 @@ BaseTrackView[unlighted="true"] #buttonStereoInversion
 
 #soloButton:checked
 {
-    background-color: rgb(0, 128, 0);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(20, 128, 20), stop:1 rgb(0, 80, 0));
     color: rgb(140, 140, 140);
 }
 
 #soloButton:hover:checked
 {
-    background-color: rgb(0, 128, 0);
-    color: rgb(250, 250, 250);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(20, 180, 20), stop:1 rgb(0, 80, 0));
+    color: rgb(140, 140, 140);
 }
 
 #soloButton:hover
@@ -92,13 +92,13 @@ BaseTrackView[unlighted="true"] #buttonStereoInversion
 
 #muteButton:checked
 {
-    background-color: rgb(128, 0, 0);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(128, 20, 20), stop:1 rgb(80, 0, 0));
     color: rgb(140, 140, 140);
 }
 
 #muteButton:hover:checked
 {
-    background-color: rgb(128, 0, 0);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 20, 20), stop:1 rgb(80, 0, 0));
     color: rgb(250, 250, 250);
 }
 
