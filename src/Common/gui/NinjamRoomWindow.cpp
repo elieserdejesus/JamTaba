@@ -289,16 +289,31 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
         isChordProgressionMessage = false;// just in case
     }
 
+
+    QString userName = user.getName();
+    bool showBlockButton = canShowBlockButtonInChatMessage(userName);
     bool showTranslationButton = !isChordProgressionMessage;
-    bool userIsBot = mainController->getNinjamController()->userIsBot(user.getName());
-    bool currentUserIsPostingTheChatMessage = user.getName() == mainController->getUserName();
-    bool showBlockButton = !userIsBot && !currentUserIsPostingTheChatMessage; // avoid the block button for bot and current user messages. Is not a good idea allow user to block yourself :)
-    chatPanel->addMessage(user.getName(), message, showTranslationButton, showBlockButton);
+    chatPanel->addMessage(userName, message, showTranslationButton, showBlockButton);
 
     if (isVoteMessage)
         handleVoteMessage(user, message);
     else if (isChordProgressionMessage)
         handleChordProgressionMessage(user, message);
+}
+
+bool NinjamRoomWindow::canShowBlockButtonInChatMessage(const QString &userName) const
+{
+    /**
+        Avoid the block button for bot and current user messages. Is not a good idea allow user
+    to block yourself :).
+        In vote messages (to change BPI or BPM) user name is empty. The last logic test is
+    avoiding show block button in vote messages (fixing #389).
+
+    **/
+
+    bool userIsBot = mainController->getNinjamController()->userIsBot(userName);
+    bool currentUserIsPostingTheChatMessage = userName == mainController->getUserName(); // chat message author and the current user name are the same?
+    return !userIsBot && !currentUserIsPostingTheChatMessage && !userName.isEmpty();
 }
 
 void NinjamRoomWindow::handleChordProgressionMessage(const Ninjam::User &user, const QString &message)

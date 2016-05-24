@@ -104,6 +104,8 @@ private:
 
     void translate();
 
+    bool canShowBlockButtonInChatMessage(const QString &userName) const;
+
     static const QString JAMTABA_CHAT_BOT_NAME;
 
 private slots:
