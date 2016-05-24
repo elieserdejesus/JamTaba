@@ -1,6 +1,16 @@
 /* Dialogs in Black theme
 -------------------------------------*/
 
+PreferencesDialog
+{
+    background-color: rgb(35, 35, 35);
+}
+
+PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome
+{
+    background-color: rgb(80, 80, 80);
+}
+
 PluginScanDialog
 {
     background-color: rgb(80, 80, 80);
