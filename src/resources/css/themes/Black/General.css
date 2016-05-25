@@ -210,3 +210,21 @@ QTabBar::tab:!selected
     color: rgb(140, 140,140);
     background-color: black
 }
+
+QMenuBar::item
+{
+    color: rgb(140, 140, 140);
+    background:rgb(35, 35, 35);
+}
+
+QMenuBar
+{
+    background:rgb(35, 35, 35);
+}
+
+QMenu
+{
+    border: 1px outset rgb(10, 10, 10);
+    color: rgb(140, 140, 140);
+    background:rgb(35, 35, 35);
+}
