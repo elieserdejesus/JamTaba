@@ -79,5 +79,5 @@ QMainWindow
 #chatTabWidget QTabBar::tab
 {
     background-color: rgb(20, 20, 20);
-    color: white;
+    color: rgb(140, 140, 140);
 }
