@@ -13,7 +13,7 @@ const QColor PeakMeter::GRADIENT_FIRST_COLOR = QColor(255, 0, 0); //red
 const QColor PeakMeter::GRADIENT_MIDDLE_COLOR = QColor(0, 220, 0); //mid green
 const QColor PeakMeter::GRADIENT_LAST_COLOR = QColor(0, 100, 0); //dark green
 const QColor PeakMeter::MAX_PEAK_COLOR = QColor(0, 0, 0, 80);
-const QColor PeakMeter::RMS_COLOR = QColor(255, 255, 255, 110);
+const QColor PeakMeter::RMS_COLOR = QColor(255, 255, 255, 120);
 
 const int PeakMeter::MAX_PEAK_MARKER_SIZE = 2;
 const int PeakMeter::DEFAULT_DECAY_TIME = 3000;
@@ -142,7 +142,14 @@ void PeakMeter::paintEvent(QPaintEvent *)
         //draw the rms rect in the top layer
         if (currentRms) {
             float rmsValue = Utils::poweredGainToLinear(currentRms) * rectSize;
-            painter.fillRect(getPaintRect(rmsValue), RMS_COLOR);
+            QRectF rmsRect = getPaintRect(rmsValue);
+            painter.fillRect(rmsRect, RMS_COLOR);
+
+            //draw a rms mark
+            painter.setPen(MAX_PEAK_COLOR);
+            QPointF firstPoint  = isVerticalMeter ? rmsRect.topLeft() : rmsRect.topRight();
+            QPointF secondPoint = isVerticalMeter ? rmsRect.topRight() : rmsRect.bottomRight();
+            painter.drawLine(firstPoint, secondPoint);
         }
 
         // draw max peak marker

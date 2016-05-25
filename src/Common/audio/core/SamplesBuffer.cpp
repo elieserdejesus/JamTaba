@@ -19,6 +19,10 @@ SamplesBuffer::SamplesBuffer(unsigned int channels) :
         qCritical() << "AudioSamplesBuffer::channels == 0";
     for (unsigned int c = 0; c < channels; ++c)
         samples.push_back(std::vector<float>());
+
+    squaredSums[0] = squaredSums[1] = 0.0f;
+    lastRmsValues[0] = lastRmsValues[1] = 0.0f;
+    summedSamples = 0;
 }
 
 SamplesBuffer::SamplesBuffer(unsigned int channels, unsigned int frameLenght) :
@@ -142,12 +146,8 @@ void SamplesBuffer::zero()
         std::fill(samples[c].begin(), samples[c].end(), (float)0);
 }
 
-AudioPeak SamplesBuffer::computePeak() const
+AudioPeak SamplesBuffer::computePeak()
 {
-    static float squaredSums[2] = {0.0f};
-    static int summedSamples = 0;
-    static float lastRmsValues[2] = {0.0f};
-
     float abs; //max peak absolute value
     float maxPeaks[2] = {0};// left and right peaks
     for (unsigned int c = 0; c < channels; ++c) {

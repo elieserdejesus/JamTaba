@@ -11,7 +11,12 @@ class SamplesBuffer
 private:
     unsigned int channels;
     unsigned int frameLenght;
+
+    //rms calculations
     double rmsRunningSum;
+    float squaredSums[2];
+    int summedSamples;
+    float lastRmsValues[2];
 
     std::vector< std::vector<float> > samples;
 
@@ -61,7 +66,7 @@ public:
 
     void invertStereo();
 
-    Audio::AudioPeak computePeak() const;
+    Audio::AudioPeak computePeak();
 
     inline void add(const SamplesBuffer &buffer)
     {
