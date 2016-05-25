@@ -175,12 +175,12 @@ LocalTrackGroupView #groupNameField
 {
     color: rgb(140, 140, 140);
     background-color: rgb(50, 50, 50);
-    border-color: rgb(20, 20, 20);
+    border-color: rgb(50, 50, 50);
 }
 
 LocalTrackGroupView #groupNameField:focus
 {
-    color: rgb(140, 140, 140);
+    color: rgb(180, 180, 180);
     background-color: rgb(50, 50, 50);
-    border-color: rgb(20, 20, 20);
+    border-color: rgb(30, 30, 30);
 }
