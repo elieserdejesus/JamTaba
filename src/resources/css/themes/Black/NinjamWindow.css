@@ -119,14 +119,15 @@ NinjamTrackGroupView[unlighted="true"] #groupNameField        /* channel name te
 
 NinjamTrackView  #channelName               /* channel name for ninjamers */
 {
-    border: none;
-    background-color: rgba(0, 0, 0, 6);
+    border-color: rgb(20, 20, 20);
+    background-color: rgb(80, 80, 80);
     padding-top: 3px;
     padding-bottom: 3px;
     font-size: 10px;
-    color: rgba(0, 0, 0, 160);
+    color: rgb(140, 140, 140);;
     max-width: 130px;
 }
+
 
 
 /* NinjamPanel is the widget where the ninjam controls are showed (in bottom when we are connected in a server)
