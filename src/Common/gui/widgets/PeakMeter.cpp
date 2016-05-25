@@ -163,7 +163,7 @@ void PeakMeter::paintEvent(QPaintEvent *)
         if (currentRms && paintingRMS) {
             float rmsValue = Utils::poweredGainToLinear(currentRms) * rectSize;
             QRectF rmsRect = getPaintRect(rmsValue);
-            if (currentRms > currentPeak)
+            if (currentRms > currentPeak || !paintingPeaks)
                 painter.fillRect(rmsRect, gradient); //paint the gradient when current rms is greater than current peak to avoid a ugly white rect (the white rect is painted in next lines)
 
             painter.fillRect(rmsRect, RMS_COLOR); //paint the "transparent white" rect to highlight the rms meter
