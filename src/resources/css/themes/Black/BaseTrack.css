@@ -37,10 +37,10 @@
 #buttonBoostPlus12:checked,
 #buttonBoostZero:checked
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(80, 80, 80));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(100, 100, 100), stop:1 rgb(60, 60, 60));
     color: rgba(0, 0, 0, 160);
     border-radius: 0px;
-    border-color: rgb(40, 40, 40);
+    border-color: rgb(20, 20, 20);
 }
 
 #buttonBoostMinus12:hover,
@@ -57,10 +57,10 @@
 #buttonBoostPlus12:hover:checked,
 #buttonBoostZero:hover:checked
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(120, 120, 120));
-    color: rgb(80, 80, 80);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(80, 80, 80), stop:1 rgb(60, 60, 60));
+    color: rgb(40, 40, 40);
     border-radius: 0px;
-    border-color: rgb(40, 40, 40)
+    border-color: rgb(20, 20, 20)
 }
 
 QPushButton#buttonStereoInversion
