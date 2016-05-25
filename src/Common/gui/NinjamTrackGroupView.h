@@ -37,6 +37,8 @@ public:
 protected:
     NinjamTrackView *createTrackView(long trackID) override;
 
+    void populateContextMenu(QMenu &contextMenu) override;
+
 private:
     Controller::MainController *mainController;
     QLabel *countryLabel;
@@ -52,7 +54,6 @@ private:
 
 private slots:
     void updateGeoLocation(const QString &resolvedIp);
-    void showContextMenu(const QPoint &pos);
     void blockChatMessages();
     void unblockChatMessages();
     void hideChatBlockIcon(const QString &unblockedUserName);

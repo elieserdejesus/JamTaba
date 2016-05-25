@@ -19,12 +19,16 @@ const int PeakMeter::MAX_PEAK_MARKER_SIZE = 2;
 const int PeakMeter::DEFAULT_DECAY_TIME = 3000;
 const int PeakMeter::MAX_PEAK_SHOW_TIME = 1500;
 
+bool PeakMeter::paintingMaxPeakMarker = true;
+bool PeakMeter::paintingPeaks = true;
+bool PeakMeter::paintingRMS = true;
+
 PeakMeter::PeakMeter(QWidget *) :
-    currentPeak(0),
+    currentPeak(0.0f),
+    currentRms(0.0f),
     maxPeak(0),
     lastUpdate(QDateTime::currentMSecsSinceEpoch()),
     usingGradient(true),
-    paintingMaxPeak(true),
     decayTime(DEFAULT_DECAY_TIME),
     orientation(Qt::Vertical),
     lastMaxPeakTime(0)
@@ -32,6 +36,11 @@ PeakMeter::PeakMeter(QWidget *) :
     gradient = createGradient();
     setAttribute(Qt::WA_NoBackground);
     update();
+}
+
+PeakMeter::~PeakMeter()
+{
+
 }
 
 QSize PeakMeter::minimumSizeHint() const
@@ -77,8 +86,17 @@ void PeakMeter::setDecayTime(quint32 decayTimeInMiliseconds)
 
 void PeakMeter::setPaintMaxPeakMarker(bool paintMaxPeak)
 {
-    this->paintingMaxPeak = paintMaxPeak;
-    update();
+    PeakMeter::paintingMaxPeakMarker = paintMaxPeak;
+}
+
+void PeakMeter::setPaintingPeaks(bool paintPeaks)
+{
+    PeakMeter::paintingPeaks = paintPeaks;
+}
+
+void PeakMeter::setPaintingRMS(bool paintRMS)
+{
+    PeakMeter::paintingRMS = paintRMS;
 }
 
 void PeakMeter::setSolidColor(const QColor &color)
@@ -135,25 +153,30 @@ void PeakMeter::paintEvent(QPaintEvent *)
     if (isEnabled()) {
         bool isVerticalMeter = isVertical();
         int rectSize = isVerticalMeter ? height() : width();
-        float peakValue = Utils::poweredGainToLinear(currentPeak) * rectSize;
 
-        painter.fillRect(getPaintRect(peakValue), usingGradient ? gradient : QBrush(solidColor));
+        if (currentPeak && paintingPeaks) {
+            float peakValue = Utils::poweredGainToLinear(currentPeak) * rectSize;
+            painter.fillRect(getPaintRect(peakValue), usingGradient ? gradient : QBrush(solidColor));
+        }
 
         //draw the rms rect in the top layer
-        if (currentRms) {
+        if (currentRms && paintingRMS) {
             float rmsValue = Utils::poweredGainToLinear(currentRms) * rectSize;
             QRectF rmsRect = getPaintRect(rmsValue);
-            painter.fillRect(rmsRect, RMS_COLOR);
+            if (currentRms > currentPeak)
+                painter.fillRect(rmsRect, gradient); //paint the gradient when current rms is greater than current peak to avoid a ugly white rect (the white rect is painted in next lines)
+
+            painter.fillRect(rmsRect, RMS_COLOR); //paint the "transparent white" rect to highlight the rms meter
 
             //draw a rms mark
-            painter.setPen(MAX_PEAK_COLOR);
             QPointF firstPoint  = isVerticalMeter ? rmsRect.topLeft() : rmsRect.topRight();
             QPointF secondPoint = isVerticalMeter ? rmsRect.topRight() : rmsRect.bottomRight();
+            painter.setPen(MAX_PEAK_COLOR);
             painter.drawLine(firstPoint, secondPoint);
         }
 
         // draw max peak marker
-        if (maxPeak > 0 && paintingMaxPeak) {
+        if (maxPeak > 0 && paintingMaxPeakMarker) {
             float linearPeak = Utils::poweredGainToLinear(maxPeak);
             QRect maxPeakRect(isVerticalMeter ? 0 : (linearPeak * width()),
                            isVerticalMeter ? (height() - linearPeak * height()) : 0,

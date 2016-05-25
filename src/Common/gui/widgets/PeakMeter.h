@@ -10,20 +10,27 @@ class PeakMeter : public QFrame
 public:
 
     explicit PeakMeter(QWidget *parent = 0);
-    virtual ~PeakMeter()
-    {
-    }
+    virtual ~PeakMeter();
 
     void setPeak(float, float rms);
     void setSolidColor(const QColor &color);
-    void setPaintMaxPeakMarker(bool paintMaxPeak);
+
+    static void setPaintMaxPeakMarker(bool paintMaxPeak);
+    static void setPaintingPeaks(bool paintPeaks);
+    static void setPaintingRMS(bool paintRMS);
+
     void setDecayTime(quint32 decayTimeInMiliseconds);
     void setOrientation(Qt::Orientation orientation);
     QSize minimumSizeHint() const override;
 
+    inline static bool isPaintintMaxPeakMarker() { return paintingMaxPeakMarker; }
+    inline static bool isPaintingRMS() { return paintingRMS; }
+    inline static bool isPaintingPeaks() { return paintingPeaks; }
+
 protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *);
+
 private:
 
     inline bool isVertical() const
@@ -46,7 +53,10 @@ private:
     bool usingGradient;
     QColor solidColor;// used when setSolidColor is called to disable gradient painting
 
-    bool paintingMaxPeak;
+    //static painting flags. Turning on/off will affect all meters.
+    static bool paintingMaxPeakMarker;
+    static bool paintingPeaks;
+    static bool paintingRMS;
 
     Qt::Orientation orientation;
 

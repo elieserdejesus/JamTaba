@@ -37,7 +37,7 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
     midiPeakMeter = new PeakMeter();
     midiPeakMeter->setObjectName(QStringLiteral("midiPeakMeter"));
     midiPeakMeter->setSolidColor(QColor(180, 0, 0));
-    midiPeakMeter->setPaintMaxPeakMarker(false);
+    //midiPeakMeter->setPaintMaxPeakMarker(false);
     midiPeakMeter->setDecayTime(500);// 500 ms
     midiPeakMeter->setAccessibleDescription("This is the midi activity meter");
 

@@ -63,10 +63,6 @@ NinjamTrackGroupView::NinjamTrackGroupView(Controller::MainController *mainContr
 
     connect(mainController, SIGNAL(ipResolved(QString)), this, SLOT(updateGeoLocation(QString)));
 
-    //context menu
-    setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, &NinjamTrackGroupView::customContextMenuRequested, this, &NinjamTrackGroupView::showContextMenu);
-
     //reacting to chat block/unblock events
     Controller::NinjamController *ninjamController = mainController->getNinjamController();
     connect(ninjamController, SIGNAL(userBlockedInChat(QString)), this, SLOT(showChatBlockIcon(QString)));
@@ -85,16 +81,16 @@ void NinjamTrackGroupView::showChatBlockIcon(const QString &blockedUserName)
         chatBlockIconLabel->show();
 }
 
-void NinjamTrackGroupView::showContextMenu(const QPoint &pos)
+void NinjamTrackGroupView::populateContextMenu(QMenu &contextMenu)
 {
-    QMenu contextMenu(this);
     QString userName = getGroupName();
     bool userIsBlockedInChat = mainController->getNinjamController()->userIsBlockedInChat(userName);
     QAction *blockAction = contextMenu.addAction(tr("Block %1 in chat").arg(userName), this, SLOT(blockChatMessages()));
     QAction *unblockAction = contextMenu.addAction(tr("Unblock %1 in chat").arg(userName), this, SLOT(unblockChatMessages()));
     blockAction->setEnabled(!userIsBlockedInChat);
     unblockAction->setEnabled(userIsBlockedInChat);
-    contextMenu.exec(mapToGlobal(pos));
+
+    TrackGroupView::populateContextMenu(contextMenu);
 }
 
 void NinjamTrackGroupView::blockChatMessages()
