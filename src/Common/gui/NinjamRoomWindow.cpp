@@ -278,8 +278,9 @@ void NinjamRoomWindow::handleUserEntering(const QString &userName)
 
 void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &message)
 {
-    bool isVoteMessage = !message.isNull() && message.toLower().startsWith(
+    bool isSystemVoteMessage = !message.isNull() && message.toLower().startsWith(
         "[voting system] leading candidate:");
+
     bool isChordProgressionMessage = false;
     try{ //TODO - remove this try catch?
         ChatChordsProgressionParser chordsParser;
@@ -295,10 +296,16 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
     bool showTranslationButton = !isChordProgressionMessage;
     chatPanel->addMessage(userName, message, showTranslationButton, showBlockButton);
 
-    if (isVoteMessage)
-        handleVoteMessage(user, message);
-    else if (isChordProgressionMessage)
+    static bool localUserWasVotingInLastMessage = false;
+    if (isSystemVoteMessage) {
+        if (!localUserWasVotingInLastMessage) //don't create the vote button if local user is proposing BPI or BPM change
+            createVoteButton(message);
+    }
+    else if (isChordProgressionMessage) {
         handleChordProgressionMessage(user, message);
+    }
+
+    localUserWasVotingInLastMessage = message.toLower().startsWith("!vote") && user.getName() == mainController->getUserName();
 }
 
 bool NinjamRoomWindow::canShowBlockButtonInChatMessage(const QString &userName) const
@@ -329,29 +336,21 @@ void NinjamRoomWindow::handleChordProgressionMessage(const Ninjam::User &user, c
     }
 }
 
-void NinjamRoomWindow::handleVoteMessage(const Ninjam::User &user, const QString &message)
+void NinjamRoomWindow::createVoteButton(const QString &message)
 {
-    // local user is voting?
-    static quint64 lastVoteCommand = 0;
-    QString localUserFullName = mainController->getNinjamService()->getConnectedUserName();
-    if (user.getFullName() == localUserFullName && message.toLower().contains("!vote"))
-        lastVoteCommand = QDateTime::currentMSecsSinceEpoch();
-    quint64 timeSinceLastVote = QDateTime::currentMSecsSinceEpoch() - lastVoteCommand;
-    if (timeSinceLastVote >= 1000) {
-        QString commandType = (message.toLower().contains("bpm")) ? "BPM" : "BPI";
+    QString commandType = (message.toLower().contains("bpm")) ? "BPM" : "BPI";
 
-        // [voting system] leading candidate: 1/2 votes for 12 BPI [each vote expires in 60s]
-        int forIndex = message.indexOf("for");
-        assert(forIndex >= 0);
-        int spaceAfterValueIndex = message.indexOf(" ", forIndex + 4);
-        QString voteValueString = message.mid(forIndex + 4, spaceAfterValueIndex - (forIndex + 4));
-        int voteValue = voteValueString.toInt();
+    // [voting system] leading candidate: 1/2 votes for 12 BPI [each vote expires in 60s]
+    int forIndex = message.indexOf("for");
+    assert(forIndex >= 0);
+    int spaceAfterValueIndex = message.indexOf(" ", forIndex + 4);
+    QString voteValueString = message.mid(forIndex + 4, spaceAfterValueIndex - (forIndex + 4));
+    int voteValue = voteValueString.toInt();
 
-        if (commandType == "BPI")
-            chatPanel->addBpiVoteConfirmationMessage(voteValue);
-        else if (commandType == "BPM")// just in case
-            chatPanel->addBpmVoteConfirmationMessage(voteValue);
-    }
+    if (commandType == "BPI")
+        chatPanel->addBpiVoteConfirmationMessage(voteValue);
+    else if (commandType == "BPM")// just in case
+        chatPanel->addBpmVoteConfirmationMessage(voteValue);
 }
 
 void NinjamRoomWindow::voteToChangeBpi(int newBpi)

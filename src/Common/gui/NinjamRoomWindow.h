@@ -75,7 +75,7 @@ private:
 
     QString roomName;
 
-    void handleVoteMessage(const Ninjam::User &user, const QString &message);
+    void createVoteButton(const QString &message);
     void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);
 
     NinjamPanel *createNinjamPanel();
