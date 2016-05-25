@@ -190,20 +190,20 @@ TrackGroupView[unlighted="true"] > #topPanel                /* the track group t
 BaseTrackView #panSlider::handle
 {
     background-color: rgb(140, 140, 140);
-    border: rgb(150, 150, 150);
-    width: 7px;
+    border: 1px outset rgb(30, 30, 30);
+
 }
 
 BaseTrackView #panSlider::handle:hover
 {
     background-color: rgb(180, 180, 180);
-    border: rgb(200, 200, 200);
+    border: rgb(40, 40, 40);
 }
 
 BaseTrackView #levelSlider::handle:hover
 {
     background-color: rgb(180, 180, 180);
-    border: rgb(200, 200, 200);
+    border: rgb(40, 40, 40);
 }
 
 PeakMeter
