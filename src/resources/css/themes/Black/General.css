@@ -4,21 +4,31 @@
 /* Button ----------------------*/
 QPushButton
 {
-    color: rgb(20, 20, 20);
-    background-color: rgb(140, 140, 140);
+    color: rgb(40, 40, 40);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(120, 120, 120));
+    border: 1px outset rgb(30, 30, 30);
     border: 1px solid black;
 }
 
 QPushButton:checked
 {
-    background-color: rgb(80, 80, 80);
-    color: rgb(140, 140, 140);
+    color: rgb(180, 180, 180);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(60, 60, 60));
+    border: 1px outset rgb(10, 10, 10);
 }
 
 QPushButton:hover
 {
+    color: rgb(40, 40, 40);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
+    border: 1px outset rgb(30, 30, 30);
+}
+
+QPushButton:hover:checked
+{
     color: rgb(180, 180, 180);
-    border: 1px solid black;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(80, 80, 80));
+    border: 1px outset rgb(10, 10, 10);
 }
 
 QPushButton[enabled="false"]        /* disabled buttons */
@@ -197,18 +207,24 @@ QTabBar::tab
     background-color: rgb(200, 200, 200);
 }
 
-QTabBar::tab:selected,
-QTabBar::tab:hover
+QTabBar::tab:selected
 {
     color: rgb(140, 140,140);
-    background-color: rgb(20, 20, 20)
+    background-color: rgb(20, 20, 20);
+}
+
+QTabBar::tab:hover,
+QTabBar::tab:hover:checked
+{
+    color: rgb(140, 140,140);
+    background-color: rgb(30, 30, 30);
 }
 
 QTabBar::tab:!selected
 {
     margin-top: 3px; /* make non-selected tabs look smaller */
     color: rgb(140, 140,140);
-    background-color: black
+    background-color: rgb(10, 10, 10);
 }
 
 QMenuBar::item
