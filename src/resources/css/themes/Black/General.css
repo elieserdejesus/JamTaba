@@ -236,6 +236,10 @@ QMenuBar::item
 QMenuBar
 {
     background:rgb(35, 35, 35);
+    border-bottom: none;
+    border-top: 1px solid rgb(100, 100, 100);
+    border-left: 1px solid rgb(100, 100, 100);
+    border-right: 1px solid rgb(100, 100, 100);
 }
 
 QMenu
