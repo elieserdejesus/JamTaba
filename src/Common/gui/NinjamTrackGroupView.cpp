@@ -69,10 +69,21 @@ NinjamTrackGroupView::NinjamTrackGroupView(Controller::MainController *mainContr
 
     //reacting to chat block/unblock events
     Controller::NinjamController *ninjamController = mainController->getNinjamController();
-    connect(ninjamController, SIGNAL(userBlockedInChat(QString)), chatBlockIconLabel, SLOT(show()));
-    connect(ninjamController, SIGNAL(userUnblockedInChat(QString)), chatBlockIconLabel, SLOT(hide()));
+    connect(ninjamController, SIGNAL(userBlockedInChat(QString)), this, SLOT(showChatBlockIcon(QString)));
+    connect(ninjamController, SIGNAL(userUnblockedInChat(QString)), this, SLOT(hideChatBlockIcon(QString)));
 }
 
+void NinjamTrackGroupView::hideChatBlockIcon(const QString &unblockedUserName)
+{
+    if (unblockedUserName == getGroupName())
+        chatBlockIconLabel->hide();
+}
+
+void NinjamTrackGroupView::showChatBlockIcon(const QString &blockedUserName)
+{
+    if (blockedUserName == getGroupName())
+        chatBlockIconLabel->show();
+}
 
 void NinjamTrackGroupView::showContextMenu(const QPoint &pos)
 {

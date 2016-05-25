@@ -55,6 +55,8 @@ private slots:
     void showContextMenu(const QPoint &pos);
     void blockChatMessages();
     void unblockChatMessages();
+    void hideChatBlockIcon(const QString &unblockedUserName);
+    void showChatBlockIcon(const QString &blockedUserName);
 };
 
 #endif // NINJAMTRACKGROUPVIEW_H
