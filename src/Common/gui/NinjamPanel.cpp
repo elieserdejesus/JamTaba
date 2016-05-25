@@ -216,10 +216,10 @@ void NinjamPanel::setGainSliderValue(int value)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamPanel::setMetronomePeaks(float left, float right)
+void NinjamPanel::setMetronomePeaks(float left, float right, float rmsLeft, float rmsRight)
 {
-    ui->peakMeterLeft->setPeak(left);
-    ui->peakMeterRight->setPeak(right);
+    ui->peakMeterLeft->setPeak(left, rmsLeft);
+    ui->peakMeterRight->setPeak(right, rmsRight);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++

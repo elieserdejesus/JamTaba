@@ -850,7 +850,7 @@ void MainWindow::timerEvent(QTimerEvent *)
             roomView->setShowBufferingState(buffering);
             if (!buffering) {
                 Audio::AudioPeak peak = mainController->getRoomStreamPeak();
-                roomView->addPeak(peak.getMax());
+                roomView->addPeak(peak.getMaxPeak());
             } else {
                 int percentage = mainController->getRoomStreamer()->getBufferingPercentage();
                 roomView->setBufferingPercentage(percentage);
@@ -860,8 +860,8 @@ void MainWindow::timerEvent(QTimerEvent *)
 
     // update master peaks
     Audio::AudioPeak masterPeak = mainController->getMasterPeak();
-    ui.masterMeterL->setPeak(masterPeak.getLeft());
-    ui.masterMeterR->setPeak(masterPeak.getRight());
+    ui.masterMeterL->setPeak(masterPeak.getLeftPeak(), 0.0f); //not showing rms in master meters
+    ui.masterMeterR->setPeak(masterPeak.getRightPeak(), 0.0f);
 }
 
 // ++++++++++++=

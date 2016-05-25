@@ -37,7 +37,7 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
     midiPeakMeter = new PeakMeter();
     midiPeakMeter->setObjectName(QStringLiteral("midiPeakMeter"));
     midiPeakMeter->setSolidColor(QColor(180, 0, 0));
-    midiPeakMeter->setPaintMaxPeakMarker(false);
+    //midiPeakMeter->setPaintMaxPeakMarker(false);
     midiPeakMeter->setDecayTime(500);// 500 ms
     midiPeakMeter->setAccessibleDescription("This is the midi activity meter");
 
@@ -74,7 +74,7 @@ void LocalTrackViewStandalone::updateGuiElements()
 
     if (inputNode && inputNode->hasMidiActivity()) {
         quint8 midiActivityValue = inputNode->getMidiActivityValue();
-        midiPeakMeter->setPeak(midiActivityValue/127.0);
+        midiPeakMeter->setPeak(midiActivityValue/127.0, 0.0f); // not using the rms value in midi peak
         inputNode->resetMidiActivity();
     }
     if (midiPeakMeter->isVisible())

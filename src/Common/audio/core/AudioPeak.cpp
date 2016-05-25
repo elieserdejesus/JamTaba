@@ -4,40 +4,39 @@
 
 using namespace Audio;
 
-AudioPeak::AudioPeak(float leftPeak, float rightPeak) :
-    left(leftPeak),
-    right(rightPeak)
+AudioPeak::AudioPeak(float leftPeak, float rightPeak, float rmsLeft, float rmsRight)
 {
+    peaks[0] = leftPeak;
+    peaks[1] = rightPeak;
+
+    rms[0] = rmsLeft;
+    rms[1] = rmsRight;
 }
 
-AudioPeak::AudioPeak() :
-    left(0),
-    right(0)
+AudioPeak::AudioPeak()
 {
+    zero();
 }
 
 void AudioPeak::update(const AudioPeak &other)
 {
-    left = other.left;
-    right = other.right;
+    peaks[0] = other.peaks[0];
+    peaks[1] = other.peaks[1];
+
+    rms[0] = other.rms[0];
+    rms[1] = other.rms[1];
 }
 
 void AudioPeak::zero()
 {
-    this->left = this->right = 0;
+    peaks[0] = 0.0f;
+    peaks[1] = 0.0f;
+
+    rms[0] = 0.0f;
+    rms[1] = 0.0f;
 }
 
-void AudioPeak::setLeft(float newLeftValue)
+float AudioPeak::getMaxPeak() const
 {
-    this->left = newLeftValue;
-}
-
-void AudioPeak::setRight(float newRightValue)
-{
-    this->right = newRightValue;
-}
-
-float AudioPeak::getMax() const
-{
-    return std::max(qAbs(left), qAbs(right));
+    return std::max(qAbs(peaks[0]), qAbs(peaks[1]));
 }
