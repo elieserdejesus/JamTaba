@@ -133,7 +133,6 @@ NinjamTrackGroupView[unlighted="true"] #groupNameField        /* channel name te
 NinjamTrackView  #channelName               /* channel name for ninjamers */
 {
     border-color: rgb(20, 20, 20);
-    background-color: rgb(80, 80, 80);
     padding-top: 3px;
     padding-bottom: 3px;
     font-size: 10px;
