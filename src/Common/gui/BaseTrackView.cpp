@@ -293,13 +293,13 @@ void BaseTrackView::updateGuiElements()
         return;
 
     Audio::AudioPeak peak = mainController->getTrackPeak(getTrackID());
-    if (peak.getMax() > maxPeak.getMax()) {
+    if (peak.getMaxPeak() > maxPeak.getMaxPeak()) {
         maxPeak.update(peak);
-        double db = Utils::linearToDb(maxPeak.getMax());
+        double db = Utils::linearToDb(maxPeak.getMaxPeak());
         peaksDbLabel->setText(QString::number(db, 'f', 0));
     }
     // update the track peaks
-    setPeaks(peak.getLeft(), peak.getRight());
+    setPeaks(peak.getLeftRMS(), peak.getRightRMS());
 
     // update the track processors. In this moment the VST plugins GUI are updated. Some plugins need this to run your animations (see Ez Drummer, for example);
     Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());

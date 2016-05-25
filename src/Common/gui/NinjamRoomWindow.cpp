@@ -380,7 +380,7 @@ void NinjamRoomWindow::updatePeaks()
     }
     Audio::AudioPeak metronomePeak = mainController->getTrackPeak(
         Controller::NinjamController::METRONOME_TRACK_ID);
-    ninjamPanel->setMetronomePeaks(metronomePeak.getLeft(), metronomePeak.getRight());
+    ninjamPanel->setMetronomePeaks(metronomePeak.getLeftPeak(), metronomePeak.getRightPeak());
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

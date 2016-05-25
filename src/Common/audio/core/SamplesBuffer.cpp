@@ -12,7 +12,8 @@ const SamplesBuffer SamplesBuffer::ZERO_BUFFER(1, 0);
 
 SamplesBuffer::SamplesBuffer(unsigned int channels) :
     channels(channels),
-    frameLenght(0)
+    frameLenght(0),
+    rmsRunningSum(0)
 {
     if (channels == 0)
         qCritical() << "AudioSamplesBuffer::channels == 0";
@@ -143,20 +144,42 @@ void SamplesBuffer::zero()
 
 AudioPeak SamplesBuffer::computePeak() const
 {
-    float abs;
-    float peaks[2] = {0};// left and right peaks
+    static float squaredSums[2] = {0.0f};
+    static int summedSamples = 0;
+    static float lastRmsValues[2] = {0.0f};
+
+    float abs; //max peak absolute value
+    float maxPeaks[2] = {0};// left and right peaks
     for (unsigned int c = 0; c < channels; ++c) {
         float maxPeak = 0;
         for (unsigned int i = 0; i < frameLenght; ++i) {
-            abs = fabs(samples[c][i]);
+
+            //max peak
+            abs = std::fabs(samples[c][i]);
             if (abs > maxPeak)
                 maxPeak = abs;
-            peaks[c] = maxPeak;
+            maxPeaks[c] = maxPeak;
+
+            //rms running squared sum
+            squaredSums[c] += samples[c][i] * samples[c][i]; // squaring every sample and summing
         }
+        summedSamples += frameLenght;
     }
-    if (isMono())
-        peaks[1] = peaks[0];
-    return AudioPeak(peaks[0], peaks[1]);
+    if (isMono()) {
+        maxPeaks[1] = maxPeaks[0];
+        squaredSums[1] = squaredSums[0];
+    }
+
+    //time to compute new rms values?
+    if (summedSamples >= 13230) { //300 ms in 44100 KHz
+        lastRmsValues[0] = std::sqrt(squaredSums[0]/summedSamples);
+        lastRmsValues[1] = std::sqrt(squaredSums[1]/summedSamples);
+
+        squaredSums[0] = squaredSums[1] = 0.0f; //reinitialize the rms running sum
+        summedSamples = 0;
+    }
+
+    return AudioPeak(maxPeaks[0], maxPeaks[1], lastRmsValues[0], lastRmsValues[1]);
 }
 
 void SamplesBuffer::add(const SamplesBuffer &buffer, int internalWriteOffset)

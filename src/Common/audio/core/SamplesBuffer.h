@@ -11,6 +11,7 @@ class SamplesBuffer
 private:
     unsigned int channels;
     unsigned int frameLenght;
+    double rmsRunningSum;
 
     std::vector< std::vector<float> > samples;
 

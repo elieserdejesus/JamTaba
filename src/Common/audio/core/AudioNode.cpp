@@ -72,7 +72,7 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
 AudioNode::AudioNode() :
     internalInputBuffer(2),
     internalOutputBuffer(2),
-    lastPeak(0, 0),
+    lastPeak(),
     muted(false),
     soloed(false),
     activated(true),
