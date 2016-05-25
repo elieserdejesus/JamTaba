@@ -860,8 +860,8 @@ void MainWindow::timerEvent(QTimerEvent *)
 
     // update master peaks
     Audio::AudioPeak masterPeak = mainController->getMasterPeak();
-    ui.masterMeterL->setPeak(masterPeak.getLeftPeak());
-    ui.masterMeterR->setPeak(masterPeak.getRightPeak());
+    ui.masterMeterL->setPeak(masterPeak.getLeftPeak(), masterPeak.getLeftRMS());
+    ui.masterMeterR->setPeak(masterPeak.getRightPeak(), masterPeak.getLeftRMS());
 }
 
 // ++++++++++++=

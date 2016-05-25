@@ -299,7 +299,7 @@ void BaseTrackView::updateGuiElements()
         peaksDbLabel->setText(QString::number(db, 'f', 0));
     }
     // update the track peaks
-    setPeaks(peak.getLeftRMS(), peak.getRightRMS());
+    setPeaks(peak.getLeftPeak(), peak.getRightPeak(), peak.getLeftRMS(), peak.getRightRMS());
 
     // update the track processors. In this moment the VST plugins GUI are updated. Some plugins need this to run your animations (see Ez Drummer, for example);
     Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
@@ -388,12 +388,11 @@ BaseTrackView *BaseTrackView::getTrackViewByID(long trackID)
     return nullptr;
 }
 
-void BaseTrackView::setPeaks(float left, float right)
+void BaseTrackView::setPeaks(float peakLeft, float peakRight, float rmsLeft, float rmsRight)
 {
-    if (left < 0 || right < 0)
-        qWarning() << "Invalid peak values left:" << left << " right:" << right;
-    peakMeterLeft->setPeak(left);
-    peakMeterRight->setPeak(right);
+    peakMeterLeft->setPeak(peakLeft, rmsLeft);
+    peakMeterRight->setPeak(peakRight, rmsRight);
+
 }
 
 // event filter used to handle double clicks

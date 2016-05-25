@@ -14,7 +14,7 @@ public:
     {
     }
 
-    void setPeak(float);
+    void setPeak(float, float rms);
     void setSolidColor(const QColor &color);
     void setPaintMaxPeakMarker(bool paintMaxPeak);
     void setDecayTime(quint32 decayTimeInMiliseconds);
@@ -36,6 +36,8 @@ private:
     float currentPeak;
     float maxPeak;
 
+    float currentRms;
+
     qint64 lastMaxPeakTime;
     qint64 lastUpdate;
 
@@ -50,9 +52,15 @@ private:
 
     QLinearGradient createGradient();
 
+    QRectF getPaintRect(float peakValue) const;
+
+    static float limitFloatValue(float value, float minValue = 0.0f, float maxValue = 1.0f);
+
     static const QColor GRADIENT_FIRST_COLOR;
     static const QColor GRADIENT_MIDDLE_COLOR;
     static const QColor GRADIENT_LAST_COLOR;
+
+    static const QColor RMS_COLOR;
 
     static const int LINES_MARGIN;
     static const int MIN_SIZE;

@@ -74,7 +74,7 @@ void LocalTrackViewStandalone::updateGuiElements()
 
     if (inputNode && inputNode->hasMidiActivity()) {
         quint8 midiActivityValue = inputNode->getMidiActivityValue();
-        midiPeakMeter->setPeak(midiActivityValue/127.0);
+        midiPeakMeter->setPeak(midiActivityValue/127.0, 0.0f); // not using the rms value in midi peak
         inputNode->resetMidiActivity();
     }
     if (midiPeakMeter->isVisible())
