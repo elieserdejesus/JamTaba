@@ -13,7 +13,8 @@ const SamplesBuffer SamplesBuffer::ZERO_BUFFER(1, 0);
 SamplesBuffer::SamplesBuffer(unsigned int channels) :
     channels(channels),
     frameLenght(0),
-    rmsRunningSum(0)
+    rmsRunningSum(0.0f),
+    rmsWindowSize(13230) //300 ms in 44100 KHz
 {
     if (channels == 0)
         qCritical() << "AudioSamplesBuffer::channels == 0";
@@ -27,7 +28,9 @@ SamplesBuffer::SamplesBuffer(unsigned int channels) :
 
 SamplesBuffer::SamplesBuffer(unsigned int channels, unsigned int frameLenght) :
     channels(channels),
-    frameLenght(frameLenght)
+    frameLenght(frameLenght),
+    rmsRunningSum(0.0f),
+    rmsWindowSize(13230) //300 ms in 44100 KHz
 {
     for (unsigned int c = 0; c < channels; ++c)
         samples.push_back(std::vector<float>(frameLenght));
@@ -36,13 +39,20 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, unsigned int frameLenght) :
 SamplesBuffer::SamplesBuffer(const SamplesBuffer &other) :
     channels(other.channels),
     frameLenght(other.frameLenght),
-    samples(other.samples)
+    samples(other.samples),
+    rmsRunningSum(other.rmsRunningSum),
+    rmsWindowSize(other.rmsWindowSize)
 {
     // qWarning() << "Samples Buffer copy constructor!";
 }
 
 SamplesBuffer::~SamplesBuffer()
 {
+}
+
+void SamplesBuffer::setRmsWindowSize(int samples)
+{
+    rmsWindowSize = samples;
 }
 
 void SamplesBuffer::invertStereo()
@@ -171,7 +181,7 @@ AudioPeak SamplesBuffer::computePeak()
     }
 
     //time to compute new rms values?
-    if (summedSamples >= 13230) { //300 ms in 44100 KHz
+    if (summedSamples >= rmsWindowSize) {
         lastRmsValues[0] = std::sqrt(squaredSums[0]/summedSamples);
         lastRmsValues[1] = std::sqrt(squaredSums[1]/summedSamples);
 
@@ -180,6 +190,11 @@ AudioPeak SamplesBuffer::computePeak()
     }
 
     return AudioPeak(maxPeaks[0], maxPeaks[1], lastRmsValues[0], lastRmsValues[1]);
+}
+
+int SamplesBuffer::computeRmsWindowSize(int sampleRate, int windowTimeInMs)
+{
+    return sampleRate * windowTimeInMs/1000.0f;
 }
 
 void SamplesBuffer::add(const SamplesBuffer &buffer, int internalWriteOffset)

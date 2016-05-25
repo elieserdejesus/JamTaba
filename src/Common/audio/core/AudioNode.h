@@ -78,6 +78,8 @@ public:
 
     void resetLastPeak();
 
+    void setRmsWindowSize(int samples);
+
     inline void deactivate()
     {
         activated = false;

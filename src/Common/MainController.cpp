@@ -52,6 +52,11 @@ void MainController::unblockUserInChat(const QString &userNameToUnblock){
 
 void MainController::setSampleRate(int newSampleRate)
 {
+    foreach (Audio::AudioNode *node, tracksNodes.values()) {
+        int rmsWindowSize = Audio::SamplesBuffer::computeRmsWindowSize(newSampleRate);
+        node->setRmsWindowSize(rmsWindowSize);
+    }
+
     audioMixer.setSampleRate(newSampleRate);
     if (settings.isSaveMultiTrackActivated())
         jamRecorder.setSampleRate(newSampleRate);
