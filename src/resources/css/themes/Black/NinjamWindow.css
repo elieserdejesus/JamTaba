@@ -46,6 +46,7 @@ NinjamTrackView[horizontal="true"]
 ------------------------------------------------------------------------------------*/
 #licenceButton
 {
+    background-color: rgb(50, 50, 50);
     border: 1px solid black;
     max-height: 20px;
     width: 28px;
@@ -55,14 +56,14 @@ NinjamRoomWindow QToolButton:hover,
 #licenceButton:hover
 {
     border: 1px solid black;
-    background-color: rgb(120, 120, 120);
+    background-color: rgb(80, 80, 80);
 }
 
 NinjamRoomWindow QToolButton:hover:checked,
 #licenceButton:hover:checked
 {
     border: 1px solid black;
-    background-color: rgb(140, 140, 140);
+    background-color: rgb(80, 80, 80);
 }
 
 NinjamRoomWindow QToolButton,
@@ -74,6 +75,7 @@ NinjamRoomWindow QToolButton,
 
 NinjamRoomWindow QToolButton
 {
+    background-color: rgb(50, 50, 50);
     border: 1px solid black;
     height: 20px;
     min-width: 28px;
@@ -83,7 +85,7 @@ NinjamRoomWindow QToolButton
 NinjamRoomWindow QToolButton:checked
 {
     border: 1px solid black;
-    background-color: rgb(60, 60, 60);
+    background-color: rgb(20, 20, 20);
 }
 
 
