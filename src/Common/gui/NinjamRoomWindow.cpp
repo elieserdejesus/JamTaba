@@ -16,7 +16,7 @@
 #include "chords/ChordProgression.h"
 #include "chords/ChatChordsProgressionParser.h"
 #include "NinjamPanel.h"
-#include "ChatPanel.h"
+#include "chat/ChatPanel.h"
 #include "MainWindow.h"
 #include "log/Logging.h"
 #include "persistence/UsersDataCache.h"

@@ -6,7 +6,7 @@
 #include "ninjam/User.h"
 #include "ninjam/Server.h"
 #include "loginserver/LoginService.h"
-#include "ChatPanel.h"
+#include "chat/ChatPanel.h"
 #include <QMessageBox>
 #include "NinjamPanel.h"
 #include "UsersColorsPool.h"
