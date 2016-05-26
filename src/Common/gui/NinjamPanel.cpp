@@ -41,6 +41,20 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     translate();
 }
 
+void NinjamPanel::setBpiComboStatus(bool enabled)
+{
+    ui->comboBpi->setEnabled(enabled);
+    style()->unpolish(ui->comboBpi);
+    style()->polish(ui->comboBpi);
+}
+
+void NinjamPanel::setBpmComboStatus(bool enabled)
+{
+    ui->comboBpm->setEnabled(enabled);
+    style()->unpolish(ui->comboBpm);
+    style()->polish(ui->comboBpm);
+}
+
 void NinjamPanel::translate()
 {
     ui->retranslateUi(this);

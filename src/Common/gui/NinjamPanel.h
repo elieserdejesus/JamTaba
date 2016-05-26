@@ -33,6 +33,9 @@ public:
     void setBpiComboText(const QString &);
     void setBpmComboText(const QString &);
 
+    void setBpiComboStatus(bool enabled);
+    void setBpmComboStatus(bool enabled);
+
     int getPanSliderMaximumValue() const;
     int getGainSliderMaximumValue() const;
     int getCurrentBeatsPerAccent() const;

@@ -7,6 +7,7 @@
 #include "ninjam/Server.h"
 #include "loginserver/LoginService.h"
 #include "chat/ChatPanel.h"
+#include "chat/NinjamVotingMessageParser.h"
 #include <QMessageBox>
 #include "NinjamPanel.h"
 #include "UsersColorsPool.h"
@@ -75,7 +76,7 @@ private:
 
     QString roomName;
 
-    void createVoteButton(const QString &message);
+    void createVoteButton(const Gui::Chat::SystemVotingMessage &votingMessage);
     void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);
 
     NinjamPanel *createNinjamPanel();
@@ -150,6 +151,7 @@ private slots:
     void toggleTracksLayoutOrientation(QAbstractButton *buttonClicked); // horizontal or vertical
     void toggleTracksSize(QAbstractButton *buttonClicked);// narrow or wide
 
+    void handleNinjamVotingExpiration();
 
     void setEstimatatedChunksPerIntervalInAllTracks();
 };

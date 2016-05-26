@@ -31,6 +31,7 @@
 #include <QDateTime>
 #include <QToolButton>
 #include <QButtonGroup>
+#include <QTimer>
 
 using namespace Persistence;
 
@@ -296,13 +297,8 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
 
     bool isChordProgressionMessage = false;
     if (!isSystemVoteMessage) {
-        try{ //TODO - remove this try catch?
-            ChatChordsProgressionParser chordsParser;
-            isChordProgressionMessage = chordsParser.containsProgression(message);
-        }
-        catch (...) {
-            isChordProgressionMessage = false;// just in case
-        }
+        ChatChordsProgressionParser chordsParser;
+        isChordProgressionMessage = chordsParser.containsProgression(message);
     }
 
     bool showBlockButton = canShowBlockButtonInChatMessage(userName);
@@ -311,14 +307,38 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
 
     static bool localUserWasVotingInLastMessage = false;
     if (isSystemVoteMessage) {
-        if (!localUserWasVotingInLastMessage)  //don't create the vote button if local user is proposing BPI or BPM change
-            createVoteButton(message);
+        Gui::Chat::SystemVotingMessage voteMessage = Gui::Chat::parseVotingMessage(message);
+
+        if (!localUserWasVotingInLastMessage) {  //don't create the vote button if local user is proposing BPI or BPM change
+            createVoteButton(voteMessage);
+        }
+        else{ //if local user is proposing a bpi/bpm change the combos are disabled until the voting reach majority or expire
+            if (voteMessage.isBpiVotingMessage())
+                ninjamPanel->setBpiComboStatus(false);
+            else
+                ninjamPanel->setBpmComboStatus(false);
+            if (QApplication::focusWidget()) //clear comboboxes focus when disabling
+                QApplication::focusWidget()->clearFocus();
+        }
+
+        int expirationTime = voteMessage.getExpirationTime() * 1000;
+        QTimer::singleShot(expirationTime, this, SLOT(handleNinjamVotingExpiration()));
     }
     else if (isChordProgressionMessage) {
         handleChordProgressionMessage(user, message);
     }
 
     localUserWasVotingInLastMessage = message.toLower().startsWith("!vote") && user.getName() == mainController->getUserName();
+}
+
+void NinjamRoomWindow::handleNinjamVotingExpiration()
+{
+    ninjamPanel->setBpiComboStatus(true);
+    ninjamPanel->setBpmComboStatus(true);
+
+    Controller::NinjamController *ninjamController = mainController->getNinjamController();
+    ninjamPanel->setBpiComboText(QString::number(ninjamController->getCurrentBpi()));
+    ninjamPanel->setBpmComboText(QString::number(ninjamController->getCurrentBpm()));
 }
 
 bool NinjamRoomWindow::canShowBlockButtonInChatMessage(const QString &userName) const
@@ -349,17 +369,17 @@ void NinjamRoomWindow::handleChordProgressionMessage(const Ninjam::User &user, c
     }
 }
 
-void NinjamRoomWindow::createVoteButton(const QString &message)
+void NinjamRoomWindow::createVoteButton(const Gui::Chat::SystemVotingMessage &votingMessage)
 {
-    Gui::Chat::SystemVotingMessage votingMessage = Gui::Chat::parseVotingMessage(message);
-
     if (!votingMessage.isValidVotingMessage())
         return;
 
+    quint32 voteValue = votingMessage.getVoteValue();
+    quint32 expireTime = votingMessage.getExpirationTime();
     if (votingMessage.isBpiVotingMessage())
-        chatPanel->addBpiVoteConfirmationMessage(votingMessage.getVoteValue());
+        chatPanel->addBpiVoteConfirmationMessage(voteValue, expireTime);
     else
-        chatPanel->addBpmVoteConfirmationMessage(votingMessage.getVoteValue());
+        chatPanel->addBpmVoteConfirmationMessage(voteValue, expireTime);
 }
 
 void NinjamRoomWindow::voteToChangeBpi(int newBpi)
