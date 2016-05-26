@@ -17,6 +17,7 @@
 #include "chords/ChatChordsProgressionParser.h"
 #include "NinjamPanel.h"
 #include "chat/ChatPanel.h"
+#include "chat/NinjamVotingMessageParser.h"
 #include "MainWindow.h"
 #include "log/Logging.h"
 #include "persistence/UsersDataCache.h"
@@ -289,10 +290,9 @@ void NinjamRoomWindow::handleUserEntering(const QString &userName)
 
 void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &message)
 {
-    bool isSystemVoteMessage = !message.isNull() && user.getName().isEmpty() && message.toLower().startsWith(
-        "[voting system] leading candidate:");
+    QString userName = user.getName();
 
-    //
+    bool isSystemVoteMessage = Gui::Chat::isSystemVotingMessage(userName, message);
 
     bool isChordProgressionMessage = false;
     try{ //TODO - remove this try catch?
@@ -303,15 +303,13 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
         isChordProgressionMessage = false;// just in case
     }
 
-
-    QString userName = user.getName();
     bool showBlockButton = canShowBlockButtonInChatMessage(userName);
     bool showTranslationButton = !isChordProgressionMessage;
     chatPanel->addMessage(userName, message, showTranslationButton, showBlockButton);
 
     static bool localUserWasVotingInLastMessage = false;
     if (isSystemVoteMessage) {
-        if (!localUserWasVotingInLastMessage) //don't create the vote button if local user is proposing BPI or BPM change
+        if (!localUserWasVotingInLastMessage)  //don't create the vote button if local user is proposing BPI or BPM change
             createVoteButton(message);
     }
     else if (isChordProgressionMessage) {
@@ -351,21 +349,15 @@ void NinjamRoomWindow::handleChordProgressionMessage(const Ninjam::User &user, c
 
 void NinjamRoomWindow::createVoteButton(const QString &message)
 {
-    QString commandType = (message.toLower().contains("bpm")) ? "BPM" : "BPI";
+    Gui::Chat::SystemVotingMessage votingMessage = Gui::Chat::parseVotingMessage(message);
 
-    // [voting system] leading candidate: 1/2 votes for 12 BPI [each vote expires in 60s]
-    int forIndex = message.indexOf("for");
-    if ( forIndex < 0)
-        return; // invalid voting message
+    if (!votingMessage.isValidVotingMessage())
+        return;
 
-    int spaceAfterValueIndex = message.indexOf(" ", forIndex + 4);
-    QString voteValueString = message.mid(forIndex + 4, spaceAfterValueIndex - (forIndex + 4));
-    int voteValue = voteValueString.toInt();
-
-    if (commandType == "BPI")
-        chatPanel->addBpiVoteConfirmationMessage(voteValue);
-    else if (commandType == "BPM")// just in case
-        chatPanel->addBpmVoteConfirmationMessage(voteValue);
+    if (votingMessage.isBpiVotingMessage())
+        chatPanel->addBpiVoteConfirmationMessage(votingMessage.getVoteValue());
+    else
+        chatPanel->addBpmVoteConfirmationMessage(votingMessage.getVoteValue());
 }
 
 void NinjamRoomWindow::voteToChangeBpi(int newBpi)
