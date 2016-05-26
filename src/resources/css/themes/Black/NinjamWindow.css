@@ -176,3 +176,11 @@ IntervalProgressWindow                      /* The floating window showing the m
 {
     color: rgb(140, 140, 140);
 }
+
+#panelCombos QComboBox QAbstractItemView
+{
+    border: 1px solid black;
+    color: rgb(180, 180, 180);
+    background-color: rgb(20, 20, 20);
+    selection-background-color: rgb(80, 80, 80);
+}
