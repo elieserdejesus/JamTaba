@@ -174,13 +174,17 @@ background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 20,
 LocalTrackGroupView #groupNameField
 {
     color: rgb(140, 140, 140);
-    background-color: rgb(50, 50, 50);
-    border-color: rgb(50, 50, 50);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(50, 50, 50),
+    stop:1 rgb(65, 65, 65));
+    border: 1px solid rgb(54, 54, 54);
 }
 
 LocalTrackGroupView #groupNameField:focus
 {
     color: rgb(180, 180, 180);
-    background-color: rgb(50, 50, 50);
-    border-color: rgb(30, 30, 30);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(55, 55, 55),
+    stop:1 rgb(65, 65, 65));
+    border: 1px solid rgb(60, 60, 60);
 }
