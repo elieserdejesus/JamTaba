@@ -289,8 +289,10 @@ void NinjamRoomWindow::handleUserEntering(const QString &userName)
 
 void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &message)
 {
-    bool isSystemVoteMessage = !message.isNull() && message.toLower().startsWith(
+    bool isSystemVoteMessage = !message.isNull() && user.getName().isEmpty() && message.toLower().startsWith(
         "[voting system] leading candidate:");
+
+    //
 
     bool isChordProgressionMessage = false;
     try{ //TODO - remove this try catch?
@@ -353,7 +355,9 @@ void NinjamRoomWindow::createVoteButton(const QString &message)
 
     // [voting system] leading candidate: 1/2 votes for 12 BPI [each vote expires in 60s]
     int forIndex = message.indexOf("for");
-    assert(forIndex >= 0);
+    if ( forIndex < 0)
+        return; // invalid voting message
+
     int spaceAfterValueIndex = message.indexOf(" ", forIndex + 4);
     QString voteValueString = message.mid(forIndex + 4, spaceAfterValueIndex - (forIndex + 4));
     int voteValue = voteValueString.toInt();
