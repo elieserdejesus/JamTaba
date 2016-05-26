@@ -152,9 +152,10 @@ NinjamPanel QComboBox
     background-color: rgba(0, 0, 0, 30);
 }
 
-
-
-
+NinjamTrackGroupView > #topPanel                /* the track group top panel: used to show user name */
+{
+    background: rgba(255, 255, 255, 50);
+}
 
 NinjamTrackGroupView                        /* ninjam track group. If a ninjamer is using 2 channels they will appear grouped */
 {
