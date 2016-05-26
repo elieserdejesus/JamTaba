@@ -96,11 +96,12 @@ BaseTrackView
    font-size: 8px; /*db value */
 }
 
-BaseTrackView[unlighted="true"]             /* track when is not xmiting */
+BaseTrackView[unlighted="true"],                            /* the track */
+TrackGroupView[unlighted="true"] > #topPanel                /* the track group top panel: used to show user name */
 {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop:0 rgb(150, 150, 150),
-        stop:1 rgb(90, 90, 90));
+    stop:0 rgb(150, 150, 150),
+    stop:1 rgb(90, 90, 90));
 }
 
 PeakMeter
