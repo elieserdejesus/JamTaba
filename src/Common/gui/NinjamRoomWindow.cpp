@@ -295,12 +295,14 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
     bool isSystemVoteMessage = Gui::Chat::isSystemVotingMessage(userName, message);
 
     bool isChordProgressionMessage = false;
-    try{ //TODO - remove this try catch?
-        ChatChordsProgressionParser chordsParser;
-        isChordProgressionMessage = chordsParser.containsProgression(message);
-    }
-    catch (...) {
-        isChordProgressionMessage = false;// just in case
+    if (!isSystemVoteMessage) {
+        try{ //TODO - remove this try catch?
+            ChatChordsProgressionParser chordsParser;
+            isChordProgressionMessage = chordsParser.containsProgression(message);
+        }
+        catch (...) {
+            isChordProgressionMessage = false;// just in case
+        }
     }
 
     bool showBlockButton = canShowBlockButtonInChatMessage(userName);
