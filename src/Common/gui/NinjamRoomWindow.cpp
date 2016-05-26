@@ -76,6 +76,17 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
     setTracksSize(lastTracksSize);
 
     translate();
+
+    updateBpmBpiLabel();
+}
+
+void NinjamRoomWindow::updateBpmBpiLabel()
+{
+    Controller::NinjamController *controller = mainController->getNinjamController();
+    int bpi = controller->getCurrentBpi();
+    int bpm = controller->getCurrentBpm();
+    QString newText("BPM: " + QString::number(bpm) + "   BPI: " + QString::number(bpi));
+    ui->labelBpmBpi->setText(newText);
 }
 
 void NinjamRoomWindow::changeEvent(QEvent *e)
@@ -628,8 +639,8 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
 
     connect(ninjamController, SIGNAL(userEnter(QString)), this, SLOT(handleUserEntering(QString)));
 
-    connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(setEstimatatedChunksPerIntervalInAllTracks()));
-    connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(setEstimatatedChunksPerIntervalInAllTracks()));
+    connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(handleBpiBpmChanges()));
+    connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(handleBpiBpmChanges()));
 
     connect(ninjamController, &Controller::NinjamController::userBlockedInChat, this, &NinjamRoomWindow::showFeedbackAboutBlockedUserInChat);
     connect(ninjamController, &Controller::NinjamController::userUnblockedInChat, this, &NinjamRoomWindow::showFeedbackAboutUnblockedUserInChat);
@@ -646,6 +657,12 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
 
     connect(ninjamPanel, SIGNAL(intervalShapeChanged(int)), this, SLOT(setNewIntervalShape(int)));
 
+}
+
+void NinjamRoomWindow::handleBpiBpmChanges()
+{
+    setEstimatatedChunksPerIntervalInAllTracks();
+    updateBpmBpiLabel();
 }
 
 void NinjamRoomWindow::showFeedbackAboutBlockedUserInChat(const QString &userName)

@@ -106,6 +106,8 @@ private:
 
     bool canShowBlockButtonInChatMessage(const QString &userName) const;
 
+    void updateBpmBpiLabel();
+
     static const QString JAMTABA_CHAT_BOT_NAME;
 
 private slots:
@@ -133,7 +135,7 @@ private slots:
     void addChatMessage(const Ninjam::User &, const QString &message);
     void handleUserLeaving(const QString &userName);
     void handleUserEntering(const QString &userName);
-
+    void handleBpiBpmChanges();
     void sendNewChatMessage(const QString &msg);
 
     void showServerLicence();

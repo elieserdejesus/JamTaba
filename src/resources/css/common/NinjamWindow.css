@@ -5,6 +5,11 @@
 */
 
 
+NinjamRoomWindow #labelBpmBpi                                /* label used to show current bpi and bpm values inside ninjam room window */
+{
+    color: rgba(0, 0, 0, 140);
+}
+
 /* Tool buttons in ninjam window
 ------------------------------------*/
 
