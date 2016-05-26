@@ -105,6 +105,11 @@ NinjamTrackView  #channelName               /* channel name for ninjamers */
     max-width: 130px;
 }
 
+NinjamTrackGroupView > #topPanel                /* the track group top panel: used to show user name */
+ {
+     background: rgba(255, 255, 255, 180);
+ }
+
 
 /* NinjamPanel is the widget where the ninjam controls are showed (in bottom when we are connected in a server)
 ----------------------------------------------------------------------------------------------------------------*/
