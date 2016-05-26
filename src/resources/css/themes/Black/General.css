@@ -230,12 +230,12 @@ QTabBar::tab:!selected
 QMenuBar::item
 {
     color: rgb(140, 140, 140);
-    background:rgb(35, 35, 35);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(50, 50, 50), stop:1 rgb(30, 30, 30));
 }
 
 QMenuBar
 {
-    background:rgb(35, 35, 35);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(50, 50, 50), stop:1 rgb(30, 30, 30));
     border-bottom: none;
     border-top: 1px solid rgb(100, 100, 100);
     border-left: 1px solid rgb(100, 100, 100);
@@ -244,7 +244,7 @@ QMenuBar
 
 QMenu
 {
-    border: 1px outset rgb(10, 10, 10);
+    border: 1px outset rgb(20, 20, 20);
     color: rgb(140, 140, 140);
     background:rgb(35, 35, 35);
 }
