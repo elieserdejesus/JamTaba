@@ -8,8 +8,9 @@ int main(int argc, char *argv[])
     TestChatVotingMessage testVotingMessage;
     int result = 0;
 
-    result += QTest::qExec(&testVotingMessage);
+
     result += QTest::qExec(&testChatParser);
+    result += QTest::qExec(&testVotingMessage);
 
     return result > 0 ? -result : 0;
 }
