@@ -322,6 +322,7 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
         }
 
         int expirationTime = voteMessage.getExpirationTime() * 1000;
+        systemVotingMessagesWaitingToExpire.append(voteMessage.isBpiVotingMessage() ? QString("BPI") : QString("BPM"));
         QTimer::singleShot(expirationTime, this, SLOT(handleNinjamVotingExpiration()));
     }
     else if (isChordProgressionMessage) {
@@ -333,12 +334,19 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
 
 void NinjamRoomWindow::handleNinjamVotingExpiration()
 {
-    ninjamPanel->setBpiComboStatus(true);
-    ninjamPanel->setBpmComboStatus(true);
+    if (systemVotingMessagesWaitingToExpire.isEmpty())
+        return;
 
+    QString pendingVotation = systemVotingMessagesWaitingToExpire.takeFirst();
     Controller::NinjamController *ninjamController = mainController->getNinjamController();
-    ninjamPanel->setBpiComboText(QString::number(ninjamController->getCurrentBpi()));
-    ninjamPanel->setBpmComboText(QString::number(ninjamController->getCurrentBpm()));
+    if (pendingVotation == "BPI") {
+        ninjamPanel->setBpiComboStatus(true);
+        ninjamPanel->setBpiComboText(QString::number(ninjamController->getCurrentBpi()));
+    }
+    else{
+        ninjamPanel->setBpmComboStatus(true);
+        ninjamPanel->setBpmComboText(QString::number(ninjamController->getCurrentBpm()));
+    }
 }
 
 bool NinjamRoomWindow::canShowBlockButtonInChatMessage(const QString &userName) const

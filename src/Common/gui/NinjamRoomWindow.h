@@ -72,6 +72,8 @@ private:
     QMap<QString, NinjamTrackGroupView *> trackGroups;
     ChatPanel *chatPanel;
 
+    QList<QString> systemVotingMessagesWaitingToExpire;
+
     bool fullViewMode;
 
     QString roomName;
