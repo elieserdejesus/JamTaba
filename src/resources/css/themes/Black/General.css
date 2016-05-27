@@ -6,7 +6,7 @@ QPushButton
 {
     color: rgb(40, 40, 40);
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(120, 120, 120));
-    border: 1px outset rgb(30, 30, 30);
+    border: 1px outset rgb(20, 20, 20);
     border: 1px solid black;
 }
 
@@ -21,7 +21,7 @@ QPushButton:hover
 {
     color: rgb(40, 40, 40);
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
-    border: 1px outset rgb(30, 30, 30);
+    border: 1px outset rgb(20, 20, 20);
 }
 
 QPushButton:hover:checked
@@ -31,11 +31,11 @@ QPushButton:hover:checked
     border: 1px outset rgb(10, 10, 10);
 }
 
-QPushButton[enabled="false"]        /* disabled buttons */
+QPushButton[enabled="false"]
 {
-    background: none;
-    color: black;
-    border-color: rgba(0, 0, 0, 40);
+    background-color: rgba(0, 0, 0, 40);
+    color: rgba(0, 0, 0, 100);
+    border-color: rgba(0, 0, 0, 20);
 }
 
 /* Scroll bars ----------------------*/
