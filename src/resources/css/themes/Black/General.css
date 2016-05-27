@@ -12,7 +12,7 @@ QPushButton
 
 QPushButton:checked
 {
-    color: rgb(180, 180, 180);
+    color: rgba(0, 0, 0, 160);
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(60, 60, 60));
     border: 1px outset rgb(10, 10, 10);
 }
@@ -26,7 +26,7 @@ QPushButton:hover
 
 QPushButton:hover:checked
 {
-    color: rgb(180, 180, 180);
+    color: rgba(0, 0, 0, 160);
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(80, 80, 80));
     border: 1px outset rgb(10, 10, 10);
 }
