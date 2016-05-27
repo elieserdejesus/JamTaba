@@ -15,7 +15,7 @@ bool Gui::Chat::isSystemVotingMessage(const QString &userName, const QString &me
     return VOTING_REGEX.match(message).hasMatch();
 }
 
-SystemVotingMessage Gui::Chat::parseVotingMessage(const QString &message)
+SystemVotingMessage Gui::Chat::parseSystemVotingMessage(const QString &message)
 {
     if (!isSystemVotingMessage("", message))
         return SystemVotingMessage::newEmptyVotingMessage(); //return an invalid voting message.

@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
     TestChatChordsProgressionParser testChatParser;
-    TestChatVotingMessage testVotingMessage;
+    TestChatVotingMessages testVotingMessage;
     int result = 0;
 
 

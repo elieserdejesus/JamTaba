@@ -4,14 +4,14 @@
 
 using namespace Gui::Chat;
 
-void TestChatVotingMessage::parsingValidVotingMessages()
+void TestChatVotingMessages::parsingValidSystemVotingMessages()
 {
     QFETCH(QString, voteType);
     QFETCH(quint32, voteValue);
     QFETCH(quint32, expirationTime);
 
-    QString message = buildVotingSystemMessage(voteType, voteValue, expirationTime);
-    SystemVotingMessage votingMessage = parseVotingMessage(message);
+    QString message = buildSystemVotingMessage(voteType, voteValue, expirationTime);
+    SystemVotingMessage votingMessage = parseSystemVotingMessage(message);
 
     QVERIFY(votingMessage.isValidVotingMessage());
 
@@ -24,7 +24,7 @@ void TestChatVotingMessage::parsingValidVotingMessages()
         QVERIFY(votingMessage.isBpmVotingMessage());
 }
 
-void TestChatVotingMessage::parsingValidVotingMessages_data()
+void TestChatVotingMessages::parsingValidSystemVotingMessages_data()
 {
     QTest::addColumn<QString>("voteType");
     QTest::addColumn<quint32>("voteValue");
@@ -38,19 +38,19 @@ void TestChatVotingMessage::parsingValidVotingMessages_data()
     QTest::newRow("240 BPM, expires in 11s") << QString("BPM") << (quint32)240 << (quint32)11;
 }
 
-void TestChatVotingMessage::parsingInvalidVotingMessages()
+void TestChatVotingMessages::parsingInvalidSystemVotingMessages()
 {
     QFETCH(QString, voteType);
     QFETCH(quint32, voteValue);
     QFETCH(quint32, expirationTime);
 
-    QString message = buildVotingSystemMessage(voteType, voteValue, expirationTime);
-    SystemVotingMessage votingMessage = parseVotingMessage(message);
+    QString message = buildSystemVotingMessage(voteType, voteValue, expirationTime);
+    SystemVotingMessage votingMessage = parseSystemVotingMessage(message);
 
     QVERIFY(!votingMessage.isValidVotingMessage());
 }
 
-void TestChatVotingMessage::parsingInvalidVotingMessages_data()
+void TestChatVotingMessages::parsingInvalidSystemVotingMessages_data()
 {
     QTest::addColumn<QString>("voteType");
     QTest::addColumn<quint32>("voteValue");
@@ -61,19 +61,19 @@ void TestChatVotingMessage::parsingInvalidVotingMessages_data()
     QTest::newRow("Invalid expiration time") << QString("BPI") << (quint32)16 << (quint32)1234;
 }
 
-QString TestChatVotingMessage::buildVotingSystemMessage(const QString &voteType, quint32 voteValue, quint32 expirationTime)
+QString TestChatVotingMessages::buildSystemVotingMessage(const QString &voteType, quint32 voteValue, quint32 expirationTime)
 {
     return "[voting system] leading candidate: 1/2 votes for " + QString::number(voteValue) + " " + voteType + " [each vote expires in " + QString::number(expirationTime) + "s]";
 }
 
-void TestChatVotingMessage::validVotingMessage()
+void TestChatVotingMessages::validSystemVotingMessage()
 {
     QFETCH(QString, chatMessage);
     QString userName = ""; //empty user for system voting messages
     QVERIFY(Gui::Chat::isSystemVotingMessage(userName, chatMessage));
 }
 
-void TestChatVotingMessage::validVotingMessage_data()
+void TestChatVotingMessages::validSystemVotingMessage_data()
 {
     QTest::addColumn<QString>("chatMessage");
     QTest::newRow("12 BPI, expires in 60s") << QString("[voting system] leading candidate: 1/2 votes for 12 BPI [each vote expires in 60s]");
@@ -87,14 +87,14 @@ void TestChatVotingMessage::validVotingMessage_data()
     QTest::newRow("240 BPM, expires in 120s") << QString("[voting system] leading candidate: 1/2 votes for 240 BPM [each vote expires in 120s]");
 }
 
-void TestChatVotingMessage::invalidVotingMessage()
+void TestChatVotingMessages::invalidSystemVotingMessage()
 {
     QFETCH(QString, chatMessage);
     QFETCH(QString, userName);
     QVERIFY(!Gui::Chat::isSystemVotingMessage(userName, chatMessage));
 }
 
-void TestChatVotingMessage::invalidVotingMessage_data()
+void TestChatVotingMessages::invalidSystemVotingMessage_data()
 {
     QTest::addColumn<QString>("userName");
     QTest::addColumn<QString>("chatMessage");

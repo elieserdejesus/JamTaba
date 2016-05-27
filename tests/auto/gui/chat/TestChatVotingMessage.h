@@ -3,25 +3,25 @@
 
 #include <QObject>
 
-class TestChatVotingMessage : public QObject
+class TestChatVotingMessages : public QObject
 {
     Q_OBJECT
 
 private slots:
-    void validVotingMessage_data();
-    void validVotingMessage();
+    void validSystemVotingMessage_data();
+    void validSystemVotingMessage();
 
-    void invalidVotingMessage_data();
-    void invalidVotingMessage();
+    void invalidSystemVotingMessage_data();
+    void invalidSystemVotingMessage();
 
-    void parsingValidVotingMessages();
-    void parsingValidVotingMessages_data();
+    void parsingValidSystemVotingMessages();
+    void parsingValidSystemVotingMessages_data();
 
-    void parsingInvalidVotingMessages();
-    void parsingInvalidVotingMessages_data();
+    void parsingInvalidSystemVotingMessages();
+    void parsingInvalidSystemVotingMessages_data();
 
 private:
-    static QString buildVotingSystemMessage(const QString &voteType, quint32 voteValue, quint32 expirationTime);
+    static QString buildSystemVotingMessage(const QString &voteType, quint32 voteValue, quint32 expirationTime);
 
 };
 

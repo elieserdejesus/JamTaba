@@ -307,7 +307,7 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
 
     static bool localUserWasVotingInLastMessage = false;
     if (isSystemVoteMessage) {
-        Gui::Chat::SystemVotingMessage voteMessage = Gui::Chat::parseVotingMessage(message);
+        Gui::Chat::SystemVotingMessage voteMessage = Gui::Chat::parseSystemVotingMessage(message);
 
         if (!localUserWasVotingInLastMessage) {  //don't create the vote button if local user is proposing BPI or BPM change
             createVoteButton(voteMessage);

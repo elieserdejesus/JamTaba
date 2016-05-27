@@ -31,7 +31,7 @@ namespace Gui
 
         bool isSystemVotingMessage(const QString &userName, const QString &message);
 
-        SystemVotingMessage parseVotingMessage(const QString &message);
+        SystemVotingMessage parseSystemVotingMessage(const QString &message);
 
     } // Chat namespace
 
