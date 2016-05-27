@@ -328,7 +328,7 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
         handleChordProgressionMessage(user, message);
     }
 
-    localUserWasVotingInLastMessage = message.toLower().startsWith("!vote") && user.getName() == mainController->getUserName();
+    localUserWasVotingInLastMessage = Gui::Chat::isLocalUserVotingMessage(message) && user.getName() == mainController->getUserName();
 }
 
 void NinjamRoomWindow::handleNinjamVotingExpiration()
