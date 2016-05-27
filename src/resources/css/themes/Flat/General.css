@@ -19,6 +19,12 @@ QPushButton:hover
     border: 1px solid rgb(120, 120, 120);
 }
 
+QPushButton:disabled
+{
+    background-color: rgba(0, 0, 0, 20);
+    color: rgba(0, 0, 0, 60)
+}
+
 
 /* Scroll bars ----------------------*/
 QScrollBar:vertical,
