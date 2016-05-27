@@ -230,6 +230,7 @@ FORMS += gui/MainWindow.ui
 FORMS += gui/chords/ChordsPanel.ui
 
 RESOURCES += ../resources/jamtaba.qrc
+RESOURCES += ../resources/emoji/emoji.qrc
 
 #this is the file used by the Beautifier QtCreator plugin (using the Uncrustify tool)
 DISTFILES += $$PWD/uncrustify.cfg
