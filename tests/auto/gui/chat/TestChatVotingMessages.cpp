@@ -1,8 +1,47 @@
-#include "TestChatVotingMessage.h"
+#include "TestChatVotingMessages.h"
 #include "gui/chat/NinjamVotingMessageParser.h"
 #include <QTest>
 
 using namespace Gui::Chat;
+
+void TestChatVotingMessages::invalidLocalUserVotingMessage_data()
+{
+    QTest::addColumn<QString>("message");
+
+    QTest::newRow("Any text")           << QString("testing invalid message");
+    QTest::newRow("Missing vote value") << QString("!vote bpi");
+    QTest::newRow("Missing vote type")  << QString("!vote");
+    QTest::newRow("Lower case")         << QString("!VOTE BPM 120");
+    QTest::newRow("Missing exclamation")<< QString("vote bpi 32");
+    QTest::newRow("BPM in lower case")  << QString("!vote BPM 140");
+}
+
+void TestChatVotingMessages::invalidLocalUserVotingMessage()
+{
+    QFETCH(QString, message);
+    QVERIFY(!isLocalUserVotingMessage(message));
+}
+
+void TestChatVotingMessages::validLocalUserVotingMessage_data()
+{
+    QTest::addColumn<QString>("voteType");
+    QTest::addColumn<quint32>("voteValue");
+
+    QTest::newRow("3 BPI") << QString("BPI") << (quint32)3;
+    QTest::newRow("32 BPI") << QString("BPI") << (quint32)32;
+    QTest::newRow("16 BPI") << QString("BPI") << (quint32)16;
+    QTest::newRow("90 BPM") << QString("BPM") << (quint32)90;
+    QTest::newRow("240 BPM") << QString("BPM") << (quint32)240;
+}
+
+void TestChatVotingMessages::validLocalUserVotingMessage()
+{
+    QFETCH(QString, voteType);
+    QFETCH(quint32, voteValue);
+
+    QString message = buildLocalUserVotingMessage(voteType, voteValue);
+    QVERIFY(isLocalUserVotingMessage(message));
+}
 
 void TestChatVotingMessages::parsingValidSystemVotingMessages()
 {
@@ -64,6 +103,11 @@ void TestChatVotingMessages::parsingInvalidSystemVotingMessages_data()
 QString TestChatVotingMessages::buildSystemVotingMessage(const QString &voteType, quint32 voteValue, quint32 expirationTime)
 {
     return "[voting system] leading candidate: 1/2 votes for " + QString::number(voteValue) + " " + voteType + " [each vote expires in " + QString::number(expirationTime) + "s]";
+}
+
+QString TestChatVotingMessages::buildLocalUserVotingMessage(const QString &voteType, quint32 voteValue)
+{
+    return "!vote " + voteType.toLower() + " " + QString::number(voteValue);
 }
 
 void TestChatVotingMessages::validSystemVotingMessage()

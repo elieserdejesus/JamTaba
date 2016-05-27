@@ -9,7 +9,8 @@ namespace Gui
     namespace Chat
     {
 
-        extern const QRegularExpression VOTING_REGEX;
+        extern const QRegularExpression SYSTEM_VOTING_REGEX;
+        extern const QRegularExpression LOCAL_USER_VOTING_REGEX;
 
         class SystemVotingMessage
         {
@@ -28,6 +29,8 @@ namespace Gui
             quint32 voteValue; // the BPI or BPM value (90, 120, 16, 32, etc)
             quint32 expirationTime; // voting expiration time in seconds;
         };
+
+        bool isLocalUserVotingMessage(const QString &message);
 
         bool isSystemVotingMessage(const QString &userName, const QString &message);
 

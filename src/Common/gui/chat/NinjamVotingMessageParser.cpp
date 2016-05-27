@@ -5,14 +5,22 @@
 using namespace Gui::Chat;
 
 // System voting format is: [voting system] leading candidate: 1/2 votes for 12 BPI [each vote expires in 60s]
-const QRegularExpression Gui::Chat::VOTING_REGEX("\\[voting system\\] leading candidate: \\d{1,2}\\/\\d{1,2} votes for (\\d{1,3}) (\\bBPI|\\bBPM) \\[each vote expires in (\\d{1,3})s\\]");
+const QRegularExpression Gui::Chat::SYSTEM_VOTING_REGEX("\\[voting system\\] leading candidate: \\d{1,2}\\/\\d{1,2} votes for (\\d{1,3}) (\\bBPI|\\bBPM) \\[each vote expires in (\\d{1,3})s\\]");
+
+// Local user voting format is: !vote bpi/bpm 120, always in lower case
+const QRegularExpression Gui::Chat::LOCAL_USER_VOTING_REGEX("!vote (\\bbpi|\\bbpm) \\d{1,3}");
+
+bool Gui::Chat::isLocalUserVotingMessage(const QString &message)
+{
+    return LOCAL_USER_VOTING_REGEX.match(message).hasMatch();
+}
 
 bool Gui::Chat::isSystemVotingMessage(const QString &userName, const QString &message)
 {
     if (!userName.isEmpty())
         return false; // the user name in system voting message is always empty. If we have a valid user name somebody it trying to inpersonate the "server" :)
 
-    return VOTING_REGEX.match(message).hasMatch();
+    return SYSTEM_VOTING_REGEX.match(message).hasMatch();
 }
 
 SystemVotingMessage Gui::Chat::parseSystemVotingMessage(const QString &message)
@@ -20,7 +28,7 @@ SystemVotingMessage Gui::Chat::parseSystemVotingMessage(const QString &message)
     if (!isSystemVotingMessage("", message))
         return SystemVotingMessage::newEmptyVotingMessage(); //return an invalid voting message.
 
-    QRegularExpressionMatch match = VOTING_REGEX.match(message);
+    QRegularExpressionMatch match = SYSTEM_VOTING_REGEX.match(message);
 
     QString voteValueString = match.captured(1);
     if (voteValueString.isNull()) //invalid vote value

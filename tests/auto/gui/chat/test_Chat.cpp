@@ -1,6 +1,6 @@
 #include <QTest>
 #include "TestChatChordsProgressionParser.h"
-#include "TestChatVotingMessage.h"
+#include "TestChatVotingMessages.h"
 
 int main(int argc, char *argv[])
 {
