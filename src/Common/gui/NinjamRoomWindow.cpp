@@ -87,7 +87,7 @@ void NinjamRoomWindow::updateBpmBpiLabel()
     Controller::NinjamController *controller = mainController->getNinjamController();
     int bpi = controller->getCurrentBpi();
     int bpm = controller->getCurrentBpm();
-    QString newText("BPM: " + QString::number(bpm) + "   BPI: " + QString::number(bpi));
+    QString newText(QString::number(bpm) + " BPM   " + QString::number(bpi) + " BPI");
     ui->labelBpmBpi->setText(newText);
 }
 
