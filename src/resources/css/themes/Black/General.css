@@ -133,7 +133,7 @@ QLineEdit
 {
     background-color: rgb(100, 100, 100);
     border-color: rgba(0, 0, 0, 45);
-    color: rgb(40, 40, 40);
+    color: rgb(60, 60, 60);
 }
 
 QLineEdit:focus
@@ -252,4 +252,9 @@ QMenu
     border: 1px outset rgb(20, 20, 20);
     color: rgb(140, 140, 140);
     background:rgb(35, 35, 35);
+}
+
+QTabWidget::pane
+{
+    background-color: transparent;
 }
