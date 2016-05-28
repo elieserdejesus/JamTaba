@@ -102,6 +102,11 @@ PluginScanDialog
     stop:1 rgb(40, 40, 40));
 }
 
+PluginScanDialog QGroupBox
+{
+    border: 1px solid black;
+}
+
 BusyDialog
 {
     border: 1px solid rgba(0, 0, 0, 30);
