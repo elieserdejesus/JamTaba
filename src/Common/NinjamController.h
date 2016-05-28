@@ -90,8 +90,9 @@ public:
     Ninjam::User getUserByName(const QString &userName) const;
 
 signals:
-    void currentBpiChanged(int newBpi);
+    void currentBpiChanged(int newBpi); //emitted when a scheduled bpi change is processed in interval start (first beat).
     void currentBpmChanged(int newBpm);
+
     void intervalBeatChanged(int intervalBeat);
     void startingNewInterval();
     void startProcessing(int intervalPosition);

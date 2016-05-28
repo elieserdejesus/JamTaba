@@ -49,23 +49,23 @@ bool ChatPanel::eventFilter(QObject *obj, QEvent *event)
     return QWidget::eventFilter(obj, event);
 }
 
-void ChatPanel::createVoteButton(const QString &voteType, int value)
+void ChatPanel::createVoteButton(const QString &voteType, quint32 value, quint32 expireTime)
 {
-    QPushButton *voteButton = new NinjamVoteButton(voteType, value);
+    QPushButton *voteButton = new NinjamVoteButton(voteType, value, expireTime);
     voteButton->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred));
     ui->scrollContent->layout()->addWidget(voteButton);
     ui->scrollContent->layout()->setAlignment(voteButton, Qt::AlignRight);
     QObject::connect(voteButton, SIGNAL(clicked(bool)), this, SLOT(on_voteButtonClicked()));
 }
 
-void ChatPanel::addBpiVoteConfirmationMessage(int newBpiValue)
+void ChatPanel::addBpiVoteConfirmationMessage(quint32 newBpiValue, quint32 expireTime)
 {
-    createVoteButton("BPI", newBpiValue);
+    createVoteButton("BPI", newBpiValue, expireTime);
 }
 
-void ChatPanel::addBpmVoteConfirmationMessage(int newBpmValue)
+void ChatPanel::addBpmVoteConfirmationMessage(quint32 newBpmValue, quint32 expireTime)
 {
-    createVoteButton("BPM", newBpmValue);
+    createVoteButton("BPM", newBpmValue, expireTime);
 }
 
 void ChatPanel::on_voteButtonClicked()
