@@ -97,17 +97,11 @@ NinjamPanel #intervalPanel                  /* The widget used to show ninjam co
     border-radius: 2px;
 }
 
-#panelCombos QComboBox[enabled="false"]             /* bpi and bpm combos are disable while a voting is running */
+#panelCombos QComboBox[pending="true"]             /* bpi and bpm combos are setted to 'pending' while a voting is running */
 {
     color: red;
-    border: none;
-    background-color: rgba(0, 0, 0, 15);
 }
 
-#panelCombos QComboBox[enabled="false"]::down-arrow
-{
-    image: none;
-}
 /* ------------------------------------------------------------------ */
 
 NinjamPanel #metronomeControls,             /* Making the metronome and comboboxes area transparent */

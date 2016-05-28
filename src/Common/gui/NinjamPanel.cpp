@@ -41,16 +41,16 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     translate();
 }
 
-void NinjamPanel::setBpiComboStatus(bool enabled)
+void NinjamPanel::setBpiComboPendingStatus(bool enabled)
 {
-    ui->comboBpi->setEnabled(enabled);
+    ui->comboBpi->setProperty("pending", enabled);
     style()->unpolish(ui->comboBpi);
     style()->polish(ui->comboBpi);
 }
 
-void NinjamPanel::setBpmComboStatus(bool enabled)
+void NinjamPanel::setBpmComboPendingStatus(bool enabled)
 {
-    ui->comboBpm->setEnabled(enabled);
+    ui->comboBpm->setProperty("pending", enabled);
     style()->unpolish(ui->comboBpm);
     style()->polish(ui->comboBpm);
 }

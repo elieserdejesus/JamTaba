@@ -2,6 +2,7 @@
 #define NINJAMROOMWINDOW_H
 
 #include <QWidget>
+#include <QTimer>
 #include "ninjam/UserChannel.h"
 #include "ninjam/User.h"
 #include "ninjam/Server.h"
@@ -72,8 +73,8 @@ private:
     QMap<QString, NinjamTrackGroupView *> trackGroups;
     ChatPanel *chatPanel;
 
-    bool bpiVotingRunning;
-    bool bpmVotingRunning;
+    QTimer *bpmVotingExpirationTimer;
+    QTimer *bpiVotingExpiratonTimer;
 
     bool fullViewMode;
 
@@ -111,6 +112,8 @@ private:
     bool canShowBlockButtonInChatMessage(const QString &userName) const;
 
     void updateBpmBpiLabel();
+
+    void initializeVotingExpirationTimers();
 
     static const QString JAMTABA_CHAT_BOT_NAME;
 
