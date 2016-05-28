@@ -18,24 +18,6 @@ PrivateServerDialog
     stop:1 rgb(40, 40, 40));
 }
 
-/*
-PrivateServerDialog #passwordTextField, #serverPortTextField, #serverTextField
-{
-    color: rgb(160, 160, 160);
-    background-color: rgb(70, 70, 70);
-    selection-background-color: rgb(50, 50, 50);
-    selection-color: rgb(140, 140, 140);
-}
-
-UserNameDialog #lineEdit
-{
-    color: rgb(160, 160, 160);
-    background-color: rgb(70, 70, 70);
-    selection-background-color: rgb(50, 50, 50);
-    selection-color: rgb(140, 140, 140);
-}
-*/
-
 PrivateServerDialog #label, #label_2, #label_3
 {
     color: rgb(160, 160, 160);
@@ -70,16 +52,6 @@ PreferencesDialog QComboBox QAbstractItemView      /* the colors inside drop dow
     selection-color: rgb(10, 10, 10);
 }
 
-/*
-PreferencesDialog #recordPathLineEdit, #textFieldPrimaryBeat, #textFieldSecondaryBeat
-{
-    color: rgb(160, 160, 160);
-    background-color: rgb(70, 70, 70);
-    selection-background-color: rgb(50, 50, 50);
-    selection-color: rgb(140, 140, 140);
-}
-*/
-
 PreferencesDialog #vstListWidget
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -87,7 +59,7 @@ PreferencesDialog #vstListWidget
     stop:1 rgb(120, 120, 120));;
 }
 
-MidiToolsDialog #label_5, #labelHigherNote, #labelLowerNoteX
+MidiToolsDialog #label_5, #labelHigherNote, #labelLowerNote
 {
     color: rgb(160, 160, 160);
 }
@@ -100,21 +72,11 @@ MidiToolsDialog #GroupBoxKeyRange, #GroupBoxTranspose
 MidiToolsDialog #spinBoxTranspose
 {
     border: 1px solid rgb(80, 80, 80);
-    color: rgb(160, 160, 160);
-    background-color: rgb(70, 70, 70);
+    color: rgb(20, 20, 20);
+    background-color: rgb(110, 110, 110);
     selection-background-color: rgb(50, 50, 50);
     selection-color: rgb(140, 140, 140);
 }
-
-/*
-MidiToolsDialog #textFieldHigherNote, #textFieldLowerNote
-{
-    color: rgb(160, 160, 160);
-    background-color: rgb(70, 70, 70);
-    selection-background-color: rgb(50, 50, 50);
-    selection-color: rgb(140, 140, 140);
-}
-*/
 
 QInputDialog QPushButton
 {
@@ -136,7 +98,7 @@ PluginScanDialog #labelPluginText
 PluginScanDialog
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgb(120, 120, 120),
+    stop:0 rgb(80, 80, 80),
     stop:1 rgb(40, 40, 40));
 }
 

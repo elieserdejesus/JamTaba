@@ -131,20 +131,25 @@ QScrollBar::sub-page:horizontal
 -----------------------------------------------------------------------*/
 QLineEdit
 {
-    background-color: rgb(140, 140, 140);
+    background-color: rgb(100, 100, 100);
     border-color: rgba(0, 0, 0, 45);
-    color: rgb(80, 80, 80);
+    color: rgb(40, 40, 40);
 }
 
-QLineEdit:focus,
-QLineEdit#groupNameField:focus
+QLineEdit:focus
 {
-    border-color: rgba(0, 0, 0, 90);
-    background-color: rgb(35, 35, 35);
+    background-color: rgb(80, 80, 80);
     color: rgb(180, 180, 180);
+    selection-background-color: rgb(50, 50, 50);
+    selection-color: rgb(140, 140, 140);
 }
 
-
+QLineEdit#groupNameField:focus, #userNameLineEdit:focus
+{
+    color: rgb(200, 200, 200);
+    selection-background-color: rgb(120, 120, 120);
+    selection-color: rgb(80, 80, 80);
+}
 
 /*  SLIDERs ++++++++++++++++++++++++++++++++ */
 
