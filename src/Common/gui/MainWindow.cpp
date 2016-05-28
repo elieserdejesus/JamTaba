@@ -1127,7 +1127,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
         resize(minimumSize());
     }
 
-    int tabLayoutMargim = isRunningInFullViewMode() ? 6 : 6;
+    int tabLayoutMargim = 6;
     ui.tabLayout->setContentsMargins(tabLayoutMargim, tabLayoutMargim, tabLayoutMargim,
                                      tabLayoutMargim);
     ui.allRoomsContent->layout()->setSpacing(tabLayoutMargim);
@@ -1152,6 +1152,9 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
             localTrackGroup->setToNarrow();
         else
             localTrackGroup->setToWide();
+
+        bool useSmallSpacing = isRunningInMiniMode();
+        localTrackGroup->useSmallSpacingInLayouts(useSmallSpacing);
     }
 
     ui.actionFullView->setChecked(isRunningInFullViewMode());

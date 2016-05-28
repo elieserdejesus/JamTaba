@@ -48,6 +48,8 @@ public:
     void solo(bool b);
     void initializeBoostButtons(Boost boostValue);
 
+    void useSmallSpacingInLayouts(bool useSmallSpacing);
+
 protected:
     Audio::LocalInputNode *inputNode;
     QPushButton *buttonStereoInversion;

@@ -25,7 +25,13 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
     setUnlightStatus(false);
 
     secondaryChildsLayout->addWidget(buttonStereoInversion);
+}
 
+void LocalTrackView::useSmallSpacingInLayouts(bool useSmallSpacing)
+{
+    int spacing = useSmallSpacing ? 6 : 12;
+    secondaryChildsLayout->setSpacing(spacing );
+    mainLayout->setVerticalSpacing(spacing);
 }
 
 void LocalTrackView::setInitialValues(float initialGain, BaseTrackView::Boost boostValue,

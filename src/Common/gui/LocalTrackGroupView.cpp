@@ -28,6 +28,15 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
     translateUi();
 }
 
+void LocalTrackGroupView::useSmallSpacingInLayouts(bool useSmallSpacing)
+{
+
+    QList<LocalTrackView*> tracks = getTracks<LocalTrackView*>();
+    foreach (LocalTrackView *trackView, tracks) {
+        trackView->useSmallSpacingInLayouts(useSmallSpacing);
+    }
+}
+
 void LocalTrackGroupView::refreshStyleSheet()
 {
     TrackGroupView::refreshStyleSheet();
