@@ -1,24 +1,58 @@
 /* Dialogs in Black theme */
 
+PreferencesDialog
+{
+    background-color: rgb(70, 70, 70);
+}
+
 QMessageBox,
 QInputDialog,
 PluginScanDialog,
 MidiToolsDialog,
 PluginScanDialog,
-PrivateServerDialog,
 UserNameDialog,
-PreferencesDialog
+PrivateServerDialog
 {
     border-color: rgb(20, 20, 20);
     color: rgb(40, 40, 40);
-    background-color: rgb(80, 80, 80);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(70, 70, 70),
+    stop:1 rgb(40, 40, 40));
+}
+
+PrivateServerDialog #passwordTextField, #serverPortTextField, #serverTextField
+{
+    color: rgb(160, 160, 160);
+    background-color: rgb(70, 70, 70);
+    selection-background-color: rgb(50, 50, 50);
+    selection-color: rgb(40, 40, 40);
+}
+
+UserNameDialog #lineEdit
+{
+    color: rgb(160, 160, 160);
+    background-color: rgb(70, 70, 70);
+    selection-background-color: rgb(50, 50, 50);
+    selection-color: rgb(40, 40, 40);
+}
+
+PrivateServerDialog #label, #label_2, #label_3
+{
+    color: rgb(160, 160, 160);
+}
+
+UserNameDialog #label
+{
+    color: rgb(160, 160, 160);
 }
 
 PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome
 {
-    background-color: rgb(40, 40, 40);
+    border: 1px solid rgb(40, 40, 40);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(70, 70, 70),
+    stop:1 rgb(40, 40, 40));
 }
-
 
 PreferencesDialog QComboBox                         /* the colors inside the combo box*/
 {
@@ -34,6 +68,25 @@ PreferencesDialog QComboBox QAbstractItemView      /* the colors inside drop dow
     background-color: rgb(70, 70, 70);
     selection-background-color: rgb(50, 50, 50);
     selection-color: rgb(10, 10, 10);
+}
+
+MidiToolsDialog #label_5, #labelHigherNote, #labelLowerNoteX
+{
+    color: rgb(160, 160, 160);
+}
+
+MidiToolsDialog #GroupBoxKeyRange, #GroupBoxTranspose
+{
+    color: rgb(160, 160, 160);
+}
+
+MidiToolsDialog #spinBoxTranspose
+{
+    border: 1px solid rgb(140, 140, 140);
+    color: rgb(160, 160, 160);
+    background-color: rgb(70, 70, 70);
+    selection-background-color: rgb(50, 50, 50);
+    selection-color: rgb(40, 40, 40);
 }
 
 QInputDialog QPushButton
