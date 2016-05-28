@@ -98,13 +98,15 @@ PluginScanDialog #labelPluginText
 PluginScanDialog
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgb(80, 80, 80),
+    stop:0 rgb(90, 90, 90),
     stop:1 rgb(40, 40, 40));
 }
 
 PluginScanDialog QGroupBox
 {
-    border: 1px solid black;
+    color: rgb(180, 180, 180);
+    border: 1px solid gray;
+    selection-color: rgb(140, 140, 140);
 }
 
 BusyDialog
