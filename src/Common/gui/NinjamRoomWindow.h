@@ -75,7 +75,7 @@ private:
 
     QString roomName;
 
-    void handleVoteMessage(const Ninjam::User &user, const QString &message);
+    void createVoteButton(const QString &message);
     void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);
 
     NinjamPanel *createNinjamPanel();
@@ -103,6 +103,10 @@ private:
     void updateTracksSizeButtons();// enable or disable tracks size buttons
 
     void translate();
+
+    bool canShowBlockButtonInChatMessage(const QString &userName) const;
+
+    static const QString JAMTABA_CHAT_BOT_NAME;
 
 private slots:
 
@@ -137,6 +141,9 @@ private slots:
     // chat panel
     void voteToChangeBpi(int newBpi);
     void voteToChangeBpm(int newBpm);
+    void blockUserInChat(const QString &userNameToBlock);
+    void showFeedbackAboutBlockedUserInChat(const QString &userName);
+    void showFeedbackAboutUnblockedUserInChat(const QString &userName);
 
     void toggleTracksLayoutOrientation(QAbstractButton *buttonClicked); // horizontal or vertical
     void toggleTracksSize(QAbstractButton *buttonClicked);// narrow or wide

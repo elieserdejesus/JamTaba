@@ -7,6 +7,10 @@ namespace Midi {
     class MidiMessage;
 }
 
+namespace Controller {
+class MainController;
+}
+
 namespace Audio {
 
 class LocalInputNode : public AudioNode
@@ -14,7 +18,7 @@ class LocalInputNode : public AudioNode
     Q_OBJECT
 
 public:
-    LocalInputNode(int parentChannelIndex, bool isMono = true);
+    LocalInputNode(Controller::MainController *mainController, int parentChannelIndex, bool isMono = true);
     ~LocalInputNode();
     void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
                                   const Midi::MidiMessageBuffer &midiBuffer) override;
@@ -32,6 +36,10 @@ public:
 
     bool isAudio() const;
 
+    void setStereoInversion(bool stereoInverted);
+
+    bool isStereoInverted() const;
+
     void setAudioInputSelection(int firstChannelIndex, int channelCount);
 
     void setMidiInputSelection(int midiDeviceIndex, int midiChannelIndex);
@@ -43,6 +51,8 @@ public:
     int getMidiChannelIndex() const;
 
     bool isReceivingAllMidiChannels() const;
+
+    QList<Midi::MidiMessage> pullMidiMessagesGeneratedByPlugins() const override;
 
     ChannelRange getAudioInputRange() const;
 
@@ -76,7 +86,7 @@ public:
     void stopMidiNoteLearn();
     bool isLearningMidiNote() const;
 
-    void addProcessor(AudioNodeProcessor *newProcessor) override;
+    void addProcessor(AudioNodeProcessor *newProcessor, quint32 slotIndex) override;
 
     void reset();
 
@@ -86,6 +96,9 @@ public:
 
 signals:
     void midiNoteLearned(quint8 midiNote) const;
+
+protected:
+    void preFaderProcess(Audio::SamplesBuffer &out) override;
 
 private:
     //int globalFirstInputIndex; // store the first input index selected globally by users in preferences menu
@@ -104,6 +117,10 @@ private:
     bool learningMidiNote; //is waiting to learn a midi note?
 
     int channelIndex; // the group index (a group contain N LocalInputAudioNode instances)
+
+    bool stereoInverted;
+
+    Controller::MainController *mainController;
 
     enum InputMode {
         AUDIO, MIDI, DISABLED

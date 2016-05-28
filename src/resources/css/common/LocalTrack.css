@@ -1,0 +1,144 @@
+/*
+    This file contains stylesheet related to local/user tracks. Many details about the tracks are defined in BaseTrack.css file.
+*/
+
+
+/* LocalTrackView is widget used to show the user tracks/subchannels.
+----------------------------------------------------------------------*/
+
+LocalTrackView
+{
+    border: none;
+}
+
+LocalTrackView[peakMetersOnly="true"]           /* collapsed track */
+{
+    background: none;
+}
+
+LocalTrackView #inputPanel                      /* the widget used to show the input selection (no input, midi, mono or stereo) */
+{
+    padding: 2px;
+    border: none;
+}
+
+LocalTrackView[unlighted="false"] #inputPanel    /* input panel color when user is transmiting */
+{
+    border: 1px outset rgb(80,80,80);
+}
+
+LocalTrackView #inputSelectionIcon              /* Icon used to show no-input, mono or stereo input */
+{
+    border: 1px solid rgba(0, 0, 0, 0);
+    margin: 0px;
+    padding: 0px;
+    max-width: 22px;
+    min-width: 22px;
+    background-position: center;
+    background-repeat: none;
+}
+
+LocalTrackView #inputSelectionButton            /* Button used to open the input selection menu */
+{
+    background-color: none;
+    background-image: url(':/images/arrow-down.png');
+    background-repeat: none;
+    background-position: center right;
+    border: none;
+    color: rgba(255,255, 255, 160);
+    font-size: 9px;
+    text-align: left;
+    margin: 0px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+LocalTrackView #midiToolsButton                 /* The button used to open MidiToolsDialog */
+{
+    font-size: 10px;
+    background-repeat: none;
+    background-position: center left;
+    padding: 0px;
+}
+
+LocalTrackView #inputSelectionIcon,
+LocalTrackView #midiToolsButton
+{
+    min-height: 14px;                           /* using same height for these items to keep the vertical align (#267) */
+    max-height: 14px;
+}
+
+LocalTrackView #midiPeakMeter                   /* The thin line/meter used to show the midi activity. */
+{
+    max-width: 1px;
+    min-width: 1px;
+    border: none;
+}
+
+ /* The transmiting (xmit) button.
+ ----------------------------------*/
+#xmitButton
+{
+    padding-left: 0px; /* using ZERO padding in left and right to fix #387 */
+    padding-right: 0px;
+}
+
+#xmitButton:!checked                            /* default state (not checked) is 'not transmiting */
+{
+    border-width: 1px;
+    font-size: 11px;
+    padding: 0px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    color: black;
+    min-height: 15px;
+    min-width: 10px;
+    border-style: outset;
+}
+
+#xmitButton:checked                             /* when the button is checked we are 'Transmiting' */
+{
+    border-style: inset;
+    color: rgb(0, 40, 0);
+}
+
+
+
+/* LocalTrackGroup (used as container to group tracks/subchannels)
+-----------------------------------*/
+
+LocalTrackGroupView
+{
+    border: none;
+}
+
+LocalTrackGroupView[highlighted="true"]         /* when navigating in local track menu (clicking in wheel icon) the tracks are highlighted */
+{
+    border: 1px solid white;
+}
+
+LocalTrackGroupView  #toolButton                /* The wheel/gear button used to open the channels/subchannels menu (create/remove channels and subchannels). */
+{
+    background-color: none;
+    background-image: url(':/images/gear.png');
+    background-repeat: none;
+    background-position: center center;
+    border: none;
+    padding: 0px;
+    margin: 0px;
+    width: 14px;
+    height: 14px;
+}
+
+LocalTrackGroupView   #toolButton:hover
+{
+    background-image: url(':/images/gear-hover.png');
+}
+
+LocalTrackGroupView #groupNameField             /* The channel name for local tracks and the user name for ninjam tracks */
+{
+    font-size: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin: 0px;
+}

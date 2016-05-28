@@ -1,6 +1,8 @@
 #ifndef _MIDI_MESSAGE_BUFFER_
 #define _MIDI_MESSAGE_BUFFER_
 
+#include <QList>
+
 namespace Midi {
 
 class MidiMessage;
@@ -16,6 +18,8 @@ public:
     {
         return messagesCount;
     }
+
+    QList<Midi::MidiMessage> toList() const;
 
     MidiMessageBuffer(const MidiMessageBuffer &other);
 private:

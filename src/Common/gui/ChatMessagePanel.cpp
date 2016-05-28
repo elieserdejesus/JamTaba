@@ -17,14 +17,16 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent) :
 
 ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, const QString &msg,
                                    const QColor &userNameBackgroundColor,
-                                   const QColor &msgBackgroundColor, const QColor &textColor,
-                                   bool showTranslationButton) :
+                                   const QColor &textColor,
+                                   bool showTranslationButton, bool showBlockButton) :
     QFrame(parent),
-    ui(new Ui::ChatMessagePanel)
+    ui(new Ui::ChatMessagePanel),
+    userName(userName)
 {
     ui->setupUi(this);
-    initialize(userName, msg, userNameBackgroundColor, msgBackgroundColor, textColor,
-               showTranslationButton);
+    initialize(userName, msg, userNameBackgroundColor, textColor, showTranslationButton, showBlockButton);
+    connect(ui->blockButton, SIGNAL(clicked(bool)), this, SLOT(fireBlockingUserSignal()));
+
 }
 
 void ChatMessagePanel::changeEvent(QEvent *e)
@@ -37,9 +39,8 @@ void ChatMessagePanel::changeEvent(QEvent *e)
 }
 
 void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
-                                  const QColor &userNameBackgroundColor,
                                   const QColor &msgBackgroundColor, const QColor &textColor,
-                                  bool showTranslationButton)
+                                  bool showTranslationButton, bool showBlockButton)
 {
     if (!userName.isEmpty() && !userName.isNull()) {
         ui->labelUserName->setText(userName + ":");
@@ -54,6 +55,8 @@ void ChatMessagePanel::initialize(const QString &userName, const QString &msg,
     ui->labelTimeStamp->setText(QTime::currentTime().toString("hh:mm:ss"));
 
     ui->translateButton->setVisible(showTranslationButton);
+
+    ui->blockButton->setVisible(showBlockButton);
 
     this->originalText = msg;
 }
@@ -124,6 +127,11 @@ void ChatMessagePanel::on_translateButton_clicked()
     } else {
         setMessageLabelText(originalText);
     }
+}
+
+void ChatMessagePanel::fireBlockingUserSignal()
+{
+    emit blockingUser(userName);
 }
 
 void ChatMessagePanel::setPrefferedTranslationLanguage(const QString &targetLanguage)

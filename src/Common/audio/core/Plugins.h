@@ -51,7 +51,7 @@ public:
     explicit JamtabaDelay(int sampleRate);
     ~JamtabaDelay();
     virtual void process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
-                         const Midi::MidiMessageBuffer &midiBuffer);
+                         const QList<Midi::MidiMessage> &midiBuffer);
     void setDelayTime(int delayTimeInMs);
     void setFeedback(float feedback);
     void setLevel(float level);

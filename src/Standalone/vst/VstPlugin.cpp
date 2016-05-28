@@ -29,7 +29,6 @@
 using namespace Vst;
 
 QMap<QString, QDialog*> VstPlugin::editorsWindows;
-//+++++++++++++++++++++++++++
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 VstPlugin::VstPlugin(Vst::Host* host)
@@ -77,6 +76,12 @@ bool VstPlugin::load(QString path){
     loaded = true;
 
     return true;
+}
+
+bool VstPlugin::canGenerateMidiMessages() const{
+    //long canSendVstEvents = effect->dispatcher(effect, effCanDo, 0, 0, (void*)"sendVstEvents", 0);
+    long returnValue = effect->dispatcher(effect, effCanDo, 0, 0, (void*)"sendVstMidiEvent", 0);
+    return returnValue >= 0;
 }
 
 bool VstPlugin::isVirtualInstrument() const{
@@ -216,28 +221,26 @@ void VstPlugin::unload(){
     }
 }
 
-void VstPlugin::fillVstEventsList(const Midi::MidiMessageBuffer &midiBuffer){
-    int midiMessages = qMin( midiBuffer.getMessagesCount(), MAX_MIDI_EVENTS);
+void VstPlugin::fillVstEventsList(const QList<Midi::MidiMessage> &midiBuffer){
+    int midiMessages = qMin( midiBuffer.count(), MAX_MIDI_EVENTS);
     this->vstMidiEvents.numEvents = midiMessages;
     for (int m = 0; m < midiMessages; ++m) {
-        Midi::MidiMessage message = midiBuffer.getMessage(m);
+        Midi::MidiMessage message = midiBuffer.at(m);
         VstMidiEvent* vstEvent = (VstMidiEvent*)vstMidiEvents.events[m];
         vstEvent->type = kVstMidiType;
         vstEvent->byteSize = sizeof(vstEvent);
-        vstEvent->deltaFrames = 0;
+        vstEvent->deltaFrames = vstEvent->reserved1 = vstEvent->reserved2 = 0;
         vstEvent->midiData[0] = message.getStatus();
         vstEvent->midiData[1] = message.getData1();
         vstEvent->midiData[2] = message.getData2();
         vstEvent->midiData[3] = 0;
-        vstEvent->reserved1 = vstEvent->reserved2 = 0;
         vstEvent->flags = kVstMidiEventIsRealtime;
     }
 }
 
-void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, const Midi::MidiMessageBuffer& midiBuffer){
+void VstPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &outBuffer, const QList<Midi::MidiMessage> &midiBuffer){
 
     Q_UNUSED(in)
-    //qCDebug(vst) << "processing ...";
     if( isBypassed() || !effect || !loaded || !started){
         return;
     }

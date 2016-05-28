@@ -1,0 +1,27 @@
+
+JamRoomViewPanel
+{
+    background-color: none;
+    border: 1px solid rgba(0, 0, 0, 60);
+    border-radius: 3px;
+}
+
+JamRoomViewPanel #panelTop
+{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+       stop:0 #EAEAEA,
+        stop:1 #CACACA);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+JamRoomViewPanel #content
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(255, 255, 255),
+            stop:1 rgb(250, 250, 250));
+    border: none;
+    border-top: 1px solid #dddddd;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}

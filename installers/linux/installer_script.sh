@@ -11,6 +11,10 @@ echo "Installing Jamtaba 2 in " $destDir
 #copy all files preserving attributes
 cp -rp . $destDir
 
+
+#change the _DEST_DIR placeholder text in Jamtaba2.desktop file
+sed -i "s|_DEST_DIR|$destDir|" Jamtaba2.desktop
+
 #copy the .desktop file to Desktop and Applications folder
 cp Jamtaba2.desktop ~/Desktop/
 cp Jamtaba2.desktop /usr/share/applications/

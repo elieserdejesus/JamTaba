@@ -12,17 +12,25 @@ const SamplesBuffer SamplesBuffer::ZERO_BUFFER(1, 0);
 
 SamplesBuffer::SamplesBuffer(unsigned int channels) :
     channels(channels),
-    frameLenght(0)
+    frameLenght(0),
+    rmsRunningSum(0.0f),
+    rmsWindowSize(13230) //300 ms in 44100 KHz
 {
     if (channels == 0)
         qCritical() << "AudioSamplesBuffer::channels == 0";
     for (unsigned int c = 0; c < channels; ++c)
         samples.push_back(std::vector<float>());
+
+    squaredSums[0] = squaredSums[1] = 0.0f;
+    lastRmsValues[0] = lastRmsValues[1] = 0.0f;
+    summedSamples = 0;
 }
 
 SamplesBuffer::SamplesBuffer(unsigned int channels, unsigned int frameLenght) :
     channels(channels),
-    frameLenght(frameLenght)
+    frameLenght(frameLenght),
+    rmsRunningSum(0.0f),
+    rmsWindowSize(13230) //300 ms in 44100 KHz
 {
     for (unsigned int c = 0; c < channels; ++c)
         samples.push_back(std::vector<float>(frameLenght));
@@ -31,13 +39,28 @@ SamplesBuffer::SamplesBuffer(unsigned int channels, unsigned int frameLenght) :
 SamplesBuffer::SamplesBuffer(const SamplesBuffer &other) :
     channels(other.channels),
     frameLenght(other.frameLenght),
-    samples(other.samples)
+    samples(other.samples),
+    rmsRunningSum(other.rmsRunningSum),
+    rmsWindowSize(other.rmsWindowSize)
 {
     // qWarning() << "Samples Buffer copy constructor!";
 }
 
 SamplesBuffer::~SamplesBuffer()
 {
+}
+
+void SamplesBuffer::setRmsWindowSize(int samples)
+{
+    rmsWindowSize = samples;
+}
+
+void SamplesBuffer::invertStereo()
+{
+    if (channels != 2)
+        return; //trying invert a non stereo buffer
+
+    std::iter_swap(samples.begin(), samples.begin() + 1); // swap first and second channels
 }
 
 void SamplesBuffer::discardFirstSamples(unsigned int samplesToDiscard)
@@ -133,22 +156,45 @@ void SamplesBuffer::zero()
         std::fill(samples[c].begin(), samples[c].end(), (float)0);
 }
 
-AudioPeak SamplesBuffer::computePeak() const
+AudioPeak SamplesBuffer::computePeak()
 {
-    float abs;
-    float peaks[2] = {0};// left and right peaks
+    float abs; //max peak absolute value
+    float maxPeaks[2] = {0};// left and right peaks
     for (unsigned int c = 0; c < channels; ++c) {
         float maxPeak = 0;
         for (unsigned int i = 0; i < frameLenght; ++i) {
-            abs = fabs(samples[c][i]);
+
+            //max peak
+            abs = std::fabs(samples[c][i]);
             if (abs > maxPeak)
                 maxPeak = abs;
-            peaks[c] = maxPeak;
+            maxPeaks[c] = maxPeak;
+
+            //rms running squared sum
+            squaredSums[c] += samples[c][i] * samples[c][i]; // squaring every sample and summing
         }
+        summedSamples += frameLenght;
     }
-    if (isMono())
-        peaks[1] = peaks[0];
-    return AudioPeak(peaks[0], peaks[1]);
+    if (isMono()) {
+        maxPeaks[1] = maxPeaks[0];
+        squaredSums[1] = squaredSums[0];
+    }
+
+    //time to compute new rms values?
+    if (summedSamples >= rmsWindowSize) {
+        lastRmsValues[0] = std::sqrt(squaredSums[0]/summedSamples);
+        lastRmsValues[1] = std::sqrt(squaredSums[1]/summedSamples);
+
+        squaredSums[0] = squaredSums[1] = 0.0f; //reinitialize the rms running sum
+        summedSamples = 0;
+    }
+
+    return AudioPeak(maxPeaks[0], maxPeaks[1], lastRmsValues[0], lastRmsValues[1]);
+}
+
+int SamplesBuffer::computeRmsWindowSize(int sampleRate, int windowTimeInMs)
+{
+    return sampleRate * windowTimeInMs/1000.0f;
 }
 
 void SamplesBuffer::add(const SamplesBuffer &buffer, int internalWriteOffset)

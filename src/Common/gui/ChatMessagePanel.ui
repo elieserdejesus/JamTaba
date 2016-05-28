@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>173</width>
-    <height>77</height>
+    <width>214</width>
+    <height>89</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -40,6 +40,19 @@
    </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="spacing">
+      <number>3</number>
+     </property>
+     <item>
+      <widget class="QPushButton" name="blockButton">
+       <property name="toolTip">
+        <string>block chat messages from this user</string>
+       </property>
+       <property name="text">
+        <string>B</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QLabel" name="labelUserName">
        <property name="sizePolicy">

@@ -17,6 +17,7 @@
 #include <QDesktopServices>
 #include <QRect>
 #include "MainController.h"
+#include "ThemeLoader.h"
 // #include "performance/PerformanceMonitor.h"
 
 using namespace Audio;
@@ -93,17 +94,13 @@ void MainWindow::initializeThemeMenu()
 {
     connect(ui.menuTheme, &QMenu::triggered, this, &MainWindow::changeTheme);
 
-    // create a menu action for each .css resource
-    QDir themesDir(":/style");
-    if (themesDir.exists()) {
-        QStringList themeFiles = themesDir.entryList(QStringList("*.css"));
-        foreach (const QString &themeFile, themeFiles) {
-            QString theme = QFileInfo(themeFile).baseName();
-            QAction *action = ui.menuTheme->addAction(theme);
-            action->setData(theme);
-        }
-    } else {
-        qCritical() << "Themes dir not exist! Can't create the Themes menu!";
+    // create a menu action for each theme
+
+    QStringList themeFiles = Theme::Loader::getAvailableThemes(":/style/themes");
+    foreach (const QString &themeFile, themeFiles) {
+        QString theme = QFileInfo(themeFile).baseName();
+        QAction *action = ui.menuTheme->addAction(theme);
+        action->setData(theme);
     }
 }
 
@@ -215,11 +212,12 @@ Persistence::LocalInputTrackSettings MainWindow::getInputsSettings() const
             float boost = Utils::linearToDb(inputNode->getBoost());
             float pan = inputNode->getPan();
             bool muted = inputNode->isMuted();
+            bool stereoInverted = inputNode->isStereoInverted();
             qint8 transpose = inputNode->getTranspose();
             quint8 lowerNote = inputNode->getMidiLowerNote();
             quint8 higherNote = inputNode->getMidiHigherNote();
 
-            Subchannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted,
+            Subchannel sub(firstInput, channels, midiDevice, midiChannel, gain, boost, pan, muted, stereoInverted,
                            transpose, lowerNote, higherNote);
             channel.subChannels.append(sub);
         }
@@ -382,7 +380,7 @@ void MainWindow::initializeLocalSubChannel(LocalTrackView *localTrackView,
                                            const Subchannel &subChannel)
 {
     BaseTrackView::Boost boostValue = BaseTrackView::intToBoostValue(subChannel.boost);
-    localTrackView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted);
+    localTrackView->setInitialValues(subChannel.gain, boostValue, subChannel.pan, subChannel.muted, subChannel.stereoInverted);
 }
 
 void MainWindow::initializeLocalInputChannels()
@@ -852,7 +850,7 @@ void MainWindow::timerEvent(QTimerEvent *)
             roomView->setShowBufferingState(buffering);
             if (!buffering) {
                 Audio::AudioPeak peak = mainController->getRoomStreamPeak();
-                roomView->addPeak(peak.getMax());
+                roomView->addPeak(peak.getMaxPeak());
             } else {
                 int percentage = mainController->getRoomStreamer()->getBufferingPercentage();
                 roomView->setBufferingPercentage(percentage);
@@ -862,8 +860,8 @@ void MainWindow::timerEvent(QTimerEvent *)
 
     // update master peaks
     Audio::AudioPeak masterPeak = mainController->getMasterPeak();
-    ui.masterMeterL->setPeak(masterPeak.getLeft());
-    ui.masterMeterR->setPeak(masterPeak.getRight());
+    ui.masterMeterL->setPeak(masterPeak.getLeftPeak(), 0.0f); //not showing rms in master meters
+    ui.masterMeterR->setPeak(masterPeak.getRightPeak(), 0.0f);
 }
 
 // ++++++++++++=

@@ -1,0 +1,213 @@
+/*
+    This file contains common stylesheet for ninjam window, ninjam panel (appears in
+    bottom when connected in a server) and ninjam tracks.
+
+*/
+
+
+/* Tool buttons in ninjam window
+------------------------------------*/
+
+#licenceButton                              /* show the server licence text */
+{
+    background-image: url(':/images/licence.png');
+    background-position: center center;
+    background-repeat: none;
+}
+
+#buttonVerticalLayout                       /* show ninjam tracks in vertical layout (like ReaNinjam) */
+{
+    margin-right: 0px;
+}
+
+#buttonHorizontalLayout                     /* show ninjam tracks in horizontal layout (like many DAW mixers) */
+{
+    margin-left: 0px;
+}
+
+#wide                                       /* button used to show wide/fat */
+{
+    margin: 0px;
+}
+
+#wide:!checked
+{
+    border-right-color: none;
+}
+
+#narrow                                     /* button used to show narrow tracks */
+{
+    margin-left: 0px;
+}
+
+#narrow:!checked
+{
+    border-left-color: none;
+}
+
+/* NinjamPanel - Appears in bottom when connected in a server
+---------------------------- */
+
+NinjamPanel #intervalPanel                  /* The widget used to show ninjam controls (bpi, bpm, accent and shape) and interval progress */
+{
+    color: rgb(238, 238, 238);
+    font-weight: normal;
+    font-size: 11px;
+    background: none;
+    margin: 0px;
+}
+
+
+/* Tunning the bpi, bpm, accents and shape comboboxes
+-------------------------------------------------------*/
+
+#panelCombos QLabel             /* The labels in left side of comboboxes (bpi, bpm, accents and shape) */
+{
+    color: black;
+}
+
+#panelCombos QComboBox::down-arrow
+{
+    image:url(:/images/arrow-down.png);
+}
+
+#panelCombos QComboBox::down-arrow:hover
+{
+    image:url(:/images/arrow-down-lighter.png);
+}
+
+#panelCombos QComboBox::drop-down
+{
+    border: 0px;
+}
+
+#panelCombos QComboBox
+{
+    background-position: center right;
+    background-repeat: none;
+    font-size: 11px;
+    color: rgb(50, 50, 50);
+    border: 1px solid rgba(0, 0, 0, 40);
+    padding: 0px 5px 0px 5px;
+    border-radius: 2px;
+}
+/* ------------------------------------------------------------------ */
+
+NinjamPanel #metronomeControls,             /* Making the metronome and comboboxes area transparent */
+NinjamPanel #panelCombos
+{
+    background: transparent;
+}
+
+/* Changing the metronome level and pan sliders */
+NinjamPanel QSlider::groove:vertical{
+    width: 5px;
+    margin: 0px;
+    background: rgba(0, 0, 0, 40);
+}
+
+NinjamPanel QSlider::groove:horizontal{
+    background-color: rgba(0,0, 0, 40);
+}
+/* ---------------------------------------------------------------*/
+
+
+NinjamPanel #preferencesButton,             /* Button used to open metronome preferences */
+NinjamPanel #floatingWindowButton           /* The button used to open the metronome floating window */
+{
+    background-repeat: none;
+    background-position: center center;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+NinjamPanel #preferencesButton,
+NinjamPanel #floatingWindowButton,
+NinjamPanel #soloButton,
+NinjamPanel #muteButton
+{
+    max-width: 20px;
+    max-height: 16px;
+    min-height: 16px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+NinjamPanel #preferencesButton
+{
+   background-image: url(':/images/gear-hover.png');
+}
+
+NinjamPanel #floatingWindowButton
+{
+    background-image: url(':/images/windows.png');
+}
+
+NinjamPanel QLabel                          /* metronome, pan (L & R) labels, BPI and BPM labels */
+{
+    color: rgba(0, 0, 0, 150);
+    font-size: 11px;
+}
+
+#labelMetronomeIControls                    /* the label used to show the word 'metronome' */
+{
+    margin-top: 6px;
+}
+
+
+
+/* Ninjam tracks
+------------------------- */
+NinjamTrackView
+{
+    border: none;
+}
+
+NinjamTrackView #soloButton,
+NinjamTrackView #muteButton
+{
+   border-color: rgb(95,95,95);
+   color: rgb(40,40,40);
+}
+
+NinjamTrackView #peaksDbLabel               /* the label used to show max peak (in bottom of peak meters) */
+{
+    border: 1px solid rgba(0, 0, 0, 8);
+}
+
+
+NinjamTrackView QProgressBar                /* The progress bar in bottom of ninjam tracks showing downloaded interval */
+{
+    background-color: rgba(255, 255, 255, 20);
+    border: none;
+    min-height: 2px;
+    max-height: 3px;
+}
+
+NinjamTrackView[horizontal="true"] #soloButton, /* custom stylesheet for solo and mute buttons in horizontal ninjam tracks */
+NinjamTrackView[horizontal="true"] #muteButton
+{
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+
+
+/* Ninjam track groups
+------------------------*/
+
+NinjamTrackGroupView #groupNameField        /* User name field in ninjam tracks */
+{
+    border: none;
+    color: black;
+    margin-bottom: 3px;
+    margin-top: 3px;
+    padding: 3px;
+}
+
+NinjamTrackGroupView #countryLabel          /* country name in ninjam tracks */
+{
+    color: rgba(0, 0, 0, 180);
+    qproperty-alignment: AlignCenter;
+    font-size: 9px;
+}

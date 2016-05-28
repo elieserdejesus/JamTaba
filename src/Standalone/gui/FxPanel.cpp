@@ -35,14 +35,28 @@ void FxPanel::removePlugins()
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-void FxPanel::addPlugin(Audio::Plugin *plugin)
+
+qint32 FxPanel::getPluginFreeSlotIndex() const
 {
     QList<FxPanelItem *> items = findChildren<FxPanelItem *>();
-    for (FxPanelItem *item : items) {// find the first free slot to put the new plugin
-        if (!item->containPlugin()) {
-            item->setPlugin(plugin);
-            return;
-        }
+    int slotIndex = 0;
+    for (FxPanelItem *item : items) {
+        if (!item->containPlugin())
+            return slotIndex;
+        slotIndex++;
+    }
+    return -1; // no free slot
+}
+
+void FxPanel::addPlugin(Audio::Plugin *plugin, quint32 pluginSlotIndex)
+{
+    QList<FxPanelItem *> items = findChildren<FxPanelItem *>();
+    if (pluginSlotIndex < (quint32)items.count()) {
+        FxPanelItem *fxPanelItem = items.at(pluginSlotIndex);
+        if (!fxPanelItem->containPlugin())
+            fxPanelItem->setPlugin(plugin);
+        else
+            qCritical() << "Can't add " << plugin->getName() << " in slot index " << pluginSlotIndex;
     }
 }
 

@@ -1452,5 +1452,31 @@ ChordLabel[current="true"]{
     border: 1px solid #008F1f;
 }
 
+/* button stereo inversion */
+QPushButton#buttonStereoInversion
+{
+    background-repeat: none;
+    background-position: center center;
+    max-width: 12px;
+    max-height: 12px;
+    background-color: rgb(235, 235, 235);
+}
+
+LocalTrackView[unlighted="true"] #buttonStereoInversion,
+QPushButton#buttonStereoInversion[enabled="false"]
+{
+    background-color: rgba(0, 0, 0, 30);
+}
+
+QPushButton#buttonStereoInversion:!checked
+{
+  background-image: url(':/images/stereo_normal.png');
+}
+
+QPushButton#buttonStereoInversion:checked
+{
+  background-image: url(':/images/stereo_inverted.png');
+}
+/* +++++++++++++++++++++++++++++++++ */
 
 

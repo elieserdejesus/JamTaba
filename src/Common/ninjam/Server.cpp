@@ -57,6 +57,11 @@ void Server::removeUserChannel(const UserChannel &channel)
     }
 }
 
+void Server::removeUser(const QString &fullUserName)
+{
+    users.remove(fullUserName);
+}
+
 void Server::addUserChannel(const UserChannel &newChannel)
 {
     QString userFullName = newChannel.getUserFullName();

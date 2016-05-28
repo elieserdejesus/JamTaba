@@ -5,7 +5,9 @@
 #include <QMutex>
 #include "SamplesBuffer.h"
 #include "AudioDriver.h"
+#include "midi/MidiMessage.h"
 #include <QDebug>
+#include <QList>
 
 namespace Midi   {
 class MidiMessageBuffer;
@@ -24,8 +26,13 @@ public:
 
     virtual void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate,
                                   const Midi::MidiMessageBuffer &midiBuffer);
+
+    virtual QList<Midi::MidiMessage> pullMidiMessagesGeneratedByPlugins() const;
+
     virtual void setMute(bool muted);
+
     void setSolo(bool soloed);
+
     inline bool isMuted() const
     {
         return muted;
@@ -39,7 +46,7 @@ public:
     virtual bool connect(AudioNode &other);
     virtual bool disconnect(AudioNode &otherNode);
 
-    virtual void addProcessor(AudioNodeProcessor *newProcessor);
+    virtual void addProcessor(AudioNodeProcessor *newProcessor, quint32 slotIndex);
     void removeProcessor(AudioNodeProcessor *processor);
     void suspendProcessors();
     void resumeProcessors();
@@ -71,6 +78,8 @@ public:
 
     void resetLastPeak();
 
+    void setRmsWindowSize(int samples);
+
     inline void deactivate()
     {
         activated = false;
@@ -88,12 +97,15 @@ public:
 
     virtual void reset();// reset pan, gain, boost, etc
 
+    static const quint8 MAX_PROCESSORS_PER_TRACK = 4;
 protected:
+
+    inline virtual void preFaderProcess(Audio::SamplesBuffer &out){ Q_UNUSED(out) } // called after process all input and plugins, and just before compute gain, pan and boost.
 
     int getInputResamplingLength(int sourceSampleRate, int targetSampleRate, int outFrameLenght);
 
     QSet<AudioNode *> connections;
-    QList<AudioNodeProcessor *> processors;
+    AudioNodeProcessor *processors[MAX_PROCESSORS_PER_TRACK];
     SamplesBuffer internalInputBuffer;
     SamplesBuffer internalOutputBuffer;
 

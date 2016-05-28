@@ -8,6 +8,7 @@
 #include "log/Logging.h"
 #include "audio/core/AudioNode.h"
 #include "audio/core/LocalInputNode.h"
+#include "ThemeLoader.h"
 
 using namespace Persistence;
 using namespace Midi;
@@ -36,8 +37,26 @@ MainController::MainController(const Settings &settings) :
     connect(ipToLocationResolver.data(), SIGNAL(ipResolved(const QString &)), this, SIGNAL(ipResolved(const QString &)));
 }
 
+void MainController::blockUserInChat(const QString &userNameToBlock)
+{
+    if (isPlayingInNinjamRoom()){
+        ninjamController->blockUserInChat(userNameToBlock);
+    }
+}
+
+void MainController::unblockUserInChat(const QString &userNameToUnblock){
+    if (isPlayingInNinjamRoom()){
+        ninjamController->unblockUserInChat(userNameToUnblock);
+    }
+}
+
 void MainController::setSampleRate(int newSampleRate)
 {
+    foreach (Audio::AudioNode *node, tracksNodes.values()) {
+        int rmsWindowSize = Audio::SamplesBuffer::computeRmsWindowSize(newSampleRate);
+        node->setRmsWindowSize(rmsWindowSize);
+    }
+
     audioMixer.setSampleRate(newSampleRate);
     if (settings.isSaveMultiTrackActivated())
         jamRecorder.setSampleRate(newSampleRate);
@@ -352,7 +371,7 @@ void MainController::removeTrack(long trackID)
 void MainController::doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
                                     int sampleRate)
 {
-    audioMixer.process(in, out, sampleRate, pullMidiBuffer());
+    audioMixer.process(in, out, sampleRate, pullMidiMessagesFromDevices());
 
     out.applyGain(masterGain, 1.0f);// using 1 as boost factor/multiplier (no boost)
     masterPeak.update(out.computePeak());
@@ -478,6 +497,21 @@ bool MainController::trackIsSoloed(int trackID) const
     Audio::AudioNode *node = tracksNodes[trackID];
     if (node)
         return node->isSoloed();
+    return false;
+}
+
+void MainController::setTrackStereoInversion(int trackID, bool stereoInverted)
+{
+    Audio::LocalInputNode *inputTrackNode = inputTracks[trackID];
+    if (inputTrackNode)
+        inputTrackNode->setStereoInversion(stereoInverted);
+}
+
+bool MainController::trackStereoIsInverted(int trackID) const
+{
+    Audio::LocalInputNode *inputTrackNode = inputTracks[trackID];
+    if (inputTrackNode)
+        return inputTrackNode->isStereoInverted();
     return false;
 }
 
@@ -685,9 +719,10 @@ void MainController::stop()
 
 bool MainController::setTheme(const QString &themeName)
 {
-    QFile styleFile(":/style/" + themeName + ".css");
-    if (styleFile.open(QFile::ReadOnly)) {
-        setCSS(styleFile.readAll());
+    QString themeDir(":/style/themes");
+    QString themeCSS = Theme::Loader::loadCSS(themeDir, themeName);
+    if (!themeCSS.isEmpty()) {
+        setCSS(themeCSS);
         settings.setTheme(themeName);
         return true;
     }

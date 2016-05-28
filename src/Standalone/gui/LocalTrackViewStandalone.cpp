@@ -37,7 +37,7 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
     midiPeakMeter = new PeakMeter();
     midiPeakMeter->setObjectName(QStringLiteral("midiPeakMeter"));
     midiPeakMeter->setSolidColor(QColor(180, 0, 0));
-    midiPeakMeter->setPaintMaxPeakMarker(false);
+    //midiPeakMeter->setPaintMaxPeakMarker(false);
     midiPeakMeter->setDecayTime(500);// 500 ms
     midiPeakMeter->setAccessibleDescription("This is the midi activity meter");
 
@@ -74,7 +74,7 @@ void LocalTrackViewStandalone::updateGuiElements()
 
     if (inputNode && inputNode->hasMidiActivity()) {
         quint8 midiActivityValue = inputNode->getMidiActivityValue();
-        midiPeakMeter->setPeak(midiActivityValue/127.0);
+        midiPeakMeter->setPeak(midiActivityValue/127.0, 0.0f); // not using the rms value in midi peak
         inputNode->resetMidiActivity();
     }
     if (midiPeakMeter->isVisible())
@@ -272,14 +272,19 @@ void LocalTrackViewStandalone::onMidiToolsDialogClosed()
     qCDebug(jtGUI) << "MidiToolsDialog pointer cleared!";
 }
 
-void LocalTrackViewStandalone::addPlugin(Audio::Plugin *plugin, bool bypassed)
+void LocalTrackViewStandalone::addPlugin(Audio::Plugin *plugin, quint32 slotIndex, bool bypassed)
 {
     if (fxPanel) {
         plugin->setBypass(bypassed);
-        this->fxPanel->addPlugin(plugin);
-        this->refreshInputSelectionName();// refresh input type combo box, if the added plugins is a virtual instrument Jamtaba will try auto change the input type to midi
+        fxPanel->addPlugin(plugin, slotIndex);
+        refreshInputSelectionName();// refresh input type combo box, if the added plugins is a virtual instrument Jamtaba will try auto change the input type to midi
         update();
     }
+}
+
+qint32 LocalTrackViewStandalone::getPluginFreeSlotIndex() const
+{
+    return fxPanel->getPluginFreeSlotIndex();
 }
 
 QList<const Audio::Plugin *> LocalTrackViewStandalone::getInsertedPlugins() const
@@ -529,6 +534,9 @@ void LocalTrackViewStandalone::refreshInputSelectionName()
     midiToolsButton->setVisible( canShowMidiToolsButton() );
     inputTypeIconLabel->setVisible(canShowInputTypeIcon());
 
+    buttonStereoInversion->setEnabled(!inputNode->isMono()); //stereo, midi or no-input can be stereo inverted. Sometimes we are using 'no-input' but using some VSTi generating loops, for example. These VSTi will generate stereo output and can be inverted.
+
+    refreshStyleSheet();
     updateGeometry();
     update();
 }

@@ -1,0 +1,87 @@
+/*
+    This file contain common stylesheet to all widgets.
+*/
+
+
+*{
+    font-family: "Verdana";
+    font-size: 11px;
+    outline: none;                  /* Removing rect border in selected tabs (Linux workaround) */
+}
+
+
+/* Stylesheet for buttons
+--------------------------------*/
+QPushButton
+{
+    border: 1px outset gray;
+    padding: 3px 6px 3px 6px;
+    font-size: 11px;
+    color: rgb(60, 60, 60);
+}
+
+QPushButton:focus
+{
+    outline: none;                  /* Remove the focus rect from buttons. The annoying focus appears only in VSt plugin*/
+}
+
+QPushButton:checked
+{
+    border-style: inset;
+    color: rgb(0,0,0);
+}
+
+QPushButton[enabled="false"]        /* disabled buttons */
+{
+    background: none;
+    color: rgba(0, 0, 0, 30);
+    border-color: rgba(0, 0, 0, 40);
+}
+
+
+/* Stylesheet for Scroll bars
+--------------------------------*/
+QScrollBar:vertical
+{
+    width: 12px;
+}
+
+QScrollBar:horizontal
+{
+    height: 12px;
+}
+
+
+/* QLineEdit stylesheet. This widget is used in chat text input, user name, channel name, user name dialog, etc.
+--------------------------------*/
+QLineEdit,
+#userNamePanel
+{
+    padding: 2px;
+    color: black;
+    border-radius: 1px;
+    border: 1px solid;
+}
+
+/* QPlainTextEdit stylesheet. If I remember correctly this widget is used only in black listed vst plugins.
+-----------------------------------------------------------------------------------------------------------*/
+QPlainTextEdit
+{
+    border: none;
+}
+
+
+/* QScrollArea stylesheet.
+--------------------------*/
+QScrollArea
+{
+    border: none;
+    background: transparent;        /* we are interested only in the scroll feature */
+}
+
+
+QScrollArea > QWidget > QWidget
+{
+    background: transparent;        /*removing the background in content (public rooms) widget */
+}
+

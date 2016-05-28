@@ -20,7 +20,7 @@ public:
     explicit TrackGroupView(QWidget *parent = 0);
     ~TrackGroupView();
     virtual void setGroupName(const QString &groupName);
-    QString getGroupName() const;
+    virtual QString getGroupName() const;
 
     virtual BaseTrackView *addTrackView(long trackID);
 
@@ -57,6 +57,8 @@ protected:
 
     virtual void translateUi();
 
+    virtual void populateContextMenu(QMenu &contextMenu);
+
     QList<BaseTrackView *> trackViews;
 
     virtual BaseTrackView *createTrackView(long trackID) = 0;
@@ -68,6 +70,13 @@ protected:
     QBoxLayout *mainLayout;
 
     virtual void refreshStyleSheet();
+
+private slots:
+    void showContextMenu(const QPoint &pos);
+    void showPeakMeterOnly();
+    void showRmsOnly();
+    void showPeakAndRms();
+    void showMaxPeakMarker(bool showMarker);
 
 private:
     void setupUI();

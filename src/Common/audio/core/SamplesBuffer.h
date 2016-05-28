@@ -12,6 +12,13 @@ private:
     unsigned int channels;
     unsigned int frameLenght;
 
+    //rms calculations
+    double rmsRunningSum;
+    float squaredSums[2];
+    int summedSamples;
+    int rmsWindowSize; //how many samples until have enough data to compute rms?
+    float lastRmsValues[2];
+
     std::vector< std::vector<float> > samples;
 
     inline bool channelIsValid(unsigned int channel) const
@@ -30,6 +37,9 @@ public:
     explicit SamplesBuffer(unsigned int channels, unsigned int frameLenght);
     SamplesBuffer(const SamplesBuffer &other);
     ~SamplesBuffer();
+
+    void setRmsWindowSize(int samples);
+    static int computeRmsWindowSize(int sampleRate, int windowTimeInMs = 300); //using 300 ms as default
 
     static const SamplesBuffer ZERO_BUFFER;// a static buffer with zero samples
 
@@ -58,7 +68,9 @@ public:
     void setToMono();
     void setToStereo();
 
-    Audio::AudioPeak computePeak() const;
+    void invertStereo();
+
+    Audio::AudioPeak computePeak();
 
     inline void add(const SamplesBuffer &buffer)
     {

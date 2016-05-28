@@ -28,6 +28,15 @@ MidiMessageBuffer::~MidiMessageBuffer()
     delete [] messages;
 }
 
+QList<Midi::MidiMessage> MidiMessageBuffer::toList() const
+{
+    QList<Midi::MidiMessage> list;
+    for (int m = 0; m < messagesCount; ++m) {
+        list.append(messages[m]);
+    }
+    return list;
+}
+
 void MidiMessageBuffer::addMessage(const MidiMessage &m)
 {
     if (messagesCount < maxMessages) {

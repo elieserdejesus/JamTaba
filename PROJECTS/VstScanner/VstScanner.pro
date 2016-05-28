@@ -35,6 +35,7 @@ SOURCES += main.cpp
 SOURCES += vst/VstHost.cpp
 SOURCES += vst/VstLoader.cpp
 SOURCES += audio/core/PluginDescriptor.cpp
+SOURCES += midi/MidiMessage.cpp
 SOURCES += log/logging.cpp
 SOURCES += VstPluginScanner.cpp
 

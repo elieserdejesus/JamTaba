@@ -5,11 +5,83 @@
 #include <QStyleOption>
 #include <QEvent>
 #include <QDebug>
+#include <QMenu>
+#include <QActionGroup>
+#include "PeakMeter.h"
 
 TrackGroupView::TrackGroupView(QWidget *parent) :
     QFrame(parent)
 {
     setupUI();
+
+    //context menu
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, &TrackGroupView::customContextMenuRequested, this, &TrackGroupView::showContextMenu);
+}
+
+void TrackGroupView::populateContextMenu(QMenu &contextMenu)
+{
+    // create painting on/off actions in context menu
+    contextMenu.addSeparator();
+    QAction *audioPeaksAction = contextMenu.addAction(tr("Show peak meter only"));
+    QAction *audioRmsAction = contextMenu.addAction(tr("Show RMS meter only"));
+    QAction *audioPeaPlusRmsAction = contextMenu.addAction(tr("Show Peak and RMS meters"));
+    contextMenu.addSeparator();
+    QAction *maxPeakMarkerAction = contextMenu.addAction(tr("Show max peak marker"));
+
+    audioPeaksAction->setCheckable(true);
+    audioRmsAction->setCheckable(true);
+    audioPeaPlusRmsAction->setCheckable(true);
+    maxPeakMarkerAction->setCheckable(true);
+
+    connect(audioPeaksAction, SIGNAL(triggered(bool)), this, SLOT(showPeakMeterOnly()));
+    connect(audioRmsAction, SIGNAL(triggered(bool)), this, SLOT(showRmsOnly()));
+    connect(audioPeaPlusRmsAction, SIGNAL(triggered(bool)), this, SLOT(showPeakAndRms()));
+    connect(maxPeakMarkerAction, SIGNAL(triggered(bool)), this, SLOT(showMaxPeakMarker(bool)));
+
+    maxPeakMarkerAction->setChecked(PeakMeter::isPaintintMaxPeakMarker());
+    bool showingPeakAndRms = PeakMeter::isPaintingRMS() && PeakMeter::isPaintingPeaks();
+    if (showingPeakAndRms) {
+        audioPeaPlusRmsAction->setChecked(true);
+    }
+    else{
+        audioPeaksAction->setChecked(PeakMeter::isPaintingPeaks());
+        audioRmsAction->setChecked(PeakMeter::isPaintingRMS());
+    }
+
+    QActionGroup *actionGroup = new QActionGroup(&contextMenu);
+    actionGroup->addAction(audioPeaksAction);
+    actionGroup->addAction(audioRmsAction);
+    actionGroup->addAction(audioPeaPlusRmsAction);
+}
+
+void TrackGroupView::showContextMenu(const QPoint &pos){
+    QMenu contextMenu(this);
+    populateContextMenu(contextMenu); //populate is overrided in subclasses to add more menu actions
+    contextMenu.exec(mapToGlobal(pos));
+}
+
+void TrackGroupView::showPeakMeterOnly()
+{
+    PeakMeter::setPaintingPeaks(true);
+    PeakMeter::setPaintingRMS(false);
+}
+
+void TrackGroupView::showRmsOnly()
+{
+    PeakMeter::setPaintingPeaks(false);
+    PeakMeter::setPaintingRMS(true);
+}
+
+void TrackGroupView::showPeakAndRms()
+{
+    PeakMeter::setPaintingPeaks(true);
+    PeakMeter::setPaintingRMS(true);
+}
+
+void TrackGroupView::showMaxPeakMarker(bool showMarker)
+{
+    PeakMeter::setPaintMaxPeakMarker(showMarker);
 }
 
 void TrackGroupView::setupUI()
