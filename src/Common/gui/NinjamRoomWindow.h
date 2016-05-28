@@ -107,6 +107,8 @@ private:
 
     void updateTracksSizeButtons();// enable or disable tracks size buttons
 
+    void updateUserNameLabel();
+
     void translate();
 
     bool canShowBlockButtonInChatMessage(const QString &userName) const;

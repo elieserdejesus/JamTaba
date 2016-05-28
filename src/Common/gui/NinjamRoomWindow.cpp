@@ -120,7 +120,15 @@ void NinjamRoomWindow::translate()
     verticalLayoutButton->setToolTip(tr("Set tracks layout to vertical"));
     wideButton->setToolTip(tr("Wide tracks"));
     narrowButton->setToolTip(tr("Narrow tracks"));
-    ui->labelUserName->setText(tr("Connected as %1").arg(mainController->getUserName()));
+
+    updateUserNameLabel();
+}
+
+void NinjamRoomWindow::updateUserNameLabel()
+{
+    QString userName = mainController->getUserName();
+    QString labelText = fullViewMode ? tr("Connected as %1").arg(userName) : userName;
+    ui->labelUserName->setText(labelText);
 }
 
 void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrientation)
@@ -247,6 +255,8 @@ void NinjamRoomWindow::setFullViewStatus(bool fullView)
         return;
 
     fullViewMode = fullView;
+
+    updateUserNameLabel();
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
