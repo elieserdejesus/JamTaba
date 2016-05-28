@@ -90,6 +90,13 @@ public:
         return channelIndex;
     }
 
+private:
+    int intervalIndex;
+    int bpm;
+    int bpi;
+    QString path;
+    QString userName;
+    quint8 channelIndex;
 };
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Jam
