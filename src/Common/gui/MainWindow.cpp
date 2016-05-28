@@ -1062,27 +1062,60 @@ void MainWindow::setMultiTrackRecordingStatus(bool recording)
 
 void MainWindow::initializeViewMenu()
 {
-    QObject::connect(ui.menuViewMode, SIGNAL(triggered(QAction *)), this,
-                     SLOT(changeViewMode(QAction *)));
+    connect(ui.actionMiniView, SIGNAL(triggered(bool)), this, SLOT(changeViewMode()));
+    connect(ui.actionFullView, SIGNAL(triggered(bool)), this, SLOT(changeViewMode()));
 
-    QActionGroup *group = new QActionGroup(this);
-    ui.actionFullView->setActionGroup(group);
-    ui.actionMiniView->setActionGroup(group);
+    connect(ui.menuMetering, SIGNAL(aboutToShow()), this, SLOT(updateMeteringMenu()));
+
+    connect(ui.menuMetering, SIGNAL(triggered(QAction*)), this, SLOT(handleMenuMeteringAction(QAction*)));
+
+    QActionGroup *meteringActionGroup = new QActionGroup(this);
+    meteringActionGroup->addAction(ui.actionShowPeaksOnly);
+    meteringActionGroup->addAction(ui.actionShowRmsOnly);
+    meteringActionGroup->addAction(ui.actionShowPeakAndRMS);
+
+    QActionGroup *viewModeActionGroup = new QActionGroup(this);
+    ui.actionFullView->setActionGroup(viewModeActionGroup);
+    ui.actionMiniView->setActionGroup(viewModeActionGroup);
 }
 
-void MainWindow::changeViewMode(QAction *action)
+void MainWindow::handleMenuMeteringAction(QAction *action)
 {
-    QString actionData = action->data().toString();
-    if (actionData.isEmpty()) { // the actions mini view, full view and full screen have no data
-        setFullViewStatus(ui.actionFullView->isChecked());
-    } else {
-        QFileInfo themeFile(actionData);
-        QString theme = themeFile.baseName();
-        bool themeInstalled = mainController->setTheme(theme);
-        if (!themeInstalled)
-            QMessageBox::critical(this, tr("Error"), tr("The theme %1 was not installed!").arg(
-                                      theme), QMessageBox::Cancel, QMessageBox::Ok);
+    if (action == ui.actionShowMaxPeaks){
+        PeakMeter::setPaintMaxPeakMarker(ui.actionShowMaxPeaks->isChecked());
     }
+    else{
+        if (action == ui.actionShowPeakAndRMS){
+            PeakMeter::setPaintingPeaks(true);
+            PeakMeter::setPaintingRMS(true);
+        }
+        else if (action == ui.actionShowPeaksOnly) {
+            PeakMeter::setPaintingPeaks(true);
+            PeakMeter::setPaintingRMS(false);
+        }
+        else{ //RMS only
+            PeakMeter::setPaintingPeaks(false);
+            PeakMeter::setPaintingRMS(true);
+        }
+    }
+}
+
+void MainWindow::updateMeteringMenu()
+{
+    ui.actionShowMaxPeaks->setChecked(PeakMeter::isPaintintMaxPeakMarker());
+    bool showingPeakAndRms = PeakMeter::isPaintingRMS() && PeakMeter::isPaintingPeaks();
+    if (showingPeakAndRms) {
+        ui.actionShowPeakAndRMS->setChecked(true);
+    }
+    else{
+        ui.actionShowPeaksOnly->setChecked(PeakMeter::isPaintingPeaks());
+        ui.actionShowRmsOnly->setChecked(PeakMeter::isPaintingRMS());
+    }
+}
+
+void MainWindow::changeViewMode()
+{
+    setFullViewStatus(ui.actionFullView->isChecked());
 }
 
 void MainWindow::updatePublicRoomsListLayout()

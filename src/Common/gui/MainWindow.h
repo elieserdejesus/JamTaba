@@ -149,7 +149,9 @@ protected slots:
     void showPrivateServerDialog();
 
     // view mode menu
-    void changeViewMode(QAction *action);
+    void changeViewMode();
+    void updateMeteringMenu();
+    void handleMenuMeteringAction(QAction *);
 
     // ninjam controller
     void startTransmission();
