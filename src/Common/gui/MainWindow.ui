@@ -206,13 +206,13 @@
       </property>
       <layout class="QVBoxLayout" name="bottomPanelLayout">
        <property name="leftMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
        <property name="topMargin">
         <number>6</number>
        </property>
        <property name="rightMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
        <property name="bottomMargin">
         <number>0</number>
@@ -239,6 +239,12 @@
          </property>
          <layout class="QVBoxLayout" name="masterControlsLayout" stretch="0,0,0">
           <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
            <number>0</number>
           </property>
           <item alignment="Qt::AlignBottom">
