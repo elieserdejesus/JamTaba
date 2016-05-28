@@ -5,6 +5,8 @@ QInputDialog,
 PluginScanDialog,
 MidiToolsDialog,
 PluginScanDialog,
+PrivateServerDialog,
+UserNameDialog,
 PreferencesDialog
 {
     border-color: rgb(20, 20, 20);
