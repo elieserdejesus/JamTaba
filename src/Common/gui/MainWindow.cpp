@@ -56,10 +56,29 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeLanguageMenu();
     initializeTranslator();
     initializeThemeMenu();
+    initializeMeteringOptions();
     setupWidgets();
     setupSignals();
 
     qCInfo(jtGUI) << "MainWindow created!";
+}
+
+void MainWindow::initializeMeteringOptions()
+{
+    const Persistence::Settings &settings = mainController->getSettings();
+    PeakMeter::setPaintMaxPeakMarker(settings.isShowingMaxPeaks());
+    quint8 meterOption = settings.getMeterOption();
+    switch (meterOption) {
+    case 0:
+        PeakMeter::paintPeaksAndRms();
+        break;
+    case 1:
+        PeakMeter::paintPeaksOnly();
+        break;
+    case 2:
+        PeakMeter::paintRmsOnly();
+        break;
+    }
 }
 
 void MainWindow::initializeTranslator()
@@ -1086,18 +1105,22 @@ void MainWindow::handleMenuMeteringAction(QAction *action)
     }
     else{
         if (action == ui.actionShowPeakAndRMS){
-            PeakMeter::setPaintingPeaks(true);
-            PeakMeter::setPaintingRMS(true);
+            PeakMeter::paintPeaksAndRms();
         }
-        else if (action == ui.actionShowPeaksOnly) {
-            PeakMeter::setPaintingPeaks(true);
-            PeakMeter::setPaintingRMS(false);
+        else if (action == ui.actionShowPeaksOnly){
+            PeakMeter::paintPeaksOnly();
         }
         else{ //RMS only
-            PeakMeter::setPaintingPeaks(false);
-            PeakMeter::setPaintingRMS(true);
+            PeakMeter::paintRmsOnly();
         }
     }
+    quint8 meterOption = 0; //rms + peaks
+    if (PeakMeter::isPaintingPeaksOnly())
+        meterOption = 1;
+    else if (PeakMeter::isPaintingRmsOnly())
+        meterOption = 2;
+
+    mainController->storeMeteringSettings(PeakMeter::isPaintintMaxPeakMarker(), meterOption);
 }
 
 void MainWindow::updateMeteringMenu()

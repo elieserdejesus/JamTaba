@@ -89,14 +89,32 @@ void PeakMeter::setPaintMaxPeakMarker(bool paintMaxPeak)
     PeakMeter::paintingMaxPeakMarker = paintMaxPeak;
 }
 
-void PeakMeter::setPaintingPeaks(bool paintPeaks)
+void PeakMeter::paintRmsOnly()
 {
-    PeakMeter::paintingPeaks = paintPeaks;
+    paintingRMS = true;
+    paintingPeaks = false;
 }
 
-void PeakMeter::setPaintingRMS(bool paintRMS)
+void PeakMeter::paintPeaksOnly()
 {
-    PeakMeter::paintingRMS = paintRMS;
+    paintingRMS = false;
+    paintingPeaks = true;
+}
+
+void PeakMeter::paintPeaksAndRms()
+{
+    paintingRMS = true;
+    paintingPeaks = true;
+}
+
+bool PeakMeter::isPaintingPeaksOnly()
+{
+    return paintingPeaks && !paintingRMS;
+}
+
+bool PeakMeter::isPaintingRmsOnly()
+{
+    return paintingRMS && !paintingPeaks;
 }
 
 void PeakMeter::setSolidColor(const QColor &color)

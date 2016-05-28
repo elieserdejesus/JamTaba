@@ -445,7 +445,7 @@ void LocalInputTrackSettings::read(const QJsonObject &in)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++
-void Settings::setUserName(const QString &newUserName)
+void Settings::storeUserName(const QString &newUserName)
 {
     this->lastUserName = newUserName;
 }
@@ -735,6 +735,7 @@ void Settings::load()
     sections.append(&inputsSettings);
     sections.append(&recordingSettings);
     sections.append(&privateServerSettings);
+    sections.append(&meteringSettings);
 
     readFile(sections);
 }
@@ -760,6 +761,7 @@ void Settings::save(const LocalInputTrackSettings &localInputsSettings)
     sections.append(&inputsSettings);
     sections.append(&recordingSettings);
     sections.append(&privateServerSettings);
+    sections.append(&meteringSettings);
 
     writeFile(sections);
 }
@@ -779,24 +781,31 @@ void Settings::setTheme(const QString theme)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-QString Settings::getLastUserName() const
-{
-// QJsonObject audioObject = instance->rootObject["User"].toObject();
-// if(audioObject.contains("name")){
-// return audioObject["name"].toString();
-// }
-    return "no saved yet";
-}
 
 QString Settings::getTranslation() const
 {
     return translation;
 }
 
-void Settings::storeLasUserName(const QString &userName)
+
+//__________________________________________________________
+
+MeteringSettings::MeteringSettings()
+    : SettingsObject(QStringLiteral("Metering")),
+      showingMaxPeakMarkers(true),
+      meterOption(0) // showing RMS + Peaks
 {
-    Q_UNUSED(userName)
-    // QJsonObject object = instance->rootObject["User"].toObject();
-// object["name"] = userName;
-// save();
+
+}
+
+void MeteringSettings::read(const QJsonObject &in)
+{
+    this->showingMaxPeakMarkers = getValueFromJson(in, "showMaxPeak", true);
+    this->meterOption = getValueFromJson(in, "meterOption", quint8(0));
+}
+
+void MeteringSettings::write(QJsonObject &out) const
+{
+    out["showMaxPeak"] = showingMaxPeakMarkers;
+    out["meterOption"] = meterOption;
 }

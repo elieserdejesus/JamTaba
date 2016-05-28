@@ -229,6 +229,17 @@ public:
     QString name;
 };
 
+class MeteringSettings : public SettingsObject
+{
+public:
+    MeteringSettings();
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
+
+    bool showingMaxPeakMarkers;
+    quint8 meterOption; // 0 - peak + RMS, 1 - peak only or 2 - RMS only
+};
+
 // ++++++++++++++++++++++++
 class Settings
 {
@@ -242,6 +253,7 @@ private:
     LocalInputTrackSettings inputsSettings;
     RecordingSettings recordingSettings;
     PrivateServerSettings privateServerSettings;
+    MeteringSettings meteringSettings;
 
     QString lastUserName;// the last nick name choosed by user
     QString translation;// the translation language (en, fr, jp, pt, etc.) being used in chat
@@ -385,8 +397,7 @@ public:
         return lastUserName;
     }
 
-    void setUserName(const QString &newUserName);
-    void storeLasUserName(const QString &userName);
+    void storeUserName(const QString &newUserName);
     void storeLastChannelName(int channelIndex, const QString &channelName);
 
     void setIntervalProgressShape(int shape)
@@ -496,13 +507,18 @@ public:
     }
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    QString getLastUserName() const;
 
     // TRANSLATION
     QString getTranslation() const;
     void setTranslation(const QString &localeName);
 
     QString getLastChannelName(int channelIndex) const;
+
+    //Metering
+    inline quint8 getMeterOption() const { return meteringSettings.meterOption; }
+    inline bool isShowingMaxPeaks() const { return meteringSettings.showingMaxPeakMarkers; }
+    void storeMeterOption(quint8 meterOption) { meteringSettings.meterOption = meterOption; }
+    void storeMeterShowingMaxPeaks(bool showingMaxPeaks) { meteringSettings.showingMaxPeakMarkers = showingMaxPeaks; }
 };
 }
 

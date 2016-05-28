@@ -16,8 +16,11 @@ public:
     void setSolidColor(const QColor &color);
 
     static void setPaintMaxPeakMarker(bool paintMaxPeak);
-    static void setPaintingPeaks(bool paintPeaks);
-    static void setPaintingRMS(bool paintRMS);
+    static void paintRmsOnly();
+    static void paintPeaksOnly();
+    static void paintPeaksAndRms();
+    static bool isPaintingPeaksOnly();
+    static bool isPaintingRmsOnly();
 
     void setDecayTime(quint32 decayTimeInMiliseconds);
     void setOrientation(Qt::Orientation orientation);

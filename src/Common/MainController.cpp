@@ -192,7 +192,7 @@ int MainController::getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) 
 // ++++++++++++++++++++
 void MainController::setUserName(const QString &newUserName)
 {
-    settings.setUserName(newUserName);
+    settings.storeUserName(newUserName);
 }
 
 QString MainController::getUserName() const
@@ -775,4 +775,11 @@ QString MainController::getSuggestedUserName()
         return userName;
 
     return ""; //returning empty name as suggestion
+}
+
+
+void MainController::storeMeteringSettings(bool showingMaxPeaks, quint8 meterOption)
+{
+    settings.storeMeterOption(meterOption);
+    settings.storeMeterShowingMaxPeaks(showingMaxPeaks);
 }

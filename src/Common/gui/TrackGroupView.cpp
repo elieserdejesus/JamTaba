@@ -33,20 +33,17 @@ void TrackGroupView::showContextMenu(const QPoint &pos){
 
 void TrackGroupView::showPeakMeterOnly()
 {
-    PeakMeter::setPaintingPeaks(true);
-    PeakMeter::setPaintingRMS(false);
+    PeakMeter::paintPeaksOnly();
 }
 
 void TrackGroupView::showRmsOnly()
 {
-    PeakMeter::setPaintingPeaks(false);
-    PeakMeter::setPaintingRMS(true);
+    PeakMeter::paintRmsOnly();
 }
 
 void TrackGroupView::showPeakAndRms()
 {
-    PeakMeter::setPaintingPeaks(true);
-    PeakMeter::setPaintingRMS(true);
+    PeakMeter::paintPeaksAndRms();
 }
 
 void TrackGroupView::showMaxPeakMarker(bool showMarker)
