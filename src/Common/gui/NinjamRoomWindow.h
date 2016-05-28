@@ -72,7 +72,8 @@ private:
     QMap<QString, NinjamTrackGroupView *> trackGroups;
     ChatPanel *chatPanel;
 
-    QList<QString> systemVotingMessagesWaitingToExpire;
+    bool bpiVotingRunning;
+    bool bpmVotingRunning;
 
     bool fullViewMode;
 
@@ -138,7 +139,8 @@ private slots:
     void addChatMessage(const Ninjam::User &, const QString &message);
     void handleUserLeaving(const QString &userName);
     void handleUserEntering(const QString &userName);
-    void handleBpiBpmChanges();
+    void handleBpiChanges();
+    void handleBpmChanges();
     void sendNewChatMessage(const QString &msg);
 
     void showServerLicence();
@@ -153,7 +155,8 @@ private slots:
     void toggleTracksLayoutOrientation(QAbstractButton *buttonClicked); // horizontal or vertical
     void toggleTracksSize(QAbstractButton *buttonClicked);// narrow or wide
 
-    void handleNinjamVotingExpiration();
+    void resetBpiComboBox();
+    void resetBpmComboBox();
 
     void setEstimatatedChunksPerIntervalInAllTracks();
 };

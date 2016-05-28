@@ -322,8 +322,14 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
         }
 
         int expirationTime = voteMessage.getExpirationTime() * 1000;
-        systemVotingMessagesWaitingToExpire.append(voteMessage.isBpiVotingMessage() ? QString("BPI") : QString("BPM"));
-        QTimer::singleShot(expirationTime, this, SLOT(handleNinjamVotingExpiration()));
+        if (voteMessage.isBpiVotingMessage()) {
+            bpiVotingRunning = true;
+            QTimer::singleShot(expirationTime, this, SLOT(resetBpiComboBox()));
+        }
+        else {
+            bpmVotingRunning = true;
+            QTimer::singleShot(expirationTime, this, SLOT(resetBpmComboBox()));
+        }
     }
     else if (isChordProgressionMessage) {
         handleChordProgressionMessage(user, message);
@@ -332,18 +338,21 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
     localUserWasVotingInLastMessage = Gui::Chat::isLocalUserVotingMessage(message) && user.getName() == mainController->getUserName();
 }
 
-void NinjamRoomWindow::handleNinjamVotingExpiration()
+void NinjamRoomWindow::resetBpiComboBox()
 {
-    if (systemVotingMessagesWaitingToExpire.isEmpty())
-        return;
-
-    QString pendingVotation = systemVotingMessagesWaitingToExpire.takeFirst();
-    Controller::NinjamController *ninjamController = mainController->getNinjamController();
-    if (pendingVotation == "BPI") {
+    if (bpiVotingRunning) {
+        bpiVotingRunning = false;
+        Controller::NinjamController *ninjamController = mainController->getNinjamController();
         ninjamPanel->setBpiComboStatus(true);
         ninjamPanel->setBpiComboText(QString::number(ninjamController->getCurrentBpi()));
     }
-    else{
+}
+
+void NinjamRoomWindow::resetBpmComboBox()
+{
+    if (bpmVotingRunning) {
+        bpmVotingRunning = false;
+        Controller::NinjamController *ninjamController = mainController->getNinjamController();
         ninjamPanel->setBpmComboStatus(true);
         ninjamPanel->setBpmComboText(QString::number(ninjamController->getCurrentBpm()));
     }
@@ -665,8 +674,8 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
 
     connect(ninjamController, SIGNAL(userEnter(QString)), this, SLOT(handleUserEntering(QString)));
 
-    connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(handleBpiBpmChanges()));
-    connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(handleBpiBpmChanges()));
+    connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(handleBpiChanges()));
+    connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(handleBpmChanges()));
 
     connect(ninjamController, &Controller::NinjamController::userBlockedInChat, this, &NinjamRoomWindow::showFeedbackAboutBlockedUserInChat);
     connect(ninjamController, &Controller::NinjamController::userUnblockedInChat, this, &NinjamRoomWindow::showFeedbackAboutUnblockedUserInChat);
@@ -685,10 +694,18 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
 
 }
 
-void NinjamRoomWindow::handleBpiBpmChanges()
+void NinjamRoomWindow::handleBpiChanges()
 {
     setEstimatatedChunksPerIntervalInAllTracks();
     updateBpmBpiLabel();
+    resetBpiComboBox();
+}
+
+void NinjamRoomWindow::handleBpmChanges()
+{
+    setEstimatatedChunksPerIntervalInAllTracks();
+    updateBpmBpiLabel();
+    resetBpmComboBox();
 }
 
 void NinjamRoomWindow::showFeedbackAboutBlockedUserInChat(const QString &userName)

@@ -692,14 +692,11 @@ void NinjamController::on_ninjamUserChannelUpdated(const Ninjam::User &user, con
 
 void NinjamController::on_ninjamServerBpiChanged(quint16 newBpi, quint16 oldBpi){
     Q_UNUSED(oldBpi);
-    //this->samplesInInterval = computeTotalSamplesInInterval();
-    //this->newBpi = newBpi;
     scheduledEvents.append(new BpiChangeEvent(this, newBpi));
 }
 
 void NinjamController::on_ninjamServerBpmChanged(quint16 newBpm){
-    //this->metronomeTrackNode->setSamplesPerBeat(getSamplesPerBeat());
-    //this->newBpm = newBpm;
+    Q_UNUSED(newBpm)
     scheduledEvents.append(new BpmChangeEvent(this, newBpm));
 }
 
