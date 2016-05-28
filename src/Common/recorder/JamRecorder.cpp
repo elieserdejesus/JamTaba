@@ -29,6 +29,15 @@ JamTrack::JamTrack()//default construtor to use this class in QMap and QList wit
 void JamTrack::addAudioFile(const QString &path, int intervalIndex){
     audioFiles.append( JamAudioFile(path, intervalIndex));
 }
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+JamInterval::JamInterval(const int intervalIndex, const int bpm, const int bpi, const QString &path, const QString &userName, const quint8 channelIndex)
+    :intervalIndex(intervalIndex), bpm(bpm), bpi(bpi), path(path), userName(userName), channelIndex(channelIndex){
+}
+
+JamInterval::JamInterval()
+    :intervalIndex(0), bpm(-1), bpi(-1), path(""), userName(""), channelIndex(0){
+}
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Jam::Jam(int bpm, int bpi, int sampleRate, const QString &jamName, const QString &baseDir)
     : bpm(bpm), bpi(bpi), name(jamName), sampleRate(sampleRate), baseDir(baseDir) {
@@ -70,7 +79,7 @@ void Jam::addAudioFile(const QString &userName, quint8 channelIndex, const QStri
     if(!jamIntervals.contains(intervalIndex)){
         jamIntervals.insert(intervalIndex, QList<JamInterval>());
     }
-    jamIntervals[intervalIndex].append(JamInterval(intervalIndex, getBpm(), getBpi(), filePath, userName, channelIndex));
+    jamIntervals[intervalIndex].insert(intervalIndex, JamInterval(intervalIndex, getBpm(), getBpi(), filePath, userName, channelIndex));
 
     qCDebug(jtJamRecorder) << "adding a file in jam interval:" <<intervalIndex << " path:" << filePath;
 }
