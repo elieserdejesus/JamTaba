@@ -13,7 +13,7 @@ void ClipSortLogGenerator::write(const Jam &jam){
     int intervalIndex = -1;
     double bpm = 0.0;
     int bpi = 0;
-    QList<JamIntervals> intervals = jam.getJamIntervals();
+    QList<JamInterval> intervals = jam.getJamIntervals();
     for (JamInterval interval : intervals) {
         if (interval.getIntervalIndex() != intervalIndex) {
             intervalIndex = interval.getIntervalIndex();
