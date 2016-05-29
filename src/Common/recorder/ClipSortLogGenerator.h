@@ -8,6 +8,6 @@ class ClipSortLogGenerator : public JamMetadataWriter
 {
 public:
     void write(const Jam &jam) override;
-}
+};
 
 #endif
