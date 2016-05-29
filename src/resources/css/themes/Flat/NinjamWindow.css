@@ -45,6 +45,16 @@ NinjamTrackView[horizontal="true"]
         stop:1 rgb(200, 200, 200));
 }
 
+NinjamTrackView[horizontal="true"][unlighted="true"]
+{
+    background: rgba(255, 255, 255, 40);
+}
+
+NinjamTrackView[unlighted="true"][horizontal="true"] QSlider::handle:horizontal
+ {
+     background: rgb(180, 180, 180);
+ }
+
 /* Tool buttons: track vertical/horizontal, wide/narrow and server licence buttons
 ------------------------------------------------------------------------------------*/
 #licenceButton
