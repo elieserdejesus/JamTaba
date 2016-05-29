@@ -656,7 +656,8 @@ void MainController::start()
 {
     if (!started) {
 
-        setTheme(settings.getTheme());
+        if (qApp->styleSheet().isEmpty())
+            setTheme(settings.getTheme());
 
         qCInfo(jtCore) << "Creating roomStreamer ...";
         roomStreamer.reset(new Audio::NinjamRoomStreamerNode()); // new Audio::AudioFileStreamerNode(":/teste.mp3");
