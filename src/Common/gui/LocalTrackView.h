@@ -48,6 +48,9 @@ public:
     void solo(bool b);
     void initializeBoostButtons(Boost boostValue);
 
+    void useSmallSpacingInLayouts(bool useSmallSpacing);
+    inline bool isUsingSmallSpacingInLayouts() const { return usingSmallSpacing; }
+
 protected:
     Audio::LocalInputNode *inputNode;
     QPushButton *buttonStereoInversion;
@@ -55,7 +58,7 @@ protected:
     void refreshStyleSheet() override;
 
 private:
-
+    bool usingSmallSpacing;
     QPushButton *createStereoInversionButton();
 
     bool inputIsUsedByThisTrack(int inputIndexInAudioDevice) const;

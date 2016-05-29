@@ -10,20 +10,30 @@ class PeakMeter : public QFrame
 public:
 
     explicit PeakMeter(QWidget *parent = 0);
-    virtual ~PeakMeter()
-    {
-    }
+    virtual ~PeakMeter();
 
-    void setPeak(float);
+    void setPeak(float, float rms);
     void setSolidColor(const QColor &color);
-    void setPaintMaxPeakMarker(bool paintMaxPeak);
+
+    static void setPaintMaxPeakMarker(bool paintMaxPeak);
+    static void paintRmsOnly();
+    static void paintPeaksOnly();
+    static void paintPeaksAndRms();
+    static bool isPaintingPeaksOnly();
+    static bool isPaintingRmsOnly();
+
     void setDecayTime(quint32 decayTimeInMiliseconds);
     void setOrientation(Qt::Orientation orientation);
     QSize minimumSizeHint() const override;
 
+    inline static bool isPaintintMaxPeakMarker() { return paintingMaxPeakMarker; }
+    inline static bool isPaintingRMS() { return paintingRMS; }
+    inline static bool isPaintingPeaks() { return paintingPeaks; }
+
 protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *);
+
 private:
 
     inline bool isVertical() const
@@ -36,6 +46,8 @@ private:
     float currentPeak;
     float maxPeak;
 
+    float currentRms;
+
     qint64 lastMaxPeakTime;
     qint64 lastUpdate;
 
@@ -44,15 +56,24 @@ private:
     bool usingGradient;
     QColor solidColor;// used when setSolidColor is called to disable gradient painting
 
-    bool paintingMaxPeak;
+    //static painting flags. Turning on/off will affect all meters.
+    static bool paintingMaxPeakMarker;
+    static bool paintingPeaks;
+    static bool paintingRMS;
 
     Qt::Orientation orientation;
 
     QLinearGradient createGradient();
 
+    QRectF getPaintRect(float peakValue) const;
+
+    static float limitFloatValue(float value, float minValue = 0.0f, float maxValue = 1.0f);
+
     static const QColor GRADIENT_FIRST_COLOR;
     static const QColor GRADIENT_MIDDLE_COLOR;
     static const QColor GRADIENT_LAST_COLOR;
+
+    static const QColor RMS_COLOR;
 
     static const int LINES_MARGIN;
     static const int MIN_SIZE;

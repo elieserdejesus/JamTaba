@@ -66,6 +66,8 @@ public:
     void voteToChangeBPM(quint16 newBPM);
     void voteToChangeBPI(quint16 newBPI);
 
+    inline Ninjam::Server *getCurrentServer() const { return currentServer.data(); }
+
     static inline QStringList getBotNamesList()
     {
         return botNames;

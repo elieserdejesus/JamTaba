@@ -44,6 +44,9 @@ public:
 
     void resetTracks();
 
+    void useSmallSpacingInLayouts(bool useSmallSpacing);
+    bool isUsingSmallSpacingInLayouts() const;
+
 protected:
 
     LocalTrackView *createTrackView(long trackID) override;

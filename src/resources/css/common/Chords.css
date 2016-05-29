@@ -1,0 +1,46 @@
+/*
+    This file contain common stylesheet to chords widgets.
+*/
+
+
+
+/* ChordsPanel is the widget used to show the chord progressions and the action buttons.
+-----------------------------------------------------------------------------------------*/
+
+ChordsPanel #buttonSendToChat, /* button used to send chord progression to chat */
+ChordsPanel #buttonDiscardChords /* button used to drop the current chord progression */
+{
+    background-repeat: no-repeat;
+    background-position: center;
+    max-width: 18px;
+    width: 18px;
+    padding: 2px;
+}
+
+ChordsPanel #buttonSendToChat
+{
+    background-image: url(':/images/chat_small.png');
+}
+
+ChordsPanel #buttonDiscardChords
+{
+    background-image: url(':/images/discard.png');
+}
+
+
+/* ChordLabel is the widget used show one chord. A chord progression is a sequence of chord labels
+--------------------------------------------------------------------------------------------------*/
+ChordLabel
+{
+    font-size: 13px;
+    border: 1px solid rgba(0, 0, 0, 30);
+    padding: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+ChordLabel[current="true"]  /* the current chord label is highlighted */
+{
+    color: black;
+    border: 1px solid #008F1f;
+}

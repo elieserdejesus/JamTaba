@@ -206,13 +206,13 @@
       </property>
       <layout class="QVBoxLayout" name="bottomPanelLayout">
        <property name="leftMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
        <property name="topMargin">
         <number>6</number>
        </property>
        <property name="rightMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
        <property name="bottomMargin">
         <number>0</number>
@@ -239,6 +239,12 @@
          </property>
          <layout class="QVBoxLayout" name="masterControlsLayout" stretch="0,0,0">
           <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
            <number>0</number>
           </property>
           <item alignment="Qt::AlignBottom">
@@ -457,13 +463,25 @@
     <addaction name="separator"/>
     <addaction name="actionTranslators"/>
    </widget>
-   <widget class="QMenu" name="menuViewMode">
+   <widget class="QMenu" name="menuView">
     <property name="cursor">
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="title">
-     <string>View Mode</string>
+     <string>View</string>
     </property>
+    <widget class="QMenu" name="menuMetering">
+     <property name="title">
+      <string>Metering</string>
+     </property>
+     <addaction name="actionShowPeakAndRMS"/>
+     <addaction name="actionShowRmsOnly"/>
+     <addaction name="actionShowPeaksOnly"/>
+     <addaction name="separator"/>
+     <addaction name="actionShowMaxPeaks"/>
+    </widget>
+    <addaction name="menuMetering"/>
+    <addaction name="separator"/>
     <addaction name="actionFullView"/>
     <addaction name="actionMiniView"/>
     <addaction name="separator"/>
@@ -480,7 +498,7 @@
     </property>
    </widget>
    <addaction name="menuPreferences"/>
-   <addaction name="menuViewMode"/>
+   <addaction name="menuView"/>
    <addaction name="menuNinjam"/>
    <addaction name="menuLanguage"/>
    <addaction name="menuTheme"/>
@@ -578,6 +596,38 @@
   <action name="actionTranslators">
    <property name="text">
     <string>Translators ...</string>
+   </property>
+  </action>
+  <action name="actionShowPeaksOnly">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show peak meter only</string>
+   </property>
+  </action>
+  <action name="actionShowRmsOnly">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show RMS meter only</string>
+   </property>
+  </action>
+  <action name="actionShowPeakAndRMS">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show peak + RMS meters</string>
+   </property>
+  </action>
+  <action name="actionShowMaxPeaks">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show max peaks</string>
    </property>
   </action>
  </widget>

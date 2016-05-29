@@ -80,7 +80,7 @@ var
 
 procedure InitializeWizard;
 begin
-  if IsWin64 then begin
+  if Is64BitInstallMode then begin
     VST2DirPage := CreateInputDirPage(wpSelectDir,
     'Confirm 64-Bit VST Plugin Directory', '',
     'Select the folder in which setup should install the 64-bit VST Plugin, then click Next.',
@@ -178,5 +178,4 @@ procedure CurUninstallStepChanged (CurUninstallStep: TUninstallStep);
        end;
    end;
 end;
-
 

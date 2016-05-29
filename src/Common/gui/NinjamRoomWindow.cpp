@@ -16,7 +16,8 @@
 #include "chords/ChordProgression.h"
 #include "chords/ChatChordsProgressionParser.h"
 #include "NinjamPanel.h"
-#include "ChatPanel.h"
+#include "chat/ChatPanel.h"
+#include "chat/NinjamVotingMessageParser.h"
 #include "MainWindow.h"
 #include "log/Logging.h"
 #include "persistence/UsersDataCache.h"
@@ -30,8 +31,11 @@
 #include <QDateTime>
 #include <QToolButton>
 #include <QButtonGroup>
+#include <QTimer>
 
 using namespace Persistence;
+
+const QString NinjamRoomWindow::JAMTABA_CHAT_BOT_NAME("JamTaba");
 
 // +++++++++++++++++++++++++
 NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &roomInfo,
@@ -74,6 +78,29 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
     setTracksSize(lastTracksSize);
 
     translate();
+
+    initializeVotingExpirationTimers();
+
+    updateBpmBpiLabel();
+}
+
+void NinjamRoomWindow::initializeVotingExpirationTimers()
+{
+    bpiVotingExpiratonTimer = new QTimer(this);
+    bpmVotingExpirationTimer = new QTimer(this);
+    bpiVotingExpiratonTimer->setSingleShot(true);
+    bpmVotingExpirationTimer->setSingleShot(true);
+    connect(bpiVotingExpiratonTimer, SIGNAL(timeout()), this, SLOT(resetBpiComboBox()));
+    connect(bpmVotingExpirationTimer, SIGNAL(timeout()), this, SLOT(resetBpmComboBox()));
+}
+
+void NinjamRoomWindow::updateBpmBpiLabel()
+{
+    Controller::NinjamController *controller = mainController->getNinjamController();
+    int bpi = controller->getCurrentBpi();
+    int bpm = controller->getCurrentBpm();
+    QString newText(QString::number(bpm) + " BPM   " + QString::number(bpi) + " BPI");
+    ui->labelBpmBpi->setText(newText);
 }
 
 void NinjamRoomWindow::changeEvent(QEvent *e)
@@ -93,7 +120,15 @@ void NinjamRoomWindow::translate()
     verticalLayoutButton->setToolTip(tr("Set tracks layout to vertical"));
     wideButton->setToolTip(tr("Wide tracks"));
     narrowButton->setToolTip(tr("Narrow tracks"));
-    ui->labelUserName->setText(tr("Connected as %1").arg(mainController->getUserName()));
+
+    updateUserNameLabel();
+}
+
+void NinjamRoomWindow::updateUserNameLabel()
+{
+    QString userName = mainController->getUserName();
+    QString labelText = fullViewMode ? tr("Connected as %1").arg(userName) : userName;
+    ui->labelUserName->setText(labelText);
 }
 
 void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrientation)
@@ -220,6 +255,8 @@ void NinjamRoomWindow::setFullViewStatus(bool fullView)
         return;
 
     fullViewMode = fullView;
+
+    updateUserNameLabel();
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -263,7 +300,7 @@ void NinjamRoomWindow::sendNewChatMessage(const QString &msg)
 void NinjamRoomWindow::handleUserLeaving(const QString &userName)
 {
     if (chatPanel)
-        chatPanel->addMessage("JamTaba", tr("%1 leave the room.").arg(userName));
+        chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 leave the room.").arg(userName));
 
     usersColorsPool.giveBack(userName); // reuse the color mapped to this 'leaving' user
 }
@@ -271,29 +308,78 @@ void NinjamRoomWindow::handleUserLeaving(const QString &userName)
 void NinjamRoomWindow::handleUserEntering(const QString &userName)
 {
     if (chatPanel)
-        chatPanel->addMessage("JamTaba", tr("%1 enter in room.").arg(userName));
+        chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 enter in room.").arg(userName));
 }
 
 void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &message)
 {
-    bool isVoteMessage = !message.isNull() && message.toLower().startsWith(
-        "[voting system] leading candidate:");
+    QString userName = user.getName();
+
+    bool isSystemVoteMessage = Gui::Chat::isSystemVotingMessage(userName, message);
+
     bool isChordProgressionMessage = false;
-    try{ //TODO - remove this try catch?
+    if (!isSystemVoteMessage) {
         ChatChordsProgressionParser chordsParser;
         isChordProgressionMessage = chordsParser.containsProgression(message);
     }
-    catch (...) {
-        isChordProgressionMessage = false;// just in case
+
+    bool showBlockButton = canShowBlockButtonInChatMessage(userName);
+    bool showTranslationButton = !isChordProgressionMessage;
+    chatPanel->addMessage(userName, message, showTranslationButton, showBlockButton);
+
+    static bool localUserWasVotingInLastMessage = false;
+    if (isSystemVoteMessage) {
+        Gui::Chat::SystemVotingMessage voteMessage = Gui::Chat::parseSystemVotingMessage(message);
+
+        if (!localUserWasVotingInLastMessage) {  //don't create the vote button if local user is proposing BPI or BPM change
+            createVoteButton(voteMessage);
+        }
+        else{ //if local user is proposing a bpi/bpm change the combos are disabled until the voting reach majority or expire
+            if (voteMessage.isBpiVotingMessage())
+                ninjamPanel->setBpiComboPendingStatus(true);
+            else
+                ninjamPanel->setBpmComboPendingStatus(true);
+            if (QApplication::focusWidget()) //clear comboboxes focus when disabling
+                QApplication::focusWidget()->clearFocus();
+        }
+
+        QTimer *expirationTimer = voteMessage.isBpiVotingMessage() ? bpiVotingExpiratonTimer : bpmVotingExpirationTimer;
+        expirationTimer->start(voteMessage.getExpirationTime() * 1000); //QTimer::start will cancel a previous voting expiration timer
+    }
+    else if (isChordProgressionMessage) {
+        handleChordProgressionMessage(user, message);
     }
 
-    bool showTranslationButton = !isChordProgressionMessage;
-    chatPanel->addMessage(user.getName(), message, showTranslationButton);
+    localUserWasVotingInLastMessage = Gui::Chat::isLocalUserVotingMessage(message) && user.getName() == mainController->getUserName();
+}
 
-    if (isVoteMessage)
-        handleVoteMessage(user, message);
-    else if (isChordProgressionMessage)
-        handleChordProgressionMessage(user, message);
+void NinjamRoomWindow::resetBpiComboBox()
+{
+    Controller::NinjamController *ninjamController = mainController->getNinjamController();
+    ninjamPanel->setBpiComboPendingStatus(false);
+    ninjamPanel->setBpiComboText(QString::number(ninjamController->getCurrentBpi()));
+}
+
+void NinjamRoomWindow::resetBpmComboBox()
+{
+    Controller::NinjamController *ninjamController = mainController->getNinjamController();
+    ninjamPanel->setBpmComboPendingStatus(false);
+    ninjamPanel->setBpmComboText(QString::number(ninjamController->getCurrentBpm()));
+}
+
+bool NinjamRoomWindow::canShowBlockButtonInChatMessage(const QString &userName) const
+{
+    /**
+        Avoid the block button for bot and current user messages. Is not a good idea allow user
+    to block yourself :).
+        In vote messages (to change BPI or BPM) user name is empty. The last logic test is
+    avoiding show block button in vote messages (fixing #389).
+
+    **/
+
+    bool userIsBot = mainController->getNinjamController()->userIsBot(userName);
+    bool currentUserIsPostingTheChatMessage = userName == mainController->getUserName(); // chat message author and the current user name are the same?
+    return !userIsBot && !currentUserIsPostingTheChatMessage && !userName.isEmpty();
 }
 
 void NinjamRoomWindow::handleChordProgressionMessage(const Ninjam::User &user, const QString &message)
@@ -309,29 +395,17 @@ void NinjamRoomWindow::handleChordProgressionMessage(const Ninjam::User &user, c
     }
 }
 
-void NinjamRoomWindow::handleVoteMessage(const Ninjam::User &user, const QString &message)
+void NinjamRoomWindow::createVoteButton(const Gui::Chat::SystemVotingMessage &votingMessage)
 {
-    // local user is voting?
-    static quint64 lastVoteCommand = 0;
-    QString localUserFullName = mainController->getNinjamService()->getConnectedUserName();
-    if (user.getFullName() == localUserFullName && message.toLower().contains("!vote"))
-        lastVoteCommand = QDateTime::currentMSecsSinceEpoch();
-    quint64 timeSinceLastVote = QDateTime::currentMSecsSinceEpoch() - lastVoteCommand;
-    if (timeSinceLastVote >= 1000) {
-        QString commandType = (message.toLower().contains("bpm")) ? "BPM" : "BPI";
+    if (!votingMessage.isValidVotingMessage())
+        return;
 
-        // [voting system] leading candidate: 1/2 votes for 12 BPI [each vote expires in 60s]
-        int forIndex = message.indexOf("for");
-        assert(forIndex >= 0);
-        int spaceAfterValueIndex = message.indexOf(" ", forIndex + 4);
-        QString voteValueString = message.mid(forIndex + 4, spaceAfterValueIndex - (forIndex + 4));
-        int voteValue = voteValueString.toInt();
-
-        if (commandType == "BPI")
-            chatPanel->addBpiVoteConfirmationMessage(voteValue);
-        else if (commandType == "BPM")// just in case
-            chatPanel->addBpmVoteConfirmationMessage(voteValue);
-    }
+    quint32 voteValue = votingMessage.getVoteValue();
+    quint32 expireTime = votingMessage.getExpirationTime();
+    if (votingMessage.isBpiVotingMessage())
+        chatPanel->addBpiVoteConfirmationMessage(voteValue, expireTime);
+    else
+        chatPanel->addBpmVoteConfirmationMessage(voteValue, expireTime);
 }
 
 void NinjamRoomWindow::voteToChangeBpi(int newBpi)
@@ -361,7 +435,11 @@ void NinjamRoomWindow::updatePeaks()
     }
     Audio::AudioPeak metronomePeak = mainController->getTrackPeak(
         Controller::NinjamController::METRONOME_TRACK_ID);
-    ninjamPanel->setMetronomePeaks(metronomePeak.getLeft(), metronomePeak.getRight());
+
+    ninjamPanel->setMetronomePeaks(metronomePeak.getLeftPeak(),
+                                   metronomePeak.getRightPeak(),
+                                   metronomePeak.getLeftRMS(),
+                                   metronomePeak.getRightRMS());
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -605,8 +683,11 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
 
     connect(ninjamController, SIGNAL(userEnter(QString)), this, SLOT(handleUserEntering(QString)));
 
-    connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(setEstimatatedChunksPerIntervalInAllTracks()));
-    connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(setEstimatatedChunksPerIntervalInAllTracks()));
+    connect(ninjamController, SIGNAL(currentBpiChanged(int)), this, SLOT(handleBpiChanges()));
+    connect(ninjamController, SIGNAL(currentBpmChanged(int)), this, SLOT(handleBpmChanges()));
+
+    connect(ninjamController, &Controller::NinjamController::userBlockedInChat, this, &NinjamRoomWindow::showFeedbackAboutBlockedUserInChat);
+    connect(ninjamController, &Controller::NinjamController::userUnblockedInChat, this, &NinjamRoomWindow::showFeedbackAboutUnblockedUserInChat);
 
     connect(chatPanel, SIGNAL(userSendingNewMessage(QString)), this, SLOT(sendNewChatMessage(QString)));
 
@@ -614,10 +695,47 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
 
     connect(chatPanel, SIGNAL(userConfirmingVoteToBpmChange(int)), this, SLOT(voteToChangeBpm(int)));
 
+    connect(chatPanel, SIGNAL(userBlockingChatMessagesFrom(QString)), this, SLOT(blockUserInChat(QString)));
+
     connect(ui->licenceButton, SIGNAL(clicked(bool)), this, SLOT(showServerLicence()));
 
     connect(ninjamPanel, SIGNAL(intervalShapeChanged(int)), this, SLOT(setNewIntervalShape(int)));
 
+}
+
+void NinjamRoomWindow::handleBpiChanges()
+{
+    setEstimatatedChunksPerIntervalInAllTracks();
+    updateBpmBpiLabel();
+    resetBpiComboBox();
+}
+
+void NinjamRoomWindow::handleBpmChanges()
+{
+    setEstimatatedChunksPerIntervalInAllTracks();
+    updateBpmBpiLabel();
+    resetBpmComboBox();
+}
+
+void NinjamRoomWindow::showFeedbackAboutBlockedUserInChat(const QString &userName)
+{
+    if (chatPanel)
+        chatPanel->removeMessagesFrom(userName);
+        chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is blocked in the chat").arg(userName));
+}
+
+void NinjamRoomWindow::showFeedbackAboutUnblockedUserInChat(const QString &userName)
+{
+    if (chatPanel)
+        chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 is unblocked in the chat").arg(userName));
+}
+
+void NinjamRoomWindow::blockUserInChat(const QString &userNameToBlock)
+{
+    Controller::NinjamController *ninjamController = mainController->getNinjamController();
+    Ninjam::User user = ninjamController->getUserByName(userNameToBlock);
+    if (user.getName() == userNameToBlock)
+        ninjamController->blockUserInChat(user);
 }
 
 void NinjamRoomWindow::setNewIntervalShape(int newShape)

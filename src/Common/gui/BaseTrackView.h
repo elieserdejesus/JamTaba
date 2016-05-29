@@ -82,7 +82,7 @@ protected:
     bool narrowed;
     bool drawDbValue;
 
-    virtual void setPeaks(float left, float right);
+    virtual void setPeaks(float peakLeft, float peakRight, float rmsLeft, float rmsRight);
 
     // this is called in inherited classes [LocalTrackView, NinjamTrackView]
     void bindThisViewWithTrackNodeSignals();

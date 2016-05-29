@@ -10,6 +10,7 @@
 LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex) :
     BaseTrackView(mainController, channelIndex),
     inputNode(nullptr),
+    usingSmallSpacing(false),
     peakMetersOnly(false),
     buttonStereoInversion(createStereoInversionButton())
 {
@@ -25,7 +26,14 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
     setUnlightStatus(false);
 
     secondaryChildsLayout->addWidget(buttonStereoInversion);
+}
 
+void LocalTrackView::useSmallSpacingInLayouts(bool useSmallSpacing)
+{
+    int spacing = useSmallSpacing ? 6 : 12;
+    secondaryChildsLayout->setSpacing(spacing );
+    mainLayout->setVerticalSpacing(spacing);
+    this->usingSmallSpacing = useSmallSpacing;
 }
 
 void LocalTrackView::setInitialValues(float initialGain, BaseTrackView::Boost boostValue,

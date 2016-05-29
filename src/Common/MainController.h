@@ -248,6 +248,12 @@ public:
         return &usersDataCache;
     }
 
+    void blockUserInChat(const QString &userNameToBlock);
+    void unblockUserInChat(const QString &userNameToUnblock);
+
+
+    void storeMeteringSettings(bool showingMaxPeaks, quint8 meterOption);
+
     static QString getSuggestedUserName();
 
 signals:

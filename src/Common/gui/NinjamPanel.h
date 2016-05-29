@@ -33,6 +33,9 @@ public:
     void setBpiComboText(const QString &);
     void setBpmComboText(const QString &);
 
+    void setBpiComboPendingStatus(bool enabled);
+    void setBpmComboPendingStatus(bool enabled);
+
     int getPanSliderMaximumValue() const;
     int getGainSliderMaximumValue() const;
     int getCurrentBeatsPerAccent() const;
@@ -41,7 +44,7 @@ public:
     void setBpm(int bpm);
     void setCurrentBeat(int currentBeat);
 
-    void setMetronomePeaks(float left, float right);
+    void setMetronomePeaks(float left, float right, float rmsLeft, float rmsRight);
 
     int getIntervalShape() const;
     void setIntervalShape(int shape);

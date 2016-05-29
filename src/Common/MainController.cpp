@@ -8,6 +8,7 @@
 #include "log/Logging.h"
 #include "audio/core/AudioNode.h"
 #include "audio/core/LocalInputNode.h"
+#include "ThemeLoader.h"
 
 using namespace Persistence;
 using namespace Midi;
@@ -36,8 +37,26 @@ MainController::MainController(const Settings &settings) :
     connect(ipToLocationResolver.data(), SIGNAL(ipResolved(const QString &)), this, SIGNAL(ipResolved(const QString &)));
 }
 
+void MainController::blockUserInChat(const QString &userNameToBlock)
+{
+    if (isPlayingInNinjamRoom()){
+        ninjamController->blockUserInChat(userNameToBlock);
+    }
+}
+
+void MainController::unblockUserInChat(const QString &userNameToUnblock){
+    if (isPlayingInNinjamRoom()){
+        ninjamController->unblockUserInChat(userNameToUnblock);
+    }
+}
+
 void MainController::setSampleRate(int newSampleRate)
 {
+    foreach (Audio::AudioNode *node, tracksNodes.values()) {
+        int rmsWindowSize = Audio::SamplesBuffer::computeRmsWindowSize(newSampleRate);
+        node->setRmsWindowSize(rmsWindowSize);
+    }
+
     audioMixer.setSampleRate(newSampleRate);
     if (settings.isSaveMultiTrackActivated())
         jamRecorder.setSampleRate(newSampleRate);
@@ -173,7 +192,7 @@ int MainController::getMaxChannelsForEncodingInTrackGroup(uint trackGroupIndex) 
 // ++++++++++++++++++++
 void MainController::setUserName(const QString &newUserName)
 {
-    settings.setUserName(newUserName);
+    settings.storeUserName(newUserName);
 }
 
 QString MainController::getUserName() const
@@ -637,7 +656,8 @@ void MainController::start()
 {
     if (!started) {
 
-        setTheme(settings.getTheme());
+        if (qApp->styleSheet().isEmpty())
+            setTheme(settings.getTheme());
 
         qCInfo(jtCore) << "Creating roomStreamer ...";
         roomStreamer.reset(new Audio::NinjamRoomStreamerNode()); // new Audio::AudioFileStreamerNode(":/teste.mp3");
@@ -700,9 +720,10 @@ void MainController::stop()
 
 bool MainController::setTheme(const QString &themeName)
 {
-    QFile styleFile(":/style/" + themeName + ".css");
-    if (styleFile.open(QFile::ReadOnly)) {
-        setCSS(styleFile.readAll());
+    QString themeDir(":/style/themes");
+    QString themeCSS = Theme::Loader::loadCSS(themeDir, themeName);
+    if (!themeCSS.isEmpty()) {
+        setCSS(themeCSS);
         settings.setTheme(themeName);
         return true;
     }
@@ -755,4 +776,11 @@ QString MainController::getSuggestedUserName()
         return userName;
 
     return ""; //returning empty name as suggestion
+}
+
+
+void MainController::storeMeteringSettings(bool showingMaxPeaks, quint8 meterOption)
+{
+    settings.storeMeterOption(meterOption);
+    settings.storeMeterShowingMaxPeaks(showingMaxPeaks);
 }

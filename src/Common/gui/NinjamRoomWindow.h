@@ -2,11 +2,13 @@
 #define NINJAMROOMWINDOW_H
 
 #include <QWidget>
+#include <QTimer>
 #include "ninjam/UserChannel.h"
 #include "ninjam/User.h"
 #include "ninjam/Server.h"
 #include "loginserver/LoginService.h"
-#include "ChatPanel.h"
+#include "chat/ChatPanel.h"
+#include "chat/NinjamVotingMessageParser.h"
 #include <QMessageBox>
 #include "NinjamPanel.h"
 #include "UsersColorsPool.h"
@@ -71,11 +73,14 @@ private:
     QMap<QString, NinjamTrackGroupView *> trackGroups;
     ChatPanel *chatPanel;
 
+    QTimer *bpmVotingExpirationTimer;
+    QTimer *bpiVotingExpiratonTimer;
+
     bool fullViewMode;
 
     QString roomName;
 
-    void handleVoteMessage(const Ninjam::User &user, const QString &message);
+    void createVoteButton(const Gui::Chat::SystemVotingMessage &votingMessage);
     void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);
 
     NinjamPanel *createNinjamPanel();
@@ -102,7 +107,17 @@ private:
 
     void updateTracksSizeButtons();// enable or disable tracks size buttons
 
+    void updateUserNameLabel();
+
     void translate();
+
+    bool canShowBlockButtonInChatMessage(const QString &userName) const;
+
+    void updateBpmBpiLabel();
+
+    void initializeVotingExpirationTimers();
+
+    static const QString JAMTABA_CHAT_BOT_NAME;
 
 private slots:
 
@@ -129,7 +144,8 @@ private slots:
     void addChatMessage(const Ninjam::User &, const QString &message);
     void handleUserLeaving(const QString &userName);
     void handleUserEntering(const QString &userName);
-
+    void handleBpiChanges();
+    void handleBpmChanges();
     void sendNewChatMessage(const QString &msg);
 
     void showServerLicence();
@@ -137,10 +153,15 @@ private slots:
     // chat panel
     void voteToChangeBpi(int newBpi);
     void voteToChangeBpm(int newBpm);
+    void blockUserInChat(const QString &userNameToBlock);
+    void showFeedbackAboutBlockedUserInChat(const QString &userName);
+    void showFeedbackAboutUnblockedUserInChat(const QString &userName);
 
     void toggleTracksLayoutOrientation(QAbstractButton *buttonClicked); // horizontal or vertical
     void toggleTracksSize(QAbstractButton *buttonClicked);// narrow or wide
 
+    void resetBpiComboBox();
+    void resetBpmComboBox();
 
     void setEstimatatedChunksPerIntervalInAllTracks();
 };

@@ -77,9 +77,22 @@ public:
 
     void recreateMetronome(int newSampleRate);
 
+    void blockUserInChat(const Ninjam::User &user);
+    void blockUserInChat(const QString &userNameToBlock);
+
+    void unblockUserInChat(const Ninjam::User &user);
+    void unblockUserInChat(const QString &userNameToBlock);
+
+    bool userIsBlockedInChat(const QString &userName) const;
+
+    bool userIsBot(const QString userName) const;
+
+    Ninjam::User getUserByName(const QString &userName) const;
+
 signals:
-    void currentBpiChanged(int newBpi);
+    void currentBpiChanged(int newBpi); //emitted when a scheduled bpi change is processed in interval start (first beat).
     void currentBpmChanged(int newBpm);
+
     void intervalBeatChanged(int intervalBeat);
     void startingNewInterval();
     void startProcessing(int intervalPosition);
@@ -96,6 +109,9 @@ signals:
 
     void encodedAudioAvailableToSend(const QByteArray &encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart);
 
+    void userBlockedInChat(const QString &userName);
+    void userUnblockedInChat(const QString &userName);
+
     void preparingTransmission();// waiting for start transmission
     void preparedToTransmit(); // this signal is emmited one time, when Jamtaba is ready to transmit (after wait some complete itervals)
 
@@ -103,16 +119,24 @@ protected:
     long intervalPosition;
     long samplesInInterval;
 
+private slots:
+    void handleReceivedChatMessage(const Ninjam::User &user, const QString &message);
+
 private:
     Controller::MainController *mainController;
     Audio::MetronomeTrackNode *metronomeTrackNode;
 
     QMap<QString, NinjamTrackNode *> trackNodes;// the other users channels
 
-    static QString getUniqueKey(const Ninjam::UserChannel &channel);
+    static QString getUniqueKeyForChannel(const Ninjam::UserChannel &channel);
+    static QString getUniqueKeyForUser(const Ninjam::User& user);
 
     void addTrack(const Ninjam::User &user, const Ninjam::UserChannel &channel);
     void removeTrack(const Ninjam::User &user, const Ninjam::UserChannel &channel);
+
+    static bool userIsBlockedInChat(const Ninjam::User &user);
+
+    static QList<QString> chatBlockedUsers; // using static to keep the blocked users list until Jamtaba is closed.
 
     bool running;
     int lastBeat;
@@ -159,8 +183,6 @@ private:
     bool preparedForTransmit;
     int waitingIntervals;
     static const int TOTAL_PREPARED_INTERVALS = 2;// how many intervals Jamtaba will wait to start trasmiting?
-
-    bool userIsBot(const QString userName) const;
 
 private slots:
     // ninjam events

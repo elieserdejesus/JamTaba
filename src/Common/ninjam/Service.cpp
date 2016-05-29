@@ -259,10 +259,8 @@ void Service::process(const UserInfoChangeNotifyMessage &msg)
     QList<User> users = msg.getUsers();
     foreach (const User &user, users) {
         usersNames.append(user.getFullName());
-        if (!currentServer->containsUser(user)) {
+        if (!currentServer->containsUser(user))
             currentServer->addUser(user);
-            emit userEntered(user);
-        }
         handleUserChannels(user);
     }
 
@@ -429,8 +427,13 @@ void Service::process(const ServerChatMessage &msg)
 {
     switch (msg.getCommand()) {
     case ChatCommandType::JOIN:
-        //
+    {
+        QString userName = msg.getArguments().at(0);
+        if (currentServer)
+            currentServer->addUser(User(userName));
+        emit userEntered(User(userName));
         break;
+    }
     case ChatCommandType::MSG:
     {
         QString messageSender = msg.getArguments().at(0);
@@ -441,6 +444,8 @@ void Service::process(const ServerChatMessage &msg)
     case ChatCommandType::PART:
     {
         QString userLeavingTheServer = msg.getArguments().at(0);
+        if (currentServer)
+            currentServer->removeUser(userLeavingTheServer);
         emit userExited(User(userLeavingTheServer));
         break;
     }

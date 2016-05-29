@@ -28,6 +28,15 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
     translateUi();
 }
 
+void LocalTrackGroupView::useSmallSpacingInLayouts(bool useSmallSpacing)
+{
+
+    QList<LocalTrackView*> tracks = getTracks<LocalTrackView*>();
+    foreach (LocalTrackView *trackView, tracks) {
+        trackView->useSmallSpacingInLayouts(useSmallSpacing);
+    }
+}
+
 void LocalTrackGroupView::refreshStyleSheet()
 {
     TrackGroupView::refreshStyleSheet();
@@ -189,8 +198,19 @@ void LocalTrackGroupView::showMenu()
 
 void LocalTrackGroupView::addSubChannel()
 {
-    if (!trackViews.isEmpty())
+    if (!trackViews.isEmpty()) {
         addTrackView(getChannelIndex());
+        useSmallSpacingInLayouts(isUsingSmallSpacingInLayouts());
+    }
+}
+
+bool LocalTrackGroupView::isUsingSmallSpacingInLayouts() const
+{
+    QList<LocalTrackView*> tracks = getTracks<LocalTrackView*>();
+    if (tracks.isEmpty())
+        return false;
+
+    return tracks.first()->isUsingSmallSpacingInLayouts();
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++

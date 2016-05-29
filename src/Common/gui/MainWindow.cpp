@@ -17,6 +17,7 @@
 #include <QDesktopServices>
 #include <QRect>
 #include "MainController.h"
+#include "ThemeLoader.h"
 // #include "performance/PerformanceMonitor.h"
 
 using namespace Audio;
@@ -55,10 +56,29 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeLanguageMenu();
     initializeTranslator();
     initializeThemeMenu();
+    initializeMeteringOptions();
     setupWidgets();
     setupSignals();
 
     qCInfo(jtGUI) << "MainWindow created!";
+}
+
+void MainWindow::initializeMeteringOptions()
+{
+    const Persistence::Settings &settings = mainController->getSettings();
+    PeakMeter::setPaintMaxPeakMarker(settings.isShowingMaxPeaks());
+    quint8 meterOption = settings.getMeterOption();
+    switch (meterOption) {
+    case 0:
+        PeakMeter::paintPeaksAndRms();
+        break;
+    case 1:
+        PeakMeter::paintPeaksOnly();
+        break;
+    case 2:
+        PeakMeter::paintRmsOnly();
+        break;
+    }
 }
 
 void MainWindow::initializeTranslator()
@@ -93,17 +113,13 @@ void MainWindow::initializeThemeMenu()
 {
     connect(ui.menuTheme, &QMenu::triggered, this, &MainWindow::changeTheme);
 
-    // create a menu action for each .css resource
-    QDir themesDir(":/style");
-    if (themesDir.exists()) {
-        QStringList themeFiles = themesDir.entryList(QStringList("*.css"));
-        foreach (const QString &themeFile, themeFiles) {
-            QString theme = QFileInfo(themeFile).baseName();
-            QAction *action = ui.menuTheme->addAction(theme);
-            action->setData(theme);
-        }
-    } else {
-        qCritical() << "Themes dir not exist! Can't create the Themes menu!";
+    // create a menu action for each theme
+
+    QStringList themeFiles = Theme::Loader::getAvailableThemes(":/style/themes");
+    foreach (const QString &themeFile, themeFiles) {
+        QString theme = QFileInfo(themeFile).baseName();
+        QAction *action = ui.menuTheme->addAction(theme);
+        action->setData(theme);
     }
 }
 
@@ -351,6 +367,8 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QS
 
     if (createFirstSubchannel)
         localChannel->addTrackView(channelGroupIndex);
+
+    localChannel->useSmallSpacingInLayouts(isRunningInMiniMode());
 
     ui.localTracksWidget->updateGeometry();
 
@@ -853,7 +871,7 @@ void MainWindow::timerEvent(QTimerEvent *)
             roomView->setShowBufferingState(buffering);
             if (!buffering) {
                 Audio::AudioPeak peak = mainController->getRoomStreamPeak();
-                roomView->addPeak(peak.getMax());
+                roomView->addPeak(peak.getMaxPeak());
             } else {
                 int percentage = mainController->getRoomStreamer()->getBufferingPercentage();
                 roomView->setBufferingPercentage(percentage);
@@ -863,8 +881,8 @@ void MainWindow::timerEvent(QTimerEvent *)
 
     // update master peaks
     Audio::AudioPeak masterPeak = mainController->getMasterPeak();
-    ui.masterMeterL->setPeak(masterPeak.getLeft());
-    ui.masterMeterR->setPeak(masterPeak.getRight());
+    ui.masterMeterL->setPeak(masterPeak.getLeftPeak(), 0.0f); //not showing rms in master meters
+    ui.masterMeterR->setPeak(masterPeak.getRightPeak(), 0.0f);
 }
 
 // ++++++++++++=
@@ -1065,27 +1083,64 @@ void MainWindow::setMultiTrackRecordingStatus(bool recording)
 
 void MainWindow::initializeViewMenu()
 {
-    QObject::connect(ui.menuViewMode, SIGNAL(triggered(QAction *)), this,
-                     SLOT(changeViewMode(QAction *)));
+    connect(ui.actionMiniView, SIGNAL(triggered(bool)), this, SLOT(changeViewMode()));
+    connect(ui.actionFullView, SIGNAL(triggered(bool)), this, SLOT(changeViewMode()));
 
-    QActionGroup *group = new QActionGroup(this);
-    ui.actionFullView->setActionGroup(group);
-    ui.actionMiniView->setActionGroup(group);
+    connect(ui.menuMetering, SIGNAL(aboutToShow()), this, SLOT(updateMeteringMenu()));
+
+    connect(ui.menuMetering, SIGNAL(triggered(QAction*)), this, SLOT(handleMenuMeteringAction(QAction*)));
+
+    QActionGroup *meteringActionGroup = new QActionGroup(this);
+    meteringActionGroup->addAction(ui.actionShowPeaksOnly);
+    meteringActionGroup->addAction(ui.actionShowRmsOnly);
+    meteringActionGroup->addAction(ui.actionShowPeakAndRMS);
+
+    QActionGroup *viewModeActionGroup = new QActionGroup(this);
+    ui.actionFullView->setActionGroup(viewModeActionGroup);
+    ui.actionMiniView->setActionGroup(viewModeActionGroup);
 }
 
-void MainWindow::changeViewMode(QAction *action)
+void MainWindow::handleMenuMeteringAction(QAction *action)
 {
-    QString actionData = action->data().toString();
-    if (actionData.isEmpty()) { // the actions mini view, full view and full screen have no data
-        setFullViewStatus(ui.actionFullView->isChecked());
-    } else {
-        QFileInfo themeFile(actionData);
-        QString theme = themeFile.baseName();
-        bool themeInstalled = mainController->setTheme(theme);
-        if (!themeInstalled)
-            QMessageBox::critical(this, tr("Error"), tr("The theme %1 was not installed!").arg(
-                                      theme), QMessageBox::Cancel, QMessageBox::Ok);
+    if (action == ui.actionShowMaxPeaks){
+        PeakMeter::setPaintMaxPeakMarker(ui.actionShowMaxPeaks->isChecked());
     }
+    else{
+        if (action == ui.actionShowPeakAndRMS){
+            PeakMeter::paintPeaksAndRms();
+        }
+        else if (action == ui.actionShowPeaksOnly){
+            PeakMeter::paintPeaksOnly();
+        }
+        else{ //RMS only
+            PeakMeter::paintRmsOnly();
+        }
+    }
+    quint8 meterOption = 0; //rms + peaks
+    if (PeakMeter::isPaintingPeaksOnly())
+        meterOption = 1;
+    else if (PeakMeter::isPaintingRmsOnly())
+        meterOption = 2;
+
+    mainController->storeMeteringSettings(PeakMeter::isPaintintMaxPeakMarker(), meterOption);
+}
+
+void MainWindow::updateMeteringMenu()
+{
+    ui.actionShowMaxPeaks->setChecked(PeakMeter::isPaintintMaxPeakMarker());
+    bool showingPeakAndRms = PeakMeter::isPaintingRMS() && PeakMeter::isPaintingPeaks();
+    if (showingPeakAndRms) {
+        ui.actionShowPeakAndRMS->setChecked(true);
+    }
+    else{
+        ui.actionShowPeaksOnly->setChecked(PeakMeter::isPaintingPeaks());
+        ui.actionShowRmsOnly->setChecked(PeakMeter::isPaintingRMS());
+    }
+}
+
+void MainWindow::changeViewMode()
+{
+    setFullViewStatus(ui.actionFullView->isChecked());
 }
 
 void MainWindow::updatePublicRoomsListLayout()
@@ -1130,7 +1185,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
         resize(minimumSize());
     }
 
-    int tabLayoutMargim = isRunningInFullViewMode() ? 6 : 6;
+    int tabLayoutMargim = 6;
     ui.tabLayout->setContentsMargins(tabLayoutMargim, tabLayoutMargim, tabLayoutMargim,
                                      tabLayoutMargim);
     ui.allRoomsContent->layout()->setSpacing(tabLayoutMargim);
@@ -1155,6 +1210,9 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
             localTrackGroup->setToNarrow();
         else
             localTrackGroup->setToWide();
+
+        bool useSmallSpacing = isRunningInMiniMode();
+        localTrackGroup->useSmallSpacingInLayouts(useSmallSpacing);
     }
 
     ui.actionFullView->setChecked(isRunningInFullViewMode());

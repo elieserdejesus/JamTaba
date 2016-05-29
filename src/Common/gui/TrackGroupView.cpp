@@ -5,11 +5,50 @@
 #include <QStyleOption>
 #include <QEvent>
 #include <QDebug>
+#include <QMenu>
+#include <QActionGroup>
+#include "PeakMeter.h"
 
 TrackGroupView::TrackGroupView(QWidget *parent) :
     QFrame(parent)
 {
     setupUI();
+
+    //context menu
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, &TrackGroupView::customContextMenuRequested, this, &TrackGroupView::showContextMenu);
+}
+
+void TrackGroupView::populateContextMenu(QMenu &contextMenu)
+{
+    Q_UNUSED(contextMenu);
+    //no common actions at moment
+}
+
+void TrackGroupView::showContextMenu(const QPoint &pos){
+    QMenu contextMenu(this);
+    populateContextMenu(contextMenu); //populate is overrided in subclasses to add more menu actions
+    contextMenu.exec(mapToGlobal(pos));
+}
+
+void TrackGroupView::showPeakMeterOnly()
+{
+    PeakMeter::paintPeaksOnly();
+}
+
+void TrackGroupView::showRmsOnly()
+{
+    PeakMeter::paintRmsOnly();
+}
+
+void TrackGroupView::showPeakAndRms()
+{
+    PeakMeter::paintPeaksAndRms();
+}
+
+void TrackGroupView::showMaxPeakMarker(bool showMarker)
+{
+    PeakMeter::setPaintMaxPeakMarker(showMarker);
 }
 
 void TrackGroupView::setupUI()

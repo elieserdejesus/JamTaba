@@ -41,6 +41,20 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
     translate();
 }
 
+void NinjamPanel::setBpiComboPendingStatus(bool enabled)
+{
+    ui->comboBpi->setProperty("pending", enabled);
+    style()->unpolish(ui->comboBpi);
+    style()->polish(ui->comboBpi);
+}
+
+void NinjamPanel::setBpmComboPendingStatus(bool enabled)
+{
+    ui->comboBpm->setProperty("pending", enabled);
+    style()->unpolish(ui->comboBpm);
+    style()->polish(ui->comboBpm);
+}
+
 void NinjamPanel::translate()
 {
     ui->retranslateUi(this);
@@ -216,10 +230,10 @@ void NinjamPanel::setGainSliderValue(int value)
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++
-void NinjamPanel::setMetronomePeaks(float left, float right)
+void NinjamPanel::setMetronomePeaks(float left, float right, float rmsLeft, float rmsRight)
 {
-    ui->peakMeterLeft->setPeak(left);
-    ui->peakMeterRight->setPeak(right);
+    ui->peakMeterLeft->setPeak(left, rmsLeft);
+    ui->peakMeterRight->setPeak(right, rmsRight);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++

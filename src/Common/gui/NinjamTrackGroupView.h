@@ -24,6 +24,7 @@ public:
     void setNarrowStatus(bool narrow);
     void updateGeoLocation();
     void setGroupName(const QString &groupName);
+    QString getGroupName() const override;
     void updateGuiElements();
     void setEstimatedChunksPerInterval(int estimatedChunks);
 
@@ -36,10 +37,13 @@ public:
 protected:
     NinjamTrackView *createTrackView(long trackID) override;
 
+    void populateContextMenu(QMenu &contextMenu) override;
+
 private:
     Controller::MainController *mainController;
     QLabel *countryLabel;
     MarqueeLabel *groupNameLabel;
+    QLabel *chatBlockIconLabel;
     QString userIP;
     Qt::Orientation orientation;
 
@@ -50,6 +54,10 @@ private:
 
 private slots:
     void updateGeoLocation(const QString &resolvedIp);
+    void blockChatMessages();
+    void unblockChatMessages();
+    void hideChatBlockIcon(const QString &unblockedUserName);
+    void showChatBlockIcon(const QString &blockedUserName);
 };
 
 #endif // NINJAMTRACKGROUPVIEW_H
