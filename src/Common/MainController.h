@@ -315,7 +315,7 @@ private:
 
     QScopedPointer<Geo::IpToLocationResolver> ipToLocationResolver;
 
-    Recorder::JamRecorder jamRecorder;
+    QList<Recorder::JamRecorder> jamRecorders;
 
     // master
     float masterGain;
