@@ -368,6 +368,8 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QS
     if (createFirstSubchannel)
         localChannel->addTrackView(channelGroupIndex);
 
+    localChannel->useSmallSpacingInLayouts(isRunningInMiniMode());
+
     ui.localTracksWidget->updateGeometry();
 
     return localChannel;
