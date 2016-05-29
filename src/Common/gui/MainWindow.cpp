@@ -525,7 +525,7 @@ void MainWindow::handleServerConnectionError(const QString &errorMsg)
 {
     hideBusyDialog();
     QMessageBox::warning(this, tr("Error!"),
-                         tr("Error connecting in Jamtaba server!\n") + errorMsg);
+                         tr("Error connecting with Jamtaba server!\n") + errorMsg);
     close();
 }
 
@@ -669,7 +669,7 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
 
         mainController->stopNinjamController();// disconnect from current ninjam server
     } else if (mainController->userNameWasChoosed()) {
-        showBusyDialog(tr("Connecting in %1 ... ").arg(roomInfo.getName()));
+        showBusyDialog(tr("Connecting with %1 ... ").arg(roomInfo.getName()));
         mainController->enterInRoom(roomInfo, getChannelsNames(), password);
     }
 }
@@ -812,7 +812,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
                            QMessageBox::Warning);
     } else {
         if (roomToJump) {// waiting the disconnection to connect in a new room?
-            showBusyDialog(tr("Connecting in %1").arg(roomToJump->getName()));
+            showBusyDialog(tr("Connecting with %1").arg(roomToJump->getName()));
             mainController->enterInRoom(*roomToJump, getChannelsNames(),
                                         (passwordToJump.isNull()
                                          || passwordToJump.isEmpty()) ? "" : passwordToJump);
