@@ -43,7 +43,7 @@ void ClipSortLogGenerator::write(const Jam &jam){
         else
         {
             // If this does not work, we'll have to copy and hope Windows at least creates a lazy copy
-            QFile(interval.getPath()).link(jamDir + "/" + replacementFilePath.left(1) + "/" + replacementFilePath);
+            QFile(interval.getPath()).link(jamDir.canonicalPath() + "/" + replacementFilePath.left(1) + "/" + replacementFilePath);
         }
 
     }
