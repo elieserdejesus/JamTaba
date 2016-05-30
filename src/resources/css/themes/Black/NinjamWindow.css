@@ -179,7 +179,12 @@ NinjamPanel QComboBox
 
 NinjamTrackGroupView > #topPanel                /* the track group top panel: used to show user name */
 {
-    background: rgba(255, 255, 255, 50);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(30, 30, 30),
+    stop:1 rgb(70, 70, 70));
+
+    border-top-left-radius: 1px;
+    border-top-right-radius: 1px;
 }
 
 NinjamTrackGroupView                        /* ninjam track group. If a ninjamer is using 2 channels they will appear grouped */
