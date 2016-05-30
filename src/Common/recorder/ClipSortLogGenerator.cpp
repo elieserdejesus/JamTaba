@@ -25,7 +25,7 @@ void ClipSortLogGenerator::write(const Jam &jam){
                 .append("\n");
         }
         //user 451065aed5824d1c51254b7cdf417598 "Alfred@62.163.190.x" 0 "Abnormal NINJAM"
-        QString replacementFilePath = QUuid::createUuid().toString().remove("-");
+        QString replacementFilePath = QUuid::createUuid().toString().remove(QRegExp("[-{}]"));
         stringBuffer.append("user")
             .append(" " + replacementFilePath)
             .append(" \"" + interval.getUserName().replace("\"", "_") + "\"") // it'll work...
