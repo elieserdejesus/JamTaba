@@ -56,7 +56,7 @@ NinjamRoomWindow #labelBpmBpi                                /* label used to sh
 
 NinjamPanel #intervalPanel                  /* The widget used to show ninjam controls (bpi, bpm, accent and shape) and interval progress */
 {
-    color: rgb(238, 238, 238);
+    color: black;
     font-weight: normal;
     font-size: 11px;
     background: none;

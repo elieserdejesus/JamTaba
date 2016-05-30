@@ -179,7 +179,7 @@ NinjamPanel QComboBox
 
 NinjamTrackGroupView > #topPanel                /* the track group top panel: used to show user name */
 {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
     stop:0 rgb(30, 30, 30),
     stop:1 rgb(70, 70, 70));
 
@@ -218,3 +218,9 @@ IntervalProgressWindow
     background-color: rgb(20, 20, 20);
     selection-background-color: rgb(80, 80, 80);
 }
+
+NinjamPanel #intervalPanel
+{
+    color: rgb(180, 180, 180);
+}
+
