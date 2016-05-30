@@ -162,8 +162,8 @@ BaseTrackView[unlighted="true"] #peaksDbLabel
 BaseTrackView
 {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop:0 rgb(80, 80, 80),
-        stop:1 rgb(20, 20, 20));
+        stop:0 rgb(70, 70, 70),
+        stop:1 rgb(30, 30, 30));
 
     border: none; /*1px solid rgb(61, 61, 61);*/
     font-size: 8px;
@@ -221,7 +221,7 @@ TrackGroupView #topPanel                                /* topPanel is used to s
 {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
     stop:0 rgb(20, 20, 20),
-    stop:1 rgb(80, 80, 80));
+    stop:1 rgb(70, 70, 70));
 
     border-top-left-radius: 1px;
     border-top-right-radius: 1px;
