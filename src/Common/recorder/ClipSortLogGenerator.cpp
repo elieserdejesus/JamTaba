@@ -7,6 +7,7 @@ using namespace Recorder;
 
 void ClipSortLogGenerator::write(const Jam &jam){
     QDir jamDir = QDir(jam.getAudioAbsolutePath());
+    jamDir.cdUp(); // or drop everything under .../audio?
 
     QString stringBuffer("");
 
@@ -40,17 +41,17 @@ void ClipSortLogGenerator::write(const Jam &jam){
             qCCritical(jtJamRecorder) << "Could not create clip directory in " << jamDir;
             break; // to avoid flooding
         }
-        else
-        {
-            // If this does not work, we'll have to copy and hope Windows at least creates a lazy copy
-            QFile(interval.getPath()).link(jamDir.canonicalPath() + "/" + replacementFilePath.left(1) + "/" + replacementFilePath);
-        }
+        QFile(interval.getPath()).copy(
+            jamDir.canonicalPath() + "/" +
+                    replacementFilePath.left(1) + "/" +
+                    replacementFilePath + "." +
+                    QFileInfo(interval.getPath()).completeSuffix()
+        );
 
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //save
-    jamDir.cdUp();
     QFile projectFile(jamDir.absoluteFilePath("clipsort.log"));
     if(!projectFile.open(QFile::WriteOnly)){
         qCCritical(jtJamRecorder) << "Can't write clipsort.log in " << jamDir;
