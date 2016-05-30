@@ -29,7 +29,7 @@ void ClipSortLogGenerator::write(const Jam &jam){
         stringBuffer.append("user")
             .append(" " + replacementFilePath)
             .append(" \"" + interval.getUserName().replace("\"", "_") + "\"") // it'll work...
-            .append(" " + interval.getChannelIndex())
+            .append(" " + QString::number(interval.getChannelIndex()))
             .append(" \"channel name\"")
             .append("\n");
 
