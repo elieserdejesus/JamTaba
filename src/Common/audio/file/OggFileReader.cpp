@@ -18,8 +18,8 @@ void OggFileReader::read(const QString &filePath, Audio::SamplesBuffer &outBuffe
         qDebug() << "Opening " << filePath;
 
         VorbisDecoder decoder;
-        decoder.setInput(oggFile.readAll());
-        decoder.reset(); //read the ogg headers from file
+        decoder.setInputData(oggFile.readAll());
+        decoder.initialize(); //read the ogg headers from file
         sampleRate = decoder.getSampleRate();
         if (decoder.isMono())
             outBuffer.setToMono();
