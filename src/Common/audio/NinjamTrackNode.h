@@ -26,10 +26,8 @@ public:
     }
 
     int getSampleRate() const;
-    inline bool isPlaying() const
-    {
-        return playing;
-    }
+
+    bool isPlaying();
 
     void discardIntervals(bool keepMostRecentInterval);
     inline void setProcessingLastPartOfInterval(bool status)
@@ -38,9 +36,6 @@ public:
     }
 
 private:
-    bool playing;// playing one interval or waiting for more vorbis data to decode
-    VorbisDecoder decoder;
-    QList<QByteArray> intervals;
     int ID;
     SamplesBufferResampler resampler;
 
@@ -49,6 +44,13 @@ private:
     int getFramesToProcess(int targetSampleRate, int outFrameLenght);
 
     bool processingLastPartOfInterval;
+
+    class IntervalDecoder;
+
+    QList<IntervalDecoder*> decoders;
+    IntervalDecoder* currentDecoder;
+    QMutex decodersMutex;
+
 };
 
 #endif // NINJAMTRACKNODE_H
