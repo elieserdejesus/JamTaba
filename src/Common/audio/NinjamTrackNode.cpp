@@ -81,6 +81,10 @@ NinjamTrackNode::~NinjamTrackNode()
         delete decoder;
 
     decoders.clear();
+    if (currentDecoder) {
+        delete currentDecoder;
+        currentDecoder = nullptr;
+    }
     decodersMutex.unlock();
 }
 
