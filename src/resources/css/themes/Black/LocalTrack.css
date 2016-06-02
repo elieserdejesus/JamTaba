@@ -80,8 +80,8 @@ FxPanelItem QPushButton:checked:hover                   /* hover effect for 'plu
 LocalTrackView[highlighted="true"]
 {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgb(255, 255, 255),
-    stop:1 rgb(170, 170, 170));
+    stop:0 rgb(140, 140, 140),
+    stop:1 rgb(40, 40, 40));
 }
 
 LocalTrackView #inputSelectionButton            /* Button used to open the input selection menu */
