@@ -120,6 +120,7 @@ public:
     void write(QJsonObject &out) const override;
     void read(const QJsonObject &in) override;
     bool saveMultiTracksActivated;
+    QMap <QString, bool> jamRecorderActivated;
     QString recordingPath;
 };
 // +++++++++++++++++++++++++++++++++

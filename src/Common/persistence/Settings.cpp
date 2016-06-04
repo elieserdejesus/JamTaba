@@ -8,6 +8,7 @@
 
 #include <QDir>
 #include <QList>
+#include <QStringList>
 #include <QSettings>
 #include "log/Logging.h"
 
@@ -150,14 +151,19 @@ void MidiSettings::read(const QJsonObject &in)
 RecordingSettings::RecordingSettings() :
     SettingsObject("recording"),
     saveMultiTracksActivated(false),
+    jamRecorderActivated(QMap<QString, bool>()),
     recordingPath("")
 {
+	// TODO: populate jamRecorderActivated with {jamRecorderId, false} pairs for each known jamRecorder
 }
 
 void RecordingSettings::write(QJsonObject &out) const
 {
     out["recordingPath"] = recordingPath;
     out["recordActivated"] = saveMultiTracksActivated;
+    foreach(QString key, jamRecorderActivated.keys()){
+        out[key + ".recordActivated"] = jamRecorderActivated[key];
+    }
 }
 
 void RecordingSettings::read(const QJsonObject &in)
@@ -180,6 +186,9 @@ void RecordingSettings::read(const QJsonObject &in)
         recordingPath = QDir(documentsDir).absoluteFilePath("Jamtaba");
     }
     saveMultiTracksActivated = getValueFromJson(in, "recordActivated", false);
+    foreach(QString key, in.keys().filter(".recordActivated$")){
+        jamRecorderActivated[key] = in[key + ".recordActivated"].toBool();
+    }
 }
 
 // +++++++++++++++++++++++++++++
