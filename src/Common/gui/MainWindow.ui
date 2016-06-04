@@ -309,10 +309,10 @@
              <number>2</number>
             </property>
             <item>
-             <widget class="PeakMeter" name="masterMeterL" native="true"/>
+             <widget class="AudioMeter" name="masterMeterL" native="true"/>
             </item>
             <item>
-             <widget class="PeakMeter" name="masterMeterR" native="true"/>
+             <widget class="AudioMeter" name="masterMeterR" native="true"/>
             </item>
            </layout>
           </item>
@@ -634,7 +634,7 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>PeakMeter</class>
+   <class>AudioMeter</class>
    <extends>QWidget</extends>
    <header>PeakMeter.h</header>
    <container>1</container>
