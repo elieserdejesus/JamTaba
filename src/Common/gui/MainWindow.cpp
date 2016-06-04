@@ -66,17 +66,17 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 void MainWindow::initializeMeteringOptions()
 {
     const Persistence::Settings &settings = mainController->getSettings();
-    PeakMeter::setPaintMaxPeakMarker(settings.isShowingMaxPeaks());
+    AudioMeter::setPaintMaxPeakMarker(settings.isShowingMaxPeaks());
     quint8 meterOption = settings.getMeterOption();
     switch (meterOption) {
     case 0:
-        PeakMeter::paintPeaksAndRms();
+        AudioMeter::paintPeaksAndRms();
         break;
     case 1:
-        PeakMeter::paintPeaksOnly();
+        AudioMeter::paintPeaksOnly();
         break;
     case 2:
-        PeakMeter::paintRmsOnly();
+        AudioMeter::paintRmsOnly();
         break;
     }
 }
@@ -1103,38 +1103,38 @@ void MainWindow::initializeViewMenu()
 void MainWindow::handleMenuMeteringAction(QAction *action)
 {
     if (action == ui.actionShowMaxPeaks){
-        PeakMeter::setPaintMaxPeakMarker(ui.actionShowMaxPeaks->isChecked());
+        AudioMeter::setPaintMaxPeakMarker(ui.actionShowMaxPeaks->isChecked());
     }
     else{
         if (action == ui.actionShowPeakAndRMS){
-            PeakMeter::paintPeaksAndRms();
+            AudioMeter::paintPeaksAndRms();
         }
         else if (action == ui.actionShowPeaksOnly){
-            PeakMeter::paintPeaksOnly();
+            AudioMeter::paintPeaksOnly();
         }
         else{ //RMS only
-            PeakMeter::paintRmsOnly();
+            AudioMeter::paintRmsOnly();
         }
     }
     quint8 meterOption = 0; //rms + peaks
-    if (PeakMeter::isPaintingPeaksOnly())
+    if (AudioMeter::isPaintingPeaksOnly())
         meterOption = 1;
-    else if (PeakMeter::isPaintingRmsOnly())
+    else if (AudioMeter::isPaintingRmsOnly())
         meterOption = 2;
 
-    mainController->storeMeteringSettings(PeakMeter::isPaintintMaxPeakMarker(), meterOption);
+    mainController->storeMeteringSettings(AudioMeter::isPaintintMaxPeakMarker(), meterOption);
 }
 
 void MainWindow::updateMeteringMenu()
 {
-    ui.actionShowMaxPeaks->setChecked(PeakMeter::isPaintintMaxPeakMarker());
-    bool showingPeakAndRms = PeakMeter::isPaintingRMS() && PeakMeter::isPaintingPeaks();
+    ui.actionShowMaxPeaks->setChecked(AudioMeter::isPaintintMaxPeakMarker());
+    bool showingPeakAndRms = AudioMeter::isPaintingRMS() && AudioMeter::isPaintingPeaks();
     if (showingPeakAndRms) {
         ui.actionShowPeakAndRMS->setChecked(true);
     }
     else{
-        ui.actionShowPeaksOnly->setChecked(PeakMeter::isPaintingPeaks());
-        ui.actionShowRmsOnly->setChecked(PeakMeter::isPaintingRMS());
+        ui.actionShowPeaksOnly->setChecked(AudioMeter::isPaintingPeaks());
+        ui.actionShowRmsOnly->setChecked(AudioMeter::isPaintingRMS());
     }
 }
 

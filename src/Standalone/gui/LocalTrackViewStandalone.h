@@ -84,7 +84,7 @@ private:
     QWidget *inputPanel;
     FxPanel *fxPanel;
 
-    PeakMeter *midiPeakMeter;// show midi activity
+    MidiActivityMeter *midiPeakMeter;// show midi activity
 
     void setMidiPeakMeterVisibility(bool visible);
 

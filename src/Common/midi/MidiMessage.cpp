@@ -70,3 +70,15 @@ bool MidiMessage::isNote() const
     int status = getStatus();
     return status >= 0x80 && status <= 0x9F;
 }
+
+bool MidiMessage::isNoteOn() const
+{
+    int status = getStatus();
+    return status >= 0x90 && status <= 0x9F;
+}
+
+bool MidiMessage::isNoteOff() const
+{
+    int status = getStatus();
+    return status >= 0x80 && status <= 0x8F;
+}
