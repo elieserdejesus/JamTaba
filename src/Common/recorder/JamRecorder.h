@@ -104,9 +104,14 @@ class Jam
 public:
     Jam(int bpm, int bpi, int sampleRate, const QString &jamName, const QString &baseDir);
 
-    inline QString getAudioAbsolutePath() const
+    inline QString getRPPAudioAbsolutePath() const
     {
-        return audioPath;
+        return rppAudioPath;
+    }
+
+    inline QString getClipSortAbsolutePath() const
+    {
+        return clipsortPath;
     }
 
     inline int getSampleRate() const
@@ -146,7 +151,8 @@ private:
     int sampleRate;
     QString name;
     QString baseDir;
-    QString audioPath;
+    QString rppAudioPath;
+    QString clipsortPath;
 
     // the first map key is userName. The second map key is channelIndex
     QMap<QString, QMap<quint8, JamTrack> > jamTracks;

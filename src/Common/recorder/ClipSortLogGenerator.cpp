@@ -6,8 +6,7 @@ using namespace Recorder;
 
 
 void ClipSortLogGenerator::write(const Jam &jam){
-    QDir jamDir = QDir(jam.getAudioAbsolutePath());
-    jamDir.cdUp(); // or drop everything under .../audio?
+    QDir jamDir = QDir(jam.getClipSortAbsolutePath());
 
     QString stringBuffer("");
 
