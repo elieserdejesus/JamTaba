@@ -92,6 +92,12 @@ QSize LocalTrackView::sizeHint() const
     return BaseTrackView::sizeHint();
 }
 
+void LocalTrackView::setupMetersLayout()
+{
+    metersLayout->addWidget(peakMeterLeft);
+    metersLayout->addWidget(peakMeterRight);
+}
+
 void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode)
 {
     if (this->peakMetersOnly != peakMetersOnly) {
@@ -105,8 +111,7 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMi
             mainLayout->addWidget(peakMeterRight, 0, 1);
         }
         else{// put the meter in the original layout
-            metersLayout->addWidget(peakMeterLeft);
-            metersLayout->addWidget(peakMeterRight);
+            setupMetersLayout();
         }
         mainLayout->setHorizontalSpacing( peakMetersOnly ? 0 : 6 );
 

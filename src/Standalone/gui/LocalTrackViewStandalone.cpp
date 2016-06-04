@@ -39,6 +39,7 @@ LocalTrackViewStandalone::LocalTrackViewStandalone(
     midiPeakMeter->setSolidColor(QColor(180, 0, 0));
     midiPeakMeter->setDecayTime(1000);// 1000 ms
     midiPeakMeter->setAccessibleDescription("This is the midi activity meter");
+    metersLayout->insertWidget(1, midiPeakMeter);
 
     inputSelectionButton->installEventFilter(this);
 
@@ -340,6 +341,13 @@ void LocalTrackViewStandalone::setPeakMetersOnlyMode(bool peakMetersOnly, bool r
     midiToolsButton->setVisible(canShowMidiToolsButton());
 }
 
+void LocalTrackViewStandalone::setupMetersLayout()
+{
+    LocalTrackView::setupMetersLayout();
+    if (midiPeakMeter)
+        metersLayout->insertWidget(1, midiPeakMeter);
+}
+
 QMenu *LocalTrackViewStandalone::createMonoInputsMenu(QMenu *parent)
 {
     QMenu *monoInputsMenu = new QMenu(tr("Mono"), parent);
@@ -614,13 +622,8 @@ bool LocalTrackViewStandalone::canShowMidiToolsButton()
 
 void LocalTrackViewStandalone::setMidiPeakMeterVisibility(bool visible)
 {
-    if (visible) {
-        // midi activity meter is inserted between the 2 audio meters
-        metersLayout->insertWidget(1, midiPeakMeter);
-    } else {
-        metersLayout->removeWidget(midiPeakMeter);
-    }
-    update();
+    if (midiPeakMeter)
+        midiPeakMeter->setVisible(visible);
 }
 
 void LocalTrackViewStandalone::setToMono(QAction *action)

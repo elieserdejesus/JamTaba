@@ -57,6 +57,8 @@ protected:
 
     void refreshStyleSheet() override;
 
+    virtual void setupMetersLayout();
+
 private:
     bool usingSmallSpacing;
     QPushButton *createStereoInversionButton();

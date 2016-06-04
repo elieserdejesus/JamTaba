@@ -52,6 +52,8 @@ protected:
 
     bool eventFilter(QObject *target, QEvent *event) override;
 
+    void setupMetersLayout() override;
+
 private slots:
     void showInputSelectionMenu();// build and show the input selection menu
     void openMidiToolsDialog();
