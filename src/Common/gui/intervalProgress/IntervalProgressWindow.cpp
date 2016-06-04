@@ -9,6 +9,7 @@ IntervalProgressWindow::IntervalProgressWindow(QWidget *parent, IntervalProgress
 {
 
     progressDisplay = new IntervalProgressDisplay(this);
+    progressDisplay->setObjectName(QStringLiteral("intervalPanel"));
     progressDisplay->setBeatsPerInterval(beatsPerInterval);
     progressDisplay->setBeatsPerAccent(beatsPerAccent);
     progressDisplay->setShowAccents(showingAccents);

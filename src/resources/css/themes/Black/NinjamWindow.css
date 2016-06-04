@@ -219,7 +219,8 @@ IntervalProgressWindow
     selection-background-color: rgb(80, 80, 80);
 }
 
-NinjamPanel #intervalPanel
+NinjamPanel #intervalPanel,
+IntervalProgressWindow #intervalPanel
 {
     color: rgb(180, 180, 180);
 }
