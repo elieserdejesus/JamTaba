@@ -34,6 +34,8 @@ protected:
     static QString getValueFromJson(const QJsonObject &json, const QString &propertyName,
                                     QString fallBackValue);
     static bool getValueFromJson(const QJsonObject &json, const QString &propertyName, bool fallBackValue);
+    static QJsonArray getValueFromJson(const QJsonObject &json, const QString &propertyName, QJsonArray fallBackValue);
+    static QJsonObject getValueFromJson(const QJsonObject &json, const QString &propertyName, QJsonObject fallBackValue);
 };
 // +++++++++++++++++++++++++++++++++++++++++++
 class AudioSettings : public SettingsObject

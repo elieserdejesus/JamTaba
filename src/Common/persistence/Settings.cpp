@@ -63,6 +63,20 @@ float SettingsObject::getValueFromJson(const QJsonObject &json, const QString &p
     return fallBackValue;
 }
 
+QJsonArray SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
+                                           QJsonArray fallBackValue){
+    if (json.contains(propertyName))
+        return json[propertyName].toArray();
+    return fallBackValue;
+}
+
+QJsonObject SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
+                                           QJsonObject fallBackValue){
+    if (json.contains(propertyName))
+        return json[propertyName].toObject();
+    return fallBackValue;
+}
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 PrivateServerSettings::PrivateServerSettings() :
     SettingsObject("PrivateServer"),
