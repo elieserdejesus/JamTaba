@@ -188,10 +188,15 @@ public:
 
     void storeWindowSettings(bool maximized, bool usingFullViewMode, QPointF location);
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice, const QList<bool> &midiInputStatus);
+
     void storeRecordingMultiTracksStatus(bool savingMultiTracks);
     inline bool isRecordingMultiTracksActivated() const
     {
         return settings.isSaveMultiTrackActivated();
+    }
+    void storeJamRecorderStatus(QString writerId, bool status);
+    inline bool isJamRecorderActivated(QString writerId) {
+        settings.isJamRecorderActivated(writerId);
     }
     void storeRecordingPath(const QString &newPath);
 
@@ -255,6 +260,14 @@ public:
     void storeMeteringSettings(bool showingMaxPeaks, quint8 meterOption);
 
     static QString getSuggestedUserName();
+
+    QMap<QString, QString> getJamRecoders() {
+        QMap<QString, QString> jamRecoderMap = QMap<QString, QString>();
+        foreach(Recorder::JamRecorder * jamRecorder, jamRecorders) {
+            jamRecoderMap[jamRecorder->getWriterId()] = jamRecorder->getWriterName();
+        }
+        return jamRecoderMap;
+    }
 
 signals:
     void ipResolved(const QString &ip);

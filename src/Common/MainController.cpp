@@ -311,6 +311,20 @@ void MainController::storeRecordingMultiTracksStatus(bool savingMultiTracks)
     settings.setSaveMultiTrack(savingMultiTracks);
 }
 
+void MainController::storeJamRecorderStatus(QString writerId, bool status)
+{
+    if (settings.isSaveMultiTrackActivated()) // recording is active and changing the jamRecorder status
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+            if (jamRecorder->getWriterId() == writerId) {
+                if (status)
+                    jamRecorder->startRecording(getUserName(), QDir(settings.getRecordingPath()),
+                                               ninjamService.getCurrentServer()->getBpm(), ninjamService.getCurrentServer()->getBpi(), getSampleRate());
+                else
+                    jamRecorder->stopRecording();
+            }
+    settings.setJamRecorderActivated(writerId, status);
+}
+
 void MainController::storeRecordingPath(const QString &newPath)
 {
     settings.setRecordingPath(newPath);

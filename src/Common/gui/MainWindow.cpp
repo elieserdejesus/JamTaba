@@ -1038,7 +1038,7 @@ void MainWindow::openPreferencesDialog(QAction *action)
         stopCurrentRoomStream();
 
         PreferencesDialog *dialog = createPreferencesDialog();// factory method, overrided in derived classes MainWindowStandalone and MainWindowVST
-        dialog->initialize(initialTab, &mainController->getSettings());// initializing here to avoid call virtual methods inside PreferencesDialog constructor
+        dialog->initialize(initialTab, &mainController->getSettings(), &mainController->getJamRecoders());// initializing here to avoid call virtual methods inside PreferencesDialog constructor
         dialog->show();
     }
 }
@@ -1050,6 +1050,8 @@ void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
 
     connect(dialog, SIGNAL(multiTrackRecordingStatusChanged(bool)), this,
             SLOT(setMultiTrackRecordingStatus(bool)));
+    connect(dialog, SIGNAL(jamRecorderStatusChanged(QString, bool)), this,
+            SLOT(setJamRecorderStatus(QString, bool)));
     connect(dialog, SIGNAL(recordingPathSelected(const QString &)), this,
             SLOT(setRecordingPath(const QString &)));
     connect(dialog, SIGNAL(builtInMetronomeSelected(QString)), this,
@@ -1069,14 +1071,19 @@ void MainWindow::setCustomMetronome(const QString &primaryBeatFile,
     mainController->setCustomMetronome(primaryBeatFile, secondaryBeatFile);
 }
 
-void MainWindow::setRecordingPath(const QString &newRecordingPath)
-{
-    mainController->storeRecordingPath(newRecordingPath);
-}
-
 void MainWindow::setMultiTrackRecordingStatus(bool recording)
 {
     mainController->storeRecordingMultiTracksStatus(recording);
+}
+
+void MainWindow::setJamRecorderStatus(QString writerId, bool status)
+{
+    mainController->storeJamRecorderStatus(writerId, status);
+}
+
+void MainWindow::setRecordingPath(const QString &newRecordingPath)
+{
+    mainController->storeRecordingPath(newRecordingPath);
 }
 
 // ++++++++++++++++++++++

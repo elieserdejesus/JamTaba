@@ -46,10 +46,11 @@ void PreferencesDialog::refreshMetronomeControlsStyleSheet()
     style()->polish(ui->browseSecondaryBeatButton);
 }
 
-void PreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings)
+void PreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> *jamRecorders)
 {
     Q_UNUSED(initialTab);
     this->settings = settings;
+    this->jamRecorders = jamRecorders;
     setupSignals();
     populateAllTabs();
 }
@@ -59,8 +60,16 @@ void PreferencesDialog::setupSignals()
     // the 'accept' slot is overrided in inherited classes (StandalonePreferencesDialog and VstPreferencesDialog)
     connect(ui->okButton, SIGNAL(clicked(bool)), this, SLOT(accept()));
     connect(ui->prefsTab, SIGNAL(currentChanged(int)), this, SLOT(selectTab(int)));
+
     connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this,
             SIGNAL(multiTrackRecordingStatusChanged(bool)));
+    foreach(QString writerId, jamRecorders->keys()) {
+        connect(
+                    ui->recordingCheckBox, // TODO: this should be the dynamically created per-recorder checkbox
+                    &QCheckBox::clicked, [=](bool newStatus) {
+            jamRecorderStatusChanged(writerId, newStatus);
+        });
+    }
     connect(ui->browseRecPathButton, SIGNAL(clicked(bool)), this, SLOT(openRecordingPathBrowser()));
 
     connect(ui->groupBoxCustomMetronome, SIGNAL(toggled(bool)), this, SLOT(toggleCustomMetronomeSounds(bool)));
@@ -120,6 +129,12 @@ void PreferencesDialog::populateRecordingTab()
     Persistence::RecordingSettings recordingSettings = settings->getRecordingSettings();
     QDir recordDir(recordingSettings.recordingPath);
     ui->recordingCheckBox->setChecked(recordingSettings.saveMultiTracksActivated);
+    /*
+     * At this point we want to show the list of jamRecorders known to this version
+     * and populate the checkbox from the settings.
+     * Settings may not have anything and it may have settings for unknown jamRecorders
+     * but that does not matter.
+     */
     ui->recordPathLineEdit->setText(recordDir.absolutePath());
 }
 

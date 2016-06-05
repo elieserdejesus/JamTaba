@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "persistence/Settings.h"
+#include "recorder/JamRecorder.h"
 
 namespace Ui {
 class PreferencesDialog;
@@ -21,13 +22,14 @@ public:
         TAB_AUDIO, TAB_MIDI, TAB_VST, TAB_RECORDING, TAB_METRONOME
     };
 
-    virtual void initialize(PreferencesTab initialTab, const Persistence::Settings *settings);
+    virtual void initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> *jamRecorders);
 
 signals:
-    void recordingPathSelected(const QString &newRecordingPath);
     void customMetronomeSelected(const QString &primaryBeatAudioFile, const QString &secondaryBeatAudioFile);
     void builtInMetronomeSelected(const QString &metronomeAlias);
     void multiTrackRecordingStatusChanged(bool recording);
+    void jamRecorderStatusChanged(const QString &writerId, bool status);
+    void recordingPathSelected(const QString &newRecordingPath);
 
 public slots:
     void accept() override;
@@ -63,6 +65,7 @@ protected:
     virtual void populateAllTabs();
 
     const Persistence::Settings *settings;
+    const QMap<QString, QString> *jamRecorders;
 
 };
 

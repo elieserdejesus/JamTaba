@@ -175,9 +175,13 @@ void RecordingSettings::write(QJsonObject &out) const
 {
     out["recordingPath"] = recordingPath;
     out["recordActivated"] = saveMultiTracksActivated;
+    QJsonObject jamRecorders = QJsonObject();
     foreach(QString key, jamRecorderActivated.keys()){
-        out[key + ".recordActivated"] = jamRecorderActivated[key];
+        QJsonObject jamRecorder = QJsonObject();
+        jamRecorder["activated"] = jamRecorderActivated[key];
+        jamRecorders[key] = jamRecorder;
     }
+    out["jamRecorders"] = jamRecorders;
 }
 
 void RecordingSettings::read(const QJsonObject &in)
@@ -200,8 +204,11 @@ void RecordingSettings::read(const QJsonObject &in)
         recordingPath = QDir(documentsDir).absoluteFilePath("Jamtaba");
     }
     saveMultiTracksActivated = getValueFromJson(in, "recordActivated", false);
-    foreach(QString key, in.keys().filter(".recordActivated$")){
-        jamRecorderActivated[key] = in[key + ".recordActivated"].toBool();
+
+    QJsonObject jamRecorders = getValueFromJson(in, "jamRecorders", QJsonObject());
+    foreach(QString key, jamRecorders.keys()) {
+        QJsonObject jamRecorder = jamRecorders[key].toObject();
+        jamRecorderActivated[key] = getValueFromJson(jamRecorder, "activated", false);
     }
 }
 

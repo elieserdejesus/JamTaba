@@ -124,6 +124,17 @@ public:
     bool saveMultiTracksActivated;
     QMap <QString, bool> jamRecorderActivated;
     QString recordingPath;
+
+    inline bool isJamRecorderActivated(QString key) const
+    {
+        if (jamRecorderActivated.contains(key))
+            return jamRecorderActivated[key];
+        return false;
+    }
+    inline void RecordingSettings::setJamRecorderActivated(QString key, bool value)
+    {
+        jamRecorderActivated[key] = value;
+    }
 };
 // +++++++++++++++++++++++++++++++++
 class Plugin
@@ -369,24 +380,34 @@ public:
     void setPrivateServerData(const QString &server, int serverPort, const QString &password);
 
     // recording settings
-    inline bool isSaveMultiTrackActivated() const
-    {
-        return recordingSettings.saveMultiTracksActivated;
-    }
-
     inline RecordingSettings getRecordingSettings() const
     {
         return recordingSettings;
     }
 
-    inline QString getRecordingPath() const
+    inline bool isSaveMultiTrackActivated() const
     {
-        return recordingSettings.recordingPath;
+        return recordingSettings.saveMultiTracksActivated;
     }
 
     inline void setSaveMultiTrack(bool saveMultiTracks)
     {
         recordingSettings.saveMultiTracksActivated = saveMultiTracks;
+    }
+
+    inline bool isJamRecorderActivated(QString key) const
+    {
+        return recordingSettings.isJamRecorderActivated(key);
+    }
+
+    inline void setJamRecorderActivated(QString key, bool value)
+    {
+        recordingSettings.setJamRecorderActivated(key, value);
+    }
+
+    inline QString getRecordingPath() const
+    {
+        return recordingSettings.recordingPath;
     }
 
     inline void setRecordingPath(const QString &newPath)
