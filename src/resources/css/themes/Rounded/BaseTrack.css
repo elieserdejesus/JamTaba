@@ -172,7 +172,11 @@ BaseTrackView[unlighted="true"] .QPushButton
    background-color: rgb(100, 100, 100);
 }
 
-
+BaseTrackView[unlighted="true"] #buttonStereoInversion:hover,
+BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked
+{
+    background-color: rgba(0, 0, 0, 45);
+}
 
 /* track group
 ------------------------------------ */
