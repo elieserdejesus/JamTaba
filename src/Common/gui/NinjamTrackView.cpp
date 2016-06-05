@@ -117,7 +117,7 @@ void NinjamTrackView::setupVerticalLayout()
 
     mainLayout->addWidget(channelNameLabel, 0, 0, 1, 2);// insert channel name label in top
     mainLayout->addLayout(primaryChildsLayout, 1, 0);
-    mainLayout->addLayout(secondaryChildsLayout,1, 1);
+    mainLayout->addLayout(secondaryChildsLayout, 1, 1);
     mainLayout->addWidget(chunksDisplay, 2, 0, 1, 2); // append chunks display in bottom
 
     primaryChildsLayout->setDirection(QBoxLayout::TopToBottom);
@@ -137,7 +137,7 @@ void NinjamTrackView::setupHorizontalLayout()
     mainLayout->addWidget(channelNameLabel, 0, 0);
     mainLayout->addLayout(primaryChildsLayout, 0, 1);
     mainLayout->addLayout(secondaryChildsLayout, 1, 0, 1, 2);
-    mainLayout->addWidget(chunksDisplay, 1, 0, 1, 2); // append chunks display in bottom overlapping the other widgets
+    mainLayout->addWidget(chunksDisplay, 2, 0, 1, 2); // append chunks display in bottom
 
     mainLayout->setContentsMargins(6, 3, 6, 3);
     mainLayout->setVerticalSpacing(6);
@@ -201,11 +201,6 @@ void NinjamTrackView::setDownloadedChunksDisplayVisibility(bool visible)
 {
     chunksDisplay->reset();
     chunksDisplay->setVisible(visible);
-    if(orientation == Qt::Horizontal)
-        BaseTrackView::setLayoutWidgetsVisibility(secondaryChildsLayout, !visible);
-    else
-        BaseTrackView::setLayoutWidgetsVisibility(secondaryChildsLayout, true);//secondary widgets are always visible in vertical layout
-
 }
 
 void NinjamTrackView::setChannelName(const QString &name)
