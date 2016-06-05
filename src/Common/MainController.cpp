@@ -127,7 +127,7 @@ void MainController::connectedNinjamServer(const Ninjam::Server &server)
     newNinjamController->start(server);
 
     if (settings.isSaveMultiTrackActivated())
-        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+        foreach(Recorder::JamRecorder *jamRecorder, getActiveRecorders())
             jamRecorder->startRecording(getUserName(), QDir(settings.getRecordingPath()),
                                    server.getBpm(), server.getBpi(), getSampleRate());
 }
@@ -186,7 +186,7 @@ void MainController::enqueueAudioDataToUpload(const QByteArray &encodedAudio, qu
     }
 
     if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom())
-        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+        foreach(Recorder::JamRecorder *jamRecorder, getActiveRecorders())
             jamRecorder->appendLocalUserAudio(encodedAudio, channelIndex, isFirstPart, isLastPart);
 }
 
@@ -237,7 +237,7 @@ void MainController::saveEncodedAudio(const QString &userName, quint8 channelInd
                                       const QByteArray &encodedAudio)
 {
     if (settings.isSaveMultiTrackActivated())// just in case
-        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+        foreach(Recorder::JamRecorder *jamRecorder, getActiveRecorders())
             jamRecorder->addRemoteUserAudio(userName, encodedAudio, channelIndex);
 }
 

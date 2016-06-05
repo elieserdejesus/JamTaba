@@ -317,6 +317,14 @@ private:
 
     QList<Recorder::JamRecorder *> jamRecorders;
 
+    inline QList<Recorder::JamRecorder *> getActiveRecorders() const {
+        QList<Recorder::JamRecorder *> activeRecorders;
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+            if (settings.isJamRecorderActivated(jamRecorder->getWriterId()))
+                activeRecorders.append(jamRecorder);
+        return activeRecorders;
+    }
+
     // master
     float masterGain;
     Audio::AudioPeak masterPeak;
