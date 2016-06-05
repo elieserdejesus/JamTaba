@@ -260,8 +260,17 @@ void MainControllerStandalone::on_ninjamStartProcessing(int intervalPosition)
 
 void MainControllerStandalone::on_VSTPluginFounded(QString name, QString group, QString path)
 {
-    pluginsDescriptors.append(Audio::PluginDescriptor(name, group, path));
-    settings.addVstPlugin(path);
+    bool containThePlugin = false;
+    foreach (const Audio::PluginDescriptor descriptor, pluginsDescriptors) {
+        if (descriptor.getPath() == path) {
+            containThePlugin = true;
+            break;
+        }
+    }
+    if (!containThePlugin) {
+        settings.addVstPlugin(path);
+        pluginsDescriptors.append(Audio::PluginDescriptor(name, group, path));
+    }
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++
