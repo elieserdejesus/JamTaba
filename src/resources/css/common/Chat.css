@@ -46,6 +46,11 @@ ChatMessagePanel #labelUserName /* chat message author */
     font-weight: bold;
 }
 
+ChatMessagePanel #translateButton
+{
+    background-color: transparent;
+}
+
 ChatMessagePanel #translateButton, /* the small T (translate) button in right side of chat messages */
 ChatMessagePanel #blockButton      /* the small B (block user in chat) button */
 {
