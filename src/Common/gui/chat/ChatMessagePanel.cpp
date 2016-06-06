@@ -73,8 +73,10 @@ void ChatMessagePanel::setMessageLabelText(const QString &msg)
 
 QString ChatMessagePanel::buildCssString(const QColor &bgColor, const QColor &textColor)
 {
-    QString css = "background-color: " + bgColor.name() + ";";
-    css += "color: " + textColor.name() + ";";
+    QString css = "ChatMessagePanel { ";
+    css += " background-color: " + bgColor.name(QColor::HexArgb) + ";";
+    css += " color: " + textColor.name() + ";";
+    css += "}";
     return css;
 }
 

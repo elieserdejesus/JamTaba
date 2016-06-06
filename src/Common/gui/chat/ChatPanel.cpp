@@ -7,7 +7,7 @@
 #include <QKeyEvent>
 #include <QWidget>
 
-const QColor ChatPanel::BOT_COLOR(180, 180, 180);
+const QColor ChatPanel::BOT_COLOR(255, 255, 255, 30);
 
 ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool) :
     QWidget(nullptr),
