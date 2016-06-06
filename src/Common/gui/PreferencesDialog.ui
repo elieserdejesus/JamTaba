@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="prefsTab">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
@@ -521,35 +521,21 @@
        <property name="verticalSpacing">
         <number>18</number>
        </property>
-       <item row="1" column="1">
+       <item row="3" column="1">
         <widget class="QLineEdit" name="recordPathLineEdit">
          <property name="enabled">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Record path:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="3">
-        <widget class="QCheckBox" name="recordingCheckBox">
-         <property name="text">
-          <string>Save multi tracks </string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
+       <item row="3" column="2">
         <widget class="QPushButton" name="browseRecPathButton">
          <property name="text">
           <string>browse ...</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="4" column="1">
         <spacer name="verticalSpacer_3">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -561,6 +547,27 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="0" column="0" colspan="3">
+        <widget class="QCheckBox" name="recordingCheckBox">
+         <property name="text">
+          <string>Save multi tracks </string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Record path:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <layout class="QVBoxLayout" name="layoutRecorders">
+         <property name="leftMargin">
+          <number>26</number>
+         </property>
+        </layout>
        </item>
       </layout>
      </widget>

@@ -1,6 +1,7 @@
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
 
+#include <QtWidgets>
 #include <QDebug>
 #include <QFileDialog>
 #include "persistence/Settings.h"
@@ -51,6 +52,16 @@ void PreferencesDialog::initialize(PreferencesTab initialTab, const Persistence:
     Q_UNUSED(initialTab);
     this->settings = settings;
     this->jamRecorders = jamRecorders;
+    this->jamRecorderCheckBoxes = QMap<QCheckBox *, QString>();
+
+    foreach(const QString jamRecorder, jamRecorders->keys()) {
+        QCheckBox *myCheckBox = new QCheckBox;
+        myCheckBox->setObjectName(jamRecorder);
+        myCheckBox->setText(jamRecorders->value(jamRecorder));
+        ui->layoutRecorders->addWidget(myCheckBox);
+        jamRecorderCheckBoxes[myCheckBox] = jamRecorder;
+    }
+
     setupSignals();
     populateAllTabs();
 }
@@ -63,11 +74,9 @@ void PreferencesDialog::setupSignals()
 
     connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this,
             SIGNAL(multiTrackRecordingStatusChanged(bool)));
-    foreach(QString writerId, jamRecorders->keys()) {
-        connect(
-                    ui->recordingCheckBox, // TODO: this should be the dynamically created per-recorder checkbox
-                    &QCheckBox::clicked, [=](bool newStatus) {
-            jamRecorderStatusChanged(writerId, newStatus);
+    foreach(QCheckBox *myCheckBox, jamRecorderCheckBoxes.keys()) {
+        connect(myCheckBox, &QCheckBox::clicked, [=](bool newStatus) {
+            jamRecorderStatusChanged(jamRecorderCheckBoxes[myCheckBox], newStatus);
         });
     }
     connect(ui->browseRecPathButton, SIGNAL(clicked(bool)), this, SLOT(openRecordingPathBrowser()));
@@ -127,14 +136,11 @@ void PreferencesDialog::populateRecordingTab()
 {
     Q_ASSERT(settings);
     Persistence::RecordingSettings recordingSettings = settings->getRecordingSettings();
-    QDir recordDir(recordingSettings.recordingPath);
     ui->recordingCheckBox->setChecked(recordingSettings.saveMultiTracksActivated);
-    /*
-     * At this point we want to show the list of jamRecorders known to this version
-     * and populate the checkbox from the settings.
-     * Settings may not have anything and it may have settings for unknown jamRecorders
-     * but that does not matter.
-     */
+    foreach(QCheckBox *myCheckBox, jamRecorderCheckBoxes.keys()) {
+        myCheckBox->setChecked(recordingSettings.isJamRecorderActivated(jamRecorderCheckBoxes[myCheckBox]));
+    }
+    QDir recordDir(recordingSettings.recordingPath);
     ui->recordPathLineEdit->setText(recordDir.absolutePath());
 }
 
