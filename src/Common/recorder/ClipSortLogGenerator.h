@@ -2,6 +2,7 @@
 #define __CLIPSORT_LOG_GENERATOR__
 
 #include "JamRecorder.h"
+#include "QCoreApplication"
 
 namespace Recorder {
 class ClipSortLogGenerator : public JamMetadataWriter
@@ -14,7 +15,7 @@ public:
     }
     inline QString getWriterName() const override // Localised
     {
-        return "Generate Reaper 'clipsort.log' file";
+        return QCoreApplication::translate("Recorder::ClipSortLogGenerator", "Generate Reaper 'clipsort.log' file");
     }
 };
 }

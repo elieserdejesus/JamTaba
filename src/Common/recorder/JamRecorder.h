@@ -166,8 +166,8 @@ class JamMetadataWriter
 public:
     virtual void write(const Jam &metadata) = 0;
     virtual ~JamMetadataWriter(){}
-    virtual QString getWriterId() const {return "";}
-    virtual QString getWriterName() const {return "";} // Localised
+    virtual QString getWriterId() const = 0;
+    virtual QString getWriterName() const = 0; // Localised
 };
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class LocalNinjamInterval

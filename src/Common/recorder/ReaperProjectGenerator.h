@@ -2,6 +2,7 @@
 #define __REAPER_PROJECT_GENERATOR__
 
 #include "JamRecorder.h"
+#include "QCoreApplication"
 
 namespace Recorder {
 class ReaperProjectGenerator : public JamMetadataWriter
@@ -14,7 +15,7 @@ public:
     }
     inline QString getWriterName() const override // Localised
     {
-        return "Generate Reaper Project file (RPP)";
+        return QCoreApplication::translate("Recorder::ReaperProjectGenerator", "Generate Reaper Project file (RPP)");
     }
 
 private:
