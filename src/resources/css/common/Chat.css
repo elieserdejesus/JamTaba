@@ -46,7 +46,8 @@ ChatMessagePanel #labelUserName /* chat message author */
     font-weight: bold;
 }
 
-ChatMessagePanel #translateButton
+ChatMessagePanel #translateButton,
+ChatMessagePanel #blockButton
 {
     background-color: transparent;
 }
