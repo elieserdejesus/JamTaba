@@ -188,7 +188,7 @@ protected slots:
     void setMasterGain(int faderPosition);
 
     // chords progression
-    void showChordProgression(const ChordProgression &chordProgression);
+    void acceptChordProgression(const ChordProgression &chordProgression);
     void sendCurrentChordProgressionToChat();
 
     void updateBpi(int bpi);
@@ -291,6 +291,8 @@ private:
     void setChatVisibility(bool chatVisible);
 
     void openUrlInUserBrowser(const QString &url);
+
+    void sendAcceptedChordProgressionToServer(const ChordProgression &progression);
 
     // PerformanceMonitor performanceMonitor;//cpu and memmory usage
     // qint64 lastPerformanceMonitorUpdate;

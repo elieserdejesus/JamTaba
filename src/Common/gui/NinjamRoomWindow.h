@@ -60,7 +60,9 @@ public:
 
     void setTracksSize(TracksSize size);
 
-    inline QString getRoomName() const { return roomName; }
+    inline QString getRoomName() const { return roomInfo.getName(); }
+
+    Login::RoomInfo getRoomInfo() const { return roomInfo; }
 
 protected:
     Ui::NinjamRoomWindow *ui;
@@ -78,7 +80,7 @@ private:
 
     bool fullViewMode;
 
-    QString roomName;
+    Login::RoomInfo roomInfo;
 
     void createVoteButton(const Gui::Chat::SystemVotingMessage &votingMessage);
     void handleChordProgressionMessage(const Ninjam::User &user, const QString &message);
@@ -117,6 +119,8 @@ private:
 
     void initializeVotingExpirationTimers();
 
+    void showLastChordsInChat();
+
     static const QString JAMTABA_CHAT_BOT_NAME;
 
 private slots:
@@ -142,6 +146,7 @@ private slots:
     void updateIntervalDownloadingProgressBar(long trackID);
     void hideIntervalDownloadingProgressBar(long trackID);
     void addChatMessage(const Ninjam::User &, const QString &message);
+    void addServerTopicMessage(const QString &topicMessage);
     void handleUserLeaving(const QString &userName);
     void handleUserEntering(const QString &userName);
     void handleBpiChanges();

@@ -49,7 +49,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
     ninjamPanel(nullptr),
     tracksOrientation(Qt::Vertical),
     tracksSize(TracksSize::WIDE),
-    roomName(roomInfo.getName())
+    roomInfo(roomInfo)
 {
     qCDebug(jtNinjamGUI) << "NinjamRoomWindow construtor..";
     ui->setupUi(this);
@@ -82,6 +82,7 @@ NinjamRoomWindow::NinjamRoomWindow(MainWindow *parent, const Login::RoomInfo &ro
     initializeVotingExpirationTimers();
 
     updateBpmBpiLabel();
+
 }
 
 void NinjamRoomWindow::initializeVotingExpirationTimers()
@@ -311,6 +312,27 @@ void NinjamRoomWindow::handleUserEntering(const QString &userName)
         chatPanel->addMessage(JAMTABA_CHAT_BOT_NAME, tr("%1 enter in room.").arg(userName));
 }
 
+void NinjamRoomWindow::addServerTopicMessage(const QString &topicMessage)
+{
+    addChatMessage(Ninjam::User(JAMTABA_CHAT_BOT_NAME), topicMessage);
+
+    showLastChordsInChat();
+}
+
+void NinjamRoomWindow::showLastChordsInChat()
+{
+    Login::LoginService *loginService = mainController->getLoginService();
+    QString lastChordProgression = loginService->getChordProgressionFor(roomInfo);
+    ChatChordsProgressionParser parser;
+    if (parser.containsProgression(lastChordProgression)) {
+        ChordProgression progression = parser.parse(lastChordProgression);
+        QString title = tr("Last chords used");
+        chatPanel->addLastChordsMessage(title, progression.toString());
+        chatPanel->addChordProgressionConfirmationMessage(parser.parse(lastChordProgression));
+
+    }
+}
+
 void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &message)
 {
     QString userName = user.getName();
@@ -377,7 +399,7 @@ bool NinjamRoomWindow::canShowBlockButtonInChatMessage(const QString &userName) 
 
     **/
 
-    bool userIsBot = mainController->getNinjamController()->userIsBot(userName);
+    bool userIsBot = mainController->getNinjamController()->userIsBot(userName) || userName == JAMTABA_CHAT_BOT_NAME;
     bool currentUserIsPostingTheChatMessage = userName == mainController->getUserName(); // chat message author and the current user name are the same?
     return !userIsBot && !currentUserIsPostingTheChatMessage && !userName.isEmpty();
 }
@@ -676,6 +698,8 @@ void NinjamRoomWindow::setupSignals(Controller::NinjamController* ninjamControll
     connect(ninjamController, SIGNAL(channelAudioFullyDownloaded(long)), this, SLOT(hideIntervalDownloadingProgressBar(long)));
 
     connect(ninjamController, SIGNAL(chatMsgReceived(Ninjam::User, QString)), this, SLOT(addChatMessage(Ninjam::User, QString)));
+
+    connect(ninjamController, SIGNAL(topicMessageReceived(QString)), this, SLOT(addServerTopicMessage(QString)));
 
     connect(ninjamController, SIGNAL(channelXmitChanged(long, bool)), this, SLOT(setChannelXmitStatus(long, bool)));
 

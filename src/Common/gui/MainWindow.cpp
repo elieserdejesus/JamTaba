@@ -698,7 +698,7 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
 
     QObject::connect(chatPanel, SIGNAL(userConfirmingChordProgression(
                                            ChordProgression)), this,
-                     SLOT(showChordProgression(ChordProgression)));
+                     SLOT(acceptChordProgression(ChordProgression)));
 
     // add the ninjam panel in main window (bottom panel)
     qCDebug(jtGUI) << "adding ninjam panel...";
@@ -1293,7 +1293,7 @@ ChordsPanel *MainWindow::createChordsPanel()
     return chordsPanel;
 }
 
-void MainWindow::showChordProgression(const ChordProgression &progression)
+void MainWindow::acceptChordProgression(const ChordProgression &progression)
 {
     int currentBpi = mainController->getNinjamController()->getCurrentBpi();
     if (progression.canBeUsed(currentBpi)) {
@@ -1311,12 +1311,29 @@ void MainWindow::showChordProgression(const ChordProgression &progression)
         dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->insertWidget(0, chordsPanel);
         if (ninjamWindow)
             ninjamWindow->getNinjamPanel()->setLowContrastPaintInIntervalPanel(true);
+
+        sendAcceptedChordProgressionToServer(progression);
+
     } else {
         int measures = progression.getMeasures().size();
         QString msg = tr("These chords (%1 measures) can't be used in a %2 bpi interval!")
                       .arg(QString::number(measures))
                       .arg(QString::number(currentBpi));
         QMessageBox::warning(this, tr("Problem..."), msg);
+    }
+}
+
+void MainWindow::sendAcceptedChordProgressionToServer(const ChordProgression &progression)
+{
+    Login::LoginService *service = mainController->getLoginService();
+    Login::RoomInfo currentRoom = ninjamWindow->getRoomInfo();
+    QString chords = progression.toString();
+    bool chordProgressionIsOutdated = service->getChordProgressionFor(currentRoom) != chords;
+    if (chordProgressionIsOutdated) {
+        QString userName = mainController->getUserName();
+        QString serverName = currentRoom.getName();
+        quint32 serverPort = currentRoom.getPort();
+        service->sendChordProgressionToServer(userName, serverName, serverPort, chords);
     }
 }
 

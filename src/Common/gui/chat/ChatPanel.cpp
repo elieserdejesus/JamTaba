@@ -148,6 +148,15 @@ void ChatPanel::hideTranslationProgressFeedback()
         QApplication::restoreOverrideCursor();
 }
 
+void ChatPanel::addLastChordsMessage(const QString &userName, const QString &message, QColor textColor, QColor backgroundColor)
+{
+    ChatMessagePanel *msgPanel = new ChatMessagePanel(ui->scrollContent, userName, message,
+                                                      backgroundColor, textColor, false, false);
+
+    addMessagePanelInLayout(msgPanel);
+
+}
+
 void ChatPanel::addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton, bool showBlockButton)
 {
     QString name = !userName.isEmpty() ? userName : "JamTaba";
@@ -164,6 +173,16 @@ void ChatPanel::addMessage(const QString &userName, const QString &userMessage, 
     connect(msgPanel, &ChatMessagePanel::blockingUser, this, &ChatPanel::userBlockingChatMessagesFrom);
 
     msgPanel->setPrefferedTranslationLanguage(this->autoTranslationLanguage);
+
+    addMessagePanelInLayout(msgPanel);
+
+    if (autoTranslating)
+        msgPanel->translate();// request the translation
+
+}
+
+void ChatPanel::addMessagePanelInLayout(ChatMessagePanel *msgPanel)
+{
     ui->scrollContent->layout()->addWidget(msgPanel);
     if (ui->scrollContent->layout()->count() > MAX_MESSAGES) {
         // remove the first widget
@@ -173,10 +192,6 @@ void ChatPanel::addMessage(const QString &userName, const QString &userMessage, 
     }
     ui->scrollContent->layout()->setAlignment(Qt::AlignTop);
     ui->scrollContent->layout()->setAlignment(msgPanel, Qt::AlignTop);
-
-    if (autoTranslating)
-        msgPanel->translate();// request the translation
-
 }
 
 // +++++++++++++++++++++++++++++++++++=

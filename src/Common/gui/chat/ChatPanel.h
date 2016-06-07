@@ -13,6 +13,8 @@ namespace Ui {
 class ChatPanel;
 }
 
+class ChatMessagePanel;
+
 class ChatPanel : public QWidget
 {
     Q_OBJECT
@@ -21,6 +23,7 @@ public:
     ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool);
     virtual ~ChatPanel();
     void addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton = true, bool showBlockButton = false);
+    void addLastChordsMessage(const QString &userName, const QString &message, QColor textColor = Qt::black, QColor backgroundColor = QColor(212, 243, 182));
     void addBpmVoteConfirmationMessage(quint32 newBpmValue, quint32 expireTime);
     void addBpiVoteConfirmationMessage(quint32 newBpiValue, quint32 expireTime);
     void addChordProgressionConfirmationMessage(const ChordProgression &progression);
@@ -62,6 +65,8 @@ private:
     void createVoteButton(const QString &voteType, quint32 value, quint32 expireTime);
 
     bool autoTranslating;
+
+    void addMessagePanelInLayout(ChatMessagePanel *msgPanel);
 
     UsersColorsPool *colorsPool;
 };

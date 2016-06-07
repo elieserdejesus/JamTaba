@@ -466,7 +466,7 @@ void Service::process(const ServerChatMessage &msg)
             currentServer->setLicence(serverLicence);
             currentServer->setTopic(topicText);
             emit connectedInServer(*currentServer);
-            emit chatMessageReceived(Ninjam::User(currentServer->getHostName()), topicText);
+            emit serverTopicMessageReceived(topicText);
         }
         break;
     }
