@@ -53,7 +53,7 @@ ChatMessagePanel #blockButton
 ChatMessagePanel #translateButton:hover,
 ChatMessagePanel #blockButton:hover
 {
-    border-color: rgb(200, 200, 200);
+    border-color: rgb(140, 140, 140);
     border-style: outset;
 }
 
