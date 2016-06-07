@@ -55,7 +55,7 @@ void PreferencesDialog::initialize(PreferencesTab initialTab, const Persistence:
     this->jamRecorderCheckBoxes = QMap<QCheckBox *, QString>();
 
     foreach(const QString jamRecorder, jamRecorders->keys()) {
-        QCheckBox *myCheckBox = new QCheckBox;
+        QCheckBox *myCheckBox = new QCheckBox(this);
         myCheckBox->setObjectName(jamRecorder);
         myCheckBox->setText(jamRecorders->value(jamRecorder));
         ui->layoutRecorders->addWidget(myCheckBox);
