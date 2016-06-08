@@ -498,7 +498,7 @@
     </message>
     <message>
         <source>Full View</source>
-        <translation>全画面表示</translation>
+        <translation>最大表示</translation>
     </message>
     <message>
         <source>Mini View</source>
@@ -545,7 +545,7 @@
     </message>
     <message>
         <source>Your Jamtaba version is not compatible with previous versions!</source>
-        <translation>このバージョンのJamTabaは以前のバージョンと互換性がありません!</translation>
+        <translation>このバージョンのJamtabaは以前のバージョンと互換性がありません!</translation>
     </message>
     <message>
         <source>Server : Compatibility problem</source>
@@ -559,7 +559,7 @@
     </message>
     <message>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
-        <translation>&lt;a href=&apos;http://www.jamtaba.com&apos;&gt;新しいバージョンのJamTaba&lt;/a&gt;がダウンロード可能です!</translation>
+        <translation>&lt;a href=&apos;http://www.jamtaba.com&apos;&gt;新しいバージョンのJamtaba&lt;/a&gt;がダウンロード可能です!</translation>
     </message>
     <message>
         <source>New Jamtaba version available!</source>
