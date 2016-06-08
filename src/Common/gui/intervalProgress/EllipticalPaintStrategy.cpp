@@ -42,7 +42,7 @@ void IntervalProgressDisplay::EllipticalPaintStrategy::paint(QPainter &p, const 
 void IntervalProgressDisplay::EllipticalPaintStrategy::drawCurrentBeatValue(QPainter &p, const QRectF &rect, const PaintContext &context, const PaintColors &colors)
 {
     // draw current beat text in center
-    p.setPen(colors.textColor);
+    p.setPen(QPen(colors.textColor, 1.0f));
     font.setPointSizeF(context.fontSize);
     p.setFont(font);
     QString numberString(QString::number(context.currentBeat + 1) + " / " + QString::number(context.beatsPerInterval));

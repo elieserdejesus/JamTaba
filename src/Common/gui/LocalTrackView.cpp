@@ -10,6 +10,7 @@
 LocalTrackView::LocalTrackView(Controller::MainController *mainController, int channelIndex) :
     BaseTrackView(mainController, channelIndex),
     inputNode(nullptr),
+    usingSmallSpacing(false),
     peakMetersOnly(false),
     buttonStereoInversion(createStereoInversionButton())
 {
@@ -25,7 +26,14 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
     setUnlightStatus(false);
 
     secondaryChildsLayout->addWidget(buttonStereoInversion);
+}
 
+void LocalTrackView::useSmallSpacingInLayouts(bool useSmallSpacing)
+{
+    int spacing = useSmallSpacing ? 6 : 12;
+    secondaryChildsLayout->setSpacing(spacing );
+    mainLayout->setVerticalSpacing(spacing);
+    this->usingSmallSpacing = useSmallSpacing;
 }
 
 void LocalTrackView::setInitialValues(float initialGain, BaseTrackView::Boost boostValue,
@@ -84,6 +92,12 @@ QSize LocalTrackView::sizeHint() const
     return BaseTrackView::sizeHint();
 }
 
+void LocalTrackView::setupMetersLayout()
+{
+    metersLayout->addWidget(peakMeterLeft);
+    metersLayout->addWidget(peakMeterRight);
+}
+
 void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode)
 {
     if (this->peakMetersOnly != peakMetersOnly) {
@@ -97,8 +111,7 @@ void LocalTrackView::setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMi
             mainLayout->addWidget(peakMeterRight, 0, 1);
         }
         else{// put the meter in the original layout
-            metersLayout->addWidget(peakMeterLeft);
-            metersLayout->addWidget(peakMeterRight);
+            setupMetersLayout();
         }
         mainLayout->setHorizontalSpacing( peakMetersOnly ? 0 : 6 );
 

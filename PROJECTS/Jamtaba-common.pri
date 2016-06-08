@@ -4,7 +4,7 @@ message("VST PATH: " $$VST_SDK_PATH)
 
 TEMPLATE = lib
 
-VERSION = 2.0.14
+VERSION = 2.0.15
 
 ROOT_PATH = "../.."
 SOURCE_PATH = "$$ROOT_PATH/src"
@@ -81,8 +81,9 @@ HEADERS += gui/NinjamTrackView.h
 HEADERS += gui/NinjamTrackGroupView.h
 HEADERS += gui/NinjamPanel.h
 HEADERS += gui/BusyDialog.h
-HEADERS += gui/ChatPanel.h
-HEADERS += gui/ChatMessagePanel.h
+HEADERS += gui/chat/ChatPanel.h
+HEADERS += gui/chat/ChatMessagePanel.h
+HEADERS += gui/chat/NinjamVotingMessageParser.h
 HEADERS += gui/Highligther.h
 HEADERS += gui/TrackGroupView.h
 HEADERS += gui/LocalTrackGroupView.h
@@ -173,8 +174,9 @@ SOURCES += gui/NinjamTrackView.cpp
 SOURCES += gui/NinjamTrackGroupView.cpp
 SOURCES += gui/NinjamPanel.cpp
 SOURCES += gui/BusyDialog.cpp
-SOURCES += gui/ChatPanel.cpp
-SOURCES += gui/ChatMessagePanel.cpp
+SOURCES += gui/chat/ChatPanel.cpp
+SOURCES += gui/chat/ChatMessagePanel.cpp
+SOURCES += gui/chat/NinjamVotingMessageParser.cpp
 SOURCES += gui/Highligther.cpp
 SOURCES += gui/TrackGroupView.cpp
 SOURCES += gui/LocalTrackGroupView.cpp
@@ -221,8 +223,8 @@ FORMS += gui/PluginScanDialog.ui
 FORMS += gui/NinjamRoomWindow.ui
 FORMS += gui/NinjamPanel.ui
 FORMS += gui/BusyDialog.ui
-FORMS += gui/ChatPanel.ui
-FORMS += gui/ChatMessagePanel.ui
+FORMS += gui/chat/ChatPanel.ui
+FORMS += gui/chat/ChatMessagePanel.ui
 FORMS += gui/JamRoomViewPanel.ui
 FORMS += gui/PrivateServerDialog.ui
 FORMS += gui/UserNameDialog.ui

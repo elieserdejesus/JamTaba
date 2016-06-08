@@ -80,10 +80,11 @@ BaseTrackView #peaksDbLabel:hover{
     font-size: 9px;
 }
 
-PeakMeter
+BaseMeter
 {
     min-width: 4px;
     min-height: 4px;
+    background-color: rgba(0, 0, 0, 20);
 }
 
 /*
@@ -92,7 +93,7 @@ used when xmit is off, and for remote tracks (ninjam tracks) this color is used 
 user is not transmiting.
 -----------------------------------------------------------------------------------*/
 
-BaseTrackView[unlighted="true"] PeakMeter{
+BaseTrackView[unlighted="true"] BaseMeter{
     background-color: rgba(0, 0, 0, 15);
 }
 

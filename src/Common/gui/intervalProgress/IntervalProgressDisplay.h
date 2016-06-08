@@ -72,10 +72,10 @@ private:
         QColor accentBeat;//used in first interval beat and accents when these beats are non current beat
         QColor currentAccentBeat;//used when drawing the current beat and this beat is an accent
         QColor disabledBeats;
-        QColor textColor;
+        QBrush textColor;
 
 
-        PaintColors(const QColor &currentBeat, const QColor &secondaryBeat, const QColor &accentBeat, const QColor &currentAccentBeat, const QColor &disabledBeats, const QColor &textColor);
+        PaintColors(const QColor &currentBeat, const QColor &secondaryBeat, const QColor &accentBeat, const QColor &currentAccentBeat, const QColor &disabledBeats, const QBrush &textColor);
     };
 
     class PaintStrategy
@@ -155,7 +155,6 @@ private:
     static const QColor ACCENT_COLOR;
     static const QColor SECONDARY_BEATS_COLOR;
     static const QColor DISABLED_BEATS_COLOR;
-    static const QColor TEXT_COLOR;
 };
 
 #endif

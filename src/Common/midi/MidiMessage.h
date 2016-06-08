@@ -19,6 +19,8 @@ public:
     int getChannel() const;
 
     bool isNote() const;
+    bool isNoteOn() const;
+    bool isNoteOff() const;
 
     void transpose(qint8 semitones);
 

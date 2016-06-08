@@ -29,7 +29,9 @@ public:
 
     inline int getSampleRate() const
     {
-        return vorbisFile.vi->rate;
+        if (vorbisFile.vi)
+            return vorbisFile.vi->rate;
+        return 44100;
     }
 
     inline bool isInitialized() const
@@ -37,15 +39,12 @@ public:
         return initialized;
     }
 
-    void setInput(const QByteArray &vorbisData);
-    void reset();
-    inline int getTotalDecodedSamples() const
-    {
-        return decodedSamples;
-    }
+    void setInputData(const QByteArray &vorbisData);
+
+    bool initialize();
 
 private:
-    bool initialize();
+
     Audio::SamplesBuffer internalBuffer;
     OggVorbis_File vorbisFile;
     bool initialized;
@@ -54,8 +53,6 @@ private:
     static size_t readOgg(void *oggOutBuffer, size_t size, size_t nmemb, void *decoderInstance);
 
     size_t consumeTo(void *oggOutBuffer, size_t bytesToConsume);
-
-    int decodedSamples;
 };
 
 #endif

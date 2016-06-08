@@ -69,7 +69,7 @@ Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}; Filen
 ; add the Parameters, WorkingDir and StatusMsg as you wish, just keep here the conditional installation Check
 Filename: {tmp}\{#Redistributable}; Check: VCRedistNeedsInstall; Parameters: "/install /quiet /norestart "
 
-Filename: {app}\{#MyAppExeName}; Description: {cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}; Flags: nowait postinstall skipifsilent
+Filename: {app}\{#MyAppExeName}; Description: {cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}; Flags: nowait postinstall skipifsilent runascurrentuser
 
 
 [Registry]

@@ -131,9 +131,9 @@ void BaseTrackView::createLayoutStructure()
     levelSliderLayout->addWidget(levelSlider);
     levelSliderLayout->addWidget(lowLevelIcon);
 
-    peakMeterLeft = new PeakMeter();
+    peakMeterLeft = new AudioMeter(this);
     peakMeterLeft->setObjectName(QStringLiteral("peakMeterLeft"));
-    peakMeterRight = new PeakMeter();
+    peakMeterRight = new AudioMeter(this);
     peakMeterRight->setObjectName(QStringLiteral("peakMeterRight"));
 
     metersLayout = new QHBoxLayout();

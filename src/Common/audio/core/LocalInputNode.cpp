@@ -167,7 +167,7 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
                     filteredMidiBuffer.addMessage(message);
 
                     // save the midi activity peak value for notes or controls
-                    if (message.isNote() || message.isControl()) {
+                    if (message.isNoteOn() || message.isControl()) {
                         quint8 activityValue = message.getData2();
                         if (activityValue > lastMidiActivity)
                             lastMidiActivity = activityValue;

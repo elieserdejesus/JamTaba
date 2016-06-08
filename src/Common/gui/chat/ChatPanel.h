@@ -5,6 +5,7 @@
 #include <QMap>
 #include <QPushButton>
 #include <QList>
+#include <QTimer>
 #include "chords/ChordProgression.h"
 #include "UsersColorsPool.h"
 
@@ -20,8 +21,8 @@ public:
     ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool);
     virtual ~ChatPanel();
     void addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton = true, bool showBlockButton = false);
-    void addBpmVoteConfirmationMessage(int newBpmValue);
-    void addBpiVoteConfirmationMessage(int newBpmValue);
+    void addBpmVoteConfirmationMessage(quint32 newBpmValue, quint32 expireTime);
+    void addBpiVoteConfirmationMessage(quint32 newBpiValue, quint32 expireTime);
     void addChordProgressionConfirmationMessage(const ChordProgression &progression);
     void setPreferredTranslationLanguage(const QString &targetLanguage);
     void updateMessagesGeometry();// called when user switch from mini mode to full view
@@ -58,7 +59,7 @@ private:
 
     QString autoTranslationLanguage;
 
-    void createVoteButton(const QString &voteType, int value);
+    void createVoteButton(const QString &voteType, quint32 value, quint32 expireTime);
 
     bool autoTranslating;
 
@@ -70,7 +71,7 @@ class NinjamVoteButton : public QPushButton
     Q_OBJECT
 
 public:
-    NinjamVoteButton(QString voteType, int voteValue) :
+    NinjamVoteButton(QString voteType, quint32 voteValue, quint32 expireTime) :
         voteValue(voteValue),
         voteType(voteType)
     {
@@ -78,6 +79,8 @@ public:
 
         QString label = tr("Vote - change %1 to %2 ").arg(voteType).arg(QString::number(voteValue));
         setText(label);
+
+        QTimer::singleShot(expireTime * 1000, this, SLOT(hide()));
     }
 
     inline int getVoteValue() const
@@ -96,7 +99,7 @@ public:
     }
 
 private:
-    int voteValue;
+    quint32 voteValue;
     QString voteType;
 };
 

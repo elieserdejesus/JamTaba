@@ -18,8 +18,7 @@ VorbisDecoder::VorbisDecoder()
     outBuffer = new float*[2];
     outBuffer[0] = new float[2048];
     outBuffer[1] = new float[2048];
-
-    decodedSamples = 0;
+    vorbisFile.vi = nullptr;
 }
 //+++++++++++++++++++++++++++++++++++++++++++
 VorbisDecoder::~VorbisDecoder(){
@@ -28,9 +27,9 @@ VorbisDecoder::~VorbisDecoder(){
     //delete [] outBuffer[0];
     //delete [] outBuffer[1];
     //delete [] outBuffer;
-    //if(initialized){
-//        ov_clear(&vorbisFile);
-//    }
+
+    if(initialized)
+        ov_clear(&vorbisFile);
 }
 //+++++++++++++++++++++++++++++++++++++++++++
 size_t VorbisDecoder::consumeTo(void *oggOutBuffer, size_t bytesToConsume){
@@ -39,9 +38,6 @@ size_t VorbisDecoder::consumeTo(void *oggOutBuffer, size_t bytesToConsume){
         memcpy(oggOutBuffer, vorbisInput.data(), len);
         vorbisInput.remove(0, (uint)len);
     }
-//    else{
-//        qCritical() << "len " << len;
-//    }
     return len;
 }
 
@@ -73,20 +69,13 @@ const Audio::SamplesBuffer &VorbisDecoder::decode(int maxSamplesToDecode){
         return Audio::SamplesBuffer::ZERO_BUFFER;
     }
     internalBuffer.setFrameLenght(samplesDecoded);
-    decodedSamples += samplesDecoded;
     //internal buffer is always stereo
     internalBuffer.add(0, outBuffer[0], samplesDecoded);//the left channel is always copyed
     internalBuffer.add(1, outBuffer[ (vorbisFile.vi->channels >= 2) ? 1 : 0 ], samplesDecoded);
     return internalBuffer;
 }
 //+++++++++++++++++++++++++++++++++++++++++++
-void VorbisDecoder::reset(){
-    initialize();
-    decodedSamples = 0;
-    //qWarning() << "reset";
-}
-//++++++++++++++++++++++++++++++++++++++++++++++
-void VorbisDecoder::setInput(const QByteArray &vorbisData){
+void VorbisDecoder::setInputData(const QByteArray &vorbisData){
     vorbisInput.clear();
     vorbisInput.append(vorbisData);
 }

@@ -4,7 +4,7 @@
 #include <QWidget>
 #include "audio/core/AudioPeak.h"
 
-class PeakMeter;
+class AudioMeter;
 class QLabel;
 class QPushButton;
 class QGroupBox;
@@ -94,8 +94,8 @@ protected:
     virtual QPoint getDbValuePosition(const QString &dbValueText, const QFontMetrics &metrics) const;
 
     //meters
-    PeakMeter *peakMeterLeft;
-    PeakMeter *peakMeterRight;
+    AudioMeter *peakMeterLeft;
+    AudioMeter *peakMeterRight;
     QBoxLayout *metersLayout;// used to group the two meter bars
     QLabel *peaksDbLabel;
     QBoxLayout *meterWidgetsLayout;// used to group meters bars and the max peaks Db label

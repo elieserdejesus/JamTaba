@@ -21,38 +21,8 @@ TrackGroupView::TrackGroupView(QWidget *parent) :
 
 void TrackGroupView::populateContextMenu(QMenu &contextMenu)
 {
-    // create painting on/off actions in context menu
-    contextMenu.addSeparator();
-    QAction *audioPeaksAction = contextMenu.addAction(tr("Show peak meter only"));
-    QAction *audioRmsAction = contextMenu.addAction(tr("Show RMS meter only"));
-    QAction *audioPeaPlusRmsAction = contextMenu.addAction(tr("Show Peak and RMS meters"));
-    contextMenu.addSeparator();
-    QAction *maxPeakMarkerAction = contextMenu.addAction(tr("Show max peak marker"));
-
-    audioPeaksAction->setCheckable(true);
-    audioRmsAction->setCheckable(true);
-    audioPeaPlusRmsAction->setCheckable(true);
-    maxPeakMarkerAction->setCheckable(true);
-
-    connect(audioPeaksAction, SIGNAL(triggered(bool)), this, SLOT(showPeakMeterOnly()));
-    connect(audioRmsAction, SIGNAL(triggered(bool)), this, SLOT(showRmsOnly()));
-    connect(audioPeaPlusRmsAction, SIGNAL(triggered(bool)), this, SLOT(showPeakAndRms()));
-    connect(maxPeakMarkerAction, SIGNAL(triggered(bool)), this, SLOT(showMaxPeakMarker(bool)));
-
-    maxPeakMarkerAction->setChecked(PeakMeter::isPaintintMaxPeakMarker());
-    bool showingPeakAndRms = PeakMeter::isPaintingRMS() && PeakMeter::isPaintingPeaks();
-    if (showingPeakAndRms) {
-        audioPeaPlusRmsAction->setChecked(true);
-    }
-    else{
-        audioPeaksAction->setChecked(PeakMeter::isPaintingPeaks());
-        audioRmsAction->setChecked(PeakMeter::isPaintingRMS());
-    }
-
-    QActionGroup *actionGroup = new QActionGroup(&contextMenu);
-    actionGroup->addAction(audioPeaksAction);
-    actionGroup->addAction(audioRmsAction);
-    actionGroup->addAction(audioPeaPlusRmsAction);
+    Q_UNUSED(contextMenu);
+    //no common actions at moment
 }
 
 void TrackGroupView::showContextMenu(const QPoint &pos){
@@ -63,25 +33,22 @@ void TrackGroupView::showContextMenu(const QPoint &pos){
 
 void TrackGroupView::showPeakMeterOnly()
 {
-    PeakMeter::setPaintingPeaks(true);
-    PeakMeter::setPaintingRMS(false);
+    AudioMeter::paintPeaksOnly();
 }
 
 void TrackGroupView::showRmsOnly()
 {
-    PeakMeter::setPaintingPeaks(false);
-    PeakMeter::setPaintingRMS(true);
+    AudioMeter::paintRmsOnly();
 }
 
 void TrackGroupView::showPeakAndRms()
 {
-    PeakMeter::setPaintingPeaks(true);
-    PeakMeter::setPaintingRMS(true);
+    AudioMeter::paintPeaksAndRms();
 }
 
 void TrackGroupView::showMaxPeakMarker(bool showMarker)
 {
-    PeakMeter::setPaintMaxPeakMarker(showMarker);
+    AudioMeter::setPaintMaxPeakMarker(showMarker);
 }
 
 void TrackGroupView::setupUI()

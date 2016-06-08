@@ -79,8 +79,14 @@
         stop:1 rgba(255,255, 255, 30));
 }
 
-
-
+QPushButton#buttonStereoInversion:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(240, 240, 240),
+        stop:0.2 rgb(255, 255, 255),
+        stop:0.7 rgb(240, 240, 240),
+        stop:1 rgb(210,210, 210));
+}
 
 BaseTrackView
 {
@@ -166,7 +172,11 @@ BaseTrackView[unlighted="true"] .QPushButton
    background-color: rgb(100, 100, 100);
 }
 
-
+BaseTrackView[unlighted="true"] #buttonStereoInversion:hover,
+BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked
+{
+    background-color: rgba(0, 0, 0, 45);
+}
 
 /* track group
 ------------------------------------ */

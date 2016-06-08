@@ -43,8 +43,19 @@ QScrollBar:horizontal
 {
     border: 1px solid rgba(0, 0, 0, 45);
     background-color: rgba(0, 0, 0, 40);
-    margin: 0px;
     border-radius: 2px;
+}
+
+QScrollBar:vertical
+{
+    width: 14px;
+    margin-left: 6px;
+}
+
+QScrollBar:horizontal
+{
+    height: 14px;
+    margin-top: 6px;
 }
 
 QScrollBar::handle:vertical,

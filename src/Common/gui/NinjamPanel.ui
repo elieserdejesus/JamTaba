@@ -21,13 +21,13 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="leftMargin">
-    <number>6</number>
+    <number>0</number>
    </property>
    <property name="topMargin">
     <number>6</number>
    </property>
    <property name="rightMargin">
-    <number>6</number>
+    <number>0</number>
    </property>
    <property name="bottomMargin">
     <number>6</number>
@@ -135,7 +135,7 @@
          <number>2</number>
         </property>
         <item alignment="Qt::AlignBottom">
-         <widget class="PeakMeter" name="peakMeterLeft" native="true">
+         <widget class="AudioMeter" name="peakMeterLeft" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -145,7 +145,7 @@
          </widget>
         </item>
         <item alignment="Qt::AlignTop">
-         <widget class="PeakMeter" name="peakMeterRight" native="true">
+         <widget class="AudioMeter" name="peakMeterRight" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -505,15 +505,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PeakMeter</class>
-   <extends>QWidget</extends>
-   <header>PeakMeter.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>IntervalProgressDisplay</class>
    <extends>QWidget</extends>
    <header>intervalProgress/IntervalProgressDisplay.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>AudioMeter</class>
+   <extends>QWidget</extends>
+   <header>PeakMeter.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -52,6 +52,8 @@ protected:
 
     bool eventFilter(QObject *target, QEvent *event) override;
 
+    void setupMetersLayout() override;
+
 private slots:
     void showInputSelectionMenu();// build and show the input selection menu
     void openMidiToolsDialog();
@@ -84,7 +86,7 @@ private:
     QWidget *inputPanel;
     FxPanel *fxPanel;
 
-    PeakMeter *midiPeakMeter;// show midi activity
+    MidiActivityMeter *midiPeakMeter;// show midi activity
 
     void setMidiPeakMeterVisibility(bool visible);
 

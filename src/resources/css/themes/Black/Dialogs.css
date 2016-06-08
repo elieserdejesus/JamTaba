@@ -1,0 +1,131 @@
+/* Dialogs in Black theme */
+
+PreferencesDialog
+{
+    background-color: rgb(70, 70, 70);
+}
+
+QMessageBox,
+QInputDialog,
+MidiToolsDialog,
+UserNameDialog,
+PrivateServerDialog
+{
+    border-color: rgb(20, 20, 20);
+    color: rgb(40, 40, 40);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(70, 70, 70),
+    stop:1 rgb(40, 40, 40));
+}
+
+PrivateServerDialog #label, #label_2, #label_3
+{
+    color: rgb(160, 160, 160);
+}
+
+UserNameDialog #label
+{
+    color: rgb(160, 160, 160);
+}
+
+PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome
+{
+    border: 1px solid rgb(40, 40, 40);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(70, 70, 70),
+    stop:1 rgb(40, 40, 40));
+}
+
+PreferencesDialog QComboBox                         /* the colors inside the combo box*/
+{
+    background-color: rgb(80, 80, 80);
+    selection-background-color: rgb(50, 50, 50);
+    selection-color: rgb(10, 10, 10);
+}
+
+PreferencesDialog QComboBox QAbstractItemView      /* the colors inside drop down menu of the combo box*/
+{
+    border: 1px solid black;
+    color: rgb(160, 160, 160);
+    background-color: rgb(70, 70, 70);
+    selection-background-color: rgb(50, 50, 50);
+    selection-color: rgb(10, 10, 10);
+}
+
+PreferencesDialog #vstListWidget
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(180, 180, 180),
+    stop:1 rgb(120, 120, 120));;
+}
+
+MidiToolsDialog #label_5, #labelHigherNote, #labelLowerNote
+{
+    color: rgb(160, 160, 160);
+}
+
+MidiToolsDialog #GroupBoxKeyRange, #GroupBoxTranspose
+{
+    color: rgb(160, 160, 160);
+}
+
+MidiToolsDialog #spinBoxTranspose
+{
+    border: 1px solid rgb(80, 80, 80);
+    color: rgb(20, 20, 20);
+    background-color: rgb(110, 110, 110);
+    selection-background-color: rgb(50, 50, 50);
+    selection-color: rgb(140, 140, 140);
+}
+
+QInputDialog QPushButton
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(20,20,20), stop:0.02 rgb(80, 80, 80), stop:0.7 rgba(90, 90, 90), stop:1 rgb(40,40,40));
+    border-color: rgb(20, 20, 20);
+    color: rgb(140,140,140);
+}
+
+PluginScanDialog QPlainTextEdit
+{
+    background: transparent;
+}
+
+PluginScanDialog #labelPluginText
+{
+    color: rgb(20, 20, 20,);
+    font-weight: bold;
+}
+
+PluginScanDialog
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(80, 80, 80),
+    stop:1 rgb(40, 40, 40));
+}
+
+PluginScanDialog QGroupBox
+{
+    color: rgb(180, 180, 180);
+    border: 1px solid gray;
+    selection-color: rgb(140, 140, 140);
+}
+
+BusyDialog
+{
+    border: 1px solid rgba(20, 20, 20);
+    padding: 0px;
+    margin: 0px;
+    border-radius: 3px;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgb(80, 80, 80),
+            stop:0.3 rgb(60, 60, 60)
+            stop:0.6 rgba(40, 40, 40),
+            stop:1 rgba(20, 20, 20));
+}
+
+BusyDialog > QLabel /* the text appearing in Busy dialog, like "connecting in ninbot.com" */
+{
+    font-weight: bold;
+    color: rgb(140, 140, 140);
+}
+

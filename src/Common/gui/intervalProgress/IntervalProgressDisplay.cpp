@@ -10,7 +10,6 @@ const QColor IntervalProgressDisplay::CURRENT_ACCENT_COLOR = Qt::green;
 const QColor IntervalProgressDisplay::ACCENT_COLOR = QColor(225, 225, 225);
 const QColor IntervalProgressDisplay::SECONDARY_BEATS_COLOR = Qt::gray;
 const QColor IntervalProgressDisplay::DISABLED_BEATS_COLOR = QColor(0, 0, 0, 15);
-const QColor IntervalProgressDisplay::TEXT_COLOR = Qt::black;
 
 IntervalProgressDisplay::PaintStrategy::PaintStrategy()
     :font("Verdana")
@@ -115,7 +114,8 @@ void IntervalProgressDisplay::paintEvent(QPaintEvent *e)
         qreal fontSize = getFontSize(paintMode);
         PaintContext paintContext(width(), height(), beatsPerInterval, currentBeat, isShowingAccents(), beatsPerAccent, elementsSize, fontSize);
         QColor currentBeatColor = usingLowContrastColors ? Qt::lightGray : Qt::white;
-        PaintColors paintColors(currentBeatColor, SECONDARY_BEATS_COLOR, ACCENT_COLOR, CURRENT_ACCENT_COLOR, DISABLED_BEATS_COLOR, TEXT_COLOR);
+        QBrush textBrush = palette().text(); //using the color define in loaded stylesheet theme
+        PaintColors paintColors(currentBeatColor, SECONDARY_BEATS_COLOR, ACCENT_COLOR, CURRENT_ACCENT_COLOR, DISABLED_BEATS_COLOR, textBrush);
         paintStrategy->paint(p, paintContext, paintColors);
     }
 }
@@ -195,7 +195,7 @@ IntervalProgressDisplay::PaintContext::PaintContext(int width, int height, int b
 
 IntervalProgressDisplay::PaintColors::PaintColors(const QColor &currentBeat,
             const QColor &secondaryBeat, const QColor &accentBeat, const QColor &currentAccentBeat, const QColor &disabledBeats,
-                                                              const QColor &textColor)
+                                                              const QBrush &textColor)
 
     : currentBeat(currentBeat),
       secondaryBeat(secondaryBeat),

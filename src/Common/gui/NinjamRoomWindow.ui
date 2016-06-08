@@ -19,59 +19,64 @@
   <property name="accessibleDescription">
    <string>you are in the ninjam room window</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true"/>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
-    <number>0</number>
+    <number>6</number>
    </property>
    <property name="leftMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <property name="topMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <property name="rightMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <property name="bottomMargin">
-    <number>0</number>
+    <number>6</number>
    </property>
    <item>
     <layout class="QHBoxLayout" name="topLayout">
      <property name="spacing">
-      <number>12</number>
+      <number>6</number>
      </property>
      <property name="leftMargin">
-      <number>6</number>
+      <number>0</number>
      </property>
      <property name="topMargin">
-      <number>6</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
-      <number>6</number>
+      <number>0</number>
      </property>
      <property name="bottomMargin">
-      <number>6</number>
+      <number>0</number>
      </property>
      <item>
-      <widget class="QLabel" name="labelUserName">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>1</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <layout class="QVBoxLayout" name="labelsLayout">
+       <property name="spacing">
+        <number>3</number>
        </property>
-       <property name="text">
-        <string>Connected as &lt;user_name&gt;</string>
-       </property>
-      </widget>
+       <item>
+        <widget class="QLabel" name="labelUserName">
+         <property name="text">
+          <string>Connected as &lt;user_name&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelBpmBpi">
+         <property name="text">
+          <string notr="true">BPM 120  BPI 32</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <widget class="QPushButton" name="licenceButton">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -111,8 +116,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>495</width>
-        <height>313</height>
+        <width>483</width>
+        <height>297</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
@@ -120,16 +125,16 @@
         <number>6</number>
        </property>
        <property name="leftMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
        <property name="topMargin">
         <number>0</number>
        </property>
        <property name="rightMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>6</number>
+        <number>0</number>
        </property>
       </layout>
      </widget>

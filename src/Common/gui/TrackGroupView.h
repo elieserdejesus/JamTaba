@@ -18,7 +18,7 @@ class TrackGroupView : public QFrame
 
 public:
     explicit TrackGroupView(QWidget *parent = 0);
-    ~TrackGroupView();
+    virtual ~TrackGroupView();
     virtual void setGroupName(const QString &groupName);
     virtual QString getGroupName() const;
 

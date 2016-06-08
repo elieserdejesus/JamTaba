@@ -56,10 +56,29 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     initializeLanguageMenu();
     initializeTranslator();
     initializeThemeMenu();
+    initializeMeteringOptions();
     setupWidgets();
     setupSignals();
 
     qCInfo(jtGUI) << "MainWindow created!";
+}
+
+void MainWindow::initializeMeteringOptions()
+{
+    const Persistence::Settings &settings = mainController->getSettings();
+    AudioMeter::setPaintMaxPeakMarker(settings.isShowingMaxPeaks());
+    quint8 meterOption = settings.getMeterOption();
+    switch (meterOption) {
+    case 0:
+        AudioMeter::paintPeaksAndRms();
+        break;
+    case 1:
+        AudioMeter::paintPeaksOnly();
+        break;
+    case 2:
+        AudioMeter::paintRmsOnly();
+        break;
+    }
 }
 
 void MainWindow::initializeTranslator()
@@ -349,6 +368,8 @@ LocalTrackGroupView *MainWindow::addLocalChannel(int channelGroupIndex, const QS
     if (createFirstSubchannel)
         localChannel->addTrackView(channelGroupIndex);
 
+    localChannel->useSmallSpacingInLayouts(isRunningInMiniMode());
+
     ui.localTracksWidget->updateGeometry();
 
     return localChannel;
@@ -504,7 +525,7 @@ void MainWindow::handleServerConnectionError(const QString &errorMsg)
 {
     hideBusyDialog();
     QMessageBox::warning(this, tr("Error!"),
-                         tr("Error connecting in Jamtaba server!\n") + errorMsg);
+                         tr("Error connecting with Jamtaba server!\n") + errorMsg);
     close();
 }
 
@@ -648,7 +669,7 @@ void MainWindow::tryEnterInRoom(const Login::RoomInfo &roomInfo, const QString &
 
         mainController->stopNinjamController();// disconnect from current ninjam server
     } else if (mainController->userNameWasChoosed()) {
-        showBusyDialog(tr("Connecting in %1 ... ").arg(roomInfo.getName()));
+        showBusyDialog(tr("Connecting with %1 ... ").arg(roomInfo.getName()));
         mainController->enterInRoom(roomInfo, getChannelsNames(), password);
     }
 }
@@ -791,7 +812,7 @@ void MainWindow::exitFromRoom(bool normalDisconnection, QString disconnectionMes
                            QMessageBox::Warning);
     } else {
         if (roomToJump) {// waiting the disconnection to connect in a new room?
-            showBusyDialog(tr("Connecting in %1").arg(roomToJump->getName()));
+            showBusyDialog(tr("Connecting with %1").arg(roomToJump->getName()));
             mainController->enterInRoom(*roomToJump, getChannelsNames(),
                                         (passwordToJump.isNull()
                                          || passwordToJump.isEmpty()) ? "" : passwordToJump);
@@ -860,8 +881,8 @@ void MainWindow::timerEvent(QTimerEvent *)
 
     // update master peaks
     Audio::AudioPeak masterPeak = mainController->getMasterPeak();
-    ui.masterMeterL->setPeak(masterPeak.getLeftPeak(), 0.0f); //not showing rms in master meters
-    ui.masterMeterR->setPeak(masterPeak.getRightPeak(), 0.0f);
+    ui.masterMeterL->setPeak(masterPeak.getLeftPeak(), masterPeak.getLeftRMS());
+    ui.masterMeterR->setPeak(masterPeak.getRightPeak(), masterPeak.getRightRMS());
 }
 
 // ++++++++++++=
@@ -1062,27 +1083,64 @@ void MainWindow::setMultiTrackRecordingStatus(bool recording)
 
 void MainWindow::initializeViewMenu()
 {
-    QObject::connect(ui.menuViewMode, SIGNAL(triggered(QAction *)), this,
-                     SLOT(changeViewMode(QAction *)));
+    connect(ui.actionMiniView, SIGNAL(triggered(bool)), this, SLOT(changeViewMode()));
+    connect(ui.actionFullView, SIGNAL(triggered(bool)), this, SLOT(changeViewMode()));
 
-    QActionGroup *group = new QActionGroup(this);
-    ui.actionFullView->setActionGroup(group);
-    ui.actionMiniView->setActionGroup(group);
+    connect(ui.menuMetering, SIGNAL(aboutToShow()), this, SLOT(updateMeteringMenu()));
+
+    connect(ui.menuMetering, SIGNAL(triggered(QAction*)), this, SLOT(handleMenuMeteringAction(QAction*)));
+
+    QActionGroup *meteringActionGroup = new QActionGroup(this);
+    meteringActionGroup->addAction(ui.actionShowPeaksOnly);
+    meteringActionGroup->addAction(ui.actionShowRmsOnly);
+    meteringActionGroup->addAction(ui.actionShowPeakAndRMS);
+
+    QActionGroup *viewModeActionGroup = new QActionGroup(this);
+    ui.actionFullView->setActionGroup(viewModeActionGroup);
+    ui.actionMiniView->setActionGroup(viewModeActionGroup);
 }
 
-void MainWindow::changeViewMode(QAction *action)
+void MainWindow::handleMenuMeteringAction(QAction *action)
 {
-    QString actionData = action->data().toString();
-    if (actionData.isEmpty()) { // the actions mini view, full view and full screen have no data
-        setFullViewStatus(ui.actionFullView->isChecked());
-    } else {
-        QFileInfo themeFile(actionData);
-        QString theme = themeFile.baseName();
-        bool themeInstalled = mainController->setTheme(theme);
-        if (!themeInstalled)
-            QMessageBox::critical(this, tr("Error"), tr("The theme %1 was not installed!").arg(
-                                      theme), QMessageBox::Cancel, QMessageBox::Ok);
+    if (action == ui.actionShowMaxPeaks){
+        AudioMeter::setPaintMaxPeakMarker(ui.actionShowMaxPeaks->isChecked());
     }
+    else{
+        if (action == ui.actionShowPeakAndRMS){
+            AudioMeter::paintPeaksAndRms();
+        }
+        else if (action == ui.actionShowPeaksOnly){
+            AudioMeter::paintPeaksOnly();
+        }
+        else{ //RMS only
+            AudioMeter::paintRmsOnly();
+        }
+    }
+    quint8 meterOption = 0; //rms + peaks
+    if (AudioMeter::isPaintingPeaksOnly())
+        meterOption = 1;
+    else if (AudioMeter::isPaintingRmsOnly())
+        meterOption = 2;
+
+    mainController->storeMeteringSettings(AudioMeter::isPaintintMaxPeakMarker(), meterOption);
+}
+
+void MainWindow::updateMeteringMenu()
+{
+    ui.actionShowMaxPeaks->setChecked(AudioMeter::isPaintintMaxPeakMarker());
+    bool showingPeakAndRms = AudioMeter::isPaintingRMS() && AudioMeter::isPaintingPeaks();
+    if (showingPeakAndRms) {
+        ui.actionShowPeakAndRMS->setChecked(true);
+    }
+    else{
+        ui.actionShowPeaksOnly->setChecked(AudioMeter::isPaintingPeaks());
+        ui.actionShowRmsOnly->setChecked(AudioMeter::isPaintingRMS());
+    }
+}
+
+void MainWindow::changeViewMode()
+{
+    setFullViewStatus(ui.actionFullView->isChecked());
 }
 
 void MainWindow::updatePublicRoomsListLayout()
@@ -1127,7 +1185,7 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
         resize(minimumSize());
     }
 
-    int tabLayoutMargim = isRunningInFullViewMode() ? 6 : 6;
+    int tabLayoutMargim = 6;
     ui.tabLayout->setContentsMargins(tabLayoutMargim, tabLayoutMargim, tabLayoutMargim,
                                      tabLayoutMargim);
     ui.allRoomsContent->layout()->setSpacing(tabLayoutMargim);
@@ -1152,6 +1210,9 @@ void MainWindow::setFullViewStatus(bool fullViewActivated)
             localTrackGroup->setToNarrow();
         else
             localTrackGroup->setToWide();
+
+        bool useSmallSpacing = isRunningInMiniMode();
+        localTrackGroup->useSmallSpacingInLayouts(useSmallSpacing);
     }
 
     ui.actionFullView->setChecked(isRunningInFullViewMode());
