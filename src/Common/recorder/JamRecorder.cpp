@@ -112,13 +112,14 @@ QString JamRecorder::buildAudioFileName(const QString &userName, quint8 channelI
 
 JamRecorder::JamRecorder(JamMetadataWriter* jamMetadataWritter)
     : jam(nullptr), jamMetadataWritter(jamMetadataWritter), globalIntervalIndex(0), running(false){
-
     //this->recordingActivated = true;//just to test
+    qCDebug(jtJamRecorder) << "Creating JamRecorder!";
 }
 
 JamRecorder::~JamRecorder()
 {
     delete jamMetadataWritter;
+    qCDebug(jtJamRecorder) << "Deleting JamRecorder!";
 }
 
 void JamRecorder::appendLocalUserAudio(const QByteArray &encodedaudio, quint8 channelIndex, bool isFirstPartOfInterval, bool isLastPastOfInterval){

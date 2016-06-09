@@ -561,6 +561,11 @@ MainController::~MainController()
     trackGroups.clear();
     qCDebug(jtCore()) << "cleaning tracksNodes done!";
 
+    qCDebug(jtCore()) << "cleaning jamRecorders...";
+    foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+        delete jamRecorder;
+    qCDebug(jtCore()) << "cleaning jamRecorders done!";
+
     qCDebug(jtCore) << "MainController destructor finished!";
 }
 
