@@ -52,19 +52,66 @@ private:
     quint8 channelIndex;
     QList<JamAudioFile> audioFiles;
 };
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class JamInterval
+{
+public:
+    JamInterval(const int intervalIndex, const int bpm, const int bpi, const QString &path, const QString &userName, const quint8 channelIndex);
+    JamInterval();
+
+    inline int getIntervalIndex() const
+    {
+        return intervalIndex;
+    }
+
+    inline int getBpm() const
+    {
+        return bpm;
+    }
+
+    inline int getBpi() const
+    {
+        return bpi;
+    }
+
+    inline QString getPath() const
+    {
+        return path;
+    }
+
+    inline QString getUserName() const
+    {
+        return userName;
+    }
+
+    inline quint8 getChannelIndex() const
+    {
+        return channelIndex;
+    }
+
+private:
+    int intervalIndex;
+    int bpm;
+    int bpi;
+    QString path;
+    QString userName;
+    quint8 channelIndex;
+};
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Jam
 {
 public:
     Jam(int bpm, int bpi, int sampleRate, const QString &jamName, const QString &baseDir);
 
-    double getIntervalsLenght() const;
-
-    // called when a new file is writed in disk
-    void addAudioFile(const QString &userName, quint8 channelIndex, const QString &filePath, int intervalIndex);
-    QString getAudioAbsolutePath() const
+    inline QString getRPPAudioAbsolutePath() const
     {
-        return audioPath;
+        return rppAudioPath;
+    }
+
+    inline QString getClipSortAbsolutePath() const
+    {
+        return clipsortPath;
     }
 
     inline int getSampleRate() const
@@ -87,17 +134,31 @@ public:
         return baseDir;
     }
 
+    inline double getIntervalsLenght() const
+    {
+        return 60.0/bpm * (double)bpi;
+    }
+
+    // called when a new file is writed in disk
+    void addAudioFile(const QString &userName, const quint8 channelIndex, const QString &filePath, const int intervalIndex);
+
     QList<JamTrack> getJamTracks() const;
+
+    QList<JamInterval> getJamIntervals() const;
 private:
     int bpm;
     int bpi;
     int sampleRate;
     QString name;
     QString baseDir;
-    QString audioPath;
+    QString rppAudioPath;
+    QString clipsortPath;
 
     // the first map key is userName. The second map key is channelIndex
     QMap<QString, QMap<quint8, JamTrack> > jamTracks;
+
+    // the map key is intervalIndex.
+    QMap<int, QList<JamInterval> > jamIntervals;
 };
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class JamMetadataWriter
@@ -105,6 +166,8 @@ class JamMetadataWriter
 public:
     virtual void write(const Jam &metadata) = 0;
     virtual ~JamMetadataWriter(){}
+    virtual QString getWriterId() const = 0;
+    virtual QString getWriterName() const = 0; // Localised
 };
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class LocalNinjamInterval
@@ -149,7 +212,7 @@ class JamRecorder
 {
 public:
     JamRecorder(JamMetadataWriter *jamMetadataWritter);
-    virtual ~JamRecorder();
+    ~JamRecorder();
     void appendLocalUserAudio(const QByteArray &encodedaudio, quint8 channelIndex,
                               bool isFirstPartOfInterval, bool isLastPastOfInterval);
     void addRemoteUserAudio(const QString &userName, const QByteArray &encodedAudio, quint8 channelIndex);
@@ -163,6 +226,9 @@ public:
 
     void stopRecording();
     void newInterval();
+
+    inline QString getWriterId() const { return jamMetadataWritter->getWriterId(); }
+    inline QString getWriterName() const { return jamMetadataWritter->getWriterName(); }
 
 private:
     QString currentJamName;

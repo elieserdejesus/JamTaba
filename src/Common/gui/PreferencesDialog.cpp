@@ -1,6 +1,7 @@
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
 
+#include <QtWidgets>
 #include <QDebug>
 #include <QFileDialog>
 #include "persistence/Settings.h"
@@ -46,10 +47,21 @@ void PreferencesDialog::refreshMetronomeControlsStyleSheet()
     style()->polish(ui->browseSecondaryBeatButton);
 }
 
-void PreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings)
+void PreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> *jamRecorders)
 {
     Q_UNUSED(initialTab);
     this->settings = settings;
+    this->jamRecorders = jamRecorders;
+    this->jamRecorderCheckBoxes = QMap<QCheckBox *, QString>();
+
+    foreach(const QString jamRecorder, jamRecorders->keys()) {
+        QCheckBox *myCheckBox = new QCheckBox(this);
+        myCheckBox->setObjectName(jamRecorder);
+        myCheckBox->setText(jamRecorders->value(jamRecorder));
+        ui->layoutRecorders->addWidget(myCheckBox);
+        jamRecorderCheckBoxes[myCheckBox] = jamRecorder;
+    }
+
     setupSignals();
     populateAllTabs();
 }
@@ -59,8 +71,14 @@ void PreferencesDialog::setupSignals()
     // the 'accept' slot is overrided in inherited classes (StandalonePreferencesDialog and VstPreferencesDialog)
     connect(ui->okButton, SIGNAL(clicked(bool)), this, SLOT(accept()));
     connect(ui->prefsTab, SIGNAL(currentChanged(int)), this, SLOT(selectTab(int)));
+
     connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this,
             SIGNAL(multiTrackRecordingStatusChanged(bool)));
+    foreach(QCheckBox *myCheckBox, jamRecorderCheckBoxes.keys()) {
+        connect(myCheckBox, &QCheckBox::clicked, [=](bool newStatus) {
+            jamRecorderStatusChanged(jamRecorderCheckBoxes[myCheckBox], newStatus);
+        });
+    }
     connect(ui->browseRecPathButton, SIGNAL(clicked(bool)), this, SLOT(openRecordingPathBrowser()));
 
     connect(ui->groupBoxCustomMetronome, SIGNAL(toggled(bool)), this, SLOT(toggleCustomMetronomeSounds(bool)));
@@ -118,8 +136,11 @@ void PreferencesDialog::populateRecordingTab()
 {
     Q_ASSERT(settings);
     Persistence::RecordingSettings recordingSettings = settings->getRecordingSettings();
-    QDir recordDir(recordingSettings.recordingPath);
     ui->recordingCheckBox->setChecked(recordingSettings.saveMultiTracksActivated);
+    foreach(QCheckBox *myCheckBox, jamRecorderCheckBoxes.keys()) {
+        myCheckBox->setChecked(recordingSettings.isJamRecorderActivated(jamRecorderCheckBoxes[myCheckBox]));
+    }
+    QDir recordDir(recordingSettings.recordingPath);
     ui->recordPathLineEdit->setText(recordDir.absolutePath());
 }
 
