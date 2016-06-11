@@ -131,7 +131,7 @@ public:
             return jamRecorderActivated[key];
         return false;
     }
-    inline void RecordingSettings::setJamRecorderActivated(QString key, bool value)
+    inline void setJamRecorderActivated(QString key, bool value)
     {
         jamRecorderActivated[key] = value;
     }

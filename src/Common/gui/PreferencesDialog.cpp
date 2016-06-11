@@ -47,17 +47,17 @@ void PreferencesDialog::refreshMetronomeControlsStyleSheet()
     style()->polish(ui->browseSecondaryBeatButton);
 }
 
-void PreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> *jamRecorders)
+void PreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders)
 {
     Q_UNUSED(initialTab);
     this->settings = settings;
     this->jamRecorders = jamRecorders;
     this->jamRecorderCheckBoxes = QMap<QCheckBox *, QString>();
 
-    foreach(const QString jamRecorder, jamRecorders->keys()) {
+    foreach(const QString &jamRecorder, jamRecorders.keys()) {
         QCheckBox *myCheckBox = new QCheckBox(this);
         myCheckBox->setObjectName(jamRecorder);
-        myCheckBox->setText(jamRecorders->value(jamRecorder));
+        myCheckBox->setText(jamRecorders.value(jamRecorder));
         ui->layoutRecorders->addWidget(myCheckBox);
         jamRecorderCheckBoxes[myCheckBox] = jamRecorder;
     }

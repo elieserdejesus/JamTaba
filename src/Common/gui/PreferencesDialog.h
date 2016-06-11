@@ -22,7 +22,7 @@ public:
         TAB_AUDIO, TAB_MIDI, TAB_VST, TAB_RECORDING, TAB_METRONOME
     };
 
-    virtual void initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> *jamRecorders);
+    virtual void initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders);
 
 signals:
     void customMetronomeSelected(const QString &primaryBeatAudioFile, const QString &secondaryBeatAudioFile);
@@ -66,7 +66,7 @@ protected:
     virtual void populateAllTabs();
 
     const Persistence::Settings *settings;
-    const QMap<QString, QString> *jamRecorders;
+    QMap<QString, QString> jamRecorders;
 
 };
 

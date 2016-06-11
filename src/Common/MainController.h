@@ -195,9 +195,11 @@ public:
         return settings.isSaveMultiTrackActivated();
     }
     void storeJamRecorderStatus(QString writerId, bool status);
+
     inline bool isJamRecorderActivated(QString writerId) {
-        settings.isJamRecorderActivated(writerId);
+        return settings.isJamRecorderActivated(writerId);
     }
+
     void storeRecordingPath(const QString &newPath);
 
     void storePrivateServerSettings(const QString &server, int serverPort, const QString &password);
@@ -261,13 +263,7 @@ public:
 
     static QString getSuggestedUserName();
 
-    QMap<QString, QString> getJamRecoders() {
-        QMap<QString, QString> jamRecoderMap = QMap<QString, QString>();
-        foreach(Recorder::JamRecorder * jamRecorder, jamRecorders) {
-            jamRecoderMap[jamRecorder->getWriterId()] = jamRecorder->getWriterName();
-        }
-        return jamRecoderMap;
-    }
+    QMap<QString, QString> getJamRecoders() const;
 
 signals:
     void ipResolved(const QString &ip);
