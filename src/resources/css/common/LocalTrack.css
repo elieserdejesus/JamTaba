@@ -2,6 +2,12 @@
     This file contains stylesheet related to local/user tracks. Many details about the tracks are defined in BaseTrack.css file.
 */
 
+LocalTrackView[unlighted="true"] FxPanelItem,
+FxPanelItem[containPlugin="false"]
+{
+    min-height: 14px; /* fixing #442 */
+}
+
 
 /* LocalTrackView is widget used to show the user tracks/subchannels.
 ----------------------------------------------------------------------*/

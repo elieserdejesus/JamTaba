@@ -1,19 +1,10 @@
 
 
-FxPanelItem             /* plugin slot */
+BaseTrackView FxPanelItem             /* plugin slot */
 {
     background-color: qlineargradient(x1:0, y1:0.6, x2:0, y2:1, stop:0 rgba(0, 0, 0, 30), stop:1 rgba(0, 0, 0, 50));
-    background-position: center right;
-    background-repeat: none;
-    max-height: 14px;
-    width: 100%;
     border-radius: 2px;
-    border: none;
-}
-
-BaseTrackView[unlighted="false"] FxPanelItem    /* plugin slot when user is not xmiting */
-{
-    border: 1px outset rgb(100, 100, 100);
+    border: 1px outset rgb(100, 100, 100)
 }
 
 FxPanelItem[containPlugin="false"]
@@ -31,7 +22,6 @@ FxPanelItem[containPlugin="true"]
 FxPanelItem QLabel                              /* plugin name label */
 {
     qproperty-alignment: AlignLeft;
-    font-size: 10px;
     color: #D3D3D3;
     margin: 0px;
 }
