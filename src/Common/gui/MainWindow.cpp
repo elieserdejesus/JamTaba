@@ -112,15 +112,40 @@ void MainWindow::changeTheme(QAction *action)
 void MainWindow::initializeThemeMenu()
 {
     connect(ui.menuTheme, &QMenu::triggered, this, &MainWindow::changeTheme);
+    connect(ui.menuTheme, &QMenu::aboutToShow, this, &MainWindow::translateThemeMenu); // the menu is translated before open
 
     // create a menu action for each theme
-
     QStringList themeFiles = Theme::Loader::getAvailableThemes(":/style/themes");
     foreach (const QString &themeFile, themeFiles) {
-        QString theme = QFileInfo(themeFile).baseName();
-        QAction *action = ui.menuTheme->addAction(theme);
-        action->setData(theme);
+        QString themeName = QFileInfo(themeFile).baseName();
+        QAction *action = ui.menuTheme->addAction(themeName);
+        action->setData(themeName);
     }
+}
+
+void MainWindow::translateThemeMenu()
+{
+    foreach (QAction *action, ui.menuTheme->actions()) {
+        QString themeName = action->data().toString();
+        QString menuString = themeName; //use themeName as default text
+        QString translatedName = getTranslatedThemeName(themeName);
+        if (translatedName != themeName) //maybe we don't have a translation entry for the theme ...
+            menuString = translatedName + " (" + themeName + ")";
+        action->setText(menuString);
+    }
+}
+
+QString MainWindow::getTranslatedThemeName(const QString &themeName)
+{
+    QMap<QString, QString> translatedNames;
+    translatedNames.insert("Black",   tr("Black"));
+    translatedNames.insert("Flat",    tr("Flat"));
+    translatedNames.insert("Rounded", tr("Rounded"));
+
+    if (translatedNames.contains(themeName))
+        return translatedNames[themeName];
+
+    return themeName; //returning the original name if we have not a translate entry in the map
 }
 
 void MainWindow::loadTranslationFile(const QString &locale)

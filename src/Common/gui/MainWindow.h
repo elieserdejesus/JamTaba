@@ -223,6 +223,7 @@ private slots:
     void updateUserName();
 
     void changeTheme(QAction *action);
+    void translateThemeMenu();
 
 private:
 
@@ -294,6 +295,8 @@ private:
     void openUrlInUserBrowser(const QString &url);
 
     void sendAcceptedChordProgressionToServer(const ChordProgression &progression);
+
+    QString getTranslatedThemeName(const QString &themeName);
 
     // PerformanceMonitor performanceMonitor;//cpu and memmory usage
     // qint64 lastPerformanceMonitorUpdate;
