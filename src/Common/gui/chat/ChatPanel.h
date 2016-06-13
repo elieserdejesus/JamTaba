@@ -30,20 +30,22 @@ public:
     void setPreferredTranslationLanguage(const QString &targetLanguage);
     void updateMessagesGeometry();// called when user switch from mini mode to full view
     void removeMessagesFrom(const QString &userName);
+
 signals:
     void userSendingNewMessage(const QString &msg);
     void userConfirmingVoteToBpiChange(int newBpi);
     void userConfirmingVoteToBpmChange(int newBpm);
     void userConfirmingChordProgression(const ChordProgression &chordProgression);
     void userBlockingChatMessagesFrom(const QString &blockedUserName);
-private slots:
-    void on_chatTextEditionFinished();
-    void on_verticalScrollBarRangeChanged(int min, int max);
-    void on_buttonClear_clicked();
 
-    void on_voteButtonClicked();
-    void on_chordProgressionConfirmationButtonClicked();
-    void on_buttonAutoTranslate_clicked();
+private slots:
+    void sendNewMessage();
+    void autoScroll(int min, int max);
+    void clearMessages();
+
+    void confirmVote();
+    void confirmChordProgression();
+    void toggleAutoTranslate();
 
     void showTranslationProgressFeedback();
     void hideTranslationProgressFeedback();
