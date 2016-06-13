@@ -337,10 +337,10 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
 {
     QString userName = user.getName();
 
-    bool isSystemVoteMessage = Gui::Chat::isSystemVotingMessage(userName, message);
+    bool isFirstSystemVoteMessage = Gui::Chat::isFirstSystemVotingMessage(userName, message);
 
     bool isChordProgressionMessage = false;
-    if (!isSystemVoteMessage) {
+    if (!isFirstSystemVoteMessage) {
         ChatChordsProgressionParser chordsParser;
         isChordProgressionMessage = chordsParser.containsProgression(message);
     }
@@ -350,7 +350,7 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
     chatPanel->addMessage(userName, message, showTranslationButton, showBlockButton);
 
     static bool localUserWasVotingInLastMessage = false;
-    if (isSystemVoteMessage) {
+    if (isFirstSystemVoteMessage) {
         Gui::Chat::SystemVotingMessage voteMessage = Gui::Chat::parseSystemVotingMessage(message);
 
         if (!localUserWasVotingInLastMessage) {  //don't create the vote button if local user is proposing BPI or BPM change
