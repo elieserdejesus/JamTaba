@@ -43,11 +43,11 @@
     </message>
     <message>
         <source>block chat messages from this user</source>
-        <translation type="unfinished"></translation>
+        <translation>blocke chat nachrichten von diesem user</translation>
     </message>
     <message>
         <source>B</source>
-        <translation type="unfinished"></translation>
+        <translation>B</translation>
     </message>
 </context>
 <context>
@@ -242,7 +242,7 @@
     <name>LocalTrackView</name>
     <message>
         <source>Invert stereo</source>
-        <translation type="unfinished"></translation>
+        <translation>invertiere stereo</translation>
     </message>
 </context>
 <context>
@@ -392,35 +392,35 @@
     </message>
     <message>
         <source>View</source>
-        <translation type="unfinished"></translation>
+        <translation>ansicht</translation>
     </message>
     <message>
         <source>Metering</source>
-        <translation type="unfinished"></translation>
+        <translation>pegel</translation>
     </message>
     <message>
         <source>Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Thema</translation>
     </message>
     <message>
         <source>Translators ...</source>
-        <translation type="unfinished"></translation>
+        <translation>übersetzer...</translation>
     </message>
     <message>
         <source>Show peak meter only</source>
-        <translation type="unfinished"></translation>
+        <translation>zeige pegel spitze</translation>
     </message>
     <message>
         <source>Show RMS meter only</source>
-        <translation type="unfinished"></translation>
+        <translation>zeige RMS pegel</translation>
     </message>
     <message>
         <source>Show peak + RMS meters</source>
-        <translation type="unfinished"></translation>
+        <translation>zeige spitze + RMS pegel</translation>
     </message>
     <message>
         <source>Show max peaks</source>
-        <translation type="unfinished"></translation>
+        <translation>zeige max pegel</translation>
     </message>
 </context>
 <context>
@@ -499,32 +499,32 @@
     </message>
     <message>
         <source>Black</source>
-        <translation type="unfinished"></translation>
+        <translation>schwarz</translation>
     </message>
     <message>
         <source>Flat</source>
-        <translation type="unfinished"></translation>
+        <translation>flach</translation>
     </message>
     <message>
         <source>Rounded</source>
-        <translation type="unfinished"></translation>
+        <translation>abgerundet</translation>
     </message>
     <message>
         <source>Error connecting with Jamtaba server!
 </source>
-        <translation type="unfinished"></translation>
+        <translation>fehler verbindung mit Jamtaba server</translation>
     </message>
     <message>
         <source>Connecting with %1 ... </source>
-        <translation type="unfinished"></translation>
+        <translation>verbindung mit %1 ...</translation>
     </message>
     <message>
         <source>Connecting with %1</source>
-        <translation type="unfinished"></translation>
+        <translation>verbindung mit %1</translation>
     </message>
     <message>
         <source>Can&apos;t open the link!</source>
-        <translation type="unfinished"></translation>
+        <translation>Can&apos;t öffnet den link!</translation>
     </message>
 </context>
 <context>
@@ -732,26 +732,26 @@
     </message>
     <message>
         <source>Last chords used</source>
-        <translation type="unfinished"></translation>
+        <translation>letzter akkord</translation>
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
-        <translation type="unfinished"></translation>
+        <translationt>%1 ist geblockt im cha</translation>
     </message>
     <message>
         <source>%1 is unblocked in the chat</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ist freigegeben im chat</translation>
     </message>
 </context>
 <context>
     <name>NinjamTrackGroupView</name>
     <message>
         <source>Block %1 in chat</source>
-        <translation type="unfinished"></translation>
+        <translation>blockiere %1 im chat</translation>
     </message>
     <message>
         <source>Unblock %1 in chat</source>
-        <translation type="unfinished"></translation>
+        <translation>gebe frei %1 im chat</translation>
     </message>
 </context>
 <context>
@@ -1005,14 +1005,14 @@
     <name>Recorder::ClipSortLogGenerator</name>
     <message>
         <source>Generate Reaper &apos;clipsort.log&apos; file</source>
-        <translation type="unfinished"></translation>
+        <translation>generiere Reaper &apos;clipsort.log&apos; datei</translation>
     </message>
 </context>
 <context>
     <name>Recorder::ReaperProjectGenerator</name>
     <message>
         <source>Generate Reaper Project file (RPP)</source>
-        <translation type="unfinished"></translation>
+        <translation>generiere Reaper Project datei (RPP)</translation>
     </message>
 </context>
 <context>
