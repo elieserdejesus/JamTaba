@@ -220,7 +220,7 @@ private:
     int globalIntervalIndex;
     QString localUserName;
     bool running;
-    QDir recordBaseDir;// used to set the newPath in the next interval
+    QDir recordBaseDir;
 
     QMap<quint8, LocalNinjamInterval> localUserIntervals;// use channel index as key and store encoded bytes. When a full interval is stored the encoded bytes are store in a ogg file.
 
