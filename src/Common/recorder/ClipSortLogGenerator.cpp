@@ -44,7 +44,7 @@ void ClipSortLogGenerator::write(const Jam &jam){
             jamDir.canonicalPath() + "/" +
                     replacementFilePath.left(1) + "/" +
                     replacementFilePath + "." +
-                    QFileInfo(interval.getPath()).completeSuffix()
+                    QFileInfo(interval.getPath()).suffix()
         );
 
     }
