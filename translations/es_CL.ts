@@ -41,6 +41,14 @@
         <source>T</source>
         <translation>T</translation>
     </message>
+    <message>
+        <source>block chat messages from this user</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>B</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ChatPanel</name>
@@ -128,145 +136,6 @@
     <message>
         <source>remove</source>
         <translation>eliminar</translation>
-    </message>
-</context>
-<context>
-    <name>IODialog</name>
-    <message>
-        <source>Preferences ...</source>
-        <translation>Preferencias ...</translation>
-    </message>
-    <message>
-        <source>Audio</source>
-        <translation>Sonido</translation>
-    </message>
-    <message>
-        <source>Audio Device</source>
-        <translation>Dispositivo de Sonido</translation>
-    </message>
-    <message>
-        <source>Inputs</source>
-        <translation>Entradas</translation>
-    </message>
-    <message>
-        <source>First</source>
-        <translation>Primera</translation>
-    </message>
-    <message>
-        <source>Last</source>
-        <translation>Última</translation>
-    </message>
-    <message>
-        <source>Outputs</source>
-        <translation>Salidas</translation>
-    </message>
-    <message>
-        <source>Sample rate</source>
-        <translation>Frecuencia de Muestreo</translation>
-    </message>
-    <message>
-        <source>Buffer size</source>
-        <translation>Tamaño del Búfer</translation>
-    </message>
-    <message>
-        <source>ASIO panel ...</source>
-        <translation>Panel ASIO ...</translation>
-    </message>
-    <message>
-        <source>MIDI</source>
-        <translation>MIDI</translation>
-    </message>
-    <message>
-        <source>Enable/disable your midi input devices:</source>
-        <translation>Activar/desactivar los dispositivos de entrada midi:</translation>
-    </message>
-    <message>
-        <source>VST</source>
-        <translation>VST</translation>
-    </message>
-    <message>
-        <source>Vst(i)s loaded</source>
-        <translation>VST(i) cargados</translation>
-    </message>
-    <message>
-        <source>Scan only new plugins</source>
-        <translation>Buscar sólo plugins nuevos</translation>
-    </message>
-    <message>
-        <source>Refresh</source>
-        <translation>Actualizar</translation>
-    </message>
-    <message>
-        <source>Clear plugins cache and scan all plugin folders</source>
-        <translation>Limpiar el caché y buscar plugins en todas las carpetas</translation>
-    </message>
-    <message>
-        <source>Clear and Scan</source>
-        <translation>Limpiar y Buscar</translation>
-    </message>
-    <message>
-        <source>Add to black List</source>
-        <translation>Agregar a la Lista negra</translation>
-    </message>
-    <message>
-        <source>Remove from blackList</source>
-        <translation>Eliminar de la Lista negra</translation>
-    </message>
-    <message>
-        <source>Plugin Paths:</source>
-        <translation>Carpetas de Plugins:</translation>
-    </message>
-    <message>
-        <source>Add a new folder to scan ...</source>
-        <translation>Agregar una nueva carpeta de búsqueda ...</translation>
-    </message>
-    <message>
-        <source>Recording</source>
-        <translation>Grabación</translation>
-    </message>
-    <message>
-        <source>Record path:</source>
-        <translation>Carpeta de Grabación:</translation>
-    </message>
-    <message>
-        <source>Save multi tracks </source>
-        <translation>Guardar multipistas </translation>
-    </message>
-    <message>
-        <source>browse ...</source>
-        <translation>Seleccionar carpeta ...</translation>
-    </message>
-    <message>
-        <source>Metronome</source>
-        <translation>Metrónomo</translation>
-    </message>
-    <message>
-        <source>Built-in metronomes:</source>
-        <translation>Metrónomos incorporados:</translation>
-    </message>
-    <message>
-        <source>Custom Metronome Sounds</source>
-        <translation>Sonidos de metrónomos personalizados</translation>
-    </message>
-    <message>
-        <source>Primary Beat:</source>
-        <translation>Sonido Primario:</translation>
-    </message>
-    <message>
-        <source>Secondary Beat:</source>
-        <translation>Sonido Secundario:</translation>
-    </message>
-    <message>
-        <source>Browse ...</source>
-        <translation>Seleccionar archivo ...</translation>
-    </message>
-    <message>
-        <source>Use 16 bit audio files!</source>
-        <translation>¡Utilice sonidos de 16 bits!</translation>
-    </message>
-    <message>
-        <source>ok</source>
-        <translation>Aceptar</translation>
     </message>
 </context>
 <context>
@@ -370,6 +239,13 @@
     </message>
 </context>
 <context>
+    <name>LocalTrackView</name>
+    <message>
+        <source>Invert stereo</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>LocalTrackViewStandalone</name>
     <message>
         <source>Choose input channels ...</source>
@@ -437,10 +313,6 @@
     <message>
         <source>Help</source>
         <translation>Ayuda</translation>
-    </message>
-    <message>
-        <source>View Mode</source>
-        <translation>Visualización</translation>
     </message>
     <message>
         <source>Language</source>
@@ -518,6 +390,38 @@
         <source>user name here</source>
         <translation>nombre usuario</translation>
     </message>
+    <message>
+        <source>View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Metering</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Translators ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show peak meter only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show RMS meter only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show peak + RMS meters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show max peaks</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -542,12 +446,6 @@
         <translation>Servidor : Problema de compatibilidad</translation>
     </message>
     <message>
-        <source>Error connecting in Jamtaba server!
-</source>
-        <translation>¡Error al conectar con el servidor de Jamtaba!
-</translation>
-    </message>
-    <message>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
         <translation>¡Una nueva versión de Jamtaba está disponible para descarga! ¡Por favor usa la &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;nueva version&lt;/a&gt;!</translation>
     </message>
@@ -564,20 +462,12 @@
         <translation>¡No está permitido dejar el nombre en blanco!</translation>
     </message>
     <message>
-        <source>Connecting in %1 ... </source>
-        <translation>Conectando con %1 ... </translation>
-    </message>
-    <message>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
         <source>Disconnected from ninjam server</source>
         <translation>Desconectado del servidor de ninjam</translation>
-    </message>
-    <message>
-        <source>Connecting in %1</source>
-        <translation>Conectando con %1</translation>
     </message>
     <message>
         <source>About Jamtaba</source>
@@ -606,6 +496,35 @@
     <message>
         <source>Chat</source>
         <translation>Chat</translation>
+    </message>
+    <message>
+        <source>Black</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rounded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error connecting with Jamtaba server!
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connecting with %1 ... </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connecting with %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Can&apos;t open the link!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -811,6 +730,29 @@
         <source>Server Licence</source>
         <translation>Licencia Servidor</translation>
     </message>
+    <message>
+        <source>Last chords used</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 is blocked in the chat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 is unblocked in the chat</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>NinjamTrackGroupView</name>
+    <message>
+        <source>Block %1 in chat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unblock %1 in chat</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NinjamVoteButton</name>
@@ -875,6 +817,142 @@
         <source>Choosing recording path ...</source>
         <translation>Escoger la carpeta de grabación...</translation>
     </message>
+    <message>
+        <source>Preferences ...</source>
+        <translation>Preferencias ...</translation>
+    </message>
+    <message>
+        <source>Audio</source>
+        <translation>Sonido</translation>
+    </message>
+    <message>
+        <source>Audio Device</source>
+        <translation>Dispositivo de Sonido</translation>
+    </message>
+    <message>
+        <source>Inputs</source>
+        <translation>Entradas</translation>
+    </message>
+    <message>
+        <source>First</source>
+        <translation>Primera</translation>
+    </message>
+    <message>
+        <source>Last</source>
+        <translation>Última</translation>
+    </message>
+    <message>
+        <source>Outputs</source>
+        <translation>Salidas</translation>
+    </message>
+    <message>
+        <source>Sample rate</source>
+        <translation>Frecuencia de Muestreo</translation>
+    </message>
+    <message>
+        <source>Buffer size</source>
+        <translation>Tamaño del Búfer</translation>
+    </message>
+    <message>
+        <source>ASIO panel ...</source>
+        <translation>Panel ASIO ...</translation>
+    </message>
+    <message>
+        <source>MIDI</source>
+        <translation>MIDI</translation>
+    </message>
+    <message>
+        <source>Enable/disable your midi input devices:</source>
+        <translation>Activar/desactivar los dispositivos de entrada midi:</translation>
+    </message>
+    <message>
+        <source>VST</source>
+        <translation>VST</translation>
+    </message>
+    <message>
+        <source>Vst(i)s loaded</source>
+        <translation>VST(i) cargados</translation>
+    </message>
+    <message>
+        <source>Scan only new plugins</source>
+        <translation>Buscar sólo plugins nuevos</translation>
+    </message>
+    <message>
+        <source>Refresh</source>
+        <translation>Actualizar</translation>
+    </message>
+    <message>
+        <source>Clear plugins cache and scan all plugin folders</source>
+        <translation>Limpiar el caché y buscar plugins en todas las carpetas</translation>
+    </message>
+    <message>
+        <source>Clear and Scan</source>
+        <translation>Limpiar y Buscar</translation>
+    </message>
+    <message>
+        <source>Add to black List</source>
+        <translation>Agregar a la Lista negra</translation>
+    </message>
+    <message>
+        <source>Remove from blackList</source>
+        <translation>Eliminar de la Lista negra</translation>
+    </message>
+    <message>
+        <source>Plugin Paths:</source>
+        <translation>Carpetas de Plugins:</translation>
+    </message>
+    <message>
+        <source>Add a new folder to scan ...</source>
+        <translation>Agregar una nueva carpeta de búsqueda ...</translation>
+    </message>
+    <message>
+        <source>Recording</source>
+        <translation>Grabación</translation>
+    </message>
+    <message>
+        <source>browse ...</source>
+        <translation>Seleccionar carpeta ...</translation>
+    </message>
+    <message>
+        <source>Save multi tracks </source>
+        <translation>Guardar multipistas </translation>
+    </message>
+    <message>
+        <source>Record path:</source>
+        <translation>Carpeta de Grabación:</translation>
+    </message>
+    <message>
+        <source>Metronome</source>
+        <translation>Metrónomo</translation>
+    </message>
+    <message>
+        <source>Built-in metronomes:</source>
+        <translation>Metrónomos incorporados:</translation>
+    </message>
+    <message>
+        <source>Custom Metronome Sounds</source>
+        <translation>Sonidos de metrónomos personalizados</translation>
+    </message>
+    <message>
+        <source>Primary Beat:</source>
+        <translation>Sonido Primario:</translation>
+    </message>
+    <message>
+        <source>Secondary Beat:</source>
+        <translation>Sonido Secundario:</translation>
+    </message>
+    <message>
+        <source>Browse ...</source>
+        <translation>Seleccionar archivo ...</translation>
+    </message>
+    <message>
+        <source>Use 16 bit audio files!</source>
+        <translation>¡Utilice sonidos de 16 bits!</translation>
+    </message>
+    <message>
+        <source>ok</source>
+        <translation>Aceptar</translation>
+    </message>
 </context>
 <context>
     <name>PrivateServerDialog</name>
@@ -921,6 +999,20 @@
     <message>
         <source>OK</source>
         <translation>Aceptar</translation>
+    </message>
+</context>
+<context>
+    <name>Recorder::ClipSortLogGenerator</name>
+    <message>
+        <source>Generate Reaper &apos;clipsort.log&apos; file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Recorder::ReaperProjectGenerator</name>
+    <message>
+        <source>Generate Reaper Project file (RPP)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
