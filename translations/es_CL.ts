@@ -242,7 +242,7 @@
     <name>LocalTrackView</name>
     <message>
         <source>Invert stereo</source>
-        <translation>Invertir Estéreo</translation>
+        <translation>Invertir el estéreo</translation>
     </message>
 </context>
 <context>
@@ -732,7 +732,7 @@
     </message>
     <message>
         <source>Last chords used</source>
-        <translation>Últimos acordes usados</translation>
+        <translation>Últimos acordes utilizados</translation>
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
