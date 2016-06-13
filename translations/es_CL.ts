@@ -1005,7 +1005,7 @@
     <name>Recorder::ClipSortLogGenerator</name>
     <message>
         <source>Generate Reaper &apos;clipsort.log&apos; file</source>
-        <translation>Generar Archivo de Reaper &apos;clipsort.log&apos;</translation>
+        <translation>Generar Archivo &apos;clipsort.log&apos; de Reaper</translation>
     </message>
 </context>
 <context>
