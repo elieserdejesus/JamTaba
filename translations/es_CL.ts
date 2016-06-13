@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="es_CL" sourcelanguage="en_US">
+<TS version="2.0" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -43,11 +43,11 @@
     </message>
     <message>
         <source>block chat messages from this user</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear mensajes de chat para este usuario</translation>
     </message>
     <message>
         <source>B</source>
-        <translation type="unfinished"></translation>
+        <translation>B</translation>
     </message>
 </context>
 <context>
@@ -242,7 +242,7 @@
     <name>LocalTrackView</name>
     <message>
         <source>Invert stereo</source>
-        <translation type="unfinished"></translation>
+        <translation>Invertir Estéreo</translation>
     </message>
 </context>
 <context>
@@ -392,35 +392,35 @@
     </message>
     <message>
         <source>View</source>
-        <translation type="unfinished"></translation>
+        <translation>Visualización</translation>
     </message>
     <message>
         <source>Metering</source>
-        <translation type="unfinished"></translation>
+        <translation>Medidor de Nivel</translation>
     </message>
     <message>
         <source>Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Tema</translation>
     </message>
     <message>
         <source>Translators ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Traductores ...</translation>
     </message>
     <message>
         <source>Show peak meter only</source>
-        <translation type="unfinished"></translation>
+        <translation>Solo medidor de nivel de picos</translation>
     </message>
     <message>
         <source>Show RMS meter only</source>
-        <translation type="unfinished"></translation>
+        <translation>Solo medidor de nivel RMS</translation>
     </message>
     <message>
         <source>Show peak + RMS meters</source>
-        <translation type="unfinished"></translation>
+        <translation>Medidor de nivel de picos + RMS</translation>
     </message>
     <message>
         <source>Show max peaks</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar picos máximos</translation>
     </message>
 </context>
 <context>
@@ -498,33 +498,33 @@
         <translation>Chat</translation>
     </message>
     <message>
-        <source>Black</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Flat</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Rounded</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Error connecting with Jamtaba server!
 </source>
-        <translation type="unfinished"></translation>
+        <translation>¡Error al conectar con el servidor de Jamtaba!</translation>
     </message>
     <message>
         <source>Connecting with %1 ... </source>
-        <translation type="unfinished"></translation>
+        <translation>Conectando con %1 ... </translation>
     </message>
     <message>
         <source>Connecting with %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Conectando con %1</translation>
     </message>
     <message>
         <source>Can&apos;t open the link!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡No se puede abrir el enlace!</translation>
+    </message>
+    <message>
+        <source>Black</source>
+        <translation>Negro</translation>
+    </message>
+    <message>
+        <source>Flat</source>
+        <translation>Plano</translation>
+    </message>
+    <message>
+        <source>Rounded</source>
+        <translation>Redondeado</translation>
     </message>
 </context>
 <context>
@@ -732,26 +732,26 @@
     </message>
     <message>
         <source>Last chords used</source>
-        <translation type="unfinished"></translation>
+        <translation>Últimos acordes usados</translation>
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ha sido bloqueado en el chat</translation>
     </message>
     <message>
         <source>%1 is unblocked in the chat</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ha sido desbloqueado en el chat</translation>
     </message>
 </context>
 <context>
     <name>NinjamTrackGroupView</name>
     <message>
         <source>Block %1 in chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear a %1 en el chat</translation>
     </message>
     <message>
         <source>Unblock %1 in chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Desbloquear a %1 en el chat</translation>
     </message>
 </context>
 <context>
@@ -1005,14 +1005,14 @@
     <name>Recorder::ClipSortLogGenerator</name>
     <message>
         <source>Generate Reaper &apos;clipsort.log&apos; file</source>
-        <translation type="unfinished"></translation>
+        <translation>Generar Archivo de Reaper &apos;clipsort.log&apos;</translation>
     </message>
 </context>
 <context>
     <name>Recorder::ReaperProjectGenerator</name>
     <message>
         <source>Generate Reaper Project file (RPP)</source>
-        <translation type="unfinished"></translation>
+        <translation>Generar Archivo de Projecto de Reaper</translation>
     </message>
 </context>
 <context>
