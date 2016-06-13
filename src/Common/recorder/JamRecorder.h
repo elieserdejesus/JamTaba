@@ -102,22 +102,7 @@ private:
 class Jam
 {
 public:
-    Jam(int bpm, int bpi, int sampleRate, const QString &jamName, const QString &baseDir);
-
-    inline QString getRPPAudioAbsolutePath() const
-    {
-        return rppAudioPath;
-    }
-
-    inline QString getClipSortAbsolutePath() const
-    {
-        return clipsortPath;
-    }
-
-    inline int getSampleRate() const
-    {
-        return sampleRate;
-    }
+    Jam(int bpm, int bpi, int sampleRate);
 
     inline int getBpm() const
     {
@@ -129,9 +114,9 @@ public:
         return bpi;
     }
 
-    inline QString getBaseDir() const
+    inline int getSampleRate() const
     {
-        return baseDir;
+        return sampleRate;
     }
 
     inline double getIntervalsLenght() const
@@ -149,10 +134,6 @@ private:
     int bpm;
     int bpi;
     int sampleRate;
-    QString name;
-    QString baseDir;
-    QString rppAudioPath;
-    QString clipsortPath;
 
     // the first map key is userName. The second map key is channelIndex
     QMap<QString, QMap<quint8, JamTrack> > jamTracks;
@@ -168,6 +149,8 @@ public:
     virtual ~JamMetadataWriter(){}
     virtual QString getWriterId() const = 0;
     virtual QString getWriterName() const = 0; // Localised
+    virtual void setJamDir(QString newJamName, QString recordBasePath) = 0;
+    virtual QString getAudioAbsolutePath(QString audioFileName) = 0;
 };
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class LocalNinjamInterval
@@ -237,7 +220,7 @@ private:
     int globalIntervalIndex;
     QString localUserName;
     bool running;
-    QDir newPath;// used to set the newPath in the next interval
+    QDir recordBaseDir;// used to set the newPath in the next interval
 
     QMap<quint8, LocalNinjamInterval> localUserIntervals;// use channel index as key and store encoded bytes. When a full interval is stored the encoded bytes are store in a ogg file.
 

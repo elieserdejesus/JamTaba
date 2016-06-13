@@ -17,9 +17,15 @@ public:
     {
         return QCoreApplication::translate("Recorder::ReaperProjectGenerator", "Generate Reaper Project file (RPP)");
     }
-
+    inline void setJamDir(QString newJamName, QString recordBasePath) override {
+        QDir parentDir(QDir(recordBasePath).absoluteFilePath(newJamName));
+        parentDir.mkpath("Reaper");
+        this->rppPath = parentDir.absoluteFilePath("Reaper");
+    }
+    QString getAudioAbsolutePath(QString audioFileName) override;
 private:
     static QString buildTrackName(const QString &userName, quint8 channelIndex);
+    QString rppPath;
 };
 }
 
