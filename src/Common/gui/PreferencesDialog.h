@@ -2,6 +2,7 @@
 #define PREFERENCES_DIALOG_H
 
 #include <QDialog>
+#include <QCheckBox>
 #include "persistence/Settings.h"
 #include "recorder/JamRecorder.h"
 
