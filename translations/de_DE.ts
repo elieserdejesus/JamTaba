@@ -736,7 +736,7 @@
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
-        <translationt>%1 ist geblockt im cha</translation>
+        <translationt>%1 ist geblockt im chat</translation>
     </message>
     <message>
         <source>%1 is unblocked in the chat</source>
