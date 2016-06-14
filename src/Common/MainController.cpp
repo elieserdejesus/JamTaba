@@ -37,6 +37,7 @@ MainController::MainController(const Settings &settings) :
 
     connect(ipToLocationResolver.data(), SIGNAL(ipResolved(const QString &)), this, SIGNAL(ipResolved(const QString &)));
 
+    // Register known JamRecorders here:
     jamRecorders.append(new Recorder::JamRecorder(new Recorder::ReaperProjectGenerator()));
     jamRecorders.append(new Recorder::JamRecorder(new Recorder::ClipSortLogGenerator()));
 }

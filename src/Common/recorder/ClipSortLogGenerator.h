@@ -17,6 +17,10 @@ public:
     {
         return QCoreApplication::translate("Recorder::ClipSortLogGenerator", "Generate Reaper 'clipsort.log' file");
     }
+    void setJamDir(QString newJamName, QString recordBasePath) override;
+    QString getAudioAbsolutePath(QString audioFileName) override;
+private:
+    QString clipsortPath;
 };
 
 }// namespace

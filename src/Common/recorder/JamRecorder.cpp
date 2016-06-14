@@ -39,14 +39,8 @@ JamInterval::JamInterval()
     :intervalIndex(0), bpm(-1), bpi(-1), path(""), userName(""), channelIndex(0){
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Jam::Jam(int bpm, int bpi, int sampleRate, const QString &jamName, const QString &baseDir)
-    : bpm(bpm), bpi(bpi), name(jamName), sampleRate(sampleRate), baseDir(baseDir) {
-
-    QDir jamDir(QDir(baseDir).absoluteFilePath(jamName));
-    jamDir.mkpath("Reaper/audio");
-    this->rppAudioPath = jamDir.absoluteFilePath("Reaper/audio");
-    jamDir.mkpath("Reaper/clipsort");
-    this->clipsortPath = jamDir.absoluteFilePath("Reaper/clipsort");
+Jam::Jam(int bpm, int bpi, int sampleRate)
+    : bpm(bpm), bpi(bpi), sampleRate(sampleRate) {
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++
@@ -135,7 +129,7 @@ void JamRecorder::appendLocalUserAudio(const QByteArray &encodedaudio, quint8 ch
     localUserIntervals[channelIndex].appendEncodedAudio(encodedaudio);
     if(isLastPastOfInterval){
         QString audioFileName = buildAudioFileName(localUserName, channelIndex, localUserIntervals[channelIndex].getIntervalIndex());
-        QString audioFilePath = QDir(jam->getRPPAudioAbsolutePath()).absoluteFilePath(audioFileName);
+        QString audioFilePath = jamMetadataWritter->getAudioAbsolutePath(audioFileName);
         QByteArray encodedData(localUserIntervals[channelIndex].getEncodedData());
         QtConcurrent::run(this, &JamRecorder::writeEncodedFile, encodedData, audioFilePath);
         //writeEncodedFile(localUserIntervals[channelIndex].getEncodedData(), audioFilePath);
@@ -151,48 +145,52 @@ void JamRecorder::addRemoteUserAudio(const QString &userName, const QByteArray &
     }
     int intervalIndex = globalIntervalIndex;
     QString audioFileName = buildAudioFileName(userName, channelIndex, intervalIndex);
-    QString audioFilePath = QDir(jam->getRPPAudioAbsolutePath()).absoluteFilePath(audioFileName);
+    QString audioFilePath = jamMetadataWritter->getAudioAbsolutePath(audioFileName);
     QtConcurrent::run(this, &JamRecorder::writeEncodedFile, encodedAudio, audioFilePath);
     jam->addAudioFile(userName, channelIndex, audioFilePath, intervalIndex);
 }
 
-void JamRecorder::startRecording(const QString &localUser, const QDir &recordBasePath, int bpm, int bpi, int sampleRate){
+void JamRecorder::startRecording(const QString &localUser, const QDir &recordBaseDir, int bpm, int bpi, int sampleRate){
     this->localUserName = localUser;
+    this->recordBaseDir = recordBaseDir;
+    this->jamMetadataWritter->setJamDir(getNewJamName(), recordBaseDir.absolutePath());
 
-    this->currentJamName = getNewJamName();
     if(this->jam){
         delete this->jam;
     }
-    this->jam = new Jam(bpm, bpi, sampleRate, currentJamName, recordBasePath.absolutePath());
+    this->jam = new Jam(bpm, bpi, sampleRate);
+
     this->running = true;
+    qDebug(jtJamRecorder) << this->jamMetadataWritter->getWriterId() << "startRecording!";
 }
 
 //these methods are called when the user change the preferences. All these methods start a new recording
 void JamRecorder::setBpi(int newBpi){
     if(running){
         stopRecording();
-        startRecording(localUserName, QDir(jam->getBaseDir()), jam->getBpm(), newBpi, jam->getSampleRate() );
+        startRecording(localUserName, recordBaseDir, jam->getBpm(), newBpi, jam->getSampleRate() );
     }
 }
 
 void JamRecorder::setBpm(int newBpm){
     if(running){
         stopRecording();
-        startRecording(localUserName, QDir(jam->getBaseDir()), newBpm, jam->getBpi(), jam->getSampleRate() );
+        startRecording(localUserName, recordBaseDir, newBpm, jam->getBpi(), jam->getSampleRate() );
     }
 }
 
-void JamRecorder::setRecordPath(const QDir &recordBasePath){
+void JamRecorder::setRecordPath(const QDir &newDir){
+    recordBaseDir = newDir;
     if(running){
         stopRecording();
-        startRecording(localUserName, recordBasePath, jam->getBpm(), jam->getBpi(), jam->getSampleRate() );
+        startRecording(localUserName, recordBaseDir, jam->getBpm(), jam->getBpi(), jam->getSampleRate() );
     }
 }
 
 void JamRecorder::setSampleRate(int newSampleRate){
     if(running){
         stopRecording();
-        startRecording(localUserName, QDir(jam->getBaseDir()), jam->getBpm(), jam->getBpi(), newSampleRate );
+        startRecording(localUserName, recordBaseDir, jam->getBpm(), jam->getBpi(), newSampleRate );
     }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

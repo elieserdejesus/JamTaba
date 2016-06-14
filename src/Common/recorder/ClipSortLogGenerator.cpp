@@ -6,8 +6,6 @@ using namespace Recorder;
 
 
 void ClipSortLogGenerator::write(const Jam &jam){
-    QDir jamDir = QDir(jam.getClipSortAbsolutePath());
-
     QString stringBuffer("");
 
     int intervalIndex = -1;
@@ -25,32 +23,18 @@ void ClipSortLogGenerator::write(const Jam &jam){
                 .append("\n");
         }
         //user 451065aed5824d1c51254b7cdf417598 "Alfred@62.163.190.x" 0 "Abnormal NINJAM"
-        QString replacementFilePath = QUuid::createUuid().toString().remove(QRegExp("[-{}]"));
+        QString intervalName = QFileInfo(interval.getPath()).baseName();
         stringBuffer.append("user")
-            .append(" " + replacementFilePath)
+            .append(" " + intervalName)
             .append(" \"" + interval.getUserName().replace("\"", "_") + "\"") // it'll work...
             .append(" " + QString::number(interval.getChannelIndex()))
             .append(" \"channel name\"")
             .append("\n");
-
-        // Now some hackery is required to maybe create a dir with the first letter of the
-        // replacement filename and then copy/link the existing file to that name
-        if (!jamDir.exists(replacementFilePath.left(1)) && !jamDir.mkdir(replacementFilePath.left(1)))
-        {
-            qCCritical(jtJamRecorder) << "Could not create clip directory in " << jamDir;
-            break; // to avoid flooding
-        }
-        QFile(interval.getPath()).copy(
-            jamDir.canonicalPath() + "/" +
-                    replacementFilePath.left(1) + "/" +
-                    replacementFilePath + "." +
-                    QFileInfo(interval.getPath()).completeSuffix()
-        );
-
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //save
+    QDir jamDir = QDir(this->clipsortPath);
     QFile projectFile(jamDir.absoluteFilePath("clipsort.log"));
     if(!projectFile.open(QFile::WriteOnly)){
         qCCritical(jtJamRecorder) << "Can't write clipsort.log in " << jamDir;
@@ -58,4 +42,24 @@ void ClipSortLogGenerator::write(const Jam &jam){
     QTextStream stream(&projectFile);
     QByteArray byteArray(stringBuffer.toUtf8());
     stream << byteArray;
+}
+
+void ClipSortLogGenerator::setJamDir(QString newJamName, QString recordBasePath)
+{
+    QDir parentDir(QDir(recordBasePath).absoluteFilePath(newJamName));
+    parentDir.mkpath("Reaper/clipsort");
+    this->clipsortPath = parentDir.absoluteFilePath("Reaper/clipsort");
+}
+
+QString ClipSortLogGenerator::getAudioAbsolutePath(QString audioFileName){
+    QDir jamDir = QDir(this->clipsortPath);
+    QString replacementFilePath = QUuid::createUuid().toString().remove(QRegExp("[-{}]"));
+    if (!jamDir.exists(replacementFilePath.left(1)) && !jamDir.mkdir(replacementFilePath.left(1)))
+    {
+        qCCritical(jtJamRecorder) << "Could not create clip directory in " << this->clipsortPath;
+        return QString::null;
+    }
+    return jamDir.absoluteFilePath(replacementFilePath.left(1) + "/" +
+            replacementFilePath + "." +
+            QFileInfo(audioFileName).suffix());
 }
