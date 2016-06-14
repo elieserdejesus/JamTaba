@@ -17,11 +17,7 @@ public:
     {
         return QCoreApplication::translate("Recorder::ClipSortLogGenerator", "Generate Reaper 'clipsort.log' file");
     }
-    inline void setJamDir(QString newJamName, QString recordBasePath) override {
-        QDir parentDir(QDir(recordBasePath).absoluteFilePath(newJamName));
-        parentDir.mkpath("Reaper/clipsort");
-        this->clipsortPath = parentDir.absoluteFilePath("Reaper/clipsort");
-    }
+    void setJamDir(QString newJamName, QString recordBasePath) override;
     QString getAudioAbsolutePath(QString audioFileName) override;
 private:
     QString clipsortPath;

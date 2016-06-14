@@ -44,6 +44,13 @@ void ClipSortLogGenerator::write(const Jam &jam){
     stream << byteArray;
 }
 
+void ClipSortLogGenerator::setJamDir(QString newJamName, QString recordBasePath)
+{
+    QDir parentDir(QDir(recordBasePath).absoluteFilePath(newJamName));
+    parentDir.mkpath("Reaper/clipsort");
+    this->clipsortPath = parentDir.absoluteFilePath("Reaper/clipsort");
+}
+
 QString ClipSortLogGenerator::getAudioAbsolutePath(QString audioFileName){
     QDir jamDir = QDir(this->clipsortPath);
     QString replacementFilePath = QUuid::createUuid().toString().remove(QRegExp("[-{}]"));

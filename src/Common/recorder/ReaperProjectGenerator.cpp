@@ -58,6 +58,13 @@ void ReaperProjectGenerator::write(const Jam &jam){
     //projectFile.write(stringBuffer.toStdString().c_str(), stringBuffer.size());
 }
 
+void ReaperProjectGenerator::setJamDir(QString newJamName, QString recordBasePath)
+{
+    QDir parentDir(QDir(recordBasePath).absoluteFilePath(newJamName));
+    parentDir.mkpath("Reaper");
+    this->rppPath = parentDir.absoluteFilePath("Reaper");
+}
+
 QString ReaperProjectGenerator::getAudioAbsolutePath(QString audioFileName){
     QDir jamDir = QDir(this->rppPath);
     if (!jamDir.exists("audio") && !jamDir.mkdir("audio"))
