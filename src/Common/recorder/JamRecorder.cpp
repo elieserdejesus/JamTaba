@@ -89,7 +89,7 @@ void Jam::addAudioFile(const QString &userName, quint8 channelIndex, const QStri
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 QString JamRecorder::getNewJamName() {
     QDateTime now = QDateTime::currentDateTime();
-    QString nowString = now.toString(Qt::SystemLocaleShortDate);
+    QString nowString = now.toString(Qt::TextDate);
     nowString = nowString.replace(QRegExp("[/:]"), "-").replace(QRegExp("[ ]"), "_");
     return "Jam-" + nowString;
 }
