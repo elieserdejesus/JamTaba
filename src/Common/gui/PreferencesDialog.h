@@ -30,6 +30,7 @@ signals:
     void multiTrackRecordingStatusChanged(bool recording);
     void jamRecorderStatusChanged(const QString &writerId, bool status);
     void recordingPathSelected(const QString &newRecordingPath);
+    void encodingQualityChanged(float newEncodingQuality);
 
 public slots:
     void accept() override;
@@ -47,11 +48,15 @@ private slots:
 
     void toggleCustomMetronomeSounds(bool usingCustomMetronome);
     void toggleBuiltInMetronomeSounds(bool usingBuiltInMetronome);
+
 private:
+    void populateEncoderQualityComboBox();
+    bool usingCustomEncodingQuality();
     QString selectAudioFile(QString caption, QString initialDir);
     void refreshMetronomeControlsStyleSheet();
     QString openAudioFileBrowser(const QString caption);
     QMap<QCheckBox *, QString> jamRecorderCheckBoxes;
+
 protected:
     Ui::PreferencesDialog *ui;
 
