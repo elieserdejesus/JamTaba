@@ -86,6 +86,17 @@ void PreferencesDialog::setupSignals()
     connect(ui->groupBoxBuiltInMetronomes, SIGNAL(toggled(bool)), this, SLOT(toggleBuiltInMetronomeSounds(bool)));
     connect(ui->browsePrimaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(openPrimaryBeatAudioFileBrowser()));
     connect(ui->browseSecondaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(openSecondaryBeatAudioFileBrowser()));
+
+    connect(ui->comboBoxEncoderQuality, SIGNAL(currentIndexChanged(int)), this, SLOT(emitEncodingQualityChanged()));
+}
+
+void PreferencesDialog::emitEncodingQualityChanged()
+{
+    QVariant currentData = ui->comboBoxEncoderQuality->currentData();
+    if (!currentData.isNull()){
+        float selectedQuality = currentData.toFloat();
+        emit encodingQualityChanged(selectedQuality);
+    }
 }
 
 void PreferencesDialog::accept()
