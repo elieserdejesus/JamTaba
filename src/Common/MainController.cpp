@@ -71,6 +71,13 @@ void MainController::setSampleRate(int newSampleRate)
     settings.setSampleRate(newSampleRate);
 }
 
+void MainController::setEncodingQuality(float newEncodingQuality)
+{
+    settings.setEncodingQuality(newEncodingQuality);
+    if (isPlayingInNinjamRoom())
+        ninjamController->recreateEncoders();
+}
+
 void MainController::finishUploads()
 {
     foreach (int channelIndex, intervalsToUpload.keys())

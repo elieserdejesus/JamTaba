@@ -275,6 +275,7 @@ signals:
 
 public slots:
     virtual void setSampleRate(int newSampleRate);
+    void setEncodingQuality(float newEncodingQuality);
 
 protected:
 

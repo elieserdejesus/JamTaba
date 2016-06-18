@@ -290,6 +290,11 @@ public:
         return audioSettings.encodingQuality;
     }
 
+    inline void setEncodingQuality(float quality)
+    {
+        audioSettings.encodingQuality = quality;
+    }
+
     void setBuiltInMetronome(const QString &metronomeAlias);
     inline QString getBuiltInMetronome() const { return metronomeSettings.builtInMetronomeAlias; }
 

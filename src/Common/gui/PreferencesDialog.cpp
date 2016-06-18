@@ -87,7 +87,7 @@ void PreferencesDialog::setupSignals()
     connect(ui->browsePrimaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(openPrimaryBeatAudioFileBrowser()));
     connect(ui->browseSecondaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(openSecondaryBeatAudioFileBrowser()));
 
-    connect(ui->comboBoxEncoderQuality, SIGNAL(currentIndexChanged(int)), this, SLOT(emitEncodingQualityChanged()));
+    connect(ui->comboBoxEncoderQuality, SIGNAL(activated(int)), this, SLOT(emitEncodingQualityChanged()));
 }
 
 void PreferencesDialog::emitEncodingQualityChanged()

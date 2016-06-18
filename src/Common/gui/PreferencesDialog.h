@@ -43,8 +43,7 @@ private slots:
     void openPrimaryBeatAudioFileBrowser();
     void openSecondaryBeatAudioFileBrowser();
 
-    //void emitFirstBeatAudioFileChanged();
-    //void emitSecondaryBeatAudioFileChanged();
+    void emitEncodingQualityChanged();
 
     void toggleCustomMetronomeSounds(bool usingCustomMetronome);
     void toggleBuiltInMetronomeSounds(bool usingBuiltInMetronome);
