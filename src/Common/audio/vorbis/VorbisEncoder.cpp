@@ -4,29 +4,34 @@
 #include <QThread>
 #include "log/Logging.h"
 
-const float VorbisEncoder::QUALITY = 0.32f;
+
+//these vorbis quality values are discussed here: https://github.com/elieserdejesus/JamTaba/issues/456#issuecomment-226920734
+const float VorbisEncoder::QUALITY_LOW    = -0.1f; // ~64 kbps
+const float VorbisEncoder::QUALITY_NORMAL =  0.2f; // ~96 – ~112 kbps. In ogg vorbis 96 Kbps is similar to 128 kbps mp3
+const float VorbisEncoder::QUALITY_HIGH   =  0.3f;  // ~112 – ~128 kbps
 
 VorbisEncoder::VorbisEncoder()
     :initialized(false)
 {
-    init(1, 44100);
+    init(1, 44100, QUALITY_NORMAL);
 }
 
-VorbisEncoder::VorbisEncoder(int channels, int sampleRate):
+VorbisEncoder::VorbisEncoder(int channels, int sampleRate, float quality):
     initialized(false)
 {
-    init(channels, sampleRate);
+    init(channels, sampleRate, quality);
 }
 
-void VorbisEncoder::init(int channels, int sampleRate){
-    qCDebug(jtNinjamVorbisEncoder) << "Initializing VorbisEncoder Thread:" << QThread::currentThreadId();
+void VorbisEncoder::init(int channels, int sampleRate, float quality){
     vorbis_info_init(&info);
 
-    if(vorbis_encode_init_vbr(&info, (long) channels, (long) sampleRate, QUALITY) != 0){
+    if(vorbis_encode_init_vbr(&info, (long) channels, (long) sampleRate, quality) != 0){
         qCritical() << "vorbis encoder initialization error!";
     }
     vorbis_comment_init(&comment);
     vorbis_comment_add_tag(&comment, "Encoder", "Jamtaba");
+
+    qCDebug(jtNinjamVorbisEncoder) << "Initializing VorbisEncoder sampleRate:" << sampleRate << " channels: " << channels << " quality: " << quality;
 
     streamID = 0;
     isFirstEncoding = true;

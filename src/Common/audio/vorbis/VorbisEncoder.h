@@ -10,7 +10,7 @@ class VorbisEncoder
 
 public:
     VorbisEncoder();
-    VorbisEncoder(int channels, int sampleRate);
+    VorbisEncoder(int channels, int sampleRate, float quality);
     ~VorbisEncoder();
 
     QByteArray encode(const Audio::SamplesBuffer& in);
@@ -18,8 +18,12 @@ public:
     inline int getChannels() const{return info.channels;}
     inline int getSampleRate() const{return info.rate;}
 
+    static const float QUALITY_LOW;
+    static const float QUALITY_NORMAL;
+    static const float QUALITY_HIGH;
+
 private:
-    static const float QUALITY;// = 0.32;//vorbis default quality is 0.3
+    float quality;
     ogg_stream_state streamState; /* take physical pages, weld into a logical stream of packets */
     vorbis_info      info; /* struct that stores all the static vorbis bitstream settings */
     vorbis_comment   comment; /* struct that stores all the user comments */
@@ -33,7 +37,7 @@ private:
 
     QByteArray outBuffer;
 
-    void init(int channels, int sampleRate);
+    void init(int channels, int sampleRate, float quality);
 
     void encodeFirstVorbisHeaders();
     void clearState();

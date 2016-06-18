@@ -770,7 +770,10 @@ void NinjamController::recreateEncoderForChannel(int channelIndex){
         if(currentEncoderIsInvalid){
             delete encoders[channelIndex];
         }
-        encoders[channelIndex] = new VorbisEncoder(maxChannelsForEncoding, mainController->getSampleRate());
+
+        int sampleRate = mainController->getSampleRate();
+        float encodingQuality = mainController->getEncodingQuality();
+        encoders[channelIndex] = new VorbisEncoder(maxChannelsForEncoding, sampleRate, encodingQuality);
     }
 }
 

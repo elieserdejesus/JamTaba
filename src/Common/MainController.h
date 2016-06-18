@@ -175,6 +175,11 @@ public:
 
     virtual int getSampleRate() const = 0;
 
+    inline float getEncodingQuality() const
+    {
+        return settings.getEncodingQuality();
+    }
+
     static QByteArray newGUID();
 
     inline const Persistence::Settings &getSettings() const

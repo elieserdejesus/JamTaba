@@ -51,6 +51,7 @@ public:
     int lastIn;
     int lastOut;
     int audioDevice;
+    float encodingQuality;
 };
 // +++++++++++++++++++++++++++++++++++++
 class MidiSettings : public SettingsObject
@@ -283,6 +284,11 @@ private:
 public:
     Settings();
     ~Settings();
+
+    inline float getEncodingQuality() const
+    {
+        return audioSettings.encodingQuality;
+    }
 
     void setBuiltInMetronome(const QString &metronomeAlias);
     inline QString getBuiltInMetronome() const { return metronomeSettings.builtInMetronomeAlias; }
