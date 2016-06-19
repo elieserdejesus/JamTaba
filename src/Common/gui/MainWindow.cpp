@@ -1075,14 +1075,20 @@ void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
 
     connect(dialog, SIGNAL(multiTrackRecordingStatusChanged(bool)), this,
             SLOT(setMultiTrackRecordingStatus(bool)));
+
     connect(dialog, SIGNAL(jamRecorderStatusChanged(QString, bool)), this,
             SLOT(setJamRecorderStatus(QString, bool)));
+
     connect(dialog, SIGNAL(recordingPathSelected(const QString &)), this,
             SLOT(setRecordingPath(const QString &)));
+
     connect(dialog, SIGNAL(builtInMetronomeSelected(QString)), this,
             SLOT(setBuiltInMetronome(QString)));
+
     connect(dialog, SIGNAL(customMetronomeSelected(QString, QString)), this,
             SLOT(setCustomMetronome(QString, QString)));
+
+    connect(dialog, &PreferencesDialog::encodingQualityChanged, mainController, &MainController::setEncodingQuality);
 }
 
 void MainWindow::setBuiltInMetronome(const QString &metronomeAlias)

@@ -11,6 +11,7 @@
 #include <QStringList>
 #include <QSettings>
 #include "log/Logging.h"
+#include "audio/vorbis/VorbisEncoder.h"
 
 using namespace Persistence;
 
@@ -124,6 +125,14 @@ void AudioSettings::read(const QJsonObject &in)
     lastIn = getValueFromJson(in, "lastIn", 0);
     lastOut = getValueFromJson(in, "lastOut", 0);
     audioDevice = getValueFromJson(in, "audioDevice", -1);
+
+    encodingQuality = getValueFromJson(in, "encodingQuality", VorbisEncoder::QUALITY_NORMAL); // using VorbisEncoder.QUALITY_NORMAL as fallback value.
+
+    //ensure vorbis quality is in accepted range
+    if (encodingQuality < VorbisEncoder::QUALITY_LOW)
+        encodingQuality = VorbisEncoder::QUALITY_LOW;
+    else if(encodingQuality > VorbisEncoder::QUALITY_HIGH)
+        encodingQuality = VorbisEncoder::QUALITY_HIGH;
 }
 
 void AudioSettings::write(QJsonObject &out) const
@@ -135,6 +144,7 @@ void AudioSettings::write(QJsonObject &out) const
     out["lastIn"] = lastIn;
     out["lastOut"] = lastOut;
     out["audioDevice"] = audioDevice;
+    out["encodingQuality"] = encodingQuality;
 }
 
 // +++++++++++++++++++++++++++++

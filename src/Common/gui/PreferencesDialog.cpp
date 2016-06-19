@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include "persistence/Settings.h"
 #include "MetronomeUtils.h"
+#include "audio/vorbis/VorbisEncoder.h"
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
     QDialog(parent),
@@ -85,6 +86,17 @@ void PreferencesDialog::setupSignals()
     connect(ui->groupBoxBuiltInMetronomes, SIGNAL(toggled(bool)), this, SLOT(toggleBuiltInMetronomeSounds(bool)));
     connect(ui->browsePrimaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(openPrimaryBeatAudioFileBrowser()));
     connect(ui->browseSecondaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(openSecondaryBeatAudioFileBrowser()));
+
+    connect(ui->comboBoxEncoderQuality, SIGNAL(activated(int)), this, SLOT(emitEncodingQualityChanged()));
+}
+
+void PreferencesDialog::emitEncodingQualityChanged()
+{
+    QVariant currentData = ui->comboBoxEncoderQuality->currentData();
+    if (!currentData.isNull()){
+        float selectedQuality = currentData.toFloat();
+        emit encodingQualityChanged(selectedQuality);
+    }
 }
 
 void PreferencesDialog::accept()
@@ -98,8 +110,51 @@ void PreferencesDialog::accept()
     QDialog::accept();
 }
 
+void PreferencesDialog::populateEncoderQualityComboBox()
+{
+    ui->comboBoxEncoderQuality->clear();
+    ui->comboBoxEncoderQuality->addItem(tr("Low (good for slow internet connections)"), VorbisEncoder::QUALITY_LOW);
+    ui->comboBoxEncoderQuality->addItem(tr("Normal (default)"), VorbisEncoder::QUALITY_NORMAL);
+    ui->comboBoxEncoderQuality->addItem(tr("High (for good internet connections only)"), VorbisEncoder::QUALITY_HIGH);
+
+    bool usingCustomQuality = usingCustomEncodingQuality();
+    if (usingCustomQuality)
+        ui->comboBoxEncoderQuality->addItem(tr("Custom quality"));
+
+    //select the correct item in combobox
+    if (!usingCustomQuality){
+        float quality = settings->getEncodingQuality();
+        if (qFuzzyCompare(quality, VorbisEncoder::QUALITY_LOW))
+            ui->comboBoxEncoderQuality->setCurrentIndex(0);
+        else if (qFuzzyCompare(quality, VorbisEncoder::QUALITY_NORMAL))
+            ui->comboBoxEncoderQuality->setCurrentIndex(1);
+        else if (qFuzzyCompare(quality, VorbisEncoder::QUALITY_HIGH))
+                    ui->comboBoxEncoderQuality->setCurrentIndex(2);
+    }
+    else{
+        ui->comboBoxEncoderQuality->setCurrentIndex(ui->comboBoxEncoderQuality->count() - 1);
+    }
+}
+
+bool PreferencesDialog::usingCustomEncodingQuality()
+{
+    float currentQuality = settings->getEncodingQuality();
+
+    if (qFuzzyCompare(currentQuality, VorbisEncoder::QUALITY_LOW))
+        return false;
+
+    if (qFuzzyCompare(currentQuality, VorbisEncoder::QUALITY_NORMAL))
+        return false;
+
+    if (qFuzzyCompare(currentQuality, VorbisEncoder::QUALITY_HIGH))
+        return false;
+
+    return true;
+}
+
 void PreferencesDialog::populateAllTabs()
 {
+    populateEncoderQualityComboBox();
     populateRecordingTab();
     populateMetronomeTab();
 }
