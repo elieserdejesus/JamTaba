@@ -49,6 +49,8 @@ private slots:
     void toggleCustomMetronomeSounds(bool usingCustomMetronome);
     void toggleBuiltInMetronomeSounds(bool usingBuiltInMetronome);
 
+    void toggleRecording(bool recording);
+
 private:
     void populateEncoderQualityComboBox();
     bool usingCustomEncodingQuality();

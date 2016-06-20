@@ -73,13 +73,13 @@ void PreferencesDialog::setupSignals()
     connect(ui->okButton, SIGNAL(clicked(bool)), this, SLOT(accept()));
     connect(ui->prefsTab, SIGNAL(currentChanged(int)), this, SLOT(selectTab(int)));
 
-    connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this,
-            SIGNAL(multiTrackRecordingStatusChanged(bool)));
+    connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this, SLOT(toggleRecording(bool)));
     foreach(QCheckBox *myCheckBox, jamRecorderCheckBoxes.keys()) {
         connect(myCheckBox, &QCheckBox::clicked, [=](bool newStatus) {
             jamRecorderStatusChanged(jamRecorderCheckBoxes[myCheckBox], newStatus);
         });
     }
+
     connect(ui->browseRecPathButton, SIGNAL(clicked(bool)), this, SLOT(openRecordingPathBrowser()));
 
     connect(ui->groupBoxCustomMetronome, SIGNAL(toggled(bool)), this, SLOT(toggleCustomMetronomeSounds(bool)));
@@ -88,6 +88,14 @@ void PreferencesDialog::setupSignals()
     connect(ui->browseSecondaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(openSecondaryBeatAudioFileBrowser()));
 
     connect(ui->comboBoxEncoderQuality, SIGNAL(activated(int)), this, SLOT(emitEncodingQualityChanged()));
+}
+
+void PreferencesDialog::toggleRecording(bool recording)
+{
+    for(QCheckBox *checkbox : jamRecorderCheckBoxes.keys())
+        checkbox->setChecked(recording);
+
+    emit multiTrackRecordingStatusChanged(recording);
 }
 
 void PreferencesDialog::emitEncodingQualityChanged()
