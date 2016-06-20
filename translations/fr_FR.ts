@@ -43,11 +43,11 @@
     </message>
     <message>
         <source>block chat messages from this user</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloqué les messages chat de cet utilisateur</translation>
     </message>
     <message>
         <source>B</source>
-        <translation type="unfinished"></translation>
+        <translation>B</translation>
     </message>
 </context>
 <context>
@@ -242,7 +242,7 @@
     <name>LocalTrackView</name>
     <message>
         <source>Invert stereo</source>
-        <translation type="unfinished"></translation>
+        <translation>Inversé la stéréo</translation>
     </message>
 </context>
 <context>
@@ -392,35 +392,35 @@
     </message>
     <message>
         <source>View</source>
-        <translation type="unfinished"></translation>
+        <translation>Vue</translation>
     </message>
     <message>
         <source>Metering</source>
-        <translation type="unfinished"></translation>
+        <translation>Métrique</translation>
     </message>
     <message>
         <source>Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Thème</translation>
     </message>
     <message>
         <source>Translators ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Tranducteurs...</translation>
     </message>
     <message>
         <source>Show peak meter only</source>
-        <translation type="unfinished"></translation>
+        <translation>Montrer les cr^tes mètres (peack meter) seulement</translation>
     </message>
     <message>
         <source>Show RMS meter only</source>
-        <translation type="unfinished"></translation>
+        <translation>Montrer les niveaux RMS seulement</translation>
     </message>
     <message>
         <source>Show peak + RMS meters</source>
-        <translation type="unfinished"></translation>
+        <translation>Montrer pics et RMS</translation>
     </message>
     <message>
         <source>Show max peaks</source>
-        <translation type="unfinished"></translation>
+        <translation>Montrer les pics maximum</translation>
     </message>
 </context>
 <context>
@@ -499,15 +499,15 @@
     </message>
     <message>
         <source>Black</source>
-        <translation type="unfinished"></translation>
+        <translation>Noire</translation>
     </message>
     <message>
         <source>Flat</source>
-        <translation type="unfinished"></translation>
+        <translation>Plat</translation>
     </message>
     <message>
         <source>Rounded</source>
-        <translation type="unfinished"></translation>
+        <translation>Rond</translation>
     </message>
     <message>
         <source>Error connecting with Jamtaba server!
@@ -516,11 +516,11 @@
     </message>
     <message>
         <source>Connecting with %1 ... </source>
-        <translation type="unfinished"></translation>
+        <translation>Connecté avec %1... </translation>
     </message>
     <message>
         <source>Connecting with %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Connecté avec %1</translation>
     </message>
     <message>
         <source>Can&apos;t open the link!</source>
@@ -732,26 +732,26 @@
     </message>
     <message>
         <source>Last chords used</source>
-        <translation type="unfinished"></translation>
+        <translation>Derniers accords utilisés</translation>
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 est bloqué dans le chat</translation>
     </message>
     <message>
         <source>%1 is unblocked in the chat</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 est débloquer dans le chat</translation>
     </message>
 </context>
 <context>
     <name>NinjamTrackGroupView</name>
     <message>
         <source>Block %1 in chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer %1 dans le chat</translation>
     </message>
     <message>
         <source>Unblock %1 in chat</source>
-        <translation type="unfinished"></translation>
+        <translation>Débloquer %1 dans le chat</translation>
     </message>
 </context>
 <context>
@@ -947,31 +947,31 @@
     </message>
     <message>
         <source>Buffer size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille du buffer:</translation>
     </message>
     <message>
         <source>Sample rate:</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille d&apos;échantillonage (sample rate):</translation>
     </message>
     <message>
         <source>Encoder quality:</source>
-        <translation type="unfinished"></translation>
+        <translation>Qualité d&apos;encodage:</translation>
     </message>
     <message>
         <source>Low (good for slow internet connections)</source>
-        <translation type="unfinished"></translation>
+        <translation>Basse (pour les connections internet plus lentes)</translation>
     </message>
     <message>
         <source>Normal (default)</source>
-        <translation type="unfinished"></translation>
+        <translation>Moyenne (par défaut)</translation>
     </message>
     <message>
         <source>High (for good internet connections only)</source>
-        <translation type="unfinished"></translation>
+        <translation>Haute (pour les meilleures connections internet seulement)</translation>
     </message>
     <message>
         <source>Custom quality</source>
-        <translation type="unfinished"></translation>
+        <translation>Qualité moyenne</translation>
     </message>
 </context>
 <context>
@@ -1025,14 +1025,14 @@
     <name>Recorder::ClipSortLogGenerator</name>
     <message>
         <source>Generate Reaper &apos;clipsort.log&apos; file</source>
-        <translation type="unfinished"></translation>
+        <translation>Généré un fichier reaper &apos;clipsort.log&apos;</translation>
     </message>
 </context>
 <context>
     <name>Recorder::ReaperProjectGenerator</name>
     <message>
         <source>Generate Reaper Project file (RPP)</source>
-        <translation type="unfinished"></translation>
+        <translation>Généré un projet reaper(.RPP)</translation>
     </message>
 </context>
 <context>
