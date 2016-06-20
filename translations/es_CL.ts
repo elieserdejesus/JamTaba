@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="es_CL" sourcelanguage="en_US">
+<TS version="2.1" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -846,14 +846,6 @@
         <translation>Salidas</translation>
     </message>
     <message>
-        <source>Sample rate</source>
-        <translation>Frecuencia de Muestreo</translation>
-    </message>
-    <message>
-        <source>Buffer size</source>
-        <translation>Tamaño del Búfer</translation>
-    </message>
-    <message>
         <source>ASIO panel ...</source>
         <translation>Panel ASIO ...</translation>
     </message>
@@ -952,6 +944,34 @@
     <message>
         <source>ok</source>
         <translation>Aceptar</translation>
+    </message>
+    <message>
+        <source>Buffer size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sample rate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Encoder quality:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low (good for slow internet connections)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normal (default)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>High (for good internet connections only)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom quality</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

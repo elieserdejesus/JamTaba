@@ -849,14 +849,6 @@
         <translation>Saídas</translation>
     </message>
     <message>
-        <source>Sample rate</source>
-        <translation>Taxa de amostragem</translation>
-    </message>
-    <message>
-        <source>Buffer size</source>
-        <translation>Tamanho do buffer</translation>
-    </message>
-    <message>
         <source>ASIO panel ...</source>
         <translation>Painel ASIO ...</translation>
     </message>
@@ -955,6 +947,34 @@
     <message>
         <source>ok</source>
         <translation>Ok</translation>
+    </message>
+    <message>
+        <source>Buffer size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sample rate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Encoder quality:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low (good for slow internet connections)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normal (default)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>High (for good internet connections only)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom quality</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
