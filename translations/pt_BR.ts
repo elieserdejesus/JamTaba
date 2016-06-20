@@ -950,31 +950,31 @@
     </message>
     <message>
         <source>Buffer size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamanho do buffer:</translation>
     </message>
     <message>
         <source>Sample rate:</source>
-        <translation type="unfinished"></translation>
+        <translation>Taxa de amostragem:</translation>
     </message>
     <message>
         <source>Encoder quality:</source>
-        <translation type="unfinished"></translation>
+        <translation>Qualidade da codificação:</translation>
     </message>
     <message>
         <source>Low (good for slow internet connections)</source>
-        <translation type="unfinished"></translation>
+        <translation>Baixa (adequada para conexões de internet lentas)</translation>
     </message>
     <message>
         <source>Normal (default)</source>
-        <translation type="unfinished"></translation>
+        <translation>Normal (qualidade padrão)</translation>
     </message>
     <message>
         <source>High (for good internet connections only)</source>
-        <translation type="unfinished"></translation>
+        <translation>Alta (adequada somente para conexões rápidas)</translation>
     </message>
     <message>
         <source>Custom quality</source>
-        <translation type="unfinished"></translation>
+        <translation>Qualidade customizada</translation>
     </message>
 </context>
 <context>
