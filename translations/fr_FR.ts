@@ -524,7 +524,7 @@
     </message>
     <message>
         <source>Can&apos;t open the link!</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d&apos;ouvrir ce lien!</translation>
     </message>
 </context>
 <context>
