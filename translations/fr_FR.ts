@@ -512,7 +512,7 @@
     <message>
         <source>Error connecting with Jamtaba server!
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur de connection au serveur Jamtaba!</translation>
     </message>
     <message>
         <source>Connecting with %1 ... </source>
