@@ -947,11 +947,11 @@
     </message>
     <message>
         <source>Buffer size:</source>
-        <translation type="unfinished"></translation>
+        <translation>buffer größe:</translation>
     </message>
     <message>
         <source>Sample rate:</source>
-        <translation type="unfinished"></translation>
+        <translation>sample rate:</translation>
     </message>
     <message>
         <source>Encoder quality:</source>
