@@ -957,11 +957,11 @@
     </message>
     <message>
         <source>Buffer size:</source>
-        <translation type="unfinished"></translation>
+        <translation>バッファサイズ:</translation>
     </message>
     <message>
         <source>Sample rate:</source>
-        <translation type="unfinished"></translation>
+        <translation>サンプリングレート:</translation>
     </message>
     <message>
         <source>Encoder quality:</source>
