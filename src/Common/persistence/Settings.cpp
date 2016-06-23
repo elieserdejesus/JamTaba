@@ -112,7 +112,8 @@ void Settings::setPrivateServerData(const QString &server, int serverPort, const
 AudioSettings::AudioSettings() :
     SettingsObject("audio"),
     sampleRate(44100),
-    bufferSize(128)
+    bufferSize(128),
+    encodingQuality(VorbisEncoder::QUALITY_NORMAL)
 {
 }
 
