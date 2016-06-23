@@ -955,19 +955,19 @@
     </message>
     <message>
         <source>Encoder quality:</source>
-        <translation type="unfinished"></translation>
+        <translation>Encoder Qualität:</translation>
     </message>
     <message>
         <source>Low (good for slow internet connections)</source>
-        <translation type="unfinished"></translation>
+        <translation>Niedrig (gut bei langsamer Internetverbindung)</translation>
     </message>
     <message>
         <source>Normal (default)</source>
-        <translation type="unfinished"></translation>
+        <translation>Normal (default)</translation>
     </message>
     <message>
         <source>High (for good internet connections only)</source>
-        <translation type="unfinished"></translation>
+        <translation>Hoch (nur bei schneller Internetverbindung)</translation>
     </message>
     <message>
         <source>Custom quality</source>
