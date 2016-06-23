@@ -971,7 +971,7 @@
     </message>
     <message>
         <source>Custom quality</source>
-        <translation type="unfinished"></translation>
+        <translation>Benutzerdefinierte Qualität</translation>
     </message>
 </context>
 <context>
