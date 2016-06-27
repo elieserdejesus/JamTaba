@@ -39,6 +39,10 @@ private:
     int ID;
     SamplesBufferResampler resampler;
 
+    class LowCutFilter;
+
+    QScopedPointer<LowCutFilter> lowCut;
+
     bool needResamplingFor(int targetSampleRate) const;
 
     int getFramesToProcess(int targetSampleRate, int outFrameLenght);

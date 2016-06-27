@@ -7,7 +7,44 @@
 #include <QMutexLocker>
 #include <QDateTime>
 #include <QtConcurrent/QtConcurrent>
+#include "audio/core/Filters.h"
 
+class NinjamTrackNode::LowCutFilter
+{
+public:
+    LowCutFilter(double sampleRate);
+    void process(Audio::SamplesBuffer &buffer);
+    inline bool isActivated() const { return activated; }
+    inline void setActivated(bool activated){ this->activated = activated; }
+private:
+    bool activated;
+    Audio::Filter leftFilter;
+    Audio::Filter rightFilter;
+};
+
+NinjamTrackNode::LowCutFilter::LowCutFilter(double sampleRate) :
+    activated(false),
+    //FilterType type, double samplerate, double frequency, double Q, double gain
+    leftFilter(Audio::Filter::FilterType::HighPass, sampleRate, 300.0, 1, 1.0),
+    rightFilter(Audio::Filter::FilterType::HighPass, sampleRate, 300.0, 1, 1.0)
+{
+
+}
+
+void NinjamTrackNode::setMute(bool mute)
+{
+    lowCut->setActivated(mute);
+}
+
+void NinjamTrackNode::LowCutFilter::process(Audio::SamplesBuffer &buffer)
+{
+    quint32 samples = buffer.getFrameLenght();
+    leftFilter.process(buffer.getSamplesArray(0), samples);
+    if (!buffer.isMono())
+        rightFilter.process(buffer.getSamplesArray(1), samples);
+}
+
+//--------------------------------------------------------------------------
 
 class NinjamTrackNode::IntervalDecoder
 {
@@ -62,7 +99,8 @@ NinjamTrackNode::NinjamTrackNode(int ID) :
     ID(ID),
     processingLastPartOfInterval(false),
     currentDecoder(nullptr),
-    decodersMutex(QMutex::NonRecursive)
+    decodersMutex(QMutex::NonRecursive),
+    lowCut(new NinjamTrackNode::LowCutFilter(44100))
 {
 
 }
@@ -162,6 +200,10 @@ void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::Sa
                 qWarning() << internalInputBuffer.getFrameLenght() << " != "
                            << out.getFrameLenght();
         }
+
+        if (lowCut->isActivated())
+            lowCut->process(internalInputBuffer);
+
         Audio::AudioNode::processReplacing(in, out, sampleRate, midiBuffer);// process internal buffer pan, gain, etc
     }
 }
