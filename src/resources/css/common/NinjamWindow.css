@@ -193,6 +193,17 @@ NinjamTrackView #lowCutButton
     border-style: inset;
 }
 
+NinjamTrackView #lowCutButton::hover
+{
+    border-style: solid;
+    border-color: rgb(80, 80, 80);
+}
+
+NinjamTrackView[horizontal="true"] #lowCutButton
+{
+    max-height: 6px;
+}
+
 NinjamTrackView QPushButton#lowCutButton:!checked
 {
     border-style: outset;
