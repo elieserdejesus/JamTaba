@@ -42,7 +42,7 @@ protected:
 
 private:
     MarqueeLabel *channelNameLabel;
-    QPushButton *lowCutButton;
+    QPushButton *buttonLowCut;
     Persistence::CacheEntry cacheEntry;// used to remember the track controls values
     IntervalChunksDisplay *chunksDisplay;// display downloaded interval chunks
 

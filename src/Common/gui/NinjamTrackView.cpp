@@ -29,7 +29,7 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
     chunksDisplay = new IntervalChunksDisplay(this);
     chunksDisplay->setVisible(false);
 
-    lowCutButton = createLowCutButton(false);
+    buttonLowCut = createLowCutButton(false);
 
     setupVerticalLayout();
 
@@ -48,19 +48,12 @@ QPushButton *NinjamTrackView::createLowCutButton(bool checked)
     return button;
 }
 
-void NinjamTrackView::setLowCutStatus(bool activated)
-{
-    NinjamTrackNode* node = static_cast<NinjamTrackNode *>(mainController->getTrackNode(getTrackID()));
-    if (node)
-        node->setLowCutStatus(activated);
-}
-
 void NinjamTrackView::refreshStyleSheet()
 {
     style()->unpolish(channelNameLabel);
     style()->polish(channelNameLabel);
-    style()->unpolish(lowCutButton);
-    style()->polish(lowCutButton);
+    style()->unpolish(buttonLowCut);
+    style()->polish(buttonLowCut);
     BaseTrackView::refreshStyleSheet();
 }
 
@@ -81,6 +74,9 @@ void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialVal
         else
             buttonBoostZero->click();
     }
+
+    if (initialValues.isLowCutActivated())
+        buttonLowCut->click();
 }
 
 // +++++++++++++++
@@ -265,6 +261,16 @@ void NinjamTrackView::updateBoostValue()
     Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
     if (trackNode) {
         cacheEntry.setBoost(trackNode->getBoost());
+        mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
+    }
+}
+
+void NinjamTrackView::setLowCutStatus(bool activated)
+{
+    NinjamTrackNode* node = static_cast<NinjamTrackNode *>(mainController->getTrackNode(getTrackID()));
+    if (node) {
+        node->setLowCutStatus(activated);
+        cacheEntry.setLowCutActivated(activated);
         mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
     }
 }
