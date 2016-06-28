@@ -9,6 +9,8 @@
 #include <QtConcurrent/QtConcurrent>
 #include "audio/core/Filters.h"
 
+const double NinjamTrackNode::LOW_CUT_FREQUENCY = 220.0; // in Hertz
+
 class NinjamTrackNode::LowCutFilter
 {
 public:
@@ -24,16 +26,10 @@ private:
 
 NinjamTrackNode::LowCutFilter::LowCutFilter(double sampleRate) :
     activated(false),
-    //FilterType type, double samplerate, double frequency, double Q, double gain
-    leftFilter(Audio::Filter::FilterType::HighPass, sampleRate, 300.0, 1, 1.0),
-    rightFilter(Audio::Filter::FilterType::HighPass, sampleRate, 300.0, 1, 1.0)
+    leftFilter(Audio::Filter::FilterType::HighPass, sampleRate, LOW_CUT_FREQUENCY, 1.0, 1.0),
+    rightFilter(Audio::Filter::FilterType::HighPass, sampleRate, LOW_CUT_FREQUENCY, 1.0, 1.0)
 {
 
-}
-
-void NinjamTrackNode::setMute(bool mute)
-{
-    lowCut->setActivated(mute);
 }
 
 void NinjamTrackNode::LowCutFilter::process(Audio::SamplesBuffer &buffer)
@@ -103,6 +99,11 @@ NinjamTrackNode::NinjamTrackNode(int ID) :
     lowCut(new NinjamTrackNode::LowCutFilter(44100))
 {
 
+}
+
+void NinjamTrackNode::setLowCutStatus(bool activated)
+{
+    lowCut->setActivated(activated);
 }
 
 int NinjamTrackNode::getSampleRate() const

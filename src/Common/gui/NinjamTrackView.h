@@ -42,6 +42,7 @@ protected:
 
 private:
     MarqueeLabel *channelNameLabel;
+    QPushButton *lowCutButton;
     Persistence::CacheEntry cacheEntry;// used to remember the track controls values
     IntervalChunksDisplay *chunksDisplay;// display downloaded interval chunks
 
@@ -52,14 +53,18 @@ private:
     bool downloadingFirstInterval;
     void setDownloadedChunksDisplayVisibility(bool visible);
 
+    QPushButton *createLowCutButton(bool checked);
+
     static const int WIDE_HEIGHT;
 
 protected slots:
     // overriding the base class slots
-    void toggleMuteStatus();
-    void setGain(int value);
-    void setPan(int value);
-    void updateBoostValue();
+    void toggleMuteStatus() override;
+    void setGain(int value) override;
+    void setPan(int value) override;
+    void updateBoostValue() override;
+
+    void setLowCutStatus(bool activated);
 };
 
 #endif // NINJAMTRACKVIEW_H
