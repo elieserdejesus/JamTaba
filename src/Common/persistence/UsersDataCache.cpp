@@ -9,9 +9,10 @@
 
 using namespace Persistence;
 
-const quint32 UsersDataCacheHeader::REVISION = 1;
+const quint32 UsersDataCacheHeader::REVISION = 2; // added low cut in revision 2
 
 const bool CacheEntry::DEFAULT_MUTED = false;
+const bool CacheEntry::DEFAULT_LOW_CUT = false;
 const float CacheEntry::DEFAULT_GAIN = 1.0f;
 const float CacheEntry::DEFAULT_PAN = 0.0f;
 const float CacheEntry::DEFAULT_BOOST = 1.0f;
@@ -32,17 +33,18 @@ QDataStream &operator<<(QDataStream &stream, const CacheEntry &entry)
            << entry.isMuted()
            << entry.getGain()
            << entry.getPan()
-           << entry.getBoost();
+           << entry.getBoost()
+           << entry.isLowCutActivated();
 }
 
 QDataStream &operator>>(QDataStream &stream, CacheEntry &entry)
 {
     QString userIp, userName;
     quint8 channelID;
-    bool muted;
+    bool muted, lowCutActivated;
     float gain, pan, boost;
 
-    stream >> userIp >> userName >> channelID >> muted >> gain >> pan >> boost;
+    stream >> userIp >> userName >> channelID >> muted >> gain >> pan >> boost >> lowCutActivated;
 
     entry.setUserIP(userIp);
     entry.setUserName(userName);
@@ -51,6 +53,7 @@ QDataStream &operator>>(QDataStream &stream, CacheEntry &entry)
     entry.setGain(gain);
     entry.setPan(pan);
     entry.setBoost(boost);
+    entry.setLowCutActivated(lowCutActivated);
 
     return stream;
 }
@@ -65,6 +68,12 @@ CacheEntry::CacheEntry(const QString &userIp, const QString &userName, quint8 ch
     setGain(DEFAULT_GAIN);
     setPan(DEFAULT_PAN);
     setBoost(DEFAULT_BOOST);
+    setLowCutActivated(DEFAULT_LOW_CUT);
+}
+
+void CacheEntry::setLowCutActivated(bool activated)
+{
+    this->lowCutActivated = activated;
 }
 
 void CacheEntry::setUserIP(const QString &userIp)

@@ -11,6 +11,7 @@
 #include <QStyle>
 #include "MainController.h"
 #include "Utils.h"
+#include "audio/NinjamTrackNode.h"
 
 const int NinjamTrackView::WIDE_HEIGHT = 70; //height used in horizontal layout for wide tracks
 
@@ -28,15 +29,31 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
     chunksDisplay = new IntervalChunksDisplay(this);
     chunksDisplay->setVisible(false);
 
+    buttonLowCut = createLowCutButton(false);
+
     setupVerticalLayout();
 
     setUnlightStatus(true); // disabled/grayed until receive the first bytes.
+}
+
+QPushButton *NinjamTrackView::createLowCutButton(bool checked)
+{
+    QPushButton *button = new QPushButton(this);
+    button->setCheckable(true);
+    button->setChecked(checked);
+    secondaryChildsLayout->addWidget(button);
+    button->setObjectName("lowCutButton");
+    button->setToolTip(tr("Low cut"));
+    connect(button, &QPushButton::clicked, this, &NinjamTrackView::setLowCutStatus);
+    return button;
 }
 
 void NinjamTrackView::refreshStyleSheet()
 {
     style()->unpolish(channelNameLabel);
     style()->polish(channelNameLabel);
+    style()->unpolish(buttonLowCut);
+    style()->polish(buttonLowCut);
     BaseTrackView::refreshStyleSheet();
 }
 
@@ -57,6 +74,9 @@ void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialVal
         else
             buttonBoostZero->click();
     }
+
+    if (initialValues.isLowCutActivated())
+        buttonLowCut->click();
 }
 
 // +++++++++++++++
@@ -241,6 +261,16 @@ void NinjamTrackView::updateBoostValue()
     Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
     if (trackNode) {
         cacheEntry.setBoost(trackNode->getBoost());
+        mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
+    }
+}
+
+void NinjamTrackView::setLowCutStatus(bool activated)
+{
+    NinjamTrackNode* node = static_cast<NinjamTrackNode *>(mainController->getTrackNode(getTrackID()));
+    if (node) {
+        node->setLowCutStatus(activated);
+        cacheEntry.setLowCutActivated(activated);
         mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
     }
 }

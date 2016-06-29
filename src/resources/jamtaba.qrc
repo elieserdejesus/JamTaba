@@ -95,6 +95,7 @@
         <file>pencil.png</file>
         <file>pencil-read-only.png</file>
         <file>chat_blocked.png</file>
+        <file>low_cut.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>flags/ad.png</file>

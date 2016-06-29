@@ -107,6 +107,23 @@ NinjamTrackView[unlighted="true"]           /* user is not xmiting */
     background: rgba(0, 0, 0, 20);
 }
 
+NinjamTrackView #lowCutButton:!checked
+{
+    background-color: rgb(235, 235, 235);
+}
+
+NinjamTrackView #lowCutButton:checked
+{
+    background-color: rgb(205, 205, 205);
+}
+
+NinjamTrackView[unlighted="true"] #lowCutButton
+{
+    background-color: rgba(0, 0, 0, 30);
+    border: none;
+}
+
+
 NinjamTrackView  #channelName               /* channel name for ninjamers */
 {
     border: none;
