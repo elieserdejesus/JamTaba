@@ -1,16 +1,16 @@
 #ifndef CHORDLABEL_H
 #define CHORDLABEL_H
 
-#include <QLabel>
+#include <QTextEdit>
 #include "ChordProgression.h"
 
 class QPaintEvent;
 
-class ChordLabel : public QLabel
+class ChordLabel : public QTextEdit
 {
     Q_OBJECT
 public:
-    explicit ChordLabel(const Chord &chord, int chordBeats);
+    explicit ChordLabel(QWidget *parent, const Chord &chord, int chordBeats);
     ~ChordLabel();
     ChordLabel *setAsCurrentChord();
     void incrementIntervalBeat();

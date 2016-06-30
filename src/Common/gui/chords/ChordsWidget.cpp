@@ -35,7 +35,7 @@ void ChordsWidget::resetGridLayout()
 void ChordsWidget::addChord(const Chord &chord, int durationInBeats)
 {
     const int ROW = 0;
-    ChordLabel *chordLabel = new ChordLabel(chord, durationInBeats);
+    ChordLabel *chordLabel = new ChordLabel(this, chord, durationInBeats);
     gridLayout->addWidget(chordLabel, ROW, beatToInsert);
 
     gridLayout->setColumnStretch(beatToInsert, durationInBeats);

@@ -3,19 +3,24 @@
 #include <QStyle>
 #include <QStyleOption>
 #include <QPainter>
+#include <QLayout>
 
 ChordLabel *ChordLabel::currentChordLabel = nullptr;
 const QColor ChordLabel::BEAT_PROGRESS_COLOR = QColor(0, 255, 0, 35); //transparent green
 
 // ++++++++++++++++++++++++++++++++++++++++++++=
 
-ChordLabel::ChordLabel(const Chord &chord, int chordBeats) :
+ChordLabel::ChordLabel(QWidget *parent, const Chord &chord, int chordBeats) :
+    QTextEdit(parent),
     chord(chord),
     currentBeat(0),
     beatsCount(chordBeats)//how many beats per chord?
 {
-    setText(chordToHtmlText(chord));
+    setHtml(chordToHtmlText(chord));
     setStyleSheetPropertyStatus(false);
+    setAcceptRichText(true);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 ChordLabel::~ChordLabel()
@@ -26,12 +31,13 @@ ChordLabel::~ChordLabel()
 
 void ChordLabel::paintEvent(QPaintEvent *ev)
 {
-    QLabel::paintEvent(ev);
+    QTextEdit::paintEvent(ev);
     if(beatsCount > 0 && currentBeat > 0){
-        QPainter painter(this);
+        QPainter painter(viewport());
         int position = currentBeat * width()/beatsCount;
+
         //fill the green rectangle, the beat progress indicator
-        painter.fillRect(1, 1, position, height()-2, BEAT_PROGRESS_COLOR);
+        painter.fillRect(1, 1, position, height()-1, BEAT_PROGRESS_COLOR);
 
         //draw a two pixel line to highlight the end of above rectangle
         painter.fillRect(position-2, 1, 2, height()-2, BEAT_PROGRESS_COLOR);
