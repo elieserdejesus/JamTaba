@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "ChordProgression.h"
+#include "ChordLabel.h"
 
 namespace Ui {
 class ChordsPanel;
@@ -47,7 +48,13 @@ private slots:
 private:
     Ui::ChordsPanel *ui;
     ChordProgression chordProgression;
+    QMap<int, ChordLabel *> chordsMap; // mapping beats and chords
+    ChordLabel *currentChordLabel;
+
     int getEstimatedChordDuration(const Chord &chord, const ChordProgressionMeasure &measure) const;
+    void resetGridLayout();
+    void clear();
+    void addChord(const Chord &chord, int beatToInsert, int durationInBeats);
 };
 
 #endif // QCHORDPANEL_H

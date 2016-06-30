@@ -1,10 +1,10 @@
 #include "ChordsPanel.h"
 #include "ui_ChordsPanel.h"
-#include "ChordsWidget.h"
 
 ChordsPanel::ChordsPanel(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ChordsPanel)
+    ui(new Ui::ChordsPanel),
+    currentChordLabel(nullptr)
 {
     ui->setupUi(this);
 
@@ -22,17 +22,37 @@ ChordsPanel::~ChordsPanel()
 
 void ChordsPanel::setChords(const ChordProgression &progression)
 {
-    ui->chordsWidget->clear();
-    this->chordProgression.clear();
     if (progression.isEmpty())// empty progression is returned when a incompatible bpi is choosed, for example.
         return;
+
+    clear();
+
     QList<ChordProgressionMeasure> measures = progression.getMeasures();
+    int beatToInsert = 0;
     foreach (const ChordProgressionMeasure &measure, measures) {
         const QList<Chord> chords = measure.getChords();
-        foreach (const Chord &chord, chords)
-            ui->chordsWidget->addChord(chord, getEstimatedChordDuration(chord, measure));
+        foreach (const Chord &chord, chords) {
+            int chordBeat = beatToInsert;
+            int chordDuration = getEstimatedChordDuration(chord, measure);
+            addChord(chord, chordBeat, chordDuration);
+            beatToInsert += chordDuration;
+        }
     }
     this->chordProgression = progression;
+}
+
+void ChordsPanel::addChord(const Chord &chord, int beatToInsert, int durationInBeats)
+{
+    const int ROW = 0;
+    ChordLabel *chordLabel = new ChordLabel(this, chord, durationInBeats);
+    ui->gridLayout->addWidget(chordLabel, ROW, beatToInsert, 1, durationInBeats);
+    chordsMap.insert(beatToInsert, chordLabel);
+}
+
+void ChordsPanel::resetGridLayout()
+{
+    for (int c = 0; c < ui->gridLayout->columnCount(); ++c)
+        ui->gridLayout->removeItem(ui->gridLayout->itemAtPosition(0, c));
 }
 
 bool ChordsPanel::setBpi(int newBpi)
@@ -44,11 +64,23 @@ bool ChordsPanel::setBpi(int newBpi)
             setChords(this->chordProgression.getStretchedVersion(newBpi));
             return true;
         } else {
-            ui->chordsWidget->clear();
-            this->chordProgression.clear();
+            clear();
         }
     }
     return false;
+}
+
+void ChordsPanel::clear()
+{
+    chordProgression.clear();
+
+    foreach (ChordLabel *chordLabel, chordsMap.values()) {
+        ui->gridLayout->removeWidget(chordLabel);
+        delete chordLabel;
+    }
+    chordsMap.clear();
+    currentChordLabel = nullptr;
+    resetGridLayout();
 }
 
 int ChordsPanel::getEstimatedChordDuration(const Chord &chord,
@@ -68,7 +100,14 @@ int ChordsPanel::getEstimatedChordDuration(const Chord &chord,
 
 void ChordsPanel::setCurrentBeat(int beat)
 {
-    ui->chordsWidget->setCurrentBeat(beat);
+    if (chordsMap[beat]){
+        currentChordLabel = chordsMap[beat]->setAsCurrentChord();
+    }
+    else{
+        if(currentChordLabel){
+            currentChordLabel->incrementIntervalBeat();
+        }
+    }
 }
 
 void ChordsPanel::on_buttonTransposeUp_clicked()
@@ -83,7 +122,6 @@ void ChordsPanel::on_buttonTransposeDown_clicked()
 
 void ChordsPanel::discardChords()
 {
-    chordProgression.clear();
-    ui->chordsWidget->clear();
+    clear();
     emit chordsDiscarded();
 }
