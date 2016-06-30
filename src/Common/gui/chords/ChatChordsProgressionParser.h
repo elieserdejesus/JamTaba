@@ -12,6 +12,7 @@ class ChatChordsProgressionParser : public ChordsProgressionParser
 public:
     ChordProgression parse(const QString &string) override;
     bool containsProgression(const QString &string) override;
+    static bool isValidChord(const QString &chordString);
 private:
     QString getSanitizedString(const QString &string);
 

@@ -17,7 +17,8 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
-
+    void keyPressEvent(QKeyEvent *event) override;
+    void focusOutEvent(QFocusEvent *event) override;
 private:
     Chord chord;
     int currentBeat;
@@ -28,6 +29,8 @@ private:
     static ChordLabel *currentChordLabel;
 
     void unsetAsCurrentChord();
+
+    void updateChordText();
 
     void setStyleSheetPropertyStatus(bool status);
 

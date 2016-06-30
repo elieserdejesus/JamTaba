@@ -8,6 +8,11 @@ const QString ChatChordsProgressionParser::CHORD_REGEX
 
 const QString ChatChordsProgressionParser::MEASURE_SEPARATORS_REGEX = "\\||!|I|l";
 
+bool ChatChordsProgressionParser::isValidChord(const QString &chordString)
+{
+    return QRegularExpression(CHORD_REGEX).match(chordString).hasMatch();
+}
+
 bool ChatChordsProgressionParser::containsProgression(const QString &string)
 {
     QRegularExpression regex(

@@ -4,6 +4,7 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <QLayout>
+#include "chords/ChatChordsProgressionParser.h"
 
 ChordLabel *ChordLabel::currentChordLabel = nullptr;
 const QColor ChordLabel::BEAT_PROGRESS_COLOR = QColor(0, 255, 0, 35); //transparent green
@@ -41,6 +42,31 @@ void ChordLabel::paintEvent(QPaintEvent *ev)
 
         //draw a two pixel line to highlight the end of above rectangle
         painter.fillRect(position-2, 1, 2, height()-2, BEAT_PROGRESS_COLOR);
+    }
+}
+
+void ChordLabel::updateChordText()
+{
+    if (ChatChordsProgressionParser::isValidChord(toPlainText()))
+        chord = Chord(toPlainText(), chord.getBeat());
+
+    setHtml(chordToHtmlText(chord));
+}
+
+void ChordLabel::focusOutEvent(QFocusEvent *event)
+{
+    QTextEdit::focusOutEvent(event);
+    updateChordText();
+}
+
+void ChordLabel::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Return) {
+        updateChordText();
+        clearFocus();
+    }
+    else {
+        QTextEdit::keyPressEvent(event);
     }
 }
 
