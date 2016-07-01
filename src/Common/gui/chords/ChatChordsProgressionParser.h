@@ -18,6 +18,7 @@ private:
 
     static const QString CHORD_REGEX;
     static const QString CHORDS_EXTENSIONS;
+    static const QString CHORDS_NUMBERS;
     static const QString MEASURE_SEPARATORS_REGEX;
 };
 

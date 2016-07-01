@@ -76,9 +76,9 @@ int ChordProgression::getBeatsPerInterval() const
 QString ChordProgression::toString() const
 {
     QString string;
-    foreach (const ChordProgressionMeasure &measure, measures)
+    for (const ChordProgressionMeasure &measure : measures)
         string += measure.toString();
-    return string;
+    return string + "|";
 }
 
 void ChordProgression::clear()

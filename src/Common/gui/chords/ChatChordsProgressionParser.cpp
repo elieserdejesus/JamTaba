@@ -5,10 +5,11 @@
 
 const QString ChatChordsProgressionParser::CHORDS_EXTENSIONS = "(M|Major|major|maj|m|minor|min|add|sus|aug|dim)";
 
-const QString TEST = "([\\(]?[#b\\+-]?(2|5|7|9|11|13)[ ]?[#b\\+-]?[\\)]?){1,3}|\\+|\\º|\\(maj7\\)";
+const QString ChatChordsProgressionParser::CHORDS_NUMBERS = "([\\(]?[#b\\+-]?(2|5|7|9|11|13)[ ]?[#b\\+-]?[\\)]?){1,3}|\\+|\\º|\\(maj7\\)";
 
 const QString ChatChordsProgressionParser::CHORD_REGEX
-    = "([A-G][b#]?[ ]?"+ ChatChordsProgressionParser::CHORDS_EXTENSIONS +"?("+ TEST +")?(\\/[A-G][b#]?[ ]{0,3})?)";
+    = "([A-G][b#]?[ ]?"+ ChatChordsProgressionParser::CHORDS_EXTENSIONS + "?" +
+      "("+ ChatChordsProgressionParser::CHORDS_NUMBERS +")?(\\/[A-G][b#]?[ ]{0,3})?[ ]{0,3})";
 
 const QString ChatChordsProgressionParser::MEASURE_SEPARATORS_REGEX = "\\||!|I|l";
 
