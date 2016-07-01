@@ -8,6 +8,10 @@ class TestChatChordsProgressionParser : public QObject
     Q_OBJECT
 
 private slots:
+
+    void validSpaces();  // testing spaces between chords and measure separators
+    void validSpaces_data();
+
     void measureSeparators_data();
     void measureSeparators();
 
