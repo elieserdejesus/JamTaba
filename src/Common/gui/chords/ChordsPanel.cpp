@@ -8,11 +8,11 @@ ChordsPanel::ChordsPanel(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QObject::connect(ui->buttonSendToChat, SIGNAL(clicked(bool)), this,
-                     SIGNAL(sendingChordsToChat()));
-
-    QObject::connect(ui->buttonDiscardChords, SIGNAL(clicked(bool)), this,
-                     SLOT(discardChords()));
+    //setup signals and slots
+    connect(ui->buttonSendToChat, &QPushButton::clicked, this, &ChordsPanel::sendingChordsToChat);
+    connect(ui->buttonDiscardChords, &QPushButton::clicked, this, &ChordsPanel::discardChords);
+    connect(ui->buttonTransposeUp, &QPushButton::clicked, this, &ChordsPanel::transposeUp);
+    connect(ui->buttonTransposeDown, &QPushButton::clicked, this, &ChordsPanel::transposeDown);
 }
 
 ChordsPanel::~ChordsPanel()
@@ -110,12 +110,12 @@ void ChordsPanel::setCurrentBeat(int beat)
     }
 }
 
-void ChordsPanel::on_buttonTransposeUp_clicked()
+void ChordsPanel::transposeUp()
 {
     setChords(chordProgression.getTransposedVersion(1));
 }
 
-void ChordsPanel::on_buttonTransposeDown_clicked()
+void ChordsPanel::transposeDown()
 {
     setChords(chordProgression.getTransposedVersion(-1));
 }
