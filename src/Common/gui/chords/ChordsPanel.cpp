@@ -28,11 +28,11 @@ void ChordsPanel::setChords(const ChordProgression &progression)
     clear();
 
     chordProgression = progression;
-    QList<ChordProgressionMeasure> measures = chordProgression.getMeasures();
+    QList<ChordProgressionMeasure *> measures = chordProgression.getMeasures();
     int beatToInsert = 0;
-    foreach (const ChordProgressionMeasure &measure, measures) {
-        const QList<Chord> chords = measure.getChords();
-        foreach (const Chord &chord, chords) {
+    for (ChordProgressionMeasure *measure : measures) {
+        QList<Chord *> chords = measure->getChords();
+        for (Chord *chord : chords) {
             int chordBeat = beatToInsert;
             int chordDuration = getEstimatedChordDuration(chord, measure);
             addChord(chord, chordBeat, chordDuration);
@@ -41,7 +41,7 @@ void ChordsPanel::setChords(const ChordProgression &progression)
     }
 }
 
-void ChordsPanel::addChord(const Chord &chord, int beatToInsert, int durationInBeats)
+void ChordsPanel::addChord(Chord *chord, int beatToInsert, int durationInBeats)
 {
     const int ROW = 0;
     ChordLabel *chordLabel = new ChordLabel(this, chord, durationInBeats);
@@ -83,19 +83,19 @@ void ChordsPanel::clear()
     resetGridLayout();
 }
 
-int ChordsPanel::getEstimatedChordDuration(const Chord &chord,
-                                           const ChordProgressionMeasure &measure) const
+int ChordsPanel::getEstimatedChordDuration(Chord *chord,
+                                           ChordProgressionMeasure *measure) const
 {
-    int chordsInMeasure = measure.getChords().size();
+    int chordsInMeasure = measure->getChords().size();
     if (chordsInMeasure <= 2)// only one or two chords in the measure?
-        return measure.getBeats()/chordsInMeasure;
-    if (chordsInMeasure == 3 && measure.getBeats() == 4) {
-        if (chord.getBeat() == 0)// first chord in the progression
+        return measure->getBeats()/chordsInMeasure;
+    if (chordsInMeasure == 3 && measure->getBeats() == 4) {
+        if (chord->getBeat() == 0)// first chord in the progression
             return 2;// the first chord will ocuppy 2 slots
         else
             return 1;// the last chords are 1 beat chords
     }
-    return measure.getBeats();
+    return measure->getBeats();
 }
 
 void ChordsPanel::setCurrentBeat(int beat)

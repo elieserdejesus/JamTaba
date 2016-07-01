@@ -10,7 +10,7 @@ public:
     ChordProgression();
     bool isEmpty() const;
     void addMeasure(const ChordProgressionMeasure &measure);
-    const QList<ChordProgressionMeasure> getMeasures() const;
+    const QList<ChordProgressionMeasure *> getMeasures() const;
     QString toString() const;
     bool canBeUsed(int bpi) const;
     ChordProgression getStretchedVersion(int bpi) const;
@@ -26,11 +26,6 @@ private:
 inline bool ChordProgression::isEmpty() const
 {
     return measures.isEmpty();
-}
-
-inline const QList<ChordProgressionMeasure> ChordProgression::getMeasures() const
-{
-    return measures;
 }
 
 #endif // CHORDPROGRESSION_H

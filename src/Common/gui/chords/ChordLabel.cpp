@@ -11,7 +11,7 @@ const QColor ChordLabel::BEAT_PROGRESS_COLOR = QColor(0, 255, 0, 35); //transpar
 
 // ++++++++++++++++++++++++++++++++++++++++++++=
 
-ChordLabel::ChordLabel(QWidget *parent, const Chord &chord, int chordBeats) :
+ChordLabel::ChordLabel(QWidget *parent, Chord *chord, int chordBeats) :
     QTextEdit(parent),
     chord(chord),
     currentBeat(0),
@@ -48,7 +48,7 @@ void ChordLabel::paintEvent(QPaintEvent *ev)
 void ChordLabel::updateChordText()
 {
     if (ChatChordsProgressionParser::isValidChord(toPlainText()))
-        chord = Chord(toPlainText(), chord.getBeat());
+        chord->setText(toPlainText());
 
     setHtml(chordToHtmlText(chord));
 }
@@ -104,22 +104,22 @@ void ChordLabel::setStyleSheetPropertyStatus(bool status)
     style()->polish(this);
 }
 
-QString ChordLabel::chordToHtmlText(const Chord &chord)
+QString ChordLabel::chordToHtmlText(Chord *chord)
 {
-    QString finalString = "<strong>" + chord.getRootKey().left(1).toUpper();// the first chord letter
-    if (chord.isFlat() || chord.isSharp()) {
-        if (chord.getRootKey().size() > 1)// just in case
-            finalString += "<sup>" + chord.getRootKey().mid(1, 1) + "</sup>";
+    QString finalString = "<strong>" + chord->getRootKey().left(1).toUpper();// the first chord letter
+    if (chord->isFlat() || chord->isSharp()) {
+        if (chord->getRootKey().size() > 1)// just in case
+            finalString += "<sup>" + chord->getRootKey().mid(1, 1) + "</sup>";
     }
     finalString += "</strong>";
-    if (chord.hasLettersAfterRoot())
-        finalString += chord.getLettersAfterRoot().toLower();
-    if (chord.hasLastPart())
-        finalString += chord.getLastPart();
-    if (chord.hasBassInversion()) {
-        finalString += "/<strong>" + chord.getBassInversion().left(1);
-        if (chord.getBassInversion().size() > 1) // chord inversion is flat or sharp?
-            finalString += "<sup>" + chord.getBassInversion().mid(1, 1) + "</sup>";
+    if (chord->hasLettersAfterRoot())
+        finalString += chord->getLettersAfterRoot().toLower();
+    if (chord->hasLastPart())
+        finalString += chord->getLastPart();
+    if (chord->hasBassInversion()) {
+        finalString += "/<strong>" + chord->getBassInversion().left(1);
+        if (chord->getBassInversion().size() > 1) // chord inversion is flat or sharp?
+            finalString += "<sup>" + chord->getBassInversion().mid(1, 1) + "</sup>";
         finalString += "</strong>";
     }
     return finalString;

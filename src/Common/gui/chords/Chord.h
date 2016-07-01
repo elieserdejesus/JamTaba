@@ -10,58 +10,28 @@ class Chord
 public:
     Chord(const QString &chordText, int beat = 0);
 
-    inline bool hasLastPart() const
-    {
-        return lastPart != nullptr;
-    }
+    void setText(const QString &chordText);
 
-    inline QString getLastPart() const
-    {
-        return lastPart;
-    }
+    bool hasLastPart() const;
+    QString getLastPart() const;
 
-    inline bool hasLettersAfterRoot() const
-    {
-        return hasLettersAfterChordRoot;
-    }
+    bool hasLettersAfterRoot() const;
+    QString getLettersAfterRoot() const;
 
-    inline QString getLettersAfterRoot() const
-    {
-        return lettersAfterRoot;
-    }
-
-    inline QString getBassInversion() const
-    {
-        return bassInversion;
-    }
-
-    inline bool hasBassInversion() const
-    {
-        return bassInversion != nullptr;
-    }
+    QString getBassInversion() const;
+    bool hasBassInversion() const;
 
     QString getRootKey() const;
 
     bool isSharp() const;
-
     bool isFlat() const;
 
-    inline int getBeat() const
-    {
-        return beat;
-    }
-
-    inline void setBeat(int beat)
-    {
-        this->beat = beat;
-    }
+    int getBeat() const;
+    void setBeat(int beat);
 
     Chord getTransposedVersion(int semitones) const;
 
-    inline QString getChordText() const
-    {
-        return chordText;
-    }
+    QString getChordText() const;
 
 private:
     QString chordText;
@@ -70,6 +40,7 @@ private:
     bool hasLettersAfterChordRoot;
     QString lettersAfterRoot;
     QString lastPart;// characters after Letters
+
     /*
         Example: Cmaj7(9)/Bb
         Root: C
@@ -86,5 +57,51 @@ private:
 
     static QString getTransposedRoot(const QString &rootKey, int semitones);
 };
+
+
+inline bool Chord::hasLastPart() const
+{
+    return lastPart != nullptr;
+}
+
+inline QString Chord::getLastPart() const
+{
+    return lastPart;
+}
+
+inline bool Chord::hasLettersAfterRoot() const
+{
+    return hasLettersAfterChordRoot;
+}
+
+inline QString Chord::getLettersAfterRoot() const
+{
+    return lettersAfterRoot;
+}
+
+inline QString Chord::getBassInversion() const
+{
+    return bassInversion;
+}
+
+inline bool Chord::hasBassInversion() const
+{
+    return bassInversion != nullptr;
+}
+
+inline int Chord::getBeat() const
+{
+    return beat;
+}
+
+inline void Chord::setBeat(int beat)
+{
+    this->beat = beat;
+}
+
+inline QString Chord::getChordText() const
+{
+    return chordText;
+}
 
 #endif // CHORD_H

@@ -2,14 +2,16 @@
 #include <QRegularExpression>
 #include "gui/BpiUtils.h"
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++
-
-// ++++++++++++++++++++++++++++++++++++++++++
-
-// ++++++++++++++++++++
-
 ChordProgression::ChordProgression()
 {
+}
+
+const QList<ChordProgressionMeasure *> ChordProgression::getMeasures() const
+{
+    QList<ChordProgressionMeasure *> measuresPointers;
+    for(const ChordProgressionMeasure & measure : measures)
+        measuresPointers.append(const_cast<ChordProgressionMeasure *>(&measure));
+    return measuresPointers;
 }
 
 bool ChordProgression::canBeUsed(int bpi) const
@@ -41,9 +43,9 @@ ChordProgression ChordProgression::getStretchedVersion(int bpi) const
     ChordProgression stretchedProgression;
     for (ChordProgressionMeasure originalMeasure : measures) {
         ChordProgressionMeasure newMeasure(newbeatsPerMesure);
-        foreach (const Chord &chord, originalMeasure.getChords()) {
-            int newChordBeat = chord.getBeat() * strechFactor;
-            newMeasure.addChord(Chord(chord.getChordText(), newChordBeat));
+        for (Chord *chord : originalMeasure.getChords()) {
+            int newChordBeat = chord->getBeat() * strechFactor;
+            newMeasure.addChord(Chord(chord->getChordText(), newChordBeat));
         }
         stretchedProgression.addMeasure(newMeasure);
     }
@@ -56,8 +58,8 @@ ChordProgression ChordProgression::getTransposedVersion(int semitones) const
     ChordProgression newProgression;
     for (ChordProgressionMeasure originalMeasure : measures) {
         ChordProgressionMeasure newMeasure(originalMeasure.getBeats());
-        foreach (const Chord &chord, originalMeasure.getChords())
-            newMeasure.addChord(chord.getTransposedVersion(semitones));
+        for (Chord *chord : originalMeasure.getChords())
+            newMeasure.addChord(chord->getTransposedVersion(semitones));
         newProgression.addMeasure(newMeasure);
     }
     return newProgression;
