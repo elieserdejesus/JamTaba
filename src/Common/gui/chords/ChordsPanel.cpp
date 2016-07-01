@@ -27,7 +27,8 @@ void ChordsPanel::setChords(const ChordProgression &progression)
 
     clear();
 
-    QList<ChordProgressionMeasure> measures = progression.getMeasures();
+    chordProgression = progression;
+    QList<ChordProgressionMeasure> measures = chordProgression.getMeasures();
     int beatToInsert = 0;
     foreach (const ChordProgressionMeasure &measure, measures) {
         const QList<Chord> chords = measure.getChords();
@@ -38,7 +39,6 @@ void ChordsPanel::setChords(const ChordProgression &progression)
             beatToInsert += chordDuration;
         }
     }
-    this->chordProgression = progression;
 }
 
 void ChordsPanel::addChord(const Chord &chord, int beatToInsert, int durationInBeats)

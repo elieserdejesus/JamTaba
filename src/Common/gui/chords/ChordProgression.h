@@ -8,17 +8,9 @@ class ChordProgression
 {
 public:
     ChordProgression();
-    inline bool isEmpty() const
-    {
-        return measures.isEmpty();
-    }
-
+    bool isEmpty() const;
     void addMeasure(const ChordProgressionMeasure &measure);
-    const QList<ChordProgressionMeasure> getMeasures() const
-    {
-        return measures;
-    }
-
+    const QList<ChordProgressionMeasure> getMeasures() const;
     QString toString() const;
     bool canBeUsed(int bpi) const;
     ChordProgression getStretchedVersion(int bpi) const;
@@ -29,5 +21,16 @@ public:
 private:
     QList<ChordProgressionMeasure> measures;
 };
+
+
+inline bool ChordProgression::isEmpty() const
+{
+    return measures.isEmpty();
+}
+
+inline const QList<ChordProgressionMeasure> ChordProgression::getMeasures() const
+{
+    return measures;
+}
 
 #endif // CHORDPROGRESSION_H
