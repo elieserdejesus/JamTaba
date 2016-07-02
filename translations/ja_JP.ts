@@ -291,7 +291,7 @@
     </message>
     <message>
         <source>no input</source>
-        <translation>入力がありません</translation>
+        <translation>入力なし</translation>
     </message>
 </context>
 <context>
@@ -873,7 +873,7 @@
     </message>
     <message>
         <source>Vst(i)s loaded</source>
-        <translation>読み込まれたVST(i)s</translation>
+        <translation>読み込まれたVST(i)</translation>
     </message>
     <message>
         <source>Scan only new plugins</source>
@@ -881,7 +881,7 @@
     </message>
     <message>
         <source>Refresh</source>
-        <translation>リフレッシュ</translation>
+        <translation>更新</translation>
     </message>
     <message>
         <source>Clear plugins cache and scan all plugin folders</source>
@@ -897,7 +897,7 @@
     </message>
     <message>
         <source>Remove from blackList</source>
-        <translation>ブラックリストから除去</translation>
+        <translation>ブラックリストから削除</translation>
     </message>
     <message>
         <source>Plugin Paths:</source>
@@ -913,7 +913,7 @@
     </message>
     <message>
         <source>browse ...</source>
-        <translation>ブラウズ...</translation>
+        <translation>参照...</translation>
     </message>
     <message>
         <source>Save multi tracks </source>
@@ -929,7 +929,7 @@
     </message>
     <message>
         <source>Built-in metronomes:</source>
-        <translation>組込のメトロノーム:</translation>
+        <translation>組込のメトロノーム音:</translation>
     </message>
     <message>
         <source>Custom Metronome Sounds</source>
@@ -945,7 +945,7 @@
     </message>
     <message>
         <source>Browse ...</source>
-        <translation>ブラウズ...</translation>
+        <translation>参照...</translation>
     </message>
     <message>
         <source>Use 16 bit audio files!</source>
