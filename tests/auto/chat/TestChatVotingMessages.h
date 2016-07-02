@@ -16,6 +16,12 @@ private slots:
     void invalidLocalUserVotingMessage();
 
     // System voting message
+    void validFirstSystemVotingMessage();
+    void validFirstSystemVotingMessage_data();
+
+    void invalidFirstSystemVotingMessage();
+    void invalidFirstSystemVotingMessage_data();
+
     void validSystemVotingMessage_data();
     void validSystemVotingMessage();
 
@@ -29,7 +35,7 @@ private slots:
     void parsingInvalidSystemVotingMessages_data();
 
 private:
-    static QString buildSystemVotingMessage(const QString &voteType, quint32 voteValue, quint32 expirationTime);
+    static QString buildSystemVotingMessage(const QString &voteType, quint32 voteValue, quint32 expirationTime, quint8 currentVote, quint8 maxVotes);
     static QString buildLocalUserVotingMessage(const QString &voteType, quint32 voteValue);
 };
 

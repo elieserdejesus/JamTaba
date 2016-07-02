@@ -1,5 +1,7 @@
 #include "MainController.h"
+#include "recorder/JamRecorder.h"
 #include "recorder/ReaperProjectGenerator.h"
+#include "recorder/ClipSortLogGenerator.h"
 #include "gui/MainWindow.h"
 #include "NinjamController.h"
 #include "geo/WebIpToLocationResolver.h"
@@ -25,7 +27,6 @@ MainController::MainController(const Settings &settings) :
     loginService(new Login::LoginService(this)),
     settings(settings),
     mainWindow(nullptr),
-    jamRecorder(new Recorder::ReaperProjectGenerator()),
     masterGain(1),
     lastInputTrackID(0),
     usersDataCache(Configurator::getInstance()->getCacheDir())
@@ -35,6 +36,10 @@ MainController::MainController(const Settings &settings) :
     ipToLocationResolver.reset( new Geo::WebIpToLocationResolver(cacheDir));
 
     connect(ipToLocationResolver.data(), SIGNAL(ipResolved(const QString &)), this, SIGNAL(ipResolved(const QString &)));
+
+    // Register known JamRecorders here:
+    jamRecorders.append(new Recorder::JamRecorder(new Recorder::ReaperProjectGenerator()));
+    jamRecorders.append(new Recorder::JamRecorder(new Recorder::ClipSortLogGenerator()));
 }
 
 void MainController::blockUserInChat(const QString &userNameToBlock)
@@ -59,10 +64,18 @@ void MainController::setSampleRate(int newSampleRate)
 
     audioMixer.setSampleRate(newSampleRate);
     if (settings.isSaveMultiTrackActivated())
-        jamRecorder.setSampleRate(newSampleRate);
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+            jamRecorder->setSampleRate(newSampleRate);
     if (isPlayingInNinjamRoom())
         ninjamController->setSampleRate(newSampleRate);
     settings.setSampleRate(newSampleRate);
+}
+
+void MainController::setEncodingQuality(float newEncodingQuality)
+{
+    settings.setEncodingQuality(newEncodingQuality);
+    if (isPlayingInNinjamRoom())
+        ninjamController->recreateEncoders();
 }
 
 void MainController::finishUploads()
@@ -87,7 +100,8 @@ void MainController::disconnectFromNinjamServer(const Server &server)
     if (mainWindow)
         mainWindow->exitFromRoom(true);
     if (settings.isSaveMultiTrackActivated())
-        jamRecorder.stopRecording();
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+            jamRecorder->stopRecording();
 }
 
 void MainController::setupNinjamControllerSignals(){
@@ -120,7 +134,8 @@ void MainController::connectedNinjamServer(const Ninjam::Server &server)
     newNinjamController->start(server);
 
     if (settings.isSaveMultiTrackActivated())
-        jamRecorder.startRecording(getUserName(), QDir(settings.getRecordingPath()),
+        foreach(Recorder::JamRecorder *jamRecorder, getActiveRecorders())
+            jamRecorder->startRecording(getUserName(), QDir(settings.getRecordingPath()),
                                    server.getBpm(), server.getBpi(), getSampleRate());
 }
 
@@ -137,19 +152,22 @@ void MainController::on_newNinjamInterval()
     // TODO move the jamRecorder to NinjamController?
     qCDebug(jtCore) << "MainController: on_newNinjamInterval";
     if (settings.isSaveMultiTrackActivated())
-        jamRecorder.newInterval();
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+            jamRecorder->newInterval();
 }
 
 void MainController::updateBpi(int newBpi)
 {
     if (settings.isSaveMultiTrackActivated())
-        jamRecorder.setBpi(newBpi);
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+            jamRecorder->setBpi(newBpi);
 }
 
 void MainController::updateBpm(int newBpm)
 {
     if (settings.isSaveMultiTrackActivated())
-        jamRecorder.setBpm(newBpm);
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+            jamRecorder->setBpm(newBpm);
 }
 
 void MainController::enqueueAudioDataToUpload(const QByteArray &encodedAudio, quint8 channelIndex,
@@ -175,7 +193,8 @@ void MainController::enqueueAudioDataToUpload(const QByteArray &encodedAudio, qu
     }
 
     if (settings.isSaveMultiTrackActivated() && isPlayingInNinjamRoom())
-        jamRecorder.appendLocalUserAudio(encodedAudio, channelIndex, isFirstPart, isLastPart);
+        foreach(Recorder::JamRecorder *jamRecorder, getActiveRecorders())
+            jamRecorder->appendLocalUserAudio(encodedAudio, channelIndex, isFirstPart, isLastPart);
 }
 
 // ++++++++++++++++++++
@@ -225,7 +244,8 @@ void MainController::saveEncodedAudio(const QString &userName, quint8 channelInd
                                       const QByteArray &encodedAudio)
 {
     if (settings.isSaveMultiTrackActivated())// just in case
-        jamRecorder.addRemoteUserAudio(userName, encodedAudio, channelIndex);
+        foreach(Recorder::JamRecorder *jamRecorder, getActiveRecorders())
+            jamRecorder->addRemoteUserAudio(userName, encodedAudio, channelIndex);
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++
@@ -293,15 +313,34 @@ bool MainController::addTrack(long trackID, Audio::AudioNode *trackNode)
 void MainController::storeRecordingMultiTracksStatus(bool savingMultiTracks)
 {
     if (settings.isSaveMultiTrackActivated() && !savingMultiTracks)// user is disabling recording multi tracks?
-        jamRecorder.stopRecording();
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+            jamRecorder->stopRecording();
     settings.setSaveMultiTrack(savingMultiTracks);
+}
+
+QMap<QString, QString> MainController::getJamRecoders() const
+{
+    QMap<QString, QString> jamRecoderMap;
+    foreach(Recorder::JamRecorder * jamRecorder, jamRecorders)
+        jamRecoderMap.insert(jamRecorder->getWriterId(), jamRecorder->getWriterName());
+    return jamRecoderMap;
+}
+
+void MainController::storeJamRecorderStatus(QString writerId, bool status)
+{
+    if (settings.isSaveMultiTrackActivated()) // recording is active and changing the jamRecorder status
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+            if (jamRecorder->getWriterId() == writerId && !status)
+                jamRecorder->stopRecording();
+    settings.setJamRecorderActivated(writerId, status);
 }
 
 void MainController::storeRecordingPath(const QString &newPath)
 {
     settings.setRecordingPath(newPath);
     if (settings.isSaveMultiTrackActivated())
-        jamRecorder.setRecordPath(newPath);
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+            jamRecorder->setRecordPath(newPath);
 }
 
 // ---------------------------------
@@ -536,6 +575,11 @@ MainController::~MainController()
         delete group;
     trackGroups.clear();
     qCDebug(jtCore()) << "cleaning tracksNodes done!";
+
+    qCDebug(jtCore()) << "cleaning jamRecorders...";
+    foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+        delete jamRecorder;
+    qCDebug(jtCore()) << "cleaning jamRecorders done!";
 
     qCDebug(jtCore) << "MainController destructor finished!";
 }

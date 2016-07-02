@@ -8,8 +8,10 @@
 
 #include <QDir>
 #include <QList>
+#include <QStringList>
 #include <QSettings>
 #include "log/Logging.h"
+#include "audio/vorbis/VorbisEncoder.h"
 
 using namespace Persistence;
 
@@ -62,6 +64,20 @@ float SettingsObject::getValueFromJson(const QJsonObject &json, const QString &p
     return fallBackValue;
 }
 
+QJsonArray SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
+                                           QJsonArray fallBackValue){
+    if (json.contains(propertyName))
+        return json[propertyName].toArray();
+    return fallBackValue;
+}
+
+QJsonObject SettingsObject::getValueFromJson(const QJsonObject &json, const QString &propertyName,
+                                           QJsonObject fallBackValue){
+    if (json.contains(propertyName))
+        return json[propertyName].toObject();
+    return fallBackValue;
+}
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 PrivateServerSettings::PrivateServerSettings() :
     SettingsObject("PrivateServer"),
@@ -96,7 +112,8 @@ void Settings::setPrivateServerData(const QString &server, int serverPort, const
 AudioSettings::AudioSettings() :
     SettingsObject("audio"),
     sampleRate(44100),
-    bufferSize(128)
+    bufferSize(128),
+    encodingQuality(VorbisEncoder::QUALITY_NORMAL)
 {
 }
 
@@ -109,6 +126,14 @@ void AudioSettings::read(const QJsonObject &in)
     lastIn = getValueFromJson(in, "lastIn", 0);
     lastOut = getValueFromJson(in, "lastOut", 0);
     audioDevice = getValueFromJson(in, "audioDevice", -1);
+
+    encodingQuality = getValueFromJson(in, "encodingQuality", VorbisEncoder::QUALITY_NORMAL); // using VorbisEncoder.QUALITY_NORMAL as fallback value.
+
+    //ensure vorbis quality is in accepted range
+    if (encodingQuality < VorbisEncoder::QUALITY_LOW)
+        encodingQuality = VorbisEncoder::QUALITY_LOW;
+    else if(encodingQuality > VorbisEncoder::QUALITY_HIGH)
+        encodingQuality = VorbisEncoder::QUALITY_HIGH;
 }
 
 void AudioSettings::write(QJsonObject &out) const
@@ -120,6 +145,7 @@ void AudioSettings::write(QJsonObject &out) const
     out["lastIn"] = lastIn;
     out["lastOut"] = lastOut;
     out["audioDevice"] = audioDevice;
+    out["encodingQuality"] = encodingQuality;
 }
 
 // +++++++++++++++++++++++++++++
@@ -150,14 +176,23 @@ void MidiSettings::read(const QJsonObject &in)
 RecordingSettings::RecordingSettings() :
     SettingsObject("recording"),
     saveMultiTracksActivated(false),
+    jamRecorderActivated(QMap<QString, bool>()),
     recordingPath("")
 {
+	// TODO: populate jamRecorderActivated with {jamRecorderId, false} pairs for each known jamRecorder
 }
 
 void RecordingSettings::write(QJsonObject &out) const
 {
     out["recordingPath"] = recordingPath;
     out["recordActivated"] = saveMultiTracksActivated;
+    QJsonObject jamRecorders = QJsonObject();
+    foreach(QString key, jamRecorderActivated.keys()){
+        QJsonObject jamRecorder = QJsonObject();
+        jamRecorder["activated"] = jamRecorderActivated[key];
+        jamRecorders[key] = jamRecorder;
+    }
+    out["jamRecorders"] = jamRecorders;
 }
 
 void RecordingSettings::read(const QJsonObject &in)
@@ -180,6 +215,12 @@ void RecordingSettings::read(const QJsonObject &in)
         recordingPath = QDir(documentsDir).absoluteFilePath("Jamtaba");
     }
     saveMultiTracksActivated = getValueFromJson(in, "recordActivated", false);
+
+    QJsonObject jamRecorders = getValueFromJson(in, "jamRecorders", QJsonObject());
+    foreach(QString key, jamRecorders.keys()) {
+        QJsonObject jamRecorder = jamRecorders[key].toObject();
+        jamRecorderActivated[key] = getValueFromJson(jamRecorder, "activated", false);
+    }
 }
 
 // +++++++++++++++++++++++++++++

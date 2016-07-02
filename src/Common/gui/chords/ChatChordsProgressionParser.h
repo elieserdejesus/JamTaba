@@ -12,10 +12,13 @@ class ChatChordsProgressionParser : public ChordsProgressionParser
 public:
     ChordProgression parse(const QString &string) override;
     bool containsProgression(const QString &string) override;
+    static bool isValidChord(const QString &chordString);
 private:
     QString getSanitizedString(const QString &string);
 
     static const QString CHORD_REGEX;
+    static const QString CHORDS_EXTENSIONS;
+    static const QString CHORDS_NUMBERS;
     static const QString MEASURE_SEPARATORS_REGEX;
 };
 

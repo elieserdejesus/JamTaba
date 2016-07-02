@@ -1,3 +1,8 @@
+NinjamTrackView #lowCutButton:checked
+{
+    background-color: rgb(160, 160, 160);
+}
+
 NinjamTrackView[horizontal="true"] #panSlider
 {
     max-width: 50px;

@@ -39,7 +39,7 @@ class RoomInfo
 {
 public:
     RoomInfo(long long id, const QString &roomName, int roomPort, RoomTYPE roomType, int maxUsers,
-             const QList<UserInfo> &users, int maxChannels, int bpi, int bpm, const QString &streamUrl = "");
+             const QList<UserInfo> &users, int maxChannels, int bpi, int bpm, const QString &streamUrl);
 
     RoomInfo(const QString &roomName, int roomPort, RoomTYPE roomType, int maxUsers, int maxChannels = 0);
 
@@ -140,6 +140,12 @@ public:
         return connected;
     }
 
+    QString getChordProgressionFor(const Login::RoomInfo &roomInfo) const;
+    void sendChordProgressionToServer(const QString &userName,
+                                      const QString serverName,
+                                      quint32 serverPort,
+                                      const QString &chordProgression);
+
 signals:
     void roomsListAvailable(const QList<Login::RoomInfo> &publicRooms);
     void incompatibilityWithServerDetected();
@@ -162,6 +168,9 @@ private:
 
     static const int REFRESH_PERIOD = 30000;
     QTimer *refreshTimer;
+
+    QMap<QString, QString> lastChordProgressions;
+    static QString getRoomInfoUniqueName(const Login::RoomInfo &roomInfo);
 
 private slots:
     void connectedSlot();

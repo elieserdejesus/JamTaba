@@ -175,6 +175,11 @@ public:
 
     virtual int getSampleRate() const = 0;
 
+    inline float getEncodingQuality() const
+    {
+        return settings.getEncodingQuality();
+    }
+
     static QByteArray newGUID();
 
     inline const Persistence::Settings &getSettings() const
@@ -188,12 +193,19 @@ public:
 
     void storeWindowSettings(bool maximized, bool usingFullViewMode, QPointF location);
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut, int audioDevice, const QList<bool> &midiInputStatus);
-    void storeRecordingPath(const QString &newPath);
+
     void storeRecordingMultiTracksStatus(bool savingMultiTracks);
     inline bool isRecordingMultiTracksActivated() const
     {
         return settings.isSaveMultiTrackActivated();
     }
+    void storeJamRecorderStatus(QString writerId, bool status);
+
+    inline bool isJamRecorderActivated(QString writerId) {
+        return settings.isJamRecorderActivated(writerId);
+    }
+
+    void storeRecordingPath(const QString &newPath);
 
     void storePrivateServerSettings(const QString &server, int serverPort, const QString &password);
 
@@ -256,11 +268,14 @@ public:
 
     static QString getSuggestedUserName();
 
+    QMap<QString, QString> getJamRecoders() const;
+
 signals:
     void ipResolved(const QString &ip);
 
 public slots:
     virtual void setSampleRate(int newSampleRate);
+    void setEncodingQuality(float newEncodingQuality);
 
 protected:
 
@@ -315,7 +330,15 @@ private:
 
     QScopedPointer<Geo::IpToLocationResolver> ipToLocationResolver;
 
-    Recorder::JamRecorder jamRecorder;
+    QList<Recorder::JamRecorder *> jamRecorders;
+
+    inline QList<Recorder::JamRecorder *> getActiveRecorders() const {
+        QList<Recorder::JamRecorder *> activeRecorders;
+        foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
+            if (settings.isJamRecorderActivated(jamRecorder->getWriterId()))
+                activeRecorders.append(jamRecorder);
+        return activeRecorders;
+    }
 
     // master
     float masterGain;

@@ -106,6 +106,7 @@ signals:
     void userEnter(const QString &userName);
 
     void chatMsgReceived(const Ninjam::User &user, const QString &message );
+    void topicMessageReceived(const QString &message);
 
     void encodedAudioAvailableToSend(const QByteArray &encodedAudio, quint8 channelIndex, bool isFirstPart, bool isLastPart);
 

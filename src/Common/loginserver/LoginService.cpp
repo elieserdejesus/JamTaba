@@ -25,8 +25,7 @@ UserInfo::UserInfo(long long id, const QString &name, const QString &ip) :
 }
 
 RoomInfo::RoomInfo(long long id, const QString &roomName, int roomPort, RoomTYPE roomType,
-                   int maxUsers, const QList<UserInfo> &users, int maxChannels, int bpi, int bpm,
-                   const QString &streamUrl) :
+                   int maxUsers, const QList<UserInfo> &users, int maxChannels, int bpi, int bpm, const QString &streamUrl) :
     id(id),
     name(roomName),
     port(roomPort),
@@ -105,6 +104,18 @@ public:
         query.addQueryItem("environment", environment);
         query.addQueryItem("version", version);
         query.addQueryItem("sampleRate", QString::number(sampleRate));
+        return query;
+    }
+
+    static QUrlQuery createParametersToUpdateLastChordProgression(QString userName,
+                                               QString serverName, quint32 serverPort, QString chordsProgression)
+    {
+        QUrlQuery query;
+        query.addQueryItem("cmd", "UPDATE_CHORDS");
+        query.addQueryItem("userName", userName);
+        query.addQueryItem("serverName", serverName);
+        query.addQueryItem("serverPort", QString::number(serverPort));
+        query.addQueryItem("chords", chordsProgression);
         return query;
     }
 
@@ -319,9 +330,39 @@ void LoginService::handleJson(const QString &json)
     QList<RoomInfo> publicRooms;
     for (int i = 0; i < allRooms.size(); ++i) {
         QJsonObject jsonObject = allRooms[i].toObject();
-        publicRooms.append(buildRoomInfoFromJson(jsonObject));
+        Login::RoomInfo roomInfo = buildRoomInfoFromJson(jsonObject);
+        publicRooms.append(roomInfo);
+
+        QString lastChordProgression = "" ; //store an empty chord progression by default
+        if (jsonObject.contains("lastChordProgression"))
+            lastChordProgression = jsonObject["lastChordProgression"].toString();
+        QString key = getRoomInfoUniqueName(roomInfo);
+        lastChordProgressions.insert(key, lastChordProgression);
     }
     emit roomsListAvailable(publicRooms);
+}
+
+QString LoginService::getChordProgressionFor(const RoomInfo &roomInfo) const
+{
+    QString key = getRoomInfoUniqueName(roomInfo);
+    if (lastChordProgressions.contains(key))
+        return lastChordProgressions[key];
+
+    return ""; //no chord progression available for this roomInfo
+}
+
+void LoginService::sendChordProgressionToServer(const QString &userName,
+                                                const QString serverName,
+                                                quint32 serverPort,
+                                                const QString &chordProgression)
+{
+    QUrlQuery query = HttpParamsFactory::createParametersToUpdateLastChordProgression(userName, serverName, serverPort, chordProgression);
+    sendCommandToServer(query);
+}
+
+QString LoginService::getRoomInfoUniqueName(const Login::RoomInfo &roomInfo)
+{
+    return roomInfo.getName() + ":" + roomInfo.getPort();
 }
 
 RoomInfo LoginService::buildRoomInfoFromJson(const QJsonObject &jsonObject)

@@ -85,6 +85,7 @@ signals:
     void disconnectedFromServer(const Ninjam::Server &server);
     void connectedInServer(const Ninjam::Server &server);
     void chatMessageReceived(const Ninjam::User &sender, const QString &message);
+    void serverTopicMessageReceived(const QString &topic);
     void privateMessageReceived(const Ninjam::User &sender, const QString &message); //TODO this works? I never see a private message in my life :)
     void userEntered(const Ninjam::User &newUser);
     void userExited(const Ninjam::User &user);

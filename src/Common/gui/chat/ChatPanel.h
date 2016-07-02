@@ -13,6 +13,8 @@ namespace Ui {
 class ChatPanel;
 }
 
+class ChatMessagePanel;
+
 class ChatPanel : public QWidget
 {
     Q_OBJECT
@@ -21,26 +23,29 @@ public:
     ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool);
     virtual ~ChatPanel();
     void addMessage(const QString &userName, const QString &userMessage, bool showTranslationButton = true, bool showBlockButton = false);
+    void addLastChordsMessage(const QString &userName, const QString &message, QColor textColor = Qt::black, QColor backgroundColor = QColor(212, 243, 182));
     void addBpmVoteConfirmationMessage(quint32 newBpmValue, quint32 expireTime);
     void addBpiVoteConfirmationMessage(quint32 newBpiValue, quint32 expireTime);
     void addChordProgressionConfirmationMessage(const ChordProgression &progression);
     void setPreferredTranslationLanguage(const QString &targetLanguage);
     void updateMessagesGeometry();// called when user switch from mini mode to full view
     void removeMessagesFrom(const QString &userName);
+
 signals:
     void userSendingNewMessage(const QString &msg);
     void userConfirmingVoteToBpiChange(int newBpi);
     void userConfirmingVoteToBpmChange(int newBpm);
     void userConfirmingChordProgression(const ChordProgression &chordProgression);
     void userBlockingChatMessagesFrom(const QString &blockedUserName);
-private slots:
-    void on_chatTextEditionFinished();
-    void on_verticalScrollBarRangeChanged(int min, int max);
-    void on_buttonClear_clicked();
 
-    void on_voteButtonClicked();
-    void on_chordProgressionConfirmationButtonClicked();
-    void on_buttonAutoTranslate_clicked();
+private slots:
+    void sendNewMessage();
+    void autoScroll(int min, int max);
+    void clearMessages();
+
+    void confirmVote();
+    void confirmChordProgression();
+    void toggleAutoTranslate();
 
     void showTranslationProgressFeedback();
     void hideTranslationProgressFeedback();
@@ -62,6 +67,8 @@ private:
     void createVoteButton(const QString &voteType, quint32 value, quint32 expireTime);
 
     bool autoTranslating;
+
+    void addMessagePanelInLayout(ChatMessagePanel *msgPanel);
 
     UsersColorsPool *colorsPool;
 };

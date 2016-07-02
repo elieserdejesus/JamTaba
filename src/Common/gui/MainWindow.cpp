@@ -112,15 +112,40 @@ void MainWindow::changeTheme(QAction *action)
 void MainWindow::initializeThemeMenu()
 {
     connect(ui.menuTheme, &QMenu::triggered, this, &MainWindow::changeTheme);
+    connect(ui.menuTheme, &QMenu::aboutToShow, this, &MainWindow::translateThemeMenu); // the menu is translated before open
 
     // create a menu action for each theme
-
     QStringList themeFiles = Theme::Loader::getAvailableThemes(":/style/themes");
     foreach (const QString &themeFile, themeFiles) {
-        QString theme = QFileInfo(themeFile).baseName();
-        QAction *action = ui.menuTheme->addAction(theme);
-        action->setData(theme);
+        QString themeName = QFileInfo(themeFile).baseName();
+        QAction *action = ui.menuTheme->addAction(themeName);
+        action->setData(themeName);
     }
+}
+
+void MainWindow::translateThemeMenu()
+{
+    foreach (QAction *action, ui.menuTheme->actions()) {
+        QString themeName = action->data().toString();
+        QString menuString = themeName; //use themeName as default text
+        QString translatedName = getTranslatedThemeName(themeName);
+        if (translatedName != themeName) //maybe we don't have a translation entry for the theme ...
+            menuString = translatedName + " (" + themeName + ")";
+        action->setText(menuString);
+    }
+}
+
+QString MainWindow::getTranslatedThemeName(const QString &themeName)
+{
+    QMap<QString, QString> translatedNames;
+    translatedNames.insert("Black",   tr("Black"));
+    translatedNames.insert("Flat",    tr("Flat"));
+    translatedNames.insert("Rounded", tr("Rounded"));
+
+    if (translatedNames.contains(themeName))
+        return translatedNames[themeName];
+
+    return themeName; //returning the original name if we have not a translate entry in the map
 }
 
 void MainWindow::loadTranslationFile(const QString &locale)
@@ -698,7 +723,7 @@ void MainWindow::enterInRoom(const Login::RoomInfo &roomInfo)
 
     QObject::connect(chatPanel, SIGNAL(userConfirmingChordProgression(
                                            ChordProgression)), this,
-                     SLOT(showChordProgression(ChordProgression)));
+                     SLOT(acceptChordProgression(ChordProgression)));
 
     // add the ninjam panel in main window (bottom panel)
     qCDebug(jtGUI) << "adding ninjam panel...";
@@ -1038,7 +1063,7 @@ void MainWindow::openPreferencesDialog(QAction *action)
         stopCurrentRoomStream();
 
         PreferencesDialog *dialog = createPreferencesDialog();// factory method, overrided in derived classes MainWindowStandalone and MainWindowVST
-        dialog->initialize(initialTab, &mainController->getSettings());// initializing here to avoid call virtual methods inside PreferencesDialog constructor
+        dialog->initialize(initialTab, &mainController->getSettings(), mainController->getJamRecoders());// initializing here to avoid call virtual methods inside PreferencesDialog constructor
         dialog->show();
     }
 }
@@ -1050,12 +1075,20 @@ void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
 
     connect(dialog, SIGNAL(multiTrackRecordingStatusChanged(bool)), this,
             SLOT(setMultiTrackRecordingStatus(bool)));
+
+    connect(dialog, SIGNAL(jamRecorderStatusChanged(QString, bool)), this,
+            SLOT(setJamRecorderStatus(QString, bool)));
+
     connect(dialog, SIGNAL(recordingPathSelected(const QString &)), this,
             SLOT(setRecordingPath(const QString &)));
+
     connect(dialog, SIGNAL(builtInMetronomeSelected(QString)), this,
             SLOT(setBuiltInMetronome(QString)));
+
     connect(dialog, SIGNAL(customMetronomeSelected(QString, QString)), this,
             SLOT(setCustomMetronome(QString, QString)));
+
+    connect(dialog, &PreferencesDialog::encodingQualityChanged, mainController, &MainController::setEncodingQuality);
 }
 
 void MainWindow::setBuiltInMetronome(const QString &metronomeAlias)
@@ -1069,14 +1102,19 @@ void MainWindow::setCustomMetronome(const QString &primaryBeatFile,
     mainController->setCustomMetronome(primaryBeatFile, secondaryBeatFile);
 }
 
-void MainWindow::setRecordingPath(const QString &newRecordingPath)
-{
-    mainController->storeRecordingPath(newRecordingPath);
-}
-
 void MainWindow::setMultiTrackRecordingStatus(bool recording)
 {
     mainController->storeRecordingMultiTracksStatus(recording);
+}
+
+void MainWindow::setJamRecorderStatus(QString writerId, bool status)
+{
+    mainController->storeJamRecorderStatus(writerId, status);
+}
+
+void MainWindow::setRecordingPath(const QString &newRecordingPath)
+{
+    mainController->storeRecordingPath(newRecordingPath);
 }
 
 // ++++++++++++++++++++++
@@ -1293,7 +1331,7 @@ ChordsPanel *MainWindow::createChordsPanel()
     return chordsPanel;
 }
 
-void MainWindow::showChordProgression(const ChordProgression &progression)
+void MainWindow::acceptChordProgression(const ChordProgression &progression)
 {
     int currentBpi = mainController->getNinjamController()->getCurrentBpi();
     if (progression.canBeUsed(currentBpi)) {
@@ -1311,12 +1349,29 @@ void MainWindow::showChordProgression(const ChordProgression &progression)
         dynamic_cast<QVBoxLayout *>(ui.bottomPanel->layout())->insertWidget(0, chordsPanel);
         if (ninjamWindow)
             ninjamWindow->getNinjamPanel()->setLowContrastPaintInIntervalPanel(true);
+
+        sendAcceptedChordProgressionToServer(progression);
+
     } else {
         int measures = progression.getMeasures().size();
         QString msg = tr("These chords (%1 measures) can't be used in a %2 bpi interval!")
                       .arg(QString::number(measures))
                       .arg(QString::number(currentBpi));
         QMessageBox::warning(this, tr("Problem..."), msg);
+    }
+}
+
+void MainWindow::sendAcceptedChordProgressionToServer(const ChordProgression &progression)
+{
+    Login::LoginService *service = mainController->getLoginService();
+    Login::RoomInfo currentRoom = ninjamWindow->getRoomInfo();
+    QString chords = progression.toString();
+    bool chordProgressionIsOutdated = service->getChordProgressionFor(currentRoom) != chords;
+    if (chordProgressionIsOutdated) {
+        QString userName = mainController->getUserName();
+        QString serverName = currentRoom.getName();
+        quint32 serverPort = currentRoom.getPort();
+        service->sendChordProgressionToServer(userName, serverName, serverPort, chords);
     }
 }
 

@@ -1,10 +1,12 @@
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
 
+#include <QtWidgets>
 #include <QDebug>
 #include <QFileDialog>
 #include "persistence/Settings.h"
 #include "MetronomeUtils.h"
+#include "audio/vorbis/VorbisEncoder.h"
 
 PreferencesDialog::PreferencesDialog(QWidget *parent) :
     QDialog(parent),
@@ -46,10 +48,21 @@ void PreferencesDialog::refreshMetronomeControlsStyleSheet()
     style()->polish(ui->browseSecondaryBeatButton);
 }
 
-void PreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings)
+void PreferencesDialog::initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders)
 {
     Q_UNUSED(initialTab);
     this->settings = settings;
+    this->jamRecorders = jamRecorders;
+    this->jamRecorderCheckBoxes = QMap<QCheckBox *, QString>();
+
+    foreach(const QString &jamRecorder, jamRecorders.keys()) {
+        QCheckBox *myCheckBox = new QCheckBox(this);
+        myCheckBox->setObjectName(jamRecorder);
+        myCheckBox->setText(jamRecorders.value(jamRecorder));
+        ui->layoutRecorders->addWidget(myCheckBox);
+        jamRecorderCheckBoxes[myCheckBox] = jamRecorder;
+    }
+
     setupSignals();
     populateAllTabs();
 }
@@ -59,14 +72,39 @@ void PreferencesDialog::setupSignals()
     // the 'accept' slot is overrided in inherited classes (StandalonePreferencesDialog and VstPreferencesDialog)
     connect(ui->okButton, SIGNAL(clicked(bool)), this, SLOT(accept()));
     connect(ui->prefsTab, SIGNAL(currentChanged(int)), this, SLOT(selectTab(int)));
-    connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this,
-            SIGNAL(multiTrackRecordingStatusChanged(bool)));
+
+    connect(ui->recordingCheckBox, SIGNAL(clicked(bool)), this, SLOT(toggleRecording(bool)));
+    foreach(QCheckBox *myCheckBox, jamRecorderCheckBoxes.keys()) {
+        connect(myCheckBox, &QCheckBox::clicked, [=](bool newStatus) {
+            jamRecorderStatusChanged(jamRecorderCheckBoxes[myCheckBox], newStatus);
+        });
+    }
+
     connect(ui->browseRecPathButton, SIGNAL(clicked(bool)), this, SLOT(openRecordingPathBrowser()));
 
     connect(ui->groupBoxCustomMetronome, SIGNAL(toggled(bool)), this, SLOT(toggleCustomMetronomeSounds(bool)));
     connect(ui->groupBoxBuiltInMetronomes, SIGNAL(toggled(bool)), this, SLOT(toggleBuiltInMetronomeSounds(bool)));
     connect(ui->browsePrimaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(openPrimaryBeatAudioFileBrowser()));
     connect(ui->browseSecondaryBeatButton, SIGNAL(clicked(bool)), this, SLOT(openSecondaryBeatAudioFileBrowser()));
+
+    connect(ui->comboBoxEncoderQuality, SIGNAL(activated(int)), this, SLOT(emitEncodingQualityChanged()));
+}
+
+void PreferencesDialog::toggleRecording(bool recording)
+{
+    for(QCheckBox *checkbox : jamRecorderCheckBoxes.keys())
+        checkbox->setChecked(recording);
+
+    emit multiTrackRecordingStatusChanged(recording);
+}
+
+void PreferencesDialog::emitEncodingQualityChanged()
+{
+    QVariant currentData = ui->comboBoxEncoderQuality->currentData();
+    if (!currentData.isNull()){
+        float selectedQuality = currentData.toFloat();
+        emit encodingQualityChanged(selectedQuality);
+    }
 }
 
 void PreferencesDialog::accept()
@@ -80,8 +118,51 @@ void PreferencesDialog::accept()
     QDialog::accept();
 }
 
+void PreferencesDialog::populateEncoderQualityComboBox()
+{
+    ui->comboBoxEncoderQuality->clear();
+    ui->comboBoxEncoderQuality->addItem(tr("Low (good for slow internet connections)"), VorbisEncoder::QUALITY_LOW);
+    ui->comboBoxEncoderQuality->addItem(tr("Normal (default)"), VorbisEncoder::QUALITY_NORMAL);
+    ui->comboBoxEncoderQuality->addItem(tr("High (for good internet connections only)"), VorbisEncoder::QUALITY_HIGH);
+
+    bool usingCustomQuality = usingCustomEncodingQuality();
+    if (usingCustomQuality)
+        ui->comboBoxEncoderQuality->addItem(tr("Custom quality"));
+
+    //select the correct item in combobox
+    if (!usingCustomQuality){
+        float quality = settings->getEncodingQuality();
+        if (qFuzzyCompare(quality, VorbisEncoder::QUALITY_LOW))
+            ui->comboBoxEncoderQuality->setCurrentIndex(0);
+        else if (qFuzzyCompare(quality, VorbisEncoder::QUALITY_NORMAL))
+            ui->comboBoxEncoderQuality->setCurrentIndex(1);
+        else if (qFuzzyCompare(quality, VorbisEncoder::QUALITY_HIGH))
+                    ui->comboBoxEncoderQuality->setCurrentIndex(2);
+    }
+    else{
+        ui->comboBoxEncoderQuality->setCurrentIndex(ui->comboBoxEncoderQuality->count() - 1);
+    }
+}
+
+bool PreferencesDialog::usingCustomEncodingQuality()
+{
+    float currentQuality = settings->getEncodingQuality();
+
+    if (qFuzzyCompare(currentQuality, VorbisEncoder::QUALITY_LOW))
+        return false;
+
+    if (qFuzzyCompare(currentQuality, VorbisEncoder::QUALITY_NORMAL))
+        return false;
+
+    if (qFuzzyCompare(currentQuality, VorbisEncoder::QUALITY_HIGH))
+        return false;
+
+    return true;
+}
+
 void PreferencesDialog::populateAllTabs()
 {
+    populateEncoderQualityComboBox();
     populateRecordingTab();
     populateMetronomeTab();
 }
@@ -118,8 +199,11 @@ void PreferencesDialog::populateRecordingTab()
 {
     Q_ASSERT(settings);
     Persistence::RecordingSettings recordingSettings = settings->getRecordingSettings();
-    QDir recordDir(recordingSettings.recordingPath);
     ui->recordingCheckBox->setChecked(recordingSettings.saveMultiTracksActivated);
+    foreach(QCheckBox *myCheckBox, jamRecorderCheckBoxes.keys()) {
+        myCheckBox->setChecked(recordingSettings.isJamRecorderActivated(jamRecorderCheckBoxes[myCheckBox]));
+    }
+    QDir recordDir(recordingSettings.recordingPath);
     ui->recordPathLineEdit->setText(recordDir.absolutePath());
 }
 

@@ -52,24 +52,17 @@ private:
     quint8 channelIndex;
     QList<JamAudioFile> audioFiles;
 };
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class Jam
+class JamInterval
 {
 public:
-    Jam(int bpm, int bpi, int sampleRate, const QString &jamName, const QString &baseDir);
+    JamInterval(const int intervalIndex, const int bpm, const int bpi, const QString &path, const QString &userName, const quint8 channelIndex);
+    JamInterval();
 
-    double getIntervalsLenght() const;
-
-    // called when a new file is writed in disk
-    void addAudioFile(const QString &userName, quint8 channelIndex, const QString &filePath, int intervalIndex);
-    QString getAudioAbsolutePath() const
+    inline int getIntervalIndex() const
     {
-        return audioPath;
-    }
-
-    inline int getSampleRate() const
-    {
-        return sampleRate;
+        return intervalIndex;
     }
 
     inline int getBpm() const
@@ -82,22 +75,71 @@ public:
         return bpi;
     }
 
-    inline QString getBaseDir() const
+    inline QString getPath() const
     {
-        return baseDir;
+        return path;
     }
 
+    inline QString getUserName() const
+    {
+        return userName;
+    }
+
+    inline quint8 getChannelIndex() const
+    {
+        return channelIndex;
+    }
+
+private:
+    int intervalIndex;
+    int bpm;
+    int bpi;
+    QString path;
+    QString userName;
+    quint8 channelIndex;
+};
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class Jam
+{
+public:
+    Jam(int bpm, int bpi, int sampleRate);
+
+    inline int getBpm() const
+    {
+        return bpm;
+    }
+
+    inline int getBpi() const
+    {
+        return bpi;
+    }
+
+    inline int getSampleRate() const
+    {
+        return sampleRate;
+    }
+
+    inline double getIntervalsLenght() const
+    {
+        return 60.0/bpm * (double)bpi;
+    }
+
+    // called when a new file is writed in disk
+    void addAudioFile(const QString &userName, const quint8 channelIndex, const QString &filePath, const int intervalIndex);
+
     QList<JamTrack> getJamTracks() const;
+
+    QList<JamInterval> getJamIntervals() const;
 private:
     int bpm;
     int bpi;
     int sampleRate;
-    QString name;
-    QString baseDir;
-    QString audioPath;
 
     // the first map key is userName. The second map key is channelIndex
     QMap<QString, QMap<quint8, JamTrack> > jamTracks;
+
+    // the map key is intervalIndex.
+    QMap<int, QList<JamInterval> > jamIntervals;
 };
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class JamMetadataWriter
@@ -105,6 +147,10 @@ class JamMetadataWriter
 public:
     virtual void write(const Jam &metadata) = 0;
     virtual ~JamMetadataWriter(){}
+    virtual QString getWriterId() const = 0;
+    virtual QString getWriterName() const = 0; // Localised
+    virtual void setJamDir(QString newJamName, QString recordBasePath) = 0;
+    virtual QString getAudioAbsolutePath(QString audioFileName) = 0;
 };
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class LocalNinjamInterval
@@ -149,7 +195,7 @@ class JamRecorder
 {
 public:
     JamRecorder(JamMetadataWriter *jamMetadataWritter);
-    virtual ~JamRecorder();
+    ~JamRecorder();
     void appendLocalUserAudio(const QByteArray &encodedaudio, quint8 channelIndex,
                               bool isFirstPartOfInterval, bool isLastPastOfInterval);
     void addRemoteUserAudio(const QString &userName, const QByteArray &encodedAudio, quint8 channelIndex);
@@ -164,6 +210,9 @@ public:
     void stopRecording();
     void newInterval();
 
+    inline QString getWriterId() const { return jamMetadataWritter->getWriterId(); }
+    inline QString getWriterName() const { return jamMetadataWritter->getWriterName(); }
+
 private:
     QString currentJamName;
     Jam *jam;
@@ -171,7 +220,7 @@ private:
     int globalIntervalIndex;
     QString localUserName;
     bool running;
-    QDir newPath;// used to set the newPath in the next interval
+    QDir recordBaseDir;
 
     QMap<quint8, LocalNinjamInterval> localUserIntervals;// use channel index as key and store encoded bytes. When a full interval is stored the encoded bytes are store in a ogg file.
 

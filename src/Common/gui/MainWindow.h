@@ -188,7 +188,7 @@ protected slots:
     void setMasterGain(int faderPosition);
 
     // chords progression
-    void showChordProgression(const ChordProgression &chordProgression);
+    void acceptChordProgression(const ChordProgression &chordProgression);
     void sendCurrentChordProgressionToChat();
 
     void updateBpi(int bpi);
@@ -213,6 +213,7 @@ private slots:
 
     //preferences dialog (these are just the common slots between Standalone and VST, the other slots are in MainWindowStandalone class)
     void setMultiTrackRecordingStatus(bool recording);
+    void setJamRecorderStatus(QString writerId, bool status);
     void setRecordingPath(const QString &newRecordingPath);
     void setBuiltInMetronome(const QString &metronomeAlias);
     void setCustomMetronome(const QString &primaryBeatFile, const QString &secondaryBeatFile);
@@ -222,6 +223,7 @@ private slots:
     void updateUserName();
 
     void changeTheme(QAction *action);
+    void translateThemeMenu();
 
 private:
 
@@ -291,6 +293,10 @@ private:
     void setChatVisibility(bool chatVisible);
 
     void openUrlInUserBrowser(const QString &url);
+
+    void sendAcceptedChordProgressionToServer(const ChordProgression &progression);
+
+    QString getTranslatedThemeName(const QString &themeName);
 
     // PerformanceMonitor performanceMonitor;//cpu and memmory usage
     // qint64 lastPerformanceMonitorUpdate;

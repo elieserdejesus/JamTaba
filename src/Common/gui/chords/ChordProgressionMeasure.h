@@ -7,24 +7,14 @@
 
 class ChordProgressionMeasure
 {
+
 public:
     explicit ChordProgressionMeasure(int beatsInTheMeasure);
     void addChord(const Chord &chord);
     QString toString() const;
-    inline int getBeats() const
-    {
-        return beats;
-    }
-
-    const QList<Chord> getChords() const
-    {
-        return chords;
-    }
-
-    inline bool isEmpty() const
-    {
-        return chords.isEmpty();
-    }
+    int getBeats() const;
+    QList<Chord *> getChords() const;
+    bool isEmpty() const;
 
 private:
     int beats;
@@ -32,5 +22,17 @@ private:
 
     void updateChordsBeats();
 };
+
+
+inline int ChordProgressionMeasure::getBeats() const
+{
+    return beats;
+}
+
+inline bool ChordProgressionMeasure::isEmpty() const
+{
+    return chords.isEmpty();
+}
+
 
 #endif // CHORDPROGRESSIONMEASURE_H

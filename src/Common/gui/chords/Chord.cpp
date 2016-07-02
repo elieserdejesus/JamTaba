@@ -10,8 +10,13 @@ const QString Chord::TABLE_FLATS[]
 
 Chord::Chord(const QString &chordText, int beat)
 {
-    this->chordText = chordText.trimmed();
     this->beat = beat;
+    setText(chordText);
+}
+
+void Chord::setText(const QString &chordText)
+{
+    this->chordText = chordText.trimmed();
     int indexOfInversionBar = this->chordText.indexOf("/");
     if (indexOfInversionBar > 0)
         bassInversion = this->chordText.right(this->chordText.size() - 1 - indexOfInversionBar);
