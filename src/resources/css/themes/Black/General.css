@@ -268,6 +268,22 @@ QMenuBar::item
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(50, 50, 50), stop:1 rgb(30, 30, 30));
 }
 
+QMenuBar::item:selected { /* hover effect for menu bar items */
+
+    color: rgb(140, 140, 140);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(70, 70, 70), stop:1 rgb(30, 30, 30));
+    border: 1px outset rgb(35, 35, 35);
+
+}
+
+QMenuBar::item:pressed { /* 'button pressed' item style */
+
+    color: rgb(140, 140, 140);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(70, 70, 70), stop:1 rgb(30, 30, 30));
+    border: 1px inset rgb(35, 35, 35);
+
+}
+
 QMenuBar
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(50, 50, 50), stop:1 rgb(30, 30, 30));
