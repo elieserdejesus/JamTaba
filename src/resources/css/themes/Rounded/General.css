@@ -296,6 +296,22 @@ QMenuBar::item
     background:rgb(225, 225, 225);
 }
 
+QMenuBar::item:selected { /* hover effect for menu bar items */
+
+    border-radius: 2px;
+}
+
+QMenuBar::item:pressed { /* 'button pressed' item style */
+
+    border-radius: 2px;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgba(240, 240, 240, 20),
+        stop:0.2 rgba(255, 255, 255, 20),
+        stop:0.7 rgba(240, 240, 240, 20),
+        stop:1 rgba(210, 210, 210, 20)
+    );
+}
+
 QMenuBar
 {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
