@@ -1,6 +1,13 @@
 NinjamTrackView #lowCutButton:checked
 {
-    background-color: rgb(160, 160, 160);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(100, 100, 100), stop:1 rgb(80, 80, 80));
+    border-color: rgb(20, 20, 20);
+}
+
+NinjamTrackView #lowCutButton:checked:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(80, 80, 80));
+    border-color: rgb(20, 20, 20)
 }
 
 NinjamTrackView[horizontal="true"] #panSlider
