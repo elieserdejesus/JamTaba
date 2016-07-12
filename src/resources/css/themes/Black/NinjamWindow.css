@@ -10,6 +10,13 @@ NinjamTrackView #lowCutButton:checked:hover
     border-color: rgb(20, 20, 20)
 }
 
+NinjamTrackView[unlighted="true"] #lowCutButton,
+NinjamTrackView[unlighted="true"] #lowCutButton:checked
+{
+    background-color: rgba(0, 0, 0, 30);
+    border: none;
+}
+
 NinjamTrackView[horizontal="true"] #panSlider
 {
     max-width: 50px;
