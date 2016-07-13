@@ -15,8 +15,7 @@ class Settings;
 
 class SettingsObject // base class for the settings components
 {
-protected:
-    QString name;
+
 public:
     SettingsObject(const QString &name);
     virtual ~SettingsObject();
@@ -28,6 +27,8 @@ public:
     }
 
 protected:
+    QString name;
+
     static int getValueFromJson(const QJsonObject &json, const QString &propertyName, int fallBackValue);
     static float getValueFromJson(const QJsonObject &json, const QString &propertyName,
                                   float fallBackValue);
