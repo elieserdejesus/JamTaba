@@ -174,9 +174,9 @@ void UserInfoChangeNotifyMessage::readFrom(QDataStream &stream)
             users.insert(userFullName, User(userFullName));
         }
         User &user = users[userFullName];
-        bytesConsumed += userFullName.size() + 1;
+        bytesConsumed += userFullName.toUtf8().size() + 1;
         QString channelName = Ninjam::extractString(stream);
-        bytesConsumed += channelName.size() + 1;
+        bytesConsumed += channelName.toUtf8().size() + 1;
         bool channelIsActive = active > 0 ? true : false;
         user.addChannel(UserChannel(userFullName, channelName, channelIndex, channelIsActive,
                                     volume, pan, flags));
