@@ -1,4 +1,4 @@
-/* Stylesheet for BaseTrack - Black theme */
+/* Stylesheet for BaseTrack - Orange theme */
 
 
 /* Track buttons
@@ -83,7 +83,7 @@ QPushButton#buttonStereoInversion:hover
  QPushButton#buttonStereoInversion:hover:checked
 {
     border-color: rgb(110,110,110);
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(80, 80, 80));
+    background-color: rgb(253, 228, 186)
 }
 
 /* button colors when the track is NOT xmiting */
@@ -166,9 +166,13 @@ BaseTrackView[unlighted="true"] #peaksDbLabel
 
 BaseTrackView
 {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(247, 247, 247), stop:1 rgb(220, 220, 220));
-border: none; /*1px solid rgb(61, 61, 61);*/
-font-size: 8px;
+   background: #FFFBF4;
+   border: none;/* 1px solid red;*/
+   border-radius: 1px;
+   border-bottom-left-radius: 3px;
+   border-bottom-right-radius: 3px;
+   font-size: 8px; /*db value */
+   padding: 1px;
 }
 
 
@@ -178,17 +182,22 @@ font-size: 8px;
 BaseTrackView[unlighted="true"] #panSlider::handle,         /* pan slider handle */
 BaseTrackView[unlighted="true"] QSlider::handle:vertical    /* track fader handle */
 {
-    background: rgb(210, 210, 210);
-    border-color: rgb(210, 210, 210);
+    background: rgb(180, 180, 180);
+    border-color: rgb(120, 120, 120);
 }
 
-BaseTrackView[unlighted="true"]{
- background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(220, 220, 220), stop:1 rgb(200, 200, 200));
+BaseTrackView[unlighted="true"]
+{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgba(0, 0, 0, 150),
+    stop:1 rgb(237, 227, 215));
 }
 
 TrackGroupView[unlighted="true"] > #topPanel                /* the track group top panel: used to show user name */
 {
-background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(230, 230, 230), stop:1 rgb(140, 140, 140));
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(237, 227, 215),
+    stop:1 rgba(0, 0, 0, 150));
 }
 
 /* -----------------------------------------*/
@@ -225,9 +234,7 @@ PeakMeter
 
 TrackGroupView #topPanel
 {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgb(255, 255, 255),
-    stop:1 rgb(247, 247, 247));
+    background: #FFE6AC;
 
     border-top-left-radius: 1px;
     border-top-right-radius: 1px;

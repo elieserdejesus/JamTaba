@@ -9,19 +9,20 @@ FxPanelItem{
     background-repeat: none;
     max-height: 14px;
     width: 100%;
-    border-radius: 1px;
+    border-radius: 2px;
     border: none;
 }
 
 BaseTrackView[unlighted="true"] FxPanelItem
 {
-    background-color: rgb(63, 56, 42);
+    background: rgb(180, 180, 180);
+    border-color: rgb(120, 120, 120);
 
 }
 
 BaseTrackView[unlighted="false"] FxPanelItem            /* slot border when the track is xmiting */
 {
-    border: 1px outset rgb(20, 20, 20);
+    border: 1px outset rgba(0, 0, 0, 45);
 }
 
 FxPanelItem[containPlugin="false"]                      /* empty slot */
@@ -36,19 +37,15 @@ FxPanelItem[containPlugin="true"]                       /* non empty slot */
 
 FxPanelItem QLabel                                     /* plugin name label */
 {
-    color: rgb(40, 40, 40);
+    color: rgb(127, 77, 26);
     qproperty-alignment: AlignLeft;
     font-size: 10px;
     margin: 0px;
 }
 
-FxPanelItem:hover{
-    background-color: qlineargradient(x1:0, y1:0.4, x2:0, y2:1, stop:0 rgba(0, 0, 0, 50), stop:1 rgba(0, 0, 0, 70));
-}
-
 FxPanelItem:hover                                       /* slot hover effect */
 {
-    background-color: rgba(0, 0, 0, 60);
+    background-color: rgb(253, 228, 186);
 }
 
 FxPanelItem QPushButton                                 /* the small button used to bypass the plugin */
@@ -57,27 +54,24 @@ FxPanelItem QPushButton                                 /* the small button used
      max-height: 10px;
      margin: 0px;
      padding: 0px;
-     border: 1px solid rgba(0, 0, 0, 60);
-     background-color: rgba(0, 0, 0, 120);
+     border-color: rgb(110,110,110);
+     background-color: rgb(250, 225, 169)
 }
 
 FxPanelItem QPushButton:hover                           /* hover effect for the small 'plugin bypass' button */
 {
-    border: 1px solid rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 60);
+    border-color: rgb(20, 20, 20);
 }
 
 FxPanelItem QPushButton:checked                         /* 'plugin bypass' button is checked */
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(20, 128, 20), stop:1 rgb(0, 80, 0));
-    border-color: rgb(20, 20, 20);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(20, 180, 20), stop:1 rgb(0, 80, 0));
 }
 
 FxPanelItem QPushButton:checked:hover                   /* hover effect for 'plugin bypass' button when checked */
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(20, 180, 20), stop:1 rgb(0, 80, 0));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(110, 255, 82), stop:1 rgb(30, 195, 30));
 }
-
 
 
 
@@ -185,11 +179,12 @@ background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgba(255, 90,
 LocalTrackGroupView #groupNameField
 {
     background-color: rgb(250, 225, 169);
+    border-radius: 2px;
     border-color: rgba(0, 0, 0, 45);
     color: rgb(127, 77, 26);
 }
 
 LocalTrackGroupView[unlighted="true"] #groupNameField
 {
-background: rgb(125, 112, 84);
+    background: rgba(237, 227, 215, 45);
 }

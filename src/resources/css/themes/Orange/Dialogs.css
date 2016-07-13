@@ -105,22 +105,19 @@ PluginScanDialog QGroupBox
     selection-color: rgb(140, 140, 140);
 }
 
-BusyDialog
-{
-    border: 1px solid rgba(20, 20, 20);
-    padding: 0px;
-    margin: 0px;
-    border-radius: 3px;
+BusyDialog{
+    border: 1px outset rgb(130, 130, 130);
+    border-radius: 1px;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-            stop:0 rgb(80, 80, 80),
-            stop:0.3 rgb(60, 60, 60)
-            stop:0.6 rgba(40, 40, 40),
-            stop:1 rgba(20, 20, 20));
+            stop:0 rgb(255, 255, 255),
+            stop:0.1 rgb(247, 247, 247),
+            stop:0.9 rgba(200, 200, 200),
+            stop:1 rgba(180, 180, 180));
 }
 
 BusyDialog > QLabel /* the text appearing in Busy dialog, like "connecting in ninbot.com" */
 {
     font-weight: bold;
-    color: rgb(140, 140, 140);
+    color: rgb(100, 100, 100);
 }
 

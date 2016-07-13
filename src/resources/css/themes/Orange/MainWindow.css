@@ -1,12 +1,9 @@
 #userNamePanel
 {
     color: black;
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-            stop:0 rgba(25, 22, 17),
-            stop:0.1 rgb(250, 225, 169)
-            stop:0.9 rgb(250, 225, 169),
-            stop:1 rgba(25, 22, 17));
-    border: 1px solid rgb(55, 55, 55);
+    border-radius: 2px;
+    background-color: rgb(250, 225, 169);
+    border-color: rgba(0, 0, 0, 45);
     padding: 1px;
 }
 
@@ -62,14 +59,14 @@ QMainWindow
 
 #leftPanel
 {
-   background-color: white;
-   border: 1px solid black;
+   background-color: rgb(237, 227, 215);
+   /* border: 1px solid black;*/
 }
 
 #contentTabWidget:pane
 {
-    background-color: white;
-    border: 1px solid black;/* 1px solid #EFEEC2;*/
+    background-color: rgb(237, 227, 215);
+    border: none;/* 1px solid #EFEEC2;*/
     border-radius: 1px;
     padding: 0px;
 }
@@ -84,6 +81,6 @@ QMainWindow
 #chatTabWidget:pane,
 #chatTabWidget QTabBar::tab
 {
-    background-color: rgb(20, 20, 20);
+    background-color: rgb(237, 227, 215);
     color: rgb(140, 140, 140);
 }
