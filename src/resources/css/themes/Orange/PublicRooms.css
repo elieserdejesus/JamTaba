@@ -1,0 +1,26 @@
+/* JamRoomViewPanel is the widget used to show ONE public room/server */
+
+JamRoomViewPanel
+{
+    background-color: #FFC575;
+    border: none; /* 1px solid #FFC435;*/
+    border-bottom: 1px solid black;/*#E5E5E5;*/
+    border-radius: 1px;
+    padding: 0px;
+}
+
+JamRoomViewPanel #content                   /* where the user names and wave form are showed */
+{
+        background: rgb(247, 247, 247);
+}
+
+JamRoomViewPanel #labelName             /* the server name (ninbot.com, ninjamer.com, etc) */
+{
+    color: rgb(127, 77, 26);
+    font-weight: bold;
+}
+
+JamRoomViewPanel .PlayerLabel
+{
+    color: black;
+}
