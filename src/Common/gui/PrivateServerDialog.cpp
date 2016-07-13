@@ -1,21 +1,35 @@
 #include "PrivateServerDialog.h"
 #include "ui_PrivateServerDialog.h"
+#include "MainController.h"
+#include "persistence/Settings.h"
 #include <QDebug>
 
-PrivateServerDialog::PrivateServerDialog(QWidget *parent, QString lastServer, int lastServerPort,
-                                         const QString &lastPassword) :
+using namespace Persistence;
+
+PrivateServerDialog::PrivateServerDialog(QWidget *parent, Controller::MainController *mainController) :
     QDialog(parent),
-    ui(new Ui::PrivateServerDialog)
+    ui(new Ui::PrivateServerDialog),
+    mainController(mainController)
 {
     ui->setupUi(this);
-    ui->serverTextField->setText(lastServer);
-    ui->passwordTextField->setText(lastPassword);
-    ui->serverPortTextField->setText(QString::number(lastServerPort));
+
+    QList<PrivateServer> servers = mainController->getSettings().getPrivateServers();
+    if (!servers.isEmpty()) {
+        PrivateServer server = servers.first();
+        ui->serverTextField->setText(server.getName());
+        ui->passwordTextField->setText(server.getPassword());
+        ui->serverPortTextField->setText(QString::number(server.getPort()));
+    }
 
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     QObject::connect(ui->okButton, SIGNAL(clicked(bool)), this, SLOT(on_okButtonTriggered()));
+}
+
+void PrivateServerDialog::buildComboBoxItems()
+{
+
 }
 
 void PrivateServerDialog::on_okButtonTriggered()

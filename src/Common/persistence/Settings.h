@@ -65,15 +65,35 @@ public:
 };
 
 // +++++++++++++++++++++++++++++++++++
+class PrivateServer
+{
+public:
+    PrivateServer(const QString serverName, quint32 serverPort, const QString password = QString());
+
+    inline QString getName() const { return name; }
+    inline quint32 getPort() const { return port; }
+    inline QString getPassword() const { return password; }
+    inline bool hasPassword() const { return !password.isEmpty(); }
+
+private:
+    QString name;
+    quint32 port;
+    QString password;
+};
+
+bool operator== (const PrivateServer &s1, const PrivateServer &s2);
+
 class PrivateServerSettings : public SettingsObject
 {
+
 public:
     PrivateServerSettings();
     void write(QJsonObject &out) const override;
     void read(const QJsonObject &in) override;
-    QString server;
-    int serverPort;
-    QString password;
+    void addPrivateServer(const PrivateServer &newServer);
+    inline QList<PrivateServer> getServers() const { return servers; }
+private:
+    QList<PrivateServer> servers;
 };
 
 // +++++++++++++++++++++++++++++++++++
@@ -374,22 +394,12 @@ public:
     }
 
     // private server
-    inline QString getLastPrivateServer() const
+    inline QList<PrivateServer> getPrivateServers() const
     {
-        return privateServerSettings.server;
+        return privateServerSettings.getServers();
     }
 
-    inline int getLastPrivateServerPort() const
-    {
-        return privateServerSettings.serverPort;
-    }
-
-    inline QString getLastPrivateServerPassword() const
-    {
-        return privateServerSettings.password;
-    }
-
-    void setPrivateServerData(const QString &server, int serverPort, const QString &password);
+    void addPrivateServer(const QString &server, int serverPort, const QString &password);
 
     // recording settings
     inline RecordingSettings getRecordingSettings() const

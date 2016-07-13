@@ -346,7 +346,7 @@ void MainController::storeRecordingPath(const QString &newPath)
 // ---------------------------------
 void MainController::storePrivateServerSettings(const QString &server, int serverPort, const QString &password)
 {
-    settings.setPrivateServerData(server, serverPort, password);
+    settings.addPrivateServer(server, serverPort, password);
 }
 
 void MainController::storeMetronomeSettings(float metronomeGain, float metronomePan, bool metronomeMuted)

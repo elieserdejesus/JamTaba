@@ -79,33 +79,69 @@ QJsonObject SettingsObject::getValueFromJson(const QJsonObject &json, const QStr
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-PrivateServerSettings::PrivateServerSettings() :
-    SettingsObject("PrivateServer"),
-    server("localhost"),
-    serverPort(2049),
-    password("")
+PrivateServer::PrivateServer(const QString serverName, quint32 serverPort, const QString password) :
+    name(serverName),
+    port(serverPort),
+    password(password)
 {
+    //
+}
+
+bool Persistence::operator== (const PrivateServer &s1, const PrivateServer &s2)
+{
+    return s1.getName() == s2.getName() && s1.getPort() == s2.getPort();
+}
+
+PrivateServerSettings::PrivateServerSettings() :
+    SettingsObject("PrivateServer")
+{
+    addPrivateServer(PrivateServer("localhost", 2049)); // this is the default item in the list
+}
+
+void PrivateServerSettings::addPrivateServer(const PrivateServer &newServer)
+{
+    // check for duplicated servers before add the new server
+    for (const PrivateServer &server : servers)
+        if (server == newServer)
+            return;
+
+    servers.append(newServer);
 }
 
 void PrivateServerSettings::write(QJsonObject &out) const
 {
-    out["server"] = server;
-    out["password"] = password;
-    out["port"] = serverPort;
+    QJsonArray serversArray;
+    for (const PrivateServer &server : servers) {
+        QJsonObject serverObject;
+        serverObject["name"] = server.getName();
+        serverObject["port"] = (int)server.getPort();
+        serverObject["password"] = server.getPassword();
+        serversArray.append(serverObject);
+    }
+
+    out["servers"] = serversArray;
 }
 
 void PrivateServerSettings::read(const QJsonObject &in)
 {
-    server = getValueFromJson(in, "server", QString("localhost"));
-    password = getValueFromJson(in, "password", QString(""));
-    serverPort = getValueFromJson(in, "port", 2049);
+    if (in.contains("servers")) {
+        QJsonArray serversArray = in["servers"].toArray();
+        for (int serverIndex = 0; serverIndex < serversArray.size(); ++serverIndex) {
+            QJsonObject serverObject = serversArray.at(serverIndex).toObject();
+            QString serverName = getValueFromJson(serverObject, "name", QString(""));
+            if (!serverName.isEmpty()) {
+                quint32 serverPort = getValueFromJson(serverObject, "port", (int)2049);
+                QString serverPassword = getValueFromJson(serverObject, "password", QString(""));
+                addPrivateServer(PrivateServer(serverName, serverPort, serverPassword));
+            }
+        }
+    }
 }
 
-void Settings::setPrivateServerData(const QString &server, int serverPort, const QString &password)
+void Settings::addPrivateServer(const QString &serverName, int serverPort, const QString &password)
 {
-    privateServerSettings.server = server;
-    privateServerSettings.serverPort = serverPort;
-    privateServerSettings.password = password;
+    PrivateServer newServer(serverName, serverPort, password);
+    privateServerSettings.addPrivateServer(newServer);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
