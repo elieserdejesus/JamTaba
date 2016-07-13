@@ -22,11 +22,11 @@ public:
     QString getPassword() const;
     int getServerPort() const;
 
+public slots:
+    void accept() override;
+
 signals:
     void connectionAccepted(const QString &server, int serverPort, const QString &password);
-
-private slots:
-    void on_okButtonTriggered();
 
 private:
     Ui::PrivateServerDialog *ui;
