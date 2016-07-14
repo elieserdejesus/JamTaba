@@ -110,6 +110,21 @@ PluginScanDialog QGroupBox
     selection-color: rgb(140, 140, 140);
 }
 
+PrivateServerDialog #comboBoxServers
+{
+    border: 1px solid rgba(0, 0, 0, 30);
+    background-color: rgb(80, 80, 80);
+    color: rgb(180, 180, 180);
+    selection-background-color: rgb(50, 50, 50);
+}
+
+PrivateServerDialog QComboBox QAbstractItemView
+{
+    color: rgb(180, 180, 180);
+    background-color: rgb(80, 80, 80);
+    selection-background-color: rgb(50, 50, 50);
+}
+
 BusyDialog
 {
     border: 1px solid rgba(20, 20, 20);
