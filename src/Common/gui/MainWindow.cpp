@@ -1007,15 +1007,11 @@ void MainWindow::openUrlInUserBrowser(const QString &url)
 
 void MainWindow::showPrivateServerDialog()
 {
-    Settings settings = mainController->getSettings();
-    QString server = settings.getLastPrivateServer();
-    QString password = settings.getLastPrivateServerPassword();
-    int port = settings.getLastPrivateServerPort();
     PrivateServerDialog *privateServerDialog
-        = new PrivateServerDialog(ui.centralWidget, server, port, password);
-    QObject::connect(privateServerDialog, SIGNAL(connectionAccepted(QString, int,
-                                                                    QString)), this,
-                     SLOT(connectInPrivateServer(QString, int, QString)));
+        = new PrivateServerDialog(ui.centralWidget, mainController);
+
+    connect(privateServerDialog, &PrivateServerDialog::connectionAccepted, this, &MainWindow::connectInPrivateServer);
+
     centerDialog(privateServerDialog);
     privateServerDialog->show();
 }

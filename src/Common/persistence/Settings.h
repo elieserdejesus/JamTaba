@@ -15,8 +15,7 @@ class Settings;
 
 class SettingsObject // base class for the settings components
 {
-protected:
-    QString name;
+
 public:
     SettingsObject(const QString &name);
     virtual ~SettingsObject();
@@ -28,6 +27,8 @@ public:
     }
 
 protected:
+    QString name;
+
     static int getValueFromJson(const QJsonObject &json, const QString &propertyName, int fallBackValue);
     static float getValueFromJson(const QJsonObject &json, const QString &propertyName,
                                   float fallBackValue);
@@ -66,13 +67,19 @@ public:
 // +++++++++++++++++++++++++++++++++++
 class PrivateServerSettings : public SettingsObject
 {
+
 public:
     PrivateServerSettings();
     void write(QJsonObject &out) const override;
     void read(const QJsonObject &in) override;
-    QString server;
-    int serverPort;
-    QString password;
+    void addPrivateServerData(const QString &serverName, int serverPort, const QString &password = QString());
+    inline QList<QString> getLastServers() const { return lastServers; }
+    inline quint32 getLastPort() const { return lastPort; }
+    inline QString getLastPassword() const { return lastPassword; }
+private:
+    QList<QString> lastServers;
+    int lastPort;
+    QString lastPassword;
 };
 
 // +++++++++++++++++++++++++++++++++++
@@ -372,23 +379,22 @@ public:
         return audioSettings.bufferSize;
     }
 
-    // private server
-    inline QString getLastPrivateServer() const
+    inline QList<QString> getLastPrivateServers() const
     {
-        return privateServerSettings.server;
+        return privateServerSettings.getLastServers();
     }
 
-    inline int getLastPrivateServerPort() const
+    inline quint32 getLastPrivateServerPort() const
     {
-        return privateServerSettings.serverPort;
+        return privateServerSettings.getLastPort();
     }
 
     inline QString getLastPrivateServerPassword() const
     {
-        return privateServerSettings.password;
+        return privateServerSettings.getLastPassword();
     }
 
-    void setPrivateServerData(const QString &server, int serverPort, const QString &password);
+    void addPrivateServer(const QString &server, int serverPort, const QString &password);
 
     // recording settings
     inline RecordingSettings getRecordingSettings() const
