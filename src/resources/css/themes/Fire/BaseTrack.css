@@ -72,18 +72,18 @@ QPushButton#buttonStereoInversion
 
 QPushButton#buttonStereoInversion:hover
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
+    background-color: rgb(255, 197, 156);
 }
 
  QPushButton#buttonStereoInversion:checked
 {
-    background-color: rgb(250, 184, 135);
+    background-color: rgb(253, 228, 156);
 }
 
  QPushButton#buttonStereoInversion:hover:checked
 {
     border-color: rgb(110,110,110);
-    background-color: rgb(253, 228, 186)
+    background-color: rgb(253, 228, 186);
 }
 
 /* button colors when the track is NOT xmiting */
@@ -135,12 +135,6 @@ BaseTrackView[unlighted="true"] #buttonStereoInversion
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 110, 122), stop:1 rgb(120, 0, 0));
     color: white;
-}
-
-QPushButton#buttonStereoInversion:hover,
-QPushButton#buttonStereoInversion:hover:checked
-{
-    background-color:#FFC575;
 }
 
 BaseTrackView[unlighted="true"] #buttonStereoInversion:hover, #buttonStereoInversion:hover:checked

@@ -1,7 +1,7 @@
 NinjamTrackView #lowCutButton
 {
      border-color: rgb(110,110,110);
-     background-color: rgb(250, 184, 135);
+     background-color: rgb(255, 197, 117);
 }
 
 NinjamTrackView #lowCutButton:checked
