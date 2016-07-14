@@ -13,14 +13,6 @@ PrivateServerDialog::PrivateServerDialog(QWidget *parent, Controller::MainContro
 {
     ui->setupUi(this);
 
-    QList<PrivateServer> servers = mainController->getSettings().getPrivateServers();
-    if (!servers.isEmpty()) {
-        PrivateServer server = servers.first();
-        ui->textFieldName->setText(server.getName());
-        ui->textFieldPassword->setText(server.getPassword());
-        ui->textFieldPort->setText(QString::number(server.getPort()));
-    }
-
     ui->okButton->setAutoDefault(true);
     connect(ui->okButton, &QPushButton::clicked, this, &PrivateServerDialog::accept);
 
@@ -28,22 +20,26 @@ PrivateServerDialog::PrivateServerDialog(QWidget *parent, Controller::MainContro
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     buildComboBoxItems();
+
+    //setting initial values
+    const Persistence::Settings &settings = mainController->getSettings();
+    ui->textFieldPassword->setText(settings.getLastPrivateServerPassword());
+    ui->textFieldPort->setText(QString::number(settings.getLastPrivateServerPort()));
 }
 
 void PrivateServerDialog::buildComboBoxItems()
 {
     ui->comboBoxServers->clear();
-    QList<PrivateServer> servers = mainController->getSettings().getPrivateServers();
-    for (const PrivateServer &server : servers) {
-        QString serverString = server.getName() + ":" + QString::number(server.getPort());
-        ui->comboBoxServers->addItem(serverString, QVariant(serverString));
+    QList<QString> servers = mainController->getSettings().getLastPrivateServers();
+    for (const QString &server : servers) {
+        ui->comboBoxServers->addItem(server, server);
     }
 }
 
 void PrivateServerDialog::accept()
 {
     QDialog::accept();
-    QString serverName = ui->textFieldName->text();
+    QString serverName = ui->comboBoxServers->currentText();
     int serverPort = ui->textFieldPort->text().toInt();
     QString serverPassword = ui->textFieldPassword->text();
 
@@ -57,7 +53,7 @@ QString PrivateServerDialog::getPassword() const
 
 QString PrivateServerDialog::getServer() const
 {
-    return ui->textFieldName->text();
+    return ui->comboBoxServers->currentText();
 }
 
 PrivateServerDialog::~PrivateServerDialog()

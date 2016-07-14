@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>303</width>
-    <height>161</height>
+    <height>165</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,42 +24,11 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QFormLayout" name="formLayout_2">
-     <item row="0" column="0">
-      <widget class="QLabel" name="labelServers">
-       <property name="text">
-        <string>Servers:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QComboBox" name="comboBoxServers">
-       <property name="currentText">
-        <string notr="true"/>
-       </property>
-       <property name="duplicatesEnabled">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
     <layout class="QFormLayout" name="formLayout">
      <item row="1" column="0">
       <widget class="QLabel" name="labelName">
        <property name="text">
         <string>Server:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="textFieldName">
-       <property name="accessibleDescription">
-        <string>type here the name of the server to join</string>
-       </property>
-       <property name="text">
-        <string notr="true">localhost</string>
        </property>
       </widget>
      </item>
@@ -100,6 +69,19 @@
        </property>
        <property name="text">
         <string notr="true"/>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="comboBoxServers">
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+       <property name="currentText">
+        <string notr="true"/>
+       </property>
+       <property name="duplicatesEnabled">
+        <bool>false</bool>
        </property>
       </widget>
      </item>

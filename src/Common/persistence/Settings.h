@@ -65,24 +65,6 @@ public:
 };
 
 // +++++++++++++++++++++++++++++++++++
-class PrivateServer
-{
-public:
-    PrivateServer(const QString serverName, quint32 serverPort, const QString password = QString());
-
-    inline QString getName() const { return name; }
-    inline quint32 getPort() const { return port; }
-    inline QString getPassword() const { return password; }
-    inline bool hasPassword() const { return !password.isEmpty(); }
-
-private:
-    QString name;
-    quint32 port;
-    QString password;
-};
-
-bool operator== (const PrivateServer &s1, const PrivateServer &s2);
-
 class PrivateServerSettings : public SettingsObject
 {
 
@@ -90,10 +72,14 @@ public:
     PrivateServerSettings();
     void write(QJsonObject &out) const override;
     void read(const QJsonObject &in) override;
-    void addPrivateServer(const PrivateServer &newServer);
-    inline QList<PrivateServer> getServers() const { return servers; }
+    void addPrivateServerData(const QString &serverName, int serverPort, const QString &password = QString());
+    inline QList<QString> getLastServers() const { return lastServers; }
+    inline quint32 getLastPort() const { return lastPort; }
+    inline QString getLastPassword() const { return lastPassword; }
 private:
-    QList<PrivateServer> servers;
+    QList<QString> lastServers;
+    int lastPort;
+    QString lastPassword;
 };
 
 // +++++++++++++++++++++++++++++++++++
@@ -393,10 +379,19 @@ public:
         return audioSettings.bufferSize;
     }
 
-    // private server
-    inline QList<PrivateServer> getPrivateServers() const
+    inline QList<QString> getLastPrivateServers() const
     {
-        return privateServerSettings.getServers();
+        return privateServerSettings.getLastServers();
+    }
+
+    inline quint32 getLastPrivateServerPort() const
+    {
+        return privateServerSettings.getLastPort();
+    }
+
+    inline QString getLastPrivateServerPassword() const
+    {
+        return privateServerSettings.getLastPassword();
     }
 
     void addPrivateServer(const QString &server, int serverPort, const QString &password);
