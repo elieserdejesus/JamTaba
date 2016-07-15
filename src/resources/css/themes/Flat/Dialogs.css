@@ -25,6 +25,7 @@ PrivateServerDialog #comboBoxServers
 PrivateServerDialog #comboBoxServers:focus
 {
     color: black;
+    border:1px solid gray;
 }
 
 BusyDialog
