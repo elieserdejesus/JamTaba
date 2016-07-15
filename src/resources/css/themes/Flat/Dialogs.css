@@ -17,6 +17,16 @@ PluginScanDialog #labelPluginText
     font-weight: bold;
 }
 
+PrivateServerDialog #comboBoxServers
+{
+    color: rgb(80, 80, 80);
+}
+
+PrivateServerDialog #comboBoxServers:focus
+{
+    color: black;
+}
+
 BusyDialog
 {
     border: 1px solid rgba(0, 0, 0, 30);
