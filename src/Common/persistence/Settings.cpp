@@ -110,6 +110,7 @@ void PrivateServerSettings::write(QJsonObject &out) const
 void PrivateServerSettings::read(const QJsonObject &in)
 {
     if (in.contains("lastServers")) {
+        lastServers.clear();
         QJsonArray serversArray = in["lastServers"].toArray();
         for (int serverIndex = 0; serverIndex < serversArray.size(); ++serverIndex) {
             QString serverName = serversArray.at(serverIndex).toString();
