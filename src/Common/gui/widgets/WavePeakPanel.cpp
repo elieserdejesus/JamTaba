@@ -11,7 +11,9 @@ WavePeakPanel::WavePeakPanel(QWidget *parent) :
     QWidget(parent),
     maxPeaks(0),
     showingBuffering(false),
-    bufferingPercentage(0)
+    bufferingPercentage(0),
+    peaksColor(QColor(90, 90, 90)),
+    loadingColor(Qt::gray)
 {
     setAutoFillBackground(false);
     recreatePeaksArray();
@@ -89,7 +91,10 @@ void WavePeakPanel::paintEvent(QPaintEvent *event)
             size_t size = peaksArray.size();
             for (uint i = 0; i < size; i++) {
                 float alpha = ((float)(i+1)/(size));
-                QColor color(90, 90, 90, std::pow(alpha, 2) * 255);
+
+                QColor color(peaksColor); //using the color defined in stylesheet
+                color.setAlpha(std::pow(alpha, 2) * 255);
+
                 int xPos = i * (peaksRectWidth + peaksPad);
                 drawPeak(&painter, xPos, peaksArray[i], color);
             }
@@ -97,17 +102,21 @@ void WavePeakPanel::paintEvent(QPaintEvent *event)
         else{ //showing buffering
             QPen pen;
             pen.setWidth(3);
-            pen.setColor(Qt::gray);
+            pen.setColor(loadingColor);
             painter.setPen(pen);
 
             float progress = bufferingPercentage/100.0;
-            //QRectF rectangle(10.0, 20.0, 80.0, 80.0);
+
             int rectSize = qMin(height(), width()) * 0.7;// 70% of width or height
             QRectF rectangle(width()/2 - rectSize/2, height()/2 - rectSize/2, rectSize, rectSize);
+
             //to understand these magic numbers, look drawArc method in Qt doc
             int startAngle = 0;
             int spanAngle = -progress * 360 * 16;
             painter.drawArc(rectangle, startAngle, spanAngle);
+
+
+            painter.setPen(palette().text().color()); //using the color defined in stylesheet files
             painter.drawText(rectangle, Qt::AlignCenter, QString::number(bufferingPercentage)+"%");
         }
     }

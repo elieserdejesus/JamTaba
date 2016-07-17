@@ -24,3 +24,16 @@ JamRoomViewPanel  #labelRoomType
     margin-right: 3px;
     margin-bottom: -3px;
 }
+
+
+WavePeakPanel
+{
+    /* color used to draw the wave form */
+    qproperty-peaksColor: rgb(90, 90, 90);
+
+    /* color used to draw the loading circle */
+    qproperty-loadingColor: gray;
+
+    /* color used to draw loading percentage text*/
+    color: gray;
+}
