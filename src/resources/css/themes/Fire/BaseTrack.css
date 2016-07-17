@@ -10,7 +10,6 @@
 font-size: 9px;
 border-color: rgb(110,110,110);
 padding: 2px;
-color: rgb(50,50,50);
 }
 
 #buttonBoostMinus12,
@@ -19,8 +18,13 @@ color: rgb(50,50,50);
 #soloButton,
 #muteButton
 {
-     border-color: rgb(110,110,110);
-     background: rgb(255, 197, 117);
+    color: rgb(60, 60, 60);
+    border-color: rgb(200, 81, 2);
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(206, 48, 3),
+        stop:0.2 rgb(212, 69, 29),
+        stop:0.7  rgb(240, 100, 2),
+        stop:1    rgb(248, 151, 118));
 }
 
 
@@ -38,8 +42,12 @@ color: rgb(50,50,50);
 #buttonBoostPlus12:checked,
 #buttonBoostZero:checked
 {
-    background-color: rgb(253, 228, 156);
-    color: rgba(0, 0, 0, 160);
+    border-style: inset;
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(197, 34, 1),
+        stop:0.2 rgb(206, 48, 3),
+        stop:0.7  rgb(212, 69, 29),
+        stop:1    rgb(240, 100, 2));
     border-radius: 0px;
 }
 
@@ -47,8 +55,12 @@ color: rgb(50,50,50);
 #buttonBoostPlus12:hover,
 #buttonBoostZero:hover
 {
-    background-color: #FFC575;
-    color: rgb(80, 80, 80);
+background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+    stop:0    rgb(216, 58, 13),
+    stop:0.2 rgb(222, 79, 39),
+    stop:0.7  rgb(250, 110, 12),
+    stop:1    rgb(255, 161, 128));
+    color: white;
     border-radius: 0px;
 }
 
@@ -56,7 +68,11 @@ color: rgb(50,50,50);
 #buttonBoostPlus12:hover:checked,
 #buttonBoostZero:hover:checked
 {
-    background-color: rgb(253, 228, 186);
+background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+    stop:0    rgb(207, 44, 11),
+    stop:0.2 rgb(216, 58, 13),
+    stop:0.7  rgb(222, 79, 39),
+    stop:1    rgb(250, 110, 12));
     color: rgb(40, 40, 40);
     border-radius: 0px;
 }
@@ -67,23 +83,40 @@ QPushButton#buttonStereoInversion
     background-position: center center;
     max-width: 8px;
     max-height: 12px;
-    background-color: rgb(255, 197, 117);
+    border-color: rgb(200, 81, 2);
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(206, 48, 3),
+        stop:0.2 rgb(212, 69, 29),
+        stop:0.7  rgb(240, 100, 2),
+        stop:1    rgb(248, 151, 118));
 }
 
 QPushButton#buttonStereoInversion:hover
 {
-    background-color: rgb(255, 197, 156);
+background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+    stop:0    rgb(216, 58, 13),
+    stop:0.2 rgb(222, 79, 39),
+    stop:0.7  rgb(250, 110, 12),
+    stop:1    rgb(255, 161, 128));
 }
 
  QPushButton#buttonStereoInversion:checked
 {
-    background-color: rgb(253, 228, 156);
+border-style: inset;
+background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+    stop:0    rgb(197, 34, 1),
+    stop:0.2 rgb(206, 48, 3),
+    stop:0.7  rgb(212, 69, 29),
+    stop:1    rgb(240, 100, 2));
 }
 
  QPushButton#buttonStereoInversion:hover:checked
 {
-    border-color: rgb(110,110,110);
-    background-color: rgb(253, 228, 186);
+background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+    stop:0    rgb(207, 44, 11),
+    stop:0.2 rgb(216, 58, 13),
+    stop:0.7  rgb(222, 79, 39),
+    stop:1    rgb(250, 110, 12));
 }
 
 /* button colors when the track is NOT xmiting */
@@ -109,14 +142,18 @@ BaseTrackView[unlighted="true"] #buttonStereoInversion
 #soloButton:hover,
 #muteButton:hover
 {
-    background-color:#FFC575;
-    color: rgba(0, 0, 0, 200);
+background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+    stop:0    rgb(216, 58, 13),
+    stop:0.2 rgb(222, 79, 39),
+    stop:0.7  rgb(250, 110, 12),
+    stop:1    rgb(255, 161, 128));
+    color: white;
 }
 
 #soloButton:checked
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
-    color: black;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(20, 180, 20), stop:1 rgb(0, 80, 0));
+    color: rgb(60, 60, 60);
 }
 
 #soloButton:hover:checked
@@ -134,7 +171,7 @@ BaseTrackView[unlighted="true"] #buttonStereoInversion
 #muteButton:checked
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 110, 122), stop:1 rgb(120, 0, 0));
-    color: white;
+    color: rgb(180, 180, 180);
 }
 
 BaseTrackView[unlighted="true"] #buttonStereoInversion:hover, #buttonStereoInversion:hover:checked
@@ -160,7 +197,9 @@ BaseTrackView[unlighted="true"] #peaksDbLabel
 
 BaseTrackView
 {
-   background: rgb(250, 225, 169);
+   background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+   stop:0 rgb(239, 114, 24),
+   stop:1 rgb(210, 85, 2));
    border: none;/* 1px solid red;*/
    border-radius: 1px;
    border-bottom-left-radius: 3px;
@@ -228,7 +267,9 @@ PeakMeter
 
 TrackGroupView #topPanel
 {
-    background: rgb(255, 197, 117);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(240, 100, 2),
+    stop:1 rgb(239, 114, 24));
 
     border-top-left-radius: 1px;
     border-top-right-radius: 1px;

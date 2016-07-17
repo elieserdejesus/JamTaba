@@ -7,31 +7,41 @@ QPushButton
 {
     border-radius: 2px;
     border-style: outset;
-    border-color: rgb(110,110,110);
-    background-color: rgb(255, 197, 117);
+    border-color: rgb(200, 81, 2);
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(206, 48, 3),
+        stop:0.2 rgb(212, 69, 29),
+        stop:0.7  rgb(240, 100, 2),
+        stop:1    rgb(248, 151, 118));
+    color: rgb(230, 230, 230);
 }
 
 QPushButton:checked
 {
     border-style: inset;
-    background-color: rgb(253, 228, 156);
-    color: rgb(0,0,0);
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(197, 34, 1),
+        stop:0.2 rgb(206, 48, 3),
+        stop:0.7  rgb(212, 69, 29),
+        stop:1    rgb(240, 100, 2));
 }
 
 QPushButton:hover
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop:0    rgba(255, 255, 255, 200),
-        stop:0.2 rgb(255, 251, 230),
-        stop:0.7  rgb(255, 251, 230),
-        stop:1    rgb(255, 252, 190));
+background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+    stop:0    rgb(216, 58, 13),
+    stop:0.2 rgb(222, 79, 39),
+    stop:0.7  rgb(250, 110, 12),
+    stop:1    rgb(255, 161, 128));
 }
 
 QPushButton:hover:checked
 {
-    color: rgba(0, 0, 0, 160);
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(80, 80, 80));
-    border: 1px outset rgb(10, 10, 10);
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(207, 44, 11),
+        stop:0.2 rgb(216, 58, 13),
+        stop:0.7  rgb(222, 79, 39),
+        stop:1    rgb(250, 110, 12));
 }
 
 QPushButton[enabled="false"]
@@ -164,22 +174,21 @@ QScrollBar::sub-page:horizontal
 -----------------------------------------------------------------------*/
 QLineEdit
 {
-    background-color: rgb(250, 225, 169);
+    background-color: rgb(240, 98, 2);
     border-color: rgba(0, 0, 0, 45);
-    color: rgb(127, 77, 26);
+    color: rgb(180, 180, 180);
 }
 
 QLineEdit:focus
 {
-    background-color: rgb(250, 225, 169);
-    color: black;
+    color: white;
     selection-background-color: rgb(247, 247, 247);
     selection-color: rgb(140, 140, 140);
 }
 
 QLineEdit#groupNameField:focus, #userNameLineEdit:focus
 {
-    color: black;
+    color: white;
     selection-background-color: rgb(247, 247, 247);
     selection-color: rgb(80, 80, 80);
 }
@@ -276,24 +285,36 @@ QTabBar::tab:!selected
 
 QMenuBar::item
 {
-    color: rgb(127, 77, 26);
-    background: rgb(255, 197, 117);
+    color: rgb(230, 230, 230);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(240, 98, 2), stop:1 rgb(210, 85, 2));
 }
 
 QMenuBar::item:selected { /* hover effect for menu bar items */
 
     border-radius: 2px;
+    border: 1px outset rgb(200, 81, 2);
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(206, 48, 3),
+        stop:0.2 rgb(212, 69, 29),
+        stop:0.7  rgb(240, 100, 2),
+        stop:1    rgb(248, 151, 118));
 }
 
 QMenuBar::item:pressed { /* 'button pressed' item style */
 
     border-radius: 2px;
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(127, 98, 58), stop:1 rgb(63, 49, 29));
+    border-style: inset;
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(197, 34, 1),
+        stop:0.2 rgb(206, 48, 3),
+        stop:0.7  rgb(212, 69, 29),
+        stop:1    rgb(240, 100, 2));
 }
 
 QMenuBar
 {
-    background: rgb(255, 197, 117);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(240, 98, 2), stop:1 rgb(210, 85, 2));
+
     border-bottom: none;
     border-top: 1px solid rgb(237, 227, 215);
     border-left: 1px solid rgb(237, 227, 215);

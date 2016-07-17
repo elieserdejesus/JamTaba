@@ -1,21 +1,21 @@
 #userNamePanel
 {
-    color: black;
+    color: rgb(180, 180, 180);
     border-radius: 2px;
-    background-color: rgb(255, 197, 117);
+    background-color: rgb(240, 98, 2);
     border-color: rgba(0, 0, 0, 45);
     padding: 1px;
 }
 
 #labelYourControls
 {
-    color: black;
+    color: white;
 }
 
 #masterTitleLabel,
 #labelMetronomeIControls
 {
-    color: black;
+    color: white;
 }
 
 #masterMeterL,
@@ -50,7 +50,9 @@ QMainWindow
 
 #bottomPanel
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(239, 114, 24), stop:1 rgb(194, 34, 0));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(239, 114, 24),
+    stop:1 rgb(194, 34, 0));
 }
 
 #leftPanel
