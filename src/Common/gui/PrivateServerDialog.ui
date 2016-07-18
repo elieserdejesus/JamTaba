@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Connecting in private Ninjam server ...</string>
+   <string>Connecting with private Ninjam server ...</string>
   </property>
   <property name="accessibleDescription">
    <string>This the private server dialog</string>
