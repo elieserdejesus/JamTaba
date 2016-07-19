@@ -362,6 +362,7 @@ void StandalonePreferencesDialog::changeAudioDevice(int index)
     populateFirstInputCombo();
     populateFirstOutputCombo();
     populateSampleRateCombo();
+    populateBufferSizeCombo();
 }
 
 void StandalonePreferencesDialog::accept()
