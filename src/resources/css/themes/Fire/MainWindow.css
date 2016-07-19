@@ -2,20 +2,24 @@
 {
     color: rgb(180, 180, 180);
     border-radius: 2px;
-    background-color: rgb(240, 98, 2);
-    border-color: rgba(0, 0, 0, 45);
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+            stop:0    rgb(206, 48, 3),
+            stop:0.2 rgb(212, 69, 29),
+            stop:0.7  rgb(240, 100, 2),
+            stop:1    rgb(248, 151, 118));
+    border-radius: 2px;
     padding: 1px;
 }
 
 #labelYourControls
 {
-    color: white;
+    color: rgb(230, 230, 230);
 }
 
 #masterTitleLabel,
 #labelMetronomeIControls
 {
-    color: white;
+    color: rgb(230, 230, 230);
 }
 
 #masterMeterL,
@@ -28,14 +32,14 @@
 
 #userNameLineEdit
 {
-    color: rgb(127, 77, 26);
+    color: rgb(230, 230, 230);
     background-color: transparent;
     border: none;
 }
 
 #userNameLineEdit:read-only
 {
-    color: rgb(127, 77, 26);
+    color: rgb(200, 200, 200);
 }
 
 /* ------------------------------ */
@@ -44,26 +48,26 @@
 
 QMainWindow
 {
-    background-color: rgb(250, 225, 169);
+    background-color: rgb(196, 60, 9);
     border: 1px solid rgb(237, 227, 215);
 }
 
 #bottomPanel
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
     stop:0 rgb(239, 114, 24),
-    stop:1 rgb(194, 34, 0));
+    stop:1 rgb(199, 92, 14));
 }
 
 #leftPanel
 {
-   background-color: rgb(247, 247, 247);
+   background-color: rgb(167, 51, 7);
    /* border: 1px solid black;*/
 }
 
 #contentTabWidget:pane
 {
-    background-color: rgb(247, 247, 247);
+    background-color: rgb(167, 51, 7);
     border: none;/* 1px solid #EFEEC2;*/
     border-radius: 1px;
     padding: 0px;

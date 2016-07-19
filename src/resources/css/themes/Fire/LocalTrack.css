@@ -193,11 +193,10 @@ LocalTrackGroupView #groupNameField
         stop:0.7  rgb(240, 100, 2),
         stop:1    rgb(248, 151, 118));
     border-radius: 2px;
-    border-color: rgba(0, 0, 0, 45);
     color: rgb(200, 200, 200);
 }
 
 LocalTrackGroupView[unlighted="true"] #groupNameField
 {
-    background: rgba(237, 227, 215, 45);
+    background: rgb(196, 60, 9);
 }

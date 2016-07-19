@@ -24,6 +24,7 @@ QPushButton:checked
         stop:0.2 rgb(206, 48, 3),
         stop:0.7  rgb(212, 69, 29),
         stop:1    rgb(240, 100, 2));
+    color: rgb(230, 230, 230);
 }
 
 QPushButton:hover
@@ -46,7 +47,7 @@ QPushButton:hover:checked
 
 QPushButton[enabled="false"]
 {
-    background-color: rgba(0, 0, 0, 40);
+    background-color: rgba(0, 0, 0, 70);
     color: rgba(0, 0, 0, 100);
     border-color: rgba(0, 0, 0, 20);
 }
@@ -251,7 +252,7 @@ QSlider::handle:vertical:hover
 /* TabBar ----------------------*/
 QTabBar::tab
 {
-    background-color: rgba(237, 227, 215, 145);
+    background-color:  rgb(130, 40, 5);
     border: none;/* 1px solid #D0D5EA;*/
     border-radius: 2px;
     min-width: 8ex;
@@ -259,12 +260,12 @@ QTabBar::tab
     padding-left: 10px;
     padding-right: 10px;
     font-size: 11px;
-    color: black;
+    color: rgb(230, 230, 230);
 }
 
 QTabBar::tab:selected
 {
-    background-color: rgb(247, 247, 247);
+    background-color: rgb(167, 51, 7);
     /* border-top: 1px solid black;/* 1px solid #D0D5EA;*/
     /* border-left: 1px solid black;
     border-right: 1px solid black;
@@ -274,19 +275,19 @@ QTabBar::tab:selected
 QTabBar::tab:hover,
 QTabBar::tab:hover:checked
 {
-    background-color: rgba(237, 227, 215, 90);
+    background-color: rgb(188, 57, 7);
 }
 
 QTabBar::tab:!selected
 {
     margin-top: 3px; /* make non-selected tabs look smaller */
-    color: rgb(90, 90, 90);
+    color: rgb(230, 230, 230);
 }
 
 QMenuBar::item
 {
     color: rgb(230, 230, 230);
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(240, 98, 2), stop:1 rgb(210, 85, 2));
+    background: rgb(239, 114, 24);
 }
 
 QMenuBar::item:selected { /* hover effect for menu bar items */
@@ -313,8 +314,7 @@ QMenuBar::item:pressed { /* 'button pressed' item style */
 
 QMenuBar
 {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(240, 98, 2), stop:1 rgb(210, 85, 2));
-
+    background: rgb(239, 114, 24);
     border-bottom: none;
     border-top: 1px solid rgb(237, 227, 215);
     border-left: 1px solid rgb(237, 227, 215);

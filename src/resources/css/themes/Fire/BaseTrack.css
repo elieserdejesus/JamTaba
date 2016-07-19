@@ -197,15 +197,15 @@ BaseTrackView[unlighted="true"] #peaksDbLabel
 
 BaseTrackView
 {
-   background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
    stop:0 rgb(239, 114, 24),
-   stop:1 rgb(210, 85, 2));
-   border: none;/* 1px solid red;*/
-   border-radius: 1px;
-   border-bottom-left-radius: 3px;
-   border-bottom-right-radius: 3px;
-   font-size: 8px; /*db value */
-   padding: 1px;
+   stop:1 rgb(199, 92, 14));
+    border: none;/* 1px solid red;*/
+    border-radius: 1px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    font-size: 8px; /*db value */
+    padding: 1px;
 }
 
 
@@ -221,16 +221,12 @@ BaseTrackView[unlighted="true"] QSlider::handle:vertical    /* track fader handl
 
 BaseTrackView[unlighted="true"]
 {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgba(0, 0, 0, 150),
-    stop:1 rgb(237, 227, 215));
+    background: rgb(196, 60, 9);
 }
 
 TrackGroupView[unlighted="true"] > #topPanel                /* the track group top panel: used to show user name */
 {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgb(237, 227, 215),
-    stop:1 rgba(0, 0, 0, 150));
+    background: rgb(196, 60, 9);
 }
 
 /* -----------------------------------------*/
@@ -268,8 +264,8 @@ PeakMeter
 TrackGroupView #topPanel
 {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgb(240, 100, 2),
-    stop:1 rgb(239, 114, 24));
+    stop:0 rgb(239, 114, 24),
+    stop:1 rgb(213, 37, 0));
 
     border-top-left-radius: 1px;
     border-top-right-radius: 1px;

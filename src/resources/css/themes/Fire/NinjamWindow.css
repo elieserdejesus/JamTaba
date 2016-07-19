@@ -1,24 +1,39 @@
 NinjamTrackView #lowCutButton
 {
      border-color: rgb(110,110,110);
-     background-color: rgb(255, 197, 117);
+     background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+         stop:0    rgb(206, 48, 3),
+         stop:0.2 rgb(212, 69, 29),
+         stop:0.7  rgb(240, 100, 2),
+         stop:1    rgb(248, 151, 118));
 }
 
 NinjamTrackView #lowCutButton:checked
 {
-background-color: rgb(253, 228, 156);
-border-color: rgb(20, 20, 20);
+    border-style: inset;
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(197, 34, 1),
+        stop:0.2 rgb(206, 48, 3),
+        stop:0.7  rgb(212, 69, 29),
+        stop:1    rgb(240, 100, 2));
 }
 
 NinjamTrackView #lowCutButton:hover
 {
-background-color: #FFC575;
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(216, 58, 13),
+        stop:0.2 rgb(222, 79, 39),
+        stop:0.7  rgb(250, 110, 12),
+        stop:1    rgb(255, 161, 128));
 }
 
 NinjamTrackView #lowCutButton:checked:hover
 {
-background-color: rgb(253, 228, 186);
-border-color: rgb(20, 20, 20)
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(207, 44, 11),
+        stop:0.2 rgb(216, 58, 13),
+        stop:0.7  rgb(222, 79, 39),
+        stop:1    rgb(250, 110, 12));
 }
 
 NinjamTrackView[unlighted="true"] #lowCutButton,
@@ -85,7 +100,9 @@ NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:checked
 
 NinjamTrackView[horizontal="true"]
 {
-   background: #FFFBF4;
+   background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+       stop:0 rgb(239, 114, 24),
+       stop:1 rgb(213, 37, 0));
    border: none;/* 1px solid red;*/
    border-radius: 1px;
    border-bottom-left-radius: 3px;
@@ -96,9 +113,7 @@ NinjamTrackView[horizontal="true"]
 
 NinjamTrackView[unlighted="true"][horizontal="true"]
 {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgba(0, 0, 0, 100),
-    stop:1 rgb(237, 227, 215));
+    background: rgb(196, 60, 9);
 }
 
 NinjamTrackView[unlighted="true"][horizontal="true"] QSlider::handle:horizontal
@@ -178,12 +193,12 @@ NinjamRoomWindow QToolButton#buttonHorizontalLayout:!checked
 
 NinjamRoomWindow #labelUserName
 {
-    color: rgb(140, 140, 140);
+    color: rgb(230, 230, 230);
 }
 
 NinjamRoomWindow #labelBpmBpi
 {
-    color: rgb(70, 70, 70);
+    color: rgb(200, 200, 200);
 }
 
 /* Ninjam tracks
@@ -191,21 +206,25 @@ NinjamRoomWindow #labelBpmBpi
 
 NinjamTrackView[unlighted="true"] #channelName              /* user is not xmiting */
 {
-    color: rgb(80, 80, 80);
-    background: rgba(237, 227, 215, 45);
+    color: rgb(200, 200, 200);
+    background: rgb(196, 60, 9);
     border-color: rgba(0, 0, 0, 45);
 }
 
 
 NinjamTrackView  #channelName               /* channel name for ninjamers XMIT ON */
 {
-    background: rgb(250, 225, 169);
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(206, 48, 3),
+        stop:0.2 rgb(212, 69, 29),
+        stop:0.7  rgb(240, 100, 2),
+        stop:1    rgb(248, 151, 118));
     border-radius: 2px;
     border: 1px solid rgba(0, 0, 0, 45);
     padding-top: 3px;
     padding-bottom: 3px;
     font-size: 10px;
-    color: rgb(140, 140, 140);
+    color: rgb(200, 200, 200);
     max-width: 130px;
 }
 
@@ -232,7 +251,9 @@ NinjamPanel QComboBox
 
 NinjamTrackGroupView > #topPanel                /* the track group top panel: used to show user name */
 {
-    background-color: #FFE6AC;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(239, 114, 24),
+    stop:1 rgb(213, 37, 0));
     border-top-left-radius: 1px;
     border-top-right-radius: 1px;
 }
