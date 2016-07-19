@@ -16,6 +16,9 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::ClickFocus</enum>
+  </property>
   <property name="windowTitle">
    <string notr="true"/>
   </property>
@@ -95,6 +98,9 @@
    </item>
    <item>
     <widget class="QLabel" name="labelMessage">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
      <property name="text">
       <string notr="true">big text to test the multiline behavior when using vbery big texts</string>
      </property>
