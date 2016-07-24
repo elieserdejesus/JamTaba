@@ -7,12 +7,10 @@ QPushButton
 {
     border-radius: 2px;
     border-style: outset;
-    border-color: rgb(200, 81, 2);
-    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
-        stop:0    rgb(206, 48, 3),
-        stop:0.2 rgb(212, 69, 29),
-        stop:0.7  rgb(240, 100, 2),
-        stop:1    rgb(248, 151, 118));
+    border-color: rgb(150, 2, 2);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(239, 114, 24),
+        stop:1 rgb(213, 37, 0));
     color: rgb(230, 230, 230);
 }
 
@@ -29,11 +27,11 @@ QPushButton:checked
 
 QPushButton:hover
 {
-background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
-    stop:0    rgb(216, 58, 13),
-    stop:0.2 rgb(222, 79, 39),
-    stop:0.7  rgb(250, 110, 12),
-    stop:1    rgb(255, 161, 128));
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(198, 10, 5),
+        stop:0.2 rgb(200, 22, 8),
+        stop:0.7  rgb(219, 69, 18),
+        stop:1    rgb(223, 97, 0));
 }
 
 QPushButton:hover:checked
@@ -286,8 +284,10 @@ QTabBar::tab:!selected
 
 QMenuBar::item
 {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(229, 119, 8),
+        stop:1 rgb(211, 89, 12));
     color: rgb(230, 230, 230);
-    background: rgb(239, 114, 24);
 }
 
 QMenuBar::item:selected { /* hover effect for menu bar items */
@@ -314,7 +314,9 @@ QMenuBar::item:pressed { /* 'button pressed' item style */
 
 QMenuBar
 {
-    background: rgb(239, 114, 24);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgb(229, 119, 8),
+            stop:1 rgb(211, 89, 12));
     border-bottom: none;
     border-top: 1px solid rgb(237, 227, 215);
     border-left: 1px solid rgb(237, 227, 215);

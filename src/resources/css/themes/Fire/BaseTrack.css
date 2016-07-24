@@ -55,11 +55,11 @@ padding: 2px;
 #buttonBoostPlus12:hover,
 #buttonBoostZero:hover
 {
-background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
-    stop:0    rgb(216, 58, 13),
-    stop:0.2 rgb(222, 79, 39),
-    stop:0.7  rgb(250, 110, 12),
-    stop:1    rgb(255, 161, 128));
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(206, 48, 3),
+        stop:0.2 rgb(212, 69, 29),
+        stop:0.7  rgb(240, 100, 2),
+        stop:1    rgb(248, 151, 118));
     color: white;
     border-radius: 0px;
 }
@@ -197,9 +197,9 @@ BaseTrackView[unlighted="true"] #peaksDbLabel
 
 BaseTrackView
 {
-background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-   stop:0 rgb(239, 114, 24),
-   stop:1 rgb(199, 92, 14));
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(239, 114, 24),
+        stop:1 rgb(199, 92, 14));
     border: none;/* 1px solid red;*/
     border-radius: 1px;
     border-bottom-left-radius: 3px;
@@ -264,9 +264,8 @@ PeakMeter
 TrackGroupView #topPanel
 {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgb(239, 114, 24),
-    stop:1 rgb(213, 37, 0));
-
+        stop:0 rgb(239, 114, 24),
+        stop:1 rgb(213, 37, 0));
     border-top-left-radius: 1px;
     border-top-right-radius: 1px;
 }

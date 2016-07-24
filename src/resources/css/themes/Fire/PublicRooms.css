@@ -12,8 +12,8 @@ JamRoomViewPanel
 JamRoomViewPanel #content                   /* where the user names and wave form are showed */
 {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop:0 rgb(239, 114, 24),
-        stop:1 rgb(199, 92, 14));
+    stop:0 rgb(239, 114, 24),
+    stop:1 rgb(199, 92, 14));
 }
 
 JamRoomViewPanel #labelName             /* the server name (ninbot.com, ninjamer.com, etc) */

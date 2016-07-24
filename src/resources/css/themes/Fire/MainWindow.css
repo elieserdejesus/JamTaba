@@ -2,11 +2,10 @@
 {
     color: rgb(180, 180, 180);
     border-radius: 2px;
-    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
-            stop:0    rgb(206, 48, 3),
-            stop:0.2 rgb(212, 69, 29),
-            stop:0.7  rgb(240, 100, 2),
-            stop:1    rgb(248, 151, 118));
+    border-color: rgb(150, 2, 2);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(239, 114, 24),
+        stop:1 rgb(213, 37, 0));
     border-radius: 2px;
     padding: 1px;
 }
@@ -48,20 +47,20 @@
 
 QMainWindow
 {
-    background-color: rgb(196, 60, 9);
+    background-color: rgb(181, 9, 7);
     border: 1px solid rgb(237, 227, 215);
 }
 
 #bottomPanel
 {
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgb(239, 114, 24),
-    stop:1 rgb(199, 92, 14));
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgb(229, 119, 8),
+            stop:1 rgb(211, 89, 12));
 }
 
 #leftPanel
 {
-   background-color: rgb(167, 51, 7);
+   background-color: rgb(190, 106, 16);
    /* border: 1px solid black;*/
 }
 

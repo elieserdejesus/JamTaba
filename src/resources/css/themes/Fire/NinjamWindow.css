@@ -251,9 +251,9 @@ NinjamPanel QComboBox
 
 NinjamTrackGroupView > #topPanel                /* the track group top panel: used to show user name */
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgb(239, 114, 24),
-    stop:1 rgb(213, 37, 0));
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(239, 114, 24),
+        stop:1 rgb(213, 37, 0));
     border-top-left-radius: 1px;
     border-top-right-radius: 1px;
 }
