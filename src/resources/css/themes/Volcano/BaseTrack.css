@@ -33,7 +33,7 @@ QPushButton#buttonStereoInversion
    padding: 1px;
    padding-top: 3px;
    padding-bottom: 3px;
-   border-radius: 1px;
+   border-radius: 2px;
 }
 
 #buttonBoostMinus12:checked,
@@ -113,9 +113,11 @@ BaseTrackView[unlighted="true"] #peaksDbLabel
 
 BaseTrackView
 {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop:0 rgba(255, 255, 255, 40),
-        stop:1 rgba(255, 255, 255, 20));
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+stop: 0.0 #FFD470,
+stop: 0.15 #FDE09B,
+stop: 0.9 #FDE5A9,
+stop: 1.0 #EF820D);
 
     border: none; /*1px solid rgb(61, 61, 61);*/
     font-size: 8px;
@@ -157,17 +159,17 @@ PeakMeter
 
 TrackGroupView
 {
-    border: 1px solid rgba(0, 0, 0, 80);
+    border: none;
 }
 
 TrackGroupView #topPanel                                /* topPanel is used to show channel name */
 {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgba(0, 0, 0, 10),
-    stop:1 rgba(0, 0, 0, 5));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 #EF820D,
+        stop: 0.5 #FFD470);
 
-    border-top-left-radius: 1px;
-    border-top-right-radius: 1px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
 }
 
 TrackGroupView #groupNameField                          /* the text field used to input channel name */
@@ -176,10 +178,13 @@ TrackGroupView #groupNameField                          /* the text field used t
     margin-top: 0px;
     font-size: 11px;
     font-weight: normal;
+    border: 1px solid rgb(0, 0, 0, 40);
+    border-radius: 2px;
+    background-color: rgba(0, 0, 0, 5);
 }
 
 TrackGroupView[unlighted="true"] #groupNameField        /* channel name text field when not xmiting */
 {
-    background: rgba(255, 255, 255, 20);
+    background: red;
     border: none;
 }

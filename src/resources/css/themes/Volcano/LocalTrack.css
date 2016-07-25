@@ -5,11 +5,12 @@
 --------------------------------------------------*/
 FxPanelItem
 {
-    background-color: rgba(0, 0, 0, 55);
+background-color: rgba(255, 106, 0, 100);
     background-position: center right;
     background-repeat: none;
     max-height: 14px;
     border: none;
+    border-radius: 2px;
 }
 
 BaseTrackView[unlighted="false"] FxPanelItem            /* slot border when the track is not xmiting */
@@ -77,7 +78,8 @@ LocalTrackView[highlighted="true"]
 
 LocalTrackView #inputPanel
 {
-    background-color: rgba(0, 0, 0, 60);
+    background-color: rgba(255, 106, 0, 100);
+    border-radius: 2px;
 }
 
 LocalTrackView[unlighted="false"] #inputPanel    /* input panel color when user is transmiting */

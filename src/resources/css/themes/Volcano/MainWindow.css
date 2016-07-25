@@ -1,8 +1,9 @@
 #userNamePanel
 {
-    background-color: rgba(255, 255, 255, 20);
-    border-color: rgba(0, 0, 0, 100);
+    background-color: rgba(255, 255, 255, 80);
+    border-color: rgba(0, 0, 0, 160);
     padding: 1px;
+    border-radius: 2px;
 }
 
 #labelYourControls
@@ -13,7 +14,7 @@
 #masterTitleLabel,
 #labelMetronomeIControls
 {
-    color: lightgray;
+    color: rgb(40, 40, 40);
 }
 
 #masterMeterL,
@@ -41,28 +42,32 @@
 
 QMainWindow
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-        stop: 0   rgb(197, 34, 1),
-        stop: 0.3 rgb(239, 114, 24),
-        stop: 0.7 rgb(239, 114, 24),
-        stop: 1.0 rgb(197, 34, 1));
+    background-color: #D49061;
     border: 1px solid rgb(90, 90, 90);
 }
 
 #bottomPanel
 {
-    background: transparent;
-    border-top: none;
+    background: rgba(255, 255, 255, 30);
+    border: none;
+    border-radius: 3px;
 }
 
 #leftPanel
 {
-   background-color: rgba(0, 0, 0, 30);
+    background-color: rgba(0, 0, 0, 30);
+    border-radius: 3px;
 }
 
 #contentTabWidget:pane
 {
-    background-color: rgba(255, 255, 255, 15);
+    /* this is the 'volcano' gradient */
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.5 rgb(239, 114, 24),
+        stop: 1.0 rgb(197, 34, 1));
+
+    border-radius: 3px;
+    border-top-left-radius: 0px;
 }
 
 #contentTabWidget:pane,
