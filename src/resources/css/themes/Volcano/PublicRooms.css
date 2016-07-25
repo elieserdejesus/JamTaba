@@ -7,6 +7,23 @@ JamRoomViewPanel
     border-radius: 3px;
 }
 
+JamRoomViewPanel[empty="true"]{
+    border: none;
+    background-color: rgba(0, 0, 0, 15);
+    border: 1px solid rgba(0, 0, 0, 100);
+}
+
+JamRoomViewPanel[empty="true"] #labelRoomStatus
+{
+    color: black;
+}
+
+JamRoomViewPanel[empty="true"] #labelName
+{
+    color: black;
+    font-weight: normal;
+}
+
 JamRoomViewPanel #content                   /* where the user names and wave form are showed */
 {
     background: rgba(0, 0, 0, 10);

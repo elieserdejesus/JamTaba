@@ -92,7 +92,15 @@ void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
 
     updateButtonListen();
 
+    setProperty("empty", ui->usersPanel->layout()->isEmpty());
+
     ui->buttonEnter->setEnabled(!roomInfo.isFull());
+
+    //update the style sheet
+    style()->unpolish(this);
+    style()->polish(this);
+    style()->unpolish(ui->buttonListen);
+    style()->polish(ui->buttonListen);
 }
 
 void JamRoomViewPanel::updateButtonListen()
@@ -106,9 +114,6 @@ void JamRoomViewPanel::updateButtonListen()
         ui->buttonListen->setIcon(QIcon());// remove the icon
         ui->buttonListen->setToolTip("");// clean the tooltip
     }
-
-    style()->unpolish(ui->buttonListen);
-    style()->polish(ui->buttonListen);
 }
 
 bool JamRoomViewPanel::userInfoLessThan(const Login::UserInfo &u1, const Login::UserInfo &u2)
