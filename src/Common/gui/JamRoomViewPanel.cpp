@@ -97,8 +97,8 @@ void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
     ui->buttonEnter->setEnabled(!roomInfo.isFull());
 
     //update the style sheet
-    style()->unpolish(this);
-    style()->polish(this);
+    style()->unpolish(ui->content);
+    style()->polish(ui->content);
     style()->unpolish(ui->buttonListen);
     style()->polish(ui->buttonListen);
 }
