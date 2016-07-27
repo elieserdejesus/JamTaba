@@ -18,7 +18,9 @@ JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo,
     initialize(roomInfo);
     ui->wavePeakPanel->setEnabled(false);// is enable when user click in listen button
 
-    connect(mainController, SIGNAL(ipResolved(const QString &)), this, SLOT(updateUserLocation(const QString &)));
+    connect(mainController, &Controller::MainController::ipResolved, this, &JamRoomViewPanel::updateUserLocation);
+    connect(ui->buttonListen, &QPushButton::clicked, this, &JamRoomViewPanel::toggleRoomListening);
+    connect(ui->buttonEnter, &QPushButton::clicked, this, &JamRoomViewPanel::enterInTheRoom);
 }
 
 void JamRoomViewPanel::updateUserLocation(const QString &userIP)
@@ -169,7 +171,7 @@ void JamRoomViewPanel::clear(bool resetListenButton)
     updateButtonListen();
 }
 
-void JamRoomViewPanel::on_buttonListen_clicked()
+void JamRoomViewPanel::toggleRoomListening()
 {
     if (ui->buttonListen->isChecked())
         emit startingListeningTheRoom(roomInfo);
@@ -179,7 +181,7 @@ void JamRoomViewPanel::on_buttonListen_clicked()
     ui->wavePeakPanel->updateGeometry();
 }
 
-void JamRoomViewPanel::on_buttonEnter_clicked()
+void JamRoomViewPanel::enterInTheRoom()
 {
     emit enteringInTheRoom(roomInfo);
 }

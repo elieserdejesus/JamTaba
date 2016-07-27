@@ -33,6 +33,8 @@ void WavePeakPanel::setShowBuffering(bool showBuffering)
         showingBuffering = showBuffering;
         bufferingPercentage = 0;
         clearPeaks();
+        setEnabled(showBuffering);
+        updateGeometry();
     }
 }
 
