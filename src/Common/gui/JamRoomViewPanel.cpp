@@ -92,15 +92,28 @@ void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
 
     updateButtonListen();
 
-    setProperty("empty", roomInfo.isEmpty());
-
     ui->buttonEnter->setEnabled(!roomInfo.isFull());
 
-    //update the style sheet
+    setProperty("empty", roomInfo.isEmpty());
+
+    updateStyleSheet();
+}
+
+void JamRoomViewPanel::updateStyleSheet()
+{
+    style()->unpolish(this);
     style()->unpolish(ui->content);
-    style()->polish(ui->content);
+    style()->unpolish(ui->labelName);
+    style()->unpolish(ui->labelRoomStatus);
     style()->unpolish(ui->buttonListen);
+
+    style()->polish(this);
+    style()->polish(ui->content);
+    style()->polish(ui->labelName);
+    style()->polish(ui->labelRoomStatus);
     style()->polish(ui->buttonListen);
+
+    update();
 }
 
 void JamRoomViewPanel::updateButtonListen()
@@ -172,6 +185,7 @@ void JamRoomViewPanel::clear(bool resetListenButton)
     if (resetListenButton)
         ui->buttonListen->setChecked(false);
     updateButtonListen();
+    updateStyleSheet();
 }
 
 void JamRoomViewPanel::on_buttonListen_clicked()

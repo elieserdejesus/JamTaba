@@ -66,6 +66,7 @@ private:
     QString buildRoomDescriptionString();
 
     void translateUi();
+    void updateStyleSheet();
 };
 
 #endif // JAMROOMVIEWPANEL_H
