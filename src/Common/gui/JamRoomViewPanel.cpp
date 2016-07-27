@@ -92,7 +92,7 @@ void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
 
     updateButtonListen();
 
-    setProperty("empty", ui->usersPanel->layout()->isEmpty());
+    setProperty("empty", roomInfo.isEmpty());
 
     ui->buttonEnter->setEnabled(!roomInfo.isFull());
 
