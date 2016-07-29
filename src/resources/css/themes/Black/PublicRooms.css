@@ -21,8 +21,3 @@ JamRoomViewPanel #labelName             /* the server name (ninbot.com, ninjamer
     color: rgb(140, 140,140);
     font-weight: bold;
 }
-
-JamRoomViewPanel .PlayerLabel
-{
-    color: rgb(140, 140, 140);
-}
