@@ -1,5 +1,10 @@
 /* some details of ninjam tracks */
 
+NinjamTrackView #lowCutButton:checked
+{
+    background-color: rgb(175, 175, 175);
+}
+
 NinjamTrackView QProgressBar
 {
     border-radius: 2px;

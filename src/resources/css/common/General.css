@@ -85,3 +85,21 @@ QScrollArea > QWidget > QWidget
     background: transparent;        /*removing the background in content (public rooms) widget */
 }
 
+QMenuBar::item:selected { /* hover effect for menu bar items */
+
+    border: 1px outset gray;
+    padding: 3px 6px 3px 6px;
+    font-size: 11px;
+}
+
+QMenuBar::item:pressed { /* 'button pressed' item style */
+
+    border-style: inset;
+
+}
+
+/* fix to issue #500 */
+QMenu::item::disabled
+{
+    color: rgba(0, 0, 0, 120);
+}

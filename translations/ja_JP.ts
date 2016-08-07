@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ja_JP">
+<TS version="2.0" language="ja_JP">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -48,11 +48,11 @@
     </message>
     <message>
         <source>block chat messages from this user</source>
-        <translation type="unfinished"></translation>
+        <translation>このユーザーからの発言をブロックします</translation>
     </message>
     <message>
         <source>B</source>
-        <translation type="unfinished"></translation>
+        <translation>B</translation>
     </message>
 </context>
 <context>
@@ -248,7 +248,7 @@
     <name>LocalTrackView</name>
     <message>
         <source>Invert stereo</source>
-        <translation type="unfinished"></translation>
+        <translation>LRを反転</translation>
     </message>
 </context>
 <context>
@@ -291,7 +291,7 @@
     </message>
     <message>
         <source>no input</source>
-        <translation>入力がありません</translation>
+        <translation>入力なし</translation>
     </message>
 </context>
 <context>
@@ -366,7 +366,7 @@
     </message>
     <message>
         <source>Full View</source>
-        <translation>全画面表示</translation>
+        <translation>最大表示</translation>
     </message>
     <message>
         <source>Mini View</source>
@@ -398,35 +398,35 @@
     </message>
     <message>
         <source>View</source>
-        <translation type="unfinished"></translation>
+        <translation>表示</translation>
     </message>
     <message>
         <source>Metering</source>
-        <translation type="unfinished"></translation>
+        <translation>メーター</translation>
     </message>
     <message>
         <source>Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマ</translation>
     </message>
     <message>
         <source>Translators ...</source>
-        <translation type="unfinished"></translation>
+        <translation>翻訳者 ...</translation>
     </message>
     <message>
         <source>Show peak meter only</source>
-        <translation type="unfinished"></translation>
+        <translation>ピークメーターのみ表示</translation>
     </message>
     <message>
         <source>Show RMS meter only</source>
-        <translation type="unfinished"></translation>
+        <translation>RMSメーターのみ表示</translation>
     </message>
     <message>
         <source>Show peak + RMS meters</source>
-        <translation type="unfinished"></translation>
+        <translation>ピークメーターとRMSメーターを表示</translation>
     </message>
     <message>
         <source>Show max peaks</source>
-        <translation type="unfinished"></translation>
+        <translation>最大ピークを表示</translation>
     </message>
 </context>
 <context>
@@ -445,7 +445,7 @@
     </message>
     <message>
         <source>Your Jamtaba version is not compatible with previous versions!</source>
-        <translation>このバージョンのJamTabaは以前のバージョンと互換性がありません!</translation>
+        <translation>このバージョンのJamtabaは以前のバージョンと互換性がありません!</translation>
     </message>
     <message>
         <source>Server : Compatibility problem</source>
@@ -453,7 +453,7 @@
     </message>
     <message>
         <source>A new Jamtaba version is available for download! Please use the &lt;a href=&apos;http://www.jamtaba.com&apos;&gt;new version&lt;/a&gt;!</source>
-        <translation>&lt;a href=&apos;http://www.jamtaba.com&apos;&gt;新しいバージョンのJamTaba&lt;/a&gt;がダウンロード可能です!</translation>
+        <translation>&lt;a href=&apos;http://www.jamtaba.com&apos;&gt;新しいバージョンのJamtaba&lt;/a&gt;がダウンロード可能です!</translation>
     </message>
     <message>
         <source>New Jamtaba version available!</source>
@@ -506,32 +506,32 @@
     </message>
     <message>
         <source>Black</source>
-        <translation type="unfinished"></translation>
+        <translation>黒</translation>
     </message>
     <message>
         <source>Flat</source>
-        <translation type="unfinished"></translation>
+        <translation>フラット</translation>
     </message>
     <message>
         <source>Rounded</source>
-        <translation type="unfinished"></translation>
+        <translation>ラウンド</translation>
     </message>
     <message>
         <source>Error connecting with Jamtaba server!
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Jamtabaサーバへの接続にエラーが発生しました！</translation>
     </message>
     <message>
         <source>Connecting with %1 ... </source>
-        <translation type="unfinished"></translation>
+        <translation>%1に接続中 ... </translation>
     </message>
     <message>
         <source>Connecting with %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1に接続中</translation>
     </message>
     <message>
         <source>Can&apos;t open the link!</source>
-        <translation type="unfinished"></translation>
+        <translation>リンクを開けません！</translation>
     </message>
 </context>
 <context>
@@ -741,26 +741,26 @@
     </message>
     <message>
         <source>Last chords used</source>
-        <translation type="unfinished"></translation>
+        <translation>最後に使ったコード</translation>
     </message>
     <message>
         <source>%1 is blocked in the chat</source>
-        <translation type="unfinished"></translation>
+        <translation>%1の発言はブロックされました</translation>
     </message>
     <message>
         <source>%1 is unblocked in the chat</source>
-        <translation type="unfinished"></translation>
+        <translation>%1の発言はブロック解除されました</translation>
     </message>
 </context>
 <context>
     <name>NinjamTrackGroupView</name>
     <message>
         <source>Block %1 in chat</source>
-        <translation type="unfinished"></translation>
+        <translation>%1の発言をブロック</translation>
     </message>
     <message>
         <source>Unblock %1 in chat</source>
-        <translation type="unfinished"></translation>
+        <translation>%1の発言をブロック解除</translation>
     </message>
 </context>
 <context>
@@ -856,15 +856,6 @@
         <translation>出力</translation>
     </message>
     <message>
-        <source>Sample rate</source>
-        <translation>サンプリングレート</translation>
-    </message>
-    <message>
-        <source>Buffer size</source>
-        <translation>バッファサイズ
-</translation>
-    </message>
-    <message>
         <source>ASIO panel ...</source>
         <translation>ASIOパネル...</translation>
     </message>
@@ -882,7 +873,7 @@
     </message>
     <message>
         <source>Vst(i)s loaded</source>
-        <translation>読み込まれたVST(i)s</translation>
+        <translation>読み込まれたVST(i)</translation>
     </message>
     <message>
         <source>Scan only new plugins</source>
@@ -890,7 +881,7 @@
     </message>
     <message>
         <source>Refresh</source>
-        <translation>リフレッシュ</translation>
+        <translation>更新</translation>
     </message>
     <message>
         <source>Clear plugins cache and scan all plugin folders</source>
@@ -906,7 +897,7 @@
     </message>
     <message>
         <source>Remove from blackList</source>
-        <translation>ブラックリストから除去</translation>
+        <translation>ブラックリストから削除</translation>
     </message>
     <message>
         <source>Plugin Paths:</source>
@@ -922,7 +913,7 @@
     </message>
     <message>
         <source>browse ...</source>
-        <translation>ブラウズ...</translation>
+        <translation>参照...</translation>
     </message>
     <message>
         <source>Save multi tracks </source>
@@ -938,7 +929,7 @@
     </message>
     <message>
         <source>Built-in metronomes:</source>
-        <translation>組込のメトロノーム:</translation>
+        <translation>組込のメトロノーム音:</translation>
     </message>
     <message>
         <source>Custom Metronome Sounds</source>
@@ -954,7 +945,7 @@
     </message>
     <message>
         <source>Browse ...</source>
-        <translation>ブラウズ...</translation>
+        <translation>参照...</translation>
     </message>
     <message>
         <source>Use 16 bit audio files!</source>
@@ -963,6 +954,34 @@
     <message>
         <source>ok</source>
         <translation>保存</translation>
+    </message>
+    <message>
+        <source>Buffer size:</source>
+        <translation>バッファサイズ:</translation>
+    </message>
+    <message>
+        <source>Sample rate:</source>
+        <translation>サンプリングレート:</translation>
+    </message>
+    <message>
+        <source>Encoder quality:</source>
+        <translation>エンコード品質:</translation>
+    </message>
+    <message>
+        <source>Low (good for slow internet connections)</source>
+        <translation>低 (低速回線向け)</translation>
+    </message>
+    <message>
+        <source>Normal (default)</source>
+        <translation>中 (標準)</translation>
+    </message>
+    <message>
+        <source>High (for good internet connections only)</source>
+        <translation>高 (高速回線向け)</translation>
+    </message>
+    <message>
+        <source>Custom quality</source>
+        <translation>カスタム</translation>
     </message>
 </context>
 <context>
@@ -1017,14 +1036,14 @@
     <name>Recorder::ClipSortLogGenerator</name>
     <message>
         <source>Generate Reaper &apos;clipsort.log&apos; file</source>
-        <translation type="unfinished"></translation>
+        <translation>Reaper用のclipsort.logファイルを生成</translation>
     </message>
 </context>
 <context>
     <name>Recorder::ReaperProjectGenerator</name>
     <message>
         <source>Generate Reaper Project file (RPP)</source>
-        <translation type="unfinished"></translation>
+        <translation>Reaper用のプロジェクトファイル(.RPP)を生成</translation>
     </message>
 </context>
 <context>

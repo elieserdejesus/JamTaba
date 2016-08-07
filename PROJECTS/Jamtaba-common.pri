@@ -4,7 +4,7 @@ message("VST PATH: " $$VST_SDK_PATH)
 
 TEMPLATE = lib
 
-VERSION = 2.0.15
+VERSION = 2.0.16
 
 ROOT_PATH = "../.."
 SOURCE_PATH = "$$ROOT_PATH/src"
@@ -46,6 +46,7 @@ HEADERS += audio/core/AudioMixer.h
 HEADERS += audio/core/SamplesBuffer.h
 HEADERS += audio/core/AudioPeak.h
 HEADERS += audio/core/Plugins.h
+HEADERS += audio/core/Filters.h
 HEADERS += audio/vorbis/VorbisDecoder.h
 HEADERS += audio/vorbis/VorbisEncoder.h
 HEADERS += audio/RoomStreamerNode.h
@@ -102,7 +103,6 @@ HEADERS += gui/widgets/PlayerLabel.h
 HEADERS += gui/widgets/UserNameLineEdit.h
 HEADERS += gui/BpiUtils.h
 HEADERS += gui/chords/ChordLabel.h
-HEADERS += gui/chords/ChordsWidget.h
 HEADERS += gui/chords/ChordsPanel.h
 HEADERS += gui/chords/ChordProgression.h
 HEADERS += gui/chords/ChordProgressionMeasure.h
@@ -138,6 +138,7 @@ SOURCES += audio/core/LocalInputNode.cpp
 SOURCES += audio/core/LocalInputGroup.cpp
 SOURCES += audio/core/AudioNodeProcessor.cpp
 SOURCES += audio/core/AudioMixer.cpp
+SOURCES += audio/core/Filters.cpp
 SOURCES += audio/RoomStreamerNode.cpp
 SOURCES += audio/core/Plugins.cpp
 SOURCES += audio/codec.cpp
@@ -196,7 +197,6 @@ SOURCES += gui/widgets/UserNameLineEdit.cpp
 SOURCES += gui/widgets/IntervalChunksDisplay.cpp
 SOURCES += gui/widgets/MarqueeLabel.cpp
 SOURCES += gui/BpiUtils.cpp
-SOURCES += gui/chords/ChordsWidget.cpp
 SOURCES += gui/chords/ChordsPanel.cpp
 SOURCES += gui/chords/ChordProgression.cpp
 SOURCES += gui/chords/ChordProgressionMeasure.cpp

@@ -64,7 +64,7 @@ void LocalTrackGroupView::updateXmitButtonText()
         xmitButton->setText(tr("X"));
     }
     else{
-        xmitButton->setText(isPreparingToTransmit() ? tr("Preparing") : tr("Transmitting"));
+        xmitButton->setText(isPreparingToTransmit() ? tr("Preparing") : tr("Transmit"));
     }
 }
 

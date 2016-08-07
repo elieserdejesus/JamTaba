@@ -71,6 +71,13 @@ void MainController::setSampleRate(int newSampleRate)
     settings.setSampleRate(newSampleRate);
 }
 
+void MainController::setEncodingQuality(float newEncodingQuality)
+{
+    settings.setEncodingQuality(newEncodingQuality);
+    if (isPlayingInNinjamRoom())
+        ninjamController->recreateEncoders();
+}
+
 void MainController::finishUploads()
 {
     foreach (int channelIndex, intervalsToUpload.keys())
@@ -339,7 +346,7 @@ void MainController::storeRecordingPath(const QString &newPath)
 // ---------------------------------
 void MainController::storePrivateServerSettings(const QString &server, int serverPort, const QString &password)
 {
-    settings.setPrivateServerData(server, serverPort, password);
+    settings.addPrivateServer(server, serverPort, password);
 }
 
 void MainController::storeMetronomeSettings(float metronomeGain, float metronomePan, bool metronomeMuted)

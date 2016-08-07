@@ -24,7 +24,8 @@ PreferencesDialog #plainTextEdit
 PreferencesDialog QGroupBox,
 MidiToolsDialog QGroupBox,
 PreferencesDialog #sampleRateLabel,
-PreferencesDialog #bufferSizeLabel
+PreferencesDialog #bufferSizeLabel,
+PreferencesDialog #labelEncoderQuality
 {
     font-weight: bold;
 }

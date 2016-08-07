@@ -5,6 +5,11 @@
 
 class WavePeakPanel : public QWidget
 {
+    Q_OBJECT
+
+    //custom properties defined in stylesheet files
+    Q_PROPERTY(QColor peaksColor MEMBER peaksColor)
+    Q_PROPERTY(QColor loadingColor MEMBER loadingColor)
 
 public:
     explicit WavePeakPanel(QWidget *parent = 0);
@@ -16,6 +21,7 @@ public:
 
     void setBufferingPercentage(uint percentage);
     void setShowBuffering(bool setShowBuffering);
+
 protected:
     void resizeEvent(QResizeEvent *event);
     void paintEvent(QPaintEvent *event);
@@ -23,6 +29,9 @@ protected:
 private:
     static const int peaksRectWidth;
     static const int peaksPad;
+
+    QColor peaksColor;
+    QColor loadingColor; //color for the loading circle
 
     bool showingBuffering;
     int bufferingPercentage;

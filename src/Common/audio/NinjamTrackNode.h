@@ -19,6 +19,9 @@ public:
     void addVorbisEncodedInterval(const QByteArray &encodedBytes);
     void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate,
                           const Midi::MidiMessageBuffer &midiBuffer);
+
+    void setLowCutStatus(bool activated);
+
     bool startNewInterval();
     inline int getID() const
     {
@@ -38,6 +41,10 @@ public:
 private:
     int ID;
     SamplesBufferResampler resampler;
+
+    class LowCutFilter;
+    QScopedPointer<LowCutFilter> lowCut;
+    const static double LOW_CUT_FREQUENCY;
 
     bool needResamplingFor(int targetSampleRate) const;
 

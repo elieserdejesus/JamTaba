@@ -11,6 +11,7 @@
 #include <QStringList>
 #include <QSettings>
 #include "log/Logging.h"
+#include "audio/vorbis/VorbisEncoder.h"
 
 using namespace Persistence;
 
@@ -79,39 +80,60 @@ QJsonObject SettingsObject::getValueFromJson(const QJsonObject &json, const QStr
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 PrivateServerSettings::PrivateServerSettings() :
-    SettingsObject("PrivateServer"),
-    server("localhost"),
-    serverPort(2049),
-    password("")
+    SettingsObject("PrivateServer")
 {
+    addPrivateServerData("localhost", 2049);
+}
+
+void PrivateServerSettings::addPrivateServerData(const QString &serverName, int serverPort, const QString &password)
+{
+    if (lastServers.contains(serverName))
+        lastServers.removeOne(serverName);
+
+    lastServers.insert(0, serverName); // the last used server is the first element in the list
+
+    lastPort = serverPort;
+    lastPassword = password;
 }
 
 void PrivateServerSettings::write(QJsonObject &out) const
 {
-    out["server"] = server;
-    out["password"] = password;
-    out["port"] = serverPort;
+    QJsonArray serversArray;
+    for (const QString &server : lastServers) {
+        serversArray.append(server);
+    }
+    out["lastPort"] = lastPort;
+    out["lastPassword"] = lastPassword;
+    out["lastServers"] = serversArray;
 }
 
 void PrivateServerSettings::read(const QJsonObject &in)
 {
-    server = getValueFromJson(in, "server", QString("localhost"));
-    password = getValueFromJson(in, "password", QString(""));
-    serverPort = getValueFromJson(in, "port", 2049);
+    if (in.contains("lastServers")) {
+        lastServers.clear();
+        QJsonArray serversArray = in["lastServers"].toArray();
+        for (int serverIndex = 0; serverIndex < serversArray.size(); ++serverIndex) {
+            QString serverName = serversArray.at(serverIndex).toString();
+            if (!serverName.isEmpty() && !lastServers.contains(serverName))
+                lastServers.append(serverName);
+        }
+    }
+
+    lastPort = getValueFromJson(in, "lastPort", (int)2049);
+    lastPassword = getValueFromJson(in, "lastPassword", QString(""));
 }
 
-void Settings::setPrivateServerData(const QString &server, int serverPort, const QString &password)
+void Settings::addPrivateServer(const QString &serverName, int serverPort, const QString &password)
 {
-    privateServerSettings.server = server;
-    privateServerSettings.serverPort = serverPort;
-    privateServerSettings.password = password;
+    privateServerSettings.addPrivateServerData(serverName, serverPort, password);
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 AudioSettings::AudioSettings() :
     SettingsObject("audio"),
     sampleRate(44100),
-    bufferSize(128)
+    bufferSize(128),
+    encodingQuality(VorbisEncoder::QUALITY_NORMAL)
 {
 }
 
@@ -124,6 +146,14 @@ void AudioSettings::read(const QJsonObject &in)
     lastIn = getValueFromJson(in, "lastIn", 0);
     lastOut = getValueFromJson(in, "lastOut", 0);
     audioDevice = getValueFromJson(in, "audioDevice", -1);
+
+    encodingQuality = getValueFromJson(in, "encodingQuality", VorbisEncoder::QUALITY_NORMAL); // using VorbisEncoder.QUALITY_NORMAL as fallback value.
+
+    //ensure vorbis quality is in accepted range
+    if (encodingQuality < VorbisEncoder::QUALITY_LOW)
+        encodingQuality = VorbisEncoder::QUALITY_LOW;
+    else if(encodingQuality > VorbisEncoder::QUALITY_HIGH)
+        encodingQuality = VorbisEncoder::QUALITY_HIGH;
 }
 
 void AudioSettings::write(QJsonObject &out) const
@@ -135,6 +165,7 @@ void AudioSettings::write(QJsonObject &out) const
     out["lastIn"] = lastIn;
     out["lastOut"] = lastOut;
     out["audioDevice"] = audioDevice;
+    out["encodingQuality"] = encodingQuality;
 }
 
 // +++++++++++++++++++++++++++++

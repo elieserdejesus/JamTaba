@@ -5,6 +5,15 @@
 ChordProgressionMeasure::ChordProgressionMeasure(int beatsInTheMeasure) :
     beats(beatsInTheMeasure)
 {
+
+}
+
+QList<Chord *> ChordProgressionMeasure::getChords() const
+{
+    QList<Chord *> chordPointers;
+    for (const Chord &chord : chords)
+        chordPointers.append(const_cast<Chord *>(&chord));
+    return chordPointers;
 }
 
 void ChordProgressionMeasure::addChord(const Chord &chord)

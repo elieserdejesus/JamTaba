@@ -28,19 +28,19 @@ ChordsPanel #buttonDiscardChords
 }
 
 
-/* ChordLabel is the widget used show one chord. A chord progression is a sequence of chord labels
+/* ChordLabel is the widget used to show one chord. A chord progression is a sequence of chord labels
 --------------------------------------------------------------------------------------------------*/
 ChordLabel
 {
     font-size: 13px;
     border: 1px solid rgba(0, 0, 0, 30);
-    padding: 2px;
-    padding-left: 3px;
-    padding-right: 3px;
+    padding: 0px;
+    max-height: 17px;
+    margin: 0px;
 }
 
-ChordLabel[current="true"]  /* the current chord label is highlighted */
+ChordLabel[current="true"]
 {
     color: black;
-    border: 1px solid #008F1f;
+    border: 1px solid rgba(0, 0, 0, 130);
 }

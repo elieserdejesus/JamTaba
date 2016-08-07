@@ -3,6 +3,23 @@
 #include <QDebug>
 #include "gui/chords/ChatChordsProgressionParser.h"
 
+void TestChatChordsProgressionParser::validSpaces()
+{
+    QFETCH(QString, chatMessage);
+    ChatChordsProgressionParser parser;
+    QVERIFY(parser.containsProgression(chatMessage));
+}
+
+void TestChatChordsProgressionParser::validSpaces_data()
+{
+    QTest::addColumn<QString>("chatMessage");
+    QTest::newRow("Test 1") << QString("| C    | F    | G    | F    ");
+    QTest::newRow("Test 2") << QString("|C    |F    |G    |F    ");
+    QTest::newRow("Test 3") << QString("|C|F|G|F");
+    QTest::newRow("Test 4") << QString("|  C|  F|  G|  F");
+    QTest::newRow("Test 5") << QString("|C| F| G |F");
+}
+
 void TestChatChordsProgressionParser::upperCaseText()
 {
     //testing if upper case letters are recognized as chords

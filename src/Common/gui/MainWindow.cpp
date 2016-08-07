@@ -1007,15 +1007,11 @@ void MainWindow::openUrlInUserBrowser(const QString &url)
 
 void MainWindow::showPrivateServerDialog()
 {
-    Settings settings = mainController->getSettings();
-    QString server = settings.getLastPrivateServer();
-    QString password = settings.getLastPrivateServerPassword();
-    int port = settings.getLastPrivateServerPort();
     PrivateServerDialog *privateServerDialog
-        = new PrivateServerDialog(ui.centralWidget, server, port, password);
-    QObject::connect(privateServerDialog, SIGNAL(connectionAccepted(QString, int,
-                                                                    QString)), this,
-                     SLOT(connectInPrivateServer(QString, int, QString)));
+        = new PrivateServerDialog(ui.centralWidget, mainController);
+
+    connect(privateServerDialog, &PrivateServerDialog::connectionAccepted, this, &MainWindow::connectInPrivateServer);
+
     centerDialog(privateServerDialog);
     privateServerDialog->show();
 }
@@ -1075,14 +1071,20 @@ void MainWindow::setupPreferencesDialogSignals(PreferencesDialog *dialog)
 
     connect(dialog, SIGNAL(multiTrackRecordingStatusChanged(bool)), this,
             SLOT(setMultiTrackRecordingStatus(bool)));
+
     connect(dialog, SIGNAL(jamRecorderStatusChanged(QString, bool)), this,
             SLOT(setJamRecorderStatus(QString, bool)));
+
     connect(dialog, SIGNAL(recordingPathSelected(const QString &)), this,
             SLOT(setRecordingPath(const QString &)));
+
     connect(dialog, SIGNAL(builtInMetronomeSelected(QString)), this,
             SLOT(setBuiltInMetronome(QString)));
+
     connect(dialog, SIGNAL(customMetronomeSelected(QString, QString)), this,
             SLOT(setCustomMetronome(QString, QString)));
+
+    connect(dialog, &PreferencesDialog::encodingQualityChanged, mainController, &MainController::setEncodingQuality);
 }
 
 void MainWindow::setBuiltInMetronome(const QString &metronomeAlias)

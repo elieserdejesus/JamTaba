@@ -10,4 +10,6 @@ ChordLabel
 ChordLabel[current="true"]
 {
     background-color: rgb(140, 140, 140);
+    border-color: gray;
+    color: black;
 }

@@ -7,6 +7,7 @@
 #include <QDebug>
 
 HHOOK KeyboardHook::globalKeyboardHook = nullptr;
+bool KeyboardHook::lastImeKeyUpWasReturn = false;
 
 /**
     This is a callback function to hook VST host key pressing. In general VST hosts are
@@ -21,67 +22,85 @@ BPI and BPM combos.
 
 LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lParam)
 {
-    if (nCode == HC_ACTION) {
+
+    if (nCode >= HC_ACTION) {
+
         QWidget *focusWidget = QApplication::focusWidget();
 
         // qobject_cast return NULL when the cast fail.
         bool widgetIsFocusable = qobject_cast<QLineEdit *>(focusWidget) || qobject_cast<QComboBox *>(focusWidget);
 
         if (widgetIsFocusable) {
-            QKeyEvent *ev = nullptr;
-            QKeyEvent::Type eventType
-                = (wParam == WM_KEYDOWN) ? QKeyEvent::KeyPress : QKeyEvent::KeyRelease;
-            KBDLLHOOKSTRUCT *lowLevelKeyboardStruct = reinterpret_cast<KBDLLHOOKSTRUCT *>(lParam);
+            KBDLLHOOKSTRUCT *keyData = reinterpret_cast<KBDLLHOOKSTRUCT *>(lParam);
 
-            switch (lowLevelKeyboardStruct->vkCode) {
+            //SYSTEM events are not 'trapped' by Jamtaba
+            if (wParam == WM_SYSKEYDOWN || wParam == WM_SYSKEYUP)
+                return CallNextHookEx(NULL, nCode, wParam, lParam);
+
+            bool usingIME = ImmGetOpenStatus(ImmGetContext(GetActiveWindow())); //detect if japanese input (IME) is activated - issue #472
+            if (usingIME) {
+                //we need detect if user is pressing VK_RETURN 2 times: 1 time to finish IME notation window and the second time to send the message in ninjam chat.
+                bool hookingReturnKey = KeyboardHook::lastImeKeyUpWasReturn && keyData->vkCode == VK_RETURN;
+                if (wParam == WM_KEYUP) //we need "remember" if the last key was VK_RETURN
+                    KeyboardHook::lastImeKeyUpWasReturn = !hookingReturnKey && keyData->vkCode == VK_RETURN;
+
+                if (!hookingReturnKey)
+                    return CallNextHookEx(NULL, nCode, wParam, lParam);
+            }
+
+            QKeyEvent *ev = nullptr;
+            QKeyEvent::Type eventType = (wParam == WM_KEYDOWN) ? QKeyEvent::KeyPress : QKeyEvent::KeyRelease;
+
+            bool controlIsPressed = GetKeyState(VK_CONTROL) & 0x8000;
+
+            switch (keyData->vkCode) { // these keys are used by VST hosts and we need intercept
+            case 67: //CONTROL + C
+                if (controlIsPressed)
+                    ev = new QKeyEvent(eventType, Qt::Key_C, Qt::ControlModifier);
+                    break;
+            case 86: //CONTROL + V
+                if (controlIsPressed)
+                    ev = new QKeyEvent(eventType, Qt::Key_V, Qt::ControlModifier);
+                    break;
+            case 65: //CONTROL + A
+                if (controlIsPressed)
+                    ev = new QKeyEvent(eventType, Qt::Key_A, Qt::ControlModifier);
+                    break;
+            case 90: //CONTROL + Z
+                if (controlIsPressed)
+                    ev = new QKeyEvent(eventType, Qt::Key_Z, Qt::ControlModifier);
+                    break;
+            case 88: //CONTROL + X
+                if (controlIsPressed)
+                    ev = new QKeyEvent(eventType, Qt::Key_X, Qt::ControlModifier);
+                    break;
             case VK_SPACE:
                 ev = new QKeyEvent(eventType, Qt::Key_Space, Qt::NoModifier, " ");
                 break;
             case VK_RETURN:
                 ev = new QKeyEvent(eventType, Qt::Key_Return, Qt::NoModifier);
                 break;
-            case VK_BACK:
-                ev = new QKeyEvent(eventType, Qt::Key_Backspace, Qt::NoModifier);
-                break;
             case VK_LEFT:
-                ev = new QKeyEvent(eventType, Qt::Key_Left, Qt::NoModifier);
+                ev = new QKeyEvent(eventType, Qt::Key_Left, QApplication::queryKeyboardModifiers());
                 break;
             case VK_RIGHT:
-                ev = new QKeyEvent(eventType, Qt::Key_Right, Qt::NoModifier);
+                ev = new QKeyEvent(eventType, Qt::Key_Right, QApplication::queryKeyboardModifiers());
                 break;
-            case VK_DELETE:
-                ev = new QKeyEvent(eventType, Qt::Key_Delete, Qt::NoModifier);
+            case VK_END:
+                ev = new QKeyEvent(eventType, Qt::Key_End, QApplication::queryKeyboardModifiers());
                 break;
-            case VK_SHIFT:
-            case VK_LSHIFT:
-            case VK_RSHIFT:
-                return 0; // return 0 (the event is not consumed) and keep the SHIFT modifier in the keyboard buffer.
-            default:
-                if (eventType == QKeyEvent::KeyPress) { // handling only KeyPress to avoid problems with 'é', 'ã', etc
-                    wchar_t buffer[5];
-                    BYTE keyboard_state[256];
-                    if (GetKeyboardState(keyboard_state)) {
-                        // Try to convert the key information to text
-                        int result = ToUnicodeEx(lowLevelKeyboardStruct->vkCode,
-                                                 lowLevelKeyboardStruct->scanCode, keyboard_state,
-                                                 buffer, 5, lowLevelKeyboardStruct->flags, GetKeyboardLayout(
-                                                     0));
-                        if (result > 0)
-                            ev = new QKeyEvent(eventType, lowLevelKeyboardStruct->vkCode,
-                                               Qt::ShiftModifier, QString::fromWCharArray(buffer));
-                    }
-                }
+            case VK_HOME:
+                ev = new QKeyEvent(eventType, Qt::Key_Home, QApplication::queryKeyboardModifiers());
+                break;
             }
-            if (ev)
+
+            if (ev) {
                 QApplication::postEvent(focusWidget, ev);
-            return 1; // if the QLineEdit is the focused widget always consume the event and don't forward to the Vst host.
+                return 1; // if we have a keyboard event Jamtaba will consume the event and don't forward to the Vst host.
+            }
         }
     }
     return CallNextHookEx(NULL, nCode, wParam, lParam);// Forward the event to VST host
-}
-
-KeyboardHook::KeyboardHook()
-{
 }
 
 void KeyboardHook::installLowLevelKeyboardHook()

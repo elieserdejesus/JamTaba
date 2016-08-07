@@ -50,8 +50,8 @@ protected:
     void changeEvent(QEvent *) override;
 
 private slots:
-    void on_buttonListen_clicked();
-    void on_buttonEnter_clicked();
+    void toggleRoomListening();
+    void enterInTheRoom();
     void updateUserLocation(const QString &userIP);
 private:
     Ui::RoomViewPanel *ui;
