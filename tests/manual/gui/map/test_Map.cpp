@@ -46,12 +46,9 @@ MapWidget* createFirstMap()
 
     QImage flag = QPixmap(":/flag").toImage();
     QList<MapMarker> markers;
-    for (int i = 0; i < 7; ++i) {
-        markers << MapMarker("Player " + QString::number(i), "test " + QString::number(i), QPointF(-27 + i, -50 + i), flag);
+    for (int i = 0; i < 8; ++i) {
+        markers << MapMarker("Player " + QString::number(i), "test " + QString::number(i), QPointF(-27, -50), flag);
     }
-
-    //markers << MapMarker("Player 2", "test 2", QPointF(-27, -50), flag);
-    //markers << MapMarker("Player 3", "test 3", QPointF(-27.6, -50), flag);
 
     map->setMarkers(markers);
 

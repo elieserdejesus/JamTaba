@@ -189,8 +189,6 @@ void MapWidget::setMarkers(const QList<MapMarker> &newMarkers)
     markers.clear();
     markers.append(newMarkers);
 
-    clearMarkerPositions();
-
     autoAdjustZoomLevel();
 
     setCenter(getCenterLatLong());
@@ -270,7 +268,6 @@ void MapWidget::loadTiles()
 
 void MapWidget::resizeEvent(QResizeEvent *)
 {
-    clearMarkerPositions();
     autoAdjustZoomLevel();
     setCenter(getCenterLatLong());
 }
@@ -385,6 +382,7 @@ QPointF MapWidget::getBestMarkerRectPosition(const QPointF &screenPosition)
 
 void MapWidget::drawPlayersMarkers(QPainter &p, bool showCountryDetailsInMarkers)
 {
+    clearMarkerPositions();
     for (MapMarker &marker : markers) {
         QPointF screenPosition = getMarkerScreenPosition(marker);
         QPointF rectPosition = getBestMarkerRectPosition(screenPosition);
