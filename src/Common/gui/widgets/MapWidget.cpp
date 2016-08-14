@@ -71,8 +71,8 @@ void MapWidget::setMarkersVisibility(bool showMarkers)
 {
     if (showingMarkers != showMarkers) {
         showingMarkers = showMarkers;
-        update();
     }
+    update();
 }
 
 void MapWidget::setTilesDir(const QString &newDir)
@@ -323,12 +323,12 @@ void MapWidget::paintEvent(QPaintEvent *event)
 
     drawMapTiles(p, event->rect());
 
-    if (showingMarkers) {
-        bool showCountryDetailsInMarkers = zoom < 3;
+    bool showCountryDetailsInMarkers = zoom < 3;
+    if (showingMarkers)
         drawPlayersMarkers(p, showCountryDetailsInMarkers);
-        if (!showCountryDetailsInMarkers)
-            drawPlayersList(p);
-    }
+
+    if (!showCountryDetailsInMarkers || !showingMarkers)
+        drawPlayersList(p);
 
     p.end();
 }

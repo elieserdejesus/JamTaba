@@ -191,6 +191,8 @@ void JamRoomViewPanel::clear(bool resetListenButton)
     if (resetListenButton)
         ui->buttonListen->setChecked(false);
     updateButtonListen();
+
+    map->setMarkersVisibility(!ui->buttonListen->isChecked());
 }
 
 void JamRoomViewPanel::toggleRoomListening()
