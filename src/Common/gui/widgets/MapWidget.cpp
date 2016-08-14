@@ -58,11 +58,21 @@ qreal latitudeFromTile(qreal ty, int zoom)
 
 
 MapWidget::MapWidget(QWidget *parent)
-    : QWidget(parent), zoom(1)
+    : QWidget(parent),
+      zoom(1),
+      showingMarkers(true)
 {
 
     loadTiles();
     setCenter(QPointF(0, 0));
+}
+
+void MapWidget::setMarkersVisibility(bool showMarkers)
+{
+    if (showingMarkers != showMarkers) {
+        showingMarkers = showMarkers;
+        update();
+    }
 }
 
 void MapWidget::setTilesDir(const QString &newDir)
@@ -312,10 +322,13 @@ void MapWidget::paintEvent(QPaintEvent *event)
     p.setRenderHint(QPainter::Antialiasing, true);
 
     drawMapTiles(p, event->rect());
-    bool showCountryDetailsInMarkers = zoom < 3;
-    drawPlayersMarkers(p, showCountryDetailsInMarkers);
-    if (!showCountryDetailsInMarkers)
-        drawPlayersList(p);
+
+    if (showingMarkers) {
+        bool showCountryDetailsInMarkers = zoom < 3;
+        drawPlayersMarkers(p, showCountryDetailsInMarkers);
+        if (!showCountryDetailsInMarkers)
+            drawPlayersList(p);
+    }
 
     p.end();
 }

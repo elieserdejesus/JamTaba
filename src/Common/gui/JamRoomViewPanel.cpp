@@ -26,7 +26,10 @@ JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo,
 
     createMapWidgets();
 
+    // add wave peak panel as a layer in top of map widget
     ui->content->layout()->removeWidget(ui->wavePeakPanel);
+    map->setLayout(new QHBoxLayout());
+    map->layout()->addWidget(ui->wavePeakPanel);
 
     initialize(roomInfo);
 }
@@ -196,14 +199,10 @@ void JamRoomViewPanel::toggleRoomListening()
         emit startingListeningTheRoom(roomInfo);
     else
         emit finishingListeningTheRoom(roomInfo);
+
     ui->wavePeakPanel->setEnabled(listening);
-
-    if (listening)
-        static_cast<QBoxLayout*>(ui->content->layout())->insertWidget(0, ui->wavePeakPanel);
-    else
-        ui->content->layout()->removeWidget(ui->wavePeakPanel);
-
     ui->wavePeakPanel->updateGeometry();
+    map->setMarkersVisibility(!listening);
 }
 
 void JamRoomViewPanel::enterInTheRoom()

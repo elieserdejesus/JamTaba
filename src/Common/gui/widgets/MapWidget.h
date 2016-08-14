@@ -12,6 +12,7 @@ class MapWidget: public QWidget
 public:
     MapWidget(QWidget *parent = 0);
     void setMarkers(const QList<MapMarker> &markers);
+    void setMarkersVisibility(bool showMarkers);
     static void setTilesDir(const QString &newDir);
 
 protected:
@@ -33,7 +34,9 @@ private:
 
     QList<MapMarker> markers;
 
-    QMap<int, bool> markersPositions;
+    QMap<int, bool> markersPositions; // used to avoid overllaped markers in map
+
+    bool showingMarkers;
 
     void invalidate();
     QRect tileRect(const QPoint &tp) const;
