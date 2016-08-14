@@ -150,7 +150,7 @@ private:
     static const int MIN_BPM = 40;
     static const int MAX_BPM = 400;
     static const int MAX_BPI = 64;
-    static const int MIN_BPI = 3;
+    static const int MIN_BPI = 2;
 };
 
 }// namespace
