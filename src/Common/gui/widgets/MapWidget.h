@@ -5,9 +5,13 @@
 #include <QMap>
 #include "MapMarker.h"
 
+struct MapMarkerComparator;
+
 class MapWidget: public QWidget
 {
     Q_OBJECT
+
+    friend struct MapMarkerComparator;
 
 public:
     MapWidget(QWidget *parent = 0);
@@ -33,8 +37,6 @@ private:
     static QMap<int, QHash<QPoint, QPixmap>> tilePixmaps; // tiles cache, one QHash per zoom level
 
     QList<MapMarker> markers;
-
-    QMap<int, bool> markersPositions; // used to avoid overllaped markers in map
 
     bool showingMarkers;
 
@@ -62,9 +64,7 @@ private:
     QPointF getMinimumLatLongInMarkers() const;
     QPointF getMaximumLatLongInMarkers() const;
 
-    QPointF getBestMarkerRectPosition(const QPointF &screenPosition);
-
-    void clearMarkerPositions();
+    void drawMarkersRegion(QPainter &p, QList<MapMarker> &markers, qreal initialAngle, bool showCountryDetailsInMarkers, bool shiftRectsToLeft) const;
 
     int calculateBestZoomLevel() const;
 

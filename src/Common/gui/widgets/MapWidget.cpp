@@ -176,14 +176,6 @@ QRectF MapWidget::computeMinimumRect(int zoom) const
     return QRectF(QPointF(left, top), QPointF(right, bottom));
 }
 
-void MapWidget::clearMarkerPositions()
-{
-    markersPositions.clear();
-    for (int position = 0; position < MARKER_POSITIONS; ++position) {
-        markersPositions.insert(position, false); // position is not used
-    }
-}
-
 void MapWidget::setMarkers(const QList<MapMarker> &newMarkers)
 {
     markers.clear();
@@ -350,43 +342,86 @@ qreal distance(const QPointF &p1, const QPointF &p2)
     return std::sqrt(x * x + y * y);
 }
 
-QPointF MapWidget::getBestMarkerRectPosition(const QPointF &screenPosition)
-{
-    if (markers.isEmpty() || markers.size() == 1) {
-        return QPointF(screenPosition.x() + 10, screenPosition.y() + 10);
-    }
-
-    qreal hRadius = width()/2.0 * 0.8;
-    qreal vRadius = height()/2.0 * 0.8;
-    qreal hCenter = width()/2.0;
-    qreal vCenter = height()/2.0;
-    qreal angleIncrement = (2 * M_PI)/MARKER_POSITIONS; // dividing the circle in 8 pies
-    qreal angle = 0.0;
-
-    qreal minDistance = hRadius;
-    QPointF bestPosition = screenPosition;
-    int bestPositionIndex = 0;
-    for (int i = 1; i < MARKER_POSITIONS; ++i) {
-        angle += angleIncrement;
-        QPointF candidate(hCenter + (hRadius * std::cos(angle)), vCenter + (vRadius * std::sin(angle)));
-        qreal dist = distance(candidate, screenPosition);
-        if (dist < minDistance && !markersPositions[i]) { // slot[i] is free to use?
-            minDistance = dist;
-            bestPosition = candidate;
-            bestPositionIndex = i;
-        }
-    }
-    markersPositions.insert(bestPositionIndex, true); // this slot is used
-    return bestPosition;
-}
-
 void MapWidget::drawPlayersMarkers(QPainter &p, bool showCountryDetailsInMarkers)
 {
-    clearMarkerPositions();
+    //separate markers in 4 regions: topLeft, topRight, bottomLeft and bottomRight
+
+    QList<MapMarker> topRightMarkers;
+    QList<MapMarker> bottomRightMarkers;
+    QList<MapMarker> topLeftMarkers;
+    QList<MapMarker> bottomLeftMarkers;
+
+    qreal hCenter = width()/2.0;
+    qreal vCenter = height()/2.0;
+
     for (MapMarker &marker : markers) {
         QPointF screenPosition = getMarkerScreenPosition(marker);
-        QPointF rectPosition = getBestMarkerRectPosition(screenPosition);
+
+        if (screenPosition.x() >= hCenter) { //right side
+            if (screenPosition.y() < vCenter)
+                topRightMarkers.append(marker);
+            else
+                bottomRightMarkers.append(marker);
+        }
+        else { // left side
+            if (screenPosition.y() < vCenter)
+                topLeftMarkers.append(marker);
+            else
+                bottomLeftMarkers.append(marker);
+        }
+    }
+
+    drawMarkersRegion(p, topRightMarkers, -M_PI/2.0, showCountryDetailsInMarkers, false);
+    drawMarkersRegion(p, bottomRightMarkers, 0.0, showCountryDetailsInMarkers, false);
+    drawMarkersRegion(p, bottomLeftMarkers, M_PI/2.0, showCountryDetailsInMarkers, true);
+    drawMarkersRegion(p, topLeftMarkers, M_PI, showCountryDetailsInMarkers, false);
+}
+
+struct MapMarkerComparator
+{
+    QPointF anchor;
+    const MapWidget *mapWidget;
+    MapMarkerComparator(const MapWidget *mapWidget, const QPointF &anchor) : mapWidget(mapWidget), anchor(anchor){}
+    bool operator()(const MapMarker &m1, const MapMarker &m2)
+    {
+        qreal deltaM1 = distance(mapWidget->getMarkerScreenPosition(m1), anchor);
+        qreal deltaM2 = distance(mapWidget->getMarkerScreenPosition(m2), anchor);
+        return deltaM1 < deltaM2;
+    }
+};
+
+void MapWidget::drawMarkersRegion(QPainter &p, QList<MapMarker> &markers, qreal initialAngle, bool showCountryDetailsInMarkers, bool shiftRectsToLeft) const{
+    static const qreal margim = 3;
+    qreal hCenter = width()/2.0;
+    qreal vCenter = height()/2.0;
+    qreal hRadius = hCenter * 0.98;
+    qreal vRadius = vCenter * 0.98;
+    qreal angleIncrement = (M_PI/2.0)/markers.size();
+    qreal angle = initialAngle;
+
+    QPointF sortAnchor(hCenter + std::cos(initialAngle) * hRadius, vCenter + std::sin(initialAngle) * vRadius);
+    qSort(markers.begin(), markers.end(), MapMarkerComparator(this, sortAnchor));
+
+    int markerCount = 0;
+    for (const MapMarker &marker : markers) {
+        QPointF screenPosition = getMarkerScreenPosition(marker);
+        QRectF markerRect = getMarkerRect(marker, screenPosition, showCountryDetailsInMarkers);
+        QPointF rectPosition(hCenter + (hRadius * std::cos(angle)), vCenter + (vRadius * std::sin(angle)));
+
+        if (shiftRectsToLeft)
+            rectPosition.setX(rectPosition.x() - (markerRect.width() * (markers.size() - markerCount)/markers.size()));
+
+        if (rectPosition.x() + markerRect.width() > width())
+            rectPosition.setX(width() - markerRect.width() - margim);
+        if (rectPosition.y() - markerRect.height()/2 < margim)
+            rectPosition.setY(margim + markerRect.height()/2);
+        if (rectPosition.y() + markerRect.height()/2.0 > height())
+            rectPosition.setY(height() - markerRect.height()/2.0 - margim);
+        if (rectPosition.x() < margim)
+            rectPosition.setX(margim);
+
         drawMarker(marker, p, screenPosition, rectPosition, showCountryDetailsInMarkers);
+        angle += angleIncrement;
     }
 }
 
