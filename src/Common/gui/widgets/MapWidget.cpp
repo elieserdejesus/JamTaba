@@ -457,16 +457,30 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
 QPainterPath MapWidget::getMarkerPainterPath(const MapMarker &marker, const QPointF &markerPosition, const QPointF &rectPosition, bool showCountryDetails) const
 {
     QRectF markerRect = getMarkerRect(marker, rectPosition, showCountryDetails);
-    qreal rectCenter = markerRect.center().x();
+    qreal rectHCenter = markerRect.center().x();
 
     QPainterPath painterPath;
 
     painterPath.addRoundRect(markerRect, 15);
 
     painterPath.moveTo(markerPosition);
-    qreal triangleY = (rectPosition.y() < markerPosition.y()) ? markerRect.bottom() : markerRect.top();
-    painterPath.lineTo(rectCenter - 4.0, triangleY);
-    painterPath.lineTo(rectCenter + 4.0, triangleY);
+    if (qAbs(markerPosition.y() - rectPosition.y()) > markerRect.height() * 2) {
+        qreal triangleY = (rectPosition.y() < markerPosition.y()) ? markerRect.bottom() : markerRect.top();
+        painterPath.lineTo(rectHCenter - 5.0, triangleY);
+        painterPath.lineTo(rectHCenter + 5.0, triangleY);
+    }
+    else { // drawing horizontal connectors between marker position and player name rectangle
+        qreal height = markerRect.height();
+        qreal markerRectVCenter = markerRect.y() + height/2.0;
+        if (markerPosition.x() < rectPosition.x()) { // drawing connect in left side of rectangle
+            painterPath.lineTo(rectPosition.x(), markerRectVCenter - 2);
+            painterPath.lineTo(rectPosition.x(), markerRectVCenter + 2);
+        }
+        else { // drawing connect in right side of rectangle
+            painterPath.lineTo(markerRect.x() + markerRect.width(), markerRectVCenter - 2);
+            painterPath.lineTo(markerRect.x() + markerRect.width(), markerRectVCenter + 2);
+        }
+    }
 
     return painterPath;
 }
