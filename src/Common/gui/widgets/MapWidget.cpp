@@ -13,6 +13,7 @@ QString MapWidget::TILES_DIR = ":/tiles/map/";
 const int MapWidget::TILES_SIZE = 256; // tile size in pixels
 const qreal MapWidget::TEXT_MARGIM = 3;
 const int MapWidget::MARKER_POSITIONS = 8;
+bool MapWidget::usingNightMode = false;
 
 QMap<int, QHash<QPoint, QPixmap>> MapWidget::tilePixmaps;
 
@@ -302,6 +303,13 @@ void MapWidget::drawMapTiles(QPainter &p, const QRect &rect)
             }
         }
     }
+
+    if (MapWidget::usingNightMode) {
+        QPainter::CompositionMode compositionMode = p.compositionMode();
+        p.setCompositionMode(QPainter::CompositionMode_Difference);
+        p.fillRect(rect, Qt::white);
+        p.setCompositionMode(compositionMode);
+    }
 }
 
 void MapWidget::paintEvent(QPaintEvent *event)
@@ -320,6 +328,12 @@ void MapWidget::paintEvent(QPaintEvent *event)
         drawPlayersList(p);
 
     p.end();
+
+}
+
+void MapWidget::setNightMode(bool useNightMode)
+{
+    MapWidget::usingNightMode = useNightMode;
 }
 
 QPointF MapWidget::getMarkerScreenPosition(const MapMarker &marker) const
@@ -425,6 +439,30 @@ void MapWidget::drawMarkersRegion(QPainter &p, QList<MapMarker> &markers, qreal 
     }
 }
 
+QColor MapWidget::getMarkerTextBackgroundColor()
+{
+    if (!MapWidget::usingNightMode)
+        return QColor(0, 0, 0, 120);
+
+    return QColor(255, 255, 255, 120);
+}
+
+QColor MapWidget::getMarkerColor()
+{
+    if (!MapWidget::usingNightMode)
+        return Qt::red;
+
+    return Qt::white;
+}
+
+QColor MapWidget::getMarkerTextColor()
+{
+    if (!MapWidget::usingNightMode)
+        return Qt::white;
+
+    return Qt::black;
+}
+
 void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPointF &markerPosition, const QPointF &rectPosition, bool showCountryDetails) const
 {
     QFontMetrics fMetrics = fontMetrics();
@@ -432,19 +470,17 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     qreal textWidth = fMetrics.width(text);
 
     //drawing the dark transparent background
-    static QColor bgColor(0, 0, 0, 120);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(QBrush(bgColor));
+    painter.setBrush(QBrush(getMarkerTextBackgroundColor()));
     painter.drawPath(getMarkerPainterPath(marker, markerPosition, rectPosition, showCountryDetails));
 
     //drawing the player red circle
     static qreal circleRadius = 2.5;
-    static QColor redColor(255, 0, 0, 180);
-    painter.setBrush(redColor);
+    painter.setBrush(getMarkerColor());
     painter.drawEllipse(markerPosition, circleRadius, circleRadius);
 
     //draw the player name text
-    painter.setPen(Qt::white);
+    painter.setPen(getMarkerTextColor());
     qreal textY = rectPosition.y() + TEXT_MARGIM;
     qreal textX = rectPosition.x() + TEXT_MARGIM;
     painter.drawText(textX, textY, text);

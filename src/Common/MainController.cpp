@@ -700,9 +700,6 @@ void MainController::start()
 {
     if (!started) {
 
-        if (qApp->styleSheet().isEmpty())
-            setTheme(settings.getTheme());
-
         qCInfo(jtCore) << "Creating roomStreamer ...";
         roomStreamer.reset(new Audio::NinjamRoomStreamerNode()); // new Audio::AudioFileStreamerNode(":/teste.mp3");
         this->audioMixer.addNode(roomStreamer.data());
@@ -769,6 +766,7 @@ bool MainController::setTheme(const QString &themeName)
     if (!themeCSS.isEmpty()) {
         setCSS(themeCSS);
         settings.setTheme(themeName);
+        emit themeChanged();
         return true;
     }
     return false;

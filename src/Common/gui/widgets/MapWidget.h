@@ -18,6 +18,7 @@ public:
     void setMarkers(const QList<MapMarker> &markers);
     void setMarkersVisibility(bool showMarkers);
     static void setTilesDir(const QString &newDir);
+    static void setNightMode(bool useNightMode);
 
 protected:
     void resizeEvent(QResizeEvent *) override;
@@ -36,6 +37,8 @@ private:
     QRect tilesRect;
     static QMap<int, QHash<QPoint, QPixmap>> tilePixmaps; // tiles cache, one QHash per zoom level
 
+    static bool usingNightMode;
+
     QList<MapMarker> markers;
 
     bool showingMarkers;
@@ -47,6 +50,10 @@ private:
     void drawPlayersList(QPainter &p);
     void drawPlayersMarkers(QPainter &p, bool showCountryDetailsInMarkers);
     void drawMarker(const MapMarker &marker, QPainter &p, const QPointF &markerPosition, const QPointF &rectPosition, bool showCountryDetails) const;
+
+    static QColor getMarkerTextBackgroundColor();
+    static QColor getMarkerColor();
+    static QColor getMarkerTextColor();
 
     QPainterPath getMarkerPainterPath(const MapMarker &marker, const QPointF &markerPosition, const QPointF &rectPosition, bool showCountryDetails) const;
     QRectF getMarkerRect(const MapMarker &marker, const QPointF &anchor, bool showCountryDetails) const;
