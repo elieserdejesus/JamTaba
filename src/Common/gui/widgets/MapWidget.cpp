@@ -500,7 +500,9 @@ QPainterPath MapWidget::getMarkerPainterPath(const MapMarker &marker, const QPoi
     painterPath.addRoundRect(markerRect, 15);
 
     painterPath.moveTo(markerPosition);
-    if (qAbs(markerPosition.y() - rectPosition.y()) > markerRect.height() * 2) {
+
+    bool canDrawVerticalConnectors = (qAbs(markerPosition.y() - rectPosition.y()) > markerRect.height() * 2) || (markerPosition.x() >= (markerRect.x() - 25) && markerPosition.x() <= markerRect.x() + markerRect.width() + 25);
+    if (canDrawVerticalConnectors) {
         qreal triangleY = (rectPosition.y() < markerPosition.y()) ? markerRect.bottom() : markerRect.top();
         painterPath.lineTo(rectHCenter - 5.0, triangleY);
         painterPath.lineTo(rectHCenter + 5.0, triangleY);
@@ -508,10 +510,10 @@ QPainterPath MapWidget::getMarkerPainterPath(const MapMarker &marker, const QPoi
     else { // drawing horizontal connectors between marker position and player name rectangle
         qreal height = markerRect.height();
         qreal markerRectVCenter = markerRect.y() + height/2.0;
-        if (markerPosition.x() < rectPosition.x()) { // drawing connect in left side of rectangle
-            painterPath.lineTo(rectPosition.x(), markerRectVCenter - 2);
+        if (markerPosition.x() < markerRect.x()) { // drawing connect in left side of rectangle
+            painterPath.lineTo(markerRect.x(), markerRectVCenter - 2);
             painterPath.lineTo(rectPosition.x(), markerRectVCenter + 2);
-        }
+            }
         else { // drawing connect in right side of rectangle
             painterPath.lineTo(markerRect.x() + markerRect.width(), markerRectVCenter - 2);
             painterPath.lineTo(markerRect.x() + markerRect.width(), markerRectVCenter + 2);
@@ -527,11 +529,8 @@ QRectF MapWidget::getMarkerRect(const MapMarker &marker, const QPointF &anchor, 
     QString text = marker.getText(showCountryDetails);
     const QImage &flag = marker.getFlag();
     qreal rectWidth = fMetrics.width(text) + TEXT_MARGIM * 3 + flag.width();
-    qreal rectX = 0;
     qreal height = fMetrics.height() + (TEXT_MARGIM * 2);
-    qreal rectY = -height/2;
-    QRectF rect(rectX, rectY, rectWidth, height);
-    rect.translate(anchor.x(), anchor.y());
+    QRectF rect(anchor.x(), anchor.y() - height/2.0, rectWidth, height);
     return rect;
 }
 

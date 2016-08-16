@@ -78,15 +78,19 @@ MapWidget* createSecondMap()
 {
     MapWidget *map = new MapWidget();
 
-    QPointF israel(31.95216224, 34.23339844);
-    QPointF australia(-24.84656535, 132.01171875);
-    QPointF japan(37.99616268, 140.80078125);
+    QPointF france(46.29933031, 5.41520975);
+    QPointF malaysia(4.210484, 101.975766);
+    QPointF usa1(39.97712029, -80.244141);
+    QPointF usa2(36.66841912, -79.71679725);
+    QPointF usa3(40.91351276, -108.19335975);
 
     QImage flag = QPixmap(":/flag").toImage();
     QList<MapMarker> markers;
-    markers << MapMarker("Player 3", "Japan", japan, flag);
-    markers << MapMarker("Player 4", "israel", israel, flag);
-    markers << MapMarker("Player 5", "australia", australia, flag);
+    markers << MapMarker("Player 1", "france", france, flag);
+    markers << MapMarker("Player 2", "malaysia", malaysia, flag);
+    markers << MapMarker("Player 3", "USA", usa1, flag);
+    markers << MapMarker("Player 4", "USA", usa2, flag);
+    markers << MapMarker("Player 5", "USA", usa3, flag);
 
     map->setMarkers(markers);
 
@@ -98,7 +102,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QMainWindow mainWindow;
-    mainWindow.setMinimumWidth(800);
+    mainWindow.setMinimumWidth(500);
     //mainWindow.setMaximumHeight(0);
 
     QWidget *contentWidget = new QWidget();
@@ -108,9 +112,9 @@ int main(int argc, char *argv[])
     contentWidget->setLayout(layout);
 
     layout->addWidget(createFirstMap(), 0, 0);
-    //layout->addWidget(createSecondMap(), 0, 1);
-    //layout->addWidget(createThirdMap(), 1, 0);
-    //layout->addWidget(createFourthMap(), 1, 1);
+    layout->addWidget(createSecondMap(), 0, 1);
+    layout->addWidget(createThirdMap(), 1, 0);
+    layout->addWidget(createFourthMap(), 1, 1);
 
     mainWindow.setCentralWidget(contentWidget);
     mainWindow.show();
