@@ -75,6 +75,8 @@ private:
 
     void createMapWidgets();
     void updateMap();
+
+    bool static canShowNinjamServerPort(const QString &serverName);
 };
 
 #endif // JAMROOMVIEWPANEL_H

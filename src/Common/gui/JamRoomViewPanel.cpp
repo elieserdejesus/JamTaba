@@ -170,10 +170,15 @@ bool JamRoomViewPanel::roomContainsBotsOnly(const Login::RoomInfo &roomInfo)
     return true;
 }
 
+bool JamRoomViewPanel::canShowNinjamServerPort(const QString &serverName)
+{
+    return serverName == "ninbot.com" || serverName == "ninjamer.com";
+}
+
 void JamRoomViewPanel::initialize(const Login::RoomInfo &roomInfo)
 {
     QString roomName = roomInfo.getName();
-    if (roomInfo.getType() == Login::RoomTYPE::NINJAM)
+    if (roomInfo.getType() == Login::RoomTYPE::NINJAM && canShowNinjamServerPort(roomName))
         roomName += " (" + QString::number(roomInfo.getPort()) + ")";
     ui->labelName->setText(roomName);
     refresh(roomInfo);
