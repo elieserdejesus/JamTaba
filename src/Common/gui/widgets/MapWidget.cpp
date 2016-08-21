@@ -57,6 +57,12 @@ qreal latitudeFromTile(qreal ty, int zoom)
     return lng;
 }
 
+qreal getDistance(const QPointF &p1, const QPointF &p2)
+{
+    qreal x = qAbs(p1.x() - p2.x());
+    qreal y = qAbs(p1.y() - p2.y());
+    return std::sqrt(x * x + y * y);
+}
 
 MapWidget::MapWidget(QWidget *parent)
     : QWidget(parent),
@@ -334,7 +340,7 @@ void MapWidget::setNightMode(bool useNightMode)
     MapWidget::usingNightMode = useNightMode;
 }
 
-QPointF MapWidget::getMarkerScreenPosition(const MapMarker &marker) const
+QPointF MapWidget::getMarkerScreenCoordinate(const MapMarker &marker) const
 {
     QPointF center = tileForCoordinate(latitude, longitude, zoom);
     qreal hCenter = width()/2.0;
@@ -347,46 +353,136 @@ QPointF MapWidget::getMarkerScreenPosition(const MapMarker &marker) const
     return QPointF(x, y);
 }
 
-qreal distance(const QPointF &p1, const QPointF &p2)
+int MapWidget::getMaximumMarkerWidth() const
 {
-    qreal x = qAbs(p1.x() - p2.x());
-    qreal y = qAbs(p1.y() - p2.y());
-    return std::sqrt(x * x + y * y);
+    int maxWidth = 0;
+    QPointF anchor(0, 0);
+    for (const MapMarker &marker : markers) {
+        int markerWidth = getMarkerRect(marker, anchor).width();
+        if (markerWidth > maxWidth)
+            maxWidth = markerWidth;
+    }
+    return maxWidth;
+}
+
+QList<MapWidget::Position> MapWidget::getEmptyPositions( const QMap<int, QList<MapMarker>> markers, const QList<MapWidget::Position> &allPositions) const
+{
+    QList<MapWidget::Position> emptyPositions;
+    for (const MapWidget::Position &position : allPositions) {
+        if (markers[position.index].isEmpty())
+            emptyPositions.append(position);
+    }
+    return emptyPositions;
 }
 
 void MapWidget::drawPlayersMarkers(QPainter &p)
 {
-    //separate markers in 4 regions: topLeft, topRight, bottomLeft and bottomRight
+    static const int markersHeight = fontMetrics().height() + TEXT_MARGIM;
+    qreal ellipseX = TEXT_MARGIM;
+    qreal ellipseY = TEXT_MARGIM + markersHeight/2;
+    qreal ellipseWidth = width() - getMaximumMarkerWidth() - TEXT_MARGIM * 2;
+    qreal ellipseHeight = height() - TEXT_MARGIM * 2 - markersHeight;
 
-    QList<MapMarker> topRightMarkers;
-    QList<MapMarker> bottomRightMarkers;
-    QList<MapMarker> topLeftMarkers;
-    QList<MapMarker> bottomLeftMarkers;
+    QRectF ellipseRect(ellipseX, ellipseY, ellipseWidth, ellipseHeight);
 
-    qreal hCenter = width()/2.0;
-    qreal vCenter = height()/2.0;
+    QList<MapWidget::Position> allPositions = getEllipsePositions(markersHeight, ellipseRect);
 
-    for (MapMarker &marker : markers) {
-        QPointF screenPosition = getMarkerScreenPosition(marker);
+    QMap<int, QList<MapMarker>> map;
+    for (const MapMarker &marker : markers) {
+        Position position= findBestEllipsePositionForMarker(marker, markers, allPositions);
+        map[position.index].append(marker);
+    }
 
-        if (screenPosition.x() >= hCenter) { //right side
-            if (screenPosition.y() < vCenter)
-                topRightMarkers.append(marker);
+    for (int i : map.keys()) {
+        while (map[i].size() > 1) {
+            const MapMarker &marker = map[i].takeLast();
+            QList<MapWidget::Position> emptyPositions = getEmptyPositions(map, allPositions);
+            MapWidget::Position newPosition = findBestEllipsePositionForMarker(marker, markers, emptyPositions);
+            if (map[newPosition.index].isEmpty()) // new position is really empty?
+                map[newPosition.index].append(marker);
             else
-                bottomRightMarkers.append(marker);
-        }
-        else { // left side
-            if (screenPosition.y() < vCenter)
-                topLeftMarkers.append(marker);
-            else
-                bottomLeftMarkers.append(marker);
+                qCritical() << " new marker position is not empty: position " << newPosition.index;
         }
     }
 
-    drawMarkersRegion(p, topRightMarkers, -M_PI/2.0, false);
-    drawMarkersRegion(p, bottomRightMarkers, 0.0, false);
-    drawMarkersRegion(p, bottomLeftMarkers, M_PI/2.0, true);
-    drawMarkersRegion(p, topLeftMarkers, M_PI, false);
+    //finally drawing the markers
+    for (int positionIndex : map.keys()) {
+        if (!map[positionIndex].isEmpty()) {
+            const MapMarker &marker = map[positionIndex].first();
+            QPointF rectPosition = allPositions.at(positionIndex).coords;
+            QPointF markerPosition = getMarkerScreenCoordinate(marker);
+            drawMarker(marker, p, markerPosition, rectPosition);
+        }
+    }
+}
+
+bool MapWidget::rectIntersectsSomeMarker(const QRectF &rect, const QList<MapMarker> &markers) const
+{
+    QRectF r = rect.adjusted(-10, -10, 10, 10);
+    for (const MapMarker &marker : markers) {
+        if (r.contains(getMarkerScreenCoordinate(marker)))
+            return true;
+    }
+    return false;
+}
+
+MapWidget::Position MapWidget::findBestEllipsePositionForMarker(const MapMarker &marker, const QList<MapMarker> &markers, const QList<MapWidget::Position> &positions) const
+{
+    int bestPositionIndex = 0;
+    QPointF markerPosition = getMarkerScreenCoordinate(marker);
+    qreal minDistance = 1000.0;
+    QPointF position;
+    for (int i = 0; i < positions.size(); ++i) {
+        const QPointF &ellipsePosition = positions.at(i).coords;
+        qreal distance = getDistance(markerPosition, ellipsePosition);
+        if (distance < minDistance) {
+            QRectF markerRect = getMarkerRect(marker, ellipsePosition);
+            if (!rectIntersectsSomeMarker(markerRect, markers)) { // avoid a rect intersecting markers circles
+                minDistance = distance;
+                position = ellipsePosition;
+                bestPositionIndex = positions.at(i).index;
+            }
+        }
+    }
+    return MapWidget::Position(position, bestPositionIndex);
+}
+
+QList<MapWidget::Position> MapWidget::getEllipsePositions(int markersHeight, const QRectF &ellipseRect) const
+{
+    qreal hRadius = ellipseRect.width()/2.0;
+    qreal vRadius = ellipseRect.height()/2.0;
+    qreal elipseHCenter = ellipseRect.x() + hRadius;
+    qreal elipseVCenter = ellipseRect.y() + vRadius;
+
+    QList<MapWidget::Position> positions;
+
+    qreal angle = -M_PI/2.0;
+    qreal usedAngles = 0;
+    int index = 0;
+    while (usedAngles < M_PI * 2) {
+        qreal x = elipseHCenter + (std::cos(angle) * hRadius);
+        qreal y = elipseVCenter + (std::sin(angle) * vRadius);
+        positions.append(MapWidget::Position(QPointF(x, y), index++));
+        static const qreal STEP = 0.1;
+        qreal angleStep = 0.0;
+        qreal tempY = y;
+        while (qAbs(tempY - y) < markersHeight) {
+            tempY = elipseVCenter + (std::sin(angle + angleStep) * vRadius);
+            angleStep += STEP;
+        }
+        usedAngles += angleStep;
+        angle += angleStep;
+    }
+
+    // the last position is too close to the first position?
+    if (positions.size() >= 2) {
+        const MapWidget::Position &first = positions.first();
+        const MapWidget::Position &last = positions.last();
+        if (qAbs(last.coords.y() - first.coords.y()) < markersHeight)
+            positions.removeLast(); // discard the last
+    }
+
+    return positions;
 }
 
 struct MapMarkerComparator
@@ -396,46 +492,11 @@ struct MapMarkerComparator
     MapMarkerComparator(const MapWidget *mapWidget, const QPointF &anchor) : mapWidget(mapWidget), anchor(anchor){}
     bool operator()(const MapMarker &m1, const MapMarker &m2)
     {
-        qreal deltaM1 = distance(mapWidget->getMarkerScreenPosition(m1), anchor);
-        qreal deltaM2 = distance(mapWidget->getMarkerScreenPosition(m2), anchor);
+        qreal deltaM1 = getDistance(mapWidget->getMarkerScreenCoordinate(m1), anchor);
+        qreal deltaM2 = getDistance(mapWidget->getMarkerScreenCoordinate(m2), anchor);
         return deltaM1 < deltaM2;
     }
 };
-
-void MapWidget::drawMarkersRegion(QPainter &p, QList<MapMarker> &markers, qreal initialAngle, bool shiftRectsToLeft) const{
-    static const qreal margim = 3;
-    qreal hCenter = width()/2.0;
-    qreal vCenter = height()/2.0;
-    qreal hRadius = hCenter * 0.98;
-    qreal vRadius = vCenter * 0.98;
-    qreal angleIncrement = (M_PI/2.0)/markers.size();
-    qreal angle = initialAngle;
-
-    QPointF sortAnchor(hCenter + std::cos(initialAngle) * hRadius, vCenter + std::sin(initialAngle) * vRadius);
-    qSort(markers.begin(), markers.end(), MapMarkerComparator(this, sortAnchor));
-
-    int markerCount = 0;
-    for (const MapMarker &marker : markers) {
-        QPointF screenPosition = getMarkerScreenPosition(marker);
-        QRectF markerRect = getMarkerRect(marker, screenPosition);
-        QPointF rectPosition(hCenter + (hRadius * std::cos(angle)), vCenter + (vRadius * std::sin(angle)));
-
-        if (shiftRectsToLeft)
-            rectPosition.setX(rectPosition.x() - (markerRect.width() * (markers.size() - markerCount)/markers.size()));
-
-        if (rectPosition.x() + markerRect.width() > width())
-            rectPosition.setX(width() - markerRect.width() - margim);
-        if (rectPosition.y() - markerRect.height()/2 < margim)
-            rectPosition.setY(margim + markerRect.height()/2);
-        if (rectPosition.y() + markerRect.height()/2.0 > height())
-            rectPosition.setY(height() - markerRect.height()/2.0 - margim);
-        if (rectPosition.x() < margim)
-            rectPosition.setX(margim);
-
-        drawMarker(marker, p, screenPosition, rectPosition);
-        angle += angleIncrement;
-    }
-}
 
 QColor MapWidget::getMarkerTextBackgroundColor()
 {
@@ -470,12 +531,12 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     //drawing the dark transparent background
     painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(getMarkerTextBackgroundColor()));
-    painter.drawPath(getMarkerPainterPath(marker, markerPosition, rectPosition));
+    painter.drawPath(getMarkerTextPainterPath(marker, markerPosition, rectPosition));
 
-    //drawing the player red circle
-    static qreal circleRadius = 2.5;
+    //drawing the player red marker
+    const static qreal markerSize = 3.0;
     painter.setBrush(getMarkerColor());
-    painter.drawEllipse(markerPosition, circleRadius, circleRadius);
+    painter.drawEllipse(markerPosition, markerSize, markerSize);
 
     //draw the player name text
     painter.setPen(getMarkerTextColor());
@@ -488,7 +549,7 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     painter.drawImage(QPointF(imageX, imageY), marker.getFlag());
 }
 
-QPainterPath MapWidget::getMarkerPainterPath(const MapMarker &marker, const QPointF &markerPosition, const QPointF &rectPosition) const
+QPainterPath MapWidget::getMarkerTextPainterPath(const MapMarker &marker, const QPointF &markerPosition, const QPointF &rectPosition) const
 {
     QRectF markerRect = getMarkerRect(marker, rectPosition);
     qreal rectHCenter = markerRect.center().x();

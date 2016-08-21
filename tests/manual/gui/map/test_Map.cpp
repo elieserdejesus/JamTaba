@@ -56,8 +56,6 @@ MapWidget* createFirstMap()
     QPointF israel(31.95216224, 34.23339844);
     QPointF australia(-24.84656535, 132.01171875);
     QPointF japan(37.99616268, 140.80078125);
-    QPointF japan2(38, 140.80078125);
-    QPointF japan3(37, 140.80078125);
     QPointF france(46.177929, 3.38);
     QPointF france2(46.20, 3.4);
 
@@ -67,12 +65,7 @@ MapWidget* createFirstMap()
     markers << MapMarker("Player 2", "Brazil", brazil, flag);
     markers << MapMarker("Player 3", "Israel", israel, flag);
     markers << MapMarker("Player 4", "Australia", australia, flag);
-    markers << MapMarker("Player 4.1", "Australia 2", QPointF(-24.84656535, 132.01171875), flag);
-    markers << MapMarker("Player 4.3", "Australia 3", QPointF(-24, 132), flag);
-    markers << MapMarker("Player 4.4", "Australia 4", QPointF(-24, 131), flag);
     markers << MapMarker("Player 5", "Japan", japan, flag);
-    markers << MapMarker("Player 5.1", "Japan", japan2, flag);
-    markers << MapMarker("Player 5.2", "Japan", japan3, flag);
     markers << MapMarker("Player 6", "France", france, flag);
     markers << MapMarker("Player 7", "France", france2, flag);
 
@@ -112,7 +105,7 @@ int main(int argc, char *argv[])
     //mainWindow.setMaximumHeight(0);
 
     QWidget *contentWidget = new QWidget();
-    contentWidget->setMinimumWidth(800);
+    contentWidget->setMinimumWidth(900);
     //contentWidget->setMaximumHeight(250);
 
     QGridLayout *layout = new QGridLayout();

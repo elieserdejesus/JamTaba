@@ -55,7 +55,7 @@ private:
     static QColor getMarkerColor();
     static QColor getMarkerTextColor();
 
-    QPainterPath getMarkerPainterPath(const MapMarker &marker, const QPointF &markerPosition, const QPointF &rectPosition) const;
+    QPainterPath getMarkerTextPainterPath(const MapMarker &marker, const QPointF &markerPosition, const QPointF &rectPosition) const;
     QRectF getMarkerRect(const MapMarker &marker, const QPointF &anchor) const;
 
     void setCenter(QPointF latLong);
@@ -66,12 +66,24 @@ private:
 
     QRectF computeMinimumRect(int zoom) const;
 
-    QPointF getMarkerScreenPosition(const MapMarker &marker) const;
+    QPointF getMarkerScreenCoordinate(const MapMarker &marker) const;
 
     QPointF getMinimumLatLongInMarkers() const;
     QPointF getMaximumLatLongInMarkers() const;
 
-    void drawMarkersRegion(QPainter &p, QList<MapMarker> &markers, qreal initialAngle, bool shiftRectsToLeft) const;
+    struct Position
+    {
+        QPointF coords;
+        int index;
+        Position(const QPointF &coords, int index) : coords(coords), index(index){}
+    };
+
+    QList<MapWidget::Position> getEllipsePositions(int markersHeight, const QRectF &ellipseRect) const;
+    Position findBestEllipsePositionForMarker(const MapMarker &marker, const QList<MapMarker> &markers, const QList<Position> &positions) const;
+    QList<MapWidget::Position> getEmptyPositions(const QMap<int, QList<MapMarker>> markers, const QList<MapWidget::Position> &allPositions) const;
+    bool rectIntersectsSomeMarker(const QRectF &rect, const QList<MapMarker> &markers) const;
+
+    int getMaximumMarkerWidth() const;
 
     int calculateBestZoomLevel() const;
 
