@@ -26,13 +26,19 @@ MapWidget* createThirdMap()
 {
     MapWidget *map = new MapWidget();
 
-    QPointF venezuela(7.62388685, -65.25878906);
-    QPointF malvines(-51.65892665, -58.87573242);
+    QPointF portugal(39.290734, -8.107910);
+    QPointF france1(43.698658, 5);
+    QPointF france2(43, 5);
+    QPointF france3(44, 5.5);
+    QPointF france4(43.5, 5);
 
     QImage flag = QPixmap(":/flag").toImage();
     QList<MapMarker> markers;
-    markers << MapMarker("Player 6", "venezuela", venezuela, flag);
-    markers << MapMarker("Player 7", "Malvines", malvines, flag);
+    markers << MapMarker("portugal", "Portugal", portugal, flag);
+    markers << MapMarker("France 1", "France", france1, flag);
+    markers << MapMarker("France 2", "France", france2, flag);
+    markers << MapMarker("France 3", "France", france3, flag);
+    markers << MapMarker("France 4", "France", france4, flag);
 
     map->setMarkers(markers);
 
@@ -102,10 +108,11 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QMainWindow mainWindow;
-    mainWindow.setMinimumWidth(500);
+
     //mainWindow.setMaximumHeight(0);
 
     QWidget *contentWidget = new QWidget();
+    contentWidget->setMinimumWidth(800);
     //contentWidget->setMaximumHeight(250);
 
     QGridLayout *layout = new QGridLayout();
