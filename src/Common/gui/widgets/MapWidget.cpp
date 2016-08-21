@@ -320,11 +320,9 @@ void MapWidget::paintEvent(QPaintEvent *event)
 
     drawMapTiles(p, event->rect());
 
-    bool showCountryDetailsInMarkers = zoom < 3;
     if (showingMarkers)
-        drawPlayersMarkers(p, showCountryDetailsInMarkers);
-
-    if (!showCountryDetailsInMarkers || !showingMarkers)
+        drawPlayersMarkers(p);
+    else
         drawPlayersList(p);
 
     p.end();
@@ -356,7 +354,7 @@ qreal distance(const QPointF &p1, const QPointF &p2)
     return std::sqrt(x * x + y * y);
 }
 
-void MapWidget::drawPlayersMarkers(QPainter &p, bool showCountryDetailsInMarkers)
+void MapWidget::drawPlayersMarkers(QPainter &p)
 {
     //separate markers in 4 regions: topLeft, topRight, bottomLeft and bottomRight
 
@@ -385,10 +383,10 @@ void MapWidget::drawPlayersMarkers(QPainter &p, bool showCountryDetailsInMarkers
         }
     }
 
-    drawMarkersRegion(p, topRightMarkers, -M_PI/2.0, showCountryDetailsInMarkers, false);
-    drawMarkersRegion(p, bottomRightMarkers, 0.0, showCountryDetailsInMarkers, false);
-    drawMarkersRegion(p, bottomLeftMarkers, M_PI/2.0, showCountryDetailsInMarkers, true);
-    drawMarkersRegion(p, topLeftMarkers, M_PI, showCountryDetailsInMarkers, false);
+    drawMarkersRegion(p, topRightMarkers, -M_PI/2.0, false);
+    drawMarkersRegion(p, bottomRightMarkers, 0.0, false);
+    drawMarkersRegion(p, bottomLeftMarkers, M_PI/2.0, true);
+    drawMarkersRegion(p, topLeftMarkers, M_PI, false);
 }
 
 struct MapMarkerComparator
@@ -404,7 +402,7 @@ struct MapMarkerComparator
     }
 };
 
-void MapWidget::drawMarkersRegion(QPainter &p, QList<MapMarker> &markers, qreal initialAngle, bool showCountryDetailsInMarkers, bool shiftRectsToLeft) const{
+void MapWidget::drawMarkersRegion(QPainter &p, QList<MapMarker> &markers, qreal initialAngle, bool shiftRectsToLeft) const{
     static const qreal margim = 3;
     qreal hCenter = width()/2.0;
     qreal vCenter = height()/2.0;
@@ -419,7 +417,7 @@ void MapWidget::drawMarkersRegion(QPainter &p, QList<MapMarker> &markers, qreal 
     int markerCount = 0;
     for (const MapMarker &marker : markers) {
         QPointF screenPosition = getMarkerScreenPosition(marker);
-        QRectF markerRect = getMarkerRect(marker, screenPosition, showCountryDetailsInMarkers);
+        QRectF markerRect = getMarkerRect(marker, screenPosition);
         QPointF rectPosition(hCenter + (hRadius * std::cos(angle)), vCenter + (vRadius * std::sin(angle)));
 
         if (shiftRectsToLeft)
@@ -434,7 +432,7 @@ void MapWidget::drawMarkersRegion(QPainter &p, QList<MapMarker> &markers, qreal 
         if (rectPosition.x() < margim)
             rectPosition.setX(margim);
 
-        drawMarker(marker, p, screenPosition, rectPosition, showCountryDetailsInMarkers);
+        drawMarker(marker, p, screenPosition, rectPosition);
         angle += angleIncrement;
     }
 }
@@ -463,16 +461,16 @@ QColor MapWidget::getMarkerTextColor()
     return Qt::black;
 }
 
-void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPointF &markerPosition, const QPointF &rectPosition, bool showCountryDetails) const
+void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPointF &markerPosition, const QPointF &rectPosition) const
 {
     QFontMetrics fMetrics = fontMetrics();
-    QString text = marker.getText(showCountryDetails);
+    QString text = marker.getText();
     qreal textWidth = fMetrics.width(text);
 
     //drawing the dark transparent background
     painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(getMarkerTextBackgroundColor()));
-    painter.drawPath(getMarkerPainterPath(marker, markerPosition, rectPosition, showCountryDetails));
+    painter.drawPath(getMarkerPainterPath(marker, markerPosition, rectPosition));
 
     //drawing the player red circle
     static qreal circleRadius = 2.5;
@@ -490,9 +488,9 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     painter.drawImage(QPointF(imageX, imageY), marker.getFlag());
 }
 
-QPainterPath MapWidget::getMarkerPainterPath(const MapMarker &marker, const QPointF &markerPosition, const QPointF &rectPosition, bool showCountryDetails) const
+QPainterPath MapWidget::getMarkerPainterPath(const MapMarker &marker, const QPointF &markerPosition, const QPointF &rectPosition) const
 {
-    QRectF markerRect = getMarkerRect(marker, rectPosition, showCountryDetails);
+    QRectF markerRect = getMarkerRect(marker, rectPosition);
     qreal rectHCenter = markerRect.center().x();
 
     QPainterPath painterPath;
@@ -523,10 +521,10 @@ QPainterPath MapWidget::getMarkerPainterPath(const MapMarker &marker, const QPoi
     return painterPath;
 }
 
-QRectF MapWidget::getMarkerRect(const MapMarker &marker, const QPointF &anchor, bool showCountryDetails) const
+QRectF MapWidget::getMarkerRect(const MapMarker &marker, const QPointF &anchor) const
 {
     QFontMetrics fMetrics = fontMetrics();
-    QString text = marker.getText(showCountryDetails);
+    QString text = marker.getText();
     const QImage &flag = marker.getFlag();
     qreal rectWidth = fMetrics.width(text) + TEXT_MARGIM * 3 + flag.width();
     qreal height = fMetrics.height() + (TEXT_MARGIM * 2);
@@ -546,9 +544,8 @@ void MapWidget::drawPlayersList(QPainter &p)
 
     //compute the background rectangle width
     qreal maxWidth = 0;
-    bool showCountryDetails = zoom < 3;
     for(const MapMarker &mark : markers) {
-        QString userString = mark.getText(showCountryDetails);
+        QString userString = mark.getText();
         qreal width = metrics.width(userString);
         if (width > maxWidth)
             maxWidth = width;
@@ -567,7 +564,7 @@ void MapWidget::drawPlayersList(QPainter &p)
     int x = margim * 2;
     p.setPen(Qt::black);
     for(const MapMarker &mark : markers) {
-        QString userString = mark.getText(showCountryDetails);
+        QString userString = mark.getText();
         p.drawText(x, y, userString);
         y += fontHeight;
     }

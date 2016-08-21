@@ -48,15 +48,15 @@ private:
 
     void drawMapTiles(QPainter &p, const QRect &rect);
     void drawPlayersList(QPainter &p);
-    void drawPlayersMarkers(QPainter &p, bool showCountryDetailsInMarkers);
-    void drawMarker(const MapMarker &marker, QPainter &p, const QPointF &markerPosition, const QPointF &rectPosition, bool showCountryDetails) const;
+    void drawPlayersMarkers(QPainter &p);
+    void drawMarker(const MapMarker &marker, QPainter &p, const QPointF &markerPosition, const QPointF &rectPosition) const;
 
     static QColor getMarkerTextBackgroundColor();
     static QColor getMarkerColor();
     static QColor getMarkerTextColor();
 
-    QPainterPath getMarkerPainterPath(const MapMarker &marker, const QPointF &markerPosition, const QPointF &rectPosition, bool showCountryDetails) const;
-    QRectF getMarkerRect(const MapMarker &marker, const QPointF &anchor, bool showCountryDetails) const;
+    QPainterPath getMarkerPainterPath(const MapMarker &marker, const QPointF &markerPosition, const QPointF &rectPosition) const;
+    QRectF getMarkerRect(const MapMarker &marker, const QPointF &anchor) const;
 
     void setCenter(QPointF latLong);
 
@@ -71,7 +71,7 @@ private:
     QPointF getMinimumLatLongInMarkers() const;
     QPointF getMaximumLatLongInMarkers() const;
 
-    void drawMarkersRegion(QPainter &p, QList<MapMarker> &markers, qreal initialAngle, bool showCountryDetailsInMarkers, bool shiftRectsToLeft) const;
+    void drawMarkersRegion(QPainter &p, QList<MapMarker> &markers, qreal initialAngle, bool shiftRectsToLeft) const;
 
     int calculateBestZoomLevel() const;
 

@@ -9,10 +9,7 @@ MapMarker::MapMarker(const QString &playerName, const QString &countryName, cons
 
 }
 
-QString MapMarker::getText(bool showCountryDetails) const
+QString MapMarker::getText() const
 {
-    QString text = name;
-    if (showCountryDetails)
-        text += " (" + countryName + ")";
-    return text;
+    return name + " (" + countryName + ")";
 }
