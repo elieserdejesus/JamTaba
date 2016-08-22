@@ -55,7 +55,6 @@ private:
     static QColor getMarkerColor();
     static QColor getMarkerTextColor();
 
-    QPainterPath getMarkerTextPainterPath(const MapMarker &marker, const QPointF &markerPosition, const QPointF &rectPosition) const;
     QRectF getMarkerRect(const MapMarker &marker, const QPointF &anchor) const;
 
     void setCenter(QPointF latLong);

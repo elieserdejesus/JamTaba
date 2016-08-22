@@ -528,12 +528,23 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     QString text = marker.getText();
     qreal textWidth = fMetrics.width(text);
 
-    //drawing the dark transparent background
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QBrush(getMarkerTextBackgroundColor()));
-    painter.drawPath(getMarkerTextPainterPath(marker, markerPosition, rectPosition));
+    QRectF markerRect = getMarkerRect(marker, rectPosition);
 
-    //drawing the player red marker
+    QColor bgColor = getMarkerTextBackgroundColor();
+    painter.setBrush(QBrush(bgColor));
+
+    // drawing the line connector
+    painter.setPen(bgColor);
+    painter.setClipping(true);
+    painter.setClipRegion(QRegion(rect()).subtracted(markerRect.toRect()));
+    painter.drawLine(markerRect.center(), markerPosition);
+
+    // drawing the dark transparent background
+    painter.setClipping(false);
+    painter.setPen(Qt::NoPen);
+    painter.drawRect(markerRect);
+
+    // drawing the player red marker
     const static qreal markerSize = 3.0;
     painter.setBrush(getMarkerColor());
     painter.drawEllipse(markerPosition, markerSize, markerSize);
@@ -547,39 +558,6 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     qreal imageX = textX + textWidth + TEXT_MARGIM;
     qreal imageY = rectPosition.y() - fMetrics.height()/2.0;
     painter.drawImage(QPointF(imageX, imageY), marker.getFlag());
-}
-
-QPainterPath MapWidget::getMarkerTextPainterPath(const MapMarker &marker, const QPointF &markerPosition, const QPointF &rectPosition) const
-{
-    QRectF markerRect = getMarkerRect(marker, rectPosition);
-    qreal rectHCenter = markerRect.center().x();
-
-    QPainterPath painterPath;
-
-    painterPath.addRoundRect(markerRect, 15);
-
-    painterPath.moveTo(markerPosition);
-
-    bool canDrawVerticalConnectors = (qAbs(markerPosition.y() - rectPosition.y()) > markerRect.height() * 2) || (markerPosition.x() >= (markerRect.x() - 25) && markerPosition.x() <= markerRect.x() + markerRect.width() + 25);
-    if (canDrawVerticalConnectors) {
-        qreal triangleY = (rectPosition.y() < markerPosition.y()) ? markerRect.bottom() : markerRect.top();
-        painterPath.lineTo(rectHCenter - 5.0, triangleY);
-        painterPath.lineTo(rectHCenter + 5.0, triangleY);
-    }
-    else { // drawing horizontal connectors between marker position and player name rectangle
-        qreal height = markerRect.height();
-        qreal markerRectVCenter = markerRect.y() + height/2.0;
-        if (markerPosition.x() < markerRect.x()) { // drawing connect in left side of rectangle
-            painterPath.lineTo(markerRect.x(), markerRectVCenter - 2);
-            painterPath.lineTo(rectPosition.x(), markerRectVCenter + 2);
-            }
-        else { // drawing connect in right side of rectangle
-            painterPath.lineTo(markerRect.x() + markerRect.width(), markerRectVCenter - 2);
-            painterPath.lineTo(markerRect.x() + markerRect.width(), markerRectVCenter + 2);
-        }
-    }
-
-    return painterPath;
 }
 
 QRectF MapWidget::getMarkerRect(const MapMarker &marker, const QPointF &anchor) const
