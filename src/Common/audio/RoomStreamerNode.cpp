@@ -176,8 +176,8 @@ void NinjamRoomStreamerNode::initialize(const QString &streamPath)
             httpClient->deleteLater();
         httpClient = new QNetworkAccessManager(this);
         QNetworkReply *reply = httpClient->get(QNetworkRequest(QUrl(streamPath)));
-        connect(reply, QNetworkReply::readyRead(), this, & SLOT(processDownloadedData()));
-        connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this,
+        QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(processDownloadedData()));
+        QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this,
                          SLOT(handleNetworkError(QNetworkReply::NetworkError)));
         this->device = reply;
     }
