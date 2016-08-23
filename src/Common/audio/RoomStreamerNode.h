@@ -71,6 +71,7 @@ public:
 
 protected:
     void initialize(const QString &streamPath);
+
 private:
     QNetworkAccessManager *httpClient;
     bool buffering;
@@ -78,8 +79,8 @@ private:
     static const int BUFFER_SIZE;
 
 private slots:
-    void on_reply_error(QNetworkReply::NetworkError);
-    void on_reply_read();
+    void handleNetworkError(QNetworkReply::NetworkError);
+    void processDownloadedData();
 };
 // ++++++++++++++++++++++++++++
 class AudioFileStreamerNode : public AbstractMp3Streamer

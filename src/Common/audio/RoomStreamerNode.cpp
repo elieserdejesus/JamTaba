@@ -176,21 +176,21 @@ void NinjamRoomStreamerNode::initialize(const QString &streamPath)
             httpClient->deleteLater();
         httpClient = new QNetworkAccessManager(this);
         QNetworkReply *reply = httpClient->get(QNetworkRequest(QUrl(streamPath)));
-        QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(on_reply_read()));
-        QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this,
-                         SLOT(on_reply_error(QNetworkReply::NetworkError)));
+        connect(reply, QNetworkReply::readyRead(), this, & SLOT(processDownloadedData()));
+        connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this,
+                         SLOT(handleNetworkError(QNetworkReply::NetworkError)));
         this->device = reply;
     }
 }
 
-void NinjamRoomStreamerNode::on_reply_error(QNetworkReply::NetworkError /*error*/)
+void NinjamRoomStreamerNode::handleNetworkError(QNetworkReply::NetworkError /*error*/)
 {
     QString msg = "ERROR playing room stream";
     qCCritical(jtNinjamRoomStreamer) << msg;
     emit error(msg);
 }
 
-void NinjamRoomStreamerNode::on_reply_read()
+void NinjamRoomStreamerNode::processDownloadedData()
 {
     if (!device) {
         qCDebug(jtNinjamRoomStreamer) << "device is null!";
@@ -225,9 +225,11 @@ void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBu
         return;
     int samplesToRender = getSamplesToRender(sampleRate, out.getFrameLenght());
     while (bufferedSamples.getFrameLenght() < samplesToRender) {// need decoding?
-        decode(256);
-        if (bytesToDecode.isEmpty()) {// no more bytes to decode
-            qCritical() << "no more bytes to decode and not enough buffered samples. Buffering ...";
+        if (!bytesToDecode.isEmpty()) {
+            decode(qMin(32, bytesToDecode.size())); //decoding small packets to avoid blocking the audio thread
+        }
+        else {// no more bytes to decode
+            //qDebug() << "no more bytes to decode and not enough buffered samples. Buffering ...";
             buffering = true;
             break;
         }
