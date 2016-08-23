@@ -545,7 +545,7 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     painter.drawRect(markerRect);
 
     // drawing the player red marker
-    const static qreal markerSize = 3.0;
+    const static qreal markerSize = 1.6;
     painter.setBrush(getMarkerColor());
     painter.drawEllipse(markerPosition, markerSize, markerSize);
 
