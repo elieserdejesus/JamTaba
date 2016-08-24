@@ -19,24 +19,10 @@
 
 using namespace Audio;
 
-const int AbstractMp3Streamer::MAX_BYTES_PER_DECODING = 2048;
+const int NinjamRoomStreamerNode::MAX_BYTES_PER_DECODING = 2048;
+const int NinjamRoomStreamerNode::BUFFER_SIZE = 128000;
 
-// +++++++++++++
-AbstractMp3Streamer::AbstractMp3Streamer(Audio::Mp3Decoder *decoder) :
-    decoder(decoder),
-    device(nullptr),
-    streaming(false),
-    bufferedSamples(2, 4096)
-{
-    bufferedSamples.setFrameLenght(0);// reset internal offset
-}
-
-AbstractMp3Streamer::~AbstractMp3Streamer()
-{
-    delete decoder;
-}
-
-void AbstractMp3Streamer::stopCurrentStream()
+void NinjamRoomStreamerNode::stopCurrentStream()
 {
     qCDebug(jtNinjamRoomStreamer) << "stopping room stream";
 
@@ -51,7 +37,7 @@ void AbstractMp3Streamer::stopCurrentStream()
     lastPeak.zero();
 }
 
-int AbstractMp3Streamer::getSamplesToRender(int targetSampleRate, int outLenght)
+int NinjamRoomStreamerNode::getSamplesToRender(int targetSampleRate, int outLenght)
 {
     bool needResampling = needResamplingFor(targetSampleRate);
     int samplesToRender = needResampling ? getInputResamplingLength(
@@ -59,61 +45,13 @@ int AbstractMp3Streamer::getSamplesToRender(int targetSampleRate, int outLenght)
     return samplesToRender;
 }
 
-void AbstractMp3Streamer::processReplacing(const Audio::SamplesBuffer &in,
-                                           Audio::SamplesBuffer &out, int targetSampleRate,
-                                           const Midi::MidiMessageBuffer &)
-{
-    Q_UNUSED(in);
 
-    if (bufferedSamples.isEmpty() || !streaming)
-        return;
-
-    int samplesToRender = getSamplesToRender(targetSampleRate, out.getFrameLenght());
-    if (samplesToRender <= 0)
-        return;
-
-    internalInputBuffer.setFrameLenght(samplesToRender);
-    internalInputBuffer.set(bufferedSamples);
-
-    if (needResamplingFor(targetSampleRate)) {
-        const Audio::SamplesBuffer &resampledBuffer = resampler.resample(internalInputBuffer,
-                                                                         out.getFrameLenght());
-        internalOutputBuffer.setFrameLenght(resampledBuffer.getFrameLenght());
-        internalOutputBuffer.set(resampledBuffer);
-    } else {
-        internalOutputBuffer.setFrameLenght(out.getFrameLenght());
-        internalOutputBuffer.set(internalInputBuffer);
-    }
-
-    bufferedSamples.discardFirstSamples(samplesToRender);// keep non rendered samples for next audio callback
-
-    if (internalOutputBuffer.getFrameLenght() < out.getFrameLenght())
-        qCDebug(jtNinjamRoomStreamer) << out.getFrameLenght()
-            - internalOutputBuffer.getFrameLenght() << " samples missing";
-
-    this->lastPeak.update(internalOutputBuffer.computePeak());
-
-    out.add(internalOutputBuffer);
-}
-
-void AbstractMp3Streamer::initialize(const QString &streamPath)
-{
-    streaming = !streamPath.isNull() && !streamPath.isEmpty();
-}
-
-int AbstractMp3Streamer::getSampleRate() const
+int NinjamRoomStreamerNode::getSampleRate() const
 {
     return decoder->getSampleRate();
 }
 
-bool AbstractMp3Streamer::needResamplingFor(int targetSampleRate) const
-{
-    if (!streaming)
-        return false;
-    return targetSampleRate != getSampleRate();
-}
-
-void AbstractMp3Streamer::decode(const unsigned int maxBytesToDecode)
+void NinjamRoomStreamerNode::decode(const unsigned int maxBytesToDecode)
 {
     if (!device)
         return;
@@ -139,34 +77,34 @@ void AbstractMp3Streamer::decode(const unsigned int maxBytesToDecode)
     }
 }
 
-void AbstractMp3Streamer::setStreamPath(const QString &streamPath)
+void NinjamRoomStreamerNode::setStreamPath(const QString &streamPath)
 {
     stopCurrentStream();
     initialize(streamPath);
 }
 
-// +++++++++++++++++++++++++++++++++++++++
-
-const int NinjamRoomStreamerNode::BUFFER_SIZE = 128000;
-
 NinjamRoomStreamerNode::NinjamRoomStreamerNode(const QUrl &streamPath) :
-    AbstractMp3Streamer(new Mp3DecoderMiniMp3()),
+    decoder(new Mp3DecoderMiniMp3()),
     httpClient(nullptr),
-    buffering(false)
+    buffering(false),
+    streaming(false),
+    device(nullptr),
+    bufferedSamples(2, 4096)
 {
     setStreamPath(streamPath.toString());
+    bufferedSamples.setFrameLenght(0);
 }
 
 bool NinjamRoomStreamerNode::needResamplingFor(int targetSampleRate) const
 {
     if (!streaming)
         return false;
-    return AbstractMp3Streamer::needResamplingFor(targetSampleRate);
+    return targetSampleRate != getSampleRate();
 }
 
 void NinjamRoomStreamerNode::initialize(const QString &streamPath)
 {
-    AbstractMp3Streamer::initialize(streamPath);
+    streaming = !streamPath.isNull() && !streamPath.isEmpty();
     buffering = true;
     bufferedSamples.zero();
     bytesToDecode.clear();
@@ -210,12 +148,14 @@ void NinjamRoomStreamerNode::processDownloadedData()
 
 NinjamRoomStreamerNode::~NinjamRoomStreamerNode()
 {
+    delete decoder;
 }
 
 void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
                                               int sampleRate, const Midi::MidiMessageBuffer &midiBuffer)
 {
     Q_UNUSED(in)
+
     QMutexLocker locker(&mutex);
     if (buffering && bytesToDecode.size() >= BUFFER_SIZE)
         buffering = false;
@@ -234,8 +174,39 @@ void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBu
             break;
         }
     }
-    if (!bufferedSamples.isEmpty())
-        AbstractMp3Streamer::processReplacing(in, out, sampleRate, midiBuffer);
+    if (!bufferedSamples.isEmpty()) {
+        Q_UNUSED(in);
+
+        if (bufferedSamples.isEmpty() || !streaming)
+            return;
+
+        int samplesToRender = getSamplesToRender(sampleRate, out.getFrameLenght());
+        if (samplesToRender <= 0)
+            return;
+
+        internalInputBuffer.setFrameLenght(samplesToRender);
+        internalInputBuffer.set(bufferedSamples);
+
+        if (needResamplingFor(sampleRate)) {
+            const Audio::SamplesBuffer &resampledBuffer = resampler.resample(internalInputBuffer,
+                                                                             out.getFrameLenght());
+            internalOutputBuffer.setFrameLenght(resampledBuffer.getFrameLenght());
+            internalOutputBuffer.set(resampledBuffer);
+        } else {
+            internalOutputBuffer.setFrameLenght(out.getFrameLenght());
+            internalOutputBuffer.set(internalInputBuffer);
+        }
+
+        bufferedSamples.discardFirstSamples(samplesToRender);// keep non rendered samples for next audio callback
+
+        if (internalOutputBuffer.getFrameLenght() < out.getFrameLenght())
+            qCDebug(jtNinjamRoomStreamer) << out.getFrameLenght()
+                - internalOutputBuffer.getFrameLenght() << " samples missing";
+
+        this->lastPeak.update(internalOutputBuffer.computePeak());
+
+        out.add(internalOutputBuffer);
+    }
 }
 
 int NinjamRoomStreamerNode::getBufferingPercentage() const
@@ -247,35 +218,3 @@ int NinjamRoomStreamerNode::getBufferingPercentage() const
         return 0;
     return 100;//if not buffering and is streaming, the buffer is completed (100%)
 }
-
-// ++++++++++++++++++
-AudioFileStreamerNode::AudioFileStreamerNode(const QString &file) :
-    AbstractMp3Streamer(new Mp3DecoderMiniMp3())
-{
-    setStreamPath(file);
-}
-
-void AudioFileStreamerNode::initialize(const QString &streamPath)
-{
-    AbstractMp3Streamer::initialize(streamPath);
-    QFile *f = new QFile(streamPath);
-    if (!f->open(QIODevice::ReadOnly))
-        qCCritical(jtNinjamRoomStreamer) << "error opening the file " << streamPath;
-    this->device = f;
-    bytesToDecode.append(f->readAll());
-}
-
-AudioFileStreamerNode::~AudioFileStreamerNode()
-{
-}
-
-void AudioFileStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
-                                             int sampleRate, const Midi::MidiMessageBuffer &midiBuffer)
-{
-    while (bufferedSamples.getFrameLenght() < out.getFrameLenght())
-        decode(1024 + 1024);
-
-    AbstractMp3Streamer::processReplacing(in, out, sampleRate, midiBuffer);
-}
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++/*
