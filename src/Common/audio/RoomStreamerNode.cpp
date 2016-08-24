@@ -91,6 +91,9 @@ PublicRoomStreamerNode::PublicRoomStreamerNode(const QUrl &streamPath) :
 
 void PublicRoomStreamerNode::appendDecodeAudio(const SamplesBuffer &decodedBuffer)
 {
+    if (!streaming)
+        return;
+
     mutexBufferedSamples.lock();
 
     bufferedSamples.append(decodedBuffer);
@@ -101,6 +104,8 @@ void PublicRoomStreamerNode::appendDecodeAudio(const SamplesBuffer &decodedBuffe
 void PublicRoomStreamerNode::stopCurrentStream()
 {
     qCDebug(jtNinjamRoomStreamer) << "stopping room stream";
+
+    QMutexLocker locker(&mutex);
 
     if (device) {
         device->deleteLater();
