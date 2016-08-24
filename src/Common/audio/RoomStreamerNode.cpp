@@ -19,10 +19,22 @@
 
 using namespace Audio;
 
-const int NinjamRoomStreamerNode::MAX_BYTES_PER_DECODING = 2048;
-const int NinjamRoomStreamerNode::BUFFER_SIZE = 128000;
+const int PublicRoomStreamerNode::MAX_BYTES_PER_DECODING = 2048;
+const int PublicRoomStreamerNode::BUFFER_SIZE = 128000;
 
-void NinjamRoomStreamerNode::stopCurrentStream()
+PublicRoomStreamerNode::PublicRoomStreamerNode(const QUrl &streamPath) :
+    decoder(new Mp3DecoderMiniMp3()),
+    httpClient(nullptr),
+    buffering(false),
+    streaming(false),
+    device(nullptr),
+    bufferedSamples(2, 4096)
+{
+    setStreamPath(streamPath.toString());
+    bufferedSamples.setFrameLenght(0);
+}
+
+void PublicRoomStreamerNode::stopCurrentStream()
 {
     qCDebug(jtNinjamRoomStreamer) << "stopping room stream";
 
@@ -37,7 +49,7 @@ void NinjamRoomStreamerNode::stopCurrentStream()
     lastPeak.zero();
 }
 
-int NinjamRoomStreamerNode::getSamplesToRender(int targetSampleRate, int outLenght)
+int PublicRoomStreamerNode::getSamplesToRender(int targetSampleRate, int outLenght)
 {
     bool needResampling = needResamplingFor(targetSampleRate);
     int samplesToRender = needResampling ? getInputResamplingLength(
@@ -46,12 +58,12 @@ int NinjamRoomStreamerNode::getSamplesToRender(int targetSampleRate, int outLeng
 }
 
 
-int NinjamRoomStreamerNode::getSampleRate() const
+int PublicRoomStreamerNode::getSampleRate() const
 {
     return decoder->getSampleRate();
 }
 
-void NinjamRoomStreamerNode::decode(const unsigned int maxBytesToDecode)
+void PublicRoomStreamerNode::decode(const unsigned int maxBytesToDecode)
 {
     if (!device)
         return;
@@ -77,32 +89,20 @@ void NinjamRoomStreamerNode::decode(const unsigned int maxBytesToDecode)
     }
 }
 
-void NinjamRoomStreamerNode::setStreamPath(const QString &streamPath)
+void PublicRoomStreamerNode::setStreamPath(const QString &streamPath)
 {
     stopCurrentStream();
     initialize(streamPath);
 }
 
-NinjamRoomStreamerNode::NinjamRoomStreamerNode(const QUrl &streamPath) :
-    decoder(new Mp3DecoderMiniMp3()),
-    httpClient(nullptr),
-    buffering(false),
-    streaming(false),
-    device(nullptr),
-    bufferedSamples(2, 4096)
-{
-    setStreamPath(streamPath.toString());
-    bufferedSamples.setFrameLenght(0);
-}
-
-bool NinjamRoomStreamerNode::needResamplingFor(int targetSampleRate) const
+bool PublicRoomStreamerNode::needResamplingFor(int targetSampleRate) const
 {
     if (!streaming)
         return false;
     return targetSampleRate != getSampleRate();
 }
 
-void NinjamRoomStreamerNode::initialize(const QString &streamPath)
+void PublicRoomStreamerNode::initialize(const QString &streamPath)
 {
     streaming = !streamPath.isNull() && !streamPath.isEmpty();
     buffering = true;
@@ -121,14 +121,14 @@ void NinjamRoomStreamerNode::initialize(const QString &streamPath)
     }
 }
 
-void NinjamRoomStreamerNode::handleNetworkError(QNetworkReply::NetworkError /*error*/)
+void PublicRoomStreamerNode::handleNetworkError(QNetworkReply::NetworkError /*error*/)
 {
     QString msg = "ERROR playing room stream";
     qCCritical(jtNinjamRoomStreamer) << msg;
     emit error(msg);
 }
 
-void NinjamRoomStreamerNode::processDownloadedData()
+void PublicRoomStreamerNode::processDownloadedData()
 {
     if (!device) {
         qCDebug(jtNinjamRoomStreamer) << "device is null!";
@@ -146,12 +146,12 @@ void NinjamRoomStreamerNode::processDownloadedData()
     }
 }
 
-NinjamRoomStreamerNode::~NinjamRoomStreamerNode()
+PublicRoomStreamerNode::~PublicRoomStreamerNode()
 {
     delete decoder;
 }
 
-void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
+void PublicRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out,
                                               int sampleRate, const Midi::MidiMessageBuffer &midiBuffer)
 {
     Q_UNUSED(in)
@@ -209,7 +209,7 @@ void NinjamRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBu
     }
 }
 
-int NinjamRoomStreamerNode::getBufferingPercentage() const
+int PublicRoomStreamerNode::getBufferingPercentage() const
 {
     if (buffering)
         return bytesToDecode.size()/(float)BUFFER_SIZE * 100;

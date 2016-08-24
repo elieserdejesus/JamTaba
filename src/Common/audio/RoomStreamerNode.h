@@ -12,13 +12,13 @@ namespace Audio {
 class Mp3Decoder;
 
 // +++++++++++++++++++++++++++++++++++++++++++++
-class NinjamRoomStreamerNode : public AudioNode
+class PublicRoomStreamerNode : public AudioNode
 {
     Q_OBJECT
 
 public:
-    NinjamRoomStreamerNode(const QUrl &streamPath = QUrl(""));
-    ~NinjamRoomStreamerNode();
+    PublicRoomStreamerNode(const QUrl &streamPath = QUrl(""));
+    ~PublicRoomStreamerNode();
     void processReplacing(const SamplesBuffer &in, SamplesBuffer &out, int sampleRate, const Midi::MidiMessageBuffer &midiBuffer);
     bool needResamplingFor(int targetSampleRate) const;
     void setStreamPath(const QString &streamPath);
