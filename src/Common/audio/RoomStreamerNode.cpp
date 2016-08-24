@@ -16,14 +16,67 @@
 #include <cmath>
 #include <QMutexLocker>
 #include <QFile>
+#include <QtConcurrent/QtConcurrent>
 
 using namespace Audio;
 
-const int PublicRoomStreamerNode::MAX_BYTES_PER_DECODING = 2048;
-const int PublicRoomStreamerNode::BUFFER_SIZE = 128000;
+const qreal PublicRoomStreamerNode::BUFFER_TIME = 4.0; // in seconds
+
+PublicRoomStreamDecoder::PublicRoomStreamDecoder() :
+    mp3Decoder(new Mp3DecoderMiniMp3())
+{
+    //
+}
+
+PublicRoomStreamDecoder::~PublicRoomStreamDecoder()
+{
+    delete mp3Decoder;
+}
+
+void PublicRoomStreamDecoder::reset()
+{
+    mp3Decoder->reset();
+}
+
+int PublicRoomStreamDecoder::getSampleRate() const
+{
+    return mp3Decoder->getSampleRate();
+}
+
+void PublicRoomStreamDecoder::doDecode(QByteArray &bytesToDecode)
+{
+    qint64 totalBytesToProcess = bytesToDecode.size();
+    char *in = bytesToDecode.data();
+
+    if (totalBytesToProcess <= 0)
+        return;
+
+    Audio::SamplesBuffer decodedSamples(2);
+    int bytesProcessed = 0;
+    static const int MAX_BYTES_PER_DECODING = 2048;
+    while (bytesProcessed < totalBytesToProcess) {// split bytesReaded in chunks to avoid a very large decoded buffer
+        // chunks maxsize is 2048 bytes
+        int bytesToProcess = std::min((int)(totalBytesToProcess - bytesProcessed), MAX_BYTES_PER_DECODING);
+        const Audio::SamplesBuffer *decodedBuffer = mp3Decoder->decode(in, bytesToProcess);
+
+        // prepare in for the next decoding
+        in += bytesToProcess;
+        bytesProcessed += bytesToProcess;
+        // +++++++++++++++++  PROCESS DECODED SAMPLES ++++++++++++++++
+        decodedSamples.append(*decodedBuffer);
+    }
+
+    if (!decodedSamples.isEmpty())
+        emit audioDecoded(decodedSamples);
+}
+
+void PublicRoomStreamDecoder::decode(QByteArray &bytesToDecode)
+{
+    QtConcurrent::run(this, &PublicRoomStreamDecoder::doDecode, bytesToDecode);
+}
 
 PublicRoomStreamerNode::PublicRoomStreamerNode(const QUrl &streamPath) :
-    decoder(new Mp3DecoderMiniMp3()),
+    decoder(new PublicRoomStreamDecoder()),
     httpClient(nullptr),
     buffering(false),
     streaming(false),
@@ -32,6 +85,17 @@ PublicRoomStreamerNode::PublicRoomStreamerNode(const QUrl &streamPath) :
 {
     setStreamPath(streamPath.toString());
     bufferedSamples.setFrameLenght(0);
+
+    QObject::connect(decoder, &PublicRoomStreamDecoder::audioDecoded, this, &PublicRoomStreamerNode::appendDecodeAudio);
+}
+
+void PublicRoomStreamerNode::appendDecodeAudio(const SamplesBuffer &decodedBuffer)
+{
+    mutexBufferedSamples.lock();
+
+    bufferedSamples.append(decodedBuffer);
+
+    mutexBufferedSamples.unlock();
 }
 
 void PublicRoomStreamerNode::stopCurrentStream()
@@ -39,13 +103,23 @@ void PublicRoomStreamerNode::stopCurrentStream()
     qCDebug(jtNinjamRoomStreamer) << "stopping room stream";
 
     if (device) {
-        decoder->reset();// discard unprocessed bytes
         device->deleteLater();
         device = nullptr;
-        bufferedSamples.zero();// discard samples
-        streaming = false;
     }
-    bytesToDecode.clear();
+
+    decoder->reset();// discard unprocessed bytes
+
+    mutexBufferedSamples.lock();
+    bufferedSamples.setFrameLenght(0);// discard samples
+    mutexBufferedSamples.unlock();
+
+    streaming = false;
+    buffering = false;
+
+    mutexDownloadedBytes.lock();
+    downloadedBytes.clear();
+    mutexDownloadedBytes.unlock();
+
     lastPeak.zero();
 }
 
@@ -61,32 +135,6 @@ int PublicRoomStreamerNode::getSamplesToRender(int targetSampleRate, int outLeng
 int PublicRoomStreamerNode::getSampleRate() const
 {
     return decoder->getSampleRate();
-}
-
-void PublicRoomStreamerNode::decode(const unsigned int maxBytesToDecode)
-{
-    if (!device)
-        return;
-    qint64 totalBytesToProcess = std::min((int)maxBytesToDecode, bytesToDecode.size());
-    char *in = bytesToDecode.data();
-
-    if (totalBytesToProcess > 0) {
-        int bytesProcessed = 0;
-        while (bytesProcessed < totalBytesToProcess) {// split bytesReaded in chunks to avoid a very large decoded buffer
-            // chunks maxsize is 2048 bytes
-            int bytesToProcess = std::min((int)(totalBytesToProcess - bytesProcessed),
-                                          MAX_BYTES_PER_DECODING);
-            const Audio::SamplesBuffer *decodedBuffer = decoder->decode(in, bytesToProcess);
-
-            // prepare in for the next decoding
-            in += bytesToProcess;
-            bytesProcessed += bytesToProcess;
-            // +++++++++++++++++  PROCESS DECODED SAMPLES ++++++++++++++++
-            bufferedSamples.append(*decodedBuffer);
-        }
-
-        bytesToDecode = bytesToDecode.right(bytesToDecode.size() - bytesProcessed);
-    }
 }
 
 void PublicRoomStreamerNode::setStreamPath(const QString &streamPath)
@@ -106,8 +154,9 @@ void PublicRoomStreamerNode::initialize(const QString &streamPath)
 {
     streaming = !streamPath.isNull() && !streamPath.isEmpty();
     buffering = true;
-    bufferedSamples.zero();
-    bytesToDecode.clear();
+    bufferedTime = 0.0;
+    bufferedSamples.setFrameLenght(0);
+    downloadedBytes.clear();
     if (!streamPath.isEmpty()) {
         qCDebug(jtNinjamRoomStreamer) << "connecting in " << streamPath;
         if (httpClient)
@@ -135,12 +184,9 @@ void PublicRoomStreamerNode::processDownloadedData()
         return;
     }
     if (device->isOpen() && device->isReadable()) {
-        QMutexLocker locker(&mutex);
-        bytesToDecode.append(device->readAll());
-        if (buffering) {
-            qCDebug(jtNinjamRoomStreamer) << "bytes downloaded  bytesToDecode:"<<bytesToDecode.size()
-                                      << " bufferedSamples: " << bufferedSamples.getFrameLenght();
-        }
+        mutexDownloadedBytes.lock();
+        downloadedBytes.append(device->readAll());
+        mutexDownloadedBytes.unlock();
     } else {
         qCCritical(jtNinjamRoomStreamer) << "problem in device!";
     }
@@ -156,65 +202,72 @@ void PublicRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBu
 {
     Q_UNUSED(in)
 
-    QMutexLocker locker(&mutex);
-    if (buffering && bytesToDecode.size() >= BUFFER_SIZE)
+    if (!streaming)
+        return;
+
+    bufferedTime = bufferedSamples.getFrameLenght()/(float)sampleRate;
+    int samplesToRender = getSamplesToRender(sampleRate, out.getFrameLenght());
+
+    {
+        QMutexLocker locker(&mutexDownloadedBytes);
+
+        // check if is necessary decode more mp3 data
+        if (bufferedTime < BUFFER_TIME && !downloadedBytes.isEmpty() ) {
+            QByteArray bytesToDecode = downloadedBytes.left(512);
+            downloadedBytes.remove(0, bytesToDecode.size());
+            decoder->decode(bytesToDecode);
+        }
+
+        if (!buffering && downloadedBytes.isEmpty())
+            buffering = true;
+    }
+
+    if (buffering && bufferedTime >= BUFFER_TIME)
         buffering = false;
-    if (!buffering && bytesToDecode.isEmpty())
-        buffering = true;
+
     if (buffering)
         return;
-    int samplesToRender = getSamplesToRender(sampleRate, out.getFrameLenght());
-    while (bufferedSamples.getFrameLenght() < samplesToRender) {// need decoding?
-        if (!bytesToDecode.isEmpty()) {
-            decode(qMin(32, bytesToDecode.size())); //decoding small packets to avoid blocking the audio thread
-        }
-        else {// no more bytes to decode
-            //qDebug() << "no more bytes to decode and not enough buffered samples. Buffering ...";
-            buffering = true;
-            break;
-        }
-    }
-    if (!bufferedSamples.isEmpty()) {
-        Q_UNUSED(in);
 
-        if (bufferedSamples.isEmpty() || !streaming)
-            return;
-
-        int samplesToRender = getSamplesToRender(sampleRate, out.getFrameLenght());
-        if (samplesToRender <= 0)
+    {
+        QMutexLocker locker(&mutexBufferedSamples);
+        if (bufferedSamples.isEmpty() || samplesToRender <= 0)
             return;
 
         internalInputBuffer.setFrameLenght(samplesToRender);
         internalInputBuffer.set(bufferedSamples);
-
-        if (needResamplingFor(sampleRate)) {
-            const Audio::SamplesBuffer &resampledBuffer = resampler.resample(internalInputBuffer,
-                                                                             out.getFrameLenght());
-            internalOutputBuffer.setFrameLenght(resampledBuffer.getFrameLenght());
-            internalOutputBuffer.set(resampledBuffer);
-        } else {
-            internalOutputBuffer.setFrameLenght(out.getFrameLenght());
-            internalOutputBuffer.set(internalInputBuffer);
-        }
-
         bufferedSamples.discardFirstSamples(samplesToRender);// keep non rendered samples for next audio callback
-
-        if (internalOutputBuffer.getFrameLenght() < out.getFrameLenght())
-            qCDebug(jtNinjamRoomStreamer) << out.getFrameLenght()
-                - internalOutputBuffer.getFrameLenght() << " samples missing";
-
-        this->lastPeak.update(internalOutputBuffer.computePeak());
-
-        out.add(internalOutputBuffer);
     }
+
+    QMutexLocker locker(&mutex);
+    if (needResamplingFor(sampleRate)) {
+        const Audio::SamplesBuffer &resampledBuffer = resampler.resample(internalInputBuffer,
+                                                                         out.getFrameLenght());
+        internalOutputBuffer.setFrameLenght(resampledBuffer.getFrameLenght());
+        internalOutputBuffer.set(resampledBuffer);
+    } else {
+        internalOutputBuffer.setFrameLenght(out.getFrameLenght());
+        internalOutputBuffer.set(internalInputBuffer);
+    }
+
+    if (internalOutputBuffer.getFrameLenght() < out.getFrameLenght())
+        qCDebug(jtNinjamRoomStreamer) << out.getFrameLenght()
+                                         - internalOutputBuffer.getFrameLenght() << " samples missing";
+
+    this->lastPeak.update(internalOutputBuffer.computePeak());
+
+    out.add(internalOutputBuffer);
 }
 
-int PublicRoomStreamerNode::getBufferingPercentage() const
+int PublicRoomStreamerNode::getBufferingPercentage()
 {
-    if (buffering)
-        return bytesToDecode.size()/(float)BUFFER_SIZE * 100;
+    if (buffering) {
+        int percentage = bufferedTime/BUFFER_TIME * 100;
+        if (percentage <= 100)
+            return percentage;
+    }
 
     if (!streaming)
         return 0;
+
     return 100;//if not buffering and is streaming, the buffer is completed (100%)
 }

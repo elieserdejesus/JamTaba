@@ -32,6 +32,8 @@ MainController::MainController(const Settings &settings) :
     usersDataCache(Configurator::getInstance()->getCacheDir())
 {
 
+    qRegisterMetaType<Audio::SamplesBuffer>("Audio::SamplesBuffer");
+
     QDir cacheDir = Configurator::getInstance()->getCacheDir();
     ipToLocationResolver.reset( new Geo::WebIpToLocationResolver(cacheDir));
 
