@@ -227,7 +227,7 @@
     </message>
     <message>
         <source>Transmit</source>
-        <translation type="unfinished"></translation>
+        <translation>Transmitir</translation>
     </message>
 </context>
 <context>
@@ -761,7 +761,7 @@
     <name>NinjamTrackView</name>
     <message>
         <source>Low cut</source>
-        <translation type="unfinished"></translation>
+        <translation>Corte de graves</translation>
     </message>
 </context>
 <context>
@@ -1017,7 +1017,7 @@
     </message>
     <message>
         <source>Connecting with private Ninjam server ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Conectando em servidor Ninjam privado ...</translation>
     </message>
 </context>
 <context>
