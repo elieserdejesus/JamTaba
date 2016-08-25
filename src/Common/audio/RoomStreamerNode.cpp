@@ -72,7 +72,7 @@ void PublicRoomStreamDecoder::doDecode(QByteArray &bytesToDecode)
         emit audioDecoded(decodedSamples);
 }
 
-void PublicRoomStreamDecoder::decode(QByteArray &bytesToDecode)
+void PublicRoomStreamDecoder::decode(QByteArray bytesToDecode)
 {
     QtConcurrent::run(threadPool, this, &PublicRoomStreamDecoder::doDecode, bytesToDecode);
 }
@@ -93,14 +93,17 @@ PublicRoomStreamerNode::PublicRoomStreamerNode(const QUrl &streamPath) :
 
 void PublicRoomStreamerNode::appendDecodeAudio(const SamplesBuffer &decodedBuffer)
 {
-    if (!streaming)
+    if (!streaming) {
+        qDebug() << "Not streaming, returning!";
         return;
+    }
 
     if (decodedBuffer.isEmpty())
         qDebug() << "decoded buffer is empty";
 
     mutexBufferedSamples.lock();
     bufferedSamples.append(decodedBuffer);
+    //qDebug() << "Appending " << QString::number(bufferedSamples.getFrameLenght()) << " decoded samples!";
     mutexBufferedSamples.unlock();
 }
 
@@ -194,6 +197,7 @@ void PublicRoomStreamerNode::processDownloadedData()
     if (device->isOpen() && device->isReadable()) {
         mutexDownloadedBytes.lock();
         downloadedBytes.append(device->readAll());
+        //qDebug() << "Bytes downloaded: " << QString::number(downloadedBytes.size());
         mutexDownloadedBytes.unlock();
     } else {
         qCritical() << "problem in device!";
@@ -221,14 +225,14 @@ void PublicRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBu
 
         // check if is necessary decode more mp3 data
         if (bufferedTime < BUFFER_TIME && !downloadedBytes.isEmpty() ) {
-            QByteArray bytesToDecode = downloadedBytes.left(512);
+            QByteArray bytesToDecode = downloadedBytes.left(2048);
             downloadedBytes.remove(0, bytesToDecode.size());
             decoder->decode(bytesToDecode);
         }
 
-        if (!buffering && downloadedBytes.isEmpty()) {
+        if (!buffering && downloadedBytes.isEmpty() && bufferedTime <= 0) {
             buffering = true;
-            qDebug() << "Downloaded bytes is empty, bufferring ...";
+            qDebug() << "Downloaded bytes is empty, no buffered audio, bufferring ...";
         }
     }
 
@@ -239,6 +243,7 @@ void PublicRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBu
 
     if (buffering)
         return;
+
 
     {
         QMutexLocker locker(&mutexBufferedSamples);

@@ -22,7 +22,7 @@ public:
     ~PublicRoomStreamDecoder();
     void reset();
     int getSampleRate() const;
-    void decode(QByteArray &bytesToDecode);
+    void decode(QByteArray bytesToDecode);
 
 signals:
     void audioDecoded(const Audio::SamplesBuffer &decodedBuffer);
