@@ -212,10 +212,15 @@ PreferencesDialog::~PreferencesDialog()
     delete ui;
 }
 
+QString PreferencesDialog::getAudioFilesFilter()
+{
+    return tr("Audio Files") + " (*.wav *.ogg)";
+}
+
 void PreferencesDialog::openPrimaryBeatAudioFileBrowser()
 {
     QString caption = tr("Choosing Primary beat audio file...");
-    QString filter = tr("Audio Files (*.wav *.ogg)");
+    QString filter = getAudioFilesFilter();
     QString dir = ".";
     QString filePath = QFileDialog::getOpenFileName(this, caption, dir, filter);
     if (!filePath.isNull()) {
@@ -226,7 +231,7 @@ void PreferencesDialog::openPrimaryBeatAudioFileBrowser()
 void PreferencesDialog::openSecondaryBeatAudioFileBrowser()
 {
     QString caption = tr("Choosing Secondary beat audio file...");
-    QString filter = tr("Audio Files (*.wav *.ogg)");
+    QString filter = getAudioFilesFilter();
     QString dir = ".";
     QString filePath = QFileDialog::getOpenFileName(this, caption, dir, filter);
     if (!filePath.isNull()) {

@@ -183,10 +183,6 @@
         <translation>En préparation</translation>
     </message>
     <message>
-        <source>Transmitting</source>
-        <translation>Transmission</translation>
-    </message>
-    <message>
         <source>Load preset</source>
         <translation>Charger le preset</translation>
     </message>
@@ -225,6 +221,10 @@
     <message>
         <source>channel name</source>
         <translation>nom du canal</translation>
+    </message>
+    <message>
+        <source>Transmit</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -755,17 +755,17 @@
     </message>
 </context>
 <context>
+    <name>NinjamTrackView</name>
+    <message>
+        <source>Low cut</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>NinjamVoteButton</name>
     <message>
         <source>Vote - change %1 to %2 </source>
         <translation>Voter - changer %1 pour %2 </translation>
-    </message>
-</context>
-<context>
-    <name>PlayerLabel</name>
-    <message>
-        <source>%1  location is not available at moment!</source>
-        <translation>%1plus de place disponible pour le moment!</translation>
     </message>
 </context>
 <context>
@@ -806,8 +806,8 @@
         <translation>Choisir le fichier des accents de temps primaires...</translation>
     </message>
     <message>
-        <source>Audio Files (*.wav, *.ogg)</source>
-        <translation>Fichiers audio (*.wav, *.ogg)</translation>
+        <source>Audio Files</source>
+        <translation>Fichiers audio</translation>
     </message>
     <message>
         <source>Choosing Secondary beat audio file...</source>
@@ -977,20 +977,12 @@
 <context>
     <name>PrivateServerDialog</name>
     <message>
-        <source>Connecting in private Ninjam server ...</source>
-        <translation>Se connecter à un serveur prive Ninjam...</translation>
-    </message>
-    <message>
         <source>This the private server dialog</source>
         <translation>Boite de dialogue serveur privé</translation>
     </message>
     <message>
         <source>Server:</source>
         <translation>Serveur:</translation>
-    </message>
-    <message>
-        <source>type here the name of the server to join</source>
-        <translation>écrire ici le nom du serveur choisi</translation>
     </message>
     <message>
         <source>leave blank to connect as annonymous</source>
@@ -1019,6 +1011,10 @@
     <message>
         <source>OK</source>
         <translation>OK</translation>
+    </message>
+    <message>
+        <source>Connecting with private Ninjam server ...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1056,10 +1052,6 @@
     <message>
         <source>enter</source>
         <translation>entrer</translation>
-    </message>
-    <message>
-        <source>That panel shows the musicians actually in that room</source>
-        <translation>Ce panneau montre les musiciens présents dans ce salon</translation>
     </message>
     <message>
         <source>That zone displays the waveform actually played</source>
