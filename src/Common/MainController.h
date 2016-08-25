@@ -272,6 +272,7 @@ public:
 
 signals:
     void ipResolved(const QString &ip);
+    void themeChanged();
 
 public slots:
     virtual void setSampleRate(int newSampleRate);

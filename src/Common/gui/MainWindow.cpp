@@ -12,6 +12,7 @@
 #include "log/Logging.h"
 #include "JamRoomViewPanel.h"
 #include "ChordsPanel.h"
+#include "MapWidget.h"
 
 #include <QDesktopWidget>
 #include <QDesktopServices>
@@ -103,10 +104,21 @@ void MainWindow::setLanguage(QAction *languageMenuAction)
     }
 }
 
+void MainWindow::updateNightModeInWorldMaps()
+{
+    QString themeName = mainController->getTheme();
+    MapWidget::setNightMode(MainWindow::themeCanUseNightModeWorldMaps(themeName));
+}
+
 void MainWindow::changeTheme(QAction *action)
 {
     QString theme = action->data().toString();
     mainController->setTheme(theme);
+}
+
+bool MainWindow::themeCanUseNightModeWorldMaps(const QString &themeName)
+{
+    return themeName == "Black"; // at moment only Black theme is using night mode maps
 }
 
 void MainWindow::initializeThemeMenu()
@@ -178,6 +190,9 @@ void MainWindow::initializeLanguageMenu()
 void MainWindow::initialize()
 {
     timerID = startTimer(1000/50);// timer used to animate audio peaks, midi activity, public room wave audio plot, etc.
+
+    if (qApp->styleSheet().isEmpty())
+        mainController->setTheme(mainController->getTheme());
 
     showBusyDialog(tr("Loading rooms list ..."));
 
@@ -1497,6 +1512,8 @@ void MainWindow::setupSignals()
     connect(ui.menuLanguage, SIGNAL(triggered(QAction *)), this, SLOT(setLanguage(QAction *)));
 
     connect(ui.userNameLineEdit, SIGNAL(editingFinished()), this, SLOT(updateUserName()));
+
+    connect(mainController, &Controller::MainController::themeChanged, this, &MainWindow::updateNightModeInWorldMaps);
 }
 
 void MainWindow::updateUserName()

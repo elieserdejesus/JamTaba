@@ -8,8 +8,8 @@ namespace Geo {
 class Location
 {
 public:
-    Location(const QString &countryName, const QString &countryCode, const QString &city = "UNKNOWN", double latitude = -200,
-             double longitude = -200);
+    Location(const QString &countryName, const QString &countryCode, double latitude = -200,
+             double longitude = -200, const QString &city = "UNKNOWN");
     Location();
 
     inline double getLatitude() const
@@ -38,6 +38,7 @@ public:
     }
 
     bool isUnknown() const;
+
 private:
     QString countryName;
     QString countryCode;
