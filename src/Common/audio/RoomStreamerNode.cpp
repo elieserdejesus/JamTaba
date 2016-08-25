@@ -17,15 +17,17 @@
 #include <QMutexLocker>
 #include <QFile>
 #include <QtConcurrent/QtConcurrent>
+#include <QThreadPool>
 
 using namespace Audio;
 
 const qreal PublicRoomStreamerNode::BUFFER_TIME = 4.0; // in seconds
 
 PublicRoomStreamDecoder::PublicRoomStreamDecoder() :
-    mp3Decoder(new Mp3DecoderMiniMp3())
+    mp3Decoder(new Mp3DecoderMiniMp3()),
+    threadPool(new QThreadPool(this))
 {
-    //
+    threadPool->setMaxThreadCount(1);
 }
 
 PublicRoomStreamDecoder::~PublicRoomStreamDecoder()
@@ -72,7 +74,9 @@ void PublicRoomStreamDecoder::doDecode(QByteArray &bytesToDecode)
 
 void PublicRoomStreamDecoder::decode(QByteArray &bytesToDecode)
 {
-    QtConcurrent::run(this, &PublicRoomStreamDecoder::doDecode, bytesToDecode);
+    QThreadPool *pool = new QThreadPool();
+    pool->setMaxThreadCount(1);
+    QtConcurrent::run(threadPool, this, &PublicRoomStreamDecoder::doDecode, bytesToDecode);
 }
 
 PublicRoomStreamerNode::PublicRoomStreamerNode(const QUrl &streamPath) :

@@ -5,6 +5,7 @@
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
 #include "SamplesBufferResampler.h"
+#include <QThreadPool>
 
 class QIODevice;
 
@@ -29,7 +30,7 @@ signals:
 private:
     Audio::Mp3Decoder *mp3Decoder;
     void doDecode(QByteArray &bytesToDecode);
-
+    QThreadPool *threadPool;
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++++
