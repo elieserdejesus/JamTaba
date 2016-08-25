@@ -74,6 +74,7 @@ void PublicRoomStreamDecoder::doDecode(QByteArray &bytesToDecode)
 
 void PublicRoomStreamDecoder::decode(QByteArray bytesToDecode)
 {
+    // decoding in separated thread. The threadPool is using just one thread to avoid mess the decoded chunks sequence.
     QtConcurrent::run(threadPool, this, &PublicRoomStreamDecoder::doDecode, bytesToDecode);
 }
 
@@ -94,16 +95,15 @@ PublicRoomStreamerNode::PublicRoomStreamerNode(const QUrl &streamPath) :
 void PublicRoomStreamerNode::appendDecodeAudio(const SamplesBuffer &decodedBuffer)
 {
     if (!streaming) {
-        qDebug() << "Not streaming, returning!";
+        qCDebug(jtNinjamRoomStreamer) << "Not streaming, returning!";
         return;
     }
 
     if (decodedBuffer.isEmpty())
-        qDebug() << "decoded buffer is empty";
+        qCDebug(jtNinjamRoomStreamer) << "decoded buffer is empty";
 
     mutexBufferedSamples.lock();
     bufferedSamples.append(decodedBuffer);
-    //qDebug() << "Appending " << QString::number(bufferedSamples.getFrameLenght()) << " decoded samples!";
     mutexBufferedSamples.unlock();
 }
 
@@ -197,7 +197,6 @@ void PublicRoomStreamerNode::processDownloadedData()
     if (device->isOpen() && device->isReadable()) {
         mutexDownloadedBytes.lock();
         downloadedBytes.append(device->readAll());
-        //qDebug() << "Bytes downloaded: " << QString::number(downloadedBytes.size());
         mutexDownloadedBytes.unlock();
     } else {
         qCritical() << "problem in device!";
@@ -232,13 +231,13 @@ void PublicRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBu
 
         if (!buffering && downloadedBytes.isEmpty() && bufferedTime <= 0) {
             buffering = true;
-            qDebug() << "Downloaded bytes is empty, no buffered audio, bufferring ...";
+            qCDebug(jtNinjamRoomStreamer) << "Downloaded bytes is empty, no buffered audio, bufferring ...";
         }
     }
 
     if (buffering && bufferedTime >= BUFFER_TIME) {
         buffering = false;
-        qDebug() << "We have enough bytes to decode, buffering = false";
+        qCDebug(jtNinjamRoomStreamer) << "We have enough bytes to decode, buffering = false";
     }
 
     if (buffering)
@@ -249,7 +248,7 @@ void PublicRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBu
         QMutexLocker locker(&mutexBufferedSamples);
         if (bufferedSamples.isEmpty() || samplesToRender <= 0) {
             if (streaming)
-                qDebug() << "Nothing to render bufferedSamples.isEmpty =" << bufferedSamples.isEmpty() << " samplesToRender:" << samplesToRender;
+                qCDebug(jtNinjamRoomStreamer) << "Nothing to render bufferedSamples.isEmpty =" << bufferedSamples.isEmpty() << " samplesToRender:" << samplesToRender;
             return;
         }
 
