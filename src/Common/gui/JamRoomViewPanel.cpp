@@ -30,6 +30,7 @@ JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo,
     ui->content->layout()->removeWidget(ui->wavePeakPanel);
     map->setLayout(new QHBoxLayout());
     map->layout()->addWidget(ui->wavePeakPanel);
+    ui->wavePeakPanel->setMaximumHeight(120);
 
     initialize(roomInfo);
 }
