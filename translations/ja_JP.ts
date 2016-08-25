@@ -230,7 +230,7 @@
     </message>
     <message>
         <source>Transmit</source>
-        <translation type="unfinished"></translation>
+        <translation>送信中</translation>
     </message>
 </context>
 <context>
@@ -767,7 +767,7 @@
     <name>NinjamTrackView</name>
     <message>
         <source>Low cut</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカット</translation>
     </message>
 </context>
 <context>
@@ -1024,7 +1024,7 @@
     </message>
     <message>
         <source>Connecting with private Ninjam server ...</source>
-        <translation type="unfinished"></translation>
+        <translation>プライベート Ninjam サーバへ接続中...</translation>
     </message>
 </context>
 <context>
