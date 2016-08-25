@@ -74,8 +74,6 @@ void PublicRoomStreamDecoder::doDecode(QByteArray &bytesToDecode)
 
 void PublicRoomStreamDecoder::decode(QByteArray &bytesToDecode)
 {
-    QThreadPool *pool = new QThreadPool();
-    pool->setMaxThreadCount(1);
     QtConcurrent::run(threadPool, this, &PublicRoomStreamDecoder::doDecode, bytesToDecode);
 }
 
@@ -98,10 +96,11 @@ void PublicRoomStreamerNode::appendDecodeAudio(const SamplesBuffer &decodedBuffe
     if (!streaming)
         return;
 
+    if (decodedBuffer.isEmpty())
+        qDebug() << "decoded buffer is empty";
+
     mutexBufferedSamples.lock();
-
     bufferedSamples.append(decodedBuffer);
-
     mutexBufferedSamples.unlock();
 }
 
@@ -182,7 +181,7 @@ void PublicRoomStreamerNode::initialize(const QString &streamPath)
 void PublicRoomStreamerNode::handleNetworkError(QNetworkReply::NetworkError /*error*/)
 {
     QString msg = "ERROR playing room stream";
-    qCCritical(jtNinjamRoomStreamer) << msg;
+    qCritical() << msg;
     emit error(msg);
 }
 
@@ -197,7 +196,7 @@ void PublicRoomStreamerNode::processDownloadedData()
         downloadedBytes.append(device->readAll());
         mutexDownloadedBytes.unlock();
     } else {
-        qCCritical(jtNinjamRoomStreamer) << "problem in device!";
+        qCritical() << "problem in device!";
     }
 }
 
@@ -227,20 +226,27 @@ void PublicRoomStreamerNode::processReplacing(const SamplesBuffer &in, SamplesBu
             decoder->decode(bytesToDecode);
         }
 
-        if (!buffering && downloadedBytes.isEmpty())
+        if (!buffering && downloadedBytes.isEmpty()) {
             buffering = true;
+            qDebug() << "Downloaded bytes is empty, bufferring ...";
+        }
     }
 
-    if (buffering && bufferedTime >= BUFFER_TIME)
+    if (buffering && bufferedTime >= BUFFER_TIME) {
         buffering = false;
+        qDebug() << "We have enough bytes to decode, buffering = false";
+    }
 
     if (buffering)
         return;
 
     {
         QMutexLocker locker(&mutexBufferedSamples);
-        if (bufferedSamples.isEmpty() || samplesToRender <= 0)
+        if (bufferedSamples.isEmpty() || samplesToRender <= 0) {
+            if (streaming)
+                qDebug() << "Nothing to render bufferedSamples.isEmpty =" << bufferedSamples.isEmpty() << " samplesToRender:" << samplesToRender;
             return;
+        }
 
         internalInputBuffer.setFrameLenght(samplesToRender);
         internalInputBuffer.set(bufferedSamples);
