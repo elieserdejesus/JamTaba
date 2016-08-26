@@ -12,6 +12,7 @@
 #include <QTextStream>
 #include <QDataStream>
 #include <QTimer>
+#include <QPointF>
 #include "log/Logging.h"
 #include "persistence/CacheHeader.h"
 
