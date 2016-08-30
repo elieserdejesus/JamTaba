@@ -33,7 +33,7 @@ private:
 
     SamplesBuffer &operator=(const SamplesBuffer &other);
 public:
-    explicit SamplesBuffer(unsigned int channels = 2);
+    explicit SamplesBuffer(unsigned int channels);
     explicit SamplesBuffer(unsigned int channels, unsigned int frameLenght);
     SamplesBuffer(const SamplesBuffer &other);
     ~SamplesBuffer();
@@ -102,6 +102,5 @@ public:
         return frameLenght <= 0;
     }
 };
-
 }
 #endif // SAMPLESBUFFER_H

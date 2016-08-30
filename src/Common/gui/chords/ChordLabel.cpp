@@ -4,7 +4,6 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <QLayout>
-#include <QKeyEvent>
 #include "chords/ChatChordsProgressionParser.h"
 
 ChordLabel *ChordLabel::currentChordLabel = nullptr;

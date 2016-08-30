@@ -68,8 +68,8 @@ void SamplesBuffer::discardFirstSamples(unsigned int samplesToDiscard)
     int toDiscard = std::min(frameLenght, samplesToDiscard);
     uint newFrameLenght = frameLenght - toDiscard;
     for (uint c = 0; c < channels; ++c) {
-        //std::rotate(samples[c].begin(), samples[c].begin() + toDiscard, samples[c].end());
-         samples[c].erase(samples[c].begin(), samples[c].begin() + toDiscard);
+        std::rotate(samples[c].begin(), samples[c].begin() + toDiscard, samples[c].end());
+        // samples[c].erase(samples[c].begin(), samples[c].begin() + toDiscard);
     }
     setFrameLenght(newFrameLenght);
 }

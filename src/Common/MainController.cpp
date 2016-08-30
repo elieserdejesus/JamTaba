@@ -32,8 +32,6 @@ MainController::MainController(const Settings &settings) :
     usersDataCache(Configurator::getInstance()->getCacheDir())
 {
 
-    qRegisterMetaType<Audio::SamplesBuffer>("Audio::SamplesBuffer");
-
     QDir cacheDir = Configurator::getInstance()->getCacheDir();
     ipToLocationResolver.reset( new Geo::WebIpToLocationResolver(cacheDir));
 
@@ -703,7 +701,7 @@ void MainController::start()
     if (!started) {
 
         qCInfo(jtCore) << "Creating roomStreamer ...";
-        roomStreamer.reset(new Audio::PublicRoomStreamerNode()); // new Audio::AudioFileStreamerNode(":/teste.mp3");
+        roomStreamer.reset(new Audio::NinjamRoomStreamerNode()); // new Audio::AudioFileStreamerNode(":/teste.mp3");
         this->audioMixer.addNode(roomStreamer.data());
 
         QObject::connect(&ninjamService, SIGNAL(connectedInServer(const Ninjam::Server &)), this,
