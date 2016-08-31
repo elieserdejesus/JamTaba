@@ -14,8 +14,9 @@ const int MapWidget::TILES_SIZE = 256; // tile size in pixels
 const qreal MapWidget::TEXT_MARGIM = 3;
 const int MapWidget::MARKER_POSITIONS = 8;
 bool MapWidget::usingNightMode = false;
+const int MapWidget::ZOOM = 1; // fixed zoom level
 
-QMap<int, QHash<QPoint, QPixmap>> MapWidget::tilePixmaps;
+QHash<QPoint, QPixmap> MapWidget::tilePixmaps;
 
 // some consts used to translate map tiles to lat,long
 const qreal deg2rad = M_PI/180.0;
@@ -66,7 +67,6 @@ qreal getDistance(const QPointF &p1, const QPointF &p2)
 
 MapWidget::MapWidget(QWidget *parent)
     : QWidget(parent),
-      zoom(1),
       showingMarkers(true)
 {
 
@@ -188,21 +188,7 @@ void MapWidget::setMarkers(const QList<MapMarker> &newMarkers)
     markers.clear();
     markers.append(newMarkers);
 
-    autoAdjustZoomLevel();
-
     setCenter(getCenterLatLong());
-}
-
-int MapWidget::calculateBestZoomLevel() const
-{
-    // auto adjust zoom
-    int zoomLevel = 1; // 1 is the max zoom level
-    QRectF rect = computeMinimumRect(zoomLevel);
-    while ((qAbs(rect.width()) > width() || qAbs(rect.height()) > height()) && zoomLevel > 0) {
-        zoomLevel--;
-        rect = computeMinimumRect(zoomLevel); // trying another zoom level
-    }
-    return zoomLevel;
 }
 
 void MapWidget::setCenter(QPointF latLong)
@@ -215,7 +201,7 @@ void MapWidget::setCenter(QPointF latLong)
 QSize MapWidget::minimumSizeHint() const
 {
     QSize hint = QWidget::minimumSizeHint();
-    QRectF minRect = computeMinimumRect(zoom);
+    QRectF minRect = computeMinimumRect(ZOOM);
     hint.setHeight(qMax(240.0, minRect.height()));
     return hint;
 }
@@ -225,7 +211,7 @@ void MapWidget::invalidate()
     if (width() <= 0 || height() <= 0)
         return;
 
-    QPointF center = tileForCoordinate(latitude, longitude, zoom);
+    QPointF center = tileForCoordinate(latitude, longitude, ZOOM);
     qreal tileX = center.x();
     qreal tileY = center.y();
 
@@ -254,12 +240,12 @@ void MapWidget::invalidate()
 
 void MapWidget::loadTiles()
 {
-    int totalTiles = std::pow(2, zoom);
+    int totalTiles = std::pow(2, ZOOM);
     for (int x = 0; x < totalTiles; ++x) {
         for (int y = 0; y < totalTiles; ++y) {
             QPoint tp(x, y);
-            if (!tilePixmaps[zoom].contains(tp)) {
-                tilePixmaps[zoom].insert(tp, loadTile(zoom, x, y));
+            if (!tilePixmaps.contains(tp)) {
+                tilePixmaps.insert(tp, loadTile(ZOOM, x, y));
             }
         }
     }
@@ -267,17 +253,18 @@ void MapWidget::loadTiles()
 
 void MapWidget::resizeEvent(QResizeEvent *)
 {
-    autoAdjustZoomLevel();
-    setCenter(getCenterLatLong());
-}
+    //rebuild the positions cache
+    static const int markersHeight = fontMetrics().height() + TEXT_MARGIM;
+    qreal ellipseX = TEXT_MARGIM;
+    qreal ellipseY = TEXT_MARGIM + markersHeight/2;
+    qreal ellipseWidth = width() - getMaximumMarkerWidth() - TEXT_MARGIM * 2;
+    qreal ellipseHeight = height() - TEXT_MARGIM * 2 - markersHeight;
+    QRectF ellipseRect(ellipseX, ellipseY, ellipseWidth, ellipseHeight);
 
-void MapWidget::autoAdjustZoomLevel()
-{
-    int bestZoom = calculateBestZoomLevel();
-    if (bestZoom != zoom) {
-        zoom = bestZoom;
-        loadTiles(); // load the tiles for the new zoom level
-    }
+    mapPositions.clear();
+    mapPositions.append(getEllipsePositions(markersHeight, ellipseRect));
+
+    setCenter(getCenterLatLong());
 }
 
 QPixmap MapWidget::loadTile(int zoomLevel, int x, int y)
@@ -286,7 +273,7 @@ QPixmap MapWidget::loadTile(int zoomLevel, int x, int y)
     path = path.arg(zoomLevel).arg(x).arg(y);
     QFile imageFile(path);
     if (!imageFile.exists()) {
-        qCritical() << "Tile no found to zoom:" << zoomLevel << " x:" << x << " y:" << y;
+        qCritical() << "Tile not found to zoom:" << zoomLevel << " x:" << x << " y:" << y;
         return QPixmap();
     }
 
@@ -295,7 +282,7 @@ QPixmap MapWidget::loadTile(int zoomLevel, int x, int y)
 
 void MapWidget::drawMapTiles(QPainter &p, const QRect &rect)
 {
-    int tiles = std::pow(2, zoom);
+    int tiles = std::pow(2, ZOOM);
     for (int x = 0; x <= tilesRect.width(); ++x) {
         for (int y = 0; y <= tilesRect.height(); ++y) {
             QPoint tp(x + tilesRect.left(), y + tilesRect.top());
@@ -303,8 +290,8 @@ void MapWidget::drawMapTiles(QPainter &p, const QRect &rect)
             if (rect.intersects(box)) {
                 tp.setX((tp.x() + tiles) % tiles);
                 tp.setY((tp.y() + tiles) % tiles);
-                if (tilePixmaps[zoom].contains(tp)) {
-                    p.drawPixmap(box, tilePixmaps[zoom].value(tp));
+                if (tilePixmaps.contains(tp)) {
+                    p.drawPixmap(box, tilePixmaps.value(tp));
                 }
             }
         }
@@ -342,12 +329,12 @@ void MapWidget::setNightMode(bool useNightMode)
 
 QPointF MapWidget::getMarkerScreenCoordinate(const MapMarker &marker) const
 {
-    QPointF center = tileForCoordinate(latitude, longitude, zoom);
+    QPointF center = tileForCoordinate(latitude, longitude, ZOOM);
     qreal hCenter = width()/2.0;
     qreal vCenter = height()/2.0;
 
     QPointF latLong = marker.getLatLong();
-    QPointF tile = tileForCoordinate(latLong.x(), latLong.y(), zoom);
+    QPointF tile = tileForCoordinate(latLong.x(), latLong.y(), ZOOM);
     qreal x = hCenter - ((center.x() - tile.x()) * TILES_SIZE);
     qreal y = vCenter - ((center.y() - tile.y()) * TILES_SIZE);
     return QPointF(x, y);
@@ -377,31 +364,26 @@ QList<MapWidget::Position> MapWidget::getEmptyPositions( const QMap<int, QList<M
 
 void MapWidget::drawPlayersMarkers(QPainter &p)
 {
-    static const int markersHeight = fontMetrics().height() + TEXT_MARGIM;
-    qreal ellipseX = TEXT_MARGIM;
-    qreal ellipseY = TEXT_MARGIM + markersHeight/2;
-    qreal ellipseWidth = width() - getMaximumMarkerWidth() - TEXT_MARGIM * 2;
-    qreal ellipseHeight = height() - TEXT_MARGIM * 2 - markersHeight;
-
-    QRectF ellipseRect(ellipseX, ellipseY, ellipseWidth, ellipseHeight);
-
-    QList<MapWidget::Position> allPositions = getEllipsePositions(markersHeight, ellipseRect);
-
     QMap<int, QList<MapMarker>> map;
     for (const MapMarker &marker : markers) {
-        Position position= findBestEllipsePositionForMarker(marker, markers, allPositions);
+        Position position= findBestEllipsePositionForMarker(marker, markers, mapPositions);
         map[position.index].append(marker);
     }
 
     for (int i : map.keys()) {
         while (map[i].size() > 1) {
             const MapMarker &marker = map[i].takeLast();
-            QList<MapWidget::Position> emptyPositions = getEmptyPositions(map, allPositions);
+            QList<MapWidget::Position> emptyPositions = getEmptyPositions(map, mapPositions);
             MapWidget::Position newPosition = findBestEllipsePositionForMarker(marker, markers, emptyPositions);
-            if (map[newPosition.index].isEmpty()) // new position is really empty?
-                map[newPosition.index].append(marker);
-            else
-                qCritical() << " new marker position is not empty: position " << newPosition.index;
+            if (newPosition.index != i) { // avoid append the Position in same index and create an infinite loop
+                if (map[newPosition.index].isEmpty()) // new position is really empty?
+                    map[newPosition.index].append(marker);
+                else
+                    qCritical() << " new marker position is not empty: position " << newPosition.index;
+            }
+            else{
+                qCritical() << "Warning! The newPosition.index is not really a new position!";
+            }
         }
     }
 
@@ -409,9 +391,11 @@ void MapWidget::drawPlayersMarkers(QPainter &p)
     for (int positionIndex : map.keys()) {
         if (!map[positionIndex].isEmpty()) {
             const MapMarker &marker = map[positionIndex].first();
-            QPointF rectPosition = allPositions.at(positionIndex).coords;
-            QPointF markerPosition = getMarkerScreenCoordinate(marker);
-            drawMarker(marker, p, markerPosition, rectPosition);
+            if (positionIndex >= 0 && positionIndex < mapPositions.size()) {
+                QPointF rectPosition = mapPositions.at(positionIndex).coords;
+                QPointF markerPosition = getMarkerScreenCoordinate(marker);
+                drawMarker(marker, p, markerPosition, rectPosition);
+            }
         }
     }
 }
@@ -456,22 +440,19 @@ QList<MapWidget::Position> MapWidget::getEllipsePositions(int markersHeight, con
 
     QList<MapWidget::Position> positions;
 
-    qreal angle = -M_PI/2.0;
-    qreal usedAngles = 0;
+    qreal angle = -M_PI/2.0; //start angle
     int index = 0;
-    while (usedAngles < M_PI * 2) {
+    const int maxPositions = height()/markersHeight * 2.0;
+    static const qreal STEP = 0.1;
+    while (index < maxPositions && angle < M_PI * 1.5) {
         qreal x = elipseHCenter + (std::cos(angle) * hRadius);
         qreal y = elipseVCenter + (std::sin(angle) * vRadius);
         positions.append(MapWidget::Position(QPointF(x, y), index++));
-        static const qreal STEP = 0.1;
-        qreal angleStep = 0.0;
         qreal tempY = y;
         while (qAbs(tempY - y) < markersHeight) {
-            tempY = elipseVCenter + (std::sin(angle + angleStep) * vRadius);
-            angleStep += STEP;
+            tempY = elipseVCenter + (std::sin(angle) * vRadius);
+            angle += STEP;
         }
-        usedAngles += angleStep;
-        angle += angleStep;
     }
 
     // the last position is too close to the first position?

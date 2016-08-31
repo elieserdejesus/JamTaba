@@ -29,13 +29,13 @@ private slots:
     void loadTiles();
 
 private:
-    int zoom;
+    static const int ZOOM;
     qreal latitude;
     qreal longitude;
 
     QPoint offset;
     QRect tilesRect;
-    static QMap<int, QHash<QPoint, QPixmap>> tilePixmaps; // tiles cache, one QHash per zoom level
+    static QHash<QPoint, QPixmap> tilePixmaps; // tiles cache
 
     static bool usingNightMode;
 
@@ -63,7 +63,7 @@ private:
 
     QPointF getCenterLatLong() const;
 
-    QRectF computeMinimumRect(int zoom) const;
+    QRectF computeMinimumRect(int ZOOM) const;
 
     QPointF getMarkerScreenCoordinate(const MapMarker &marker) const;
 
@@ -77,16 +77,14 @@ private:
         Position(const QPointF &coords, int index) : coords(coords), index(index){}
     };
 
+    QList<MapWidget::Position> mapPositions;
+
     QList<MapWidget::Position> getEllipsePositions(int markersHeight, const QRectF &ellipseRect) const;
     Position findBestEllipsePositionForMarker(const MapMarker &marker, const QList<MapMarker> &markers, const QList<Position> &positions) const;
     QList<MapWidget::Position> getEmptyPositions(const QMap<int, QList<MapMarker>> markers, const QList<MapWidget::Position> &allPositions) const;
     bool rectIntersectsSomeMarker(const QRectF &rect, const QList<MapMarker> &markers) const;
 
     int getMaximumMarkerWidth() const;
-
-    int calculateBestZoomLevel() const;
-
-    void autoAdjustZoomLevel();
 
     static QString TILES_DIR;
     static const qreal TEXT_MARGIM;
