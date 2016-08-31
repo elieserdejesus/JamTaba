@@ -230,7 +230,7 @@ public:
 
     void saveEncodedAudio(const QString &userName, quint8 channelIndex, const QByteArray &encodedAudio);
 
-    inline Audio::PublicRoomStreamerNode *getRoomStreamer() const
+    inline Audio::AbstractMp3Streamer *getRoomStreamer() const
     {
         return roomStreamer.data();
     }
@@ -315,7 +315,7 @@ private:
     // audio process is here too (see MainController::process)
     void doAudioProcess(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate);
 
-    QScopedPointer<Audio::PublicRoomStreamerNode> roomStreamer;
+    QScopedPointer<Audio::AbstractMp3Streamer> roomStreamer;
     long long currentStreamingRoomID;
 
     QMap<int, Audio::LocalInputGroup *> trackGroups;
