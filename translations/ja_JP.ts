@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ja_JP">
+<TS version="2.1" language="ja_JP">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -192,10 +192,6 @@
         <translation>準備中</translation>
     </message>
     <message>
-        <source>Transmitting</source>
-        <translation>送信中</translation>
-    </message>
-    <message>
         <source>Enable/disable your audio transmission for others</source>
         <translation>相手へのオーディオ送信を有効/無効化</translation>
     </message>
@@ -231,6 +227,10 @@
     <message>
         <source>channel name</source>
         <translation>チャンネル名</translation>
+    </message>
+    <message>
+        <source>Transmit</source>
+        <translation>送信中</translation>
     </message>
 </context>
 <context>
@@ -764,18 +764,17 @@
     </message>
 </context>
 <context>
+    <name>NinjamTrackView</name>
+    <message>
+        <source>Low cut</source>
+        <translation>ローカット</translation>
+    </message>
+</context>
+<context>
     <name>NinjamVoteButton</name>
     <message>
         <source>Vote - change %1 to %2 </source>
         <translation>%1から%2への変更に投票</translation>
-    </message>
-</context>
-<context>
-    <name>PlayerLabel</name>
-    <message>
-        <source>%1  location is not available at moment!</source>
-        <translatorcomment>地域 %1 の情報は得られませんでした!</translatorcomment>
-        <translation>地域 %1 は得られませんでした!</translation>
     </message>
 </context>
 <context>
@@ -816,8 +815,8 @@
         <translation>プライマリービートのオーディオファイルを選択...</translation>
     </message>
     <message>
-        <source>Audio Files (*.wav, *.ogg)</source>
-        <translation>オーディオファイル (*.wav, *.ogg)</translation>
+        <source>Audio Files</source>
+        <translation>オーディオファイル</translation>
     </message>
     <message>
         <source>Choosing Secondary beat audio file...</source>
@@ -987,10 +986,6 @@
 <context>
     <name>PrivateServerDialog</name>
     <message>
-        <source>Connecting in private Ninjam server ...</source>
-        <translation>プライベート Ninjam サーバへ接続中...</translation>
-    </message>
-    <message>
         <source>This the private server dialog</source>
         <translation>プライベート サーバ ダイアログ</translation>
     </message>
@@ -998,10 +993,6 @@
         <source>Server:</source>
         <translatorcomment>ホスト名/IPアドレス</translatorcomment>
         <translation>サーバ:</translation>
-    </message>
-    <message>
-        <source>type here the name of the server to join</source>
-        <translation>参加するサーバ名を入力</translation>
     </message>
     <message>
         <source>leave blank to connect as annonymous</source>
@@ -1030,6 +1021,10 @@
     <message>
         <source>OK</source>
         <translation>接続</translation>
+    </message>
+    <message>
+        <source>Connecting with private Ninjam server ...</source>
+        <translation>プライベート Ninjam サーバへ接続中...</translation>
     </message>
 </context>
 <context>
@@ -1071,10 +1066,6 @@
     <message>
         <source>enter</source>
         <translation>入室</translation>
-    </message>
-    <message>
-        <source>That panel shows the musicians actually in that room</source>
-        <translation>参加中のミュージシャン</translation>
     </message>
     <message>
         <source>That zone displays the waveform actually played</source>

@@ -1,5 +1,6 @@
 #include "Filters.h"
 #include <cfloat>
+#include <cmath>
 
 using namespace Audio;
 

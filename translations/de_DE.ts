@@ -223,7 +223,7 @@
         <translation>Kanalnamen</translation>
     </message>
     <message>
-        <source>Transmitting</source>
+        <source>Transmit</source>
         <translation>Übertragen</translation>
     </message>
 </context>
@@ -755,17 +755,17 @@
     </message>
 </context>
 <context>
+    <name>NinjamTrackView</name>
+    <message>
+        <source>Low cut</source>
+        <translation>Tiefpass</translation>
+    </message>
+</context>
+<context>
     <name>NinjamVoteButton</name>
     <message>
         <source>Vote - change %1 to %2 </source>
         <translation>vote - änderung%1 to %2</translation>
-    </message>
-</context>
-<context>
-    <name>PlayerLabel</name>
-    <message>
-        <source>%1  location is not available at moment!</source>
-        <translation>%1 ort ist nicht erreichbar im moment!</translation>
     </message>
 </context>
 <context>
@@ -806,8 +806,8 @@
         <translation>Auswahl primär beat audio datei ...</translation>
     </message>
     <message>
-        <source>Audio Files (*.wav, *.ogg)</source>
-        <translation>audio dateien (*.wav,*.ogg)</translation>
+        <source>Audio Files</source>
+        <translation>audio dateien</translation>
     </message>
     <message>
         <source>Choosing Secondary beat audio file...</source>
@@ -977,20 +977,12 @@
 <context>
     <name>PrivateServerDialog</name>
     <message>
-        <source>Connecting in private Ninjam server ...</source>
-        <translation>Verbinde zu privatem ninjam server ...</translation>
-    </message>
-    <message>
         <source>This the private server dialog</source>
         <translation>privater serverdialog</translation>
     </message>
     <message>
         <source>Server:</source>
         <translation>Server:</translation>
-    </message>
-    <message>
-        <source>type here the name of the server to join</source>
-        <translation>tippe hier den servernamen </translation>
     </message>
     <message>
         <source>leave blank to connect as annonymous</source>
@@ -1019,6 +1011,10 @@
     <message>
         <source>OK</source>
         <translation>ok</translation>
+    </message>
+    <message>
+        <source>Connecting with private Ninjam server ...</source>
+        <translation>Verbinde zu privatem ninjam server ...</translation>
     </message>
 </context>
 <context>
@@ -1056,10 +1052,6 @@
     <message>
         <source>enter</source>
         <translation>enter</translation>
-    </message>
-    <message>
-        <source>That panel shows the musicians actually in that room</source>
-        <translation>dieses feld zeigt musiker aktuell im raum</translation>
     </message>
     <message>
         <source>That zone displays the waveform actually played</source>

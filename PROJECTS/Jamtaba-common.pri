@@ -32,6 +32,7 @@ macx{
 
 CONFIG += c++11
 
+
 PRECOMPILED_HEADER += PreCompiledHeaders.h
 
 HEADERS += midi/MidiDriver.h
@@ -99,8 +100,9 @@ HEADERS += gui/widgets/IntervalChunksDisplay.h
 HEADERS += gui/widgets/MarqueeLabel.h
 HEADERS += gui/widgets/PeakMeter.h
 HEADERS += gui/widgets/WavePeakPanel.h
-HEADERS += gui/widgets/PlayerLabel.h
 HEADERS += gui/widgets/UserNameLineEdit.h
+HEADERS += gui/widgets/MapWidget.h
+HEADERS += gui/widgets/MapMarker.h
 HEADERS += gui/BpiUtils.h
 HEADERS += gui/chords/ChordLabel.h
 HEADERS += gui/chords/ChordsPanel.h
@@ -165,7 +167,6 @@ SOURCES += ninjam/ServerMessagesHandler.cpp
 SOURCES += ninjam/UserChannel.cpp
 SOURCES += gui/widgets/PeakMeter.cpp
 SOURCES += gui/widgets/WavePeakPanel.cpp
-SOURCES += gui/widgets/PlayerLabel.cpp
 SOURCES += gui/LocalTrackView.cpp
 SOURCES += gui/plugins/Guis.cpp
 SOURCES += gui/JamRoomViewPanel.cpp
@@ -196,6 +197,8 @@ SOURCES += gui/widgets/CustomTabWidget.cpp
 SOURCES += gui/widgets/UserNameLineEdit.cpp
 SOURCES += gui/widgets/IntervalChunksDisplay.cpp
 SOURCES += gui/widgets/MarqueeLabel.cpp
+SOURCES += gui/widgets/MapMarker.cpp
+SOURCES += gui/widgets/MapWidget.cpp
 SOURCES += gui/BpiUtils.cpp
 SOURCES += gui/chords/ChordsPanel.cpp
 SOURCES += gui/chords/ChordProgression.cpp

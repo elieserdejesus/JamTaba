@@ -2,16 +2,17 @@
 #define KEYBOARDHOOK_H
 
 #include "Windows.h"
+#include <QString>
 
-class KeyboardHook
+namespace KeyboardHook
 {
-public:
-    static void installLowLevelKeyboardHook();
-    static void uninstallLowLevelKeyboardKook();
-    static bool lastImeKeyUpWasReturn;
-private:
-    static HHOOK globalKeyboardHook;
+    void installLowLevelKeyboardHook();
+    void uninstallLowLevelKeyboardKook();
 
-};
+    QString vkCodeToText(DWORD vkCode, DWORD scanCode);
+
+    extern bool lastImeKeyUpWasReturn;
+    extern HHOOK globalKeyboardHook;
+}
 
 #endif // KEYBOARDHOOK_H

@@ -25,7 +25,7 @@ NinjamPanel::NinjamPanel(QWidget *parent) :
         ui->comboBpi->addItem(QString::number(bpis[i]), bpis[i]);
 
     ui->comboBpm->setValidator(new QIntValidator(40, 400, ui->comboBpm));
-    ui->comboBpi->setValidator(new QIntValidator(3, 64, ui->comboBpi));
+    ui->comboBpi->setValidator(new QIntValidator(2, 64, ui->comboBpi));
 
     ui->comboBpi->setCompleter(0);// disabling completer
     ui->comboBpm->setCompleter(0);// disabling completer
