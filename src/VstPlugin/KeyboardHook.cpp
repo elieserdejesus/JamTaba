@@ -54,15 +54,17 @@ LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lP
             bool controlIsPressed = GetKeyState(VK_CONTROL) & 0x8000;
             bool shiftIsPressed = GetKeyState(VK_SHIFT) & 0x8000;
 
-            // A-Z keys
-            if (keyData->vkCode >= Qt::Key_A && keyData->vkCode <= Qt::Key_Z) {
+            // A-Z letters and numbers
+            bool typingLetters = keyData->vkCode >= Qt::Key_A && keyData->vkCode <= Qt::Key_Z;
+            bool typingNumbers = keyData->vkCode >= Qt::Key_0 && keyData->vkCode <= Qt::Key_9;
+            bool typingInNumPad = keyData->vkCode >= VK_NUMPAD0 && keyData->vkCode <= VK_NUMPAD9;
+            if (typingLetters || typingNumbers || typingInNumPad) {
                 QString keyText = KeyboardHook::vkCodeToText(keyData->vkCode, keyData->scanCode);
                 Qt::KeyboardModifiers modifiers;
                 if (controlIsPressed)
                     modifiers |= Qt::ControlModifier;
                 if (shiftIsPressed) {
                     modifiers |= Qt::ShiftModifier;
-                    keyText = keyText.toUpper(); // Qt::ShitModifier was not enough, toUpper was necessary to get SHIFT key working inside VST Hosts.
                 }
                 ev = new QKeyEvent(eventType, keyData->vkCode, modifiers, keyText);
             }
@@ -101,13 +103,15 @@ LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lP
 
 QString KeyboardHook::vkCodeToText(DWORD vkCode, DWORD scanCode)
 {
-    wchar_t buffer[2];
+    wchar_t buffer[10];
 
     BYTE keyState[256] = {0};
 
-    int result = ToUnicodeEx(vkCode, scanCode, keyState, buffer, _countof(buffer), 0, NULL);
-    if (result)
-        return QString::fromWCharArray(buffer);
+    if (GetKeyboardState(keyState)) {
+        int result = ToUnicodeEx(vkCode, scanCode, keyState, buffer, _countof(buffer), 0, NULL);
+        if (result)
+            return QString::fromWCharArray(buffer);
+    }
     return "";
 }
 
