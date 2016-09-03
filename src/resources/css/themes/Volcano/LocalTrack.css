@@ -32,7 +32,7 @@ FxPanelItem  QLabel                                     /* plugin name label */
 {
     qproperty-alignment: AlignLeft;
     font-size: 10px;
-    color: #D3D3D3;
+    color: white;
     margin: 0px;
 }
 
