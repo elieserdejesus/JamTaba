@@ -33,7 +33,7 @@
 
 #userNameLineEdit:read-only
 {
-    color: gray;
+    color: rgba(0, 0, 0, 90);
 }
 
 /* ------------------------------ */
