@@ -116,9 +116,6 @@ NinjamRoomWindow QToolButton
 {
     border: 1px solid rgba(0, 0, 0, 20);
     background-color: rgba(0, 0, 0, 8);
-    min-height: 20px;
-    min-width: 24px;
-    padding: 0px;
 }
 
 NinjamRoomWindow QToolButton:hover
@@ -164,7 +161,6 @@ NinjamRoomWindow QToolButton#narrow
 
 NinjamRoomWindow #licenceButton
 {
-    min-width: 28px;
     background-color: rgba(0, 0, 0, 8);
     border: 1px solid rgba(0, 0,0, 12);
     border-radius: 2px;

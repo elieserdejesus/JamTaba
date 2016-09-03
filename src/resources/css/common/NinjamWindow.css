@@ -14,6 +14,11 @@ NinjamRoomWindow #labelBpmBpi                                /* label used to sh
 /* Tool buttons in ninjam window
 ------------------------------------*/
 
+NinjamRoomWindow QToolButton
+{
+    min-width: 24px;
+}
+
 #licenceButton                              /* show the server licence text */
 {
     background-image: url(':/images/licence.png');
