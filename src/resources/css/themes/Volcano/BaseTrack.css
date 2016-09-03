@@ -99,7 +99,7 @@ BaseTrackView[unlighted="true"] #muteButton
 
 #soloButton:hover:checked
 {
-    background-color: rgb(110, 255, 80);
+    background-color: rgb(125, 255, 108);
     border-color: rgb(45, 45, 45);
 }
 
