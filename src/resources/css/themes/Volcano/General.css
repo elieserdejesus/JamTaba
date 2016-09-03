@@ -288,13 +288,13 @@ QMenu
 {
     border: 1px outset rgb(80, 80, 80);
     color: rgb(220, 220, 220);
-    background: rgb(217, 157, 116);
+    background: rgb(210, 142, 100);
 }
 
 QMenu::item:selected
 {
     color: rgb(220, 220, 220);
-    background-color: rgb(212, 144, 97);
+    background-color: rgb(217, 157, 116);
 }
 
 
