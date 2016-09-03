@@ -1,4 +1,4 @@
-/* Stylesheet for BaseTrack - Flat theme */
+/* Stylesheet for BaseTrack - Volcano theme */
 
 
 /* Track buttons
@@ -43,6 +43,28 @@ QPushButton#buttonStereoInversion
     background-color: #B35925;
     color: rgba(0, 0, 0, 160);
     border-radius: 0px;
+}
+
+#buttonBoostMinus12:hover,
+#buttonBoostPlus12:hover,
+#buttonBoostZero:hover,
+#soloButton:hover,
+#muteButton:hover,
+QPushButton#buttonStereoInversion:hover
+{
+    background-color: #fed87b;
+    color: rgb(80, 80, 80);
+    border-radius: 0px;
+    border-color: rgb(40, 40, 40);
+}
+
+#buttonBoostMinus12:hover:checked,
+#buttonBoostPlus12:hover:checked,
+#buttonBoostZero:hover:checked
+{
+    background-color: #e56318;
+    border-radius: 0px;
+    border-color: rgb(20, 20, 20)
 }
 
 /* button colors when the track is NOT xmiting */
@@ -130,13 +152,14 @@ stop: 1.0 #EF820D);
 BaseTrackView[unlighted="true"] #panSlider::handle,         /* pan slider handle */
 BaseTrackView[unlighted="true"] QSlider::handle:vertical    /* track fader handle */
 {
-    background: rgb(180, 180, 180);
+background: rgb(179, 89, 37);
+Border: none;
 }
 
 BaseTrackView[unlighted="true"],                            /* the track */
 TrackGroupView[unlighted="true"] > #topPanel                /* the track group top panel: used to show user name */
 {
-    background: rgba(255, 255, 255, 40);
+    background: rgba(199, 129, 77, 100);
 }
 /* -----------------------------------------*/
 
@@ -146,6 +169,11 @@ TrackGroupView[unlighted="true"] > #topPanel                /* the track group t
     width: 7px;
 }
 
+BaseTrackView[unlighted="true"] #panSlider::handle:hover,
+BaseTrackView[unlighted="true"] #levelSlider::handle:hover
+{
+    background-color: rgb(217, 157, 116);
+}
 
 PeakMeter
 {
@@ -185,6 +213,6 @@ TrackGroupView #groupNameField                          /* the text field used t
 
 TrackGroupView[unlighted="true"] #groupNameField        /* channel name text field when not xmiting */
 {
-    background: red;
+    background-color: rgba(0, 0, 0, 10);
     border: none;
 }

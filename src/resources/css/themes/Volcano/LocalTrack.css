@@ -1,4 +1,4 @@
-/* Local track stylesheet for Flat theme */
+/* Local track stylesheet for Volcano theme */
 
 
 /* FxPanelItem is the 'slot' for one vst plugin
@@ -71,9 +71,7 @@ FxPanelItem QPushButton:checked:hover                   /* hover effect for 'plu
 
 LocalTrackView[highlighted="true"]
 {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-    stop:0 rgb(255, 255, 255),
-    stop:1 rgb(170, 170, 170));
+    background: rgba(255, 255, 255, 40);
 }
 
 LocalTrackView #inputPanel

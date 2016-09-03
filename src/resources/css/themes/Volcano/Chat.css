@@ -1,5 +1,5 @@
 /*
-    Chat stylesheet for Flat theme
+    Chat stylesheet for Volcano theme
 */
 
 
@@ -10,13 +10,12 @@ scroll area, the text input field, but clear and auto translate buttons).
 ChatPanel #chatText
 {                                           /* text input field used to send chat messages */
     border-color: rgba(0, 0, 0, 80);
-    background-color: rgb(250, 250, 250);
+    background-color: rgba(255, 255, 255, 80);
 }
 
 ChatPanel #chatText:focus                   /* text input field focused */
 {
     border-color: rgba(0, 0, 0, 160);
-    background-color: white;
 }
 
 
@@ -25,7 +24,7 @@ ChatPanel #chatText:focus                   /* text input field focused */
 ----------------------------------------------------------------*/
 ChatMessagePanel
 {
-    border: 1px solid rgb(140, 140, 140);
+    border: 1px solid rgba(0, 0, 0, 120);
 }
 
 ChatMessagePanel #labelUserName             /* The name of chat message author */
