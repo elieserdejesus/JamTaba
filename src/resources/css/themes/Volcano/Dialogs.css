@@ -36,7 +36,7 @@ PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome
 PreferencesDialog QComboBox                         /* the colors inside the combo box*/
 {
     background-color: rgb(254, 181, 102);
-    selection-background-color: rgba(0, 0, 0, 90);
+    selection-background-color: rgb(179, 89, 37);
     selection-color: rgb(254, 181, 102);
 }
 
@@ -45,7 +45,7 @@ PreferencesDialog QComboBox QAbstractItemView      /* the colors inside drop dow
     border: none;
     color: black;
     background-color: rgba(254, 181, 102, 150);
-    selection-background-color: rgba(0, 0, 0, 90);
+    selection-background-color: rgb(179, 89, 37);
     selection-color: rgb(254, 181, 102);
 }
 
@@ -74,7 +74,7 @@ MidiToolsDialog #spinBoxTranspose
     border: 1px solid rgb(80, 80, 80);
     color: black;
     background-color: rgb(254, 181, 102);
-    selection-background-color: rgba(0, 0, 0, 90);
+    selection-background-color: rgb(179, 89, 37);
     selection-color: rgba(254, 181, 102, 150);
 }
 
@@ -131,7 +131,7 @@ PrivateServerDialog #comboBoxServers:focus
 {
     border-color: rgba(0, 0, 0, 100);
     color: black;
-    selection-background-color: rgba(0, 0, 0, 90);
+    selection-background-color: rgb(179, 89, 37);
     selection-color: rgba(254, 181, 102, 150);
 }
 
@@ -140,7 +140,7 @@ PrivateServerDialog QComboBox QAbstractItemView
     border: none;
     color: black;
     background-color: rgba(254, 181, 102, 150);
-    selection-background-color: rgba(0, 0, 0, 90);
+    selection-background-color: rgb(179, 89, 37);
     selection-color: rgb(254, 181, 102);
 }
 
