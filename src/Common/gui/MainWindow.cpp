@@ -118,7 +118,7 @@ void MainWindow::changeTheme(QAction *action)
 
 bool MainWindow::themeCanUseNightModeWorldMaps(const QString &themeName)
 {
-    return themeName == "Black"; // at moment only Black theme is using night mode maps
+    return themeName == "Black" || themeName == "Volcano"; // at moment only Black theme is using night mode maps
 }
 
 void MainWindow::initializeThemeMenu()

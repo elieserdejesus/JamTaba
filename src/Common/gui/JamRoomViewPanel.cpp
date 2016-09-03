@@ -118,6 +118,28 @@ void JamRoomViewPanel::refresh(const Login::RoomInfo &roomInfo)
     ui->buttonEnter->setEnabled(!roomInfo.isFull());
 
     updateMap();
+
+    setProperty("empty", roomInfo.isEmpty());
+
+    updateStyleSheet();
+
+}
+
+void JamRoomViewPanel::updateStyleSheet()
+{
+    style()->unpolish(this);
+    style()->unpolish(ui->content);
+    style()->unpolish(ui->labelName);
+    style()->unpolish(ui->labelRoomStatus);
+    style()->unpolish(ui->buttonListen);
+
+    style()->polish(this);
+    style()->polish(ui->content);
+    style()->polish(ui->labelName);
+    style()->polish(ui->labelRoomStatus);
+    style()->polish(ui->buttonListen);
+
+    update();
 }
 
 void JamRoomViewPanel::updateButtonListen()
@@ -197,6 +219,7 @@ void JamRoomViewPanel::clear(bool resetListenButton)
     if (resetListenButton)
         ui->buttonListen->setChecked(false);
     updateButtonListen();
+    updateStyleSheet();
 
     map->setMarkersVisibility(!ui->buttonListen->isChecked());
 }

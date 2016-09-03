@@ -72,7 +72,7 @@ private:
     QString buildRoomDescriptionString();
 
     void translateUi();
-
+    void updateStyleSheet();
     void createMapWidgets();
     void updateMap();
 
