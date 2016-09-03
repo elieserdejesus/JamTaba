@@ -147,7 +147,7 @@ NinjamTrackView  #channelName               /* channel name for ninjamers */
 
 NinjamTrackGroupView > #topPanel                /* the track group top panel: used to show user name */
  {
-     background: #BD5A1D;
+     ackground: rgba(255, 255, 255, 180);
  }
 
 
