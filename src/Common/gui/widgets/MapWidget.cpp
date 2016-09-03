@@ -33,9 +33,14 @@ QPointF tileForCoordinate(qreal lat, qreal lng, int zoom)
 {
     qreal zn = static_cast<qreal>(1 << zoom);
     qreal tx = (lng + 180.0) / 360.0;
-    qreal ty = (1.0 - log(tan(lat * M_PI / 180.0) +
-                          1.0 / cos(lat * M_PI / 180.0)) / M_PI) / 2.0;
-    return QPointF(tx * zn, ty * zn);
+    qreal divider = cos(lat * M_PI / 180.0);
+    if (divider != 0) {
+        qreal ty = (1.0 - log(tan(lat * M_PI / 180.0) +
+                          1.0 / divider) / M_PI) / 2.0;
+        return QPointF(tx * zn, ty * zn);
+    }
+
+    return QPointF(0, 0);
 }
 
 QPointF tileForCoordinate(QPointF latLong, int zoom)
@@ -46,8 +51,11 @@ QPointF tileForCoordinate(QPointF latLong, int zoom)
 qreal longitudeFromTile(qreal tx, int zoom)
 {
     qreal zn = static_cast<qreal>(1 << zoom);
-    qreal lat = tx / zn * 360.0 - 180.0;
-    return lat;
+    qreal divider = zn * 360.0 - 180.0;
+    if (divider != 0)
+        return tx / divider;
+
+    return 0;
 }
 
 qreal latitudeFromTile(qreal ty, int zoom)
@@ -254,15 +262,17 @@ void MapWidget::loadTiles()
 void MapWidget::resizeEvent(QResizeEvent *)
 {
     //rebuild the positions cache
-    static const int markersHeight = fontMetrics().height() + TEXT_MARGIM;
-    qreal ellipseX = TEXT_MARGIM;
-    qreal ellipseY = TEXT_MARGIM + markersHeight/2;
-    qreal ellipseWidth = width() - getMaximumMarkerWidth() - TEXT_MARGIM * 2;
-    qreal ellipseHeight = height() - TEXT_MARGIM * 2 - markersHeight;
-    QRectF ellipseRect(ellipseX, ellipseY, ellipseWidth, ellipseHeight);
+    if (!markers.isEmpty()) {
+        static const int markersHeight = fontMetrics().height() + TEXT_MARGIM * 2;
+        qreal ellipseX = TEXT_MARGIM;
+        qreal ellipseY = TEXT_MARGIM + markersHeight/2;
+        qreal ellipseWidth = width() - getMaximumMarkerWidth() - TEXT_MARGIM * 2;
+        qreal ellipseHeight = height() - TEXT_MARGIM * 2 - markersHeight;
+        QRectF ellipseRect(ellipseX, ellipseY, ellipseWidth, ellipseHeight);
 
-    mapPositions.clear();
-    mapPositions.append(getEllipsePositions(markersHeight, ellipseRect));
+        mapPositions.clear();
+        mapPositions.append(getEllipsePositions(markersHeight, ellipseRect));
+    }
 
     setCenter(getCenterLatLong());
 }
@@ -442,17 +452,20 @@ QList<MapWidget::Position> MapWidget::getEllipsePositions(int markersHeight, con
 
     qreal angle = -M_PI/2.0; //start angle
     int index = 0;
+    Q_ASSERT(markersHeight > 0);
     const int maxPositions = height()/markersHeight * 2.0;
+    static const qreal MAX_ANGLE = M_PI * 1.5;
     static const qreal STEP = 0.1;
-    while (index < maxPositions && angle < M_PI * 1.5) {
+    while (index < maxPositions && angle < MAX_ANGLE) {
         qreal x = elipseHCenter + (std::cos(angle) * hRadius);
         qreal y = elipseVCenter + (std::sin(angle) * vRadius);
         positions.append(MapWidget::Position(QPointF(x, y), index++));
-        qreal tempY = y;
-        while (qAbs(tempY - y) < markersHeight) {
-            tempY = elipseVCenter + (std::sin(angle) * vRadius);
+        qreal tempY;
+        do{
             angle += STEP;
+            tempY = elipseVCenter + (std::sin(angle) * vRadius);
         }
+        while (qAbs(tempY - y) <= markersHeight && angle < MAX_ANGLE);
     }
 
     // the last position is too close to the first position?
