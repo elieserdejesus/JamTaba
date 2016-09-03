@@ -245,3 +245,14 @@ IntervalProgressWindow #intervalPanel
     color: rgb(180, 180, 180);
 }
 
+
+IntervalProgressDisplay
+{
+    /* qproperty-currentBeatColor: white; */
+    /* qproperty-accentsColor: rgb(225, 225, 225); */
+    /* qproperty-currentAccentColor: rgb(0, 195, 0); */
+    /* qproperty-secondaryBeatsColor: gray; */
+    /* qproperty-disabledBeatsColor: rgba(0, 0, 0, 15); */
+    qproperty-linesColor: rgb(0, 0, 0, 180);
+    /* qproperty-bordersColor: darkgray; */
+}

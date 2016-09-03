@@ -250,3 +250,13 @@ NinjamTrackGroupView #countryLabel          /* country name in ninjam tracks */
     qproperty-alignment: AlignCenter;
     font-size: 9px;
 }
+
+IntervalProgressDisplay
+{
+    qproperty-currentBeatColor: white;
+    qproperty-accentsColor: rgb(225, 225, 225);
+    qproperty-currentAccentColor: rgb(0, 195, 0); /* light green*/
+    qproperty-secondaryBeatsColor: gray;
+    qproperty-disabledBeatsColor: rgba(0, 0, 0, 15);
+    qproperty-linesColor: rgba(0, 0, 0, 40);
+}
