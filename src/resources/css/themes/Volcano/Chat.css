@@ -40,3 +40,8 @@ ChatMessagePanel #blockButton:hover
     font-weight: bold;
 }
 
+ChatMessagePanel #labelMessage
+{
+selection-background-color: rgb(179, 89, 37);
+selection-color: rgb(254, 181, 102);
+}
