@@ -87,7 +87,9 @@ LocalTrackView[unlighted="false"] #inputPanel    /* input panel color when user 
 
 LocalTrackView #inputPanel:hover
 {
-    background-color: rgba(255, 106, 0, 5);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(255, 142, 60, 2),
+    stop:1 rgb(255, 106, 0, 150));
 }
 
 LocalTrackView[unlighted="true"] #inputPanel:hover
