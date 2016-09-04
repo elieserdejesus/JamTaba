@@ -232,8 +232,7 @@ QSlider::handle:vertical
 /* TabBar ----------------------*/
 QTabBar::tab
 {
-    background-color: rgba(0, 0, 0, 20); /* rgb(200, 200, 200);*/
-    color: lightgray;
+    background-color: rgba(174, 83, 27, 180);
 }
 
 QTabBar::tab:selected
