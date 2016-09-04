@@ -14,6 +14,11 @@ NinjamRoomWindow #labelBpmBpi                                /* label used to sh
 /* Tool buttons in ninjam window
 ------------------------------------*/
 
+NinjamRoomWindow QToolButton
+{
+    min-width: 24px;
+}
+
 #licenceButton                              /* show the server licence text */
 {
     background-image: url(':/images/licence.png');
@@ -249,4 +254,14 @@ NinjamTrackGroupView #countryLabel          /* country name in ninjam tracks */
     color: rgba(0, 0, 0, 180);
     qproperty-alignment: AlignCenter;
     font-size: 9px;
+}
+
+IntervalProgressDisplay
+{
+    qproperty-currentBeatColor: white;
+    qproperty-accentsColor: rgb(225, 225, 225);
+    qproperty-currentAccentColor: rgb(0, 195, 0); /* light green*/
+    qproperty-secondaryBeatsColor: gray;
+    qproperty-disabledBeatsColor: rgba(0, 0, 0, 15);
+    qproperty-linesColor: rgba(0, 0, 0, 40);
 }

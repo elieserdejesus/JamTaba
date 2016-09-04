@@ -26,6 +26,31 @@ JamRoomViewPanel  #labelRoomType
 }
 
 
+/* empty rooms */
+JamRoomViewPanel[empty="true"] #content
+{
+    background: rgb(253, 253, 253, 85);
+}
+
+
+JamRoomViewPanel[empty="true"]
+{
+    background-color: rgba(0, 0, 0, 15);
+    border: none;
+}
+
+JamRoomViewPanel[empty="true"] #labelRoomStatus
+{
+    color: rgba(0, 0, 0, 90);
+}
+
+JamRoomViewPanel[empty="true"] #labelName
+{
+    font-weight: normal;
+}
+
+
+
 WavePeakPanel
 {
     /* color used to draw the wave form */

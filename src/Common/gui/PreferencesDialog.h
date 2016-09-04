@@ -58,6 +58,7 @@ private:
     void refreshMetronomeControlsStyleSheet();
     QString openAudioFileBrowser(const QString caption);
     QMap<QCheckBox *, QString> jamRecorderCheckBoxes;
+    static QString getAudioFilesFilter();
 
 protected:
     Ui::PreferencesDialog *ui;

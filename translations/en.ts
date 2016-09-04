@@ -171,10 +171,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Transmitting</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Enable/disable your audio transmission for others</source>
         <translation></translation>
     </message>
@@ -224,6 +220,10 @@
     </message>
     <message>
         <source>channel name</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Transmit</source>
         <translation></translation>
     </message>
 </context>
@@ -526,6 +526,10 @@
         <source>Can&apos;t open the link!</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Volcano</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>MainWindowStandalone</name>
@@ -755,16 +759,16 @@
     </message>
 </context>
 <context>
-    <name>NinjamVoteButton</name>
+    <name>NinjamTrackView</name>
     <message>
-        <source>Vote - change %1 to %2 </source>
+        <source>Low cut</source>
         <translation></translation>
     </message>
 </context>
 <context>
-    <name>PlayerLabel</name>
+    <name>NinjamVoteButton</name>
     <message>
-        <source>%1  location is not available at moment!</source>
+        <source>Vote - change %1 to %2 </source>
         <translation></translation>
     </message>
 </context>
@@ -806,7 +810,7 @@
         <translation></translation>
     </message>
     <message>
-        <source>Audio Files (*.wav, *.ogg)</source>
+        <source>Audio Files</source>
         <translation></translation>
     </message>
     <message>
@@ -977,19 +981,11 @@
 <context>
     <name>PrivateServerDialog</name>
     <message>
-        <source>Connecting in private Ninjam server ...</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>This the private server dialog</source>
         <translation></translation>
     </message>
     <message>
         <source>Server:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>type here the name of the server to join</source>
         <translation></translation>
     </message>
     <message>
@@ -1018,6 +1014,10 @@
     </message>
     <message>
         <source>OK</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Connecting with private Ninjam server ...</source>
         <translation></translation>
     </message>
 </context>
@@ -1059,10 +1059,6 @@
     </message>
     <message>
         <source>enter</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>That panel shows the musicians actually in that room</source>
         <translation></translation>
     </message>
     <message>

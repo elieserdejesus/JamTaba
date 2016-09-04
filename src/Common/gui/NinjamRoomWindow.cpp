@@ -135,11 +135,13 @@ void NinjamRoomWindow::updateUserNameLabel()
 void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrientation)
 {
     horizontalLayoutButton = new QToolButton();
+    horizontalLayoutButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding);
     horizontalLayoutButton->setIcon(QIcon(":/images/horizontal_layout.png"));
     horizontalLayoutButton->setObjectName(QStringLiteral("buttonHorizontalLayout"));
     horizontalLayoutButton->setCheckable(true);
 
     verticalLayoutButton = new QToolButton();
+    verticalLayoutButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding);
     verticalLayoutButton->setIcon(QIcon(":/images/vertical_layout.png"));
     verticalLayoutButton->setObjectName(QStringLiteral("buttonVerticalLayout"));
     verticalLayoutButton->setCheckable(true);
@@ -168,11 +170,13 @@ void NinjamRoomWindow::createLayoutDirectionButtons(Qt::Orientation initialOrien
 void NinjamRoomWindow::createTracksSizeButtons(TracksSize initialTracksSize)
 {
     wideButton = new QToolButton();
+    wideButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding);
     wideButton->setIcon(QIcon(":/images/wide.png"));
     wideButton->setObjectName(QStringLiteral("wide"));
     wideButton->setCheckable(true);
 
     narrowButton = new QToolButton();
+    narrowButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding);
     narrowButton->setIcon(QIcon(":/images/narrow.png"));
     narrowButton->setObjectName(QStringLiteral("narrow"));
     narrowButton->setCheckable(true);

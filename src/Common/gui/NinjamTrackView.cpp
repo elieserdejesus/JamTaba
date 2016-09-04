@@ -25,6 +25,7 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
     channelNameLabel->setObjectName("channelName");
     channelNameLabel->setText("");
     channelNameLabel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
+    channelNameLabel->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
 
     chunksDisplay = new IntervalChunksDisplay(this);
     chunksDisplay->setVisible(false);

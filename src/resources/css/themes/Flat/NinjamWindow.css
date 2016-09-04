@@ -30,12 +30,15 @@ NinjamTrackView[horizontal="true"] #buttonBoostZero
     min-width: 12px;
 }
 
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12:checked,
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:checked,
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:checked
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12:hover:checked,
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:hover:checked,
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:hover:checked,
+NinjamTrackView[horizontal="true"] QPushButton#lowCutButton:hover:checked,
+NinjamTrackView QPushButton#lowCutButton:hover:checked
 {
     margin-top: -1px;
-    background-color: rgba(0, 0, 0, 30);
+    background-color: rgb(200, 200, 200);
+    border: none;
 }
 
 NinjamTrackView[horizontal="true"]
@@ -57,11 +60,6 @@ NinjamTrackView[unlighted="true"][horizontal="true"] QSlider::handle:horizontal
 
 /* Tool buttons: track vertical/horizontal, wide/narrow and server licence buttons
 ------------------------------------------------------------------------------------*/
-#licenceButton
-{
-    max-height: 20px;
-    width: 28px;
-}
 
 NinjamRoomWindow QToolButton:hover,
 #licenceButton:hover
@@ -75,13 +73,6 @@ NinjamRoomWindow QToolButton,
 {
     border: 1px solid rgb(150, 150, 150);
     background-color: rgba(255, 255, 255, 10);
-}
-
-NinjamRoomWindow QToolButton
-{
-    height: 20px;
-    min-width: 28px;
-    padding: 0px;
 }
 
 NinjamRoomWindow QToolButton:checked

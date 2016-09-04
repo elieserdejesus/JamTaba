@@ -94,8 +94,8 @@ QMenuBar::item:selected { /* hover effect for menu bar items */
 
 QMenuBar::item:pressed { /* 'button pressed' item style */
 
-    border-style: inset;
-
+    border: 1px inset gray;
+    background-color: rgba(0, 0, 0, 50);
 }
 
 /* fix to issue #500 */

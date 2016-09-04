@@ -79,11 +79,7 @@ int RoomInfo::getNonBotUsersCount() const
 
 bool RoomInfo::isEmpty() const
 {
-    foreach (const UserInfo &userInfo, users) {
-        if (!Ninjam::Service::isBotName(userInfo.getName()))
-            return false;
-    }
-    return true;
+    return getNonBotUsersCount() == 0;
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

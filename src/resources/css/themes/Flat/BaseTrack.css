@@ -35,7 +35,17 @@
 
 #buttonBoostMinus12:checked,
 #buttonBoostPlus12:checked,
-#buttonBoostZero:checked
+#buttonBoostZero:checked,
+QPushButton#buttonStereoInversion:checked
+{
+    background-color: rgb(200, 200, 200);
+    color: rgba(0, 0, 0, 160);
+    border-radius: 0px;
+}
+
+#buttonBoostMinus12:hover:checked,
+#buttonBoostPlus12:hover:checked,
+#buttonBoostZero:hover:checked
 {
     background-color: rgb(200, 200, 200);
     color: rgba(0, 0, 0, 160);
@@ -47,10 +57,16 @@ BaseTrackView[unlighted="true"] #buttonBoostMinus12,
 BaseTrackView[unlighted="true"] #buttonBoostZero,
 BaseTrackView[unlighted="true"] #buttonBoostPlus12,
 BaseTrackView[unlighted="true"] #soloButton,
-BaseTrackView[unlighted="true"] #muteButton
+BaseTrackView[unlighted="true"] #muteButton,
+BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
 {
     background-color: rgba(0, 0, 0, 30);
     border: none;
+}
+
+BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion:hover:checked
+{
+    background-color: rgb(200, 200, 200);
 }
 
 #buttonBoostZero:checked
@@ -87,6 +103,10 @@ BaseTrackView[unlighted="true"] #muteButton
     border-color: rgb(45, 45, 45);
 }
 
+BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked
+{
+    background-color: rgba(0, 0, 0, 50);
+}
 
 /* Small Label used to show max peak below peak meters
 -------------------------------------------------------*/

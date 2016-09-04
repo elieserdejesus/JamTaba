@@ -129,7 +129,7 @@ void ChatMessagePanel::on_translateButton_clicked()
         if (translatedText.isEmpty())
             translate();
         else{
-            setMessageLabelText(translatedText);
+            setMessageLabelText("<i>" + translatedText + "</i>");
         }
     } else {
         setMessageLabelText(originalText);
@@ -178,5 +178,5 @@ void ChatMessagePanel::setTranslatedMessage(const QString &translatedMessage)
 {
     ui->translateButton->setChecked(true);
     translatedText = translatedMessage;
-    setMessageLabelText(translatedMessage);
+    setMessageLabelText("<i>" + translatedMessage + "</i>");
 }

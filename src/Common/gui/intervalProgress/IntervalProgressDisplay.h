@@ -12,6 +12,15 @@ class QComboBox;
 class IntervalProgressDisplay : public QFrame
 {
     Q_OBJECT
+
+    // custom properties defined in CSS files
+    Q_PROPERTY(QColor currentBeatColor MEMBER currentBeatColor)
+    Q_PROPERTY(QColor accentsColor MEMBER accentsColor)
+    Q_PROPERTY(QColor currentAccentColor MEMBER currentAccentColor)
+    Q_PROPERTY(QColor secondaryBeatsColor MEMBER secondaryBeatsColor)
+    Q_PROPERTY(QColor disabledBeatsColor MEMBER disabledBeatsColor)
+    Q_PROPERTY(QColor linesColor MEMBER linesColor)
+
 public:
     enum PaintShape {
         CIRCULAR, ELLIPTICAL, LINEAR, PIE
@@ -67,15 +76,15 @@ private:
 
     struct PaintColors
     {
-        QColor currentBeat; //white, the most highlighted beat
-        QColor secondaryBeat; //non current beats
-        QColor accentBeat;//used in first interval beat and accents when these beats are non current beat
-        QColor currentAccentBeat;//used when drawing the current beat and this beat is an accent
+        QColor currentBeat;         // the most highlighted beat
+        QColor secondaryBeat;       // non current beats
+        QColor accentBeat;          // used in first interval beat and accents when these beats are non current beat
+        QColor currentAccentBeat;   // used when drawing the current beat and this beat is an accent
         QColor disabledBeats;
         QBrush textColor;
+        QColor linesColor;
 
-
-        PaintColors(const QColor &currentBeat, const QColor &secondaryBeat, const QColor &accentBeat, const QColor &currentAccentBeat, const QColor &disabledBeats, const QBrush &textColor);
+        PaintColors(const QColor &currentBeat, const QColor &secondaryBeat, const QColor &accentBeat, const QColor &currentAccentBeat, const QColor &disabledBeats, const QBrush &textColor, QColor linesColor);
     };
 
     class PaintStrategy
@@ -98,8 +107,7 @@ private:
         void paint(QPainter &p, const PaintContext &context, const PaintColors &colors) override;
     private:
         qreal getHorizontalSpace(int width, qreal elementsSize, int totalPoinstToDraw, int initialXPos) const;
-        void drawPoint(qreal x, qreal y, qreal size, QPainter &painter, int value, const QBrush &bgPaint, const QColor &border, bool small);
-        static const QColor CIRCLES_BORDER_COLOR;
+        void drawPoint(qreal x, qreal y, qreal size, QPainter &painter, int value, const QBrush &bgPaint, bool small);
     };
 
     class EllipticalPaintStrategy : public PaintStrategy
@@ -110,7 +118,6 @@ private:
     protected:
         virtual QRectF createContextRect(const PaintContext& context, qreal margin) const;
         QBrush getBrush(int beat, int beatOffset, const PaintContext &context, const PaintColors &colors) const;
-        QPen getPen(int beat, int beatOffset, const PaintContext &context) const;
         qreal getCircleSize(int beat, int beatOffset, const PaintContext &context) const;
         void drawCurrentBeatValue(QPainter &p, const QRectF &rect, const PaintContext &context, const PaintColors &colors);
     private:
@@ -151,10 +158,19 @@ private:
 
     static const double PI;
 
-    static const QColor CURRENT_ACCENT_COLOR;
-    static const QColor ACCENT_COLOR;
-    static const QColor SECONDARY_BEATS_COLOR;
-    static const QColor DISABLED_BEATS_COLOR;
+    QColor currentBeatColor;
+    QColor accentsColor;
+    QColor currentAccentColor;
+    QColor secondaryBeatsColor;
+    QColor disabledBeatsColor;
+    QColor linesColor;
+
+    static const QColor DEFAULT_CURRENT_BEAT_COLOR;
+    static const QColor DEFAULT_CURRENT_ACCENT_COLOR;
+    static const QColor DEFAULT_ACCENTS_COLOR;
+    static const QColor DEFAULT_SECONDARY_BEATS_COLOR;
+    static const QColor DEFAULT_DISABLED_BEATS_COLOR;
+    static const QColor DEFAULT_LINES_COLOR;
 };
 
 #endif

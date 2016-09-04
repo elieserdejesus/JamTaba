@@ -6,10 +6,13 @@
 
 const double IntervalProgressDisplay::PI = 3.141592653589793238462643383279502884;
 
-const QColor IntervalProgressDisplay::CURRENT_ACCENT_COLOR = Qt::green;
-const QColor IntervalProgressDisplay::ACCENT_COLOR = QColor(225, 225, 225);
-const QColor IntervalProgressDisplay::SECONDARY_BEATS_COLOR = Qt::gray;
-const QColor IntervalProgressDisplay::DISABLED_BEATS_COLOR = QColor(0, 0, 0, 15);
+// at moment these colors are defined in CSS Theme files. These constants are just fallback values.
+const QColor IntervalProgressDisplay::DEFAULT_CURRENT_BEAT_COLOR = Qt::white;
+const QColor IntervalProgressDisplay::DEFAULT_CURRENT_ACCENT_COLOR = Qt::green;
+const QColor IntervalProgressDisplay::DEFAULT_ACCENTS_COLOR = QColor(225, 225, 225);
+const QColor IntervalProgressDisplay::DEFAULT_SECONDARY_BEATS_COLOR = Qt::gray;
+const QColor IntervalProgressDisplay::DEFAULT_DISABLED_BEATS_COLOR = QColor(0, 0, 0, 15);
+const QColor IntervalProgressDisplay::DEFAULT_LINES_COLOR = Qt::gray;
 
 IntervalProgressDisplay::PaintStrategy::PaintStrategy()
     :font("Verdana")
@@ -28,7 +31,13 @@ IntervalProgressDisplay::IntervalProgressDisplay(QWidget *parent) :
     showAccents(false),
     currentBeat(0),
     beatsPerAccent(0),
-    usingLowContrastColors(false)
+    usingLowContrastColors(false),
+    accentsColor(DEFAULT_ACCENTS_COLOR),
+    currentAccentColor(DEFAULT_CURRENT_ACCENT_COLOR),
+    secondaryBeatsColor(DEFAULT_SECONDARY_BEATS_COLOR),
+    disabledBeatsColor(DEFAULT_DISABLED_BEATS_COLOR),
+    currentBeatColor(DEFAULT_CURRENT_BEAT_COLOR)
+
 {
     //setAttribute(Qt::WA_NoBackground);
 
@@ -113,9 +122,9 @@ void IntervalProgressDisplay::paintEvent(QPaintEvent *e)
         qreal elementsSize = getElementsSize(paintMode);
         qreal fontSize = getFontSize(paintMode);
         PaintContext paintContext(width(), height(), beatsPerInterval, currentBeat, isShowingAccents(), beatsPerAccent, elementsSize, fontSize);
-        QColor currentBeatColor = usingLowContrastColors ? Qt::lightGray : Qt::white;
-        QBrush textBrush = palette().text(); //using the color define in loaded stylesheet theme
-        PaintColors paintColors(currentBeatColor, SECONDARY_BEATS_COLOR, ACCENT_COLOR, CURRENT_ACCENT_COLOR, DISABLED_BEATS_COLOR, textBrush);
+        QColor currentBeatColor = usingLowContrastColors ? Qt::lightGray : this->currentBeatColor;
+        QBrush textBrush = palette().text(); //using the color defined in loaded stylesheet theme
+        PaintColors paintColors(currentBeatColor, secondaryBeatsColor, accentsColor, currentAccentColor, disabledBeatsColor, textBrush, linesColor);
         paintStrategy->paint(p, paintContext, paintColors);
     }
 }
@@ -195,14 +204,15 @@ IntervalProgressDisplay::PaintContext::PaintContext(int width, int height, int b
 
 IntervalProgressDisplay::PaintColors::PaintColors(const QColor &currentBeat,
             const QColor &secondaryBeat, const QColor &accentBeat, const QColor &currentAccentBeat, const QColor &disabledBeats,
-                                                              const QBrush &textColor)
+                                                              const QBrush &textColor, QColor linesColor)
 
     : currentBeat(currentBeat),
       secondaryBeat(secondaryBeat),
       accentBeat(accentBeat),
       currentAccentBeat(currentAccentBeat),
       disabledBeats(disabledBeats),
-      textColor(textColor)
+      textColor(textColor),
+      linesColor(linesColor)
 {
 
 }

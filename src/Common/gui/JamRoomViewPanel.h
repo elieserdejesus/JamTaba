@@ -6,6 +6,8 @@
 #include "ninjam/Server.h"
 #include "loginserver/LoginService.h"
 
+class MapWidget;
+
 namespace Ui {
 class RoomViewPanel;
 }
@@ -16,6 +18,7 @@ class Location;
 
 namespace Login {
 class AbstractJamRoom;
+class RoomInfo;
 }
 
 namespace Controller {
@@ -53,10 +56,13 @@ private slots:
     void toggleRoomListening();
     void enterInTheRoom();
     void updateUserLocation(const QString &userIP);
+
 private:
     Ui::RoomViewPanel *ui;
     Controller::MainController *mainController;
     Login::RoomInfo roomInfo;
+    MapWidget *map;
+
     void initialize(const Login::RoomInfo &roomInfo);
     bool roomContainsBotsOnly(const Login::RoomInfo &roomInfo);
     bool userIsBot(const Login::UserInfo &userInfo);
@@ -66,6 +72,11 @@ private:
     QString buildRoomDescriptionString();
 
     void translateUi();
+    void updateStyleSheet();
+    void createMapWidgets();
+    void updateMap();
+
+    bool static canShowNinjamServerPort(const QString &serverName);
 };
 
 #endif // JAMROOMVIEWPANEL_H

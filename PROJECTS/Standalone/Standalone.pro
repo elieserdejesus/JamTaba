@@ -81,6 +81,7 @@ linux{
     SOURCES += vst/LinuxVstPluginChecker.cpp
 }
 
+
 win32{
 
     win32-msvc*{#all msvc compilers

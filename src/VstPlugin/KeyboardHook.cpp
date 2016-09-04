@@ -52,46 +52,44 @@ LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lP
             QKeyEvent::Type eventType = (wParam == WM_KEYDOWN) ? QKeyEvent::KeyPress : QKeyEvent::KeyRelease;
 
             bool controlIsPressed = GetKeyState(VK_CONTROL) & 0x8000;
+            bool shiftIsPressed = GetKeyState(VK_SHIFT) & 0x8000;
 
-            switch (keyData->vkCode) { // these keys are used by VST hosts and we need intercept
-            case 67: //CONTROL + C
+            // A-Z letters and numbers
+            bool typingLetters = keyData->vkCode >= Qt::Key_A && keyData->vkCode <= Qt::Key_Z;
+            bool typingNumbers = keyData->vkCode >= Qt::Key_0 && keyData->vkCode <= Qt::Key_9;
+            bool typingInNumPad = keyData->vkCode >= VK_NUMPAD0 && keyData->vkCode <= VK_NUMPAD9;
+            if (typingLetters || typingNumbers || typingInNumPad) {
+                QString keyText = KeyboardHook::vkCodeToText(keyData->vkCode, keyData->scanCode);
+                Qt::KeyboardModifiers modifiers;
                 if (controlIsPressed)
-                    ev = new QKeyEvent(eventType, Qt::Key_C, Qt::ControlModifier);
+                    modifiers |= Qt::ControlModifier;
+                if (shiftIsPressed) {
+                    modifiers |= Qt::ShiftModifier;
+                }
+                ev = new QKeyEvent(eventType, keyData->vkCode, modifiers, keyText);
+            }
+            else { //other/special keys
+
+                switch (keyData->vkCode) {
+                case VK_SPACE:
+                    ev = new QKeyEvent(eventType, Qt::Key_Space, Qt::NoModifier, " ");
                     break;
-            case 86: //CONTROL + V
-                if (controlIsPressed)
-                    ev = new QKeyEvent(eventType, Qt::Key_V, Qt::ControlModifier);
+                case VK_RETURN:
+                    ev = new QKeyEvent(eventType, Qt::Key_Return, Qt::NoModifier);
                     break;
-            case 65: //CONTROL + A
-                if (controlIsPressed)
-                    ev = new QKeyEvent(eventType, Qt::Key_A, Qt::ControlModifier);
+                case VK_LEFT:
+                    ev = new QKeyEvent(eventType, Qt::Key_Left, QApplication::queryKeyboardModifiers());
                     break;
-            case 90: //CONTROL + Z
-                if (controlIsPressed)
-                    ev = new QKeyEvent(eventType, Qt::Key_Z, Qt::ControlModifier);
+                case VK_RIGHT:
+                    ev = new QKeyEvent(eventType, Qt::Key_Right, QApplication::queryKeyboardModifiers());
                     break;
-            case 88: //CONTROL + X
-                if (controlIsPressed)
-                    ev = new QKeyEvent(eventType, Qt::Key_X, Qt::ControlModifier);
+                case VK_END:
+                    ev = new QKeyEvent(eventType, Qt::Key_End, QApplication::queryKeyboardModifiers());
                     break;
-            case VK_SPACE:
-                ev = new QKeyEvent(eventType, Qt::Key_Space, Qt::NoModifier, " ");
-                break;
-            case VK_RETURN:
-                ev = new QKeyEvent(eventType, Qt::Key_Return, Qt::NoModifier);
-                break;
-            case VK_LEFT:
-                ev = new QKeyEvent(eventType, Qt::Key_Left, QApplication::queryKeyboardModifiers());
-                break;
-            case VK_RIGHT:
-                ev = new QKeyEvent(eventType, Qt::Key_Right, QApplication::queryKeyboardModifiers());
-                break;
-            case VK_END:
-                ev = new QKeyEvent(eventType, Qt::Key_End, QApplication::queryKeyboardModifiers());
-                break;
-            case VK_HOME:
-                ev = new QKeyEvent(eventType, Qt::Key_Home, QApplication::queryKeyboardModifiers());
-                break;
+                case VK_HOME:
+                    ev = new QKeyEvent(eventType, Qt::Key_Home, QApplication::queryKeyboardModifiers());
+                    break;
+                }
             }
 
             if (ev) {
@@ -101,6 +99,20 @@ LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lP
         }
     }
     return CallNextHookEx(NULL, nCode, wParam, lParam);// Forward the event to VST host
+}
+
+QString KeyboardHook::vkCodeToText(DWORD vkCode, DWORD scanCode)
+{
+    wchar_t buffer[10];
+
+    BYTE keyState[256] = {0};
+
+    if (GetKeyboardState(keyState)) {
+        int result = ToUnicodeEx(vkCode, scanCode, keyState, buffer, _countof(buffer), 0, NULL);
+        if (result)
+            return QString::fromWCharArray(buffer);
+    }
+    return "";
 }
 
 void KeyboardHook::installLowLevelKeyboardHook()

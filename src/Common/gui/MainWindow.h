@@ -225,6 +225,7 @@ private slots:
     void changeTheme(QAction *action);
     void translateThemeMenu();
 
+    void updateNightModeInWorldMaps();
 private:
 
     BusyDialog busyDialog;
@@ -297,6 +298,8 @@ private:
     void sendAcceptedChordProgressionToServer(const ChordProgression &progression);
 
     QString getTranslatedThemeName(const QString &themeName);
+
+    static bool themeCanUseNightModeWorldMaps(const QString &themeName);
 
     // PerformanceMonitor performanceMonitor;//cpu and memmory usage
     // qint64 lastPerformanceMonitorUpdate;

@@ -49,13 +49,16 @@ NinjamTrackView[horizontal="true"] #buttonBoostZero
     min-width: 12px;
 }
 
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12:checked,
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:checked,
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:checked
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12:hover:checked,
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:hover:checked,
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:hover:checked,
+NinjamTrackView[horizontal="true"] QPushButton#lowCutButton:hover:checked,
+NinjamTrackView QPushButton#lowCutButton:hover:checked
 {
     margin-top: -1px;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(100, 100, 100), stop:1 rgb(80, 80, 80));
     color: rgba(0, 0, 0, 160);
+    border: none;
 }
 
 NinjamTrackView[horizontal="true"]
@@ -79,66 +82,57 @@ NinjamTrackView[horizontal="true"] QSlider::handle:horizontal
 
 /* Tool buttons: track vertical/horizontal, wide/narrow and server licence buttons
 ------------------------------------------------------------------------------------*/
-#licenceButton
-{
-    background-color: rgb(50, 50, 50);
-    border: 1px solid black;
-    max-height: 20px;
-    width: 28px;
-}
-
-NinjamRoomWindow QToolButton:hover
-{
-    border: 1px solid black;
-    background-color: rgb(60, 60, 60);
-}
-
-#licenceButton:hover
-{
-    border: 1px solid black;
-    background-color: rgb(35, 35, 35);
-}
-
+NinjamRoomWindow QToolButton:hover,
 NinjamRoomWindow QToolButton:hover:checked,
+#licenceButton:hover,
 #licenceButton:hover:checked
 {
-    border: 1px solid black;
-    background-color: rgb(30, 30, 30);
+    background-color: rgba(255, 255, 255, 100);
+}
+
+NinjamRoomWindow QToolButton:hover:!checked,
+#licenceButton:hover:!checked
+{
+    background-color: rgba(255, 255, 255, 40);
 }
 
 NinjamRoomWindow QToolButton,
 #licenceButton
 {
     border: 1px solid black;
-    background-color: rgba(255, 255, 255, 10);
 }
 
 NinjamRoomWindow QToolButton
 {
-    background-color: rgb(50, 50, 50);
     border: 1px solid black;
     height: 20px;
     min-width: 28px;
     padding: 0px;
 }
 
-NinjamRoomWindow QToolButton:checked
+NinjamRoomWindow QToolButton:checked,
+#licenceButton
 {
-    border: 1px solid black;
-    background-color: rgb(20, 20, 20);
+    background-color: rgb(255, 255, 255, 60);
 }
 
+NinjamRoomWindow QToolButton:!checked
+{
+    background-color: rgba(255, 255, 255, 25);
+}
 
-NinjamRoomWindow QToolButton#buttonVerticalLayout:!checked
+#buttonVerticalLayout:!checked
 {
     border: 1px solid black;
     border-right-color: none;
 }
-NinjamRoomWindow QToolButton#buttonHorizontalLayout:!checked
+#buttonHorizontalLayout:!checked
 {
     border: 1px solid black;
     border-left-color: none;
 }
+
+
 
 NinjamRoomWindow #labelUserName
 {
@@ -245,3 +239,14 @@ IntervalProgressWindow #intervalPanel
     color: rgb(180, 180, 180);
 }
 
+
+IntervalProgressDisplay
+{
+    /* qproperty-currentBeatColor: white; */
+    /* qproperty-accentsColor: rgb(225, 225, 225); */
+    /* qproperty-currentAccentColor: rgb(0, 195, 0); */
+    /* qproperty-secondaryBeatsColor: gray; */
+    /* qproperty-disabledBeatsColor: rgba(0, 0, 0, 15); */
+    qproperty-linesColor: rgb(0, 0, 0, 180);
+    /* qproperty-bordersColor: darkgray; */
+}
