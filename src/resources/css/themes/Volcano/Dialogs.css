@@ -14,7 +14,9 @@ PrivateServerDialog
 {
     border-color: rgb(20, 20, 20);
     color: rgb(220, 220, 220);
-    background-color: rgb(239, 114, 24);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.5 rgb(239, 114, 24),
+        stop: 1.0 rgb(197, 34, 1));
 }
 
 PrivateServerDialog #label, #label_2, #label_3
@@ -30,7 +32,9 @@ UserNameDialog #label
 PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome
 {
     border: none;
-    background: rgb(239, 114, 24);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.5 rgb(239, 114, 24),
+        stop: 1.0 rgb(197, 34, 1));
 }
 
 PreferencesDialog QComboBox                         /* the colors inside the combo box*/
@@ -108,7 +112,9 @@ PluginScanDialog #labelPluginText
 
 PluginScanDialog
 {
-    background-color: rgb(239, 114, 24);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.5 rgb(239, 114, 24),
+        stop: 1.0 rgb(197, 34, 1));
 }
 
 PluginScanDialog QGroupBox
