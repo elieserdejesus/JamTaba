@@ -535,7 +535,7 @@
     </message>
     <message>
         <source>Volcano</source>
-        <translation type="unfinished"></translation>
+        <translation>ボルケーノ</translation>
     </message>
 </context>
 <context>
