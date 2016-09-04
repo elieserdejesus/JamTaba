@@ -36,6 +36,11 @@ QPushButton#buttonStereoInversion
    border-radius: 2px;
 }
 
+QPushButton#buttonStereoInversion:checked
+{
+    background-color: #B35925;
+}
+
 #buttonBoostMinus12:checked,
 #buttonBoostPlus12:checked,
 #buttonBoostZero:checked
@@ -49,13 +54,18 @@ QPushButton#buttonStereoInversion
 #buttonBoostPlus12:hover,
 #buttonBoostZero:hover,
 #soloButton:hover,
-#muteButton:hover,
-QPushButton#buttonStereoInversion:hover
+#muteButton:hover
 {
     background-color: #fed87b;
     color: rgb(80, 80, 80);
     border-radius: 0px;
     border-color: rgb(40, 40, 40);
+}
+
+QPushButton#buttonStereoInversion:hover
+{
+    background-color: #fed87b;
+    border-radius: 2px;
 }
 
 #buttonBoostMinus12:hover:checked,
@@ -65,6 +75,12 @@ QPushButton#buttonStereoInversion:hover
     background-color: #e56318;
     border-radius: 0px;
     border-color: rgb(20, 20, 20)
+}
+
+QPushButton#buttonStereoInversion:hover:checked
+{
+    background-color: #e56318;
+    border-radius: 2px;
 }
 
 /* button colors when the track is NOT xmiting */
