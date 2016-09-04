@@ -259,20 +259,23 @@ void MapWidget::loadTiles()
     }
 }
 
+void MapWidget::updateMapPositionsCache()
+{
+    static const int markersHeight = fontMetrics().height() + TEXT_MARGIM * 2;
+    qreal ellipseX = TEXT_MARGIM;
+    qreal ellipseY = TEXT_MARGIM + markersHeight/2;
+    qreal ellipseWidth = width() - getMaximumMarkerWidth() - TEXT_MARGIM * 2;
+    qreal ellipseHeight = height() - TEXT_MARGIM * 2 - markersHeight;
+    QRectF ellipseRect(ellipseX, ellipseY, ellipseWidth, ellipseHeight);
+
+    mapPositions.clear();
+    mapPositions.append(getEllipsePositions(markersHeight, ellipseRect));
+}
+
 void MapWidget::resizeEvent(QResizeEvent *)
 {
-    //rebuild the positions cache
-    if (!markers.isEmpty()) {
-        static const int markersHeight = fontMetrics().height() + TEXT_MARGIM * 2;
-        qreal ellipseX = TEXT_MARGIM;
-        qreal ellipseY = TEXT_MARGIM + markersHeight/2;
-        qreal ellipseWidth = width() - getMaximumMarkerWidth() - TEXT_MARGIM * 2;
-        qreal ellipseHeight = height() - TEXT_MARGIM * 2 - markersHeight;
-        QRectF ellipseRect(ellipseX, ellipseY, ellipseWidth, ellipseHeight);
-
-        mapPositions.clear();
-        mapPositions.append(getEllipsePositions(markersHeight, ellipseRect));
-    }
+    if (!markers.isEmpty())
+        updateMapPositionsCache();
 
     setCenter(getCenterLatLong());
 }
@@ -374,6 +377,9 @@ QList<MapWidget::Position> MapWidget::getEmptyPositions( const QMap<int, QList<M
 
 void MapWidget::drawPlayersMarkers(QPainter &p)
 {
+    if (mapPositions.isEmpty() && !markers.isEmpty())
+        updateMapPositionsCache();
+
     QMap<int, QList<MapMarker>> map;
     for (const MapMarker &marker : markers) {
         Position position= findBestEllipsePositionForMarker(marker, markers, mapPositions);
@@ -384,12 +390,12 @@ void MapWidget::drawPlayersMarkers(QPainter &p)
         while (map[i].size() > 1) {
             const MapMarker &marker = map[i].takeLast();
             QList<MapWidget::Position> emptyPositions = getEmptyPositions(map, mapPositions);
-            MapWidget::Position newPosition = findBestEllipsePositionForMarker(marker, markers, emptyPositions);
-            if (newPosition.index != i) { // avoid append the Position in same index and create an infinite loop
-                if (map[newPosition.index].isEmpty()) // new position is really empty?
-                    map[newPosition.index].append(marker);
+            MapWidget::Position newEmptyPosition = findBestEllipsePositionForMarker(marker, markers, emptyPositions);
+            if (newEmptyPosition.index != i) { // avoid append the Position in same index and create an infinite loop
+                if (map[newEmptyPosition.index].isEmpty()) // new position is really empty?
+                    map[newEmptyPosition.index].append(marker);
                 else
-                    qCritical() << " new marker position is not empty: position " << newPosition.index;
+                    qCritical() << " new marker position is not empty: position " << newEmptyPosition.index;
             }
             else{
                 qCritical() << "Warning! The newPosition.index is not really a new position!";
@@ -422,11 +428,15 @@ bool MapWidget::rectIntersectsSomeMarker(const QRectF &rect, const QList<MapMark
 
 MapWidget::Position MapWidget::findBestEllipsePositionForMarker(const MapMarker &marker, const QList<MapMarker> &markers, const QList<MapWidget::Position> &positions) const
 {
+
+    if (positions.isEmpty())
+        return MapWidget::Position(QPointF(0, 0), 0);
+
     int bestPositionIndex = 0;
     QPointF markerPosition = getMarkerScreenCoordinate(marker);
     qreal minDistance = 1000.0;
-    QPointF position;
-    for (int i = 0; i < positions.size(); ++i) {
+    QPointF position = positions.first().coords;
+    for (int i = 1; i < positions.size(); ++i) {
         const QPointF &ellipsePosition = positions.at(i).coords;
         qreal distance = getDistance(markerPosition, ellipsePosition);
         if (distance < minDistance) {

@@ -78,6 +78,7 @@ private:
     };
 
     QList<MapWidget::Position> mapPositions;
+    void updateMapPositionsCache();
 
     QList<MapWidget::Position> getEllipsePositions(int markersHeight, const QRectF &ellipseRect) const;
     Position findBestEllipsePositionForMarker(const MapMarker &marker, const QList<MapMarker> &markers, const QList<Position> &positions) const;

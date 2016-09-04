@@ -44,8 +44,14 @@ void JamRoomViewPanel::createMapWidgets()
 void JamRoomViewPanel::updateUserLocation(const QString &userIP)
 {
     Q_UNUSED(userIP)
+    for (const Login::UserInfo &user : roomInfo.getUsers()) {
+        if (user.getIp() == userIP) {
+            updateMap();
+            update();
+            break;
+        }
+    }
 
-    updateMap();
 }
 
 void JamRoomViewPanel::changeEvent(QEvent *e)
