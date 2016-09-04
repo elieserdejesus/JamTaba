@@ -30,12 +30,16 @@ NinjamTrackView[horizontal="true"] #buttonBoostZero
     min-width: 12px;
 }
 
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12:checked,
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:checked,
-NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:checked
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12:hover:checked,
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:hover:checked,
+NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:hover:checked,
+NinjamTrackView[horizontal="true"] QPushButton#lowCutButton:hover:checked,
+NinjamTrackView QPushButton#lowCutButton:hover:checked
+
 {
     margin-top: -1px;
-    background-color: rgba(0, 0, 0, 30);
+    background-color: rgb(229, 99, 24);
+    border: none;
 }
 
 NinjamTrackView[horizontal="true"]
