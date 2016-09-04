@@ -21,3 +21,26 @@ JamRoomViewPanel #labelName             /* the server name (ninbot.com, ninjamer
     color: rgb(140, 140,140);
     font-weight: bold;
 }
+
+
+/* empty rooms */
+JamRoomViewPanel[empty="true"] #content
+{
+    background: rgb(255, 255, 255, 10);
+}
+
+JamRoomViewPanel[empty="true"]
+{
+    background-color: rgba(0, 0, 0, 15);
+    border: 1px solid black;
+}
+
+JamRoomViewPanel[empty="true"] #labelRoomStatus
+{
+    color: gray;
+}
+
+JamRoomViewPanel[empty="true"] #labelName
+{
+    font-weight: normal;
+}
