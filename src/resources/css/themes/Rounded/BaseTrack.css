@@ -71,7 +71,8 @@
 #buttonBoostMinus12:checked,
 #buttonBoostPlus12:checked,
 #buttonBoostZero:checked,
-#lowCutButton:checked
+#lowCutButton:checked,
+QPushButton#buttonStereoInversion:checked
 {
     background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
         stop:0 rgba(255, 255, 255, 160),
@@ -87,6 +88,15 @@ QPushButton#buttonStereoInversion:hover
         stop:0.2 rgb(255, 255, 255),
         stop:0.7 rgb(240, 240, 240),
         stop:1 rgb(210,210, 210));
+}
+
+QPushButton#buttonStereoInversion:hover:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(220, 220, 220),
+        stop:0.2 rgb(235, 235, 235),
+        stop:0.7 rgb(220, 220, 220),
+        stop:1 rgb(190, 190, 190));
 }
 
 BaseTrackView
@@ -173,10 +183,13 @@ BaseTrackView[unlighted="true"] .QPushButton
    background-color: rgb(100, 100, 100);
 }
 
-BaseTrackView[unlighted="true"] #buttonStereoInversion:hover,
-BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked
+BaseTrackView[unlighted="true"] #buttonStereoInversion:checked
 {
-    background-color: rgba(0, 0, 0, 45);
+background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+    stop:0 rgba(255, 255, 255, 160),
+    stop:0.2 rgba(255, 255, 255, 120),
+    stop:0.7 rgba(255, 255, 255, 120),
+    stop:1 rgba(255,255, 255, 30));
 }
 
 /* track group
