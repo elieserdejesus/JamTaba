@@ -526,6 +526,10 @@
         <source>Can&apos;t open the link!</source>
         <translation>Impossible d&apos;ouvrir ce lien!</translation>
     </message>
+    <message>
+        <source>Volcano</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindowStandalone</name>

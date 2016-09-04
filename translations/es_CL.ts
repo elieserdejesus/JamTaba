@@ -526,6 +526,10 @@
         <source>Rounded</source>
         <translation>Redondeado</translation>
     </message>
+    <message>
+        <source>Volcano</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindowStandalone</name>
