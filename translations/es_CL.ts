@@ -528,7 +528,7 @@
     </message>
     <message>
         <source>Volcano</source>
-        <translation type="unfinished"></translation>
+        <translation>Volcánico</translation>
     </message>
 </context>
 <context>
