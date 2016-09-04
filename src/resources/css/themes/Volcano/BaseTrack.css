@@ -120,7 +120,7 @@ BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
 
 BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked
 {
-    background-color: rgba(0, 0, 0, 50);
+    background-color: #e56318;
 }
 
 /* Small Label used to show max peak below peak meters
