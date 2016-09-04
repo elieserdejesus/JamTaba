@@ -35,7 +35,7 @@
 
 #buttonBoostMinus12:checked,
 #buttonBoostPlus12:checked,
-#buttonBoostZero:checked
+#buttonBoostZero:checked,
 QPushButton#buttonStereoInversion:checked
 {
     background-color: rgb(200, 200, 200);
