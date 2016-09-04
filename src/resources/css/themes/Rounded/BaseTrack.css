@@ -90,6 +90,15 @@ QPushButton#buttonStereoInversion:hover
         stop:1 rgb(210,210, 210));
 }
 
+QPushButton#buttonStereoInversion:hover:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(220, 220, 220),
+        stop:0.2 rgb(235, 235, 235),
+        stop:0.7 rgb(220, 220, 220),
+        stop:1 rgb(190, 190, 190));
+}
+
 BaseTrackView
 {
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
