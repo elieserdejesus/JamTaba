@@ -97,7 +97,11 @@ NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:checked,
 NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:checked
 {
     margin-top: -1px;
-    background-color: rgba(0, 0, 0, 30);
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0 rgba(255, 255, 255, 160),
+        stop:0.2 rgba(255, 255, 255, 120),
+        stop:0.7 rgba(255, 255, 255, 120),
+        stop:1 rgba(255,255, 255, 30));
 }
 
 NinjamTrackView[horizontal="true"]
