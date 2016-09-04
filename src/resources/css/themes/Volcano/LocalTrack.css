@@ -87,9 +87,13 @@ LocalTrackView[unlighted="false"] #inputPanel    /* input panel color when user 
 
 LocalTrackView #inputPanel:hover
 {
-    background-color: rgba(0, 0, 0, 30);
+    background-color: rgba(255, 106, 0, 5);
 }
 
+LocalTrackView[unlighted="true"] #inputPanel:hover
+{
+    background-color: rgba(0, 0, 0, 30);
+}
 
 #xmitButton
 {
