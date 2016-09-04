@@ -233,7 +233,6 @@ QSlider::handle:vertical
 QTabBar::tab
 {
     background-color: rgba(174, 83, 27, 180);
-    color: lightgray;
 }
 
 QTabBar::tab:selected
