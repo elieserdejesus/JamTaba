@@ -1018,7 +1018,7 @@
     </message>
     <message>
         <source>Connecting with private Ninjam server ...</source>
-        <translation>Se connecter à un serveur prive Ninjam...</translation>
+        <translation>Se connecter à un serveur privé Ninjam ...</translation>
     </message>
 </context>
 <context>
