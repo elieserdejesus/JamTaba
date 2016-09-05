@@ -104,10 +104,13 @@ void MarqueeLabel::resizeEvent(QResizeEvent *ev)
 
 void MarqueeLabel::paintEvent(QPaintEvent *evt)
 {
-    Q_UNUSED(evt);
-    QPainter p(this);
-
-    p.setFont(font());
-    p.setBrush(palette().text());// use the color defined in css file
-    p.drawText(QPointF(textX, textY), animating ? originalText : text());  // text() can be elided
+    if (hasSelectedText()) {
+        QLabel::paintEvent(evt);
+    }
+    else {
+        QPainter p(this);
+        p.setFont(font());
+        p.setBrush(palette().text());// use the color defined in css file
+        p.drawText(QPointF(textX, textY), animating ? originalText : text());  // text() can be elided
+    }
 }

@@ -235,7 +235,10 @@ NinjamTrackView[horizontal="true"] #muteButton
     padding-bottom: 0px;
 }
 
-
+NinjamTrackView  #channelName
+{
+    selection-background-color: rgba(0, 0, 0, 80);
+}
 
 /* Ninjam track groups
 ------------------------*/
