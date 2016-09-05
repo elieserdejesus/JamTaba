@@ -263,7 +263,7 @@ QMenuBar::item
     background: transparent; /*rgb(225, 225, 225);*/
 }
 
-QMenuBar::item:selected { /* hover effect for menu bar items */
+QMenuBar::item::enabled:selected { /* hover effect for menu bar items */
 
     border-radius: 2px;
 }
@@ -291,7 +291,7 @@ QMenu
     background: rgb(210, 142, 100);
 }
 
-QMenu::item:selected
+QMenu::item::enabled:selected
 {
     color: rgb(220, 220, 220);
     background-color: rgb(217, 157, 116);

@@ -300,7 +300,7 @@ QMenu
     background:rgb(35, 35, 35);
 }
 
-QMenu::item:selected
+QMenu::item::enabled:selected
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(60, 60, 60), stop:1 rgb(40, 40, 40));
     color: black; /* fix to issue #500 */

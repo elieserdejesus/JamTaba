@@ -86,7 +86,6 @@ QScrollArea > QWidget > QWidget
 }
 
 QMenuBar::item:selected { /* hover effect for menu bar items */
-
     border: 1px outset gray;
     padding: 3px 6px 3px 6px;
     font-size: 11px;
@@ -102,4 +101,10 @@ QMenuBar::item:pressed { /* 'button pressed' item style */
 QMenu::item::disabled
 {
     color: rgba(0, 0, 0, 120);
+}
+
+/* hover effect */
+QMenu::item::enabled:selected
+{
+    background-color: rgba(0, 0, 0, 30);
 }
