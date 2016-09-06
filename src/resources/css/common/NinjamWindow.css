@@ -7,7 +7,7 @@
 
 NinjamRoomWindow #labelBpmBpi                                /* label used to show current bpi and bpm values inside ninjam room window */
 {
-    color: rgba(0, 0, 0, 100);
+    color: black;
     font-size: 9px;
 }
 
@@ -74,7 +74,7 @@ NinjamPanel #intervalPanel                  /* The widget used to show ninjam co
 
 #panelCombos QLabel             /* The labels in left side of comboboxes (bpi, bpm, accents and shape) */
 {
-    color: black;
+    color: rgba(0, 0, 0, 170);
 }
 
 #panelCombos QComboBox::down-arrow
