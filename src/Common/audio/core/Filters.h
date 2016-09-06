@@ -1,3 +1,8 @@
+#ifndef _FILTERS_
+#define _FILTERS_
+
+#include <QtGlobal>
+
 namespace Audio {
 
 /** Biquad Filter - Adapted from Ardour code: http://ardour.org/ */
@@ -51,3 +56,5 @@ private:
     FilterType type;
 };
 } // namespace
+
+#endif
