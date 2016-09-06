@@ -58,7 +58,8 @@ LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lP
             bool typingLetters = keyData->vkCode >= Qt::Key_A && keyData->vkCode <= Qt::Key_Z;
             bool typingNumbers = keyData->vkCode >= Qt::Key_0 && keyData->vkCode <= Qt::Key_9;
             bool typingInNumPad = keyData->vkCode >= VK_NUMPAD0 && keyData->vkCode <= VK_NUMPAD9;
-            if (typingLetters || typingNumbers || typingInNumPad) {
+            bool typingQuestionMark = keyData->vkCode == Qt::Key_questiondown || keyData->vkCode == Qt::Key_Question;
+            if (typingLetters || typingNumbers || typingInNumPad || typingQuestionMark) {
                 QString keyText = KeyboardHook::vkCodeToText(keyData->vkCode, keyData->scanCode);
                 Qt::KeyboardModifiers modifiers;
                 if (controlIsPressed)
