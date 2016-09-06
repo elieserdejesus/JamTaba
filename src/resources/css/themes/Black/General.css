@@ -178,7 +178,7 @@ QLineEdit#groupNameField:focus, #userNameLineEdit:focus
 {
     color: rgb(200, 200, 200);
     selection-background-color: rgb(120, 120, 120);
-    selection-color: rgb(80, 80, 80);
+    selection-color: rgb(40, 40, 40);
 }
 
 /*  SLIDERs ++++++++++++++++++++++++++++++++ */

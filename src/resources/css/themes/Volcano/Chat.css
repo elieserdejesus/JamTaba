@@ -42,6 +42,6 @@ ChatMessagePanel #blockButton:hover
 
 ChatMessagePanel #labelMessage
 {
-selection-background-color: rgb(179, 89, 37);
-selection-color: rgb(254, 181, 102);
+    selection-background-color: rgb(179, 89, 37);
+    selection-color: rgb(254, 181, 102);
 }

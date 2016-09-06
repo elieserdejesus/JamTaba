@@ -217,12 +217,14 @@ IntervalProgressWindow
 
 #panelCombos QLabel             /* The labels in left side of comboboxes (bpi, bpm, accents and shape) */
 {
-    color: rgb(180, 180, 180);
+    color: rgb(140, 140, 140);
 }
 
 #panelCombos QComboBox
 {
-    color: rgb(140, 140, 140);
+    color: rgb(180, 180, 180);
+    selection-background-color: rgb(80, 80, 80);
+    selection-color: rgb(10, 10, 10);;
 }
 
 #panelCombos QComboBox QAbstractItemView
@@ -231,6 +233,7 @@ IntervalProgressWindow
     color: rgb(180, 180, 180);
     background-color: rgb(20, 20, 20);
     selection-background-color: rgb(80, 80, 80);
+    selection-color: black;
 }
 
 NinjamPanel #intervalPanel,
@@ -239,6 +242,11 @@ IntervalProgressWindow #intervalPanel
     color: rgb(180, 180, 180);
 }
 
+NinjamTrackView  #channelName
+{
+    selection-background-color: rgb(120, 120, 120);
+    selection-color: rgb(40, 40, 40);
+}
 
 IntervalProgressDisplay
 {
