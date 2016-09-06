@@ -293,7 +293,9 @@ QTabBar::tab:!selected {
 QMenuBar::item
 {
     color: black;
-    background:rgb(225, 225, 225);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 #EAEAEA,
+    stop:1 #CACACA);
 }
 
 QMenuBar::item::enabled:selected { /* hover effect for menu bar items */
