@@ -245,6 +245,7 @@ NinjamTrackGroupView #groupNameField        /* User name field in ninjam tracks 
     margin-bottom: 3px;
     margin-top: 3px;
     padding: 3px;
+    qproperty-alignment: AlignCenter;
 }
 
 NinjamTrackGroupView #countryLabel          /* country name in ninjam tracks */
