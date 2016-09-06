@@ -47,7 +47,7 @@ QPushButton#buttonStereoInversion:checked
 {
     background-color: #B35925;
     color: rgba(0, 0, 0, 160);
-    border-radius: 0px;
+    border-radius: 2px;
 }
 
 #buttonBoostMinus12:hover,
@@ -58,7 +58,7 @@ QPushButton#buttonStereoInversion:checked
 {
     background-color: #fed87b;
     color: rgb(80, 80, 80);
-    border-radius: 0px;
+    border-radius: 2px;
     border-color: rgb(40, 40, 40);
 }
 
@@ -73,7 +73,7 @@ QPushButton#buttonStereoInversion:hover
 #buttonBoostZero:hover:checked
 {
     background-color: #e56318;
-    border-radius: 0px;
+    border-radius: 2px;
     border-color: rgb(20, 20, 20)
 }
 

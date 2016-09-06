@@ -161,11 +161,21 @@ NinjamPanel #muteButton
     stop: 1.0 #FFB301);
 }
 
+#panelCombos QLabel             /* The labels in left side of comboboxes (bpi, bpm, accents and shape) */
+{
+    color: rgb(40, 40, 40);
+}
+
 NinjamPanel QComboBox
 {
     background-color: rgba(0, 0, 0, 30);
-    selection-background-color: rgba(0, 0, 0, 90);
-    selection-color: rgba(254, 181, 102, 150);
+    selection-background-color: rgba(0, 0, 0, 160);
+    selection-color: rgb(254, 181, 102);
+}
+
+#panelCombos QComboBox
+{
+    color: rgb(10, 10, 10);
 }
 
 NinjamPanel QComboBox QAbstractItemView
@@ -174,11 +184,18 @@ border: none;
 color: black;
 background-color: rgb(176, 128, 94);
 selection-background-color: rgba(0, 0, 0, 90);
+selection-color: rgb(254, 181, 102);
 }
 
 NinjamTrackGroupView                        /* ninjam track group. If a ninjamer is using 2 channels they will appear grouped */
 {
     border: 1px solid rgb(130, 130, 130);
+}
+
+NinjamTrackView  #channelName
+{
+    selection-background-color: rgb(179, 89, 37);
+    selection-color: rgb(254, 181, 102);
 }
 
 /* The floating window showing the metronome/interval progress */
