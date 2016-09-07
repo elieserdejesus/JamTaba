@@ -12,13 +12,6 @@ MidiToolsDialog
     border-radius: 2px;
 }
 
-QInputDialog QPushButton
-{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(80,80,80), stop:0.02 rgb(150, 150, 150), stop:0.7 rgba(160, 160, 160), stop:1 rgb(90,90,90));
-    border-color: rgb(60, 60, 60);
-    color: rgb(45,45,45);
-}
-
 PluginScanDialog
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,

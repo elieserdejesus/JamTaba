@@ -82,13 +82,6 @@ MidiToolsDialog #spinBoxTranspose
     selection-color: rgba(254, 181, 102, 150);
 }
 
-QInputDialog QPushButton
-{
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(20,20,20), stop:0.02 rgb(80, 80, 80), stop:0.7 rgba(90, 90, 90), stop:1 rgb(40,40,40));
-    border-color: rgb(20, 20, 20);
-    color: rgb(140,140,140);
-}
-
 PluginScanDialog QPlainTextEdit
 {
     background: transparent;
