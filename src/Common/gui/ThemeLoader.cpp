@@ -13,7 +13,7 @@ QStringList Loader::getAvailableThemes(QString themesDir)
         return QStringList();
     }
 
-    return baseDir.entryList(QDir::Dirs);
+    return baseDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 }
 
 QString Loader::loadCSS(QString themeDir, QString themeName)

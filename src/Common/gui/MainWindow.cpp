@@ -127,7 +127,8 @@ void MainWindow::initializeThemeMenu()
     connect(ui.menuTheme, &QMenu::aboutToShow, this, &MainWindow::translateThemeMenu); // the menu is translated before open
 
     // create a menu action for each theme
-    QStringList themeFiles = Theme::Loader::getAvailableThemes(":/style/themes");
+    QString themesDir = Configurator::getInstance()->getThemesDir().absolutePath();
+    QStringList themeFiles = Theme::Loader::getAvailableThemes(themesDir);
     foreach (const QString &themeFile, themeFiles) {
         QString themeName = QFileInfo(themeFile).baseName();
         QAction *action = ui.menuTheme->addAction(themeName);
