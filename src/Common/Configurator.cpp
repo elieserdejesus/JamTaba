@@ -146,8 +146,11 @@ void Configurator::exportThemes() const
         for (const QString &themeCSSFile : themeFiles) {
             QString sourcePath = themeFolderInResources.absoluteFilePath(themeCSSFile);
             QString destinationPath = destinationDir.absoluteFilePath(themeCSSFile);
-            if (!QFile::copy(sourcePath, destinationPath))
+            if (QFile::copy(sourcePath, destinationPath))
+                QFile(destinationPath).setPermissions(QFile::ReadOwner | QFile::WriteOwner);
+            else
                 qDebug(jtConfigurator) << "Can't copy " << sourcePath << " to " << destinationPath;
+
         }
     }
 }
