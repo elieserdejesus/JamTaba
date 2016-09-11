@@ -110,10 +110,18 @@ void MainWindow::updateNightModeInWorldMaps()
     MapWidget::setNightMode(MainWindow::themeCanUseNightModeWorldMaps(themeName));
 }
 
+void MainWindow::setTheme(const QString &themeName)
+{
+    if(!mainController->setTheme(themeName)) {
+        QString errorMessage = tr("Error loading the theme %1").arg(themeName);
+        QMessageBox::critical(this, tr("Error!"), errorMessage);
+    }
+}
+
 void MainWindow::changeTheme(QAction *action)
 {
-    QString theme = action->data().toString();
-    mainController->setTheme(theme);
+    QString themeName = action->data().toString();
+    setTheme(themeName);
 }
 
 bool MainWindow::themeCanUseNightModeWorldMaps(const QString &themeName)
@@ -128,9 +136,9 @@ void MainWindow::initializeThemeMenu()
 
     // create a menu action for each theme
     QString themesDir = Configurator::getInstance()->getThemesDir().absolutePath();
-    QStringList themeFiles = Theme::Loader::getAvailableThemes(themesDir);
-    foreach (const QString &themeFile, themeFiles) {
-        QString themeName = QFileInfo(themeFile).baseName();
+    QStringList themes = Theme::Loader::getAvailableThemes(themesDir);
+    foreach (const QString &themeDir, themes) {
+        QString themeName = QFileInfo(themeDir).baseName();
         QAction *action = ui.menuTheme->addAction(themeName);
         action->setData(themeName);
     }
@@ -193,8 +201,13 @@ void MainWindow::initialize()
 {
     timerID = startTimer(1000/50);// timer used to animate audio peaks, midi activity, public room wave audio plot, etc.
 
-    if (qApp->styleSheet().isEmpty())
-        mainController->setTheme(mainController->getTheme());
+    if (qApp->styleSheet().isEmpty()) { // allow custom stylesheet via app arguments
+        QString themeName = mainController->getTheme();
+        QString themesDir = Configurator::getInstance()->getThemesDir().absolutePath();
+        if(!Theme::Loader::canLoad(themesDir, themeName))
+            themeName = "Flat"; // fallback to Flat theme
+        setTheme(themeName);
+    }
 
     showBusyDialog(tr("Loading rooms list ..."));
 

@@ -238,6 +238,8 @@ private:
 
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
 
+    void setTheme(const QString &themeName);
+
     int timerID;
 
     QPointF computeLocation() const;
