@@ -11,4 +11,5 @@ void Configurator::initializeDirs()
 
     //the presets dir will be created inside VstPlugin dir. Standalone and VstPlugin are using different presets dirs.
     presetsDir = QDir(baseDir.absoluteFilePath(PRESETS_FOLDER_NAME));
+
 }
