@@ -10,6 +10,8 @@ QScopedPointer<Configurator> Configurator::instance(nullptr);
 const QString Configurator::PRESETS_FOLDER_NAME = "Presets";
 const QString Configurator::CACHE_FOLDER_NAME = "Cache";
 const QString Configurator::LOG_CONFIG_FILE_NAME = "logging.ini";
+const QString Configurator::THEMES_FOLDER_NAME = "Themes";
+const QString Configurator::THEMES_FOLDER_IN_RESOURCES = ":/style/themes";
 
 void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -103,16 +105,54 @@ QStringList Configurator::getPresetFilesNames(bool fullpath)
     return filesPaths;
 }
 
+bool Configurator::needExportThemes() const
+{
+    return themesDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot).isEmpty();
+}
+
 bool Configurator::setUp()
 {
     initializeDirs(); // directories initialization is different in Standalone and VstPlugin. Check the files ConfiguratorStandalone.cpp and VstPlugin.cpp
+
+    // themes dir is the same for Standalone and Vst plugin
+    themesDir = QDir(baseDir.absoluteFilePath(THEMES_FOLDER_NAME));
 
     if (!folderTreeExists())
         createFoldersTree();
 
     exportLogIniFile(); //copy log config file from resources to user hard disk
+
+    if (needExportThemes()) // copy default themes from resources to user hard disk
+        exportThemes();
+
     setupLogConfigFile();
+
     return true;
+}
+
+void Configurator::exportThemes() const
+{
+    // copy default themes from resources to user hard disk
+    QDir resourceDir(THEMES_FOLDER_IN_RESOURCES);
+    QDir themesDir = getThemesDir();
+    qDebug() << "Exporting themes from " << resourceDir.absolutePath() << " to " << themesDir.absolutePath();
+    QStringList themesInResources = resourceDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    for (const QString &themeDir : themesInResources) {
+        QDir themeFolderInResources(resourceDir.absoluteFilePath(themeDir));
+        themesDir.mkdir(themeDir);
+        QDir destinationDir(themesDir.absoluteFilePath(themeDir));
+        qDebug() << "Exporting theme " << themeDir << " to " << destinationDir.absolutePath();
+        QStringList themeFiles = themeFolderInResources.entryList(QDir::Files); // css files
+        for (const QString &themeCSSFile : themeFiles) {
+            QString sourcePath = themeFolderInResources.absoluteFilePath(themeCSSFile);
+            QString destinationPath = destinationDir.absoluteFilePath(themeCSSFile);
+            if (QFile::copy(sourcePath, destinationPath))
+                QFile(destinationPath).setPermissions(QFile::ReadOwner | QFile::WriteOwner);
+            else
+                qDebug(jtConfigurator) << "Can't copy " << sourcePath << " to " << destinationPath;
+
+        }
+    }
 }
 
 void Configurator::setupLogConfigFile()
@@ -142,12 +182,26 @@ void Configurator::createFoldersTree()
         presetsDir.mkpath(".");
         qCDebug(jtConfigurator) << "Standalone presets dir created in " << presetsDir.absolutePath();
     }
+
+    if (!themesDir.exists()) {
+        themesDir.mkpath(".");
+        qCDebug(jtConfigurator) << "Themes dir created in " << themesDir.absolutePath();
+    }
 }
 
 bool Configurator::folderTreeExists() const
 {
-    if (!presetsDir.exists() || !cacheDir.exists()) {
-        qWarning(jtConfigurator) << "FOLDER'S TREE don't exist !";
+    if (!presetsDir.exists() || !cacheDir.exists() || !themesDir.exists()) {
+
+        if (!presetsDir.exists())
+            qWarning(jtConfigurator) << "Presets dir don't exist !";
+
+        if (!cacheDir.exists())
+            qWarning(jtConfigurator) << "Cache dir don't exist !";
+
+        if (!themesDir.exists())
+            qWarning(jtConfigurator) << "Themes dir don't exist !";
+
         return false;
     }
     return true;

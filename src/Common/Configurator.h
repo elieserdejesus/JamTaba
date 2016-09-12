@@ -27,6 +27,7 @@ public:
     QDir getCacheDir() const;
     QDir getPresetsDir() const;
     QDir getBaseDir() const;
+    QDir getThemesDir() const;
 
     // Presets
     QString getPresetPath(const QString &JsonFile);// used by Settings
@@ -37,12 +38,15 @@ private:
     static const QString PRESETS_FOLDER_NAME;
     static const QString CACHE_FOLDER_NAME;
     static const QString LOG_CONFIG_FILE_NAME;
+    static const QString THEMES_FOLDER_NAME;
+    static const QString THEMES_FOLDER_IN_RESOURCES;
 
     QString logConfigFileName;// the name of the json config file
 
     QDir cacheDir;
     QDir presetsDir;
     QDir baseDir;
+    QDir themesDir;
 
     bool logFileCreated;
 
@@ -54,6 +58,8 @@ private:
     void initializeDirs(); //this function is implemented in ConfiguratorStandalone.cpp and in ConfiguratorVST.cpp. Only the correct .cpp file is included in .pro files.
     void exportLogIniFile();
     void setupLogConfigFile();
+    bool needExportThemes() const;
+    void exportThemes() const;
 
     static void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 };
@@ -69,16 +75,24 @@ inline void Configurator::setFileCreatedFlag()
     logFileCreated = true;
 }
 
-inline QDir Configurator::getCacheDir() const {
+inline QDir Configurator::getCacheDir() const
+{
     return cacheDir;
 }
 
-inline QDir Configurator::getPresetsDir() const{
+inline QDir Configurator::getPresetsDir() const
+{
     return presetsDir;
 }
 
-inline QDir Configurator::getBaseDir() const {
+inline QDir Configurator::getBaseDir() const
+{
     return baseDir;
+}
+
+inline QDir Configurator::getThemesDir() const
+{
+    return themesDir;
 }
 
 #endif // CONFIGURATOR_H

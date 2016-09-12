@@ -761,7 +761,7 @@ void MainController::stop()
 
 bool MainController::setTheme(const QString &themeName)
 {
-    QString themeDir(":/style/themes");
+    QString themeDir(Configurator::getInstance()->getThemesDir().absolutePath());
     QString themeCSS = Theme::Loader::loadCSS(themeDir, themeName);
     if (!themeCSS.isEmpty()) {
         setCSS(themeCSS);

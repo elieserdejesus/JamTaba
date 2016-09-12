@@ -30,6 +30,7 @@ using namespace Persistence;
 const QSize MainWindow::MINI_MODE_MIN_SIZE = QSize(800, 600);
 const QSize MainWindow::FULL_VIEW_MODE_MIN_SIZE = QSize(1180, 790);
 const int MainWindow::MINI_MODE_MAX_LOCAL_TRACKS_WIDTH = 185;
+const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
 
 // const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200;//in miliseconds
 
@@ -110,15 +111,31 @@ void MainWindow::updateNightModeInWorldMaps()
     MapWidget::setNightMode(MainWindow::themeCanUseNightModeWorldMaps(themeName));
 }
 
+void MainWindow::setTheme(const QString &themeName)
+{
+    if(!mainController->setTheme(themeName)) {
+        QString errorMessage = tr("Error loading the theme %1").arg(themeName);
+        QMessageBox::critical(this, tr("Error!"), errorMessage);
+    }
+}
+
 void MainWindow::changeTheme(QAction *action)
 {
-    QString theme = action->data().toString();
-    mainController->setTheme(theme);
+    QString themeName = action->data().toString();
+    setTheme(themeName);
 }
 
 bool MainWindow::themeCanUseNightModeWorldMaps(const QString &themeName)
 {
-    return themeName == "Black" || themeName == "Volcano"; // at moment only Black theme is using night mode maps
+    return themeName.endsWith(NIGHT_MODE_SUFFIX);
+}
+
+QString MainWindow::getStripedThemeName(const QString &fullThemeName)
+{
+    if (themeCanUseNightModeWorldMaps(fullThemeName))
+        return fullThemeName.left(fullThemeName.size() - 3); // remove the last 3 letters in theme name
+
+    return fullThemeName;
 }
 
 void MainWindow::initializeThemeMenu()
@@ -127,21 +144,22 @@ void MainWindow::initializeThemeMenu()
     connect(ui.menuTheme, &QMenu::aboutToShow, this, &MainWindow::translateThemeMenu); // the menu is translated before open
 
     // create a menu action for each theme
-    QStringList themeFiles = Theme::Loader::getAvailableThemes(":/style/themes");
-    foreach (const QString &themeFile, themeFiles) {
-        QString themeName = QFileInfo(themeFile).baseName();
-        QAction *action = ui.menuTheme->addAction(themeName);
-        action->setData(themeName);
+    QString themesDir = Configurator::getInstance()->getThemesDir().absolutePath();
+    QStringList themes = Theme::Loader::getAvailableThemes(themesDir);
+    foreach (const QString &themeDir, themes) {
+        QString themeName = QFileInfo(themeDir).baseName();
+        QAction *action = ui.menuTheme->addAction(getStripedThemeName(themeName));
+         action->setData(themeName);
     }
 }
 
 void MainWindow::translateThemeMenu()
 {
     foreach (QAction *action, ui.menuTheme->actions()) {
-        QString themeName = action->data().toString();
-        QString menuString = themeName; //use themeName as default text
+        QString themeName = action->text();
+        QString menuString = themeName; // use themeName as default text
         QString translatedName = getTranslatedThemeName(themeName);
-        if (translatedName != themeName) //maybe we don't have a translation entry for the theme ...
+        if (translatedName != themeName) // maybe we don't have a translation entry for the theme ...
             menuString = translatedName + " (" + themeName + ")";
         action->setText(menuString);
     }
@@ -192,8 +210,13 @@ void MainWindow::initialize()
 {
     timerID = startTimer(1000/50);// timer used to animate audio peaks, midi activity, public room wave audio plot, etc.
 
-    if (qApp->styleSheet().isEmpty())
-        mainController->setTheme(mainController->getTheme());
+    if (qApp->styleSheet().isEmpty()) { // allow custom stylesheet via app arguments
+        QString themeName = mainController->getTheme();
+        QString themesDir = Configurator::getInstance()->getThemesDir().absolutePath();
+        if(!Theme::Loader::canLoad(themesDir, themeName))
+            themeName = "Flat"; // fallback to Flat theme
+        setTheme(themeName);
+    }
 
     showBusyDialog(tr("Loading rooms list ..."));
 

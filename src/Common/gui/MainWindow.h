@@ -226,6 +226,7 @@ private slots:
     void translateThemeMenu();
 
     void updateNightModeInWorldMaps();
+
 private:
 
     BusyDialog busyDialog;
@@ -237,6 +238,8 @@ private:
     void centerBusyDialog();
 
     void showMessageBox(const QString &title, const QString &text, QMessageBox::Icon icon);
+
+    void setTheme(const QString &themeName);
 
     int timerID;
 
@@ -301,6 +304,8 @@ private:
 
     static bool themeCanUseNightModeWorldMaps(const QString &themeName);
 
+    static QString getStripedThemeName(const QString &fullThemeName);
+
     // PerformanceMonitor performanceMonitor;//cpu and memmory usage
     // qint64 lastPerformanceMonitorUpdate;
     // static const int PERFORMANCE_MONITOR_REFRESH_TIME;
@@ -310,6 +315,8 @@ private:
     static const QSize FULL_VIEW_MODE_MIN_SIZE;
 
     static const int MINI_MODE_MAX_LOCAL_TRACKS_WIDTH;
+
+    static const QString NIGHT_MODE_SUFFIX;
 };
 
 #endif
