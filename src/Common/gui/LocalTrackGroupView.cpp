@@ -128,7 +128,27 @@ void LocalTrackGroupView::resetTracks()
         track->reset();
 }
 
-QMenu *LocalTrackGroupView::createPresetsSubMenu()
+QMenu *LocalTrackGroupView::createPresetsDeletingSubMenu()
+{
+    QMenu *deleteMenu = new QMenu(tr("Delete preset"));
+    deleteMenu->setIcon(QIcon(":/images/preset-load.png"));
+
+    // adding a menu action for each stored preset
+    QStringList presetsNames = Configurator::getInstance()->getPresetFilesNames(false);
+    foreach (const QString &name, presetsNames) {
+        QString stripedName = getStripedPresetName(name);
+        QAction *deleteAction = deleteMenu->addAction(stripedName);
+        deleteAction->setData(name);// putting the preset name (including .json suffix) in the Action instance we can get this preset name inside slot 'loadPreset'
+    }
+
+    connect(deleteMenu, &QMenu::triggered, this, &LocalTrackGroupView::deletePreset);
+
+    deleteMenu->setEnabled(!presetsNames.isEmpty());
+
+    return deleteMenu;
+}
+
+QMenu *LocalTrackGroupView::createPresetsLoadingSubMenu()
 {
     // LOAD - using a submenu to list stored presets
     QMenu *loadMenu = new QMenu(tr("Load preset"));
@@ -137,10 +157,13 @@ QMenu *LocalTrackGroupView::createPresetsSubMenu()
     // adding a menu action for each stored preset
     QStringList presetsNames = Configurator::getInstance()->getPresetFilesNames(false);
     foreach (const QString &name, presetsNames) {
-        QAction *presetAction = loadMenu->addAction(QString(name).replace(".json", "")); //strip the file extension from preset name
-        presetAction->setData(name);// putting the preset name in the Action instance we can get this preset name inside slot 'loadPreset'
+        QString stripedName = getStripedPresetName(name);
+        QAction *loadAction = loadMenu->addAction(stripedName);
+        loadAction->setData(name);// putting the preset name (including .json suffix) in the Action instance we can get this preset name inside slot 'loadPreset'
     }
-    QObject::connect(loadMenu, SIGNAL(triggered(QAction *)), this, SLOT(loadPreset(QAction *)));
+
+    connect(loadMenu, &QMenu::triggered, this, &LocalTrackGroupView::loadPreset);
+
     loadMenu->setEnabled(!presetsNames.isEmpty());
 
     return loadMenu;
@@ -148,7 +171,8 @@ QMenu *LocalTrackGroupView::createPresetsSubMenu()
 
 void LocalTrackGroupView::createPresetsActions(QMenu &menu)
 {
-    menu.addMenu(createPresetsSubMenu());
+    menu.addMenu(createPresetsLoadingSubMenu()); // loading submenu
+    menu.addMenu(createPresetsDeletingSubMenu()); // deleting submenu
 
     // save preset
     QAction *addPresetActionSave = menu.addAction(QIcon(":/images/preset-save.png"), tr("Save preset"));
@@ -309,16 +333,24 @@ void LocalTrackGroupView::resetLocalTracks()
     mainFrame->resetLocalChannels();//reset all local channels and subchannels
 }
 
-void LocalTrackGroupView::deletePreset()
+QString LocalTrackGroupView::getStripedPresetName(const QString &presetName)
 {
-    QStringList items = mainFrame->getMainController()->getPresetList();
-    bool ok;
-    QString item = QInputDialog::getItem(this, tr("Remove preset"),
-                                         tr("Preset:"), items, 0, false, &ok);
+    if (presetName.endsWith(".json"))
+        return presetName.left(presetName.size() - 5); // remove '.json' 5 letters
 
-    // delete the file
+    return presetName;
+}
 
-    mainFrame->getMainController()->deletePreset(item);
+void LocalTrackGroupView::deletePreset(QAction *action)
+{
+    QString presetName = action->data().toString();
+    QString stripedName = getStripedPresetName(presetName);
+    QMessageBox::StandardButton reply;
+    QString messageBoxTitle(tr("Deleting preset ..."));
+    QString messageBoxText(tr("You want to delete the preset '%1'").arg(stripedName));
+    reply = QMessageBox::question(this, messageBoxTitle, messageBoxText, QMessageBox::Yes|QMessageBox::No);
+    if (reply == QMessageBox::Yes)
+        mainFrame->getMainController()->deletePreset(presetName);
 }
 
 // +++++++++++++++++++++++++++++
