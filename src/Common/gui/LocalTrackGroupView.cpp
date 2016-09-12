@@ -131,21 +131,19 @@ void LocalTrackGroupView::resetTracks()
 QMenu *LocalTrackGroupView::createPresetsSubMenu()
 {
     // LOAD - using a submenu to list stored presets
-    QMenu *presetsMenu = new QMenu(tr("Load preset"));
-    presetsMenu->setIcon(QIcon(":/images/preset-load.png"));
-    presetsMenu->installEventFilter(this);// to deal with mouse buttons
+    QMenu *loadMenu = new QMenu(tr("Load preset"));
+    loadMenu->setIcon(QIcon(":/images/preset-load.png"));
 
     // adding a menu action for each stored preset
-    Configurator *cfg = Configurator::getInstance();
-    QStringList presetsNames = cfg->getPresetFilesNames(false);
+    QStringList presetsNames = Configurator::getInstance()->getPresetFilesNames(false);
     foreach (const QString &name, presetsNames) {
-        QAction *presetAction = presetsMenu->addAction(QString(name).replace(".json", "")); //strip the file extension from preset name
+        QAction *presetAction = loadMenu->addAction(QString(name).replace(".json", "")); //strip the file extension from preset name
         presetAction->setData(name);// putting the preset name in the Action instance we can get this preset name inside slot 'loadPreset'
     }
-    QObject::connect(presetsMenu, SIGNAL(triggered(QAction *)), this, SLOT(loadPreset(QAction *)));
-    presetsMenu->setEnabled(!presetsNames.isEmpty());
+    QObject::connect(loadMenu, SIGNAL(triggered(QAction *)), this, SLOT(loadPreset(QAction *)));
+    loadMenu->setEnabled(!presetsNames.isEmpty());
 
-    return presetsMenu;
+    return loadMenu;
 }
 
 void LocalTrackGroupView::createPresetsActions(QMenu &menu)
