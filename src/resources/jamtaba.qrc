@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/style/common">
+    <qresource prefix="/css/common">
         <file alias="General.css">css/common/General.css</file>
         <file alias="Dialogs.css">css/common/Dialogs.css</file>
         <file alias="BaseTrack.css">css/common/BaseTrack.css</file>
@@ -10,7 +10,7 @@
         <file alias="Chords.css">css/common/Chords.css</file>
         <file alias="PublicRooms.css">css/common/PublicRooms.css</file>
     </qresource>
-    <qresource prefix="/style/themes/Flat">
+    <qresource prefix="/css/themes/Flat">
         <file>css/themes/Flat/BaseTrack.css</file>
         <file>css/themes/Flat/NinjamWindow.css</file>
         <file>css/themes/Flat/LocalTrack.css</file>
@@ -21,7 +21,7 @@
         <file>css/themes/Flat/Chat.css</file>
         <file>css/themes/Flat/Chords.css</file>
     </qresource>
-    <qresource prefix="/style/themes/Volcano_nm">
+    <qresource prefix="/css/themes/Volcano_nm">
         <file>css/themes/Volcano_nm/BaseTrack.css</file>
         <file>css/themes/Volcano_nm/NinjamWindow.css</file>
         <file>css/themes/Volcano_nm/LocalTrack.css</file>
@@ -32,7 +32,7 @@
         <file>css/themes/Volcano_nm/Chat.css</file>
         <file>css/themes/Volcano_nm/Chords.css</file>
     </qresource>
-    <qresource prefix="/style/themes/Black_nm">
+    <qresource prefix="/css/themes/Black_nm">
         <file>css/themes/Black_nm/BaseTrack.css</file>
         <file>css/themes/Black_nm/NinjamWindow.css</file>
         <file>css/themes/Black_nm/LocalTrack.css</file>
@@ -43,7 +43,7 @@
         <file>css/themes/Black_nm/Chat.css</file>
         <file>css/themes/Black_nm/Chords.css</file>
     </qresource>
-    <qresource prefix="/style/themes/Rounded">
+    <qresource prefix="/css/themes/Rounded">
         <file>css/themes/Rounded/BaseTrack.css</file>
         <file>css/themes/Rounded/Chat.css</file>
         <file>css/themes/Rounded/Chords.css</file>

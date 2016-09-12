@@ -2,7 +2,7 @@
 
 void Configurator::initializeDirs()
 {
-    QDir appLocalDataDir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    QDir appLocalDataDir = getApplicationDataDir();
 
     baseDir = QDir(appLocalDataDir.absoluteFilePath("VstPlugin"));
 

@@ -3,7 +3,7 @@
 
 void Configurator::initializeDirs()
 {
-    baseDir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    baseDir = getApplicationDataDir();
     cacheDir = QDir(baseDir.absoluteFilePath(CACHE_FOLDER_NAME));
     presetsDir = QDir(baseDir.absoluteFilePath(PRESETS_FOLDER_NAME));
 }

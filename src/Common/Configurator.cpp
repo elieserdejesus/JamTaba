@@ -2,6 +2,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QApplication>
+#include <QStandardPaths>
 
 #include "log/Logging.h"
 
@@ -11,7 +12,7 @@ const QString Configurator::PRESETS_FOLDER_NAME = "Presets";
 const QString Configurator::CACHE_FOLDER_NAME = "Cache";
 const QString Configurator::LOG_CONFIG_FILE_NAME = "logging.ini";
 const QString Configurator::THEMES_FOLDER_NAME = "Themes";
-const QString Configurator::THEMES_FOLDER_IN_RESOURCES = ":/style/themes";
+const QString Configurator::THEMES_FOLDER_IN_RESOURCES = ":/css/themes";
 
 void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -110,12 +111,17 @@ bool Configurator::needExportThemes() const
     return themesDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot).isEmpty();
 }
 
+QDir Configurator::getApplicationDataDir()
+{
+    return QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+}
+
 bool Configurator::setUp()
 {
     initializeDirs(); // directories initialization is different in Standalone and VstPlugin. Check the files ConfiguratorStandalone.cpp and VstPlugin.cpp
 
     // themes dir is the same for Standalone and Vst plugin
-    themesDir = QDir(baseDir.absoluteFilePath(THEMES_FOLDER_NAME));
+    themesDir = QDir(getApplicationDataDir().absoluteFilePath(THEMES_FOLDER_NAME));
 
     if (!folderTreeExists())
         createFoldersTree();
@@ -141,10 +147,12 @@ void Configurator::exportThemes() const
         QDir themeFolderInResources(resourceDir.absoluteFilePath(themeDir));
         themesDir.mkdir(themeDir);
         QDir destinationDir(themesDir.absoluteFilePath(themeDir));
-        qDebug() << "Exporting theme " << themeDir << " to " << destinationDir.absolutePath();
-        QStringList themeFiles = themeFolderInResources.entryList(QDir::Files); // css files
+        qDebug() << "Exporting theme " << themeDir << " from " << themeFolderInResources.absolutePath() << " to " << destinationDir.absolutePath();
+        QString fullPath = themeFolderInResources.absolutePath() + "/css/themes/" + themeDir;
+        QDir pathInResources(fullPath);
+        QStringList themeFiles = pathInResources.entryList(QDir::Files); // css files
         for (const QString &themeCSSFile : themeFiles) {
-            QString sourcePath = themeFolderInResources.absoluteFilePath(themeCSSFile);
+            QString sourcePath = pathInResources.absoluteFilePath(themeCSSFile);
             QString destinationPath = destinationDir.absoluteFilePath(themeCSSFile);
             if (QFile::copy(sourcePath, destinationPath))
                 QFile(destinationPath).setPermissions(QFile::ReadOwner | QFile::WriteOwner);

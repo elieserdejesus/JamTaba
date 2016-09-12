@@ -39,7 +39,7 @@ bool Loader::canLoad(const QString &themesDir, const QString &themeName)
 QString Loader::loadCSS(QString themeDir, QString themeName)
 {
     //first load the common CSS shared by all themes
-    QString commonCSSDir(":/style/");
+    QString commonCSSDir(":/css/");
     QString commonCSSName("common");
     QString commonCss = Loader::loadThemeCSSFiles(commonCSSDir, commonCSSName);
 

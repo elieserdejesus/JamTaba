@@ -61,6 +61,8 @@ private:
     bool needExportThemes() const;
     void exportThemes() const;
 
+    static QDir getApplicationDataDir();
+
     static void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 };
 
