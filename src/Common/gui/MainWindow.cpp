@@ -30,6 +30,7 @@ using namespace Persistence;
 const QSize MainWindow::MINI_MODE_MIN_SIZE = QSize(800, 600);
 const QSize MainWindow::FULL_VIEW_MODE_MIN_SIZE = QSize(1180, 790);
 const int MainWindow::MINI_MODE_MAX_LOCAL_TRACKS_WIDTH = 185;
+const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
 
 // const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200;//in miliseconds
 
@@ -126,7 +127,15 @@ void MainWindow::changeTheme(QAction *action)
 
 bool MainWindow::themeCanUseNightModeWorldMaps(const QString &themeName)
 {
-    return themeName == "Black" || themeName == "Volcano"; // at moment only Black theme is using night mode maps
+    return themeName.endsWith(NIGHT_MODE_SUFFIX);
+}
+
+QString MainWindow::getStripedThemeName(const QString &fullThemeName)
+{
+    if (themeCanUseNightModeWorldMaps(fullThemeName))
+        return fullThemeName.left(fullThemeName.size() - 3); // remove the last 3 letters in theme name
+
+    return fullThemeName;
 }
 
 void MainWindow::initializeThemeMenu()
@@ -139,18 +148,18 @@ void MainWindow::initializeThemeMenu()
     QStringList themes = Theme::Loader::getAvailableThemes(themesDir);
     foreach (const QString &themeDir, themes) {
         QString themeName = QFileInfo(themeDir).baseName();
-        QAction *action = ui.menuTheme->addAction(themeName);
-        action->setData(themeName);
+        QAction *action = ui.menuTheme->addAction(getStripedThemeName(themeName));
+         action->setData(themeName);
     }
 }
 
 void MainWindow::translateThemeMenu()
 {
     foreach (QAction *action, ui.menuTheme->actions()) {
-        QString themeName = action->data().toString();
-        QString menuString = themeName; //use themeName as default text
+        QString themeName = action->text();
+        QString menuString = themeName; // use themeName as default text
         QString translatedName = getTranslatedThemeName(themeName);
-        if (translatedName != themeName) //maybe we don't have a translation entry for the theme ...
+        if (translatedName != themeName) // maybe we don't have a translation entry for the theme ...
             menuString = translatedName + " (" + themeName + ")";
         action->setText(menuString);
     }

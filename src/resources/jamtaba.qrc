@@ -21,27 +21,27 @@
         <file alias="Chat.css">css/themes/Flat/Chat.css</file>
         <file alias="Chords.css">css/themes/Flat/Chords.css</file>
     </qresource>
-    <qresource prefix="/style/themes/Volcano">
-        <file alias="BaseTrack.css">css/themes/Volcano/BaseTrack.css</file>
-        <file alias="NinjamWindow.css">css/themes/Volcano/NinjamWindow.css</file>
-        <file alias="LocalTrack.css">css/themes/Volcano/LocalTrack.css</file>
-        <file alias="Dialogs.css">css/themes/Volcano/Dialogs.css</file>
-        <file alias="General.css">css/themes/Volcano/General.css</file>
-        <file alias="MainWindow.css">css/themes/Volcano/MainWindow.css</file>
-        <file alias="PublicRooms.css">css/themes/Volcano/PublicRooms.css</file>
-        <file alias="Chat.css">css/themes/Volcano/Chat.css</file>
-        <file alias="Chords.css">css/themes/Volcano/Chords.css</file>
+    <qresource prefix="/style/themes/Volcano_nm">
+        <file alias="BaseTrack.css">css/themes/Volcano_nm/BaseTrack.css</file>
+        <file alias="NinjamWindow.css">css/themes/Volcano_nm/NinjamWindow.css</file>
+        <file alias="LocalTrack.css">css/themes/Volcano_nm/LocalTrack.css</file>
+        <file alias="Dialogs.css">css/themes/Volcano_nm/Dialogs.css</file>
+        <file alias="General.css">css/themes/Volcano_nm/General.css</file>
+        <file alias="MainWindow.css">css/themes/Volcano_nm/MainWindow.css</file>
+        <file alias="PublicRooms.css">css/themes/Volcano_nm/PublicRooms.css</file>
+        <file alias="Chat.css">css/themes/Volcano_nm/Chat.css</file>
+        <file alias="Chords.css">css/themes/Volcano_nm/Chords.css</file>
     </qresource>
-    <qresource prefix="/style/themes/Black">
-        <file alias="BaseTrack.css">css/themes/Black/BaseTrack.css</file>
-        <file alias="NinjamWindow.css">css/themes/Black/NinjamWindow.css</file>
-        <file alias="LocalTrack.css">css/themes/Black/LocalTrack.css</file>
-        <file alias="Dialogs.css">css/themes/Black/Dialogs.css</file>
-        <file alias="General.css">css/themes/Black/General.css</file>
-        <file alias="MainWindow.css">css/themes/Black/MainWindow.css</file>
-        <file alias="PublicRooms.css">css/themes/Black/PublicRooms.css</file>
-        <file alias="Chat.css">css/themes/Black/Chat.css</file>
-        <file alias="Chords.css">css/themes/Black/Chords.css</file>
+    <qresource prefix="/style/themes/Black_nm">
+        <file alias="BaseTrack.css">css/themes/Black_nm/BaseTrack.css</file>
+        <file alias="NinjamWindow.css">css/themes/Black_nm/NinjamWindow.css</file>
+        <file alias="LocalTrack.css">css/themes/Black_nm/LocalTrack.css</file>
+        <file alias="Dialogs.css">css/themes/Black_nm/Dialogs.css</file>
+        <file alias="General.css">css/themes/Black_nm/General.css</file>
+        <file alias="MainWindow.css">css/themes/Black_nm/MainWindow.css</file>
+        <file alias="PublicRooms.css">css/themes/Black_nm/PublicRooms.css</file>
+        <file alias="Chat.css">css/themes/Black_nm/Chat.css</file>
+        <file alias="Chords.css">css/themes/Black_nm/Chords.css</file>
     </qresource>
     <qresource prefix="/style/themes/Rounded">
         <file alias="BaseTrack.css">css/themes/Rounded/BaseTrack.css</file>
