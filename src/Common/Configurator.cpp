@@ -231,24 +231,14 @@ void Configurator::exportLogIniFile()
     }
 }
 
-QString Configurator::getPresetPath(const QString &jsonFile)
+QString Configurator::getPresetPath(const QString &presetFileName)
 {
     if (!presetsDir.exists()) {
         qDebug(jtConfigurator) << "Can't load preset file , preset dir inexistent !";
         return "";
     }
 
-    QString path = presetsDir.absoluteFilePath(jsonFile);
-    QStringList list = getPresetFilesNames(true);
-    foreach (const QString &item, list) {
-        if (item.contains(path)) {
-            qDebug(jtConfigurator) << "Path to required preset is :" << path;
-            return path;
-        }
-    }
-
-    qDebug(jtConfigurator) << "NO Path found !" << path;
-    return path;
+    return presetsDir.absoluteFilePath(presetFileName);
 }
 
 void Configurator::deletePreset(const QString &name)
@@ -256,13 +246,12 @@ void Configurator::deletePreset(const QString &name)
     QString presetPath = getPresetPath(name);
     if (presetPath.isEmpty())
         return;
-    {
-        qInfo(jtConfigurator) << "!!! Preset to delete Path is " << presetPath;
-        if (presetsDir.remove(presetPath))
-            qInfo(jtConfigurator) << "!!! Preset deleted ! ";
-        else
-            qInfo(jtConfigurator) << "!!! Could not delete Preset ! ";
-    }
+
+    qInfo(jtConfigurator) << "!!! Preset to delete Path is " << presetPath;
+    if (presetsDir.remove(name))
+        qDebug() << "!!! Preset deleted ! ";
+    else
+        qDebug() << "!!! Could not delete Preset " << name;
 }
 
 // -------------------------------------------------------------------------------

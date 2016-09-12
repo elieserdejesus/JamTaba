@@ -73,11 +73,14 @@ private:
     QPushButton *createToolButton();
     QPushButton *createXmitButton();
 
-    QMenu* createPresetsSubMenu();
+    QMenu* createPresetsLoadingSubMenu();
+    QMenu* createPresetsDeletingSubMenu();
     void createPresetsActions(QMenu &menu);
     void createChannelsActions(QMenu &menu);
 
     void updateXmitButtonText();
+
+    static QString getStripedPresetName(const QString &presetName);
 
 signals:
     void nameChanged();
@@ -101,7 +104,7 @@ private slots:
     void loadPreset(QAction *action);
     void savePreset();
     void resetLocalTracks();
-    void deletePreset();
+    void deletePreset(QAction *action);
 
     void toggleTransmitingStatus(bool checked);
 };
