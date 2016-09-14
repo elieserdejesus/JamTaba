@@ -28,7 +28,7 @@ using namespace Ninjam;
 using namespace Persistence;
 
 const QSize MainWindow::MINI_MODE_MIN_SIZE = QSize(800, 600);
-const QSize MainWindow::FULL_VIEW_MODE_MIN_SIZE = QSize(1180, 790);
+const QSize MainWindow::FULL_VIEW_MODE_MIN_SIZE = QSize(1180, 720);
 const int MainWindow::MINI_MODE_MAX_LOCAL_TRACKS_WIDTH = 185;
 const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
 
