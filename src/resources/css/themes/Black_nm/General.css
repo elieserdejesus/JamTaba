@@ -296,13 +296,13 @@ QMenuBar
 QMenu
 {
     border: 1px outset rgb(20, 20, 20);
-    color: rgb(180, 180, 180);
-    background: rgb(93, 93, 93);
+    color: rgb(140, 140, 140);
+    background-color: rgb(60, 60, 60);
 }
 
 QMenu::item::enabled:selected
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(60, 60, 60), stop:1 rgb(40, 40, 40));
+    background-color: rgb(45, 45, 45);
     color: black; /* fix to issue #500 */
 }
 
