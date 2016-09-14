@@ -296,8 +296,8 @@ QMenuBar
 QMenu
 {
     border: 1px outset rgb(20, 20, 20);
-    color: rgb(140, 140, 140);
-    background:rgb(35, 35, 35);
+    color: rgb(180, 180, 180);
+    background: rgb(93, 93, 93);
 }
 
 QMenu::item::enabled:selected
