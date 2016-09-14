@@ -95,6 +95,7 @@
         <file>chat_small.png</file>
         <file>preset-load.png</file>
         <file>preset-save.png</file>
+        <file>preset-delete.png</file>
         <file>discard.png</file>
         <file>level high.png</file>
         <file>level low.png</file>

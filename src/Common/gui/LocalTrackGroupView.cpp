@@ -131,7 +131,7 @@ void LocalTrackGroupView::resetTracks()
 QMenu *LocalTrackGroupView::createPresetsDeletingSubMenu()
 {
     QMenu *deleteMenu = new QMenu(tr("Delete preset"));
-    deleteMenu->setIcon(QIcon(":/images/preset-load.png"));
+    deleteMenu->setIcon(QIcon(":/images/preset-delete.png"));
 
     // adding a menu action for each stored preset
     QStringList presetsNames = Configurator::getInstance()->getPresetFilesNames(false);
@@ -172,11 +172,12 @@ QMenu *LocalTrackGroupView::createPresetsLoadingSubMenu()
 void LocalTrackGroupView::createPresetsActions(QMenu &menu)
 {
     menu.addMenu(createPresetsLoadingSubMenu()); // loading submenu
-    menu.addMenu(createPresetsDeletingSubMenu()); // deleting submenu
 
     // save preset
     QAction *addPresetActionSave = menu.addAction(QIcon(":/images/preset-save.png"), tr("Save preset"));
     QObject::connect(addPresetActionSave, SIGNAL(triggered(bool)), this, SLOT(savePreset()));
+
+    menu.addMenu(createPresetsDeletingSubMenu()); // deleting submenu
 
     // RESET - in case of panic
     QAction *reset = menu.addAction(QIcon(":/images/gear.png"), tr("Reset Track Controls"));
