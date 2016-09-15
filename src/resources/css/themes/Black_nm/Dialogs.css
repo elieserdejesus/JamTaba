@@ -134,10 +134,11 @@ BusyDialog
     padding: 0px;
     margin: 0px;
     border-radius: 3px;
+
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-            stop:0 rgb(80, 80, 80),
-            stop:0.3 rgb(60, 60, 60)
-            stop:0.6 rgba(40, 40, 40),
+            stop:0 rgb(110, 110, 110),
+            stop:0.3 rgb(80, 80, 80)
+            stop:0.6 rgba(50, 50, 50),
             stop:1 rgba(20, 20, 20));
 }
 
