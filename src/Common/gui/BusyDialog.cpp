@@ -11,7 +11,7 @@ BusyDialog::BusyDialog(QWidget *parent) :
 
     QMovie *movie = new QMovie(":/loading.gif");
     movie->setParent(this);
-    movie->setSpeed(50);// 50%
+    //movie->setSpeed(50);/
     movie->setScaledSize(QSize(64, 64));
     ui->labelGif->setMovie(movie);
 }
