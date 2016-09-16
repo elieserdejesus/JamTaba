@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QMap>
 #include "MapMarker.h"
+#include <QMouseEvent>
 
 struct MapMarkerComparator;
 
@@ -16,7 +17,6 @@ class MapWidget: public QWidget
 public:
     MapWidget(QWidget *parent = 0);
     void setMarkers(const QList<MapMarker> &markers);
-    void setMarkersVisibility(bool showMarkers);
     static void setTilesDir(const QString &newDir);
     static void setNightMode(bool useNightMode);
 
@@ -24,6 +24,7 @@ protected:
     void resizeEvent(QResizeEvent *) override;
     void paintEvent(QPaintEvent *event) override;
     QSize minimumSizeHint() const override;
+    bool eventFilter(QObject *, QEvent *) override;
 
 private slots:
     void loadTiles();
@@ -41,13 +42,10 @@ private:
 
     QList<MapMarker> markers;
 
-    bool showingMarkers;
-
     void invalidate();
     QRect tileRect(const QPoint &tp) const;
 
     void drawMapTiles(QPainter &p, const QRect &rect);
-    void drawPlayersList(QPainter &p);
     void drawPlayersMarkers(QPainter &p);
     void drawMarker(const MapMarker &marker, QPainter &p, const QPointF &markerPosition, const QPointF &rectPosition) const;
 

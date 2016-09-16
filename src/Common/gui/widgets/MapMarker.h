@@ -12,8 +12,9 @@ class MapMarker
 public:
     MapMarker(const QString &name, const QString &countryName, const QPointF &latLong, const QImage &flag);
     inline QPointF getLatLong() const { return latLong; }
-    QString getText() const;
+    QString getPlayerName() const;
     inline const QImage &getFlag() const { return flag; }
+    inline QString getCountryName() const { return countryName; }
 
 private:
     QString name;

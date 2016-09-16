@@ -30,7 +30,7 @@ JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo,
     ui->content->layout()->removeWidget(ui->wavePeakPanel);
     map->setLayout(new QHBoxLayout());
     map->layout()->addWidget(ui->wavePeakPanel);
-    ui->wavePeakPanel->setMaximumHeight(120);
+    ui->wavePeakPanel->setMaximumHeight(50);
 
     initialize(roomInfo);
 }
@@ -226,8 +226,6 @@ void JamRoomViewPanel::clear(bool resetListenButton)
         ui->buttonListen->setChecked(false);
     updateButtonListen();
     updateStyleSheet();
-
-    map->setMarkersVisibility(!ui->buttonListen->isChecked());
 }
 
 void JamRoomViewPanel::toggleRoomListening()
@@ -240,7 +238,6 @@ void JamRoomViewPanel::toggleRoomListening()
 
     ui->wavePeakPanel->setEnabled(listening);
     ui->wavePeakPanel->updateGeometry();
-    map->setMarkersVisibility(!listening);
 }
 
 void JamRoomViewPanel::enterInTheRoom()

@@ -3,6 +3,7 @@
 #include <QtWidgets>
 #include <QDebug>
 #include <cmath>
+#include <QEvent>
 
 
 #ifndef M_PI
@@ -17,12 +18,6 @@ bool MapWidget::usingNightMode = false;
 const int MapWidget::ZOOM = 1; // fixed zoom level
 
 QHash<QPoint, QPixmap> MapWidget::tilePixmaps;
-
-// some consts used to translate map tiles to lat,long
-const qreal deg2rad = M_PI/180.0;
-const qreal A_EARTH = 6378137;
-const qreal flattening = 1.0/298.257223563;
-const qreal NAV_E2 = (2.0-flattening)*flattening;
 
 uint qHash(const QPoint& p)
 {
@@ -48,24 +43,6 @@ QPointF tileForCoordinate(QPointF latLong, int zoom)
     return tileForCoordinate(latLong.x(), latLong.y(), zoom);
 }
 
-qreal longitudeFromTile(qreal tx, int zoom)
-{
-    qreal zn = static_cast<qreal>(1 << zoom);
-    qreal divider = zn * 360.0 - 180.0;
-    if (divider != 0)
-        return tx / divider;
-
-    return 0;
-}
-
-qreal latitudeFromTile(qreal ty, int zoom)
-{
-    qreal zn = static_cast<qreal>(1 << zoom);
-    qreal n = M_PI - 2 * M_PI * ty / zn;
-    qreal lng = 180.0 / M_PI * atan(0.5 * (exp(n) - exp(-n)));
-    return lng;
-}
-
 qreal getDistance(const QPointF &p1, const QPointF &p2)
 {
     qreal x = qAbs(p1.x() - p2.x());
@@ -74,20 +51,12 @@ qreal getDistance(const QPointF &p1, const QPointF &p2)
 }
 
 MapWidget::MapWidget(QWidget *parent)
-    : QWidget(parent),
-      showingMarkers(true)
+    : QWidget(parent)
 {
 
     loadTiles();
     setCenter(QPointF(0, 0));
-}
-
-void MapWidget::setMarkersVisibility(bool showMarkers)
-{
-    if (showingMarkers != showMarkers) {
-        showingMarkers = showMarkers;
-    }
-    update();
+    installEventFilter(this);
 }
 
 void MapWidget::setTilesDir(const QString &newDir)
@@ -326,10 +295,7 @@ void MapWidget::paintEvent(QPaintEvent *event)
 
     drawMapTiles(p, event->rect());
 
-    if (showingMarkers)
-        drawPlayersMarkers(p);
-    else
-        drawPlayersList(p);
+    drawPlayersMarkers(p);
 
     p.end();
 
@@ -528,9 +494,7 @@ QColor MapWidget::getMarkerTextColor()
 
 void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPointF &markerPosition, const QPointF &rectPosition) const
 {
-    QFontMetrics fMetrics = fontMetrics();
-    QString text = marker.getText();
-    qreal textWidth = fMetrics.width(text);
+    QString text = marker.getPlayerName();
 
     QRectF markerRect = getMarkerRect(marker, rectPosition);
 
@@ -543,75 +507,31 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     painter.setClipRegion(QRegion(rect()).subtracted(markerRect.toRect()));
     painter.drawLine(markerRect.center(), markerPosition);
 
-    // drawing the dark transparent background
+    // drawing the transparent background
     painter.setClipping(false);
     painter.setPen(Qt::NoPen);
     painter.drawRect(markerRect);
 
-    // drawing the player red marker
+    // drawing the player marker
     const static qreal markerSize = 1.6;
     painter.setBrush(getMarkerColor());
     painter.drawEllipse(markerPosition, markerSize, markerSize);
 
     //draw the player name text
     painter.setPen(getMarkerTextColor());
-    qreal textY = rectPosition.y() + TEXT_MARGIM;
+    qreal textY = rectPosition.y() + TEXT_MARGIM + fontMetrics().descent()/2.0;
     qreal textX = rectPosition.x() + TEXT_MARGIM;
     painter.drawText(textX, textY, text);
-
-    qreal imageX = textX + textWidth + TEXT_MARGIM;
-    qreal imageY = rectPosition.y() - fMetrics.height()/2.0;
-    painter.drawImage(QPointF(imageX, imageY), marker.getFlag());
 }
 
 QRectF MapWidget::getMarkerRect(const MapMarker &marker, const QPointF &anchor) const
 {
     QFontMetrics fMetrics = fontMetrics();
-    QString text = marker.getText();
-    const QImage &flag = marker.getFlag();
-    qreal rectWidth = fMetrics.width(text) + TEXT_MARGIM * 3 + flag.width();
-    qreal height = fMetrics.height() + (TEXT_MARGIM * 2);
+    QString text = marker.getPlayerName();
+    qreal rectWidth = fMetrics.width(text) + TEXT_MARGIM * 2;
+    qreal height = fMetrics.height() + TEXT_MARGIM;
     QRectF rect(anchor.x(), anchor.y() - height/2.0, rectWidth, height);
     return rect;
-}
-
-void MapWidget::drawPlayersList(QPainter &p)
-{
-    if (markers.isEmpty())
-        return;
-
-    p.setTransform(QTransform());//reset transform
-
-    QFontMetrics metrics = fontMetrics();
-    qreal fontHeight = metrics.height();
-
-    //compute the background rectangle width
-    qreal maxWidth = 0;
-    for(const MapMarker &mark : markers) {
-        QString userString = mark.getText();
-        qreal width = metrics.width(userString);
-        if (width > maxWidth)
-            maxWidth = width;
-    }
-
-    //draw the background rect
-    static const qreal margim = 5;
-    QRectF backgroundRect(margim, margim, maxWidth + margim * 2, fontHeight * markers.count() + margim * 2);
-    static const QColor bgColor(255, 255, 255, 160);
-    p.setPen(Qt::NoPen);
-    p.setBrush(bgColor);
-    p.drawRect(backgroundRect);
-
-    //draw the players names
-    int y = fontHeight + margim;
-    int x = margim * 2;
-    p.setPen(Qt::black);
-    for(const MapMarker &mark : markers) {
-        QString userString = mark.getText();
-        p.drawText(x, y, userString);
-        y += fontHeight;
-    }
-
 }
 
 QRect MapWidget::tileRect(const QPoint &tp) const
@@ -621,3 +541,26 @@ QRect MapWidget::tileRect(const QPoint &tp) const
     int y = t.y() * TILES_SIZE + offset.y();
     return QRect(x, y, TILES_SIZE, TILES_SIZE);
 }
+
+bool MapWidget::eventFilter(QObject *object, QEvent *ev)
+{
+    if (ev->type() == QEvent::ToolTip) {
+        QHelpEvent *event = static_cast<QHelpEvent *>(ev);
+        QPoint mousePosition = event->pos();
+
+        //check if mouse is intercepting some marker and show country name as tooltip
+        for (const MapMarker &marker : markers) {
+            QPointF markerPosition = getMarkerScreenCoordinate(marker);
+            QRectF markerRect(markerPosition.x() - 2.5, markerPosition.y() - 2.5, 5, 5);
+            if (markerRect.contains(QPointF(mousePosition))) {
+                QToolTip::showText(event->globalPos(), marker.getCountryName());
+                return true;
+            }else {
+                QToolTip::hideText();
+                event->ignore();
+            }
+        }
+    }
+    return QWidget::eventFilter(object, ev);
+}
+
