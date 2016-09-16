@@ -156,12 +156,11 @@ void MainWindow::initializeThemeMenu()
 void MainWindow::translateThemeMenu()
 {
     foreach (QAction *action, ui.menuTheme->actions()) {
-        QString themeName = action->text();
-        QString menuString = themeName; // use themeName as default text
+        QString themeName = getStripedThemeName(action->data().toString()); // use themeName as default text
         QString translatedName = getTranslatedThemeName(themeName);
         if (translatedName != themeName) // maybe we don't have a translation entry for the theme ...
-            menuString = translatedName + " (" + themeName + ")";
-        action->setText(menuString);
+            themeName = translatedName + " (" + themeName + ")";
+        action->setText(themeName);
     }
 }
 
