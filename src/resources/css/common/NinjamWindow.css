@@ -192,16 +192,35 @@ NinjamTrackView #lowCutButton
 {
     max-width: 8px;
     max-height: 8px;
-    background-image: url(':/images/low_cut.png');
     background-position: center center;
     background-repeat: none;
     border-style: inset;
+}
+
+NinjamTrackView #lowCutButton[state="0"]
+{
+   background-image: url(':/images/low_cut_off.png');
+}
+
+NinjamTrackView #lowCutButton[state="1"]
+{
+   background-image: url(':/images/low_cut_normal.png');
+}
+
+NinjamTrackView #lowCutButton[state="2"]
+{
+   background-image: url(':/images/low_cut_drastic.png');
 }
 
 NinjamTrackView #lowCutButton::hover
 {
     border-style: solid;
     border-color: rgb(80, 80, 80);
+}
+
+NinjamTrackView[horizontal="false"] #lowCutButton
+{
+    min-height: 8px;
 }
 
 NinjamTrackView[horizontal="true"] #lowCutButton

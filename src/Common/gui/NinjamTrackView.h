@@ -6,6 +6,8 @@
 #include "IntervalChunksDisplay.h"
 #include "persistence/UsersDataCache.h"
 #include "MarqueeLabel.h"
+#include "audio/NinjamTrackNode.h"
+#include "MultiStateButton.h"
 
 namespace Controller {
 class MainController;
@@ -42,7 +44,7 @@ protected:
 
 private:
     MarqueeLabel *channelNameLabel;
-    QPushButton *buttonLowCut;
+    MultiStateButton *buttonLowCut;
     Persistence::CacheEntry cacheEntry;// used to remember the track controls values
     IntervalChunksDisplay *chunksDisplay;// display downloaded interval chunks
 
@@ -53,7 +55,10 @@ private:
     bool downloadingFirstInterval;
     void setDownloadedChunksDisplayVisibility(bool visible);
 
-    QPushButton *createLowCutButton(bool checked);
+    MultiStateButton *createLowCutButton(bool checked);
+
+    void updateLowCutButtonToolTip();
+    QString getLowCutStateText() const;
 
     static const int WIDE_HEIGHT;
 
@@ -64,7 +69,7 @@ protected slots:
     void setPan(int value) override;
     void updateBoostValue() override;
 
-    void setLowCutStatus(bool activated);
+    void setLowCutToNextState();
 };
 
 #endif // NINJAMTRACKVIEW_H

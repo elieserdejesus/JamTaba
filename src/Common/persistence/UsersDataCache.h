@@ -62,9 +62,9 @@ public:
         return channelID;
     }
 
-    inline bool isLowCutActivated() const
+    inline int getLowCutState() const
     {
-        return lowCutActivated;
+        return lowCutState;
     }
 
     void setUserIP(const QString &userIp);
@@ -74,12 +74,12 @@ public:
     void setPan(float pan);
     void setBoost(float boost);
     void setGain(float gain);
-    void setLowCutActivated(bool activated);
+    void setLowCutState(quint8 state);
 
     static QRegExp ipPattern;
 
     static const bool DEFAULT_MUTED;
-    static const bool DEFAULT_LOW_CUT;
+    static const quint8 DEFAULT_LOW_CUT_STATE;
     static const float DEFAULT_GAIN;
     static const float DEFAULT_PAN;
     static const float DEFAULT_BOOST;
@@ -93,7 +93,7 @@ private:
     float gain;// fader level
     float pan;
     float boost;
-    bool lowCutActivated;
+    quint8 lowCutState;
 };
 
 // ++++++++++++++++++++++++++++++++

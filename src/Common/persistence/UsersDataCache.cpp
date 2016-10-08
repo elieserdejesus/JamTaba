@@ -9,10 +9,10 @@
 
 using namespace Persistence;
 
-const quint32 UsersDataCacheHeader::REVISION = 2; // added low cut in revision 2
+const quint32 UsersDataCacheHeader::REVISION = 3; // added 3 low cut states (off, normal and drastic) in revision 3
 
 const bool CacheEntry::DEFAULT_MUTED = false;
-const bool CacheEntry::DEFAULT_LOW_CUT = false;
+const quint8 CacheEntry::DEFAULT_LOW_CUT_STATE = 0; // OFF state is default
 const float CacheEntry::DEFAULT_GAIN = 1.0f;
 const float CacheEntry::DEFAULT_PAN = 0.0f;
 const float CacheEntry::DEFAULT_BOOST = 1.0f;
@@ -34,17 +34,18 @@ QDataStream &operator<<(QDataStream &stream, const CacheEntry &entry)
            << entry.getGain()
            << entry.getPan()
            << entry.getBoost()
-           << entry.isLowCutActivated();
+           << entry.getLowCutState();
 }
 
 QDataStream &operator>>(QDataStream &stream, CacheEntry &entry)
 {
     QString userIp, userName;
     quint8 channelID;
-    bool muted, lowCutActivated;
+    bool muted;
+    int lowCutState;
     float gain, pan, boost;
 
-    stream >> userIp >> userName >> channelID >> muted >> gain >> pan >> boost >> lowCutActivated;
+    stream >> userIp >> userName >> channelID >> muted >> gain >> pan >> boost >> lowCutState;
 
     entry.setUserIP(userIp);
     entry.setUserName(userName);
@@ -53,7 +54,7 @@ QDataStream &operator>>(QDataStream &stream, CacheEntry &entry)
     entry.setGain(gain);
     entry.setPan(pan);
     entry.setBoost(boost);
-    entry.setLowCutActivated(lowCutActivated);
+    entry.setLowCutState(lowCutState);
 
     return stream;
 }
@@ -68,12 +69,12 @@ CacheEntry::CacheEntry(const QString &userIp, const QString &userName, quint8 ch
     setGain(DEFAULT_GAIN);
     setPan(DEFAULT_PAN);
     setBoost(DEFAULT_BOOST);
-    setLowCutActivated(DEFAULT_LOW_CUT);
+    setLowCutState(DEFAULT_LOW_CUT_STATE);
 }
 
-void CacheEntry::setLowCutActivated(bool activated)
+void CacheEntry::setLowCutState(quint8 state)
 {
-    this->lowCutActivated = activated;
+    this->lowCutState = state;
 }
 
 void CacheEntry::setUserIP(const QString &userIp)

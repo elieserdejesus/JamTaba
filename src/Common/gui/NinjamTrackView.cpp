@@ -31,22 +31,48 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
     chunksDisplay->setVisible(false);
 
     buttonLowCut = createLowCutButton(false);
+    updateLowCutButtonToolTip();
 
     setupVerticalLayout();
 
     setUnlightStatus(true); // disabled/grayed until receive the first bytes.
 }
 
-QPushButton *NinjamTrackView::createLowCutButton(bool checked)
+MultiStateButton *NinjamTrackView::createLowCutButton(bool checked)
 {
-    QPushButton *button = new QPushButton(this);
+    MultiStateButton *button = new MultiStateButton(3, this); // 3 states: Low cut OFF, NORMAL, and DRASTIC
     button->setCheckable(true);
     button->setChecked(checked);
     secondaryChildsLayout->addWidget(button);
     button->setObjectName("lowCutButton");
-    button->setToolTip(tr("Low cut"));
-    connect(button, &QPushButton::clicked, this, &NinjamTrackView::setLowCutStatus);
+    connect(button, &QPushButton::clicked, this, &NinjamTrackView::setLowCutToNextState);
     return button;
+}
+
+void NinjamTrackView::updateLowCutButtonToolTip()
+{
+    Q_ASSERT(buttonLowCut);
+
+    QString toolTipText = tr("Low cut") + " [" + getLowCutStateText() + "]";
+    buttonLowCut->setToolTip(toolTipText);
+}
+
+QString NinjamTrackView::getLowCutStateText() const
+{
+    Q_ASSERT(mainController);
+
+    NinjamTrackNode* trackNode = static_cast<NinjamTrackNode *>(mainController->getTrackNode(getTrackID()));
+
+    if (trackNode != nullptr) {
+        switch(trackNode->getLowCutState())
+        {
+        case NinjamTrackNode::OFF: return tr("Off");
+        case NinjamTrackNode::NORMAl: return tr("Normal");
+        case NinjamTrackNode::DRASTIC: return tr("Drastic");
+        }
+    }
+
+    return tr("Off"); // just to be shure
 }
 
 void NinjamTrackView::refreshStyleSheet()
@@ -76,8 +102,12 @@ void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialVal
             buttonBoostZero->click();
     }
 
-    if (initialValues.isLowCutActivated())
-        buttonLowCut->click();
+    quint8 lowCutState = initialValues.getLowCutState();
+    if (lowCutState < 3) { // Check for invalid lowCut state value, Low cut is 3 states: OFF, NOrmal and Drastic
+        for (int var = 0; var < lowCutState; ++var) {
+            buttonLowCut->click(); // force button state change
+        }
+    }
 }
 
 // +++++++++++++++
@@ -266,12 +296,18 @@ void NinjamTrackView::updateBoostValue()
     }
 }
 
-void NinjamTrackView::setLowCutStatus(bool activated)
+void NinjamTrackView::setLowCutToNextState()
 {
     NinjamTrackNode* node = static_cast<NinjamTrackNode *>(mainController->getTrackNode(getTrackID()));
     if (node) {
-        node->setLowCutStatus(activated);
-        cacheEntry.setLowCutActivated(activated);
+        NinjamTrackNode::LowCutState newState = node->setLowCutToNextState();
+
+        cacheEntry.setLowCutState(newState);
         mainController->getUsersDataCache()->updateUserCacheEntry(cacheEntry);
+
+        updateLowCutButtonToolTip();
+
+        buttonLowCut->style()->unpolish(this);
+        buttonLowCut->style()->polish(this);
     }
 }

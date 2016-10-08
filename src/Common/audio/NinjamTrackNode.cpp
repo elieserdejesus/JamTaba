@@ -9,31 +9,49 @@
 #include <QtConcurrent/QtConcurrent>
 #include "audio/core/Filters.h"
 
-const double NinjamTrackNode::LOW_CUT_FREQUENCY = 220.0; // in Hertz
+const double NinjamTrackNode::LOW_CUT_DRASTIC_FREQUENCY = 220.0; // in Hertz
+const double NinjamTrackNode::LOW_CUT_NORMAL_FREQUENCY = 120.0; // in Hertz
 
 class NinjamTrackNode::LowCutFilter
 {
 public:
     LowCutFilter(double sampleRate);
     void process(Audio::SamplesBuffer &buffer);
-    inline bool isActivated() const { return activated; }
-    inline void setActivated(bool activated){ this->activated = activated; }
+    //inline bool isActivated() const { return activated; }
+    inline NinjamTrackNode::LowCutState getState(){ return this->state; }
+    void setState(NinjamTrackNode::LowCutState state);
 private:
-    bool activated;
+    NinjamTrackNode::LowCutState state;
     Audio::Filter leftFilter;
     Audio::Filter rightFilter;
 };
 
 NinjamTrackNode::LowCutFilter::LowCutFilter(double sampleRate) :
-    activated(false),
-    leftFilter(Audio::Filter::FilterType::HighPass, sampleRate, LOW_CUT_FREQUENCY, 1.0, 1.0),
-    rightFilter(Audio::Filter::FilterType::HighPass, sampleRate, LOW_CUT_FREQUENCY, 1.0, 1.0)
+    state(LowCutState::OFF),
+    leftFilter(Audio::Filter::FilterType::HighPass, sampleRate, LOW_CUT_NORMAL_FREQUENCY, 1.0, 1.0),
+    rightFilter(Audio::Filter::FilterType::HighPass, sampleRate, LOW_CUT_NORMAL_FREQUENCY, 1.0, 1.0)
 {
 
 }
 
+void NinjamTrackNode::LowCutFilter::setState(NinjamTrackNode::LowCutState state)
+{
+    this->state = state;
+    if (state != LowCutState::OFF){
+        double frequency = LOW_CUT_NORMAL_FREQUENCY;
+        if (state == LowCutState::DRASTIC)
+            frequency = LOW_CUT_DRASTIC_FREQUENCY;
+
+        leftFilter.setFrequency(frequency);
+        rightFilter.setFrequency(frequency);
+    }
+}
+
 void NinjamTrackNode::LowCutFilter::process(Audio::SamplesBuffer &buffer)
 {
+    if (state == LowCutState::OFF)
+        return;
+
     quint32 samples = buffer.getFrameLenght();
     leftFilter.process(buffer.getSamplesArray(0), samples);
     if (!buffer.isMono())
@@ -101,9 +119,36 @@ NinjamTrackNode::NinjamTrackNode(int ID) :
 
 }
 
-void NinjamTrackNode::setLowCutStatus(bool activated)
+NinjamTrackNode::LowCutState NinjamTrackNode::setLowCutToNextState()
 {
-    lowCut->setActivated(activated);
+    LowCutState newState = LowCutState::OFF;
+
+    switch (lowCut->getState() ) {
+
+    case LowCutState::OFF:
+        newState = LowCutState::NORMAl;
+        break;
+    case LowCutState::NORMAl:
+        newState = LowCutState::DRASTIC;
+        break;
+    case LowCutState::DRASTIC:
+        newState = LowCutState::OFF;
+        break;
+    }
+
+    lowCut->setState(newState);
+
+    return newState;
+}
+
+NinjamTrackNode::LowCutState NinjamTrackNode::getLowCutState() const
+{
+    return lowCut->getState();
+}
+
+void NinjamTrackNode::setLowCutState(LowCutState newState)
+{
+    lowCut->setState(newState);
 }
 
 int NinjamTrackNode::getSampleRate() const
@@ -202,8 +247,7 @@ void NinjamTrackNode::processReplacing(const Audio::SamplesBuffer &in, Audio::Sa
                            << out.getFrameLenght();
         }
 
-        if (lowCut->isActivated())
-            lowCut->process(internalInputBuffer);
+        lowCut->process(internalInputBuffer);
 
         Audio::AudioNode::processReplacing(in, out, sampleRate, midiBuffer);// process internal buffer pan, gain, etc
     }

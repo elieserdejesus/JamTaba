@@ -14,13 +14,21 @@ class StreamBuffer;
 class NinjamTrackNode : public Audio::AudioNode
 {
 public:
+
+    enum LowCutState
+    {
+        OFF, NORMAl, DRASTIC
+    };
+
     explicit NinjamTrackNode(int ID);
     virtual ~NinjamTrackNode();
     void addVorbisEncodedInterval(const QByteArray &encodedBytes);
     void processReplacing(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out, int sampleRate,
                           const Midi::MidiMessageBuffer &midiBuffer);
 
-    void setLowCutStatus(bool activated);
+    void setLowCutState(LowCutState newState);
+    LowCutState setLowCutToNextState();
+    LowCutState getLowCutState() const;
 
     bool startNewInterval();
     inline int getID() const
@@ -44,7 +52,8 @@ private:
 
     class LowCutFilter;
     QScopedPointer<LowCutFilter> lowCut;
-    const static double LOW_CUT_FREQUENCY;
+    const static double LOW_CUT_NORMAL_FREQUENCY;
+    const static double LOW_CUT_DRASTIC_FREQUENCY;
 
     bool needResamplingFor(int targetSampleRate) const;
 

@@ -22,10 +22,11 @@ public:
         HighShelf
     };
 
-    Filter (FilterType type, double samplerate, double frequency, double Q, double gain);
+    Filter (FilterType type, double samplerate, double frequency, double Q = 1.0, double gain = 1.0);
 
     void process(float *data, const quint32 samples);
 
+    void setFrequency(double newFrequency);
 
     /** filter transfer function (filter response for spectrum visualization)
      * @param freq frequency
