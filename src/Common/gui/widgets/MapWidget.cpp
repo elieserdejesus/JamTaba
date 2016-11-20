@@ -494,7 +494,9 @@ QColor MapWidget::getMarkerTextColor()
 
 void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPointF &markerPosition, const QPointF &rectPosition) const
 {
-    QString text = marker.getPlayerName();
+    QString playerName = marker.getPlayerName();
+    QFontMetrics metrics = fontMetrics();
+    qreal playerNameWidth = metrics.width(playerName);
 
     QRectF markerRect = getMarkerRect(marker, rectPosition);
 
@@ -517,18 +519,42 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     painter.setBrush(getMarkerColor());
     painter.drawEllipse(markerPosition, markerSize, markerSize);
 
-    //draw the player name text
+    qreal hOffset = rectPosition.x() + TEXT_MARGIM;
+
+    // draw the player name text
     painter.setPen(getMarkerTextColor());
-    qreal textY = rectPosition.y() + TEXT_MARGIM + fontMetrics().descent()/2.0;
-    qreal textX = rectPosition.x() + TEXT_MARGIM;
-    painter.drawText(textX, textY, text);
+    qreal textY = rectPosition.y() + TEXT_MARGIM + metrics.descent()/2.0;
+    painter.drawText(hOffset, textY, playerName);
+
+    // draw the player country flag
+    QString countryName = marker.getCountryName();
+    hOffset += playerNameWidth + TEXT_MARGIM * 4;
+    qreal imageX = hOffset;
+    qreal imageY = rectPosition.y() - metrics.height()/2.0;
+    painter.drawImage(QPointF(imageX, imageY), marker.getFlag());
+
+    // draw the player country name
+    QFont countryNameFont = font();
+    countryNameFont.setPixelSize(countryNameFont.pixelSize() - 1);
+    countryNameFont.setItalic(true);
+    painter.setFont(countryNameFont);
+
+    hOffset += marker.getFlag().width() + TEXT_MARGIM;
+    painter.drawText(hOffset, textY, countryName);
+
 }
 
 QRectF MapWidget::getMarkerRect(const MapMarker &marker, const QPointF &anchor) const
 {
     QFontMetrics fMetrics = fontMetrics();
-    QString text = marker.getPlayerName();
-    qreal rectWidth = fMetrics.width(text) + TEXT_MARGIM * 2;
+    const QImage &flag = marker.getFlag();
+
+    qreal rectWidth = TEXT_MARGIM; //left margin
+    rectWidth += fMetrics.width(marker.getPlayerName());
+    rectWidth += TEXT_MARGIM  * 4; //space between player name and country flag
+    rectWidth += fMetrics.width(marker.getCountryName()) + flag.width();
+    rectWidth += TEXT_MARGIM; // right margin
+
     qreal height = fMetrics.height() + TEXT_MARGIM;
     QRectF rect(anchor.x(), anchor.y() - height/2.0, rectWidth, height);
     return rect;
