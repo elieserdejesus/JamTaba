@@ -45,7 +45,6 @@ public:
     void resetTracks();
 
     void useSmallSpacingInLayouts(bool useSmallSpacing);
-    bool isUsingSmallSpacingInLayouts() const;
 
 protected:
 
@@ -65,6 +64,7 @@ private:
     QPushButton *toolButton;
     QPushButton *xmitButton;
     bool preparingToTransmit;
+    bool usingSmallSpacingInLayouts;
 
     int index;
 

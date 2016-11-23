@@ -10,7 +10,8 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
     index(channelIndex),
     mainFrame(mainFrame),
     peakMeterOnly(false),
-    preparingToTransmit(false)
+    preparingToTransmit(false),
+    usingSmallSpacingInLayouts(false)
 {
     toolButton = createToolButton();
     topPanel->layout()->addWidget(toolButton);
@@ -30,7 +31,7 @@ LocalTrackGroupView::LocalTrackGroupView(int channelIndex, MainWindow *mainFrame
 
 void LocalTrackGroupView::useSmallSpacingInLayouts(bool useSmallSpacing)
 {
-
+    this->usingSmallSpacingInLayouts = useSmallSpacing;
     QList<LocalTrackView*> tracks = getTracks<LocalTrackView*>();
     foreach (LocalTrackView *trackView, tracks) {
         trackView->useSmallSpacingInLayouts(useSmallSpacing);
@@ -223,17 +224,7 @@ void LocalTrackGroupView::addSubChannel()
 {
     if (!trackViews.isEmpty()) {
         addTrackView(getChannelIndex());
-        useSmallSpacingInLayouts(isUsingSmallSpacingInLayouts());
     }
-}
-
-bool LocalTrackGroupView::isUsingSmallSpacingInLayouts() const
-{
-    QList<LocalTrackView*> tracks = getTracks<LocalTrackView*>();
-    if (tracks.isEmpty())
-        return false;
-
-    return tracks.first()->isUsingSmallSpacingInLayouts();
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++
@@ -243,11 +234,12 @@ LocalTrackView *LocalTrackGroupView::addTrackView(long trackID)
     if (trackViews.size() >= MAX_SUB_CHANNELS)
         return nullptr;
 
-    BaseTrackView *newTrack = TrackGroupView::addTrackView(trackID);
+    LocalTrackView *newTrack = dynamic_cast<LocalTrackView *>(TrackGroupView::addTrackView(trackID));
+    newTrack->useSmallSpacingInLayouts(usingSmallSpacingInLayouts);
 
     emit trackAdded();
 
-    return dynamic_cast<LocalTrackView *>(newTrack);
+    return newTrack;
 }
 
 LocalTrackView *LocalTrackGroupView::createTrackView(long trackID)
