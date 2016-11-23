@@ -31,16 +31,13 @@ BaseTrackView::BaseTrackView(Controller::MainController *mainController, long tr
     createLayoutStructure();
     setupVerticalLayout();
 
-    QObject::connect(muteButton, SIGNAL(clicked()), this, SLOT(toggleMuteStatus()));
-    QObject::connect(soloButton, SIGNAL(clicked()), this, SLOT(toggleSoloStatus()));
-    QObject::connect(levelSlider, SIGNAL(valueChanged(int)), this, SLOT(setGain(int)));
-    QObject::connect(panSlider, SIGNAL(valueChanged(int)), this, SLOT(setPan(int)));
-    QObject::connect(buttonBoostZero, SIGNAL(clicked(bool)), this,
-                     SLOT(updateBoostValue()));
-    QObject::connect(buttonBoostMinus12, SIGNAL(clicked(bool)), this,
-                     SLOT(updateBoostValue()));
-    QObject::connect(buttonBoostPlus12, SIGNAL(clicked(bool)), this, SLOT(
-                         updateBoostValue()));
+    connect(muteButton, &QPushButton::clicked, this, &BaseTrackView::toggleMuteStatus);
+    connect(soloButton, &QPushButton::clicked, this, &BaseTrackView::toggleSoloStatus);
+    connect(levelSlider, &QSlider::valueChanged, this, &BaseTrackView::setGain);
+    connect(panSlider, &QSlider::valueChanged, this, &BaseTrackView::setPan);
+    connect(buttonBoostZero, &QPushButton::clicked, this, &BaseTrackView::updateBoostValue);
+    connect(buttonBoostMinus12, &QPushButton::clicked, this, &BaseTrackView::updateBoostValue);
+    connect(buttonBoostPlus12, &QPushButton::clicked, this, &BaseTrackView::updateBoostValue);
 
     panSlider->installEventFilter(this);
     levelSlider->installEventFilter(this);
@@ -231,14 +228,11 @@ void BaseTrackView::bindThisViewWithTrackNodeSignals()
 {
     Audio::AudioNode *trackNode = mainController->getTrackNode(trackID);
     Q_ASSERT(trackNode);
-    QObject::connect(trackNode, SIGNAL(gainChanged(float)), this, SLOT(setGainSliderPosition(
-                                                                           float)));
-    QObject::connect(trackNode, SIGNAL(panChanged(float)), this,
-                     SLOT(setPanKnobPosition(float)));
-    QObject::connect(trackNode, SIGNAL(muteChanged(bool)), this,
-                     SLOT(setMuteStatus(bool)));
-    QObject::connect(trackNode, SIGNAL(soloChanged(bool)), this,
-                     SLOT(setSoloStatus(bool)));
+    connect(trackNode, &Audio::AudioNode::gainChanged, this, &BaseTrackView::setGainSliderPosition);
+    connect(trackNode, &Audio::AudioNode::panChanged, this, &BaseTrackView::setPanKnobPosition);
+    connect(trackNode, &Audio::AudioNode::muteChanged, this, &BaseTrackView::setMuteStatus);
+    connect(trackNode, &Audio::AudioNode::soloChanged, this, &BaseTrackView::setSoloStatus);
+    connect(trackNode, &Audio::AudioNode::boostChanged, this, &BaseTrackView::setBoostStatus);
 }
 
 // ++++++  signals emitted by Audio Node +++++++
@@ -251,6 +245,16 @@ changed only by user mouse interaction, these values can be changed using anothe
 methods (like midi messages).
 
 */
+
+void BaseTrackView::setBoostStatus(float newBoostValue)
+{
+    if (newBoostValue > 1.0)
+        buttonBoostPlus12->setChecked(true);
+    else if (newBoostValue < 1.0)
+        buttonBoostMinus12->setChecked(true);
+    else
+        buttonBoostZero->setChecked(true);
+}
 
 void BaseTrackView::setGainSliderPosition(float newGainValue)
 {

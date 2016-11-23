@@ -186,12 +186,16 @@ void LocalInputNode::preFaderProcess(SamplesBuffer &out) // this function is cal
         out.invertStereo();
 }
 
-void LocalInputNode::setStereoInversion(bool stereoInverted)
+void LocalInputNode::setStereoInversion(bool inverted)
 {
     if (isMono())
         return;
 
-    this->stereoInverted = stereoInverted;
+    if (this->stereoInverted != inverted)
+    {
+        this->stereoInverted = inverted;
+        emit stereoInversionChanged(inverted);
+    }
 }
 
 bool LocalInputNode::isStereoInverted() const
@@ -244,4 +248,7 @@ void LocalInputNode::reset()
 {
     AudioNode::reset();
     setToNoInput();
+
+    stereoInverted = false;
+    emit stereoInversionChanged(stereoInverted);
 }

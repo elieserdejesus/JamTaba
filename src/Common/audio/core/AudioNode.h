@@ -53,10 +53,7 @@ public:
     virtual void updateProcessorsGui();
 
     void setGain(float gainValue);
-    inline void setBoost(float boostValue)
-    {
-        this->boost = boostValue;
-    }
+    void setBoost(float boostValue);
 
     inline float getBoost() const
     {
@@ -138,7 +135,7 @@ private:
 signals:
     void gainChanged(float newGain);
     void panChanged(float newPan);
-    // void boostChanged(float boostInDecibels);
+    void boostChanged(float newBoost);
     void muteChanged(bool muteStatus);
     void soloChanged(bool soloStatus);
 };

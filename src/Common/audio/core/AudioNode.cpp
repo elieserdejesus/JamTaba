@@ -140,6 +140,12 @@ void AudioNode::setGain(float gainValue)
     emit gainChanged(this->gain);
 }
 
+void AudioNode::setBoost(float boostValue)
+{
+    this->boost = boostValue;
+    emit boostChanged(this->boost);
+}
+
 void AudioNode::setMute(bool muteStatus)
 {
     if (this->muted != muteStatus) {

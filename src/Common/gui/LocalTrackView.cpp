@@ -28,6 +28,13 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
     secondaryChildsLayout->addWidget(buttonStereoInversion);
 }
 
+void LocalTrackView::bindThisViewWithTrackNodeSignals()
+{
+    BaseTrackView::bindThisViewWithTrackNodeSignals();
+
+    connect(inputNode, &Audio::LocalInputNode::stereoInversionChanged, this, &LocalTrackView::setStereoInversion);
+}
+
 void LocalTrackView::useSmallSpacingInLayouts(bool useSmallSpacing)
 {
     int spacing = useSmallSpacing ? 6 : 12;

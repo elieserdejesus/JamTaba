@@ -127,6 +127,9 @@ void LocalTrackGroupView::resetTracks()
 {
     foreach (LocalTrackView *track, getTracks<LocalTrackView *>())
         track->reset();
+
+    if (!xmitButton->isChecked())
+        xmitButton->click(); // uncheck/reset the xmit button, the default is xmiting (button checked)
 }
 
 QMenu *LocalTrackGroupView::createPresetsDeletingSubMenu()

@@ -88,7 +88,7 @@ public:
 
     void addProcessor(AudioNodeProcessor *newProcessor, quint32 slotIndex) override;
 
-    void reset();
+    void reset() override;
 
     /** local input tracks are always activated, so is possible play offline while listening to a room.
      The other tracks (ninjam tracks) are deactivated when the 'room preview' is started. */
@@ -96,6 +96,7 @@ public:
 
 signals:
     void midiNoteLearned(quint8 midiNote) const;
+    void stereoInversionChanged(bool stereoInverted);
 
 protected:
     void preFaderProcess(Audio::SamplesBuffer &out) override;

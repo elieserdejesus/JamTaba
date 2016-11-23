@@ -59,6 +59,8 @@ protected:
 
     virtual void setupMetersLayout();
 
+    void bindThisViewWithTrackNodeSignals() override;
+
 private:
     bool usingSmallSpacing;
     QPushButton *createStereoInversionButton();

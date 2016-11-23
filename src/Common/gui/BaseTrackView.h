@@ -85,7 +85,7 @@ protected:
     virtual void setPeaks(float peakLeft, float peakRight, float rmsLeft, float rmsRight);
 
     // this is called in inherited classes [LocalTrackView, NinjamTrackView]
-    void bindThisViewWithTrackNodeSignals();
+    virtual void bindThisViewWithTrackNodeSignals();
 
     void createLayoutStructure();
 
@@ -150,6 +150,7 @@ private slots:
     void setGainSliderPosition(float newGainValue);
     void setMuteStatus(bool newMuteStatus);
     void setSoloStatus(bool newSoloStatus);
+    void setBoostStatus(float newBoostValue);
 };
 
 #endif // TRACKVIEW_H
