@@ -61,6 +61,7 @@
         <file alias="es_CL.qm">../../translations/es_CL.qm</file>
         <file alias="fr_FR.qm">../../translations/fr_FR.qm</file>
         <file alias="de_DE.qm">../../translations/de_DE.qm</file>
+        <file alias="pl_PL.qm">../../translations/pl_PL.qm</file>
     </qresource>
     <qresource prefix="/images">
         <file>stereo_inverted.png</file>
