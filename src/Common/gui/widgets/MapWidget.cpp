@@ -525,23 +525,25 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     painter.setPen(getMarkerTextColor());
     qreal textY = rectPosition.y() + TEXT_MARGIM + metrics.descent()/2.0;
     painter.drawText(hOffset, textY, playerName);
-
-    // draw the player country flag
-    QString countryName = marker.getCountryName();
-    hOffset += playerNameWidth + TEXT_MARGIM * 4;
-    qreal imageX = hOffset;
-    qreal imageY = rectPosition.y() - metrics.height()/2.0;
-    painter.drawImage(QPointF(imageX, imageY), marker.getFlag());
+    hOffset += playerNameWidth + TEXT_MARGIM * 3;
 
     // draw the player country name
-    QFont countryNameFont = font();
+    QFont normalFont = font();
+    QFont countryNameFont = normalFont;
     countryNameFont.setPixelSize(countryNameFont.pixelSize() - 1);
     countryNameFont.setItalic(true);
     painter.setFont(countryNameFont);
 
-    hOffset += marker.getFlag().width() + TEXT_MARGIM;
+    QString countryName = marker.getCountryName();
     painter.drawText(hOffset, textY, countryName);
+    hOffset += metrics.width(countryName);
 
+    painter.setFont(normalFont); //restore the normal font
+
+    // draw the player country flag
+    qreal imageX = hOffset;
+    qreal imageY = rectPosition.y() - metrics.height()/2.0;
+    painter.drawImage(QPointF(imageX, imageY), marker.getFlag());
 }
 
 QRectF MapWidget::getMarkerRect(const MapMarker &marker, const QPointF &anchor) const
@@ -551,7 +553,7 @@ QRectF MapWidget::getMarkerRect(const MapMarker &marker, const QPointF &anchor) 
 
     qreal rectWidth = TEXT_MARGIM; //left margin
     rectWidth += fMetrics.width(marker.getPlayerName());
-    rectWidth += TEXT_MARGIM  * 4; //space between player name and country flag
+    rectWidth += TEXT_MARGIM  * 3; //space between player name and country flag
     rectWidth += fMetrics.width(marker.getCountryName()) + flag.width();
     rectWidth += TEXT_MARGIM; // right margin
 
