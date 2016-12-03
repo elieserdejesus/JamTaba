@@ -136,6 +136,15 @@ bool Configurator::setUp()
     return true;
 }
 
+QDir Configurator::createPresetsDir(const QDir &baseDir)
+{
+    QString presetsFolder(PRESETS_FOLDER_NAME);
+    if (QSysInfo::buildCpuArchitecture().endsWith("64")) { /** 32 and 64 bits presets are not compatible - issue #587 https://github.com/elieserdejesus/JamTaba/issues/587 **/
+        presetsFolder += "_x64"; /** using a different folder for 64 bits presets **/
+    }
+    return QDir(baseDir.absoluteFilePath(presetsFolder));
+}
+
 void Configurator::exportThemes() const
 {
     // copy default themes from resources to user hard disk

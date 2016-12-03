@@ -34,6 +34,9 @@ public:
     QStringList getPresetFilesNames(bool fullpath);// all the files names in a folder
     void deletePreset(const QString &name);
 
+protected:
+    static QDir createPresetsDir(const QDir &baseDir);
+
 private:
     static const QString PRESETS_FOLDER_NAME;
     static const QString CACHE_FOLDER_NAME;

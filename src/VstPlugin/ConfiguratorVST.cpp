@@ -10,6 +10,6 @@ void Configurator::initializeDirs()
     cacheDir = QDir(appLocalDataDir.absoluteFilePath(CACHE_FOLDER_NAME));
 
     //the presets dir will be created inside VstPlugin dir. Standalone and VstPlugin are using different presets dirs.
-    presetsDir = QDir(baseDir.absoluteFilePath(PRESETS_FOLDER_NAME));
+    presetsDir = createPresetsDir(baseDir);
 
 }
