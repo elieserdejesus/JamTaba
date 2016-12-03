@@ -444,6 +444,12 @@ void MainWindow::loadPreset(const Preset &preset)
     if (preset.isValid()) {
         removeAllInputLocalTracks();
         initializeLocalInputChannels(preset.inputTrackSettings);
+
+        //set all loaded channels xmit to ON
+        foreach (LocalTrackGroupView *trackGroupView,  localGroupChannels ) {
+            mainController->setTransmitingStatus(trackGroupView->getChannelIndex(), true);
+        }
+
         QApplication::processEvents();
     }
 }
