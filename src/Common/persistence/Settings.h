@@ -260,6 +260,7 @@ public:
 
     bool showingMaxPeakMarkers;
     quint8 meterOption; // 0 - peak + RMS, 1 - peak only or 2 - RMS only
+    quint8 refreshRate; // in Hertz
 };
 
 // ++++++++++++++++++++++++
@@ -558,8 +559,10 @@ public:
     //Metering
     inline quint8 getMeterOption() const { return meteringSettings.meterOption; }
     inline bool isShowingMaxPeaks() const { return meteringSettings.showingMaxPeakMarkers; }
-    void storeMeterOption(quint8 meterOption) { meteringSettings.meterOption = meterOption; }
-    void storeMeterShowingMaxPeaks(bool showingMaxPeaks) { meteringSettings.showingMaxPeakMarkers = showingMaxPeaks; }
+    inline quint8 getMeterRefreshRate() const { return meteringSettings.refreshRate; }
+    inline void storeMeterOption(quint8 meterOption) { meteringSettings.meterOption = meterOption; }
+    inline void storeMeterShowingMaxPeaks(bool showingMaxPeaks) { meteringSettings.showingMaxPeakMarkers = showingMaxPeaks; }
+    inline void storeMeterRefreshRate(quint8 newRate) { meteringSettings.refreshRate = newRate; }
 };
 }
 

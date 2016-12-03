@@ -32,6 +32,9 @@ const QSize MainWindow::FULL_VIEW_MODE_MIN_SIZE = QSize(1180, 720);
 const int MainWindow::MINI_MODE_MAX_LOCAL_TRACKS_WIDTH = 185;
 const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
 
+const quint8 MainWindow::DEFAULT_REFRESH_RATE = 30; // in Hertz
+const quint8 MainWindow::MAX_REFRESH_RATE = 60; // in Hertz
+
 // const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200;//in miliseconds
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -205,9 +208,20 @@ void MainWindow::initializeLanguageMenu()
 }
 
 // ++++++++++++++++++++++++=
+void MainWindow::initializeGuiRefreshTimer()
+{
+    quint8 refreshRate = mainController->getSettings().getMeterRefreshRate();
+    if (refreshRate <= 0)
+        refreshRate = DEFAULT_REFRESH_RATE;
+    else if (refreshRate > MAX_REFRESH_RATE)
+        refreshRate = MAX_REFRESH_RATE;
+
+    timerID = startTimer(1000/refreshRate);// timer used to animate audio peaks, midi activity, public room wave audio plot, etc.
+}
+
 void MainWindow::initialize()
 {
-    timerID = startTimer(1000/50);// timer used to animate audio peaks, midi activity, public room wave audio plot, etc.
+    initializeGuiRefreshTimer();
 
     if (qApp->styleSheet().isEmpty()) { // allow custom stylesheet via app arguments
         QString themeName = mainController->getTheme();

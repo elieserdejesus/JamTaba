@@ -241,7 +241,9 @@ private:
 
     void setTheme(const QString &themeName);
 
-    int timerID;
+    int timerID; // timer used to refresh the entire GUI: animations, peak meters, etc
+    static const quint8 DEFAULT_REFRESH_RATE;
+    static const quint8 MAX_REFRESH_RATE;
 
     QPointF computeLocation() const;
 
@@ -268,6 +270,8 @@ private:
     void initializeTranslator();
 
     void initializeMeteringOptions();
+
+    void initializeGuiRefreshTimer();
 
     void updateUserNameLabel();
 

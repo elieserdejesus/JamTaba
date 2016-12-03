@@ -854,7 +854,8 @@ QString Settings::getTranslation() const
 MeteringSettings::MeteringSettings()
     : SettingsObject(QStringLiteral("Metering")),
       showingMaxPeakMarkers(true),
-      meterOption(0) // showing RMS + Peaks
+      meterOption(0), // showing RMS + Peaks
+      refreshRate(0)
 {
 
 }
@@ -863,10 +864,12 @@ void MeteringSettings::read(const QJsonObject &in)
 {
     this->showingMaxPeakMarkers = getValueFromJson(in, "showMaxPeak", true);
     this->meterOption = getValueFromJson(in, "meterOption", quint8(0));
+    this->refreshRate = getValueFromJson(in, "refreshRate", quint8(0));
 }
 
 void MeteringSettings::write(QJsonObject &out) const
 {
     out["showMaxPeak"] = showingMaxPeakMarkers;
     out["meterOption"] = meterOption;
+    out["refreshRate"] = refreshRate;
 }
