@@ -57,6 +57,18 @@ MapWidget::MapWidget(QWidget *parent)
     loadTiles();
     setCenter(QPointF(0, 0));
     installEventFilter(this);
+    initializeFonts();
+}
+
+void MapWidget::initializeFonts()
+{
+    QFont widgetFont = font();
+    userFont.setFamily(widgetFont.family());
+    userFont.setPointSize(widgetFont.pointSize());
+    userFont.setBold(true);
+
+    countryFont.setFamily(userFont.family());
+    countryFont.setPointSize(userFont.pointSize());
 }
 
 void MapWidget::setTilesDir(const QString &newDir)
@@ -319,7 +331,7 @@ QPointF MapWidget::getMarkerScreenCoordinate(const MapMarker &marker) const
     return QPointF(x, y);
 }
 
-int MapWidget::getMaximumMarkerWidth() const
+int MapWidget::getMaximumMarkerWidth()
 {
     int maxWidth = 0;
     QPointF anchor(0, 0);
@@ -392,7 +404,7 @@ bool MapWidget::rectIntersectsSomeMarker(const QRectF &rect, const QList<MapMark
     return false;
 }
 
-MapWidget::Position MapWidget::findBestEllipsePositionForMarker(const MapMarker &marker, const QList<MapMarker> &markers, const QList<MapWidget::Position> &positions) const
+MapWidget::Position MapWidget::findBestEllipsePositionForMarker(const MapMarker &marker, const QList<MapMarker> &markers, const QList<MapWidget::Position> &positions)
 {
 
     if (positions.isEmpty())
@@ -492,12 +504,8 @@ QColor MapWidget::getMarkerTextColor()
     return Qt::black;
 }
 
-void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPointF &markerPosition, const QPointF &rectPosition) const
+void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPointF &markerPosition, const QPointF &rectPosition)
 {
-    QString playerName = marker.getPlayerName();
-    QFontMetrics metrics = fontMetrics();
-    qreal playerNameWidth = metrics.width(playerName);
-
     QRectF markerRect = getMarkerRect(marker, rectPosition);
 
     QColor bgColor = getMarkerTextBackgroundColor();
@@ -519,45 +527,56 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     painter.setBrush(getMarkerColor());
     painter.drawEllipse(markerPosition, markerSize, markerSize);
 
-    qreal hOffset = rectPosition.x() + TEXT_MARGIM;
+    qreal hOffset = rectPosition.x() + TEXT_MARGIM; // left margin
 
     // draw the player name text
+    QString playerName = marker.getPlayerName();
+    painter.setFont(userFont);
+
+    QFontMetrics metrics = painter.fontMetrics();
+    qreal playerNameWidth = metrics.width(playerName);
     painter.setPen(getMarkerTextColor());
     qreal textY = rectPosition.y() + TEXT_MARGIM + metrics.descent()/2.0;
     painter.drawText(hOffset, textY, playerName);
     hOffset += playerNameWidth + TEXT_MARGIM * 3;
 
     // draw the player country name
-    QFont normalFont = font();
-    QFont countryNameFont = normalFont;
-    countryNameFont.setPixelSize(countryNameFont.pixelSize() - 1);
-    countryNameFont.setItalic(true);
-    painter.setFont(countryNameFont);
+    painter.setFont(countryFont);
+    metrics = painter.fontMetrics();
 
+    QColor countryNameColor(getMarkerTextColor());
+    countryNameColor.setAlpha(180); // country name is drawed using some alpha
+    painter.setPen(countryNameColor);
     QString countryName = marker.getCountryName();
     painter.drawText(hOffset, textY, countryName);
+
     hOffset += metrics.width(countryName);
 
-    painter.setFont(normalFont); //restore the normal font
+    painter.setFont(userFont); //restore the normal font
+    metrics = painter.fontMetrics();
 
     // draw the player country flag
-    qreal imageX = hOffset;
-    qreal imageY = rectPosition.y() - metrics.height()/2.0;
-    painter.drawImage(QPointF(imageX, imageY), marker.getFlag());
+    const QImage &image = marker.getFlag();
+    qreal imageX = hOffset + TEXT_MARGIM;
+    qreal imageY = rectPosition.y() - image.height()/2.0;
+    painter.drawImage(QPointF(imageX, imageY), image);
 }
 
 QRectF MapWidget::getMarkerRect(const MapMarker &marker, const QPointF &anchor) const
 {
-    QFontMetrics fMetrics = fontMetrics();
     const QImage &flag = marker.getFlag();
 
     qreal rectWidth = TEXT_MARGIM; //left margin
-    rectWidth += fMetrics.width(marker.getPlayerName());
+
+    QFontMetrics metrics(userFont);
+    rectWidth += metrics.width(marker.getPlayerName());
     rectWidth += TEXT_MARGIM  * 3; //space between player name and country flag
-    rectWidth += fMetrics.width(marker.getCountryName()) + flag.width();
+
+    metrics = QFontMetrics(countryFont);
+    rectWidth += metrics.width(marker.getCountryName()) + TEXT_MARGIM + flag.width();
     rectWidth += TEXT_MARGIM; // right margin
 
-    qreal height = fMetrics.height() + TEXT_MARGIM;
+    qreal height = qMax(metrics.height(), flag.height()) + TEXT_MARGIM * 2;
     QRectF rect(anchor.x(), anchor.y() - height/2.0, rectWidth, height);
     return rect;
 }

@@ -47,11 +47,13 @@ private:
 
     void drawMapTiles(QPainter &p, const QRect &rect);
     void drawPlayersMarkers(QPainter &p);
-    void drawMarker(const MapMarker &marker, QPainter &p, const QPointF &markerPosition, const QPointF &rectPosition) const;
+    void drawMarker(const MapMarker &marker, QPainter &p, const QPointF &markerPosition, const QPointF &rectPosition);
 
     static QColor getMarkerTextBackgroundColor();
     static QColor getMarkerColor();
     static QColor getMarkerTextColor();
+
+    void initializeFonts();
 
     QRectF getMarkerRect(const MapMarker &marker, const QPointF &anchor) const;
 
@@ -79,11 +81,15 @@ private:
     void updateMapPositionsCache();
 
     QList<MapWidget::Position> getEllipsePositions(int markersHeight, const QRectF &ellipseRect) const;
-    Position findBestEllipsePositionForMarker(const MapMarker &marker, const QList<MapMarker> &markers, const QList<Position> &positions) const;
+    Position findBestEllipsePositionForMarker(const MapMarker &marker, const QList<MapMarker> &markers, const QList<Position> &positions);
     QList<MapWidget::Position> getEmptyPositions(const QMap<int, QList<MapMarker>> markers, const QList<MapWidget::Position> &allPositions) const;
     bool rectIntersectsSomeMarker(const QRectF &rect, const QList<MapMarker> &markers) const;
 
-    int getMaximumMarkerWidth() const;
+    int getMaximumMarkerWidth();
+
+    QFont userFont;
+    QFont countryFont;
+
 
     static QString TILES_DIR;
     static const qreal TEXT_MARGIM;
