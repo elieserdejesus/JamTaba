@@ -53,6 +53,19 @@ PreferencesDialog QComboBox QAbstractItemView      /* the colors inside drop dow
     selection-color: rgb(254, 181, 102);
 }
 
+PreferencesDialog QComboBox:disabled,
+PreferencesDialog QLabel:disabled,
+PreferencesDialog QGroupBox#groupBoxBuiltInMetronomes[checked=false],
+PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false]
+{
+color: rgba(0, 0, 0, 90);
+}
+
+PreferencesDialog QComboBox::down-arrow:disabled
+{
+    image:url(:/images/arrow-down-lighter.png);
+}
+
 PreferencesDialog #vstListWidget
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
