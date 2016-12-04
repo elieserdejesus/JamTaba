@@ -728,7 +728,7 @@ void NinjamController::on_ninjamAudiointervalCompleted(const Ninjam::User &user,
 void NinjamController::reset(bool keepRecentIntervals){
     QMutexLocker locker(&mutex);
     foreach (NinjamTrackNode* trackNode, trackNodes.values()) {
-        trackNode->discardIntervals(keepRecentIntervals);
+        trackNode->discardDownloadedIntervals(keepRecentIntervals);
     }
     intervalPosition = lastBeat = 0;
 }

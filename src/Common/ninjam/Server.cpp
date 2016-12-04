@@ -45,7 +45,16 @@ void Server::updateUserChannel(const UserChannel &serverChannel)
 {
     QString userFullName = serverChannel.getUserFullName();
     if(users.contains(userFullName)){
-        users[userFullName].updateChannelName(serverChannel.getIndex(), serverChannel.getName());
+        quint8 channelIndex = serverChannel.getIndex();
+        users[userFullName].updateChannelName(channelIndex, serverChannel.getName());
+        users[userFullName].updateChannelReceiveStatus(channelIndex, serverChannel.isActive());
+    }
+}
+
+void Server::updateUserChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receive)
+{
+    if(users.contains(userFullName)){
+        users[userFullName].updateChannelReceiveStatus(channelIndex, receive);
     }
 }
 

@@ -22,13 +22,14 @@ public:
     NinjamTrackView(Controller::MainController *mainController, long trackID);
     void setChannelName(const QString &name);
     void setInitialValues(const Persistence::CacheEntry &initialValues);
+    void setNinjamChannelData(const QString &userFullName, quint8 channelIndex);
 
     // interval chunks visual feedback
     void incrementDownloadedChunks();// called when a interval part (a chunk) is received
     void finishCurrentDownload(); // called when the interval is fully downloaded
     void setEstimatedChunksPerInterval(int estimatedChunks);// how many download chunks per interval?
 
-    void setUnlightStatus(bool unlighted);
+    void setActivatedStatus(bool deactivated);
 
     void updateGuiElements();
 
@@ -45,8 +46,13 @@ protected:
 private:
     MarqueeLabel *channelNameLabel;
     MultiStateButton *buttonLowCut;
+    QPushButton *buttonReceive;
     Persistence::CacheEntry cacheEntry;// used to remember the track controls values
     IntervalChunksDisplay *chunksDisplay;// display downloaded interval chunks
+
+    // used to send channel receive on/off messages
+    QString userFullName;
+    quint8 channelIndex;
 
     Qt::Orientation orientation;
 
@@ -60,6 +66,9 @@ private:
     void updateLowCutButtonToolTip();
     QString getLowCutStateText() const;
 
+    MarqueeLabel *createChannelNameLabel() const;
+    QPushButton *createReceiveButton() const;
+
     static const int WIDE_HEIGHT;
 
 protected slots:
@@ -70,6 +79,10 @@ protected slots:
     void updateBoostValue() override;
 
     void setLowCutToNextState();
+
+private slots:
+    void setReceiveState(bool receive);
+
 };
 
 #endif // NINJAMTRACKVIEW_H

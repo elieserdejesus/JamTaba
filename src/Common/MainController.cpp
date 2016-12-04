@@ -42,6 +42,14 @@ MainController::MainController(const Settings &settings) :
     jamRecorders.append(new Recorder::JamRecorder(new Recorder::ClipSortLogGenerator()));
 }
 
+void MainController::setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel)
+{
+    if (isPlayingInNinjamRoom())
+    {
+        ninjamService.setChannelReceiveStatus(userFullName, channelIndex, receiveChannel);
+    }
+}
+
 void MainController::blockUserInChat(const QString &userNameToBlock)
 {
     if (isPlayingInNinjamRoom()){

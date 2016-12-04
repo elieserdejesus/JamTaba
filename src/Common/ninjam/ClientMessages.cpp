@@ -151,14 +151,13 @@ void ClientKeepAlive::printDebug(QDebug &dbg) const{
     dbg << "SEND {Client KeepAlive}" << endl;
 }
 //+++++++++++++++++
-ClientSetUserMask::ClientSetUserMask(const QList<QString> &users)
-    :ClientMessage(0x81, 0)
+ClientSetUserMask::ClientSetUserMask(const QString &userName, quint32 channelsMask)
+    :ClientMessage(0x81, 0),
+      userName(userName),
+      channelsMask(channelsMask)
 {
-    payload = 4 * users.size();//4 bytes (int) flag
-    foreach (const QString &userFullName , users) {
-        usersFullNames.append(userFullName);
-        payload += userFullName.size() + 1;
-    }
+    payload = 4;// * users.size();//4 bytes (int) flag
+    payload += userName.size() + 1;
 }
 
 void ClientSetUserMask::serializeTo(QByteArray &buffer) const
@@ -168,15 +167,14 @@ void ClientSetUserMask::serializeTo(QByteArray &buffer) const
     stream << msgType;
     stream << payload;
     //++++++++++++  END HEADER ++++++++++++
-    foreach (const QString &userName , usersFullNames) {
-        ClientMessage::serializeString(userName, stream);
-        stream << FLAG;
-    }
+
+    ClientMessage::serializeString(userName, stream);
+    stream << channelsMask;
 }
 
 void ClientSetUserMask::printDebug(QDebug &dbg) const
 {
-    dbg << "SEND ClientSetUserMask{ userNames=" << usersFullNames << " flag=" << FLAG << '}';
+    dbg << "SEND ClientSetUserMask{ userName=" << userName << " flag=" << channelsMask << '}';
 }
 
 //+++++++++++++++++++++++++++++

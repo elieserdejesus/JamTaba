@@ -60,7 +60,9 @@ public:
         return mainController;
     }
 
-    virtual void setUnlightStatus(bool unlighted);
+    virtual void setActivatedStatus(bool deactivated);
+
+    bool isActivated() const;
 
     static void setLayoutWidgetsVisibility(QLayout *layout, bool visible);
 

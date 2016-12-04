@@ -92,11 +92,11 @@ private:
 class ClientSetUserMask : public ClientMessage
 {
 public:
-    explicit ClientSetUserMask(const QList<QString> &users);
+    explicit ClientSetUserMask(const QString &userName, quint32 channelsMask);
 
 private:
-    QStringList usersFullNames;
-    static const quint32 FLAG = 0xFFFFFFFF;
+    QString userName;
+    quint32 channelsMask;
 
     void serializeTo(QByteArray &stream) const override;
     void printDebug(QDebug &dbg) const override;

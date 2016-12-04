@@ -64,6 +64,8 @@
         <file alias="pl_PL.qm">../../translations/pl_PL.qm</file>
     </qresource>
     <qresource prefix="/images">
+        <file>receive.png</file>
+        <file>transmit.png</file>
         <file>stereo_inverted.png</file>
         <file>stereo_normal.png</file>
         <file>check.png</file>

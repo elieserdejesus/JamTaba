@@ -23,7 +23,7 @@ LocalTrackView::LocalTrackView(Controller::MainController *mainController, int c
 
     setInitialValues(1.0f, BaseTrackView::Boost::ZERO, 0.0f, false, false);
 
-    setUnlightStatus(false);
+    setActivatedStatus(false);
 
     secondaryChildsLayout->addWidget(buttonStereoInversion);
 }
@@ -151,9 +151,9 @@ void LocalTrackView::togglePeakMetersOnlyMode(bool runninsInMiniMode)
     setPeakMetersOnlyMode(!peakMetersOnly, runninsInMiniMode);
 }
 
-void LocalTrackView::setUnlightStatus(bool unlighted)
+void LocalTrackView::setActivatedStatus(bool unlighted)
 {
-    BaseTrackView::setUnlightStatus(unlighted);
+    BaseTrackView::setActivatedStatus(unlighted);
     update();
 }
 

@@ -48,6 +48,8 @@ public:
 
     void sendChatMessageToServer(const QString &message);
 
+    void setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel);
+
     // audio interval upload
     void sendAudioIntervalPart(const QByteArray &GUID, const QByteArray &encodedAudioBuffer, bool isLastPart);
     void sendAudioIntervalBegin(const QByteArray &GUID, quint8 channelIndex);

@@ -115,7 +115,7 @@ void TrackGroupView::setUnlightStatus(bool unlighted)
     refreshStyleSheet();
 
     foreach (BaseTrackView *localTrack, trackViews)
-        localTrack->setUnlightStatus(unlighted);
+        localTrack->setActivatedStatus(unlighted);
     update();
 }
 
@@ -142,7 +142,7 @@ BaseTrackView *TrackGroupView::addTrackView(long trackID)
             foreach (BaseTrackView *trackView, trackViews)
                 trackView->setToNarrow();
             updateGeometry();
-            newTrackView->setUnlightStatus(isUnlighted());
+            newTrackView->setActivatedStatus(isUnlighted());
         }
     }
     return newTrackView;

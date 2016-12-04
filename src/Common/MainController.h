@@ -270,6 +270,8 @@ public:
 
     QMap<QString, QString> getJamRecoders() const;
 
+    void setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel);
+
 signals:
     void ipResolved(const QString &ip);
     void themeChanged();

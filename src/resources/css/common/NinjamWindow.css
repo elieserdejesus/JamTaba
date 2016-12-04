@@ -182,19 +182,26 @@ NinjamTrackView
 
 NinjamTrackView #soloButton,
 NinjamTrackView #muteButton,
-NinjamTrackView #lowCutButton
+NinjamTrackView #lowCutButton,
+NinjamTrackView #receiveButton
 {
    border-color: rgb(95,95,95);
    color: rgb(40,40,40);
 }
 
-NinjamTrackView #lowCutButton
+NinjamTrackView #lowCutButton,
+NinjamTrackView #receiveButton
 {
     max-width: 8px;
     max-height: 8px;
     background-position: center center;
     background-repeat: none;
     border-style: inset;
+}
+
+NinjamTrackView #receiveButton::hover
+{
+    border-style: solid;
 }
 
 NinjamTrackView #lowCutButton[state="0"]
@@ -232,6 +239,12 @@ NinjamTrackView QPushButton#lowCutButton:!checked
 {
     border-style: outset;
 }
+
+NinjamTrackView QPushButton#receiveButton
+{
+    background-image: url(':/images/receive.png');
+}
+
 
 NinjamTrackView #peaksDbLabel               /* the label used to show max peak (in bottom of peak meters) */
 {

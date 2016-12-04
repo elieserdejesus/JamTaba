@@ -255,17 +255,33 @@ bool Service::needSendKeepAlive() const
 
 void Service::process(const UserInfoChangeNotifyMessage &msg)
 {
-    QStringList usersNames;
-    QList<User> users = msg.getUsers();
-    foreach (const User &user, users) {
-        usersNames.append(user.getFullName());
-        if (!currentServer->containsUser(user))
+    foreach (const User &user, msg.getUsers()) {
+        if (!currentServer->containsUser(user)) {
             currentServer->addUser(user);
-        handleUserChannels(user);
-    }
+        }
 
-    // enable new users channels
-    sendMessageToServer(ClientSetUserMask(usersNames));
+        handleUserChannels(user);
+
+        // enable receive for all user channels
+        foreach (const UserChannel &channel, user.getChannels()) {
+            setChannelReceiveStatus(user.getFullName(), channel.getIndex(), true);
+        }
+    }
+}
+
+void Service::setChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receiveChannel)
+{
+    if (currentServer->containsUser(userFullName)) {
+        currentServer->updateUserChannelReceiveStatus(userFullName, channelIndex, receiveChannel);
+
+        User user = currentServer->getUser(userFullName);
+        quint32 channelsMask = 0;
+        foreach (const UserChannel &channel, user.getChannels()) {
+            if (channel.isActive() || (channel.getIndex() == channelIndex && receiveChannel))
+                channelsMask |= 1 << channel.getIndex();
+        }
+        sendMessageToServer(ClientSetUserMask(userFullName, channelsMask));
+    }
 }
 
 void Service::process(const DownloadIntervalBegin &msg)
@@ -284,11 +300,13 @@ void Service::process(const DownloadIntervalWrite &msg)
         Download &download = downloads[msg.getGUID()];
         download.appendVorbisData(msg.getEncodedAudioData());
         User user = currentServer->getUser(download.getUserFullName());
-        if (msg.downloadIsComplete()) {
-            emit audioIntervalCompleted(user, download.getChannelIndex(), download.getVorbisData());
-            downloads.remove(msg.getGUID());
-        } else {
-            emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedAudioData().size());
+        if (user.getChannel(download.getChannelIndex()).isActive()) {
+            if (msg.downloadIsComplete()) {
+                emit audioIntervalCompleted(user, download.getChannelIndex(), download.getVorbisData());
+                downloads.remove(msg.getGUID());
+            } else {
+                emit audioIntervalDownloading(user, download.getChannelIndex(), msg.getEncodedAudioData().size());
+            }
         }
     } else {
         qCritical("GUID is not in map!");

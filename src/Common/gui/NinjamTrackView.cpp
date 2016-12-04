@@ -21,11 +21,7 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
     orientation(Qt::Vertical),
     downloadingFirstInterval(true)
 {
-    channelNameLabel = new MarqueeLabel();
-    channelNameLabel->setObjectName("channelName");
-    channelNameLabel->setText("");
-    channelNameLabel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
-    channelNameLabel->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
+    channelNameLabel = createChannelNameLabel();
 
     chunksDisplay = new IntervalChunksDisplay(this);
     chunksDisplay->setVisible(false);
@@ -33,9 +29,53 @@ NinjamTrackView::NinjamTrackView(Controller::MainController *mainController, lon
     buttonLowCut = createLowCutButton(false);
     updateLowCutButtonToolTip();
 
+    buttonReceive = createReceiveButton();
+    buttonReceive->setChecked(true); // receiving by default
+    buttonReceive->setEnabled(false); // disabled until receive the first interval
+    connect(buttonReceive, &QPushButton::toggled, this, &NinjamTrackView::setReceiveState);
+
     setupVerticalLayout();
 
-    setUnlightStatus(true); // disabled/grayed until receive the first bytes.
+    setActivatedStatus(true); // disabled/grayed until receive the first bytes.
+}
+
+void NinjamTrackView::setNinjamChannelData(const QString &userFullName, quint8 channelIndex)
+{
+    this->userFullName = userFullName;
+    this->channelIndex = channelIndex;
+}
+
+void NinjamTrackView::setReceiveState(bool receive)
+{
+    setActivatedStatus(!receive);
+
+    //send a message to ninjam server disabling channel receive status
+    mainController->setChannelReceiveStatus(userFullName, channelIndex, receive);
+
+    // stop rendering downloaded audio
+    NinjamTrackNode *trackNode = dynamic_cast<NinjamTrackNode*>(mainController->getTrackNode(getTrackID()));
+    trackNode->stopDecoding();
+}
+
+QPushButton *NinjamTrackView::createReceiveButton() const
+{
+    QPushButton *button = new QPushButton();
+    button->setToolTip(tr("Receive"));
+    button->setObjectName(QStringLiteral("receiveButton"));
+    button->setCheckable(true);
+    secondaryChildsLayout->addWidget(button);
+    return button;
+}
+
+MarqueeLabel *NinjamTrackView::createChannelNameLabel() const
+{
+    MarqueeLabel *label = new MarqueeLabel();
+    label->setObjectName("channelName");
+    label->setText("");
+    label->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum));
+    label->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
+
+    return label;
 }
 
 MultiStateButton *NinjamTrackView::createLowCutButton(bool checked)
@@ -81,6 +121,8 @@ void NinjamTrackView::refreshStyleSheet()
     style()->polish(channelNameLabel);
     style()->unpolish(buttonLowCut);
     style()->polish(buttonLowCut);
+    style()->polish(buttonReceive);
+
     BaseTrackView::refreshStyleSheet();
 }
 
@@ -113,15 +155,18 @@ void NinjamTrackView::setInitialValues(const Persistence::CacheEntry &initialVal
 // +++++++++++++++
 void NinjamTrackView::updateGuiElements()
 {
+    if (!isActivated())
+        return;
+
     BaseTrackView::updateGuiElements();
     channelNameLabel->updateMarquee();
 }
 
-void NinjamTrackView::setUnlightStatus(bool unlighted)
+void NinjamTrackView::setActivatedStatus(bool deactivated)
 {
-    BaseTrackView::setUnlightStatus(unlighted);
+    BaseTrackView::setActivatedStatus(deactivated);
 
-    if (unlighted) {// remote user stop xmiting and the track is greyed/unlighted?
+    if (deactivated) {// remote user stop xmiting and the track is greyed/unlighted?
         Audio::AudioNode *trackNode = mainController->getTrackNode(getTrackID());
         if (trackNode)
             trackNode->resetLastPeak(); // reset the internal node last peak to avoid getting the last peak calculated when the remote user was transmiting.
@@ -236,10 +281,14 @@ void NinjamTrackView::finishCurrentDownload()
 
 void NinjamTrackView::incrementDownloadedChunks()
 {
-    if(downloadingFirstInterval){
+    if (downloadingFirstInterval){
         chunksDisplay->incrementDownloadedChunks();
-        if(!chunksDisplay->isVisible())
+
+        if (!chunksDisplay->isVisible())
             setDownloadedChunksDisplayVisibility(true);
+
+        if (!buttonReceive->isEnabled())
+            buttonReceive->setEnabled(true);
     }
 }
 

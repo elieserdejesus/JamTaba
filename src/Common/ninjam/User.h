@@ -52,6 +52,7 @@ public:
     }
 
     void updateChannelName(quint8 channelIndex, const QString &newName);
+    void updateChannelReceiveStatus(quint8 channelIndex, bool receiving);
 
     void addChannel(const UserChannel &channel);
     void removeChannel(quint8 channelIndex);

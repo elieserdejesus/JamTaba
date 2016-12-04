@@ -67,6 +67,7 @@ public:
     void decode(quint32 maxSamplesToDecode);
     quint32 getDecodedSamples(Audio::SamplesBuffer &outBuffer, int samplesToDecode);
     inline int getSampleRate() { return vorbisDecoder.getSampleRate(); }
+    void stopDecoding();
 private:
     VorbisDecoder vorbisDecoder;
     Audio::SamplesBuffer decodedBuffer;
@@ -84,6 +85,15 @@ void NinjamTrackNode::IntervalDecoder::decode(quint32 maxSamplesToDecode)
     mutex.lock();
 
     decodedBuffer.append(vorbisDecoder.decode(maxSamplesToDecode));
+
+    mutex.unlock();
+}
+
+void NinjamTrackNode::IntervalDecoder::stopDecoding()
+{
+    mutex.lock(); // this funcion is called from GUI thread
+
+    vorbisDecoder.setInputData(QByteArray()); // empty data
 
     mutex.unlock();
 }
@@ -117,6 +127,14 @@ NinjamTrackNode::NinjamTrackNode(int ID) :
     lowCut(new NinjamTrackNode::LowCutFilter(44100))
 {
 
+}
+
+void NinjamTrackNode::stopDecoding()
+{
+    discardDownloadedIntervals(false);
+
+    if (currentDecoder != nullptr)
+        currentDecoder->stopDecoding();
 }
 
 NinjamTrackNode::LowCutState NinjamTrackNode::setLowCutToNextState()
@@ -172,7 +190,7 @@ NinjamTrackNode::~NinjamTrackNode()
     decodersMutex.unlock();
 }
 
-void NinjamTrackNode::discardIntervals(bool keepMostRecentInterval)
+void NinjamTrackNode::discardDownloadedIntervals(bool keepMostRecentInterval)
 {
     decodersMutex.lock();
     if (!keepMostRecentInterval) {
@@ -196,7 +214,7 @@ bool NinjamTrackNode::startNewInterval()
 {
     decodersMutex.lock();
     if (currentDecoder) {
-        delete currentDecoder; //discard the precious interval decoder
+        delete currentDecoder; //discard the previous interval decoder
         currentDecoder = nullptr;
     }
     if (!decoders.isEmpty())

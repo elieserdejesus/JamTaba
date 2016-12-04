@@ -20,6 +20,7 @@ public:
     void addUserChannel(const UserChannel &newChannel);
     void removeUserChannel(const UserChannel &channel);
     void updateUserChannel(const UserChannel &serverChannel);
+    void updateUserChannelReceiveStatus(const QString &userFullName, quint8 channelIndex, bool receive);
 
     User getUser(const QString &userFullName) const;
 

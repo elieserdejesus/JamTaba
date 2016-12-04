@@ -46,6 +46,11 @@ public:
         this->channelName = name;
     }
 
+    inline void setActive(bool active)
+    {
+        this->active = active;
+    }
+
 private:
     QString userFullName;
     QString channelName;

@@ -46,6 +46,14 @@ void User::updateChannelName(quint8 channelIndex, const QString &newName){
         qCCritical(jtNinjamCore) << "invalid channel index (" << QString::number(channelIndex) << "), can't update the channel!";
 }
 
+void User::updateChannelReceiveStatus(quint8 channelIndex, bool receiving)
+{
+    if(channels.contains(channelIndex))
+        channels[channelIndex].setActive(receiving);
+    else
+        qCCritical(jtNinjamCore) << "invalid channel index (" << QString::number(channelIndex) << "), can't update the channel!";
+}
+
 void User::removeChannel(quint8 channelIndex)
 {
     this->channels.remove(channelIndex);

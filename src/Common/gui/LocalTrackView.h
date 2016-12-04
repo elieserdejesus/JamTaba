@@ -33,7 +33,7 @@ public:
 
     Audio::LocalInputNode *getInputNode() const;
 
-    virtual void setUnlightStatus(bool unlighted);
+    virtual void setActivatedStatus(bool unlighted);
 
     virtual void setPeakMetersOnlyMode(bool peakMetersOnly, bool runningInMiniMode);
     void togglePeakMetersOnlyMode(bool runninsInMiniMode);

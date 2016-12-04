@@ -493,7 +493,7 @@ void NinjamRoomWindow::setChannelXmitStatus(long channelID, bool transmiting)
     qCDebug(jtNinjamGUI) << "channel xmit changed:" << channelID << " state:" << transmiting;
     NinjamTrackView *trackView = getTrackViewByID(channelID);
     if (trackView)
-        trackView->setUnlightStatus(!transmiting);
+        trackView->setActivatedStatus(!transmiting);
 }
 
 void NinjamRoomWindow::removeChannel(const Ninjam::User &user, const Ninjam::UserChannel &channel, long channelID)
@@ -546,13 +546,13 @@ void NinjamRoomWindow::addChannel(const Ninjam::User &user, const Ninjam::UserCh
     if (!trackGroups.contains(user.getFullName())) {// first channel from this user?
         QString channelName = channel.getName();
         QColor userColor = usersColorsPool.get(user.getName());// the user channel and your chat messages are painted with same color
-        NinjamTrackGroupView *trackView = new NinjamTrackGroupView(mainController, channelID,
+        NinjamTrackGroupView *trackGroupView = new NinjamTrackGroupView(mainController, channelID,
                                                                    channelName, userColor, cacheEntry);
-        trackView->setOrientation(tracksOrientation);
-        trackView->setNarrowStatus(tracksSize == TracksSize::NARROW);
-        ui->tracksPanel->layout()->addWidget(trackView);
-        trackGroups.insert(user.getFullName(), trackView);
-        trackView->setEstimatedChunksPerInterval(calculateEstimatedChunksPerInterval());
+        trackGroupView->setOrientation(tracksOrientation);
+        trackGroupView->setNarrowStatus(tracksSize == TracksSize::NARROW);
+        ui->tracksPanel->layout()->addWidget(trackGroupView);
+        trackGroups.insert(user.getFullName(), trackGroupView);
+        trackGroupView->setEstimatedChunksPerInterval(calculateEstimatedChunksPerInterval());
     } else {// the second, or third channel from same user, group with other channels
         NinjamTrackGroupView *trackGroup = trackGroups[user.getFullName()];
         if (trackGroup) {
@@ -560,10 +560,19 @@ void NinjamRoomWindow::addChannel(const Ninjam::User &user, const Ninjam::UserCh
             ninjamTrackView->setChannelName(channel.getName());
             ninjamTrackView->setInitialValues(cacheEntry);
             ninjamTrackView->setEstimatedChunksPerInterval(calculateEstimatedChunksPerInterval());
-            ninjamTrackView->setUnlightStatus(true);/** disabled/grayed until receive the first bytes. When the first bytes
+            ninjamTrackView->setActivatedStatus(true);/** disabled/grayed until receive the first bytes. When the first bytes
             are downloaded the 'on_channelXmitChanged' slot is executed and this track is enabled.*/
         }
     }
+
+    // bind the new track view with ninjam channel data (user full name and channel index). These ninjam data is necessary to send receive on/off messages to server when user click in 'receive' button
+    NinjamTrackGroupView *groupView = trackGroups[user.getFullName()];
+    if (groupView != nullptr) {
+        QList<NinjamTrackView *> trackViews = groupView->getTracks<NinjamTrackView*>();
+        if (!trackViews.isEmpty())
+            trackViews.last()->setNinjamChannelData(user.getFullName(), channel.getIndex());
+    }
+
     qCDebug(jtNinjamGUI) << "channel view created";
 
     updateTracksSizeButtons();

@@ -40,7 +40,11 @@ public:
 
     bool isPlaying();
 
-    void discardIntervals(bool keepMostRecentInterval);
+    /** Discard all downloaded (but not played yet) intervals */
+    void discardDownloadedIntervals(bool keepMostRecentInterval);
+
+    void stopDecoding();
+
     inline void setProcessingLastPartOfInterval(bool status)
     {
         this->processingLastPartOfInterval = status;

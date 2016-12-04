@@ -305,9 +305,9 @@ FxPanel *LocalTrackViewStandalone::createFxPanel()
     return new FxPanel(this, controller);
 }
 
-void LocalTrackViewStandalone::setUnlightStatus(bool unlighted)
+void LocalTrackViewStandalone::setActivatedStatus(bool unlighted)
 {
-    LocalTrackView::setUnlightStatus(unlighted);
+    LocalTrackView::setActivatedStatus(unlighted);
 
     if (fxPanel) {
         style()->unpolish(fxPanel);

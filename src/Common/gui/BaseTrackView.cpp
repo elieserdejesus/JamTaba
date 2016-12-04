@@ -379,10 +379,16 @@ void BaseTrackView::refreshStyleSheet()
     update();
 }
 
-void BaseTrackView::setUnlightStatus(bool unlighted)
+void BaseTrackView::setActivatedStatus(bool deactivated)
 {
-    setProperty("unlighted", QVariant(unlighted));
+    setProperty("unlighted", QVariant(deactivated));
+    this->activated = !deactivated;
     refreshStyleSheet();
+}
+
+bool BaseTrackView::isActivated() const
+{
+    return activated;
 }
 
 BaseTrackView *BaseTrackView::getTrackViewByID(long trackID)
