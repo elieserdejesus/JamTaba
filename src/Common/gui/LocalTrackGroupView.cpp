@@ -62,7 +62,7 @@ void LocalTrackGroupView::translateUi()
 void LocalTrackGroupView::updateXmitButtonText()
 {
     if (peakMeterOnly) {
-        xmitButton->setText(tr("X"));
+        xmitButton->setText(""); // no text, just the up arrow icon
     }
     else{
         xmitButton->setText(isPreparingToTransmit() ? tr("Preparing") : tr("Transmit"));
@@ -99,6 +99,7 @@ QPushButton *LocalTrackGroupView::createXmitButton()
     toolButton->setObjectName(QStringLiteral("xmitButton"));
     toolButton->setCheckable(true);
     toolButton->setChecked(true);
+    toolButton->setIcon(QIcon(":/images/transmit.png"));
     return toolButton;
 }
 
