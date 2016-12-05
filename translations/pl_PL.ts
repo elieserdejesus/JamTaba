@@ -296,7 +296,7 @@
     <name>MainFrameClass</name>
     <message>
         <source>Your Controls</source>
-        <translation>TWOJA KONSOLKA</translation>
+        <translation>Twoja Konsolka</translation>
     </message>
     <message>
         <source>collapse/expand your controls ...</source>
