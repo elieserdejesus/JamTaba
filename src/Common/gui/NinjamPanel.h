@@ -25,6 +25,7 @@ public:
 
     void createHostSyncButton(const QString &buttonText);
     void uncheckHostSyncButton();//used to uncheck the button when the sync with host fail (different BPMs)
+    bool hostSyncButtonIsChecked() const;
 
     void setMuteButtonStatus(bool checked);
     void setPanSliderValue(int value);

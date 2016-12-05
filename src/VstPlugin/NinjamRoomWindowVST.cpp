@@ -2,6 +2,9 @@
 #include "ui_NinjamRoomWindow.h"
 #include "MainControllerVST.h"
 #include "NinjamControllerVST.h"
+#include <QToolTip>
+
+using namespace Controller;
 
 // +++++++++++++++++++++++++++++++++++++++++++++
 NinjamRoomWindowVST::NinjamRoomWindowVST(MainWindow *parent, const Login::RoomInfo &roomInfo,
@@ -12,8 +15,23 @@ NinjamRoomWindowVST::NinjamRoomWindowVST(MainWindow *parent, const Login::RoomIn
     QString hostName = mainController->getHostName();
     if (ninjamPanel) {
         ninjamPanel->createHostSyncButton("Sync with " + hostName);
-        QObject::connect(ninjamPanel, SIGNAL(hostSyncStateChanged(bool)), this,
-                         SLOT(setHostSyncState(bool)));
+        connect(ninjamPanel, &NinjamPanel::hostSyncStateChanged, this, &NinjamRoomWindowVST::setHostSyncState);
+    }
+
+    // if server bpm change the 'sync with host' is disabled
+    connect(controller->getNinjamController(), &NinjamController::currentBpmChanged, this, &NinjamRoomWindowVST::disableHostSync);
+}
+
+void NinjamRoomWindowVST::disableHostSync()
+{
+    if (ninjamPanel->hostSyncButtonIsChecked()) {
+        setHostSyncState(false);
+        ninjamPanel->uncheckHostSyncButton();
+
+        QString hostName = controller->getHostName();
+        QString newBpm = QString::number(controller->getNinjamController()->getCurrentBpm());
+
+        showMessageBox(tr("Host sync"), tr("The BPM is changed! Please stop %1 and change BPM to %2!").arg(hostName, newBpm));
     }
 }
 

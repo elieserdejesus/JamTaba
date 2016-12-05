@@ -179,6 +179,14 @@ void NinjamPanel::createHostSyncButton(const QString &buttonText)
     }
 }
 
+bool NinjamPanel::hostSyncButtonIsChecked() const
+{
+    if (hostSyncButton)
+        return hostSyncButton->isChecked();
+
+    return false;
+}
+
 void NinjamPanel::uncheckHostSyncButton()
 {
     if(hostSyncButton)

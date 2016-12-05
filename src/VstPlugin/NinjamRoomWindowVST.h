@@ -13,7 +13,7 @@ public:
 
 private slots:
     void setHostSyncState(bool syncWithHost);
-
+    void disableHostSync();
 private:
     void showMessageBox(const QString &title, const QString &msg);
     MainControllerVST *controller;
