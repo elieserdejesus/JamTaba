@@ -24,6 +24,7 @@ ChatMessagePanel::ChatMessagePanel(QWidget *parent, const QString &userName, con
     userName(userName)
 {
     ui->setupUi(this);
+
     initialize(userName, msg, userNameBackgroundColor, textColor, showTranslationButton, showBlockButton);
     connect(ui->blockButton, SIGNAL(clicked(bool)), this, SLOT(fireBlockingUserSignal()));
 }

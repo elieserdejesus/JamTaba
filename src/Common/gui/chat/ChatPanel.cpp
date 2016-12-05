@@ -17,8 +17,9 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool) :
     colorsPool(colorsPool)
 {
     ui->setupUi(this);
-    ui->scrollContent->setLayout(new QVBoxLayout(ui->scrollContent));
-    ui->scrollContent->layout()->setContentsMargins(0, 0, 0, 0);
+    QVBoxLayout *layout = new QVBoxLayout(ui->scrollContent);
+    layout->setContentsMargins(0, 0, 0, 0);
+    ui->scrollContent->setLayout(layout);
 
     connect(ui->chatText, &QLineEdit::returnPressed, this, &ChatPanel::sendNewMessage);
 
@@ -33,7 +34,6 @@ ChatPanel::ChatPanel(const QStringList &botNames, UsersColorsPool *colorsPool) :
 
     // disable blue border when QLineEdit has focus in mac
     ui->chatText->setAttribute(Qt::WA_MacShowFocusRect, 0);
-
 }
 
 void ChatPanel::changeEvent(QEvent *e)
@@ -131,7 +131,7 @@ void ChatPanel::updateMessagesGeometry()
 {
     QList<ChatMessagePanel *> messages = ui->scrollContent->findChildren<ChatMessagePanel *>();
     foreach (ChatMessagePanel *msg, messages) {
-        msg->setMaximumWidth(ui->scrollContent->width());
+        msg->setMaximumWidth(ui->chatScroll->viewport()->width() - 20);
         msg->updateGeometry();
     }
 }

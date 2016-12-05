@@ -28,6 +28,7 @@ signals:
 protected:
     void changeEvent(QEvent *) override;
     void focusInEvent(QFocusEvent *) override;
+
 private slots:
     void on_translateButton_clicked();
     void fireBlockingUserSignal();

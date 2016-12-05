@@ -71,6 +71,7 @@ private:
     void addMessagePanelInLayout(ChatMessagePanel *msgPanel);
 
     UsersColorsPool *colorsPool;
+
 };
 
 class NinjamVoteButton : public QPushButton
