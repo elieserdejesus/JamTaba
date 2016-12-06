@@ -7,7 +7,7 @@ ChatTextEditor::ChatTextEditor(QWidget *parent)
     //setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     setSizeAdjustPolicy(QTextEdit::AdjustToContentsOnFirstShow);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setWordWrapMode(QTextOption::WrapAnywhere);
+    setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     setReadOnly(true);
     setFrameShape(QFrame::NoFrame);
     setOpenExternalLinks(true);
