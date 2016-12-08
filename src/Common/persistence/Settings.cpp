@@ -204,7 +204,7 @@ RecordingSettings::RecordingSettings() :
 
 void RecordingSettings::write(QJsonObject &out) const
 {
-    out["recordingPath"] = recordingPath;
+    out["recordingPath"] = QDir::toNativeSeparators(recordingPath);
     out["recordActivated"] = saveMultiTracksActivated;
     QJsonObject jamRecorders = QJsonObject();
     foreach(QString key, jamRecorderActivated.keys()){
@@ -220,9 +220,9 @@ void RecordingSettings::read(const QJsonObject &in)
     bool useDefaultRecordingPath = false;
     if (in.contains("recordingPath")) {
         recordingPath = in["recordingPath"].toString();
-        QDir dir(recordingPath);
+        QDir dir(QDir::fromNativeSeparators(recordingPath));
         if (recordingPath.isEmpty() || !dir.exists()) {
-            // qWarning() << "Dir " << dir << " not exists, using the application directory to save multitracks!";
+            qWarning() << "Dir " << dir << " not exists, using the application directory to save multitracks!";
             useDefaultRecordingPath = true;
         }
     } else {

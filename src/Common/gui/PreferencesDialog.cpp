@@ -17,6 +17,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) :
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint & Qt::WA_DeleteOnClose);
 
     ui->comboLastOutput->setEnabled(false);
+
+    connect(ui->recordPathLineEdit, &QLineEdit::textEdited, this, &PreferencesDialog::recordingPathSelected);
 }
 
 void PreferencesDialog::toggleBuiltInMetronomeSounds(bool usingBuiltInMetronome)
