@@ -305,7 +305,7 @@
     <message>
         <source>user name here</source>
         <translatorcomment>user name here</translatorcomment>
-        <translation>nazwa użytkownika</translation>
+        <translation>twoja nazwa</translation>
     </message>
     <message>
         <source>master</source>
