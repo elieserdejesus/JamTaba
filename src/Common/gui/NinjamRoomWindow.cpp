@@ -91,8 +91,8 @@ void NinjamRoomWindow::initializeVotingExpirationTimers()
     bpmVotingExpirationTimer = new QTimer(this);
     bpiVotingExpiratonTimer->setSingleShot(true);
     bpmVotingExpirationTimer->setSingleShot(true);
-    connect(bpiVotingExpiratonTimer, SIGNAL(timeout()), this, SLOT(resetBpiComboBox()));
-    connect(bpmVotingExpirationTimer, SIGNAL(timeout()), this, SLOT(resetBpmComboBox()));
+    connect(bpiVotingExpiratonTimer, &QTimer::timeout, this, &NinjamRoomWindow::resetBpiComboBox);
+    connect(bpmVotingExpirationTimer, &QTimer::timeout, this, &NinjamRoomWindow::resetBpmComboBox);
 }
 
 void NinjamRoomWindow::updateBpmBpiLabel()
@@ -341,10 +341,10 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
 {
     QString userName = user.getName();
 
-    bool isFirstSystemVoteMessage = Gui::Chat::isFirstSystemVotingMessage(userName, message);
+    bool isSystemVoteMessage = Gui::Chat::parseSystemVotingMessage(message).isValidVotingMessage();
 
     bool isChordProgressionMessage = false;
-    if (!isFirstSystemVoteMessage) {
+    if (!isSystemVoteMessage) {
         ChatChordsProgressionParser chordsParser;
         isChordProgressionMessage = chordsParser.containsProgression(message);
     }
@@ -354,22 +354,28 @@ void NinjamRoomWindow::addChatMessage(const Ninjam::User &user, const QString &m
     chatPanel->addMessage(userName, message, showTranslationButton, showBlockButton);
 
     static bool localUserWasVotingInLastMessage = false;
-    if (isFirstSystemVoteMessage) {
+
+    if (isSystemVoteMessage) {
         Gui::Chat::SystemVotingMessage voteMessage = Gui::Chat::parseSystemVotingMessage(message);
 
-        if (!localUserWasVotingInLastMessage) {  //don't create the vote button if local user is proposing BPI or BPM change
-            createVoteButton(voteMessage);
-        }
-        else{ //if local user is proposing a bpi/bpm change the combos are disabled until the voting reach majority or expire
-            if (voteMessage.isBpiVotingMessage())
-                ninjamPanel->setBpiComboPendingStatus(true);
-            else
-                ninjamPanel->setBpmComboPendingStatus(true);
-            if (QApplication::focusWidget()) //clear comboboxes focus when disabling
-                QApplication::focusWidget()->clearFocus();
+        QTimer *expirationTimer = voteMessage.isBpiVotingMessage() ? bpiVotingExpiratonTimer : bpmVotingExpirationTimer;
+
+        bool isFirstSystemVoteMessage = Gui::Chat::isFirstSystemVotingMessage(userName, message);
+        if (isFirstSystemVoteMessage) { //starting a new votation round
+            if (!localUserWasVotingInLastMessage) {  //don't create the vote button if local user is proposing BPI or BPM change
+                createVoteButton(voteMessage);
+            }
+            else{ //if local user is proposing a bpi/bpm change the combos are disabled until the voting reach majority or expire
+                if (voteMessage.isBpiVotingMessage())
+                    ninjamPanel->setBpiComboPendingStatus(true);
+                else
+                    ninjamPanel->setBpmComboPendingStatus(true);
+                if (QApplication::focusWidget()) //clear comboboxes focus when disabling
+                    QApplication::focusWidget()->clearFocus();
+            }
         }
 
-        QTimer *expirationTimer = voteMessage.isBpiVotingMessage() ? bpiVotingExpiratonTimer : bpmVotingExpirationTimer;
+        //timer is restarted in every vote
         expirationTimer->start(voteMessage.getExpirationTime() * 1000); //QTimer::start will cancel a previous voting expiration timer
     }
     else if (isChordProgressionMessage) {
