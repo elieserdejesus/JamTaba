@@ -177,12 +177,25 @@ void WebIpToLocationResolver::requestDataFromWebService(const QString &ip){
     QString serviceUrl = "http://geoip.nekudo.com/api/";
 
     // http://geoip.nekudo.com/api/{ip}/{language}/{type}
-    request.setUrl(QUrl(serviceUrl + ip + "/" + currentLanguage + "/short"));
+    QString lang = sanitizeLanguageCode(currentLanguage);
+    if (!canTranslateCountryName(lang))
+        lang = "en";
+
+    request.setUrl(QUrl(serviceUrl + ip + "/" + lang + "/short"));
 
     QNetworkReply* reply = httpClient.get(request);
     reply->setProperty("ip", QVariant(ip));
     reply->setProperty("language", QVariant(currentLanguage));
     QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(replyError(QNetworkReply::NetworkError)));
+}
+
+bool WebIpToLocationResolver::canTranslateCountryName(const QString &currentLanguage)
+{
+    // nekudo.com api is supporting only some languages
+    static QStringList supportedCountryTranslationLanguages("en");
+    supportedCountryTranslationLanguages << "de" << "es" << "fr" << "ja" << "pt" << "ru" << "zh";
+
+    return supportedCountryTranslationLanguages.contains(sanitizeLanguageCode(currentLanguage));
 }
 
 void WebIpToLocationResolver::replyError(QNetworkReply::NetworkError e){

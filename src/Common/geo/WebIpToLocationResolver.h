@@ -47,6 +47,8 @@ private:
     static QString buildFileNameFromLanguage(const QString &languageCode);
     static QString sanitizeLanguageCode(const QString &languageCode);
 
+    static bool canTranslateCountryName(const QString &currentLanguage);
+
     QString currentLanguage;
 
     QDir cacheDir;
