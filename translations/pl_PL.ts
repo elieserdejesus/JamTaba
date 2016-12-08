@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pl_PL" sourcelanguage="en_US">
+<TS version="2.0" language="pl_PL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -54,7 +54,7 @@
     <name>ChatPanel</name>
     <message>
         <source>This is the chat scroll area</source>
-        <translation>blokuj wiadomosci od tego uzytkownika</translation>
+        <translation></translation>
     </message>
     <message>
         <source>clear the messages ...</source>
@@ -108,15 +108,15 @@
     <name>DelayGui</name>
     <message>
         <source>Delay Time (ms):</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Feedback (db):</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Level:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -204,7 +204,7 @@
     </message>
     <message>
         <source>Reset Track Controls</source>
-        <translation>Zresetuj ustawienia śladu</translation>
+        <translation>Zresetuj ustawienia ścieżki</translation>
     </message>
     <message>
         <source>Add channel</source>
@@ -296,7 +296,7 @@
     <name>MainFrameClass</name>
     <message>
         <source>Your Controls</source>
-        <translation>Twoja Konsolka</translation>
+        <translation>Twoja Konsola</translation>
     </message>
     <message>
         <source>collapse/expand your controls ...</source>
@@ -304,11 +304,12 @@
     </message>
     <message>
         <source>user name here</source>
-        <translation>Tutaj wpisz swoją nazwę użytkownika</translation>
+        <translatorcomment>user name here</translatorcomment>
+        <translation>nazwa użytkownika</translation>
     </message>
     <message>
         <source>master</source>
-        <translation>MASTER</translation>
+        <translation>Master</translation>
     </message>
     <message>
         <source>Rooms to play</source>
@@ -344,7 +345,7 @@
     </message>
     <message>
         <source>Audio ...</source>
-        <translation>Karta dźwiękowa ...</translation>
+        <translation>Audio ...</translation>
     </message>
     <message>
         <source>Midi ...</source>
@@ -408,7 +409,7 @@
     </message>
     <message>
         <source>Translators ...</source>
-        <translation>Tłumacze ...</translation>
+        <translation>O tłumaczeniu...</translation>
     </message>
     <message>
         <source>Show peak meter only</source>
@@ -420,7 +421,7 @@
     </message>
     <message>
         <source>Show peak + RMS meters</source>
-        <translation>Pokaż oba &quot;peak + RMS&quot;</translation>
+        <translation>Pokaż oba wskaźniki &quot;peak + RMS&quot;</translation>
     </message>
     <message>
         <source>Show max peaks</source>
@@ -566,27 +567,27 @@
     </message>
     <message>
         <source>Key Range:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Lower note:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>learn</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Higher note:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Transpose:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Semitones:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -915,7 +916,7 @@
     </message>
     <message>
         <source>Save multi tracks </source>
-        <translation>Zapisz zapis wielośladowy</translation>
+        <translation>Zapisz sesję</translation>
     </message>
     <message>
         <source>Record path:</source>
