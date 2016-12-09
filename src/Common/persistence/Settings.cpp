@@ -855,7 +855,7 @@ MeteringSettings::MeteringSettings()
     : SettingsObject(QStringLiteral("Metering")),
       showingMaxPeakMarkers(true),
       meterOption(0), // showing RMS + Peaks
-      refreshRate(0)
+      refreshRate(30)
 {
 
 }
