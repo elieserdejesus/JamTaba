@@ -34,7 +34,9 @@ NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#lowCutButton:hover:checked,
-NinjamTrackView QPushButton#lowCutButton:hover:checked
+NinjamTrackView[horizontal="true"] QPushButton#receiveButton:hover:checked,
+NinjamTrackView QPushButton#lowCutButton:hover:checked,
+NinjamTrackView QPushButton#receiveButton:hover:checked
 {
     margin-top: -1px;
     background-color: rgb(200, 200, 200);
@@ -98,17 +100,20 @@ NinjamTrackView[unlighted="true"]           /* user is not xmiting */
     background: rgba(0, 0, 0, 20);
 }
 
-NinjamTrackView #lowCutButton:!checked
+NinjamTrackView #lowCutButton:!checked,
+NinjamTrackView #receiveButton:!checked
 {
     background-color: rgb(235, 235, 235);
 }
 
-NinjamTrackView #lowCutButton:checked
+NinjamTrackView #lowCutButton:checked,
+NinjamTrackView #receiveButton:checked
 {
     background-color: rgb(205, 205, 205);
 }
 
-NinjamTrackView[unlighted="true"] #lowCutButton
+NinjamTrackView[unlighted="true"] #lowCutButton,
+NinjamTrackView[unlighted="true"] #receiveButton
 {
     background-color: rgba(0, 0, 0, 30);
     border: none;
