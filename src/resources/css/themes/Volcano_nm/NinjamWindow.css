@@ -34,7 +34,9 @@ NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#lowCutButton:hover:checked,
-NinjamTrackView QPushButton#lowCutButton:hover:checked
+NinjamTrackView[horizontal="true"] QPushButton#receiveButton:hover:checked,
+NinjamTrackView QPushButton#lowCutButton:hover:checked,
+NinjamTrackView QPushButton#receiveButton:hover:checked
 
 {
     margin-top: -1px;
@@ -116,17 +118,23 @@ NinjamTrackView #lowCutButton:!checked
         stop: 1.0 #FFB301);
 }
 
-NinjamTrackView #lowCutButton:checked
+NinjamTrackView #lowCutButton:checked,
+NinjamTrackView #receiveButton:checked
 {
     background-color: #B35925;
 }
 
-NinjamTrackView[unlighted="true"] #lowCutButton
+NinjamTrackView #lowCutButton:hover
+{
+    background-color: #fed87b;
+}
+
+NinjamTrackView[unlighted="true"] #lowCutButton,
+NinjamTrackView[unlighted="true"] #receiveButton
 {
     background-color: rgba(0, 0, 0, 30);
     border: none;
 }
-
 
 NinjamTrackView  #channelName               /* channel name for ninjamers */
 {
