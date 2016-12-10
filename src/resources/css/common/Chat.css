@@ -61,3 +61,8 @@ ChatMessagePanel #blockButton      /* the small B (block user in chat) button */
     font-size: 8px;
     border: 1px solid rgba(0, 0, 0, 70);
 }
+
+ChatMessagePanel #labelMessage
+{
+    background-color: transparent;
+}

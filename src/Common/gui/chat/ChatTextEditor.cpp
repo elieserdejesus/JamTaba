@@ -11,13 +11,6 @@ ChatTextEditor::ChatTextEditor(QWidget *parent)
     setReadOnly(true);
     setFrameShape(QFrame::NoFrame);
     setOpenExternalLinks(true);
-
-    //transparent background
-    QPalette pallete = palette();
-    pallete.setColor(QPalette::Base, Qt::transparent);
-    setPalette(pallete);
-
-    //connect(document(), &QTextDocument::contentsChanged, this, &ChatTextEditor::updateGeometry);
 }
 
 int ChatTextEditor::getMinimumHeight() const

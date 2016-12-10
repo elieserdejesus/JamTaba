@@ -56,8 +56,3 @@ ChatMessagePanel #blockButton:hover
     border-color: rgb(140, 140, 140);
     border-style: outset;
 }
-
-ChatMessagePanel #labelMessage
-{
-    margin: 1px;
-}
