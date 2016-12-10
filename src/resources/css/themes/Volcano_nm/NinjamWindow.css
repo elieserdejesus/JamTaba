@@ -111,8 +111,7 @@ NinjamTrackView[unlighted="true"]{           /* user is not xmiting */
     background: rgb(193, 106, 48,);
 }
 
-NinjamTrackView #lowCutButton:!checked,
-NinjamTrackView #receiveButton:!checked
+NinjamTrackView #lowCutButton:!checked
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop: 0.0 #FDE5A9,
