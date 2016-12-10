@@ -40,7 +40,6 @@ JamtabaPlugin::JamtabaPlugin (audioMasterCallback audioMaster) :
     setNumInputs(DEFAULT_INPUTS*2);
     setNumOutputs(DEFAULT_OUTPUTS*2);
 
-    isSynth(true);
     canProcessReplacing(true);
     programsAreChunks(false);
     vst_strncpy(programName, "Default", kVstMaxProgNameLen);    // default program name

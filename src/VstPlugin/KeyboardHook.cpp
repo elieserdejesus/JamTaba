@@ -70,8 +70,13 @@ LRESULT CALLBACK globalKeyboardHookProcedure(int nCode, WPARAM wParam, LPARAM lP
                 ev = new QKeyEvent(eventType, keyData->vkCode, modifiers, keyText);
             }
             else { //other/special keys
-
                 switch (keyData->vkCode) {
+                case VK_BACK:
+                    ev = new QKeyEvent(eventType, Qt::Key_Backspace, Qt::NoModifier);
+                    break;
+                case VK_DELETE:
+                    ev = new QKeyEvent(eventType, Qt::Key_Delete, Qt::NoModifier);
+                    break;
                 case VK_SPACE:
                     ev = new QKeyEvent(eventType, Qt::Key_Space, Qt::NoModifier, " ");
                     break;
