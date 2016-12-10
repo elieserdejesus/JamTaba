@@ -237,10 +237,14 @@ NinjamTrackView[horizontal="true"] #receiveButton
     max-height: 6px;
 }
 
-NinjamTrackView QPushButton#lowCutButton:!checked,
-NinjamTrackView QPushButton#receiveButton:!checked
+NinjamTrackView QPushButton#lowCutButton:!checked
 {
     border-style: outset;
+}
+
+NinjamTrackView QPushButton#receiveButton:!checked
+{
+    background-color:red;
 }
 
 NinjamTrackView QPushButton#receiveButton
