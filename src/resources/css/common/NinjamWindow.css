@@ -225,17 +225,20 @@ NinjamTrackView #lowCutButton::hover
     border-color: rgb(80, 80, 80);
 }
 
-NinjamTrackView[horizontal="false"] #lowCutButton
+NinjamTrackView[horizontal="false"] #lowCutButton,
+NinjamTrackView[horizontal="false"] #receiveButton
 {
     min-height: 8px;
 }
 
-NinjamTrackView[horizontal="true"] #lowCutButton
+NinjamTrackView[horizontal="true"] #lowCutButton,
+NinjamTrackView[horizontal="true"] #receiveButton
 {
     max-height: 6px;
 }
 
-NinjamTrackView QPushButton#lowCutButton:!checked
+NinjamTrackView QPushButton#lowCutButton:!checked,
+NinjamTrackView QPushButton#receiveButton:!checked
 {
     border-style: outset;
 }
