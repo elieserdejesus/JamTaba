@@ -23,6 +23,11 @@ NinjamTrackView[unlighted="true"][horizontal="true"] #receiveButton:checked
     border: none;
 }
 
+NinjamTrackView[unlighted="true"][horizontal="true"] #receiveButton:!checked
+{
+    background-color:red;
+}
+
 NinjamTrackView[horizontal="true"] #panSlider
 {
     max-width: 50px;
