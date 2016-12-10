@@ -125,13 +125,17 @@ NinjamTrackView #receiveButton:checked
     background-color: #B35925;
 }
 
+NinjamTrackView #lowCutButton:hover
+{
+    background-color: #fed87b;
+}
+
 NinjamTrackView[unlighted="true"] #lowCutButton,
 NinjamTrackView[unlighted="true"] #receiveButton
 {
     background-color: rgba(0, 0, 0, 30);
     border: none;
 }
-
 
 NinjamTrackView  #channelName               /* channel name for ninjamers */
 {
