@@ -4,17 +4,28 @@ NinjamTrackView #lowCutButton:checked
     border-color: rgb(20, 20, 20);
 }
 
-NinjamTrackView #lowCutButton:checked:hover
+NinjamTrackView #lowCutButton:checked:hover,
+NinjamTrackView #receiveButton:checked:hover,
+NinjamTrackView[horizontal="true"] #receiveButton:checked:hover
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(80, 80, 80));
     border-color: rgb(20, 20, 20)
 }
 
 NinjamTrackView[unlighted="true"] #lowCutButton,
-NinjamTrackView[unlighted="true"] #lowCutButton:checked
+NinjamTrackView[unlighted="true"] #lowCutButton:checked,
+NinjamTrackView[unlighted="true"] #receiveButton,
+NinjamTrackView[unlighted="true"] #receiveButton:checked,
+NinjamTrackView[unlighted="true"][horizontal="true"] #receiveButton,
+NinjamTrackView[unlighted="true"][horizontal="true"] #receiveButton:checked
 {
     background-color: rgba(0, 0, 0, 30);
     border: none;
+}
+
+NinjamTrackView[unlighted="true"][horizontal="true"] #receiveButton:!checked
+{
+    background-color:red;
 }
 
 NinjamTrackView[horizontal="true"] #panSlider
@@ -53,7 +64,9 @@ NinjamTrackView[horizontal="true"] QPushButton#buttonBoostMinus12:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#buttonBoostPlus12:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#buttonBoostZero:hover:checked,
 NinjamTrackView[horizontal="true"] QPushButton#lowCutButton:hover:checked,
-NinjamTrackView QPushButton#lowCutButton:hover:checked
+NinjamTrackView[horizontal="true"] QPushButton#receiveButton:checked,
+NinjamTrackView QPushButton#lowCutButton:hover:checked,
+NinjamTrackView QPushButton#receiveButton:checked
 {
     margin-top: -1px;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(100, 100, 100), stop:1 rgb(80, 80, 80));
