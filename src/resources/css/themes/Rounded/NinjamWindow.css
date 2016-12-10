@@ -59,8 +59,7 @@ NinjamTrackView[horizontal="true"][unlighted="true"]
         stop:1 rgb(90, 90, 90));
 }
 
-NinjamTrackView[unlighted="true"] #lowCutButton:!checked,
-NinjamTrackView[unlighted="true"] #receiveButton:!checked
+NinjamTrackView[unlighted="true"] #lowCutButton:!checked
 {
 border: none;
 background-color: rgb(100, 100, 100);
