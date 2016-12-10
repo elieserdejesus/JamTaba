@@ -496,7 +496,6 @@ void NinjamRoomWindow::updateIntervalDownloadingProgressBar(long trackID)
 
 void NinjamRoomWindow::setChannelXmitStatus(long channelID, bool transmiting)
 {
-    qCDebug(jtNinjamGUI) << "channel xmit changed:" << channelID << " state:" << transmiting;
     NinjamTrackView *trackView = getTrackViewByID(channelID);
     if (trackView)
         trackView->setActivatedStatus(!transmiting);

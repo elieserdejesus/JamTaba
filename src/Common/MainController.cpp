@@ -158,7 +158,6 @@ QMap<int, bool> MainController::getXmitChannelsFlags() const
 void MainController::on_newNinjamInterval()
 {
     // TODO move the jamRecorder to NinjamController?
-    qCDebug(jtCore) << "MainController: on_newNinjamInterval";
     if (settings.isSaveMultiTrackActivated())
         foreach(Recorder::JamRecorder *jamRecorder, jamRecorders)
             jamRecorder->newInterval();

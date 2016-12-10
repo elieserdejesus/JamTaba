@@ -29,7 +29,7 @@ public:
         userFullName(userFullName),
         GUID(GUID)
     {
-        qCDebug(jtNinjamProtocol) << "Download constructor ";
+
     }
 
     Download()//this constructor is necessary to use Download in a QMap without pointers
@@ -113,7 +113,6 @@ void Service::setupSocketSignals()
 void Service::sendAudioIntervalPart(const QByteArray &GUID, const QByteArray &encodedAudioBuffer,
                                     bool isLastPart)
 {
-    qCDebug(jtNinjamProtocol) << "sending audio interval part";
     if (!initialized)
         return;
     sendMessageToServer(ClientIntervalUploadWrite(GUID, encodedAudioBuffer, isLastPart));
@@ -121,7 +120,6 @@ void Service::sendAudioIntervalPart(const QByteArray &GUID, const QByteArray &en
 
 void Service::sendAudioIntervalBegin(const QByteArray &GUID, quint8 channelIndex)
 {
-    qCDebug(jtNinjamProtocol) << "sending audio interval begin";
     if (!initialized)
         return;
     sendMessageToServer(ClientUploadIntervalBegin(GUID, channelIndex, this->userName));

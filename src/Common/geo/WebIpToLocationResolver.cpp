@@ -228,7 +228,6 @@ Geo::Location WebIpToLocationResolver::resolve(const QString &ip, const QString 
         if (countryNamesCache.contains(countryCode)) {
             QString countryName = countryNamesCache[countryCode];
             if (latLongCache.contains(ip)) {
-                qCDebug(jtIpToLocation) << "cache hit for " << ip;
                 qreal latitude = latLongCache[ip].x();
                 qreal longitude = latLongCache[ip].y();
                 return Location(countryName, countryCode, latitude, longitude);

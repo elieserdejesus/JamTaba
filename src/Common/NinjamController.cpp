@@ -640,7 +640,7 @@ void NinjamController::handleNewInterval(){
             emit channelXmitChanged(track->getID(), trackIsPlaying);
         }
     }
-    qCDebug(jtNinjamCore) << "emitint startingNewInterval signal";
+
     emit startingNewInterval();
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

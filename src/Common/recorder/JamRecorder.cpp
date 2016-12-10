@@ -76,8 +76,6 @@ void Jam::addAudioFile(const QString &userName, quint8 channelIndex, const QStri
         jamIntervals.insert(intervalIndex, QList<JamInterval>());
     }
     jamIntervals[intervalIndex].insert(intervalIndex, JamInterval(intervalIndex, getBpm(), getBpi(), filePath, userName, channelIndex));
-
-    qCDebug(jtJamRecorder) << "adding a file in jam interval:" <<intervalIndex << " path:" << filePath;
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -96,7 +94,6 @@ void JamRecorder::writeEncodedFile(const QByteArray& encodedData, const QString 
         return;
     }
     audioFile.write(encodedData.data(), encodedData.size());
-    qCDebug(jtJamRecorder) << "file writed:" <<path;
 }
 
 QString JamRecorder::buildAudioFileName(const QString &userName, quint8 channelIndex, int currentInterval) {

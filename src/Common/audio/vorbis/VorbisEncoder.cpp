@@ -129,7 +129,6 @@ QByteArray VorbisEncoder::encode(const Audio::SamplesBuffer& samples) {
                 //header and body
                 outBuffer.append((const char*)page.header, page.header_len);//memcpy(buffer, page.header, page.header_len);
                 outBuffer.append((const char*)page.body, page.body_len);//memcpy(buffer, page.body, page.body_len);
-                qCDebug(jtNinjamVorbisEncoder) << "encoded bytes added to out buffer  bytes:" << outBuffer.size();
                 if (ogg_page_eos(&page))
                     endOfStream = true;
             }
