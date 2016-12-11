@@ -180,14 +180,6 @@
         <translation>プリセット名:</translation>
     </message>
     <message>
-        <source>Remove preset</source>
-        <translation>プリセットを削除</translation>
-    </message>
-    <message>
-        <source>Preset:</source>
-        <translation>プリセット:</translation>
-    </message>
-    <message>
         <source>Preparing</source>
         <translation>準備中</translation>
     </message>
@@ -220,17 +212,24 @@
         <translation>&quot;%1&quot;チャンネルを削除</translation>
     </message>
     <message>
-        <source>X</source>
-        <translatorcomment>トランスミット</translatorcomment>
-        <translation>X</translation>
-    </message>
-    <message>
         <source>channel name</source>
         <translation>チャンネル名</translation>
     </message>
     <message>
         <source>Transmit</source>
         <translation>送信中</translation>
+    </message>
+    <message>
+        <source>Delete preset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deleting preset ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You want to delete the preset &apos;%1&apos;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -537,6 +536,10 @@
         <source>Volcano</source>
         <translation>ボルケーノ</translation>
     </message>
+    <message>
+        <source>Error loading the theme %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindowStandalone</name>
@@ -724,14 +727,6 @@
         <translation>狭いトラック</translation>
     </message>
     <message>
-        <source>%1 leave the room.</source>
-        <translation>%1 が退室しました.</translation>
-    </message>
-    <message>
-        <source>%1 enter in room.</source>
-        <translation>%1 が入室しました.</translation>
-    </message>
-    <message>
         <source>Connected as &lt;user_name&gt;</source>
         <translation>&lt;user_name&gt;として接続</translation>
     </message>
@@ -755,6 +750,47 @@
         <source>%1 is unblocked in the chat</source>
         <translation>%1の発言はブロック解除されました</translation>
     </message>
+    <message>
+        <source>%1 has left the room.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 has joined the room.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>NinjamRoomWindowVST</name>
+    <message>
+        <source>Host sync</source>
+        <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The BPM is changed! Please stop %1 and change BPM to %2!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sync with %1</source>
+        <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronizing...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Press play/start in %1 to sync with Jamtaba!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trying to sync ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change %1 BPM to %2 and try sync again!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NinjamTrackGroupView</name>
@@ -772,6 +808,22 @@
     <message>
         <source>Low cut</source>
         <translation>ローカット</translation>
+    </message>
+    <message>
+        <source>Receive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Drastic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="pl_PL" sourcelanguage="en_US">
+<TS version="2.1" language="pl_PL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -177,10 +177,6 @@
     <message>
         <source>channel name</source>
         <translation>nazwa kanału</translation>
-    </message>
-    <message>
-        <source>X</source>
-        <translation>X</translation>
     </message>
     <message>
         <source>Preparing</source>
@@ -757,6 +753,39 @@
     </message>
 </context>
 <context>
+    <name>NinjamRoomWindowVST</name>
+    <message>
+        <source>Host sync</source>
+        <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The BPM is changed! Please stop %1 and change BPM to %2!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sync with %1</source>
+        <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronizing...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Press play/start in %1 to sync with Jamtaba!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trying to sync ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change %1 BPM to %2 and try sync again!</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>NinjamTrackGroupView</name>
     <message>
         <source>Block %1 in chat</source>
@@ -772,6 +801,22 @@
     <message>
         <source>Low cut</source>
         <translation>Obcięcie basu</translation>
+    </message>
+    <message>
+        <source>Receive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Drastic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

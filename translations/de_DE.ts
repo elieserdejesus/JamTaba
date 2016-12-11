@@ -175,10 +175,6 @@
         <translation>entferne oder füge kanal hinzu...</translation>
     </message>
     <message>
-        <source>X</source>
-        <translation>X</translation>
-    </message>
-    <message>
         <source>Preparing</source>
         <translation>vorbereiten</translation>
     </message>
@@ -211,20 +207,24 @@
         <translation>voreinstellung name:</translation>
     </message>
     <message>
-        <source>Remove preset</source>
-        <translation>lösche voreinstellung</translation>
-    </message>
-    <message>
-        <source>Preset:</source>
-        <translation>voreinstellung:</translation>
-    </message>
-    <message>
         <source>channel name</source>
         <translation>Kanalnamen</translation>
     </message>
     <message>
         <source>Transmit</source>
         <translation>Übertragen</translation>
+    </message>
+    <message>
+        <source>Delete preset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deleting preset ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You want to delete the preset &apos;%1&apos;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -530,6 +530,10 @@
         <source>Volcano</source>
         <translation>Vulkan</translation>
     </message>
+    <message>
+        <source>Error loading the theme %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindowStandalone</name>
@@ -715,14 +719,6 @@
         <translation>schmale spuren</translation>
     </message>
     <message>
-        <source>%1 leave the room.</source>
-        <translation>%1 verlasse den raum.</translation>
-    </message>
-    <message>
-        <source>%1 enter in room.</source>
-        <translation>%1 betrete den raum.</translation>
-    </message>
-    <message>
         <source>Connected as &lt;user_name&gt;</source>
         <translation>Verbunden als &lt;user_name&gt;</translation>
     </message>
@@ -746,6 +742,47 @@
         <source>%1 is unblocked in the chat</source>
         <translation>%1 ist freigegeben im chat</translation>
     </message>
+    <message>
+        <source>%1 has left the room.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 has joined the room.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>NinjamRoomWindowVST</name>
+    <message>
+        <source>Host sync</source>
+        <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The BPM is changed! Please stop %1 and change BPM to %2!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sync with %1</source>
+        <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Synchronizing...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Press play/start in %1 to sync with Jamtaba!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trying to sync ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change %1 BPM to %2 and try sync again!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NinjamTrackGroupView</name>
@@ -763,6 +800,22 @@
     <message>
         <source>Low cut</source>
         <translation>Tiefpass</translation>
+    </message>
+    <message>
+        <source>Receive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Drastic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
