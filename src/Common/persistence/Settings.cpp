@@ -864,7 +864,7 @@ void MeteringSettings::read(const QJsonObject &in)
 {
     this->showingMaxPeakMarkers = getValueFromJson(in, "showMaxPeak", true);
     this->meterOption = getValueFromJson(in, "meterOption", quint8(0));
-    this->refreshRate = getValueFromJson(in, "refreshRate", quint8(0));
+    this->refreshRate = getValueFromJson(in, "refreshRate", quint8(30));
 }
 
 void MeteringSettings::write(QJsonObject &out) const
