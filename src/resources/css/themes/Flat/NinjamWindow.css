@@ -100,6 +100,11 @@ NinjamTrackView[unlighted="true"]           /* user is not xmiting */
     background: rgba(0, 0, 0, 20);
 }
 
+NinjamTrackView #lowCutButton:hover
+{
+    color: black;
+}
+
 NinjamTrackView #lowCutButton:!checked
 {
     background-color: rgb(235, 235, 235);
