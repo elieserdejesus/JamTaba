@@ -14,7 +14,9 @@ NinjamRoomWindowVST::NinjamRoomWindowVST(MainWindow *parent, const Login::RoomIn
 {
     QString hostName = mainController->getHostName();
     if (ninjamPanel) {
-        ninjamPanel->createHostSyncButton("Sync with " + hostName);
+        //: The '%1' marker will be replaced by the host name when Jamtaba is running.
+        QString text = tr("Sync with %1").arg(hostName);
+        ninjamPanel->createHostSyncButton(text);
         connect(ninjamPanel, &NinjamPanel::hostSyncStateChanged, this, &NinjamRoomWindowVST::setHostSyncState);
     }
 
@@ -31,7 +33,11 @@ void NinjamRoomWindowVST::disableHostSync()
         QString hostName = controller->getHostName();
         QString newBpm = QString::number(controller->getNinjamController()->getCurrentBpm());
 
-        showMessageBox(tr("Host sync"), tr("The BPM is changed! Please stop %1 and change BPM to %2!").arg(hostName, newBpm));
+        //: This is the title of MessageDialot showed when user click in "Sync with host" button
+        QString title = tr("Host sync");
+
+        QString message = tr("The BPM is changed! Please stop %1 and change BPM to %2!").arg(hostName, newBpm);
+        showMessageBox(title, message);
     }
 }
 
@@ -47,10 +53,13 @@ void NinjamRoomWindowVST::setHostSyncState(bool syncWithHost)
         if (hostBpm == ninjamBpm) {
             ninjamController->stopAndWaitForHostSync();// stop ninjam streams and wait until user press play/start in host
             ninjamPanel->setCurrentBeat(0);
-            showMessageBox("Synchronizing...", "Press play/start in " + hostName + " to sync with Jamtaba!");
+            QString title = tr("Synchronizing...");
+            QString message = tr("Press play/start in %1 to sync with Jamtaba!").arg(hostName);
+            showMessageBox(title, message);
         } else {
-            QString message = "Change " + hostName + " BPM to " + QString::number(ninjamBpm) + " and try sync again!";
-            showMessageBox("Trying to sync ...", message);
+            QString title = tr("Trying to sync ...");
+            QString message = tr("Change %1 BPM to %2 and try sync again!").arg(hostName, ninjamBpm);
+            showMessageBox(title, message);
             ninjamPanel->uncheckHostSyncButton();//the button is unchecked, so user can try again
         }
     } else {
