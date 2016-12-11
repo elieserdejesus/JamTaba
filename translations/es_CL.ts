@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="es_CL" sourcelanguage="en_US">
+<TS version="2.0" language="es_CL" sourcelanguage="en_US">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -216,15 +216,15 @@
     </message>
     <message>
         <source>Delete preset</source>
-        <translation type="unfinished"></translation>
+        <translation>Eliminar programa</translation>
     </message>
     <message>
         <source>Deleting preset ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Borrando programa ...</translation>
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Desea eliminar el programa &apos;%1&apos;</translation>
     </message>
 </context>
 <context>
@@ -242,7 +242,7 @@
     <name>LocalTrackView</name>
     <message>
         <source>Invert stereo</source>
-        <translation>Invertir el estéreo</translation>
+        <translation>Invertir estéreo</translation>
     </message>
 </context>
 <context>
@@ -532,7 +532,7 @@
     </message>
     <message>
         <source>Error loading the theme %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Error al cargar el tema %1</translation>
     </message>
 </context>
 <context>
@@ -681,7 +681,7 @@
     </message>
     <message>
         <source>Pie</source>
-        <translation>Torta</translation>
+        <translation>Pastel</translation>
     </message>
     <message>
         <source>off</source>
@@ -744,11 +744,11 @@
     </message>
     <message>
         <source>%1 has left the room.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 se ha retirado de la sala.</translation>
     </message>
     <message>
         <source>%1 has joined the room.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ha ingresado a la sala.</translation>
     </message>
 </context>
 <context>
@@ -756,32 +756,32 @@
     <message>
         <source>Host sync</source>
         <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Sincronizar con el anfitrión</translation>
     </message>
     <message>
         <source>The BPM is changed! Please stop %1 and change BPM to %2!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡BPM ha cambiado! ¡Por favor detenga  %1 y cambie BPM a to %2!</translation>
     </message>
     <message>
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Sincronizar con %1</translation>
     </message>
     <message>
         <source>Synchronizing...</source>
-        <translation type="unfinished"></translation>
+        <translation>Sincronizando...</translation>
     </message>
     <message>
         <source>Press play/start in %1 to sync with Jamtaba!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡Presione play/comenzar en %1 para sincronizar con Jamtaba!</translation>
     </message>
     <message>
         <source>Trying to sync ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Intentando sincronizar ...</translation>
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡Cambie %1 BPM a %2 e intente sincronizar nuevamente!</translation>
     </message>
 </context>
 <context>
@@ -803,19 +803,19 @@
     </message>
     <message>
         <source>Receive</source>
-        <translation type="unfinished"></translation>
+        <translation>Recibir</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Apagado</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"></translation>
+        <translation>Normal</translation>
     </message>
     <message>
         <source>Drastic</source>
-        <translation type="unfinished"></translation>
+        <translation>Drástico</translation>
     </message>
 </context>
 <context>
