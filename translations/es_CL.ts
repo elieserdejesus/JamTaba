@@ -760,7 +760,7 @@
     </message>
     <message>
         <source>The BPM is changed! Please stop %1 and change BPM to %2!</source>
-        <translation>¡El BPM ha cambiado! ¡Por favor detenga  %1 y cambie BPM a to %2!</translation>
+        <translation>¡BPM ha cambiado! ¡Por favor detenga  %1 y cambie BPM a to %2!</translation>
     </message>
     <message>
         <source>Sync with %1</source>
