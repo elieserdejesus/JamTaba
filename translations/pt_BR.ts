@@ -219,15 +219,15 @@
     </message>
     <message>
         <source>Delete preset</source>
-        <translation type="unfinished"></translation>
+        <translation>Deletar preset</translation>
     </message>
     <message>
         <source>Deleting preset ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Deletando preset ...</translation>
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Você está deletando o preset %1</translation>
     </message>
 </context>
 <context>
@@ -535,7 +535,7 @@
     </message>
     <message>
         <source>Error loading the theme %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Erro carregando o tema %1</translation>
     </message>
 </context>
 <context>
@@ -747,11 +747,11 @@
     </message>
     <message>
         <source>%1 has left the room.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 saiu da sala.</translation>
     </message>
     <message>
         <source>%1 has joined the room.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 entrou na sala.</translation>
     </message>
 </context>
 <context>
@@ -759,32 +759,32 @@
     <message>
         <source>Host sync</source>
         <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Sincando com o Host</translation>
     </message>
     <message>
         <source>The BPM is changed! Please stop %1 and change BPM to %2!</source>
-        <translation type="unfinished"></translation>
+        <translation>O BPM mudou! Por favor pare o %1 e mude o BPM para %2!</translation>
     </message>
     <message>
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Sincando com %1</translation>
     </message>
     <message>
         <source>Synchronizing...</source>
-        <translation type="unfinished"></translation>
+        <translation>Sincando ...</translation>
     </message>
     <message>
         <source>Press play/start in %1 to sync with Jamtaba!</source>
-        <translation type="unfinished"></translation>
+        <translation>Pressiona play/start no %1 para sincronizar com o JamTaba!</translation>
     </message>
     <message>
         <source>Trying to sync ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Tentando sincronizar ...</translation>
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
-        <translation type="unfinished"></translation>
+        <translation>Mude o BPM do %1 para %2 e tente sincronizar novamente!</translation>
     </message>
 </context>
 <context>
@@ -806,19 +806,19 @@
     </message>
     <message>
         <source>Receive</source>
-        <translation type="unfinished"></translation>
+        <translation>Receber</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Desligado</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"></translation>
+        <translation>Normal</translation>
     </message>
     <message>
         <source>Drastic</source>
-        <translation type="unfinished"></translation>
+        <translation>Drástico</translation>
     </message>
 </context>
 <context>
