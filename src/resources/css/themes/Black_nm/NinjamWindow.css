@@ -23,9 +23,16 @@ NinjamTrackView[unlighted="true"][horizontal="true"] #receiveButton:checked
     border: none;
 }
 
-NinjamTrackView[unlighted="true"][horizontal="true"] #receiveButton:!checked
+NinjamTrackView[unlighted="true"] #receiveButton:!checked
 {
-    background-color:red;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(128, 20, 20), stop:1 rgb(80, 0, 0));
+    border-color: rgb(128, 0, 0);
+}
+
+NinjamTrackView[unlighted="true"] #receiveButton:hover:!checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 20, 20), stop:1 rgb(80, 0, 0));
+    border-color: rgba(0, 0, 0, 90);
 }
 
 NinjamTrackView[horizontal="true"] #panSlider
