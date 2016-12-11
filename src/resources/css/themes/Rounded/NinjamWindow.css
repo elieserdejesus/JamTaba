@@ -65,6 +65,12 @@ border: none;
 background-color: rgb(100, 100, 100);
 }
 
+NinjamTrackView QPushButton#receiveButton:!checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgba(255, 90, 62, 140), stop:1 rgba(175, 0, 0, 140));
+    border-color: rgb(50,50,50);;
+}
+
 /* buttons in ninjam track when using horizontal layout
 -------------------------------------------------------------*/
 
