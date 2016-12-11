@@ -118,6 +118,11 @@ NinjamTrackView[unlighted="true"] #receiveButton
     border: none;
 }
 
+NinjamTrackView #receiveButton:hover:!checked
+{
+    background-color: rgb(255, 40, 40);
+    border-color: rgba(0, 0, 0, 90);
+}
 
 NinjamTrackView  #channelName               /* channel name for ninjamers */
 {
