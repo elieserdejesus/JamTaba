@@ -43,6 +43,12 @@ QPushButton#buttonStereoInversion:checked
     border-radius: 0px;
 }
 
+#soloButton:hover,
+#muteButton:hover
+{
+    color: black;
+}
+
 #buttonBoostMinus12:hover:checked,
 #buttonBoostPlus12:hover:checked,
 #buttonBoostZero:hover:checked
