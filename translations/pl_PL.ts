@@ -301,7 +301,7 @@
     <message>
         <source>user name here</source>
         <translatorcomment>user name here</translatorcomment>
-        <translation>twoja nazwa</translation>
+        <translation>twoje imię</translation>
     </message>
     <message>
         <source>master</source>
@@ -563,27 +563,27 @@
     </message>
     <message>
         <source>Key Range:</source>
-        <translation></translation>
+        <translation>Zasięg klawiatury:</translation>
     </message>
     <message>
         <source>Lower note:</source>
-        <translation></translation>
+        <translation>Najniższy dźwiek:</translation>
     </message>
     <message>
         <source>learn</source>
-        <translation></translation>
+        <translation>naucz</translation>
     </message>
     <message>
         <source>Higher note:</source>
-        <translation></translation>
+        <translation>Najwyższy dźwięk:</translation>
     </message>
     <message>
         <source>Transpose:</source>
-        <translation></translation>
+        <translation>Transpozycja:</translation>
     </message>
     <message>
         <source>Semitones:</source>
-        <translation></translation>
+        <translation>Półtony:</translation>
     </message>
 </context>
 <context>
