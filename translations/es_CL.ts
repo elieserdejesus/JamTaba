@@ -807,7 +807,7 @@
     </message>
     <message>
         <source>Off</source>
-        <translation>Apagado</translation>
+        <translation>Desactivada</translation>
     </message>
     <message>
         <source>Normal</source>
@@ -815,7 +815,7 @@
     </message>
     <message>
         <source>Drastic</source>
-        <translation>Drástico</translation>
+        <translation>Drástica</translation>
     </message>
 </context>
 <context>
