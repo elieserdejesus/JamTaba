@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr_FR">
+<TS version="2.0" language="fr_FR">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -216,7 +216,7 @@
     </message>
     <message>
         <source>Delete preset</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer le preset</translation>
     </message>
     <message>
         <source>Deleting preset ...</source>
@@ -224,7 +224,7 @@
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous voulez supprimer le preset &apos;%1&apos;</translation>
     </message>
 </context>
 <context>
@@ -744,11 +744,11 @@
     </message>
     <message>
         <source>%1 has left the room.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 quitte le salon.</translation>
     </message>
     <message>
         <source>%1 has joined the room.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 entrer dans le salon.</translation>
     </message>
 </context>
 <context>
@@ -756,20 +756,20 @@
     <message>
         <source>Host sync</source>
         <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Synchronisation hôte</translation>
     </message>
     <message>
         <source>The BPM is changed! Please stop %1 and change BPM to %2!</source>
-        <translation type="unfinished"></translation>
+        <translation>Le BPM a changé! Arrêtez BPM %1 et changer BPM à %2!</translation>
     </message>
     <message>
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Synchroniser avec %1</translation>
     </message>
     <message>
         <source>Synchronizing...</source>
-        <translation type="unfinished"></translation>
+        <translation>Synchronisation ...</translation>
     </message>
     <message>
         <source>Press play/start in %1 to sync with Jamtaba!</source>
@@ -777,11 +777,11 @@
     </message>
     <message>
         <source>Trying to sync ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Essayer de synchroniser ...</translation>
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
-        <translation type="unfinished"></translation>
+        <translation>Changez %1 BPM en %2 et essayez la synchronisation à nouveau!</translation>
     </message>
 </context>
 <context>
@@ -803,19 +803,19 @@
     </message>
     <message>
         <source>Receive</source>
-        <translation type="unfinished"></translation>
+        <translation>Recevoir</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Off</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"></translation>
+        <translation>Moyenne</translation>
     </message>
     <message>
         <source>Drastic</source>
-        <translation type="unfinished"></translation>
+        <translation>Drastique</translation>
     </message>
 </context>
 <context>

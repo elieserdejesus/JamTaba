@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ja_JP">
+<TS version="2.0" language="ja_JP">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -752,11 +752,11 @@
     </message>
     <message>
         <source>%1 has left the room.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 が退室しました.</translation>
     </message>
     <message>
         <source>%1 has joined the room.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 が入室しました.</translation>
     </message>
 </context>
 <context>
@@ -811,19 +811,19 @@
     </message>
     <message>
         <source>Receive</source>
-        <translation type="unfinished"></translation>
+        <translation>受け取る</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation>オフ</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"></translation>
+        <translation>中</translation>
     </message>
     <message>
         <source>Drastic</source>
-        <translation type="unfinished"></translation>
+        <translation>抜本的</translation>
     </message>
 </context>
 <context>
