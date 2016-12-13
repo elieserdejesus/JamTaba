@@ -572,15 +572,15 @@
     </message>
     <message>
         <source>Lower note:</source>
-        <translation>Lower note:</translation>
+        <translation>低いノート:</translation>
     </message>
     <message>
         <source>learn</source>
-        <translation>lean</translation>
+        <translation>学ぶ</translation>
     </message>
     <message>
         <source>Higher note:</source>
-        <translation>Higher note:</translation>
+        <translation>高いノート:</translation>
     </message>
     <message>
         <source>Transpose:</source>
