@@ -512,7 +512,8 @@
     <message>
         <source>Error connecting with Jamtaba server!
 </source>
-        <translation>fehler verbindung mit Jamtaba server</translation>
+        <translation>fehler verbindung mit Jamtaba server!
+</translation>
     </message>
     <message>
         <source>Connecting with %1 ... </source>
@@ -532,7 +533,7 @@
     </message>
     <message>
         <source>Error loading the theme %1</source>
-        <translation>Fehler beim thema laden</translation>
+        <translation>Fehler beim thema %1 laden</translation>
     </message>
 </context>
 <context>
@@ -777,7 +778,7 @@
     </message>
     <message>
         <source>Trying to sync ...</source>
-        <translation>versuche zu syncen</translation>
+        <translation>versuche zu syncen ...</translation>
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
