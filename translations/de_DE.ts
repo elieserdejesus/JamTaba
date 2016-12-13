@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="de_DE">
+<TS version="2.0" language="de_DE">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -756,7 +756,7 @@
     <message>
         <source>Host sync</source>
         <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Host sync</translation>
     </message>
     <message>
         <source>The BPM is changed! Please stop %1 and change BPM to %2!</source>
@@ -765,7 +765,7 @@
     <message>
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Sync mit %1</translation>
     </message>
     <message>
         <source>Synchronizing...</source>
@@ -803,7 +803,7 @@
     </message>
     <message>
         <source>Receive</source>
-        <translation erhalte></translation>
+        <translation>erhalte&gt;</translation>
     </message>
     <message>
         <source>Off</source>
