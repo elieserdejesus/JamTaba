@@ -804,7 +804,7 @@
     </message>
     <message>
         <source>Receive</source>
-        <translation>erhalte&gt;</translation>
+        <translation>erhalte</translation>
     </message>
     <message>
         <source>Off</source>
