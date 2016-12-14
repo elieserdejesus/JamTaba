@@ -768,7 +768,7 @@
     </message>
     <message>
         <source>The BPM is changed! Please stop %1 and change BPM to %2!</source>
-        <translation type="unfinished"></translation>
+        <translation>BPMが変更されました！％1を停止してBPMを％2に変更してください！</translation>
     </message>
     <message>
         <source>Sync with %1</source>
@@ -781,7 +781,7 @@
     </message>
     <message>
         <source>Press play/start in %1 to sync with Jamtaba!</source>
-        <translation type="unfinished"></translation>
+        <translation>Jamtabaと同期するには％1で再生/開始を押してください！</translation>
     </message>
     <message>
         <source>Trying to sync ...</source>
@@ -789,7 +789,7 @@
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
-        <translation type="unfinished"></translation>
+        <translation>％1のBPMを％2に変更して、もう一度同期を試みてください！</translation>
     </message>
 </context>
 <context>
