@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ja_JP">
+<TS version="2.0" language="ja_JP">
 <context>
     <name>BaseTrackView</name>
     <message>
@@ -221,15 +221,15 @@
     </message>
     <message>
         <source>Delete preset</source>
-        <translation type="unfinished"></translation>
+        <translation>プリセット削除</translation>
     </message>
     <message>
         <source>Deleting preset ...</source>
-        <translation type="unfinished"></translation>
+        <translation>プリセットを削除しています...</translation>
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>プリセット&apos;%1&apos;を削除しますか</translation>
     </message>
 </context>
 <context>
@@ -518,7 +518,8 @@
     <message>
         <source>Error connecting with Jamtaba server!
 </source>
-        <translation>Jamtabaサーバへの接続にエラーが発生しました！</translation>
+        <translation>Jamtabaサーバへの接続にエラーが発生しました!
+        </translation>
     </message>
     <message>
         <source>Connecting with %1 ... </source>
@@ -530,7 +531,7 @@
     </message>
     <message>
         <source>Can&apos;t open the link!</source>
-        <translation>リンクを開けません！</translation>
+        <translation>リンクを開けません!</translation>
     </message>
     <message>
         <source>Volcano</source>
@@ -538,7 +539,7 @@
     </message>
     <message>
         <source>Error loading the theme %1</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマ%1の読み込み中にエラーが発生しました</translation>
     </message>
 </context>
 <context>
@@ -572,15 +573,15 @@
     </message>
     <message>
         <source>Lower note:</source>
-        <translation>Lower note:</translation>
+        <translation>低いノート:</translation>
     </message>
     <message>
         <source>learn</source>
-        <translation>lean</translation>
+        <translation>学ぶ</translation>
     </message>
     <message>
         <source>Higher note:</source>
-        <translation>Higher note:</translation>
+        <translation>高いノート:</translation>
     </message>
     <message>
         <source>Transpose:</source>
@@ -752,11 +753,11 @@
     </message>
     <message>
         <source>%1 has left the room.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 が退室しました.</translation>
     </message>
     <message>
         <source>%1 has joined the room.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 が入室しました.</translation>
     </message>
 </context>
 <context>
@@ -764,32 +765,32 @@
     <message>
         <source>Host sync</source>
         <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>ホスト同期</translation>
     </message>
     <message>
         <source>The BPM is changed! Please stop %1 and change BPM to %2!</source>
-        <translation type="unfinished"></translation>
+        <translation>BPMが変更されました！%1を停止してBPMを%2に変更してください!</translation>
     </message>
     <message>
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>%1と同期する</translation>
     </message>
     <message>
         <source>Synchronizing...</source>
-        <translation type="unfinished"></translation>
+        <translation>同期中...</translation>
     </message>
     <message>
         <source>Press play/start in %1 to sync with Jamtaba!</source>
-        <translation type="unfinished"></translation>
+        <translation>Jamtabaと同期するには%1で再生/開始を押してください!</translation>
     </message>
     <message>
         <source>Trying to sync ...</source>
-        <translation type="unfinished"></translation>
+        <translation>私たちは同期しようとしている ...</translation>
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
-        <translation type="unfinished"></translation>
+        <translation>%1のBPMを%2に変更して、もう一度同期を試みてください!</translation>
     </message>
 </context>
 <context>
@@ -811,19 +812,19 @@
     </message>
     <message>
         <source>Receive</source>
-        <translation type="unfinished"></translation>
+        <translation>受け取る</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation>オフ</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"></translation>
+        <translation>中</translation>
     </message>
     <message>
         <source>Drastic</source>
-        <translation type="unfinished"></translation>
+        <translation>抜本的</translation>
     </message>
 </context>
 <context>
