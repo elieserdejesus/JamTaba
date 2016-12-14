@@ -221,11 +221,11 @@
     </message>
     <message>
         <source>Delete preset</source>
-        <translation type="unfinished"></translation>
+        <translation>プリセット削除</translation>
     </message>
     <message>
         <source>Deleting preset ...</source>
-        <translation type="unfinished"></translation>
+        <translation>プリセットを削除する</translation>
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
@@ -786,7 +786,7 @@
     </message>
     <message>
         <source>Trying to sync ...</source>
-        <translation type="unfinished"></translation>
+        <translation>私たちは同期しようとしている...</translation>
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
