@@ -225,7 +225,7 @@
     </message>
     <message>
         <source>Deleting preset ...</source>
-        <translation>プリセットを削除する</translation>
+        <translation>プリセットを削除しています...</translation>
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
