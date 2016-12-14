@@ -230,7 +230,8 @@ private slots:
 private:
 
     BusyDialog busyDialog;
-    QTranslator translator;
+    QTranslator jamtabaTranslator; // used to translate jamtaba texts
+    QTranslator qtTranslator; // used to translate Qt texts (QMessageBox buttons, context menus, etc.)
 
     void showBusyDialog(const QString &message);
     void showBusyDialog();

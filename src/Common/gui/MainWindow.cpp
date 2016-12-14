@@ -88,8 +88,10 @@ void MainWindow::initializeMeteringOptions()
 
 void MainWindow::initializeTranslator()
 {
-    // always install the translator
-    QApplication::instance()->installTranslator(&translator);
+    // always install the translators (one for Jamtaba strings and another for Qt strings)
+    QCoreApplication *app = QApplication::instance();
+    app->installTranslator(&jamtabaTranslator);
+    app->installTranslator(&qtTranslator);
 
     // remember the last selected language
     QString localeName = mainController->getSettings().getTranslation();
@@ -183,7 +185,12 @@ QString MainWindow::getTranslatedThemeName(const QString &themeName)
 
 void MainWindow::loadTranslationFile(const QString &locale)
 {
-    translator.load(locale, ":/tr");
+    if( !jamtabaTranslator.load(locale, ":/tr"))
+        qWarning() << "Can't load the Jamtaba translation for " << locale;
+
+    QString fileName = "qtbase_" + locale;
+    if (!qtTranslator.load(fileName, ":/qt_tr"))
+        qWarning() << "Can't load Qt translation for " << locale;
 }
 
 // ++++++++++++++++++++++++=

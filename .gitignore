@@ -17,8 +17,6 @@
 *.DS_Store
 *~
 
-# Qt-Linguist
-*.qm
 
 # Qt-es
 
@@ -48,4 +46,4 @@ Makefile*
 
 libs/
 VST_SDK/
-
+translations/*.qm
