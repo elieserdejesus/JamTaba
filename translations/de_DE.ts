@@ -220,7 +220,7 @@
     </message>
     <message>
         <source>Deleting preset ...</source>
-        <translation>entferne voreinstellung</translation>
+        <translation>entferne voreinstellung ...</translation>
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
