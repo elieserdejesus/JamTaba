@@ -764,7 +764,7 @@
     <message>
         <source>Host sync</source>
         <extracomment>This is the title of MessageDialot showed when user click in &quot;Sync with host&quot; button</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>ホスト同期</translation>
     </message>
     <message>
         <source>The BPM is changed! Please stop %1 and change BPM to %2!</source>
