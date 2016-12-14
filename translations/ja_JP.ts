@@ -774,11 +774,11 @@
     <message>
         <source>Sync with %1</source>
         <extracomment>The &apos;%1&apos; marker will be replaced by the host name when Jamtaba is running.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>%1と同期する</translation>
     </message>
     <message>
         <source>Synchronizing...</source>
-        <translation type="unfinished"></translation>
+        <translation>同期中...</translation>
     </message>
     <message>
         <source>Press play/start in %1 to sync with Jamtaba!</source>
