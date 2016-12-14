@@ -229,7 +229,7 @@
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>プリセット&apos;％1&apos;を削除しますか</translation>
     </message>
 </context>
 <context>
@@ -538,7 +538,7 @@
     </message>
     <message>
         <source>Error loading the theme %1</source>
-        <translation type="unfinished"></translation>
+        <translation>テーマ％1の読み込み中にエラーが発生しました</translation>
     </message>
 </context>
 <context>
