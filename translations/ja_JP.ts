@@ -786,7 +786,7 @@
     </message>
     <message>
         <source>Trying to sync ...</source>
-        <translation>私たちは同期しようとしている...</translation>
+        <translation>私たちは同期しようとしている ...</translation>
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
