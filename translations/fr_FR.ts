@@ -220,7 +220,7 @@
     </message>
     <message>
         <source>Deleting preset ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Suppression du preset</translation>
     </message>
     <message>
         <source>You want to delete the preset &apos;%1&apos;</source>
@@ -532,7 +532,7 @@
     </message>
     <message>
         <source>Error loading the theme %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur lors du chargement du thème %1</translation>
     </message>
 </context>
 <context>
@@ -773,7 +773,7 @@
     </message>
     <message>
         <source>Press play/start in %1 to sync with Jamtaba!</source>
-        <translation type="unfinished"></translation>
+        <translation>Presser play/start dans %1 pour synchroniser avec Jamtaba!</translation>
     </message>
     <message>
         <source>Trying to sync ...</source>
