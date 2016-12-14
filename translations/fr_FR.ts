@@ -811,7 +811,7 @@
     </message>
     <message>
         <source>Normal</source>
-        <translation>Moyenne</translation>
+        <translation>Normal</translation>
     </message>
     <message>
         <source>Drastic</source>
