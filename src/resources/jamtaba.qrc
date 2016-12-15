@@ -70,6 +70,7 @@
         <file alias="qtbase_ja.qm">../../translations/Qt/qtbase_ja.qm</file>
         <file alias="qtbase_pl.qm">../../translations/Qt/qtbase_pl.qm</file>
         <file alias="qtbase_es.qm">../../translations/Qt/qtbase_es.qm</file>
+        <file alias="qtbase_pt.qm">../../translations/Qt/qtbase_pt.qm</file>
     </qresource>
     <qresource prefix="/images">
         <file>receive.png</file>
