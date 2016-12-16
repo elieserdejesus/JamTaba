@@ -781,7 +781,7 @@
     </message>
     <message>
         <source>Change %1 BPM to %2 and try sync again!</source>
-        <translation>Changez %1 BPM en %2 et essayez la synchronisation à nouveau!</translation>
+        <translation>Changez BPM du %1 en %2 et essayez la synchronisation à nouveau!</translation>
     </message>
 </context>
 <context>
