@@ -36,7 +36,7 @@ void NinjamRoomWindowVST::disableHostSync()
         //: This is the title of MessageDialot showed when user click in "Sync with host" button
         QString title = tr("Host sync");
 
-        QString message = tr("The BPM is changed! Please stop %1 and change BPM to %2!").arg(hostName, newBpm);
+        QString message = tr("The BPM has changed! Please stop %1 and change BPM to %2!").arg(hostName, newBpm);
         showMessageBox(title, message);
     }
 }
