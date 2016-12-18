@@ -1,9 +1,3 @@
-/*
-     File: Filter.cpp
- Abstract: Filter.h
-  Version: 1.0
- 
-*/
 
 #include "AUEffectBase.h"
 #include <AudioToolbox/AudioUnitUtilities.h>
@@ -11,52 +5,6 @@
 #include "JamTaba.h"
 #include <math.h>
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#pragma mark ____FilterKernel
-
-class FilterKernel : public AUKernelBase		// the actual filter DSP happens here
-{
-public:
-	FilterKernel(AUEffectBase *inAudioUnit );
-	virtual ~FilterKernel();
-			
-	// processes one channel of non-interleaved samples
-	virtual void 		Process(	const Float32 	*inSourceP,
-									Float32		 	*inDestP,
-									UInt32 			inFramesToProcess,
-									UInt32			inNumChannels,
-									bool &			ioSilence);
-
-	// resets the filter state
-	virtual void		Reset();
-
-	void				CalculateLopassParams(	double inFreq, double inResonance );
-
-	// used by the custom property handled in the Filter class below
-	double				GetFrequencyResponse( double inFreq );
-	
-			
-private:
-	// filter coefficients
-	double	mA0;
-	double	mA1;
-	double	mA2;
-	double	mB1;
-	double	mB2;
-
-	// filter state
-	double	mX1;
-	double	mX2;
-	double	mY1;
-	double	mY2;
-	
-	double	mLastCutoff;
-	double	mLastResonance;
-};
-
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#pragma mark ____Filter
 
 class JamTaba : public AUEffectBase
 {
@@ -66,8 +14,6 @@ public:
 	virtual OSStatus			Version() { return kJamTabaVersion; }
 
 	virtual OSStatus			Initialize();
-
-	virtual AUKernelBase *		NewKernel() { return new FilterKernel(this); }
 
 	// for custom property
 	virtual OSStatus			GetPropertyInfo(	AudioUnitPropertyID		inID,
@@ -304,46 +250,6 @@ OSStatus			JamTaba::GetProperty (	AudioUnitPropertyID 		inID,
 				
 				return noErr;
 			}
-
-			// This is our custom property which reports the current frequency response curve
-			//
-			case kAudioUnitCustomProperty_FilterFrequencyResponse:
-			{
-				if(inScope != kAudioUnitScope_Global) 	return kAudioUnitErr_InvalidScope;
-
-				// the kernels are only created if we are initialized
-				// since we're using the kernels to get the curve info, let
-				// the caller know we can't do it if we're un-initialized
-				// the UI should check for the error and not draw the curve in this case
-				if(!IsInitialized() ) return kAudioUnitErr_Uninitialized;
-
-				FrequencyResponse *freqResponseTable = ((FrequencyResponse*)outData);
-
-				// each of our filter kernel objects (one per channel) will have an identical frequency response
-				// so we arbitrarilly use the first one...
-				//
-				FilterKernel *filterKernel = dynamic_cast<FilterKernel*>(mKernelList[0]);
-
-
-				double cutoff = GetParameter(kFilterParam_CutoffFrequency);
-				double resonance = GetParameter(kFilterParam_Resonance );
-
-				float srate = GetSampleRate();
-				
-				cutoff = 2.0 * cutoff / srate;
-				if(cutoff > 0.99) cutoff = 0.99;		// clip cutoff to highest allowed by sample rate...
-
-				filterKernel->CalculateLopassParams(cutoff, resonance);
-				
-				for(int i = 0; i < kNumberOfResponseFrequencies; i++ )
-				{
-					double frequency = freqResponseTable[i].mFrequency;
-					
-					freqResponseTable[i].mMagnitude = filterKernel->GetFrequencyResponse(frequency);
-				}
-
-				return noErr;
-			}
 		}
 	}
 	
@@ -412,164 +318,4 @@ OSStatus	JamTaba::NewFactoryPresetSet (const AUPreset & inNewFactoryPreset)
 	return kAudioUnitErr_InvalidPropertyValue;
 }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#pragma mark ____FilterKernel
 
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	FilterKernel::FilterKernel()
-//
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-FilterKernel::FilterKernel(AUEffectBase *inAudioUnit )
-	: AUKernelBase(inAudioUnit)
-{
-	Reset();
-}
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	FilterKernel::~FilterKernel()
-//
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-FilterKernel::~FilterKernel( )
-{
-}
-
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	FilterKernel::Reset()
-//
-//		It's very important to fully reset all filter state variables to their
-//		initial settings here.  For delay/reverb effects, the delay buffers must
-//		also be cleared here.
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void		FilterKernel::Reset()
-{
-	mX1 = 0.0;
-	mX2 = 0.0;
-	mY1 = 0.0;
-	mY2 = 0.0;
-	
-	// forces filter coefficient calculation
-	mLastCutoff = -1.0;
-	mLastResonance = -1.0;
-}
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	FilterKernel::CalculateLopassParams()
-//
-//		inFreq is normalized frequency 0 -> 1
-//		inResonance is in decibels
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void FilterKernel::CalculateLopassParams(	double inFreq,
-											double inResonance )
-{
-    double r = pow(10.0, 0.05 * -inResonance);		// convert from decibels to linear
-    
-    double k = 0.5 * r * sin(M_PI * inFreq);
-    double c1 = 0.5 * (1.0 - k) / (1.0 + k);
-    double c2 = (0.5 + c1) * cos(M_PI * inFreq);
-    double c3 = (0.5 + c1 - c2) * 0.25;
-    
-    mA0 = 2.0 *   c3;
-    mA1 = 2.0 *   2.0 * c3;
-    mA2 = 2.0 *   c3;
-    mB1 = 2.0 *   -c2;
-    mB2 = 2.0 *   c1;
-}
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	FilterKernel::GetFrequencyResponse()
-//
-//		returns scalar magnitude response
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-double FilterKernel::GetFrequencyResponse( double inFreq /* in Hertz */ )
-{
-	float srate = GetSampleRate();
-	
-	double scaledFrequency = 2.0 * inFreq / srate;
-	
-	// frequency on unit circle in z-plane
-	double zr = cos(M_PI * scaledFrequency);
-	double zi = sin(M_PI * scaledFrequency);
-	
-	// zeros response
-	double num_r = mA0*(zr*zr - zi*zi) + mA1*zr + mA2;
-	double num_i = 2.0*mA0*zr*zi + mA1*zi;
-	
-	double num_mag = sqrt(num_r*num_r + num_i*num_i);
-	
-	// poles response
-	double den_r = zr*zr - zi*zi + mB1*zr + mB2;
-	double den_i = 2.0*zr*zi + mB1*zi;
-	
-	double den_mag = sqrt(den_r*den_r + den_i*den_i);
-	
-	// total response
-	double response = num_mag  / den_mag;
-
-	
-	return response;
-}
-
-
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	FilterKernel::Process(int inFramesToProcess)
-//
-//		We process one non-interleaved stream at a time
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void FilterKernel::Process(	const Float32 	*inSourceP,
-							Float32 		*inDestP,
-							UInt32 			inFramesToProcess,
-							UInt32			inNumChannels,	// for version 2 AudioUnits inNumChannels is always 1
-							bool &			ioSilence)
-{
-	double cutoff = GetParameter(kFilterParam_CutoffFrequency);
-    double resonance = GetParameter(kFilterParam_Resonance );
-    
-	// do bounds checking on parameters
-	//
-    if(cutoff < kMinCutoffHz) cutoff = kMinCutoffHz;
-
-	if(resonance < kMinResonance ) resonance = kMinResonance;
-	if(resonance > kMaxResonance ) resonance = kMaxResonance;
-
-	
-	// convert to 0->1 normalized frequency
-	float srate = GetSampleRate();
-	
-	cutoff = 2.0 * cutoff / srate;
-	if(cutoff > 0.99) cutoff = 0.99;		// clip cutoff to highest allowed by sample rate...
-	
-
-	// only calculate the filter coefficients if the parameters have changed from last time
-	if(cutoff != mLastCutoff || resonance != mLastResonance )
-	{
-		CalculateLopassParams(cutoff, resonance);
-		
-		mLastCutoff = cutoff;
-		mLastResonance = resonance;		
-	}
-	
-
-	const Float32 *sourceP = inSourceP;
-	Float32 *destP = inDestP;
-	int n = inFramesToProcess;
-	
-	// Apply the filter on the input and write to the output
-	// This code isn't optimized and is written for clarity...
-	//
-	while(n--)
-	{
-		float input = *sourceP++;
-		
-		float output = mA0*input + mA1*mX1 + mA2*mX2 - mB1*mY1 - mB2*mY2;
-
-		mX2 = mX1;
-		mX1 = input;
-		mY2 = mY1;
-		mY1 = output;
-		
-		*destP++ = output;
-	}
-}
