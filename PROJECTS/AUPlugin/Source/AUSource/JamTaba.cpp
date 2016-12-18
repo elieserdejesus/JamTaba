@@ -7,8 +7,8 @@
 
 #include "AUEffectBase.h"
 #include <AudioToolbox/AudioUnitUtilities.h>
-#include "FilterVersion.h"
-#include "Filter.h"
+#include "JamTabaVersion.h"
+#include "JamTaba.h"
 #include <math.h>
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

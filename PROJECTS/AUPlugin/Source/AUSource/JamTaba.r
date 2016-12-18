@@ -7,7 +7,7 @@
 */
 #include <AudioUnit/AudioUnit.r>
 
-#include "FilterVersion.h"
+#include "JamTabaVersion.h"
 
 // Note that resource IDs must be spaced 2 apart for the 'STR ' name and description
 #define kAudioUnitResID_Filter				1000

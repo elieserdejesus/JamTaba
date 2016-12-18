@@ -11,7 +11,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 
 #import "DEMOFilter_GraphView.h"
-#import "Filter.h"
+#import "JamTaba.h"
 
 /************************************************************************************************************/
 /* NOTE: It is important to rename ALL ui classes when using the XCode Audio Unit with Cocoa View template	*/
