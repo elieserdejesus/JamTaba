@@ -17,7 +17,7 @@
 #endif
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-#define Filter_COMP_SUBTYPE		'FILT'
+#define Filter_COMP_SUBTYPE		'smxr'
 #define Filter_COMP_MANF		'JTBA'
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 

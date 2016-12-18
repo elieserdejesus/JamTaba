@@ -1,10 +1,3 @@
-/*
-     File: Filter.r 
- Abstract:  Filter.r  
-  Version: 1.01
- hacked into functionality by Alex Kenis
-  
-*/
 #include <AudioUnit/AudioUnit.r>
 
 #include "JamTabaVersion.h"

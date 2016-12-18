@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8D01CCC60486CAD60068D4B7"
-               BuildableName = "Filter.component"
+               BuildableName = "JamTaba.component"
                BlueprintName = "JamTaba"
                ReferencedContainer = "container:JamTaba.xcodeproj">
             </BuildableReference>
