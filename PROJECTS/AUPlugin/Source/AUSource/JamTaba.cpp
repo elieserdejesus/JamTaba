@@ -36,17 +36,6 @@ public:
     virtual OSStatus			GetPresets(	CFArrayRef	*outData	)	const;    
     virtual OSStatus			NewFactoryPresetSet (	const AUPreset & inNewFactoryPreset	);
 
-	// we'll report a 1ms tail.   A reverb effect would have a much more substantial tail on
-	// the order of several seconds....
-	//
-	virtual	bool				SupportsTail () { return true; }
-    virtual Float64				GetTailTime() {return 0.001;}
-
-	// we have no latency
-	//
-	// A lookahead compressor or FFT-based processor should report the true latency in seconds
-    virtual Float64				GetLatency() {return 0.0;}
-
 
 protected:
 };
