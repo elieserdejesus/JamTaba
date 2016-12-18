@@ -28,11 +28,6 @@ public:
 													void 					* outData );
 
 
-	virtual OSStatus			GetParameterInfo(	AudioUnitScope			inScope,
-													AudioUnitParameterID	inParameterID,
-													AudioUnitParameterInfo	&outParameterInfo );
-	
-
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,10 +47,7 @@ static CFStringRef kCutoffFreq_Name = CFSTR("cutoff frequency");
 static CFStringRef kResonance_Name = CFSTR("resonance");
 
 
-const float kMinCutoffHz = 12.0;
 const float kDefaultCutoff = 1000.0;
-const float kMinResonance = -20.0;
-const float kMaxResonance = 20.0;
 const float kDefaultResonance = 0;
 
 
@@ -71,17 +63,8 @@ static AUPreset kPresets[kNumberPresets] =
         { kPreset_Two, CFSTR("Preset Two") }		
 	};
 	
-static const int kPresetDefault = kPreset_One;
-static const int kPresetDefaultIndex = 0;
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#pragma mark ____Construction_Initialization
 
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Filter::Filter
-//
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~a~m~Filter:FilterbaTmaJoUnit component)
 JamTaba::JamTaba(AudioUnit component)	: AUEffectBase(component)
 {
 	// all the parameters must be set to their initial values here
@@ -114,60 +97,6 @@ OSStatus			JamTaba::Initialize()
 	return result;
 }
 
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#pragma mark ____Parameters
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Filter::GetParameterInfo
-//
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-OSStatus			JamTaba::GetParameterInfo(	AudioUnitScope			inScope,
-												AudioUnitParameterID	inParameterID,
-												AudioUnitParameterInfo	&outParameterInfo )
-{
-	OSStatus result = noErr;
-
-	outParameterInfo.flags = 	kAudioUnitParameterFlag_IsWritable
-						+		kAudioUnitParameterFlag_IsReadable;
-		
-	if (inScope == kAudioUnitScope_Global) {
-		
-		switch(inParameterID)
-		{
-			case kFilterParam_CutoffFrequency:
-				AUBase::FillInParameterName (outParameterInfo, kCutoffFreq_Name, false);
-				outParameterInfo.unit = kAudioUnitParameterUnit_Hertz;
-				outParameterInfo.minValue = kMinCutoffHz;
-				outParameterInfo.maxValue = GetSampleRate() * 0.5;
-				outParameterInfo.defaultValue = kDefaultCutoff;
-				outParameterInfo.flags += kAudioUnitParameterFlag_IsHighResolution;
-				outParameterInfo.flags += kAudioUnitParameterFlag_DisplayLogarithmic;
-				break;
-				
-			case kFilterParam_Resonance:
-				AUBase::FillInParameterName (outParameterInfo, kResonance_Name, false);
-				outParameterInfo.unit = kAudioUnitParameterUnit_Decibels;
-				outParameterInfo.minValue = kMinResonance;
-				outParameterInfo.maxValue = kMaxResonance;
-				outParameterInfo.defaultValue = kDefaultResonance;
-				outParameterInfo.flags += kAudioUnitParameterFlag_IsHighResolution;
-				break;
-				
-			default:
-				result = kAudioUnitErr_InvalidParameter;
-				break;
-		}
-	} else {
-		result = kAudioUnitErr_InvalidParameter;
-	}
-	
-	return result;
-}
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#pragma mark ____Properties
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //	Filter::GetPropertyInfo
 //
@@ -198,10 +127,8 @@ OSStatus			JamTaba::GetPropertyInfo (	AudioUnitPropertyID				inID,
 	return AUEffectBase::GetPropertyInfo (inID, inScope, inElement, outDataSize, outWritable);
 }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Filter::GetProperty
-//
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 OSStatus			JamTaba::GetProperty (	AudioUnitPropertyID 		inID,
 											AudioUnitScope 				inScope,
 											AudioUnitElement			inElement,
