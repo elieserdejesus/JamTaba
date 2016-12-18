@@ -58,12 +58,12 @@ private:
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #pragma mark ____Filter
 
-class Filter : public AUEffectBase
+class JamTaba : public AUEffectBase
 {
 public:
-	Filter(AudioUnit component);
+	JamTaba(AudioUnit component);
 
-	virtual OSStatus			Version() { return kFilterVersion; }
+	virtual OSStatus			Version() { return kJamTabaVersion; }
 
 	virtual OSStatus			Initialize();
 
@@ -108,7 +108,7 @@ protected:
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //	Standard DSP AudioUnit implementation
 
-AUDIOCOMPONENT_ENTRY(AUBaseProcessFactory, Filter)
+AUDIOCOMPONENT_ENTRY(AUBaseProcessFactory, JamTaba)
 
 
 enum
@@ -151,9 +151,8 @@ static const int kPresetDefaultIndex = 0;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //	Filter::Filter
 //
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Filter::Filter(AudioUnit component)
-	: AUEffectBase(component)
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~a~m~Filter:FilterbaTmaJoUnit component)
+JamTaba::JamTaba(AudioUnit component)	: AUEffectBase(component)
 {
 	// all the parameters must be set to their initial values here
 	//
@@ -171,7 +170,7 @@ Filter::Filter(AudioUnit component)
 //	Filter::Initialize
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-OSStatus			Filter::Initialize()
+OSStatus			JamTaba::Initialize()
 {
 	OSStatus result = AUEffectBase::Initialize();
 	
@@ -193,7 +192,7 @@ OSStatus			Filter::Initialize()
 //	Filter::GetParameterInfo
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-OSStatus			Filter::GetParameterInfo(	AudioUnitScope			inScope,
+OSStatus			JamTaba::GetParameterInfo(	AudioUnitScope			inScope,
 												AudioUnitParameterID	inParameterID,
 												AudioUnitParameterInfo	&outParameterInfo )
 {
@@ -243,7 +242,7 @@ OSStatus			Filter::GetParameterInfo(	AudioUnitScope			inScope,
 //	Filter::GetPropertyInfo
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-OSStatus			Filter::GetPropertyInfo (	AudioUnitPropertyID				inID,
+OSStatus			JamTaba::GetPropertyInfo (	AudioUnitPropertyID				inID,
 												AudioUnitScope					inScope,
 												AudioUnitElement				inElement,
 												UInt32 &						outDataSize,
@@ -273,7 +272,7 @@ OSStatus			Filter::GetPropertyInfo (	AudioUnitPropertyID				inID,
 //	Filter::GetProperty
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-OSStatus			Filter::GetProperty (	AudioUnitPropertyID 		inID,
+OSStatus			JamTaba::GetProperty (	AudioUnitPropertyID 		inID,
 											AudioUnitScope 				inScope,
 											AudioUnitElement			inElement,
 											void *						outData)
@@ -360,7 +359,7 @@ OSStatus			Filter::GetProperty (	AudioUnitPropertyID 		inID,
 //	Filter::GetPresets
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-OSStatus			Filter::GetPresets (		CFArrayRef * 		outData) const
+OSStatus			JamTaba::GetPresets (		CFArrayRef * 		outData) const
 {
 		// this is used to determine if presets are supported 
 		// which in this unit they are so we implement this method!
@@ -379,7 +378,7 @@ OSStatus			Filter::GetPresets (		CFArrayRef * 		outData) const
 //	Filter::NewFactoryPresetSet
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-OSStatus	Filter::NewFactoryPresetSet (const AUPreset & inNewFactoryPreset)
+OSStatus	JamTaba::NewFactoryPresetSet (const AUPreset & inNewFactoryPreset)
 {
 	SInt32 chosenPreset = inNewFactoryPreset.presetNumber;
 	

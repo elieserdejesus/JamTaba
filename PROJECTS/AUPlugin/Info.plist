@@ -8,7 +8,7 @@
 			<key>description</key>
 			<string>Jamtaba - Ninjam Client</string>
 			<key>factoryFunction</key>
-			<string>FilterFactory</string>
+			<string>JamTabaFactory</string>
 			<key>manufacturer</key>
 			<string>JTBA</string>
 			<key>name</key>

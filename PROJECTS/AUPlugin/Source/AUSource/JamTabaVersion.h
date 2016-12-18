@@ -1,24 +1,16 @@
-/*
-     File: FilterVersion.h
- Abstract: FilterVersion.h
-  Version: 1.0
- 
-*/
-
-
-#ifndef __FilterVersion_h__
-#define __FilterVersion_h__
+#ifndef __JamTabaVersion_h__
+#define __JamTabaVersion_h__
 
 
 #ifdef DEBUG
-	#define kFilterVersion 0x00010000
+	#define kJamTabaVersion 0x00010000
 #else
-	#define kFilterVersion 0x00010000	
+	#define kJamTabaVersion 0x00010000
 #endif
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-#define Filter_COMP_SUBTYPE		'smxr'
-#define Filter_COMP_MANF		'JTBA'
+#define JAMTABA_COMP_SUBTYPE	'smxr'
+#define JAMTABA_COMP_MANF		'JTBA'
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
 #endif
