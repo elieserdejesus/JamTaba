@@ -5,16 +5,16 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>C54387AE-8273-460B-8909-FA80318583C4</string>
+	<string>83BF2D57-8B6D-4575-9D7F-8A0B8626B1FB</string>
 	<key>IDESourceControlProjectName</key>
-	<string>Jamtaba</string>
+	<string>JamTaba</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>09AE4779-2C8F-49FC-A928-164FD68130E2</key>
 		<string>https://github.com/elieserdejesus/JamTaba.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>PROJECTS/AUPlugin/Jamtaba.xcodeproj/project.xcworkspace</string>
+	<string>PROJECTS/AUPlugin/JamTaba.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>09AE4779-2C8F-49FC-A928-164FD68130E2</key>

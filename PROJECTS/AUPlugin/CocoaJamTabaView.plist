@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleExecutable</key>
-	<string>CocoaFilterView</string>
+	<string>CocoaJamTabaView</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.jamtaba</string>
+	<string>com.DEMO.audiounit.Filter</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>NSMainNibFile</key>

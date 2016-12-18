@@ -6,13 +6,13 @@
 	<array>
 		<dict>
 			<key>description</key>
-			<string>Jamtaba - Ninjam Client</string>
+			<string>JamTaba Audio Unit</string>
 			<key>factoryFunction</key>
 			<string>JamTabaFactory</string>
 			<key>manufacturer</key>
 			<string>JTBA</string>
 			<key>name</key>
-			<string>Jamtaba : Ninjam</string>
+			<string>JTBA: JamTaba</string>
 			<key>sandboxSafe</key>
 			<true/>
 			<key>subtype</key>
@@ -28,7 +28,7 @@
 	<key>CFBundleExecutable</key>
 	<string>JamTaba</string>
 	<key>CFBundleIconFile</key>
-	<string></string>
+	<string>../Jamtaba.icns</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.jamtaba</string>
 	<key>CFBundleInfoDictionaryVersion</key>

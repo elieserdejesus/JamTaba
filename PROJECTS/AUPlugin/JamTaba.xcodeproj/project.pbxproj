@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2A3A1DB51E06CC9700B00FC3 /* JamTaba.component in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D01CCD20486CAD60068D4B7 /* JamTaba.component */; };
-		4C56E7CB08047C7700DE6468 /* SectionPatternLight.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 4C56E7CA08047C7700DE6468 /* SectionPatternLight.tiff */; };
+		2A3D0AA31E06D4FE00789D68 /* JamTaba.component in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D01CCD20486CAD60068D4B7 /* JamTaba.component */; };
+		2A74D2261E072B9400BBF922 /* JamTaba.exp in Sources */ = {isa = PBXBuildFile; fileRef = 8BA05A670720730100365D66 /* JamTaba.exp */; };
 		4C56E7E8080482C100DE6468 /* DEMOFilter_GraphView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C56E7E6080482C100DE6468 /* DEMOFilter_GraphView.h */; };
 		4C56E7E9080482C100DE6468 /* DEMOFilter_GraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C56E7E7080482C100DE6468 /* DEMOFilter_GraphView.m */; };
 		4C56E93B0804AE2C00DE6468 /* JamTaba.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C56E93A0804AE2C00DE6468 /* JamTaba.h */; };
@@ -81,9 +81,8 @@
 		8BA4AE5D073EB7C300A2709A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA4AE5B073EB79000A2709A /* Cocoa.framework */; };
 		8BA4AE5E073EB7C500A2709A /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AFA072074E100365D66 /* AudioUnit.framework */; };
 		8BA4AE5F073EB7C600A2709A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AF9072074E100365D66 /* AudioToolbox.framework */; };
-		8BA4AE66073EBB2E00A2709A /* CocoaFilterView.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8BA4AE4E073EB69000A2709A /* CocoaFilterView.bundle */; };
+		8BA4AE66073EBB2E00A2709A /* CocoaJamTabaView.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */; };
 		8D01CCC80486CAD60068D4B7 /* JamTaba_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32BAE0B30371A71500C91783 /* JamTaba_Prefix.pch */; };
-		8D01CCCA0486CAD60068D4B7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,13 +96,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2A3A1DB41E06CC9000B00FC3 /* CopyFiles */ = {
+		2A3D0AA21E06D4F800789D68 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "/Library/Audio/Plug-Ins/Components";
 			dstSubfolderSpec = 0;
 			files = (
-				2A3A1DB51E06CC9700B00FC3 /* JamTaba.component in CopyFiles */,
+				2A3D0AA31E06D4FE00789D68 /* JamTaba.component in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,7 +112,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
-				8BA4AE66073EBB2E00A2709A /* CocoaFilterView.bundle in CopyFiles */,
+				8BA4AE66073EBB2E00A2709A /* CocoaJamTabaView.bundle in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,9 +120,7 @@
 
 /* Begin PBXFileReference section */
 		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2A3A1E061E06CDF500B00FC3 /* Filter copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Filter copy-Info.plist"; path = "/Users/elieser/Desktop/JamTaba/PROJECTS/AUPlugin/Filter copy-Info.plist"; sourceTree = "<absolute>"; };
 		32BAE0B30371A71500C91783 /* JamTaba_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JamTaba_Prefix.pch; sourceTree = "<group>"; };
-		4C56E7CA08047C7700DE6468 /* SectionPatternLight.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = SectionPatternLight.tiff; sourceTree = "<group>"; };
 		4C56E7E6080482C100DE6468 /* DEMOFilter_GraphView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DEMOFilter_GraphView.h; path = Source/CocoaUI/DEMOFilter_GraphView.h; sourceTree = "<group>"; };
 		4C56E7E7080482C100DE6468 /* DEMOFilter_GraphView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DEMOFilter_GraphView.m; path = Source/CocoaUI/DEMOFilter_GraphView.m; sourceTree = "<group>"; };
 		4C56E93A0804AE2C00DE6468 /* JamTaba.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JamTaba.h; path = Source/AUSource/JamTaba.h; sourceTree = "<group>"; };
@@ -195,8 +192,8 @@
 		8BA4ADD0073EB19800A2709A /* DEMOFilter_UIView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DEMOFilter_UIView.h; path = Source/CocoaUI/DEMOFilter_UIView.h; sourceTree = "<group>"; };
 		8BA4ADD1073EB19800A2709A /* DEMOFilter_UIView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DEMOFilter_UIView.m; path = Source/CocoaUI/DEMOFilter_UIView.m; sourceTree = "<group>"; };
 		8BA4ADF4073EB43200A2709A /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/CocoaView.nib; sourceTree = "<group>"; };
-		8BA4AE4E073EB69000A2709A /* CocoaFilterView.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CocoaFilterView.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
-		8BA4AE4F073EB69000A2709A /* CocoaFilterView.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CocoaFilterView.plist; sourceTree = "<group>"; };
+		8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CocoaJamTabaView.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		8BA4AE4F073EB69000A2709A /* CocoaJamTabaView.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CocoaJamTabaView.plist; sourceTree = "<group>"; };
 		8BA4AE5B073EB79000A2709A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		8D01CCD10486CAD60068D4B7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D01CCD20486CAD60068D4B7 /* JamTaba.component */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JamTaba.component; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -234,7 +231,6 @@
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
-				2A3A1E061E06CDF500B00FC3 /* Filter copy-Info.plist */,
 			);
 			name = FilterDemo;
 			sourceTree = "<group>";
@@ -256,8 +252,7 @@
 			children = (
 				62B3B89C18918C4F00E507B7 /* PkgInfo */,
 				4C69E18D083402BA00030563 /* CocoaView.nib */,
-				4C56E7CA08047C7700DE6468 /* SectionPatternLight.tiff */,
-				8BA4AE4F073EB69000A2709A /* CocoaFilterView.plist */,
+				8BA4AE4F073EB69000A2709A /* CocoaJamTabaView.plist */,
 				8D01CCD10486CAD60068D4B7 /* Info.plist */,
 				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
 			);
@@ -280,7 +275,7 @@
 			isa = PBXGroup;
 			children = (
 				8D01CCD20486CAD60068D4B7 /* JamTaba.component */,
-				8BA4AE4E073EB69000A2709A /* CocoaFilterView.bundle */,
+				8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -481,7 +476,7 @@
 			);
 			name = CocoaUI;
 			productName = CocoaUI;
-			productReference = 8BA4AE4E073EB69000A2709A /* CocoaFilterView.bundle */;
+			productReference = 8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		8D01CCC60486CAD60068D4B7 /* JamTaba */ = {
@@ -494,7 +489,7 @@
 				8D01CCCD0486CAD60068D4B7 /* Frameworks */,
 				8D01CCCF0486CAD60068D4B7 /* Rez */,
 				8BA4AE65073EBB1B00A2709A /* CopyFiles */,
-				2A3A1DB41E06CC9000B00FC3 /* CopyFiles */,
+				2A3D0AA21E06D4F800789D68 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -538,7 +533,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C69E18E083402BA00030563 /* CocoaView.nib in Resources */,
-				4C56E7CB08047C7700DE6468 /* SectionPatternLight.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -546,7 +540,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D01CCCA0486CAD60068D4B7 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -585,6 +578,7 @@
 				621713E21891A149005D69C7 /* AUBuffer.cpp in Sources */,
 				621713FA1891A149005D69C7 /* CADebugger.cpp in Sources */,
 				6211E2B31891AA2900751AA3 /* ComponentBase.cpp in Sources */,
+				2A74D2261E072B9400BBF922 /* JamTaba.exp in Sources */,
 				621713DE1891A149005D69C7 /* AUBase.cpp in Sources */,
 				621713FE1891A149005D69C7 /* CADebugPrintf.cpp in Sources */,
 				621713EF1891A149005D69C7 /* AUScopeElement.cpp in Sources */,
@@ -644,7 +638,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				INFOPLIST_FILE = CocoaFilterView.plist;
+				INFOPLIST_FILE = CocoaJamTabaView.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
@@ -654,7 +648,7 @@
 					AppKit,
 				);
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = CocoaFilterView;
+				PRODUCT_NAME = CocoaJamTabaView;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -672,7 +666,7 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				INFOPLIST_FILE = CocoaFilterView.plist;
+				INFOPLIST_FILE = CocoaJamTabaView.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
@@ -682,7 +676,7 @@
 					AppKit,
 				);
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = CocoaFilterView;
+				PRODUCT_NAME = CocoaJamTabaView;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -699,7 +693,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				INFOPLIST_FILE = CocoaFilterView.plist;
+				INFOPLIST_FILE = CocoaJamTabaView.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
@@ -709,7 +703,7 @@
 					AppKit,
 				);
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = CocoaFilterView;
+				PRODUCT_NAME = CocoaJamTabaView;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -727,7 +721,7 @@
 				EXPORTED_SYMBOLS_FILE = JamTaba.exp;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Jamtaba_Prefix.pch;
+				GCC_PREFIX_HEADER = JamTaba_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GENERATE_PKGINFO_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
@@ -753,7 +747,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				EXPORTED_SYMBOLS_FILE = JamTaba.exp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Jamtaba_Prefix.pch;
+				GCC_PREFIX_HEADER = JamTaba_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GENERATE_PKGINFO_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
@@ -779,7 +773,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				EXPORTED_SYMBOLS_FILE = JamTaba.exp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Jamtaba_Prefix.pch;
+				GCC_PREFIX_HEADER = JamTaba_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GENERATE_PKGINFO_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
@@ -802,6 +796,7 @@
 		3EED094A089806170095A620 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				EXPORTED_SYMBOLS_FILE = "";
 				HEADER_SEARCH_PATHS = (
@@ -821,6 +816,7 @@
 		3EED094B089806170095A620 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				EXPORTED_SYMBOLS_FILE = "";
 				HEADER_SEARCH_PATHS = (
@@ -840,6 +836,7 @@
 		3EED094C089806170095A620 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				EXPORTED_SYMBOLS_FILE = "";
 				HEADER_SEARCH_PATHS = (

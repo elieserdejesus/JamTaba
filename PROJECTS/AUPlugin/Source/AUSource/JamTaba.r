@@ -1,3 +1,4 @@
+
 #include <AudioUnit/AudioUnit.r>
 
 #include "JamTabaVersion.h"
@@ -9,12 +10,12 @@
 
 #define RES_ID			kAudioUnitResID_JamTaba
 #define COMP_TYPE		kAudioUnitType_Effect
-#define COMP_SUBTYPE	JAMTABA_COMP_SUBTYPE
-#define COMP_MANUF		JAMTABA_COMP_MANF
+#define COMP_SUBTYPE	JamTaba_COMP_SUBTYPE
+#define COMP_MANUF		JamTaba_COMP_MANF
 
 #define VERSION			kJamTabaVersion
-#define NAME			"Jamtaba : Ninjam"
-#define DESCRIPTION		"Jamtaba - Ninjam Client"
-#define ENTRY_POINT		"FilterEntry"
+#define NAME			"JTBA: JamTaba"
+#define DESCRIPTION		"JamTaba AU"
+#define ENTRY_POINT		"JamTabaEntry"
 
 #include "AUResources.r"

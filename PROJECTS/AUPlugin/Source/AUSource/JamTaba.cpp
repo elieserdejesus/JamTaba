@@ -1,4 +1,3 @@
-
 #include "AUEffectBase.h"
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include "JamTabaVersion.h"
@@ -14,12 +13,7 @@ public:
 	virtual OSStatus			Version() { return kJamTabaVersion; }
 
 	virtual OSStatus			Initialize();
-    
-    virtual OSStatus			ProcessBufferLists(
-                                                   AudioUnitRenderActionFlags &	ioActionFlags,
-                                                   const AudioBufferList &			inBuffer,
-                                                   AudioBufferList &				outBuffer,
-                                                   UInt32							inFramesToProcess );
+
 
 	// for custom property
 	virtual OSStatus			GetPropertyInfo(	AudioUnitPropertyID		inID,
@@ -33,6 +27,11 @@ public:
 													AudioUnitElement 		inElement,
 													void 					* outData );
 
+    virtual OSStatus			ProcessBufferLists(
+                                                   AudioUnitRenderActionFlags &	ioActionFlags,
+                                                   const AudioBufferList &			inBuffer,
+                                                   AudioBufferList &				outBuffer,
+                                                   UInt32							inFramesToProcess );
 
 };
 
@@ -42,123 +41,100 @@ public:
 AUDIOCOMPONENT_ENTRY(AUBaseProcessFactory, JamTaba)
 
 
-JamTaba::JamTaba(AudioUnit component)	: AUEffectBase(component)
+JamTaba::JamTaba(AudioUnit component)
+	: AUEffectBase(component)
 {
-	// all the parameters must be set to their initial values here
-	//
-	// these calls have the effect both of defining the parameters for the first time
-	// and assigning their initial values
-	//
-	//SetParameter(kFilterParam_CutoffFrequency, kDefaultCutoff );
-	//SetParameter(kFilterParam_Resonance, kDefaultResonance );
-
-	//// kFilterParam_CutoffFrequency max value depends on sample-rate
-	//SetParamHasSampleRateDependency(true );
+	
 }
 
-OSStatus JamTaba::ProcessBufferLists(  AudioUnitRenderActionFlags &	ioActionFlags,
+OSStatus JamTaba::ProcessBufferLists(AudioUnitRenderActionFlags &	ioActionFlags,
                                                const AudioBufferList &			inBuffer,
                                                AudioBufferList &				outBuffer,
                                                UInt32							inFramesToProcess )
 {
-    const float *srcBufferL = (Float32 *)inBuffer.mBuffers[0].mData;
-    const float *srcBufferR = (Float32 *)inBuffer.mBuffers[1].mData;
-    float *destBufferL = (Float32 *)outBuffer.mBuffers[0].mData;
-    float *destBufferR = (Float32 *)outBuffer.mBuffers[1].mData;
-    
-    for(UInt32 frame = 0; frame < inFramesToProcess; ++frame) {
-        destBufferL[frame] = srcBufferL[frame] * 0.1;
-        destBufferR[frame] = srcBufferR[frame] * 0.1;
+    if (inBuffer.mNumberBuffers == 2) {
+        const float *srcBufferL = (Float32 *)inBuffer.mBuffers[0].mData;
+        const float *srcBufferR = (Float32 *)inBuffer.mBuffers[1].mData;
+        float *destBufferL = (Float32 *)outBuffer.mBuffers[0].mData;
+        float *destBufferR = (Float32 *)outBuffer.mBuffers[1].mData;
+        
+        for(UInt32 frame = 0; frame < inFramesToProcess; ++frame) {
+            destBufferL[frame] = srcBufferL[frame] * 0.1;
+            destBufferR[frame] = srcBufferR[frame] * 0.1;
+        }
     }
-    
+
     return noErr;
 }
 
 
-OSStatus			JamTaba::Initialize()
+
+OSStatus JamTaba::Initialize()
 {
 	OSStatus result = AUEffectBase::Initialize();
-	
-	if(result == noErr )
-	{
-		// in case the AU was un-initialized and parameters were changed, the view can now
-		// be made aware it needs to update the frequency response curve
-		PropertyChanged(kAudioUnitCustomProperty_FilterFrequencyResponse, kAudioUnitScope_Global, 0 );
-	}
 	
 	return result;
 }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Filter::GetPropertyInfo
-//
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-OSStatus			JamTaba::GetPropertyInfo (	AudioUnitPropertyID				inID,
+
+OSStatus JamTaba::GetPropertyInfo (	AudioUnitPropertyID				inID,
 												AudioUnitScope					inScope,
 												AudioUnitElement				inElement,
 												UInt32 &						outDataSize,
 												Boolean &						outWritable)
 {
-	if (inScope == kAudioUnitScope_Global)
-	{
-		switch (inID)
-		{
-			case kAudioUnitProperty_CocoaUI:
-				outWritable = false;
-				outDataSize = sizeof (AudioUnitCocoaViewInfo);
-				return noErr;
-
-			case kAudioUnitCustomProperty_FilterFrequencyResponse:	// our custom property
-				if(inScope != kAudioUnitScope_Global ) return kAudioUnitErr_InvalidScope;
-				outDataSize = kNumberOfResponseFrequencies * sizeof(FrequencyResponse);
-				outWritable = false;
-				return noErr;
-		}
-	}
+//	if (inScope == kAudioUnitScope_Global)
+//	{
+//		switch (inID)
+//		{
+//			case kAudioUnitProperty_CocoaUI:
+//				outWritable = false;
+//				outDataSize = sizeof (AudioUnitCocoaViewInfo);
+//				return noErr;
+//
+//        }
+//	}
 	
 	return AUEffectBase::GetPropertyInfo (inID, inScope, inElement, outDataSize, outWritable);
 }
 
-
-
-OSStatus			JamTaba::GetProperty (	AudioUnitPropertyID 		inID,
+OSStatus JamTaba::GetProperty (	AudioUnitPropertyID 		inID,
 											AudioUnitScope 				inScope,
 											AudioUnitElement			inElement,
 											void *						outData)
 {
-	if (inScope == kAudioUnitScope_Global)
-	{
-		switch (inID)
-		{
-			// This property allows the host application to find the UI associated with this
-			// AudioUnit
-			//
-			case kAudioUnitProperty_CocoaUI:
-			{
-				// Look for a resource in the main bundle by name and type.
-				CFBundleRef bundle = CFBundleGetBundleWithIdentifier( CFSTR("com.jamtaba") );
-				
-				if (bundle == NULL) return fnfErr;
-                
-				CFURLRef bundleURL = CFBundleCopyResourceURL( bundle, 
-                    CFSTR("CocoaFilterView"),	// this is the name of the cocoa bundle as specified in the CocoaViewFactory.plist
-                    CFSTR("bundle"),			// this is the extension of the cocoa bundle
-                    NULL);
-                
-                if (bundleURL == NULL) return fnfErr;
-                
-				CFStringRef className = CFSTR("DEMOFilter_ViewFactory");	// name of the main class that implements the AUCocoaUIBase protocol
-				AudioUnitCocoaViewInfo cocoaInfo = { bundleURL, { className } };
-				*((AudioUnitCocoaViewInfo *)outData) = cocoaInfo;
-				
-				return noErr;
-			}
-		}
-	}
+//	if (inScope == kAudioUnitScope_Global)
+//	{
+//		switch (inID)
+//		{
+//			// This property allows the host application to find the UI associated with this
+//			// AudioUnit
+//			//
+//			case kAudioUnitProperty_CocoaUI:
+//			{
+//				// Look for a resource in the main bundle by name and type.
+//				CFBundleRef bundle = CFBundleGetBundleWithIdentifier( CFSTR("com.DEMO.audiounit.Filter") );
+//				
+//				if (bundle == NULL) return fnfErr;
+//                
+//				CFURLRef bundleURL = CFBundleCopyResourceURL( bundle, 
+//                    CFSTR("CocoaFilterView"),	// this is the name of the cocoa bundle as specified in the CocoaViewFactory.plist
+//                    CFSTR("bundle"),			// this is the extension of the cocoa bundle
+//                    NULL);
+//                
+//                if (bundleURL == NULL) return fnfErr;
+//                
+//				CFStringRef className = CFSTR("DEMOFilter_ViewFactory");	// name of the main class that implements the AUCocoaUIBase protocol
+//				AudioUnitCocoaViewInfo cocoaInfo = { bundleURL, { className } };
+//				*((AudioUnitCocoaViewInfo *)outData) = cocoaInfo;
+//				
+//				return noErr;
+//			}
+//
+//			
+//		}
+//	}
 	
 	// if we've gotten this far, handles the standard properties
 	return AUEffectBase::GetProperty (inID, inScope, inElement, outData);
 }
-
-
-
