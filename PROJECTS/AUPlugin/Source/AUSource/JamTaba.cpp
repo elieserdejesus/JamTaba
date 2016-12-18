@@ -32,12 +32,7 @@ public:
 													AudioUnitParameterID	inParameterID,
 													AudioUnitParameterInfo	&outParameterInfo );
 	
-    // handle presets:
-    virtual OSStatus			GetPresets(	CFArrayRef	*outData	)	const;    
-    virtual OSStatus			NewFactoryPresetSet (	const AUPreset & inNewFactoryPreset	);
 
-
-protected:
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -246,65 +241,5 @@ OSStatus			JamTaba::GetProperty (	AudioUnitPropertyID 		inID,
 	return AUEffectBase::GetProperty (inID, inScope, inElement, outData);
 }
 
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#pragma mark ____Presets
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Filter::GetPresets
-//
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-OSStatus			JamTaba::GetPresets (		CFArrayRef * 		outData) const
-{
-		// this is used to determine if presets are supported 
-		// which in this unit they are so we implement this method!
-	if (outData == NULL) return noErr;
-	
-	CFMutableArrayRef theArray = CFArrayCreateMutable (NULL, kNumberPresets, NULL);
-	for (int i = 0; i < kNumberPresets; ++i) {
-		CFArrayAppendValue (theArray, &kPresets[i]);
-    }
-    
-	*outData = (CFArrayRef)theArray;	// client is responsible for releasing the array
-	return noErr;
-}
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Filter::NewFactoryPresetSet
-//
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-OSStatus	JamTaba::NewFactoryPresetSet (const AUPreset & inNewFactoryPreset)
-{
-	SInt32 chosenPreset = inNewFactoryPreset.presetNumber;
-	
-	for(int i = 0; i < kNumberPresets; ++i)
-	{
-		if(chosenPreset == kPresets[i].presetNumber)
-		{
-			// set whatever state you need to based on this preset's selection
-			//
-			// Here we use a switch statement, but it would also be possible to
-			// use chosenPreset as an index into an array (if you publish the preset
-			// numbers as indices in the GetPresets() method)
-			//			
-			switch(chosenPreset)
-			{
-				case kPreset_One:
-					SetParameter(kFilterParam_CutoffFrequency, 200.0 );
-					SetParameter(kFilterParam_Resonance, -5.0 );
-					break;
-				case kPreset_Two:
-					SetParameter(kFilterParam_CutoffFrequency, 1000.0 );
-					SetParameter(kFilterParam_Resonance, 10.0 );
-					break;
-			}
-            
-            SetAFactoryPresetAsCurrent (kPresets[i]);
-			return noErr;
-		}
-	}
-	
-	return kAudioUnitErr_InvalidPropertyValue;
-}
 
 
