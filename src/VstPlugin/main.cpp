@@ -13,8 +13,11 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 extern AudioEffect *createEffectInstance(audioMasterCallback audioMaster);
 
 extern "C" {
+#ifdef __GNUC__
+#define VST_EXPORT
+#else
 #define VST_EXPORT _declspec(dllexport)
-// #define VST_EXPORT
+#endif
 
 // ------------------------------------------------------------------------
 /** Prototype of the export function main */

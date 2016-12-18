@@ -75,28 +75,48 @@ win32 {
 
     !contains(QMAKE_TARGET.arch, x86_64) {
         message("x86 build") ## Windows x86 (32bit) specific build here
-        LIBS_PATH = "static/win32-msvc"
+        win32-msvc*{
+            LIBS_PATH = "static/win32-msvc"
+        }
+        win32-g++{
+            LIBS_PATH = "static/win32-mingw"
+        }
+
     } else {
         message("x86_64 build") ## Windows x64 (64bit) specific build here
         LIBS_PATH = "static/win64-msvc"
     }
+    message("Libs path: " $$LIBS_PATH)
 
-    #+++++++++++++ link windows platform statically +++++++++++++++++++++++++++++++++++
-    #release platform libs
-    CONFIG(release, debug|release): LIBS += -lQt5PlatformSupport
-    CONFIG(release, debug|release): LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindows #link windows platform statically
+    win32-msvc*{ #microsoft compilers
+        #+++++++++++++ link windows platform statically +++++++++++++++++++++++++++++++++++
+        #release platform libs
+        CONFIG(release, debug|release): LIBS += -lQt5PlatformSupport
+        CONFIG(release, debug|release): LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindows #link windows platform statically
 
-    #debug platform libs
-    CONFIG(debug, debug|release): LIBS += -lQt5PlatformSupportd #link windows platform statically
-    CONFIG(debug, debug|release): LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindowsd #link windows platform statically
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        #debug platform libs
+        CONFIG(debug, debug|release): LIBS += -lQt5PlatformSupportd #link windows platform statically
+        CONFIG(debug, debug|release): LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindowsd #link windows platform statically
+        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    CONFIG(release, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lminimp3 -lvorbisfile -lvorbis -logg
-    else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lminimp3d -lvorbisfiled -lvorbisd -loggd
 
-    CONFIG(release, debug|release) {
-      #ltcg - http://blogs.msdn.com/b/vcblog/archive/2009/02/24/quick-tips-on-using-whole-program-optimization.aspx
-      QMAKE_CXXFLAGS_RELEASE +=  -GL
-      QMAKE_LFLAGS_RELEASE += /LTCG
+        CONFIG(release, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lminimp3 -lvorbisfile -lvorbis -logg
+        else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libs/$$LIBS_PATH/ -lminimp3d -lvorbisfiled -lvorbisd -loggd
+
+        message("Using MSVC libs")
+        CONFIG(release, debug|release) {
+            #ltcg - http://blogs.msdn.com/b/vcblog/archive/2009/02/24/quick-tips-on-using-whole-program-optimization.aspx
+            QMAKE_CXXFLAGS_RELEASE +=  -GL
+            QMAKE_LFLAGS_RELEASE += /LTCG
+        }
+    }
+    win32-g++{ #mingw
+        message("Using mingw libs")
+
+        LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lminimp3 -lvorbisfile -lvorbisenc -lvorbis -logg
+
+        #platform libs
+        LIBS += -lQt5PlatformSupport
+        LIBS += -L$(QTDIR)\plugins\platforms\ -lqwindows #link windows platform statically
     }
 }
