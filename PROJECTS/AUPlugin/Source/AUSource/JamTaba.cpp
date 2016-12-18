@@ -14,6 +14,12 @@ public:
 	virtual OSStatus			Version() { return kJamTabaVersion; }
 
 	virtual OSStatus			Initialize();
+    
+    virtual OSStatus			ProcessBufferLists(
+                                                   AudioUnitRenderActionFlags &	ioActionFlags,
+                                                   const AudioBufferList &			inBuffer,
+                                                   AudioBufferList &				outBuffer,
+                                                   UInt32							inFramesToProcess );
 
 	// for custom property
 	virtual OSStatus			GetPropertyInfo(	AudioUnitPropertyID		inID,
@@ -36,35 +42,6 @@ public:
 AUDIOCOMPONENT_ENTRY(AUBaseProcessFactory, JamTaba)
 
 
-enum
-{
-	kFilterParam_CutoffFrequency = 0,
-	kFilterParam_Resonance = 1
-};
-
-
-static CFStringRef kCutoffFreq_Name = CFSTR("cutoff frequency");
-static CFStringRef kResonance_Name = CFSTR("resonance");
-
-
-const float kDefaultCutoff = 1000.0;
-const float kDefaultResonance = 0;
-
-
-
-// Factory presets
-static const int kPreset_One = 0;
-static const int kPreset_Two = 1;
-static const int kNumberPresets = 2;
-
-static AUPreset kPresets[kNumberPresets] = 
-    {
-        { kPreset_One, CFSTR("Preset One") },		
-        { kPreset_Two, CFSTR("Preset Two") }		
-	};
-	
-
-
 JamTaba::JamTaba(AudioUnit component)	: AUEffectBase(component)
 {
 	// all the parameters must be set to their initial values here
@@ -72,17 +49,32 @@ JamTaba::JamTaba(AudioUnit component)	: AUEffectBase(component)
 	// these calls have the effect both of defining the parameters for the first time
 	// and assigning their initial values
 	//
-	SetParameter(kFilterParam_CutoffFrequency, kDefaultCutoff );
-	SetParameter(kFilterParam_Resonance, kDefaultResonance );
+	//SetParameter(kFilterParam_CutoffFrequency, kDefaultCutoff );
+	//SetParameter(kFilterParam_Resonance, kDefaultResonance );
 
-	// kFilterParam_CutoffFrequency max value depends on sample-rate
-	SetParamHasSampleRateDependency(true );
+	//// kFilterParam_CutoffFrequency max value depends on sample-rate
+	//SetParamHasSampleRateDependency(true );
 }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Filter::Initialize
-//
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+OSStatus JamTaba::ProcessBufferLists(  AudioUnitRenderActionFlags &	ioActionFlags,
+                                               const AudioBufferList &			inBuffer,
+                                               AudioBufferList &				outBuffer,
+                                               UInt32							inFramesToProcess )
+{
+    const float *srcBufferL = (Float32 *)inBuffer.mBuffers[0].mData;
+    const float *srcBufferR = (Float32 *)inBuffer.mBuffers[1].mData;
+    float *destBufferL = (Float32 *)outBuffer.mBuffers[0].mData;
+    float *destBufferR = (Float32 *)outBuffer.mBuffers[1].mData;
+    
+    for(UInt32 frame = 0; frame < inFramesToProcess; ++frame) {
+        destBufferL[frame] = srcBufferL[frame] * 0.1;
+        destBufferR[frame] = srcBufferR[frame] * 0.1;
+    }
+    
+    return noErr;
+}
+
+
 OSStatus			JamTaba::Initialize()
 {
 	OSStatus result = AUEffectBase::Initialize();
