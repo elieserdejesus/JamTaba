@@ -10,8 +10,6 @@
     [super dealloc];
 }
 
-
-
 - (void)setAU:(AudioUnit)inAU {
 	
 	mAU = inAU;
