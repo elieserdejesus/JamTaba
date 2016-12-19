@@ -1,15 +1,15 @@
-#ifndef VST_PREFERENCES_DIALOG_H
-#define VST_PREFERENCES_DIALOG_H
+#ifndef PREFERENCES_DIALOG_PLUGIN_H
+#define PREFERENCES_DIALOG_PLUGIN_H
 
 #include "PreferencesDialog.h"
 #include "ui_PreferencesDialog.h"
 
-class VstPreferencesDialog : public PreferencesDialog
+class PreferencesDialogPlugin : public PreferencesDialog
 {
     Q_OBJECT
 
 public:
-    VstPreferencesDialog(QWidget *parent);
+    PreferencesDialogPlugin(QWidget *parent);
     void initialize(PreferencesTab initialTab, const Persistence::Settings *settings, const QMap<QString, QString> &jamRecorders) override;
 
 protected slots:

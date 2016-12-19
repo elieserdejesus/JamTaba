@@ -1,4 +1,4 @@
-#include "Plugin.h"
+#include "JamTabaVSTPlugin.h"
 #include <QtGlobal>
 #include "MainControllerVST.h"
 #include "log/Logging.h"

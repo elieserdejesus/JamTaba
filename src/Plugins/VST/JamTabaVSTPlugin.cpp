@@ -1,40 +1,22 @@
-#include "Plugin.h"
-#include <cmath>
-#include <QWinWidget>
-#include <QLabel>
-#include <QSlider>
-#include <QHBoxLayout>
-#include <QStandardPaths>
+#include "JamTabaVSTPlugin.h"
 #include "MainControllerVST.h"
-#include "NinjamControllerVST.h"
+#include "NinjamControllerPlugin.h"
 #include "log/Logging.h"
 #include "Editor.h"
-
-// anti troll scheme to avoid multiple connections in ninjam servers
-bool JamtabaPlugin::instanceIsInitialized = false;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 AudioEffect *createEffectInstance(audioMasterCallback audioMaster)
 {
-    if (!JamtabaPlugin::pluginIsInitialized())// avoid multiple instances inside a DAW.
-        return new JamtabaPlugin(audioMaster);
+    if (!JamTabaPlugin::pluginIsInitialized())// avoid multiple instances inside a DAW.
+        return new JamTabaVSTPlugin(audioMaster);
     return nullptr;
 }
 
-bool JamtabaPlugin::pluginIsInitialized()
-{
-    return JamtabaPlugin::instanceIsInitialized;
-}
-
-JamtabaPlugin::JamtabaPlugin (audioMasterCallback audioMaster) :
+JamTabaVSTPlugin::JamTabaVSTPlugin(audioMasterCallback audioMaster) :
+    JamTabaPlugin(DEFAULT_INPUTS * 2, DEFAULT_OUTPUTS * 2),
     AudioEffectX(audioMaster, 0, 0),
     listEvnts(0),
-    controller(nullptr),
-    running(false),
-    inputBuffer(DEFAULT_INPUTS*2),
-    outputBuffer(DEFAULT_OUTPUTS*2),
-    timeInfo(nullptr),
-    hostWasPlayingInLastAudioCallBack(false)
+    timeInfo(nullptr)
 {
     qCDebug(jtVstPlugin) << "Plugin constructor...";
     setNumInputs(DEFAULT_INPUTS*2);
@@ -52,7 +34,7 @@ JamtabaPlugin::JamtabaPlugin (audioMasterCallback audioMaster) :
     qCDebug(jtVstPlugin) << "Plugin constructor done.";
 }
 
-QString JamtabaPlugin::getHostName()
+QString JamTabaVSTPlugin::getHostName()
 {
     char tempChars[kVstMaxProductStrLen];
     getHostProductString(tempChars);
@@ -73,67 +55,42 @@ QString JamtabaPlugin::getHostName()
     return QString::fromUtf8(tempChars);// preserve original case
 }
 
-bool JamtabaPlugin::hostIsPlaying() const
+bool JamTabaVSTPlugin::hostIsPlaying() const
 {
     if (timeInfo)
         return (timeInfo->flags & kVstTransportPlaying) != 0;
     return false;
 }
 
-int JamtabaPlugin::getHostBpm() const
+int JamTabaVSTPlugin::getHostBpm() const
 {
     if (timeInfo)
         return (int)timeInfo->tempo;
     return 0;
 }
 
-VstInt32 JamtabaPlugin::fxIdle()
+VstInt32 JamTabaVSTPlugin::fxIdle()
 {
     QApplication::processEvents();
     return 0;
 }
 
-bool JamtabaPlugin::needIdle()
+bool JamTabaVSTPlugin::needIdle()
 {
     return true;
 }
 
-JamtabaPlugin::~JamtabaPlugin ()
+JamTabaVSTPlugin::~JamTabaVSTPlugin ()
 {
-    qCDebug(jtVstPlugin) << "Plugin destructor";
+    qCDebug(jtVstPlugin) << "VST Plugin destructor";
 }
 
-void JamtabaPlugin::initialize()
-{
-    if (!isRunning()) {
-        if (!controller) {
-            qCDebug(jtVstPlugin) << "Plugin initialize()...";
-            QApplication::setApplicationName("Jamtaba 2");
-            QApplication::setApplicationVersion(APP_VERSION);
-
-            Persistence::Settings settings;// read from file in constructor
-            settings.load();
-            qCDebug(jtVstPlugin)<< "Creating controller!";
-            controller.reset(new MainControllerVST(settings, this));
-            controller->setSampleRate(getSampleRate());
-            controller->start();
-            controller->connectInJamtabaServer();
-
-            qCDebug(jtVstPlugin)<< "Controller started!";
-            running = true;
-            qCDebug(jtVstPlugin) << "Plugin initialize() done";
-
-            JamtabaPlugin::instanceIsInitialized = true; // the anti troll flag :)
-        }
-    }
-}
-
-void JamtabaPlugin::open()
+void JamTabaVSTPlugin::open()
 {
     qCDebug(jtVstPlugin) << "Plugin open()";
 }
 
-void JamtabaPlugin::close()
+void JamTabaVSTPlugin::close()
 {
     qCDebug(jtVstPlugin) << "JamtabaPlugin::close()";
     if (editor) {
@@ -142,23 +99,20 @@ void JamtabaPlugin::close()
         dynamic_cast<VstEditor *>(editor)->deleteMainWindow();
     }
 
-    running = false;
-    qCDebug(jtVstPlugin) << "JamtabaPLugin::close() finished";
-
-    JamtabaPlugin::instanceIsInitialized = false; // the anti troll flag :)
+    JamTabaPlugin::close(); // super class
 }
 
-VstInt32 JamtabaPlugin::getNumMidiInputChannels()
+VstInt32 JamTabaVSTPlugin::getNumMidiInputChannels()
 {
     return 0;
 }
 
-VstInt32 JamtabaPlugin::getNumMidiOutputChannels()
+VstInt32 JamTabaVSTPlugin::getNumMidiOutputChannels()
 {
     return 0;
 }
 
-bool JamtabaPlugin::getEffectName(char *name)
+bool JamTabaVSTPlugin::getEffectName(char *name)
 {
     if (!name)
         return false;
@@ -166,7 +120,7 @@ bool JamtabaPlugin::getEffectName(char *name)
     return true;
 }
 
-bool JamtabaPlugin::getProductString(char *text)
+bool JamTabaVSTPlugin::getProductString(char *text) const
 {
     if (!text)
         return false;
@@ -174,7 +128,7 @@ bool JamtabaPlugin::getProductString(char *text)
     return true;
 }
 
-bool JamtabaPlugin::getVendorString(char *text)
+bool JamTabaVSTPlugin::getVendorString(char *text) const
 {
     if (!text)
         return false;
@@ -182,12 +136,12 @@ bool JamtabaPlugin::getVendorString(char *text)
     return true;
 }
 
-VstInt32 JamtabaPlugin::getVendorVersion()
+VstInt32 JamTabaVSTPlugin::getVendorVersion()
 {
     return 2;
 }
 
-VstInt32 JamtabaPlugin::canDo(char *text)
+VstInt32 JamTabaVSTPlugin::canDo(char *text)
 {
     if (!text)
         return 0;
@@ -196,7 +150,7 @@ VstInt32 JamtabaPlugin::canDo(char *text)
     return 0;
 }
 
-qint32 JamtabaPlugin::getStartPositionForHostSync() const
+qint32 JamTabaVSTPlugin::getStartPositionForHostSync() const
 {
     qint32 startPosition = 0;
     double samplesPerBeat = (60.0 * timeInfo->sampleRate)/timeInfo->tempo;
@@ -214,7 +168,7 @@ qint32 JamtabaPlugin::getStartPositionForHostSync() const
     return startPosition;
 }
 
-void JamtabaPlugin::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
+void JamTabaVSTPlugin::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames)
 {
     if (!controller)
         return;
@@ -226,7 +180,7 @@ void JamtabaPlugin::processReplacing(float **inputs, float **outputs, VstInt32 s
 
         timeInfo = getTimeInfo(kVstTransportPlaying | kVstTransportChanged | kVstTempoValid);
         if (transportStartDetectedInHost()) {// user pressing play/start in host?
-            NinjamControllerVST *ninjamController = controller->getNinjamController();
+            NinjamControllerPlugin *ninjamController = controller->getNinjamController();
             Q_ASSERT(ninjamController);
             if (ninjamController->isWaitingForHostSync())
                 ninjamController->startSynchronizedWithHost(getStartPositionForHostSync());
@@ -251,20 +205,28 @@ void JamtabaPlugin::processReplacing(float **inputs, float **outputs, VstInt32 s
     hostWasPlayingInLastAudioCallBack = hostIsPlaying();
 }
 
-void JamtabaPlugin::setSampleRate(float sampleRate)
+MainControllerPlugin *JamTabaVSTPlugin::createControllerPlugin(const Persistence::Settings &settings, JamTabaPlugin *plugin) const
 {
-    qCDebug(jtVstPlugin) << "JamtabaPlugin::setSampleRate()";
-    this->sampleRate = sampleRate;
-    if (controller)
-        controller->setSampleRate(sampleRate);
+    return new MainControllerVST(settings, dynamic_cast<JamTabaVSTPlugin*>(plugin));
 }
 
-void JamtabaPlugin::suspend()
+float JamTabaVSTPlugin::getSampleRate() const
+{
+    return this->sampleRate;
+}
+
+void JamTabaVSTPlugin::setSampleRate(float sampleRate)
+{
+    JamTabaPlugin::setSampleRate(sampleRate);
+    this->sampleRate = sampleRate;
+}
+
+void JamTabaVSTPlugin::suspend()
 {
     qCDebug(jtVstPlugin) << "JamtabaPLugin::suspend()";
 }
 
-void JamtabaPlugin::resume()
+void JamTabaVSTPlugin::resume()
 {
     qCDebug(jtVstPlugin) << "JamtabaPLugin::resume()";
 }

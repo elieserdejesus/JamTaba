@@ -1,11 +1,11 @@
-#include "MainWindowVST.h"
-#include "NinjamRoomWindowVST.h"
-#include "MainControllerVST.h"
-#include "VstPreferencesDialog.h"
+#include "MainWindowPlugin.h"
+#include "NinjamRoomWindowPlugin.h"
+#include "MainControllerPlugin.h"
+#include "PreferencesDialogPlugin.h"
 #include "LocalTrackView.h"
 #include "audio/core/LocalInputNode.h"
 
-MainWindowVST::MainWindowVST(MainControllerVST *mainController) :
+MainWindowVST::MainWindowVST(MainControllerPlugin *mainController) :
     MainWindow(mainController),
     firstChannelIsInitialized(false)
 {
@@ -16,10 +16,10 @@ MainWindowVST::MainWindowVST(MainControllerVST *mainController) :
     this->ui.actionFullscreenMode->setVisible(false);
 }
 
-NinjamRoomWindowVST *MainWindowVST::createNinjamWindow(const Login::RoomInfo &roomInfo,
+NinjamRoomWindow *MainWindowVST::createNinjamWindow(const Login::RoomInfo &roomInfo,
                                                     Controller::MainController *mainController)
 {
-    return new NinjamRoomWindowVST(this, roomInfo, dynamic_cast<MainControllerVST *>(mainController));
+    return new NinjamRoomWindowPlugin(this, roomInfo, dynamic_cast<MainControllerPlugin*>(mainController));
 }
 
 void MainWindowVST::removeAllInputLocalTracks(){
@@ -48,7 +48,7 @@ void MainWindowVST::initializeLocalSubChannel(LocalTrackView *subChannelView, co
 void MainWindowVST::setFullViewStatus(bool fullViewActivated)
 {
     MainWindow::setFullViewStatus(fullViewActivated);
-    MainControllerVST *controller = getMainController();
+    MainControllerPlugin *controller = getMainController();
     controller->storeWindowSettings(isMaximized(), fullViewActivated, QPointF());
     controller->resizePluginEditor(width(), height());
 }
@@ -56,7 +56,7 @@ void MainWindowVST::setFullViewStatus(bool fullViewActivated)
 
 PreferencesDialog *MainWindowVST::createPreferencesDialog()
 {
-    PreferencesDialog * dialog = new VstPreferencesDialog(this);
+    PreferencesDialog * dialog = new PreferencesDialogPlugin(this);
     setupPreferencesDialogSignals(dialog);
     return dialog;
 }

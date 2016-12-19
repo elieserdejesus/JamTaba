@@ -3,12 +3,12 @@
 
 #include "NinjamController.h"
 
-class MainControllerVST;
+class MainControllerPlugin;
 
-class NinjamControllerVST : public Controller::NinjamController
+class NinjamControllerPlugin : public Controller::NinjamController
 {
 public:
-    explicit NinjamControllerVST(MainControllerVST *controller);
+    explicit NinjamControllerPlugin(MainControllerPlugin *controller);
 
     inline bool isWaitingForHostSync() const
     {

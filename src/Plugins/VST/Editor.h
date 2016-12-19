@@ -8,18 +8,18 @@
 
 #include <QWinWidget>
 
-class JamtabaPlugin;
+class JamTabaVSTPlugin;
 class MainWindow;
 
 class VstEditor : public AEffEditor
 {
     QWinWidget *widget;
-    JamtabaPlugin *jamtaba;
+    JamTabaVSTPlugin *jamtaba;
     ERect rectangle;
     MainWindow *mainWindow;
 
 public:
-    VstEditor(JamtabaPlugin *jamtaba);
+    VstEditor(JamTabaVSTPlugin *jamtaba);
     ~VstEditor();
     bool getRect(ERect **rect);
     void resize(int width, int height);

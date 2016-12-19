@@ -1,13 +1,13 @@
-#include "NinjamControllerVST.h"
-#include "MainControllerVST.h"
+#include "NinjamControllerPlugin.h"
+#include "MainControllerPlugin.h"
 
-NinjamControllerVST::NinjamControllerVST(MainControllerVST *controller) :
+NinjamControllerPlugin::NinjamControllerPlugin(MainControllerPlugin *controller) :
     NinjamController(controller),
     waitingForHostSync(false)
 {
 }
 
-void NinjamControllerVST::stopAndWaitForHostSync()
+void NinjamControllerPlugin::stopAndWaitForHostSync()
 {
     if (!waitingForHostSync) {
         waitingForHostSync = true;
@@ -15,12 +15,12 @@ void NinjamControllerVST::stopAndWaitForHostSync()
     }
 }
 
-void NinjamControllerVST::disableHostSync()
+void NinjamControllerPlugin::disableHostSync()
 {
     waitingForHostSync = false;
 }
 
-void NinjamControllerVST::startSynchronizedWithHost(qint32 startPosition)
+void NinjamControllerPlugin::startSynchronizedWithHost(qint32 startPosition)
 {
     if (waitingForHostSync){
         waitingForHostSync = false;
@@ -31,7 +31,7 @@ void NinjamControllerVST::startSynchronizedWithHost(qint32 startPosition)
     }
 }
 
-void NinjamControllerVST::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
+void NinjamControllerPlugin::process(const Audio::SamplesBuffer &in, Audio::SamplesBuffer &out,
                                   int sampleRate)
 {
     if (waitingForHostSync)// skip the ninjam processing if is waiting for host sync

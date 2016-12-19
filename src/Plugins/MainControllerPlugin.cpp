@@ -1,45 +1,35 @@
-#include "MainControllerVST.h"
-#include "NinjamControllerVST.h"
+#include "MainControllerPlugin.h"
+//#include "NinjamControllerVST.h"
 #include "midi/MidiDriver.h"
 #include "audio/core/LocalInputNode.h"
 #include "MainWindow.h"
-#include "Plugin.h"
+#include "JamTabaPlugin.h"
 #include "log/Logging.h"
 #include "Editor.h"
 
 using namespace Controller;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-MainControllerVST::MainControllerVST(const Persistence::Settings &settings, JamtabaPlugin *plugin) :
+MainControllerPlugin::MainControllerPlugin(const Persistence::Settings &settings, JamTabaPlugin *plugin) :
     MainController(settings),
     plugin(plugin)
 {
     qCDebug(jtCore) << "Creating MainControllerVST instance!";
 }
 
-MainControllerVST::~MainControllerVST()
+MainControllerPlugin::~MainControllerPlugin()
 {
     if (mainWindow)
         saveLastUserSettings(mainWindow->getInputsSettings());
 }
 
-Persistence::Preset MainControllerVST::loadPreset(const QString &name)
+Persistence::Preset MainControllerPlugin::loadPreset(const QString &name)
 {
     return settings.readPresetFromFile(name, false);//don't allow multi subchannels in vst plugin and avoid hacking in json file to create subchannels in VSt plugin.
 }
 
-void MainControllerVST::resizePluginEditor(int newWidth, int newHeight)
-{
-    if (plugin) {
-        VstEditor *editor = (VstEditor *)plugin->getEditor();
-        if (editor)
-            editor->resize(newWidth, newHeight);
-        plugin->sizeWindow(newWidth, newHeight);
-    }
-}
-
 // +++++++++++++++++++++++++++++++++++++
-int MainControllerVST::addInputTrackNode(Audio::LocalInputNode *inputTrackNode)
+int MainControllerPlugin::addInputTrackNode(Audio::LocalInputNode *inputTrackNode)
 {
     int inputTrackID = MainController::addInputTrackNode(inputTrackNode);
 
@@ -49,49 +39,51 @@ int MainControllerVST::addInputTrackNode(Audio::LocalInputNode *inputTrackNode)
     return inputTrackID;
 }
 
-// ++++++++++++++++++++++++++++++++++
-QString MainController::getJamtabaFlavor() const
-{
-    return "Vst Plugin";
-}
-
-QString MainControllerVST::getUserEnvironmentString() const
+QString MainControllerPlugin::getUserEnvironmentString() const
 {
     return MainController::getUserEnvironmentString() + " running in " + getHostName();
 }
 
 // +++++++++++++++++++++++++++++++++++++
-QString MainControllerVST::getHostName() const
+QString MainControllerPlugin::getHostName() const
 {
     if (plugin)
         return plugin->getHostName();
     return "(Error getting host name)";
 }
 
-int MainControllerVST::getHostBpm() const
+int MainControllerPlugin::getHostBpm() const
 {
     if (plugin)
         return plugin->getHostBpm();
     return -1;
 }
 
-void MainControllerVST::setSampleRate(int newSampleRate)
+void MainControllerPlugin::setSampleRate(int newSampleRate)
 {
-    this->sampleRate = newSampleRate;
+    //this->sampleRate = newSampleRate;
     MainController::setSampleRate(newSampleRate);
 }
 
-Controller::NinjamController *MainControllerVST::createNinjamController()
+float MainControllerPlugin::getSampleRate() const
 {
-    return new NinjamControllerVST(this);
+    if (plugin)
+        return plugin->getSampleRate();
+
+    return 0;
 }
 
-Midi::MidiDriver *MainControllerVST::createMidiDriver()
+NinjamControllerPlugin *MainControllerPlugin::createNinjamController()
+{
+    return new NinjamControllerPlugin(const_cast<MainControllerPlugin*>(this));
+}
+
+Midi::MidiDriver *MainControllerPlugin::createMidiDriver()
 {
     return new Midi::NullMidiDriver();
 }
 
-void MainControllerVST::setCSS(const QString &css)
+void MainControllerPlugin::setCSS(const QString &css)
 {
     qCDebug(jtCore) << "setting CSS";
     qApp->setStyleSheet(css);// qApp is a global variable created in dll main.

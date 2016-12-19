@@ -2,23 +2,24 @@
 #define MAINWINDOWVST_H
 
 #include "gui/MainWindow.h"
-#include "NinjamRoomWindowVST.h"
-#include "MainControllerVST.h"
+#include "NinjamRoomWindowPlugin.h"
+#include "MainControllerPlugin.h"
 
-class NinjamRoomWindow;
+class NinjamRoomWindowPlugin;
 
 class MainWindowVST : public MainWindow
 {
 public:
-    MainWindowVST(MainControllerVST *mainController);
+    MainWindowVST(MainControllerPlugin *mainController);
 
-    inline MainControllerVST *getMainController() override
+    inline MainControllerPlugin *getMainController() override
     {
-        return dynamic_cast<MainControllerVST *>(mainController);
+        return dynamic_cast<MainControllerPlugin *>(mainController);
     }
 
 protected:
-    NinjamRoomWindowVST *createNinjamWindow(const Login::RoomInfo &, Controller::MainController *) override;
+    NinjamRoomWindow *createNinjamWindow(const Login::RoomInfo &, Controller::MainController *) override;
+
     void setFullViewStatus(bool fullViewActivated);
 
     void initializeLocalSubChannel(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel) override;

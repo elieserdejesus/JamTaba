@@ -3,20 +3,20 @@
 
 #include "gui/NinjamRoomWindow.h"
 
-class MainControllerVST;
+class MainControllerPlugin;
 
-class NinjamRoomWindowVST : public NinjamRoomWindow
+class NinjamRoomWindowPlugin : public NinjamRoomWindow
 {
     Q_OBJECT
 public:
-    NinjamRoomWindowVST(MainWindow *parent, const Login::RoomInfo &roomInfo, MainControllerVST *mainController);
+    NinjamRoomWindowPlugin(MainWindow *parent, const Login::RoomInfo &roomInfo, MainControllerPlugin *mainController);
 
 private slots:
     void setHostSyncState(bool syncWithHost);
     void disableHostSync();
 private:
     void showMessageBox(const QString &title, const QString &msg);
-    MainControllerVST *controller;
+    MainControllerPlugin *controller;
 };
 
 #endif // NINJAMROOMWINDOWVST_H

@@ -1,14 +1,14 @@
-#include "NinjamRoomWindowVST.h"
+#include "NinjamRoomWindowPlugin.h"
 #include "ui_NinjamRoomWindow.h"
-#include "MainControllerVST.h"
-#include "NinjamControllerVST.h"
+#include "MainControllerPlugin.h"
+#include "NinjamControllerPlugin.h"
 #include <QToolTip>
 
 using namespace Controller;
 
 // +++++++++++++++++++++++++++++++++++++++++++++
-NinjamRoomWindowVST::NinjamRoomWindowVST(MainWindow *parent, const Login::RoomInfo &roomInfo,
-                                         MainControllerVST *mainController) :
+NinjamRoomWindowPlugin::NinjamRoomWindowPlugin(MainWindow *parent, const Login::RoomInfo &roomInfo,
+                                         MainControllerPlugin *mainController) :
     NinjamRoomWindow(parent, roomInfo, mainController),
     controller(mainController)
 {
@@ -17,14 +17,14 @@ NinjamRoomWindowVST::NinjamRoomWindowVST(MainWindow *parent, const Login::RoomIn
         //: The '%1' marker will be replaced by the host name when Jamtaba is running.
         QString text = tr("Sync with %1").arg(hostName);
         ninjamPanel->createHostSyncButton(text);
-        connect(ninjamPanel, &NinjamPanel::hostSyncStateChanged, this, &NinjamRoomWindowVST::setHostSyncState);
+        connect(ninjamPanel, &NinjamPanel::hostSyncStateChanged, this, &NinjamRoomWindowPlugin::setHostSyncState);
     }
 
     // if server bpm change the 'sync with host' is disabled
-    connect(controller->getNinjamController(), &NinjamController::currentBpmChanged, this, &NinjamRoomWindowVST::disableHostSync);
+    connect(controller->getNinjamController(), &NinjamController::currentBpmChanged, this, &NinjamRoomWindowPlugin::disableHostSync);
 }
 
-void NinjamRoomWindowVST::disableHostSync()
+void NinjamRoomWindowPlugin::disableHostSync()
 {
     if (ninjamPanel->hostSyncButtonIsChecked()) {
         setHostSyncState(false);
@@ -42,10 +42,10 @@ void NinjamRoomWindowVST::disableHostSync()
 }
 
 // activate/deactivate sync with host
-void NinjamRoomWindowVST::setHostSyncState(bool syncWithHost)
+void NinjamRoomWindowPlugin::setHostSyncState(bool syncWithHost)
 {
     Q_ASSERT(ninjamPanel);
-    NinjamControllerVST *ninjamController = controller->getNinjamController();
+    NinjamControllerPlugin *ninjamController = controller->getNinjamController();
     if (syncWithHost) {
         int ninjamBpm = ninjamController->getCurrentBpm();
         int hostBpm = controller->getHostBpm();
@@ -67,7 +67,7 @@ void NinjamRoomWindowVST::setHostSyncState(bool syncWithHost)
     }
 }
 
-void NinjamRoomWindowVST::showMessageBox(const QString &title, const QString &msg)
+void NinjamRoomWindowPlugin::showMessageBox(const QString &title, const QString &msg)
 {
     QMessageBox *msgBox = new QMessageBox(this);
     msgBox->setWindowTitle(title);

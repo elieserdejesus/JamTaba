@@ -1,46 +1,38 @@
-#ifndef MAINCONTROLLERVST_H
-#define MAINCONTROLLERVST_H
+#ifndef MAINCONTROLLERPLUGIN_H
+#define MAINCONTROLLERPLUGIN_H
 
 #include "MainController.h"
 #include "NinjamController.h"
 #include "audio/core/PluginDescriptor.h"
-#include "NinjamControllerVST.h"
+#include "NinjamControllerPlugin.h"
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-class JamtabaPlugin;
+class JamTabaPlugin;
 
-class MainControllerVST : public Controller::MainController
+class MainControllerPlugin : public Controller::MainController
 {
 public:
-    MainControllerVST(const Persistence::Settings &settings, JamtabaPlugin *plugin);
-    ~MainControllerVST();
-
-    inline QString getJamtabaFlavor() const override
-    {
-        return "Vst Plugin";
-    }
+    MainControllerPlugin(const Persistence::Settings &settings, JamTabaPlugin *plugin);
+    virtual ~MainControllerPlugin();
 
     QString getUserEnvironmentString() const;
 
     Audio::AudioDriver *createAudioDriver(const Persistence::Settings &settings);
 
-    Controller::NinjamController *createNinjamController() override;
+    NinjamControllerPlugin *createNinjamController() override;
 
-    inline NinjamControllerVST *getNinjamController() const override
+    inline NinjamControllerPlugin *getNinjamController() const override
     {
-        return dynamic_cast<NinjamControllerVST *>(ninjamController.data());
+        return dynamic_cast<NinjamControllerPlugin *>(ninjamController.data());
     }
 
     void setCSS(const QString &css) override;
 
     int addInputTrackNode(Audio::LocalInputNode *inputTrackNode) override;
 
-    void setSampleRate(int newSampleRate);
+    void setSampleRate(int newSampleRate) override;
 
-    inline int getSampleRate() const override
-    {
-        return sampleRate;
-    }
+    float getSampleRate() const override;
 
     Midi::MidiDriver *createMidiDriver();
 
@@ -52,7 +44,7 @@ public:
 
     QString getHostName() const;
 
-    void resizePluginEditor(int newWidth, int newHeight);
+    virtual void resizePluginEditor(int newWidth, int newHeight) = 0;
 
     Persistence::Preset loadPreset(const QString &name) override;
 
@@ -68,9 +60,9 @@ protected:
         static Midi::MidiMessageBuffer emptyBuffer(0);
         return emptyBuffer;
     }
-private:
-    int sampleRate;
-    JamtabaPlugin *plugin;
+
+    JamTabaPlugin *plugin;
+
 };
 
-#endif // MAINCONTROLLERVST_H
+#endif // MAINCONTROLLERPLUGIN_H

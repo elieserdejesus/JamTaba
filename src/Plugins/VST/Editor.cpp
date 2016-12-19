@@ -1,13 +1,13 @@
 #include "Editor.h"
 
-#include "Plugin.h"
-#include "MainWindowVST.h"
+#include "JamTabaVSTPlugin.h"
+#include "MainWindowPlugin.h"
 #include "log/Logging.h"
 #include "KeyboardHook.h"
 #include <QTimer>
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++
-VstEditor::VstEditor(JamtabaPlugin *jamtaba) :
+VstEditor::VstEditor(JamTabaVSTPlugin *jamtaba) :
     widget(NULL),
     jamtaba(jamtaba),
     mainWindow(nullptr)
@@ -74,8 +74,9 @@ bool VstEditor::open(void *ptr)
 
     if (!mainWindow) {
         qCDebug(jtVstPlugin) << "Creating MainWindow...";
-        mainWindow = new MainWindowVST(jamtaba->getController());
-        jamtaba->getController()->setMainWindow(mainWindow);
+        MainControllerVST *controller = dynamic_cast<MainControllerVST*>(jamtaba->getController());
+        mainWindow = new MainWindowVST(controller);
+        controller->setMainWindow(mainWindow);
         mainWindow->initialize();
         rectangle.left = 0;
         rectangle.top = 0;
