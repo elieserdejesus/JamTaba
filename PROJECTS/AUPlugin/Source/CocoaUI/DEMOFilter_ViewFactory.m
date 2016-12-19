@@ -1,11 +1,3 @@
-/*
-     File: DEMOFilter_ViewFactory.m
- Abstract: DEMOFilter_ViewFactory.h
-  Version: 1.0
- 
-*/
-
-
 #import "DEMOFilter_ViewFactory.h"
 #import "DEMOFilter_UIView.h"
 
@@ -18,25 +10,32 @@
 
 // string description of the Cocoa UI
 - (NSString *) description {
-	return @"DEMO: Filter";
+	return @"JTBA: JamTaba";
 }
 
-// N.B.: this class is simply a view-factory,
-// returning a new autoreleased view each time it's called.
+// N.B.: this class is simply a view-factory,  returning a new autoreleased view each time it's called.
 - (NSView *)uiViewForAudioUnit:(AudioUnit)inAU withSize:(NSSize)inPreferredSize {
-    if (![[NSBundle bundleForClass:[self class]] loadNibNamed:@"CocoaView" owner:self topLevelObjects:nil]) {
-        NSLog (@"Unable to load nib for view.");
-		return nil;
-	}
+    //if (![[NSBundle bundleForClass:[self class]] loadNibNamed:@"CocoaView" owner:self topLevelObjects:nil]) {
+        //NSLog (@"Unable to load nib for view.");
+	//	return nil;
+	//}
     
-    // This particular nib has a fixed size, so we don't do anything with the inPreferredSize argument.
-    // It's up to the host application to handle.
+    
+    uiFreshlyLoadedView = [[DEMOFilter_UIView alloc] init];
+    NSRect newFrame = uiFreshlyLoadedView.frame;
+    newFrame.size.width = 800;
+    newFrame.size.height = 600;
+    uiFreshlyLoadedView.frame = newFrame;
+    
+    NSLog (@"Loading Cocoa view preferresSize: %f x %f", inPreferredSize.width, inPreferredSize.height);
     [uiFreshlyLoadedView setAU:inAU];
     
     NSView *returnView = uiFreshlyLoadedView;
     uiFreshlyLoadedView = nil;	// zero out pointer.  This is a view factory.  Once a view's been created
                                 // and handed off, the factory keeps no record of it.
     
+    
+    NSLog (@"Returning view %@", returnView);
     return returnView;
 }
 

@@ -1,10 +1,3 @@
-/*
-     File: DEMOFilter_ViewFactory.h
- Abstract: DEMOFilter_ViewFactory.h
-  Version: 1.0
- 
-*/
-
 #import <Cocoa/Cocoa.h>
 #import <AudioUnit/AUCocoaUIView.h>
 
@@ -21,7 +14,7 @@
 
 @interface DEMOFilter_ViewFactory : NSObject <AUCocoaUIBase>
 {
-    IBOutlet DEMOFilter_UIView *uiFreshlyLoadedView;	// This class is the File's Owner of the CocoaView nib
+    IBOutlet DEMOFilter_UIView *uiFreshlyLoadedView;
 }															// This data member needs to be the same class as the view class the factory will return
 
 - (NSString *) description;	// string description of the view

@@ -30,7 +30,7 @@
 	<key>CFBundleIconFile</key>
 	<string>../Jamtaba.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.jamtaba</string>
+	<string>com.jamtaba.audiounit.JamTaba</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

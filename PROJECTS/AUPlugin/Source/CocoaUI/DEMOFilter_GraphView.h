@@ -1,12 +1,5 @@
-/*
-     File: DEMOFilter_GraphView.h
- Abstract: DEMOFilter_GraphView.h
-  Version: 1.0
- 
-*/
-
 #import <Cocoa/Cocoa.h>
-#import "JamTaba.h"
+
 
 /************************************************************************************************************/
 /* NOTE: It is important to rename ALL ui classes when using the XCode Audio Unit with Cocoa View template	*/

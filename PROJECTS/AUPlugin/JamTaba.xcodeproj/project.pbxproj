@@ -9,11 +9,7 @@
 /* Begin PBXBuildFile section */
 		2A3D0AA31E06D4FE00789D68 /* JamTaba.component in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D01CCD20486CAD60068D4B7 /* JamTaba.component */; };
 		2A74D2261E072B9400BBF922 /* JamTaba.exp in Sources */ = {isa = PBXBuildFile; fileRef = 8BA05A670720730100365D66 /* JamTaba.exp */; };
-		4C56E7E8080482C100DE6468 /* DEMOFilter_GraphView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C56E7E6080482C100DE6468 /* DEMOFilter_GraphView.h */; };
-		4C56E7E9080482C100DE6468 /* DEMOFilter_GraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C56E7E7080482C100DE6468 /* DEMOFilter_GraphView.m */; };
-		4C56E93B0804AE2C00DE6468 /* JamTaba.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C56E93A0804AE2C00DE6468 /* JamTaba.h */; };
-		4C56E93C0804AE2C00DE6468 /* JamTaba.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C56E93A0804AE2C00DE6468 /* JamTaba.h */; };
-		4C69E18E083402BA00030563 /* CocoaView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4C69E18D083402BA00030563 /* CocoaView.nib */; };
+		2AB5C82E1E076776007BD342 /* CocoaJamTabaView.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */; };
 		6211E2B31891AA2900751AA3 /* ComponentBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6211E2B11891AA2900751AA3 /* ComponentBase.cpp */; };
 		6211E2B41891AA2900751AA3 /* ComponentBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 6211E2B21891AA2900751AA3 /* ComponentBase.h */; };
 		621713DE1891A149005D69C7 /* AUBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713AA1891A149005D69C7 /* AUBase.cpp */; };
@@ -81,7 +77,6 @@
 		8BA4AE5D073EB7C300A2709A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA4AE5B073EB79000A2709A /* Cocoa.framework */; };
 		8BA4AE5E073EB7C500A2709A /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AFA072074E100365D66 /* AudioUnit.framework */; };
 		8BA4AE5F073EB7C600A2709A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AF9072074E100365D66 /* AudioToolbox.framework */; };
-		8BA4AE66073EBB2E00A2709A /* CocoaJamTabaView.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */; };
 		8D01CCC80486CAD60068D4B7 /* JamTaba_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32BAE0B30371A71500C91783 /* JamTaba_Prefix.pch */; };
 /* End PBXBuildFile section */
 
@@ -106,13 +101,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8BA4AE65073EBB1B00A2709A /* CopyFiles */ = {
+		2AB5C82D1E07676E007BD342 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
-				8BA4AE66073EBB2E00A2709A /* CocoaJamTabaView.bundle in CopyFiles */,
+				2AB5C82E1E076776007BD342 /* CocoaJamTabaView.bundle in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,9 +116,6 @@
 /* Begin PBXFileReference section */
 		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		32BAE0B30371A71500C91783 /* JamTaba_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JamTaba_Prefix.pch; sourceTree = "<group>"; };
-		4C56E7E6080482C100DE6468 /* DEMOFilter_GraphView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DEMOFilter_GraphView.h; path = Source/CocoaUI/DEMOFilter_GraphView.h; sourceTree = "<group>"; };
-		4C56E7E7080482C100DE6468 /* DEMOFilter_GraphView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DEMOFilter_GraphView.m; path = Source/CocoaUI/DEMOFilter_GraphView.m; sourceTree = "<group>"; };
-		4C56E93A0804AE2C00DE6468 /* JamTaba.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JamTaba.h; path = Source/AUSource/JamTaba.h; sourceTree = "<group>"; };
 		6211E2B11891AA2900751AA3 /* ComponentBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComponentBase.cpp; path = Source/AUPublic/AUBase/ComponentBase.cpp; sourceTree = SOURCE_ROOT; };
 		6211E2B21891AA2900751AA3 /* ComponentBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComponentBase.h; path = Source/AUPublic/AUBase/ComponentBase.h; sourceTree = SOURCE_ROOT; };
 		621713AA1891A149005D69C7 /* AUBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUBase.cpp; path = Source/AUPublic/AUBase/AUBase.cpp; sourceTree = SOURCE_ROOT; };
@@ -191,7 +183,6 @@
 		8BA4ADCF073EB19800A2709A /* DEMOFilter_ViewFactory.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DEMOFilter_ViewFactory.m; path = Source/CocoaUI/DEMOFilter_ViewFactory.m; sourceTree = "<group>"; };
 		8BA4ADD0073EB19800A2709A /* DEMOFilter_UIView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DEMOFilter_UIView.h; path = Source/CocoaUI/DEMOFilter_UIView.h; sourceTree = "<group>"; };
 		8BA4ADD1073EB19800A2709A /* DEMOFilter_UIView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DEMOFilter_UIView.m; path = Source/CocoaUI/DEMOFilter_UIView.m; sourceTree = "<group>"; };
-		8BA4ADF4073EB43200A2709A /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/CocoaView.nib; sourceTree = "<group>"; };
 		8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CocoaJamTabaView.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BA4AE4F073EB69000A2709A /* CocoaJamTabaView.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CocoaJamTabaView.plist; sourceTree = "<group>"; };
 		8BA4AE5B073EB79000A2709A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -251,7 +242,6 @@
 			isa = PBXGroup;
 			children = (
 				62B3B89C18918C4F00E507B7 /* PkgInfo */,
-				4C69E18D083402BA00030563 /* CocoaView.nib */,
 				8BA4AE4F073EB69000A2709A /* CocoaJamTabaView.plist */,
 				8D01CCD10486CAD60068D4B7 /* Info.plist */,
 				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
@@ -381,7 +371,6 @@
 			isa = PBXGroup;
 			children = (
 				62B3B89E1891936500E507B7 /* JamTaba.r */,
-				4C56E93A0804AE2C00DE6468 /* JamTaba.h */,
 				8BA05A660720730100365D66 /* JamTaba.cpp */,
 				8BA05A670720730100365D66 /* JamTaba.exp */,
 				8BA05A690720730100365D66 /* JamTabaVersion.h */,
@@ -396,8 +385,6 @@
 				8BA4ADCF073EB19800A2709A /* DEMOFilter_ViewFactory.m */,
 				8BA4ADD0073EB19800A2709A /* DEMOFilter_UIView.h */,
 				8BA4ADD1073EB19800A2709A /* DEMOFilter_UIView.m */,
-				4C56E7E6080482C100DE6468 /* DEMOFilter_GraphView.h */,
-				4C56E7E7080482C100DE6468 /* DEMOFilter_GraphView.m */,
 			);
 			name = CocoaUI;
 			sourceTree = SOURCE_ROOT;
@@ -411,8 +398,6 @@
 			files = (
 				8BA4AE54073EB72300A2709A /* DEMOFilter_ViewFactory.h in Headers */,
 				8BA4AE55073EB72300A2709A /* DEMOFilter_UIView.h in Headers */,
-				4C56E7E8080482C100DE6468 /* DEMOFilter_GraphView.h in Headers */,
-				4C56E93C0804AE2C00DE6468 /* JamTaba.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -420,7 +405,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C56E93B0804AE2C00DE6468 /* JamTaba.h in Headers */,
 				8D01CCC80486CAD60068D4B7 /* JamTaba_Prefix.pch in Headers */,
 				8BA05A6E0720730100365D66 /* JamTabaVersion.h in Headers */,
 				621713DF1891A149005D69C7 /* AUBase.h in Headers */,
@@ -488,8 +472,8 @@
 				8D01CCCB0486CAD60068D4B7 /* Sources */,
 				8D01CCCD0486CAD60068D4B7 /* Frameworks */,
 				8D01CCCF0486CAD60068D4B7 /* Rez */,
-				8BA4AE65073EBB1B00A2709A /* CopyFiles */,
 				2A3D0AA21E06D4F800789D68 /* CopyFiles */,
+				2AB5C82D1E07676E007BD342 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -532,7 +516,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C69E18E083402BA00030563 /* CocoaView.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,7 +546,6 @@
 			files = (
 				8BA4AE56073EB73300A2709A /* DEMOFilter_ViewFactory.m in Sources */,
 				8BA4AE57073EB73300A2709A /* DEMOFilter_UIView.m in Sources */,
-				4C56E7E9080482C100DE6468 /* DEMOFilter_GraphView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -614,14 +596,6 @@
 				089C167EFE841241C02AAC07 /* English */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		4C69E18D083402BA00030563 /* CocoaView.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8BA4ADF4073EB43200A2709A /* English */,
-			);
-			name = CocoaView.nib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
