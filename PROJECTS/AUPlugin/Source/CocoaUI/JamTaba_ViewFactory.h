@@ -1,7 +1,5 @@
 #import <Cocoa/Cocoa.h>
-#import <AudioUnit/AudioUnit.h>
-#import <AudioToolbox/AudioToolbox.h>
-
+#import <AudioUnit/AUCocoaUIView.h>
 
 /************************************************************************************************************/
 /* NOTE: It is important to rename ALL ui classes when using the XCode Audio Unit with Cocoa View template	*/
@@ -12,13 +10,12 @@
 /*		 starting your class name with an undescore as these names are reserved for Apple.					*/
 /************************************************************************************************************/
 
-@interface DEMOFilter_UIView : NSView
-{	
-    // Other Members
-    AudioUnit 				mAU;
-}
+@class JamTaba_UIView;
 
-
-- (void)setAU:(AudioUnit)inAU;
+@interface JamTaba_ViewFactory : NSObject <AUCocoaUIBase>
+{
+    IBOutlet JamTaba_UIView *uiFreshlyLoadedView;
+}															
+- (NSString *) description;	// string description of the view
 
 @end

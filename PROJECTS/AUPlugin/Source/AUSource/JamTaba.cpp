@@ -125,7 +125,7 @@ OSStatus JamTaba::GetProperty (	AudioUnitPropertyID 		inID,
                 if (bundleURL == NULL)
                     return fnfErr;
                 
-				CFStringRef className = CFSTR("DEMOFilter_ViewFactory");// name of the main class
+				CFStringRef className = CFSTR("JamTaba_ViewFactory");// name of the main class
 				AudioUnitCocoaViewInfo cocoaInfo = { bundleURL, { className } };
 				*((AudioUnitCocoaViewInfo *)outData) = cocoaInfo;
 				

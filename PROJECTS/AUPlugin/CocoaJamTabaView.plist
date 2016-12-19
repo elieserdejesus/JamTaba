@@ -9,6 +9,6 @@
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>NSPrincipalClass</key>
-	<string>DEMOFilter_ViewFactory</string>
+	<string>JamTaba_ViewFactory</string>
 </dict>
 </plist>

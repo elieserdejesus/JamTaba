@@ -69,10 +69,10 @@
 		8BA05AFC072074E100365D66 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AF9072074E100365D66 /* AudioToolbox.framework */; };
 		8BA05AFD072074E100365D66 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AFA072074E100365D66 /* AudioUnit.framework */; };
 		8BA05B02072074F900365D66 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05B01072074F900365D66 /* CoreServices.framework */; };
-		8BA4AE54073EB72300A2709A /* DEMOFilter_ViewFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BA4ADCE073EB19800A2709A /* DEMOFilter_ViewFactory.h */; };
-		8BA4AE55073EB72300A2709A /* DEMOFilter_UIView.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BA4ADD0073EB19800A2709A /* DEMOFilter_UIView.h */; };
-		8BA4AE56073EB73300A2709A /* DEMOFilter_ViewFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BA4ADCF073EB19800A2709A /* DEMOFilter_ViewFactory.m */; };
-		8BA4AE57073EB73300A2709A /* DEMOFilter_UIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BA4ADD1073EB19800A2709A /* DEMOFilter_UIView.m */; };
+		8BA4AE54073EB72300A2709A /* JamTaba_ViewFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BA4ADCE073EB19800A2709A /* JamTaba_ViewFactory.h */; };
+		8BA4AE55073EB72300A2709A /* JamTaba_UIView.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BA4ADD0073EB19800A2709A /* JamTaba_UIView.h */; };
+		8BA4AE56073EB73300A2709A /* JamTaba_ViewFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BA4ADCF073EB19800A2709A /* JamTaba_ViewFactory.m */; };
+		8BA4AE57073EB73300A2709A /* JamTaba_UIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BA4ADD1073EB19800A2709A /* JamTaba_UIView.m */; };
 		8BA4AE5C073EB79000A2709A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA4AE5B073EB79000A2709A /* Cocoa.framework */; };
 		8BA4AE5D073EB7C300A2709A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA4AE5B073EB79000A2709A /* Cocoa.framework */; };
 		8BA4AE5E073EB7C500A2709A /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AFA072074E100365D66 /* AudioUnit.framework */; };
@@ -179,10 +179,10 @@
 		8BA05AFA072074E100365D66 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = /System/Library/Frameworks/AudioUnit.framework; sourceTree = "<absolute>"; };
 		8BA05AFB072074E100365D66 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
 		8BA05B01072074F900365D66 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
-		8BA4ADCE073EB19800A2709A /* DEMOFilter_ViewFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DEMOFilter_ViewFactory.h; path = Source/CocoaUI/DEMOFilter_ViewFactory.h; sourceTree = "<group>"; };
-		8BA4ADCF073EB19800A2709A /* DEMOFilter_ViewFactory.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DEMOFilter_ViewFactory.m; path = Source/CocoaUI/DEMOFilter_ViewFactory.m; sourceTree = "<group>"; };
-		8BA4ADD0073EB19800A2709A /* DEMOFilter_UIView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DEMOFilter_UIView.h; path = Source/CocoaUI/DEMOFilter_UIView.h; sourceTree = "<group>"; };
-		8BA4ADD1073EB19800A2709A /* DEMOFilter_UIView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DEMOFilter_UIView.m; path = Source/CocoaUI/DEMOFilter_UIView.m; sourceTree = "<group>"; };
+		8BA4ADCE073EB19800A2709A /* JamTaba_ViewFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = JamTaba_ViewFactory.h; path = Source/CocoaUI/JamTaba_ViewFactory.h; sourceTree = "<group>"; };
+		8BA4ADCF073EB19800A2709A /* JamTaba_ViewFactory.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = JamTaba_ViewFactory.m; path = Source/CocoaUI/JamTaba_ViewFactory.m; sourceTree = "<group>"; };
+		8BA4ADD0073EB19800A2709A /* JamTaba_UIView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = JamTaba_UIView.h; path = Source/CocoaUI/JamTaba_UIView.h; sourceTree = "<group>"; };
+		8BA4ADD1073EB19800A2709A /* JamTaba_UIView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = JamTaba_UIView.m; path = Source/CocoaUI/JamTaba_UIView.m; sourceTree = "<group>"; };
 		8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CocoaJamTabaView.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BA4AE4F073EB69000A2709A /* CocoaJamTabaView.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CocoaJamTabaView.plist; sourceTree = "<group>"; };
 		8BA4AE5B073EB79000A2709A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -381,10 +381,10 @@
 		8BA4ADCB073EB14C00A2709A /* CocoaUI */ = {
 			isa = PBXGroup;
 			children = (
-				8BA4ADCE073EB19800A2709A /* DEMOFilter_ViewFactory.h */,
-				8BA4ADCF073EB19800A2709A /* DEMOFilter_ViewFactory.m */,
-				8BA4ADD0073EB19800A2709A /* DEMOFilter_UIView.h */,
-				8BA4ADD1073EB19800A2709A /* DEMOFilter_UIView.m */,
+				8BA4ADCE073EB19800A2709A /* JamTaba_ViewFactory.h */,
+				8BA4ADCF073EB19800A2709A /* JamTaba_ViewFactory.m */,
+				8BA4ADD0073EB19800A2709A /* JamTaba_UIView.h */,
+				8BA4ADD1073EB19800A2709A /* JamTaba_UIView.m */,
 			);
 			name = CocoaUI;
 			sourceTree = SOURCE_ROOT;
@@ -396,8 +396,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8BA4AE54073EB72300A2709A /* DEMOFilter_ViewFactory.h in Headers */,
-				8BA4AE55073EB72300A2709A /* DEMOFilter_UIView.h in Headers */,
+				8BA4AE54073EB72300A2709A /* JamTaba_ViewFactory.h in Headers */,
+				8BA4AE55073EB72300A2709A /* JamTaba_UIView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -544,8 +544,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8BA4AE56073EB73300A2709A /* DEMOFilter_ViewFactory.m in Sources */,
-				8BA4AE57073EB73300A2709A /* DEMOFilter_UIView.m in Sources */,
+				8BA4AE56073EB73300A2709A /* JamTaba_ViewFactory.m in Sources */,
+				8BA4AE57073EB73300A2709A /* JamTaba_UIView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
