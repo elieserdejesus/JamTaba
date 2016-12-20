@@ -52,7 +52,7 @@ public:
         return vstHost;
     }
 
-    inline virtual int getSampleRate() const override
+    inline virtual float getSampleRate() const override
     {
         return audioDriver->getSampleRate();
     }
