@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QDebug>
 #include <cmath>
+#include <QGraphicsBlurEffect>
 
 const int WavePeakPanel::peaksRectWidth = 1;
 const int WavePeakPanel::peaksPad = 0;
@@ -17,6 +18,9 @@ WavePeakPanel::WavePeakPanel(QWidget *parent) :
 {
     setAutoFillBackground(false);
     recreatePeaksArray();
+    QGraphicsBlurEffect *blur = new QGraphicsBlurEffect();
+    blur->setBlurRadius(1.65);
+    setGraphicsEffect(blur);
 }
 
 void WavePeakPanel::setBufferingPercentage(uint percentage)
