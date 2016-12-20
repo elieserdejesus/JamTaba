@@ -88,20 +88,22 @@ void WavePeakPanel::paintEvent(QPaintEvent *event)
     if (isVisible()) {
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
-
         if (!showingBuffering) {
             size_t size = peaksArray.size();
             for (uint i = 0; i < size; i++) {
-                float alpha = ((float)(i+1)/(size));
+                float alpha = (float)i/size;
 
                 QColor color(peaksColor); //using the color defined in stylesheet
-                color.setAlpha(std::pow(alpha, 2) * 255);
+                color.setAlpha(std::pow(alpha, 4) * 255);
 
                 int xPos = i * (peaksRectWidth + peaksPad);
                 drawPeak(&painter, xPos, peaksArray[i], color);
             }
         }
         else{ //showing buffering
+
+            painter.fillRect(rect(), QColor(0, 0, 0, 80));
+
             QPen pen;
             pen.setWidth(3);
             pen.setColor(loadingColor);
@@ -116,10 +118,6 @@ void WavePeakPanel::paintEvent(QPaintEvent *event)
             int startAngle = 0;
             int spanAngle = -progress * 360 * 16;
             painter.drawArc(rectangle, startAngle, spanAngle);
-
-
-            painter.setPen(palette().text().color()); //using the color defined in stylesheet files
-            painter.drawText(rectangle, Qt::AlignCenter, QString::number(bufferingPercentage)+"%");
         }
     }
 }

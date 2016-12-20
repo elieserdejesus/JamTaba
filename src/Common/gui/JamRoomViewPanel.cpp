@@ -28,9 +28,10 @@ JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo,
 
     // add wave peak panel as a layer in top of map widget
     ui->content->layout()->removeWidget(ui->wavePeakPanel);
-    map->setLayout(new QHBoxLayout());
-    map->layout()->addWidget(ui->wavePeakPanel);
-    ui->wavePeakPanel->setMaximumHeight(50);
+    QLayout *mapWidgetLayout = new QHBoxLayout();
+    map->setLayout(mapWidgetLayout);
+    mapWidgetLayout->addWidget(ui->wavePeakPanel);
+    mapWidgetLayout->setContentsMargins(0, 0, 0, 0);
 
     initialize(roomInfo);
 }

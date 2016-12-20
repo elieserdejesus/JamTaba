@@ -44,3 +44,12 @@ JamRoomViewPanel[empty="true"] #labelName
 {
     font-weight: normal;
 }
+
+WavePeakPanel
+{
+    /* color used to draw the wave form */
+    qproperty-peaksColor: white;
+
+    /* color used to draw the loading circle */
+    qproperty-loadingColor: white;
+}

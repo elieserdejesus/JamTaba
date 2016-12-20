@@ -57,8 +57,5 @@ WavePeakPanel
     qproperty-peaksColor: rgb(90, 90, 90);
 
     /* color used to draw the loading circle */
-    qproperty-loadingColor: gray;
-
-    /* color used to draw loading percentage text*/
-    color: gray;
+    qproperty-loadingColor: rgb(240, 240, 240);
 }

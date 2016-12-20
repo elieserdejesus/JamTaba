@@ -58,11 +58,8 @@ PlayerLabel
 WavePeakPanel
 {
     /* color used to draw the wave form */
-    qproperty-peaksColor: white;
+    qproperty-peaksColor: rgb(239, 114, 24); /* orange */
 
     /* color used to draw the loading circle */
-    qproperty-loadingColor: orange;
-
-    /* color used to draw loading percentage text*/
-    color: orange;
+    qproperty-loadingColor: rgb(239, 114, 24);
 }
