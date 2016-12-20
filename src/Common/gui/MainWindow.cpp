@@ -1200,6 +1200,26 @@ void MainWindow::initializeViewMenu()
     QActionGroup *viewModeActionGroup = new QActionGroup(this);
     ui.actionFullView->setActionGroup(viewModeActionGroup);
     ui.actionMiniView->setActionGroup(viewModeActionGroup);
+
+    //initialize Wave Drawing menu
+    QActionGroup *waveDrawingGroup = new QActionGroup(this);
+    waveDrawingGroup->addAction(ui.actionBuildings);
+    waveDrawingGroup->addAction(ui.actionSoundWave);
+    connect(ui.menuWaveDrawing, &QMenu::triggered, this, &MainWindow::setWaveDrawingMode);
+}
+
+void MainWindow::setWaveDrawingMode(QAction *action)
+{
+    if (mainController->isPlayingRoomStream()) {
+        long long roomID = mainController->getCurrentStreamingRoomID();
+        JamRoomViewPanel *roomView = roomViewPanels[roomID];
+        if (roomView) {
+            if (action == ui.actionSoundWave)
+                roomView->setWaveDrawingMode(WavePeakPanel::SOUND_WAVE);
+            else if (action == ui.actionBuildings)
+                roomView->setWaveDrawingMode(WavePeakPanel::BUILDINGS);
+        }
+    }
 }
 
 void MainWindow::handleMenuMeteringAction(QAction *action)

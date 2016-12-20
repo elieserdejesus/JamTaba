@@ -5,9 +5,6 @@
 #include <cmath>
 #include <QGraphicsBlurEffect>
 
-const int WavePeakPanel::peaksRectWidth = 2;
-const int WavePeakPanel::peaksPad = 1;
-
 WavePeakPanel::WavePeakPanel(QWidget *parent) :
     QWidget(parent),
     maxPeaks(0),
@@ -15,13 +12,20 @@ WavePeakPanel::WavePeakPanel(QWidget *parent) :
     bufferingPercentage(0),
     peaksColor(QColor(90, 90, 90)),
     loadingColor(Qt::gray),
-    drawingMode(WavePeakPanel::MIRRORED_WAVE)
+    drawingMode(WavePeakPanel::BUILDINGS)
 {
     setAutoFillBackground(false);
     recreatePeaksArray();
     QGraphicsBlurEffect *blur = new QGraphicsBlurEffect();
     blur->setBlurRadius(1.4);
     setGraphicsEffect(blur);
+}
+
+void WavePeakPanel::setDrawingMode(WavePeakPanelMode mode)
+{
+    this->drawingMode = mode;
+    recreatePeaksArray();
+    update();
 }
 
 void WavePeakPanel::setBufferingPercentage(uint percentage)
@@ -52,7 +56,11 @@ void WavePeakPanel::recreatePeaksArray()
 
 int WavePeakPanel::computeMaxPeaks()
 {
-    return width() / (peaksRectWidth + peaksPad);
+    int divider = getPeaksWidth() + getPeaksPad();
+    if (divider > 0)
+        return width() / divider;
+
+    return 0;
 }
 
 void WavePeakPanel::clearPeaks()
@@ -90,18 +98,38 @@ void WavePeakPanel::addPeak(float peak)
 void WavePeakPanel::paintSoundWave(QPainter &painter)
 {
     size_t size = peaksArray.size();
+    if (size <= 0) // avoid divide by zero
+        return;
+
+    qreal maxPeakHeight = height()/2.0;
+
     for (uint i = 0; i < size; i++) {
         float alpha = (float)i/size;
 
         QColor color(peaksColor); //using the color defined in stylesheet
-        color.setAlpha(std::pow(alpha, 4) * 255);
+        color.setAlpha(std::pow(alpha, 2) * 255);
 
+        int peaksRectWidth = getPeaksWidth();
+        int peaksPad = getPeaksPad();
         int xPos = i * (peaksRectWidth + peaksPad);
-        drawPeak(&painter, xPos, peaksArray[i], color);
+
+        int peakHeight = (int)(maxPeakHeight * peaksArray[i]);
+        if (peakHeight == 0)
+            peakHeight = 2;
+
+        int yPos = maxPeakHeight - peakHeight;
+        QLinearGradient gradient(xPos, yPos, xPos, yPos + peakHeight * 2);
+        QColor secondaryColor(color);
+        secondaryColor.setAlphaF(color.alphaF() * 0.25);
+
+        gradient.setColorAt(0.0, secondaryColor);
+        gradient.setColorAt(0.5, color);
+        gradient.setColorAt(1.0, secondaryColor);
+        painter.fillRect(xPos, yPos, peaksRectWidth, peakHeight * 2, gradient);
     }
 }
 
-void WavePeakPanel::paintMirrored(QPainter &painter)
+void WavePeakPanel::paintBuildings(QPainter &painter)
 {
     size_t size = peaksArray.size();
     if (size <= 0) // avoid divide by zero
@@ -115,6 +143,8 @@ void WavePeakPanel::paintMirrored(QPainter &painter)
         QColor color(peaksColor); //using the color defined in stylesheet
         color.setAlpha(std::pow(alpha, 3) * 255);
 
+        int peaksRectWidth = getPeaksWidth();
+        int peaksPad = getPeaksPad();
         int xPos = i * (peaksRectWidth + peaksPad);
 
         int peakHeight = (int)(maxPeakHeight * peaksArray[i]);
@@ -139,6 +169,19 @@ void WavePeakPanel::paintMirrored(QPainter &painter)
     }
 }
 
+int WavePeakPanel::getPeaksPad() const
+{
+    if (drawingMode == WavePeakPanel::BUILDINGS)
+        return 1;
+
+    return 0;
+}
+
+int WavePeakPanel::getPeaksWidth() const
+{
+   return 2; // returning same value for all WavePeakPanelModes
+}
+
 void WavePeakPanel::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
@@ -150,15 +193,15 @@ void WavePeakPanel::paintEvent(QPaintEvent *event)
             painter.fillRect(rect(), QColor(0, 0, 0, 140));
 
         if (!showingBuffering) {
-            if (drawingMode == WavePeakPanel::SOUND_WAVE)
+            switch (drawingMode) {
+            case WavePeakPanel::BUILDINGS:
+                paintBuildings(painter);
+                break;
+            case WavePeakPanel::SOUND_WAVE:
                 paintSoundWave(painter);
-            else
-                paintMirrored(painter);
+            }
         }
         else{ //showing buffering
-
-
-
             QPen pen;
             pen.setWidth(3);
             pen.setColor(loadingColor);
@@ -175,14 +218,4 @@ void WavePeakPanel::paintEvent(QPaintEvent *event)
             painter.drawArc(rectangle, startAngle, spanAngle);
         }
     }
-}
-
-void WavePeakPanel::drawPeak(QPainter *g, int x, float peak, const QColor &color)
-{
-    int peakHeight = (int)(height() * peak);
-    if (peakHeight == 0)
-        peakHeight = 2;
-    int y = (height() - peakHeight) / 2;
-
-    g->fillRect(x, y, peaksRectWidth, peakHeight, color);
 }

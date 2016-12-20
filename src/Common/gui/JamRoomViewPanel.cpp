@@ -36,6 +36,11 @@ JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo,
     initialize(roomInfo);
 }
 
+void JamRoomViewPanel::setWaveDrawingMode(WavePeakPanel::WavePeakPanelMode mode)
+{
+    ui->wavePeakPanel->setDrawingMode(mode);
+}
+
 void JamRoomViewPanel::createMapWidgets()
 {
     map = new MapWidget(this);

@@ -5,6 +5,7 @@
 #include <QLabel>
 #include "ninjam/Server.h"
 #include "loginserver/LoginService.h"
+#include "WavePeakPanel.h"
 
 class MapWidget;
 
@@ -38,6 +39,7 @@ public:
 
     void setShowBufferingState(bool showBuffering);
     void setBufferingPercentage(int percentage);
+    void setWaveDrawingMode(WavePeakPanel::WavePeakPanelMode mode);
 
     inline Login::RoomInfo getRoomInfo() const
     {
