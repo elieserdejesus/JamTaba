@@ -22,11 +22,17 @@ public:
     void setBufferingPercentage(uint percentage);
     void setShowBuffering(bool setShowBuffering);
 
+    enum WavePeakPanelMode
+    {
+        SOUND_WAVE, MIRRORED_WAVE
+    };
+
 protected:
     void resizeEvent(QResizeEvent *event);
     void paintEvent(QPaintEvent *event);
 
 private:
+
     static const int peaksRectWidth;
     static const int peaksPad;
 
@@ -44,6 +50,10 @@ private:
     void recreatePeaksArray();
 
     void drawPeak(QPainter *g, int x, float peak, const QColor &color);
+    void paintSoundWave(QPainter &painter);
+    void paintMirrored(QPainter &painter);
+
+    WavePeakPanelMode drawingMode;
 };
 
 #endif

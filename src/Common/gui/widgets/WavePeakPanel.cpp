@@ -5,8 +5,8 @@
 #include <cmath>
 #include <QGraphicsBlurEffect>
 
-const int WavePeakPanel::peaksRectWidth = 1;
-const int WavePeakPanel::peaksPad = 0;
+const int WavePeakPanel::peaksRectWidth = 2;
+const int WavePeakPanel::peaksPad = 1;
 
 WavePeakPanel::WavePeakPanel(QWidget *parent) :
     QWidget(parent),
@@ -14,12 +14,13 @@ WavePeakPanel::WavePeakPanel(QWidget *parent) :
     showingBuffering(false),
     bufferingPercentage(0),
     peaksColor(QColor(90, 90, 90)),
-    loadingColor(Qt::gray)
+    loadingColor(Qt::gray),
+    drawingMode(WavePeakPanel::MIRRORED_WAVE)
 {
     setAutoFillBackground(false);
     recreatePeaksArray();
     QGraphicsBlurEffect *blur = new QGraphicsBlurEffect();
-    blur->setBlurRadius(1.65);
+    blur->setBlurRadius(1.4);
     setGraphicsEffect(blur);
 }
 
@@ -86,27 +87,77 @@ void WavePeakPanel::addPeak(float peak)
     update();// repaint
 }
 
+void WavePeakPanel::paintSoundWave(QPainter &painter)
+{
+    size_t size = peaksArray.size();
+    for (uint i = 0; i < size; i++) {
+        float alpha = (float)i/size;
+
+        QColor color(peaksColor); //using the color defined in stylesheet
+        color.setAlpha(std::pow(alpha, 4) * 255);
+
+        int xPos = i * (peaksRectWidth + peaksPad);
+        drawPeak(&painter, xPos, peaksArray[i], color);
+    }
+}
+
+void WavePeakPanel::paintMirrored(QPainter &painter)
+{
+    size_t size = peaksArray.size();
+    if (size <= 0) // avoid divide by zero
+        return;
+
+    qreal maxPeakHeight = height() * 0.75;
+
+    for (uint i = 0; i < size; i++) {
+        float alpha = (float)i/size;
+
+        QColor color(peaksColor); //using the color defined in stylesheet
+        color.setAlpha(std::pow(alpha, 3) * 255);
+
+        int xPos = i * (peaksRectWidth + peaksPad);
+
+        int peakHeight = (int)(maxPeakHeight * peaksArray[i]);
+        if (peakHeight == 0)
+            peakHeight = 2;
+        int yPos = maxPeakHeight - peakHeight;
+
+        painter.fillRect(xPos, yPos, peaksRectWidth, peakHeight, color);
+
+        color.setAlpha(color.alpha() * 0.35);
+        painter.setPen(color);
+        int mirroredHeight = peakHeight/4;
+        qreal xPosMirrored = xPos + std::cos(0.4) * mirroredHeight;
+        QPointF points[] = {
+            QPointF(xPos, maxPeakHeight), //top left
+            QPointF(xPos + peaksRectWidth, maxPeakHeight), // top right
+            QPointF(xPosMirrored + peaksRectWidth, maxPeakHeight + mirroredHeight), //bottom right
+            QPointF(xPosMirrored, maxPeakHeight + mirroredHeight)
+        };
+        painter.setBrush(color);
+        painter.drawPolygon(points, 4);
+    }
+}
+
 void WavePeakPanel::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
     if (isVisible()) {
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
+
+        if (showingBuffering || !peaksArray.empty())
+            painter.fillRect(rect(), QColor(0, 0, 0, 140));
+
         if (!showingBuffering) {
-            size_t size = peaksArray.size();
-            for (uint i = 0; i < size; i++) {
-                float alpha = (float)i/size;
-
-                QColor color(peaksColor); //using the color defined in stylesheet
-                color.setAlpha(std::pow(alpha, 4) * 255);
-
-                int xPos = i * (peaksRectWidth + peaksPad);
-                drawPeak(&painter, xPos, peaksArray[i], color);
-            }
+            if (drawingMode == WavePeakPanel::SOUND_WAVE)
+                paintSoundWave(painter);
+            else
+                paintMirrored(painter);
         }
         else{ //showing buffering
 
-            painter.fillRect(rect(), QColor(0, 0, 0, 80));
+
 
             QPen pen;
             pen.setWidth(3);
