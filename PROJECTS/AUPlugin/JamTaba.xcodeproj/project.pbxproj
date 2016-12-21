@@ -149,74 +149,74 @@
 		2A2F700B1E08111E00A4B6C2 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		2A2F700D1E08113100A4B6C2 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		2A2F700F1E08116200A4B6C2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
-		32BAE0B30371A71500C91783 /* JamTaba_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JamTaba_Prefix.pch; sourceTree = "<group>"; };
-		6211E2B11891AA2900751AA3 /* ComponentBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComponentBase.cpp; path = Source/AUPublic/AUBase/ComponentBase.cpp; sourceTree = SOURCE_ROOT; };
-		6211E2B21891AA2900751AA3 /* ComponentBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComponentBase.h; path = Source/AUPublic/AUBase/ComponentBase.h; sourceTree = SOURCE_ROOT; };
-		621713AA1891A149005D69C7 /* AUBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUBase.cpp; path = Source/AUPublic/AUBase/AUBase.cpp; sourceTree = SOURCE_ROOT; };
-		621713AB1891A149005D69C7 /* AUBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUBase.h; path = Source/AUPublic/AUBase/AUBase.h; sourceTree = SOURCE_ROOT; };
-		621713AC1891A149005D69C7 /* AUBaseHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUBaseHelper.cpp; path = Source/AUPublic/Utility/AUBaseHelper.cpp; sourceTree = SOURCE_ROOT; };
-		621713AD1891A149005D69C7 /* AUBaseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUBaseHelper.h; path = Source/AUPublic/Utility/AUBaseHelper.h; sourceTree = SOURCE_ROOT; };
-		621713AE1891A149005D69C7 /* AUBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUBuffer.cpp; path = Source/AUPublic/Utility/AUBuffer.cpp; sourceTree = SOURCE_ROOT; };
-		621713AF1891A149005D69C7 /* AUBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUBuffer.h; path = Source/AUPublic/Utility/AUBuffer.h; sourceTree = SOURCE_ROOT; };
-		621713B01891A149005D69C7 /* AUDispatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUDispatch.cpp; path = Source/AUPublic/AUBase/AUDispatch.cpp; sourceTree = SOURCE_ROOT; };
-		621713B11891A149005D69C7 /* AUDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUDispatch.h; path = Source/AUPublic/AUBase/AUDispatch.h; sourceTree = SOURCE_ROOT; };
-		621713B21891A149005D69C7 /* AUEffectBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUEffectBase.cpp; path = Source/AUPublic/OtherBases/AUEffectBase.cpp; sourceTree = SOURCE_ROOT; };
-		621713B31891A149005D69C7 /* AUEffectBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUEffectBase.h; path = Source/AUPublic/OtherBases/AUEffectBase.h; sourceTree = SOURCE_ROOT; };
-		621713B41891A149005D69C7 /* AUInputElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUInputElement.cpp; path = Source/AUPublic/AUBase/AUInputElement.cpp; sourceTree = SOURCE_ROOT; };
-		621713B51891A149005D69C7 /* AUInputElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUInputElement.h; path = Source/AUPublic/AUBase/AUInputElement.h; sourceTree = SOURCE_ROOT; };
-		621713B61891A149005D69C7 /* AUOutputElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUOutputElement.cpp; path = Source/AUPublic/AUBase/AUOutputElement.cpp; sourceTree = SOURCE_ROOT; };
-		621713B71891A149005D69C7 /* AUOutputElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUOutputElement.h; path = Source/AUPublic/AUBase/AUOutputElement.h; sourceTree = SOURCE_ROOT; };
-		621713B81891A149005D69C7 /* AUPlugInDispatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUPlugInDispatch.cpp; path = Source/AUPublic/AUBase/AUPlugInDispatch.cpp; sourceTree = SOURCE_ROOT; };
-		621713B91891A149005D69C7 /* AUPlugInDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUPlugInDispatch.h; path = Source/AUPublic/AUBase/AUPlugInDispatch.h; sourceTree = SOURCE_ROOT; };
-		621713BA1891A149005D69C7 /* AUResources.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; name = AUResources.r; path = Source/AUPublic/AUBase/AUResources.r; sourceTree = SOURCE_ROOT; };
-		621713BB1891A149005D69C7 /* AUScopeElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUScopeElement.cpp; path = Source/AUPublic/AUBase/AUScopeElement.cpp; sourceTree = SOURCE_ROOT; };
-		621713BC1891A149005D69C7 /* AUScopeElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUScopeElement.h; path = Source/AUPublic/AUBase/AUScopeElement.h; sourceTree = SOURCE_ROOT; };
-		621713BD1891A149005D69C7 /* AUSilentTimeout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUSilentTimeout.h; path = Source/AUPublic/Utility/AUSilentTimeout.h; sourceTree = SOURCE_ROOT; };
-		621713BE1891A149005D69C7 /* CAAtomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAtomic.h; path = Source/PublicUtility/CAAtomic.h; sourceTree = SOURCE_ROOT; };
-		621713BF1891A149005D69C7 /* CAAtomicStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAtomicStack.h; path = Source/PublicUtility/CAAtomicStack.h; sourceTree = SOURCE_ROOT; };
-		621713C01891A149005D69C7 /* CAAudioChannelLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAAudioChannelLayout.cpp; path = Source/PublicUtility/CAAudioChannelLayout.cpp; sourceTree = SOURCE_ROOT; };
-		621713C11891A149005D69C7 /* CAAudioChannelLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAudioChannelLayout.h; path = Source/PublicUtility/CAAudioChannelLayout.h; sourceTree = SOURCE_ROOT; };
-		621713C21891A149005D69C7 /* CAAutoDisposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAutoDisposer.h; path = Source/PublicUtility/CAAutoDisposer.h; sourceTree = SOURCE_ROOT; };
-		621713C31891A149005D69C7 /* CABufferList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CABufferList.cpp; path = Source/PublicUtility/CABufferList.cpp; sourceTree = SOURCE_ROOT; };
-		621713C41891A149005D69C7 /* CABufferList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CABufferList.h; path = Source/PublicUtility/CABufferList.h; sourceTree = SOURCE_ROOT; };
-		621713C51891A149005D69C7 /* CAByteOrder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAByteOrder.h; path = Source/PublicUtility/CAByteOrder.h; sourceTree = SOURCE_ROOT; };
-		621713C61891A149005D69C7 /* CADebugger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugger.cpp; path = Source/PublicUtility/CADebugger.cpp; sourceTree = SOURCE_ROOT; };
-		621713C71891A149005D69C7 /* CADebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugger.h; path = Source/PublicUtility/CADebugger.h; sourceTree = SOURCE_ROOT; };
-		621713C81891A149005D69C7 /* CADebugMacros.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugMacros.cpp; path = Source/PublicUtility/CADebugMacros.cpp; sourceTree = SOURCE_ROOT; };
-		621713C91891A149005D69C7 /* CADebugMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugMacros.h; path = Source/PublicUtility/CADebugMacros.h; sourceTree = SOURCE_ROOT; };
-		621713CA1891A149005D69C7 /* CADebugPrintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugPrintf.cpp; path = Source/PublicUtility/CADebugPrintf.cpp; sourceTree = SOURCE_ROOT; };
-		621713CB1891A149005D69C7 /* CADebugPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugPrintf.h; path = Source/PublicUtility/CADebugPrintf.h; sourceTree = SOURCE_ROOT; };
-		621713CC1891A149005D69C7 /* CAException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAException.h; path = Source/PublicUtility/CAException.h; sourceTree = SOURCE_ROOT; };
-		621713CD1891A149005D69C7 /* CAGuard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAGuard.cpp; path = Source/PublicUtility/CAGuard.cpp; sourceTree = SOURCE_ROOT; };
-		621713CE1891A149005D69C7 /* CAGuard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAGuard.h; path = Source/PublicUtility/CAGuard.h; sourceTree = SOURCE_ROOT; };
-		621713CF1891A149005D69C7 /* CAHostTimeBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAHostTimeBase.cpp; path = Source/PublicUtility/CAHostTimeBase.cpp; sourceTree = SOURCE_ROOT; };
-		621713D01891A149005D69C7 /* CAHostTimeBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHostTimeBase.h; path = Source/PublicUtility/CAHostTimeBase.h; sourceTree = SOURCE_ROOT; };
-		621713D11891A149005D69C7 /* CALogMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CALogMacros.h; path = Source/PublicUtility/CALogMacros.h; sourceTree = SOURCE_ROOT; };
-		621713D21891A149005D69C7 /* CAMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAMath.h; path = Source/PublicUtility/CAMath.h; sourceTree = SOURCE_ROOT; };
-		621713D31891A149005D69C7 /* CAMutex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAMutex.cpp; path = Source/PublicUtility/CAMutex.cpp; sourceTree = SOURCE_ROOT; };
-		621713D41891A149005D69C7 /* CAMutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAMutex.h; path = Source/PublicUtility/CAMutex.h; sourceTree = SOURCE_ROOT; };
-		621713D51891A149005D69C7 /* CAReferenceCounted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAReferenceCounted.h; path = Source/PublicUtility/CAReferenceCounted.h; sourceTree = SOURCE_ROOT; };
-		621713D61891A149005D69C7 /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = Source/PublicUtility/CAStreamBasicDescription.cpp; sourceTree = SOURCE_ROOT; };
-		621713D71891A149005D69C7 /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = Source/PublicUtility/CAStreamBasicDescription.h; sourceTree = SOURCE_ROOT; };
-		621713D81891A149005D69C7 /* CAThreadSafeList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAThreadSafeList.h; path = Source/PublicUtility/CAThreadSafeList.h; sourceTree = SOURCE_ROOT; };
-		621713D91891A149005D69C7 /* CAVectorUnit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAVectorUnit.cpp; path = Source/PublicUtility/CAVectorUnit.cpp; sourceTree = SOURCE_ROOT; };
-		621713DA1891A149005D69C7 /* CAVectorUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAVectorUnit.h; path = Source/PublicUtility/CAVectorUnit.h; sourceTree = SOURCE_ROOT; };
-		621713DB1891A149005D69C7 /* CAVectorUnitTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAVectorUnitTypes.h; path = Source/PublicUtility/CAVectorUnitTypes.h; sourceTree = SOURCE_ROOT; };
-		621713DC1891A149005D69C7 /* CAXException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAXException.cpp; path = Source/PublicUtility/CAXException.cpp; sourceTree = SOURCE_ROOT; };
-		621713DD1891A149005D69C7 /* CAXException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAXException.h; path = Source/PublicUtility/CAXException.h; sourceTree = SOURCE_ROOT; };
+		32BAE0B30371A71500C91783 /* JamTaba_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JamTaba_Prefix.pch; path = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch; sourceTree = "<group>"; };
+		6211E2B11891AA2900751AA3 /* ComponentBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComponentBase.cpp; path = ../../src/Plugins/AU/AUPublic/AUBase/ComponentBase.cpp; sourceTree = SOURCE_ROOT; };
+		6211E2B21891AA2900751AA3 /* ComponentBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComponentBase.h; path = ../../src/Plugins/AU/AUPublic/AUBase/ComponentBase.h; sourceTree = SOURCE_ROOT; };
+		621713AA1891A149005D69C7 /* AUBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUBase.cpp; path = ../../src/Plugins/AU/AUPublic/AUBase/AUBase.cpp; sourceTree = SOURCE_ROOT; };
+		621713AB1891A149005D69C7 /* AUBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUBase.h; path = ../../src/Plugins/AU/AUPublic/AUBase/AUBase.h; sourceTree = SOURCE_ROOT; };
+		621713AC1891A149005D69C7 /* AUBaseHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUBaseHelper.cpp; path = ../../src/Plugins/AU/AUPublic/Utility/AUBaseHelper.cpp; sourceTree = SOURCE_ROOT; };
+		621713AD1891A149005D69C7 /* AUBaseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUBaseHelper.h; path = ../../src/Plugins/AU/AUPublic/Utility/AUBaseHelper.h; sourceTree = SOURCE_ROOT; };
+		621713AE1891A149005D69C7 /* AUBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUBuffer.cpp; path = ../../src/Plugins/AU/AUPublic/Utility/AUBuffer.cpp; sourceTree = SOURCE_ROOT; };
+		621713AF1891A149005D69C7 /* AUBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUBuffer.h; path = ../../src/Plugins/AU/AUPublic/Utility/AUBuffer.h; sourceTree = SOURCE_ROOT; };
+		621713B01891A149005D69C7 /* AUDispatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUDispatch.cpp; path = ../../src/Plugins/AU/AUPublic/AUBase/AUDispatch.cpp; sourceTree = SOURCE_ROOT; };
+		621713B11891A149005D69C7 /* AUDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUDispatch.h; path = ../../src/Plugins/AU/AUPublic/AUBase/AUDispatch.h; sourceTree = SOURCE_ROOT; };
+		621713B21891A149005D69C7 /* AUEffectBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUEffectBase.cpp; path = ../../src/Plugins/AU/AUPublic/OtherBases/AUEffectBase.cpp; sourceTree = SOURCE_ROOT; };
+		621713B31891A149005D69C7 /* AUEffectBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUEffectBase.h; path = ../../src/Plugins/AU/AUPublic/OtherBases/AUEffectBase.h; sourceTree = SOURCE_ROOT; };
+		621713B41891A149005D69C7 /* AUInputElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUInputElement.cpp; path = ../../src/Plugins/AU/AUPublic/AUBase/AUInputElement.cpp; sourceTree = SOURCE_ROOT; };
+		621713B51891A149005D69C7 /* AUInputElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUInputElement.h; path = ../../src/Plugins/AU/AUPublic/AUBase/AUInputElement.h; sourceTree = SOURCE_ROOT; };
+		621713B61891A149005D69C7 /* AUOutputElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUOutputElement.cpp; path = ../../src/Plugins/AU/AUPublic/AUBase/AUOutputElement.cpp; sourceTree = SOURCE_ROOT; };
+		621713B71891A149005D69C7 /* AUOutputElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUOutputElement.h; path = ../../src/Plugins/AU/AUPublic/AUBase/AUOutputElement.h; sourceTree = SOURCE_ROOT; };
+		621713B81891A149005D69C7 /* AUPlugInDispatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUPlugInDispatch.cpp; path = ../../src/Plugins/AU/AUPublic/AUBase/AUPlugInDispatch.cpp; sourceTree = SOURCE_ROOT; };
+		621713B91891A149005D69C7 /* AUPlugInDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUPlugInDispatch.h; path = ../../src/Plugins/AU/AUPublic/AUBase/AUPlugInDispatch.h; sourceTree = SOURCE_ROOT; };
+		621713BA1891A149005D69C7 /* AUResources.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; name = AUResources.r; path = ../../src/Plugins/AU/AUPublic/AUBase/AUResources.r; sourceTree = SOURCE_ROOT; };
+		621713BB1891A149005D69C7 /* AUScopeElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUScopeElement.cpp; path = ../../src/Plugins/AU/AUPublic/AUBase/AUScopeElement.cpp; sourceTree = SOURCE_ROOT; };
+		621713BC1891A149005D69C7 /* AUScopeElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUScopeElement.h; path = ../../src/Plugins/AU/AUPublic/AUBase/AUScopeElement.h; sourceTree = SOURCE_ROOT; };
+		621713BD1891A149005D69C7 /* AUSilentTimeout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUSilentTimeout.h; path = ../../src/Plugins/AU/AUPublic/Utility/AUSilentTimeout.h; sourceTree = SOURCE_ROOT; };
+		621713BE1891A149005D69C7 /* CAAtomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAtomic.h; path = ../../src/Plugins/AU/PublicUtility/CAAtomic.h; sourceTree = SOURCE_ROOT; };
+		621713BF1891A149005D69C7 /* CAAtomicStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAtomicStack.h; path = ../../src/Plugins/AU/PublicUtility/CAAtomicStack.h; sourceTree = SOURCE_ROOT; };
+		621713C01891A149005D69C7 /* CAAudioChannelLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAAudioChannelLayout.cpp; path = ../../src/Plugins/AU/PublicUtility/CAAudioChannelLayout.cpp; sourceTree = SOURCE_ROOT; };
+		621713C11891A149005D69C7 /* CAAudioChannelLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAudioChannelLayout.h; path = ../../src/Plugins/AU/PublicUtility/CAAudioChannelLayout.h; sourceTree = SOURCE_ROOT; };
+		621713C21891A149005D69C7 /* CAAutoDisposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAutoDisposer.h; path = ../../src/Plugins/AU/PublicUtility/CAAutoDisposer.h; sourceTree = SOURCE_ROOT; };
+		621713C31891A149005D69C7 /* CABufferList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CABufferList.cpp; path = ../../src/Plugins/AU/PublicUtility/CABufferList.cpp; sourceTree = SOURCE_ROOT; };
+		621713C41891A149005D69C7 /* CABufferList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CABufferList.h; path = ../../src/Plugins/AU/PublicUtility/CABufferList.h; sourceTree = SOURCE_ROOT; };
+		621713C51891A149005D69C7 /* CAByteOrder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAByteOrder.h; path = ../../src/Plugins/AU/PublicUtility/CAByteOrder.h; sourceTree = SOURCE_ROOT; };
+		621713C61891A149005D69C7 /* CADebugger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugger.cpp; path = ../../src/Plugins/AU/PublicUtility/CADebugger.cpp; sourceTree = SOURCE_ROOT; };
+		621713C71891A149005D69C7 /* CADebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugger.h; path = ../../src/Plugins/AU/PublicUtility/CADebugger.h; sourceTree = SOURCE_ROOT; };
+		621713C81891A149005D69C7 /* CADebugMacros.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugMacros.cpp; path = ../../src/Plugins/AU/PublicUtility/CADebugMacros.cpp; sourceTree = SOURCE_ROOT; };
+		621713C91891A149005D69C7 /* CADebugMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugMacros.h; path = ../../src/Plugins/AU/PublicUtility/CADebugMacros.h; sourceTree = SOURCE_ROOT; };
+		621713CA1891A149005D69C7 /* CADebugPrintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugPrintf.cpp; path = ../../src/Plugins/AU/PublicUtility/CADebugPrintf.cpp; sourceTree = SOURCE_ROOT; };
+		621713CB1891A149005D69C7 /* CADebugPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugPrintf.h; path = ../../src/Plugins/AU/PublicUtility/CADebugPrintf.h; sourceTree = SOURCE_ROOT; };
+		621713CC1891A149005D69C7 /* CAException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAException.h; path = ../../src/Plugins/AU/PublicUtility/CAException.h; sourceTree = SOURCE_ROOT; };
+		621713CD1891A149005D69C7 /* CAGuard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAGuard.cpp; path = ../../src/Plugins/AU/PublicUtility/CAGuard.cpp; sourceTree = SOURCE_ROOT; };
+		621713CE1891A149005D69C7 /* CAGuard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAGuard.h; path = ../../src/Plugins/AU/PublicUtility/CAGuard.h; sourceTree = SOURCE_ROOT; };
+		621713CF1891A149005D69C7 /* CAHostTimeBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAHostTimeBase.cpp; path = ../../src/Plugins/AU/PublicUtility/CAHostTimeBase.cpp; sourceTree = SOURCE_ROOT; };
+		621713D01891A149005D69C7 /* CAHostTimeBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHostTimeBase.h; path = ../../src/Plugins/AU/PublicUtility/CAHostTimeBase.h; sourceTree = SOURCE_ROOT; };
+		621713D11891A149005D69C7 /* CALogMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CALogMacros.h; path = ../../src/Plugins/AU/PublicUtility/CALogMacros.h; sourceTree = SOURCE_ROOT; };
+		621713D21891A149005D69C7 /* CAMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAMath.h; path = ../../src/Plugins/AU/PublicUtility/CAMath.h; sourceTree = SOURCE_ROOT; };
+		621713D31891A149005D69C7 /* CAMutex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAMutex.cpp; path = ../../src/Plugins/AU/PublicUtility/CAMutex.cpp; sourceTree = SOURCE_ROOT; };
+		621713D41891A149005D69C7 /* CAMutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAMutex.h; path = ../../src/Plugins/AU/PublicUtility/CAMutex.h; sourceTree = SOURCE_ROOT; };
+		621713D51891A149005D69C7 /* CAReferenceCounted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAReferenceCounted.h; path = ../../src/Plugins/AU/PublicUtility/CAReferenceCounted.h; sourceTree = SOURCE_ROOT; };
+		621713D61891A149005D69C7 /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = ../../src/Plugins/AU/PublicUtility/CAStreamBasicDescription.cpp; sourceTree = SOURCE_ROOT; };
+		621713D71891A149005D69C7 /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = ../../src/Plugins/AU/PublicUtility/CAStreamBasicDescription.h; sourceTree = SOURCE_ROOT; };
+		621713D81891A149005D69C7 /* CAThreadSafeList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAThreadSafeList.h; path = ../../src/Plugins/AU/PublicUtility/CAThreadSafeList.h; sourceTree = SOURCE_ROOT; };
+		621713D91891A149005D69C7 /* CAVectorUnit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAVectorUnit.cpp; path = ../../src/Plugins/AU/PublicUtility/CAVectorUnit.cpp; sourceTree = SOURCE_ROOT; };
+		621713DA1891A149005D69C7 /* CAVectorUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAVectorUnit.h; path = ../../src/Plugins/AU/PublicUtility/CAVectorUnit.h; sourceTree = SOURCE_ROOT; };
+		621713DB1891A149005D69C7 /* CAVectorUnitTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAVectorUnitTypes.h; path = ../../src/Plugins/AU/PublicUtility/CAVectorUnitTypes.h; sourceTree = SOURCE_ROOT; };
+		621713DC1891A149005D69C7 /* CAXException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAXException.cpp; path = ../../src/Plugins/AU/PublicUtility/CAXException.cpp; sourceTree = SOURCE_ROOT; };
+		621713DD1891A149005D69C7 /* CAXException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAXException.h; path = ../../src/Plugins/AU/PublicUtility/CAXException.h; sourceTree = SOURCE_ROOT; };
 		62B3B89C18918C4F00E507B7 /* PkgInfo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PkgInfo; sourceTree = "<group>"; };
-		62B3B89E1891936500E507B7 /* JamTaba.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; name = JamTaba.r; path = Source/AUSource/JamTaba.r; sourceTree = "<group>"; };
-		8BA05A660720730100365D66 /* JamTaba.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = JamTaba.cpp; path = Source/AUSource/JamTaba.cpp; sourceTree = "<group>"; };
-		8BA05A670720730100365D66 /* JamTaba.exp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.exports; path = JamTaba.exp; sourceTree = "<group>"; };
-		8BA05A690720730100365D66 /* JamTabaVersion.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = JamTabaVersion.h; path = Source/AUSource/JamTabaVersion.h; sourceTree = "<group>"; };
+		62B3B89E1891936500E507B7 /* JamTaba.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; name = JamTaba.r; path = ../../src/Plugins/AU/AUSource/JamTaba.r; sourceTree = "<group>"; };
+		8BA05A660720730100365D66 /* JamTaba.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = JamTaba.cpp; path = ../../src/Plugins/AU/AUSource/JamTaba.cpp; sourceTree = "<group>"; };
+		8BA05A670720730100365D66 /* JamTaba.exp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.exports; name = JamTaba.exp; path = ../../src/Plugins/AU/AUSource/JamTaba.exp; sourceTree = "<group>"; };
+		8BA05A690720730100365D66 /* JamTabaVersion.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = JamTabaVersion.h; path = ../../src/Plugins/AU/AUSource/JamTabaVersion.h; sourceTree = "<group>"; };
 		8BA05AF9072074E100365D66 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		8BA05AFA072074E100365D66 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = /System/Library/Frameworks/AudioUnit.framework; sourceTree = "<absolute>"; };
 		8BA05AFB072074E100365D66 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
 		8BA05B01072074F900365D66 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
-		8BA4ADCE073EB19800A2709A /* JamTaba_ViewFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = JamTaba_ViewFactory.h; path = Source/CocoaUI/JamTaba_ViewFactory.h; sourceTree = "<group>"; };
-		8BA4ADCF073EB19800A2709A /* JamTaba_ViewFactory.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; name = JamTaba_ViewFactory.mm; path = Source/CocoaUI/JamTaba_ViewFactory.mm; sourceTree = "<group>"; };
-		8BA4ADD0073EB19800A2709A /* JamTaba_UIView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = JamTaba_UIView.h; path = Source/CocoaUI/JamTaba_UIView.h; sourceTree = "<group>"; };
-		8BA4ADD1073EB19800A2709A /* JamTaba_UIView.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; name = JamTaba_UIView.mm; path = Source/CocoaUI/JamTaba_UIView.mm; sourceTree = "<group>"; };
+		8BA4ADCE073EB19800A2709A /* JamTaba_ViewFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = JamTaba_ViewFactory.h; path = ../../src/Plugins/AU/CocoaUI/JamTaba_ViewFactory.h; sourceTree = "<group>"; };
+		8BA4ADCF073EB19800A2709A /* JamTaba_ViewFactory.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; name = JamTaba_ViewFactory.mm; path = ../../src/Plugins/AU/CocoaUI/JamTaba_ViewFactory.mm; sourceTree = "<group>"; };
+		8BA4ADD0073EB19800A2709A /* JamTaba_UIView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = JamTaba_UIView.h; path = ../../src/Plugins/AU/CocoaUI/JamTaba_UIView.h; sourceTree = "<group>"; };
+		8BA4ADD1073EB19800A2709A /* JamTaba_UIView.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; name = JamTaba_UIView.mm; path = ../../src/Plugins/AU/CocoaUI/JamTaba_UIView.mm; sourceTree = "<group>"; };
 		8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CocoaJamTabaView.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BA4AE4F073EB69000A2709A /* CocoaJamTabaView.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CocoaJamTabaView.plist; sourceTree = "<group>"; };
 		8BA4AE5B073EB79000A2709A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -323,7 +323,6 @@
 				8BA4ADCB073EB14C00A2709A /* CocoaUI */,
 				8BA05A56072072A900365D66 /* AU Source */,
 				62FEDF6A1891AEA9004C557F /* AUPublic */,
-				32BAE0B30371A71500C91783 /* JamTaba_Prefix.pch */,
 				62FEDF6B1891AED5004C557F /* PublicUtility */,
 			);
 			name = Source;
@@ -396,7 +395,7 @@
 				621713B31891A149005D69C7 /* AUEffectBase.h */,
 			);
 			name = OtherBases;
-			path = Source/AUPublic/OtherBases;
+			path = ../../src/Plugins/AU/AUPublic/OtherBases;
 			sourceTree = SOURCE_ROOT;
 		};
 		62FEDF6D1891B01E004C557F /* Utility */ = {
@@ -409,7 +408,7 @@
 				621713BD1891A149005D69C7 /* AUSilentTimeout.h */,
 			);
 			name = Utility;
-			path = Source/AUPublic/Utility;
+			path = ../../src/Plugins/AU/AUPublic/Utility;
 			sourceTree = SOURCE_ROOT;
 		};
 		62FEDF6E1891B0AA004C557F /* AUBase */ = {
@@ -432,12 +431,13 @@
 				6211E2B21891AA2900751AA3 /* ComponentBase.h */,
 			);
 			name = AUBase;
-			path = Source/AUPublic/AUBase;
+			path = ../../src/Plugins/AU/AUPublic/AUBase;
 			sourceTree = SOURCE_ROOT;
 		};
 		8BA05A56072072A900365D66 /* AU Source */ = {
 			isa = PBXGroup;
 			children = (
+				32BAE0B30371A71500C91783 /* JamTaba_Prefix.pch */,
 				62B3B89E1891936500E507B7 /* JamTaba.r */,
 				8BA05A660720730100365D66 /* JamTaba.cpp */,
 				8BA05A670720730100365D66 /* JamTaba.exp */,
@@ -820,10 +820,10 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUGGING_SYMBOLS = YES;
-				EXPORTED_SYMBOLS_FILE = JamTaba.exp;
+				EXPORTED_SYMBOLS_FILE = ../../src/Plugins/AU/AUSource/JamTaba.exp;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = JamTaba_Prefix.pch;
+				GCC_PREFIX_HEADER = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GENERATE_PKGINFO_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
@@ -848,9 +848,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				EXPORTED_SYMBOLS_FILE = JamTaba.exp;
+				EXPORTED_SYMBOLS_FILE = ../../src/Plugins/AU/AUSource/JamTaba.exp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = JamTaba_Prefix.pch;
+				GCC_PREFIX_HEADER = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GENERATE_PKGINFO_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
@@ -875,9 +875,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				EXPORTED_SYMBOLS_FILE = JamTaba.exp;
+				EXPORTED_SYMBOLS_FILE = ../../src/Plugins/AU/AUSource/JamTaba.exp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = JamTaba_Prefix.pch;
+				GCC_PREFIX_HEADER = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GENERATE_PKGINFO_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
