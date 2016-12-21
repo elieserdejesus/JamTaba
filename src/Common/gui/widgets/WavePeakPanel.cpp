@@ -16,9 +16,9 @@ WavePeakPanel::WavePeakPanel(QWidget *parent) :
 {
     setAutoFillBackground(false);
     recreatePeaksArray();
-    QGraphicsBlurEffect *blur = new QGraphicsBlurEffect();
-    blur->setBlurRadius(1.4);
-    setGraphicsEffect(blur);
+    //QGraphicsBlurEffect *blur = new QGraphicsBlurEffect();
+    //blur->setBlurRadius(1.4);
+    //setGraphicsEffect(blur);
 }
 
 void WavePeakPanel::setDrawingMode(WavePeakPanelMode mode)
