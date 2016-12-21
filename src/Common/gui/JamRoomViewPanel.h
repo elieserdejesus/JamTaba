@@ -39,7 +39,7 @@ public:
 
     void setShowBufferingState(bool showBuffering);
     void setBufferingPercentage(int percentage);
-    void setWaveDrawingMode(WavePeakPanel::WavePeakPanelMode mode);
+    void setWaveDrawingMode(WavePeakPanel::WaveDrawingMode mode);
 
     inline Login::RoomInfo getRoomInfo() const
     {

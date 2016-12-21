@@ -33,10 +33,14 @@ JamRoomViewPanel::JamRoomViewPanel(const Login::RoomInfo &roomInfo,
     mapWidgetLayout->addWidget(ui->wavePeakPanel);
     mapWidgetLayout->setContentsMargins(0, 0, 0, 0);
 
+    //'remember' the wave drawing mode
+    WavePeakPanel::WaveDrawingMode lastDrawingMode = static_cast<WavePeakPanel::WaveDrawingMode>(mainController->getLastWaveDrawingMode());
+    setWaveDrawingMode(lastDrawingMode);
+
     initialize(roomInfo);
 }
 
-void JamRoomViewPanel::setWaveDrawingMode(WavePeakPanel::WavePeakPanelMode mode)
+void JamRoomViewPanel::setWaveDrawingMode(WavePeakPanel::WaveDrawingMode mode)
 {
     ui->wavePeakPanel->setDrawingMode(mode);
 }

@@ -1215,15 +1215,19 @@ void MainWindow::setWaveDrawingMode(QAction *action)
     if (mainController->isPlayingRoomStream()) {
         long long roomID = mainController->getCurrentStreamingRoomID();
         JamRoomViewPanel *roomView = roomViewPanels[roomID];
+        WavePeakPanel::WaveDrawingMode drawingMode;
         if (roomView) {
             if (action == ui.actionSoundWave)
-                roomView->setWaveDrawingMode(WavePeakPanel::SOUND_WAVE);
+                drawingMode = WavePeakPanel::SOUND_WAVE;
             else if (action == ui.actionBuildings)
-                roomView->setWaveDrawingMode(WavePeakPanel::BUILDINGS);
+                drawingMode = WavePeakPanel::BUILDINGS;
             else if (action == ui.actionPixelatedSoundWave)
-                roomView->setWaveDrawingMode(WavePeakPanel::PIXELED_SOUND_WAVE);
+                drawingMode = WavePeakPanel::PIXELED_SOUND_WAVE;
             else if(action == ui.actionPixelatedBuildings)
-                    roomView->setWaveDrawingMode(WavePeakPanel::PIXELED_BUILDINGS);
+                drawingMode = WavePeakPanel::PIXELED_BUILDINGS;
+
+            roomView->setWaveDrawingMode(drawingMode);
+            mainController->storeWaveDrawingMode(drawingMode);
         }
     }
 }

@@ -14,7 +14,7 @@ class WavePeakPanel : public QWidget
 public:
     explicit WavePeakPanel(QWidget *parent = 0);
 
-    enum WavePeakPanelMode
+    enum WaveDrawingMode
     {
         SOUND_WAVE, BUILDINGS, PIXELED_SOUND_WAVE, PIXELED_BUILDINGS
     };
@@ -26,7 +26,7 @@ public:
 
     void setBufferingPercentage(uint percentage);
     void setShowBuffering(bool setShowBuffering);
-    void setDrawingMode(WavePeakPanel::WavePeakPanelMode mode);
+    void setDrawingMode(WavePeakPanel::WaveDrawingMode mode);
 
 protected:
     void resizeEvent(QResizeEvent *event);
@@ -50,7 +50,7 @@ private:
     void paintSoundWave(QPainter &painter);
     void paintPixeledSoundWave(QPainter &painter);
 
-    WavePeakPanelMode drawingMode;
+    WaveDrawingMode drawingMode;
 
     int getPeaksPad() const;
     int getPeaksWidth() const;

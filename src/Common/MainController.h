@@ -104,6 +104,16 @@ public:
         return settings.isUsingNarrowedTracks();
     }
 
+    inline void storeWaveDrawingMode(quint8 drawingMode)
+    {
+        settings.storeWaveDrawingMode(drawingMode);
+    }
+
+    inline quint8 getLastWaveDrawingMode() const
+    {
+        return settings.getLastWaveDrawingMode();
+    }
+
     void enterInRoom(const Login::RoomInfo &room, const QStringList &channelsNames, const QString &password = "");
 
     Login::LoginService *getLoginService() const;

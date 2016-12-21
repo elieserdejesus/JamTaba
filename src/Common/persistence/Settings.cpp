@@ -855,6 +855,7 @@ MeteringSettings::MeteringSettings()
     : SettingsObject(QStringLiteral("Metering")),
       showingMaxPeakMarkers(true),
       meterOption(0), // showing RMS + Peaks
+      waveDrawingMode(3), // pixeled buildings
       refreshRate(30)
 {
 
@@ -865,11 +866,13 @@ void MeteringSettings::read(const QJsonObject &in)
     this->showingMaxPeakMarkers = getValueFromJson(in, "showMaxPeak", true);
     this->meterOption = getValueFromJson(in, "meterOption", quint8(0));
     this->refreshRate = getValueFromJson(in, "refreshRate", quint8(30));
+    this->waveDrawingMode = getValueFromJson(in, "waveDrawingMode", quint8(3)); // using 3 (pixeleted buildings) as default value
 }
 
 void MeteringSettings::write(QJsonObject &out) const
 {
-    out["showMaxPeak"] = showingMaxPeakMarkers;
-    out["meterOption"] = meterOption;
-    out["refreshRate"] = refreshRate;
+    out["showMaxPeak"]      = showingMaxPeakMarkers;
+    out["meterOption"]      = meterOption;
+    out["refreshRate"]      = refreshRate;
+    out["waveDrawingMode"]  = waveDrawingMode;
 }
