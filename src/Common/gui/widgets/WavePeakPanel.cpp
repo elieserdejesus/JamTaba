@@ -12,7 +12,7 @@ WavePeakPanel::WavePeakPanel(QWidget *parent) :
     bufferingPercentage(0),
     peaksColor(QColor(90, 90, 90)),
     loadingColor(Qt::gray),
-    drawingMode(WavePeakPanel::PIXELED_SOUND_WAVE)
+    drawingMode(WavePeakPanel::PIXELED_BUILDINGS)
 {
     setAutoFillBackground(false);
     recreatePeaksArray();
@@ -129,13 +129,15 @@ void WavePeakPanel::paintSoundWave(QPainter &painter)
     }
 }
 
-void WavePeakPanel::paintBuildings(QPainter &painter)
+void WavePeakPanel::paintBuildings(QPainter &painter, bool pixeled)
 {
     size_t size = peaksArray.size();
     if (size <= 0) // avoid divide by zero
         return;
 
-    qreal maxPeakHeight = height() * 0.75;
+    int peaksRectWidth = getPeaksWidth();
+    int peaksPad = getPeaksPad();
+    int maxPeakHeight = (int)(height() * 0.75);
 
     for (uint i = 0; i < size; i++) {
         float alpha = (float)i/size;
@@ -143,21 +145,37 @@ void WavePeakPanel::paintBuildings(QPainter &painter)
         QColor color(peaksColor); //using the color defined in stylesheet
         color.setAlpha(std::pow(alpha, 3) * 255);
 
-        int peaksRectWidth = getPeaksWidth();
-        int peaksPad = getPeaksPad();
         int xPos = i * (peaksRectWidth + peaksPad);
 
         int peakHeight = (int)(maxPeakHeight * peaksArray[i]);
+        if (pixeled)
+            peakHeight = peakHeight/peaksRectWidth * peaksRectWidth;
+
         if (peakHeight == 0)
             peakHeight = 2;
         int yPos = maxPeakHeight - peakHeight;
 
+        // draw the build
         painter.fillRect(xPos, yPos, peaksRectWidth, peakHeight, color);
+
+        //pixelize the build
+        if (pixeled) {
+            painter.setPen(QPen(color.darker(), 1));
+            int linesToDraw = peakHeight / peaksRectWidth;
+            for (int i = 1; i < linesToDraw; ++i) {
+                int lineY = maxPeakHeight - (i * peaksRectWidth);
+                painter.drawLine(xPos, lineY, xPos + peaksRectWidth, lineY);
+            }
+        }
 
         color.setAlpha(color.alpha() * 0.35);
         painter.setPen(color);
         int mirroredHeight = peakHeight/4;
-        qreal xPosMirrored = xPos + std::cos(0.4) * mirroredHeight;
+        if (pixeled)
+            mirroredHeight = mirroredHeight / peaksRectWidth * peaksRectWidth;
+
+        qreal mirrorAngle = 0.4;
+        qreal xPosMirrored = xPos + std::cos(mirrorAngle) * mirroredHeight;
         QPointF points[] = {
             QPointF(xPos, maxPeakHeight), //top left
             QPointF(xPos + peaksRectWidth, maxPeakHeight), // top right
@@ -166,6 +184,18 @@ void WavePeakPanel::paintBuildings(QPainter &painter)
         };
         painter.setBrush(color);
         painter.drawPolygon(points, 4);
+
+        //pixelize the mirrored build
+        if (pixeled) {
+            painter.setPen(QPen(color.darker(), 1));
+            int linesToDraw = mirroredHeight / peaksRectWidth;
+            xPosMirrored = xPos;
+            for (int i = 0; i < linesToDraw; ++i) {
+                int lineY = maxPeakHeight + (i * peaksRectWidth);
+                painter.drawLine(xPosMirrored + 1, lineY, xPosMirrored + peaksRectWidth, lineY);
+                xPosMirrored += std::cos(mirrorAngle) * peaksRectWidth;
+            }
+        }
     }
 }
 
@@ -179,7 +209,7 @@ int WavePeakPanel::getPeaksPad() const
 
 int WavePeakPanel::getPeaksWidth() const
 {
-   if (drawingMode == PIXELED_SOUND_WAVE)
+   if (drawingMode == PIXELED_SOUND_WAVE || drawingMode == PIXELED_BUILDINGS)
        return 5;
 
     return 2; // returning same value for all WavePeakPanelModes
@@ -238,13 +268,16 @@ void WavePeakPanel::paintEvent(QPaintEvent *event)
         if (!showingBuffering) {
             switch (drawingMode) {
             case WavePeakPanel::BUILDINGS:
-                paintBuildings(painter);
+                paintBuildings(painter, false);
                 break;
             case WavePeakPanel::SOUND_WAVE:
                 paintSoundWave(painter);
                 break;
             case WavePeakPanel::PIXELED_SOUND_WAVE:
                 paintPixeledSoundWave(painter);
+                break;
+            case WavePeakPanel::PIXELED_BUILDINGS:
+                paintBuildings(painter, true);
                 break;
             }
         }

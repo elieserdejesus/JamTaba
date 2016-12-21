@@ -487,6 +487,7 @@
      <addaction name="actionSoundWave"/>
      <addaction name="actionBuildings"/>
      <addaction name="actionPixelatedSoundWave"/>
+     <addaction name="actionPixelatedBuildings"/>
     </widget>
     <addaction name="menuMetering"/>
     <addaction name="separator"/>
@@ -672,6 +673,11 @@
   <action name="actionPixelatedSoundWave">
    <property name="text">
     <string>Pixelated Sound Wave</string>
+   </property>
+  </action>
+  <action name="actionPixelatedBuildings">
+   <property name="text">
+    <string>Pixelated Buildings</string>
    </property>
   </action>
  </widget>
