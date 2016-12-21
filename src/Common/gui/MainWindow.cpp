@@ -1205,6 +1205,7 @@ void MainWindow::initializeViewMenu()
     QActionGroup *waveDrawingGroup = new QActionGroup(this);
     waveDrawingGroup->addAction(ui.actionBuildings);
     waveDrawingGroup->addAction(ui.actionSoundWave);
+    waveDrawingGroup->addAction(ui.actionPixelatedSoundWave);
     connect(ui.menuWaveDrawing, &QMenu::triggered, this, &MainWindow::setWaveDrawingMode);
 }
 
@@ -1218,6 +1219,8 @@ void MainWindow::setWaveDrawingMode(QAction *action)
                 roomView->setWaveDrawingMode(WavePeakPanel::SOUND_WAVE);
             else if (action == ui.actionBuildings)
                 roomView->setWaveDrawingMode(WavePeakPanel::BUILDINGS);
+            else if (action == ui.actionPixelatedSoundWave)
+                roomView->setWaveDrawingMode(WavePeakPanel::PIXELED_SOUND_WAVE);
         }
     }
 }

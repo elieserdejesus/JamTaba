@@ -16,7 +16,7 @@ public:
 
     enum WavePeakPanelMode
     {
-        SOUND_WAVE, BUILDINGS
+        SOUND_WAVE, BUILDINGS, PIXELED_SOUND_WAVE
     };
 
     void addPeak(float peak);
@@ -48,6 +48,7 @@ private:
 
     void paintBuildings(QPainter &painter);
     void paintSoundWave(QPainter &painter);
+    void paintPixeledSoundWave(QPainter &painter);
 
     WavePeakPanelMode drawingMode;
 

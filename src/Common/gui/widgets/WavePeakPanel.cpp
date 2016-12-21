@@ -12,7 +12,7 @@ WavePeakPanel::WavePeakPanel(QWidget *parent) :
     bufferingPercentage(0),
     peaksColor(QColor(90, 90, 90)),
     loadingColor(Qt::gray),
-    drawingMode(WavePeakPanel::BUILDINGS)
+    drawingMode(WavePeakPanel::PIXELED_SOUND_WAVE)
 {
     setAutoFillBackground(false);
     recreatePeaksArray();
@@ -171,15 +171,58 @@ void WavePeakPanel::paintBuildings(QPainter &painter)
 
 int WavePeakPanel::getPeaksPad() const
 {
-    if (drawingMode == WavePeakPanel::BUILDINGS)
-        return 1;
+    if (drawingMode == WavePeakPanel::SOUND_WAVE)
+        return 0;
 
-    return 0;
+    return 1;
 }
 
 int WavePeakPanel::getPeaksWidth() const
 {
-   return 2; // returning same value for all WavePeakPanelModes
+   if (drawingMode == PIXELED_SOUND_WAVE)
+       return 5;
+
+    return 2; // returning same value for all WavePeakPanelModes
+}
+
+void WavePeakPanel::paintPixeledSoundWave(QPainter &painter)
+{
+    size_t size = peaksArray.size();
+    if (size <= 0) // avoid divide by zero
+        return;
+
+    qreal maxPeakHeight = height()/2.0;
+
+
+    for (uint i = 0; i < size; i++) {
+        float alpha = (float)i/size;
+
+        QColor color(peaksColor); //using the color defined in stylesheet
+        color.setAlpha(std::pow(alpha, 2) * 255);
+
+        int peaksRectWidth = getPeaksWidth();
+        int peaksPad = getPeaksPad();
+        int xPos = i * (peaksRectWidth + peaksPad);
+
+        int peakHeight = (int)(maxPeakHeight * peaksArray[i]);
+        peakHeight = peakHeight/peaksRectWidth * peaksRectWidth;
+        if (peakHeight == 0)
+            peakHeight = peaksRectWidth;
+
+        int yPos = maxPeakHeight - peakHeight;
+        painter.fillRect(xPos, yPos, peaksRectWidth, peakHeight * 2, color);
+
+        //draw pixelizing horizontal lines
+        painter.setPen(QPen(color.dark(), 1));
+        int linesToDraw = peakHeight / peaksRectWidth;
+        for (int i = 0; i < linesToDraw; ++i) {
+            int yTop = maxPeakHeight - (i * peaksRectWidth);
+            painter.drawLine(xPos, yTop, xPos + peaksRectWidth, yTop);
+
+            int yBottom = maxPeakHeight + (i * peaksRectWidth);
+            painter.drawLine(xPos, yBottom, xPos + peaksRectWidth, yBottom);
+        }
+    }
 }
 
 void WavePeakPanel::paintEvent(QPaintEvent *event)
@@ -199,6 +242,10 @@ void WavePeakPanel::paintEvent(QPaintEvent *event)
                 break;
             case WavePeakPanel::SOUND_WAVE:
                 paintSoundWave(painter);
+                break;
+            case WavePeakPanel::PIXELED_SOUND_WAVE:
+                paintPixeledSoundWave(painter);
+                break;
             }
         }
         else{ //showing buffering

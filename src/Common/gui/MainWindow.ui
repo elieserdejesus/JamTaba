@@ -486,6 +486,7 @@
      </property>
      <addaction name="actionSoundWave"/>
      <addaction name="actionBuildings"/>
+     <addaction name="actionPixelatedSoundWave"/>
     </widget>
     <addaction name="menuMetering"/>
     <addaction name="separator"/>
@@ -666,6 +667,11 @@
    </property>
    <property name="text">
     <string>Gradient</string>
+   </property>
+  </action>
+  <action name="actionPixelatedSoundWave">
+   <property name="text">
+    <string>Pixelated Sound Wave</string>
    </property>
   </action>
  </widget>
