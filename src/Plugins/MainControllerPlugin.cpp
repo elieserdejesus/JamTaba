@@ -1,11 +1,10 @@
 #include "MainControllerPlugin.h"
-//#include "NinjamControllerVST.h"
 #include "midi/MidiDriver.h"
 #include "audio/core/LocalInputNode.h"
 #include "MainWindow.h"
 #include "JamTabaPlugin.h"
 #include "log/Logging.h"
-#include "Editor.h"
+//#include "Editor.h"
 
 using namespace Controller;
 

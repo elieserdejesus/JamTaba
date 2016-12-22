@@ -1,7 +1,8 @@
 #include "JamTabaPlugin.h"
-#include "MainControllerVST.h"
+#include "MainControllerPlugin.h"
 #include "NinjamControllerPlugin.h"
 #include "log/Logging.h"
+#include <QApplication>
 
 // anti troll scheme to avoid multiple connections in ninjam servers
 bool JamTabaPlugin::instanceIsInitialized = false;
@@ -27,18 +28,23 @@ JamTabaPlugin::~JamTabaPlugin ()
     qCDebug(jtVstPlugin) << "Base Plugin destructor";
 }
 
+MainControllerPlugin *JamTabaPlugin::getController()
+{
+    return controller.data();
+}
+
 void JamTabaPlugin::initialize()
 {
     if (!isRunning()) {
         if (!controller) {
-            qCDebug(jtVstPlugin) << "Plugin initialize()...";
+            qCDebug(jtVstPlugin) << "Plugin initialize()..." << this;
             QApplication::setApplicationName("Jamtaba 2");
             QApplication::setApplicationVersion(APP_VERSION);
 
             Persistence::Settings settings;// read from file in constructor
             settings.load();
             qCDebug(jtVstPlugin)<< "Creating controller!";
-            controller.reset(createControllerPlugin(settings, this));
+            controller.reset(createPluginMainController(settings, this));
             controller->setSampleRate(getSampleRate());
             controller->start();
             controller->connectInJamtabaServer();

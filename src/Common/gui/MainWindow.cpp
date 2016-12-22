@@ -150,6 +150,7 @@ void MainWindow::initializeThemeMenu()
 
     // create a menu action for each theme
     QString themesDir = Configurator::getInstance()->getThemesDir().absolutePath();
+    qDebug() << "Themes dir:" << themesDir;
     QStringList themes = Theme::Loader::getAvailableThemes(themesDir);
     foreach (const QString &themeDir, themes) {
         QString themeName = QFileInfo(themeDir).baseName();

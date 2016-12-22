@@ -14,7 +14,7 @@
 			<key>name</key>
 			<string>JTBA: JamTaba</string>
 			<key>sandboxSafe</key>
-			<true/>
+			<false/>
 			<key>subtype</key>
 			<string>smxr</string>
 			<key>type</key>

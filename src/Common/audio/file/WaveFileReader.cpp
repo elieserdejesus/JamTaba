@@ -16,6 +16,11 @@ public:
         :stream(stream)
     {
     }
+    
+    virtual ~SampleExtractor()
+    {
+        
+    }
 
     virtual float nextSample() = 0;
 protected:

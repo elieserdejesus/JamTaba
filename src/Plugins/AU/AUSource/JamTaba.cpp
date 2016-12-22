@@ -1,37 +1,26 @@
-#include "AUEffectBase.h"
-#include <AudioToolbox/AudioUnitUtilities.h>
-#include "JamTabaVersion.h"
-#include <math.h>
+#include "JamTaba.h"
+#include "MainControllerPlugin.h"
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-class JamTaba : public AUEffectBase
+class MainControllerAU : public MainControllerPlugin
 {
 public:
-	JamTaba(AudioUnit component);
-
-	virtual OSStatus			Version() { return kJamTabaVersion; }
-
-	virtual OSStatus			Initialize();
-
-
-	// for custom property
-	virtual OSStatus			GetPropertyInfo(	AudioUnitPropertyID		inID,
-													AudioUnitScope			inScope,
-													AudioUnitElement		inElement,
-													UInt32 &				outDataSize,
-													Boolean	&				outWritable );
-
-	virtual OSStatus			GetProperty(		AudioUnitPropertyID 	inID,
-													AudioUnitScope 			inScope,
-													AudioUnitElement 		inElement,
-													void 					* outData );
-
-    virtual OSStatus			ProcessBufferLists(
-                                                   AudioUnitRenderActionFlags &	ioActionFlags,
-                                                   const AudioBufferList &			inBuffer,
-                                                   AudioBufferList &				outBuffer,
-                                                   UInt32							inFramesToProcess );
-
+    MainControllerAU(const Persistence::Settings &settings, JamTabaPlugin *plugin)
+        : MainControllerPlugin(settings, plugin)
+    {
+        
+    }
+    
+    QString getJamtabaFlavor() const override
+    {
+        return "AU Plugin";
+    }
+    
+    void resizePluginEditor(int newWidth, int newHeight) override
+    {
+        
+    }
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,10 +29,47 @@ public:
 AUDIOCOMPONENT_ENTRY(AUBaseProcessFactory, JamTaba)
 
 
+JamTaba *JamTaba::instance = nullptr;
+
 JamTaba::JamTaba(AudioUnit component)
-	: AUEffectBase(component)
+	: AUEffectBase(component),
+      JamTabaPlugin(2, 2)
 {
-	
+	if (instance == nullptr) {
+        instance = this;
+        
+    }
+    qDebug() << "AUDIO UNIT: " << component;
+}
+
+MainControllerPlugin * JamTaba::createPluginMainController(const Persistence::Settings &settings, JamTabaPlugin *plugin) const
+{
+    return new MainControllerAU(settings, plugin);
+}
+
+qint32 JamTaba::getStartPositionForHostSync() const
+{
+    return 0; // TODO implementar
+}
+
+bool JamTaba::hostIsPlaying() const
+{
+    return true; //TODO implementar
+}
+
+int JamTaba::getHostBpm() const
+{
+    return 120; //TODO implementar
+}
+
+float JamTaba::getSampleRate() const
+{
+    return 44100; // TODO implementar
+}
+
+QString JamTaba::getHostName()
+{
+    return "Implementar!"; //http://lists.apple.com/archives/coreaudio-api/2007/Mar/msg00167.html
 }
 
 OSStatus JamTaba::ProcessBufferLists(AudioUnitRenderActionFlags &	ioActionFlags,
@@ -72,6 +98,13 @@ OSStatus JamTaba::Initialize()
 {
 	OSStatus result = AUEffectBase::Initialize();
 	
+    // start the configurator
+    //Configurator *configurator = Configurator::getInstance();
+    //if (!configurator->setUp())
+        //qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";
+    
+    JamTabaPlugin::initialize();
+ 	
 	return result;
 }
 

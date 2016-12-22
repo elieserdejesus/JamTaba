@@ -60,7 +60,7 @@ protected:
     qint32 getStartPositionForHostSync() const override;
     bool hostIsPlaying() const override;
 
-    MainControllerPlugin *createControllerPlugin(const Persistence::Settings &settings, JamTabaPlugin *plugin) const override;
+    MainControllerPlugin *createPluginMainController(const Persistence::Settings &settings, JamTabaPlugin *plugin) const override;
 };
 
 

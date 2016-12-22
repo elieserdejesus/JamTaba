@@ -5,7 +5,7 @@
 #include "LocalTrackView.h"
 #include "audio/core/LocalInputNode.h"
 
-MainWindowVST::MainWindowVST(MainControllerPlugin *mainController) :
+MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
     MainWindow(mainController),
     firstChannelIsInitialized(false)
 {
@@ -16,19 +16,19 @@ MainWindowVST::MainWindowVST(MainControllerPlugin *mainController) :
     this->ui.actionFullscreenMode->setVisible(false);
 }
 
-NinjamRoomWindow *MainWindowVST::createNinjamWindow(const Login::RoomInfo &roomInfo,
+NinjamRoomWindow *MainWindowPlugin::createNinjamWindow(const Login::RoomInfo &roomInfo,
                                                     Controller::MainController *mainController)
 {
     return new NinjamRoomWindowPlugin(this, roomInfo, dynamic_cast<MainControllerPlugin*>(mainController));
 }
 
-void MainWindowVST::removeAllInputLocalTracks(){
+void MainWindowPlugin::removeAllInputLocalTracks(){
     MainWindow::removeAllInputLocalTracks();
 
     firstChannelIsInitialized = false;//prepare for the next local input tracks initialization (loading presets)
 }
 
-void MainWindowVST::initializeLocalSubChannel(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel){
+void MainWindowPlugin::initializeLocalSubChannel(LocalTrackView *subChannelView, const Persistence::Subchannel &subChannel){
 
     // load channels names, gain, pan, boost, mute
     MainWindow::initializeLocalSubChannel(subChannelView, subChannel);
@@ -45,7 +45,7 @@ void MainWindowVST::initializeLocalSubChannel(LocalTrackView *subChannelView, co
 
 // ++++++++++++++++++++++++++++
 
-void MainWindowVST::setFullViewStatus(bool fullViewActivated)
+void MainWindowPlugin::setFullViewStatus(bool fullViewActivated)
 {
     MainWindow::setFullViewStatus(fullViewActivated);
     MainControllerPlugin *controller = getMainController();
@@ -54,7 +54,7 @@ void MainWindowVST::setFullViewStatus(bool fullViewActivated)
 }
 
 
-PreferencesDialog *MainWindowVST::createPreferencesDialog()
+PreferencesDialog *MainWindowPlugin::createPreferencesDialog()
 {
     PreferencesDialog * dialog = new PreferencesDialogPlugin(this);
     setupPreferencesDialogSignals(dialog);

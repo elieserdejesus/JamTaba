@@ -1,7 +1,7 @@
 #ifndef JAMTABA_PLUGIN_H
 #define JAMTABA_PLUGIN_H
 
-#include "MainControllerVST.h"
+#include "MainControllerPlugin.h"
 
 /** this is the base class for VST and AU plugins */
 
@@ -12,6 +12,8 @@ public:
 
     JamTabaPlugin(quint8 inputChannels, quint8 outputChannels);
     virtual ~JamTabaPlugin();
+    
+    MainControllerPlugin *getController();
 
     void initialize();    // need be called first time editor is opened
 
@@ -23,8 +25,6 @@ public:
 
     inline bool isRunning() const;
 
-    inline MainControllerPlugin *getController();
-
     virtual int getHostBpm() const = 0;
 
 protected:
@@ -35,15 +35,17 @@ protected:
     Audio::SamplesBuffer outputBuffer;
     bool hostWasPlayingInLastAudioCallBack;
 
-    virtual bool hostIsPlaying() const = 0;
+    
 
     static bool instanceIsInitialized;
 
     inline bool transportStartDetectedInHost() const;
 
+    virtual bool hostIsPlaying() const = 0;
+    
     virtual qint32 getStartPositionForHostSync() const = 0;
 
-    virtual MainControllerPlugin *createControllerPlugin(const Persistence::Settings &settings, JamTabaPlugin *plugin) const = 0;
+    virtual MainControllerPlugin *createPluginMainController(const Persistence::Settings &settings, JamTabaPlugin *plugin) const = 0;
 
 };
 
@@ -53,11 +55,6 @@ protected:
 bool JamTabaPlugin::isRunning() const
 {
     return running;
-}
-
-MainControllerPlugin *JamTabaPlugin::getController()
-{
-    return controller.data();
 }
 
 bool JamTabaPlugin::transportStartDetectedInHost() const

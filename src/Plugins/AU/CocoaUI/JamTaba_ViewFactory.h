@@ -14,7 +14,7 @@
 
 @interface JamTaba_ViewFactory : NSObject <AUCocoaUIBase>
 {
-    IBOutlet JamTaba_UIView *uiFreshlyLoadedView;
+    @private IBOutlet JamTaba_UIView *uiFreshlyLoadedView;
 }															
 - (NSString *) description;	// string description of the view
 

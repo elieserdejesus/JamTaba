@@ -7,10 +7,10 @@
 
 class NinjamRoomWindowPlugin;
 
-class MainWindowVST : public MainWindow
+class MainWindowPlugin : public MainWindow
 {
 public:
-    MainWindowVST(MainControllerPlugin *mainController);
+    MainWindowPlugin(MainControllerPlugin *mainController);
 
     inline MainControllerPlugin *getMainController() override
     {
