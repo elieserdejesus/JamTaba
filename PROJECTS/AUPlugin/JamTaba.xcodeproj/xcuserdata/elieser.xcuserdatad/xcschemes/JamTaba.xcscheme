@@ -36,13 +36,10 @@
       debugAsWhichUser = "root"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Development"
+      buildConfiguration = "Deployment"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <PathRunnable
-         FilePath = "/Applications/REAPER64.app">
-      </PathRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

@@ -16,6 +16,7 @@
 {	
     // Other Members
     AudioUnit 				mAU;
+
 }
 
 

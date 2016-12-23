@@ -5,38 +5,48 @@
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include "JamTabaVersion.h"
 #include <math.h>
-#include "JamTabaPlugin.h" // plugins (AU and VST) base class
-#include "JamTaba.h"
 
-class JamTaba : public AUEffectBase, public JamTabaPlugin
+enum
+{
+	//kAudioUnitCustomProperty_JamTabaPluginIntance = 65536,
+    kAudioUnitCustomProperty_JamTabaListener = 65537,
+
+};
+
+
+class JamTabaListener
+{
+public:
+    virtual void audioCallback(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess) = 0;
+};
+
+
+class JamTaba : public AUEffectBase
 {
 public:
 	JamTaba(AudioUnit component);
     
-	virtual OSStatus			Version() { return kJamTabaVersion; }
-	virtual OSStatus			Initialize();
-	virtual OSStatus			GetPropertyInfo(AudioUnitPropertyID	inID, AudioUnitScope inScope, AudioUnitElement inElement, UInt32 &outDataSize, Boolean	&outWritable);
+	inline OSStatus Version() override {
+        return kJamTabaVersion;
+    }
+	
+    OSStatus Initialize() override;
+	
+    OSStatus GetPropertyInfo(AudioUnitPropertyID inID, AudioUnitScope inScope, AudioUnitElement inElement, UInt32 &outDataSize, Boolean	&outWritable) override;
     
-	virtual OSStatus GetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, AudioUnitElement inElement, void	*outData);
+	OSStatus GetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, AudioUnitElement inElement, void	*outData) override;
     
-    virtual OSStatus ProcessBufferLists(AudioUnitRenderActionFlags &ioActionFlags, const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess);
+    OSStatus ProcessBufferLists(AudioUnitRenderActionFlags &ioActionFlags, const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess) override;
     
-    QString getHostName() override;
+    OSStatus SetProperty(		AudioUnitPropertyID inID,
+                                                  AudioUnitScope 		inScope,
+                                                  AudioUnitElement 	inElement,
+                                                  const void *			inData,
+                                                  UInt32 inDataSize)         override;
     
-    float getSampleRate() const override;
-    
-    int getHostBpm() const override;
-    
-    bool hostIsPlaying() const override;
-    
-    qint32 getStartPositionForHostSync() const override;
-    
-    MainControllerPlugin *createPluginMainController(const Persistence::Settings &settings, JamTabaPlugin *plugin) const override;
-    
-    inline static JamTaba *getInstance() { return instance; }
-    
+   
 private:
-    static JamTaba *instance;
+    JamTabaListener *listener;
     
 };
 

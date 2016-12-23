@@ -1,7 +1,15 @@
 
 #import "JamTaba_UIView.h"
+#include "MainWindowPlugin.h"
 
 @implementation JamTaba_UIView
+
+
+-(id)init
+{
+        
+    return [super init];
+}
 
 - (void)dealloc {
 

@@ -4,8 +4,9 @@
 #include <QMacNativeWidget>
 #include <QApplication>
 #include <QVBoxLayout>
-#include "MainWindowPlugin.h"
-#include "JamTaba.h"
+#include "JamTabaAUPlugin.h"
+#import "MainWindowPlugin.h"
+#import "JamTabaAUPlugin.h"
 
 #include <QtPlugin>
 Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
@@ -24,16 +25,17 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 
 - (NSView *)uiViewForAudioUnit:(AudioUnit)inAU withSize:(NSSize)inPreferredSize {
     
-    uiFreshlyLoadedView = [[JamTaba_UIView alloc] init];
-    
-    if (!qApp)
+    if (!QApplication::instance())
     {
         int argc = 0;
         QApplication::setApplicationName("Jamtaba 2");
         QApplication::setAttribute(Qt::AA_MacPluginApplication);
         QApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
-        (void)new QApplication(argc, 0);
+        new QApplication(argc, 0);
     }
+    
+    uiFreshlyLoadedView = [[JamTaba_UIView alloc] init];
+
     
     QMacNativeWidget *nativeWidget = new QMacNativeWidget();
     nativeWidget->setWindowFlags(Qt::Tool); // without this flag the plugin window is not showed in AULab and Logic 9
@@ -47,24 +49,29 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
+ 
     
+    static JamTabaAUPlugin *auPlugin = new JamTabaAUPlugin();
+    static MainWindowPlugin *mainWindow;
+    static MainControllerPlugin *mainController;
     
-    JamTaba* jamtaba = new JamTaba(inAU);
-    if (!jamtaba->isRunning()) {
+    if (!auPlugin->isRunning()) {
         Configurator *configurator = Configurator::getInstance();
         if (!configurator->setUp())
             qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";
-        jamtaba->initialize();
+        auPlugin->initialize();
+        
+        mainController = auPlugin->getController();
+        mainWindow = new MainWindowPlugin(mainController);
+        mainController->setMainWindow(mainWindow);
+        mainWindow->initialize();
     }
     
-    MainControllerPlugin *mainController = jamtaba->getController();
-    MainWindowPlugin* mainWindow = new MainWindowPlugin(mainController);
-    mainController->setMainWindow(mainWindow);
-    mainWindow->initialize();
-
+    
+    
     layout->addWidget(mainWindow);
     nativeWidget->setLayout(layout);
-    
+
     //cast voodoo learned from http://lists.qt-project.org/pipermail/interest/2014-January/010655.html
     NSView *nativeWidgetView = (__bridge NSView *)reinterpret_cast<void*>(nativeWidget->winId());
 
@@ -81,9 +88,17 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     [uiFreshlyLoadedView setAU:inAU];
     
     NSView *returnView = uiFreshlyLoadedView;
-    uiFreshlyLoadedView = nil;	// zero out pointer.  This is a view factory.  Once a view's been created
-                                // and handed off, the factory keeps no record of it.
     
+    printf("Setando listener: %d", auPlugin);
+    
+    UInt32 size = sizeof(void *);
+    JamTabaListener *listener = auPlugin->listener;
+    AudioUnitSetProperty(inAU, kAudioUnitCustomProperty_JamTabaListener, kAudioUnitScope_Global, 0, listener, size);
+    
+    
+    uiFreshlyLoadedView = nil;	// zero out pointer.  This is a view factory.  Once a view's been created
+    // and handed off, the factory keeps no record of it.
+
     
     return returnView;
 }

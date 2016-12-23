@@ -128,6 +128,7 @@ bool Configurator::setUp()
 
     // themes dir is the same for Standalone and Vst plugin
     themesDir = QDir(getApplicationDataDir().absoluteFilePath(THEMES_FOLDER_NAME));
+    qDebug() << "Themes dir: " << themesDir;
 
     if (!folderTreeExists())
         createFoldersTree();

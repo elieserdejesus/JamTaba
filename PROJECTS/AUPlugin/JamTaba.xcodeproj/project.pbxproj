@@ -7,328 +7,113 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2A0DBC4E1E0AF46900BEF1FF /* codec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB151E0AF46800BEF1FF /* codec.cpp */; };
 		2A0DBC4F1E0AF46900BEF1FF /* codec.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB161E0AF46800BEF1FF /* codec.h */; };
-		2A0DBC501E0AF46900BEF1FF /* codec.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB161E0AF46800BEF1FF /* codec.h */; };
-		2A0DBC521E0AF46900BEF1FF /* AudioDriver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB181E0AF46800BEF1FF /* AudioDriver.cpp */; };
 		2A0DBC531E0AF46900BEF1FF /* AudioDriver.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB191E0AF46800BEF1FF /* AudioDriver.h */; };
-		2A0DBC541E0AF46900BEF1FF /* AudioDriver.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB191E0AF46800BEF1FF /* AudioDriver.h */; };
-		2A0DBC561E0AF46900BEF1FF /* AudioMixer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB1A1E0AF46800BEF1FF /* AudioMixer.cpp */; };
 		2A0DBC571E0AF46900BEF1FF /* AudioMixer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB1B1E0AF46800BEF1FF /* AudioMixer.h */; };
-		2A0DBC581E0AF46900BEF1FF /* AudioMixer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB1B1E0AF46800BEF1FF /* AudioMixer.h */; };
-		2A0DBC5A1E0AF46900BEF1FF /* AudioNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB1C1E0AF46800BEF1FF /* AudioNode.cpp */; };
 		2A0DBC5B1E0AF46900BEF1FF /* AudioNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB1D1E0AF46800BEF1FF /* AudioNode.h */; };
-		2A0DBC5C1E0AF46900BEF1FF /* AudioNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB1D1E0AF46800BEF1FF /* AudioNode.h */; };
-		2A0DBC5E1E0AF46900BEF1FF /* AudioNodeProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB1E1E0AF46800BEF1FF /* AudioNodeProcessor.cpp */; };
 		2A0DBC5F1E0AF46900BEF1FF /* AudioNodeProcessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB1F1E0AF46800BEF1FF /* AudioNodeProcessor.h */; };
-		2A0DBC601E0AF46900BEF1FF /* AudioNodeProcessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB1F1E0AF46800BEF1FF /* AudioNodeProcessor.h */; };
-		2A0DBC621E0AF46900BEF1FF /* AudioPeak.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB201E0AF46800BEF1FF /* AudioPeak.cpp */; };
 		2A0DBC631E0AF46900BEF1FF /* AudioPeak.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB211E0AF46800BEF1FF /* AudioPeak.h */; };
-		2A0DBC641E0AF46900BEF1FF /* AudioPeak.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB211E0AF46800BEF1FF /* AudioPeak.h */; };
-		2A0DBC661E0AF46900BEF1FF /* Filters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB221E0AF46800BEF1FF /* Filters.cpp */; };
 		2A0DBC671E0AF46900BEF1FF /* Filters.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB231E0AF46800BEF1FF /* Filters.h */; };
-		2A0DBC681E0AF46900BEF1FF /* Filters.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB231E0AF46800BEF1FF /* Filters.h */; };
-		2A0DBC701E0AF46900BEF1FF /* LocalInputGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB281E0AF46800BEF1FF /* LocalInputGroup.cpp */; };
 		2A0DBC711E0AF46900BEF1FF /* LocalInputGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB291E0AF46800BEF1FF /* LocalInputGroup.h */; };
-		2A0DBC721E0AF46900BEF1FF /* LocalInputGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB291E0AF46800BEF1FF /* LocalInputGroup.h */; };
-		2A0DBC741E0AF46900BEF1FF /* LocalInputNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB2A1E0AF46800BEF1FF /* LocalInputNode.cpp */; };
 		2A0DBC751E0AF46900BEF1FF /* LocalInputNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB2B1E0AF46800BEF1FF /* LocalInputNode.h */; };
-		2A0DBC761E0AF46900BEF1FF /* LocalInputNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB2B1E0AF46800BEF1FF /* LocalInputNode.h */; };
-		2A0DBC781E0AF46900BEF1FF /* PluginDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB2C1E0AF46800BEF1FF /* PluginDescriptor.cpp */; };
 		2A0DBC791E0AF46900BEF1FF /* PluginDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB2D1E0AF46800BEF1FF /* PluginDescriptor.h */; };
-		2A0DBC7A1E0AF46900BEF1FF /* PluginDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB2D1E0AF46800BEF1FF /* PluginDescriptor.h */; };
 		2A0DBC7D1E0AF46900BEF1FF /* Plugins.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB2F1E0AF46800BEF1FF /* Plugins.h */; };
-		2A0DBC7E1E0AF46900BEF1FF /* Plugins.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB2F1E0AF46800BEF1FF /* Plugins.h */; };
-		2A0DBC801E0AF46900BEF1FF /* SamplesBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB301E0AF46800BEF1FF /* SamplesBuffer.cpp */; };
 		2A0DBC811E0AF46900BEF1FF /* SamplesBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB311E0AF46800BEF1FF /* SamplesBuffer.h */; };
-		2A0DBC821E0AF46900BEF1FF /* SamplesBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB311E0AF46800BEF1FF /* SamplesBuffer.h */; };
 		2A0DBC831E0AF46900BEF1FF /* FileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB331E0AF46800BEF1FF /* FileReader.h */; };
-		2A0DBC841E0AF46900BEF1FF /* FileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB331E0AF46800BEF1FF /* FileReader.h */; };
-		2A0DBC861E0AF46900BEF1FF /* FileReaderFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB341E0AF46800BEF1FF /* FileReaderFactory.cpp */; };
 		2A0DBC871E0AF46900BEF1FF /* FileReaderFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB351E0AF46800BEF1FF /* FileReaderFactory.h */; };
-		2A0DBC881E0AF46900BEF1FF /* FileReaderFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB351E0AF46800BEF1FF /* FileReaderFactory.h */; };
-		2A0DBC8A1E0AF46900BEF1FF /* OggFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB361E0AF46800BEF1FF /* OggFileReader.cpp */; };
 		2A0DBC8B1E0AF46900BEF1FF /* OggFileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB371E0AF46800BEF1FF /* OggFileReader.h */; };
-		2A0DBC8C1E0AF46900BEF1FF /* OggFileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB371E0AF46800BEF1FF /* OggFileReader.h */; };
-		2A0DBC8E1E0AF46900BEF1FF /* WaveFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB381E0AF46800BEF1FF /* WaveFileReader.cpp */; };
 		2A0DBC8F1E0AF46900BEF1FF /* WaveFileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB391E0AF46900BEF1FF /* WaveFileReader.h */; };
-		2A0DBC901E0AF46900BEF1FF /* WaveFileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB391E0AF46900BEF1FF /* WaveFileReader.h */; };
-		2A0DBCA21E0AF46900BEF1FF /* MetronomeTrackNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB461E0AF46900BEF1FF /* MetronomeTrackNode.cpp */; };
 		2A0DBCA31E0AF46900BEF1FF /* MetronomeTrackNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB471E0AF46900BEF1FF /* MetronomeTrackNode.h */; };
-		2A0DBCA41E0AF46900BEF1FF /* MetronomeTrackNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB471E0AF46900BEF1FF /* MetronomeTrackNode.h */; };
-		2A0DBCA61E0AF46900BEF1FF /* NinjamTrackNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB481E0AF46900BEF1FF /* NinjamTrackNode.cpp */; };
 		2A0DBCA71E0AF46900BEF1FF /* NinjamTrackNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB491E0AF46900BEF1FF /* NinjamTrackNode.h */; };
-		2A0DBCA81E0AF46900BEF1FF /* NinjamTrackNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB491E0AF46900BEF1FF /* NinjamTrackNode.h */; };
-		2A0DBCAA1E0AF46900BEF1FF /* Resampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB4A1E0AF46900BEF1FF /* Resampler.cpp */; };
 		2A0DBCAB1E0AF46900BEF1FF /* Resampler.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB4B1E0AF46900BEF1FF /* Resampler.h */; };
-		2A0DBCAC1E0AF46900BEF1FF /* Resampler.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB4B1E0AF46900BEF1FF /* Resampler.h */; };
-		2A0DBCAE1E0AF46900BEF1FF /* RoomStreamerNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB4C1E0AF46900BEF1FF /* RoomStreamerNode.cpp */; };
 		2A0DBCAF1E0AF46900BEF1FF /* RoomStreamerNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB4D1E0AF46900BEF1FF /* RoomStreamerNode.h */; };
-		2A0DBCB01E0AF46900BEF1FF /* RoomStreamerNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB4D1E0AF46900BEF1FF /* RoomStreamerNode.h */; };
-		2A0DBCB21E0AF46900BEF1FF /* samplesbufferrecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB4E1E0AF46900BEF1FF /* samplesbufferrecorder.cpp */; };
 		2A0DBCB31E0AF46900BEF1FF /* SamplesBufferRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB4F1E0AF46900BEF1FF /* SamplesBufferRecorder.h */; };
-		2A0DBCB41E0AF46900BEF1FF /* SamplesBufferRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB4F1E0AF46900BEF1FF /* SamplesBufferRecorder.h */; };
-		2A0DBCB61E0AF46900BEF1FF /* SamplesBufferResampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB501E0AF46900BEF1FF /* SamplesBufferResampler.cpp */; };
 		2A0DBCB71E0AF46900BEF1FF /* SamplesBufferResampler.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB511E0AF46900BEF1FF /* SamplesBufferResampler.h */; };
-		2A0DBCB81E0AF46900BEF1FF /* SamplesBufferResampler.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB511E0AF46900BEF1FF /* SamplesBufferResampler.h */; };
-		2A0DBCBA1E0AF46900BEF1FF /* VorbisDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB531E0AF46900BEF1FF /* VorbisDecoder.cpp */; };
 		2A0DBCBB1E0AF46900BEF1FF /* VorbisDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB541E0AF46900BEF1FF /* VorbisDecoder.h */; };
-		2A0DBCBC1E0AF46900BEF1FF /* VorbisDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB541E0AF46900BEF1FF /* VorbisDecoder.h */; };
-		2A0DBCBE1E0AF46900BEF1FF /* VorbisEncoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB551E0AF46900BEF1FF /* VorbisEncoder.cpp */; };
 		2A0DBCBF1E0AF46900BEF1FF /* VorbisEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB561E0AF46900BEF1FF /* VorbisEncoder.h */; };
-		2A0DBCC01E0AF46900BEF1FF /* VorbisEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB561E0AF46900BEF1FF /* VorbisEncoder.h */; };
-		2A0DBCC21E0AF46900BEF1FF /* Configurator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB571E0AF46900BEF1FF /* Configurator.cpp */; };
 		2A0DBCC31E0AF46900BEF1FF /* Configurator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB581E0AF46900BEF1FF /* Configurator.h */; };
-		2A0DBCC41E0AF46900BEF1FF /* Configurator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB581E0AF46900BEF1FF /* Configurator.h */; };
-		2A0DBCD21E0AF46900BEF1FF /* IpToLocationResolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB621E0AF46900BEF1FF /* IpToLocationResolver.cpp */; };
 		2A0DBCD31E0AF46900BEF1FF /* IpToLocationResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB631E0AF46900BEF1FF /* IpToLocationResolver.h */; };
-		2A0DBCD41E0AF46900BEF1FF /* IpToLocationResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB631E0AF46900BEF1FF /* IpToLocationResolver.h */; };
-		2A0DBCD61E0AF46900BEF1FF /* WebIpToLocationResolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB641E0AF46900BEF1FF /* WebIpToLocationResolver.cpp */; };
 		2A0DBCD71E0AF46900BEF1FF /* WebIpToLocationResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB651E0AF46900BEF1FF /* WebIpToLocationResolver.h */; };
-		2A0DBCD81E0AF46900BEF1FF /* WebIpToLocationResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB651E0AF46900BEF1FF /* WebIpToLocationResolver.h */; };
-		2A0DBCDA1E0AF46900BEF1FF /* BaseTrackView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB671E0AF46900BEF1FF /* BaseTrackView.cpp */; };
 		2A0DBCDB1E0AF46900BEF1FF /* BaseTrackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB681E0AF46900BEF1FF /* BaseTrackView.h */; };
-		2A0DBCDC1E0AF46900BEF1FF /* BaseTrackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB681E0AF46900BEF1FF /* BaseTrackView.h */; };
-		2A0DBCDE1E0AF46900BEF1FF /* BpiUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB691E0AF46900BEF1FF /* BpiUtils.cpp */; };
 		2A0DBCDF1E0AF46900BEF1FF /* BpiUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB6A1E0AF46900BEF1FF /* BpiUtils.h */; };
-		2A0DBCE01E0AF46900BEF1FF /* BpiUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB6A1E0AF46900BEF1FF /* BpiUtils.h */; };
-		2A0DBCE21E0AF46900BEF1FF /* BusyDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB6B1E0AF46900BEF1FF /* BusyDialog.cpp */; };
 		2A0DBCE31E0AF46900BEF1FF /* BusyDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB6C1E0AF46900BEF1FF /* BusyDialog.h */; };
-		2A0DBCE41E0AF46900BEF1FF /* BusyDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB6C1E0AF46900BEF1FF /* BusyDialog.h */; };
 		2A0DBCE51E0AF46900BEF1FF /* BusyDialog.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBB6D1E0AF46900BEF1FF /* BusyDialog.ui */; };
-		2A0DBCE61E0AF46900BEF1FF /* BusyDialog.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBB6D1E0AF46900BEF1FF /* BusyDialog.ui */; };
-		2A0DBCE81E0AF46900BEF1FF /* ChatMessagePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB6F1E0AF46900BEF1FF /* ChatMessagePanel.cpp */; };
 		2A0DBCE91E0AF46900BEF1FF /* ChatMessagePanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB701E0AF46900BEF1FF /* ChatMessagePanel.h */; };
-		2A0DBCEA1E0AF46900BEF1FF /* ChatMessagePanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB701E0AF46900BEF1FF /* ChatMessagePanel.h */; };
 		2A0DBCEB1E0AF46900BEF1FF /* ChatMessagePanel.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBB711E0AF46900BEF1FF /* ChatMessagePanel.ui */; };
-		2A0DBCEC1E0AF46900BEF1FF /* ChatMessagePanel.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBB711E0AF46900BEF1FF /* ChatMessagePanel.ui */; };
-		2A0DBCEE1E0AF46900BEF1FF /* ChatPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB721E0AF46900BEF1FF /* ChatPanel.cpp */; };
 		2A0DBCEF1E0AF46A00BEF1FF /* ChatPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB731E0AF46900BEF1FF /* ChatPanel.h */; };
-		2A0DBCF01E0AF46A00BEF1FF /* ChatPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB731E0AF46900BEF1FF /* ChatPanel.h */; };
 		2A0DBCF11E0AF46A00BEF1FF /* ChatPanel.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBB741E0AF46900BEF1FF /* ChatPanel.ui */; };
-		2A0DBCF21E0AF46A00BEF1FF /* ChatPanel.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBB741E0AF46900BEF1FF /* ChatPanel.ui */; };
-		2A0DBCF41E0AF46A00BEF1FF /* ChatTextEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB751E0AF46900BEF1FF /* ChatTextEditor.cpp */; };
 		2A0DBCF51E0AF46A00BEF1FF /* ChatTextEditor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB761E0AF46900BEF1FF /* ChatTextEditor.h */; };
-		2A0DBCF61E0AF46A00BEF1FF /* ChatTextEditor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB761E0AF46900BEF1FF /* ChatTextEditor.h */; };
-		2A0DBD021E0AF46A00BEF1FF /* NinjamVotingMessageParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB7D1E0AF46900BEF1FF /* NinjamVotingMessageParser.cpp */; };
 		2A0DBD031E0AF46A00BEF1FF /* NinjamVotingMessageParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB7E1E0AF46900BEF1FF /* NinjamVotingMessageParser.h */; };
-		2A0DBD041E0AF46A00BEF1FF /* NinjamVotingMessageParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB7E1E0AF46900BEF1FF /* NinjamVotingMessageParser.h */; };
-		2A0DBD061E0AF46A00BEF1FF /* ChatChordsProgressionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB801E0AF46900BEF1FF /* ChatChordsProgressionParser.cpp */; };
 		2A0DBD071E0AF46A00BEF1FF /* ChatChordsProgressionParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB811E0AF46900BEF1FF /* ChatChordsProgressionParser.h */; };
-		2A0DBD081E0AF46A00BEF1FF /* ChatChordsProgressionParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB811E0AF46900BEF1FF /* ChatChordsProgressionParser.h */; };
-		2A0DBD0A1E0AF46A00BEF1FF /* Chord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB821E0AF46900BEF1FF /* Chord.cpp */; };
 		2A0DBD0B1E0AF46A00BEF1FF /* Chord.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB831E0AF46900BEF1FF /* Chord.h */; };
-		2A0DBD0C1E0AF46A00BEF1FF /* Chord.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB831E0AF46900BEF1FF /* Chord.h */; };
-		2A0DBD0E1E0AF46A00BEF1FF /* ChordLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB841E0AF46900BEF1FF /* ChordLabel.cpp */; };
 		2A0DBD0F1E0AF46A00BEF1FF /* ChordLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB851E0AF46900BEF1FF /* ChordLabel.h */; };
-		2A0DBD101E0AF46A00BEF1FF /* ChordLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB851E0AF46900BEF1FF /* ChordLabel.h */; };
-		2A0DBD121E0AF46A00BEF1FF /* ChordProgression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB861E0AF46900BEF1FF /* ChordProgression.cpp */; };
 		2A0DBD131E0AF46A00BEF1FF /* ChordProgression.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB871E0AF46900BEF1FF /* ChordProgression.h */; };
-		2A0DBD141E0AF46A00BEF1FF /* ChordProgression.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB871E0AF46900BEF1FF /* ChordProgression.h */; };
-		2A0DBD161E0AF46A00BEF1FF /* ChordProgressionMeasure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB881E0AF46900BEF1FF /* ChordProgressionMeasure.cpp */; };
 		2A0DBD171E0AF46A00BEF1FF /* ChordProgressionMeasure.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB891E0AF46900BEF1FF /* ChordProgressionMeasure.h */; };
-		2A0DBD181E0AF46A00BEF1FF /* ChordProgressionMeasure.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB891E0AF46900BEF1FF /* ChordProgressionMeasure.h */; };
-		2A0DBD1A1E0AF46A00BEF1FF /* ChordsPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB8A1E0AF46900BEF1FF /* ChordsPanel.cpp */; };
 		2A0DBD1B1E0AF46A00BEF1FF /* ChordsPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB8B1E0AF46900BEF1FF /* ChordsPanel.h */; };
-		2A0DBD1C1E0AF46A00BEF1FF /* ChordsPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB8B1E0AF46900BEF1FF /* ChordsPanel.h */; };
 		2A0DBD1D1E0AF46A00BEF1FF /* ChordsPanel.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBB8C1E0AF46900BEF1FF /* ChordsPanel.ui */; };
-		2A0DBD1E1E0AF46A00BEF1FF /* ChordsPanel.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBB8C1E0AF46900BEF1FF /* ChordsPanel.ui */; };
 		2A0DBD1F1E0AF46A00BEF1FF /* ChordsProgressionParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB8D1E0AF46900BEF1FF /* ChordsProgressionParser.h */; };
-		2A0DBD201E0AF46A00BEF1FF /* ChordsProgressionParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBB8D1E0AF46900BEF1FF /* ChordsProgressionParser.h */; };
-		2A0DBD5C1E0AF46A00BEF1FF /* GuiUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBAD1E0AF46900BEF1FF /* GuiUtils.cpp */; };
 		2A0DBD5D1E0AF46A00BEF1FF /* GuiUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBAE1E0AF46900BEF1FF /* GuiUtils.h */; };
-		2A0DBD5E1E0AF46A00BEF1FF /* GuiUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBAE1E0AF46900BEF1FF /* GuiUtils.h */; };
-		2A0DBD601E0AF46A00BEF1FF /* Highligther.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBAF1E0AF46900BEF1FF /* Highligther.cpp */; };
 		2A0DBD611E0AF46A00BEF1FF /* Highligther.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBB01E0AF46900BEF1FF /* Highligther.h */; };
-		2A0DBD621E0AF46A00BEF1FF /* Highligther.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBB01E0AF46900BEF1FF /* Highligther.h */; };
-		2A0DBD641E0AF46A00BEF1FF /* CircularPaintStrategy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBB21E0AF46900BEF1FF /* CircularPaintStrategy.cpp */; };
-		2A0DBD661E0AF46A00BEF1FF /* EllipticalPaintStrategy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBB31E0AF46900BEF1FF /* EllipticalPaintStrategy.cpp */; };
-		2A0DBD6C1E0AF46A00BEF1FF /* IntervalProgressDisplay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBB71E0AF46900BEF1FF /* IntervalProgressDisplay.cpp */; };
 		2A0DBD6D1E0AF46A00BEF1FF /* IntervalProgressDisplay.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBB81E0AF46900BEF1FF /* IntervalProgressDisplay.h */; };
-		2A0DBD6E1E0AF46A00BEF1FF /* IntervalProgressDisplay.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBB81E0AF46900BEF1FF /* IntervalProgressDisplay.h */; };
-		2A0DBD701E0AF46B00BEF1FF /* IntervalProgressWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBB91E0AF46900BEF1FF /* IntervalProgressWindow.cpp */; };
 		2A0DBD711E0AF46B00BEF1FF /* IntervalProgressWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBBA1E0AF46900BEF1FF /* IntervalProgressWindow.h */; };
-		2A0DBD721E0AF46B00BEF1FF /* IntervalProgressWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBBA1E0AF46900BEF1FF /* IntervalProgressWindow.h */; };
-		2A0DBD741E0AF46B00BEF1FF /* LinearPaintStrategy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBBB1E0AF46900BEF1FF /* LinearPaintStrategy.cpp */; };
-		2A0DBD761E0AF46B00BEF1FF /* PiePaintStrategy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBBC1E0AF46900BEF1FF /* PiePaintStrategy.cpp */; };
-		2A0DBD781E0AF46B00BEF1FF /* JamRoomViewPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBBD1E0AF46900BEF1FF /* JamRoomViewPanel.cpp */; };
 		2A0DBD791E0AF46B00BEF1FF /* JamRoomViewPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBBE1E0AF46900BEF1FF /* JamRoomViewPanel.h */; };
-		2A0DBD7A1E0AF46B00BEF1FF /* JamRoomViewPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBBE1E0AF46900BEF1FF /* JamRoomViewPanel.h */; };
 		2A0DBD7B1E0AF46B00BEF1FF /* JamRoomViewPanel.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBBF1E0AF46900BEF1FF /* JamRoomViewPanel.ui */; };
-		2A0DBD7C1E0AF46B00BEF1FF /* JamRoomViewPanel.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBBF1E0AF46900BEF1FF /* JamRoomViewPanel.ui */; };
-		2A0DBD7E1E0AF46B00BEF1FF /* LocalTrackGroupView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBC01E0AF46900BEF1FF /* LocalTrackGroupView.cpp */; };
 		2A0DBD7F1E0AF46B00BEF1FF /* LocalTrackGroupView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBC11E0AF46900BEF1FF /* LocalTrackGroupView.h */; };
-		2A0DBD801E0AF46B00BEF1FF /* LocalTrackGroupView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBC11E0AF46900BEF1FF /* LocalTrackGroupView.h */; };
-		2A0DBD821E0AF46B00BEF1FF /* LocalTrackView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBC21E0AF46900BEF1FF /* LocalTrackView.cpp */; };
 		2A0DBD831E0AF46B00BEF1FF /* LocalTrackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBC31E0AF46900BEF1FF /* LocalTrackView.h */; };
-		2A0DBD841E0AF46B00BEF1FF /* LocalTrackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBC31E0AF46900BEF1FF /* LocalTrackView.h */; };
 		2A0DBD851E0AF46B00BEF1FF /* mainframe.qrc in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBC41E0AF46900BEF1FF /* mainframe.qrc */; };
-		2A0DBD881E0AF46B00BEF1FF /* MainWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBC51E0AF46900BEF1FF /* MainWindow.cpp */; };
 		2A0DBD891E0AF46B00BEF1FF /* MainWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBC61E0AF46900BEF1FF /* MainWindow.h */; };
-		2A0DBD8A1E0AF46B00BEF1FF /* MainWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBC61E0AF46900BEF1FF /* MainWindow.h */; };
 		2A0DBD8B1E0AF46B00BEF1FF /* MainWindow.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBC71E0AF46900BEF1FF /* MainWindow.ui */; };
-		2A0DBD8C1E0AF46B00BEF1FF /* MainWindow.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBC71E0AF46900BEF1FF /* MainWindow.ui */; };
-		2A0DBD8E1E0AF46B00BEF1FF /* NinjamPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBC81E0AF46900BEF1FF /* NinjamPanel.cpp */; };
 		2A0DBD8F1E0AF46B00BEF1FF /* NinjamPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBC91E0AF46900BEF1FF /* NinjamPanel.h */; };
-		2A0DBD901E0AF46B00BEF1FF /* NinjamPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBC91E0AF46900BEF1FF /* NinjamPanel.h */; };
 		2A0DBD911E0AF46B00BEF1FF /* NinjamPanel.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBCA1E0AF46900BEF1FF /* NinjamPanel.ui */; };
-		2A0DBD921E0AF46B00BEF1FF /* NinjamPanel.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBCA1E0AF46900BEF1FF /* NinjamPanel.ui */; };
-		2A0DBD941E0AF46B00BEF1FF /* NinjamRoomWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBCB1E0AF46900BEF1FF /* NinjamRoomWindow.cpp */; };
 		2A0DBD951E0AF46B00BEF1FF /* NinjamRoomWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBCC1E0AF46900BEF1FF /* NinjamRoomWindow.h */; };
-		2A0DBD961E0AF46B00BEF1FF /* NinjamRoomWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBCC1E0AF46900BEF1FF /* NinjamRoomWindow.h */; };
 		2A0DBD971E0AF46B00BEF1FF /* NinjamRoomWindow.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBCD1E0AF46900BEF1FF /* NinjamRoomWindow.ui */; };
-		2A0DBD981E0AF46B00BEF1FF /* NinjamRoomWindow.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBCD1E0AF46900BEF1FF /* NinjamRoomWindow.ui */; };
-		2A0DBD9A1E0AF46B00BEF1FF /* NinjamTrackGroupView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBCE1E0AF46900BEF1FF /* NinjamTrackGroupView.cpp */; };
 		2A0DBD9B1E0AF46B00BEF1FF /* NinjamTrackGroupView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBCF1E0AF46900BEF1FF /* NinjamTrackGroupView.h */; };
-		2A0DBD9C1E0AF46B00BEF1FF /* NinjamTrackGroupView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBCF1E0AF46900BEF1FF /* NinjamTrackGroupView.h */; };
-		2A0DBD9E1E0AF46B00BEF1FF /* NinjamTrackView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBD01E0AF46900BEF1FF /* NinjamTrackView.cpp */; };
 		2A0DBD9F1E0AF46B00BEF1FF /* NinjamTrackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBD11E0AF46900BEF1FF /* NinjamTrackView.h */; };
-		2A0DBDA01E0AF46B00BEF1FF /* NinjamTrackView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBD11E0AF46900BEF1FF /* NinjamTrackView.h */; };
 		2A0DBDA91E0AF46B00BEF1FF /* PluginScanDialog.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBD71E0AF46900BEF1FF /* PluginScanDialog.ui */; };
-		2A0DBDAC1E0AF46B00BEF1FF /* PreferencesDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBD81E0AF46900BEF1FF /* PreferencesDialog.cpp */; };
 		2A0DBDAD1E0AF46B00BEF1FF /* PreferencesDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBD91E0AF46900BEF1FF /* PreferencesDialog.h */; };
-		2A0DBDAE1E0AF46B00BEF1FF /* PreferencesDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBD91E0AF46900BEF1FF /* PreferencesDialog.h */; };
 		2A0DBDAF1E0AF46B00BEF1FF /* PreferencesDialog.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBDA1E0AF46900BEF1FF /* PreferencesDialog.ui */; };
-		2A0DBDB01E0AF46B00BEF1FF /* PreferencesDialog.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBDA1E0AF46900BEF1FF /* PreferencesDialog.ui */; };
-		2A0DBDB21E0AF46B00BEF1FF /* PrivateServerDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBDB1E0AF46900BEF1FF /* PrivateServerDialog.cpp */; };
 		2A0DBDB31E0AF46B00BEF1FF /* PrivateServerDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBDC1E0AF46900BEF1FF /* PrivateServerDialog.h */; };
-		2A0DBDB41E0AF46B00BEF1FF /* PrivateServerDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBDC1E0AF46900BEF1FF /* PrivateServerDialog.h */; };
 		2A0DBDB51E0AF46B00BEF1FF /* PrivateServerDialog.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBDD1E0AF46900BEF1FF /* PrivateServerDialog.ui */; };
-		2A0DBDB61E0AF46B00BEF1FF /* PrivateServerDialog.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBDD1E0AF46900BEF1FF /* PrivateServerDialog.ui */; };
-		2A0DBDB81E0AF46B00BEF1FF /* ThemeLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBDE1E0AF46900BEF1FF /* ThemeLoader.cpp */; };
 		2A0DBDB91E0AF46B00BEF1FF /* ThemeLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBDF1E0AF46900BEF1FF /* ThemeLoader.h */; };
-		2A0DBDBA1E0AF46B00BEF1FF /* ThemeLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBDF1E0AF46900BEF1FF /* ThemeLoader.h */; };
-		2A0DBDBC1E0AF46B00BEF1FF /* TrackGroupView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBE01E0AF46900BEF1FF /* TrackGroupView.cpp */; };
 		2A0DBDBD1E0AF46B00BEF1FF /* TrackGroupView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBE11E0AF46900BEF1FF /* TrackGroupView.h */; };
-		2A0DBDBE1E0AF46B00BEF1FF /* TrackGroupView.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBE11E0AF46900BEF1FF /* TrackGroupView.h */; };
-		2A0DBDC01E0AF46B00BEF1FF /* UserNameDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBE21E0AF46900BEF1FF /* UserNameDialog.cpp */; };
 		2A0DBDC11E0AF46B00BEF1FF /* UserNameDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBE31E0AF46900BEF1FF /* UserNameDialog.h */; };
-		2A0DBDC21E0AF46B00BEF1FF /* UserNameDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBE31E0AF46900BEF1FF /* UserNameDialog.h */; };
 		2A0DBDC31E0AF46B00BEF1FF /* UserNameDialog.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBE41E0AF46900BEF1FF /* UserNameDialog.ui */; };
-		2A0DBDC41E0AF46B00BEF1FF /* UserNameDialog.ui in Resources */ = {isa = PBXBuildFile; fileRef = 2A0DBBE41E0AF46900BEF1FF /* UserNameDialog.ui */; };
-		2A0DBDC61E0AF46B00BEF1FF /* UsersColorsPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBE51E0AF46900BEF1FF /* UsersColorsPool.cpp */; };
 		2A0DBDC71E0AF46B00BEF1FF /* UsersColorsPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBE61E0AF46900BEF1FF /* UsersColorsPool.h */; };
-		2A0DBDC81E0AF46B00BEF1FF /* UsersColorsPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBE61E0AF46900BEF1FF /* UsersColorsPool.h */; };
-		2A0DBDCA1E0AF46C00BEF1FF /* CustomTabWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBE81E0AF46900BEF1FF /* CustomTabWidget.cpp */; };
 		2A0DBDCB1E0AF46C00BEF1FF /* CustomTabWidget.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBE91E0AF46900BEF1FF /* CustomTabWidget.h */; };
-		2A0DBDCC1E0AF46C00BEF1FF /* CustomTabWidget.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBE91E0AF46900BEF1FF /* CustomTabWidget.h */; };
-		2A0DBDDC1E0AF46C00BEF1FF /* IntervalChunksDisplay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBF21E0AF46900BEF1FF /* IntervalChunksDisplay.cpp */; };
 		2A0DBDDD1E0AF46C00BEF1FF /* IntervalChunksDisplay.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBF31E0AF46900BEF1FF /* IntervalChunksDisplay.h */; };
-		2A0DBDDE1E0AF46C00BEF1FF /* IntervalChunksDisplay.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBF31E0AF46900BEF1FF /* IntervalChunksDisplay.h */; };
-		2A0DBDE01E0AF46C00BEF1FF /* MapMarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBF41E0AF46900BEF1FF /* MapMarker.cpp */; };
 		2A0DBDE11E0AF46C00BEF1FF /* MapMarker.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBF51E0AF46900BEF1FF /* MapMarker.h */; };
-		2A0DBDE21E0AF46C00BEF1FF /* MapMarker.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBF51E0AF46900BEF1FF /* MapMarker.h */; };
-		2A0DBDE41E0AF46C00BEF1FF /* MapWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBF61E0AF46900BEF1FF /* MapWidget.cpp */; };
 		2A0DBDE51E0AF46C00BEF1FF /* MapWidget.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBF71E0AF46900BEF1FF /* MapWidget.h */; };
-		2A0DBDE61E0AF46C00BEF1FF /* MapWidget.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBF71E0AF46900BEF1FF /* MapWidget.h */; };
-		2A0DBDE81E0AF46C00BEF1FF /* MarqueeLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBF81E0AF46900BEF1FF /* MarqueeLabel.cpp */; };
 		2A0DBDE91E0AF46C00BEF1FF /* MarqueeLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBF91E0AF46900BEF1FF /* MarqueeLabel.h */; };
-		2A0DBDEA1E0AF46C00BEF1FF /* MarqueeLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBF91E0AF46900BEF1FF /* MarqueeLabel.h */; };
-		2A0DBDEC1E0AF46C00BEF1FF /* MultiStateButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBFA1E0AF46900BEF1FF /* MultiStateButton.cpp */; };
 		2A0DBDED1E0AF46C00BEF1FF /* MultiStateButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBFB1E0AF46900BEF1FF /* MultiStateButton.h */; };
-		2A0DBDEE1E0AF46C00BEF1FF /* MultiStateButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBFB1E0AF46900BEF1FF /* MultiStateButton.h */; };
-		2A0DBDF01E0AF46C00BEF1FF /* PeakMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBFC1E0AF46900BEF1FF /* PeakMeter.cpp */; };
-		2A0DBDF21E0AF46C00BEF1FF /* PeakMeter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBFD1E0AF46900BEF1FF /* PeakMeter.h */; };
-		2A0DBDF41E0AF46C00BEF1FF /* UserNameLineEdit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBFE1E0AF46900BEF1FF /* UserNameLineEdit.cpp */; };
 		2A0DBDF51E0AF46C00BEF1FF /* UserNameLineEdit.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBFF1E0AF46900BEF1FF /* UserNameLineEdit.h */; };
-		2A0DBDF61E0AF46C00BEF1FF /* UserNameLineEdit.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBBFF1E0AF46900BEF1FF /* UserNameLineEdit.h */; };
-		2A0DBDF81E0AF46C00BEF1FF /* WavePeakPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC001E0AF46900BEF1FF /* WavePeakPanel.cpp */; };
 		2A0DBDF91E0AF46C00BEF1FF /* WavePeakPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC011E0AF46900BEF1FF /* WavePeakPanel.h */; };
-		2A0DBDFA1E0AF46C00BEF1FF /* WavePeakPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC011E0AF46900BEF1FF /* WavePeakPanel.h */; };
-		2A0DBDFC1E0AF46C00BEF1FF /* logging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC031E0AF46900BEF1FF /* logging.cpp */; };
 		2A0DBDFD1E0AF46C00BEF1FF /* Logging.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC041E0AF46900BEF1FF /* Logging.h */; };
-		2A0DBDFE1E0AF46C00BEF1FF /* Logging.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC041E0AF46900BEF1FF /* Logging.h */; };
-		2A0DBE021E0AF46C00BEF1FF /* LoginService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC081E0AF46900BEF1FF /* LoginService.cpp */; };
 		2A0DBE031E0AF46C00BEF1FF /* LoginService.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC091E0AF46900BEF1FF /* LoginService.h */; };
-		2A0DBE041E0AF46C00BEF1FF /* LoginService.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC091E0AF46900BEF1FF /* LoginService.h */; };
 		2A0DBE051E0AF46C00BEF1FF /* natmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC0A1E0AF46900BEF1FF /* natmap.h */; };
-		2A0DBE061E0AF46C00BEF1FF /* natmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC0A1E0AF46900BEF1FF /* natmap.h */; };
-		2A0DBE081E0AF46C00BEF1FF /* MainController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC0B1E0AF46900BEF1FF /* MainController.cpp */; };
 		2A0DBE091E0AF46C00BEF1FF /* MainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC0C1E0AF46900BEF1FF /* MainController.h */; };
-		2A0DBE0A1E0AF46C00BEF1FF /* MainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC0C1E0AF46900BEF1FF /* MainController.h */; };
-		2A0DBE0C1E0AF46C00BEF1FF /* MetronomeUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC0D1E0AF46900BEF1FF /* MetronomeUtils.cpp */; };
 		2A0DBE0D1E0AF46C00BEF1FF /* MetronomeUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC0E1E0AF46900BEF1FF /* MetronomeUtils.h */; };
-		2A0DBE0E1E0AF46C00BEF1FF /* MetronomeUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC0E1E0AF46900BEF1FF /* MetronomeUtils.h */; };
-		2A0DBE101E0AF46D00BEF1FF /* MidiDriver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC101E0AF46900BEF1FF /* MidiDriver.cpp */; };
 		2A0DBE111E0AF46D00BEF1FF /* MidiDriver.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC111E0AF46900BEF1FF /* MidiDriver.h */; };
-		2A0DBE121E0AF46D00BEF1FF /* MidiDriver.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC111E0AF46900BEF1FF /* MidiDriver.h */; };
-		2A0DBE141E0AF46D00BEF1FF /* MidiMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC121E0AF46900BEF1FF /* MidiMessage.cpp */; };
 		2A0DBE151E0AF46D00BEF1FF /* MidiMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC131E0AF46900BEF1FF /* MidiMessage.h */; };
-		2A0DBE161E0AF46D00BEF1FF /* MidiMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC131E0AF46900BEF1FF /* MidiMessage.h */; };
-		2A0DBE181E0AF46D00BEF1FF /* MidiMessageBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC141E0AF46900BEF1FF /* MidiMessageBuffer.cpp */; };
 		2A0DBE191E0AF46D00BEF1FF /* MidiMessageBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC151E0AF46900BEF1FF /* MidiMessageBuffer.h */; };
-		2A0DBE1A1E0AF46D00BEF1FF /* MidiMessageBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC151E0AF46900BEF1FF /* MidiMessageBuffer.h */; };
-		2A0DBE1C1E0AF46D00BEF1FF /* RtMidiDriver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC161E0AF46900BEF1FF /* RtMidiDriver.cpp */; };
 		2A0DBE1D1E0AF46D00BEF1FF /* RtMidiDriver.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC171E0AF46900BEF1FF /* RtMidiDriver.h */; };
-		2A0DBE1E1E0AF46D00BEF1FF /* RtMidiDriver.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC171E0AF46900BEF1FF /* RtMidiDriver.h */; };
-		2A0DBE281E0AF46D00BEF1FF /* ClientMessages.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC1E1E0AF46900BEF1FF /* ClientMessages.cpp */; };
 		2A0DBE291E0AF46D00BEF1FF /* ClientMessages.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC1F1E0AF46900BEF1FF /* ClientMessages.h */; };
-		2A0DBE2A1E0AF46D00BEF1FF /* ClientMessages.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC1F1E0AF46900BEF1FF /* ClientMessages.h */; };
-		2A0DBE2C1E0AF46D00BEF1FF /* moc_Service.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC211E0AF46900BEF1FF /* moc_Service.cpp */; };
-		2A0DBE2E1E0AF46D00BEF1FF /* Server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC221E0AF46900BEF1FF /* Server.cpp */; };
 		2A0DBE2F1E0AF46D00BEF1FF /* Server.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC231E0AF46900BEF1FF /* Server.h */; };
-		2A0DBE301E0AF46D00BEF1FF /* Server.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC231E0AF46900BEF1FF /* Server.h */; };
-		2A0DBE321E0AF46D00BEF1FF /* ServerMessages.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC241E0AF46900BEF1FF /* ServerMessages.cpp */; };
 		2A0DBE331E0AF46D00BEF1FF /* ServerMessages.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC251E0AF46900BEF1FF /* ServerMessages.h */; };
-		2A0DBE341E0AF46D00BEF1FF /* ServerMessages.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC251E0AF46900BEF1FF /* ServerMessages.h */; };
-		2A0DBE361E0AF46D00BEF1FF /* ServerMessagesHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC261E0AF46900BEF1FF /* ServerMessagesHandler.cpp */; };
 		2A0DBE371E0AF46D00BEF1FF /* ServerMessagesHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC271E0AF46900BEF1FF /* ServerMessagesHandler.h */; };
-		2A0DBE381E0AF46D00BEF1FF /* ServerMessagesHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC271E0AF46900BEF1FF /* ServerMessagesHandler.h */; };
-		2A0DBE3A1E0AF46D00BEF1FF /* Service.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC281E0AF46900BEF1FF /* Service.cpp */; };
 		2A0DBE3B1E0AF46D00BEF1FF /* Service.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC291E0AF46900BEF1FF /* Service.h */; };
-		2A0DBE3C1E0AF46D00BEF1FF /* Service.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC291E0AF46900BEF1FF /* Service.h */; };
-		2A0DBE3E1E0AF46D00BEF1FF /* User.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC2A1E0AF46900BEF1FF /* User.cpp */; };
 		2A0DBE3F1E0AF46D00BEF1FF /* User.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC2B1E0AF46900BEF1FF /* User.h */; };
-		2A0DBE401E0AF46D00BEF1FF /* User.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC2B1E0AF46900BEF1FF /* User.h */; };
-		2A0DBE421E0AF46D00BEF1FF /* UserChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC2C1E0AF46900BEF1FF /* UserChannel.cpp */; };
 		2A0DBE431E0AF46E00BEF1FF /* UserChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC2D1E0AF46900BEF1FF /* UserChannel.h */; };
-		2A0DBE441E0AF46E00BEF1FF /* UserChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC2D1E0AF46900BEF1FF /* UserChannel.h */; };
-		2A0DBE461E0AF46E00BEF1FF /* NinjamController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC2E1E0AF46900BEF1FF /* NinjamController.cpp */; };
 		2A0DBE471E0AF46E00BEF1FF /* NinjamController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC2F1E0AF46900BEF1FF /* NinjamController.h */; };
-		2A0DBE481E0AF46E00BEF1FF /* NinjamController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC2F1E0AF46900BEF1FF /* NinjamController.h */; };
-		2A0DBE501E0AF46E00BEF1FF /* CacheHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC351E0AF46900BEF1FF /* CacheHeader.cpp */; };
 		2A0DBE511E0AF46E00BEF1FF /* CacheHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC361E0AF46900BEF1FF /* CacheHeader.h */; };
-		2A0DBE521E0AF46E00BEF1FF /* CacheHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC361E0AF46900BEF1FF /* CacheHeader.h */; };
-		2A0DBE541E0AF46E00BEF1FF /* Settings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC371E0AF46900BEF1FF /* Settings.cpp */; };
 		2A0DBE551E0AF46E00BEF1FF /* Settings.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC381E0AF46900BEF1FF /* Settings.h */; };
-		2A0DBE561E0AF46E00BEF1FF /* Settings.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC381E0AF46900BEF1FF /* Settings.h */; };
-		2A0DBE581E0AF46E00BEF1FF /* UsersDataCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC391E0AF46900BEF1FF /* UsersDataCache.cpp */; };
 		2A0DBE591E0AF46E00BEF1FF /* UsersDataCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC3A1E0AF46900BEF1FF /* UsersDataCache.h */; };
-		2A0DBE5A1E0AF46E00BEF1FF /* UsersDataCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC3A1E0AF46900BEF1FF /* UsersDataCache.h */; };
 		2A0DBE5B1E0AF46E00BEF1FF /* PreCompiledHeaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC3B1E0AF46900BEF1FF /* PreCompiledHeaders.h */; };
-		2A0DBE5C1E0AF46E00BEF1FF /* PreCompiledHeaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC3B1E0AF46900BEF1FF /* PreCompiledHeaders.h */; };
-		2A0DBE5E1E0AF46E00BEF1FF /* ClipSortLogGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC3D1E0AF46900BEF1FF /* ClipSortLogGenerator.cpp */; };
 		2A0DBE5F1E0AF46E00BEF1FF /* ClipSortLogGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC3E1E0AF46900BEF1FF /* ClipSortLogGenerator.h */; };
-		2A0DBE601E0AF46E00BEF1FF /* ClipSortLogGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC3E1E0AF46900BEF1FF /* ClipSortLogGenerator.h */; };
-		2A0DBE621E0AF46E00BEF1FF /* JamRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC3F1E0AF46900BEF1FF /* JamRecorder.cpp */; };
 		2A0DBE631E0AF46E00BEF1FF /* JamRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC401E0AF46900BEF1FF /* JamRecorder.h */; };
-		2A0DBE641E0AF46E00BEF1FF /* JamRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC401E0AF46900BEF1FF /* JamRecorder.h */; };
-		2A0DBE661E0AF46E00BEF1FF /* ReaperProjectGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC411E0AF46900BEF1FF /* ReaperProjectGenerator.cpp */; };
 		2A0DBE671E0AF46E00BEF1FF /* ReaperProjectGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC421E0AF46900BEF1FF /* ReaperProjectGenerator.h */; };
-		2A0DBE681E0AF46E00BEF1FF /* ReaperProjectGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC421E0AF46900BEF1FF /* ReaperProjectGenerator.h */; };
-		2A0DBE6A1E0AF46E00BEF1FF /* UploadIntervalData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC431E0AF46900BEF1FF /* UploadIntervalData.cpp */; };
 		2A0DBE6B1E0AF46E00BEF1FF /* UploadIntervalData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC441E0AF46900BEF1FF /* UploadIntervalData.h */; };
-		2A0DBE6C1E0AF46E00BEF1FF /* UploadIntervalData.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC441E0AF46900BEF1FF /* UploadIntervalData.h */; };
 		2A0DBE6D1E0AF46E00BEF1FF /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC451E0AF46900BEF1FF /* Utils.h */; };
-		2A0DBE6E1E0AF46E00BEF1FF /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A0DBC451E0AF46900BEF1FF /* Utils.h */; };
-		2A0DBE7B1E0AF5AA00BEF1FF /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700F1E08116200A4B6C2 /* IOKit.framework */; };
-		2A0DBE7C1E0AF5AA00BEF1FF /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700D1E08113100A4B6C2 /* Carbon.framework */; };
-		2A0DBE7D1E0AF5AA00BEF1FF /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700B1E08111E00A4B6C2 /* OpenGL.framework */; };
-		2A0DBE7E1E0AF5AA00BEF1FF /* libqcocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F70091E080FEC00A4B6C2 /* libqcocoa.a */; };
-		2A0DBE7F1E0AF5AA00BEF1FF /* libQt5PrintSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F70021E0804F800A4B6C2 /* libQt5PrintSupport.a */; };
-		2A0DBE801E0AF5AA00BEF1FF /* libQt5Widgets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FE41E0801B900A4B6C2 /* libQt5Widgets.a */; };
-		2A0DBE811E0AF5AA00BEF1FF /* libQt5Core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FE51E0801B900A4B6C2 /* libQt5Core.a */; };
-		2A0DBE821E0AF5AA00BEF1FF /* libQt5Gui.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FE61E0801B900A4B6C2 /* libQt5Gui.a */; };
-		2A0DBE831E0AF5AA00BEF1FF /* libQt5Network.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FE71E0801B900A4B6C2 /* libQt5Network.a */; };
-		2A0DBE841E0AF5AA00BEF1FF /* libqtfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FE81E0801B900A4B6C2 /* libqtfreetype.a */; };
-		2A0DBE851E0AF5AA00BEF1FF /* libqtharfbuzzng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FE91E0801B900A4B6C2 /* libqtharfbuzzng.a */; };
-		2A0DBE861E0AF5AA00BEF1FF /* libqtpcre.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FEA1E0801B900A4B6C2 /* libqtpcre.a */; };
-		2A0DBE871E0AF5AA00BEF1FF /* libQt5PlatformSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FEB1E0801B900A4B6C2 /* libQt5PlatformSupport.a */; };
-		2A0DBE881E0AF5AA00BEF1FF /* libqtpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FEC1E0801B900A4B6C2 /* libqtpng.a */; };
-		2A0DBE891E0AF5AA00BEF1FF /* libQt5Concurrent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FED1E0801B900A4B6C2 /* libQt5Concurrent.a */; };
 		2A0DBE8A1E0AF5AA00BEF1FF /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AFB072074E100365D66 /* CoreAudio.framework */; };
-		2A0DBE8B1E0AF5DB00BEF1FF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F70071E080F7200A4B6C2 /* libz.dylib */; };
-		2A0DBE8C1E0AF5DD00BEF1FF /* libcups.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F70051E08094500A4B6C2 /* libcups.dylib */; };
 		2A0DBE961E0AF79300BEF1FF /* PrivateServerDialog.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBDD1E0AF46900BEF1FF /* PrivateServerDialog.ui */; };
 		2A0DBE971E0AF7CB00BEF1FF /* BusyDialog.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB6D1E0AF46900BEF1FF /* BusyDialog.ui */; };
 		2A0DBE981E0AF7D700BEF1FF /* ChatMessagePanel.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB711E0AF46900BEF1FF /* ChatMessagePanel.ui */; };
@@ -340,72 +125,13 @@
 		2A0DBE9E1E0AF7EE00BEF1FF /* NinjamRoomWindow.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBCD1E0AF46900BEF1FF /* NinjamRoomWindow.ui */; };
 		2A0DBEA01E0AF80600BEF1FF /* PreferencesDialog.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBDA1E0AF46900BEF1FF /* PreferencesDialog.ui */; };
 		2A0DBEA11E0AF82700BEF1FF /* UserNameDialog.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBE41E0AF46900BEF1FF /* UserNameDialog.ui */; };
-		2A0DBEA51E0B01C600BEF1FF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEA41E0B01C600BEF1FF /* Security.framework */; };
-		2A0DBEA61E0B021800BEF1FF /* NinjamController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC2F1E0AF46900BEF1FF /* NinjamController.h */; };
-		2A0DBEA71E0B022300BEF1FF /* MainController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC0C1E0AF46900BEF1FF /* MainController.h */; };
-		2A0DBEA81E0B026F00BEF1FF /* BusyDialog.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB6D1E0AF46900BEF1FF /* BusyDialog.ui */; };
-		2A0DBEA91E0B027400BEF1FF /* ChatMessagePanel.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB711E0AF46900BEF1FF /* ChatMessagePanel.ui */; };
-		2A0DBEAA1E0B027600BEF1FF /* ChatPanel.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB741E0AF46900BEF1FF /* ChatPanel.ui */; };
-		2A0DBEAB1E0B027C00BEF1FF /* ChordsPanel.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB8C1E0AF46900BEF1FF /* ChordsPanel.ui */; };
-		2A0DBEAC1E0B028700BEF1FF /* JamRoomViewPanel.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBBF1E0AF46900BEF1FF /* JamRoomViewPanel.ui */; };
-		2A0DBEAD1E0B028C00BEF1FF /* MainWindow.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBC71E0AF46900BEF1FF /* MainWindow.ui */; };
-		2A0DBEAE1E0B029200BEF1FF /* NinjamPanel.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBCA1E0AF46900BEF1FF /* NinjamPanel.ui */; };
-		2A0DBEB01E0B029900BEF1FF /* PreferencesDialog.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBDA1E0AF46900BEF1FF /* PreferencesDialog.ui */; };
-		2A0DBEB11E0B029C00BEF1FF /* PrivateServerDialog.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBDD1E0AF46900BEF1FF /* PrivateServerDialog.ui */; };
-		2A0DBEB21E0B02A300BEF1FF /* UserNameDialog.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBE41E0AF46900BEF1FF /* UserNameDialog.ui */; };
 		2A0DBEBA1E0B03C600BEF1FF /* libminimp3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEB31E0B03C600BEF1FF /* libminimp3.a */; };
-		2A0DBEBB1E0B03C600BEF1FF /* libminimp3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEB31E0B03C600BEF1FF /* libminimp3.a */; };
 		2A0DBEBC1E0B03C600BEF1FF /* libogg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEB41E0B03C600BEF1FF /* libogg.a */; };
-		2A0DBEBD1E0B03C600BEF1FF /* libogg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEB41E0B03C600BEF1FF /* libogg.a */; };
 		2A0DBEBE1E0B03C600BEF1FF /* libportaudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEB51E0B03C600BEF1FF /* libportaudio.a */; };
-		2A0DBEBF1E0B03C600BEF1FF /* libportaudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEB51E0B03C600BEF1FF /* libportaudio.a */; };
 		2A0DBEC01E0B03C600BEF1FF /* librtmidi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEB61E0B03C600BEF1FF /* librtmidi.a */; };
-		2A0DBEC11E0B03C600BEF1FF /* librtmidi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEB61E0B03C600BEF1FF /* librtmidi.a */; };
 		2A0DBEC21E0B03C700BEF1FF /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEB71E0B03C600BEF1FF /* libvorbis.a */; };
-		2A0DBEC31E0B03C700BEF1FF /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEB71E0B03C600BEF1FF /* libvorbis.a */; };
 		2A0DBEC41E0B03C700BEF1FF /* libvorbisenc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEB81E0B03C600BEF1FF /* libvorbisenc.a */; };
-		2A0DBEC51E0B03C700BEF1FF /* libvorbisenc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEB81E0B03C600BEF1FF /* libvorbisenc.a */; };
 		2A0DBEC61E0B03C700BEF1FF /* libvorbisfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEB91E0B03C600BEF1FF /* libvorbisfile.a */; };
-		2A0DBEC71E0B03C700BEF1FF /* libvorbisfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEB91E0B03C600BEF1FF /* libvorbisfile.a */; };
-		2A0DBEC81E0B04AF00BEF1FF /* NinjamRoomWindow.ui in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBCD1E0AF46900BEF1FF /* NinjamRoomWindow.ui */; };
-		2A0DBECD1E0B082B00BEF1FF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBECB1E0B07B900BEF1FF /* SystemConfiguration.framework */; };
-		2A0DBECE1E0B086700BEF1FF /* MainWindow.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBC61E0AF46900BEF1FF /* MainWindow.h */; };
-		2A0DBECF1E0B087000BEF1FF /* ChordsPanel.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB8B1E0AF46900BEF1FF /* ChordsPanel.h */; };
-		2A0DBED01E0B089F00BEF1FF /* NinjamPanel.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBC91E0AF46900BEF1FF /* NinjamPanel.h */; };
-		2A0DBED11E0B08EE00BEF1FF /* BaseTrackView.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB681E0AF46900BEF1FF /* BaseTrackView.h */; };
-		2A0DBED21E0B08F900BEF1FF /* NinjamTrackView.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBD11E0AF46900BEF1FF /* NinjamTrackView.h */; };
-		2A0DBED31E0B08FF00BEF1FF /* LocalTrackView.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBC31E0AF46900BEF1FF /* LocalTrackView.h */; };
-		2A0DBED41E0B091600BEF1FF /* ChatMessagePanel.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB701E0AF46900BEF1FF /* ChatMessagePanel.h */; };
-		2A0DBED51E0B091A00BEF1FF /* JamRoomViewPanel.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBBE1E0AF46900BEF1FF /* JamRoomViewPanel.h */; };
-		2A0DBED61E0B093000BEF1FF /* NinjamRoomWindow.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBCC1E0AF46900BEF1FF /* NinjamRoomWindow.h */; };
-		2A0DBED71E0B097D00BEF1FF /* PreferencesDialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBD91E0AF46900BEF1FF /* PreferencesDialog.h */; };
-		2A0DBED81E0B098B00BEF1FF /* LocalTrackGroupView.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBC11E0AF46900BEF1FF /* LocalTrackGroupView.h */; };
-		2A0DBED91E0B099C00BEF1FF /* PrivateServerDialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBDC1E0AF46900BEF1FF /* PrivateServerDialog.h */; };
-		2A0DBEDA1E0B09C000BEF1FF /* NinjamTrackGroupView.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBCF1E0AF46900BEF1FF /* NinjamTrackGroupView.h */; };
-		2A0DBEDB1E0B09FA00BEF1FF /* IntervalProgressWindow.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBBA1E0AF46900BEF1FF /* IntervalProgressWindow.h */; };
-		2A0DBEDC1E0B0A2800BEF1FF /* NinjamRoomWindowPlugin.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0D3DC1E0AB913005A940A /* NinjamRoomWindowPlugin.h */; };
-		2A0DBEDD1E0B0A4500BEF1FF /* ChatPanel.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB731E0AF46900BEF1FF /* ChatPanel.h */; };
-		2A0DBEDE1E0B0A5700BEF1FF /* WebIpToLocationResolver.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB651E0AF46900BEF1FF /* WebIpToLocationResolver.h */; };
-		2A0DBEDF1E0B0A6D00BEF1FF /* AudioDriver.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB191E0AF46800BEF1FF /* AudioDriver.h */; };
-		2A0DBEE01E0B0A8C00BEF1FF /* LocalInputNode.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB2B1E0AF46800BEF1FF /* LocalInputNode.h */; };
-		2A0DBEE11E0B0B2400BEF1FF /* TrackGroupView.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBE11E0AF46900BEF1FF /* TrackGroupView.h */; };
-		2A0DBEE21E0B0B4700BEF1FF /* IntervalProgressDisplay.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBB81E0AF46900BEF1FF /* IntervalProgressDisplay.h */; };
-		2A0DBEE31E0B0B6A00BEF1FF /* IpToLocationResolver.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB631E0AF46900BEF1FF /* IpToLocationResolver.h */; };
-		2A0DBEE41E0B0B8600BEF1FF /* RoomStreamerNode.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB4D1E0AF46900BEF1FF /* RoomStreamerNode.h */; };
-		2A0DBEE51E0B0BCF00BEF1FF /* AudioNode.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB1D1E0AF46800BEF1FF /* AudioNode.h */; };
-		2A0DBEE61E0B0BF600BEF1FF /* LoginService.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC091E0AF46900BEF1FF /* LoginService.h */; };
-		2A0DBEE71E0B0C0E00BEF1FF /* BusyDialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB6C1E0AF46900BEF1FF /* BusyDialog.h */; };
-		2A0DBEE81E0B0C6300BEF1FF /* IntervalChunksDisplay.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBF31E0AF46900BEF1FF /* IntervalChunksDisplay.h */; };
-		2A0DBEEA1E0B0C6900BEF1FF /* MarqueeLabel.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBF91E0AF46900BEF1FF /* MarqueeLabel.h */; };
-		2A0DBEEB1E0B0C6F00BEF1FF /* MultiStateButton.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBFB1E0AF46900BEF1FF /* MultiStateButton.h */; };
-		2A0DBEEC1E0B0C7100BEF1FF /* PeakMeter.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBFD1E0AF46900BEF1FF /* PeakMeter.h */; };
-		2A0DBEED1E0B0C7300BEF1FF /* UserNameLineEdit.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBFF1E0AF46900BEF1FF /* UserNameLineEdit.h */; };
-		2A0DBEEE1E0B0C7500BEF1FF /* WavePeakPanel.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBC011E0AF46900BEF1FF /* WavePeakPanel.h */; };
-		2A0DBEEF1E0B0CFE00BEF1FF /* ChordLabel.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB851E0AF46900BEF1FF /* ChordLabel.h */; };
-		2A0DBEF01E0B0D0300BEF1FF /* Highligther.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBB01E0AF46900BEF1FF /* Highligther.h */; };
-		2A0DBEF11E0B0D0700BEF1FF /* UserNameDialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBE31E0AF46900BEF1FF /* UserNameDialog.h */; };
-		2A0DBEF21E0B0D3600BEF1FF /* MapWidget.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBBF71E0AF46900BEF1FF /* MapWidget.h */; };
-		2A0DBEF31E0B0D4E00BEF1FF /* PreferencesDialogPlugin.h in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0D3DE1E0AB913005A940A /* PreferencesDialogPlugin.h */; };
 		2A120A521E0BEEED00E0E596 /* AudioDriver.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB191E0AF46800BEF1FF /* AudioDriver.h */; };
 		2A120A531E0BEEF300E0E596 /* AudioNode.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB1D1E0AF46800BEF1FF /* AudioNode.h */; };
 		2A120A541E0BEEFC00E0E596 /* LocalInputNode.h in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB2B1E0AF46800BEF1FF /* LocalInputNode.h */; };
@@ -580,7 +306,6 @@
 		2A1C7AAC1E0B5F6600C7984D /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AFB072074E100365D66 /* CoreAudio.framework */; };
 		2A1C7AAD1E0B5FBC00C7984D /* JamTaba_ViewFactory.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BA4ADCF073EB19800A2709A /* JamTaba_ViewFactory.mm */; };
 		2A1C7AAE1E0B5FBE00C7984D /* JamTaba_UIView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BA4ADD1073EB19800A2709A /* JamTaba_UIView.mm */; };
-		2A1C7AB31E0B66AC00C7984D /* JamTaba.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A1C7AB21E0B66AC00C7984D /* JamTaba.h */; };
 		2A1C7AB41E0B66AC00C7984D /* JamTaba.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A1C7AB21E0B66AC00C7984D /* JamTaba.h */; };
 		2A2F6FF81E0804F800A4B6C2 /* libQt5Concurrent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FED1E0801B900A4B6C2 /* libQt5Concurrent.a */; };
 		2A2F6FF91E0804F800A4B6C2 /* libQt5Core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FE51E0801B900A4B6C2 /* libQt5Core.a */; };
@@ -596,89 +321,42 @@
 		2A2F70061E08094500A4B6C2 /* libcups.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F70051E08094500A4B6C2 /* libcups.dylib */; };
 		2A2F70081E080F7200A4B6C2 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F70071E080F7200A4B6C2 /* libz.dylib */; };
 		2A2F700A1E080FEC00A4B6C2 /* libqcocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F70091E080FEC00A4B6C2 /* libqcocoa.a */; };
+		2A3016211E0D907B0013700B /* JamTaba.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BA05A660720730100365D66 /* JamTaba.cpp */; };
+		2A3016221E0D90AB0013700B /* AUBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713AA1891A149005D69C7 /* AUBase.cpp */; };
+		2A3016231E0D90AD0013700B /* AUDispatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713B01891A149005D69C7 /* AUDispatch.cpp */; };
+		2A3016241E0D90B00013700B /* AUInputElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713B41891A149005D69C7 /* AUInputElement.cpp */; };
+		2A3016251E0D90B30013700B /* AUOutputElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713B61891A149005D69C7 /* AUOutputElement.cpp */; };
+		2A3016271E0D90BC0013700B /* AUScopeElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713BB1891A149005D69C7 /* AUScopeElement.cpp */; };
+		2A3016281E0D90BE0013700B /* ComponentBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6211E2B11891AA2900751AA3 /* ComponentBase.cpp */; };
+		2A3016291E0D90C30013700B /* AUBaseHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713AC1891A149005D69C7 /* AUBaseHelper.cpp */; };
+		2A30162A1E0D90C60013700B /* AUBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713AE1891A149005D69C7 /* AUBuffer.cpp */; };
+		2A30162B1E0D90CA0013700B /* AUEffectBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713B21891A149005D69C7 /* AUEffectBase.cpp */; };
+		2A30162C1E0D90CF0013700B /* CAAudioChannelLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713C01891A149005D69C7 /* CAAudioChannelLayout.cpp */; };
+		2A30162D1E0D90D80013700B /* CABufferList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713C31891A149005D69C7 /* CABufferList.cpp */; };
+		2A30162E1E0D90DD0013700B /* CADebugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713C61891A149005D69C7 /* CADebugger.cpp */; };
+		2A30162F1E0D90E10013700B /* CADebugMacros.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713C81891A149005D69C7 /* CADebugMacros.cpp */; };
+		2A3016301E0D90E40013700B /* CAGuard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713CD1891A149005D69C7 /* CAGuard.cpp */; };
+		2A3016311E0D90EC0013700B /* CAHostTimeBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713CF1891A149005D69C7 /* CAHostTimeBase.cpp */; };
+		2A3016321E0D90F70013700B /* CAMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713D31891A149005D69C7 /* CAMutex.cpp */; };
+		2A3016331E0D90FB0013700B /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713D61891A149005D69C7 /* CAStreamBasicDescription.cpp */; };
+		2A3016341E0D90FE0013700B /* CAVectorUnit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713D91891A149005D69C7 /* CAVectorUnit.cpp */; };
+		2A3016351E0D91010013700B /* CAXException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713DC1891A149005D69C7 /* CAXException.cpp */; };
+		2A3016361E0D94320013700B /* AUPlugInDispatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713B81891A149005D69C7 /* AUPlugInDispatch.cpp */; };
+		2A30163B1E0D9E650013700B /* JamTabaAUPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A3016391E0D9E650013700B /* JamTabaAUPlugin.cpp */; };
+		2A30163C1E0D9E650013700B /* JamTabaAUPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A30163A1E0D9E650013700B /* JamTabaAUPlugin.h */; };
 		2A3D0AA31E06D4FE00789D68 /* JamTaba.component in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D01CCD20486CAD60068D4B7 /* JamTaba.component */; };
 		2AB5C82E1E076776007BD342 /* CocoaJamTabaView.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */; };
-		2AC0D3DF1E0AB913005A940A /* ConfiguratorPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0D3D21E0AB913005A940A /* ConfiguratorPlugin.cpp */; };
-		2AC0D3E11E0AB913005A940A /* JamTabaPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0D3D31E0AB913005A940A /* JamTabaPlugin.cpp */; };
-		2AC0D3E31E0AB913005A940A /* JamTabaPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D41E0AB913005A940A /* JamTabaPlugin.h */; };
 		2AC0D3E41E0AB913005A940A /* JamTabaPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D41E0AB913005A940A /* JamTabaPlugin.h */; };
-		2AC0D3E51E0AB913005A940A /* MainControllerPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0D3D51E0AB913005A940A /* MainControllerPlugin.cpp */; };
-		2AC0D3E71E0AB913005A940A /* MainControllerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D61E0AB913005A940A /* MainControllerPlugin.h */; };
 		2AC0D3E81E0AB913005A940A /* MainControllerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D61E0AB913005A940A /* MainControllerPlugin.h */; };
-		2AC0D3E91E0AB913005A940A /* MainWindowPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0D3D71E0AB913005A940A /* MainWindowPlugin.cpp */; };
-		2AC0D3EB1E0AB913005A940A /* MainWindowPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D81E0AB913005A940A /* MainWindowPlugin.h */; };
 		2AC0D3EC1E0AB913005A940A /* MainWindowPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D81E0AB913005A940A /* MainWindowPlugin.h */; };
-		2AC0D3ED1E0AB913005A940A /* NinjamControllerPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0D3D91E0AB913005A940A /* NinjamControllerPlugin.cpp */; };
-		2AC0D3EF1E0AB913005A940A /* NinjamControllerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3DA1E0AB913005A940A /* NinjamControllerPlugin.h */; };
 		2AC0D3F01E0AB913005A940A /* NinjamControllerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3DA1E0AB913005A940A /* NinjamControllerPlugin.h */; };
-		2AC0D3F11E0AB913005A940A /* NinjamRoomWindowPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0D3DB1E0AB913005A940A /* NinjamRoomWindowPlugin.cpp */; };
-		2AC0D3F31E0AB913005A940A /* NinjamRoomWindowPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3DC1E0AB913005A940A /* NinjamRoomWindowPlugin.h */; };
 		2AC0D3F41E0AB913005A940A /* NinjamRoomWindowPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3DC1E0AB913005A940A /* NinjamRoomWindowPlugin.h */; };
-		2AC0D3F51E0AB913005A940A /* PreferencesDialogPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC0D3DD1E0AB913005A940A /* PreferencesDialogPlugin.cpp */; };
-		2AC0D3F71E0AB913005A940A /* PreferencesDialogPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3DE1E0AB913005A940A /* PreferencesDialogPlugin.h */; };
-		6211E2B31891AA2900751AA3 /* ComponentBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6211E2B11891AA2900751AA3 /* ComponentBase.cpp */; };
-		6211E2B41891AA2900751AA3 /* ComponentBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 6211E2B21891AA2900751AA3 /* ComponentBase.h */; };
-		621713DE1891A149005D69C7 /* AUBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713AA1891A149005D69C7 /* AUBase.cpp */; };
-		621713DF1891A149005D69C7 /* AUBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713AB1891A149005D69C7 /* AUBase.h */; };
-		621713E01891A149005D69C7 /* AUBaseHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713AC1891A149005D69C7 /* AUBaseHelper.cpp */; };
-		621713E11891A149005D69C7 /* AUBaseHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713AD1891A149005D69C7 /* AUBaseHelper.h */; };
-		621713E21891A149005D69C7 /* AUBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713AE1891A149005D69C7 /* AUBuffer.cpp */; };
-		621713E31891A149005D69C7 /* AUBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713AF1891A149005D69C7 /* AUBuffer.h */; };
-		621713E41891A149005D69C7 /* AUDispatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713B01891A149005D69C7 /* AUDispatch.cpp */; };
-		621713E51891A149005D69C7 /* AUDispatch.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713B11891A149005D69C7 /* AUDispatch.h */; };
-		621713E61891A149005D69C7 /* AUEffectBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713B21891A149005D69C7 /* AUEffectBase.cpp */; };
-		621713E71891A149005D69C7 /* AUEffectBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713B31891A149005D69C7 /* AUEffectBase.h */; };
-		621713E81891A149005D69C7 /* AUInputElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713B41891A149005D69C7 /* AUInputElement.cpp */; };
-		621713E91891A149005D69C7 /* AUInputElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713B51891A149005D69C7 /* AUInputElement.h */; };
-		621713EA1891A149005D69C7 /* AUOutputElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713B61891A149005D69C7 /* AUOutputElement.cpp */; };
-		621713EB1891A149005D69C7 /* AUOutputElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713B71891A149005D69C7 /* AUOutputElement.h */; };
-		621713EC1891A149005D69C7 /* AUPlugInDispatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713B81891A149005D69C7 /* AUPlugInDispatch.cpp */; };
-		621713ED1891A149005D69C7 /* AUPlugInDispatch.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713B91891A149005D69C7 /* AUPlugInDispatch.h */; };
-		621713EF1891A149005D69C7 /* AUScopeElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713BB1891A149005D69C7 /* AUScopeElement.cpp */; };
-		621713F01891A149005D69C7 /* AUScopeElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713BC1891A149005D69C7 /* AUScopeElement.h */; };
-		621713F11891A149005D69C7 /* AUSilentTimeout.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713BD1891A149005D69C7 /* AUSilentTimeout.h */; };
-		621713F21891A149005D69C7 /* CAAtomic.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713BE1891A149005D69C7 /* CAAtomic.h */; };
-		621713F31891A149005D69C7 /* CAAtomicStack.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713BF1891A149005D69C7 /* CAAtomicStack.h */; };
-		621713F41891A149005D69C7 /* CAAudioChannelLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713C01891A149005D69C7 /* CAAudioChannelLayout.cpp */; };
-		621713F51891A149005D69C7 /* CAAudioChannelLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713C11891A149005D69C7 /* CAAudioChannelLayout.h */; };
-		621713F61891A149005D69C7 /* CAAutoDisposer.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713C21891A149005D69C7 /* CAAutoDisposer.h */; };
-		621713F71891A149005D69C7 /* CABufferList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713C31891A149005D69C7 /* CABufferList.cpp */; };
-		621713F81891A149005D69C7 /* CABufferList.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713C41891A149005D69C7 /* CABufferList.h */; };
-		621713F91891A149005D69C7 /* CAByteOrder.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713C51891A149005D69C7 /* CAByteOrder.h */; };
-		621713FA1891A149005D69C7 /* CADebugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713C61891A149005D69C7 /* CADebugger.cpp */; };
-		621713FB1891A149005D69C7 /* CADebugger.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713C71891A149005D69C7 /* CADebugger.h */; };
-		621713FC1891A149005D69C7 /* CADebugMacros.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713C81891A149005D69C7 /* CADebugMacros.cpp */; };
-		621713FD1891A149005D69C7 /* CADebugMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713C91891A149005D69C7 /* CADebugMacros.h */; };
-		621713FE1891A149005D69C7 /* CADebugPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713CA1891A149005D69C7 /* CADebugPrintf.cpp */; };
-		621713FF1891A149005D69C7 /* CADebugPrintf.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713CB1891A149005D69C7 /* CADebugPrintf.h */; };
-		621714001891A149005D69C7 /* CAException.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713CC1891A149005D69C7 /* CAException.h */; };
-		621714011891A149005D69C7 /* CAGuard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713CD1891A149005D69C7 /* CAGuard.cpp */; };
-		621714021891A149005D69C7 /* CAGuard.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713CE1891A149005D69C7 /* CAGuard.h */; };
-		621714031891A149005D69C7 /* CAHostTimeBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713CF1891A149005D69C7 /* CAHostTimeBase.cpp */; };
-		621714041891A149005D69C7 /* CAHostTimeBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713D01891A149005D69C7 /* CAHostTimeBase.h */; };
-		621714051891A149005D69C7 /* CALogMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713D11891A149005D69C7 /* CALogMacros.h */; };
-		621714061891A149005D69C7 /* CAMath.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713D21891A149005D69C7 /* CAMath.h */; };
-		621714071891A149005D69C7 /* CAMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713D31891A149005D69C7 /* CAMutex.cpp */; };
-		621714081891A149005D69C7 /* CAMutex.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713D41891A149005D69C7 /* CAMutex.h */; };
-		621714091891A149005D69C7 /* CAReferenceCounted.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713D51891A149005D69C7 /* CAReferenceCounted.h */; };
-		6217140A1891A149005D69C7 /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713D61891A149005D69C7 /* CAStreamBasicDescription.cpp */; };
-		6217140B1891A149005D69C7 /* CAStreamBasicDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713D71891A149005D69C7 /* CAStreamBasicDescription.h */; };
-		6217140C1891A149005D69C7 /* CAThreadSafeList.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713D81891A149005D69C7 /* CAThreadSafeList.h */; };
-		6217140D1891A149005D69C7 /* CAVectorUnit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713D91891A149005D69C7 /* CAVectorUnit.cpp */; };
-		6217140E1891A149005D69C7 /* CAVectorUnit.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713DA1891A149005D69C7 /* CAVectorUnit.h */; };
-		6217140F1891A149005D69C7 /* CAVectorUnitTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713DB1891A149005D69C7 /* CAVectorUnitTypes.h */; };
-		621714101891A149005D69C7 /* CAXException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713DC1891A149005D69C7 /* CAXException.cpp */; };
-		621714111891A149005D69C7 /* CAXException.h in Headers */ = {isa = PBXBuildFile; fileRef = 621713DD1891A149005D69C7 /* CAXException.h */; };
 		62B3B89F1891936500E507B7 /* JamTaba.r in Rez */ = {isa = PBXBuildFile; fileRef = 62B3B89E1891936500E507B7 /* JamTaba.r */; };
-		8BA05A6B0720730100365D66 /* JamTaba.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BA05A660720730100365D66 /* JamTaba.cpp */; };
-		8BA05A6E0720730100365D66 /* JamTabaVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BA05A690720730100365D66 /* JamTabaVersion.h */; };
 		8BA05AFC072074E100365D66 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AF9072074E100365D66 /* AudioToolbox.framework */; };
 		8BA05AFD072074E100365D66 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AFA072074E100365D66 /* AudioUnit.framework */; };
 		8BA05B02072074F900365D66 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05B01072074F900365D66 /* CoreServices.framework */; };
 		8BA4AE54073EB72300A2709A /* JamTaba_ViewFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BA4ADCE073EB19800A2709A /* JamTaba_ViewFactory.h */; };
 		8BA4AE55073EB72300A2709A /* JamTaba_UIView.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BA4ADD0073EB19800A2709A /* JamTaba_UIView.h */; };
-		8BA4AE5C073EB79000A2709A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA4AE5B073EB79000A2709A /* Cocoa.framework */; };
-		8D01CCC80486CAD60068D4B7 /* JamTaba_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32BAE0B30371A71500C91783 /* JamTaba_Prefix.pch */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -704,28 +382,6 @@
 			);
 			script = "/Users/elieser/Qt/5.7/clang_64/bin/moc -o ${INPUT_FILE_DIR}/GeneratedFiles/moc_${INPUT_FILE_BASE}.cpp ${INPUT_FILE_PATH}\n";
 		};
-		2A0DBB0F1E0AF3AA00BEF1FF /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*.h";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"${INPUT_FILE_DIR}/GeneratedFiles/moc_${INPUT_FILE_BASE}.cpp",
-			);
-			script = "/Users/elieser/Qt/5.7/clang_64/bin/moc -o ${INPUT_FILE_DIR}/GeneratedFiles/moc_${INPUT_FILE_BASE}.cpp ${INPUT_FILE_PATH}\n";
-		};
-		2A0DBB101E0AF3C500BEF1FF /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*.ui";
-			fileType = pattern.proxy;
-			isEditable = 1;
-			outputFiles = (
-				"${INPUT_FILE_DIR}/GeneratedFiles/ui_${INPUT_FILE_BASE}.h",
-			);
-			script = "/Users/elieser/Qt/5.7/clang_64/bin/uic -o ${INPUT_FILE_DIR}/GeneratedFiles/ui_${INPUT_FILE_BASE}.h ${INPUT_FILE_PATH}";
-		};
 		2A120A871E0C066100E0E596 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
@@ -740,7 +396,7 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
-		8B707175074BC40400FFC872 /* PBXContainerItemProxy */ = {
+		2A3016371E0D95F10013700B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
 			proxyType = 1;
@@ -1020,6 +676,8 @@
 		2A2F700B1E08111E00A4B6C2 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		2A2F700D1E08113100A4B6C2 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		2A2F700F1E08116200A4B6C2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		2A3016391E0D9E650013700B /* JamTabaAUPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JamTabaAUPlugin.cpp; sourceTree = "<group>"; };
+		2A30163A1E0D9E650013700B /* JamTabaAUPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JamTabaAUPlugin.h; sourceTree = "<group>"; };
 		2AC0D3D21E0AB913005A940A /* ConfiguratorPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConfiguratorPlugin.cpp; path = ../../src/Plugins/ConfiguratorPlugin.cpp; sourceTree = "<group>"; };
 		2AC0D3D31E0AB913005A940A /* JamTabaPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JamTabaPlugin.cpp; path = ../../src/Plugins/JamTabaPlugin.cpp; sourceTree = "<group>"; };
 		2AC0D3D41E0AB913005A940A /* JamTabaPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JamTabaPlugin.h; path = ../../src/Plugins/JamTabaPlugin.h; sourceTree = "<group>"; };
@@ -1153,37 +811,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A0DBEA51E0B01C600BEF1FF /* Security.framework in Frameworks */,
-				2A0DBE7B1E0AF5AA00BEF1FF /* IOKit.framework in Frameworks */,
-				2A0DBECD1E0B082B00BEF1FF /* SystemConfiguration.framework in Frameworks */,
-				2A0DBE7C1E0AF5AA00BEF1FF /* Carbon.framework in Frameworks */,
-				2A0DBEC51E0B03C700BEF1FF /* libvorbisenc.a in Frameworks */,
-				2A0DBEBF1E0B03C600BEF1FF /* libportaudio.a in Frameworks */,
-				2A0DBE7D1E0AF5AA00BEF1FF /* OpenGL.framework in Frameworks */,
-				2A0DBEC71E0B03C700BEF1FF /* libvorbisfile.a in Frameworks */,
-				8BA4AE5C073EB79000A2709A /* Cocoa.framework in Frameworks */,
 				8BA05B02072074F900365D66 /* CoreServices.framework in Frameworks */,
 				8BA05AFC072074E100365D66 /* AudioToolbox.framework in Frameworks */,
-				2A0DBEBB1E0B03C600BEF1FF /* libminimp3.a in Frameworks */,
-				2A0DBE8C1E0AF5DD00BEF1FF /* libcups.dylib in Frameworks */,
-				2A0DBE8B1E0AF5DB00BEF1FF /* libz.dylib in Frameworks */,
 				8BA05AFD072074E100365D66 /* AudioUnit.framework in Frameworks */,
 				2A0DBE8A1E0AF5AA00BEF1FF /* CoreAudio.framework in Frameworks */,
-				2A0DBE7E1E0AF5AA00BEF1FF /* libqcocoa.a in Frameworks */,
-				2A0DBE7F1E0AF5AA00BEF1FF /* libQt5PrintSupport.a in Frameworks */,
-				2A0DBE801E0AF5AA00BEF1FF /* libQt5Widgets.a in Frameworks */,
-				2A0DBE811E0AF5AA00BEF1FF /* libQt5Core.a in Frameworks */,
-				2A0DBE821E0AF5AA00BEF1FF /* libQt5Gui.a in Frameworks */,
-				2A0DBEC31E0B03C700BEF1FF /* libvorbis.a in Frameworks */,
-				2A0DBE831E0AF5AA00BEF1FF /* libQt5Network.a in Frameworks */,
-				2A0DBEBD1E0B03C600BEF1FF /* libogg.a in Frameworks */,
-				2A0DBE841E0AF5AA00BEF1FF /* libqtfreetype.a in Frameworks */,
-				2A0DBE851E0AF5AA00BEF1FF /* libqtharfbuzzng.a in Frameworks */,
-				2A0DBE861E0AF5AA00BEF1FF /* libqtpcre.a in Frameworks */,
-				2A0DBE871E0AF5AA00BEF1FF /* libQt5PlatformSupport.a in Frameworks */,
-				2A0DBEC11E0B03C600BEF1FF /* librtmidi.a in Frameworks */,
-				2A0DBE881E0AF5AA00BEF1FF /* libqtpng.a in Frameworks */,
-				2A0DBE891E0AF5AA00BEF1FF /* libQt5Concurrent.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1813,6 +1444,8 @@
 				8BA4ADCF073EB19800A2709A /* JamTaba_ViewFactory.mm */,
 				8BA4ADD0073EB19800A2709A /* JamTaba_UIView.h */,
 				8BA4ADD1073EB19800A2709A /* JamTaba_UIView.mm */,
+				2A3016391E0D9E650013700B /* JamTabaAUPlugin.cpp */,
+				2A30163A1E0D9E650013700B /* JamTabaAUPlugin.h */,
 			);
 			name = CocoaUI;
 			sourceTree = SOURCE_ROOT;
@@ -1854,6 +1487,7 @@
 				2A0DBCD31E0AF46900BEF1FF /* IpToLocationResolver.h in Headers */,
 				2A0DBE331E0AF46D00BEF1FF /* ServerMessages.h in Headers */,
 				2A0DBC8B1E0AF46900BEF1FF /* OggFileReader.h in Headers */,
+				2A30163C1E0D9E650013700B /* JamTabaAUPlugin.h in Headers */,
 				2AC0D3F41E0AB913005A940A /* NinjamRoomWindowPlugin.h in Headers */,
 				2A0DBC671E0AF46900BEF1FF /* Filters.h in Headers */,
 				2A0DBC751E0AF46900BEF1FF /* LocalInputNode.h in Headers */,
@@ -1932,141 +1566,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A0DBE521E0AF46E00BEF1FF /* CacheHeader.h in Headers */,
-				2A0DBDF21E0AF46C00BEF1FF /* PeakMeter.h in Headers */,
-				2A0DBE441E0AF46E00BEF1FF /* UserChannel.h in Headers */,
-				2A0DBD1C1E0AF46A00BEF1FF /* ChordsPanel.h in Headers */,
-				2A0DBCAC1E0AF46900BEF1FF /* Resampler.h in Headers */,
-				2A0DBE061E0AF46C00BEF1FF /* natmap.h in Headers */,
-				2A0DBC581E0AF46900BEF1FF /* AudioMixer.h in Headers */,
-				2AC0D3F71E0AB913005A940A /* PreferencesDialogPlugin.h in Headers */,
-				2A0DBDA01E0AF46B00BEF1FF /* NinjamTrackView.h in Headers */,
-				2A0DBC541E0AF46900BEF1FF /* AudioDriver.h in Headers */,
-				2AC0D3F31E0AB913005A940A /* NinjamRoomWindowPlugin.h in Headers */,
-				2A0DBE301E0AF46D00BEF1FF /* Server.h in Headers */,
-				2A0DBE1E1E0AF46D00BEF1FF /* RtMidiDriver.h in Headers */,
-				2A0DBC841E0AF46900BEF1FF /* FileReader.h in Headers */,
-				8D01CCC80486CAD60068D4B7 /* JamTaba_Prefix.pch in Headers */,
-				2A0DBE0E1E0AF46C00BEF1FF /* MetronomeUtils.h in Headers */,
-				2A0DBD201E0AF46A00BEF1FF /* ChordsProgressionParser.h in Headers */,
-				2A0DBDDE1E0AF46C00BEF1FF /* IntervalChunksDisplay.h in Headers */,
-				2A0DBE0A1E0AF46C00BEF1FF /* MainController.h in Headers */,
-				2A0DBE341E0AF46D00BEF1FF /* ServerMessages.h in Headers */,
-				8BA05A6E0720730100365D66 /* JamTabaVersion.h in Headers */,
-				2A0DBC8C1E0AF46900BEF1FF /* OggFileReader.h in Headers */,
-				2A0DBE481E0AF46E00BEF1FF /* NinjamController.h in Headers */,
-				2A0DBE6C1E0AF46E00BEF1FF /* UploadIntervalData.h in Headers */,
-				2A0DBDEE1E0AF46C00BEF1FF /* MultiStateButton.h in Headers */,
-				621713DF1891A149005D69C7 /* AUBase.h in Headers */,
-				2A0DBCC01E0AF46900BEF1FF /* VorbisEncoder.h in Headers */,
-				2A0DBCD81E0AF46900BEF1FF /* WebIpToLocationResolver.h in Headers */,
-				621713E11891A149005D69C7 /* AUBaseHelper.h in Headers */,
-				2A0DBCE01E0AF46900BEF1FF /* BpiUtils.h in Headers */,
-				2A0DBE681E0AF46E00BEF1FF /* ReaperProjectGenerator.h in Headers */,
-				621713E31891A149005D69C7 /* AUBuffer.h in Headers */,
-				2A0DBDE21E0AF46C00BEF1FF /* MapMarker.h in Headers */,
-				621713E51891A149005D69C7 /* AUDispatch.h in Headers */,
-				2A0DBD101E0AF46A00BEF1FF /* ChordLabel.h in Headers */,
-				2A0DBD0C1E0AF46A00BEF1FF /* Chord.h in Headers */,
-				2A0DBE381E0AF46D00BEF1FF /* ServerMessagesHandler.h in Headers */,
-				2A0DBCC41E0AF46900BEF1FF /* Configurator.h in Headers */,
-				2A0DBD901E0AF46B00BEF1FF /* NinjamPanel.h in Headers */,
-				2A0DBDEA1E0AF46C00BEF1FF /* MarqueeLabel.h in Headers */,
-				2A0DBC501E0AF46900BEF1FF /* codec.h in Headers */,
-				2A0DBE5C1E0AF46E00BEF1FF /* PreCompiledHeaders.h in Headers */,
-				2A0DBE121E0AF46D00BEF1FF /* MidiDriver.h in Headers */,
-				2A0DBCE41E0AF46900BEF1FF /* BusyDialog.h in Headers */,
-				2A0DBCB01E0AF46900BEF1FF /* RoomStreamerNode.h in Headers */,
-				2A0DBD181E0AF46A00BEF1FF /* ChordProgressionMeasure.h in Headers */,
-				2A0DBD721E0AF46B00BEF1FF /* IntervalProgressWindow.h in Headers */,
-				2A0DBDC21E0AF46B00BEF1FF /* UserNameDialog.h in Headers */,
-				2A0DBD5E1E0AF46A00BEF1FF /* GuiUtils.h in Headers */,
-				621713E71891A149005D69C7 /* AUEffectBase.h in Headers */,
-				2A0DBD621E0AF46A00BEF1FF /* Highligther.h in Headers */,
-				2A0DBC7E1E0AF46900BEF1FF /* Plugins.h in Headers */,
-				2A0DBC641E0AF46900BEF1FF /* AudioPeak.h in Headers */,
-				2A0DBD041E0AF46A00BEF1FF /* NinjamVotingMessageParser.h in Headers */,
-				2A0DBE1A1E0AF46D00BEF1FF /* MidiMessageBuffer.h in Headers */,
-				2A0DBD9C1E0AF46B00BEF1FF /* NinjamTrackGroupView.h in Headers */,
-				2A0DBE5A1E0AF46E00BEF1FF /* UsersDataCache.h in Headers */,
-				2A0DBCB81E0AF46900BEF1FF /* SamplesBufferResampler.h in Headers */,
-				621713E91891A149005D69C7 /* AUInputElement.h in Headers */,
-				2A0DBC5C1E0AF46900BEF1FF /* AudioNode.h in Headers */,
-				2A0DBC721E0AF46900BEF1FF /* LocalInputGroup.h in Headers */,
-				2A0DBDAE1E0AF46B00BEF1FF /* PreferencesDialog.h in Headers */,
-				621713ED1891A149005D69C7 /* AUPlugInDispatch.h in Headers */,
-				2A0DBD8A1E0AF46B00BEF1FF /* MainWindow.h in Headers */,
-				2A0DBE561E0AF46E00BEF1FF /* Settings.h in Headers */,
-				621713EB1891A149005D69C7 /* AUOutputElement.h in Headers */,
-				2AC0D3EB1E0AB913005A940A /* MainWindowPlugin.h in Headers */,
-				621713F11891A149005D69C7 /* AUSilentTimeout.h in Headers */,
-				2A0DBCF01E0AF46A00BEF1FF /* ChatPanel.h in Headers */,
-				2A0DBCDC1E0AF46900BEF1FF /* BaseTrackView.h in Headers */,
-				2A0DBCBC1E0AF46900BEF1FF /* VorbisDecoder.h in Headers */,
-				2A0DBC761E0AF46900BEF1FF /* LocalInputNode.h in Headers */,
-				2A0DBD081E0AF46A00BEF1FF /* ChatChordsProgressionParser.h in Headers */,
-				2A0DBE641E0AF46E00BEF1FF /* JamRecorder.h in Headers */,
-				2A0DBE161E0AF46D00BEF1FF /* MidiMessage.h in Headers */,
-				621713F21891A149005D69C7 /* CAAtomic.h in Headers */,
-				2A0DBDFA1E0AF46C00BEF1FF /* WavePeakPanel.h in Headers */,
-				621713F31891A149005D69C7 /* CAAtomicStack.h in Headers */,
-				2A0DBC821E0AF46900BEF1FF /* SamplesBuffer.h in Headers */,
-				2A0DBD961E0AF46B00BEF1FF /* NinjamRoomWindow.h in Headers */,
-				2A0DBCA41E0AF46900BEF1FF /* MetronomeTrackNode.h in Headers */,
-				621713F51891A149005D69C7 /* CAAudioChannelLayout.h in Headers */,
-				2A0DBD841E0AF46B00BEF1FF /* LocalTrackView.h in Headers */,
-				2A0DBD7A1E0AF46B00BEF1FF /* JamRoomViewPanel.h in Headers */,
-				621713F61891A149005D69C7 /* CAAutoDisposer.h in Headers */,
-				2A0DBDE61E0AF46C00BEF1FF /* MapWidget.h in Headers */,
-				621713F81891A149005D69C7 /* CABufferList.h in Headers */,
-				2A0DBD801E0AF46B00BEF1FF /* LocalTrackGroupView.h in Headers */,
-				621713F91891A149005D69C7 /* CAByteOrder.h in Headers */,
-				2A0DBC601E0AF46900BEF1FF /* AudioNodeProcessor.h in Headers */,
-				621713FB1891A149005D69C7 /* CADebugger.h in Headers */,
-				2A0DBCD41E0AF46900BEF1FF /* IpToLocationResolver.h in Headers */,
-				2A0DBE401E0AF46D00BEF1FF /* User.h in Headers */,
-				2A0DBDC81E0AF46B00BEF1FF /* UsersColorsPool.h in Headers */,
-				2A0DBC681E0AF46900BEF1FF /* Filters.h in Headers */,
-				621713FD1891A149005D69C7 /* CADebugMacros.h in Headers */,
-				621713FF1891A149005D69C7 /* CADebugPrintf.h in Headers */,
-				2A0DBC7A1E0AF46900BEF1FF /* PluginDescriptor.h in Headers */,
-				621714001891A149005D69C7 /* CAException.h in Headers */,
-				2A0DBCB41E0AF46900BEF1FF /* SamplesBufferRecorder.h in Headers */,
-				621714021891A149005D69C7 /* CAGuard.h in Headers */,
-				621714041891A149005D69C7 /* CAHostTimeBase.h in Headers */,
-				2A0DBE3C1E0AF46D00BEF1FF /* Service.h in Headers */,
-				2A1C7AB31E0B66AC00C7984D /* JamTaba.h in Headers */,
-				2A0DBE041E0AF46C00BEF1FF /* LoginService.h in Headers */,
-				621714051891A149005D69C7 /* CALogMacros.h in Headers */,
-				2AC0D3E71E0AB913005A940A /* MainControllerPlugin.h in Headers */,
-				2A0DBD6E1E0AF46A00BEF1FF /* IntervalProgressDisplay.h in Headers */,
-				621714061891A149005D69C7 /* CAMath.h in Headers */,
-				2A0DBD141E0AF46A00BEF1FF /* ChordProgression.h in Headers */,
-				621714081891A149005D69C7 /* CAMutex.h in Headers */,
-				2A0DBDFE1E0AF46C00BEF1FF /* Logging.h in Headers */,
-				621714091891A149005D69C7 /* CAReferenceCounted.h in Headers */,
-				2A0DBCF61E0AF46A00BEF1FF /* ChatTextEditor.h in Headers */,
-				6217140B1891A149005D69C7 /* CAStreamBasicDescription.h in Headers */,
-				2AC0D3EF1E0AB913005A940A /* NinjamControllerPlugin.h in Headers */,
-				6211E2B41891AA2900751AA3 /* ComponentBase.h in Headers */,
-				6217140C1891A149005D69C7 /* CAThreadSafeList.h in Headers */,
-				2A0DBDB41E0AF46B00BEF1FF /* PrivateServerDialog.h in Headers */,
-				2A0DBE2A1E0AF46D00BEF1FF /* ClientMessages.h in Headers */,
-				2A0DBE6E1E0AF46E00BEF1FF /* Utils.h in Headers */,
-				2A0DBDF61E0AF46C00BEF1FF /* UserNameLineEdit.h in Headers */,
-				6217140E1891A149005D69C7 /* CAVectorUnit.h in Headers */,
-				6217140F1891A149005D69C7 /* CAVectorUnitTypes.h in Headers */,
-				2A0DBC881E0AF46900BEF1FF /* FileReaderFactory.h in Headers */,
-				2A0DBC901E0AF46900BEF1FF /* WaveFileReader.h in Headers */,
-				2A0DBE601E0AF46E00BEF1FF /* ClipSortLogGenerator.h in Headers */,
-				2A0DBDCC1E0AF46C00BEF1FF /* CustomTabWidget.h in Headers */,
-				2AC0D3E31E0AB913005A940A /* JamTabaPlugin.h in Headers */,
-				621714111891A149005D69C7 /* CAXException.h in Headers */,
-				2A0DBDBE1E0AF46B00BEF1FF /* TrackGroupView.h in Headers */,
-				2A0DBDBA1E0AF46B00BEF1FF /* ThemeLoader.h in Headers */,
-				2A0DBCEA1E0AF46900BEF1FF /* ChatMessagePanel.h in Headers */,
-				621713F01891A149005D69C7 /* AUScopeElement.h in Headers */,
-				2A0DBCA81E0AF46900BEF1FF /* NinjamTrackNode.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2107,11 +1606,9 @@
 				2AB5C82D1E07676E007BD342 /* CopyFiles */,
 			);
 			buildRules = (
-				2A0DBB101E0AF3C500BEF1FF /* PBXBuildRule */,
-				2A0DBB0F1E0AF3AA00BEF1FF /* PBXBuildRule */,
 			);
 			dependencies = (
-				8B707176074BC40400FFC872 /* PBXTargetDependency */,
+				2A3016381E0D95F10013700B /* PBXTargetDependency */,
 			);
 			name = JamTaba;
 			productInstallPath = "$(HOME)/Library/Bundles";
@@ -2170,17 +1667,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A0DBDB61E0AF46B00BEF1FF /* PrivateServerDialog.ui in Resources */,
-				2A0DBCEC1E0AF46900BEF1FF /* ChatMessagePanel.ui in Resources */,
-				2A0DBD1E1E0AF46A00BEF1FF /* ChordsPanel.ui in Resources */,
-				2A0DBDC41E0AF46B00BEF1FF /* UserNameDialog.ui in Resources */,
-				2A0DBDB01E0AF46B00BEF1FF /* PreferencesDialog.ui in Resources */,
-				2A0DBCF21E0AF46A00BEF1FF /* ChatPanel.ui in Resources */,
-				2A0DBD981E0AF46B00BEF1FF /* NinjamRoomWindow.ui in Resources */,
-				2A0DBCE61E0AF46900BEF1FF /* BusyDialog.ui in Resources */,
-				2A0DBD8C1E0AF46B00BEF1FF /* MainWindow.ui in Resources */,
-				2A0DBD7C1E0AF46B00BEF1FF /* JamRoomViewPanel.ui in Resources */,
-				2A0DBD921E0AF46B00BEF1FF /* NinjamPanel.ui in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2223,6 +1709,7 @@
 				2A120A5F1E0BEF4F00E0E596 /* IntervalProgressDisplay.h in Sources */,
 				2A120A691E0BEF8000E0E596 /* PreferencesDialog.h in Sources */,
 				2A120A6D1E0BEFA500E0E596 /* NinjamController.h in Sources */,
+				2A30163B1E0D9E650013700B /* JamTabaAUPlugin.cpp in Sources */,
 				2A120A6C1E0BEF9100E0E596 /* MainController.h in Sources */,
 				2A120A611E0BEF5400E0E596 /* JamRoomViewPanel.h in Sources */,
 				2A120A751E0BF0EC00E0E596 /* MapWidget.h in Sources */,
@@ -2382,188 +1869,37 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A0DBEB21E0B02A300BEF1FF /* UserNameDialog.ui in Sources */,
-				2A0DBEB01E0B029900BEF1FF /* PreferencesDialog.ui in Sources */,
-				2A0DBEB11E0B029C00BEF1FF /* PrivateServerDialog.ui in Sources */,
-				2A0DBEAE1E0B029200BEF1FF /* NinjamPanel.ui in Sources */,
-				2A0DBEAD1E0B028C00BEF1FF /* MainWindow.ui in Sources */,
-				2A0DBEC81E0B04AF00BEF1FF /* NinjamRoomWindow.ui in Sources */,
-				2A0DBEAC1E0B028700BEF1FF /* JamRoomViewPanel.ui in Sources */,
-				2A0DBEAB1E0B027C00BEF1FF /* ChordsPanel.ui in Sources */,
-				2A0DBEAA1E0B027600BEF1FF /* ChatPanel.ui in Sources */,
-				2A0DBEA91E0B027400BEF1FF /* ChatMessagePanel.ui in Sources */,
-				2A0DBEA81E0B026F00BEF1FF /* BusyDialog.ui in Sources */,
-				2A0DBEE01E0B0A8C00BEF1FF /* LocalInputNode.h in Sources */,
-				2A0DBEDF1E0B0A6D00BEF1FF /* AudioDriver.h in Sources */,
-				2A0DBEDE1E0B0A5700BEF1FF /* WebIpToLocationResolver.h in Sources */,
-				2A0DBEE41E0B0B8600BEF1FF /* RoomStreamerNode.h in Sources */,
-				2A0DBEE31E0B0B6A00BEF1FF /* IpToLocationResolver.h in Sources */,
-				2A0DBEE61E0B0BF600BEF1FF /* LoginService.h in Sources */,
-				2A0DBEE51E0B0BCF00BEF1FF /* AudioNode.h in Sources */,
-				2A0DBEDD1E0B0A4500BEF1FF /* ChatPanel.h in Sources */,
-				2A0DBEEA1E0B0C6900BEF1FF /* MarqueeLabel.h in Sources */,
-				2A0DBEE81E0B0C6300BEF1FF /* IntervalChunksDisplay.h in Sources */,
-				2A0DBEDC1E0B0A2800BEF1FF /* NinjamRoomWindowPlugin.h in Sources */,
-				2A0DBEEB1E0B0C6F00BEF1FF /* MultiStateButton.h in Sources */,
-				2A0DBEED1E0B0C7300BEF1FF /* UserNameLineEdit.h in Sources */,
-				2A0DBEEE1E0B0C7500BEF1FF /* WavePeakPanel.h in Sources */,
-				2A0DBEEF1E0B0CFE00BEF1FF /* ChordLabel.h in Sources */,
-				2A0DBEEC1E0B0C7100BEF1FF /* PeakMeter.h in Sources */,
-				2A0DBEF21E0B0D3600BEF1FF /* MapWidget.h in Sources */,
-				2A0DBEF01E0B0D0300BEF1FF /* Highligther.h in Sources */,
-				2A0DBEF11E0B0D0700BEF1FF /* UserNameDialog.h in Sources */,
-				2A0DBEDA1E0B09C000BEF1FF /* NinjamTrackGroupView.h in Sources */,
-				2A0DBED91E0B099C00BEF1FF /* PrivateServerDialog.h in Sources */,
-				2A0DBEE71E0B0C0E00BEF1FF /* BusyDialog.h in Sources */,
-				2A0DBED71E0B097D00BEF1FF /* PreferencesDialog.h in Sources */,
-				2A0DBED61E0B093000BEF1FF /* NinjamRoomWindow.h in Sources */,
-				2A0DBED51E0B091A00BEF1FF /* JamRoomViewPanel.h in Sources */,
-				2A0DBED41E0B091600BEF1FF /* ChatMessagePanel.h in Sources */,
-				2A0DBEF31E0B0D4E00BEF1FF /* PreferencesDialogPlugin.h in Sources */,
-				2A0DBED31E0B08FF00BEF1FF /* LocalTrackView.h in Sources */,
-				2A0DBED21E0B08F900BEF1FF /* NinjamTrackView.h in Sources */,
-				2A0DBED01E0B089F00BEF1FF /* NinjamPanel.h in Sources */,
-				2A0DBED11E0B08EE00BEF1FF /* BaseTrackView.h in Sources */,
-				2A0DBECE1E0B086700BEF1FF /* MainWindow.h in Sources */,
-				2A0DBECF1E0B087000BEF1FF /* ChordsPanel.h in Sources */,
-				2A0DBEA71E0B022300BEF1FF /* MainController.h in Sources */,
-				2A0DBEA61E0B021800BEF1FF /* NinjamController.h in Sources */,
-				2A0DBEE11E0B0B2400BEF1FF /* TrackGroupView.h in Sources */,
-				2A0DBED81E0B098B00BEF1FF /* LocalTrackGroupView.h in Sources */,
-				2A0DBEE21E0B0B4700BEF1FF /* IntervalProgressDisplay.h in Sources */,
-				2A0DBEDB1E0B09FA00BEF1FF /* IntervalProgressWindow.h in Sources */,
-				621713E01891A149005D69C7 /* AUBaseHelper.cpp in Sources */,
-				621713EC1891A149005D69C7 /* AUPlugInDispatch.cpp in Sources */,
-				2A0DBDF41E0AF46C00BEF1FF /* UserNameLineEdit.cpp in Sources */,
-				2A0DBE6A1E0AF46E00BEF1FF /* UploadIntervalData.cpp in Sources */,
-				2A0DBE621E0AF46E00BEF1FF /* JamRecorder.cpp in Sources */,
-				2A0DBCAA1E0AF46900BEF1FF /* Resampler.cpp in Sources */,
-				2A0DBDAC1E0AF46B00BEF1FF /* PreferencesDialog.cpp in Sources */,
-				2A0DBC741E0AF46900BEF1FF /* LocalInputNode.cpp in Sources */,
-				2A0DBE461E0AF46E00BEF1FF /* NinjamController.cpp in Sources */,
-				621713E81891A149005D69C7 /* AUInputElement.cpp in Sources */,
-				2A0DBD9A1E0AF46B00BEF1FF /* NinjamTrackGroupView.cpp in Sources */,
-				621714011891A149005D69C7 /* CAGuard.cpp in Sources */,
-				2A0DBE421E0AF46D00BEF1FF /* UserChannel.cpp in Sources */,
-				2A0DBDE81E0AF46C00BEF1FF /* MarqueeLabel.cpp in Sources */,
-				2A0DBE321E0AF46D00BEF1FF /* ServerMessages.cpp in Sources */,
-				2A0DBCBE1E0AF46900BEF1FF /* VorbisEncoder.cpp in Sources */,
-				2A0DBD881E0AF46B00BEF1FF /* MainWindow.cpp in Sources */,
-				2A0DBD0A1E0AF46A00BEF1FF /* Chord.cpp in Sources */,
-				2A0DBDBC1E0AF46B00BEF1FF /* TrackGroupView.cpp in Sources */,
-				2A0DBD0E1E0AF46A00BEF1FF /* ChordLabel.cpp in Sources */,
-				621713E21891A149005D69C7 /* AUBuffer.cpp in Sources */,
-				2A0DBD5C1E0AF46A00BEF1FF /* GuiUtils.cpp in Sources */,
-				2A0DBCD21E0AF46900BEF1FF /* IpToLocationResolver.cpp in Sources */,
-				2A0DBC781E0AF46900BEF1FF /* PluginDescriptor.cpp in Sources */,
-				621713FA1891A149005D69C7 /* CADebugger.cpp in Sources */,
-				6211E2B31891AA2900751AA3 /* ComponentBase.cpp in Sources */,
-				2A0DBD761E0AF46B00BEF1FF /* PiePaintStrategy.cpp in Sources */,
-				2A0DBCA61E0AF46900BEF1FF /* NinjamTrackNode.cpp in Sources */,
-				2AC0D3F51E0AB913005A940A /* PreferencesDialogPlugin.cpp in Sources */,
-				2A0DBCA21E0AF46900BEF1FF /* MetronomeTrackNode.cpp in Sources */,
-				2A0DBC861E0AF46900BEF1FF /* FileReaderFactory.cpp in Sources */,
-				2AC0D3ED1E0AB913005A940A /* NinjamControllerPlugin.cpp in Sources */,
-				2A0DBD661E0AF46A00BEF1FF /* EllipticalPaintStrategy.cpp in Sources */,
-				2A0DBCBA1E0AF46900BEF1FF /* VorbisDecoder.cpp in Sources */,
-				2A0DBDB81E0AF46B00BEF1FF /* ThemeLoader.cpp in Sources */,
-				2A0DBD601E0AF46A00BEF1FF /* Highligther.cpp in Sources */,
-				2A0DBD941E0AF46B00BEF1FF /* NinjamRoomWindow.cpp in Sources */,
-				2A0DBE361E0AF46D00BEF1FF /* ServerMessagesHandler.cpp in Sources */,
-				2A0DBD821E0AF46B00BEF1FF /* LocalTrackView.cpp in Sources */,
-				2A0DBCE81E0AF46900BEF1FF /* ChatMessagePanel.cpp in Sources */,
-				2A0DBC5A1E0AF46900BEF1FF /* AudioNode.cpp in Sources */,
-				621713DE1891A149005D69C7 /* AUBase.cpp in Sources */,
-				2A0DBDB21E0AF46B00BEF1FF /* PrivateServerDialog.cpp in Sources */,
-				2A0DBE081E0AF46C00BEF1FF /* MainController.cpp in Sources */,
-				2A0DBCC21E0AF46900BEF1FF /* Configurator.cpp in Sources */,
-				2A0DBC5E1E0AF46900BEF1FF /* AudioNodeProcessor.cpp in Sources */,
-				621713FE1891A149005D69C7 /* CADebugPrintf.cpp in Sources */,
-				2A0DBE501E0AF46E00BEF1FF /* CacheHeader.cpp in Sources */,
-				2A0DBDF01E0AF46C00BEF1FF /* PeakMeter.cpp in Sources */,
-				2A0DBD161E0AF46A00BEF1FF /* ChordProgressionMeasure.cpp in Sources */,
-				2A0DBD741E0AF46B00BEF1FF /* LinearPaintStrategy.cpp in Sources */,
-				2AC0D3F11E0AB913005A940A /* NinjamRoomWindowPlugin.cpp in Sources */,
-				2A0DBD8E1E0AF46B00BEF1FF /* NinjamPanel.cpp in Sources */,
-				2A0DBDE01E0AF46C00BEF1FF /* MapMarker.cpp in Sources */,
-				2A0DBC8A1E0AF46900BEF1FF /* OggFileReader.cpp in Sources */,
-				2A0DBD781E0AF46B00BEF1FF /* JamRoomViewPanel.cpp in Sources */,
-				2A0DBE101E0AF46D00BEF1FF /* MidiDriver.cpp in Sources */,
-				2A0DBD7E1E0AF46B00BEF1FF /* LocalTrackGroupView.cpp in Sources */,
-				621713EF1891A149005D69C7 /* AUScopeElement.cpp in Sources */,
-				2A0DBD021E0AF46A00BEF1FF /* NinjamVotingMessageParser.cpp in Sources */,
-				2A0DBCDE1E0AF46900BEF1FF /* BpiUtils.cpp in Sources */,
-				2A0DBDCA1E0AF46C00BEF1FF /* CustomTabWidget.cpp in Sources */,
-				2A0DBE181E0AF46D00BEF1FF /* MidiMessageBuffer.cpp in Sources */,
-				2A0DBE1C1E0AF46D00BEF1FF /* RtMidiDriver.cpp in Sources */,
-				2A0DBDEC1E0AF46C00BEF1FF /* MultiStateButton.cpp in Sources */,
-				621713E41891A149005D69C7 /* AUDispatch.cpp in Sources */,
-				2AC0D3E11E0AB913005A940A /* JamTabaPlugin.cpp in Sources */,
-				2A0DBDDC1E0AF46C00BEF1FF /* IntervalChunksDisplay.cpp in Sources */,
-				2A0DBC8E1E0AF46900BEF1FF /* WaveFileReader.cpp in Sources */,
-				2A0DBE5E1E0AF46E00BEF1FF /* ClipSortLogGenerator.cpp in Sources */,
-				2A0DBE661E0AF46E00BEF1FF /* ReaperProjectGenerator.cpp in Sources */,
-				2A0DBE0C1E0AF46C00BEF1FF /* MetronomeUtils.cpp in Sources */,
-				621713F71891A149005D69C7 /* CABufferList.cpp in Sources */,
-				2A0DBE281E0AF46D00BEF1FF /* ClientMessages.cpp in Sources */,
-				2A0DBCE21E0AF46900BEF1FF /* BusyDialog.cpp in Sources */,
-				2A0DBCEE1E0AF46900BEF1FF /* ChatPanel.cpp in Sources */,
-				2A0DBE2C1E0AF46D00BEF1FF /* moc_Service.cpp in Sources */,
-				2A0DBE3A1E0AF46D00BEF1FF /* Service.cpp in Sources */,
-				621714031891A149005D69C7 /* CAHostTimeBase.cpp in Sources */,
-				2A0DBE3E1E0AF46D00BEF1FF /* User.cpp in Sources */,
-				2A0DBD701E0AF46B00BEF1FF /* IntervalProgressWindow.cpp in Sources */,
-				621714101891A149005D69C7 /* CAXException.cpp in Sources */,
-				2A0DBD061E0AF46A00BEF1FF /* ChatChordsProgressionParser.cpp in Sources */,
-				6217140D1891A149005D69C7 /* CAVectorUnit.cpp in Sources */,
-				2A0DBCAE1E0AF46900BEF1FF /* RoomStreamerNode.cpp in Sources */,
-				2A0DBDFC1E0AF46C00BEF1FF /* logging.cpp in Sources */,
-				2AC0D3E51E0AB913005A940A /* MainControllerPlugin.cpp in Sources */,
-				2A0DBCB21E0AF46900BEF1FF /* samplesbufferrecorder.cpp in Sources */,
-				2A0DBC701E0AF46900BEF1FF /* LocalInputGroup.cpp in Sources */,
-				2A0DBDE41E0AF46C00BEF1FF /* MapWidget.cpp in Sources */,
-				2A0DBC801E0AF46900BEF1FF /* SamplesBuffer.cpp in Sources */,
-				6217140A1891A149005D69C7 /* CAStreamBasicDescription.cpp in Sources */,
-				2A0DBCDA1E0AF46900BEF1FF /* BaseTrackView.cpp in Sources */,
-				2A0DBC4E1E0AF46900BEF1FF /* codec.cpp in Sources */,
-				2A0DBC621E0AF46900BEF1FF /* AudioPeak.cpp in Sources */,
-				2A0DBE021E0AF46C00BEF1FF /* LoginService.cpp in Sources */,
-				2A0DBD641E0AF46A00BEF1FF /* CircularPaintStrategy.cpp in Sources */,
-				2A0DBE2E1E0AF46D00BEF1FF /* Server.cpp in Sources */,
-				2AC0D3DF1E0AB913005A940A /* ConfiguratorPlugin.cpp in Sources */,
-				2A0DBD9E1E0AF46B00BEF1FF /* NinjamTrackView.cpp in Sources */,
-				2A0DBDC61E0AF46B00BEF1FF /* UsersColorsPool.cpp in Sources */,
-				621713EA1891A149005D69C7 /* AUOutputElement.cpp in Sources */,
-				2A0DBCD61E0AF46900BEF1FF /* WebIpToLocationResolver.cpp in Sources */,
-				2AC0D3E91E0AB913005A940A /* MainWindowPlugin.cpp in Sources */,
-				8BA05A6B0720730100365D66 /* JamTaba.cpp in Sources */,
-				2A0DBD6C1E0AF46A00BEF1FF /* IntervalProgressDisplay.cpp in Sources */,
-				2A0DBE141E0AF46D00BEF1FF /* MidiMessage.cpp in Sources */,
-				2A0DBDC01E0AF46B00BEF1FF /* UserNameDialog.cpp in Sources */,
-				2A0DBCF41E0AF46A00BEF1FF /* ChatTextEditor.cpp in Sources */,
-				621713E61891A149005D69C7 /* AUEffectBase.cpp in Sources */,
-				2A0DBD121E0AF46A00BEF1FF /* ChordProgression.cpp in Sources */,
-				2A0DBCB61E0AF46900BEF1FF /* SamplesBufferResampler.cpp in Sources */,
-				2A0DBE541E0AF46E00BEF1FF /* Settings.cpp in Sources */,
-				2A0DBE581E0AF46E00BEF1FF /* UsersDataCache.cpp in Sources */,
-				621714071891A149005D69C7 /* CAMutex.cpp in Sources */,
-				621713FC1891A149005D69C7 /* CADebugMacros.cpp in Sources */,
-				2A0DBDF81E0AF46C00BEF1FF /* WavePeakPanel.cpp in Sources */,
-				2A0DBD1A1E0AF46A00BEF1FF /* ChordsPanel.cpp in Sources */,
-				2A0DBC521E0AF46900BEF1FF /* AudioDriver.cpp in Sources */,
-				2A0DBC661E0AF46900BEF1FF /* Filters.cpp in Sources */,
-				621713F41891A149005D69C7 /* CAAudioChannelLayout.cpp in Sources */,
-				2A0DBC561E0AF46900BEF1FF /* AudioMixer.cpp in Sources */,
+				2A3016221E0D90AB0013700B /* AUBase.cpp in Sources */,
+				2A3016231E0D90AD0013700B /* AUDispatch.cpp in Sources */,
+				2A30162B1E0D90CA0013700B /* AUEffectBase.cpp in Sources */,
+				2A3016241E0D90B00013700B /* AUInputElement.cpp in Sources */,
+				2A3016251E0D90B30013700B /* AUOutputElement.cpp in Sources */,
+				2A3016361E0D94320013700B /* AUPlugInDispatch.cpp in Sources */,
+				2A3016271E0D90BC0013700B /* AUScopeElement.cpp in Sources */,
+				2A3016291E0D90C30013700B /* AUBaseHelper.cpp in Sources */,
+				2A30162A1E0D90C60013700B /* AUBuffer.cpp in Sources */,
+				2A3016281E0D90BE0013700B /* ComponentBase.cpp in Sources */,
+				2A3016211E0D907B0013700B /* JamTaba.cpp in Sources */,
+				2A3016331E0D90FB0013700B /* CAStreamBasicDescription.cpp in Sources */,
+				2A30162C1E0D90CF0013700B /* CAAudioChannelLayout.cpp in Sources */,
+				2A30162D1E0D90D80013700B /* CABufferList.cpp in Sources */,
+				2A30162E1E0D90DD0013700B /* CADebugger.cpp in Sources */,
+				2A30162F1E0D90E10013700B /* CADebugMacros.cpp in Sources */,
+				2A3016301E0D90E40013700B /* CAGuard.cpp in Sources */,
+				2A3016311E0D90EC0013700B /* CAHostTimeBase.cpp in Sources */,
+				2A3016321E0D90F70013700B /* CAMutex.cpp in Sources */,
+				2A3016351E0D91010013700B /* CAXException.cpp in Sources */,
+				2A3016341E0D90FE0013700B /* CAVectorUnit.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		8B707176074BC40400FFC872 /* PBXTargetDependency */ = {
+		2A3016381E0D95F10013700B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 8BA4AE4D073EB69000A2709A /* CocoaUI */;
-			targetProxy = 8B707175074BC40400FFC872 /* PBXContainerItemProxy */;
+			targetProxy = 2A3016371E0D95F10013700B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2852,6 +2188,7 @@
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				EXPORTED_SYMBOLS_FILE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -2897,6 +2234,7 @@
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				EXPORTED_SYMBOLS_FILE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -2942,6 +2280,7 @@
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				EXPORTED_SYMBOLS_FILE = "";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;

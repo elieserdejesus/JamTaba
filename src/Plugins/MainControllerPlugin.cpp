@@ -84,6 +84,13 @@ Midi::MidiDriver *MainControllerPlugin::createMidiDriver()
 
 void MainControllerPlugin::setCSS(const QString &css)
 {
-    qCDebug(jtCore) << "setting CSS";
-    qApp->setStyleSheet(css);// qApp is a global variable created in dll main.
+    
+    if (qApp) {
+        qCDebug(jtCore) << "setting CSS";
+        qApp->setStyleSheet(css);// qApp is a global variable created in dll main.
+    }
+    else
+    {
+        qWarning() << "Can´t set CSS, qApp is null!";
+    }
 }
