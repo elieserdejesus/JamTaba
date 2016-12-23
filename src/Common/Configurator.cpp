@@ -184,7 +184,11 @@ void Configurator::setupLogConfigFile()
     QString logConfigFilePath = baseDir.absoluteFilePath(logConfigFileName);
     if (!logConfigFilePath.isEmpty()) {
         qputenv("QT_LOGGING_CONF", QByteArray(logConfigFilePath.toUtf8()));
+        qDebug() << "Setting QT_LOGGING_CONF to " << logConfigFilePath;
         qInstallMessageHandler(&Configurator::LogHandler);
+    }
+    else {
+        qWarning() << "Log file path is empty!";
     }
 }
 
@@ -244,7 +248,7 @@ void Configurator::exportLogIniFile()
 {
     QString logConfigFilePath = baseDir.absoluteFilePath(logConfigFileName);
     if (!QFile(logConfigFilePath).exists()) {
-        qDebug(jtConfigurator) << "Log Ini file don't exist in' :"<<logConfigFilePath;
+        qDebug(jtConfigurator) << "Log Ini file don't exist in' :" << logConfigFilePath;
 
         //copy the log config file from resources to 'filePath'
         QFile logFile(":/" + logConfigFileName);

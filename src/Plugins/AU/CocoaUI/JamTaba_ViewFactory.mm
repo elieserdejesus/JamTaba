@@ -27,6 +27,10 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     
     if (!QApplication::instance())
     {
+        Configurator *configurator = Configurator::getInstance();
+        if (!configurator->setUp())
+            qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";
+        
         int argc = 0;
         QApplication::setApplicationName("Jamtaba 2");
         QApplication::setAttribute(Qt::AA_MacPluginApplication);
@@ -51,14 +55,13 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     layout->setContentsMargins(0, 0, 0, 0);
  
     
-    static JamTabaAUPlugin *auPlugin = new JamTabaAUPlugin();
+    static JamTabaAUPlugin *auPlugin = nullptr;
     static MainWindowPlugin *mainWindow;
     static MainControllerPlugin *mainController;
     
-    if (!auPlugin->isRunning()) {
-        Configurator *configurator = Configurator::getInstance();
-        if (!configurator->setUp())
-            qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";
+    if (!auPlugin) {
+        
+        auPlugin = new JamTabaAUPlugin();
         auPlugin->initialize();
         
         mainController = auPlugin->getController();
@@ -66,8 +69,6 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
         mainController->setMainWindow(mainWindow);
         mainWindow->initialize();
     }
-    
-    
     
     layout->addWidget(mainWindow);
     nativeWidget->setLayout(layout);
@@ -84,13 +85,11 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     
     nativeWidget->show();
     
-    
     [uiFreshlyLoadedView setAU:inAU];
     
     NSView *returnView = uiFreshlyLoadedView;
     
-    printf("Setando listener: %d", auPlugin);
-    
+ 
     UInt32 size = sizeof(void *);
     JamTabaListener *listener = auPlugin->listener;
     AudioUnitSetProperty(inAU, kAudioUnitCustomProperty_JamTabaListener, kAudioUnitScope_Global, 0, listener, size);
