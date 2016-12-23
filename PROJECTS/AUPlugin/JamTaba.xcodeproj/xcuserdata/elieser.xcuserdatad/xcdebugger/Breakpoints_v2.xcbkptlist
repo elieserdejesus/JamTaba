@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../src/Plugins/AU/AUSource/JamTaba.cpp"
-            timestampString = "504213769.253585"
+            timestampString = "504225693.321382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
             landmarkName = "JamTaba::GetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, AudioUnitElement inElement, void *outData)"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../src/Plugins/AU/AUSource/JamTaba.cpp"
-            timestampString = "504213769.253585"
+            timestampString = "504225693.321382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
             landmarkName = "JamTaba::Initialize()"
             landmarkType = "5">
          </BreakpointContent>
@@ -136,11 +136,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../src/Plugins/AU/AUSource/JamTaba.cpp"
-            timestampString = "504213769.253585"
+            timestampString = "504225693.321382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
             landmarkName = "JamTaba::GetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, AudioUnitElement inElement, void *outData)"
             landmarkType = "5">
             <Locations>
@@ -278,11 +278,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../src/Plugins/AU/CocoaUI/JamTaba_ViewFactory.mm"
-            timestampString = "504224865.568358"
+            timestampString = "504225693.321382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "100"
-            endingLineNumber = "100"
+            startingLineNumber = "98"
+            endingLineNumber = "98"
             landmarkName = "-uiViewForAudioUnit:withSize:"
             landmarkType = "5">
          </BreakpointContent>
@@ -294,11 +294,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../src/Plugins/AU/CocoaUI/JamTaba_ViewFactory.mm"
-            timestampString = "504224865.568358"
+            timestampString = "504225693.321382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
             landmarkName = "-uiViewForAudioUnit:withSize:"
             landmarkType = "5">
          </BreakpointContent>

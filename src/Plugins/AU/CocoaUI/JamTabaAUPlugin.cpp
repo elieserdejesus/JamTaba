@@ -37,18 +37,6 @@ void JamTabaAUPlugin::callback(const AudioBufferList &inBuffer, AudioBufferList 
     if (inBuffer.mNumberBuffers != inputBuffer.getChannels())
         return;
     
-    //if (inBuffer.mNumberBuffers == 2) {
-         //const float *srcBufferL = (Float32 *)inBuffer.mBuffers[0].mData;
-         //const float *srcBufferR = (Float32 *)inBuffer.mBuffers[1].mData;
-         //float *destBufferL = (Float32 *)outBuffer.mBuffers[0].mData;
-         //float *destBufferR = (Float32 *)outBuffer.mBuffers[1].mData;
-    
-//        for(UInt32 frame = 0; frame < inFramesToProcess; ++frame) {
-//            destBufferL[frame] = srcBufferL[frame] * 0.1;
-//             destBufferR[frame] = srcBufferR[frame] * 0.1;
-//        }
-    //}
-    
     if (!controller)
         return;
     

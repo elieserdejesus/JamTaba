@@ -8,10 +8,11 @@
 
 enum
 {
-	//kAudioUnitCustomProperty_JamTabaPluginIntance = 65536,
     kAudioUnitCustomProperty_JamTabaListener = 65537,
 
 };
+
+
 
 
 class JamTabaListener
@@ -19,6 +20,8 @@ class JamTabaListener
 public:
     virtual void audioCallback(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess) = 0;
 };
+
+
 
 
 class JamTaba : public AUEffectBase

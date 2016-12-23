@@ -1,6 +1,4 @@
 #include "JamTaba.h"
-//#include "MainControllerPlugin.h"
-
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -13,7 +11,7 @@ JamTaba::JamTaba(AudioUnit component)
 	: AUEffectBase(component),
       listener(nullptr)
 {
-	//SetProperty(kAudioUnitCustomProperty_JamTabaPluginIntance, kAudioUnitScope_Global, 0, this, sizeof(JamTaba));
+
 }
 
 OSStatus JamTaba::SetProperty(AudioUnitPropertyID inID,
@@ -24,7 +22,6 @@ OSStatus JamTaba::SetProperty(AudioUnitPropertyID inID,
 {
     if (inScope == kAudioUnitScope_Global && inID == kAudioUnitCustomProperty_JamTabaListener) {
         this->listener = (JamTabaListener*)inData;
-        printf("\n\nlistener settado para %d\n\n", this->listener);
         return noErr;
     }
     
@@ -35,18 +32,6 @@ OSStatus JamTaba::SetProperty(AudioUnitPropertyID inID,
 
 OSStatus JamTaba::ProcessBufferLists(AudioUnitRenderActionFlags &ioActionFlags, const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess)
 {
-//    if (inBuffer.mNumberBuffers == 2) {
-//        const float *srcBufferL = (Float32 *)inBuffer.mBuffers[0].mData;
-//        const float *srcBufferR = (Float32 *)inBuffer.mBuffers[1].mData;
-//        float *destBufferL = (Float32 *)outBuffer.mBuffers[0].mData;
-//        float *destBufferR = (Float32 *)outBuffer.mBuffers[1].mData;
-//        
-//        for(UInt32 frame = 0; frame < inFramesToProcess; ++frame) {
-//            destBufferL[frame] = srcBufferL[frame] * 0.1;
-//            destBufferR[frame] = srcBufferR[frame] * 0.1;
-//        }
-//    }
-    
     if (listener) {
         listener->audioCallback(inBuffer, outBuffer, inFramesToProcess);
     }
@@ -72,16 +57,6 @@ OSStatus JamTaba::GetPropertyInfo (AudioUnitPropertyID	inID, AudioUnitScope inSc
 				outWritable = false;
 				outDataSize = sizeof (AudioUnitCocoaViewInfo);
 				return noErr;
-            
-//            case kAudioUnitCustomProperty_JamTabaPluginIntance:	// our custom property
-//				
-//                if(inScope != kAudioUnitScope_Global )
-//                    return kAudioUnitErr_InvalidScope;
-//				
-//                outDataSize = sizeof(void *);
-//				outWritable = false;
-//				return noErr;
-
         }
 	}
 	
@@ -119,16 +94,6 @@ OSStatus JamTaba::GetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, 
 				
 				return noErr;
 			}
-                
-//     		case kAudioUnitCustomProperty_JamTabaPluginIntance:
-//			{
-//				if(inScope != kAudioUnitScope_Global)
-//                    return kAudioUnitErr_InvalidScope;
-//                
-//                ((void **)outData)[0] = (void *)this;
-//                
-//				return noErr;
-//			}
 		}
 	}
 	
