@@ -5,6 +5,9 @@
 #include <QDir>
 #include <QScopedPointer>
 
+
+#define VERSION "2.0.19"
+
 // ! Configurator class for Jamtaba !
 // ! Easy to use , it is intended to create the folders tree in the user local folder.
 // ! It will create on folder for the plugin version , where the log file and the config

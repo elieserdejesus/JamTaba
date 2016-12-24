@@ -4,8 +4,6 @@ message("VST PATH: " $$VST_SDK_PATH)
 
 TEMPLATE = lib
 
-VERSION = 2.0.18
-
 ROOT_PATH = "../.."
 SOURCE_PATH = "$$ROOT_PATH/src"
 

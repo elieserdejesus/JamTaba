@@ -39,7 +39,7 @@ void JamTabaPlugin::initialize()
         if (!controller) {
             qCDebug(jtVstPlugin) << "Plugin initialize()..." << this;
             QApplication::setApplicationName("Jamtaba 2");
-            QApplication::setApplicationVersion(APP_VERSION);
+            QApplication::setApplicationVersion(VERSION);
 
             Persistence::Settings settings;// read from file in constructor
             settings.load();

@@ -11,6 +11,7 @@
 #include <QtPlugin>
 Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 
+#define APP_VERSION VERSION  // VERSION is defined in Configurator.h
 
 @implementation JamTaba_ViewFactory
 
@@ -70,6 +71,7 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     
     if (!QApplication::instance())
     {
+        
         Configurator *configurator = Configurator::getInstance();
         if (!configurator->setUp())
             qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";

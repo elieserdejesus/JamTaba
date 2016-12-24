@@ -2,8 +2,6 @@
 // Prefix header for all source files of the 'FilterDemo' target in the 'FilterDemo' project.
 //
 
-#define APP_VERSION "2.0.19"
-
 #include <Carbon/Carbon.h>
 
 #include <QAction>
