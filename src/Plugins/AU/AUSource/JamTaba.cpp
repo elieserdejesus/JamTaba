@@ -112,7 +112,7 @@ OSStatus JamTaba::GetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, 
                     return err;
                 }
             }
-		}
+  		}
 	}
 	
 	// if we've gotten this far, handles the standard properties

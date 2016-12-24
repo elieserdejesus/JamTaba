@@ -206,7 +206,47 @@ float JamTabaAUPlugin::getSampleRate() const
     return 44100; // TODO implementar
 }
 
+QString JamTabaAUPlugin::CFStringToQString(CFStringRef str)
+{
+
+        if (!str)
+            return QString();
+        
+        CFIndex length = CFStringGetLength(str);
+        if (length == 0)
+            return QString();
+        
+        QString string(length, Qt::Uninitialized);
+        CFStringGetCharacters(str, CFRangeMake(0, length), reinterpret_cast<UniChar *>
+                              (const_cast<QChar *>(string.unicode())));
+        return string;
+    
+}
+
 QString JamTabaAUPlugin::getHostName()
 {
-    return "Implementar!"; //http://lists.apple.com/archives/coreaudio-api/2007/Mar/msg00167.html
+    AUHostIdentifier hostIdentifier;
+    UInt32 size = sizeof(hostIdentifier);
+    OSStatus status = AudioUnitGetProperty(audioUnit, kAudioUnitProperty_AUHostIdentifier, kAudioUnitScope_Global, 0, &hostIdentifier, &size);
+    
+    if (status == noErr) {
+        return CFStringToQString(hostIdentifier.hostName);
+    }
+   
+    // trying a second approach
+    CFBundleRef mainBundle = CFBundleGetMainBundle();
+    if (mainBundle)
+    {
+        CFStringRef identifier = CFBundleGetIdentifier(mainBundle);
+        QString identifierString = CFStringToQString(identifier); // format = com.org.<hostName>
+        int index = identifierString.lastIndexOf(".");
+        if (index > 0) {
+            identifierString = identifierString.right(identifierString.size() - (index + 1));
+        }
+        identifierString = identifierString.at(0).toUpper() + identifierString.right(identifierString.size()-1);
+        
+        return identifierString;
+    }
+
+    return "Error!";
 }

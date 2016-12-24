@@ -52,6 +52,8 @@ public:
 
 private:
     static QMacNativeWidget *createNativeView();
+    static QString CFStringToQString(CFStringRef str);
+    
     static JamTabaAUPlugin *instance;
     AudioUnit audioUnit;
 
