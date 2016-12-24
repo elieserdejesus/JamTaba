@@ -62,7 +62,12 @@ OSStatus JamTaba::GetPropertyInfo (AudioUnitPropertyID	inID, AudioUnitScope inSc
                 outWritable = true;
                 outDataSize = sizeof(int *);
                 return noErr;
-
+            
+            case kJamTabaGetHostSampleRate:
+                outWritable = true;
+                outDataSize = sizeof(int *);
+                return noErr;
+                
         }
 	}
 	
@@ -72,6 +77,7 @@ OSStatus JamTaba::GetPropertyInfo (AudioUnitPropertyID	inID, AudioUnitScope inSc
 
 OSStatus JamTaba::GetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, AudioUnitElement inElement, void *outData)
 {
+    
     //qDebug() << "inID: " << inID << " inScope: " << inScope;
 	if (inScope == kAudioUnitScope_Global)
 	{
@@ -111,6 +117,12 @@ OSStatus JamTaba::GetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, 
                     
                     return err;
                 }
+            }
+                
+            case kJamTabaGetHostSampleRate:
+            {
+                 *((int*)outData) = (int)GetSampleRate();
+                return noErr;
             }
   		}
 	}

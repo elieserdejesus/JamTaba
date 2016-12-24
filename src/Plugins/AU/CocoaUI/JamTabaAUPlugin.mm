@@ -203,7 +203,18 @@ int JamTabaAUPlugin::getHostBpm() const
 
 float JamTabaAUPlugin::getSampleRate() const
 {
-    return 44100; // TODO implementar
+    //TODO improve this method for performance - this methos is called in every audio callback. Is better listen to somthing like a "sample rate changed" event.
+    
+    int sampleRate = 44100;
+    UInt32 size = sizeof(int *);
+    
+    OSStatus status = AudioUnitGetProperty(audioUnit, kJamTabaGetHostSampleRate, kAudioUnitScope_Global, 0, &sampleRate, &size);
+    
+    if (status != noErr) {
+        qDebug() << "HOST GET SAMPLE RATE ERROR" << status;
+    }
+
+    return sampleRate;
 }
 
 QString JamTabaAUPlugin::CFStringToQString(CFStringRef str)
