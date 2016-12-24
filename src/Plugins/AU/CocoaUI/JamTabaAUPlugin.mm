@@ -1,6 +1,7 @@
 #include "JamTabaAUPlugin.h"
 #include <QMacNativeWidget>
 
+
 JamTabaAUPlugin* JamTabaAUPlugin::instance = nullptr;
 
 
@@ -38,7 +39,7 @@ public:
 
     void resizePluginEditor(int newWidth, int newHeight) override
     {
-
+        dynamic_cast<JamTabaAUPlugin*>(this->plugin)->resizeWindow(newWidth, newHeight);
     }
 };
 
@@ -95,6 +96,29 @@ void JamTabaAUPlugin::finalize()
     
         nativeView = nullptr;
         mainWindow = nullptr;
+    }
+}
+
+void JamTabaAUPlugin::resizeWindow(int newWidth, int newHeight)
+{
+    if (mainWindow && nativeView) {
+        
+        QSize newSize(newWidth, newHeight);
+        mainWindow->resize(newSize);
+        
+        if (!nativeView->isVisible())
+            return;
+        
+        //cast voodoo learned from http://lists.qt-project.org/pipermail/interest/2014-January/010655.html
+        NSView *nativeWidgetView = (__bridge NSView *)reinterpret_cast<void*>(nativeView->winId());
+        
+        NSRect frame;
+        frame.size.width  = mainWindow->width();
+        frame.size.height = mainWindow->height();
+        [nativeWidgetView setFrame: frame];
+        NSView *parentView = [nativeWidgetView superview];
+        [parentView setFrame: frame];
+        //[uiFreshlyLoadedView setFrame: frame];
     }
 }
 

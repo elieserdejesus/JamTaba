@@ -40,6 +40,8 @@ public:
     
     void process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess);
     
+    void resizeWindow(int newWidth, int newHeight);
+    
     JamTabaAudioUnitListener *listener;
     MainWindowPlugin *mainWindow;
     QMacNativeWidget *nativeView;
