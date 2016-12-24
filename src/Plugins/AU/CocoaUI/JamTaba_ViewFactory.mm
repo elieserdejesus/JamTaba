@@ -27,36 +27,13 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     [self createQtEnvironment];
     
     uiFreshlyLoadedView = [[JamTaba_UIView alloc] init];
-
     
-    QMacNativeWidget *nativeWidget = new QMacNativeWidget();
-    nativeWidget->setWindowFlags(Qt::Tool); // without this flag the plugin window is not showed in AULab and Logic 9
+    JamTabaAUPlugin *auPlugin = JamTabaAUPlugin::getInstance();
+    MainWindowPlugin *mainWindow = auPlugin->mainWindow;
+    QMacNativeWidget *nativeWidget = auPlugin->nativeView;
     
-    nativeWidget->clearFocus();
-    nativeWidget->releaseKeyboard();
-    nativeWidget->setAttribute(Qt::WA_ShowWithoutActivating);
-    nativeWidget->setAttribute(Qt::WA_NativeWindow);
-    
-    nativeWidget->nativeView();
-    
-    QVBoxLayout *layout = new QVBoxLayout();
+    QVBoxLayout *layout = new QVBoxLayout(); // I tried put this layout code inside JamTabaAUPlugin, but doesn«t work :(
     layout->setContentsMargins(0, 0, 0, 0);
- 
-    
-    JamTabaAUPlugin *auPlugin = nullptr;
-    MainWindowPlugin *mainWindow;
-    
-    if (!auPlugin) {
-        
-        auPlugin = new JamTabaAUPlugin();
-        auPlugin->initialize();
-        
-        MainControllerPlugin *mainController = auPlugin->getController();
-        mainWindow = new MainWindowPlugin(mainController);
-        mainController->setMainWindow(mainWindow);
-        mainWindow->initialize();
-    }
-    
     layout->addWidget(mainWindow);
     nativeWidget->setLayout(layout);
 

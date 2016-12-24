@@ -6,14 +6,12 @@
 
 -(id)init
 {
-    NSLog(@"VIEW INIT");
     return [super init];
 }
 
 - (void)dealloc {
 
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
-	NSLog(@"VIEW DEALOC");
     [super dealloc];
 }
 

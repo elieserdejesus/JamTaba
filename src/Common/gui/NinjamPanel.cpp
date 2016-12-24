@@ -124,8 +124,10 @@ void NinjamPanel::toggleMetronomeFloatingWindowVisibility(bool showFloatingWindo
             metronomeFloatingWindow = new IntervalProgressWindow(this, paintMode, beatsPerInterval, beatsPerAccent, showingAccents);
             connect(metronomeFloatingWindow, SIGNAL(windowClosed()), this, SLOT(deleteFloatWindow()));
         }
+        
         metronomeFloatingWindow->setVisible(true);
         metronomeFloatingWindow->raise();
+
     }
     else{
         if (metronomeFloatingWindow) {

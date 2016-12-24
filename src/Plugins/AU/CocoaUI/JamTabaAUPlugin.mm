@@ -1,5 +1,24 @@
 #include "JamTabaAUPlugin.h"
+#include <QMacNativeWidget>
 
+JamTabaAUPlugin* JamTabaAUPlugin::instance = nullptr;
+
+
+Listener::Listener(JamTabaAUPlugin *auPlugin)
+    : auPlugin(auPlugin)
+{
+        
+}
+    
+void Listener::process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess) 
+{
+   auPlugin->process(inBuffer, outBuffer, inFramesToProcess);
+}
+    
+void Listener::cleanUp()
+{
+    JamTabaAUPlugin::releaseInstance();
+}
 
 ////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -31,6 +50,68 @@ JamTabaAUPlugin::JamTabaAUPlugin()
     
 }
 
+JamTabaAUPlugin::~JamTabaAUPlugin()
+{
+    finalize();
+}
+
+JamTabaAUPlugin* JamTabaAUPlugin::getInstance()
+{
+    if (!JamTabaAUPlugin::instance) {
+        JamTabaAUPlugin::instance = new JamTabaAUPlugin();
+        JamTabaAUPlugin::instance->initialize();
+    }
+    
+    return JamTabaAUPlugin::instance;
+}
+
+void JamTabaAUPlugin::releaseInstance()
+{
+    if (JamTabaAUPlugin::instance) {
+        delete JamTabaAUPlugin::instance;
+        JamTabaAUPlugin::instance = nullptr;
+    }
+}
+
+void JamTabaAUPlugin::initialize()
+{
+    qDebug() << "Initializing JamTabaAUPlugin";
+    
+    JamTabaPlugin::initialize();
+ 
+    MainControllerPlugin *mainController = getController();
+    mainWindow = new MainWindowPlugin(mainController);
+    mainController->setMainWindow(mainWindow);
+    mainWindow->initialize();
+    
+    nativeView = createNativeView();
+}
+
+void JamTabaAUPlugin::finalize()
+{
+    if (nativeView && mainWindow) {
+        qDebug() << "Deleting windows";
+        nativeView->deleteLater();
+    
+        nativeView = nullptr;
+        mainWindow = nullptr;
+    }
+}
+
+QMacNativeWidget *JamTabaAUPlugin::createNativeView()
+{
+    QMacNativeWidget *nativeWidget = new QMacNativeWidget();
+    nativeWidget->setWindowFlags(Qt::Tool); // without this flag the plugin window is not showed in AULab and Logic 9
+    
+    nativeWidget->clearFocus();
+    nativeWidget->releaseKeyboard();
+    nativeWidget->setAttribute(Qt::WA_ShowWithoutActivating);
+    nativeWidget->setAttribute(Qt::WA_NativeWindow);
+    
+    nativeWidget->nativeView();
+    
+    return nativeWidget;
+}
 
 void JamTabaAUPlugin::process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess)
 {

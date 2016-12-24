@@ -6,6 +6,8 @@
 #include "JamTabaPlugin.h"
 #include <QString>
 #include "MainControllerPlugin.h"
+#include "MainWindowPlugin.h"
+#include <QMacNativeWidget>
 
 
 class Listener;
@@ -13,9 +15,16 @@ class Listener;
 
 class JamTabaAUPlugin : public JamTabaPlugin
 {
-public:
-    
+
+private:
     JamTabaAUPlugin();
+    
+public:
+    ~JamTabaAUPlugin();
+    
+    void initialize() override;
+    
+    void finalize();
     
     QString getHostName() override;
     
@@ -29,32 +38,29 @@ public:
     
     MainControllerPlugin *createPluginMainController(const Persistence::Settings &settings, JamTabaPlugin *plugin) const override;
     
-
-    JamTabaAudioUnitListener *listener;
     void process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess);
+    
+    JamTabaAudioUnitListener *listener;
+    MainWindowPlugin *mainWindow;
+    QMacNativeWidget *nativeView;
+    
+    static JamTabaAUPlugin *getInstance();
+    static void releaseInstance();
+    
+
+private:
+    static QMacNativeWidget *createNativeView();
+    static JamTabaAUPlugin *instance;
 
 };
 
 class Listener : public JamTabaAudioUnitListener
 {
 public:
-    Listener(JamTabaAUPlugin *auPlugin)
-    : auPlugin(auPlugin)
-    {
-        
-    }
-    
-    void process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess) override
-    {
-        auPlugin->process(inBuffer, outBuffer, inFramesToProcess);
-    }
-    
-    void cleanUp() override
-    {
-        //auPlugin->
-        qDebug() << "CLEANING!!!";
-    }
-    
+    Listener(JamTabaAUPlugin *auPlugin);
+    void process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess) override;
+    void cleanUp() override;
+
 private:
     JamTabaAUPlugin *auPlugin;
 };

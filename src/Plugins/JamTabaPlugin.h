@@ -15,7 +15,7 @@ public:
     
     MainControllerPlugin *getController();
 
-    void initialize();    // need be called first time editor is opened
+    virtual void initialize();    // need be called first time editor is opened
 
     virtual QString getHostName() = 0;
 
