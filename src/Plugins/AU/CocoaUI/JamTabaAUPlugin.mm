@@ -190,7 +190,10 @@ qint32 JamTabaAUPlugin::getStartPositionForHostSync() const
 
 bool JamTabaAUPlugin::hostIsPlaying() const
 {
-    return true; //TODO implementar
+    Boolean hostIsPlaying = false;
+    UInt32 size = sizeof(Boolean *);
+    AudioUnitGetProperty(audioUnit, kJamTabaGetHostIsPlaying, kAudioUnitScope_Global, 0, &hostIsPlaying, &size);
+    return hostIsPlaying;
 }
 
 int JamTabaAUPlugin::getHostBpm() const

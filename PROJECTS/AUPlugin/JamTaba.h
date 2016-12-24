@@ -10,7 +10,8 @@ enum
 {
     kJamTabaSetListener         = 65537,
     kJamTabaGetHostBPM          = 65538,
-    kJamTabaGetHostSampleRate   = 65539
+    kJamTabaGetHostSampleRate   = 65539,
+    kJamTabaGetHostIsPlaying    = 65540
 
 };
 

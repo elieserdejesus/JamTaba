@@ -59,13 +59,18 @@ OSStatus JamTaba::GetPropertyInfo (AudioUnitPropertyID	inID, AudioUnitScope inSc
 				return noErr;
                 
             case kJamTabaGetHostBPM:
-                outWritable = true;
+                outWritable = false;
                 outDataSize = sizeof(int *);
                 return noErr;
             
             case kJamTabaGetHostSampleRate:
-                outWritable = true;
+                outWritable = false;
                 outDataSize = sizeof(int *);
+                return noErr;
+                
+            case kJamTabaGetHostIsPlaying:
+                outWritable = false;
+                outDataSize = sizeof(Boolean *);
                 return noErr;
                 
         }
@@ -123,6 +128,18 @@ OSStatus JamTaba::GetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, 
             {
                  *((int*)outData) = (int)GetSampleRate();
                 return noErr;
+            }
+                
+            case kJamTabaGetHostIsPlaying:
+            {
+                Boolean isPlaying = true;
+                Boolean dummy; // this value is not used
+                Float64 dummyFloat; // this is not used
+                OSStatus status = CallHostTransportState(&isPlaying, &dummy, &dummyFloat, &dummy, &dummyFloat, &dummyFloat);
+                
+                *((Boolean*)outData) = isPlaying;
+                
+                return status;
             }
   		}
 	}
