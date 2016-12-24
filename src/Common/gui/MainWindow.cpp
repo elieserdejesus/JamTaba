@@ -1127,6 +1127,7 @@ void MainWindow::openPreferencesDialog(QAction *action)
         PreferencesDialog *dialog = createPreferencesDialog();// factory method, overrided in derived classes MainWindowStandalone and MainWindowVST
         dialog->initialize(initialTab, &mainController->getSettings(), mainController->getJamRecoders());// initializing here to avoid call virtual methods inside PreferencesDialog constructor
         dialog->show();
+        dialog->exec();
     }
 }
 
@@ -1373,7 +1374,11 @@ void MainWindow::showJamtabaCurrentVersion()
 {
     QString title = tr("About Jamtaba");
     QString text = tr("Jamtaba version is %1").arg(QApplication::applicationVersion());
-    QMessageBox::about(this, title, text);
+    QMessageBox *box = new QMessageBox();
+    box->setWindowTitle(title);
+    box->setText(text);
+    box->deleteLater();
+    box->exec();
 }
 
 // ++++++++++++++++++
