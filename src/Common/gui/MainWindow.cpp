@@ -1079,6 +1079,7 @@ void MainWindow::showPrivateServerDialog()
 
     centerDialog(privateServerDialog);
     privateServerDialog->show();
+    privateServerDialog->exec();
 }
 
 void MainWindow::centerDialog(QWidget *dialog)
