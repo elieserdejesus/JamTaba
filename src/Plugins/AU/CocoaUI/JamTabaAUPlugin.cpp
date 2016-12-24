@@ -32,7 +32,7 @@ JamTabaAUPlugin::JamTabaAUPlugin()
 }
 
 
-void JamTabaAUPlugin::callback(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess)
+void JamTabaAUPlugin::process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess)
 {
     if (inBuffer.mNumberBuffers != inputBuffer.getChannels())
         return;

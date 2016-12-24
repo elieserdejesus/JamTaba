@@ -8,17 +8,19 @@
 
 enum
 {
-    kAudioUnitCustomProperty_JamTabaListener = 65537,
+    kJamTabaSetListener = 65537,
 
 };
 
 
 
 
-class JamTabaListener
+class JamTabaAudioUnitListener
 {
 public:
-    virtual void audioCallback(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess) = 0;
+    virtual void process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess) = 0;
+    
+    virtual void cleanUp() = 0;
 };
 
 
@@ -32,8 +34,8 @@ public:
 	inline OSStatus Version() override {
         return kJamTabaVersion;
     }
-	
-    OSStatus Initialize() override;
+    
+    void Cleanup() override;
 	
     OSStatus GetPropertyInfo(AudioUnitPropertyID inID, AudioUnitScope inScope, AudioUnitElement inElement, UInt32 &outDataSize, Boolean	&outWritable) override;
     
@@ -46,10 +48,9 @@ public:
                                                   AudioUnitElement 	inElement,
                                                   const void *			inData,
                                                   UInt32 inDataSize)         override;
-    
    
 private:
-    JamTabaListener *listener;
+    JamTabaAudioUnitListener *listener;
     
 };
 

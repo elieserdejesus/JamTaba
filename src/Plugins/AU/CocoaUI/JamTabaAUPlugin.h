@@ -7,6 +7,7 @@
 #include <QString>
 #include "MainControllerPlugin.h"
 
+
 class Listener;
 
 
@@ -29,12 +30,12 @@ public:
     MainControllerPlugin *createPluginMainController(const Persistence::Settings &settings, JamTabaPlugin *plugin) const override;
     
 
-    JamTabaListener *listener;
-    void callback(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess);
+    JamTabaAudioUnitListener *listener;
+    void process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess);
 
 };
 
-class Listener : public JamTabaListener
+class Listener : public JamTabaAudioUnitListener
 {
 public:
     Listener(JamTabaAUPlugin *auPlugin)
@@ -43,9 +44,15 @@ public:
         
     }
     
-    void audioCallback(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess)
+    void process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess) override
     {
-        auPlugin->callback(inBuffer, outBuffer, inFramesToProcess);
+        auPlugin->process(inBuffer, outBuffer, inFramesToProcess);
+    }
+    
+    void cleanUp() override
+    {
+        //auPlugin->
+        qDebug() << "CLEANING!!!";
     }
     
 private:

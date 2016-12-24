@@ -14,36 +14,36 @@ JamTaba::JamTaba(AudioUnit component)
 
 }
 
+
 OSStatus JamTaba::SetProperty(AudioUnitPropertyID inID,
                                 AudioUnitScope 		inScope,
                                 AudioUnitElement 	inElement,
                                 const void *			inData,
                                                 UInt32 inDataSize)
 {
-    if (inScope == kAudioUnitScope_Global && inID == kAudioUnitCustomProperty_JamTabaListener) {
-        this->listener = (JamTabaListener*)inData;
+    if (inScope == kAudioUnitScope_Global && inID == kJamTabaSetListener) {
+        this->listener = (JamTabaAudioUnitListener*)inData;
         return noErr;
     }
     
     return AUEffectBase::SetProperty (inID, inScope, inElement, inData, inDataSize);
 }
 
-
+void JamTaba::Cleanup()
+{
+    AUEffectBase::Cleanup();
+    
+    if (listener)
+        listener->cleanUp();
+}
 
 OSStatus JamTaba::ProcessBufferLists(AudioUnitRenderActionFlags &ioActionFlags, const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess)
 {
     if (listener) {
-        listener->audioCallback(inBuffer, outBuffer, inFramesToProcess);
+        listener->process(inBuffer, outBuffer, inFramesToProcess);
     }
 
     return noErr;
-}
-
-
-OSStatus JamTaba::Initialize()
-{
-	OSStatus result = AUEffectBase::Initialize();
-	return result;
 }
 
 

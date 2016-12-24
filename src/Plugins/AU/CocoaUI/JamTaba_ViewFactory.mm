@@ -22,21 +22,9 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 	return @"JTBA: JamTaba";
 }
 
-
 - (NSView *)uiViewForAudioUnit:(AudioUnit)inAU withSize:(NSSize)inPreferredSize {
     
-    if (!QApplication::instance())
-    {
-        Configurator *configurator = Configurator::getInstance();
-        if (!configurator->setUp())
-            qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";
-        
-        int argc = 0;
-        QApplication::setApplicationName("Jamtaba 2");
-        QApplication::setAttribute(Qt::AA_MacPluginApplication);
-        QApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
-        new QApplication(argc, 0);
-    }
+    [self createQtEnvironment];
     
     uiFreshlyLoadedView = [[JamTaba_UIView alloc] init];
 
@@ -55,16 +43,15 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     layout->setContentsMargins(0, 0, 0, 0);
  
     
-    static JamTabaAUPlugin *auPlugin = nullptr;
-    static MainWindowPlugin *mainWindow;
-    static MainControllerPlugin *mainController;
+    JamTabaAUPlugin *auPlugin = nullptr;
+    MainWindowPlugin *mainWindow;
     
     if (!auPlugin) {
         
         auPlugin = new JamTabaAUPlugin();
         auPlugin->initialize();
         
-        mainController = auPlugin->getController();
+        MainControllerPlugin *mainController = auPlugin->getController();
         mainWindow = new MainWindowPlugin(mainController);
         mainController->setMainWindow(mainWindow);
         mainWindow->initialize();
@@ -91,15 +78,32 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     
  
     UInt32 size = sizeof(void *);
-    JamTabaListener *listener = auPlugin->listener;
-    AudioUnitSetProperty(inAU, kAudioUnitCustomProperty_JamTabaListener, kAudioUnitScope_Global, 0, listener, size);
+    JamTabaAudioUnitListener *listener = auPlugin->listener;
+    AudioUnitSetProperty(inAU, kJamTabaSetListener, kAudioUnitScope_Global, 0, listener, size);
     
     
     uiFreshlyLoadedView = nil;	// zero out pointer.  This is a view factory.  Once a view's been created
     // and handed off, the factory keeps no record of it.
 
     
-    return returnView;
+    return [returnView autorelease];
+}
+
+- (void) createQtEnvironment {
+    
+    if (!QApplication::instance())
+    {
+        Configurator *configurator = Configurator::getInstance();
+        if (!configurator->setUp())
+            qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";
+        
+        int argc = 0;
+        QApplication::setApplicationName("Jamtaba 2");
+        QApplication::setAttribute(Qt::AA_MacPluginApplication);
+        QApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
+        new QApplication(argc, 0);
+    }
+    
 }
 
 @end
