@@ -113,9 +113,6 @@ bool Configurator::needExportThemes() const
 
 QDir Configurator::getApplicationDataDir()
 {
-    //if(true)
-       // return QDir("~/Library/Application Support/JamTaba");
-    
     QDir dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     if (!dir.exists())
         dir.mkpath(".");

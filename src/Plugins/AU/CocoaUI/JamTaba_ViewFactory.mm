@@ -25,7 +25,14 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 
 - (NSView *)uiViewForAudioUnit:(AudioUnit)inAU withSize:(NSSize)inPreferredSize {
     
+    QApplication::setApplicationName("Jamtaba 2");
+    
+    Configurator *configurator = Configurator::getInstance();
+    if (!configurator->setUp())
+        qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";
+    
     [self createQtEnvironment];
+    
     
     uiFreshlyLoadedView = [[JamTaba_UIView alloc] init];
     
@@ -72,15 +79,12 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     if (!QApplication::instance())
     {
         
-        Configurator *configurator = Configurator::getInstance();
-        if (!configurator->setUp())
-            qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";
-        
         int argc = 0;
-        QApplication::setApplicationName("Jamtaba 2");
+        
         QApplication::setAttribute(Qt::AA_MacPluginApplication);
         QApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
         new QApplication(argc, 0);
+       
     }
     
 }
