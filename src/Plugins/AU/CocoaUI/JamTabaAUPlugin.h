@@ -38,7 +38,7 @@ public:
     
     MainControllerPlugin *createPluginMainController(const Persistence::Settings &settings, JamTabaPlugin *plugin) const override;
     
-    void process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess);
+    void process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess, const AUHostState &hostState);
     
     void resizeWindow(int newWidth, int newHeight);
     
@@ -56,6 +56,7 @@ private:
     
     static JamTabaAUPlugin *instance;
     AudioUnit audioUnit;
+    AUHostState hostState;
 
 };
 
@@ -63,7 +64,7 @@ class Listener : public JamTabaAudioUnitListener
 {
 public:
     Listener(JamTabaAUPlugin *auPlugin);
-    void process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess) override;
+    void process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess, const AUHostState &hostState) override;
     void cleanUp() override;
 
 private:

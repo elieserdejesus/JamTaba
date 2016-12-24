@@ -11,9 +11,9 @@ Listener::Listener(JamTabaAUPlugin *auPlugin)
         
 }
     
-void Listener::process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess) 
+void Listener::process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess, const AUHostState &hostState)
 {
-   auPlugin->process(inBuffer, outBuffer, inFramesToProcess);
+   auPlugin->process(inBuffer, outBuffer, inFramesToProcess, hostState);
 }
     
 void Listener::cleanUp()
@@ -119,7 +119,7 @@ void JamTabaAUPlugin::resizeWindow(int newWidth, int newHeight)
         [nativeWidgetView setFrame: frame];
         NSView *parentView = [nativeWidgetView superview];
         [parentView setFrame: frame];
-        //[uiFreshlyLoadedView setFrame: frame];
+
     }
 }
 
@@ -138,8 +138,20 @@ QMacNativeWidget *JamTabaAUPlugin::createNativeView()
     return nativeWidget;
 }
 
-void JamTabaAUPlugin::process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess)
+void JamTabaAUPlugin::process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess, const AUHostState &hostState)
 {
+    this->hostState = hostState;
+//    qDebug() << "";
+//    qDebug() << "samplePos:         " << hostState.samplePos;
+//    qDebug() << "sampleRate:        " << hostState.sampleRate;
+//    qDebug() << "barStartPos:       " << hostState.barStartPos;
+//    qDebug() << "ppqPos:            " << hostState.ppqPos;
+//    qDebug() << "tempo:             " << hostState.tempo;
+//    qDebug() << "timeSigDenominator:" << hostState.timeSigDenominator;
+//    qDebug() << "timeSigNumerator:  " << hostState.timeSigNumerator;
+//    qDebug() << "------------------";
+//    qDebug() << "";
+    
     if (inBuffer.mNumberBuffers != inputBuffer.getChannels())
         return;
     
@@ -148,16 +160,13 @@ void JamTabaAUPlugin::process(const AudioBufferList &inBuffer, AudioBufferList &
     
     if (controller->isPlayingInNinjamRoom()) {
         
-        // ++++++++++ sync ninjam BPM with host BPM ++++++++++++
-        // ask timeInfo to VST host
-        
-//        timeInfo = getTimeInfo(kVstTransportPlaying | kVstTransportChanged | kVstTempoValid);
-//        if (transportStartDetectedInHost()) {// user pressing play/start in host?
-//            NinjamControllerPlugin *ninjamController = controller->getNinjamController();
-//            Q_ASSERT(ninjamController);
-//            if (ninjamController->isWaitingForHostSync())
-//                ninjamController->startSynchronizedWithHost(getStartPositionForHostSync());
-//        }
+        // ++++++++++ sync ninjam with host  ++++++++++++
+        if (transportStartDetectedInHost()) {// user pressing play/start in host?
+            NinjamControllerPlugin *ninjamController = controller->getNinjamController();
+            if (ninjamController->isWaitingForHostSync()) {
+                ninjamController->startSynchronizedWithHost(getStartPositionForHostSync());
+            }
+        }
     }
     
     // ++++++++++ Audio processing +++++++++++++++
@@ -185,39 +194,43 @@ MainControllerPlugin * JamTabaAUPlugin::createPluginMainController(const Persist
 
 qint32 JamTabaAUPlugin::getStartPositionForHostSync() const
 {
-    return 0; // TODO implementar
+    
+     qint32 startPosition = 0;
+    
+     double samplesPerBeat = (60.0 * hostState.sampleRate)/hostState.tempo;
+     if (hostState.ppqPos > 0)
+     {
+         //when host start button is pressed (and the cursor is aligned in project start) ppqPos is positive in Reaper, but negative in  Cubase
+         
+         double cursorPosInMeasure = hostState.ppqPos - hostState.barStartPos;
+         if (cursorPosInMeasure > 0.00000001) {
+             //the 'cursor' in the host is not aligned in the measure start. Whe need shift the interval start a little bit. Comparing with 0.00000001 because when the 'cursor' is in 5th beat Reaper is returning barStartPos = 4.9999999 and ppqPos = 5
+             
+             double samplesUntilNextMeasure = (hostState.timeSigNumerator - cursorPosInMeasure) * samplesPerBeat;
+             startPosition = -samplesUntilNextMeasure; //shift the start position to compensate the 'cursor' position
+         }
+     }
+     else
+     {  //host is returning negative values for timeInfo structure when start button is pressed
+         startPosition = hostState.ppqPos * samplesPerBeat; //wil generate a negative value
+     }
+     return startPosition;
+ 
 }
 
 bool JamTabaAUPlugin::hostIsPlaying() const
 {
-    Boolean hostIsPlaying = false;
-    UInt32 size = sizeof(Boolean *);
-    AudioUnitGetProperty(audioUnit, kJamTabaGetHostIsPlaying, kAudioUnitScope_Global, 0, &hostIsPlaying, &size);
-    return hostIsPlaying;
+    return hostState.playing;
 }
 
 int JamTabaAUPlugin::getHostBpm() const
 {
-    int bpm = 0;
-    UInt32 size = sizeof(int *);
-    AudioUnitGetProperty(audioUnit, kJamTabaGetHostBPM, kAudioUnitScope_Global, 0, &bpm, &size);
-    return bpm;
+    return hostState.tempo;
 }
 
 float JamTabaAUPlugin::getSampleRate() const
 {
-    //TODO improve this method for performance - this methos is called in every audio callback. Is better listen to somthing like a "sample rate changed" event.
-    
-    int sampleRate = 44100;
-    UInt32 size = sizeof(int *);
-    
-    OSStatus status = AudioUnitGetProperty(audioUnit, kJamTabaGetHostSampleRate, kAudioUnitScope_Global, 0, &sampleRate, &size);
-    
-    if (status != noErr) {
-        qDebug() << "HOST GET SAMPLE RATE ERROR" << status;
-    }
-
-    return sampleRate;
+    return hostState.sampleRate;
 }
 
 QString JamTabaAUPlugin::CFStringToQString(CFStringRef str)

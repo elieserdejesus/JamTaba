@@ -37,10 +37,52 @@ void JamTaba::Cleanup()
         listener->cleanUp();
 }
 
+void JamTaba::updateHostState()
+{
+    Boolean hostIsPlaying;
+    Boolean hostTransportChanged;
+    Float64 currentSampleInTimeLine;
+    Boolean hostIsCycling;
+    Float64 cycleStartBeat;
+    Float64 cycleEndBeat;
+    
+    CallHostTransportState(&hostIsPlaying, &hostTransportChanged, &currentSampleInTimeLine, &hostIsCycling, &cycleStartBeat, &cycleEndBeat);
+    
+    
+    UInt32 deltaSampleOffsetToNextBeat;
+    Float32 timeSigNumerator;
+    UInt32 timeSigDenominator;
+    Float64 currentMeasureDownBeat;
+    
+    CallHostMusicalTimeLocation(&deltaSampleOffsetToNextBeat, &timeSigNumerator, &timeSigDenominator, &currentMeasureDownBeat);
+    
+    
+    Float64 currentBeat;
+    Float64 currentTempo;
+    CallHostBeatAndTempo(&currentBeat, &currentTempo);
+    
+    hostState.sampleRate            = GetSampleRate();
+    hostState.tempo                 = currentTempo;
+    hostState.timeSigDenominator    = timeSigDenominator;
+    hostState.timeSigNumerator      = timeSigNumerator;
+    hostState.samplePos             = currentSampleInTimeLine;
+    hostState.playing               = hostIsPlaying;
+    
+    
+    double dPos = hostState.samplePos / hostState.sampleRate;
+    hostState.ppqPos = dPos * hostState.tempo / 60.L;
+    
+    // bar length in quarter notes
+    float barLengthq = (float)(4 * hostState.timeSigNumerator)/hostState.timeSigDenominator;
+    int currentBar = std::floor(hostState.ppqPos/barLengthq);
+    hostState.barStartPos = barLengthq * currentBar;
+}
+
 OSStatus JamTaba::ProcessBufferLists(AudioUnitRenderActionFlags &ioActionFlags, const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess)
 {
     if (listener) {
-        listener->process(inBuffer, outBuffer, inFramesToProcess);
+        updateHostState();
+        listener->process(inBuffer, outBuffer, inFramesToProcess, hostState);
     }
 
     return noErr;
@@ -57,22 +99,7 @@ OSStatus JamTaba::GetPropertyInfo (AudioUnitPropertyID	inID, AudioUnitScope inSc
 				outWritable = false;
 				outDataSize = sizeof (AudioUnitCocoaViewInfo);
 				return noErr;
-                
-            case kJamTabaGetHostBPM:
-                outWritable = false;
-                outDataSize = sizeof(int *);
-                return noErr;
-            
-            case kJamTabaGetHostSampleRate:
-                outWritable = false;
-                outDataSize = sizeof(int *);
-                return noErr;
-                
-            case kJamTabaGetHostIsPlaying:
-                outWritable = false;
-                outDataSize = sizeof(Boolean *);
-                return noErr;
-                
+               
         }
 	}
 	
@@ -111,36 +138,7 @@ OSStatus JamTaba::GetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, 
 				
 				return noErr;
 			}
-                
-            case kJamTabaGetHostBPM:
-            {
-                Float64		bpm;
-                OSStatus	err	= CallHostBeatAndTempo(NULL, &bpm);
-                
-                if (err == noErr) {
-                    *((int*)outData) = (int)bpm;
-                    
-                    return err;
-                }
-            }
-                
-            case kJamTabaGetHostSampleRate:
-            {
-                 *((int*)outData) = (int)GetSampleRate();
-                return noErr;
-            }
-                
-            case kJamTabaGetHostIsPlaying:
-            {
-                Boolean isPlaying = true;
-                Boolean dummy; // this value is not used
-                Float64 dummyFloat; // this is not used
-                OSStatus status = CallHostTransportState(&isPlaying, &dummy, &dummyFloat, &dummy, &dummyFloat, &dummyFloat);
-                
-                *((Boolean*)outData) = isPlaying;
-                
-                return status;
-            }
+
   		}
 	}
 	
