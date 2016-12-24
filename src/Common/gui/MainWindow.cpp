@@ -1059,7 +1059,7 @@ void MainWindow::showJamtabaUsersManual()
 
 void MainWindow::showJamtabaTranslators()
 {
-    QString url = "www.jamtaba.com/#translators";
+    QString url = "http://www.jamtaba.com/#translators";
     openUrlInUserBrowser(url);
 }
 
