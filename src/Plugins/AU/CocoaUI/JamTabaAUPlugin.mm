@@ -44,9 +44,10 @@ public:
 };
 
 
-JamTabaAUPlugin::JamTabaAUPlugin()
+JamTabaAUPlugin::JamTabaAUPlugin(AudioUnit audioUnit)
     :JamTabaPlugin(2, 2),
-    listener(new Listener(this))
+    listener(new Listener(this)),
+    audioUnit(audioUnit)
 {
     
 }
@@ -56,10 +57,10 @@ JamTabaAUPlugin::~JamTabaAUPlugin()
     finalize();
 }
 
-JamTabaAUPlugin* JamTabaAUPlugin::getInstance()
+JamTabaAUPlugin* JamTabaAUPlugin::getInstance(AudioUnit unit)
 {
     if (!JamTabaAUPlugin::instance) {
-        JamTabaAUPlugin::instance = new JamTabaAUPlugin();
+        JamTabaAUPlugin::instance = new JamTabaAUPlugin(unit);
         JamTabaAUPlugin::instance->initialize();
     }
     
@@ -194,7 +195,10 @@ bool JamTabaAUPlugin::hostIsPlaying() const
 
 int JamTabaAUPlugin::getHostBpm() const
 {
-    return 120; //TODO implementar
+    int bpm = 0;
+    UInt32 size = sizeof(int *);
+    AudioUnitGetProperty(audioUnit, kJamTabaGetHostBPM, kAudioUnitScope_Global, 0, &bpm, &size);
+    return bpm;
 }
 
 float JamTabaAUPlugin::getSampleRate() const

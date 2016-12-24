@@ -17,7 +17,7 @@ class JamTabaAUPlugin : public JamTabaPlugin
 {
 
 private:
-    JamTabaAUPlugin();
+    JamTabaAUPlugin(AudioUnit audioUnit);
     
 public:
     ~JamTabaAUPlugin();
@@ -46,13 +46,14 @@ public:
     MainWindowPlugin *mainWindow;
     QMacNativeWidget *nativeView;
     
-    static JamTabaAUPlugin *getInstance();
+    static JamTabaAUPlugin *getInstance(AudioUnit unit);
     static void releaseInstance();
     
 
 private:
     static QMacNativeWidget *createNativeView();
     static JamTabaAUPlugin *instance;
+    AudioUnit audioUnit;
 
 };
 

@@ -36,7 +36,7 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     
     uiFreshlyLoadedView = [[JamTaba_UIView alloc] init];
     
-    JamTabaAUPlugin *auPlugin = JamTabaAUPlugin::getInstance();
+    JamTabaAUPlugin *auPlugin = JamTabaAUPlugin::getInstance(inAU);
     MainWindowPlugin *mainWindow = auPlugin->mainWindow;
     QMacNativeWidget *nativeWidget = auPlugin->nativeView;
     

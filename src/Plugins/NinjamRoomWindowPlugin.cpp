@@ -79,4 +79,6 @@ void NinjamRoomWindowPlugin::showMessageBox(const QString &title, const QString 
     int x = globalPosition.x() + width()/2 - msgBox->width()/2;
     int y = globalPosition.y() + height()/2 - msgBox->height()/2;
     msgBox->move(x, y);
+    
+    msgBox->exec();
 }

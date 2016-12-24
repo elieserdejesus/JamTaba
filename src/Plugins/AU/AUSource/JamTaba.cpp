@@ -11,7 +11,7 @@ JamTaba::JamTaba(AudioUnit component)
 	: AUEffectBase(component),
       listener(nullptr)
 {
-
+    
 }
 
 
@@ -57,6 +57,12 @@ OSStatus JamTaba::GetPropertyInfo (AudioUnitPropertyID	inID, AudioUnitScope inSc
 				outWritable = false;
 				outDataSize = sizeof (AudioUnitCocoaViewInfo);
 				return noErr;
+                
+            case kJamTabaGetHostBPM:
+                outWritable = true;
+                outDataSize = sizeof(int *);
+                return noErr;
+
         }
 	}
 	
@@ -94,6 +100,18 @@ OSStatus JamTaba::GetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, 
 				
 				return noErr;
 			}
+                
+            case kJamTabaGetHostBPM:
+            {
+                Float64		bpm;
+                OSStatus	err	= CallHostBeatAndTempo(NULL, &bpm);
+                
+                if (err == noErr) {
+                    *((int*)outData) = (int)bpm;
+                    
+                    return err;
+                }
+            }
 		}
 	}
 	
