@@ -12,9 +12,9 @@ Listener::Listener(JamTabaAUPlugin *auPlugin)
     //
 }
     
-void Listener::process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess, const AUHostState &hostState)
+void Listener::process(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &hostState)
 {
-   auPlugin->process(inBuffer, outBuffer, inFramesToProcess, hostState);
+   auPlugin->process(inputs, outputs, inputsCount, outputsCount, framesToProcess, hostState);
 }
     
 void Listener::cleanUp()
@@ -48,7 +48,7 @@ public:
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 JamTabaAUPlugin::JamTabaAUPlugin(AudioUnit audioUnit)
-    :JamTabaPlugin(2, 2),
+    :JamTabaPlugin(4, 2),
     listener(new Listener(this)),
     audioUnit(audioUnit),
     initializing(true)
@@ -150,12 +150,9 @@ QMacNativeWidget *JamTabaAUPlugin::createNativeView()
     return nativeWidget;
 }
 
-void JamTabaAUPlugin::process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess, const AUHostState &hostState)
+void JamTabaAUPlugin::process(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &hostState)
 {
     this->hostState = hostState;
-    
-    if (inBuffer.mNumberBuffers != inputBuffer.getChannels())
-        return;
     
     if (!controller)
         return;
@@ -172,18 +169,24 @@ void JamTabaAUPlugin::process(const AudioBufferList &inBuffer, AudioBufferList &
     }
     
     // ++++++++++ Audio processing +++++++++++++++
-    inputBuffer.setFrameLenght(inFramesToProcess);
-    for (int c = 0; c < inputBuffer.getChannels(); ++c)
-        memcpy(inputBuffer.getSamplesArray(c), inBuffer.mBuffers[c].mData, sizeof(float) * inFramesToProcess);
+    inputBuffer.setFrameLenght(framesToProcess);
+    quint32 bytesToCopy = sizeof(float) * framesToProcess;
+    quint8 channelsToCopy = qMin((quint8)inputBuffer.getChannels(), (quint8)inputsCount);
+    for (int c = 0; c < channelsToCopy; ++c) {
+        if (inputs[c] != nullptr)
+            memcpy(inputBuffer.getSamplesArray(c), inputs[c], bytesToCopy);
+    }
     
-    outputBuffer.setFrameLenght(inFramesToProcess);
+    outputBuffer.setFrameLenght(framesToProcess);
     outputBuffer.zero();
     
     controller->process(inputBuffer, outputBuffer, getSampleRate());
     
-    int channels = outputBuffer.getChannels();
-    for (int c = 0; c < channels; ++c)
-        memcpy(outBuffer.mBuffers[c].mData, outputBuffer.getSamplesArray(c), sizeof(float) * inFramesToProcess);
+    channelsToCopy = qMin((quint8)outputBuffer.getChannels(), (quint8)outputsCount);
+    for (int c = 0; c < channelsToCopy; ++c) {
+        if (outputs[c] != nullptr)
+            memcpy(outputs[c], outputBuffer.getSamplesArray(c), bytesToCopy);
+    }
     
     // ++++++++++++++++++++++++++++++
     hostWasPlayingInLastAudioCallBack = hostIsPlaying();

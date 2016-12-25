@@ -3,9 +3,14 @@
 
 @implementation JamTaba_UIView
 
-
 -(id)init
 {
+//    [NSEvent addLocalMonitorForEventsMatchingMask:NSKeyDownMask handler:^(NSEvent *incomingEvent) {
+//        NSEvent *result = incomingEvent;
+//        NSLog(@"evento %f:", result.keyCode);
+//        return result;
+//    }];
+    
     return [super init];
 }
 

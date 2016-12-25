@@ -1,7 +1,7 @@
 #ifndef JamTaba_JamTaba_h
 #define JamTaba_JamTaba_h
 
-#include "AUEffectBase.h"
+#include "AUBase.h"
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include "JamTabaVersion.h"
 #include <math.h>
@@ -30,14 +30,14 @@ struct AUHostState
 class JamTabaAudioUnitListener
 {
 public:
-    virtual void process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess, const AUHostState &hostState) = 0;
+    virtual void process(Float32 **inputs, Float32 ** outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &hostState) = 0;
     
     virtual void cleanUp() = 0;
 };
 
 
 
-class JamTaba : public AUEffectBase
+class JamTaba : public AUBase
 {
     
 public:
@@ -54,10 +54,12 @@ public:
     
 	OSStatus GetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, AudioUnitElement inElement, void	*outData) override;
     
-    OSStatus ProcessBufferLists(AudioUnitRenderActionFlags &ioActionFlags, const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess) override;
-    
     OSStatus SetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, AudioUnitElement inElement, const void *inData, UInt32 inDataSize) override;
    
+	bool StreamFormatWritable (AudioUnitScope scope, AudioUnitElement element) override;
+    
+    OSStatus Render(AudioUnitRenderActionFlags &ioActionFlags, const AudioTimeStamp &inTimeStamp, UInt32 nFrames) override;
+    
 private:
     
     JamTabaAudioUnitListener *listener;
