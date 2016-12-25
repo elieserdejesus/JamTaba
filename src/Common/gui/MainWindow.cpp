@@ -348,6 +348,7 @@ void MainWindow::showMessageBox(const QString &title, const QString &text, QMess
     messageBox->setIcon(icon);
     messageBox->setAttribute(Qt::WA_DeleteOnClose, true);
     messageBox->show();
+    messageBox->exec();
 }
 
 void MainWindow::handlePublicRoomStreamError(const QString &msg)

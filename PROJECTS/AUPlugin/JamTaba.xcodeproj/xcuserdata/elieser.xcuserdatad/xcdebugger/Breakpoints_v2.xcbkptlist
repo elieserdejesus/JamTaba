@@ -326,11 +326,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../src/Plugins/AU/CocoaUI/JamTabaAUPlugin.mm"
-            timestampString = "504317666.096179"
+            timestampString = "504363095.811297"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "85"
-            endingLineNumber = "85"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
             landmarkName = "JamTabaAUPlugin::initialize()"
             landmarkType = "5">
          </BreakpointContent>
@@ -342,11 +342,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../src/Plugins/AU/CocoaUI/JamTabaAUPlugin.mm"
-            timestampString = "504295061.400915"
+            timestampString = "504363095.811297"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "21"
-            endingLineNumber = "21"
+            startingLineNumber = "22"
+            endingLineNumber = "22"
             landmarkName = "Listener::cleanUp()"
             landmarkType = "5">
          </BreakpointContent>
@@ -358,11 +358,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../src/Plugins/AU/CocoaUI/JamTabaAUPlugin.mm"
-            timestampString = "504317666.096179"
+            timestampString = "504363095.811297"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
             landmarkName = "JamTabaAUPlugin::getInstance(AudioUnit unit)"
             landmarkType = "5">
          </BreakpointContent>
@@ -390,12 +390,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../src/Plugins/AU/CocoaUI/JamTabaAUPlugin.mm"
-            timestampString = "504362246.319835"
+            timestampString = "504363095.811297"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "267"
-            endingLineNumber = "267"
+            startingLineNumber = "258"
+            endingLineNumber = "258"
             landmarkName = "JamTabaAUPlugin::getHostName()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../src/Plugins/AU/CocoaUI/JamTabaAUPlugin.mm"
+            timestampString = "504363046.540609"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "202"
+            endingLineNumber = "202"
+            landmarkName = "JamTabaAUPlugin::getStartPositionForHostSync()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
