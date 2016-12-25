@@ -57,6 +57,8 @@ private:
     static JamTabaAUPlugin *instance;
     AudioUnit audioUnit;
     AUHostState hostState;
+    
+    bool initializing;
 
 };
 

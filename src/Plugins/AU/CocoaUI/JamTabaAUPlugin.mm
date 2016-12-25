@@ -47,7 +47,8 @@ public:
 JamTabaAUPlugin::JamTabaAUPlugin(AudioUnit audioUnit)
     :JamTabaPlugin(2, 2),
     listener(new Listener(this)),
-    audioUnit(audioUnit)
+    audioUnit(audioUnit),
+    initializing(true)
 {
     
 }
@@ -87,12 +88,20 @@ void JamTabaAUPlugin::initialize()
     mainWindow->initialize();
     
     nativeView = createNativeView();
+    
+    initializing = false;
 }
 
 void JamTabaAUPlugin::finalize()
 {
     if (nativeView && mainWindow) {
         qDebug() << "Deleting windows";
+        
+        // avoid a crash when host is closed and the user name or channel QLineEdit is focused
+        QWidget *focusWidget = QApplication::focusWidget();
+        if (focusWidget)
+            focusWidget->clearFocus();
+        
         nativeView->deleteLater();
     
         nativeView = nullptr;
@@ -102,6 +111,9 @@ void JamTabaAUPlugin::finalize()
 
 void JamTabaAUPlugin::resizeWindow(int newWidth, int newHeight)
 {
+    if (initializing)
+        return; //avoid a crash when initializing and try use nativeView
+    
     if (mainWindow && nativeView) {
         
         QSize newSize(newWidth, newHeight);
