@@ -4,6 +4,7 @@
 
 JamTabaAUPlugin* JamTabaAUPlugin::instance = nullptr;
 
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Listener::Listener(JamTabaAUPlugin *auPlugin)
     : auPlugin(auPlugin)
@@ -21,7 +22,7 @@ void Listener::cleanUp()
     JamTabaAUPlugin::releaseInstance();
 }
 
-////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 class MainControllerAU : public MainControllerPlugin
 {
@@ -34,15 +35,17 @@ public:
 
     QString getJamtabaFlavor() const override
     {
-        return "AU Plugin";
+        return QStringLiteral("AU Plugin");
     }
 
     void resizePluginEditor(int newWidth, int newHeight) override
     {
-        dynamic_cast<JamTabaAUPlugin*>(this->plugin)->resizeWindow(newWidth, newHeight);
+        JamTabaAUPlugin *jamTabaPlugin = dynamic_cast<JamTabaAUPlugin*>(this->plugin);
+        jamTabaPlugin->resizeWindow(newWidth, newHeight);
     }
 };
 
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 JamTabaAUPlugin::JamTabaAUPlugin(AudioUnit audioUnit)
     :JamTabaPlugin(2, 2),
@@ -78,8 +81,6 @@ void JamTabaAUPlugin::releaseInstance()
 
 void JamTabaAUPlugin::initialize()
 {
-    qDebug() << "Initializing JamTabaAUPlugin";
-    
     JamTabaPlugin::initialize();
  
     MainControllerPlugin *mainController = getController();
@@ -95,7 +96,6 @@ void JamTabaAUPlugin::initialize()
 void JamTabaAUPlugin::finalize()
 {
     if (nativeView && mainWindow) {
-        qDebug() << "Deleting windows";
         
         // avoid a crash when host is closed and the user name or channel QLineEdit is focused
         QWidget *focusWidget = QApplication::focusWidget();
@@ -112,7 +112,7 @@ void JamTabaAUPlugin::finalize()
 void JamTabaAUPlugin::resizeWindow(int newWidth, int newHeight)
 {
     if (initializing)
-        return; //avoid a crash when initializing and try use nativeView
+        return; //avoid a crash when initializing and try to use nativeView
     
     if (mainWindow && nativeView) {
         
@@ -153,16 +153,6 @@ QMacNativeWidget *JamTabaAUPlugin::createNativeView()
 void JamTabaAUPlugin::process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess, const AUHostState &hostState)
 {
     this->hostState = hostState;
-//    qDebug() << "";
-//    qDebug() << "samplePos:         " << hostState.samplePos;
-//    qDebug() << "sampleRate:        " << hostState.sampleRate;
-//    qDebug() << "barStartPos:       " << hostState.barStartPos;
-//    qDebug() << "ppqPos:            " << hostState.ppqPos;
-//    qDebug() << "tempo:             " << hostState.tempo;
-//    qDebug() << "timeSigDenominator:" << hostState.timeSigDenominator;
-//    qDebug() << "timeSigNumerator:  " << hostState.timeSigNumerator;
-//    qDebug() << "------------------";
-//    qDebug() << "";
     
     if (inBuffer.mNumberBuffers != inputBuffer.getChannels())
         return;
