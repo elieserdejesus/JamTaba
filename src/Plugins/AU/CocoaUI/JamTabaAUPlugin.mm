@@ -8,7 +8,7 @@ JamTabaAUPlugin* JamTabaAUPlugin::instance = nullptr;
 Listener::Listener(JamTabaAUPlugin *auPlugin)
     : auPlugin(auPlugin)
 {
-        
+    //
 }
     
 void Listener::process(const AudioBufferList &inBuffer, AudioBufferList &outBuffer, UInt32 inFramesToProcess, const AUHostState &hostState)
