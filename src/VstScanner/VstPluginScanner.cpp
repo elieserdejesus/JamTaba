@@ -9,7 +9,7 @@
 #include "log/Logging.h"
 #include "VstPluginChecker.h"
 
-VstPluginScanner::VstPluginScanner() :
+VstPluginScanner::VstPluginScanner(Vst::VstHost *host) :
     QObject()
 {
     qCDebug(jtStandalonePluginFinder) << "Creating vst plugin scanner!";
@@ -38,7 +38,7 @@ void VstPluginScanner::scan()
             QFileInfo pluginFileInfo(folderIterator.filePath());
             if (!skipList.contains(pluginFileInfo.absoluteFilePath())) {
                 writeToProcessOutput("JT-Scanner-Scanning: "+ pluginFileInfo.absoluteFilePath());
-                const Audio::PluginDescriptor &descriptor = getPluginDescriptor(pluginFileInfo);
+                auto descriptor = getPluginDescriptor(pluginFileInfo);
                 if (descriptor.isValid())
                     writeToProcessOutput("JT-Scanner-Scan-Finished: " + descriptor.getPath());
             }
@@ -54,7 +54,7 @@ Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(const QFileInfo &p
         if (!Vst::PluginChecker::isValidPluginFile(pluginFile.absoluteFilePath()))
             return Audio::PluginDescriptor();// invalid descriptor
 
-        AEffect *effect = Vst::VstLoader::load(pluginFile.absoluteFilePath(), Vst::Host::getInstance());
+        AEffect *effect = Vst::VstLoader::load(pluginFile.absoluteFilePath(), host);
         if (effect) {
             QString name = Audio::PluginDescriptor::getPluginNameFromPath(pluginFile.absoluteFilePath());
             Vst::VstLoader::unload(effect);// delete the AEffect instance

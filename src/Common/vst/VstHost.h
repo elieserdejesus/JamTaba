@@ -11,7 +11,7 @@ namespace Vst {
 class VstPlugin;
 class VstLoader;
 
-class Host : public QObject
+class VstHost : public QObject
 {
     Q_OBJECT
 
@@ -19,9 +19,9 @@ class Host : public QObject
     friend class VstLoader;
 
 public:
-    static Host *getInstance();
+    static VstHost *getInstance();
 
-    ~Host();
+    ~VstHost();
     int getSampleRate() const;
     inline int getBufferSize() const
     {
@@ -50,13 +50,12 @@ private:
 
     void clearVstTimeInfoFlags();
 
-    static QScopedPointer<Host> hostInstance;
-    Host();
-    Host(const Host &);// copy constructor
+    static QScopedPointer<VstHost> hostInstance;
+    VstHost();
+    VstHost(const VstHost &);// copy constructor
 
     bool tempoIsValid() const;
 
-    long callBack(AEffect *effect, long opcode, long index, long value, void *ptr, float opt);
 };
 }
 

@@ -31,7 +31,7 @@ using namespace Vst;
 QMap<QString, QDialog*> VstPlugin::editorsWindows;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-VstPlugin::VstPlugin(Vst::Host* host)
+VstPlugin::VstPlugin(Vst::VstHost* host)
     :   Audio::Plugin("name"),
         effect(nullptr),
         internalOutputBuffer(nullptr),

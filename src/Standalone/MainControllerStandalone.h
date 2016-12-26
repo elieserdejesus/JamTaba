@@ -47,7 +47,7 @@ public:
 
     void updateInputTracksRange();// called when input range or method (audio or midi) are changed in preferences
 
-    inline Vst::Host *getVstHost() const
+    inline Vst::VstHost *getVstHost() const
     {
         return vstHost;
     }
@@ -139,11 +139,11 @@ protected slots:
     void on_VSTPluginFounded(QString name, QString group, QString path);
 
 private slots:
-    void on_vstPluginRequestedWindowResize(QString pluginName, int newWidht, int newHeight);
+    void setPluginWindowSize(QString pluginName, int newWidht, int newHeight);
 
 private:
     // VST
-    Vst::Host *vstHost;// static instance released inside Vst::Host using QSCopedPointer
+    Vst::VstHost *vstHost;// static instance released inside Vst::Host using QSCopedPointer
     QApplication *application;
 
     QScopedPointer<Audio::AudioDriver> audioDriver;

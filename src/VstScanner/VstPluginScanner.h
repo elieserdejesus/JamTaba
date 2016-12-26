@@ -5,12 +5,13 @@
 #include <QFileInfo>
 #include <QProcess>
 #include "audio/core/PluginDescriptor.h"
+#include "vst/VstHost.h"
 
 class VstPluginScanner : public QObject
 {
     Q_OBJECT
 public:
-    VstPluginScanner();
+    VstPluginScanner(Vst::VstHost *host);
     void start(int argc, char *argv[]);
 private:
     QStringList foldersToScan;
@@ -23,6 +24,8 @@ private:
 
     QProcess process;
     void writeToProcessOutput(const QString &);
+
+    Vst::VstHost *host;
 };
 
 #endif // VSTPLUGINSCANNER_H

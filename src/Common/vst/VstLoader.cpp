@@ -9,7 +9,7 @@
 
 using namespace Vst;
 
-AEffect* VstLoader::load(const QString &path, Vst::Host* host){
+AEffect* VstLoader::load(const QString &path, Vst::VstHost* host){
     if(!host){
         return 0;
     }

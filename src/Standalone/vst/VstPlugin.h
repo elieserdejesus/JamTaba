@@ -11,7 +11,7 @@
 struct VstEvents;
 
 namespace Vst {
-class Host;
+class VstHost;
 
 // Plugin's entry point
 typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
@@ -19,7 +19,7 @@ typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
 class VstPlugin : public Audio::Plugin
 {
 public:
-    explicit VstPlugin(Vst::Host *host);
+    explicit VstPlugin(Vst::VstHost *host);
     ~VstPlugin();
 
     void process(const Audio::SamplesBuffer &vstInputArray, Audio::SamplesBuffer &outBuffer,
@@ -65,7 +65,7 @@ private:
     AEffect *effect;
     Audio::SamplesBuffer *internalOutputBuffer;
     Audio::SamplesBuffer *internalInputBuffer;
-    Vst::Host *host;
+    Vst::VstHost *host;
     bool wantMidi;
     QString path;
 

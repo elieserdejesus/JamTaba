@@ -319,18 +319,16 @@ Audio::AudioDriver *MainControllerStandalone::createAudioDriver(
 MainControllerStandalone::MainControllerStandalone(Persistence::Settings settings,
                                                    QApplication *application) :
     MainController(settings),
-    vstHost(Vst::Host::getInstance()),
+    vstHost(Vst::VstHost::getInstance()),
     application(application)
 {
     application->setQuitOnLastWindowClosed(true);
 
-    QObject::connect(Vst::Host::getInstance(),
-                     SIGNAL(pluginRequestingWindowResize(QString, int, int)),
-                     this, SLOT(on_vstPluginRequestedWindowResize(QString, int, int)));
+    connect(vstHost, &Vst::VstHost::pluginRequestingWindowResize,
+            this, &MainControllerStandalone::setPluginWindowSize);
 }
 
-void MainControllerStandalone::on_vstPluginRequestedWindowResize(QString pluginName, int newWidht,
-                                                                 int newHeight)
+void MainControllerStandalone::setPluginWindowSize(QString pluginName, int newWidht, int newHeight)
 {
     QDialog *pluginEditorWindow = Vst::VstPlugin::getPluginEditorWindow(pluginName);
     if (pluginEditorWindow) {
@@ -574,7 +572,7 @@ void MainControllerStandalone::quit()
 Midi::MidiMessageBuffer MainControllerStandalone::pullMidiMessagesFromPlugins()
 {
     // return midi messages created by vst plugins, not by midi controllers.
-    QList<Midi::MidiMessage> receivedMidiMessages = Vst::Host::getInstance()->pullReceivedMidiMessages();
+    QList<Midi::MidiMessage> receivedMidiMessages = vstHost->pullReceivedMidiMessages();
     Midi::MidiMessageBuffer midiBuffer(receivedMidiMessages.count());
     foreach (const Midi::MidiMessage &vstMidiMessage, receivedMidiMessages) {
         midiBuffer.addMessage(vstMidiMessage);
