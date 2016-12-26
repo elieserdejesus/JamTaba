@@ -32,8 +32,10 @@ void JamTaba::Cleanup()
 {
     AUBase::Cleanup();
     
-    if (listener)
+    if (listener) {
         listener->cleanUp();
+        listener = nullptr;
+    }
 }
 
 void JamTaba::updateHostState()
@@ -80,6 +82,9 @@ void JamTaba::updateHostState()
 
 OSStatus JamTaba::Render(AudioUnitRenderActionFlags &ioActionFlags, const AudioTimeStamp &timeStamp, UInt32 framesToProcess)
 {
+    if (!IsInitialized())
+        return noErr;
+    
 	bool firstInputChannelIsActivated = HasInput(0);
     bool secondInputChannelIsActivated = HasInput(1);
     
@@ -91,7 +96,9 @@ OSStatus JamTaba::Render(AudioUnitRenderActionFlags &ioActionFlags, const AudioT
     AUOutputElement *outputBus = GetOutput(0);
     
     
-	firstInputBus->PullInput(ioActionFlags, timeStamp, 0, framesToProcess);
+	OSStatus status = firstInputBus->PullInput(ioActionFlags, timeStamp, 0, framesToProcess);
+    if (status != noErr)
+        return status;
     
     const UInt16 inputsCount = secondInputChannelIsActivated ? 4 : 2;
     Float32 *inputs[inputsCount];
@@ -100,7 +107,10 @@ OSStatus JamTaba::Render(AudioUnitRenderActionFlags &ioActionFlags, const AudioT
     
     if (secondInputChannelIsActivated) {
         AUInputElement *secondInputBus = GetInput(1);
-        secondInputBus->PullInput(ioActionFlags, timeStamp, 1, framesToProcess);
+        status = secondInputBus->PullInput(ioActionFlags, timeStamp, 1, framesToProcess);
+        if (status != noErr)
+            return status;
+        
         inputs[2] = secondInputBus->GetFloat32ChannelData(0);
         inputs[3] = secondInputBus->GetFloat32ChannelData(1);
     }
@@ -117,6 +127,8 @@ OSStatus JamTaba::Render(AudioUnitRenderActionFlags &ioActionFlags, const AudioT
         updateHostState();
         listener->process(inputs, outputs, inputsCount, outputsCount, framesToProcess, hostState);
     }
+    
+    return noErr;
 }
 
 
