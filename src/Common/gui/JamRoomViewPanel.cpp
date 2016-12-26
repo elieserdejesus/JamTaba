@@ -50,6 +50,8 @@ void JamRoomViewPanel::setWaveDrawingButtonsVisibility(bool showButtons)
     for (QPushButton *button : waveDrawingButtons.values()) {
         button->setVisible(showButtons);
     }
+
+    map->setBlurMode(showButtons);
 }
 
 QLayout * JamRoomViewPanel::createWaveDrawingButtons()
