@@ -16,8 +16,6 @@ INCLUDEPATH += $$SOURCE_PATH/Common/gui/chat
 VPATH       += $$SOURCE_PATH/Common
 VPATH       += $$SOURCE_PATH
 
-# Define the preprocessor macro to get the application version in Jamtaba application.
-DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += VST_FORCE_DEPRECATED=0#enable VST 2.3 features
 
 linux{ #avoid erros in VST SDK when compiling in Linux

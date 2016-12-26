@@ -730,6 +730,7 @@ void MainController::connectInJamtabaServer()
     NatMap map;// not used yet,will be used in future to real time rooms
     QString userEnvironment = getUserEnvironmentString();
     QString version = QApplication::applicationVersion();// applicationVersion();
+    qDebug() << "Version: " << version;
     QString userName = settings.getUserName();
     if (userName.isEmpty())
         userName = "No name!";
