@@ -58,7 +58,7 @@ void NinjamRoomWindowPlugin::setHostSyncState(bool syncWithHost)
             showMessageBox(title, message);
         } else {
             QString title = tr("Trying to sync ...");
-            QString message = tr("Change %1 BPM to %2 and try sync again!").arg(hostName, ninjamBpm);
+            QString message = tr("Change %1 BPM to %2 and try sync again!").arg(hostName, QString::number(ninjamBpm));
             showMessageBox(title, message);
             ninjamPanel->uncheckHostSyncButton();//the button is unchecked, so user can try again
         }
