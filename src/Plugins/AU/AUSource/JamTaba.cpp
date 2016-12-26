@@ -83,8 +83,9 @@ OSStatus JamTaba::Render(AudioUnitRenderActionFlags &ioActionFlags, const AudioT
 	bool firstInputChannelIsActivated = HasInput(0);
     bool secondInputChannelIsActivated = HasInput(1);
     
-    if (!firstInputChannelIsActivated)
-		return kAudioUnitErr_NoConnection;
+    if (!firstInputChannelIsActivated) {
+        return kAudioUnitErr_NoConnection;
+    }
     
     AUInputElement *firstInputBus = GetInput(0);
     AUOutputElement *outputBus = GetOutput(0);
@@ -129,6 +130,11 @@ OSStatus JamTaba::GetPropertyInfo (AudioUnitPropertyID	inID, AudioUnitScope inSc
 				outWritable = false;
 				outDataSize = sizeof (AudioUnitCocoaViewInfo);
 				return noErr;
+                
+            case kJamTabaGetHostState:
+                outWritable = false;
+                outDataSize = sizeof(AUHostState);
+                return noErr;
                
         }
 	}
@@ -168,6 +174,13 @@ OSStatus JamTaba::GetProperty(AudioUnitPropertyID inID, AudioUnitScope inScope, 
 				
 				return noErr;
 			}
+                
+            case kJamTabaGetHostState:
+            {
+                updateHostState();
+                *((AUHostState *)outData) = hostState;
+                return noErr;
+            }
 
   		}
 	}

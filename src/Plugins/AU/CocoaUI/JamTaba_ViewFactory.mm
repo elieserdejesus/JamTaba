@@ -37,25 +37,44 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     uiFreshlyLoadedView = [[JamTaba_UIView alloc] init];
     
     JamTabaAUPlugin *auPlugin = JamTabaAUPlugin::getInstance(inAU);
-    MainWindowPlugin *mainWindow = auPlugin->mainWindow;
-    QMacNativeWidget *nativeWidget = auPlugin->nativeView;
     
-    QVBoxLayout *layout = new QVBoxLayout(); // I tried put this layout code inside JamTabaAUPlugin, but doesn«t work :(
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(mainWindow);
-    nativeWidget->setLayout(layout);
-
-    //cast voodoo learned from http://lists.qt-project.org/pipermail/interest/2014-January/010655.html
-    NSView *nativeWidgetView = (__bridge NSView *)reinterpret_cast<void*>(nativeWidget->winId());
+    if (!auPlugin->mainWindow) {
+        MainControllerPlugin *mainController = auPlugin->getController();
+        auPlugin->mainWindow = new MainWindowPlugin(mainController);
+        mainController->setMainWindow(auPlugin->mainWindow);
+        auPlugin->mainWindow->initialize();
+        
+        QMacNativeWidget *nativeWidget = new QMacNativeWidget();
+        nativeWidget->setWindowFlags(Qt::Tool); // without this flag the plugin window is not showed in AULab and Logic 9
+        
+        nativeWidget->clearFocus();
+        nativeWidget->releaseKeyboard();
+        nativeWidget->setAttribute(Qt::WA_ShowWithoutActivating);
+        nativeWidget->setAttribute(Qt::WA_NativeWindow);
+        
+        nativeWidget->nativeView();
+        
+        auPlugin->nativeView = nativeWidget;
+        
+        QVBoxLayout *layout = new QVBoxLayout(); // I tried put this layout code inside JamTabaAUPlugin, but doesn«t work :(
+        layout->setContentsMargins(0, 0, 0, 0);
+        layout->addWidget(auPlugin->mainWindow);
+        nativeWidget->setLayout(layout);
+    }
+    
+    NSView *nativeWidgetView = auPlugin->nativeView->nativeView();
 
     [uiFreshlyLoadedView addSubview:nativeWidgetView positioned:NSWindowAbove relativeTo:nil];
     NSRect frame;
-    frame.size.width  = mainWindow->width();
-    frame.size.height = mainWindow->height();
+    frame.origin.x = 0;
+    frame.origin.y = 0;
+    frame.size.width  = auPlugin->mainWindow->width();
+    frame.size.height = auPlugin->mainWindow->height();
     [nativeWidgetView setFrame: frame];
     [uiFreshlyLoadedView setFrame: frame];
     
-    nativeWidget->show();
+    auPlugin->nativeView->show();
+    auPlugin->mainWindow->update(); // necessary to solve a bug in Logic when the custom view is hidded (using generic view) and showed
     
     [uiFreshlyLoadedView setAU:inAU];
     

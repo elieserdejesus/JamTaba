@@ -53,7 +53,8 @@ JamTabaAUPlugin::JamTabaAUPlugin(AudioUnit audioUnit)
     audioUnit(audioUnit),
     initializing(true)
 {
-    
+    UInt32 size = sizeof(AUHostState);
+    AudioUnitGetProperty(audioUnit, kJamTabaGetHostState, kAudioUnitScope_Global, 0, &hostState, &size);
 }
 
 JamTabaAUPlugin::~JamTabaAUPlugin()
@@ -83,12 +84,9 @@ void JamTabaAUPlugin::initialize()
 {
     JamTabaPlugin::initialize();
  
-    MainControllerPlugin *mainController = getController();
-    mainWindow = new MainWindowPlugin(mainController);
-    mainController->setMainWindow(mainWindow);
-    mainWindow->initialize();
+    mainWindow = nullptr;
     
-    nativeView = createNativeView();
+    nativeView = nullptr;// createNativeView();
     
     initializing = false;
 }
@@ -133,21 +131,6 @@ void JamTabaAUPlugin::resizeWindow(int newWidth, int newHeight)
         [parentView setFrame: frame];
 
     }
-}
-
-QMacNativeWidget *JamTabaAUPlugin::createNativeView()
-{
-    QMacNativeWidget *nativeWidget = new QMacNativeWidget();
-    nativeWidget->setWindowFlags(Qt::Tool); // without this flag the plugin window is not showed in AULab and Logic 9
-    
-    nativeWidget->clearFocus();
-    nativeWidget->releaseKeyboard();
-    nativeWidget->setAttribute(Qt::WA_ShowWithoutActivating);
-    nativeWidget->setAttribute(Qt::WA_NativeWindow);
-    
-    nativeWidget->nativeView();
-    
-    return nativeWidget;
 }
 
 void JamTabaAUPlugin::process(Float32 **inputs, Float32 **outputs, UInt16 inputsCount, UInt16 outputsCount, UInt32 framesToProcess, const AUHostState &hostState)

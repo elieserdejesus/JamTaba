@@ -8,7 +8,8 @@
 
 enum
 {
-    kJamTabaSetListener         = 65537
+    kJamTabaSetListener         = 65537,
+    kJamTabaGetHostState
 };
 
 
