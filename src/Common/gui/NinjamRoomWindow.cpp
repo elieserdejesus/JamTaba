@@ -648,7 +648,7 @@ void NinjamRoomWindow::showServerLicence()
     QString anchorTag = QStringLiteral("<a href=\"\\1deed.%1\">\\1</a>").arg(locale);
 
     QString licence = mainController->getNinjamService()->getCurrentServerLicence();
-    QMessageBox *msgBox = new QMessageBox();//parentWidget());
+    QMessageBox *msgBox = new QMessageBox();
 
     msgBox->setTextFormat(Qt::RichText);
     msgBox->setText(licence
@@ -664,12 +664,7 @@ void NinjamRoomWindow::showServerLicence()
                                                     QSizePolicy::Expanding);
     QGridLayout *layout = (QGridLayout *)msgBox->layout();
     layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
-    
 
-//    QPoint basePosition = mapToGlobal(parentWidget()->pos());    // parent widget is QTabWidget;
-//    int x = basePosition.x() + parentWidget()->width()/2 - msgBox->width()/2;
-//    int y = basePosition.y() + parentWidget()->height()/2 - msgBox->height()/2;
-//    msgBox->move(x, y);
     msgBox->raise();
     
     msgBox->show();
