@@ -51,13 +51,19 @@ qreal getDistance(const QPointF &p1, const QPointF &p2)
 }
 
 MapWidget::MapWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      blurActivated(false)
 {
 
     loadTiles();
     setCenter(QPointF(0, 0));
     installEventFilter(this);
     initializeFonts();
+}
+
+void MapWidget::setBlurMode(bool blurEnabled)
+{
+    this->blurActivated = blurEnabled;
 }
 
 void MapWidget::initializeFonts()
@@ -308,6 +314,10 @@ void MapWidget::paintEvent(QPaintEvent *event)
     drawMapTiles(p, event->rect());
 
     drawPlayersMarkers(p);
+
+    if (blurActivated) {
+        p.fillRect(rect(), QColor(0, 0, 0, 140)); // draw a transparent black layer and create more contrast to show the sound wave
+    }
 
     p.end();
 

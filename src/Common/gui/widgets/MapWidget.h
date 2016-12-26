@@ -19,7 +19,7 @@ public:
     void setMarkers(const QList<MapMarker> &markers);
     static void setTilesDir(const QString &newDir);
     static void setNightMode(bool useNightMode);
-
+    void setBlurMode(bool blurEnabled);
 protected:
     void resizeEvent(QResizeEvent *) override;
     void paintEvent(QPaintEvent *event) override;
@@ -90,6 +90,7 @@ private:
     QFont userFont;
     QFont countryFont;
 
+    bool blurActivated;
 
     static QString TILES_DIR;
     static const qreal TEXT_MARGIM;

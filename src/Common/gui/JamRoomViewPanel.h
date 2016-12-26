@@ -3,6 +3,7 @@
 
 #include <QFrame>
 #include <QLabel>
+#include <QPushButton>
 #include "ninjam/Server.h"
 #include "loginserver/LoginService.h"
 #include "WavePeakPanel.h"
@@ -65,20 +66,25 @@ private:
     Login::RoomInfo roomInfo;
     MapWidget *map;
 
-    void initialize(const Login::RoomInfo &roomInfo);
-    bool roomContainsBotsOnly(const Login::RoomInfo &roomInfo);
-    bool userIsBot(const Login::UserInfo &userInfo);
-    void updateButtonListen();
+    QLayout *waveDrawingButtonsLayout;
+    QMap<WavePeakPanel::WaveDrawingMode, QPushButton*> waveDrawingButtons;
+    QLayout *createWaveDrawingButtons();
+    void setWaveDrawingButtonsVisibility(bool showButtons);
 
-    static bool userInfoLessThan(const Login::UserInfo &u1, const Login::UserInfo &u2);
-    QString buildRoomDescriptionString();
+     void initialize(const Login::RoomInfo &roomInfo);
+     bool roomContainsBotsOnly(const Login::RoomInfo &roomInfo);
+     bool userIsBot(const Login::UserInfo &userInfo);
+     void updateButtonListen();
 
-    void translateUi();
-    void updateStyleSheet();
-    void createMapWidgets();
-    void updateMap();
+     static bool userInfoLessThan(const Login::UserInfo &u1, const Login::UserInfo &u2);
+     QString buildRoomDescriptionString();
 
-    bool static canShowNinjamServerPort(const QString &serverName);
-};
+     void translateUi();
+     void updateStyleSheet();
+     void createMapWidgets();
+     void updateMap();
 
-#endif // JAMROOMVIEWPANEL_H
+     bool static canShowNinjamServerPort(const QString &serverName);
+ };
+
+ #endif // JAMROOMVIEWPANEL_H

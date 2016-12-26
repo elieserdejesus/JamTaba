@@ -480,18 +480,7 @@
      <addaction name="separator"/>
      <addaction name="actionShowMaxPeaks"/>
     </widget>
-    <widget class="QMenu" name="menuWaveDrawing">
-     <property name="title">
-      <string>Wave Drawing</string>
-     </property>
-     <addaction name="actionSoundWave"/>
-     <addaction name="actionBuildings"/>
-     <addaction name="actionPixelatedSoundWave"/>
-     <addaction name="actionPixelatedBuildings"/>
-    </widget>
     <addaction name="menuMetering"/>
-    <addaction name="separator"/>
-    <addaction name="menuWaveDrawing"/>
     <addaction name="separator"/>
     <addaction name="actionFullView"/>
     <addaction name="actionMiniView"/>

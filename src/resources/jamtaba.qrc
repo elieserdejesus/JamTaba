@@ -73,6 +73,10 @@
         <file alias="qtbase_pt.qm">../../translations/Qt/qtbase_pt.qm</file>
     </qresource>
     <qresource prefix="/images">
+        <file>wave_normal.png</file>
+        <file>wave_pixelated.png</file>
+        <file>wave_buildings.png</file>
+        <file>wave_buildings_pixelated.png</file>
         <file>receive.png</file>
         <file>transmit.png</file>
         <file>stereo_inverted.png</file>

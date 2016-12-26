@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <cmath>
 #include <QGraphicsBlurEffect>
+#include <QVBoxLayout>
+#include <QPushButton>
 
 WavePeakPanel::WavePeakPanel(QWidget *parent) :
     QWidget(parent),
@@ -258,9 +260,6 @@ void WavePeakPanel::paintEvent(QPaintEvent *event)
     if (isVisible()) {
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
-
-        if (showingBuffering || !peaksArray.empty())
-            painter.fillRect(rect(), QColor(0, 0, 0, 140));
 
         if (!showingBuffering) {
             switch (drawingMode) {
