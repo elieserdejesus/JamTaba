@@ -113,7 +113,10 @@ bool Configurator::needExportThemes() const
 
 QDir Configurator::getApplicationDataDir()
 {
-    return QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    QDir dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    if (!dir.exists())
+        dir.mkpath(".");
+    return dir;
 }
 
 bool Configurator::setUp()
@@ -122,6 +125,7 @@ bool Configurator::setUp()
 
     // themes dir is the same for Standalone and Vst plugin
     themesDir = QDir(getApplicationDataDir().absoluteFilePath(THEMES_FOLDER_NAME));
+    qDebug() << "Themes dir: " << themesDir;
 
     if (!folderTreeExists())
         createFoldersTree();
@@ -177,7 +181,11 @@ void Configurator::setupLogConfigFile()
     QString logConfigFilePath = baseDir.absoluteFilePath(logConfigFileName);
     if (!logConfigFilePath.isEmpty()) {
         qputenv("QT_LOGGING_CONF", QByteArray(logConfigFilePath.toUtf8()));
+        qDebug() << "Setting QT_LOGGING_CONF to " << logConfigFilePath;
         qInstallMessageHandler(&Configurator::LogHandler);
+    }
+    else {
+        qWarning() << "Log file path is empty!";
     }
 }
 
@@ -186,23 +194,31 @@ void Configurator::createFoldersTree()
     qWarning(jtConfigurator) << " Creating folders tree...";
 
     if (!baseDir.exists()) {
-        baseDir.mkpath(".");
-        qCDebug(jtConfigurator) << "Base dir created in " << baseDir.absolutePath();
+        if (baseDir.mkpath("."))
+            qCDebug(jtConfigurator) << "Base dir created in " << baseDir.absolutePath();
+        else
+            qCDebug(jtConfigurator) << "Can´t create Base dir in " << baseDir.absolutePath();
     }
 
     if (!cacheDir.exists()) {
-        cacheDir.mkpath(".");
-        qCDebug(jtConfigurator) << "Cache dir created in " << cacheDir.absolutePath();
+        if(cacheDir.mkpath("."))
+            qCDebug(jtConfigurator) << "Cache dir created in " << cacheDir.absolutePath();
+        else
+            qCDebug(jtConfigurator) << "Can´t create Cache dir in " << cacheDir.absolutePath();
     }
 
     if (!presetsDir.exists()) {
-        presetsDir.mkpath(".");
-        qCDebug(jtConfigurator) << "Standalone presets dir created in " << presetsDir.absolutePath();
+        if(presetsDir.mkpath("."))
+            qCDebug(jtConfigurator) << "Standalone presets dir created in " << presetsDir.absolutePath();
+        else
+            qCDebug(jtConfigurator) << "Can´t create PRESETS dir in " << presetsDir.absolutePath();
     }
 
     if (!themesDir.exists()) {
-        themesDir.mkpath(".");
-        qCDebug(jtConfigurator) << "Themes dir created in " << themesDir.absolutePath();
+        if(themesDir.mkpath("."))
+            qCDebug(jtConfigurator) << "Themes dir created in " << themesDir.absolutePath();
+        else
+            qCDebug(jtConfigurator) << "Can´t create Themes dir in " << themesDir.absolutePath();
     }
 }
 
@@ -229,14 +245,15 @@ void Configurator::exportLogIniFile()
 {
     QString logConfigFilePath = baseDir.absoluteFilePath(logConfigFileName);
     if (!QFile(logConfigFilePath).exists()) {
-        qDebug(jtConfigurator) << "Log Ini file don't exist in' :"<<logConfigFilePath;
+        qDebug(jtConfigurator) << "Log Ini file don't exist in' :" << logConfigFilePath;
 
         //copy the log config file from resources to 'filePath'
-        bool result = QFile::copy(":/" + logConfigFileName, logConfigFilePath);
+        QFile logFile(":/" + logConfigFileName);
+        bool result = logFile.copy(logConfigFilePath);
         if (result)
             qDebug(jtConfigurator) << "Log Config file copied in :"<<logConfigFilePath;
         else
-            qDebug(jtConfigurator) << "FAILED to copy the log config file in :"<<logConfigFilePath;
+            qDebug(jtConfigurator) << "FAILED to copy the log config file in :" << logConfigFilePath << "Error:" << logFile.errorString();
     }
 }
 

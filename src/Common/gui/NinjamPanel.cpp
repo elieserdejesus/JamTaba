@@ -121,11 +121,14 @@ void NinjamPanel::toggleMetronomeFloatingWindowVisibility(bool showFloatingWindo
             int beatsPerInterval = ui->intervalPanel->getBeatsPerInterval();
             int beatsPerAccent = ui->intervalPanel->getBeatsPerAccent();
             bool showingAccents = ui->intervalPanel->isShowingAccents();
-            metronomeFloatingWindow = new IntervalProgressWindow(this, paintMode, beatsPerInterval, beatsPerAccent, showingAccents);
+            metronomeFloatingWindow = new IntervalProgressWindow(nullptr, paintMode, beatsPerInterval, beatsPerAccent, showingAccents);
             connect(metronomeFloatingWindow, SIGNAL(windowClosed()), this, SLOT(deleteFloatWindow()));
         }
+        
+        metronomeFloatingWindow->move(10, 10); // top left
         metronomeFloatingWindow->setVisible(true);
         metronomeFloatingWindow->raise();
+
     }
     else{
         if (metronomeFloatingWindow) {

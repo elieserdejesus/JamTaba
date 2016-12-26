@@ -22,7 +22,8 @@ win32-msvc* {
 }
 
 INCLUDEPATH += $$SOURCE_PATH/Common
-INCLUDEPATH += $$SOURCE_PATH/VstPlugin
+INCLUDEPATH += $$SOURCE_PATH/Plugins
+INCLUDEPATH += $$SOURCE_PATH/Plugins/VST
 
 INCLUDEPATH += $$ROOT_PATH/libs/includes/ogg
 INCLUDEPATH += $$ROOT_PATH/libs/includes/vorbis
@@ -35,36 +36,40 @@ win32{
 }
 
 VPATH += $$SOURCE_PATH/Common
-VPATH += $$SOURCE_PATH/VstPlugin
+VPATH += $$SOURCE_PATH/Plugins/
+VPATH += $$SOURCE_PATH/Plugins/VST
 
 DEPENDPATH +=  $$ROOT_PATH/libs/includes/ogg
 DEPENDPATH +=  $$ROOT_PATH/libs/includes/vorbis
 DEPENDPATH +=  $$ROOT_PATH/libs/includes/minimp3
 
-HEADERS += Plugin.h
+HEADERS += JamTabaPlugin.h
+HEADERS += JamTabaVSTPlugin.h
 HEADERS += Editor.h
+HEADERS += MainControllerPlugin.h
 HEADERS += MainControllerVST.h
-HEADERS += NinjamControllerVST.h
-HEADERS += NinjamRoomWindowVST.h
-HEADERS += MainWindowVST.h
+HEADERS += NinjamControllerPlugin.h
+HEADERS += NinjamRoomWindowPlugin.h
+HEADERS += MainWindowPlugin.h
 HEADERS += KeyboardHook.h
-HEADERS += VstPreferencesDialog.h
+HEADERS += PreferencesDialogPlugin.h
 
 SOURCES += main.cpp
-SOURCES += Plugin.cpp
+SOURCES += JamTabaPlugin.cpp
+SOURCES += JamTabaVSTPlugin.cpp
 SOURCES += Editor.cpp
 SOURCES += MainControllerVST.cpp
-SOURCES += ConfiguratorVST.cpp
-SOURCES += NinjamRoomWindowVST.cpp
-SOURCES += NinjamControllerVST.cpp
-SOURCES += MainWindowVST.cpp
+SOURCES += MainControllerPlugin.cpp
+SOURCES += ConfiguratorPlugin.cpp
+SOURCES += NinjamRoomWindowPlugin.cpp
+SOURCES += NinjamControllerPlugin.cpp
+SOURCES += MainWindowPlugin.cpp
 SOURCES += KeyboardHook.cpp
-SOURCES += VstPreferencesDialog.cpp
+SOURCES += PreferencesDialogPlugin.cpp
 SOURCES += $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffectx.cpp
 SOURCES += $$VST_SDK_PATH/public.sdk/source/vst2.x/audioeffect.cpp
 #SOURCES += audio/samplesbufferrecorder.cpp
 #SOURCES += audio/core/PluginDescriptor.cpp
-
 
 win32 {
     message("Windows VST build")

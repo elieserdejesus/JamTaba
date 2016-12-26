@@ -46,7 +46,7 @@ public:
 
     void setMaxChannels(int max)
     {
-        this->maxChannels = max;
+        this->maxChannels = (quint8)max;
     }
 
     inline bool hasStream() const
@@ -72,7 +72,7 @@ public:
 
     inline void setMaxUsers(unsigned int maxUsers)
     {
-        this->maxUsers = maxUsers;
+        this->maxUsers = (quint8)maxUsers;
     }
 
     inline void setIsActive(bool active)

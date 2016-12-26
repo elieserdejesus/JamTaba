@@ -169,11 +169,11 @@ QSlider::handle:hover
 
 QSlider::handle:horizontal
 {
-    margin-top: -8px;
+    margin-top: -7px;
     margin-bottom: -7px;
     padding: 0px;
     width: 8px;
-    height: 15px;
+    height: 14px;
 }
 
 QSlider::handle:vertical

@@ -657,18 +657,23 @@ void NinjamRoomWindow::showServerLicence()
               .replace(ccLink, anchorTag));
     msgBox->setWindowTitle(tr("Server Licence"));
     msgBox->setAttribute(Qt::WA_DeleteOnClose);
+    msgBox->setWindowModality(Qt::WindowModal);
 
     // hack to set minimum width in QMessageBox
     QSpacerItem *horizontalSpacer = new QSpacerItem(500, 0, QSizePolicy::Minimum,
                                                     QSizePolicy::Expanding);
     QGridLayout *layout = (QGridLayout *)msgBox->layout();
     layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
-    msgBox->show();
+    
 
     QPoint basePosition = mapToGlobal(parentWidget()->pos());    // parent widget is QTabWidget;
     int x = basePosition.x() + parentWidget()->width()/2 - msgBox->width()/2;
     int y = basePosition.y() + parentWidget()->height()/2 - msgBox->height()/2;
     msgBox->move(x, y);
+    msgBox->raise();
+    
+    msgBox->show();
+    msgBox->exec();
 }
 
 // ----------

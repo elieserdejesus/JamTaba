@@ -28,7 +28,7 @@ using namespace Ninjam;
 using namespace Persistence;
 
 const QSize MainWindow::MINI_MODE_MIN_SIZE = QSize(800, 600);
-const QSize MainWindow::FULL_VIEW_MODE_MIN_SIZE = QSize(1180, 720);
+const QSize MainWindow::FULL_VIEW_MODE_MIN_SIZE = QSize(1100, 665);
 const int MainWindow::MINI_MODE_MAX_LOCAL_TRACKS_WIDTH = 185;
 const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
 
@@ -348,6 +348,7 @@ void MainWindow::showMessageBox(const QString &title, const QString &text, QMess
     messageBox->setIcon(icon);
     messageBox->setAttribute(Qt::WA_DeleteOnClose, true);
     messageBox->show();
+    messageBox->exec();
 }
 
 void MainWindow::handlePublicRoomStreamError(const QString &msg)
@@ -1059,7 +1060,7 @@ void MainWindow::showJamtabaUsersManual()
 
 void MainWindow::showJamtabaTranslators()
 {
-    QString url = "www.jamtaba.com/#translators";
+    QString url = "http://www.jamtaba.com/#translators";
     openUrlInUserBrowser(url);
 }
 
@@ -1079,6 +1080,7 @@ void MainWindow::showPrivateServerDialog()
 
     centerDialog(privateServerDialog);
     privateServerDialog->show();
+    privateServerDialog->exec();
 }
 
 void MainWindow::centerDialog(QWidget *dialog)
@@ -1126,6 +1128,7 @@ void MainWindow::openPreferencesDialog(QAction *action)
         PreferencesDialog *dialog = createPreferencesDialog();// factory method, overrided in derived classes MainWindowStandalone and MainWindowVST
         dialog->initialize(initialTab, &mainController->getSettings(), mainController->getJamRecoders());// initializing here to avoid call virtual methods inside PreferencesDialog constructor
         dialog->show();
+        dialog->exec();
     }
 }
 
@@ -1372,7 +1375,11 @@ void MainWindow::showJamtabaCurrentVersion()
 {
     QString title = tr("About Jamtaba");
     QString text = tr("Jamtaba version is %1").arg(QApplication::applicationVersion());
-    QMessageBox::about(this, title, text);
+    QMessageBox *box = new QMessageBox();
+    box->setWindowTitle(title);
+    box->setText(text);
+    box->deleteLater();
+    box->exec();
 }
 
 // ++++++++++++++++++

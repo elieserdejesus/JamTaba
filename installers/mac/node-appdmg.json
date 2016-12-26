@@ -6,13 +6,16 @@
 
   "background": "background.png",
 
-  "icon-size": 128,
+  "icon-size": 64,
 
 
   "contents": [
 
-    { "x": 480, "y": 180, "type": "link", "path": "/Applications" },
-    { "x": 1, "y": 180, "type": "file", "path": "Jamtaba2.app" }
+    { "x": 430, "y": 120, "type": "link", "path": "/Applications" },
+    { "x": 110,  "y": 120, "type": "file", "path": "Jamtaba2.app" },
+    
+    { "x": 430, "y": 280, "type": "link", "path": "/Library/Audio/Plug-Ins/Components" },
+    { "x": 110,  "y": 280, "type": "file", "path": "JamTaba.component" }
 
   ]
 

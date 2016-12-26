@@ -173,7 +173,7 @@ public:
 
     void mixGroupedInputs(int groupIndex, Audio::SamplesBuffer &out);
 
-    virtual int getSampleRate() const = 0;
+    virtual float getSampleRate() const = 0;
 
     inline float getEncodingQuality() const
     {
