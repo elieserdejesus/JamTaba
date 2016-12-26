@@ -2,6 +2,7 @@
 
 #include "JamTabaVSTPlugin.h"
 #include "MainWindowPlugin.h"
+#include "MainControllerVST.h"
 #include "log/Logging.h"
 #include "KeyboardHook.h"
 #include <QTimer>
