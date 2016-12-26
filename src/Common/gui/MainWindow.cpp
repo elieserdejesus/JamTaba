@@ -1200,6 +1200,36 @@ void MainWindow::initializeViewMenu()
     QActionGroup *viewModeActionGroup = new QActionGroup(this);
     ui.actionFullView->setActionGroup(viewModeActionGroup);
     ui.actionMiniView->setActionGroup(viewModeActionGroup);
+
+    //initialize Wave Drawing menu
+    QActionGroup *waveDrawingGroup = new QActionGroup(this);
+    waveDrawingGroup->addAction(ui.actionBuildings);
+    waveDrawingGroup->addAction(ui.actionSoundWave);
+    waveDrawingGroup->addAction(ui.actionPixelatedSoundWave);
+    waveDrawingGroup->addAction(ui.actionPixelatedBuildings);
+    connect(ui.menuWaveDrawing, &QMenu::triggered, this, &MainWindow::setWaveDrawingMode);
+}
+
+void MainWindow::setWaveDrawingMode(QAction *action)
+{
+    if (mainController->isPlayingRoomStream()) {
+        long long roomID = mainController->getCurrentStreamingRoomID();
+        JamRoomViewPanel *roomView = roomViewPanels[roomID];
+        WavePeakPanel::WaveDrawingMode drawingMode;
+        if (roomView) {
+            if (action == ui.actionSoundWave)
+                drawingMode = WavePeakPanel::SOUND_WAVE;
+            else if (action == ui.actionBuildings)
+                drawingMode = WavePeakPanel::BUILDINGS;
+            else if (action == ui.actionPixelatedSoundWave)
+                drawingMode = WavePeakPanel::PIXELED_SOUND_WAVE;
+            else if(action == ui.actionPixelatedBuildings)
+                drawingMode = WavePeakPanel::PIXELED_BUILDINGS;
+
+            roomView->setWaveDrawingMode(drawingMode);
+            mainController->storeWaveDrawingMode(drawingMode);
+        }
+    }
 }
 
 void MainWindow::handleMenuMeteringAction(QAction *action)

@@ -261,6 +261,7 @@ public:
     bool showingMaxPeakMarkers;
     quint8 meterOption; // 0 - peak + RMS, 1 - peak only or 2 - RMS only
     quint8 refreshRate; // in Hertz
+    quint8 waveDrawingMode;
 };
 
 // ++++++++++++++++++++++++
@@ -292,6 +293,16 @@ private:
 public:
     Settings();
     ~Settings();
+
+    inline void storeWaveDrawingMode(quint8 mode)
+    {
+        meteringSettings.waveDrawingMode = mode;
+    }
+
+    inline quint8 getLastWaveDrawingMode() const
+    {
+        return meteringSettings.waveDrawingMode;
+    }
 
     inline float getEncodingQuality() const
     {

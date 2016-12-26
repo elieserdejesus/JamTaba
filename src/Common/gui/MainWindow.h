@@ -227,6 +227,8 @@ private slots:
 
     void updateNightModeInWorldMaps();
 
+    void setWaveDrawingMode(QAction *action);
+
 private:
 
     BusyDialog busyDialog;

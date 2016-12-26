@@ -480,7 +480,18 @@
      <addaction name="separator"/>
      <addaction name="actionShowMaxPeaks"/>
     </widget>
+    <widget class="QMenu" name="menuWaveDrawing">
+     <property name="title">
+      <string>Wave Drawing</string>
+     </property>
+     <addaction name="actionSoundWave"/>
+     <addaction name="actionBuildings"/>
+     <addaction name="actionPixelatedSoundWave"/>
+     <addaction name="actionPixelatedBuildings"/>
+    </widget>
     <addaction name="menuMetering"/>
+    <addaction name="separator"/>
+    <addaction name="menuWaveDrawing"/>
     <addaction name="separator"/>
     <addaction name="actionFullView"/>
     <addaction name="actionMiniView"/>
@@ -628,6 +639,45 @@
    </property>
    <property name="text">
     <string>Show max peaks</string>
+   </property>
+  </action>
+  <action name="actionAsd">
+   <property name="text">
+    <string>asd</string>
+   </property>
+  </action>
+  <action name="actionSoundWave">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Sound Wave</string>
+   </property>
+  </action>
+  <action name="actionBuildings">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Buildings</string>
+   </property>
+  </action>
+  <action name="actionGradient">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Gradient</string>
+   </property>
+  </action>
+  <action name="actionPixelatedSoundWave">
+   <property name="text">
+    <string>Pixelated Sound Wave</string>
+   </property>
+  </action>
+  <action name="actionPixelatedBuildings">
+   <property name="text">
+    <string>Pixelated Buildings</string>
    </property>
   </action>
  </widget>
