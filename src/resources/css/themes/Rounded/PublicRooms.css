@@ -37,7 +37,7 @@ JamRoomViewPanel QPushButton#buttonWaveDrawingMode
 
 JamRoomViewPanel QPushButton#buttonWaveDrawingMode:checked
 {
-    background-color: rgba(0, 0, 0, 70);
+    background-color: rgba(0, 0, 0, 35);
 }
 
 JamRoomViewPanel QPushButton#buttonWaveDrawingMode:hover
