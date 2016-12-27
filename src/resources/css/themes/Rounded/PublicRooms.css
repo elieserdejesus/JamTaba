@@ -49,3 +49,13 @@ background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
     stop:1 rgb(210,210, 210)
 );
 }
+
+JamRoomViewPanel QPushButton#buttonWaveDrawingMode:hover:checked
+{
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 rgb(180, 180, 180),
+    stop:0.2 rgb(195, 195, 195),
+    stop:0.7 rgb(180, 180, 180),
+    stop:1 rgb(150, 150, 150)
+);
+}
