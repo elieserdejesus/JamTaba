@@ -45,10 +45,25 @@ JamRoomViewPanel[empty="true"] #labelName
     font-weight: normal;
 }
 
+JamRoomViewPanel QPushButton#buttonWaveDrawingMode:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(100, 100, 100), stop:1 rgb(40, 40, 40));
+}
+
+JamRoomViewPanel QPushButton#buttonWaveDrawingMode:hover
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
+}
+
+JamRoomViewPanel QPushButton#buttonWaveDrawingMode:hover:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(120, 120, 120), stop:1 rgb(60, 60, 60));
+}
+
 WavePeakPanel
 {
     /* color used to draw the wave form */
-    qproperty-peaksColor: white;
+    qproperty-peaksColor: rgb(200, 200, 200);
 
     /* color used to draw the loading circle */
     qproperty-loadingColor: rgb(90, 90, 90);
