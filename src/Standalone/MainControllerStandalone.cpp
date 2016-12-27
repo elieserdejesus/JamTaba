@@ -204,19 +204,26 @@ void MainControllerStandalone::setInputTrackToStereo(int localChannelIndex, int 
 void MainControllerStandalone::updateBpm(int newBpm)
 {
     MainController::updateBpm(newBpm);
-    vstHost->setTempo(newBpm);
+
+    for(Host *host : hosts)
+        host->setTempo(newBpm);
 }
 
 void MainControllerStandalone::connectedNinjamServer(const Ninjam::Server &server)
 {
     MainController::connectedNinjamServer(server);
-    vstHost->setTempo(server.getBpm());
+
+    for(Host *host : hosts)
+        host->setTempo(server.getBpm());
 }
 
 void MainControllerStandalone::setSampleRate(int newSampleRate)
 {
     MainController::setSampleRate(newSampleRate);
-    vstHost->setSampleRate(newSampleRate);
+
+    for(Host *host : hosts)
+        host->setSampleRate(newSampleRate);
+
     audioDriver->setSampleRate(newSampleRate);
     foreach (Audio::LocalInputNode *inputNode, inputTracks)
         inputNode->setProcessorsSampleRate(newSampleRate);
@@ -224,7 +231,10 @@ void MainControllerStandalone::setSampleRate(int newSampleRate)
 
 void MainControllerStandalone::setBufferSize(int newBufferSize)
 {
-    vstHost->setBlockSize(newBufferSize);
+
+    for(Host *host : hosts)
+        host->setBlockSize(newBufferSize);
+
     audioDriver->setBufferSize(newBufferSize);
     settings.setBufferSize(newBufferSize);
 }
@@ -244,7 +254,9 @@ void MainControllerStandalone::on_audioDriverStopped()
 void MainControllerStandalone::on_newNinjamInterval()
 {
     MainController::on_newNinjamInterval();
-    vstHost->setPlayingFlag(true);
+
+    for(Host *host : hosts)
+        host->setPlayingFlag(true);
 }
 
 void MainControllerStandalone::setupNinjamControllerSignals(){
@@ -255,7 +267,8 @@ void MainControllerStandalone::setupNinjamControllerSignals(){
 
 void MainControllerStandalone::on_ninjamStartProcessing(int intervalPosition)
 {
-    vstHost->update(intervalPosition);// update the vst host time line in every audio callback.
+    for(Host *host : hosts)
+        host->update(intervalPosition);// update the vst host time line in every audio callback.
 }
 
 void MainControllerStandalone::on_VSTPluginFounded(QString name, QString group, QString path)
@@ -319,13 +332,15 @@ Audio::AudioDriver *MainControllerStandalone::createAudioDriver(
 MainControllerStandalone::MainControllerStandalone(Persistence::Settings settings,
                                                    QApplication *application) :
     MainController(settings),
-    vstHost(Vst::VstHost::getInstance()),
     application(application)
 {
     application->setQuitOnLastWindowClosed(true);
 
-    connect(vstHost, &Vst::VstHost::pluginRequestingWindowResize,
-            this, &MainControllerStandalone::setPluginWindowSize);
+    hosts.append(Vst::VstHost::getInstance());
+
+    // disabled for while
+    //connect(vstHost, &Vst::VstHost::pluginRequestingWindowResize,
+            //this, &MainControllerStandalone::setPluginWindowSize);
 }
 
 void MainControllerStandalone::setPluginWindowSize(QString pluginName, int newWidht, int newHeight)
@@ -387,8 +402,10 @@ void MainControllerStandalone::start()
                      SLOT(on_VSTPluginFounded(QString, QString, QString)));
 
     if (audioDriver) {
-        vstHost->setSampleRate(audioDriver->getSampleRate());
-        vstHost->setBlockSize(audioDriver->getBufferSize());
+        for(Host *host : hosts) {
+            host->setSampleRate(audioDriver->getSampleRate());
+            host->setBlockSize(audioDriver->getBufferSize());
+        }
     }
 }
 
@@ -416,8 +433,10 @@ Audio::Plugin *MainControllerStandalone::createPluginInstance(
     if (descriptor.isNative()) {
         if (descriptor.getName() == "Delay")
             return new Audio::JamtabaDelay(audioDriver->getSampleRate());
-    } else if (descriptor.isVST()) {
-        Vst::VstPlugin *vstPlugin = new Vst::VstPlugin(this->vstHost);
+    }
+    else if (descriptor.isVST()) {
+        Vst::VstHost *host = Vst::VstHost::getInstance();
+        Vst::VstPlugin *vstPlugin = new Vst::VstPlugin(host);
         if (vstPlugin->load(descriptor.getPath()))
             return vstPlugin;
     }
@@ -558,7 +577,9 @@ void MainControllerStandalone::openExternalAudioControlPanel()
 void MainControllerStandalone::stopNinjamController()
 {
     MainController::stopNinjamController();
-    vstHost->setPlayingFlag(false);
+
+    for(Host *host : hosts)
+        host->setPlayingFlag(false);
 }
 
 void MainControllerStandalone::quit()
@@ -571,8 +592,11 @@ void MainControllerStandalone::quit()
 
 Midi::MidiMessageBuffer MainControllerStandalone::pullMidiMessagesFromPlugins()
 {
-    // return midi messages created by vst plugins, not by midi controllers.
-    QList<Midi::MidiMessage> receivedMidiMessages = vstHost->pullReceivedMidiMessages();
+    // return midi messages created by vst and AU plugins, not by midi controllers.
+    QList<Midi::MidiMessage> receivedMidiMessages;
+    for(Host *host : hosts)
+        receivedMidiMessages.append(host->pullReceivedMidiMessages());
+
     Midi::MidiMessageBuffer midiBuffer(receivedMidiMessages.count());
     foreach (const Midi::MidiMessage &vstMidiMessage, receivedMidiMessages) {
         midiBuffer.addMessage(vstMidiMessage);

@@ -9,7 +9,7 @@
 #include "log/Logging.h"
 #include "VstPluginChecker.h"
 
-VstPluginScanner::VstPluginScanner(Vst::VstHost *host) :
+VstPluginScanner::VstPluginScanner() :
     QObject()
 {
     qCDebug(jtStandalonePluginFinder) << "Creating vst plugin scanner!";
@@ -54,6 +54,7 @@ Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(const QFileInfo &p
         if (!Vst::PluginChecker::isValidPluginFile(pluginFile.absoluteFilePath()))
             return Audio::PluginDescriptor();// invalid descriptor
 
+        Vst::VstHost *host = Vst::VstHost::getInstance();
         AEffect *effect = Vst::VstLoader::load(pluginFile.absoluteFilePath(), host);
         if (effect) {
             QString name = Audio::PluginDescriptor::getPluginNameFromPath(pluginFile.absoluteFilePath());

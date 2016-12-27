@@ -37,6 +37,7 @@ HEADERS += gui/FxPanelItem.h
 HEADERS += gui/MidiToolsDialog.h
 
 HEADERS += audio/PortAudioDriver.h
+HEADERS += audio/Host.h
 HEADERS += midi/RtMidiDriver.h
 HEADERS += vst/VstPlugin.h
 HEADERS += vst/VstHost.h

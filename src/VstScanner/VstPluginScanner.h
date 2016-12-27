@@ -11,7 +11,7 @@ class VstPluginScanner : public QObject
 {
     Q_OBJECT
 public:
-    VstPluginScanner(Vst::VstHost *host);
+    VstPluginScanner();
     void start(int argc, char *argv[]);
 private:
     QStringList foldersToScan;
@@ -24,8 +24,6 @@ private:
 
     QProcess process;
     void writeToProcessOutput(const QString &);
-
-    Vst::VstHost *host;
 };
 
 #endif // VSTPLUGINSCANNER_H

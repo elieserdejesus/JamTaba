@@ -4,7 +4,7 @@
 #include "MainController.h"
 #include <QApplication>
 #include "vst/PluginFinder.h"
-#include "vst/VstHost.h"
+#include "audio/Host.h"
 #include "audio/core/Plugins.h"
 #include "audio/core/PluginDescriptor.h"
 
@@ -17,7 +17,7 @@ class MidiDriver;
 }
 
 namespace JamtabaVstPlugin {
-class VstHost;
+//class VstHost;
 class PluginFinder;
 }
 
@@ -46,11 +46,6 @@ public:
     void stop() override;
 
     void updateInputTracksRange();// called when input range or method (audio or midi) are changed in preferences
-
-    inline Vst::VstHost *getVstHost() const
-    {
-        return vstHost;
-    }
 
     inline virtual float getSampleRate() const override
     {
@@ -142,8 +137,8 @@ private slots:
     void setPluginWindowSize(QString pluginName, int newWidht, int newHeight);
 
 private:
-    // VST
-    Vst::VstHost *vstHost;// static instance released inside Vst::Host using QSCopedPointer
+    // VST and AU hosts
+    QList<Host *> hosts;
     QApplication *application;
 
     QScopedPointer<Audio::AudioDriver> audioDriver;

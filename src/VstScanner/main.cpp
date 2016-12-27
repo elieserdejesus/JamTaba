@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[])
 {
-    VstPluginScanner scanner(Vst::VstHost::getInstance());
+    VstPluginScanner scanner;
     scanner.start(argc, argv);
     return 0;
 }
