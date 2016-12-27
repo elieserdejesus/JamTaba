@@ -65,4 +65,6 @@ ChatMessagePanel #blockButton      /* the small B (block user in chat) button */
 ChatMessagePanel #labelMessage
 {
     background-color: transparent;
+    selection-background-color: rgb(51, 153, 255);
+    selection-color: white;
 }
