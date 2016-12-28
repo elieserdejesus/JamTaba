@@ -294,6 +294,12 @@ NinjamTrackGroupView #countryLabel          /* country name in ninjam tracks */
     font-size: 9px;
 }
 
+NinjamTrackView  #channelName
+{
+    selection-background-color: rgb(51, 153, 255);
+    selection-color: white;
+}
+
 IntervalProgressDisplay
 {
     qproperty-currentBeatColor: white;
