@@ -1,16 +1,17 @@
-#ifndef VSTPLUGINSCANNER_H
-#define VSTPLUGINSCANNER_H
+#ifndef AUPLUGINSCANNER_H
+#define AUTPLUGINSCANNER_H
 
 #include <QObject>
 #include <QFileInfo>
 #include <QProcess>
 #include "audio/core/PluginDescriptor.h"
 
-class VstPluginScanner : public QObject
+class AUPluginScanner : public QObject
 {
     Q_OBJECT
+
 public:
-    VstPluginScanner();
+    AUPluginScanner();
     void start(int argc, char *argv[]);
 private:
     QStringList foldersToScan;
@@ -25,4 +26,4 @@ private:
     void writeToProcessOutput(const QString &);
 };
 
-#endif // VSTPLUGINSCANNER_H
+#endif // AUPLUGINSCANNER_H

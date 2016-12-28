@@ -1,8 +1,8 @@
-#include "VstPluginScanner.h"
+#include "AUPluginScanner.h"
 
 int main(int argc, char *argv[])
 {
-    VstPluginScanner scanner;
+    AUPluginScanner scanner;
     scanner.start(argc, argv);
     return 0;
 }

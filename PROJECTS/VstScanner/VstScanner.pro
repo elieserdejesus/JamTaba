@@ -1,4 +1,4 @@
-QT += core widgets
+QT += core
 QT -= gui
 
 TARGET = VstScanner
