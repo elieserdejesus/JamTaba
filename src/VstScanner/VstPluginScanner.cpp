@@ -61,7 +61,7 @@ Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(const QFileInfo &p
             Vst::VstLoader::unload(effect);// delete the AEffect instance
             QLibrary lib(pluginFile.absoluteFilePath());
             lib.unload();// try unload the shared lib
-            return Audio::PluginDescriptor(name, "VST", pluginFile.absoluteFilePath());
+            return Audio::PluginDescriptor(name, Audio::PluginDescriptor::VST_Plugin, pluginFile.absoluteFilePath());
         }
     }
     catch (...) {

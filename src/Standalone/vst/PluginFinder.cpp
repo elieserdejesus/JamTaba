@@ -5,7 +5,7 @@
 #include <QApplication>
 #include <QLibraryInfo>
 
-using namespace Vst;
+using namespace audio;
 
 PluginFinder::PluginFinder()
 {
@@ -24,7 +24,8 @@ void PluginFinder::setFoldersToScan(const QStringList &folders)
 Audio::PluginDescriptor PluginFinder::getPluginDescriptor(const QFileInfo &f)
 {
     QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
-    return Audio::PluginDescriptor(name, "VST", f.absoluteFilePath());
+    Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::VST_Plugin;
+    return Audio::PluginDescriptor(name, category, f.absoluteFilePath());
 }
 
 void PluginFinder::finishScan()
@@ -51,7 +52,7 @@ void PluginFinder::handleProcessError(const QString &lastScannedPlugin)
         emit badPluginDetected(lastScannedPlugin);
 }
 
-QString PluginFinder::getVstScannerExecutablePath() const
+QString PluginFinder::getScannerExecutablePath() const
 {
     // try the same jamtaba executable path first
     QString scannerExePath = QApplication::applicationDirPath() + "/VstScanner";// In the deployed and debug version the VstScanner and Jamtaba2 executables are in the same folder.
@@ -106,7 +107,7 @@ void PluginFinder::scan(const QStringList &skipList)
         return;
     }
 
-    QString scannerExePath = getVstScannerExecutablePath();
+    QString scannerExePath = getScannerExecutablePath();
     if (scannerExePath.isEmpty())
         return;// scanner executable not found!
 

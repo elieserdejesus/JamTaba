@@ -72,10 +72,20 @@ bool MainControllerStandalone::pluginDescriptorLessThan(const Audio::PluginDescr
 }
 
 
-QList<Audio::PluginDescriptor> MainControllerStandalone::getPluginsDescriptors()
+QList<Audio::PluginDescriptor> MainControllerStandalone::getPluginsDescriptors(Audio::PluginDescriptor::Category category)
 {
-    qSort(pluginsDescriptors.begin(), pluginsDescriptors.end(), pluginDescriptorLessThan);
-    return pluginsDescriptors;
+    QList<Audio::PluginDescriptor> categorizedDescriptors;
+
+    for (const Audio::PluginDescriptor &descriptor : pluginsDescriptors) {
+        if (descriptor.getCategory() == category) {
+            categorizedDescriptors.append(descriptor);
+        }
+    }
+
+    if (!categorizedDescriptors.isEmpty())
+        qSort(categorizedDescriptors.begin(), categorizedDescriptors.end(), pluginDescriptorLessThan);
+
+    return categorizedDescriptors;
 }
 
 Audio::Plugin *MainControllerStandalone::addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex,
@@ -271,7 +281,7 @@ void MainControllerStandalone::on_ninjamStartProcessing(int intervalPosition)
         host->update(intervalPosition);// update the vst host time line in every audio callback.
 }
 
-void MainControllerStandalone::on_VSTPluginFounded(QString name, QString group, QString path)
+void MainControllerStandalone::on_VSTPluginFounded(QString name, QString path)
 {
     bool containThePlugin = false;
     foreach (const Audio::PluginDescriptor descriptor, pluginsDescriptors) {
@@ -282,15 +292,16 @@ void MainControllerStandalone::on_VSTPluginFounded(QString name, QString group, 
     }
     if (!containThePlugin) {
         settings.addVstPlugin(path);
-        pluginsDescriptors.append(Audio::PluginDescriptor(name, group, path));
+        Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::VST_Plugin;
+        pluginsDescriptors.append(Audio::PluginDescriptor(name, category, path));
     }
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++
 
-Vst::PluginFinder *MainControllerStandalone::createPluginFinder()
+audio::PluginFinder *MainControllerStandalone::createPluginFinder()
 {
-    return new Vst::PluginFinder();
+    return new audio::PluginFinder();
 }
 
 void MainControllerStandalone::setMainWindow(MainWindow *mainWindow)
@@ -341,6 +352,8 @@ MainControllerStandalone::MainControllerStandalone(Persistence::Settings setting
     // disabled for while
     //connect(vstHost, &Vst::VstHost::pluginRequestingWindowResize,
             //this, &MainControllerStandalone::setPluginWindowSize);
+
+
 }
 
 void MainControllerStandalone::setPluginWindowSize(QString pluginName, int newWidht, int newHeight)
@@ -397,9 +410,8 @@ void MainControllerStandalone::start()
     qCInfo(jtCore) << "Creating plugin finder...";
     pluginFinder.reset(createPluginFinder());
 
-    QObject::connect(pluginFinder.data(), SIGNAL(pluginScanFinished(QString, QString,
-                                                                    QString)), this,
-                     SLOT(on_VSTPluginFounded(QString, QString, QString)));
+    connect(pluginFinder.data(), &audio::PluginFinder::pluginScanFinished, this,
+                                                &MainControllerStandalone::on_VSTPluginFounded);
 
     if (audioDriver) {
         for(Host *host : hosts) {
@@ -525,14 +537,14 @@ bool MainControllerStandalone::pluginsScanIsNeeded() const
     return false;
 }
 
-void MainControllerStandalone::initializePluginsList(const QStringList &paths)
+void MainControllerStandalone::initializePluginsList(const QStringList &paths, Audio::PluginDescriptor::Category category)
 {
     pluginsDescriptors.clear();
     foreach (const QString &path, paths) {
         QFile file(path);
         if (file.exists()) {
             QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(path);
-            pluginsDescriptors.append(Audio::PluginDescriptor(pluginName, "VST", path));
+            pluginsDescriptors.append(Audio::PluginDescriptor(pluginName, category, path));
         }
     }
 }

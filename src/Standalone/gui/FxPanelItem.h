@@ -59,6 +59,8 @@ private:
 
     void showPluginGui(Audio::Plugin *plugin);
 
+    void showPluginsListMenu(const QPoint &p);
+
     static const QString NEW_EFFECT_STRING;
 
     LocalTrackViewStandalone *localTrackView;

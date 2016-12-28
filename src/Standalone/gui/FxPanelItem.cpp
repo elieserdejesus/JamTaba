@@ -17,6 +17,8 @@
 #include <QDesktopWidget>
 #include <QStyle>
 
+using namespace Audio;
+
 FxPanelItem::FxPanelItem(LocalTrackViewStandalone *parent, Controller::MainControllerStandalone *mainController) :
     QFrame(parent),
     plugin(nullptr),
@@ -112,25 +114,43 @@ void FxPanelItem::leaveEvent(QEvent *)
         label->setText("");
 }
 
+void FxPanelItem::showPluginsListMenu(const QPoint &p)
+{
+    QMenu menu;
+
+    QList<PluginDescriptor::Category> categories;
+    categories << PluginDescriptor::VST_Plugin;
+#ifdef Q_OS_MAC
+    categories << PluginDescriptor::AU_Plugin;
+#endif
+    //categories << PluginDescriptor::Native_Plugin; // native plugins are not implemented yet
+
+    for(PluginDescriptor::Category category : categories) {
+
+        QString categoryName = Audio::PluginDescriptor::categoryToString(category);
+        QMenu *categoryMenu = new QMenu(categoryName);
+        menu.addMenu(categoryMenu);
+        QList<Audio::PluginDescriptor> plugins = mainController->getPluginsDescriptors(category);
+        for (const Audio::PluginDescriptor &pluginDescriptor  : plugins) {
+            QAction *action = categoryMenu->addAction(pluginDescriptor.getName());
+            action->setData(pluginDescriptor.toString());
+        }
+
+        connect(categoryMenu, &QMenu::triggered, this, &FxPanelItem::on_fxMenuActionTriggered);
+
+        categoryMenu->setEnabled(!plugins.isEmpty());
+    }
+
+    menu.move(mapToGlobal(p));
+    menu.exec();
+}
+
 void FxPanelItem::on_contextMenu(QPoint p)
 {
     if (!containPlugin()) {// show plugins list
-        QMenu menu;
-        QList<Audio::PluginDescriptor> plugins = mainController->getPluginsDescriptors();
-        if (!plugins.isEmpty()) {
-            for (const Audio::PluginDescriptor &pluginDescriptor  : plugins) {
-                QAction *action = menu.addAction(pluginDescriptor.getName());
-                action->setData(pluginDescriptor.toString());
-            }
-
-            QObject::connect(&menu, SIGNAL(triggered(QAction *)), this,
-                             SLOT(on_fxMenuActionTriggered(QAction *)));
-        } else {// no plugin found
-            menu.addAction(tr("No plugin found! Check the 'Preferences -> Vst plugins' menu."));
-        }
-        menu.move(mapToGlobal(p));
-        menu.exec();
-    } else {// show actions list if contain a plugin
+        showPluginsListMenu(p);
+    }
+    else {// show actions list if contain a plugin
         QMenu menu(this);
         menu.connect(&menu, SIGNAL(triggered(QAction *)), this,
                      SLOT(on_actionMenuTriggered(QAction *)));

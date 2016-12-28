@@ -9,7 +9,7 @@ namespace Audio {
 class PluginDescriptor;
 }
 
-namespace Vst {
+namespace audio {
 
 class PluginFinder : public QObject
 {
@@ -27,7 +27,7 @@ private:
 
     Audio::PluginDescriptor getPluginDescriptor(const QFileInfo &f);
     QString buildCommaSeparetedString(const QStringList &list) const;
-    QString getVstScannerExecutablePath() const;
+    QString getScannerExecutablePath() const;
     void handleProcessError(const QString &lastScannedPlugin);
 
 private slots:
@@ -40,7 +40,7 @@ signals:
     void scanFinished(bool finishedWithoutError);
     void pluginScanStarted(const QString &path);
     void pluginScanFinished(const QString &name, const QString &group, const QString &path);
-    void badPluginDetected(const QString &pluginPath);// a plugin crash the scanner process
+    void badPluginDetected(const QString &pluginPath);// a plugin crashed the scanner process
 };
 }
 

@@ -32,7 +32,7 @@ public:
     MainControllerStandalone(Persistence::Settings settings, QApplication *application);
     ~MainControllerStandalone();
 
-    void initializePluginsList(const QStringList &paths);
+    void initializePluginsList(const QStringList &paths, Audio::PluginDescriptor::Category category);
 
     void addDefaultPluginsScanPath();// add vst path from registry
 
@@ -79,13 +79,13 @@ public:
 
     void cancelPluginFinder();
 
-    inline Vst::PluginFinder *getPluginFinder() const
+    inline audio::PluginFinder *getPluginFinder() const
     {
         return pluginFinder.data();
     }
 
     void removePlugin(int inputTrackIndex, Audio::Plugin *PLUGIN);
-    QList<Audio::PluginDescriptor> getPluginsDescriptors();
+    QList<Audio::PluginDescriptor> getPluginsDescriptors(Audio::PluginDescriptor::Category category);
     Audio::Plugin *addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex, const Audio::PluginDescriptor &descriptor);
 
     Midi::MidiMessageBuffer pullMidiMessagesFromPlugins() override;
@@ -131,7 +131,7 @@ protected slots:
     void on_audioDriverStarted();
     void on_ninjamStartProcessing(int intervalPosition) ;
 
-    void on_VSTPluginFounded(QString name, QString group, QString path);
+    void on_VSTPluginFounded(QString name, QString path);
 
 private slots:
     void setPluginWindowSize(QString pluginName, int newWidht, int newHeight);
@@ -150,9 +150,9 @@ private:
 
     bool inputIndexIsValid(int inputIndex);
 
-    QScopedPointer<Vst::PluginFinder> pluginFinder;
+    QScopedPointer<audio::PluginFinder> pluginFinder;
 
-    Vst::PluginFinder *createPluginFinder();
+    audio::PluginFinder *createPluginFinder();
 
     // used to sort plugins list
     static bool pluginDescriptorLessThan(const Audio::PluginDescriptor &d1,

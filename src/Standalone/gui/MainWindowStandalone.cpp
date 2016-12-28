@@ -43,7 +43,7 @@ void MainWindowStandalone::setupSignals()
 {
     connect(ui.actionFullscreenMode, SIGNAL(triggered(bool)), this, SLOT(toggleFullScreen()));
 
-    Vst::PluginFinder *pluginFinder = controller->getPluginFinder();
+    audio::PluginFinder *pluginFinder = controller->getPluginFinder();
     Q_ASSERT(pluginFinder);
     connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(showPluginScanDialog()));
     connect(pluginFinder, SIGNAL(scanFinished(bool)), this, SLOT(hidePluginScanDialog(bool)));
@@ -199,7 +199,8 @@ void MainWindowStandalone::restoreLocalSubchannelPluginsList(
     // create the plugins list
     foreach (const Persistence::Plugin &plugin, subChannel.getPlugins()) {
         QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
-        Audio::PluginDescriptor descriptor(pluginName, "VST", plugin.path);
+        Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::VST_Plugin;
+        Audio::PluginDescriptor descriptor(pluginName, category, plugin.path);
         quint32 inputTrackIndex = subChannelView->getInputIndex();
         qint32 pluginSlotIndex = subChannelView->getPluginFreeSlotIndex();
         if (pluginSlotIndex >= 0) {
@@ -373,7 +374,8 @@ void MainWindowStandalone::initializePluginFinder()
 {
     const Persistence::Settings settings = controller->getSettings();
 
-    controller->initializePluginsList(settings.getVstPluginsPaths());// load the cached plugins. The cache can be empty.
+    Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::VST_Plugin;
+    controller->initializePluginsList(settings.getVstPluginsPaths(), category);// load the cached plugins. The cache can be empty.
 
     // checking for new plugins...
     if (controller->pluginsScanIsNeeded()) {// no vsts in database cache or new plugins detected in scan folders?
