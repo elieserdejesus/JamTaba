@@ -1,5 +1,5 @@
 #ifndef AUPLUGINSCANNER_H
-#define AUTPLUGINSCANNER_H
+#define AUPLUGINSCANNER_H
 
 #include <QObject>
 #include <QFileInfo>

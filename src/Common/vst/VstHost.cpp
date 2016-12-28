@@ -3,7 +3,7 @@
 #include "midi/MidiDriver.h"
 #include <QDebug>
 #include <QDateTime>
-#include <QApplication>
+#include <QCoreApplication>
 #include <QList>
 #include <QMap>
 #include <cmath>
@@ -147,7 +147,7 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
 
     switch (opcode) {
     case audioMasterIdle:
-        QApplication::processEvents();
+        QCoreApplication::processEvents();
         return 0L;
 
     case audioMasterVersion:  // 1
@@ -207,7 +207,7 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
     }
 
     case audioMasterUpdateDisplay:// 42
-        QApplication::processEvents();
+        QCoreApplication::processEvents();
         return 1L;
 
     case audioMasterCanDo:  // 37

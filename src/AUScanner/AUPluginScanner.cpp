@@ -4,7 +4,8 @@
 #include <QDirIterator>
 #include "audio/core/PluginDescriptor.h"
 #include "log/Logging.h"
-#include "AUAudioUnit.h"
+//#include "AUAudioUnit.h"
+
 AUPluginScanner::AUPluginScanner() :
     QObject()
 {
@@ -48,30 +49,30 @@ Audio::PluginDescriptor AUPluginScanner::getPluginDescriptor(const QFileInfo &pl
 {
     qDebug() << "baseNAme:" << pluginFile.baseName();
 
-    ComponentDescription desc;
-        desc.componentType = 0;
-        desc.componentSubType = 0;
-        desc.componentManufacturer = 0;
-        desc.componentFlags = 0;
-        desc.componentFlagsMask = 0;
+//    ComponentDescription desc;
+//        desc.componentType = 0;
+//        desc.componentSubType = 0;
+//        desc.componentManufacturer = 0;
+//        desc.componentFlags = 0;
+//        desc.componentFlagsMask = 0;
 
-    Component comp = FindNextComponent( NULL, &desc );
-        if( !comp )
-        {
-           DBUG( ( "AUHAL component not found." ) );
-           *audioUnit = NULL;
-           *audioDevice = kAudioDeviceUnknown;
-           return paUnanticipatedHostError;
-        }
-        /* -- open it -- */
-        result = OpenAComponent( comp, audioUnit );
-        if( result )
-        {
-           DBUG( ( "Failed to open AUHAL component." ) );
-           *audioUnit = NULL;
-           *audioDevice = kAudioDeviceUnknown;
-           return ERR( result );
-        }
+//    Component comp = FindNextComponent( NULL, &desc );
+//        if( !comp )
+//        {
+//           DBUG( ( "AUHAL component not found." ) );
+//           *audioUnit = NULL;
+//           *audioDevice = kAudioDeviceUnknown;
+//           return paUnanticipatedHostError;
+//        }
+//        /* -- open it -- */
+//        result = OpenAComponent( comp, audioUnit );
+//        if( result )
+//        {
+//           DBUG( ( "Failed to open AUHAL component." ) );
+//           *audioUnit = NULL;
+//           *audioDevice = kAudioDeviceUnknown;
+//           return ERR( result );
+//        }
 
     return Audio::PluginDescriptor();// invalid descriptor
 }
