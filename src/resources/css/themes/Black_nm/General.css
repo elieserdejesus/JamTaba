@@ -262,6 +262,11 @@ QTabBar::tab:!selected
     background-color: rgb(10, 10, 10);
 }
 
+QTabBar::tab:!selected:hover
+{
+    background-color: rgb(20, 20, 20);
+}
+
 QMenuBar::item
 {
     color: rgb(140, 140, 140);
