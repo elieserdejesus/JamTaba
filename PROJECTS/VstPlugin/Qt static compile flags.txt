@@ -17,6 +17,16 @@ Install  libfontconfig1-dev to avoid bad fonts. After install the fontconfig pac
 
 -----------------------------------------------------------------
 
+Mac OSX - Compiling from Qt 5.5, the newer versions are non compatible with Mac 10.7
+
+./configure -prefix ~/Desktop/Qt -release -opensource -confirm-license -static -no-largefile -no-qml-debug -no-sql-psql -no-sql-mysql -no-sm -no-sql-odbc -no-sql-tds -no-sql-oci -no-sql-db2 -no-sql-sqlite -no-sql-sqlite2 -no-sql-ibase -no-audio-backend -no-cups -no-nis -no-dbus -nomake examples -nomake tests
+
+32 bits
+__________
+./configure -prefix ~/Desktop/Qt-32 -platform macx-clang-32 -release -opensource -confirm-license -static -no-largefile -no-qml-debug -no-sql-psql -no-sql-mysql -no-sm -no-sql-odbc -no-sql-tds -no-sql-oci -no-sql-db2 -no-sql-sqlite -no-sql-sqlite2 -no-sql-ibase -no-audio-backend -no-cups -no-nis -no-dbus -nomake examples -nomake tests
+
+
+
 PAra compilar eu baixei somente os pacotes qt e qtbase.
 
 Descompactei o qt e depois descompactei o qtbase para dentro do qt.
