@@ -11,12 +11,12 @@ class PluginDescriptor;
 
 namespace audio {
 
-class PluginFinder : public QObject
+class VSTPluginFinder : public QObject
 {
     Q_OBJECT
 public:
-    PluginFinder();
-    virtual ~PluginFinder();
+    VSTPluginFinder();
+    virtual ~VSTPluginFinder();
     void scan(const QStringList &skipList);
     void setFoldersToScan(const QStringList &folders);
     void cancel();

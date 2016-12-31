@@ -15,8 +15,16 @@
 #include <QDialog>
 #include <QHostAddress>
 
-#if _WIN32
+#ifdef Q_OS_WIN
     #include "windows.h"
+#endif
+
+#ifdef Q_OS_MAC
+    #include <AudioUnit/AudioUnit.h>
+    #include <AudioToolBox/AudioToolbox.h>
+    #include <CoreAudio/CoreAudio.h>
+    #include <CoreServices/CoreServices.h>
+    #include <CoreFoundation/CoreFoundation.h>
 #endif
 
 #include <QDataStream>
@@ -71,79 +79,11 @@ bool MainControllerStandalone::pluginDescriptorLessThan(const Audio::PluginDescr
     return d1.getName().localeAwareCompare(d2.getName()) < 0;
 }
 
-#include <AudioUnit/AudioUnit.h>
-#include <AudioToolBox/AudioToolbox.h>
-#include <CoreAudio/CoreAudio.h>
-#include <CoreServices/CoreServices.h>
-#include <CoreFoundation/CoreFoundation.h>
 
-QString osTypeToString (OSType type)
-{
-    const wchar_t s[4] = { (wchar_t) ((type >> 24) & 0xff),
-                                  (wchar_t) ((type >> 16) & 0xff),
-                                  (wchar_t) ((type >> 8) & 0xff),
-                                  (wchar_t) (type & 0xff) };
-    return QString::fromWCharArray(s, 4);
-}
-
-void fillAuPlugins(QList<Audio::PluginDescriptor> &descriptors)
-{
-
-    static QList<OSType> supportedAudioUnitTypes;
-    supportedAudioUnitTypes << kAudioUnitType_MusicDevice;
-    supportedAudioUnitTypes << kAudioUnitType_MusicEffect;
-    supportedAudioUnitTypes << kAudioUnitType_Effect;
-    supportedAudioUnitTypes << kAudioUnitType_Mixer;
-    supportedAudioUnitTypes << kAudioUnitType_Generator;
-    supportedAudioUnitTypes << kAudioUnitType_MIDIProcessor;
-
-    for(OSType audioUnitType : supportedAudioUnitTypes) {
-
-        AudioComponent comp = nullptr;
-        do {
-            AudioComponentDescription desc;
-            desc.componentType = audioUnitType;
-            desc.componentSubType = OSType(0);
-            desc.componentManufacturer = OSType(0);
-            desc.componentFlags = 0;
-            desc.componentFlagsMask = 0;
-
-           comp = AudioComponentFindNext(comp, &desc);
-           if (comp) {
-               AudioComponentInstance instance;
-               OSStatus status = AudioComponentInstanceNew(comp, &instance);
-               if (status == noErr) {
-                   status = AudioComponentGetDescription(comp, &desc);
-                   if (status == noErr) {
-                       QString type(osTypeToString(desc.componentType));
-                       QString subType(osTypeToString(desc.componentSubType));
-                       QString manufacturer(osTypeToString(desc.componentManufacturer));
-
-                       CFStringRef cfName;
-                       status = AudioComponentCopyName(comp, &cfName);
-                       if (status == noErr) {
-                            QString name = QString::fromCFString(cfName);
-                            QString path(type + ":" + subType + ":" + manufacturer);
-                            Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::AU_Plugin;
-                            descriptors.append(Audio::PluginDescriptor(name, category, path));
-                       }
-                   }
-                   AudioComponentInstanceDispose(instance);
-               }
-           }
-        }
-        while(comp);
-    }
-}
 
 QList<Audio::PluginDescriptor> MainControllerStandalone::getPluginsDescriptors(Audio::PluginDescriptor::Category category)
 {
     QList<Audio::PluginDescriptor> categorizedDescriptors;
-
-    if (category == Audio::PluginDescriptor::AU_Plugin) {
-        fillAuPlugins(categorizedDescriptors);
-    }
-
     for (const Audio::PluginDescriptor &descriptor : pluginsDescriptors) {
         if (descriptor.getCategory() == category) {
             categorizedDescriptors.append(descriptor);
@@ -367,9 +307,9 @@ void MainControllerStandalone::on_VSTPluginFounded(QString name, QString path)
 
 // ++++++++++++++++++++++++++++++++++++++++++
 
-audio::PluginFinder *MainControllerStandalone::createPluginFinder()
+audio::VSTPluginFinder *MainControllerStandalone::createPluginFinder()
 {
-    return new audio::PluginFinder();
+    return new audio::VSTPluginFinder();
 }
 
 void MainControllerStandalone::setMainWindow(MainWindow *mainWindow)
@@ -476,9 +416,9 @@ void MainControllerStandalone::start()
 
 
     qCInfo(jtCore) << "Creating plugin finder...";
-    pluginFinder.reset(createPluginFinder());
+    vstPluginFinder.reset(createPluginFinder());
 
-    connect(pluginFinder.data(), &audio::PluginFinder::pluginScanFinished, this,
+    connect(vstPluginFinder.data(), &audio::VSTPluginFinder::pluginScanFinished, this,
                                                 &MainControllerStandalone::on_VSTPluginFounded);
 
     if (audioDriver) {
@@ -491,8 +431,8 @@ void MainControllerStandalone::start()
 
 void MainControllerStandalone::cancelPluginFinder()
 {
-    if (pluginFinder)
-        pluginFinder->cancel();
+    if (vstPluginFinder)
+        vstPluginFinder->cancel();
 }
 
 
@@ -632,20 +572,92 @@ void MainControllerStandalone::scanOnlyNewPlugins()
 
 void MainControllerStandalone::scanPlugins(bool scanOnlyNewPlugins)
 {
-    if (pluginFinder) {
+    if (vstPluginFinder) {
         if (!scanOnlyNewPlugins)
             pluginsDescriptors.clear();
 
-        pluginFinder->setFoldersToScan(settings.getVstScanFolders());
+        vstPluginFinder->setFoldersToScan(settings.getVstScanFolders());
 
         // The skipList contains the paths for black listed plugins by default.
         // If the parameter 'scanOnlyNewPlugins' is 'true' the cached plugins are added in the skipList too.
         QStringList skipList(settings.getBlackListedPlugins());
         if (scanOnlyNewPlugins)
             skipList.append(settings.getVstPluginsPaths());
-        pluginFinder->scan(skipList);
+
+        vstPluginFinder->scan(skipList);
     }
+
+#ifdef Q_OS_MAC
+    qDebug() << "Antes de escanear AUs: " << pluginsDescriptors.size();
+    scanAudioUnitPlugins();
+#endif
+
 }
+
+#ifdef Q_OS_MAC
+
+QString osTypeToString (OSType type)
+{
+    const wchar_t s[4] = { (wchar_t) ((type >> 24) & 0xff),
+                                  (wchar_t) ((type >> 16) & 0xff),
+                                  (wchar_t) ((type >> 8) & 0xff),
+                                  (wchar_t) (type & 0xff) };
+    return QString::fromWCharArray(s, 4);
+}
+
+void MainControllerStandalone::scanAudioUnitPlugins()
+{
+
+    static QList<OSType> supportedAudioUnitTypes;
+    supportedAudioUnitTypes << kAudioUnitType_MusicDevice;
+    supportedAudioUnitTypes << kAudioUnitType_MusicEffect;
+    supportedAudioUnitTypes << kAudioUnitType_Effect;
+    supportedAudioUnitTypes << kAudioUnitType_Mixer;
+    supportedAudioUnitTypes << kAudioUnitType_Generator;
+    supportedAudioUnitTypes << kAudioUnitType_MIDIProcessor;
+
+    AudioComponent comp = nullptr;
+    do {
+        AudioComponentDescription desc;
+        desc.componentType = OSType(0);
+        desc.componentSubType = OSType(0);
+        desc.componentManufacturer = OSType(0);
+        desc.componentFlags = 0;
+        desc.componentFlagsMask = 0;
+
+        comp = AudioComponentFindNext(comp, &desc);
+        if (comp) {
+            AudioComponentInstance instance;
+            OSStatus status = AudioComponentInstanceNew(comp, &instance);
+            if (status == noErr) {
+                status = AudioComponentGetDescription(comp, &desc);
+                if (status == noErr) {
+
+                    if (!supportedAudioUnitTypes.contains(desc.componentType))
+                        continue; // skip unsupported types
+
+                    QString type(osTypeToString(desc.componentType));
+                    QString subType(osTypeToString(desc.componentSubType));
+                    QString manufacturer(osTypeToString(desc.componentManufacturer));
+
+                    CFStringRef cfName;
+                    status = AudioComponentCopyName(comp, &cfName);
+                    if (status == noErr) {
+                        QString name = QString::fromCFString(cfName);
+                        QString path(type + ":" + subType + ":" + manufacturer);
+                        Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::AU_Plugin;
+                        this->pluginsDescriptors.append(Audio::PluginDescriptor(name, category, path));
+                    }
+                }
+                AudioComponentInstanceDispose(instance);
+            }
+
+        }
+    }
+    while(comp);
+}
+
+#endif
 
 void MainControllerStandalone::openExternalAudioControlPanel()
 {

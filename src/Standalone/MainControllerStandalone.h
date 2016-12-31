@@ -79,9 +79,9 @@ public:
 
     void cancelPluginFinder();
 
-    inline audio::PluginFinder *getPluginFinder() const
+    inline audio::VSTPluginFinder *getPluginFinder() const
     {
-        return pluginFinder.data();
+        return vstPluginFinder.data();
     }
 
     void removePlugin(int inputTrackIndex, Audio::Plugin *PLUGIN);
@@ -150,9 +150,9 @@ private:
 
     bool inputIndexIsValid(int inputIndex);
 
-    QScopedPointer<audio::PluginFinder> pluginFinder;
+    QScopedPointer<audio::VSTPluginFinder> vstPluginFinder;
 
-    audio::PluginFinder *createPluginFinder();
+    audio::VSTPluginFinder *createPluginFinder();
 
     // used to sort plugins list
     static bool pluginDescriptorLessThan(const Audio::PluginDescriptor &d1,
@@ -162,6 +162,9 @@ private:
 
     void scanPlugins(bool scanOnlyNewPlugins);
 
+#ifdef Q_OS_MAC
+    void scanAudioUnitPlugins();
+#endif
 
 };
 }

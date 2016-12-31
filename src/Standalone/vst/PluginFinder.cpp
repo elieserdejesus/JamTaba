@@ -7,28 +7,28 @@
 
 using namespace audio;
 
-PluginFinder::PluginFinder()
+VSTPluginFinder::VSTPluginFinder()
 {
 }
 
-PluginFinder::~PluginFinder()
+VSTPluginFinder::~VSTPluginFinder()
 {
 }
 
-void PluginFinder::setFoldersToScan(const QStringList &folders)
+void VSTPluginFinder::setFoldersToScan(const QStringList &folders)
 {
     scanFolders.clear();
     scanFolders.append(folders);
 }
 
-Audio::PluginDescriptor PluginFinder::getPluginDescriptor(const QFileInfo &f)
+Audio::PluginDescriptor VSTPluginFinder::getPluginDescriptor(const QFileInfo &f)
 {
     QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
     Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::VST_Plugin;
     return Audio::PluginDescriptor(name, category, f.absoluteFilePath());
 }
 
-void PluginFinder::finishScan()
+void VSTPluginFinder::finishScan()
 {
     QProcess::ExitStatus exitStatus = scanProcess.exitStatus();
     scanProcess.close();
@@ -40,19 +40,19 @@ void PluginFinder::finishScan()
         handleProcessError(lastScanned);
 }
 
-void PluginFinder::handleScanError(QProcess::ProcessError error)
+void VSTPluginFinder::handleScanError(QProcess::ProcessError error)
 {
     qCritical(jtStandalonePluginFinder) << "ERROR:" << error << scanProcess.errorString();
     finishScan();
 }
 
-void PluginFinder::handleProcessError(const QString &lastScannedPlugin)
+void VSTPluginFinder::handleProcessError(const QString &lastScannedPlugin)
 {
     if (!lastScannedPlugin.isEmpty())
         emit badPluginDetected(lastScannedPlugin);
 }
 
-QString PluginFinder::getScannerExecutablePath() const
+QString VSTPluginFinder::getScannerExecutablePath() const
 {
     // try the same jamtaba executable path first
     QString scannerExePath = QApplication::applicationDirPath() + "/VstScanner";// In the deployed and debug version the VstScanner and Jamtaba2 executables are in the same folder.
@@ -66,7 +66,7 @@ QString PluginFinder::getScannerExecutablePath() const
     return "";
 }
 
-void PluginFinder::consumeOutputFromScanProcess()
+void VSTPluginFinder::consumeOutputFromScanProcess()
 {
     QByteArray readedData = scanProcess.readAll();
     QTextStream stream(readedData, QIODevice::ReadOnly);
@@ -89,7 +89,7 @@ void PluginFinder::consumeOutputFromScanProcess()
     }
 }
 
-QString PluginFinder::buildCommaSeparetedString(const QStringList &list) const
+QString VSTPluginFinder::buildCommaSeparetedString(const QStringList &list) const
 {
     QString folderString;
     for (int c = 0; c < list.size(); ++c) {
@@ -100,7 +100,7 @@ QString PluginFinder::buildCommaSeparetedString(const QStringList &list) const
     return folderString;
 }
 
-void PluginFinder::scan(const QStringList &skipList)
+void VSTPluginFinder::scan(const QStringList &skipList)
 {
     if (scanProcess.isOpen()) {
         qCWarning(jtStandalonePluginFinder) << "scan process is already open!";
@@ -126,7 +126,7 @@ void PluginFinder::scan(const QStringList &skipList)
     qCDebug(jtStandalonePluginFinder) << "Scan process started with " << scannerExePath;
 }
 
-void PluginFinder::cancel()
+void VSTPluginFinder::cancel()
 {
     if (scanProcess.isOpen())
         scanProcess.terminate();

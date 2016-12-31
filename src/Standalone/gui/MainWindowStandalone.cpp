@@ -43,7 +43,7 @@ void MainWindowStandalone::setupSignals()
 {
     connect(ui.actionFullscreenMode, SIGNAL(triggered(bool)), this, SLOT(toggleFullScreen()));
 
-    audio::PluginFinder *pluginFinder = controller->getPluginFinder();
+    audio::VSTPluginFinder *pluginFinder = controller->getPluginFinder();
     Q_ASSERT(pluginFinder);
     connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(showPluginScanDialog()));
     connect(pluginFinder, SIGNAL(scanFinished(bool)), this, SLOT(hidePluginScanDialog(bool)));
