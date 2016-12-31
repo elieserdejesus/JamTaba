@@ -374,8 +374,14 @@ void MainWindowStandalone::initializePluginFinder()
 {
     const Persistence::Settings settings = controller->getSettings();
 
-    Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::VST_Plugin;
-    controller->initializePluginsList(settings.getVstPluginsPaths(), category);// load the cached plugins. The cache can be empty.
+
+    controller->clearPluginsList();
+
+    controller->initializeVstPluginsList(settings.getVstPluginsPaths());// load the cached plugins. The cache can be empty.
+
+#ifdef Q_OS_MAC
+    controller->initializeAudioUnitPluginsList(settings.getAudioUnitsPaths());
+#endif
 
     // checking for new plugins...
     if (controller->pluginsScanIsNeeded()) {// no vsts in database cache or new plugins detected in scan folders?

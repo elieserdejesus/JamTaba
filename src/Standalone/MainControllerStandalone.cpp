@@ -132,9 +132,19 @@ void MainControllerStandalone::removePluginsScanPath(const QString &path)
     settings.removeVstScanPath(path);
 }
 
+void MainControllerStandalone::clearPluginsList()
+{
+    pluginsDescriptors.clear();
+}
+
 void MainControllerStandalone::clearPluginsCache()
 {
     settings.clearVstCache();
+
+#ifdef Q_OS_MAC
+    settings.clearAudioUnitCache();
+#endif
+
 }
 
 // VST BlackList ...
@@ -518,37 +528,83 @@ void MainControllerStandalone::addDefaultPluginsScanPath()
     }
 }
 
-// we need scan plugins when plugins cache is empty OR we have new plugins in scan folders
-// This code is executed whem Jamtaba is started.
+/**
+ * We need scan plugins when plugins cache is empty OR we have new plugins in scan folders
+ * This code is executed whem Jamtaba is started.
+*/
 bool MainControllerStandalone::pluginsScanIsNeeded() const
 {
-    if (settings.getVstPluginsPaths().isEmpty())// cache is empty?
-
+    bool vstCacheIsEmpty = settings.getVstPluginsPaths().isEmpty();
+ #ifdef Q_OS_WIN
+    if (vstCacheIsEmpty)
         return true;
+#endif
 
-    // checking for new plugins in scan folders
+#ifdef Q_OS_MAC
+    bool audioUnitCacheIsEmpty = settings.getAudioUnitsPaths().isEmpty();
+    if (vstCacheIsEmpty || audioUnitCacheIsEmpty)
+        return true;
+#endif
+
+    // checking for new vst plugins in scan folders
     QStringList foldersToScan = settings.getVstScanFolders();
 
     QStringList skipList(settings.getBlackListedPlugins());
     skipList.append(settings.getVstPluginsPaths());
 
+    bool newVstFounded = false;
     foreach (const QString &scanFolder, foldersToScan) {
-        QDirIterator folderIterator(scanFolder, QDirIterator::Subdirectories);
-        while (folderIterator.hasNext())
-        {
+        QDirIterator folderIterator(scanFolder, QDir::AllDirs | QDir::NoDotAndDotDot,  QDirIterator::Subdirectories);
+        while (folderIterator.hasNext()) {
             folderIterator.next();// point to next file inside current folder
             QString filePath = folderIterator.filePath();
-            if (!skipList.contains(filePath) && Vst::PluginChecker::isValidPluginFile(filePath))
-                return true; // a new vst plugin was founded
+            if (!skipList.contains(filePath) && Vst::PluginChecker::isValidPluginFile(filePath)) {
+                 newVstFounded = true;
+                 break;
+            }
+        }
+        if (newVstFounded)
+            break;
+    }
+
+
+
+#ifdef Q_OS_WIN
+    return newVstFounded;
+#endif
+
+#ifdef Q_OS_MAC
+    //check for new AU plugins
+    QList<Audio::PluginDescriptor> aus = scanAudioUnitPlugins();
+    QStringList cachedPlugins = settings.getAudioUnitsPaths();
+    bool newAudioUnitFounded = false;
+    for (const auto &au : aus) {
+        if (!cachedPlugins.contains(au.getPath())) {
+            newAudioUnitFounded = true;
+            break;
         }
     }
+    return newVstFounded || newAudioUnitFounded;
+#endif
+
     return false;
 }
 
-void MainControllerStandalone::initializePluginsList(const QStringList &paths, Audio::PluginDescriptor::Category category)
+#ifdef Q_OS_MAC
+
+void MainControllerStandalone::initializeAudioUnitPluginsList(const QStringList &paths)
 {
-    pluginsDescriptors.clear();
-    foreach (const QString &path, paths) {
+    for(const QString &path : paths) {
+        qDebug() << "Inicializando " << path;
+    }
+}
+
+#endif
+
+void MainControllerStandalone::initializeVstPluginsList(const QStringList &paths)
+{
+    Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::VST_Plugin;
+    for (const QString &path : paths) {
         QFile file(path);
         if (file.exists()) {
             QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(path);
@@ -588,8 +644,11 @@ void MainControllerStandalone::scanPlugins(bool scanOnlyNewPlugins)
     }
 
 #ifdef Q_OS_MAC
-    qDebug() << "Antes de escanear AUs: " << pluginsDescriptors.size();
-    scanAudioUnitPlugins();
+    QList<Audio::PluginDescriptor> aus = scanAudioUnitPlugins();
+    for (const Audio::PluginDescriptor &au : aus) {
+        pluginsDescriptors.append(au);
+        settings.addAudioUnitPlugin(au.getPath());
+    }
 #endif
 
 }
@@ -605,7 +664,7 @@ QString osTypeToString (OSType type)
     return QString::fromWCharArray(s, 4);
 }
 
-void MainControllerStandalone::scanAudioUnitPlugins()
+QList<Audio::PluginDescriptor> MainControllerStandalone::scanAudioUnitPlugins()
 {
 
     static QList<OSType> supportedAudioUnitTypes;
@@ -617,6 +676,7 @@ void MainControllerStandalone::scanAudioUnitPlugins()
     supportedAudioUnitTypes << kAudioUnitType_MIDIProcessor;
 
     AudioComponent comp = nullptr;
+    QList<Audio::PluginDescriptor> descriptors;
     do {
         AudioComponentDescription desc;
         desc.componentType = OSType(0);
@@ -646,7 +706,7 @@ void MainControllerStandalone::scanAudioUnitPlugins()
                         QString name = QString::fromCFString(cfName);
                         QString path(type + ":" + subType + ":" + manufacturer);
                         Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::AU_Plugin;
-                        this->pluginsDescriptors.append(Audio::PluginDescriptor(name, category, path));
+                        descriptors.append(Audio::PluginDescriptor(name, category, path));
                     }
                 }
                 AudioComponentInstanceDispose(instance);
@@ -655,6 +715,8 @@ void MainControllerStandalone::scanAudioUnitPlugins()
         }
     }
     while(comp);
+
+    return descriptors;
 }
 
 #endif

@@ -359,6 +359,33 @@ void VstSettings::read(const QJsonObject &in)
             blackedPlugins.append(cacheArray.at(x).toString());
     }
 }
+// +++++++++++++++++++++++++++++++++++++++
+
+AudioUnitSettings::AudioUnitSettings() :
+    SettingsObject("AU")
+{
+}
+
+// AU JSON WRITER
+void AudioUnitSettings::write(QJsonObject &out) const
+{
+    QJsonArray cacheArray;
+    foreach (const QString &pluginPath, cachedPlugins)
+        cacheArray.append(pluginPath);
+    out["cachedPlugins"] = cacheArray;
+}
+
+void AudioUnitSettings::read(const QJsonObject &in)
+{
+    cachedPlugins.clear();
+    if (in.contains("cachedPlugins")) {
+        QJsonArray cacheArray = in["cachedPlugins"].toArray();
+        for (int x = 0; x < cacheArray.size(); ++x) {
+            QString pluginFile = cacheArray.at(x).toString();
+
+        }
+    }
+}
 
 // +++++++++++++++++++++++++++++++++++++++
 Channel::Channel(const QString &name) :
@@ -576,6 +603,25 @@ QStringList Settings::getBlackListedPlugins() const
 }
 
 // ++++++++++++++++++
+#ifdef Q_OS_MAC
+
+void Settings::addAudioUnitPlugin(const QString &pluginPath)
+{
+    if (!audioUnitSettings.cachedPlugins.contains(pluginPath))
+        audioUnitSettings.cachedPlugins.append(pluginPath);
+}
+
+void Settings::clearAudioUnitCache()
+{
+    audioUnitSettings.cachedPlugins.clear();
+}
+
+QStringList Settings::getAudioUnitsPaths() const
+{
+    return audioUnitSettings.cachedPlugins;
+}
+
+#endif
 
 // +++++++++++++++++++++++++++++
 void Settings::setMetronomeSettings(float gain, float pan, bool muted)
@@ -793,6 +839,9 @@ void Settings::load()
     sections.append(&windowSettings);
     sections.append(&metronomeSettings);
     sections.append(&vstSettings);
+#ifdef Q_OS_MAC
+    sections.append(&audioUnitSettings);
+#endif
     sections.append(&inputsSettings);
     sections.append(&recordingSettings);
     sections.append(&privateServerSettings);
@@ -819,6 +868,9 @@ void Settings::save(const LocalInputTrackSettings &localInputsSettings)
     sections.append(&windowSettings);
     sections.append(&metronomeSettings);
     sections.append(&vstSettings);
+#ifdef Q_OS_MAC
+    sections.append(&audioUnitSettings);
+#endif
     sections.append(&inputsSettings);
     sections.append(&recordingSettings);
     sections.append(&privateServerSettings);

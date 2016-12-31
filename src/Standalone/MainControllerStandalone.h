@@ -32,9 +32,15 @@ public:
     MainControllerStandalone(Persistence::Settings settings, QApplication *application);
     ~MainControllerStandalone();
 
-    void initializePluginsList(const QStringList &paths, Audio::PluginDescriptor::Category category);
+    void initializeVstPluginsList(const QStringList &paths);
+
+#ifdef Q_OS_MAC
+    void initializeAudioUnitPluginsList(const QStringList &paths);
+#endif
 
     void addDefaultPluginsScanPath();// add vst path from registry
+
+    void clearPluginsList();
 
     void clearPluginsCache();
     QStringList getSteinbergRecommendedPaths();
@@ -163,7 +169,7 @@ private:
     void scanPlugins(bool scanOnlyNewPlugins);
 
 #ifdef Q_OS_MAC
-    void scanAudioUnitPlugins();
+    static QList<Audio::PluginDescriptor> scanAudioUnitPlugins();
 #endif
 
 };
