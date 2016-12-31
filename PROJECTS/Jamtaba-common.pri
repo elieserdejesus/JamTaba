@@ -4,6 +4,8 @@ message("VST PATH: " $$VST_SDK_PATH)
 
 TEMPLATE = lib
 
+mac:LIBS+= -dead_strip
+
 ROOT_PATH = "../.."
 SOURCE_PATH = "$$ROOT_PATH/src"
 

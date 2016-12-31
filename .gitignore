@@ -48,4 +48,4 @@ libs/
 VST_SDK/
 translations/*.qm
 GeneratedFiles/
-*.xcuserstate
+JamTaba.xcodeproj/

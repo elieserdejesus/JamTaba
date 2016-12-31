@@ -82,7 +82,7 @@ void PluginFinder::consumeOutputFromScanProcess()
                     emit pluginScanStarted(pluginPath);
                 } else {
                     QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(pluginPath);
-                    emit pluginScanFinished(pluginName, "VST", pluginPath);
+                    emit pluginScanFinished(pluginName, pluginPath, "VST");
                 }
             }
         }

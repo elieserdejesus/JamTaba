@@ -243,8 +243,10 @@ bool Configurator::folderTreeExists() const
 // copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
 void Configurator::exportLogIniFile()
 {
-    QString logConfigFilePath = baseDir.absoluteFilePath(logConfigFileName);
-    if (!QFile(logConfigFilePath).exists()) {
+    QString logConfigFilePath(baseDir.absoluteFilePath(logConfigFileName));
+    qDebug() << "log path:" << logConfigFilePath;
+    QFile file(logConfigFilePath);
+    if (!file.exists()) {
         qDebug(jtConfigurator) << "Log Ini file don't exist in' :" << logConfigFilePath;
 
         //copy the log config file from resources to 'filePath'

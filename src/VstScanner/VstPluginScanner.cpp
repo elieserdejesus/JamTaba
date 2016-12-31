@@ -31,16 +31,22 @@ void VstPluginScanner::scan()
     }
 
     writeToProcessOutput("JT-Scanner-Starting");
-    foreach (const QString &scanFolder, foldersToScan) {
-        QDirIterator folderIterator(scanFolder, QDirIterator::Subdirectories);
-        while (folderIterator.hasNext()) {
+    foreach (const QString &scanFolder, foldersToScan)
+    {
+        QDirIterator folderIterator(scanFolder, QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks, QDirIterator::Subdirectories);
+        while (folderIterator.hasNext())
+        {
             folderIterator.next();// point to next file inside current folder
             QFileInfo pluginFileInfo(folderIterator.filePath());
-            if (!skipList.contains(pluginFileInfo.absoluteFilePath())) {
-                writeToProcessOutput("JT-Scanner-Scanning: "+ pluginFileInfo.absoluteFilePath());
-                auto descriptor = getPluginDescriptor(pluginFileInfo);
-                if (descriptor.isValid())
-                    writeToProcessOutput("JT-Scanner-Scan-Finished: " + descriptor.getPath());
+
+            if (!skipList.contains(pluginFileInfo.absoluteFilePath()))
+            {
+                if (pluginFileInfo.isBundle() || pluginFileInfo.suffix() == "dll") {
+                    writeToProcessOutput("JT-Scanner-Scanning: "+ pluginFileInfo.absoluteFilePath());
+                    auto descriptor = getPluginDescriptor(pluginFileInfo);
+                    if (descriptor.isValid())
+                        writeToProcessOutput("JT-Scanner-Scan-Finished: " + descriptor.getPath());
+                }
             }
         }
     }

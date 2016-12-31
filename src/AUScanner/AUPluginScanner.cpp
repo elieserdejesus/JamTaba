@@ -4,7 +4,13 @@
 #include <QDirIterator>
 #include "audio/core/PluginDescriptor.h"
 #include "log/Logging.h"
-//#include "AUAudioUnit.h"
+
+#include <CoreAudio/CoreAudio.h>
+#include <AudioToolBox/AudioToolbox.h>
+#include <AudioUnit/AudioUnit.h>
+#include <CoreServices/CoreServices.h>
+
+
 
 AUPluginScanner::AUPluginScanner() :
     QObject()
@@ -47,32 +53,39 @@ void AUPluginScanner::scan()
 
 Audio::PluginDescriptor AUPluginScanner::getPluginDescriptor(const QFileInfo &pluginFile)
 {
-    qDebug() << "baseNAme:" << pluginFile.baseName();
+    AUB
 
-//    ComponentDescription desc;
-//        desc.componentType = 0;
-//        desc.componentSubType = 0;
-//        desc.componentManufacturer = 0;
-//        desc.componentFlags = 0;
-//        desc.componentFlagsMask = 0;
+    AudioComponent comp = nullptr;
+    do {
+        AudioComponentDescription desc;
+        desc.componentType = OSType(0);
+        desc.componentSubType = OSType(0);
+        desc.componentManufacturer = OSType(0);
+        desc.componentFlags = 0;
+        desc.componentFlagsMask = 0;
 
-//    Component comp = FindNextComponent( NULL, &desc );
-//        if( !comp )
-//        {
-//           DBUG( ( "AUHAL component not found." ) );
-//           *audioUnit = NULL;
-//           *audioDevice = kAudioDeviceUnknown;
-//           return paUnanticipatedHostError;
-//        }
-//        /* -- open it -- */
-//        result = OpenAComponent( comp, audioUnit );
-//        if( result )
-//        {
-//           DBUG( ( "Failed to open AUHAL component." ) );
-//           *audioUnit = NULL;
-//           *audioDevice = kAudioDeviceUnknown;
-//           return ERR( result );
-//        }
+       comp = AudioComponentFindNext(comp, &desc);
+       if (comp) {
+           AudioComponentInstance instance;
+           OSStatus status = AudioComponentInstanceNew(comp, &instance);
+           if (status == noErr) {
+               status = AudioComponentGetDescription(comp, &desc);
+               if (status == noErr) {
+                   QString type(osTypeToString(desc.componentType));
+                   QString subType(osTypeToString(desc.componentSubType));
+                   QString manufacturer(desc.componentManufacturer);
+                   qDebug() << "type: " << type << "sub: " << subType << "Man: " << manufacturer;
+                   CFStringRef name;
+                   status = AudioComponentCopyName(comp, &name);
+                   if (status == noErr) {
+                        qDebug() << "NAme: " << QString::fromCFString(name);
+                   }
+               }
+               AudioComponentInstanceDispose(instance);
+           }
+       }
+    }
+    while(comp);
 
     return Audio::PluginDescriptor();// invalid descriptor
 }

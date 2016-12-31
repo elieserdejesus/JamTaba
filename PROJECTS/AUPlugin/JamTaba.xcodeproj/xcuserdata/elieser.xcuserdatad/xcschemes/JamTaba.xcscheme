@@ -40,9 +40,6 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <PathRunnable
-         FilePath = "/Applications/Logic Pro.app">
-      </PathRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

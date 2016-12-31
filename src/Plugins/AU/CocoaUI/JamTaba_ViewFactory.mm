@@ -27,11 +27,13 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
     
     QApplication::setApplicationName("Jamtaba 2");
     
+    [self createQtEnvironment];
+    
     Configurator *configurator = Configurator::getInstance();
     if (!configurator->setUp())
         qCWarning(jtConfigurator) << "JTBConfig->setUp() FAILED !";
     
-    [self createQtEnvironment];
+    
     
     
     uiFreshlyLoadedView = [[JamTaba_UIView alloc] init];

@@ -71,10 +71,78 @@ bool MainControllerStandalone::pluginDescriptorLessThan(const Audio::PluginDescr
     return d1.getName().localeAwareCompare(d2.getName()) < 0;
 }
 
+#include <AudioUnit/AudioUnit.h>
+#include <AudioToolBox/AudioToolbox.h>
+#include <CoreAudio/CoreAudio.h>
+#include <CoreServices/CoreServices.h>
+#include <CoreFoundation/CoreFoundation.h>
+
+QString osTypeToString (OSType type)
+{
+    const wchar_t s[4] = { (wchar_t) ((type >> 24) & 0xff),
+                                  (wchar_t) ((type >> 16) & 0xff),
+                                  (wchar_t) ((type >> 8) & 0xff),
+                                  (wchar_t) (type & 0xff) };
+    return QString::fromWCharArray(s, 4);
+}
+
+void fillAuPlugins(QList<Audio::PluginDescriptor> &descriptors)
+{
+
+    static QList<OSType> supportedAudioUnitTypes;
+    supportedAudioUnitTypes << kAudioUnitType_MusicDevice;
+    supportedAudioUnitTypes << kAudioUnitType_MusicEffect;
+    supportedAudioUnitTypes << kAudioUnitType_Effect;
+    supportedAudioUnitTypes << kAudioUnitType_Mixer;
+    supportedAudioUnitTypes << kAudioUnitType_Generator;
+    supportedAudioUnitTypes << kAudioUnitType_MIDIProcessor;
+
+    for(OSType audioUnitType : supportedAudioUnitTypes) {
+
+        AudioComponent comp = nullptr;
+        do {
+            AudioComponentDescription desc;
+            desc.componentType = audioUnitType;
+            desc.componentSubType = OSType(0);
+            desc.componentManufacturer = OSType(0);
+            desc.componentFlags = 0;
+            desc.componentFlagsMask = 0;
+
+           comp = AudioComponentFindNext(comp, &desc);
+           if (comp) {
+               AudioComponentInstance instance;
+               OSStatus status = AudioComponentInstanceNew(comp, &instance);
+               if (status == noErr) {
+                   status = AudioComponentGetDescription(comp, &desc);
+                   if (status == noErr) {
+                       QString type(osTypeToString(desc.componentType));
+                       QString subType(osTypeToString(desc.componentSubType));
+                       QString manufacturer(osTypeToString(desc.componentManufacturer));
+
+                       CFStringRef cfName;
+                       status = AudioComponentCopyName(comp, &cfName);
+                       if (status == noErr) {
+                            QString name = QString::fromCFString(cfName);
+                            QString path(type + ":" + subType + ":" + manufacturer);
+                            Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::AU_Plugin;
+                            descriptors.append(Audio::PluginDescriptor(name, category, path));
+                       }
+                   }
+                   AudioComponentInstanceDispose(instance);
+               }
+           }
+        }
+        while(comp);
+    }
+}
 
 QList<Audio::PluginDescriptor> MainControllerStandalone::getPluginsDescriptors(Audio::PluginDescriptor::Category category)
 {
     QList<Audio::PluginDescriptor> categorizedDescriptors;
+
+    if (category == Audio::PluginDescriptor::AU_Plugin) {
+        fillAuPlugins(categorizedDescriptors);
+    }
 
     for (const Audio::PluginDescriptor &descriptor : pluginsDescriptors) {
         if (descriptor.getCategory() == category) {
