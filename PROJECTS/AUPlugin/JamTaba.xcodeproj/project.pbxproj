@@ -1935,6 +1935,7 @@
 					"/Users/elieser/Desktop/Qt-5.6/plugins/platforms",
 					"/Users/elieser/Desktop/Qt-5.6/plugins/printsupport",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -1988,6 +1989,7 @@
 					"/Users/elieser/Desktop/Qt-5.6/plugins/platforms",
 					"/Users/elieser/Desktop/Qt-5.6/plugins/printsupport",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -2041,6 +2043,7 @@
 					"/Users/elieser/Desktop/Qt-5.6/plugins/platforms",
 					"/Users/elieser/Desktop/Qt-5.6/plugins/printsupport",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -2205,7 +2208,7 @@
 					"\"$(SRCROOT)/../../libs/includes\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OSACOMPILE_EXECUTE_ONLY = YES;
 				REZ_SEARCH_PATHS = "";
 				SDKROOT = macosx;
@@ -2248,7 +2251,7 @@
 					"\"$(SRCROOT)/../../libs/includes\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OSACOMPILE_EXECUTE_ONLY = YES;
 				REZ_SEARCH_PATHS = "";
 				SDKROOT = macosx;
@@ -2291,7 +2294,7 @@
 					"\"$(SRCROOT)/../../libs/includes\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OSACOMPILE_EXECUTE_ONLY = YES;
 				REZ_SEARCH_PATHS = "";
 				SDKROOT = macosx;
