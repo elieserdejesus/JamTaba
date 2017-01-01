@@ -1,0 +1,202 @@
+/* Local track stylesheet for Fire theme */
+
+
+/* FxPanelItem is the 'slot' for one vst plugin
+--------------------------------------------------*/
+FxPanelItem{
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(206, 48, 3),
+        stop:0.2 rgb(212, 69, 29),
+        stop:0.7  rgb(240, 100, 2),
+        stop:1    rgb(248, 151, 118));
+    background-position: center right;
+    background-repeat: none;
+    max-height: 14px;
+    width: 100%;
+    border-radius: 2px;
+    border: none;
+}
+
+BaseTrackView[unlighted="true"] FxPanelItem
+{
+    background: rgb(180, 180, 180);
+    border-color: rgb(120, 120, 120);
+
+}
+
+BaseTrackView[unlighted="false"] FxPanelItem            /* slot border when the track is xmiting */
+{
+    border: 1px outset rgba(0, 0, 0, 45);
+}
+
+FxPanelItem[containPlugin="false"]                      /* empty slot */
+{
+    background-image: url(':/images/arrow-down-lighter.png');
+}
+
+FxPanelItem[containPlugin="true"]                       /* non empty slot */
+{
+    background-image: none;
+}
+
+FxPanelItem QLabel                                     /* plugin name label */
+{
+    color: rgb(200, 200, 200);
+    qproperty-alignment: AlignLeft;
+    font-size: 10px;
+    margin: 0px;
+}
+
+FxPanelItem QLabel:hover
+{
+    color: white;
+}
+
+FxPanelItem:hover                                       /* slot hover effect */
+{
+    background-color: rgb(253, 228, 186);
+}
+
+FxPanelItem QPushButton                                 /* the small button used to bypass the plugin */
+{
+     max-width: 10px;
+     max-height: 10px;
+     margin: 0px;
+     padding: 0px;
+     border-color: rgb(110,110,110);
+     background-color: rgb(250, 225, 169);
+}
+
+FxPanelItem QPushButton:hover                           /* hover effect for the small 'plugin bypass' button */
+{
+    border-color: rgb(20, 20, 20);
+}
+
+FxPanelItem QPushButton:checked                         /* 'plugin bypass' button is checked */
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(20, 180, 20), stop:1 rgb(0, 80, 0));
+}
+
+FxPanelItem QPushButton:checked:hover                   /* hover effect for 'plugin bypass' button when checked */
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(110, 255, 82), stop:1 rgb(30, 195, 30));
+}
+
+
+
+
+LocalTrackView[highlighted="true"]
+{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(230, 230, 230), stop:1 rgb(140, 140, 140));
+}
+
+LocalTrackView #inputSelectionButton            /* Button used to open the input selection menu */
+{
+    background-color: none;
+    background-image: url(':/images/arrow-down.png');
+    background-repeat: none;
+    background-position: center right;
+    border: none;
+    color: rgb(140, 140, 140);
+    font-size: 9px;
+    text-align: left;
+    margin: 0px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+LocalTrackView #inputPanel
+{
+    background-color: rgba(0, 0, 0, 60);
+}
+
+LocalTrackView #inputPanel:hover
+{
+    background-color: rgba(0, 0, 0, 30);
+}
+
+LocalTrackView[unlighted="false"] #inputPanel    /* input panel color when user is transmiting */
+{
+    border: 1px outset rgb(20, 20, 20);
+}
+
+LocalTrackView[unlighted="false"] #inputPanel:hover    /* input panel color when user is transmiting */
+{
+    border: 1px outset rgb(80, 80, 80);
+}
+
+LocalTrackView #midiToolsButton                 /* The button used to open MidiToolsDialog */
+{
+    color: rgb(20, 20, 20);
+    border: 1px outset rgb(40, 40, 40);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(140, 140, 140), stop:1 rgb(120, 120, 120));
+    font-size: 10px;
+    background-repeat: none;
+    background-position: center left;
+    padding: 0px;
+}
+
+LocalTrackView #midiToolsButton:hover                 /* The button used to open MidiToolsDialog */
+{
+       background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 180), stop:1 rgb(120, 120, 120));
+}
+
+
+#xmitButton
+{
+border-radius: 1px;
+border-width: 1px;
+font-size: 11px;
+padding-top: 3px;
+padding-bottom: 3px;
+color: black;
+min-height: 15px;
+}
+
+#xmitButton:checked
+{
+/*background-color: rgb(90,90,90);*/
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(20, 180, 20), stop:1 rgb(0, 80, 0));
+border-color: rgb(50, 50, 50);
+border-style: inset;
+color: rgba(0,40, 0);
+}
+
+#xmitButton[preparing="true"]
+{
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(180, 180, 20), stop:1 rgb(80, 80, 0));
+}
+
+#xmitButton:!checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgba(255, 90, 62, 180), stop:1 rgba(175, 0, 0, 180));
+border-style: outset;
+border-color: rgb(50,50,50);
+color: rgb(50, 50, 50);
+}
+
+#xmitButton:hover
+{
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgba(90, 255, 62, 140), stop:1 rgb(0, 175, 0, 140));
+}
+
+#xmitButton:hover:!checked
+{
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgba(255, 90, 62, 140), stop:1 rgba(175, 0, 0, 140));
+}
+
+LocalTrackGroupView #groupNameField
+{
+    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0,
+        stop:0    rgb(206, 48, 3),
+        stop:0.2 rgb(212, 69, 29),
+        stop:0.7  rgb(240, 100, 2),
+        stop:1    rgb(248, 151, 118));
+    border-radius: 2px;
+    color: rgb(200, 200, 200);
+}
+
+LocalTrackGroupView[unlighted="true"] #groupNameField
+{
+    background: rgb(196, 60, 9);
+}

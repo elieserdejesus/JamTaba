@@ -54,6 +54,17 @@
         <file>css/themes/Rounded/NinjamWindow.css</file>
         <file>css/themes/Rounded/PublicRooms.css</file>
     </qresource>
+    <qresource prefix="/style/themes/Fire">
+        <file alias="BaseTrack.css">css/themes/Fire/BaseTrack.css</file>
+        <file alias="NinjamWindow.css">css/themes/Fire/NinjamWindow.css</file>
+        <file alias="LocalTrack.css">css/themes/Fire/LocalTrack.css</file>
+        <file alias="Dialogs.css">css/themes/Fire/Dialogs.css</file>
+        <file alias="General.css">css/themes/Fire/General.css</file>
+        <file alias="MainWindow.css">css/themes/Fire/MainWindow.css</file>
+        <file alias="PublicRooms.css">css/themes/Fire/PublicRooms.css</file>
+        <file alias="Chat.css">css/themes/Fire/Chat.css</file>
+        <file alias="Chords.css">css/themes/Fire/Chords.css</file>
+    </qresource>
     <qresource prefix="/tr">
         <file alias="en.qm">../../translations/en.qm</file>
         <file alias="ja_JP.qm">../../translations/ja_JP.qm</file>

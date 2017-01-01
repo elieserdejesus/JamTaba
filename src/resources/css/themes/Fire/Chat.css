@@ -1,0 +1,48 @@
+/*
+    Chat stylesheet for Fire theme
+*/
+
+
+/* ChatPanel is the widget used to layout all chat controls (messages in a
+scroll area, the text input field, but clear and auto translate buttons).
+----------------------------------------------*/
+
+ChatPanel #chatText
+{                                           /* text input field used to send chat messages */
+    border-color: rgba(0, 0, 0, 80);
+    background-color: #FFE6AC;
+}
+
+ChatPanel #chatText:focus                   /* text input field focused */
+{
+    color: black;
+    border-color: rgba(0, 0, 0, 160);
+    background-color: rgb(250, 225, 169);
+}
+
+
+
+/* ChatMessagePanel is the widget used to show ONE chat message
+----------------------------------------------------------------*/
+ChatMessagePanel
+{
+    background-color: rgb(125, 112, 84);
+    border: 1px solid black;
+}
+
+ChatMessagePanel #labelUserName             /* The name of chat message author */
+{
+    padding: 0px;
+    margin-bottom: 1px;
+}
+
+ChatMessagePanel #translateButton:hover,     /* hover effect in chat message translate (T) button */
+ChatMessagePanel #blockButton:hover
+{
+    border-color: rgb(60, 60, 60);
+    border-style: outset;
+    color: rgb(60, 60, 60);
+    font-weight: bold;
+}
+
+

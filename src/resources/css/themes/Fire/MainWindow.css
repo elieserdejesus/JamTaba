@@ -1,0 +1,87 @@
+#userNamePanel
+{
+    color: rgb(180, 180, 180);
+    border-radius: 2px;
+    border-color: rgb(150, 2, 2);
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 rgb(239, 114, 24),
+        stop:1 rgb(213, 37, 0));
+    border-radius: 2px;
+    padding: 1px;
+}
+
+#labelYourControls
+{
+    color: rgb(230, 230, 230);
+}
+
+#masterTitleLabel,
+#labelMetronomeIControls
+{
+    color: rgb(230, 230, 230);
+}
+
+#masterMeterL,
+#masterMeterR
+{
+    max-height: 4px;
+    height: 4px;
+    margin: 0px;
+}
+
+#userNameLineEdit
+{
+    color: rgb(230, 230, 230);
+    background-color: transparent;
+    border: none;
+}
+
+#userNameLineEdit:read-only
+{
+    color: rgb(200, 200, 200);
+}
+
+/* ------------------------------ */
+
+/* main areas */
+
+QMainWindow
+{
+    background-color: rgb(181, 9, 7);
+    border: 1px solid rgb(237, 227, 215);
+}
+
+#bottomPanel
+{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 rgb(229, 119, 8),
+            stop:1 rgb(211, 89, 12));
+}
+
+#leftPanel
+{
+   background-color: rgb(190, 106, 16);
+   /* border: 1px solid black;*/
+}
+
+#contentTabWidget:pane
+{
+    background-color: rgb(167, 51, 7);
+    border: none;/* 1px solid #EFEEC2;*/
+    border-radius: 1px;
+    padding: 0px;
+}
+
+#contentTabWidget:pane,
+#chatTabWidget:pane
+{
+    padding: 0px;
+}
+
+
+#chatTabWidget:pane,
+#chatTabWidget QTabBar::tab
+{
+    background-color: rgb(247, 247, 247);
+    color: rgb(140, 140, 140);
+}
