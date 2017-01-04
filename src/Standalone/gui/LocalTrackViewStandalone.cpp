@@ -354,13 +354,13 @@ QMenu *LocalTrackViewStandalone::createMonoInputsMenu(QMenu *parent)
     monoInputsMenu->setIcon(QIcon(MONO_ICON));
     Audio::AudioDriver *audioDriver = controller->getAudioDriver();
     int globalInputs = audioDriver->getInputsCount();
-    QString deviceName(audioDriver->getAudioDeviceName(audioDriver->getAudioDeviceIndex()));
+    QString deviceName(audioDriver->getAudioInputDeviceName(audioDriver->getAudioDeviceIndex()));
 
     for (int i = 0; i < globalInputs; ++i) {
         int index = audioDriver->getFirstSelectedInput() + i;
         QString channelName = QString(audioDriver->getInputChannelName(index)).trimmed();
         if (channelName.isNull() || channelName.isEmpty())
-            channelName = QString::number(index+1)  + " "+ audioDriver->getAudioDeviceName();
+            channelName = QString::number(index+1)  + " "+ deviceName;
         QString inputName = channelName + "  (" + deviceName + ")";
         QAction *action = monoInputsMenu->addAction(inputName);
         action->setData(i);  // using the channel index as action data
@@ -395,7 +395,7 @@ QMenu *LocalTrackViewStandalone::createStereoInputsMenu(QMenu *parent)
     stereoInputsMenu->setIcon(QIcon(STEREO_ICON));
     Audio::AudioDriver *audioDriver = controller->getAudioDriver();
     int globalInputs = audioDriver->getInputsCount();
-    QString deviceName(audioDriver->getAudioDeviceName(audioDriver->getAudioDeviceIndex()));
+    QString deviceName(audioDriver->getAudioInputDeviceName(audioDriver->getAudioDeviceIndex()));
     for (int i = 0; i < globalInputs; i += 2) {
         if (i + 1 < globalInputs) {// we can make a channel pair using (i) and (i+1)?
             QString firstName = getInputChannelNameOnly(i);
@@ -420,7 +420,7 @@ QString LocalTrackViewStandalone::getInputChannelNameOnly(int inputIndex)
     Audio::AudioDriver *audioDriver = controller->getAudioDriver();
     QString fullName(audioDriver->getInputChannelName(inputIndex));
     if (fullName.isEmpty())// mac return empy channel names if user don't rename the channels
-        fullName = audioDriver->getAudioDeviceName();
+        fullName = audioDriver->getAudioInputDeviceName();
     int spaceIndex = fullName.lastIndexOf(" ");
     if (spaceIndex > 0)
         return fullName.left(spaceIndex);
@@ -565,7 +565,7 @@ QString LocalTrackViewStandalone::getAudioInputText()
         if (!name.isNull() && !name.isEmpty())
             inputType += name;
         else
-            inputType += QString(audioDriver->getAudioDeviceName());
+            inputType += QString(audioDriver->getAudioInputDeviceName());
 
         return inputType;
     }

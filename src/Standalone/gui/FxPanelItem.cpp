@@ -176,6 +176,9 @@ void FxPanelItem::on_fxMenuActionTriggered(QAction *action)
             localTrackView->addPlugin(plugin, pluginSlotIndex);
             showPluginGui(plugin);
         }
+        else {
+            qCritical() << "Can´t instantiate the plugin " << descriptor.getName() << " -> " << descriptor.getPath();
+        }
     }
     QApplication::restoreOverrideCursor();
 }

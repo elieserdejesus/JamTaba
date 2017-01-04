@@ -7,7 +7,8 @@ namespace Audio {
 PortAudioDriver::PortAudioDriver(Controller::MainController *mainController, int deviceIndex,
                                  int firstInIndex, int lastInIndex, int firstOutIndex,
                                  int lastOutIndex, int sampleRate, int bufferSize) :
-    AudioDriver(mainController)
+    AudioDriver(mainController),
+    useSystemDefaultDevices(false)
 {
 
     Q_UNUSED(firstInIndex)

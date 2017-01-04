@@ -6,7 +6,8 @@ namespace Audio {
 PortAudioDriver::PortAudioDriver(Controller::MainController *mainController, int deviceIndex,
                                  int firstInIndex, int lastInIndex, int firstOutIndex,
                                  int lastOutIndex, int sampleRate, int bufferSize) :
-    AudioDriver(mainController)
+    AudioDriver(mainController),
+    useSystemDefaultDevices(true) // in mac deviceIndex is always the system default values
 {
 
     Q_UNUSED(firstInIndex)
@@ -14,11 +15,14 @@ PortAudioDriver::PortAudioDriver(Controller::MainController *mainController, int
     Q_UNUSED(lastInIndex)
     Q_UNUSED(lastOutIndex)
     Q_UNUSED(deviceIndex)
+
     // initialize portaudio using default devices, mono input and try estereo output if possible
     PaError error = Pa_Initialize();
     if (error == paNoError) {
-        audioDeviceIndex = Pa_GetDefaultOutputDevice();
+        audioDeviceIndex = paNoDevice;
+
         globalInputRange = ChannelRange(0, getMaxInputs());
+
         globalOutputRange = ChannelRange(0, 2);// 2 channels for output
 
         int maxOutputs = getMaxOutputs();
@@ -51,12 +55,20 @@ QList<int> PortAudioDriver::getValidBufferSizes(int deviceIndex) const
 
 QString PortAudioDriver::getOutputChannelName(const unsigned int index) const
 {
-    return QString(PaMacCore_GetChannelName(audioDeviceIndex, index, false));
+    PaDeviceIndex device = Pa_GetDefaultOutputDevice();
+    if (device == paNoDevice)
+        return "Error! No Output!";
+
+    return QString(PaMacCore_GetChannelName(device, index, false));
 }
 
 QString PortAudioDriver::getInputChannelName(const unsigned int index) const
 {
-    return QString(PaMacCore_GetChannelName(audioDeviceIndex, index, true));
+    PaDeviceIndex device = Pa_GetDefaultInputDevice();
+    if (device == paNoDevice)
+        return "Error! No Input!";
+
+    return QString(PaMacCore_GetChannelName(device, index, true));
 }
 
 void PortAudioDriver::configureHostSpecificInputParameters(PaStreamParameters &inputParameters)

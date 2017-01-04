@@ -74,8 +74,17 @@ win32{
     SOURCES += vst/WindowsVstPluginChecker.cpp
 }
 macx{
+
+    AU_SDK_PATH = "$$PWD/../../AU_SDK"
+    VPATH += $$AU_SDK_PATH
+
     SOURCES += audio/MacPortAudioDriver.cpp
     SOURCES += vst/MacVstPluginChecker.cpp
+
+    HEADERS += AU/AudioUnitPlugin.h
+    OBJECTIVE_SOURCES += AU/AudioUnitPlugin.mm
+
+    INCLUDEPATH += $$AU_SDK_PATH
 }
 linux{
     SOURCES += audio/LinuxPortAudioDriver.cpp

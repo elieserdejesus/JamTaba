@@ -13,6 +13,7 @@ int main(int argc, char* args[] ){
 
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
+    //QApplication::setAttribute(Qt::AA_MacPluginApplication);
 
     //start the configurator
     Configurator* configurator = Configurator::getInstance();

@@ -108,11 +108,14 @@ public:
     virtual QString getInputChannelName(unsigned const int index) const = 0;
     virtual QString getOutputChannelName(unsigned const int index) const = 0;
 
-    virtual QString getAudioDeviceName(int index) const = 0;
-    inline QString getAudioDeviceName() const
-    {
-        return getAudioDeviceName(audioDeviceIndex);
-    }
+    virtual QString getAudioInputDeviceName(int index) const = 0;
+    virtual QString getAudioInputDeviceName() const = 0;
+
+    virtual QString getAudioOutputDeviceName(int index) const = 0;
+    virtual QString getAudioOutputDeviceName() const = 0;
+//    {
+//        return getAudioDeviceName(audioDeviceIndex);
+//    }
 
     virtual int getAudioDeviceIndex() const = 0;
     virtual void setAudioDeviceIndex(int index) = 0;
@@ -197,9 +200,24 @@ public:
         return "Silence";
     }
 
-    inline QString getAudioDeviceName(int) const
+    inline QString getAudioInputDeviceName(int) const
     {
         return "NullAudioDriver";
+    }
+
+    inline QString getAudioInputDeviceName() const
+    {
+        return getAudioInputDeviceName(0);
+    }
+
+    inline QString getAudioOutputDeviceName(int) const
+    {
+        return "NullAudioDriver";
+    }
+
+    inline QString getAudioOutputDeviceName() const
+    {
+        return getAudioOutputDeviceName(0);
     }
 
     inline int getAudioDeviceIndex() const

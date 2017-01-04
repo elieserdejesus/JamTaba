@@ -21,10 +21,7 @@
 
 #ifdef Q_OS_MAC
     #include <AudioUnit/AudioUnit.h>
-    #include <AudioToolBox/AudioToolbox.h>
-    #include <CoreAudio/CoreAudio.h>
-    #include <CoreServices/CoreServices.h>
-    #include <CoreFoundation/CoreFoundation.h>
+    #include "AU/AudioUnitPlugin.h"
 #endif
 
 #include <QDataStream>
@@ -99,6 +96,7 @@ QList<Audio::PluginDescriptor> MainControllerStandalone::getPluginsDescriptors(A
 Audio::Plugin *MainControllerStandalone::addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex,
                                          const Audio::PluginDescriptor &descriptor)
 {
+    qDebug() << "Creating plugin in thread " << QThread::currentThreadId();
     Audio::Plugin *plugin = createPluginInstance(descriptor);
     if (plugin) {
         plugin->start();
@@ -470,6 +468,14 @@ Audio::Plugin *MainControllerStandalone::createPluginInstance(
         if (vstPlugin->load(descriptor.getPath()))
             return vstPlugin;
     }
+#ifdef Q_OS_MAC
+    else if(descriptor.isAU()) {
+        int initialSampleRate = audioDriver->getSampleRate();
+        int blockSize = audioDriver->getBufferSize();
+        return AU::audioUnitPluginfromPath(descriptor.getPath(), initialSampleRate, blockSize);
+    }
+#endif
+
     return nullptr;
 }
 
@@ -655,15 +661,6 @@ void MainControllerStandalone::scanPlugins(bool scanOnlyNewPlugins)
 
 #ifdef Q_OS_MAC
 
-QString osTypeToString (OSType type)
-{
-    const wchar_t s[4] = { (wchar_t) ((type >> 24) & 0xff),
-                                  (wchar_t) ((type >> 16) & 0xff),
-                                  (wchar_t) ((type >> 8) & 0xff),
-                                  (wchar_t) (type & 0xff) };
-    return QString::fromWCharArray(s, 4);
-}
-
 QList<Audio::PluginDescriptor> MainControllerStandalone::scanAudioUnitPlugins()
 {
 
@@ -696,9 +693,9 @@ QList<Audio::PluginDescriptor> MainControllerStandalone::scanAudioUnitPlugins()
                     if (!supportedAudioUnitTypes.contains(desc.componentType))
                         continue; // skip unsupported types
 
-                    QString type(osTypeToString(desc.componentType));
-                    QString subType(osTypeToString(desc.componentSubType));
-                    QString manufacturer(osTypeToString(desc.componentManufacturer));
+                    QString type(AU::osTypeToString(desc.componentType));
+                    QString subType(AU::osTypeToString(desc.componentSubType));
+                    QString manufacturer(AU::osTypeToString(desc.componentManufacturer));
 
                     CFStringRef cfName;
                     status = AudioComponentCopyName(comp, &cfName);
