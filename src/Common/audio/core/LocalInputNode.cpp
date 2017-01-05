@@ -155,7 +155,8 @@ void LocalInputNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &ou
             if (audioInputRange.isEmpty())
                 return;
             internalInputBuffer.set(in, audioInputRange.getFirstChannel(), audioInputRange.getChannels());
-        } else if (isMidi()) {// just in case
+        }
+        else if (isMidi()) {// just in case
             int messagesCount = midiBuffer.getMessagesCount();
             for (int m = 0; m < messagesCount; ++m) {
                 Midi::MidiMessage message = midiBuffer.getMessage(m);

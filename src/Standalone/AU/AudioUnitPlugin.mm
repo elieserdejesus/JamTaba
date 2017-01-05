@@ -5,8 +5,12 @@
 #include "audio/core/SamplesBuffer.h"
 
 #include "PublicUtility/CAStreamBasicDescription.h"
+#include "PublicUtility/CABufferList.h"
 
 #include <QThread>
+#include <QtGlobal>
+
+#include <cmath>
 
 using namespace AU;
 
@@ -14,22 +18,90 @@ AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, Audio
     : Audio::Plugin(name),
       audioUnit(au),
       path(path),
-      bufferList(nullptr)
+      bufferList(nullptr),
+      currentInputBuffer(nullptr),
+      internalOutBuffer(2, blockSize)
 {
 
-//    AURenderCallbackStruct renderCallbackInfo;
+    initializeCallbacks();
 
-//    renderCallbackInfo.inputProcRefCon = this;
-//    renderCallbackInfo.inputProc = getInputCallback;
+    initializeMaximumFramesPerSlice(blockSize);
 
-//    OSStatus status = AudioUnitSetProperty (audioUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input,
-//                          0, //assumint we have just one input bus
-//                          &renderCallbackInfo,
-//                          sizeof(renderCallbackInfo));
-    OSStatus status = noErr;
+    inputs = initializeChannels(kAudioUnitScope_Input);
+    outputs = initializeChannels(kAudioUnitScope_Output);
+
+    if (outputs == 1)
+        internalOutBuffer.setToMono(); // default output is stereo
+
+    Float64 sampleRate = static_cast<Float64>(initialSampleRate);
+    initializeSampleRate(sampleRate);
+
+    initializeStreamFormat(kAudioUnitScope_Input, inputs, sampleRate);
+    initializeStreamFormat(kAudioUnitScope_Output, outputs, sampleRate);
+
+}
+
+void AudioUnitPlugin::initializeStreamFormat(AudioUnitScope scope, UInt32 channels, Float64 sampleRate)
+{
+    //CAStreamBasicDescription stream(sampleRate, channels, CAStreamBasicDescription::kPCMFormatFloat32, false);
+
+    AudioStreamBasicDescription stream;
+    stream.mSampleRate      = sampleRate;
+    stream.mFormatID         = kAudioFormatLinearPCM;
+    stream.mFormatFlags      = kAudioFormatFlagsNativeFloatPacked | kAudioFormatFlagIsNonInterleaved | kAudioFormatFlagsNativeEndian;
+    stream.mFramesPerPacket  = 1;
+    stream.mBytesPerPacket   = 4;
+    stream.mBytesPerFrame    = 4;
+    stream.mBitsPerChannel   = 32;
+    stream.mChannelsPerFrame = static_cast<UInt32> (channels);
+    stream.mReserved = 0;
+
+    OSStatus status = AudioUnitSetProperty(audioUnit, kAudioUnitProperty_StreamFormat, scope, 0, &stream, sizeof(stream));
+    if (status) {
+       qCritical() << "Error setting stream format in audio unit OSStatus:" << status;
+    }
+}
+
+void AudioUnitPlugin::initializeSampleRate(Float64 initialSampleRate)
+{
+    Float64 sr = initialSampleRate;
+    OSStatus status = AudioUnitSetProperty (audioUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Input, 0, &sr, sizeof(Float64));
+    if (status != noErr)
+        qCritical() << "Error setting sample rate in input Status:" << status;
+
+    status = AudioUnitSetProperty (audioUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Output, 0, &sr, sizeof(Float64));
+    if (status != noErr)
+        qCritical() << "Error setting sample rate in Ouput Status:" << status;
+}
+
+void AudioUnitPlugin::initializeMaximumFramesPerSlice(UInt32 maxFrames)
+{
+    OSStatus status = AudioUnitSetProperty(audioUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
+                         &maxFrames, sizeof(UInt32));
+    if (status != noErr)
+        qCritical() << "Error setting maximumFramesPerSlice status:" << status;
+
+}
+
+void AudioUnitPlugin::initializeCallbacks()
+{
+    // set AU input callback
+    AURenderCallbackStruct renderCallbackInfo;
+
+    renderCallbackInfo.inputProcRefCon = this;
+    renderCallbackInfo.inputProc = getInputCallback;
+
+    OSStatus status = AudioUnitSetProperty (audioUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input,
+                          0, //assuming we have just one input bus
+                          &renderCallbackInfo,
+                          sizeof(renderCallbackInfo));
+
     if (status != noErr)
         qCritical() << "Error setting render callback in Audio Unit " << name << " => " << path;
 
+
+
+    // set host callback
     HostCallbackInfo hostCallbackInfo;
 
     hostCallbackInfo.hostUserData = this;
@@ -43,54 +115,56 @@ AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, Audio
 
     if (status != noErr)
         qCritical() << "Error setting host callback in Audio Unit " << name << " => " << path;
+}
 
-    setSampleRate(initialSampleRate);
+/**
+ * @brief AudioUnitPlugin::adjustChannels Try set the scope channels to 2 (stereo) if possible. Return the real channels number of scope.
+ * @param scope input or output scope
+ * @return The number of channels in the scope
+ */
+UInt32 AudioUnitPlugin::initializeChannels(AudioUnitScope scope)
+{
+    UInt32 channels;
+    UInt32 size = sizeof(channels);
+    Boolean writable = false;
 
-    UInt32 maxFrames = blockSize;
-    status = AudioUnitSetProperty(audioUnit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
-                         &maxFrames, sizeof(UInt32));
+    OSStatus status = AudioUnitGetProperty(audioUnit, kAudioUnitProperty_ElementCount, kAudioUnitScope_Input, 0, &channels, &size);
+    if (status == noErr) {
+        if (channels != 2) {
 
-    if (status != noErr)
-        qCritical() << "Error setting maximumFramesPerSlice " << name << " => " << path;
+            status = AudioUnitGetPropertyInfo(audioUnit, kAudioUnitProperty_ElementCount, scope, 0, &size, &writable);
+            if (status != noErr)
+                qCritical() << "Error getting propertyInfo to ElementCount OSStatus:" << status;
 
-
-    Float64 sr = initialSampleRate;
-    status = AudioUnitSetProperty (audioUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Input, 0, &sr, sizeof(Float64));
-    if (status != noErr)
-        qCritical() << "Error setting sample rate in input " << name << " => " << path;
-
-    status = AudioUnitSetProperty (audioUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Output, 0, &sr, sizeof(Float64));
-    if (status != noErr)
-        qCritical() << "Error setting sample rate in Ouput " << name << " => " << path;
-
-    CAStreamBasicDescription streamFormat(initialSampleRate, 2, CAStreamBasicDescription::kPCMFormatFloat32, false);
-
-     status = AudioUnitSetProperty(audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &streamFormat, sizeof(streamFormat));
-     if (status) {
-         qCritical() << "Error setting stream format in audio unit INPUT OSStatus:" << status;
-     }
-
-     status = AudioUnitSetProperty(audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &streamFormat, sizeof(streamFormat));
-     if (status) {
-        qCritical() << "Error setting stream format in audio unit OUTPUT OSStatus:" << status;
-     }
-
+            if (writable) {
+                channels = 2;
+                status = AudioUnitSetProperty(audioUnit, kAudioUnitProperty_ElementCount, kAudioUnitScope_Input, 0, &channels, sizeof(channels));
+                if (status != noErr)
+                    qCritical() << "Error setting ElementCount in input OSStatus:" << status;
+            }
+        }
+    }
+    else {
+        qCritical() << "Error getting ElementCount. OSStatus:" << status;
+    }
+    return channels;
 }
 
 AudioUnitPlugin::~AudioUnitPlugin()
 {
     AudioUnitUninitialize(audioUnit);
     AudioComponentInstanceDispose(audioUnit);
+
+    delete bufferList;
 }
 
 void AudioUnitPlugin::start()
 {
     if (bufferList)
-        free(bufferList);
+        delete bufferList;
 
-    static const quint32 channelCount = 2;
+    static const quint32 channelCount = 1;
 
-    qDebug() << "Creating buffer list!";
     bufferList = (AudioBufferList*)malloc(sizeof(*bufferList) + ((channelCount-1) * sizeof(AudioBuffer)));
     bufferList->mNumberBuffers = channelCount;
 
@@ -110,15 +184,6 @@ void AudioUnitPlugin::closeEditor()
 
 }
 
-OSStatus AudioUnitPlugin::getInputCallback (void* hostRef, AudioUnitRenderActionFlags* ioActionFlags,
-                                            const AudioTimeStamp* inTimeStamp, UInt32 inBusNumber,
-                                            UInt32 inNumberFrames, AudioBufferList* ioData)
-{
-    qDebug() << "Render callback in thread " << QThread::currentThreadId();
-    qDebug() << "render input call back in:BusNumber" << inBusNumber << " frames:" << inNumberFrames << " bufferListChannels: " << ioData->mNumberBuffers;
-
-    return noErr;
-}
 
 OSStatus AudioUnitPlugin::getBeatAndTempoCallback (void* hostRef, Float64* outCurrentBeat, Float64* outCurrentTempo)
 {
@@ -174,11 +239,24 @@ OSStatus AudioUnitPlugin::getTransportStateCallback (void* hostRef, Boolean* out
     return noErr;
 }
 
+
+OSStatus AudioUnitPlugin::getInputCallback (void* hostRef, AudioUnitRenderActionFlags* ioActionFlags,
+                                            const AudioTimeStamp* inTimeStamp, UInt32 inBusNumber,
+                                            UInt32 inNumberFrames, AudioBufferList* ioData)
+{
+    Q_UNUSED(ioActionFlags)
+    Q_UNUSED(inBusNumber)
+    Q_UNUSED(inTimeStamp)
+
+    AudioUnitPlugin *instance = static_cast<AudioUnitPlugin *>(hostRef);
+    instance->copyBufferContent(instance->currentInputBuffer, ioData, inNumberFrames);
+
+    return noErr;
+}
+
 void AudioUnitPlugin::process(const Audio::SamplesBuffer &inBuffer, Audio::SamplesBuffer &outBuffer,
                      const QList<Midi::MidiMessage> &midiBuffer)
 {
-
-    qDebug() << "processing audio in thread " << QThread::currentThreadId();
 
     AudioUnitRenderActionFlags flags = 0;
     static AudioTimeStamp timeStamp;
@@ -188,16 +266,39 @@ void AudioUnitPlugin::process(const Audio::SamplesBuffer &inBuffer, Audio::Sampl
     if (!bufferList)
         qFatal("Buffer list is null");
 
-    OSStatus status = AudioUnitRender (audioUnit, &flags, &timeStamp,
-                     0, //assuming just ont output bus
+    currentInputBuffer = &inBuffer;
+
+    // prepare the output AudioBufferList
+    internalOutBuffer.setFrameLenght(frames);
+    for (quint8 i = 0; i < bufferList->mNumberBuffers; i++) {
+        bufferList->mBuffers[i].mNumberChannels = 1;
+        bufferList->mBuffers[i].mDataByteSize = (UInt32) (sizeof (float) * (size_t) frames);
+        bufferList->mBuffers[i].mData = internalOutBuffer.getSamplesArray(i);
+    }
+
+    OSStatus status = AudioUnitRender(audioUnit, &flags, &timeStamp,
+                     0, //assuming just one output bus
                      frames, bufferList);
 
     if (status != noErr) {
         qWarning() << "Error rendering audio unit OSStatus: " << status;
+        internalOutBuffer.zero();
     }
 
-    timeStamp.mHostTime++;
+    outBuffer.set(internalOutBuffer);
 
+    timeStamp.mHostTime++;
+    timeStamp.mSampleTime += frames;
+
+}
+
+void AudioUnitPlugin::copyBufferContent(const Audio::SamplesBuffer *input, AudioBufferList *abl, quint32 frames)
+{
+    const quint8 channels = qMin((int)abl->mNumberBuffers, input->getChannels());
+    const size_t bytesToCopy = sizeof(float) * frames;
+    for(quint8 c = 0; c < channels; ++c) {
+        std::memcpy(abl->mBuffers[c].mData, input->getSamplesArray(c), bytesToCopy);
+    }
 }
 
 void AudioUnitPlugin::suspend()

@@ -1,11 +1,14 @@
 #ifndef _AUDIO_UNIT_UTILS_H_
 #define _AUDIO_UNIT_UTILS_H_
 
-#include "audio/core/Plugins.h"
 #include <QString>
 #include <QByteArray>
 
+#include "audio/core/Plugins.h"
+#include "audio/core/SamplesBuffer.h"
+
 #include <AudioUnit/AudioUnit.h>
+#include "PublicUtility/CABufferList.h"
 
 namespace AU {
 
@@ -40,7 +43,11 @@ namespace AU {
         QString path;
 
         AudioBufferList *bufferList;
+        const Audio::SamplesBuffer *currentInputBuffer;
+        Audio::SamplesBuffer internalOutBuffer;
 
+        UInt32 inputs;
+        UInt32 outputs;
 
         // AU callbacks
         static OSStatus getInputCallback (void* hostRef, AudioUnitRenderActionFlags* ioActionFlags,
@@ -57,6 +64,14 @@ namespace AU {
         static OSStatus getTransportStateCallback (void* hostRef, Boolean* outIsPlaying, Boolean* outTransportStateChanged,
                                                        Float64* outCurrentSampleInTimeLine, Boolean* outIsCycling,
                                                        Float64* outCycleStartBeat, Float64* outCycleEndBeat);
+
+        UInt32 initializeChannels(AudioUnitScope scope);
+        void initializeStreamFormat(AudioUnitScope scope, UInt32 channels, Float64 sampleRate);
+        void initializeCallbacks();
+        void initializeMaximumFramesPerSlice(UInt32 maxFrames);
+        void initializeSampleRate(Float64 initialSampleRate);
+
+        void copyBufferContent(const Audio::SamplesBuffer *input, AudioBufferList *buffer, quint32 frames);
     };
 
     // name space functions
