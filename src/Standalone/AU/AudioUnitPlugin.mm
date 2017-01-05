@@ -244,17 +244,22 @@ private:
 
     static void resizeHandler(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
     {
+        Q_UNUSED(userInfo)
+        Q_UNUSED(center)
+        Q_UNUSED(name)
+        Q_UNUSED(object)
+
         ViewContainer *viewContainer = static_cast<ViewContainer *>(observer);
         if (viewContainer) {
            NSView *view = viewContainer->cocoaView();
            if (view) {
                 auto mask = [view autoresizingMask];
-                QPoint viewContainerPosition(viewContainer->pos());
+                //QPoint viewContainerPosition(viewContainer->pos());
                 [view setAutoresizingMask: NSViewNotSizable];
                 NSRect frame = [view frame];
                 viewContainer->resize(frame.size.width, frame.size.height);
                 [view setAutoresizingMask:mask];
-                viewContainer->move(viewContainerPosition);
+                //viewContainer->move(viewContainerPosition);
            }
         }
     }
