@@ -7,12 +7,48 @@
 #include "PublicUtility/CAStreamBasicDescription.h"
 #include "PublicUtility/CABufferList.h"
 
-#include <QThread>
 #include <QtGlobal>
+#include <QMacCocoaViewContainer>
 
 #include <cmath>
 
 using namespace AU;
+
+
+NSView *createAudioUnitView(AudioUnit audioUnit)
+{
+
+    AudioUnitCocoaViewInfo cocoaViewInfo;
+    UInt32 dataSize = sizeof(cocoaViewInfo);
+
+    //request the cocoa view
+    OSStatus status  = AudioUnitGetProperty(audioUnit, kAudioUnitProperty_CocoaUI,
+                                   kAudioUnitScope_Global, 0, &cocoaViewInfo, &dataSize);
+
+    // a cocoa view is available?
+    if (status == noErr) {
+
+        CFURLRef cocoaViewBundlePath = cocoaViewInfo.mCocoaAUViewBundleLocation;
+        CFStringRef factoryClassName = cocoaViewInfo.mCocoaAUViewClass[0];
+        NSBundle * viewBundle = [NSBundle bundleWithURL:(NSURL *)cocoaViewBundlePath];
+
+        if(viewBundle) {
+            Class factoryClass = [viewBundle classNamed:(NSString *)factoryClassName];
+            auto factoryInstance = [[[factoryClass alloc] init] autorelease];
+            NSView *view = [factoryInstance uiViewForAudioUnit:audioUnit withSize:NSZeroSize];
+            return view;
+        }
+        else {
+            qCritical() << "Can´t obtain CocoaView bundle!";
+        }
+    }
+    else {
+        qCritical() << "No CocoaView available! OSStatus:" << status;
+    }
+
+    return nullptr;
+}
+
 
 AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, AudioUnit au, int initialSampleRate, int blockSize)
     : Audio::Plugin(name),
@@ -43,8 +79,6 @@ AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, Audio
 
 void AudioUnitPlugin::initializeStreamFormat(AudioUnitScope scope, UInt32 channels, Float64 sampleRate)
 {
-    //CAStreamBasicDescription stream(sampleRate, channels, CAStreamBasicDescription::kPCMFormatFloat32, false);
-
     AudioStreamBasicDescription stream;
     stream.mSampleRate      = sampleRate;
     stream.mFormatID         = kAudioFormatLinearPCM;
@@ -176,7 +210,14 @@ void AudioUnitPlugin::start()
 
 void AudioUnitPlugin::openEditor(const QPoint &centerOfScreen)
 {
-
+    NSView *cocoaView = createAudioUnitView(audioUnit);
+    if (cocoaView) {
+        QMacCocoaViewContainer *cocoaViewContainer = new QMacCocoaViewContainer(cocoaView);
+        cocoaViewContainer->show();
+    }
+    else {
+        qCritical() << "Cocoa view is null!";
+    }
 }
 
 void AudioUnitPlugin::closeEditor()
@@ -351,33 +392,7 @@ void AudioUnitPlugin::setSampleRate(int newSampleRate)
     //qDebug() << "Done!";
 }
 
-//QDialog * AudioUnitPlugin::createEditorWindow(AudioUnit unit)
-//{
 
-//   AudioUnitCocoaViewInfo cocoaViewInfo;
-//    UInt32 dataSize = sizeof(cocoaViewInfo);
-
-//    //request the cocoa view
-//    OSStatus status  = AudioUnitGetProperty(unit, kAudioUnitProperty_CocoaUI,
-//                                   kAudioUnitScope_Global, 0, &cocoaViewInfo, &dataSize);
-
-//    // a cocoa view is available?
-//    if (status == noErr) {
-
-//        CFURLRef cocoaViewBundlePath = cocoaViewInfo.mCocoaAUViewBundleLocation;
-//        CFStringRef factoryClassName = cocoaViewInfo.mCocoaAUViewClass[0];
-//        NSBundle * viewBundle = [NSBundle bundleWithURL:(NSURL *)cocoaViewBundlePath];
-
-//        if(viewBundle) {
-//            Class factoryClass = [viewBundle classNamed:(NSString *)factoryClassName];
-//            id<AUCocoaUIBase> factoryInstance = [[[factoryClass alloc] init] autorelease];
-//            NSView *view = [factoryInstance uiViewForAudioUnit:unit withSize:NSZeroSize];
-//            return view;
-//        }
-//    }
-
-//    return nullptr;
-//}
 
 AudioUnitPlugin *AU::audioUnitPluginfromPath(const QString &path, int initialSampleRate, int blockSize)
 {

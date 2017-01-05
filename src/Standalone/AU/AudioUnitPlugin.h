@@ -38,7 +38,6 @@ namespace AU {
         inline QString getPath() const override { return path; }
 
     private:
-        QDialog *createEditorWindow(AudioUnit unit);
         AudioUnit audioUnit;
         QString path;
 
