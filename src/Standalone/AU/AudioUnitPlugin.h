@@ -4,6 +4,8 @@
 #include <QString>
 #include <QByteArray>
 
+#include <QMacCocoaViewContainer>
+
 #include "audio/core/Plugins.h"
 #include "audio/core/SamplesBuffer.h"
 
@@ -48,6 +50,8 @@ namespace AU {
         UInt32 inputs;
         UInt32 outputs;
 
+        QMacCocoaViewContainer *viewContainer;
+
         // AU callbacks
         static OSStatus getInputCallback (void* hostRef, AudioUnitRenderActionFlags* ioActionFlags,
                                                     const AudioTimeStamp* inTimeStamp, UInt32 inBusNumber,
@@ -71,6 +75,7 @@ namespace AU {
         void initializeSampleRate(Float64 initialSampleRate);
 
         void copyBufferContent(const Audio::SamplesBuffer *input, AudioBufferList *buffer, quint32 frames);
+
     };
 
     // name space functions

@@ -8,7 +8,8 @@
 #include "PublicUtility/CABufferList.h"
 
 #include <QtGlobal>
-#include <QMacCocoaViewContainer>
+#include <QLayout>
+#include <QDialog>
 
 #include <cmath>
 
@@ -34,7 +35,7 @@ NSView *createAudioUnitView(AudioUnit audioUnit)
 
         if(viewBundle) {
             Class factoryClass = [viewBundle classNamed:(NSString *)factoryClassName];
-            auto factoryInstance = [[[factoryClass alloc] init] autorelease];
+            id factoryInstance = [[[factoryClass alloc] init] autorelease];
             NSView *view = [factoryInstance uiViewForAudioUnit:audioUnit withSize:NSZeroSize];
             return view;
         }
@@ -56,7 +57,8 @@ AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, Audio
       path(path),
       bufferList(nullptr),
       currentInputBuffer(nullptr),
-      internalOutBuffer(2, blockSize)
+      internalOutBuffer(2, blockSize),
+      viewContainer(nullptr)
 {
 
     initializeCallbacks();
@@ -208,21 +210,90 @@ void AudioUnitPlugin::start()
         qCritical() << "Error initializing audio unit OSStatus: " << status;
 }
 
+class ViewContainer : public QMacCocoaViewContainer
+{
+public:
+
+    ViewContainer(NSView *cocoaView)
+        : QMacCocoaViewContainer(cocoaView)
+    {
+        setAttribute(Qt::WA_DeleteOnClose);
+
+        //add a listener for NSView resize
+        CFNotificationCenterAddObserver
+            (
+                CFNotificationCenterGetLocalCenter(),
+                this,
+                &resizeHandler,
+                CFSTR("NSViewFrameDidChangeNotification"),
+                cocoaView,
+                CFNotificationSuspensionBehaviorDeliverImmediately
+            );
+    }
+
+    ~ViewContainer()
+    {
+        CFNotificationCenterRemoveEveryObserver
+            (
+                CFNotificationCenterGetLocalCenter(),
+                this
+            );
+    }
+
+private:
+
+    static void resizeHandler(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
+    {
+        ViewContainer *viewDialog = static_cast<ViewContainer *>(observer);
+        if (viewDialog) {
+            qDebug() << "resizing";
+            viewDialog->updateGeometry();
+            viewDialog->update();
+        }
+    }
+};
+
 void AudioUnitPlugin::openEditor(const QPoint &centerOfScreen)
 {
-    NSView *cocoaView = createAudioUnitView(audioUnit);
-    if (cocoaView) {
-        QMacCocoaViewContainer *cocoaViewContainer = new QMacCocoaViewContainer(cocoaView);
-        cocoaViewContainer->show();
+    if (!viewContainer) { // editor window is not created yet
+        NSView *cocoaView = createAudioUnitView(audioUnit);
+
+       if (cocoaView) {
+            viewContainer = new ViewContainer(cocoaView);
+
+            QObject::connect(viewContainer, &QDialog::destroyed, [=](){
+                viewContainer = nullptr; // reset the view container when editor is closed and destroyed
+            });
+
+        }
+        else {
+           qCritical() << "Cocoa view is null!";
+           viewContainer = nullptr; // just in case :)
+           return;
+        }
     }
-    else {
-        qCritical() << "Cocoa view is null!";
+
+    if (!viewContainer) // plugin doesn´t have a cocoa view
+        return;
+
+    if (!viewContainer->isVisible()) {
+        int viewX = qMax(0, centerOfScreen.x() - viewContainer->width()/2);
+        int viewY = qMax(0, centerOfScreen.y() - viewContainer->height()/2);
+
+        viewContainer->move(QPoint(viewX, viewY));
     }
+
+    viewContainer->raise();
+    viewContainer->activateWindow();
+    viewContainer->show();
+
 }
 
 void AudioUnitPlugin::closeEditor()
 {
-
+    if (viewContainer) {
+        viewContainer->close();
+    }
 }
 
 
@@ -468,3 +539,4 @@ bool AU::getComponentDescriptionFromPath(const QString &path, AudioComponentDesc
 
     return true;
 }
+;
