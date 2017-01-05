@@ -272,6 +272,7 @@ void AudioUnitPlugin::openEditor(const QPoint &centerOfScreen)
 
        if (cocoaView) {
             viewContainer = new ViewContainer(cocoaView);
+            viewContainer->setWindowTitle(getName());
 
             QObject::connect(viewContainer, &QDialog::destroyed, [=](){
                 viewContainer = nullptr; // reset the view container when editor is closed and destroyed
