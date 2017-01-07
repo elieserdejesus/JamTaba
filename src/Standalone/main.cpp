@@ -13,7 +13,7 @@ int main(int argc, char* args[] ){
 
     QApplication::setApplicationName("Jamtaba 2");
     QApplication::setApplicationVersion(APP_VERSION);
-    //QApplication::setAttribute(Qt::AA_MacPluginApplication);
+    QApplication::setAttribute(Qt::AA_MacPluginApplication);
 
     //start the configurator
     Configurator* configurator = Configurator::getInstance();
@@ -38,8 +38,10 @@ int main(int argc, char* args[] ){
     MainWindowStandalone mainWindow(&mainController);
     mainController.setMainWindow(&mainWindow);
 
-    mainWindow.initialize();
+
+    //if these 2 line order is changed the application freeze in Mac OSX :(
     mainWindow.show();
+    mainWindow.initialize();
 
     mainController.connectInJamtabaServer();
 

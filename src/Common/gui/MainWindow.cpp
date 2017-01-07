@@ -245,6 +245,7 @@ void MainWindow::initialize()
 
 void MainWindow::doWindowInitialization()
 {
+
     initializeLocalInputChannels(); // create the local tracks, load plugins, etc.
 
     // set window mode: mini mode or full view mode
@@ -502,10 +503,8 @@ void MainWindow::initializeLocalInputChannels()
 
 void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inputsSettings)
 {
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    QApplication::processEvents();
+    QApplication::setOverrideCursor(Qt::WaitCursor); // this line was hanging/freezing in Mac
 
-    qCInfo(jtGUI) << "Initializing local inputs...";
     int channelIndex = 0;
     foreach (const Persistence::Channel &channel, inputsSettings.channels) {
         qCInfo(jtGUI) << "\tCreating channel "<< channel.name;
