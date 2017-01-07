@@ -39,6 +39,9 @@ namespace AU {
 
         inline QString getPath() const override { return path; }
 
+        inline bool hasInputs() const { return inputs > 0; }
+        inline bool hasOutputs() const { return outputs > 0; }
+
     private:
         AudioUnit audioUnit;
         QString path;
@@ -49,6 +52,8 @@ namespace AU {
 
         UInt32 inputs;
         UInt32 outputs;
+
+        const bool wantsMidiMessages;
 
         QMacCocoaViewContainer *viewContainer;
 
@@ -73,8 +78,11 @@ namespace AU {
         void initializeCallbacks();
         void initializeMaximumFramesPerSlice(UInt32 maxFrames);
         void initializeSampleRate(Float64 initialSampleRate);
+        void initializeChannelLayout(AudioUnitScope scope);
 
         void copyBufferContent(const Audio::SamplesBuffer *input, AudioBufferList *buffer, quint32 frames);
+
+        static bool audioUnitWantsMidi(AudioUnit audioUnit);
 
     };
 
