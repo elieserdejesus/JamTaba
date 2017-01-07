@@ -6,7 +6,6 @@
 
 #include "PublicUtility/CAStreamBasicDescription.h"
 #include "PublicUtility/CABufferList.h"
-
 #include <QtGlobal>
 #include <QLayout>
 #include <QDialog>
@@ -51,6 +50,21 @@ NSView *createAudioUnitView(AudioUnit audioUnit)
 }
 
 
+quint8 AudioUnitPlugin::getBusCount(AudioUnit comp, AudioUnitScope scope)
+{
+    UInt32 count;
+    UInt32 countSize = sizeof(count);
+
+    OSStatus err = AudioUnitGetProperty (comp, kAudioUnitProperty_ElementCount, scope, 0, &count, &countSize);
+
+    if (err) {
+        qCritical() << "Error getting element count scope:" << scope << " error:" << err;
+        return static_cast<quint8>(0);
+    }
+
+    return static_cast<quint8> (count);
+}
+
 AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, AudioUnit au, int initialSampleRate, int blockSize)
     : Audio::Plugin(name),
       audioUnit(au),
@@ -59,84 +73,25 @@ AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, Audio
       currentInputBuffer(nullptr),
       internalOutBuffer(2, blockSize),
       viewContainer(nullptr),
-      wantsMidiMessages(AudioUnitPlugin::audioUnitWantsMidi(au))
+      wantsMidiMessages(AudioUnitPlugin::audioUnitWantsMidi(au)),
+      hasInputs(AudioUnitPlugin::getBusCount(au, kAudioUnitScope_Input) > 0),
+      hasOutputs(AudioUnitPlugin::getBusCount(au, kAudioUnitScope_Output) > 0)
 {
 
     qDebug() << name << " wants midi: " << wantsMidiMessages;
 
-    UInt32 propertySize = 0;
-    Boolean writable;
-    UInt32 numChannelInfos = 0;
-
-    OSStatus status = AudioUnitGetPropertyInfo (audioUnit, kAudioUnitProperty_SupportedNumChannels, kAudioUnitScope_Global, 0, &propertySize, &writable);
-    if (status == noErr && propertySize > 0)
-    {
-        numChannelInfos = propertySize / sizeof (AUChannelInfo);
-        AUChannelInfo infos[numChannelInfos];
-        propertySize = static_cast<UInt32> (sizeof (AUChannelInfo) * static_cast<size_t> (numChannelInfos));
-
-        OSStatus status = AudioUnitGetProperty (audioUnit, kAudioUnitProperty_SupportedNumChannels, kAudioUnitScope_Global, 0, &infos, &propertySize);
-        if (status == noErr) {
-                qDebug() << "supported ins:" << infos[0].inChannels << " outs:" << infos[0].outChannels;
-        }
-        else {
-            qDebug() << "ERRO: " << status;
-        }
-    }
-    else {
-        qDebug() << "erro obtendo property info" << status;
-    }
-
     initializeMaximumFramesPerSlice(blockSize);
 
-    inputs = initializeChannels(kAudioUnitScope_Input);
-    outputs = initializeChannels(kAudioUnitScope_Output);
-    qDebug() << getName() << " channels initialized - inputs:" << inputs << ", outputs:" << outputs;
-
     initializeCallbacks();
-
-    if (outputs == 1)
-        internalOutBuffer.setToMono(); // default output is stereo
 
     Float64 sampleRate = static_cast<Float64>(initialSampleRate);
     initializeSampleRate(sampleRate);
 
-    if (hasInputs())
-        initializeStreamFormat(kAudioUnitScope_Input, inputs, sampleRate);
+    if (hasInputs)
+        initializeStreamFormat(kAudioUnitScope_Input, 2, sampleRate);
 
-    if (hasOutputs())
-        initializeStreamFormat(kAudioUnitScope_Output, outputs, sampleRate);
-
-    initializeChannelLayout(kAudioUnitScope_Input);
-    initializeChannelLayout(kAudioUnitScope_Output);
-
-}
-
-void AudioUnitPlugin::initializeChannelLayout(AudioUnitScope scope)
-{
-    AudioChannelLayout layout;
-    const UInt32 minDataSize = sizeof (layout) - sizeof (AudioChannelDescription);
-    UInt32 dataSize = minDataSize;
-
-    OSStatus err = AudioUnitGetProperty(audioUnit, kAudioUnitProperty_AudioChannelLayout, scope, 0, &layout, &dataSize);
-    bool supportsLayouts = (err == noErr && dataSize >= minDataSize);
-    if (supportsLayouts) {
-        qDebug() << "setting layout in scope " << scope;
-        AudioChannelLayout layout;
-        layout.mChannelBitmap = 0;
-        layout.mChannelLayoutTag = kAudioChannelLayoutTag_Stereo;
-        //layout.mNumberChannelDescriptions = 1;
-        //layout.mChannelDescriptions[0].mChannelFlags = kAudioUnit
-
-        err = AudioUnitSetProperty(audioUnit, kAudioUnitProperty_AudioChannelLayout, scope, 0, &layout, sizeof(AudioChannelLayout));
-        if (err) {
-            qCritical() << "Error setting channels layout! " << err;
-        }
-    }
-    else {
-        qDebug() << "Layout is not supported in scope " << scope << " OSStatus:" << err;
-    }
-
+    if (hasOutputs)
+        initializeStreamFormat(kAudioUnitScope_Output, 2, sampleRate);
 }
 
 bool AudioUnitPlugin::audioUnitWantsMidi(AudioUnit audioUnit)
@@ -152,7 +107,7 @@ void AudioUnitPlugin::initializeStreamFormat(AudioUnitScope scope, UInt32 channe
     AudioStreamBasicDescription stream;
     stream.mSampleRate      = sampleRate;
     stream.mFormatID         = kAudioFormatLinearPCM;
-    stream.mFormatFlags      = kAudioFormatFlagsNativeFloatPacked | kAudioFormatFlagIsNonInterleaved | kAudioFormatFlagsNativeEndian;
+    stream.mFormatFlags      = kAudioFormatFlagsAudioUnitCanonical;
     stream.mFramesPerPacket  = 1;
     stream.mBytesPerPacket   = 4;
     stream.mBytesPerFrame    = 4;
@@ -176,7 +131,7 @@ void AudioUnitPlugin::initializeSampleRate(Float64 initialSampleRate)
 {
 
     Float64 sr = initialSampleRate;
-    if (hasInputs()) {
+    if (hasInputs) {
         OSStatus status = AudioUnitSetProperty (audioUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Input, 0, &sr, sizeof(Float64));
         if (status != noErr)
             qCritical() << "Error setting sample rate in input Status:" << status;
@@ -184,7 +139,7 @@ void AudioUnitPlugin::initializeSampleRate(Float64 initialSampleRate)
             qDebug() << "Sample rate setted to " << initialSampleRate << " in " << getName() << " input scope";
     }
 
-    if (hasOutputs()) {
+    if (hasOutputs) {
         OSStatus status = AudioUnitSetProperty (audioUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Output, 0, &sr, sizeof(Float64));
         if (status != noErr)
             qCritical() << "Error setting sample rate in Ouput Status:" << status;
@@ -207,8 +162,8 @@ void AudioUnitPlugin::initializeCallbacks()
 {
     OSStatus status = noErr;
 
-    if (hasInputs()) { // some plugins like Apple AU Sampler are ZERO inputs
-        // set AU input callback
+    if (hasInputs) { // some plugins like Apple AU Sampler are ZERO inputs
+
         AURenderCallbackStruct renderCallbackInfo;
 
         renderCallbackInfo.inputProcRefCon = this;
@@ -243,41 +198,6 @@ void AudioUnitPlugin::initializeCallbacks()
         qDebug() << "Host callback setted in " << getName();
 }
 
-/**
- * @brief AudioUnitPlugin::adjustChannels Try set the scope channels to 2 (stereo) if possible. Return the real channels number of scope.
- * @param scope input or output scope
- * @return The number of channels in the scope
- */
-UInt32 AudioUnitPlugin::initializeChannels(AudioUnitScope scope)
-{
-    UInt32 channels;
-    UInt32 size = sizeof(channels);
-    Boolean canChangeBus = false;
-
-    OSStatus status = AudioUnitGetProperty(audioUnit, kAudioUnitProperty_BusCount, kAudioUnitScope_Input, 0, &channels, &size);
-    if (status == noErr) {
-        status = AudioUnitGetPropertyInfo(audioUnit, kAudioUnitProperty_BusCount, scope, 0, &size, &canChangeBus);
-        if (status != noErr)
-            qCritical() << "Error getting propertyInfo to kAudioUnitProperty_BusCount OSStatus:" << status;
-
-        if (canChangeBus && channels != 2) {
-            channels = 2;
-            status = AudioUnitSetProperty(audioUnit, kAudioUnitProperty_BusCount, scope, 0, &channels, sizeof(channels));
-            if (status != noErr)
-                qCritical() << "Error setting kAudioUnitProperty_BusCount in scope " << scope << " OSStatus:" << status;
-            else
-                qDebug() << "Setting kAudioUnitProperty_BusCount in scope " << scope << " to " << channels;
-        }
-        else {
-            qDebug() << "No changing kAudioUnitProperty_BusCount in scope " << scope << ", canChangeElements:" << canChangeBus << ", channels:" << channels;
-        }
-    }
-    else {
-        qCritical() << "Error getting kAudioUnitProperty_BusCount. OSStatus:" << status;
-    }
-    return channels;
-}
-
 AudioUnitPlugin::~AudioUnitPlugin()
 {
     AudioUnitUninitialize(audioUnit);
@@ -291,8 +211,9 @@ void AudioUnitPlugin::start()
     if (bufferList)
         delete bufferList;
 
-    bufferList = (AudioBufferList*)malloc(sizeof(*bufferList) + ((outputs-1) * sizeof(AudioBuffer)));
-    bufferList->mNumberBuffers = outputs;
+    const quint8 channels = 2; // in jamtaba the stream is always stereo (left + right)
+    bufferList = (AudioBufferList*)malloc(sizeof(*bufferList) + ((channels-1) * sizeof(AudioBuffer)));
+    bufferList->mNumberBuffers = channels;
 
     OSStatus status = AudioUnitInitialize(audioUnit);
 
@@ -486,7 +407,7 @@ void AudioUnitPlugin::process(const Audio::SamplesBuffer &inBuffer, Audio::Sampl
     // prepare the output AudioBufferList
     internalOutBuffer.setFrameLenght(frames);
     for (quint8 i = 0; i < bufferList->mNumberBuffers; i++) {
-        bufferList->mBuffers[i].mNumberChannels = 1;
+        bufferList->mBuffers[i].mNumberChannels = 1; // each buffer contain one audio channel (left or right, for example)
         bufferList->mBuffers[i].mDataByteSize = (UInt32) (sizeof (float) * (size_t) frames);
         bufferList->mBuffers[i].mData = internalOutBuffer.getSamplesArray(i);
     }
@@ -497,12 +418,11 @@ void AudioUnitPlugin::process(const Audio::SamplesBuffer &inBuffer, Audio::Sampl
         for (const Midi::MidiMessage &message : midiBuffer) {
             MusicDeviceMIDIEvent(audioUnit, message.getStatus(), message.getData1(),
                                                             message.getData2(), midiEventPosition);
-
         }
     }
 
     OSStatus status = AudioUnitRender(audioUnit, &flags, &timeStamp,
-                     0, //assuming just one output bus
+                     0, //assuming just one stereo output bus
                      frames, bufferList);
 
     if (status != noErr) {
@@ -652,4 +572,4 @@ bool AU::getComponentDescriptionFromPath(const QString &path, AudioComponentDesc
 
     return true;
 }
-;
+

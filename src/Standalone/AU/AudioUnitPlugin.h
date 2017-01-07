@@ -39,9 +39,6 @@ namespace AU {
 
         inline QString getPath() const override { return path; }
 
-        inline bool hasInputs() const { return inputs > 0; }
-        inline bool hasOutputs() const { return outputs > 0; }
-
     private:
         AudioUnit audioUnit;
         QString path;
@@ -50,8 +47,8 @@ namespace AU {
         const Audio::SamplesBuffer *currentInputBuffer;
         Audio::SamplesBuffer internalOutBuffer;
 
-        UInt32 inputs;
-        UInt32 outputs;
+        const bool hasInputs;
+        const bool hasOutputs;
 
         const bool wantsMidiMessages;
 
@@ -73,7 +70,7 @@ namespace AU {
                                                        Float64* outCurrentSampleInTimeLine, Boolean* outIsCycling,
                                                        Float64* outCycleStartBeat, Float64* outCycleEndBeat);
 
-        UInt32 initializeChannels(AudioUnitScope scope);
+        UInt32 initializeBuses(AudioUnitScope scope);
         void initializeStreamFormat(AudioUnitScope scope, UInt32 channels, Float64 sampleRate);
         void initializeCallbacks();
         void initializeMaximumFramesPerSlice(UInt32 maxFrames);
@@ -83,6 +80,8 @@ namespace AU {
         void copyBufferContent(const Audio::SamplesBuffer *input, AudioBufferList *buffer, quint32 frames);
 
         static bool audioUnitWantsMidi(AudioUnit audioUnit);
+
+        static quint8 getBusCount(AudioUnit audioUnit, AudioUnitScope scope);
 
     };
 
