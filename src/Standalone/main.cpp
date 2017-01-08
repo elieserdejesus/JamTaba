@@ -40,8 +40,9 @@ int main(int argc, char* args[] ){
 
 
     //if these 2 line order is changed the application freeze in Mac OSX :(
-    mainWindow.show();
+
     mainWindow.initialize();
+    mainWindow.show();
 
     mainController.connectInJamtabaServer();
 

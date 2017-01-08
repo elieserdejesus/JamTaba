@@ -155,6 +155,7 @@ macx{
     LIBS += -framework AudioUnit
     LIBS += -framework CoreServices
     LIBS += -framework Carbon
+    LIBS += -framework Cocoa
 
     #mac osx doc icon
     ICON = ../Jamtaba.icns

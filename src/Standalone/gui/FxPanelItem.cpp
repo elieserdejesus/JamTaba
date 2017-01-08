@@ -164,7 +164,7 @@ void FxPanelItem::on_contextMenu(QPoint p)
 void FxPanelItem::on_fxMenuActionTriggered(QAction *action)
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    QApplication::processEvents();// force the cursor change
+    //QApplication::processEvents();// force the cursor change
 
     // add a new plugin
     Audio::PluginDescriptor descriptor = Audio::PluginDescriptor::fromString(action->data().toString());

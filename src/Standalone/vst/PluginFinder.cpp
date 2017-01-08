@@ -38,6 +38,7 @@ void VSTPluginFinder::finishScan()
     lastScannedPlugin.clear();
     if (!exitingWithoutError)
         handleProcessError(lastScanned);
+
 }
 
 void VSTPluginFinder::handleScanError(QProcess::ProcessError error)
@@ -103,7 +104,7 @@ QString VSTPluginFinder::buildCommaSeparetedString(const QStringList &list) cons
 void VSTPluginFinder::scan(const QStringList &skipList)
 {
     if (scanProcess.isOpen()) {
-        qCWarning(jtStandalonePluginFinder) << "scan process is already open!";
+        qCritical() << "scan process is already open!";
         return;
     }
 
