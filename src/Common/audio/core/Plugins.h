@@ -1,8 +1,8 @@
 #ifndef PLUGINS_H
 #define PLUGINS_H
 
-//#include "AudioNode.h"
 #include "AudioNodeProcessor.h"
+#include "PluginDescriptor.h"
 
 class QDialog;
 
@@ -21,7 +21,7 @@ class Plugin : public Audio::AudioNodeProcessor
 {
     Q_OBJECT
 public:
-    explicit Plugin(const QString &name);
+    explicit Plugin(const PluginDescriptor &pluginDescriptor);
     virtual inline QString getName() const
     {
         return name;
@@ -35,10 +35,14 @@ public:
     virtual QString getPath() const = 0;
     virtual QByteArray getSerializedData() const = 0;
     virtual void restoreFromSerializedData(const QByteArray &data) = 0;
+
+    inline PluginDescriptor getDescriptor() const { return descriptor; }
+
 protected:
     QString name;
-
     QDialog *editorWindow;
+    PluginDescriptor descriptor;
+
 private slots:
     void editorDialogFinished();
 };

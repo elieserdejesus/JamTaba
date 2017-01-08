@@ -32,7 +32,7 @@ QMap<QString, QDialog*> VstPlugin::editorsWindows;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 VstPlugin::VstPlugin(Vst::VstHost* host)
-    :   Audio::Plugin("name"),
+    :   Audio::Plugin(Audio::PluginDescriptor("tempName", Audio::PluginDescriptor::VST_Plugin)),
         effect(nullptr),
         internalOutputBuffer(nullptr),
         host(host),

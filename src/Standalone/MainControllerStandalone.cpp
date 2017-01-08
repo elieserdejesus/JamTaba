@@ -458,6 +458,8 @@ MainControllerStandalone::~MainControllerStandalone()
 Audio::Plugin *MainControllerStandalone::createPluginInstance(
     const Audio::PluginDescriptor &descriptor)
 {
+    qDebug() << "creating plugin for category " << descriptor.categoryToString(descriptor.getCategory());
+
     if (descriptor.isNative()) {
         if (descriptor.getName() == "Delay")
             return new Audio::JamtabaDelay(audioDriver->getSampleRate());

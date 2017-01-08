@@ -9,10 +9,12 @@
 using namespace Audio;
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Plugin::Plugin(const QString &name) :
-    name(name),
-    editorWindow(nullptr)
+Plugin::Plugin(const PluginDescriptor &pluginDescriptor)
+    :   descriptor(pluginDescriptor),
+        name(pluginDescriptor.getName()),
+        editorWindow(nullptr)
 {
+
 }
 
 void Plugin::closeEditor()
@@ -38,7 +40,7 @@ Plugin::~Plugin()
 const int JamtabaDelay::MAX_DELAY_IN_SECONDS = 3;
 
 JamtabaDelay::JamtabaDelay(int sampleRate) :
-    Plugin("Delay"),
+    Plugin(PluginDescriptor("Delay", PluginDescriptor::Native_Plugin)),
     delayTimeInMs(0),
     internalBuffer(new Audio::SamplesBuffer(2))  // 2 channels, 3 seconds delay
 {

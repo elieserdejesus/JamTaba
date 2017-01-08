@@ -9,6 +9,7 @@
 #include <QStringList>
 #include <QFile>
 #include "Configurator.h"
+#include "audio/core/PluginDescriptor.h"
 
 namespace Persistence {
 class Settings;
@@ -158,10 +159,13 @@ public:
 class Plugin
 {
 public:
-    Plugin(const QString &path, bool bypassed, const QByteArray &data);
+
+    Plugin(const QString &name, const QString &path, bool bypassed, Audio::PluginDescriptor::Category category, const QByteArray &data = QByteArray());
     QString path;
+    QString name;
     bool bypassed;
     QByteArray data;// saved data to restore in next jam session
+    Audio::PluginDescriptor::Category category; // VST, AU, NATIVE plugin
 };
 // +++++++++++++++++++++++++++++++++
 class Subchannel
@@ -237,6 +241,8 @@ public:
     void read(const QJsonObject &in) override;
     void read(const QJsonObject &in, bool allowMultiSubchannels);
     QList<Channel> channels;
+
+    static Plugin jsonObjectToPlugin(QJsonObject jsonObject);
 
     inline bool isValid() const
     {

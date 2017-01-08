@@ -44,7 +44,7 @@ AEffect* VstLoader::load(const QString &path, Vst::VstHost* host){
         return 0;
     }
     qCDebug(jtStandaloneVstPlugin) << "Entry point founded for " << path ;
-    QCoreApplication::processEvents();
+    //QCoreApplication::processEvents();
     try{
         qCDebug(jtStandaloneVstPlugin) << "Initializing effect for " << path ;
         effect = entryPoint( (audioMasterCallback)host->hostCallback);// myHost->vstHost->AudioMasterCallback);
@@ -58,7 +58,7 @@ AEffect* VstLoader::load(const QString &path, Vst::VstHost* host){
         qCCritical(jtStandaloneVstPlugin) << "Error when initializing effect. Unloading " << path ;
         return 0;
     }
-    QCoreApplication::processEvents();
+    //QCoreApplication::processEvents();
     if (effect->magic != kEffectMagic) {
         qCCritical(jtStandaloneVstPlugin) << "KEffectMagic error for " << path ;
         return 0;

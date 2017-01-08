@@ -393,11 +393,14 @@ Channel::Channel(const QString &name) :
 {
 }
 
-Plugin::Plugin(const QString &path, bool bypassed, const QByteArray &data) :
+Plugin::Plugin(const QString &name, const QString &path, bool bypassed, Audio::PluginDescriptor::Category category, const QByteArray &data) :
+    name(name),
     path(path),
     bypassed(bypassed),
-    data(data)
+    data(data),
+    category(category)
 {
+
 }
 
 Subchannel::Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel,
@@ -458,9 +461,12 @@ void LocalInputTrackSettings::write(QJsonObject &out) const
             QJsonArray pluginsArray;
             foreach (const Persistence::Plugin &plugin, sub.getPlugins()) {
                 QJsonObject pluginObject;
-                pluginObject["path"] = plugin.path;
+                pluginObject["name"]     = plugin.name;
+                pluginObject["path"]     = plugin.path;
                 pluginObject["bypassed"] = plugin.bypassed;
-                pluginObject["data"] = QString(plugin.data.toBase64());
+                pluginObject["data"]     = QString(plugin.data.toBase64());
+                pluginObject["category"] = static_cast<quint8>(plugin.category);
+
                 pluginsArray.append(pluginObject);
             }
             subChannelObject["plugins"] = pluginsArray;
@@ -471,6 +477,23 @@ void LocalInputTrackSettings::write(QJsonObject &out) const
         channelsArray.append(channelObject);
     }
     out["channels"] = channelsArray;
+}
+
+Plugin LocalInputTrackSettings::jsonObjectToPlugin(QJsonObject pluginObject)
+{
+    QString name = getValueFromJson(pluginObject, "name", QString(""));
+
+    QString path = getValueFromJson(pluginObject, "path", QString(""));
+
+    bool bypassed = getValueFromJson(pluginObject, "bypassed", false);
+
+    QString dataString = getValueFromJson(pluginObject, "data", QString(""));
+
+    Audio::PluginDescriptor::Category category = static_cast<Audio::PluginDescriptor::Category>(getValueFromJson(pluginObject, "category", quint8(1))); // 1 is the VST enum value
+
+    QByteArray rawByteArray(dataString.toStdString().c_str());
+
+    return Persistence::Plugin(name, path, bypassed, category, QByteArray::fromBase64(rawByteArray));
 }
 
 void LocalInputTrackSettings::read(const QJsonObject &in, bool allowMultiSubchannels)
@@ -503,17 +526,13 @@ void LocalInputTrackSettings::read(const QJsonObject &in, bool allowMultiSubchan
                         QJsonArray pluginsArray = subChannelObject["plugins"].toArray();
                         for (int p = 0; p < pluginsArray.size(); ++p) {
                             QJsonObject pluginObject = pluginsArray.at(p).toObject();
-                            QString pluginPath
-                                = getValueFromJson(pluginObject, "path", QString(""));
-                            bool bypassed = getValueFromJson(pluginObject, "bypassed", false);
-                            QString dataString
-                                = getValueFromJson(pluginObject, "data", QString(""));
-                            if (!pluginPath.isEmpty() && QFile(pluginPath).exists()) {
-                                QByteArray rawByteArray(dataString.toStdString().c_str());
-                                plugins.append(Persistence::Plugin(pluginPath, bypassed,
-                                                                   QByteArray::fromBase64(
-                                                                       rawByteArray)));
-                            }
+                            Plugin plugin = jsonObjectToPlugin(pluginObject);
+                            bool pathIsValid = !plugin.path.isEmpty();
+                            if (plugin.category == Audio::PluginDescriptor::VST_Plugin)
+                                pathIsValid = QFile(plugin.path).exists();
+
+                            if (pathIsValid)
+                                plugins.append(plugin);
                         }
                     }
                     Persistence::Subchannel subChannel(firstInput, channelsCount, midiDevice,

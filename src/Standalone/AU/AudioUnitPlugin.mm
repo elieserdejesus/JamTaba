@@ -66,7 +66,7 @@ quint8 AudioUnitPlugin::getBusCount(AudioUnit comp, AudioUnitScope scope)
 }
 
 AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, AudioUnit au, int initialSampleRate, int blockSize)
-    : Audio::Plugin(name),
+    : Audio::Plugin(Audio::PluginDescriptor(name, Audio::PluginDescriptor::AU_Plugin, path)),
       audioUnit(au),
       path(path),
       bufferList(nullptr),

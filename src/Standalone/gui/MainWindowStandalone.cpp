@@ -197,10 +197,10 @@ void MainWindowStandalone::restoreLocalSubchannelPluginsList(
     LocalTrackViewStandalone *subChannelView, const Subchannel &subChannel)
 {
     // create the plugins list
-    foreach (const Persistence::Plugin &plugin, subChannel.getPlugins()) {
-        QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(plugin.path);
-        Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::VST_Plugin;
-        Audio::PluginDescriptor descriptor(pluginName, category, plugin.path);
+    foreach (const Persistence::Plugin &plugin, subChannel.getPlugins()) { 
+        Audio::PluginDescriptor::Category category = static_cast<Audio::PluginDescriptor::Category>(plugin.category);
+
+        Audio::PluginDescriptor descriptor(plugin.name, category, plugin.path);
         quint32 inputTrackIndex = subChannelView->getInputIndex();
         qint32 pluginSlotIndex = subChannelView->getPluginFreeSlotIndex();
         if (pluginSlotIndex >= 0) {
@@ -214,7 +214,10 @@ void MainWindowStandalone::restoreLocalSubchannelPluginsList(
                 }
                 subChannelView->addPlugin(pluginInstance, pluginSlotIndex, plugin.bypassed);
             }
-            QApplication::processEvents();
+            else {
+                qCritical() << "can´t create plugin instance! " << plugin.name;
+            }
+            //QApplication::processEvents(); // freezing the GUI in MAC
         }
     }
 }
@@ -242,8 +245,9 @@ QList<Persistence::Plugin> buildPersistentPluginList(QList<const Audio::Plugin *
     QList<Persistence::Plugin> persistentPlugins;
     foreach (const Audio::Plugin *p, trackPlugins) {
         QByteArray serializedData = p->getSerializedData();
-        persistentPlugins.append(Persistence::Plugin(p->getPath(), p->isBypassed(),
-                                                     serializedData));
+        Audio::PluginDescriptor::Category category = p->getDescriptor().getCategory();
+        Persistence::Plugin plugin(p->getName(), p->getPath(), p->isBypassed(), category, serializedData);
+        persistentPlugins.append(plugin);
     }
     return persistentPlugins;
 }
