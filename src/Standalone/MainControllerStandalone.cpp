@@ -95,8 +95,9 @@ QMap<QString, QList<Audio::PluginDescriptor>> MainControllerStandalone::getPlugi
         }
     }
 
-    //if (!descriptors.isEmpty())
-    //    qSort(descriptors.begin(), descriptors.end(), pluginDescriptorLessThan);
+    for(const QString &manufacturer : descriptors.keys()) {
+        qSort(descriptors[manufacturer].begin(), descriptors[manufacturer].end(), pluginDescriptorLessThan);
+    }
 
     return descriptors;
 }
