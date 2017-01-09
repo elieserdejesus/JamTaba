@@ -187,8 +187,6 @@ void AudioUnitPlugin::initializeStreamFormat(AudioUnitScope scope, UInt32 channe
     OSStatus status = AudioUnitSetProperty(audioUnit, kAudioUnitProperty_StreamFormat, scope, bus, &stream, sizeof(stream));
     if (status) {
        qCritical() << "Error setting stream format in audio unit OSStatus:" << status << " scope:" << scope << " ";
-       NSLog (@"bus %d scope %d. rate: %f, %ld channels, %ld bits per channel", bus, scope, stream.mSampleRate, stream.mChannelsPerFrame, stream.mBitsPerChannel);
-
     }
 }
 
