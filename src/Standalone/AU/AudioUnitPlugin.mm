@@ -121,8 +121,22 @@ quint8 AudioUnitPlugin::getBusCount(AudioUnit comp, AudioUnitScope scope)
     return static_cast<quint8> (count);
 }
 
+Audio::PluginDescriptor AU::createPluginDescriptor(const QString &name, const QString &path)
+{
+    // name is formatted as MANUFACTURER: AU plugin name
+    QString manufacturer = "";
+    QString pluginName = name;
+    int index = name.indexOf(":");
+    if (index > 0) {
+        manufacturer = name.left(index);
+        pluginName = name.right(name.size() - (index + 1)).trimmed();
+    }
+    auto category = Audio::PluginDescriptor::AU_Plugin;
+    return Audio::PluginDescriptor(pluginName, category, manufacturer, path);
+}
+
 AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, AudioUnit au, int initialSampleRate, int blockSize)
-    : Audio::Plugin(Audio::PluginDescriptor(name, Audio::PluginDescriptor::AU_Plugin, path)),
+    : Audio::Plugin(AU::createPluginDescriptor(name, path)),
       audioUnit(au),
       path(path),
       bufferList(nullptr),
@@ -133,8 +147,6 @@ AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, Audio
       hasInputs(AudioUnitPlugin::getBusCount(au, kAudioUnitScope_Input) > 0),
       hasOutputs(AudioUnitPlugin::getBusCount(au, kAudioUnitScope_Output) > 0)
 {
-
-    qDebug() << name << " wants midi: " << wantsMidiMessages;
 
     initializeMaximumFramesPerSlice(blockSize);
 
@@ -178,9 +190,6 @@ void AudioUnitPlugin::initializeStreamFormat(AudioUnitScope scope, UInt32 channe
        NSLog (@"bus %d scope %d. rate: %f, %ld channels, %ld bits per channel", bus, scope, stream.mSampleRate, stream.mChannelsPerFrame, stream.mBitsPerChannel);
 
     }
-    else {
-        qDebug() << "Stream audio format setted in " << getName() << ", scope " << scope << " sr:" << stream.mSampleRate << " channels per frame:" << stream.mChannelsPerFrame;
-    }
 }
 
 void AudioUnitPlugin::initializeSampleRate(Float64 initialSampleRate)
@@ -191,16 +200,12 @@ void AudioUnitPlugin::initializeSampleRate(Float64 initialSampleRate)
         OSStatus status = AudioUnitSetProperty (audioUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Input, 0, &sr, sizeof(Float64));
         if (status != noErr)
             qCritical() << "Error setting sample rate in input Status:" << status;
-        else
-            qDebug() << "Sample rate setted to " << initialSampleRate << " in " << getName() << " input scope";
     }
 
     if (hasOutputs) {
         OSStatus status = AudioUnitSetProperty (audioUnit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Output, 0, &sr, sizeof(Float64));
         if (status != noErr)
             qCritical() << "Error setting sample rate in Ouput Status:" << status;
-        else
-            qDebug() << "Sample rate setted to " << initialSampleRate << " in " << getName() << " output scope";
     }
 }
 
@@ -210,8 +215,6 @@ void AudioUnitPlugin::initializeMaximumFramesPerSlice(UInt32 maxFrames)
                          &maxFrames, sizeof(UInt32));
     if (status != noErr)
         qCritical() << "Error setting maximumFramesPerSlice status:" << status;
-    else
-        qDebug() << getName() << " - maximumFramesPerSlice setted to " << maxFrames;
 }
 
 void AudioUnitPlugin::initializeCallbacks()
@@ -232,8 +235,6 @@ void AudioUnitPlugin::initializeCallbacks()
 
         if (status != noErr)
             qCritical() << "Error setting render callback in Audio Unit " << name << " => " << path << " OSStatus:" << status;
-        else
-            qDebug() << "Render callback setted in " << getName();
     }
 
     // set host callback
@@ -250,8 +251,7 @@ void AudioUnitPlugin::initializeCallbacks()
 
     if (status != noErr)
         qCritical() << "Error setting host callback in Audio Unit " << name << " => " << path;
-    else
-        qDebug() << "Host callback setted in " << getName();
+
 }
 
 AudioUnitPlugin::~AudioUnitPlugin()
@@ -507,7 +507,6 @@ AudioUnitPlugin *AU::audioUnitPluginfromPath(const QString &path, int initialSam
 
     AudioComponent component = AudioComponentFindNext(nullptr, &auDescription);
     if (component) {
-        qDebug() << "Component founded! " << path;
         AudioUnit audioUnit;
         OSStatus status = AudioComponentInstanceNew(component, &audioUnit);
         if (status == noErr) {
@@ -558,7 +557,7 @@ bool AU::getComponentDescriptionFromPath(const QString &path, AudioComponentDesc
 {
     QStringList parts = path.split(":");
     if (parts.size() != 3) {
-        qCritical() << "Audio Unit plugin path string need excatly 3 parts! (" << path << ")";
+        qCritical() << "Audio Unit plugin path string need exactly 3 parts! (" << path << ")";
         return false;
     }
 
@@ -574,3 +573,56 @@ bool AU::getComponentDescriptionFromPath(const QString &path, AudioComponentDesc
     return true;
 }
 
+
+QList<Audio::PluginDescriptor> AU::scanAudioUnitPlugins()
+{
+    static QList<OSType> supportedAudioUnitTypes;
+    supportedAudioUnitTypes << kAudioUnitType_MusicDevice;
+    supportedAudioUnitTypes << kAudioUnitType_MusicEffect;
+    supportedAudioUnitTypes << kAudioUnitType_Effect;
+    supportedAudioUnitTypes << kAudioUnitType_Mixer;
+    supportedAudioUnitTypes << kAudioUnitType_Generator;
+    supportedAudioUnitTypes << kAudioUnitType_MIDIProcessor;
+
+    AudioComponent comp = nullptr;
+    QList<Audio::PluginDescriptor> descriptors;
+    do {
+        AudioComponentDescription desc;
+        desc.componentType = OSType(0);
+        desc.componentSubType = OSType(0);
+        desc.componentManufacturer = OSType(0);
+        desc.componentFlags = 0;
+        desc.componentFlagsMask = 0;
+
+        comp = AudioComponentFindNext(comp, &desc);
+        if (comp) {
+            AudioComponentInstance instance;
+            OSStatus status = AudioComponentInstanceNew(comp, &instance);
+            if (status == noErr) {
+                status = AudioComponentGetDescription(comp, &desc);
+                if (status == noErr) {
+
+                    if (!supportedAudioUnitTypes.contains(desc.componentType))
+                        continue; // skip unsupported types
+
+                    QString type(AU::osTypeToString(desc.componentType));
+                    QString subType(AU::osTypeToString(desc.componentSubType));
+                    QString manufacturer(AU::osTypeToString(desc.componentManufacturer));
+
+                    CFStringRef cfName;
+                    status = AudioComponentCopyName(comp, &cfName);
+                    if (status == noErr) {
+                        QString name = QString::fromCFString(cfName);
+                        QString path(type + ":" + subType + ":" + manufacturer);
+                        descriptors.append(createPluginDescriptor(name, path));
+                    }
+                }
+                AudioComponentInstanceDispose(instance);
+            }
+
+        }
+    }
+    while(comp);
+
+    return descriptors;
+}

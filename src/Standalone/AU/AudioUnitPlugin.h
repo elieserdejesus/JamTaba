@@ -93,6 +93,10 @@ namespace AU {
 
     AudioUnitPlugin *audioUnitPluginfromPath(const QString &path, int initialSampleRate, int blockSize);
 
+    Audio::PluginDescriptor createPluginDescriptor(const QString &name, const QString &path);
+
+    QList<Audio::PluginDescriptor> scanAudioUnitPlugins();
+
 } // namespace
 
 

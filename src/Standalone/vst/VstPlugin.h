@@ -19,7 +19,7 @@ typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
 class VstPlugin : public Audio::Plugin
 {
 public:
-    explicit VstPlugin(Vst::VstHost *host);
+    explicit VstPlugin(Vst::VstHost *host, const QString &pluginPath);
     ~VstPlugin();
 
     void process(const Audio::SamplesBuffer &vstInputArray, Audio::SamplesBuffer &outBuffer,
@@ -28,7 +28,7 @@ public:
 
     void closeEditor() override;
 
-    bool load(QString path);
+    bool load(const QString &path);
 
     inline QString getPath() const
     {
@@ -47,7 +47,7 @@ public:
 
     void setBypass(bool state);
 
-    static QDialog *getPluginEditorWindow(QString pluginName);
+    static QDialog *getPluginEditorWindow(const QString &pluginName);
 
     bool isVirtualInstrument() const override;
 
@@ -91,6 +91,10 @@ private:
     VSTEventBlock<MAX_MIDI_EVENTS> vstMidiEvents;
 
     static QMap<QString, QDialog *> editorsWindows;
+
+    static QString getPluginVendor(AEffect *plugin);
+    static QString getPluginName(AEffect *plugin);
+    static Audio::PluginDescriptor createDescriptor(AEffect *plugin, const QString &pluginPath);
 
 };
 }

@@ -23,7 +23,7 @@ void VSTPluginFinder::setFoldersToScan(const QStringList &folders)
 
 Audio::PluginDescriptor VSTPluginFinder::getPluginDescriptor(const QFileInfo &f)
 {
-    QString name = Audio::PluginDescriptor::getPluginNameFromPath(f.absoluteFilePath());
+    QString name = Audio::PluginDescriptor::getVstPluginNameFromPath(f.absoluteFilePath());
     Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::VST_Plugin;
     return Audio::PluginDescriptor(name, category, f.absoluteFilePath());
 }
@@ -82,7 +82,7 @@ void VSTPluginFinder::consumeOutputFromScanProcess()
                     lastScannedPlugin = pluginPath;// store the plugin path, if the scanner process crash we can add this bad plugin in the black list
                     emit pluginScanStarted(pluginPath);
                 } else {
-                    QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(pluginPath);
+                    QString pluginName = Audio::PluginDescriptor::getVstPluginNameFromPath(pluginPath);
                     emit pluginScanFinished(pluginName, pluginPath, "VST");
                 }
             }

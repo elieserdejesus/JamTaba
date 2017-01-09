@@ -31,8 +31,8 @@ using namespace Vst;
 QMap<QString, QDialog*> VstPlugin::editorsWindows;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-VstPlugin::VstPlugin(Vst::VstHost* host)
-    :   Audio::Plugin(Audio::PluginDescriptor("tempName", Audio::PluginDescriptor::VST_Plugin)),
+VstPlugin::VstPlugin(Vst::VstHost* host, const QString &pluginPath)
+    :   Audio::Plugin(VstPlugin::createDescriptor(nullptr, pluginPath)),
         effect(nullptr),
         internalOutputBuffer(nullptr),
         host(host),
@@ -42,18 +42,47 @@ VstPlugin::VstPlugin(Vst::VstHost* host)
         vstOutputArray(nullptr),
         vstInputArray(nullptr)
 {
-    this->vstMidiEvents.reserved = 0;
-    this->vstMidiEvents.numEvents = 0;
+    vstMidiEvents.reserved = 0;
+    vstMidiEvents.numEvents = 0;
     for (int i = 0; i < MAX_MIDI_EVENTS; ++i) {
-        this->vstMidiEvents.events[i] = (VstEvent*)(new VstMidiEvent);
+        vstMidiEvents.events[i] = (VstEvent*)(new VstMidiEvent);
     }
 
     assert(host);
 
 }
 
+Audio::PluginDescriptor VstPlugin::createDescriptor(AEffect *plugin, const QString &pluginPath)
+{
+    auto pluginName = VstPlugin::getPluginName(plugin);
+    auto manufacturer = VstPlugin::getPluginVendor(plugin);
+    auto category = Audio::PluginDescriptor::VST_Plugin;
+    return Audio::PluginDescriptor(pluginName, category, manufacturer, pluginPath);
+}
 
-bool VstPlugin::load(QString path){
+QString VstPlugin::getPluginVendor(AEffect *plugin)
+{
+    if (!plugin)
+        return QString();
+
+    char temp[128];//kVstMaxVendorStrLen]; //some dumb plugins don't respect kVstMaxVendorStrLen
+    plugin->dispatcher(plugin, effGetVendorString, 0, 0, temp, 0);
+
+    return QString::fromUtf8(temp);
+}
+
+QString VstPlugin::getPluginName(AEffect *plugin)
+{
+    if (!plugin)
+        return QString();
+
+    char temp[128];//kVstMaxEffectNameLen]; //some dumb plugins don't respect kVstMaxEffectNameLen
+    plugin->dispatcher(plugin, effGetEffectName, 0, 0, temp, 0);
+
+    return QString::fromUtf8(temp);
+}
+
+bool VstPlugin::load(const QString &path){
     if(!host){
         return false;
     }
@@ -64,9 +93,9 @@ bool VstPlugin::load(QString path){
         return false;
     }
 
-    char temp[128];//kVstMaxEffectNameLen]; //some dumb plugins don't respect kVstMaxEffectNameLen
-    effect->dispatcher(effect, effGetEffectName, 0, 0, temp, 0);
-    this->name = QString::fromUtf8(temp);
+    descriptor = createDescriptor(effect, path);
+
+    this->name = descriptor.getName();
 
     long ver = effect->dispatcher(effect, effGetVstVersion, 0, 0, NULL, 0);// EffGetVstVersion();
     qCDebug(jtVstPlugin) << "loading " << getName() << " version " << ver;
@@ -367,7 +396,7 @@ void VstPlugin::openEditor(const QPoint &centerOfScreen){
     //resume();
 }
 
-QDialog* VstPlugin::getPluginEditorWindow(QString pluginName){
+QDialog* VstPlugin::getPluginEditorWindow(const QString &pluginName){
     return VstPlugin::editorsWindows[pluginName];
 }
 

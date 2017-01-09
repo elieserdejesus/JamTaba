@@ -8,14 +8,16 @@ using namespace Audio;
 PluginDescriptor::PluginDescriptor()
     : name(""),
       category(PluginDescriptor::Invalid_Plugin),
+      manufacturer(""),
       path("")
 {
 
 }
 
-PluginDescriptor::PluginDescriptor(const QString &name, Category category, const QString &path)
+PluginDescriptor::PluginDescriptor(const QString &name, Category category, const QString &manufacturer, const QString &path)
     : name(name),
       category(category),
+      manufacturer(manufacturer),
       path(path)
 {
 
@@ -28,19 +30,24 @@ PluginDescriptor::~PluginDescriptor()
 
 QString PluginDescriptor::toString() const
 {
-    return name + ";" + PluginDescriptor::categoryToString(category) + ";" + path;
+    return name + ";" + PluginDescriptor::categoryToString(category) + ";" + path + ";" + manufacturer;
 }
 
 PluginDescriptor PluginDescriptor::fromString(const QString &str)
 {
     QStringList parts = str.split(";");
-    if (parts.size() != 3)
+    if (parts.size() != 4)
         return PluginDescriptor(); // returning invalid descriptor
 
     QString name = parts.at(0);
+
     PluginDescriptor::Category category = stringToCategory(parts.at(1));
+
     QString path = parts.at(2);
-    return PluginDescriptor(name, category, path);
+
+    QString manufacturer = parts.at(3);
+
+    return PluginDescriptor(name, category, manufacturer, path);
 }
 
 QString PluginDescriptor::categoryToString(PluginDescriptor::Category category)
@@ -71,7 +78,7 @@ PluginDescriptor::Category PluginDescriptor::stringToCategory(const QString &str
     return Category::Invalid_Plugin;
 }
 
-QString PluginDescriptor::getPluginNameFromPath(const QString &path)
+QString PluginDescriptor::getVstPluginNameFromPath(const QString &path)
 {
     QString name = QFile(path).fileName();
     int indexOfDirSeparator = name.lastIndexOf("/");

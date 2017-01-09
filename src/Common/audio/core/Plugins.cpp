@@ -40,7 +40,7 @@ Plugin::~Plugin()
 const int JamtabaDelay::MAX_DELAY_IN_SECONDS = 3;
 
 JamtabaDelay::JamtabaDelay(int sampleRate) :
-    Plugin(PluginDescriptor("Delay", PluginDescriptor::Native_Plugin)),
+    Plugin(PluginDescriptor("Delay", PluginDescriptor::Native_Plugin, "JamTaba")),
     delayTimeInMs(0),
     internalBuffer(new Audio::SamplesBuffer(2))  // 2 channels, 3 seconds delay
 {

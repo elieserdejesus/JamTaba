@@ -393,12 +393,13 @@ Channel::Channel(const QString &name) :
 {
 }
 
-Plugin::Plugin(const QString &name, const QString &path, bool bypassed, Audio::PluginDescriptor::Category category, const QByteArray &data) :
-    name(name),
-    path(path),
-    bypassed(bypassed),
-    data(data),
-    category(category)
+Plugin::Plugin(const Audio::PluginDescriptor &descriptor, bool bypassed, const QByteArray &data)
+    :   name(descriptor.getName()),
+        path(descriptor.getPath()),
+        manufacturer(descriptor.getManufacturer()),
+        bypassed(bypassed),
+        data(data),
+        category(descriptor.getCategory())
 {
 
 }
@@ -462,10 +463,19 @@ void LocalInputTrackSettings::write(QJsonObject &out) const
             foreach (const Persistence::Plugin &plugin, sub.getPlugins()) {
                 QJsonObject pluginObject;
                 pluginObject["name"]     = plugin.name;
-                pluginObject["path"]     = plugin.path;
+
+                if (!plugin.path.isEmpty())
+                    pluginObject["path"]     = plugin.path;
+
                 pluginObject["bypassed"] = plugin.bypassed;
-                pluginObject["data"]     = QString(plugin.data.toBase64());
+
+                if (!plugin.data.isEmpty())
+                    pluginObject["data"]     = QString(plugin.data.toBase64());
+
                 pluginObject["category"] = static_cast<quint8>(plugin.category);
+
+                if (!plugin.manufacturer.isEmpty())
+                    pluginObject["manufacturer"] = plugin.manufacturer;
 
                 pluginsArray.append(pluginObject);
             }
@@ -493,7 +503,11 @@ Plugin LocalInputTrackSettings::jsonObjectToPlugin(QJsonObject pluginObject)
 
     QByteArray rawByteArray(dataString.toStdString().c_str());
 
-    return Persistence::Plugin(name, path, bypassed, category, QByteArray::fromBase64(rawByteArray));
+    QString manufacturer = getValueFromJson(pluginObject, "manufacturer", QString(""));
+
+    Audio::PluginDescriptor descriptor(name, category, manufacturer, path);
+
+    return Persistence::Plugin(descriptor, bypassed, QByteArray::fromBase64(rawByteArray));
 }
 
 void LocalInputTrackSettings::read(const QJsonObject &in, bool allowMultiSubchannels)

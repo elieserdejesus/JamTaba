@@ -91,7 +91,7 @@ public:
     }
 
     void removePlugin(int inputTrackIndex, Audio::Plugin *PLUGIN);
-    QList<Audio::PluginDescriptor> getPluginsDescriptors(Audio::PluginDescriptor::Category category);
+    QMap<QString, QList<Audio::PluginDescriptor> > getPluginsDescriptors(Audio::PluginDescriptor::Category category);
     Audio::Plugin *addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex, const Audio::PluginDescriptor &descriptor);
 
     Midi::MidiMessageBuffer pullMidiMessagesFromPlugins() override;
@@ -167,10 +167,6 @@ private:
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
     void scanPlugins(bool scanOnlyNewPlugins);
-
-#ifdef Q_OS_MAC
-    static QList<Audio::PluginDescriptor> scanAudioUnitPlugins();
-#endif
 
 };
 }

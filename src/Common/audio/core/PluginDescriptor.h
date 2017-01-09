@@ -17,7 +17,7 @@ public:
         Invalid_Plugin
     };
 
-    PluginDescriptor(const QString &name, Category category, const QString &path = "");
+    PluginDescriptor(const QString &name, Category category, const QString &manufacturer, const QString &path = "");
 
     PluginDescriptor();
 
@@ -29,6 +29,8 @@ public:
 
     inline QString getPath() const;
 
+    inline QString getManufacturer() const;
+
     inline bool isValid() const;
 
     inline bool isVST() const;
@@ -37,7 +39,7 @@ public:
 
     inline bool isNative() const;
 
-    static QString getPluginNameFromPath(const QString &path);
+    static QString getVstPluginNameFromPath(const QString &path);
 
     QString toString() const;
 
@@ -49,11 +51,16 @@ private:
     QString name;
     Category category;
     QString path;
-
+    QString manufacturer;
 
     static PluginDescriptor::Category stringToCategory(const QString &string);
 
 };
+
+QString PluginDescriptor::getManufacturer() const
+{
+    return manufacturer;
+}
 
 QString PluginDescriptor::getName() const
 {

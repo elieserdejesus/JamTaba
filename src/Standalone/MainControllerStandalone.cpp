@@ -77,26 +77,33 @@ bool MainControllerStandalone::pluginDescriptorLessThan(const Audio::PluginDescr
 }
 
 
-
-QList<Audio::PluginDescriptor> MainControllerStandalone::getPluginsDescriptors(Audio::PluginDescriptor::Category category)
+/**
+ * @param category: VST, AU or NATIVE
+ * @return A map indexed by plugin Manufacturer name.
+ */
+QMap<QString, QList<Audio::PluginDescriptor>> MainControllerStandalone::getPluginsDescriptors(Audio::PluginDescriptor::Category category)
 {
-    QList<Audio::PluginDescriptor> categorizedDescriptors;
+    QMap<QString, QList<Audio::PluginDescriptor>> descriptors;
+
     for (const Audio::PluginDescriptor &descriptor : pluginsDescriptors) {
         if (descriptor.getCategory() == category) {
-            categorizedDescriptors.append(descriptor);
+            QString manufacturer = descriptor.getManufacturer();
+            if (!descriptors.contains(manufacturer))
+                descriptors.insert(manufacturer, QList<Audio::PluginDescriptor>());
+
+             descriptors[manufacturer].append(descriptor);
         }
     }
 
-    if (!categorizedDescriptors.isEmpty())
-        qSort(categorizedDescriptors.begin(), categorizedDescriptors.end(), pluginDescriptorLessThan);
+    //if (!descriptors.isEmpty())
+    //    qSort(descriptors.begin(), descriptors.end(), pluginDescriptorLessThan);
 
-    return categorizedDescriptors;
+    return descriptors;
 }
 
 Audio::Plugin *MainControllerStandalone::addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex,
                                          const Audio::PluginDescriptor &descriptor)
 {
-    qDebug() << "Creating plugin in thread " << QThread::currentThreadId();
     Audio::Plugin *plugin = createPluginInstance(descriptor);
     if (plugin) {
         plugin->start();
@@ -309,7 +316,8 @@ void MainControllerStandalone::on_VSTPluginFounded(QString name, QString path)
     if (!containThePlugin) {
         settings.addVstPlugin(path);
         Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::VST_Plugin;
-        pluginsDescriptors.append(Audio::PluginDescriptor(name, category, path));
+        QString manufacturer = "";
+        pluginsDescriptors.append(Audio::PluginDescriptor(name, category, manufacturer, path));
     }
 }
 
@@ -458,15 +466,13 @@ MainControllerStandalone::~MainControllerStandalone()
 Audio::Plugin *MainControllerStandalone::createPluginInstance(
     const Audio::PluginDescriptor &descriptor)
 {
-    qDebug() << "creating plugin for category " << descriptor.categoryToString(descriptor.getCategory());
-
     if (descriptor.isNative()) {
         if (descriptor.getName() == "Delay")
             return new Audio::JamtabaDelay(audioDriver->getSampleRate());
     }
     else if (descriptor.isVST()) {
         Vst::VstHost *host = Vst::VstHost::getInstance();
-        Vst::VstPlugin *vstPlugin = new Vst::VstPlugin(host);
+        Vst::VstPlugin *vstPlugin = new Vst::VstPlugin(host, descriptor.getPath());
         if (vstPlugin->load(descriptor.getPath()))
             return vstPlugin;
     }
@@ -583,7 +589,7 @@ bool MainControllerStandalone::pluginsScanIsNeeded() const
 
 #ifdef Q_OS_MAC
     //check for new AU plugins
-    QList<Audio::PluginDescriptor> aus = scanAudioUnitPlugins();
+    QList<Audio::PluginDescriptor> aus = AU::scanAudioUnitPlugins();
     QStringList cachedPlugins = settings.getAudioUnitsPaths();
     bool newAudioUnitFounded = false;
     for (const auto &au : aus) {
@@ -615,8 +621,9 @@ void MainControllerStandalone::initializeVstPluginsList(const QStringList &paths
     for (const QString &path : paths) {
         QFile file(path);
         if (file.exists()) {
-            QString pluginName = Audio::PluginDescriptor::getPluginNameFromPath(path);
-            pluginsDescriptors.append(Audio::PluginDescriptor(pluginName, category, path));
+            QString pluginName = Audio::PluginDescriptor::getVstPluginNameFromPath(path);
+            QString manufacturer = "";
+            pluginsDescriptors.append(Audio::PluginDescriptor(pluginName, category, manufacturer, path));
         }
     }
 }
@@ -652,7 +659,7 @@ void MainControllerStandalone::scanPlugins(bool scanOnlyNewPlugins)
     }
 
 #ifdef Q_OS_MAC
-    QList<Audio::PluginDescriptor> aus = scanAudioUnitPlugins();
+    QList<Audio::PluginDescriptor> aus = AU::scanAudioUnitPlugins();
     for (const Audio::PluginDescriptor &au : aus) {
         pluginsDescriptors.append(au);
         settings.addAudioUnitPlugin(au.getPath());
@@ -660,65 +667,6 @@ void MainControllerStandalone::scanPlugins(bool scanOnlyNewPlugins)
 #endif
 
 }
-
-#ifdef Q_OS_MAC
-
-QList<Audio::PluginDescriptor> MainControllerStandalone::scanAudioUnitPlugins()
-{
-
-    static QList<OSType> supportedAudioUnitTypes;
-    supportedAudioUnitTypes << kAudioUnitType_MusicDevice;
-    supportedAudioUnitTypes << kAudioUnitType_MusicEffect;
-    supportedAudioUnitTypes << kAudioUnitType_Effect;
-    supportedAudioUnitTypes << kAudioUnitType_Mixer;
-    supportedAudioUnitTypes << kAudioUnitType_Generator;
-    supportedAudioUnitTypes << kAudioUnitType_MIDIProcessor;
-
-    AudioComponent comp = nullptr;
-    QList<Audio::PluginDescriptor> descriptors;
-    do {
-        AudioComponentDescription desc;
-        desc.componentType = OSType(0);
-        desc.componentSubType = OSType(0);
-        desc.componentManufacturer = OSType(0);
-        desc.componentFlags = 0;
-        desc.componentFlagsMask = 0;
-
-        comp = AudioComponentFindNext(comp, &desc);
-        if (comp) {
-            AudioComponentInstance instance;
-            OSStatus status = AudioComponentInstanceNew(comp, &instance);
-            if (status == noErr) {
-                status = AudioComponentGetDescription(comp, &desc);
-                if (status == noErr) {
-
-                    if (!supportedAudioUnitTypes.contains(desc.componentType))
-                        continue; // skip unsupported types
-
-                    QString type(AU::osTypeToString(desc.componentType));
-                    QString subType(AU::osTypeToString(desc.componentSubType));
-                    QString manufacturer(AU::osTypeToString(desc.componentManufacturer));
-
-                    CFStringRef cfName;
-                    status = AudioComponentCopyName(comp, &cfName);
-                    if (status == noErr) {
-                        QString name = QString::fromCFString(cfName);
-                        QString path(type + ":" + subType + ":" + manufacturer);
-                        Audio::PluginDescriptor::Category category = Audio::PluginDescriptor::AU_Plugin;
-                        descriptors.append(Audio::PluginDescriptor(name, category, path));
-                    }
-                }
-                AudioComponentInstanceDispose(instance);
-            }
-
-        }
-    }
-    while(comp);
-
-    return descriptors;
-}
-
-#endif
 
 void MainControllerStandalone::openExternalAudioControlPanel()
 {

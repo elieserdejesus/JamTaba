@@ -49,7 +49,7 @@ private slots:
     void on_contextMenu(QPoint p);
     void on_buttonClicked();
     void on_actionMenuTriggered(QAction *a);
-    void on_fxMenuActionTriggered(QAction *a);
+    void loadPlugin(QAction *a);
 
 private:
     Audio::Plugin *plugin;

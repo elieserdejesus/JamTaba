@@ -160,9 +160,10 @@ class Plugin
 {
 public:
 
-    Plugin(const QString &name, const QString &path, bool bypassed, Audio::PluginDescriptor::Category category, const QByteArray &data = QByteArray());
+    Plugin(const Audio::PluginDescriptor &descriptor, bool bypassed, const QByteArray &data = QByteArray());
     QString path;
     QString name;
+    QString manufacturer;
     bool bypassed;
     QByteArray data;// saved data to restore in next jam session
     Audio::PluginDescriptor::Category category; // VST, AU, NATIVE plugin

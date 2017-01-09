@@ -127,18 +127,29 @@ void FxPanelItem::showPluginsListMenu(const QPoint &p)
 
     for(PluginDescriptor::Category category : categories) {
 
-        QString categoryName = Audio::PluginDescriptor::categoryToString(category);
+        QString categoryName = Audio::PluginDescriptor::categoryToString(category); // VST, AU or NATIVE
         QMenu *categoryMenu = new QMenu(categoryName);
         menu.addMenu(categoryMenu);
-        QList<Audio::PluginDescriptor> plugins = mainController->getPluginsDescriptors(category);
-        for (const Audio::PluginDescriptor &pluginDescriptor  : plugins) {
-            QAction *action = categoryMenu->addAction(pluginDescriptor.getName());
-            action->setData(pluginDescriptor.toString());
+
+        QMap<QString, QList<Audio::PluginDescriptor>> allPlugins = mainController->getPluginsDescriptors(category);
+
+        for(const QString &manufacturer : allPlugins.keys()) {
+            QMenu *parentMenu = categoryMenu;
+            bool canCreateManufacturerMenu = !manufacturer.isEmpty() && allPlugins[manufacturer].size() > 1; // when the manufacturer has only one plugin this plugin is showed in the Root menu
+            if (canCreateManufacturerMenu) {
+                parentMenu = new QMenu(manufacturer);
+                categoryMenu->addMenu(parentMenu);
+            }
+
+            for (const auto &pluginDescriptor  : allPlugins[manufacturer]) {
+                QAction *action = parentMenu->addAction(pluginDescriptor.getName());
+                action->setData(pluginDescriptor.toString());
+            }
         }
 
-        connect(categoryMenu, &QMenu::triggered, this, &FxPanelItem::on_fxMenuActionTriggered);
+        connect(categoryMenu, &QMenu::triggered, this, &FxPanelItem::loadPlugin);
 
-        categoryMenu->setEnabled(!plugins.isEmpty());
+        categoryMenu->setEnabled(!allPlugins.isEmpty());
     }
 
     menu.move(mapToGlobal(p));
@@ -161,8 +172,11 @@ void FxPanelItem::on_contextMenu(QPoint p)
     }
 }
 
-void FxPanelItem::on_fxMenuActionTriggered(QAction *action)
+void FxPanelItem::loadPlugin(QAction *action)
 {
+    if (action->data().toString().isEmpty())
+        return;
+
     QApplication::setOverrideCursor(Qt::WaitCursor);
     //QApplication::processEvents();// force the cursor change
 
