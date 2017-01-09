@@ -176,8 +176,8 @@ bool PortAudioDriver::start()
         qCInfo(jtAudio) << "Starting portaudio driver using" << getAudioInputDeviceName(audioDeviceIndex) << " as device.";
     }
     else {
-        qDebug() << "Starting portaudio using" << getAudioInputDeviceName() << " as input device.";
-        qDebug() << "Starting portaudio using" << getAudioOutputDeviceName() << " as output device.";
+        qCDebug(jtAudio) << "Starting portaudio using" << getAudioInputDeviceName() << " as input device.";
+        qCDebug(jtAudio) << "Starting portaudio using" << getAudioOutputDeviceName() << " as output device.";
     }
 
     ensureInputRangeIsValid();

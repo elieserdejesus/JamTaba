@@ -125,7 +125,6 @@ bool Configurator::setUp()
 
     // themes dir is the same for Standalone and Vst plugin
     themesDir = QDir(getApplicationDataDir().absoluteFilePath(THEMES_FOLDER_NAME));
-    qDebug() << "Themes dir: " << themesDir;
 
     if (!folderTreeExists())
         createFoldersTree();
@@ -181,7 +180,6 @@ void Configurator::setupLogConfigFile()
     QString logConfigFilePath = baseDir.absoluteFilePath(logConfigFileName);
     if (!logConfigFilePath.isEmpty()) {
         qputenv("QT_LOGGING_CONF", QByteArray(logConfigFilePath.toUtf8()));
-        qDebug() << "Setting QT_LOGGING_CONF to " << logConfigFilePath;
         qInstallMessageHandler(&Configurator::LogHandler);
     }
     else {
@@ -244,7 +242,7 @@ bool Configurator::folderTreeExists() const
 void Configurator::exportLogIniFile()
 {
     QString logConfigFilePath(baseDir.absoluteFilePath(logConfigFileName));
-    qDebug() << "log path:" << logConfigFilePath;
+
     QFile file(logConfigFilePath);
     if (!file.exists()) {
         qDebug(jtConfigurator) << "Log Ini file don't exist in' :" << logConfigFilePath;

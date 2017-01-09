@@ -188,9 +188,11 @@ void MainWindow::loadTranslationFile(const QString &locale)
     if( !jamtabaTranslator.load(locale, ":/tr"))
         qWarning() << "Can't load the Jamtaba translation for " << locale;
 
-    QString fileName = "qtbase_" + locale;
-    if (!qtTranslator.load(fileName, ":/qt_tr"))
-        qWarning() << "Can't load Qt translation for " << locale;
+    if (locale != "en") { // avoid load en Qt translation (this file is obviously missing)
+        QString fileName = "qtbase_" + locale;
+        if (!qtTranslator.load(fileName, ":/qt_tr"))
+            qWarning() << "Can't load Qt translation for " << locale;
+    }
 }
 
 // ++++++++++++++++++++++++=
@@ -1576,7 +1578,6 @@ void MainWindow::setupSignals()
 void MainWindow::updateUserName()
 {
     QString newUserName = ui.userNameLineEdit->text();
-    qDebug() << "Setting user name to:" << newUserName;
     mainController->setUserName(newUserName);
 }
 

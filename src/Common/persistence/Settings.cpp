@@ -221,6 +221,9 @@ void RecordingSettings::read(const QJsonObject &in)
     if (in.contains("recordingPath")) {
         recordingPath = in["recordingPath"].toString();
         QDir dir(QDir::fromNativeSeparators(recordingPath));
+        if (!dir.exists())
+            dir.mkpath(".");
+
         if (recordingPath.isEmpty() || !dir.exists()) {
             qWarning() << "Dir " << dir << " not exists, using the application directory to save multitracks!";
             useDefaultRecordingPath = true;
@@ -731,7 +734,6 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
     QFile configFile(absolutePath);
 
     if (configFile.open(QIODevice::ReadOnly)) {
-        qInfo(jtConfigurator) << "Reading settings from " << configFile.fileName();
         QJsonDocument doc = QJsonDocument::fromJson(configFile.readAll());
         QJsonObject root = doc.object();
 
