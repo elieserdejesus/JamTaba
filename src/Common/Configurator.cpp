@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QApplication>
 #include <QStandardPaths>
+#include <QTime>
 
 #include "log/Logging.h"
 
@@ -13,6 +14,13 @@ const QString Configurator::CACHE_FOLDER_NAME = "Cache";
 const QString Configurator::LOG_CONFIG_FILE_NAME = "logging.ini";
 const QString Configurator::THEMES_FOLDER_NAME = "Themes";
 const QString Configurator::THEMES_FOLDER_IN_RESOURCES = ":/css/themes";
+
+// from https://sites.google.com/a/embeddedlab.org/community/technical-articles/qt/qt-posts/howtodocoloredloggingusingqtdebug
+#define COLOR_DEBUG     "\033[35;1m"
+#define COLOR_WARN      "\033[33;1m"
+#define COLOR_CRITICAL  "\033[31;1m"
+#define COLOR_FATAL     "\033[31;1m"
+#define COLOR_RESET     "\033[0m"
 
 void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -26,27 +34,26 @@ void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context,
     else
         file = fullFileName;
 
+    QString messageType;
+    QString messageColor;
+
     QTextStream stream(&stringMsg);
     switch (type) {
-    case QtDebugMsg:
-        stream << context.category << ".DEBUG:  " << localMsg.constData() << " "  << " in "
-               << file << " " << context.line << endl;
-        break;
-    case QtWarningMsg:
-        stream << context.category << ".WARNING:  " << localMsg.constData() <<  context.function
-               <<  " " << file << context.line << endl << endl;
-        break;
-    case QtCriticalMsg:
-        stream << context.category << ".CRITICAL:  " << localMsg.constData() <<  context.function
-               << " " << file << context.line << endl << endl;
-        break;
-    case QtFatalMsg:
-        stream << context.category  << ".FATAL:  " << localMsg.constData() << context.function
-               << file << context.line << endl << endl;
-        break;
+    case QtDebugMsg:    messageType = "DEBUG   ";   messageColor = COLOR_DEBUG;   break;
+    case QtWarningMsg:  messageType = "WARNING ";   messageColor = COLOR_WARN;   break;
+    case QtCriticalMsg: messageType = "CRITICAL";   messageColor = COLOR_CRITICAL;   break;
+    case QtFatalMsg:    messageType = "FATAL   ";   messageColor = COLOR_FATAL;   break;
     default:
-        stream << context.category << ".INFO:  " << localMsg.constData() <<endl;
+        messageType = "INFO    "; messageColor = COLOR_RESET;
     }
+
+    QString timeStamp(QTime::currentTime().toString("hh:mm:ss:zzz"));
+
+    stream << messageColor
+           << QString(QString(context.category) + "." + messageType).leftJustified(17, ' ')
+           << " [" << timeStamp << "] "
+           << localMsg.constData()
+           << COLOR_RESET << " [" << file << ", line " << context.line << "]" << endl;
 
     QTextStream(stdout) << stringMsg;
 
