@@ -14,6 +14,62 @@
 
 using namespace AU;
 
+class ViewContainer : public QMacCocoaViewContainer
+{
+public:
+
+    ViewContainer(NSView *cocoaView)
+        : QMacCocoaViewContainer(cocoaView)
+    {
+        setAttribute(Qt::WA_DeleteOnClose);
+
+        //add a listener for NSView resize
+        CFNotificationCenterAddObserver
+            (
+                CFNotificationCenterGetLocalCenter(),
+                this,
+                &resizeHandler,
+                CFSTR("NSViewFrameDidChangeNotification"),
+                cocoaView,
+                CFNotificationSuspensionBehaviorDeliverImmediately
+            );
+    }
+
+    ~ViewContainer()
+    {
+        CFNotificationCenterRemoveEveryObserver
+            (
+                CFNotificationCenterGetLocalCenter(),
+                this
+            );
+    }
+
+private:
+
+    static void resizeHandler(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
+    {
+        Q_UNUSED(userInfo)
+        Q_UNUSED(center)
+        Q_UNUSED(name)
+        Q_UNUSED(object)
+
+        ViewContainer *viewContainer = static_cast<ViewContainer *>(observer);
+        if (viewContainer) {
+           NSView *view = viewContainer->cocoaView();
+           if (view) {
+                auto mask = [view autoresizingMask];
+                [view setAutoresizingMask: NSViewNotSizable];
+                NSRect frame = [view frame];
+                viewContainer->resize(frame.size.width, frame.size.height);
+                frame.origin.x = frame.origin.y = 0;
+                [view setAutoresizingMask:mask];
+                [view setFrame:frame];
+
+           }
+        }
+    }
+};
+
 
 NSView *createAudioUnitView(AudioUnit audioUnit)
 {
@@ -220,61 +276,6 @@ void AudioUnitPlugin::start()
     if (status != noErr)
         qCritical() << "Error initializing audio unit OSStatus: " << status;
 }
-
-class ViewContainer : public QMacCocoaViewContainer
-{
-public:
-
-    ViewContainer(NSView *cocoaView)
-        : QMacCocoaViewContainer(cocoaView)
-    {
-        setAttribute(Qt::WA_DeleteOnClose);
-
-        //add a listener for NSView resize
-        CFNotificationCenterAddObserver
-            (
-                CFNotificationCenterGetLocalCenter(),
-                this,
-                &resizeHandler,
-                CFSTR("NSViewFrameDidChangeNotification"),
-                cocoaView,
-                CFNotificationSuspensionBehaviorDeliverImmediately
-            );
-    }
-
-    ~ViewContainer()
-    {
-        CFNotificationCenterRemoveEveryObserver
-            (
-                CFNotificationCenterGetLocalCenter(),
-                this
-            );
-    }
-
-private:
-
-    static void resizeHandler(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
-    {
-        Q_UNUSED(userInfo)
-        Q_UNUSED(center)
-        Q_UNUSED(name)
-        Q_UNUSED(object)
-
-        ViewContainer *viewContainer = static_cast<ViewContainer *>(observer);
-        if (viewContainer) {
-           NSView *view = viewContainer->cocoaView();
-           if (view) {
-                auto mask = [view autoresizingMask];
-                //QPoint viewContainerPosition(viewContainer->pos());
-                [view setAutoresizingMask: NSViewNotSizable];
-                NSRect frame = [view frame];
-                viewContainer->resize(frame.size.width, frame.size.height);
-                [view setAutoresizingMask:mask];
-                //viewContainer->move(viewContainerPosition);
-           }
-        }
-    }
-};
 
 void AudioUnitPlugin::openEditor(const QPoint &centerOfScreen)
 {
