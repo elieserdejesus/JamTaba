@@ -141,7 +141,6 @@ AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, Audio
       path(path),
       bufferList(nullptr),
       currentInputBuffer(nullptr),
-      internalOutBuffer(2, blockSize),
       viewContainer(nullptr),
       wantsMidiMessages(AudioUnitPlugin::audioUnitWantsMidi(au)),
       hasInputs(AudioUnitPlugin::getBusCount(au, kAudioUnitScope_Input) > 0),
@@ -404,11 +403,11 @@ void AudioUnitPlugin::process(const Audio::SamplesBuffer &inBuffer, Audio::Sampl
     currentInputBuffer = &inBuffer;
 
     // prepare the output AudioBufferList
-    internalOutBuffer.setFrameLenght(frames);
-    for (quint8 i = 0; i < bufferList->mNumberBuffers; i++) {
+    quint8 channels = qMin(static_cast<int>(bufferList->mNumberBuffers), outBuffer.getChannels());
+    for (quint8 i = 0; i < channels; i++) {
         bufferList->mBuffers[i].mNumberChannels = 1; // each buffer contain one audio channel (left or right, for example)
         bufferList->mBuffers[i].mDataByteSize = (UInt32) (sizeof (float) * (size_t) frames);
-        bufferList->mBuffers[i].mData = internalOutBuffer.getSamplesArray(i);
+        bufferList->mBuffers[i].mData = outBuffer.getSamplesArray(i);
     }
 
     if (wantsMidiMessages && !midiBuffer.isEmpty())
@@ -426,10 +425,10 @@ void AudioUnitPlugin::process(const Audio::SamplesBuffer &inBuffer, Audio::Sampl
 
     if (status != noErr) {
         qWarning() << "Error rendering audio unit OSStatus: " << status;
-        internalOutBuffer.zero();
+        //internalOutBuffer.zero();
     }
 
-    outBuffer.set(internalOutBuffer);
+    //outBuffer.set(internalOutBuffer);
 
     timeStamp.mHostTime++;
     timeStamp.mSampleTime += frames;

@@ -735,8 +735,6 @@ void MainController::connectInJamtabaServer()
         userName = "No name!";
 
     qCInfo(jtCore) << "Connecting in Jamtaba server...";
-    qWarning() << "testando warning";
-    qCritical() << "testando critical";
 
     loginService.connectInServer(userName, 0, "", map, version, userEnvironment, getSampleRate());
 }

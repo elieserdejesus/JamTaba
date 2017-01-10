@@ -45,7 +45,6 @@ namespace AU {
 
         AudioBufferList *bufferList;
         const Audio::SamplesBuffer *currentInputBuffer;
-        Audio::SamplesBuffer internalOutBuffer;
 
         const bool hasInputs;
         const bool hasOutputs;
