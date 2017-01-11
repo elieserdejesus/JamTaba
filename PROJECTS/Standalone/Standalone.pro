@@ -43,6 +43,7 @@ HEADERS += vst/VstPlugin.h
 HEADERS += vst/VstHost.h
 HEADERS += vst/VstLoader.h
 HEADERS += vst/PluginFinder.h
+HEADERS += vst/Utils.h
 HEADERS += Libs/SingleApplication/singleapplication.h
 HEADERS += audio/core/PluginDescriptor.h
 
@@ -61,6 +62,7 @@ SOURCES += midi/RtMidiDriver.cpp
 SOURCES += vst/VstPlugin.cpp
 SOURCES += vst/VstHost.cpp
 SOURCES += vst/PluginFinder.cpp
+SOURCES += vst/Utils.cpp
 SOURCES += vst/VstLoader.cpp
 SOURCES += Libs/SingleApplication/singleapplication.cpp
 SOURCES += audio/PortAudioDriver.cpp

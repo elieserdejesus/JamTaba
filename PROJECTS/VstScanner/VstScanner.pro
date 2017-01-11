@@ -31,10 +31,12 @@ VPATH       += $$SOURCE_PATH/VstScanner
 
 HEADERS += vst/VstHost.h
 HEADERS += VstPluginScanner.h
+HEADERS += vst/Utils.h
 
 SOURCES += main.cpp
 SOURCES += vst/VstHost.cpp
 SOURCES += vst/VstLoader.cpp
+SOURCES += vst/Utils.cpp
 SOURCES += audio/core/PluginDescriptor.cpp
 SOURCES += midi/MidiMessage.cpp
 SOURCES += log/logging.cpp

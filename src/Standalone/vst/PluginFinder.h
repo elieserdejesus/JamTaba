@@ -39,7 +39,7 @@ signals:
     void scanStarted();
     void scanFinished(bool finishedWithoutError);
     void pluginScanStarted(const QString &path);
-    void pluginScanFinished(const QString &name, const QString &path, const QString &category);
+    void pluginScanFinished(const QString &name, const QString &path);
     void badPluginDetected(const QString &pluginPath);// a plugin crashed the scanner process
 };
 }

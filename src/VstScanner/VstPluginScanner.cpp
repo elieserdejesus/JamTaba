@@ -6,6 +6,7 @@
 #include "audio/core/PluginDescriptor.h"
 #include "vst/VstHost.h"
 #include "vst/VstLoader.h"
+#include "vst/Utils.h"
 #include "log/Logging.h"
 #include "VstPluginChecker.h"
 
@@ -64,10 +65,12 @@ Audio::PluginDescriptor VstPluginScanner::getPluginDescriptor(const QFileInfo &p
         AEffect *effect = Vst::VstLoader::load(pluginFile.absoluteFilePath(), host);
         if (effect) {
             QString name = Audio::PluginDescriptor::getVstPluginNameFromPath(pluginFile.absoluteFilePath());
+            QString manufacturer = Vst::utils::getPluginVendor(effect);
             Vst::VstLoader::unload(effect);// delete the AEffect instance
             QLibrary lib(pluginFile.absoluteFilePath());
             lib.unload();// try unload the shared lib
-            return Audio::PluginDescriptor(name, Audio::PluginDescriptor::VST_Plugin, pluginFile.absoluteFilePath());
+
+            return Audio::PluginDescriptor(name, Audio::PluginDescriptor::VST_Plugin, manufacturer, pluginFile.absoluteFilePath());
         }
     }
     catch (...) {

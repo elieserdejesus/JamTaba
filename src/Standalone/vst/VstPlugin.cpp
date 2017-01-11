@@ -1,21 +1,20 @@
 #include "VstPlugin.h"
-#include "aeffectx.h"
-#include "vst/VstHost.h"
-#include "vst/VstLoader.h"
-#include <QMap>
-#include <QApplication>
-#include <QDialog>
 
 #ifdef Q_OS_WIN
     #include <windows.h>
     #include <excpt.h>
 #endif
 
-#include <QDebug>
+#include "aeffectx.h"
+#include "vst/VstHost.h"
+#include "vst/VstLoader.h"
+#include "vst/Utils.h"
 #include "audio/core/AudioDriver.h"
 #include "audio/core/SamplesBuffer.h"
 #include "midi/MidiMessage.h"
 #include "midi/MidiMessageBuffer.h"
+#include "log/Logging.h"
+
 #include <QLibrary>
 #include <string>
 #include <locale>
@@ -23,8 +22,11 @@
 #include <QDir>
 #include <QThread>
 #include <QDebug>
+#include <QMap>
+#include <QApplication>
+#include <QDialog>
 #include <cassert>
-#include "log/Logging.h"
+
 
 using namespace Vst;
 
@@ -32,7 +34,7 @@ QMap<QString, QDialog*> VstPlugin::editorsWindows;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 VstPlugin::VstPlugin(Vst::VstHost* host, const QString &pluginPath)
-    :   Audio::Plugin(VstPlugin::createDescriptor(nullptr, pluginPath)),
+    :   Audio::Plugin(Vst::utils::createDescriptor(nullptr, pluginPath)),
         effect(nullptr),
         internalOutputBuffer(nullptr),
         host(host),
@@ -52,36 +54,6 @@ VstPlugin::VstPlugin(Vst::VstHost* host, const QString &pluginPath)
 
 }
 
-Audio::PluginDescriptor VstPlugin::createDescriptor(AEffect *plugin, const QString &pluginPath)
-{
-    auto pluginName = VstPlugin::getPluginName(plugin);
-    auto manufacturer = VstPlugin::getPluginVendor(plugin);
-    auto category = Audio::PluginDescriptor::VST_Plugin;
-    return Audio::PluginDescriptor(pluginName, category, manufacturer, pluginPath);
-}
-
-QString VstPlugin::getPluginVendor(AEffect *plugin)
-{
-    if (!plugin)
-        return QString();
-
-    char temp[128];//kVstMaxVendorStrLen]; //some dumb plugins don't respect kVstMaxVendorStrLen
-    plugin->dispatcher(plugin, effGetVendorString, 0, 0, temp, 0);
-
-    return QString::fromUtf8(temp);
-}
-
-QString VstPlugin::getPluginName(AEffect *plugin)
-{
-    if (!plugin)
-        return QString();
-
-    char temp[128];//kVstMaxEffectNameLen]; //some dumb plugins don't respect kVstMaxEffectNameLen
-    plugin->dispatcher(plugin, effGetEffectName, 0, 0, temp, 0);
-
-    return QString::fromUtf8(temp);
-}
-
 bool VstPlugin::load(const QString &path){
     if(!host){
         return false;
@@ -93,7 +65,7 @@ bool VstPlugin::load(const QString &path){
         return false;
     }
 
-    descriptor = createDescriptor(effect, path);
+    descriptor = Vst::utils::createDescriptor(effect, path);
 
     this->name = descriptor.getName();
 
@@ -412,3 +384,5 @@ void VstPlugin::updateGui(){
 
     effect->dispatcher(effect, effEditIdle, 0, 0, 0, 0);
 }
+
+

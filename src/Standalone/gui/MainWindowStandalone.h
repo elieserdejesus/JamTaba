@@ -48,7 +48,7 @@ protected slots: //TODO change to private slots?
     // plugin finder
     void showPluginScanDialog();
     void hidePluginScanDialog(bool finishedWithoutError);
-    void addFoundedPlugin(const QString &name, const QString &group, const QString &path);
+    void addFoundedPlugin(const QString &name, const QString &path);
     void setCurrentScanningPlugin(const QString &pluginPath);
     void addPluginToBlackList(const QString &pluginPath);
 

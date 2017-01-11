@@ -10,6 +10,7 @@
 
 using namespace Persistence;
 using namespace Controller;
+using namespace audio;  // TODO rewrite namespaces using lower case
 
 MainWindowStandalone::MainWindowStandalone(MainControllerStandalone *mainController) :
     MainWindow(mainController),
@@ -41,18 +42,20 @@ void MainWindowStandalone::setupShortcuts()
 
 void MainWindowStandalone::setupSignals()
 {
-    connect(ui.actionFullscreenMode, SIGNAL(triggered(bool)), this, SLOT(toggleFullScreen()));
+    connect(ui.actionFullscreenMode, &QAction::triggered, this, &MainWindowStandalone::toggleFullScreen);
 
     audio::VSTPluginFinder *pluginFinder = controller->getPluginFinder();
     Q_ASSERT(pluginFinder);
-    connect(pluginFinder, SIGNAL(scanStarted()), this, SLOT(showPluginScanDialog()));
-    connect(pluginFinder, SIGNAL(scanFinished(bool)), this, SLOT(hidePluginScanDialog(bool)));
-    connect(pluginFinder, SIGNAL(badPluginDetected(QString)), this,
-            SLOT(addPluginToBlackList(QString)));
-    connect(pluginFinder, SIGNAL(pluginScanFinished(QString, QString, QString)), this,
-            SLOT(addFoundedPlugin(QString, QString, QString)));
-    connect(pluginFinder, SIGNAL(pluginScanStarted(QString)), this,
-            SLOT(setCurrentScanningPlugin(QString)));
+
+    connect(pluginFinder, &VSTPluginFinder::scanStarted, this, &MainWindowStandalone::showPluginScanDialog);
+
+    connect(pluginFinder, &VSTPluginFinder::scanFinished, this, &MainWindowStandalone::hidePluginScanDialog);
+
+    connect(pluginFinder, &VSTPluginFinder::badPluginDetected, this, &MainWindowStandalone::addPluginToBlackList);
+
+    connect(pluginFinder, &VSTPluginFinder::pluginScanFinished, this, &MainWindowStandalone::addFoundedPlugin);
+
+    connect(pluginFinder, &VSTPluginFinder::pluginScanStarted, this, &MainWindowStandalone::setCurrentScanningPlugin);
 }
 
 void MainWindowStandalone::doWindowInitialization()
@@ -122,11 +125,10 @@ void MainWindowStandalone::addPluginToBlackList(const QString &pluginPath)
     controller->addBlackVstToSettings(pluginPath);
 }
 
-void MainWindowStandalone::addFoundedPlugin(const QString &name, const QString &group,
-                                            const QString &path)
+void MainWindowStandalone::addFoundedPlugin(const QString &name, const QString &path)
 {
     Q_UNUSED(path);
-    Q_UNUSED(group);
+
     if (pluginScanDialog)
         pluginScanDialog->addFoundedPlugin(name);
 }

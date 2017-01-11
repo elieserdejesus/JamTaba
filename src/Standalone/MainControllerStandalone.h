@@ -137,7 +137,7 @@ protected slots:
     void on_audioDriverStarted();
     void on_ninjamStartProcessing(int intervalPosition) ;
 
-    void on_VSTPluginFounded(QString name, QString path);
+    void on_VSTPluginFounded(const QString &name, const QString &path);
 
 private slots:
     void setPluginWindowSize(QString pluginName, int newWidht, int newHeight);

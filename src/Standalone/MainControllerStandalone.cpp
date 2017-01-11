@@ -305,7 +305,7 @@ void MainControllerStandalone::on_ninjamStartProcessing(int intervalPosition)
         host->update(intervalPosition);// update the vst host time line in every audio callback.
 }
 
-void MainControllerStandalone::on_VSTPluginFounded(QString name, QString path)
+void MainControllerStandalone::on_VSTPluginFounded(const QString &name, const QString &path)
 {
     bool containThePlugin = false;
     foreach (const Audio::PluginDescriptor descriptor, pluginsDescriptors) {

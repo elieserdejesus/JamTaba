@@ -11,6 +11,7 @@
 struct VstEvents;
 
 namespace Vst {
+
 class VstHost;
 
 // Plugin's entry point
@@ -57,16 +58,21 @@ public:
 
 protected:
     void unload();
-
     void resume();
     void suspend();
+
 private:
     bool initPlugin();
+
     AEffect *effect;
+
     Audio::SamplesBuffer *internalOutputBuffer;
     Audio::SamplesBuffer *internalInputBuffer;
+
     Vst::VstHost *host;
+
     bool wantMidi;
+
     QString path;
 
     bool started;
@@ -92,11 +98,9 @@ private:
 
     static QMap<QString, QDialog *> editorsWindows;
 
-    static QString getPluginVendor(AEffect *plugin);
-    static QString getPluginName(AEffect *plugin);
-    static Audio::PluginDescriptor createDescriptor(AEffect *plugin, const QString &pluginPath);
+}; // class
 
-};
-}
+
+} // namespace
 
 #endif
