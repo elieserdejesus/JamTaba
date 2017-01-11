@@ -39,12 +39,15 @@ namespace AU {
 
         inline QString getPath() const override { return path; }
 
+        bool isVirtualInstrument() const override;
+
     private:
         AudioUnit audioUnit;
         QString path;
 
         AudioBufferList *bufferList;
         const Audio::SamplesBuffer *currentInputBuffer;
+        Audio::SamplesBuffer internalOutBuffer;
 
         const bool hasInputs;
         const bool hasOutputs;
@@ -54,7 +57,7 @@ namespace AU {
         QMacCocoaViewContainer *viewContainer;
 
         // AU callbacks
-        static OSStatus getInputCallback (void* hostRef, AudioUnitRenderActionFlags* ioActionFlags,
+        static OSStatus inputCallback (void* hostRef, AudioUnitRenderActionFlags* ioActionFlags,
                                                     const AudioTimeStamp* inTimeStamp, UInt32 inBusNumber,
                                                     UInt32 inNumberFrames, AudioBufferList* ioData);
 
