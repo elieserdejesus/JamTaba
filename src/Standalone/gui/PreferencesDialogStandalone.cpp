@@ -5,6 +5,7 @@
 #include "gui/ScanFolderPanel.h"
 #include "QFileDialog"
 #include "persistence/Settings.h"
+#include <QDebug>
 
 /**
  This file contains the common/shared implementation for the Jamtaba plataforms (Win, Mac and Linux) in Standalone. In the Vst Plugin some details are different and implemented in the file VstPreferencesDialog.cpp.
@@ -58,8 +59,11 @@ void StandalonePreferencesDialog::initialize(PreferencesTab initialTab, const Pe
 void StandalonePreferencesDialog::populateAllTabs()
 {
     PreferencesDialog::populateAllTabs();//populate recording and metronome tabs
+
     populateAudioTab();
+
     populateMidiTab();
+
     populateVstTab();
 }
 

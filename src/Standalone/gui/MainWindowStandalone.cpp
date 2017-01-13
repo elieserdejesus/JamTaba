@@ -309,6 +309,9 @@ void MainWindowStandalone::closeEvent(QCloseEvent *e)
 
 PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
 {
+
+    qDebug(jtGUI) << "Creating preferences dialog";
+
     // stop midi and audio before show the preferences dialog
     Midi::MidiDriver *midiDriver = controller->getMidiDriver();
     Audio::AudioDriver *audioDriver = controller->getAudioDriver();
@@ -406,6 +409,8 @@ void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsSta
                                                 int audioDevice, int firstIn, int lastIn,
                                                 int firstOut, int lastOut)
 {
+    qDebug(jtGUI) << "Setting global preferences ...";
+
     Audio::AudioDriver *audioDriver = controller->getAudioDriver();
 
     audioDriver->setProperties(firstIn, lastIn, firstOut, lastOut);

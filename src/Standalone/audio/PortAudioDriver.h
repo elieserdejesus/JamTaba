@@ -31,10 +31,7 @@ public:
     QString getAudioInputDeviceName() const override;
     QString getAudioOutputDeviceName() const override;
 
-    inline int getAudioDeviceIndex() const
-    {
-        return audioDeviceIndex;
-    }
+    int getAudioDeviceIndex() const;
 
     void setAudioDeviceIndex(int index) override;
 

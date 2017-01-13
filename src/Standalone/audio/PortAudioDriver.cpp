@@ -26,9 +26,17 @@ bool PortAudioDriver::canBeStarted() const
     return audioDeviceIndex != paNoDevice;
 }
 
+int PortAudioDriver::getAudioDeviceIndex() const
+{
+    if (useSystemDefaultDevices)
+        return Pa_GetDefaultOutputDevice();
+
+    return audioDeviceIndex;
+}
+
 bool PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
 {
-    qCInfo(jtAudio) << "initializing portaudio...";
+    qCDebug(jtAudio) << "initializing portaudio...";
     PaError error = Pa_Initialize();
     if (error != paNoError){
         qCCritical(jtAudio) << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
@@ -105,7 +113,7 @@ void PortAudioDriver::ensureInputRangeIsValid()
 
 PortAudioDriver::~PortAudioDriver()
 {
-    qCDebug(jtAudio) << "destructor PortAudioDriver";
+    qCDebug(jtAudio) << "PortAudioDriver destructor";
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -186,7 +194,7 @@ bool PortAudioDriver::start()
     recreateBuffers();//adjust the input and output buffers channels
 
     unsigned long framesPerBuffer = bufferSize;// paFramesPerBufferUnspecified;
-    qCInfo(jtAudio) << "Starting portaudio driver using" << framesPerBuffer << " as buffer size.";
+    qCDebug(jtAudio) << "Starting portaudio using" << framesPerBuffer << " as buffer size.";
     PaSampleFormat sampleFormat = paFloat32;// | paNonInterleaved;
 
     PaStreamParameters inputParams;
@@ -212,11 +220,11 @@ bool PortAudioDriver::start()
 
     bool willUseInputParams = !globalInputRange.isEmpty();
     if(willUseInputParams){
-        qCInfo(jtAudio) << "Trying initialize portaudio using inputParams and samplerate=" << sampleRate;
+        qCDebug(jtAudio) << "Trying initialize portaudio using inputParams and samplerate=" << sampleRate;
     }
     else{
-        qCInfo(jtAudio) << "Trying initialize portaudio WITHOUT inputParams because globalInputRange is empty!";
-        qCInfo(jtAudio) << "Detected inputs for " << getAudioInputDeviceName(audioDeviceIndex) << ":" << getMaxInputs();
+        qCDebug(jtAudio) << "Trying initialize portaudio WITHOUT inputParams because globalInputRange is empty!";
+        qCDebug(jtAudio) << "Detected inputs for " << getAudioInputDeviceName(audioDeviceIndex) << ":" << getMaxInputs();
     }
 
 
@@ -268,7 +276,7 @@ bool PortAudioDriver::start()
             return false;
         }
     }
-    qCInfo(jtAudio) << "portaudio driver started ok!";
+    qCDebug(jtAudio) << "Portaudio driver started ok!";
     emit started();
 
     releaseHostSpecificParameters(inputParams, outputParams);
@@ -304,20 +312,25 @@ QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const
 
 void PortAudioDriver::stop(bool refreshDevicesList)
 {
+
     if (paStream != NULL){
         if (!Pa_IsStreamStopped(paStream)){
-            qCDebug(jtAudio) << "closing portaudio stream";
+            qCDebug(jtAudio) << "Stopping portaudio driver ...";
             PaError error = Pa_CloseStream(paStream);
             if(error != paNoError){
-                qCCritical(jtAudio) << "error closing portaudio stream: " << Pa_GetErrorText(error);
+                qCCritical(jtAudio) << "   Error closing portaudio stream: " << Pa_GetErrorText(error);
             }
             emit stopped();
+            qCDebug(jtAudio) << "Portaudio driver stoped!";
         }
     }
     if(refreshDevicesList){
-        Pa_Terminate(); //terminate and reinitialize to refresh portaudio internal devices list
+        qCDebug(jtAudio) << "   Refreshing portaudio devices list";
+        Pa_Terminate(); // terminate and reinitialize to refresh portaudio internal devices list
         Pa_Initialize();
     }
+
+
 }
 
 void PortAudioDriver::release()

@@ -8,10 +8,14 @@ using namespace Midi;
 #include "log/Logging.h"
 
 RtMidiDriver::RtMidiDriver(const QList<bool> &deviceStatuses){
-    qCInfo(jtMidi) << "Initializing rtmidi...";
+
+    qCDebug(jtMidi) << "Initializing rtmidi...";
+
     QList<bool> statuses(deviceStatuses);
     int maxInputDevices = getMaxInputDevices();
+
     qCDebug(jtMidi) << "MIDI DEVICES FOUND idx:" << maxInputDevices;
+
     if(statuses.size() < maxInputDevices){
         int itemsToAdd = maxInputDevices - statuses.size();
         for (int i = 0; i < itemsToAdd; ++i) {
@@ -19,11 +23,14 @@ RtMidiDriver::RtMidiDriver(const QList<bool> &deviceStatuses){
         }
     }
     setInputDevicesStatus(statuses);
-    qCInfo(jtMidi) << "rtmidi initialized!";
+
+    qCDebug(jtMidi) << "rtmidi initialized!";
 
 }
 
 void RtMidiDriver::setInputDevicesStatus(const QList<bool> &statuses){
+    qCDebug(jtMidi) << "Setting input devices status in RtMidiDriver";
+
     release();
 
     int midiDevicesCount = getMaxInputDevices();
@@ -43,6 +50,8 @@ void RtMidiDriver::setInputDevicesStatus(const QList<bool> &statuses){
 }
 
 void RtMidiDriver::start(const QList<bool> &deviceStatuses){
+    qCDebug(jtMidi) << "Starting RtMidiDriver";
+
     setInputDevicesStatus(deviceStatuses);
 
     if(!hasInputDevices()){
@@ -73,14 +82,22 @@ void RtMidiDriver::start(const QList<bool> &deviceStatuses){
 }
 
 void RtMidiDriver::stop(){
+    qCDebug(jtMidi) << "Stopping RtMidiDriver (closing " << midiStreams.size() << " streams)";
     foreach (RtMidiIn* stream, midiStreams) {
         if(stream){
             stream->closePort();
         }
     }
+   qCDebug(jtMidi) << "RtMidiDriver stoped!";
 }
 
 void RtMidiDriver::release(){
+
+    if (midiStreams.isEmpty())
+        return;
+
+    qCDebug(jtMidi) << "Releasing RtMidiDriver";
+
     foreach (RtMidiIn* stream, midiStreams) {
         if(stream){
             if(stream->isPortOpen()){
@@ -101,6 +118,7 @@ QString RtMidiDriver::getInputDeviceName(uint index) const{
 
 void RtMidiDriver::consumeMessagesFromStream(RtMidiIn *stream, int deviceIndex, MidiMessageBuffer &outBuffer)
 {
+    //qCDebug(jtMidi) << "consuming messages from stream - RtMidiDriver";
     std::vector<unsigned char> messageBytes;
     do{
         messageBytes.clear();
@@ -131,8 +149,15 @@ bool RtMidiDriver::hasInputDevices() const{
 }
 
 int RtMidiDriver::getMaxInputDevices() const{
-    RtMidiIn rtMidi;
-    return rtMidi.getPortCount();
+    try
+    {
+        RtMidiIn rtMidi;
+        return rtMidi.getPortCount();
+    }
+    catch(const RtMidiError &e) {
+        qCDebug(jtMidi) << QString::fromStdString(e.getMessage());
+    }
+    return 0;
 }
 
 RtMidiDriver::~RtMidiDriver(){

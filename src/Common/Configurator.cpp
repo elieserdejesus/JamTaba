@@ -16,11 +16,27 @@ const QString Configurator::THEMES_FOLDER_NAME = "Themes";
 const QString Configurator::THEMES_FOLDER_IN_RESOURCES = ":/css/themes";
 
 // from https://sites.google.com/a/embeddedlab.org/community/technical-articles/qt/qt-posts/howtodocoloredloggingusingqtdebug
-#define COLOR_DEBUG     "\033[35;1m"
-#define COLOR_WARN      "\033[33;1m"
-#define COLOR_CRITICAL  "\033[31;1m"
-#define COLOR_FATAL     "\033[31;1m"
-#define COLOR_RESET     "\033[0m"
+#define COLOR_DEBUG         "\033[35;1m"
+#define COLOR_DEBUG_MIDI    "\033[32;1m"
+#define COLOR_DEBUG_AUDIO   "\033[35;1m"
+#define COLOR_DEBUG_GUI     "\033[36;1m"
+#define COLOR_WARN          "\033[33;1m"
+#define COLOR_CRITICAL      "\033[31;1m"
+#define COLOR_FATAL         "\033[31;1m"
+#define COLOR_RESET         "\033[0m"
+
+QString Configurator::getDebugColor(const QMessageLogContext &context)
+{
+    QString category(context.category);
+    if (category == QString(jtMidi().categoryName()))
+        return COLOR_DEBUG_MIDI;
+    else if (category == QString(jtAudio().categoryName()))
+        return COLOR_DEBUG_AUDIO;
+    else if (category == QString(jtGUI().categoryName()))
+        return COLOR_DEBUG_GUI;
+
+    return COLOR_DEBUG;
+}
 
 void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -39,7 +55,7 @@ void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context,
 
     QTextStream stream(&stringMsg);
     switch (type) {
-    case QtDebugMsg:    messageType = "DEBUG   ";   messageColor = COLOR_DEBUG;   break;
+    case QtDebugMsg:    messageType = "DEBUG   ";   messageColor = getDebugColor(context);   break;
     case QtWarningMsg:  messageType = "WARNING ";   messageColor = COLOR_WARN;   break;
     case QtCriticalMsg: messageType = "CRITICAL";   messageColor = COLOR_CRITICAL;   break;
     case QtFatalMsg:    messageType = "FATAL   ";   messageColor = COLOR_FATAL;   break;

@@ -71,6 +71,8 @@ private:
     static QDir getApplicationDataDir();
 
     static void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
+
+    static QString getDebugColor(const QMessageLogContext &context);
 };
 
 

@@ -66,6 +66,7 @@ void PreferencesDialog::initialize(PreferencesTab initialTab, const Persistence:
     }
 
     setupSignals();
+
     populateAllTabs();
 }
 
