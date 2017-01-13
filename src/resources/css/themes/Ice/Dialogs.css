@@ -1,0 +1,185 @@
+/* Dialogs in Ice theme
+-------------------------------------*/
+
+PreferencesDialog
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 rgb(128, 180, 255),
+        stop: 1.0 rgb(126, 178, 255));
+}
+
+QMessageBox,
+QInputDialog,
+MidiToolsDialog,
+UserNameDialog,
+PrivateServerDialog
+{
+    border-color: rgb(20, 20, 20);
+    color: white;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop: 0.0 rgb(128, 180, 255),
+    stop: 1.0 rgb(126, 178, 255));
+}
+
+PrivateServerDialog #label, #label_2, #label_3
+{
+    color: rgb(160, 160, 160);
+}
+
+UserNameDialog #label
+{
+    color: black;
+}
+
+PreferencesDialog #tabAudio, #tabMidi, #tabVST, #tabRecording, #tabMetronome
+{
+    border: none;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.5 rgb(160, 243, 241),
+        stop: 1.0 rgb(144, 211, 209));
+}
+
+PreferencesDialog QComboBox                         /* the colors inside the combo box*/
+{
+    background-color: rgb(180, 207, 250);
+    selection-background-color: rgb(51, 153, 255);
+    selection-color: white;
+}
+
+PreferencesDialog QComboBox QAbstractItemView      /* the colors inside drop down menu of the combo box*/
+{
+    border: none;
+    color: black;
+    background-color: rgb(180, 207, 250);
+    selection-background-color: rgb(51, 153, 255);
+    selection-color: white;
+}
+
+PreferencesDialog QComboBox:disabled,
+PreferencesDialog QLabel:disabled,
+PreferencesDialog QGroupBox#groupBoxBuiltInMetronomes[checked=false],
+PreferencesDialog QGroupBox#groupBoxCustomMetronome[checked=false]
+{
+color: rgba(0, 0, 0, 90);
+}
+
+PreferencesDialog QComboBox::down-arrow:disabled
+{
+    image:url(:/images/arrow-down-lighter.png);
+}
+
+PreferencesDialog #vstListWidget
+{
+    border-radius: 6px;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 rgb(128, 180, 255),
+        stop: 1.0 rgb(126, 178, 255));
+
+}
+
+MidiToolsDialog #label_5, #labelHigherNote, #labelLowerNote
+{
+    color: white;
+}
+
+MidiToolsDialog #GroupBoxKeyRange, #GroupBoxTranspose
+{
+    color: rgb(160, 160, 160);
+}
+
+MidiToolsDialog #spinBoxTranspose
+{
+    border: 1px solid rgb(80, 80, 80);
+    border-radius:6px;
+    color: black;
+    background-color: rgb(180, 207, 250);
+    selection-background-color: rgb(51, 153, 255);
+    selection-color: white;
+}
+
+PrivateServerDialog #ServerList
+{
+    border-radius: 6px;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.5 rgb(160, 243, 241),
+        stop: 1.0 rgb(144, 211, 209))
+}
+
+PluginScanDialog QPlainTextEdit
+{
+    background: transparent;
+}
+
+PluginScanDialog #labelPluginText
+{
+    color: rgb(20, 20, 20,);
+    font-weight: bold;
+}
+
+PluginScanDialog QPlainTextEdit
+{
+    background: transparent;
+}
+
+PluginScanDialog #labelPluginText
+{
+    font-weight: bold;
+}
+
+PluginScanDialog
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 rgb(128, 180, 255),
+        stop: 1.0 rgb(126, 178, 255));
+}
+
+PluginScanDialog QGroupBox
+{
+    color: white;
+    border: 1px solid rgba(0, 0, 0, 100);
+    border-radius:6px;
+    selection-color: rgb(140, 140, 140);
+}
+
+PrivateServerDialog #comboBoxServers
+{
+    border: 1px solid rgba(0, 0, 0, 30);
+    background-color: rgb(180, 207, 250);
+    color: rgba(0, 0, 0, 220);
+    selection-background-color: rgb(51, 153, 255);
+    selection-color: white;
+}
+
+PrivateServerDialog #comboBoxServers:focus
+{
+    border-color: rgba(0, 0, 0, 100);
+    color: black;
+    selection-background-color: rgb(51, 153, 255);
+    selection-color: white;;
+}
+
+PrivateServerDialog QComboBox QAbstractItemView
+{
+    border: none;
+    color: black;
+    background-color: rgb(180, 207, 250);
+    selection-background-color: rgb(51, 153, 255);
+    selection-color: white;
+}
+
+BusyDialog
+{
+    border: 1px solid rgba(0, 0, 0, 100);
+    border-radius:6px;
+    padding: 0px;
+    margin: 0px;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 rgb(128, 180, 255),
+        stop: 1.0 rgb(126, 178, 255));
+}
+
+BusyDialog > QLabel /* the text appearing in Busy dialog, like "connecting in ninbot.com" */
+{
+    font-weight: bold;
+    color: white;
+}

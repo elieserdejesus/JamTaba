@@ -1,0 +1,237 @@
+/* Stylesheet for BaseTrack - Ice theme */
+
+
+/* Track buttons
+--------------------------------*/
+
+#soloButton,
+#muteButton
+{
+    font-size: 9px;
+    padding: 2px;
+    color: black;
+}
+
+#buttonBoostMinus12,
+#buttonBoostPlus12,
+#buttonBoostZero,
+#soloButton,
+#muteButton,
+QPushButton#buttonStereoInversion
+{
+    background-color: rgb(180, 207, 250);
+    border-radius: 6px;
+}
+
+
+#buttonBoostMinus12,
+#buttonBoostPlus12,
+#buttonBoostZero
+{
+   padding: 1px;
+   padding-top: 3px;
+   padding-bottom: 3px;
+}
+
+QPushButton#buttonStereoInversion:checked
+{
+    background-color: rgb(129, 181, 255);
+}
+
+#buttonBoostMinus12:checked,
+#buttonBoostPlus12:checked,
+#buttonBoostZero:checked
+{
+    background-color: rgb(129, 181, 255);
+    color: rgba(0, 0, 0, 160);
+}
+
+#buttonBoostMinus12:hover,
+#buttonBoostPlus12:hover,
+#buttonBoostZero:hover,
+#soloButton:hover,
+#muteButton:hover
+{
+    background-color: rgb(204, 225, 255);
+    color: rgb(80, 80, 80);
+}
+
+QPushButton#buttonStereoInversion:hover
+{
+    background-color: rgb(204, 225, 255);
+}
+
+#buttonBoostMinus12:hover:checked,
+#buttonBoostPlus12:hover:checked,
+#buttonBoostZero:hover:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 rgb(179,211,255);,
+        stop: 1.0 #b4673b);
+        border-color: rgb(40, 40, 40);
+}
+
+QPushButton#buttonStereoInversion:hover:checked
+{
+   background-color: rgb(157, 199, 255);
+   border-color: rgb(40, 40, 40);
+}
+
+/* button colors when the track is NOT xmiting */
+BaseTrackView[unlighted="true"] #buttonBoostMinus12,
+BaseTrackView[unlighted="true"] #buttonBoostZero,
+BaseTrackView[unlighted="true"] #buttonBoostPlus12,
+BaseTrackView[unlighted="true"] #soloButton,
+BaseTrackView[unlighted="true"] #muteButton,
+BaseTrackView[unlighted="true"] QPushButton#buttonStereoInversion
+{
+    background-color: rgba(0, 0, 0, 30);
+    border: none;
+}
+
+BaseTrackView[unlighted="true"] #soloButton,
+BaseTrackView[unlighted="true"] #muteButton
+{
+    color: rgb(50, 50, 50);
+}
+
+BaseTrackView[unlighted="true"] #soloButton:hover,
+BaseTrackView[unlighted="true"] #muteButton:hover
+{
+    color: rgb(80, 80, 80);
+}
+
+#buttonBoostZero:checked
+{
+    border-bottom: none;
+    border-top: none;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 60);
+}
+
+#soloButton:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
+    color: black;
+}
+
+#soloButton:hover:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgba(90, 255, 62, 220), stop:1 rgba(0, 175, 0, 200));
+    border-color: rgb(45, 45, 45);
+}
+
+#muteButton:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
+    border-color: rgba(0, 0, 0, 30);
+    color: white;
+
+}
+
+#muteButton:hover:checked
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgba(255, 90, 62, 220), stop:1 rgba(175, 0, 0, 200));
+    color: lightgray;
+    border-color: rgb(45, 45, 45);
+}
+
+BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked,
+BaseTrackView[unlighted="true"] #buttonBoostZero:hover:checked
+{
+    background-color: rgb(157, 199, 255);
+}
+
+/* Small Label used to show max peak below peak meters
+-------------------------------------------------------*/
+BaseTrackView #peaksDbLabel
+{
+    border: 1px solid rgba(0, 0, 0, 8);
+    background-color: rgba(0, 0, 0, 6);
+    border-radius: 1px;
+}
+
+BaseTrackView[unlighted="true"] #peaksDbLabel
+{
+   border: none;
+   background-color: rgba(0, 0, 0, 10);
+}
+
+
+BaseTrackView
+{
+background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+stop: 0.0 rgb(128, 180, 255),
+stop: 1.0 rgb(126, 178, 255));
+
+    border: none; /*1px solid rgb(61, 61, 61);*/
+    font-size: 8px;
+}
+
+
+
+/* Setting colors when the track is 'not transmiting'
+-----------------------------------------------------*/
+BaseTrackView[unlighted="true"] #panSlider::handle,         /* pan slider handle */
+BaseTrackView[unlighted="true"] QSlider::handle:vertical    /* track fader handle */
+{
+    background: rgba(0, 107, 206);
+    Border: indent;
+}
+
+BaseTrackView[unlighted="true"],                            /* the track */
+TrackGroupView[unlighted="true"] > #topPanel                /* the track group top panel: used to show user name */
+{
+    background: rgba(0, 107, 206, 150);
+}
+/* -----------------------------------------*/
+
+
+BaseTrackView[unlighted="true"] #panSlider::handle:hover,
+BaseTrackView[unlighted="true"] #levelSlider::handle:hover
+{
+    background-color: rgb(51, 158, 255);
+}
+
+PeakMeter
+{
+    background-color: rgba(0, 0, 0, 6);
+    border: none;
+}
+
+
+/* TrackGroup - used as container for subchannels
+---------------------------------------------------*/
+
+TrackGroupView
+{
+    border: none;
+    border-radius: 2px;
+}
+
+TrackGroupView #topPanel                                /* topPanel is used to show channel name */
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 rgb(71, 166, 219),
+        stop: 1 rgb(126, 178, 255));
+
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+TrackGroupView #groupNameField                          /* the text field used to input channel name */
+{
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 11px;
+    font-weight: normal;
+    border: 1px solid rgb(0, 0, 0, 40);
+    border-radius: 6px;
+    background-color: rgba(0, 0, 0, 5);
+}
+
+TrackGroupView[unlighted="true"] #groupNameField        /* channel name text field when not xmiting */
+{
+    background-color: rgba(0, 0, 0, 10);
+    border: none;
+}

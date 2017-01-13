@@ -1,0 +1,78 @@
+/* JamRoomViewPanel is the widget used to show ONE public room/server */
+
+JamRoomViewPanel
+{
+    background-color: #4E9CE5;
+    border: 1px solid #4E9CE5;
+    border-radius: 6px;
+}
+
+JamRoomViewPanel[empty="true"]
+{
+    background-color: rgba(0, 0, 0, 15);
+    border: 1px solid rgba(0, 0, 0, 100);
+}
+
+JamRoomViewPanel[empty="true"] #labelRoomStatus
+{
+    color: black;
+}
+
+JamRoomViewPanel[empty="true"] #labelName
+{
+    color: black;
+}
+
+/* where the user names and wave form are showed */
+JamRoomViewPanel #content,
+JamRoomViewPanel[empty="true"] #content
+{
+    background: rgba(0, 0, 0, 10);
+    border-top: 1px solid rgba(0, 0, 0, 15);
+}
+
+JamRoomViewPanel #labelName             /* the server name (ninbot.com, ninjamer.com, etc) */
+{
+    font-weight: bold;
+    color: white;
+}
+
+JamRoomViewPanel #labelRoomStatus,      /* the label used to show number of connected users, bpm and bpi */
+JamRoomViewPanel  #labelRoomType        /* ninjam or realtime room? Only ninjam at moment. */
+{
+    font-size: 9px;
+    color: rgb(240, 240, 240);
+}
+
+JamRoomViewPanel  #labelRoomType
+{
+    margin-right: 3px;
+    margin-bottom: -3px;
+}
+
+PlayerLabel
+{
+    color: white;
+}
+
+JamRoomViewPanel QPushButton#buttonWaveDrawingMode:hover
+{
+    background-color: rgb(207, 224, 252);
+}
+
+JamRoomViewPanel QPushButton#buttonWaveDrawingMode:hover:checked
+{
+    background-color: rgb(159, 200, 255);
+}
+
+WavePeakPanel
+{
+    /* color used to draw the wave form */
+    qproperty-peaksColor: #96D3FF;
+
+    /* color used to draw the loading circle */
+    qproperty-loadingColor: #4E9CE5;
+
+    /* color used to draw loading percentage text*/
+    color: orange;
+}
