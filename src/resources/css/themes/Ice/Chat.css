@@ -40,7 +40,6 @@ ChatMessagePanel #translateButton:hover,   /* hover effect in chat message trans
 ChatMessagePanel #blockButton:hover
 {
     border-color: black;
-    border-radius:6px;
     font-weight: bold;
 }
 
