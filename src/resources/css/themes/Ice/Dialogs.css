@@ -74,7 +74,11 @@ PreferencesDialog #vstListWidget
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         stop: 0.0 rgb(128, 180, 255),
         stop: 1.0 rgb(126, 178, 255));
+}
 
+PreferencesDialog #blackListWidget
+{
+    border-radius:6px;
 }
 
 MidiToolsDialog #label_5, #labelHigherNote, #labelLowerNote
