@@ -74,5 +74,5 @@ WavePeakPanel
     qproperty-loadingColor: #4E9CE5;
 
     /* color used to draw loading percentage text*/
-    color: orange;
+    color: #4E9CE5;
 }
