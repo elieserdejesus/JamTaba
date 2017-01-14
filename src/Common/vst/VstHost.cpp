@@ -207,7 +207,7 @@ long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index,
     }
 
     case audioMasterUpdateDisplay:// 42
-        QCoreApplication::processEvents();
+        //QCoreApplication::processEvents();  crashing in MAC
         return 1L;
 
     case audioMasterCanDo:  // 37
