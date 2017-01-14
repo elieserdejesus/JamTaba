@@ -54,17 +54,19 @@ private:
         Q_UNUSED(object)
 
         ViewContainer *viewContainer = static_cast<ViewContainer *>(observer);
-        NSView *view = viewContainer->cocoaView();
-        if (view) {
-             auto mask = [view autoresizingMask];
-             [view setAutoresizingMask: NSViewNotSizable];
-             NSRect frame = [view frame];
-             viewContainer->resize(frame.size.width, frame.size.height);
-             qDebug() << "resizing view container to" << frame.size.width << " x " << frame.size.height;
-             frame.origin.x = frame.origin.y = 0;
-             [view setAutoresizingMask:mask];
-             [view setFrame:frame];
+        if (viewContainer) {
+            NSView *view = viewContainer->cocoaView();
+            if (view) {
+                auto mask = [view autoresizingMask];
+                [view setAutoresizingMask: NSViewNotSizable];
+                NSRect frame = [view frame];
+                viewContainer->resize(frame.size.width, frame.size.height);
+                qDebug() << "resizing view container to" << frame.size.width << " x " << frame.size.height;
+                frame.origin.x = frame.origin.y = 0;
+                [view setAutoresizingMask:mask];
+                [view setFrame:frame];
 
+            }
         }
     }
 };
