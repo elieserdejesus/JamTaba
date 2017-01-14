@@ -34,7 +34,7 @@ void VstPluginScanner::scan()
     writeToProcessOutput("JT-Scanner-Starting");
     foreach (const QString &scanFolder, foldersToScan)
     {
-        QDirIterator folderIterator(scanFolder, QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks, QDirIterator::Subdirectories);
+        QDirIterator folderIterator(scanFolder, QDir::AllEntries | QDir::NoDotAndDotDot | QDir::NoSymLinks, QDirIterator::Subdirectories);
         while (folderIterator.hasNext())
         {
             folderIterator.next();// point to next file inside current folder
