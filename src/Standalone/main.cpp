@@ -37,9 +37,8 @@ int main(int argc, char* args[] ){
     MainWindowStandalone mainWindow(&mainController);
     mainController.setMainWindow(&mainWindow);
 
-    mainWindow.show();
     mainWindow.initialize();
-
+    mainWindow.show();
 
     mainController.connectInJamtabaServer();
 

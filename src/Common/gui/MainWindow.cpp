@@ -243,6 +243,7 @@ void MainWindow::initialize()
     showBusyDialog(tr("Loading rooms list ..."));
 
     doWindowInitialization();
+
 }
 
 void MainWindow::doWindowInitialization()
@@ -293,6 +294,7 @@ void MainWindow::updateLocalInputChannelsGeometry()
         foreach (LocalTrackGroupView *trackGroup, localGroupChannels)
             trackGroup->setToNarrow();
     }
+
 }
 
 void MainWindow::toggleLocalInputsCollapseStatus()
