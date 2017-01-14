@@ -41,12 +41,11 @@ HEADERS += audio/Host.h
 HEADERS += midi/RtMidiDriver.h
 HEADERS += vst/VstPlugin.h
 HEADERS += vst/VstHost.h
-HEADERS += AU/AudioUnitHost.h
+mac:HEADERS += AU/AudioUnitHost.h
 HEADERS += vst/VstLoader.h
 HEADERS += vst/PluginFinder.h
 HEADERS += vst/Utils.h
 HEADERS += Libs/SingleApplication/singleapplication.h
-HEADERS += audio/core/PluginDescriptor.h
 
 SOURCES += main.cpp
 SOURCES += MainControllerStandalone.cpp
@@ -62,13 +61,12 @@ SOURCES += gui/MidiToolsDialog.cpp
 SOURCES += midi/RtMidiDriver.cpp
 SOURCES += vst/VstPlugin.cpp
 SOURCES += vst/VstHost.cpp
-SOURCES += AU/AudioUnitHost.cpp
+mac:SOURCES += AU/AudioUnitHost.cpp
 SOURCES += vst/PluginFinder.cpp
 SOURCES += vst/Utils.cpp
 SOURCES += vst/VstLoader.cpp
 SOURCES += Libs/SingleApplication/singleapplication.cpp
 SOURCES += audio/PortAudioDriver.cpp
-SOURCES += audio/core/PluginDescriptor.cpp
 
 FORMS += gui/MidiToolsDialog.ui
 
