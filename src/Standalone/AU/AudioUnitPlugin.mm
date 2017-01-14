@@ -54,18 +54,17 @@ private:
         Q_UNUSED(object)
 
         ViewContainer *viewContainer = static_cast<ViewContainer *>(observer);
-        if (viewContainer) {
-           NSView *view = viewContainer->cocoaView();
-           if (view) {
-                auto mask = [view autoresizingMask];
-                [view setAutoresizingMask: NSViewNotSizable];
-                NSRect frame = [view frame];
-                viewContainer->resize(frame.size.width, frame.size.height);
-                frame.origin.x = frame.origin.y = 0;
-                [view setAutoresizingMask:mask];
-                [view setFrame:frame];
+        NSView *view = viewContainer->cocoaView();
+        if (view) {
+             auto mask = [view autoresizingMask];
+             [view setAutoresizingMask: NSViewNotSizable];
+             NSRect frame = [view frame];
+             viewContainer->resize(frame.size.width, frame.size.height);
+             qDebug() << "resizing view container to" << frame.size.width << " x " << frame.size.height;
+             frame.origin.x = frame.origin.y = 0;
+             [view setAutoresizingMask:mask];
+             [view setFrame:frame];
 
-           }
         }
     }
 };
@@ -91,7 +90,7 @@ NSView *createAudioUnitView(AudioUnit audioUnit)
         if(viewBundle) {
             Class factoryClass = [viewBundle classNamed:(NSString *)factoryClassName];
             id factoryInstance = [[[factoryClass alloc] init] autorelease];
-            NSView *view = [factoryInstance uiViewForAudioUnit:audioUnit withSize:NSZeroSize];
+            NSView *view = [factoryInstance uiViewForAudioUnit:audioUnit withSize:NSMakeSize(100, 100)];
             return view;
         }
         else {
@@ -290,7 +289,10 @@ void AudioUnitPlugin::openEditor(const QPoint &centerOfScreen)
         NSView *cocoaView = createAudioUnitView(audioUnit);
 
        if (cocoaView) {
+
+            NSRect frame = [cocoaView frame];
             viewContainer = new ViewContainer(cocoaView);
+            viewContainer->resize(frame.size.width, frame.size.height);
             viewContainer->setWindowTitle(getName());
 
             QObject::connect(viewContainer, &QDialog::destroyed, [=](){
