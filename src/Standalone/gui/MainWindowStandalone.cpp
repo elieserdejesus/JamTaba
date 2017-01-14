@@ -44,7 +44,7 @@ void MainWindowStandalone::setupSignals()
 {
     connect(ui.actionFullscreenMode, &QAction::triggered, this, &MainWindowStandalone::toggleFullScreen);
 
-    audio::VSTPluginFinder *pluginFinder = controller->getPluginFinder();
+     audio::PluginFinder *pluginFinder = controller->getVstPluginFinder();
     Q_ASSERT(pluginFinder);
 
     connect(pluginFinder, &VSTPluginFinder::scanStarted, this, &MainWindowStandalone::showPluginScanDialog);
@@ -53,7 +53,7 @@ void MainWindowStandalone::setupSignals()
 
     connect(pluginFinder, &VSTPluginFinder::badPluginDetected, this, &MainWindowStandalone::addPluginToBlackList);
 
-    connect(pluginFinder, &VSTPluginFinder::pluginScanFinished, this, &MainWindowStandalone::addFoundedPlugin);
+    connect(pluginFinder, &VSTPluginFinder::pluginScanFinished, this, &MainWindowStandalone::showFoundedVstPlugin);
 
     connect(pluginFinder, &VSTPluginFinder::pluginScanStarted, this, &MainWindowStandalone::setCurrentScanningPlugin);
 }
@@ -102,7 +102,7 @@ void MainWindowStandalone::showPluginScanDialog()
 
 void MainWindowStandalone::closePluginScanDialog()
 {
-    controller->cancelPluginFinder();
+    controller->cancelPluginFinders();
     pluginScanDialog.reset();// reset to null pointer
 }
 
@@ -125,7 +125,7 @@ void MainWindowStandalone::addPluginToBlackList(const QString &pluginPath)
     controller->addBlackVstToSettings(pluginPath);
 }
 
-void MainWindowStandalone::addFoundedPlugin(const QString &name, const QString &path)
+void MainWindowStandalone::showFoundedVstPlugin(const QString &name, const QString &path)
 {
     Q_UNUSED(path);
 
@@ -340,9 +340,9 @@ PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
     connect(dialog, SIGNAL(sampleRateChanged(int)), controller, SLOT(setSampleRate(int)));
     connect(dialog, SIGNAL(bufferSizeChanged(int)), controller, SLOT(setBufferSize(int)));
 
-    connect(controller->getPluginFinder(), SIGNAL(scanFinished(bool)), dialog, SLOT(
+    connect(controller->getVstPluginFinder(), SIGNAL(scanFinished(bool)), dialog, SLOT(
                 populateVstTab()));
-    connect(controller->getPluginFinder(), SIGNAL(scanStarted()), dialog, SLOT(clearVstList()));
+    connect(controller->getVstPluginFinder(), SIGNAL(scanStarted()), dialog, SLOT(clearVstList()));
 
     connect(dialog, SIGNAL(vstScanDirRemoved(const QString &)), controller,
             SLOT(removePluginsScanPath(const QString &)));
@@ -392,7 +392,7 @@ void MainWindowStandalone::initializePluginFinder()
 #endif
 
     // checking for new plugins...
-    if (controller->pluginsScanIsNeeded()) {// no vsts in database cache or new plugins detected in scan folders?
+    if (controller->vstScanIsNeeded()) {// no vsts in database cache or new plugins detected in scan folders?
         if (settings.getVstScanFolders().isEmpty())
             controller->addDefaultPluginsScanPath();
         controller->scanOnlyNewPlugins();

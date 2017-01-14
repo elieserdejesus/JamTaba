@@ -11,26 +11,28 @@ class PluginDescriptor;
 
 namespace audio {
 
-class VSTPluginFinder : public QObject
+class PluginFinder : public QObject
 {
     Q_OBJECT
-public:
-    VSTPluginFinder();
-    virtual ~VSTPluginFinder();
-    void scan(const QStringList &skipList);
-    void setFoldersToScan(const QStringList &folders);
-    void cancel();
-private:
-    QStringList scanFolders;
-    QProcess scanProcess;
-    QString lastScannedPlugin;// used to recover the last plugin path when the scanner process crash
 
-    Audio::PluginDescriptor getPluginDescriptor(const QFileInfo &f);
-    QString buildCommaSeparetedString(const QStringList &list) const;
-    QString getScannerExecutablePath() const;
+public:
+    void scan(const QStringList &foldersToScan = QStringList(), const QStringList &skipList = QStringList());
+    void cancel();
+
+protected:
+    QProcess scanProcess;
+    QString lastScannedPlugin;
+
+    virtual QString getScannerExecutablePath() const = 0;
+
     void handleProcessError(const QString &lastScannedPlugin);
 
-private slots:
+    virtual void handleScanningStart(const QString &scannedLine) = 0;
+    virtual void handleScanningFinished(const QString &scannedLine) = 0;
+
+     QString buildCommaSeparatedString(const QStringList &list) const;
+
+protected slots:
     void consumeOutputFromScanProcess();
     void finishScan();
     void handleScanError(QProcess::ProcessError);
@@ -41,7 +43,9 @@ signals:
     void pluginScanStarted(const QString &path);
     void pluginScanFinished(const QString &name, const QString &path);
     void badPluginDetected(const QString &pluginPath);// a plugin crashed the scanner process
+
 };
-}
+
+} // namespace
 
 #endif

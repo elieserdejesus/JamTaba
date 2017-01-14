@@ -566,15 +566,6 @@ AudioUnitPlugin *AU::audioUnitPluginfromPath(const QString &path, int initialSam
 
 }
 
-QString AU::osTypeToString (OSType type)
-{
-    const wchar_t s[4] = { (wchar_t) ((type >> 24) & 0xff),
-                                  (wchar_t) ((type >> 16) & 0xff),
-                                  (wchar_t) ((type >> 8) & 0xff),
-                                  (wchar_t) (type & 0xff) };
-    return QString::fromWCharArray(s, 4);
-}
-
 //this piece of code was stoled from JUCE :) https://searchcode.com/codesearch/view/12071132/
 OSType AU::stringToOSType (const QString& string)
 {
@@ -606,66 +597,4 @@ bool AU::getComponentDescriptionFromPath(const QString &path, AudioComponentDesc
     desc.componentFlags = desc.componentFlagsMask = 0;
 
     return true;
-}
-
-
-QList<Audio::PluginDescriptor> AU::scanAudioUnitPlugins()
-{
-    static QList<OSType> supportedAudioUnitTypes;
-    supportedAudioUnitTypes << kAudioUnitType_MusicDevice;
-    supportedAudioUnitTypes << kAudioUnitType_MusicEffect;
-    supportedAudioUnitTypes << kAudioUnitType_Effect;
-    supportedAudioUnitTypes << kAudioUnitType_MIDIProcessor;
-
-    AudioComponent comp = nullptr;
-    QList<Audio::PluginDescriptor> descriptors;
-    do {
-        AudioComponentDescription desc;
-        desc.componentType = OSType(0);
-        desc.componentSubType = OSType(0);
-        desc.componentManufacturer = OSType(0);
-        desc.componentFlags = 0;
-        desc.componentFlagsMask = 0;
-
-        comp = AudioComponentFindNext(comp, &desc);
-        if (comp) {
-
-            OSStatus status = AudioComponentGetDescription(comp, &desc);
-            if (status == noErr) {
-
-                if (!supportedAudioUnitTypes.contains(desc.componentType))
-                    continue; // skip unsupported types
-
-                AudioComponentInstance instance;
-                status = AudioComponentInstanceNew(comp, &instance);
-                if (status == noErr) {
-
-                    QString type(AU::osTypeToString(desc.componentType));
-                    QString subType(AU::osTypeToString(desc.componentSubType));
-                    QString manufacturer(AU::osTypeToString(desc.componentManufacturer));
-
-                    CFStringRef cfName;
-                    status = AudioComponentCopyName(comp, &cfName);
-                    if (status == noErr) {
-                        QString name = QString::fromCFString(cfName);
-                        QString path(type + ":" + subType + ":" + manufacturer);
-                        descriptors.append(createPluginDescriptor(name, path));
-                    }
-                    else {
-                        qCritical() << "error getting name:" << status;
-                    }
-                }
-                if((status = AudioComponentInstanceDispose(instance)) != noErr)
-                    qCritical() << "error disposing:" << status;
-            }
-            else {
-                qCritical() << "Error creating component instance: " << status;
-            }
-
-        }
-
-    }
-    while(comp);
-
-    return descriptors;
 }

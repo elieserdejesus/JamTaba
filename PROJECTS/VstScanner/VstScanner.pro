@@ -23,24 +23,27 @@ ROOT_PATH = "../.."
 SOURCE_PATH = $$ROOT_PATH/src
 
 INCLUDEPATH += $$SOURCE_PATH/Common
-INCLUDEPATH += $$SOURCE_PATH/VstScanner
+INCLUDEPATH += $$SOURCE_PATH/Scanners
 INCLUDEPATH += $$ROOT_PATH/VST_SDK/pluginterfaces/vst2.x
 
 VPATH       += $$SOURCE_PATH/Common
-VPATH       += $$SOURCE_PATH/VstScanner
+VPATH       += $$SOURCE_PATH/Scanners
 
 HEADERS += vst/VstHost.h
-HEADERS += VstPluginScanner.h
 HEADERS += vst/Utils.h
+HEADERS += VstScanner/VstPluginScanner.h
+HEADERS += BaseScanner.h
 
-SOURCES += main.cpp
+SOURCES += VstScanner/main.cpp
+SOURCES += BaseScanner.cpp
+SOURCES += VstScanner/VstPluginScanner.cpp
 SOURCES += vst/VstHost.cpp
 SOURCES += vst/VstLoader.cpp
 SOURCES += vst/Utils.cpp
 SOURCES += audio/core/PluginDescriptor.cpp
 SOURCES += midi/MidiMessage.cpp
 SOURCES += log/logging.cpp
-SOURCES += VstPluginScanner.cpp
+
 
 #including the correct implementation for VstPluginChecker
 INCLUDEPATH += $$SOURCE_PATH/Standalone/vst #to allow a simple '#include "VstPluginChecker.h"' in the code

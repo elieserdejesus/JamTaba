@@ -101,8 +101,6 @@ namespace AU {
 
     Audio::PluginDescriptor createPluginDescriptor(const QString &name, const QString &path);
 
-    QList<Audio::PluginDescriptor> scanAudioUnitPlugins();
-
 } // namespace
 
 

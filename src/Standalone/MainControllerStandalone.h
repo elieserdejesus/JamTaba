@@ -3,7 +3,10 @@
 
 #include "MainController.h"
 #include <QApplication>
-#include "vst/PluginFinder.h"
+#include "vst/VSTPluginFinder.h"
+#ifdef Q_OS_MAC
+    #include "AU/AudioUnitPluginFinder.h"
+#endif
 #include "audio/Host.h"
 #include "audio/core/Plugins.h"
 #include "audio/core/PluginDescriptor.h"
@@ -14,11 +17,6 @@ class MainWindowStandalone;
 
 namespace Midi {
 class MidiDriver;
-}
-
-namespace JamtabaVstPlugin {
-//class VstHost;
-class PluginFinder;
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++
@@ -44,7 +42,7 @@ public:
 
     void clearPluginsCache();
     QStringList getSteinbergRecommendedPaths();
-    bool pluginsScanIsNeeded() const; // plugins cache is empty OR we have new plugins in scan folders?
+    bool vstScanIsNeeded() const; // plugins cache is empty OR we have new plugins in scan folders?
 
     void quit();
 
@@ -83,9 +81,9 @@ public:
 
     void setMainWindow(MainWindow *mainWindow) override;
 
-    void cancelPluginFinder();
+    void cancelPluginFinders();
 
-    inline audio::VSTPluginFinder *getPluginFinder() const
+    inline audio::VSTPluginFinder *getVstPluginFinder() const
     {
         return vstPluginFinder.data();
     }
@@ -137,7 +135,10 @@ protected slots:
     void on_audioDriverStarted();
     void on_ninjamStartProcessing(int intervalPosition) ;
 
-    void on_VSTPluginFounded(const QString &name, const QString &path);
+    void addFoundedVstPlugin(const QString &name, const QString &path);
+#ifdef Q_OS_MAC
+    void addFoundedAudioUnitPlugin(const QString &name, const QString &path);
+#endif
 
 private slots:
     void setVstPluginWindowSize(QString pluginName, int newWidht, int newHeight);
@@ -157,8 +158,9 @@ private:
     bool inputIndexIsValid(int inputIndex);
 
     QScopedPointer<audio::VSTPluginFinder> vstPluginFinder;
-
-    audio::VSTPluginFinder *createPluginFinder();
+#ifdef Q_OS_MAC
+    QScopedPointer<audio::AudioUnitPluginFinder> auPluginFinder;
+#endif
 
     // used to sort plugins list
     static bool pluginDescriptorLessThan(const Audio::PluginDescriptor &d1,
