@@ -19,7 +19,7 @@ public:
     virtual void setBlockSize(int blockSize) = 0;
     virtual void setTempo(int bpm) = 0;
     virtual void setPlayingFlag(bool playing) = 0;
-    virtual void update(int intervalPosition) = 0;
+    virtual void setPositionInSamples(int position) = 0;
 
 protected:
     QList<Midi::MidiMessage> receivedMidiMessages;

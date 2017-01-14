@@ -8,6 +8,7 @@
 
 #include "audio/core/Plugins.h"
 #include "audio/core/SamplesBuffer.h"
+#include "AU/AudioUnitHost.h"
 
 #include <AudioUnit/AudioUnit.h>
 #include "PublicUtility/CABufferList.h"
@@ -17,7 +18,7 @@ namespace AU {
     class AudioUnitPlugin : public Audio::Plugin {
 
     public:
-        AudioUnitPlugin(const QString &name, const QString &path, AudioUnit au, int initialSampleRate, int blockSize);
+        AudioUnitPlugin(const QString &name, const QString &path, AudioUnit au, AudioUnitHost *host);
         virtual ~AudioUnitPlugin();
 
         void openEditor(const QPoint &centerOfScreen) override;
@@ -54,9 +55,12 @@ namespace AU {
 
         const bool wantsMidiMessages;
 
+        AudioUnitHost *host;
+        AudioTimeStamp timeStamp;
+
         QMacCocoaViewContainer *viewContainer;
 
-        // AU callbacks
+                // AU callbacks
         static OSStatus inputCallback (void* hostRef, AudioUnitRenderActionFlags* ioActionFlags,
                                                     const AudioTimeStamp* inTimeStamp, UInt32 inBusNumber,
                                                     UInt32 inNumberFrames, AudioBufferList* ioData);

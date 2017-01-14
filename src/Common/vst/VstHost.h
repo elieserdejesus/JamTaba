@@ -36,7 +36,8 @@ public:
     void setBlockSize(int blockSize) override;
     void setTempo(int bpm) override;
     void setPlayingFlag(bool playing) override;
-    void update(int intervalPosition) override;
+    void setPositionInSamples(int intervalPosition) override;
+
 protected:
     static long VSTCALLBACK hostCallback(AEffect *effect, long opcode, long index, long value,
                                          void *ptr, float opt);

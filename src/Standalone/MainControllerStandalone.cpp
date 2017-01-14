@@ -302,7 +302,7 @@ void MainControllerStandalone::setupNinjamControllerSignals(){
 void MainControllerStandalone::on_ninjamStartProcessing(int intervalPosition)
 {
     for(Host *host : hosts)
-        host->update(intervalPosition);// update the vst host time line in every audio callback.
+        host->setPositionInSamples(intervalPosition);// update the vst host time line in every audio callback.
 }
 
 void MainControllerStandalone::on_VSTPluginFounded(const QString &name, const QString &path)
@@ -322,7 +322,6 @@ void MainControllerStandalone::on_VSTPluginFounded(const QString &name, const QS
     }
 }
 
-// ++++++++++++++++++++++++++++++++++++++++++
 
 audio::VSTPluginFinder *MainControllerStandalone::createPluginFinder()
 {
@@ -373,15 +372,15 @@ MainControllerStandalone::MainControllerStandalone(Persistence::Settings setting
     application->setQuitOnLastWindowClosed(true);
 
     hosts.append(Vst::VstHost::getInstance());
+#ifdef Q_OS_MAC
+    hosts.append(AU::AudioUnitHost::getInstance());
+#endif
 
-    // disabled for while
-    //connect(vstHost, &Vst::VstHost::pluginRequestingWindowResize,
-            //this, &MainControllerStandalone::setPluginWindowSize);
-
-
+    connect(Vst::VstHost::getInstance(), &Vst::VstHost::pluginRequestingWindowResize,
+            this, &MainControllerStandalone::setVstPluginWindowSize);
 }
 
-void MainControllerStandalone::setPluginWindowSize(QString pluginName, int newWidht, int newHeight)
+void MainControllerStandalone::setVstPluginWindowSize(QString pluginName, int newWidht, int newHeight)
 {
     QDialog *pluginEditorWindow = Vst::VstPlugin::getPluginEditorWindow(pluginName);
     if (pluginEditorWindow) {

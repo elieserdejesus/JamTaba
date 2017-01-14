@@ -63,7 +63,7 @@ QList<Midi::MidiMessage> VstHost::pullReceivedMidiMessages()
     return messages;
 }
 
-void VstHost::update(int intervalPosition)
+void VstHost::setPositionInSamples(int intervalPosition)
 {
     vstTimeInfo.samplePos = intervalPosition;
 

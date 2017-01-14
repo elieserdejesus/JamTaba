@@ -135,7 +135,7 @@ Audio::PluginDescriptor AU::createPluginDescriptor(const QString &name, const QS
     return Audio::PluginDescriptor(pluginName, category, manufacturer, path);
 }
 
-AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, AudioUnit au, int initialSampleRate, int blockSize)
+AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, AudioUnit au, AudioUnitHost *host)
     : Audio::Plugin(AU::createPluginDescriptor(name, path)),
       audioUnit(au),
       path(path),
@@ -145,14 +145,17 @@ AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, Audio
       viewContainer(nullptr),
       wantsMidiMessages(AudioUnitPlugin::audioUnitWantsMidi(au)),
       hasInputs(AudioUnitPlugin::getBusCount(au, kAudioUnitScope_Input) > 0),
-      hasOutputs(AudioUnitPlugin::getBusCount(au, kAudioUnitScope_Output) > 0)
+      hasOutputs(AudioUnitPlugin::getBusCount(au, kAudioUnitScope_Output) > 0),
+      host(host)
 {
 
-    initializeMaximumFramesPerSlice(blockSize);
+    Q_ASSERT(host);
+
+    initializeMaximumFramesPerSlice(host->getBufferSize());
 
     initializeCallbacks();
 
-    Float64 sampleRate = static_cast<Float64>(initialSampleRate);
+    Float64 sampleRate = static_cast<Float64>(host->getSampleRate());
     initializeSampleRate(sampleRate);
 
     if (hasInputs)
@@ -160,6 +163,9 @@ AudioUnitPlugin::AudioUnitPlugin(const QString &name, const QString &path, Audio
 
     if (hasOutputs)
         initializeStreamFormat(kAudioUnitScope_Output, 2, sampleRate);
+
+    timeStamp.mSampleTime = 0;
+    timeStamp.mFlags = kAudioTimeStampSampleTimeValid;
 }
 
 bool AudioUnitPlugin::audioUnitWantsMidi(AudioUnit audioUnit)
@@ -238,7 +244,7 @@ void AudioUnitPlugin::initializeCallbacks()
     // set host callback
     HostCallbackInfo hostCallbackInfo;
 
-    hostCallbackInfo.hostUserData = this;
+    hostCallbackInfo.hostUserData = this->host;
     hostCallbackInfo.beatAndTempoProc = getBeatAndTempoCallback;
     hostCallbackInfo.musicalTimeLocationProc = getMusicalTimeLocationCallback;
     hostCallbackInfo.transportStateProc = getTransportStateCallback;
@@ -271,8 +277,11 @@ void AudioUnitPlugin::start()
 
     OSStatus status = AudioUnitInitialize(audioUnit);
 
-    if (status != noErr)
+    if (status != noErr) {
         qCritical() << "Error initializing audio unit OSStatus: " << status;
+        return;
+    }
+
 }
 
 void AudioUnitPlugin::openEditor(const QPoint &centerOfScreen)
@@ -322,12 +331,16 @@ void AudioUnitPlugin::closeEditor()
 
 OSStatus AudioUnitPlugin::getBeatAndTempoCallback (void* hostRef, Float64* outCurrentBeat, Float64* outCurrentTempo)
 {
-    qDebug() << "Beat and Tempo callback";
+    AudioUnitHost* host = static_cast<AudioUnitHost*>(hostRef);
 
-    static Float64 beat = 0;
-    static Float64 tempo = 110;
-    outCurrentBeat = &beat;
-    outCurrentTempo = &tempo;
+    Float64 beat =  host->getBeat();
+    Float64 tempo = host->getTempo();
+
+    if (outCurrentBeat)
+        *outCurrentBeat = beat;
+
+    if (outCurrentTempo)
+        *outCurrentTempo = tempo;
 
     return noErr;
 }
@@ -336,12 +349,12 @@ OSStatus AudioUnitPlugin::getMusicalTimeLocationCallback (void* hostRef, UInt32*
                                                     Float32* outTimeSig_Numerator, UInt32* outTimeSig_Denominator,
                                                     Float64* outCurrentMeasureDownBeat)
 {
-    qDebug() << "Musical Time Location callback";
+    AudioUnitHost* host = static_cast<AudioUnitHost*>(hostRef);
 
-    static UInt32 deltaSampleOffsetToNextBeat = 0;
-    static Float32 timeSigNumerator = 4;
-    static UInt32 timeSigDenominator = 4;
-    static Float64 currentMeasureDownBeat = 0;
+    UInt32 deltaSampleOffsetToNextBeat = 0;
+    Float32 timeSigNumerator = host->getTimeSignatureNumerator();
+    UInt32 timeSigDenominator = host->getTimeSignatureDenominator();
+    Float64 currentMeasureDownBeat = 0;
 
     outDeltaSampleOffsetToNextBeat = &deltaSampleOffsetToNextBeat;
     outTimeSig_Numerator = &timeSigNumerator;
@@ -355,14 +368,14 @@ OSStatus AudioUnitPlugin::getTransportStateCallback (void* hostRef, Boolean* out
                                                Float64* outCurrentSampleInTimeLine, Boolean* outIsCycling,
                                                Float64* outCycleStartBeat, Float64* outCycleEndBeat)
 {
-    qDebug() << "Transport state callback";
+    AudioUnitHost* host = static_cast<AudioUnitHost*>(hostRef);
 
-    static Boolean isPLaying = true;
-    static Boolean transportStateChanged = false;
-    static Float64 currentSampleInTimeLine = 0;
-    static Boolean isCycling = false;
-    static Float64 cycleStartBeat = 0;
-    static Float64 cycleEndBeat = 0;
+    Boolean isPLaying = host->isPlaying();
+    Boolean transportStateChanged = false;
+    Float64 currentSampleInTimeLine = host->getPosition();
+    Boolean isCycling = false;
+    Float64 cycleStartBeat = 0;
+    Float64 cycleEndBeat = 0;
 
     outIsCycling = &isCycling;
     outIsPlaying = &isPLaying;
@@ -394,7 +407,6 @@ void AudioUnitPlugin::process(const Audio::SamplesBuffer &inBuffer, Audio::Sampl
 {
 
     AudioUnitRenderActionFlags flags = 0;
-    static AudioTimeStamp timeStamp;
 
     UInt32 frames = outBuffer.getFrameLenght();
 
@@ -446,8 +458,6 @@ void AudioUnitPlugin::process(const Audio::SamplesBuffer &inBuffer, Audio::Sampl
         outBuffer.set(internalOutBuffer);// AUs are replacing
     }
 
-
-    timeStamp.mHostTime++;
     timeStamp.mSampleTime += frames;
 
 }
@@ -531,10 +541,13 @@ AudioUnitPlugin *AU::audioUnitPluginfromPath(const QString &path, int initialSam
         if (status == noErr) {
             CFStringRef name;
             status = AudioComponentCopyName(component, &name);
-            if (status == noErr)
-                return new AudioUnitPlugin(QString::fromCFString(name), path, audioUnit, initialSampleRate, blockSize);
-            else
+            if (status == noErr) {
+                AU::AudioUnitHost *host = AU::AudioUnitHost::getInstance();
+                return new AudioUnitPlugin(QString::fromCFString(name), path, audioUnit, host);
+            }
+            else {
                 qCritical() << "Error getting audio unit name! OSStatus: " << status;
+            }
         }
         else
         {

@@ -140,7 +140,7 @@ protected slots:
     void on_VSTPluginFounded(const QString &name, const QString &path);
 
 private slots:
-    void setPluginWindowSize(QString pluginName, int newWidht, int newHeight);
+    void setVstPluginWindowSize(QString pluginName, int newWidht, int newHeight);
 
 private:
     // VST and AU hosts
