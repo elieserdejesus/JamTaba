@@ -128,13 +128,16 @@ void FxPanelItem::showPluginsListMenu(const QPoint &p)
     for(PluginDescriptor::Category category : categories) {
 
         QString categoryName = Audio::PluginDescriptor::categoryToString(category); // VST, AU or NATIVE
-        QMenu *categoryMenu = new QMenu(categoryName);
-        menu.addMenu(categoryMenu);
+        QMenu *categoryMenu = nullptr;
+        if (categories.size() > 1) {
+            categoryMenu = new QMenu(categoryName);
+            menu.addMenu(categoryMenu);
+        }
 
         QMap<QString, QList<Audio::PluginDescriptor>> allPlugins = mainController->getPluginsDescriptors(category);
 
+        QMenu *parentMenu = (categoryMenu != nullptr) ? categoryMenu : (&menu);
         for(const QString &manufacturer : allPlugins.keys()) {
-            QMenu *parentMenu = categoryMenu;
             bool canCreateManufacturerMenu = !manufacturer.isEmpty() && allPlugins[manufacturer].size() > 1; // when the manufacturer has only one plugin this plugin is showed in the Root menu
             if (canCreateManufacturerMenu) {
                 parentMenu = new QMenu(manufacturer);
@@ -147,9 +150,9 @@ void FxPanelItem::showPluginsListMenu(const QPoint &p)
             }
         }
 
-        connect(categoryMenu, &QMenu::triggered, this, &FxPanelItem::loadPlugin);
+        connect(parentMenu, &QMenu::triggered, this, &FxPanelItem::loadPlugin);
 
-        categoryMenu->setEnabled(!allPlugins.isEmpty());
+        parentMenu->setEnabled(!allPlugins.isEmpty());
     }
 
     menu.move(mapToGlobal(p));
