@@ -115,7 +115,7 @@ JamRecorder::~JamRecorder()
 
 void JamRecorder::appendLocalUserAudio(const QByteArray &encodedaudio, quint8 channelIndex, bool isFirstPartOfInterval, bool isLastPastOfInterval){
     if(!running){
-        qCCritical(jtJamRecorder) << "Illegal state! Recorder is not running!";
+        qCritical() << "Illegal state! Recorder is not running!";
         return;
     }
     //qCDebug(recorder) << "appending encoded audio to a local user channel index:" <<channelIndex;
@@ -137,7 +137,7 @@ void JamRecorder::appendLocalUserAudio(const QByteArray &encodedaudio, quint8 ch
 
 void JamRecorder::addRemoteUserAudio(const QString &userName, const QByteArray &encodedAudio, quint8 channelIndex){
     if(!running){
-        qCCritical(jtJamRecorder) << "Illegal state! Recorder is not running!";
+        qCritical() << "Illegal state! Recorder is not running!";
         return;
     }
     int intervalIndex = globalIntervalIndex;

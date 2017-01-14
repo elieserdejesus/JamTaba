@@ -415,7 +415,7 @@
                 driver = createAudioDriver(settings);
             }
             catch (const std::runtime_error &error) {
-                qCCritical(jtCore) << "Audio initialization fail: " << QString::fromUtf8(
+                qCritical() << "Audio initialization fail: " << QString::fromUtf8(
                     error.what());
                 QMessageBox::warning(window, "Audio Initialization Problem!", error.what());
             }

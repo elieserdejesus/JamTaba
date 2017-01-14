@@ -239,7 +239,7 @@ void Service::sendMessageToServer(const ClientMessage &message)
         socket->flush();
         lastSendTime = QDateTime::currentMSecsSinceEpoch();
     } else {
-        qCCritical(jtNinjamProtocol) << "Bytes not writed in socket!";
+        qCritical() << "Bytes not writed in socket!";
     }
 
     Q_ASSERT(message.getPayload() + 5 == (uint)outBuffer.size());

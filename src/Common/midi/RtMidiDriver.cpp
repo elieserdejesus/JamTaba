@@ -70,11 +70,11 @@ void RtMidiDriver::start(const QList<bool> &deviceStatuses){
                         stream->openPort(deviceIndex);
                     }
                     catch(RtMidiError e){
-                        qCCritical(jtMidi) << "Error opening midi port " << QString::fromStdString(e.getMessage());
+                        qCritical() << "Error opening midi port " << QString::fromStdString(e.getMessage());
                     }
                 }
                 else{
-                    qCCritical(jtMidi) << "Port " << QString::fromStdString(stream->getPortName(deviceIndex)) << " already opened!";
+                    qCritical() << "Port " << QString::fromStdString(stream->getPortName(deviceIndex)) << " already opened!";
                 }
             }
         }

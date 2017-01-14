@@ -133,7 +133,7 @@ void VstPlugin::suspend(){
 
 void VstPlugin::start(){
     if(!effect){
-        qCCritical(jtVstPlugin) << "effect not set, returning!";
+        qCritical() << "effect not set, returning!";
         return;
     }
 
@@ -338,7 +338,7 @@ void VstPlugin::openEditor(const QPoint &centerOfScreen){
     ERect* rect;
     effect->dispatcher(effect, effEditGetRect, 0, 0, (void*)&rect, 0);
     if (!rect) {
-      qCCritical(jtVstPlugin) << "VST plugin returned NULL edit rect";
+      qCritical() << "VST plugin returned NULL edit rect";
       return;
     }
     int rectWidth = rect->right - rect->left;

@@ -23,7 +23,7 @@ void PluginFinder::finishScan()
 
 void PluginFinder::handleScanError(QProcess::ProcessError error)
 {
-    qCritical(jtStandalonePluginFinder) << "ERROR:" << error << scanProcess.errorString();
+    qCritical() << error << scanProcess.errorString();
     finishScan();
 }
 
@@ -80,9 +80,10 @@ void PluginFinder::scan(const QStringList &scanFolders, const QStringList &skipL
 
 void PluginFinder::cancel()
 {
-    if (scanProcess.isOpen()) {
+    if (!scanProcess.atEnd()) {
         qCDebug(jtStandalonePluginFinder) << "Terminating scan process!";
         scanProcess.terminate();
+        qDebug() << "process closed";
     }
 }
 

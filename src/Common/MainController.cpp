@@ -135,7 +135,7 @@ void MainController::connectedNinjamServer(const Ninjam::Server &server)
                                                 Login::RoomTYPE::NINJAM, server.getMaxUsers(),
                                                 server.getMaxChannels()));
     } else {
-        qCCritical(jtCore) << "mainWindow is null!";
+        qCritical() << "mainWindow is null!";
     }
     qCDebug(jtCore) << "starting ninjamController...";
 

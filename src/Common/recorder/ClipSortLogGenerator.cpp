@@ -37,7 +37,7 @@ void ClipSortLogGenerator::write(const Jam &jam){
     QDir jamDir = QDir(this->clipsortPath);
     QFile projectFile(jamDir.absoluteFilePath("clipsort.log"));
     if(!projectFile.open(QFile::WriteOnly)){
-        qCCritical(jtJamRecorder) << "Can't write clipsort.log in " << jamDir;
+        qCritical() << "Can't write clipsort.log in " << jamDir;
     }
     QTextStream stream(&projectFile);
     QByteArray byteArray(stringBuffer.toUtf8());
@@ -56,7 +56,7 @@ QString ClipSortLogGenerator::getAudioAbsolutePath(QString audioFileName){
     QString replacementFilePath = QUuid::createUuid().toString().remove(QRegExp("[-{}]"));
     if (!jamDir.exists(replacementFilePath.left(1)) && !jamDir.mkdir(replacementFilePath.left(1)))
     {
-        qCCritical(jtJamRecorder) << "Could not create clip directory in " << this->clipsortPath;
+        qCritical() << "Could not create clip directory in " << this->clipsortPath;
         return QString::null;
     }
     return jamDir.absoluteFilePath(replacementFilePath.left(1) + "/" +

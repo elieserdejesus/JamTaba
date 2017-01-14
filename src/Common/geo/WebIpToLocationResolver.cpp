@@ -199,7 +199,7 @@ bool WebIpToLocationResolver::canTranslateCountryName(const QString &currentLang
 }
 
 void WebIpToLocationResolver::replyError(QNetworkReply::NetworkError e){
-    qCCritical(jtIpToLocation) << "Reply error! " << e;
+    qCritical() << "Reply error! " << e;
 }
 
 QString WebIpToLocationResolver::sanitizeLanguageCode(const QString &languageCode)

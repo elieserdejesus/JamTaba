@@ -30,7 +30,7 @@ UserChannel User::getChannel(quint8 index) const
     if (channels.contains(index))
         return channels[index];
 
-    qCCritical(jtNinjamCore) << "invalid channel index (" << QString::number(index) << "), returning an empty channel!";
+    qCritical() << "invalid channel index (" << QString::number(index) << "), returning an empty channel!";
     return UserChannel();// return a invalid/empty channel
 }
 
@@ -43,7 +43,7 @@ void User::updateChannelName(quint8 channelIndex, const QString &newName){
     if(channels.contains(channelIndex))
         channels[channelIndex].setName(newName);
     else
-        qCCritical(jtNinjamCore) << "invalid channel index (" << QString::number(channelIndex) << "), can't update the channel!";
+        qCritical() << "invalid channel index (" << QString::number(channelIndex) << "), can't update the channel!";
 }
 
 void User::updateChannelReceiveStatus(quint8 channelIndex, bool receiving)
@@ -51,7 +51,7 @@ void User::updateChannelReceiveStatus(quint8 channelIndex, bool receiving)
     if(channels.contains(channelIndex))
         channels[channelIndex].setActive(receiving);
     else
-        qCCritical(jtNinjamCore) << "invalid channel index (" << QString::number(channelIndex) << "), can't update the channel!";
+        qCritical() << "invalid channel index (" << QString::number(channelIndex) << "), can't update the channel!";
 }
 
 void User::removeChannel(quint8 channelIndex)

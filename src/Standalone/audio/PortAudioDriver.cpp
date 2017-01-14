@@ -39,7 +39,7 @@ bool PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
     qCDebug(jtAudio) << "initializing portaudio...";
     PaError error = Pa_Initialize();
     if (error != paNoError){
-        qCCritical(jtAudio) << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
+        qCritical() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
         return false;
     }
     paStream = nullptr;// inputBuffer = outputBuffer = NULL;
@@ -318,7 +318,7 @@ void PortAudioDriver::stop(bool refreshDevicesList)
             qCDebug(jtAudio) << "Stopping portaudio driver ...";
             PaError error = Pa_CloseStream(paStream);
             if(error != paNoError){
-                qCCritical(jtAudio) << "   Error closing portaudio stream: " << Pa_GetErrorText(error);
+                qCritical() << "   Error closing portaudio stream: " << Pa_GetErrorText(error);
             }
             emit stopped();
             qCDebug(jtAudio) << "Portaudio driver stoped!";

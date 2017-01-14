@@ -28,11 +28,11 @@ PortAudioDriver::PortAudioDriver(Controller::MainController *mainController, int
         if (maxOutputs > 1)
             globalOutputRange.setToStereo();
         if(!initPortAudio(sampleRate, bufferSize)){
-            qCCritical(jtAudio) << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
+            qCritical() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
             audioDeviceIndex = paNoDevice;
         }
     } else {
-        qCCritical(jtAudio) << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
+        qCritical() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
         audioDeviceIndex = paNoDevice;
     }
 }
