@@ -157,6 +157,10 @@ int RtMidiDriver::getMaxInputDevices() const{
     catch(const RtMidiError &e) {
         qCDebug(jtMidi) << QString::fromStdString(e.getMessage());
     }
+    catch(...) {
+        qCritical() << "ERRO NO MIDI!" ;
+    }
+
     return 0;
 }
 

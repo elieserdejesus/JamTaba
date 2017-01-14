@@ -477,7 +477,7 @@ void MainWindow::loadPreset(const Preset &preset)
             mainController->setTransmitingStatus(trackGroupView->getChannelIndex(), true);
         }
 
-        //QApplication::processEvents();
+        QApplication::processEvents();
     }
 }
 

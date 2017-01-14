@@ -180,7 +180,7 @@ void FxPanelItem::loadSelectedPlugin()
         return;
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    //QApplication::processEvents();// force the cursor change
+    QApplication::processEvents();// force the cursor change
 
     // add a new plugin
     Audio::PluginDescriptor descriptor = Audio::PluginDescriptor::fromString(action->data().toString());

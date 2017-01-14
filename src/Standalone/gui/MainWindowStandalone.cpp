@@ -219,7 +219,7 @@ void MainWindowStandalone::restoreLocalSubchannelPluginsList(
             else {
                 qCritical() << "can´t create plugin instance! " << plugin.name;
             }
-            //QApplication::processEvents(); // freezing the GUI in MAC
+            //QApplication::processEvents();
         }
     }
 }
