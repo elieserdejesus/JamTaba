@@ -61,7 +61,6 @@ private:
                 [view setAutoresizingMask: NSViewNotSizable];
                 NSRect frame = [view frame];
                 viewContainer->resize(frame.size.width, frame.size.height);
-                qDebug() << "resizing view container to" << frame.size.width << " x " << frame.size.height;
                 frame.origin.x = frame.origin.y = 0;
                 [view setAutoresizingMask:mask];
                 [view setFrame:frame];
@@ -616,8 +615,6 @@ QList<Audio::PluginDescriptor> AU::scanAudioUnitPlugins()
     supportedAudioUnitTypes << kAudioUnitType_MusicDevice;
     supportedAudioUnitTypes << kAudioUnitType_MusicEffect;
     supportedAudioUnitTypes << kAudioUnitType_Effect;
-    supportedAudioUnitTypes << kAudioUnitType_Mixer;
-    supportedAudioUnitTypes << kAudioUnitType_Generator;
     supportedAudioUnitTypes << kAudioUnitType_MIDIProcessor;
 
     AudioComponent comp = nullptr;
@@ -632,14 +629,16 @@ QList<Audio::PluginDescriptor> AU::scanAudioUnitPlugins()
 
         comp = AudioComponentFindNext(comp, &desc);
         if (comp) {
-            AudioComponentInstance instance;
-            OSStatus status = AudioComponentInstanceNew(comp, &instance);
-            if (status == noErr) {
-                status = AudioComponentGetDescription(comp, &desc);
-                if (status == noErr) {
 
-                    if (!supportedAudioUnitTypes.contains(desc.componentType))
-                        continue; // skip unsupported types
+            OSStatus status = AudioComponentGetDescription(comp, &desc);
+            if (status == noErr) {
+
+                if (!supportedAudioUnitTypes.contains(desc.componentType))
+                    continue; // skip unsupported types
+
+                AudioComponentInstance instance;
+                status = AudioComponentInstanceNew(comp, &instance);
+                if (status == noErr) {
 
                     QString type(AU::osTypeToString(desc.componentType));
                     QString subType(AU::osTypeToString(desc.componentSubType));
@@ -652,11 +651,19 @@ QList<Audio::PluginDescriptor> AU::scanAudioUnitPlugins()
                         QString path(type + ":" + subType + ":" + manufacturer);
                         descriptors.append(createPluginDescriptor(name, path));
                     }
+                    else {
+                        qCritical() << "error getting name:" << status;
+                    }
                 }
-                AudioComponentInstanceDispose(instance);
+                if((status = AudioComponentInstanceDispose(instance)) != noErr)
+                    qCritical() << "error disposing:" << status;
+            }
+            else {
+                qCritical() << "Error creating component instance: " << status;
             }
 
         }
+
     }
     while(comp);
 
