@@ -327,6 +327,7 @@
 		2A3669151E0DBFA9006CD583 /* JamTabaAUPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A3669131E0DBFA9006CD583 /* JamTabaAUPlugin.h */; };
 		2A3D0AA31E06D4FE00789D68 /* JamTaba.component in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D01CCD20486CAD60068D4B7 /* JamTaba.component */; };
 		2A3FC8401E15BCD5005227F4 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700D1E08113100A4B6C2 /* Carbon.framework */; };
+		2A488F041E2C04C70097C505 /* PluginDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB2C1E0AF46800BEF1FF /* PluginDescriptor.cpp */; };
 		2AB5C82E1E076776007BD342 /* CocoaJamTabaView.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */; };
 		2AC0D3E41E0AB913005A940A /* JamTabaPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D41E0AB913005A940A /* JamTabaPlugin.h */; };
 		2AC0D3E81E0AB913005A940A /* MainControllerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D61E0AB913005A940A /* MainControllerPlugin.h */; };
@@ -364,7 +365,7 @@
 			outputFiles = (
 				"${INPUT_FILE_DIR}/GeneratedFiles/ui_${INPUT_FILE_BASE}.h",
 			);
-			script = "/Users/elieser/Qt/5.7/clang_64/bin/uic -o ${INPUT_FILE_DIR}/GeneratedFiles/ui_${INPUT_FILE_BASE}.h ${INPUT_FILE_PATH}\n";
+			script = "~/Desktop/Qt-5.6/bin/uic -o ${INPUT_FILE_DIR}/GeneratedFiles/ui_${INPUT_FILE_BASE}.h ${INPUT_FILE_PATH}\n";
 		};
 		2A0DBB0E1E0AF31900BEF1FF /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -375,7 +376,7 @@
 			outputFiles = (
 				"${INPUT_FILE_DIR}/GeneratedFiles/moc_${INPUT_FILE_BASE}.cpp",
 			);
-			script = "/Users/elieser/Qt/5.7/clang_64/bin/moc -o ${INPUT_FILE_DIR}/GeneratedFiles/moc_${INPUT_FILE_BASE}.cpp ${INPUT_FILE_PATH}\n";
+			script = "~/Desktop/Qt-5.6/bin/moc -o ${INPUT_FILE_DIR}/GeneratedFiles/moc_${INPUT_FILE_BASE}.cpp ${INPUT_FILE_PATH}\n";
 		};
 		2A120A871E0C066100E0E596 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -386,7 +387,7 @@
 			outputFiles = (
 				"${INPUT_FILE_DIR}/GeneratedFiles/rcc_${INPUT_FILE_BASE}.cpp",
 			);
-			script = "/Users/elieser/Qt/5.7/clang_64/bin/rcc -o ${INPUT_FILE_DIR}/GeneratedFiles/rcc_${INPUT_FILE_BASE}.cpp ${INPUT_FILE_PATH}";
+			script = "~/Desktop/Qt-5.6/bin/rcc -o ${INPUT_FILE_DIR}/GeneratedFiles/rcc_${INPUT_FILE_BASE}.cpp ${INPUT_FILE_PATH}";
 		};
 /* End PBXBuildRule section */
 
@@ -1779,6 +1780,7 @@
 				2A1C7A5C1E0B5F2C00C7984D /* LocalTrackView.cpp in Sources */,
 				2A1C7A5D1E0B5F2C00C7984D /* MainWindow.cpp in Sources */,
 				2A1C7A5E1E0B5F2C00C7984D /* NinjamPanel.cpp in Sources */,
+				2A488F041E2C04C70097C505 /* PluginDescriptor.cpp in Sources */,
 				2A1C7A5F1E0B5F2C00C7984D /* NinjamRoomWindow.cpp in Sources */,
 				2A1C7A601E0B5F2C00C7984D /* NinjamTrackGroupView.cpp in Sources */,
 				2A1C7A611E0B5F2C00C7984D /* NinjamTrackView.cpp in Sources */,
@@ -1947,7 +1949,7 @@
 				PRODUCT_NAME = CocoaJamTabaView;
 				SECTORDER_FLAGS = "";
 				STRIP_INSTALLED_PRODUCT = YES;
-				USER_HEADER_SEARCH_PATHS = "";
+				USER_HEADER_SEARCH_PATHS = "~/Desktop/Qt-5.6/include/**";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2001,7 +2003,7 @@
 				PRODUCT_NAME = CocoaJamTabaView;
 				SECTORDER_FLAGS = "";
 				STRIP_INSTALLED_PRODUCT = YES;
-				USER_HEADER_SEARCH_PATHS = "";
+				USER_HEADER_SEARCH_PATHS = "~/Desktop/Qt-5.6/include/**";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2055,7 +2057,7 @@
 				PRODUCT_NAME = CocoaJamTabaView;
 				SECTORDER_FLAGS = "";
 				STRIP_INSTALLED_PRODUCT = YES;
-				USER_HEADER_SEARCH_PATHS = "";
+				USER_HEADER_SEARCH_PATHS = "~/Desktop/Qt-5.6/include/**";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
