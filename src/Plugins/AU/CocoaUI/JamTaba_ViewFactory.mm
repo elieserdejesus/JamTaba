@@ -25,8 +25,6 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 
 - (NSView *)uiViewForAudioUnit:(AudioUnit)inAU withSize:(NSSize)inPreferredSize {
     
-    QApplication::setApplicationName("Jamtaba 2");
-    
     [self createQtEnvironment];
     
     Configurator *configurator = Configurator::getInstance();
@@ -96,14 +94,13 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 }
 
 - (void) createQtEnvironment {
+    QApplication::setApplicationName("Jamtaba 2");
+    QApplication::setAttribute(Qt::AA_MacPluginApplication);
+    QApplication::setAttribute(Qt::AA_DontUseNativeMenuBar); // not working in qt 5.6.2
     
     if (!QApplication::instance())
     {
-        
         int argc = 0;
-        
-        QApplication::setAttribute(Qt::AA_MacPluginApplication);
-        QApplication::setAttribute(Qt::AA_DontUseNativeMenuBar);
         new QApplication(argc, 0);
        
     }
