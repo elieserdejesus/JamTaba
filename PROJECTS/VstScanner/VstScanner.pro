@@ -10,12 +10,16 @@ linux{
     DEFINES += __cdecl="" #avoid tons of errors in VST_SDK in linux
 }
 
-#when debugging the VstScanner executable is generated in the Standalone folder
-CONFIG(debug, debug|release){
-    macx: DESTDIR = $$OUT_PWD/../Standalone/Jamtaba2.app/Contents/MacOS
-    !macx:DESTDIR = $$OUT_PWD/../Standalone/debug
-    message("Generating VstScanner executable in" $$DESTDIR)
+# the VstScanner executable is generated in the Standalone folder
+macx: DESTDIR = $$OUT_PWD/../Standalone/Jamtaba2.app/Contents/MacOS
+!macx{
+    CONFIG(debug, debug|release) {
+        DESTDIR = $$OUT_PWD/../Standalone/Debug
+    } else {
+        DESTDIR = $$OUT_PWD/../Standalone/Release
+    }
 }
+message("Generating VstScanner executable in" $$DESTDIR)
 
 TEMPLATE = app
 

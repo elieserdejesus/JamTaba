@@ -2,14 +2,11 @@ QT += core
 QT -= gui
 
 TARGET = AUScanner
-CONFIG -= app_bundle #in MAC create just a binary, not a complete bundle
+CONFIG -= app_bundle #in MAC create just a binary executable, not a complete bundle
 
-#when debugging the AUScanner executable is generated in the Standalone folder
-CONFIG(debug, debug|release){
-    macx: DESTDIR = $$OUT_PWD/../Standalone/Jamtaba2.app/Contents/MacOS
-    !macx:DESTDIR = $$OUT_PWD/../Standalone/debug
-    message("Generating AUScanner executable in" $$DESTDIR)
-}
+# AUScanner executable is generated in the Standalone folder
+DESTDIR = $$OUT_PWD/../Standalone/Jamtaba2.app/Contents/MacOS
+message("Generating AUScanner executable in" $$DESTDIR)
 
 TEMPLATE = app
 
