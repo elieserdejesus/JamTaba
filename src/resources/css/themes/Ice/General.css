@@ -274,7 +274,7 @@ QMenu
     border: 1px outset rgb(80, 80, 80);
     border-radius: 6px;
     color: white;
-    background: rgb(143, 188, 250);
+    background: rgb(128, 180, 255);
 }
 
 QMenu::item::enabled:selected
