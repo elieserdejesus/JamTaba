@@ -160,9 +160,10 @@ BaseTrackView[unlighted="true"] #peaksDbLabel
 
 BaseTrackView
 {
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-stop: 0.0 rgb(128, 180, 255),
-stop: 1.0 rgb(126, 178, 255));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop: 0.0 rgb(128, 180, 255),
+            stop: 0.95 rgb(126, 178, 255),
+            stop: 1.0 rgb(71, 166, 219));
 
     border: none; /*1px solid rgb(61, 61, 61);*/
     font-size: 8px;
