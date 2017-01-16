@@ -4,6 +4,8 @@ message("VST PATH: " $$VST_SDK_PATH)
 
 TEMPLATE = lib
 
+mac:LIBS+= -dead_strip
+
 ROOT_PATH = "../.."
 SOURCE_PATH = "$$ROOT_PATH/src"
 
@@ -45,6 +47,7 @@ HEADERS += audio/core/SamplesBuffer.h
 HEADERS += audio/core/AudioPeak.h
 HEADERS += audio/core/Plugins.h
 HEADERS += audio/core/Filters.h
+HEADERS += audio/core/PluginDescriptor.h
 HEADERS += audio/vorbis/VorbisDecoder.h
 HEADERS += audio/vorbis/VorbisEncoder.h
 HEADERS += audio/RoomStreamerNode.h
@@ -146,6 +149,7 @@ SOURCES += audio/codec.cpp
 SOURCES += audio/NinjamTrackNode.cpp
 SOURCES += audio/MetronomeTrackNode.cpp
 SOURCES += audio/core/SamplesBuffer.cpp
+SOURCES += audio/core/PluginDescriptor.cpp
 SOURCES += audio/SamplesBufferResampler.cpp
 SOURCES += audio/vorbis/VorbisDecoder.cpp
 SOURCES += audio/vorbis/VorbisEncoder.cpp

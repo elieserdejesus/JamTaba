@@ -49,7 +49,7 @@ private slots:
     void on_contextMenu(QPoint p);
     void on_buttonClicked();
     void on_actionMenuTriggered(QAction *a);
-    void on_fxMenuActionTriggered(QAction *a);
+    void loadSelectedPlugin();
 
 private:
     Audio::Plugin *plugin;
@@ -58,6 +58,8 @@ private:
     Controller::MainControllerStandalone *mainController;// used to ask about plugins
 
     void showPluginGui(Audio::Plugin *plugin);
+
+    void showPluginsListMenu(const QPoint &p);
 
     static const QString NEW_EFFECT_STRING;
 

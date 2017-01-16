@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QApplication>
 #include <QStandardPaths>
+#include <QTime>
 
 #include "log/Logging.h"
 
@@ -13,6 +14,29 @@ const QString Configurator::CACHE_FOLDER_NAME = "Cache";
 const QString Configurator::LOG_CONFIG_FILE_NAME = "logging.ini";
 const QString Configurator::THEMES_FOLDER_NAME = "Themes";
 const QString Configurator::THEMES_FOLDER_IN_RESOURCES = ":/css/themes";
+
+// from https://sites.google.com/a/embeddedlab.org/community/technical-articles/qt/qt-posts/howtodocoloredloggingusingqtdebug
+#define COLOR_DEBUG         "\033[35;1m"
+#define COLOR_DEBUG_MIDI    "\033[32;1m"
+#define COLOR_DEBUG_AUDIO   "\033[35;1m"
+#define COLOR_DEBUG_GUI     "\033[36;1m"
+#define COLOR_WARN          "\033[33;1m"
+#define COLOR_CRITICAL      "\033[31;1m"
+#define COLOR_FATAL         "\033[31;1m"
+#define COLOR_RESET         "\033[0m"
+
+QString Configurator::getDebugColor(const QMessageLogContext &context)
+{
+    QString category(context.category);
+    if (category == QString(jtMidi().categoryName()))
+        return COLOR_DEBUG_MIDI;
+    else if (category == QString(jtAudio().categoryName()))
+        return COLOR_DEBUG_AUDIO;
+    else if (category == QString(jtGUI().categoryName()))
+        return COLOR_DEBUG_GUI;
+
+    return COLOR_DEBUG;
+}
 
 void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -26,27 +50,26 @@ void Configurator::LogHandler(QtMsgType type, const QMessageLogContext &context,
     else
         file = fullFileName;
 
+    QString messageType;
+    QString messageColor;
+
     QTextStream stream(&stringMsg);
     switch (type) {
-    case QtDebugMsg:
-        stream << context.category << ".DEBUG:  " << localMsg.constData() << " "  << " in "
-               << file << " " << context.line << endl;
-        break;
-    case QtWarningMsg:
-        stream << context.category << ".WARNING:  " << localMsg.constData() <<  context.function
-               <<  " " << file << context.line << endl << endl;
-        break;
-    case QtCriticalMsg:
-        stream << context.category << ".CRITICAL:  " << localMsg.constData() <<  context.function
-               << " " << file << context.line << endl << endl;
-        break;
-    case QtFatalMsg:
-        stream << context.category  << ".FATAL:  " << localMsg.constData() << context.function
-               << file << context.line << endl << endl;
-        break;
+    case QtDebugMsg:    messageType = "DEBUG   ";   messageColor = getDebugColor(context);   break;
+    case QtWarningMsg:  messageType = "WARNING ";   messageColor = COLOR_WARN;   break;
+    case QtCriticalMsg: messageType = "CRITICAL";   messageColor = COLOR_CRITICAL;   break;
+    case QtFatalMsg:    messageType = "FATAL   ";   messageColor = COLOR_FATAL;   break;
     default:
-        stream << context.category << ".INFO:  " << localMsg.constData() <<endl;
+        messageType = "INFO    "; messageColor = COLOR_RESET;
     }
+
+    QString timeStamp(QTime::currentTime().toString("hh:mm:ss:zzz"));
+
+    stream << messageColor
+           << QString(QString(context.category) + "." + messageType).leftJustified(17, ' ')
+           << " [" << timeStamp << "] "
+           << localMsg.constData()
+           << COLOR_RESET << " [" << file << ", line " << context.line << "]" << endl;
 
     QTextStream(stdout) << stringMsg;
 
@@ -125,7 +148,6 @@ bool Configurator::setUp()
 
     // themes dir is the same for Standalone and Vst plugin
     themesDir = QDir(getApplicationDataDir().absoluteFilePath(THEMES_FOLDER_NAME));
-    qDebug() << "Themes dir: " << themesDir;
 
     if (!folderTreeExists())
         createFoldersTree();
@@ -136,6 +158,8 @@ bool Configurator::setUp()
         exportThemes();
 
     setupLogConfigFile();
+
+    qInfo() << "JamTaba Base dir:" << baseDir.absolutePath();
 
     return true;
 }
@@ -181,7 +205,6 @@ void Configurator::setupLogConfigFile()
     QString logConfigFilePath = baseDir.absoluteFilePath(logConfigFileName);
     if (!logConfigFilePath.isEmpty()) {
         qputenv("QT_LOGGING_CONF", QByteArray(logConfigFilePath.toUtf8()));
-        qDebug() << "Setting QT_LOGGING_CONF to " << logConfigFilePath;
         qInstallMessageHandler(&Configurator::LogHandler);
     }
     else {
@@ -243,8 +266,10 @@ bool Configurator::folderTreeExists() const
 // copy the logging.ini from resources to application writable path, so user can tweak the Jamtaba log
 void Configurator::exportLogIniFile()
 {
-    QString logConfigFilePath = baseDir.absoluteFilePath(logConfigFileName);
-    if (!QFile(logConfigFilePath).exists()) {
+    QString logConfigFilePath(baseDir.absoluteFilePath(logConfigFileName));
+
+    QFile file(logConfigFilePath);
+    if (!file.exists()) {
         qDebug(jtConfigurator) << "Log Ini file don't exist in' :" << logConfigFilePath;
 
         //copy the log config file from resources to 'filePath'

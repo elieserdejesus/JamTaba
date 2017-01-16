@@ -9,11 +9,15 @@ MainWindowPlugin::MainWindowPlugin(MainControllerPlugin *mainController) :
     MainWindow(mainController),
     firstChannelIsInitialized(false)
 {
-    this->ui.actionVstPreferences->setVisible(false);
-    this->ui.actionAudioPreferences->setVisible(false);
-    this->ui.actionMidiPreferences->setVisible(false);
-    this->ui.actionQuit->setVisible(false);
-    this->ui.actionFullscreenMode->setVisible(false);
+    ui.actionVstPreferences->setVisible(false);
+    ui.actionAudioPreferences->setVisible(false);
+    ui.actionMidiPreferences->setVisible(false);
+    ui.actionQuit->setVisible(false);
+    ui.actionFullscreenMode->setVisible(false);
+    
+#ifdef Q_OS_MAC
+    ui.menuBar->setNativeMenuBar(false); // avoid show the JamTaba menu bar in top of screen (the common behavior for mac apps)
+#endif
 }
 
 NinjamRoomWindow *MainWindowPlugin::createNinjamWindow(const Login::RoomInfo &roomInfo,

@@ -3,7 +3,7 @@
 #include "midi/MidiDriver.h"
 #include <QDebug>
 #include <QDateTime>
-#include <QApplication>
+#include <QCoreApplication>
 #include <QList>
 #include <QMap>
 #include <cmath>
@@ -11,22 +11,22 @@
 
 using namespace Vst;
 
-QScopedPointer<Host> Host::hostInstance;
+QScopedPointer<VstHost> VstHost::hostInstance;
 
-Host *Host::getInstance()
+VstHost *VstHost::getInstance()
 {
     if (!hostInstance)
-        hostInstance.reset(new Host());
+        hostInstance.reset(new VstHost());
     return hostInstance.data();
 }
 
-Host::Host() :
+VstHost::VstHost() :
     blockSize(0)
 {
     clearVstTimeInfoFlags();
 }
 
-void Host::clearVstTimeInfoFlags()
+void VstHost::clearVstTimeInfoFlags()
 {
     int tempSampleRate = vstTimeInfo.sampleRate;
 
@@ -48,7 +48,7 @@ void Host::clearVstTimeInfoFlags()
     vstTimeInfo.flags |= kVstTimeSigValid;
 }
 
-void Host::setPlayingFlag(bool playing)
+void VstHost::setPlayingFlag(bool playing)
 {
     if (playing)
         vstTimeInfo.flags |= kVstTransportPlaying;
@@ -56,14 +56,14 @@ void Host::setPlayingFlag(bool playing)
         clearVstTimeInfoFlags();
 }
 
-QList<Midi::MidiMessage> Host::pullReceivedMidiMessages()
+QList<Midi::MidiMessage> VstHost::pullReceivedMidiMessages()
 {
     QList<Midi::MidiMessage> messages(receivedMidiMessages);
     receivedMidiMessages.clear();
     return messages;
 }
 
-void Host::update(int intervalPosition)
+void VstHost::setPositionInSamples(int intervalPosition)
 {
     vstTimeInfo.samplePos = intervalPosition;
 
@@ -107,37 +107,37 @@ void Host::update(int intervalPosition)
     vstTimeInfo.flags |= kVstClockValid;
 }
 
-Host::~Host()
+VstHost::~VstHost()
 {
 }
 
-void Host::setBlockSize(int blockSize)
+void VstHost::setBlockSize(int blockSize)
 {
     this->blockSize = blockSize;
 }
 
-void Host::setSampleRate(int sampleRate)
+void VstHost::setSampleRate(int sampleRate)
 {
     this->vstTimeInfo.sampleRate = sampleRate;
 }
 
-int Host::getSampleRate() const
+int VstHost::getSampleRate() const
 {
     return (int)this->vstTimeInfo.sampleRate;
 }
 
-void Host::setTempo(int bpm)
+void VstHost::setTempo(int bpm)
 {
     this->vstTimeInfo.tempo = bpm;
     this->vstTimeInfo.flags |= kVstTempoValid;
 }
 
-bool Host::tempoIsValid() const
+bool VstHost::tempoIsValid() const
 {
     return this->vstTimeInfo.flags & kVstTempoValid;
 }
 
-long VSTCALLBACK Host::hostCallback(AEffect *effect, long opcode, long index, long value, void *ptr,
+long VSTCALLBACK VstHost::hostCallback(AEffect *effect, long opcode, long index, long value, void *ptr,
                                     float opt)
 {
     Q_UNUSED(effect)
@@ -147,7 +147,7 @@ long VSTCALLBACK Host::hostCallback(AEffect *effect, long opcode, long index, lo
 
     switch (opcode) {
     case audioMasterIdle:
-        QApplication::processEvents();
+        QCoreApplication::processEvents();
         return 0L;
 
     case audioMasterVersion:  // 1
@@ -160,22 +160,22 @@ long VSTCALLBACK Host::hostCallback(AEffect *effect, long opcode, long index, lo
         int newHeight = value;
         char temp[128];// kVstMaxEffectNameLen]; //some dumb plugins don't respect kVstMaxEffectNameLen
         effect->dispatcher(effect, effGetEffectName, 0, 0, temp, 0);
-        emit Host::getInstance()->pluginRequestingWindowResize(QString::fromUtf8(
+        emit VstHost::getInstance()->pluginRequestingWindowResize(QString::fromUtf8(
                                                                    temp), newWidth, newHeight);
         return 1L;
     }
 
     case audioMasterGetBlockSize:
-        return Host::getInstance()->blockSize;
+        return VstHost::getInstance()->blockSize;
 
     case audioMasterGetSampleRate:
-        return Host::getInstance()->getSampleRate();
+        return VstHost::getInstance()->getSampleRate();
 
     case audioMasterWantMidi:// 6
         return true;
 
     case audioMasterGetTime:  // 7
-        return (long)(&Host::getInstance()->vstTimeInfo);
+        return (long)(&VstHost::getInstance()->vstTimeInfo);
 
     case audioMasterGetCurrentProcessLevel:  // 23
         return 2L;
@@ -207,7 +207,7 @@ long VSTCALLBACK Host::hostCallback(AEffect *effect, long opcode, long index, lo
     }
 
     case audioMasterUpdateDisplay:// 42
-        QApplication::processEvents();
+        //QCoreApplication::processEvents();  crashing in MAC
         return 1L;
 
     case audioMasterCanDo:  // 37

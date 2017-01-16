@@ -9,6 +9,7 @@
 #include <QStringList>
 #include <QFile>
 #include "Configurator.h"
+#include "audio/core/PluginDescriptor.h"
 
 namespace Persistence {
 class Settings;
@@ -122,6 +123,16 @@ public:
     QStringList foldersToScan;
     QStringList blackedPlugins;// vst in blackbox....
 };
+
+class AudioUnitSettings  : public SettingsObject
+{
+public:
+    AudioUnitSettings();
+    void write(QJsonObject &out) const override;
+    void read(const QJsonObject &in) override;
+    QStringList cachedPlugins;
+};
+
 // ++++++++++++++++++++++++
 class RecordingSettings : public SettingsObject
 {
@@ -148,10 +159,14 @@ public:
 class Plugin
 {
 public:
-    Plugin(const QString &path, bool bypassed, const QByteArray &data);
+
+    Plugin(const Audio::PluginDescriptor &descriptor, bool bypassed, const QByteArray &data = QByteArray());
     QString path;
+    QString name;
+    QString manufacturer;
     bool bypassed;
     QByteArray data;// saved data to restore in next jam session
+    Audio::PluginDescriptor::Category category; // VST, AU, NATIVE plugin
 };
 // +++++++++++++++++++++++++++++++++
 class Subchannel
@@ -228,6 +243,8 @@ public:
     void read(const QJsonObject &in, bool allowMultiSubchannels);
     QList<Channel> channels;
 
+    static Plugin jsonObjectToPlugin(QJsonObject jsonObject);
+
     inline bool isValid() const
     {
         return !channels.isEmpty();
@@ -274,6 +291,9 @@ private:
     WindowSettings windowSettings;
     MetronomeSettings metronomeSettings;
     VstSettings vstSettings;
+#ifdef Q_OS_MAC
+    AudioUnitSettings audioUnitSettings;
+#endif
     LocalInputTrackSettings inputsSettings;
     RecordingSettings recordingSettings;
     PrivateServerSettings privateServerSettings;
@@ -476,6 +496,13 @@ public:
     void addVstScanPath(const QString &path);
     void removeVstScanPath(const QString &path);
     QStringList getVstScanFolders() const;
+
+    // AU plugins
+#ifdef Q_OS_MAC
+    void addAudioUnitPlugin(const QString &pluginPath);
+    void clearAudioUnitCache();
+    QStringList getAudioUnitsPaths() const;
+#endif
 
     // ++++++++++++++ Metronome ++++++++++
     void setMetronomeSettings(float gain, float pan, bool muted);

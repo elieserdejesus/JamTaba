@@ -200,7 +200,7 @@ void UsersDataCache::writeCacheEntriesToFile()
 
         qCDebug(jtCache) << cacheEntries.size() << " items stored in tracks cache file!";
     } else {
-        qCCritical(jtCache) << "Can't open the tracks cache file in"
+        qCritical() << "Can't open the tracks cache file in"
                             << QFileInfo(cacheFile).absoluteFilePath();
     }
 }

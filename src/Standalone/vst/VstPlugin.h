@@ -11,7 +11,8 @@
 struct VstEvents;
 
 namespace Vst {
-class Host;
+
+class VstHost;
 
 // Plugin's entry point
 typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
@@ -19,7 +20,7 @@ typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
 class VstPlugin : public Audio::Plugin
 {
 public:
-    explicit VstPlugin(Vst::Host *host);
+    explicit VstPlugin(Vst::VstHost *host, const QString &pluginPath);
     ~VstPlugin();
 
     void process(const Audio::SamplesBuffer &vstInputArray, Audio::SamplesBuffer &outBuffer,
@@ -28,7 +29,7 @@ public:
 
     void closeEditor() override;
 
-    bool load(QString path);
+    bool load(const QString &path);
 
     inline QString getPath() const
     {
@@ -47,7 +48,7 @@ public:
 
     void setBypass(bool state);
 
-    static QDialog *getPluginEditorWindow(QString pluginName);
+    static QDialog *getPluginEditorWindow(const QString &pluginName);
 
     bool isVirtualInstrument() const override;
 
@@ -57,16 +58,21 @@ public:
 
 protected:
     void unload();
-
     void resume();
     void suspend();
+
 private:
     bool initPlugin();
+
     AEffect *effect;
+
     Audio::SamplesBuffer *internalOutputBuffer;
     Audio::SamplesBuffer *internalInputBuffer;
-    Vst::Host *host;
+
+    Vst::VstHost *host;
+
     bool wantMidi;
+
     QString path;
 
     bool started;
@@ -92,7 +98,9 @@ private:
 
     static QMap<QString, QDialog *> editorsWindows;
 
-};
-}
+}; // class
+
+
+} // namespace
 
 #endif

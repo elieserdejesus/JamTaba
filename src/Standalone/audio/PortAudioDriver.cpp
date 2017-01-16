@@ -14,27 +14,43 @@
  * code are in WindowsPortAudioDriver.cpp, MacPortAudioDriver.cpp and in future LinuxPortAudioDriver.cpp.
 */
 
-namespace Audio{
+namespace Audio
+{
 
-bool PortAudioDriver::canBeStarted() const{
+bool PortAudioDriver::canBeStarted() const
+{
+    if (useSystemDefaultDevices) {
+        return Pa_GetDefaultOutputDevice() != paNoDevice; // we need output
+    }
+
     return audioDeviceIndex != paNoDevice;
+}
+
+int PortAudioDriver::getAudioDeviceIndex() const
+{
+    if (useSystemDefaultDevices)
+        return Pa_GetDefaultOutputDevice();
+
+    return audioDeviceIndex;
 }
 
 bool PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
 {
-    qCInfo(jtAudio) << "initializing portaudio...";
+    qCDebug(jtAudio) << "initializing portaudio...";
     PaError error = Pa_Initialize();
     if (error != paNoError){
-        qCCritical(jtAudio) << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
+        qCritical() << "ERROR initializing portaudio:" << Pa_GetErrorText(error);
         return false;
     }
     paStream = nullptr;// inputBuffer = outputBuffer = NULL;
 
     //check for invalid audio device index
-    if(audioDeviceIndex < 0 || audioDeviceIndex >= Pa_GetDeviceCount()){
-        audioDeviceIndex = Pa_GetDefaultInputDevice();
-        if(audioDeviceIndex == paNoDevice){
-            audioDeviceIndex = Pa_GetDefaultOutputDevice();
+    if (!useSystemDefaultDevices) {
+        if(audioDeviceIndex < 0 || audioDeviceIndex >= Pa_GetDeviceCount()){
+            audioDeviceIndex = Pa_GetDefaultInputDevice();
+            if(audioDeviceIndex == paNoDevice){
+                audioDeviceIndex = Pa_GetDefaultOutputDevice();
+            }
         }
     }
 
@@ -43,16 +59,17 @@ bool PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
 
     //set sample rate
     this->sampleRate = (sampleRate >= 44100 && sampleRate <= 192000) ? sampleRate : 44100;
-    if(audioDeviceIndex != paNoDevice){//avoid query sample rates in a invalid device
-        QList<int> validSampleRates = getValidSampleRates(audioDeviceIndex);
+    PaDeviceIndex device = useSystemDefaultDevices ? Pa_GetDefaultOutputDevice() : audioDeviceIndex;
+    if(device != paNoDevice){//avoid query sample rates in a invalid device
+        QList<int> validSampleRates = getValidSampleRates(device);
         if(this->sampleRate > validSampleRates.last()){
             this->sampleRate = validSampleRates.last();//use the max supported sample rate
         }
     }
 
     this->bufferSize = bufferSize;
-    if(audioDeviceIndex != paNoDevice){
-        QList<int> validBufferSizes = getValidBufferSizes(audioDeviceIndex);
+    if(device != paNoDevice){
+        QList<int> validBufferSizes = getValidBufferSizes(device);
         if (!validBufferSizes.isEmpty()) {
             if(this->bufferSize < validBufferSizes.first()){
                 this->bufferSize = validBufferSizes.first();//use the minimum supported buffer size
@@ -68,12 +85,14 @@ bool PortAudioDriver::initPortAudio(int sampleRate, int bufferSize)
 void PortAudioDriver::ensureOutputRangeIsValid()
 {
     //check if outputs are valid
-    if(audioDeviceIndex != paNoDevice){
+    PaDeviceIndex device = useSystemDefaultDevices ? Pa_GetDefaultOutputDevice() : audioDeviceIndex;
+    if(device != paNoDevice){
         int outputsCount = globalOutputRange.getChannels();
         int maxOutputs = getMaxOutputs();
         if(outputsCount > maxOutputs || globalOutputRange.getFirstChannel() >= maxOutputs || outputsCount <= 0){
-            const PaDeviceInfo* info = Pa_GetDeviceInfo(audioDeviceIndex);
-            globalOutputRange = ChannelRange(info->defaultLowOutputLatency, std::min(2, info->maxOutputChannels));
+            const PaDeviceInfo* info = Pa_GetDeviceInfo(device);
+            if (info)
+                globalOutputRange = ChannelRange(info->defaultLowOutputLatency, std::min(2, info->maxOutputChannels));
         }
     }
 }
@@ -81,7 +100,8 @@ void PortAudioDriver::ensureOutputRangeIsValid()
 void PortAudioDriver::ensureInputRangeIsValid()
 {
     //check if inputs are valid for selected device
-    if(audioDeviceIndex != paNoDevice){
+    PaDeviceIndex device = useSystemDefaultDevices ? Pa_GetDefaultInputDevice() : audioDeviceIndex;
+    if(device != paNoDevice){
         int inputsCount = globalInputRange.getChannels();
         int maxInputs = getMaxInputs();
         if(inputsCount > maxInputs || globalInputRange.getFirstChannel() >= maxInputs || inputsCount <= 0 ){
@@ -93,12 +113,13 @@ void PortAudioDriver::ensureInputRangeIsValid()
 
 PortAudioDriver::~PortAudioDriver()
 {
-    qCDebug(jtAudio) << "destructor PortAudioDriver";
+    qCDebug(jtAudio) << "PortAudioDriver destructor";
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //this method just convert portaudio void* inputBuffer to a float[][] buffer, and do the same for outputs
-void PortAudioDriver::translatePortAudioCallBack(const void *in, void *out, unsigned long framesPerBuffer){
+void PortAudioDriver::translatePortAudioCallBack(const void *in, void *out, unsigned long framesPerBuffer)
+{
     if(!inputBuffer || !outputBuffer){
         return;
     }
@@ -148,15 +169,24 @@ int portaudioCallBack(const void *inputBuffer, void *outputBuffer,
 }
 
 
-bool PortAudioDriver::start(){
+bool PortAudioDriver::start()
+{
 
-    if(audioDeviceIndex == paNoDevice){
+    PaDeviceIndex device = useSystemDefaultDevices ? Pa_GetDefaultOutputDevice() : audioDeviceIndex;
+
+    if(device == paNoDevice){
         return false;
     }
 
     stop();
 
-    qCInfo(jtAudio) << "Starting portaudio driver using" << getAudioDeviceName(audioDeviceIndex) << " as device.";
+    if (!useSystemDefaultDevices) {
+        qCInfo(jtAudio) << "Starting portaudio driver using" << getAudioInputDeviceName(audioDeviceIndex) << " as device.";
+    }
+    else {
+        qCDebug(jtAudio) << "Starting portaudio using" << getAudioInputDeviceName() << " as input device.";
+        qCDebug(jtAudio) << "Starting portaudio using" << getAudioOutputDeviceName() << " as output device.";
+    }
 
     ensureInputRangeIsValid();
     ensureOutputRangeIsValid();
@@ -164,12 +194,12 @@ bool PortAudioDriver::start(){
     recreateBuffers();//adjust the input and output buffers channels
 
     unsigned long framesPerBuffer = bufferSize;// paFramesPerBufferUnspecified;
-    qCInfo(jtAudio) << "Starting portaudio driver using" << framesPerBuffer << " as buffer size.";
+    qCDebug(jtAudio) << "Starting portaudio using" << framesPerBuffer << " as buffer size.";
     PaSampleFormat sampleFormat = paFloat32;// | paNonInterleaved;
 
     PaStreamParameters inputParams;
     inputParams.channelCount = globalInputRange.getChannels();// maxInputChannels;//*/ inputChannels;
-    inputParams.device = audioDeviceIndex;
+    inputParams.device = useSystemDefaultDevices ? Pa_GetDefaultInputDevice() : audioDeviceIndex;
     inputParams.sampleFormat = sampleFormat;
     inputParams.suggestedLatency = 0;//computeSuggestedLatency(sampleRate, bufferSize);// Pa_GetDeviceInfo(inputDeviceIndex)->defaultLowOutputLatency;
     inputParams.hostApiSpecificStreamInfo = NULL;
@@ -179,7 +209,7 @@ bool PortAudioDriver::start(){
     //+++++++++ OUTPUT
     PaStreamParameters outputParams;
     outputParams.channelCount = globalOutputRange.getChannels();// */outputChannels;
-    outputParams.device = audioDeviceIndex;
+    outputParams.device = useSystemDefaultDevices ? Pa_GetDefaultOutputDevice() : audioDeviceIndex;
     outputParams.sampleFormat = sampleFormat;
     outputParams.suggestedLatency = 0;//computeSuggestedLatency(sampleRate, bufferSize);//  Pa_GetDeviceInfo(outputDeviceIndex)->defaultLowOutputLatency;
     outputParams.hostApiSpecificStreamInfo = NULL;
@@ -190,17 +220,19 @@ bool PortAudioDriver::start(){
 
     bool willUseInputParams = !globalInputRange.isEmpty();
     if(willUseInputParams){
-        qCInfo(jtAudio) << "Trying initialize portaudio using inputParams and samplerate=" << sampleRate;
+        qCDebug(jtAudio) << "Trying initialize portaudio using inputParams and samplerate=" << sampleRate;
     }
     else{
-        qCInfo(jtAudio) << "Trying initialize portaudio WITHOUT inputParams because globalInputRange is empty!";
-        qCInfo(jtAudio) << "Detected inputs for " << getAudioDeviceName(audioDeviceIndex) << ":" << getMaxInputs();
+        qCDebug(jtAudio) << "Trying initialize portaudio WITHOUT inputParams because globalInputRange is empty!";
+        qCDebug(jtAudio) << "Detected inputs for " << getAudioInputDeviceName(audioDeviceIndex) << ":" << getMaxInputs();
     }
 
-    // test if output format is supported
+
     if(globalOutputRange.isEmpty())
         return false;
-    PaError error =  Pa_IsFormatSupported( nullptr, &outputParams, sampleRate);
+
+    // test if output format is supported
+    PaError error =  Pa_IsFormatSupported(nullptr, &outputParams, sampleRate);
     if(error != paNoError){
         qCritical() << "unsuported output format: " <<
                        Pa_GetErrorText(error) <<
@@ -214,7 +246,7 @@ bool PortAudioDriver::start(){
 
     // test if input format is supported
     if(!globalInputRange.isEmpty()){
-        error =  Pa_IsFormatSupported( &inputParams, nullptr, sampleRate);
+        error =  Pa_IsFormatSupported(&inputParams, nullptr, sampleRate);
         if(error != paNoError){
             qCritical() << "unsuported input format: " <<
                            Pa_GetErrorText(error) <<
@@ -244,7 +276,7 @@ bool PortAudioDriver::start(){
             return false;
         }
     }
-    qCInfo(jtAudio) << "portaudio driver started ok!";
+    qCDebug(jtAudio) << "Portaudio driver started ok!";
     emit started();
 
     releaseHostSpecificParameters(inputParams, outputParams);
@@ -252,7 +284,8 @@ bool PortAudioDriver::start(){
     return true;
 }
 
-QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const{
+QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const
+{
     PaStreamParameters outputParams;
     outputParams.channelCount = 1;
     outputParams.device = deviceIndex;
@@ -277,61 +310,111 @@ QList<int> PortAudioDriver::getValidSampleRates(int deviceIndex) const{
     return validSRs;
 }
 
-void PortAudioDriver::stop(bool refreshDevicesList){
+void PortAudioDriver::stop(bool refreshDevicesList)
+{
+
     if (paStream != NULL){
         if (!Pa_IsStreamStopped(paStream)){
-            qCDebug(jtAudio) << "closing portaudio stream";
+            qCDebug(jtAudio) << "Stopping portaudio driver ...";
             PaError error = Pa_CloseStream(paStream);
             if(error != paNoError){
-                qCCritical(jtAudio) << "error closing portaudio stream: " << Pa_GetErrorText(error);
+                qCritical() << "   Error closing portaudio stream: " << Pa_GetErrorText(error);
             }
             emit stopped();
+            qCDebug(jtAudio) << "Portaudio driver stoped!";
         }
     }
     if(refreshDevicesList){
-        Pa_Terminate(); //terminate and reinitialize to refresh portaudio internal devices list
+        qCDebug(jtAudio) << "   Refreshing portaudio devices list";
+        Pa_Terminate(); // terminate and reinitialize to refresh portaudio internal devices list
         Pa_Initialize();
     }
+
+
 }
 
-void PortAudioDriver::release(){
+void PortAudioDriver::release()
+{
     qCDebug(jtAudio) << "releasing portaudio resources...";
     stop();
     Pa_Terminate();
     qCDebug(jtAudio) << "portaudio terminated!";
 }
 
-int PortAudioDriver::getMaxInputs() const{
-    const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(audioDeviceIndex);
+int PortAudioDriver::getMaxInputs() const
+{
+    PaDeviceIndex device = useSystemDefaultDevices ? Pa_GetDefaultInputDevice() : audioDeviceIndex;
+
+    const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(device);
     if(deviceInfo)
         return deviceInfo->maxInputChannels;
+
     return 0;
 }
 
-int PortAudioDriver::getMaxOutputs() const{
-    const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(audioDeviceIndex);
+int PortAudioDriver::getMaxOutputs() const
+{
+    PaDeviceIndex device = useSystemDefaultDevices ? Pa_GetDefaultOutputDevice() : audioDeviceIndex;
+
+    const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(device);
     if(deviceInfo)
         return deviceInfo->maxOutputChannels;
+
     return 0;
 }
 
 void PortAudioDriver::setAudioDeviceIndex(PaDeviceIndex index)
 {
     stop();
-    this->audioDeviceIndex = index;
+    if (!useSystemDefaultDevices)
+        this->audioDeviceIndex = index;
+    else
+        this->audioDeviceIndex = paNoDevice;
 }
 
-QString PortAudioDriver::getAudioDeviceName(int index) const
+QString PortAudioDriver::getAudioInputDeviceName(int index) const
 {
-    return Pa_GetDeviceInfo(index)->name;
+    if (useSystemDefaultDevices)
+        index = Pa_GetDefaultInputDevice();
+
+    const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(index);
+    if (deviceInfo)
+        return deviceInfo->name;
+
+    return "Error!";
 }
 
+QString PortAudioDriver::getAudioInputDeviceName() const
+{
+    PaDeviceIndex device = useSystemDefaultDevices ? Pa_GetDefaultInputDevice() : audioDeviceIndex;
+
+    return getAudioInputDeviceName(device);
+}
+
+QString PortAudioDriver::getAudioOutputDeviceName(int index) const
+{
+    if (useSystemDefaultDevices)
+        index = Pa_GetDefaultOutputDevice();
+
+    const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(index);
+    if (deviceInfo)
+        return deviceInfo->name;
+
+    return "Error!";
+}
+
+QString PortAudioDriver::getAudioOutputDeviceName() const
+{
+    PaDeviceIndex device = useSystemDefaultDevices ? Pa_GetDefaultOutputDevice() : audioDeviceIndex;
+
+    return getAudioOutputDeviceName(device);
+}
 
 int PortAudioDriver::getDevicesCount() const
 {
     return Pa_GetDeviceCount();
 }
 
-}
+} // namespace
 //++++++++++++=
 

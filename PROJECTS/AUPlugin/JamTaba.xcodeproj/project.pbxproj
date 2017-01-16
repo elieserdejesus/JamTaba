@@ -293,34 +293,15 @@
 		2A1C7A9F1E0B5F2C00C7984D /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713D61891A149005D69C7 /* CAStreamBasicDescription.cpp */; };
 		2A1C7AA01E0B5F2C00C7984D /* CAVectorUnit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713D91891A149005D69C7 /* CAVectorUnit.cpp */; };
 		2A1C7AA11E0B5F2C00C7984D /* CAXException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713DC1891A149005D69C7 /* CAXException.cpp */; };
-		2A1C7AA21E0B5F5B00C7984D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBECB1E0B07B900BEF1FF /* SystemConfiguration.framework */; };
 		2A1C7AA31E0B5F6600C7984D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0DBEA41E0B01C600BEF1FF /* Security.framework */; };
-		2A1C7AA41E0B5F6600C7984D /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC0D3F91E0AB9A8005A940A /* CoreServices.framework */; };
-		2A1C7AA51E0B5F6600C7984D /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700F1E08116200A4B6C2 /* IOKit.framework */; };
-		2A1C7AA61E0B5F6600C7984D /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700D1E08113100A4B6C2 /* Carbon.framework */; };
-		2A1C7AA71E0B5F6600C7984D /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700B1E08111E00A4B6C2 /* OpenGL.framework */; };
-		2A1C7AA81E0B5F6600C7984D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA4AE5B073EB79000A2709A /* Cocoa.framework */; };
-		2A1C7AA91E0B5F6600C7984D /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05B01072074F900365D66 /* CoreServices.framework */; };
 		2A1C7AAA1E0B5F6600C7984D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AF9072074E100365D66 /* AudioToolbox.framework */; };
 		2A1C7AAB1E0B5F6600C7984D /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AFA072074E100365D66 /* AudioUnit.framework */; };
 		2A1C7AAC1E0B5F6600C7984D /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AFB072074E100365D66 /* CoreAudio.framework */; };
 		2A1C7AAD1E0B5FBC00C7984D /* JamTaba_ViewFactory.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BA4ADCF073EB19800A2709A /* JamTaba_ViewFactory.mm */; };
 		2A1C7AAE1E0B5FBE00C7984D /* JamTaba_UIView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BA4ADD1073EB19800A2709A /* JamTaba_UIView.mm */; };
 		2A1C7AB41E0B66AC00C7984D /* JamTaba.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A1C7AB21E0B66AC00C7984D /* JamTaba.h */; };
-		2A2F6FF81E0804F800A4B6C2 /* libQt5Concurrent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FED1E0801B900A4B6C2 /* libQt5Concurrent.a */; };
-		2A2F6FF91E0804F800A4B6C2 /* libQt5Core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FE51E0801B900A4B6C2 /* libQt5Core.a */; };
-		2A2F6FFA1E0804F800A4B6C2 /* libQt5Gui.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FE61E0801B900A4B6C2 /* libQt5Gui.a */; };
-		2A2F6FFB1E0804F800A4B6C2 /* libQt5Network.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FE71E0801B900A4B6C2 /* libQt5Network.a */; };
-		2A2F6FFC1E0804F800A4B6C2 /* libQt5PlatformSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FEB1E0801B900A4B6C2 /* libQt5PlatformSupport.a */; };
-		2A2F6FFD1E0804F800A4B6C2 /* libQt5Widgets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FE41E0801B900A4B6C2 /* libQt5Widgets.a */; };
-		2A2F6FFE1E0804F800A4B6C2 /* libqtfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FE81E0801B900A4B6C2 /* libqtfreetype.a */; };
-		2A2F6FFF1E0804F800A4B6C2 /* libqtharfbuzzng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FE91E0801B900A4B6C2 /* libqtharfbuzzng.a */; };
-		2A2F70001E0804F800A4B6C2 /* libqtpcre.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FEA1E0801B900A4B6C2 /* libqtpcre.a */; };
-		2A2F70011E0804F800A4B6C2 /* libqtpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F6FEC1E0801B900A4B6C2 /* libqtpng.a */; };
-		2A2F70041E08051A00A4B6C2 /* libQt5PrintSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F70021E0804F800A4B6C2 /* libQt5PrintSupport.a */; };
 		2A2F70061E08094500A4B6C2 /* libcups.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F70051E08094500A4B6C2 /* libcups.dylib */; };
 		2A2F70081E080F7200A4B6C2 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F70071E080F7200A4B6C2 /* libz.dylib */; };
-		2A2F700A1E080FEC00A4B6C2 /* libqcocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F70091E080FEC00A4B6C2 /* libqcocoa.a */; };
 		2A3016211E0D907B0013700B /* JamTaba.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BA05A660720730100365D66 /* JamTaba.cpp */; };
 		2A3016221E0D90AB0013700B /* AUBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713AA1891A149005D69C7 /* AUBase.cpp */; };
 		2A3016231E0D90AD0013700B /* AUDispatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 621713B01891A149005D69C7 /* AUDispatch.cpp */; };
@@ -345,16 +326,31 @@
 		2A3669141E0DBFA9006CD583 /* JamTabaAUPlugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2A3669121E0DBFA9006CD583 /* JamTabaAUPlugin.mm */; };
 		2A3669151E0DBFA9006CD583 /* JamTabaAUPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A3669131E0DBFA9006CD583 /* JamTabaAUPlugin.h */; };
 		2A3D0AA31E06D4FE00789D68 /* JamTaba.component in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D01CCD20486CAD60068D4B7 /* JamTaba.component */; };
+		2A3FC8401E15BCD5005227F4 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700D1E08113100A4B6C2 /* Carbon.framework */; };
+		2A488F041E2C04C70097C505 /* PluginDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A0DBB2C1E0AF46800BEF1FF /* PluginDescriptor.cpp */; };
 		2AB5C82E1E076776007BD342 /* CocoaJamTabaView.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8BA4AE4E073EB69000A2709A /* CocoaJamTabaView.bundle */; };
 		2AC0D3E41E0AB913005A940A /* JamTabaPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D41E0AB913005A940A /* JamTabaPlugin.h */; };
 		2AC0D3E81E0AB913005A940A /* MainControllerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D61E0AB913005A940A /* MainControllerPlugin.h */; };
 		2AC0D3EC1E0AB913005A940A /* MainWindowPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3D81E0AB913005A940A /* MainWindowPlugin.h */; };
 		2AC0D3F01E0AB913005A940A /* NinjamControllerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3DA1E0AB913005A940A /* NinjamControllerPlugin.h */; };
 		2AC0D3F41E0AB913005A940A /* NinjamRoomWindowPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 2AC0D3DC1E0AB913005A940A /* NinjamRoomWindowPlugin.h */; };
+		2AEFF5531E1835A100843898 /* libQt5Core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF54E1E1835A100843898 /* libQt5Core.a */; };
+		2AEFF5541E1835A100843898 /* libQt5Gui.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF54F1E1835A100843898 /* libQt5Gui.a */; };
+		2AEFF5551E1835A100843898 /* libQt5Network.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF5501E1835A100843898 /* libQt5Network.a */; };
+		2AEFF5561E1835A100843898 /* libQt5PlatformSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF5511E1835A100843898 /* libQt5PlatformSupport.a */; };
+		2AEFF5571E1835A100843898 /* libQt5Widgets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF5521E1835A100843898 /* libQt5Widgets.a */; };
+		2AEFF5591E1835CC00843898 /* libqtharfbuzzng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF5581E1835CC00843898 /* libqtharfbuzzng.a */; };
+		2AEFF55B1E1835E100843898 /* libqtpcre.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF55A1E1835E100843898 /* libqtpcre.a */; };
+		2AEFF55D1E18360A00843898 /* libqcocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF55C1E18360A00843898 /* libqcocoa.a */; };
+		2AEFF55F1E18362500843898 /* libcocoaprintersupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF55E1E18362500843898 /* libcocoaprintersupport.a */; };
+		2AEFF5611E18363800843898 /* libqtfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF5601E18363800843898 /* libqtfreetype.a */; };
+		2AEFF5631E18364D00843898 /* libQt5PrintSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AEFF5621E18364D00843898 /* libQt5PrintSupport.a */; };
+		2AEFF5641E18368F00843898 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700B1E08111E00A4B6C2 /* OpenGL.framework */; };
+		2AEFF5671E1836EA00843898 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700F1E08116200A4B6C2 /* IOKit.framework */; };
+		2AEFF5681E1836F800843898 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2F700D1E08113100A4B6C2 /* Carbon.framework */; };
 		62B3B89F1891936500E507B7 /* JamTaba.r in Rez */ = {isa = PBXBuildFile; fileRef = 62B3B89E1891936500E507B7 /* JamTaba.r */; };
 		8BA05AFC072074E100365D66 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AF9072074E100365D66 /* AudioToolbox.framework */; };
 		8BA05AFD072074E100365D66 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AFA072074E100365D66 /* AudioUnit.framework */; };
-		8BA05B02072074F900365D66 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05B01072074F900365D66 /* CoreServices.framework */; };
 		8BA4AE54073EB72300A2709A /* JamTaba_ViewFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BA4ADCE073EB19800A2709A /* JamTaba_ViewFactory.h */; };
 		8BA4AE55073EB72300A2709A /* JamTaba_UIView.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BA4ADD0073EB19800A2709A /* JamTaba_UIView.h */; };
 /* End PBXBuildFile section */
@@ -369,7 +365,7 @@
 			outputFiles = (
 				"${INPUT_FILE_DIR}/GeneratedFiles/ui_${INPUT_FILE_BASE}.h",
 			);
-			script = "/Users/elieser/Qt/5.7/clang_64/bin/uic -o ${INPUT_FILE_DIR}/GeneratedFiles/ui_${INPUT_FILE_BASE}.h ${INPUT_FILE_PATH}\n";
+			script = "~/Desktop/Qt-5.6/bin/uic -o ${INPUT_FILE_DIR}/GeneratedFiles/ui_${INPUT_FILE_BASE}.h ${INPUT_FILE_PATH}\n";
 		};
 		2A0DBB0E1E0AF31900BEF1FF /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -380,7 +376,7 @@
 			outputFiles = (
 				"${INPUT_FILE_DIR}/GeneratedFiles/moc_${INPUT_FILE_BASE}.cpp",
 			);
-			script = "/Users/elieser/Qt/5.7/clang_64/bin/moc -o ${INPUT_FILE_DIR}/GeneratedFiles/moc_${INPUT_FILE_BASE}.cpp ${INPUT_FILE_PATH}\n";
+			script = "~/Desktop/Qt-5.6/bin/moc -o ${INPUT_FILE_DIR}/GeneratedFiles/moc_${INPUT_FILE_BASE}.cpp ${INPUT_FILE_PATH}\n";
 		};
 		2A120A871E0C066100E0E596 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -391,7 +387,7 @@
 			outputFiles = (
 				"${INPUT_FILE_DIR}/GeneratedFiles/rcc_${INPUT_FILE_BASE}.cpp",
 			);
-			script = "/Users/elieser/Qt/5.7/clang_64/bin/rcc -o ${INPUT_FILE_DIR}/GeneratedFiles/rcc_${INPUT_FILE_BASE}.cpp ${INPUT_FILE_PATH}";
+			script = "~/Desktop/Qt-5.6/bin/rcc -o ${INPUT_FILE_DIR}/GeneratedFiles/rcc_${INPUT_FILE_BASE}.cpp ${INPUT_FILE_PATH}";
 		};
 /* End PBXBuildRule section */
 
@@ -656,28 +652,16 @@
 		2A0DBEB71E0B03C600BEF1FF /* libvorbis.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbis.a; path = ../../libs/static/mac64/libvorbis.a; sourceTree = "<group>"; };
 		2A0DBEB81E0B03C600BEF1FF /* libvorbisenc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbisenc.a; path = ../../libs/static/mac64/libvorbisenc.a; sourceTree = "<group>"; };
 		2A0DBEB91E0B03C600BEF1FF /* libvorbisfile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbisfile.a; path = ../../libs/static/mac64/libvorbisfile.a; sourceTree = "<group>"; };
-		2A0DBECB1E0B07B900BEF1FF /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		2A120A841E0C05D900E0E596 /* jamtaba.qrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = jamtaba.qrc; path = ../../src/resources/jamtaba.qrc; sourceTree = "<group>"; };
 		2A1C7AB21E0B66AC00C7984D /* JamTaba.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JamTaba.h; sourceTree = "<group>"; };
-		2A2F6FE41E0801B900A4B6C2 /* libQt5Widgets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Widgets.a; path = "../../../../Downloads/qtbase-opensource-src-5.7.1/lib/libQt5Widgets.a"; sourceTree = "<group>"; };
-		2A2F6FE51E0801B900A4B6C2 /* libQt5Core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Core.a; path = "../../../../Downloads/qtbase-opensource-src-5.7.1/lib/libQt5Core.a"; sourceTree = "<group>"; };
-		2A2F6FE61E0801B900A4B6C2 /* libQt5Gui.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Gui.a; path = "../../../../Downloads/qtbase-opensource-src-5.7.1/lib/libQt5Gui.a"; sourceTree = "<group>"; };
-		2A2F6FE71E0801B900A4B6C2 /* libQt5Network.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Network.a; path = "../../../../Downloads/qtbase-opensource-src-5.7.1/lib/libQt5Network.a"; sourceTree = "<group>"; };
-		2A2F6FE81E0801B900A4B6C2 /* libqtfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtfreetype.a; path = "../../../../Downloads/qtbase-opensource-src-5.7.1/lib/libqtfreetype.a"; sourceTree = "<group>"; };
-		2A2F6FE91E0801B900A4B6C2 /* libqtharfbuzzng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtharfbuzzng.a; path = "../../../../Downloads/qtbase-opensource-src-5.7.1/lib/libqtharfbuzzng.a"; sourceTree = "<group>"; };
-		2A2F6FEA1E0801B900A4B6C2 /* libqtpcre.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtpcre.a; path = "../../../../Downloads/qtbase-opensource-src-5.7.1/lib/libqtpcre.a"; sourceTree = "<group>"; };
-		2A2F6FEB1E0801B900A4B6C2 /* libQt5PlatformSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5PlatformSupport.a; path = "../../../../Downloads/qtbase-opensource-src-5.7.1/lib/libQt5PlatformSupport.a"; sourceTree = "<group>"; };
-		2A2F6FEC1E0801B900A4B6C2 /* libqtpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtpng.a; path = "../../../../Downloads/qtbase-opensource-src-5.7.1/lib/libqtpng.a"; sourceTree = "<group>"; };
-		2A2F6FED1E0801B900A4B6C2 /* libQt5Concurrent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Concurrent.a; path = "../../../../Downloads/qtbase-opensource-src-5.7.1/lib/libQt5Concurrent.a"; sourceTree = "<group>"; };
-		2A2F70021E0804F800A4B6C2 /* libQt5PrintSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5PrintSupport.a; path = "../../../../Downloads/qtbase-opensource-src-5.7.1/lib/libQt5PrintSupport.a"; sourceTree = "<group>"; };
 		2A2F70051E08094500A4B6C2 /* libcups.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcups.dylib; path = usr/lib/libcups.dylib; sourceTree = SDKROOT; };
 		2A2F70071E080F7200A4B6C2 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		2A2F70091E080FEC00A4B6C2 /* libqcocoa.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqcocoa.a; path = "../../../../Downloads/qtbase-opensource-src-5.7.1/plugins/platforms/libqcocoa.a"; sourceTree = "<group>"; };
 		2A2F700B1E08111E00A4B6C2 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		2A2F700D1E08113100A4B6C2 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		2A2F700F1E08116200A4B6C2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		2A3669121E0DBFA9006CD583 /* JamTabaAUPlugin.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = JamTabaAUPlugin.mm; path = ../../src/Plugins/AU/CocoaUI/JamTabaAUPlugin.mm; sourceTree = "<group>"; };
 		2A3669131E0DBFA9006CD583 /* JamTabaAUPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JamTabaAUPlugin.h; path = ../../src/Plugins/AU/CocoaUI/JamTabaAUPlugin.h; sourceTree = "<group>"; };
+		2A4CE4181E13E50E009601F6 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
 		2AC0D3D21E0AB913005A940A /* ConfiguratorPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConfiguratorPlugin.cpp; path = ../../src/Plugins/ConfiguratorPlugin.cpp; sourceTree = "<group>"; };
 		2AC0D3D31E0AB913005A940A /* JamTabaPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JamTabaPlugin.cpp; path = ../../src/Plugins/JamTabaPlugin.cpp; sourceTree = "<group>"; };
 		2AC0D3D41E0AB913005A940A /* JamTabaPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JamTabaPlugin.h; path = ../../src/Plugins/JamTabaPlugin.h; sourceTree = "<group>"; };
@@ -691,62 +675,72 @@
 		2AC0D3DC1E0AB913005A940A /* NinjamRoomWindowPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NinjamRoomWindowPlugin.h; path = ../../src/Plugins/NinjamRoomWindowPlugin.h; sourceTree = "<group>"; };
 		2AC0D3DD1E0AB913005A940A /* PreferencesDialogPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreferencesDialogPlugin.cpp; path = ../../src/Plugins/PreferencesDialogPlugin.cpp; sourceTree = "<group>"; };
 		2AC0D3DE1E0AB913005A940A /* PreferencesDialogPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesDialogPlugin.h; path = ../../src/Plugins/PreferencesDialogPlugin.h; sourceTree = "<group>"; };
-		2AC0D3F91E0AB9A8005A940A /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		2AEFF54E1E1835A100843898 /* libQt5Core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Core.a; path = "../../../Qt-5.6/lib/libQt5Core.a"; sourceTree = "<group>"; };
+		2AEFF54F1E1835A100843898 /* libQt5Gui.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Gui.a; path = "../../../Qt-5.6/lib/libQt5Gui.a"; sourceTree = "<group>"; };
+		2AEFF5501E1835A100843898 /* libQt5Network.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Network.a; path = "../../../Qt-5.6/lib/libQt5Network.a"; sourceTree = "<group>"; };
+		2AEFF5511E1835A100843898 /* libQt5PlatformSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5PlatformSupport.a; path = "../../../Qt-5.6/lib/libQt5PlatformSupport.a"; sourceTree = "<group>"; };
+		2AEFF5521E1835A100843898 /* libQt5Widgets.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5Widgets.a; path = "../../../Qt-5.6/lib/libQt5Widgets.a"; sourceTree = "<group>"; };
+		2AEFF5581E1835CC00843898 /* libqtharfbuzzng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtharfbuzzng.a; path = "../../../Qt-5.6/lib/libqtharfbuzzng.a"; sourceTree = "<group>"; };
+		2AEFF55A1E1835E100843898 /* libqtpcre.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtpcre.a; path = "../../../Qt-5.6/lib/libqtpcre.a"; sourceTree = "<group>"; };
+		2AEFF55C1E18360A00843898 /* libqcocoa.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqcocoa.a; path = "../../../Qt-5.6/plugins/platforms/libqcocoa.a"; sourceTree = "<group>"; };
+		2AEFF55E1E18362500843898 /* libcocoaprintersupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcocoaprintersupport.a; path = "../../../Qt-5.6/plugins/printsupport/libcocoaprintersupport.a"; sourceTree = "<group>"; };
+		2AEFF5601E18363800843898 /* libqtfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libqtfreetype.a; path = "../../../Qt-5.6/lib/libqtfreetype.a"; sourceTree = "<group>"; };
+		2AEFF5621E18364D00843898 /* libQt5PrintSupport.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQt5PrintSupport.a; path = "../../../Qt-5.6/lib/libQt5PrintSupport.a"; sourceTree = "<group>"; };
 		32BAE0B30371A71500C91783 /* JamTaba_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JamTaba_Prefix.pch; path = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch; sourceTree = "<group>"; };
-		6211E2B11891AA2900751AA3 /* ComponentBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComponentBase.cpp; path = ../../src/Plugins/AU/AUPublic/AUBase/ComponentBase.cpp; sourceTree = SOURCE_ROOT; };
-		6211E2B21891AA2900751AA3 /* ComponentBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComponentBase.h; path = ../../src/Plugins/AU/AUPublic/AUBase/ComponentBase.h; sourceTree = SOURCE_ROOT; };
-		621713AA1891A149005D69C7 /* AUBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUBase.cpp; path = ../../src/Plugins/AU/AUPublic/AUBase/AUBase.cpp; sourceTree = SOURCE_ROOT; };
-		621713AB1891A149005D69C7 /* AUBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUBase.h; path = ../../src/Plugins/AU/AUPublic/AUBase/AUBase.h; sourceTree = SOURCE_ROOT; };
-		621713AC1891A149005D69C7 /* AUBaseHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUBaseHelper.cpp; path = ../../src/Plugins/AU/AUPublic/Utility/AUBaseHelper.cpp; sourceTree = SOURCE_ROOT; };
-		621713AD1891A149005D69C7 /* AUBaseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUBaseHelper.h; path = ../../src/Plugins/AU/AUPublic/Utility/AUBaseHelper.h; sourceTree = SOURCE_ROOT; };
-		621713AE1891A149005D69C7 /* AUBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUBuffer.cpp; path = ../../src/Plugins/AU/AUPublic/Utility/AUBuffer.cpp; sourceTree = SOURCE_ROOT; };
-		621713AF1891A149005D69C7 /* AUBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUBuffer.h; path = ../../src/Plugins/AU/AUPublic/Utility/AUBuffer.h; sourceTree = SOURCE_ROOT; };
-		621713B01891A149005D69C7 /* AUDispatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUDispatch.cpp; path = ../../src/Plugins/AU/AUPublic/AUBase/AUDispatch.cpp; sourceTree = SOURCE_ROOT; };
-		621713B11891A149005D69C7 /* AUDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUDispatch.h; path = ../../src/Plugins/AU/AUPublic/AUBase/AUDispatch.h; sourceTree = SOURCE_ROOT; };
-		621713B21891A149005D69C7 /* AUEffectBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUEffectBase.cpp; path = ../../src/Plugins/AU/AUPublic/OtherBases/AUEffectBase.cpp; sourceTree = SOURCE_ROOT; };
-		621713B31891A149005D69C7 /* AUEffectBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUEffectBase.h; path = ../../src/Plugins/AU/AUPublic/OtherBases/AUEffectBase.h; sourceTree = SOURCE_ROOT; };
-		621713B41891A149005D69C7 /* AUInputElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUInputElement.cpp; path = ../../src/Plugins/AU/AUPublic/AUBase/AUInputElement.cpp; sourceTree = SOURCE_ROOT; };
-		621713B51891A149005D69C7 /* AUInputElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUInputElement.h; path = ../../src/Plugins/AU/AUPublic/AUBase/AUInputElement.h; sourceTree = SOURCE_ROOT; };
-		621713B61891A149005D69C7 /* AUOutputElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUOutputElement.cpp; path = ../../src/Plugins/AU/AUPublic/AUBase/AUOutputElement.cpp; sourceTree = SOURCE_ROOT; };
-		621713B71891A149005D69C7 /* AUOutputElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUOutputElement.h; path = ../../src/Plugins/AU/AUPublic/AUBase/AUOutputElement.h; sourceTree = SOURCE_ROOT; };
-		621713B81891A149005D69C7 /* AUPlugInDispatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUPlugInDispatch.cpp; path = ../../src/Plugins/AU/AUPublic/AUBase/AUPlugInDispatch.cpp; sourceTree = SOURCE_ROOT; };
-		621713B91891A149005D69C7 /* AUPlugInDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUPlugInDispatch.h; path = ../../src/Plugins/AU/AUPublic/AUBase/AUPlugInDispatch.h; sourceTree = SOURCE_ROOT; };
-		621713BA1891A149005D69C7 /* AUResources.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; name = AUResources.r; path = ../../src/Plugins/AU/AUPublic/AUBase/AUResources.r; sourceTree = SOURCE_ROOT; };
-		621713BB1891A149005D69C7 /* AUScopeElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUScopeElement.cpp; path = ../../src/Plugins/AU/AUPublic/AUBase/AUScopeElement.cpp; sourceTree = SOURCE_ROOT; };
-		621713BC1891A149005D69C7 /* AUScopeElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUScopeElement.h; path = ../../src/Plugins/AU/AUPublic/AUBase/AUScopeElement.h; sourceTree = SOURCE_ROOT; };
-		621713BD1891A149005D69C7 /* AUSilentTimeout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUSilentTimeout.h; path = ../../src/Plugins/AU/AUPublic/Utility/AUSilentTimeout.h; sourceTree = SOURCE_ROOT; };
-		621713BE1891A149005D69C7 /* CAAtomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAtomic.h; path = ../../src/Plugins/AU/PublicUtility/CAAtomic.h; sourceTree = SOURCE_ROOT; };
-		621713BF1891A149005D69C7 /* CAAtomicStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAtomicStack.h; path = ../../src/Plugins/AU/PublicUtility/CAAtomicStack.h; sourceTree = SOURCE_ROOT; };
-		621713C01891A149005D69C7 /* CAAudioChannelLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAAudioChannelLayout.cpp; path = ../../src/Plugins/AU/PublicUtility/CAAudioChannelLayout.cpp; sourceTree = SOURCE_ROOT; };
-		621713C11891A149005D69C7 /* CAAudioChannelLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAudioChannelLayout.h; path = ../../src/Plugins/AU/PublicUtility/CAAudioChannelLayout.h; sourceTree = SOURCE_ROOT; };
-		621713C21891A149005D69C7 /* CAAutoDisposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAutoDisposer.h; path = ../../src/Plugins/AU/PublicUtility/CAAutoDisposer.h; sourceTree = SOURCE_ROOT; };
-		621713C31891A149005D69C7 /* CABufferList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CABufferList.cpp; path = ../../src/Plugins/AU/PublicUtility/CABufferList.cpp; sourceTree = SOURCE_ROOT; };
-		621713C41891A149005D69C7 /* CABufferList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CABufferList.h; path = ../../src/Plugins/AU/PublicUtility/CABufferList.h; sourceTree = SOURCE_ROOT; };
-		621713C51891A149005D69C7 /* CAByteOrder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAByteOrder.h; path = ../../src/Plugins/AU/PublicUtility/CAByteOrder.h; sourceTree = SOURCE_ROOT; };
-		621713C61891A149005D69C7 /* CADebugger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugger.cpp; path = ../../src/Plugins/AU/PublicUtility/CADebugger.cpp; sourceTree = SOURCE_ROOT; };
-		621713C71891A149005D69C7 /* CADebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugger.h; path = ../../src/Plugins/AU/PublicUtility/CADebugger.h; sourceTree = SOURCE_ROOT; };
-		621713C81891A149005D69C7 /* CADebugMacros.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugMacros.cpp; path = ../../src/Plugins/AU/PublicUtility/CADebugMacros.cpp; sourceTree = SOURCE_ROOT; };
-		621713C91891A149005D69C7 /* CADebugMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugMacros.h; path = ../../src/Plugins/AU/PublicUtility/CADebugMacros.h; sourceTree = SOURCE_ROOT; };
-		621713CA1891A149005D69C7 /* CADebugPrintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugPrintf.cpp; path = ../../src/Plugins/AU/PublicUtility/CADebugPrintf.cpp; sourceTree = SOURCE_ROOT; };
-		621713CB1891A149005D69C7 /* CADebugPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugPrintf.h; path = ../../src/Plugins/AU/PublicUtility/CADebugPrintf.h; sourceTree = SOURCE_ROOT; };
-		621713CC1891A149005D69C7 /* CAException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAException.h; path = ../../src/Plugins/AU/PublicUtility/CAException.h; sourceTree = SOURCE_ROOT; };
-		621713CD1891A149005D69C7 /* CAGuard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAGuard.cpp; path = ../../src/Plugins/AU/PublicUtility/CAGuard.cpp; sourceTree = SOURCE_ROOT; };
-		621713CE1891A149005D69C7 /* CAGuard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAGuard.h; path = ../../src/Plugins/AU/PublicUtility/CAGuard.h; sourceTree = SOURCE_ROOT; };
-		621713CF1891A149005D69C7 /* CAHostTimeBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAHostTimeBase.cpp; path = ../../src/Plugins/AU/PublicUtility/CAHostTimeBase.cpp; sourceTree = SOURCE_ROOT; };
-		621713D01891A149005D69C7 /* CAHostTimeBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHostTimeBase.h; path = ../../src/Plugins/AU/PublicUtility/CAHostTimeBase.h; sourceTree = SOURCE_ROOT; };
-		621713D11891A149005D69C7 /* CALogMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CALogMacros.h; path = ../../src/Plugins/AU/PublicUtility/CALogMacros.h; sourceTree = SOURCE_ROOT; };
-		621713D21891A149005D69C7 /* CAMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAMath.h; path = ../../src/Plugins/AU/PublicUtility/CAMath.h; sourceTree = SOURCE_ROOT; };
-		621713D31891A149005D69C7 /* CAMutex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAMutex.cpp; path = ../../src/Plugins/AU/PublicUtility/CAMutex.cpp; sourceTree = SOURCE_ROOT; };
-		621713D41891A149005D69C7 /* CAMutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAMutex.h; path = ../../src/Plugins/AU/PublicUtility/CAMutex.h; sourceTree = SOURCE_ROOT; };
-		621713D51891A149005D69C7 /* CAReferenceCounted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAReferenceCounted.h; path = ../../src/Plugins/AU/PublicUtility/CAReferenceCounted.h; sourceTree = SOURCE_ROOT; };
-		621713D61891A149005D69C7 /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = ../../src/Plugins/AU/PublicUtility/CAStreamBasicDescription.cpp; sourceTree = SOURCE_ROOT; };
-		621713D71891A149005D69C7 /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = ../../src/Plugins/AU/PublicUtility/CAStreamBasicDescription.h; sourceTree = SOURCE_ROOT; };
-		621713D81891A149005D69C7 /* CAThreadSafeList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAThreadSafeList.h; path = ../../src/Plugins/AU/PublicUtility/CAThreadSafeList.h; sourceTree = SOURCE_ROOT; };
-		621713D91891A149005D69C7 /* CAVectorUnit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAVectorUnit.cpp; path = ../../src/Plugins/AU/PublicUtility/CAVectorUnit.cpp; sourceTree = SOURCE_ROOT; };
-		621713DA1891A149005D69C7 /* CAVectorUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAVectorUnit.h; path = ../../src/Plugins/AU/PublicUtility/CAVectorUnit.h; sourceTree = SOURCE_ROOT; };
-		621713DB1891A149005D69C7 /* CAVectorUnitTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAVectorUnitTypes.h; path = ../../src/Plugins/AU/PublicUtility/CAVectorUnitTypes.h; sourceTree = SOURCE_ROOT; };
-		621713DC1891A149005D69C7 /* CAXException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAXException.cpp; path = ../../src/Plugins/AU/PublicUtility/CAXException.cpp; sourceTree = SOURCE_ROOT; };
-		621713DD1891A149005D69C7 /* CAXException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAXException.h; path = ../../src/Plugins/AU/PublicUtility/CAXException.h; sourceTree = SOURCE_ROOT; };
+		6211E2B11891AA2900751AA3 /* ComponentBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComponentBase.cpp; path = ../../AU_SDK/AUPublic/AUBase/ComponentBase.cpp; sourceTree = SOURCE_ROOT; };
+		6211E2B21891AA2900751AA3 /* ComponentBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComponentBase.h; path = ../../AU_SDK/AUPublic/AUBase/ComponentBase.h; sourceTree = SOURCE_ROOT; };
+		621713AA1891A149005D69C7 /* AUBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUBase.cpp; path = ../../AU_SDK/AUPublic/AUBase/AUBase.cpp; sourceTree = SOURCE_ROOT; };
+		621713AB1891A149005D69C7 /* AUBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUBase.h; path = ../../AU_SDK/AUPublic/AUBase/AUBase.h; sourceTree = SOURCE_ROOT; };
+		621713AC1891A149005D69C7 /* AUBaseHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUBaseHelper.cpp; path = ../../AU_SDK/AUPublic/Utility/AUBaseHelper.cpp; sourceTree = SOURCE_ROOT; };
+		621713AD1891A149005D69C7 /* AUBaseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUBaseHelper.h; path = ../../AU_SDK/AUPublic/Utility/AUBaseHelper.h; sourceTree = SOURCE_ROOT; };
+		621713AE1891A149005D69C7 /* AUBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUBuffer.cpp; path = ../../AU_SDK/AUPublic/Utility/AUBuffer.cpp; sourceTree = SOURCE_ROOT; };
+		621713AF1891A149005D69C7 /* AUBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUBuffer.h; path = ../../AU_SDK/AUPublic/Utility/AUBuffer.h; sourceTree = SOURCE_ROOT; };
+		621713B01891A149005D69C7 /* AUDispatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUDispatch.cpp; path = ../../AU_SDK/AUPublic/AUBase/AUDispatch.cpp; sourceTree = SOURCE_ROOT; };
+		621713B11891A149005D69C7 /* AUDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUDispatch.h; path = ../../AU_SDK/AUPublic/AUBase/AUDispatch.h; sourceTree = SOURCE_ROOT; };
+		621713B21891A149005D69C7 /* AUEffectBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUEffectBase.cpp; path = ../../AU_SDK/AUPublic/OtherBases/AUEffectBase.cpp; sourceTree = SOURCE_ROOT; };
+		621713B31891A149005D69C7 /* AUEffectBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUEffectBase.h; path = ../../AU_SDK/AUPublic/OtherBases/AUEffectBase.h; sourceTree = SOURCE_ROOT; };
+		621713B41891A149005D69C7 /* AUInputElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUInputElement.cpp; path = ../../AU_SDK/AUPublic/AUBase/AUInputElement.cpp; sourceTree = SOURCE_ROOT; };
+		621713B51891A149005D69C7 /* AUInputElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUInputElement.h; path = ../../AU_SDK/AUPublic/AUBase/AUInputElement.h; sourceTree = SOURCE_ROOT; };
+		621713B61891A149005D69C7 /* AUOutputElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUOutputElement.cpp; path = ../../AU_SDK/AUPublic/AUBase/AUOutputElement.cpp; sourceTree = SOURCE_ROOT; };
+		621713B71891A149005D69C7 /* AUOutputElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUOutputElement.h; path = ../../AU_SDK/AUPublic/AUBase/AUOutputElement.h; sourceTree = SOURCE_ROOT; };
+		621713B81891A149005D69C7 /* AUPlugInDispatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUPlugInDispatch.cpp; path = ../../AU_SDK/AUPublic/AUBase/AUPlugInDispatch.cpp; sourceTree = SOURCE_ROOT; };
+		621713B91891A149005D69C7 /* AUPlugInDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUPlugInDispatch.h; path = ../../AU_SDK/AUPublic/AUBase/AUPlugInDispatch.h; sourceTree = SOURCE_ROOT; };
+		621713BA1891A149005D69C7 /* AUResources.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; name = AUResources.r; path = ../../AU_SDK/AUPublic/AUBase/AUResources.r; sourceTree = SOURCE_ROOT; };
+		621713BB1891A149005D69C7 /* AUScopeElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AUScopeElement.cpp; path = ../../AU_SDK/AUPublic/AUBase/AUScopeElement.cpp; sourceTree = SOURCE_ROOT; };
+		621713BC1891A149005D69C7 /* AUScopeElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUScopeElement.h; path = ../../AU_SDK/AUPublic/AUBase/AUScopeElement.h; sourceTree = SOURCE_ROOT; };
+		621713BD1891A149005D69C7 /* AUSilentTimeout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AUSilentTimeout.h; path = ../../AU_SDK/AUPublic/Utility/AUSilentTimeout.h; sourceTree = SOURCE_ROOT; };
+		621713BE1891A149005D69C7 /* CAAtomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAtomic.h; path = ../../AU_SDK/PublicUtility/CAAtomic.h; sourceTree = SOURCE_ROOT; };
+		621713BF1891A149005D69C7 /* CAAtomicStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAtomicStack.h; path = ../../AU_SDK/PublicUtility/CAAtomicStack.h; sourceTree = SOURCE_ROOT; };
+		621713C01891A149005D69C7 /* CAAudioChannelLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAAudioChannelLayout.cpp; path = ../../AU_SDK/PublicUtility/CAAudioChannelLayout.cpp; sourceTree = SOURCE_ROOT; };
+		621713C11891A149005D69C7 /* CAAudioChannelLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAudioChannelLayout.h; path = ../../AU_SDK/PublicUtility/CAAudioChannelLayout.h; sourceTree = SOURCE_ROOT; };
+		621713C21891A149005D69C7 /* CAAutoDisposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAAutoDisposer.h; path = ../../AU_SDK/PublicUtility/CAAutoDisposer.h; sourceTree = SOURCE_ROOT; };
+		621713C31891A149005D69C7 /* CABufferList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CABufferList.cpp; path = ../../AU_SDK/PublicUtility/CABufferList.cpp; sourceTree = SOURCE_ROOT; };
+		621713C41891A149005D69C7 /* CABufferList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CABufferList.h; path = ../../AU_SDK/PublicUtility/CABufferList.h; sourceTree = SOURCE_ROOT; };
+		621713C51891A149005D69C7 /* CAByteOrder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAByteOrder.h; path = ../../AU_SDK/PublicUtility/CAByteOrder.h; sourceTree = SOURCE_ROOT; };
+		621713C61891A149005D69C7 /* CADebugger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugger.cpp; path = ../../AU_SDK/PublicUtility/CADebugger.cpp; sourceTree = SOURCE_ROOT; };
+		621713C71891A149005D69C7 /* CADebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugger.h; path = ../../AU_SDK/PublicUtility/CADebugger.h; sourceTree = SOURCE_ROOT; };
+		621713C81891A149005D69C7 /* CADebugMacros.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugMacros.cpp; path = ../../AU_SDK/PublicUtility/CADebugMacros.cpp; sourceTree = SOURCE_ROOT; };
+		621713C91891A149005D69C7 /* CADebugMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugMacros.h; path = ../../AU_SDK/PublicUtility/CADebugMacros.h; sourceTree = SOURCE_ROOT; };
+		621713CA1891A149005D69C7 /* CADebugPrintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CADebugPrintf.cpp; path = ../../AU_SDK/PublicUtility/CADebugPrintf.cpp; sourceTree = SOURCE_ROOT; };
+		621713CB1891A149005D69C7 /* CADebugPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CADebugPrintf.h; path = ../../AU_SDK/PublicUtility/CADebugPrintf.h; sourceTree = SOURCE_ROOT; };
+		621713CC1891A149005D69C7 /* CAException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAException.h; path = ../../AU_SDK/PublicUtility/CAException.h; sourceTree = SOURCE_ROOT; };
+		621713CD1891A149005D69C7 /* CAGuard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAGuard.cpp; path = ../../AU_SDK/PublicUtility/CAGuard.cpp; sourceTree = SOURCE_ROOT; };
+		621713CE1891A149005D69C7 /* CAGuard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAGuard.h; path = ../../AU_SDK/PublicUtility/CAGuard.h; sourceTree = SOURCE_ROOT; };
+		621713CF1891A149005D69C7 /* CAHostTimeBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAHostTimeBase.cpp; path = ../../AU_SDK/PublicUtility/CAHostTimeBase.cpp; sourceTree = SOURCE_ROOT; };
+		621713D01891A149005D69C7 /* CAHostTimeBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAHostTimeBase.h; path = ../../AU_SDK/PublicUtility/CAHostTimeBase.h; sourceTree = SOURCE_ROOT; };
+		621713D11891A149005D69C7 /* CALogMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CALogMacros.h; path = ../../AU_SDK/PublicUtility/CALogMacros.h; sourceTree = SOURCE_ROOT; };
+		621713D21891A149005D69C7 /* CAMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAMath.h; path = ../../AU_SDK/PublicUtility/CAMath.h; sourceTree = SOURCE_ROOT; };
+		621713D31891A149005D69C7 /* CAMutex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAMutex.cpp; path = ../../AU_SDK/PublicUtility/CAMutex.cpp; sourceTree = SOURCE_ROOT; };
+		621713D41891A149005D69C7 /* CAMutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAMutex.h; path = ../../AU_SDK/PublicUtility/CAMutex.h; sourceTree = SOURCE_ROOT; };
+		621713D51891A149005D69C7 /* CAReferenceCounted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAReferenceCounted.h; path = ../../AU_SDK/PublicUtility/CAReferenceCounted.h; sourceTree = SOURCE_ROOT; };
+		621713D61891A149005D69C7 /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAStreamBasicDescription.cpp; path = ../../AU_SDK/PublicUtility/CAStreamBasicDescription.cpp; sourceTree = SOURCE_ROOT; };
+		621713D71891A149005D69C7 /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAStreamBasicDescription.h; path = ../../AU_SDK/PublicUtility/CAStreamBasicDescription.h; sourceTree = SOURCE_ROOT; };
+		621713D81891A149005D69C7 /* CAThreadSafeList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAThreadSafeList.h; path = ../../AU_SDK/PublicUtility/CAThreadSafeList.h; sourceTree = SOURCE_ROOT; };
+		621713D91891A149005D69C7 /* CAVectorUnit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAVectorUnit.cpp; path = ../../AU_SDK/PublicUtility/CAVectorUnit.cpp; sourceTree = SOURCE_ROOT; };
+		621713DA1891A149005D69C7 /* CAVectorUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAVectorUnit.h; path = ../../AU_SDK/PublicUtility/CAVectorUnit.h; sourceTree = SOURCE_ROOT; };
+		621713DB1891A149005D69C7 /* CAVectorUnitTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAVectorUnitTypes.h; path = ../../AU_SDK/PublicUtility/CAVectorUnitTypes.h; sourceTree = SOURCE_ROOT; };
+		621713DC1891A149005D69C7 /* CAXException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAXException.cpp; path = ../../AU_SDK/PublicUtility/CAXException.cpp; sourceTree = SOURCE_ROOT; };
+		621713DD1891A149005D69C7 /* CAXException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAXException.h; path = ../../AU_SDK/PublicUtility/CAXException.h; sourceTree = SOURCE_ROOT; };
 		62B3B89C18918C4F00E507B7 /* PkgInfo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PkgInfo; sourceTree = "<group>"; };
 		62B3B89E1891936500E507B7 /* JamTaba.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; name = JamTaba.r; path = ../../src/Plugins/AU/AUSource/JamTaba.r; sourceTree = "<group>"; };
 		8BA05A660720730100365D66 /* JamTaba.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = JamTaba.cpp; path = ../../src/Plugins/AU/AUSource/JamTaba.cpp; sourceTree = "<group>"; };
@@ -755,7 +749,6 @@
 		8BA05AF9072074E100365D66 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		8BA05AFA072074E100365D66 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = /System/Library/Frameworks/AudioUnit.framework; sourceTree = "<absolute>"; };
 		8BA05AFB072074E100365D66 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
-		8BA05B01072074F900365D66 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		8BA4ADCE073EB19800A2709A /* JamTaba_ViewFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = JamTaba_ViewFactory.h; path = ../../src/Plugins/AU/CocoaUI/JamTaba_ViewFactory.h; sourceTree = "<group>"; };
 		8BA4ADCF073EB19800A2709A /* JamTaba_ViewFactory.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; name = JamTaba_ViewFactory.mm; path = ../../src/Plugins/AU/CocoaUI/JamTaba_ViewFactory.mm; sourceTree = "<group>"; };
 		8BA4ADD0073EB19800A2709A /* JamTaba_UIView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = JamTaba_UIView.h; path = ../../src/Plugins/AU/CocoaUI/JamTaba_UIView.h; sourceTree = "<group>"; };
@@ -772,38 +765,33 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A1C7AA21E0B5F5B00C7984D /* SystemConfiguration.framework in Frameworks */,
+				2AEFF5681E1836F800843898 /* Carbon.framework in Frameworks */,
+				2AEFF5671E1836EA00843898 /* IOKit.framework in Frameworks */,
+				2AEFF5641E18368F00843898 /* OpenGL.framework in Frameworks */,
 				2A1C7AA31E0B5F6600C7984D /* Security.framework in Frameworks */,
-				2A1C7AA41E0B5F6600C7984D /* CoreServices.framework in Frameworks */,
-				2A1C7AA51E0B5F6600C7984D /* IOKit.framework in Frameworks */,
-				2A1C7AA61E0B5F6600C7984D /* Carbon.framework in Frameworks */,
-				2A1C7AA71E0B5F6600C7984D /* OpenGL.framework in Frameworks */,
-				2A1C7AA81E0B5F6600C7984D /* Cocoa.framework in Frameworks */,
-				2A1C7AA91E0B5F6600C7984D /* CoreServices.framework in Frameworks */,
-				2A1C7AAA1E0B5F6600C7984D /* AudioToolbox.framework in Frameworks */,
 				2A1C7AAB1E0B5F6600C7984D /* AudioUnit.framework in Frameworks */,
 				2A1C7AAC1E0B5F6600C7984D /* CoreAudio.framework in Frameworks */,
+				2A1C7AAA1E0B5F6600C7984D /* AudioToolbox.framework in Frameworks */,
+				2AEFF5611E18363800843898 /* libqtfreetype.a in Frameworks */,
+				2AEFF5551E1835A100843898 /* libQt5Network.a in Frameworks */,
+				2AEFF55D1E18360A00843898 /* libqcocoa.a in Frameworks */,
+				2AEFF5531E1835A100843898 /* libQt5Core.a in Frameworks */,
+				2AEFF5591E1835CC00843898 /* libqtharfbuzzng.a in Frameworks */,
+				2AEFF5631E18364D00843898 /* libQt5PrintSupport.a in Frameworks */,
 				2A0DBEC61E0B03C700BEF1FF /* libvorbisfile.a in Frameworks */,
-				2A2F70081E080F7200A4B6C2 /* libz.dylib in Frameworks */,
-				2A2F70061E08094500A4B6C2 /* libcups.dylib in Frameworks */,
-				2A2F6FF91E0804F800A4B6C2 /* libQt5Core.a in Frameworks */,
-				2A2F6FFA1E0804F800A4B6C2 /* libQt5Gui.a in Frameworks */,
-				2A2F6FFD1E0804F800A4B6C2 /* libQt5Widgets.a in Frameworks */,
 				2A0DBEC21E0B03C700BEF1FF /* libvorbis.a in Frameworks */,
-				2A2F6FFB1E0804F800A4B6C2 /* libQt5Network.a in Frameworks */,
+				2AEFF5541E1835A100843898 /* libQt5Gui.a in Frameworks */,
+				2AEFF55B1E1835E100843898 /* libqtpcre.a in Frameworks */,
+				2AEFF55F1E18362500843898 /* libcocoaprintersupport.a in Frameworks */,
+				2AEFF5561E1835A100843898 /* libQt5PlatformSupport.a in Frameworks */,
 				2A0DBEC41E0B03C700BEF1FF /* libvorbisenc.a in Frameworks */,
 				2A0DBEC01E0B03C600BEF1FF /* librtmidi.a in Frameworks */,
-				2A2F700A1E080FEC00A4B6C2 /* libqcocoa.a in Frameworks */,
-				2A2F6FFC1E0804F800A4B6C2 /* libQt5PlatformSupport.a in Frameworks */,
-				2A2F6FFE1E0804F800A4B6C2 /* libqtfreetype.a in Frameworks */,
-				2A2F6FFF1E0804F800A4B6C2 /* libqtharfbuzzng.a in Frameworks */,
 				2A0DBEBA1E0B03C600BEF1FF /* libminimp3.a in Frameworks */,
 				2A0DBEBC1E0B03C600BEF1FF /* libogg.a in Frameworks */,
-				2A2F70001E0804F800A4B6C2 /* libqtpcre.a in Frameworks */,
-				2A2F70011E0804F800A4B6C2 /* libqtpng.a in Frameworks */,
-				2A2F70041E08051A00A4B6C2 /* libQt5PrintSupport.a in Frameworks */,
-				2A2F6FF81E0804F800A4B6C2 /* libQt5Concurrent.a in Frameworks */,
+				2AEFF5571E1835A100843898 /* libQt5Widgets.a in Frameworks */,
 				2A0DBEBE1E0B03C600BEF1FF /* libportaudio.a in Frameworks */,
+				2A2F70081E080F7200A4B6C2 /* libz.dylib in Frameworks */,
+				2A2F70061E08094500A4B6C2 /* libcups.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -811,7 +799,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8BA05B02072074F900365D66 /* CoreServices.framework in Frameworks */,
+				2A3FC8401E15BCD5005227F4 /* Carbon.framework in Frameworks */,
 				8BA05AFC072074E100365D66 /* AudioToolbox.framework in Frameworks */,
 				8BA05AFD072074E100365D66 /* AudioUnit.framework in Frameworks */,
 				2A0DBE8A1E0AF5AA00BEF1FF /* CoreAudio.framework in Frameworks */,
@@ -835,7 +823,18 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				2A0DBECB1E0B07B900BEF1FF /* SystemConfiguration.framework */,
+				2AEFF5621E18364D00843898 /* libQt5PrintSupport.a */,
+				2AEFF5601E18363800843898 /* libqtfreetype.a */,
+				2AEFF55E1E18362500843898 /* libcocoaprintersupport.a */,
+				2AEFF55C1E18360A00843898 /* libqcocoa.a */,
+				2AEFF55A1E1835E100843898 /* libqtpcre.a */,
+				2AEFF5581E1835CC00843898 /* libqtharfbuzzng.a */,
+				2AEFF54E1E1835A100843898 /* libQt5Core.a */,
+				2AEFF54F1E1835A100843898 /* libQt5Gui.a */,
+				2AEFF5501E1835A100843898 /* libQt5Network.a */,
+				2AEFF5511E1835A100843898 /* libQt5PlatformSupport.a */,
+				2AEFF5521E1835A100843898 /* libQt5Widgets.a */,
+				2A4CE4181E13E50E009601F6 /* ApplicationServices.framework */,
 				2A0DBEB31E0B03C600BEF1FF /* libminimp3.a */,
 				2A0DBEB41E0B03C600BEF1FF /* libogg.a */,
 				2A0DBEB51E0B03C600BEF1FF /* libportaudio.a */,
@@ -846,24 +845,10 @@
 				2A0DBEA41E0B01C600BEF1FF /* Security.framework */,
 				2A2F70071E080F7200A4B6C2 /* libz.dylib */,
 				2A2F70051E08094500A4B6C2 /* libcups.dylib */,
-				2AC0D3F91E0AB9A8005A940A /* CoreServices.framework */,
 				2A2F700F1E08116200A4B6C2 /* IOKit.framework */,
 				2A2F700D1E08113100A4B6C2 /* Carbon.framework */,
 				2A2F700B1E08111E00A4B6C2 /* OpenGL.framework */,
-				2A2F70091E080FEC00A4B6C2 /* libqcocoa.a */,
-				2A2F70021E0804F800A4B6C2 /* libQt5PrintSupport.a */,
-				2A2F6FE41E0801B900A4B6C2 /* libQt5Widgets.a */,
-				2A2F6FE51E0801B900A4B6C2 /* libQt5Core.a */,
-				2A2F6FE61E0801B900A4B6C2 /* libQt5Gui.a */,
-				2A2F6FE71E0801B900A4B6C2 /* libQt5Network.a */,
-				2A2F6FE81E0801B900A4B6C2 /* libqtfreetype.a */,
-				2A2F6FE91E0801B900A4B6C2 /* libqtharfbuzzng.a */,
-				2A2F6FEA1E0801B900A4B6C2 /* libqtpcre.a */,
-				2A2F6FEB1E0801B900A4B6C2 /* libQt5PlatformSupport.a */,
-				2A2F6FEC1E0801B900A4B6C2 /* libqtpng.a */,
-				2A2F6FED1E0801B900A4B6C2 /* libQt5Concurrent.a */,
 				8BA4AE5B073EB79000A2709A /* Cocoa.framework */,
-				8BA05B01072074F900365D66 /* CoreServices.framework */,
 				8BA05AF9072074E100365D66 /* AudioToolbox.framework */,
 				8BA05AFA072074E100365D66 /* AudioUnit.framework */,
 				8BA05AFB072074E100365D66 /* CoreAudio.framework */,
@@ -1333,7 +1318,7 @@
 				62FEDF6C1891AFC9004C557F /* OtherBases */,
 			);
 			name = AUPublic;
-			path = Source/AUPublic;
+			path = ../../AU_SDK/AUPublic;
 			sourceTree = SOURCE_ROOT;
 		};
 		62FEDF6B1891AED5004C557F /* PublicUtility */ = {
@@ -1373,7 +1358,7 @@
 				621713DD1891A149005D69C7 /* CAXException.h */,
 			);
 			name = PublicUtility;
-			path = Source/PublicUtility;
+			path = ../../AU_SDK/PublicUtility;
 			sourceTree = SOURCE_ROOT;
 		};
 		62FEDF6C1891AFC9004C557F /* OtherBases */ = {
@@ -1383,7 +1368,7 @@
 				621713B31891A149005D69C7 /* AUEffectBase.h */,
 			);
 			name = OtherBases;
-			path = ../../src/Plugins/AU/AUPublic/OtherBases;
+			path = ../../AU_SDK/AUPublic/OtherBases;
 			sourceTree = SOURCE_ROOT;
 		};
 		62FEDF6D1891B01E004C557F /* Utility */ = {
@@ -1396,7 +1381,7 @@
 				621713BD1891A149005D69C7 /* AUSilentTimeout.h */,
 			);
 			name = Utility;
-			path = ../../src/Plugins/AU/AUPublic/Utility;
+			path = ../../AU_SDK/AUPublic/Utility;
 			sourceTree = SOURCE_ROOT;
 		};
 		62FEDF6E1891B0AA004C557F /* AUBase */ = {
@@ -1419,7 +1404,7 @@
 				6211E2B21891AA2900751AA3 /* ComponentBase.h */,
 			);
 			name = AUBase;
-			path = ../../src/Plugins/AU/AUPublic/AUBase;
+			path = ../../AU_SDK/AUPublic/AUBase;
 			sourceTree = SOURCE_ROOT;
 		};
 		8BA05A56072072A900365D66 /* AU Source */ = {
@@ -1795,6 +1780,7 @@
 				2A1C7A5C1E0B5F2C00C7984D /* LocalTrackView.cpp in Sources */,
 				2A1C7A5D1E0B5F2C00C7984D /* MainWindow.cpp in Sources */,
 				2A1C7A5E1E0B5F2C00C7984D /* NinjamPanel.cpp in Sources */,
+				2A488F041E2C04C70097C505 /* PluginDescriptor.cpp in Sources */,
 				2A1C7A5F1E0B5F2C00C7984D /* NinjamRoomWindow.cpp in Sources */,
 				2A1C7A601E0B5F2C00C7984D /* NinjamTrackGroupView.cpp in Sources */,
 				2A1C7A611E0B5F2C00C7984D /* NinjamTrackView.cpp in Sources */,
@@ -1918,13 +1904,14 @@
 		3EED0942089806170095A620 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "/Users/elieser/Qt/5.7/clang_64/lib/**";
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1937,20 +1924,20 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Extras,
-					"/Downloads/qtbase-opensource-src-5.7.1/include/**",
-					"/Users/elieser/Qt/5.7/clang_64/lib/QtWidgets.framework/Headers/**",
-					/Users/elieser/Qt/5.7/clang_64/lib/QtGui.framework/Headers,
-					"/Users/elieser/Qt/5.7/clang_64/lib/QtCore.framework/Headers/**",
+					"~/Desktop/Qt-5.6/include/**",
 				);
 				INFOPLIST_FILE = CocoaJamTabaView.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/elieser/Downloads/qtbase-opensource-src-5.7.1/lib/**",
-					"/Users/elieser/Downloads/qtbase-opensource-src-5.7.1/lib/**",
-					"/Users/elieser/Downloads/qtbase-opensource-src-5.7.1/plugins/platforms/**",
-					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
+					"~/Desktop/Qt-5.6/lib/**",
+					"~/Desktop/Qt-5.6/plugins/platforms/**",
+					"/Users/elieser/Desktop/JamTaba/libs/static/mac64/**",
+					"/Users/elieser/Desktop/Qt-5.6/lib",
+					"/Users/elieser/Desktop/Qt-5.6/plugins/platforms",
+					"/Users/elieser/Desktop/Qt-5.6/plugins/printsupport",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -1961,8 +1948,8 @@
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = CocoaJamTabaView;
 				SECTORDER_FLAGS = "";
-				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = "";
+				STRIP_INSTALLED_PRODUCT = YES;
+				USER_HEADER_SEARCH_PATHS = "~/Desktop/Qt-5.6/include/**";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -1975,12 +1962,13 @@
 		3EED0943089806170095A620 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
-				FRAMEWORK_SEARCH_PATHS = "/Users/elieser/Qt/5.7/clang_64/lib/**";
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
@@ -1990,20 +1978,20 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Extras,
-					"/Downloads/qtbase-opensource-src-5.7.1/include/**",
-					"/Users/elieser/Qt/5.7/clang_64/lib/QtWidgets.framework/Headers/**",
-					/Users/elieser/Qt/5.7/clang_64/lib/QtGui.framework/Headers,
-					"/Users/elieser/Qt/5.7/clang_64/lib/QtCore.framework/Headers/**",
+					"~/Desktop/Qt-5.6/include/**",
 				);
 				INFOPLIST_FILE = CocoaJamTabaView.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/elieser/Downloads/qtbase-opensource-src-5.7.1/lib/**",
-					"/Users/elieser/Downloads/qtbase-opensource-src-5.7.1/lib/**",
-					"/Users/elieser/Downloads/qtbase-opensource-src-5.7.1/plugins/platforms/**",
-					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
+					"~/Desktop/Qt-5.6/lib/**",
+					"~/Desktop/Qt-5.6/plugins/platforms/**",
+					"/Users/elieser/Desktop/JamTaba/libs/static/mac64/**",
+					"/Users/elieser/Desktop/Qt-5.6/lib",
+					"/Users/elieser/Desktop/Qt-5.6/plugins/platforms",
+					"/Users/elieser/Desktop/Qt-5.6/plugins/printsupport",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -2014,8 +2002,8 @@
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = CocoaJamTabaView;
 				SECTORDER_FLAGS = "";
-				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = "";
+				STRIP_INSTALLED_PRODUCT = YES;
+				USER_HEADER_SEARCH_PATHS = "~/Desktop/Qt-5.6/include/**";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2028,12 +2016,13 @@
 		3EED0944089806170095A620 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
-				FRAMEWORK_SEARCH_PATHS = "/Users/elieser/Qt/5.7/clang_64/lib/**";
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
@@ -2043,20 +2032,20 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Extras,
-					"/Downloads/qtbase-opensource-src-5.7.1/include/**",
-					"/Users/elieser/Qt/5.7/clang_64/lib/QtWidgets.framework/Headers/**",
-					/Users/elieser/Qt/5.7/clang_64/lib/QtGui.framework/Headers,
-					"/Users/elieser/Qt/5.7/clang_64/lib/QtCore.framework/Headers/**",
+					"~/Desktop/Qt-5.6/include/**",
 				);
 				INFOPLIST_FILE = CocoaJamTabaView.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/elieser/Downloads/qtbase-opensource-src-5.7.1/lib/**",
-					"/Users/elieser/Downloads/qtbase-opensource-src-5.7.1/lib/**",
-					"/Users/elieser/Downloads/qtbase-opensource-src-5.7.1/plugins/platforms/**",
-					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
+					"~/Desktop/Qt-5.6/lib/**",
+					"~/Desktop/Qt-5.6/plugins/platforms/**",
+					"/Users/elieser/Desktop/JamTaba/libs/static/mac64/**",
+					"/Users/elieser/Desktop/Qt-5.6/lib",
+					"/Users/elieser/Desktop/Qt-5.6/plugins/platforms",
+					"/Users/elieser/Desktop/Qt-5.6/plugins/printsupport",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -2067,8 +2056,8 @@
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = CocoaJamTabaView;
 				SECTORDER_FLAGS = "";
-				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = "";
+				STRIP_INSTALLED_PRODUCT = YES;
+				USER_HEADER_SEARCH_PATHS = "~/Desktop/Qt-5.6/include/**";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2080,10 +2069,11 @@
 		3EED0946089806170095A620 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				DEBUGGING_SYMBOLS = YES;
 				EXPORTED_SYMBOLS_FILE = ../../src/Plugins/AU/AUSource/JamTaba.exp;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2096,8 +2086,6 @@
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/Components/";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/elieser/Downloads/qtbase-opensource-src-5.7.1/plugins/platforms",
-					"/Users/elieser/Downloads/qtbase-opensource-src-5.7.1/lib",
 					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
 				);
 				LIBRARY_STYLE = Bundle;
@@ -2106,7 +2094,7 @@
 				OTHER_REZFLAGS = "-d i386_$i386 -d x86_64_$x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Extras/CoreAudio/AudioUnits/AUPublic/AUBase";
 				PRODUCT_NAME = JamTaba;
 				REZ_SEARCH_PATHS = "";
-				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2119,10 +2107,11 @@
 		3EED0947089806170095A620 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				EXPORTED_SYMBOLS_FILE = ../../src/Plugins/AU/AUSource/JamTaba.exp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch;
@@ -2133,8 +2122,6 @@
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/Components/";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/elieser/Downloads/qtbase-opensource-src-5.7.1/plugins/platforms",
-					"/Users/elieser/Downloads/qtbase-opensource-src-5.7.1/lib",
 					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
 				);
 				LIBRARY_STYLE = Bundle;
@@ -2143,7 +2130,7 @@
 				OTHER_REZFLAGS = "-d i386_$i386 -d x86_64_$x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Extras/CoreAudio/AudioUnits/AUPublic/AUBase";
 				PRODUCT_NAME = JamTaba;
 				REZ_SEARCH_PATHS = "";
-				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2156,10 +2143,11 @@
 		3EED0948089806170095A620 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				EXPORTED_SYMBOLS_FILE = ../../src/Plugins/AU/AUSource/JamTaba.exp;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../src/Plugins/AU/AUSource/JamTaba_Prefix.pch;
@@ -2170,8 +2158,6 @@
 				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/Components/";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/elieser/Downloads/qtbase-opensource-src-5.7.1/plugins/platforms",
-					"/Users/elieser/Downloads/qtbase-opensource-src-5.7.1/lib",
 					/Users/elieser/Desktop/JamTaba/libs/static/mac64,
 				);
 				LIBRARY_STYLE = Bundle;
@@ -2180,7 +2166,7 @@
 				OTHER_REZFLAGS = "-d i386_$i386 -d x86_64_$x86_64 -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Extras/CoreAudio/AudioUnits/AUPublic/AUBase";
 				PRODUCT_NAME = JamTaba;
 				REZ_SEARCH_PATHS = "";
-				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_INSTALLED_PRODUCT = YES;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2194,7 +2180,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_EMPTY_BODY = NO;
@@ -2220,14 +2206,11 @@
 					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Extras,
 					"\"$(SRCROOT)/../../src/Common\"/**",
-					"/Users/elieser/Qt/5.7/clang_64/lib/QtWidgets.framework/Headers/**",
-					"/Users/elieser/Qt/5.7/clang_64/lib/QtGui.framework/Headers/**",
-					"/Users/elieser/Qt/5.7/clang_64/lib/QtCore.framework/Headers/**",
-					"\"$(SRCROOT)/../../../../Downloads/qtbase-opensource-src-5.7.1/include\"/**",
+					"~/Desktop/Qt-5.6/include/**",
 					"\"$(SRCROOT)/../../libs/includes\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OSACOMPILE_EXECUTE_ONLY = YES;
 				REZ_SEARCH_PATHS = "";
 				SDKROOT = macosx;
@@ -2240,7 +2223,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_EMPTY_BODY = NO;
@@ -2266,14 +2249,11 @@
 					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Extras,
 					"\"$(SRCROOT)/../../src/Common\"/**",
-					"/Users/elieser/Qt/5.7/clang_64/lib/QtWidgets.framework/Headers/**",
-					"/Users/elieser/Qt/5.7/clang_64/lib/QtGui.framework/Headers/**",
-					"/Users/elieser/Qt/5.7/clang_64/lib/QtCore.framework/Headers/**",
-					"\"$(SRCROOT)/../../../../Downloads/qtbase-opensource-src-5.7.1/include\"/**",
+					"~/Desktop/Qt-5.6/include/**",
 					"\"$(SRCROOT)/../../libs/includes\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OSACOMPILE_EXECUTE_ONLY = YES;
 				REZ_SEARCH_PATHS = "";
 				SDKROOT = macosx;
@@ -2286,7 +2266,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_EMPTY_BODY = NO;
@@ -2312,14 +2292,11 @@
 					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include,
 					/Applications/Xcode.app/Contents/Developer/Extras,
 					"\"$(SRCROOT)/../../src/Common\"/**",
-					"/Users/elieser/Qt/5.7/clang_64/lib/QtWidgets.framework/Headers/**",
-					"/Users/elieser/Qt/5.7/clang_64/lib/QtGui.framework/Headers/**",
-					"/Users/elieser/Qt/5.7/clang_64/lib/QtCore.framework/Headers/**",
-					"\"$(SRCROOT)/../../../../Downloads/qtbase-opensource-src-5.7.1/include\"/**",
+					"~/Desktop/Qt-5.6/include/**",
 					"\"$(SRCROOT)/../../libs/includes\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OSACOMPILE_EXECUTE_ONLY = YES;
 				REZ_SEARCH_PATHS = "";
 				SDKROOT = macosx;

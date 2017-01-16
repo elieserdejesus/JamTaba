@@ -186,7 +186,7 @@ void NinjamRoomStreamerNode::initialize(const QString &streamPath)
 void NinjamRoomStreamerNode::on_reply_error(QNetworkReply::NetworkError /*error*/)
 {
     QString msg = "ERROR playing room stream";
-    qCCritical(jtNinjamRoomStreamer) << msg;
+    qCritical() << msg;
     emit error(msg);
 }
 
@@ -204,7 +204,7 @@ void NinjamRoomStreamerNode::on_reply_read()
                                       << " bufferedSamples: " << bufferedSamples.getFrameLenght();
         }
     } else {
-        qCCritical(jtNinjamRoomStreamer) << "problem in device!";
+        qCritical() << "problem in device!";
     }
 }
 
@@ -258,7 +258,7 @@ void AudioFileStreamerNode::initialize(const QString &streamPath)
     AbstractMp3Streamer::initialize(streamPath);
     QFile *f = new QFile(streamPath);
     if (!f->open(QIODevice::ReadOnly))
-        qCCritical(jtNinjamRoomStreamer) << "error opening the file " << streamPath;
+        qCritical() << "error opening the file " << streamPath;
     this->device = f;
     bytesToDecode.append(f->readAll());
 }

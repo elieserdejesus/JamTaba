@@ -37,13 +37,18 @@ HEADERS += gui/FxPanelItem.h
 HEADERS += gui/MidiToolsDialog.h
 
 HEADERS += audio/PortAudioDriver.h
+HEADERS += audio/Host.h
 HEADERS += midi/RtMidiDriver.h
 HEADERS += vst/VstPlugin.h
 HEADERS += vst/VstHost.h
 HEADERS += vst/VstLoader.h
-HEADERS += vst/PluginFinder.h
+HEADERS += PluginFinder.h
+HEADERS += vst/VstPluginFinder.h
+HEADERS += vst/Utils.h
 HEADERS += Libs/SingleApplication/singleapplication.h
-HEADERS += audio/core/PluginDescriptor.h
+
+mac:HEADERS += AU/AudioUnitHost.h
+mac:HEADERS += AU/AudioUnitPlugin.h
 
 SOURCES += main.cpp
 SOURCES += MainControllerStandalone.cpp
@@ -59,11 +64,16 @@ SOURCES += gui/MidiToolsDialog.cpp
 SOURCES += midi/RtMidiDriver.cpp
 SOURCES += vst/VstPlugin.cpp
 SOURCES += vst/VstHost.cpp
-SOURCES += vst/PluginFinder.cpp
+SOURCES += PluginFinder.cpp
+SOURCES += vst/VstPluginFinder.cpp
+SOURCES += vst/Utils.cpp
 SOURCES += vst/VstLoader.cpp
 SOURCES += Libs/SingleApplication/singleapplication.cpp
 SOURCES += audio/PortAudioDriver.cpp
-SOURCES += audio/core/PluginDescriptor.cpp
+
+mac:SOURCES += AU/AudioUnitHost.cpp
+mac:SOURCES += AU/AudioUnitPluginFinder.cpp
+
 
 FORMS += gui/MidiToolsDialog.ui
 
@@ -73,8 +83,17 @@ win32{
     SOURCES += vst/WindowsVstPluginChecker.cpp
 }
 macx{
+
+    AU_SDK_PATH = "$$PWD/../../AU_SDK"
+    VPATH += $$AU_SDK_PATH
+
     SOURCES += audio/MacPortAudioDriver.cpp
     SOURCES += vst/MacVstPluginChecker.cpp
+
+    HEADERS += AU/AudioUnitPlugin.h
+    OBJECTIVE_SOURCES += AU/AudioUnitPlugin.mm
+
+    INCLUDEPATH += $$AU_SDK_PATH
 }
 linux{
     SOURCES += audio/LinuxPortAudioDriver.cpp
@@ -145,6 +164,7 @@ macx{
     LIBS += -framework AudioUnit
     LIBS += -framework CoreServices
     LIBS += -framework Carbon
+    LIBS += -framework Cocoa
 
     #mac osx doc icon
     ICON = ../Jamtaba.icns

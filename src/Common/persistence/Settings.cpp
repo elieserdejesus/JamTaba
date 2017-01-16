@@ -221,6 +221,9 @@ void RecordingSettings::read(const QJsonObject &in)
     if (in.contains("recordingPath")) {
         recordingPath = in["recordingPath"].toString();
         QDir dir(QDir::fromNativeSeparators(recordingPath));
+        if (!dir.exists())
+            dir.mkpath(".");
+
         if (recordingPath.isEmpty() || !dir.exists()) {
             qWarning() << "Dir " << dir << " not exists, using the application directory to save multitracks!";
             useDefaultRecordingPath = true;
@@ -359,6 +362,33 @@ void VstSettings::read(const QJsonObject &in)
             blackedPlugins.append(cacheArray.at(x).toString());
     }
 }
+// +++++++++++++++++++++++++++++++++++++++
+
+AudioUnitSettings::AudioUnitSettings() :
+    SettingsObject("AU")
+{
+}
+
+// AU JSON WRITER
+void AudioUnitSettings::write(QJsonObject &out) const
+{
+    QJsonArray cacheArray;
+    foreach (const QString &pluginPath, cachedPlugins)
+        cacheArray.append(pluginPath);
+    out["cachedPlugins"] = cacheArray;
+}
+
+void AudioUnitSettings::read(const QJsonObject &in)
+{
+    cachedPlugins.clear();
+    if (in.contains("cachedPlugins")) {
+        QJsonArray cacheArray = in["cachedPlugins"].toArray();
+        for (int x = 0; x < cacheArray.size(); ++x) {
+            QString pluginFile = cacheArray.at(x).toString();
+
+        }
+    }
+}
 
 // +++++++++++++++++++++++++++++++++++++++
 Channel::Channel(const QString &name) :
@@ -366,11 +396,15 @@ Channel::Channel(const QString &name) :
 {
 }
 
-Plugin::Plugin(const QString &path, bool bypassed, const QByteArray &data) :
-    path(path),
-    bypassed(bypassed),
-    data(data)
+Plugin::Plugin(const Audio::PluginDescriptor &descriptor, bool bypassed, const QByteArray &data)
+    :   name(descriptor.getName()),
+        path(descriptor.getPath()),
+        manufacturer(descriptor.getManufacturer()),
+        bypassed(bypassed),
+        data(data),
+        category(descriptor.getCategory())
 {
+
 }
 
 Subchannel::Subchannel(int firstInput, int channelsCount, int midiDevice, int midiChannel,
@@ -431,9 +465,21 @@ void LocalInputTrackSettings::write(QJsonObject &out) const
             QJsonArray pluginsArray;
             foreach (const Persistence::Plugin &plugin, sub.getPlugins()) {
                 QJsonObject pluginObject;
-                pluginObject["path"] = plugin.path;
+                pluginObject["name"]     = plugin.name;
+
+                if (!plugin.path.isEmpty())
+                    pluginObject["path"]     = plugin.path;
+
                 pluginObject["bypassed"] = plugin.bypassed;
-                pluginObject["data"] = QString(plugin.data.toBase64());
+
+                if (!plugin.data.isEmpty())
+                    pluginObject["data"]     = QString(plugin.data.toBase64());
+
+                pluginObject["category"] = static_cast<quint8>(plugin.category);
+
+                if (!plugin.manufacturer.isEmpty())
+                    pluginObject["manufacturer"] = plugin.manufacturer;
+
                 pluginsArray.append(pluginObject);
             }
             subChannelObject["plugins"] = pluginsArray;
@@ -444,6 +490,27 @@ void LocalInputTrackSettings::write(QJsonObject &out) const
         channelsArray.append(channelObject);
     }
     out["channels"] = channelsArray;
+}
+
+Plugin LocalInputTrackSettings::jsonObjectToPlugin(QJsonObject pluginObject)
+{
+    QString name = getValueFromJson(pluginObject, "name", QString(""));
+
+    QString path = getValueFromJson(pluginObject, "path", QString(""));
+
+    bool bypassed = getValueFromJson(pluginObject, "bypassed", false);
+
+    QString dataString = getValueFromJson(pluginObject, "data", QString(""));
+
+    Audio::PluginDescriptor::Category category = static_cast<Audio::PluginDescriptor::Category>(getValueFromJson(pluginObject, "category", quint8(1))); // 1 is the VST enum value
+
+    QByteArray rawByteArray(dataString.toStdString().c_str());
+
+    QString manufacturer = getValueFromJson(pluginObject, "manufacturer", QString(""));
+
+    Audio::PluginDescriptor descriptor(name, category, manufacturer, path);
+
+    return Persistence::Plugin(descriptor, bypassed, QByteArray::fromBase64(rawByteArray));
 }
 
 void LocalInputTrackSettings::read(const QJsonObject &in, bool allowMultiSubchannels)
@@ -476,17 +543,13 @@ void LocalInputTrackSettings::read(const QJsonObject &in, bool allowMultiSubchan
                         QJsonArray pluginsArray = subChannelObject["plugins"].toArray();
                         for (int p = 0; p < pluginsArray.size(); ++p) {
                             QJsonObject pluginObject = pluginsArray.at(p).toObject();
-                            QString pluginPath
-                                = getValueFromJson(pluginObject, "path", QString(""));
-                            bool bypassed = getValueFromJson(pluginObject, "bypassed", false);
-                            QString dataString
-                                = getValueFromJson(pluginObject, "data", QString(""));
-                            if (!pluginPath.isEmpty() && QFile(pluginPath).exists()) {
-                                QByteArray rawByteArray(dataString.toStdString().c_str());
-                                plugins.append(Persistence::Plugin(pluginPath, bypassed,
-                                                                   QByteArray::fromBase64(
-                                                                       rawByteArray)));
-                            }
+                            Plugin plugin = jsonObjectToPlugin(pluginObject);
+                            bool pathIsValid = !plugin.path.isEmpty();
+                            if (plugin.category == Audio::PluginDescriptor::VST_Plugin)
+                                pathIsValid = QFile(plugin.path).exists();
+
+                            if (pathIsValid)
+                                plugins.append(plugin);
                         }
                     }
                     Persistence::Subchannel subChannel(firstInput, channelsCount, midiDevice,
@@ -576,6 +639,25 @@ QStringList Settings::getBlackListedPlugins() const
 }
 
 // ++++++++++++++++++
+#ifdef Q_OS_MAC
+
+void Settings::addAudioUnitPlugin(const QString &pluginPath)
+{
+    if (!audioUnitSettings.cachedPlugins.contains(pluginPath))
+        audioUnitSettings.cachedPlugins.append(pluginPath);
+}
+
+void Settings::clearAudioUnitCache()
+{
+    audioUnitSettings.cachedPlugins.clear();
+}
+
+QStringList Settings::getAudioUnitsPaths() const
+{
+    return audioUnitSettings.cachedPlugins;
+}
+
+#endif
 
 // +++++++++++++++++++++++++++++
 void Settings::setMetronomeSettings(float gain, float pan, bool muted)
@@ -652,7 +734,6 @@ bool Settings::readFile(const QList<SettingsObject *> &sections)
     QFile configFile(absolutePath);
 
     if (configFile.open(QIODevice::ReadOnly)) {
-        qInfo(jtConfigurator) << "Reading settings from " << configFile.fileName();
         QJsonDocument doc = QJsonDocument::fromJson(configFile.readAll());
         QJsonObject root = doc.object();
 
@@ -793,6 +874,9 @@ void Settings::load()
     sections.append(&windowSettings);
     sections.append(&metronomeSettings);
     sections.append(&vstSettings);
+#ifdef Q_OS_MAC
+    sections.append(&audioUnitSettings);
+#endif
     sections.append(&inputsSettings);
     sections.append(&recordingSettings);
     sections.append(&privateServerSettings);
@@ -819,6 +903,9 @@ void Settings::save(const LocalInputTrackSettings &localInputsSettings)
     sections.append(&windowSettings);
     sections.append(&metronomeSettings);
     sections.append(&vstSettings);
+#ifdef Q_OS_MAC
+    sections.append(&audioUnitSettings);
+#endif
     sections.append(&inputsSettings);
     sections.append(&recordingSettings);
     sections.append(&privateServerSettings);

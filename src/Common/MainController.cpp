@@ -135,7 +135,7 @@ void MainController::connectedNinjamServer(const Ninjam::Server &server)
                                                 Login::RoomTYPE::NINJAM, server.getMaxUsers(),
                                                 server.getMaxChannels()));
     } else {
-        qCCritical(jtCore) << "mainWindow is null!";
+        qCritical() << "mainWindow is null!";
     }
     qCDebug(jtCore) << "starting ninjamController...";
 
@@ -730,12 +730,12 @@ void MainController::connectInJamtabaServer()
     NatMap map;// not used yet,will be used in future to real time rooms
     QString userEnvironment = getUserEnvironmentString();
     QString version = QApplication::applicationVersion();// applicationVersion();
-    qDebug() << "Version: " << version;
     QString userName = settings.getUserName();
     if (userName.isEmpty())
         userName = "No name!";
 
     qCInfo(jtCore) << "Connecting in Jamtaba server...";
+
     loginService.connectInServer(userName, 0, "", map, version, userEnvironment, getSampleRate());
 }
 

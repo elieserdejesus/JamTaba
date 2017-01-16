@@ -79,7 +79,7 @@ void Server::addUserChannel(const UserChannel &newChannel)
         if(userChannelsCount < maxChannels)
             users[userFullName].addChannel(newChannel);
         else
-            qCCritical(jtNinjamCore) << "Can't add more channels for " << userFullName << "(using" <<
+            qCritical() << "Can't add more channels for " << userFullName << "(using" <<
                                         QString::number(userChannelsCount) << " channels). The server maxChannels is " <<
                                         QString::number(maxChannels);
     }

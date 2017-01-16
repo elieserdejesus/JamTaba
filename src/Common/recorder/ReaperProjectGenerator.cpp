@@ -50,7 +50,7 @@ void ReaperProjectGenerator::write(const Jam &jam){
     QDir jamDir = QDir(this->rppPath);
     QFile projectFile(jamDir.absoluteFilePath("Reaper project.rpp"));
     if(!projectFile.open(QFile::WriteOnly)){
-        qCCritical(jtJamRecorder) << "Can't write the reaper project file in " << jamDir;
+        qCritical() << "Can't write the reaper project file in " << jamDir;
     }
     QTextStream stream(&projectFile);
     QByteArray byteArray(stringBuffer.toUtf8());
@@ -69,7 +69,7 @@ QString ReaperProjectGenerator::getAudioAbsolutePath(QString audioFileName){
     QDir jamDir = QDir(this->rppPath);
     if (!jamDir.exists("audio") && !jamDir.mkdir("audio"))
     {
-        qCCritical(jtJamRecorder) << "Could not create audio directory in " << this->rppPath;
+        qCritical() << "Could not create audio directory in " << this->rppPath;
         return QString::null;
     }
     return jamDir.absoluteFilePath("audio/" + audioFileName);

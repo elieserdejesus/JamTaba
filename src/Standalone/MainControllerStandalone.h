@@ -3,8 +3,11 @@
 
 #include "MainController.h"
 #include <QApplication>
-#include "vst/PluginFinder.h"
-#include "vst/VstHost.h"
+#include "vst/VstPluginFinder.h"
+#ifdef Q_OS_MAC
+    #include "AU/AudioUnitPluginFinder.h"
+#endif
+#include "audio/Host.h"
 #include "audio/core/Plugins.h"
 #include "audio/core/PluginDescriptor.h"
 
@@ -14,11 +17,6 @@ class MainWindowStandalone;
 
 namespace Midi {
 class MidiDriver;
-}
-
-namespace JamtabaVstPlugin {
-class VstHost;
-class PluginFinder;
 }
 
 // ++++++++++++++++++++++++++++++++++++++++++
@@ -32,13 +30,19 @@ public:
     MainControllerStandalone(Persistence::Settings settings, QApplication *application);
     ~MainControllerStandalone();
 
-    void initializePluginsList(const QStringList &paths);
+    void initializeVstPluginsList(const QStringList &paths);
+
+#ifdef Q_OS_MAC
+    void initializeAudioUnitPluginsList(const QStringList &paths);
+#endif
 
     void addDefaultPluginsScanPath();// add vst path from registry
 
+    void clearPluginsList();
+
     void clearPluginsCache();
     QStringList getSteinbergRecommendedPaths();
-    bool pluginsScanIsNeeded() const; // plugins cache is empty OR we have new plugins in scan folders?
+    bool vstScanIsNeeded() const; // plugins cache is empty OR we have new plugins in scan folders?
 
     void quit();
 
@@ -46,11 +50,6 @@ public:
     void stop() override;
 
     void updateInputTracksRange();// called when input range or method (audio or midi) are changed in preferences
-
-    inline Vst::Host *getVstHost() const
-    {
-        return vstHost;
-    }
 
     inline virtual float getSampleRate() const override
     {
@@ -82,15 +81,15 @@ public:
 
     void setMainWindow(MainWindow *mainWindow) override;
 
-    void cancelPluginFinder();
+    void cancelPluginFinders();
 
-    inline Vst::PluginFinder *getPluginFinder() const
+    inline audio::VSTPluginFinder *getVstPluginFinder() const
     {
-        return pluginFinder.data();
+        return vstPluginFinder.data();
     }
 
     void removePlugin(int inputTrackIndex, Audio::Plugin *PLUGIN);
-    QList<Audio::PluginDescriptor> getPluginsDescriptors();
+    QMap<QString, QList<Audio::PluginDescriptor> > getPluginsDescriptors(Audio::PluginDescriptor::Category category);
     Audio::Plugin *addPlugin(quint32 inputTrackIndex, quint32 pluginSlotIndex, const Audio::PluginDescriptor &descriptor);
 
     Midi::MidiMessageBuffer pullMidiMessagesFromPlugins() override;
@@ -136,14 +135,17 @@ protected slots:
     void on_audioDriverStarted();
     void on_ninjamStartProcessing(int intervalPosition) ;
 
-    void on_VSTPluginFounded(QString name, QString group, QString path);
+    void addFoundedVstPlugin(const QString &name, const QString &path);
+#ifdef Q_OS_MAC
+    void addFoundedAudioUnitPlugin(const QString &name, const QString &path);
+#endif
 
 private slots:
-    void on_vstPluginRequestedWindowResize(QString pluginName, int newWidht, int newHeight);
+    void setVstPluginWindowSize(QString pluginName, int newWidht, int newHeight);
 
 private:
-    // VST
-    Vst::Host *vstHost;// static instance released inside Vst::Host using QSCopedPointer
+    // VST and AU hosts
+    QList<Host *> hosts;
     QApplication *application;
 
     QScopedPointer<Audio::AudioDriver> audioDriver;
@@ -155,9 +157,10 @@ private:
 
     bool inputIndexIsValid(int inputIndex);
 
-    QScopedPointer<Vst::PluginFinder> pluginFinder;
-
-    Vst::PluginFinder *createPluginFinder();
+    QScopedPointer<audio::VSTPluginFinder> vstPluginFinder;
+#ifdef Q_OS_MAC
+    QScopedPointer<audio::AudioUnitPluginFinder> auPluginFinder;
+#endif
 
     // used to sort plugins list
     static bool pluginDescriptorLessThan(const Audio::PluginDescriptor &d1,
@@ -166,7 +169,6 @@ private:
     Audio::Plugin *createPluginInstance(const Audio::PluginDescriptor &descriptor);
 
     void scanPlugins(bool scanOnlyNewPlugins);
-
 
 };
 }

@@ -36,7 +36,7 @@ void AudioNode::processReplacing(const SamplesBuffer &in, SamplesBuffer &out, in
                                    midiBuffer);
     }
 
-    internalOutputBuffer.set(internalInputBuffer);// if we have no plugins insert the input samples are just copied  to output buffer.
+    internalOutputBuffer.set(internalInputBuffer);// if we have no plugins inserted the input samples are just copied  to output buffer.
 
 
     static SamplesBuffer tempInputBuffer(2);

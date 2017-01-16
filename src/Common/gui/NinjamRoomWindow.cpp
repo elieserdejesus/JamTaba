@@ -423,7 +423,7 @@ void NinjamRoomWindow::handleChordProgressionMessage(const Ninjam::User &user, c
         chatPanel->addChordProgressionConfirmationMessage(chordProgression);
     }
     catch (const std::runtime_error &e) {
-        qCCritical(jtNinjamGUI) << e.what();
+        qCritical() << e.what();
     }
 }
 

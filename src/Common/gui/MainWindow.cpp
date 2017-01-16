@@ -48,7 +48,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     chordsPanel(nullptr)
     // lastPerformanceMonitorUpdate(0)
 {
-    qCInfo(jtGUI) << "Creating MainWindow...";
+    qCDebug(jtGUI) << "Creating MainWindow...";
 
     ui.setupUi(this);
 
@@ -65,7 +65,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     setupWidgets();
     setupSignals();
 
-    qCInfo(jtGUI) << "MainWindow created!";
+    qCDebug(jtGUI) << "MainWindow created!";
 }
 
 void MainWindow::initializeMeteringOptions()
@@ -188,9 +188,11 @@ void MainWindow::loadTranslationFile(const QString &locale)
     if( !jamtabaTranslator.load(locale, ":/tr"))
         qWarning() << "Can't load the Jamtaba translation for " << locale;
 
-    QString fileName = "qtbase_" + locale;
-    if (!qtTranslator.load(fileName, ":/qt_tr"))
-        qWarning() << "Can't load Qt translation for " << locale;
+    if (locale != "en") { // avoid load en Qt translation (this file is obviously missing)
+        QString fileName = "qtbase_" + locale;
+        if (!qtTranslator.load(fileName, ":/qt_tr"))
+            qWarning() << "Can't load Qt translation for " << locale;
+    }
 }
 
 // ++++++++++++++++++++++++=
@@ -241,10 +243,12 @@ void MainWindow::initialize()
     showBusyDialog(tr("Loading rooms list ..."));
 
     doWindowInitialization();
+
 }
 
 void MainWindow::doWindowInitialization()
 {
+
     initializeLocalInputChannels(); // create the local tracks, load plugins, etc.
 
     // set window mode: mini mode or full view mode
@@ -290,6 +294,7 @@ void MainWindow::updateLocalInputChannelsGeometry()
         foreach (LocalTrackGroupView *trackGroup, localGroupChannels)
             trackGroup->setToNarrow();
     }
+
 }
 
 void MainWindow::toggleLocalInputsCollapseStatus()
@@ -502,18 +507,16 @@ void MainWindow::initializeLocalInputChannels()
 
 void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inputsSettings)
 {
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    QApplication::processEvents();
+    QApplication::setOverrideCursor(Qt::WaitCursor); // this line was hanging/freezing in Mac
 
-    qCInfo(jtGUI) << "Initializing local inputs...";
     int channelIndex = 0;
     foreach (const Persistence::Channel &channel, inputsSettings.channels) {
-        qCInfo(jtGUI) << "\tCreating channel "<< channel.name;
+        qCDebug(jtGUI) << "\tCreating channel "<< channel.name;
         bool createFirstSubChannel = channel.subChannels.isEmpty();
         LocalTrackGroupView *channelView = addLocalChannel(channelIndex, channel.name,
                                                            createFirstSubChannel);
         foreach (const Persistence::Subchannel &subChannel, channel.subChannels) {
-            qCInfo(jtGUI) << "\t\tCreating sub-channel ";
+            qCDebug(jtGUI) << "\t\tCreating sub-channel ";
             LocalTrackView *subChannelView = channelView->addTrackView(channelIndex);
             initializeLocalSubChannel(subChannelView, subChannel);
         }
@@ -522,7 +525,7 @@ void MainWindow::initializeLocalInputChannels(const LocalInputTrackSettings &inp
     if (channelIndex == 0)// no channels in settings file or no settings file...
         addLocalChannel(0, "", true); // create a channel using an empty name
 
-    qCInfo(jtGUI) << "Initializing local inputs done!";
+    qCDebug(jtGUI) << "Initializing local inputs done!";
 
     QApplication::restoreOverrideCursor();
 }
@@ -1126,7 +1129,11 @@ void MainWindow::openPreferencesDialog(QAction *action)
         stopCurrentRoomStream();
 
         PreferencesDialog *dialog = createPreferencesDialog();// factory method, overrided in derived classes MainWindowStandalone and MainWindowVST
+
+        qDebug(jtGUI) << "Initializing preferences dialog";
         dialog->initialize(initialTab, &mainController->getSettings(), mainController->getJamRecoders());// initializing here to avoid call virtual methods inside PreferencesDialog constructor
+
+        qCDebug(jtGUI) << "Showing preferences dialog";
         dialog->show();
         dialog->exec();
     }
@@ -1577,7 +1584,6 @@ void MainWindow::setupSignals()
 void MainWindow::updateUserName()
 {
     QString newUserName = ui.userNameLineEdit->text();
-    qDebug() << "Setting user name to:" << newUserName;
     mainController->setUserName(newUserName);
 }
 

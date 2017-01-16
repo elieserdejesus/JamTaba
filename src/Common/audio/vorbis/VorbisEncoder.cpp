@@ -106,7 +106,7 @@ QByteArray VorbisEncoder::encode(const Audio::SamplesBuffer& samples) {
     //lenght == 0 in the end of interval
     int result = vorbis_analysis_wrote(&dspState, samples.getFrameLenght()); // tell the library how much we actually submitted
     if(result != 0){
-        qCCritical(jtNinjamVorbisEncoder) << "encoder error!";
+        qCritical() << "encoder error!";
     }
 
     //++++++++++++++++++++++++ encoding +++++++++
