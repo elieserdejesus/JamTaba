@@ -89,9 +89,8 @@ void MainWindow::initializeMeteringOptions()
 void MainWindow::initializeTranslator()
 {
     // always install the translators (one for Jamtaba strings and another for Qt strings)
-    QCoreApplication *app = QApplication::instance();
-    app->installTranslator(&jamtabaTranslator);
-    app->installTranslator(&qtTranslator);
+    qApp->installTranslator(&jamtabaTranslator);
+    qApp->installTranslator(&qtTranslator);
 
     // remember the last selected language
     QString localeName = mainController->getSettings().getTranslation();
