@@ -19,13 +19,12 @@ void CustomTabWidget::setResourcesUsage(double cpuUsage, int memoryUsage)
     repaint();
 }
 
-/*
 void CustomTabWidget::paintEvent(QPaintEvent *e){
     QTabWidget::paintEvent(e);
 
     QPainter painter(this);
     //draw the cpu/memory usage background
-    QString string = "CPU: " + QString::number(cpuUsage, 'f', 1) + "%  MEM: " + QString::number(memoryUsage) + " MB";
+    QString string = "CPU:" + QString::number(cpuUsage, 'f', 0) + "% MEM:" + QString::number(memoryUsage) + "%";
     const int H_MARGIM = 3;
     const int V_MARGIM = 2;
     const int ROUND = 3;
@@ -44,4 +43,3 @@ void CustomTabWidget::paintEvent(QPaintEvent *e){
     painter.drawText(x + H_MARGIM, textY, string);
 
 }
-*/

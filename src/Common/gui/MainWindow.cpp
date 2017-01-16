@@ -19,7 +19,7 @@
 #include <QRect>
 #include "MainController.h"
 #include "ThemeLoader.h"
-// #include "performance/PerformanceMonitor.h"
+#include "performance/PerformanceMonitor.h"
 
 using namespace Audio;
 using namespace Persistence;
@@ -35,7 +35,7 @@ const QString MainWindow::NIGHT_MODE_SUFFIX = "_nm";
 const quint8 MainWindow::DEFAULT_REFRESH_RATE = 30; // in Hertz
 const quint8 MainWindow::MAX_REFRESH_RATE = 60; // in Hertz
 
-// const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200;//in miliseconds
+const int MainWindow::PERFORMANCE_MONITOR_REFRESH_TIME = 200;//in miliseconds
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 MainWindow::MainWindow(Controller::MainController *mainController, QWidget *parent) :
@@ -45,8 +45,8 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
     ninjamWindow(nullptr),
     roomToJump(nullptr),
     fullViewMode(true),
-    chordsPanel(nullptr)
-    // lastPerformanceMonitorUpdate(0)
+    chordsPanel(nullptr),
+    lastPerformanceMonitorUpdate(0)
 {
     qCInfo(jtGUI) << "Creating MainWindow...";
 
@@ -946,12 +946,12 @@ void MainWindow::timerEvent(QTimerEvent *)
             ninjamWindow->updatePeaks();
     }
 
-    // update cpu and memmory usage
-// qint64 now = QDateTime::currentMSecsSinceEpoch();
-// if(now - lastPerformanceMonitorUpdate >= PERFORMANCE_MONITOR_REFRESH_TIME){
-// ui.tabWidget->setResourcesUsage(performanceMonitor.getCpuUsage(), performanceMonitor.getMemmoryUsage());
-// lastPerformanceMonitorUpdate = now;
-// }
+ // update cpu and memmory usage
+qint64 now = QDateTime::currentMSecsSinceEpoch();
+if(now - lastPerformanceMonitorUpdate >= PERFORMANCE_MONITOR_REFRESH_TIME){
+ui.contentTabWidget->setResourcesUsage(performanceMonitor.getTotalCpuUsage(), performanceMonitor.getFreeMemmory());
+lastPerformanceMonitorUpdate = now;
+}
 
     // update room stream plot
     if (mainController->isPlayingRoomStream()) {

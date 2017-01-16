@@ -10,8 +10,10 @@ class PerformanceMonitor{
 public:
     explicit PerformanceMonitor();
     ~PerformanceMonitor();
-    int getMemmoryUsage();
-    double getCpuUsage();
+    //int getMemmoryUsage();
+      int getFreeMemmory();
+    //double getCpuUsage();
+      double getTotalCpuUsage();
 private:
     int processorsCount;
 };
