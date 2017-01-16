@@ -55,7 +55,7 @@ fi
 
 echo "Copying jamtaba files to 'packageFiles' dir"
 cp Standalone/Jamtaba2 packageFiles/
-cp VstScanner/VstScanner packageFiles/
+cp Standalone/VstScanner packageFiles/
 cp $scriptDir/Jamtaba2.desktop packageFiles/
 cp $scriptDir/installer_script.sh packageFiles/
 cp $scriptDir/Jamtaba2.sh packageFiles/
