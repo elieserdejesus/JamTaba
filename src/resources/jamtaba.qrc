@@ -490,15 +490,4 @@
         <file>map/3/7/6.png</file>
         <file>map/3/7/7.png</file>
     </qresource>
-    <qresource prefix="/css/themes/Ice">
-        <file>css/themes/Ice/BaseTrack.css</file>
-        <file>css/themes/Ice/Chat.css</file>
-        <file>css/themes/Ice/Chords.css</file>
-        <file>css/themes/Ice/Dialogs.css</file>
-        <file>css/themes/Ice/General.css</file>
-        <file>css/themes/Ice/LocalTrack.css</file>
-        <file>css/themes/Ice/MainWindow.css</file>
-        <file>css/themes/Ice/NinjamWindow.css</file>
-        <file>css/themes/Ice/PublicRooms.css</file>
-    </qresource>
 </RCC>
