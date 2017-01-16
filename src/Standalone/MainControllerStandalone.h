@@ -3,7 +3,7 @@
 
 #include "MainController.h"
 #include <QApplication>
-#include "vst/VSTPluginFinder.h"
+#include "vst/VstPluginFinder.h"
 #ifdef Q_OS_MAC
     #include "AU/AudioUnitPluginFinder.h"
 #endif

@@ -6,7 +6,7 @@
     #include "audio/core/LocalInputNode.h"
     #include "vst/VstPlugin.h"
     #include "vst/VstHost.h"
-    #include "vst/VSTPluginFinder.h"
+    #include "vst/VstPluginFinder.h"
     #include "audio/core/PluginDescriptor.h"
     #include "NinjamController.h"
     #include "vst/VstPluginChecker.h"
