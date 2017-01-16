@@ -25,7 +25,7 @@ private:
     float speedDecay;
 
     static const int MARQUEE_SPEED;
-    static int TIME_BETWEEN_ANIMATIONS;
+    static quint64 TIME_BETWEEN_ANIMATIONS;
 
     quint64 lastUpdate;
     quint64 timeSinceLastAnimation;

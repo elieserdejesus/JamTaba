@@ -132,13 +132,11 @@ void IntervalProgressDisplay::paintEvent(QPaintEvent *e)
 qreal IntervalProgressDisplay::getFontSize(PaintShape paintMode) const
 {
     qreal baseFontSize = 8.0;
-    int size;
-    switch (paintMode) {
-        case PaintShape::LINEAR:     return qMax(baseFontSize, width() * 0.015);
-        case PaintShape::CIRCULAR:
-        case PaintShape::ELLIPTICAL:
-        case PaintShape::PIE:        size = qMin(width(), height()); break;
-    }
+
+    int size = qMax(baseFontSize, width() * 0.015);
+    if (paintMode == PaintShape::PIE)
+        size = qMin(width(), height());
+
     return qMax(baseFontSize, size * 0.05);
 }
 

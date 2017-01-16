@@ -19,6 +19,7 @@ VPATH       += $$SOURCE_PATH/Common
 VPATH       += $$SOURCE_PATH
 
 DEFINES += VST_FORCE_DEPRECATED=0#enable VST 2.3 features
+DEFINES += OV_EXCLUDE_STATIC_CALLBACKS  #avoid ogg static callback warnings
 
 linux{ #avoid erros in VST SDK when compiling in Linux
     DEFINES += __cdecl=""

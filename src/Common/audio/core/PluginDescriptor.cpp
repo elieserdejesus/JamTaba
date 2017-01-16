@@ -8,8 +8,8 @@ using namespace Audio;
 PluginDescriptor::PluginDescriptor()
     : name(""),
       category(PluginDescriptor::Invalid_Plugin),
-      manufacturer(""),
-      path("")
+      path(""),
+      manufacturer("")
 {
 
 }
@@ -17,8 +17,8 @@ PluginDescriptor::PluginDescriptor()
 PluginDescriptor::PluginDescriptor(const QString &name, Category category, const QString &manufacturer, const QString &path)
     : name(name),
       category(category),
-      manufacturer(manufacturer),
-      path(path)
+      path(path),
+      manufacturer(manufacturer)
 {
 
 }

@@ -67,7 +67,7 @@ void Filter::initialize(FilterType type, double freq, double Q, double gain)
     const double alpha = sinW0 / (2.0 * Q);
     const double beta = sqrt(A) / Q;
 
-    double a0;
+    double a0 = 0;
 
     switch (type) {
     case LowPass:

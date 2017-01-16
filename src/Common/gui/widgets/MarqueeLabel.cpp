@@ -7,7 +7,7 @@
 #include <QtMath>
 
 const int MarqueeLabel::MARQUEE_SPEED = 20;// pixels per second
-int MarqueeLabel::TIME_BETWEEN_ANIMATIONS = 10000;
+quint64 MarqueeLabel::TIME_BETWEEN_ANIMATIONS = 10000;
 
 // +++++++++++++++++++++++++++++++++++++++++++++
 

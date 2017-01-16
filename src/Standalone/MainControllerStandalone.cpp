@@ -571,14 +571,12 @@
     bool MainControllerStandalone::vstScanIsNeeded() const
     {
         bool vstCacheIsEmpty = settings.getVstPluginsPaths().isEmpty();
-     #ifdef Q_OS_WIN
-        if (vstCacheIsEmpty)
-            return true;
-    #endif
-
     #ifdef Q_OS_MAC
         bool audioUnitCacheIsEmpty = settings.getAudioUnitsPaths().isEmpty();
         if (vstCacheIsEmpty || audioUnitCacheIsEmpty)
+            return true;
+    #else
+        if (vstCacheIsEmpty)
             return true;
     #endif
 
