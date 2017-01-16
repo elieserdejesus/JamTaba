@@ -13,7 +13,7 @@ public:
     //int getMemmoryUsage();
       int getMemmoryUsed();
     //double getCpuUsage();
-      double getTotalCpuUsage();
+    //double getTotalCpuUsage();
 private:
     int processorsCount;
 };
