@@ -159,6 +159,8 @@ bool Configurator::setUp()
 
     setupLogConfigFile();
 
+    qInfo() << "JamTaba Base dir:" << baseDir.absolutePath();
+
     return true;
 }
 

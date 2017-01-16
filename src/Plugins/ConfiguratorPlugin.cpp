@@ -5,8 +5,6 @@ void Configurator::initializeDirs()
 {
     QDir appLocalDataDir = getApplicationDataDir();
     
-    qDebug() << "appLocalDataDir: " << appLocalDataDir.absolutePath();
-
 #ifdef Q_OS_WIN
     QString pluginDir(QStringLiteral("VstPlugin"));
 #else

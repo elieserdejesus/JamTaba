@@ -11,8 +11,9 @@ linux{
 }
 
 # the VstScanner executable is generated in the Standalone folder
-macx: DESTDIR = $$OUT_PWD/../Standalone/Jamtaba2.app/Contents/MacOS
-!macx{
+macx:DESTDIR = $$OUT_PWD/../Standalone/Jamtaba2.app/Contents/MacOS
+linux:DESTDIR = $$OUT_PWD/../Standalone
+win32{
     CONFIG(debug, debug|release) {
         DESTDIR = $$OUT_PWD/../Standalone/Debug
     } else {
