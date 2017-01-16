@@ -24,7 +24,7 @@ void CustomTabWidget::paintEvent(QPaintEvent *e){
 
     QPainter painter(this);
     //draw the cpu/memory usage background
-    QString string = "CPU:" + QString::number(cpuUsage, 'f', 0) + "% MEM:" + QString::number(memoryUsage) + "%";
+    QString string = "CPU:" + QString::number(cpuUsage, 'f', 0) + "% RAM:" + QString::number(memoryUsage) + "%";
     const int H_MARGIM = 3;
     const int V_MARGIM = 2;
     const int ROUND = 3;

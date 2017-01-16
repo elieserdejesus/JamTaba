@@ -63,7 +63,7 @@ double PerformanceMonitor::getTotalCpuUsage(){
             return percent * 100;
 }
 
-int PerformanceMonitor::getFreeMemmory(){
+int PerformanceMonitor::getMemmoryUsed(){
 
     //http://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
     MEMORYSTATUSEX memInfo;
@@ -77,7 +77,7 @@ int PerformanceMonitor::getFreeMemmory(){
         return (100-((memInfo.ullAvailPageFile/DIVIDER) * 100)/(memInfo.ullTotalPageFile/DIVIDER));
     }
     else{
-        qWarning() << "Can't get total memory available! GetProcessMemoryInfo fail!";
+        qWarning() << "Can't get total memory available! GlobalMemoryStatusEx fail!";
     }
     return 0;
 }
