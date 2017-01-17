@@ -53,7 +53,9 @@ QMainWindow
 
 #bottomPanel
 {
-    background: #9CC6D1;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 #9CC6D1,
+        stop: 1.0 rgb(80, 146, 240));
     border: none;
     border-radius: 6px;
 }
@@ -66,9 +68,10 @@ QMainWindow
 
 #contentTabWidget:pane
 {
-background-color:  qlineargradient(x1:0 y1:0, x2:0 y2:1,
-    stop:0 #A0F3F1,
-    stop:1 #90D3D1);
+    background-color:  qlineargradient(x1:0 y1:0, x2:0 y2:1,
+        stop:0 rgb(202, 242, 242),
+        stop:0.5 rgb(155, 245, 242),
+        stop:1 rgb(110, 165, 245));
 
     border-radius: 6px;
     border-top-left-radius: 0px;
@@ -82,10 +85,17 @@ background-color:  qlineargradient(x1:0 y1:0, x2:0 y2:1,
 }
 
 
-#chatTabWidget:pane,
+#chatTabWidget:pane
+{
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 rgb(180, 207, 250),
+        stop: 1.0 rgb(110, 165, 245));
+        border-color: rgba(40, 40, 40, 90);
+    color: black;
+}
+
 #chatTabWidget QTabBar::tab
 {
-    background-color: #96D3FF;
-    border-color: rgba(40, 40, 40, 90);
+    background-color: rgb(180, 207, 250);
     color: black;
 }

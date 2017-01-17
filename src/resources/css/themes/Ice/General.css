@@ -177,9 +177,9 @@ QSlider::groove:vertical
 QSlider::handle
 {
 
-background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-stop: 0.0 rgb(190,217,255),
-stop: 1.0 rgb(180,207,250));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop: 0.0 rgb(190,217,255),
+        stop: 1.0 rgb(180,207,250));
 
     border: 1px outset #68300F;
 }
@@ -210,18 +210,29 @@ QSlider::handle:vertical
 /* TabBar ----------------------*/
 QTabBar::tab
 {
-    background-color: rgb(150, 211, 255);
+    background-color: rgb(180, 207, 250);
     color: black;
 }
 
 QTabBar::tab:selected
 {
-    background-color: #A0F3F1;
+    background-color: rgb(202, 242, 242);
 }
 
-QTabBar::tab:hover
+/*
+QTabBar::tab:selected:hover
 {
     background-color: rgb(202, 249, 248);
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+*/
+
+QTabBar::tab:!selected:hover
+{
+    background-color: rgb(201, 229, 252);
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
 }
 
 QTabBar::tab:selected,

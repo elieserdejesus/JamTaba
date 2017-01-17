@@ -236,7 +236,7 @@ NinjamPanel QComboBox QAbstractItemView
 {
     border: none;
     color: black;
-    background-color: rgb(127, 161, 170);
+    background-color: rgb(100, 143, 181);
     selection-background-color: rgb(51, 153, 255);
     selection-color: white;
 }
