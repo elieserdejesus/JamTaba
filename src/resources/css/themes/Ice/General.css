@@ -5,14 +5,14 @@
 QPushButton
 {
     background-color: rgb(180, 207, 250);
-
+    border: 1px outset rgba(0, 0, 140, 120);
     border-radius: 6px;
 }
 
 QPushButton:checked
 {
     background-color: rgb(129, 181, 255);
-
+    border: 1px inset rgba(0, 0, 140, 120);
 }
 
 QPushButton:hover
