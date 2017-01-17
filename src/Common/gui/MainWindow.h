@@ -9,7 +9,7 @@
 #include "LocalTrackGroupView.h"
 #include <QTranslator>
 
-// #include "performance/PerformanceMonitor.h"
+#include "performance/PerformanceMonitor.h"
 
 class PreferencesDialog;
 class LocalTrackView;
@@ -311,9 +311,9 @@ private:
 
     static QString getStripedThemeName(const QString &fullThemeName);
 
-    // PerformanceMonitor performanceMonitor;//cpu and memmory usage
-    // qint64 lastPerformanceMonitorUpdate;
-    // static const int PERFORMANCE_MONITOR_REFRESH_TIME;
+    PerformanceMonitor performanceMonitor;//cpu and memmory usage
+    qint64 lastPerformanceMonitorUpdate;
+    static const int PERFORMANCE_MONITOR_REFRESH_TIME;
 
     // TODO:group these 2 related constants?
     static const QSize MINI_MODE_MIN_SIZE;

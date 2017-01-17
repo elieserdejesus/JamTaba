@@ -129,7 +129,7 @@ HEADERS += persistence/UsersDataCache.h
 HEADERS += persistence/CacheHeader.h
 HEADERS += log/Logging.h
 HEADERS += UploadIntervalData.h
-#HEADERS +=performance/PerformanceMonitor.h
+HEADERS += performance/PerformanceMonitor.h
 
 SOURCES += MainController.cpp
 SOURCES += NinjamController.cpp
@@ -226,7 +226,7 @@ SOURCES += persistence/CacheHeader.cpp
 SOURCES += UploadIntervalData.cpp
 
 #multiplatform implementations
-#win32:SOURCES += $$PWD/src/performance/WindowsPerformanceMonitor.cpp
+win32:SOURCES += performance/WindowsPerformanceMonitor.cpp
 #macx:SOURCES += $$PWD/src/performance/MacPerformanceMonitor.cpp
 
 FORMS += gui/PreferencesDialog.ui

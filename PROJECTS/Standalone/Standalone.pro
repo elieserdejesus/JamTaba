@@ -136,9 +136,9 @@ win32{
        LIBS += -L$$PWD/../../libs/$$LIBS_PATH -lportaudio -lminimp3 -lrtmidi -lvorbisfile -lvorbisenc -lvorbis -logg
     }
 
-    LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32 #-lPsapi
+    LIBS +=  -lwinmm -lole32 -lws2_32 -lAdvapi32 -lUser32 -lPsapi
     #performance monitor lib
-    #QMAKE_CXXFLAGS += -DPSAPI_VERSION=1
+    QMAKE_CXXFLAGS += -DPSAPI_VERSION=1
 
     RC_FILE = ../Jamtaba2.rc #windows icon
 }

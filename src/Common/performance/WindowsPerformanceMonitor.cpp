@@ -7,6 +7,7 @@
 //http://hackage.haskell.org/package/criterion-1.1.0.0/src/cbits/time-windows.c
 
 PerformanceMonitor::PerformanceMonitor(){
+/*
     HANDLE thisProcessHande = GetCurrentProcess();
     SYSTEM_INFO sysInfo;
     BOOL runningInWow64 = false;
@@ -18,12 +19,14 @@ PerformanceMonitor::PerformanceMonitor(){
         GetSystemInfo(&sysInfo);
     }
     this->processorsCount = sysInfo.dwNumberOfProcessors;
+*/
 }
 
 PerformanceMonitor::~PerformanceMonitor(){
 
 }
 
+/*
 //http://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
 double PerformanceMonitor::getCpuUsage(){
     static ULARGE_INTEGER lastCPU;
@@ -68,6 +71,26 @@ int PerformanceMonitor::getMemmoryUsage(){
     }
     else{
         qWarning() << "Can't get memory usage! GetProcessMemoryInfo fail!";
+    }
+    return 0;
+}
+*/
+
+int PerformanceMonitor::getMemmoryUsed(){
+
+    //http://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
+    MEMORYSTATUSEX memInfo;
+    memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+    bool result = GlobalMemoryStatusEx(&memInfo);
+    static const int DIVIDER = 1024 * 1024;
+    if(result){
+        //        qInfo() << "PrivateUsage:" << pmc.PrivateUsage/1024/1024;
+        //        qInfo() << "WorkingSetSize:" << pmc.WorkingSetSize/1024/1024;
+        //        qInfo() << "------------------------------";
+        return (100-((memInfo.ullAvailPageFile/DIVIDER) * 100)/(memInfo.ullTotalPageFile/DIVIDER));
+    }
+    else{
+        qWarning() << "Can't get total memory available! GlobalMemoryStatusEx fail!";
     }
     return 0;
 }
