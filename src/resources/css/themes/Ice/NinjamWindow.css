@@ -261,8 +261,8 @@ IntervalProgressWindow
 
 IntervalProgressDisplay
 {
-    qproperty-currentBeatColor: rgb(38, 136, 208);
-    qproperty-accentsColor: rgb(0, 0, 200); /* dark blue */
+    qproperty-currentBeatColor: rgb(18, 97, 244);
+    qproperty-accentsColor: rgb(0, 0, 240); /* dark blue */
     qproperty-currentAccentColor: blue;
     qproperty-secondaryBeatsColor: rgba(57, 77, 77);
     qproperty-disabledBeatsColor: rgba(86, 67, 47);
