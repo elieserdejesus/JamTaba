@@ -10,6 +10,7 @@
     font-size: 9px;
     padding: 2px;
     color: black;
+    border: 1px outset rgba(0, 0, 140, 120);
 }
 
 #buttonBoostMinus12,
@@ -44,6 +45,7 @@ QPushButton#buttonStereoInversion:checked
 {
     background-color: rgb(129, 181, 255);
     color: rgba(0, 0, 0, 160);
+    border: 1px inset rgba(0, 0, 140, 120);
 }
 
 #buttonBoostMinus12:hover,
@@ -113,6 +115,7 @@ BaseTrackView[unlighted="true"] #muteButton:hover
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
     color: black;
+    border: 1px inset rgba(0, 0, 140, 120);
 }
 
 #soloButton:hover:checked
@@ -124,7 +127,7 @@ BaseTrackView[unlighted="true"] #muteButton:hover
 #muteButton:checked
 {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
-    border-color: rgba(0, 0, 0, 30);
+    border: 1px inset rgba(0, 0, 140, 120);
     color: white;
 
 }
@@ -137,7 +140,9 @@ BaseTrackView[unlighted="true"] #muteButton:hover
 }
 
 BaseTrackView[unlighted="true"] #buttonStereoInversion:hover:checked,
-BaseTrackView[unlighted="true"] #buttonBoostZero:hover:checked
+BaseTrackView[unlighted="true"] #buttonBoostZero:hover:checked,
+BaseTrackView[unlighted="true"] #buttonBoostMinus12:hover:checked,
+BaseTrackView[unlighted="true"] #buttonBoostPlus12:hover:checked
 {
     background-color: rgb(157, 199, 255);
 }
