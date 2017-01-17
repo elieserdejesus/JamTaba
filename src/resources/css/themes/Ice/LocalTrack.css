@@ -5,7 +5,7 @@
 --------------------------------------------------*/
 FxPanelItem
 {
-background-color: rgba(255, 255, 255, 60);
+    background-color: rgba(255, 255, 255, 60);
     background-position: center right;
     background-repeat: none;
     max-height: 14px;
@@ -106,29 +106,39 @@ LocalTrackView[unlighted="true"] #inputPanel:hover
 
 #xmitButton:checked
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+        stop:0 rgb(90, 255, 62),
+        stop:1 rgb(0, 175, 0));
     border-color: rgb(100, 100, 100);
 }
 
 #xmitButton[preparing="true"]
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255,255,0), stop:1 rgb(204,204,0));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9,
+        stop:0 rgb(255,255,0),
+        stop:1 rgb(204,204,0));
 }
 
 #xmitButton:!checked
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9,
+        stop:0 rgb(255, 90, 62),
+        stop:1 rgb(175, 0, 0));
     border-color: rgba(0, 0, 0, 30);
     color: black;
 }
 
 #xmitButton:hover
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgba(90, 255, 62, 220), stop:1 rgba(0, 175, 0, 200));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+        stop:0 rgba(90, 255, 62, 220),
+        stop:1 rgba(0, 175, 0, 200));
 }
 
 #xmitButton:hover:!checked
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgba(255, 90, 62, 220), stop:1 rgba(175, 0, 0, 200));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9,
+        stop:0 rgba(255, 90, 62, 220),
+        stop:1 rgba(175, 0, 0, 200));
     border-color: rgba(0, 0, 0, 90);
 }

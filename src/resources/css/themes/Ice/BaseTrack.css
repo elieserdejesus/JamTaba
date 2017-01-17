@@ -113,20 +113,26 @@ BaseTrackView[unlighted="true"] #muteButton:hover
 
 #soloButton:checked
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgb(90, 255, 62), stop:1 rgb(0, 175, 0));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+    stop:0 rgb(90, 255, 62),
+    stop:1 rgb(0, 175, 0));
     color: black;
     border: 1px inset rgba(0, 0, 140, 120);
 }
 
 #soloButton:hover:checked
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95, stop:0 rgba(90, 255, 62, 220), stop:1 rgba(0, 175, 0, 200));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.95,
+    stop:0 rgba(90, 255, 62, 220),
+    stop:1 rgba(0, 175, 0, 200));
     border-color: rgb(45, 45, 45);
 }
 
 #muteButton:checked
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9,
+    stop:0 rgb(255, 90, 62),
+    stop:1 rgb(175, 0, 0));
     border: 1px inset rgba(0, 0, 140, 120);
     color: white;
 
@@ -134,7 +140,9 @@ BaseTrackView[unlighted="true"] #muteButton:hover
 
 #muteButton:hover:checked
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgba(255, 90, 62, 220), stop:1 rgba(175, 0, 0, 200));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9,
+    stop:0 rgba(255, 90, 62, 220),
+    stop:1 rgba(175, 0, 0, 200));
     color: lightgray;
     border-color: rgb(45, 45, 45);
 }

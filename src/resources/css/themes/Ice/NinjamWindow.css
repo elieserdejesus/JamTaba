@@ -76,13 +76,17 @@ NinjamTrackView[unlighted="true"][horizontal="true"] QSlider::handle:horizontal
 
 NinjamTrackView QPushButton#receiveButton:!checked
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgb(255, 90, 62), stop:1 rgb(175, 0, 0));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9,
+    stop:0 rgb(255, 90, 62),
+    stop:1 rgb(175, 0, 0));
     border-color: rgb(50,50,50);;
 }
 
 NinjamTrackView QPushButton#receiveButton:hover:!checked
 {
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9, stop:0 rgba(255, 90, 62, 220), stop:1 rgba(175, 0, 0, 200));
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0.9,
+    stop:0 rgba(255, 90, 62, 220),
+    stop:1 rgba(175, 0, 0, 200));
 }
 
 /* Tool buttons: track vertical/horizontal, wide/narrow and server licence buttons
