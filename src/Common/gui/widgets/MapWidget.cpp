@@ -248,7 +248,7 @@ void MapWidget::loadTiles()
 
 void MapWidget::updateMapPositionsCache()
 {
-    static const int markersHeight = fontMetrics().height() + TEXT_MARGIM * 2;
+    static const int markersHeight = fontMetrics().height() * 2;
     qreal ellipseX = TEXT_MARGIM;
     qreal ellipseY = TEXT_MARGIM + markersHeight/2;
     qreal ellipseWidth = width() - getMaximumMarkerWidth() - TEXT_MARGIM * 2;
@@ -344,9 +344,8 @@ QPointF MapWidget::getMarkerScreenCoordinate(const MapMarker &marker) const
 int MapWidget::getMaximumMarkerWidth()
 {
     int maxWidth = 0;
-    QPointF anchor(0, 0);
     for (const MapMarker &marker : markers) {
-        int markerWidth = getMarkerRect(marker, anchor).width();
+        int markerWidth = getMarkerSize(marker).width();
         if (markerWidth > maxWidth)
             maxWidth = markerWidth;
     }
@@ -416,7 +415,6 @@ bool MapWidget::rectIntersectsSomeMarker(const QRectF &rect, const QList<MapMark
 
 MapWidget::Position MapWidget::findBestEllipsePositionForMarker(const MapMarker &marker, const QList<MapMarker> &markers, const QList<MapWidget::Position> &positions)
 {
-
     if (positions.isEmpty())
         return MapWidget::Position(QPointF(0, 0), 0);
 
@@ -424,11 +422,14 @@ MapWidget::Position MapWidget::findBestEllipsePositionForMarker(const MapMarker 
     QPointF markerPosition = getMarkerScreenCoordinate(marker);
     qreal minDistance = 1000.0;
     QPointF position = positions.first().coords;
+
     for (int i = 1; i < positions.size(); ++i) {
+
         const QPointF &ellipsePosition = positions.at(i).coords;
         qreal distance = getDistance(markerPosition, ellipsePosition);
+
         if (distance < minDistance) {
-            QRectF markerRect = getMarkerRect(marker, ellipsePosition);
+            QRectF markerRect(ellipsePosition, getMarkerSize(marker));
             if (!rectIntersectsSomeMarker(markerRect, markers)) { // avoid a rect intersecting markers circles
                 minDistance = distance;
                 position = ellipsePosition;
@@ -436,6 +437,7 @@ MapWidget::Position MapWidget::findBestEllipsePositionForMarker(const MapMarker 
             }
         }
     }
+
     return MapWidget::Position(position, bestPositionIndex);
 }
 
@@ -516,7 +518,7 @@ QColor MapWidget::getMarkerTextColor()
 
 void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPointF &markerPosition, const QPointF &rectPosition)
 {
-    QRectF markerRect = getMarkerRect(marker, rectPosition);
+    QRectF markerRect(rectPosition, getMarkerSize(marker));
 
     QColor bgColor = getMarkerTextBackgroundColor();
     painter.setBrush(QBrush(bgColor));
@@ -532,7 +534,7 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     painter.setPen(Qt::NoPen);
     painter.drawRect(markerRect);
 
-    // drawing the player marker
+    // drawing the player marker (the small circle)
     const static qreal markerSize = 1.6;
     painter.setBrush(getMarkerColor());
     painter.drawEllipse(markerPosition, markerSize, markerSize);
@@ -546,7 +548,7 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     QFontMetrics metrics = painter.fontMetrics();
     qreal playerNameWidth = metrics.width(playerName);
     painter.setPen(getMarkerTextColor());
-    qreal textY = rectPosition.y() + TEXT_MARGIM + metrics.descent()/2.0;
+    qreal textY = markerRect.center().y() + TEXT_MARGIM + metrics.descent()/2.0;
     painter.drawText(hOffset, textY, playerName);
     hOffset += playerNameWidth + TEXT_MARGIM * 3;
 
@@ -568,27 +570,28 @@ void MapWidget::drawMarker(const MapMarker &marker, QPainter &painter, const QPo
     // draw the player country flag
     const QImage &image = marker.getFlag();
     qreal imageX = hOffset + TEXT_MARGIM;
-    qreal imageY = rectPosition.y() - image.height()/2.0;
+    qreal imageY = markerRect.center().y() - image.height()/2.0;
     painter.drawImage(QPointF(imageX, imageY), image);
 }
 
-QRectF MapWidget::getMarkerRect(const MapMarker &marker, const QPointF &anchor) const
+QSizeF MapWidget::getMarkerSize(const MapMarker &marker) const
 {
     const QImage &flag = marker.getFlag();
 
-    qreal rectWidth = TEXT_MARGIM; //left margin
+    qreal markerWidth = TEXT_MARGIM; //left margin
 
     QFontMetrics metrics(userFont);
-    rectWidth += metrics.width(marker.getPlayerName());
-    rectWidth += TEXT_MARGIM  * 3; //space between player name and country flag
+    markerWidth += metrics.width(marker.getPlayerName());
+    markerWidth += TEXT_MARGIM  * 3; //space between player and country name
 
     metrics = QFontMetrics(countryFont);
-    rectWidth += metrics.width(marker.getCountryName()) + TEXT_MARGIM + flag.width();
-    rectWidth += TEXT_MARGIM; // right margin
+    markerWidth += metrics.width(marker.getCountryName());
+    markerWidth += TEXT_MARGIM + flag.width();
+    markerWidth += TEXT_MARGIM; // right margin
 
-    qreal height = qMax(metrics.height(), flag.height()) + TEXT_MARGIM * 2;
-    QRectF rect(anchor.x(), anchor.y() - height/2.0, rectWidth, height);
-    return rect;
+    qreal markerHeight = qMax(metrics.height(), flag.height()) + TEXT_MARGIM * 2;
+
+    return QSizeF(markerWidth, markerHeight);
 }
 
 QRect MapWidget::tileRect(const QPoint &tp) const

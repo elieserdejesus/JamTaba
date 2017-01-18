@@ -9,13 +9,13 @@ MapWidget* createFourthMap()
 {
     MapWidget *map = new MapWidget();
 
-    QPointF australia(-24.84656535, 132.01171875);
-    QPointF japan(37.99616268, 140.80078125);
+    QPointF canada(56.130366, -106.346771);
+    QPointF uk(55.378051, -3.435973);
 
     QImage flag = QPixmap(":/flag").toImage();
     QList<MapMarker> markers;
-    markers << MapMarker("Player 8", "Japan", japan, flag);
-    markers << MapMarker("Player 9", "australia", australia, flag);
+    markers << MapMarker("Pete", "Canada", canada, flag);
+    markers << MapMarker("Generic_person_3", "United Kingdom", uk, flag);
 
     map->setMarkers(markers);
 
@@ -38,7 +38,7 @@ MapWidget* createThirdMap()
     markers << MapMarker("France 1", "France", france1, flag);
     markers << MapMarker("France 2", "France", france2, flag);
     markers << MapMarker("France 3", "France", france3, flag);
-    markers << MapMarker("France 4", "France", france4, flag);
+    markers << MapMarker("testing_user_with_very_big_name", "France", france4, flag);
 
     map->setMarkers(markers);
 

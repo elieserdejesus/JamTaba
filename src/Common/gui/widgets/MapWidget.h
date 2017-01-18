@@ -55,7 +55,7 @@ private:
 
     void initializeFonts();
 
-    QRectF getMarkerRect(const MapMarker &marker, const QPointF &anchor) const;
+    QSizeF getMarkerSize(const MapMarker &marker) const;
 
     void setCenter(QPointF latLong);
 
