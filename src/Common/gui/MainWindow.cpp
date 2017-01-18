@@ -1039,9 +1039,12 @@ MainWindow::~MainWindow()
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void MainWindow::connectInPrivateServer(const QString &server, int serverPort,
-                                        const QString &password)
+                                            const QString &userName, const QString &password)
 {
     mainController->storePrivateServerSettings(server, serverPort, password);
+    mainController->setUserName(userName);
+    ui.userNameLineEdit->setText(userName);
+
     Login::RoomInfo roomInfo(server, serverPort, Login::RoomTYPE::NINJAM, 32, 32);
     tryEnterInRoom(roomInfo, password);
 }

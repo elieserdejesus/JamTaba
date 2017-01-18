@@ -164,7 +164,7 @@ protected slots:
     void showJamtabaTranslators();
 
     // private server
-    void connectInPrivateServer(const QString &server, int serverPort, const QString &password);
+    void connectInPrivateServer(const QString &server, int serverPort, const QString &userName, const QString &password);
 
     // login service
     void showNewVersionAvailableMessage();
