@@ -29,6 +29,8 @@ PrivateServerDialog::PrivateServerDialog(QWidget *parent, Controller::MainContro
 
     ui->textFieldUserName->forceCenterAlignment(false);
     ui->textFieldUserName->setAlignment(Qt::AlignLeft);
+
+    ui->textFieldPassword->setEchoMode(QLineEdit::Password);
 }
 
 void PrivateServerDialog::buildComboBoxItems()
