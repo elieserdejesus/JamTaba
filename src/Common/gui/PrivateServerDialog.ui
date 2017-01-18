@@ -123,7 +123,7 @@
         </sizepolicy>
        </property>
        <property name="toolTip">
-        <string>leave blank to connect as annonymous</string>
+        <string/>
        </property>
        <property name="accessibleDescription">
         <string>type here the password</string>
