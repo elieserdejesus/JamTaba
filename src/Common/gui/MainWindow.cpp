@@ -52,7 +52,7 @@ MainWindow::MainWindow(Controller::MainController *mainController, QWidget *pare
 
     ui.setupUi(this);
 
-    setWindowTitle("JamTaba " + QApplication::applicationVersion());
+    setWindowTitle("JamTaba");
 
     initializeLoginService();
     initializeMainTabWidget();
