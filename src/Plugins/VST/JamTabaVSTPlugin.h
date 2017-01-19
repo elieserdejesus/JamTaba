@@ -32,8 +32,8 @@ public:
     QString getHostName() override;
 
     bool getEffectName(char *name);
-    bool getVendorString(char *text) const;
-    bool getProductString(char *text) const;
+    bool getVendorString(char *text);
+    bool getProductString(char *text);
     VstInt32 getVendorVersion();
 
     VstInt32 getNumMidiInputChannels();

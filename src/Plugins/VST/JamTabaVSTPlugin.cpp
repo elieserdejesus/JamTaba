@@ -116,23 +116,25 @@ bool JamTabaVSTPlugin::getEffectName(char *name)
 {
     if (!name)
         return false;
-    vst_strncpy(name, "Jamtaba 2", kVstMaxEffectNameLen);
+    vst_strncpy(name, "JamTaba 2", kVstMaxEffectNameLen);
     return true;
 }
 
-bool JamTabaVSTPlugin::getProductString(char *text) const
+bool JamTabaVSTPlugin::getProductString(char *text)
 {
     if (!text)
         return false;
-    vst_strncpy(text, "Jamtaba 2", kVstMaxProductStrLen);
+
+    QString string("JamTaba v" + QApplication::applicationVersion());
+    vst_strncpy(text, string.toLatin1().data(), kVstMaxProductStrLen);
     return true;
 }
 
-bool JamTabaVSTPlugin::getVendorString(char *text) const
+bool JamTabaVSTPlugin::getVendorString(char *text)
 {
     if (!text)
         return false;
-    vst_strncpy(text, "Jamtaba", kVstMaxVendorStrLen);
+    vst_strncpy(text, "www.jamtaba.com", kVstMaxVendorStrLen);
     return true;
 }
 
