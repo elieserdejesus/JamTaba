@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="prefsTab">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabAudio">
       <attribute name="title">
@@ -461,7 +461,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>16</width>
+               <width>375</width>
                <height>45</height>
               </rect>
              </property>
@@ -686,25 +686,25 @@
    <item>
     <layout class="QHBoxLayout" name="bottomLayout">
      <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+      <widget class="QLabel" name="labelVstScanStatus">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>280</width>
-         <height>20</height>
-        </size>
+       <property name="text">
+        <string/>
        </property>
-      </spacer>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="okButton">
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>16777215</height>
-        </size>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
        <property name="layoutDirection">
         <enum>Qt::LeftToRight</enum>

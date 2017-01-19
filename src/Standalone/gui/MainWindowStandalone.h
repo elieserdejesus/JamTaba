@@ -65,6 +65,8 @@ private:
     MainControllerStandalone *controller;
     QScopedPointer<PluginScanDialog> pluginScanDialog;
 
+    PreferencesDialog *preferencesDialog; // store the instance to check if dialog is visible e decide show or not the Vst Plugin Scan Dialog
+
     LocalTrackGroupViewStandalone *geTrackGroupViewByName(const QString &trackGroupName) const;
 
     bool midiDeviceIsValid(int deviceIndex) const;

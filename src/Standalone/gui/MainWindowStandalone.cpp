@@ -16,7 +16,8 @@ MainWindowStandalone::MainWindowStandalone(MainControllerStandalone *mainControl
     MainWindow(mainController),
     controller(mainController),
     fullScreenViewMode(false),
-    pluginScanDialog(nullptr)
+    pluginScanDialog(nullptr),
+    preferencesDialog(nullptr)
 {
     setupSignals();
 
@@ -80,11 +81,14 @@ void MainWindowStandalone::restoreWindowPosition()
 {
     QPointF location = mainController->getSettings().getLastWindowLocation();
     QDesktopWidget *desktop = QApplication::desktop();
+
     int desktopWidth = desktop->width();
     int desktopHeight = desktop->height();
     int x = desktopWidth * location.x();
     int y = desktopHeight * location.y();
+
     this->move(x, y);
+
     qCDebug(jtGUI)<< "Restoring window to position:" << x << ", " << y;
     qCDebug(jtGUI)<< "Window size:" << width() << ", " << height();
 }
@@ -92,11 +96,14 @@ void MainWindowStandalone::restoreWindowPosition()
 // plugin finder events
 void MainWindowStandalone::showPluginScanDialog()
 {
+    if (preferencesDialog && preferencesDialog->isVisible())
+        return; // only show the Plugin Scan dialog if PreferencesDialog is not opened (to avoid two modal dialogs)
+
     if (!pluginScanDialog) {
         pluginScanDialog.reset(new PluginScanDialog(this));
-        QObject::connect(pluginScanDialog.data(), SIGNAL(rejected()), this,
-                         SLOT(closePluginScanDialog()));
+        connect(pluginScanDialog.data(), SIGNAL(rejected()), this, SLOT(closePluginScanDialog()));
     }
+
     pluginScanDialog->show();
 }
 
@@ -111,6 +118,7 @@ void MainWindowStandalone::hidePluginScanDialog(bool finishedWithoutError)
     Q_UNUSED(finishedWithoutError);
     if (pluginScanDialog)
         pluginScanDialog->close();
+
     pluginScanDialog.reset();
 }
 
@@ -309,7 +317,6 @@ void MainWindowStandalone::closeEvent(QCloseEvent *e)
 
 PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
 {
-
     qDebug(jtGUI) << "Creating preferences dialog";
 
     // stop midi and audio before show the preferences dialog
@@ -323,42 +330,37 @@ PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
     midiDriver->stop();
 
     bool showAudioControlPanelButton = controller->getAudioDriver()->hasControlPanel();
-    StandalonePreferencesDialog *dialog = new StandalonePreferencesDialog(this,
-                                                                          showAudioControlPanelButton,
-                                                                          controller->getAudioDriver(),
-                                                                          controller->getMidiDriver());
+    auto *dialog = new PreferencesDialogStandalone(this, showAudioControlPanelButton, audioDriver, midiDriver);
 
     // setup signals related with recording and metronome preferences
     MainWindow::setupPreferencesDialogSignals(dialog);
 
     // setup standalone specific signals
-    connect(dialog, SIGNAL(ioPreferencesChanged(QList<bool>, int, int, int, int, int)),
-            this, SLOT(setGlobalPreferences(QList<bool>, int, int, int, int, int)));
+    connect(dialog, &PreferencesDialogStandalone::ioPreferencesChanged, this, &MainWindowStandalone::setGlobalPreferences);
 
-    connect(dialog, SIGNAL(rejected()), this, SLOT(restartAudioAndMidi()));
+    connect(dialog, &PreferencesDialogStandalone::rejected, this, &MainWindowStandalone::restartAudioAndMidi);
 
-    connect(dialog, SIGNAL(sampleRateChanged(int)), controller, SLOT(setSampleRate(int)));
-    connect(dialog, SIGNAL(bufferSizeChanged(int)), controller, SLOT(setBufferSize(int)));
+    connect(dialog, &PreferencesDialogStandalone::sampleRateChanged, controller, &MainControllerStandalone::setSampleRate);
+    connect(dialog, &PreferencesDialogStandalone::bufferSizeChanged, controller, &MainControllerStandalone::setBufferSize);
 
-    connect(controller->getVstPluginFinder(), SIGNAL(scanFinished(bool)), dialog, SLOT(
-                populateVstTab()));
-    connect(controller->getVstPluginFinder(), SIGNAL(scanStarted()), dialog, SLOT(clearVstList()));
+    VSTPluginFinder *vstFinder = controller->getVstPluginFinder();
+    connect(vstFinder, &VSTPluginFinder::scanFinished, dialog, &PreferencesDialogStandalone::populateVstTab);
+    connect(vstFinder, &VSTPluginFinder::scanStarted, dialog, &PreferencesDialogStandalone::clearVstList);
+    connect(vstFinder, &VSTPluginFinder::pluginScanFinished, dialog, &PreferencesDialogStandalone::addFoundedVstPlugin);
+    connect(vstFinder, &VSTPluginFinder::pluginScanStarted, dialog, &PreferencesDialogStandalone::setCurrentScannedVstPlugin);
 
-    connect(dialog, SIGNAL(vstScanDirRemoved(const QString &)), controller,
-            SLOT(removePluginsScanPath(const QString &)));
-    connect(dialog, SIGNAL(vstScanDirAdded(const QString &)), controller,
-            SLOT(addPluginsScanPath(const QString &)));
+    connect(dialog, &PreferencesDialogStandalone::vstScanDirRemoved, controller, &MainControllerStandalone::removePluginsScanPath);
+    connect(dialog, &PreferencesDialogStandalone::vstScanDirAdded, controller, &MainControllerStandalone::addPluginsScanPath);
 
-    connect(dialog, SIGNAL(vstPluginAddedInBlackList(const QString &)), controller,
-            SLOT(addBlackVstToSettings(const QString &)));
-    connect(dialog, SIGNAL(vstPluginRemovedFromBlackList(const QString &)), controller,
-            SLOT(removeBlackVstFromSettings(const QString &)));
+    connect(dialog, &PreferencesDialogStandalone::vstPluginAddedInBlackList, controller, &MainControllerStandalone::addBlackVstToSettings);
+    connect(dialog, &PreferencesDialogStandalone::vstPluginRemovedFromBlackList, controller, &MainControllerStandalone::removeBlackVstFromSettings);
 
-    connect(dialog, SIGNAL(startingFullPluginsScan()), controller, SLOT(scanAllPlugins()));
-    connect(dialog, SIGNAL(startingOnlyNewPluginsScan()), controller, SLOT(scanOnlyNewPlugins()));
+    connect(dialog, &PreferencesDialogStandalone::startingFullPluginsScan, controller, &MainControllerStandalone::scanAllPlugins);
+    connect(dialog, &PreferencesDialogStandalone::startingOnlyNewPluginsScan, controller, &MainControllerStandalone::scanOnlyNewPlugins);
 
-    connect(dialog, SIGNAL(openingExternalAudioControlPanel()), controller,
-            SLOT(openExternalAudioControlPanel()));
+    connect(dialog, &PreferencesDialogStandalone::openingExternalAudioControlPanel, controller, &MainControllerStandalone::openExternalAudioControlPanel);
+
+    preferencesDialog = dialog; // store the dialog instance to use when showing Vst Plugin Scan Dialog - issue #670
 
     return dialog;
 }
