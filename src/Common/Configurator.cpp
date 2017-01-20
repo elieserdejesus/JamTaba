@@ -174,14 +174,9 @@ void Configurator::exportThemes() const
     QDir themesDir = getThemesDir();
     QStringList themesInResources = resourceDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
-    QDate compilationDate = QLocale("en_US").toDate(QString(__DATE__).simplified(), "MMM d yyyy");   //QDate::fromString(QString(__DATE__).simplified(), "MMM d yyyy");
+    QDate compilationDate = QLocale("en_US").toDate(QString(__DATE__).simplified(), "MMM d yyyy");
     QTime compilationTime = QTime::fromString(QString(__TIME__).simplified(), "hh:mm:ss");
     QDateTime jamTabaCompilationDate(compilationDate, compilationTime);
-
-    qDebug() << "Trying to export themes files JamTabaa compilationDateTime:" << jamTabaCompilationDate;
-    qDebug() << "C++ dateTime macros: " << "'" << __DATE__ << "'" << " " << "'" <<__TIME__ <<"'";
-    qDebug() << "compilation date: " << compilationDate;
-    qDebug() << "compilation time: " << compilationTime;
 
     for (const QString &themeDir : themesInResources) {
 
@@ -217,13 +212,6 @@ void Configurator::exportThemes() const
                 else {
                     qCritical() << "Can't copy " << sourceFileInfo.absoluteFilePath() << " to " << destinationFileInfo.absoluteFilePath();
                 }
-            }
-            else
-            {
-                if (destinationFileInfo.exists())
-                    qDebug() << destinationFileInfo.absoluteFilePath() << " exists in appFolder and will not be exported!";
-                else
-                    qDebug() << destinationFileInfo.absoluteFilePath() << " not exists, but will not be exported because the file in resources is not newer";
             }
         }
     }
