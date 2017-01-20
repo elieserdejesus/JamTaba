@@ -174,7 +174,7 @@ void Configurator::exportThemes() const
     QDir themesDir = getThemesDir();
     QStringList themesInResources = resourceDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
-    QDate compilationDate = QDate::fromString(QString(__DATE__).simplified(), "MMM d yyyy");
+    QDate compilationDate = QLocale("en_US").toDate(QString(__DATE__).simplified(), "MMM d yyyy");   //QDate::fromString(QString(__DATE__).simplified(), "MMM d yyyy");
     QTime compilationTime = QTime::fromString(QString(__TIME__).simplified(), "hh:mm:ss");
     QDateTime jamTabaCompilationDate(compilationDate, compilationTime);
 
