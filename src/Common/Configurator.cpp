@@ -173,9 +173,15 @@ void Configurator::exportThemes() const
     QDir resourceDir(THEMES_FOLDER_IN_RESOURCES);
     QDir themesDir = getThemesDir();
     QStringList themesInResources = resourceDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-    QDateTime jamTabaCompilationDate = QDateTime::fromString(QString(__DATE__).simplified() + " " + QString(__TIME__).simplified(), "MMM d yyyy hh:mm:ss");
 
-    qDebug() << "Trying to export themes files JamTabaa compilationDate:" << jamTabaCompilationDate;
+    QDate compilationDate = QDate::fromString(QString(__DATE__).simplified(), "MMM d yyyy");
+    QTime compilationTime = QTime::fromString(QString(__TIME__).simplified(), "hh:mm:ss");
+    QDateTime jamTabaCompilationDate(compilationDate, compilationTime);
+
+    qDebug() << "Trying to export themes files JamTabaa compilationDateTime:" << jamTabaCompilationDate;
+    qDebug() << "C++ dateTime macros: " << "'" << __DATE__ << "'" << " " << "'" <<__TIME__ <<"'";
+    qDebug() << "compilation date: " << compilationDate;
+    qDebug() << "compilation time: " << compilationTime;
 
     for (const QString &themeDir : themesInResources) {
 
