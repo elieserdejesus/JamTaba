@@ -65,12 +65,12 @@ private:
     void initializeDirs(); //this function is implemented in ConfiguratorStandalone.cpp and in ConfiguratorVST.cpp. Only the correct .cpp file is included in .pro files.
     void exportLogIniFile();
     void setupLogConfigFile();
-    bool needExportThemes() const;
+
     void exportThemes() const;
 
     static QDir getApplicationDataDir();
 
-    static void LogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
+    static void logHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
     static QString getDebugColor(const QMessageLogContext &context);
 };
